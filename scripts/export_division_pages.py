@@ -6,6 +6,8 @@ The optional --from-bills mode projects only the already published bill export:
 it explicitly labels member coverage unavailable rather than inventing votes.
 Both modes use committed bill links, without a title guess, to link each division
 back to its bills. One JSON file per slug avoids a runtime scan of the corpus.
+--refresh-parties rechecks the published snapshot using held dated records,
+without a database or fetch, keeping its source facts and retention reasons.
 
 Every refresh preserves the existing division set and recorded member evidence.
 A degraded candidate retains the complete previous record and declares why in
@@ -393,7 +395,7 @@ def projection_index(records):
     ]}
 
 
-def write_projection(records, output, carry=False, strict=False, party_evidence=None):
+def write_projection(records, output, carry=False, strict=False, party_evidence=None, party_refresh=False):
     """Guard both DB and bill-only runs, stage every byte, then index last.
 
     `carry` remains accepted for existing callers; the guard now always protects
@@ -409,6 +411,14 @@ def write_projection(records, output, carry=False, strict=False, party_evidence=
     output = Path(output)
     previous = read_previous_projection(output)
     guarded = guard_projection(records, previous, strict=strict)
+    if party_refresh:
+        # A party-only run is over the retained snapshot, not a new source
+        # observation. Keep its publication guard's original retention reasons.
+        if records != previous:
+            raise ValueError("A party-only refresh requires the published snapshot")
+        for key, record in guarded.items():
+            for field in ("refresh_retained", "refresh_retained_reason"):
+                record["_meta"][field] = previous[key]["_meta"].get(field)
     if party_evidence is not None and not getattr(party_evidence, "check_labels", True):
         # vote_parties.load_evidence has logged the missing release once.
         party_evidence = None
@@ -420,7 +430,7 @@ def write_projection(records, output, carry=False, strict=False, party_evidence=
     # fills and corrections where its source label is unchanged (retained
     # records already carry them).
     for key, record in guarded.items():
-        if frozen(record) and key in previous and not record["_meta"]["refresh_retained"]:
+        if not party_refresh and frozen(record) and key in previous and not record["_meta"]["refresh_retained"]:
             vote_parties.keep_published_parties(record, previous[key])
     if party_evidence is not None:
         # Before source parties are copied in: a party the source now publishes
@@ -428,10 +438,12 @@ def write_projection(records, output, carry=False, strict=False, party_evidence=
         # label goes back to its source label before it is checked again.
         vote_parties.clear_fills([r for r in guarded.values() if not frozen(r)])
     # Enrich a retained snapshot only from matching dated source facts and votes.
+    # A party-only refresh has no new source observation: its candidate labels
+    # may be old derived fills and must not be copied back as source labels.
     # Never substitute current-roster affiliations or discard its extra members.
     for key, record in guarded.items():
         candidate = records.get(key)
-        if not candidate or not record["_meta"]["refresh_retained"]:
+        if party_refresh or not candidate or not record["_meta"]["refresh_retained"]:
             continue
         if any(record.get(field) != candidate.get(field)
                for field in ("date", "house", "ayes", "noes", "source_url")):
@@ -486,11 +498,17 @@ def main():
     parser.add_argument("--db", default=DEFAULT_DB)
     parser.add_argument("--bills", type=Path, default=ROOT / "portal/public/bills")
     parser.add_argument("--out", type=Path, default=ROOT / "portal/public/divisions")
-    parser.add_argument("--from-bills", action="store_true")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--from-bills", action="store_true")
+    mode.add_argument("--refresh-parties", action="store_true",
+                      help="Recheck the published snapshot using held dated evidence, without a DB or fetch")
     parser.add_argument("--strict-refresh", action="store_true", help="Refuse evidence regression before publishing any files")
     args = parser.parse_args()
-    published = bill_projection(args.bills)
-    if args.from_bills:
+    published = {} if args.refresh_parties else bill_projection(args.bills)
+    if args.refresh_parties:
+        records = read_previous_projection(args.out)
+        evidence = vote_parties.load_evidence(ROOT)
+    elif args.from_bills:
         records = published
         # No database, so no Wikidata terms: keep the previous fills as they are
         # rather than recompute from part of the evidence.
@@ -504,7 +522,7 @@ def main():
             evidence = vote_parties.load_evidence(ROOT, db)
         publication_rules(records)
     records = write_projection(records, args.out, carry=args.from_bills, strict=args.strict_refresh,
-                               party_evidence=evidence)
+                               party_evidence=evidence, party_refresh=args.refresh_parties)
     coverage = projection_index(records)["coverage"]
     print(f"Exported {len(records)} divisions; {sum(bool(d['members']) for d in records.values())} with member records; "
           f"retained {coverage['retained_count']} previous records ({json.dumps(coverage['retained_by_reason'], sort_keys=True)}); "

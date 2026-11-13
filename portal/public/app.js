@@ -40,9 +40,9 @@ const growthModulesReady = import("/growth-modules.js?v=518b8a1250").then(module
 let registerTables;
 const registerTablesReady = import('/register-tables.js?v=a1bf34a557').then(module => { registerTables = module; });
 let askPerson;
-const askPersonReady = import('/ask-person.js?v=a83f09ee1b').then(module => { askPerson = module; });
+const askPersonReady = import('/ask-person.js?v=e628525cf3').then(module => { askPerson = module; });
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=6d2e2e9cd8').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=fcb2a1091c').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
@@ -9976,7 +9976,7 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=09bdcac15d", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=55654982b0", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=1c29d72c36", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=67e896260e", mount: "mountLedger" },

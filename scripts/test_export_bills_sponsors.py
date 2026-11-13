@@ -5,12 +5,14 @@
 import json
 import sqlite3
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import export_bills as eb  # noqa: E402
 import roster_identity  # noqa: E402
+import vote_parties as v  # noqa: E402
 
 MEMBERS = [
     # person_id, full_name, first_name, last_name, chamber, entered_house, left_house
@@ -93,6 +95,72 @@ class FillSponsorIds(unittest.TestCase):
 
     def test_non_numeric_ids_are_not_members(self):
         self.assertNotIn("aph_1", members())
+
+
+class DatedSponsorParties(unittest.TestCase):
+    def evidence(self):
+        return v.Evidence([
+            v.entry("service", "representatives", ("name", "avery fixture"), ["Avery Fixture"],
+                    "Nationals", "2022-05-21", "2023-02-01", pids=["99991"]),
+            v.entry("service", "representatives", ("name", "avery fixture"), ["Avery Fixture"],
+                    "Independent", "2023-02-01", "2025-05-03", pids=["99991"]),
+            v.entry("service", "senate", ("name", "robin sample"), ["Robin Sample"],
+                    "Independent", "2020-01-01", "2022-07-01", pids=["99992"]),
+        ])
+
+    def test_recognised_party_is_checked_on_introduction_day_for_every_sponsor(self):
+        bills = [{**bill("FIXTURE, Avery, MP", house="representatives", introduced=day, pid="99991"),
+                  "sponsor_party": "Nationals", "sponsors": [
+                      {"name": "FIXTURE, Avery, MP", "person_id": "99991", "party": "Nationals"},
+                      {"name": "FIXTURE, Avery, MP", "person_id": "99991", "party": "Nationals"}]}
+                 for day in ["2023-01-31", "2023-02-01", "2024-06-03"]]
+        eb.fill_sponsor_parties(bills, evidence=self.evidence())
+        self.assertEqual([b["sponsor_party"] for b in bills], ["Nationals", "Independent", "Independent"])
+        self.assertEqual([[s["party"] for s in b["sponsors"]] for b in bills],
+                         [["Nationals"] * 2, ["Independent"] * 2, ["Independent"] * 2])
+
+    def test_missing_dates_conflicts_and_frozen_records_do_not_replace_a_source_label(self):
+        for day, evidence in [(None, self.evidence()), ("2026-01-01", self.evidence()),
+                              ("2024-01-01", v.Evidence(self.evidence(), check_labels=False))]:
+            b = {**bill("FIXTURE, Avery, MP", house="representatives", introduced=day, pid="99991"),
+                 "sponsor_party": "Nationals"}
+            eb.fill_sponsor_parties([b], evidence=evidence)
+            self.assertEqual(b["sponsor_party"], "Nationals")
+        evidence = self.evidence()
+        evidence.append(v.entry("service", "representatives", ("name", "avery fixture"), ["Avery Fixture"],
+                                "Labor", "2024-01-01", "2025-01-01", pids=["99991"]))
+        b = {**bill("FIXTURE, Avery, MP", house="representatives", introduced="2024-06-01", pid="99991"),
+             "sponsor_party": "Nationals"}
+        eb.fill_sponsor_parties([b], evidence=evidence)
+        self.assertEqual(b["sponsor_party"], "Nationals")
+
+    def test_registered_party_and_group_disagreement_is_returned_for_review(self):
+        b = {**bill("SAMPLE, Sen Robin", introduced="2021-05-12", pid="99992"),
+             "sponsor_party": "Rex Patrick Team", "sponsors": [
+                 {"name": "SAMPLE, Sen Robin", "person_id": "99992", "party": "Rex Patrick Team"}]}
+        held = eb.fill_sponsor_parties([b], evidence=self.evidence())
+        self.assertEqual(b["sponsor_party"], "Rex Patrick Team")
+        self.assertEqual(b["sponsors"][0]["party"], "Rex Patrick Team")
+        self.assertEqual(held, [{"key": "k", "sponsor": "SAMPLE, Sen Robin", "date": "2021-05-12",
+                                 "source_party": "Rex Patrick Team", "dated_party": "Independent"}])
+
+    def test_retained_refresh_updates_detail_and_index_without_changing_the_snapshot_date(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            directory = Path(scratch)
+            b = {**bill("FIXTURE, Avery, MP", house="representatives", introduced="2024-06-03", pid="99991"),
+                 "sponsor_party": "Nationals", "sponsors": [
+                     {"name": "FIXTURE, Avery, MP", "person_id": "99991", "party": "Nationals"}]}
+            index = {"generated_at": "2024-07-01", "bills": [{"key": "k", "sponsor_party": "Nationals"}]}
+            (directory / "k.json").write_text(json.dumps(b))
+            (directory / "index.json").write_text(json.dumps(index))
+            self.assertEqual(eb.refresh_sponsor_parties(directory, self.evidence()), (1, []))
+            detail = json.loads((directory / "k.json").read_text())
+            repaired = json.loads((directory / "index.json").read_text())
+            self.assertEqual(detail["sponsor_party"], "Independent")
+            self.assertEqual(detail["sponsors"][0]["party"], "Independent")
+            self.assertEqual(repaired["bills"][0]["sponsor_party"], "Independent")
+            self.assertEqual(repaired["generated_at"], index["generated_at"])
+            self.assertEqual(eb.refresh_sponsor_parties(directory, self.evidence()), (0, []))
 
 
 if __name__ == "__main__":

@@ -5,12 +5,57 @@
    (/graph/party-members.json, scripts/build_party_index.mjs).
    Pure functions; app.js passes in its helpers. */
 
-import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=6d2e2e9cd8';
+import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=fcb2a1091c';
 import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=bcc9a57bab';
+// sponsor-party-aliases:begin
+// Generated from scripts/export_bills.py SPONSOR_PARTY_TOKENS.
+const SPONSOR_PARTY_ALIASES = {
+  "alp": "Labor",
+  "australia's voice": "Australia's Voice",
+  "australian conservatives": "Australian Conservatives",
+  "australian democrats": "Australian Democrats",
+  "australian greens": "Greens",
+  "australian labor party": "Labor",
+  "australian motoring enthusiast party": "Australian Motoring Enthusiast Party",
+  "centre alliance": "Centre Alliance",
+  "country liberal party": "Country Liberal Party",
+  "country liberals (northern territory": "Country Liberal Party",
+  "democratic labor party": "DLP",
+  "democratic labor party (dlp": "DLP",
+  "democratic labour party (dlp": "DLP",
+  "derryn hinch's justice party": "Derryn Hinch's Justice Party",
+  "family first": "Family First",
+  "gerard rennick people first": "Gerard Rennick People First",
+  "greens": "Greens",
+  "independent": "Independent",
+  "independent member": "Independent",
+  "independent members": "Independent",
+  "jacqui lambie network": "Jacqui Lambie Network",
+  "katter's australian party": "Katter's Australian Party",
+  "labor": "Labor",
+  "liberal": "Liberal",
+  "liberal democratic party": "Liberal Democratic Party",
+  "liberal national party of queensland": "LNP",
+  "liberal party of australia": "Liberal",
+  "lnp": "LNP",
+  "national party of australia": "Nationals",
+  "nationals": "Nationals",
+  "nick xenophon team": "Nick Xenophon Team",
+  "one nation": "One Nation",
+  "palmer united party": "Palmer United Party",
+  "pauline hanson's one nation": "One Nation",
+  "pauline hansons one nation": "One Nation",
+  "queensland greens": "Greens",
+  "rex patrick team": "Rex Patrick Team",
+  "the nationals": "Nationals",
+  "united australia party": "United Australia Party",
+  "united australia party (clive palmer": "United Australia Party"
+};
+// sponsor-party-aliases:end
 
 // Server consumers use these re-exports too, keeping the stamped browser
 // dependencies and their identity tables to one copy in the Worker bundle.
-export * from './labels.js?v=6d2e2e9cd8';
+export * from './labels.js?v=fcb2a1091c';
 export * from './canonical-urls.js?v=bcc9a57bab';
 
 const fold = value => String(value ?? '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
@@ -488,7 +533,8 @@ export function resolvePartyPage(segment, pages) {
   // A former name's own slug ("liberal-democratic-party") names its party's page: partyUrl now
   // writes the current address, so the raw slug is compared too, and the Worker answers it with a 301.
   const slugs = label => [partyUrl(label).split('/').at(-1), partySlug(label)];
-  const alias = Object.keys(PARTY_MAP).find(label => slugs(label).includes(want));
+  const sponsorAlias = Object.entries(SPONSOR_PARTY_ALIASES).find(([label]) => fold(label) === want || partySlug(label) === want)?.[1];
+  const alias = sponsorAlias || Object.keys(PARTY_MAP).find(label => slugs(label).includes(want));
   return pages.find(page => page.aliases.some(label => fold(label) === want || slugs(label).includes(want))
     || page.href.split('/').at(-1) === want || identity(page.label) === identity(alias || segment)) || null;
 }
