@@ -40,7 +40,10 @@ Party canonicalisation reuses `ext_common.canonical_party` (the money map's
 grammar) but only for rows whose return IS a party return; an associated
 entity's party comes from the AssociatedParties field of its own return
 (`associated_party`, `associated_party_canonical`). DLP / Liberal Democrats /
-Libertarian are held out of the Labor / Liberal buckets.
+Libertarian are held out of the Labor / Liberal buckets. The Liberal Democrats
+and the Libertarian Party are one party under two names (PARTY_RENAMED): each
+return keeps the name it was lodged under ('Liberal Democratic Party' to
+2022-23, 'Libertarian Party' after), and the money map counts both in one node.
 
 Usage (on the box that holds parli.db):
     PYTHONPATH=. python -m parli.ingest.money_aec_extras --db ~/.cache/autoresearch/parli.db
@@ -89,6 +92,20 @@ KIND_OF = {
 # Names that the money-map grammar would drop into Labor / Liberal but are
 # their own parties (the `donations` table leaves these unbucketed too).
 _NOT_MAJOR_RE = re.compile(r"democratic labor|liberal democrat|libertarian", re.I)
+# Of those, the parties selected in their own right, under the name each return was
+# lodged as. The Liberal Democratic Party (Liberal Democrats; branches "Liberal
+# Democratic Party (NSW Branch)") was deregistered on 19 July 2022 and the Libertarian
+# Party registered on 12 January 2024 (portal labels.js PARTY_RENAMES); its Queensland
+# branch lodges as "Libertarian Party of Queensland". Libertarian is tested first, so
+# "Libertarian (formerly Liberal Democrats)" reads as the current name.
+_OWN_PARTIES = [
+    (re.compile(r"\blibertarian\b", re.I), "Libertarian Party"),
+    (re.compile(r"\bliberal democrat(?:s|ic)?\b", re.I), "Liberal Democratic Party"),
+]
+# A renamed party: its former name -> the name the money map's one node carries.
+PARTY_RENAMED = {"Liberal Democratic Party": "Libertarian Party"}
+# The node's other names, for lookups by either name (node.aliases on the money map).
+PARTY_FORMER_NAMES = {"Libertarian Party": ["Liberal Democratic Party", "Liberal Democrats"]}
 # Money-map party nodes the shared grammar misses or mis-orders ('liberal' is
 # tested before 'country liberal' there): decided here first.
 _BEFORE_SHARED = [
@@ -204,12 +221,31 @@ def norm_fy(text: str | None) -> str | None:
 
 
 def canon_party(name: str | None) -> str | None:
-    if not name or _NOT_MAJOR_RE.search(name):
+    """The party a return's name reads as, under the name it was lodged as."""
+    if not name:
+        return None
+    if own_party(name):
+        return own_party(name)
+    if _NOT_MAJOR_RE.search(name):
         return None
     for rx, canon in _BEFORE_SHARED:
         if rx.search(name):
             return canon
     return canonical_party(name)
+
+
+def own_party(name: str | None) -> str | None:
+    """The party a name reads as when it is one the shared grammar leaves out but this
+    module selects in its own right (_OWN_PARTIES), under the name it was lodged as; else None."""
+    for rx, canon in _OWN_PARTIES:
+        if name and rx.search(name):
+            return canon
+    return None
+
+
+def current_party(canon: str | None) -> str | None:
+    """A canon_party result under the party's current name: the money map's node."""
+    return PARTY_RENAMED.get(canon, canon) if canon else canon
 
 
 def split_parties(text: str | None) -> list[str]:

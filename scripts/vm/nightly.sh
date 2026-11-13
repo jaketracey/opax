@@ -60,6 +60,10 @@
 #   OPAX_BILL_PARLIAMENT  current federal parliament (default 48)
 #   OPAX_BILLS_TIMEOUT    combined bill fetch/full-export limit (default 20m, plus 60s kill grace)
 #   OPAX_EVIDENCE_TIMEOUT combined evidence export/audit/install limit (default 20m, plus 60s kill grace)
+#   OPAX_EVIDENCE_RUN     1 = the monthly connections rebuild instead of a night: no acquisition; the evidence
+#                         bundle is built from the live parli.db and published. run-nightly.sh sets it on the
+#                         first-Saturday 11:00 boot when OPAX_EVIDENCE_MONTHLY=1 (runbook: "Connections rebuild")
+#   OPAX_EVIDENCE_BUILD_TIMEOUT  the bundle build's own budget (default 90m; 7h on an evidence run)
 #   OPAX_EVIDENCE_READINESS_TIMEOUT input probe limit (default 60s, plus 5s kill grace; timeout waits)
 #   OPAX_EVIDENCE_SOURCE / LAYERS / PLACES / DECISIONS / ADDITIONAL  matching read-only SQLite inputs
 #   OPAX_TEST_GATE        0 = do not run the portal test suite against the new data before committing
@@ -153,9 +157,9 @@ publish_status() {
 
 write_status() {
   local status=$1
-  "$PY" - "$LASTFILE" "$status" "$TODAY" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" <<'PYEOF' 2>/dev/null || true
+  "$PY" - "$LASTFILE" "$status" "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" <<'PYEOF' 2>/dev/null || true
 import json, sys, datetime
-path, status, day, started, sha, deploy, summary, nwarn, *rest = sys.argv[1:]
+path, status, day, run, started, sha, deploy, summary, nwarn, *rest = sys.argv[1:]
 warnings, failures = rest[:int(nwarn)], rest[int(nwarn):]
 from pathlib import Path
 from datetime import date
@@ -169,7 +173,7 @@ for receipt in [Path(path).parent / 'source-access.json', *(Path(path).parent / 
     try:
         paused_sources.update({k:v for k,v in json.loads(receipt.read_text()).items() if v.get('status') == 'paused'})
     except (OSError, ValueError): pass
-json.dump({"date": day, "status": status, "started": started,
+json.dump({"date": day, "run": run, "status": status, "started": started,
            "finished": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
            "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures, "warnings": warnings,
            "paused_sources": paused_sources, "periodic_state": periodic_state},
@@ -233,6 +237,18 @@ fi
 find "$PIPE" -maxdepth 1 -name 'nightly-20*.log' -mtime +90 -delete 2>/dev/null || true
 avail_gb=$(df -Pk "$HOME/.cache" | awk 'NR==2 {print int($4/1024/1024)}')
 if [ "${avail_gb:-0}" -lt "$MIN_FREE_GB" ]; then fail "only ${avail_gb:-0}GB free on the data disk (need ${MIN_FREE_GB}GB for the WAL and caches; the disk is small: see the runbook)"; finish; fi
+
+# ---- 0b. evidence run: the monthly connections rebuild, on its own boot ------------------------------------------
+# The evidence bundle build freezes parli.db for hours (5 h 7 min measured on 13 Nov 2026), so it gets its own boot
+# (EventBridge opax-refresh-evidence-start, first Saturday 11:00) after that morning's nightly: acquisition is
+# skipped and the run publishes the rebuilt evidence through the usual gate, commit and push.
+EVIDENCE_RUN=0
+if [ "${OPAX_EVIDENCE_RUN:-0}" = 1 ]; then
+  EVIDENCE_RUN=1
+  export OPAX_NIGHTLY_SKIP_REFRESH=1 OPAX_EVIDENCE_BUILD=1
+  export OPAX_EVIDENCE_BUILD_TIMEOUT="${OPAX_EVIDENCE_BUILD_TIMEOUT:-7h}" OPAX_EVIDENCE_TIMEOUT="${OPAX_EVIDENCE_TIMEOUT:-45m}"
+  log "evidence run: no acquisition; rebuilding the connections layer (build budget $OPAX_EVIDENCE_BUILD_TIMEOUT, export $OPAX_EVIDENCE_TIMEOUT)"
+fi
 
 # ---- 1. sync the checkout ---------------------------------------------------------------
 sync_repo() {
