@@ -1,0 +1,34 @@
+[
+  {
+    "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-02-12.xml",
+    "user_agent": "opax-improve-audit",
+    "requested_at": "2026-11-13T23:34:15.801784+00:00",
+    "method": "GET",
+    "status": 200,
+    "bytes_read": 755985,
+    "sha256": "1e64086d0948bff8c61cdaef9f1be96bd5d07d34590b241e97f0fc4e3ea54b52",
+    "content_type": "application/xml",
+    "location": null
+  },
+  {
+    "url": "https://zenodo.org/api/records?q=%22hansard_corpus_1998_to_2022%22&size=1",
+    "user_agent": "opax-improve-audit",
+    "requested_at": "2026-11-13T23:35:38.393242+00:00",
+    "method": "GET",
+    "status": 200,
+    "bytes_read": 458,
+    "sha256": "027380d7247ce44a45c7942a627ee1521960fb64200d00b0edc4b21fdefcd00d",
+    "content_type": "application/json"
+  },
+  {
+    "name": "tvfy",
+    "url": "https://theyvoteforyou.org.au/help/licencing",
+    "method": "GET",
+    "user_agent": "opax-improve-audit",
+    "requested_at": "2026-11-13T23:35:58.403725+00:00",
+    "status": 403,
+    "location": null,
+    "refusal": true,
+    "body_excerpt": "<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta name=\"robots\" content=\"noindex,nofollow\"><meta name=\""
+  }
+]

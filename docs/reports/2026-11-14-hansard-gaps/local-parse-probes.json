@@ -1,0 +1,41 @@
+[
+  {
+    "file": "senate/1953/19530929_senate_20_s1_v9.xml",
+    "sha256": "50a165b79b562b08670e11bf02b6480dd10e6a268243b478db5ba518a1db4168",
+    "parsed_rows": 38,
+    "dates": [
+      "1953-09-29"
+    ],
+    "diagnostic": ""
+  },
+  {
+    "file": "senate/1993/senate_1993-05-06.xml",
+    "sha256": "162f5134d3debc10e68f89b5108c2ff28a6677f8d8d652e29029482a0b74b7a2",
+    "parsed_rows": 0,
+    "dates": [],
+    "diagnostic": "  ERROR parsing hansard-xml/senate/1993/senate_1993-05-06.xml: syntax error: line 1, column 64\n"
+  },
+  {
+    "file": "senate/2005/4273-3.xml",
+    "sha256": "d889421d44c9a75f509e789108fe92294c3dee7c50e53494eae0208c7cded844",
+    "parsed_rows": 67,
+    "dates": [
+      "2005-10-10"
+    ],
+    "diagnostic": ""
+  },
+  {
+    "file": "hofreps/1981/reps_1981-10-14.xml",
+    "sha256": "430d39ea6ec172f2e5c327e91f176f191aec56cb530a887612c03948ca6adad6",
+    "parsed_rows": 0,
+    "dates": [],
+    "diagnostic": "  ERROR parsing hansard-xml/hofreps/1981/reps_1981-10-14.xml: syntax error: line 1, column 64\n"
+  },
+  {
+    "file": "hofreps/1993/reps_1993-12-15.xml",
+    "sha256": "736215cb9604d9227d25c5bac6c0847fbf994786f856e38987b1f5004570a0ce",
+    "parsed_rows": 0,
+    "dates": [],
+    "diagnostic": "  ERROR parsing hansard-xml/hofreps/1993/reps_1993-12-15.xml: syntax error: line 1, column 64\n"
+  }
+]

@@ -1,0 +1,140 @@
+{
+  "as_of": "2026-11-14",
+  "snapshot": {
+    "bytes": 28851892224,
+    "mtime_utc": "2026-11-10T10:23:44.736218+00:00",
+    "mtime_ns": 1794306224736217783
+  },
+  "raw_speech_rows_including_committees": 1316517,
+  "public_candidate_note": "Sync date/length/P1-P7/source-overlap gates before exact-body dedupe and profile identity gates.",
+  "chambers": [
+    {
+      "chamber": "act_la",
+      "first": null,
+      "last": null,
+      "rows": 0,
+      "held_days": 0,
+      "median_rows": null
+    },
+    {
+      "chamber": "federation",
+      "first": null,
+      "last": null,
+      "rows": 0,
+      "held_days": 0,
+      "median_rows": null
+    },
+    {
+      "chamber": "nsw_la",
+      "first": "2015-05-05",
+      "last": "2026-09-24",
+      "rows": 72676,
+      "held_days": 454,
+      "median_rows": 140.0
+    },
+    {
+      "chamber": "nsw_lc",
+      "first": "2015-05-05",
+      "last": "2026-09-24",
+      "rows": 47824,
+      "held_days": 411,
+      "median_rows": 110
+    },
+    {
+      "chamber": "qld_la",
+      "first": "2024-02-14",
+      "last": "2026-09-16",
+      "rows": 17723,
+      "held_days": 64,
+      "median_rows": 275.0
+    },
+    {
+      "chamber": "representatives",
+      "first": "1901-05-09",
+      "last": "2026-09-17",
+      "rows": 715880,
+      "held_days": 7236,
+      "median_rows": 43.0
+    },
+    {
+      "chamber": "sa_ha",
+      "first": "2020-02-05",
+      "last": "2024-11-12",
+      "rows": 42515,
+      "held_days": 151,
+      "median_rows": 260
+    },
+    {
+      "chamber": "sa_lc",
+      "first": "2020-02-05",
+      "last": "2023-05-17",
+      "rows": 26467,
+      "held_days": 152,
+      "median_rows": 159.0
+    },
+    {
+      "chamber": "senate",
+      "first": "1901-05-09",
+      "last": "2026-09-17",
+      "rows": 109226,
+      "held_days": 3139,
+      "median_rows": 28
+    },
+    {
+      "chamber": "vic_la",
+      "first": "2018-02-06",
+      "last": "2026-09-24",
+      "rows": 45976,
+      "held_days": 367,
+      "median_rows": 124
+    },
+    {
+      "chamber": "vic_lc",
+      "first": "2024-03-21",
+      "last": "2026-09-24",
+      "rows": 15265,
+      "held_days": 129,
+      "median_rows": 118
+    }
+  ],
+  "gap_runs": 59,
+  "thin_flags": 174,
+  "evidence_inputs": [
+    {
+      "path": "hansard/hansard-xml/all-sitting-days.csv",
+      "sha256": "30aba726c73326d60e1dbee502707cea7230b2cc93b81eec96529572e651ee9a"
+    },
+    {
+      "path": "hansard/hansard-xml/README.md",
+      "sha256": "84e1f61ff3e7aba7057815aa39c49b8260c279ddd9fb06a24edfb0cebd3610ca"
+    },
+    {
+      "path": "hansard/hansard-xml/missing.csv",
+      "sha256": "31c58922faea617f9f07eee0d63e700deadcd06fde8062dc1d83123d1f4c5885"
+    },
+    {
+      "path": "portal/public/parliament/sitting-days.json",
+      "sha256": "1a814aff74e4c412a1337a4700ce14ebc78563af33139289355a4d4ca49aad64"
+    },
+    {
+      "path": "tvfy/list/*.json",
+      "files": 498,
+      "sha256_name_nul_body": "07b10f183e49069b003e44d72c7ef686de9f6e7ef2b32dd1f301e2df060c37c3"
+    },
+    {
+      "path": "votes_state/nsw/year_2026.json",
+      "sha256": "d57c8086417ea188b4b8cfc5c1b28c3a167fc2307b5385aed0d8eae643d2a847"
+    }
+  ],
+  "zenodo_rows": 586830,
+  "federation_input_rows": 80836,
+  "federation_input_chars_50": 64085,
+  "federation_input_chars_200": 50788,
+  "limitations": [
+    "No complete expected-day inventory for federal 2006-2025 or any state chamber.",
+    "Sequences over lower-bound evidence can hide intervening unknown sitting days; not certified exhaustive.",
+    "Federation Chamber labels are absent in SQLite; source fedchamb_flag proves a classification defect.",
+    "ACT is held in main exports but absent in this local snapshot.",
+    "No network is performed by this script."
+  ]
+}

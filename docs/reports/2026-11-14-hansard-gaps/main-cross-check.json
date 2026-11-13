@@ -1,0 +1,216 @@
+{
+  "corpus_version": "2026-11-14",
+  "collected_speeches": 964517,
+  "main_commit": "fdba7591835bd9937da77d6417a29dd27879f312",
+  "export_sha256": {
+    "corpus.json": "33a2eaf190f4928d041511a6416c7338a1658f23f80f83a05bce25db9ccb7ecb",
+    "parliamentarians.json": "d4bdc3e588b1727d5e9bf6547c1c2424354f9d461d18a6e5a5065cda6a1bf1a2",
+    "speakers.json": "4794054053105decee506e619e742868418fdd2a17a29845dfe258d0dddaf9cf"
+  },
+  "main_latest_source_dates": {
+    "act_hansard": "2026-10-29",
+    "committee_house": "2026-10-06",
+    "committee_joint": "2026-10-08",
+    "committee_senate": "2026-10-29",
+    "nsw_hansard": "2026-11-12",
+    "openaustralia": "2026-10-29",
+    "qld_hansard": "2026-09-16",
+    "sa_hansard": "2024-11-12",
+    "vic_hansard": "2026-09-24",
+    "wragge_xml": "2005-12-08",
+    "zenodo": "2022-09-08"
+  },
+  "main_sources": [
+    {
+      "name": "Federal Hansard: House of Representatives (zenodo)",
+      "docs": 283020,
+      "coverage": "1998–2022"
+    },
+    {
+      "name": "NSW Parliament",
+      "docs": 115308,
+      "coverage": "2015–2026"
+    },
+    {
+      "name": "Senate committee hearings",
+      "docs": 127581,
+      "coverage": "2025–2026"
+    },
+    {
+      "name": "Victorian Parliament",
+      "docs": 50744,
+      "coverage": "2018–2026"
+    },
+    {
+      "name": "SA Parliament",
+      "docs": 37971,
+      "coverage": "2020–2024"
+    },
+    {
+      "name": "Federal Hansard: Senate + recent House (openaustralia)",
+      "docs": 110696,
+      "coverage": "2006–2026"
+    },
+    {
+      "name": "QLD Parliament",
+      "docs": 10228,
+      "coverage": "2024–2026"
+    },
+    {
+      "name": "Joint committee hearings",
+      "docs": 24956,
+      "coverage": "2025–2026"
+    },
+    {
+      "name": "House committee hearings",
+      "docs": 14257,
+      "coverage": "2025–2026"
+    },
+    {
+      "name": "ACT Legislative Assembly",
+      "docs": 9964,
+      "coverage": "2024–2026"
+    },
+    {
+      "name": "Recorded divisions (TheyVoteForYou + state Hansard)",
+      "docs": 14244,
+      "coverage": "1998–2026"
+    }
+  ],
+  "person_index_meta": {
+    "generated": "2026-10-18",
+    "since": "1993-03-13",
+    "min_chars": 200,
+    "floor": 5,
+    "people": 1565,
+    "speeches": 669898,
+    "witnesses_excluded": 3841,
+    "below_floor": 832,
+    "malformed": 1,
+    "source": "parli.db speeches under the arag_sync corpus rule; names via normalize_speaker",
+    "representation": {
+      "updated": "2026-10-06",
+      "matched": 977,
+      "method": "Evidence-gated corrections only; clean records pass through intact. Scoped witness splits use reviewed, dated own-house identities and service-date retrieval filters. SQL exports partition testimony and count only eligible speeches; pinned own counts remain pending. Weak multi-parliament or contradictory prints require a unique compatible identity. Transcript aggregates are retained."
+    },
+    "witness_speeches_separated": 11503,
+    "speech_counts_pending": 16,
+    "prints_folded": 160
+  },
+  "person_examples": [
+    {
+      "name": "David Shoebridge",
+      "speeches": 6922,
+      "party": "Greens",
+      "states": [
+        "nsw",
+        "federal"
+      ],
+      "chambers": [
+        "nsw_lc",
+        "senate",
+        "senate_committee",
+        "joint_committee"
+      ],
+      "first": 2015,
+      "last": 2026,
+      "representation": [
+        {
+          "jurisdiction": "federal",
+          "chamber": "senate",
+          "electorate": "New South Wales",
+          "state": "NSW",
+          "basis": "Recorded parliamentary roster; exact name and chamber match"
+        }
+      ],
+      "pid": "11010",
+      "current": true,
+      "party_now": "Greens",
+      "prints": [
+        "Shoebridge"
+      ]
+    },
+    {
+      "name": "Penny Wong",
+      "speeches": 2937,
+      "party": "Labor",
+      "states": [
+        "federal"
+      ],
+      "chambers": [
+        "senate"
+      ],
+      "first": 2006,
+      "last": 2026,
+      "pid": "10678",
+      "current": true,
+      "party_now": "Labor",
+      "representation": [
+        {
+          "jurisdiction": "federal",
+          "chamber": "senate",
+          "electorate": "South Australia",
+          "state": "SA",
+          "basis": "Recorded parliamentary roster; exact name and chamber match"
+        }
+      ]
+    },
+    {
+      "name": "Sarah Hanson-Young",
+      "speeches": 1488,
+      "party": "Greens",
+      "states": [
+        "federal"
+      ],
+      "chambers": [
+        "senate",
+        "senate_committee"
+      ],
+      "first": 2008,
+      "last": 2026,
+      "pid": "10711",
+      "current": true,
+      "party_now": "Greens",
+      "representation": [
+        {
+          "jurisdiction": "federal",
+          "chamber": "senate",
+          "electorate": "South Australia",
+          "state": "SA",
+          "basis": "Recorded parliamentary roster; exact name and chamber match"
+        }
+      ],
+      "prints": [
+        "Hanson-Young"
+      ]
+    },
+    {
+      "name": "David Fawcett",
+      "speeches": 427,
+      "party": "Liberal",
+      "states": [
+        "federal"
+      ],
+      "chambers": [
+        "senate",
+        "representatives"
+      ],
+      "first": 2004,
+      "last": 2025,
+      "pid": "10215",
+      "representation": [
+        {
+          "jurisdiction": "federal",
+          "chamber": "senate",
+          "electorate": "South Australia",
+          "state": "SA",
+          "basis": "Recorded parliamentary roster; exact name and chamber match"
+        }
+      ],
+      "aliases": [
+        "David Julian Fawcett"
+      ]
+    }
+  ],
+  "note": "Aggregate indexes have no per-day completeness proof; these are different snapshots and grains."
+}
