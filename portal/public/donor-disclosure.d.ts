@@ -12,7 +12,9 @@ export function donorLookup(records: DonorDisclosureRecord[]): Map<string, Donor
 export interface ReceiptCells {total?:number;count?:number;firstYear?:number|null;lastYear?:number|null;byYear?:Record<string,unknown>;undated?:[number,number];by_type?:Record<string,number>;by_type_year?:Record<string,Record<string,[number,number]>>}
 export interface ReceiptFigures {total:number;count:number;firstYear:number|null;lastYear:number|null;byYear:Record<string,number>;cells:Record<string,[number,number]>;undated:[number,number];byType:Record<string,number>|null;typed:boolean}
 export function receiptFigures(x: ReceiptCells | null | undefined): ReceiptFigures;
-export function receiptScopeLabel(figures: ReceiptFigures): string;
+export function receiptScopeLabel(figures: Pick<ReceiptFigures,'typed'|'firstYear'|'lastYear'>, measure?: 'all_types' | 'donation_only'): string;
+/** A financial year from its first year: 2020 is "2020-21". */
+export function financialYear(year: number): string;
 export interface ReceiptGraphLike {nodes?: unknown[]; edges: unknown[]; receiptMeasure?: boolean}
 /** The graph with every donor-to-party edge and donor node read through receiptFigures (same shape, typed figures). */
 export function receiptGraph<G extends ReceiptGraphLike | null | undefined>(graph: G): G;

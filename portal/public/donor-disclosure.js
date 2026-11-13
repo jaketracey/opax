@@ -124,14 +124,15 @@ export function receiptFigures(x) {
   return {total, count, firstYear, lastYear, byYear, cells, undated, byType, typed:true};
 }
 
-const financialYear = year => `${year}-${String((year + 1) % 100).padStart(2, '0')}`;
+export const financialYear = year => `${year}-${String((year + 1) % 100).padStart(2, '0')}`;
 
 /** The scope of a receiptFigures result, in a reader's words, for its own line under the figure. */
-export function receiptScopeLabel(figures) {
+export function receiptScopeLabel(figures, measure = 'all_types') {
   if (!figures?.typed) return 'All federal disclosure records, as given by both donor and party, so a gift can appear twice';
   const span = figures.firstYear == null ? '' : figures.firstYear === figures.lastYear
     ? `, ${financialYear(figures.firstYear)}` : `, ${financialYear(figures.firstYear)} to ${financialYear(figures.lastYear)}`;
-  return `All receipt types${span}, as the parties reported them in federal returns`;
+  // The map's "Donation-only" measure (graph/index.ts) keeps only the donation_received cells.
+  return `${measure === 'donation_only' ? 'Donations only' : 'All receipt types'}${span}, as the parties reported them in federal returns`;
 }
 
 /**
