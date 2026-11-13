@@ -64,6 +64,7 @@ import {
   askSession,
   markArrival,
   scopeOptions,
+  useAskScreenFocus,
   type AskScope,
 } from './session';
 import { AskPaneProvider, useAskSources } from './SourcesPane';
@@ -129,6 +130,7 @@ export default function AskScreen() {
   const lastAnswer = useRef<object | null>(null);
   const loadingNames = useRef(false);
   useFocusRequest('ask', input);
+  useAskScreenFocus();
   // The conversation and composer keep their positions on both displays.
   const [onRoom, room] = useMeasuredRegion();
   const outer = useLayout();

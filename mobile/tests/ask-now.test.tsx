@@ -7,6 +7,7 @@ import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { AccessibilityInfo } from 'react-native';
 import { router } from 'expo-router';
 import { useNetworkState } from 'expo-network';
+import { NavigationContext } from 'expo-router/react-navigation';
 import { catalogs, client } from '../src/api/runtime';
 import { askConsentGiven } from '../src/features/ask/consent';
 import { track } from '../src/analytics';
@@ -22,7 +23,12 @@ import {
   useOpenAsk,
 } from '../src/features/ask/open';
 import { askDraft } from '../src/features/search/recovery';
-import { askSession, askNowCopy } from '../src/features/ask/session';
+import {
+  askScreenFocused,
+  askSession,
+  askNowCopy,
+  useAskScreenFocus,
+} from '../src/features/ask/session';
 import { AskFailure } from '../src/features/ask/stream';
 import { chatsSnapshot, saveChats } from '../src/features/ask/store';
 import { AskBlock, todayStarters } from '../src/features/today/AskBlock';
@@ -611,6 +617,94 @@ describe('VoiceOver focus for a tapped question', () => {
     expect(takeFocusRequest('ask')).toBe(true);
     expect(askSession.snapshot().draft).toBe('What did Alex Example say?');
     tree.unmount();
+  });
+
+  // Review: a queued send asked for the status's focus even when the reader
+  // had left Ask while the question waited.
+  /** An Ask screen in a navigator that the test can focus or blur. */
+  function askScreen(focused: boolean) {
+    const listeners = new Map<string, Set<() => void>>();
+    let isFocused = focused;
+    const navigation = {
+      isFocused: () => isFocused,
+      addListener: (type: string, listener: () => void) => {
+        const set = listeners.get(type) ?? new Set();
+        set.add(listener);
+        listeners.set(type, set);
+        return () => set.delete(listener);
+      },
+    };
+    function Screen() {
+      useAskScreenFocus();
+      return null;
+    }
+    return {
+      element: (
+        <NavigationContext.Provider value={navigation as never}>
+          <Screen />
+        </NavigationContext.Provider>
+      ),
+      emit: (type: 'focus' | 'blur') => {
+        isFocused = type === 'focus';
+        listeners.get(type)?.forEach((listener) => listener());
+      },
+    };
+  }
+  /** Ends a running answer with a question waiting; the queued answer stays open. */
+  async function queuedSend() {
+    let finish!: (value: unknown) => void;
+    let second!: (value: unknown) => void;
+    post
+      .mockImplementationOnce(() => new Promise((resolve) => (finish = resolve)))
+      .mockImplementationOnce(
+        () => new Promise((resolve) => (second = resolve)),
+      );
+    await act(async () => {
+      void askSession.submit('A question already running?');
+    });
+    askSession.arrive(
+      'What has parliament said?',
+      { ...askSession.snapshot().options },
+      { queue: true },
+    );
+    await act(async () => finish(answer('The first answer.')));
+    await flush();
+    expect(asked()).toEqual([
+      'A question already running?',
+      'What has parliament said?',
+    ]);
+    expect(askSession.snapshot().busy).toBe(true);
+    const status = takeFocusRequest('ask-status');
+    await act(async () => second(answer('The second answer.')));
+    await flush();
+    return status;
+  }
+
+  it('goes to the queued answer’s status while Ask is on screen', async () => {
+    const screen = askScreen(true);
+    const tree = await render(screen.element);
+    expect(askScreenFocused()).toBe(true);
+    expect(await queuedSend()).toBe(true);
+    act(() => tree.unmount());
+    expect(askScreenFocused()).toBe(false);
+  });
+
+  it('stays where the reader is when they left Ask while the question waited', async () => {
+    const screen = askScreen(true);
+    const tree = await render(screen.element);
+    act(() => screen.emit('blur'));
+    expect(askScreenFocused()).toBe(false);
+    // The question still goes; only VoiceOver stays put.
+    expect(await queuedSend()).toBe(false);
+    expect(askSession.snapshot().thread.at(-1)).toMatchObject({
+      role: 'answer',
+      text: 'The second answer.',
+    });
+    // Back on Ask, the next queued send moves focus again.
+    act(() => screen.emit('focus'));
+    expect(askScreenFocused()).toBe(true);
+    act(() => tree.unmount());
+    expect(askScreenFocused()).toBe(false);
   });
 
   it('goes to the waiting line, not the other answer’s status, while it waits', async () => {

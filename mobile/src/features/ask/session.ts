@@ -1,4 +1,6 @@
 import { router } from 'expo-router';
+import { NavigationContext } from 'expo-router/react-navigation';
+import { useContext, useEffect } from 'react';
 import { AccessibilityInfo } from 'react-native';
 import { client, catalogs } from '../../api/runtime';
 import { requestFocus, takeFocusRequest } from '../../design/keyboard';
@@ -140,19 +142,19 @@ export function askNow(
 }
 /**
  * Sends the composer's question with VoiceOver bound for the answer's
- * status. The status takes the request when the answer starts; when the send
- * never starts (the consent sheet, a refused Person), the request is dropped
- * so a later answer does not take focus.
+ * status (unless `status` is false). The status takes the request when the
+ * answer starts; when the send never starts (the consent sheet, a refused
+ * Person), the request is dropped so a later answer does not take focus.
  */
-async function sendDraftNow() {
-  requestFocus('ask-status');
+async function sendDraftNow({ status = true }: { status?: boolean } = {}) {
+  if (status) requestFocus('ask-status');
   let error: string | null = null;
   try {
     error = await askQuestion(askSession.snapshot().draft, {
       fromDraft: true,
     });
   } finally {
-    takeFocusRequest('ask-status');
+    if (status) takeFocusRequest('ask-status');
   }
   if (!error) return;
   // A refused send (the Person check) leaves the question to edit.
@@ -166,7 +168,41 @@ async function sendQueued() {
   const s = askSession.snapshot();
   if (s.busy || !s.draft.trim()) return;
   takeFocusRequest('ask-waiting');
-  await sendDraftNow();
+  // VoiceOver moves to the answer's status only while Ask is on screen. The
+  // reader may have gone to another screen while the question waited.
+  await sendDraftNow({ status: askScreenFocused() });
+}
+
+// Ask screens with navigation focus. The Ask route is in every tab's stack,
+// so more than one can be mounted, and none is focused while the reader is
+// on another screen.
+let focusedAskScreens = 0;
+/** True while an Ask screen is the one on screen. */
+export function askScreenFocused() {
+  return focusedAskScreens > 0;
+}
+/**
+ * Counts the calling Ask screen while it has navigation focus (outside a
+ * navigator, while it is mounted), for `askScreenFocused`.
+ */
+export function useAskScreenFocus() {
+  const navigation = useContext(NavigationContext);
+  useEffect(() => {
+    let counted = false;
+    const count = (focused: boolean) => {
+      if (focused === counted) return;
+      counted = focused;
+      focusedAskScreens += focused ? 1 : -1;
+    };
+    count(navigation?.isFocused() ?? true);
+    const removeFocus = navigation?.addListener('focus', () => count(true));
+    const removeBlur = navigation?.addListener('blur', () => count(false));
+    return () => {
+      removeFocus?.();
+      removeBlur?.();
+      count(false);
+    };
+  }, [navigation]);
 }
 
 export const inputCopy = {
