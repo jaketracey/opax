@@ -9,7 +9,7 @@ import { JSDOM } from 'jsdom';
 import { mapSourceHTML } from '../public/home-data.js';
 import { receiptHeadline } from '../public/money-explain.js';
 import { shortMoney } from '../public/format.js';
-import { homeMapFallbackHTML, mapDonorsPhrase, renderMoneyAnswer } from '../src/seo-content.ts';
+import { homeMapFallbackHTML, mapDonorsPhrase, mapSpanPhrase, renderMoneyAnswer } from '../src/seo-content.ts';
 import { loadWorker, offline } from './worker-harness.mjs';
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8');
@@ -115,7 +115,9 @@ test('for the same map file the home line and the /money answer give one total, 
 });
 
 test('/map says who it draws from the file it draws, never a fixed count', () => {
-  assert.doesNotMatch(mapHtml, /top \d+ donors|\b250\b/);
+  assert.doesNotMatch(mapHtml, /top \d+ donors|\b250\b|1998&ndash;2026/);
+  assert.equal(mapSpanPhrase(graph), 'AEC returns, 2010-11 to 2021-22');
+  assert.equal(mapSpanPhrase({ nodes: graph.nodes, edges: [] }), 'AEC returns');
   assert.match(mapHtml, /Who funds Australian politics: <span id="map-donors">the largest disclosed donors<\/span> and the parties/);
   const meta = { donor_nodes_by_total: 2, donors_via_public_money: 1, public_money_floor: 50_000_000 };
   assert.equal(mapDonorsPhrase({ nodes: graph.nodes, meta }), '3 donors (the 2 largest by lifetime total, and 1 more holding $50,000,000 or more in Commonwealth contracts and grants)');
@@ -226,6 +228,9 @@ test('the Worker writes the person head, the /money boot field, the home fallbac
     const map = await (await h.fetch('/map')).text();
     assert.match(map, /<div class="ui-sheet"><div id="crawl-facts"><section id="prerender"/);
     const drawn = published.nodes.filter((n) => n.kind === 'donor').length;
+    // The span by the figures' rule: the years the /money answer's scope line names.
+    const years = /^All receipt types, (.+), as the parties reported them/.exec(headline.scope)[1];
+    assert.ok(map.includes(`from <span id="map-span">AEC returns, ${years}</span>.`), '/map states the span of the figures');
     assert.ok(map.includes(`Who funds Australian politics: <span id="map-donors">${drawn} donors (the ${published.meta.donor_nodes_by_total} largest by lifetime total`), '/map counts the donors it draws');
   } finally { restore(); }
 });

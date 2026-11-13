@@ -357,6 +357,20 @@ export function homeMapFallbackHTML(graph: unknown): string {
 }
 
 /**
+ * Whose returns the federal map draws and the years they span, by the same
+ * rule as its figures (receiptHeadline: the typed cells' first and last
+ * financial years, written as receiptScopeLabel writes them). /map's intro
+ * carries this in place of a fixed "1998-2026"; no span when the file has no
+ * typed cells.
+ */
+export function mapSpanPhrase(graph: unknown): string {
+  const {firstYear, lastYear} = receiptHeadline(graph)
+  const fy = (year: number) => `${year}-${String((year + 1) % 100).padStart(2, '0')}`
+  if (firstYear == null || lastYear == null) return 'AEC returns'
+  return firstYear === lastYear ? `AEC returns, ${fy(firstYear)}` : `AEC returns, ${fy(firstYear)} to ${fy(lastYear)}`
+}
+
+/**
  * Who the federal map draws, counted from the file itself: every donor node,
  * and, where the export says how it chose them (meta.donor_nodes_by_total,
  * meta.donors_via_public_money, meta.public_money_floor), the two groups.

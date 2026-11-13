@@ -131,6 +131,10 @@ export function receiptGraph(graph) {
   return out;
 }
 
+// Integrator: once im/money-typed-sweep (merge-queue row 99) lands, receiptGraph
+// lives in donor-disclosure.js. If this module then only re-exports it
+// (export {receiptGraph} from ...), receiptHeadline below needs a local
+// `import {receiptGraph}` as well, or it calls an unbound name.
 /**
  * A whole graph's receipts in one line, read through receiptGraph: what a
  * page states as the map's headline (the /money answer, the homepage map
