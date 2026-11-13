@@ -61,6 +61,7 @@ import {
 import { divisionsFilterModel } from '../sheets/filter-models';
 import { loadDivisionHistory, type DivisionRecord } from './division-data';
 import type { DivisionRow as Division } from './model';
+import { useFloatingBarFoot } from '../../navigation/floating-bar';
 
 const PATH = '/bills?view=divisions';
 const TITLE = 'Votes in parliament';
@@ -279,6 +280,7 @@ export default function DivisionHistory() {
   } = useCatalogRecord(load);
   const list = useRef<SectionList<Division, HistorySection>>(null);
   const column = useScreenColumn();
+  const foot = useFloatingBarFoot();
   const [inset, setInset] = useState(0);
   const [text, setText] = useState('');
   const [query, setQuery] = useState('');
@@ -577,7 +579,7 @@ export default function DivisionHistory() {
                 scrollEventThrottle={16}
                 testID="division-history-screen"
                 style={styles.screen}
-                contentContainerStyle={[styles.content, column.content]}
+                contentContainerStyle={[styles.content, column.content, foot]}
                 onLayout={column.onLayout}
                 contentInsetAdjustmentBehavior="automatic"
                 keyboardDismissMode="on-drag"

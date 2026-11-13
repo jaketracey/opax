@@ -52,6 +52,7 @@ import {
   weekRuns,
   type FeedRow,
 } from './model';
+import { useFloatingBarFoot } from '../../navigation/floating-bar';
 
 const coverageNotes = (rows: number, available: number) => [
   `Showing the newest ${formatCount(rows)} of ${formatCount(available)} dated register changes.`,
@@ -128,6 +129,7 @@ export default function Declarations() {
     return () => clearTimeout(timer);
   }, [arrival, field]);
   const column = useScreenColumn();
+  const foot = useFloatingBarFoot(rhythm.section + rhythm.block);
   useRefreshCommand(refresh, refreshing);
   const all = useMemo(() => record?.data ?? [], [record]);
   const facets = useMemo(() => feedFacets(all), [all]);
@@ -339,7 +341,7 @@ export default function Declarations() {
             />
           }
           style={styles.screen}
-          contentContainerStyle={[styles.content, column.content]}
+          contentContainerStyle={[styles.content, column.content, foot]}
           onLayout={column.onLayout}
           contentInsetAdjustmentBehavior="automatic"
           keyboardShouldPersistTaps="handled"

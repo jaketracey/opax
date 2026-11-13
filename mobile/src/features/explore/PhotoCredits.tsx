@@ -27,6 +27,7 @@ import {
 } from '../sources/parts';
 import type { YearPicture } from './pictures';
 import { explore } from './runtime';
+import { useFloatingBarFoot } from '../../navigation/floating-bar';
 
 /**
  * A photograph's originals: its Wikimedia Commons page, then its licence.
@@ -62,6 +63,7 @@ const loadPictures = (_refresh: boolean, signal?: AbortSignal) =>
  */
 export function PhotoCreditsList() {
   const column = useScreenColumn();
+  const foot = useFloatingBarFoot();
   const search = useBarSearch(text.searchPhotos);
   const read = useRead(loadPictures);
   const record = read.record;
@@ -104,7 +106,7 @@ export function PhotoCreditsList() {
         <SectionList
           testID="explore-photo-credits"
           style={styles.screen}
-          contentContainerStyle={[styles.content, column.content]}
+          contentContainerStyle={[styles.content, column.content, foot]}
           onLayout={column.onLayout}
           contentInsetAdjustmentBehavior="automatic"
           keyboardShouldPersistTaps="handled"

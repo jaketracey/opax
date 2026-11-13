@@ -27,6 +27,7 @@ import {
   sourcesCopy as text,
   useBarSearch,
 } from './parts';
+import { useFloatingBarFoot } from '../../navigation/floating-bar';
 
 /** Surname, then given names: "Albanese Anthony". */
 const sortKey = (name: string) => {
@@ -41,6 +42,7 @@ const sortKey = (name: string) => {
  */
 export default function PortraitsList() {
   const column = useScreenColumn();
+  const foot = useFloatingBarFoot();
   const search = useBarSearch(text.searchPortraits);
   const [list, setList] = useState<PortraitListing[] | null>(null);
   const [failed, setFailed] = useState(false);
@@ -121,7 +123,7 @@ export default function PortraitsList() {
         <FlatList
           testID="sources-portraits-screen"
           style={styles.screen}
-          contentContainerStyle={[styles.content, column.content]}
+          contentContainerStyle={[styles.content, column.content, foot]}
           onLayout={column.onLayout}
           contentInsetAdjustmentBehavior="automatic"
           keyboardShouldPersistTaps="handled"
