@@ -101,6 +101,12 @@ export interface MoneyMapProps {
   onFocus: (id: string | null) => void;
   /** How far the floating chrome covers each edge, in points. */
   insets: Insets;
+  /**
+   * The band the map is drawn in, as points from the stage's top and bottom
+   * (the card's lower edge and the panel's top). Strokes and names outside
+   * it are not drawn; gestures still cover the whole stage. None: no clip.
+   */
+  clip?: { top: number; bottom: number } | null;
   /** Where the camera is kept between visits (a jurisdiction). */
   cacheKey: string;
   accessibilityLabel: string;
@@ -171,6 +177,7 @@ export function MoneyMap({
   focus,
   onFocus,
   insets,
+  clip = null,
   cacheKey,
   accessibilityLabel,
   actions = [],
@@ -706,6 +713,7 @@ export function MoneyMap({
     );
   }, [focusIndex, reduced, dim]);
   const allowed = useSharedValue<Record<string, 1>>({});
+  const clipTop = clip?.top ?? 0;
   const { fontScale } = window;
   const box = useMemo(
     () => ({
@@ -726,11 +734,12 @@ export function MoneyMap({
           // Camera margins reserve the floating controls too. Only a safe
           // side clips labels, preserving their existing phone placement.
           insets: { ...viewport.insets, left: safeLeft, right: safeRight },
+          clipTop,
         },
         box,
       );
     },
-    [slots, box, safeLeft, safeRight],
+    [slots, box, safeLeft, safeRight, clipTop],
   );
   // At the fit the whole map is in view, so the overview only earns its
   // corner once the reader has come in closer.
@@ -805,43 +814,69 @@ export function MoneyMap({
           testID={probe}
           style={styles.fill}
         >
-          <SizedCanvas
-            ref={canvasRef}
-            width={size.width}
-            height={size.height}
-            style={styles.fill}
-            accessible={false}
-            accessibilityElementsHidden
-            importantForAccessibility="no-hide-descendants"
+          <View
+            style={
+              clip
+                ? [styles.clip, { top: clip.top, bottom: clip.bottom }]
+                : styles.fill
+            }
+            pointerEvents="none"
+            testID="money-map-clip"
           >
-            <Group transform={transform}>
-              <Group opacity={dim}>
-                <Group opacity={publicOpacity}>
-                  <Picture picture={pictures.publicEdges} />
+            <View
+              style={
+                clip
+                  ? [
+                      styles.unclip,
+                      {
+                        top: -clip.top,
+                        width: size.width,
+                        height: size.height,
+                      },
+                    ]
+                  : styles.fill
+              }
+              pointerEvents="none"
+            >
+              <SizedCanvas
+                ref={canvasRef}
+                width={size.width}
+                height={size.height}
+                style={styles.fill}
+                accessible={false}
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+              >
+                <Group transform={transform}>
+                  <Group opacity={dim}>
+                    <Group opacity={publicOpacity}>
+                      <Picture picture={pictures.publicEdges} />
+                    </Group>
+                    <Group opacity={thinOpacity}>
+                      <Picture picture={pictures.thinEdges} />
+                    </Group>
+                    <Picture picture={pictures.thickEdges} />
+                    <Group opacity={smallOpacity}>
+                      <Picture picture={pictures.smallNodes} />
+                    </Group>
+                    <Picture picture={pictures.largeNodes} />
+                  </Group>
+                  {focusPicture ? <Picture picture={focusPicture} /> : null}
                 </Group>
-                <Group opacity={thinOpacity}>
-                  <Picture picture={pictures.thinEdges} />
-                </Group>
-                <Picture picture={pictures.thickEdges} />
-                <Group opacity={smallOpacity}>
-                  <Picture picture={pictures.smallNodes} />
-                </Group>
-                <Picture picture={pictures.largeNodes} />
-              </Group>
-              {focusPicture ? <Picture picture={focusPicture} /> : null}
-            </Group>
-          </SizedCanvas>
-          {size.width > 0 ? (
-            <MoneyMapLabels
-              slots={slots}
-              tx={tx}
-              ty={ty}
-              k={k}
-              fitK={fitK}
-              allowed={allowed}
-              width={size.width}
-            />
-          ) : null}
+              </SizedCanvas>
+              {size.width > 0 ? (
+                <MoneyMapLabels
+                  slots={slots}
+                  tx={tx}
+                  ty={ty}
+                  k={k}
+                  fitK={fitK}
+                  allowed={allowed}
+                  width={size.width}
+                />
+              ) : null}
+            </View>
+          </View>
         </View>
       </GestureDetector>
       {overviewFrame && zoomedIn && size.width > 0 ? (
@@ -880,4 +915,6 @@ const styles = StyleSheet.create({
   stage: { ...fill, overflow: 'hidden' },
   fill,
   overview: { position: 'absolute' },
+  clip: { position: 'absolute', left: 0, right: 0, overflow: 'hidden' },
+  unclip: { position: 'absolute', left: 0 },
 });

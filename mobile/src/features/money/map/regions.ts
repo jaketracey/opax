@@ -84,8 +84,11 @@ export function largeTextLimits(
   topHeight: number,
   controlHeight: number,
   state: ChromeState,
+  /** Height kept for the map itself (a short adaptive window); 0 on a phone. */
+  sceneFloor = 0,
 ) {
-  const room = (band: number) => Math.max(0, height - band - BAND_GAPS);
+  const room = (band: number) =>
+    Math.max(0, height - band - BAND_GAPS - sceneFloor);
   const topMaxHeight = Math.max(
     minimumTarget,
     Math.floor(room(state === 'search' ? 0 : controlHeight) / 2),
@@ -98,6 +101,26 @@ export function largeTextLimits(
         Math.min(topHeight, topMaxHeight),
     ),
   };
+}
+
+/** The most of a compact window the map keeps for itself, and its ceiling. */
+const SCENE_SHARE = 0.35;
+const SCENE_FLOOR_MAX = 200;
+/** Widths from here up float a narrow card and panel over the map instead. */
+const COMPACT_WIDTH = 600;
+
+/**
+ * How much height the map keeps when the card, the band and the panel share
+ * one compact column over it (the folded Duo's 466 x 678 outer display, or a
+ * camera cut-out on a narrow window). Without it the card and the panel took
+ * all but about 110 pt at the default size and all of it at large text
+ * (BACKLOG D7). A fold or a hinge gives the map its own side: no floor.
+ */
+export function sceneFloor(pose: { folded: boolean; controls: Rect }) {
+  if (pose.folded || pose.controls.width >= COMPACT_WIDTH) return 0;
+  return Math.round(
+    Math.min(SCENE_FLOOR_MAX, pose.controls.height * SCENE_SHARE),
+  );
 }
 
 /** A compact row preserves room for the scene on the short outer display. */
@@ -115,13 +138,22 @@ export function mapControlLayout(
     : horizontal
       ? 48
       : controlsHeight || 190;
+  // The card and the panel share what the band and the map's floor leave:
+  // the card at most half of it, the panel what the card does not use.
+  const floor = sceneFloor(pose);
+  const shared = pose.controls.height - controlHeight - 32 - floor;
+  const topMaxHeight = Math.max(
+    44,
+    floor ? Math.floor(shared / 2) : pose.controls.height - controlHeight - 92,
+  );
   return {
     ...pose,
     horizontal,
-    topMaxHeight: Math.max(44, pose.controls.height - controlHeight - 92),
+    sceneFloor: floor,
+    topMaxHeight,
     panelMaxHeight: Math.max(
       44,
-      pose.controls.height - topHeight - controlHeight - 32,
+      shared - (floor ? Math.min(topHeight, topMaxHeight) : topHeight),
     ),
   };
 }
