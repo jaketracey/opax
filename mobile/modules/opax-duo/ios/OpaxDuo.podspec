@@ -5,6 +5,11 @@ require 'rubygems/version'
 sdk_version = `xcrun --sdk iphoneos --show-sdk-version 2>/dev/null`.strip
 reserved_regions = !sdk_version.empty? && Gem::Version.new(sdk_version) >= Gem::Version.new('27.1')
 
+conditions = ['$(inherited)']
+conditions << 'OPAX_RESERVED_REGIONS' if reserved_regions
+# E2E builds only: a launch argument may override the window's size classes.
+conditions << 'OPAX_DUO_E2E' if ENV['OPAX_VARIANT'] == 'e2e'
+
 Pod::Spec.new do |s|
   s.name           = 'OpaxDuo'
   s.version        = '0.1.0'
@@ -22,6 +27,6 @@ Pod::Spec.new do |s|
   s.pod_target_xcconfig = {
     'DEFINES_MODULE' => 'YES',
     'SWIFT_COMPILATION_MODE' => 'wholemodule',
-    'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => reserved_regions ? '$(inherited) OPAX_RESERVED_REGIONS' : '$(inherited)'
+    'SWIFT_ACTIVE_COMPILATION_CONDITIONS' => conditions.join(' ')
   }
 end

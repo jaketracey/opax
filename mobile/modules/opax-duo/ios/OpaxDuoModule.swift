@@ -230,6 +230,25 @@ private final class WindowTraitsObserver {
   }
 }
 
+#if OPAX_DUO_E2E
+/// E2E builds only: `-OPAXWindowTraits regular` (Maestro `arguments:`) sets
+/// every window scene's size classes, standing in on an iPhone simulator for
+/// the unfolded iPhone Duo (regular/regular), which Xcode cannot show.
+/// `regular-compact` is a regular width with a compact height.
+@MainActor
+private func overrideWindowTraitsForE2E() {
+  guard let value = UserDefaults.standard.string(forKey: "OPAXWindowTraits") else { return }
+  let words = value.split(separator: "-").map(String.init)
+  let classes: [String: UIUserInterfaceSizeClass] = ["regular": .regular, "compact": .compact]
+  guard let horizontal = words.first.flatMap({ classes[$0] }),
+    let vertical = classes[words.count > 1 ? words[1] : words[0]] else { return }
+  for case let scene as UIWindowScene in UIApplication.shared.connectedScenes {
+    scene.traitOverrides.horizontalSizeClass = horizontal
+    scene.traitOverrides.verticalSizeClass = vertical
+  }
+}
+#endif
+
 /// React Native owns child layout, exactly as in a plain View.
 final class ReservedRegionView: ExpoView {
   let onReservedRegions = EventDispatcher()
@@ -277,7 +296,14 @@ public final class OpaxDuoModule: Module {
     Name("OpaxDuo")
     Events("onWindowTraits")
 
-    OnCreate { onMain { self.observer.refresh() } }
+    OnCreate {
+      onMain {
+#if OPAX_DUO_E2E
+        overrideWindowTraitsForE2E()
+#endif
+        self.observer.refresh()
+      }
+    }
 
     Function("getWindowTraits") { () -> [String: Any] in
       if Thread.isMainThread {
