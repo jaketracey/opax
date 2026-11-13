@@ -49,9 +49,17 @@ export const inlineTitleScaleCap = 23 / 17;
  * At accessibility sizes UIKit draws each bar item's symbol larger: the
  * share and More pair measured 114 pt at AX3 against 103 pt at Large
  * (sweep 1, light-ax3/s1-person-02). Each trailing item reserves this
- * much more, and the title keeps 8 pt clear of the items on each side.
+ * much more.
  */
 export const barItemGrowthAX = 6;
+/**
+ * UIKit sets a title view that fits 12.7 pt after the back button and at
+ * least 9.3 pt before the trailing items (measured at AX3). One wider than
+ * that span is pinned to the trailing side and runs left over the back
+ * button: 5 pt clear at AX3 with a 205 pt view. At AX sizes the title
+ * gives up this much more room, so the view fits the span and keeps 8 pt
+ * or more on each side.
+ */
 export const barTitleClearanceAX = 8;
 /**
  * The widest a bar title may be between the bar's items: iOS 26
@@ -168,12 +176,9 @@ export function BarTitle({
   // follows the inline ramp to 23 pt. Choose the retreat at the Large size,
   // as every other size does, and let the drawn title shrink back towards
   // it to fit: a title that fits at Large is shown at AX3 (sweep 1, 2.6).
-  // The room already keeps 8 pt (20 pt beside a named back button) from
-  // each item; at AX sizes that gap becomes padding inside the title view,
-  // so UIKit cannot set the view against an item and print over it.
   const ax = isAccessibilityCategory(fontScale);
   const growth = ax ? barItemGrowthAX : 0;
-  const clearance = ax ? 2 * barTitleClearanceAX : 0;
+  const clearance = ax ? barTitleClearanceAX : 0;
   const key = `${title}:${backTitle}:${fontScale}`;
   const [metrics, setMetrics] = useState<Record<string, number>>({});
   const measured = (text: string) => metrics[`${key}:${text}`];
@@ -182,13 +187,16 @@ export function BarTitle({
   const ready =
     candidates.every((text) => measured(text) !== undefined) &&
     (!backTitle || backWidth !== undefined);
-  const namedRoom = barTitleWidth(
-    safeWidth,
-    trailing,
-    trailingWidth,
-    backTitle,
-    backWidth,
-    growth,
+  const namedRoom = Math.max(
+    0,
+    barTitleWidth(
+      safeWidth,
+      trailing,
+      trailingWidth,
+      backTitle,
+      backWidth,
+      growth,
+    ) - clearance,
   );
   const [measurement, setMeasurement] = useState({
     key,
@@ -224,13 +232,10 @@ export function BarTitle({
   // Once visible, keep the full fallback and its room for this reveal.
   // Late native measurements take effect after the heading returns.
   const fallback = measurement.expired;
-  const minimalRoom = barTitleWidth(
-    safeWidth,
-    trailing,
-    trailingWidth,
-    '',
-    undefined,
-    growth,
+  const minimalRoom = Math.max(
+    0,
+    barTitleWidth(safeWidth, trailing, trailingWidth, '', undefined, growth) -
+      clearance,
   );
   const retreat = retreatBarTitle(
     title,
@@ -286,12 +291,7 @@ export function BarTitle({
   const shrink = fontScale > 1 && !fallback;
   return createElement(
     NativeView,
-    {
-      style: {
-        maxWidth: room + clearance,
-        paddingHorizontal: clearance / 2,
-      },
-    },
+    { style: { maxWidth: room } },
     createElement(
       Animated.Text,
       {

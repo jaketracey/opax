@@ -966,28 +966,32 @@ describe('bar titles keep their initial layout clear of the bar items', () => {
       <BarTitle title="Interactive Gambling Bill" shown trailing={2} />,
     );
     try {
-      // The room keeps its 8 pt gaps once (build 62 took them twice, and
-      // "Interactive Gambling…" retreated to nothing); at AX they are
-      // padding inside the title view, so the view is the room plus both.
-      const room = barTitleWidth(
-        window.width,
-        2,
-        undefined,
-        '',
-        undefined,
-        barItemGrowthAX,
-      );
+      // The larger items and 8 pt more come off the room, and nothing is
+      // added back as padding: UIKit runs a title view wider than its span
+      // left over the back button (5 pt clear at AX3 with a 205 pt view).
+      const room =
+        barTitleWidth(
+          window.width,
+          2,
+          undefined,
+          '',
+          undefined,
+          barItemGrowthAX,
+        ) - barTitleClearanceAX;
       expect(style(view).maxWidth).toBe(room);
-      const padded = view.root.findAll(
-        (node) =>
-          typeof node.type === 'string' &&
-          StyleSheet.flatten(node.props.style)?.paddingHorizontal ===
-            barTitleClearanceAX,
-      );
-      expect(padded).not.toHaveLength(0);
-      expect(StyleSheet.flatten(padded[0].props.style).maxWidth).toBe(
-        room + 2 * barTitleClearanceAX,
-      );
+      for (const node of view.root.findAll(
+        (candidate) => typeof candidate.type === 'string',
+      )) {
+        const flat = StyleSheet.flatten(node.props.style);
+        if (flat?.maxWidth !== undefined) expect(flat.maxWidth).toBe(room);
+        expect(flat?.paddingHorizontal ?? 0).toBe(0);
+      }
+      // On a 402 pt iPhone the room is 186 pt: "Interactive Gambling…",
+      // 176 pt at Large, still fits and is shown (s1-bill-02).
+      expect(
+        barTitleWidth(402, 2, undefined, '', undefined, barItemGrowthAX) -
+          barTitleClearanceAX,
+      ).toBe(186);
       // Fabric shrinks only text it sees truncated; a clipped line never is.
       expect(view.root.findByType(Animated.Text).props).toMatchObject({
         adjustsFontSizeToFit: true,
