@@ -1,4 +1,5 @@
 import Constants from 'expo-constants';
+import { track } from '../analytics';
 import { canonicalUrl, openSource } from '../navigation/external';
 
 // /support is published. No health probe, transcript, credential or account ID is sent.
@@ -45,5 +46,8 @@ export function reportAnswerUrl(
 
 /** Presents the existing in-app Safari source browser (e2e previews locally). */
 export async function reportAnswer(recordPath: string | null): Promise<void> {
-  await openSource(reportAnswerUrl(recordPath), 'Report this answer');
+  const url = reportAnswerUrl(recordPath);
+  // The surface and action only: never the record, the call or its captions.
+  track('opax_answer_feedback', { surface: 'talk', action: 'report_opened' });
+  await openSource(url, 'Report this answer');
 }

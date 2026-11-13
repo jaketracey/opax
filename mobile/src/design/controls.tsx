@@ -494,7 +494,15 @@ export function FollowButton({
           up rather than jumping. The limit's Edit Following arrives with it. */}
       <HeightReveal reduceMotion={reduceMotion} testID={`${testID}-reveal`}>
         {message ? (
-          <Group gap={rhythm.tight} style={styles.followMessage}>
+          <Group
+            gap={rhythm.tight}
+            style={[
+              styles.followMessage,
+              // Android buttons start-align, so the limit's Edit Following
+              // would sit at the message's leading edge, off the centre line.
+              centre ? styles.followGroupCentred : null,
+            ]}
+          >
             <Animated.View style={{ opacity: confirmation ? opacity : 1 }}>
               <Text
                 wordSafe
@@ -1941,6 +1949,7 @@ const styles = StyleSheet.create({
   shrink: { flexShrink: 1 },
   hug: { alignSelf: 'flex-start' },
   followCentred: { alignSelf: 'center', alignItems: 'center' },
+  followGroupCentred: { alignItems: 'center' },
   followMessageCentred: { textAlign: 'center' },
   full: { alignSelf: 'stretch' },
   steps: {
@@ -2069,21 +2078,28 @@ const styles = StyleSheet.create({
   segmentInline: { flex: 1, flexBasis: 0 },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: rhythm.tight },
   field: { gap: rhythm.tight, alignSelf: 'stretch' },
+  // The title keeps its own width (a label never breaks inside a word:
+  // "Showin/g" on a 669pt Duo); the button moves under it when both do
+  // not fit on one line.
   menuRow: {
     alignSelf: 'stretch',
     minHeight: minimumTarget,
     flexDirection: 'row',
+    flexWrap: 'wrap',
     alignItems: 'center',
-    gap: rhythm.tight,
+    columnGap: rhythm.tight,
   },
   menuRowStacked: {
     flexDirection: 'column',
+    flexWrap: 'nowrap',
     alignItems: 'stretch',
     gap: rhythm.line,
   },
-  menuRowTitle: { flex: 1 },
+  menuRowTitle: { flexGrow: 1, flexShrink: 0, maxWidth: '100%' },
   menuRowWrapping: { flexWrap: 'wrap', columnGap: 0, rowGap: 0 },
-  menuRowInlineTitle: { flexShrink: 1, maxWidth: '100%' },
+  // Its own width too, so "Showing:" never breaks inside the word; the
+  // value moves under it when the two do not fit.
+  menuRowInlineTitle: { flexShrink: 0, maxWidth: '100%' },
   groupedInput: { borderRadius: radii.container, borderCurve: 'continuous' },
   composerBody: {
     gap: 8,

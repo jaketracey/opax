@@ -30,6 +30,8 @@ import {
   agencyRoute,
   moneyRecordRoute,
 } from '../src/navigation/routes/public-money';
+import { redirectSystemPath } from '../src/app/+native-intent';
+import { fromWebPath } from '../src/navigation/routes';
 import { pinned } from './pinned';
 
 jest.mock('../src/design/environment', () => ({
@@ -122,7 +124,11 @@ function expectOriginalsLast(r: TestRenderer.ReactTestRenderer) {
   if (more !== -1) expect(originals).toBeLessThan(more);
 }
 
-async function renderDonor(label: string, aliases: string[] = []) {
+async function renderDonor(
+  label: string,
+  aliases: string[] = [],
+  params?: Record<string, string>,
+) {
   const figures = {
     total: 1000,
     count: 1,
@@ -159,7 +165,7 @@ async function renderDonor(label: string, aliases: string[] = []) {
     savedAt: 1,
   }));
   const donor = decodeMoneyGraph(graph).nodes.find((n) => n.kind === 'donor')!;
-  return render({ node: donor.id, via: 'map' });
+  return render(params ?? { node: donor.id, via: 'map' });
 }
 beforeEach(() => {
   jest.clearAllMocks();
@@ -476,6 +482,75 @@ test('an individual donor is named, with its originals, but no Wikipedia action'
     r.root.findAll((x) => x.props.testID === 'money-record-originals'),
   ).not.toHaveLength(0);
   await act(async () => r.unmount());
+});
+
+/** The params a web or universal link to a donor gives the record screen. */
+function donorLinkParams(name: string) {
+  const route = fromWebPath(`/subject/donor/${encodeURIComponent(name)}`) as {
+    pathname: string;
+    params: Record<string, string>;
+  };
+  expect(route.pathname).toBe('/money-record');
+  return route.params;
+}
+const named = (r: TestRenderer.ReactTestRenderer, text: string) =>
+  r.root.findAll((x) => x.props.children === text).length > 0;
+
+test('a /subject/donor/<name> link opens that donor, and the route takes its graph id', async () => {
+  // Invented: the graph id is not the name, as "donor:pratt" is not
+  // "Pratt Holdings Pty Ltd".
+  const params = donorLinkParams('Quenby Example Pty Ltd');
+  expect(params.node).toBe('donor:Quenby Example Pty Ltd');
+  const r = await renderDonor('Quenby Example Pty Ltd', [], params);
+  expect(r.root.findAllByType(ContentUnavailable)).toHaveLength(0);
+  expect(figure(r, 'money-focus-amount')).toBeDefined();
+  expect(named(r, 'Quenby Example Pty Ltd')).toBe(true);
+  expect(mockNavigation.setParams).toHaveBeenCalledWith({
+    node: 'donor:example',
+    name: 'Quenby Example Pty Ltd',
+  });
+  await act(async () => r.unmount());
+});
+
+test('a donor link by a recorded spelling opens the same record', async () => {
+  const r = await renderDonor(
+    'Quenby Example Pty Ltd',
+    ['Quenby Example Holdings'],
+    donorLinkParams('Quenby Example Holdings'),
+  );
+  expect(r.root.findAllByType(ContentUnavailable)).toHaveLength(0);
+  expect(named(r, 'Quenby Example Pty Ltd')).toBe(true);
+  expect(mockNavigation.setParams).toHaveBeenCalledWith({
+    node: 'donor:example',
+    name: 'Quenby Example Pty Ltd',
+  });
+  await act(async () => r.unmount());
+});
+
+test('a donor link the graph has no confident match for is not on the map', async () => {
+  for (const name of ['Marrowby Example Pty Ltd', 'Quenby']) {
+    const r = await renderDonor(
+      'Quenby Example Pty Ltd',
+      [],
+      donorLinkParams(name),
+    );
+    expect(r.root.findByType(ContentUnavailable).props.testID).toBe(
+      'money-node-missing',
+    );
+    await act(async () => r.unmount());
+  }
+  expect(mockNavigation.setParams).not.toHaveBeenCalled();
+});
+
+test('a universal link to a donor opens the record screen in its tab', () => {
+  expect(
+    redirectSystemPath({
+      path: 'https://opax.com.au/subject/donor/Quenby%20Example%20Pty%20Ltd',
+      initial: true,
+    }),
+  ).toBe(
+    '/(tabs)/(today)/money-record?node=donor%3AQuenby+Example+Pty+Ltd&jur=federal',
+  );
 });
 
 test('a node outside a narrowed window offers all years', async () => {

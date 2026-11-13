@@ -15,6 +15,7 @@ import { useSolidBar } from '../design/accessibility';
 import { RootBar, useVerticalBarEdge } from '../../modules/opax-root-bar';
 import { colors } from '../design/tokens';
 import { glassBar, largeTitleBar, scrollBar, tabRootGround } from './chrome';
+import { isTabStack } from './floating-bar';
 
 const roots = ['index', 'your-mp', 'bills', 'search', 'ask'];
 /** Roots whose Screen turns the top edge hard under scrolled text. */
@@ -114,11 +115,7 @@ export function useRootBarAppearance(
   );
   const route = useContext(NavigationRouteContext);
   const state = route ? navigation?.getState() : undefined;
-  // Every tab uses the shared route inventory. Account and other sheet stacks
-  // also have an index route, so being first in a stack is insufficient.
-  const tabStack =
-    state?.routeNames?.includes('bill/[key]') &&
-    state.routeNames.includes('explore/[tool]');
+  const tabStack = isTabStack(state);
   const root =
     !disabled &&
     glassBar() &&

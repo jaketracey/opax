@@ -42,7 +42,7 @@ def apply(root):
                 raise ValueError("Privacy patch refused: " + entry["package"])
         if any(digest(package / row["path"]) != row["after"] for row in entry["files"]):
             raise ValueError("Privacy patch output hash mismatch: " + entry["package"])
-    print("PASS version-pinned native patches (expo-location 57.0.20, Reanimated 4.5.1, expo-file-system 57.0.7, react-native-screens 4.26.0)")
+    print("PASS version-pinned native patches (expo-location 57.0.20, Reanimated 4.5.1, expo-file-system 57.0.7, react-native-screens 4.26.0, PostHog plugin 2.13.0)")
 
 
 if __name__ == "__main__":

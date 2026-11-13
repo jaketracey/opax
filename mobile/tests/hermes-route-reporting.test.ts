@@ -13,7 +13,11 @@ const DEVELOPMENT_ROUTE =
 
 const mockSegments = ['(tabs)', '(today)', 'person', '[slug]'];
 const mockCapture = jest.fn();
-const mockClient = jest.fn((..._args: unknown[]) => ({ capture: mockCapture }));
+const mockCaptureException = jest.fn();
+const mockClient = jest.fn((..._args: unknown[]) => ({
+  capture: mockCapture,
+  captureException: mockCaptureException,
+}));
 jest.mock('posthog-react-native', () => ({
   __esModule: true,
   default: function (...args: unknown[]) {
@@ -158,6 +162,7 @@ test('the reporting boundary captures once per caught error, without error text 
   error.name = privateText;
   const retry = async () => {};
   mockCapture.mockClear();
+  mockCaptureException.mockClear();
   let tree!: TestRenderer.ReactTestRenderer;
   act(() => {
     tree = TestRenderer.create(
@@ -173,6 +178,9 @@ test('the reporting boundary captures once per caught error, without error text 
       { error_class: 'TypeError', route_pattern: '/person/[slug]' },
     ],
   ]);
+  // One $exception with the stack, through the same scrubber; not a second
+  // one when React re-renders the boundary with the same error.
+  expect(mockCaptureException.mock.calls).toEqual([[error]]);
   act(() => {
     tree.update(
       createElement(RouteErrorBoundary, {
@@ -182,6 +190,7 @@ test('the reporting boundary captures once per caught error, without error text 
     );
   });
   expect(mockCapture).toHaveBeenCalledTimes(2);
+  expect(mockCaptureException).toHaveBeenCalledTimes(2);
   expect(tree.root.findAllByProps({ testID: 'route-error' })).not.toHaveLength(0);
   expect(JSON.stringify(tree.toJSON())).not.toContain(privateText);
   act(() => tree.unmount());
@@ -223,7 +232,7 @@ test('reporting respects the release gate on both platforms and anonymous SDK op
     personProfiles: 'never',
     enableSessionReplay: false,
     disableGeoip: true,
-    errorTracking: { autocapture: false },
+    errorTracking: { autocapture: { console: [] } },
   });
   Constants.expoConfig!.extra = original;
 });

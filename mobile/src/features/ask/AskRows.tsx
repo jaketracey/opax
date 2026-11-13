@@ -15,7 +15,8 @@ import {
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { minimumTarget, rhythm } from '../../design/tokens';
-import { openSource } from '../../navigation/external';
+import type { SourcePlacement } from '../../analytics/events';
+import { openSource, trackSourceOpen } from '../../navigation/external';
 import { docRoute } from '../../navigation/routes/records';
 import { shareRecord } from '../../navigation/share';
 import { citationPassage } from './CitationContent';
@@ -30,6 +31,7 @@ import type { AskPerson } from './people';
 export function sourceMenu(
   source: Source,
   showPassage?: () => void,
+  placement: SourcePlacement = 'inline',
 ): RowMenuAction[] {
   return [
     ...(showPassage
@@ -54,7 +56,8 @@ export function sourceMenu(
           {
             title: 'Open original',
             symbol: 'arrow.up.right.square' as const,
-            onPress: () => void openSource(source.url!, sourceTitle(source)),
+            onPress: () =>
+              void openSource(source.url!, sourceTitle(source), placement),
           },
         ]
       : []),
@@ -98,6 +101,7 @@ export function CitedRecordRow({
   onShowPassage,
   selected = false,
   profiles,
+  placement = 'inline',
   testID,
 }: {
   record: Source;
@@ -108,6 +112,8 @@ export function CitedRecordRow({
   onShowPassage?: () => void;
   selected?: boolean;
   profiles?: Map<string, AskPerson>;
+  /** Where the row is, for analytics: the answer, or the Sources list. */
+  placement?: SourcePlacement;
   testID?: string;
 }) {
   const title = sourceTitle(source);
@@ -117,12 +123,13 @@ export function CitedRecordRow({
     ? (profiles?.get(source.speaker) ?? profiles?.get(speaker ?? ''))
     : undefined;
   const href = sourceRoute(source);
-  const open = () =>
-    onPress
-      ? onPress()
-      : href
-        ? router.push(href)
-        : openAnswerLink(source.url || source.href || '');
+  const open = () => {
+    if (onPress) onPress();
+    else if (href) {
+      router.push(href);
+      trackSourceOpen('app', placement);
+    } else openAnswerLink(source.url || source.href || '', placement);
+  };
   const slot = speakerSlot(speaker, source.party ?? null, person?.slug);
   return (
     <RecordRow
@@ -137,7 +144,7 @@ export function CitedRecordRow({
       href={href ?? undefined}
       onPress={onPress ?? (!href ? open : undefined)}
       selected={selected}
-      menu={sourceMenu(source, onShowPassage)}
+      menu={sourceMenu(source, onShowPassage, placement)}
       testID={testID}
     />
   );

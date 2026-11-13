@@ -61,9 +61,18 @@ PURPOSES = {
 }
 
 
+# Whole printable strings that only name a framework. posthog-ios' crash
+# stack-trace processor lists system framework names ("CoreMotion",
+# "CoreLocation", ...) to mark their frames as not in-app. A bare name on its
+# own `strings -a` line is data, not a use: linking, loading or calling
+# CoreMotion still shows as a framework path, class, symbol or selector.
+NAME_ONLY_STRINGS = ("CoreMotion",)
+
+
 def findings(text):
     # Normalize nm's ObjC import prefix, retaining raw evidence in reports.
     text = re.sub(r"_OBJC_(?:CLASS|METACLASS)_\$_", " ", text)
+    text = re.sub(r"(?m)^(?:" + "|".join(map(re.escape, NAME_ONLY_STRINGS)) + r")$", " ", text)
     required = {category: sorted({m.group(0) for m in re.finditer(pattern, text)})
                 for category, pattern in REQUIRED.items()}
     purposes = {name: sorted({m.group(0) for m in re.finditer(pattern, text)})

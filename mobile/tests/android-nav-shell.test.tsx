@@ -10,6 +10,9 @@ import { AndroidReadingHeader } from '../src/navigation/AndroidReadingHeader';
 import { routeSheetOptions, SheetFrame } from '../src/features/sheets/frame';
 import { citationBar } from '../src/features/sheets/CitationSheet';
 import { filtersScreens } from '../src/navigation/stack/filters';
+import { rootScreens } from '../src/navigation/stack/root';
+import { FiltersHeader } from '../src/features/sheets/FilterRoutes';
+import * as safeArea from 'react-native-safe-area-context';
 import { screen } from '../src/navigation/stack/screen';
 import { exploreScreens } from '../src/navigation/stack/explore';
 import { Icon } from '../src/design/icon';
@@ -218,6 +221,54 @@ test('Android route sheets are dimmed native bottom sheets, full height at large
   ).toBe('Done');
 });
 
+test.each([1, 2])(
+  'Android sheet heading at font scale %s: the title keeps the default insets and Close stays on its row',
+  (fontScale) => {
+    platform('android');
+    const rn = jest.requireActual('react-native');
+    const dims = jest
+      .spyOn(rn, 'useWindowDimensions')
+      .mockReturnValue({ width: 412, height: 915, scale: 2.625, fontScale });
+    try {
+      const tree = render(
+        <SheetFrame title="Sources" testID="source-sheet">
+          Content
+        </SheetFrame>,
+      );
+      const rows = tree.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID === 'sheet-heading',
+      );
+      expect(rows).toHaveLength(1);
+      const row = rows[0]!;
+      const title = row.find(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.accessibilityRole === 'header',
+      );
+      const close = row.find(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.accessibilityLabel === 'Done',
+      );
+      expect(title.props.children).toBe('Sources');
+      expect(close).toBeDefined();
+      const rowStyle = StyleSheet.flatten(row.props.style);
+      const titleStyle = StyleSheet.flatten(title.props.style);
+      // Row inset plus title inset: the same screen margin at both sizes.
+      expect(rowStyle.paddingHorizontal).toBe(8);
+      expect(titleStyle.paddingHorizontal).toBe(8);
+      expect(titleStyle.flex).toBe(1);
+      expect(rowStyle.flexDirection).toBe('row');
+      // A wrapped title keeps Close at the top of the row.
+      if (fontScale > 1) expect(rowStyle.alignItems).toBe('flex-start');
+    } finally {
+      dims.mockRestore();
+    }
+  },
+);
+
 test('Android citation navigation retains previous, next and overflow actions inside the sheet', () => {
   platform('android');
   const previous = jest.fn();
@@ -250,6 +301,62 @@ test('Android filter stacks use the supported full-screen dialog fallback', () =
   expect(
     element.props.options({ route: {}, navigation: undefined }),
   ).toMatchObject({ presentation: 'fullScreenModal', headerShown: false });
+});
+
+function licencesOptions() {
+  const element = rootScreens().find((node) => node.key === 'licences')!;
+  return element.props.options({
+    route: { params: {} },
+    navigation: undefined,
+  });
+}
+
+test('Android gives a deep-linked Sources and licences its own bar; iOS keeps its sheet bar', () => {
+  platform('android');
+  expect(licencesOptions()).toMatchObject({
+    presentation: 'modal',
+    headerShown: true,
+    header: AndroidReadingHeader,
+    title: 'Sources and licences',
+  });
+  platform('ios');
+  const ios = licencesOptions();
+  expect(ios).toMatchObject({ presentation: 'modal', headerShown: true });
+  expect(ios.header).toBeUndefined();
+});
+
+test('Android filter dialogs pad their bar from the window insets from the first frame', () => {
+  platform('android');
+  const hook = safeArea.useSafeAreaInsets as jest.Mock;
+  const original = hook.getMockImplementation();
+  hook.mockImplementation(() => ({ top: 24, bottom: 16, left: 0, right: 0 }));
+  const options = {
+    title: 'Options',
+    presentation: 'card',
+    unstable_headerRightItems: () => [
+      { type: 'button', label: 'Done', onPress: jest.fn() },
+    ],
+  };
+  const props = {
+    navigation: { goBack: jest.fn() },
+    route: { key: 'options', name: '[list]' },
+    options,
+  } as unknown as Parameters<typeof AndroidReadingHeader>[0];
+  const padded = render(<AndroidReadingHeader {...props} windowInsets />);
+  const bar = padded.findByProps({ testID: 'android-header-window-insets' });
+  expect(StyleSheet.flatten(bar.props.style)).toMatchObject({ paddingTop: 24 });
+  // Other Android bars keep measuring natively.
+  const native = render(<AndroidReadingHeader {...props} />);
+  expect(
+    native.findAllByProps({ testID: 'android-header-window-insets' }),
+  ).toHaveLength(0);
+  // The filters' dialog header is that window-inset bar.
+  expect(
+    render(<FiltersHeader {...props} />).findAllByProps({
+      testID: 'android-header-window-insets',
+    }),
+  ).not.toHaveLength(0);
+  hook.mockImplementation(original);
 });
 
 test('Android dialog headers reuse the route close action and show one close control', () => {

@@ -4,6 +4,7 @@ import { join } from 'node:path';
 import assert from 'node:assert/strict';
 import { formatA11yIssue, scanA11yTree } from './a11y-static';
 import { scanSource } from './source-boundary';
+import { layoutAnimationIssues } from './layout-animation-policy';
 import { scanSecrets } from './secret-boundary';
 import { boundaryFiles } from './boundary-files';
 import { scanSwift } from './swift-boundary';
@@ -174,6 +175,25 @@ assert.deepEqual(
   ],
   'Analytics declares Product Interaction and Device ID, never tracking',
 );
+assert.deepEqual(
+  release.ios.privacyManifests.NSPrivacyCollectedDataTypes.filter(
+    (entry: { NSPrivacyCollectedDataType: string }) =>
+      /CrashData|OtherDiagnosticData/.test(entry.NSPrivacyCollectedDataType),
+  ).map(
+    (entry: {
+      NSPrivacyCollectedDataType: string;
+      NSPrivacyCollectedDataTypeTracking: boolean;
+    }) => [
+      entry.NSPrivacyCollectedDataType,
+      entry.NSPrivacyCollectedDataTypeTracking,
+    ],
+  ),
+  [
+    ['NSPrivacyCollectedDataTypeCrashData', false],
+    ['NSPrivacyCollectedDataTypeOtherDiagnosticData', false],
+  ],
+  'Crash reports declare Crash Data and Other Diagnostic Data, never tracking',
+);
 for (const app of [release, e2e]) {
   assert.equal(app.name, 'OPAX');
   assert.equal(app.version, '1.1.4');
@@ -217,18 +237,20 @@ for (const version of Object.values({
     'All direct dependencies must be pinned',
   );
 const lock = JSON.parse(readFileSync('package-lock.json', 'utf8'));
-// PostHog is the one reviewed analytics SDK (docs/ANALYTICS.md): the JS SDK
-// and its two JS dependencies, never replay, the native plugin or another SDK.
+// PostHog is the one reviewed analytics SDK (docs/ANALYTICS.md): the JS SDK,
+// its two JS dependencies and the native crash plugin (scrubbed by its pinned
+// privacy patch), never replay or another SDK.
 assert.deepEqual(
   Object.keys(lock.packages)
     .filter((path) => /posthog/i.test(path))
     .sort(),
   [
     'node_modules/@posthog/core',
+    'node_modules/@posthog/react-native-plugin',
     'node_modules/@posthog/types',
     'node_modules/posthog-react-native',
   ],
-  'Only the reviewed PostHog JS SDK',
+  'Only the reviewed PostHog JS SDK and native crash plugin',
 );
 for (const path of Object.keys(lock.packages))
   assert(
@@ -273,6 +295,48 @@ for (const path of boundary.javascript) {
     `Transport boundary: ${path}`,
   );
 }
+// The PostHog client stays inside src/analytics/index.ts, which never resets,
+// identifies, groups or aliases it or reloads flags: native reset and
+// identify reload feature flags (docs/ANALYTICS.md).
+const posthogImport =
+  /(?:\bfrom\s*|\bimport\s*\(?\s*|\brequire\s*\(\s*)['"](?:posthog-react-native|@posthog\/[^'"]+)['"]/;
+assert.deepEqual(
+  boundary.javascript.filter((path) =>
+    posthogImport.test(readFileSync(path, 'utf8')),
+  ),
+  [join(sourceRoot, 'analytics/index.ts')],
+  'Only src/analytics/index.ts imports PostHog',
+);
+for (const path of boundary.javascript.filter((path) =>
+  posthogImport.test(readFileSync(path, 'utf8')),
+)) {
+  const content = readFileSync(path, 'utf8');
+  assert.deepEqual(
+    content.match(
+      /\.\s*(?:reset|identify|group|alias|reloadFeatureFlags(?:Async)?|setPersonPropertiesForFlags|setGroupPropertiesForFlags)\s*\(/g,
+    ) ?? [],
+    [],
+    `PostHog reset, identify, group, alias or a flag reload (native reset reloads flags): ${path}`,
+  );
+  assert(
+    !/\bexport\s+(?:default\s+(?:client|analytics)\b|(?:async\s+)?(?:function\*?|const|let|var)\s+(?:client|analytics)\b)|\bexport\s*\{[^}]*\b(?:client|analytics)\b/.test(
+      content,
+    ),
+    `The PostHog client stays private to ${path}`,
+  );
+}
+// LayoutAnimation is inert on iOS under Reanimated 4.5: content that comes
+// and goes uses HeightReveal (scripts/layout-animation-policy.ts).
+assert.deepEqual(
+  layoutAnimationIssues(
+    boundary.javascript
+      .filter((path) => path.startsWith(sourceRoot))
+      .map((path) => ({ path, content: readFileSync(path, 'utf8') })),
+    sourceRoot,
+  ),
+  [],
+  'LayoutAnimation outside scripts/layout-animation-policy.ts',
+);
 for (const path of boundary.swift)
   assert.deepEqual(
     scanSwift(path, readFileSync(path, 'utf8')),
@@ -432,7 +496,7 @@ if (appIndex !== -1) {
   }
 }
 console.log(
-  'PASS qa-static: variant origins/ATS, identity, iOS floor, dependency tree, secrets, transport boundary, accessibility rules',
+  'PASS qa-static: variant origins/ATS, identity, iOS floor, dependency tree, secrets, transport boundary, PostHog client calls, accessibility rules',
 );
 console.log(
   `  accessibility: ${Object.entries(a11y.checked)

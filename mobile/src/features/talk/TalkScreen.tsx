@@ -13,7 +13,6 @@ import {
   Alert,
   BackHandler,
   findNodeHandle,
-  LayoutAnimation,
   Linking,
   Platform,
   ScrollView,
@@ -40,6 +39,7 @@ import { useAdaptiveDevice, useLayout } from '../../design/adaptive';
 import { placeClear, type Rect } from '../../design/fold';
 import { ReservedRegionArea, useReservedRegions } from '../../design/fold-area';
 import { designFlags } from '../../design/flags';
+import { HeightReveal } from '../../design/reveal';
 import { colors, layout, rhythm } from '../../design/tokens';
 import { closeSheetItem, androidHeaderBar } from '../../navigation/chrome';
 import { openOnWeb } from '../../navigation/external';
@@ -301,16 +301,6 @@ function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
   useEffect(() => {
     if (terminal && screenReader) focusOn(statusNode.current);
   }, [terminal, screenReader]);
-  // The orb moves between the stage and the call row (7.4).
-  const priorCompact = useRef(compact);
-  useLayoutEffect(() => {
-    if (priorCompact.current === compact) return;
-    priorCompact.current = compact;
-    if (!reduceMotion)
-      LayoutAnimation.configureNext(
-        LayoutAnimation.create(300, 'easeInEaseOut', 'opacity'),
-      );
-  }, [compact, reduceMotion]);
 
   const close = (finish: () => void = leaveTalk) => {
     if (active)
@@ -625,29 +615,40 @@ function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
           { paddingBottom: dockPlacement.paddingBottom },
         ]}
       >
-        {compact ? (
-          <View style={[styles.callRow, large ? styles.callRowStacked : null]}>
-            <View {...statusProps} style={styles.callOrb}>
-              <VoiceOrb
-                phase={phase}
-                levels={levels}
-                size={ORB_CALL}
-                reduceMotion={reduceMotion}
-              />
+        {/* The orb moves from the stage to the call row (7.4), which eases
+            open above the captions. It goes at once: the stage's large orb is
+            back in the same commit, and two orbs would show while it closed. */}
+        <HeightReveal
+          reduceMotion={reduceMotion || !compact}
+          // styles.body's gap: the captions move down by row and gap together.
+          gap={rhythm.group}
+        >
+          {compact ? (
+            <View
+              style={[styles.callRow, large ? styles.callRowStacked : null]}
+            >
+              <View {...statusProps} style={styles.callOrb}>
+                <VoiceOrb
+                  phase={phase}
+                  levels={levels}
+                  size={ORB_CALL}
+                  reduceMotion={reduceMotion}
+                />
+              </View>
+              {statusText ? (
+                <Text
+                  wordSafe
+                  variant="secondary"
+                  testID="talk-state"
+                  accessibilityElementsHidden
+                  importantForAccessibility="no-hide-descendants"
+                >
+                  {statusText}
+                </Text>
+              ) : null}
             </View>
-            {statusText ? (
-              <Text
-                wordSafe
-                variant="secondary"
-                testID="talk-state"
-                accessibilityElementsHidden
-                importantForAccessibility="no-hide-descendants"
-              >
-                {statusText}
-              </Text>
-            ) : null}
-          </View>
-        ) : null}
+          ) : null}
+        </HeightReveal>
         {showTranscript ? (
           <View style={styles.transcript}>
             <ScrollView

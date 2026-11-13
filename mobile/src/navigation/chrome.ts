@@ -260,12 +260,41 @@ export function rootHeaderItems(props?: {
   return Platform.OS === 'ios' ? [...items.slice(1), items[0]!] : items;
 }
 
+/**
+ * Ask's way back to the page an arrival came from (journeys/ask.md 4.2): the
+ * outermost leading item, drawn as the system's back item is. iOS draws the
+ * chevron in its own glass; the label is the item's title, which UIKit shows
+ * on a vertical bar (Duo), in overflow and in the Large Content Viewer.
+ * Android draws Material's navigation icon, and system Back does the same.
+ */
+export function askBackItem(props: {
+  name: string;
+  onPress: () => void;
+}): TestableHeaderItem {
+  return {
+    type: 'button',
+    label: props.name,
+    accessibilityLabel: `Back to ${props.name}`,
+    testID: 'ask-back',
+    identifier: 'ask-back',
+    tintColor: colors.navy,
+    icon: {
+      type: 'sfSymbol',
+      name: Platform.OS === 'android' ? 'arrow.left' : 'chevron.backward',
+    },
+    sharesBackground: false,
+    onPress: props.onPress,
+  };
+}
+
 export function askHeaderItems(props: {
   canStartNew: boolean;
   historyEnabled: boolean;
   signedIn: boolean;
   onNew: () => void;
   onHistory: () => void;
+  /** The page an arrival from another tab came from. */
+  back?: { name: string; onPress: () => void } | null;
 }) {
   const history: NativeStackHeaderItem = {
     type: 'button',
@@ -283,8 +312,11 @@ export function askHeaderItems(props: {
     disabled: !props.canStartNew,
     onPress: props.onNew,
   };
+  const leading: TestableHeaderItem[] = props.back
+    ? [askBackItem(props.back), history]
+    : [history];
   return {
-    unstable_headerLeftItems: () => [history],
+    unstable_headerLeftItems: () => leading,
     ...headerItems(() =>
       rootHeaderItems({
         segment: '(ask)',
@@ -293,7 +325,7 @@ export function askHeaderItems(props: {
       }),
     ),
     ...(Platform.OS === 'android'
-      ? { headerLeft: () => androidHeaderBar([history]) }
+      ? { headerLeft: () => androidHeaderBar(leading) }
       : {}),
   };
 }

@@ -366,7 +366,7 @@ export default function DocumentReader({
     ? { slug: doc.slug, title: headline, kind: doc.labels.kind }
     : null;
   const ask = () => {
-    if (doc) openAsk({ question: documentQuestion(doc) });
+    if (doc) openAsk({ question: documentQuestion(doc) }, headline);
   };
   const share = () => {
     if (doc) void shareRecord({ path: `/doc/${doc.slug}`, title: headline });

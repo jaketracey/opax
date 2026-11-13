@@ -1,10 +1,16 @@
 import { RouteOptions } from '../../navigation/preview';
 
-import { Fragment, useRef } from 'react';
+import { useRef } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import type { EditionView } from '../../api/selectors';
 import { Card } from '../../design/card';
-import { BarSeries, StageTimeline, VoteSplit } from '../../design/charts';
+import {
+  BarSeries,
+  isPartOfWhole,
+  ShareBar,
+  StageTimeline,
+  VoteSplit,
+} from '../../design/charts';
 import { copy } from '../../design/copy';
 import { designFlags } from '../../design/flags';
 import { formatDate } from '../../design/format';
@@ -12,8 +18,9 @@ import { MachinePill } from '../../design/labels';
 import { InsetGroup, Screen } from '../../design/layout';
 import { PersonRow } from '../../design/people';
 import { FigureBlock } from '../../design/record';
+import { RowOpenListener } from '../../design/row-link';
 import { BillRow, LinkRow, ValueRow } from '../../design/rows';
-import { SourceLine } from '../../design/source';
+import { SourceLine, SourceSection } from '../../design/source';
 import { ContentUnavailable, OfflineLine } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
@@ -25,6 +32,7 @@ import { CachedPortrait } from '../CachedPortrait';
 import { editionMenu, shareEdition } from './actions';
 import { useEdition, useEditionSubject } from './data';
 import { EditionSkeleton } from './EditionCard';
+import { trackEdition, useEditionEnd, useEditionOpen } from './measure';
 import {
   editionInk,
   editionPerson,
@@ -37,6 +45,9 @@ import {
 } from './model';
 import { Plate } from './Plate';
 
+/** The story's subject opened (`story_open`); the row opens it as usual. */
+const openStory = () => trackEdition('story_open');
+
 export function EditionStory() {
   const { block, refreshing, refresh } = useEdition();
   const subject = useEditionSubject(
@@ -47,7 +58,8 @@ export function EditionStory() {
   const title = useTitleOnScroll(titleRef, 'Daily edition');
   const openAsk = useOpenAsk();
   const onAsk = () => {
-    if (edition) openAsk({ question: editionQuestion(edition) });
+    if (edition)
+      openAsk({ question: editionQuestion(edition) }, 'Daily edition');
   };
   const onShare = () => {
     if (edition) void shareEdition(edition);
@@ -67,14 +79,18 @@ export function EditionStory() {
       }
     : null;
   const destination = edition ? editionSubject(edition, subject.slug) : null;
+  useEditionOpen(edition ? `${edition.date}:${edition.title}` : null);
+  const end = useEditionEnd();
   const sourceRows = edition
     ? editionSourceRows(edition, subject.originals)
     : [];
-  // A figure card carries the edition's SourceLine; the foot repeats it
-  // only when no figure has.
+  // A figure card or a bars chart carries the edition's SourceLine; the
+  // foot repeats it only when none has.
   const figureLines =
-    !!edition?.facts.figures.length &&
-    (edition.facts.order?.some((fact) => fact.type === 'figure') ?? true);
+    (!!edition?.facts.figures.length &&
+      (edition.facts.order?.some((fact) => fact.type === 'figure') ?? true)) ||
+    (!!edition?.facts.bars &&
+      (edition.facts.order?.some((fact) => fact.type === 'bars') ?? true));
   const offline =
     block?.error?.code === 'offline' || block?.error?.code === 'timeout';
   return (
@@ -105,7 +121,11 @@ export function EditionStory() {
       <Screen
         grouped
         testID="edition-screen"
-        onScroll={title.onScroll}
+        onScroll={(y) => {
+          title.onScroll(y);
+          end.onScroll(y);
+        }}
+        onLayout={end.onLayout}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={refresh} />
         }
@@ -169,54 +189,56 @@ export function EditionStory() {
             </View>
             <EditionFacts edition={edition} provenance={source} />
             {destination ? (
-              <InsetGroup testID="edition-subject-group">
-                {edition.kind === 'bill' ? (
-                  <BillRow
-                    billKey={/^\/bill\/([^/?]+)/.exec(edition.path)![1]!}
-                    title={edition.shortTitle ?? edition.title}
-                    href={destination}
-                    status=""
-                    showStatus={false}
-                    menu={[]}
-                    testID="edition-subject"
-                  />
-                ) : edition.kind === 'politician' ? (
-                  <PersonRow
-                    name={edition.title}
-                    {...editionPerson(edition)}
-                    href={destination}
-                    portrait={
-                      <CachedPortrait
-                        name={edition.title}
-                        slug={subject.slug}
-                      />
-                    }
-                    menu={[]}
-                    testID="edition-subject"
-                  />
-                ) : (
-                  <LinkRow
-                    title={
-                      edition.kind === 'largest'
-                        ? 'Largest grants'
-                        : edition.kind === 'topic'
-                          ? editionTopic(edition)!.name
-                          : edition.title
-                    }
-                    symbol={
-                      edition.kind === 'topic' ? symbols.topic : symbols.money
-                    }
-                    href={destination}
-                    value={
-                      edition.kind === 'grant'
-                        ? edition.facts.figures[0]?.value
-                        : undefined
-                    }
-                    valueEmphasis={edition.kind === 'grant'}
-                    testID="edition-subject"
-                  />
-                )}
-              </InsetGroup>
+              <RowOpenListener.Provider value={openStory}>
+                <InsetGroup testID="edition-subject-group">
+                  {edition.kind === 'bill' ? (
+                    <BillRow
+                      billKey={/^\/bill\/([^/?]+)/.exec(edition.path)![1]!}
+                      title={edition.shortTitle ?? edition.title}
+                      href={destination}
+                      status=""
+                      showStatus={false}
+                      menu={[]}
+                      testID="edition-subject"
+                    />
+                  ) : edition.kind === 'politician' ? (
+                    <PersonRow
+                      name={edition.title}
+                      {...editionPerson(edition)}
+                      href={destination}
+                      portrait={
+                        <CachedPortrait
+                          name={edition.title}
+                          slug={subject.slug}
+                        />
+                      }
+                      menu={[]}
+                      testID="edition-subject"
+                    />
+                  ) : (
+                    <LinkRow
+                      title={
+                        edition.kind === 'largest'
+                          ? 'Largest grants'
+                          : edition.kind === 'topic'
+                            ? editionTopic(edition)!.name
+                            : edition.title
+                      }
+                      symbol={
+                        edition.kind === 'topic' ? symbols.topic : symbols.money
+                      }
+                      href={destination}
+                      value={
+                        edition.kind === 'grant'
+                          ? edition.facts.figures[0]?.value
+                          : undefined
+                      }
+                      valueEmphasis={edition.kind === 'grant'}
+                      testID="edition-subject"
+                    />
+                  )}
+                </InsetGroup>
+              </RowOpenListener.Provider>
             ) : null}
             <InsetGroup testID="edition-ask-group">
               <LinkRow
@@ -257,11 +279,29 @@ export function EditionStory() {
             {figureLines ? null : (
               <SourceLine {...source} testID="edition-sources" />
             )}
+            <View onLayout={end.onEndLayout} testID="edition-end" />
           </>
         )}
       </Screen>
     </View>
   );
+}
+
+/**
+ * Whether a bars slide is parts of one whole, drawn as one split bar. The
+ * composer says so (`whole: true`) and leaves the field off otherwise. It
+ * never makes a member's topic labels (a speech can carry several) or a
+ * topic's speakers (scaled to the first) a whole, so those kinds keep the 0
+ * to 100% scale without it. Any other slide without the field predates it
+ * and is guessed from its numbers.
+ */
+function barsAreWhole(
+  kind: EditionView['kind'],
+  bars: NonNullable<EditionView['facts']['bars']>,
+): boolean {
+  if (typeof bars.whole === 'boolean') return bars.whole;
+  if (kind === 'politician' || kind === 'topic') return false;
+  return isPartOfWhole(bars.items.map((bar) => bar.pct));
 }
 
 function EditionFacts({
@@ -276,14 +316,23 @@ function EditionFacts({
     dateRange: { start: edition.date, end: edition.date },
     citation: 'OPAX daily edition',
   };
+  // One sheet for every line here (figures and charts alike), so the line
+  // the section keeps always opens the full sources.
+  const sheet = {
+    ...source,
+    asOf: edition.date,
+    citation: 'OPAX daily edition',
+  };
   const order = edition.facts.order ?? [
     ...figures.map((_, index) => ({ type: 'figure' as const, index })),
     ...(bars ? [{ type: 'bars' as const, index: 0 }] : []),
     ...(events.length ? [{ type: 'events' as const, index: 0 }] : []),
     ...(division ? [{ type: 'division' as const, index: 0 }] : []),
   ];
+  // Every card and chart here carries the edition's source line; the
+  // section shows it once, under the first.
   return (
-    <Fragment>
+    <SourceSection>
       {order.map((fact, index) => {
         const id = `edition-fact-${index}`;
         if (fact.type === 'figure') {
@@ -292,12 +341,7 @@ function EditionFacts({
           const figureProps = {
             ...figure,
             ink: editionInk(edition),
-            citation: {
-              ...source,
-              asOf: edition.date,
-              citation: 'OPAX daily edition',
-              testID: `${id}-sources`,
-            },
+            citation: { ...sheet, testID: `${id}-sources` },
             testID: id,
           };
           return (
@@ -313,17 +357,39 @@ function EditionFacts({
                 <Text wordSafe variant="subsectionTitle">
                   {bars.title}
                 </Text>
-                <BarSeries
-                  data={bars.items.map((bar) => ({
-                    label: bar.label,
-                    value: bar.pct,
-                  }))}
-                  ink={editionInk(edition)}
-                  format={(value) => `${value}%`}
-                  tableTitle={bars.title}
-                  values="all"
-                  {...provenance}
-                />
+                {/* Bars slides are shares: parts of one whole read as one
+                    bar; overlapping shares keep a 0 to 100% scale. */}
+                {barsAreWhole(edition.kind, bars) ? (
+                  <ShareBar
+                    parts={bars.items.map((bar) => ({
+                      label: bar.label,
+                      value: bar.pct,
+                    }))}
+                    ink={editionInk(edition)}
+                    format={(value) => `${value}%`}
+                    testID={`${id}-share`}
+                    sourceLine={
+                      <SourceLine {...sheet} testID={`${id}-sources`} />
+                    }
+                    {...provenance}
+                  />
+                ) : (
+                  <BarSeries
+                    data={bars.items.map((bar) => ({
+                      label: bar.label,
+                      value: bar.pct,
+                    }))}
+                    ink={editionInk(edition)}
+                    format={(value) => `${value}%`}
+                    tableTitle={bars.title}
+                    share
+                    values="all"
+                    sourceLine={
+                      <SourceLine {...sheet} testID={`${id}-sources`} />
+                    }
+                    {...provenance}
+                  />
+                )}
                 {bars.note ? (
                   <Text wordSafe variant="footnote">
                     {bars.note}
@@ -345,7 +411,7 @@ function EditionFacts({
           </View>
         );
       })}
-    </Fragment>
+    </SourceSection>
   );
 }
 

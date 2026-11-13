@@ -225,7 +225,7 @@ describe('with anonymous analytics', () => {
     mockAnalytics = false;
   });
 
-  test('privacy adds one plain line: counts, a random ID, never what is typed', () => {
+  test('privacy adds one plain line: counts, a random ID, crash reports, never what is typed', () => {
     const privacy = renderer.root.findByProps({
       testID: 'about-privacy-section',
     });
@@ -237,7 +237,7 @@ describe('with anonymous analytics', () => {
       testID: 'about-privacy-usage',
     });
     expect(usage.props.children).toBe(
-      'OPAX counts how the app is used, such as which screens open and how many sources an answer had, with a random ID made on this iPhone. The counts never include what you type, ask or search for, and aren’t linked to your account.',
+      'OPAX counts how the app is used, such as which screens open and how many sources an answer had, with a random ID made on this iPhone. It also sends anonymous crash and error reports, which say where in the app something went wrong. The counts and reports never include what you type, ask or search for, and aren’t linked to your account.',
     );
     expect(usage.props.children).not.toMatch(/[—–]/);
   });

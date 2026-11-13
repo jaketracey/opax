@@ -1,5 +1,9 @@
 const { getDefaultConfig } = require('expo/metro-config');
+const fs = require('node:fs');
 const path = require('node:path');
+const {
+  unstableBeforeAssetSerializationDebugIdPlugin,
+} = require('posthog-react-native/metro');
 const { productionVoiceEnabled } = require('./plugins/voiceProduction');
 const variant = process.env.OPAX_VARIANT ?? 'development';
 const androidBuild = process.env.OPAX_TARGET_PLATFORM === 'android';
@@ -11,7 +15,26 @@ const hideCommunity = process.env.OPAX_HIDE_COMMUNITY ?? '0';
 if (!['0', '1'].includes(hideCommunity))
   throw new Error('OPAX_HIDE_COMMUNITY must be 0 or 1');
 const communityHidden = variant === 'production' || hideCommunity === '1';
-const config = getDefaultConfig(__dirname);
+// Crash report symbols (docs/ANALYTICS.md). Production bundles carry
+// PostHog's chunk ID, which JS stack frames report and the uploaded source map
+// is matched by. React Native's composed Hermes map drops the ID, so a release
+// build that sets OPAX_SYMBOLS_DIR also records it there for
+// scripts/upload-crash-symbols.sh.
+const recordChunkId = (input) => {
+  const directory = process.env.OPAX_SYMBOLS_DIR;
+  if (directory && input.debugId) {
+    fs.mkdirSync(directory, { recursive: true });
+    fs.writeFileSync(
+      path.join(directory, `${input.graph.transformOptions.platform}.chunk-id`),
+      `${input.debugId}\n`,
+    );
+  }
+  return unstableBeforeAssetSerializationDebugIdPlugin(input);
+};
+const config = getDefaultConfig(__dirname, {
+  unstable_beforeAssetSerializationPlugins:
+    variant === 'production' ? [recordChunkId] : [],
+});
 const inheritedResolver = config.resolver.resolveRequest;
 // Modules with a production stub beside them: the e2e drawn-line probe, the
 // welcome tour's launch argument and the electorate outline probe, and the

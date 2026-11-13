@@ -813,6 +813,33 @@ test('Android centred FollowButton keeps the button and its message on one centr
     expect(flat(message)).toMatchObject({ textAlign: 'center' });
   }));
 
+test("Android centred FollowButton keeps the limit's Edit Following on the centre line", () =>
+  asAndroid(async () => {
+    jest.mocked(useFollows).mockReturnValue([]);
+    jest
+      .mocked(followWithFeedback)
+      .mockResolvedValueOnce({ status: 'limit', showMessage: false });
+    const r = render(
+      <FollowButton
+        kind="bill"
+        id="b"
+        title="A bill"
+        testID="follow"
+        centred
+      />,
+    );
+    await act(async () => {
+      await press(r, 'follow-off').props.onPress();
+    });
+    const edit = r.root.findAll(
+      (node) =>
+        node.type === Button && node.props.testID === 'follow-edit-following',
+    )[0]!;
+    // Android buttons start-align: the group holding the message and Edit
+    // Following centres its children, so the button is not at the leading edge.
+    expect(flat(edit.parent!)).toMatchObject({ alignItems: 'center' });
+  }));
+
 test('iOS FollowButton ignores centred: the tree is unchanged', () => {
   const os = RN.Platform.OS;
   RN.Platform.OS = 'ios';

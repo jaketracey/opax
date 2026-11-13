@@ -103,11 +103,35 @@ export function SheetFrame({
         wordSafe
         variant="sectionTitle"
         accessibilityRole="header"
-        style={[styles.androidTitle, accessible ? { flex: 0 } : null]}
+        style={styles.androidTitle}
       >
         {title}
       </Text>
     );
+    const others = trailing.filter(
+      (item) => !('label' in item && item.label === 'Done'),
+    );
+    const leadingBar = androidHeaderBar(leading);
+    const trailingBar = androidHeaderBar(others);
+    const closeButton = (
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Done"
+        accessibilityHint="Closes this sheet"
+        testID="header-done"
+        onPress={close}
+        onLongPress={() => ToastAndroid.show('Close', ToastAndroid.SHORT)}
+        android_ripple={{ color: colors.navyWash, borderless: true }}
+        style={styles.androidClose}
+      >
+        <Icon name={symbols.close} size={24} maxScale={1} />
+      </Pressable>
+    );
+    // At accessibility sizes the title wraps at whole words with the same
+    // insets as at the default size. Close stays beside it at the top of the
+    // row; a sheet with other actions (citation previous and next) keeps them
+    // and Close together on a row of their own below, in reading order.
+    const actions = leading.length + others.length > 0;
     return (
       <>
         <RouteOptions
@@ -122,28 +146,32 @@ export function SheetFrame({
           accessibilityViewIsModal
           style={styles.androidDialog}
         >
-          {accessible ? heading : null}
-          <View style={styles.androidHeading}>
-            {androidHeaderBar(leading)}
-            {accessible ? <View style={{ flex: 1 }} /> : heading}
-            {androidHeaderBar(
-              trailing.filter(
-                (item) => !('label' in item && item.label === 'Done'),
-              ),
-            )}
-            <Pressable
-              accessibilityRole="button"
-              accessibilityLabel="Done"
-              accessibilityHint="Closes this sheet"
-              testID="header-done"
-              onPress={close}
-              onLongPress={() => ToastAndroid.show('Close', ToastAndroid.SHORT)}
-              android_ripple={{ color: colors.navyWash, borderless: true }}
-              style={styles.androidClose}
-            >
-              <Icon name={symbols.close} size={24} maxScale={1} />
-            </Pressable>
-          </View>
+          {accessible ? (
+            <>
+              <View
+                testID="sheet-heading"
+                style={[styles.androidHeading, styles.androidHeadingTop]}
+              >
+                {heading}
+                {actions ? null : closeButton}
+              </View>
+              {actions ? (
+                <View style={styles.androidHeading}>
+                  {leadingBar}
+                  <View style={{ flex: 1 }} />
+                  {trailingBar}
+                  {closeButton}
+                </View>
+              ) : null}
+            </>
+          ) : (
+            <View testID="sheet-heading" style={styles.androidHeading}>
+              {leadingBar}
+              {heading}
+              {trailingBar}
+              {closeButton}
+            </View>
+          )}
           <SurfaceContext.Provider value="sunken">
             <ScrollView
               testID={testID}
@@ -244,6 +272,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: rhythm.tight,
   },
+  androidHeadingTop: { alignItems: 'flex-start' },
   androidTitle: {
     flex: 1,
     paddingVertical: rhythm.tight,

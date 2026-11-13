@@ -3,8 +3,9 @@ name: 46 From a bill in the Bills tab, Ask about this opens a draft; the bill te
 ---
 # The bill is opened from the Bills tab, not by deep link: a deep link can
 # land in the Ask tab's own stack, where the old pop-to-Ask worked, so only
-# a browsing tab shows a dead "Ask about this" (build 17). Arrival in Ask
-# never submits; the draft waits for the reader.
+# a browsing tab shows a dead "Ask about this" (build 17). "Ask about this"
+# switches to the Ask tab and never submits; the draft waits for the reader,
+# and Ask's bar leads back to the bill (journeys/ask.md 4.2).
 - launchApp
 - tapOn:
     id: tab-bills
@@ -13,7 +14,7 @@ name: 46 From a bill in the Bills tab, Ask about this opens a draft; the bill te
       id: bills-count
     timeout: 20000
 - tapOn:
-    text: Bills, sponsors and portfolios
+    text: Search bills
 - inputText: interactive gambling levy
 - pressKey: Enter
 - scrollUntilVisible:
@@ -47,9 +48,10 @@ name: 46 From a bill in the Bills tab, Ask about this opens a draft; the bill te
     timeout: 15000
 - assertVisible: What did parliament say about the .*\?
 - takeScreenshot: ${EVIDENCE}/46-ask-draft
-# Back to the bill: the Bills tab keeps its stack.
+# Back to the bill: Ask's back item returns to the Bills tab, whose stack
+# kept the bill.
 - tapOn:
-    id: tab-bills
+    id: ask-back
 - extendedWaitUntil:
     visible:
       id: bill-screen

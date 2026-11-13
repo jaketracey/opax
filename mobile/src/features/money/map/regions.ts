@@ -6,6 +6,7 @@ import {
   type Rect,
   type ReservedRegions,
 } from '../../../design/fold';
+import { minimumTarget, rhythm } from '../../../design/tokens';
 
 const area = (r: Rect) => r.width * r.height;
 
@@ -56,6 +57,46 @@ export function mapRegions(bounds: Rect, regions: ReservedRegions) {
     controls: clearRegion(controls, regions),
     folded: !!(vertical || horizontal),
     laptop: !!horizontal,
+  };
+}
+
+/** The gaps above and below the control band, in points. */
+const BAND_GAPS = rhythm.block * 2;
+
+/**
+ * What the stage's chrome is doing: at rest with the control band shown,
+ * with the panel expanded (the band hides), or with the search in the card's
+ * place (the band hides).
+ */
+export type ChromeState = 'map' | 'expanded' | 'search';
+
+/**
+ * At accessibility text sizes the card above the map and the panel under it
+ * share the height the control band leaves, so the search and zoom buttons
+ * between them stay whole on screen at every size. The card takes at most
+ * half and scrolls inside it; the panel takes what the card leaves and
+ * scrolls too. The card keeps its share while the panel is expanded, so it
+ * holds still when the band hides; the search card stands in its place and
+ * may use the band's room.
+ */
+export function largeTextLimits(
+  height: number,
+  topHeight: number,
+  controlHeight: number,
+  state: ChromeState,
+) {
+  const room = (band: number) => Math.max(0, height - band - BAND_GAPS);
+  const topMaxHeight = Math.max(
+    minimumTarget,
+    Math.floor(room(state === 'search' ? 0 : controlHeight) / 2),
+  );
+  return {
+    topMaxHeight,
+    panelMaxHeight: Math.max(
+      minimumTarget,
+      room(state === 'map' ? controlHeight : 0) -
+        Math.min(topHeight, topMaxHeight),
+    ),
   };
 }
 

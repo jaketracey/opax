@@ -1099,6 +1099,9 @@ const barsSlide = shape({
     ),
   ),
   note: lenient(nonempty),
+  // The composer sets it when the items are parts of one total and leaves it
+  // off otherwise; editions from before it never carry it (barsAreWhole).
+  whole: lenient(boolean),
 });
 const timelineSlide = shape({
   ...slideBase,

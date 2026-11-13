@@ -102,7 +102,7 @@ jest.mock('../src/design/adaptive', () => {
     ...actual,
     useLayout: () => {
       const layout = actual.useLayout();
-      return pad() ? { ...layout, regular: true } : layout;
+      return pad() ? { ...layout, regular: true, split: true } : layout;
     },
   };
   Object.defineProperty(out, 'isPad', { get: pad, enumerable: true });

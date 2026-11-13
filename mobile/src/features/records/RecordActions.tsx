@@ -14,6 +14,7 @@ import {
 } from '../../design/row-link';
 import { pageMenu } from '../../navigation/chrome';
 import { canonicalUrl, openOnWeb } from '../../navigation/external';
+import { trackShare } from '../../navigation/share';
 import { citeRoute } from '../../navigation/routes';
 import { copyText } from './actions';
 import { citationsFor } from './citations';
@@ -143,7 +144,9 @@ export function recordActions(
       symbol: 'link',
       onPress: () => {
         void copyText(canonicalUrl(path), 'Copied link').then((copied) => {
-          if (copied) haptic('success');
+          if (!copied) return;
+          haptic('success');
+          trackShare('copy_link', path);
         });
       },
     },

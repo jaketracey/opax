@@ -80,7 +80,8 @@ and workers.dev previews do not send production analytics.
 From 1.1.1 the iOS app sends anonymous product analytics to the same PostHog
 project, through the same `https://opax.com.au/ingest` proxy (native requests
 carry no `Origin`, which the proxy already accepts). The SDK is
-`posthog-react-native`, pinned to an exact version with no native modules.
+`posthog-react-native`, pinned to an exact version, with its native crash
+plugin `@posthog/react-native-plugin` (see "Crash and error reports" below).
 The token and host live in build config (`mobile/app.config.ts`,
 `extra.analytics`), never in `src/`. Only iOS production builds carry that
 config. Development and e2e builds never do, even with `OPAX_ANALYTICS=1`.
@@ -114,7 +115,12 @@ and rebuilds each payload from fixed lists, so SDK enrichment (deep-link URLs,
 screen sizes, locale, device name, flags, person and super properties) never
 leaves the phone. Every event carries `platform` (`ios`, or `android` once enabled), `app` (`opax`),
 `app_version`, `app_build` and `environment`, with `$process_person_profile`
-false and `$geoip_disable` true.
+false and `$geoip_disable` true. Every event also carries the window as two
+categories, read as it is sent: `layout` (`compact` or `regular`, the size
+class the app is laying out with) and `foldable` (true when the window spans a
+fold). Never the window's size, the device model or a measured region; if the
+window cannot be read, both are left off. Native crash reports, which the
+native SDK builds without passing through JS, do not carry them.
 
 | Event | Properties |
 | --- | --- |
@@ -127,16 +133,25 @@ false and `$geoip_disable` true.
 | `opax_search_started` | `scope`, `page`, `filter_count` |
 | `opax_search_completed` | `scope`, `page`, `result_count`, `total_count`, `duration_ms` |
 | `opax_search_failed` | `scope`, `page`, `duration_ms` |
-| `opax_source_open` | `from_section`, `destination` (`app` or `browser`) |
+| `opax_source_open` | `from_section`, `destination` (`app` or `browser`), optional `placement` (`inline`, `sources_pane` or `talk_sources`) |
 | `opax_chip` | `chip_kind` (`ask`), `placement` (`ask` or `today`) |
-| `opax_voice_card` | `action` (`open`), `account` (`signed_in` or `signed_out`) |
+| `opax_talk` | `action` (`consent_shown`, `consent_accepted`, `consent_declined`, `call_started`, `call_ended` or `call_failed`); `account` (`signed_in` or `signed_out`) once known; for an ended call `duration_s` (whole seconds, 0 to 600); for an ended or failed call `end_reason` (`user`, `limit`, `network` or `error`) |
+| `opax_ask_followup_click` | `position` (1 to 4), `kind` (`speech`, `vote`, `recent`, `compare` or `detail`) |
+| `opax_share` | `kind` (`record`, `question`, `answer` or `copy_link`); for a record or link `record_type` (`person`, `party`, `bill`, `electorate`, `doc`, `money` or `other`) |
+| `opax_link_open` | `source` (`universal`, `scheme` or `widget`), `route_pattern` (a fixed template from `route-patterns.ts`), `initial` (true when the link launched the app) |
+| `opax_follow` | `action` (`follow` or `unfollow`), `kind` (`person`, `party`, `bill`, `topic` or `electorate`) |
+| `opax_answer_feedback` | `surface` (`ask` or `talk`), `action` (`report_opened` or `report_sent_mail`) |
+| `opax_map_action` | `action` (`open`, `filter`, `zoom`, `open_record` or `search`), `filter_count` (0 to 20) |
+| `opax_edition` | `action` (`open`, `story_open` or `reached_end`) |
 | `opax_first_run` | `step` (`welcome`, `seat` or `state`), `outcome` (`chosen` or `skipped`), and for a choice `method` (`search`, `location` or `browse`) |
 | `opax_route_error` | `error_class`: fixed constructor-name category; `route_pattern`: a fixed route-file pattern such as `/person/[slug]`; optional `error_message`: an exact, content-free diagnostic from a fixed allowlist, at most 80 characters |
 | `opax_app_start` | `duration_ms`: JS entry to the first committed Today render, only when Today is the first focused route of a cold JS runtime |
 | `opax_screen_ready` | `route_pattern`: one of `/`, `/person/[slug]`, `/bill/[key]`, `/your-mp`, `/search`, `/ask`; `duration_ms`: navigation to the first content commit, at most once per sampled visit |
 
 `from_section` is the first segment of the current route (`today` for the
-home screen); anything else becomes `other`. `scope` is one of the fixed search
+home screen). Only the sections in `routeSections`
+(`mobile/src/analytics/route-patterns.ts`, the first segments of the fixed
+route list) are kept; anything else, including a slug, becomes `other`. `scope` is one of the fixed search
 scopes. Counts are integers from 0 to 1,000,000 and durations are milliseconds
 up to an hour; any other value is dropped. Ask outcome `reason` accepts only
 `stall`, `deadline`, `network`, `server` or
@@ -144,11 +159,123 @@ up to an hour; any other value is dropped. Ask outcome `reason` accepts only
 and `reason: no_answer`. Written `evidence_gap` answers retain `has_answer: true`
 and omit that reason. Cancellations omit the reason. Automatic transport recovery shares one lifecycle event pair.
 The app never calls identify.
-Person profiles, session replay, touch and text autocapture, exception capture, surveys and feature flags
-are off, and GeoIP is disabled. The install ID is a random UUID made by the SDK and kept in the
+Person profiles, session replay, touch and text autocapture, console capture, surveys and feature flags
+are off, and GeoIP is disabled. Crash and error reports are on (below). The install ID is a random UUID made by the SDK and kept in the
 app's documents folder; it is not the IDFV or IDFA and is not linked to an
 account. `tests/analytics-sdk.test.ts` runs the real SDK against a mocked
 network and proves a raw question cannot reach any request.
+
+### Feature use
+
+The events from `opax_talk` to `opax_edition` in the table, and `placement`,
+come from the 13 November 2026 PostHog scan. They follow its rules:
+
+- No event names a record: no MP, party, bill, topic, electorate or donor
+  names, IDs, slugs or paths.
+- A `kind` or `record_type` is a coarse category, never which one.
+- No text is ever sent: no search text, Ask text, share text or note.
+- Durations are capped whole-second counts. Route templates come from
+  `route-patterns.ts`, never the real path.
+
+Every value outside the lists above is dropped by both `cleanEvent` and
+`scrubEvent`. The unwired `opax_voice_card` rule is gone; `opax_talk` replaces
+it.
+
+`opax_talk` covers Talk's consent sheet and each call. `consent_shown` is sent
+when the sheet opens. `consent_accepted` is sent once the agreement is saved.
+`consent_declined` is sent when the sheet closes any other way: Not now, a
+swipe down, or closing after a failed save. Talk's native commands only
+acknowledge, so call events follow the call's state, not the button. A Start
+that goes live sends `call_started`; it then ends once, as `call_ended`, with
+its length from going live and an `end_reason`. Leaving Talk mid-call ends it
+as `user`. A Start that never goes live sends one `call_failed`. Leaving
+while still connecting sends nothing, and so does a call this Talk screen did
+not start. `account` is the signed-in state from the last voice status read,
+left off until one has arrived. Remaining minutes, captions, sources and
+account IDs are never sent.
+
+How `end_reason` is chosen:
+
+| Ended by | `end_reason` |
+| --- | --- |
+| The reader ending it, leaving OPAX, another call or consent withdrawn | `user` |
+| The call time limit, the allowance or the budget | `limit` |
+| The connection, a media reset or the voice provider | `network` |
+| Anything else | `error` |
+
+A Start refused before it connects is classed the same way. An allowance,
+budget, capacity, rate limit or already-open call is `limit`. A network
+fault, timeout, unreadable response, cancellation or policy refusal is
+`network`. Being signed out, a refused microphone or missing consent is
+`user`.
+
+`opax_ask_followup_click` is sent when a reader taps an "Ask next"
+suggestion. `position` is the row, from 1, and `kind` is the server's category
+for it when it sends one from the list, else `detail`, as on the web. The
+question is never sent.
+
+`placement` on `opax_source_open` says where an Ask or Talk source was opened:
+
+- `inline`: a cited row or citation in the answer itself, or the full-screen
+  citation.
+- `sources_pane`: the iPad Sources pane or the iPhone Sources sheet.
+- `talk_sources`: Talk's Sources sheet.
+
+Other source opens leave it off.
+
+`opax_share` is sent when a reader chooses Share (whether or not they finish
+sharing), copies a record link, or copies an Ask answer.
+`record` and `copy_link` add a `record_type` from the shared path: subject
+pages give `person`, `party` or `electorate`, and bills, documents and money
+pages give `bill`, `doc` or `money`. Anything else is `other`, including
+topics and a source's own page on another site (Your MP's Lately originals). A question or answer share has no `record_type`, and the path, title
+and text are never sent.
+
+`opax_link_open` is sent once for each OPAX link that opens the app:
+
+- `universal`: an `https://opax.com.au` link.
+- `scheme`: an `opax://` link.
+- `widget`: a widget's link, which carries the fixed `src=widget`. That
+  marker is read, then removed before routing, so the screen never sees it.
+
+`route_pattern` is the template the link lands on, or `/other`. Links to other
+sites are not counted.
+
+`opax_follow` is sent only when a follow or unfollow changes the saved list.
+Following an item already followed, or at the limit, sends nothing. Which
+item is never sent.
+
+`opax_answer_feedback` with `surface: ask` sends `report_opened` when "Report
+this answer" opens with an answer, and `report_sent_mail` once Mail opens with
+the report. Whether it was then sent cannot be known. With `surface: talk` it
+sends `report_opened` when Talk opens its report page. The reason, the note
+and the answer are never sent.
+
+`opax_map_action` covers the money map:
+
+- `open`: the map is shown.
+- `filter`: its filters change while it is shown.
+- `zoom`: the zoom in, zoom out or fit buttons. Pinch zoom is not counted.
+- `open_record`: the focused record is opened from the panel's title, its
+  "Open record" row or the map's accessibility action.
+- `search`: a search result is chosen. The search text and the result are
+  never sent.
+
+`filter_count` is how many of the year range, industry, the three layers,
+inflation and the minimum differ from the defaults (at most 7).
+
+`opax_edition` sends `open` once when the daily edition's story page is
+shown, `story_open` when its subject row is opened, and `reached_end` once when the reader
+scrolls to its end (a short story counts once laid out). There is no story
+position: every reader gets the same edition in the same order, so an index
+with a time would say which record was read. Today's featured people
+carousel does not send `story_open`.
+
+`mobile/tests/analytics-feature-events.test.ts` checks each event's exact
+properties, the caps and ranges, the route templates and the `layout` and
+`foldable` properties. It also checks that invented names, IDs, slugs, paths
+and questions never reach an event. The component suites check each fire
+point sends once.
 
 `opax_first_run` reports how the welcome's electorate step ended, so the
 first-run funnel can tell a choice from a skip (the `$screen` names alone
@@ -175,7 +302,8 @@ boundary, including a new failure after Try again. It uses `track`, the same
 build-config gate (`extra.analytics`) and both privacy scrubbers; there is no
 separate analytics consent setting in the app. Voice consent does not enable
 analytics. Android, e2e and all development builds send no report. No
-identify call, exception autocapture or new identifier is added.
+identify call or new identifier is added. The same error also goes out once
+as a crash and error report (below).
 
 `error_class` accepts the built-in Error constructors, `ApiError`,
 `PersonIdentityError`, `ChatSyncError` and `AskFailure`; unknown constructors
@@ -198,8 +326,9 @@ Account, Talk, Community and Licence modal stacks through
 `mobile/src/navigation/RouteErrorBoundary.tsx`. It keeps the existing error
 screen and Try again action. A successful retry followed by a new failure
 can report again. These are recoverable JavaScript route render failures;
-native process crashes, asynchronous exceptions and OS terminations are not
-captured by Router boundaries. Exception autocapture remains disabled.
+native process crashes and asynchronous exceptions are not captured by
+Router boundaries; the crash and error reports below cover them. OS
+terminations (memory, watchdog) are not reported.
 
 `mobile/index.js` timestamps the start of JS entry evaluation before importing
 Router. `opax_app_start` ends at Today's first focused React commit, even if
@@ -236,9 +365,127 @@ route templates and finite durations from 0 to 3,600,000 ms; SDK screen context
 is removed. They use the same build gate and both privacy scrubbers as all
 other events, with no new modules, consent settings or text collection.
 
+### Crash and error reports
+
+iOS production builds also send anonymous crash and error reports as PostHog
+`$exception` events, behind the same build gate as every other event:
+development, e2e, fixture and Android builds send none, and the app has no
+analytics opt-out to honour. They appear in PostHog Error tracking once the
+project setting "Enable exception autocapture" is on; until then the SDK
+captures nothing automatically.
+
+- **JS errors.** Uncaught exceptions (the `ErrorUtils` global handler) and
+  unhandled promise rejections (Hermes' rejection tracker), through the SDK's
+  `errorTracking.autocapture`. Console capture is off (`console: []`) and
+  breadcrumbs (`exceptionSteps`) are off.
+- **Route render errors.** React does not pass an error a boundary caught to
+  the global handler in release builds, so `reportRouteError` sends it once
+  with `captureException`, beside `opax_route_error`.
+- **Native crashes.** `@posthog/react-native-plugin` 2.13.0 (posthog-ios
+  3.92.7 with PLCrashReporter, posthog-android 3.74.2) with `nativeCrashes`
+  and `androidNdkCrashes` on. A crash is written to disk and sent on the next
+  launch. Push notification capture, which the plugin turns on by default, is
+  off in the options and in Info.plist
+  (`com.posthog.posthog.CAPTURE_PUSH_NOTIFICATION_OPENED`).
+
+The native SDK never sees the app's other PostHog settings: posthog-react-native
+passes it only its own options, with feature flag preloading on whenever native
+crash capture is. The plugin patch fixes them after that: no feature flag
+requests, no default person properties and, on iOS, GeoIP off (posthog-android
+has no GeoIP switch and sends no flags request). At launch the native SDK makes
+one request of its own, a GET of PostHog's remote config
+(`/ingest/array/<project token>/config`) carrying no body, install ID or session
+ID, and with preloading off nothing in it starts a flags request. posthog-ios
+3.92.7 has no public switch for it; posthog-android 3.74.2 has a deprecated
+`remoteConfig` setting that still works. The patch leaves it on in both, because
+its answer carries the "Enable exception autocapture" setting, the project's
+switch for crash capture. The `/ingest` proxy forwards it with the phone's IP
+address, as it does the app's own analytics requests. Native `reset`, `identify`
+and `group` reload feature flags, so the app never calls them (or `alias` or a
+flag reload): `npm run qa-static` fails if `src/analytics/index.ts` does, if it
+exports its client, or if any other app file imports PostHog.
+The plugin podspec is patched to require exactly posthog-ios 3.92.7, the
+version these settings and the release verifier were checked against.
+
+`scrubEvent` rebuilds every JS `$exception` from fixed lists in
+`mobile/src/analytics/exceptions.ts`. Native crash reports never pass through
+JS, so `mobile/patches/@posthog+react-native-plugin+2.13.0.patch` (pinned by
+`patches/privacy-patches.json`, replayed on install and prebuild) adds the same
+rules in Swift and Kotlin as the native SDK's last `beforeSend`, and drops every
+native event that is not `$exception`. The three copies must stay in step:
+`tests/analytics-exceptions.test.ts` checks that Swift and Kotlin use the JS
+message rules' exact pattern texts, and `tests/native-scrub.test.ts` runs the
+Swift copy, cut from the patch by `scripts/check-native-scrub.sh`, on the
+invented inputs in `tests/fixtures/exception-scrub-cases.json` and expects what
+JS keeps (on a Mac a missing `swift` fails it; only Linux skips it). Kotlin
+is compiled only by the Android build, but Android's `java.util.regex` runs on
+ICU like NSRegularExpression, so the same pattern texts behave the same.
+
+| Property | What it may hold |
+| --- | --- |
+| `$exception_list` | Up to 10 exceptions: `type` (an identifier such as `TypeError`, `java.lang.IllegalStateException` or `EXC_BAD_ACCESS`, or one of Swift's three fatal kinds; anything else becomes `Error`), `value` (the scrubbed message), `module`, `thread_id`, `mechanism` (`type`, `handled`, `synthetic`, `exception_id`, `parent_id`) and `stacktrace` (`type` and up to 250 frames) |
+| Stack frames | `platform`, `function`, `filename`, `abs_path`, `module`, `package` (paths cut at the first `?` or `#`), `lineno`, `colno`, `in_app`, `instruction_addr`, `image_addr`, `symbol_addr`, `chunk_id`, `map_id`, `method_synthetic`, `client_resolved`. Source context, local variables and any other field are dropped |
+| `$debug_images` | Up to 500 binary images native frames point into: `type`, `debug_id`, `code_id`, `code_file`, `image_addr`, `image_vmaddr`, `image_size`, `arch` |
+| `$exception_level`, `$exception_source`, `$exception_fingerprint` | A fixed level word and short tokens |
+| Common | `$lib`, `$lib_version`, `$session_id`, `$os_name`, `$device_type`, `$app_name`, `$app_namespace` (`au.com.opax.app`), `$app_version`, `$app_build`, `$screen_name` (the route template), `platform`, `app`, `app_version`, `app_build`, `environment`, `$process_person_profile` false, `$is_identified` false, `$geoip_disable` true; on JS reports also `layout` and `foldable` |
+
+Messages keep their shape but lose anything that could be user text, in this
+order: spaces the engines disagree on (U+0085, U+FEFF and U+001C to U+001F)
+become plain spaces, so all three copies cut the same text; a URL loses its
+user name and password; an OPAX URL (`opax.com.au` or a subdomain, with or
+without a scheme or a trailing dot) keeps only its host, since its paths can
+carry a search or question; a path with no host in front keeps only its first
+segment, or `/api/<endpoint>` for the API (`/ask/why-is-rent-late?x=1` becomes
+`/ask`, `/api/search/rent` becomes `/api/search`), except a file path under a
+filesystem root such as `/src`, `/node_modules`, `/Users`, `/private`, `/var`
+or `/data`, which stays whole so stack locations stay readable; any other URL
+or path keeps its path, losing its query string and fragment; any other
+`?key=value` query goes; email addresses become `[email]`; quoted text becomes
+`[redacted]`, across lines: double quotes, curly, German and fullwidth quotes,
+guillemets, corner brackets, double primes, backticks and the opening single
+quotes ‘ ‚ ‛ wherever they open (`x"text"` included), and ' ’ ＇ and primes
+after a space or punctuation, where an apostrophe followed by a letter
+(`O'Brien`, `it's`) does not close the quote; a quote that never closes hides
+the rest of the message; runs of four or more digits (codes, postcodes, phone
+numbers) become `#`; the result is cut to 120 characters. So `Cannot read
+property 'wombat crossing' of undefined` is sent as `Cannot read property
+[redacted] of undefined`. Unquoted
+free text cannot be recognised in general, which is why the cap is short.
+`$exception_steps`, app state, screen sizes, locale, device model, `$set` and
+any property a caller adds are dropped. `tests/analytics-exceptions.test.ts`
+plants an invented search, question, Talk transcript, sign-in email and code
+and a field value in every position a message, frame, image or SDK property
+could carry them and fails if any reaches the payload;
+`tests/analytics-sdk.test.ts` runs the real SDK's handlers end to end.
+
+**Symbols.** Production bundles carry PostHog's chunk ID
+(`mobile/metro.config.js`), which JS frames report. Every release archive
+writes the composed Hermes source map and the chunk ID beside it, in the
+release evidence folder (`main.jsbundle.map`, `ios.chunk-id`; see
+`IOS-RELEASE.md`), and the verifier refuses an archive without them or with a
+map inside the app. `scripts/release-ios.sh` then runs
+`scripts/upload-crash-symbols.sh`, which uploads that map and the archive's
+dSYMs with `posthog-cli` (0.20 or later). It needs a
+personal API key with the `error_tracking:write` scope in
+`POSTHOG_CLI_API_KEY`; without one it logs a single skip line. When the
+variable is unset, the script loads `~/.config/opax/posthog.env` itself, inside
+the upload process only, and only if the file is mode 600 and owned by the
+person running it. It refuses any project but the OPAX one (507367). The key is
+redacted from release logs and never reaches a build step. Releases resolve
+per event from `$app_namespace`, `$app_version` and `$app_build`. For Android
+the script also uploads the R8 mapping under posthog-android's map ID
+(`au.com.opax.app@<versionName>+<versionCode>`); it is not wired into
+`build-play.sh` while Android sends nothing. Gradle writes the Android map to
+`android/app/build/generated/sourcemaps/react/release/index.android.bundle.map`,
+and `verify-play.py` refuses any `.map` an APK would install. R8's mapping
+(`BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map`) is Play
+metadata that is never installed, so it passes.
+
 The privacy manifest declares Product Interaction and Device ID, not linked,
-not used for tracking, purpose Analytics; `NSPrivacyTracking` stays false. The
-App Store privacy label is in `IOS-STORE.md` section 4.
+not used for tracking, purpose Analytics, and Crash Data and Other Diagnostic
+Data, not linked, not used for tracking, purpose App Functionality;
+`NSPrivacyTracking` stays false. The App Store privacy label is in
+`IOS-STORE.md` section 4.
 
 ## Build, test, deploy
 

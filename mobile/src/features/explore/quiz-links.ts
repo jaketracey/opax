@@ -1,5 +1,7 @@
 import type { Href } from 'expo-router';
 import type { SourceOriginal } from '../../design/source';
+import type { MoneyGraph } from '../money/data';
+import { donorNodeFor, loadedMoneyGraph } from '../money/lookup';
 import { askRoute } from '../../navigation/routes/ask';
 import { moneyRoute } from '../../navigation/routes/money-map';
 import { partyRoute } from '../../navigation/routes/people';
@@ -21,6 +23,11 @@ type AskScope = Parameters<typeof askRoute>[0];
  *   same destination from its group's route builder: a donor's money record,
  *   the in-tab money map filtered to an industry, a party or topic page, or
  *   Methods ("How OPAX is built").
+ *   A donor round names its donor; the record opens by the donor's graph id,
+ *   as the money page's "Largest donors" rows do, so the name is matched on
+ *   the federal money graph (`donorNodeFor`, the map search's normalised
+ *   names, exact only). Before the graph loads, or with no match, there is
+ *   no row.
  * - `ask`: a speaker's year in the record, drafted in Ask through
  *   `useOpenAsk` and never sent.
  * Null means no row: a link with no native page.
@@ -46,7 +53,14 @@ const industryName = (slug: string) => {
   return words.charAt(0).toUpperCase() + words.slice(1);
 };
 
-export function quizDestination(q: Question): QuizDestination | null {
+/** Whether a question links to a donor, so its reveal needs the money graph. */
+export const isDonorQuestion = (q: Question) =>
+  /^\/subject\/donor\//.test(quizRecordPath(q.link.href));
+
+export function quizDestination(
+  q: Question,
+  graph: MoneyGraph | null = loadedMoneyGraph('federal'),
+): QuizDestination | null {
   const path = quizRecordPath(q.link.href);
   if (!path) return null;
   const url = new URL(path, 'https://opax.invalid');
@@ -57,12 +71,19 @@ export function quizDestination(q: Question): QuizDestination | null {
     const [, kind, raw] = segments;
     const name = decode(raw!);
     if (!name) return null;
-    if (kind === 'donor')
+    if (kind === 'donor') {
+      const donor = donorNodeFor({ name }, graph);
+      if (!donor) return null;
       return {
         kind: 'original',
-        original: { label: name, url: path, record: 'donations' },
-        route: () => moneyRecordRoute({ rid: name, jur: 'federal' }, name),
+        original: {
+          label: donor.label,
+          url: `/money?node=${encodeURIComponent(donor.id)}`,
+          record: 'donations',
+        },
+        route: () => moneyRecordRoute({ node: donor.id }, donor.label),
       };
+    }
     if (kind === 'party')
       return {
         kind: 'original',

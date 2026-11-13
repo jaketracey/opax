@@ -22,7 +22,8 @@ if (!['0', '1'].includes(e2eMicrophone))
   throw new Error('OPAX_E2E_MICROPHONE must be 0 or 1');
 const microphonePrompt =
   androidBuild && variant === 'e2e' && e2eMicrophone === '1';
-// Anonymous product analytics (docs/ANALYTICS.md): iOS production only.
+// Anonymous product analytics and crash reports (docs/ANALYTICS.md): iOS
+// production only.
 // Development and e2e never carry analytics, even with OPAX_ANALYTICS=1. Android stays
 // off until its Google Play Data safety answers include analytics (the code is
 // shared; drop the androidBuild condition then). Events go through
@@ -42,17 +43,24 @@ const analytics =
     : undefined;
 // What analytics collects, as the privacy manifest declares it: how the app
 // is used (screens, app opens, Ask and Search outcomes as counts) and the
-// random install ID that groups those events. Neither is linked to an
-// account or used for tracking. A voice build merges its own linked types.
+// random install ID that groups those events, for Analytics; and anonymous
+// crash and error reports (stack traces, scrubbed messages), for App
+// Functionality. None is linked to an account or used for tracking. A voice
+// build merges its own linked types.
+const collected = (types: string[], purpose: string) =>
+  types.map((type) => ({
+    NSPrivacyCollectedDataType: `NSPrivacyCollectedDataType${type}`,
+    NSPrivacyCollectedDataTypeLinked: false,
+    NSPrivacyCollectedDataTypeTracking: false,
+    NSPrivacyCollectedDataTypePurposes: [
+      `NSPrivacyCollectedDataTypePurpose${purpose}`,
+    ],
+  }));
 const analyticsDataTypes = analytics
-  ? ['ProductInteraction', 'DeviceID'].map((type) => ({
-      NSPrivacyCollectedDataType: `NSPrivacyCollectedDataType${type}`,
-      NSPrivacyCollectedDataTypeLinked: false,
-      NSPrivacyCollectedDataTypeTracking: false,
-      NSPrivacyCollectedDataTypePurposes: [
-        'NSPrivacyCollectedDataTypePurposeAnalytics',
-      ],
-    }))
+  ? [
+      ...collected(['ProductInteraction', 'DeviceID'], 'Analytics'),
+      ...collected(['CrashData', 'OtherDiagnosticData'], 'AppFunctionality'),
+    ]
   : [];
 const buildNumber = process.env.OPAX_BUILD_NUMBER ?? '1';
 if (!/^[1-9][0-9]*$/.test(buildNumber)) {
@@ -220,6 +228,9 @@ const config: ExpoConfig = {
       // StatusBar takes over once the app draws (the root layout sets
       // `auto`; the launch cover keeps `light` while it is up).
       UIStatusBarStyle: 'UIStatusBarStyleLightContent',
+      // The PostHog crash plugin hooks notification opens at launch, before
+      // any JS runs; only this key skips it. The app sends no push events.
+      'com.posthog.posthog.CAPTURE_PUSH_NOTIFICATION_OPENED': false,
       NSLocationWhenInUseUsageDescription:
         'OPAX uses your location once, on this iPhone, to find your electorate. It is not sent anywhere.',
       'NSLocationWhenInUseUsageDescription~ipad':

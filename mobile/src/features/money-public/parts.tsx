@@ -41,6 +41,7 @@ import { colors, hairline, layout, rhythm } from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { openOnWeb } from '../../navigation/external';
 import { canShare, copyRecordLink, shareRecord } from '../../navigation/share';
+import { useFloatingBarFoot } from '../../navigation/floating-bar';
 
 // The registers behind public money, by their publishers' short names
 // (specs/money.md 1.2): the line says "AusTender", the sheet the full title,
@@ -451,6 +452,7 @@ export function MoneyList<T>({
   listRef?: Ref<FlatList<T>>;
 }) {
   const column = useScreenColumn('readable');
+  const foot = useFloatingBarFoot();
   useRefreshCommand(refresh, refreshing);
   return (
     <SidebarSafe style={styles.screen}>
@@ -461,7 +463,7 @@ export function MoneyList<T>({
           keyExtractor={rowKey}
           testID={id}
           style={styles.screen}
-          contentContainerStyle={[styles.content, column.content]}
+          contentContainerStyle={[styles.content, column.content, foot]}
           onLayout={column.onLayout}
           onScroll={onScroll}
           scrollEventThrottle={16}

@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from 'react';
 import {
+  Dimensions,
   Platform,
   StyleSheet,
   View,
@@ -44,6 +45,13 @@ export const breakpoints = {
   regular: 700,
   /** A region in a regular/regular iPhone window. */
   regularPhone: 560,
+  /**
+   * Two panes side by side (a split's list and detail, Ask's sources pane,
+   * Today's two columns) from here, on iPad and regular phones alike. Below
+   * it a regular phone keeps one column: a 669pt Duo (portrait inner) gave a
+   * 281pt list whose header labels broke mid-word.
+   */
+  split: 700,
   /** Three-column grids from here (a 13-inch iPad in landscape). */
   wide: 1100,
 } as const;
@@ -101,6 +109,19 @@ export function splitPaneWidth(
 }
 
 export type SizeClass = 'compact' | 'regular';
+
+/**
+ * Whether a region `width` wide may draw two panes side by side: a regular
+ * region at least `breakpoints.split` (700pt) wide, on every device. Text
+ * size does not move the breakpoint; at accessibility sizes the narrow pane
+ * widens to 45% (`splitPaneWidth`) and labels step down (`wordSafe`).
+ */
+export function splitAllowed(
+  width: number,
+  rule: LayoutRule = currentRule(),
+): boolean {
+  return sizeClassFor(width, rule) === 'regular' && width >= breakpoints.split;
+}
 
 /** iPad-only behaviour: keyboard, pointer, drags, sidebar labels and phoneCopy. */
 export const isPad = Platform.OS === 'ios' && Platform.isPad;
@@ -201,6 +222,22 @@ export function currentRule(
 }
 
 /**
+ * The window as analytics categories, read when an event is sent: the
+ * window's size class under the current rule and whether it spans a fold.
+ * Never its size, the device model or a measured region.
+ */
+export function windowClass(): {
+  layout: SizeClass;
+  foldable: boolean;
+} {
+  const { width } = Dimensions.get('window');
+  return {
+    layout: sizeClassFor(width, currentRule()),
+    foldable: !!traitsSnapshot.traits?.foldable,
+  };
+}
+
+/**
  * Replace module-level isPad at whole-view-tree forks with this hook. Once
  * a phone reports a division or regular/regular traits, it stays adaptive
  * for the session so display changes keep the same screen tree mounted.
@@ -235,6 +272,8 @@ export interface Layout {
   regular: boolean;
   /** Regular iPad region at least `breakpoints.wide`: room for three columns. */
   wide: boolean;
+  /** Room for two panes side by side (`splitAllowed`): 700pt on any device. */
+  split: boolean;
   /** The region's width: the measured pane or screen, else the window. */
   width: number;
   height: number;
@@ -277,6 +316,7 @@ export function useLayout(): Layout {
       size,
       regular: size === 'regular',
       wide: rule === 'pad' && size === 'regular' && width >= breakpoints.wide,
+      split: splitAllowed(width, rule),
       width,
       height,
       window: { width: window.width, height: window.height },

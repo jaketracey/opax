@@ -61,7 +61,7 @@ name: 10 Filter and search the bill list, then open a bill
       text: 119 bills
     timeout: 10000
 # Search is the native field in the bar, named by its placeholder.
-- tapOn: Bills, sponsors and portfolios
+- tapOn: Search bills
 - inputText: child support social services
 # Return submits and dismisses the keyboard; a swipe can land on the
 # keyboard itself at AX5.

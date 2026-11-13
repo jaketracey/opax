@@ -76,7 +76,7 @@ import {
 } from './map/MoneyMapPanel';
 import { MoneyMapSearch } from './map/MoneyMapSearch';
 import { MINI_HEIGHT, MINI_WIDTH } from './map/MiniMap';
-import { mapControlLayout } from './map/regions';
+import { largeTextLimits, mapControlLayout } from './map/regions';
 import { buildModel, nextAlongFlows, type MapModel } from './map/model';
 import { moneyPageMenu } from './menu';
 import { MoneyTestHooks } from './money-probe';
@@ -107,11 +107,13 @@ import {
   moneySourceDetails,
 } from './sources';
 import {
+  moneyFilterCount,
   moneyView,
   moneyWindowNodes,
   rankedDonors,
   type MoneyFilters,
 } from './view';
+import { track } from '../../analytics';
 
 const TOP_DONORS = 20;
 type Mode = 'list' | 'map';
@@ -501,6 +503,21 @@ function MapMode({
     [],
   );
   const model = useMemo(() => buildModel(view), [view]);
+  // Map analytics: the action and how many filters are set, never which
+  // filters, records or search text.
+  const filterCount = moneyFilterCount(graph, filters);
+  const mapAction = (
+    action: 'open' | 'filter' | 'zoom' | 'open_record' | 'search',
+  ) => track('opax_map_action', { action, filter_count: filterCount });
+  const shown = useRef(false);
+  const filterKey = JSON.stringify(filters);
+  useEffect(() => {
+    // `open` once as the map is shown; `filter` on each change after that.
+    mapAction(shown.current ? 'filter' : 'open');
+    shown.current = true;
+    // filterKey stands for the filters; the count alone can stay the same.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterKey]);
   const focus = param(params.select) ?? null;
   const focusIndex = focus === null ? null : (model.byId.get(focus) ?? null);
   // The trail Next has walked, as node ids, so Previous retraces it.
@@ -559,8 +576,24 @@ function MapMode({
     topHeight + rhythm.block + stackHeight + rhythm.block >
       (stage.height || window.height) - below - peek;
   const horizontalControls = (managed && pose.horizontal) || rowOnPhone;
-  const panelMaxHeight = managed ? pose.panelMaxHeight : undefined;
-  const topMaxHeight = managed ? pose.topMaxHeight : undefined;
+  // At accessibility sizes a compact card and panel would fill the screen and
+  // bury the controls: they share what the band leaves and scroll inside it.
+  // Regular layouts keep their own caps, which already leave the band room.
+  const limits =
+    large && !regular
+      ? largeTextLimits(
+          managed
+            ? pose.controls.height
+            : (stage.height || window.height) - below,
+          topHeight,
+          controlsHeight || (horizontalControls ? 48 : 190),
+          searchOpen ? 'search' : expanded ? 'expanded' : 'map',
+        )
+      : null;
+  const panelMaxHeight =
+    limits?.panelMaxHeight ?? (managed ? pose.panelMaxHeight : undefined);
+  const topMaxHeight =
+    limits?.topMaxHeight ?? (managed ? pose.topMaxHeight : undefined);
   const insets = useMemo(
     () =>
       pose.folded
@@ -578,11 +611,10 @@ function MapMode({
               (horizontalControls && !searchOpen && !expanded
                 ? 48 + rhythm.block
                 : 0),
-            bottom: managed
-              ? (safe?.bottom ?? 0) +
-                Math.min(peek, panelMaxHeight ?? peek) +
-                rhythm.tight
-              : below + peek + rhythm.tight,
+            bottom:
+              (managed ? (safe?.bottom ?? 0) : below) +
+              Math.min(peek, panelMaxHeight ?? peek) +
+              rhythm.tight,
             left: (safe?.left ?? 0) + rhythm.tight,
             right:
               (safe?.right ?? 0) +
@@ -631,6 +663,11 @@ function MapMode({
     setFocus(id, nextTrail);
   };
   const flyTo = (id: string) => go(id, [id]);
+  /** A search result chosen: the action only, never the text or the result. */
+  const chooseSearchResult = (id: string) => {
+    mapAction('search');
+    flyTo(id);
+  };
   const record_ = useCallback(
     (id: string, name?: string) =>
       moneyFocusRoute(id, jurisdiction, filters, name, 'map'),
@@ -693,7 +730,10 @@ function MapMode({
         {
           name: 'openRecord',
           label: `Open the record for ${panelFocus.node.label}`,
-          onAction: () => router.push(panelFocus.record),
+          onAction: () => {
+            mapAction('open_record');
+            router.push(panelFocus.record);
+          },
         },
         {
           name: 'clearFocus',
@@ -732,7 +772,7 @@ function MapMode({
   const topContent = searchOpen ? (
     <MoneyMapSearch
       model={model}
-      onChoose={flyTo}
+      onChoose={chooseSearchResult}
       onClose={() => setSearchOpen(false)}
     />
   ) : (
@@ -815,18 +855,19 @@ function MapMode({
             style={[
               styles.top,
               cardWidth,
-              managed ? { maxHeight: topMaxHeight } : null,
+              topMaxHeight === undefined ? null : { maxHeight: topMaxHeight },
             ]}
             pointerEvents="box-none"
             onLayout={(event) =>
               setTopHeight(Math.ceil(event.nativeEvent.layout.height))
             }
           >
-            {managed ? (
+            {topMaxHeight !== undefined ? (
               <ScrollView
-                scrollEnabled={managed}
-                style={{ flexGrow: 0 }}
+                style={styles.topScroll}
                 keyboardShouldPersistTaps="handled"
+                // Android hides the bar at rest; a capped card shows it has more.
+                persistentScrollbar
               >
                 {topContent}
               </ScrollView>
@@ -853,9 +894,18 @@ function MapMode({
               <MoneyMapControls
                 horizontal={horizontalControls}
                 onSearch={() => setSearchOpen(true)}
-                onZoomIn={() => dispatch({ type: 'zoom', direction: 1 })}
-                onZoomOut={() => dispatch({ type: 'zoom', direction: -1 })}
-                onFit={() => dispatch({ type: 'fit' })}
+                onZoomIn={() => {
+                  mapAction('zoom');
+                  dispatch({ type: 'zoom', direction: 1 });
+                }}
+                onZoomOut={() => {
+                  mapAction('zoom');
+                  dispatch({ type: 'zoom', direction: -1 });
+                }}
+                onFit={() => {
+                  mapAction('zoom');
+                  dispatch({ type: 'fit' });
+                }}
               />
             </View>
           )}
@@ -885,6 +935,7 @@ function MapMode({
                 setFocus(null);
                 setExpanded(false);
               }}
+              onOpenRecord={() => mapAction('open_record')}
               onPeekHeight={setPeek}
             />
           </View>
@@ -1192,6 +1243,7 @@ const styles = StyleSheet.create({
     paddingTop: rhythm.tight,
     width: '100%',
   },
+  topScroll: { flexGrow: 0 },
   card: {
     backgroundColor: colors.raised,
     borderRadius: radii.container,

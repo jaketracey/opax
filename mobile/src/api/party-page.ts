@@ -7,6 +7,7 @@ import type {
   PeopleCatalog,
   Roster,
   Slugs,
+  Votes,
 } from './catalog-decoders';
 import {
   joinPerson,
@@ -19,8 +20,14 @@ import {
   billName,
   billQuestionParts,
 } from './bill-transforms';
-import { isPartyLabel, samePartyLabel } from '../design/party';
+import {
+  formerPartyName,
+  isPartyLabel,
+  partyRename,
+  samePartyLabel,
+} from '../design/party';
 import { nameKey } from './ids';
+import { formatMoney } from '../design/format';
 export { resolveParty } from '../design/party';
 
 // Codes in the parliamentary roster, expanded for membership comparisons.
@@ -76,6 +83,7 @@ export function partyMembers(
       chamber: s.chamber,
       place: s.place,
       asAt: s.asAt,
+      ...recordedAs(s.party),
     })),
   );
   const recorded: PartyMember[] = [];
@@ -144,6 +152,7 @@ export function partyMembers(
         chamber: '',
         place: '',
         asAt: roster.meta.generated,
+        ...recordedAs(p.party),
       });
       for (const source of p.sources) sources.set(source.source_id, source);
     }
@@ -270,22 +279,124 @@ export interface PartyMember {
   chamber: string;
   place: string;
   asAt: string | null;
+  /** The label the record carries, when it is a former name of the party. */
+  recordedAs?: string;
+}
+/** The record's former party name, as recorded, for a "Recorded as" line. */
+const recordedAs = (party: string | null | undefined) => {
+  const former = formerPartyName(party);
+  return former ? { recordedAs: former } : {};
+};
+
+/** A past member from the voting record, under a former name of the party. */
+export interface PartyPastMember {
+  name: string;
+  /** Their profile's slug, or null when OPAX holds no profile for them. */
+  slug: string | null;
+  jurisdiction: string;
+  house: string;
+  /** First and last year of their recorded votes. */
+  years: readonly number[];
+  recordedAs: string;
+}
+/**
+ * Past members of a renamed party, from the voting record: everyone whose
+ * record carries one of its former names ("Liberal Democratic Party"). Only
+ * renamed parties list them: past members keep the label they sat under,
+ * and the party page otherwise excludes former members. People the members
+ * list already shows are left out.
+ */
+export function partyPastMembers(
+  label: string,
+  votes: Votes,
+  slugs: Slugs,
+  shown: readonly { name: string }[] = [],
+): PartyPastMember[] {
+  const rename = partyRename(label);
+  if (!rename) return [];
+  const seen = new Set(shown.map((m) => nameKey(m.name)));
+  const slugByName = new Map(
+    Object.entries(slugs.slugs).map(([slug, name]) => [nameKey(name), slug]),
+  );
+  const rows: PartyPastMember[] = [];
+  for (const record of Object.values(votes.records)) {
+    const former = formerPartyName(record.party);
+    if (!former || partyRename(former) !== rename) continue;
+    const key = nameKey(record.name);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    rows.push({
+      name: record.name,
+      slug: slugByName.get(key) ?? null,
+      jurisdiction: record.jurisdiction,
+      house: record.house,
+      years: record.years,
+      recordedAs: former,
+    });
+  }
+  return rows.sort(
+    (a, b) =>
+      (a.years[0] ?? 0) - (b.years[0] ?? 0) ||
+      a.name.localeCompare(b.name, 'en-AU'),
+  );
+}
+type MoneyNode = Money['nodes'][number];
+/**
+ * Several nodes of one renamed party in one money file, as one (the web's
+ * party-page.js combinedNode): totals and counts summed, the years spanned,
+ * and `lodgedAs` naming each name's part ("Lodged as Liberal Democrats
+ * $1,000; as Libertarian $2,000"). Returns lodged under each name are
+ * separate filings, so the sum never counts a receipt twice.
+ */
+export function combinedPartyNode(
+  nodes: readonly MoneyNode[],
+): MoneyNode & { lodgedAs: string | null } {
+  if (nodes.length === 1) return { ...nodes[0]!, lodgedAs: null };
+  const years = nodes
+    .flatMap((n) => [n.firstYear, n.lastYear])
+    .filter((y): y is number => !!y)
+    .sort((a, b) => a - b);
+  const parts = [...nodes]
+    .sort((a, b) =>
+      String(a.firstYear || '').localeCompare(String(b.firstYear || '')),
+    )
+    .map((n) => `${n.label} ${formatMoney(n.total || 0)}`);
+  const byYear: MoneyNode['byYear'] = {};
+  for (const n of nodes)
+    for (const [year, [amount, count]] of Object.entries(n.byYear)) {
+      const was = byYear[year] ?? [0, 0];
+      byYear[year] = [was[0] + amount, was[1] + count];
+    }
+  return {
+    ...nodes[0]!,
+    total: nodes.reduce((a, n) => a + (n.total || 0), 0),
+    count: nodes.reduce((a, n) => a + (n.count || 0), 0),
+    firstYear: years[0],
+    lastYear: years.at(-1),
+    byYear,
+    lodgedAs: `Lodged as ${parts.join('; as ')}`,
+  };
 }
 export function partyMoney(label: string, graph: Money) {
   const parties = graph.nodes
     .filter((n) => n.kind === 'party' && !n.via)
     .sort((a, b) => b.total - a.total);
-  const node = parties.find(
-    (n) =>
-      samePartyLabel(n.label, label) ||
-      n.aliases?.some((a) => samePartyLabel(a, label)),
-  );
-  if (!node) return null;
+  const matches = (n: MoneyNode) =>
+    samePartyLabel(n.label, label) ||
+    !!n.aliases?.some((a) => samePartyLabel(a, label));
+  // A renamed party can hold a node under each name it lodged returns as:
+  // all of them, as one. Any other party reads its largest matching node.
+  const own = partyRename(label)
+    ? parties.filter(matches)
+    : parties.filter(matches).slice(0, 1);
+  if (!own.length) return null;
+  const node = combinedPartyNode(own);
+  const ids = new Set(own.map((n) => n.id));
   const donors = new Map(
     graph.nodes.filter((n) => n.kind === 'donor').map((n) => [n.id, n]),
   );
   const flows = graph.edges.filter(
-    (e) => e.target === node.id && donors.has(e.source),
+    (e) => ids.has(e.target) && donors.has(e.source),
   );
   const donorRows = (year?: string) => {
     const sums = new Map<string, number>();
@@ -305,14 +416,23 @@ export function partyMoney(label: string, graph: Money) {
         name: donors.get(id)!.label,
         amount,
         associated: associatedLine(
-          donorAssociatedTo(donors.get(id)!, node.label),
+          own
+            .map((n) => donorAssociatedTo(donors.get(id)!, n.label))
+            .find(Boolean) ?? null,
         ),
       }));
   };
+  // The party's place among the file's parties, its names counted once.
+  const others = parties.filter((n) => !ids.has(n.id));
   return {
     node,
-    rank: parties.findIndex((n) => n.id === node.id) + 1,
-    parties: parties.length,
+    /** The register's own label, when its one node carries a former name. */
+    recordedAs: own.length === 1 ? formerPartyName(node.label) : null,
+    rank:
+      own.length === 1
+        ? parties.indexOf(own[0]!) + 1
+        : others.filter((n) => n.total > node.total).length + 1,
+    parties: others.length + 1,
     donors: donorRows(),
     byYear: Object.keys(node.byYear)
       .sort((a, b) => b.localeCompare(a))
@@ -333,9 +453,10 @@ export function partyDivisions(label: string, bills: BillDetail[]) {
     .flatMap((bill) =>
       billDedupeDivisions(bill.divisions, bill).divisions.flatMap(
         (division) => {
-          const split = Object.entries(division.party_splits).find(([party]) =>
-            samePartyLabel(party, label),
-          )?.[1];
+          const [party, split] =
+            Object.entries(division.party_splits).find(([party]) =>
+              samePartyLabel(party, label),
+            ) ?? [];
           return split && (split.ayes || split.noes)
             ? [
                 {
@@ -344,6 +465,8 @@ export function partyDivisions(label: string, bills: BillDetail[]) {
                   division,
                   question: billQuestionParts(division, bill).head,
                   ...split,
+                  // The division's own label, when it is a former name.
+                  recordedAs: formerPartyName(party),
                 },
               ]
             : [];
