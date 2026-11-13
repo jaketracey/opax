@@ -120,7 +120,7 @@ A reviewed service entry for each would hold these labels back on the next night
 
 **Recomputed each night.** Each run first restores the source label on every corrected or held row, and removes every fill, before checking again from the snapshot. Withdrawn evidence clears on the next run, and a rerun is byte-stable (tested).
 
-**Missing sources.** Every evidence source is optional, as im-vote-parties made it: a missing or unreadable one is skipped with one log line, and the nightly carries on. The electorate release is the dated record for federal labels, so if it does not load, the run logs one `WARNING` line and checks no source label at all. Every label stays as the source gives it, including any a previous night corrected, and the refresh does not fail. Gap fills still come from whatever other sources loaded (tested).
+**Missing sources.** Every evidence source is optional, as im-vote-parties made it: a missing or unreadable one is skipped with one log line, and the nightly carries on. The electorate release is the dated record for federal labels, so if it does not load, the run logs one `WARNING` line and recomputes no party at all, as a `--from-bills` run does. The previous run's fills, corrections and held-back labels are kept exactly as published, on every row whose source label is unchanged; a row whose source label changed meanwhile shows the new source label. The refresh does not fail (tested: the shards are byte-identical after a night without the release).
 
 **After merging im-vote-parties (fix-1).** Brackets and Wikidata confirmation now stop at a general election (`scripts/general_elections.json`), not after four years. Labels are compared in substance inside that rule too. The counts are unchanged: 11,218 labels replaced, none held back and 3,123 gap fills (dry run with `parli.db`).
 
@@ -207,13 +207,13 @@ All test people are invented.
   - No covering evidence, or two people with one name, keeps the label.
   - Senate rows are untouched without dated Senate evidence.
   - Corrections and holds are recomputed from the source label, and withdrawn evidence clears them.
-  - Without the dated release, no label is checked or changed, and earlier corrections go back to the source label.
+  - Without the dated release, the export keeps the published fills and corrections byte for byte, and a source label that changed meanwhile is not given the old correction.
   - `same_party` cases.
   - An export integration test: tallies follow the correction, reruns are byte-stable, and withdrawal clears.
 - **`portal/test/division-parties.test.mjs`:** 2 new tests (7 in total after the merge).
   - Replaced-label wording, with no "gap fill" wording and no stale party.
   - A held label is counted in words and never shown.
-- **`scripts/vm/test_nightly.sh`:** the fixture sandbox now copies `vote_parties.py`, its evidence files and `tvfy_refresh`'s imports, and holds an empty electorate release. The exporter has imported `vote_parties` and read the release since im-vote-parties, so before this change the fixture import check failed, and with that fixed the sandboxed division export failed. A missing release in a real run is logged and leaves every source label unchanged (see "Missing sources").
+- **`scripts/vm/test_nightly.sh`:** the fixture sandbox now copies `vote_parties.py`, its evidence files and `tvfy_refresh`'s imports, and holds an empty electorate release. The exporter has imported `vote_parties` and read the release since im-vote-parties, so before this change the fixture import check failed, and with that fixed the sandboxed division export failed. A missing release in a real run is logged once and keeps the published parties as they are (see "Missing sources").
 
 The three dated-record leads (Goodenough, Quick and Johnson) and the missing dated Senate records go to the backlog as data tickets.
 

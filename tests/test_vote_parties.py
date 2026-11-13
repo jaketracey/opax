@@ -503,6 +503,31 @@ class ExportIntegration(unittest.TestCase):
         ivo = next(m for m in guarded["nsw-lc-2026-05-01-1"]["members"] if m["name"] == "Ivo Quarrington")
         self.assertEqual((ivo["party"], ivo["party_source"]["basis"]), ("Example Labour", "service"))
 
+    def test_a_missing_release_keeps_published_corrections_and_fills_as_they_are(self):
+        evidence = V.Evidence([release_term("Corin Ashdale", "Nationals", "2013-09-07", "2025-12-15"),
+                               release_term("Lark Penhallow", "Labor", "2013-09-07", pid="99300")], elections={})
+        def fresh(ashdale="One Nation"):
+            record = federal("federal-representatives-1", "2014-03-20", [
+                labelled("Corin Ashdale", ashdale), row("Lark Penhallow", "no", "tvfy_99300")])
+            record.update(ayes=1, noes=1)
+            return {record["key"]: record}
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "divisions"
+            D.write_projection(fresh(), out, party_evidence=evidence)
+            published = {p.name: p.read_bytes() for p in out.iterdir()}
+            shard = json.loads((out / "division-federal-representatives-1.json").read_text())
+            self.assertEqual([m.get("party") for m in shard["members"]], ["Nationals", "Labor"])
+            # Tonight the release does not load: nothing may be undone.
+            missing = V.Evidence([], elections={}, check_labels=False)
+            D.write_projection(fresh(), out, party_evidence=missing)
+            self.assertEqual({p.name: p.read_bytes() for p in out.iterdir()}, published)
+            # A source label that changed meanwhile is not given the old correction.
+            D.write_projection(fresh("Nationals"), out, party_evidence=missing)
+            shard = json.loads((out / "division-federal-representatives-1.json").read_text())
+        ashdale, penhallow = shard["members"]
+        self.assertEqual((ashdale["party"], "party_source" in ashdale), ("Nationals", False))
+        self.assertEqual((penhallow["party"], penhallow["party_source"]["basis"]), ("Labor", "release-term"))
+
     def test_without_evidence_rows_are_unchanged(self):
         record = division("nsw-lc-2026-05-01-1", "2026-05-01", [row("Ivo Quarrington")])
         with tempfile.TemporaryDirectory() as tmp:

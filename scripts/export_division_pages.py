@@ -400,12 +400,24 @@ def write_projection(records, output, carry=False, strict=False, party_evidence=
     previously published evidence. The returned records include retained rows.
     `party_evidence` (scripts/vote_parties.load_evidence) refills dated parties
     for rows the source leaves without one and checks source labels against
-    them, from the source labels each run; None (--from-bills) keeps the
-    previous fills and corrections as published.
+    them, from the source labels each run. None (--from-bills), or evidence
+    without the dated release (check_labels False), recomputes nothing and
+    keeps the previous fills and corrections as published.
     """
     output = Path(output)
-    guarded = guard_projection(records, read_previous_projection(output), strict=strict)
-    if party_evidence is not None:
+    previous = read_previous_projection(output)
+    guarded = guard_projection(records, previous, strict=strict)
+    if party_evidence is not None and not getattr(party_evidence, "check_labels", True):
+        # vote_parties.load_evidence has logged the missing release once.
+        party_evidence = None
+    if party_evidence is None:
+        # Nothing is recomputed: a fresh record takes last run's fills and
+        # corrections where its source label is unchanged (retained records
+        # already carry them).
+        for key, record in guarded.items():
+            if key in previous and not record["_meta"]["refresh_retained"]:
+                vote_parties.keep_published_parties(record, previous[key])
+    else:
         # Before source parties are copied in: a party the source now publishes
         # must win over last run's roster fill, and a corrected or withheld
         # label goes back to its source label before it is checked again.

@@ -254,9 +254,10 @@ def load_elections(path: Path = ELECTIONS) -> dict[str, list[str]]:
 class Evidence(list):
     """Dated observations, plus the general elections that bound them.
 
-    `check_labels` is False when the electorate release did not load: the
-    release is the dated record for federal source labels, so without it no
-    source label is checked (all stay as the source gives them)."""
+    `check_labels` is False when the electorate release did not load. The
+    release is the dated record for federal source labels, so the division
+    export then recomputes nothing and keeps the previous run's fills and
+    corrections as published (keep_published_parties)."""
     def __init__(self, items=(), elections=None, check_labels=True):
         super().__init__(items)
         self.elections = load_elections() if elections is None else elections
@@ -279,7 +280,7 @@ def load_evidence(root: Path = ROOT, db: sqlite3.Connection | None = None, publi
             log(f"{name} skipped ({type(e).__name__}: {e}); no party is filled from it")
     if not release_loaded:
         log("WARNING: the electorate release (the dated party record) did not load; "
-            "no source party label is checked or changed this run, all stay as the source gives them")
+            "no party is recomputed this run: the previous fills and corrections are kept as published")
     return Evidence(out, load_elections(root / "scripts/general_elections.json"), check_labels=release_loaded)
 
 
@@ -490,6 +491,47 @@ def clear_fills(records) -> None:
             if isinstance(held, dict) and held.get("source_party") and not member.get("party"):
                 member["party"] = held["source_party"]
 
+
+
+def keep_published_parties(record: dict, published: dict) -> None:
+    """Carry the previous run's fills, corrections and holds onto a fresh record.
+
+    Used when no party can be recomputed (the dated release is missing): a
+    night without evidence must not undo what earlier evidence established.
+    A row takes the published result only while its source label is the one
+    that result was made from; a row whose source label changed keeps the
+    new source label."""
+    key = lambda m: (fold(m.get("name")), m.get("vote"), rules.canonical_person_id(m.get("person_id")))
+    old = {}
+    for m in published.get("members", []):
+        old.setdefault(key(m), m)
+    counts = Counter()
+    for member in record.get("members", []):
+        prev = old.get(key(member))
+        if not prev:
+            continue
+        fill, held = prev.get("party_source"), prev.get("party_withheld")
+        if isinstance(fill, dict) and fill.get("source_party"):
+            if member.get("party") == fill["source_party"]:
+                member["party"], member["party_source"] = prev["party"], dict(fill)
+                counts["corrected"] += 1
+        elif isinstance(fill, dict):
+            if not member.get("party") and prev.get("party"):
+                member["party"], member["party_source"] = prev["party"], dict(fill)
+                counts["filled"] += 1
+        elif isinstance(held, dict) and held.get("source_party"):
+            if member.get("party") == held["source_party"]:
+                member.pop("party", None)
+                member["party_withheld"] = dict(held)
+                counts["withheld"] += 1
+    meta, old_meta = record.setdefault("_meta", {}), published.get("_meta", {})
+    meta.pop("party_fill", None)
+    meta.pop("party_check", None)
+    if counts["filled"] and old_meta.get("party_fill"):
+        meta["party_fill"] = {**old_meta["party_fill"], "filled": counts["filled"]}
+    if (counts["corrected"] or counts["withheld"]) and old_meta.get("party_check"):
+        meta["party_check"] = {**old_meta["party_check"], "corrected": counts["corrected"],
+                               "withheld": counts["withheld"]}
 
 
 def check_label(resolver, house, day, member, voters) -> dict:
