@@ -63,7 +63,8 @@ function CountLine({
     ...(parts?.rest ?? []),
   ]
     .filter(Boolean)
-    .join('. ');
+    .join('. ')
+    .replace(/\u00a0/g, ' ');
   const line = (
     <>
       {details ? (

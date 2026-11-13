@@ -193,12 +193,20 @@ function StageTimelineContent({
   stages,
   latestIndex,
   onBand = false,
+  caption = true,
   dateRange,
   citation,
 }: ChartProvenance & {
   stages: readonly { label: string; date: string }[];
   latestIndex: number;
   onBand?: boolean;
+  /**
+   * The footnote date range under the stages ("12 August 2026 to 18
+   * September 2026"). A page whose block already ends in a dated source
+   * line turns it off, so the block is not sourced twice (the bill page,
+   * sweep 1 item 9). The stages and their dates are still drawn and said.
+   */
+  caption?: boolean;
 }) {
   const large = useAccessibilitySize();
   const regions = useReservedRegions();
@@ -454,13 +462,15 @@ function StageTimelineContent({
           </View>
         ))}
       </View>
-      <Text
-        testID="stage-timeline-caption"
-        variant="footnote"
-        tone={onBand ? 'onBandSoft' : 'inkSoft'}
-      >
-        {provenance({ dateRange, citation })}
-      </Text>
+      {caption ? (
+        <Text
+          testID="stage-timeline-caption"
+          variant="footnote"
+          tone={onBand ? 'onBandSoft' : 'inkSoft'}
+        >
+          {provenance({ dateRange, citation })}
+        </Text>
+      ) : null}
     </View>
   );
 }

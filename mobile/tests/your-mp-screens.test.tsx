@@ -204,7 +204,14 @@ test('profile failure in expenses preserves votes, pay and identity; absent loca
   ).toBeGreaterThan(0);
   expect(r.root.findAllByType(Image)).toHaveLength(0);
   expect(text(r)).not.toContain('Portrait display permission needs review');
-  expect(text(r)).toContain('Date not published');
+  // Tile labels fit one line at Large (sweep 1, item 9).
+  expect(text(r)).toContain(
+    '1,998 divisions 37 interests $448,631 a year in pay',
+  );
+  // An undated votes file is dated by the newest listed bill vote, never
+  // left undated or given another file's date (sweep 1, item 9).
+  expect(text(r)).toContain('Latest bill vote 20 Jan 2026 · They Vote For You');
+  expect(text(r)).not.toContain('Date not published · They Vote For You');
   expect(text(r)).toContain('Real estate');
   expect(text(r)).not.toContain('real_estate');
   await act(async () => r.unmount());

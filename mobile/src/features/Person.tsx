@@ -708,7 +708,8 @@ function ProfileContent({
   if (votes !== null && b.votes.status !== 'error')
     tiles.push({
       value: formatCount(votes),
-      label: `${votes === 1 ? 'division' : 'divisions'} voted in`,
+      // One line at Large, the chevron after the last word (sweep 1, item 9).
+      label: votes === 1 ? 'division' : 'divisions',
       onPress: b.votes.status !== 'unlinked' ? () => jump('votes') : undefined,
       testID: 'person-figure-votes',
     });
@@ -716,7 +717,7 @@ function ProfileContent({
   if (interests !== null && b.interests.status !== 'error')
     tiles.push({
       value: formatCount(interests),
-      label: 'declared interests',
+      label: interests === 1 ? 'interest' : 'interests',
       onPress:
         b.interests.status !== 'unlinked' ? () => jump('interests') : undefined,
       testID: 'person-figure-interests',
@@ -834,10 +835,7 @@ function ProfileContent({
           ) : undefined
         }
         licenceDataset="tvfy"
-        line={() => ({
-          ...votesSource(b.votes),
-          ...(b.votes.asAt ? {} : { dateLabel: 'Date not published' }),
-        })}
+        line={() => votesSource(b.votes)}
         about={(v) =>
           v
             ? {
