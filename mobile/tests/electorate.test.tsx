@@ -891,9 +891,12 @@ test('not found and failure states', async () => {
     pathname: '/directory',
     params: { kind: 'electorate' },
   });
+  // A page of its own, like Members and topics: the loading page centred
+  // drew the block 57 pt low on the device. Nothing to refresh.
   const page = r.root.findByType(Screen);
   expect(page.props.centred).toBe(true);
-  expect(page.props.grouped).toBe(false);
+  expect(page.props.grouped).toBeFalsy();
+  expect(page.props.refreshControl).toBeUndefined();
   await act(async () => r.unmount());
   mockParams.id = seat('Grayndler').electorate_id;
   mock.electorateFor.mockRejectedValue(new ApiError('http', 'nope'));

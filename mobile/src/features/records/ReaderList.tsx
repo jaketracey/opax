@@ -150,7 +150,11 @@ export function ReaderList({
   const lastJump = useRef<typeof jumpTo>(null);
   // A readable column on iPad, with a split pane's Back first.
   const column = useScreenColumn();
-  const foot = useFloatingBarFoot(rhythm.section * 2);
+  // A centred page state keeps Screen's foot, so a missing record sits at the
+  // same height as every other not-found page (18 pt high with the reader's).
+  const foot = useFloatingBarFoot(
+    centred ? rhythm.section : rhythm.section * 2,
+  );
   // Highlight with the same document-wide pass as the find counter, including
   // parts that are not mounted in the virtualised list yet.
   const query = find?.query;
@@ -203,8 +207,8 @@ export function ReaderList({
           contentContainerStyle={[
             styles.content,
             column.content,
-            foot,
             centred ? styles.centred : null,
+            foot,
           ]}
           onLayout={column.onLayout}
           contentInsetAdjustmentBehavior="automatic"
@@ -276,7 +280,11 @@ const styles = StyleSheet.create({
     paddingTop: rhythm.block,
     paddingBottom: rhythm.section * 2,
   },
-  centred: { flexGrow: 1, justifyContent: 'center' },
+  centred: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingBottom: rhythm.section,
+  },
   // Paragraphs 11 apart (`row`); a part title 8 above its text.
   part: { paddingVertical: rhythm.row / 2, gap: rhythm.heading },
   match: { backgroundColor: colors.navyWash },

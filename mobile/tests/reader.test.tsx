@@ -36,6 +36,7 @@ import { decodeDocument } from '../src/features/records/model';
 import { records } from '../src/features/records/runtime';
 import { citeRoute, moneyRecordRoute } from '../src/navigation/routes';
 import { sheetPayload } from '../src/navigation/sheets';
+import { rhythm } from '../src/design/tokens';
 import { index, manifest, people, roster, slugs } from './pinned';
 
 const responses: Record<string, unknown> = fixtures.responses;
@@ -437,6 +438,16 @@ test('a link that names no record says so', async () => {
   expect(state.props.body).toBe('The link may be old.');
   expect(state.props.action.label).toBe('Search the record');
   expect(view.root.findByType(ReaderList).props.centred).toBe(true);
+  // Screen's foot, not the reader's double one: the block sat 18 pt above
+  // the other not-found pages on the device.
+  const list = view.root.findAll(
+    (node) =>
+      node.props.testID === 'doc-reader' && !!node.props.contentContainerStyle,
+  )[0]!;
+  const content = StyleSheet.flatten(list.props.contentContainerStyle);
+  expect(content.paddingTop).toBe(rhythm.block);
+  expect(content.paddingBottom).toBe(rhythm.section);
+  expect(content.justifyContent).toBe('center');
   await act(async () => view.unmount());
 });
 

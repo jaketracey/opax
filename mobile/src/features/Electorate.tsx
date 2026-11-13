@@ -245,15 +245,34 @@ function ElectorateContent({
   const scroll = useRef<ScrollView>(null);
   const identity = loaded?.view.identity.data;
   const offline = failure?.code === 'offline' || failure?.code === 'timeout';
-  // A missing seat takes the shared not-found pattern (sweep 2, item 2):
-  // centred on the paper ground like every other missing record.
-  const missing = !loaded && failure?.code === 'not-found';
+  // A missing seat takes the shared not-found pattern (sweep 2, item 2) on a
+  // page of its own, like the members and topic pages: centred on paper,
+  // nothing to refresh. Centring the loading page instead drew the block
+  // 57 pt below the other six on the device.
+  if (!loaded && failure?.code === 'not-found')
+    return (
+      <>
+        {embedded ? null : <ElectorateBar loaded={null} asof={asof} />}
+        <Screen centred testID="electorate-screen">
+          <ContentUnavailable
+            symbol="map"
+            title="This electorate isn’t in OPAX"
+            body="It may have been renamed or abolished."
+            action={{
+              label: 'Search electorates',
+              onPress: () => router.navigate(directoryRoute('electorate')),
+              testID: 'electorate-not-found-search',
+            }}
+            testID="electorate-error"
+          />
+        </Screen>
+      </>
+    );
   return (
     <>
       {embedded ? null : <ElectorateBar loaded={loaded} asof={asof} />}
       <Screen
-        grouped={!missing}
-        centred={missing}
+        grouped
         column="readable"
         testID="electorate-screen"
         scrollRef={scroll}
@@ -271,39 +290,23 @@ function ElectorateContent({
           skeleton={<ElectorateSkeleton />}
         >
           {failure && !loaded ? (
-            failure.code === 'not-found' ? (
-              <ContentUnavailable
-                symbol="map"
-                title="This electorate isn’t in OPAX"
-                body="It may have been renamed or abolished."
-                action={{
-                  label: 'Search electorates',
-                  onPress: () => router.navigate(directoryRoute('electorate')),
-                  testID: 'electorate-not-found-search',
-                }}
-                testID="electorate-error"
-              />
-            ) : (
-              <ContentUnavailable
-                symbol={offline ? 'wifi.slash' : 'exclamationmark.triangle'}
-                title={
-                  offline
-                    ? copy.notSaved
-                    : "This electorate couldn't be loaded."
-                }
-                body={offline ? copy.notSavedBody : undefined}
-                action={
-                  offline
-                    ? undefined
-                    : {
-                        label: copy.tryAgain,
-                        onPress: refresh,
-                        testID: 'electorate-retry',
-                      }
-                }
-                testID="electorate-error"
-              />
-            )
+            <ContentUnavailable
+              symbol={offline ? 'wifi.slash' : 'exclamationmark.triangle'}
+              title={
+                offline ? copy.notSaved : "This electorate couldn't be loaded."
+              }
+              body={offline ? copy.notSavedBody : undefined}
+              action={
+                offline
+                  ? undefined
+                  : {
+                      label: copy.tryAgain,
+                      onPress: refresh,
+                      testID: 'electorate-retry',
+                    }
+              }
+              testID="electorate-error"
+            />
           ) : null}
           {loaded && identity ? (
             <ElectoratePage
