@@ -6,7 +6,7 @@ import {
   stageTitle,
 } from '../src/features/bills/divisions';
 import reviewed from './fixtures/vote-titles.json';
-import { pinned, servedFiles } from './pinned';
+import { bills, pinned, servedFiles } from './pinned';
 
 // These decisions were reviewed against the explicit questions in the
 // pinned records. Every unlisted vote keeps its pre-sweep recorded title.
@@ -54,4 +54,21 @@ test('every fixture motion line is bounded and starts with words, not stray punc
     expect(motion.length).toBeLessThanOrEqual(240);
     expect(motion).toMatch(/^That \p{L}/u);
   }
+});
+
+test('every bundled Amendment bill name keeps its second-reading title', () => {
+  const names = bills.bills.filter((bill) =>
+    /\bamendments?\b/i.test(bill.title),
+  );
+  expect(names).toHaveLength(2162);
+  const mislabelled = names.flatMap((bill) => {
+    const title = divisionTitle({
+      stage: 'Limitation of debate',
+      question: `That the ${bill.title} be now read a second time.`,
+    });
+    return title !== 'Second reading'
+      ? [{ key: bill.key, name: bill.title, title }]
+      : [];
+  });
+  expect(mislabelled).toEqual([]);
 });

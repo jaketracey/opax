@@ -61,6 +61,59 @@ test('an announcement never adds a mover to the title', () => {
 });
 
 test.each([
+  [
+    'the Treasury Laws Amendment (Measures No. 1) Bill 2026 be now read a second time.',
+    'Second reading',
+  ],
+  [
+    'the Public Governance, Performance and Accountability Amendment (Supporting Small Businesses To Be Paid On Time) Bill 2026 be now read a second time.',
+    'Second reading',
+  ],
+  [
+    'the Social Services Legislation Amendment (Other Measures) Bill 2025 be now read a third time.',
+    'Third reading',
+  ],
+  [
+    'the Treasury Laws Amendment and Other Measures Bill 2026 be now read a second time.',
+    'Second reading',
+  ],
+  [
+    'the Social Security and Other Legislation Amendment (Other Measures) Bill 2025 be now read a third time.',
+    'Third reading',
+  ],
+  [
+    'the Environment (Consequential Amendments) Bill 2026 be now read a third time.',
+    'Third reading',
+  ],
+  ['the bill be now read a third time.', 'Third reading'],
+  [
+    'the amendment to the Treasury Laws Amendment Bill be agreed to.',
+    'Amendment',
+  ],
+  [
+    'the amendment to the Treasury Laws Amendment and Other Measures Bill 2026 be agreed to.',
+    'Amendment',
+  ],
+  [
+    'the amendments to the Social Services Legislation Amendment (Other Measures) Bill 2025 be agreed to.',
+    'Amendments',
+  ],
+])('a bill name is not the amendment being voted on: %s', (motion, title) => {
+  expect(divisionTitle({ stage, question: `That ${motion}` })).toBe(title);
+});
+
+test('a Consequential Amendments bill retains its third reading when the question only says the bill', () => {
+  expect(
+    divisionTitle({
+      title: stage,
+      stage,
+      head: 'Environment (Consequential Amendments) Bill 2026',
+      question: 'That the bill be now read a third time.',
+    }),
+  ).toBe('Third reading');
+});
+
+test.each([
   null,
   '',
   'Long debate text truncated.',

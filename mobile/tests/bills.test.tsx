@@ -663,6 +663,39 @@ describe('loading a bill (4.3)', () => {
 });
 
 describe('the bill page', () => {
+  test('an Amendment bill name containing To Be still renders its reading, not an amendment', async () => {
+    mockParams.key = 'au-federal-r7534';
+    const record = await fixture.billFor(mockParams.key);
+    const divisions = record.data.divisions.data!;
+    jest.mocked(runtime.billFor).mockResolvedValueOnce({
+      ...record,
+      data: {
+        ...record.data,
+        divisions: {
+          ...record.data.divisions,
+          data: {
+            ...divisions,
+            rows: [
+              {
+                ...divisions.rows[0]!,
+                stage: 'Limitation of debate',
+                title: 'Limitation of debate',
+                question:
+                  'That the Public Governance, Performance and Accountability Amendment (Supporting Small Businesses To Be Paid On Time) Bill 2026 be now read a second time.',
+              },
+            ],
+          },
+        },
+      },
+    });
+    const root = await render();
+    expect(texts(host(root, 'bill-division-0-title')[0]!)).toEqual([
+      'Second reading',
+    ]);
+    expect(
+      host(root, 'bill-division-0-more')[0]!.props.accessibilityLabel,
+    ).toMatch(/^Second reading, Senate · .*under a time limit,/);
+  });
   test('r7375 never presents its rejected amendment as a rejected second reading', async () => {
     mockParams.key = 'au-federal-r7375';
     mockParams.division = 'federal-senate-10192';

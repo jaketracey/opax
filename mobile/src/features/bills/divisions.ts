@@ -426,7 +426,14 @@ function timeLimitedTitle(division: DivisionTitleRecord): string | null {
   if (!UNDER_TIME_LIMIT.test(stage) || !division.question) return null;
   const put = divisionMotion(division.question);
   if (!put) return null;
-  const subject = put.split(/\s+be\s+/i, 1)[0]!;
+  const subject = put
+    .replace(
+      // A bill's name can itself contain "Amendment". Keep "to" outside
+      // these spans so an amendment TO a named bill remains an amendment.
+      /\b(?!That\b)(?![Tt][Oo]\b)\p{Lu}[\p{L}\p{N}'’./-]*(?:\s+(?:(?![Tt][Oo]\b)[\p{Lu}\p{N}][\p{L}\p{N}'’./-]*|and|or|of|the|for|in|on|with|under|a|an)|\s*\((?:[^()]|\([^()]*\))*\))*\s+Bill(?:\s+\d{4})?\b/gu,
+      (name) => (/\bamendments?\b/i.test(name) ? '' : name),
+    )
+    .split(/\s+be\s+/i, 1)[0]!;
   // An amendment to a reading motion is still an amendment, even when
   // that motion's second/third reading is quoted later in the question.
   const amendment = SUBSTANTIVE_QUESTION[3]!.exec(subject);
