@@ -24,7 +24,7 @@ import {
 import { askDraft } from '../src/features/search/recovery';
 import { askSession, askNowCopy } from '../src/features/ask/session';
 import { AskFailure } from '../src/features/ask/stream';
-import { saveChats } from '../src/features/ask/store';
+import { chatsSnapshot, saveChats } from '../src/features/ask/store';
 import { AskBlock, todayStarters } from '../src/features/today/AskBlock';
 
 jest.mock('expo-router', () => ({
@@ -44,15 +44,23 @@ jest.mock('../src/features/account/store', () => ({
   useAccount: () => ({ status: null, checking: false }),
   accountSnapshot: () => ({ status: null }),
 }));
+// The device store keeps a copy of what it saves, as the disk does: a turn
+// changed after its save never reaches it, so a missing save shows.
 jest.mock('../src/features/ask/store', () => {
-  const saved = { v: 1, active: null, chats: [] };
+  const empty = () => ({ v: 1, active: null, chats: [] });
+  let saved = empty();
   return {
     chatsSnapshot: () => saved,
     subscribeChats: () => () => {},
     subscribeChatDeletion: () => () => {},
     loadChats: jest.fn().mockResolvedValue(undefined),
-    saveChats: jest.fn().mockResolvedValue(undefined),
+    saveChats: jest.fn(async (next: unknown) => {
+      saved = JSON.parse(JSON.stringify(next));
+    }),
     forgetActiveChat: jest.fn(),
+    resetChats: () => {
+      saved = empty();
+    },
   };
 });
 jest.mock('../src/features/ask/sync', () => ({
@@ -64,6 +72,9 @@ jest.mock('../src/analytics', () => ({
   currentSection: () => 'today',
 }));
 
+const { resetChats } = jest.requireMock<{ resetChats: () => void }>(
+  '../src/features/ask/store',
+);
 const post = jest.mocked(client.askPost);
 const today = '2026-11-13';
 const [first] = todayStarters(today);
@@ -109,6 +120,7 @@ async function render(element: React.ReactElement) {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  resetChats();
   online(true);
   post.mockResolvedValue(answer('An answer from the record.'));
   askSession.start();
@@ -372,9 +384,14 @@ it.each([
   },
 );
 
-it('the waiting question goes when the answer is written, before its Ask next rows, which still reach the saved conversation', async () => {
+/**
+ * A running answer with sources and a tapped question waiting behind it:
+ * the answer is written and saved, the waiting question goes, and the
+ * answer's Ask next request is left open for the test to settle.
+ */
+async function waitingBehindAnswer() {
   let finish!: (value: unknown) => void;
-  let followups!: (value: unknown) => void;
+  let followups: ((value: unknown) => void) | undefined;
   post.mockImplementation((path: string) =>
     path === '/api/followups'
       ? new Promise((resolve) => (followups = resolve))
@@ -385,7 +402,7 @@ it('the waiting question goes when the answer is written, before its Ask next ro
   await act(async () => {
     void askSession.submit('A question already running?');
   });
-  const running = askSession.snapshot().id;
+  const running = askSession.snapshot().id!;
   askSession.arrive(
     'What has parliament said?',
     { ...askSession.snapshot().options },
@@ -406,6 +423,13 @@ it('the waiting question goes when the answer is written, before its Ask next ro
     }),
   );
   await flush();
+  return { running, followups };
+}
+const storedChat = (id: string) =>
+  chatsSnapshot().chats.find((c) => c.id === id);
+
+it('the waiting question goes when the answer is written, before its Ask next rows, which still reach the saved conversation', async () => {
+  const { running, followups } = await waitingBehindAnswer();
   // Sent while the first answer's Ask next rows are still loading.
   expect(followups).toBeDefined();
   expect(asked()).toEqual([
@@ -413,21 +437,85 @@ it('the waiting question goes when the answer is written, before its Ask next ro
     'What has parliament said?',
   ]);
   expect(askSession.snapshot().id).not.toBe(running);
+  // The answer was saved before its rows arrived.
+  expect(storedChat(running)?.thread.at(-1)).toMatchObject({
+    role: 'answer',
+    text: 'The first answer.',
+  });
+  expect(storedChat(running)?.thread.at(-1)?.next).toBeUndefined();
   await act(async () =>
-    followups({ questions: ['What did the committee find?'] }),
+    followups!({ questions: ['What did the committee find?'] }),
   );
   await flush();
-  const saved = jest
-    .mocked(saveChats)
-    .mock.calls.map(([store]) => store.chats.find((c) => c.id === running))
-    .filter(Boolean)
-    .at(-1)!;
-  expect(saved.thread.at(-1)).toMatchObject({
+  // Only a save puts the rows in the store's own copy.
+  expect(storedChat(running)?.thread.at(-1)).toMatchObject({
     role: 'answer',
     next: [{ question: 'What did the committee find?' }],
   });
   // The open conversation is the new one, untouched by the old rows.
   expect(askSession.snapshot().thread.at(-1)?.next).toBeUndefined();
+});
+
+it('Ask next rows for a conversation deleted while they loaded are not saved', async () => {
+  const { running, followups } = await waitingBehindAnswer();
+  expect(storedChat(running)).toBeDefined();
+  // The reader deletes the first conversation in Conversations.
+  await saveChats({
+    ...chatsSnapshot(),
+    chats: chatsSnapshot().chats.filter((c) => c.id !== running),
+  });
+  jest.mocked(saveChats).mockClear();
+  await act(async () =>
+    followups!({ questions: ['What did the committee find?'] }),
+  );
+  await flush();
+  expect(saveChats).not.toHaveBeenCalled();
+  expect(storedChat(running)).toBeUndefined();
+});
+
+it('a running answer that asks for a full question keeps the waiting question unsent', async () => {
+  let finish!: (value: unknown) => void;
+  post.mockImplementationOnce(
+    () => new Promise((resolve) => (finish = resolve)),
+  );
+  await act(async () => {
+    void askSession.submit('ok');
+  });
+  askSession.arrive(
+    'What has parliament said?',
+    { ...askSession.snapshot().options },
+    { queue: true },
+  );
+  expect(askSession.snapshot().queued).toBe(true);
+  await act(async () =>
+    finish({
+      answer: '',
+      sources: [],
+      answer_status: 'needs_question',
+      suggested_question: 'What has parliament said about rivers?',
+    }),
+  );
+  await flush();
+  // The clarify request stays on screen, and nothing else is asked.
+  expect(asked()).toEqual(['ok']);
+  const s = askSession.snapshot();
+  expect(s.clarify).toEqual({
+    question: 'ok',
+    suggestion: 'What has parliament said about rivers?',
+  });
+  expect(s).toMatchObject({
+    id: null,
+    thread: [],
+    busy: false,
+    draft: 'What has parliament said?',
+    fresh: true,
+    queued: false,
+  });
+  // Nothing was searched or written: no Ask next request and no save.
+  expect(post.mock.calls.map(([path]) => path)).toEqual(['/api/ask?stream=1']);
+  expect(saveChats).not.toHaveBeenCalled();
+  await flush();
+  expect(asked()).toEqual(['ok']);
 });
 
 describe('VoiceOver focus for a tapped question', () => {
