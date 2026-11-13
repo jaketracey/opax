@@ -59,7 +59,8 @@ query-free internal paths. Google signals and advertising personalization are of
 | `opax_community_open` | Follow a public link to community; navigation/footer placement |
 | `opax_download`, `opax_export` | Download a resource/export; export format and row count |
 
-No raw questions, search strings, answers, titles, postcodes, or errors are sent.
+No raw questions, search strings, answers, titles or postcodes are sent. Error
+reports go to PostHog only, scrubbed as described under "Error reports" below.
 URLs have query strings and fragments removed, including legacy hash routes.
 Only explicitly allowed categories and counts are accepted. SDK referrer, initial
 URL, search and person-property enrichment is removed before send. Of the
@@ -82,7 +83,7 @@ project's "Discard client IP data" setting, which is not in this repository.
 The SDK also sends the browser details it collects (browser and version, OS,
 device type, screen and viewport, language, time zone, referring domain) and
 keeps its identifier in a one-year cookie plus local storage; that cookie also
-holds the full first-visit URL, which `beforeSend` strips from events. Session replay, generic DOM autocapture, exception text capture, surveys
+holds the full first-visit URL, which `beforeSend` strips from events. Session replay, generic DOM autocapture, console error capture, surveys
 and remote feature flags are disabled to keep private questions out of telemetry.
 The shared event allowlist and Do Not Track gate apply to both systems. GA4
 Enhanced Measurement is disabled at the stream level so automatic search,
@@ -92,6 +93,40 @@ activity are not instrumented.
 
 Capture is enabled only on `opax.com.au` and `www.opax.com.au`. Local development
 and workers.dev previews do not send production analytics.
+
+## Error reports
+
+Since 13 November 2026 PostHog receives `$exception` events for uncaught errors
+(`window.onerror`) and unhandled promise rejections. `console.error` is never
+captured. GA receives no errors. The client sets the whole policy itself, so the
+project's Error tracking "Exception autocapture" setting does not change it:
+`capture_exceptions` is an object with every field set (an object makes
+posthog-js 1.427.2 ignore the remote setting, and fields left out are off),
+`error_tracking.captureExtensionExceptions` is `false`, and exception steps are
+off. The hooks (`posthog-js/dist/exception-autocapture`) are bundled into
+`analytics.js` because external script loading is disabled.
+
+`cleanException` in `analytics/privacy.mjs` runs inside `beforeSend`, after the
+same automated-browser check and URL scrubbing as every other event. It drops:
+
+- errors with any stack frame in a browser extension (`chrome-extension:`,
+  `moz-extension:`, `safari-extension:`, `safari-web-extension:`,
+  `ms-browser-extension:`);
+- errors whose located frames are all on other origins (no frame on
+  `opax.com.au` or `www.opax.com.au`), and bare cross-origin `Script error.`;
+- events with no `$exception_list`.
+
+It keeps only `$exception_list`, `$exception_level` and a plain
+`$exception_fingerprint`; every other `$exception*` property (steps, sources,
+SDK copies of the message) is deleted. Each exception (at most 5) keeps `type`
+(an identifier, otherwise `Error`), `value`, `mechanism` (`type`, `handled`,
+`synthetic`) and `stacktrace.frames` (at most 50): `platform`, `function`,
+`in_app`, `lineno`, `colno`, `chunk_id`, and `filename` only for frames on
+OPAX's own origin, as origin plus path (a script path as is, a page path through
+the page-view allowlist). The message has quoted text replaced with
+`<redacted>`, query strings and fragments removed (including `%3F`/`%23`), a
+rejected or thrown non-error value redacted unless it is a plain literal, and is
+capped at 200 characters.
 
 ## Build, test, deploy
 

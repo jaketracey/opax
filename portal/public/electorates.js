@@ -2,6 +2,7 @@ import { vicElectionFooterHTML } from './vic-election.js?v=6642b187d4';
 import { personUrl, partyUrl } from './canonical-urls.js?v=e32f13c6c8';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
+import { renderNotFound } from './not-found.js';
 import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=75e6c65ff7';
 import { pageMenuHTML as moreMenuHTML } from './page-actions-menu.js?v=8640c3d1ca';
 // The person page reads its verified-roster and dated official-list party fallbacks through this module (roster-party.js).
@@ -220,7 +221,14 @@ export async function renderProfile({ body, slug, on, isActive, setCrumbs, goRou
     const data = await loadIndex();
     if (!isActive()) return;
     const entry = data.electorates.find((e) => e.slug === slug || e.electorate_id === slug);
-    if (!entry) { body.innerHTML = '<h1 id="subject-title" tabindex="-1">Electorate not found</h1><p>No electorate has this address. <a href="/subject/electorate">Browse electorates</a></p>'; return; }
+    if (!entry) {
+      // No electorate at this address: the one not-found block (not-found.js).
+      const heading = renderNotFound(body, { kind: 'electorate', slug, headingId: 'subject-title' });
+      document.title = 'No electorate at this address · OPAX';
+      setCrumbs([{ label: 'Electorates', href: '/subject/electorate' }, { label: 'Not found' }]);
+      if (manageFocus) heading?.focus();
+      return;
+    }
     // Portraits for the bylines: the photo map in parallel, never blocking the page on it.
     const [detail, photoUrlFor] = await Promise.all([json(entry.detail_url), loadPhotos ? loadPhotos().catch(() => null) : null]);
     if (!isActive()) return;
