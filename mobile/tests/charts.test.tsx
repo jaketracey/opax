@@ -22,6 +22,7 @@ import {
 } from '../src/design/palette';
 import { SourceLine } from '../src/design/source';
 import { Text } from '../src/design/text';
+import { readAloud } from './a11y-tree';
 
 jest.mock('@shopify/react-native-skia', () => ({
   Canvas: require('react-native').View,
@@ -622,6 +623,16 @@ test('the inline table has a visible heading and a matching Show as chart spoken
     variant: 'subsectionTitle',
     children: 'Monthly totals',
   });
+  // Each row is one stop, year and value, in the bar's own words.
+  const read = readAloud(r.root);
+  const at = read.indexOf('Monthly totals (header)');
+  expect(read.slice(at, at + 3)).toEqual([
+    'Monthly totals (header)',
+    'October, 5',
+    'November, 10',
+  ]);
+  expect(read).not.toContain('October');
+  expect(read).not.toContain('5');
 });
 
 test('a partial financial year is dated by its source, and a completed year has no invented qualifier', () => {

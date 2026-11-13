@@ -646,6 +646,9 @@ function BarSeriesContent({
     partialFrom !== undefined && index >= partialFrom;
   const yearLabel = (index: number) =>
     partial(index) ? `${data[index]!.label} so far` : data[index]!.label;
+  /** One year as a screen reader says it, on its bar or its table row. */
+  const pointLabel = (index: number) =>
+    `${yearLabel(index)}, ${format(data[index]!.value)}`;
   const keys = data.map(
     (item, index) =>
       `${fontScale}:${index}:${item.label}:${format(item.value)}`,
@@ -698,7 +701,7 @@ function BarSeriesContent({
       accessible={spark || undefined}
       accessibilityLabel={
         spark
-          ? `${tableTitle}. ${data.map((item, index) => `${yearLabel(index)}, ${format(item.value)}`).join('. ')}. ${provenance({ dateRange, citation })}`
+          ? `${tableTitle}. ${data.map((_, index) => pointLabel(index)).join('. ')}. ${provenance({ dateRange, citation })}`
           : tableTitle
       }
       accessibilityActions={tableActions}
@@ -813,7 +816,7 @@ function BarSeriesContent({
           {!spark
             ? data.map((item, index) => {
                 const a11y = {
-                  accessibilityLabel: `${yearLabel(index)}, ${format(item.value)}`,
+                  accessibilityLabel: pointLabel(index),
                   accessibilityActions: tableActions,
                   onAccessibilityAction: tableAction,
                 };
@@ -913,7 +916,14 @@ function BarSeriesContent({
                 {tableTitle}
               </Text>
               {data.map((item, index) => (
-                <View key={`${item.label}:${index}`} style={styles.tableRow}>
+                // A row is one stop, year and value, as its bar is.
+                <View
+                  key={`${item.label}:${index}`}
+                  style={styles.tableRow}
+                  accessible
+                  accessibilityLabel={pointLabel(index)}
+                  testID={`bar-series-row-${index}`}
+                >
                   <Text variant="body" style={styles.tableCell}>
                     {yearLabel(index)}
                   </Text>
