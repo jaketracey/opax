@@ -149,6 +149,21 @@ export function receiptScopeLabel(figures, measure = 'all_types') {
  * measure), and grants and public-money flows are untouched.
  */
 const isReceiptEdge = edge => edge && !edge.grant && !edge.flow;
+
+/**
+ * Whether the parties' own returns list any receipt for a donor or a donor-to-party
+ * flow: its typed cells hold at least one receipt. A record without typed cells (every
+ * record of a state graph) keeps its record figures and counts as listed. A donor or a
+ * flow that only its own donor return declares has empty typed cells, so it has no
+ * each-gift-once figure: show DONOR_DECLARED_ONLY for it, never $0.
+ */
+export function hasPartyReceipts(x) {
+  if (!x?.by_type) return true;
+  const f = receiptFigures(x);
+  return f.count > 0 || f.total !== 0;
+}
+/** The line for a donor or flow that hasPartyReceipts rules out, in a reader's words. */
+export const DONOR_DECLARED_ONLY = "Declared on its own donor return; the parties' returns list no receipt from it";
 // Not cached: a few milliseconds for the federal graph, and a cache keyed on the
 // object would hand back a stale view of a graph changed after its first read.
 export function receiptGraph(graph) {
@@ -159,9 +174,8 @@ export function receiptGraph(graph) {
   for (const edge of graph.edges) {
     // An edge without typed cells (every edge of a state graph) keeps its record figures as they are.
     if (!isReceiptEdge(edge) || !edge.by_type) { edges.push(edge); continue; }
-    const f = receiptFigures(edge);
-    if (f.count <= 0 && f.total === 0) continue;
-    edges.push(read(edge, f));
+    if (!hasPartyReceipts(edge)) continue;
+    edges.push(read(edge, receiptFigures(edge)));
   }
   const nodes = Array.isArray(graph.nodes) ? graph.nodes.map(node => node?.kind === 'donor' && node.by_type ? read(node, receiptFigures(node)) : node) : graph.nodes;
   return {...graph, nodes, edges, receiptMeasure:true};

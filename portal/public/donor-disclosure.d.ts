@@ -13,6 +13,9 @@ export interface ReceiptCells {total?:number;count?:number;firstYear?:number|nul
 export interface ReceiptFigures {total:number;count:number;firstYear:number|null;lastYear:number|null;byYear:Record<string,number>;cells:Record<string,[number,number]>;undated:[number,number];byType:Record<string,number>|null;typed:boolean}
 export function receiptFigures(x: ReceiptCells | null | undefined): ReceiptFigures;
 export function receiptScopeLabel(figures: Pick<ReceiptFigures,'typed'|'firstYear'|'lastYear'>, measure?: 'all_types' | 'donation_only'): string;
+/** Whether the parties' own returns list any receipt for a donor or flow; true for a record without typed cells. */
+export function hasPartyReceipts(x: ReceiptCells | null | undefined): boolean;
+export const DONOR_DECLARED_ONLY: string;
 /** A financial year from its first year: 2020 is "2020-21". */
 export function financialYear(year: number): string;
 export interface ReceiptGraphLike {nodes?: unknown[]; edges: unknown[]; receiptMeasure?: boolean}
