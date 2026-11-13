@@ -294,6 +294,36 @@ for (const path of boundary.javascript) {
     `Transport boundary: ${path}`,
   );
 }
+// The PostHog client stays inside src/analytics/index.ts, which never resets,
+// identifies, groups or aliases it or reloads flags: native reset and
+// identify reload feature flags (docs/ANALYTICS.md).
+const posthogImport =
+  /(?:\bfrom\s*|\bimport\s*\(?\s*|\brequire\s*\(\s*)['"](?:posthog-react-native|@posthog\/[^'"]+)['"]/;
+assert.deepEqual(
+  boundary.javascript.filter((path) =>
+    posthogImport.test(readFileSync(path, 'utf8')),
+  ),
+  [join(sourceRoot, 'analytics/index.ts')],
+  'Only src/analytics/index.ts imports PostHog',
+);
+for (const path of boundary.javascript.filter((path) =>
+  posthogImport.test(readFileSync(path, 'utf8')),
+)) {
+  const content = readFileSync(path, 'utf8');
+  assert.deepEqual(
+    content.match(
+      /\.\s*(?:reset|identify|group|alias|reloadFeatureFlags(?:Async)?|setPersonPropertiesForFlags|setGroupPropertiesForFlags)\s*\(/g,
+    ) ?? [],
+    [],
+    `PostHog reset, identify, group, alias or a flag reload (native reset reloads flags): ${path}`,
+  );
+  assert(
+    !/\bexport\s+(?:default\s+(?:client|analytics)\b|(?:async\s+)?(?:function\*?|const|let|var)\s+(?:client|analytics)\b)|\bexport\s*\{[^}]*\b(?:client|analytics)\b/.test(
+      content,
+    ),
+    `The PostHog client stays private to ${path}`,
+  );
+}
 for (const path of boundary.swift)
   assert.deepEqual(
     scanSwift(path, readFileSync(path, 'utf8')),
@@ -453,7 +483,7 @@ if (appIndex !== -1) {
   }
 }
 console.log(
-  'PASS qa-static: variant origins/ATS, identity, iOS floor, dependency tree, secrets, transport boundary, accessibility rules',
+  'PASS qa-static: variant origins/ATS, identity, iOS floor, dependency tree, secrets, transport boundary, PostHog client calls, accessibility rules',
 );
 console.log(
   `  accessibility: ${Object.entries(a11y.checked)

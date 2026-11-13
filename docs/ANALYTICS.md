@@ -269,10 +269,15 @@ requests, no default person properties and, on iOS, GeoIP off (posthog-android
 has no GeoIP switch and sends no flags request). At launch the native SDK makes
 one request of its own, a GET of PostHog's remote config
 (`/ingest/array/<project token>/config`) carrying no body, install ID or session
-ID; it cannot be turned off in posthog-ios 3.92.7 or posthog-android 3.74.2, and
-with preloading off nothing in it starts a flags request. Its answer includes
-the "Enable exception autocapture" setting. The `/ingest` proxy forwards it
-with the phone's IP address, as it does the app's own analytics requests.
+ID, and with preloading off nothing in it starts a flags request. posthog-ios
+3.92.7 has no public switch for it; posthog-android 3.74.2 has a deprecated
+`remoteConfig` setting that still works. The patch leaves it on in both, because
+its answer carries the "Enable exception autocapture" setting, the project's
+switch for crash capture. The `/ingest` proxy forwards it with the phone's IP
+address, as it does the app's own analytics requests. Native `reset`, `identify`
+and `group` reload feature flags, so the app never calls them (or `alias` or a
+flag reload): `npm run qa-static` fails if `src/analytics/index.ts` does, if it
+exports its client, or if any other app file imports PostHog.
 The plugin podspec is patched to require exactly posthog-ios 3.92.7, the
 version these settings and the release verifier were checked against.
 
