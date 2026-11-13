@@ -401,6 +401,35 @@ test('a remount after the first-text tap never taps again', async () => {
   expect(jest.mocked(haptic).mock.calls).toEqual([['light']]);
 });
 
+test.each(['streamed', 'whole'] as const)(
+  'two threads on one session (Ask open in two tab stacks) tap once for %s text',
+  async (arrival) => {
+    const both = () =>
+      act(() =>
+        tree.update(
+          <>
+            <Thread />
+            <Thread />
+          </>,
+        ),
+      );
+    both();
+    start();
+    act(() => jest.advanceTimersByTime(5000));
+    if (arrival === 'streamed') act(() => handlers.delta('First words.'));
+    else await complete();
+    expect(jest.mocked(haptic).mock.calls).toEqual([['light']]);
+    hideThread();
+    both();
+    if (arrival === 'streamed') await complete();
+    expect(jest.mocked(haptic).mock.calls).toEqual([['light']]);
+    start();
+    act(() => jest.advanceTimersByTime(3000));
+    await complete();
+    expect(jest.mocked(haptic).mock.calls).toEqual([['light'], ['light']]);
+  },
+);
+
 test('the controller keeps the first-text arrival per question, across a recovery', async () => {
   start();
   expect(controller.snapshot().firstText).toBeNull();

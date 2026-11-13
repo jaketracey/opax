@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { AccessibilityInfo, AppState, StyleSheet, View } from 'react-native';
 import { Button } from '../../design/controls';
 import { haptic } from '../../design/haptics';
@@ -164,18 +164,27 @@ const slowArrival = 3000;
 const arrivalLate = 1000;
 
 /**
+ * Arrivals already felt or passed over, shared by every mounted thread: Ask
+ * can be open in more than one tab stack at once, all on one session.
+ */
+const feltArrivals = new WeakSet<object>();
+
+/**
  * One light haptic when a slow answer's first words appear. The arrival is
- * the controller's (`s.firstText`), consumed once per question, including
- * fast, failed and background arrivals. A view that mounts after the words
- * came counts them as felt, so a remount never taps again or late.
+ * the controller's (`s.firstText`), consumed once per question across all
+ * mounted threads, including fast, failed and background arrivals. A view
+ * that mounts after the words came counts them as felt, so a remount never
+ * taps again or late.
  */
 function useAnswerArrival(s: AskState) {
-  const felt = useRef(s.firstText);
+  useState(() => {
+    if (s.firstText) feltArrivals.add(s.firstText);
+  });
   const first = s.firstText;
   const failed = !!(s.error || s.clarify);
   useEffect(() => {
-    if (!first || felt.current === first) return;
-    felt.current = first;
+    if (!first || feltArrivals.has(first)) return;
+    feltArrivals.add(first);
     if (
       !failed &&
       first.waited >= slowArrival &&
