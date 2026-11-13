@@ -132,7 +132,7 @@ test('ordinary fallback and its cached SSE replay remove repeated financial sets
 
 test('catalogue receipt rows become prose with one cited figure and no repeated connection',()=>{
  const text='Disclosed receipt: CSR Limited → Labor — $447,696.00 in disclosed political receipts; 74 records. Aggregated connection, not an individual gift. Mining.'
- const sheet=api.writingFacts(undefined,[1,2].map(id=>({id,text,cite:{kind:'record',url:'https://example.org/receipt/'+id,label:text}})))
+ const sheet=api.writingFacts(undefined,[1,2].map(id=>({id,text,cite:{kind:'record',url:'https://example.org/receipt/fixture',label:text}})))
  const query={question:'How much money has CSR Limited given Labor?',period:{kind:'all',label:''},facts:sheet}
  assert.equal(api.rawToolEcho(text),true)
  assert.equal(api.verifyWrittenAnswer({sentences:[{text,facts:[1]}]},query),null)
@@ -204,13 +204,14 @@ test('exact record count coverage retains the snapshot and latest record date se
  assert.doesNotMatch(out.answer,/snapshot|coverage|ranked sample/i)
 })
 
-test('overlapping source copies cite a figure once while distinct owners survive',()=>{
+test('overlapping source copies merge citations while distinct owners survive',()=>{
  const row=(id,name)=>({id,text:`${name} received $100,000.`,source:source('copy-'+id,`${name} received $100,000.`)})
  const fs=[row(1,'Robin Example'),row(2,'Robin Example'),row(3,'Casey Sample')]
  const out=api.verifyWrittenAnswer({sentences:[{text:fs[0].text,facts:[1,2]},{text:fs[2].text,facts:[3]}]},{question:'What did the two recipients receive?',period:{kind:'all',label:''},facts:fs})
  assert.equal(out.answer,'Robin Example received $100,000.\n\nCasey Sample received $100,000.')
- assert.equal(Object.keys(out.citations).length,2)
- assert.equal(Object.values(out.citations).flat().length,2)
+ assert.equal(Object.keys(out.citations).length,3)
+ assert.equal(Object.values(out.citations).flat().length,3)
+ assert.deepEqual(out.citations['copy-1/t/body/0'],out.citations['copy-2/t/body/0'])
 })
 
 test('a substantive limitation retains the explanation in its body',()=>{

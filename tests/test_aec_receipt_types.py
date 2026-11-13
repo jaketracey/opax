@@ -73,6 +73,30 @@ def test_migration_is_additive_and_idempotent():
     assert set(receipts.DONATION_COLUMNS) <= {r[1] for r in db.execute("PRAGMA table_info(donations)")}
 
 
+def test_retained_donor_figures_select_recipient_rows_once_without_a_drawing_graph(tmp_path):
+    from scripts.export_donor_disclosures import attach_selected_federal_receipts
+    db = database(tmp_path / 'db')
+    entries = {'Detailed Receipts.csv': [annual(Value='100'), annual(Value='100'),
+        annual('Other Receipt', Value='40'), annual('Loan', Value='30'), annual('Public Funding', Value='900')],
+        'Donations Made.csv': [{'Financial Year': '2020-2021', 'Donor Name': 'Example Mining Ltd',
+                               'Donation Made To': 'Example Party', 'Value': '100'}]}
+    donations.process_zip(db, archive('AllAnnualData', entries), 'AllAnnualData')
+    load(db, 'AllElectionsData', {})
+    load(db, 'AllReferendumData', {})
+    db.execute("UPDATE donations SET recipient_canonical='Labor',industry='mining'")
+    node = {'label': 'Example Mining Ltd', 'total': 999999, 'count': 99}
+    attach_selected_federal_receipts(db, [node])
+    assert (node['total'], node['count']) == (270, 4)
+    assert node['by_type'] == {'donation_received': 200, 'loan': 30, 'other_receipt': 40}
+    assert node['by_type_year']['2020-21']['donation_received'] == [200, 2], 'equal recipient rows stay distinct'
+    absent = {'label': 'No Recipient Receipt', 'total': 999, 'count': 1}
+    attach_selected_federal_receipts(db, [absent])
+    assert absent['by_type'] == {} and 'total' not in absent and 'count' not in absent
+    db.execute('DELETE FROM aec_receipt_files')
+    with pytest.raises(ValueError, match='Complete cached'):
+        attach_selected_federal_receipts(db, [node])
+
+
 def test_direct_loaders_keep_real_aec_columns(tmp_path):
     db = database(tmp_path / "db")
     with zipfile.ZipFile(io.BytesIO(archive("AllAnnualData", {"Detailed Receipts.csv": [annual()]}))) as z:
@@ -113,6 +137,62 @@ def test_recipient_measure_never_adds_donor_declarations_and_preserves_equal_gif
     assert sum(edge["by_type"].values()) == 1160.5
     assert graph["meta"]["receipt_types"]["counts"]["exported_rows"] == 6
     assert all(n["by_type"] == edge["by_type"] for n in graph["nodes"])
+
+
+def test_receipt_alias_fallback_counts_once_and_reports_ambiguous_rows(tmp_path):
+    from scripts.aec_receipt_types import attach_receipt_types
+    from scripts.audit_donor_receipt_aliases import audit
+    from scripts.reconcile_aec_receipts import audit as reconcile
+    db = database(tmp_path / "db")
+    db.executescript("CREATE TABLE ext_donor_aliases(alias_raw,entity_id);"
+                     "CREATE TABLE ext_donor_entities(entity_id,kind);")
+    donations._insert_donation(db, "Alex Hart", "Example Party", 100, "2020-21", "aec_annual")
+    db.execute("UPDATE donations SET recipient_canonical='Labor'")
+    lines = [("Alex Hart", 100), ("Alex (Morgan) Hart", 20), ("ALEX HART", 30), ("Alex,  Hart.", 40),
+             ("Alex (Morgan Hart", 50), ("Jordan (Riley) Vale", 60), ("Jordan Vale", 70),
+             ("Jordan (Quinn) Vale", 80), ("JORDAN (QUINN) VALE", 10),
+             ("Alex (see note page 18) Hart", 100)]
+    load(db, "AllAnnualData", {"Detailed Receipts.csv": [
+        annual(Value=str(amount), **{"Received From": name}) for name, amount in lines]})
+    load(db, "AllElectionsData", {})
+    load(db, "AllReferendumData", {})
+    nodes = [{"id": "party:Labor", "kind": "party", "label": "Labor"}] + [
+        {"id": id, "kind": "donor", "label": name, "total": 999} for id, name in
+        [("alex", "Alex Hart"), ("jordan", "Jordan Vale"), ("other", "Jordan (Quinn) Vale")]]
+    graph = {"meta": {}, "nodes": nodes, "edges": [
+        {"source": source, "target": "party:Labor", "total": 999} for source in ["alex", "jordan", "other"]]}
+    attach_receipt_types(db, graph)
+    assert [e["by_type"] for e in graph["edges"]] == [
+        {"donation_received": 190}, {"donation_received": 70}, {"donation_received": 90}]
+    assert all(e["total"] == 999 for e in graph["edges"])
+    assert graph["nodes"][0]["by_type"] == {"donation_received": 350}
+    cells = graph["edges"][0]["by_type_year"]["2020-21"]["donation_received"]
+    assert cells == [190, 4]
+    counts = graph["meta"]["receipt_types"]["counts"]
+    assert counts["exported_rows"] == 7
+    assert counts["excluded_donor_or_edge_outside_map"] == 2
+    assert counts["excluded_flagged_review"] == 1
+    matching = graph["meta"]["receipt_types"]["donor_matching"]
+    assert matching["by_result"]["ambiguous"] == [1, 60]
+    assert matching["by_result"]["unmatched"] == [1, 50]
+    assert matching["by_result"]["annotation_review"] == [1, 100]
+    assert len(matching["exceptions"]) == 1
+    assert matching["exceptions"][0]["candidate_nodes"] == 2
+    result = audit(db, graph)
+    assert result["counts"]["before_unmatched_node"] == {"rows": 6, "aud": 210}
+    assert result["counts"]["after_unmatched_node"] == {"rows": 2, "aud": 110}
+    assert result["counts"]["newly_exported"] == {"rows": 4, "aud": 100}
+    assert "existing_match_changed" not in result["counts"]
+    # Independent CSV/Decimal calculation, with no production matching imports.
+    archive_path = tmp_path / "annual.zip"
+    archive_path.write_bytes(archive("AllAnnualData", {"Detailed Receipts.csv": [
+        annual(Value=str(amount), **{"Received From": name}) for name, amount in lines]}))
+    assert reconcile(db, archive_path, graph, report(db, tmp_path, graph))["exported_rows"] == 7
+    # The party cap cannot choose between donors or create a missing edge.
+    graph["edges"] = graph["edges"][:1]
+    attach_receipt_types(db, graph)
+    assert graph["meta"]["receipt_types"]["counts"]["exported_rows"] == 4
+    assert graph["meta"]["receipt_types"]["donor_matching"]["by_result"]["ambiguous"] == [1, 60]
 
 
 def test_offline_backfill_reimport_keeps_types_ids_classifications_and_flags(tmp_path):
@@ -428,6 +508,158 @@ def test_the_pinned_associated_names_are_the_party_owned_entities_that_decide_a_
     for payer in ("Labor Resources Pty Ltd", "ALP Holdings", "Labor Services & Holdings Trust", "Labor Campaign Investment Pty Ltd",
                   "National Free Enterprise Foundation", "Pilliwinks as trustee for the National Party Foundation Trust"):
         assert entity_keys(payer)[1] in shorts, payer
+
+
+def test_aec_extras_selects_the_liberal_democrats_and_the_libertarian_party_under_the_name_lodged():
+    from parli.ingest import money_aec_extras as extras
+    from scripts import export_state_money as state
+    lodged = {
+        "Liberal Democratic Party": "Liberal Democratic Party",
+        "Liberal Democratic Party (NSW Branch)": "Liberal Democratic Party",
+        "LIBERAL DEMOCRATIC PARTY LDP": "Liberal Democratic Party",
+        "Liberal Democrats": "Liberal Democratic Party",
+        "Libertarian Party": "Libertarian Party",
+        "Libertarian Party of Queensland": "Libertarian Party",
+        "Libertarian (formerly Liberal Democrats)": "Libertarian Party",
+        # Not this party: the Liberal Party's own SA return, and the DLP stays held out.
+        "Liberal Party of Australia (SA Division) (LDP-SA)": "Liberal",
+        "Democratic Labour Party": None,
+        "LDP Administration Limited": None,
+    }
+    for name, canon in lodged.items():
+        assert extras.canon_party(name) == canon, name
+    # One money-map node under the current name, answering to the former names.
+    assert extras.current_party("Liberal Democratic Party") == "Libertarian Party"
+    assert extras.current_party("Labor") == "Labor"
+    assert extras.PARTY_FORMER_NAMES == {"Libertarian Party": ["Liberal Democratic Party", "Liberal Democrats"]}
+    # export_state_money is streamed alone, so it keeps a copy: the copy must agree.
+    assert [(rx.pattern, c) for rx, c in state.OWN_PARTIES] == [(rx.pattern, c) for rx, c in extras._OWN_PARTIES]
+    assert state.PARTY_RENAMED == extras.PARTY_RENAMED and state.PARTY_FORMER_NAMES == extras.PARTY_FORMER_NAMES
+    for name in ("Liberal Democrats", "Libertarian Party of Queensland"):
+        assert state.own_party(name) == "Libertarian Party"
+    assert state.own_party("Liberal Party of Australia") is None
+
+
+def renamed_party_fixture(tmp_path):
+    """An invented party under two names: 'Fixture Liberty Party' renamed 'Fixture Freedom Party'.
+    The donations table leaves both unbucketed (recipient_canonical NULL), as it does the LDP."""
+    path = tmp_path / "db"
+    db = database(path)
+    old, new, branch = "Fixture Liberty Party", "Fixture Freedom Party", "Fixture Liberty Party (North Branch)"
+    line = lambda donor, recipient, kind, value, fy: annual(kind, Value=str(value), **{
+        "Received From": donor, "Recipient Name": recipient, "Financial Year": fy})
+    entries = {"Detailed Receipts.csv": [
+        line("Example Mining Ltd", old, "Donation Received", 1000, "2020-2021"),
+        line("Example Farms Ltd", branch, "Donation Received", 50, "2020-2021"),
+        line("Australian Electoral Commission", old, "Public Funding", 700, "2020-2021"),
+        line("Example Mining Ltd", new, "Donation Received", 300, "2023-2024"),
+        line(branch, new, "Other Receipt", 200, "2023-2024"),  # its own branch: a transfer
+        line("Example Mining Ltd", "Example Party", "Donation Received", 5000, "2020-2021"),
+    ], "Donations Made.csv": [
+        # The donor's own declaration of the 2020-21 gift: in the legacy total, never in the return cells.
+        {"Financial Year": "2020-2021", "Donor Name": "Example Mining Ltd", "Donation Made To": old, "Value": "1000"}]}
+    donations.process_zip(db, archive("AllAnnualData", entries), "AllAnnualData")
+    load(db, "AllElectionsData", {})
+    load(db, "AllReferendumData", {})
+    db.execute("UPDATE donations SET industry='mining', recipient_canonical=CASE recipient WHEN 'Example Party' THEN 'Example Party' END")
+    db.executescript("CREATE TABLE ext_donor_entities(entity_id,canonical_name,kind);"
+                     "CREATE TABLE ext_donor_aliases(alias_raw,entity_id,confidence,method);")
+    db.execute("INSERT INTO ext_donor_entities VALUES ('fixture-north',?,'party_unit')", (branch,))
+    db.execute("INSERT INTO ext_donor_aliases VALUES (?,'fixture-north',1,'exact')", (branch,))
+    db.commit()
+    return path, old, new
+
+
+@contextlib.contextmanager
+def renamed_party_rules(on=True):
+    import re
+    from parli.ingest import money_aec_extras
+    from scripts import aec_receipt_types
+    own = [(re.compile(r"\bfixture freedom\b", re.I), "Fixture Freedom Party"),
+           (re.compile(r"\bfixture liberty\b", re.I), "Fixture Liberty Party")] if on else []
+    former = {"Fixture Freedom Party": ["Fixture Liberty Party", "Fixture Liberty"]}
+    with mock.patch.object(money_aec_extras, "_OWN_PARTIES", own), \
+            mock.patch.object(money_aec_extras, "PARTY_RENAMED", {"Fixture Liberty Party": "Fixture Freedom Party"}), \
+            mock.patch.object(money_aec_extras, "PARTY_FORMER_NAMES", former), \
+            mock.patch.object(exporter, "PARTY_FORMER_NAMES", former), \
+            mock.patch.object(aec_receipt_types, "PARTY_FORMER_NAMES", former):
+        yield
+
+
+def test_a_renamed_party_is_one_node_with_its_former_name_as_an_alias_and_each_receipt_once(tmp_path):
+    path, old, new = renamed_party_fixture(tmp_path)
+    with renamed_party_rules():
+        graph = export(path)
+    parties = {n["id"]: n for n in graph["nodes"] if n["kind"] == "party"}
+    assert "party:" + old not in parties, "no node under the former name"
+    node = parties["party:" + new]
+    assert node["label"] == new
+    assert node["aliases"] == ["Fixture Liberty Party", "Fixture Liberty"]
+    # Each receipt once, from the party's own returns under both names: the donor's declaration of the
+    # same 2020-21 gift, public funding and the branch's transfer are not added.
+    assert node["return_by_type"] == {"donation_received": 1350}
+    assert node["return_by_type_year"] == {"2020-21": {"donation_received": [1050, 2]},
+                                           "2023-24": {"donation_received": [300, 1]}}
+    assert node["return_by_name"] == {old: [1050, 2, "2020-21", "2020-21"], new: [300, 1, "2023-24", "2023-24"]}
+    meta = graph["meta"]
+    assert meta["receipt_types"]["party_return_transfers"][new] == [200, 1]
+    assert "return_by_name" in meta["receipt_types"]["party_return_note"]
+    assert node["total"] > sum(node["return_by_type"].values())
+    # Its donors count it like any other party's: one flow, typed from the party's own returns, each receipt
+    # once (the 2020-21 gift the donor also declared is not added twice in the typed cells).
+    flows = {e["source"]: e for e in graph["edges"] if e["target"] == "party:" + new}
+    assert sorted(flows) == ["donor:example farms", "donor:example mining"]
+    assert flows["donor:example mining"]["by_type"] == {"donation_received": 1300}
+    assert flows["donor:example mining"]["by_type_year"] == {"2020-21": {"donation_received": [1000, 1]}, "2023-24": {"donation_received": [300, 1]}}
+    assert flows["donor:example farms"]["by_type"] == {"donation_received": 50}, "a gift to a former-name branch joins the one node"
+    # A donor whose only rows are to the party still gets its spelling and its return references.
+    farms = next(n for n in graph["nodes"] if n["id"] == "donor:example farms")
+    assert farms["source_name"] == "Example Farms Ltd"
+    assert [(r["return_type"], r["year"]) for r in farms["returnReferences"]] == [("AEC annual return", "2020-2021")]
+    assert all("aliases" not in n and "return_by_name" not in n for n in parties.values() if n["id"] != "party:" + new)
+
+
+def test_selecting_the_renamed_party_moves_only_its_node_its_donors_and_their_flows_to_it(tmp_path):
+    path, _, new = renamed_party_fixture(tmp_path)
+    with renamed_party_rules(on=False):
+        before = export(path)
+    with renamed_party_rules():
+        after = export(path)
+    added = {n["id"] for n in after["nodes"]} - {n["id"] for n in before["nodes"]}
+    # The party, and a donor that gave only to it (on this uncapped fixture map every donor is drawn).
+    assert added == {"party:" + new, "donor:example farms"}
+    assert {n["id"] for n in before["nodes"]} <= {n["id"] for n in after["nodes"]}, "no donor leaves the map"
+    old_edges = {(e["source"], e["target"]): e for e in before["edges"]}
+    new_edges = {(e["source"], e["target"]): e for e in after["edges"]}
+    assert set(new_edges) - set(old_edges) == {("donor:example mining", "party:" + new), ("donor:example farms", "party:" + new)}
+    assert all(new_edges[k] == v for k, v in old_edges.items()), "every existing flow is unchanged"
+    before_nodes = {n["id"]: n for n in before["nodes"]}
+    moved = [n["id"] for n in after["nodes"] if n["id"] not in added and n != before_nodes[n["id"]]]
+    assert moved == ["donor:example mining"], "only the party's donor moves"
+    donor_before, donor_after = before_nodes["donor:example mining"], next(n for n in after["nodes"] if n["id"] == "donor:example mining")
+    flow = new_edges[("donor:example mining", "party:" + new)]
+    # The donor gains exactly its flow to the party: legacy record cells and typed cells alike.
+    assert donor_after["total"] - donor_before["total"] == flow["total"]
+    assert donor_after["count"] - donor_before["count"] == flow["count"]
+    assert sum(donor_after["by_type"].values()) - sum(donor_before["by_type"].values()) == sum(flow["by_type"].values()) == 1300
+
+
+def test_independent_csv_reconciliation_counts_a_renamed_partys_unbucketed_receipts(tmp_path):
+    import re
+    from scripts import reconcile_aec_receipts as verifier
+    path, _, new = renamed_party_fixture(tmp_path)
+    db = sqlite3.connect(path)
+    rows = [annual(kind, Value=str(amount), **{"Received From": donor, "Recipient Name": recipient,
+            "Financial Year": year}) for donor, recipient, amount, year, kind in db.execute(
+                "SELECT donor_name,recipient,amount,financial_year,receipt_type FROM aec_receipt_records "
+                "WHERE source_file='Detailed Receipts.csv'")]
+    raw = tmp_path / "annual.zip"
+    raw.write_bytes(archive("AllAnnualData", {"Detailed Receipts.csv": rows}))
+    with renamed_party_rules(), mock.patch.object(verifier, "OWN_PARTIES", [
+            (re.compile(r"\bfixture (?:liberty|freedom)\b", re.I), new)]):
+        graph = export(path)
+        result = verifier.audit(db, raw, graph, report(db, tmp_path, graph))
+    assert result["exported_rows"] == 4
 
 
 def test_public_funding_is_excluded_by_receipt_type_whatever_the_payer_is_called():

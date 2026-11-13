@@ -3,7 +3,7 @@ import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datata
 // Guard and render must share the core module's rejection-state registry.
 export {guardTableURL};
 import {shortDate} from './format.js';
-import {statusLabelHTML} from './labels.js?v=89dda4a520';
+import {statusLabelHTML} from './labels.js?v=6d2e2e9cd8';
 import {divisionPlain} from './division-markdown.js?v=5991511166';
 
 const sentence = value => { const text = String(value || '').replace(/_/g, ' ').trim(); return text ? text[0].toUpperCase() + text.slice(1).toLowerCase() : ''; };
@@ -87,13 +87,27 @@ export function personVoteRecords(keys = [], votes = {}, recentData = null) {
 
 const chambers = {senate:'Senate', representatives:'House of Representatives', nsw_la:'New South Wales Legislative Assembly',
   nsw_lc:'New South Wales Legislative Council', vic_la:'Victorian Legislative Assembly', vic_lc:'Victorian Legislative Council', qld_la:'Queensland Legislative Assembly'};
+/**
+ * A division's identity: its chamber, sitting day and division number, read from the division's own
+ * address ("…/divisions/senate/2026-08-19/6"), else the record's slug or key. Never its tally, stage or
+ * question. '' when the record carries none, so the row is kept as its own.
+ */
+export function divisionIdentity(division) {
+  const url = String(division?.url || division?.source_url || '');
+  const numbered = /\/divisions\/([a-z_]+)\/(\d{4}-\d{2}-\d{2})\/(\d+)\b/.exec(url);
+  if (numbered) return `${numbered[1]}|${numbered[2]}|${Number(numbered[3])}`;
+  const own = String(division?.slug || division?.key || '').replace(/^division-/, '');
+  return own ? `key:${own}` : '';
+}
 export function divisionRows(divisions = [], deduplicate = false) {
   const unique = new Map();
   for (const division of divisions) {
     const stage = (division.stage ? sentence(division.stage) : headingTitle(division.title)) || 'Division';
     const date = String(division.date || '');
     // Keep the existing bill-list rule: repeated register counts are one row.
-    const key = deduplicate ? [date, stage, division.ayes, division.noes, division.house].join('|') : division.slug || division.key || unique.size;
+    // Repeated records of one division are one row; two divisions are never one row because their
+    // tallies, stage or question match (two amendments can both go 11 to 24 on one day).
+    const key = deduplicate ? divisionIdentity(division) || `row:${unique.size}` : division.slug || division.key || unique.size;
     if (unique.has(key)) continue;
     const outcome = ({affirmative:'Agreed', negative:'Not agreed'}[division.outcome || division.result]) || sentence(division.outcome || division.result) || 'Not recorded';
     unique.set(key, {title:[stage, date ? shortDate(date) : ''].filter(Boolean).join(', '), date,

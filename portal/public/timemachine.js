@@ -38,7 +38,7 @@ import {isMultiSpeaker, speakerLabel, isUnattributed, resolvedParticipants, grou
  */
 
 import { shortMoney as fmtMoney } from './format.js'
-import { machineLabelHTML } from './labels.js?v=89dda4a520'
+import { machineLabelHTML } from './labels.js?v=6d2e2e9cd8'
 
 const YEAR_MIN = 1998
 const YEAR_MAX = 2026
@@ -972,7 +972,7 @@ export function mountTimeMachine(container, opts = {}) {
           <h2 class="tm-h2">Voices of the year</h2>
           <div class="tm-voices"></div>
         </section>
-        <section class="tm-sec tm-sec-numbers" aria-label="The year in numbers">
+        <section class="tm-sec tm-sec-numbers" aria-label="The year in numbers" hidden>
           <h2 class="tm-h2">The year in numbers</h2>
           <div class="tm-stats"></div>
         </section>
@@ -1398,8 +1398,9 @@ export function mountTimeMachine(container, opts = {}) {
 
   function renderStats() {
     statsEl.replaceChildren()
-    if (!staticData.reports.length) return
-    for (const c of buildCallouts(staticData.reports, year)) {
+    const callouts = buildCallouts(staticData.reports, year)
+    statsEl.closest('.tm-sec-numbers').hidden = !callouts.length
+    for (const c of callouts) {
       const box = el('div', 'tm-stat')
       const num = el('div', 'tm-stat-num')
       num.textContent = c.num

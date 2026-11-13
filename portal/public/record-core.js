@@ -1,7 +1,7 @@
 import {grantRows, supplierRows, contractRows, topicRows, rowsHTML} from './record-core-content.js';
 
 /** Adopt the server table as the interactive list. No second list is mounted. */
-export function hydrateRecordCore(kind, data, {jurisdiction = 'federal', slug} = {}) {
+export function hydrateRecordCore(kind, data, {jurisdiction = 'federal', slug, recipientIds} = {}) {
   const core = document.querySelector('#prerender[data-record-core]');
   const kinds = kind === 'agency' ? ['agency-suppliers','agency-contracts'] : [kind];
   const sections = kinds.map(name=>core?.querySelector(`[data-record-list="${name}"]`));
@@ -32,7 +32,7 @@ export function hydrateRecordCore(kind, data, {jurisdiction = 'federal', slug} =
     }
     function paint() {
       const rows = matches(), visible = rows.slice(page*20,page*20+20);
-      const cells = type === 'agency-suppliers' ? supplierRows(visible) : type === 'agency-contracts' ? contractRows(visible) : type === 'topic' ? topicRows(visible) : grantRows(visible,data,jurisdiction,type === 'program');
+      const cells = type === 'agency-suppliers' ? supplierRows(visible) : type === 'agency-contracts' ? contractRows(visible) : type === 'topic' ? topicRows(visible) : grantRows(visible,data,jurisdiction,type === 'program',recipientIds);
       section.querySelector('tbody').innerHTML = rowsHTML(cells);
       status.textContent = `Showing ${rows.length ? `${page*20+1}–${Math.min((page+1)*20,rows.length)}` : '0'} of ${rows.length} listed records`;
       controls(rows);

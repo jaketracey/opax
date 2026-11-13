@@ -149,16 +149,24 @@ test('a minor party outside the money map: its one member, under the full name, 
   const members = partyMembers('Fixture First Party', {roster, divisions, same: helpers.same});
   assert.deepEqual(members.current, []);
   assert.deepEqual(members.former.map(m => [m.name, m.first, m.last, m.divisions]), [['Alex Fixture', 2023, 2025, 12]]);
-  const html = partyMembersHTML('Fixture First Party', members, helpers, {speechesHref: '/ask?view=search&q=*&party=Fixture+First+Party'});
+  const speechSummary = '24 speeches in the record, as of 1 Jan 2026.';
+  const html = partyMembersHTML('Fixture First Party', members, helpers, {speechesHref: '/ask?view=search&q=*&party=Fixture+First+Party', speechSummary});
   const doc = new JSDOM(html).window.document;
+  assert.equal(doc.querySelector('.entry-section-head > h2.subject-section-title').textContent, 'Members');
+  const note = doc.querySelector('#party-members > .ui-section-note');
+  assert.equal(note.textContent, speechSummary);
+  assert.equal(note.previousElementSibling, doc.querySelector('.entry-section-head'));
   assert.equal(doc.querySelectorAll('li.dir-row').length, 1);
   assert.equal(doc.querySelector('li.dir-row a').getAttribute('href'), '/subject/person/alex-fixture');
   assert.ok(doc.querySelector('.dir-mono'), 'no portrait: the blank circle, never initials');
   assert.ok([...doc.querySelectorAll('a')].some(a => a.textContent === 'Their speeches'));
   assert.equal(doc.querySelectorAll('h3.entry-subhead').length, 0, 'nobody sitting: no subheadings, and no "Sitting members (0)"');
   assert.doesNotMatch(doc.body.textContent, /\(0\)|Not available|not recorded/i);
-  // A party with nobody in the record draws no Members block at all, and no state money draws nothing.
-  assert.equal(partyMembersHTML('Nobody Party', partyMembers('Nobody Party', {roster, divisions}), helpers), '');
+  // A missing roster is stated plainly; a party without state money has no money block.
+  const empty = new JSDOM(partyMembersHTML('Nobody Party', partyMembers('Nobody Party', {roster, divisions}), helpers)).window.document;
+  assert.equal(empty.querySelector('#party-members > h2.subject-section-title').textContent, 'Members');
+  assert.equal(empty.querySelector('#party-members p').textContent, "No members recorded in OPAX's roster for this party.");
+  assert.equal(empty.querySelectorAll('li.dir-row').length, 0);
   assert.equal(partyStateMoneyHTML('Fixture First Party', [['qld', {nodes: [], edges: []}]], helpers), '');
 });
 
@@ -226,7 +234,8 @@ test('A4b: the real app gives a sponsor-only party its page: the name and its sp
   const first = doc.querySelector('#party-sponsored-bills li a');
   assert.equal(first.textContent, 'Australian Federal Integrity Commission Bill 2021');
   assert.equal(first.getAttribute('href'), '/bill/au-federal-s1321');
-  assert.ok(!doc.querySelector('#party-members'), 'no members block: the record names no member under this label');
+  assert.equal(doc.querySelector('#party-members p').textContent, "No members recorded in OPAX's roster for this party.");
+  assert.equal(doc.querySelectorAll('#party-members li.dir-row').length, 0);
   assert.doesNotMatch(doc.body.textContent, /Party not found/);
 });
 

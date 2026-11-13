@@ -4,6 +4,18 @@ import unittest
 from scripts.donor_disclosure import attach_donor_disclosures
 
 
+def recipient_fixture(db, rows):
+    """Explicit recipient rows, separate from the legacy declaration fixtures."""
+    from parli.ingest.aec_receipts import FILES
+    if 'recipient' not in {r[1] for r in db.execute('PRAGMA table_info(donations)')}:
+        db.execute('ALTER TABLE donations ADD COLUMN recipient TEXT')
+    db.execute('UPDATE donations SET recipient=recipient_canonical WHERE recipient IS NULL')
+    db.executescript('CREATE TABLE aec_receipt_files(archive,source_file);'
+                     'CREATE TABLE aec_receipt_records(donor_name,recipient,amount,financial_year,receipt_type,recipient_kind,record_side);')
+    db.executemany('INSERT INTO aec_receipt_files VALUES (?,?)', [(a,n) for a,names in FILES.items() for n in names])
+    db.executemany("INSERT INTO aec_receipt_records VALUES (?,?,?,?,?,'political_party','recipient')", rows)
+
+
 class DonorDisclosures(unittest.TestCase):
     def graph(self):
         return {"meta": {"sourceShort": "AEC annual return"}, "nodes": [
@@ -52,6 +64,7 @@ class DonorDisclosures(unittest.TestCase):
         reference={"return_type":"GrantConnect source record", "year":"2024-25", "transaction_id":"GA-FIXTURE", "url":"https://example.test/grant/7"}
         candidates=[{"id":"donor:fixture","entity_id":"fixture","label":"Alex Example","kind":"donor","aliases":[],"references":[]},
                     {"id":"donor:source-only","label":"Source Example","kind":"donor","aliases":[],"references":[reference]}]
+        recipient_fixture(db, [("EXAMPLE, ALEX", "Labor", 120, "2024-25", "Donation Received")])
         catalog=disclosure_catalog(db,candidates)
         self.assertEqual(len(catalog["donors"]),1)
         donor=catalog["donors"][0]
@@ -62,3 +75,38 @@ class DonorDisclosures(unittest.TestCase):
         self.assertNotIn("total",catalog["references"][0])
         self.assertIsNone(catalog["references"][0]["match"]["href"])
         self.assertEqual(catalog["references"][0]["returnReferences"][0]["transaction_id"],"GA-FIXTURE")
+
+
+class DonorsLeavingTheMap(unittest.TestCase):
+    """A donor ranked just past the cap after a refresh keeps its index entry and page (invented names)."""
+
+    def test_an_indexed_donor_the_maps_no_longer_draw_is_summed_from_its_returns(self):
+        import json, tempfile
+        from pathlib import Path
+        from scripts.export_donor_disclosures import disclosure_catalog, published_references
+        public = Path(tempfile.mkdtemp())
+        (public / "graph").mkdir()
+        # Last week's index: both donors were drawn. This week's map draws only the first;
+        # the second is rank 251.
+        index = {"version": 2, "donors": [
+            {"jurisdiction": "federal", "id": "donor:still drawn", "label": "Still Drawn Pty Ltd", "match": {"entity_id": "still-drawn"}},
+            {"jurisdiction": "federal", "id": "donor:past cap", "label": "Past Cap Example Pty Ltd", "source_name": "PAST CAP EXAMPLE PTY LTD",
+             "lookup_names": ["Past Cap Example Pty Ltd"], "match": {"entity_id": "past-cap"}},
+            {"jurisdiction": "federal", "id": "donor:ref", "label": "Only A Reference", "kind": "reference", "match": {}}]}
+        (public / "graph/donor-index.json").write_text(json.dumps(index))
+        (public / "graph/money.json").write_text(json.dumps({"meta": {}, "nodes": [
+            {"id": "donor:still drawn", "kind": "donor", "label": "Still Drawn Pty Ltd"}], "edges": []}))
+        candidates = published_references(public)
+        self.assertEqual([c["label"] for c in candidates], ["Past Cap Example Pty Ltd"], "only the donor the maps no longer draw")
+        db = sqlite3.connect(":memory:")
+        self.addCleanup(db.close)
+        db.executescript("CREATE TABLE donations(donor_name,amount,financial_year,source,donation_id,donation_type,recipient_canonical);"
+                         "INSERT INTO donations VALUES ('PAST CAP EXAMPLE PTY LTD',650000,'2014-15','aec_annual',1,'gift','Liberal');"
+                         "INSERT INTO donations VALUES ('Past Cap Example Pty Ltd',21000,'2015-16','aec_annual',2,'gift','Labor');"
+                         "CREATE TABLE ext_donations(donor_name,amount,financial_year,source,source_record_id,source_url,disclosure_type,jurisdiction,recipient_party)")
+        recipient_fixture(db, [("PAST CAP EXAMPLE PTY LTD", "Liberal", 650000, "2014-15", "Donation Received"), ("Past Cap Example Pty Ltd", "Labor", 21000, "2015-16", "Donation Received")])
+        catalog = disclosure_catalog(db, candidates)
+        [donor] = catalog["donors"]
+        self.assertEqual((donor["jurisdiction"], donor["total"], donor["count"], donor["firstYear"], donor["lastYear"]), ("federal", 671000, 2, 2014, 2015))
+        self.assertEqual(donor["returnReferences"][0]["return_type"], "AEC annual return")
+        self.assertEqual(catalog["references"], [])

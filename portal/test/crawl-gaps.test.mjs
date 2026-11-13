@@ -72,8 +72,9 @@ test('directory coverage is exact, capitalised, and distinguishes independents f
   for (const label of ['Australian Conservatives', 'Australian Motoring Enthusiast Party', "Derryn Hinch's Justice Party", 'Gerard Rennick People First']) {
     assert.equal(partyPageCoverage(pages.find(p => p.label === label)), 'Recorded divisions. No party-level disclosure file held by OPAX.');
   }
-  // The Libertarian Party's page holds the roster (its current name) and the divisions (its former one).
-  assert.equal(partyPageCoverage(pages.find(p => p.label === 'Libertarian Party')), 'Parliamentary roster and recorded divisions. No party-level disclosure file held by OPAX.');
+  // The Libertarian Party's page holds the roster (its current name), the divisions (its former one) and,
+  // since its money-map node (export rule 10), its receipts under both names.
+  assert.equal(partyPageCoverage(pages.find(p => p.label === 'Libertarian Party')), 'Published political receipts; federal and state returns remain separate.');
   assert.equal(partyPageCoverage(pages.find(p => p.label === 'Independent')), 'Parliamentarians who sat without a party. Not a party organisation.');
   assert.equal(pages.find(p => p.label === 'DLP').name, 'Democratic Labour Party');
   const directory = await renderDirectory('party', new URL('https://opax.test/subject/party'), read, [], new Map(), {});

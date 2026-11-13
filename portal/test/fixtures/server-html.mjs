@@ -12,6 +12,8 @@ for (const jur of ['federal','qld']) {
   const recipient = {id:recipientId,n:'Example Community Ltd',t:25000,c:25,sh:0,k:'company'};
   const grants = Array.from({length:25},(_,i)=>({id:`GA${100+i}`,n:`Example award ${i+1}`,pr:name,ag:'Department of Example Services',v:1000,fy:'2025-26',s:'2026-01-02',rid:recipientId,rn:recipient.n,k:'company',guid:`fixture-${i+1}`}));
   const program = {id:programId,key,n:name,jur,ag:'Department of Example Services',t:25000,c:25,r:1,y0:'2025-26',y1:'2025-26',grants,grants_total:25,grants_listed:25,recipients:[[recipientId,recipient.n,25000,25,'company']],agencies:[['Department of Example Services',25000]],by:[],cats:[],pbs:[],electorates:[]};
+  program.grants = grants.map((grant, i) => i === 1 || i === 24
+    ? {...grant, rid:'name:example outside catalogue ltd', rn:'Example Outside Catalogue Ltd'} : grant);
   files[`/graph/grants.${jur}.json`] = {meta:{label:jur==='qld'?'Queensland':'Commonwealth',sourceShort:'Example source',source_url:'https://example.org/grants',years:['2025-26'],counts:{dollars:25000,grants:25,recipients:1,donor_recipients:0,donor_share:0,donor_dollars:0,abn_known_share:1,top_listed:1},generated:'2026-10-30',coverage:'2025-26'},programs:[program],recipients:[recipient],agencies:['Department of Example Services'],years:{'2025-26':{t:25000,c:25,dt:0}},categories:[],kinds:{company:{r:1,t:25000}},electorates:[]};
   files[`/grants/${jur}/programs/${key}.json`] = program;
   files[`/grants/${jur}/shard-00.json`] = {'abn-00000000001': {...recipient,jur,grants,more:0,programs:[[name,25000,25]],agencies:[['Department of Example Services',25000,25]],by:[]}};

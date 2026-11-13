@@ -344,7 +344,7 @@ test('donors directory: Pratt Holdings at $19.6m across 120 receipts, Liberal an
 test('app.js keeps one projected graph beside moneyData, from donor-views.js', async () => {
   const source = await readFile(new URL('../public/app.js', import.meta.url), 'utf8');
   assert.ok(source.includes('moneyReceipts = module.receiptGraph(d);'));
-  assert.ok(source.includes('({donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);'));
+  assert.ok(source.includes('({donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,receiptTypeLine,receiptFigures,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);'));
 });
 
 // ---- Games: the ledger, the quiz's donor and industry questions, words per dollar ----
@@ -456,8 +456,8 @@ test('person page ties: the scope line shows once the exporter marks the flows t
 });
 
 // ---- Donors and flows only their own donor return declares (round 3) ------------
-// receiptGraph drops 131 flows whose typed cells are empty: the parties' returns list no
-// receipt for them. Ten donors have no other flow, so their typed total is 0. No surface
+// receiptGraph drops 139 flows whose typed cells are empty: the parties' returns list no
+// receipt for them. Eleven donors have no other flow, so their typed total is 0. No surface
 // may show such a donor at $0: each says what is true (DONOR_DECLARED_ONLY) instead.
 // A donor whose only receipt is Public Funding (NSW Efa) is also left out, with its own line (PUBLIC_FUNDING_ONLY).
 const DECLARED_ONLY = published.nodes.filter(n => n.kind === 'donor' && !hasPartyReceipts(n) && !publicFundingOnly(n));
@@ -466,14 +466,34 @@ const GOLDMAN = 'donor:goldman sachs australia';
 const ZERO = /\$0(?:\.00)?(?![\d.,])/;
 
 test('one predicate: hasPartyReceipts picks out the released donors and flows only their own returns declare', () => {
-  assert.equal(DECLARED_ONLY.length, 10);
+  // 13 Nov 2026: 10 to 11, IT Alliance Australia, whose only row is its own 2019-20 declaration of $1,000 to the
+  // Liberal Democratic Party (ACT Branch); the party's return lists no such receipt.
+  assert.equal(DECLARED_ONLY.length, 11);
   assert.ok(DECLARED_ONLY.every(n => !Object.keys(n.by_type).length && n.total > 0), 'each holds a record figure from its own declarations');
   assert.ok(DECLARED_ONLY.some(n => n.id === GOLDMAN));
   const dropped = published.edges.filter(e => !e.grant && !e.flow && !hasPartyReceipts(e));
-  assert.equal(dropped.length, 132, '131 only the donor declared and 1 only public funding');
+  // 13 Nov 2026: 130 to 139 donor-declared flows, the nine to the Libertarian Party that only the donor's own return declares
+  // (Ancora, Australian Energy Producers, Chevron, Australian Hotels Association, IAG, IT Alliance, Deloitte, Allianz, Sanofi).
+  assert.equal(dropped.length, 140, '139 only the donor declared and 1 only public funding');
   assert.deepEqual(PUBLIC_ONLY.map(n => n.id), ['donor:nsw efa']);
   assert.equal(receiptGraph(published).edges.length, published.edges.length - dropped.length, 'receiptGraph drops exactly those flows');
   assert.equal(hasPartyReceipts({total: 0, count: 0}), true, 'a record without typed cells (a state graph) keeps its figures');
+});
+
+test('a declared-only flow to a renamed party: the former name before the new one was registered, the current name after', async () => {
+  // Invented: Allianz's $500 moved to 2024-25, after the Libertarian Party was registered (12 January 2024).
+  const moved = structuredClone(published);
+  const flow = moved.edges.find(e => e.source === 'donor:allianz australia' && e.target === 'party:Libertarian Party');
+  Object.assign(flow, {byYear: {2024: [500, 1]}, firstYear: 2024, lastYear: 2024});
+  const movedEnv = {...env, asset: async path => path === '/graph/money.json' ? structuredClone(moved) : asset(path)};
+  movedEnv.ASSETS = {async fetch(req) { const body = await movedEnv.asset(new URL(req.url).pathname); return body ? Response.json(body) : new Response('missing', {status: 404}); }};
+  const out = await api.callTool(movedEnv, 'money_totals', {donor: 'donor:allianz australia', party: 'Libertarian Party'});
+  assert.deepEqual(out.donor_declared, [{party: 'Libertarian Party', donor_declared_aud: 500, records: 1, period: '2024-25'}]);
+  assert.match(out.citations[0].text, /declares \$500 to Libertarian Party across 1 record \(2024-25\)\. Libertarian Party's own returns list no receipt/);
+  // FY 2022-23 ends 30 June 2023, before the registration: still the former name.
+  Object.assign(flow, {byYear: {2022: [500, 1]}, firstYear: 2022, lastYear: 2022});
+  const before = await api.callTool(movedEnv, 'money_totals', {donor: 'donor:allianz australia', party: 'Libertarian Party'});
+  assert.equal(before.donor_declared[0].party, 'Liberal Democratic Party');
 });
 
 test('Ask money_totals: never a $0 donor row; a flow only the donor declared is said as the donor\'s declaration', async () => {
@@ -494,14 +514,19 @@ test('Ask money_totals: never a $0 donor row; a flow only the donor declared is 
   // A donor with both kinds: the counted flows as rows, the declared-only one as a note.
   const allianz = await api.callTool(env, 'money_totals', {donor: 'donor:allianz australia', group_by: 'party'});
   assert.deepEqual(allianz.rows.map(r => r.party), ['Labor', 'Liberal', 'Nationals']);
-  assert.ok(allianz.notes.some(n => n.startsWith("Not counted above: Allianz Australia Limited's own donor returns declare $67,798 to LNP across 18 records (2011-12 to 2022-23).")));
+  // 13 Nov 2026: Allianz's own 2018-19 declaration of $500 to the Liberal Democratic Party joins the note; that party's return lists no such receipt.
+  // It names the party as the gift was made, before the Libertarian Party was registered (#344, labels.js PARTY_RENAMES).
+  assert.ok(allianz.notes.some(n => n.startsWith("Not counted above: Allianz Australia Limited's own donor returns declare $68,298 to federal parties across 19 records: LNP $67,798 (2011-12 to 2022-23); the Liberal Democratic Party (now the Libertarian Party) $500 (2018-19).")));
+  assert.deepEqual(allianz.donor_declared.at(-1), {party: 'Liberal Democratic Party', party_now: 'Libertarian Party', donor_declared_aud: 500, records: 1, period: '2018-19'}, 'the writer gets the recorded name too');
+  const itAlliance = await api.callTool(env, 'money_totals', {donor: 'donor:it alliance australia'});
+  assert.match(itAlliance.citations[0].text, /^IT Alliance Australia Pty Ltd's own donor return declares \$1,000 to the Liberal Democratic Party \(now the Libertarian Party\) across 1 record \(2019-20\)\. The Liberal Democratic Party's own returns list no receipt/);
   // A ranking holds only donors the parties' returns list.
   const ranked = await api.callTool(env, 'money_totals', {group_by: 'donor', limit: 20});
   assert.equal(ranked.matched, published.nodes.filter(n => n.kind === 'donor' && hasPartyReceipts(n)).length);
   assert.ok(ranked.rows.every(r => r.total_aud > 0));
 });
 
-test('donors directory: no row at $0; declared-only donors carry the labelled line; off-map federal rows say they are record totals', async () => {
+test('donors directory: no row at $0; declared-only donors carry the labelled line; off-map federal rows retain selected receipts', async () => {
   const index = await readPublic('/graph/donor-index.json');
   const graphs = {federal: published, qld: await readPublic('/graph/money.qld.json'), vic: await readPublic('/graph/money.vic.json'), tas: await readPublic('/graph/money.tas.json')};
   const context = appContext({
@@ -525,13 +550,14 @@ test('donors directory: no row at $0; declared-only donors carry the labelled li
   }
   assert.ok(directory.filters.find(f => f.key === 'jur').test(declared[0][0], 'federal'), 'still listed as disclosed to the AEC');
   const offMap = html.filter(([d]) => d.recordMeasure && d.money.federal);
-  assert.ok(offMap.length > 100);
-  for (const [d, row] of offMap) assert.ok(row.includes('All federal disclosure records, as given by both donor and party, so a gift can appear twice') && row.includes('AEC records'), d.label);
+  assert.equal(offMap.length,0,'retained federal entries now carry typed recipient receipts');
+  const linc = html.find(([d])=>d.label==='Linc Energy');
+  assert.deepEqual([linc[0].money.federal.total,linc[0].money.federal.count],[357799,9]);
   const onMap = html.find(([d]) => d.label === 'Pratt Holdings Pty Ltd')[1];
   assert.ok(onMap.includes('AEC returns') && !onMap.includes('AEC records'));
 });
 
-test('search: no donor or receipt record says $0.00; declared-only donors carry the labelled line; off-map federal donors say they are record totals', async () => {
+test('search: no donor or receipt record says $0.00; declared-only donors carry the labelled line; off-map federal donors say they are selected receipts', async () => {
   for (const n of published.nodes.filter(n => n.kind === 'donor')) assert.doesNotMatch(donorSearchRecord('federal', n).snippet, ZERO, n.label);
   assert.equal(donorSearchRecord('federal', published.nodes.find(n => n.id === GOLDMAN)).snippet, `Finance. ${DONOR_DECLARED_ONLY}.`);
   assert.equal(donorSearchRecord('federal', PUBLIC_ONLY[0]).snippet, `Individual. ${PUBLIC_FUNDING_ONLY}.`);
@@ -541,7 +567,7 @@ test('search: no donor or receipt record says $0.00; declared-only donors carry 
   for (const file of ['money.json', 'money.qld.json', 'money.vic.json', 'money.tas.json']) for (const n of (await readPublic('/graph/' + file)).nodes) onMap.add(n.id);
   for (const n of index.donors) if (n.kind !== 'reference' && !onMap.has(n.id)) assert.doesNotMatch(donorSearchRecord(n.jurisdiction || 'federal', n).snippet, ZERO, n.label);
   const offMap = index.donors.find(n => n.kind === 'donor' && (n.jurisdiction || 'federal') === 'federal' && !onMap.has(n.id) && n.total > 0);
-  assert.match(donorSearchRecord('federal', offMap).snippet, /records\. All federal disclosure records, as given by both donor and party, so a gift can appear twice\.$/);
+  assert.match(donorSearchRecord('federal', offMap).snippet, /records\. All receipt types.*as the parties reported them in federal returns\.$/);
   const source = await readFile(new URL('../../scripts/build_search_catalog.mjs', import.meta.url), 'utf8');
   assert.ok(source.includes('   if(!hasPartyReceipts(e))continue;'), 'receipt records use the same predicate');
 });

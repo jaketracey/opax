@@ -1,0 +1,5889 @@
+{
+  "baseline": "53df1f8b3085a320937c336cb955c0b37cf5aa51",
+  "scope": "Published federal donor-index entries carrying retained totals; mapped donor entries have no amount in this index and are excluded. No production requests. Each retained entity entry counted once.",
+  "pages_changed": 512,
+  "net_removed_aud": 17807993.63,
+  "gross_removed_aud": 17913193.63,
+  "increases_aud": 105200.0,
+  "top_five": [
+    {
+      "donor": "Crown Resorts Limited",
+      "source_name": "Crown Resorts Limited",
+      "before_aud": 2968754.0,
+      "before_records": 363,
+      "after_aud": 718154.0,
+      "after_receipts": 43,
+      "removed_aud": 2250600.0,
+      "by_type": {
+        "donation_received": 338354,
+        "other_receipt": 363800,
+        "unspecified": 16000
+      }
+    },
+    {
+      "donor": "Beach Energy Limited",
+      "source_name": "Beach Energy Limited",
+      "before_aud": 836300.0,
+      "before_records": 19,
+      "after_aud": 290000.0,
+      "after_receipts": 6,
+      "removed_aud": 546300.0,
+      "by_type": {
+        "donation_received": 125000,
+        "other_receipt": 165000
+      }
+    },
+    {
+      "donor": "Nimrod Resources Limited",
+      "source_name": "Nimrod Resources Limited",
+      "before_aud": 1000000.0,
+      "before_records": 2,
+      "after_aud": 500000.0,
+      "after_receipts": 1,
+      "removed_aud": 500000.0,
+      "by_type": {
+        "donation_received": 500000
+      }
+    },
+    {
+      "donor": "New Hope Corporation Limited",
+      "source_name": "New Hope Corporation Limited",
+      "before_aud": 935000.0,
+      "before_records": 9,
+      "after_aud": 480000.0,
+      "after_receipts": 5,
+      "removed_aud": 455000.0,
+      "by_type": {
+        "donation_received": 480000
+      }
+    },
+    {
+      "donor": "INPEX Operations Australia Pty Ltd",
+      "source_name": "INPEX Operations Australia Pty Ltd",
+      "before_aud": 537830.0,
+      "before_records": 44,
+      "after_aud": 90000.0,
+      "after_receipts": 3,
+      "removed_aud": 447830.0,
+      "by_type": {
+        "other_receipt": 90000
+      }
+    }
+  ],
+  "changes": [
+    {
+      "donor": "Crown Resorts Limited",
+      "source_name": "Crown Resorts Limited",
+      "before_aud": 2968754.0,
+      "before_records": 363,
+      "after_aud": 718154.0,
+      "after_receipts": 43,
+      "removed_aud": 2250600.0,
+      "by_type": {
+        "donation_received": 338354,
+        "other_receipt": 363800,
+        "unspecified": 16000
+      }
+    },
+    {
+      "donor": "Beach Energy Limited",
+      "source_name": "Beach Energy Limited",
+      "before_aud": 836300.0,
+      "before_records": 19,
+      "after_aud": 290000.0,
+      "after_receipts": 6,
+      "removed_aud": 546300.0,
+      "by_type": {
+        "donation_received": 125000,
+        "other_receipt": 165000
+      }
+    },
+    {
+      "donor": "Nimrod Resources Limited",
+      "source_name": "Nimrod Resources Limited",
+      "before_aud": 1000000.0,
+      "before_records": 2,
+      "after_aud": 500000.0,
+      "after_receipts": 1,
+      "removed_aud": 500000.0,
+      "by_type": {
+        "donation_received": 500000
+      }
+    },
+    {
+      "donor": "New Hope Corporation Limited",
+      "source_name": "New Hope Corporation Limited",
+      "before_aud": 935000.0,
+      "before_records": 9,
+      "after_aud": 480000.0,
+      "after_receipts": 5,
+      "removed_aud": 455000.0,
+      "by_type": {
+        "donation_received": 480000
+      }
+    },
+    {
+      "donor": "INPEX Operations Australia Pty Ltd",
+      "source_name": "INPEX Operations Australia Pty Ltd",
+      "before_aud": 537830.0,
+      "before_records": 44,
+      "after_aud": 90000.0,
+      "after_receipts": 3,
+      "removed_aud": 447830.0,
+      "by_type": {
+        "other_receipt": 90000
+      }
+    },
+    {
+      "donor": "Justice Services Pty Ltd",
+      "source_name": "Justice Services Pty Ltd",
+      "before_aud": 900456.84,
+      "before_records": 159,
+      "after_aud": 496919.0,
+      "after_receipts": 79,
+      "removed_aud": 403537.84,
+      "by_type": {
+        "donation_received": 194637,
+        "other_receipt": 302282
+      }
+    },
+    {
+      "donor": "Anacta Strategies Pty Ltd",
+      "source_name": "Anacta Strategies Pty Ltd",
+      "before_aud": 929296.52,
+      "before_records": 175,
+      "after_aud": 533358.0,
+      "after_receipts": 86,
+      "removed_aud": 395938.52,
+      "by_type": {
+        "donation_received": 270425,
+        "other_receipt": 262933
+      }
+    },
+    {
+      "donor": "Genworth",
+      "source_name": "Genworth",
+      "before_aud": 940312.0,
+      "before_records": 47,
+      "after_aud": 568906.0,
+      "after_receipts": 35,
+      "removed_aud": 371406.0,
+      "by_type": {
+        "donation_received": 40500,
+        "other_receipt": 528406
+      }
+    },
+    {
+      "donor": "Nine Entertainment Co. Holdings Ltd",
+      "source_name": "Nine Entertainment Co. Holdings Ltd",
+      "before_aud": 515784.0,
+      "before_records": 26,
+      "after_aud": 154028.0,
+      "after_receipts": 8,
+      "removed_aud": 361756.0,
+      "by_type": {
+        "donation_received": 25200,
+        "other_receipt": 128828
+      }
+    },
+    {
+      "donor": "Queensland Hotels Association Union of Employers",
+      "source_name": "Queensland Hotels Association Union of Employers",
+      "before_aud": 494280.39,
+      "before_records": 159,
+      "after_aud": 158530.0,
+      "after_receipts": 41,
+      "removed_aud": 335750.39,
+      "by_type": {
+        "donation_received": 50411,
+        "other_receipt": 108119
+      }
+    },
+    {
+      "donor": "Adelaide Brighton Ltd",
+      "source_name": "Adelaide Brighton Ltd",
+      "before_aud": 517700.0,
+      "before_records": 26,
+      "after_aud": 200800.0,
+      "after_receipts": 11,
+      "removed_aud": 316900.0,
+      "by_type": {
+        "donation_received": 165000,
+        "other_receipt": 10800,
+        "unspecified": 25000
+      }
+    },
+    {
+      "donor": "Linc Energy",
+      "source_name": "Linc Energy Limited",
+      "before_aud": 671498.0,
+      "before_records": 18,
+      "after_aud": 357799.0,
+      "after_receipts": 9,
+      "removed_aud": 313699.0,
+      "by_type": {
+        "donation_received": 294999,
+        "other_receipt": 62800
+      }
+    },
+    {
+      "donor": "Taxi Council of Queensland Incorporated",
+      "source_name": "Taxi Council of Queensland Incorporated",
+      "before_aud": 473760.43,
+      "before_records": 60,
+      "after_aud": 164670.0,
+      "after_receipts": 24,
+      "removed_aud": 309090.43,
+      "by_type": {
+        "donation_received": 35620,
+        "other_receipt": 116050,
+        "unspecified": 13000
+      }
+    },
+    {
+      "donor": "SAS Consulting Group Pty Ltd",
+      "source_name": "SAS Consulting Group Pty Ltd",
+      "before_aud": 514288.57,
+      "before_records": 195,
+      "after_aud": 214108.0,
+      "after_receipts": 59,
+      "removed_aud": 300180.57,
+      "by_type": {
+        "donation_received": 23464,
+        "other_receipt": 190644
+      }
+    },
+    {
+      "donor": "Integrated Clinical Oncology Network Pty Ltd",
+      "source_name": "Integrated Clinical Oncology Network Pty Ltd",
+      "before_aud": 276000.0,
+      "before_records": 12,
+      "after_aud": 49500.0,
+      "after_receipts": 2,
+      "removed_aud": 226500.0,
+      "by_type": {
+        "other_receipt": 49500
+      }
+    },
+    {
+      "donor": "Halikos Pty Ltd",
+      "source_name": "Halikos Pty Ltd",
+      "before_aud": 491000.0,
+      "before_records": 10,
+      "after_aud": 271000.0,
+      "after_receipts": 7,
+      "removed_aud": 220000.0,
+      "by_type": {
+        "donation_received": 250000,
+        "other_receipt": 4000,
+        "unspecified": 17000
+      }
+    },
+    {
+      "donor": "Healthscope Operations Pty Ltd",
+      "source_name": "Healthscope Operations Pty Ltd",
+      "before_aud": 204140.0,
+      "before_records": 43,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 204140.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Australian Southern Bluefin Tuna (SBT) Industry Association Ltd",
+      "source_name": "Australian Southern Bluefin Tuna (SBT) Industry Association Ltd",
+      "before_aud": 195000.0,
+      "before_records": 3,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 195000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Qube Holdings Limited",
+      "source_name": "Qube Holdings Limited",
+      "before_aud": 378000.0,
+      "before_records": 12,
+      "after_aud": 189000.0,
+      "after_receipts": 6,
+      "removed_aud": 189000.0,
+      "by_type": {
+        "other_receipt": 189000
+      }
+    },
+    {
+      "donor": "Local Government Association of Queensland Ltd",
+      "source_name": "Local Government Association of Queensland Ltd",
+      "before_aud": 300138.0,
+      "before_records": 48,
+      "after_aud": 116749.0,
+      "after_receipts": 18,
+      "removed_aud": 183389.0,
+      "by_type": {
+        "other_receipt": 116749
+      }
+    },
+    {
+      "donor": "Australian Sugar Milling Council",
+      "source_name": "Australian Sugar Milling Council",
+      "before_aud": 395522.6,
+      "before_records": 48,
+      "after_aud": 215360.0,
+      "after_receipts": 19,
+      "removed_aud": 180162.6,
+      "by_type": {
+        "donation_received": 6500,
+        "other_receipt": 208860
+      }
+    },
+    {
+      "donor": "Menzies Research Centre Ltd",
+      "source_name": "Menzies Research Centre Ltd",
+      "before_aud": 1465489.0,
+      "before_records": 19,
+      "after_aud": 1287597.0,
+      "after_receipts": 16,
+      "removed_aud": 177892.0,
+      "by_type": {
+        "donation_received": 21563,
+        "other_receipt": 1266034
+      }
+    },
+    {
+      "donor": "Australian Automobile Association",
+      "source_name": "Australian Automobile Association",
+      "before_aud": 269722.0,
+      "before_records": 68,
+      "after_aud": 95339.0,
+      "after_receipts": 22,
+      "removed_aud": 174383.0,
+      "by_type": {
+        "other_receipt": 93690,
+        "unspecified": 1649
+      }
+    },
+    {
+      "donor": "G.James Australia Pty Ltd",
+      "source_name": "G.James Australia Pty Ltd",
+      "before_aud": 406000.0,
+      "before_records": 31,
+      "after_aud": 232250.0,
+      "after_receipts": 17,
+      "removed_aud": 173750.0,
+      "by_type": {
+        "donation_received": 23000,
+        "other_receipt": 199250,
+        "unspecified": 10000
+      }
+    },
+    {
+      "donor": "Idameneo (no.123) PTY LTD ATF The ARTLU UNIT TRUST",
+      "source_name": "Idameneo (no.123) PTY LTD ATF The ARTLU UNIT TRUST",
+      "before_aud": 172090.0,
+      "before_records": 24,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 172090.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Clean Energy Council",
+      "source_name": "Clean Energy Council",
+      "before_aud": 411000.0,
+      "before_records": 26,
+      "after_aud": 242000.0,
+      "after_receipts": 18,
+      "removed_aud": 169000.0,
+      "by_type": {
+        "other_receipt": 242000
+      }
+    },
+    {
+      "donor": "Sentinel Property Group",
+      "source_name": "Sentinel Property Group",
+      "before_aud": 319310.0,
+      "before_records": 18,
+      "after_aud": 157780.0,
+      "after_receipts": 8,
+      "removed_aud": 161530.0,
+      "by_type": {
+        "donation_received": 153000,
+        "other_receipt": 4780
+      }
+    },
+    {
+      "donor": "Bruck Textiles Pty Ltd",
+      "source_name": "Bruck Textiles Pty Ltd",
+      "before_aud": 375291.0,
+      "before_records": 31,
+      "after_aud": 217200.0,
+      "after_receipts": 13,
+      "removed_aud": 158091.0,
+      "by_type": {
+        "donation_received": 64000,
+        "other_receipt": 118200,
+        "unspecified": 35000
+      }
+    },
+    {
+      "donor": "Victorian Trades Hall Council",
+      "source_name": "Victorian Trades Hall Council",
+      "before_aud": 386677.0,
+      "before_records": 16,
+      "after_aud": 242986.0,
+      "after_receipts": 2,
+      "removed_aud": 143691.0,
+      "by_type": {
+        "donation_received": 242986
+      }
+    },
+    {
+      "donor": "McDonalds Australia Limited",
+      "source_name": "McDonalds Australia Limited",
+      "before_aud": 378230.0,
+      "before_records": 33,
+      "after_aud": 234550.0,
+      "after_receipts": 21,
+      "removed_aud": 143680.0,
+      "by_type": {
+        "donation_received": 120000,
+        "other_receipt": 114550
+      }
+    },
+    {
+      "donor": "Association of Marine Park Tourism Operators Limited",
+      "source_name": "Association of Marine Park Tourism Operators Limited",
+      "before_aud": 201665.66,
+      "before_records": 57,
+      "after_aud": 62325.0,
+      "after_receipts": 19,
+      "removed_aud": 139340.66,
+      "by_type": {
+        "donation_received": 41000,
+        "other_receipt": 21325
+      }
+    },
+    {
+      "donor": "Financial Planning Association of Australia Ltd",
+      "source_name": "Financial Planning Association of Australia Ltd",
+      "before_aud": 221710.0,
+      "before_records": 56,
+      "after_aud": 82400.0,
+      "after_receipts": 13,
+      "removed_aud": 139310.0,
+      "by_type": {
+        "other_receipt": 79100,
+        "unspecified": 3300
+      }
+    },
+    {
+      "donor": "Simplot Australia Pty Ltd",
+      "source_name": "Simplot Australia Pty Ltd",
+      "before_aud": 319000.0,
+      "before_records": 31,
+      "after_aud": 182000.0,
+      "after_receipts": 17,
+      "removed_aud": 137000.0,
+      "by_type": {
+        "donation_received": 137000,
+        "other_receipt": 40000,
+        "unspecified": 5000
+      }
+    },
+    {
+      "donor": "iOM Pty Ltd",
+      "source_name": "iOM Pty Ltd",
+      "before_aud": 134088.0,
+      "before_records": 13,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 134088.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Phosphate Resources Limited",
+      "source_name": "Phosphate Resources Limited",
+      "before_aud": 210717.0,
+      "before_records": 27,
+      "after_aud": 82300.0,
+      "after_receipts": 7,
+      "removed_aud": 128417.0,
+      "by_type": {
+        "other_receipt": 82300
+      }
+    },
+    {
+      "donor": "JBS Australia Pty Ltd",
+      "source_name": "JBS Australia Pty Ltd",
+      "before_aud": 503447.52,
+      "before_records": 44,
+      "after_aud": 377875.0,
+      "after_receipts": 20,
+      "removed_aud": 125572.52,
+      "by_type": {
+        "donation_received": 10000,
+        "other_receipt": 367875
+      }
+    },
+    {
+      "donor": "Queensland Master Builders Association Industrial Organisation of Employers",
+      "source_name": "Queensland Master Builders Association Industrial Organisation of Employers",
+      "before_aud": 212319.0,
+      "before_records": 23,
+      "after_aud": 93500.0,
+      "after_receipts": 8,
+      "removed_aud": 118819.0,
+      "by_type": {
+        "other_receipt": 93500
+      }
+    },
+    {
+      "donor": "Black & White Cabs Pty Ltd",
+      "source_name": "Black & White Cabs Pty Ltd",
+      "before_aud": 199452.74,
+      "before_records": 35,
+      "after_aud": 85278.0,
+      "after_receipts": 13,
+      "removed_aud": 114174.74,
+      "by_type": {
+        "donation_received": 24478,
+        "other_receipt": 60800
+      }
+    },
+    {
+      "donor": "Energy Developments Pty Ltd",
+      "source_name": "Energy Developments Pty Ltd",
+      "before_aud": 184108.0,
+      "before_records": 52,
+      "after_aud": 71030.0,
+      "after_receipts": 20,
+      "removed_aud": 113078.0,
+      "by_type": {
+        "donation_received": 17100,
+        "other_receipt": 53930
+      }
+    },
+    {
+      "donor": "Kilcoy Pastoral Company Limited",
+      "source_name": "Kilcoy Pastoral Company Limited",
+      "before_aud": 186480.0,
+      "before_records": 21,
+      "after_aud": 78000.0,
+      "after_receipts": 7,
+      "removed_aud": 108480.0,
+      "by_type": {
+        "donation_received": 12000,
+        "other_receipt": 66000
+      }
+    },
+    {
+      "donor": "CUB",
+      "source_name": "CUB",
+      "before_aud": 313797.0,
+      "before_records": 16,
+      "after_aud": 205833.0,
+      "after_receipts": 4,
+      "removed_aud": 107964.0,
+      "by_type": {
+        "other_receipt": 205833
+      }
+    },
+    {
+      "donor": "Navitas Pty Limited",
+      "source_name": "Navitas Pty Limited",
+      "before_aud": 661644.0,
+      "before_records": 32,
+      "after_aud": 554700.0,
+      "after_receipts": 19,
+      "removed_aud": 106944.0,
+      "by_type": {
+        "donation_received": 10000,
+        "other_receipt": 544700
+      }
+    },
+    {
+      "donor": "Queensland Council of Unions",
+      "source_name": "Queensland Council of Unions",
+      "before_aud": 217791.26,
+      "before_records": 37,
+      "after_aud": 111842.0,
+      "after_receipts": 23,
+      "removed_aud": 105949.26,
+      "by_type": {
+        "donation_received": 94008,
+        "other_receipt": 17834
+      }
+    },
+    {
+      "donor": "Russell Mineral Equipment Pty Ltd",
+      "source_name": "Russell Mineral Equipment Pty Ltd",
+      "before_aud": 300000.0,
+      "before_records": 12,
+      "after_aud": 195000.0,
+      "after_receipts": 4,
+      "removed_aud": 105000.0,
+      "by_type": {
+        "donation_received": 195000
+      }
+    },
+    {
+      "donor": "Southern Oil Refining Pty Ltd",
+      "source_name": "Southern Oil Refining Pty Ltd",
+      "before_aud": 161634.0,
+      "before_records": 51,
+      "after_aud": 56880.0,
+      "after_receipts": 17,
+      "removed_aud": 104754.0,
+      "by_type": {
+        "donation_received": 22875,
+        "other_receipt": 34005
+      }
+    },
+    {
+      "donor": "Queensland Trucking Association LTD.",
+      "source_name": "Queensland Trucking Association LTD.",
+      "before_aud": 149767.5,
+      "before_records": 35,
+      "after_aud": 49364.0,
+      "after_receipts": 11,
+      "removed_aud": 100403.5,
+      "by_type": {
+        "other_receipt": 49364
+      }
+    },
+    {
+      "donor": "Newcastle Coal Infrastructure Group",
+      "source_name": "Newcastle Coal Infrastructure Group",
+      "before_aud": 200000.0,
+      "before_records": 4,
+      "after_aud": 100000.0,
+      "after_receipts": 2,
+      "removed_aud": 100000.0,
+      "by_type": {
+        "donation_received": 100000
+      }
+    },
+    {
+      "donor": "Primary Health Care Limited",
+      "source_name": "Primary Health Care Limited",
+      "before_aud": 241200.0,
+      "before_records": 15,
+      "after_aud": 142600.0,
+      "after_receipts": 11,
+      "removed_aud": 98600.0,
+      "by_type": {
+        "donation_received": 2000,
+        "other_receipt": 140600
+      }
+    },
+    {
+      "donor": "National Retail Association Limited",
+      "source_name": "National Retail Association Limited",
+      "before_aud": 175175.5,
+      "before_records": 51,
+      "after_aud": 76846.0,
+      "after_receipts": 23,
+      "removed_aud": 98329.5,
+      "by_type": {
+        "donation_received": 23100,
+        "other_receipt": 53746
+      }
+    },
+    {
+      "donor": "Revesby Workers' Club Ltd",
+      "source_name": "Revesby Workers' Club Ltd",
+      "before_aud": 256600.0,
+      "before_records": 36,
+      "after_aud": 160240.0,
+      "after_receipts": 14,
+      "removed_aud": 96360.0,
+      "by_type": {
+        "donation_received": 130000,
+        "other_receipt": 27740,
+        "unspecified": 2500
+      }
+    },
+    {
+      "donor": "Federal Chamber Automotive Industries",
+      "source_name": "Federal Chamber Automotive Industries",
+      "before_aud": 661679.0,
+      "before_records": 42,
+      "after_aud": 565720.0,
+      "after_receipts": 30,
+      "removed_aud": 95959.0,
+      "by_type": {
+        "other_receipt": 565720
+      }
+    },
+    {
+      "donor": "WorkPac",
+      "source_name": "WorkPac",
+      "before_aud": 252405.0,
+      "before_records": 32,
+      "after_aud": 160800.0,
+      "after_receipts": 13,
+      "removed_aud": 91605.0,
+      "by_type": {
+        "other_receipt": 160800
+      }
+    },
+    {
+      "donor": "Pardoo Beef Corporation Pty Ltd",
+      "source_name": "Pardoo Beef Corporation Pty Ltd",
+      "before_aud": 268025.0,
+      "before_records": 20,
+      "after_aud": 176675.0,
+      "after_receipts": 7,
+      "removed_aud": 91350.0,
+      "by_type": {
+        "donation_received": 176675
+      }
+    },
+    {
+      "donor": "Hall Contracting Pty Ltd",
+      "source_name": "Hall Contracting Pty Ltd",
+      "before_aud": 152045.0,
+      "before_records": 21,
+      "after_aud": 62000.0,
+      "after_receipts": 5,
+      "removed_aud": 90045.0,
+      "by_type": {
+        "donation_received": 62000
+      }
+    },
+    {
+      "donor": "Trident Services Australia",
+      "source_name": "Trident Services Australia",
+      "before_aud": 107900.0,
+      "before_records": 7,
+      "after_aud": 20000.0,
+      "after_receipts": 1,
+      "removed_aud": 87900.0,
+      "by_type": {
+        "other_receipt": 20000
+      }
+    },
+    {
+      "donor": "Packer Leather Pty Ltd",
+      "source_name": "Packer Leather Pty Ltd",
+      "before_aud": 115340.0,
+      "before_records": 13,
+      "after_aud": 27500.0,
+      "after_receipts": 1,
+      "removed_aud": 87840.0,
+      "by_type": {
+        "other_receipt": 27500
+      }
+    },
+    {
+      "donor": "GWI Pty Ltd",
+      "source_name": "GWI Pty Ltd",
+      "before_aud": 151987.49,
+      "before_records": 40,
+      "after_aud": 66526.0,
+      "after_receipts": 14,
+      "removed_aud": 85461.49,
+      "by_type": {
+        "donation_received": 5606,
+        "other_receipt": 60920
+      }
+    },
+    {
+      "donor": "Queensland Resources Council",
+      "source_name": "Queensland Resources Council",
+      "before_aud": 127008.0,
+      "before_records": 24,
+      "after_aud": 42218.0,
+      "after_receipts": 7,
+      "removed_aud": 84790.0,
+      "by_type": {
+        "other_receipt": 42218
+      }
+    },
+    {
+      "donor": "Cotton Australia",
+      "source_name": "Cotton Australia",
+      "before_aud": 140088.0,
+      "before_records": 35,
+      "after_aud": 56150.0,
+      "after_receipts": 14,
+      "removed_aud": 83938.0,
+      "by_type": {
+        "donation_received": 16950,
+        "other_receipt": 39200
+      }
+    },
+    {
+      "donor": "George Weston Foods Ltd",
+      "source_name": "George Weston Foods Ltd",
+      "before_aud": 190340.0,
+      "before_records": 42,
+      "after_aud": 107300.0,
+      "after_receipts": 12,
+      "removed_aud": 83040.0,
+      "by_type": {
+        "other_receipt": 88300,
+        "unspecified": 19000
+      }
+    },
+    {
+      "donor": "Fortescue Metals Group Ltd",
+      "source_name": "Fortescue Metals Group Ltd",
+      "before_aud": 468700.0,
+      "before_records": 37,
+      "after_aud": 388050.0,
+      "after_receipts": 28,
+      "removed_aud": 80650.0,
+      "by_type": {
+        "donation_received": 11000,
+        "other_receipt": 377050
+      }
+    },
+    {
+      "donor": "Austral Fisheries Pty Ltd",
+      "source_name": "Austral Fisheries Pty Ltd",
+      "before_aud": 225886.0,
+      "before_records": 25,
+      "after_aud": 147500.0,
+      "after_receipts": 16,
+      "removed_aud": 78386.0,
+      "by_type": {
+        "donation_received": 2000,
+        "other_receipt": 130500,
+        "subscription": 15000
+      }
+    },
+    {
+      "donor": "Australian Council of Trade Unions",
+      "source_name": "Australian Council of Trade Unions",
+      "before_aud": 72511.0,
+      "before_records": 31,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 72511.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Free TV Australia Limited",
+      "source_name": "Free TV Australia Limited",
+      "before_aud": 118636.0,
+      "before_records": 17,
+      "after_aud": 48250.0,
+      "after_receipts": 6,
+      "removed_aud": 70386.0,
+      "by_type": {
+        "other_receipt": 48250
+      }
+    },
+    {
+      "donor": "Australian Agricultural Company Limited",
+      "source_name": "Australian Agricultural Company Limited",
+      "before_aud": 112906.0,
+      "before_records": 15,
+      "after_aud": 43023.0,
+      "after_receipts": 5,
+      "removed_aud": 69883.0,
+      "by_type": {
+        "donation_received": 2500,
+        "other_receipt": 40523
+      }
+    },
+    {
+      "donor": "Bank of Queensland",
+      "source_name": "Bank of Queensland",
+      "before_aud": 168328.0,
+      "before_records": 23,
+      "after_aud": 100039.0,
+      "after_receipts": 13,
+      "removed_aud": 68289.0,
+      "by_type": {
+        "donation_received": 15000,
+        "other_receipt": 80039,
+        "unspecified": 5000
+      }
+    },
+    {
+      "donor": "MSF Sugar Pty Ltd",
+      "source_name": "MSF Sugar Pty Ltd",
+      "before_aud": 74270.0,
+      "before_records": 17,
+      "after_aud": 11000.0,
+      "after_receipts": 1,
+      "removed_aud": 63270.0,
+      "by_type": {
+        "other_receipt": 11000
+      }
+    },
+    {
+      "donor": "Haileybury",
+      "source_name": "Haileybury",
+      "before_aud": 208100.0,
+      "before_records": 20,
+      "after_aud": 146800.0,
+      "after_receipts": 15,
+      "removed_aud": 61300.0,
+      "by_type": {
+        "other_receipt": 146800
+      }
+    },
+    {
+      "donor": "Ampol Limited",
+      "source_name": "Ampol Limited",
+      "before_aud": 430176.0,
+      "before_records": 40,
+      "after_aud": 369650.0,
+      "after_receipts": 19,
+      "removed_aud": 60526.0,
+      "by_type": {
+        "other_receipt": 369650
+      }
+    },
+    {
+      "donor": "Twynam Investments Pty Limited",
+      "source_name": "Twynam Investments Pty Limited",
+      "before_aud": 57650.0,
+      "before_records": 9,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 57650.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Amalgamated Hotels Pty Ltd",
+      "source_name": "Amalgamated Hotels Pty Ltd",
+      "before_aud": 99000.0,
+      "before_records": 10,
+      "after_aud": 42000.0,
+      "after_receipts": 4,
+      "removed_aud": 57000.0,
+      "by_type": {
+        "donation_received": 10000,
+        "other_receipt": 22000,
+        "unspecified": 10000
+      }
+    },
+    {
+      "donor": "Northern Oil Refineries Pty Ltd",
+      "source_name": "Northern Oil Refineries Pty Ltd",
+      "before_aud": 102850.0,
+      "before_records": 8,
+      "after_aud": 47000.0,
+      "after_receipts": 3,
+      "removed_aud": 55850.0,
+      "by_type": {
+        "other_receipt": 47000
+      }
+    },
+    {
+      "donor": "ELGAS Limited",
+      "source_name": "ELGAS Limited",
+      "before_aud": 180801.0,
+      "before_records": 57,
+      "after_aud": 125462.0,
+      "after_receipts": 35,
+      "removed_aud": 55339.0,
+      "by_type": {
+        "donation_received": 1600,
+        "other_receipt": 117062,
+        "unspecified": 6800
+      }
+    },
+    {
+      "donor": "NSW Forest Products Association",
+      "source_name": "NSW Forest Products Association",
+      "before_aud": 108670.0,
+      "before_records": 15,
+      "after_aud": 54670.0,
+      "after_receipts": 8,
+      "removed_aud": 54000.0,
+      "by_type": {
+        "donation_received": 42500,
+        "other_receipt": 10500,
+        "unspecified": 1670
+      }
+    },
+    {
+      "donor": "The Trustee for THE WILSON FAMILY TRUST",
+      "source_name": "The Trustee for THE WILSON FAMILY TRUST",
+      "before_aud": 53528.0,
+      "before_records": 10,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 53528.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Australian Retailers Association",
+      "source_name": "Australian Retailers Association",
+      "before_aud": 137220.0,
+      "before_records": 9,
+      "after_aud": 85250.0,
+      "after_receipts": 6,
+      "removed_aud": 51970.0,
+      "by_type": {
+        "donation_received": 47500,
+        "other_receipt": 37750
+      }
+    },
+    {
+      "donor": "Bundaberg Sugar Limited",
+      "source_name": "Bundaberg Sugar Limited",
+      "before_aud": 98900.0,
+      "before_records": 38,
+      "after_aud": 48200.0,
+      "after_receipts": 16,
+      "removed_aud": 50700.0,
+      "by_type": {
+        "donation_received": 36500,
+        "other_receipt": 9700,
+        "unspecified": 2000
+      }
+    },
+    {
+      "donor": "Trilogy Care Pty Ltd",
+      "source_name": "Trilogy Care Pty Ltd",
+      "before_aud": 100000.0,
+      "before_records": 2,
+      "after_aud": 50000.0,
+      "after_receipts": 1,
+      "removed_aud": 50000.0,
+      "by_type": {
+        "donation_received": 50000
+      }
+    },
+    {
+      "donor": "Norwent 2 Pty Ltd",
+      "source_name": "Norwent 2 Pty Ltd",
+      "before_aud": 100000.0,
+      "before_records": 2,
+      "after_aud": 50000.0,
+      "after_receipts": 1,
+      "removed_aud": 50000.0,
+      "by_type": {
+        "donation_received": 50000
+      }
+    },
+    {
+      "donor": "Coastwide Engineering Pty Ltd",
+      "source_name": "Coastwide Engineering Pty Ltd",
+      "before_aud": 100000.0,
+      "before_records": 2,
+      "after_aud": 50000.0,
+      "after_receipts": 1,
+      "removed_aud": 50000.0,
+      "by_type": {
+        "donation_received": 50000
+      }
+    },
+    {
+      "donor": "Australian Leisure & Hospitality Group Ltd",
+      "source_name": "Australian Leisure & Hospitality Group Ltd",
+      "before_aud": 47000.0,
+      "before_records": 6,
+      "after_aud": 2000.0,
+      "after_receipts": 1,
+      "removed_aud": 45000.0,
+      "by_type": {
+        "donation_received": 2000
+      }
+    },
+    {
+      "donor": "Skilled Engineering Ltd",
+      "source_name": "Skilled Engineering Ltd",
+      "before_aud": 175650.0,
+      "before_records": 27,
+      "after_aud": 131480.0,
+      "after_receipts": 17,
+      "removed_aud": 44170.0,
+      "by_type": {
+        "donation_received": 10200,
+        "other_receipt": 104880,
+        "unspecified": 16400
+      }
+    },
+    {
+      "donor": "Australian Computer Society",
+      "source_name": "Australian Computer Society",
+      "before_aud": 324515.0,
+      "before_records": 20,
+      "after_aud": 280515.0,
+      "after_receipts": 19,
+      "removed_aud": 44000.0,
+      "by_type": {
+        "donation_received": 22815,
+        "other_receipt": 257700
+      }
+    },
+    {
+      "donor": "Queensland Farmers' Federation",
+      "source_name": "Queensland Farmers' Federation",
+      "before_aud": 55000.0,
+      "before_records": 5,
+      "after_aud": 11000.0,
+      "after_receipts": 1,
+      "removed_aud": 44000.0,
+      "by_type": {
+        "other_receipt": 11000
+      }
+    },
+    {
+      "donor": "Cubic Transportation Systems (Australia) PTY Limited",
+      "source_name": "Cubic Transportation Systems (Australia) PTY Limited",
+      "before_aud": 53900.0,
+      "before_records": 6,
+      "after_aud": 11000.0,
+      "after_receipts": 1,
+      "removed_aud": 42900.0,
+      "by_type": {
+        "other_receipt": 11000
+      }
+    },
+    {
+      "donor": "Thompson Health Care",
+      "source_name": "Thompson Health Care",
+      "before_aud": 99900.0,
+      "before_records": 11,
+      "after_aud": 57700.0,
+      "after_receipts": 6,
+      "removed_aud": 42200.0,
+      "by_type": {
+        "donation_received": 40200,
+        "other_receipt": 17500
+      }
+    },
+    {
+      "donor": "Caravan Industry Association of Australia",
+      "source_name": "Caravan Industry Association of Australia",
+      "before_aud": 335600.0,
+      "before_records": 18,
+      "after_aud": 294900.0,
+      "after_receipts": 15,
+      "removed_aud": 40700.0,
+      "by_type": {
+        "donation_received": 50000,
+        "other_receipt": 244900
+      }
+    },
+    {
+      "donor": "AUSFILM International Inc",
+      "source_name": "AUSFILM International Inc",
+      "before_aud": 99640.0,
+      "before_records": 21,
+      "after_aud": 59370.0,
+      "after_receipts": 17,
+      "removed_aud": 40270.0,
+      "by_type": {
+        "other_receipt": 59370
+      }
+    },
+    {
+      "donor": "Watpac Limited",
+      "source_name": "Watpac Limited",
+      "before_aud": 68580.0,
+      "before_records": 11,
+      "after_aud": 31180.0,
+      "after_receipts": 5,
+      "removed_aud": 37400.0,
+      "by_type": {
+        "other_receipt": 31180
+      }
+    },
+    {
+      "donor": "Incitec Pivot Limited",
+      "source_name": "Incitec Pivot Limited",
+      "before_aud": 73994.0,
+      "before_records": 7,
+      "after_aud": 36997.0,
+      "after_receipts": 4,
+      "removed_aud": 36997.0,
+      "by_type": {
+        "donation_received": 10000,
+        "other_receipt": 26997
+      }
+    },
+    {
+      "donor": "Grant Thornton Australia Ltd",
+      "source_name": "Grant Thornton Australia Ltd",
+      "before_aud": 45980.0,
+      "before_records": 6,
+      "after_aud": 12760.0,
+      "after_receipts": 2,
+      "removed_aud": 33220.0,
+      "by_type": {
+        "other_receipt": 12760
+      }
+    },
+    {
+      "donor": "Aurizon Operations Limited",
+      "source_name": "Aurizon Operations Limited",
+      "before_aud": 43220.0,
+      "before_records": 5,
+      "after_aud": 11000.0,
+      "after_receipts": 1,
+      "removed_aud": 32220.0,
+      "by_type": {
+        "other_receipt": 11000
+      }
+    },
+    {
+      "donor": "Marand Precision Engineering",
+      "source_name": "Marand Precision Engineering",
+      "before_aud": 66400.0,
+      "before_records": 5,
+      "after_aud": 34200.0,
+      "after_receipts": 3,
+      "removed_aud": 32200.0,
+      "by_type": {
+        "other_receipt": 34200
+      }
+    },
+    {
+      "donor": "Drake Trailers Pty Ltd",
+      "source_name": "Drake Trailers Pty Ltd",
+      "before_aud": 33591.66,
+      "before_records": 7,
+      "after_aud": 1500.0,
+      "after_receipts": 1,
+      "removed_aud": 32091.66,
+      "by_type": {
+        "other_receipt": 1500
+      }
+    },
+    {
+      "donor": "Helicopter Film Services Pty Ltd",
+      "source_name": "Helicopter Film Services Pty Ltd",
+      "before_aud": 31900.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 31900.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Tritium Pty Ltd",
+      "source_name": "Tritium Pty Ltd",
+      "before_aud": 67800.0,
+      "before_records": 12,
+      "after_aud": 36400.0,
+      "after_receipts": 7,
+      "removed_aud": 31400.0,
+      "by_type": {
+        "donation_received": 2500,
+        "other_receipt": 33900
+      }
+    },
+    {
+      "donor": "Australian Rural Exports PTY. LTD.",
+      "source_name": "Australian Rural Exports PTY. LTD.",
+      "before_aud": 31240.0,
+      "before_records": 9,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 31240.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Australian Tourism Export Council Ltd",
+      "source_name": "Australian Tourism Export Council Ltd",
+      "before_aud": 62000.0,
+      "before_records": 12,
+      "after_aud": 31000.0,
+      "after_receipts": 6,
+      "removed_aud": 31000.0,
+      "by_type": {
+        "donation_received": 18000,
+        "other_receipt": 13000
+      }
+    },
+    {
+      "donor": "Prime Television (Southern) Pty Ltd",
+      "source_name": "Prime Television (Southern) Pty Ltd",
+      "before_aud": 32672.0,
+      "before_records": 3,
+      "after_aud": 2411.0,
+      "after_receipts": 1,
+      "removed_aud": 30261.0,
+      "by_type": {
+        "other_receipt": 2411
+      }
+    },
+    {
+      "donor": "TLC Aged Care Pty Ltd",
+      "source_name": "TLC Aged Care Pty Ltd",
+      "before_aud": 60000.0,
+      "before_records": 2,
+      "after_aud": 30000.0,
+      "after_receipts": 1,
+      "removed_aud": 30000.0,
+      "by_type": {
+        "other_receipt": 30000
+      }
+    },
+    {
+      "donor": "Gowing Bros Ltd",
+      "source_name": "Gowing Bros Ltd",
+      "before_aud": 230000.0,
+      "before_records": 9,
+      "after_aud": 200000.0,
+      "after_receipts": 5,
+      "removed_aud": 30000.0,
+      "by_type": {
+        "donation_received": 200000
+      }
+    },
+    {
+      "donor": "Territory Property Group Pty Ltd",
+      "source_name": "Territory Property Group Pty Ltd",
+      "before_aud": 50000.0,
+      "before_records": 3,
+      "after_aud": 20000.0,
+      "after_receipts": 1,
+      "removed_aud": 30000.0,
+      "by_type": {
+        "donation_received": 20000
+      }
+    },
+    {
+      "donor": "The Trustee For Turner Family Trust",
+      "source_name": "The Trustee For Turner Family Trust",
+      "before_aud": 45000.0,
+      "before_records": 3,
+      "after_aud": 15000.0,
+      "after_receipts": 1,
+      "removed_aud": 30000.0,
+      "by_type": {
+        "donation_received": 15000
+      }
+    },
+    {
+      "donor": "Gympie District Show Society Inc",
+      "source_name": "Gympie District Show Society Inc",
+      "before_aud": 29954.3,
+      "before_records": 3,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 29954.3,
+      "by_type": {}
+    },
+    {
+      "donor": "IDSM Pty Ltd",
+      "source_name": "IDSM Pty Ltd",
+      "before_aud": 28800.0,
+      "before_records": 4,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 28800.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Cement Concrete & Aggregates Australia",
+      "source_name": "Cement Concrete & Aggregates Australia",
+      "before_aud": 42350.0,
+      "before_records": 6,
+      "after_aud": 13750.0,
+      "after_receipts": 1,
+      "removed_aud": 28600.0,
+      "by_type": {
+        "donation_received": 13750
+      }
+    },
+    {
+      "donor": "The Trustee For Springfield Development Trust",
+      "source_name": "The Trustee For Springfield Development Trust",
+      "before_aud": 37500.0,
+      "before_records": 4,
+      "after_aud": 10000.0,
+      "after_receipts": 2,
+      "removed_aud": 27500.0,
+      "by_type": {
+        "donation_received": 10000
+      }
+    },
+    {
+      "donor": "The Master Plumbers Assn of Qld Union of Employers",
+      "source_name": "The Master Plumbers Assn of Qld Union of Employers",
+      "before_aud": 41350.0,
+      "before_records": 18,
+      "after_aud": 15200.0,
+      "after_receipts": 5,
+      "removed_aud": 26150.0,
+      "by_type": {
+        "donation_received": 13000,
+        "other_receipt": 2200
+      }
+    },
+    {
+      "donor": "News Corp Australia",
+      "source_name": "News Corp Australia",
+      "before_aud": 79000.0,
+      "before_records": 8,
+      "after_aud": 53000.0,
+      "after_receipts": 7,
+      "removed_aud": 26000.0,
+      "by_type": {
+        "other_receipt": 53000
+      }
+    },
+    {
+      "donor": "Broadcast Australia Pty Ltd",
+      "source_name": "Broadcast Australia Pty Ltd",
+      "before_aud": 51000.0,
+      "before_records": 12,
+      "after_aud": 25500.0,
+      "after_receipts": 6,
+      "removed_aud": 25500.0,
+      "by_type": {
+        "donation_received": 22500,
+        "other_receipt": 3000
+      }
+    },
+    {
+      "donor": "Casella Wines Pty Ltd",
+      "source_name": "Casella Wines Pty Ltd",
+      "before_aud": 57500.0,
+      "before_records": 3,
+      "after_aud": 32500.0,
+      "after_receipts": 2,
+      "removed_aud": 25000.0,
+      "by_type": {
+        "donation_received": 32500
+      }
+    },
+    {
+      "donor": "Australian Recording Industry Association",
+      "source_name": "Australian Recording Industry Association",
+      "before_aud": 26500.0,
+      "before_records": 4,
+      "after_aud": 1500.0,
+      "after_receipts": 1,
+      "removed_aud": 25000.0,
+      "by_type": {
+        "other_receipt": 1500
+      }
+    },
+    {
+      "donor": "The Mining Pty Ltd",
+      "source_name": "The Mining Pty Ltd",
+      "before_aud": 29500.0,
+      "before_records": 4,
+      "after_aud": 4500.0,
+      "after_receipts": 2,
+      "removed_aud": 25000.0,
+      "by_type": {
+        "donation_received": 2500,
+        "other_receipt": 2000
+      }
+    },
+    {
+      "donor": "ULR Automotive Group",
+      "source_name": "ULR Automotive Group",
+      "before_aud": 50000.0,
+      "before_records": 2,
+      "after_aud": 25000.0,
+      "after_receipts": 1,
+      "removed_aud": 25000.0,
+      "by_type": {
+        "other_receipt": 25000
+      }
+    },
+    {
+      "donor": "Garrards Pty Ltd",
+      "source_name": "Garrards Pty Ltd",
+      "before_aud": 53500.0,
+      "before_records": 3,
+      "after_aud": 28500.0,
+      "after_receipts": 2,
+      "removed_aud": 25000.0,
+      "by_type": {
+        "donation_received": 25000,
+        "other_receipt": 3500
+      }
+    },
+    {
+      "donor": "Business Council of Australia",
+      "source_name": "Business Council of Australia",
+      "before_aud": 176850.0,
+      "before_records": 17,
+      "after_aud": 152100.0,
+      "after_receipts": 15,
+      "removed_aud": 24750.0,
+      "by_type": {
+        "donation_received": 5000,
+        "other_receipt": 147100
+      }
+    },
+    {
+      "donor": "Group Training Australia",
+      "source_name": "Group Training Australia",
+      "before_aud": 50654.0,
+      "before_records": 10,
+      "after_aud": 26427.0,
+      "after_receipts": 6,
+      "removed_aud": 24227.0,
+      "by_type": {
+        "other_receipt": 26427
+      }
+    },
+    {
+      "donor": "Motor Trades Association OF QLD Industrial Organisation OF Employers",
+      "source_name": "Motor Trades Association OF QLD Industrial Organisation OF Employers",
+      "before_aud": 24740.0,
+      "before_records": 6,
+      "after_aud": 1320.0,
+      "after_receipts": 1,
+      "removed_aud": 23420.0,
+      "by_type": {
+        "other_receipt": 1320
+      }
+    },
+    {
+      "donor": "S Kidman & Co",
+      "source_name": "S Kidman & Co",
+      "before_aud": 131050.0,
+      "before_records": 19,
+      "after_aud": 108500.0,
+      "after_receipts": 5,
+      "removed_aud": 22550.0,
+      "by_type": {
+        "donation_received": 108500
+      }
+    },
+    {
+      "donor": "AKS Industries  Aust Pty Ltd",
+      "source_name": "AKS Industries  Aust Pty Ltd",
+      "before_aud": 44000.0,
+      "before_records": 2,
+      "after_aud": 22000.0,
+      "after_receipts": 1,
+      "removed_aud": 22000.0,
+      "by_type": {
+        "donation_received": 22000
+      }
+    },
+    {
+      "donor": "Swick Mining Services",
+      "source_name": "Swick Mining Services",
+      "before_aud": 41364.0,
+      "before_records": 3,
+      "after_aud": 20000.0,
+      "after_receipts": 1,
+      "removed_aud": 21364.0,
+      "by_type": {
+        "donation_received": 20000
+      }
+    },
+    {
+      "donor": "Namoi Cotton Co-operative Limited",
+      "source_name": "Namoi Cotton Co-operative Limited",
+      "before_aud": 40000.0,
+      "before_records": 11,
+      "after_aud": 19000.0,
+      "after_receipts": 5,
+      "removed_aud": 21000.0,
+      "by_type": {
+        "donation_received": 19000
+      }
+    },
+    {
+      "donor": "Colemans Printing Pty Ltd",
+      "source_name": "Colemans Printing Pty Ltd",
+      "before_aud": 40000.0,
+      "before_records": 4,
+      "after_aud": 20000.0,
+      "after_receipts": 2,
+      "removed_aud": 20000.0,
+      "by_type": {
+        "donation_received": 20000
+      }
+    },
+    {
+      "donor": "Cathay Uexpress Group Pty Ltd",
+      "source_name": "Cathay Uexpress Group Pty Ltd",
+      "before_aud": 60000.0,
+      "before_records": 2,
+      "after_aud": 40000.0,
+      "after_receipts": 2,
+      "removed_aud": 20000.0,
+      "by_type": {
+        "other_receipt": 40000
+      }
+    },
+    {
+      "donor": "Ford Dynasty Pty Ltd",
+      "source_name": "Ford Dynasty Pty Ltd",
+      "before_aud": 54350.0,
+      "before_records": 4,
+      "after_aud": 34350.0,
+      "after_receipts": 3,
+      "removed_aud": 20000.0,
+      "by_type": {
+        "other_receipt": 4350,
+        "unspecified": 30000
+      }
+    },
+    {
+      "donor": "MCCosker Contracting PTY LTD",
+      "source_name": "MCCosker Contracting PTY LTD",
+      "before_aud": 20000.0,
+      "before_records": 3,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 20000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "PainChek Limited",
+      "source_name": "PainChek Limited",
+      "before_aud": 19500.0,
+      "before_records": 4,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 19500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Cairns Aquarium & Reef Research Centre Pty Ltd",
+      "source_name": "Cairns Aquarium & Reef Research Centre Pty Ltd",
+      "before_aud": 29250.0,
+      "before_records": 4,
+      "after_aud": 10000.0,
+      "after_receipts": 1,
+      "removed_aud": 19250.0,
+      "by_type": {
+        "donation_received": 10000
+      }
+    },
+    {
+      "donor": "TransitCare Limited",
+      "source_name": "TransitCare Limited",
+      "before_aud": 18970.0,
+      "before_records": 7,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 18970.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Tangalooma",
+      "source_name": "Tangalooma",
+      "before_aud": 18741.0,
+      "before_records": 4,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 18741.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Quicksilver Connections Limited",
+      "source_name": "Quicksilver Connections Limited",
+      "before_aud": 29480.0,
+      "before_records": 6,
+      "after_aud": 10990.0,
+      "after_receipts": 2,
+      "removed_aud": 18490.0,
+      "by_type": {
+        "donation_received": 10990
+      }
+    },
+    {
+      "donor": "Vanguard Consulting & Services PTY LTD",
+      "source_name": "Vanguard Consulting & Services PTY LTD",
+      "before_aud": 18485.0,
+      "before_records": 5,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 18485.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Orana Movielines Pty Ltd",
+      "source_name": "Orana Movielines Pty Ltd",
+      "before_aud": 17730.0,
+      "before_records": 3,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 17730.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Fresh Fields Aged Care Pty Ltd",
+      "source_name": "Fresh Fields Aged Care Pty Ltd",
+      "before_aud": 26000.0,
+      "before_records": 5,
+      "after_aud": 8500.0,
+      "after_receipts": 2,
+      "removed_aud": 17500.0,
+      "by_type": {
+        "other_receipt": 8500
+      }
+    },
+    {
+      "donor": "Australian Solar Energy Society",
+      "source_name": "Australian Solar Energy Society",
+      "before_aud": 31770.0,
+      "before_records": 3,
+      "after_aud": 14400.0,
+      "after_receipts": 1,
+      "removed_aud": 17370.0,
+      "by_type": {
+        "donation_received": 14400
+      }
+    },
+    {
+      "donor": "Australian Medical Association",
+      "source_name": "Australian Medical Association",
+      "before_aud": 57299.0,
+      "before_records": 15,
+      "after_aud": 40149.0,
+      "after_receipts": 9,
+      "removed_aud": 17150.0,
+      "by_type": {
+        "donation_received": 7800,
+        "other_receipt": 30700,
+        "unspecified": 1649
+      }
+    },
+    {
+      "donor": "Queensland Chinese United Council",
+      "source_name": "Queensland Chinese United Council",
+      "before_aud": 60230.0,
+      "before_records": 22,
+      "after_aud": 43200.0,
+      "after_receipts": 6,
+      "removed_aud": 17030.0,
+      "by_type": {
+        "donation_received": 37000,
+        "other_receipt": 6200
+      }
+    },
+    {
+      "donor": "Honeycombes Property Group",
+      "source_name": "Honeycombes Property Group",
+      "before_aud": 48000.0,
+      "before_records": 3,
+      "after_aud": 31500.0,
+      "after_receipts": 2,
+      "removed_aud": 16500.0,
+      "by_type": {
+        "other_receipt": 31500
+      }
+    },
+    {
+      "donor": "Superior Care Group Pty Ltd",
+      "source_name": "Superior Care Group Pty Ltd",
+      "before_aud": 49500.0,
+      "before_records": 3,
+      "after_aud": 33000.0,
+      "after_receipts": 2,
+      "removed_aud": 16500.0,
+      "by_type": {
+        "other_receipt": 33000
+      }
+    },
+    {
+      "donor": "Yellow Cabs (QLD) Pty Ltd",
+      "source_name": "Yellow Cabs (QLD) Pty Ltd",
+      "before_aud": 32400.0,
+      "before_records": 9,
+      "after_aud": 16000.0,
+      "after_receipts": 4,
+      "removed_aud": 16400.0,
+      "by_type": {
+        "donation_received": 8000,
+        "other_receipt": 8000
+      }
+    },
+    {
+      "donor": "Copyright Agency Limited",
+      "source_name": "Copyright Agency Limited",
+      "before_aud": 54989.0,
+      "before_records": 15,
+      "after_aud": 38614.0,
+      "after_receipts": 11,
+      "removed_aud": 16375.0,
+      "by_type": {
+        "other_receipt": 38614
+      }
+    },
+    {
+      "donor": "Tarrawarra Estate Pty Ltd",
+      "source_name": "Tarrawarra Estate Pty Ltd",
+      "before_aud": 41000.0,
+      "before_records": 2,
+      "after_aud": 25000.0,
+      "after_receipts": 1,
+      "removed_aud": 16000.0,
+      "by_type": {
+        "donation_received": 25000
+      }
+    },
+    {
+      "donor": "Queensland Lions Football Club",
+      "source_name": "Queensland Lions Football Club",
+      "before_aud": 16000.0,
+      "before_records": 3,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 16000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Early Start Australia Pty Ltd",
+      "source_name": "Early Start Australia Pty Ltd",
+      "before_aud": 15700.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 15700.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Fletcher International Exports Pty Ltd",
+      "source_name": "Fletcher International Exports Pty Ltd",
+      "before_aud": 44294.0,
+      "before_records": 9,
+      "after_aud": 28772.0,
+      "after_receipts": 4,
+      "removed_aud": 15522.0,
+      "by_type": {
+        "donation_received": 16772,
+        "other_receipt": 7000,
+        "unspecified": 5000
+      }
+    },
+    {
+      "donor": "Association of Marine Park Tourism Operators Limited (AMPTO)",
+      "source_name": "Association of Marine Park Tourism Operators Limited (AMPTO)",
+      "before_aud": 15500.0,
+      "before_records": 4,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 15500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Kamori Australia Pty Ltd T/A Lone Pine Koala Sanctuary",
+      "source_name": "Kamori Australia Pty Ltd T/A Lone Pine Koala Sanctuary",
+      "before_aud": 15000.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 15000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Gainsdale Pty Ltd",
+      "source_name": "Gainsdale Pty Ltd",
+      "before_aud": 35000.0,
+      "before_records": 3,
+      "after_aud": 20000.0,
+      "after_receipts": 2,
+      "removed_aud": 15000.0,
+      "by_type": {
+        "donation_received": 20000
+      }
+    },
+    {
+      "donor": "Trojanmede Pty Ltd",
+      "source_name": "Trojanmede Pty Ltd",
+      "before_aud": 50000.0,
+      "before_records": 3,
+      "after_aud": 35000.0,
+      "after_receipts": 2,
+      "removed_aud": 15000.0,
+      "by_type": {
+        "donation_received": 15000,
+        "unspecified": 20000
+      }
+    },
+    {
+      "donor": "WRIQ",
+      "source_name": "WRIQ",
+      "before_aud": 31080.0,
+      "before_records": 9,
+      "after_aud": 16310.0,
+      "after_receipts": 6,
+      "removed_aud": 14770.0,
+      "by_type": {
+        "donation_received": 10260,
+        "other_receipt": 6050
+      }
+    },
+    {
+      "donor": "A Gabrielli Constructions Pty Ltd",
+      "source_name": "A Gabrielli Constructions Pty Ltd",
+      "before_aud": 14411.25,
+      "before_records": 7,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 14411.25,
+      "by_type": {}
+    },
+    {
+      "donor": "Australian Industry Trade College Ltd",
+      "source_name": "Australian Industry Trade College Ltd",
+      "before_aud": 14140.0,
+      "before_records": 5,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 14140.0,
+      "by_type": {}
+    },
+    {
+      "donor": "SM Solvency Accountants PTY LTD",
+      "source_name": "SM Solvency Accountants PTY LTD",
+      "before_aud": 14060.0,
+      "before_records": 4,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 14060.0,
+      "by_type": {}
+    },
+    {
+      "donor": "D + T Hydraulics and Engineering Pty Ltd",
+      "source_name": "D + T Hydraulics and Engineering Pty Ltd",
+      "before_aud": 14000.0,
+      "before_records": 3,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 14000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Jimmy's on the Mall Pty Ltd",
+      "source_name": "Jimmy's on the Mall Pty Ltd",
+      "before_aud": 21014.9,
+      "before_records": 5,
+      "after_aud": 7102.0,
+      "after_receipts": 2,
+      "removed_aud": 13912.9,
+      "by_type": {
+        "donation_received": 6052,
+        "other_receipt": 1050
+      }
+    },
+    {
+      "donor": "Transit Australia Pty Ltd",
+      "source_name": "Transit Australia Pty Ltd",
+      "before_aud": 24700.0,
+      "before_records": 7,
+      "after_aud": 11100.0,
+      "after_receipts": 3,
+      "removed_aud": 13600.0,
+      "by_type": {
+        "other_receipt": 11100
+      }
+    },
+    {
+      "donor": "Emerald Coaches Pty Ltd",
+      "source_name": "Emerald Coaches Pty Ltd",
+      "before_aud": 27000.0,
+      "before_records": 4,
+      "after_aud": 13500.0,
+      "after_receipts": 2,
+      "removed_aud": 13500.0,
+      "by_type": {
+        "other_receipt": 13500
+      }
+    },
+    {
+      "donor": "SDC Pty Ltd",
+      "source_name": "SDC Pty Ltd",
+      "before_aud": 23500.0,
+      "before_records": 4,
+      "after_aud": 10000.0,
+      "after_receipts": 1,
+      "removed_aud": 13500.0,
+      "by_type": {
+        "donation_received": 10000
+      }
+    },
+    {
+      "donor": "Global Training Innovations Pty Ltd",
+      "source_name": "Global Training Innovations Pty Ltd",
+      "before_aud": 13300.0,
+      "before_records": 3,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 13300.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Joondalup Health Campus",
+      "source_name": "Joondalup Health Campus",
+      "before_aud": 49930.0,
+      "before_records": 6,
+      "after_aud": 36730.0,
+      "after_receipts": 5,
+      "removed_aud": 13200.0,
+      "by_type": {
+        "other_receipt": 36730
+      }
+    },
+    {
+      "donor": "SPM Group Pty Ltd",
+      "source_name": "SPM Group Pty Ltd",
+      "before_aud": 13200.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 13200.0,
+      "by_type": {}
+    },
+    {
+      "donor": "J.C. Travel Professionals Pty Ltd",
+      "source_name": "J.C. Travel Professionals Pty Ltd",
+      "before_aud": 13200.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 13200.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Melbourne Institute of Technology",
+      "source_name": "Melbourne Institute of Technology",
+      "before_aud": 48000.0,
+      "before_records": 3,
+      "after_aud": 35000.0,
+      "after_receipts": 2,
+      "removed_aud": 13000.0,
+      "by_type": {
+        "other_receipt": 35000
+      }
+    },
+    {
+      "donor": "Danae Jones Consulting",
+      "source_name": "Danae Jones Consulting",
+      "before_aud": 13000.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 13000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Tricare",
+      "source_name": "Tricare",
+      "before_aud": 21700.0,
+      "before_records": 10,
+      "after_aud": 9000.0,
+      "after_receipts": 3,
+      "removed_aud": 12700.0,
+      "by_type": {
+        "other_receipt": 7000,
+        "unspecified": 2000
+      }
+    },
+    {
+      "donor": "Bradken Resources Pty Ltd",
+      "source_name": "Bradken Resources Pty Ltd",
+      "before_aud": 12500.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 12500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "The Trustee For SG Discretionary Trust",
+      "source_name": "The Trustee For SG Discretionary Trust",
+      "before_aud": 12500.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 12500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Australian Food & Grocery Council",
+      "source_name": "Australian Food & Grocery Council",
+      "before_aud": 37200.0,
+      "before_records": 10,
+      "after_aud": 24850.0,
+      "after_receipts": 6,
+      "removed_aud": 12350.0,
+      "by_type": {
+        "other_receipt": 24850
+      }
+    },
+    {
+      "donor": "Munster Services Group Pty Ltd",
+      "source_name": "Munster Services Group Pty Ltd",
+      "before_aud": 24000.0,
+      "before_records": 6,
+      "after_aud": 12000.0,
+      "after_receipts": 3,
+      "removed_aud": 12000.0,
+      "by_type": {
+        "donation_received": 10000,
+        "other_receipt": 2000
+      }
+    },
+    {
+      "donor": "Master Electricians Association, Queensland Industrial Organisation of Employers",
+      "source_name": "Master Electricians Association, Queensland Industrial Organisation of Employers",
+      "before_aud": 11788.0,
+      "before_records": 4,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 11788.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Genea",
+      "source_name": "Genea",
+      "before_aud": 23400.0,
+      "before_records": 6,
+      "after_aud": 11700.0,
+      "after_receipts": 4,
+      "removed_aud": 11700.0,
+      "by_type": {
+        "other_receipt": 11700
+      }
+    },
+    {
+      "donor": "Universities Australia",
+      "source_name": "Universities Australia",
+      "before_aud": 23000.0,
+      "before_records": 3,
+      "after_aud": 11500.0,
+      "after_receipts": 2,
+      "removed_aud": 11500.0,
+      "by_type": {
+        "other_receipt": 11500
+      }
+    },
+    {
+      "donor": "Townsville Enterprise Limited",
+      "source_name": "Townsville Enterprise Limited",
+      "before_aud": 17000.0,
+      "before_records": 3,
+      "after_aud": 5500.0,
+      "after_receipts": 1,
+      "removed_aud": 11500.0,
+      "by_type": {
+        "other_receipt": 5500
+      }
+    },
+    {
+      "donor": "LEO Pharma Pty Ltd",
+      "source_name": "LEO Pharma Pty Ltd",
+      "before_aud": 22660.0,
+      "before_records": 4,
+      "after_aud": 11330.0,
+      "after_receipts": 2,
+      "removed_aud": 11330.0,
+      "by_type": {
+        "other_receipt": 11330
+      }
+    },
+    {
+      "donor": "Credit Union Australia LTD",
+      "source_name": "Credit Union Australia LTD",
+      "before_aud": 15208.27,
+      "before_records": 5,
+      "after_aud": 3960.0,
+      "after_receipts": 1,
+      "removed_aud": 11248.27,
+      "by_type": {
+        "other_receipt": 3960
+      }
+    },
+    {
+      "donor": "Actualisation Group Pty Ltd",
+      "source_name": "Actualisation Group Pty Ltd",
+      "before_aud": 11100.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 11100.0,
+      "by_type": {}
+    },
+    {
+      "donor": "I Cook Catering Service PTY. LTD.",
+      "source_name": "I Cook Catering Service PTY. LTD.",
+      "before_aud": 11000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 11000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "RZ Resources Ltd",
+      "source_name": "RZ Resources Ltd",
+      "before_aud": 20500.0,
+      "before_records": 5,
+      "after_aud": 9500.0,
+      "after_receipts": 3,
+      "removed_aud": 11000.0,
+      "by_type": {
+        "other_receipt": 9500
+      }
+    },
+    {
+      "donor": "Destination Cairns Marketing Pty. Ltd.",
+      "source_name": "Destination Cairns Marketing Pty. Ltd.",
+      "before_aud": 17000.0,
+      "before_records": 9,
+      "after_aud": 6000.0,
+      "after_receipts": 3,
+      "removed_aud": 11000.0,
+      "by_type": {
+        "donation_received": 6000
+      }
+    },
+    {
+      "donor": "D'Orsogna Limited",
+      "source_name": "D'Orsogna Limited",
+      "before_aud": 15750.0,
+      "before_records": 12,
+      "after_aud": 5000.0,
+      "after_receipts": 2,
+      "removed_aud": 10750.0,
+      "by_type": {
+        "donation_received": 5000
+      }
+    },
+    {
+      "donor": "Queensland Cricketers' Club Limited",
+      "source_name": "Queensland Cricketers' Club Limited",
+      "before_aud": 16500.5,
+      "before_records": 10,
+      "after_aud": 6200.0,
+      "after_receipts": 3,
+      "removed_aud": 10300.5,
+      "by_type": {
+        "donation_received": 4400,
+        "other_receipt": 1800
+      }
+    },
+    {
+      "donor": "Seven Network (Operations) Limited",
+      "source_name": "Seven Network (Operations) Limited",
+      "before_aud": 73223.0,
+      "before_records": 9,
+      "after_aud": 63223.0,
+      "after_receipts": 8,
+      "removed_aud": 10000.0,
+      "by_type": {
+        "other_receipt": 63223
+      }
+    },
+    {
+      "donor": "Mackay Marina Pty Ltd",
+      "source_name": "Mackay Marina Pty Ltd",
+      "before_aud": 15000.0,
+      "before_records": 3,
+      "after_aud": 5000.0,
+      "after_receipts": 1,
+      "removed_aud": 10000.0,
+      "by_type": {
+        "donation_received": 5000
+      }
+    },
+    {
+      "donor": "WesTrac Pty Ltd",
+      "source_name": "WesTrac Pty Ltd",
+      "before_aud": 10000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 10000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Sekuro Operations Pty Ltd",
+      "source_name": "Sekuro Operations Pty Ltd",
+      "before_aud": 20000.0,
+      "before_records": 2,
+      "after_aud": 10000.0,
+      "after_receipts": 1,
+      "removed_aud": 10000.0,
+      "by_type": {
+        "other_receipt": 10000
+      }
+    },
+    {
+      "donor": "Iliveit Australia Pty Ltd",
+      "source_name": "Iliveit Australia Pty Ltd",
+      "before_aud": 10000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 10000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Mac Farms PTY LTD",
+      "source_name": "Mac Farms PTY LTD",
+      "before_aud": 10000.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 10000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Cipe Group PTY LTD",
+      "source_name": "Cipe Group PTY LTD",
+      "before_aud": 10000.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 10000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Doval Constructions (QLD) Ltd",
+      "source_name": "Doval Constructions (QLD) Ltd",
+      "before_aud": 10000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 10000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Nicholl Holdings Pty Ltd",
+      "source_name": "Nicholl Holdings Pty Ltd",
+      "before_aud": 10000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 10000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Premise Group Services Pty Ltd",
+      "source_name": "Premise Group Services Pty Ltd",
+      "before_aud": 9990.0,
+      "before_records": 4,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 9990.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Aam Investment Group PTY LTD",
+      "source_name": "Aam Investment Group PTY LTD",
+      "before_aud": 9800.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 9800.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Haljent Pty Ltd",
+      "source_name": "Haljent Pty Ltd",
+      "before_aud": 12300.0,
+      "before_records": 4,
+      "after_aud": 2500.0,
+      "after_receipts": 1,
+      "removed_aud": 9800.0,
+      "by_type": {
+        "donation_received": 2500
+      }
+    },
+    {
+      "donor": "Children First Learning Centres Pty Ltd",
+      "source_name": "Children First Learning Centres Pty Ltd",
+      "before_aud": 9671.18,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 9671.18,
+      "by_type": {}
+    },
+    {
+      "donor": "Bdo Services PTY LTD",
+      "source_name": "Bdo Services PTY LTD",
+      "before_aud": 9240.0,
+      "before_records": 5,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 9240.0,
+      "by_type": {}
+    },
+    {
+      "donor": "The Trustee for Ranjit Trust",
+      "source_name": "The Trustee for Ranjit Trust",
+      "before_aud": 12306.0,
+      "before_records": 8,
+      "after_aud": 3152.0,
+      "after_receipts": 2,
+      "removed_aud": 9154.0,
+      "by_type": {
+        "donation_received": 3152
+      }
+    },
+    {
+      "donor": "JPH1 Pty Ltd",
+      "source_name": "JPH1 Pty Ltd",
+      "before_aud": 29000.0,
+      "before_records": 3,
+      "after_aud": 20000.0,
+      "after_receipts": 1,
+      "removed_aud": 9000.0,
+      "by_type": {
+        "donation_received": 20000
+      }
+    },
+    {
+      "donor": "The Trustee for THE MOORE FAMILY TRUST",
+      "source_name": "The Trustee for THE MOORE FAMILY TRUST",
+      "before_aud": 9000.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 9000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "JMC Automotive Group Pty Ltd",
+      "source_name": "JMC Automotive Group Pty Ltd",
+      "before_aud": 18000.0,
+      "before_records": 4,
+      "after_aud": 9000.0,
+      "after_receipts": 2,
+      "removed_aud": 9000.0,
+      "by_type": {
+        "donation_received": 9000
+      }
+    },
+    {
+      "donor": "Merlo Coffee Pty Ltd",
+      "source_name": "Merlo Coffee Pty Ltd",
+      "before_aud": 9000.0,
+      "before_records": 4,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 9000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Brisbane Markets Limited",
+      "source_name": "Brisbane Markets Limited",
+      "before_aud": 14840.0,
+      "before_records": 6,
+      "after_aud": 5870.0,
+      "after_receipts": 3,
+      "removed_aud": 8970.0,
+      "by_type": {
+        "other_receipt": 5870
+      }
+    },
+    {
+      "donor": "Caravan Trade & Industries Association of Queensland",
+      "source_name": "Caravan Trade & Industries Association of Queensland",
+      "before_aud": 17600.0,
+      "before_records": 2,
+      "after_aud": 8800.0,
+      "after_receipts": 1,
+      "removed_aud": 8800.0,
+      "by_type": {
+        "other_receipt": 8800
+      }
+    },
+    {
+      "donor": "Nautilus Aviation Pty Ltd",
+      "source_name": "Nautilus Aviation Pty Ltd",
+      "before_aud": 8690.0,
+      "before_records": 5,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 8690.0,
+      "by_type": {}
+    },
+    {
+      "donor": "BHP Billiton Limited",
+      "source_name": "BHP Billiton Limited",
+      "before_aud": 129644.0,
+      "before_records": 22,
+      "after_aud": 121147.0,
+      "after_receipts": 21,
+      "removed_aud": 8497.0,
+      "by_type": {
+        "donation_received": 5000,
+        "other_receipt": 116147
+      }
+    },
+    {
+      "donor": "Capricorn Copper Holdings Pty Ltd",
+      "source_name": "Capricorn Copper Holdings Pty Ltd",
+      "before_aud": 8300.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 8300.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Aveo Group Limited",
+      "source_name": "Aveo Group Limited",
+      "before_aud": 8299.0,
+      "before_records": 3,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 8299.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Fitness Australia",
+      "source_name": "Fitness Australia",
+      "before_aud": 24225.0,
+      "before_records": 3,
+      "after_aud": 15975.0,
+      "after_receipts": 2,
+      "removed_aud": 8250.0,
+      "by_type": {
+        "other_receipt": 15975
+      }
+    },
+    {
+      "donor": "Mates IN Construction (QLD & NT) LTD",
+      "source_name": "Mates IN Construction (QLD & NT) LTD",
+      "before_aud": 15140.0,
+      "before_records": 14,
+      "after_aud": 6890.0,
+      "after_receipts": 6,
+      "removed_aud": 8250.0,
+      "by_type": {
+        "donation_received": 2000,
+        "other_receipt": 4890
+      }
+    },
+    {
+      "donor": "De Bortoli Wines Pty Ltd",
+      "source_name": "De Bortoli Wines Pty Ltd",
+      "before_aud": 31900.0,
+      "before_records": 6,
+      "after_aud": 23900.0,
+      "after_receipts": 6,
+      "removed_aud": 8000.0,
+      "by_type": {
+        "donation_received": 12500,
+        "other_receipt": 11400
+      }
+    },
+    {
+      "donor": "Milcom Communications Pty Ltd",
+      "source_name": "Milcom Communications Pty Ltd",
+      "before_aud": 8000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 8000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Classica Kitchen & Giftware Pty Ltd",
+      "source_name": "Classica Kitchen & Giftware Pty Ltd",
+      "before_aud": 16000.0,
+      "before_records": 2,
+      "after_aud": 8000.0,
+      "after_receipts": 1,
+      "removed_aud": 8000.0,
+      "by_type": {
+        "other_receipt": 8000
+      }
+    },
+    {
+      "donor": "Gold Training Pty Ltd",
+      "source_name": "Gold Training Pty Ltd",
+      "before_aud": 8000.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 8000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Gilbert & Tobin Lawyers",
+      "source_name": "Gilbert & Tobin Lawyers",
+      "before_aud": 16400.0,
+      "before_records": 5,
+      "after_aud": 8700.0,
+      "after_receipts": 3,
+      "removed_aud": 7700.0,
+      "by_type": {
+        "other_receipt": 8700
+      }
+    },
+    {
+      "donor": "National Training Group",
+      "source_name": "National Training Group",
+      "before_aud": 15400.0,
+      "before_records": 3,
+      "after_aud": 7700.0,
+      "after_receipts": 2,
+      "removed_aud": 7700.0,
+      "by_type": {
+        "other_receipt": 7700
+      }
+    },
+    {
+      "donor": "Riviera Australia PTY LTD",
+      "source_name": "Riviera Australia PTY LTD",
+      "before_aud": 7700.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 7700.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Burrito Bar Franchising Corporation Pty Ltd",
+      "source_name": "Burrito Bar Franchising Corporation Pty Ltd",
+      "before_aud": 7700.0,
+      "before_records": 4,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 7700.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Grace Education Pty Ltd",
+      "source_name": "Grace Education Pty Ltd",
+      "before_aud": 8800.0,
+      "before_records": 5,
+      "after_aud": 1200.0,
+      "after_receipts": 1,
+      "removed_aud": 7600.0,
+      "by_type": {
+        "other_receipt": 1200
+      }
+    },
+    {
+      "donor": "Independent Reserve PTY Limited",
+      "source_name": "Independent Reserve PTY Limited",
+      "before_aud": 27500.0,
+      "before_records": 2,
+      "after_aud": 20000.0,
+      "after_receipts": 1,
+      "removed_aud": 7500.0,
+      "by_type": {
+        "donation_received": 20000
+      }
+    },
+    {
+      "donor": "Australia Qld Fujian Association",
+      "source_name": "Australia Qld Fujian Association",
+      "before_aud": 13500.0,
+      "before_records": 3,
+      "after_aud": 6000.0,
+      "after_receipts": 1,
+      "removed_aud": 7500.0,
+      "by_type": {
+        "donation_received": 6000
+      }
+    },
+    {
+      "donor": "The Trustee for The Angus Family Trust",
+      "source_name": "The Trustee for The Angus Family Trust",
+      "before_aud": 7480.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 7480.0,
+      "by_type": {}
+    },
+    {
+      "donor": "OZ Xpress Pty Ltd",
+      "source_name": "OZ Xpress Pty Ltd",
+      "before_aud": 7354.16,
+      "before_records": 3,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 7354.16,
+      "by_type": {}
+    },
+    {
+      "donor": "Brisbane Racing Club",
+      "source_name": "Brisbane Racing Club",
+      "before_aud": 7290.0,
+      "before_records": 4,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 7290.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Kingswood Cabinets Pty Ltd",
+      "source_name": "Kingswood Cabinets Pty Ltd",
+      "before_aud": 7170.0,
+      "before_records": 4,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 7170.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Eniquest",
+      "source_name": "Eniquest",
+      "before_aud": 7119.0,
+      "before_records": 7,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 7119.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Auswide Bank LTD",
+      "source_name": "Auswide Bank LTD",
+      "before_aud": 6970.0,
+      "before_records": 5,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 6970.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Helimods Pty Ltd",
+      "source_name": "Helimods Pty Ltd",
+      "before_aud": 6770.0,
+      "before_records": 4,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 6770.0,
+      "by_type": {}
+    },
+    {
+      "donor": "The Richmond Fellowship OF Queensland",
+      "source_name": "The Richmond Fellowship OF Queensland",
+      "before_aud": 6600.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 6600.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Huawei Technologies (Australia",
+      "source_name": "Huawei Technologies (Australia",
+      "before_aud": 13200.0,
+      "before_records": 2,
+      "after_aud": 6600.0,
+      "after_receipts": 1,
+      "removed_aud": 6600.0,
+      "by_type": {
+        "other_receipt": 6600
+      }
+    },
+    {
+      "donor": "Shine Lawyers",
+      "source_name": "Shine Lawyers",
+      "before_aud": 17680.0,
+      "before_records": 11,
+      "after_aud": 11090.0,
+      "after_receipts": 5,
+      "removed_aud": 6590.0,
+      "by_type": {
+        "donation_received": 990,
+        "other_receipt": 10100
+      }
+    },
+    {
+      "donor": "Alphapharm",
+      "source_name": "Alphapharm",
+      "before_aud": 14500.0,
+      "before_records": 5,
+      "after_aud": 8000.0,
+      "after_receipts": 4,
+      "removed_aud": 6500.0,
+      "by_type": {
+        "other_receipt": 8000
+      }
+    },
+    {
+      "donor": "World Arts & Multi - Culture Inc",
+      "source_name": "World Arts & Multi - Culture Inc",
+      "before_aud": 9495.0,
+      "before_records": 9,
+      "after_aud": 3000.0,
+      "after_receipts": 1,
+      "removed_aud": 6495.0,
+      "by_type": {
+        "donation_received": 3000
+      }
+    },
+    {
+      "donor": "Rock FM Association Inc",
+      "source_name": "Rock FM Association Inc",
+      "before_aud": 6468.44,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 6468.44,
+      "by_type": {}
+    },
+    {
+      "donor": "Jones Lang Lasalle (QLD) PTY Limited",
+      "source_name": "Jones Lang Lasalle (QLD) PTY Limited",
+      "before_aud": 6440.0,
+      "before_records": 5,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 6440.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Nightbreeze Pty Ltd",
+      "source_name": "Nightbreeze Pty Ltd",
+      "before_aud": 6290.0,
+      "before_records": 4,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 6290.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Eastern Suburbs District Rugby League Football Club Inc",
+      "source_name": "Eastern Suburbs District Rugby League Football Club Inc",
+      "before_aud": 12000.0,
+      "before_records": 2,
+      "after_aud": 6000.0,
+      "after_receipts": 1,
+      "removed_aud": 6000.0,
+      "by_type": {
+        "donation_received": 6000
+      }
+    },
+    {
+      "donor": "AusCare Home and Community Care Limited",
+      "source_name": "AusCare Home and Community Care Limited",
+      "before_aud": 6000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 6000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Transition Level Investments PTY LTD",
+      "source_name": "Transition Level Investments PTY LTD",
+      "before_aud": 6000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 6000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Woodlands Enterprises Pty Ltd",
+      "source_name": "Woodlands Enterprises Pty Ltd",
+      "before_aud": 5990.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5990.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Stacked Farm Pty Ltd",
+      "source_name": "Stacked Farm Pty Ltd",
+      "before_aud": 5800.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5800.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Bennett and Bennett Group",
+      "source_name": "Bennett and Bennett Group",
+      "before_aud": 5800.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5800.0,
+      "by_type": {}
+    },
+    {
+      "donor": "K2 Law Pty Ltd",
+      "source_name": "K2 Law Pty Ltd",
+      "before_aud": 5800.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5800.0,
+      "by_type": {}
+    },
+    {
+      "donor": "TUSU Liquor Pty Ltd",
+      "source_name": "TUSU Liquor Pty Ltd",
+      "before_aud": 10700.0,
+      "before_records": 3,
+      "after_aud": 5000.0,
+      "after_receipts": 1,
+      "removed_aud": 5700.0,
+      "by_type": {
+        "other_receipt": 5000
+      }
+    },
+    {
+      "donor": "Bentleys (QLD) PTY LTD",
+      "source_name": "Bentleys (QLD) PTY LTD",
+      "before_aud": 5700.0,
+      "before_records": 4,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5700.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Greenridge Press Pty Ltd",
+      "source_name": "Greenridge Press Pty Ltd",
+      "before_aud": 5665.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5665.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Hillcrest Christian College Limited",
+      "source_name": "Hillcrest Christian College Limited",
+      "before_aud": 5590.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5590.0,
+      "by_type": {}
+    },
+    {
+      "donor": "NSW Farmers Association",
+      "source_name": "NSW Farmers Association",
+      "before_aud": 31696.0,
+      "before_records": 9,
+      "after_aud": 26196.0,
+      "after_receipts": 8,
+      "removed_aud": 5500.0,
+      "by_type": {
+        "other_receipt": 26196
+      }
+    },
+    {
+      "donor": "Graincorp Operations Ltd",
+      "source_name": "Graincorp Operations Ltd",
+      "before_aud": 78800.0,
+      "before_records": 16,
+      "after_aud": 73300.0,
+      "after_receipts": 14,
+      "removed_aud": 5500.0,
+      "by_type": {
+        "donation_received": 39000,
+        "other_receipt": 24300,
+        "unspecified": 10000
+      }
+    },
+    {
+      "donor": "Qualipac Pty Ltd",
+      "source_name": "Qualipac Pty Ltd",
+      "before_aud": 8000.0,
+      "before_records": 3,
+      "after_aud": 2500.0,
+      "after_receipts": 1,
+      "removed_aud": 5500.0,
+      "by_type": {
+        "donation_received": 2500
+      }
+    },
+    {
+      "donor": "Australian Taiwanese Chamber of Commerce QLD Inc",
+      "source_name": "Australian Taiwanese Chamber of Commerce QLD Inc",
+      "before_aud": 6940.0,
+      "before_records": 5,
+      "after_aud": 1600.0,
+      "after_receipts": 1,
+      "removed_aud": 5340.0,
+      "by_type": {
+        "other_receipt": 1600
+      }
+    },
+    {
+      "donor": "CuString Pty Ltd",
+      "source_name": "CuString Pty Ltd",
+      "before_aud": 9724.0,
+      "before_records": 5,
+      "after_aud": 4400.0,
+      "after_receipts": 2,
+      "removed_aud": 5324.0,
+      "by_type": {
+        "other_receipt": 4400
+      }
+    },
+    {
+      "donor": "Tranzmile Pty Ltd",
+      "source_name": "Tranzmile Pty Ltd",
+      "before_aud": 5280.0,
+      "before_records": 3,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5280.0,
+      "by_type": {}
+    },
+    {
+      "donor": "NetBi Pty Ltd",
+      "source_name": "NetBi Pty Ltd",
+      "before_aud": 5200.0,
+      "before_records": 3,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5200.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Queensland Chamber OF Commerce And Industry Limited",
+      "source_name": "Queensland Chamber OF Commerce And Industry Limited",
+      "before_aud": 5170.0,
+      "before_records": 3,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5170.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Brisbane Broncos Corporation pty Ltd",
+      "source_name": "Brisbane Broncos Corporation pty Ltd",
+      "before_aud": 6500.0,
+      "before_records": 2,
+      "after_aud": 1500.0,
+      "after_receipts": 1,
+      "removed_aud": 5000.0,
+      "by_type": {
+        "other_receipt": 1500
+      }
+    },
+    {
+      "donor": "Airnorth",
+      "source_name": "Airnorth",
+      "before_aud": 15800.0,
+      "before_records": 5,
+      "after_aud": 10800.0,
+      "after_receipts": 4,
+      "removed_aud": 5000.0,
+      "by_type": {
+        "other_receipt": 10800
+      }
+    },
+    {
+      "donor": "Brisbane Bears-Fitzroy Football Club Ltd",
+      "source_name": "Brisbane Bears-Fitzroy Football Club Ltd",
+      "before_aud": 5000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "The trustee for Stanbroke Beef Trust",
+      "source_name": "The trustee for Stanbroke Beef Trust",
+      "before_aud": 5000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Greek Orthodox Community of NSW Limited",
+      "source_name": "Greek Orthodox Community of NSW Limited",
+      "before_aud": 10000.0,
+      "before_records": 2,
+      "after_aud": 5000.0,
+      "after_receipts": 1,
+      "removed_aud": 5000.0,
+      "by_type": {
+        "unspecified": 5000
+      }
+    },
+    {
+      "donor": "World Vision Australia",
+      "source_name": "World Vision Australia",
+      "before_aud": 10000.0,
+      "before_records": 2,
+      "after_aud": 5000.0,
+      "after_receipts": 1,
+      "removed_aud": 5000.0,
+      "by_type": {
+        "other_receipt": 5000
+      }
+    },
+    {
+      "donor": "SAE Investments (Aust) Pty Ltd",
+      "source_name": "SAE Investments (Aust) Pty Ltd",
+      "before_aud": 10000.0,
+      "before_records": 2,
+      "after_aud": 5000.0,
+      "after_receipts": 1,
+      "removed_aud": 5000.0,
+      "by_type": {
+        "donation_received": 5000
+      }
+    },
+    {
+      "donor": "Kennedy'S Classic Aged Timbers PTY LTD",
+      "source_name": "Kennedy'S Classic Aged Timbers PTY LTD",
+      "before_aud": 5000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Zeta Media Marketing",
+      "source_name": "Zeta Media Marketing",
+      "before_aud": 10000.0,
+      "before_records": 2,
+      "after_aud": 5000.0,
+      "after_receipts": 1,
+      "removed_aud": 5000.0,
+      "by_type": {
+        "donation_received": 5000
+      }
+    },
+    {
+      "donor": "Islamic College of Brisbane Limited",
+      "source_name": "Islamic College of Brisbane Limited",
+      "before_aud": 8000.0,
+      "before_records": 5,
+      "after_aud": 3000.0,
+      "after_receipts": 2,
+      "removed_aud": 5000.0,
+      "by_type": {
+        "donation_received": 1000,
+        "other_receipt": 2000
+      }
+    },
+    {
+      "donor": "Our Community Pty Ltd",
+      "source_name": "Our Community Pty Ltd",
+      "before_aud": 17500.0,
+      "before_records": 3,
+      "after_aud": 12500.0,
+      "after_receipts": 2,
+      "removed_aud": 5000.0,
+      "by_type": {
+        "donation_received": 7500,
+        "other_receipt": 5000
+      }
+    },
+    {
+      "donor": "Ray Fry Investments Pty Ltd",
+      "source_name": "Ray Fry Investments Pty Ltd",
+      "before_aud": 5000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Parsram Exporters Pty Ltd",
+      "source_name": "Parsram Exporters Pty Ltd",
+      "before_aud": 5000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Wanless Waste Management PTY LTD",
+      "source_name": "Wanless Waste Management PTY LTD",
+      "before_aud": 5000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Impavid Education PTY LTD",
+      "source_name": "Impavid Education PTY LTD",
+      "before_aud": 5000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "James Engineering Pty Ltd",
+      "source_name": "James Engineering Pty Ltd",
+      "before_aud": 5000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "J F Hull Holdings Pty Ltd",
+      "source_name": "J F Hull Holdings Pty Ltd",
+      "before_aud": 5000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Magnum Australia Pty Ltd",
+      "source_name": "Magnum Australia Pty Ltd",
+      "before_aud": 10000.0,
+      "before_records": 2,
+      "after_aud": 5000.0,
+      "after_receipts": 1,
+      "removed_aud": 5000.0,
+      "by_type": {
+        "donation_received": 5000
+      }
+    },
+    {
+      "donor": "Lionel Moore Trailers PTY LTD.",
+      "source_name": "Lionel Moore Trailers PTY LTD.",
+      "before_aud": 5000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Goldy Motors Pty Ltd",
+      "source_name": "Goldy Motors Pty Ltd",
+      "before_aud": 8000.0,
+      "before_records": 3,
+      "after_aud": 3000.0,
+      "after_receipts": 1,
+      "removed_aud": 5000.0,
+      "by_type": {
+        "donation_received": 3000
+      }
+    },
+    {
+      "donor": "Envestra Ltd",
+      "source_name": "Envestra Ltd",
+      "before_aud": 10000.0,
+      "before_records": 2,
+      "after_aud": 5000.0,
+      "after_receipts": 1,
+      "removed_aud": 5000.0,
+      "by_type": {
+        "donation_received": 5000
+      }
+    },
+    {
+      "donor": "State Gas Limited",
+      "source_name": "State Gas Limited",
+      "before_aud": 9400.0,
+      "before_records": 2,
+      "after_aud": 4400.0,
+      "after_receipts": 1,
+      "removed_aud": 5000.0,
+      "by_type": {
+        "other_receipt": 4400
+      }
+    },
+    {
+      "donor": "Tuff Australia PTY LTD",
+      "source_name": "Tuff Australia PTY LTD",
+      "before_aud": 5000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Big Cat Green Island Reef Cruises",
+      "source_name": "Big Cat Green Island Reef Cruises",
+      "before_aud": 5000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Luminary Consulting Group Pty Ltd",
+      "source_name": "Luminary Consulting Group Pty Ltd",
+      "before_aud": 15000.0,
+      "before_records": 3,
+      "after_aud": 10000.0,
+      "after_receipts": 2,
+      "removed_aud": 5000.0,
+      "by_type": {
+        "other_receipt": 10000
+      }
+    },
+    {
+      "donor": "A.S. BARR (Perth) Pty Ltd",
+      "source_name": "A.S. BARR (Perth) Pty Ltd",
+      "before_aud": 5000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 5000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Pacific Marine Group Pty Ltd",
+      "source_name": "Pacific Marine Group Pty Ltd",
+      "before_aud": 7000.0,
+      "before_records": 2,
+      "after_aud": 2000.0,
+      "after_receipts": 1,
+      "removed_aud": 5000.0,
+      "by_type": {
+        "other_receipt": 2000
+      }
+    },
+    {
+      "donor": "Master Painters Decorators & Signwriters Association of Queensland Ltd",
+      "source_name": "Master Painters Decorators & Signwriters Association of Queensland Ltd",
+      "before_aud": 9900.0,
+      "before_records": 2,
+      "after_aud": 4950.0,
+      "after_receipts": 1,
+      "removed_aud": 4950.0,
+      "by_type": {
+        "donation_received": 4950
+      }
+    },
+    {
+      "donor": "Peopleplus Enterprises PTY LTD",
+      "source_name": "Peopleplus Enterprises PTY LTD",
+      "before_aud": 4800.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 4800.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Australian Catholic University",
+      "source_name": "Australian Catholic University",
+      "before_aud": 9400.0,
+      "before_records": 6,
+      "after_aud": 4700.0,
+      "after_receipts": 3,
+      "removed_aud": 4700.0,
+      "by_type": {
+        "other_receipt": 4700
+      }
+    },
+    {
+      "donor": "Kalfresh Pty Ltd",
+      "source_name": "Kalfresh Pty Ltd",
+      "before_aud": 4600.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 4600.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Arkhefield Pty Ltd",
+      "source_name": "Arkhefield Pty Ltd",
+      "before_aud": 4500.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 4500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Allgas Energy Pty Ltd",
+      "source_name": "Allgas Energy Pty Ltd",
+      "before_aud": 4500.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 4500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Hoppicorp Pty Ltd",
+      "source_name": "Hoppicorp Pty Ltd",
+      "before_aud": 4500.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 4500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Taylor David Pty Ltd",
+      "source_name": "Taylor David Pty Ltd",
+      "before_aud": 9000.0,
+      "before_records": 4,
+      "after_aud": 4500.0,
+      "after_receipts": 2,
+      "removed_aud": 4500.0,
+      "by_type": {
+        "other_receipt": 4500
+      }
+    },
+    {
+      "donor": "Caboolture Sports Club Limited",
+      "source_name": "Caboolture Sports Club Limited",
+      "before_aud": 8804.5,
+      "before_records": 6,
+      "after_aud": 4402.0,
+      "after_receipts": 3,
+      "removed_aud": 4402.5,
+      "by_type": {
+        "donation_received": 4402
+      }
+    },
+    {
+      "donor": "Field Solutions Group",
+      "source_name": "Field Solutions Group",
+      "before_aud": 4400.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 4400.0,
+      "by_type": {}
+    },
+    {
+      "donor": "National Rugby League Limited",
+      "source_name": "National Rugby League Limited",
+      "before_aud": 11000.0,
+      "before_records": 3,
+      "after_aud": 6600.0,
+      "after_receipts": 2,
+      "removed_aud": 4400.0,
+      "by_type": {
+        "other_receipt": 4400,
+        "unspecified": 2200
+      }
+    },
+    {
+      "donor": "Ausveg",
+      "source_name": "Ausveg",
+      "before_aud": 88300.0,
+      "before_records": 14,
+      "after_aud": 83900.0,
+      "after_receipts": 11,
+      "removed_aud": 4400.0,
+      "by_type": {
+        "donation_received": 1000,
+        "other_receipt": 71900,
+        "subscription": 11000
+      }
+    },
+    {
+      "donor": "Canegrowers",
+      "source_name": "Canegrowers",
+      "before_aud": 4400.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 4400.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Fresh Select Pty Ltd",
+      "source_name": "Fresh Select Pty Ltd",
+      "before_aud": 8800.0,
+      "before_records": 4,
+      "after_aud": 4400.0,
+      "after_receipts": 2,
+      "removed_aud": 4400.0,
+      "by_type": {
+        "other_receipt": 4400
+      }
+    },
+    {
+      "donor": "STS Training Pty Ltd",
+      "source_name": "STS Training Pty Ltd",
+      "before_aud": 4400.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 4400.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Sea Swift Pty Ltd",
+      "source_name": "Sea Swift Pty Ltd",
+      "before_aud": 6300.0,
+      "before_records": 3,
+      "after_aud": 2000.0,
+      "after_receipts": 1,
+      "removed_aud": 4300.0,
+      "by_type": {
+        "donation_received": 2000
+      }
+    },
+    {
+      "donor": "The Trustee for Lyngcoln Family Trust",
+      "source_name": "The Trustee for Lyngcoln Family Trust",
+      "before_aud": 4235.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 4235.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Bundaberg Canegrowers Limited",
+      "source_name": "Bundaberg Canegrowers Limited",
+      "before_aud": 4200.0,
+      "before_records": 3,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 4200.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Australia China Business Council",
+      "source_name": "Australia China Business Council",
+      "before_aud": 4185.0,
+      "before_records": 5,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 4185.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Mates In Construction (Aust) Limited",
+      "source_name": "Mates In Construction (Aust) Limited",
+      "before_aud": 5335.0,
+      "before_records": 5,
+      "after_aud": 1200.0,
+      "after_receipts": 1,
+      "removed_aud": 4135.0,
+      "by_type": {
+        "other_receipt": 1200
+      }
+    },
+    {
+      "donor": "Egg Farmers of Australia",
+      "source_name": "Egg Farmers of Australia",
+      "before_aud": 13100.0,
+      "before_records": 4,
+      "after_aud": 9050.0,
+      "after_receipts": 3,
+      "removed_aud": 4050.0,
+      "by_type": {
+        "other_receipt": 9050
+      }
+    },
+    {
+      "donor": "Archerfield Airport Corporation",
+      "source_name": "Archerfield Airport Corporation",
+      "before_aud": 6050.0,
+      "before_records": 4,
+      "after_aud": 2000.0,
+      "after_receipts": 1,
+      "removed_aud": 4050.0,
+      "by_type": {
+        "other_receipt": 2000
+      }
+    },
+    {
+      "donor": "Spinal Life Australia Ltd",
+      "source_name": "Spinal Life Australia Ltd",
+      "before_aud": 8000.0,
+      "before_records": 2,
+      "after_aud": 4000.0,
+      "after_receipts": 1,
+      "removed_aud": 4000.0,
+      "by_type": {
+        "other_receipt": 4000
+      }
+    },
+    {
+      "donor": "National Seniors Australia Ltd",
+      "source_name": "National Seniors Australia Ltd",
+      "before_aud": 8000.0,
+      "before_records": 2,
+      "after_aud": 4000.0,
+      "after_receipts": 1,
+      "removed_aud": 4000.0,
+      "by_type": {
+        "other_receipt": 4000
+      }
+    },
+    {
+      "donor": "Australian General Practice Accreditation LTD",
+      "source_name": "Australian General Practice Accreditation LTD",
+      "before_aud": 4000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 4000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Australian Airports (Mount Isa) Pty Ltd",
+      "source_name": "Australian Airports (Mount Isa) Pty Ltd",
+      "before_aud": 9000.0,
+      "before_records": 4,
+      "after_aud": 5000.0,
+      "after_receipts": 2,
+      "removed_aud": 4000.0,
+      "by_type": {
+        "donation_received": 5000
+      }
+    },
+    {
+      "donor": "The Coffee Commune Pty Ltd",
+      "source_name": "The Coffee Commune Pty Ltd",
+      "before_aud": 4000.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 4000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "SIMS Group Australia",
+      "source_name": "SIMS Group Australia",
+      "before_aud": 8000.0,
+      "before_records": 2,
+      "after_aud": 4000.0,
+      "after_receipts": 1,
+      "removed_aud": 4000.0,
+      "by_type": {
+        "other_receipt": 4000
+      }
+    },
+    {
+      "donor": "Wansey Downs Pty Ltd",
+      "source_name": "Wansey Downs Pty Ltd",
+      "before_aud": 4000.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 4000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Redcliffe Leagues Club Limited",
+      "source_name": "Redcliffe Leagues Club Limited",
+      "before_aud": 8000.0,
+      "before_records": 2,
+      "after_aud": 4000.0,
+      "after_receipts": 1,
+      "removed_aud": 4000.0,
+      "by_type": {
+        "other_receipt": 4000
+      }
+    },
+    {
+      "donor": "Sunlife Energy Pty Ltd",
+      "source_name": "Sunlife Energy Pty Ltd",
+      "before_aud": 4000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 4000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "The Da'Vange Group PTY LTD",
+      "source_name": "The Da'Vange Group PTY LTD",
+      "before_aud": 3960.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 3960.0,
+      "by_type": {}
+    },
+    {
+      "donor": "The Trustee for Yungaburra Hotel Trust",
+      "source_name": "The Trustee for Yungaburra Hotel Trust",
+      "before_aud": 3800.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 3800.0,
+      "by_type": {}
+    },
+    {
+      "donor": "MGB Pty Ltd",
+      "source_name": "MGB Pty Ltd",
+      "before_aud": 3800.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 3800.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Mater Misericordiae Ltd",
+      "source_name": "Mater Misericordiae Ltd",
+      "before_aud": 3780.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 3780.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Southport Australian Rules Football Club LTD.",
+      "source_name": "Southport Australian Rules Football Club LTD.",
+      "before_aud": 3570.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 3570.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Queensland Rugby Union",
+      "source_name": "Queensland Rugby Union",
+      "before_aud": 5280.0,
+      "before_records": 3,
+      "after_aud": 1760.0,
+      "after_receipts": 1,
+      "removed_aud": 3520.0,
+      "by_type": {
+        "other_receipt": 1760
+      }
+    },
+    {
+      "donor": "Grove Fruit Juice Pty Ltd",
+      "source_name": "Grove Fruit Juice Pty Ltd",
+      "before_aud": 3500.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 3500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Runsmart Corporate Pty Ltd",
+      "source_name": "Runsmart Corporate Pty Ltd",
+      "before_aud": 3500.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 3500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Regatta Hotel",
+      "source_name": "Regatta Hotel",
+      "before_aud": 8500.0,
+      "before_records": 4,
+      "after_aud": 5000.0,
+      "after_receipts": 2,
+      "removed_aud": 3500.0,
+      "by_type": {
+        "donation_received": 3500,
+        "other_receipt": 1500
+      }
+    },
+    {
+      "donor": "Tactiv Pty Ltd",
+      "source_name": "Tactiv Pty Ltd",
+      "before_aud": 3490.0,
+      "before_records": 3,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 3490.0,
+      "by_type": {}
+    },
+    {
+      "donor": "City of South Perth",
+      "source_name": "City of South Perth",
+      "before_aud": 6950.0,
+      "before_records": 2,
+      "after_aud": 3475.0,
+      "after_receipts": 1,
+      "removed_aud": 3475.0,
+      "by_type": {
+        "other_receipt": 3475
+      }
+    },
+    {
+      "donor": "Australian Chinese Buddhist Association (Brisbane)",
+      "source_name": "Australian Chinese Buddhist Association (Brisbane)",
+      "before_aud": 4380.0,
+      "before_records": 5,
+      "after_aud": 1000.0,
+      "after_receipts": 1,
+      "removed_aud": 3380.0,
+      "by_type": {
+        "donation_received": 1000
+      }
+    },
+    {
+      "donor": "Ozcare",
+      "source_name": "Ozcare",
+      "before_aud": 3350.48,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 3350.48,
+      "by_type": {}
+    },
+    {
+      "donor": "Ricegrowers Limited",
+      "source_name": "Ricegrowers Limited",
+      "before_aud": 6600.0,
+      "before_records": 2,
+      "after_aud": 3300.0,
+      "after_receipts": 1,
+      "removed_aud": 3300.0,
+      "by_type": {
+        "other_receipt": 3300
+      }
+    },
+    {
+      "donor": "Ellis Air Conditioning (QLD) Pty Ltd",
+      "source_name": "Ellis Air Conditioning (QLD) Pty Ltd",
+      "before_aud": 4950.0,
+      "before_records": 3,
+      "after_aud": 1650.0,
+      "after_receipts": 1,
+      "removed_aud": 3300.0,
+      "by_type": {
+        "other_receipt": 1650
+      }
+    },
+    {
+      "donor": "Law Council of Australia",
+      "source_name": "Law Council of Australia",
+      "before_aud": 6500.0,
+      "before_records": 4,
+      "after_aud": 3250.0,
+      "after_receipts": 2,
+      "removed_aud": 3250.0,
+      "by_type": {
+        "other_receipt": 3250
+      }
+    },
+    {
+      "donor": "Heathgate Resources",
+      "source_name": "Heathgate Resources",
+      "before_aud": 16300.0,
+      "before_records": 6,
+      "after_aud": 13150.0,
+      "after_receipts": 5,
+      "removed_aud": 3150.0,
+      "by_type": {
+        "other_receipt": 13150
+      }
+    },
+    {
+      "donor": "Lighting Council Australia",
+      "source_name": "Lighting Council Australia",
+      "before_aud": 6200.0,
+      "before_records": 4,
+      "after_aud": 3100.0,
+      "after_receipts": 2,
+      "removed_aud": 3100.0,
+      "by_type": {
+        "other_receipt": 3100
+      }
+    },
+    {
+      "donor": "Ripple Concepts PTY LTD",
+      "source_name": "Ripple Concepts PTY LTD",
+      "before_aud": 3100.0,
+      "before_records": 3,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 3100.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Greg Grant Australia Pty Ltd",
+      "source_name": "Greg Grant Australia Pty Ltd",
+      "before_aud": 3080.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 3080.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Nolan Meats PTY. LTD.",
+      "source_name": "Nolan Meats PTY. LTD.",
+      "before_aud": 3000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 3000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Parsram Foods Pty Ltd",
+      "source_name": "Parsram Foods Pty Ltd",
+      "before_aud": 6000.0,
+      "before_records": 2,
+      "after_aud": 3000.0,
+      "after_receipts": 1,
+      "removed_aud": 3000.0,
+      "by_type": {
+        "other_receipt": 3000
+      }
+    },
+    {
+      "donor": "Pivotal Entertainment PTY LTD",
+      "source_name": "Pivotal Entertainment PTY LTD",
+      "before_aud": 3000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 3000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Calliope Cattle Co",
+      "source_name": "Calliope Cattle Co",
+      "before_aud": 3000.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 3000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Apprentice Employment Network",
+      "source_name": "Apprentice Employment Network",
+      "before_aud": 4500.0,
+      "before_records": 3,
+      "after_aud": 1500.0,
+      "after_receipts": 1,
+      "removed_aud": 3000.0,
+      "by_type": {
+        "other_receipt": 1500
+      }
+    },
+    {
+      "donor": "Brisbane Home Loans PTY. LTD.",
+      "source_name": "Brisbane Home Loans PTY. LTD.",
+      "before_aud": 3000.0,
+      "before_records": 3,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 3000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Rebel Sport Ltd",
+      "source_name": "Rebel Sport Ltd",
+      "before_aud": 6000.0,
+      "before_records": 2,
+      "after_aud": 3000.0,
+      "after_receipts": 1,
+      "removed_aud": 3000.0,
+      "by_type": {
+        "donation_received": 3000
+      }
+    },
+    {
+      "donor": "Frenchville Sports Club",
+      "source_name": "Frenchville Sports Club",
+      "before_aud": 2970.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2970.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Master Painters Decorators & Signwriters Assoc of Qld Union of Employers",
+      "source_name": "Master Painters Decorators & Signwriters Assoc of Qld Union of Employers",
+      "before_aud": 5908.27,
+      "before_records": 4,
+      "after_aud": 2954.0,
+      "after_receipts": 2,
+      "removed_aud": 2954.27,
+      "by_type": {
+        "other_receipt": 2954
+      }
+    },
+    {
+      "donor": "Consolidated Pastoral Company",
+      "source_name": "Consolidated Pastoral Company",
+      "before_aud": 2950.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2950.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Patient Zero PTY LTD",
+      "source_name": "Patient Zero PTY LTD",
+      "before_aud": 2690.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2690.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Australian Logistics Council Ltd",
+      "source_name": "Australian Logistics Council Ltd",
+      "before_aud": 5318.0,
+      "before_records": 2,
+      "after_aud": 2659.0,
+      "after_receipts": 1,
+      "removed_aud": 2659.0,
+      "by_type": {
+        "other_receipt": 2659
+      }
+    },
+    {
+      "donor": "Ripper Corporation Pty Ltd",
+      "source_name": "Ripper Corporation Pty Ltd",
+      "before_aud": 10280.0,
+      "before_records": 4,
+      "after_aud": 7640.0,
+      "after_receipts": 3,
+      "removed_aud": 2640.0,
+      "by_type": {
+        "donation_received": 5000,
+        "other_receipt": 2640
+      }
+    },
+    {
+      "donor": "Home Nursing Group",
+      "source_name": "Home Nursing Group",
+      "before_aud": 5000.0,
+      "before_records": 2,
+      "after_aud": 2500.0,
+      "after_receipts": 1,
+      "removed_aud": 2500.0,
+      "by_type": {
+        "donation_received": 2500
+      }
+    },
+    {
+      "donor": "Stockair Pty Ltd",
+      "source_name": "Stockair Pty Ltd",
+      "before_aud": 2500.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Internet 2.0",
+      "source_name": "Internet 2.0",
+      "before_aud": 17879.0,
+      "before_records": 7,
+      "after_aud": 15379.0,
+      "after_receipts": 6,
+      "removed_aud": 2500.0,
+      "by_type": {
+        "donation_received": 1779,
+        "other_receipt": 13600
+      }
+    },
+    {
+      "donor": "Rebel Radio Network Pty Ltd",
+      "source_name": "Rebel Radio Network Pty Ltd",
+      "before_aud": 5000.0,
+      "before_records": 2,
+      "after_aud": 2500.0,
+      "after_receipts": 1,
+      "removed_aud": 2500.0,
+      "by_type": {
+        "donation_received": 2500
+      }
+    },
+    {
+      "donor": "Brighton Pacific Pty Ltd",
+      "source_name": "Brighton Pacific Pty Ltd",
+      "before_aud": 2500.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Meat Inspectors Pty Ltd",
+      "source_name": "Meat Inspectors Pty Ltd",
+      "before_aud": 2500.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "National Basketball League Pty Ltd",
+      "source_name": "National Basketball League Pty Ltd",
+      "before_aud": 5000.0,
+      "before_records": 2,
+      "after_aud": 2500.0,
+      "after_receipts": 1,
+      "removed_aud": 2500.0,
+      "by_type": {
+        "other_receipt": 2500
+      }
+    },
+    {
+      "donor": "North Jacklin Pty Ltd",
+      "source_name": "North Jacklin Pty Ltd",
+      "before_aud": 2500.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "C.M. Fraser & Sons PTY. LTD.",
+      "source_name": "C.M. Fraser & Sons PTY. LTD.",
+      "before_aud": 2500.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Isador Enterprises",
+      "source_name": "Isador Enterprises",
+      "before_aud": 2500.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Northern Management Group",
+      "source_name": "Northern Management Group",
+      "before_aud": 5000.0,
+      "before_records": 2,
+      "after_aud": 2500.0,
+      "after_receipts": 1,
+      "removed_aud": 2500.0,
+      "by_type": {
+        "donation_received": 2500
+      }
+    },
+    {
+      "donor": "Aldesta Hotel Australia Pty Ltd",
+      "source_name": "Aldesta Hotel Australia Pty Ltd",
+      "before_aud": 3648.0,
+      "before_records": 3,
+      "after_aud": 1216.0,
+      "after_receipts": 1,
+      "removed_aud": 2432.0,
+      "by_type": {
+        "donation_received": 1216
+      }
+    },
+    {
+      "donor": "Arama National Ltd",
+      "source_name": "Arama National Ltd",
+      "before_aud": 4840.0,
+      "before_records": 2,
+      "after_aud": 2420.0,
+      "after_receipts": 1,
+      "removed_aud": 2420.0,
+      "by_type": {
+        "other_receipt": 2420
+      }
+    },
+    {
+      "donor": "Brisbane Convention & Exhibition Centre",
+      "source_name": "Brisbane Convention & Exhibition Centre",
+      "before_aud": 15978.1,
+      "before_records": 5,
+      "after_aud": 13577.0,
+      "after_receipts": 3,
+      "removed_aud": 2401.1,
+      "by_type": {
+        "other_receipt": 13577
+      }
+    },
+    {
+      "donor": "Sunnybank Rugby Union Club Ltd",
+      "source_name": "Sunnybank Rugby Union Club Ltd",
+      "before_aud": 2400.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2400.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Ausde Migration And Investment Group Pty Ltd",
+      "source_name": "Ausde Migration And Investment Group Pty Ltd",
+      "before_aud": 2360.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2360.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Vaxxas Pty Ltd",
+      "source_name": "Vaxxas Pty Ltd",
+      "before_aud": 2350.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2350.0,
+      "by_type": {}
+    },
+    {
+      "donor": "SkyTrans",
+      "source_name": "SkyTrans",
+      "before_aud": 6653.0,
+      "before_records": 2,
+      "after_aud": 4353.0,
+      "after_receipts": 1,
+      "removed_aud": 2300.0,
+      "by_type": {
+        "unspecified": 4353
+      }
+    },
+    {
+      "donor": "Elite Executive Pty Ltd",
+      "source_name": "Elite Executive Pty Ltd",
+      "before_aud": 2300.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2300.0,
+      "by_type": {}
+    },
+    {
+      "donor": "QIHE Pty Ltd",
+      "source_name": "QIHE Pty Ltd",
+      "before_aud": 4576.0,
+      "before_records": 4,
+      "after_aud": 2288.0,
+      "after_receipts": 2,
+      "removed_aud": 2288.0,
+      "by_type": {
+        "donation_received": 1000,
+        "other_receipt": 1288
+      }
+    },
+    {
+      "donor": "Pharmaceutical Society Of Australia",
+      "source_name": "Pharmaceutical Society Of Australia",
+      "before_aud": 22000.0,
+      "before_records": 8,
+      "after_aud": 19800.0,
+      "after_receipts": 7,
+      "removed_aud": 2200.0,
+      "by_type": {
+        "other_receipt": 19800
+      }
+    },
+    {
+      "donor": "Broome International Airport Pty Ltd",
+      "source_name": "Broome International Airport Pty Ltd",
+      "before_aud": 20900.0,
+      "before_records": 3,
+      "after_aud": 18700.0,
+      "after_receipts": 2,
+      "removed_aud": 2200.0,
+      "by_type": {
+        "other_receipt": 18700
+      }
+    },
+    {
+      "donor": "Red Meat Advisory Council Limited",
+      "source_name": "Red Meat Advisory Council Limited",
+      "before_aud": 9400.0,
+      "before_records": 3,
+      "after_aud": 7200.0,
+      "after_receipts": 2,
+      "removed_aud": 2200.0,
+      "by_type": {
+        "other_receipt": 7200
+      }
+    },
+    {
+      "donor": "P.W.R Performance Products Pty Ltd",
+      "source_name": "P.W.R Performance Products Pty Ltd",
+      "before_aud": 4400.0,
+      "before_records": 2,
+      "after_aud": 2200.0,
+      "after_receipts": 1,
+      "removed_aud": 2200.0,
+      "by_type": {
+        "other_receipt": 2200
+      }
+    },
+    {
+      "donor": "TelSoft Pty Ltd",
+      "source_name": "TelSoft Pty Ltd",
+      "before_aud": 4400.0,
+      "before_records": 2,
+      "after_aud": 2200.0,
+      "after_receipts": 1,
+      "removed_aud": 2200.0,
+      "by_type": {
+        "other_receipt": 2200
+      }
+    },
+    {
+      "donor": "Gold Coast Airport ltd",
+      "source_name": "Gold Coast Airport ltd",
+      "before_aud": 10150.0,
+      "before_records": 5,
+      "after_aud": 8150.0,
+      "after_receipts": 4,
+      "removed_aud": 2000.0,
+      "by_type": {
+        "donation_received": 2000,
+        "other_receipt": 4150,
+        "unspecified": 2000
+      }
+    },
+    {
+      "donor": "Mulgowie Fresh Pty Ltd",
+      "source_name": "Mulgowie Fresh Pty Ltd",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Experience Co Ltd",
+      "source_name": "Experience Co Ltd",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Turnbull Bros Orchards Pty Ltd",
+      "source_name": "Turnbull Bros Orchards Pty Ltd",
+      "before_aud": 4000.0,
+      "before_records": 2,
+      "after_aud": 2000.0,
+      "after_receipts": 1,
+      "removed_aud": 2000.0,
+      "by_type": {
+        "donation_received": 2000
+      }
+    },
+    {
+      "donor": "Chamber of Commerce and Industry WA",
+      "source_name": "Chamber of Commerce and Industry WA",
+      "before_aud": 4000.0,
+      "before_records": 2,
+      "after_aud": 2000.0,
+      "after_receipts": 1,
+      "removed_aud": 2000.0,
+      "by_type": {
+        "other_receipt": 2000
+      }
+    },
+    {
+      "donor": "The Trustee for WALKER FAMILY TRUST",
+      "source_name": "The Trustee for WALKER FAMILY TRUST",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "MediGroup Australia Pty Ltd",
+      "source_name": "MediGroup Australia Pty Ltd",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Australian Islamic Cultural Centre Inc",
+      "source_name": "Australian Islamic Cultural Centre Inc",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Hardy Aviation (NT) Pty Ltd",
+      "source_name": "Hardy Aviation (NT) Pty Ltd",
+      "before_aud": 4000.0,
+      "before_records": 2,
+      "after_aud": 2000.0,
+      "after_receipts": 1,
+      "removed_aud": 2000.0,
+      "by_type": {
+        "donation_received": 2000
+      }
+    },
+    {
+      "donor": "Tom Stoddart Pty Ltd",
+      "source_name": "Tom Stoddart Pty Ltd",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Real Estate Institute of Australia",
+      "source_name": "Real Estate Institute of Australia",
+      "before_aud": 219750.0,
+      "before_records": 17,
+      "after_aud": 217750.0,
+      "after_receipts": 16,
+      "removed_aud": 2000.0,
+      "by_type": {
+        "other_receipt": 217750
+      }
+    },
+    {
+      "donor": "Consolidated Tyre Company",
+      "source_name": "Consolidated Tyre Company",
+      "before_aud": 2000.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Aletek Pty Ltd",
+      "source_name": "Aletek Pty Ltd",
+      "before_aud": 4000.0,
+      "before_records": 2,
+      "after_aud": 2000.0,
+      "after_receipts": 1,
+      "removed_aud": 2000.0,
+      "by_type": {
+        "donation_received": 2000
+      }
+    },
+    {
+      "donor": "Alertvale Pty Ltd",
+      "source_name": "Alertvale Pty Ltd",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "King International Operations Pty Ltd",
+      "source_name": "King International Operations Pty Ltd",
+      "before_aud": 2000.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Australian Prawn Farms PTY. LTD.",
+      "source_name": "Australian Prawn Farms PTY. LTD.",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "New Centenary PTY Limited",
+      "source_name": "New Centenary PTY Limited",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Pearls Australia",
+      "source_name": "Pearls Australia",
+      "before_aud": 4000.0,
+      "before_records": 2,
+      "after_aud": 2000.0,
+      "after_receipts": 1,
+      "removed_aud": 2000.0,
+      "by_type": {
+        "other_receipt": 2000
+      }
+    },
+    {
+      "donor": "Nutrifert Australia Pty Ltd",
+      "source_name": "Nutrifert Australia Pty Ltd",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Safe Places for Children Australia",
+      "source_name": "Safe Places for Children Australia",
+      "before_aud": 4000.0,
+      "before_records": 2,
+      "after_aud": 2000.0,
+      "after_receipts": 1,
+      "removed_aud": 2000.0,
+      "by_type": {
+        "other_receipt": 2000
+      }
+    },
+    {
+      "donor": "Prestige Staffing Solutions Ltd",
+      "source_name": "Prestige Staffing Solutions Ltd",
+      "before_aud": 4000.0,
+      "before_records": 2,
+      "after_aud": 2000.0,
+      "after_receipts": 1,
+      "removed_aud": 2000.0,
+      "by_type": {
+        "other_receipt": 2000
+      }
+    },
+    {
+      "donor": "Migas Limited",
+      "source_name": "Migas Limited",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Pryde Fabrication Pty Ltd",
+      "source_name": "Pryde Fabrication Pty Ltd",
+      "before_aud": 4000.0,
+      "before_records": 2,
+      "after_aud": 2000.0,
+      "after_receipts": 1,
+      "removed_aud": 2000.0,
+      "by_type": {
+        "donation_received": 2000
+      }
+    },
+    {
+      "donor": "G Crumpton & Sons & CO PTY LTD",
+      "source_name": "G Crumpton & Sons & CO PTY LTD",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "The trustee for the Townsville Marine Unit Trust",
+      "source_name": "The trustee for the Townsville Marine Unit Trust",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Sirromet Wines",
+      "source_name": "Sirromet Wines",
+      "before_aud": 4000.0,
+      "before_records": 2,
+      "after_aud": 2000.0,
+      "after_receipts": 1,
+      "removed_aud": 2000.0,
+      "by_type": {
+        "other_receipt": 2000
+      }
+    },
+    {
+      "donor": "WGC Lawyers Pty Ltd",
+      "source_name": "WGC Lawyers Pty Ltd",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Rum City Foods",
+      "source_name": "Rum City Foods",
+      "before_aud": 4000.0,
+      "before_records": 2,
+      "after_aud": 2000.0,
+      "after_receipts": 1,
+      "removed_aud": 2000.0,
+      "by_type": {
+        "donation_received": 2000
+      }
+    },
+    {
+      "donor": "The Trustee for CBD DISCRETIONARY GOLF TRUST",
+      "source_name": "The Trustee for CBD DISCRETIONARY GOLF TRUST",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Centenary Memorial Gardens Pty Ltd",
+      "source_name": "Centenary Memorial Gardens Pty Ltd",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Ferro Chow Architecture PTY LTD",
+      "source_name": "Ferro Chow Architecture PTY LTD",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "ACLG Lawyers",
+      "source_name": "ACLG Lawyers",
+      "before_aud": 3000.0,
+      "before_records": 3,
+      "after_aud": 1000.0,
+      "after_receipts": 1,
+      "removed_aud": 2000.0,
+      "by_type": {
+        "other_receipt": 1000
+      }
+    },
+    {
+      "donor": "Australian Crawl Pty Ltd",
+      "source_name": "Australian Crawl Pty Ltd",
+      "before_aud": 2000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 2000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Airbridge Networks PTY LTD",
+      "source_name": "Airbridge Networks PTY LTD",
+      "before_aud": 1998.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1998.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Absolute Enterprises",
+      "source_name": "Absolute Enterprises",
+      "before_aud": 1980.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1980.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Star Promotional Products PTY LTD",
+      "source_name": "Star Promotional Products PTY LTD",
+      "before_aud": 1950.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1950.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Sunnycare Residential Pty Ltd",
+      "source_name": "Sunnycare Residential Pty Ltd",
+      "before_aud": 3800.0,
+      "before_records": 2,
+      "after_aud": 1900.0,
+      "after_receipts": 1,
+      "removed_aud": 1900.0,
+      "by_type": {
+        "other_receipt": 1900
+      }
+    },
+    {
+      "donor": "Electro Group Training Queensland Ltd",
+      "source_name": "Electro Group Training Queensland Ltd",
+      "before_aud": 3800.0,
+      "before_records": 2,
+      "after_aud": 1900.0,
+      "after_receipts": 1,
+      "removed_aud": 1900.0,
+      "by_type": {
+        "other_receipt": 1900
+      }
+    },
+    {
+      "donor": "Australian Fishing Trade Association Inc",
+      "source_name": "Australian Fishing Trade Association Inc",
+      "before_aud": 5600.0,
+      "before_records": 4,
+      "after_aud": 3700.0,
+      "after_receipts": 3,
+      "removed_aud": 1900.0,
+      "by_type": {
+        "other_receipt": 3700
+      }
+    },
+    {
+      "donor": "Doug Hall Enterprises Pty Ltd",
+      "source_name": "Doug Hall Enterprises Pty Ltd",
+      "before_aud": 1827.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1827.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Regional Development Australia Logan & Redlands Inc",
+      "source_name": "Regional Development Australia Logan & Redlands Inc",
+      "before_aud": 1800.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1800.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Hinterland Aviation Pty Ltd",
+      "source_name": "Hinterland Aviation Pty Ltd",
+      "before_aud": 1800.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1800.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Queensland Food Corporation",
+      "source_name": "Queensland Food Corporation",
+      "before_aud": 1800.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1800.0,
+      "by_type": {}
+    },
+    {
+      "donor": "L Wilson & Co Pty Ltd",
+      "source_name": "L Wilson & Co Pty Ltd",
+      "before_aud": 1800.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1800.0,
+      "by_type": {}
+    },
+    {
+      "donor": "The Trustee for Cairns Local Cars Unit Trust",
+      "source_name": "The Trustee for Cairns Local Cars Unit Trust",
+      "before_aud": 1800.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1800.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Royal Life Saving Society Queensland Inc",
+      "source_name": "Royal Life Saving Society Queensland Inc",
+      "before_aud": 1800.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1800.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Sun Tourism Pty Ltd",
+      "source_name": "Sun Tourism Pty Ltd",
+      "before_aud": 1800.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1800.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Tassal Group Limited",
+      "source_name": "Tassal Group Limited",
+      "before_aud": 1798.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1798.0,
+      "by_type": {}
+    },
+    {
+      "donor": "City of Fremantle",
+      "source_name": "City of Fremantle",
+      "before_aud": 3584.0,
+      "before_records": 2,
+      "after_aud": 1792.0,
+      "after_receipts": 1,
+      "removed_aud": 1792.0,
+      "by_type": {
+        "other_receipt": 1792
+      }
+    },
+    {
+      "donor": "Stirling Machinery Pty Ltd",
+      "source_name": "Stirling Machinery Pty Ltd",
+      "before_aud": 1780.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1780.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Pacific Tug Group Pty Ltd",
+      "source_name": "Pacific Tug Group Pty Ltd",
+      "before_aud": 1780.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1780.0,
+      "by_type": {}
+    },
+    {
+      "donor": "SMEC Australia Pty Ltd",
+      "source_name": "SMEC Australia Pty Ltd",
+      "before_aud": 1755.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1755.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Townsend School Bus Services PTY LTD",
+      "source_name": "Townsend School Bus Services PTY LTD",
+      "before_aud": 1750.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1750.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Individual Empowerment Network",
+      "source_name": "Individual Empowerment Network",
+      "before_aud": 1650.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1650.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Australia China Cultural and Economic Promotion Association Inc",
+      "source_name": "Australia China Cultural and Economic Promotion Association Inc",
+      "before_aud": 3280.0,
+      "before_records": 4,
+      "after_aud": 1640.0,
+      "after_receipts": 2,
+      "removed_aud": 1640.0,
+      "by_type": {
+        "other_receipt": 1640
+      }
+    },
+    {
+      "donor": "Metagen PTY LTD",
+      "source_name": "Metagen PTY LTD",
+      "before_aud": 1625.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1625.0,
+      "by_type": {}
+    },
+    {
+      "donor": "The Trustee for Charlesworth Family Trust",
+      "source_name": "The Trustee for Charlesworth Family Trust",
+      "before_aud": 1622.6,
+      "before_records": 6,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1622.6,
+      "by_type": {}
+    },
+    {
+      "donor": "UNICEF Australia",
+      "source_name": "UNICEF Australia",
+      "before_aud": 4830.0,
+      "before_records": 2,
+      "after_aud": 3220.0,
+      "after_receipts": 2,
+      "removed_aud": 1610.0,
+      "by_type": {
+        "other_receipt": 3220
+      }
+    },
+    {
+      "donor": "Cordwell Investments Pty Ltd",
+      "source_name": "Cordwell Investments Pty Ltd",
+      "before_aud": 1600.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1600.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Fourth Quadrant Foundation PTY LTD",
+      "source_name": "Fourth Quadrant Foundation PTY LTD",
+      "before_aud": 1600.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1600.0,
+      "by_type": {}
+    },
+    {
+      "donor": "EndED",
+      "source_name": "EndED",
+      "before_aud": 1580.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1580.0,
+      "by_type": {}
+    },
+    {
+      "donor": "MatchWorks",
+      "source_name": "MatchWorks",
+      "before_aud": 1500.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Domain Principal Group",
+      "source_name": "Domain Principal Group",
+      "before_aud": 3000.0,
+      "before_records": 2,
+      "after_aud": 1500.0,
+      "after_receipts": 1,
+      "removed_aud": 1500.0,
+      "by_type": {
+        "other_receipt": 1500
+      }
+    },
+    {
+      "donor": "Football Australia Limited",
+      "source_name": "Football Australia Limited",
+      "before_aud": 5000.0,
+      "before_records": 3,
+      "after_aud": 3500.0,
+      "after_receipts": 2,
+      "removed_aud": 1500.0,
+      "by_type": {
+        "other_receipt": 3500
+      }
+    },
+    {
+      "donor": "Glass Terra Pty Ltd",
+      "source_name": "Glass Terra Pty Ltd",
+      "before_aud": 1500.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Tamborine International PTY LTD",
+      "source_name": "Tamborine International PTY LTD",
+      "before_aud": 1500.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Leaders Institute Pty Ltd",
+      "source_name": "Leaders Institute Pty Ltd",
+      "before_aud": 3000.0,
+      "before_records": 2,
+      "after_aud": 1500.0,
+      "after_receipts": 1,
+      "removed_aud": 1500.0,
+      "by_type": {
+        "other_receipt": 1500
+      }
+    },
+    {
+      "donor": "LeeCare Solutions Pty Ltd",
+      "source_name": "LeeCare Solutions Pty Ltd",
+      "before_aud": 3000.0,
+      "before_records": 2,
+      "after_aud": 1500.0,
+      "after_receipts": 1,
+      "removed_aud": 1500.0,
+      "by_type": {
+        "other_receipt": 1500
+      }
+    },
+    {
+      "donor": "Global Educational Supplies & Services Pty Ltd",
+      "source_name": "Global Educational Supplies & Services Pty Ltd",
+      "before_aud": 3000.0,
+      "before_records": 2,
+      "after_aud": 1500.0,
+      "after_receipts": 1,
+      "removed_aud": 1500.0,
+      "by_type": {
+        "other_receipt": 1500
+      }
+    },
+    {
+      "donor": "Australian Midas Group Pty Ltd",
+      "source_name": "Australian Midas Group Pty Ltd",
+      "before_aud": 1500.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Jurox Pty Ltd",
+      "source_name": "Jurox Pty Ltd",
+      "before_aud": 10000.0,
+      "before_records": 5,
+      "after_aud": 8500.0,
+      "after_receipts": 4,
+      "removed_aud": 1500.0,
+      "by_type": {
+        "donation_received": 4500,
+        "other_receipt": 4000
+      }
+    },
+    {
+      "donor": "Northern Suburbs Rugby League Football Club Limited",
+      "source_name": "Northern Suburbs Rugby League Football Club Limited",
+      "before_aud": 3000.0,
+      "before_records": 2,
+      "after_aud": 1500.0,
+      "after_receipts": 1,
+      "removed_aud": 1500.0,
+      "by_type": {
+        "other_receipt": 1500
+      }
+    },
+    {
+      "donor": "Galati Nominees Pty Ltd",
+      "source_name": "Galati Nominees Pty Ltd",
+      "before_aud": 3000.0,
+      "before_records": 2,
+      "after_aud": 1500.0,
+      "after_receipts": 1,
+      "removed_aud": 1500.0,
+      "by_type": {
+        "donation_received": 1500
+      }
+    },
+    {
+      "donor": "Building & Construction Industry Training Fund",
+      "source_name": "Building & Construction Industry Training Fund",
+      "before_aud": 3000.0,
+      "before_records": 2,
+      "after_aud": 1500.0,
+      "after_receipts": 1,
+      "removed_aud": 1500.0,
+      "by_type": {
+        "donation_received": 1500
+      }
+    },
+    {
+      "donor": "The Trustee For The Corkery Family Trust",
+      "source_name": "The Trustee For The Corkery Family Trust",
+      "before_aud": 1500.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Zamoner PTY. Limited",
+      "source_name": "Zamoner PTY. Limited",
+      "before_aud": 1500.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Rivergate Marina & Shipyard",
+      "source_name": "Rivergate Marina & Shipyard",
+      "before_aud": 3000.0,
+      "before_records": 2,
+      "after_aud": 1500.0,
+      "after_receipts": 1,
+      "removed_aud": 1500.0,
+      "by_type": {
+        "other_receipt": 1500
+      }
+    },
+    {
+      "donor": "Approved Realty Pty Ltd",
+      "source_name": "Approved Realty Pty Ltd",
+      "before_aud": 1500.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "National Electrical & Communications Association",
+      "source_name": "National Electrical & Communications Association",
+      "before_aud": 9120.0,
+      "before_records": 3,
+      "after_aud": 7620.0,
+      "after_receipts": 2,
+      "removed_aud": 1500.0,
+      "by_type": {
+        "other_receipt": 7620
+      }
+    },
+    {
+      "donor": "Cybernetic Team Pty Ltd",
+      "source_name": "Cybernetic Team Pty Ltd",
+      "before_aud": 3000.0,
+      "before_records": 2,
+      "after_aud": 1500.0,
+      "after_receipts": 1,
+      "removed_aud": 1500.0,
+      "by_type": {
+        "other_receipt": 1500
+      }
+    },
+    {
+      "donor": "MGW Hotels Pty Ltd",
+      "source_name": "MGW Hotels Pty Ltd",
+      "before_aud": 3000.0,
+      "before_records": 2,
+      "after_aud": 1500.0,
+      "after_receipts": 1,
+      "removed_aud": 1500.0,
+      "by_type": {
+        "other_receipt": 1500
+      }
+    },
+    {
+      "donor": "Technical Fabric Services Pty Ltd",
+      "source_name": "Technical Fabric Services Pty Ltd",
+      "before_aud": 1490.0,
+      "before_records": 3,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1490.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Agersens PTY LTD",
+      "source_name": "Agersens PTY LTD",
+      "before_aud": 2974.0,
+      "before_records": 2,
+      "after_aud": 1487.0,
+      "after_receipts": 1,
+      "removed_aud": 1487.0,
+      "by_type": {
+        "donation_received": 1487
+      }
+    },
+    {
+      "donor": "John Gribbin Realty Pty Ltd",
+      "source_name": "John Gribbin Realty Pty Ltd",
+      "before_aud": 2922.0,
+      "before_records": 2,
+      "after_aud": 1461.0,
+      "after_receipts": 1,
+      "removed_aud": 1461.0,
+      "by_type": {
+        "donation_received": 1461
+      }
+    },
+    {
+      "donor": "Hughenden Irrigation Project Corporation Pty Ltd",
+      "source_name": "Hughenden Irrigation Project Corporation Pty Ltd",
+      "before_aud": 1450.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1450.0,
+      "by_type": {}
+    },
+    {
+      "donor": "South Continental International Pty Ltd",
+      "source_name": "South Continental International Pty Ltd",
+      "before_aud": 2800.0,
+      "before_records": 2,
+      "after_aud": 1400.0,
+      "after_receipts": 1,
+      "removed_aud": 1400.0,
+      "by_type": {
+        "donation_received": 1400
+      }
+    },
+    {
+      "donor": "Business Council of Co-operatives and Mutuals",
+      "source_name": "Business Council of Co-operatives and Mutuals",
+      "before_aud": 94350.0,
+      "before_records": 11,
+      "after_aud": 93000.0,
+      "after_receipts": 10,
+      "removed_aud": 1350.0,
+      "by_type": {
+        "other_receipt": 93000
+      }
+    },
+    {
+      "donor": "Brighton College PTY LTD",
+      "source_name": "Brighton College PTY LTD",
+      "before_aud": 1300.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1300.0,
+      "by_type": {}
+    },
+    {
+      "donor": "The trustee for WME Investments Trust",
+      "source_name": "The trustee for WME Investments Trust",
+      "before_aud": 1300.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1300.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Independent Schools Queensland Ltd",
+      "source_name": "Independent Schools Queensland Ltd",
+      "before_aud": 1290.0,
+      "before_records": 2,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1290.0,
+      "by_type": {}
+    },
+    {
+      "donor": "CPX Printing Logistics",
+      "source_name": "CPX Printing Logistics",
+      "before_aud": 1200.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1200.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Century 21 Grant Smith Property",
+      "source_name": "Century 21 Grant Smith Property",
+      "before_aud": 1200.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1200.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Australian Football League",
+      "source_name": "Australian Football League",
+      "before_aud": 20300.0,
+      "before_records": 6,
+      "after_aud": 19150.0,
+      "after_receipts": 6,
+      "removed_aud": 1150.0,
+      "by_type": {
+        "other_receipt": 19150
+      }
+    },
+    {
+      "donor": "Islander Resort Hotel",
+      "source_name": "Islander Resort Hotel",
+      "before_aud": 1107.0,
+      "before_records": 4,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1107.0,
+      "by_type": {}
+    },
+    {
+      "donor": "uLaunch Pty Ltd",
+      "source_name": "uLaunch Pty Ltd",
+      "before_aud": 2200.0,
+      "before_records": 2,
+      "after_aud": 1100.0,
+      "after_receipts": 1,
+      "removed_aud": 1100.0,
+      "by_type": {
+        "other_receipt": 1100
+      }
+    },
+    {
+      "donor": "Electro Optic Systems Pty Ltd",
+      "source_name": "Electro Optic Systems Pty Ltd",
+      "before_aud": 4400.0,
+      "before_records": 3,
+      "after_aud": 3300.0,
+      "after_receipts": 2,
+      "removed_aud": 1100.0,
+      "by_type": {
+        "other_receipt": 3300
+      }
+    },
+    {
+      "donor": "Risk 2 Solution",
+      "source_name": "Risk 2 Solution",
+      "before_aud": 2200.0,
+      "before_records": 2,
+      "after_aud": 1100.0,
+      "after_receipts": 1,
+      "removed_aud": 1100.0,
+      "by_type": {
+        "other_receipt": 1100
+      }
+    },
+    {
+      "donor": "Gill Family Trust",
+      "source_name": "Gill Family Trust",
+      "before_aud": 1100.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1100.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Hooper Accountants",
+      "source_name": "Hooper Accountants",
+      "before_aud": 1100.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1100.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Brown Family Trust",
+      "source_name": "Brown Family Trust",
+      "before_aud": 1100.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1100.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Point Trading Group",
+      "source_name": "Point Trading Group",
+      "before_aud": 2060.0,
+      "before_records": 2,
+      "after_aud": 1030.0,
+      "after_receipts": 1,
+      "removed_aud": 1030.0,
+      "by_type": {
+        "other_receipt": 1030
+      }
+    },
+    {
+      "donor": "Bupa Care Services Pty Ltd",
+      "source_name": "Bupa Care Services Pty Ltd",
+      "before_aud": 2000.0,
+      "before_records": 2,
+      "after_aud": 1000.0,
+      "after_receipts": 1,
+      "removed_aud": 1000.0,
+      "by_type": {
+        "other_receipt": 1000
+      }
+    },
+    {
+      "donor": "The Ethnic Communities Council of Queensland Limited",
+      "source_name": "The Ethnic Communities Council of Queensland Limited",
+      "before_aud": 2000.0,
+      "before_records": 2,
+      "after_aud": 1000.0,
+      "after_receipts": 1,
+      "removed_aud": 1000.0,
+      "by_type": {
+        "donation_received": 1000
+      }
+    },
+    {
+      "donor": "Hypersonix Launch Systems Pty Ltd",
+      "source_name": "Hypersonix Launch Systems Pty Ltd",
+      "before_aud": 2000.0,
+      "before_records": 2,
+      "after_aud": 1000.0,
+      "after_receipts": 1,
+      "removed_aud": 1000.0,
+      "by_type": {
+        "other_receipt": 1000
+      }
+    },
+    {
+      "donor": "Ferra Engineering PTY LTD",
+      "source_name": "Ferra Engineering PTY LTD",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Jaragun Pty Ltd",
+      "source_name": "Jaragun Pty Ltd",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "NPA Earthmoving Yusia Pty Ltd",
+      "source_name": "NPA Earthmoving Yusia Pty Ltd",
+      "before_aud": 2000.0,
+      "before_records": 2,
+      "after_aud": 1000.0,
+      "after_receipts": 1,
+      "removed_aud": 1000.0,
+      "by_type": {
+        "other_receipt": 1000
+      }
+    },
+    {
+      "donor": "Medadvisor International Pty Ltd",
+      "source_name": "Medadvisor International Pty Ltd",
+      "before_aud": 2000.0,
+      "before_records": 2,
+      "after_aud": 1000.0,
+      "after_receipts": 1,
+      "removed_aud": 1000.0,
+      "by_type": {
+        "other_receipt": 1000
+      }
+    },
+    {
+      "donor": "JMD Park Pty Ltd",
+      "source_name": "JMD Park Pty Ltd",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Make Trips Pty Ltd",
+      "source_name": "Make Trips Pty Ltd",
+      "before_aud": 2000.0,
+      "before_records": 2,
+      "after_aud": 1000.0,
+      "after_receipts": 1,
+      "removed_aud": 1000.0,
+      "by_type": {
+        "donation_received": 1000
+      }
+    },
+    {
+      "donor": "AMT Helicopters Pty Ltd",
+      "source_name": "AMT Helicopters Pty Ltd",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "The Trustee For The Waitarere Trust",
+      "source_name": "The Trustee For The Waitarere Trust",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Kool Kids Training College PTY LTD",
+      "source_name": "Kool Kids Training College PTY LTD",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Australian Global Institute Pty Ltd",
+      "source_name": "Australian Global Institute Pty Ltd",
+      "before_aud": 2000.0,
+      "before_records": 2,
+      "after_aud": 1000.0,
+      "after_receipts": 1,
+      "removed_aud": 1000.0,
+      "by_type": {
+        "other_receipt": 1000
+      }
+    },
+    {
+      "donor": "Dobinsons Spring + Suspension",
+      "source_name": "Dobinsons Spring + Suspension",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Treehouse Early Learning Manly PTY LTD",
+      "source_name": "Treehouse Early Learning Manly PTY LTD",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Cleanaway Pty Ltd",
+      "source_name": "Cleanaway Pty Ltd",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Deloitte Access Economics Pty Ltd",
+      "source_name": "Deloitte Access Economics Pty Ltd",
+      "before_aud": 2000.0,
+      "before_records": 2,
+      "after_aud": 1000.0,
+      "after_receipts": 1,
+      "removed_aud": 1000.0,
+      "by_type": {
+        "donation_received": 1000
+      }
+    },
+    {
+      "donor": "Mainland Chinese Society Queensland Inc",
+      "source_name": "Mainland Chinese Society Queensland Inc",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Bowen Tyre & Mechanical",
+      "source_name": "Bowen Tyre & Mechanical",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Capricorn Coast Sand and Soil",
+      "source_name": "Capricorn Coast Sand and Soil",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "East Coast Truck Sales Pty Ltd",
+      "source_name": "East Coast Truck Sales Pty Ltd",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "AM Logistics Pty Ltd",
+      "source_name": "AM Logistics Pty Ltd",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Aston Lawyers",
+      "source_name": "Aston Lawyers",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "H1 Group PTY LTD",
+      "source_name": "H1 Group PTY LTD",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Driscoll Pastoral Company Pty Ltd",
+      "source_name": "Driscoll Pastoral Company Pty Ltd",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Anderson Telford Lawyers",
+      "source_name": "Anderson Telford Lawyers",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Just Health Group Pty Ltd",
+      "source_name": "Just Health Group Pty Ltd",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Youngs Farm",
+      "source_name": "Youngs Farm",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Raw Investments Real Estate Pty Ltd",
+      "source_name": "Raw Investments Real Estate Pty Ltd",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Ocean Group Australia Pty Ltd",
+      "source_name": "Ocean Group Australia Pty Ltd",
+      "before_aud": 2000.0,
+      "before_records": 2,
+      "after_aud": 1000.0,
+      "after_receipts": 1,
+      "removed_aud": 1000.0,
+      "by_type": {
+        "donation_received": 1000
+      }
+    },
+    {
+      "donor": "Damien Lacey Plumbing Maintenance PTY. LTD.",
+      "source_name": "Damien Lacey Plumbing Maintenance PTY. LTD.",
+      "before_aud": 1000.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 1000.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Flanagan Consulting",
+      "source_name": "Flanagan Consulting",
+      "before_aud": 3500.0,
+      "before_records": 3,
+      "after_aud": 2500.0,
+      "after_receipts": 2,
+      "removed_aud": 1000.0,
+      "by_type": {
+        "donation_received": 1000,
+        "other_receipt": 1500
+      }
+    },
+    {
+      "donor": "The Chinese Fraternity Association of Queensland Inc",
+      "source_name": "The Chinese Fraternity Association of Queensland Inc",
+      "before_aud": 800.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 800.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Australian National Sikhs Sports & Cultural Council QLD Inc.",
+      "source_name": "Australian National Sikhs Sports & Cultural Council QLD Inc.",
+      "before_aud": 800.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 800.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Ballycara Limited",
+      "source_name": "Ballycara Limited",
+      "before_aud": 660.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 660.0,
+      "by_type": {}
+    },
+    {
+      "donor": "HB Group (QLD) Pty Ltd",
+      "source_name": "HB Group (QLD) Pty Ltd",
+      "before_aud": 550.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 550.0,
+      "by_type": {}
+    },
+    {
+      "donor": "The Easylift Group Pty Ltd",
+      "source_name": "The Easylift Group Pty Ltd",
+      "before_aud": 500.0,
+      "before_records": 1,
+      "after_aud": 0.0,
+      "after_receipts": 0,
+      "removed_aud": 500.0,
+      "by_type": {}
+    },
+    {
+      "donor": "Biocelect",
+      "source_name": "Biocelect",
+      "before_aud": 15500.0,
+      "before_records": 5,
+      "after_aud": 17500.0,
+      "after_receipts": 6,
+      "removed_aud": -2000.0,
+      "by_type": {
+        "other_receipt": 17500
+      }
+    },
+    {
+      "donor": "Glide Products Pty Ltd",
+      "source_name": "Glide Products Pty Ltd",
+      "before_aud": 10000.0,
+      "before_records": 3,
+      "after_aud": 12000.0,
+      "after_receipts": 4,
+      "removed_aud": -2000.0,
+      "by_type": {
+        "other_receipt": 12000
+      }
+    },
+    {
+      "donor": "Captain Cook Cruises Limited",
+      "source_name": "Captain Cook Cruises Limited",
+      "before_aud": 39334.0,
+      "before_records": 10,
+      "after_aud": 49634.0,
+      "after_receipts": 12,
+      "removed_aud": -10300.0,
+      "by_type": {
+        "donation_received": 14000,
+        "other_receipt": 11110,
+        "unspecified": 24524
+      }
+    },
+    {
+      "donor": "Housing Industry Association",
+      "source_name": "Housing Industry Association",
+      "before_aud": 84800.0,
+      "before_records": 12,
+      "after_aud": 122200.0,
+      "after_receipts": 14,
+      "removed_aud": -37400.0,
+      "by_type": {
+        "other_receipt": 122200
+      }
+    },
+    {
+      "donor": "Australian Airports Association",
+      "source_name": "Australian Airports Association",
+      "before_aud": 284750.0,
+      "before_records": 15,
+      "after_aud": 338250.0,
+      "after_receipts": 16,
+      "removed_aud": -53500.0,
+      "by_type": {
+        "other_receipt": 338250
+      }
+    }
+  ],
+  "rounding": "AUD figures rounded to cents before comparison; legacy source aggregates contain binary float residue.",
+  "retained_federal_pages": 665,
+  "pages_with_changed_figures": 512
+}
