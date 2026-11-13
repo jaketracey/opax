@@ -1,0 +1,15 @@
+{
+  "production_commit": "eea7e511a8de2c7f784cd120d21aba180b941058",
+  "base": "c626b938a4d496275c2d55f5a0ded280f86226d9",
+  "scratch_worktree": "/tmp/im-division-coverage-review-revert",
+  "commands": [
+    "git worktree add --detach /tmp/im-division-coverage-review-revert eea7e511a8de2c7f784cd120d21aba180b941058",
+    "git -C /tmp/im-division-coverage-review-revert revert --no-commit eea7e511a8de2c7f784cd120d21aba180b941058",
+    "git -C /tmp/im-division-coverage-review-revert restore --source=eea7e511a8de2c7f784cd120d21aba180b941058 --worktree -- tests/test_division_coverage.py",
+    "cd /tmp/im-division-coverage-review-revert && /home/jake/opax-work/wt/im-division-coverage/.venv/bin/python -m pytest -q tests/test_division_coverage.py"
+  ],
+  "exit_code": 1,
+  "summary": "23 failed, 5 passed, 10 subtests passed in 0.88s",
+  "test_blob": "2b06704a8318a616e7c5b8473f9222178bb99caf",
+  "reverted_exporter_blob": "b4729e154e03016618992f903a8398a02decb933"
+}

@@ -4,7 +4,7 @@ import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datata
 export {guardTableURL};
 import {shortDate} from './format.js';
 import {statusLabelHTML} from './labels.js?v=fcb2a1091c';
-import {divisionPlain} from './division-markdown.js?v=5991511166';
+import {divisionPlain} from './division-markdown.js?v=98f03d1853';
 
 const sentence = value => { const text = String(value || '').replace(/_/g, ' ').trim(); return text ? text[0].toUpperCase() + text.slice(1).toLowerCase() : ''; };
 const count = value => value == null || value === '' ? null : Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : null;

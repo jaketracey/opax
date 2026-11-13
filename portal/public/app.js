@@ -31,9 +31,9 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=4e3aec806a").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=1ee3372338").then(module => { voteTables = module; });
 let divisionMarkdown;
-const divisionMarkdownReady = import('/division-markdown.js?v=6d09c32fed').then(module => { divisionMarkdown = module; });
+const divisionMarkdownReady = import('/division-markdown.js?v=98f03d1853').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=1e074743c9").then(module => { growthModules = module; });

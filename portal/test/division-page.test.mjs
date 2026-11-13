@@ -129,10 +129,10 @@ test('when the record cannot be read the block is one plain line, and the counts
   assert.match(render, /ayes, \$\{noes\.toLocaleString\(\)\} noes/);
 });
 
-test('the member block discloses held and official counts for unresolved and reconciled lists', async () => {
+test('the member block discloses held and source counts for unresolved and reconciled lists', async () => {
   const ctx = page({});
   for (const [key, pattern] of [
-    ['federal-representatives-7575', /63 named ayes and 59 named noes.*official tally of 64 ayes and 59 noes/],
+    ['federal-representatives-7575', /63 named ayes and 59 named noes.*source tally of 64 ayes and 59 noes/],
     ['federal-senate-2858', /34 named ayes and 37 named noes.*33 ayes and 36 noes excludes those tellers/],
   ]) {
     const d = JSON.parse(readFileSync(new URL(`../public/divisions/division-${key}.json`, import.meta.url)));
