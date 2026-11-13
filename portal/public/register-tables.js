@@ -1,5 +1,5 @@
 import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=766cd2970b';
-import {donorDisclosure, financialYear, receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=3a0ec5c387';
+import {donorDisclosure, financialYear, receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=06a87fe45d';
 import {interestHolder} from './interest-holder.js';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -82,6 +82,27 @@ export function interestTableData(register) {
       date:date(item.date) || date(register.as_at),source:source && item.page ? `${source.split('#')[0]}#page=${Number(item.page) || 1}` : source});
   }
   return {rows,omitted:0};
+}
+
+/**
+ * Why the table holds fewer rows than the count above it. The register file keeps up to PER_BUCKET
+ * entries per category (scripts/export_interests.py) while `count` is every row of the category,
+ * so "28 entries" sits above 14 rows. Said once, with the way to the rest; '' when they agree.
+ * Returns trusted HTML (the link is checked here).
+ */
+export function interestShownNote(register, shown, registerURL = '') {
+  const total = Number(register?.total) || 0, n = Number(shown) || 0;
+  if (!n || n >= total) return '';
+  const counts = Object.values(register?.buckets || {}).map(b => Number(b?.count) || 0).filter(Boolean);
+  const listed = Object.values(register?.buckets || {}).map(b => (b?.items || []).length);
+  const capped = listed.length && Math.max(...listed);
+  const per = capped && counts.some(c => c > capped) ? `, up to ${capped} in each category` : '';
+  const link = href(registerURL);
+  const fmt = value => value.toLocaleString('en-AU');
+  // The file selects per category, not across the register, so the note says that and claims no order.
+  return `${fmt(n)} ${n === 1 ? 'entry is' : 'entries are'} listed here${per}. ${link
+    ? `All ${fmt(total)} are in <a href="${link.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" rel="noopener" target="_blank">the register ↗︎</a>.`
+    : `All ${fmt(total)} are in the register.`}`;
 }
 
 export const categoryMembers = values => [...new Set((values || []).flatMap(value=>String(value).split(';').map(v=>v.trim()).filter(Boolean)))];
@@ -232,7 +253,7 @@ export function governmentFunctionTableConfig(rows) {
 // for every money figure, light enough for the games and the Worker's tools);
 // they are re-exported here for the pages and tables that already import them.
 // financialYear ("2020-21") comes from there too, for any scope line written here.
-export {receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=3a0ec5c387';
+export {receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=06a87fe45d';
 
 /**
  * A party's headline: its own federal returns, every receipt line once and all

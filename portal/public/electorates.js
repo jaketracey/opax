@@ -171,6 +171,32 @@ function censusHTML(d) {
   return `${d.indicators.population != null ? `<div class="ui-stats"><p class="ui-stat"><b class="ui-stat-value">${number(d.indicators.population)}</b><span class="ui-stat-label">people, ${esc(d.vintage)}</span></p></div>` : ''}
     <dl class="ui-kv el-demographics" data-variant="ledger">${rows.map(([key, [label, unit]]) => `<div><dt>${esc(label)}</dt><dd>${esc(unitOf(d.indicators[key], unit))}</dd></div>`).join('')}</dl>`;
 }
+/**
+ * "Held by Labor since 1996": the run of one party back from the seat's open service record, read from
+ * the dated service records only. The run stops at a different party ("since 1996") or where the
+ * records stop or name no party ("since at least 1993": they cover no further). Null for a
+ * multi-member electorate, a historical seat, an as-at view, or a current record without a party.
+ */
+export function heldSinceLine(detail) {
+  if (!detail || detail.status === 'historical' || Number(detail.capacity || 1) > 1) return null;
+  const periods = [...(detail.terms || [])].sort((a, b) => String(b.start || '').localeCompare(String(a.start || '')))
+    .map((t) => ({ term: t, list: [...(t.party_periods || [])].sort((a, b) => String(b.start || '').localeCompare(String(a.start || ''))) }));
+  const open = periods[0];
+  if (!open || open.term.end || !validDate(open.term.start || '')) return null;
+  const party = open.list[0]?.party;
+  if (!party || open.list[0].end) return null;
+  let since = open.list[0].start || open.term.start, definite = false;
+  outer: for (const { term, list } of periods) {
+    if (!list.length) break;
+    for (const p of list) {
+      if (p.party !== party) { definite = true; break outer; }
+      since = p.start || term.start || since;
+    }
+  }
+  const year = String(since || '').slice(0, 4);
+  if (!/^\d{4}$/.test(year)) return null;
+  return { party, year, text: `Held by ${party} since ${definite ? '' : 'at least '}${year}` };
+}
 /* One title and one meta line (no kicker), ⋯ on the title's row; then
    sections (ui-section), each ending in one source line that opens its
    originals, dates, notes and licences. Who holds the seat and its boundary sit
@@ -192,7 +218,8 @@ export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) 
   const service = sourcesOf(detail, ['terms']);
   const census = sourcesOf(detail, ['demographics']);
   const line = (list, opts) => sourceLineHTML({ updated: retrieved(list), dateLabel: 'As at', originals: originalsOf(list), licence: licences(list), ...opts });
-  return `<div class="ui-page-head el-head"><h1 id="subject-title" tabindex="-1">${esc(detail.name)}</h1><p class="ui-page-meta">${esc(CHAMBERS[detail.chamber] || detail.chamber)} · ${esc(detail.state_code.toUpperCase())}${detail.capacity > 1 ? ` · ${detail.capacity} seats` : ''}${detail.status === 'historical' ? ' · Historical electorate' : ''}</p>
+  const heldSince = on ? null : heldSinceLine(detail);
+  return `<div class="ui-page-head el-head"><h1 id="subject-title" tabindex="-1">${esc(detail.name)}</h1>${heldSince ? `<p class="ui-page-meta el-held-since">${esc(heldSince.text)}</p>` : ''}<p class="ui-page-meta">${esc(CHAMBERS[detail.chamber] || detail.chamber)} · ${esc(detail.state_code.toUpperCase())}${detail.capacity > 1 ? ` · ${detail.capacity} seats` : ''}${detail.status === 'historical' ? ' · Historical electorate' : ''}</p>
     <div class="page-actions">${moreMenuHTML([
       { href: detail.detail_url, label: 'Download this electorate', detail: 'JSON, every record on this page with its sources' },
       { href: '/subject/electorate', label: 'All electorates' },

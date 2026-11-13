@@ -6,7 +6,7 @@ import {runInNewContext} from 'node:vm';
 import {JSDOM} from 'jsdom';
 import ts from 'typescript';
 import {fy, financialYear, moneyScope, industryName} from '../public/money-scope.js';
-import {donorLookup, receiptScopeLabel, donorLabelHTML} from '../public/donor-disclosure.js';
+import {donorLookup, receiptFigures, receiptScopeLabel, receiptTypeLine, hasPartyReceipts, notListedLine, donorLabelHTML} from '../public/donor-disclosure.js';
 import {shortMoney} from '../public/format.js';
 import {formatCell, dataTableHTML, applyQuery, toCSV} from '../public/datatable.js';
 import {partyMoneyTableConfig} from '../public/register-tables.js';
@@ -17,7 +17,7 @@ const app=ts.createSourceFile('app.js',readFileSync(new URL('../public/app.js',i
 const names=['donorRecordHTML','renderDonorStateMoney','partyReceiptsHTML','partyLatestYear','personPartyFigure','fillDatedMentionParties','metaHTML','renderPartyMembers'];
 const code=app.statements.filter(n=>ts.isFunctionDeclaration(n)&&names.includes(n.name?.text)).map(n=>n.getText(app)).join('\n');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const helpers={esc,fy,moneyScope,receiptScopeLabel,fmtMoney:shortMoney,fmtDollars:n=>'$'+n.toLocaleString('en-AU'),safeUrl:s=>s,
+const helpers={esc,fy,moneyScope,receiptFigures,receiptScopeLabel,receiptTypeLine,hasPartyReceipts,notListedLine,fmtMoney:shortMoney,fmtDollars:n=>'$'+n.toLocaleString('en-AU'),safeUrl:s=>s,
   tile:(n,label)=>`<div><b>${esc(n)}</b> ${esc(label)}</div>`,yearSpan:(a,b)=>a===b?String(a):`${a}–${b}`,
   sourceLineHTML:opts=>`<aside>${esc(opts.source)} ${opts.notes.map(esc).join(' ')}</aside>`,AEC_NOTE:'Check the original records.',AEC_LICENCE:'AEC licence',
   MONEY_JURISDICTIONS:{federal:{label:'Federal'},qld:{label:'Queensland'}},STATE_NOT_SUMMED:'Jurisdictions are not added together.',
@@ -40,8 +40,16 @@ const federal={id:'federal:fern',source_name:'FERN EXAMPLE PTY LTD',label:'FERN 
 const state={...federal,id:'qld:fern',jurisdiction:'qld',total:6700,count:2};
 test('N03: index-only federal profile names mixed disclosure records, preserving total and count',()=>{
  const html=api().donorRecordHTML(federal),doc=new JSDOM(html).window.document;
- assert.match(doc.body.textContent,/Federal disclosure records/);assert.match(doc.body.textContent,/7 records/);assert.match(doc.body.textContent,/\$14.3k/);
+ assert.equal(doc.querySelector('.subject-section-title').textContent,'Source records');assert.match(doc.body.textContent,/7 records/);assert.match(doc.body.textContent,/\$14.3k/);
  assert.equal(doc.querySelector('.entry-scope').textContent,receiptScopeLabel({typed:false}));assert.doesNotMatch(doc.body.textContent,/Disclosed gifts|7 gifts/);
+});
+test('typed off-map profiles keep the receipt figure, count and scope despite poisoned source totals',()=>{
+ const record={...federal,total:999999,count:999,by_type:{donation_received:120,other_receipt:30},by_type_year:{'2024-25':{donation_received:[120,2],other_receipt:[30,1]}}};
+ const doc=new JSDOM(api().donorRecordHTML(record)).window.document;
+ assert.equal(doc.querySelector('.subject-section-title').textContent,'Disclosed receipts');
+ assert.match(doc.body.textContent,/\$150.*3 receipts/s);assert.doesNotMatch(doc.body.textContent,/999|gift can appear twice|both donor and party/);
+ assert.equal(doc.querySelector('.entry-scope').textContent,receiptScopeLabel(receiptFigures(record))+'. '+receiptTypeLine(record)+'.');
+ assert.match(doc.querySelector('aside').textContent,/Receipts disclosed under this exact name\. This donor is not drawn on the money map, which shows a bounded selection of donors/);
 });
 test('N04: both lookup orders retain the federal record and profile jurisdictions separately',async()=>{
  for(const records of [[federal,state],[state,federal]]){

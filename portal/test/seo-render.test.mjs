@@ -279,7 +279,7 @@ test('mobile voting asset retains schema 1 and the shipped per-person keys',asyn
 });
 test('affected person notice is served before JavaScript and its methods link resolves', async () => {
   const html = await get('/subject/person/anthony-albanese');
-  assert.match(html, /814 earlier transcripts also record this member, alongside other speakers\. They join these speeches once each speaker’s words are separated\./);
+  assert.match(html, /814 earlier transcripts record this member alongside other speakers and are not counted here\./);
   assert.doesNotMatch(html, /aren't counted yet/);
   // The note sits with the speeches it qualifies, after the head's party and representation.
   assert.ok(html.indexOf('person-held-back') > html.indexOf('Party and representation'));
@@ -298,7 +298,7 @@ test('chair-only and overlapping notices are served before JavaScript', async ()
     assert.match(html, /href="\/methods#speaker-attribution"/);
   }
   const both = await get('/subject/person/sue-lines');
-  assert.match(both, /11 earlier transcripts also record this member, alongside other speakers\. They join these speeches once each speaker’s words are separated\./);
+  assert.match(both, /11 earlier transcripts record this member alongside other speakers and are not counted here\./);
   assert.match(both, /1,659 transcripts record this member presiding in the chair\. They are kept apart from their own speeches\./);
   const methods = await get('/methods');
   assert.match(methods, /Chair-role transcripts record a member\s+presiding over proceedings/);
@@ -697,7 +697,8 @@ test('bill answers name every sponsor, show the source stage wording and never b
   assert.ok(!html.includes("Sponsor's recorded party"),'no roster party stands in for the recorded one');
   assert.ok(!html.includes('(s) WHISH'),'a private print is not a portfolio');
   assert.equal(html.split('Order of the day removed').length-1,1,'an exact repeat is shown once');
-  assert.match(html,/Second reading \(negatived\)/);
+  assert.match(html,/Second reading \(not agreed\)/);
+  assert.doesNotMatch(html,/negatived/i);
 });
 test('server pages leave out empty sections, heading and all',async()=>{
   const bill=renderBillAnswer({title:'Example Bill 2026',key:'x',sponsor:'Example Member',portfolio:'Example Portfolio',divisions:[]},[],new Map(),[]).html;

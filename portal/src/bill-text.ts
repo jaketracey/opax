@@ -18,7 +18,7 @@ export interface BillTextDependencies {
   cache?: Cache
 }
 const ORDER: Record<string, number> = { aspassed: 60, 'third-senate': 50, 'third-reps': 40, 'first-senate': 30, 'first-reps': 20, first: 10 }
-const COVERAGE = 'Complete source versions published so far. Other versions may still be awaiting collection; this is not a list of every version issued by Parliament.'
+const COVERAGE = 'Versions published by Parliament so far.'
 const string = (value: unknown): string => typeof value === 'string' ? value : ''
 const count = (value: unknown): number | null => typeof value === 'number' && Number.isSafeInteger(value) && value >= 0 ? value : null
 const json = (body: unknown, status = 200) => Response.json(body, { status, headers: { 'cache-control': 'no-store' } })

@@ -1,4 +1,4 @@
-import {donorDisclosure,donorLabelHTML} from './donor-disclosure.js?v=3a0ec5c387';
+import {donorDisclosure,donorLabelHTML} from './donor-disclosure.js?v=06a87fe45d';
 /* Record-based landing modules. No generated answers or guessed identities. */
 import { shortDate } from './format.js';
 import { isOrganisationDonor } from './donor-entity.js?v=3fd3e51b56';

@@ -1,8 +1,8 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,receiptGraph,receiptScopeLabel} from './donor-disclosure.js?v=3a0ec5c387';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,receiptGraph,receiptScopeLabel} from './donor-disclosure.js?v=06a87fe45d';
 // receiptGraph is shared with every money page (donor-disclosure.js); re-exported for the tests that read it here.
 export {receiptGraph};
-import {loadDonorViewIndex} from './donor-views.js?v=0bc838d767';
-import {partyReturnFigures, industryName} from './register-tables.js?v=6a50ffbf65';
+import {loadDonorViewIndex} from './donor-views.js?v=de8c7159ab';
+import {partyReturnFigures, industryName} from './register-tables.js?v=218ee1a61d';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph

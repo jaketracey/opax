@@ -1,6 +1,6 @@
 import {shortMoney} from '../public/format.js'
 import {sourceLineHTML} from '../public/party-page.js'
-import {donorDisclosure,receiptScopeLabel,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
+import {donorDisclosure,receiptFigures,receiptScopeLabel,receiptTypeLine,hasPartyReceipts,notListedLine,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {escapeHtml as esc,safeHref} from './seo-content.ts'
 import {fy} from '../public/money-scope.js'
 
@@ -29,14 +29,17 @@ export function donorRecordsHTML(records: DonorDisclosureRecord[]): string {
     const jurisdiction = record.jurisdiction || 'federal'
     const [label,source] = sources[jurisdiction] || [jurisdiction,'Disclosure returns']
     const federal = jurisdiction === 'federal'
-    const n = record.count || 0
+    const figures = receiptFigures(record)
+    if (figures.typed && !hasPartyReceipts(record)) return `<section class="donor-record" data-donor-record="${esc(jurisdiction)}"><p>${esc(notListedLine(record))}.</p></section>`
+    const n = figures.count
     const span = record.firstYear ? record.firstYear === record.lastYear || !record.lastYear ? String(record.firstYear) : `${record.firstYear}–${record.lastYear}` : ''
-    const unit = federal ? 'record' : 'receipt'
+    const unit = federal && !figures.typed ? 'record' : 'receipt'
     const originals = [...new Map((record.returnReferences || []).map(ref => [safeHref(ref.url || ''),ref] as const).filter(([href]) => href)).entries()].slice(0,3)
       .map(([href,ref]) => ({href:href!,label:ref.return_type || 'Disclosure return'}))
-    return `<section class="donor-record" data-donor-record="${esc(jurisdiction)}"><h2>${esc(label)}: ${federal ? 'AEC records' : 'Disclosed receipts'}</h2>
-      <p>${esc(donorDisclosure(record).name)}: <b>${esc(shortMoney(record.total))}</b> across ${n.toLocaleString('en-AU')} ${unit}${n === 1 ? '' : 's'}${span ? `, ${esc(span)}` : ''}.</p>
-      ${federal ? `<p class="entry-scope">${esc(receiptScopeLabel({typed:false,firstYear:null,lastYear:null}))}</p>` : ''}
+    return `<section class="donor-record" data-donor-record="${esc(jurisdiction)}"><h2>${esc(label)}: ${federal && !figures.typed ? 'AEC records' : 'Disclosed receipts'}</h2>
+      <p>${esc(donorDisclosure(record).name)}: <b>${esc(shortMoney(figures.total))}</b> across ${n.toLocaleString('en-AU')} ${unit}${n === 1 ? '' : 's'}${span ? `, ${esc(span)}` : ''}.</p>
+      ${federal ? `<p class="entry-scope">${esc(receiptScopeLabel(figures))}</p>` : ''}
+      ${figures.typed ? `<p class="entry-scope">${esc(receiptTypeLine(record))}.</p>` : ''}
       ${sourceLineHTML({source,state:'totals are a floor',originals})}</section>`
   }).join('')
   return blocks ? `${blocks}<p class="fineprint">State and federal returns are not summed: AEC returns already include state branch receipts.</p>` : ''

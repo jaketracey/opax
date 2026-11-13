@@ -63,7 +63,7 @@ async function mount(data=graph,options={}, {url='https://opax.test/money',webgl
 const publishedGraph=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url),'utf8'));
 const receiptRanks={
   donation_only:[['Liberal',1093352],['Labor',1067066],['Nationals',258500],['LNP',50000]],
-  all_types:[['Labor',4699593],['Liberal',3538879],['Nationals',343740],['LNP',86300]],
+  all_types:[['Labor',4706193],['Liberal',3538879],['Nationals',343740],['LNP',86300]],
 };
 
 for(const webgl of [true,false])test(`${webgl?'map':'2D fallback'} receipt selection survives reload and shared links without adding history entries`,async()=>{
@@ -82,7 +82,7 @@ for(const webgl of [true,false])test(`${webgl?'map':'2D fallback'} receipt selec
         totals.set(party,(totals.get(party)||0)+edge.total);
       }
       assert.deepEqual([...totals].sort((a,b)=>b[1]-a[1]),receiptRanks[measure]);
-      assert.equal([...totals.values()].reduce((a,b)=>a+b,0),measure==='donation_only'?2468918:8668512);
+      assert.equal([...totals.values()].reduce((a,b)=>a+b,0),measure==='donation_only'?2468918:8675112);
     }
     function choose(measure){
       const history=mounted.window.history;
@@ -260,10 +260,10 @@ test('the full map draws no donor-to-party flow at $0: every flow no party retur
     const flows=view.edges.filter(e=>!e.grant&&!e.flow&&String(e.source).startsWith('donor:'));
     assert.ok(flows.length>500);
     assert.deepEqual(flows.filter(e=>!(e.total>0)).map(e=>`${e.source} -> ${e.target}`),[]);
-    // The 140 donor-declared-only flows, and the one Public Funding-only flow (NSW Efa to the Greens), which is never a donor's (A35).
-    // 13 Nov 2026: 131 to 140 donor-declared-only flows, the nine to the Libertarian Party that only the donor's own return declares (Ancora, Australian Energy Producers, Chevron, Australian Hotels Association, IAG, IT Alliance, Deloitte, Allianz, Sanofi), export rule 10.
+    // The 139 donor-declared-only flows, and the one Public Funding-only flow (NSW Efa to the Greens), which is never a donor's (A35).
+    // 13 Nov 2026: 130 to 139 donor-declared-only flows, the nine to the Libertarian Party that only the donor's own return declares (Ancora, Australian Energy Producers, Chevron, Australian Hotels Association, IAG, IT Alliance, Deloitte, Allianz, Sanofi), export rule 10.
     const dropped=publishedGraph.edges.filter(e=>!e.grant&&!e.flow&&e.by_type&&!Object.keys(e.by_type).filter(k=>k!=='public_funding').length);
-    assert.equal(dropped.length,141);
+    assert.equal(dropped.length,140);
     assert.equal(view.edges.length,publishedGraph.edges.length-dropped.length);
   }finally{handle.destroy()}
 });
