@@ -5,6 +5,8 @@ export interface InterestRegister {source_url?: string; as_at?: string; buckets:
 import type {ReceiptCells} from './donor-disclosure.js';
 export {receiptFigures, receiptScopeLabel, type ReceiptCells, type ReceiptFigures} from './donor-disclosure.js';
 export interface PartyGraph {meta?:{source?:string;source_url?:string};nodes:(DonorDisclosureRecord & {id:string;kind:string;label:string;industry?:string;aliases?:string[]})[];edges:(ReceiptCells & {source:string;target:string;flow?:string;grant?:boolean})[]}
+export function partyReturnScopeLabel(figures: ReceiptFigures): string;
+export function partyReturnFigures(node: (ReceiptCells & {return_by_type?:Record<string,number>;return_by_type_year?:Record<string,Record<string,[number,number]>>}) | null | undefined): ReceiptFigures;
 export function instrumentTableConfig(): DataTableConfig;
 export function auditTableConfig(records: AuditRow[]): DataTableConfig;
 export function interestTableData(register: InterestRegister): {rows:Row[];omitted:number};

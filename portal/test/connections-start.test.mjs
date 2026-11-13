@@ -123,12 +123,12 @@ test('the page says once, under its title, the day the connections run to, and a
   assert.equal(lines.length,1,'one dated line on the page');
   assert.equal(lines[0].parentElement,head,'it sits in the page head');
   assert.equal(head.lastElementChild,lines[0],'at the foot of the head');
-  assert.ok(lines[0].textContent.includes('As at 8 Sep 2026'),lines[0].textContent);
+  assert.ok(lines[0].textContent.includes('Updated 8 Sep 2026'),lines[0].textContent);
   assert.ok(lines[0].textContent.includes('Connections from records collected to 8 September 2026.'));
   doc.querySelector('.connection-choice[data-entity="bb0000000000000000000002"]').click();
   await settle();
   assert.equal(doc.querySelectorAll('.ui-source').length,1,'the opened connection adds no second date');
-  assert.ok(!doc.getElementById('connection-detail').textContent.includes('As at'));
+  assert.ok(!doc.getElementById('connection-detail').textContent.includes('Updated'));
   page.destroy();
   assert.equal(head.querySelector('.ui-source'),null,'leaving the page takes the line with it');
  }finally{restore();}

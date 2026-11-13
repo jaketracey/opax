@@ -223,6 +223,36 @@ export function governmentFunctionTableConfig(rows) {
 export {receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=8c73ceafd6';
 
 /**
+ * A party's headline: its own federal returns, every receipt line once and all
+ * receipt types, without public funding or transfers between its own branches
+ * (meta.receipt_types.party_return_note). The node's by_type cells only sum the
+ * donors drawn on the map, so they are never the headline. A graph without
+ * return cells (an older file, a state graph) keeps the party's record total,
+ * and its scope line says a gift can appear twice there.
+ */
+export function partyReturnFigures(node) {
+  if (!node?.return_by_type || !Object.keys(node.return_by_type).length) {
+    const {by_type, by_type_year, ...legacy} = node || {};
+    return receiptFigures(legacy);
+  }
+  return receiptFigures({by_type:node.return_by_type, by_type_year:node.return_by_type_year || {}});
+}
+
+/**
+ * What a party's headline counts, in a reader's words: what it is, then what it
+ * leaves out, so nobody reads it against the AEC's larger Total Receipts.
+ * Without return cells it is the record total, and receiptScopeLabel says so.
+ * The money map card prints the same words (graph/index.ts, partyReturnScope).
+ */
+export function partyReturnScopeLabel(figures) {
+  if (!figures?.typed) return receiptScopeLabel(figures);
+  const span = figures.firstYear == null ? '' : figures.firstYear === figures.lastYear
+    ? `, ${financialYear(figures.firstYear)}` : `, ${financialYear(figures.firstYear)} to ${financialYear(figures.lastYear)}`;
+  return `Itemised receipts in the party's own federal returns${span}, each counted once. `
+    + 'Public funding, tax refunds and other government payments, transfers between the party\'s own branches and amounts under the disclosure threshold are not included.';
+}
+
+/**
  * Keep every disclosed donor; party transfers and grants are excluded. Each row
  * counts each receipt once, from the party's own return (receiptFigures), the
  * measure the map card and the donor page use. `scope` says so in a reader's
