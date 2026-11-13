@@ -604,7 +604,7 @@ test('Westpac to One Nation: /money, the party page, its API, receiptGraph and p
   assert.ok(!given.data.rows.some(r => r.donor === 'Westpac Banking Corporation'), 'party_receipts by donations');
   const line = given.data.other_receipts.find(r => r.donor === 'Westpac Banking Corporation');
   assert.deepEqual([line.other_receipts_aud, line.receipts], TYPED, 'party_receipts other-receipts line');
-  assert.equal(line.line, "Westpac Banking Corporation recorded $204,604 in other receipts (such as loans or interest) to One Nation in financial years 2022-23 to 2024-25, which the AEC doesn't class as donations.");
+  assert.equal(line.line, "Westpac Banking Corporation recorded $204,604 in other receipts (amounts other than donations or subscriptions) to One Nation in financial years 2022-23 to 2024-25.");
   const page = registerTables.partyMoneyData(published, ONE_NATION).rows.find(r => r.label === 'Westpac Banking Corporation');
   assert.deepEqual([page.total, page.count], TYPED, 'One Nation party page donor table');
   const response = await partyMoneyResponse(new Request(`https://opax.test/api/register/party-money?partyId=${encodeURIComponent(ONE_NATION)}`), {fetch: async () => Response.json(published)});

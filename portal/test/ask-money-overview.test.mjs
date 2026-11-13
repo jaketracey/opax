@@ -20,7 +20,7 @@ const facts = {
     { name: 'Labor', amount: '$8,526,686', records: '743 disclosed receipt records' },
   ],
   derived: ['Gap between Liberal and Labor: $487,287', 'Everything below Liberal, added together: $8,526,686', "Liberal's share of the shown total ($17,540,659): 51%"],
-  measure:'receipts_all',measure_label:'disclosed receipts, all types (donations, loans and other receipts)',
+  measure:'receipts_all',measure_label:'disclosed receipts, all types (donations, subscriptions and other receipts)',
 };
 
 test('the prompt hands over the figures and forbids working any out', () => {

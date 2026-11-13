@@ -277,8 +277,19 @@ export function factSheet(results: ToolResult[]): { facts: Fact[]; notes: string
         const pf = (d.public_funding as { source: string; amount_aud: number; period: string }[] | undefined) ?? []
         pf.forEach((row, i) => { const cite = r.cite[rows.length + 1 + other.length + i]; if (cite) add(cite.label, cite, entities,
           { receipt: { party: String(d.party), source: row.source, amount: row.amount_aud, period: row.period || period, jurisdiction: 'federal', measure: 'public_funding', measure_label: 'public funding', aside: cite.label } }) })
-      } else (d.rows as { party: string; total_aud: number }[]).forEach((row, i) => add(`${row.party} disclosed $${row.total_aud.toLocaleString('en-AU')} in ${word} from ${d.industry} sources (federal disclosures; financial years ${period})`, r.cite[i], [`party:${row.party}`],
-        { receipt: { party: row.party, source: `${d.industry} sources`, amount: row.total_aud, period, jurisdiction: 'federal', aggregate: true, ...measured, ...(industry ? { industry, filter: industry } : {}) } }))
+        // A lending question's note and declared debts: what the returns say about loans, beside the ranking.
+        const lending = (d.lending as string[] | undefined) ?? []
+        lending.forEach((_line, i) => { const cite = r.cite[rows.length + 1 + other.length + pf.length + i]; if (cite) add(cite.label, cite, entities,
+          { receipt: { party: String(d.party), source: `${d.party} returns`, amount: Number(cite.value) || 0, period, jurisdiction: 'federal', measure: 'declared_debts', measure_label: 'debts the returns declare', aside: cite.label } }) })
+      } else {
+        const rows = d.rows as { party: string; total_aud: number }[]
+        rows.forEach((row, i) => add(`${row.party} disclosed $${row.total_aud.toLocaleString('en-AU')} in ${word} from ${d.industry} sources (federal disclosures; financial years ${period})`, r.cite[i], [`party:${row.party}`],
+          { receipt: { party: row.party, source: `${d.industry} sources`, amount: row.total_aud, period, jurisdiction: 'federal', aggregate: true, ...measured, ...(industry ? { industry, filter: industry } : {}) } }))
+        // A donations ranking's labelled lines: the industry's other receipts to each party, never ranked.
+        const other = (d.other_receipts as { party: string; other_receipts_aud: number; subscriptions_aud: number; untyped_aud: number }[] | undefined) ?? []
+        other.forEach((row, i) => { const cite = r.cite[rows.length + i]; if (cite) add(cite.label, cite, [`party:${row.party}`],
+          { receipt: { party: row.party, source: `${d.industry} sources`, amount: row.other_receipts_aud + row.subscriptions_aud + row.untyped_aud, period, jurisdiction: 'federal', aggregate: true, measure: 'other_receipts', measure_label: 'receipts the AEC does not class as donations', aside: cite.label, ...(industry ? { industry, filter: industry } : {}) } }) })
+      }
     } else if (r.tool === 'find_people') {
       const p = (d.people as { name: string; party: string | null; service?: ServicePeriod[] }[])[0]
       if (p) add(`${p.name}: ${p.party ?? 'party not recorded'}`, { ...r.cite[0], kind: 'person' })
@@ -561,6 +572,7 @@ export function periodPlan(plan: Plan, period: Period, filters: Record<string, u
     if (constraints && ['declared_interests', 'find_records', 'public_finances'].includes(s.tool)) return constrainStep(s, constraints, TOOL_SPECS.find(t => t.name === s.tool)!.input.properties as Record<string, unknown>)
     // The question decides what a donor figure counts (A34), on the planner path as in the research loop.
     if (s.tool === 'party_receipts' && constraints?.receiptMeasure) s = { ...s, args: { ...s.args, measure: constraints.receiptMeasure } }
+    if (s.tool === 'party_receipts' && constraints?.lending) s = { ...s, args: { ...s.args, lending: true } }
     if (s.tool === 'party_receipts' && (period.since || period.until)) {
       const { since: _s, until: _u, from_year: _f, to_year: _t, ...args } = s.args
       const years = receiptYearWindow(period.since, period.until)

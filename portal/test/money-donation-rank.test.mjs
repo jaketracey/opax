@@ -5,14 +5,18 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import {readFile} from 'node:fs/promises'
 import {build} from 'esbuild'
+import {MockLanguageModelV4} from 'ai/test'
 import {PUBLIC_FUNDING_ONLY, DONOR_DECLARED_ONLY, hasPartyReceipts, notListedLine, otherReceiptsLine, publicFundingOnly, receiptFigures, receiptGraph, receiptSplit} from '../public/donor-disclosure.js'
 
 const root = new URL('../', import.meta.url).pathname
 const built = await build({
-  stdin: {contents: "export {factSheet, periodPlan} from './src/agentic-ask'; export {partyDonations, TOOL_SPECS} from './src/agentic-tools'; export {callTool} from './src/tools/index'; export {writingFacts, proseFallback} from './src/research-writing'; export {receiptMeasureIntent} from './src/ask-money-family'; export {extractAskConstraints, constrainStep} from './src/ask-constraints'; export {donorRanking} from './src/research-coherence.mjs';", resolveDir: root},
+  stdin: {contents: "export {factSheet, periodPlan} from './src/agentic-ask'; export {partyDonations, TOOL_SPECS} from './src/agentic-tools'; export {callTool} from './src/tools/index'; export {writingFacts, proseFallback} from './src/research-writing'; export {receiptMeasureIntent} from './src/ask-money-family'; export {receiptAnswer, lendingQuestion} from './src/voice-money'; export {LENDING_NOTE, declaredDebtsLine} from './src/tools/declared-debts'; export {extractAskConstraints, constrainStep} from './src/ask-constraints'; export {donorRanking} from './src/research-coherence.mjs';", resolveDir: root},
   bundle: true, write: false, platform: 'node', format: 'esm', external: ['node:*'],
 })
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'))
+// The writer pulls in the AI SDK, which bundles for the browser platform, as in ask-answers.test.mjs.
+const writerBuilt = await build({stdin: {contents: "export {createAnswerWriter} from './src/research-writer'", resolveDir: root}, bundle: true, write: false, platform: 'browser', format: 'esm', external: ['node:*']})
+const {createAnswerWriter} = await import('data:text/javascript;base64,' + Buffer.from(writerBuilt.outputFiles[0].text).toString('base64'))
 const savedFetch = globalThis.fetch
 globalThis.fetch = async () => { throw Error('Money tests must never call a public service.') }
 test.after(() => { globalThis.fetch = savedFetch })
@@ -51,7 +55,7 @@ const GRAPH = {
 }
 const deps = {kb: async () => { throw Error('no retrieval') }, asset: async path => path === '/graph/money.json' ? structuredClone(GRAPH) : null, origin: 'https://opax.test'}
 const env = {origin: 'https://opax.test', asset: deps.asset}
-const LOAN = /\bloans?\b(?! or interest)/i
+const LOAN = /\bloans?\b|\blent\b/i
 
 test('typed cells carry their AEC receipt type; no total moves, and Public Funding counts in no donor figure', async () => {
   const read = receiptGraph(GRAPH)
@@ -92,7 +96,7 @@ test('receiptSplit splits a window by type, and the other-receipts line never ca
   assert.deepEqual(receiptSplit(bank, 2019, 2019).other, [300000, 2])
   assert.equal(receiptSplit({total: 5, count: 1, byYear: {2020: [5, 1]}}), null, 'a record without types has no split')
   const line = otherReceiptsLine('Invented Bank Ltd', 'Example', receiptSplit(bank), {also: true, period: 'financial years 2019-20 to 2020-21'})
-  assert.equal(line, "Invented Bank Ltd also recorded $500,000 in other receipts (such as loans or interest) to Example in financial years 2019-20 to 2020-21, which the AEC doesn't class as donations.")
+  assert.equal(line, "Invented Bank Ltd also recorded $500,000 in other receipts (amounts other than donations or subscriptions) to Example in financial years 2019-20 to 2020-21.")
   assert.doesNotMatch(line, LOAN)
   assert.equal(otherReceiptsLine('Invented Workers Union', 'Example', receiptSplit(GRAPH.edges.find(e => e.source === UNION))),
     "Invented Workers Union recorded $80,000 in subscriptions to Example, which the AEC doesn't class as donations.")
@@ -120,7 +124,7 @@ test('party_receipts: "gives" ranks Donation Received only, with labelled lines;
   // A year window: the bank's 2019-20 receipts are all Other Receipt.
   const window = await api.partyDonations(deps, {party: 'Example', measure: 'donations', from_year: 2019, to_year: 2019})
   assert.deepEqual(window.data.rows.map(r => r.donor), ['Invented Company Pty Ltd'])
-  assert.match(window.data.other_receipts[0].line, /^Invented Bank Ltd recorded \$300,000 in other receipts \(such as loans or interest\) to Example in financial year 2019-20, /)
+  assert.match(window.data.other_receipts[0].line, /^Invented Bank Ltd recorded \$300,000 in other receipts \(amounts other than donations or subscriptions\) to Example in financial year 2019-20\.$/)
   // An industry: the union's subscriptions are not donations.
   assert.deepEqual((await api.partyDonations(deps, {industry: 'unions', measure: 'donations'})).data.rows, [{party: 'Example', total_aud: 50000, receipts: 1}])
   assert.deepEqual((await api.partyDonations(deps, {industry: 'unions', measure: 'all_types'})).data.rows, [{party: 'Example', total_aud: 130000, receipts: 5}])
@@ -143,18 +147,18 @@ test('the answer leads with the largest donation and gives other receipts and pu
   assert.deepEqual(api.donorRanking(input.question, input.facts.map(f => f.source)).map(r => r.name), ['Invented Company Pty Ltd', 'Invented Workers Union', 'Invented Bank Ltd'], 'asides never rank')
   const lines = out.answer.split('\n').filter(Boolean)
   assert.match(lines[0], /^Invented Company Pty Ltd gave the most in donations to Greens: \$60,000 /)
-  assert.ok(lines.includes("Invented Bank Ltd also recorded $500,000 in other receipts (such as loans or interest) to Greens in financial years 2019-20 to 2020-21, which the AEC doesn't class as donations."), out.answer)
+  assert.ok(lines.includes("Invented Bank Ltd also recorded $500,000 in other receipts (amounts other than donations or subscriptions) to Greens in financial years 2019-20 to 2020-21."), out.answer)
   assert.ok(lines.some(l => l.startsWith("Greens' returns also list $900,000 in public funding from Zed Funding Body")), out.answer)
   assert.ok(lines.findIndex(l => /also recorded/.test(l)) > lines.findIndex(l => /Invented Bank Ltd gave donations/.test(l)), 'the lines come after the ranking')
   for (const answerText of [out.answer, (await answer('Who gives the most to Example?', {party: 'Example', measure: 'donations'})).out.answer]) {
     assert.doesNotMatch(answerText, /Invented Bank Ltd gave the most|Zed Funding Body gave|Invented Bank Ltd (?:donated|is a donor)/)
-    assert.doesNotMatch(answerText.replace(/such as loans or interest/g, ''), LOAN)
+    assert.doesNotMatch(answerText, /\bloans?\b|\blent\b/i, 'no line mentions loans')
     assert.match(answerText, /Invented Bank Ltd (?:also )?recorded \$500,000 in other receipts/)
   }
   // How much did a source give, when it gave no donations in the window: say so, then what it gave.
   const named = await answer('How much did Invented Bank Ltd give to the Greens in 2019-20?', {party: 'Greens', measure: 'donations', from_year: 2019, to_year: 2019}, greens)
   assert.match(named.out.answer, /^Greens' returns list no donations from Invented Bank Ltd in financial year 2019-20\.\n/, named.out.answer)
-  assert.match(named.out.answer, /Invented Bank Ltd recorded \$300,000 in other receipts \(such as loans or interest\) to Greens in financial year 2019-20/)
+  assert.match(named.out.answer, /Invented Bank Ltd recorded \$300,000 in other receipts \(amounts other than donations or subscriptions\) to Greens in financial year 2019-20/)
   // A donation the named source did give: the donation, then its other receipts.
   const both = await answer('How much did Invented Workers Union give to the Greens?', {party: 'Greens', measure: 'donations'}, greens)
   assert.match(both.out.answer, /^Invented Workers Union gave \$50,000 in donations to Greens /, both.out.answer)
@@ -167,7 +171,7 @@ test('money_totals: donations for who gives, every type for money from, and a la
   assert.equal(none.coverage_only, undefined, 'an answer: no donations, and what the returns do list')
   assert.deepEqual(none.rows, [])
   assert.equal(none.citations[0].text, "Example's returns list no donations from Invented Bank Ltd in financial year 2019-20.")
-  assert.match(none.citations[1].text, /^Invented Bank Ltd recorded \$300,000 in other receipts \(such as loans or interest\) to Example in financial year 2019-20, which the AEC doesn't class as donations\.$/)
+  assert.match(none.citations[1].text, /^Invented Bank Ltd recorded \$300,000 in other receipts \(amounts other than donations or subscriptions\) to Example in financial year 2019-20\.$/)
   const all = await call({donor: 'Invented Bank Ltd', party: 'Example', financial_year: '2019-20'})
   assert.deepEqual([all.rows[0].total_aud, all.rows[0].receipts, all.measure], [300000, 2, 'all_types'], 'without a cue, every receipt type')
   assert.match(all.citations[0].text, /in federal disclosed receipts to Example across 2 receipts/)
@@ -222,4 +226,90 @@ test('a graph without receipt types never calls a figure donations', async () =>
   const totals = await api.callTool({origin: 'https://opax.test', asset}, 'money_totals', {party: 'Example', group_by: 'donor', measure: 'donations'})
   assert.equal(totals.measure, 'all_types')
   assert.match(totals.citations[0].text, /in federal disclosed receipts/)
+})
+
+test('the deterministic money route counts no Public Funding: the Greens total is the map\'s, and NSW Efa never ranks', async () => {
+  const published = JSON.parse(await readFile(new URL('../public/graph/money.json', import.meta.url), 'utf8'))
+  const mapTotal = receiptGraph(published).edges.filter(e => e.target === 'party:Greens' && !e.grant && !e.flow).reduce((a, e) => a + e.total, 0)
+  assert.equal(mapTotal, 13086663, 'the map leaves NSW Efa\'s $1,069,773 out of $14,156,436')
+  const all = api.receiptAnswer(published, 'How much money did the Greens receive?', 'federal', 'https://opax.test', {measure: 'receipts_all'})
+  assert.equal(all.all_types_aud, mapTotal)
+  assert.doesNotMatch(all.answer, /14,156,436/)
+  for (const measure of ['receipts_all', 'donations']) {
+    const ranked = api.receiptAnswer(published, 'Who gave the most money to the Greens in 2010-11?', 'federal', 'https://opax.test', {measure})
+    assert.ok(!JSON.stringify(ranked.by_donor ?? []).includes('NSW Efa'), `${measure}: NSW Efa is never a ranked source`)
+    assert.doesNotMatch(ranked.answer, /NSW Efa|1,069,773/)
+  }
+})
+
+// Lending (A34 review P3): the AEC types no receipt as a loan, so no receipt is said to be lent. What the
+// returns do declare is the party's debts at 30 June, listed apart and never matched to a receipt.
+const EXTRAS = {meta: {latest_year: '2024-25'}, parties: {Greens: {debts: {year: '2024-25', total: 628768, lenders: 9, top: [
+  {name: 'Zed Studios', amount: 159225, type: 'Non-financial'}, {name: 'Invented Bank Ltd', amount: 100000, type: 'Financial'},
+  {name: 'A Member', amount: 93652, type: 'Non-financial'}, {name: 'Fourth Creditor', amount: 1000, type: 'Non-financial'}]}}}}
+const greensGraph = () => JSON.parse(JSON.stringify(GRAPH).replaceAll('party:Example', 'party:Greens').replaceAll('"label":"Example"', '"label":"Greens"'))
+const lendingAsset = async path => path === '/graph/money.json' ? greensGraph() : path === '/graph/aec-extras.json' ? structuredClone(EXTRAS) : null
+const DEBTS = "Greens' returns for 2024-25 declare $628,768 in debts owed at 30 June 2025; the largest creditors listed are Zed Studios ($159,225), Invented Bank Ltd ($100,000, a financial institution) and A Member ($93,652)."
+
+test('a lending question is flagged, and both money tools add the note and the declared debts, never a lent receipt', async () => {
+  const period = {kind: 'all', label: ''}, named = {people: [], parties: []}
+  for (const q of ['Who lent money to the Greens?', 'Which banks loaned the Greens money?', 'Who does One Nation owe money to?']) {
+    const c = api.extractAskConstraints(q, period, named)
+    assert.equal(c.lending, true, q)
+    for (const tool of ['party_receipts', 'money_totals']) {
+      const props = api.TOOL_SPECS.find(t => t.name === tool).input.properties
+      assert.equal(api.constrainStep({tool, args: {party: 'Greens'}}, c, props).args.lending, true, `${tool}: ${q}`)
+    }
+    assert.equal(api.periodPlan({shape: 'money', steps: [{tool: 'party_receipts', args: {party: 'Greens'}}]}, period, {}, c).steps[0].args.lending, true)
+  }
+  assert.equal(api.extractAskConstraints('Who gives the most to the Greens?', period, named).lending, undefined)
+  assert.equal(api.declaredDebtsLine(EXTRAS, 'Greens').text, DEBTS)
+  assert.equal(api.declaredDebtsLine(EXTRAS, 'Labor'), null, 'no declared debts: no line')
+  const out = await api.partyDonations({...deps, asset: lendingAsset}, {party: 'Greens', measure: 'all_types', lending: true})
+  assert.deepEqual(out.data.lending, [api.LENDING_NOTE, DEBTS])
+  assert.deepEqual(out.cite.slice(-2).map(c => c.label), [api.LENDING_NOTE, DEBTS])
+  assert.ok(!out.cite.some(c => /\blent\b|\bloaned\b/i.test(c.label)))
+  assert.equal((await api.partyDonations({...deps, asset: lendingAsset}, {party: 'Greens', measure: 'all_types'})).data.lending, undefined, 'only when asked')
+  const totals = await api.callTool({origin: 'https://opax.test', asset: lendingAsset}, 'money_totals', {party: 'Greens', group_by: 'donor', lending: true})
+  assert.deepEqual(totals.citations.slice(-2).map(c => c.text), [api.LENDING_NOTE, DEBTS])
+})
+
+test('a lending answer leads with the note and the debts, ranks receipts as receipts, and a draft that says "lent" gives way', async () => {
+  const question = 'Who lent money to the Greens?', period = {kind: 'all', label: ''}
+  const result = await api.partyDonations({...deps, asset: lendingAsset}, {party: 'Greens', measure: 'all_types', lending: true})
+  const facts = api.factSheet([result]).facts
+  const input = {question, period, facts: api.writingFacts(undefined, facts)}
+  const debtFacts = facts.filter(f => f.receipt?.measure === 'declared_debts')
+  assert.deepEqual(debtFacts.map(f => [f.text, !!f.receipt.aside]), [[api.LENDING_NOTE, true], [DEBTS, true]], 'labelled asides, so they never rank')
+  assert.deepEqual(api.donorRanking('Who gave the most money to the Greens?', input.facts.map(f => f.source)).map(r => r.name), ['Invented Bank Ltd', 'Invented Workers Union', 'Invented Company Pty Ltd', 'Untyped Example Ltd'])
+  const prose = api.proseFallback(input).answer
+  const lines = prose.split('\n').filter(Boolean)
+  assert.equal(lines[0], api.LENDING_NOTE)
+  assert.equal(lines[1], DEBTS)
+  assert.match(lines[2], /^Greens disclosed \$501,000 in receipts from Invented Bank Ltd /, 'the receipts, called receipts')
+  assert.doesNotMatch(prose.replace(api.LENDING_NOTE, ''), LOAN)
+  // A writer draft that calls a receipt lent is replaced by the facts-only answer.
+  const bank = input.facts.find(f => f.source.receipt?.source === 'Invented Bank Ltd' && !f.source.receipt.aside)
+  const model = new MockLanguageModelV4({doGenerate: () => ({content: [{type: 'text', text: JSON.stringify({answer_decision: 'answer', sentences: [
+    {text: 'Invented Bank Ltd lent the Greens the most: $501,000 across financial years 2019-20 to 2020-21.', facts: [bank.id]}]})}],
+    finishReason: {unified: 'stop', raw: 'stop'}, usage: {inputTokens: {total: 10}, outputTokens: {total: 10}}, warnings: []})})
+  const write = createAnswerWriter({model, modelBudgetSpent: async () => false, dailyBudget: {reserve: async () => ({settle: async () => {}})}})
+  const written = await write(input, {rounds: 1, tokens: {input: 0, output: 0}}, undefined, 3000)
+  assert.equal(model.doGenerateCalls.length, 1, 'the writer ran')
+  assert.doesNotMatch(written.answer, /\blent\b/)
+  assert.match(written.answer, /Greens disclosed \$501,000 in receipts from Invented Bank Ltd/)
+  assert.ok(written.answer.startsWith(api.LENDING_NOTE), written.answer)
+})
+
+test('an industry donations ranking gives each party its industry\'s other receipts as labelled lines, never ranked', async () => {
+  const unions = await api.partyDonations(deps, {industry: 'unions', measure: 'donations'})
+  assert.deepEqual(unions.data.rows, [{party: 'Example', total_aud: 50000, receipts: 1}])
+  assert.deepEqual(unions.data.other_receipts.map(r => [r.party, r.subscriptions_aud, r.line]),
+    [['Example', 80000, "Union sources also recorded $80,000 in subscriptions to Example in financial year 2020-21, which the AEC doesn't class as donations."]])
+  const finance = await api.partyDonations(deps, {industry: 'finance', measure: 'donations', from_year: 2019, to_year: 2019})
+  assert.deepEqual(finance.data.rows, [], 'the bank gave no donations in 2019-20')
+  assert.equal(finance.data.other_receipts[0].line, 'Finance sources recorded $300,000 in other receipts (amounts other than donations or subscriptions) to Example in financial year 2019-20.')
+  const facts = api.factSheet([unions]).facts
+  assert.equal(facts.filter(f => f.receipt?.aside).length, 1)
+  assert.equal((await api.partyDonations(deps, {industry: 'unions', measure: 'all_types'})).data.other_receipts, undefined, 'all types: no lines')
 })

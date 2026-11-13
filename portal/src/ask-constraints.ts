@@ -9,6 +9,7 @@ import { canonicalChamber, questionChamber } from './ask-chamber'
 import { identityPerson } from './ask-followup'
 import { agencyHeadRanking } from './ask-remuneration'
 import { receiptMeasureIntent, type ReceiptMeasureIntent } from './ask-money-family'
+import { lendingQuestion } from './voice-money'
 export interface AskConstraints {
   period: Period; dated: boolean; jurisdiction?: string; chamber?: string; party?: string
   people: string[]; locationState?: string; stateGovernment?: boolean; place?: string; superlative?: 'highest' | 'lowest'; trend: boolean
@@ -28,13 +29,15 @@ export interface AskConstraints {
   remunerationYear?: string
   /** Donor money: donations (who gives, donates, funds) or every receipt type (money from, receipts, paid). */
   receiptMeasure?: ReceiptMeasureIntent
+  /** A question about loans, lending or debts: no receipt is said to be lent, and declared debts are added. */
+  lending?: true
 }
 export function extractAskConstraints(question: string, period: Period, named: NamedScope, filters: Record<string, unknown> = {}, statuteTitles: ReadonlySet<string> | null = null): AskConstraints {
   question = named.resolvedQuestion ?? question
   const q = recordIntentText(question)
   const identity = identityPerson(question), headRanking = agencyHeadRanking(question) && !named.people.length
   const measure = receiptMeasureIntent(question)
-  const remuneration = {...(measure ? {receiptMeasure: measure} : {}),...(identity ? {identityPerson: identity} : {}), ...(headRanking ? {agencyHeadRanking: true as const, remunerationYear: question.slice(0,4000).match(/\b(?:19|20)\d{2}-\d{2}\b/)?.[0]} : {})}
+  const remuneration = {...(measure ? {receiptMeasure: measure} : {}),...(lendingQuestion(question) ? {lending: true as const} : {}),...(identity ? {identityPerson: identity} : {}), ...(headRanking ? {agencyHeadRanking: true as const, remunerationYear: question.slice(0,4000).match(/\b(?:19|20)\d{2}-\d{2}\b/)?.[0]} : {})}
   const { text, territory } = scopeAfterStatutes(question, statuteTitles), jurisdictionText = text.toLowerCase()
   const actUnfiltered = !statuteTitles?.size, state = actUnfiltered && filters.state === 'act' ? undefined : filters.state
   const detected = String(state || (/new south wales|\bnsw\b/.test(jurisdictionText) ? 'nsw' : /victoria|\bvic\b/.test(jurisdictionText) ? 'vic' : /queensland|\bqld\b/.test(jurisdictionText) ? 'qld' : /south australia|\bsa\b/.test(jurisdictionText) ? 'sa' : /western australia|\bwa\b/.test(jurisdictionText) ? 'wa' : /tasmania/.test(jurisdictionText) ? 'tas' : territory ? 'act' : /northern territory/.test(jurisdictionText) ? 'nt' : /federal|commonwealth/.test(jurisdictionText) ? 'federal' : '')) || undefined
@@ -76,6 +79,7 @@ export function constrainStep(step: PlanStep, c: AskConstraints, properties: Rec
   if (step.tool === 'money_totals' && c.industryRanking && has('group_by')) { a.group_by = 'industry'; delete a.donor }
   // The question decides what a donor figure counts (A34): a planner cannot turn "who gives" into all receipts.
   if (['party_receipts', 'money_totals'].includes(step.tool) && c.receiptMeasure && has('measure')) a.measure = c.receiptMeasure
+  if (['party_receipts', 'money_totals'].includes(step.tool) && c.lending && has('lending')) a.lending = true
   if (step.tool === 'division' && c.policyVoteTopic && c.party) {
     a.operation = 'policy_votes'; a.title = c.policyVoteTopic
     for (const key of ['bill', 'person', 'division_id', 'other_party', 'date']) delete a[key]

@@ -2,6 +2,7 @@
 import { donorAssociatedTo, donorDisclosure, hasPartyReceipts, otherReceiptsLine, partyReturns, publicFundingOnly, receiptGraph, receiptGraphScope, receiptSplit, type DonorDisclosureRecord } from '../../public/donor-disclosure.js'
 import { receiptYearWindow } from '../receipt-period'
 import { aud, clip, fold, siteUrl } from './record-common'
+import { lendingLines } from './declared-debts'
 import { readToolAsset, type StructuredToolResult, type ToolArgs, type ToolDefinition, type ToolEnv } from './types'
 
 type Amount = [number, number]
@@ -114,6 +115,7 @@ export const tool: ToolDefinition = {
     since: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$', description: 'Optional first complete FY boundary, YYYY-07-01. Other boundaries return a coverage limitation.' },
     until: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$', description: 'Optional last complete FY boundary, YYYY-06-30. Other boundaries return a coverage limitation.' },
     measure: { type: 'string', enum: ['donations', 'all_types'], description: 'Donor figures: donations (AEC Donation Received only) or all_types (default; every receipt type). Party totals always cover all receipt types.' },
+    lending: { type: 'boolean', description: "Set true for a question about loans, lending, borrowing or debts: the answer adds what the party's own returns declare as debts, beside the receipts." },
     group_by: { type: 'string', enum: ['party', 'donor', 'year', 'industry'], description: 'Default: one total for a named party/donor, otherwise rank parties. industry sums every selected donor flow by its industry, excluding individuals, unclassified sources and associated entities of the recipient; use for which industries gave most. year returns every observed FY in chronological order.' },
     limit: { type: 'integer', minimum: 1, maximum: 20, description: 'Maximum ranked entities, default 5. Year series retain all observed years.' },
   }, examples: [{ party: 'Nationals', financial_year: '2017-18' }, { group_by: 'party', from_year: 2022, to_year: 2022 },
@@ -151,8 +153,8 @@ export const tool: ToolDefinition = {
     const measure: Measure = args.measure === 'donations' && graph.edges.some(edge => edge.typeCells) ? 'donations' : 'all_types'
     const word = measure === 'donations' ? 'federal disclosed donations' : 'federal disclosed receipts'
     const measureNote = measure === 'donations'
-      ? "Donor figures count donations only: receipts the party's return types as Donation Received. Other receipt types (other receipts such as loans or interest, subscriptions and receipts with no type) are given separately and are not donations. OPAX holds no debt record matched to a receipt, so none is called a loan. Public funding is never a donor."
-      : 'Donor figures count every receipt type: donations, other receipts (such as loans or interest), subscriptions and receipts with no type. Only Donation Received is a donation. Public funding is never a donor.'
+      ? "Donor figures count donations only: receipts the party's return types as Donation Received. Other receipt types (other receipts, subscriptions and receipts with no type) are given separately and are not donations. OPAX does not match receipts to the debts a return declares, so none is called a loan. Public funding is never a donor."
+      : 'Donor figures count every receipt type: donations, other receipts, subscriptions and receipts with no type. Only Donation Received is a donation. Public funding is never a donor.'
 
     if (group === 'industry') {
       if (donor) return limitations(env, 'An industry ranking cannot be restricted to one donor.')
@@ -276,7 +278,9 @@ export const tool: ToolDefinition = {
       const text = `${who} across ${row.receipts.toLocaleString('en-AU')} ${row.donor && measure === 'donations' ? 'donation' : 'receipt'}${row.receipts === 1 ? '' : 's'} in financial years ${row.period} ${dates}${undated && row.year === undefined ? ', including undated receipts' : ''}. ${basis}`
       return { kind: 'export' as const, text, value: row.total_aud, url: siteUrl(env, '/money?' + params) }
     })
-    return { rows: picked, citations: [...citations, ...others.map(o => o.citation)], notes, period, group_by: group, measure, ...(others.length ? { other_receipts: others.map(o => o.row) } : {}), ...(declared.length ? { donor_declared: declared } : {}), ...(party ? { party: party.label } : {}), ...(donor ? { donor: donorDisclosure(donor).name } : {}),
+    // A lending question: no receipt is a loan; the party's declared debts follow as their own lines.
+    const lending = args.lending === true && party ? (await lendingLines(path => readToolAsset(env, path), party.label, env.origin ?? 'https://opax.com.au')).map(l => ({ kind: 'record' as const, text: l.label, ...(l.value ? { value: l.value } : {}), url: l.url })) : []
+    return { rows: picked, citations: [...citations, ...others.map(o => o.citation), ...lending], notes, period, group_by: group, measure, ...(others.length ? { other_receipts: others.map(o => o.row) } : {}), ...(declared.length ? { donor_declared: declared } : {}), ...(party ? { party: party.label } : {}), ...(donor ? { donor: donorDisclosure(donor).name } : {}),
       coverage, matched: rows.length, truncated: picked.length < rows.length, query: { file: '/graph/money.json', from_year: from, to_year: to, lifetime: !requested.dated, measure } }
   },
 }

@@ -29,9 +29,10 @@ test('industry questions lead with labelled ranked amounts and bypass speech res
   assert.equal(gradeRow(q,out).overall,'pass')
  }
 })
-test('banks use the explicit finance grouping with loans beside the figures',async()=>{
- // Typed (published): donations lead and the all-types column flags loans; untyped fallback: the mixed total is labelled with loans.
- for(const [money,label] of [['typed',/^\*\*Liberal\*\* has received \*\*\$14,402,567\*\* from finance-linked sources in donations received \(AEC receipt type: Donation Received\)/],['untyped',/disclosed receipts, all types, including bank loans to the party/]]){
+test('banks use the explicit finance grouping with the receipt types beside the figures',async()=>{
+ // Typed (published): donations lead and the all-types column flags other receipts; untyped fallback: the mixed total names its types.
+ // No figure is called a loan: OPAX matches no receipt to a declared debt (A34 review).
+ for(const [money,label] of [['typed',/^\*\*Liberal\*\* has received \*\*\$14,402,567\*\* from finance-linked sources in donations received \(AEC receipt type: Donation Received\)/],['untyped',/disclosed receipts, all types \(donations, subscriptions and other receipts\)/]]){
   const out=await localAsk(api,'How much have the banks donated to the Liberals?',{money})
   assert.equal(out.answer_status,'calculated',money);assert.match(out.answer,label,money)
   assert.match(out.answer,/finance-linked \(banks, insurers and investment firms\)/)
@@ -39,7 +40,7 @@ test('banks use the explicit finance grouping with loans beside the figures',asy
   assert.ok(out.sources.every(s=>new URL(s.url,'https://local.test').searchParams.get('party')==='party:Liberal'))
   assert.ok(out.sources.every(s=>new URL(s.url,'https://local.test').searchParams.get('industry')==='finance'))
   // The total covers the 39 sources with donations; sources with $0 in donations are not ranked.
-  if(money==='typed')assert.match(out.answer,/\| Total, 39 sources \| \$14,402,567 \| 100% \| \$60,885,834 \(includes loans\) \|/)
+  if(money==='typed')assert.match(out.answer,/\| Total, 39 sources \| \$14,402,567 \| 100% \| \$60,885,834 \(mostly other receipts\) \|/)
  }
 })
 test('a topic question stays with speech evidence',async()=>{
@@ -61,14 +62,14 @@ test('known industries and totals keep exact party and year controls; unknown sc
 test('a donor return reference keeps an untyped bank figure labelled as all receipt types',async()=>{
  const graph={meta:{generated:'2026-11-12'},nodes:[{id:'party:Liberal',label:'Liberal',kind:'party'},{id:'source:bank',label:'Example Bank Ltd',kind:'donor',industry:'finance',returnReferences:[{return_type:'AEC donor return',year:'2024-25'}]}],edges:[{source:'source:bank',target:'party:Liberal',total:40000001,count:2,firstYear:2024,lastYear:2024,byYear:{2024:[40000001,2]}}]}
  const out=await api.industryMoneyAnswer({question:'How much has Example Bank Ltd donated to Liberal?'},{fetch:async()=>Response.json(graph)})
- assert.equal(out.answer_status,'calculated');assert.match(out.answer,/\$40,000,001.*disclosed receipts, all types, including bank loans to the party/)
+ assert.equal(out.answer_status,'calculated');assert.match(out.answer,/\$40,000,001.*disclosed receipts, all types \(donations, subscriptions and other receipts\)/);assert.doesNotMatch(out.answer,/\bloans?\b/)
  assert.equal(out.measure,'receipts_all')
 })
 test('union receipts name affiliation fees in the lead measure',async()=>{
  // Typed (published): union donations lead; affiliation fees sit in the all-types column.
  const out=await localAsk(api,'Who receives the most union money?')
  assert.equal(out.answer_status,'calculated');assert.match(out.answer,/^\*\*Labor\*\* leads parties receiving money from union-linked sources: \*\*\$67,541,836\*\* in donations received/)
- assert.match(out.answer,/\| Labor \| \$67,541,836 \| 96% \| \$181,802,496 \(includes loans\) \|/)
+ assert.match(out.answer,/\| Labor \| \$67,541,836 \| 96% \| \$181,802,496 \(mostly other receipts\) \|/)
  // Untyped fallback: the mixed total names affiliation fees in the lead measure.
  const legacy=await localAsk(api,'Who receives the most union money?',{money:'untyped'})
  assert.equal(legacy.answer_status,'calculated');assert.match(legacy.answer,/disclosed receipts, all types \(donations, affiliation fees and other receipts\)/)

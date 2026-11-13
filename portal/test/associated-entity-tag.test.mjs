@@ -108,7 +108,7 @@ test('the calculated money ranking names the associated entity with its tag in t
  assert.equal(liberal?.answer_status,'calculated');assert.equal(liberal.measure,'donations')
  assert.match(liberal.answer.split('\n')[0],/^The largest source to Liberal is \*\*Pratt Holdings Pty Ltd: \$10,034,400\*\*, donations received/)
  row(liberal.answer,vapold,'$6,969,513')
- assert.match(liberal.answer,/\| \[Vapold Pty Ltd\]\([^)]*\) \([^|]+\) \| \$6,969,513 \| 7% \| \$27,790,108 \(includes loans\) \|/)
+ assert.match(liberal.answer,/\| \[Vapold Pty Ltd\]\([^)]*\) \([^|]+\) \| \$6,969,513 \| 7% \| \$27,790,108 \(mostly other receipts\) \|/)
  // Untyped fallback: all receipt types lead, so Vapold leads the Liberal Party and the SDA leads Labor in 2019–20.
  for(const [c,amount] of [[vapold,'$27,790,108'],[sda,'$960,208']]){
   const out=await api.rankedMoneyAnswer({question:c.question},untypedAssets)

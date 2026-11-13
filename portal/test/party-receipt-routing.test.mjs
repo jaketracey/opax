@@ -11,7 +11,7 @@ const fixture=JSON.parse(fs.readFileSync(new URL('./fixtures/party-receipt-routi
 // Routes are checked against the published typed export (the Worker tests read public/, which this import checks is
 // typed); the untyped test near the end strips the receipt-type fields to keep the fallback shape.
 const asset=moneyAsset('typed'),assets=moneyAssets('typed'),untypedAssets=moneyAssets('untyped')
-const typedHeading={donations:'Donations',other_receipts:'Other receipts \\(includes loans\\)',subscriptions:'Subscriptions'}
+const typedHeading={donations:'Donations',other_receipts:'Other receipts',subscriptions:'Subscriptions'}
 function cited(p){assert.ok(Object.keys(p.citations).length>=2);for(const ranges of Object.values(p.citations))for(const[a,b]of ranges)assert.ok(a>=0&&b>a&&b<=Array.from(p.answer).length)}
 function complete(p){
  assert.equal(p.answer_status,'calculated');assert.ok(typedHeading[p.measure],p.measure)

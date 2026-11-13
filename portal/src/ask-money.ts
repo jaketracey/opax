@@ -527,9 +527,10 @@ export function calculatedMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph,qu
       if(fromDonors||allFlows)params.set('focus',row.id)
       const url='/money?'+params,start=Array.from(answer).length
       const finance=result.measure==='receipts_all'&&(industry==='finance'||graph.nodes.find(n=>n.id===row.id)?.industry==='finance')
-      const amount=aud(row.total_aud)+(finance?' (includes loans)':'')
+      const amount=aud(row.total_aud)
       const identity=result.by_donor.find(d=>d.id===row.id),name=identity?.href?`[${plain(row.name)}](${new URL(identity.href,'https://opax.com.au').href})`:plain(row.name)
-      const all=aud(row.all_types_aud)+(row.other_receipts_aud>=row.all_types_aud/2&&row.other_receipts_aud>0?' (includes loans)':'')
+      // Mostly Other Receipt: say the type, never "loans" (no receipt is matched to a declared debt).
+      const all=aud(row.all_types_aud)+(row.other_receipts_aud>=row.all_types_aud/2&&row.other_receipts_aud>0?' (mostly other receipts)':'')
       answer+=`\n| ${name}${tag(row)} | ${amount} | ${share(row.total_aud)} | ${result.typed&&result.measure!=='receipts_all'?all:row.receipts.toLocaleString('en-AU')} |${donationCells(row)}`
       cite(start,`${row.name}: ${amount}`,url,`${row.name}: ${aud(row.total_aud)} in ${labelFor(finance?'finance':industry)}, ${period}, ${recordCount(row.receipts)}; share ${share(row.total_aud)} of ${aud(result.total_aud)}; all receipt types ${aud(row.all_types_aud)}.`,{party:row.party,source:fromDonors?row.name:allFlows?String((row as {donor?:string}).donor):plain(result.subject),amount:row.total_aud,period,jurisdiction,measure:result.measure,measure_label,...(industry?{filter:industry}:{}),...(fromDonors||allFlows?{}:{aggregate:true})})
     }
@@ -537,14 +538,14 @@ export function calculatedMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph,qu
     const more=ranked.length-rows.length
     if(more){
       const rest=ranked.slice(rows.length),amount=rest.reduce((sum,r)=>sum+r.total_aud,0),records=rest.reduce((sum,r)=>sum+r.receipts,0),all=rest.reduce((sum,r)=>sum+r.all_types_aud,0),other=rest.reduce((sum,r)=>sum+r.other_receipts_aud,0)
-      const start=Array.from(answer).length,includesLoans=result.measure==='receipts_all'&&industry==='finance'?' (includes loans)':''
-      answer+=`\n| Other ${fromDonors||allFlows?'sources':'parties'} (${more} more on the map) | ${aud(amount)}${includesLoans} | ${share(amount)} | ${result.typed&&result.measure!=='receipts_all'?aud(all)+(other>=all/2&&other>0?' (includes loans)':''):records.toLocaleString('en-AU')} |${sumCells(rest)}`
+      const start=Array.from(answer).length,includesLoans=''
+      answer+=`\n| Other ${fromDonors||allFlows?'sources':'parties'} (${more} more on the map) | ${aud(amount)}${includesLoans} | ${share(amount)} | ${result.typed&&result.measure!=='receipts_all'?aud(all)+(other>=all/2&&other>0?' (mostly other receipts)':''):records.toLocaleString('en-AU')} |${sumCells(rest)}`
       cite(start,'Remaining sources',result.sources[0].url,`${aud(amount)} in ${measure_label}, ${period}; ${records} records across ${more} sources; share ${share(amount)}${result.typed&&result.measure!=='receipts_all'?`; all receipt types ${aud(all)}`:''}.`)
     }
-    const start=Array.from(answer).length,includesLoans=result.measure==='receipts_all'&&industry==='finance'?' (includes loans)':''
+    const start=Array.from(answer).length,includesLoans=''
     // The total sums the rows shown.
     const shownAll=ranked.reduce((sum,r)=>sum+r.all_types_aud,0),shownOther=ranked.reduce((sum,r)=>sum+r.other_receipts_aud,0)
-    const allTotal=aud(Math.round(shownAll*100)/100)+(shownOther>=shownAll/2&&shownOther>0?' (includes loans)':'')
+    const allTotal=aud(Math.round(shownAll*100)/100)+(shownOther>=shownAll/2&&shownOther>0?' (mostly other receipts)':'')
     answer+=`\n| Total, ${ranked.length} ${fromDonors||allFlows?ranked.length===1?'source':'sources':ranked.length===1?'party':'parties'} | ${aud(result.total_aud)}${includesLoans} | 100% | ${result.typed&&result.measure!=='receipts_all'?allTotal:result.receipts.toLocaleString('en-AU')} |${sumCells(ranked)}`
     cite(start,'Whole selection',result.sources[0].url,`${aud(result.total_aud)} in ${measure_label}, ${period}; ${ranked.length} ${fromDonors||allFlows?'sources':'parties'} with figures in this measure; ${result.receipts} records; share 100%; all receipt types ${aud(Math.round(shownAll*100)/100)}.`)
   }

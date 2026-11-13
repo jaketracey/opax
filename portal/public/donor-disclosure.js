@@ -185,20 +185,22 @@ export function receiptSplit(x, from, to) {
 const aud = amount => '$' + Math.round(amount).toLocaleString('en-AU');
 /**
  * The labelled line for what a source gave a party that the AEC does not class as a
- * donation, for a receiptSplit. Other Receipt is never called a loan: OPAX holds no
- * debt record matched to a receipt, so the line says what the type can include.
+ * donation, for a receiptSplit. The line says what the AEC type is, never what a receipt was:
+ * OPAX does not match receipts to the debts a return declares, so none is called a loan.
  * Empty when there is nothing but donations. `also` when the source is in the ranking above;
  * `period` ("financial years 2019-20 to 2020-21") when the line has one.
  */
 export function otherReceiptsLine(name, party, split, {also = false, period = ''} = {}) {
   if (!split) return '';
   const parts = [];
-  if (split.other[0]) parts.push(`${aud(split.other[0])} in other receipts (such as loans or interest)`);
+  if (split.other[0]) parts.push(`${aud(split.other[0])} in other receipts (amounts other than donations or subscriptions)`);
   if (split.subscriptions[0]) parts.push(`${aud(split.subscriptions[0])} in subscriptions`);
   if (split.untyped[0]) parts.push(`${aud(split.untyped[0])} in receipts the return gave no type for`);
   if (!parts.length) return '';
   const list = parts.length === 1 ? parts[0] : parts.slice(0, -1).join(', ') + ' and ' + parts.at(-1);
-  return `${name} ${also ? 'also ' : ''}recorded ${list} to ${party}${period ? ` in ${period}` : ''}, which the AEC doesn't class as donations.`;
+  // Other receipts already say what they are not; subscriptions and untyped receipts need the clause.
+  const clause = split.subscriptions[0] || split.untyped[0] ? ", which the AEC doesn't class as donations" : '';
+  return `${name} ${also ? 'also ' : ''}recorded ${list} to ${party}${period ? ` in ${period}` : ''}${clause}.`;
 }
 
 /** "Labor's returns", "Greens' returns". */
