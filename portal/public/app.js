@@ -8865,11 +8865,9 @@ function billRowHTML(b) {
     : b.sponsor && !b.portfolio
       ? `${billSponsorName(b.sponsor)}${others ? ` and ${others} other${others === 1 ? "" : "s"}` : ""}` : "";
   const figures = [
-    // Not "28 divisions": the index counts the register's division records, and
-    // the source records one division several times, so the bill page folds
-    // that same Medibank bill to eight. The list cannot fold — it would have to
-    // open every file — so it says which number this is instead of asserting a
-    // count the next page denies.
+    // The index counts the register's division records. Each is one division of
+    // the house (they are keyed by chamber, day and division number), and the
+    // bill page shows every one, so this count matches the bill page's table.
     Number(b.divisions) ? `${b.divisions} division record${b.divisions === 1 ? "" : "s"}` : "",
     Number(b.speeches) ? `${b.speeches} speech${b.speeches === 1 ? "" : "es"}` : "",
     Number(b.acts) ? "became law" : "",
@@ -8891,9 +8889,8 @@ const BILLS_FINEPRINT =
   `Bills, their dates and their divisions come from the parliamentary record; each bill page links the
    official source it was read from. Summaries are written by a model from the explanatory memorandum or
    the Bills Digest, are marked as such wherever they appear, and are not the record. A bill missing from
-   this list is not evidence it does not exist: the register is still being built. The source records
-   some divisions more than once, so a division record here is a row in the register rather than a
-   separate vote of the house; a bill page folds the duplicates and usually shows fewer.`;
+   this list is not evidence it does not exist: the register is still being built. Each division record
+   counted here is one division of the house, and the bill's page shows every one of them.`;
 
 /** /bills — the whole list, searchable by name, filtered by parliament, status and year. */
 /** APH writes a sponsor as "SMITH, Sen Dean" or "BURKE, the Hon Tony, MP"; readers want "Dean Smith". */
