@@ -352,21 +352,46 @@ else: print(json.dumps(report))
                 self.assertFalse(list(self.pipe.glob('evidence-stage.*')))
                 self.assertEqual(self.git('status', '--porcelain', '--', guard.EVIDENCE), '')
 
+    def date_shipped_export(self, generated_at):
+        # The shipped tree's own build time, as a real export writes it (index meta == stats).
+        evidence = self.repo / guard.EVIDENCE
+        stats = json.loads((evidence / 'stats.json').read_text())
+        stats['generated_at'] = generated_at
+        index = json.loads((evidence / 'index.json').read_text())
+        index['meta'] = stats
+        (evidence / 'stats.json').write_text(json.dumps(stats))
+        (evidence / 'index.json').write_text(json.dumps(index))
+        self.git('add', '-A', '--', guard.EVIDENCE)
+        self.git('-c', 'commit.gpgsign=false', 'commit', '-q', '-m', 'dated export')
+
     def test_missing_inputs_wait_before_export_and_keep_status_on_repeat(self):
+        # 09:21 UTC on 8 Sep is the same day in Sydney; the status says that day, not a warning.
+        self.date_shipped_export('2026-09-08T09:21:53.082961+00:00')
         before = guard.read_tree(self.repo / guard.EVIDENCE)
         self.inputs['places'].unlink()
         self.inputs['additional'].unlink()
         for _ in range(2):
             result = self.run_refresh('ok')
-            self.assertIn('evidence: waiting for inputs (missing:', result)
+            self.assertIn('evidence layers: snapshot 8 Sep 2026; rebuild pending a decision (missing:', result)
+            self.assertNotIn('waiting for inputs', result)
             self.assertIn(self.inputs['places'].name, result)
             self.assertIn(self.inputs['additional'].name, result)
-            self.assertEqual(result.count('WARN:'), 1)
+            self.assertEqual(result.count('WARN:'), 0)
             self.assertNotIn('FAIL:', result)
             self.assertTrue(self.pending.exists())
             self.assertFalse((self.home / 'evidence.calls').exists())
             self.assertFalse(list(self.pipe.glob('evidence-stage.*')))
             self.assertEqual(guard.read_tree(self.repo / guard.EVIDENCE), before)
+
+    def test_missing_inputs_with_an_undated_export_say_so_in_sydney_time(self):
+        self.inputs['places'].unlink()
+        result = self.run_refresh('ok')
+        self.assertIn('evidence layers: snapshot date unknown; rebuild pending a decision', result)
+        self.date_shipped_export('2026-09-08T15:30:00Z')
+        result = self.run_refresh('ok')
+        self.assertIn('evidence layers: snapshot 9 Sep 2026; rebuild pending a decision', result)
+        self.assertEqual(result.count('WARN:'), 0)
+        self.assertTrue(self.pending.exists())
 
     def test_mismatched_inputs_wait_without_running_export(self):
         with sqlite3.connect(self.inputs['source']) as db:

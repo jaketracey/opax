@@ -55,12 +55,13 @@ new_sandbox() {
   local fixture_exporters=()
   # the files the nightly reads, from the real tree
   # Bills imports roster_identity, which in turn imports parli.ingest.speaker_names.
+  # validate_data's people check imports roster_fold (twin_target), which imports roster_identity.
   # The division and vote exporters import division_rules (and through it parli.ingest.federal_affiliations) and
   # corrections.apply; the division exporter imports vote_parties (and through it tvfy_refresh's party aliases),
   # which reads the roster evidence files copied here and an empty electorate release written below; the fixture DB
   # has no ext_state_roster, which is logged and skipped; scripts/corrections/divisions.json is left out because the
   # fixture DB has none of its records.
-  for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/vm/periodic_state.py scripts/export_bills.py scripts/roster_identity.py \
+  for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/vm/periodic_state.py scripts/export_bills.py scripts/roster_identity.py scripts/roster_fold.py \
            scripts/vm/bills_refresh.sh scripts/vm/bills_guard.py scripts/vm/keep_if_unchanged.py \
            scripts/vm/divisions_refresh.sh scripts/vm/divisions_guard.py scripts/vm/mobile_votes_contract.py \
            scripts/hubs/sitting-2026.json \
@@ -166,14 +167,14 @@ HPEOF
 import importlib.util, json, pathlib, sys
 seed = sys.argv[1]
 def bill(n, briefs):
-    return {"key": f"au-federal-t{n}", "title": f"Test Bill {n}", "status": "introduced", "status_as_of": "2026-09-01",
+    return {"key": f"au-federal-t{n}", "title": f"Test Bill {n}", "status": "before_parliament", "status_as_of": "2026-09-01",
             "divisions": [{'key':'federal-senate-1','date':'2026-09-01','house':'senate',
                            'question':'Fixture question','ayes':1,'noes':0,'outcome':'affirmative',
                            'url':'https://example.test/division'}] if n == 1 else [],
             "speeches": [{"slug": f"s{n}-{i}", "speaker": "A", "date": "2026-09-01", "state": "NSW", "brief": b}
                          for i, b in enumerate(briefs)]}
 docs = [bill(1, ["Brief 1-0", "Brief 1-1"]), bill(2, ["Brief 2-0"]), bill(3, [])]
-rows = [{"key": d["key"], "title": d["title"], "parliament": 48, "introduced": "2026-08-01", "status": "introduced",
+rows = [{"key": d["key"], "title": d["title"], "parliament": 48, "introduced": "2026-08-01", "status": "before_parliament",
          "status_as_of": d["status_as_of"], "speeches": len(d["speeches"]), "divisions": len(d["divisions"])} for d in docs]
 for d in docs:
     open(f"{seed}/portal/public/bills/{d['key']}.json", "w").write(json.dumps(d, ensure_ascii=False, indent=1) + "\n")
@@ -1280,10 +1281,10 @@ new_sandbox evidence_missing
 rm "$HOME/.cache/autoresearch/evidence-places.sqlite"
 OPAX_TODAY=2026-10-10 nightly
 check "missing sidecars keep the night green and skip export/staging" bash -c "[ '$NRC' -eq 0 ] && [ ! -f '$HOME/evidence.calls' ] && ! find '$HOME/.cache/autoresearch/pipeline' -maxdepth 1 -name 'evidence-stage.*' | grep -q . && git -C '$REPO' diff --quiet HEAD -- portal/public/evidence"
-check "one evidence warning names missing files and status says waiting" bash -c "[ \$(grep -c 'WARN: evidence:' '$SB/nightly.out') -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"status\"]==\"ok\" and not d[\"failures\"] and \"evidence: waiting for inputs (missing:\" in d[\"summary\"] and \"evidence-places.sqlite\" in d[\"summary\"]'"
+check "missing sidecars are one info line naming them, not a warning; status names the snapshot" bash -c "[ \$(grep -c 'WARN: evidence' '$SB/nightly.out') -eq 0 ] && grep -q 'evidence layers: snapshot date unknown; rebuild pending a decision (missing: .*evidence-places.sqlite' '$SB/nightly.out' && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"status\"]==\"ok\" and not d[\"failures\"] and \"evidence layers: snapshot date unknown; rebuild pending a decision\" in d[\"summary\"] and not any(w.startswith(\"evidence\") for w in d.get(\"warnings\", []))'"
 check "waiting retains catch-up and publishes the rest" bash -c "[ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q 'New Member'"
 OPAX_TODAY=2026-10-10 nightly
-check "missing inputs on the next night still succeed without exporting" bash -c "[ '$NRC' -eq 0 ] && [ ! -f '$HOME/evidence.calls' ] && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && [ \$(grep -c 'WARN: evidence:' '$SB/nightly.out') -eq 1 ]"
+check "missing inputs on the next night still succeed without exporting" bash -c "[ '$NRC' -eq 0 ] && [ ! -f '$HOME/evidence.calls' ] && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && [ \$(grep -c 'WARN: evidence' '$SB/nightly.out') -eq 0 ] && grep -q 'rebuild pending a decision' '$SB/nightly.out'"
 
 new_sandbox evidence_mismatch
 python3 - "$HOME/.cache/autoresearch/parli.db" <<'PYEOF'

@@ -28,7 +28,7 @@ export function partyLabels({money = [], roster = null, divisions = null, live =
   const out = [];
   for (const graph of money) for (const n of graph?.nodes || []) if (n.kind === 'party') out.push(n.label);
   for (const p of roster?.people || []) out.push(...personPartyLabels(p));
-  out.push(...Object.keys(divisions?.parties || {}));
+  out.push(...Object.keys(divisions?.parties || {}), ...Object.keys(divisions?.bills || {}));
   for (const r of live?.parties || []) out.push(r.label);
   return [...new Set(out.map(l => String(l ?? '').trim()).filter(Boolean))];
 }
@@ -56,10 +56,14 @@ function personPartyLabels(p) {
 }
 
 /** Members of a party, current and former. A roster person is a member when any of their party
- *  fields names the party; the division records add those who voted under it. One row per person:
+ *  fields names the party, or, with none, when a verified seat roster does (the index's
+ *  seat_rosters); the division records add those who voted under it. One row per person:
  *  the roster's pid joins its prints, and person-paths joins division slugs to those identities.
- *  Only division rows without a slug fall back to their printed name. */
-export function partyMembers(label, {roster = null, divisions = null, same = (a, b) => identity(a) === identity(b)} = {}) {
+ *  Only division rows without a slug fall back to their printed name.
+ *  A seat-roster member carries `seat_roster` ({as_of, next_election, stale}). They sit until the
+ *  next election the repository records after the roster's date has passed (`today`, YYYY-MM-DD);
+ *  after it they are `stale`: neither sitting nor former, only on the roster of that date. */
+export function partyMembers(label, {roster = null, divisions = null, same = (a, b) => identity(a) === identity(b), today = utcDay()} = {}) {
   const people = roster?.people || [];
   const idOf = p => p.pid ? `pid:${p.pid}` : `name:${fold(p.full || p.name)}`;
   // A full name with a party outranks a surname print or a committee-witness stub.
@@ -96,6 +100,46 @@ export function partyMembers(label, {roster = null, divisions = null, same = (a,
     const r = row(idOf(p));
     if (p.current && same(p.party_now || p.party, label)) r.current = true;
   }
+  // A roster person with no party of their own, filed under the party a verified seat roster records
+  // for them (scripts/build_party_index.mjs seat_rosters, roster-party.js). The index named them by
+  // their roster row, so only that row's pid or exact name joins; the roster said they held the seat
+  // on its date, so they sit unless their own record says they left or a later election has been held.
+  const seatMembers = [];
+  for (const [party, members] of Object.entries(divisions?.seat_rosters || {})) {
+    if (!same(party, label)) continue;
+    for (const m of members) {
+      // A `reference` member has no roster row of their own (roster-party.js referenceOnlyPeople); the Worker
+      // adds one under the same pid, the browser does not, so the entry stands in for it here.
+      const id = m.pid && best.has(`pid:${m.pid}`) ? `pid:${m.pid}` : byName.get(fold(m.name))
+        || (m.reference ? (m.pid ? `pid:${m.pid}` : `name:${fold(m.name)}`) : null);
+      if (!id) continue;
+      const r = row(id, {name: m.name});
+      const stale = Boolean(m.next_election && today > m.next_election);
+      r.seat_roster = {as_of: m.as_of || null, next_election: m.next_election || null, stale};
+      if (r.roster?.current !== false && !stale) r.current = true;
+      if (stale && m.reference) r.current = false;
+      seatMembers.push({id, m});
+    }
+  }
+  // Victorian Hansard also prints some of these members by initials ("J Bull" beside "Josh Bull"), as a
+  // separate roster row with no pid. On this page only, an initials row the party's seat roster explains
+  // is hidden: same jurisdiction, chamber, party, surname and first initial, and exactly one such member.
+  // Two candidates keep both rows; identities are not merged here.
+  // An initials row the seat rosters tie to one member of another party is also hidden: "T Bull" (Victorian
+  // Assembly, 2018 to 2022) carries the Labor label, but the only Assembly Bull with initial T is Tim Bull,
+  // whom the Victorian roster files as a National. The repository holds no dated party for him in those years,
+  // so the row is neither moved nor relabelled: it is only not listed as this party's member.
+  const fitsPrint = (p, print, m) => (p.states || []).includes(m.jurisdiction) && (p.chambers || []).includes(m.chamber) &&
+    initialsPrint(m.name, true)?.surname === print.surname && initialsPrint(m.name, true)?.initial === print.initial;
+  const everySeat = Object.entries(divisions?.seat_rosters || {}).flatMap(([party, members]) => members.map(m => ({party, m})));
+  for (const [id, r] of [...rows]) {
+    const p = r.roster, print = p && !p.pid ? initialsPrint(p.name) : null;
+    if (!print || r.seat_roster || !memberPartyLabels(p).some(l => same(l, label))) continue;
+    const fits = seatMembers.filter(({id: other, m}) => other !== id && fitsPrint(p, print, m));
+    if (new Set(fits.map(f => f.id)).size === 1) { rows.delete(id); continue; }
+    const elsewhere = everySeat.filter(({m}) => fitsPrint(p, print, m));
+    if (!fits.length && elsewhere.length === 1 && !same(elsewhere[0].party, label)) rows.delete(id);
+  }
   for (const [party, members] of Object.entries(divisions?.parties || {})) {
     if (!same(party, label)) continue;
     for (const m of members) {
@@ -112,6 +156,26 @@ export function partyMembers(label, {roster = null, divisions = null, same = (a,
     current: list.filter(r => r.current).sort((a, b) => a.name.localeCompare(b.name)),
     former: list.filter(r => !r.current).sort(byRecent),
   };
+}
+
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+/** "2026-09-09" -> "9 Sep 2026". */
+export function dayMonthYear(day) {
+  const [y, mo, d] = String(day ?? '').split('-').map(Number);
+  return y && mo && d ? `${d} ${MONTHS[mo - 1]} ${y}` : String(day ?? '');
+}
+
+/** Today as YYYY-MM-DD (UTC). */
+function utcDay() { return new Date().toISOString().slice(0, 10); }
+
+/** {initial, surname} of an initials print ("J Bull", "K.J. Maher", "M O’Brien"), or of any full name when
+ *  `full`; null for a surname print or, without `full`, a name with a written-out given name. */
+function initialsPrint(name, full = false) {
+  const parts = String(name ?? '').trim().split(/\s+/);
+  if (parts.length < 2) return null;
+  const given = parts.slice(0, -1);
+  if (!full && !given.every(g => /^(?:[A-Z]\.?)+$/.test(g))) return null;
+  return {initial: given[0][0].toUpperCase(), surname: fold(parts.at(-1))};
 }
 
 /** The label the search index files a party's speeches under, with their count, or null when the
@@ -138,6 +202,9 @@ export function partyMembersHTML(label, members, h, {speechesHref = '', director
   const independent = isIndependent(label);
   const total = members.current.length + members.former.length;
   if (!total) return '';
+  // Seat-roster members after a later election: not known to sit, not known to have left.
+  const rostered = members.former.filter(m => m.seat_roster?.stale);
+  const former = members.former.filter(m => !m.seat_roster?.stale);
   const row = m => {
     const photo = h.photoUrlFor(m.name);
     const portrait = photo
@@ -149,17 +216,25 @@ export function partyMembersHTML(label, members, h, {speechesHref = '', director
     // Only a sitting member's party is "now"; a former member's roster party is the label their speeches carry.
     const now = p.current ? p.party_now || p.party : '';
     const where = (p.states || []).map(h.stateName).join(', ');
+    // A seat-roster member's status is the roster's, on its date: said beside them unless the heading says it.
+    const asAt = m.seat_roster?.as_of && !datedGroup ? `Parliamentary roster as at ${dayMonthYear(m.seat_roster.as_of)}` : '';
     const meta = [
       now && !h.same(now, label) ? `<span class="dir-muted">now</span> ${h.partyChipHTML(now)}` : '',
       where ? h.esc(where) : '',
       // Roster years where the roster has the person; else only the division records' last vote.
       m.first < 9999 ? h.esc(h.yearSpan(m.first, m.last)) : m.last ? h.esc(`Last recorded vote ${m.last}`) : '',
+      asAt ? h.esc(asAt) : '',
     ].filter(Boolean).join(' · ');
     return `<li class="dir-row">${portrait}<div class="dir-main">${name}${meta ? `<span class="result-meta">${meta}</span>` : ''}</div>
       <div class="dir-figs">${m.divisions ? `<span class="dir-fig"><b>${Number(m.divisions).toLocaleString()}</b>division${m.divisions === 1 ? '' : 's'}</span>` : ''}</div></li>`;
   };
+  let datedGroup = false;
   const group = (title, list) => {
     if (!list.length) return '';
+    // A group made up only of seat-roster members of one date carries the date in its heading.
+    const dates = new Set(list.map(m => m.seat_roster?.as_of || ''));
+    datedGroup = Boolean(title) && dates.size === 1 && !dates.has('');
+    if (datedGroup && !/as at/.test(title)) title = `${title}, as at ${dayMonthYear([...dates][0])}`;
     const shown = list.slice(0, SHOWN), rest = list.slice(SHOWN);
     // With nobody sitting, the block's own heading says it all: no subheading.
     return `${title ? `<h4 class="entry-subhead">${h.esc(title)} (${list.length.toLocaleString()})</h4>` : ''}
@@ -167,12 +242,16 @@ export function partyMembersHTML(label, members, h, {speechesHref = '', director
       ${rest.length ? `<details class="party-members-more"><summary>${rest.length.toLocaleString()} more ${h.esc((title || 'members').toLowerCase())}</summary>
         <ul class="subject-list dir-list party-member-list" role="list">${rest.map(row).join('')}</ul></details>` : ''}`;
   };
+  const rosteredGroups = [...new Set(rostered.map(m => m.seat_roster.as_of))].sort().reverse()
+    .map(day => group(`On the parliamentary roster as at ${dayMonthYear(day)}`, rostered.filter(m => m.seat_roster.as_of === day))).join('');
   return `<section class="party-members" id="party-members">
     <div class="entry-section-head"><h3 class="subject-section-title">${independent ? 'Parliamentarians' : 'Members'}</h3>${speechesHref ? `<a href="${h.esc(speechesHref)}">Their speeches</a>` : ''}</div>
-    ${members.current.length ? group(independent ? 'Sitting parliamentarians' : 'Sitting members', members.current) + group(independent ? 'Former parliamentarians' : 'Former members', members.former) : group('', members.former)}
+    ${members.current.length || rostered.length
+      ? group(independent ? 'Sitting parliamentarians' : 'Sitting members', members.current) + rosteredGroups + group(independent ? 'Former parliamentarians' : 'Former members', former)
+      : group('', former)}
     ${directoryHref ? `<p class="entry-more"><a href="${h.esc(directoryHref)}">${h.esc(label)} in the parliamentarians directory</a></p>` : ''}
     ${h.sourceLineHTML({
-      updated, source: 'Parliamentary roster and recorded divisions',
+      updated, source: 'Parliamentary roster, verified electorate rosters and recorded divisions',
       notes: [PARTY_MEMBER_SCOPE, 'Division records use the latest recorded affiliation, so they do not establish when it began.'],
     })}
   </section>`;
@@ -206,10 +285,43 @@ export function partyStateMoneyHTML(label, files, h) {
   </section>`;
 }
 
+/** The bills a party's members sponsored, newest first, from the party index's `bills` (scripts/build_party_index.mjs):
+ *  every spelling the party joins through `same`, each bill once. */
+export function partyBills(label, divisions, same = (a, b) => identity(a) === identity(b)) {
+  const seen = new Set(), out = [];
+  for (const [party, bills] of Object.entries(divisions?.bills || {})) {
+    if (!same(party, label)) continue;
+    for (const b of bills || []) if (b?.key && !seen.has(b.key)) { seen.add(b.key); out.push(b); }
+  }
+  return out.sort((a, b) => String(b.introduced || '').localeCompare(String(a.introduced || '')) || a.key.localeCompare(b.key));
+}
+
+// The bill rows' words (home-data.js billRowHTML).
+const BILL_STATUS = {before_parliament: 'Before parliament', passed: 'Passed', lapsed: 'Lapsed', exposure_draft: 'Exposure draft'};
+/** The "Bills sponsored" block: each bill linked to its page, with its introduction date and status. */
+export function partyBillsHTML(label, bills, h, {updated = ''} = {}) {
+  if (!bills?.length) return '';
+  const row = b => {
+    const raw = String(b.status || '').replace(/_/g, ' ');
+    const status = BILL_STATUS[b.status] || raw.replace(/^./, c => c.toUpperCase());
+    const meta = [b.introduced ? `Introduced ${dayMonthYear(b.introduced)}` : '', status].filter(Boolean).join(' · ');
+    return `<li><a class="source-title" href="/bill/${encodeURIComponent(b.key)}">${h.esc(b.title || b.key)}</a>${meta ? `<span class="result-meta">${h.esc(meta)}</span>` : ''}</li>`;
+  };
+  const shown = bills.slice(0, SHOWN), rest = bills.slice(SHOWN);
+  return `<section class="party-sponsored-bills" id="party-sponsored-bills">
+    <h3 class="subject-section-title">Bills sponsored (${bills.length.toLocaleString()})</h3>
+    <ul class="subject-list" role="list">${shown.map(row).join('')}</ul>
+    ${rest.length ? `<details class="party-members-more"><summary>${rest.length.toLocaleString()} more bills</summary>
+      <ul class="subject-list" role="list">${rest.map(row).join('')}</ul></details>` : ''}
+    ${h.sourceLineHTML({updated, source: 'Federal bills register (Parliament of Australia)',
+      notes: [`Bills whose sponsor the register records as ${isIndependent(label) ? 'an independent' : `a member of ${partyDisplayName(label)}`} when the bill was introduced.`]})}
+  </section>`;
+}
+
 const identity = label => PARTY_MAP[fold(label)]?.[1] || fold(label);
 export const isIndependent = label => identity(label) === 'IND';
 export const INDEPENDENTS_DESCRIPTION = 'Parliamentarians who sat without a party. Not a party organisation.';
-export const PARTY_MEMBER_SCOPE = 'Parliamentarian counts include current and former people recorded under the affiliation in the roster or divisions. Each person is counted once per affiliation, using their person ID where held.';
+export const PARTY_MEMBER_SCOPE = 'Parliamentarian counts include current and former people recorded under the affiliation in the roster, a verified electorate roster or the divisions. Each person is counted once per affiliation, using their person ID where held.';
 export const partyDisplayName = label => isIndependent(label) ? 'Independents' : identity(label) === 'DLP' ? PARTY_NAMES.DLP[1] : label;
 export const PARTY_MONEY_PATHS = ['/graph/money.json', '/graph/money.qld.json', '/graph/money.vic.json', '/graph/money.tas.json'];
 
@@ -221,7 +333,7 @@ export function canonicalPartyPages({ money = [], roster = null, divisions = nul
     label = String(label ?? '').trim();
     if (!label || label.length > 120 || /^(?:null|undefined|PRES|DPRES|SPK|DSPK|CWM|CHAIR)$/i.test(label)) return;
     const key = identity(label);
-    if (!parties.has(key)) parties.set(key, { label, aliases: [], money: false, roster: false, divisions: false, lastmod: '' });
+    if (!parties.has(key)) parties.set(key, { label, aliases: [], money: false, roster: false, divisions: false, bills: false, lastmod: '' });
     const page = parties.get(key);
     if (!page.aliases.includes(label)) page.aliases.push(label);
     if (source === 'money' && !page.money) page.label = label;
@@ -234,6 +346,8 @@ export function canonicalPartyPages({ money = [], roster = null, divisions = nul
   }
   const labels = Array.isArray(divisions?.parties) ? divisions.parties : Object.keys(divisions?.parties || {});
   for (const label of labels) add(label, 'divisions', divisions?.generated_at || roster?.meta?.generated);
+  // A sponsor's party the bills register records ("Rex Patrick Team"): its page lists the bills.
+  for (const [label, bills] of Object.entries(divisions?.bills || {})) add(label, 'bills', (bills || []).map(b => b.introduced || '').sort().at(-1));
   return [...parties.values()].map(page => {
     if (!page.money) page.label = page.aliases.find(label => fold(label) === fold(PARTY_NAMES[identity(label)]?.[1])) || page.label;
     return { ...page, name: partyDisplayName(page.label), href: partyUrl(page.label) };
@@ -259,6 +373,6 @@ export function resolvePartyPage(segment, pages) {
 
 export function partyPageCoverage(page) {
   if (isIndependent(page.label)) return INDEPENDENTS_DESCRIPTION;
-  const held = page.roster ? `Parliamentary roster${page.divisions ? ' and recorded divisions' : ''}` : 'Recorded divisions';
+  const held = page.roster ? `Parliamentary roster${page.divisions ? ' and recorded divisions' : ''}` : page.divisions ? 'Recorded divisions' : page.bills ? 'Bill sponsor records' : 'Recorded divisions';
   return page.money ? 'Published political receipts; federal and state returns remain separate.' : `${held}. No party-level disclosure file held by OPAX.`;
 }

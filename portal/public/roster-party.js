@@ -105,3 +105,29 @@ export function rosterListParty(person, observations) {
     source_url: typeof top[0].source_url === 'string' ? top[0].source_url : null,
   };
 }
+
+/**
+ * People the electorates release lists as holding a seat now who have no row in the speech roster
+ * (parliamentarians.json): a presiding officer Hansard prints only as "The SPEAKER" (Maree Edwards,
+ * Bendigo West), or a member yet to speak. A release person is "in the roster" when their name or an
+ * alias, folded, equals a roster row's name or one of the names its speeches sit under. Each comes
+ * with their current seats. The Worker adds them to its people (src/index.ts loadPeople) and the
+ * party index lists them (scripts/build_party_index.mjs seat_rosters, `reference`), so a party page
+ * counts them the same way in the server answer and in the browser.
+ * @param {{name: string, full?: string|null, speech_scope?: unknown}[]} rosterPeople
+ * @param {{name: string, aliases?: string[], electorates?: {current?: boolean}[]}[]} referencePeople
+ */
+export function referenceOnlyPeople(rosterPeople, referencePeople) {
+  // The roster names a row's speeches sit under: the same set as speech-attribution.js splitSpeakers.
+  const spoken = (p) => [p.name, ...(p.speech_scope && p.full ? [p.full === 'Craig Crawford' ? 'Cd Crawford' : p.full, p.full] : [])];
+  const names = new Set((rosterPeople || []).flatMap(spoken).map(rosterFold));
+  const out = [];
+  for (const person of referencePeople || []) {
+    if ([person.name, ...(person.aliases || [])].some((n) => names.has(rosterFold(n)))) continue;
+    const seats = (person.electorates || []).filter((e) => e.current);
+    if (!seats.length) continue;
+    out.push({ person, seats });
+    names.add(rosterFold(person.name));
+  }
+  return out;
+}

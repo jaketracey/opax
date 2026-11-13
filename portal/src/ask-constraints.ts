@@ -195,10 +195,10 @@ export function guardToolPeriod(result: ToolResult, step: PlanStep, c: AskConstr
   // Undated rows are not known to be wrong: they stand, marked, rather than becoming a refusal. A known mismatch is replaced below.
   if (result.ok && c.dated && !coverage.since && !coverage.until && !coverage.as_of && coverage.matched !== false) return { ...result, coverage, notes: [UNCONFIRMED_PERIOD, ...result.notes] }
   if (result.ok && !periodMatches(c, coverage)) {
-    const bounds = coverage.since && coverage.until ? `The available records cover ${coverage.since} to ${coverage.until}. ` : coverage.since ? `The available records start on ${coverage.since}. ` : coverage.until ? `The available records end on ${coverage.until}. ` : ''
-    const message = `The requested period is ${c.period.since ?? 'the start of the record'} to ${c.period.until ?? 'the present'}. ${bounds}${coverage.as_of ? 'Updated '+coverage.as_of+'. ' : ''}${coverage.note ?? ''} It cannot establish the answer for the requested period; no current figures have been substituted.`
-    if (coverage.matched === false && ['parliamentary_pay', 'paid_answer'].includes(step.tool) && result.cite.every(c => !c.label.includes('$'))) return { ...result, coverage, data: { coverage, coverage_only: true } }
-    return { ...result, coverage: { ...coverage, matched: false }, data: { coverage: { ...coverage, matched: false }, coverage_only: true }, cite: [{ kind: 'record', label: message, url: result.cite[0]?.url ?? 'https://opax.com.au/methods' }], notes: result.notes }
+    // The records stand with a one-line note on the period they cover; the model answers from them and says so.
+    const bounds = coverage.since && coverage.until ? `cover ${coverage.since} to ${coverage.until}` : coverage.since ? `start on ${coverage.since}` : coverage.until ? `end on ${coverage.until}` : 'have no confirmed dates'
+    const message = `The requested period is ${c.period.since ?? 'the start of the record'} to ${c.period.until ?? 'the present'}; these records ${bounds}.`
+    return { ...result, coverage: { ...coverage, matched: false }, notes: [message, ...result.notes] }
   }
   return { ...result, coverage }
 }

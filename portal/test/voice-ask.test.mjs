@@ -23,7 +23,7 @@ const hash=async value=>Buffer.from(await crypto.subtle.digest('SHA-256',new Tex
 
 function fixture({ask=async()=>Response.json(stored),searchRows=[]}={}){
   const db=new DatabaseSync(':memory:');
-  for(const name of ['0001_community.sql','0002_free_community.sql','0003_voice.sql','0004_voice_access.sql','0009_community_social.sql','0010_reply_email_notifications.sql','0011_native_signin.sql','0012_voice_deletion_safe.sql']) db.exec(readFileSync(new URL('../migrations/'+name,import.meta.url),'utf8'));
+  for(const name of ['0001_community.sql','0002_free_community.sql','0003_voice.sql','0004_voice_access.sql','0009_community_social.sql','0010_reply_email_notifications.sql','0011_native_signin.sql','0012_voice_deletion_safe.sql','0018_voice_liveness.sql']) db.exec(readFileSync(new URL('../migrations/'+name,import.meta.url),'utf8'));
   const statement=(sql,args=[])=>({bind(...values){return statement(sql,values)},async first(){return db.prepare(sql).get(...args)||null},async all(){return {results:db.prepare(sql).all(...args)}},async run(){db.prepare(sql).run(...args);return {success:true}}});
   const env={COMMUNITY_DB:{prepare:statement},COMMUNITY_ENABLED:'true',COMMUNITY_ORIGIN:'https://opax.test',VOICE_ENABLED:'true',VOICE_AGENT_ID:'agent_test',ELEVENLABS_API_KEY:'server-only-test-key',VOICE_TOOL_SECRET:'t'.repeat(43),VOICE_MONTHLY_SECONDS:'40000',ASSETS:{async fetch(){return Response.json({})}}};
   const asked=[];

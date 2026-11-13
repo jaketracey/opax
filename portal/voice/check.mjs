@@ -168,7 +168,7 @@ try {
       await fits(p);assert.deepEqual(f.errors, []);assertions += 6;
       await p.close();
     }
-    for (const [name, overrides] of [['signed-out', { signed_in: false }], ['disabled', { enabled: false }], ['exhausted', { remaining_seconds: 0 }], ['active-elsewhere', { active_session: { id: 'another-call', expires_at: Date.now() / 1000 + 300 } }]]) {
+    for (const [name, overrides] of [['signed-out', { signed_in: false }], ['disabled', { enabled: false }], ['exhausted', { remaining_seconds: 0 }]]) {
       const f = await fixture(390, overrides); await open(f.page);
       if (name === 'signed-out') assert.equal(await f.page.getByRole('link', { name: 'Sign in to talk for free' }).getAttribute('href'), '/community?view=signin');
       else assert.equal(await f.page.getByRole('button', { name: 'Start talking', exact: true }).isDisabled(), true);
@@ -176,6 +176,23 @@ try {
       assert.deepEqual(f.errors, []);
       assertions += 3;
       await f.page.close();
+    }
+    {
+      // An earlier call is still open (another tab, device or a dropped
+      // connection): Start stays enabled and takes it over on the server.
+      const f = await fixture(390, { active_session: { id: 'another-call', state: 'active', expires_at: Date.now() / 1000 + 300 } }), p = f.page;
+      await open(p);
+      assert.equal(await p.getByText('End it there', { exact: false }).count(), 0);
+      assert.equal(await p.locator('.opax-voice-notice').isHidden(), true);
+      f.setPostDelay(450);
+      await p.getByRole('button', { name: 'Start talking', exact: true }).click();
+      await p.getByText('Ending your earlier call…', { exact: true }).waitFor();
+      await p.getByRole('button', { name: 'Mute mic', exact: true }).waitFor();
+      assert.equal(await p.getByText('Ending your earlier call…', { exact: true }).count(), 0);
+      assert.ok(f.requests.includes('/api/voice/start'));
+      assert.deepEqual(f.errors, []);
+      assertions += 6;
+      await p.close();
     }
     for (const edge of ['cancel-connecting', 'cancel-reserving', 'denied', 'navigate', 'offline', 'background', 'allowance']) {
       const f = await fixture(390), p = f.page; await open(p);

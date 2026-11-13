@@ -1,0 +1,7 @@
+# Server HTML for record pages
+
+Recipient, agency, grant program and topic routes build factual summaries and the first 20 list rows from their existing data readers. `portal/public/record-core-content.js` supplies the table markup for both Worker rendering and client list updates. `portal/public/record-core.js` attaches controls to the painted server tables without clearing or replacing their initial rows. Client page modules skip their separate lists when those tables are present; SPA navigation removes the previous record's table.
+
+Recipients and programs reuse the grant catalogue and bounded detail-file caches. Agencies reuse the directory and eight cached previews. Topics reuse the existing topic and search cache entries, including recorded source URLs. Do not add per-row upstream requests. Missing source URLs must be labelled as missing, without suggesting an available link.
+
+From `portal/`, run `node --test test/server-html.test.mjs` for fixture-only Worker rendering and real app-shell hydration checks. Start `npx wrangler dev --config test/server-html.wrangler.jsonc --port 8915 --inspector-port 0`, then run `PLAYWRIGHT_CORE=/path/to/playwright-core/index.mjs node test/server-html-browser.mjs` for the eight fixture URLs at desktop and mobile widths, with JavaScript enabled and disabled. These checks cover page-wide record uniqueness, retained rows, metadata, geometry and list controls. `node test/server-html-benchmark.mjs` reports local detail/render timings without upstream access.

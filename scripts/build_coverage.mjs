@@ -13,6 +13,9 @@ const range = values => {
 const years = (rows, field) => range(rows.map(row => row[field]?.slice(0, 4)));
 const sum = values => values.reduce((a, b) => a + b, 0);
 const search = kind => `/ask?view=search&kind=${kind}`;
+// The one coverage input the release build regenerates (build:search) rather than the nightly
+// publishing it: stamp_assets.mjs --files lists it, so the restamp commits it with the table.
+export const SEARCH_CATALOG_MANIFEST = 'search-catalog/manifest.json';
 
 /** Read published snapshots, never fetch publishers or open private build inputs.
  * Counts below name their units: corpus resources, catalogue rows and register
@@ -79,7 +82,7 @@ export function coverageCollections(read = path => JSON.parse(readFileSync(new U
   add('agency-reports', 'Official reports and inquiries', 'Agency annual reports and quoted figures', '/official-reports/agency-reports', 'The named Commonwealth, state and territory agencies; Parliament of Victoria tabled copies', `All nine jurisdictions; ${range(agency.documents.map(d => d.reporting_year))}. Selected intake, mainly Victoria and NSW.`, agency.meta.counts.documents, `documents from ${number(agency.meta.counts.agencies)} agencies`, 'Document-specific terms; verbatim figures and source page links. OCR is marked.', 'Manual publisher PDFs checked by SHA-256; dedicated figures tool available through MCP.', agency.meta.snapshot_at, '/agency-reports/index.json', `${number(agency.meta.counts.facts)} quoted figures; ${number(agency.documents.filter(d => d.text_source === 'ocr').length)} documents read with OCR.`);
   const audit = read('audit/manifest.json');
   add('qao', 'Official reports and inquiries', 'Queensland audit reports', '/audit', 'Queensland Audit Office', `Queensland; ${range(audit.facets.year)}`, audit.count, 'report records', 'CC BY 4.0 with per-report exceptions. PDF bodies and responses remain held under document terms.', weekly, audit.generated_at, '/audit/manifest.json', `${number(audit.html_recommendations)} HTML recommendations.`);
-  const catalog = read('search-catalog/manifest.json');
+  const catalog = read(SEARCH_CATALOG_MANIFEST);
   add('official-report-records', 'Official reports and inquiries', 'Official report record pages and JSON', '/official-reports', 'Publishers of the four official-report collections above', 'Coverage follows the inquiry, integrity, Commonwealth annual-report and agency-report collections. These records overlap those totals.', catalog.counts.report, 'searchable report records', 'Source-cited records at /report/<slug>; JSON at /api/report/<slug>. Original document terms apply.', 'Rebuilt from the published collections at release.', corpus.version, '/search-catalog/manifest.json', 'One record per integrity report or agency document, per Commonwealth body-year, or per inquiry grouping its documents. Uncitable body-year stubs are excluded.');
 
   for (const [jur, title] of [['','Commonwealth'], ['qld','Queensland'], ['vic','Victoria'], ['tas','Tasmania']]) {

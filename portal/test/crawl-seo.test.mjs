@@ -71,18 +71,29 @@ test('independents have collection wording and markup, and DLP keeps its short U
   assert.equal(dlp.canonical, 'https://opax.com.au/subject/party/dlp');
 });
 
-test('server page counts use the same distinct-person membership rule as the directory', async () => {
-  const {partyMembers} = await import('../public/party-page.js');
-  const roster = await loadPeople(env), divisions = json('graph/party-members.json');
+test('the server page shows the same parliamentarian count as the browser page', async () => {
+  const {partyMembers, partyMembersHTML, PARTY_MAP} = await import('../public/party-page.js');
+  // The browser's inputs: the shipped roster as fetched (no electorate additions) and app.js samePartyLabel.
+  const roster = json('parliamentarians.json'), divisions = json('graph/party-members.json');
+  const same = (a, b) => (PARTY_MAP[String(a).toLowerCase()]?.[1] || String(a)) === (PARTY_MAP[String(b).toLowerCase()]?.[1] || String(b));
+  const esc = v => String(v ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[c]);
+  const h = {esc, photoUrlFor: () => null, personUrl: () => '/subject/person', partyChipHTML: esc, yearSpan: (a, b) => `${a}-${b}`,
+    sourceLineHTML: () => '', same, stateName: v => v};
+  const shown = {};
   for (const [label, slug] of [['Independent', 'independent'], ['Jacqui Lambie Network', 'jacqui-lambie-network'], ['Labor', 'labor'], ['Liberal', 'liberal'], ['Greens', 'greens']]) {
-    const members = partyMembers(label, {roster, divisions});
-    const total = members.current.length + members.former.length;
-    assert.ok(total > 0);
-    if (label === 'Liberal') assert.equal(total, 314);
-    if (label === 'Greens') assert.equal(total, 41);
+    // The browser's figure: the group headings' counts ("Sitting members (193)") summed.
+    const html = partyMembersHTML(label, partyMembers(label, {roster, divisions, same}), h);
+    const browser = [...html.matchAll(/<h4 class="entry-subhead">[^<]*\((\d[\d,]*)\)<\/h4>/g)].reduce((n, m) => n + Number(m[1].replace(/,/g, '')), 0);
     const meta = await moneySubjectMeta('party', slug, new URL('https://opax.com.au/subject/party/' + slug), env);
-    assert.ok(meta.prerender.includes(`${total.toLocaleString('en-AU')} parliamentarian${total === 1 ? '' : 's'}`));
+    const server = Number(meta.prerender.match(/([\d,]+) parliamentarians?(?: and [\d,]+ speeches)? in the record/)?.[1].replace(/,/g, ''));
+    assert.ok(browser > 0, label);
+    assert.equal(server, browser, label);
+    shown[label] = server;
   }
+  // Maree Edwards (Bendigo West, Speaker) has no roster row; both count her. The "T Bull" print is not Labor's.
+  assert.equal(shown.Labor, 486);
+  assert.equal(shown.Liberal, 338);
+  assert.equal(shown.Greens, 47);
 });
 
 test('sitemap index and every type file have export lastmod, unique canonical URLs and accurate counts',async()=>{

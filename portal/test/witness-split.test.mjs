@@ -11,6 +11,7 @@ import { readFileSync } from 'node:fs';
 import { runInNewContext as baseVM } from 'node:vm';
 import ts from 'typescript';
 import { personSpeechCount } from '../../scripts/build_search_catalog.mjs';
+import { referenceOnlyPeople } from '../public/roster-party.js';
 import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, splitSpeakers, splitPerson, personScope, scopedCollaborators } from '../public/speech-attribution.js';
 
 const source = ts.createSourceFile('index.ts', readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
@@ -64,7 +65,7 @@ test('real search code sends own-house filters and drops witness or other-house 
   const add = (key, state, chamber, speaker_type, person_id) => {
     resources[key] = { slug: 'speech-' + key, title: 'Stewart', origin: { collaborators: ['Stewart'] },
       usermetadata: { classifications: Object.entries({ kind: 'speech', state, chamber, speaker_type, party: 'Labor' }).map(([labelset, label]) => ({ labelset, label })) },
-      extra: { metadata: { person_id, date: '2024-06-01' } }, fields: {} };
+      extra: { metadata: { person_id, date: '2024-06-01', ...(key === '1' ? {source_url:'https://example.org/official-record'} : {}) } }, fields: {} };
   };
   add('1','qld','qld_la','member','qld_stewart');
   add('2','federal','senate_committee','witness','11011');
@@ -81,6 +82,8 @@ test('real search code sends own-house filters and drops witness or other-house 
   });
   const result = await api({}, { q: 'Stewart', mode: 'keyword', kind: 'speech', topK: 20, url: new URL('https://local.test/api/search?speaker=Stewart') });
   assert.deepEqual(plain(result.results.map(r => r.slug)), ['speech-1']);
+  assert.equal(result.results[0].source_url,'https://example.org/official-record','Existing search response preserves a recorded source outside SA');
+  assert.equal(calls.length,1,'No extra upstream read for official URLs');
   assert.match(JSON.stringify(calls[0].filter_expression), /"chamber","label":"qld_la"/);
   assert.match(JSON.stringify(calls[0].filter_expression), /"not":\{"prop":"label","labelset":"speaker_type","label":"witness"/);
   const separate = await api({}, { q: 'Stewart', mode: 'keyword', kind: 'speech', topK: 20, url: new URL('https://local.test/api/search?speaker=Stewart&attribution=unattributed') });
@@ -119,7 +122,7 @@ test('Ask scope and topic catalog use the same partition; prior citations cannot
     buildAskBody:()=>({rag_strategies:[{name:'prequeries'}]}),isRefusal:()=>false,hasUnsupportedQuotes:()=>false,
     askPayload:()=>({answer:'Grounded answer.',citations:{p:[[0,1]]},sources:[]}),
     // The 16 Oct loosening's guards, as identities: this test is about the speaker partition.
-    looseAnswer:p=>p,guardAnswerAttribution:p=>p,isEvidenceGap:()=>false,claimAttributionOk:()=>true,repairCausal:line=>line,
+    looseAnswer:p=>p,withoutSaLabel:p=>p,isEvidenceGap:()=>false,repairQuotes:t=>t,
     loadPeople: async () => ({ byFold: new Map([['stewart', { speech_scope: scope }]]) }),
     cachedJson: async (_key, fn) => fn(), json: x => Response.json(x),
     kbFetch: async (_env, _path, {body}) => { calls.push(body); return Response.json({ fulltext: { total: 0, facets: {} } }); },
@@ -212,7 +215,7 @@ test('full-name and reviewed KB aliases resolve to one scoped print, including P
 test('full-name routing merges roster-only Pugh, keeps clean pages, and redirects to the print canonical', async () => {
   const reference = { people: [{ name: 'Jess Pugh', aliases: [], electorates: [{ current: true, name: 'Mount Ommaney' }] }] };
   const data = scopedContext(ts.transpile(select(['loadPeople', 'personAt', 'canonicalRoutePath', 'personPath', 'matchSeoRoute', 'foldName'])) + ';({loadPeople,personAt,canonicalRoutePath})', {
-    peopleMemo: null, splitSpeakers, Response, URL, missingEntitySlug:()=>false,
+    peopleMemo: null, splitSpeakers, referenceOnlyPeople, Response, URL, missingEntitySlug:()=>false,
     assetJson: async () => structuredClone(roster), loadElectorates: async () => reference,
     slugIndex: people => ({ slugOf: new Map(people.map(p => [p.name, p.name.toLowerCase()])), bySlug: new Map(people.map(p => [p.name.toLowerCase(), p])) }),
   });

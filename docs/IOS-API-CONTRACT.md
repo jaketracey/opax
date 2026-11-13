@@ -312,6 +312,50 @@ For atomic replacement, stage the required catalogs under `data_version`, verify
 
 These readers add no migration or secret; the existing voice/journal schemas are required. W12 remains the separate votes-date launch dependency.
 
+**Parliament today widget file (widgets spec 2.3, lane B; live on main from PR #326).** `GET /api/app/v1/widget/today` is the one file the Parliament today home-screen widget fetches: the same bytes for every reader, within 4 KB, already reduced to the words the app shows so the widget only lays out strings. It follows the app-reader rules above (GET and HEAD only, 405, 400 `invalid_query`, weak SHA-256 ETag and 304 on any matching `If-None-Match` form, no stale grace, network block `N`) with `Cache-Control: public, max-age=900`. It sets no cookie and reads no query string, cookie or client header beyond `If-None-Match`.
+
+```ts
+type WidgetTodayV1 = {
+  version: 1;
+  generated: string|null;     // newest of the sources' own times, not the request time
+  edition: {
+    date: string;             // journal date, YYYY-MM-DD
+    kind: 'politician'|'bill'|'grant'|'topic'|'program'|'largest';
+    kind_short: string;       // 'Bill', 'Parliamentarian', 'Grant', 'Grant program', 'Largest grants', 'Topic'
+    card_title: string;       // short title when the bill has one; over 80 characters, cut at a clause or word with '…'
+    line: string|null;        // the plate's line under the title, no trailing full stop
+    path: string;             // the edition's page: path and query
+  }|null;
+  vote: {
+    date: string;             // YYYY-MM-DD
+    chamber: 'House of Representatives'|'Senate'|null;
+    stage: 'Second reading'|'Third reading'|null;
+    title: string;            // the bill's short title, else its title
+    outcome: 'Agreed to'|'Not agreed to';
+    ayes: number; noes: number;
+    path: string;             // /bill/<bill_key>?division=<division_key>
+  }|null;
+  sitting: {
+    until: string;            // the last day the list speaks for, YYYY-MM-DD
+    until_reason: 'window'|'coverage_end'|'expired';  // why the list stops at until
+    calendars: {year: number; source: string|null; as_at: string|null}[];  // one per year from today's to until's
+    next_year: {year: number; status: string}|null;   // the year after the calendar ends, as years[] lists it
+    days: {date: string; house: boolean; senate: boolean}[];  // sitting days only, today to until, in order
+  }|null;
+};
+```
+
+- `edition` is the record `/api/app/v1/edition/latest` serves (the same SELECT, bound to today in Melbourne), reduced by ports of the app's `editionFor` and `editionTitles` (`mobile/src/api/selectors.ts`) and `plateLine` and `editionPerson` (`mobile/src/features/edition/model.ts`). `line` is what the plate draws under the title: for a member, party and seat ("Liberal · Wattle, NSW", as `Plate.tsx` draws it); otherwise `plateLine` with the card's first paragraph below it, which for a bill with a stage rail is its portfolio. `card_title` takes the short title from the bill's own `/bills/<key>.json`. `null` when no posted edition exists on or before today, or when the stored record is one the app's decoder refuses (a retired `/reports/` link, for example). The file does not apply the app's age tiers: the widget reads `date` and applies them itself.
+- `vote` is the first row of Today's How parliament voted over `/divisions/recent.json` (`recentReadingVotes`, `mobile/src/features/today/votes.ts`): second and third readings only, procedure and amendments left out, newest first, one per bill per day, decoded with the app's row allowance. `null` when the file is absent, unreadable or holds no reading vote. The portal does not publish `/divisions/recent.json` yet (data lane D1), so in production `vote` stays `null` until that file ships.
+- `sitting` reads `/parliament/sitting-days.json`, the file `scripts/build_sitting_days.py` writes (branch `im/sitting-days`, shape in its `docs/DATA-SITTING-DAYS.md`). The reader uses `schema_version` (1) and `timezone` (`Australia/Sydney`) when present, `coverage.{first,last}`, `expires`, `years[]` as `{year, status, source}` with `source.{publisher,published}`, and `days[]` as `{date, house, senate}`, sitting days only. The file's top-level `published` is the day the file was built, so the reader never uses it. Unknown fields are ignored.
+- `days` holds only sitting days from today (Sydney) through `until`, in order, so an empty list in a recess still means "no sitting day on or before `until`". `until_reason` says why the list stops there: `window` when `until` is 59 days after today (or earlier, when the 4 KB rule below moved it back); `coverage_end` when the calendar's last day (`coverage.last`, or `expires` when sooner) comes first; `expired` when today is past that last day, in which case `until` is the last covered day and `calendars` and `days` are empty.
+- `calendars` gives the source of each calendar year the list spans, one entry per year from today's year through `until`'s year, so a window from December into February carries both years. A day's source is the entry for the year in its own date. `source` is that year's `source.publisher`. `as_at` is that year's `source.published`, and `null` when the builder had no publication date (a calendar built from a saved copy); it never falls back to the file's build date.
+- `next_year` is the `years[]` entry for the year after the calendar's last day, with its `status` (`not_published` until the Parliament publishes that calendar), or `null` when the file does not list that year. With the current file, 27 November 2026 gives `{until:"2026-12-31", until_reason:"coverage_end", calendars:[{year:2026, source:"Parliament of Australia", as_at:"2026-09-14"}], next_year:{year:2027, status:"not_published"}, days:[]}`. From 1 January 2027, while 2027 is still `not_published`, it gives `{until:"2026-12-31", until_reason:"expired", calendars:[], next_year:{year:2027, status:"not_published"}, days:[]}`, not `null`, so the widget can say the next calendar is not out yet.
+- `sitting` is `null` only for a missing or unreadable file: not JSON, a field the reader uses with the wrong type or an impossible date, a duplicate year or day, a `schema_version` other than 1, a `timezone` other than `Australia/Sydney`, or a coverage that starts after today.
+- Only the sitting list varies in length. If a body would pass 4 KB, the far end of that list is dropped, `until` moves back with it and `until_reason` becomes `window`; real calendars stay near 2 KB.
+- A D1 failure or a failing asset binding (5xx or a thrown fetch) returns 503 `{error:"widget_unavailable"}`, no-store, `Retry-After: 60`, so the widget keeps its saved copy rather than saving an empty one. A missing part is `null` with 200.
+- `portal/test/app-widget-today.test.mjs` pins `card_title`, `line`, `outcome` and the chosen vote against copies of the app's fixtures and the strings the app's own functions produce. It also runs the real SELECT over migrated SQLite and checks the 304 forms, the 4 KB bound, that the handler reads only `If-None-Match`, and that the module reaches only `app-http.ts` and `app-edition.ts`.
+
 ### Server voice tools, MCP and publication operations
 
 These routes are outside the native client call plan. Voice tools are provider-to-Worker calls with a server secret and can reach ARAG, limited to 30 calls/minute/session. Native must not hold that secret or invoke the tools directly. MCP and publication operations remain source-only inventory.
@@ -380,6 +424,7 @@ All paths below are relative to `https://opax.com.au`. The table accounts for al
 | `/graph/money{,.qld,.vic,.tas}.json`, `/graph/{aec-extras,campaigners,grants.federal,grants.qld}.json` | 8 | 4,115,707 | 1,069,759 | Money `{meta,nodes,edges}`; AEC return/campaigner series; grant graph uses indexed vocabularies for recipients, programs, agencies, electorates and years. | `export_money_graph.py`, `export_state_money.py` weekly; `export_aec_extras.py` explicit; grant export as above. |
 | `/interests/{index,recent,ties-by-donor,:numeric_id,n-:name}.json` | 320 | 1,402,741 | 372,027 | Member register index, declarations/changes with source links, donor ties and per-member records. 320 files. | `export_interests.py`; weekly. |
 | `/parliamentarians.json` | 1 | 405,665 | 37,766 | `{meta,people:[{name,pid,speeches,party,states,chambers,first,last,representation?}]}`; 1,557 speech-derived entries in this snapshot. | `export_people.sh` / `export_parliamentarians.py`; weekly. |
+| `/parliament/sitting-days.json` | 1 | 6,337 | 937 | `{schema_version,published,timezone,coverage,expires,years,days:[{date,house,senate}]}`; federal sitting days from the Parliament's published calendars, for Today. Added 13 November 2026, after the baseline. | `build_sitting_days.py`; explicit, when APH publishes or revises a calendar. See [DATA-SITTING-DAYS.md](DATA-SITTING-DAYS.md). |
 | `/pay.json` | 1 | 589,785 | 92,477 | `{meta,base,offices,current,names,people}`; dated determinations and office supplements, not net take-home pay. | `build_pay.py --refresh`; monthly. |
 | `/photos/people.json`, `/photos/credits.json`, `/photos/:key.webp`, `/photos/jpg/:key.jpg` | 1,702 | 9,657,219 | 9,512,543 | Name-to-portrait map and Commons attribution; 850 WebP portraits and 850 JPEG twins, plus two JSON maps. | `parli/ingest/photos.py`, `backfill_photos_oa.py` and reviewed Commons workflow; explicit refresh; JPEG twins via `portal/og/build.mjs portraits`. |
 | `/reports/{index,:slug}.json` | 8 | 1,293,250 | 305,721 | Seven reports plus index; sections/claims with citations and generated-summary labels. One report is an allocation manifest. | `generate_reports.py`; explicit generation. Header comment says several regenerations/day; no matching scheduler established here. |

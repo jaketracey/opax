@@ -3,9 +3,9 @@ import {appJson, appRead, melbourneDay, readOnly, validDate, APP_CACHE} from './
 import type {DailyPost} from './daily-post'
 
 type EditionEnv = Pick<Env, 'COMMUNITY_DB'>
-type EditionRow = {date: string; subject: string; post_json: string; created_at: string}
+export type EditionRow = {date: string; subject: string; post_json: string; created_at: string}
 
-function storedEdition(row: EditionRow): DailyPost {
+export function storedEdition(row: EditionRow): DailyPost {
   const post = JSON.parse(row.post_json) as DailyPost
   if (!post || !validDate(row.date) || post.date !== row.date || post.subject !== row.subject
     || !['politician','bill','grant','topic','program','largest'].includes(post.kind)

@@ -7,10 +7,16 @@ const RESERVATION_SECONDS = 60
 const MAX_MONTHLY_SECONDS = 40_000
 const MAX_ACTIVE_SESSIONS = 2
 const PROVIDER_ORIGIN = 'https://api.elevenlabs.io'
+/** The relay writes its heartbeat and checks its own row this often. */
+export const VOICE_WATCH_SECONDS = 15
+/** A connecting or active row unseen this long has no live relay left. */
+export const VOICE_LIVENESS_SECONDS = 45
+/** A relay that cannot confirm its row this long closes itself, inside the liveness window. */
+const RELAY_SELF_STOP_SECONDS = 35
 
 type Session = {
   id: string; member_id: string | null; state: string; reserved_seconds: number; charged_seconds: number
-  created_at: number; expires_at: number; started_at: number | null; conversation_id: string | null
+  created_at: number; expires_at: number; started_at: number | null; conversation_id: string | null; last_seen_at?: number | null
 }
 type VoiceEnv = Env & VoiceConfig
 const monthStart = (timestamp: number) => {const d = new Date(timestamp * 1000); return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1) / 1000}
@@ -27,17 +33,41 @@ const BALANCES_SQL = `SELECT
 const balanceArgs = (env: VoiceEnv, memberId: string | null, timestamp: number) =>
   [memberId, VOICE_ALLOWANCE_SECONDS, VOICE_ALLOWANCE_SECONDS, memberId, monthlyLimit(env), monthStart(timestamp) - VOICE_ALLOWANCE_SECONDS - RESERVATION_SECONDS - 60]
 
+// The charge for ending a connecting or active session at time ?: its time so
+// far plus the watch interval its relay may take to notice, but never past the
+// last instant a relay could still run (last heartbeat plus the liveness
+// window, since a relay that cannot heartbeat closes itself). Capped at the
+// reservation. Bind (timestamp + VOICE_WATCH_SECONDS).
+const ENDED_CHARGE_SQL = `MIN(reserved_seconds,MAX(0,MIN(?,last_seen_at+${VOICE_LIVENESS_SECONDS})-started_at))`
+/** The same charge in JS, for status. Rows from before liveness count their time so far. */
+function endedCharge(session: Session, timestamp: number): number {
+  if (session.started_at == null) return 0
+  const until = session.last_seen_at == null ? timestamp : Math.min(timestamp + VOICE_WATCH_SECONDS, session.last_seen_at + VOICE_LIVENESS_SECONDS)
+  return Math.min(session.reserved_seconds, Math.max(0, until - session.started_at))
+}
+
 export async function expireVoiceSessions(env: VoiceEnv, timestamp = now()): Promise<void> {
   // No connection was ever claimed, so an unused reservation is safe to release.
   await env.COMMUNITY_DB.prepare("UPDATE voice_sessions SET state='cancelled',charged_seconds=0,closed_at=? WHERE state='reserved' AND expires_at<=?").bind(timestamp, timestamp).run()
-  // Uncertain disconnects remain fully charged. Never trust a client claim that
-  // the call ended, or give it another reservation while an old socket can run.
+  // A relay that stopped heartbeating has gone: a Worker deploy or an evicted
+  // isolate can drop it without any close event. A live relay that cannot
+  // heartbeat closes itself sooner (RELAY_SELF_STOP_SECONDS), so no provider
+  // socket outlives this. Rows without a heartbeat predate liveness and keep
+  // the expires_at rule below.
+  await env.COMMUNITY_DB.prepare(`UPDATE voice_sessions SET state='expired',charged_seconds=${ENDED_CHARGE_SQL},closed_at=? WHERE state IN ('connecting','active') AND last_seen_at IS NOT NULL AND last_seen_at<?`).bind(timestamp + VOICE_WATCH_SECONDS, timestamp, timestamp - VOICE_LIVENESS_SECONDS).run()
+  // Past the hard cap, an uncertain disconnect remains fully charged. Never
+  // trust a client claim that the call ended, or give it another reservation
+  // while an old socket can run.
   await env.COMMUNITY_DB.prepare("UPDATE voice_sessions SET state='expired',closed_at=? WHERE state IN ('connecting','active') AND expires_at<=?").bind(timestamp, timestamp).run()
   await env.COMMUNITY_DB.prepare("UPDATE voice_sessions SET conversation_id=NULL WHERE member_id IS NULL AND state IN ('closed','cancelled','expired') AND closed_at<=?").bind(timestamp - 86400).run()
 }
 
 /** One SQLite write atomically checks member balance, monthly budget and locks. */
 export async function reserveVoiceSession(env: VoiceEnv, memberId: string, timestamp = now()): Promise<Session | null> {
+  return reserveStatement(env, memberId, timestamp).first<Session>()
+}
+
+function reserveStatement(env: VoiceEnv, memberId: string, timestamp: number): D1PreparedStatement {
   const id = crypto.randomUUID()
   return env.COMMUNITY_DB.prepare(`
     WITH balances AS (${BALANCES_SQL})
@@ -46,11 +76,35 @@ export async function reserveVoiceSession(env: VoiceEnv, memberId: string, times
     WHERE personal>0 AND monthly>0 AND active<?
       AND NOT EXISTS (SELECT 1 FROM voice_sessions WHERE member_id=? AND state IN ('reserved','connecting','active'))
     RETURNING *
-  `).bind(...balanceArgs(env, memberId, timestamp), id, memberId, timestamp, timestamp + RESERVATION_SECONDS, MAX_ACTIVE_SESSIONS, memberId).first<Session>()
+  `).bind(...balanceArgs(env, memberId, timestamp), id, memberId, timestamp, timestamp + RESERVATION_SECONDS, MAX_ACTIVE_SESSIONS, memberId)
+}
+
+/**
+ * Start takes over: end the member's open session and reserve a new one in one
+ * D1 transaction. An unused reservation is cancelled free. A connecting or
+ * active session closes, charged ENDED_CHARGE_SQL; its relay sees the closed
+ * row at its next watch (within VOICE_WATCH_SECONDS) and closes both sockets,
+ * so at most one provider socket per member outlives that interval. Sessions
+ * from before liveness (no heartbeat, so no watch) are left to expire.
+ * The reservation then runs the same balance, budget and capacity checks.
+ */
+export async function takeOverVoiceSession(env: VoiceEnv, memberId: string, timestamp = now()): Promise<{session: Session | null; replaced: boolean}> {
+  const end = env.COMMUNITY_DB.prepare(`UPDATE voice_sessions SET
+      state=CASE WHEN state='reserved' THEN 'cancelled' ELSE 'closed' END,
+      charged_seconds=CASE WHEN state='reserved' THEN 0 ELSE ${ENDED_CHARGE_SQL} END,
+      closed_at=?
+    WHERE member_id=? AND (state='reserved' OR (state IN ('connecting','active') AND last_seen_at IS NOT NULL))`).bind(timestamp + VOICE_WATCH_SECONDS, timestamp, memberId)
+  const [ended, reserved] = await env.COMMUNITY_DB.batch<Session>([end, reserveStatement(env, memberId, timestamp)])
+  return {session: reserved.results?.[0] ?? null, replaced: Number(ended.meta?.changes ?? 0) > 0}
+}
+
+/** The relay's heartbeat and watch in one write: false once the row was ended elsewhere. */
+export async function heartbeatVoiceSession(env: VoiceEnv, id: string, timestamp = now()): Promise<boolean> {
+  return Boolean(await env.COMMUNITY_DB.prepare("UPDATE voice_sessions SET last_seen_at=? WHERE id=? AND state IN ('connecting','active') RETURNING id").bind(timestamp, id).first())
 }
 
 export async function claimVoiceSession(env: VoiceEnv, memberId: string, id: string, timestamp = now()): Promise<Session | null> {
-  return env.COMMUNITY_DB.prepare("UPDATE voice_sessions SET state='connecting',started_at=?,expires_at=?+reserved_seconds+30 WHERE id=? AND member_id=? AND state='reserved' AND expires_at>? RETURNING *").bind(timestamp, timestamp, id, memberId, timestamp).first<Session>()
+  return env.COMMUNITY_DB.prepare("UPDATE voice_sessions SET state='connecting',started_at=?,last_seen_at=?,expires_at=?+reserved_seconds+30 WHERE id=? AND member_id=? AND state='reserved' AND expires_at>? RETURNING *").bind(timestamp, timestamp, timestamp, id, memberId, timestamp).first<Session>()
 }
 
 /** Call only after the provider socket confirms closure. Idempotent and atomic. */
@@ -72,9 +126,10 @@ async function voiceStatus(env: VoiceEnv, memberId: string | null) {
   const access = await env.COMMUNITY_DB.prepare('SELECT unlimited FROM voice_access WHERE member_id=?').bind(memberId).first<{unlimited:number}>()
   const unlimited = access?.unlimited === 1
   const active = await env.COMMUNITY_DB.prepare("SELECT * FROM voice_sessions WHERE member_id=? AND state IN ('reserved','connecting','active')").bind(memberId).first<Session>()
-  const reservedRemaining = active ? Math.max(0, active.reserved_seconds - (active.started_at == null ? 0 : timestamp - active.started_at)) : 0
+  // Start ends an open session, so its unused reservation counts as available.
+  const reservedRemaining = active ? Math.max(0, active.reserved_seconds - endedCharge(active, timestamp)) : 0
   return {enabled: configured(env), signed_in: true, budget_open, unlimited, total_seconds: unlimited ? null : VOICE_ALLOWANCE_SECONDS,
-    remaining_seconds: unlimited ? (active ? reservedRemaining : VOICE_ALLOWANCE_SECONDS) : Math.max(0, balances.personal) + reservedRemaining,
+    remaining_seconds: unlimited ? VOICE_ALLOWANCE_SECONDS : Math.max(0, balances.personal) + reservedRemaining,
     active_session: active ? {id: active.id, expires_at: active.expires_at, state: active.state} : null}
 }
 
@@ -114,16 +169,19 @@ export function voiceClientEvent(raw: unknown, sessionId: string, seconds: numbe
 /** Isolated relay logic allows timer, replay and close-handshake regression tests. */
 export function relayVoiceSockets(client: WebSocket, upstream: WebSocket, session: Session, onClosed: (seconds: number) => void, onConversation: (id: string) => void,
   clock: {time: () => number; schedule: (fn: () => void, ms: number) => ReturnType<typeof setTimeout>; cancel: (id: ReturnType<typeof setTimeout>) => void} = {time: Date.now, schedule: setTimeout, cancel: clearTimeout},
-  onClosing: (completion: Promise<void>) => void = () => {}) {
+  onClosing: (completion: Promise<void>) => void = () => {},
+  heartbeat?: () => Promise<boolean>) {
   const started = clock.time(), deadline = started + session.reserved_seconds * 1000
   let initialized = false, closing = false, reconciled = false, second = 0, messages = 0
+  // Liveness: the last time the relay confirmed its row was still live.
+  let confirmed = started, watching = false, watchTimer: ReturnType<typeof setTimeout> | undefined
   let transportClosed!: () => void
   const transportCompletion = new Promise<void>(resolve => {transportClosed = resolve})
   const close = (socket: WebSocket, code: number, reason: string) => {try {socket.close(code, reason)} catch {/* A socket may already have closed. */}}
   const stop = (code = 1000, reason = 'Voice conversation ended') => {
     if (closing) return
     closing = true
-    clock.cancel(timer); clock.cancel(initTimer)
+    clock.cancel(timer); clock.cancel(initTimer); if (watchTimer !== undefined) clock.cancel(watchTimer)
     // The browser disconnect otherwise ends the invocation before a remote
     // close acknowledgement arrives. Hold it briefly, without granting credit
     // if that acknowledgement never arrives.
@@ -133,8 +191,28 @@ export function relayVoiceSockets(client: WebSocket, upstream: WebSocket, sessio
   }
   const timer = clock.schedule(() => stop(1000, 'Your free voice time has finished'), session.reserved_seconds * 1000)
   const initTimer = clock.schedule(() => {if (!initialized) stop(1008, 'Voice connection timed out')}, 10_000)
+  // Unable to confirm the row for RELAY_SELF_STOP_SECONDS: close before the
+  // server may treat the session as ended and let a new one start.
+  const unconfirmed = () => heartbeat !== undefined && clock.time() - confirmed > RELAY_SELF_STOP_SECONDS * 1000
+  // A takeover from a new request cannot reach this relay, so the relay
+  // watches its own row: one write both records liveness and reports whether
+  // the session is still connecting or active.
+  const watch = () => {
+    if (closing || !heartbeat) return
+    watchTimer = clock.schedule(watch, VOICE_WATCH_SECONDS * 1000)
+    if (unconfirmed()) {stop(1011, 'Voice connection lost'); return}
+    if (watching) return
+    watching = true
+    const at = clock.time()
+    heartbeat().then(live => {
+      if (live) confirmed = Math.max(confirmed, at)
+      else stop(1000, 'Voice conversation replaced')
+    }, () => {/* A transient database error; the self-stop bound covers a lasting one. */}).finally(() => {watching = false})
+  }
+  if (heartbeat) watchTimer = clock.schedule(watch, VOICE_WATCH_SECONDS * 1000)
   client.addEventListener('message', event => {
     if (closing) return
+    if (unconfirmed()) {stop(1011, 'Voice connection lost'); return}
     if (clock.time() >= deadline) {stop(1000, 'Your free voice time has finished'); return}
     const currentSecond = Math.floor(clock.time() / 1000)
     if (second !== currentSecond) {second = currentSecond; messages = 0}
@@ -147,6 +225,7 @@ export function relayVoiceSockets(client: WebSocket, upstream: WebSocket, sessio
   })
   upstream.addEventListener('message', event => {
     if (closing) return
+    if (unconfirmed()) {stop(1011, 'Voice connection lost'); return}
     if (clock.time() >= deadline) {stop(1000, 'Your free voice time has finished'); return}
     if (typeof event.data !== 'string' || event.data.length > 1_000_000) {stop(1008, 'Invalid provider message'); return}
     try {
@@ -163,8 +242,10 @@ export function relayVoiceSockets(client: WebSocket, upstream: WebSocket, sessio
   upstream.addEventListener('error', () => stop(1011, 'Voice provider connection interrupted'))
   upstream.addEventListener('close', event => {
     stop()
-    // A network loss (1006 / unclean close) cannot prove the remote call ended.
-    // Keep the reservation in that case until its provider-enforced deadline.
+    // A network loss (1006 / unclean close) cannot prove the remote call ended,
+    // so it is not reconciled here. The row stays open until the liveness sweep
+    // ends it, charged up to its last heartbeat plus VOICE_LIVENESS_SECONDS
+    // (or its full reservation at expires_at if it never heartbeated).
     if (!reconciled && event.wasClean && event.code !== 1006) {reconciled = true; onClosed(Math.max(0, (clock.time() - started) / 1000))}
     transportClosed()
   })
@@ -211,17 +292,22 @@ async function connect(req: Request, env: VoiceEnv, ctx: ExecutionContext, membe
   if (!upstream) {await response.body?.cancel(); await releaseUnusedSession(env, id); throw new CommunityError(503, 'The voice provider is busy. Please try again shortly.')}
   const [browser, client] = Object.values(new WebSocketPair())
   const startedAt = now()
+  let activated: boolean | null = null
   try {
-    await env.COMMUNITY_DB.prepare("UPDATE voice_sessions SET state='active',started_at=?,expires_at=? WHERE id=? AND state='connecting'").bind(startedAt, startedAt + session.reserved_seconds + 30, id).run()
-  } catch {
+    const result = await env.COMMUNITY_DB.prepare("UPDATE voice_sessions SET state='active',started_at=?,last_seen_at=?,expires_at=? WHERE id=? AND state='connecting'").bind(startedAt, startedAt, startedAt + session.reserved_seconds + 30, id).run()
+    activated = Number(result.meta?.changes ?? 0) > 0
+  } catch { /* Reported below. */ }
+  if (!activated) {
+    // A newer start took this session over while it was connecting.
     upstream.accept(); client.accept()
     upstream.close(1011, 'Session unavailable'); client.close(1011, 'Session unavailable')
-    throw new CommunityError(503, 'The voice session could not be recorded.')
+    throw activated === false ? new CommunityError(409, 'This voice connection was replaced by a newer one.') : new CommunityError(503, 'The voice session could not be recorded.')
   }
   relayVoiceSockets(client, upstream, session,
     seconds => ctx.waitUntil(reconcileVoiceSession(env, id, seconds)),
     conversationId => ctx.waitUntil(env.COMMUNITY_DB.prepare("UPDATE voice_sessions SET conversation_id=? WHERE id=? AND conversation_id IS NULL").bind(conversationId, id).run().then(() => {})),
-    undefined, completion => ctx.waitUntil(completion))
+    undefined, completion => ctx.waitUntil(completion),
+    () => heartbeatVoiceSession(env, id))
   // ElevenLabs can send metadata immediately on upgrade, before client init.
   // Complete database I/O and attach every listener before activating either
   // socket; otherwise that first event is lost during an awaited D1 write.
@@ -261,10 +347,13 @@ export async function voiceRoute(req: Request, env: VoiceEnv, ctx: ExecutionCont
       await limit(env, 'voice-start-member:' + current.id, 6, 60)
       await limit(env, 'voice-start-ip:' + (req.headers.get('cf-connecting-ip') ?? 'unknown'), 20, 60)
       await expireVoiceSessions(env)
-      const session = await reserveVoiceSession(env, current.id)
+      // Pressing Start ends the member's earlier conversation (any device) and
+      // reserves the new one. Its relay closes within VOICE_WATCH_SECONDS.
+      const {session, replaced} = await takeOverVoiceSession(env, current.id)
       if (!session) {
         const status = await voiceStatus(env, current.id)
-        if (status.active_session) throw new CommunityError(409, 'You already have a voice conversation open.')
+        // Only a session from before liveness (no heartbeat, no watch) remains.
+        if (status.active_session) throw new CommunityError(409, 'Your earlier voice conversation is still ending. Please try again in a minute.')
         if (status.remaining_seconds <= 0) throw new CommunityError(403, 'You have used your ten free minutes of voice conversation.')
         return status.budget_open
           ? json({error:'The voice assistant is at capacity. Please try again later.', reason:'capacity'}, 429)
@@ -272,7 +361,7 @@ export async function voiceRoute(req: Request, env: VoiceEnv, ctx: ExecutionCont
       }
       const url = new URL('/api/voice/connect', env.COMMUNITY_ORIGIN)
       url.protocol = 'wss:'; url.searchParams.set('session_id', session.id)
-      return json({session_id:session.id, transport:'websocket', signed_url:url.href, remaining_seconds:session.reserved_seconds, expires_at:session.expires_at}, 201)
+      return json({session_id:session.id, transport:'websocket', signed_url:url.href, remaining_seconds:session.reserved_seconds, expires_at:session.expires_at, replaced}, 201)
     }
     if (path === 'connect' && req.method === 'GET') {
       if (!configured(env)) throw new CommunityError(503, 'Voice is currently unavailable.')
