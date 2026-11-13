@@ -6,11 +6,12 @@ Also builds a contact sheet PNG for a visual check of the crops. Honest UA, ~1 r
 import sys as _http_sys
 from pathlib import Path as _HttpPath
 _http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
-from parli.ingest import http as source_http
+from scripts import portrait_http as source_http
 import json, os, io, time, urllib.parse, re
 from pathlib import Path
 import requests
 from PIL import Image, ImageDraw
+from scripts.wikidata_mpid_match import free_licence, parliament_source
 W=Path(__file__).resolve().parents[1]; PH=W/"portal/public/photos"; SCR=W/"scripts"/"_photos_work"; SCR.mkdir(exist_ok=True)
 UA={"User-Agent":source_http.USER_AGENT}; S=source_http.Session(); S.headers.update(UA)
 import sys
@@ -29,29 +30,36 @@ meta={}
 tl=list(titles.items())
 for i in range(0,len(tl),50):
     chunk=tl[i:i+50]
-    r=S.get("https://commons.wikimedia.org/w/api.php", params={"action":"query","prop":"imageinfo","iiprop":"extmetadata|url","iiurlwidth":"480","titles":"|".join(t for _,t in chunk),"format":"json","formatversion":"2"}, timeout=120).json()
+    response=S.get("https://commons.wikimedia.org/w/api.php", params={"action":"query","prop":"imageinfo","iiprop":"extmetadata|url","iiurlwidth":"640","titles":"|".join(t for _,t in chunk),"format":"json","formatversion":"2"}, timeout=120, expected_json=True)
+    response.raise_for_status(); r=response.json()
     norm={p.get("title"):p for p in r["query"]["pages"]}
     for n in r["query"].get("normalized",[]): norm[n["from"]]=norm.get(n["to"])
     for qid,t in chunk:
         p=norm.get(t) or {}
         ii=(p.get("imageinfo") or [{}])[0]; ext=ii.get("extmetadata",{})
         g=lambda k: re.sub(r"<[^>]+>","",ext.get(k,{}).get("value","")).strip()
-        meta[qid]={"file":t,"thumb":ii.get("thumburl"),"page":ii.get("descriptionurl"),"licence":g("LicenseShortName"),"licence_url":g("LicenseUrl"),"artist":g("Artist"),"credit":g("Credit"),"attribution":g("Attribution"),"attribution_required":g("AttributionRequired")}
+        meta[qid]={"file":t,"thumb":ii.get("thumburl") or ii.get("url"),"page":ii.get("descriptionurl"),"licence":g("LicenseShortName"),"licence_url":g("LicenseUrl"),"artist":g("Artist"),"credit":g("Credit"),"attribution":g("Attribution"),"attribution_required":g("AttributionRequired"),"official_source":parliament_source(ext)}
     print(f"[meta] {min(i+50,len(tl))}/{len(tl)}", flush=True); time.sleep(1)
 lic=collections=__import__("collections").Counter(m["licence"] for m in meta.values()); print("[meta] licences:", lic.most_common(12), flush=True)
-OK_LICENCE=re.compile(r"^(CC0|CC BY(-SA)?( \d\.\d)?( [a-z]{2})?|Public domain|GFDL|OGL.*|No restrictions|Copyrighted free use.*|CC BY( \d\.\d)?|CC BY-SA( \d\.\d)?( [A-Za-z]+)?)", re.I)
+json.dump(meta, open(SCR/"commons_metadata.json", "w"), ensure_ascii=False, indent=1)
 # 2. download + crop
 pm=json.load(open(PH/"people.json")); credits=json.load(open(PH/"credits.json")) if (PH/"credits.json").exists() else {}
 ok=skip=bad=0; sheet=[]
 for qid,v in by_qid.items():
     m=meta.get(qid) or {}
     if not m.get("thumb") or not m.get("licence"): bad+=1; print(f"  no-meta {qid} {v['label']} {m.get('file')}", flush=True); continue
-    if not OK_LICENCE.match(m["licence"]) and "cc" not in m["licence"].lower() and "public" not in m["licence"].lower():
+    if m.get("official_source"):
+        skip+=1; print(f"  official-source-skip {qid} {v['label']} [{m['official_source']}]", flush=True); continue
+    if not free_licence(m["licence"]):
         skip+=1; print(f"  licence-skip {qid} {v['label']} [{m['licence']}]", flush=True); continue
     out=PH/f"wd-{qid}.webp"
     if not out.exists():
         try:
             r=S.get(m["thumb"], timeout=60); r.raise_for_status(); im=Image.open(io.BytesIO(r.content)).convert("RGB")
+            # Keep the API's direct Commons thumbnail for recrop --new. This avoids
+            # a second download and Special:FilePath's unchecked redirect.
+            (SCR/"src").mkdir(exist_ok=True)
+            (SCR/"src"/f"wd-{qid}.jpg").write_bytes(r.content)
         except Exception as e:
             bad+=1; print(f"  dl-fail {qid} {v['label']} {e}", flush=True); time.sleep(1); continue
         w,h=im.size; s=min(w,h)
@@ -61,7 +69,7 @@ for qid,v in by_qid.items():
         im=im.crop((left,top,left+s,top+s)).resize((200,200),Image.LANCZOS); im.save(out,"WEBP",quality=82)
         time.sleep(1.0)
     for n in v["names"]: pm[n.strip().lower()]=f"wd-{qid}"
-    credits[f"wd-{qid}"]={"file":m["file"],"page":m["page"],"licence":m["licence"],"licence_url":m["licence_url"],"artist":m["artist"][:120],"credit":m["credit"][:160],"attribution":m["attribution"][:200],"wikidata":qid,"label":v["label"]}
+    credits[f"wd-{qid}"]={"file":m["file"],"page":m["page"],"licence":m["licence"],"licence_url":m["licence_url"],"artist":m["artist"],"credit":m["credit"],"attribution":m["attribution"],"wikidata":qid,"label":v["label"]}
     ok+=1; sheet.append((qid,v["label"],v["names"][0]))
 json.dump(pm, open(PH/"people.json","w"), ensure_ascii=False, indent=0, sort_keys=True)
 json.dump(credits, open(PH/"credits.json","w"), ensure_ascii=False, indent=0, sort_keys=True)

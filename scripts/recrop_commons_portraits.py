@@ -14,14 +14,15 @@ Writes contact sheets to scripts/_photos_work/recrop_sheet_<n>.png for a visual 
 import sys as _http_sys
 from pathlib import Path as _HttpPath
 _http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
-from parli.ingest import http as source_http
+from scripts import portrait_http as source_http
 import json, os, sys, collections, time, urllib.parse
 from pathlib import Path
 import cv2, numpy as np, requests
 from PIL import Image, ImageDraw
+cv2.setNumThreads(1)
 W=Path(__file__).resolve().parents[1]; PH=W/"portal/public/photos"; WK=W/"scripts/_photos_work"; SRC=WK/"src"
 pm=json.load(open(PH/"people.json")); credits=json.load(open(PH/"credits.json")); matches=json.load(open(WK/"wikidata_matches.json"))
-drop_names=set(json.load(open(WK/"wikidata_drop.json")))
+drop_names=set(json.load(open(WK/"wikidata_drop.json"))) if (WK/"wikidata_drop.json").exists() else set()
 ONLY=None   # --new: only this run's matches (wikidata_matches_new.json); sources are fetched at 640px if missing
 if "--new" in sys.argv:
     ONLY={f"wd-{m['qid']}" for m in json.load(open(WK/"wikidata_matches_new.json")).values()}

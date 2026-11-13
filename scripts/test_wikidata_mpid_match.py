@@ -3,7 +3,7 @@ single APH MP ID for their pid. Invented names."""
 import sys, unittest
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from scripts.wikidata_mpid_match import file_title, parliament_source, plan
+from scripts.wikidata_mpid_match import file_title, free_licence, parliament_source, plan
 
 
 class Plan(unittest.TestCase):
@@ -56,6 +56,12 @@ class ParliamentSource(unittest.TestCase):
     def test_file_title(self):
         self.assertEqual(file_title("http://commons.wikimedia.org/wiki/Special:FilePath/Tessa%20Quill%20(2026).jpg"),
                          "File:Tessa Quill (2026).jpg")
+
+    def test_only_explicit_free_licences_pass(self):
+        for licence in ["CC BY 4.0", "CC BY-SA 2.5 au", "Public domain", "CC0", "GFDL"]:
+            self.assertTrue(free_licence(licence), licence)
+        for licence in ["CC BY-NC 4.0", "CC BY-ND 4.0", "CC BY 4.0 NC", "CC BY 9.9", "CC", "Attribution", "Publicity rights"]:
+            self.assertFalse(free_licence(licence), licence)
 
 
 if __name__ == "__main__":

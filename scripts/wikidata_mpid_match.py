@@ -57,6 +57,12 @@ PARLIAMENT_NAME = re.compile(r"\bParlInfo\b|Parliament of (?:Australia|New South
                              r"Western Australia|Tasmania)|Australian Parliament House|Department of Parliamentary Services|"
                              r"(?:Northern Territory|ACT) Legislative Assembly", re.I)
 SOURCE_FIELDS = ("Credit", "Artist", "Attribution", "ImageDescription")
+FREE_LICENCE = re.compile(r"CC0(?: 1\.0)?|CC BY(?:-SA)? (?:1\.0|2\.[05]|3\.0|4\.0)(?: AU|AT|DE|FR|IGO|NZ|UK|US)?|Public domain|GFDL(?: 1\.[123])?|OGL v[123]\.0|No restrictions|Copyrighted free use", re.I)
+
+
+def free_licence(licence):
+    """Allow explicit free licences, never an NC/ND suffix or a vague CC tag."""
+    return bool(FREE_LICENCE.fullmatch(licence.strip()))
 
 
 def parliament_source(extmetadata):

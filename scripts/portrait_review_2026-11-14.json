@@ -1,0 +1,2174 @@
+{
+  "reviewed": "2026-11-14",
+  "baseline": {
+    "roster_profiles": 1565,
+    "missing": 701,
+    "current_missing": 34
+  },
+  "after": {
+    "missing": 604,
+    "current_missing": 30
+  },
+  "classification": {
+    "d": 259,
+    "c": 93,
+    "unavailable": 317,
+    "a": 26,
+    "b": 6
+  },
+  "mapped_by_class": {
+    "a": 26,
+    "b": 4,
+    "c": 67
+  },
+  "requests": {
+    "commons": 87,
+    "wikidata": 13,
+    "refusals": 0,
+    "model_downloads": 1
+  },
+  "new_files": 67,
+  "new_file_licences": {
+    "CC BY 2.0": 4,
+    "CC BY 3.0": 3,
+    "CC BY 3.0 au": 4,
+    "CC BY 4.0": 12,
+    "CC BY-SA 2.0": 3,
+    "CC BY-SA 2.5": 1,
+    "CC BY-SA 2.5 au": 4,
+    "CC BY-SA 3.0": 5,
+    "CC BY-SA 3.0 au": 2,
+    "CC BY-SA 4.0": 18,
+    "CC0": 4,
+    "Public domain": 7
+  },
+  "mappings": [
+    {
+      "name": "A. Koutsantonis",
+      "key": "wd-Q7816502",
+      "class": "c",
+      "wikidata": "Q7816502",
+      "source_url": "https://www.wikidata.org/wiki/Q7816502",
+      "label": "Tom Koutsantonis",
+      "speech_years": [
+        2020,
+        2024
+      ],
+      "dated_positions": {
+        "sa_ha": [
+          [
+            1997,
+            2002
+          ],
+          [
+            2002,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "A. Piccolo",
+      "key": "wd-Q7823174",
+      "class": "c",
+      "wikidata": "Q7823174",
+      "source_url": "https://www.wikidata.org/wiki/Q7823174",
+      "label": "Tony Piccolo",
+      "speech_years": [
+        2020,
+        2024
+      ],
+      "dated_positions": {
+        "sa_ha": [
+          [
+            2006,
+            2026
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Abbott",
+      "key": "wd-Q348577",
+      "class": "c",
+      "wikidata": "Q348577",
+      "source_url": "https://www.wikidata.org/wiki/Q348577",
+      "label": "Tony Abbott",
+      "speech_years": [
+        1999,
+        2004
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1994,
+            2019
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Adams",
+      "key": "wd-Q5272614",
+      "class": "c",
+      "wikidata": "Q5272614",
+      "source_url": "https://www.wikidata.org/wiki/Q5272614",
+      "label": "Dick Adams",
+      "speech_years": [
+        2000,
+        2000
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1993,
+            2013
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Aitchison",
+      "key": "wd-Q19786993",
+      "class": "a",
+      "wikidata": "Q19786993",
+      "source_url": "https://www.wikidata.org/wiki/Q19786993",
+      "label": "Jenny Aitchison",
+      "speech_years": [
+        2025,
+        2026
+      ],
+      "dated_positions": {
+        "nsw_la": [
+          [
+            2015,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Amanda Stoker",
+      "key": "wd-Q50808634",
+      "class": "c",
+      "wikidata": "Q50808634",
+      "source_url": "https://www.wikidata.org/wiki/Q50808634",
+      "label": "Amanda Stoker",
+      "speech_years": [
+        2019,
+        2022
+      ],
+      "dated_positions": {
+        "qld_la": [
+          [
+            2024,
+            null
+          ]
+        ],
+        "senate": [
+          [
+            2018,
+            2022
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Anderson",
+      "key": "wd-Q3180912",
+      "class": "c",
+      "wikidata": "Q3180912",
+      "source_url": "https://www.wikidata.org/wiki/Q3180912",
+      "label": "John Anderson",
+      "speech_years": [
+        2004,
+        2004
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1989,
+            2007
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Anna Burke",
+      "key": "wd-Q4766888",
+      "class": "c",
+      "wikidata": "Q4766888",
+      "source_url": "https://www.wikidata.org/wiki/Q4766888",
+      "label": "Anna Burke",
+      "speech_years": [
+        1998,
+        2016
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1998,
+            2016
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Anthony Cianflone",
+      "key": "wd-Q115471728",
+      "class": "c",
+      "wikidata": "Q115471728",
+      "source_url": "https://www.wikidata.org/wiki/Q115471728",
+      "label": "Anthony Cianflone",
+      "speech_years": [
+        2023,
+        2026
+      ],
+      "dated_positions": {
+        "vic_la": [
+          [
+            2022,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Baird",
+      "key": "wd-Q4977100",
+      "class": "c",
+      "wikidata": "Q4977100",
+      "source_url": "https://www.wikidata.org/wiki/Q4977100",
+      "label": "Bruce Baird",
+      "speech_years": [
+        2000,
+        2005
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1998,
+            2007
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Benjamin Hood",
+      "key": "wd-Q116885607",
+      "class": "b",
+      "wikidata": "Q116885607",
+      "source_url": "https://www.wikidata.org/wiki/Q116885607",
+      "label": "Ben Hood",
+      "speech_years": [
+        2026,
+        2026
+      ],
+      "dated_positions": {
+        "sa_lc": [
+          [
+            2023,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Billson",
+      "key": "wd-Q4977155",
+      "class": "c",
+      "wikidata": "Q4977155",
+      "source_url": "https://www.wikidata.org/wiki/Q4977155",
+      "label": "Bruce Billson",
+      "speech_years": [
+        2000,
+        2004
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1996,
+            2016
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Bishop",
+      "key": "wd-Q434858",
+      "class": "c",
+      "wikidata": "Q434858",
+      "source_url": "https://www.wikidata.org/wiki/Q434858",
+      "label": "Julie Bishop",
+      "speech_years": [
+        2017,
+        2017
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1998,
+            2019
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Bowen",
+      "key": "wd-Q1077015",
+      "class": "c",
+      "wikidata": "Q1077015",
+      "source_url": "https://www.wikidata.org/wiki/Q1077015",
+      "label": "Chris Bowen",
+      "speech_years": [
+        2012,
+        2012
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            2004,
+            2010
+          ],
+          [
+            2010,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Braddock",
+      "key": "wd-Q100606032",
+      "class": "c",
+      "wikidata": "Q100606032",
+      "source_url": "https://www.wikidata.org/wiki/Q100606032",
+      "label": "Andrew Braddock",
+      "speech_years": [
+        2024,
+        2026
+      ],
+      "dated_positions": {
+        "act_la": [
+          [
+            2020,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Brereton",
+      "key": "wd-Q15525018",
+      "class": "a",
+      "wikidata": "Q15525018",
+      "source_url": "https://www.wikidata.org/wiki/Q15525018",
+      "label": "Laurie Brereton",
+      "speech_years": [
+        2000,
+        2000
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1990,
+            2004
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Bruce Scott",
+      "key": "wd-Q4978267",
+      "class": "c",
+      "wikidata": "Q4978267",
+      "source_url": "https://www.wikidata.org/wiki/Q4978267",
+      "label": "Bruce Scott",
+      "speech_years": [
+        1998,
+        2016
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1990,
+            2016
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Buckingham",
+      "key": "wd-Q13412180",
+      "class": "a",
+      "wikidata": "Q13412180",
+      "source_url": "https://www.wikidata.org/wiki/Q13412180",
+      "label": "Jeremy Buckingham",
+      "speech_years": [
+        2025,
+        2026
+      ],
+      "dated_positions": {
+        "nsw_lc": [
+          [
+            2011,
+            2019
+          ],
+          [
+            2023,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Burke",
+      "key": "wd-Q4766888",
+      "class": "c",
+      "wikidata": "Q4766888",
+      "source_url": "https://www.wikidata.org/wiki/Q4766888",
+      "label": "Anna Burke",
+      "speech_years": [
+        2000,
+        2002
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1998,
+            2016
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Chandler-Mather",
+      "key": "wd-Q112106832",
+      "class": "c",
+      "wikidata": "Q112106832",
+      "source_url": "https://www.wikidata.org/wiki/Q112106832",
+      "label": "Max Chandler-Mather",
+      "speech_years": [
+        2022,
+        2022
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            2022,
+            2025
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Chapman",
+      "key": "wd-Q7925455",
+      "class": "a",
+      "wikidata": "Q7925455",
+      "source_url": "https://www.wikidata.org/wiki/Q7925455",
+      "label": "Vickie Chapman",
+      "speech_years": [
+        2022,
+        2022
+      ],
+      "dated_positions": {
+        "sa_ha": [
+          [
+            2002,
+            2022
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Cheyne",
+      "key": "wd-Q23001033",
+      "class": "c",
+      "wikidata": "Q23001033",
+      "source_url": "https://www.wikidata.org/wiki/Q23001033",
+      "label": "Tara Cheyne",
+      "speech_years": [
+        2024,
+        2026
+      ],
+      "dated_positions": {
+        "act_la": [
+          [
+            2016,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Clark",
+      "key": "wd-Q7342941",
+      "class": "c",
+      "wikidata": "Q7342941",
+      "source_url": "https://www.wikidata.org/wiki/Q7342941",
+      "label": "Robert Clark",
+      "speech_years": [
+        2018,
+        2018
+      ],
+      "dated_positions": {
+        "vic_la": [
+          [
+            1992,
+            2018
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Coleman",
+      "key": "wd-Q16214788",
+      "class": "c",
+      "wikidata": "Q16214788",
+      "source_url": "https://www.wikidata.org/wiki/Q16214788",
+      "label": "David Coleman",
+      "speech_years": [
+        2014,
+        2014
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            2013,
+            2025
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Cook",
+      "key": "wd-Q18685498",
+      "class": "a",
+      "wikidata": "Q18685498",
+      "source_url": "https://www.wikidata.org/wiki/Q18685498",
+      "label": "Nat Cook",
+      "speech_years": [
+        2020,
+        2021
+      ],
+      "dated_positions": {
+        "sa_ha": [
+          [
+            2014,
+            2018
+          ],
+          [
+            2018,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Costello",
+      "key": "wd-Q2546246",
+      "class": "c",
+      "wikidata": "Q2546246",
+      "source_url": "https://www.wikidata.org/wiki/Q2546246",
+      "label": "Peter Costello",
+      "speech_years": [
+        2002,
+        2005
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1990,
+            2009
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "David Leyonhjelm",
+      "key": "wd-Q16149378",
+      "class": "c",
+      "wikidata": "Q16149378",
+      "source_url": "https://www.wikidata.org/wiki/Q16149378",
+      "label": "David Leyonhjelm",
+      "speech_years": [
+        2019,
+        2019
+      ],
+      "dated_positions": {
+        "senate": [
+          [
+            2014,
+            2019
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "David Limbrick",
+      "key": "wd-Q59660395",
+      "class": "c",
+      "wikidata": "Q59660395",
+      "source_url": "https://www.wikidata.org/wiki/Q59660395",
+      "label": "David Limbrick",
+      "speech_years": [
+        2024,
+        2026
+      ],
+      "dated_positions": {
+        "vic_lc": [
+          [
+            2018,
+            2022
+          ],
+          [
+            2022,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Derryn Hinch",
+      "key": "wd-Q5263246",
+      "class": "c",
+      "wikidata": "Q5263246",
+      "source_url": "https://www.wikidata.org/wiki/Q5263246",
+      "label": "Derryn Hinch",
+      "speech_years": [
+        2019,
+        2019
+      ],
+      "dated_positions": {
+        "senate": [
+          [
+            2016,
+            2019
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Evans",
+      "key": "wd-Q27435052",
+      "class": "c",
+      "wikidata": "Q27435052",
+      "source_url": "https://www.wikidata.org/wiki/Q27435052",
+      "label": "Trevor Evans",
+      "speech_years": [
+        2018,
+        2018
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            2016,
+            2022
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "F. Pangallo",
+      "key": "wd-Q50727412",
+      "class": "c",
+      "wikidata": "Q50727412",
+      "source_url": "https://www.wikidata.org/wiki/Q50727412",
+      "label": "Frank Pangallo",
+      "speech_years": [
+        2020,
+        2023
+      ],
+      "dated_positions": {
+        "sa_lc": [
+          [
+            2018,
+            2026
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Franklin",
+      "key": "wd-Q19873536",
+      "class": "a",
+      "wikidata": "Q19873536",
+      "source_url": "https://www.wikidata.org/wiki/Q19873536",
+      "label": "Ben Franklin",
+      "speech_years": [
+        2019,
+        2019
+      ],
+      "dated_positions": {
+        "nsw_lc": [
+          [
+            2015,
+            2019
+          ],
+          [
+            2019,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Fraser Anning",
+      "key": "wd-Q42893791",
+      "class": "c",
+      "wikidata": "Q42893791",
+      "source_url": "https://www.wikidata.org/wiki/Q42893791",
+      "label": "Fraser Anning",
+      "speech_years": [
+        2019,
+        2019
+      ],
+      "dated_positions": {
+        "senate": [
+          [
+            2017,
+            2019
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Gabrielle Williams",
+      "key": "wd-Q19646489",
+      "class": "c",
+      "wikidata": "Q19646489",
+      "source_url": "https://www.wikidata.org/wiki/Q19646489",
+      "label": "Gabrielle Williams",
+      "speech_years": [
+        2023,
+        2026
+      ],
+      "dated_positions": {
+        "vic_la": [
+          [
+            2014,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Gardner",
+      "key": "wd-Q6234870",
+      "class": "a",
+      "wikidata": "Q6234870",
+      "source_url": "https://www.wikidata.org/wiki/Q6234870",
+      "label": "John Gardner",
+      "speech_years": [
+        2022,
+        2022
+      ],
+      "dated_positions": {
+        "sa_ha": [
+          [
+            2010,
+            2026
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "George",
+      "key": "wd-Q6177982",
+      "class": "c",
+      "wikidata": "Q6177982",
+      "source_url": "https://www.wikidata.org/wiki/Q6177982",
+      "label": "Jennie George",
+      "speech_years": [
+        2003,
+        2005
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            2001,
+            2010
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Grant",
+      "key": "wd-Q7846832",
+      "class": "a",
+      "wikidata": "Q7846832",
+      "source_url": "https://www.wikidata.org/wiki/Q7846832",
+      "label": "Troy Grant",
+      "speech_years": [
+        2016,
+        2016
+      ],
+      "dated_positions": {
+        "nsw_la": [
+          [
+            2011,
+            2019
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Griffin",
+      "key": "wd-Q29386045",
+      "class": "a",
+      "wikidata": "Q29386045",
+      "source_url": "https://www.wikidata.org/wiki/Q29386045",
+      "label": "James Griffin",
+      "speech_years": [
+        2017,
+        2026
+      ],
+      "dated_positions": {
+        "nsw_la": [
+          [
+            2017,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Harris",
+      "key": "wd-Q5234738",
+      "class": "a",
+      "wikidata": "Q5234738",
+      "source_url": "https://www.wikidata.org/wiki/Q5234738",
+      "label": "David Harris",
+      "speech_years": [
+        2025,
+        2026
+      ],
+      "dated_positions": {
+        "nsw_la": [
+          [
+            2007,
+            2011
+          ],
+          [
+            2015,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Harrison",
+      "key": "wd-Q18379290",
+      "class": "a",
+      "wikidata": "Q18379290",
+      "source_url": "https://www.wikidata.org/wiki/Q18379290",
+      "label": "Jodie Harrison",
+      "speech_years": [
+        2022,
+        2025
+      ],
+      "dated_positions": {
+        "nsw_la": [
+          [
+            2014,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Higginson",
+      "key": "wd-Q111972517",
+      "class": "a",
+      "wikidata": "Q111972517",
+      "source_url": "https://www.wikidata.org/wiki/Q111972517",
+      "label": "Sue Higginson",
+      "speech_years": [
+        2025,
+        2026
+      ],
+      "dated_positions": {
+        "nsw_lc": [
+          [
+            2022,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Hilton Gumbys",
+      "key": "wd-Q138755015",
+      "class": "b",
+      "wikidata": "Q138755015",
+      "source_url": "https://www.wikidata.org/wiki/Q138755015",
+      "label": "Hilton Gumbys",
+      "speech_years": [
+        2026,
+        2026
+      ],
+      "dated_positions": {
+        "sa_lc": [
+          [
+            2026,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Hoare",
+      "key": "wd-Q16195116",
+      "class": "c",
+      "wikidata": "Q16195116",
+      "source_url": "https://www.wikidata.org/wiki/Q16195116",
+      "label": "Kelly Hoare",
+      "speech_years": [
+        2000,
+        2002
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1998,
+            2007
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Ian McLachlan",
+      "key": "wd-Q5982330",
+      "class": "c",
+      "wikidata": "Q5982330",
+      "source_url": "https://www.wikidata.org/wiki/Q5982330",
+      "label": "Ian McLachlan",
+      "speech_years": [
+        1998,
+        1998
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1990,
+            1998
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Irwin",
+      "key": "wd-Q6306482",
+      "class": "c",
+      "wikidata": "Q6306482",
+      "source_url": "https://www.wikidata.org/wiki/Q6306482",
+      "label": "Julia Irwin",
+      "speech_years": [
+        2002,
+        2002
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1998,
+            2010
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Jenkins",
+      "key": "wd-Q5670053",
+      "class": "c",
+      "wikidata": "Q5670053",
+      "source_url": "https://www.wikidata.org/wiki/Q5670053",
+      "label": "Harry Jenkins",
+      "speech_years": [
+        2002,
+        2003
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1986,
+            2013
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Jim Molan",
+      "key": "wd-Q6196985",
+      "class": "c",
+      "wikidata": "Q6196985",
+      "source_url": "https://www.wikidata.org/wiki/Q6196985",
+      "label": "Jim Molan",
+      "speech_years": [
+        2019,
+        2022
+      ],
+      "dated_positions": {
+        "senate": [
+          [
+            2017,
+            2019
+          ],
+          [
+            2019,
+            2023
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "John Alexander",
+      "key": "wd-Q1281683",
+      "class": "c",
+      "wikidata": "Q1281683",
+      "source_url": "https://www.wikidata.org/wiki/Q1281683",
+      "label": "John Alexander",
+      "speech_years": [
+        2010,
+        2022
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            2010,
+            2017
+          ],
+          [
+            2017,
+            2022
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Johnson",
+      "key": "wd-Q6831690",
+      "class": "c",
+      "wikidata": "Q6831690",
+      "source_url": "https://www.wikidata.org/wiki/Q6831690",
+      "label": "Michael Johnson",
+      "speech_years": [
+        2004,
+        2004
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            2001,
+            2010
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Kathleen Matthews-ward",
+      "key": "wd-Q115477075",
+      "class": "c",
+      "wikidata": "Q115477075",
+      "source_url": "https://www.wikidata.org/wiki/Q115477075",
+      "label": "Kathleen Matthews-Ward",
+      "speech_years": [
+        2023,
+        2026
+      ],
+      "dated_positions": {
+        "vic_la": [
+          [
+            2022,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Kathryn Sullivan",
+      "key": "wd-Q16106114",
+      "class": "c",
+      "wikidata": "Q16106114",
+      "source_url": "https://www.wikidata.org/wiki/Q16106114",
+      "label": "Kathy Sullivan",
+      "speech_years": [
+        1998,
+        2001
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1984,
+            2001
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Kathy Sullivan",
+      "key": "wd-Q16106114",
+      "class": "c",
+      "wikidata": "Q16106114",
+      "source_url": "https://www.wikidata.org/wiki/Q16106114",
+      "label": "Kathy Sullivan",
+      "speech_years": [
+        1998,
+        1999
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1984,
+            2001
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Kerr",
+      "key": "wd-Q15525005",
+      "class": "c",
+      "wikidata": "Q15525005",
+      "source_url": "https://www.wikidata.org/wiki/Q15525005",
+      "label": "Duncan Kerr",
+      "speech_years": [
+        2000,
+        2005
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1987,
+            2010
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Kimberley Kitching",
+      "key": "wd-Q27450592",
+      "class": "c",
+      "wikidata": "Q27450592",
+      "source_url": "https://www.wikidata.org/wiki/Q27450592",
+      "label": "Kimberley Kitching",
+      "speech_years": [
+        2019,
+        2022
+      ],
+      "dated_positions": {
+        "senate": [
+          [
+            2016,
+            2022
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Kristina Keneally",
+      "key": "wd-Q442238",
+      "class": "c",
+      "wikidata": "Q442238",
+      "source_url": "https://www.wikidata.org/wiki/Q442238",
+      "label": "Kristina Keneally",
+      "speech_years": [
+        2019,
+        2022
+      ],
+      "dated_positions": {
+        "nsw_la": [
+          [
+            2003,
+            2012
+          ]
+        ],
+        "senate": [
+          [
+            2018,
+            2022
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Lane",
+      "key": "wd-Q117468562",
+      "class": "a",
+      "wikidata": "Q117468562",
+      "source_url": "https://www.wikidata.org/wiki/Q117468562",
+      "label": "Jordan Lane",
+      "speech_years": [
+        2025,
+        2026
+      ],
+      "dated_positions": {
+        "nsw_la": [
+          [
+            2023,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Lynch",
+      "key": "wd-Q7152100",
+      "class": "a",
+      "wikidata": "Q7152100",
+      "source_url": "https://www.wikidata.org/wiki/Q7152100",
+      "label": "Paul Lynch",
+      "speech_years": [
+        2022,
+        2022
+      ],
+      "dated_positions": {
+        "nsw_la": [
+          [
+            1995,
+            2023
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "McClelland",
+      "key": "wd-Q5981237",
+      "class": "c",
+      "wikidata": "Q5981237",
+      "source_url": "https://www.wikidata.org/wiki/Q5981237",
+      "label": "Robert McClelland",
+      "speech_years": [
+        2000,
+        2003
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1996,
+            2013
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "McMullan",
+      "key": "wd-Q4933373",
+      "class": "c",
+      "wikidata": "Q4933373",
+      "source_url": "https://www.wikidata.org/wiki/Q4933373",
+      "label": "Bob McMullan",
+      "speech_years": [
+        2000,
+        2000
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1996,
+            1998
+          ],
+          [
+            1998,
+            2010
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Melanie Selwood",
+      "key": "wd-Q138755057",
+      "class": "b",
+      "wikidata": "Q138755057",
+      "source_url": "https://www.wikidata.org/wiki/Q138755057",
+      "label": "Melanie Selwood",
+      "speech_years": [
+        2026,
+        2026
+      ],
+      "dated_positions": {
+        "sa_lc": [
+          [
+            2026,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Michaela Settle",
+      "key": "wd-Q59173410",
+      "class": "c",
+      "wikidata": "Q59173410",
+      "source_url": "https://www.wikidata.org/wiki/Q59173410",
+      "label": "Michaela Settle",
+      "speech_years": [
+        2023,
+        2026
+      ],
+      "dated_positions": {
+        "vic_la": [
+          [
+            2018,
+            2022
+          ],
+          [
+            2022,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Mira El Dannawi",
+      "key": "wd-Q124048767",
+      "class": "b",
+      "wikidata": "Q124048767",
+      "source_url": "https://www.wikidata.org/wiki/Q124048767",
+      "label": "Mira El Dannawi",
+      "speech_years": [
+        2023,
+        2026
+      ],
+      "dated_positions": {
+        "sa_lc": [
+          [
+            2023,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Molhoek",
+      "key": "wd-Q7340386",
+      "class": "c",
+      "wikidata": "Q7340386",
+      "source_url": "https://www.wikidata.org/wiki/Q7340386",
+      "label": "Rob Molhoek",
+      "speech_years": [
+        2024,
+        2026
+      ],
+      "dated_positions": {
+        "qld_la": [
+          [
+            2012,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Nelson",
+      "key": "wd-Q908749",
+      "class": "c",
+      "wikidata": "Q908749",
+      "source_url": "https://www.wikidata.org/wiki/Q908749",
+      "label": "Brendan Nelson",
+      "speech_years": [
+        2000,
+        2004
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1996,
+            2009
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Nuttall",
+      "key": "wd-Q123560312",
+      "class": "c",
+      "wikidata": "Q123560312",
+      "source_url": "https://www.wikidata.org/wiki/Q123560312",
+      "label": "Laura Nuttall",
+      "speech_years": [
+        2024,
+        2026
+      ],
+      "dated_positions": {
+        "act_la": [
+          [
+            2023,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "O'Byrne",
+      "key": "wd-Q6837187",
+      "class": "a",
+      "wikidata": "Q6837187",
+      "source_url": "https://www.wikidata.org/wiki/Q6837187",
+      "label": "Michelle O'Byrne",
+      "speech_years": [
+        2003,
+        2003
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1998,
+            2004
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "O'Connor",
+      "key": "wd-Q5527997",
+      "class": "a",
+      "wikidata": "Q5527997",
+      "source_url": "https://www.wikidata.org/wiki/Q5527997",
+      "label": "Gavan O'Connor",
+      "speech_years": [
+        2000,
+        2000
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1993,
+            2007
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Park",
+      "key": "wd-Q7384410",
+      "class": "a",
+      "wikidata": "Q7384410",
+      "source_url": "https://www.wikidata.org/wiki/Q7384410",
+      "label": "Ryan Park",
+      "speech_years": [
+        2026,
+        2026
+      ],
+      "dated_positions": {
+        "nsw_la": [
+          [
+            2011,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Parker",
+      "key": "wd-Q6147330",
+      "class": "a",
+      "wikidata": "Q6147330",
+      "source_url": "https://www.wikidata.org/wiki/Q6147330",
+      "label": "Jamie Parker",
+      "speech_years": [
+        2022,
+        2022
+      ],
+      "dated_positions": {
+        "nsw_la": [
+          [
+            2011,
+            2023
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Parton",
+      "key": "wd-Q27734319",
+      "class": "c",
+      "wikidata": "Q27734319",
+      "source_url": "https://www.wikidata.org/wiki/Q27734319",
+      "label": "Mark Parton",
+      "speech_years": [
+        2024,
+        2026
+      ],
+      "dated_positions": {
+        "act_la": [
+          [
+            2016,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Patrick Dodson",
+      "key": "wd-Q7146371",
+      "class": "c",
+      "wikidata": "Q7146371",
+      "source_url": "https://www.wikidata.org/wiki/Q7146371",
+      "label": "Pat Dodson",
+      "speech_years": [
+        2019,
+        2023
+      ],
+      "dated_positions": {
+        "senate": [
+          [
+            2016,
+            2024
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Porter",
+      "key": "wd-Q5110039",
+      "class": "c",
+      "wikidata": "Q5110039",
+      "source_url": "https://www.wikidata.org/wiki/Q5110039",
+      "label": "Christian Porter",
+      "speech_years": [
+        2020,
+        2020
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            2013,
+            2022
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Rattenbury",
+      "key": "wd-Q7488240",
+      "class": "c",
+      "wikidata": "Q7488240",
+      "source_url": "https://www.wikidata.org/wiki/Q7488240",
+      "label": "Shane Rattenbury",
+      "speech_years": [
+        2024,
+        2026
+      ],
+      "dated_positions": {
+        "act_la": [
+          [
+            2008,
+            2026
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Rex Patrick",
+      "key": "10903",
+      "class": "a",
+      "wikidata": "Q43109080",
+      "source_url": "https://www.wikidata.org/wiki/Q43109080",
+      "label": "Rex Patrick",
+      "speech_years": [
+        2019,
+        2022
+      ],
+      "dated_positions": {
+        "senate": [
+          [
+            2017,
+            2022
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Richard Riordan",
+      "key": "wd-Q22121164",
+      "class": "c",
+      "wikidata": "Q22121164",
+      "source_url": "https://www.wikidata.org/wiki/Q22121164",
+      "label": "Richard Riordan",
+      "speech_years": [
+        2023,
+        2026
+      ],
+      "dated_positions": {
+        "vic_la": [
+          [
+            2015,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Robinson",
+      "key": "wd-Q6769470",
+      "class": "c",
+      "wikidata": "Q6769470",
+      "source_url": "https://www.wikidata.org/wiki/Q6769470",
+      "label": "Mark Robinson",
+      "speech_years": [
+        2024,
+        2026
+      ],
+      "dated_positions": {
+        "qld_la": [
+          [
+            2009,
+            2017
+          ],
+          [
+            2017,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Roger Price",
+      "key": "wd-Q7358801",
+      "class": "c",
+      "wikidata": "Q7358801",
+      "source_url": "https://www.wikidata.org/wiki/Q7358801",
+      "label": "Roger Price",
+      "speech_years": [
+        1998,
+        2010
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1984,
+            2010
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Ross Cameron",
+      "key": "wd-Q7369222",
+      "class": "c",
+      "wikidata": "Q7369222",
+      "source_url": "https://www.wikidata.org/wiki/Q7369222",
+      "label": "Ross Cameron",
+      "speech_years": [
+        1998,
+        2004
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1996,
+            2004
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Sarah Mansfield",
+      "key": "wd-Q115750113",
+      "class": "c",
+      "wikidata": "Q115750113",
+      "source_url": "https://www.wikidata.org/wiki/Q115750113",
+      "label": "Sarah Mansfield",
+      "speech_years": [
+        2024,
+        2026
+      ],
+      "dated_positions": {
+        "vic_lc": [
+          [
+            2022,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Sciacca",
+      "key": "wd-Q5158005",
+      "class": "a",
+      "wikidata": "Q5158005",
+      "source_url": "https://www.wikidata.org/wiki/Q5158005",
+      "label": "Con Sciacca",
+      "speech_years": [
+        2002,
+        2002
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1998,
+            2004
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Scott",
+      "key": "wd-Q7352768",
+      "class": "c",
+      "wikidata": "Q7352768",
+      "source_url": "https://www.wikidata.org/wiki/Q7352768",
+      "label": "Robin Scott",
+      "speech_years": [
+        2019,
+        2022
+      ],
+      "dated_positions": {
+        "vic_la": [
+          [
+            2006,
+            2022
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Scott Farlow",
+      "key": "wd-Q19873302",
+      "class": "c",
+      "wikidata": "Q19873302",
+      "source_url": "https://www.wikidata.org/wiki/Q19873302",
+      "label": "Scott Farlow",
+      "speech_years": [
+        2015,
+        2026
+      ],
+      "dated_positions": {
+        "nsw_lc": [
+          [
+            2015,
+            2023
+          ],
+          [
+            2023,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Settle",
+      "key": "wd-Q59173410",
+      "class": "c",
+      "wikidata": "Q59173410",
+      "source_url": "https://www.wikidata.org/wiki/Q59173410",
+      "label": "Michaela Settle",
+      "speech_years": [
+        2019,
+        2022
+      ],
+      "dated_positions": {
+        "vic_la": [
+          [
+            2018,
+            2022
+          ],
+          [
+            2022,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Singh",
+      "key": "wd-Q62395954",
+      "class": "a",
+      "wikidata": "Q62395954",
+      "source_url": "https://www.wikidata.org/wiki/Q62395954",
+      "label": "Gurmesh Singh",
+      "speech_years": [
+        2025,
+        2026
+      ],
+      "dated_positions": {
+        "nsw_la": [
+          [
+            2019,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Sophie Panopoulos",
+      "key": "10461",
+      "class": "a",
+      "wikidata": "Q7563039",
+      "source_url": "https://www.wikidata.org/wiki/Q7563039",
+      "label": "Sophie Mirabella",
+      "speech_years": [
+        2002,
+        2006
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            2001,
+            2013
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "St Clair",
+      "key": "wd-Q7627118",
+      "class": "a",
+      "wikidata": "Q7627118",
+      "source_url": "https://www.wikidata.org/wiki/Q7627118",
+      "label": "Stuart St. Clair",
+      "speech_years": [
+        2000,
+        2000
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1998,
+            2001
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Stephen-Smith",
+      "key": "wd-Q27617429",
+      "class": "c",
+      "wikidata": "Q27617429",
+      "source_url": "https://www.wikidata.org/wiki/Q27617429",
+      "label": "Rachel Stephen-Smith",
+      "speech_years": [
+        2024,
+        2026
+      ],
+      "dated_positions": {
+        "act_la": [
+          [
+            2016,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Stoker",
+      "key": "wd-Q50808634",
+      "class": "c",
+      "wikidata": "Q50808634",
+      "source_url": "https://www.wikidata.org/wiki/Q50808634",
+      "label": "Amanda Stoker",
+      "speech_years": [
+        2025,
+        2026
+      ],
+      "dated_positions": {
+        "qld_la": [
+          [
+            2024,
+            null
+          ]
+        ],
+        "senate": [
+          [
+            2018,
+            2022
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Tanner",
+      "key": "wd-Q1826293",
+      "class": "c",
+      "wikidata": "Q1826293",
+      "source_url": "https://www.wikidata.org/wiki/Q1826293",
+      "label": "Lindsay Tanner",
+      "speech_years": [
+        2000,
+        2004
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            1993,
+            2010
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Thomson",
+      "key": "wd-Q6773405",
+      "class": "c",
+      "wikidata": "Q6773405",
+      "source_url": "https://www.wikidata.org/wiki/Q6773405",
+      "label": "Marsha Thomson",
+      "speech_years": [
+        2018,
+        2018
+      ],
+      "dated_positions": {
+        "vic_lc": [
+          [
+            1999,
+            2006
+          ]
+        ],
+        "vic_la": [
+          [
+            2006,
+            2018
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Tina Ayyad",
+      "key": "wd-Q117357100",
+      "class": "c",
+      "wikidata": "Q117357100",
+      "source_url": "https://www.wikidata.org/wiki/Q117357100",
+      "label": "Tina Ayyad",
+      "speech_years": [
+        2025,
+        2026
+      ],
+      "dated_positions": {
+        "nsw_la": [
+          [
+            2023,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Ware",
+      "key": "wd-Q112127622",
+      "class": "c",
+      "wikidata": "Q112127622",
+      "source_url": "https://www.wikidata.org/wiki/Q112127622",
+      "label": "Jenny Ware",
+      "speech_years": [
+        2022,
+        2022
+      ],
+      "dated_positions": {
+        "representatives": [
+          [
+            2022,
+            2025
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Warren",
+      "key": "wd-Q21062726",
+      "class": "a",
+      "wikidata": "Q21062726",
+      "source_url": "https://www.wikidata.org/wiki/Q21062726",
+      "label": "Greg Warren",
+      "speech_years": [
+        2026,
+        2026
+      ],
+      "dated_positions": {
+        "nsw_la": [
+          [
+            2015,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Watson",
+      "key": "wd-Q4767598",
+      "class": "a",
+      "wikidata": "Q4767598",
+      "source_url": "https://www.wikidata.org/wiki/Q4767598",
+      "label": "Anna Watson",
+      "speech_years": [
+        2025,
+        2026
+      ],
+      "dated_positions": {
+        "nsw_la": [
+          [
+            2011,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Werner-Gibbings",
+      "key": "wd-Q130619114",
+      "class": "c",
+      "wikidata": "Q130619114",
+      "source_url": "https://www.wikidata.org/wiki/Q130619114",
+      "label": "Taimus Werner-Gibbings",
+      "speech_years": [
+        2024,
+        2026
+      ],
+      "dated_positions": {
+        "act_la": [
+          [
+            2024,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Wilson",
+      "key": "wd-Q29416938",
+      "class": "a",
+      "wikidata": "Q29416938",
+      "source_url": "https://www.wikidata.org/wiki/Q29416938",
+      "label": "Felicity Wilson",
+      "speech_years": [
+        2025,
+        2026
+      ],
+      "dated_positions": {
+        "nsw_la": [
+          [
+            2017,
+            null
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    },
+    {
+      "name": "Zed Seselja",
+      "key": "wd-Q8068367",
+      "class": "c",
+      "wikidata": "Q8068367",
+      "source_url": "https://www.wikidata.org/wiki/Q8068367",
+      "label": "Zed Seselja",
+      "speech_years": [
+        2013,
+        2022
+      ],
+      "dated_positions": {
+        "senate": [
+          [
+            2013,
+            2022
+          ]
+        ],
+        "act_la": [
+          [
+            2004,
+            2012
+          ],
+          [
+            2012,
+            2013
+          ]
+        ]
+      },
+      "evidence": "Name or reviewed alias and dated P39 service covering this print in every house; surname candidates include holders without portraits."
+    }
+  ]
+}
