@@ -24,7 +24,7 @@ import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
 import { positionEvidence, positionProposalQuote, positionEligibilityQuotes, positionCostQuote, isPositionEligibilityQuestion, isPositionCostQuestion, isPositionDetailQuestion, positionPointSupported, normalizePositionDraft } from './position-evidence'
 import { fundingResearchFollowUp, rankedMoneyAnswer } from './ask-money'
-import { paidAnswer, mentionsPay } from './ask-pay'
+import { paidAnswer, mentionsPay, mentionsOfficePay } from './ask-pay'
 import { rewriteFollowUp, clarifyPayload, REWRITE_SYSTEM, type FollowUpRewrite } from './ask-rewrite'
 import { buildPersonOverview, isPersonOverviewCandidate, isPersonOverviewIntent, isPersonRecentCandidate, isPersonRecentIntent, OVERVIEW_INSTRUCTIONS, OVERVIEW_CAPS, OVERVIEW_RETRIEVAL_MS, OVERVIEW_FIRST_ANSWER_MS, OVERVIEW_VERIFICATION_MS, type OverviewPack, type OverviewSpeech, type PersonContext } from './ask-person-overview'
 import { researchModelId, researchProvider, researchReasoning, researchModelOverride, researchModelKey } from './research-model'
@@ -1305,7 +1305,9 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
     epoch,
     pipeline: ASK_PIPELINE_VERSION + (input.speaker && input.kind === 'speech' && isPositionBody(buildAskBody(input)) ? ':original-turns-v7' + (input.from || input.to ? ':dated-topic-v1' : '') : '')
       // Pay evidence arrived on 2026-09-17: answers written without it retire, and only those.
-      + (mentionsPay(input.question) ? ':pay-v1' : '') + ':witness-split-v1:mixed-speakers-v1',
+      + (mentionsPay(input.question) ? ':pay-v1' : '')
+      // Secretaries' and agency heads' rates arrived on 2026-11-13: loose questions about them retire too.
+      + (mentionsOfficePay(input.question) ? ':office-pay-v1' : '') + ':witness-split-v1:mixed-speakers-v1',
     question: str(input.question).toLowerCase(),
     kind: kind && kind !== 'all' ? kind : 'all',
     speaker: str(input.speaker) ? canonicalSpeaker(input.speaker as string) : '',
