@@ -28,7 +28,7 @@ export function partyLabels({money = [], roster = null, divisions = null, live =
   const out = [];
   for (const graph of money) for (const n of graph?.nodes || []) if (n.kind === 'party') out.push(n.label);
   for (const p of roster?.people || []) out.push(...personPartyLabels(p));
-  out.push(...Object.keys(divisions?.parties || {}));
+  out.push(...Object.keys(divisions?.parties || {}), ...Object.keys(divisions?.bills || {}));
   for (const r of live?.parties || []) out.push(r.label);
   return [...new Set(out.map(l => String(l ?? '').trim()).filter(Boolean))];
 }
@@ -285,6 +285,39 @@ export function partyStateMoneyHTML(label, files, h) {
   </section>`;
 }
 
+/** The bills a party's members sponsored, newest first, from the party index's `bills` (scripts/build_party_index.mjs):
+ *  every spelling the party joins through `same`, each bill once. */
+export function partyBills(label, divisions, same = (a, b) => identity(a) === identity(b)) {
+  const seen = new Set(), out = [];
+  for (const [party, bills] of Object.entries(divisions?.bills || {})) {
+    if (!same(party, label)) continue;
+    for (const b of bills || []) if (b?.key && !seen.has(b.key)) { seen.add(b.key); out.push(b); }
+  }
+  return out.sort((a, b) => String(b.introduced || '').localeCompare(String(a.introduced || '')) || a.key.localeCompare(b.key));
+}
+
+// The bill rows' words (home-data.js billRowHTML).
+const BILL_STATUS = {before_parliament: 'Before parliament', passed: 'Passed', lapsed: 'Lapsed', exposure_draft: 'Exposure draft'};
+/** The "Bills sponsored" block: each bill linked to its page, with its introduction date and status. */
+export function partyBillsHTML(label, bills, h, {updated = ''} = {}) {
+  if (!bills?.length) return '';
+  const row = b => {
+    const raw = String(b.status || '').replace(/_/g, ' ');
+    const status = BILL_STATUS[b.status] || raw.replace(/^./, c => c.toUpperCase());
+    const meta = [b.introduced ? `Introduced ${dayMonthYear(b.introduced)}` : '', status].filter(Boolean).join(' · ');
+    return `<li><a class="source-title" href="/bill/${encodeURIComponent(b.key)}">${h.esc(b.title || b.key)}</a>${meta ? `<span class="result-meta">${h.esc(meta)}</span>` : ''}</li>`;
+  };
+  const shown = bills.slice(0, SHOWN), rest = bills.slice(SHOWN);
+  return `<section class="party-sponsored-bills" id="party-sponsored-bills">
+    <h3 class="subject-section-title">Bills sponsored (${bills.length.toLocaleString()})</h3>
+    <ul class="subject-list" role="list">${shown.map(row).join('')}</ul>
+    ${rest.length ? `<details class="party-members-more"><summary>${rest.length.toLocaleString()} more bills</summary>
+      <ul class="subject-list" role="list">${rest.map(row).join('')}</ul></details>` : ''}
+    ${h.sourceLineHTML({updated, source: 'Federal bills register (Parliament of Australia)',
+      notes: [`Bills whose sponsor the register records as ${isIndependent(label) ? 'an independent' : `a member of ${partyDisplayName(label)}`} when the bill was introduced.`]})}
+  </section>`;
+}
+
 const identity = label => PARTY_MAP[fold(label)]?.[1] || fold(label);
 export const isIndependent = label => identity(label) === 'IND';
 export const INDEPENDENTS_DESCRIPTION = 'Parliamentarians who sat without a party. Not a party organisation.';
@@ -300,7 +333,7 @@ export function canonicalPartyPages({ money = [], roster = null, divisions = nul
     label = String(label ?? '').trim();
     if (!label || label.length > 120 || /^(?:null|undefined|PRES|DPRES|SPK|DSPK|CWM|CHAIR)$/i.test(label)) return;
     const key = identity(label);
-    if (!parties.has(key)) parties.set(key, { label, aliases: [], money: false, roster: false, divisions: false, lastmod: '' });
+    if (!parties.has(key)) parties.set(key, { label, aliases: [], money: false, roster: false, divisions: false, bills: false, lastmod: '' });
     const page = parties.get(key);
     if (!page.aliases.includes(label)) page.aliases.push(label);
     if (source === 'money' && !page.money) page.label = label;
@@ -313,6 +346,8 @@ export function canonicalPartyPages({ money = [], roster = null, divisions = nul
   }
   const labels = Array.isArray(divisions?.parties) ? divisions.parties : Object.keys(divisions?.parties || {});
   for (const label of labels) add(label, 'divisions', divisions?.generated_at || roster?.meta?.generated);
+  // A sponsor's party the bills register records ("Rex Patrick Team"): its page lists the bills.
+  for (const [label, bills] of Object.entries(divisions?.bills || {})) add(label, 'bills', (bills || []).map(b => b.introduced || '').sort().at(-1));
   return [...parties.values()].map(page => {
     if (!page.money) page.label = page.aliases.find(label => fold(label) === fold(PARTY_NAMES[identity(label)]?.[1])) || page.label;
     return { ...page, name: partyDisplayName(page.label), href: partyUrl(page.label) };
@@ -338,6 +373,6 @@ export function resolvePartyPage(segment, pages) {
 
 export function partyPageCoverage(page) {
   if (isIndependent(page.label)) return INDEPENDENTS_DESCRIPTION;
-  const held = page.roster ? `Parliamentary roster${page.divisions ? ' and recorded divisions' : ''}` : 'Recorded divisions';
+  const held = page.roster ? `Parliamentary roster${page.divisions ? ' and recorded divisions' : ''}` : page.divisions ? 'Recorded divisions' : page.bills ? 'Bill sponsor records' : 'Recorded divisions';
   return page.money ? 'Published political receipts; federal and state returns remain separate.' : `${held}. No party-level disclosure file held by OPAX.`;
 }

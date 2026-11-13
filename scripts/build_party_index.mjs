@@ -16,6 +16,9 @@
 // election after that date the repository records for the jurisdiction (the
 // committed scripts/hubs/<jur>-election-<year>.json configs and the electorate
 // release's election dates). After it, the roster no longer says who sits.
+//
+// bills lists the bills a party's member sponsored, as the bills register records the sponsor's party
+// (sponsoredBills): the party pages' "Bills sponsored", and a page for a party the record names only there.
 import {readFileSync,readdirSync,writeFileSync} from 'node:fs';
 import {dirname,join,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -76,6 +79,22 @@ function seatRosters(publicRoot) {
   return seatRosterMembers(people,asset(manifest.index_url).electorates,recordedElections(manifest),asset(manifest.people_url).people);
 }
 
+/** Party -> the bills the federal bills register records a sponsor of that party for, newest first: key, title,
+ *  introduction date and status. Only the sponsor-party spellings the export accepts (public/facts/sponsor-parties.json),
+ *  so a party known only as a sponsor's party ("Rex Patrick Team") has a page with its bills. */
+export function sponsoredBills(bills,accepted) {
+  const ok=new Set(accepted || []),out={};
+  for(const b of bills || []){
+    const party=String(b?.sponsor_party || '').trim();
+    if(!party || !ok.has(party) || !b.key)continue;
+    (out[party] ||= []).push({key:b.key,title:b.short_title || b.title || b.key,introduced:b.introduced || null,status:b.status || null});
+  }
+  const sorted={};
+  for(const party of Object.keys(out).sort((a,b)=>a.localeCompare(b)))
+    sorted[party]=out[party].sort((a,b)=>String(b.introduced || '').localeCompare(String(a.introduced || '')) || a.key.localeCompare(b.key));
+  return sorted;
+}
+
 export function partyIndexFile(publicRoot=PUBLIC) {
   const dir=join(publicRoot,'divisions');
   const parties=new Map();
@@ -97,8 +116,10 @@ export function partyIndexFile(publicRoot=PUBLIC) {
   const out={};
   for(const [party,members] of [...parties].sort((a,b)=>a[0].localeCompare(b[0])))
     out[party]=[...members.values()].sort((a,b)=>b.last.localeCompare(a.last) || a.name.localeCompare(b.name));
-  return {version:1,source:'Recorded divisions (They Vote For You and the parliamentary division records); verified electorate rosters',
-    parties:out,seat_rosters:seatRosters(publicRoot)};
+  const read=path=>JSON.parse(readFileSync(join(publicRoot,...path.split('/')),'utf8')),index=read('bills/index.json');
+  return {version:1,source:'Recorded divisions (They Vote For You and the parliamentary division records); verified electorate rosters; the federal bills register',
+    parties:out,seat_rosters:seatRosters(publicRoot),bills:sponsoredBills(index.bills,read('facts/sponsor-parties.json')),
+    bills_generated_at:typeof index.generated_at==='string' ? index.generated_at : null};
 }
 
 if(process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)){
