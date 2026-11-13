@@ -31,7 +31,7 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=45f00fccb7").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=59ae545e14").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
@@ -9262,15 +9262,15 @@ function billQuestionParts(division, bill) {
   return { head: `${plain.slice(0, 105).trimEnd()}…`, note: raw };
 }
 
-/* TheyVoteForYou records the same division several times — the Medibank bill's
-   third reading appears ten times, nine of them saying so in the question
-   field. Copied straight out, the page shows ten third readings and a reader
-   counts ten. Rows identical in day, stage and counts are one division; the
-   one that carries the motion is kept and the section says this is happening. */
+/* A division can reach a bill's file more than once. Records of one division
+   share its chamber, day and division number (vote-tables.js divisionIdentity)
+   and are one row; the one that carries the motion is kept and the section says
+   this is happening. Two divisions with the same day, stage and counts are two
+   divisions: two amendments can both go 11 to 24 on one day. */
 function billDedupeDivisions(divisions, bill) {
   const groups = new Map();
   for (const d of divisions || []) {
-    const k = [d.date, String(d.stage || "").toLowerCase(), d.ayes, d.noes].join("|");
+    const k = voteTables.divisionIdentity(d) || `row:${groups.size}`;
     if (!groups.has(k)) groups.set(k, []);
     groups.get(k).push(d);
   }
@@ -9371,8 +9371,8 @@ function billDivisionsHTML(bill) {
         `Ayes and noes are each division's own totals. Party is each member's recorded affiliation, not a
           reconstruction of who they sat with on the day, and a member the record does not name is counted but
           not attributed. Only formal divisions leave a per-member record.`,
-        collapsed ? `The source records some divisions more than once; ${collapsed} row${collapsed === 1 ? "" : "s"}
-          identical in day, stage and counts ${collapsed === 1 ? "is" : "are"} shown here once.` : "",
+        collapsed ? `The source records some divisions more than once; ${collapsed} repeated record${collapsed === 1 ? "" : "s"}
+          of the same division ${collapsed === 1 ? "is" : "are"} shown here once.` : "",
         "A division's title is its recorded stage. Open a division for its count on They Vote For You and the question put, in the record's words.",
       ],
       licence: "Division records: They Vote For You, OpenAustralia Foundation, ODbL.",
