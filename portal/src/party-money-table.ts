@@ -10,6 +10,8 @@ export async function partyMoneyResponse(request:Request,assets:Fetcher):Promise
   if(!response.ok)throw Error('unavailable')
   const graph=await response.json() as PartyGraph
   if(!graph.nodes.some(node=>node.kind==='party'&&node.id===id))return Response.json({error:'Party unavailable'},{status:404,headers})
+  // {rows, scope}: each receipt once, as the party's own return gives it (receiptFigures);
+  // `scope` says that in a reader's words and is absent for a graph without typed cells.
   const data=partyMoneyData(graph,id)
   return request.method==='HEAD'?new Response(null,{headers}):Response.json(data,{headers})
  }catch{return Response.json({error:'Party unavailable'},{status:503,headers})}

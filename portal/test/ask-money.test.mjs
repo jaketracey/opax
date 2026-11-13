@@ -616,14 +616,25 @@ test('LNP comparisons retain industry or exact donor and single-party rankings r
 
 test('compound party names retain distinct federal identities and reject unsupported cohorts',async()=>{
  // The typed export holds no receipt-type cells for the Country Liberal Party's ten edges (empty by_type), so the
- // typed answer names no figure and links the party's map; the untyped block below keeps the calculated CLP ranking.
- assert.ok(graph.edges.filter(e=>e.target==='party:Country Liberal Party').every(e=>e.by_type&&!Object.keys(e.by_type).length));
+ // answer ranks their legacy totals under a label that says the AEC data OPAX holds has no type breakdown for them.
+ const clpEdges=graph.edges.filter(e=>e.target==='party:Country Liberal Party'&&!e.flow&&!e.grant);
+ assert.equal(clpEdges.length,10);assert.ok(clpEdges.every(e=>e.by_type&&!Object.keys(e.by_type).length));
  const country=await ask('Who donates the most to Country Liberal Party?');
- assert.equal(country.answer_status,'evidence_gap');assert.doesNotMatch(country.answer,/\$[\d,]+/);assert.match(country.answer,/party=party%3ACountry\+Liberal\+Party/);
+ assert.equal(country.answer_status,'calculated');assert.equal(country.measure,'receipts_all');
+ assert.equal(country.measure_label,'all receipt types (no type breakdown in the AEC data OPAX holds)');
+ assert.match(country.answer,/^The largest source to Country Liberal Party is \*\*Thiess Pty Ltd: \$40,000\*\*, all receipt types \(no type breakdown in the AEC data OPAX holds\), 1998–99 to 2004–05\./);
+ assert.match(country.answer,/the selection totals \$107,300\./);assert.equal(aud(clpEdges.reduce((s,e)=>s+e.total,0)),'$107,300');
+ assert.doesNotMatch(country.answer,/donations received|other financial years|See these donations/);
+ assert.match(country.answer,/\[See these on the money map\]\([^)]*party=party%3ACountry\+Liberal\+Party\)/);
  const pair=await ask('Who gets more money, Liberal or LNP?');assert.equal(pair.answer_status,'calculated');assert.match(pair.answer,/Liberal received \$96,469,578 more than LNP/);
  assert.equal(new Set(pair.sources.slice(1).map(s=>new URL(s.href,'https://opax.test').searchParams.get('party'))).size,2);
+ // The comparison gives the CLP's all-types total under its own label, and says it is not like for like.
  const clp=await ask('Who gets more money, Country Liberal Party or Liberal?');
  assert.equal(clp.answer_status,'calculated');assert.equal(clp.comparison_complete,false);assert.match(clp.answer,/^Liberal recorded \$100,512,875 in donations received/);
+ assert.match(clp.answer,/ Country Liberal Party recorded \$107,300 in all receipt types \(no type breakdown in the AEC data OPAX holds\), 1998–99 to 2004–05\. The AEC data OPAX holds for Country Liberal Party doesn't split receipts by type, so its total can't be set beside the donation figures as like for like\./);
+ assert.doesNotMatch(clp.answer,/One comparison side has matching records|Country Liberal Party recorded \$[\d,]+ in donations/);
+ const clpLinks=[...clp.answer.matchAll(/\[(See [^\]]+ on the money map)\]\(([^)]+)\)/g)].map(m=>[m[1],new URL(m[2]).searchParams.get('party'),new URL(m[2]).searchParams.get('receipt')]);
+ assert.deepEqual(clpLinks,[['See Liberal donations on the money map','party:Liberal','donations'],['See Country Liberal Party on the money map','party:Country Liberal Party',null]]);
  for(const q of ['Who gets more money, Labor or LNP or Greens in Queensland?','Who gets more money, Labor or LNP excluding coal in Queensland?'])assert.equal(await ask(q),null,q);
  for(const q of ['Who gets more money, LNP or Unicorn Party in Queensland?','Who donates most to Country Liberal Party in Victoria?','Who donates most to Liberal National Party in Victoria?']) {
   const r=await ask(q);assert.equal(r.answer_status,'needs_scope',q);assert.deepEqual(r.sources,[]);assert.doesNotMatch(r.answer,/\$[\d,]+/);
@@ -716,4 +727,65 @@ test('untyped fallback: funding follow-ups replace party, industry, donor and ye
  const controlled=await askUntyped('What about 2019-20?',{context:history(...turns),party:'Nationals',from:'2022',to:'2022'});
  assert.match(controlled.answer,/Tabcorp.*\$26,400/s);assert.match(controlled.money_context,/Financial years: 2019–20/);
  const labor=await askUntyped('Who donated the most to Labor from gambling?',{from:'2020',to:'2020'});assert.match(labor.answer,/\$128,500/);
+});
+
+test('donation-led answers link the Donation-only map for the same selection, and the all-types map when they show it',async()=>{
+ const links=answer=>[...answer.matchAll(/\[(See [^\]]+ on the money map)\]\(([^)]+)\)/g)].map(m=>({label:m[1],url:new URL(m[2])}))
+ const same=(a,b)=>{for(const key of ['jur','type','industry','party','focus','from','to'])assert.equal(a.searchParams.get(key),b.searchParams.get(key),key)}
+ // A ranking leads with donations and shows all receipt types beside them: both links, same selection.
+ const ranking=await ask('Who gets the most from gambling in 2021?');
+ assert.equal(ranking.measure,'donations');
+ const [donations,all]=links(ranking.answer);
+ assert.deepEqual(links(ranking.answer).map(l=>l.label),['See these donations on the money map','See all receipt types on the money map']);
+ assert.equal(donations.url.searchParams.get('receipt'),'donations');assert.equal(all.url.searchParams.get('receipt'),null);same(donations.url,all.url);
+ assert.equal(donations.url.searchParams.get('industry'),'gambling');assert.equal(donations.url.searchParams.get('from'),'2021');assert.equal(donations.url.searchParams.get('to'),'2021');
+ const party=await ask('Who donates the most to Labor?');
+ assert.deepEqual(links(party.answer).map(l=>[l.label,l.url.searchParams.get('party'),l.url.searchParams.get('receipt')]),[['See these donations on the money map','party:Labor','donations'],['See all receipt types on the money map','party:Labor',null]]);
+ // Comparisons show only donations: one Donation-only link.
+ const pair=await ask('Who gets more gambling money, Labor or Liberal?');
+ assert.equal(pair.measure,'donations');
+ assert.deepEqual(links(pair.answer).map(l=>[l.label,l.url.searchParams.get('industry'),l.url.searchParams.get('receipt')]),[['See these donations on the money map','gambling','donations']]);
+ // Without a donation lead, the link stays on all receipt types.
+ // A one-party answer shows only donations: one link.
+ const one=await ask('Who gets the most from gambling in 2000?');
+ assert.match(one.answer,/^\*\*Labor\*\* is the only party receiving \*\*\$29,500\*\* in donations received/);assert.doesNotMatch(one.answer,/across all receipt types|\| Recipient \|/);
+ assert.deepEqual(links(one.answer).map(l=>[l.label,l.url.searchParams.get('industry'),l.url.searchParams.get('receipt')]),[['See these donations on the money map','gambling','donations']]);
+ const untyped=await askUntyped('Who gets the most from gambling?');
+ assert.deepEqual(links(untyped.answer).map(l=>[l.label,l.url.searchParams.get('receipt')]),[['See these on the money map',null]]);
+});
+
+test('a year comparison never sets a year without receipt types beside typed figures',async()=>{
+ const synthetic={meta:{generated:'2026-11-11',receipt_types:{available:true,schema:1,donation_type:'donation_received'}},nodes:[
+  {id:'donor:example casino',kind:'donor',label:'Example Casino',industry:'gambling'},{id:'donor:example betting',kind:'donor',label:'Example Betting',industry:'gambling'},
+  {id:'party:Labor',kind:'party',label:'Labor'}],edges:[
+  {source:'donor:example casino',target:'party:Labor',total:300,count:1,firstYear:2020,lastYear:2020,byYear:{2020:[300,1]},by_type:{donation_received:300},by_type_year:{'2020-21':{donation_received:[300,1]}}},
+  {source:'donor:example betting',target:'party:Labor',total:500,count:2,firstYear:2021,lastYear:2021,byYear:{2021:[500,2]},by_type:{},by_type_year:{}}]};
+ const base=moneyAssets('typed');
+ const own={fetch:async request=>new URL(request.url).pathname==='/graph/money.json'?Response.json(synthetic):base.fetch(request)};
+ const r=await rankedMoneyAnswer({question:'How did gambling receipts to Labor change from 2020 to 2021?'},own);
+ assert.equal(r.answer_status,'calculated');assert.equal(r.comparison_complete,false);
+ assert.match(r.answer,/^Labor in 2020–21 recorded \$300 in donations received/);
+ assert.match(r.answer,/The AEC data OPAX holds for 2021–22 doesn't split receipts by type, so it can't be set beside the donation figures\./);
+ assert.doesNotMatch(r.answer,/\$500|records no matching receipts in 2021–22/);
+ assert.match(r.answer,/\[See these donations on the money map\]\([^)]*receipt=donations/);
+});
+
+test('a year left out for having no type breakdown keeps its reason beside the published-range note',async()=>{
+ const synthetic={meta:{generated:'2026-11-11',receipt_types:{available:true,schema:1,donation_type:'donation_received'}},nodes:[
+  {id:'donor:example casino',kind:'donor',label:'Example Casino',industry:'gambling'},{id:'donor:example betting',kind:'donor',label:'Example Betting',industry:'gambling'},
+  {id:'party:Labor',kind:'party',label:'Labor'}],edges:[
+  {source:'donor:example casino',target:'party:Labor',total:300,count:1,firstYear:2025,lastYear:2025,byYear:{2025:[300,1]},by_type:{donation_received:300},by_type_year:{'2025-26':{donation_received:[300,1]}}},
+  {source:'donor:example betting',target:'party:Labor',total:500,count:2,firstYear:2021,lastYear:2021,byYear:{2021:[500,2]},by_type:{},by_type_year:{}}]};
+ const base=moneyAssets('typed');
+ const own={fetch:async request=>new URL(request.url).pathname==='/graph/money.json'?Response.json(synthetic):base.fetch(request)};
+ const r=await rankedMoneyAnswer({question:'How did gambling receipts to Labor change from 2021 to 2030?'},own);
+ assert.equal(r.answer_status,'calculated');assert.equal(r.comparison_complete,false);assert.doesNotMatch(r.answer,/\$500/);
+ assert.match(r.answer,/The published records run from 2021–22 to 2025–26\. The AEC data OPAX holds for 2021–22 doesn't split receipts by type, so it can't be set beside the donation figures\./);
+});
+
+test('the context line starts its measure label with a capital',async()=>{
+ const pair=await ask('Who gets more money, Liberal or LNP?');
+ assert.match(pair.answer,/Federal \(AEC\)\. Donations received \(AEC receipt type: Donation Received\); nominal Australian dollars\./);
+ const clp=await ask('How did receipts to Country Liberal Party change from 2003 to 2004?');
+ assert.match(clp.answer,/Federal \(AEC\)\. All receipt types \(no type breakdown in the AEC data OPAX holds\); nominal/);
 });

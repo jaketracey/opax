@@ -9,7 +9,7 @@ import {shortMoney} from '../public/format.js';
 import {
   parseExplainParams, explainPath, explainHrefFor, explainJurisdiction, resolveFlow, narrative, flowTitle,
   comparableFlows, federalThreshold, timelineRows, candidateBills, partyOnBill, billWordsFor, pageHTML,
-  receiptTypeNote, mountMoneyExplain, pctText, fyLabel, yearPhrase, AGGREGATE_FLOOR,
+  receiptTypeNote, mountMoneyExplain, pctText, fyLabel, yearPhrase, AGGREGATE_FLOOR, receiptGraph,
 } from '../public/money-explain.js';
 
 /** A view reduced by the floor: total and count only, with no year, share, split or chart. */
@@ -256,12 +256,17 @@ const servedIndex = new Map();
 const servedAec = JSON.parse(readFileSync(new URL('../public/graph/aec-extras.json', import.meta.url)));
 
 test('served files: the largest named federal flow reads back its own edge exactly', () => {
-  const graph = served.federal;
+  // The page reads each edge's typed cells (receiptGraph: each gift once, from the
+  // party's own return), so the edge it reads back is the converted one. The released
+  // legacy cell for this flow (Mineralogy to the UAP, $124.66m) also holds the donor's
+  // own declarations; its typed figure is $56.59m.
+  const graph = receiptGraph(served.federal);
   const byId = new Map(graph.nodes.map((n) => [n.id, n]));
   const e = graph.edges.filter((x) => !x.grant && !x.flow && byId.get(x.source)?.kind === 'donor')
     .filter(x=>parseExplainParams(new URLSearchParams({from:x.source,to:x.target}),graph,servedIndex).ok)
     .sort((a, b) => b.total - a.total)[0];
-  const flow = resolveFlow({jur: 'federal', from: e.source, to: e.target}, graph, servedIndex, {aec: servedAec});
+  assert.ok(e.typed);
+  const flow = resolveFlow({jur: 'federal', from: e.source, to: e.target}, served.federal, servedIndex, {aec: servedAec});
   assert.equal(flow.total, e.total); assert.equal(flow.count, e.count);
   const cells = Object.values(e.byYear);
   assert.equal(cells.reduce((s, c) => s + c[0], 0) + (e.undated?.[0] || 0), e.total);
