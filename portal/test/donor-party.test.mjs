@@ -215,6 +215,21 @@ test('the real app renders a published one-member party outside the money map: i
   assert.ok(doc.querySelector('a[href*="kind=speech"][href*="party="]'), 'a link to their speeches');
 });
 
+test('A4b: the real app gives a sponsor-only party its page: the name and its sponsored bills, linked', {timeout: 120_000}, async () => {
+  const result = await renderEntry('/subject/party/rex-patrick-team', '#party-sponsored-bills li');
+  assert.deepEqual(result.errors, []);
+  assert.equal(result.location, '/subject/party/rex-patrick-team');
+  assert.equal(result.rows, 4);
+  const doc = new JSDOM(result.html).window.document;
+  assert.equal(doc.querySelector('#subject-title').textContent, 'Rex Patrick Team');
+  assert.equal(doc.querySelector('#party-sponsored-bills h3').textContent, 'Bills sponsored (4)');
+  const first = doc.querySelector('#party-sponsored-bills li a');
+  assert.equal(first.textContent, 'Australian Federal Integrity Commission Bill 2021');
+  assert.equal(first.getAttribute('href'), '/bill/au-federal-s1321');
+  assert.ok(!doc.querySelector('#party-members'), 'no members block: the record names no member under this label');
+  assert.doesNotMatch(doc.body.textContent, /Party not found/);
+});
+
 test('the app presents independents as parliamentarians outside a party organisation', {timeout: 120_000}, async () => {
   const result = await renderEntry('/subject/party/independent', '#party-members li.dir-row');
   assert.deepEqual(result.errors, []);
