@@ -33,19 +33,20 @@ class CallReviewRegressionTests : SafeVoiceTest() {
   }
 
   @Suppress("UNCHECKED_CAST")
-  @Test fun unknownSessionStateAndNullableFieldsStillRefuseStart() = test {
+  @Test fun unknownSessionStateAndNullableFieldsStillStart() = test {
     val body = bodyMap(signedStatus(active = "future-open")).toMutableMap()
     body["active_session"] = (body["active_session"] as Map<String, Any?>).toMutableMap().also { it["expires_at"] = null }
     body["total_seconds"] = null
     body["unlimited"] = null
     body["budget_open"] = null
     val status = VoiceStatus.decode(json(body))
-    assertEquals(VoiceFailure.callOpen, status.refusal)
+    assertNull(status.refusal)
+    // The open session is the server's to take over: Start still reserves.
     val rig = Rig.make()
     rig.http.configure(status = json(body))
-    rig.controller.start()
-    assertEquals(CallState.unavailable, rig.controller.state)
-    assertEquals(0, rig.http.count(AuthRoute.voiceStart))
+    rig.live()
+    assertEquals(1, rig.http.count(AuthRoute.voiceStart))
+    assertFalse(rig.recorder.hasError(VoiceFailure.callOpen))
     rig.close()
   }
 

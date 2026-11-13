@@ -32,20 +32,21 @@ class ReviewRegressionTests : SafeVoiceTestCase() {
     }
   }
 
-  @Test fun unknownSessionStateAndNullableFieldsStillRefuseAndBridgeHasNoId() = runBlocking {
+  @Test fun unknownSessionStateAndNullableFieldsDoNotRefuseAndBridgeHasNoId() = runBlocking {
     val body = parse(signedStatus(active = "future-open")).toMutableMap()
     body["active_session"] = (body["active_session"] as Map<*, *>).toMutableMap().apply { put("expires_at", null) }
     body["total_seconds"] = null; body["unlimited"] = null; body["budget_open"] = null
     val status = VoiceStatus.decode(json(body))
     assertEquals(ActiveSession.State.unknown("future-open"), status.activeSession?.state)
-    assertEquals(VoiceFailure.callOpen, status.refusal)
+    assertNull(status.refusal)
     val projected = jsonObject(VoiceBridgeValue.status(status.bridgeValue)).toString()
     assertFalse(projected.contains(fixtureID)); assertFalse(projected.contains("\"id\""))
     Rig.make().use { rig ->
       rig.server.configure(status = json(body))
       rig.core.refreshStatus()
-      assertEquals(CallState.unavailable, rig.core.snapshot().state)
-      eventually { rig.recorder.hasError(VoiceFailure.callOpen) }
+      // The open session is the server's to take over on Start: no refusal here.
+      assertEquals(CallState.ready, rig.core.snapshot().state)
+      assertFalse(rig.recorder.hasError(VoiceFailure.callOpen))
       assertEquals(0, rig.server.count(AuthRoute.voiceStart))
     }
   }
@@ -262,7 +263,7 @@ class CallStatusTests : SafeVoiceTestCase() {
   @Test fun refusalsArePublishedWithUnavailableState() = runBlocking {
     for ((body, failure) in listOf(signedStatus(signedIn = false) to VoiceFailure.signedOut,
       signedStatus(signedIn = false, enabled = false) to VoiceFailure.disabled, signedStatus(remaining = 0) to VoiceFailure.allowanceExhausted,
-      signedStatus(active = "active") to VoiceFailure.callOpen, signedStatus(budget = false) to VoiceFailure.budgetClosed)) {
+      signedStatus(budget = false) to VoiceFailure.budgetClosed)) {
       Rig.make().use { rig ->
         rig.server.configure(status = body)
         rig.server.setResponse(AuthRoute.communityStatus, HttpResponse(200, body = json(mapOf("enabled" to true, "member" to mapOf("id" to "fixture")))))

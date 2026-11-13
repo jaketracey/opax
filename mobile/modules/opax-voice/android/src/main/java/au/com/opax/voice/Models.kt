@@ -151,7 +151,7 @@ data class VoiceStatusSnapshot(
     get() = when {
       !enabled -> VoiceFailure.disabled
       !signedIn -> VoiceFailure.signedOut
-      activeSession != null -> VoiceFailure.callOpen
+      // An open session is not a refusal: /api/voice/start ends it and reserves the new call.
       unlimited != true && remainingSeconds <= 0 -> VoiceFailure.allowanceExhausted
       budgetOpen == false -> VoiceFailure.budgetClosed
       else -> null
