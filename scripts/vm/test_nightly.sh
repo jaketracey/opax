@@ -1441,6 +1441,56 @@ new_refresh_sandbox federal_paused
 PAUSE_STEPS=federal_feed OPAX_ONLY=fed_download,fed_load refresh
 check "a paused federal feed preserves cached citations and skips loading without failing the night" bash -c "[ '$RRC' -eq 0 ] && ! grep -q 'parli.ingest.speeches --modern-only' '$RS_CALLS' && grep -q 'Paused sources: fed_download' '$HOME/.cache/autoresearch/pipeline/daily.log'"
 
+echo "== 33. a night without the Senate party records keeps the published Senate labels and recomputes the House"
+new_sandbox s33senate
+# Invented members: a senator the Handbook fixture dates, and a House member a reviewed service record dates.
+python3 - "$HOME/.cache/autoresearch/parli.db" <<'PYEOF'
+import sqlite3, sys
+with sqlite3.connect(sys.argv[1]) as db:
+    db.executescript("""
+    INSERT INTO ext_divisions VALUES ('federal-senate-5','Fixture Senate question','Fixture Senate question','2007-02-06',
+     'senate','federal',1,0,'affirmative','https://example.test/senate-5');
+    INSERT INTO ext_votes VALUES ('federal-senate-5','99500','Quinn Harrowgate','Quinn Harrowgate','aye','federal','Example Conservatives');
+    INSERT INTO ext_divisions VALUES ('federal-representatives-5','Fixture House question','Fixture House question','2014-03-20',
+     'representatives','federal',1,0,'affirmative','https://example.test/reps-5');
+    INSERT INTO ext_votes VALUES ('federal-representatives-5','99100','Corin Ashdale','Corin Ashdale','aye','federal','One Nation');
+    """)
+PYEOF
+s33_evidence() { # $1: the House member's dated party; the Handbook fixture is written unless $2 is "no-senate"
+  python3 - "$REPO" "$1" "${2:-}" <<'PYEOF'
+import json, pathlib, sys
+repo, house_party, mode = pathlib.Path(sys.argv[1]), sys.argv[2], sys.argv[3]
+service = repo / 'scripts/roster_service.json'
+doc = json.loads(service.read_text())
+doc['service'] = [r for r in doc.get('service', []) if r.get('name') != 'Corin Ashdale'] + [
+    {'name': 'Corin Ashdale', 'chamber': 'representatives', 'party': house_party, 'start': '2013-09-07', 'end': '2025-12-15'}]
+service.write_text(json.dumps(doc, indent=2) + '\n')
+handbook = repo / 'scripts/handbook_party_service.json'
+if mode == 'no-senate':
+    handbook.unlink()
+else:
+    handbook.write_text(json.dumps({'source': 'fixture', 'url': 'https://example.test/handbook', 'fetched': '2026-11-13',
+        'chamber': 'senate', 'from': '2006-01-01', 'note': 'fixture', 'people': [
+        {'phid': 'ZZ1', 'pid': '99500', 'name': 'Quinn Harrowgate', 'names': ['Quinn Harrowgate'], 'periods': [
+            {'party': 'Liberal', 'start': '2006-05-04', 'end': '2017-02-07', 'through': None},
+            {'party': 'Example Conservatives', 'start': '2017-02-07', 'end': None, 'through': '2019-06-25'}]}]}) + '\n')
+PYEOF
+  git -C "$REPO" add -A scripts/roster_service.json scripts/handbook_party_service.json
+  git -C "$REPO" commit -qm "fixture: dated party evidence ($1${2:+, $2})"
+  git -C "$REPO" push -q origin HEAD:main
+}
+s33_evidence Nationals
+OPAX_TODAY=2026-10-10 nightly
+check "night 1: the Senate label is the Handbook's for the date and the House label the dated record's" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show main:portal/public/divisions/division-federal-senate-5.json | grep -q '\"party\":\"Liberal\"' && git --git-dir='$ORIGIN' show main:portal/public/divisions/division-federal-representatives-5.json | grep -q '\"party\":\"Nationals\"'"
+git --git-dir="$ORIGIN" show main:portal/public/divisions/division-federal-senate-5.json > "$SB/s33-senate-night1.json"
+check "night 1: the Senate page is marked as dated" grep -q '"party_dated"' "$SB/s33-senate-night1.json"
+s33_evidence Labor no-senate
+OPAX_TODAY=2026-10-18 nightly
+check "night 2: the night still succeeds" test "$NRC" -eq 0
+check "night 2: one WARNING names the missing Senate party records" bash -c "[ \$(grep -c 'WARNING: the Senate party records' '$SB/nightly.out') -eq 1 ]"
+check "night 2: the Senate page is byte for byte as published" bash -c "git --git-dir='$ORIGIN' show main:portal/public/divisions/division-federal-senate-5.json | cmp -s - '$SB/s33-senate-night1.json'"
+check "night 2: the House label is recomputed from its own dated record" bash -c "git --git-dir='$ORIGIN' show main:portal/public/divisions/division-federal-representatives-5.json | grep -q '\"party\":\"Labor\"'"
+
 echo "== honest source access: pauses preserve publications and do not fail the night"
 new_refresh_sandbox honest-daily
 PAUSE_STEPS="committee_hearings grantconnect conduct_interests_federal" refresh

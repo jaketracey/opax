@@ -51,7 +51,7 @@ export interface Division {
   source_url?: string; url?: string; stage?: string;
   party_tallies?: { party: string; votes: Record<string,number> }[];
   recorded_ayes?: number; recorded_noes?: number; unknown_party_count?: number;
-  members?: { name: string; person_id?: string; person_slug?: string; party?: string; vote: string; party_source?: { basis: string; url?: string | null; source_party?: string }; party_withheld?: { source_party: string; reason?: string }; party_undated?: { source_party: string; record_parties?: string[] } }[];
+  members?: { name: string; person_id?: string; person_slug?: string; party?: string; vote: string; party_source?: { basis: string; url?: string | null; source_party?: string }; party_withheld?: { source_party: string; reason?: string } }[];
   bills?: { key: string; title: string; url?: string }[];
   /** Set by the division export when the chamber's own dated party record covers this date (scripts/vote_parties.py). */
   _meta?: { party_dated?: { record: string; from: string; through: string } };
@@ -380,25 +380,23 @@ function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>,
   const fromRoster=members.filter(m=>m.party && m.party_source && !m.party_source.source_party).length
   const corrected=members.filter(m=>m.party && m.party_source?.source_party).length
   const withheld=members.filter(m=>!m.party && m.party_withheld).length
-  // A kept label whose service record names another party without dating the change (scripts/vote_parties.py).
-  const undated=members.filter(m=>m.party && m.party_undated).length
   const missing=d.unknown_party_count ?? members.filter(m=>!m.party).length
   const tallied=parties.reduce((n,{votes})=>n+Object.values(votes).reduce((a,b)=>a+b,0),0)
   const listed=members.length || tallied+missing
   const labelled=listed-missing
   const plural=(n: number)=>`${count(n)} ${n===1 ? 'member' : 'members'}`
   // The division source can give a senator's later party on every date. Federal Senate labels are checked
-  // against the Parliamentary Handbook's dated party records inside their dated range (_meta.party_dated);
-  // a Senate page outside it says its labels are the source's rather than claim they are dated.
+  // against the Parliamentary Handbook's dated party records inside their dated range (_meta.party_dated). A
+  // Senate page without that mark (outside the range, or with a label no dated record checks: a senator whose
+  // only record is undated and names another party, or a reviewed hold) says its labels are the source's.
   const senate=d.house==='senate' && (d.jurisdiction ?? 'federal')==='federal' && !d._meta?.party_dated
   const senateNote=' These are the division source’s labels and can show a senator’s later party rather than the one held on this date, because the dated Senate party records held do not cover this date.'
   const origin=!fromRoster ? (senate ? `Party labels are those given in the division record.${senateNote}` : 'Party labels are those recorded for this division, rather than current affiliations.')
     : fromRoster>=labelled ? 'The division record gives no parties. Each label here is the one a dated parliamentary roster records for that member on this date.'
     : `Party labels are those recorded for this division, except for ${plural(fromRoster)} the division record lists without a party: their labels are the ones a dated parliamentary roster records for them on this date.${senate ? senateNote.replace(' These are', ' The others are') : ''}`
   const correctedNote=corrected ? ` For ${plural(corrected)}, the division record gives a party not held on this date; the label shown is the party dated service records give for this date.` : ''
-  const undatedNote=undated && !senate ? ` For ${plural(undated)}, the label is the one the division record gives, but ${undated===1 ? 'their service record names' : 'their service records name'} a different party without dating the change, so the label can show a party held at another time.` : ''
   const heldNote=withheld ? ` For ${count(withheld)} of them, the division record gives a party that dated records leave unclear for this date, so it is not shown.` : ''
-  let html=`<h3>How each party voted</h3><p>${origin}${correctedNote}${undatedNote}${ayes!==d.ayes || noes!==d.noes ? ` The member list is partial: ${ayes} recorded ayes and ${noes} recorded noes; the official tally above remains the source total.` : ''}</p>`
+  let html=`<h3>How each party voted</h3><p>${origin}${correctedNote}${ayes!==d.ayes || noes!==d.noes ? ` The member list is partial: ${ayes} recorded ayes and ${noes} recorded noes; the official tally above remains the source total.` : ''}</p>`
   // Said before the lines when they describe a minority of the members, so a short list is not read as the whole vote.
   const minority=parties.length>0 && missing>0 && labelled*2<listed
   if(minority) html+=`<p>These party lines cover only ${count(labelled)} of the ${plural(listed)} listed. No party is recorded for the other ${count(missing)} on this date.${heldNote}</p>`

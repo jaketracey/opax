@@ -20,8 +20,13 @@ evidence the repo or the database already holds, and only for its own date:
                    A senator's undated Handbook party ("undated") dates
                    nothing; where it differs from the source label and no
                    dated period covers the date, the label is kept and marked
-                   party_undated, because the senator changed party on a date
-                   no record held gives (the page says so).
+                   party_unchecked, because the senator changed party on a date
+                   no record held gives. A reviewed hold (roster_accept.json,
+                   vote_party_periods.holds) takes a window out of a person's
+                   dated periods where their dates conflict with other
+                   reporting: labels inside it are kept and marked the same
+                   way. A division with a marked label is not marked
+                   party_dated, so its page keeps the caveat.
   release-roster   a verified seat roster in the release, on its as_of date.
   official-list    an official chamber list in scripts/roster_state_evidence.json,
                    on its as_of date.
@@ -63,6 +68,11 @@ back (party_withheld) rather than shown from the wrong period. Where no dated
 evidence covers the date, or the identity is ambiguous, the source label stays.
 Corrections and holds are recomputed from the source label on every run.
 
+A party renamed while its members sat shows the name it carried on the
+division's date (vote_party_periods.renames, reviewed dated names): Nick
+Xenophon Team before 10 Apr 2018 and Centre Alliance from then. The label
+before renaming stays in party_name.source_party.
+
 A dated record that does not load on a night (the electorate release for the
 House, the Handbook file for the Senate) recomputes nothing for its chamber:
 the export keeps that chamber's published fills and corrections
@@ -79,7 +89,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter, defaultdict
-from datetime import date as Date
+from datetime import date as Date, timedelta
 import json
 from pathlib import Path
 import re
@@ -294,6 +304,78 @@ def accepted_periods(path: Path) -> list[dict]:
     return people
 
 
+def day_after(day: str) -> str:
+    return (Date.fromisoformat(day) + timedelta(days=1)).isoformat()
+
+
+def read_holds(holds) -> list[dict]:
+    """Reviewed holds: windows [start, end) taken out of a person's dated periods."""
+    out = []
+    for hold in holds or []:
+        try:
+            windows = [(iso(w["start"]), iso(w["end"])) for w in hold["windows"]]
+            if not hold["reason"] or not windows or any(not (a and b and a < b) for a, b in windows):
+                raise ValueError("a window without dates, or no reason")
+            out.append({"chamber": hold["chamber"], "pid": str(hold["pid"]), "name": hold["name"],
+                        "windows": windows, "reason": hold["reason"]})
+        except (KeyError, TypeError, ValueError, AttributeError) as e:
+            log(f"party hold skipped ({type(e).__name__}: {e})")
+    return out
+
+
+def apply_holds(evidence: list[dict], holds: list[dict]) -> list[dict]:
+    """Clip every dated period of a held person out of each held window, logged once per window."""
+    out = list(evidence)
+    for hold in holds:
+        windows = ", ".join(f"{a} to {b}" for a, b in hold["windows"])
+        log(f"party periods for {hold['name']} held ({windows}): {hold['reason']}")
+        for start, end in hold["windows"]:
+            clipped = []
+            for e in out:
+                if e["point"] or e["chamber"] != hold["chamber"] or hold["pid"] not in e["pids"] or not e["start"]:
+                    clipped.append(e)
+                    continue
+                stop = e["end"] or (day_after(e["through"]) if e["through"] else None)
+                if not stop or stop <= start or e["start"] >= end:
+                    clipped.append(e)
+                    continue
+                if e["start"] < start:
+                    clipped.append({**e, "end": start, "through": None})
+                if end < stop:
+                    clipped.append({**e, "start": end})
+            out = clipped
+    return out
+
+
+def read_renames(renames) -> list[list[tuple]]:
+    """Reviewed dated names of one party: [(from or None, name), ...] in date order."""
+    out = []
+    for rename in renames or []:
+        try:
+            names = [(iso(n["from"]) if n.get("from") else None, label(n["name"])) for n in rename["names"]]
+            if not rename["evidence"] or len(names) < 2 or names[0][0] is not None \
+                    or any(not f or not n for f, n in names[1:]) or not all(n for _, n in names) \
+                    or [f for f, _ in names[1:]] != sorted(f for f, _ in names[1:]) \
+                    or not all(same_party(names[0][1], n) for _, n in names):
+                raise ValueError("names of one party, the first undated, the rest dated in order")
+            out.append(names)
+        except (KeyError, TypeError, ValueError, AttributeError) as e:
+            log(f"party rename skipped ({type(e).__name__}: {e})")
+    return out
+
+
+def dated_name(renames, party, day) -> str | None:
+    """The name `party` carried on `day`, when a reviewed rename covers it."""
+    for names in renames:
+        if any(same_party(party, n) for _, n in names):
+            current = names[0][1]
+            for start, name in names[1:]:
+                if start <= day:
+                    current = name
+            return current
+    return None
+
+
 def apply_accepts(evidence: list[dict], accepts: list[dict]) -> list[dict]:
     """Install each reviewed record: drop the release periods it replaces, add its periods.
 
@@ -378,10 +460,15 @@ class Evidence(list):
     house) to the dated range of its own party record: a record inside it is
     marked _meta.party_dated, so its page can say its labels were checked.
     `undated` maps (chamber, person id or folded name) to a person's undated
-    parties in that chamber's record (undated_change)."""
-    def __init__(self, items=(), elections=None, check_labels=True, frozen=(), dated=None, undated=None):
+    parties in that chamber's record (undated_change); `holds` are reviewed
+    windows taken out of a person's dated periods (held), and `renames` the
+    reviewed dated names of renamed parties (dated_name)."""
+    def __init__(self, items=(), elections=None, check_labels=True, frozen=(), dated=None, undated=None,
+                 holds=(), renames=()):
         super().__init__(items)
         self.undated = dict(undated or {})
+        self.holds = list(holds)
+        self.renames = list(renames)
         self.elections = load_elections() if elections is None else elections
         self.check_labels = check_labels
         self.frozen = frozenset(frozen)
@@ -394,6 +481,16 @@ class Evidence(list):
         parties = self.undated.get((house, str(pid))) or self.undated.get((house, fold(member.get("name"))))
         if parties and not any(same_party(p, member.get("party")) for p in parties):
             return parties
+        return None
+
+    def held(self, house: str, member: dict, day: str) -> str | None:
+        """The reason of a reviewed hold covering this member on `day`, else None."""
+        pid = rules.canonical_person_id(member.get("person_id"))
+        pid = pid[5:] if pid and pid.startswith("tvfy_") else pid
+        for hold in self.holds:
+            if hold["chamber"] == house and hold["pid"] == str(pid) \
+                    and any(a <= day < b for a, b in hold["windows"]):
+                return hold["reason"]
         return None
 
     def dated_range(self, record: dict) -> dict | None:
@@ -435,12 +532,17 @@ def load_evidence(root: Path = ROOT, db: sqlite3.Connection | None = None, publi
         log("WARNING: the Senate party records (scripts/handbook_party_service.json) did not load; "
             "no federal Senate party is recomputed this run: the previous Senate fills and corrections are kept "
             "as published")
+    holds, renames = [], []
     try:
+        reviewed = json.loads((root / "scripts/roster_accept.json").read_text(encoding="utf-8")).get("vote_party_periods") or {}
         out = apply_accepts(out, accepted_periods(root / "scripts/roster_accept.json"))
+        holds = read_holds(reviewed.get("holds"))
+        out = apply_holds(out, holds)
+        renames = read_renames(reviewed.get("renames"))
     except (OSError, ValueError, TypeError, AttributeError) as e:
         log(f"accepted party records skipped ({type(e).__name__}: {e}); none is applied")
     return Evidence(out, load_elections(root / "scripts/general_elections.json"), check_labels=release_loaded,
-                    frozen=frozen, dated=dated, undated=undated)
+                    frozen=frozen, dated=dated, undated=undated, holds=holds, renames=renames)
 
 
 def same_parliament(elections: dict, chamber: str, a: str, b: str) -> bool:
@@ -641,13 +743,16 @@ def clear_fills(records) -> None:
         meta.pop("party_check", None)
         meta.pop("party_dated", None)
         for member in record.get("members", []):
+            named = member.pop("party_name", None)
+            if isinstance(named, dict) and named.get("source_party"):
+                member["party"] = named["source_party"]
             fill = member.pop("party_source", None)
             if fill:
                 if isinstance(fill, dict) and fill.get("source_party"):
                     member["party"] = fill["source_party"]
                 else:
                     member.pop("party", None)
-            member.pop("party_undated", None)
+            member.pop("party_unchecked", None)
             held = member.pop("party_withheld", None)
             if isinstance(held, dict) and held.get("source_party") and not member.get("party"):
                 member["party"] = held["source_party"]
@@ -671,9 +776,9 @@ def keep_published_parties(record: dict, published: dict) -> None:
         prev = old.get(key(member))
         if not prev:
             continue
-        undated = prev.get("party_undated")
-        if isinstance(undated, dict) and member.get("party") == undated.get("source_party"):
-            member["party_undated"] = dict(undated)
+        unchecked, named = prev.get("party_unchecked"), prev.get("party_name")
+        if isinstance(unchecked, dict) and member.get("party") == unchecked.get("source_party"):
+            member["party_unchecked"] = dict(unchecked)
         fill, held = prev.get("party_source"), prev.get("party_withheld")
         if isinstance(fill, dict) and fill.get("source_party"):
             if member.get("party") == fill["source_party"]:
@@ -688,6 +793,9 @@ def keep_published_parties(record: dict, published: dict) -> None:
                 member.pop("party", None)
                 member["party_withheld"] = dict(held)
                 counts["withheld"] += 1
+        if isinstance(named, dict) and named.get("source_party") \
+                and member.get("party") in (named["source_party"], prev.get("party")):
+            member["party"], member["party_name"] = prev["party"], dict(named)
     meta, old_meta = record.setdefault("_meta", {}), published.get("_meta", {})
     meta.pop("party_fill", None)
     meta.pop("party_check", None)
@@ -741,7 +849,7 @@ def resolve_records(records, evidence, apply=False, check_labels=True):
     voters = voters_by_day(records)
     for record in records:
         day, house = iso(record.get("date")), record.get("house")
-        filled = corrected = withheld = 0
+        filled = corrected = withheld = unchecked = 0
         for member in record.get("members", []):
             if not str(member.get("name") or "").strip():
                 continue
@@ -760,14 +868,18 @@ def resolve_records(records, evidence, apply=False, check_labels=True):
                     member["party_withheld"] = {"source_party": outcome["source_party"], "reason": "conflicting"}
                     withheld += 1
                 elif outcome["reason"] in UNDATED_KEPT and getattr(evidence, "undated_change", None):
-                    # No dated period covers the date, and the chamber's record names another party
-                    # without a date: the label stays, marked as possibly from another period.
-                    parties = evidence.undated_change(house, member)
-                    if parties:
-                        outcome["reason"] = "label-kept-undated-change"
+                    # No dated period covers the date: a reviewed hold, or the chamber's record naming
+                    # another party without a date. The label stays, marked as not checked.
+                    reason = evidence.held(house, member, day)
+                    parties = None if reason else evidence.undated_change(house, member)
+                    if reason or parties:
+                        outcome["reason"] = "label-kept-held" if reason else "label-kept-undated-change"
+                        unchecked += 1
                         if apply:
-                            member["party_undated"] = {"source_party": outcome["source_party"],
-                                                       "record_parties": parties}
+                            member["party_unchecked"] = (
+                                {"source_party": outcome["source_party"], "reason": "held", "note": reason} if reason
+                                else {"source_party": outcome["source_party"], "reason": "undated-change",
+                                      "record_parties": parties})
                 yield outcome
                 continue
             if not day:
@@ -792,7 +904,18 @@ def resolve_records(records, evidence, apply=False, check_labels=True):
                 member["party_source"] = {"basis": source, "url": url}
                 filled += 1
             yield outcome
-        rng = apply and check_labels and getattr(evidence, "dated_range", None) and evidence.dated_range(record)
+        renames = getattr(evidence, "renames", None)
+        if apply and renames and day:
+            # One name per party on a date: a renamed party shows the name it carried that day.
+            for member in record.get("members", []):
+                party = member.get("party")
+                name = dated_name(renames, party, day) if party else None
+                if name and name != party:
+                    member["party_name"] = {"source_party": party, "basis": "dated-name"}
+                    member["party"] = name
+        # A page whose labels include one no dated record checks keeps its caveat.
+        rng = apply and check_labels and not unchecked and getattr(evidence, "dated_range", None) \
+            and evidence.dated_range(record)
         if rng:
             record.setdefault("_meta", {})["party_dated"] = {
                 **rng, "note": "Party labels were checked against dated party records for this chamber and date."}

@@ -751,7 +751,7 @@ class ReviewedPartyPeriods(unittest.TestCase):
         err = io.StringIO()
         with redirect_stderr(err):
             evidence = V.load_evidence(ROOT)
-        self.assertNotIn("held", err.getvalue())
+        self.assertNotRegex(err.getvalue(), r"accepted party record.*held")
         accepted = {(e["chamber"], next(iter(e["pids"])), e["party"], e["start"], e["end"])
                     for e in evidence if e["source"] == "accepted-record"}
         self.assertIn(("representatives", "10525", "Labor", "1993-03-13", "2007-08-20"), accepted)  # Harry Quick
@@ -835,11 +835,14 @@ class UndatedSenateChanges(unittest.TestCase):
         self.assertEqual(got[("federal-senate-1", "Tobin Bexley")][1], "label-kept-no-match")
         ainsley, bexley = records[0]["members"]
         self.assertEqual(ainsley["party"], "Example Voice")
-        self.assertEqual(ainsley["party_undated"], {"source_party": "Example Voice", "record_parties": ["Labor"]})
-        self.assertNotIn("party_undated", bexley)
+        self.assertEqual(ainsley["party_unchecked"],
+                         {"source_party": "Example Voice", "reason": "undated-change", "record_parties": ["Labor"]})
+        self.assertNotIn("party_unchecked", bexley)
+        # The page keeps its caveat: a label on it is not checked against a dated record.
+        self.assertNotIn("party_dated", records[0]["_meta"])
         # Recomputed every run: without the undated record the mark goes.
         fill(records, V.Evidence([], elections={}))
-        self.assertNotIn("party_undated", records[0]["members"][0])
+        self.assertNotIn("party_unchecked", records[0]["members"][0])
 
     def test_the_mark_is_kept_on_a_night_without_the_senate_file(self):
         def fresh():
@@ -850,9 +853,79 @@ class UndatedSenateChanges(unittest.TestCase):
             out = Path(tmp) / "divisions"
             D.write_projection(fresh(), out, party_evidence=evidence_from(tmp))
             page = (out / "division-federal-senate-1.json").read_bytes()
-            self.assertIn(b"party_undated", page)
+            self.assertIn(b"party_unchecked", page)
+            self.assertNotIn(b"party_dated", page)
             (Path(tmp) / "scripts/handbook_party_service.json").unlink()
             with redirect_stderr(io.StringIO()):
                 missing = evidence_from(tmp, [release_term("Corin Ashdale", "Nationals", "2013-09-07")])
             D.write_projection(fresh(), out, party_evidence=missing)
             self.assertEqual((out / "division-federal-senate-1.json").read_bytes(), page)
+
+
+class HoldsAndRenames(unittest.TestCase):
+    # Invented: the Handbook dates Wren Calloway's first party to a period other reporting contradicts.
+    CALLOWAY = senator("ZZ8", "Wren Calloway", "99900", [
+        ("One Nation", "2017-11-10", "2018-01-15", None), ("Independent", "2018-01-15", None, "2019-06-30")])
+    HOLD = {"name": "Wren Calloway", "chamber": "senate", "pid": "99900",
+            "windows": [{"start": "2017-11-10", "end": "2018-01-15"}],
+            "reason": "Handbook dates conflict with contemporaneous reporting, pending a primary source."}
+
+    def reviewed(self, tmp, holds=(), renames=()):
+        (Path(tmp) / "scripts/roster_accept.json").write_text(json.dumps(
+            {"vote_party_periods": {"people": [], "holds": list(holds), "renames": list(renames)}}))
+
+    def test_a_held_window_keeps_the_source_label_and_the_page_caveat(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            handbook_file(tmp, [self.CALLOWAY])
+            self.reviewed(tmp, [self.HOLD])
+            err = io.StringIO()
+            with redirect_stderr(err):
+                evidence = evidence_from(tmp)
+        self.assertIn("party periods for Wren Calloway held (2017-11-10 to 2018-01-15)", err.getvalue())
+        self.assertEqual(err.getvalue().count("Wren Calloway held"), 1)
+        records = [senate("federal-senate-1", "2017-11-14", [labelled("Wren Calloway", "Independent", "tvfy_99900")]),
+                   senate("federal-senate-2", "2018-03-01", [labelled("Wren Calloway", "Example Party", "tvfy_99900")])]
+        got = fill(records, evidence)
+        self.assertEqual(got[("federal-senate-1", "Wren Calloway")], ("Independent", "label-kept-held"))
+        self.assertEqual(records[0]["members"][0]["party_unchecked"]["reason"], "held")
+        self.assertNotIn("party_dated", records[0]["_meta"])
+        # Outside the window the dated period still applies.
+        self.assertEqual(got[("federal-senate-2", "Wren Calloway")], ("Independent", "label-corrected"))
+        self.assertIn("party_dated", records[1]["_meta"])
+
+    def test_a_renamed_party_shows_one_name_on_a_date(self):
+        rename = {"evidence": "fixture", "url": "https://example.test/rename",
+                  "names": [{"name": "Nick Xenophon Team"}, {"name": "Centre Alliance", "from": "2018-04-10"}]}
+        quinlan = senator("ZZ9", "Ada Quinlan", "99901", [("Nick Xenophon Team", "2017-11-14", "2018-04-10", None),
+                                                          ("Centre Alliance", "2018-04-10", None, "2022-06-30")])
+        with tempfile.TemporaryDirectory() as tmp:
+            handbook_file(tmp, [quinlan])
+            self.reviewed(tmp, renames=[rename])
+            evidence = evidence_from(tmp)
+        # The source gives the later name to everyone; the Handbook replaces one label with the name on the day.
+        before = senate("federal-senate-1", "2017-11-15", [labelled("Ada Quinlan", "Independent", "tvfy_99901"),
+                                                           labelled("Ivo Pemberton", "Centre Alliance", "tvfy_99902", "no")])
+        after = senate("federal-senate-2", "2018-05-08", [labelled("Ivo Pemberton", "Centre Alliance", "tvfy_99902")])
+        fill([before, after], evidence)
+        self.assertEqual({m["party"] for m in before["members"]}, {"Nick Xenophon Team"})
+        pemberton = before["members"][1]
+        self.assertEqual(pemberton["party_name"], {"source_party": "Centre Alliance", "basis": "dated-name"})
+        self.assertNotIn("party_source", pemberton)
+        self.assertEqual(after["members"][0], labelled("Ivo Pemberton", "Centre Alliance", "tvfy_99902"))
+        # Recomputed every run: the source label comes back when the rename is withdrawn.
+        fill([before], V.Evidence([], elections={}))
+        self.assertEqual(before["members"][1], labelled("Ivo Pemberton", "Centre Alliance", "tvfy_99902", "no"))
+
+    def test_the_committed_holds_and_renames_load(self):
+        with redirect_stderr(io.StringIO()):
+            evidence = V.load_evidence(ROOT)
+        self.assertEqual([h["pid"] for h in evidence.holds], ["10902"])  # Fraser Anning
+        self.assertEqual(V.dated_name(evidence.renames, "Centre Alliance", "2017-11-15"), "Nick Xenophon Team")
+        self.assertEqual(V.dated_name(evidence.renames, "Nick Xenophon Team", "2018-04-10"), "Centre Alliance")
+        self.assertEqual(V.dated_name(evidence.renames, "United Australia Party", "2014-07-07"), "Palmer United Party")
+        self.assertEqual(V.dated_name(evidence.renames, "Palmer United Party", "2019-07-02"), "United Australia Party")
+        self.assertIsNone(V.dated_name(evidence.renames, "Labor", "2019-07-02"))
+        anning = {"name": "Fraser Anning", "person_id": "tvfy_10902"}
+        self.assertTrue(evidence.held("senate", anning, "2017-11-14"))
+        self.assertTrue(evidence.held("senate", anning, "2018-11-12"))
+        self.assertIsNone(evidence.held("senate", anning, "2018-07-01"))

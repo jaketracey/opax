@@ -129,17 +129,13 @@ test('a Senate page inside the dated range reads as a House page: it describes t
   assert.doesNotMatch(wording(senate), /—/);
 });
 
-test('a dated Senate page says which kept labels a service record contradicts without a date', () => {
-  const dated = { _meta: { party_dated: { record: 'handbook', from: '2006-01-01', through: '2026-11-13' } } };
-  const undated = { source_party: 'Later Party', record_parties: ['Earlier Party'] };
-  const page = (members) => text(renderDivisionAnswer(division(members, { key: 'federal-senate-4', slug: 'division-federal-senate-4', house: 'senate', jurisdiction: 'federal', date: '2023-03-01', ...dated }), [], new Map()).html);
-  const one = page([{ name: 'Morgan Fixture', vote: 'aye', party: 'Later Party', party_undated: undated }, { name: 'Riley Sample', vote: 'no', party: 'Other Party' }]);
-  assert.match(one, /Party labels are those recorded for this division, rather than current affiliations\. For 1 member, the label is the one the division record gives, but their service record names a different party without dating the change, so the label can show a party held at another time\./);
-  const none = page([{ name: 'Riley Sample', vote: 'no', party: 'Other Party' }]);
-  assert.doesNotMatch(none, /without dating the change/);
-  // Outside the dated range the page caveat already covers every label: no second note.
-  const outside = text(renderDivisionAnswer(division([{ name: 'Morgan Fixture', vote: 'aye', party: 'Later Party', party_undated: undated }], { house: 'senate', jurisdiction: 'federal' }), [], new Map()).html);
-  assert.match(outside, /can show a senator’s later party/);
-  assert.doesNotMatch(outside, /without dating the change/);
-  assert.doesNotMatch(one, /—.*rather than/);
+test('a Senate page with a label no dated record checks keeps the caveat', () => {
+  // The export leaves _meta.party_dated off a division where a kept label is unchecked (scripts/vote_parties.py).
+  const unchecked = { source_party: 'Later Party', reason: 'undated-change', record_parties: ['Earlier Party'] };
+  const page = text(renderDivisionAnswer(division([
+    { name: 'Morgan Fixture', vote: 'aye', party: 'Later Party', party_unchecked: unchecked },
+    { name: 'Riley Sample', vote: 'no', party: 'Other Party' },
+  ], { key: 'federal-senate-4', slug: 'division-federal-senate-4', house: 'senate', jurisdiction: 'federal', date: '2023-03-01' }), [], new Map()).html);
+  assert.match(page, /Party labels are those given in the division record\. These are the division source’s labels and can show a senator’s later party rather than the one held on this date, because the dated Senate party records held do not cover this date\./);
+  assert.doesNotMatch(page, /rather than current affiliations/);
 });

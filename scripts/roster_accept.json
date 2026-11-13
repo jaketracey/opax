@@ -79,7 +79,7 @@
     }
   },
   "vote_party_periods": {
-    "note": "Reviewed per-record party periods for division vote rows (scripts/vote_parties.py, source accepted-record), each from a primary source. A record replaces the dated periods it lists under `replaces` and applies only while the evidence still holds exactly those periods; `periods` run from start to the day before end. Reviewed 13 Nov 2026.",
+    "note": "Reviewed per-record party periods for division vote rows (scripts/vote_parties.py, source accepted-record), each from a primary source. A record replaces the dated periods it lists under `replaces` and applies only while the evidence still holds exactly those periods; `periods` run from start to the day before end. `holds` take a window [start, end) out of a person's dated periods, so labels inside it are kept and the page keeps its caveat. `renames` give the name a party carried from each date. Reviewed 13 Nov 2026.",
     "people": [
       {
         "name": "Harry Quick",
@@ -144,7 +144,7 @@
         "pid": "10804",
         "checked": "2026-11-13",
         "url": "https://www.openaustralia.org.au/debates/?d=2025-02-11",
-        "evidence": "House Hansard, 11 Feb 2025, Ian Goodenough: \"After 30 years with the Liberal Party, political circumstances ... caused me to move to the crossbench at the start of this year\". The Handbook (PHID 74046) gives one undated Liberal record and no date for the move. The release's 31 Dec 2024 end is a year-end placeholder; his own statement puts the move at the start of 2025, after the last 2024 sitting (28 Nov) and before the first 2025 sitting (4 Feb), so every 2024 sitting is Liberal. The boundary is restated at 1 Jan 2025; no sitting falls on the day this moves.",
+        "evidence": "House Hansard, 11 Feb 2025, Statements by Members, Ian Goodenough (OPAX corpus speech 1194235; the url is OpenAustralia's index for that sitting day, as OpenAustralia refused the speech lookup on 13 Nov 2026): \"After 30 years with the Liberal Party, political circumstances ... caused me to move to the crossbench at the start of this year\". The Handbook (PHID 74046) gives one undated Liberal record and no date for the move. The release's 31 Dec 2024 end is a year-end placeholder; his own statement puts the move at the start of 2025, after the last 2024 sitting (28 Nov) and before the first 2025 sitting (4 Feb), so every 2024 sitting is Liberal. The boundary is restated at 1 Jan 2025; no sitting falls on the day this moves.",
         "replaces": [
           {
             "party": "Liberal",
@@ -184,6 +184,56 @@
             "end": "2013-08-09"
           }
         ]
+      }
+    ],
+    "holds": [
+      {
+        "name": "Fraser Anning",
+        "chamber": "senate",
+        "pid": "10902",
+        "checked": "2026-11-13",
+        "url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '273829' and ROSTypeID eq 11",
+        "windows": [
+          {
+            "start": "2017-11-10",
+            "end": "2018-01-15"
+          },
+          {
+            "start": "2018-10-01",
+            "end": "2018-11-26"
+          }
+        ],
+        "reason": "Handbook dates conflict with contemporaneous reporting, pending a primary source: the Handbook gives One Nation from 10 Nov 2017 to 15 Jan 2018, where reporting has him leaving One Nation on the day he was sworn in, and Katter's Australian Party to 26 Nov 2018, where reporting has him expelled in late October 2018. The Handbook dates may be when the change was recorded. The Senate Journals would settle both (backlog A21; www.aph.gov.au and ParlInfo are not fetched)."
+      }
+    ],
+    "renames": [
+      {
+        "names": [
+          {
+            "name": "Nick Xenophon Team"
+          },
+          {
+            "name": "Centre Alliance",
+            "from": "2018-04-10"
+          }
+        ],
+        "checked": "2026-11-13",
+        "url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '76760' and ROSTypeID eq 11",
+        "evidence": "Parliamentary Handbook records of service: Stirling Griff (PHID 76760) and Rex Patrick are Nick Xenophon Team to 10 Apr 2018 and Centre Alliance from 10 Apr 2018 (scripts/handbook_party_service.json)."
+      },
+      {
+        "names": [
+          {
+            "name": "Palmer United Party"
+          },
+          {
+            "name": "United Australia Party",
+            "from": "2018-06-18"
+          }
+        ],
+        "checked": "2026-11-13",
+        "url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '207807' and ROSTypeID eq 11",
+        "evidence": "The Handbook's party records date Palmer United Party periods to 2015 at the latest (Jacqui Lambie, Glenn Lazarus) and the first United Australia Party [2018] period from 18 Jun 2018 (Brian Burston). No party member sat in either chamber between Dio Wang's last Senate division in 2016 and that date, so the division record uses the new name from 18 Jun 2018 and the old one before it."
       }
     ]
   },
