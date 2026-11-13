@@ -1,7 +1,10 @@
 """Add the recipient-side measure without changing the legacy graph contract."""
 import html
+import json
 import re
+import sys
 from collections import defaultdict
+from pathlib import Path
 
 from parli.ingest.aec_receipts import FILES, normal_type, period_key
 from parli.ingest.money_aec_extras import canon_party
@@ -23,7 +26,9 @@ PARTY_RETURN_NOTE = (
     "and real gifts. A line is a transfer within the party only if the payer's own returns are counted in the same "
     "node: the payer is a party unit, the same rule places it in this node, and it is not an associated entity (on the "
     "AEC associated-entity register, or a name that lodged an Associated Entity Return, matched without ATF or "
-    "trustee clauses, punctuation, Holding/Holdings or Pty Ltd differences). That money was counted when the paying "
+    "trustee clauses, punctuation, Holding/Holdings or Pty Ltd differences; without the ext_aec_returns table the "
+    "deciding names pinned in scripts/aec_associated_entity_names.json are used, and party_return_associated_names "
+    "says 'pinned'). That money was counted when the paying "
     "branch received it, so it is left out rather than keyed; party_return_transfers gives it per party as "
     "[AUD, lines]. A payer whose returns are counted in another node, or in none, is counted as a receipt, as are "
     "associated entities. Amounts under the disclosure threshold are not itemised by the AEC and are not here, so these "
@@ -115,9 +120,9 @@ def attach_receipt_types(db, graph):
 
 def attach_party_return_fields(db, graph, selection=None):
     """The party-return cells and their meta, on a graph that already has receipt_types."""
-    party_counts, transfers = attach_party_returns(db, graph, selection or load_selection(db))
+    party_counts, transfers, source = attach_party_returns(db, graph, selection or load_selection(db))
     graph["meta"]["receipt_types"].update(party_return_note=PARTY_RETURN_NOTE, party_return_counts=party_counts,
-                                          party_return_transfers=transfers)
+                                          party_return_transfers=transfers, party_return_associated_names=source)
     return graph
 
 
@@ -204,10 +209,16 @@ class AssociatedEntities:
 
     def __init__(self, db, selection, filers):
         self.register = load_associated_register(db, selection.aliases, selection.exact)
-        names = []
-        if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='ext_aec_returns'").fetchone():
-            names = [r[0] for r in db.execute(
-                "SELECT DISTINCT entity_name FROM ext_aec_returns WHERE source_file='Associated Entity Returns.csv'")]
+        names = associated_return_names(db)
+        if names is None:
+            # The refresh box's nightly does not run money_aec_extras, so the table can be
+            # missing; without it Labor alone would lose about $33m of associated-entity money.
+            names = pinned_associated_names()
+            self.source = "pinned"
+            sys.stderr.write(f"aec_receipt_types: WARNING no ext_aec_returns table; associated entities are matched "
+                             f"against the register and the {len(names)} names pinned in {PINNED_ASSOCIATED.name}\n")
+        else:
+            self.source = "ext_aec_returns"
         if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='associated_entities'").fetchone():
             names += [r[0] for r in db.execute("SELECT DISTINCT entity_name FROM associated_entities")]
         self.party_short = {entity_keys(f)[1] for f in filers}
@@ -221,6 +232,21 @@ class AssociatedEntities:
             return True
         full, short = entity_keys(donor)
         return full in self.full or short in self.short
+
+
+PINNED_ASSOCIATED = Path(__file__).with_name("aec_associated_entity_names.json")
+
+
+def associated_return_names(db):
+    """Names that lodged an Associated Entity Return, or None when ext_aec_returns is absent."""
+    if not db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='ext_aec_returns'").fetchone():
+        return None
+    return [r[0] for r in db.execute(
+        "SELECT DISTINCT entity_name FROM ext_aec_returns WHERE source_file='Associated Entity Returns.csv'") if r[0]]
+
+
+def pinned_associated_names():
+    return json.loads(PINNED_ASSOCIATED.read_text(encoding="utf-8"))["names"]
 
 
 def party_node(selection, parties, name):
@@ -292,7 +318,33 @@ def attach_party_returns(db, graph, selection):
             continue
         fields = receipt_fields(cells[node_id])
         node["return_by_type"], node["return_by_type_year"] = fields["by_type"], fields["by_type_year"]
-    return dict(sorted(counts.items())), {k[6:]: [round(v[0], 2), v[1]] for k, v in sorted(transfers.items())}
+    return (dict(sorted(counts.items())), {k[6:]: [round(v[0], 2), v[1]] for k, v in sorted(transfers.items())},
+            associated.source)
+
+
+def decisive_associated_names(db, selection=None):
+    """The Associated Entity Return names that match a party unit paying a party, beyond the register.
+
+    Only these are pinned for the fallback: party-owned companies, foundations and clubs. The full
+    register also names family businesses and private people, which do not belong in the repo.
+    """
+    selection = selection or load_selection(db)
+    names = associated_return_names(db) or []
+    query = ("SELECT DISTINCT donor_name FROM aec_receipt_records WHERE record_side='recipient' "
+             "AND source_file='Detailed Receipts.csv' AND recipient_kind='political_party'")
+    filers = {r[0] for r in db.execute(query.replace("DISTINCT donor_name", "DISTINCT recipient"))}
+    party_short = {entity_keys(f)[1] for f in filers}
+    party_full = {entity_keys(f)[0] for f in filers}
+    register = load_associated_register(db, selection.aliases, selection.exact)
+    payers = set()
+    for (donor,) in db.execute(query):
+        entity = selection.entity(donor)
+        if donor and selection.entity_kinds.get(entity) == "party_unit" \
+                and not ({entity, norm_key(donor)} - {None, ""}) & register.keys():
+            payers.add(entity_keys(donor))
+    full = {f for f, _ in payers} - party_full
+    short = {sh for _, sh in payers if sh} - party_short
+    return sorted({n.strip() for n in names if entity_keys(n)[0] in full or entity_keys(n)[1] in short})
 
 
 def main(argv=None):
@@ -302,14 +354,24 @@ def main(argv=None):
     Every other field is left as it is.
     """
     import argparse
-    import json
     import sqlite3
     from scripts.export_money_graph import DB_PATH
     parser = argparse.ArgumentParser(description=main.__doc__)
     parser.add_argument("--db", default=DB_PATH)
-    parser.add_argument("graph")
+    parser.add_argument("--pin", action="store_true", help=f"rewrite {PINNED_ASSOCIATED.name} from the DB and stop")
+    parser.add_argument("graph", nargs="?")
     parser.add_argument("out", nargs="?")
     args = parser.parse_args(argv)
+    if args.pin:
+        db = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
+        if associated_return_names(db) is None:
+            raise SystemExit("no ext_aec_returns table to pin from")
+        doc = json.loads(PINNED_ASSOCIATED.read_text(encoding="utf-8"))
+        doc["names"] = decisive_associated_names(db)
+        PINNED_ASSOCIATED.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+        return
+    if not args.graph:
+        parser.error("a graph is required")
     with open(args.graph, encoding="utf-8") as f:
         graph = json.load(f)
     if not graph.get("meta", {}).get("receipt_types", {}).get("available"):

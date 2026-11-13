@@ -385,3 +385,46 @@ def test_party_return_public_money_matches_whole_words():
                  "Legislative Assembly of Queensland", "Brisbane City Council", "Example Workers Union"):
         assert not party_return_public(name, None, "Other Receipt"), name
     assert party_return_public("Example Workers Union", "union", "Public Funding"), "the receipt type still decides"
+
+
+def test_without_ext_aec_returns_the_pinned_names_still_count_an_associated_entity(tmp_path, capsys):
+    from parli.ingest import money_aec_extras
+    from scripts import aec_receipt_types
+    path = tmp_path / "db"
+    db = database(path)
+    party, holdings = "Example Party", "Example Party Holdings"  # spelt unlike the AEC return
+    entries = {"Detailed Receipts.csv": [
+        annual("Other Receipt", Value="400", **{"Received From": holdings, "Recipient Name": party}),
+        annual("Donation Received", Value="100", **{"Received From": "Example Retail Ltd", "Recipient Name": party})]}
+    donations.process_zip(db, archive("AllAnnualData", entries), "AllAnnualData")
+    load(db, "AllElectionsData", {})
+    load(db, "AllReferendumData", {})
+    db.execute("UPDATE donations SET industry='retail', recipient_canonical=?", (party,))
+    db.executescript("CREATE TABLE ext_donor_entities(entity_id,canonical_name,kind);"
+                     "CREATE TABLE ext_donor_aliases(alias_raw,entity_id,confidence,method);"
+                     "DROP TABLE IF EXISTS ext_aec_returns;")
+    db.execute("INSERT INTO ext_donor_entities VALUES ('holdings',?,'party_unit')", (holdings,))
+    db.execute("INSERT INTO ext_donor_aliases VALUES (?,'holdings',1,'exact')", (holdings,))
+    db.commit()
+    canon = lambda name: party if "example party" in (name or "").lower() else None
+    pinned = lambda: ["Example Party Holding Pty. Limited as Trustee for the Example Party Trust"]
+    with mock.patch.object(aec_receipt_types, "canon_party", canon), mock.patch.object(money_aec_extras, "canon_party", canon), \
+            mock.patch.object(aec_receipt_types, "pinned_associated_names", pinned):
+        graph = export(path)
+    node = next(n for n in graph["nodes"] if n["id"] == "party:" + party)
+    assert node["return_by_type"] == {"donation_received": 100, "other_receipt": 400}
+    meta = graph["meta"]["receipt_types"]
+    assert meta["party_return_transfers"] == {}
+    assert meta["party_return_associated_names"] == "pinned"
+    assert "aec_associated_entity_names.json" in meta["party_return_note"]
+    assert "WARNING no ext_aec_returns table" in capsys.readouterr().err
+
+
+def test_the_pinned_associated_names_are_the_party_owned_entities_that_decide_a_line():
+    from scripts.aec_receipt_types import entity_keys, pinned_associated_names
+    names = pinned_associated_names()
+    assert len(names) == len(set(names)) and names == sorted(names)
+    shorts = {entity_keys(n)[1] for n in names}
+    for payer in ("Labor Resources Pty Ltd", "ALP Holdings", "Labor Services & Holdings Trust", "Labor Campaign Investment Pty Ltd",
+                  "National Free Enterprise Foundation", "Pilliwinks as trustee for the National Party Foundation Trust"):
+        assert entity_keys(payer)[1] in shorts, payer
