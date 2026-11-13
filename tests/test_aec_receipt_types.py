@@ -73,6 +73,30 @@ def test_migration_is_additive_and_idempotent():
     assert set(receipts.DONATION_COLUMNS) <= {r[1] for r in db.execute("PRAGMA table_info(donations)")}
 
 
+def test_retained_donor_figures_select_recipient_rows_once_without_a_drawing_graph(tmp_path):
+    from scripts.export_donor_disclosures import attach_selected_federal_receipts
+    db = database(tmp_path / 'db')
+    entries = {'Detailed Receipts.csv': [annual(Value='100'), annual(Value='100'),
+        annual('Other Receipt', Value='40'), annual('Loan', Value='30'), annual('Public Funding', Value='900')],
+        'Donations Made.csv': [{'Financial Year': '2020-2021', 'Donor Name': 'Example Mining Ltd',
+                               'Donation Made To': 'Example Party', 'Value': '100'}]}
+    donations.process_zip(db, archive('AllAnnualData', entries), 'AllAnnualData')
+    load(db, 'AllElectionsData', {})
+    load(db, 'AllReferendumData', {})
+    db.execute("UPDATE donations SET recipient_canonical='Labor',industry='mining'")
+    node = {'label': 'Example Mining Ltd', 'total': 999999, 'count': 99}
+    attach_selected_federal_receipts(db, [node])
+    assert (node['total'], node['count']) == (270, 4)
+    assert node['by_type'] == {'donation_received': 200, 'loan': 30, 'other_receipt': 40}
+    assert node['by_type_year']['2020-21']['donation_received'] == [200, 2], 'equal recipient rows stay distinct'
+    absent = {'label': 'No Recipient Receipt', 'total': 999, 'count': 1}
+    attach_selected_federal_receipts(db, [absent])
+    assert absent['by_type'] == {} and 'total' not in absent and 'count' not in absent
+    db.execute('DELETE FROM aec_receipt_files')
+    with pytest.raises(ValueError, match='Complete cached'):
+        attach_selected_federal_receipts(db, [node])
+
+
 def test_direct_loaders_keep_real_aec_columns(tmp_path):
     db = database(tmp_path / "db")
     with zipfile.ZipFile(io.BytesIO(archive("AllAnnualData", {"Detailed Receipts.csv": [annual()]}))) as z:
@@ -650,7 +674,6 @@ def test_uncapped_money_export_is_independent_of_drawing_cap_and_keeps_receipt_r
 
 
 def test_retained_donor_export_uses_uncapped_selection_and_keeps_receipt_types(tmp_path):
-    from scripts.export_money_receipts import export_receipts
     from scripts.export_donor_disclosures import disclosure_catalog
     path = tmp_path / 'db'
     db = database(path)
@@ -663,17 +686,9 @@ def test_retained_donor_export_uses_uncapped_selection_and_keeps_receipt_types(t
     load(db, 'AllReferendumData', {})
     db.execute("UPDATE donations SET recipient_canonical='Labor',industry='mining'")
     db.commit()
-    full, _ = export_receipts(db, export(path))
     candidate = {'id': 'donor:example', 'label': 'Example Mining Ltd', 'kind': 'donor', 'aliases': [], 'references': []}
     db.execute('CREATE TABLE ext_donations(donor_name,amount,financial_year,source,source_record_id,source_url,disclosure_type,jurisdiction,recipient_party)')
-    [retained] = disclosure_catalog(db, [candidate], full)['donors']
+    [retained] = disclosure_catalog(db, [candidate])['donors']
     assert (retained['total'], retained['count']) == (1850, 3)
     assert retained['by_type'] == {'donation_received': 150, 'other_receipt': 900, 'loan': 800}
     assert retained['by_type_year']['2020-21']['donation_received'] == [150, 1]
-    # A published name without any eligible recipient receipt keeps its provenance,
-    # but declarations / excluded rows acquire no receipt total.
-    [unselected] = disclosure_catalog(db, [candidate], {'meta': {'uncapped': True}, 'nodes': []})['donors']
-    assert unselected['by_type'] == {}
-    assert 'total' not in unselected and 'count' not in unselected
-    with pytest.raises(ValueError, match='Uncapped'):
-        disclosure_catalog(db, [candidate], {'meta': {}, 'nodes': []})

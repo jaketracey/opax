@@ -18,7 +18,7 @@ import { repairQuotes } from './research-evidence'
 import {ServerTiming, timed, timedSync, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import { chamberLabel, PARTY_MAP } from '../public/party-page.js'
-import {partySpeechLabel, partyMembers, partyBills, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, readPartyPages, resolvePartyPage, dayMonthYear, partyHistory, recordedAsText, type PartyPage, type PartyBill} from '../public/party-page.js'
+import {partySpeechLabel, partyMembers, partyBills, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, PARTY_NO_MEMBERS, readPartyPages, resolvePartyPage, dayMonthYear, partyHistory, recordedAsText, type PartyPage, type PartyBill} from '../public/party-page.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
@@ -5385,7 +5385,7 @@ async function grantProgramMeta(raw: string, url: URL, env: Env): Promise<PageMe
   const description = facts
   return { title: `${program.n} · Grant program · OPAX`, description, canonical, ogType: 'article', status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': 'Dataset', name: program.n, description: facts, url: canonical, creator: publisher, license: jurisdiction === 'qld' ? 'https://creativecommons.org/licenses/by/4.0/' : 'https://creativecommons.org/licenses/by/3.0/au/' },
-    prerender: prerenderBlock(program.n, facts, timedSync('program-html', () => grantCoreBody(program, jurisdiction, canonical, true, `/grants/${jurisdiction}/programs/${key}.json`))),
+    prerender: prerenderBlock(program.n, facts, timedSync('program-html', () => grantCoreBody(program, jurisdiction, canonical, true, `/grants/${jurisdiction}/programs/${key}.json`, new Set(catalogue?.recipients.map(r => r.id))))),
     card: { kicker: told ? 'Where did the money go?' : 'Grant program', title: program.n,
       lines: [`${num(program.c)} ${jurisdiction === 'qld' ? 'expenditure rows' : 'grants'}${years ? `, ${years}` : ''}`, split || (program.ag ?? (jurisdiction === 'qld' ? 'Recorded annual expenditure.' : 'Published award values, not payments.'))],
       stat: { value: money(program.t), label: jurisdiction === 'qld' ? 'recorded expenditure' : 'published grant awards' } } }
@@ -5604,7 +5604,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   if (dir === 'party') {
     // Speeches as the search index labels them (scripts/build_party_speeches.mjs), so the page promises
     // what its members said only where the record holds it: "Reason Party" has money, no Hansard.
-    const indexed = await assetJson<{ parties?: Record<string, number> }>(env, '/graph/party-speeches.json').catch(() => null)
+    const indexed = await assetJson<{ generated?: string; parties?: Record<string, number> }>(env, '/graph/party-speeches.json').catch(() => null)
     const speeches = partySpeechLabel(display, { indexed, roster: people, same: samePartyLabel })?.count ?? 0
     // The division records name those who sat for a party the roster files elsewhere
     // (scripts/build_party_index.mjs): one senator's own party has its senator.
@@ -5618,7 +5618,8 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     sponsored = partyBills(display, recorded)
     const parts: string[] = []
     const count = memberNames.length
-    if (count) parts.push(`${num(count)} parliamentarian${count === 1 ? '' : 's'}${speeches ? ` and ${num(speeches)} speeches` : ''} in the record`)
+    const speechDate = indexed?.generated || people?.generated
+    if (count) parts.push(`${num(count)} parliamentarian${count === 1 ? '' : 's'}${speeches ? ` and ${num(speeches)} speeches` : ''} in the record${speeches && speechDate ? ` (speech count as of ${dayMonthYear(speechDate)})` : ''}`)
     if (sponsored.length) parts.push(`${num(sponsored.length)} bill${sponsored.length === 1 ? '' : 's'} sponsored`)
     if (node) {
       // The party's own returns, each receipt line once (partyReturnFigures), as the browser page heads it.

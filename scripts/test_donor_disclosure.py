@@ -4,12 +4,16 @@ import unittest
 from scripts.donor_disclosure import attach_donor_disclosures
 
 
-def selected_receipts(label, cells, aliases=()):
-    """Explicit party-side receipt fixture, separate from legacy source declarations."""
-    return {"meta": {"uncapped": True}, "nodes": [{"id": "donor:selected", "kind": "donor", "label": label,
-        "aliases": list(aliases), "total": sum(a for a, _ in cells.values()), "count": sum(n for _, n in cells.values()),
-        "firstYear": 2014, "lastYear": 2015, "by_type": {"donation_received": sum(a for a, _ in cells.values())},
-        "by_type_year": {y: {"donation_received": c} for y, c in cells.items()}}]}
+def recipient_fixture(db, rows):
+    """Explicit recipient rows, separate from the legacy declaration fixtures."""
+    from parli.ingest.aec_receipts import FILES
+    if 'recipient' not in {r[1] for r in db.execute('PRAGMA table_info(donations)')}:
+        db.execute('ALTER TABLE donations ADD COLUMN recipient TEXT')
+    db.execute('UPDATE donations SET recipient=recipient_canonical WHERE recipient IS NULL')
+    db.executescript('CREATE TABLE aec_receipt_files(archive,source_file);'
+                     'CREATE TABLE aec_receipt_records(donor_name,recipient,amount,financial_year,receipt_type,recipient_kind,record_side);')
+    db.executemany('INSERT INTO aec_receipt_files VALUES (?,?)', [(a,n) for a,names in FILES.items() for n in names])
+    db.executemany("INSERT INTO aec_receipt_records VALUES (?,?,?,?,?,'political_party','recipient')", rows)
 
 
 class DonorDisclosures(unittest.TestCase):
@@ -60,7 +64,8 @@ class DonorDisclosures(unittest.TestCase):
         reference={"return_type":"GrantConnect source record", "year":"2024-25", "transaction_id":"GA-FIXTURE", "url":"https://example.test/grant/7"}
         candidates=[{"id":"donor:fixture","entity_id":"fixture","label":"Alex Example","kind":"donor","aliases":[],"references":[]},
                     {"id":"donor:source-only","label":"Source Example","kind":"donor","aliases":[],"references":[reference]}]
-        catalog=disclosure_catalog(db,candidates,selected_receipts("Alex Example", {"2024-25": [120,1]}, ["EXAMPLE, ALEX"]))
+        recipient_fixture(db, [("EXAMPLE, ALEX", "Labor", 120, "2024-25", "Donation Received")])
+        catalog=disclosure_catalog(db,candidates)
         self.assertEqual(len(catalog["donors"]),1)
         donor=catalog["donors"][0]
         self.assertEqual(donor["source_name"],"EXAMPLE, ALEX")
@@ -99,23 +104,23 @@ class DonorsLeavingTheMap(unittest.TestCase):
                          "INSERT INTO donations VALUES ('PAST CAP EXAMPLE PTY LTD',650000,'2014-15','aec_annual',1,'gift','Liberal');"
                          "INSERT INTO donations VALUES ('Past Cap Example Pty Ltd',21000,'2015-16','aec_annual',2,'gift','Labor');"
                          "CREATE TABLE ext_donations(donor_name,amount,financial_year,source,source_record_id,source_url,disclosure_type,jurisdiction,recipient_party)")
-        catalog = disclosure_catalog(db, candidates, selected_receipts("Past Cap Example Pty Ltd", {"2014-15": [650000,1], "2015-16": [21000,1]}, ["PAST CAP EXAMPLE PTY LTD"]))
+        recipient_fixture(db, [("PAST CAP EXAMPLE PTY LTD", "Liberal", 650000, "2014-15", "Donation Received"), ("Past Cap Example Pty Ltd", "Labor", 21000, "2015-16", "Donation Received")])
+        catalog = disclosure_catalog(db, candidates)
         [donor] = catalog["donors"]
         self.assertEqual((donor["jurisdiction"], donor["total"], donor["count"], donor["firstYear"], donor["lastYear"]), ("federal", 671000, 2, 2014, 2015))
         self.assertEqual(donor["returnReferences"][0]["return_type"], "AEC annual return")
         self.assertEqual(catalog["references"], [])
 
-    def test_retained_entity_prefers_its_selected_node_over_a_separately_resolved_case_variant(self):
-        from scripts.export_donor_disclosures import select_federal_receipts
-        # A canonical union node and an unresolved, differently cased spelling can
-        # both exist in the selection. A folded-name dictionary must not choose
-        # the last one and replace the canonical entity's figures.
-        canonical = {"id": "donor:union", "kind": "donor", "label": "Example Union",
-                     "match": {"entity_id": "union"}, "total": 500, "count": 2,
-                     "by_type": {"donation_received": 500}, "by_type_year": {"2024-25": {"donation_received": [500,2]}}}
-        spelling = {**canonical, "id": "donor:spelling", "label": "EXAMPLE UNION", "match": {},
-                    "total": 100, "count": 1, "by_type": {"donation_received": 100}}
-        for nodes in ([canonical, spelling], [spelling, canonical]):
-            retained = {"label": "Example Union", "match": {"entity_id": "union"}}
-            select_federal_receipts([retained], {"meta": {"uncapped": True}, "nodes": nodes})
-            self.assertEqual((retained["total"], retained["count"]), (500,2))
+
+    def test_canonical_entity_is_not_overwritten_by_a_separately_resolved_case_variant(self):
+        from scripts.export_donor_disclosures import attach_selected_federal_receipts
+        db = DonorDisclosures.database(self)
+        db.execute("INSERT INTO ext_donor_entities VALUES ('other','Example Union.','union')")
+        db.executemany("INSERT INTO ext_donor_aliases VALUES (?,?,1,'curated')", [('Example Union','fixture'),('Example Union.','other')])
+        # The resolver's exact tier deliberately leaves this uppercase spelling
+        # ambiguous. It must not overwrite the canonical entity by dictionary order.
+        recipient_fixture(db, [('Example Union','Labor',500,'2024-25','Donation Received'),
+                               ('EXAMPLE UNION','Labor',100,'2024-25','Donation Received')])
+        node = {'label':'Example Union','match':{'entity_id':'fixture'}}
+        attach_selected_federal_receipts(db,[node])
+        self.assertEqual((node['total'],node['count']),(500,1))
