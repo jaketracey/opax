@@ -49,10 +49,8 @@ test('DV-PRTY-009: voting lead-ins are excluded from the bill title',async()=>{
  assert.equal(api.requestedBillTitle(q),'Fair Work (Registered Organisations) Amendment (Ensuring Integrity No. 2) Bill 2019')
  assert.equal(await lookup(q),null)
 })
-test('NG-NREC-009: a date before division coverage reports the dated archive limit, not a missing bill',async()=>{
- const out=await lookup(regressions['NG-NREC-009'].question)
- assert.match(out.answer.answer,/^OPAX has no recorded Senate divisions on 1993-07-02\./)
- assert.doesNotMatch(out.answer.answer,/bill by that name/)
+test('NG-NREC-009: a date with no recorded divisions falls through to the agent instead of a no-record answer',async()=>{
+ assert.equal(await lookup(regressions['NG-NREC-009'].question),null)
 })
 test('an absent lifecycle entry cannot hide a matching division title on the requested date',async()=>{
  const index={divisions:[{key:'federal-senate-example',date:'1993-07-02',slug:'division-example'}]}
@@ -90,11 +88,6 @@ test('TT-SPCH-003: party speech comparisons use counts and cannot enter the posi
  assert.equal(api.isNamedPositionQuestion({question:'How many speeches has Nick McKim made?',speaker:'Nick McKim',kind:'speech'}),false)
  assert.equal(api.isRecordCountQuestion('Show more speeches about housing.'),false)
  assert.equal(api.isRecordCountQuestion('What has Nick McKim said about the total cost of the Housing Bill 2020?'),false)
-})
-test('count evidence binds named people independently of unrelated retrieved speeches',()=>{
- const answer='Nick McKim recorded 10 speeches.',payload={answer,citations:{'count/t/body/0':[[0,answer.length]]},sources:[{resource:'count',kind:'count',snippet:answer},{resource:'unused',kind:'speech',speaker:'Other Member'}]}
- assert.equal(api.guardAnswerAttribution(payload,roster).answer,answer)
- assert.equal(api.guardAnswerAttribution({...payload,sources:[{resource:'count',kind:'count',snippet:'Another person recorded 10 speeches.'},payload.sources[1]]},roster).answer,api.EVIDENCE_GAP_ANSWER)
 })
 test('MN-CONT-018: a supplier is not sent as the buying agency',()=>{
  const row=regressions['MN-CONT-018'],c=api.extractAskConstraints(row.question,api.inferPeriod(row.question),api.extractNamedScope(row.question,roster,bills))

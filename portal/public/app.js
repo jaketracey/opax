@@ -1510,7 +1510,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=235e3653b2' : '/ledger.js?v=b992a7ebac');
+    const mod = await import(grants ? '/grants.js?v=17c09dbf90' : '/ledger.js?v=b992a7ebac');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1520,6 +1520,7 @@ async function openMoneyRecords(kind, params) {
       const query = next.toString();
       const to = query ? `${path}?${query}` : path;
       if (to === location.pathname + location.search) return false;
+      syncRecordCore(to);
       history[replace ? 'replaceState' : 'pushState'](null, '', to);
       return true;
     };
@@ -1559,7 +1560,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=994ffd5471');
+    const mod = await import('/grant-recipient.js?v=2a1c07e930');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1954,6 +1955,15 @@ function parseHash() {
   return { segs, params };
 }
 
+// The server overview belongs to the landed record, including its canonical alias.
+function syncRecordCore(path = location.pathname + location.search) {
+  const core = document.querySelector('#prerender[data-record-core]');
+  if (core) {
+    const landed = core.dataset.route || (core.dataset.route = location.pathname + location.search);
+    if (path !== landed && path !== core.dataset.recordPath) core.remove();
+  }
+  document.documentElement.classList.toggle('record-core-ready', Boolean(document.querySelector('#prerender[data-record-core]')));
+}
 let routeRequest = 0;
 function routePrerequisites(segs) {
   const [view] = segs;
@@ -1975,6 +1985,7 @@ async function route() {
   await Promise.allSettled(routePrerequisites(segs));
   if (requested !== routeRequest) return;
   if (!segs.length) { location.replace('/' + location.search + location.hash); return; }
+  syncRecordCore();
   const herePath = "/" + segs.join("/"); // the trail reads the address, not the hash form
   // The script can boot before attribution helpers finish importing. Reveal
   // panels only when this requested route is ready to choose its own panel.
@@ -6890,6 +6901,15 @@ async function renderTopicArc(slug, phrase, key, mount) {
       mount.remove();
       return false;
     }
+    const {hydrateRecordCore} = await import('/record-core.js');
+    if (!active()) return;
+    if (hydrateRecordCore('topic',data,{slug})) {
+      // The server table is the one speech list; the arc keeps its summary only.
+      mount.innerHTML = `<div class="topic-arc-head ui-section-head"><h3 class="topic-arc-heading ui-section-title">The arc of this debate</h3></div>
+        ${topicArcVoicesHTML(results, 0)}
+        <div class="topic-arc-footer"><a href="${esc(searchHash(phrase, { topic: slug }, 1, 'newest'))}">Search the full debate</a></div>`;
+      return true;
+    }
     const briefs = {};
     const attempted = new Set();
     let order = "newest", visible = 30, revision = 0;
@@ -7008,6 +7028,7 @@ async function openTopicPage(slug, manageFocus) {
   }
   body.innerHTML = subjectSkeleton("Topic", name, `<span id="subject-loader" class="subject-loader"></span>`);
   body.querySelector(".subject-grid").classList.add("topic-page-grid");
+  if (document.querySelector('#prerender [data-record-list="topic"]')) body.querySelector('h1')?.remove();
   if (manageFocus) $("subject-title")?.focus();
   showPageLoader("subject-loader", "Counting the labelled record.");
   const sections = $("subject-sections");
@@ -9655,7 +9676,7 @@ const GAMES = {
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=f1b69ffdd9", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=b992a7ebac", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=235e3653b2", mount: "mountGrants" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=17c09dbf90", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=3f70f2a4d0", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=010196c4a8", mount: "mountThenVsNow" },

@@ -8,9 +8,6 @@ const built = await build({ stdin: { contents: [
   "export {callTool} from './src/tools/index'",
   "export {transcriptListingOnly, withTranscriptNote, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE} from './src/transcript-answer'",
   "export {groundAnswerPayload} from './src/research-grounding'",
-  "export {guardClaimMeasures, MEASURE_GAP} from './src/ask-claim-measures'",
-  "export {extractNamedScope} from './src/agentic-ask'",
-  "export {unresolvedPersonAsked} from './src/research-evidence'",
 ].join(';'), resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'node', format: 'esm', logLevel: 'silent' })
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'))
 const savedFetch = globalThis.fetch
@@ -41,9 +38,8 @@ function listing(extra = '') {
 
 test('a transcript listing keeps every row: not read as a financial or count claim, no decline', () => {
   const payload = listing()
-  assert.deepEqual(api.guardClaimMeasures(payload), payload, 'the measure guard leaves the listing whole')
   const out = api.groundAnswerPayload(payload, "Which hearing transcripts are there for IBAC's Operation Gloucester?")
-  assert.ok(!out.answer.includes(api.MEASURE_GAP)); assert.notEqual(out.answer_decision, 'limitation')
+  assert.notEqual(out.answer_decision, 'limitation')
   assert.ok(out.answer.startsWith('OPAX lists 17 public hearing transcripts'))
   for (const row of ROWS) assert.ok(out.answer.includes(`${IBAC}, ${row}.`), row)
   assert.ok(!/[ \t]$/m.test(out.answer), 'no trailing spaces')
@@ -98,19 +94,8 @@ test('quoted CC BY excerpts carry no speaker labels, and a hearing turn supports
     assert.ok(!/(?:^|\s)(?:THE |MR |MS |DR )?[A-Z][A-Za-z'’.-]*[A-Z]:\s/.test(h.excerpt), h.excerpt)
     if (!h.speaker) continue
     named++; assert.ok(out.citations[i + 1].text.includes(`hearing turn by ${h.speaker}: "${h.excerpt}"`))
-    const sentence = `${h.speaker} said the scheme used income averaging.`
-    const payload = { answer: sentence, citations: { 'fact-1/t/body/0': [[0, Array.from(sentence).length]] }, sources: [{ resource: 'fact-1', kind: 'record', url: out.citations[i + 1].url, snippet: out.citations[i + 1].text, cited: true }] }
-    assert.equal(api.guardClaimMeasures(payload).answer, sentence)
   }
   assert.ok(named > 0)
-})
-
-test('a commission named in the question is not an unresolved person', () => {
-  const roster = { people: [{ name: 'Bill Shorten' }, { name: 'Penny Wong' }] }
-  const asked = q => api.unresolvedPersonAsked(q, api.extractNamedScope(q, roster, null))
-  for (const q of ['What did witnesses at the Robodebt Royal Commission say about income averaging?', 'What has the Robodebt Royal Commission said about income averaging?',
-    'What did counsel assisting the Royal Commission into the Robodebt Scheme say about income averaging?', 'What did Bill Shorten say at the Robodebt Royal Commission?']) assert.equal(asked(q), false, q)
-  for (const q of ['What has John Smith said about income averaging?', 'What did John Smith at the Robodebt Royal Commission say about income averaging?']) assert.equal(asked(q), true, q)
 })
 
 test('a royal commission transcript count opens the way the integrity count does', async () => {

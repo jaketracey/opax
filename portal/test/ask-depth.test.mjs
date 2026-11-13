@@ -75,16 +75,16 @@ test('aggregate selection limits survive writing and repeated final-boundary che
  assert.match(out.coverage.note,/Title selection: climate; carbon/)
  assert.match(out.coverage.note,/not support for or opposition/)
 })
-test('broad topic title fallback can retain six distinct cited records when summaries are cut',()=>{
+test('a broad topic answer keeps six distinct cited lines; quotes no source holds lose their marks',()=>{
  const q='What has parliament said about the Murray–Darling Basin?'
  const sources=Array.from({length:6},(_,i)=>({resource:'speech-'+i,kind:'speech',title:`Murray–Darling Basin debate ${i}, 201${i}-10-25`,date:`201${i}-10-25`,speaker:`Speaker ${i}`,url:`https://www.aph.gov.au/record/${i}`,href:`https://www.aph.gov.au/record/${i}`,snippet:'The Murray–Darling Basin needs better water management.',cited:true}))
  const lines=sources.map(s=>`On ${s.date}, ${s.speaker} said “The Basin belongs to Martians”.`),answer=lines.join('\n')
  const out=api.groundAnswerPayload({answer,answer_decision:'answer',sources,citations:Object.fromEntries(sources.map(s=>[s.resource+'/t/body/0',[[0,answer.length]]]))},q)
- assert.equal(out.coherence.method,'cited_record_titles')
+ assert.equal(out.coherence,undefined)
  assert.equal(Object.keys(out.citations).length,6)
- assert.match(out.answer,/The record dated 25 October 2010 is Murray–Darling Basin debate 0, 25 October 2010\./)
- assert.doesNotMatch(out.answer,/\b\d{4}-\d{2}-\d{2}\b/)
- assert.doesNotMatch(out.answer,/Martians/)
+ assert.equal(out.answer.split('\n').length,6)
+ assert.match(out.answer,/Speaker 0 said The Basin belongs to Martians\./)
+ assert.doesNotMatch(out.answer,/[“”]/)
 })
 
 test('policy representative wording and source punctuation survive the final answer boundary',async()=>{
@@ -144,7 +144,7 @@ test('broad overviews retain policy substance instead of bill lifecycle filler, 
 })
 
 
-test('a possessive topic frame cannot steal the speaker or ownership of later quoted clauses',()=>{
+test('a possessive topic frame does not steal the speaker of later quoted clauses, and the audit never cuts it',()=>{
  const answer='On the Basin Plan’s implementation, Penny Wong said the basin “needs more water”, and described it as “in crisis”.'
  const snippet='The basin needs more water and is in crisis.'
  const source={resource:'speech-1',kind:'speech',title:'Water debate',speaker:'Penny Wong',date:'2019-09-11',url:'https://www.aph.gov.au/record',href:'https://www.aph.gov.au/record',snippet,cited:true}
@@ -153,9 +153,7 @@ test('a possessive topic frame cannot steal the speaker or ownership of later qu
  assert.equal(audit.findings.filter(f=>f.type==='quote').length,0)
  assert.ok(audit.findings.some(f=>f.entity==='Basin Plan'),'unsupported framing still fails')
  const out=api.groundAnswerPayload(payload,'What has parliament said about the Murray–Darling Basin?')
- assert.match(out.answer,/Penny Wong said the basin “needs more water”, and described it as “in crisis”/)
- assert.doesNotMatch(out.answer,/implementation|record dated/)
- assert.equal(api.auditPayload('What has parliament said about the Murray–Darling Basin?',out).findings.length,0)
+ assert.equal(out.answer,answer)
  for(const [a,b]of Object.values(out.citations).flat())assert.ok(a>=0&&b>a&&b<=Array.from(out.answer).length)
  const wrong={...payload,answer:'Sarah Hanson-Young’s words were “needs more water”.'}
  assert.ok(api.auditPayload('What was said?',wrong).findings.some(f=>f.type==='quote'&&f.entity==='Sarah Hanson-Young'))

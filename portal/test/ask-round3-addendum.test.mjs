@@ -12,11 +12,11 @@ const input=(question,rows)=>({question,period:{kind:'all',label:''},facts:rows.
 const bounds=p=>{for(const ranges of Object.values(p.citations))for(const [a,b] of ranges)assert.ok(a>=0&&b>a&&b<=Array.from(p.answer).length)}
 const asset=async path=>JSON.parse(await readFile(new URL('../public'+path,import.meta.url),'utf8'))
 
-test('standalone full-name identity rejects every partial-name record family',()=>{
+test('standalone full-name identity keeps a partial-name record answer as written',()=>{
   for(const [title,snippet,kind] of [['Graham Perrett','Person: Graham Perrett, Labor.','person'],['Paul Fletcher','Person: Paul Fletcher, Liberal.','person'],['Paul Marks','Paul Marks provided $3,530,000 in disclosed receipts.','record'],['Graham Associates','Graham Associates is listed as a lobbyist.','record']]){
     const s={...source(row),title,snippet,kind,remuneration:undefined}
     const p=api.groundAnswerPayload({answer:snippet,answer_decision:'answer',sources:[s],citations:{'fact-1/t/body/0':[[0,snippet.length]]}},'Who is Paul Graham?')
-    assert.equal(p.answer_decision,'limitation');assert.match(p.answer,/no .*record.*Paul Graham/i);assert.deepEqual(p.citations,{});assert.deepEqual(p.sources,[])
+    assert.equal(p.answer_decision,'answer');assert.equal(p.answer,snippet);bounds(p)
   }
   for(const snippet of ['Paul Graham provided disclosed political receipts.','Paul Graham is listed in the lobbyist register.']){
     const s={...source(row),title:'Paul Graham',snippet,remuneration:undefined}

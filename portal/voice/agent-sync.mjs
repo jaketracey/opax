@@ -14,6 +14,9 @@
 //           https://elevenlabs.io/docs/api-reference/tools/create   POST  /v1/convai/tools  {tool_config}
 //           https://elevenlabs.io/docs/api-reference/tools/update   PATCH /v1/convai/tools/{tool_id}  {tool_config}
 //   auth    https://elevenlabs.io/docs/api-reference/authentication  xi-api-key header
+//   inline  https://elevenlabs.io/docs/eleven-agents/customization/tools/agent-tools-deprecation
+//           prompt.tools is deprecated ("use tool_ids instead", agents/update); agent POST and PATCH reject a request
+//           that carries it, and with tool_ids it is 400 both_tools_and_tool_ids_provided. Agent updates leave it out.
 import {mkdirSync, readFileSync, writeFileSync} from 'node:fs'
 import {homedir} from 'node:os'
 import {join} from 'node:path'
@@ -85,17 +88,26 @@ export function planSync(config, agent, attached, {origin, secretId, workspace =
   })
   const names = new Set(desired.map(t => t.name))
   const kept = attached.filter(t => !names.has(t.tool_config?.name)).map(t => ({id: t.id, name: t.tool_config?.name}))
-  const inlineReplaced = inline.filter(t => names.has(t?.name)).map(t => t.name)
+  // Deprecated inline entries. The agent update leaves prompt.tools out, so an entry the agent also has as a tool id
+  // or a built-in tool (a read view of them, or a migrated copy) changes nothing; a configured name is replaced by its
+  // tool id; anything else would be dropped, so it is a problem.
+  const builtIn = Object.entries(prompt.built_in_tools && typeof prompt.built_in_tools === 'object' ? prompt.built_in_tools : {}).filter(([, v]) => v)
+  const attachedNames = new Set(attached.map(t => t.tool_config?.name))
+  const covered = t => attachedIds.has(t?.id) || (typeof t?.name === 'string' && (attachedNames.has(t.name) || builtIn.some(([key, v]) => key === t.name || v.name === t.name)))
+  const inlineMatched = inline.filter(covered).map(t => t.name)
+  const inlineReplaced = inline.filter(t => !covered(t) && names.has(t?.name)).map(t => t.name)
+  const inlineOnly = inline.filter(t => !covered(t) && !names.has(t?.name)).map(t => t?.name ?? '(unnamed)')
   const want = promptText(config)
   const changed = !samePrompt(prompt.prompt, want)
   return {
-    agent_id: agent?.agent_id, origin, secret_id: secret, tools, kept, inline_replaced: inlineReplaced,
+    agent_id: agent?.agent_id, origin, secret_id: secret, tools, kept, inline_replaced: inlineReplaced, inline_matched: inlineMatched,
     prompt: {changed, diff: changed ? lineDiff(prompt.prompt, want) : [], text: want},
     problems: [
       // An attached tool of a configured name that posts elsewhere may be shared with another environment's agent:
       // updating it would repoint that agent too. Detach or replace it in the dashboard first.
       ...attached.filter(t => names.has(t.tool_config?.name) && t.tool_config?.type !== 'system' && toolOrigin(t.tool_config) !== origin)
         .map(t => `${t.tool_config.name} (${t.id}) is attached but posts to ${toolOrigin(t.tool_config) ?? 'no URL'}, not ${origin}. It may be another environment's tool; apply refused.`),
+      ...inlineOnly.map(name => `${name} is only in the deprecated prompt.tools (no tool id or built-in tool). The agent update sends tool_ids only, so it would be dropped: attach it in the ElevenLabs dashboard first; apply refused.`),
       ...(secret ? [] : ['No tool secret id: no OPAX tool sends x-opax-voice-token. Pass --secret-id <provider secret id>.']),
       ...desired.filter(t => { try { return !new URL(t.api_schema.url).pathname.startsWith('/api/voice/tools/') } catch { return true } }).map(t => `${t.name}: URL is not under /api/voice/tools/.`),
     ],
@@ -113,7 +125,8 @@ export function formatPlan(plan) {
     for (const change of tool.changes ?? []) out.push(`         ${change.path}: ${JSON.stringify(change.have)} -> ${JSON.stringify(change.want)}`)
   }
   for (const tool of plan.kept) out.push(`keep   ${tool.name} (${tool.id}), attached but not in agent-config.json`)
-  if (plan.inline_replaced.length) out.push(`inline ${plan.inline_replaced.join(', ')}: deprecated prompt.tools entries replaced by the tool ids above`)
+  if (plan.inline_replaced.length) out.push(`inline ${plan.inline_replaced.join(', ')}: deprecated prompt.tools entries replaced by the tool ids above; the agent update sends tool_ids only`)
+  if (plan.inline_matched?.length) out.push(`inline ${plan.inline_matched.join(', ')}: deprecated prompt.tools entries that match attached tools; the agent update sends tool_ids only`)
   out.push(plan.prompt.changed ? 'prompt changes:' : 'prompt unchanged')
   out.push(...plan.prompt.diff.map(line => '  ' + line))
   out.push(...plan.problems.map(problem => 'PROBLEM ' + problem))
@@ -157,9 +170,22 @@ export async function readAgent(call, agentId, names = []) {
 /** The fetched state, saved before any write. Contents are never printed. */
 export function saveBackup(dir, agentId, state, now = new Date()) {
   mkdirSync(dir, {recursive: true, mode: 0o700})
-  const file = join(dir, `${agentId}-${now.toISOString().replace(/[:.]/g, '-')}.json`)
-  writeFileSync(file, JSON.stringify({agent_id: agentId, saved_at: now.toISOString(), ...state}, null, 1), {mode: 0o600, flag: 'wx'})
-  return file
+  const stamp = now.toISOString().replace(/[:.]/g, '-'), text = JSON.stringify({agent_id: agentId, saved_at: now.toISOString(), ...state}, null, 1)
+  // Never overwrite a backup: a second one in the same millisecond gets a number.
+  for (let n = 1; ; n++) {
+    const file = join(dir, `${agentId}-${stamp}${n > 1 ? '-' + n : ''}.json`)
+    try { writeFileSync(file, text, {mode: 0o600, flag: 'wx'}); return file } catch (error) { if (error?.code !== 'EEXIST' || n >= 100) throw error }
+  }
+}
+
+/**
+ * The agent PATCH body: the fetched prompt with `changes`, without the deprecated prompt.tools. The provider refused
+ * it next to tool_ids (staging, 13 Nov), and its deprecation guide says POST and PATCH reject any request carrying
+ * it, so the key is left out rather than sent as an empty list.
+ */
+export function agentUpdate(fetchedPrompt, changes) {
+  const {tools: _deprecated, ...prompt} = {...fetchedPrompt, ...changes}
+  return {conversation_config: {agent: {prompt}}}
 }
 
 /** Tools first, then one agent PATCH that attaches them with the prompt. On a failed agent update, say what is left. */
@@ -170,10 +196,8 @@ export async function applyPlan(call, agentId, plan, agent) {
     else { if (tool.action === 'update') { await call('PATCH', `/v1/convai/tools/${encodeURIComponent(tool.id)}`, {tool_config: tool.tool}); updated.push(`${tool.name} ${tool.id}`) } ids.push(tool.id) }
   }
   const toolIds = [...ids, ...plan.kept.map(t => t.id)]
-  const prompt = {...agent.conversation_config.agent.prompt, prompt: plan.prompt.text, tool_ids: toolIds}
-  if (Array.isArray(prompt.tools)) prompt.tools = prompt.tools.filter(t => !plan.inline_replaced.includes(t?.name))
   try {
-    await call('PATCH', `/v1/convai/agents/${encodeURIComponent(agentId)}`, {conversation_config: {agent: {prompt}}})
+    await call('PATCH', `/v1/convai/agents/${encodeURIComponent(agentId)}`, agentUpdate(agent.conversation_config.agent.prompt, {prompt: plan.prompt.text, tool_ids: toolIds}))
   } catch (error) {
     throw new Error([`Agent update failed: ${error.message}`, 'The agent itself is unchanged (prompt and tool_ids as before).',
       `Created, not attached: ${created.join('; ') || 'none'}.`, `Updated in place (already attached tools now carry the new config): ${updated.join('; ') || 'none'}.`,
@@ -242,11 +266,12 @@ async function restore(args, state, {call, log, backupDir}) {
   log(`  prompt and tool_ids: ${plan.promptChanged ? 'restore' : 'already as saved'}`)
   for (const tool of plan.tools) log(`  ${tool.changes.length ? 'restore' : 'same   '} ${tool.name} (${tool.id})${tool.changes.length ? ': ' + tool.changes.map(c => c.path).join(', ') : ''}`)
   if (plan.detach.length) log(`  detach ${plan.detach.join(', ')} (left in the workspace; delete in the ElevenLabs dashboard if unwanted)`)
+  if (plan.prompt.tools?.length) log('  prompt.tools in the backup is not sent: the provider takes tool_ids only')
   if (!args.apply) { log('\nDry run: nothing changed. Re-run with --apply to restore.'); return 0 }
   const file = saveBackup(backupDir, args.agent, state)
   log(`\nBackup of the current state before restoring: ${file}`)
   for (const tool of plan.tools) if (tool.changes.length) await call('PATCH', `/v1/convai/tools/${encodeURIComponent(tool.id)}`, {tool_config: tool.tool_config})
-  if (plan.promptChanged) await call('PATCH', `/v1/convai/agents/${encodeURIComponent(args.agent)}`, {conversation_config: {agent: {prompt: {...state.agent.conversation_config.agent.prompt, prompt: plan.prompt.prompt, tool_ids: plan.prompt.tool_ids ?? [], ...(plan.prompt.tools ? {tools: plan.prompt.tools} : {})}}}})
+  if (plan.promptChanged) await call('PATCH', `/v1/convai/agents/${encodeURIComponent(args.agent)}`, agentUpdate(state.agent.conversation_config.agent.prompt, {prompt: plan.prompt.prompt, tool_ids: plan.prompt.tool_ids ?? []}))
   const after = (await call('GET', `/v1/convai/agents/${encodeURIComponent(args.agent)}`)).conversation_config?.agent?.prompt ?? {}
   const ok = samePrompt(after.prompt, plan.prompt.prompt) && isDeepStrictEqual(after.tool_ids ?? [], plan.prompt.tool_ids ?? [])
   log(ok ? 'Restored.' : 'Restore read-back differs: check the agent in the dashboard.')
