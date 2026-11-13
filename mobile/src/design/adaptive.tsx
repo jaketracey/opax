@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from 'react';
 import {
+  Dimensions,
   Platform,
   StyleSheet,
   View,
@@ -218,6 +219,22 @@ export function currentRule(
     : Platform.OS === 'ios' && traitsRegular(traits)
       ? 'phone-regular'
       : 'phone';
+}
+
+/**
+ * The window as analytics categories, read when an event is sent: the
+ * window's size class under the current rule and whether it spans a fold.
+ * Never its size, the device model or a measured region.
+ */
+export function windowClass(): {
+  layout: SizeClass;
+  foldable: boolean;
+} {
+  const { width } = Dimensions.get('window');
+  return {
+    layout: sizeClassFor(width, currentRule()),
+    foldable: !!traitsSnapshot.traits?.foldable,
+  };
 }
 
 /**

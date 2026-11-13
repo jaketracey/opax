@@ -47,6 +47,7 @@ import { Heading } from '../../design/text';
 import { colors, layout, rhythm } from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { canonicalUrl, openOnWeb } from '../../navigation/external';
+import { trackShare } from '../../navigation/share';
 import { billRoute } from '../../navigation/routes';
 import { filtersRoute } from '../../navigation/routes/filters';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
@@ -549,7 +550,9 @@ export default function DivisionHistory() {
                   symbol: 'link',
                   onPress: () => {
                     void copyText(canonicalUrl(PATH)).then((copied) => {
-                      if (copied) haptic('success');
+                      if (!copied) return;
+                      haptic('success');
+                      trackShare('copy_link', PATH);
                     });
                   },
                 },

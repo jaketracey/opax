@@ -23,6 +23,7 @@ import {
   type VoiceStatus,
 } from '../src/voice/types';
 import { recordDestination } from '../src/features/talk/sources';
+import { track } from '../src/analytics';
 
 jest.mock('../src/voice', () => ({
   subscribe: jest.fn(),
@@ -31,6 +32,10 @@ jest.mock('../src/voice', () => ({
   start: jest.fn(),
   end: jest.fn(),
   mute: jest.fn(),
+}));
+jest.mock('../src/analytics', () => ({
+  ...jest.requireActual('../src/analytics'),
+  track: jest.fn(),
 }));
 jest.mock('../src/features/talk/bridge', () => ({
   discardEvidence: jest.fn(),
@@ -491,6 +496,107 @@ test('an open session never refuses Start: the server takes the earlier call ove
   expect(failureCopy.callOpen).toBe(
     'Your earlier call is still ending. Try again in a minute.',
   );
+});
+
+describe('call analytics', () => {
+  const sent = () =>
+    jest
+      .mocked(track)
+      .mock.calls.filter(([event]) => event === 'opax_talk')
+      .map(([, properties]) => properties);
+  const state = (value: VoiceEvent & { type: 'state' }) =>
+    act(() => listener(value));
+  let now = 0;
+  beforeEach(() => {
+    now = 1_000_000;
+    jest.spyOn(Date, 'now').mockImplementation(() => now);
+    mockBridge.readConsent.mockResolvedValue(true);
+  });
+
+  test('a Start that goes live sends call_started, then its length and reason once', async () => {
+    await mount();
+    await act(async () => {
+      await call.start();
+    });
+    // Commands only acknowledge: nothing is sent until the call is live.
+    expect(sent()).toEqual([]);
+    state({ type: 'state', state: 'connecting', reason: null });
+    state({ type: 'state', state: 'live', reason: null });
+    now += 95_600;
+    state({ type: 'state', state: 'ended', reason: 'network' });
+    state({ type: 'state', state: 'ended', reason: 'network' });
+    expect(sent()).toEqual([
+      { action: 'call_started', account: 'signed_in' },
+      {
+        action: 'call_ended',
+        account: 'signed_in',
+        duration_s: 96,
+        end_reason: 'network',
+      },
+    ]);
+  });
+
+  test('a refused Start is one call_failed with its coarse reason', async () => {
+    mockVoice.start.mockResolvedValueOnce({
+      ok: false,
+      error: 'allowanceExhausted',
+    });
+    await mount();
+    await act(async () => {
+      await call.start();
+    });
+    expect(sent()).toEqual([
+      { action: 'call_failed', account: 'signed_in', end_reason: 'limit' },
+    ]);
+    // The same refusal arriving as an event is the same attempt.
+    act(() => listener({ type: 'error', error: 'allowanceExhausted' }));
+    expect(sent()).toHaveLength(1);
+  });
+
+  test('leaving Talk mid-call ends it as the reader’s choice, capped at ten minutes', async () => {
+    await mount();
+    await act(async () => {
+      await call.start();
+    });
+    state({ type: 'state', state: 'live', reason: null });
+    now += 3_600_000;
+    act(() => renderer.unmount());
+    expect(sent()).toEqual([
+      { action: 'call_started', account: 'signed_in' },
+      {
+        action: 'call_ended',
+        account: 'signed_in',
+        duration_s: 600,
+        end_reason: 'user',
+      },
+    ]);
+  });
+
+  test('a 409 at Start is one call_failed, beside its call-still-ending line', async () => {
+    await mount();
+    // Row 118's 409: the server ends native's attempt while it reserves.
+    mockVoice.start.mockImplementationOnce(async () => {
+      listener({ type: 'state', state: 'reserving', reason: null });
+      listener({ type: 'state', state: 'ending', reason: null });
+      listener({ type: 'error', error: 'callOpen' });
+      listener({ type: 'state', state: 'failed', reason: 'failed' });
+      return ok;
+    });
+    await act(async () => {
+      await call.start();
+    });
+    expect(call.error).toBe('callOpen');
+    expect(sent()).toEqual([
+      { action: 'call_failed', account: 'signed_in', end_reason: 'limit' },
+    ]);
+  });
+
+  test('a call this screen did not start sends nothing', async () => {
+    await mount();
+    state({ type: 'state', state: 'live', reason: null });
+    state({ type: 'state', state: 'ended', reason: 'user' });
+    expect(sent()).toEqual([]);
+  });
 });
 
 // Native says callOpen for three things; Talk gives the last

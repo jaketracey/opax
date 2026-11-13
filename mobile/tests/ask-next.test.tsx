@@ -11,6 +11,7 @@ import { motion } from '../src/design/tokens';
 import { AskThread } from '../src/features/ask/AskThread';
 import { AskController } from '../src/features/ask/controller';
 import type { Followup } from '../src/features/ask/model';
+import { track } from '../src/analytics';
 
 jest.mock('../src/design/accessibility', () => ({
   ...jest.requireActual('../src/design/accessibility'),
@@ -22,6 +23,10 @@ jest.mock('../src/features/ask/AskProgress', () => ({
 }));
 jest.mock('../src/features/ask/AskIdle', () => ({ fillComposer: jest.fn() }));
 jest.mock('../src/api/runtime', () => ({}));
+jest.mock('../src/analytics', () => ({
+  ...jest.requireActual('../src/analytics'),
+  track: jest.fn(),
+}));
 
 const questions: Followup[] = [
   { question: 'What age limit was proposed?', evidence: 'Fixture passage' },
@@ -219,4 +224,36 @@ test('empty suggestions remove the pending card and its placeholders', () => {
   render([], false);
   expect(byID('ask-followups')).toHaveLength(0);
   expect(view.root.findAllByType(Skeleton)).toHaveLength(0);
+});
+
+test('a follow-up tap sends its position and the server kind once, never the question', () => {
+  jest.mocked(track).mockClear();
+  render([
+    {
+      question: 'Did Jane Citizen vote on the 2031 housing bill?',
+      kind: 'vote',
+    },
+    { question: 'What else did she say?' },
+  ]);
+  const press = (i: number) =>
+    view.root
+      .findAll(
+        (n) =>
+          n.props.testID === `ask-followup-${i}` &&
+          typeof n.props.onPress === 'function',
+      )[0]!
+      .props.onPress();
+  act(() => press(0));
+  expect(jest.mocked(track).mock.calls).toEqual([
+    ['opax_ask_followup_click', { position: 1, kind: 'vote' }],
+  ]);
+  // A suggestion with no server kind is a plain detail question.
+  act(() => press(1));
+  expect(jest.mocked(track).mock.calls[1]).toEqual([
+    'opax_ask_followup_click',
+    { position: 2, kind: 'detail' },
+  ]);
+  expect(JSON.stringify(jest.mocked(track).mock.calls)).not.toMatch(
+    /Jane|housing|say/,
+  );
 });

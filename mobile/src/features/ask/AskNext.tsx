@@ -13,6 +13,7 @@ import { RowCellInsetContext, useRowInset } from '../../design/row-padding';
 import { Skeleton } from '../../design/states';
 import { LINE_HEIGHT_NUDGE } from '../../design/text';
 import { minimumTarget, motion, rhythm, textStyles } from '../../design/tokens';
+import { track } from '../../analytics';
 import { AskSuggestionRow } from './AskRows';
 import type { Followup } from './model';
 
@@ -120,7 +121,14 @@ function NextRow({
             question={suggestion.question}
             variant="send"
             minimumHeight={height}
-            onPress={() => onAsk(suggestion.question, suggestion)}
+            onPress={() => {
+              // Its place in the card (1 to 3) and the coarse kind; never the question.
+              track('opax_ask_followup_click', {
+                position: index + 1,
+                kind: suggestion.kind ?? 'detail',
+              });
+              onAsk(suggestion.question, suggestion);
+            }}
             testID={`ask-followup-${index}`}
           />
         </Animated.View>

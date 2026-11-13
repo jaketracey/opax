@@ -4,6 +4,7 @@ import { useFocusEffect } from 'expo-router';
 import * as voice from '../../voice';
 import type { EndReason, VoiceFailure } from '../../voice';
 import * as uiBridge from './bridge';
+import { CallMeasure, noteTalkAccount } from './measure';
 import {
   asksForMicrophone,
   microphoneBlocked,
@@ -49,6 +50,8 @@ export function useTalk() {
   const focusRead = useRef<Promise<void>>(Promise.resolve());
   const sequence = useRef(0);
   const revisions = useRef<Partial<Record<keyof TalkSnapshot, number>>>({});
+  // Analytics for each call this screen starts (measure.ts).
+  const [measure] = useState(() => new CallMeasure());
   const set = useCallback((value: TalkSnapshot) => {
     current.current = value;
     setSnapshot(value);
@@ -95,13 +98,17 @@ export function useTalk() {
       sequence.current += 1;
       for (const key of eventKeys[event.type])
         revisions.current[key] = sequence.current;
-      if (event.type === 'error')
+      if (event.type === 'error') {
         setError(eventFailure(event.error, current.current.state));
-      // "Already in a call" is about the call under way, so it lapses when
-      // that call moves on; it must not outlive it as the screen's message.
-      if (event.type === 'state')
+        measure.refused(event.error);
+      }
+      if (event.type === 'state') {
+        // "Already in a call" is about the call under way, so it lapses when
+        // that call moves on; it must not outlive it as the screen's message.
         setError((shown) => (shown === 'alreadyInCall' ? null : shown));
-      if (event.type === 'state' && event.reason) setTerminal(event.reason);
+        if (event.reason) setTerminal(event.reason);
+        measure.state(event.state, event.reason);
+      }
       set(applyEvent(current.current, event));
     });
     return () => {
@@ -110,13 +117,15 @@ export function useTalk() {
       dispatching.current = false;
       focusGeneration.current += 1;
       unsubscribe();
+      measure.left();
       void voice.end().then(() => uiBridge.discardEvidence());
       // The React state and all transient captions belong to this screen only.
       set({ ...emptySnapshot });
       setTerminal(null);
       setError(null);
     };
-  }, [set]);
+  }, [set, measure]);
+  useEffect(() => noteTalkAccount(snapshot.status), [snapshot.status]);
   // Each time Talk is shown: a fresh status read (unless a call is running),
   // then the native snapshot, then the stored consent.
   useFocusEffect(
@@ -179,6 +188,13 @@ export function useTalk() {
     });
     return () => subscription.remove();
   }, [recover, refresh]);
+  /** A Start: one call attempt for analytics, then the native command. */
+  async function startCall() {
+    if (dispatching.current) return;
+    measure.begin();
+    const result = await run(voice.start);
+    if (result && !result.ok) measure.refused(result.error);
+  }
   async function run(
     action: () => ReturnType<typeof voice.start>,
     describe: (error: VoiceFailure) => TalkFailure = (error) => error,
@@ -210,7 +226,7 @@ export function useTalk() {
       }
       setMicrophone(null);
     }
-    await run(voice.start);
+    await startCall();
   }
   async function start() {
     if (!consent || !consentLoaded) {
@@ -236,7 +252,7 @@ export function useTalk() {
     setBusy(false);
     if (access === 'granted') {
       setMicrophone(null);
-      if (AppState.currentState !== 'background') await run(voice.start);
+      if (AppState.currentState !== 'background') await startCall();
       return;
     }
     setMicrophone(access);
