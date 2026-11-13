@@ -28,13 +28,14 @@ import Animated, {
   useFrameCallback,
   useScrollOffset,
   useSharedValue,
+  withTiming,
   type SharedValue,
 } from 'react-native-reanimated';
 import { useReduceMotionSetting } from '../../design/accessibility';
 import { useLayout } from '../../design/adaptive';
 import { SizedCanvas } from '../../design/canvas';
 import { paletteFor } from '../../design/palette';
-import { isAccessibilityCategory, rhythm } from '../../design/tokens';
+import { isAccessibilityCategory, motion, rhythm } from '../../design/tokens';
 import outline from './australia-outline.json';
 import {
   dotClockNeeded,
@@ -46,6 +47,7 @@ import {
   dotWidth,
   dotHeight,
   androidDotScale,
+  dotArrival,
   outlineDotState,
   sampleDotRows,
   type DotHighlight,
@@ -54,6 +56,12 @@ import {
 } from './australia-dots-model';
 
 const height = dotHeight;
+// Whether the dots have drawn once this session: only that first draw fades.
+let arrivedThisSession = false;
+/** Tests only: a fresh session. */
+export function resetDotArrivalForTests() {
+  arrivedThisSession = false;
+}
 let sampled: DotRow[] | undefined;
 function dotRows() {
   // Like SeatInvitation: use the ABS SVG paths directly, without new artwork.
@@ -117,7 +125,29 @@ function DotField({
   expandedHeader: SharedValue<number>;
 }) {
   const navigation = useContext(NavigationContext);
-  const reduced = useReduceMotionSetting() !== false;
+  const reduceSetting = useReduceMotionSetting();
+  const reduced = reduceSetting !== false;
+  const arrival = useSharedValue(
+    dotArrival(arrivedThisSession, reduceSetting) === 'shown' ? 1 : 0,
+  );
+  useEffect(() => {
+    const how = dotArrival(arrivedThisSession, reduceSetting);
+    if (how === 'wait') {
+      // The setting normally answers within a frame; never hide the art
+      // for longer than a moment if it does not.
+      const fallback = setTimeout(() => {
+        arrivedThisSession = true;
+        arrival.set(1);
+      }, 300);
+      return () => clearTimeout(fallback);
+    }
+    arrivedThisSession = true;
+    arrival.set(
+      how === 'fade'
+        ? withTiming(1, { duration: motion.duration.crossfade })
+        : 1,
+    );
+  }, [reduceSetting, arrival]);
   const scheme = useColorScheme();
   const palette = paletteFor(scheme === 'dark' ? 'dark' : 'light');
   const layout = useLayout();
@@ -215,6 +245,7 @@ function DotField({
   useEffect(() => () => frame.setActive(false), [frame]);
 
   const position = useAnimatedStyle(() => ({
+    opacity: arrival.value,
     top: android ? 0 : 30 - expandedHeader.value - rhythm.block,
     // The art lives in scroll content: give back 55% for a net 0.45 drift.
     transform: [

@@ -79,6 +79,7 @@ import {
   hasOutline,
   outlineSourceDetails,
 } from './electorate-map/OutlineMap';
+import { StateLocator } from './electorate-map/StateLocator';
 import { AddedSinceGroup } from './follows/AddedSinceGroup';
 import { followKey } from './follows/store';
 import { useFollowStates } from './follows/useFollowStates';
@@ -95,6 +96,7 @@ import {
   censusOtherRows,
   electionSummary,
   electionsNewestFirst,
+  winnerResult,
   newestCensus,
   type ElectionRecord,
 } from './your-mp/election-summary';
@@ -501,16 +503,23 @@ function ElectoratePage({
   if (outline)
     page.push(
       <Group key="outline" gap={rhythm.heading} testID="electorate-map">
-        <OutlineMap
-          boundaries={view.boundaries}
-          name={identity.name}
-          state={identity.state}
-          variant="header"
-          ground="sunken"
-          onSources={
-            sourceDetails ? () => presentSource(sourceDetails) : undefined
-          }
-        />
+        {/* The state locator takes the block's top trailing corner, beside
+            the outline, never over it (sweep 1 item 8). */}
+        <View style={styles.mapRow}>
+          <View style={styles.mapMain}>
+            <OutlineMap
+              boundaries={view.boundaries}
+              name={identity.name}
+              state={identity.state}
+              variant="header"
+              ground="sunken"
+              onSources={
+                sourceDetails ? () => presentSource(sourceDetails) : undefined
+              }
+            />
+          </View>
+          <StateLocator boundaries={view.boundaries} state={identity.state} />
+        </View>
         <OutlineSource
           boundaries={view.boundaries}
           jurisdiction={identity.jurisdiction}
@@ -822,7 +831,10 @@ function MembersSection({
   );
 }
 
-/** One election, closed: its title, winner, party and date. */
+/**
+ * One election, closed: its title and date on one line, then the winner and
+ * party, then the two-candidate result when the record carries it.
+ */
 function ElectionRow({
   record,
   directory,
@@ -848,13 +860,16 @@ function ElectionRow({
     ? personRoute(profile.slug, winner!.name)
     : undefined;
   const href = electionRoute(seatId, summary.key);
-  const date = formatDate(summary.date, 'short');
+  // The date joins the title's line and never breaks inside itself.
+  const date = formatDate(summary.date, 'short').replace(/ /g, '\u00a0');
+  const result = winnerResult(record);
   const label = [
     summary.title,
+    formatDate(summary.date),
     summary.winner
       ? `${summary.winner.name}, ${summary.winner.party ?? PARTY_NOT_RECORDED}`
       : null,
-    formatDate(summary.date),
+    result,
   ]
     .filter(Boolean)
     .join('. ');
@@ -895,8 +910,8 @@ function ElectionRow({
         ]}
       >
         <View style={styles.electionWords}>
-          <Text wordSafe variant="subsectionTitle">
-            {summary.title}
+          <Text wordSafe variant="subsectionTitle" testID={`${testID}-title`}>
+            {date ? `${summary.title} · ${date}` : summary.title}
           </Text>
           {summary.winner ? (
             <>
@@ -916,9 +931,11 @@ function ElectionRow({
               </View>
             </>
           ) : null}
-          <Text wordSafe variant="secondary">
-            {date}
-          </Text>
+          {result ? (
+            <Text wordSafe variant="secondary" testID={`${testID}-result`}>
+              {result}
+            </Text>
+          ) : null}
         </View>
         <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />
       </Pressable>
@@ -936,6 +953,8 @@ const styles = StyleSheet.create({
     minHeight: minimumTarget,
   },
   electionWords: { flex: 1, gap: rhythm.line },
+  mapRow: { flexDirection: 'row', alignItems: 'flex-start' },
+  mapMain: { flex: 1, minWidth: 0 },
   party: { minHeight: minimumTarget },
   end: { height: 1 },
 });

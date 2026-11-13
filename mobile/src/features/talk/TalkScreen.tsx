@@ -465,7 +465,7 @@ function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
   const records = useMemo(() => reportChoices(s.sources), [s.sources]);
   const canCaption = active || s.transcript.length > 0;
   const screenOptions = useMemo(() => {
-    const items = () => [
+    const menu = () =>
       talkMenu({
         title: menuTitle,
         active,
@@ -481,14 +481,26 @@ function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
             () => void openOnWeb('/privacy', talkCopy.menu.voicePrivacy),
           ),
         onWithdraw: () => handlers.current.withdraw(),
-      }),
-      { ...closeSheetItem(), onPress: () => handlers.current.close() },
-    ];
+      });
+    const done = () => ({
+      ...closeSheetItem(),
+      onPress: () => handlers.current.close(),
+    });
+    const items = () => [menu(), done()];
     return {
       title: active ? '' : talkCopy.title,
       headerTitleAlign: 'center' as const,
       gestureEnabled: !active,
-      unstable_headerRightItems: items,
+      // iOS centres the title only when it clears both sides: with ⋯ and
+      // Done both trailing, UIKit set "Talk to OPAX" leading. The menu takes
+      // the leading side, as every other sheet's title is centred (sweep 1
+      // item 10).
+      ...(android
+        ? { unstable_headerRightItems: items }
+        : {
+            unstable_headerLeftItems: () => [menu()],
+            unstable_headerRightItems: () => [done()],
+          }),
       // Android draws the same items in its own bar.
       ...(android ? { headerRight: () => androidHeaderBar(items()) } : {}),
     };
