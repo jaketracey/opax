@@ -78,3 +78,66 @@ test.each(['android', 'ios'] as const)(
     expect(router.back).toHaveBeenCalledTimes(1);
   },
 );
+
+// Voice sources since im/voice-ask: Ask's labels, and Ask's pay rows on /ask.
+test('an Ask-style source reads type and date, title, then speaker; a pay row stays', () => {
+  const speech = {
+    title: 'Alex Example: Committees',
+    path: '/doc/speech-500101',
+    recordTitle: 'Committees',
+    speaker: 'Alex Example',
+    date: '2001-06-21',
+    type: 'Speech',
+  };
+  const pay = {
+    title: 'Example office pay: every step since 1999',
+    path: '/ask?q=How%20much%20is%20the%20example%20office%20paid%3F',
+    recordTitle: 'Example office pay: every step since 1999',
+    date: '1999–2026',
+    type: 'Pay record',
+  };
+  publishTalk({
+    sources: [speech, pay, source],
+    active: true,
+    live: true,
+    status: 'Listening',
+    phase: 'listening',
+    end: jest.fn(),
+  });
+  act(() => {
+    renderer = TestRenderer.create(
+      <SafeAreaProvider
+        initialMetrics={{
+          frame: { x: 0, y: 0, width: 402, height: 874 },
+          insets: { top: 0, left: 0, right: 0, bottom: 24 },
+        }}
+      >
+        <TalkSourcesScreen />
+      </SafeAreaProvider>,
+    );
+  });
+  const [first, second, third] = renderer.root.findAllByType(LinkRow);
+  expect(first!.props.title).toBe('Committees');
+  expect(first!.props.secondary.props).toMatchObject({
+    variant: 'secondary',
+    children: 'Alex Example',
+  });
+  expect(first!.props.accessibilityLabel).toBe(
+    'Speech · 21 Jun 2001, Committees, Alex Example',
+  );
+  expect(first!.props.accessibilityHint).toBe(
+    'Opens the record within the call',
+  );
+  expect(second!.props.title).toBe(pay.recordTitle);
+  expect(second!.props.secondary).toBeUndefined();
+  expect(second!.props.accessibilityLabel).toBe(
+    `Pay record · 1999–2026, ${pay.recordTitle}`,
+  );
+  expect(second!.props.accessibilityHint).toBe('Opens in Ask after the call');
+  expect(second!.props.external).toBe(true);
+  // The shipped server's title-only source renders as before.
+  expect(third!.props.title).toBe(source.title);
+  expect(third!.props.secondary).toBeUndefined();
+  act(() => second!.props.onPress());
+  expect(takeChosenSource()).toEqual(pay);
+});

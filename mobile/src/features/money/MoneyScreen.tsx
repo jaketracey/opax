@@ -550,7 +550,21 @@ function MapMode({
     controlsHeight,
     !searchOpen && !expanded,
   );
-  const horizontalControls = managed && pose.horizontal;
+  // Android's taller Material card can leave less room under it than the
+  // vertical stack needs, so Fit ran under the panel's peek. There the
+  // controls lie in a row under the card instead. The stack's own height is
+  // remembered while it stands, so the row cannot flip it back. iOS keeps
+  // its stack.
+  const [stackHeight, setStackHeight] = useState(0);
+  const rowOnPhone =
+    Platform.OS === 'android' &&
+    !managed &&
+    !pose.folded &&
+    stackHeight > 0 &&
+    peek > 0 &&
+    topHeight + rhythm.block + stackHeight + rhythm.block >
+      (stage.height || window.height) - below - peek;
+  const horizontalControls = (managed && pose.horizontal) || rowOnPhone;
   const panelMaxHeight = managed ? pose.panelMaxHeight : undefined;
   const topMaxHeight = managed ? pose.topMaxHeight : undefined;
   const insets = useMemo(
@@ -566,11 +580,9 @@ function MapMode({
             top:
               topHeight +
               rhythm.tight +
-              (managed
-                ? pose.controls.y +
-                  (horizontalControls && !searchOpen && !expanded
-                    ? 48 + rhythm.block
-                    : 0)
+              (managed ? pose.controls.y : 0) +
+              (horizontalControls && !searchOpen && !expanded
+                ? 48 + rhythm.block
                 : 0),
             bottom: managed
               ? (safe?.bottom ?? 0) +
@@ -838,9 +850,11 @@ function MapMode({
                   : null,
               ]}
               pointerEvents="box-none"
-              onLayout={(event) =>
-                setControlsHeight(Math.ceil(event.nativeEvent.layout.height))
-              }
+              onLayout={(event) => {
+                const next = Math.ceil(event.nativeEvent.layout.height);
+                setControlsHeight(next);
+                if (!horizontalControls) setStackHeight(next);
+              }}
             >
               <MoneyMapControls
                 horizontal={horizontalControls}
@@ -1090,6 +1104,7 @@ function ListBody({
                   .filter(Boolean)
                   .join(' · ')}
                 amount={node.total}
+                compact
                 href={record_(node)}
                 testID={`money-donor-${index}`}
               />

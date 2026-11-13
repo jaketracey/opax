@@ -9,7 +9,7 @@ The cold first-line flow (15) defaults to 2.0; OPAX_ANDROID_FONT_SCALE=1.0 runs 
 
 On Linux, OPAX_ANDROID_PRIVATE_ADB=1 uses a new owned Unix-socket server when shared adb is unavailable. Emulator scanning and wireless auto-connect are disabled; the USB filter accepts only the assigned emulator serial. Only that emulator is registered. Cleanup stops the owned server by PID and leaves shared adb untouched. See the [ADB socket options](https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main/docs/user/adb.1.md).
 
-prepared variant: **88**; Android-only variant: **5**; held: map lane: **8**; not applicable: **7**. Total: **108**.
+prepared variant: **85**; Android-only variant: **5**; held: map lane: **8**; not applicable: **10**. Total: **108**.
 
 The full device set is selected with `scripts/e2e-android.sh OPAX_API34 --all-android`.
 The runner changes fixture variants per flow; 04 requires a saved-catalog warmup then the fixture stopped.
@@ -70,10 +70,10 @@ R8 mapping and native symbols are release checks only when enabled by the genera
 | `26-follows.yaml` | prepared variant | `26-follows.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits; `OPAX_FIXTURE_DATA=changed` |
 | `26c-follow-limit.yaml` | prepared variant | `26c-follow-limit.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `27-leads.yaml` | prepared variant | `27-leads.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
-| `28-welcome-ax5.yaml` | prepared variant | `28-welcome-ax5.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
-| `28-welcome.yaml` | prepared variant | `28-welcome.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
+| `28-welcome-ax5.yaml` | not applicable | `28-welcome-ax5.yaml`: iOS-only: the OPAXWelcomeTour launch argument opens the welcome on iOS; Android ignores it and has no launch-argument path |
+| `28-welcome.yaml` | not applicable | `28-welcome.yaml`: iOS-only: the OPAXWelcomeTour launch argument opens the welcome on iOS; Android ignores it and has no launch-argument path |
 | `28b-cold-launch.yaml` | prepared variant | `28b-cold-launch.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
-| `28c-welcome-not-now.yaml` | prepared variant | `28c-welcome-not-now.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
+| `28c-welcome-not-now.yaml` | not applicable | `28c-welcome-not-now.yaml`: iOS-only: the OPAXWelcomeTour launch argument opens the welcome on iOS; Android ignores it and has no launch-argument path |
 | `28d-first-launch-link.yaml` | prepared variant | `28d-first-launch-link.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `28e-no-permission-at-launch.yaml` | prepared variant | `28e-no-permission-at-launch.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |
 | `28f-update-from-1-0.yaml` | prepared variant | `28f-update-from-1-0.yaml`: Shared assertions; prepared Android Back, permission selectors and launch waits |

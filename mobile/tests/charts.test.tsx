@@ -626,3 +626,61 @@ test('a partial financial year is dated by its source, and a completed year has 
     '2025–26: $290k',
   );
 });
+test('BarSeries scaleGutter keeps every scale value in its own column, clear of every bar', () => {
+  const r = render(
+    <BarSeries
+      {...proof}
+      data={dense}
+      ink="ink"
+      format={String}
+      tableTitle="Years"
+      scaleGutter
+    />,
+  );
+  // A wide value, as at the largest text sizes.
+  measureSeries(r, 30, 90);
+  const scales = ['bar-series-scale-1', 'bar-series-scale-0.5'].map((testID) =>
+    RN.StyleSheet.flatten(r.root.findByProps({ testID }).props.style),
+  );
+  const bars = r.root
+    .findAllByType('Rect' as never)
+    .map((rect) => rect.props as { x: number; width: number; height: number })
+    .filter((rect) => rect.height > 1);
+  expect(bars).toHaveLength(dense.length);
+  for (const scale of scales) {
+    expect(scale.left).toBe(0);
+    expect(scale.width).toBeGreaterThanOrEqual(90);
+    for (const bar of bars)
+      expect(bar.x).toBeGreaterThan(scale.left + scale.width);
+  }
+  expect(Math.max(...bars.map((bar) => bar.x + bar.width))).toBeLessThan(335);
+});
+test('BarSeries partialFrom draws the unfinished year lighter and says "so far" beside it', () => {
+  const r = render(
+    <BarSeries
+      {...proof}
+      data={dense}
+      ink="ink"
+      format={String}
+      tableTitle="Years"
+      partialFrom={dense.length - 1}
+    />,
+  );
+  measureSeries(r);
+  const bars = r.root
+    .findAllByType('Rect' as never)
+    .filter((rect) => rect.props.height > 1);
+  expect(bars.at(-1)!.props.opacity).toBe(0.4);
+  expect(bars.at(-2)!.props.opacity).toBe(1);
+  const caption = r.root
+    .findAllByType(Text)
+    .find((text) => text.props.testID === 'bar-series-caption')!;
+  expect(caption.props.children).toBe('2014 so far: 15');
+  expect(RN.StyleSheet.flatten(caption.props.style)).toMatchObject({
+    alignSelf: 'flex-end',
+    textAlign: 'right',
+  });
+  expect(
+    r.root.findAllByProps({ accessibilityLabel: '2014 so far, 15' }).length,
+  ).toBeGreaterThan(0);
+});

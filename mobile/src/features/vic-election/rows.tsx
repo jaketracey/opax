@@ -103,17 +103,13 @@ export function SeatRow({
               <Text wordSafe variant="strong">
                 {d.name}
               </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  gap: rhythm.line,
-                }}
-              >
+              <View style={[styles.line, large ? styles.stacked : null]}>
                 <Text wordSafe variant="secondary" tone="inkSoft">
                   {d.member.name}
                 </Text>
-                {d.member.party ? <PartyLabel party={d.member.party} /> : null}
+                {d.member.party ? (
+                  <PartyLabel party={d.member.party} nested />
+                ) : null}
               </View>
             </View>
             {!large ? figures : null}
@@ -160,6 +156,21 @@ export function RegionRow({
   );
 }
 const styles = StyleSheet.create({
+  // The record row's name-and-party line (design/rows.tsx): the party is
+  // drawn only, so it is one text line tall and shares the name's line; at
+  // accessibility sizes it takes its own line under the name.
+  line: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    columnGap: rhythm.tight,
+    rowGap: rhythm.line,
+  },
+  stacked: {
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    alignItems: 'flex-start',
+  },
   row: {
     minHeight: minimumTarget,
     flexDirection: 'row',

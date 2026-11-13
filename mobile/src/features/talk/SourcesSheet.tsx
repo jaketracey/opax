@@ -7,22 +7,30 @@ import {
   Screen,
   Text,
 } from '../../design/primitives';
-import { webPageUrl } from '../../navigation/external';
 import type { VoiceSource } from '../../voice';
 import { chooseSource, useTalkLive } from './live';
 import { talkCopy } from './model';
-import { recordDestination, sourceMeta } from './sources';
+import {
+  askDraftDestination,
+  canOpenSource,
+  recordDestination,
+  sourceHeading,
+  sourceMeta,
+  sourceSpeaker,
+} from './sources';
 
-/** Sources a call can open: validated OPAX record paths only. */
+/** Sources a call can open: validated OPAX record paths and Ask pay rows. */
 export const openableSources = (sources: readonly VoiceSource[]) =>
-  sources.filter((source) => webPageUrl(source.path));
+  sources.filter((source) => canOpenSource(source.path));
 
 /**
  * `/talk/sources`, a form sheet over the call (specs/account.md 7.8) titled
- * "Sources" with Done. Each row says its kind and date, or that the date is
- * not published. A record the app draws opens inside Talk (a chevron); one on
- * opax.com.au waits for the call to end (↗). The sheet closes first, and the
- * Talk screen opens the choice, so an alert never appears under the sheet.
+ * "Sources" with Done. Each row reads as Ask's do: its type and date (or
+ * that the date is not published), the record's title, then the speaker or
+ * body. A record the app draws opens inside Talk (a chevron); one on
+ * opax.com.au, or an Ask pay row, waits for the call to end (↗). The sheet
+ * closes first, and the Talk screen opens the choice, so an alert never
+ * appears under the sheet.
  */
 export function TalkSourcesScreen() {
   const talk = useTalkLive();
@@ -33,7 +41,10 @@ export function TalkSourcesScreen() {
         <InsetGroup>
           {sources.map((source, index) => {
             const native = recordDestination(source.path) !== null;
+            const ask = askDraftDestination(source.path) !== null;
             const meta = sourceMeta(source);
+            const title = sourceHeading(source);
+            const speaker = sourceSpeaker(source);
             const metadata = (
               <Text wordSafe variant="secondary" style={styles.meta}>
                 {meta}
@@ -42,21 +53,38 @@ export function TalkSourcesScreen() {
             return (
               <LinkRow
                 key={source.path}
-                title={source.title}
+                title={title}
                 {...(Platform.OS === 'android'
                   ? { aboveTitle: metadata }
                   : { leading: metadata })}
+                secondary={
+                  speaker ? (
+                    <Text
+                      wordSafe
+                      variant="secondary"
+                      testID={`talk-source-${index}-speaker`}
+                    >
+                      {speaker}
+                    </Text>
+                  ) : undefined
+                }
                 external={!native}
                 testID={`talk-source-${index}`}
-                accessibilityLabel={`${meta}, ${source.title}`}
+                accessibilityLabel={[meta, title, speaker]
+                  .filter(Boolean)
+                  .join(', ')}
                 accessibilityHint={
                   native
                     ? talk.active
                       ? 'Opens the record within the call'
                       : 'Opens the record'
-                    : talk.active
-                      ? 'Opens on opax.com.au after the call'
-                      : 'Opens on opax.com.au'
+                    : ask
+                      ? talk.active
+                        ? 'Opens in Ask after the call'
+                        : 'Opens in Ask'
+                      : talk.active
+                        ? 'Opens on opax.com.au after the call'
+                        : 'Opens on opax.com.au'
                 }
                 onPress={() => {
                   chooseSource(source);

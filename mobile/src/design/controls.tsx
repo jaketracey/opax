@@ -364,12 +364,15 @@ export function FollowButton({
   id,
   title,
   testID = 'follow',
+  centred = false,
 }: {
   kind: FollowKind;
   id: string;
   title: string;
   /** E2E reads the state from the suffix: `<testID>-on` or `<testID>-off`. */
   testID?: string;
+  /** In a centred header (Android): the button and its message share one centre line. */
+  centred?: boolean;
 }) {
   // Load the engine only when a follow control is mounted.
   const { FOLLOW_LIMIT, followWithFeedback, followKey, unfollow, useFollows } =
@@ -468,25 +471,37 @@ export function FollowButton({
     }
   }
   const inert = busy || follows === null;
+  // The group is as wide as its widest child. A hugging button starts at
+  // the group's leading edge, so a wider message line pushed it off the
+  // header's centre line. Android centres both; iOS is unchanged.
+  const centre = centred && Platform.OS === 'android';
+  const button = (
+    <Button
+      hug
+      selected={following}
+      variant="secondary"
+      label={following ? 'Following' : 'Follow'}
+      symbol={following ? symbols.following : symbols.follow}
+      symbolAnimation={following && bounce ? 'bounce' : null}
+      accessibilityLabel={`${following ? 'Following' : 'Follow'} ${title}`}
+      size="compact"
+      hitSlop={4}
+      disabled={inert}
+      onPress={() => void toggle()}
+      testID={`${testID}-${following ? 'on' : 'off'}`}
+    />
+  );
   return (
-    <Group gap={rhythm.tight}>
-      <Button
-        hug
-        selected={following}
-        variant="secondary"
-        label={following ? 'Following' : 'Follow'}
-        symbol={following ? symbols.following : symbols.follow}
-        symbolAnimation={following && bounce ? 'bounce' : null}
-        accessibilityLabel={`${following ? 'Following' : 'Follow'} ${title}`}
-        size="compact"
-        hitSlop={4}
-        disabled={inert}
-        onPress={() => void toggle()}
-        testID={`${testID}-${following ? 'on' : 'off'}`}
-      />
+    <Group gap={rhythm.tight} style={centre ? styles.followCentred : undefined}>
+      {centre ? <View style={styles.followCentred}>{button}</View> : button}
       {message ? (
         <Animated.View style={{ opacity: confirmation ? opacity : 1 }}>
-          <Text wordSafe variant="footnote" testID={`${testID}-message`}>
+          <Text
+            wordSafe
+            variant="footnote"
+            testID={`${testID}-message`}
+            style={centre ? styles.followMessageCentred : undefined}
+          >
             {message}
           </Text>
         </Animated.View>
@@ -1840,6 +1855,8 @@ const styles = StyleSheet.create({
   quiet: { marginHorizontal: -12 },
   shrink: { flexShrink: 1 },
   hug: { alignSelf: 'flex-start' },
+  followCentred: { alignSelf: 'center', alignItems: 'center' },
+  followMessageCentred: { textAlign: 'center' },
   full: { alignSelf: 'stretch' },
   steps: {
     flexDirection: 'row',

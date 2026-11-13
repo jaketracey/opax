@@ -10,6 +10,7 @@ import * as accessibility from '../src/design/accessibility';
 import MoneyScreen, { moneyMapLabel } from '../src/features/money/MoneyScreen';
 import { MoneyMap } from '../src/features/money/map/MoneyMap';
 import { MoneyMapPanel } from '../src/features/money/map/MoneyMapPanel';
+import { MoneyMapControls } from '../src/features/money/map/MoneyMapControls';
 import { MoneyMapSearch } from '../src/features/money/map/MoneyMapSearch';
 import {
   cameraAt,
@@ -487,3 +488,81 @@ test('a linked view and focus open the map on that disc', async () => {
   );
   act(() => r.unmount());
 });
+
+test.each(['android', 'ios'] as const)(
+  '%s phone: a control stack that would run under the panel lies in a row under the card',
+  async (os) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
+    Object.defineProperty(Platform, 'OS', { configurable: true, value: os });
+    const width = 411,
+      height = 914;
+    const layout = jest.spyOn(adaptiveLayout, 'useLayout').mockReturnValue({
+      rule: 'phone',
+      size: 'compact',
+      regular: false,
+      wide: false,
+      width,
+      height,
+      window: { width, height },
+      landscape: false,
+    });
+    const adaptive = jest
+      .spyOn(adaptiveLayout, 'useAdaptiveDevice')
+      .mockReturnValue(false);
+    const large = jest
+      .spyOn(accessibility, 'useAccessibilitySize')
+      .mockReturnValue(false);
+    let r: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      r = await render({ top: 0, right: 0, bottom: 0, left: 0 });
+      const root = r.root;
+      const panel = root.findByType(MoneyMapPanel);
+      const top = root
+        .findAllByType(View)
+        .find(
+          (node) =>
+            node.props.onLayout &&
+            StyleSheet.flatten(node.props.style)?.paddingTop === 8,
+        )!;
+      const controls = () => root.findByType(MoneyMapControls);
+      act(() => {
+        byTestID(root, 'money-screen')!.props.onLayout({
+          nativeEvent: { layout: { width, height } },
+        });
+        // Android's Material card: 560 of 914 high, a 180 peek and a
+        // 206 stack leave Fit under the panel (560 + 16 + 206 + 16 > 734).
+        top.props.onLayout({ nativeEvent: { layout: { height: 560 } } });
+        panel.props.onPeekHeight(180);
+        panel.parent!.props.onLayout({
+          nativeEvent: { layout: { y: height - 200, height: 200 } },
+        });
+      });
+      act(() =>
+        controls().parent!.props.onLayout({
+          nativeEvent: { layout: { height: 206 } },
+        }),
+      );
+      expect(controls().props.horizontal).toBe(os === 'android');
+      if (os === 'android') {
+        // The row's own height never flips it back to the stack.
+        act(() =>
+          controls().parent!.props.onLayout({
+            nativeEvent: { layout: { height: 52 } },
+          }),
+        );
+        expect(controls().props.horizontal).toBe(true);
+        expect(stage().insets).toMatchObject({
+          top: 560 + 8 + 48 + 16,
+          right: 8,
+        });
+      } else expect(stage().insets).toMatchObject({ top: 568, right: 76 });
+    } finally {
+      const mounted = r;
+      if (mounted) act(() => mounted.unmount());
+      layout.mockRestore();
+      adaptive.mockRestore();
+      large.mockRestore();
+      Object.defineProperty(Platform, 'OS', descriptor);
+    }
+  },
+);

@@ -2,6 +2,7 @@ import { vicElectionFixture } from './vic-election-fixture';
 // Offline, data-only server. No Worker import, proxy, fetch, email or model path.
 import { createVoiceFixture } from './voice-fixture';
 import { divisionsFixture, divisionsPath } from './divisions-fixture';
+import { sittingDaysPath } from '../src/features/today/sitting';
 import { reportsFixture } from './reports-fixture';
 import { exploreFixture } from './explore-fixture';
 import { askFixture } from './ask-fixture';
@@ -105,6 +106,35 @@ for (const path of Object.keys(snapshot.files)) {
 // from the pinned roster. Without it every run logged OUTSIDE_ALLOW_LIST.
 assertAllowedPath(divisionsPath);
 files.set(divisionsPath, divisionsFixture(pinnedBytes, [...files.keys()]));
+// Today's sitting line reads the Parliament's sitting calendar, which the
+// pinned snapshot predates. OPAX_FIXTURE_SITTING picks it:
+// - absent (default): a quiet 404, as before the portal published it, so
+//   journeys draw no line and their frames stay date-independent;
+// - published: the real 2026 file with its days trimmed to 12 October to
+//   26 November (tests/fixtures/sitting-days.json). The line then follows
+//   the simulator's date, as the app follows the device's.
+const sittingMode = process.env.OPAX_FIXTURE_SITTING ?? 'absent';
+if (!['absent', 'published'].includes(sittingMode))
+  throw new Error('OPAX_FIXTURE_SITTING must be absent or published');
+assertAllowedPath(sittingDaysPath);
+if (sittingMode === 'published')
+  files.set(
+    sittingDaysPath,
+    readFileSync(join(__dirname, '../tests/fixtures/sitting-days.json')),
+  );
+
+// QA-only opt-in: a newer money graph from a local file (for example one with
+// the typed receipt cells, by_type and by_type_year), still checked by the app's
+// own decoder. Absent, the pinned graph is served as always.
+const moneyGraphFile = process.env.OPAX_FIXTURE_MONEY_GRAPH;
+if (moneyGraphFile) {
+  const body = readFileSync(moneyGraphFile);
+  JSON.parse(body.toString());
+  files.set('/graph/money.json', body);
+  console.log(
+    `OPAX_FIXTURE_MONEY_GRAPH ${moneyGraphFile} bytes=${body.length}`,
+  );
+}
 // Robustness-only opt-in: change one optional field, preserving every
 // source fact and all other pinned bytes in the normal fixture mode.
 if (rosterMode === 'null-optional') {
@@ -325,6 +355,15 @@ export const server = createServer(async (request, response) => {
       assertPortraitPath(path);
     else assertAllowedPath(path);
     const url = new URL(path, `http://127.0.0.1:${port}`);
+    if (url.pathname === sittingDaysPath && !files.has(sittingDaysPath)) {
+      status = 404;
+      response.writeHead(status, {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store',
+      });
+      response.end(JSON.stringify({ error: 'Not published' }));
+      return;
+    }
     const election = vicElectionFixture(
       path,
       process.env.OPAX_FIXTURE_VIC_ELECTION !== 'off',

@@ -19,18 +19,20 @@ export function Pressable({
   const { style } = props;
   const Component =
     Platform.OS === 'android' ? AndroidPressable : NativePressable;
-  const focusStyle =
-    focused && !props.disabled && !props.accessibilityState?.disabled
-      ? {
-          outlineColor: colors.navy,
-          outlineWidth: border.focus,
-          outlineOffset: border.focus,
-          outlineStyle: 'solid' as const,
-        }
-      : undefined;
+  const ringed =
+    focused && !props.disabled && !props.accessibilityState?.disabled;
+  const focusStyle = ringed
+    ? {
+        outlineColor: colors.navy,
+        outlineWidth: border.focus,
+        outlineOffset: border.focus,
+        outlineStyle: 'solid' as const,
+      }
+    : undefined;
   return (
     <Component
       {...props}
+      {...(Platform.OS === 'android' ? { ringed } : null)}
       ref={ref}
       onFocus={(event) => {
         setFocused(true);
@@ -52,8 +54,9 @@ export function Pressable({
 }
 function AndroidPressable({
   ref,
+  ringed = false,
   ...props
-}: PressableProps & { ref?: Ref<View> }) {
+}: PressableProps & { ref?: Ref<View>; ringed?: boolean }) {
   const ownRef = useRef<View>(null);
   const setRef = useCallback(
     (node: View | null) => {
@@ -96,16 +99,22 @@ function AndroidPressable({
       android_ripple={
         disabled
           ? undefined
-          : {
-              color: onFilled
-                ? androidControls.rippleOnFilled
-                : contrast
-                  ? androidControls.rippleHighContrast
-                  : androidControls.ripple,
-              foreground: true,
-              borderless: false,
-              ...android_ripple,
-            }
+          : ringed
+            ? // The ripple's own focused state draws a grey fill under the
+              // navy ring. A transparent ripple keeps a focus-aware
+              // foreground, so Android's default focus highlight stays off
+              // too: one ring, not two.
+              { color: 'transparent', foreground: true, borderless: false }
+            : {
+                color: onFilled
+                  ? androidControls.rippleOnFilled
+                  : contrast
+                    ? androidControls.rippleHighContrast
+                    : androidControls.ripple,
+                foreground: true,
+                borderless: false,
+                ...android_ripple,
+              }
       }
       style={[
         resting,

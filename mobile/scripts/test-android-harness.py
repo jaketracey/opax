@@ -268,5 +268,20 @@ while :; do sleep 1; done
         self.assertIn('--no-reinstall-driver',maestro[1])
         self.assertEqual(len(results.splitlines()),2)
 
+    def test_exact_journey_name_never_selects_a_longer_namesake(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)
+            plan=[{'path':'28-welcome.yaml','run':False},{'path':'28-welcome-ax5.yaml','run':True},{'path':'69-money-map-v2.yaml','run':True}]
+            for p in plan: (root/p['path']).write_text('appId: au.com.opax.app\n')
+            (root/'suite.json').write_text(json.dumps(plan))
+            def select(selector):
+                return subprocess.run(['bash','-c','source "$1"; qa_android_select "$2" "$3"','_',str(SCRIPTS/'qa-flows.sh'),str(root),selector],capture_output=True,text=True)
+            exact=select('28-welcome')
+            self.assertNotEqual(exact.returncode,0)
+            self.assertIn('Unsupported Android journey: 28-welcome',exact.stderr)
+            self.assertNotIn('ax5',exact.stdout)
+            self.assertEqual(select('28-welcome-ax5').stdout.split(),['.maestro/28-welcome-ax5.yaml'])
+            self.assertEqual(select('69').stdout.split(),['.maestro/69-money-map-v2.yaml'])
+
 
 if __name__=='__main__': unittest.main()

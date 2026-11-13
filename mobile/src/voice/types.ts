@@ -78,7 +78,21 @@ export type TranscriptTurn = {
   id: number;
   text: string;
 };
-export type VoiceSource = { title: string; path: string };
+/**
+ * A record the call cited: a title and a validated OPAX path always, and
+ * Ask's labels when the voice tool sends them (im/voice-ask): the plain
+ * record title, the speaker or body, the date (a day, month, year or short
+ * label such as "1999–2026") and the record type ("Speech", "Pay record").
+ * Older native builds and the shipped server send title and path only.
+ */
+export type VoiceSource = {
+  title: string;
+  path: string;
+  recordTitle?: string;
+  speaker?: string;
+  date?: string;
+  type?: string;
+};
 /**
  * Coarse loudness for the call screen's animation, about 15 a second while
  * live: 0 is -60 dBFS or quieter, 1 is full scale. Never audio.

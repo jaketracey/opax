@@ -199,6 +199,7 @@ export function ElectionList({
   onScroll,
   onLayout,
   arrivalOpacity,
+  scrollToOverflowEnabled = false,
 }: {
   sections: ElectionSection[];
   header?: ReactNode;
@@ -210,6 +211,8 @@ export function ElectionList({
   onScroll?: (y: number) => void;
   onLayout?: () => void;
   arrivalOpacity?: Animated.Value;
+  /** iOS: lets scrollToTop reach the rest offset above zero, under the header. */
+  scrollToOverflowEnabled?: boolean;
 }) {
   const column = useScreenColumn();
   return (
@@ -229,6 +232,7 @@ export function ElectionList({
               onLayout?.();
             }}
             contentInsetAdjustmentBehavior="automatic"
+            scrollToOverflowEnabled={scrollToOverflowEnabled}
             automaticallyAdjustKeyboardInsets
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="on-drag"

@@ -29,6 +29,7 @@ function sumFigures<T extends MoneyFigures>(parts: T[]): MoneyFigures {
       }
     out.byYear = byYear;
   }
+  if (parts.length && parts.every((x) => x.typed)) out.typed = true;
   const undated = parts.filter((x) => x.undated);
   if (undated.length)
     out.undated = [

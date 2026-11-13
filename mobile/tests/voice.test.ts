@@ -165,6 +165,74 @@ test.each([
 ])('drops malformed or non-public events', (event) =>
   expect(mapEvent(event)).toBeNull(),
 );
+// Voice sources since im/voice-ask carry Ask's labels; the shipped server's
+// title-and-path sources must still decode exactly as before.
+const askSources = [
+  {
+    title: 'Alex Example: Committees',
+    path: '/doc/speech-500101',
+    recordTitle: 'Committees',
+    speaker: 'Alex Example',
+    date: '2001-06-21',
+    type: 'Speech',
+  },
+  {
+    title: 'Example office pay: every step since 1999',
+    path: '/ask?q=How%20much%20is%20the%20example%20office%20paid%3F',
+    recordTitle: 'Example office pay: every step since 1999',
+    date: '1999–2026',
+    type: 'Pay record',
+  },
+  {
+    title: 'Example report',
+    path: '/reports/example-report',
+    type: 'Report',
+  },
+];
+test('maps Ask-style voice sources, pay rows on /ask included', () => {
+  expect(mapEvent({ type: 'sources', sources: askSources })).toEqual({
+    type: 'sources',
+    sources: askSources,
+  });
+});
+test('a title-only source from the shipped server gains no fields', () => {
+  const mapped = mapEvent({
+    type: 'sources',
+    sources: [{ title: 'Published record', path: '/bill/au-federal-r7534' }],
+  });
+  expect(mapped?.type === 'sources' && Object.keys(mapped.sources[0]!)).toEqual(
+    ['title', 'path'],
+  );
+});
+test('a malformed label is left out without dropping the source', () => {
+  expect(
+    mapEvent({
+      type: 'sources',
+      sources: [
+        {
+          title: 'Sam Sample: Pay',
+          path: '/doc/speech-1',
+          recordTitle: 'Pay',
+          speaker: 42,
+          date: 'As at a date far too long to be one',
+          type: '   ',
+        },
+      ],
+    }),
+  ).toEqual({
+    type: 'sources',
+    sources: [
+      { title: 'Sam Sample: Pay', path: '/doc/speech-1', recordTitle: 'Pay' },
+    ],
+  });
+});
+test.each(['/asking', '/ask/fixture', '/api/ask'])(
+  'still refuses the near-miss path %s',
+  (path) =>
+    expect(
+      mapEvent({ type: 'sources', sources: [{ title: 'bad', path }] }),
+    ).toBeNull(),
+);
 test('subscription filters payloads and cancels the native listener', () => {
   const remove = jest.fn();
   let callback: (value: unknown) => void = () => {};
@@ -276,4 +344,14 @@ test('idle snapshot supports absent status and mode', async () => {
   };
   mockNative.snapshot.mockResolvedValue({ ok: true, value });
   expect(await voice.snapshot()).toEqual({ ok: true, value });
+});
+test('a snapshot carries Ask-style sources', async () => {
+  mockNative.snapshot.mockResolvedValue({
+    ok: true,
+    value: { ...snapshot, sources: askSources },
+  });
+  expect(await voice.snapshot()).toEqual({
+    ok: true,
+    value: { ...snapshot, sources: askSources },
+  });
 });

@@ -218,6 +218,7 @@ export function ProfileHeader({
               id={follow.id}
               title={name}
               testID={`${testID}-follow`}
+              centred={centred}
             />
           </View>
         ) : null}

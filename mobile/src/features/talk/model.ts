@@ -116,6 +116,8 @@ export const talkCopy = {
     title: 'Open after the call?',
     message: (title: string) =>
       `${title} opens on opax.com.au, which would end the call.`,
+    askMessage: (title: string) =>
+      `${title} opens in Ask, which would end the call.`,
     later: 'Open after the call',
     now: 'End call and open',
     keep: 'Keep talking',
