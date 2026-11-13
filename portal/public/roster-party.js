@@ -71,3 +71,37 @@ export function rosterSeatParty(person, electorates) {
     source_url: typeof rep.person?.source_url === 'string' ? rep.person.source_url : null,
   };
 }
+
+/** The party the latest dated official chamber list records for a full-name
+ * profile with no party of its own and no verified seat party
+ * (public/data/roster-list-parties.json, from scripts/export_roster_list_parties.py).
+ *
+ * Only a full name matches (exact, folded, or a listed alias), never a
+ * single-name print, and only in a chamber the profile sat in. The latest
+ * dated observation decides; two parties or two seats at that date give null.
+ * The result is dated, so a reader sees "Labor (parliamentary roster as at
+ * 25 Sep 2026)", never an undated affiliation.
+ *
+ * @param {{name: string, chambers?: string[]}} person
+ * @param {{name: string, aliases?: string[], chamber: string, electorate?: string, party: string, as_of: string, source_url?: string}[]} observations
+ * @returns {{party: string, as_of: string, electorate: string, url: null, source_url: string|null} | null}
+ */
+export function rosterListParty(person, observations) {
+  if (!person?.name || !Array.isArray(observations)) return null;
+  const name = rosterFold(person.name);
+  if (!name.includes(' ')) return null;
+  const chambers = new Set(person.chambers || []);
+  const hits = observations.filter((o) => o && chambers.has(o.chamber) && isoDate(o.as_of) &&
+    typeof o.party === 'string' && o.party.trim() && [o.name, ...(o.aliases || [])].some((n) => rosterFold(n) === name));
+  if (!hits.length) return null;
+  const latest = hits.reduce((a, o) => (o.as_of > a ? o.as_of : a), '');
+  const top = hits.filter((o) => o.as_of === latest);
+  if (new Set(top.map((o) => o.party.trim())).size !== 1 || new Set(top.map((o) => rosterFold(o.electorate))).size !== 1) return null;
+  return {
+    party: top[0].party.trim(),
+    as_of: latest,
+    electorate: top[0].electorate || '',
+    url: null,
+    source_url: typeof top[0].source_url === 'string' ? top[0].source_url : null,
+  };
+}

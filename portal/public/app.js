@@ -6191,6 +6191,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // records for this person (roster-party.js through electorates.js): read below,
   // with the electorate data, and preferred to the speeches' labels.
   const rosterFallback = !partyNow && !roster?.party && Boolean(roster?.representation?.length);
+  // Else a full-name profile may take the latest dated official chamber list's party
+  // (public/data/roster-list-parties.json); never a single-name print.
+  const listFallback = !partyNow && !roster?.party && /\S\s+\S/.test(String(roster?.name || ""));
   const formerly = partyNow && spokeAs && !samePartyLabel(partyNow, spokeAs) ? spokeAs : null;
   const dates = speeches.map((r) => r.date).filter(Boolean).sort();
   const chambers = [...new Set(speeches.map((r) => STATE_NAMES[r.state] || r.state).filter(Boolean))];
@@ -6252,7 +6255,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     return;
   }
   const q = encodeURIComponent(name);
-  const [fits, electorateReference, rosterData] = await Promise.all([
+  const [fits, electorateReference, rosterData, , rosterLists] = await Promise.all([
     loadFits(),
     loadElectorateModule().then(async (module) => {
       const [data, people] = await Promise.all([module.loadIndex(), module.loadPeople().catch(() => ({ people: [] }))]);
@@ -6262,11 +6265,14 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     // The party receipts row below only points at the party's map entry when
     // the money data has one; an independent's would land on "Not among the
     // top 250 disclosed donors", so they get the map itself instead.
-    party || rosterFallback ? loadMoneyData().catch(() => null) : null,
+    party || rosterFallback || listFallback ? loadMoneyData().catch(() => null) : null,
+    listFallback ? fetch("/data/roster-list-parties.json").then((r) => (r.ok ? r.json() : null)).catch(() => null) : null,
   ]);
   if (currentSubjectKey !== key) return;
-  const seatParty = rosterFallback && electorateReference
-    ? electorateReference.module.rosterSeatParty?.(roster, electorateReference.data.electorates) || null : null;
+  const seatParty = (rosterFallback && electorateReference
+    ? electorateReference.module.rosterSeatParty?.(roster, electorateReference.data.electorates) || null : null)
+    || (listFallback && electorateReference && rosterLists
+      ? electorateReference.module.rosterListParty?.(roster, rosterLists.observations) || null : null);
   if (seatParty) party = seatParty.party;
   const partyOnMap = Boolean(party && findMoneyNode("party", party));
   const electorateLinks = electorateReference
@@ -6304,6 +6310,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     ].filter(Boolean),
     facts: [
       ["Status", esc(roster?.current ? "Sitting parliamentarian" : "Parliamentarian")],
+      // A roster party is said of the roster's date, not of the whole career.
+      seatParty && ["Party", esc(`${seatParty.party} (parliamentary roster as at ${fmtDate(seatParty.as_of)})`)],
       ...electorateRows,
       ...profileAffiliations(roster).map((r) => ["Parliamentary service",
         `${esc(r.jurisdictionLabel)} · ${esc(r.chamberLabel)} · ${esc(r.electorate)} · ${esc(r.party || 'Party not recorded')}, ` +

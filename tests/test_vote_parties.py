@@ -7,6 +7,7 @@ import importlib.util
 import json
 from pathlib import Path
 import sqlite3
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -231,6 +232,30 @@ class ExportIntegration(unittest.TestCase):
             D.write_projection({record["key"]: record}, Path(tmp))
             shard = json.loads((Path(tmp) / "division-nsw-lc-2026-05-01-1.json").read_text())
         self.assertNotIn("party", shard["members"][0])
+
+
+class RosterListFile(unittest.TestCase):
+    def test_committed_roster_list_parties_match_the_evidence(self):
+        result = subprocess.run([sys.executable, str(ROOT / "scripts/export_roster_list_parties.py"), "--check"],
+                                capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_single_name_observations_are_never_written(self):
+        sys.path.insert(0, str(ROOT))
+        spec = importlib.util.spec_from_file_location("roster_list", ROOT / "scripts/export_roster_list_parties.py")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "scripts").mkdir()
+            (root / "scripts/roster_state_evidence.json").write_text(json.dumps({"snapshots": [
+                {"jurisdiction": "nsw", "chamber": "nsw_lc", "as_of": "2026-09-25", "source_url": LIST, "members": [
+                    {"name": "Ivo Quarrington", "aliases": [], "electorate": "New South Wales", "party": "Labor"},
+                    {"name": "Blackwood", "aliases": [], "electorate": "New South Wales", "party": "Labor"},
+                    {"name": "Una Fernhill", "aliases": [], "electorate": "New South Wales"}]}]}))
+            (root / "scripts/roster_service.json").write_text(json.dumps({"service": [], "history": []}))
+            got = module.observations(root)
+        self.assertEqual([(o["name"], o["party"], o["as_of"]) for o in got], [("Ivo Quarrington", "Labor", "2026-09-25")])
 
 
 if __name__ == "__main__":
