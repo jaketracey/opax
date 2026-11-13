@@ -6,7 +6,21 @@ const donorViewReady = import('/donor-views.js?v=da68cf9f9e').then(module => {
   ({donorRows,donorDisclosure,donorLabelHTML}=module);
   return module.loadDonorViewIndex();
 }).then(index => (donorViewIndex=index));
-const disclosedDonor = name => donorViewIndex.get(String(name).normalize('NFKC').replace(/[‘’ʼ`]/g,"'").replace(/\s+/g,' ').trim().toLowerCase()) || {label:name};
+const donorViewKey = name => String(name).normalize('NFKC').replace(/[‘’ʼ`]/g,"'").replace(/\s+/g,' ').trim().toLowerCase();
+const disclosedDonor = name => donorViewIndex.get(donorViewKey(name)) || {label:name};
+// The one not-found block (not-found.js), for an in-app link that lands on an empty address.
+let notFoundModule;
+const notFoundReady = () => notFoundModule ??= import('/not-found.js');
+async function showNotFound(container, kind, slug, { headingId, manageFocus = false, crumbs, isActive = () => true, extra = '' } = {}) {
+  const mod = await notFoundReady();
+  if (!isActive() || !container.isConnected) return null;
+  const heading = mod.renderNotFound(container, { kind, slug, headingId });
+  if (extra) container.insertAdjacentHTML('beforeend', extra);
+  document.title = `${mod.NOT_FOUND_KINDS[kind].title} · OPAX`;
+  if (crumbs) setCrumbs(crumbs);
+  if (manageFocus) heading?.focus();
+  return heading;
+}
 const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 /* OPAX portal — vanilla JS, no build step.
    The hash is the single source of truth for navigation; route() renders it. */
@@ -1560,7 +1574,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=2a1c07e930');
+    const mod = await import('/grant-recipient.js?v=8e1960968b');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -5981,6 +5995,15 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       await renderRosterParty(name, key, body);
       return;
     }
+    if (!node && kind === "donor" && donorViewIndex.size && !donorViewIndex.has(donorViewKey(name))) {
+      // A name in no return (the donor index holds every published spelling): the
+      // not-found block. A name in any return keeps its page (Jake, 16 Oct).
+      reserveSubjectMap(false);
+      currentSubjectKey = null;
+      await showNotFound(body, "donor", name, { headingId: "subject-title", manageFocus: true,
+        crumbs: crumbsFor("/subject/donor", "Not found"), isActive: () => currentSubjectKey === null });
+      return;
+    }
     if (!node) {
       // A donor outside the money map's bounded selection: its own returns,
       // the state commissions' files and the record, under its exact spelling.
@@ -6248,18 +6271,15 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const holders = String(name).trim().includes(" ") ? [] :
       ((await loadSpeakersDir())?.bySurname.get(speakerKey(name)) || []).filter(([n]) => speakerKey(n) !== speakerKey(name));
     if (currentSubjectKey !== key) return;
-    document.title = `${name} · OPAX`;
-    subjectTag(body).innerHTML = `<span>No speeches in the record under this name</span>`;
-    box.innerHTML = entryRailHTML({
-      actions: [
-        actionBtn("search", searchHash(`"${name}"`, {}), "Search the record for this name", { primary: true }),
-        actionBtn("entry", "/subject/person", "Browse parliamentarians"),
-      ],
-      extra: `${holders.length ? `<p class="entry-rail-head">People in the record with this surname</p>
-        <ul class="subject-list" role="list">${holders.map(([n, c]) => `<li><a ${entityHrefAttr(subjectHash("person", n))}>${esc(n)}</a> <span class="meta">${c.toLocaleString()} speeches</span></li>`).join("")}</ul>` : ""}
-        ${sourceLineHTML({ source: "Parliamentary Hansard", notes: ["The record names its speakers as the transcripts do, so a person may appear under a fuller or shorter form of this name. The search looks across every spelling."] })}`,
+    // No roster entry and no speech under the name: the not-found block, never a
+    // profile shell around the address (the Worker serves the same block).
+    currentSubjectKey = null;
+    await showNotFound(body, "person", subjectSegment || name, {
+      headingId: "subject-title", manageFocus: true, crumbs: crumbsFor("/subject/person", "Not found"),
+      isActive: () => currentSubjectKey === null && $("subject-body") === body,
+      extra: holders.length ? `<section class="not-found-holders"><h2 class="ui-section-title">People in the record with this surname</h2>
+        <ul class="subject-list" role="list">${holders.map(([n, c]) => `<li><a ${entityHrefAttr(subjectHash("person", n))}>${esc(n)}</a> <span class="meta">${c.toLocaleString()} speeches</span></li>`).join("")}</ul></section>` : "",
     });
-    revealGrid();
     return;
   }
   const q = encodeURIComponent(name);
@@ -7310,7 +7330,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=99e1eeba7e").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=c702858b8c").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -9272,16 +9292,9 @@ async function openBill(key, manageFocus) {
   if (billView !== view || generation !== billTextGeneration) return;
   clearPageLoader("bill-loader");
   if (!bill) {
-    body.innerHTML = `
-      <div class="subject-head">
-        <h1 id="bill-title" tabindex="-1">No bill with this identifier</h1>
-        <p class="subject-tag"><span>The register does not name <code>${esc(key)}</code>. It may not be
-          published yet, or the link may be old.</span></p>
-      </div>
-      <p class="action-row">${actionBtn("entry", "/bills", "Open the bill list", { primary: true })}
-        ${actionBtn("search", searchHash(key, {}), "Search the record")}</p>`;
-    if (manageFocus) $("bill-title")?.focus();
-    setCrumbs(crumbsFor("/bills", "Not found"));
+    // The register names no bill here: the not-found block, never the raw key.
+    await showNotFound(body, "bill", key, { headingId: "bill-title", manageFocus, crumbs: crumbsFor("/bills", "Not found"),
+      isActive: () => billView === view && generation === billTextGeneration });
     return;
   }
   bill.exportedAt = billsDate || "";
@@ -13391,6 +13404,8 @@ async function openDocPage(slug, manageFocus) {
   if (currentDocSlug === slug && currentDoc) return;
   currentDocSlug = slug;
   currentDoc = null;
+  $("panel-doc").classList.remove("is-missing");
+  $("panel-doc").querySelector(":scope > .not-found-host")?.remove();
   $("doc-title").textContent = "Loading…";
   document.querySelector("#panel-doc .doc-portrait")?.remove();
   $("doc-meta").textContent = "";
@@ -13551,7 +13566,19 @@ async function openDocPage(slug, manageFocus) {
   } catch (err) {
     if (currentDocSlug !== slug) return;
     // A plain sentence and a retry, never the raw message (state rules).
-    if (err.message === "not found") setStatus($("doc-status"), "No document with this identifier. The link may be old, or the record may not be published yet.", true);
+    if (err.message === "not found") {
+      // Nothing at this address: the not-found block in place of the document's
+      // shell (not-found.css hides the shell while the panel is .is-missing).
+      setStatus($("doc-status"), "");
+      const host = document.createElement("div");
+      host.className = "not-found-host";
+      $("panel-doc").classList.add("is-missing");
+      $("panel-doc").prepend(host);
+      showNotFound(host, slug.startsWith("division-") ? "division" : "document", slug, {
+        manageFocus, crumbs: crumbsFor("/ask?view=search", "Not found"),
+        isActive: () => currentDocSlug === slug && host.isConnected });
+      return;
+    }
     else $("doc-status").innerHTML = `<span>This record could not load just now.</span> <a href="${esc(`/doc/${encodeURIComponent(slug)}`)}">Try again</a>`;
     $("doc-title").textContent = "Document unavailable";
   }

@@ -67,7 +67,8 @@ test('off: every report address is the noindexed not-found page, with no way bac
     const doc = new JSDOM(html).window.document;
     assert.equal(doc.querySelector('meta[name="robots"]')?.getAttribute('content'), 'noindex', path);
     assert.equal(doc.title, 'Page not found · OPAX', path);
-    assert.match(doc.querySelector('#prerender').textContent, /Nothing is published at this address/, path);
+    assert.equal(doc.querySelector('#prerender h1').textContent, 'Nothing at this address', path);
+    assert.match(doc.querySelector('#prerender').textContent, /The link may be old, or the record may not be published yet\./, path);
     assert.equal(doc.querySelector('link[rel="canonical"]'), null, path);
     assert.deepEqual(withheldLinks(html), [], path);
     assert.equal(doc.documentElement.getAttribute('data-nav-gates'), 'vic-election', path);

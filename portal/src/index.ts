@@ -151,6 +151,7 @@ import {renderMoneyConnectionsTable} from './money-connections-table'
 import { pressHeadlineAndText, pressTitle } from './press-title'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 import { withTranscriptNote } from './transcript-answer'
+import { notFoundHTML, type NotFoundKind } from '../public/not-found.js'
 
 interface FindParagraph {
   score: number
@@ -3894,7 +3895,9 @@ interface PageMeta {
   /** The page's trail after Home, when its builder knows better than its
    *  heading (a division sits under its bill). Settled for every page in
    *  buildMeta: the strip it prints and its BreadcrumbList both read it. */
-  trail?: Crumb[]
+  trail?: Crumb[]  /** An empty address (the site's 404, or a record route the data holds nothing at):
+   *  the shared not-found block, served without the app (public/not-found.js). */
+  notFound?: NotFoundKind
 }
 
 // Published indexes resolve identities; route grammar rejects malformed paths.
@@ -4859,6 +4862,15 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
     const identity = new URL(meta.canonical)
     meta.prerender = meta.prerender.replace('id="prerender"', `id="prerender" data-record-core data-record-path="${escHtml(identity.pathname+identity.search)}"`)
   }
+  // An empty address draws the one not-found block, whichever route it reached
+  // (public/not-found.js). A 503 is not this: the data could not be read.
+  const empty = meta.status === 404 ? notFoundKindFor(route, url) : null
+  if (empty) {
+    meta.notFound = empty.kind
+    // An address nothing answers sits under no section: its path names nothing (a withdrawn report's included).
+    if (empty.kind === 'page') meta.trail = [{ label: 'Page not found' }]
+    meta.prerender = `<section id="prerender" class="wrap">${notFoundHTML({ kind: empty.kind, slug: empty.slug, headingId: 'not-found-title' })}</section>`
+  }
   // Every non-home path has a single answer, including unavailable/not-found pages.
   meta.prerender ??= answerBlock(meta.title.replace(/ · OPAX$/, ''),meta.description)
   // The page's one trail, from the menus' own list: what a server-only
@@ -4871,6 +4883,19 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
   const breadcrumbs = breadcrumbList(meta.trail, meta.canonical)
   meta.jsonLd=meta.status>=400 || meta.noindex ? null : buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity,breadcrumbs})
   return meta
+}
+
+/** Which not-found block a 404 draws, and the address it turns back into words.
+ *  Only the record routes a reader can mistype or follow from an old link; a
+ *  missing award on a recipient that exists keeps the recipient's page. */
+function notFoundKindFor(route: SeoRoute, url: URL): { kind: NotFoundKind; slug: string } | null {
+  if (route.kind === 'notfound') return { kind: 'page', slug: url.pathname }
+  if (route.kind === 'bill') return { kind: 'bill', slug: route.key }
+  if (route.kind === 'doc') return { kind: route.slug.startsWith('division-') ? 'division' : 'document', slug: route.slug }
+  if (route.kind === 'grant-recipient') return url.searchParams.has('award') ? null : { kind: 'recipient', slug: route.id }
+  if (route.kind === 'subject' && (route.dir === 'person' || route.dir === 'donor' || route.dir === 'electorate'))
+    return url.searchParams.get('attribution') === 'unattributed' ? null : { kind: route.dir, slug: route.name }
+  return null
 }
 
 /** Status as a reader meets it, from the registry's own vocabulary. */
@@ -5954,7 +5979,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   // Its renderer owns any future caveat alongside an actual political money pairing.
   // The policy pages (privacy, support) name no association between records.
   // Official report records quote a publisher's own document; they pair no records.
-  if (route.kind !== 'official-reports' && !(route.kind === 'hub' && route.hub === 'vic-election') && !(route.kind === 'static' && SERVER_PANELS.has(route.page)) && route.kind !== 'source-report')
+  if (!meta.notFound && route.kind !== 'official-reports' && !(route.kind === 'hub' && route.hub === 'vic-election') && !(route.kind === 'static' && SERVER_PANELS.has(route.page)) && route.kind !== 'source-report')
     meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
   // Every page prints its trail in the server HTML too (readers without
   // scripts, crawlers), from the menus' own list; the app's strip replaces it
@@ -6003,10 +6028,12 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/hubs.css">'+(videoCard ? '<link rel="stylesheet" href="/video-card.css" data-video-card-style><script type="module" src="/video-card.js"></script>' : ''),{html:true}) } })
   if (route.kind === 'subject' && route.dir === 'person' && videoCard) rewriter.on('head', { element(el) { el.append('<link rel="stylesheet" href="/video-card.css" data-video-card-style>',{html:true}) } })
     .on('p#stats', { element(el) { el.remove() } })
-  // An address nothing answers is a server page too: the app would route it as something else.
-  if (route.kind === 'notfound') rewriter.on('script[src]', { element(el) {
+  // An address nothing answers is a server page too: the app would route it as
+  // something else, or draw a record shell around nothing. The block's own module
+  // draws its wombat.
+  if (route.kind === 'notfound' || meta.notFound) rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
-  } })
+  } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/not-found.css" data-not-found-style><script type="module" src="/not-found.js"></script>', { html: true }) } })
   if (route.kind === 'official-reports') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/official-reports.css">' + (route.type ? '<script type="module" src="/official-reports.js"></script>' : ''), { html: true }) } })
