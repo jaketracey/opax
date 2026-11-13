@@ -102,9 +102,13 @@ name: 70 Victorian election on Android
 - takeScreenshot: ${EVIDENCE}/70-android-hub-foot
 
 - openLink: opax:///vic-election?fixture=today
-- extendedWaitUntil:
-    visible: Election day is today
-    timeout: 30000
+# The link can reopen the hub already on screen, still scrolled to its
+# foot: scroll back up to the status.
+- scrollUntilVisible:
+    element:
+      text: Election day is today
+    direction: UP
+    timeout: 90000
 - assertVisible: Polls are open from 8 am to 6 pm.
 - takeScreenshot: ${EVIDENCE}/70-android-election-day
 - openLink: opax://today
@@ -117,9 +121,13 @@ name: 70 Victorian election on Android
 - assertVisible: Polls are open from 8 am to 6 pm
 - takeScreenshot: ${EVIDENCE}/70-android-today-election-day
 - openLink: opax:///vic-election?fixture=closed
-- extendedWaitUntil:
-    visible: Voting has closed
-    timeout: 30000
+# The link can reopen the hub already on screen, still scrolled to its
+# foot: scroll back up to the status.
+- scrollUntilVisible:
+    element:
+      text: Voting has closed
+    direction: UP
+    timeout: 90000
 - assertNotVisible:
     id: vic-election-days
 - assertNotVisible: Key dates
