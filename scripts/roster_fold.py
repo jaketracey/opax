@@ -26,9 +26,10 @@ searches also read the speeches the knowledge box still holds under the bare sur
 
 Last, rows that carry one verified person id under several printed names fold into one person (fold_ids,
 docs/ROSTER-FOLDS.md "One verified id, one person"): "Mark Butler" and "Mark Christopher Butler" are one
-member, so one row, one address. The row with the most speeches keeps its name and slug (a tie goes to the
-sitting member; a surname print never holds it); the other names become `prints`, so their speeches, old
-addresses and records reach the one page.
+member, so one row, one address. The row printed under the electorate release's primary name for the id keeps
+its name and slug ("Bob Baldwin", not the formal "Robert Baldwin" with more speeches); where no row carries that
+name, the row with the most speeches (a tie goes to the sitting member). A surname print never holds it. The other
+names become `prints`, so their speeches, old addresses and records reach the one page.
 
   python3 scripts/roster_fold.py --directory portal/public/parliamentarians.json [--members members.json]
 
@@ -109,7 +110,7 @@ def registry_from_reference(reference):
             spans = [(None, WRAGGE_LAST_YEAR)]
         for first, last in spans or [(None, None)]:
             out.append({"names": names, "jurisdiction": p.get("jurisdiction"), "first": first, "last": last,
-                        "open": last is None, "pid": legacy})
+                        "open": last is None, "pid": legacy, "primary": p.get("name") or ""})
     return out
 
 
@@ -288,13 +289,22 @@ def sub_print(row, group):
                                 and parts(o["name"])[-len(mine):] == mine for o in group)
 
 
-def id_holder(group):
-    """The row that keeps the person's name and slug: the most speeches, then the sitting member's row;
-    never a surname print. None when every row is one."""
+def release_names(pid, registry=()):
+    """The name keys the electorate release prints one verified id under as its primary name (registry_from_reference)."""
+    return {name_key(m["primary"]) for m in registry if pid and m.get("pid") == pid and m.get("primary")}
+
+
+def id_holder(group, registry=()):
+    """The row that keeps the person's name and slug, and takes the other rows' data. The row printed under the
+    electorate release's primary name for the id, where the release has one name for it and a row carries it: the
+    public "Bob Baldwin", not the formal "Robert Baldwin" with more speeches. Otherwise, and among spelling twins of
+    that name, the most speeches, then the sitting member's row. Never a surname print. None when every row is one."""
     names = [p for p in group if not sub_print(p, group)]
     if not names:
         return None
-    return sorted(names, key=lambda p: (-(p.get("speeches") or 0), not p.get("current"), p["name"]))[0]
+    primary = release_names(str(names[0].get("pid") or ""), registry)
+    public = [p for p in names if name_key(p["name"]) in primary] if len(primary) == 1 else []
+    return sorted(public or names, key=lambda p: (-(p.get("speeches") or 0), not p.get("current"), p["name"]))[0]
 
 
 def _houses(row):
@@ -415,7 +425,7 @@ def fold_ids(people, registry=(), same=None):
     registry = list(registry)
     folded, skipped, gone = [], [], set()
     for pid, group in id_groups(people).items():
-        holder = id_holder(group)
+        holder = id_holder(group, registry)
         why = "every row is a surname print" if holder is None else id_problem(group, holder, registry, same)
         if why:
             skipped.append((" / ".join(sorted(p["name"] for p in group)), why))

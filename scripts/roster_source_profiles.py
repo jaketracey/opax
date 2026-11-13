@@ -56,7 +56,7 @@ def _read_reference(path, digest, _mtime, _size):
 def source_aliases(row, bundle):
     """Explicit source names of one person with the same verified legacy id and name. A person whose rows were
     folded by their verified id (scripts/roster_fold.py fold_ids) is matched through their prints as well: the
-    roster may keep the spelling with more speeches ("Robert Baldwin") where the source prints the other ("Bob")."""
+    roster may keep a printed spelling the source does not list, where the source has another of them."""
     pid = str(row.get('pid') or '')
     matches = [p for p in bundle['people'] if pid and str(p.get('legacy_person_id') or '') == pid]
     if len(matches) != 1:

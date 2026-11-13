@@ -265,15 +265,38 @@ class IdFoldTests(unittest.TestCase):
         again, folded, _ = fold(copy.deepcopy(out))
         self.assertEqual((again, folded), (out, []))
 
-    def test_the_most_speeches_holds_the_name_and_a_seat_on_the_other_row_joins_it(self):
-        people = [row("Robin Tarrant", "Liberal", ["federal"], ["representatives"], 2002, 2011, 600, pid="19002", representation=[]),
-                  row("Bob Tarrant", "Liberal", ["federal"], ["representatives"], 1998, 2016, 400, pid="19002",
-                      representation=self.SEAT, aliases=["Robin Carl Tarrant"])]
-        # The published source person for the id names both (the electorate release's name and aliases).
-        registry = roster_fold.registry_from_reference({"people": [{"name": "Bob Tarrant", "aliases": ["Robin Carl Tarrant"],
+    def tarrant(self):
+        # A formal print with more speeches ("Robin") and the public name ("Bob") holding the seat.
+        return [row("Robin Tarrant", "Liberal", ["federal"], ["representatives"], 2002, 2011, 600, pid="19002", representation=[]),
+                row("Bob Tarrant", "Liberal", ["federal"], ["representatives"], 1998, 2016, 400, pid="19002",
+                    representation=self.SEAT, aliases=["Robin Carl Tarrant"])]
+
+    @staticmethod
+    def release(name, aliases):
+        return roster_fold.registry_from_reference({"people": [{"name": name, "aliases": aliases,
             "jurisdiction": "federal", "person_id": "p2", "legacy_person_id": "19002"}], "terms": []})
+
+    def test_the_release_public_name_keeps_the_name_and_slug_over_a_formal_print_with_more_speeches(self):
+        people = self.tarrant()
+        # The published source person for the id: the electorate release's primary name, and its aliases.
+        registry = self.release("Bob Tarrant", ["Robin Carl Tarrant"])
         self.assertEqual(fold(people)[1], [], "nothing says Bob is Robin")
         out, folded, _ = fold(people, registry)
+        self.assertEqual(folded, [("Robin Tarrant", "Bob Tarrant")])
+        bob = out[0]
+        # The public name stays the person's name, so its slug (bob-tarrant) stays the address; the formal print is a
+        # print and alias, whose old address forwards to it (portal/src/person-slug.ts formerSlugs).
+        self.assertEqual((bob["name"], bob["prints"]), ("Bob Tarrant", ["Robin Tarrant"]))
+        self.assertEqual(bob["aliases"], ["Robin Tarrant", "Robin Carl Tarrant"])
+        self.assertEqual((bob["speeches"], bob["first"], bob["last"], bob["pid"]), (1000, 1998, 2016, "19002"))
+        self.assertEqual(bob["representation"], self.SEAT)
+        self.assertEqual(refusals(self.tarrant(), out), [])
+        again, folded, _ = fold(copy.deepcopy(out), registry)
+        self.assertEqual((again, folded), (out, []))
+
+    def test_without_a_row_under_the_release_name_the_most_speeches_holds_it_and_a_seat_on_the_other_row_joins_it(self):
+        # The release names the id "Rob Tarrant", which no row prints: the current rule decides.
+        out, folded, _ = fold(self.tarrant(), self.release("Rob Tarrant", ["Bob Tarrant", "Robin Carl Tarrant"]))
         self.assertEqual(folded, [("Bob Tarrant", "Robin Tarrant")])
         self.assertEqual((out[0]["speeches"], out[0]["first"], out[0]["last"]), (1000, 1998, 2016))
         self.assertEqual(out[0]["representation"], self.SEAT)
