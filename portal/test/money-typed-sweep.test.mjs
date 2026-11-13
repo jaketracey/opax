@@ -560,3 +560,32 @@ test('donor page (real app): a donor only its own return declares shows the labe
   const prattText = new JSDOM(counted.html).window.document.body.textContent;
   assert.ok(prattText.includes('Receipts counted') && !prattText.includes(DONOR_DECLARED_ONLY));
 });
+
+// ---- One pair, every surface -------------------------------------------------
+// Westpac to One Nation, from One Nation's own returns: 2022-23 two Other Receipts
+// ($34,016 and $70,588) and 2024-25 two Other Receipts of $50,000 each, $204,604
+// across 4 receipts. One Nation's 2024-25 return also lists $100,000 owed to Westpac
+// at 30 June 2025. The legacy cell ($161,787) kept one of the two equal 2024-25 rows
+// and held a 1998-99 receipt of $7,183 that is on the Associated Entity Return of
+// Pauline Hanson's One Nation Ltd, not on a One Nation party return.
+import {partyMoneyResponse} from '../src/party-money-table.ts';
+test('Westpac to One Nation: /money, the party page, its API, receiptGraph and party_receipts all give $204,604 across 4 receipts', async () => {
+  const ONE_NATION = 'party:One Nation', TYPED = [204604, 4];
+  const raw = edge(published, WESTPAC, ONE_NATION);
+  assert.deepEqual([raw.total, raw.count], [161787, 4], 'the released legacy cell, which no surface may show');
+  assert.deepEqual(raw.by_type_year, {'2022-23': {other_receipt: [104604, 2]}, '2024-25': {other_receipt: [100000, 2]}});
+  assert.ok(hasPartyReceipts(raw), 'One Nation\'s returns list these receipts');
+  const projected = edge(receiptGraph(published), WESTPAC, ONE_NATION);
+  assert.deepEqual([projected.total, projected.count], TYPED, 'receiptGraph');
+  const tool = await api.partyDonations({asset, kb: async () => { throw Error('no retrieval'); }, origin: 'https://opax.com.au'}, {party: 'One Nation', limit: 15});
+  assert.equal(tool.data.rows[0].donor, 'Westpac Banking Corporation', 'party_receipts ranks Westpac first');
+  assert.deepEqual([tool.data.rows[0].total_aud, tool.data.rows[0].receipts], TYPED, 'party_receipts');
+  const page = registerTables.partyMoneyData(published, ONE_NATION).rows.find(r => r.label === 'Westpac Banking Corporation');
+  assert.deepEqual([page.total, page.count], TYPED, 'One Nation party page donor table');
+  const response = await partyMoneyResponse(new Request(`https://opax.test/api/register/party-money?partyId=${encodeURIComponent(ONE_NATION)}`), {fetch: async () => Response.json(published)});
+  const apiRow = (await response.json()).rows.find(r => r.label === 'Westpac Banking Corporation');
+  assert.deepEqual([apiRow.total, apiRow.count], TYPED, '/api/register/party-money');
+  const html = await renderMoneyConnectionsTable(new URL('https://opax.test/money?jur=federal&c.q=Westpac'), readPublic);
+  const row = JSON.parse(html.match(/<script type="application\/json" data-dt-page>([\s\S]*?)<\/script>/)[1]).rows.find(r => r.from === 'Westpac Banking Corporation' && r.to === 'One Nation');
+  assert.deepEqual([row.value, row.records], TYPED, '/money Connections table');
+});
