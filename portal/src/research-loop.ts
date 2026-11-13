@@ -33,6 +33,7 @@ import {researchTrace} from './research-trace'
 import {remunerationFollowUp, identityPerson, sourceAboutPerson} from './ask-followup'
 import { resolvePersonName } from './person-name-matching'
 import { recordAnswerLines } from './research-record-answer'
+import { withRecordedChambers } from './ask-chamber-phrases'
 import { broadAbsenceQuestion, verifiedAbsenceCount, absenceClaim } from './research-absence'
 import { broadTopicOverview, overviewResearchHint, overviewContextOnly, overviewSearchPlan, personOverviewHint } from './ask-answer-grain'
 
@@ -247,8 +248,8 @@ export function createResearch(options: ResearchOptions): Research {
       if (typeof record.speaker === 'string') known.speaker = record.speaker
       const kind = object(record.labels).kind, date = object(record.metadata).date, party = object(record.metadata).party_on_day ?? object(record.labels).party, chamber = object(record.labels).chamber
       if (typeof kind === 'string') known.kind = kind
-      if (typeof party === 'string' && party.trim()) known.party = party.trim()
       if (typeof chamber === 'string' && chamber.trim()) known.chamber = chamber.trim()
+      if (typeof party === 'string' && party.trim()) known.party = party.trim()
       if (typeof date === 'string') known.date = date.slice(0, 10)
       if (constraints.dated && (!known.date || constraints.period.since && known.date < constraints.period.since || constraints.period.until && known.date > constraints.period.until)) return false
       passages.set(known.id, known)
@@ -451,8 +452,10 @@ export function createResearch(options: ResearchOptions): Research {
       if (overview) facts = facts.filter(f=>f.tool!=='find_records'&&!overviewContextOnly(f.fact.text)).filter((f,i,all)=>all.findIndex(other=>other.fact.cite.url===f.fact.cite.url)===i).slice(0,2)
       const tally = stats.answer = emptyTally()
       const { named } = context
-      const points = focus || hearing ? null : Array.isArray(args.points) && args.points.length ? verifyResearchPoints(overview ? args.points.slice(0,8-facts.length) : args.points, passages, question, named, options.positionQuery, roster, why, tally)
+      const written = focus || hearing ? null : Array.isArray(args.points) && args.points.length ? verifyResearchPoints(overview ? args.points.slice(0,8-facts.length) : args.points, passages, question, named, options.positionQuery, roster, why, tally)
         : typeof args.text === 'string' && args.text.trim() ? verifyResearchAnswer({ text: args.text, citations: Array.isArray(args.citations) ? args.citations as AnswerDraft['citations'] : [] }, passages, question, named) : null
+      // A chamber named for a cited speaker is the one their passage records (ask-chamber-phrases.ts).
+      const points = written && withRecordedChambers(written, id => { const p = passages.get(id); return p ? { chamber: p.chamber ?? null, speaker: p.speaker } : undefined })
       const speech = !hearing && isBillSpeechQuestion(question)
       if (speech && !points) { why('Bill metadata does not establish what a member said; search their Hansard speeches using the title, short title and second-reading debate'); return null }
       if (!points && facts.length) tally.mode = 'facts'

@@ -18,7 +18,7 @@ import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-
 import {inferPeriod} from './ask-period'
 import { transcriptTurns, shortTranscriptQuote, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, type TranscriptTurn } from './transcript-answer'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-26-minimum-checks'
+export const ANSWER_WRITING_VERSION = 'written-answer-27-recorded-chamber'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
