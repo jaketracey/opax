@@ -529,6 +529,31 @@ test('a program edition names all three groups, in the same order, against their
   assert.deepEqual(storyFrames(post.slides), [1, 2, 3, 5, 8], 'the story tray shows the cover, the total, the seat split, the seats and the source');
 });
 
+test('a bars slide says when its items are parts of one whole, from how it is computed, and is silent otherwise', async () => {
+  const bars = post => post.slides.filter(s => s.type === 'bars');
+  const flags = post => bars(post).map(s => [s.kicker, s.whole]);
+  // Wholes: one total split into parts.
+  const grant = await composeDailyPost('2026-09-14', grantSources(), 'grant');
+  assert.deepEqual(flags(grant), [['How it was chosen', true]], 'one program\'s dollars, closed non-competitive and everything else');
+  const date = ['2026-10-05', '2026-10-12'].find(d => programEraFor(d) === 'Coalition');
+  const program = await composeDailyPost(date, moneySources(sources()), 'program');
+  assert.deepEqual(flags(program), [['Whose seats', true], ['How it was chosen', true], ['How close to an election', true]]);
+  // Four processes, three shown: still parts of one whole though the bars no longer add to 100.
+  const sel = [['Open Competitive', 100000000, 50], ['Targeted Competitive', 50000000, 20], ['Closed Non-Competitive', 20000000, 20], ['Demand Driven', 10322835, 14]];
+  const many = await composeDailyPost(date, moneySources(sources(), { programs: [{ ...bbrf, sel }, pcip] }), 'program');
+  const chosen = bars(many).find(s => s.kicker === 'How it was chosen');
+  assert.deepEqual(chosen.items.map(i => i.pct), [55, 28, 11]);
+  assert.equal(chosen.whole, true);
+  // Not wholes: overlapping labels, and bars scaled to the largest. The field is left off, never false.
+  const member = await composeDailyPost('2026-09-10', sources(['person:Penny Wong']), 'politician');
+  const topic = await composeDailyPost('2026-09-10', sources([]), 'topic');
+  assert.deepEqual(bars(member).map(s => s.title), ['Most common topic labels']);
+  assert.deepEqual(bars(topic).map(s => s.title), ['Who speaks most']);
+  for (const slide of [...bars(member), ...bars(topic)]) assert.equal(Object.hasOwn(slide, 'whole'), false, `${slide.title}: no whole`);
+  // The journal stores the post as JSON, so the flag is kept exactly as composed.
+  assert.deepEqual(flags(JSON.parse(JSON.stringify(program))), flags(program));
+});
+
 test('both governments\' programs are told in exactly the same words', async () => {
   const [a, b] = ['2026-10-05', '2026-10-12'];
   const one = await composeDailyPost(a, moneySources(sources()), 'program');

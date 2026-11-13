@@ -19,8 +19,10 @@ export type StorySlide =
   | (SlideBase & { type: 'number'; lines: string[]; value: string; label: string })
   /** A framed photograph with a fact, or a quotation, beneath it. */
   | (SlideBase & { type: 'picture'; photo: string; quote?: string | null; lines: string[] })
-  /** Horizontal bars, percentages already rounded. */
-  | (SlideBase & { type: 'bars'; lines: string[]; items: { label: string; pct: number }[]; note?: string | null })
+  /** Horizontal bars, percentages already rounded. `whole` is set when the items are parts of one total
+   *  (shares of the same dollars), so a reader may draw them as one split bar; it is left off, never false,
+   *  for shares that overlap or are scaled to the largest, which keep a 0 to 100% scale. */
+  | (SlideBase & { type: 'bars'; lines: string[]; items: { label: string; pct: number }[]; note?: string | null; whole?: true })
   /** A ledger: a short first column, a description, an amount. */
   | (SlideBase & { type: 'ledger'; lines: string[]; rows: { c1: string; c2: string; amount: string }[]; total?: { label: string; amount: string } | null; note?: string | null })
   /** Dated events down a hairline. */
