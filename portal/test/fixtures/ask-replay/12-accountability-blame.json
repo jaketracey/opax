@@ -110,9 +110,10 @@
  "assets": {},
  "expect": {
   "answered": true,
-  "lead": "^The Auditor-General found",
+  "lead": "^The cited sources do not name a person or office as responsible\\.",
   "includes": [
-   "Jamie Example"
+   "Jamie Example",
+   "The Auditor-General found"
   ],
   "citations": 1,
   "cited": [

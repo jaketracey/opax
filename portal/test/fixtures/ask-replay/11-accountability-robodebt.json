@@ -175,10 +175,11 @@
  "assets": {},
  "expect": {
   "answered": true,
-  "lead": "^The Royal Commission into the Robodebt Scheme found",
+  "lead": "^The cited sources do not name a person or office as responsible\\.",
   "includes": [
    "Robin Example",
-   "Morgan Sample"
+   "Morgan Sample",
+   "The Royal Commission into the Robodebt Scheme found"
   ],
   "citations": 2,
   "cited": [
