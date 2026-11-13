@@ -77,7 +77,9 @@ export function analyticsContext(
  * Crash and error reports: uncaught exceptions, unhandled promise rejections
  * and native crashes (iOS; Android Java/Kotlin and NDK). Never console lines,
  * which can hold what a reader typed, and no breadcrumbs. The native SDK
- * sends its own crash reports; the plugin patch scrubs those (exceptions.ts).
+ * sends its own crash reports; the plugin patch scrubs those (exceptions.ts)
+ * and turns off its flags, default person properties and GeoIP, which these
+ * options never reach.
  */
 export function analyticsOptions(
   config: AnalyticsConfig,

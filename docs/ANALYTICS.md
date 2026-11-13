@@ -262,6 +262,20 @@ captures nothing automatically.
   off in the options and in Info.plist
   (`com.posthog.posthog.CAPTURE_PUSH_NOTIFICATION_OPENED`).
 
+The native SDK never sees the app's other PostHog settings: posthog-react-native
+passes it only its own options, with feature flag preloading on whenever native
+crash capture is. The plugin patch fixes them after that: no feature flag
+requests, no default person properties and, on iOS, GeoIP off (posthog-android
+has no GeoIP switch and sends no flags request). At launch the native SDK makes
+one request of its own, a GET of PostHog's remote config
+(`/ingest/array/<project token>/config`) carrying no body, install ID or session
+ID; it cannot be turned off in posthog-ios 3.92.7 or posthog-android 3.74.2, and
+with preloading off nothing in it starts a flags request. Its answer includes
+the "Enable exception autocapture" setting. The `/ingest` proxy forwards it
+with the phone's IP address, as it does the app's own analytics requests.
+The plugin podspec is patched to require exactly posthog-ios 3.92.7, the
+version these settings and the release verifier were checked against.
+
 `scrubEvent` rebuilds every JS `$exception` from fixed lists in
 `mobile/src/analytics/exceptions.ts`. Native crash reports never pass through
 JS, so `mobile/patches/@posthog+react-native-plugin+2.13.0.patch` (pinned by

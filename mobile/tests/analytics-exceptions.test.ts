@@ -293,3 +293,92 @@ test('the native plugin patch applies the same rules', () => {
   expect(patch).toContain('guard event.event == "$exception" else { return nil }');
   expect(patch).toContain('if (event.event != "\\$exception") return null');
 });
+
+const plugin = join(__dirname, '../node_modules/@posthog/react-native-plugin');
+const patchText = readFileSync(
+  join(__dirname, '../patches/@posthog+react-native-plugin+2.13.0.patch'),
+  'utf8',
+);
+/** The patched file's text from the patch: added and context lines, as written. */
+function patchedSection(file: string) {
+  const start = patchText.indexOf(
+    `+++ b/node_modules/@posthog/react-native-plugin/${file}\n`,
+  );
+  const end = patchText.indexOf('\n--- a/', start);
+  return patchText
+    .slice(start, end === -1 ? undefined : end)
+    .split('\n')
+    .filter((line) => /^[+ ]/.test(line))
+    .map((line) => line.slice(1))
+    .join('\n');
+}
+const swiftSource = patchedSection('ios/PosthogReactNativePlugin.swift');
+const kotlinSource = patchedSection(
+  'android/src/main/java/com/posthogreactnativeplugin/PosthogReactNativePluginModule.kt',
+);
+
+test('the native SDK fetches no feature flags, person properties or GeoIP', () => {
+  // posthog-react-native passes `preloadFeatureFlags: true` to the native SDK
+  // once native crash capture is on, and none of the app's flag settings, so
+  // the patch fixes them after it reads the JS options.
+  const swift = readFileSync(
+    join(plugin, 'ios/PosthogReactNativePlugin.swift'),
+    'utf8',
+  );
+  const read = swift.indexOf(
+    'config.preloadFeatureFlags = sdkOptions["preloadFeatureFlags"]',
+  );
+  expect(read).toBeGreaterThan(-1);
+  const fixed = swift.slice(read);
+  expect(fixed.indexOf('config.preloadFeatureFlags = false')).toBeGreaterThan(
+    0,
+  );
+  expect(fixed).toContain('config.setDefaultPersonProperties = false');
+  expect(fixed).toContain('config.disableGeoIp = true');
+  expect(swift.lastIndexOf('config.preloadFeatureFlags =')).toBe(
+    read + fixed.indexOf('config.preloadFeatureFlags = false'),
+  );
+  expect(swift.indexOf('PostHogSDK.shared.setup(config)')).toBeGreaterThan(
+    read + fixed.indexOf('config.disableGeoIp = true'),
+  );
+  const kotlin = readFileSync(
+    join(
+      plugin,
+      'android/src/main/java/com/posthogreactnativeplugin/PosthogReactNativePluginModule.kt',
+    ),
+    'utf8',
+  );
+  const kotlinRead = kotlin.indexOf(
+    'preloadFeatureFlags = thePreloadFeatureFlags',
+  );
+  expect(kotlinRead).toBeGreaterThan(-1);
+  expect(kotlin.lastIndexOf('preloadFeatureFlags = ')).toBe(
+    kotlin.indexOf('preloadFeatureFlags = false', kotlinRead),
+  );
+  expect(
+    kotlin.indexOf('setDefaultPersonProperties = false', kotlinRead),
+  ).toBeGreaterThan(kotlinRead);
+  // Neither copy is the patch's alone: the patch carries them too.
+  expect(swiftSource).toContain('config.disableGeoIp = true');
+  expect(kotlinSource).toContain('setDefaultPersonProperties = false');
+});
+
+test('the plugin pins exactly the reviewed posthog-ios', () => {
+  // `~> 3.92.7` would let a fresh pod install take a later 3.92.x than the
+  // one this patch and the release verifier were reviewed against.
+  const podspec = readFileSync(
+    join(plugin, 'posthog-react-native-plugin.podspec'),
+    'utf8',
+  );
+  expect(podspec).toContain("posthog_ios_version = '3.92.7'");
+  expect(podspec).toContain(
+    `s.dependency 'PostHog', "= #{posthog_ios_version}"`,
+  );
+  expect(podspec).toContain(
+    "requirement: { kind: 'exactVersion', version: posthog_ios_version }",
+  );
+  expect(podspec).not.toMatch(/~>|upToNext/);
+  expect(patchedSection('posthog-react-native-plugin.podspec')).toContain(
+    `s.dependency 'PostHog', "= #{posthog_ios_version}"`,
+  );
+});

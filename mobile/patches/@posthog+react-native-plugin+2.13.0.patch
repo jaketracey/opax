@@ -226,9 +226,38 @@
  
          // Surveys and session replay are iOS-only in posthog-ios, so the APIs below
          // don't exist on macOS. macOS gets error tracking only.
+@@ -457,6 +658,14 @@
+         // JS owns flags; it tells us when the native preload would be a duplicate. posthog-ios
+         // has no remoteConfig switch to mirror — it deprecated the option and always loads.
+         config.preloadFeatureFlags = sdkOptions["preloadFeatureFlags"] as? Bool ?? true
++        // OPAX: no feature flags, default person properties or GeoIP from the native SDK either.
++        // posthog-react-native sends `preloadFeatureFlags: true` whenever native crash capture is
++        // on and never passes the app's other flag settings, so they are fixed here. posthog-ios
++        // still fetches remote config (a GET of /array/<token>/config with no body), and with
++        // preload off nothing in it starts a /flags request.
++        config.preloadFeatureFlags = false
++        config.setDefaultPersonProperties = false
++        config.disableGeoIp = true
+ 
+         // Forward custom headers (e.g. Authorization for a reverse proxy) so the native SDK
+         // attaches them to the requests it sends directly (session replay, crash uploads).
 --- a/node_modules/@posthog/react-native-plugin/android/src/main/java/com/posthogreactnativeplugin/PosthogReactNativePluginModule.kt
 +++ b/node_modules/@posthog/react-native-plugin/android/src/main/java/com/posthogreactnativeplugin/PosthogReactNativePluginModule.kt
-@@ -182,6 +182,8 @@
+@@ -158,6 +158,13 @@
+               // answer, not a default the SDK may override from its own persisted copy.
+               persistOptOut = false
+               preloadFeatureFlags = thePreloadFeatureFlags
++              // OPAX: no feature flags or default person properties from the native SDK either.
++              // posthog-react-native sends `preloadFeatureFlags: true` whenever native crash
++              // capture is on and never passes the app's other flag settings, so they are fixed
++              // here. posthog-android has no GeoIP switch; with preload off it sends no /flags
++              // request at launch, only the remote config GET (/array/<token>/config).
++              preloadFeatureFlags = false
++              setDefaultPersonProperties = false
+               captureDeepLinks = false
+               captureApplicationLifecycleEvents = false
+               captureScreenViews = false
+@@ -182,6 +189,8 @@
                  errorTrackingConfig.ignoredExceptionTypes.add(JavascriptException::class.java)
                }
                addBeforeSend { restoreJsFatalCaptureProperties(it) }
@@ -237,7 +266,7 @@
  
                // Always apply the session replay configuration so that recording started later
                // (e.g. startRecording or a linked feature flag) uses the right mode and masking;
-@@ -917,5 +919,221 @@
+@@ -917,5 +926,221 @@
    when (getString(map, "screenshotColorMode", "")) {
      "ARGB_8888" -> config.screenshotColorMode = PostHogScreenshotColorMode.ARGB_8888
      "RGB_565" -> config.screenshotColorMode = PostHogScreenshotColorMode.RGB_565
@@ -292,9 +321,9 @@
 +    capped.appendCodePoint(codePoint)
 +    index += Character.charCount(codePoint)
 +    count++
-+  }
+   }
 +  return capped.toString().trim().ifEmpty { null }
-+}
+ }
 +
 +private sealed class OpaxField {
 +  data class Text(val max: Int) : OpaxField()
@@ -410,9 +439,9 @@
 +        .map { opaxPick(opaxFrameFields, it) }
 +        .filter { it.isNotEmpty() }
 +    clean["stacktrace"] = mapOf("type" to if (stack["type"] == "resolved") "resolved" else "raw", "frames" to frames)
-   }
++  }
 +  return clean
- }
++}
 +
 +private fun opaxContextValue(value: Any?): String? {
 +  val text =
@@ -459,3 +488,21 @@
 +  clean["\$geoip_disable"] = true
 +  return event.copy(properties = clean, set = null)
 +}
+--- a/node_modules/@posthog/react-native-plugin/posthog-react-native-plugin.podspec
++++ b/node_modules/@posthog/react-native-plugin/posthog-react-native-plugin.podspec
+@@ -33,11 +33,13 @@
+   if posthog_use_spm && respond_to?(:spm_dependency, true)
+     spm_dependency(s,
+       url: 'https://github.com/PostHog/posthog-ios.git',
+-      requirement: { kind: 'upToNextMinorVersion', minimumVersion: posthog_ios_version },
++      # OPAX: exactly the reviewed posthog-ios (mobile/patches/privacy-patches.json).
++      requirement: { kind: 'exactVersion', version: posthog_ios_version },
+       products: ['PostHog']
+     )
+   else
+-    s.dependency 'PostHog', "~> #{posthog_ios_version}"
++    # OPAX: exactly the reviewed posthog-ios, not any later 3.92.x (mobile/patches/privacy-patches.json).
++    s.dependency 'PostHog', "= #{posthog_ios_version}"
+   end
+   s.ios.deployment_target = '13.0'
+   s.osx.deployment_target = '10.15'
