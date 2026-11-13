@@ -1108,7 +1108,95 @@ export function ShareBar({
   );
 }
 
+/**
+ * Shares that overlap (a member's topic labels: a speech can carry several)
+ * as horizontal rows: the label, a bar scaled to the largest share, and the
+ * value at the row's end. No axis: two to five labelled shares read at a
+ * glance, where columns on a 0 to 100% plot were two slivers (sweep 2,
+ * item 7.5). Each row is one VoiceOver stop.
+ */
+export function ShareRows({
+  items,
+  ink,
+  format,
+  sourceLine,
+  testID = 'share-rows',
+}: {
+  items: readonly { label: string; value: number }[];
+  ink: Accent | 'ink';
+  format: (value: number) => string;
+  sourceLine?: React.ReactNode;
+  testID?: string;
+}) {
+  const darkMode = useColorScheme() === 'dark';
+  const contrast = useIncreaseContrast();
+  const palette = {
+    ...(darkMode ? dark : light),
+    ...(contrast ? (darkMode ? darkHighContrast : lightHighContrast) : {}),
+  };
+  const colour = palette[ink === 'ink' ? 'ink' : accents[ink].ink];
+  const largest = Math.max(
+    0,
+    ...items.map((item) => (Number.isFinite(item.value) ? item.value : 0)),
+  );
+  return (
+    <View style={styles.chart} testID={testID}>
+      <View style={styles.shareRowsList}>
+        {items.map((item, index) => (
+          <View
+            key={`${item.label}:${index}`}
+            accessible
+            accessibilityLabel={`${item.label}, ${format(item.value)}`}
+            testID={`${testID}-row-${index}`}
+            style={styles.shareRowsItem}
+          >
+            <Text
+              wordSafe
+              variant="footnote"
+              testID={`${testID}-label-${index}`}
+            >
+              {item.label}
+            </Text>
+            <View style={styles.shareRowsLine}>
+              <View style={styles.shareRowsTrack}>
+                <View
+                  testID={`${testID}-bar-${index}`}
+                  style={[
+                    styles.shareRowsBar,
+                    {
+                      width: `${largest > 0 ? Math.max(0, (item.value / largest) * 100) : 0}%`,
+                      backgroundColor: colour,
+                    },
+                  ]}
+                />
+              </View>
+              <Text
+                variant="footnote"
+                tone="inkSoft"
+                tabular
+                testID={`${testID}-value-${index}`}
+              >
+                {format(item.value)}
+              </Text>
+            </View>
+          </View>
+        ))}
+      </View>
+      {sourceLine ?? null}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
+  shareRowsList: { gap: rhythm.tight + rhythm.line },
+  shareRowsItem: { gap: rhythm.line },
+  shareRowsLine: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  shareRowsTrack: { flex: 1 },
+  shareRowsBar: {
+    height: 8,
+    borderRadius: 2,
+    borderCurve: 'continuous',
+  },
   chart: { gap: rhythm.heading, alignSelf: 'stretch' },
   voteSplit: {
     gap: rhythm.heading,
