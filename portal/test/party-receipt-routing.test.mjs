@@ -164,15 +164,17 @@ test('R7 long-tail grammar stays deterministic; original and new near-miss contr
  }
  for(const question of negatives){assert.equal(api.federalPartyRankingIntent(question),null,question);assert.equal(await api.federalPartyMoneyAnswer({question},assets),null,question)}
 })
-test('only incomplete exact financial grammar clarifies without assets or models',async()=>{
+test('informal party rankings are answered for their natural reading, which the answer states',async()=>{
  const {uncertain}=await import('./fixtures/party-receipt-long-tail.mjs')
- const forbidden={fetch:async()=>{throw Error('Clarification must not guess a calculation')}}
  for(const {question,parties}of uncertain){
-  const p=await api.federalPartyMoneyAnswer({question},forbidden)
-  assert.equal(p.answer_status,'needs_scope',question);assert.equal(p.money_route,'federal-party-ranking-v1')
+  const p=await api.federalPartyMoneyAnswer({question},assets)
+  assert.equal(p.answer_status,'calculated',question);assert.equal(p.money_route,'federal-party-ranking-v1')
+  assert.equal(p.money_reading,`Reading this as the largest disclosed receipts to ${parties[0]}.`,question)
   for(const party of parties)assert.ok(p.answer.includes(party),question)
-  assert.deepEqual(p.sources,[]);assert.deepEqual(p.citations,{});assert.doesNotMatch(p.answer,/\$|gave|donated/)
-  assert.equal((await api.rankedMoneyAnswer({question},forbidden)).answer,p.answer)
+  assert.ok(p.sources.length>0,question);assert.match(p.answer.split('\n')[0],/\$[\d,]+/,question)
+  const exact=await api.federalPartyMoneyAnswer({question:`Who has the most disclosed receipts to ${parties[0]}?`},assets)
+  assert.equal(p.answer.replace(/\n\nReading this as[^\n]*/,''),exact.answer,question)
+  assert.equal((await api.rankedMoneyAnswer({question},assets)).answer,p.answer)
  }
 })
 test('R7 exact reproductions and uncertain requests bypass poisoned caches in JSON and SSE',async()=>{
@@ -188,21 +190,30 @@ test('R7 exact reproductions and uncertain requests bypass poisoned caches in JS
    assert.equal(response.status,200);assert.equal(response.headers.get('x-opax-money-route'),'federal-party-ranking-v1',question)
    const wire=await response.text(),p=stream?JSON.parse(wire.match(/event: done\ndata: (.+)/)[1]):JSON.parse(wire)
    assert.deepEqual(p,JSON.parse(JSON.stringify(api.publicPartyMoneyAnswer(await api.federalPartyMoneyAnswer({question},assets)))))
-   if(reproductions.includes(question))complete(p);else assert.equal(p.answer_status,'needs_scope')
+   // An informal request is calculated for its natural reading, which the answer states.
+   if(reproductions.includes(question))complete(p);else{assert.equal(p.answer_status,'calculated',question);assert.match(p.money_reading,/^Reading this as the largest disclosed receipts to /)}
   }
   assert.equal(reads,0);assert.equal(outbound.length,before)
  }finally{globalThis.caches.default=saved;await Promise.all(pending);restore()}
 })
 
-test('uncertain family intent stays deterministic through direct agentic, research and follow-ups',async()=>{
- const question='Who Labor top donors?',forbidden=()=>{throw Error('Uncertain family intent reached a model or asset')}
- const deps={asset:forbidden,kb:forbidden,generate:forbidden,research:Object.assign(forbidden,{write:forbidden})}
- const run=await api.runAgentic(question,deps);assert.equal(api.agenticAskPayload(run,question).answer_status,'needs_scope');assert.equal(run.cost_usd,0)
+test('informal family intent is calculated without a model through direct agentic, research and follow-ups',async()=>{
+ // An informal family question is calculated for its natural reading: the
+ // published graph is read, and no model or paid call is made on any path.
+ const question='Who Labor top donors?',forbidden=()=>{throw Error('Informal family intent reached a model')}
+ const asset=async path=>JSON.parse(fs.readFileSync(new URL('../public'+path,import.meta.url),'utf8'))
+ const deps={asset,kb:forbidden,generate:forbidden,research:Object.assign(forbidden,{write:forbidden})}
+ const run=await api.runAgentic(question,deps);assert.equal(api.agenticAskPayload(run,question).answer_status,'calculated');assert.equal(run.cost_usd,0)
+ assert.match(run.answer,/Reading this as the largest disclosed receipts to Labor\./)
  const research=api.createResearch({input:{question},modelBudgetSpent:forbidden,dailyBudget:{reserve:forbidden}})
  const out=await research(question,{deps,period:api.inferPeriod(question),named:{people:[],parties:[],bills:[],ambiguous:false,unresolved:false},signal:new AbortController().signal,progress:forbidden,scope:x=>x,execute:forbidden})
- assert.equal(out.qualitative.answer_status,'needs_scope');assert.equal(out.costUsd,0)
+ assert.equal(out.costUsd,0)
  const context=[{author:'user',text:question}]
- for(const next of ['What about the Greens?','And in 2019-20?'])assert.equal((await api.federalPartyMoneyAnswer({question:next,context},assets)).answer_status,'needs_scope')
+ // Follow-ups carry the reading forward: another party, or another year.
+ const greens=await api.federalPartyMoneyAnswer({question:'What about the Greens?',context},assets)
+ assert.equal(greens.answer_status,'calculated');assert.match(greens.money_question,/to Greens/)
+ const year=await api.federalPartyMoneyAnswer({question:'And in 2019-20?',context},assets)
+ assert.equal(year.answer_status,'calculated');assert.match(year.money_question,/to Labor.*2019/)
  assert.equal(await api.federalPartyMoneyAnswer({question:'And what did Labor say about housing?',topic:'housing',context},assets),null)
 })
 

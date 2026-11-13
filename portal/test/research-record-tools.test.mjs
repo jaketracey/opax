@@ -150,19 +150,21 @@ function loop(question, responses, scope = { people: [], parties: [], bills: [],
   return api.runAgentic(question, deps, async () => {}, 40_000, api.inferPeriod(question), {}, scope).then(out => ({ out, failures, m }));
 }
 
-test('a qualitative answer leads with record facts rendered from tool rows and cites each record, then the verified points', async () => {
+test('a qualitative answer leads with the model’s own point, then the record facts rendered from tool rows, each cited', async () => {
   const { out, failures, m } = await loop('Which suppliers got the Department of Fixtures contracts, and what was said about them?', [
     reply([call('contracts', { agency: 'Department of Fixtures', limit: 2 }, 'a'), call('search', { query: 'fixture contracts' }, 'b')]),
     reply([call('answer', { facts: [2, 3, 2, 99], points: [{ claim: 'Robin Example said the contracts must be published in full.', id: passageId, quote: 'the fixture contracts must be published in full' }] }, 'c')])]);
   assert.deepEqual(failures, []); assert.equal(out.answered, true); assert.equal(out.research.mode, 'loop');
   const lines = out.answer.split('\n\n');
-  assert.equal(lines[0], 'Example Shipyards Pty Ltd recorded $4,000,000,000 across 12 Department of Fixtures contracts.');
-  assert.equal(lines[1], 'Sample Systems Ltd recorded $2,000,000,000 across 40 Department of Fixtures contracts.');
+  assert.equal(lines[0], '- Robin Example said the contracts must be published in full.');
+  assert.equal(lines[1], 'Example Shipyards Pty Ltd recorded $4,000,000,000 across 12 Department of Fixtures contracts.');
+  assert.equal(lines[2], 'Sample Systems Ltd recorded $2,000,000,000 across 40 Department of Fixtures contracts.');
   const point=lines.find(line=>line.includes('Robin Example said'));
   assert.equal(point, '- Robin Example said the contracts must be published in full.');
   assert.doesNotMatch(out.answer, /published contract values/);
   assert.match(out.qualitative.coverage?.note??'', /published contract values/);
-  assert.deepEqual(out.qualitative.citations['fact-2/t/body/0'], [[0, lines[0].length]]);
+  const factStart = Array.from(lines[0] + '\n\n').length;
+  assert.deepEqual(out.qualitative.citations['fact-2/t/body/0'], [[factStart, factStart + Array.from(lines[1]).length]]);
   const pointStart = Array.from(out.answer.slice(0,out.answer.indexOf(point)+2)).length;
   assert.deepEqual(out.qualitative.citations[passageId], [[pointStart, pointStart + Array.from(point.slice(2)).length]]);
   assert.equal(out.qualitative.sources.find(s => s.resource === 'fact-2').url, 'https://opax.com.au/subject/supplier/s-00000000000000000001');
@@ -170,7 +172,7 @@ test('a qualitative answer leads with record facts rendered from tool rows and c
   assert.match(JSON.stringify(m.doGenerateCalls[1].prompt).replace(/\\"/g, '"'), /"id":2,"text":"Example Shipyards/);
 });
 
-test('record facts obey the named scope: overall counts are refused and missing people state absence', async () => {
+test('record facts obey the named scope; an unresolved name still answers from the facts it selected', async () => {
   const scope = { people: ['Robin Example'], parties: [], bills: [], ambiguous: false, unresolved: false };
   const named = await loop('What has Robin Example said about gambling, and how often?', [
     reply([call('count_speeches', { topic: 'gambling', group_by: 'none' }, 'a'), call('count_speeches', { topic: 'gambling', speaker: 'Robin Example', group_by: 'none' }, 'b')]),
@@ -181,8 +183,8 @@ test('record facts obey the named scope: overall counts are refused and missing 
   const unresolved = await loop('What has Pat Unknownname said about contracts?', [
     reply([call('parliamentary_pay', { person: 'Robin Example' }, 'a')]), reply([call('answer', { facts: [1] }, 'b')]), reply([call('answer', { facts: [1] }, 'c')])],
     { people: [], parties: [], bills: [], ambiguous: false, unresolved: true });
-  assert.match(unresolved.out.answer, /^OPAX has no record of a parliamentarian named Pat Unknownname\./);
-  assert.equal(unresolved.out.qualitative.answer_decision, 'limitation'); assert.equal(unresolved.m.doGenerateCalls.length, 0); assert.deepEqual(unresolved.failures, []);
+  assert.doesNotMatch(unresolved.out.answer, /OPAX has no record/);
+  assert.match(unresolved.out.answer, /^Robin Example \(Labor\) recorded \$345,000 a year as Minister for Fixtures/); assert.deepEqual(unresolved.failures, []);
 });
 
 test('finish outside the numerical shapes answers with record facts only', async () => {

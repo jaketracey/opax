@@ -311,6 +311,54 @@ export function auditPayload(question,payload,{roster=[]}={}){
  }
  return {claims,findings,counts:{claims:claims.length,figures:claims.filter(c=>c.type==='figure').length,entities:claims.filter(c=>c.type==='entity').length,periods:claims.filter(c=>c.type==='period').length,quotes:claims.filter(c=>c.type==='quote').length,unverified:findings.length}}
 }
+/** The one audit rule that changes answer text. A sentence giving a dollar figure to a named donor, recipient or
+ * contract holder, where the cited money record holds that amount for a different party or period, is corrected from
+ * the record when one record row holds it and names the party or period plainly; otherwise only that sentence goes.
+ * Speech passages are not money records, and a figure the cited records do not hold at all is left as written. */
+const DONOR_FROM=/\bfrom\s+((?:the\s+)?[A-Z][\p{L}\p{N}&'’.-]*(?:\s+(?:[A-Z&][\p{L}\p{N}&'’.-]*|of|and|for|the))*)/u
+const DONOR_GAVE=/((?:the\s+)?[A-Z][\p{L}\p{N}&'’.-]*(?:\s+(?:[A-Z&][\p{L}\p{N}&'’.-]*|of|and|for|the))*)\s+(?:gave|donated|provided|contributed|paid)\b[^.]*$/u
+export function moneySentenceEdits(payload){
+ const body=String(payload.answer??''),parts=sentenceParts(body),rows=evidenceRows(payload).filter(r=>!['speech','bill'].includes(r.kind))
+ const claims=auditPayload('',payload).claims.filter(c=>c.type==='figure'&&String(c.unit??'').startsWith('AUD')&&typeof c.offset==='number')
+ const edits=new Map()
+ for(const part of parts){
+  const own=claims.filter(c=>c.offset>=part.at&&c.offset<part.at+part.text.length)
+  if(!own.length)continue
+  const from=Array.from(body.slice(0,part.at)).length,until=from+Array.from(part.text).length
+  const ids=Object.entries(payload.citations??{}).filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(r=>Array.isArray(r)&&r[0]<until&&r[1]>from)).map(([id])=>id)
+  const cited=rows.filter(r=>ids.some(id=>id===r.id||id.startsWith(r.id+'/')))
+  let text=part.text,cut=false
+  for(const claim of own){
+   const holders=cited.flatMap(r=>r.figures.filter(f=>f.value===claim.value&&String(f.unit).startsWith('AUD')).map(f=>({r,f,owners:(f.owners?.length?f.owners:[f.owner??r.entity]).filter(Boolean),period:f.period?.length?f.period:r.period})))
+   if(!holders.length)continue
+   const at=claim.offset-part.at
+   const donor=(DONOR_FROM.exec(part.text.slice(at))?.[1]??DONOR_GAVE.exec(part.text.slice(0,at))?.[1])?.replace(/^the\s+/,'').replace(/[.,;:]+$/,'').trim()
+   // The claimed owner is one the record names, or the sentence already names every party the record gives.
+   const ownerOk=h=>!claim.entity||!h.owners.length||h.owners.some(n=>norm(n)===norm(claim.entity))||h.owners.every(n=>norm(text).includes(norm(n)))
+   const recordDonor=id=>holders.find(h=>h.r.id===id&&h.r.donor)?.r.donor
+   const donorOk=h=>{const d=recordDonor(h.r.id);return !d||!donor||norm(donor)===norm(d)||norm(text).includes(norm(d))}
+   const periodOk=h=>claim.period.every(p=>dateSupported(p,{...h.r,period:h.period}))
+   // One record read twice (typed receipt and snippet line) is consistent when its readings, between them, agree.
+   if([...new Set(holders.map(h=>h.r.id))].some(id=>{const same=holders.filter(h=>h.r.id===id);return same.some(ownerOk)&&same.some(donorOk)&&same.some(periodOk)}))continue
+   // A receipt is read twice (its typed association and its snippet line); one record is one holder.
+   if(new Set(holders.map(h=>h.r.id)).size!==1){cut=true;break}
+   const only=holders.find(h=>h.r.donor)??holders[0]
+   if(!donorOk(only)&&text.includes(donor))text=text.split(donor).join(only.r.donor)
+   if(!ownerOk(only)){
+    const missing=only.owners.filter(n=>!norm(text).includes(norm(n)))
+    if(missing.length===1&&text.includes(claim.entity))text=text.split(claim.entity).join(missing[0]);else{cut=true;break}
+   }
+   if(!periodOk(only)){
+    const claimed=periods(text).filter(p=>claim.period.includes(p.value)&&!dateSupported(p.value,{...only.r,period:only.period}))
+    const record=[...new Set(only.period.map(p=>p.raw??p.value))]
+    if(claimed.length===1&&record.length===1)text=text.slice(0,claimed[0].at)+record[0]+text.slice(claimed[0].end);else{cut=true;break}
+   }
+  }
+  if(cut)edits.set(part.at,{at:part.at,text:part.text,replacement:''})
+  else if(text!==part.text)edits.set(part.at,{at:part.at,text:part.text,replacement:text})
+ }
+ return [...edits.values()].sort((a,b)=>b.at-a.at)
+}
 
 // Each token must be an adverb; consume each word once, including joined adverbs.
 export const adverbsOnly = text => text.split(/\s+/).every(word => !word || /^\w+ly$/.test(word))
