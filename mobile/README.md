@@ -136,26 +136,31 @@ Maestro and their children run in it, and release first stops any leftovers.
 
 ### Simulator preflight
 
-The iOS 27 simulator's PosterBoard renders a full set of lock-screen gallery
-snapshots (100 bundles, about 120 MB) one to two minutes after every boot, and it
-never deletes the earlier sets. Rendering them also takes about ten host cores for
-a minute. On a busy day the store under
-`data/Library/Application Support/PRBPosterExtensionDataStore` grows by gigabytes
-(7 GB on 13 Nov, 9 GB on 10 Nov). With a large store, PosterBoard and other
-system daemons crash in a loop. XCTest then waits for the crash reporter after
-every journey, and Mac load passes 200. `scripts/sim-health.sh <udid>` reports the
-store size and the system crash reports. It dates each report by its birth time,
-because macOS refreshes the modification time of old reports.
+On the iOS 27 simulator, every boot makes PosterBoard re-render all its
+lock-screen gallery snapshots (100 to 124 bundles, 100 to 170 MB) 15 to 90 s
+after boot. The render takes about ten host cores for a minute, and the old sets
+are never deleted. Changing the text size or installing the app adds nothing (measured
+13 Nov). A busy day of runs grew the store under
+`data/Library/Application Support/PRBPosterExtensionDataStore` to 7 GB (9 GB on
+10 Nov); then PosterBoard and other system daemons crash in a loop, XCTest waits
+for the crash reporter after every journey, and Mac load passes 200.
 
-Each run's device command checks the simulator first, inside its own lock and
-before boot. If the poster store is over 500 MB, or the device wrote more than 2
-system crash reports in the last hour, it erases the simulator. The run then boots
-(a cold first boot), installs and tests as usual; `sim-health.log` and
-`device-erased` in the run's evidence record it. Crash reports from before an
-erase do not count. `OPAX_SIM_PREFLIGHT_POSTER_MB`, `OPAX_SIM_PREFLIGHT_CRASHES`
-and `OPAX_SIM_PREFLIGHT_HOURS` change the limits, and `OPAX_SIM_PREFLIGHT=0` skips
-the check. With no shared lock configured it never runs, because an erase must not
-hit a simulator another lane is using.
+So `scripts/e2e-device.sh` disables PosterBoard after each boot, under the lock
+(`launchctl disable system/com.apple.PosterBoard`). The setting survives reboots
+and applies from the next boot: a boot then adds about 3 MB and peaks under two
+cores. No journey shows the lock screen. `OPAX_SIM_POSTERBOARD=1` re-enables it
+from the next boot.
+
+The device command also checks the simulator first, inside its own lock and before
+boot (`scripts/sim-health.sh`). If the poster store is over 500 MB, or the device
+wrote more than 2 system crash reports in the last hour, it erases the simulator.
+The run then boots (a cold first boot), installs and tests as usual;
+`sim-health.log` and `device-erased` in the run's evidence record it. Reports from
+before an erase do not count, and reports are dated by their birth time, because
+macOS refreshes the modification time of old ones. `OPAX_SIM_PREFLIGHT_POSTER_MB`,
+`OPAX_SIM_PREFLIGHT_CRASHES` and `OPAX_SIM_PREFLIGHT_HOURS` change the limits, and
+`OPAX_SIM_PREFLIGHT=0` skips the check. With no shared lock configured it never
+runs, because an erase must not hit a simulator another lane is using.
 `OPAX_PASTE_WAIT_SECONDS` covers active waiting time, excluding SIGSTOP and host suspend gaps; every minute `lock.log`
 names the lock, the elapsed time and the holder. Never write your own lock wrapper.
 
