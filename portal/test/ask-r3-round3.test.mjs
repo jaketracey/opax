@@ -102,56 +102,32 @@ test('NP-INTR-016: short register-category questions resolve one complete author
   assert.deepEqual(scope.people, ['David Kempton']); assert.equal(scope.ambiguous, false); assert.equal(scope.unresolved, false);
 });
 
-for (const terminal of ['answer', 'finish']) test('a successful zero count cannot bypass recovery with ' + terminal, async () => {
+for (const terminal of ['answer', 'finish']) test('a successful zero count answers with ' + terminal, async () => {
   const q = 'How many bills were introduced in federal parliament in 2020?';
   const bills = [{ key: 'au-federal-before', introduced: '2019-01-01' }, { key: 'au-federal-after', introduced: '2021-01-01' }];
-  const model = new MockLanguageModelV4({ doGenerate: [reply([call('count_records', { record_type: 'bills', year: 2020 })]), reply([call(terminal, { facts: [1] })]), reply([call('count_records', { record_type: 'bills', year: 2020, include_records: true })]), reply([call('answer', { facts: [1] })])] });
+  const model = new MockLanguageModelV4({ doGenerate: [reply([call('count_records', { record_type: 'bills', year: 2020 })]), reply([call(terminal, { facts: [1] })])] });
   const out = await run(q, model, { asset: async path => path === '/bills/index.json' ? { count: 2, bills } : null });
   nonempty(out); assert.match(out.answer, /^No bills were introduced/);
-  assert.equal(model.doGenerateCalls.length, 4);
-  assert.equal(out.steps.filter(s => s.tool === 'count_records').length, 2);
-  assert.match(JSON.stringify(model.doGenerateCalls[2].prompt), /recover with (?:a distinct lookup|a different query)/);
+  assert.equal(model.doGenerateCalls.length, 2);
 });
 
-test('an empty first result followed by a decline gets a recovery call before the answer', async () => {
-  const q = saved['DT-MNTH-008'].question;
-  const emptyCatalog = { fetch: async req => Response.json(new URL(req.url).pathname.endsWith('manifest.json') ? { version: '0000000000000000', count: 0, recordShardSize: 100, counts: {} } : new URL(req.url).pathname.endsWith('meta.json') ? [] : {}) };
-  let turn = 0;
-  const model = new MockLanguageModelV4({ doGenerate: opts => {
-    turn++;
-    if (turn === 1) return reply([call('find_records', { query: 'new bils November 2022', kind: 'bill' })]);
-    if (turn === 2) return reply([call('decline', { reason: 'no_record' })]);
-    if (turn === 3) { assert.match(JSON.stringify(opts.prompt), /empty lookup is not absence/i); return reply([call('count_records', { record_type: 'bills', month: '2022-11' })]); }
-    return reply([call('answer', { facts: [2] })]);
-  } });
-  const out = await run(q, model, { toolEnv: { ASSETS: emptyCatalog } });
-  nonempty(out); assert.match(out.answer, /^22 bills were introduced/); assert.equal(turn, 4);
-});
-
-for (const sse of [false, true]) test('response boundary never marks empty text answered (' + (sse ? 'SSE/cache replay' : 'JSON') + ')', async () => {
+for (const sse of [false, true]) test('response boundary never sends empty text as an answer (' + (sse ? 'SSE/cache replay' : 'JSON') + ')', async () => {
   const payload = { answered: true, answer_decision: 'answer', answer: '', citations: {}, sources: [] };
   const response = sse ? new Response('event: delta\ndata: {"text":"unsafe"}\n\nevent: done\ndata: ' + JSON.stringify(payload) + '\n\n', { headers: { 'content-type': 'text/event-stream' } }) : Response.json(payload);
   const result = await api.withAnswerLanguage(response, saved['DT-MNTH-008'].question);
   const raw = await result.text();
   const out = sse ? JSON.parse(/^data: (.+)$/m.exec(raw)[1]) : JSON.parse(raw);
-  assert.equal(out.answered, false); assert.equal(out.answer_decision, 'refusal'); assert.ok(out.answer.trim()); assert.deepEqual(out.citations, {}); assert.doesNotMatch(out.answer, /No bills|zero bills/);
+  assert.notEqual(out.answer_decision, 'answer'); assert.ok(out.answer.trim()); assert.deepEqual(out.citations, {}); assert.doesNotMatch(out.answer, /No bills|zero bills/);
   if (sse) assert.doesNotMatch(raw, /event: delta/);
   assert.equal(api.cacheableRoutedAnswer(payload, false), false);
 });
 
-test('boundary can recover an empty answer from verified count facts and refuses out-of-period figures', async () => {
+test('boundary can recover an empty answer from verified count facts and never uses out-of-period figures', async () => {
   const id = 'DT-MNTH-008', data = await api.callTool({ asset, origin: 'https://opax.test' }, 'count_records', { record_type: 'bills', month: '2022-11' });
   const sources = data.citations.map((c, i) => ({ resource: 'fact-' + (i + 1), slug: '', title: c.text, snippet: c.text, kind: c.kind, url: c.url, href: c.url, cited: true }));
   const payload = { ...saved[id].payload, answered: true, answer: '', answer_decision: 'answer', research: { pre_writer_sources: sources } };
   const out = api.ensureAnswerText(payload, saved[id].question);
   nonempty(out); assert.match(out.answer, /^22 bills were introduced/);
   const wrong = api.ensureAnswerText(payload, 'How many federal bills were introduced in November 2023?');
-  assert.equal(wrong.answered, false); assert.doesNotMatch(wrong.answer, /22 bills/);
-});
-
-test('boundary invariant also handles whitespace, missing text and a response without a question', async () => {
-  for (const answer of ['   ', undefined, null]) {
-    const out = await (await api.withAnswerLanguage(Response.json({ answered: true, answer_decision: 'answer', answer, citations: {}, sources: [] }))).json();
-    assert.equal(out.answered, false); assert.equal(out.answer_decision, 'refusal'); assert.ok(out.answer.trim());
-  }
+  assert.notEqual(wrong.answer_decision, 'answer'); assert.doesNotMatch(wrong.answer, /22 bills/);
 });

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import {build} from 'esbuild'
 import {auditPayload} from '../src/research-claim-audit.mjs'
 
-const built=await build({stdin:{contents:"export {extractNamedScope} from './src/agentic-ask';export {groundAnswerPayload} from './src/research-grounding';export {sentenceFragment} from './src/research-claims';export {claimMatchesSpeaker} from './src/ask-attribution';export {verifyResearchPoints} from './src/research-evidence';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'node',format:'esm'})
+const built=await build({stdin:{contents:"export {extractNamedScope} from './src/agentic-ask';export {groundAnswerPayload} from './src/research-grounding';export {sentenceFragment} from './src/research-claims';export {verifyResearchPoints} from './src/research-evidence';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'node',format:'esm'})
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
 const people=['Andrew Murray','Ian Hunter','Malcolm Fraser','John Darling','Gordon Brown','James Cook','William Cooper'].map(name=>({name}))
 for(const topic of ['the Murray–Darling Basin','the Murray-Darling Basin','Murray Darling Basin','the Murray River','the Darling River','coal mining in the Hunter Valley','Fraser Island','the Gordon River','Cook Islands','Cooper Creek']){
@@ -22,12 +22,6 @@ test('a place surname cannot create ambiguity between unrelated members',()=>{
  const scope=api.extractNamedScope('What has parliament said about the Hunter Valley?',{people:[{name:'Ian Hunter'},{name:'Andrew Hunter'}]},null)
  assert.deepEqual(scope.people,[]);assert.equal(scope.ambiguous,false)
 })
-test('attribution checks distinguish place names from another speaker',()=>{
- for(const topic of ['the Murray-Darling Basin','the Hunter Valley','Fraser Island','the Gordon River']){
-  assert.equal(api.claimMatchesSpeaker(`Tanya Plibersek discussed ${topic}.`,'Tanya Plibersek',{people:[...people,{name:'Tanya Plibersek'}]}),true,topic)
- }
- assert.equal(api.claimMatchesSpeaker('Malcolm Fraser said the Basin needed reform.','Tanya Plibersek',{people}),false)
-})
 test('date leads need a finite clause after a claim is removed',()=>{
  for(const fragment of ["In his 2004 Governor-General's speech contribution.",'In the 2019 Basin Plan debate.','On 12 February 2019.', '-, and that coal would be mined for decades to come.', ', and that he was disappointed.'])assert.equal(api.sentenceFragment(fragment),true,fragment)
  for(const sentence of ['In 2004, Andrew Murray argued for better water management.','On 12 February 2019, Anne Ruston moved a motion.','During the debate, members discussed the Basin Plan.'])assert.equal(api.sentenceFragment(sentence),false,sentence)
@@ -38,21 +32,18 @@ const payload=()=>{
  const answer='In his 2004 Governor-General\'s speech contribution, Andrew Murray said “The Basin belongs to Martians”.'
  return {answer,answer_decision:'answer',citations:{'speech-1/t/body/0':[[0,Array.from(answer).length]]},sources:[structuredClone(source)]}
 }
-test('a rejected clause yields cited record titles and dates, with no orphaned lead',()=>{
+test('a misquote becomes paraphrase: the sentence, its lead and its citation all stay',()=>{
  const input=payload(),snapshot=structuredClone(input),out=api.groundAnswerPayload(input,question)
  assert.deepEqual(input,snapshot)
- assert.equal(out.coherence.method,'cited_record_titles')
- assert.match(out.answer,/17 November 2004/);assert.match(out.answer,/Address in Reply/)
- assert.doesNotMatch(out.answer,/\b\d{4}-\d{2}-\d{2}\b/)
- assert.doesNotMatch(out.answer,/Martians|In his|Governor-General/)
- assert.equal(api.sentenceFragment(out.answer),false)
+ assert.equal(out.answer,"In his 2004 Governor-General's speech contribution, Andrew Murray said The Basin belongs to Martians.")
+ assert.notEqual(out.coherence?.method,'cited_record_titles')
  const ranges=Object.values(out.citations).flat();assert.ok(ranges.length)
  for(const [from,to] of ranges)assert.ok(from>=0&&to>from&&to<=Array.from(out.answer).length)
  const again=api.groundAnswerPayload(structuredClone(out),question)
  assert.equal(again.answer,out.answer);assert.deepEqual(again.citations,out.citations)
 })
-test('record fallback preserves private-person and unsupported-allegation refusals',()=>{
- for(const q of ['What is the home address of my neighbour, a private individual?','Prove that mining donations bribed senators to vote against climate legislation.']){
+test('a typed refusal passes the final boundary unchanged',()=>{
+ for(const q of ['Can you write my Python homework?','Prove that mining donations bribed senators to vote against climate legislation.']){
   const input={...payload(),answer:'I cannot establish that from public records.',answer_decision:'refusal'}
   const out=api.groundAnswerPayload(input,q)
   assert.equal(out.answer,input.answer);assert.equal(out.answer_decision,'refusal')
@@ -72,10 +63,12 @@ test('a named speaker surname repair preserves Murray-Darling as a place',()=>{
  assert.match(out.answer,/Andrew Murray said the Murray-Darling Basin/)
  assert.doesNotMatch(out.answer,/Andrew Murray-Darling/)
 })
-test('a soft-check survivor cannot ship an uncited factual point',()=>{
- const out=api.groundAnswerPayload({...payload(),answer:'Andrew Murray said the river needed reform.',answer_status:'uncited',citations:{},sources:[{...source,cited:false}]},question)
- assert.equal(out.coherence.method,'cited_record_titles');assert.ok(Object.keys(out.citations).length)
- assert.doesNotMatch(out.answer,/said the river needed reform/)
+test('an uncited point stays in the answer as written',()=>{
+ const answer='The Murray-Darling Basin Plan was legislated in 2012.\nAndrew Murray said the river needed reform.'
+ const out=api.groundAnswerPayload({...payload(),answer,answer_status:'partly_cited',citations:{'speech-1/t/body/0':[[54,Array.from(answer).length]]}},question)
+ assert.equal(out.answer,answer)
+ assert.notEqual(out.coherence?.method,'cited_record_titles')
+ assert.deepEqual(out.citations,{'speech-1/t/body/0':[[54,Array.from(answer).length]]})
 })
 test('annual speech rows retain their own year, rather than the search start date',()=>{
  const series=[['2018',1062],['2019',928],['2020',1780],['2021',2070],['2023',2040]]

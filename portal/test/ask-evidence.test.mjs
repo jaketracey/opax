@@ -1,6 +1,6 @@
-import {guardAnswerAttribution} from './fixtures/ask-attribution.mjs';
+import {withoutSaLabel} from './fixtures/ask-attribution.mjs';
 import {speechPresentation, joinMixedSpeakers} from '../src/mixed-speakers.ts';
-const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; context.guardAnswerAttribution ??= guardAnswerAttribution; return baseVM(code, context, options); };
+const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; context.withoutSaLabel ??= withoutSaLabel; return baseVM(code, context, options); };
 import * as passageText from '../src/passage-text.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -20,7 +20,7 @@ const index=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
 const extract=(a,b)=>index.slice(index.indexOf(a),index.indexOf(b,index.indexOf(a)));
 let streamBody;
 const api=runInNewContext(transpile([extract('function buildAskBody(','/** The portal'),extract('function askPayload(','type AskPayload'),extract('function hasUnsupportedQuotes(', '/**\n * The canonical form of an ask'),extract('function askCacheInput(','/** Cut on word boundaries'),extract('class RefusalGate','/** streamAskOnce under')].join('\n'))+';({buildAskBody,askPayload,askCacheInput,cacheableAnswer,streamAskOnce,hasUnsupportedQuotes,unquoteUnsupported,looseAnswer,evidenceOnlyAnswer})',{
- ...passageText, ...exports, isWitness, mentionsPay:()=>false, isNamedPositionQuestion:scope.isNamedPositionQuestion, isRefusal:r=>r.answer==='refusal', POSITION_GROUNDING: 'Do not roleplay', integrityQuestion:()=>false, askRetrievalQuery: input=>input.question, recordContext:rows=>rows.map(r=>JSON.stringify(r)), recordSources:(rows,c)=>rows.map((r,i)=>({...r,resource:`USER_CONTEXT_${i}`,cited:Object.hasOwn(c,`USER_CONTEXT_${i}`)})), RECORD_GROUNDING:'', filterExpression:f=>({field:f}),calibrate:s=>s,label:(r,key)=>r.usermetadata?.classifications?.find(c=>c.labelset===key)?.label ?? null,canonicalSpeaker:s=>s,TOPIC_SLUGS:new Set(['housing']),REFUSAL_PREFIXES:['not enough data'],TextDecoder,Date,ragBase:()=> 'https://example.test',kbFetch:async()=>new Response(streamBody),
+ ...passageText, ...exports, isWitness, mentionsPay:()=>false, mentionsOfficePay:()=>false, isNamedPositionQuestion:scope.isNamedPositionQuestion, isRefusal:r=>r.answer==='refusal', POSITION_GROUNDING: 'Do not roleplay', integrityQuestion:()=>false, askRetrievalQuery: input=>input.question, recordContext:rows=>rows.map(r=>JSON.stringify(r)), recordSources:(rows,c)=>rows.map((r,i)=>({...r,resource:`USER_CONTEXT_${i}`,cited:Object.hasOwn(c,`USER_CONTEXT_${i}`)})), RECORD_GROUNDING:'', filterExpression:f=>({field:f}),calibrate:s=>s,label:(r,key)=>r.usermetadata?.classifications?.find(c=>c.labelset===key)?.label ?? null,canonicalSpeaker:s=>s,TOPIC_SLUGS:new Set(['housing']),REFUSAL_PREFIXES:['not enough data'],TextDecoder,Date,ragBase:()=> 'https://example.test',kbFetch:async()=>new Response(streamBody),
  modelBudgetSpent:async()=>false, modelBudgetResponse:()=>new Response(null,{status:429}), // exercised in model-budget.test.mjs
 });
 const id='r1/t/transcript/0-50',neighbour='r1/t/transcript/50-100',generated='r1/t/da-summary/0-50';
@@ -152,10 +152,10 @@ test('UI keeps footnotes after punctuation and closing quotes without crossing p
  ]),'A fact.⟦source:1⟧⟦source:2⟧');
 });
 
-test('position prompts keep the original question and treat an evidence gap as a complete response',()=>{
+test('position prompts keep the original question and answer with the closest recorded position, never a bare gap',()=>{
  const b=api.buildAskBody({question:'What would Pauline Hanson say about housing?',speaker:'Pauline Hanson',kind:'speech'});
  assert.match(b.prompt.user,/What would Pauline Hanson say about housing/);
- assert.match(b.prompt.user,/exact topic/);assert.match(b.prompt.user,/Use that person’s explicit speaking turns/);
+ assert.match(b.prompt.user,/give the closest position they do record and say so in one line/);assert.doesNotMatch(b.prompt.user,/return (?:ONLY )?this sentence/);assert.match(b.prompt.user,/Use that person’s explicit speaking turns/);
  assert.equal(exports.isEvidenceGap(exports.EVIDENCE_GAP_ANSWER),true);
  assert.equal(exports.isEvidenceGap(exports.EVIDENCE_GAP_ANSWER+' She supports unrelated policy.'),false);
  const proposal=api.buildAskBody({question:'What has David Pocock proposed about housing?',speaker:'David Pocock',kind:'speech'});

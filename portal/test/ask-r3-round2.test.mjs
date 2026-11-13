@@ -31,13 +31,13 @@ test.after(() => { globalThis.fetch = originalFetch; });
 for (const id of ['TT-AGRE-008', 'TT-AGRE-004']) test(id + ': party comparisons are collective subjects, including a trailing Party', async () => {
   const scope = await api.resolveNamedScope(saved[id].question, { asset });
   assert.ok(scope.parties.length >= 2);
-  assert.equal(api.unresolvedPersonAsked(saved[id].question, scope), false);
+  assert.deepEqual(scope.people, []);
 });
 
 for (const [id, person] of [['NP-VOTE-015', 'Tammy Tyrrell'], ['NP-VOTE-021', 'Rebekha Sharkie']]) test(id + ': typo and contracted surname scope resolve to the recorded member', async () => {
   const question = saved[id].question, scope = await api.resolveNamedScope(question, { asset });
   assert.deepEqual(scope.people, [person]);
-  assert.equal(api.unresolvedPersonAsked(question, scope), false);
+  assert.equal(scope.unresolved, false);
 });
 
 test('NP-VOTE-015: a successful in-loop identity lookup repairs stale unresolved scope before selecting vote evidence', async () => {
@@ -112,27 +112,6 @@ test('DT-YEAR-014: a period outside the observed bill index cannot become a zero
   assert.equal(data.citations.some(c => c.kind === 'count'), false);
   assert.doesNotMatch(rendered('DT-YEAR-014', sourcesFor(data.citations)), /No bills were introduced/);
 });
-
-test('a whole-year absence requires a count before the loop can state it, even after two empty narrow searches', async () => {
-  const question = 'How many bills were introduced in federal parliament in 2020?';
-  const bills = [{ key: 'au-federal-before', introduced: '2019-01-01' }, { key: 'au-federal-after', introduced: '2021-01-01' }];
-  const emptyCatalog = { fetch: async request => Response.json(new URL(request.url).pathname.endsWith('manifest.json') ? { version: '0000000000000000', count: 0, recordShardSize: 100, counts: {} } : new URL(request.url).pathname.endsWith('meta.json') ? [] : {}) };
-  let turn = 0;
-  const model = new MockLanguageModelV4({ doGenerate: opts => {
-    turn++;
-    if (turn <= 2) return reply([call('find_records', { query: turn === 1 ? 'bills 2020' : '2020', kind: 'bill' })]);
-    if (turn === 3) return reply([call('decline', { reason: 'no_record' })]);
-    if (turn === 4) { assert.match(JSON.stringify(opts.prompt), /whole-year.*complete scoped count/i); return reply([call('count_records', { record_type: 'bills', year: 2020 })]); }
-    const result = opts.prompt.filter(m => m.role === 'tool').flatMap(m => m.content).find(c => c.toolName === 'count_records').output.value;
-    return reply([call('answer', { facts: result.facts.map(f => f.id) })]);
-  } });
-  const out = await run(question, model, { asset: async path => path === '/bills/index.json' ? { count: 2, bills } : null, toolEnv: { ASSETS: emptyCatalog } });
-  assert.equal(out.answered, true, JSON.stringify(out.research));
-  assert.equal(model.doGenerateCalls.length, 5);
-  assert.match(out.answer, /0 bill records|No bills were introduced/);
-  assert.equal(out.steps.at(-2).tool, 'count_records');
-});
-
 for (const id of ['TT-YDEB-004', 'NP-SAID-012']) test(id + ': real cumulative usage leaves a fifth turn to synthesise retrieved speeches', async () => {
   assert.equal(saved[id].answer_stats.salvaged, 'tokens');
   const source = (saved[id].retrieved_sources ?? saved[id].sources).find(s => s.kind === 'speech' && s.speaker && s.snippet.length > 40);
@@ -153,7 +132,8 @@ test('TT-YDEB-003: the saved four-turn usage permits further recovery instead of
   assert.equal(fixture.answer_stats.salvaged, 'tokens');
   const model = new MockLanguageModelV4({ doGenerate: Array.from({ length: 8 }, (_, i) => reply([call('search', { query: 'drought exceptional circumstances farmers ' + i })], fixture.turns[i]?.input ?? 24000)) });
   const out = await run(fixture.question, model);
-  assert.equal(model.doGenerateCalls.length, 8);
+  // Eight research turns, then one final answer call after the round cap.
+  assert.equal(model.doGenerateCalls.length, 9);
   assert.equal(out.research.failure, 'steps');
 });
 

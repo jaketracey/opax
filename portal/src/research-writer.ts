@@ -1,18 +1,17 @@
 import { generateText } from 'ai'
 import {researchTrace} from './research-trace'
 import { reserveQuestionTurn, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS } from './ask-budgets'
-import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, payRate, usableFact, type WritingInput } from './research-writing'
+import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, type WritingInput } from './research-writing'
+const VOTE_METRICS=new Set(['aye','no','all_aye','all_no','split'])
 import { researchTurnReservationUsd } from './research-budget'
 import { isResearchCreditError, researchCreditCooldown } from './research-credit'
 import type { ResearchOptions } from './research-loop'
 import {groundAnswerPayload} from './research-grounding'
 import {auditPayload} from './research-claim-audit.mjs'
-import {protectedDecision,coherenceCheck,answerDecision,canReconstructRanking} from './research-coherence.mjs'
 import type { QualitativeAnswer, ResearchStats } from './research-types'
 import {recordAnswerLines} from './research-record-answer'
 import {moneyWritingInput,receiptWritingLines,completeMoneySelection} from './research-money-writing'
 
-const VOTE_METRICS=new Set(['aye','no','all_aye','all_no','split'])
 /** Same pinned model, provider, limiter, token ceiling, wall cap and D1 reservation as research. */
 export function createAnswerWriter(options: ResearchOptions) {
   return async (input: WritingInput, stats: ResearchStats, signal: AbortSignal | undefined, remainingMs: number): Promise<QualitativeAnswer> => {
@@ -20,31 +19,18 @@ export function createAnswerWriter(options: ResearchOptions) {
     // Every check sees all the facts handed in, not just those a draft happened to cite.
     const found=input.facts.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     const ground=(payload:QualitativeAnswer)=>{const {research:_found,...checked}=groundAnswerPayload({...payload,research:{pre_writer_sources:found}},input.question);return checked as unknown as QualitativeAnswer}
-    // Exact record findings have a complete prose answer without a writing turn.
-    if(recordAnswerLines(input)||receiptWritingLines(input)||completeMoneySelection(input))return ground(proseFallback(input))
+    // Exact record findings have a complete prose answer without a writing turn, unless that prose is only a limit.
+    if(recordAnswerLines(input)||receiptWritingLines(input)||completeMoneySelection(input)){const exact=proseFallback(input);if(exact.answer_decision!=='limitation')return ground(exact)}
     let lastDraft:QualitativeAnswer|null=null
-    let requiredAnswer:QualitativeAnswer|null=null,keepsRequired=(payload:QualitativeAnswer)=>true
+    // A stopped writer keeps what it wrote; with nothing written, the facts are rendered as recorded.
     const fallback=():QualitativeAnswer=>{
       stats.coherence={...stats.coherence,fallback:true}
-      const facts=proseFallback(input),fromFacts={...facts,coherence:{...facts.coherence,fallback:true}}
-      // Once a transcript draft loses its attributed evidence, a generic coherence pass can accept a
-      // surviving fragment or the evidence label alone. Use the checked, short attributed turns instead.
-      if (input.facts.some(f => f.transcript)) return ground(fromFacts)
-      if(lastDraft&&!canReconstructRanking(lastDraft as unknown as Record<string,unknown>,input.question)){
-        const checked=ground(lastDraft)
-        if(protectedDecision(lastDraft))return {...checked,coherence:{...checked.coherence,fallback:true}}
-        // Preserve the checked answer prepared before writing when a revision loses its required headline.
-        if(requiredAnswer&&!keepsRequired(checked))return {...requiredAnswer,coherence:{...requiredAnswer.coherence,fallback:true}}
-        if(protectedDecision(checked)||coherenceCheck(input.question,checked).pass)return {...checked,answer_decision:answerDecision(checked),coherence:{...checked.coherence,fallback:true}}
-        // An incoherent draft yields to the facts it was written from; without any, its checked points stand.
-        return facts.answer_decision==='limitation'&&checked.answer.trim()?{...checked,coherence:{...checked.coherence,fallback:true}}:fromFacts
-      }
-      return fromFacts
+      if(lastDraft&&lastDraft.answer.trim()){const checked=ground(lastDraft);return {...checked,coherence:{...checked.coherence,fallback:true}}}
+      const facts=proseFallback(input)
+      return ground({...facts,coherence:{...facts.coherence,fallback:true}})
     }, credits=options.creditCooldown ?? researchCreditCooldown
     if (!input.facts.length || !options.model || signal?.aborted || remainingMs<250 || credits.blocked()) return fallback()
     const required=proseFallback(input),lead=required.answer.split('\n')[0]
-    const figures=required.answer_decision!=='limitation'&&/\$\d/.test(lead)
-    if(figures||input.facts.some(f=>payRate(f.text)))requiredAnswer=ground(required)
     const headlineRequired=/highest|most|top|largest|biggest|how much/i.test(input.question)&&!/cannot|not identified|do not identify/i.test(lead)
     const ownerFigure=(fact:WritingInput['facts'][number])=>{
       const receipt=fact.source.receipt
@@ -61,15 +47,13 @@ export function createAnswerWriter(options: ResearchOptions) {
     // sentence that words it differently ("6 aye and 7 no") loses it to the figure checks.
     const voteFacts=input.facts.filter(f=>!f.coverage&&(f.atoms??[]).some(a=>VOTE_METRICS.has(a.metric)))
     const keepsVotes=(answer:string)=>voteFacts.every(f=>(f.atoms??[]).filter(a=>VOTE_METRICS.has(a.metric)).every(a=>new RegExp(`\\b${a.metric.replace('_',' ')} (?:in )?${a.value}\\b`,'i').test(answer)))
-    if(voteFacts.length&&keepsVotes(required.answer)){requiredAnswer??=ground(required);voteFacts.forEach(f=>requiredIds.add(f.id))}
-    // A rejected paraphrase does not invalidate its original transcript turn. Keep those facts for
-    // repair, and do not let a surviving counsel question displace all retrieved statements.
-    const transcriptStatements=input.facts.filter(f=>f.transcript&&!/\?\s*$/.test(f.transcript.excerpt))
-    input.facts.filter(f=>f.transcript).forEach(f=>requiredIds.add(f.id))
-    const keepsAll=(payload:QualitativeAnswer)=>keepsHeadline(payload.answer)&&(!voteFacts.length||!keepsVotes(required.answer)||keepsVotes(payload.answer))&&
-      (!transcriptStatements.length||payload.sources.some(s=>s.cited&&transcriptStatements.some(f=>f.source.resource===s.resource)))
-    keepsRequired=keepsAll
-    let activeInput=input, prompt=writingPrompt(input)
+    if(voteFacts.length&&keepsVotes(required.answer))voteFacts.forEach(f=>requiredIds.add(f.id))
+    // The writer's draft keeps the requested dollar figure and the aye/no split; one that drops them gives way to the
+    // facts-only version, which carries them. That protects content and never swaps in a limitation.
+    const keepsAll=(payload:QualitativeAnswer)=>keepsHeadline(payload.answer)&&(!voteFacts.length||!keepsVotes(required.answer)||keepsVotes(payload.answer))
+    const withRequired=(checked:QualitativeAnswer)=>required.answer_decision==='limitation'||keepsAll(checked)?checked:ground(required)
+    const activeInput=input
+    let prompt=writingPrompt(input)
     const startedWriting=Date.now()
     const inputReserve=Math.ceil(prompt.length/3)+1024, outputReserve=Math.min(1400,Math.min(ASK_MAX_TOKENS,Number(options.tokens ?? ASK_DEFAULT_TOKENS))-stats.tokens.input-stats.tokens.output-inputReserve)
     if (outputReserve<=0) return fallback()
@@ -109,21 +93,8 @@ export function createAnswerWriter(options: ResearchOptions) {
         const verified=verifyWrittenAnswer(raw,activeInput)
         researchTrace('writer.verify', {question:input.question,raw,verified})
         if(!verified){if(pass===0&&remainingMs-(Date.now()-startedWriting)>=500){prompt=writingPrompt(input);continue}return fallback()}
-        const audit=auditPayload(input.question,verified)
-        const checked=ground(verified)
-        if(protectedDecision(verified))return checked
-        const draft=Array.isArray(raw.sentences)?raw.sentences.map((s:{text?:string})=>s.text??'').join('\n\n'):''
-        const dropped=Array.isArray(raw.sentences)&&raw.sentences.some((s:{text?:string})=>{const words=(s.text??'').toLowerCase().match(/[\p{L}\p{N}]+/gu)??[];return words.length>0&&words.filter((w:string)=>verified.answer.toLowerCase().includes(w)).length/words.length<0.8})
-        if(pass===0&&(audit.findings.length||dropped||!keepsAll(checked))&&remainingMs-(Date.now()-startedWriting)>=500){
-          const used=new Set(checked.sources.filter(s=>s.cited).map(s=>s.resource))
-          const surviving={...activeInput,facts:activeInput.facts.filter(f=>used.has(f.source.resource)||requiredIds.has(f.id))}
-          // A revision may lose a rejected fact, never the only usable ones: a coverage note alone cannot be rewritten into an answer.
-          if(surviving.facts.some(usableFact)||!activeInput.facts.some(usableFact)&&surviving.facts.length){activeInput=surviving;prompt=writingPrompt(surviving)}
-          continue
-        }
-        const stripped=Math.max(0,1-checked.answer.length/Math.max(1,draft.length))
-        if(stripped>1/3||!keepsAll(checked))return fallback()
-        return checked
+        researchTrace('writer.audit',{question:input.question,counts:auditPayload(input.question,verified).counts})
+        return withRequired(ground(verified))
       }catch(error){
         if(isResearchCreditError(error)){credits.exhaust();receipt=0;stats.usageUnknown=false;if(turn)Object.assign(turn,{input:0,output:0,cost_usd:0})}
         return fallback()

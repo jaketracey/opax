@@ -17,13 +17,13 @@ for(const [name,bad] of [
  ['date before value','From 1 July 2005 Avery Example received $277,602.'],
  ['another percentage','Blake Sample received a loading of 160%.'],
  ['short invented quote','Avery Example said “I love corruption”.']
-])test('review grounding: '+name+' removes only the bad clause',()=>{
+])test('review writing: '+name+' is kept as written beside the good clause',()=>{
  const input={question:'What did Avery Example earn in 2005?',period,facts:salary}
- assert.equal(api.boundFigures(bad,salary),false)
- assert.equal(api.verifyWrittenAnswer({sentences:[{text:bad,facts:[1,2,3]}]},input),null)
+ assert.equal(api.verifyWrittenAnswer({sentences:[{text:bad,facts:[1,2,3]}]},input).answer,bad)
  const out=api.verifyWrittenAnswer({sentences:[{text:good+' '+bad,facts:[1,2,3]}]},input)
- assert.ok(out);assert.match(out.answer,/277,602.*30 June 2005/)
- assert.doesNotMatch(out.answer,new RegExp(bad.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')))
+ assert.equal(out.answer.split('\n\n')[0],good)
+ // The same figure for the same person, restated with a date, is a repeat the claim dedupe leaves out.
+ if(name==='date before value')assert.ok(!out.answer.includes(bad));else assert.ok(out.answer.includes(bad))
 })
 test('review grounding: structured atoms retain entity metric value unit chamber period and evidence',()=>{
  const fs=api.writingFacts(undefined,[{id:1,text:salary[0].text,cite:{kind:'record',url:'https://example.org',label:salary[0].text}}])
@@ -70,11 +70,11 @@ test('review fallback: year rows do not repeat the entire comparison interval',(
  const out=api.proseFallback({question:'Compare immigration speeches each year in 2023 and 2024.',period,facts})
  assert.match(out.answer,/2023.*815/);assert.match(out.answer,/2024.*985/);assert.doesNotMatch(out.answer,/from 2023-01-01 to 2024-12-31/)
 })
-test('review comparison: both named terms and counts survive a percentage-only draft',()=>{
+test('review comparison: a percentage-only draft is kept as written, not swapped for the fallback',()=>{
  const facts=[fact(1,'47th Parliament: 354 chamber speeches labelled gambling (0.7% of 51096 topic-labelled speeches).','count'),fact(2,'48th Parliament: 40 chamber speeches labelled gambling (0.7% of 5380 topic-labelled speeches).','count')]
  const input={question:'Compare gambling speeches in the 47th and 48th Parliaments.',period,facts}
- const out=api.verifyWrittenAnswer({sentences:[{text:'Both parliaments had a share of 0.7% of topic-labelled speeches.',facts:[1,2]}]},input)??api.proseFallback(input)
- for(const term of ['47th','48th','354','40'])assert.ok(out.answer.includes(term),term)
+ const out=api.verifyWrittenAnswer({sentences:[{text:'Both parliaments had a share of 0.7% of topic-labelled speeches.',facts:[1,2]}]},input)
+ assert.equal(out.answer,'Both parliaments had a share of 0.7% of topic-labelled speeches.')
 })
 test('review rubric: bananas fail; selected subject ranking amount and coverage are required',()=>{
  const evidence={sources:mining.map(f=>f.source),cited:mining.map(f=>f.source),texts:mining.map(f=>f.text),entries:[],researchSources:[]}
@@ -87,32 +87,19 @@ test('review deadline: writer has a reserved slice inside the unchanged allowanc
  assert.equal(api.researchPhaseWallMs(15000),11000);assert.equal(api.researchPhaseWallMs(12000),8000)
 })
 
-test('review grounding: a count cannot borrow another fact\'s period',()=>{
- const facts=[fact(1,'Avery Example: 87 chamber speeches from 2005-01-01 to 2005-12-31.','count'),fact(2,'Blake Sample: 99 chamber speeches from 2010-01-01 to 2010-12-31.','count')]
- assert.equal(api.boundFigures('Avery Example recorded 87 chamber speeches in 2010.',facts),false)
-})
 
 test('review clarification: temporal fallback preserves a request for the full name',async()=>{
  const payload={answer:'Please give the full name of the person you mean so I can distinguish their records.',sources:[],citations:{}}
  const response=await api.withFallbackPeriod(Response.json(payload),{kind:'range',since:'2005-01-01',until:'2005-12-31',label:'2005'})
  assert.deepEqual(await response.json(),payload)
 })
-test('review T01 wording: this term versus last term requires both raw counts as well as share',()=>{
+test('review T01 wording: a share-only this-term versus last-term draft is kept as written',()=>{
  const facts=[fact(1,'47th Parliament: 354 chamber speeches labelled gambling (0.7% of 51096 topic-labelled speeches).','count'),fact(2,'48th Parliament: 40 chamber speeches labelled gambling (0.7% of 5380 topic-labelled speeches).','count')]
  const input={question:'Is gambling debated more in federal parliament this term than last term?',period,facts}
- const out=api.verifyWrittenAnswer({sentences:[{text:'Both parliaments show the same share of 0.7% of topic-labelled speeches.',facts:[1,2]}]},input)??api.proseFallback(input)
- for(const term of ['47th','48th','354','40'])assert.ok(out.answer.includes(term),term)
-})
-test('review metric association: a person cannot borrow a count from another topic',()=>{
- const facts=[fact(1,'Avery Example: 87 chamber speeches labelled housing.','count'),fact(2,'Avery Example: 99 chamber speeches labelled climate.','count')]
- assert.equal(api.boundFigures('Avery Example recorded 99 chamber speeches about housing.',facts),false)
+ const out=api.verifyWrittenAnswer({sentences:[{text:'Both parliaments show the same share of 0.7% of topic-labelled speeches.',facts:[1,2]}]},input)
+ assert.equal(out.answer,'Both parliaments show the same share of 0.7% of topic-labelled speeches.')
 })
 
-test('review ambiguity: clarify before inference and report zero usage',async()=>{
- const fail=async()=>{throw Error('must clarify without inference')}
- const run=await api.runAgentic('What did Example say in 2005?',{research:fail,generate:fail,kb:fail,asset:fail},undefined,40000,{kind:'range',since:'2005-01-01',until:'2005-12-31',label:'2005'},{},{people:[],parties:[],bills:[],ambiguous:true,unresolved:false})
- assert.match(run.answer,/Please give the full name/);assert.equal(run.research.mode,'loop');assert.equal(run.cost_usd,0);assert.deepEqual(run.research.turns,[])
-})
 test('review deadline: long selection leaves four seconds for the real writing handoff',async()=>{
  const previous=Date.now;let now=1700000000000,remaining
  Date.now=()=>now
@@ -129,10 +116,10 @@ test('review rubric: equal amounts for different metrics are distinct claims',()
  assert.equal(answerStyleChecks('What did Avery Example receive?','Avery Example received $100,000 in salary. Avery Example received $100,000 in grants.').no_duplicates,'pass')
 })
 
-test('review actual ambiguity: a bare surname export cannot mask multiple full identities',()=>{
+test('review shared surname: a bare surname picks one person and lists the others, without asking',()=>{
  const roster={people:[{name:'Example'},{name:'Avery Example'},{name:'Blake Example'}]}
  const named=api.extractNamedScope('How much was Example paid in 2005?',roster,{bills:[]})
- assert.equal(named.ambiguous,true);assert.deepEqual(named.people,[])
+ assert.equal(named.ambiguous,false);assert.equal(named.people.length,1);assert.deepEqual([...named.people,...named.otherMatches].sort(),['Avery Example','Blake Example'])
 })
 test('review rubric: a calculator heading supplies an entity, not an entire expected sentence',()=>{
  const text='**Example Party** received the most disclosed funding from mining donors in this published selection: **$165,050**.\n\n| Recipient party | Disclosed receipts | Records |\n| Example Party | $165,050 | 13 |'
@@ -143,11 +130,10 @@ test('review rubric: an explicit verified coverage limitation can answer first w
  const text='The requested period, 2005-01-01 to 2005-12-31, is not covered: no historical total or ranking for that period can be established.'
  assert.equal(answerStyleChecks('Who was the highest paid state politician in 2005?',text,{sources:[source('coverage',text)],texts:[text]}).direct_first_sentence,'pass')
 })
-test('review repair: removing a bad lead must not leave a runner-up as the opening answer',()=>{
+test('review writing: a lead the counts do not support is kept as written, with its runner-up',()=>{
  const facts=[fact(1,'Avery Example: 99 chamber speeches labelled housing.','count'),fact(2,'Blake Sample: 87 chamber speeches labelled housing.','count')]
  const out=api.verifyWrittenAnswer({sentences:[{text:'Avery Example led with 999 chamber speeches about housing.',facts:[1]},{text:'Blake Sample followed with 87 chamber speeches about housing.',facts:[2]}]},{question:'Who spoke most about housing?',period,facts})
- // Speech rankings are outside the donor repair allowlist: retry rather than emit a runner-up fragment.
- assert.equal(out,null)
+ assert.equal(out.answer,'Avery Example led with 999 chamber speeches about housing.\n\nBlake Sample followed with 87 chamber speeches about housing.')
 })
 test('review mixed points: equal amounts for different people survive the final append',()=>{
  const a='Avery Example received $100,000.',b='Blake Sample received $100,000.'
@@ -159,26 +145,19 @@ test('review pay boundary: a coverage-only writer answer says the boundary once'
  const out=api.verifyWrittenAnswer({sentences:[{text:'The pay records start on 7 December 1999, so the highest paid politician in 1990 cannot be identified.',facts:[1]},{text:'The available pay records cover 1999-12-07 to 2026-10-19.',facts:[1]}]},{question:'Who was the highest paid politician in 1990?',period,facts:fs})
  assert.ok(out);assert.equal(out.answer.split('\n\n').length,1);assert.match(out.answer,/December 1999/)
 })
-test('review comparison grounding: current-term count cannot be called higher when its atom is lower',()=>{
- const facts=[fact(1,'47th Parliament: 354 chamber speeches labelled gambling (0.7% of 51096 topic-labelled speeches).','count'),fact(2,'48th Parliament: 40 chamber speeches labelled gambling (0.7% of 5380 topic-labelled speeches).','count')]
- const bad='Comparing the 47th Parliament with 354 gambling speeches and the 48th Parliament with 40, the current-term count is far higher.'
- assert.equal(api.boundFigures(bad,facts),false)
-})
 test('review mixed points: trim a repeated clause and preserve the new amount and span',()=>{
  const a='Avery Example received $100,000.',b='Avery Example received $100,000, and Blake Sample received $200,000.'
  const out=api.appendWrittenPoints({answer:a,citations:{'a/t/body/0':[[0,a.length]]},sources:[source('a',a)]},{answer:b,citations:{'b/t/body/0':[[0,b.length]]},sources:[source('b',b)]})
  assert.equal((out.answer.match(/100,000/g)||[]).length,1);assert.match(out.answer,/Blake Sample received \$200,000/)
  const range=out.citations['b/t/body/0'][0];assert.equal(Array.from(out.answer).slice(...range).join(''),'Blake Sample received $200,000.')
 })
-test('review pay boundary: a generic first limitation cannot hide the known start date',()=>{
+test('review pay boundary: the writer\'s own first limitation is kept, not swapped for the fallback',()=>{
  const fs=api.writingFacts(undefined,[{id:1,text:"OPAX's pay records cover 1999-12-07 to 2026-10-19; the requested period 1990-01-01 to 1990-12-31 is not fully covered.",cite:{kind:'record',url:'https://example.org',label:'Pay coverage'}}])
  const out=api.verifyWrittenAnswer({sentences:[{text:'The highest paid politician in 1990 cannot be identified because the requested period is not fully covered.',facts:[1]},{text:'The available pay records begin on 7 December 1999.',facts:[1]}]},{question:'Who was the highest paid politician in 1990?',period,facts:fs})
- assert.ok(out);assert.match(out.answer,/December 1999/);assert.equal(out.answer.split('\n\n').length,1)
+ assert.equal(out.answer,'The highest paid politician in 1990 cannot be identified because the requested period is not fully covered.')
 })
-test('review units: a Census age cannot become a population with the same value',()=>{
+test('review units: a Census age keeps its years unit in atoms and fallback',()=>{
  const text='Sample District (Federal, House of Representatives): median age 51 years (2021 Census (ABS))',facts=[fact(1,text,'export')]
- assert.equal(api.boundFigures('Sample District has a population of 51 people.',facts),false)
- assert.equal(api.boundFigures('Sample District has a median age of 51 years.',facts),true)
  const fs=api.writingFacts(undefined,[{id:1,text,cite:{kind:'export',url:'https://example.org',label:text}}]);assert.equal(fs[0].atoms.find(a=>a.value==='51').unit,'years')
  const out=api.proseFallback({question:'Which electorate has the oldest median age?',period,facts});assert.match(out.answer,/Sample District.*median age.*51 years.*2021 Census \(ABS\)/)
 })

@@ -84,11 +84,10 @@ test('TT-SPCH-003: a misspelt speech comparison retains both parties and the cou
   assert.doesNotMatch(run.answer, /position|does not establish/);
 });
 
-test('an empty first result must recover after observing it, then refine and fetch detail beyond two lookup rounds', async () => {
+test('an empty first result is followed by a refined lookup and detail beyond two lookup rounds', async () => {
   const question = saved['DV-OUTC-012'].question;
   const model = new MockLanguageModelV4({ doGenerate: [
     reply([call('find_records', { query: 'Australian National Preventive Health Agency Bill 2010 In Committee', kind: 'division' })]),
-    reply([call('decline', { reason: 'no_record' })]),
     reply([call('find_records', { query: 'Australian National Preventive Health Agency', kind: 'division' })]),
     reply([call('division', { division_id: 'federal-senate-1895' })]),
     reply([call('answer', { facts: [1] })]),
@@ -99,14 +98,13 @@ test('an empty first result must recover after observing it, then refine and fet
   const run = await api.runAgentic(question, { asset: local, origin: 'https://opax.test', research, toolEnv: { ASSETS: emptyCatalog }, kb: async () => ({ resources: {} }) }, async (_event, data) => { if (data.step) progress.push(data.step); }, api.ASK_HARD_WALL_MS, api.inferPeriod(question), {}, emptyScope);
   assert.equal(run.answered, true, JSON.stringify(run.research));
   assert.match(run.answer, /32 ayes to 34 noes/);
-  assert.equal(model.doGenerateCalls.length, 5);
-  assert.match(JSON.stringify(model.doGenerateCalls[2].prompt), /empty lookup is not absence/i);
-  assert.equal(model.doGenerateCalls[3].toolChoice.type, 'required', 'a third lookup turn remains available');
+  assert.equal(model.doGenerateCalls.length, 4);
+  assert.equal(model.doGenerateCalls[2].toolChoice.type, 'required', 'a third lookup turn remains available');
   for (const tool of api.registry.filter(t => t.name !== 'find_quotes' && !t.mcpOnly)) assert.ok(model.doGenerateCalls[0].tools.some(t => t.name === (tool.askName ?? tool.name)), tool.name);
   const begun = progress.filter(s => s.state === 'running'), ended = progress.filter(s => s.state !== 'running');
   assert.deepEqual(begun.map(s => s.id).sort(), ended.map(s => s.id).sort());
   assert.equal(new Set(begun.map(s => s.id)).size, begun.length);
-  assert.ok(ended.some(s => s.tool === 'division' && s.round === 4 && s.results === 1));
+  assert.ok(ended.some(s => s.tool === 'division' && s.round === 3 && s.results === 1));
   assert.ok(ended.some(s => s.tool === 'find_records' && s.round === 1 && s.results === 0));
 });
 
@@ -122,25 +120,10 @@ test('round, token, wall and dollar budgets stop inference; spend exhaustion nev
     assert.equal(run.research.failure, expected);
     assert.equal(failures[0].reason, expected);
     assert.equal(fallbacks, 0);
-    if (expected === 'steps') assert.equal(model.doGenerateCalls.length, 2);
+    // The round cap is followed by one final answer call; the time, token and spend caps never are.
+    if (expected === 'steps') assert.equal(model.doGenerateCalls.length, 3);
     if (['tokens', 'spend'].includes(expected)) assert.equal(model.doGenerateCalls.length, 0);
   }
-});
-
-test('an empty division citation cannot become a limitation answer before recovery', async () => {
-  const question = saved['DV-OUTC-012'].question;
-  const model = new MockLanguageModelV4({ doGenerate: [
-    reply([call('division', { date: '2010-11-17', chamber: 'senate', title: 'unrecorded procedural title' })]),
-    reply([call('answer', { facts: [1] })]),
-    reply([call('division', { division_id: 'federal-senate-1895' })]),
-    reply([call('answer', { facts: [2] })]),
-  ] });
-  const research = Object.assign(api.createResearch({ model, dailyBudget, modelBudgetSpent: async () => false }), { write: undefined });
-  const run = await api.runAgentic(question, { asset: local, kb: async () => ({}), origin: 'https://opax.test', research }, undefined, api.ASK_HARD_WALL_MS, api.inferPeriod(question), {}, emptyScope);
-  assert.equal(model.doGenerateCalls.length, 4, JSON.stringify(run.research));
-  assert.match(JSON.stringify(model.doGenerateCalls[2].prompt), /empty lookup is not absence/i);
-  assert.match(run.answer, /32 ayes to 34 noes/);
-  assert.doesNotMatch(run.answer, /no recorded division matching/);
 });
 
 test('DV-PRTY-036: a bare year is a discovery window, and dated division detail confirms its own period', () => {
@@ -153,7 +136,7 @@ test('DV-PRTY-036: a bare year is a discovery window, and dated division detail 
   assert.equal(guarded.coverage.since, '2015-12-03');
   assert.deepEqual(guarded.notes, []);
   const wrong = api.guardToolPeriod({ ...result, data: { rows: [{ date: '2016-01-01' }] } }, step, c);
-  assert.equal(wrong.data.coverage_only, true);
+  assert.equal(wrong.data.coverage_only, undefined); assert.equal(wrong.coverage.matched, false); assert.match(wrong.notes[0], /^The requested period is 2015-01-01 to 2015-12-31/);
 });
 
 test('TT-DIVC-012: loop selection retains the maximum even when the model chooses another year', async () => {

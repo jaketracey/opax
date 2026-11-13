@@ -17,10 +17,10 @@ test('Jake’s exact 2005 question prices the dated base and posts across both s
  assert.deepEqual(r.rows.map(r=>[r.name,r.salary,r.since,r.until]),[['John Howard',277602,'2005-01-01','2005-06-30'],['John Howard',288990,'2005-07-01','2005-12-31']])
  assert.ok(r.citations.every(c=>c.url.includes('aph.gov.au')));assert.equal(r.coverage.as_of,pay.meta.as_of)
 })
-test('a historical result cannot silently carry current facts, even if the model selected them', () => {
+test('a historical result cannot silently carry current facts: they stand with a period note', () => {
  const old={tool:'parliamentary_pay',ok:true,data:{coverage:{since:'2026-10-19',until:'2026-10-19',as_of:'2026-10-19'},rows:[{salary:622102}]},cite:[{kind:'record',label:'Current salary $622,102',url:'https://example.org/pay'}],notes:[]}
  const guarded=api.guardToolPeriod(old,{tool:old.tool,args:{}},constraints('highest paid politician in 2005'))
- assert.equal(guarded.data.coverage_only,true);assert.doesNotMatch(JSON.stringify(guarded),/622,102|622102/);assert.match(guarded.cite[0].label,/cannot establish/)
+ assert.equal(guarded.data.coverage_only,undefined);assert.equal(guarded.coverage.matched,false);assert.match(guarded.notes[0],/^The requested period is 2005-01-01 to 2005-12-31; these records cover 2026-10-19/)
 })
 test('unsupported pre-1999, future and state pay periods explain coverage without current salaries', () => {
  for (const args of [{as_of:'1990'},{as_of:'2030'},{as_of:'2005',jurisdiction:'vic'}]){
@@ -43,10 +43,10 @@ test('constraints cover ranges, exact dates, previous term, jurisdiction, chambe
  const g=constraints('Biggest federal grants in the electorate of Perth in 2022')
  assert.equal(api.constrainStep({tool:'grants',args:{}},g,{electorate:{},jurisdiction:{},from_year:{},to_year:{}}).args.electorate,'Perth')
 })
-test('Census snapshots and unknown coverage cannot masquerade as historical rankings', () => {
+test('Census snapshots cannot masquerade as historical rankings: a note gives the Census period', () => {
  const r={tool:'electorates',ok:true,data:{coverage:{eligible:100}},cite:[{kind:'export',label:'2021 Census population 1234',url:'https://example.org/seat'}],notes:[]}
  const guarded=api.guardToolPeriod(r,{tool:'electorates',args:{}},constraints('median age in Corangamite in 2005'))
- assert.equal(guarded.coverage.as_of,'2021-08-10');assert.equal(guarded.data.coverage_only,true);assert.doesNotMatch(JSON.stringify(guarded),/1234/)
+ assert.equal(guarded.coverage.as_of,'2021-08-10');assert.equal(guarded.coverage.matched,false);assert.match(guarded.notes[0],/^The requested period is 2005-01-01 to 2005-12-31; these records cover 2021-01-01 to 2021-12-31/)
 })
 test('grader accepts unique surname mentions and detects invented surname-only people', () => {
  assert.equal(mentions('Example said housing supply matters.','Robin Example'),true)
@@ -150,7 +150,7 @@ test('partial-FY donation windows return only a scoped coverage explanation with
   assert.equal(step.args.from_year,undefined);assert.equal(step.args.to_year,undefined)
   const result=api.guardToolPeriod(await api.partyDonations(deps,step.args),step,c)
   assert.equal(result.data.coverage_only,true);assert.equal(result.coverage.matched,false)
-  assert.match(result.cite[0].label,/financial year/);assert.match(result.cite[0].label,new RegExp(c.period.until ?? c.period.since))
+  assert.match(result.cite[0].label,/financial year/);assert.match(result.notes[0],new RegExp(c.period.until ?? c.period.since))
   assert.doesNotMatch(JSON.stringify(api.factSheet([result])),/total_aud|\$/)
  }
 })

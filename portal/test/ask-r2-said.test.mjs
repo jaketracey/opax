@@ -39,7 +39,7 @@ for (const [id, key, claim, quote] of [
     reply([call('answer', { facts: [1], points: [{ claim, id: passageId, quote }] })]),
   ] });
   let writes = 0;
-  const research = Object.assign(api.createResearch({ model, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) },
+  const research = Object.assign(api.createResearch({ model, inputPrice: 0.1, outputPrice: 0.3, modelBudgetSpent: async () => false, dailyBudget: { reserve: async () => ({ settle: async () => {} }) },
     readRecord: async () => ({ text: passage.snippet, speaker: passage.speaker, labels: { kind: 'speech' }, metadata: { date: passage.date } }),
   }), { write: async () => { writes++; throw Error('Checked speech points already answer the question'); } });
   const deps = { asset: local, origin: 'https://opax.test', toolEnv: { ASSETS: assets }, research,
@@ -60,12 +60,11 @@ for (const [id, key, claim, quote] of [
   assert.equal(await api.exactRecordLookup(question, { ...deps, asset: async path => path === '/bills/index.json' ? { bills: [] } : local(path) }, period, named), null);
 });
 
-test('an empty bill lookup must search member speeches and retry title variants before absence', async () => {
+test('an empty bill lookup can be followed by member speeches and a title search', async () => {
   const { question, passage } = recorded['NP-SAID-002'], bill = await local('/bills/au-federal-r5516.json');
   const passageId = passage.resource + '/t/body/0-' + passage.snippet.length;
   const model = new MockLanguageModelV4({ doGenerate: [
     reply([call('find_records', { query: bill.title, kind: 'bill' })]),
-    reply([call('decline', { reason: 'no_record' })]),
     reply([call('person_quotes', { person: passage.speaker, topic: bill.title })]),
     reply([call('search', { query: passage.speaker + ' agricultural land foreign investment second reading' })]),
     reply([call('answer', { points: [{ claim: 'David Gillespie argued that the bills strengthen the integrity and management of foreign investment in agricultural land and agribusiness.', id: passageId, quote: 'They strengthen the integrity and management of foreign investment in agricultural land and agribusiness' }] })]),
@@ -82,10 +81,9 @@ test('an empty bill lookup must search member speeches and retry title variants 
   const out = await research(question, { deps, named: { ...emptyScope, people: [passage.speaker] }, period: api.inferPeriod(question), signal: new AbortController().signal,
     progress: async () => {}, scope: step => step, execute: (step, _round, action) => step.tool === 'find_records' ? Promise.resolve({ tool: 'find_records', ok: true, data: { rows: [], total: 0 }, cite: [], notes: [] }) : action(deps),
   });
-  assert.equal(model.doGenerateCalls.length, 5);
+  assert.equal(model.doGenerateCalls.length, 4);
   assert.equal(queries.length, 2);
   assert.deepEqual(filters[0], { speaker: passage.speaker });
-  assert.match(JSON.stringify(model.doGenerateCalls[2].prompt), /Search the member/);
   assert.ok(out.qualitative.sources.some(s => s.cited && s.kind === 'speech' && s.speaker === passage.speaker));
   assert.doesNotMatch(out.qualitative.answer, /no matching|no record|cannot establish/);
 });

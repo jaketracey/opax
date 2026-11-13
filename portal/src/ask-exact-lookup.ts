@@ -51,27 +51,7 @@ export async function exactRecordLookup(question: string, deps: ToolDeps, period
   if (offScopeQuestion(question)) return { terminal: true, answer: { answer: 'OPAX covers Australian parliament and public records. Please ask about Australian politics, public spending, bills or votes.', answer_decision: 'refusal', citations: {}, sources: [] } }
   const read = async (path: string) => { try { return await deps.asset(path) } catch { return null } }
   const today = new Date().toISOString().slice(0, 10)
-  const prediction = /\bwill\b.{0,100}\b(?:vote|declare|win|receive|award|pass)\b|\bwho will (?:be|become)\b|\bwill\b.{0,100}\bbe paid\b|\bnext (?:year|budget|election)\b/i.test(question)
-  if (prediction || period.since && period.since > today) {
-    // A dated source snapshot is distinct from an event date. Label each one as the source does.
-    if (/\b(?:paid|pay|salary)\b/i.test(question)) {
-      const last = day(object(object(await read('/pay.json')).meta).as_of)
-      if (last) return decision(`OPAX has no record yet of the requested future event. Its pay records run to ${last}.`, '/money/pay', deps)
-    }
-    if (/\bbills?\b/i.test(question) && !voteQuestion.test(question)) {
-      const bills = rows(await read('/bills/index.json'), 'bills'), last = latest((bills ?? []).map(b => day(b.status_as_of)))
-      if (last) return decision(`OPAX has no record yet of the requested future event. The latest recorded bill status is dated ${last}.`, '/bills', deps)
-    }
-    if (/\binterests\b/i.test(question)) {
-      const last = day(object(object(await read('/interests/index.json'))._meta).generated)
-      if (last) return decision(`OPAX has no record yet of the requested future event. Its latest interests register snapshot is dated ${last}.`, '/interests/index.json', deps)
-    }
-    const index = await read('/divisions/index.json'), divisions = rows(index, 'divisions')
-    const last = latest((divisions ?? []).map(r => day(r.date)))
-    const text = `OPAX has no record yet of the requested future event.${last ? ` The latest recorded division is dated ${last}.` : ' The latest recorded date could not be verified from the available index.'}`
-    return decision(text, '/divisions/index.json', deps)
-  }
-
+  // A future event or an unmatched name, bill or division is a miss: the agent answers it.
   const personSlot = requestedPerson(question)
   let resolvedPerson = named?.people.length === 1 ? named.people[0] : null
   const identityQuestion = /\b(?:MP|senator|parliamentarian|electorate|interests|paid|declared|Prime Minister)\b/i.test(question) || /\b(?:did|has|does|why['’]d)\b.+\b(?:say|said|vote|voted|back)\b/i.test(question)
@@ -82,15 +62,7 @@ export async function exactRecordLookup(question: string, deps: ToolDeps, period
     const resolution = personSlot ? resolvePersonName(personSlot, names) : null
     const person = named?.people.length === 1 ? named.people[0] : resolution?.status === 'matched' ? resolution.candidates[0].person.name : null
     resolvedPerson = person
-    if (people && personSlot && !person && resolution?.status === 'no_match' && !named?.ambiguous && !named?.people.length) {
-      // Register members can have no speech-roster entry. Check their own directory first.
-      if (/\b(?:interests|declare\w*)\b/i.test(question)) {
-        const members = Object.values(object(object(await read('/interests/index.json')).people))
-          .map(object).filter((p): p is Row & { name: string } => typeof p.name === 'string')
-        if (resolvePersonName(personSlot, members).status !== 'no_match') return null
-      }
-      return decision(`OPAX has no record of a parliamentarian named ${personSlot}.`, '/parliamentarians.json', deps)
-    }
+    if (people && personSlot && !person && resolution?.status === 'no_match' && !named?.people.length) return null
     const p = people?.find(r => normal(r.name) === normal(person))
     if (p && person) {
       const path = '/subject/person/' + encodeURIComponent(person)
@@ -139,10 +111,9 @@ export async function exactRecordLookup(question: string, deps: ToolDeps, period
             }))
             // Missing title data is unknown, not evidence of absence.
             if (files.some(r => !r.name && !r.title || (' ' + withoutYear(r.name ?? r.title) + ' ').includes(' ' + withoutYear(title) + ' '))) return null
-            const window = period.since === period.until ? `on ${period.since}` : `from ${period.since} to ${period.until}`
-            return decision(`OPAX has no recorded ${chamber === 'senate' ? 'Senate ' : chamber ? 'House ' : 'federal '}division on ${title} ${window}.`, '/divisions/index.json', deps)
+            return null
           }
-        } else return decision(`OPAX has no record of a bill by that name: ${title}.`, '/bills', deps)
+        } else return null
       }
       const bill = matches[0]
       if (bill && matches.every(b => b.status === 'passed') && /\b(?:rejected|defeated|voted down|failed to pass)\b/i.test(question)) return decision(`${bill.title} passed parliament; it was not rejected.`, '/bill/' + encodeURIComponent(String(bill.key)), deps, true, `${bill.title}: passed.`)
@@ -159,7 +130,7 @@ export async function exactRecordLookup(question: string, deps: ToolDeps, period
     const dates = scoped.map(r => day(r.date)).filter(Boolean).sort(), from = dates[0], until = dates.at(-1)
     const window = period.since === period.until ? `on ${period.since}` : `from ${period.since} to ${period.until}`
     const countInCoverage = /\b(?:how many|number of|count|more|fewer)\b/i.test(question) && from && until && period.since >= from && period.until <= until
-    if (!matches.length && !countInCoverage) return decision(`OPAX has no recorded ${chamber === 'senate' ? 'Senate ' : chamber ? 'House ' : 'federal '}divisions ${window}.${from && until ? ` Its recorded divisions cover ${from} to ${until}.` : ''}`, '/divisions/index.json', deps)
+    if (!matches.length && !countInCoverage) return null
     // Resolve a single day's full division title before interpreting a member's vote.
     const assertedAye = /\b(?:vote(?:d)? for|back(?:ed)?)\b/i.test(question), assertedNo = /\b(?:vote(?:d)? against|oppos(?:e|ed))\b/i.test(question)
     if (period.since === period.until && resolvedPerson && (assertedAye || assertedNo) && matches.length <= 60) {
