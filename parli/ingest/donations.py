@@ -35,10 +35,13 @@ import io
 import re
 import zipfile
 from pathlib import Path
+import json
+from urllib.parse import urlsplit
 
 import requests
 
 from parli.schema import get_db, init_db
+from parli.ingest import aec_receipts
 
 AEC_DOWNLOAD_BASE = "https://transparency.aec.gov.au/Download"
 CACHE_DIR = Path("~/.cache/autoresearch/donations").expanduser()
@@ -90,6 +93,15 @@ def parse_amount(value: str) -> float | None:
 
 def download_zip(url: str) -> bytes | None:
     """Download a ZIP file from the given URL. Returns bytes or None."""
+    registry = Path("~/.cache/autoresearch/pipeline/source-access.json").expanduser()
+    registries = [registry, *registry.with_suffix("").glob("*.json")]
+    host = urlsplit(url).hostname
+    for path in registries:
+        if not path.exists():
+            continue
+        for name, entry in json.loads(path.read_text()).items():
+            if entry.get("status") == "paused" and (entry.get("host") == host or name == host):
+                raise source_http.SourceRefused(url, "source-access registry is paused")
     try:
         print(f"  Downloading {url}...")
         resp = SESSION.get(url, timeout=120)
@@ -105,14 +117,17 @@ def download_zip(url: str) -> bytes | None:
 # ── CSV-specific parsers ───────────────────────────────────────────
 
 def _insert_donation(db, donor: str, recipient: str, amount: float | None,
-                     fy: str | None, source: str, state: str = "federal"):
+                     fy: str | None, source: str, state: str = "federal", *,
+                     receipt_type=None, return_type=None, source_file=None, record_side=None):
     """Insert a single donation row."""
     donor_type = classify_donor_type(donor)
     db.execute(
         """INSERT INTO donations
-           (donor_name, recipient, amount, financial_year, donor_type, industry, source, state)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
-        (donor, recipient, amount, fy, donor_type, None, source, state),
+           (donor_name, recipient, amount, financial_year, donor_type, industry, source, state,
+            receipt_type, return_type, recipient_kind, source_file, record_side)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+        (donor, recipient, amount, fy, donor_type, None, source, state,
+         receipt_type, return_type, aec_receipts.KINDS.get(return_type), source_file, record_side),
     )
 
 
@@ -129,7 +144,10 @@ def load_annual_detailed_receipts(db, text: str) -> int:
             continue
         amount = parse_amount(row.get("Value", ""))
         fy = (row.get("Financial Year") or "").strip() or None
-        _insert_donation(db, donor, recipient, amount, fy, "aec_annual")
+        _insert_donation(db, donor, recipient, amount, fy, "aec_annual",
+                         receipt_type=(row.get("Receipt Type") or "").strip() or None,
+                         return_type=(row.get("Return Type") or "").strip() or None,
+                         source_file="Detailed Receipts.csv", record_side="recipient")
         count += 1
         if count % BATCH_SIZE == 0:
             db.commit()
@@ -359,7 +377,7 @@ def load_election_donor_donations_received(db, text: str) -> int:
 
 def load_election_candidate_donations(db, text: str) -> int:
     """AllElectionsData / Senate Groups and Candidate Donations.csv
-    Columns: Event, Return Type, Name, Donor Name, Date Of Gift, Gift Value
+    Columns: Event, Return Type (Candidate/Senate Group), Name, Donor Name, Date Of Gift, Gift Value
     """
     count = 0
     reader = csv.DictReader(io.StringIO(text))
@@ -370,7 +388,10 @@ def load_election_candidate_donations(db, text: str) -> int:
             continue
         amount = parse_amount(row.get("Gift Value", ""))
         fy = (row.get("Event") or "").strip() or None
-        _insert_donation(db, donor, recipient, amount, fy, "aec_election")
+        _insert_donation(db, donor, recipient, amount, fy, "aec_election",
+                         receipt_type="Donation Received",
+                         return_type=(row.get("Return Type (Candidate/Senate Group)") or "").strip() or None,
+                         source_file="Senate Groups and Candidate Donations.csv", record_side="recipient")
         count += 1
         if count % BATCH_SIZE == 0:
             db.commit()
@@ -502,7 +523,7 @@ def _read_csv_text(zf: zipfile.ZipFile, name: str) -> str:
     with zf.open(name) as f:
         raw = f.read()
     try:
-        return raw.decode("utf-8")
+        return raw.decode("utf-8-sig")
     except UnicodeDecodeError:
         return raw.decode("latin-1")
 
@@ -517,6 +538,7 @@ def process_zip(db, zip_data: bytes, zip_key: str) -> int:
     total = 0
     try:
         with zipfile.ZipFile(io.BytesIO(zip_data), "r") as zf:
+            aec_receipts.load_archive(db, zf, zip_key, _read_csv_text, parse_amount)
             csv_names = [n for n in zf.namelist() if n.lower().endswith(".csv")]
             print(f"  {zip_key}: {len(csv_names)} CSV files in ZIP")
 
@@ -531,6 +553,8 @@ def process_zip(db, zip_data: bytes, zip_key: str) -> int:
                 total += n
     except zipfile.BadZipFile:
         print(f"  Invalid ZIP: {zip_key}")
+    aec_receipts.backfill_legacy(db)
+    db.commit()
     return total
 
 
@@ -546,9 +570,16 @@ def main():
                         help="Download ZIPs to cache but don't load")
     parser.add_argument("--no-clear", action="store_true",
                         help="Don't clear existing donations before loading")
+    parser.add_argument("--db", type=Path, help="Local SQLite database")
+    parser.add_argument("--backfill-types", action="store_true",
+                        help="Rebuild receipt provenance and backfill types without replacing legacy money or classifications")
     args = parser.parse_args()
 
-    db = get_db()
+    if args.db:
+        from parli.schema import _get_sqlite_db
+        db = _get_sqlite_db(args.db)
+    else:
+        db = get_db()
     init_db(db)
 
     # Record pre-load count
@@ -573,9 +604,23 @@ def main():
         print("Download complete.")
         return
 
+    # Require every cached archive before mutating. Never replace a good typed
+    # snapshot with an incomplete archive set.
+    missing = [key for key in ZIP_LOADERS if not (CACHE_DIR / f"{key}.zip").exists()]
+    if missing:
+        raise SystemExit(f"Missing cached AEC archives: {', '.join(missing)}")
+    if args.backfill_types:
+        for key in ZIP_LOADERS:
+            with zipfile.ZipFile(CACHE_DIR / f"{key}.zip") as zf:
+                aec_receipts.load_archive(db, zf, key, _read_csv_text, parse_amount)
+        print("Receipt type backfill:", aec_receipts.backfill_legacy(db))
+        db.commit()
+        return
+
     # Clear existing data for a clean reload (unless --no-clear)
     if not args.no_clear:
-        db.execute("DELETE FROM donations")
+        db.execute("DELETE FROM donations WHERE source IN ('aec_annual','aec_election','aec_referendum')")
+        db.execute("DELETE FROM associated_entities WHERE source='aec_assoc_entity'")
         db.commit()
         print("Cleared existing donations for clean reload.")
 
@@ -591,6 +636,8 @@ def main():
         total += n
 
     post_count = db.execute("SELECT COUNT(*) FROM donations").fetchone()[0]
+    print("Receipt type backfill:", aec_receipts.backfill_legacy(db))
+    db.commit()
 
     # Summary by source
     print(f"\n{'='*50}")

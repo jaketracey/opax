@@ -6,13 +6,14 @@ import ts from 'typescript';
 import {SEARCH_SORTS,compareSearchResults} from '../src/search-sort.ts';
 import {CATALOG_KINDS} from '../src/catalog-search.ts';
 import {tokens as catalogTokens} from '../src/catalog-query.mjs';
+import {emptySearchSuggestions} from '../src/search-recovery.ts';
 const source=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
-const code=ts.transpileModule(source.slice(source.indexOf('async function apiUnifiedSearch'),source.indexOf('/** One /find at `topK` depth')), {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
-function fixture({localError=false,docError=false,suggest=false,localRows}={}){
+const code=ts.transpileModule(source.slice(source.indexOf('async function apiUnifiedSearch'),source.indexOf('/** A bounded /find window')), {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+function fixture({localError=false,docError=false,suggest=false,localRows,docRows,matchedQuery}={}){
  const calls=[]; const requests=[]; const reads=[];
- const local={results:localRows || [{kind:'contract',slug:'catalog-1',title:'Woodside contract',href:'/subject/supplier/woodside',date:'2025-01-01'}],total:1,truncated:false,coverage:'Published snapshot',version:'test'};
- const docs={results:[{kind:'speech',slug:'speech-1',title:'Woodside debate',date:'2024-01-01'}],truncated:false};
- const ctx={URL,Request,Response,Set,Number,SEARCH_SORTS,compareSearchResults,CATALOG_KINDS,catalogTokens,validateSearchQuery:()=>null,rateLimited:async()=>null,json:(x,status=200)=>Response.json(x,{status}),searchCatalog:async()=>{calls.push('catalog');if(localError)throw Error();return local},
+ const local={results:localRows || [{kind:'contract',slug:'catalog-1',title:'Woodside contract',href:'/subject/supplier/woodside',date:'2025-01-01'}],total:localRows?.length??1,truncated:false,coverage:'Published snapshot',version:'test',matched_query:matchedQuery};
+ const docs={results:docRows || [{kind:'speech',slug:'speech-1',title:'Woodside debate',date:'2024-01-01'}],truncated:false};
+ const ctx={URL,Request,Response,Set,Number,SEARCH_SORTS,compareSearchResults,CATALOG_KINDS,catalogTokens,emptySearchSuggestions,validateSearchQuery:()=>null,rateLimited:async()=>null,json:(x,status=200)=>Response.json(x,{status}),searchCatalog:async()=>{calls.push('catalog');if(localError)throw Error();return local},
   // The paged catalogue as src/catalog-search.ts returns it: stubs in rank order, and their records on request.
   searchCatalogPaged:async()=>{calls.push('catalog');if(localError)throw Error();const rows=local.results;return {...local,stubs:rows.map((r,id)=>({id,kind:r.kind,date:r.date||undefined,sort_date:r.date||r.sort_date||''})),records:async ids=>{reads.push(ids);return new Map(ids.map(id=>[id,rows[id]]))}}},apiSearch:async(_r,u,_e,_c,options)=>{requests.push({url:u,options});calls.push(u.pathname+'?'+u.searchParams.get('kind'));return docError?new Response('',{status:502}):Response.json(docs)}};
  const fn=runInNewContext(code+';apiUnifiedSearch',ctx);
@@ -21,6 +22,32 @@ function fixture({localError=false,docError=false,suggest=false,localRows}={}){
 test('all-record search combines source types with pagination',async()=>{const f=fixture();const {data}=await f.run({per:'1',page:'2'});assert.equal(data.total,2);assert.equal(data.results[0].kind,'speech');assert.deepEqual(f.calls,['catalog','/api/search?all'])});
 test('financial-only queries do not invoke document retrieval',async()=>{const f=fixture();const {data}=await f.run({kind:'contract'});assert.equal(data.results[0].kind,'contract');assert.deepEqual(f.calls,['catalog'])});
 test('speech-only queries retain document semantics',async()=>{const f=fixture();await f.run({kind:'speech'});assert.deepEqual(f.calls,['/api/search?speech'])});
+test('an empty catalogue-only search retains its page shape and offers recovery',async()=>{
+ const {data}=await fixture({localRows:[]}).run({kind:'person'});
+ assert.equal(data.count,0);assert.equal(data.total,0);assert.deepEqual(data.results,[]);
+ assert.equal(data.suggestions.filter(s=>s.kind==='scope').length,4);
+ assert.equal(data.suggestions.find(s=>s.kind==='ask').label,'Ask OPAX: Woodside');
+});
+test('nonempty and typeahead responses keep suggestions optional',async()=>{
+ assert.equal((await fixture().run()).data.suggestions,undefined);
+ assert.equal((await fixture({localRows:[],suggest:true}).run({kind:'person'})).data.suggestions,undefined);
+});
+test('an unscoped miss reaches hybrid document retrieval and still offers recovery when both sources are empty',async()=>{
+ const f=fixture({localRows:[],docRows:[]});const {data}=await f.run();
+ assert.deepEqual(f.calls,['catalog','/api/search?all']);
+ assert.equal(f.requests[0].url.searchParams.get('mode')||'hybrid','hybrid');
+ assert.equal(data.count,0);assert.equal(data.suggestions.length,5);
+});
+test('document-only misses and a failed catalogue still offer recovery',async()=>{
+ for(const [options,params] of [[{docRows:[]},{kind:'speech'}],[{localError:true,docRows:[]},{}]]){
+  const {data}=await fixture(options).run(params);
+  assert.equal(data.count,0);assert.ok(data.suggestions.some(s=>s.kind==='ask'));
+ }
+});
+test('question recovery retains the original query and explains the matched subject',async()=>{
+ const {data}=await fixture({matchedQuery:'housing'}).run({q:'what is housing'});
+ assert.equal(data.query,'what is housing');assert.equal(data.matched_query,'housing');
+});
 test('adding report rows preserves the existing kinds, row fields and relative order',async()=>{
  const existing=['bill','division','party','agency','grant'].map((kind,i)=>({kind,slug:'existing-'+i,title:'Existing '+kind,href:'/existing/'+kind,date:'2024-01-01',snippet:'Original '+kind}));
  const before=(await fixture({localRows:existing}).run({per:'200'})).data.results;

@@ -6,7 +6,7 @@ import type { ToolDefinition } from './types'
 
 export const tool: ToolDefinition = {
   name: 'person_quotes', evidenceKind: 'passages',
-  description: 'Read one parliamentarian\'s own verified Hansard excerpts about a subject, newest first within the retrieved sample, one per speech. Uses the shared original corpus reader and the member\'s first speaking turn. These are source excerpts, never a complete count or proof of absence. Use corpus_records with returned record_id to read more or search official releases.',
+  description: 'Read one parliamentarian\'s own verified Hansard excerpts about a subject, newest first within the retrieved sample, one per speech. Uses the shared original corpus reader and the member\'s first speaking turn. These are matched source excerpts; complete counts come from the speech-count tools. Use corpus_records with returned record_id to read more or search official releases.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     person: { type: 'string', minLength: 2, maxLength: 120 }, topic: { type: 'string', minLength: 2, maxLength: 200 },
     limit: { type: 'integer', minimum: 1, maximum: 8 }, since: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$' }, until: { type: 'string', pattern: '^\\d{4}-\\d{2}-\\d{2}$' },

@@ -216,7 +216,14 @@ if [ "$want_weekly" = 1 ]; then
   # what the export said that the shipped roster kept or held back (scripts/roster_overlay.py)
   overlay=$(grep -m1 '^ROSTER OVERLAY:' "$PIPE/x_people.log" 2>/dev/null || true)
   [ -z "$overlay" ] || log "Roster overlay: ${overlay#ROSTER OVERLAY: }"
-  run_step x_money "" "$EXPORT" json portal/public/graph/money.json "$PY" scripts/export_money_graph.py
+  # nightly.sh calls this periodic path. Offline provenance rebuild preserves
+  # classifications, reviewed exclusions and legacy totals on every re-import.
+  if run_step aec_receipt_types "SELECT COUNT(*) FROM aec_receipt_records" \
+    "$PY" -m parli.ingest.donations --cache-only --backfill-types --db "$DB"; then
+    run_step x_money "" "$EXPORT" json portal/public/graph/money.json "$PY" scripts/export_money_graph.py
+  else
+    log "[x_money] SKIP: AEC receipt types unavailable; last good graph kept"
+  fi
   for j in qld vic tas; do
     run_step "x_money_$j" "" "$EXPORT" json "portal/public/graph/money.$j.json" "$PY" scripts/export_state_money.py "$j"
   done

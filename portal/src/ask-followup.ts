@@ -4,6 +4,24 @@ import type {RemunerationRecord} from './research-types'
 
 const reportThenPay = (s: string) => { const t = s.toLowerCase(), at = t.indexOf('annual report'); return at >= 0 && t.indexOf('remuneration', at) >= 0 }
 const fold = (s: string) => s.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
+/** Words that never form a person's full name: closed-class English words, question words, and the roles and
+ * stances that follow "who is" or "who was" in questions about events ("Who was responsible for robodebt?"). */
+const NOT_NAME_WORDS = new Set([
+  'a', 'about', 'accountable', 'after', 'against', 'agency', 'among', 'an', 'and', 'appointed',
+  'are', 'as', 'at', 'be', 'been', 'before', 'behind', 'being', 'between', 'blamed', 'but', 'by',
+  'can', 'chair', 'charged', 'commissioner', 'could', 'current', 'deputy', 'did', 'do', 'does',
+  'down', 'during', 'elected', 'first', 'for', 'former', 'from', 'government', 'governor', 'had',
+  'has', 'have', 'he', 'head', 'her', 'hers', 'highest', 'him', 'his', 'how', 'i', 'in', 'into',
+  'involved', 'is', 'it', 'its', 'leader', 'leading', 'like', 'mayor', 'me',
+  'member', 'members', 'might', 'minister', 'ministers', 'must', 'my', 'near', 'new', 'next', 'no',
+  'not', 'of', 'off', 'on', 'onto', 'opposition', 'or', 'our', 'out', 'over', 'paid',
+  'party', 'per', 'premier', 'president', 'prime', 'responsible', 'running', 'sacked', 'secretary',
+  'senator', 'senators', 'shadow', 'she', 'should', 'since', 'speaker', 'than', 'that', 'the',
+  'their', 'theirs', 'them', 'these', 'they', 'this', 'those', 'through', 'to', 'treasurer',
+  'under', 'up', 'us', 'via', 'was', 'what', 'when', 'where', 'which', 'who', 'whom',
+  'whose', 'why', 'with', 'within', 'without', 'would', 'you', 'your',
+  'found', 'guilty', 'today', 'yesterday', 'tomorrow', 'now', 'then', 'ever', 'also', 'still',
+])
 /** Standalone identity grammar supplies a full name, never a first-name or surname search. */
 export function identityPerson(question: string): string | null {
   if (question.length > 300) return null
@@ -15,7 +33,12 @@ export function identityPerson(question: string): string | null {
   const words = q.slice(prefix[0].length).trim().split(/\s+/)
   while (['senator','mr','mrs','ms','dr','sir','dame'].includes((words[0] ?? '').toLowerCase().replace(/\.$/, ''))) words.shift()
   if (words.length < 2 || words.length > 6 || !words.every(w => /^[\p{L}][\p{L}\p{M}.'’\-]*$/u.test(w))) return null
-  if (words.some(w => ['the','a','an','and','or','from','at','in','of','highest','paid','agency','head','who','what','is','was'].includes(w.toLowerCase()))) return null
+  if (words.some(w => NOT_NAME_WORDS.has(w.toLowerCase().replace(/[’']s$/, '')))) return null
+  // A wrong name throws the research away, so anything that does not look like a name is left to ordinary research.
+  // Typed with capitals, every word of a name is capitalised ("Who is suing Lehrmann?" is not a name).
+  // Typed in lowercase, longer -ing and -ed words are verbs, not names ("who was fired yesterday").
+  if (/\p{Lu}/u.test(q.slice(1))) { if (words.some(w => !/^\p{Lu}/u.test(w))) return null }
+  else if (words.some(w => w.length >= 5 && /(?:ing|ed)$/i.test(w))) return null
   return words.join(' ')
 }
 export function questionPerson(question: string): string | null {

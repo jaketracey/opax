@@ -62,14 +62,27 @@ type SearchPage = {
   page_count: number; total: number; truncated: boolean; years: Record<string, number>;
   count: number; results: SearchResult[];
 };
+type SearchRetrieval = {
+  mode_used: 'keyword' | 'semantic' | 'hybrid';
+  fallback?: 'hybrid_timeout' | 'hybrid_error' | 'semantic_timeout' | 'semantic_error';
+};
 type CatalogRecord = {
   kind:string; title:string; href:string; snippet:string; slug:string; resource:string;
   date?:string|null; dateLabel?:string; source?:string; url?:string;
   record_id?:string; score?:number; sort_date?:string;
 };
-type UnifiedSearchPage = Omit<SearchPage, 'results'> & {
+type UnifiedSearchPage = Omit<SearchPage, 'results'> & Partial<SearchRetrieval> & {
   results:(SearchResult | CatalogRecord)[]; warnings:string[]; catalog_matches:number;
   coverage?:string; index_version?:string;
+  // Only present when an initially empty catalogue query matches its question subject.
+  matched_query?:string;
+  // Optional on completed empty searches. Absent on typeahead and nonempty responses.
+  suggestions?:SearchSuggestion[];
+};
+type SearchSuggestion = {
+  kind:'did_you_mean'|'scope'|'ask'; label:string; href:string;
+  // Collection entries, not query matches. Omitted where a count needs retrieval.
+  count?:number;
 };
 type Resource = {
   slug: string; title: string; speaker: string | null; url: string | null;
@@ -87,7 +100,7 @@ type TopicProfile = {
 | GET/HEAD `/api/app/v1/vic-election` | Schema 1 overview: election and polling dates, six key dates, 88 districts, eight regions, optional notice, sources and authorisation. No query. | Offline hub assets; cheap read. | Public; exact `VIC_ELECTION_HUB_ENABLED=true` required; 300/none, ETag/304, noindex; disabled 404 `not_published`, no-store; `N`. |
 | GET/HEAD `/api/app/v1/vic-election/seat/<slug>` | Schema 1 district or region: results, candidates in ballot order, members and up to three titled recent votes each. Candidate `name` is a string and `party` is a string or null. Region candidates also include `group` (one uppercase letter A to Z or null) and `group_name` (string or null); blank group names become null. District candidates omit both group fields. No query; unknown or invalid slug is 404 `not_found`. | Offline hub assets; cheap read. | Public; same election flag, cache and headers; `N`. |
 | GET/HEAD `/api/app/v1/vic-election/find?q=<text>` | Schema 1 finder: exactly one non-blank `q`, trimmed and cut to 60 characters; up to eight ordered place, seat or member hits with resident shares. Places failure retains seat/member matches with `places_searched:false`. | Offline hub and ABS places assets; cheap read. | Public; same election flag, cache and headers; `N`. All three routes reject other methods with 405, invalid queries with 400, and unavailable/malformed hub data with 503 and `Retry-After: 60`. |
-| GET `/api/search` | Search parameters; `SearchPage & {mode:string}`. Public slug filtering, a bounded retrieval window and reranking. | ARAG `/find`, including keyword mode and reranker. Model-backed retrieval; hybrid/semantic also use semantic retrieval. No answer writer here. | Public; 600/600 page, 3600 retrieval-window cache, epoch; `S120` on misses; `N`. |
+| GET `/api/search` | Search parameters; `SearchPage & {mode:string} & SearchRetrieval`. Public slug filtering, a bounded retrieval window and reranking. | ARAG `/find`, including keyword mode and reranker. Model-backed retrieval; hybrid/semantic also use semantic retrieval. No answer writer here. | Public; normal results: 600/600 page, 3600 retrieval-window cache, epoch; fallback results: no-store browser/page, 60-second server window; `S120` on retrieval misses; `N`. |
 | GET `/api/search-all` | Search parameters; `UnifiedSearchPage`. Catalog kinds include person, party, donor, agency, supplier, receipt, contract, grant, bill, interest, expense, access, campaigner, report, pay. | ASSETS catalog for selected catalog-only kinds; `all`, bills and document kinds can also invoke `/api/search`. Cheap read for catalog-only selection; model-backed retrieval otherwise. | Public; no-store/none for combined response; `S120` before tasks, document miss can consume another search limit; `N`. |
 | GET `/api/person-slugs` | `{generated:string,slugs:Record<string,string>}`; names to canonical public slugs. Shape checked live. | ASSETS parliamentarians plus electorate roster augmentation; cheap read. | Public; 3600/none; no limiter; `N`. No ETag observed. |
 | GET `/api/resource/:slug` | Lowercase public slug. `Resource`; `news-*` is retired with 410. Supported source families include speech, legal, division, press, bill text and published research. | ARAG resource values, including stored machine summary; model-service read, no writer. Source-only in this lane. | Public; 3600/3600, epoch; no limiter; `N`. Supports cache bypass. |
@@ -104,9 +117,21 @@ type TopicProfile = {
 | GET/HEAD `/bill-texts/:bill_key/index.json` | Federal key `au-federal-*`; `{bill_key,title,generated_at,default_version_id,versions:BillVersion[],coverage_note}`. | ARAG catalog, at most ten pages of 100; model-service read. No static fallback is wired by the caller. | Public; 60/60, epoch; `S120` before cache lookup; `N`. |
 | GET/HEAD `/bill-texts/:bill_key/:version_id.json` | Version `[rs]digits-stage`; `{bill_key,title,version:BillVersion,text,sections:{id,title,text,source_url}[],complete:true,enrichment:object\|null}`. | ARAG original text, SHA-256 and character-count validation; optional validated stored enrichment. Model-service read, no writer. | Public; 3600/3600, epoch; `S120` before cache lookup; `N`. |
 
+Search reliability update (local implementation, 12 November 2026): `/api/search` keeps `mode` as requested and adds `mode_used` for the successful retrieval. A fallback adds `fallback`, naming the requested mode and `timeout` or `error`; HTTP errors, network failures and invalid JSON all count as errors. Hybrid and semantic retrieval keep running under a shared 10-second cap covering upstream fetches and response-body reads. At 5 seconds, a parallel keyword call starts with the same query, depth and filters and `reranker: 'noop'`. Its result waits while the preferred mode can still answer. A hybrid or semantic answer arriving before the cap wins; otherwise the keyword answer is returned with fallback metadata. An earlier primary error starts keyword recovery immediately. The hedge accommodates the documented normal 4-to-6-second retrieval range without cutting off a healthy 7-second hybrid response. Rate limiting, cache/people/attribution lookups before retrieval, `joinMixedSpeakers`, sorting and paging afterwards, and client transport are outside the 10-second cap; it is not an end-to-end response guarantee under the app's 15-second deadline. Caller cancellation or a shorter caller budget stops retrieval.
+
+Explicit `mode=keyword` requests and wildcard queries (`q=*`, including person pages' latest speeches) use keyword retrieval only, with a 6-second limit and no semantic recovery. A failed keyword-only request returns 503 rather than substituting a semantically selected window.
+
+Fallback windows are cached server-side for 60 seconds so page 1 and page 2 retain the same rows and use no further retrieval quota. Fallback page responses remain `Cache-Control: no-store` and are not cached as pages. Normal responses retain the cache lifetimes above. If both eligible modes fail, or a keyword-only request fails, `/api/search` returns 503 `{error:'find failed'}`, `Retry-After: 5` and `Cache-Control: no-store`. Unified `/api/search-all` carries `mode_used` and `fallback` when document retrieval supplied them, including the web, voice and MCP adapters; catalog-only searches omit them. Unified responses remain no-store, retain successful catalog results when document retrieval fails, and return a retryable, no-store 503 when no requested source can answer. Existing result, pagination, count and truncation fields are unchanged.
+
+Each upstream fallback emits one JSON log line with `event: 'search_fallback'`, `requested_mode`, `mode_used`, `reason` and `elapsed_ms`. It contains no query text, person or filter values, or upstream error text; cache hits do not emit a new retrieval fallback. The retained `-bounded-v1` cache key bump makes search pages and windows cold on first deployment, so watch this log for the first hour after deployment.
+
 `BillVersion` has `id`, `source_version`, `stage`, `stage_label`, nullable `date`, `source_url`, `format`, `status:'complete'`, `text_url`, nullable `characters/pages/sections`, `coverage_note` and `sha256`. The manifest lists complete collected versions, not every version Parliament has issued. Integrity failures return 502 and are not cached. Missing versions return 404.
 
 For an explicit catalog-only kind other than `bill`, `mode=keyword|hybrid|semantic` does not start document retrieval: search-all runs only the asset catalog task. Catalog-only search does not generate an answer. The web can subsequently call briefs, resource reads or search-summary, each changing its cost. `total` for unified/document search describes a ranked window; `catalog_matches` and the coverage text must remain separate. The inspected facet/recent/brief caches generally do not include the data epoch, unlike search and resource caches.
+
+Empty-search recovery (November 2026) adds optional fields only to `/api/search-all`. Existing `/api/search` and `/api/app/v1/*` response fields are unchanged. Correction names come only from the public parliamentarian roster, published bill titles and the electorate list. Scope suggestions browse People, Bills, Speeches and Money; People and Bills counts are published collection entries, not matches for the original query. Ask suggestions use `/ask?q=<encoded query>&draft=1`: the web prefills the form and waits for an explicit submission. Wildcard filter searches offer browsing without turning `*` into an Ask question. No Ask or generation call is made to prepare suggestions. Clients may ignore these fields. Native v1's existing restriction against calling Ask still applies.
+
+The shipped native search decoder (app 1.1.3, `eb6fd2dce`) uses `pageShape = shape(...)` in `mobile/src/features/search/decoders.ts`; `shape` in `mobile/src/api/validation.ts` reads declared keys and accepts unknown keys. Empty and populated pages with additional page/result keys were checked against this decoder and the current integration decoder. These additive fields require no native decoder change. Web completion analytics adds only `had_suggestion:boolean` and `suggestion_kind:'did_you_mean'|'scope'|'ask'|'none'`. The category is the first available of correction, scope and Ask, or `none` for nonempty results. Query text, correction labels, destinations and query-derived identifiers are excluded.
 
 ### Generation routes, outside native v1 and documented from source only
 
@@ -274,6 +299,8 @@ type AppManifestV1 = {
 | `electorates/<filename>` | App files under `/electorates/releases/<release_id>/`: `index.json`, `people.json` and `el_<24-hex>.json` seats |
 
 The shared static interest declarations retain a required non-empty `holder: string` in member bucket items, `ties[].register`, donor ties and recent declarations. App 1.1.3 (`eb6fd2dce`) requires this shape in all four decoders. The legacy wire value `"unspecified"` means absent and must display nothing or "Not stated"; it is not a stated holder. Keep this compatibility value in shared app-read payloads. Web display adapters, `/api/register/interests`, the declared-interests tool and local table SQL normalise it to a nullable holder, with a plain `holder_label` where displayed. The register and recent catalogs retain their own source dates when replayed from cached exports.
+
+Null is not permitted on those shared static fields by this released-app contract. Changing only the exporter would reject whole member registers and donor-tie payloads, or lose recent declaration rows. `/api/app/v1/manifest` points to the same static catalogs; it does not adapt their holder values. The Today and Your MP rows decode those catalogs before display, including the household-holder naming. A null export therefore needs a compatible released decoder and a migration for existing installations first. The [holder reader audit](operations/interests-holder-compatibility-2026-11-13.md) records the checked paths. Worker JSON and server-rendered handling of null are covered independently by `portal/test/interest-alterations.test.mjs`.
 
 The twelve root paths match the app's static catalog allow-list in `mobile/src/api/policy.ts` on `ios/app`. Cold snapshots read those local assets, share concurrent reads and cache in memory for five minutes per asset binding. Web-only money/story-photo catalogs and electorate reference/crosswalk entries are omitted; absent or malformed non-essential release entries are ignored. Electorate release hashes/dates reuse the validated static manifest; seat files are not fetched to construct this response. No D1, KV, external fetch or model is used. Missing/redirected/non-JSON/malformed assets, incomplete required electorate files or invalid release URLs/hashes return 503 `{error:"manifest_unavailable"}`, no-store, `Retry-After: 60`. Failed snapshots are discarded and may be retried. Success uses `public, max-age=300, must-revalidate` with ETag; there is no `nocache` override.
 

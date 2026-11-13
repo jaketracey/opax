@@ -3,6 +3,7 @@ import {pressHeadlineAndText, pressTitle} from '../src/press-title.ts';
 const runInNewContext = (code, context = {}, options) => { context.speechPresentation ??= speechPresentation; context.joinMixedSpeakers ??= joinMixedSpeakers; context.pressHeadlineAndText ??= pressHeadlineAndText; context.pressTitle ??= pressTitle; return baseVM(code, context, options); };
 import {personNameKey} from '../public/canonical-urls.js';
 import {personIndex} from '../src/person-slug.ts';
+import {searchFind} from '../src/search-find.ts';
 import * as passageText from '../src/passage-text.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -13,7 +14,7 @@ import { personSpeechCount } from '../../scripts/build_search_catalog.mjs';
 import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, splitSpeakers, splitPerson, personScope, scopedCollaborators } from '../public/speech-attribution.js';
 
 const source = ts.createSourceFile('index.ts', readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8'), ts.ScriptTarget.Latest, true);
-const scopedContext = (code,context,opts) => runInNewContext(code,{personNameKey,personIndex,...context},opts);
+const scopedContext = (code,context,opts) => runInNewContext(code,{personNameKey,personIndex,searchFind,...context},opts);
 const select = names => source.statements.filter(n => ts.isFunctionDeclaration(n) ? names.includes(n.name?.text) :
   ts.isVariableStatement(n) && n.declarationList.declarations.some(d => names.includes(d.name.getText(source)))).map(n => n.getText(source)).join('\n');
 const scope = { state: 'qld', chamber: 'qld_la' };
