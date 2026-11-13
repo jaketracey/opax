@@ -1,3 +1,5 @@
+import {ASK_EVIDENCE_RULES} from './ask-writing-rules'
+import type {ReceiptMeasure} from './voice-money'
 import {RECEIPTS_WRITING_RULE} from './receipt-copy'
 /**
  * A written opening for a calculated money answer.
@@ -21,10 +23,11 @@ export type MoneyFacts = {
   ranked_by: string
   /** One sentence naming the register, the period and the size of the selection. */
   selection: string
-  rows: { name: string; amount: string; records: string }[]
+  rows: { name: string; amount: string; records: string; measure_label?:string }[]
   /** Comparisons worked out here, so the model copies rather than calculates. */
   derived: string[]
-  limits: string[]
+  measure: ReceiptMeasure
+  measure_label: string
 }
 
 const MAX_CHARS = 420
@@ -41,33 +44,19 @@ const numbers = (value: string): string[] =>
 
 export function moneyOverviewPrompt(facts: MoneyFacts): string {
   return [
-    RECEIPTS_WRITING_RULE,
-    'Write the opening of an answer for a reader who asked about the figures below.',
-    'A table of those figures follows what you write; you are introducing it, not replacing it.',
-    '',
-    ...(facts.question ? [`QUESTION: ${facts.question}`, ''] : []),
-    `WHAT WAS COUNTED: ${facts.selection}`,
-    `RANKED BY: ${facts.ranked_by}`,
-    '',
-    '--- THE FIGURES (the only numbers you may use, copied exactly) ---',
-    ...facts.rows.map((row, i) => `${i + 1}. ${row.name} — ${row.amount} — ${row.records}`),
-    ...facts.derived.map(line => `- ${line}`),
+    ASK_EVIDENCE_RULES, RECEIPTS_WRITING_RULE,
+    'Write a short paragraph following the calculator’s opening and introducing its ranked figures.',
+    ...(facts.question ? [`Question: ${facts.question}`] : []),
+    `What was counted: ${facts.selection}`,
+    `Ranked by: ${facts.ranked_by}`,
+    `Measure label: ${facts.measure_label??'disclosed receipts, all types'}`,
+    '--- THE FIGURES (complete facts and calculated comparisons) ---',
+    ...facts.rows.map((row,i)=>`${i+1}. ${row.name}; ${row.amount}; ${row.measure_label??facts.measure_label}; ${row.records}`),
+    ...facts.derived,
     '--- END THE FIGURES ---',
-    '',
-    'WHAT THESE RECORDS CANNOT SHOW:',
-    ...facts.limits.map(line => `- ${line}`),
-    '',
-    'Write two or three sentences of plain prose, under 60 words in total, the way you would ' +
-      'explain the table to someone reading over your shoulder. Name who is at the top and who ' +
-      'is near them, say how close or far apart they are and what the rest of the field looks ' +
-      'like, and close by saying in your own words one thing these records cannot establish.',
-    '',
-    'Every number you write must be copied from THE FIGURES above, character for character. ' +
-      'Work nothing out: if a comparison is not given there, do not make it. Name no party, ' +
-      'donor, industry or year that is not given there either. Do not describe the table as a ' +
-      'table: never write "row", "listed here", "the figures show", "this selection" or "data". ' +
-      'No headings, lists, links, bold or quotation marks. Australian English. Reply with the ' +
-      'paragraph and nothing else.',
+    'THE FIGURES is the complete set, including every comparison already worked out. Use its names and numbers as written.',
+    'Write as you would tell someone the result: who is first, by how much, and who follows. Close with a few words on what the figure counts, using the measure label.',
+    'Use two or three sentences, under 60 words, in plain Australian English. Return a prose paragraph.',
   ].join('\n')
 }
 

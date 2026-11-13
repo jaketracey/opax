@@ -1,3 +1,4 @@
+import {ASK_EVIDENCE_RULES} from './ask-writing-rules'
 import { extractAskConstraints, constrainStep, type AskConstraints } from './ask-constraints'
 import {federalPartyMoneyAnswer,publicPartyMoneyAnswer} from './ask-money-routing'
 import {claimMeasureConsistent,guardClaimMeasures} from './ask-claim-measures'
@@ -124,21 +125,21 @@ export function fallbackPlan(question: string): Plan | null {
 const toolCatalogue = () => TOOL_SPECS.map((t) => `- ${t.name}(${Object.keys((t.input.properties ?? {}) as object).join(', ')}): ${t.description}`).join('\n')
 export function plannerPrompt(): { system: string; user: string } {
   const user = [
-    'Plan the record lookups that answer the question below. You do not answer it; the lookups produce every figure.',
+    'Plan the record lookups that answer the question below. The lookups produce every figure.',
     '',
     'Tools:',
     toolCatalogue(),
     '',
     `Topics: ${TOPICS.join(', ')}. States: ${STATES.join(', ')} (federal = Commonwealth parliament). Chambers: ${CHAMBERS.join(', ')}. Terms: ${Object.entries(TERMS).map(([k, [a, b]]) => `${k} ${a}..${b ?? 'now'}`).join('; ')}.`,
     'Rules:',
-    '- Choose capabilities from their registry descriptions, including original speeches and releases, state legislation, finance datasets, entity profiles, access registers, member voting histories and sponsored bills. Follow returned detail and paging instructions. Do not stop after an empty sample or infer a whole-period absence from it.',
-    '- Electorate demographics -> electorates only, never find_quotes or speech counts. Unqualified "median income" = median_income (personal AUD/week), NOT household income. Highest/oldest/most -> order desc; lowest/youngest -> asc. "In X" for a named seat -> operation lookup and electorate X. State parliament -> jurisdiction (e.g. vic); federal seats in a state -> jurisdiction federal + state (e.g. vic). Missing profiles cannot answer a ranking; never substitute speech figures.',
-    '- Any "how many", "number of" or "more or fewer than" question about divisions or bills -> count_records with record_type divisions or bills. Never derive totals from find_records, search or other ranked samples. Set the requested jurisdiction and chamber. Select one date (YYYY-MM-DD), month (YYYY-MM), year, financial_year (YYYY-YY) or federal term (e.g. 44th), or use inclusive since/until dates. Use group_by year or month for trends and comparisons across periods; retain every requested group. For divisions on a named bill, pass bill. For bills introduced on a day, use date; add include_records true when their names are requested. For bill passage rates, request status and use the returned denominator and share, never calculate a rate from sample records.',
+    '- Choose capabilities from their registry descriptions, including original speeches and releases, state legislation, finance datasets, entity profiles, access registers, member voting histories and sponsored bills. Follow returned detail and paging instructions. After an empty sample, run one wider lookup or a complete scoped count and report what it shows.',
+    '- Electorate demographics -> electorates. Unqualified "median income" = median_income (personal AUD/week), using the personal-income field. Highest/oldest/most -> order desc; lowest/youngest -> asc. "In X" for a named seat -> operation lookup and electorate X. State parliament -> jurisdiction (e.g. vic); federal seats in a state -> jurisdiction federal + state (e.g. vic). Rank the available electorate profiles and report their coverage.',
+    '- Any "how many", "number of" or "more or fewer than" question about divisions or bills -> count_records with record_type divisions or bills. Use the complete scoped count for totals. Set the requested jurisdiction and chamber. Select one date (YYYY-MM-DD), month (YYYY-MM), year, financial_year (YYYY-YY) or federal term (e.g. 44th), or use inclusive since/until dates. Use group_by year or month for trends and comparisons across periods; retain every requested group. For divisions on a named bill, pass bill. For bills introduced on a day, use date; add include_records true when their names are requested. For bill passage rates, request status and use the returned denominator and share, with its published denominator.',
     '- Map the subject to ONE topic label when it fits ("gambling reform" -> gambling, "climate change" -> climate-environment, "the budget" -> tax-budget).',
     '- "Who speaks most / top speakers" -> count_speeches with group_by speaker. "Which party" -> group_by party. Add state or chamber only when the question names a parliament or chamber; "senators" -> chamber senate; "MPs in federal parliament" -> state federal.',
     '- Dates: "since 2022" -> since 2022-01-01. "this term" -> term 48th, "last term" -> term 47th. A decade ("the 2010s") -> since 2010-01-01, until 2019-12-31.',
-    '- An exact person, bill, division or date lookup must retain that identity and date. A nearby title or another date cannot answer it. Empty results mean no matching record, not zero votes and not permission to substitute a related record. Check a claimed party, vote or bill status against the record before explaining its reasons.',
-    '- Speech totals -> count_speeches, not count_records or a retrieved sample. "Is X debated more / how has X changed / which year" about speeches -> speech_trend (by year, decade or term). Two named speech years -> speech_trend by year with from_year and to_year.',
+    '- An exact person, bill, division or date lookup must retain that identity and date. After an empty result, recover the exact identity or date with a distinct lookup. Check a claimed party, vote or bill status against the record before explaining its reasons.',
+    '- Speech totals -> count_speeches. "Is X debated more / how has X changed / which year" about speeches -> speech_trend (by year, decade or term). Two named speech years -> speech_trend by year with from_year and to_year.',
     '- Select the dedicated capability described in the tool catalogue. For vote histories use the authoritative archive reader and follow its paging; count words using the same person, party and period. Compatibility aliases are for old clients.',
     '- One recorded division, its outcome, party vote, named member vote or floor crossers -> division, preserving exact date and chamber and passing title words, bill or division_id. Use lookup for who crossed the floor on one division and select its named dissenters, not the number of matching divisions. Outcome questions need the result and recorded ayes/noes, without floor-crossing commentary unless asked. A year in a bill title is not the division date. Floor crossing over a period -> division operation floor_crossing; party agreement -> operation party_agreement with party and other_party. member_votes only summarises a keyword sample across several divisions.',
     '- A later step can use an earlier result: "$1" is the top name from step 1 (a speaker or party), "$1.party" is that person\'s party. To get a speaker\'s party use find_people("$1") then "$2.party".',
@@ -151,7 +152,7 @@ export function plannerPrompt(): { system: string; user: string } {
     'Question: {question}',
   ].join('\n')
   return {
-    system: 'You turn questions about the Australian parliamentary record into a JSON list of tool calls. Output JSON only.',
+    system: ASK_EVIDENCE_RULES + 'You turn questions about the Australian parliamentary record into a JSON list of tool calls. Output JSON only.',
     // The platform treats the user prompt as a format template: escape every brace except {question}.
     user: user.replace(/[{}]/g, (b) => (b === '{' ? '{{' : '}}')).replace('{{question}}', '{question}'),
   }

@@ -123,7 +123,7 @@ test('generation receives the current follow-up separately from its resolved ret
  const h=harness(draft());await h.recover(payload,{query:'housing',position_question:'When did she propose it?'},{});
  assert.equal(h.request.body.query,'When did she propose it?');
  assert.ok(h.request.body.prompt.user.includes('Latest reader question: "When did she propose it?"'));
- assert.match(h.request.body.prompt.user,/Answer that latest question specifically/);
+ assert.match(h.request.body.prompt.user,/Answer the latest question specifically/);
 });
 test('a summary cannot merge proposal conditions from different dated speeches into a cited point',async()=>{
  const h=harness(JSON.stringify({points:[{text:'Example MP proposed a five-year GST moratorium for homes up to $1 million.',citations:[{id:'s1',quote},{id:'s2',quote}]}]}));
