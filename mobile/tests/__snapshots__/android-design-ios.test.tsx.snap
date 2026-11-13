@@ -7985,7 +7985,8 @@ exports[`iOS design at font scale 2 BillRow retains its iOS output 1`] = `
               "paddingVertical": 4,
             },
             {
-              "alignSelf": "stretch",
+              "alignSelf": "flex-start",
+              "maxWidth": "100%",
             },
             {
               "backgroundColor": {
@@ -8172,9 +8173,7 @@ exports[`iOS design at font scale 2 Button retains its iOS output 1`] = `
           "borderRadius": 22,
         },
         null,
-        {
-          "alignItems": "flex-start",
-        },
+        null,
         {
           "backgroundColor": {
             "dynamic": {
@@ -8243,9 +8242,14 @@ exports[`iOS design at font scale 2 Button retains its iOS output 1`] = `
             },
             null,
             null,
-            {
-              "flexShrink": 1,
-            },
+            [
+              {
+                "flexShrink": 1,
+              },
+              {
+                "textAlign": "center",
+              },
+            ],
           ]
         }
       >
@@ -8308,9 +8312,7 @@ exports[`iOS design at font scale 2 Button retains its iOS output 1`] = `
           "borderRadius": 22,
         },
         null,
-        {
-          "alignItems": "flex-start",
-        },
+        null,
         {
           "backgroundColor": {
             "dynamic": {
@@ -8379,9 +8381,14 @@ exports[`iOS design at font scale 2 Button retains its iOS output 1`] = `
             },
             null,
             null,
-            {
-              "flexShrink": 1,
-            },
+            [
+              {
+                "flexShrink": 1,
+              },
+              {
+                "textAlign": "center",
+              },
+            ],
           ]
         }
       >
@@ -10065,7 +10072,8 @@ exports[`iOS design at font scale 2 DivisionRow retains its iOS output 1`] = `
             "paddingVertical": 4,
           },
           {
-            "alignSelf": "stretch",
+            "alignSelf": "flex-start",
+            "maxWidth": "100%",
           },
           {
             "backgroundColor": {
@@ -12712,8 +12720,12 @@ exports[`iOS design at font scale 2 SectionHeader retains its iOS output 1`] = `
 <View
   style={
     {
-      "gap": 4,
+      "alignItems": "center",
+      "columnGap": 8,
+      "flexDirection": "row",
+      "flexWrap": "wrap",
       "marginBottom": -8,
+      "rowGap": 4,
     }
   }
 >
@@ -12745,7 +12757,8 @@ exports[`iOS design at font scale 2 SectionHeader retains its iOS output 1`] = `
         null,
         {
           "flexGrow": 1,
-          "flexShrink": 1,
+          "flexShrink": 0,
+          "maxWidth": "100%",
         },
       ]
     }
@@ -14264,7 +14277,8 @@ exports[`iOS design at font scale 2 Tag retains its iOS output 1`] = `
         "minHeight": 44,
       },
       {
-        "alignSelf": "stretch",
+        "alignSelf": "flex-start",
+        "maxWidth": "100%",
       },
     ]
   }
@@ -14290,7 +14304,8 @@ exports[`iOS design at font scale 2 Tag retains its iOS output 1`] = `
           "paddingVertical": 4,
         },
         {
-          "alignSelf": "stretch",
+          "alignSelf": "flex-start",
+          "maxWidth": "100%",
         },
         null,
       ]
