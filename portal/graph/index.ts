@@ -354,7 +354,7 @@ export function partyReturnScope(first: number | null, last: number | null): str
   const fy = (year: number) => `${year}-${String((year + 1) % 100).padStart(2, '0')}`
   const span = first == null ? '' : first === last || last == null ? `, ${fy(first)}` : `, ${fy(first)} to ${fy(last)}`
   return `Itemised receipts in the party's own federal returns${span}, each counted once. `
-    + "Public funding, transfers between the party's own branches and amounts under the disclosure threshold are not included."
+    + "Public funding, tax refunds and other government payments, transfers between the party's own branches and amounts under the disclosure threshold are not included."
 }
 
 export function receiptMeasureLabel(measure: ReceiptMeasure): string {

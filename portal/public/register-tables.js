@@ -305,7 +305,7 @@ export function partyReturnScopeLabel(figures) {
   const span = figures.firstYear == null ? '' : figures.firstYear === figures.lastYear
     ? `, ${financialYear(figures.firstYear)}` : `, ${financialYear(figures.firstYear)} to ${financialYear(figures.lastYear)}`;
   return `Itemised receipts in the party's own federal returns${span}, each counted once. `
-    + 'Public funding, transfers between the party\'s own branches and amounts under the disclosure threshold are not included.';
+    + 'Public funding, tax refunds and other government payments, transfers between the party\'s own branches and amounts under the disclosure threshold are not included.';
 }
 
 /**
