@@ -5366,7 +5366,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=4f062836a7'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=598e91de6f'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
