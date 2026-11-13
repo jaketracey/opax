@@ -5,6 +5,11 @@ Offline only. Run before the roster overlay in export_people.sh. The accept list
 controls installation; this supplies its reviewed source values when no speech row exists.
 --publish-catalog adds reviewed OpenAustralia ids to the corresponding existing service
 people using export_bundle, preserving their stable person ids and all other records.
+
+Members of a reviewed dated official list (scripts/roster_state_evidence.json) with no roster row in
+that chamber get list-only profiles, or a link to the one existing person with that exact full name
+(official-list-member evidence). A review writes and installs them with
+  python3 scripts/roster_source_profiles.py --propose-list sa_lc --evidence sa-council-list [--notes notes.json]
 """
 from __future__ import annotations
 
@@ -126,6 +131,170 @@ def service_row(entry, bundle):
     return row
 
 
+# A sitting member on a chamber's dated official list (scripts/roster_state_evidence.json) with no roster row in
+# that chamber: Hansard OPAX holds ends before their term, so no speech row names them. The review writes a
+# list-only profile for them (a new row), or, when one roster person already has that exact full name with a
+# verified id and a seat in the same state, links that person to the chamber (a record group). Both are rebuilt
+# here from the reviewed list, so a re-export reproduces them and a moved list holds them.
+LIST_RULE = 'official-list-member'
+
+
+def state_evidence(root=ROOT):
+    return json.loads((Path(root) / 'scripts/roster_state_evidence.json').read_text())
+
+
+def list_member(ref, name, state):
+    """(snapshot, member) for `name` on the one reviewed official list `ref` ({chamber, as_of, sha256}) cites."""
+    if not isinstance(ref, dict):
+        raise ValueError('No official list cited')
+    snaps = [s for s in state.get('snapshots', []) if s.get('chamber') == ref.get('chamber')
+             and s.get('as_of') == ref.get('as_of') and s.get('sha256') == ref.get('sha256')]
+    if len(snaps) != 1 or not str(snaps[0].get('source_url', '')).startswith('https://'):
+        raise ValueError('The cited official list is not one reviewed snapshot')
+    hits = [m for m in snaps[0].get('members', []) if m.get('name') == name]
+    if len(hits) != 1 or not all(isinstance(hits[0].get(k), str) and hits[0][k].strip() for k in ('party', 'electorate')):
+        raise ValueError('The member is not once on the cited official list, with a party and seat')
+    return snaps[0], hits[0]
+
+
+def list_ref(snap):
+    return dict(chamber=snap['chamber'], as_of=snap['as_of'], sha256=snap['sha256'])
+
+
+def list_seat(snap, member):
+    return dict(jurisdiction=snap['jurisdiction'], chamber=snap['chamber'], electorate=member['electorate'],
+                state=snap['jurisdiction'].upper(),
+                basis=f"Official member list as at {snap['as_of']}; list-only service, no speech attribution")
+
+
+def list_row(entry, state):
+    """The list-only profile a reviewed `new` entry describes, rebuilt from the list itself."""
+    snap, m = list_member(entry.get('list'), entry.get('list_name'), state)
+    if entry.get('service') != dict(jurisdiction=snap['jurisdiction'], chamber=snap['chamber'], start=snap['as_of'], end=None):
+        raise ValueError('Reviewed list service differs from the official list')
+    year = int(snap['as_of'][:4])
+    row = dict(name=m['name'], speeches=0, states=[snap['jurisdiction']], chambers=[snap['chamber']],
+               first=year, last=year, roster_only=True)
+    if m.get('aliases'):
+        row['aliases'] = list(m['aliases'])
+    row.update(party=m['party'], current=True, party_now=m['party'], representation=[list_seat(snap, m)])
+    return row
+
+
+def list_link(row, group, state):
+    """{field: (from, to)}: an existing person `row` linked to the list chamber `group` cites. The person must be
+    the list member by exact full name or listed alias, hold a verified id, sit for the same state, and not yet
+    sit in that chamber; then the chamber, its state and the listed seat are added and nothing else moves."""
+    snap, m = list_member(group.get('list'), group.get('list_name'), state)
+    names = {name_key(n) for n in [m['name'], *m.get('aliases', [])]}
+    if name_key(row['name']) not in names:
+        raise ValueError('The linked person is not the list member by full name')
+    if not str(row.get('pid') or '').isdigit():
+        raise ValueError('The linked person has no verified id')
+    seats = row.get('representation') or []
+    if not any(str(r.get('state') or '').upper() == snap['jurisdiction'].upper() for r in seats):
+        raise ValueError('The linked person holds no seat in the list state')
+    states, chambers = list(row.get('states') or []), list(row.get('chambers') or [])
+    if snap['chamber'] in chambers:
+        raise ValueError('The linked person already sits in the list chamber')
+    return {'states': (states, states + [snap['jurisdiction']] if snap['jurisdiction'] not in states else states),
+            'chambers': (chambers, chambers + [snap['chamber']]),
+            'representation': (seats, seats + [list_seat(snap, m)])}
+
+
+def list_problem(name, entry, row=None, root=ROOT, link=False):
+    """None when a reviewed list entry (a new row, or with link a record group on `row`) is exactly what the
+    official list gives, else why it is held."""
+    try:
+        state = state_evidence(root)
+        if link:
+            if row is None or row.get('name') != name:
+                return 'a list link needs one existing roster person'
+            fields = group_fields(list_link(_from_row(row, entry), entry, state))
+            return None if entry.get('fields') == fields else 'the link differs from the official list'
+        built = list_row(entry, state)
+        return None if entry.get('row') == built and name == built['name'] else 'the row differs from the official list'
+    except (OSError, ValueError, KeyError, TypeError, AttributeError) as err:
+        return f'the official list does not give this entry ({err})'
+
+
+def group_fields(link):
+    return {f: [a, b] for f, (a, b) in link.items()}
+
+
+def _from_row(row, group):
+    """The row as it was before `group` applied (a shipped row may already hold the link)."""
+    row = copy.deepcopy(row)
+    for f, pair in (group.get('fields') or {}).items():
+        if isinstance(pair, list) and len(pair) == 2 and row.get(f) == pair[1]:
+            row[f] = pair[0]
+    return row
+
+
+def propose_list(doc, snap, evidence, checked, url):
+    """(new entries, link groups, held): the review's proposals for every member of the official list `snap` with
+    no roster row in its chamber. Matches a row by the list name, alias or reviewed print (folded), as the party
+    index does. A member whose exact full name is one roster person with a verified id and a seat in the same
+    state is linked; any other exact-name match is held for a person to decide; the rest get list-only rows."""
+    chamber = snap['chamber']
+    def keys(p):
+        return {name_key(n) for n in [p['name'], p.get('full'), *(p.get('aliases') or []), *(p.get('prints') or [])] if n}
+    in_chamber = set().union(*(keys(p) for p in doc['people'] if chamber in (p.get('chambers') or [])))
+    new, links, held = {}, {}, []
+    for m in snap['members']:
+        names = {name_key(n) for n in [m['name'], *m.get('aliases', []), *m.get('prints', [])]}
+        if names & in_chamber:
+            continue
+        full = {name_key(n) for n in [m['name'], *m.get('aliases', [])]}
+        same = [p for p in doc['people'] if keys(p) & full]
+        ref = list_ref(snap)
+        if same:
+            group = dict(evidence=evidence, list=ref, list_name=m['name'], url=url, checked=checked)
+            try:
+                if len(same) != 1:
+                    raise ValueError('more than one roster person has this name')
+                group['fields'] = group_fields(list_link(same[0], group, {'snapshots': [snap]}))
+            except ValueError as err:
+                held.append((m['name'], str(err)))
+                continue
+            links[same[0]['name']] = group
+            continue
+        entry = dict(evidence=evidence, url=url, checked=checked, list=ref, list_name=m['name'],
+                     service=dict(jurisdiction=snap['jurisdiction'], chamber=chamber, start=snap['as_of'], end=None))
+        entry['row'] = list_row(entry, {'snapshots': [snap]})
+        new[m['name']] = entry
+    return new, links, held
+
+
+def enrich_lists(out, accept, state):
+    """Lay the reviewed list rows and links onto an export (idempotent; never a second row for one name)."""
+    rule = lambda key: accept.get('evidence', {}).get(key, {}).get('rule')  # noqa: E731
+    by = {p['name']: p for p in out['people']}
+    for name, groups in accept.get('records', {}).items():
+        row = by.get(name)
+        for group in groups:
+            if row is None or rule(group.get('evidence')) != LIST_RULE:
+                continue
+            list_member(group.get('list'), group.get('list_name'), state)  # a moved list fails closed
+            fields = group.get('fields') or {}
+            # Only onto the reviewed `from` values: an export row that differs elsewhere is left as it is, and the
+            # overlay keeps the shipped (linked) row and holds the group (roster_accept.apply: export moved).
+            if all(row.get(f) == a for f, (a, _b) in fields.items()):
+                for f, (_a, b) in fields.items():
+                    row[f] = copy.deepcopy(b)
+    held = {name_key(n) for p in out['people'] for n in [p['name'], p.get('full'), *(p.get('aliases') or [])] if n}
+    for name, entry in accept.get('new', {}).items():
+        if rule(entry.get('evidence')) != LIST_RULE:
+            continue
+        row = list_row(entry, state)
+        if row != entry['row']:
+            raise ValueError(f'Reviewed list profile moved: {name}')
+        if name not in by and not ({name_key(n) for n in [row['name'], *row.get('aliases', [])]} & held):
+            out['people'].append(row)
+            by[name] = row
+    return out
+
+
 def enrich(doc, accept, bundle):
     from scripts.roster_state_parties import enrich as state_parties
     state = json.loads((ROOT / 'scripts/roster_state_evidence.json').read_text())
@@ -147,6 +316,7 @@ def enrich(doc, accept, bundle):
             raise ValueError(f'Reviewed source profile moved: {name}')
         if name not in by:
             out['people'].append(row)
+    enrich_lists(out, accept, state)
     if 'meta' in out:
         out['meta']['people'] = len(out['people'])
     return out
@@ -169,12 +339,79 @@ def enrich_catalog(bundle, accept):
     return out
 
 
+def write_entries(text, links, new, accept):
+    """The accept list's text with only these records' lines and new entries added, so the review diff shows
+    just them (roster_accept.dump would re-sort the whole file)."""
+    from scripts import roster_accept
+    text = roster_accept.edit_records(text, {name: accept['records'][name] for name in links})
+    added = [name for name in new if f'\n    {json.dumps(name, ensure_ascii=False)}: {{' not in text]
+    if added:
+        tail = '\n  }\n}\n'
+        if not text.endswith(tail):
+            raise ValueError('the accept list does not end with its "new" object')
+        body = ''.join(f',\n    {json.dumps(n, ensure_ascii=False)}: ' +
+                       json.dumps(accept['new'][n], ensure_ascii=False, indent=2).replace('\n', '\n    ') for n in added)
+        text = text[:-len(tail)] + body + tail
+    if json.loads(text) != accept:
+        raise ValueError('the written accept list differs from the reviewed entries')
+    return text
+
+
+def install_list(chamber, evidence, root=ROOT, notes=None):
+    """Write the review's list entries into scripts/roster_accept.json and lay them on the shipped roster with
+    the accept list's own apply(), so the installed rows are exactly what a re-export reproduces. Idempotent."""
+    from scripts import roster_accept
+    root = Path(root)
+    accept_path, roster_path = root / 'scripts/roster_accept.json', root / 'portal/public/parliamentarians.json'
+    accept = roster_accept.load(accept_path)
+    ev = accept.get('evidence', {}).get(evidence or '')
+    if not ev or ev.get('rule') != LIST_RULE:
+        raise SystemExit(f'--evidence must name an accept-list evidence entry with rule {LIST_RULE}')
+    state = state_evidence(root)
+    snap = max((s for s in state['snapshots'] if s.get('chamber') == chamber and s.get('sha256')), key=lambda s: s['as_of'])
+    shipped = json.loads(roster_path.read_text())
+    new, links, held = propose_list(shipped, snap, evidence, ev['checked'], ev['url'])
+    for name, note in (notes or {}).items():  # the reviewer's evidence note per member, never read back
+        for entry in [new.get(name), *[g for g in links.values() if g['list_name'] == name]]:
+            if entry is not None:
+                entry['note'] = note
+    for name, entry in new.items():
+        accept['new'].setdefault(name, entry)
+    for name, group in links.items():
+        groups = accept['records'].setdefault(name, [])
+        if group not in groups:
+            groups.append(group)
+    accept_path.write_text(write_entries(accept_path.read_text(), links, new, accept))
+    fresh = enrich_lists(copy.deepcopy(shipped), accept, state)
+    people, report = roster_accept.apply(shipped['people'], fresh['people'], accept, root)
+    listed = {m['name'] for m in snap['members']} | set(links)
+    held += [(n, why) for n, why in report['held'] if n in listed]  # other reviewed changes are not this review's
+    if report['blocked']:
+        raise SystemExit(f"accept list blocked: {report['blocked']}")
+    if people != shipped['people']:
+        people = roster_accept.ordered(people)
+        shipped = {**shipped, 'meta': roster_accept.recount(shipped['meta'], people), 'people': people}
+        roster_path.write_text(json.dumps(shipped, ensure_ascii=False, separators=(',', ':')) + '\n')
+    return held
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--directory', type=Path)
     ap.add_argument('--publish-catalog', action='store_true')
     ap.add_argument('--generated', default='2026-11-12')
+    ap.add_argument('--propose-list', metavar='CHAMBER',
+                    help="a review: write accept entries for the chamber's latest official list members with no roster "
+                         'row, and install them in the shipped roster (needs --evidence)')
+    ap.add_argument('--evidence', help='the accept-list evidence key (rule official-list-member) the entries cite')
+    ap.add_argument('--notes', type=Path, help='a JSON object {list name: review note} for --propose-list')
     args = ap.parse_args()
+    if args.propose_list:
+        notes = json.loads(args.notes.read_text()) if args.notes else None
+        held = install_list(args.propose_list, args.evidence, notes=notes)
+        for name, why in held:
+            print(f'ROSTER SOURCES: held {name}: {why}', file=sys.stderr)
+        return
     try:
         accept = json.loads((ROOT / 'scripts/roster_accept.json').read_text())
     except (OSError, ValueError) as err:

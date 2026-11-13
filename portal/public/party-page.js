@@ -6,12 +6,12 @@
    Pure functions; app.js passes in its helpers. */
 
 import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=89dda4a520';
-import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=c40e3d805e';
+import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=bcc9a57bab';
 
 // Server consumers use these re-exports too, keeping the stamped browser
 // dependencies and their identity tables to one copy in the Worker bundle.
 export * from './labels.js?v=89dda4a520';
-export * from './canonical-urls.js?v=c40e3d805e';
+export * from './canonical-urls.js?v=bcc9a57bab';
 
 const fold = value => String(value ?? '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
 /** The party URL's last segment; the same spelling as canonical-urls.js entitySlug. */
