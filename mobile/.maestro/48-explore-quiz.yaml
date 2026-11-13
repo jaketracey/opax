@@ -22,14 +22,12 @@ name: 48 Record quiz, eight questions, typed guesses, result and saved streak
     timeout: 60000
 - scrollUntilVisible:
     element:
-      id: quiz-guess-value
+      id: quiz-answer-2
     direction: DOWN
     centerElement: true
     timeout: 60000
 - tapOn:
-    id: quiz-guess-value
-- inputText: '929297'
-- runFlow: support/quiz-number-done.yaml
+    id: quiz-answer-2
 - scrollUntilVisible:
     element:
       id: quiz-confirm
@@ -63,60 +61,6 @@ name: 48 Record quiz, eight questions, typed guesses, result and saved streak
     id: quiz-answer-0
 - scrollUntilVisible:
     element:
-      id: quiz-confirm
-    direction: DOWN
-    centerElement: true
-    timeout: 60000
-- tapOn:
-    id: quiz-confirm
-- scrollUntilVisible:
-    element:
-      id: quiz-next
-    direction: DOWN
-    centerElement: true
-    timeout: 60000
-- tapOn:
-    id: quiz-next
-- scrollUntilVisible:
-    element:
-      id: quiz-question
-    direction: UP
-    centerElement: true
-    timeout: 60000
-- scrollUntilVisible:
-    element:
-      id: quiz-guess-value
-    direction: DOWN
-    centerElement: true
-    timeout: 60000
-- tapOn:
-    id: quiz-guess-value
-- inputText: '2013'
-- runFlow: support/quiz-number-done.yaml
-- scrollUntilVisible:
-    element:
-      id: quiz-confirm
-    direction: DOWN
-    centerElement: true
-    timeout: 60000
-- tapOn:
-    id: quiz-confirm
-- scrollUntilVisible:
-    element:
-      id: quiz-next
-    direction: DOWN
-    centerElement: true
-    timeout: 60000
-- tapOn:
-    id: quiz-next
-- scrollUntilVisible:
-    element:
-      id: quiz-question
-    direction: UP
-    centerElement: true
-    timeout: 60000
-- scrollUntilVisible:
-    element:
       id: quiz-answer-1
     direction: DOWN
     centerElement: true
@@ -125,28 +69,6 @@ name: 48 Record quiz, eight questions, typed guesses, result and saved streak
     id: quiz-answer-1
 - scrollUntilVisible:
     element:
-      id: quiz-confirm
-    direction: DOWN
-    centerElement: true
-    timeout: 60000
-- tapOn:
-    id: quiz-confirm
-- scrollUntilVisible:
-    element:
-      id: quiz-next
-    direction: DOWN
-    centerElement: true
-    timeout: 60000
-- tapOn:
-    id: quiz-next
-- scrollUntilVisible:
-    element:
-      id: quiz-question
-    direction: UP
-    centerElement: true
-    timeout: 60000
-- scrollUntilVisible:
-    element:
       id: quiz-answer-2
     direction: DOWN
     centerElement: true
@@ -175,22 +97,6 @@ name: 48 Record quiz, eight questions, typed guesses, result and saved streak
     direction: UP
     centerElement: true
     timeout: 60000
-- scrollUntilVisible:
-    element:
-      id: quiz-answer-2
-    direction: DOWN
-    centerElement: true
-    timeout: 60000
-- tapOn:
-    id: quiz-answer-2
-- scrollUntilVisible:
-    element:
-      id: quiz-answer-0
-    direction: DOWN
-    centerElement: true
-    timeout: 60000
-- tapOn:
-    id: quiz-answer-0
 - scrollUntilVisible:
     element:
       id: quiz-answer-1
@@ -255,12 +161,68 @@ name: 48 Record quiz, eight questions, typed guesses, result and saved streak
     timeout: 60000
 - scrollUntilVisible:
     element:
-      id: quiz-answer-1
+      id: quiz-guess-value
     direction: DOWN
     centerElement: true
     timeout: 60000
 - tapOn:
-    id: quiz-answer-1
+    id: quiz-guess-value
+- inputText: '850000'
+- runFlow: support/quiz-number-done.yaml
+- scrollUntilVisible:
+    element:
+      id: quiz-confirm
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-confirm
+- scrollUntilVisible:
+    element:
+      id: quiz-next
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-next
+- scrollUntilVisible:
+    element:
+      id: quiz-question
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: quiz-guess-value
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-guess-value
+- inputText: '2024'
+- runFlow: support/quiz-number-done.yaml
+- scrollUntilVisible:
+    element:
+      id: quiz-confirm
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-confirm
+- scrollUntilVisible:
+    element:
+      id: quiz-next
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-next
+- scrollUntilVisible:
+    element:
+      id: quiz-question
+    direction: UP
+    centerElement: true
+    timeout: 60000
 - scrollUntilVisible:
     element:
       id: quiz-answer-2
@@ -277,6 +239,44 @@ name: 48 Record quiz, eight questions, typed guesses, result and saved streak
     timeout: 60000
 - tapOn:
     id: quiz-answer-0
+- scrollUntilVisible:
+    element:
+      id: quiz-answer-1
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-answer-1
+- scrollUntilVisible:
+    element:
+      id: quiz-confirm
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-confirm
+- scrollUntilVisible:
+    element:
+      id: quiz-next
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-next
+- scrollUntilVisible:
+    element:
+      id: quiz-question
+    direction: UP
+    centerElement: true
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: quiz-answer-1
+    direction: DOWN
+    centerElement: true
+    timeout: 60000
+- tapOn:
+    id: quiz-answer-1
 - scrollUntilVisible:
     element:
       id: quiz-confirm

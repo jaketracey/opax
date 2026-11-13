@@ -77,7 +77,7 @@ export function quizSourceNotes(q: Question): string[] {
             'From the AEC disclosure rules and how OPAX builds its money data from annual returns.',
           ]
         : [
-            'Figures are donations disclosed in annual returns to the Australian Electoral Commission, as OPAX holds them.',
+            "Figures are receipts disclosed in annual returns to the Australian Electoral Commission, as OPAX holds them. Each receipt is counted once, from the party's own return.",
           ];
     case 'OPAX topics':
       return [

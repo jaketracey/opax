@@ -329,8 +329,8 @@ test('a typed guess is kept exactly: shown, stored and graded as typed', () => {
   const dragged = { value: roundGuess(q, 929_297), typed: false };
   expect(answerText(q, dragged)).toBe('$930,000');
   expect(formatGuess(q, 930_000)).toBe('$930,000');
-  expect(rangeLabels(q)).toEqual(['$22,000', '$1.7m']);
-  expect(guessError(q, 1)).toBe('Enter a figure from $22,000 to $1,671,178.');
+  expect(rangeLabels(q)).toEqual(['$29,362', '$6.4m']);
+  expect(guessError(q, 1)).toBe('Enter a figure from $29,362 to $6,402,000.');
   expect(guessError(q, 929_297)).toBeNull();
   const year = byTemplate('money-party-peak-year');
   expect(formatGuess(year, 2013)).toBe('2013');
@@ -395,16 +395,17 @@ test('topic and industry names read "and" on screen; proper names keep "&"', () 
       }
     }
   const pharmacies = shownQuestions.filter((q) =>
-    q.prompt.startsWith('Put these pharmacies and medicines donors in order'),
+    q.prompt.startsWith('Order these pharmacies and medicines receipt sources'),
   );
   expect(pharmacies.length).toBeGreaterThan(0);
-  const labels = pharmacies.flatMap((q) => q.options!.map((o) => o.label));
-  expect(labels.some((label) => label.includes('Merck Sharp & Dohme'))).toBe(
-    true,
-  );
-  expect(labels.some((label) => label.includes('Johnson & Johnson'))).toBe(
-    true,
-  );
+  const labels = shownQuestions
+    .filter((q) => q.template === 'money-donor-order')
+    .flatMap((q) => q.options!.map((o) => o.label));
+  expect(
+    labels.some((label) =>
+      label.includes('National Automotive Leasing & Salary Packaging'),
+    ),
+  ).toBe(true);
   // The pass changes names in words, never a link.
   const engineHrefs = engineQuestions.map((q) => q.link.href);
   for (const q of shownQuestions) expect(engineHrefs).toContain(q.link.href);
@@ -488,7 +489,20 @@ test('every question names who produced its fact, and Hansard never publishes a 
 test('every quiz link opens a native OPAX page, and Ask links only draft', () => {
   const graph = decodeMoneyGraph(pinned('/graph/money.json'));
   const kinds = new Set<string>();
+  // The deck is built from a newer money export than the pinned fixture
+  // graph; these donors are in the deck's export but not the fixture's.
+  const newerThanFixture = new Set([
+    '/subject/donor/Blackmores%20Limited',
+    '/subject/donor/Leeds%20Media%20and%20Communication',
+  ]);
+  const unresolved = new Set(
+    engineQuestions
+      .filter((q) => !quizDestination(q, graph))
+      .map((q) => q.link.href),
+  );
+  expect(unresolved).toEqual(newerThanFixture);
   for (const q of engineQuestions) {
+    if (newerThanFixture.has(q.link.href)) continue;
     const destination = quizDestination(q, graph);
     expect(destination).not.toBeNull();
     if (!destination) continue;
@@ -520,13 +534,17 @@ test('every quiz link opens a native OPAX page, and Ask links only draft', () =>
     }
   }
   expect([...kinds].sort()).toEqual(['ask', 'original']);
-  const donor = quizDestination(byTemplate('money-donor-figure'), graph);
+  const company = engineQuestions.find(
+    (q) =>
+      q.template === 'money-donor-figure' &&
+      q.fact.startsWith('Hemmes Trading Pty Ltd:'),
+  )!;
+  const donor = quizDestination(company, graph);
   expect(donor?.kind === 'original' && donor.route()).toEqual({
     pathname: '/money-record',
     params: {
-      node: graph.nodes.find((n) => n.label === 'Anacta Strategies Pty Ltd')!
-        .id,
-      name: 'Anacta Strategies Pty Ltd',
+      node: graph.nodes.find((n) => n.label === 'Hemmes Trading Pty Ltd')!.id,
+      name: 'Hemmes Trading Pty Ltd',
     },
   });
   // No graph yet, or a name the graph doesn't hold: no row, not a dead link.
@@ -546,12 +564,12 @@ test('every quiz link opens a native OPAX page, and Ask links only draft', () =>
   const voice = quizDestination(byTemplate('words-year-voice'));
   expect(voice).toMatchObject({
     kind: 'ask',
-    label: 'Ask about Glenn Sterle in 2025',
+    label: 'Ask about Karen Grogan in 2023',
     draft: {
-      question: 'What did Glenn Sterle say in parliament in 2025?',
-      speaker: 'Glenn Sterle',
-      from: '2025',
-      to: '2025',
+      question: 'What did Karen Grogan say in parliament in 2023?',
+      speaker: 'Karen Grogan',
+      from: '2023',
+      to: '2023',
     },
   });
 });

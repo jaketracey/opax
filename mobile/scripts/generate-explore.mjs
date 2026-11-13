@@ -1,31 +1,50 @@
-// Regenerate from checked-in public exports only. Never fetch the live Worker.
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
-import { Buffer } from 'node:buffer';
+// Regenerate from a portal checkout's public exports only. Never fetch the
+// live Worker.
+//
+//   node scripts/generate-explore.mjs --portal <portal checkout>/portal
+//
+// Pass the portal from an up-to-date main checkout, not this repo's own
+// portal/public copy, which can lag the web's engine and exports.
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import { resolve, dirname } from 'node:path';
+import {
+  frontPageDeck,
+  loadEngine,
+  partyLinks,
+  topicLinks,
+} from './explore-engine.mjs';
+
 const mobile = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const publicRoot = resolve(mobile, '../portal/public');
-const output = resolve(mobile, 'src/features/explore');
+const arg = (name) => {
+  const at = process.argv.indexOf(name);
+  return at > 0 ? process.argv[at + 1] : undefined;
+};
+const portal = arg('--portal');
+if (!portal) {
+  console.error('Usage: node scripts/generate-explore.mjs --portal <dir>');
+  process.exit(2);
+}
+const publicRoot = resolve(portal, 'public');
+if (!existsSync(resolve(publicRoot, 'quiz.js')))
+  throw new Error(`No quiz.js under ${publicRoot}`);
+const output = resolve(mobile, arg('--out') ?? 'src/features/explore');
 mkdirSync(output, { recursive: true });
+
 const hashes = {};
+const { engine, hash } = await loadEngine(publicRoot);
+hashes['quiz.js'] = hash;
 const read = (path) => {
   const bytes = readFileSync(resolve(publicRoot, path));
   hashes[path] = createHash('sha256').update(bytes).digest('hex');
   return JSON.parse(bytes);
 };
-const source = readFileSync(resolve(publicRoot, 'quiz.js'), 'utf8');
-hashes['quiz.js'] = createHash('sha256').update(source).digest('hex');
-const engine = await import(
-  'data:text/javascript;base64,' +
-    Buffer.from(
-      source.slice(0, source.indexOf('async function fetchJson')),
-    ).toString('base64')
-);
+// The same inputs the web's loadData reads.
 const data = {
   money: read('graph/money.json'),
   corpus: read('corpus.json'),
-  parliamentarians: read('parliamentarians.json'),
+  photos: read('photos/people.json'),
   reports: {},
   years: {},
 };
@@ -33,6 +52,7 @@ for (const row of read('reports/index.json').reports)
   data.reports[row.slug] = read(`reports/${row.slug}.json`);
 for (const year of Object.keys(read('years/index.json').years))
   data.years[year] = read(`years/${year}.json`);
+
 const rounds = {};
 for (const deck of ['mixed', 'money', 'words']) {
   let seed = 48;
@@ -59,15 +79,20 @@ for (const deck of ['mixed', 'money', 'words']) {
         'from the donors in the money export',
       );
     }
-    return questions;
+    // App routes: topic pages for reports, party pages by name.
+    return questions.map((q) => partyLinks(topicLinks(q)));
   });
 }
-writeFileSync(
-  resolve(output, 'quiz-rounds.json'),
-  JSON.stringify(
-    { generated: data.money.meta.generated, hashes, rounds },
-    null,
-    2,
-  ) + '\n',
+const write = (name, value) =>
+  writeFileSync(resolve(output, name), JSON.stringify(value, null, 2) + '\n');
+write('quiz-rounds.json', {
+  generated: data.money.meta.generated,
+  hashes,
+  rounds,
+});
+// Today's question deck comes from the same run, so it shares the date.
+const front = frontPageDeck(rounds);
+write('quiz-front-page.json', front);
+console.log(
+  `Generated 48 eight-question rounds and ${front.length} front-page questions from ${publicRoot}.`,
 );
-console.log('Generated 48 eight-question rounds from local exports.');
