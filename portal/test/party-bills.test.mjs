@@ -41,8 +41,8 @@ test('"Bills sponsored" links each bill, says when it was introduced and its sta
 test('the shipped index: the three sponsor-only parties and their newest bills', () => {
   const divisions = read('/graph/party-members.json');
   const expected = {
-    'Nick Xenophon Team': [7, 'Defence Amendment (Sovereign Naval Shipbuilding) Bill 2018'],
-    'Palmer United Party': [4, 'Commonwealth Grants Commission Amendment (GST Distribution) Bill 2015'],
+    'Nick Xenophon Team': [22, 'Defence Amendment (Sovereign Naval Shipbuilding) Bill 2018'],
+    'Palmer United Party': [3, 'Commonwealth Grants Commission Amendment (GST Distribution) Bill 2015'],
     'Rex Patrick Team': [4, 'Australian Federal Integrity Commission Bill 2021'],
   };
   for (const [label, [count, title]] of Object.entries(expected)) {

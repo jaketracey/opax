@@ -5,6 +5,7 @@ import json
 import sqlite3
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,6 +22,51 @@ D = load("export_division_pages")
 
 
 class DivisionExportTests(unittest.TestCase):
+    def test_published_parties_follow_a_mid_term_switch_and_refresh_idempotently(self):
+        v = D.vote_parties
+        evidence = v.Evidence([
+            v.entry("service", "representatives", ("name", "avery fixture"), ["Avery Fixture"],
+                    "Labor", "2022-05-21", "2024-02-01", url="https://example.test/service"),
+            v.entry("service", "representatives", ("name", "avery fixture"), ["Avery Fixture"],
+                    "Independent", "2024-02-01", "2025-05-03", url="https://example.test/service"),
+        ])
+        records = {}
+        for i, day in enumerate(["2024-01-31", "2024-02-01"]):
+            key = f"federal-representatives-fixture-{i}"
+            records[key] = {"key": key, "slug": f"division-{key}", "house": "representatives",
+                            "jurisdiction": "federal", "date": day, "name": "Fixture motion",
+                            "question": "That the motion be agreed to", "ayes": 1, "noes": 0,
+                            "members": [{"name": "Avery Fixture", "vote": "aye", "party": "Independent"}],
+                            "_meta": {"member_coverage": "recorded"}}
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            D.write_projection(records, out)
+            # A retained source-fact hold belongs to the original observation.
+            path = out / f"{records[next(iter(records))]['slug']}.json"
+            held = json.loads(path.read_text())
+            held["_meta"].update(refresh_retained=True, refresh_retained_reason="source-facts-changed")
+            path.write_text(json.dumps(held))
+            with patch("sys.argv", ["export_division_pages.py", "--refresh-parties", "--out", str(out)]), \
+                    patch.object(D.vote_parties, "load_evidence", return_value=evidence), \
+                    patch.object(D.sqlite3, "connect", side_effect=AssertionError("offline refresh opened a DB")):
+                D.main()
+            refreshed = D.read_previous_projection(out)
+            members = [r["members"][0] for r in refreshed.values()]
+            self.assertEqual([m["party"] for m in members], ["Labor", "Independent"])
+            self.assertEqual(members[0]["party_source"]["source_party"], "Independent")
+            index = json.loads((out / "index.json").read_text())
+            self.assertEqual(index["coverage"]["party_corrected_count"], 1)
+            self.assertEqual(index["coverage"]["retained_by_reason"], {"source-facts-changed": 1})
+            self.assertEqual({r["date"]: r["party_tallies"][0]["party"] for r in index["divisions"]},
+                             {"2024-01-31": "Labor", "2024-02-01": "Independent"})
+            before = {p.name: p.read_bytes() for p in out.glob("*.json")}
+            D.write_projection(D.read_previous_projection(out), out, party_evidence=evidence, party_refresh=True)
+            self.assertEqual({p.name: p.read_bytes() for p in out.glob("*.json")}, before)
+            # A refresh without the dated files keeps the complete published
+            # result, including provenance and the coverage explanation.
+            D.write_projection(D.read_previous_projection(out), out, party_refresh=True)
+            self.assertEqual({p.name: p.read_bytes() for p in out.glob("*.json")}, before)
+
     def test_published_bill_projection_retains_facts_and_exact_links(self):
         with tempfile.TemporaryDirectory() as tmp:
             directory = Path(tmp)
