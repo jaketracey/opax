@@ -325,6 +325,23 @@ for (const path of boundary.javascript.filter((path) =>
     `The PostHog client stays private to ${path}`,
   );
 }
+// The in-app timing probe (src/perf, PF5) exists only in e2e builds: Metro
+// swaps in probe.production.ts for release. Only the switch module imports
+// the implementation, and the release stub imports nothing at all.
+const probeImplementation = /['"](?:\.{1,2}\/)+(?:perf\/)?probe\.e2e['"]/;
+assert.deepEqual(
+  boundary.javascript.filter((path) =>
+    probeImplementation.test(readFileSync(path, 'utf8')),
+  ),
+  [join(sourceRoot, 'perf/probe.ts')],
+  'Only src/perf/probe.ts imports the timing probe implementation',
+);
+assert(
+  !/\bimport\b|\brequire\s*\(/.test(
+    readFileSync(join(sourceRoot, 'perf/probe.production.ts'), 'utf8'),
+  ),
+  'The release timing probe (src/perf/probe.production.ts) imports nothing',
+);
 // LayoutAnimation is inert on iOS under Reanimated 4.5: content that comes
 // and goes uses HeightReveal (scripts/layout-animation-policy.ts).
 assert.deepEqual(

@@ -12,6 +12,7 @@ import { BillRow } from '../../design/rows';
 import { Skeleton } from '../../design/states';
 import { rhythm } from '../../design/tokens';
 import { billListRoute, billRoute } from '../../navigation/routes';
+import { perfOnce } from '../../perf/probe';
 import { partyFromCode } from '../bills/party-codes';
 import { rowDate, statusEventText } from '../bills/status-event';
 import { billsSources } from './sources';
@@ -78,6 +79,7 @@ export function BillFeed({
   return (
     <InsetGroup testID="today-bills-group">
       {bills.map((bill, i) => {
+        if (i === 0) perfOnce('today-bill-0');
         const text = billRowText(bill, kind);
         return (
           <BillRow

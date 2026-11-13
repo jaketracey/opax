@@ -4,6 +4,7 @@ import { communityHome } from '../features/community/entry';
 import { fromWebPath } from '../navigation/external';
 import { inLinkTab } from '../navigation/link-tab';
 import { webOrigin } from '../design/environment';
+import { perfHeap, perfMark } from '../perf/probe';
 
 /**
  * One `opax_link_open` for each link that opens the app: a universal link,
@@ -30,6 +31,8 @@ export function redirectSystemPath({
   path: string;
   initial: boolean;
 }) {
+  perfMark('intent', path);
+  perfHeap('intent-heap');
   try {
     const url = new URL(path, 'opax://');
     if (

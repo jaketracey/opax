@@ -48,6 +48,8 @@ const productionStubs = [
   'src/features/electorate-map/outline-probe',
   'src/features/money/money-probe',
   'src/navigation/dev-roots',
+  // The in-app timing probe (PF5): release bundles record no timings.
+  'src/perf/probe',
 ].map((module) => path.join(__dirname, module));
 const voiceEntries = [
   ...['account', 'talk'].map((feature) =>

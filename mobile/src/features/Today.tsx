@@ -14,7 +14,7 @@ import {
 } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
 import type { Block, EditionView, Electorate } from '../api/catalogs';
-import { catalogs } from '../api/runtime';
+import { apiClient, catalogs } from '../api/runtime';
 import { useOffline } from '../api/useOffline';
 import { thisDevice } from '../design/device';
 import { Screen } from '../design/layout';
@@ -65,6 +65,7 @@ import { TodayReports, useTodayReports } from './today/TodayBlock';
 import { TodayBody } from './today/TodayBody';
 import { VotesBlock } from './today/VotesBlock';
 import { StateSeatCard, stateSeatFor, YourMPCard } from './today/YourMPCard';
+import { useProfilePreload } from './people/profile-preload';
 import { saveChoice } from './your-mp/choice-store';
 import { savedSeatDirectory, useSeat } from './your-mp/useSeat';
 
@@ -72,9 +73,10 @@ import { savedSeatDirectory, useSeat } from './your-mp/useSeat';
  * Runs `effect` each time Today's screen gains focus. Unit tests that render
  * Today outside a navigator mock expo-router without it: then nothing.
  */
-const useScreenFocus: (effect: () => void) => void = Router.useFocusEffect
-  ? (effect) => Router.useFocusEffect(effect)
-  : () => undefined;
+const useScreenFocus: (effect: () => void | (() => void)) => void =
+  Router.useFocusEffect
+    ? (effect) => Router.useFocusEffect(effect)
+    : () => undefined;
 
 const house = (s: Electorate) =>
   s.jurisdiction === 'federal' &&
@@ -274,6 +276,9 @@ export default function Today() {
   const home = federal && house(federal) ? federal : null;
   const ready = !!launch && seat.status !== 'loading';
   useScreenReady('/', ready);
+  // Once the body is drawn, the profile catalogs are read from their saved
+  // copies in idle time while Today has focus (PF2).
+  useProfilePreload(apiClient, ready, useScreenFocus);
 
   const order = launch
     ? todayOrder({
