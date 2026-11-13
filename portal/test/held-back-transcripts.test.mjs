@@ -14,7 +14,7 @@ const readCounts = (counts, chairCounts) => async path => {
 test('an affected member with zero speeches gets the correct held-back count in server content', async () => {
   const counts = {[person.pid]: 1234, 'another-member': 42};
   const {html} = await renderPersonAnswer(person, readCounts(counts), new Map());
-  assert.match(html, /1,234 earlier transcripts also record this member, alongside other speakers\. They join these speeches once each speaker’s words are separated\./);
+  assert.match(html, /1,234 earlier transcripts record this member alongside other speakers and are not counted here\./);
   assert.ok(html.includes(heldBackTranscriptsHTML(person.pid, counts)), 'browser and server use the same notice');
   assert.equal((html.match(/class="person-held-back fineprint"/g) || []).length, 1);
 });
@@ -29,7 +29,7 @@ test('zero, missing and unverified person IDs have no notice', async () => {
 });
 
 test('a single held-back transcript reads correctly and invalid counts stay absent', () => {
-  assert.match(heldBackTranscriptsHTML(person.pid, {[person.pid]: 1}), /1 earlier transcript also records this member, alongside other speakers\. It joins these speeches once each speaker’s words are separated\./);
+  assert.match(heldBackTranscriptsHTML(person.pid, {[person.pid]: 1}), /1 earlier transcript records this member alongside other speakers and is not counted here\./);
   assert.doesNotMatch(heldBackTranscriptsHTML(person.pid, {[person.pid]: 2}), /counted yet|isn't|aren't/);
   for (const count of [-1, 1.5, '42', Infinity]) assert.equal(heldBackTranscriptsHTML(person.pid, {[person.pid]: count}), '');
 });

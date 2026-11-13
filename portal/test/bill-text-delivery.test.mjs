@@ -34,7 +34,7 @@ test('manifest uses exact AND labels and extra metadata, latest complete version
   assert.deepEqual([...h.calls[0].init.body.show],['basic','extra']);
   assert.deepEqual(body.versions.map(v=>v.id),['r7542-aspassed','r7542-first-reps']);
   assert.equal(body.default_version_id,'r7542-aspassed');
-  assert.match(body.coverage_note,/not a list of every version/);
+  assert.equal(body.coverage_note,'Versions published by Parliament so far.');
   assert.equal(response.headers.get('cache-control'),'public, max-age=60');
 });
 test('full version preserves exact source, Unicode boundaries and schedule; ignores summaries',async()=>{
