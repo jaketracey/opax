@@ -105,6 +105,18 @@ for (const path of Object.keys(snapshot.files)) {
 // from the pinned roster. Without it every run logged OUTSIDE_ALLOW_LIST.
 assertAllowedPath(divisionsPath);
 files.set(divisionsPath, divisionsFixture(pinnedBytes, [...files.keys()]));
+// QA-only opt-in: a newer money graph from a local file (for example one with
+// the typed receipt cells, by_type and by_type_year), still checked by the app's
+// own decoder. Absent, the pinned graph is served as always.
+const moneyGraphFile = process.env.OPAX_FIXTURE_MONEY_GRAPH;
+if (moneyGraphFile) {
+  const body = readFileSync(moneyGraphFile);
+  JSON.parse(body.toString());
+  files.set('/graph/money.json', body);
+  console.log(
+    `OPAX_FIXTURE_MONEY_GRAPH ${moneyGraphFile} bytes=${body.length}`,
+  );
+}
 // Robustness-only opt-in: change one optional field, preserving every
 // source fact and all other pinned bytes in the normal fixture mode.
 if (rosterMode === 'null-optional') {
