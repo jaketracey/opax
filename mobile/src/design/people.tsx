@@ -48,11 +48,10 @@ import {
   rhythm,
   size as sizeTokens,
   textStyles,
-  type CurrentTextVariant,
 } from './tokens';
 
 const portraitSizes = { row: sizeTokens.portraitRow, profile: 96 } as const;
-/** A circular portrait; absent or failed images show initials or a decorative person symbol. */
+/** A circular portrait; an absent or failed image leaves a blank circle (a person symbol when unnamed). */
 export function Portrait({
   size = 'row',
   testID,
@@ -64,7 +63,7 @@ export function Portrait({
   onDisplay,
   loading: _loading = false,
 }: {
-  size?: keyof typeof portraitSizes | 28 | 44 | 56 | 72 | 80 | 96;
+  size?: keyof typeof portraitSizes | 28 | 40 | 44 | 56 | 72 | 80 | 96;
   testID?: string;
   localURI?: string;
   uri?: string | null;
@@ -76,30 +75,6 @@ export function Portrait({
 }) {
   const [failed, setFailed] = useState<string | null>(null);
   const dimension = typeof size === 'number' ? size : portraitSizes[size];
-  const initials = (
-    name
-      ?.trim()
-      .split(/\s+/)
-      .slice(0, 2)
-      .map((word) => Array.from(word)[0])
-      .join('') ?? ''
-  )
-    .toLocaleUpperCase('en-AU')
-    .slice(0, 2);
-  const initialsVariant: CurrentTextVariant =
-    dimension < sizeTokens.portraitRow
-      ? 'capsule'
-      : dimension < sizeTokens.portraitHeader
-        ? 'strong'
-        : 'tileFigure';
-  const initialsRole = textStyles[initialsVariant];
-  // Allow two wide initials and a full line inside the circle, with an inset.
-  // The smallest portraits keep the role's default size rather than shrinking.
-  const initialsScale = Math.max(
-    1,
-    (dimension - rhythm.tight) /
-      Math.hypot(2 * initialsRole.fontSize, initialsRole.lineHeight),
-  );
   const input = localURI ?? uri;
   let source: string | undefined;
   try {
@@ -151,16 +126,10 @@ export function Portrait({
         <View
           style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
         >
-          {initials ? (
-            <Text
-              variant={initialsVariant}
-              tone="inkSoft"
-              maxFontSizeMultiplier={initialsScale}
-              accessible={false}
-            >
-              {initials}
-            </Text>
-          ) : (
+          {/* A named person with no portrait is a blank circle, never
+              initials (the web's rule). Only an unnamed face, such as a
+              face stack's empty place, keeps the person symbol. */}
+          {name?.trim() ? null : (
             <Icon
               name={symbols.person}
               tone="inkSoft"

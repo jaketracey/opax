@@ -1044,7 +1044,14 @@ export function DivisionRow({
     <Pressable
       accessible
       accessibilityRole={expandable ? 'button' : href ? 'link' : undefined}
-      accessibilityLabel={[title, meta, outcome, spokenCounts, party]
+      accessibilityLabel={[
+        title,
+        // A no-break date is for layout; VoiceOver hears plain words.
+        meta.replace(/\u00a0/g, ' '),
+        outcome,
+        spokenCounts,
+        party,
+      ]
         .filter(Boolean)
         .join(', ')}
       accessibilityState={expandable ? { expanded } : undefined}
@@ -1140,6 +1147,7 @@ export function MoneyRow({
   amount,
   href,
   external,
+  compact = false,
   testID,
 }: {
   name: string;
@@ -1148,6 +1156,11 @@ export function MoneyRow({
   amount: number;
   href?: Href;
   external?: External;
+  /**
+   * Every amount compact ("$9.4m"), for a ranked list that must read one
+   * way. The accessibility label keeps the full amount.
+   */
+  compact?: boolean;
   testID?: string;
 }) {
   return (
@@ -1157,7 +1170,7 @@ export function MoneyRow({
       titleLines={nameLines}
       detailLines={2}
       value={
-        Math.abs(amount) >= 10_000_000
+        compact || Math.abs(amount) >= 10_000_000
           ? formatMoneyCompact(amount)
           : formatMoney(amount)
       }

@@ -1,5 +1,9 @@
 import { ElectionSearchRow } from '../vic-election/SearchRow';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
+import type { BillIndex } from '../../api/catalog-decoders';
+import { catalogs } from '../../api/runtime';
+import type { EditionView } from '../../api/selectors';
 import {
   Group,
   InsetGroup,
@@ -13,8 +17,10 @@ import { divisionHistoryRoute } from '../../navigation/routes/bills';
 import { directoryRoute } from '../../navigation/routes/people';
 import { publicMoneyRoute } from '../../navigation/routes/public-money';
 import { topicsRoute } from '../../navigation/routes/search';
+import { MyMemberContext } from '../your-mp/MyMemberContext';
 import { recentSearches, useRecentSearches, type RecentSearch } from './recent';
 import { scopeLabel, type Scope } from './scopes';
+import { tryRows } from './try';
 
 type Browse = {
   title: string;
@@ -63,17 +69,56 @@ export const browseRows: readonly Browse[] = [
 ];
 
 /**
+ * The daily edition as the app cache holds it (Today reads it first), for
+ * the Try group only. A failed or missing read draws no edition row.
+ */
+function useCachedEdition() {
+  const [edition, setEdition] = useState<EditionView | null>(null);
+  useEffect(() => {
+    let active = true;
+    Promise.resolve()
+      .then(() => catalogs.todayEdition())
+      .then((block) => {
+        if (active && block?.status === 'ready' && block.data)
+          setEdition(block.data);
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, []);
+  return edition;
+}
+
+/**
  * Search, idle (journeys/search.md 3.2): Recent (only when there is one),
- * then Browse. No `SourceLine`: nothing here is a figure. "Try asking"
- * waits for the reviewed starter list (specs/search.md D-S2) and draws
- * nothing until it ships.
+ * then Try (sweep 1 item 5: rows chosen by rule in `try.ts`, two when
+ * Recent shows), then Browse. No `SourceLine`: nothing here is a figure.
  */
 export function SearchIdle({
   onRecent,
+  onTry,
+  bills = null,
 }: {
   onRecent: (item: RecentSearch) => void;
+  /** A Try row with no native record searches its words. */
+  onTry?: (q: string) => void;
+  /** The bill index Search already holds for suggestions. */
+  bills?: BillIndex | null;
 }) {
   const recent = useRecentSearches();
+  const member = useContext(MyMemberContext) ?? null;
+  const edition = useCachedEdition();
+  const tries = useMemo(
+    () =>
+      tryRows({
+        member,
+        edition,
+        bills,
+        hasRecent: recent.items.length > 0,
+      }),
+    [member, edition, bills, recent.items.length],
+  );
   return (
     <Group gap={rhythm.group} testID="search-idle">
       {recent.items.length ? (
@@ -130,6 +175,25 @@ export function SearchIdle({
             ))}
           </InsetGroup>
         </View>
+      ) : null}
+      {tries.length ? (
+        <InsetGroup header="Try" testID="search-try">
+          {tries.map((row) => (
+            <LinkRow
+              key={row.key}
+              title={row.title}
+              detail={row.detail}
+              symbol={row.symbol}
+              accessibilityLabel={`${row.title}, ${row.detail}`}
+              testID={`search-try-${row.key}`}
+              {...('href' in row.action
+                ? { href: row.action.href as Browse['href'] }
+                : {
+                    onPress: () => onTry?.((row.action as { q: string }).q),
+                  })}
+            />
+          ))}
+        </InsetGroup>
       ) : null}
       <InsetGroup header="Browse" testID="search-browse">
         {browseRows.map((row) => (

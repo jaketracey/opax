@@ -20,6 +20,7 @@ import {
   changeAccessibilityLabel,
   changeText,
   moreChangesText,
+  quietText,
   todayChanges,
 } from './changes';
 import { followKey, unfollow, type Follow } from './store';
@@ -80,7 +81,9 @@ export function FollowRow({
         ? 'Not checked yet'
         : changes[0]
           ? changeText(changes[0])
-          : undefined;
+          : surface === 'following'
+            ? quietText(follow)
+            : undefined;
   // Your own MP's changes are on Today, not counted under a pointer to them.
   const more =
     !ownMP && changes.length > 1

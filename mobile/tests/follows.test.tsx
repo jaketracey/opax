@@ -23,7 +23,12 @@ import { LinkRow } from '../src/design/rows';
 import { StatusCapsule } from '../src/design/labels';
 import { Portrait } from '../src/design/people';
 import { rhythm } from '../src/design/tokens';
-import { currentKeys } from '../src/features/follows/changes';
+import {
+  changeDate,
+  checkedText,
+  currentKeys,
+  quietText,
+} from '../src/features/follows/changes';
 import Following, {
   NOTHING_FOLLOWED,
   NOTHING_FOLLOWED_TITLE,
@@ -907,9 +912,10 @@ describe('Following', () => {
     const r = await render();
     expect(groupOrder(r)).toEqual(['People', 'Bills', 'Electorates']);
     expect(has(r, 'follows-count')).toBe(false);
-    // No dot and no follow date on an unchanged row.
-    expect(row(r, `follows-row-electorate-${GRAYNDLER}`).props.detail).toBe(
-      undefined,
+    // No dot on an unchanged row; its line says nothing is new (sweep 1
+    // item 6), never a change.
+    expect(row(r, `follows-row-electorate-${GRAYNDLER}`).props.detail).toMatch(
+      /^Nothing new since \d{1,2} [A-Z][a-z]{2}$/,
     );
     mock.followSources.mockResolvedValue(changedSources());
     await act(async () =>
@@ -1070,6 +1076,64 @@ describe('Following', () => {
       'Not checked yet',
     );
     await act(async () => r.unmount());
+  });
+
+  // Sweep 1 item 6: a quiet row says the app looked, and when.
+  test('a checked follow with nothing new says since when; the list says when it was checked', async () => {
+    const checkedAt = new Date();
+    checkedAt.setHours(11, 17, 0, 0);
+    mock.followSources.mockResolvedValue(
+      sources({ savedAt: checkedAt.getTime() }),
+    );
+    await follow({ kind: 'bill', id: BILL, title: 'Fixture bill' });
+    const followed = new Date();
+    const r = await render();
+    expect(row(r, `follows-row-bill-${BILL}`).props.detail).toBe(
+      `Nothing new since ${changeDate(followed.getTime())}`,
+    );
+    const checked = r.root.find(
+      (n) => n.props.testID === 'follows-checked' && n.type === Text,
+    );
+    expect(checked.props.children).toBe('Checked today, 11:17\u00a0am');
+    // A change still shows its change line, not the quiet one.
+    mock.followSources.mockResolvedValue(changedSources());
+    const control = () =>
+      r.root.findByType(ScrollView).props.refreshControl.props;
+    await act(async () => control().onRefresh());
+    expect(row(r, `follows-row-bill-${BILL}`).props.detail).not.toMatch(
+      /^Nothing new/,
+    );
+    await act(async () => r.unmount());
+  });
+});
+
+describe('quiet follow lines (sweep 1 item 6)', () => {
+  test('since the last change seen, else the day followed', () => {
+    const followedAt = new Date(2026, 10, 12, 9).getTime();
+    expect(quietText({ followedAt, seenAt: null }, 2026)).toBe(
+      'Nothing new since 12 Nov',
+    );
+    expect(
+      quietText(
+        { followedAt, seenAt: new Date(2026, 10, 13, 8).getTime() },
+        2026,
+      ),
+    ).toBe('Nothing new since 13 Nov');
+    expect(quietText({ followedAt, seenAt: null }, 2027)).toBe(
+      'Nothing new since 12 Nov 2026',
+    );
+  });
+  test('the check time reads today, yesterday or the date, with a 12-hour clock', () => {
+    const now = new Date(2026, 10, 13, 15, 0);
+    expect(checkedText(new Date(2026, 10, 13, 11, 17).getTime(), now)).toBe(
+      'Checked today, 11:17\u00a0am',
+    );
+    expect(checkedText(new Date(2026, 10, 12, 21, 2).getTime(), now)).toBe(
+      'Checked yesterday, 9:02\u00a0pm',
+    );
+    expect(checkedText(new Date(2026, 10, 10, 0, 5).getTime(), now)).toBe(
+      'Checked 10 Nov, 12:05\u00a0am',
+    );
   });
 });
 

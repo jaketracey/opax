@@ -9,6 +9,7 @@ import {
   text,
   type Decoded,
 } from '../../api/validation';
+import { formatDate, unbroken } from '../../design/format';
 import { isProcedural, outcomeWord } from '../bills/divisions';
 
 /**
@@ -98,3 +99,21 @@ export function recentReadingVotes(file: RecentDivisions, limit = 3) {
     }));
 }
 export type ReadingVote = ReturnType<typeof recentReadingVotes>[number];
+
+/**
+ * A Today vote row's meta line: "Second reading · House · 19 Aug 2026". The
+ * chamber is its short name on Today and the date never breaks, so the line
+ * never ends on a lone date or splits one (sweep 1, item 3).
+ */
+export function voteMeta(
+  vote: Pick<ReadingVote, 'stageWords' | 'chamberWords' | 'date'>,
+): string {
+  const chamber =
+    vote.chamberWords === 'House of Representatives'
+      ? 'House'
+      : vote.chamberWords;
+  const day = formatDate(vote.date, 'short');
+  return [vote.stageWords, chamber, day ? unbroken(day) : null]
+    .filter(Boolean)
+    .join(' · ');
+}

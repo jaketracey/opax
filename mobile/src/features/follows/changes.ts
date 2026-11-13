@@ -113,6 +113,40 @@ export function changeDate(
   const parts = `${day.getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][day.getMonth()]}`;
   return `${parts}${alwaysYear || day.getFullYear() !== year ? ` ${day.getFullYear()}` : ''}`;
 }
+/**
+ * A checked follow with nothing new (sweep 1 item 6): "Nothing new since
+ * 12 Nov", from the last change the reader saw (`seenAt`), else the day it
+ * was followed. A small honest sentence that proves the app looked.
+ */
+export function quietText(
+  follow: { followedAt: number; seenAt: number | null },
+  year?: number,
+): string {
+  const date = changeDate(follow.seenAt ?? follow.followedAt, year);
+  return date ? `Nothing new since ${date}` : 'Nothing new';
+}
+/**
+ * When the follows were last checked against the record, in the source
+ * line's words: "Checked today, 11:17 am", "Checked yesterday, 9:02 pm",
+ * else "Checked 10 Nov, 9:02 pm".
+ */
+export function checkedText(at: number, now: Date = new Date()): string {
+  const when = new Date(at);
+  if (!Number.isFinite(when.getTime())) return '';
+  const dayOf = (d: Date) =>
+    new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  const days = Math.round((dayOf(now) - dayOf(when)) / 86_400_000);
+  const day =
+    days === 0
+      ? 'today'
+      : days === 1
+        ? 'yesterday'
+        : changeDate(at, now.getFullYear());
+  const hour = when.getHours() % 12 || 12;
+  const minute = String(when.getMinutes()).padStart(2, '0');
+  const period = when.getHours() < 12 ? 'am' : 'pm';
+  return `Checked ${day}, ${hour}:${minute}\u00a0${period}`;
+}
 export function changeText(change: Change, year?: number): string {
   const date = change.asAt && changeDate(change.asAt, year);
   return `${change.text}${date ? ` · ${date}` : ''}`;

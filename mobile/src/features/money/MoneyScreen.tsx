@@ -1104,6 +1104,7 @@ function ListBody({
                   .filter(Boolean)
                   .join(' · ')}
                 amount={node.total}
+                compact
                 href={record_(node)}
                 testID={`money-donor-${index}`}
               />

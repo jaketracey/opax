@@ -612,6 +612,14 @@ describe('Account sheet', () => {
     ];
     expect(ids.filter((id) => rows.includes(id))).toEqual(rows);
     expect(linkTo(renderer, 'account-ask')).toBe('/account/ask');
+    // Sweep 1, item 12: the row says what it opens.
+    const ask = renderer.root.find(
+      (node) =>
+        typeof node.props.testID === 'string' &&
+        node.props.testID === 'account-ask' &&
+        typeof node.props.title === 'string',
+    );
+    expect(ask.props.title).toBe('Ask settings');
   });
   test('no primary capsule and no repeated title: signing in is a row', async () => {
     const renderer = await render(<AccountEntry />);

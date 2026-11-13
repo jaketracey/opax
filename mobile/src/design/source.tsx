@@ -3,7 +3,13 @@ import { useState, type ReactNode, type Ref } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { presentSource } from '../navigation/sheets';
 import { useAccessibilitySize } from './accessibility';
-import { calendarDate, formatDate, sourceName, type DateInput } from './format';
+import {
+  calendarDate,
+  formatDate,
+  sourceName,
+  unbroken,
+  type DateInput,
+} from './format';
 import { EXTERNAL_GLYPH, Icon, type SFSymbol } from './icon';
 import { useRowHighlight } from './row-padding';
 import { Text } from './text';
@@ -170,7 +176,8 @@ export function sourceLineParts({
   const name = names.length
     ? names.length === 1
       ? names[0]!
-      : `${names[0]} and ${names.length - 1} more`
+      : // "and 3 more" never breaks, so "more" is never left alone.
+        `${names[0]} ${unbroken(`and ${names.length - 1} more`)}`
     : null;
   const shownState = state ?? (savedAt != null ? 'saved' : null);
   const saved = savedAt != null ? formatDate(savedAt, 'short') : '';
@@ -252,7 +259,8 @@ export function SourceLine({
     : parts;
   const spoken = [visible.date, visible.name, ...visible.rest]
     .filter(Boolean)
-    .join(', ');
+    .join(', ')
+    .replace(/\u00a0/g, ' ');
   return (
     <>
       <SourceAffordance

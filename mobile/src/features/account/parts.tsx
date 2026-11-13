@@ -36,7 +36,7 @@ import { copyText } from '../records/actions';
 // left out of the voice-off release. tests/account-copy.test.ts keeps the two
 // in step.
 export const linksCopy = {
-  ask: 'Ask',
+  ask: 'Ask settings',
   about: 'About OPAX',
   sources: 'Sources and licences',
   methods: 'Methods',

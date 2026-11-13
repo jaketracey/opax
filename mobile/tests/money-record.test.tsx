@@ -1,5 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import { act } from 'react';
+import * as RN from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import type { RecordResult } from '../src/api/client';
 import { apiClient } from '../src/api/runtime';
@@ -191,7 +192,7 @@ test('a party record: originals last, the window figure, all years beside it, an
   });
   const amount = figure(r, 'money-focus-amount');
   expect(amount.props.ink).toBe('money');
-  expect(amount.props.label).toMatch(/^in [\d,]+ receipts, 2024–25$/);
+  expect(amount.props.label).toMatch(/^in [\d,]+ disclosure records, 2024–25$/);
   expect(amount.props.caveat).toMatch(/^Totals are a minimum/);
   expect(amount.props.citation.originals).toEqual([
     expect.objectContaining({ url: 'https://transparency.aec.gov.au/' }),
@@ -212,6 +213,18 @@ test('a party record: originals last, the window figure, all years beside it, an
     .findAllByType(MoneyRow)
     .filter((x) => /^money-focus-flow-\d+$/.test(x.props.testID));
   expect(flows.length).toBeGreaterThan(0);
+  // One number style down the list.
+  expect(flows.every((x) => x.props.compact)).toBe(true);
+  // The heading says what the figure counts: all receipts, not donations only.
+  const section = r.root.find(
+    (x) => x.props.testID === 'money-record-donations' && x.type === RN.View,
+  );
+  expect(
+    section.findAll((x) => x.props.title === 'Money received').length,
+  ).toBeGreaterThan(0);
+  expect(
+    section.findAll((x) => x.props.title === 'Donations to parties'),
+  ).toHaveLength(0);
   expect(flows[0]!.props.href).toEqual(
     expect.objectContaining({
       pathname: '/money-record',
@@ -227,8 +240,8 @@ test('a party record: originals last, the window figure, all years beside it, an
 });
 
 test.each([
-  [1, 'receipt'],
-  [2, 'receipts'],
+  [1, 'disclosure record'],
+  [2, 'disclosure records'],
 ])(
   'a party with %i receipts uses the matching count noun',
   async (count, noun) => {

@@ -54,10 +54,31 @@ export function votesSource(
     })
     .filter(Boolean)
     .join(' · ');
+  if (block.asAt) return { coverage: coverage || null };
+  if (coverage) return { coverage, dateLabel: 'Record date not published' };
+  // Undated file and no coverage: date the record by its own newest listed
+  // vote, which is on screen in this block, never by another file's date.
+  const newest = latestBillVote(block.data);
   return {
-    coverage: coverage || null,
-    ...(block.asAt ? {} : { dateLabel: 'Record date not published' }),
+    coverage: null,
+    dateLabel: newest
+      ? `Latest bill vote ${formatDate(newest, 'short')}`
+      : 'Record date not published',
   };
+}
+
+/** The newest date among a voting record's listed bill votes, if any. */
+export function latestBillVote(
+  data:
+    | { for: readonly { date: string }[]; against: readonly { date: string }[] }
+    | null
+    | undefined,
+): string | null {
+  const dates = [...(data?.for ?? []), ...(data?.against ?? [])]
+    .map((vote) => vote.date)
+    .filter(Boolean)
+    .sort();
+  return dates.at(-1) ?? null;
 }
 
 const PARTIAL_NOTE = 'Some records could not be read.';
