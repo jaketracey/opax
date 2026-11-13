@@ -83,7 +83,8 @@ test('typed map finance figures and leading recipients match the independent CSV
   const donations=industryRanking('finance','donation_only');
   const allTypes=industryRanking('finance','all_types');
   assert.equal(donations.reduce((sum,[,amount])=>sum+amount,0),24731335);
-  assert.equal(allTypes.reduce((sum,[,amount])=>sum+amount,0),169586920);
+  // 13 Nov 2026: 169,586,920 to 169,602,626, Westpac's $15,706 Other Receipt (St George Bank, 2013-14) on the Liberal Democratic Party's own return (export rule 10).
+  assert.equal(allTypes.reduce((sum,[,amount])=>sum+amount,0),169602626);
   assert.deepEqual(donations.slice(0,5),[['Liberal',14402567],['Labor',8694783],['Nationals',1335985],['LNP',270000],['Greens',28000]]);
   assert.deepEqual(allTypes.slice(0,5),[['Labor',82267799],['Liberal',64102300],['Nationals',10982297],['LNP',10209821],["Katter's Australian Party",1017881]]);
 });

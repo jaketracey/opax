@@ -13,6 +13,7 @@ export interface PartyRename { code: string; name: string; since?: string; forme
 export const PARTY_RENAMES: PartyRename[];
 export function partyRename(label: string): PartyRename | null;
 export function partyFormerName(label: string): PartyFormerName | null;
+export function partyNameForPeriod(label: string, lastFy: number | undefined): { name: string; now: string | null };
 export function partyNames(party: string): [string, string];
 export const CHAMBER_LABELS: Record<string, string>;
 export function chamberLabel(code: string | null | undefined): string;

@@ -56,7 +56,9 @@ test('a donor the party reported nothing from (empty typed cells) is not a row',
   assert.ok(empty, 'the released graph has such an edge');
   const labor = partyMoneyData(graph, 'party:Labor').rows;
   assert.ok(labor.every(r => r.count > 0 && r.total > 0));
-  assert.equal(labor.length, 301, 'Labor\'s 313 donor edges less the 12 with no receipts on its own returns');
+  // 13 Nov 2026: 313 to 312 edges and 301 to 300 rows: Linc Energy left the federal map at rank 251 when NIOA's 2015-16
+  // gifts to the Liberal Democratic Party lifted NIOA into the top 250 (export rule 10).
+  assert.equal(labor.length, 300, 'Labor\'s 312 donor edges less the 12 with no receipts on its own returns');
 });
 
 test('/api/register/party-money returns the same typed figures, its shape plus a scope', async () => {
@@ -149,7 +151,8 @@ test('the D1 party-money and money-connections rows carry the page\'s figures an
     assert.deepEqual(find(list, PRATT, 'Labor').map(r => [r.amount, r.count]), [[8473476, 40]]);
     assert.deepEqual(find(list, WESTPAC, 'Labor').map(r => [r.amount, r.count]), [[47331887, 201]]);
   }
-  for (const [label, partyId, expected] of [['Labor', 'party:Labor', 301], ['Liberal', 'party:Liberal', 251]]) {
+  // 13 Nov 2026: Labor 301 to 300 and Liberal 251 to 250, Linc Energy leaving the map (see above).
+  for (const [label, partyId, expected] of [['Labor', 'party:Labor', 300], ['Liberal', 'party:Liberal', 250]]) {
     const d1 = party.filter(r => r.jurisdiction === 'federal' && r.to === label);
     assert.equal(d1.length, expected, label);
     const page = partyMoneyData(graph, partyId).rows;

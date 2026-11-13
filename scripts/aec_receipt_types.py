@@ -7,7 +7,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from parli.ingest.aec_receipts import FILES, normal_type, period_key
-from parli.ingest.money_aec_extras import canon_party
+from parli.ingest.money_aec_extras import PARTY_FORMER_NAMES, canon_party, current_party
 from scripts.aec_receipt_selection import load_selection
 from scripts.export_money_graph import PUBLIC_FUNDING_RE, load_associated_register, norm_key
 
@@ -34,7 +34,10 @@ PARTY_RETURN_NOTE = (
     "associated entities. Amounts under the disclosure threshold are not itemised by the AEC and are not here, so these "
     "figures are well below the AEC's Total Receipts. A node with no counted line has no return fields. Unlike the "
     "legacy total, count and byYear, these fields hold no donor-side declarations; unlike by_type on a party node, "
-    "they are not capped to donors drawn on the map."
+    "they are not capped to donors drawn on the map. A renamed party is one node under its current name, its "
+    "former name's returns included (the Liberal Democratic Party's in the Libertarian Party's), and its "
+    "return_by_name gives each name's part as {name: [AUD, lines, first financial year, last financial year]}, "
+    "under the name each return was lodged as."
 )
 
 
@@ -261,9 +264,10 @@ def party_node(selection, parties, name):
     where the two differ: Country Labor Party is grouped with Labor, The ACT
     Greens with the Greens, and Country Liberal Party (NT) with no other party.
     The same function places a payer, so "the payer's own returns are counted
-    in this node" is one test.
+    in this node" is one test. A renamed party's former name reads as its
+    current one (money_aec_extras.current_party), so both names are one node.
     """
-    read = canon_party(BRANCH_SUFFIX_RE.sub("", name or "")) or canon_party(name)
+    read = current_party(canon_party(BRANCH_SUFFIX_RE.sub("", name or "")) or canon_party(name))
     if read and "party:" + read in parties:
         return "party:" + read
     mapped = selection.recipient_party.get(name)
@@ -304,6 +308,8 @@ def attach_party_returns(db, graph, selection):
     associated = AssociatedEntities(db, selection, filers)
     cells, counts = defaultdict(receipt_cells), defaultdict(int)
     transfers = defaultdict(lambda: [0.0, 0])
+    # A renamed party's counted lines under each name its returns were lodged as.
+    by_name = defaultdict(lambda: defaultdict(lambda: [0.0, 0, None, None]))
     for donor, recipient, amount, period, kind, recipient_kind in db.execute(query):
         node, reason = party_return_exclusion(selection, associated, parties, donor, recipient, amount, period, kind, recipient_kind)
         if reason:
@@ -314,12 +320,23 @@ def attach_party_returns(db, graph, selection):
             continue
         add_receipt(cells[node], kind, period, amount)
         counts["exported_rows"] += 1
+        if node[6:] in PARTY_FORMER_NAMES:
+            lodged = canon_party(BRANCH_SUFFIX_RE.sub("", recipient)) or canon_party(recipient) or node[6:]
+            cell, year = by_name[node][lodged], period_key(period)
+            cell[0] += amount
+            cell[1] += 1
+            if year:
+                cell[2] = year if cell[2] is None else min(cell[2], year)
+                cell[3] = year if cell[3] is None else max(cell[3], year)
     for node_id, node in parties.items():
         # A node with no counted line gets no fields, so readers keep its record total, never $0.
         if node_id not in cells:
             continue
         fields = receipt_fields(cells[node_id])
         node["return_by_type"], node["return_by_type_year"] = fields["by_type"], fields["by_type_year"]
+        if node_id in by_name:
+            node["return_by_name"] = {name: [round(c[0], 2), c[1], c[2], c[3]]
+                                      for name, c in sorted(by_name[node_id].items(), key=lambda kv: kv[1][2] or "")}
     return (dict(sorted(counts.items())), {k[6:]: [round(v[0], 2), v[1]] for k, v in sorted(transfers.items())},
             associated.source)
 
@@ -381,6 +398,7 @@ def main(argv=None):
     for node in graph["nodes"]:
         node.pop("return_by_type", None)
         node.pop("return_by_type_year", None)
+        node.pop("return_by_name", None)
     db = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
     attach_party_return_fields(db, graph)
     with open(args.out or args.graph, "w", encoding="utf-8") as f:

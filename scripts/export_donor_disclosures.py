@@ -59,6 +59,9 @@ def published_references(public):
             for child in value:
                 visit(child, source_path)
 
+    for donor in indexed_off_map(public):
+        add(donor["label"], donor["entity_id"], donor["aliases"])
+
     paths = [public / "access.json", public / "graph/grants.federal.json", public / "graph/grants.qld.json"]
     paths += sorted((public / "grants").glob("*/shard-*.json"))
     paths += sorted((public / "reports").glob("*.json"))
@@ -66,6 +69,39 @@ def published_references(public):
         if path.exists():
             visit(json.loads(path.read_text()), path)
     return list(candidates.values())
+
+
+MONEY_GRAPHS = ["graph/money.json", "graph/money.qld.json", "graph/money.vic.json", "graph/money.tas.json"]
+
+
+def indexed_off_map(public):
+    """Donors the published index holds that the current money maps no longer draw.
+
+    A donor can leave a map when another donor's gifts push it past the 250 cap. Its
+    page and search result come from the index, so it is carried here as a candidate:
+    its returns are summed from the database like any referenced donor's, and
+    build_donor_index keeps it. A published donor page stays reachable.
+    """
+    index_path = public / "graph/donor-index.json"
+    if not index_path.exists():
+        return []
+    drawn = set()
+    for path in MONEY_GRAPHS:
+        if (public / path).exists():
+            graph = json.loads((public / path).read_text())
+            for n in graph.get("nodes", []):
+                if n.get("kind") == "donor":
+                    drawn.update(name.casefold().strip() for name in [n.get("label"), n.get("source_name"), *n.get("lookup_names", [])] if name)
+    out = []
+    for n in json.loads(index_path.read_text()).get("donors", []):
+        if n.get("kind") == "reference":
+            continue
+        names = [name for name in [n.get("label"), n.get("source_name"), *n.get("lookup_names", [])] if isinstance(name, str) and name.strip()]
+        if not names or any(name.casefold().strip() in drawn for name in names):
+            continue
+        eid = (n.get("match") or {}).get("entity_id")
+        out.append({"label": names[0], "entity_id": eid, "aliases": [*names[1:], *n.get("aliases", [])]})
+    return out
 
 
 def disclosure_catalog(db, candidates):
