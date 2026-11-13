@@ -5,6 +5,7 @@ import {runInNewContext} from 'node:vm';
 import {latestBillVotes,recentSittingSpeeches,otherSponsorBills,askPageType,noDivisionsHeading,ASSOCIATION_NOTE} from '../public/growth-modules.js';
 import {agencySuppliers,publishedSupplierIndex,agencyGrants,agencyGrantsHTML} from '../public/supplier-growth.js';
 import * as core from '../public/growth-modules.js';
+import {billDivisionTablesHTML} from '../public/vote-tables.js';
 import {cleanEvent} from '../analytics/privacy.mjs';
 const read = f=>readFileSync(new URL(f,import.meta.url),'utf8');
 const app=read('../public/app.js');
@@ -146,8 +147,8 @@ test('events keep origin type and module categories without question text',()=>{
 });
 test('the actual bill division renderer reuses one section and one SourceLine for voted or unvoted bills',()=>{
  const code=app.slice(app.indexOf('function billDivisionsHTML('),app.indexOf('const BILL_SPEECH_BRIEF_NOTE'));
- const {billDivisionsHTML}=runInNewContext(code+';({billDivisionsHTML})',{growthModules:{moduleAttrs:()=>'',associationHTML:()=>ASSOCIATION_NOTE,noDivisionsHeading},billDedupeDivisions:d=>({divisions:d||[],collapsed:0}),voteTables:{divisionTableConfig:()=>({}),divisionRows:d=>d,voteTablePage:rows=>({rows}),voteTableHTML:()=>'<table><caption>Divisions</caption></table>'},sourceLineHTML:()=>'<details class="ui-source"></details>',esc:String});
- for(const divisions of [[],[{date:'2026-10-08'}]]) {const html=billDivisionsHTML({divisions});assert.equal((html.match(/<section /g)||[]).length,1);assert.equal((html.match(/class="ui-source"/g)||[]).length,1);assert.match(html,divisions.length?/<caption>Divisions<\/caption>/:/No formal divisions recorded/);}
+ const {billDivisionsHTML}=runInNewContext(code+';({billDivisionsHTML})',{growthModules:{moduleAttrs:()=>'',associationHTML:()=>ASSOCIATION_NOTE,noDivisionsHeading},billDedupeDivisions:d=>({divisions:d||[],collapsed:0}),voteTables:{billDivisionTablesHTML},sourceLineHTML:()=>'<details class="ui-source"></details>',esc:String});
+ for(const divisions of [[],[{date:'2026-10-08'}]]) {const html=billDivisionsHTML({divisions});assert.equal((html.match(/<section class="ui-section bill-section"/g)||[]).length,1);assert.equal((html.match(/class="ui-source"/g)||[]).length,1);assert.match(html,divisions.length?/<caption>Divisions<\/caption>/:/No formal divisions recorded/);}
 });
 test('person sections are reused once, and money/vote pairings carry the association line',()=>{
  const region=app.slice(app.indexOf('// person\n'),app.indexOf('/** The ask field under'));

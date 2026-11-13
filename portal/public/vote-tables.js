@@ -22,6 +22,53 @@ export function headingTitle(value) {
 }
 const divisionLink = value => /^[a-z0-9][a-z0-9-]*$/.test(String(value || '')) ? `/doc/${String(value).startsWith('division-') ? value : `division-${value}`}` : null;
 
+/** Classify the recorded title, never the stage, tally or a speech in the question text.
+ * Limitation of debate can also be the stage of a content amendment or final passage.
+ * Only explicit motions about running the debate belong in the procedural group. */
+export function isProceduralDivision(title) {
+  const text = divisionPlain(title).toLowerCase().replace(/[–—]/g, '-').replace(/\s+/g, ' ').trim();
+  return /\b(?:suspend(?:ing)?|suspension of) (?:the |so much of the )?(?:standing(?: and sessional)?|sessional) orders?\b/.test(text)
+    || /\bsuspend (?:the )?(?:usual )?(?:procedural |procedual )?(?:rules|orders)\b/.test(text)
+    || /\b(?:that the question be (?:now )?put|put the question|closure of (?:the )?debate|allotment of time)\b/.test(text)
+    || /(?:^|[-;:])\s*(?:closure|guillotine)\s*(?:$|[-;:(])/.test(text)
+    || /\b(?:member|senator) be no (?:longer|further) heard\b/.test(text)
+    || /(?:^|[-;:])\s*(?:(?:do not|don't) )?stopp?(?:ing)?\b[^.;:]*\b(?:speaking|talking)\b/.test(text)
+    || /\b(?:member|mp|senator)\b[^.;:]*\bstop speaking\b/.test(text)
+    || /\bstop debating (?:the )?bill until\b/.test(text)
+    || /\b(?:adjourn(?:ment of)? (?:the )?debate|debate be (?:now )?adjourned)\b/.test(text)
+    || /(?:^|[-;:])\s*(?:leave (?:be granted|to (?:introduce|move|proceed|withdraw))|(?:grant|refuse) leave|order of business|rearrangement of (?:the )?business|business - rearrangement)\b/.test(text);
+}
+export const PROCEDURAL_TITLES_PATH = '/procedural-division-titles.json';
+export const PROCEDURAL_VOTES_NOTE = 'Votes on how the debate ran, such as closing debate or suspending standing orders. They are not votes on the bill itself.';
+export const proceduralTagHTML = () => '<span class="ui-tag procedural-tag">Procedural</span>';
+
+/** Older bill exports omit titles. The release lookup keeps only explicit procedural
+ * titles, read from the published division files. A missing title stays substantive. */
+export function billDivisionGroups(divisions = [], titles = {}) {
+  const rows = divisionRows(divisions.map(d => ({...d, title: d.title || d.name || titles[d.key] || ''})), true);
+  return {substantive: rows.filter(row => !row.procedural), procedural: rows.filter(row => row.procedural)};
+}
+export function billVoteSummary(groups) {
+  const n = groups.substantive.length, p = groups.procedural.length;
+  return `${n} substantive vote${n === 1 ? '' : 's'}${p ? `; ${p} procedural vote${p === 1 ? '' : 's'}` : ''}`;
+}
+export function billDivisionTablesHTML(divisions = [], titles = {}, query = {}, suffix = '', proceduralQuery = {}) {
+  const groups = billDivisionGroups(divisions, titles);
+  const table = (rows, procedural) => {
+    const config = divisionTableConfig({}, procedural ? 'Procedural votes' : 'Divisions');
+    // Both groups query their complete, bounded bill export. An unfiltered server
+    // endpoint would put procedural rows back into the substantive table on hydration.
+    delete config.source;
+    config.rows = rows;
+    config.id += `${procedural ? '-procedural' : ''}${suffix}`;
+    if (procedural) {config.urlKey = 'pv'; config.export.filename = 'procedural-votes.csv';}
+    return voteTableHTML(config, voteTablePage(rows, config, procedural ? proceduralQuery : query));
+  };
+  return `<p class="bill-vote-summary">${billVoteSummary(groups)}.</p>`
+    + (groups.substantive.length ? table(groups.substantive, false) : '<h2>Divisions</h2><p>No substantive divisions recorded.</p>')
+    + (groups.procedural.length ? `<details class="ui-disclosure procedural-votes"><summary>Procedural votes (${groups.procedural.length})</summary><div class="ui-disclosure-body"><p>${PROCEDURAL_VOTES_NOTE}</p>${table(groups.procedural, true)}</div></details>` : '');
+}
+
 export const divisionColumns = [
   {key:'title', label:'Title', type:'text', primary:true},
   {key:'date', label:'Date', type:'date'},
@@ -80,7 +127,7 @@ export function personVoteRecords(keys = [], votes = {}, recentData = null) {
       recorded = true;
       return recent.recent;
     }
-    return [...(record.for || []).map(row => ({...row, vote:'For the bill'})), ...(record.against || []).map(row => ({...row, vote:'Against the bill'}))];
+    return [...(record.for || []).map(row => ({...row, vote:isProceduralDivision(row.title || row.name) ? 'aye' : 'For the bill'})), ...(record.against || []).map(row => ({...row, vote:isProceduralDivision(row.title || row.name) ? 'no' : 'Against the bill'}))];
   });
   return {rows, recorded};
 }
@@ -112,7 +159,7 @@ export function divisionRows(divisions = [], deduplicate = false) {
     const outcome = ({affirmative:'Agreed', negative:'Not agreed'}[division.outcome || division.result]) || sentence(division.outcome || division.result) || 'Not recorded';
     unique.set(key, {title:[stage, date ? shortDate(date) : ''].filter(Boolean).join(', '), date,
       chamber:chambers[division.house] || sentence(division.house) || 'Not recorded', outcome,
-      ayes:count(division.ayes), noes:count(division.noes),
+      ayes:count(division.ayes), noes:count(division.noes), procedural:isProceduralDivision(division.title || division.name),
       href:divisionLink(division.slug || division.key) || safeLink(division.source_url || division.url)});
   }
   return [...unique.values()];
@@ -135,8 +182,10 @@ export function votingRows(votes = [], bills = []) {
     const title = headingTitle(v.title || v.name || 'Division');
     const matches = (index.get(titleKey(v.title || v.name)) || []).filter(b=>!v.jur || b.jurisdiction===v.jur);
     const billKey = v.bill_key || (matches.length===1 ? matches[0].key : '');
-    return {title, date:String(v.date || ''),
-    vote:({aye:'Aye', no:'No', paired:'Paired', absent:'Absent'}[v.vote]) || sentence(v.vote) || 'Not recorded',
+    const procedural = isProceduralDivision(v.title || v.name);
+    const vote = procedural ? ({'For the bill':'aye', 'Against the bill':'no'}[v.vote] || v.vote) : v.vote;
+    return {title, date:String(v.date || ''), procedural,
+    vote:({aye:'Aye', no:'No', paired:'Paired', absent:'Absent'}[vote]) || sentence(vote) || 'Not recorded',
     // Only a position explicitly supplied by this vote's source is shown.
     party_position:sentence(v.party_position) || 'Not recorded',
     href:divisionLink(v.division_slug) || (/^au-[a-z0-9-]+$/.test(billKey) ? `/bill/${billKey}` : safeLink(v.source_url)) || `/ask?view=search&q=${encodeURIComponent(title)}`};
@@ -159,6 +208,11 @@ function outcomeCell(html) {
 }
 export function voteTableHTML(config, page) {
   let html = dataTableHTML(config, page);
+  let row = 0;
+  html = html.replace(/(<td\b[^>]*data-primary[^>]*>)([\s\S]*?)(<\/td>)/g, (_, start, cell, end) => {
+    const record = page.rows[row++];
+    return start + cell + (record?.procedural ? proceduralTagHTML() : '') + end;
+  });
   const json = JSON.stringify(config).replace(/</g, '\\u003c').replace(/&/g, '\\u0026');
   return `<div class="vote-table" data-vote-table>${outcomeCell(html)}<script type="application/json" data-vote-config>${json}</script></div>`;
 }
@@ -175,6 +229,14 @@ export function mountVoteTables(root = document) {
     config.primaryLink = row => safeLink(row.href);
     const table = el.querySelector('[data-datatable]');
     const decorate = () => {
+      for (const cell of el.querySelectorAll('td[data-label="Bill or division"]')) {
+        const title = cell.querySelector('.dt-value')?.textContent || '';
+        if (isProceduralDivision(title)) {
+          if (!cell.querySelector('.procedural-tag')) cell.insertAdjacentHTML('beforeend', proceduralTagHTML());
+          const value = cell.closest('tr')?.querySelector('td[data-label="Vote"] .dt-value');
+          if (value && /^(?:For|Against) the bill$/i.test(value.textContent.trim())) value.textContent = /^For/i.test(value.textContent.trim()) ? 'Aye' : 'No';
+        }
+      }
       for (const cell of el.querySelectorAll('td[data-label="Outcome"]')) {
         if (cell.querySelector('.ui-status')) continue;
         const value = cell.querySelector('.dt-value') || cell;

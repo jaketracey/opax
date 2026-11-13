@@ -31,7 +31,7 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=59ae545e14").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=42ba8e3bf2").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
@@ -5872,7 +5872,7 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   const jurName = (j) => STATE_NAMES[j] || String(j || "").toUpperCase();
   const all = recs.flatMap(r => ["for", "against"].flatMap(field => (r[field] || []).map(d => ({...d, jur: d.jur || r.jurisdiction, vote: field === "for" ? "For the bill" : "Against the bill"}))));
   if (currentSubjectKey !== key) return;
-  const latestBills = growthModules.latestBillVotes(all);
+  const latestBills = growthModules.latestBillVotes(all.filter(v => !voteTables.isProceduralDivision(v.title || v.name)));
   const billIndex = await loadBillTitles().catch(() => null);
   if (currentSubjectKey !== key || !slot.isConnected) return;
   onRecord({votes: latestBills, bills: billIndex?.bills || []});
@@ -8622,6 +8622,13 @@ async function renderCampaignerEntry(name, key) {
 let billsIndexPromise = null;
 let billsTitleIndex = null;
 const billFiles = new Map();
+let proceduralTitlesPromise = null;
+function loadProceduralTitles() {
+  proceduralTitlesPromise ??= fetch('/procedural-division-titles.json', {cache:'no-cache'})
+    .then(r => {if (!r.ok) throw new Error('division titles unavailable'); return r.json();});
+  proceduralTitlesPromise.catch(() => {proceduralTitlesPromise = null;});
+  return proceduralTitlesPromise;
+}
 // "bill:<key>" or "index": what #bill-body is currently holding.
 let billView = null;
 let billTextHandle = null;
@@ -8705,7 +8712,8 @@ function loadBillsDate() {
 function fetchBill(key) {
   if (!billFiles.has(key)) {
     const request = fetch(`/bills/${encodeURIComponent(key)}.json`, { cache: "no-cache" })
-      .then((r) => { if (r.ok) return r.json(); if (r.status === 404) return null; throw new Error(`bill ${r.status}`); });
+      .then((r) => { if (r.ok) return r.json(); if (r.status === 404) return null; throw new Error(`bill ${r.status}`); })
+      .then(async bill => bill && (bill.divisions || []).length ? {...bill, division_titles:await loadProceduralTitles().catch(() => ({}))} : bill);
     request.catch(() => { if (billFiles.get(key) === request) billFiles.delete(key); });
     billFiles.set(key, request);
   }
@@ -9366,10 +9374,8 @@ function billDivisionsHTML(bill) {
         "A bill with no division here was not necessarily unopposed. This register does not establish whether a vote on the voices has occurred.",
         "No per-member or per-party vote is available without a formal division."]})}</section>`;
   }
-  const config = voteTables.divisionTableConfig({bill:bill.key});
-  const rows = voteTables.divisionRows(divs, true);
   return `<section class="ui-section bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}>
-    ${voteTables.voteTableHTML(config, voteTables.voteTablePage(rows, config))}
+    ${voteTables.billDivisionTablesHTML(divs, bill.division_titles)}
     ${sourceLineHTML({
       updated: bill.exportedAt || "", source: "They Vote For You",
       notes: [
@@ -9719,6 +9725,7 @@ const PARTY_BILLS_ENOUGH = 32; // stop as soon as this many bill files have arri
 const PARTY_BILLS_SHOW = 10;
 
 async function renderPartyBillDivisions(label, sections, key) {
+  await voteTablesReady;
   // The section takes its place in the column before anything is fetched:
   // where a reader finds it should not depend on how fast a file returns.
   const slot = document.createElement("section");
@@ -9778,6 +9785,7 @@ async function renderPartyBillDivisions(label, sections, key) {
     <span class="result-meta">${[
       r.d.title ? esc(r.d.title) : r.d.stage ? esc(billStage(r.d.stage)) : "", r.d.date ? esc(fmtDate(r.d.date)) : "",
       r.d.outcome ? `<b>${esc(billOutcome(r.d.outcome))}</b>` : "",
+      voteTables.isProceduralDivision(r.d.title || r.d.name || r.bill.division_titles?.[r.d.key]) ? voteTables.proceduralTagHTML() : "",
       // A renamed party's division keeps the name it voted under (party-page.js recordedAsText).
       partyPage?.recordedAsText(label, [r.party]) ? esc(partyPage.recordedAsText(label, [r.party])) : "",
     ].filter(Boolean).join("&nbsp;· ")}</span>
@@ -9806,13 +9814,14 @@ async function renderPartyBillDivisions(label, sections, key) {
       esc(`${runs.length} ${stage ? `${stage.toLowerCase()} ` : ""}divisions`),
       first.d.date ? esc(fmtDate(first.d.date)) : "", outcomes ? `<b>${esc(outcomes)}</b>` : "",
       esc(`${label} ${sides}`),
+      voteTables.isProceduralDivision(first.d.title || first.d.name || first.bill.division_titles?.[first.d.key]) ? voteTables.proceduralTagHTML() : "",
     ].filter(Boolean).join("&nbsp;· ")}</span>
   </li>`;
   };
   const runsOf = (rows) => {
     const runs = new Map();
     for (const r of rows) {
-      const k = `${stageOf(r)}|${r.d.date || ""}`;
+      const k = `${stageOf(r)}|${r.d.date || ""}|${voteTables.isProceduralDivision(r.d.title || r.d.name || r.bill.division_titles?.[r.d.key])}`;
       if (!runs.has(k)) runs.set(k, []);
       runs.get(k).push(r);
     }

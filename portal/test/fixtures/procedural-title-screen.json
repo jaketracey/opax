@@ -1,0 +1,280 @@
+{
+  "audit_reported_candidates": 878,
+  "candidates": 853,
+  "procedural": 785,
+  "bill_pages": 113,
+  "exceptions": [
+    {
+      "key": "federal-representatives-3681",
+      "title": "Members Suspension from the House"
+    },
+    {
+      "key": "federal-representatives-4809",
+      "title": "Motions - Deputy Prime Minister - Stop MP Burke from speeaking"
+    },
+    {
+      "key": "federal-representatives-5870",
+      "title": "Migration Amendment (Streamlining Visa Processing) Bill 2019 - Second Reading - Stop privatisation"
+    },
+    {
+      "key": "federal-representatives-6000",
+      "title": "Questions without Notice: Additional Answers - Minister for Energy and Emissions Reduction - Stop Mr Albanese from playing"
+    },
+    {
+      "key": "federal-representatives-6478",
+      "title": "Motions - Covid-19: State and Territory Border Closures - Speed things along"
+    },
+    {
+      "key": "federal-representatives-6479",
+      "title": "Motions - Covid-19: State and Territory Border Closures - Don't let a vote happen"
+    },
+    {
+      "key": "federal-representatives-6554",
+      "title": "Motions - Economy - Stop Mr Chalmers from spearking"
+    },
+    {
+      "key": "federal-representatives-7043",
+      "title": "Treasury Laws Amendment (2021 Measures No. 1) Bill 2021 - Consideration in Detail - Continuous disclosure obligations"
+    },
+    {
+      "key": "federal-representatives-7502",
+      "title": "Electoral Legislation Amendment (Political Campaigners) Bill 2021 - Consideration in Detail - Registration requirements and financial disclosure"
+    },
+    {
+      "key": "federal-representatives-7542",
+      "title": "Electoral Legislation Amendment (Annual Disclosure Equality) Bill 2021 - Consideration in Detail - Receipt of donations"
+    },
+    {
+      "key": "federal-representatives-7543",
+      "title": "Electoral Legislation Amendment (Annual Disclosure Equality) Bill 2021 - Consideration in Detail - Local expenses"
+    },
+    {
+      "key": "federal-representatives-7865",
+      "title": "National Anti-Corruption Commission Bill 2022 - Consideration in Detail - Statement about witnesses and non-disclosure notations"
+    },
+    {
+      "key": "federal-representatives-7986",
+      "title": "Migration Amendment (Australia's Engagement in the Pacific and Other Measures) Bill 2023 - Report from Federation Chamber - Stop considering bill"
+    },
+    {
+      "key": "federal-representatives-8062",
+      "title": "Motions - Offshore Petroleum and Greenhouse Gas Storage Amendment (Stop Pep11 and Protect Our Coast) Bill 2023 - Consider bill now"
+    },
+    {
+      "key": "federal-senate-10720",
+      "title": "Documents — Adstop; Order for the Production of Documents"
+    },
+    {
+      "key": "federal-senate-127",
+      "title": "Documents — Public Interest Disclosure Bill, Order for the Production of Documents"
+    },
+    {
+      "key": "federal-senate-1767",
+      "title": "Motions - Asylum Seekers - Stop excising territory"
+    },
+    {
+      "key": "federal-senate-1840",
+      "title": "Motions - Environment: Millewa Forest - Stop logging"
+    },
+    {
+      "key": "federal-senate-1844",
+      "title": "Motions - Suspension of processing Sri Lankan and Afghan asylum claims"
+    },
+    {
+      "key": "federal-senate-19",
+      "title": "Motions - Public Interest Disclosure - Protect whistle blowers"
+    },
+    {
+      "key": "federal-senate-2389",
+      "title": "Cybercrime Legislation Amendment Bill 2011 - In Committee - Agree to amendments introducing limitations on access and disclosure"
+    },
+    {
+      "key": "federal-senate-2417",
+      "title": "Motions - Carbon Pricing - Stop the increase in the carbon price"
+    },
+    {
+      "key": "federal-senate-2750",
+      "title": "Motions - Guantanamo Bay - Support its closure + Repatriate Hicks"
+    },
+    {
+      "key": "federal-senate-3035",
+      "title": "Motions - Political Donations - Disclosure and ban on overseas donations"
+    },
+    {
+      "key": "federal-senate-3086",
+      "title": "Motions - Live Animal Exports - Stop export until investigations completed"
+    },
+    {
+      "key": "federal-senate-3180",
+      "title": "Motions - Coal Seam Gas - Stop further approvals"
+    },
+    {
+      "key": "federal-senate-3362",
+      "title": "Motions - National Water Commission - Reverse position on closure"
+    },
+    {
+      "key": "federal-senate-3446",
+      "title": "National Security Legislation Amendment Bill (No. 1) 2014 - in Committee - Against increase in penalty for unauthorised disclosure"
+    },
+    {
+      "key": "federal-senate-3564",
+      "title": "Counter-Terrorism Legislation Amendment (Foreign Fighters) Bill 2014 - In Committee - Add extra defences to unauthorise disclosure offence"
+    },
+    {
+      "key": "federal-senate-3888",
+      "title": "Motions - Galilee Basin - Stop legal actions by anti-coal activists"
+    },
+    {
+      "key": "federal-senate-3978",
+      "title": "Motions - Legal System - Stop environmental groups from challenging government decisions"
+    },
+    {
+      "key": "federal-senate-3979",
+      "title": "Tax Laws Amendment (Combating Multinational Tax Avoidance) Bill 2015 - in Committee - Discretion to prevent disclosure of tax information"
+    },
+    {
+      "key": "federal-senate-3996",
+      "title": "Regulations and Determinations — Small Pelagic Fishery (Closures Variation) Direction No. 1 2015; Disallowance"
+    },
+    {
+      "key": "federal-senate-4655",
+      "title": "Motions - Ministerial Standards - Disclosure of meetings"
+    },
+    {
+      "key": "federal-senate-4793",
+      "title": "Great Barrier Reef Marine Park Amendment Bill 2017 - Second Reading - Stop Adani mine"
+    },
+    {
+      "key": "federal-senate-4932",
+      "title": "Australian Border Force Amendment (Protected Information) Bill 2017 - in Committee - Unauthorised disclosure"
+    },
+    {
+      "key": "federal-senate-4943",
+      "title": "Regional Investment Corporation Bill 2017 - in Committee - Disclosure of interests"
+    },
+    {
+      "key": "federal-senate-4953",
+      "title": "Environment and Infrastructure Legislation Amendment (Stop Adani) Bill 2017 - Second Reading - Speed things along"
+    },
+    {
+      "key": "federal-senate-5317",
+      "title": "Motions - Donations to Political Parties - Disclosure"
+    },
+    {
+      "key": "federal-senate-5336",
+      "title": "Motions - Multiculturalism - Stop promoting"
+    },
+    {
+      "key": "federal-senate-5415",
+      "title": "Motions - Bureau of Meteorology - Stop centralisation"
+    },
+    {
+      "key": "federal-senate-5497",
+      "title": "Motions - Political Donations - Increase disclosure requirements"
+    },
+    {
+      "key": "federal-senate-5820",
+      "title": "Social Security (Administration) Amendment (Cashless Welfare) Bill 2019 - Second Reading - Stop being compulsory"
+    },
+    {
+      "key": "federal-senate-5932",
+      "title": "Treasury Laws Amendment (2019 Tax Integrity and Other Measures No. 1) Bill 2019 - in Committee - Disclosure of business tax debts"
+    },
+    {
+      "key": "federal-senate-6415",
+      "title": "Motions - Live Animal Exports - Stop RETWA ship"
+    },
+    {
+      "key": "federal-senate-6489",
+      "title": "Motions - Covid-19 - State and Territory Border Closures"
+    },
+    {
+      "key": "federal-senate-6571",
+      "title": "Electoral Legislation Amendment (Miscellaneous Measures) Bill 2020 - in Committee - Lower disclosure threshold"
+    },
+    {
+      "key": "federal-senate-6572",
+      "title": "Electoral Legislation Amendment (Miscellaneous Measures) Bill 2020 - in Committee - Disclosure indexation"
+    },
+    {
+      "key": "federal-senate-6925",
+      "title": "Motions - Donations to Political Parties - Lower disclosure threashold"
+    },
+    {
+      "key": "federal-senate-7122",
+      "title": "Motions - Climate Change - Stop funding fossil fuels"
+    },
+    {
+      "key": "federal-senate-7558",
+      "title": "Electoral Legislation Amendment (Political Campaigners) Bill 2021 - Second Reading - Disclosure threshold"
+    },
+    {
+      "key": "federal-senate-7568",
+      "title": "Electoral Legislation Amendment (Annual Disclosure Equality) Bill 2021 - in Committee - Lower disclosure threshold to $1K"
+    },
+    {
+      "key": "federal-senate-7574",
+      "title": "Electoral Legislation Amendment (Annual Disclosure Equality) Bill 2021 - in Committee - Event costs and proceeds"
+    },
+    {
+      "key": "federal-senate-7775",
+      "title": "Social Services and Other Legislation Amendment (Lifting the Income Limit for the Commonwealth Seniors Health Card) Bill 2022 - in Committee - Suspension of benefits & entitlements"
+    },
+    {
+      "key": "federal-senate-7779",
+      "title": "Documents - Superannuation; Order for the Production of Documents - Changes to payment disclosure requirements"
+    },
+    {
+      "key": "federal-senate-8022",
+      "title": "Referendum (Machinery Provisions) Amendment Bill 2022; in Committee - Exclusion zones and financial disclosure"
+    },
+    {
+      "key": "federal-senate-8087",
+      "title": "Public Interest Disclosure Amendment (Review) Bill 2022 - Second Reading - Whistleblowers"
+    },
+    {
+      "key": "federal-senate-8088",
+      "title": "Public Interest Disclosure Amendment (Review) Bill 2022 - in Committee - Insert word 'solely'"
+    },
+    {
+      "key": "federal-senate-8149",
+      "title": "Public Interest Disclosure Amendment (Review) Bill 2022 - in Committee - Meaning of public interest disclosure"
+    },
+    {
+      "key": "federal-senate-8150",
+      "title": "Public Interest Disclosure Amendment (Review) Bill 2022 - in Committee - Item 9"
+    },
+    {
+      "key": "federal-senate-8151",
+      "title": "Public Interest Disclosure Amendment (Review) Bill 2022 - in Committee - Professional assistance disclosure"
+    },
+    {
+      "key": "federal-senate-8152",
+      "title": "Public Interest Disclosure Amendment (Review) Bill 2022 - in Committee - Parliamentary staff"
+    },
+    {
+      "key": "federal-senate-8317",
+      "title": "Treasury Laws Amendment (Modernising Business Communications and Other Measures) Bill 2023 - in Committee - Continuous disclosure obligations"
+    },
+    {
+      "key": "federal-senate-8594",
+      "title": "Economic Inclusion Advisory Committee Bill 2023 - In Committee - Committee appointment, contents of report & publication of disclosure of interests"
+    },
+    {
+      "key": "federal-senate-8869",
+      "title": "Digital Id Bill 2023, Digital Id (Transitional and Consequential Provisions) Bill 2023 - Committee of the Whole - Disclosures"
+    },
+    {
+      "key": "federal-senate-9198",
+      "title": "Documents - Department of Social Services; Order for the Production of Documents - Non-disclosure agreements"
+    },
+    {
+      "key": "federal-senate-9248",
+      "title": "Documents — Non-Disclosure Agreements; Order for the Production of Documents"
+    },
+    {
+      "key": "federal-senate-9567",
+      "title": "Documents - Non-Disclosure Agreements - Order for the Production of Documents"
+    }
+  ]
+}

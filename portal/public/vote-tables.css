@@ -10,3 +10,5 @@
 .vote-table .dt-bar-track { background: var(--votes-wash); }
 .vote-table .dt-bar { background: var(--votes-ink); }
 .vote-table .dt-choice input { accent-color: var(--votes-ink); }
+.vote-table .procedural-tag { margin-inline-start: .5rem; }
+.procedural-votes { margin-block-start: var(--sp-16); }
