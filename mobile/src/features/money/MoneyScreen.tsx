@@ -93,9 +93,11 @@ import {
   moneyWindowParams,
   moneyYears,
   param,
+  partiesFigureWords,
   partyDonationsTotal,
   publicMoneyCaveat,
   publicMoneySource,
+  receiptSectionWords,
   type MoneyParams,
 } from './records';
 import {
@@ -114,7 +116,7 @@ import {
 const TOP_DONORS = 20;
 type Mode = 'list' | 'map';
 
-/** "Donations to parties, 1998–99 to 2025–26, and public money to donors on the map". */
+/** "Money to parties, 1998–99 to 2025–26, and public money to donors on the map". */
 export function moneySummary(graph: MoneyGraph, filters: MoneyFilters) {
   // All years names the returns' own span: public money runs later, and
   // the extent it reaches is not a span of donations.
@@ -142,9 +144,10 @@ export function moneySummary(graph: MoneyGraph, filters: MoneyFilters) {
     !isAllYears(graph, filters) || !!filters.industry || filters.min > 0;
   if (!filters.donations)
     return `Public money to donors on the map${window}${industry}${minimum}`;
+  const { title } = partiesFigureWords(graph);
   return narrowed || !publicMoney
-    ? `Donations to parties${window}${industry}${minimum}`
-    : `Donations to parties${window}, and public money to donors on the map`;
+    ? `${title}${window}${industry}${minimum}`
+    : `${title}${window}, and public money to donors on the map`;
 }
 
 /**
@@ -1001,7 +1004,7 @@ function ListBody({
   const inflation = filters.inflation ? ', in 2025–26 dollars' : '';
   const donationsLine = donations.subset
     ? `from ${industryDonors(filters.industry!)} on the map, ${years}${inflation}`
-    : `disclosed to parties, ${years}${inflation}`;
+    : `${partiesFigureWords(graph).line}, ${years}${inflation}`;
   const shortSource = moneyShortSource(graph);
   const grantsSource = publicMoneySource(graph, 'grants');
   const contractsSource = publicMoneySource(graph, 'contracts');
@@ -1014,7 +1017,11 @@ function ListBody({
       value={formatMoneyCompact(donations.total)}
       ink="money"
       label={donationsLine}
-      caveat={donationsCaveat}
+      caveat={
+        donations.subset
+          ? donationsCaveat
+          : receiptSectionWords('party', graph, false).caveat
+      }
       accessibilityLabel={`${moneyAccessibilityLabel(donations.total, true)}, ${donationsLine}`}
       citation={moneySourceDetails(record, {
         citation: shortSource,

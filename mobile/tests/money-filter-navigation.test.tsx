@@ -183,7 +183,7 @@ test.each(['push', 'native link'] as const)(
         .findAllByType(Text)
         .find((node) => node.props.testID === 'money-view-summary')!.props
         .children,
-    ).toBe('Donations to parties in 2024–25, union donors only');
+    ).toBe('Money to parties in 2024–25, union donors only');
     // The Labor journey action: the same push as the panel's Open record.
     await act(async () =>
       map()

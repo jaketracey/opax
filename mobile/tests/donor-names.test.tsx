@@ -9,7 +9,10 @@ import { forgetMoneyGraphs } from '../src/features/money/lookup';
 import { buildModel } from '../src/features/money/map/model';
 import { MoneyMapSearch } from '../src/features/money/map/MoneyMapSearch';
 import MoneyRecordScreen from '../src/features/money/MoneyRecord';
+import { moneySummary } from '../src/features/money/MoneyScreen';
+import { partiesFigureWords } from '../src/features/money/records';
 import { defaultMoneyFilters, moneyView } from '../src/features/money/view';
+import { partyDonations } from '../src/features/money-public/HubCards';
 
 // Individual donors are public record (Jake, 12 Oct): the app names every
 // donor as its graph names it, as the web does, on a party's money page, the
@@ -204,4 +207,23 @@ test("the map's search finds an individual donor by name", async () => {
   await act(async () => results[0]!.props.onPress());
   expect(onChoose).toHaveBeenCalledWith('donor:jane example');
   await act(async () => r.unmount());
+});
+
+test('the parties figure says money to parties on a federal graph, and keeps its words on a state graph', () => {
+  const federal = decodeMoneyGraph(raw);
+  const all = defaultMoneyFilters(federal);
+  expect(
+    moneySummary(federal, { ...all, grants: false, contracts: false }),
+  ).toBe('Money to parties, 2023–24 to 2024–25');
+  expect(partyDonations(federal).line).toBe(
+    'received by political parties, 2023–24 to 2024–25',
+  );
+  const state = decodeMoneyGraph({
+    ...raw,
+    meta: { ...raw.meta, jurisdiction: 'qld' },
+  });
+  expect(partiesFigureWords(state).title).toBe('Donations to parties');
+  expect(partyDonations(state).line).toBe(
+    'disclosed to political parties, 2023–24 to 2024–25',
+  );
 });

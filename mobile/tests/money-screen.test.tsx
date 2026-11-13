@@ -289,14 +289,14 @@ test('summary, caption and footnote helpers state the cut in plain words', () =>
   const all = defaultMoneyFilters(graph);
   // All years states the returns' span, not the later public-money years.
   expect(moneySummary(graph, all)).toBe(
-    'Donations to parties, 1998–99 to 2025–26, and public money to donors on the map',
+    'Money to parties, 1998–99 to 2025–26, and public money to donors on the map',
   );
   expect(donorCaption(graph, { ...all, from: 2024, to: 2024 })).toBe(
     'Largest in 2024–25 among the 250 largest donors since 1998–99',
   );
   expect(
     moneySummary(graph, { ...all, from: 2024, to: 2024, industry: 'unions' }),
-  ).toBe('Donations to parties in 2024–25, union donors only');
+  ).toBe('Money to parties in 2024–25, union donors only');
 });
 
 test('every push from the map carries via=map', async () => {
