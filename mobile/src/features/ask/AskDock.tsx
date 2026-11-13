@@ -132,6 +132,9 @@ export function AskDock({
   const options = askSession.composerOptions();
   const tags = chips(options, (slug) => topics[slug] ?? slug);
   const empty = !s.draft.trim();
+  // iOS: an empty composer is one capped line, its symbols scaling with it.
+  const drawn = empty && Platform.OS === 'ios';
+  const symbolScale = Platform.OS === 'ios' ? chromeTextScaleCap : 1;
   // A tapped question waiting for the running answer says when it goes.
   const freshLabel = s.queued ? composerCopy.queued : composerCopy.fresh;
   // A tapped question that waits puts VoiceOver on this line (`askNow`).
@@ -161,7 +164,7 @@ export function AskDock({
   const trailing = s.busy ? (
     <IconButton
       symbol="stop.circle.fill"
-      maxScale={chromeTextScaleCap}
+      maxScale={symbolScale}
       variant="primary"
       accessibilityLabel={composerCopy.stop}
       onPress={onStop}
@@ -170,7 +173,7 @@ export function AskDock({
   ) : empty && onTalk ? (
     <IconButton
       symbol="waveform"
-      maxScale={chromeTextScaleCap}
+      maxScale={symbolScale}
       accessibilityLabel={talkLabel}
       onPress={onTalk}
       testID="ask-talk"
@@ -178,7 +181,7 @@ export function AskDock({
   ) : (
     <IconButton
       symbol="arrow.up.circle.fill"
-      maxScale={chromeTextScaleCap}
+      maxScale={symbolScale}
       variant="primary"
       accessibilityLabel={composerCopy.send}
       disabled={empty || offline}
@@ -314,10 +317,10 @@ export function AskDock({
           testID="ask-input-error"
         />
       ) : null}
-      <View style={[styles.row, empty ? styles.rowEmpty : null]}>
+      <View style={[styles.row, drawn ? styles.rowEmpty : null]}>
         <IconButton
           symbol="slider.horizontal.3"
-          maxScale={chromeTextScaleCap}
+          maxScale={symbolScale}
           selected={tags.length > 0}
           accessibilityLabel={
             tags.length
@@ -333,13 +336,16 @@ export function AskDock({
             ref={inputRef}
             value={s.draft}
             onChangeText={(text) => askSession.setDraft(text)}
-            // The placeholder is drawn below on one capped line; a native
+            // iOS draws the placeholder below on one capped line; UIKit's
             // multiline placeholder scales without a cap and wraps, so at
             // AX3 the empty composer took three lines (sweep 1, 2.1).
-            accessibilityHint={empty ? composerCopy.placeholder : undefined}
+            // Android keeps its native hint and its own field height.
+            placeholder={drawn ? undefined : composerCopy.placeholder}
+            placeholderTextColor={drawn ? undefined : colors.inkSoft}
+            accessibilityHint={drawn ? composerCopy.placeholder : undefined}
             // Empty, the field sizes its one line to the placeholder; typed
             // text keeps the reader's full size.
-            maxFontSizeMultiplier={empty ? chromeTextScaleCap : undefined}
+            maxFontSizeMultiplier={drawn ? chromeTextScaleCap : undefined}
             accessibilityLabel={composerCopy.label}
             multiline
             scrollEnabled
@@ -370,7 +376,7 @@ export function AskDock({
             onLayout={(e) => setFieldHeight(e.nativeEvent.layout.height)}
             testID="ask-question"
           />
-          {empty ? (
+          {drawn ? (
             <View
               pointerEvents="none"
               accessibilityElementsHidden
@@ -495,8 +501,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
   },
+  // The field wrapper takes the row's width; the input grows with its lines
+  // (flex here would be vertical, holding typed lines at the minimum).
   input: {
-    flex: 1,
     minHeight: minimumTarget,
     paddingTop: 11,
     paddingBottom: 11,

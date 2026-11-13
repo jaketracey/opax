@@ -1606,6 +1606,24 @@ describe('the composer at AX5 (ask.md 2.11)', () => {
     act(() => r.unmount());
   });
 
+  test('Android keeps its native hint and unscaled symbols', () => {
+    act(() =>
+      Dimensions.set({
+        window: { ...original, width: 402, height: 874, fontScale: 2.643 },
+      }),
+    );
+    jest.replaceProperty(Platform, 'OS', 'android');
+    const { r, field } = dock();
+    expect(field.props.placeholder).toBe('Ask about the public record');
+    expect(field.props.maxFontSizeMultiplier).toBeUndefined();
+    expect(
+      r.root.findAll((n) => n.props.testID === 'ask-placeholder'),
+    ).toHaveLength(0);
+    for (const icon of r.root.findAllByType(Icon))
+      expect(icon.props.maxScale).toBe(1);
+    act(() => r.unmount());
+  });
+
   test('with the keyboard up the whole composer stays within 40% of what is visible', () => {
     act(() =>
       Dimensions.set({
