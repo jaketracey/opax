@@ -163,16 +163,16 @@ name: 45 Electorates, dated representation, bill filters and Votes in parliament
     speed: 20
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/45-division-row
-# A vote is titled by its recorded stage, with chamber and date, its
-# outcome and the count in words; its bill heads the run.
+# A time-limited vote names what was decided, with the time limit on its
+# chamber/date line; the bill still heads the run.
 - assertVisible:
     id: division-history-au-federal-r7534-.*
-    text: 'Limitation of debate, Senate · 19 Aug 2026, (Agreed to|Not agreed to), .*'
+    text: '(Amendments( \(Greens\))?|Second reading|Third reading|Remaining stages|Clauses as printed), Senate · 19 Aug 2026 · under a time limit, (Agreed to|Not agreed to), .*'
     index: 0
 - assertVisible:
     id: division-history-bill-au-federal-r7534
-# Leave out procedural votes: off on first open; on, no limitation of
-# debate remains, and Filters reads one on.
+# Leave out procedural votes: substantive decisions under a time limit
+# stay, while the procedural Limitation of debate rows leave.
 - tapOn: Filters.*
 - extendedWaitUntil:
     visible:

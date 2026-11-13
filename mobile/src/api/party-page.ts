@@ -15,11 +15,8 @@ import {
   type PersonProfile,
 } from './person-identity';
 import { memberSlugFor } from './catalog-search';
-import {
-  billDedupeDivisions,
-  billName,
-  billQuestionParts,
-} from './bill-transforms';
+import { billDedupeDivisions, billName } from './bill-transforms';
+import { divisionMotion } from '../features/bills/divisions';
 import {
   formerPartyName,
   isPartyLabel,
@@ -648,7 +645,7 @@ export function partyDivisions(label: string, bills: BillDetail[]) {
                   billKey: bill.key,
                   title: billName(bill),
                   division,
-                  question: billQuestionParts(division, bill).head,
+                  question: divisionMotion(division.question),
                   ...split,
                   // The division's own label, when it is a former name.
                   recordedAs: formerPartyName(party),

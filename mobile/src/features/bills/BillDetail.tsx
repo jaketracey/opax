@@ -105,6 +105,7 @@ import {
   countWords,
   divisionQuestion,
   divisionTitle,
+  divisionMeta,
   orderDivisions,
   outcomeWord,
 } from './divisions';
@@ -748,13 +749,17 @@ function BillPage({
         anchor={speechesRef}
         fresh={follow.fresh}
       />
-      <Acts view={view} savedAt={savedAt} />
+      <Acts
+        view={view}
+        savedAt={savedAt}
+        pageSource={foot === 'acts' ? pageSource : null}
+      />
       <Related
         view={view}
         savedAt={savedAt}
         pageSource={foot === 'related' ? sharedSource : null}
       />
-      {sharedSource ? null : (
+      {sharedSource || foot === 'acts' ? null : (
         <SourceLine {...pageSource} testID="bill-source" />
       )}
     </>
@@ -1774,7 +1779,10 @@ function BillVoteRow({
     if (focus) targets.scrollTo(anchor, true);
   }, [focus, targets]);
   const title = divisionTitle(division);
-  const meta = [chamberLabel(division.house), short(division.date)].join(' · ');
+  const meta = divisionMeta(
+    division,
+    [chamberLabel(division.house), short(division.date)].join(' · '),
+  );
   const outcome = outcomeWord(division.outcome, division);
   const parties = divisionParties(division.splits);
   const question = divisionQuestion(division.question, division.stage, {
@@ -2032,7 +2040,15 @@ function MachineNotePill() {
   );
 }
 
-function Acts({ view, savedAt }: { view: BillView; savedAt: number | null }) {
+function Acts({
+  view,
+  savedAt,
+  pageSource,
+}: {
+  view: BillView;
+  savedAt: number | null;
+  pageSource?: SourceDetails | null;
+}) {
   const acts = shownActs(view);
   if (!acts.length) return null;
   return (
@@ -2051,17 +2067,22 @@ function Acts({ view, savedAt }: { view: BillView; savedAt: number | null }) {
           />
         ))}
       </View>
-      <SourceLine
-        asOf={view.acts.asAt}
-        citation="Federal Register of Legislation"
-        savedAt={savedAt}
-        originals={acts.map((act) => ({
-          label: 'Federal Register of Legislation',
-          url: act.frl_uri,
-          record: act.title,
-        }))}
-        testID="bill-acts-source"
-      />
+      <View>
+        <SourceLine
+          asOf={view.acts.asAt}
+          citation="Federal Register of Legislation"
+          savedAt={savedAt}
+          originals={acts.map((act) => ({
+            label: 'Federal Register of Legislation',
+            url: act.frl_uri,
+            record: act.title,
+          }))}
+          testID="bill-acts-source"
+        />
+        {pageSource ? (
+          <SourceLine {...pageSource} testID="bill-source" />
+        ) : null}
+      </View>
     </Section>
   );
 }

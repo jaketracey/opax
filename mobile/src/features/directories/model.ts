@@ -29,7 +29,12 @@ import { formatCount } from '../../design/format';
 import { chamberName, jurisdictionName } from '../../design/parliament';
 import { currentPartyName, isPartyLabel } from '../../design/party';
 import type { PartyFile } from './party-file';
-import { isProcedural, stageTitle } from '../bills/divisions';
+import {
+  divisionMeta,
+  divisionTitle,
+  isProcedural,
+  stageTitle,
+} from '../bills/divisions';
 export { partyName } from '../../api/party-page';
 
 export type DirectoryKind = 'person' | 'party' | 'electorate';
@@ -777,6 +782,9 @@ export interface DivisionRow {
   date: string;
   house: string;
   question: string;
+  /** Shared display policy, resolved before the bill transcripts are released. */
+  voteTitle?: string | null;
+  voteQualifier?: string | null;
   /** A procedural motion, read from the stage and the full question put. */
   procedural?: boolean;
   ayes: number;
@@ -793,6 +801,9 @@ export function divisionRows(bills: BillDetail[]): DivisionRow[] {
       date: d.date,
       house: d.house,
       question: billQuestionParts(d, b).head || billStage(d.stage),
+      voteTitle:
+        d.title?.trim() || stageTitle(d.stage) ? divisionTitle(d) : null,
+      voteQualifier: divisionMeta(d, '') || null,
       procedural: isProcedural(d.stage ?? d.title ?? null, d.question),
       ayes: d.ayes,
       noes: d.noes,

@@ -154,16 +154,20 @@ export function filterDivisions(
   });
 }
 
+const voteTitle = (item: Division) => item.voteTitle ?? item.stage ?? 'Vote';
 const divisionWhere = (item: Division) =>
   [
     chamberName(item.house, 'federal') ?? CHAMBER_NOT_RECORDED,
     formatDate(item.date, 'short'),
-  ].join(' · ');
+    item.voteQualifier,
+  ]
+    .filter(Boolean)
+    .join(' · ');
 
 /** How a vote row is spoken: stage, where and when, outcome, counts, bill. */
 export function divisionLabel(item: Division) {
   return [
-    item.stage ?? 'Vote',
+    voteTitle(item),
     divisionWhere(item),
     outcomeWord(item.outcome, item),
     countWords(item.ayes, item.noes, { spoken: true }),
@@ -188,7 +192,7 @@ const Vote = memo(function Vote({
   return (
     <View style={{ paddingLeft: inset }}>
       <DivisionRow
-        title={item.stage ?? 'Vote'}
+        title={voteTitle(item)}
         meta={divisionWhere(item)}
         outcome={outcomeWord(item.outcome, item)}
         ayes={item.ayes}

@@ -1,7 +1,8 @@
 import { billStripTitle } from '../../api/bill-transforms';
 
 // What a division is called and what its question says, for the bill page
-// (design review D5): a division is titled by its recorded stage, and the
+// (design review D5, sweep 3): a division is titled by its recorded stage
+// or the substantive motion put under a time limit, and the
 // record's question sits behind a disclosure, drawn from its Markdown as
 // plain blocks. The renderer is a port of the web's shared, bounded one
 // (portal/public/division-markdown.js): the source is always text, only
@@ -47,21 +48,35 @@ export function stageTitle(stage: string | null | undefined): string | null {
 }
 
 /**
- * A division's title: the export's `title`; until every bill file carries
+ * A time-limited substantive vote names the decision. Otherwise the
+ * division's title is the export's `title`; until every bill file carries
  * one, the same title from its recorded stage; then the first sentence of
  * the motion (`head`, already cleaned of the bill's name); else "Division".
  */
-export function divisionTitle(division: {
+export interface DivisionTitleRecord {
   title?: string | null;
   stage?: string | null;
   head?: string | null;
-}): string {
+  question?: string | null;
+}
+export function divisionTitle(division: DivisionTitleRecord): string {
   return (
+    timeLimitedTitle(division) ||
     division.title?.trim() ||
     stageTitle(division.stage) ||
     division.head?.trim() ||
     'Division'
   );
+}
+
+/** The qualifier travels with the substantive title on every vote list. */
+export function divisionMeta(
+  division: DivisionTitleRecord,
+  meta: string,
+): string {
+  return [meta, timeLimitedTitle(division) ? 'under a time limit' : null]
+    .filter(Boolean)
+    .join(' · ');
 }
 
 const PLACEHOLDER =
@@ -336,25 +351,99 @@ const SUBSTANTIVE_QUESTION = [
   // They Vote For You's own title: "<Bill> - Limitation of Debate - <what>".
   /\blimitation of debate\s*[-–]\s*(?![^-–]*\b(?:time|allot))\S/i,
 ];
+const QUESTION_PUT =
+  /question (?:now )?(?:before the chair )?is (?:now )?that/gi;
 /**
  * The motion actually put: the words after the last "the question is that"
  * in a transcript, or what a summary says the members voted on.
  */
-function questionPut(question: string): string {
-  const said = [
-    ...question.matchAll(
-      /question (?:now )?(?:before the chair )?is (?:now )?that/gi,
-    ),
-  ].pop();
+function questionPut(question: string, limit?: number): string {
+  const said = [...question.matchAll(QUESTION_PUT)].pop();
   if (said)
     return question.slice(
       said.index + said[0].length,
-      said.index + said[0].length + 300,
+      said.index + said[0].length + (limit ?? 300),
     );
-  const voted = /voted (?:against|in favour of|for) ([\s\S]{0,200})/i.exec(
-    question,
+  const voted = /voted (?:against|in favour of|for) ([\s\S]*)/i.exec(question);
+  return voted
+    ? voted[1]!.slice(0, limit ?? 200)
+    : question.slice(0, limit ?? 300);
+}
+
+/**
+ * A distinguishing line is the motion, never a transcript's opening patter.
+ * Only an explicit question, summary of a motion, or "That" is evidence.
+ */
+export function divisionMotion(
+  question: string | null | undefined,
+): string | null {
+  const plain = questionPlain(question ?? '');
+  let put = questionPut(plain, plain.length).trim();
+  const explicit = put !== plain;
+  if (!explicit) {
+    // A plain motion may carry a leading speaker label from Hansard.
+    put = put.replace(/^(?:[\p{Lu}][\p{L}'’\-]+\s+){1,5}(?=That\b)/u, '');
+    if (!/^that\b/i.test(put)) return null;
+  } else if (
+    !plain.match(QUESTION_PUT) &&
+    /\bvoted (?:against|in favour of|for)\b/i.test(plain)
+  ) {
+    const that = /\bthat\s+(.+)/i.exec(put);
+    if (!that) return null;
+    put = that[1]!;
+  }
+  put = put.replace(/^that\s+/i, '').trim();
+  const end = [...put.matchAll(/[.!?](?=\s|$)/g)].find(
+    (mark) =>
+      !/\b(?:No|Nos|Dr|Mr|Mrs|Ms|Sen)\.$/i.test(put.slice(0, mark.index + 1)),
   );
-  return voted ? voted[1]! : question.slice(0, 300);
+  const sentence = (end ? put.slice(0, end.index + 1) : put).trim();
+  return sentence ? `That ${sentence.replace(/[.!?]$/, '')}.` : null;
+}
+
+/**
+ * Sweep 3's display policy lives here so it can be reverted in one place.
+ * Reuse the substantive table without changing the procedural rule. An
+ * unrecognised question (including a broad TVFY title) keeps its old title.
+ */
+function timeLimitedTitle(division: DivisionTitleRecord): string | null {
+  const stage = String(division.stage ?? division.title ?? '').replace(
+    /_/g,
+    ' ',
+  );
+  if (!UNDER_TIME_LIMIT.test(stage) || !division.question) return null;
+  const plain = questionPlain(division.question);
+  const put = divisionMotion(division.question);
+  if (!put) return null;
+  const match = SUBSTANTIVE_QUESTION.findIndex((rule) => rule.test(put));
+  switch (match) {
+    case 0:
+      return 'Third reading';
+    case 1:
+      return /\bthird time\b/i.test(put) ? 'Third reading' : 'Second reading';
+    case 2:
+      return 'Remaining stages';
+    case 3: {
+      // Use the motion itself, or the immediately preceding announcement
+      // of the amendments' mover, rather than any earlier debate.
+      const before = plain
+        .slice(0, plain.lastIndexOf(questionPut(plain).trim()))
+        .trim();
+      const announcement = before
+        .split(/[.!?]\s+/)
+        .slice(-2)
+        .join(' ');
+      const greens =
+        /\b(?:Australian )?Greens['’]? amendments?\b|\bamendments?[^.!?]{0,120}\b(?:Australian )?Greens\b/i;
+      return greens.test(put) || greens.test(announcement)
+        ? 'Amendments (Greens)'
+        : 'Amendments';
+    }
+    case 4:
+      return 'Clauses as printed';
+    default:
+      return null;
+  }
 }
 
 /**

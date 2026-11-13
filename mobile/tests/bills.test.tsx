@@ -62,7 +62,10 @@ import DivisionHistory, {
   filterDivisions,
 } from '../src/features/directories/DivisionHistory';
 import * as divisionData from '../src/features/directories/division-data';
-import type { DivisionRow } from '../src/features/directories/model';
+import {
+  divisionRows,
+  type DivisionRow,
+} from '../src/features/directories/model';
 import { useFollowStates } from '../src/features/follows/useFollowStates';
 import { resultsRoute } from '../src/navigation/routes/search';
 import { bills, pinned, slugs } from './pinned';
@@ -270,6 +273,31 @@ describe('Votes in parliament: the votes sit under the bill title (6.1)', () => 
     ayes: 30,
     noes: 11,
     outcome: 'agreed',
+  });
+  test('a time-limited vote uses the same substantive title and spoken qualifier as the bill page', async () => {
+    const load = jest
+      .spyOn(divisionData, 'loadDivisionHistory')
+      .mockResolvedValue({
+        rows: divisionRows([
+          d.decodeBill(pinned('/bills/au-federal-r7534.json')),
+        ]).filter((item) => item.key.endsWith(':federal-senate-10705')),
+        total: 1,
+        loaded: 1,
+        failed: 0,
+        stale: false,
+      } as Awaited<ReturnType<typeof divisionData.loadDivisionHistory>>);
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(<DivisionHistory />);
+    });
+    mounted.push(r);
+    const vote = host(r.root, 'division-history-au-federal-r7534-0')[0]!;
+    expect(texts(vote)).toContain('Amendments (Greens)');
+    expect(texts(vote)).toContain('Senate · 19 Aug 2026 · under a time limit');
+    expect(vote.props.accessibilityLabel).toMatch(
+      /^Amendments \(Greens\), Senate · 19 Aug 2026 · under a time limit, (Agreed to|Not agreed to), /,
+    );
+    load.mockRestore();
   });
   test.each([
     ['the measured text column', 28, 28],
@@ -635,6 +663,40 @@ describe('loading a bill (4.3)', () => {
 });
 
 describe('the bill page', () => {
+  test.each([1, 3.571])(
+    'the two final source lines sit together inside What became law at scale %s',
+    async (fontScale) => {
+      jest
+        .mocked(useWindowDimensions)
+        .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale });
+      const record = await fixture.billFor('au-federal-r7534');
+      expect(record.data.acts.data!.length).toBeGreaterThan(0);
+      record.data.related = [];
+      record.data.became = null;
+      jest.mocked(runtime.billFor).mockResolvedValueOnce(record);
+      const root = await render();
+      const acts = host(root, 'bill-acts')[0]!;
+      const lines = acts.findAllByType(SourceLine);
+      expect(lines.map((line) => line.props.testID)).toEqual([
+        'bill-acts-source',
+        'bill-source',
+      ]);
+      expect(lines[0]!.parent).toBe(lines[1]!.parent);
+      expect(lines.map((line) => line.props.citation)).toEqual([
+        'Federal Register of Legislation',
+        'ParlInfo',
+      ]);
+      expect(lines[0]!.props.asOf).toBe(record.data.acts.asAt);
+      expect(lines[1]!.props.asOf).toBe(record.data.identity.asAt);
+      expect(lines[0]!.props.originals.length).toBeGreaterThan(0);
+      expect(lines[1]!.props.originals.length).toBeGreaterThan(0);
+      expect(
+        root
+          .findAllByType(SourceLine)
+          .filter((line) => line.props.testID === 'bill-source'),
+      ).toHaveLength(1);
+    },
+  );
   test.each([
     ['introduced', '2025-08-26', '2025-08-26', null],
     ['royal_assent', '2026-08-26', '2025-08-26', 'Royal Assent'],
