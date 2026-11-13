@@ -23,7 +23,10 @@ import {
 } from 'react-native';
 import { catalogs } from '../../api/runtime';
 import { useOffline } from '../../api/useOffline';
-import { useReduceMotion } from '../../design/accessibility';
+import {
+  useAccessibilitySize,
+  useReduceMotion,
+} from '../../design/accessibility';
 import {
   RegionProvider,
   SidebarSafe,
@@ -118,6 +121,8 @@ export default function AskScreen() {
   const [profiles, setProfiles] = useState<Map<string, AskPerson>>(new Map());
   const [names, setNames] = useState<string[]>([]);
   const [dockHeight, setDockHeight] = useState(0);
+  const [composerClearance, setComposerClearance] = useState(0);
+  const accessibilitySize = useAccessibilitySize();
   const [contentReady, setContentReady] = useState(false);
   useScreenReady('/ask', dockHeight > 0 && contentReady);
   const onContentSizeChange = useCallback((width: number, height: number) => {
@@ -341,11 +346,25 @@ export default function AskScreen() {
       keyboard={keyboard}
     />
   );
+  // At accessibility sizes the resting composer and the tab bar take about a
+  // third of a short display (the folded Duo's 678 pt at AX5), and covered
+  // Try asking: a starter seen through the band's clear edge focused the
+  // composer instead. There the idle page ends at the composer's resting top,
+  // so nothing sits under it. Typing, the band turns opaque and the page runs
+  // under it again, with room for the composer and keyboard as before.
+  const restInset =
+    idle && !docked && !keyboardVisible && accessibilitySize
+      ? composerClearance
+      : 0;
   const content = (
     <ScrollView
       ref={scroll}
       testID="ask-screen"
-      style={[styles.fill, groundStyle]}
+      style={[
+        styles.fill,
+        groundStyle,
+        restInset ? { marginBottom: restInset } : null,
+      ]}
       contentInsetAdjustmentBehavior="automatic"
       contentInset={hiddenBand ? { top: -hiddenBand } : undefined}
       scrollIndicatorInsets={hiddenBand ? { top: -hiddenBand } : undefined}
@@ -374,7 +393,9 @@ export default function AskScreen() {
         column.content,
         // Room for the docked composer (and the keyboard under it).
         {
-          paddingBottom: dockHeight + rhythm.section + (docked ? 0 : keyboard),
+          paddingBottom: restInset
+            ? rhythm.section
+            : dockHeight + rhythm.section + (docked ? 0 : keyboard),
         },
       ]}
     >
@@ -467,6 +488,7 @@ export default function AskScreen() {
                       keyboard={keyboard}
                       keyboardVisible={keyboardVisible}
                       ground={ground}
+                      onComposerClearance={setComposerClearance}
                     />
                   </AskPaneProvider>
                 </ReservedRegionArea>

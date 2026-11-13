@@ -1,4 +1,4 @@
-import { type ReactNode, useMemo, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Platform,
   StyleSheet,
@@ -49,6 +49,7 @@ export function AskColumns({
   keyboard,
   keyboardVisible = keyboard > 0,
   ground,
+  onComposerClearance,
 }: {
   docked: boolean;
   content: ReactNode;
@@ -57,8 +58,24 @@ export function AskColumns({
   keyboard: number;
   keyboardVisible?: boolean;
   ground: Role;
+  /**
+   * How far the resting composer's band (its clear top padding included)
+   * stands above the conversation column's bottom edge; 0 while docked or
+   * not yet laid out. The keyboard's lift does not change it.
+   */
+  onComposerClearance?: (clearance: number) => void;
 }) {
   const region = useLayout();
+  // The overlay has no top inset, so the composer area's y is the column's.
+  const [columnHeight, setColumnHeight] = useState(0);
+  const [restTop, setRestTop] = useState<number | null>(null);
+  const clearance =
+    !docked && columnHeight > 0 && restTop !== null
+      ? Math.max(0, Math.round(columnHeight - restTop))
+      : 0;
+  useEffect(() => {
+    onComposerClearance?.(clearance);
+  }, [clearance, onComposerClearance]);
   const large = useAccessibilitySize();
   const reserved = useReservedRegions();
   const fold = docked ? activeVerticalFold(reserved.divisions) : null;
@@ -91,6 +108,7 @@ export function AskColumns({
         testID="ask-conversation-column"
         collapsable={false}
         style={split ? { width: split.leading.width } : styles.fill}
+        onLayout={(event) => setColumnHeight(event.nativeEvent.layout.height)}
       >
         {content}
         <SafeAreaView
@@ -108,6 +126,7 @@ export function AskColumns({
               keyboard={keyboard}
               keyboardVisible={keyboardVisible}
               ground={ground}
+              onRest={setRestTop}
             >
               {dock}
             </ComposerPosition>
@@ -134,12 +153,15 @@ function ComposerPosition({
   keyboardVisible,
   ground,
   children,
+  onRest,
 }: {
   docked: boolean;
   keyboard: number;
   keyboardVisible: boolean;
   ground: Role;
   children: ReactNode;
+  /** The band's resting top in the area, null until both are laid out. */
+  onRest?: (top: number | null) => void;
 }) {
   const [onLayout, measured] = useMeasuredRegion();
   const region = useLayout();
@@ -172,6 +194,10 @@ function ComposerPosition({
   // or a camera above it by moving above that too.
   const { x: restX, y: restY, width: restWidth } = position;
   const rest = useMemo(() => ({ top: restY, height }), [restY, height]);
+  const restKnown = !!measured && height > 0;
+  useEffect(() => {
+    onRest?.(restKnown ? restY : null);
+  }, [onRest, restKnown, restY]);
   const obstacles = useMemo(
     () =>
       liftObstacles(reserved, {

@@ -6,7 +6,7 @@ import {
   Text as NativeText,
 } from 'react-native';
 import TestRenderer from 'react-test-renderer';
-import { LINE_HEIGHT_NUDGE, Text } from '../src/design/text';
+import { LINE_HEIGHT_NUDGE, Text, wordSafeFloor } from '../src/design/text';
 import { textStyles } from '../src/design/tokens';
 
 // Stand in for native SP conversion, not PixelRatio's global configuration.
@@ -88,8 +88,11 @@ test.each([1.3, 1.5, 2])(
         fontScale,
       );
       layout(cappedHeight, true);
-      if (cappedHeight / base > 1.01) expect(size()).toBeLessThan(firstCap);
-      else expect(size()).toBe(firstCap); // Never shrink below the default role.
+      // Never shrink below the role's 11pt floor.
+      const floor = wordSafeFloor(textStyles.sectionTitle.fontSize);
+      if (cappedHeight / base > floor + 0.01)
+        expect(size()).toBeLessThan(firstCap);
+      else expect(size()).toBe(firstCap);
       layout(
         spToDp(StyleSheet.flatten(text().props.style).lineHeight, fontScale),
         false,
