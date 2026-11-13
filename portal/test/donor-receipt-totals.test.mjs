@@ -23,14 +23,16 @@ const legacyOnly = {source: 'donor:older', target: 'party:Labor', total: 50, cou
 
 test('receiptFigures counts each typed receipt once, all receipt types, and never the legacy cells', () => {
   const f = receiptFigures(edge);
-  assert.deepEqual(f, {total: 140, count: 2, firstYear: 2020, lastYear: 2021, byYear: {2020: 100, 2021: 40}, typed: true});
+  assert.deepEqual(f, {total: 140, count: 2, firstYear: 2020, lastYear: 2021, byYear: {2020: 100, 2021: 40},
+    cells: {2020: [100, 1], 2021: [40, 1]}, undated: [0, 0], byType: {donation_received: 100, other_receipt: 40}, typed: true});
   // An empty typed object is zero eligible receipts, not a fallback.
   assert.equal(receiptFigures({...edge, by_type: {}, by_type_year: {}}).total, 0);
 });
 
 test('a graph without typed cells keeps its figures and says what they count', () => {
   const f = receiptFigures(legacyOnly);
-  assert.deepEqual(f, {total: 50, count: 2, firstYear: 2004, lastYear: 2005, byYear: {2004: 20, 2005: 30}, typed: false});
+  assert.deepEqual(f, {total: 50, count: 2, firstYear: 2004, lastYear: 2005, byYear: {2004: 20, 2005: 30},
+    cells: {2004: [20, 1], 2005: [30, 1]}, undated: [0, 0], byType: null, typed: false});
   assert.match(receiptScopeLabel(f), /both donor and party, so a gift can appear twice/);
 });
 
@@ -98,11 +100,11 @@ test('the actual bar list puts its scope under its heading', async () => {
   assert.equal(plain.querySelector('.entry-scope'), null);
 });
 
-test('the party page says its table counts both sides of a return, in the browser and the server page', async () => {
+test('the party page prints its table\'s own scope line, in the browser and the server page, and no longer says a gift can count twice', async () => {
   const app = await readFile(new URL('../public/app.js', import.meta.url), 'utf8');
   const worker = await readFile(new URL('../src/index.ts', import.meta.url), 'utf8');
-  const scope = app.match(/const PARTY_RECEIPTS_SCOPE = "([^"]+)"/)?.[1];
-  assert.ok(scope && /counted twice/.test(scope));
-  assert.ok(app.includes('<h3 class="subject-section-title">Where it came from</h3><p class="entry-scope">${esc(PARTY_RECEIPTS_SCOPE)}</p>'));
-  assert.ok(worker.includes(`<h2>Where it came from</h2><p>${scope}</p>`));
+  assert.ok(!app.includes('PARTY_RECEIPTS_SCOPE') && !/counted twice/.test(app));
+  assert.ok(!/counted twice/.test(worker));
+  assert.ok(app.includes('<h3 class="subject-section-title">Where it came from</h3>${partyMoney?.scope ? `<p class="entry-scope">${esc(partyMoney.scope)}</p>` : ""}${partyTable}'));
+  assert.ok(worker.includes('<h2>Where it came from</h2>${scope ? `<p class="entry-scope">${escHtml(scope)}</p>`'));
 });

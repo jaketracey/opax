@@ -200,18 +200,18 @@ function paginate(url: URL, rows: { href: string; label: string; detail?: string
 }
 const optional = async <T>(read: ReadAsset, path: string): Promise<T | null> => read<T>(path).catch(() => null)
 
-type PartyReceipts = { meta: MoneyGraph['meta']; label: string; rows: ReturnType<typeof partyMoneyData>['rows'] }
+type PartyReceipts = { meta: MoneyGraph['meta']; label: string; rows: ReturnType<typeof partyMoneyData>['rows']; scope?: string }
 /**
  * A party's disclosed-receipt rows from one money graph: its bucket (public/party-money-buckets.js),
  * or the whole graph when the bucket is unreadable. Null when the graph has no such party.
  */
 async function partyReceipts(read: ReadAsset, path: string, party: string): Promise<PartyReceipts | null> {
   const key = partyFold(party)
-  const bucket = await optional<{meta: MoneyGraph['meta']; parties: Record<string, {label: string; rows: PartyReceipts['rows']}>}>(read,partyMoneyBucketPath(path,partyMoneyBucket(key)))
+  const bucket = await optional<{meta: MoneyGraph['meta']; parties: Record<string, {label: string; rows: PartyReceipts['rows']; scope?: string}>}>(read,partyMoneyBucketPath(path,partyMoneyBucket(key)))
   if (bucket?.parties && bucket.meta) return Object.hasOwn(bucket.parties,key) ? {meta: bucket.meta, ...bucket.parties[key]} : null
   const graph = await optional<MoneyGraph>(read,path)
   const node = graph?.nodes.find(n=>n.kind==='party' && fold(n.label)===fold(party))
-  return graph && node ? {meta: graph.meta, label: node.label, rows: partyMoneyData(graph,node.id).rows} : null
+  return graph && node ? {meta: graph.meta, label: node.label, ...partyMoneyData(graph,node.id)} : null
 }
 type VoteData = Record<string, Votes | Record<string,string[]>>
 /**
@@ -302,9 +302,9 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   for (const [i,found] of received.entries()) {
     const source = graphs[i][1]
     if (!found) continue
-    const {meta, label, rows} = found
+    const {meta, label, rows, scope} = found
     const config = partyMoneyTableConfig(rows,`person-party-money-${source.toLowerCase()}`,`partyMoney${source}`,'person',{party:label,jurisdiction:({AEC:'federal',ECQ:'qld',VEC:'vic'} as Record<string,string>)[source]})
-    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(meta.coverage || '')}</p>${registerHTML(config)}`
+    body += `<h3>${escapeHtml(source)} disclosed receipts</h3><p>${escapeHtml(meta.coverage || '')}</p>${scope ? `<p>${escapeHtml(scope)}</p>` : ''}${registerHTML(config)}`
     body += `<p>Source: ${escapeHtml(meta.sourceShort || meta.source || source)}. Federal and state returns are shown separately and never summed.</p>${original(meta.source_url || (source==='AEC' ? 'https://transparency.aec.gov.au/' : source==='ECQ' ? 'https://disclosures.ecq.qld.gov.au/' : 'https://disclosures.vec.vic.gov.au/'))}`
   }
   const owned = sponsored?.sponsored[p.pid || p.name] || []
