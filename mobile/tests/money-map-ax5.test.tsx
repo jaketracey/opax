@@ -166,6 +166,16 @@ const devices: Device[] = [
     bottom: 80,
     fontScale: 2,
   },
+  // AX3 shares the accessibility-size layout; its reach holds there too.
+  {
+    name: 'iPhone 17 Pro at AX3',
+    os: 'ios',
+    width: 402,
+    height: 874,
+    stage: 758,
+    bottom: 83,
+    fontScale: 2.643,
+  },
 ];
 /** The card's and the panel's heights uncapped: modest, a screenful, far over. */
 const naturals = [
