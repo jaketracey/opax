@@ -216,6 +216,44 @@ export function governmentFunctionTableConfig(rows) {
       {key:'code_status',label:'Code availability',type:'text'}],primaryLink:()=>null};
 }
 
+// One figure for a donor-to-party flow, so the map card, the donor page and
+// the party table agree. The money graph's typed cells (by_type, by_type_year)
+// sum each receipt once, from the party's own return, across all receipt types.
+// The older total/count/byYear also add the donor's own declarations of the
+// same gifts, so one gift can appear twice there (docs/reports/2026-11-12-aec-receipt-types.md).
+// They are used only for a graph with no typed cells, and say so.
+const RECEIPT_EVENT_YEARS = {'braddon by-election':2018,'wentworth by-election':2018,'eden-monaro by-election':2020,'fadden by-election':2023};
+export function receiptFigures(x) {
+  if (!x?.by_type) {
+    const byYear = {};
+    for (const [year, cell] of Object.entries(x?.byYear || {})) byYear[year] = Number(Array.isArray(cell) ? cell[0] : cell) || 0;
+    return {total:Number(x?.total) || 0, count:Number(x?.count) || 0, firstYear:x?.firstYear ?? null, lastYear:x?.lastYear ?? null, byYear, typed:false};
+  }
+  let count = 0, firstYear = null, lastYear = null;
+  const byYear = {};
+  for (const [period, types] of Object.entries(x.by_type_year || {})) {
+    // Financial years count at their first year ("2020-21" is 2020), as on the map.
+    const year = Number(String(period).match(/\b(?:19|20)\d{2}\b/)?.[0]) || RECEIPT_EVENT_YEARS[String(period).toLowerCase()];
+    let dollars = 0, n = 0;
+    for (const cell of Object.values(types || {})) { dollars += Number(cell?.[0]) || 0; n += Number(cell?.[1]) || 0; }
+    count += n;
+    if (!year || n <= 0) continue;
+    byYear[year] = (byYear[year] || 0) + dollars;
+    firstYear = firstYear === null ? year : Math.min(firstYear, year);
+    lastYear = lastYear === null ? year : Math.max(lastYear, year);
+  }
+  const total = Object.values(x.by_type).reduce((sum, amount) => sum + (Number(amount) || 0), 0);
+  return {total, count, firstYear, lastYear, byYear, typed:true};
+}
+const financialYear = year => `${year}-${String((year + 1) % 100).padStart(2, '0')}`;
+/** The scope of a receiptFigures result, in a reader's words, for its own line under the figure. */
+export function receiptScopeLabel(figures) {
+  if (!figures?.typed) return 'All federal disclosure records, as given by both donor and party, so a gift can appear twice';
+  const span = figures.firstYear == null ? '' : figures.firstYear === figures.lastYear
+    ? `, ${financialYear(figures.firstYear)}` : `, ${financialYear(figures.firstYear)} to ${financialYear(figures.lastYear)}`;
+  return `All receipt types${span}, as the parties reported them in federal returns`;
+}
+
 /** Keep every disclosed donor; party transfers and grants are excluded. */
 export function partyMoneyData(graph, partyId) {
   const donors = new Map(graph.nodes.filter(node=>node.kind === 'donor').map(node=>[node.id,node]));
@@ -226,6 +264,8 @@ export function partyMoneyData(graph, partyId) {
     const disclosure=donorDisclosure(donor,{return_type:graph.meta?.source || 'Electoral disclosure return',url:graph.meta?.source_url});
     const row = rows.get(donor.id) || {label:disclosure.name,href:disclosure.href,return_reference:disclosure.reference,
       industry:donor.industry || 'Not supplied',total:0,count:0,firstYear:null,lastYear:null};
+    // The released legacy cells: /api/register/party-money keeps them byte for byte
+    // (test/aec-receipt-types.test.mjs), so a party page says this scope beside the table.
     row.total += Number(edge.total) || 0; row.count += Number(edge.count) || 0;
     if (Number.isFinite(edge.firstYear)) row.firstYear = row.firstYear == null ? edge.firstYear : Math.min(row.firstYear,edge.firstYear);
     if (Number.isFinite(edge.lastYear)) row.lastYear = row.lastYear == null ? edge.lastYear : Math.max(row.lastYear,edge.lastYear);

@@ -47,7 +47,7 @@ import { governmentFinancePage, governmentFinanceReader } from './government-fin
 import { govAdvertisingPage, govAdvertisingReader, govAdvertisingReady } from './gov-advertising'
 import { taxExpendituresPage, taxExpendituresReader, taxExpendituresReady } from './tax-expenditures'
 import {parseQuery,serializeQuery,type Page} from '../public/datatable.js'
-import {partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
+import {partyMoneyData,partyMoneyTableConfig,receiptFigures,registerTableHTML} from '../public/register-tables.js'
 import {grantsHTML} from './grants-table'
 import {saGrantsPage,saGrantsReader} from './sa-grants'
 import {actInvoicesPage} from './act-invoices'
@@ -5581,7 +5581,10 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     }
   } else if (node) {
     const what = node.industry === 'individual' ? 'donor' : `${industryLabel(node.industry)} donor`
-    facts = `${display}: disclosed political ${what}, ${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort}).`
+    // The page's own measure (receiptFigures): the parties' returns, each gift once.
+    const own = receiptFigures(node as Parameters<typeof receiptFigures>[0])
+    const span = years(own.firstYear ?? node.firstYear, own.lastYear ?? node.lastYear)
+    facts = `${display}: disclosed political ${what}, ${money(own.total)} across ${num(own.count)} receipts, ${span} (${node.sourceShort}).`
     // An AEC associated entity says so with its figures, the same way for every party (export rule 9).
     const associated = donorDisclosure(node as DonorDisclosureRecord).associated
     if (associated) facts += ` ${associated.charAt(0).toUpperCase()}${associated.slice(1)}.`
@@ -5589,7 +5592,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     card = {
       kicker: `Donor · ${industryLabel(node.industry)}`,
       title: display,
-      lines: [`${money(node.total)} across ${num(node.count)} receipts, ${years(node.firstYear,node.lastYear)} (${node.sourceShort})`,
+      lines: [`${money(own.total)} across ${num(own.count)} receipts, ${span} (${node.sourceShort})`,
         ...(associated ? [`${associated.charAt(0).toUpperCase()}${associated.slice(1)}`] : [])],
     }
   } else {
@@ -5607,7 +5610,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
       const {rows} = partyMoneyData(graph,party.id)
       const config = partyMoneyTableConfig(rows,undefined,undefined,undefined,{party:party.label,jurisdiction:'federal'})
       config.id = 'ssr-party-money-table'
-      table = `<section class="wrap"><h2>Where it came from</h2>${registerTableHTML(config,undefined,url)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
+      table = `<section class="wrap"><h2>Where it came from</h2><p>Every federal disclosure record for each source, from both its own returns and the party's, so one gift can be counted twice. The money map counts each receipt once.</p>${registerTableHTML(config,undefined,url)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
     }
   }
   return {
