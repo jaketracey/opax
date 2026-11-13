@@ -30,6 +30,7 @@ import {
   SourceSheet,
 } from '../src/design/source';
 import { bills, pinned, roster, slugs } from './pinned';
+import { accessibilityElements, readAloud } from './a11y-tree';
 
 import {
   BarSeries,
@@ -1440,4 +1441,163 @@ test('AX5: a long first stage name wraps to a second line, never an ellipsis; de
         ),
     );
   expect(row).toBeDefined();
+});
+
+describe('the edition facts with VoiceOver, at Large, AX3 and AX5', () => {
+  const facts = (bars: EditionView['facts']['bars']) => ({
+    ...edition,
+    kind: 'grant' as const,
+    facts: {
+      ...edition.facts,
+      figures: [{ value: '$10.0m', label: 'to an invented council' }],
+      bars,
+      division: { ayes: 80, noes: 60 },
+      order: [
+        { type: 'figure' as const, index: 0 },
+        { type: 'bars' as const, index: 0 },
+        { type: 'events' as const, index: 0 },
+        { type: 'division' as const, index: 0 },
+      ],
+    },
+  });
+  const series = {
+    title: 'Topic labels',
+    items: [
+      { label: 'Health', pct: 60 },
+      { label: 'Roads', pct: 20 },
+    ],
+    note: null,
+    whole: false,
+  };
+  async function show(fontScale: number, bars = series) {
+    Platform.OS = 'ios';
+    const window = { width: 390, height: 844, scale: 3, fontScale };
+    Dimensions.set({ window, screen: window });
+    jest
+      .mocked(catalogs.todayEdition)
+      .mockResolvedValue({ ...ready, data: facts(bars) });
+    const r = await render(<EditionStory />);
+    // Native text layout, as the chart's hidden probes would report it.
+    const line = textStyles.footnote.lineHeight * fontScale;
+    act(() =>
+      r.root
+        .findAll(
+          (node) =>
+            node.type === 'Text' &&
+            typeof node.props.onTextLayout === 'function',
+        )
+        .forEach((text) =>
+          text.props.onTextLayout({
+            nativeEvent: { lines: [{ width: 40 * fontScale, height: line }] },
+          }),
+        ),
+    );
+    act(() =>
+      host(r.root, 'bar-series-plot')[0]?.props.onLayout({
+        nativeEvent: { layout: { width: 358, height: 160 } },
+      }),
+    );
+    return { r, line };
+  }
+
+  test.each([1, 2.643, 3.571])(
+    'at %s a bars chart reads as its figures once, in the order drawn',
+    async (fontScale) => {
+      const { r } = await show(fontScale);
+      const read = accessibilityElements(r.root);
+      const at = (label: string) => read.findIndex((e) => e.label === label);
+      // Compact money in words; the chart's title is a heading.
+      expect(
+        at('10.0 million dollars, to an invented council'),
+      ).toBeGreaterThan(-1);
+      expect(
+        at('10.0 million dollars, to an invented council, 4 October 2026'),
+      ).toBeGreaterThan(-1);
+      expect(read[at('Topic labels')]!.role).toBe('header');
+      // Each bar once as its figure; the scale and the captions are drawn,
+      // not read again.
+      expect(
+        read.filter((e) => /Health/.test(e.label)).map((e) => e.label),
+      ).toEqual(['Health, 60%']);
+      expect(read.filter((e) => /^(100|50)%$/.test(e.label))).toEqual([]);
+      // Figure, then the chart, then its table button, then the timeline.
+      const order = [
+        at('10.0 million dollars, to an invented council'),
+        at('Topic labels'),
+        at('Health, 60%'),
+        at('Roads, 20%'),
+        at('Show as table'),
+        at('Royal Assent, 18 Sep 2026, latest stage'),
+      ];
+      expect(order.every((index) => index > -1)).toBe(true);
+      expect([...order].sort((a, b) => a - b)).toEqual(order);
+      // The one source line reads as a button naming its source.
+      const line = read.find(
+        (e) => /OPAX daily edition/.test(e.label) && e.role,
+      )!;
+      expect(line).toMatchObject({
+        role: 'button',
+        hint: 'Opens the sources',
+      });
+      // The grouped Sources list has a heading too.
+      expect(read[at('Sources')]!.role).toBe('header');
+      // Every stop says something.
+      expect(read.filter((e) => !e.label.trim())).toEqual([]);
+    },
+  );
+
+  test.each([
+    [1, true],
+    [2.643, true],
+    [3.571, false],
+  ])(
+    'at %s the scale values never overlap (50%% drawn: %s), and no fact text is cut short',
+    async (fontScale, half) => {
+      const { r, line } = await show(fontScale);
+      const top = (id: string) =>
+        StyleSheet.flatten(host(r.root, id)[0]!.props.style).top as number;
+      expect(host(r.root, 'bar-series-scale-1')).toHaveLength(1);
+      expect(host(r.root, 'bar-series-scale-0.5')).toHaveLength(half ? 1 : 0);
+      if (half)
+        expect(top('bar-series-scale-0.5')).toBeGreaterThanOrEqual(
+          top('bar-series-scale-1') + line,
+        );
+      const factTexts = [0, 1, 2, 3].flatMap((index) =>
+        host(r.root, `edition-fact-${index}`).flatMap((fact) =>
+          fact.findAll((node) => node.type === 'Text'),
+        ),
+      );
+      expect(factTexts.length).toBeGreaterThan(0);
+      expect(
+        factTexts.filter(
+          (text) =>
+            text.props.numberOfLines ||
+            (text.props.maxFontSizeMultiplier > 0 &&
+              text.props.maxFontSizeMultiplier < fontScale),
+        ),
+      ).toEqual([]);
+    },
+  );
+
+  test.each([1, 3.571])(
+    'at %s a share of a whole reads as one image of its parts and values',
+    async (fontScale) => {
+      const { r } = await show(fontScale, {
+        title: 'Closed, non-competitive',
+        items: [
+          { label: 'Grants', pct: 42 },
+          { label: 'Everything else', pct: 58 },
+        ],
+        note: null,
+        whole: true,
+      });
+      const read = readAloud(r.root);
+      const title = read.indexOf('Closed, non-competitive (header)');
+      expect(title).toBeGreaterThan(-1);
+      expect(read[title + 1]).toBe(
+        'Grants, 42%. Everything else, 58%. (image)',
+      );
+      expect(read.filter((label) => /42%/.test(label))).toHaveLength(1);
+    },
+  );
 });
