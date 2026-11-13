@@ -3,6 +3,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {offline, loadWorker, outbound} from './worker-harness.mjs';
+// The Worker reads public/ as published; importing this checks money.json is the typed AEC export.
+import './money-graph-data.mjs';
 
 test.after(offline());
 const {env, fetch} = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, new URL('../public/', import.meta.url).pathname);
@@ -43,9 +45,8 @@ test('industry donation limitations return early without spending model or overv
   reset(limiter(true), limiter(false));
   let response = await post('/api/ask', {question});
   let out = await response.json();
-  assert.equal(out.answer_status, 'evidence_gap');
-  assert.match(out.answer.split(/[.!?]/)[0], /figures currently combine donations with loans and other receipts/);
-  assert.doesNotMatch(out.answer, /\$\d/);
+  assert.equal(out.answer_status, 'calculated');
+  assert.match(out.answer.split(/[.!?]/)[0], /^\*\*Liberal\*\* leads parties receiving money from gambling-linked sources: \*\*\$1,093,352\*\* in donations received \(AEC receipt type: Donation Received\)/);
   assert.equal(out.money_overview, undefined);
   assert.equal(response.headers.get('x-opax-money-route'), 'federal-party-ranking-v1');
   assert.equal(outbound.length, 0);
@@ -53,9 +54,8 @@ test('industry donation limitations return early without spending model or overv
   reset(limiter(false), limiter(true));
   response = await post('/api/ask', {question});
   out = await response.json();
-  assert.equal(out.answer_status, 'evidence_gap');
-  assert.match(out.answer.split(/[.!?]/)[0], /figures currently combine donations with loans and other receipts/);
-  assert.doesNotMatch(out.answer, /\$\d/);
+  assert.equal(out.answer_status, 'calculated');
+  assert.match(out.answer.split(/[.!?]/)[0], /^\*\*Liberal\*\* leads parties receiving money from gambling-linked sources: \*\*\$1,093,352\*\* in donations received \(AEC receipt type: Donation Received\)/);
   assert.equal(out.money_overview, undefined);
   assert.equal(response.headers.get('x-opax-money-route'), 'federal-party-ranking-v1');
   assert.equal(outbound.length, 0);

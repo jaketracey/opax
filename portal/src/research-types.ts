@@ -11,6 +11,7 @@ export interface RemunerationRecord {
 export interface ReceiptFact {
   party: string; source: string; amount: number; period: string; jurisdiction?: string
   /** The AEC register line when the source is an associated entity of this party; shown with its name. */
+  measure?: string; measure_label?: string
   associated?: string
   /** The row's own industry, and the filter the tool ran with: a filtered list cannot answer an unfiltered question. */
   industry?: string; filter?: string

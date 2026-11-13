@@ -1,0 +1,103 @@
+{
+ "answered": true,
+ "answer": "The highest paid agency head in OPAX's pay records is the Secretary of the Example Department, at **$1,034,780** a year in total remuneration from 2025-07-01 [1]. The next highest are the heads of the Example Treasury Office and the Example Defence Office, each above $950,000 [2]. These figures come from Remuneration Tribunal determinations, which set pay for departmental secretaries and many statutory office holders [1][2].\n\n- Speeches have discussed these salaries, for example in Senate estimates [3].\n- Some agency heads are paid under their own instrument and are not in this list.",
+ "citations": {
+  "fact-1/t/body/0": [
+   [
+    0,
+    160
+   ]
+  ],
+  "fact-2/t/body/0": [
+   [
+    161,
+    260
+   ]
+  ]
+ },
+ "sources": [
+  {
+   "resource": "pay-1",
+   "slug": "",
+   "kind": "remuneration",
+   "title": "Secretary, Example Department — Principal Executive Office Determination 2025 — 2025-07-01",
+   "href": "/doc/legal-700001",
+   "url": "https://opax.com.au/doc/legal-700001",
+   "snippet": "Total remuneration $1,034,780.",
+   "cited": true,
+   "date": "2025-07-01",
+   "remuneration": {
+    "body": "Remuneration Tribunal",
+    "office": "Secretary, Example Department",
+    "total_aud": 1034780,
+    "date": "2025-07-01"
+   }
+  },
+  {
+   "resource": "pay-2",
+   "slug": "",
+   "kind": "remuneration",
+   "title": "EXAMPLE TREASURY OFFICE AND EXAMPLE DEFENCE OFFICE HEADS",
+   "href": "/doc/legal-700002",
+   "url": "https://opax.com.au/doc/legal-700002",
+   "snippet": "Total remuneration above $950,000.",
+   "cited": true,
+   "date": "2025-07-01"
+  },
+  {
+   "kind": "pay",
+   "title": "Example office pay — every step since 1999",
+   "href": "/ask?q=How%20much%20is%20the%20example%20office%20paid%3F",
+   "snippet": "The example salary is $250,000 a year, as at 2026-10-19.",
+   "slug": "pay-example",
+   "resource": "USER_CONTEXT_0",
+   "dateLabel": "1999–2026",
+   "source": "Remuneration Tribunal determinations, joined by Opax",
+   "url": "https://www.example.gov.au/determination-2026",
+   "cited": false
+  },
+  {
+   "resource": "speech-3",
+   "slug": "speech-800003",
+   "kind": "speech",
+   "title": "Casey Example — ESTIMATES — 2025-02-05",
+   "href": "/doc/speech-800003",
+   "url": "https://opax.com.au/doc/speech-800003",
+   "snippet": "The secretary is paid over a million dollars.",
+   "cited": true,
+   "speaker": "EXAMPLE, Casey"
+  },
+  {
+   "resource": "ext-4",
+   "slug": "",
+   "kind": "record",
+   "title": "Example tribunal page",
+   "url": "https://www.example.gov.au/determination.pdf",
+   "snippet": "",
+   "cited": false
+  },
+  {
+   "resource": "coverage",
+   "slug": "",
+   "kind": "coverage",
+   "title": "Source coverage and methods",
+   "href": "/methods",
+   "url": "https://opax.com.au/methods",
+   "snippet": "",
+   "cited": false
+  }
+ ],
+ "followups": [],
+ "research": {
+  "mode": "loop",
+  "rounds": 3,
+  "trail": [],
+  "sources": [],
+  "ms": 21000,
+  "tokens": {
+   "input": 30000,
+   "output": 900
+  },
+  "cost_usd": 0.01
+ }
+}
