@@ -9,6 +9,7 @@ import { replayWelcome } from '../src/features/welcome/replay';
 import ShortWelcome from '../src/features/welcome/ShortWelcome';
 import Welcome, {
   continuePinned,
+  overflows,
   WELCOME_COLUMN,
 } from '../src/features/welcome/Welcome';
 import { releaseSplash } from '../src/launch/splash';
@@ -268,6 +269,55 @@ describe('the full welcome', () => {
     expect(inScroll(large, 'welcome-continue')).toBe(false);
     expect(has(large, 'welcome-continue')).toBe(true);
     await act(async () => large.unmount());
+  });
+  // BACKLOG D10 (duo-audit 9): on a short window at Large the pinned foot
+  // cut the notice through above Continue, with no sign the page scrolled.
+  // Measured overflow unpins Continue under the notice, as AX3 does, and
+  // the scroll indicator flashes once.
+  test('a page that overflows at Large unpins Continue under the notice', async () => {
+    expect(overflows(0, 900)).toBe(false);
+    expect(overflows(600, 600.5)).toBe(false);
+    expect(overflows(600, 640)).toBe(true);
+    setFontScale(1);
+    const r = await render(<Welcome />);
+    const scroll = () => host(r, 'welcome-scroll');
+    const inScroll = (id: string) =>
+      scroll().findAll((n) => n.props.testID === id).length > 0;
+    const flash = jest.fn();
+    const instance = r.root.find(
+      (n) => n.props.testID === 'welcome-scroll' && typeof n.type !== 'string',
+    ).instance as { flashScrollIndicators?: () => void } | null;
+    expect(instance).toBeTruthy();
+    if (instance) instance.flashScrollIndicators = flash;
+    // Everything fits: Continue stays pinned and nothing flashes.
+    await act(async () => {
+      scroll().props.onLayout({ nativeEvent: { layout: { height: 640 } } });
+      scroll().props.onContentSizeChange(390, 600);
+    });
+    expect(inScroll('welcome-continue')).toBe(false);
+    // The Duo's outer display: the page runs past the scroll view.
+    await act(async () => {
+      scroll().props.onLayout({ nativeEvent: { layout: { height: 420 } } });
+    });
+    expect(inScroll('welcome-continue')).toBe(true);
+    const order = scroll()
+      .findAll(
+        (n) =>
+          typeof n.type === 'string' &&
+          ['welcome-notice', 'welcome-continue'].includes(n.props.testID),
+      )
+      .map((n) => n.props.testID as string);
+    expect(order.indexOf('welcome-notice')).toBeLessThan(
+      order.indexOf('welcome-continue'),
+    );
+    expect(flash).toHaveBeenCalled();
+    // Unpinned, the page only grows, so it does not flip back.
+    await act(async () => {
+      scroll().props.onLayout({ nativeEvent: { layout: { height: 520 } } });
+      scroll().props.onContentSizeChange(390, 708);
+    });
+    expect(inScroll('welcome-continue')).toBe(true);
+    await act(async () => r.unmount());
   });
   test('the feature glyphs are the tint at full strength, not hierarchical', async () => {
     const r = await render(<Welcome />);

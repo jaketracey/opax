@@ -45,6 +45,17 @@ export function continuePinned(fontScale: number): boolean {
 }
 
 /**
+ * Whether the page overflows its scroll view, from the scroll view's height
+ * and its content's. Below AX3 a short window (the Duo's outer display, a
+ * landscape phone) can overflow too: the pinned foot then cut the cultural
+ * notice through above Continue, with no sign the page scrolled (BACKLOG
+ * D10). Measured overflow unpins Continue the same way AX3 does.
+ */
+export function overflows(view: number, content: number): boolean {
+  return view > 0 && content > view + 1;
+}
+
+/**
  * The welcome (`/welcome`, shell.md 4, today.md 3): one full-screen page on
  * every device, Apple's feature-list layout, then the pushed seat step. The
  * short form (`short`) is shown over a page opened from a link on the first
@@ -64,7 +75,7 @@ export function WelcomePage({
 }) {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
-  const { fontScale } = useWindowDimensions();
+  const { fontScale, width, height } = useWindowDimensions();
   const layout = useLayout();
   const seat = useSeat();
   const [laidOut, setLaidOut] = useState(false);
@@ -72,7 +83,24 @@ export function WelcomePage({
   const leaving = useRef(false);
   const advancing = useRef(false);
   const accessible = isAccessibilityCategory(fontScale);
-  const pinned = continuePinned(fontScale);
+  // A window that overflowed with Continue pinned keeps it unpinned until
+  // the window or the text size changes (unpinned, the page only grows).
+  const windowKey = `${width}x${height}@${fontScale}`;
+  const [overflowedAt, setOverflowedAt] = useState<string | null>(null);
+  const pinned = continuePinned(fontScale) && overflowedAt !== windowKey;
+  const scroll = useRef<ScrollView>(null);
+  const size = useRef({ view: 0, content: 0 });
+  const [scrolls, setScrolls] = useState(false);
+  const measure = () => {
+    const over = overflows(size.current.view, size.current.content);
+    setScrolls(over);
+    if (over && pinned) setOverflowedAt(windowKey);
+  };
+  // The sign the page scrolls: the system indicator, flashed once the page
+  // is in view (after the launch cover has gone).
+  useEffect(() => {
+    if (scrolls && !covered) scroll.current?.flashScrollIndicators();
+  }, [scrolls, covered]);
   const wide = layout.regular;
   // The short welcome is the same page with Continue only (first-launch
   // 4.5 D2): the same ground.
@@ -172,8 +200,18 @@ export function WelcomePage({
       }}
     >
       <ScrollView
+        ref={scroll}
+        testID="welcome-scroll"
         style={styles.screen}
         contentInsetAdjustmentBehavior="never"
+        onLayout={(event) => {
+          size.current.view = event.nativeEvent.layout.height;
+          measure();
+        }}
+        onContentSizeChange={(_, contentHeight) => {
+          size.current.content = contentHeight;
+          measure();
+        }}
         contentContainerStyle={[
           styles.scroll,
           {
