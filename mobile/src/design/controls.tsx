@@ -52,6 +52,7 @@ import { Text, type TextTone } from './text';
 import {
   androidControls,
   colors,
+  buttonCapsule,
   controlHeight,
   interfaceFonts as fonts,
   hairline,
@@ -308,7 +309,7 @@ export function Button({
                 style={[
                   styles.buttonContent,
                   {
-                    minHeight: 32,
+                    minHeight: buttonCapsule,
                     paddingVertical: 4,
                     paddingHorizontal: 12,
                     borderRadius: stacked ? radii.container : radii.capsule,

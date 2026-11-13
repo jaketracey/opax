@@ -51,8 +51,10 @@ import {
   textContent,
 } from '../src/design/text';
 import {
+  buttonCapsule,
   controlHeight,
   minimumTarget,
+  rhythm,
   textStyles,
   type TextVariant,
 } from '../src/design/tokens';
@@ -1196,6 +1198,33 @@ describe('shared state kit', () => {
       expect(r.root.findByType(Button).props.hug).toBe(true);
     },
   );
+  test('an inline ContentUnavailable draws its button 12 pt under the body', () => {
+    // Sweep 2, item 8.4: Search's No results. The capsule is 32 pt inside a
+    // 44 pt target; measured to the target the button drew 22 pt under the
+    // body's line on the device.
+    const r = mount(
+      <ContentUnavailable
+        inline
+        symbol={symbols.search}
+        title="No results"
+        body="Check the spelling or try a new search."
+        action={{
+          label: 'Ask OPAX about this',
+          onPress: noop,
+          containerTestID: 'inline-action',
+        }}
+      />,
+    );
+    const row = r.root.find(
+      (node) =>
+        node.props.testID === 'inline-action' && typeof node.type === 'string',
+    );
+    const blockGap = rhythm.heading;
+    const band = (minimumTarget - buttonCapsule) / 2;
+    expect(
+      blockGap + StyleSheet.flatten(row.props.style).marginTop + band,
+    ).toBe(12);
+  });
   test.each([false, true])(
     'ContentUnavailable action=%s is optional',
     (action) => {

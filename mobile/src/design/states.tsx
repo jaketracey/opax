@@ -36,6 +36,7 @@ import { phoneCopy } from './phone-copy';
 import { symbols } from './symbols';
 import { Text } from './text';
 import {
+  buttonCapsule,
   colors,
   controlHeight,
   hairline,
@@ -830,7 +831,7 @@ export function ContentUnavailable({
   /**
    * Draw the symbol, title and body in React Native on iOS too, as Android
    * does. SwiftUI's view pads itself, so its action sat about 60 pt under
-   * the body; inline, the action sits `rhythm.block` under it. For a state
+   * the body; inline, its capsule sits 12 pt under it. For a state
    * inside a page (Search's No results, sweep 2 item 8.4), not a whole one.
    */
   inline?: boolean;
@@ -1158,8 +1159,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'stretch',
   },
-  // The block's own gap is `heading`; the action sits a block under the body.
-  unavailableActionInline: { marginTop: rhythm.block - rhythm.heading },
+  // The drawn button, not its target, sits `heading + line` (12 pt) under
+  // the body's line, within 16 pt of its descenders (sweep 2, item 8.4). The
+  // block's own gap is `heading`. On iOS the capsule sits inside its 44 pt
+  // target, so that empty band is taken back (the margin is negative);
+  // Android fills its whole target.
+  unavailableActionInline: {
+    marginTop:
+      rhythm.line -
+      (Platform.OS === 'ios' ? (minimumTarget - buttonCapsule) / 2 : 0),
+  },
   pane: {
     flex: 1,
     alignItems: 'center',
