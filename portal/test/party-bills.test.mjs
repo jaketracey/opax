@@ -38,36 +38,40 @@ test('"Bills sponsored" links each bill, says when it was introduced and its sta
   assert.doesNotMatch(partyBillsHTML('Fixture Team', bills, h), /—/);
 });
 
-test('the shipped index: the three sponsor-only parties and their newest bills', () => {
+test('the shipped index preserves recorded members alongside dated sponsor bills', () => {
   const divisions = read('/graph/party-members.json');
   const expected = {
-    'Nick Xenophon Team': [7, 'Defence Amendment (Sovereign Naval Shipbuilding) Bill 2018'],
-    'Palmer United Party': [4, 'Commonwealth Grants Commission Amendment (GST Distribution) Bill 2015'],
-    'Rex Patrick Team': [4, 'Australian Federal Integrity Commission Bill 2021'],
+    'Nick Xenophon Team': [22, 'Defence Amendment (Sovereign Naval Shipbuilding) Bill 2018', 5],
+    'Palmer United Party': [3, 'Commonwealth Grants Commission Amendment (GST Distribution) Bill 2015', 4],
+    'Rex Patrick Team': [4, 'Australian Federal Integrity Commission Bill 2021', 0],
   };
-  for (const [label, [count, title]] of Object.entries(expected)) {
+  for (const [label, [count, title, memberCount]] of Object.entries(expected)) {
     const bills = partyBills(label, divisions);
     assert.equal(bills.length, count, label);
     assert.equal(bills[0].title, title, label);
     const members = partyMembers(label, {roster:read('/parliamentarians.json'), divisions});
-    assert.equal(members.current.length + members.former.length, 0, label);
-    assert.ok(partyMembersHTML(label, members, h).includes(esc(PARTY_NO_MEMBERS)), label);
+    assert.equal(members.current.length + members.former.length, memberCount, label);
+    if (!memberCount) assert.ok(partyMembersHTML(label, members, h).includes(esc(PARTY_NO_MEMBERS)), label);
   }
   // Every listed bill has its own page file.
   const index = new Set(read('/bills/index.json').bills.map(b => b.key));
   for (const bills of Object.values(divisions.bills)) for (const b of bills) assert.ok(index.has(b.key), b.key);
 });
 
-test('server: sponsor-only parties disclose the missing roster alongside their bills', async () => {
+test('server: sponsor parties show recorded members or disclose their absence alongside bills', async () => {
   const {loadWorker, offline} = await import('./worker-harness.mjs');
   const restore = offline();
   try {
     const worker = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, new URL('../public/', import.meta.url).pathname);
-    for (const slug of ['nick-xenophon-team', 'palmer-united-party', 'rex-patrick-team']) {
+    for (const [slug, memberCount] of [['nick-xenophon-team', 5], ['palmer-united-party', 4], ['rex-patrick-team', 0]]) {
       const response = await worker.fetch('/subject/party/' + slug);
       assert.equal(response.status, 200);
       const core = new JSDOM(await response.text()).window.document.querySelector('#prerender');
-      assert.ok(core.textContent.includes(PARTY_NO_MEMBERS), slug);
+      assert.equal(core.textContent.includes(PARTY_NO_MEMBERS), memberCount === 0, slug);
+      const membersHeading = [...core.querySelectorAll('h2')].find(heading => heading.textContent === 'Members');
+      assert.ok(membersHeading, slug);
+      const memberList = membersHeading.nextElementSibling;
+      assert.equal(memberList?.tagName === 'UL' ? memberList.children.length : 0, memberCount, slug);
       assert.ok(core.querySelector('a[href^="/bill/"]'), slug);
     }
   } finally { restore(); }

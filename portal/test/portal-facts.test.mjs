@@ -9,6 +9,8 @@ import {renderBillAnswer} from '../src/seo-content.ts';
 const pub = new URL('../public/', import.meta.url);
 const read = async path => JSON.parse(readFileSync(new URL(path.slice(1), pub), 'utf8'));
 const audit = JSON.parse(readFileSync(new URL('fixtures/portal-facts.json', import.meta.url)));
+const sponsorDecisions = JSON.parse(readFileSync(new URL('fixtures/dated-sponsor-parties.json', import.meta.url)));
+const datedSponsors = sponsorDecisions.rows;
 const catalogue = await read('/graph/grants.federal.json');
 
 test('all 24 audit program URLs resolve to their own file, award count and total', async () => {
@@ -97,12 +99,13 @@ test('every bill with embedded divisions agrees with the standalone source', asy
 test('audited party labels are canonical in index and detail; renderers reject dirty labels', async () => {
   const index = await read('/bills/index.json');
   const allowed = await read('/facts/sponsor-parties.json');
+  const dated = new Map([...datedSponsors, ...sponsorDecisions.fills].map(row => [row.key, row.published_party]));
   for (const expected of audit.parties) {
     const row = index.bills.find(b => b.key === expected.key);
     const bill = await read(`/bills/${expected.key}.json`);
     assert.equal(bill.sponsor_party, row.sponsor_party, expected.key);
     assert.ok(!bill.sponsor_party || allowed.includes(bill.sponsor_party), expected.key);
-    assert.equal(bill.sponsor_party, expected.canonical, expected.key);
+    assert.equal(bill.sponsor_party, dated.get(expected.key) ?? expected.canonical, expected.key);
   }
   for (const party of ['xx', 'monarchist', 'Australia&#39;s Voice']) {
     const html = renderBillAnswer({key:'example', title:'Example bill', sponsor_party:party}, [], new Map()).html;
@@ -121,4 +124,18 @@ test('the 20 ALRC null sponsor parties remain null in detail, index and party se
     assert.doesNotMatch(renderBillAnswer(bill, [], new Map()).html, /Sponsor's recorded party/);
   }
   assert.equal(index.bills.filter(b => audit.sponsor_party_null_keys.includes(b.key) && b.sponsor_party === 'Independent').length, 0);
+});
+
+test('all 52 dated sponsor disagreements are corrected or explicitly held in the published snapshot', async () => {
+  const index = await read('/bills/index.json');
+  assert.equal(datedSponsors.length, 52);
+  assert.equal(datedSponsors.filter(row => row.decision === 'corrected').length, 48);
+  assert.equal(datedSponsors.filter(row => row.decision === 'held-for-review').length, 4);
+  for (const {key, introduced, published_party} of [...datedSponsors, ...sponsorDecisions.fills]) {
+    const bill = await read(`/bills/${key}.json`);
+    assert.equal(bill.introduced, introduced, key);
+    assert.equal(bill.sponsor_party, published_party, key);
+    for (const sponsor of bill.sponsors?.slice(0, 1) || []) assert.equal(sponsor.party, published_party, key);
+    assert.equal(index.bills.find(b => b.key === key).sponsor_party, published_party, key);
+  }
 });

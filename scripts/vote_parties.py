@@ -679,11 +679,13 @@ class Resolver:
                 return "ambiguous-identity", None
         return rule, hits
 
-    def party_on(self, hits: list[dict], day: str, same=None):
+    def party_on(self, hits: list[dict], day: str, same=None, *, allow_bracket=False):
         """(party, source, url) or (None, reason, None).
 
         `same` decides when two labels are one party: exact by default (fills
-        keep the name the evidence uses), same_party when checking a source label."""
+        keep the name the evidence uses), same_party when checking a source label.
+        Fills require direct date coverage; only source-label checks may infer
+        a party between observations with `allow_bracket`."""
         same = same or (lambda a, b: a == b)
         agree = lambda parties: all(same(a, b) for a in parties for b in parties)
         found, unconfirmed = [], False
@@ -702,9 +704,10 @@ class Resolver:
             lo = [e for e in before if e["start"] == before[-1]["start"]]
             hi = [e for e in after if e["start"] == after[0]["start"]]
             parties = {e["party"] for e in lo + hi}
-            # One parliament only: a party held at both ends of a term was held
-            # between them unless someone left and came back inside one term.
-            if agree(parties) and same_parliament(self.elections, chamber, lo[0]["start"], hi[0]["start"]):
+            # A bracket can check an existing source label, but cannot fill a
+            # blank: two observations do not establish a covering party period.
+            if allow_bracket and agree(parties) and same_parliament(
+                    self.elections, chamber, lo[0]["start"], hi[0]["start"]):
                 found.append((hi[0]["party"], "bracket", hi[0]["url"]))
             elif not agree(parties):
                 return None, "conflicting", None
@@ -819,7 +822,7 @@ def check_label(resolver, house, day, member, voters) -> dict:
     if hits is None:
         return {**out, "reason": "label-kept-" + rule}
     out["rule"] = rule
-    party, how, url = resolver.party_on(hits, day, same=same_party)
+    party, how, url = resolver.party_on(hits, day, same=same_party, allow_bracket=True)
     if party is None:
         if how == "conflicting":
             return {**out, "party": None, "reason": "label-withheld-conflicting"}

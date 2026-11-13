@@ -57,7 +57,7 @@ export {programKey, resolveProgram, resolveProgramId};
  */
 
 import { shortMoney as fmtMoney } from './format.js'
-import { sourceLineHTML } from './labels.js?v=6d2e2e9cd8'
+import { sourceLineHTML } from './labels.js?v=fcb2a1091c'
 
 /** Text into the source line's HTML fields (labels.js escapes only its own text fields). */
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) =>
