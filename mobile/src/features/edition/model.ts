@@ -101,6 +101,49 @@ export function plateLine(
   return rest.length ? rest.join(' ').replace(/\.$/, '') : null;
 }
 
+const folded = (text: string) =>
+  text.replace(/\s+/g, ' ').trim().toLocaleLowerCase('en-AU');
+/** The numbers a line states, without thousands separators: "1,200" is 1200. */
+const numbersIn = (text: string) =>
+  (text.match(/\d[\d,]*(?:\.\d+)?/g) ?? []).map((n) => n.replace(/,/g, ''));
+
+/**
+ * The story's prose (sweep 2, item 7). Nothing is composed: every sentence
+ * is the edition's own.
+ * - A list slide's sentences ("In three sentences") replace the post's
+ *   paragraphs they contain, at the first one's place, so the page carries
+ *   every sentence the carousel does.
+ * - A post paragraph whose every number is drawn on a figure card, a bars
+ *   chart or a division below is not repeated above it ("768 speeches",
+ *   "Tax & budget 19%"). Lines with no number, the caveats, stay.
+ */
+export function storyParagraphs(
+  edition: Pick<EditionView, 'paragraphs' | 'facts'>,
+): string[] {
+  const { figures, bars, division } = edition.facts;
+  const list = edition.facts.list ?? [];
+  let paragraphs = [...edition.paragraphs];
+  if (list.length) {
+    const listed = new Set(list.flatMap(sentences).map(folded));
+    const covered = (paragraph: string) =>
+      sentences(paragraph).every((sentence) => listed.has(folded(sentence)));
+    const at = paragraphs.findIndex(covered);
+    const rest = paragraphs.filter((paragraph) => !covered(paragraph));
+    const place = at < 0 ? Math.min(1, rest.length) : at;
+    paragraphs = [...rest.slice(0, place), ...list, ...rest.slice(place)];
+  }
+  const carried = new Set([
+    ...figures.flatMap((figure) => numbersIn(figure.value)),
+    ...(bars?.items.map((bar) => String(bar.pct)) ?? []),
+    ...(division ? [String(division.ayes), String(division.noes)] : []),
+  ]);
+  return paragraphs.filter((paragraph) => {
+    if (list.includes(paragraph)) return true;
+    const numbers = numbersIn(paragraph);
+    return !(numbers.length && numbers.every((number) => carried.has(number)));
+  });
+}
+
 const MONTHS = [
   'jan',
   'feb',
@@ -256,11 +299,14 @@ export function editionSources(
         : []),
       ...documents,
     ],
-    // Today 7.2: the rule is its own "How this is chosen" group, and the
-    // sheet carries no licence text (that is Sources and licences'). A row
-    // that names a document already listed as an original is not repeated.
+    // Today 7.2: the rule is its own "How this is chosen" group. The
+    // closing slide's rows are notes here, its licence line included (the
+    // page's Sources group lists only sources, sweep 2 item 7.6), less its
+    // promotional lines. A row that names a document already listed as an
+    // original is not repeated.
     rule: EDITION_RULE,
     notes: edition.sourceRows
+      .filter((row) => sourceRowKind(row) !== 'promotion')
       .map(plainSourceRow)
       .filter(
         (title) =>
@@ -292,7 +338,35 @@ export function plainSourceRow(row: string): string {
 }
 
 /**
- * The page's Sources rows: plain titles, each matched to its original when
+ * What a closing-slide row is (sweep 2, item 7.6). The share card's closing
+ * slide mixes sources with lines that are not one:
+ * - a licence line ("Hansard: Commonwealth copyright, reproduced under CC
+ *   BY-NC-ND") belongs in the source sheet's notes;
+ * - a promotional line ("Every speech in the record is cited back to
+ *   Hansard", "… on one page") suits a social card and is not shown here;
+ * - a qualification ("Award values, not payments") is a note, not a source.
+ * Everything else names where the record came from.
+ */
+export type SourceRowKind =
+  | 'source'
+  | 'licence'
+  | 'promotion'
+  | 'qualification';
+export function sourceRowKind(row: string): SourceRowKind {
+  const text = row.trim();
+  if (/^(?:every|all)\b|\bon one page\b/i.test(text)) return 'promotion';
+  if (
+    /\breproduced under\b/i.test(text) ||
+    /^[^,;]+:\s*(?:commonwealth|crown) copyright\b/i.test(text)
+  )
+    return 'licence';
+  if (/\bnot\b/i.test(plainSourceRow(text))) return 'qualification';
+  return 'source';
+}
+
+/**
+ * The page's Sources rows: only rows that are a source (sourceRowKind),
+ * as plain titles, each matched to its original when
  * the bill lists one. Dated only when every row has a date of its own, so
  * the rows never mix dated and undated (the sheet dates each original).
  */
@@ -300,15 +374,17 @@ export function editionSourceRows(
   edition: Pick<EditionView, 'sourceRows'>,
   documents: readonly SourceOriginal[] = [],
 ): { title: string; original?: SourceOriginal; date?: DateInput }[] {
-  const rows = edition.sourceRows.map((row) => {
-    const title = plainSourceRow(row);
-    const original = documents.find((item) =>
-      title
-        .toLocaleLowerCase('en-AU')
-        .startsWith(item.label.toLocaleLowerCase('en-AU')),
-    );
-    return { title, original };
-  });
+  const rows = edition.sourceRows
+    .filter((row) => sourceRowKind(row) === 'source')
+    .map((row) => {
+      const title = plainSourceRow(row);
+      const original = documents.find((item) =>
+        title
+          .toLocaleLowerCase('en-AU')
+          .startsWith(item.label.toLocaleLowerCase('en-AU')),
+      );
+      return { title, original };
+    });
   const dated = rows.length > 0 && rows.every((row) => row.original?.asOf);
   return rows.map((row) =>
     dated ? { ...row, date: row.original!.asOf! } : row,

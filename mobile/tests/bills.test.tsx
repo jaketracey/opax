@@ -180,8 +180,10 @@ describe('votes: order and words (4.2.5)', () => {
     const { main, procedural } = orderDivisions(rows);
     expect(main[0]!.stage).toBe('Third reading');
     expect(main.length + procedural.length).toBe(rows.length);
-    expect(procedural.every((r) => isProcedural(r.stage))).toBe(true);
-    expect(main.some((r) => isProcedural(r.stage))).toBe(false);
+    const rule = (r: (typeof rows)[number]) =>
+      isProcedural(r.stage ?? r.title, r.question);
+    expect(procedural.every(rule)).toBe(true);
+    expect(main.some(rule)).toBe(false);
     for (let i = 2; i < main.length; i++)
       expect(main[i - 1]!.date >= main[i]!.date).toBe(true);
   });

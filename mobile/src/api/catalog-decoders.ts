@@ -1065,7 +1065,6 @@ const editionLink = (v: unknown): string => {
 };
 const slideBase = { kicker: text, title: text, alt: text };
 const sourceSlide = shape({ ...slideBase, rows: array(text) });
-const listSlide = shape({ ...slideBase, note: optional(nullable(text)) });
 const otherSlide = shape(slideBase);
 // Today's front page reads a few more fields where the slides carry them
 // (portal/src/story.ts). Each is optional and lenient: a field that is
@@ -1082,6 +1081,13 @@ const lenient =
     }
   };
 const coverSlide = shape({ ...slideBase, line: lenient(nonempty) });
+const listSlide = shape({
+  ...slideBase,
+  note: optional(nullable(text)),
+  // The story reads the list's sentences as prose (sweep 2, item 7.1).
+  // Lenient: an unreadable list keeps the edition, without the sentences.
+  items: lenient(array(nonempty)),
+});
 const numberSlide = shape({
   ...slideBase,
   value: lenient(nonempty),

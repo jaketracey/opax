@@ -35,6 +35,7 @@ import { accessibilityElements, readAloud } from './a11y-tree';
 import {
   BarSeries,
   ShareBar,
+  ShareRows,
   StageTimeline,
   VoteSplit,
 } from '../src/design/charts';
@@ -58,6 +59,8 @@ import {
   editionTier,
   eventDay,
   plainSourceRow,
+  sourceRowKind,
+  storyParagraphs,
   plateLine,
   timelineProvenance,
 } from '../src/features/edition/model';
@@ -716,12 +719,19 @@ describe('the native edition reader', () => {
     },
   );
   test('source notes retain standard row metrics and verbatim labels', async () => {
+    const sourced = {
+      ...person,
+      sourceRows: [
+        'Hansard, Parliament of Australia',
+        'Topic labels: OPAX speech labels, 2008 to 2026',
+      ],
+    };
     jest
       .mocked(catalogs.todayEdition)
-      .mockResolvedValue({ ...ready, data: person });
+      .mockResolvedValue({ ...ready, data: sourced });
     const { root } = await render(<EditionStory />);
     expect(host(root, 'edition-source-rows')).toHaveLength(1);
-    person.sourceRows.forEach((label, i) => {
+    sourced.sourceRows.forEach((label, i) => {
       const row = root
         .findAllByType(ValueRow)
         .find((node) => node.props.testID === `edition-source-${i}`)!;
@@ -733,10 +743,50 @@ describe('the native edition reader', () => {
       expect(style.paddingVertical).toBeGreaterThan(0);
     });
   });
-  test.each(['edition-sources'])('%s opens its own originals', async (id) => {
+  // Sweep 2, item 7.6: the closing slide's promotional lines are not
+  // shown, and its licence line is a note in the source sheet.
+  test("a parliamentarian's Sources group holds no slogan, and the licence line is in the sheet", async () => {
+    jest
+      .mocked(catalogs.todayEdition)
+      .mockResolvedValue({ ...ready, data: person });
     const { root } = await render(<EditionStory />);
-    // One SourceLine on a bill day: the timeline's caption dates it, and
-    // the foot line sources the page.
+    expect(host(root, 'edition-source-rows')).toHaveLength(0);
+    const drawn = root
+      .findAll((node) => node.type === 'Text')
+      .flatMap((node) => node.props.children)
+      .filter((value) => typeof value === 'string')
+      .join(' ');
+    expect(drawn).not.toMatch(/cited back to Hansard|on one page/);
+    await press(root, 'edition-fact-0-sources');
+    const details = openedSourceDetails(root, 'edition-fact-0-sources');
+    expect(details.notes).toContain(
+      'Hansard: Commonwealth copyright, reproduced under CC BY-NC-ND',
+    );
+    expect(details.notes.join(' ')).not.toMatch(
+      /cited back to Hansard|on one page/,
+    );
+  });
+  // Sweep 2, item 7.4: one sources affordance. A bill day's Sources group
+  // links the originals, so no foot line repeats them.
+  test('a bill day lists its sources once: the group, with no foot line', async () => {
+    const { root } = await render(<EditionStory />);
+    expect(host(root, 'edition-source-rows')).toHaveLength(1);
+    expect(root.findAllByType(SourceLine)).toHaveLength(0);
+    const rows = root
+      .findAllByType(LinkRow)
+      .filter((row) => /^edition-source-\d$/.test(row.props.testID));
+    expect(rows.map((row) => row.props.title)).toEqual([
+      'Explanatory memorandum on ParlInfo',
+      'Bill home page on ParlInfo',
+    ]);
+    expect(rows[0]!.props.external.url).toContain('parlinfo.aph.gov.au');
+  });
+  test.each(['edition-sources'])('%s opens its own originals', async (id) => {
+    // Without a Sources group, the foot line sources the page.
+    jest
+      .mocked(catalogs.todayEdition)
+      .mockResolvedValue({ ...ready, data: { ...edition, sourceRows: [] } });
+    const { root } = await render(<EditionStory />);
     expect(root.findAllByType(SourceLine)).toHaveLength(1);
     const line = root
       .findAllByType(SourceLine)
@@ -764,7 +814,7 @@ describe('the native edition reader', () => {
     expect(details.rule).toBe(EDITION_RULE);
     expect(details.notes ?? []).not.toContain(EDITION_RULE);
   });
-  test('keeps the full title, all paragraphs, dated timeline and native bill subject', async () => {
+  test('keeps the full title, the story prose, dated timeline and native bill subject', async () => {
     const { root } = await render(<EditionStory />);
     expect(host(root, 'edition-plate-title')[0]!.props.children).toBe(
       bindRecordTitle(edition.title),
@@ -772,23 +822,26 @@ describe('the native edition reader', () => {
     expect(root.findByType(MachinePill).props.note.body).toEqual([
       edition.machineWritten!.attribution,
     ]);
-    edition.paragraphs.forEach((paragraph, index) =>
+    // Sweep 2, item 7.1: the list slide's sentences replace the one
+    // sentence they contain, so the story carries every sentence the
+    // carousel does; "Who it touches" follows as its own paragraph.
+    const prose = [
+      'This bill would keep funding grants that support pay for early childhood education and care workers.',
+      "It would amend the Wage Justice for Early Childhood Education and Care Workers (Special Account) Act to extend the special account's operation and the wage increase program.",
+      'The extension would run to 30 June 2028 and also aims to improve safety and quality in the sector.',
+      'Passed 18 Sep 2026.',
+    ];
+    prose.forEach((paragraph, index) =>
       expect(host(root, `edition-paragraph-${index}`)[0]!.props.children).toBe(
         paragraph,
       ),
     );
+    expect(host(root, `edition-paragraph-${prose.length}`)).toHaveLength(0);
+    expect(host(root, 'edition-affects-text')[0]!.props.children).toBe(
+      'Early childhood education and care workers and families using child care services.',
+    );
     expect(root.findByType(StageTimeline).props.stages).toHaveLength(5);
     expect(subjectHref(root)).toEqual(billRoute('au-federal-r7529'));
-    expect(
-      root
-        .findAllByType(SourceLine)
-        .every((line) => line.props.asOf === edition.date),
-    ).toBe(true);
-    expect(root.findAllByType(SourceLine)[0]!.props.originals).toContainEqual({
-      label: 'OPAX daily edition',
-      url: edition.path,
-      asOf: edition.date,
-    });
     expect(openOnWeb).not.toHaveBeenCalled();
     act(() =>
       host(root, 'edition-screen')[0]!.props.onScroll({
@@ -910,20 +963,37 @@ describe('the native edition reader', () => {
     expect(root.findAllByType(Stack.Toolbar)).toHaveLength(0);
     expect(host(root, 'edition-ask')).toHaveLength(1);
   });
-  test('the bill subject is a BillRow with the bill as its href, so it keeps its preview', async () => {
-    const { root } = await render(<EditionStory />);
-    const row = root
-      .findAllByType(BillRow)
-      .find((node) => node.props.testID === 'edition-subject')!;
-    expect(row.props.href).toEqual(billRoute('au-federal-r7529'));
-    expect(row.props.onPress).toBeUndefined();
-  });
+  // Sweep 2, item 7.2 (wording waits for Jake): the subject row keeps the
+  // bill's title, held to three lines at every size and read whole.
+  test.each([1, 2.643])(
+    'at %s the bill subject is a link row with the bill as its href, its title at most three lines',
+    async (fontScale) => {
+      const window = { width: 390, height: 844, scale: 3, fontScale };
+      Dimensions.set({ window, screen: window });
+      const { root } = await render(<EditionStory />);
+      const row = root
+        .findAllByType(LinkRow)
+        .find((node) => node.props.testID === 'edition-subject')!;
+      expect(row.props.href).toEqual(billRoute('au-federal-r7529'));
+      expect(row.props.onPress).toBeUndefined();
+      expect(row.props).toMatchObject({
+        titleRole: 'rowRecord',
+        titleLines: 3,
+        accessibilityLabel: edition.title,
+      });
+      expect(host(root, 'edition-subject-title')[0]!.props.numberOfLines).toBe(
+        3,
+      );
+    },
+  );
   test('the plate shows no detail line that repeats the paragraphs below it', async () => {
     const { root } = await render(<EditionStory />);
-    const shown = edition.paragraphs.join(' ');
+    const shown = storyParagraphs(edition).join(' ');
     const line = host(root, 'edition-plate-line')[0]?.props.children;
     if (line) expect(shown).not.toContain(line);
-    expect(root.findByType(Plate).props.shownBelow).toEqual(edition.paragraphs);
+    expect(root.findByType(Plate).props.shownBelow).toEqual(
+      storyParagraphs(edition),
+    );
   });
   test('a person resolves through the small indices, with no directory load or web fallback', async () => {
     jest
@@ -1046,16 +1116,15 @@ describe('the native edition reader', () => {
         }),
       ]),
     });
-    expect(root.findByType(BarSeries).props).toMatchObject({
-      values: 'all',
-      dateRange: { start: edition.date, end: edition.date },
-    });
+    expect(root.findByType(ShareRows).props.items).toEqual([
+      { label: 'Health', value: 60 },
+    ]);
     expect(
       root
         .findAllByType(VoteSplit)
         .every((split) => split.props.countsStyle === 'votes'),
     ).toBe(true);
-    expect(host(root, 'edition-fact-0')[0]!.findByType(BarSeries)).toBeTruthy();
+    expect(host(root, 'edition-fact-0')[0]!.findByType(ShareRows)).toBeTruthy();
     expect(host(root, 'edition-fact-1')).toHaveLength(1);
     expect(host(root, 'edition-fact-2')[0]!.findByType(VoteSplit)).toBeTruthy();
   });
@@ -1119,11 +1188,11 @@ describe('the native edition reader', () => {
   test.each([
     ['grant', true, [55, 28, 11], 'share'],
     ['politician', true, [40, 35, 25], 'share'],
-    ['grant', false, [100, 1], 'series'],
-    ['program', false, [40, 35, 25], 'series'],
-    ['topic', undefined, [100, 1], 'series'],
-    ['politician', undefined, [40, 35, 25], 'series'],
-    ['politician', undefined, [19, 12], 'series'],
+    ['grant', false, [100, 1], 'rows'],
+    ['program', false, [40, 35, 25], 'rows'],
+    ['topic', undefined, [100, 1], 'rows'],
+    ['politician', undefined, [40, 35, 25], 'rows'],
+    ['politician', undefined, [19, 12], 'rows'],
     ['grant', undefined, [60, 40], 'share'],
     ['program', undefined, [10, 83, 7], 'share'],
   ] as const)(
@@ -1157,13 +1226,15 @@ describe('the native edition reader', () => {
       expect(fact.findAllByType(ShareBar)).toHaveLength(
         draws === 'share' ? 1 : 0,
       );
-      expect(fact.findAllByType(BarSeries)).toHaveLength(
+      expect(fact.findAllByType(ShareRows)).toHaveLength(
         draws === 'share' ? 0 : 1,
       );
+      // Overlapping shares are never a 0 to 100% column chart again.
+      expect(fact.findAllByType(BarSeries)).toHaveLength(0);
       const drawn =
         draws === 'share'
           ? fact.findByType(ShareBar).props.parts
-          : fact.findByType(BarSeries).props.data;
+          : fact.findByType(ShareRows).props.items;
       expect(drawn.map((part: { value: number }) => part.value)).toEqual(pcts);
     },
   );
@@ -1305,7 +1376,7 @@ test('money and people keep category bands and incoming edition links stay nativ
   );
 });
 
-test('edition story has one continuous rail, a footnote date range and says the passed outcome once', async () => {
+test('edition story has one continuous rail, no date-range caption and says the passed outcome once', async () => {
   const { root } = await render(<EditionStory />);
   expect(host(root, 'stage-timeline-rail')).toHaveLength(1);
   const stages = root.findAll(
@@ -1338,11 +1409,14 @@ test('edition story has one continuous rail, a footnote date range and says the 
       host(root, 'stage-timeline-rail-complete')[0]!.props.style,
     ).height,
   ).toBe(320);
-  const caption = root
-    .findAllByType(Text)
-    .find((node) => node.props.testID === 'stage-timeline-caption')!;
-  expect(caption.props.variant).toBe('footnote');
-  expect(caption.props.children).toBe('12 August 2026 to 18 September 2026');
+  // Sweep 2, item 7.3: no date-range caption under the edition's
+  // timeline; its first and last dates are the stages above.
+  expect(
+    root
+      .findAllByType(Text)
+      .filter((node) => node.props.testID === 'stage-timeline-caption'),
+  ).toHaveLength(0);
+  expect(root.findByType(StageTimeline).props.caption).toBe(false);
   const drawn = root
     .findAll((node) => node.type === 'Text')
     .flatMap((node) => node.props.children)
@@ -1525,19 +1599,17 @@ describe('the edition facts with VoiceOver, at Large, AX3 and AX5', () => {
         at('10.0 million dollars, to an invented council'),
       ).toBeGreaterThan(-1);
       expect(read[at('Topic labels')]!.role).toBe('header');
-      // Each bar once as its figure; the scale and the captions are drawn,
-      // not read again.
+      // Each row once as its figure; its value is drawn, not read again.
       expect(
         read.filter((e) => /Health/.test(e.label)).map((e) => e.label),
       ).toEqual(['Health, 60%']);
       expect(read.filter((e) => /^(100|50)%$/.test(e.label))).toEqual([]);
-      // Figure, then the chart, then its table button, then the timeline.
+      // Figure, then the chart's rows, then the timeline.
       const order = [
         at('10.0 million dollars, to an invented council'),
         at('Topic labels'),
         at('Health, 60%'),
         at('Roads, 20%'),
-        at('Show as table'),
         at('Royal Assent, 18 Sep 2026, latest stage'),
       ];
       expect(order.every((index) => index > -1)).toBe(true);
@@ -1557,22 +1629,33 @@ describe('the edition facts with VoiceOver, at Large, AX3 and AX5', () => {
     },
   );
 
-  test.each([
-    [1, true],
-    [2.643, true],
-    [3.571, false],
-  ])(
-    'at %s the scale values never overlap (50%% drawn: %s), and no fact text is cut short',
-    async (fontScale, half) => {
-      const { r, line } = await show(fontScale);
-      const top = (id: string) =>
-        StyleSheet.flatten(host(r.root, id)[0]!.props.style).top as number;
-      expect(host(r.root, 'bar-series-scale-1')).toHaveLength(1);
-      expect(host(r.root, 'bar-series-scale-0.5')).toHaveLength(half ? 1 : 0);
-      if (half)
-        expect(top('bar-series-scale-0.5')).toBeGreaterThanOrEqual(
-          top('bar-series-scale-1') + line,
-        );
+  test.each([1, 2.643, 3.571])(
+    'at %s overlapping shares are labelled rows with no axis, and no fact text is cut short',
+    async (fontScale) => {
+      const { r } = await show(fontScale);
+      // Sweep 2, item 7.5: every label and its value at the row's end, the
+      // bars scaled to the largest share, and no scale.
+      expect(host(r.root, 'bar-series-scale-1')).toHaveLength(0);
+      expect(
+        [0, 1].map(
+          (i) =>
+            host(r.root, `edition-fact-1-rows-label-${i}`)[0]!.props.children,
+        ),
+      ).toEqual(['Health', 'Roads']);
+      expect(
+        [0, 1].map(
+          (i) =>
+            host(r.root, `edition-fact-1-rows-value-${i}`)[0]!.props.children,
+        ),
+      ).toEqual(['60%', '20%']);
+      const widths = [0, 1].map(
+        (i) =>
+          StyleSheet.flatten(
+            host(r.root, `edition-fact-1-rows-bar-${i}`)[0]!.props.style,
+          ).width,
+      );
+      expect(widths[0]).toBe('100%');
+      expect(parseFloat(String(widths[1]))).toBeCloseTo(100 / 3);
       const factTexts = [0, 1, 2, 3].flatMap((index) =>
         host(r.root, `edition-fact-${index}`).flatMap((fact) =>
           fact.findAll((node) => node.type === 'Text'),
@@ -1676,5 +1759,119 @@ describe('edition analytics', () => {
     const gone = await render(<EditionStory />);
     expect(host(gone.root, 'edition-end')).toHaveLength(0);
     expect(sent()).toEqual([]);
+  });
+});
+
+describe('sweep 2: the edition story says it once', () => {
+  test("a parliamentarian's prose drops what the cards carry and keeps its caveats", () => {
+    // "768" is the figure card's; "19%" and "12%" are the rows'. The
+    // caveat and the record years have numbers no card draws, or none.
+    expect(storyParagraphs(person)).toEqual([
+      'Shares of labelled speeches; labels overlap.',
+      'Records: 2008–2026.',
+    ]);
+  });
+  test('768 is drawn once by the figure card and at most once in the prose', async () => {
+    jest
+      .mocked(catalogs.todayEdition)
+      .mockResolvedValue({ ...ready, data: person });
+    const { root } = await render(<EditionStory />);
+    const prose = root
+      .findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          /^edition-paragraph-\d+$/.test(String(node.props.testID)),
+      )
+      .map((node) => String(node.props.children))
+      .join(' ');
+    expect(prose.match(/768/g)?.length ?? 0).toBeLessThanOrEqual(1);
+    expect(root.findByType(FigureBlock).props.value).toBe('768');
+  });
+  test.each([1, 2.643])(
+    "at %s a parliamentarian's topic labels are two labelled rows ending 19% and 12%",
+    async (fontScale) => {
+      const window = { width: 390, height: 844, scale: 3, fontScale };
+      Dimensions.set({ window, screen: window });
+      jest
+        .mocked(catalogs.todayEdition)
+        .mockResolvedValue({ ...ready, data: person });
+      const { root } = await render(<EditionStory />);
+      expect(root.findAllByType(BarSeries)).toHaveLength(0);
+      const rows = root.findByType(ShareRows);
+      const id = rows.props.testID as string;
+      expect(
+        [0, 1].map((i) => host(root, `${id}-label-${i}`)[0]!.props.children),
+      ).toEqual(['Tax & budget', 'Climate & environment']);
+      expect(
+        [0, 1].map((i) => host(root, `${id}-value-${i}`)[0]!.props.children),
+      ).toEqual(['19%', '12%']);
+      expect(
+        [0, 1].map(
+          (i) => host(root, `${id}-row-${i}`)[0]!.props.accessibilityLabel,
+        ),
+      ).toEqual(['Tax & budget, 19%', 'Climate & environment, 12%']);
+      // No label is clamped at any size.
+      expect(
+        rows
+          .findAll((node) => node.type === 'Text')
+          .filter((node) => node.props.numberOfLines),
+      ).toEqual([]);
+      // The note stays under the rows.
+      expect(
+        root
+          .findAll((node) => node.type === 'Text')
+          .some(
+            (node) =>
+              node.props.children ===
+              'Shares of labelled speeches; a speech can carry several labels.',
+          ),
+      ).toBe(true);
+    },
+  );
+  test.each([
+    [1, undefined],
+    [1.353, undefined],
+    [1.786, 6],
+    [2.643, 6],
+  ])(
+    "at %s the story plate's title holds %s lines; Today's card is unchanged",
+    async (fontScale, lines) => {
+      const window = { width: 390, height: 844, scale: 3, fontScale };
+      Dimensions.set({ window, screen: window });
+      const story = await render(<EditionStory />);
+      const title = host(story.root, 'edition-plate-title')[0]!;
+      expect(title.props.numberOfLines).toBe(lines);
+      const card = await render(
+        <EditionCard edition={ready} today="2026-10-05" />,
+      );
+      expect(
+        host(card.root, 'today-edition-title')[0]!.props.numberOfLines,
+      ).toBeUndefined();
+    },
+  );
+  test.each([
+    ['Explanatory memorandum on ParlInfo, CC BY-NC-ND 4.0', 'source'],
+    ['GrantConnect awards, Department of Finance, CC BY 3.0 AU', 'source'],
+    ['Report updated 3 Oct 2026', 'source'],
+    [
+      'Party on the grant date: parliamentary service records and AEC results',
+      'source',
+    ],
+    [
+      'Hansard: Commonwealth copyright, reproduced under CC BY-NC-ND',
+      'licence',
+    ],
+    ['Every speech in the record is cited back to Hansard', 'promotion'],
+    [
+      'Topic labels, votes, declared interests and the money map on one page',
+      'promotion',
+    ],
+    ['Award values, not payments', 'qualification'],
+    [
+      'Figures describe collected records, not all parliamentary activity',
+      'qualification',
+    ],
+  ] as const)('%s is a %s row', (row, kind) => {
+    expect(sourceRowKind(row)).toBe(kind);
   });
 });

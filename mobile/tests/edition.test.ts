@@ -263,6 +263,15 @@ describe('the edition selector', () => {
           { date: '18 Sep 2026', text: 'Royal Assent' },
         ],
         division: null,
+        // The list slide's sentences and the "Who it touches" line, verbatim,
+        // for the story's prose (sweep 2, item 7.1).
+        list: [
+          'This bill would keep funding grants that support pay for early childhood education and care workers.',
+          "It would amend the Wage Justice for Early Childhood Education and Care Workers (Special Account) Act to extend the special account's operation and the wage increase program.",
+          'The extension would run to 30 June 2028 and also aims to improve safety and quality in the sector.',
+        ],
+        affects:
+          'Early childhood education and care workers and families using child care services',
       },
     });
     for (const paragraph of view.data!.paragraphs)
@@ -361,6 +370,7 @@ describe('the edition selector', () => {
             ayes: -1,
             noes: 2,
           },
+          { type: 'list', kicker: 'k', title: 't', alt: 'a', items: 'x' },
           slides.at(-1),
         ],
       ),
@@ -373,6 +383,8 @@ describe('the edition selector', () => {
       bars: null,
       events: [],
       division: null,
+      list: [],
+      affects: null,
     });
     // An edition without slides has no facts, only its text.
     expect(editionFor(decodeEdition(without('slides'))).data!.facts).toEqual({
@@ -383,6 +395,8 @@ describe('the edition selector', () => {
       bars: null,
       events: [],
       division: null,
+      list: [],
+      affects: null,
     });
   });
   test("a bars slide's whole flag is the composer's: a boolean is kept, anything else is left out", () => {

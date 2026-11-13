@@ -397,3 +397,112 @@ test('Android reserves a separate art column beside the date, without a native h
     Object.defineProperty(Platform, 'OS', platform);
   }
 });
+
+test('iOS starts the date line 8 pt below the art, so Tasmania never touches it (sweep 2, 11)', () => {
+  const subscription = jest
+    .spyOn(AppState, 'addEventListener')
+    .mockReturnValue({ remove: jest.fn() });
+  const platform = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
+  const originalWindow = Dimensions.get('window');
+  const originalScreen = Dimensions.get('screen');
+  Object.defineProperty(Platform, 'OS', { configurable: true, value: 'ios' });
+  const animatedStyle = jest
+    .spyOn(Reanimated, 'useAnimatedStyle')
+    .mockImplementation((compute) => compute());
+  const window = { width: 402, height: 874, scale: 3, fontScale: 1 };
+  Dimensions.set({ window, screen: window });
+  let renderer: TestRenderer.ReactTestRenderer | undefined;
+  function Page({ expanded }: { expanded: number }) {
+    const scroll = Reanimated.useSharedValue(0);
+    const header = Reanimated.useSharedValue(expanded);
+    return (
+      <RegionProvider value={{ width: 370, height: 874 }}>
+        <Masthead
+          now={new Date('2026-11-13T00:00:00Z')}
+          mark={
+            <AustraliaDots
+              state={null}
+              scroll={scroll}
+              expandedHeader={header}
+            />
+          }
+        />
+      </RegionProvider>
+    );
+  }
+  try {
+    for (const expanded of [116, 160, 172]) {
+      act(() => {
+        renderer?.unmount();
+        renderer = TestRenderer.create(<Page expanded={expanded} />);
+      });
+      const host = (id: string) =>
+        renderer!.root.find(
+          (n) => typeof n.type === 'string' && n.props.testID === id,
+        );
+      const masthead = host('today-masthead');
+      // The box is in the masthead's flow, ahead of the date (pre-order).
+      const order = masthead
+        .findAll(
+          (n) =>
+            typeof n.type === 'string' &&
+            ['today-australia-dots-clearance', 'today-screen-message'].includes(
+              n.props.testID,
+            ),
+        )
+        .map((n) => n.props.testID);
+      expect(order).toEqual([
+        'today-australia-dots-clearance',
+        'today-screen-message',
+      ]);
+      const box = StyleSheet.flatten(
+        host('today-australia-dots-clearance').props.style,
+      );
+      const gap = StyleSheet.flatten(masthead.props.style).gap as number;
+      // The date's top, measured from the masthead's top.
+      const dateTop = box.height + box.marginBottom + gap;
+      const art = StyleSheet.flatten(host('today-australia-dots').props.style);
+      // The art keeps its place: the box starts where the masthead does.
+      expect(art).toMatchObject({
+        position: 'absolute',
+        top: 30 - expanded - rhythm.block,
+        left: -8 - 16,
+      });
+      // Tasmania is the art's lowest edge.
+      expect(dateTop - (art.top + dotHeight)).toBeGreaterThanOrEqual(8);
+      expect(dateTop - (art.top + dotHeight)).toBeCloseTo(8, 6);
+    }
+    // When the art ends well above the masthead, the date does not move.
+    act(() => {
+      renderer?.unmount();
+      renderer = TestRenderer.create(<Page expanded={400} />);
+    });
+    const box = StyleSheet.flatten(
+      renderer!.root.find(
+        (n) =>
+          typeof n.type === 'string' &&
+          n.props.testID === 'today-australia-dots-clearance',
+      ).props.style,
+    );
+    expect(box.height).toBe(0);
+    expect(box.marginBottom).toBe(-rhythm.tight);
+    // At accessibility sizes the art is hidden and the date is first.
+    act(() => {
+      Dimensions.set({
+        window: { ...window, fontScale: 2 },
+        screen: { ...window, fontScale: 2 },
+      });
+    });
+    expect(
+      renderer!.root.findAllByProps({
+        testID: 'today-australia-dots-clearance',
+      }),
+    ).toHaveLength(0);
+  } finally {
+    if (renderer) act(() => renderer!.unmount());
+    animatedStyle.mockRestore();
+    subscription.mockRestore();
+    Dimensions.set({ window: originalWindow, screen: originalScreen });
+    Object.defineProperty(Platform, 'OS', platform);
+  }
+});

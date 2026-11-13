@@ -1070,6 +1070,16 @@ export interface DivisionRowProps {
   onToggle?: () => void;
   children?: ReactNode;
   split?: { ayes: number; noes: number; partyVote?: 'aye' | 'no' };
+  /**
+   * The vote bar under the outcome. Off for a block vote, where one colour
+   * across the column only repeats the sentence above it. On by default.
+   */
+  bar?: boolean;
+  /**
+   * A sentence in place of the counts line, such as "Labor: all 25 against".
+   * VoiceOver hears it in place of the counts. Off by default.
+   */
+  votesLine?: string;
 }
 export function DivisionRow({
   title,
@@ -1086,6 +1096,8 @@ export function DivisionRow({
   onToggle,
   children,
   split,
+  bar = true,
+  votesLine,
 }: DivisionRowProps) {
   const [localExpanded, setExpanded] = useState(false);
   const expanded = controlledExpanded ?? localExpanded;
@@ -1126,7 +1138,7 @@ export function DivisionRow({
         // A no-break date is for layout; VoiceOver hears plain words.
         meta.replace(/\u00a0/g, ' '),
         outcome,
-        spokenCounts,
+        votesLine ?? spokenCounts,
         party,
       ]
         .filter(Boolean)
@@ -1148,7 +1160,7 @@ export function DivisionRow({
         pressed && (href || expandable) ? { backgroundColor: highlight } : null,
       ]}
     >
-      <View style={styles.main}>
+      <View style={[styles.main, styles.divisionMain]}>
         <Text wordSafe variant="rowRecord">
           {title}
         </Text>
@@ -1156,26 +1168,29 @@ export function DivisionRow({
           {meta}
         </Text>
         <StatusCapsule status={outcome} />
-        <View
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-          style={styles.voteBar}
-        >
+        {bar ? (
           <View
-            style={{
-              flex: Math.max(0, votes.ayes),
-              backgroundColor: colors.ink,
-            }}
-          />
-          <View
-            style={{
-              flex: Math.max(0, votes.noes),
-              backgroundColor: colors.inkFaint,
-            }}
-          />
-        </View>
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+            style={styles.voteBar}
+            testID={testID && `${testID}-bar`}
+          >
+            <View
+              style={{
+                flex: Math.max(0, votes.ayes),
+                backgroundColor: colors.ink,
+              }}
+            />
+            <View
+              style={{
+                flex: Math.max(0, votes.noes),
+                backgroundColor: colors.inkFaint,
+              }}
+            />
+          </View>
+        ) : null}
         <Text wordSafe variant="secondary">
-          {counts}
+          {votesLine ?? counts}
         </Text>
         {party ? (
           <Text wordSafe variant="secondary">
@@ -1414,6 +1429,10 @@ const styles = StyleSheet.create({
   value: { flexShrink: 0, textAlign: 'right' },
   stackedValue: { flexShrink: 0 },
   main: { flexGrow: 1, flexShrink: 1, gap: rhythm.line },
+  // A division's words take the column left beside the chevron, never their
+  // own unwrapped width: at AX3 and AX5 an auto basis let a long stage or
+  // count line run past the column, cut mid-letter (BACKLOG D9).
+  divisionMain: { flexBasis: 0, minWidth: 0 },
   recordContent: { gap: rhythm.line },
   recordTarget: { minHeight: minimumTarget, minWidth: minimumTarget },
   recordSpeakerSlot: {

@@ -268,9 +268,9 @@ test('bill stage fallback, status wording, rich divisions, speeches and duplicat
     changeText(changesFor(baseline('bill', seen), current)[0]!, 2026),
   ).toBe('Moved to a new stage · 2 Sep');
   for (const [status, expected] of [
-    ['passed', 'Passed'],
-    ['lapsed', 'Lapsed'],
-    ['royal_assent', 'Royal Assent'],
+    ['passed', 'Now passed; was before parliament'],
+    ['lapsed', 'Now lapsed; was before parliament'],
+    ['royal_assent', 'Received Royal Assent; was before parliament'],
   ])
     expect(
       changesFor(baseline('bill', seen), {

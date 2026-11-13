@@ -218,6 +218,12 @@ newest first, statuses first on equal dates, then text, and uses `todayChanges`
 to exclude expenses. There is no pay change. `moreChangesText` has no noun.
 A stage and division with the same stage, chamber and date yield one division
 row and one change line. Party totals changing never create a change.
+A bill's status change is a sentence, the same on screen and to VoiceOver:
+"Now passed; was before parliament", "Received Royal Assent; was passed".
+While a change is unseen its row (Today and Following alike) shows the
+change line in ink led by the new dot, and drops the status pill and date
+that would repeat it; the pill returns above the title once seen. Followed
+bill titles are serif (`rowRecord`), three lines to XXXL and six from AX1.
 
 Identity lists stay within the 50-key budget: the newest 10 introduced bills,
 20 register entries, the existing vote list (at most 12), one record for each
@@ -300,6 +306,8 @@ group), and their named props interfaces are exported beside them.
 // ChangeLine.tsx
 interface ChangeLineProps {
   change: Change;
+  /** Unseen: led by NewDot, set in ink. */
+  fresh?: boolean;
   testID?: string;
 }
 function ChangeLine(props: ChangeLineProps): React.JSX.Element;

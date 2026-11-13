@@ -95,6 +95,12 @@ export function Plate({
         variant={role}
         tone="onBand"
         accessibilityRole="header"
+        // The story's plate holds six lines from AX1, so its detail line
+        // stays on the first screen (sweep 2, item 7.2). VoiceOver reads the
+        // title whole, and the bill page prints it in full. Today's card
+        // and default sizes are unchanged.
+        numberOfLines={story && large ? 6 : undefined}
+        ellipsizeMode={story && large ? 'tail' : undefined}
         testID={`${testID}-title`}
       >
         {title}

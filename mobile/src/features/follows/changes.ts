@@ -369,11 +369,17 @@ export function changesFor(
       }
       // Counts do not identify a vote, declaration or bill. Wait for records.
     } else if (follow.kind === 'bill') {
-      if (marker === 'status')
+      // The change is the sentence (sweep 2 item 4): "Now passed; was
+      // before parliament", the same words on screen and to VoiceOver.
+      if (marker === 'status') {
+        const previously = was.words ? `; was ${was.words}` : '';
         text =
           reading.value === 'royal_assent'
-            ? 'Royal Assent'
-            : `${reading.words?.charAt(0).toUpperCase()}${reading.words?.slice(1)}`;
+            ? `Received Royal Assent${previously}`
+            : reading.words
+              ? `Now ${reading.words}${previously}`
+              : undefined;
+      }
       if (
         marker === 'moved' &&
         before.status?.value === current.status?.value &&

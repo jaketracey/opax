@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { peopleDepth } from '../../api/runtime';
+import { useReduceMotion } from '../../design/accessibility';
 import { BarSeries } from '../../design/charts';
+import { Button } from '../../design/controls';
 import { Disclosure } from '../../design/disclosure';
 import {
   formatCount,
@@ -12,6 +15,7 @@ import {
 import { Group, Section } from '../../design/layout';
 import { jurisdictionName } from '../../design/parliament';
 import { ValueRow } from '../../design/rows';
+import { HeightReveal } from '../../design/reveal';
 import { InlineError, Skeleton } from '../../design/states';
 import { Heading, Text } from '../../design/text';
 import { colors, hairline, rhythm } from '../../design/tokens';
@@ -145,13 +149,7 @@ export function PartyDebts({
           >
             {`Largest creditors, ${fy(d.year)}`}
           </Text>
-          {d.top.map((l, i) => (
-            <ValueRow
-              key={`${l.name}-${i}`}
-              label={l.name}
-              value={formatMoney(l.amount)}
-            />
-          ))}
+          <Creditors rows={d.top} />
         </View>
       ) : null}
       <Disclosure
@@ -165,6 +163,57 @@ export function PartyDebts({
           ))
         }
       </Disclosure>
+    </View>
+  );
+}
+
+/** Creditors shown before "Show all N". */
+export const CREDITORS_SHOWN = 5;
+
+/**
+ * The largest creditors: the first five, then the rest eased open below
+ * them, so the list does not stand between the reader and the sections
+ * after it.
+ */
+function Creditors({
+  rows,
+}: {
+  rows: readonly { name: string; amount: number }[];
+}) {
+  const [all, setAll] = useState(false);
+  const reduceMotion = useReduceMotion();
+  const row = (l: { name: string; amount: number }, i: number) => (
+    <ValueRow
+      key={`${l.name}-${i}`}
+      label={l.name}
+      value={formatMoney(l.amount)}
+    />
+  );
+  const hidden = rows.length - CREDITORS_SHOWN;
+  return (
+    <View testID="party-creditors">
+      {rows.slice(0, CREDITORS_SHOWN).map(row)}
+      <HeightReveal reduceMotion={reduceMotion}>
+        {all && hidden > 0 ? (
+          <View testID="party-creditors-rest">
+            {rows
+              .slice(CREDITORS_SHOWN)
+              .map((l, i) => row(l, i + CREDITORS_SHOWN))}
+          </View>
+        ) : null}
+      </HeightReveal>
+      {hidden > 0 ? (
+        <View style={styles.showAll}>
+          <Button
+            variant="plain"
+            label={all ? 'Show fewer' : `Show all ${formatCount(rows.length)}`}
+            trailingIcon={all ? 'chevron.up' : 'chevron.down'}
+            expanded={all}
+            onPress={() => setAll((open) => !open)}
+            testID="party-creditors-all"
+          />
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -336,4 +385,5 @@ const styles = StyleSheet.create({
   groupHeader: { paddingTop: rhythm.tight },
   row: { paddingVertical: rhythm.tight, gap: rhythm.line },
   inset: { borderTopWidth: hairline, borderTopColor: colors.dividerSubtle },
+  showAll: { alignItems: 'flex-start' },
 });

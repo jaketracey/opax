@@ -188,6 +188,14 @@ test.each([1, 3.571])(
               stage: index < 2 ? 'Third reading' : 'Limitation of debate',
               title:
                 index === 2 ? 'Closure' : 'Motion to suspend standing orders',
+              // The time-limit motion itself; a passage or amendment taken
+              // under the limit would be substantive.
+              ...(index < 2
+                ? null
+                : {
+                    question:
+                      'The question is that the motion as moved by the minister be agreed to.',
+                  }),
             })),
           },
         },

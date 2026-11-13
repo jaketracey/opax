@@ -5,9 +5,9 @@ import { RefreshControl, StyleSheet, View } from 'react-native';
 import type { EditionView } from '../../api/selectors';
 import { Card } from '../../design/card';
 import {
-  BarSeries,
   isPartOfWhole,
   ShareBar,
+  ShareRows,
   StageTimeline,
   VoteSplit,
 } from '../../design/charts';
@@ -19,7 +19,7 @@ import { InsetGroup, Screen } from '../../design/layout';
 import { PersonRow } from '../../design/people';
 import { FigureBlock } from '../../design/record';
 import { RowOpenListener } from '../../design/row-link';
-import { BillRow, LinkRow, ValueRow } from '../../design/rows';
+import { LinkRow, ValueRow } from '../../design/rows';
 import { SourceLine, SourceSection } from '../../design/source';
 import { ContentUnavailable, OfflineLine } from '../../design/states';
 import { symbols } from '../../design/symbols';
@@ -41,6 +41,7 @@ import {
   editionSources,
   editionSubject,
   editionTopic,
+  storyParagraphs,
   timelineProvenance,
 } from './model';
 import { Plate } from './Plate';
@@ -91,6 +92,8 @@ export function EditionStory() {
       (edition.facts.order?.some((fact) => fact.type === 'figure') ?? true)) ||
     (!!edition?.facts.bars &&
       (edition.facts.order?.some((fact) => fact.type === 'bars') ?? true));
+  const prose = edition ? storyParagraphs(edition) : [];
+  const affects = edition?.facts.affects ?? null;
   const offline =
     block?.error?.code === 'offline' || block?.error?.code === 'timeout';
   return (
@@ -157,7 +160,7 @@ export function EditionStory() {
               <Plate
                 edition={edition}
                 story
-                shownBelow={edition.paragraphs}
+                shownBelow={prose}
                 testID="edition-plate"
                 titleRef={titleRef}
                 onTitleLayout={title.onTitleLayout}
@@ -175,7 +178,7 @@ export function EditionStory() {
                     testID="edition-machine"
                   />
                 ) : null}
-                {edition.paragraphs.map((paragraph, i) => (
+                {prose.map((paragraph, i) => (
                   <Text
                     key={i}
                     wordSafe
@@ -185,6 +188,22 @@ export function EditionStory() {
                     {paragraph}
                   </Text>
                 ))}
+                {affects ? (
+                  // The "Who it touches" slide, in the story's type: the
+                  // slide's own line under a plain heading.
+                  <View style={styles.affects} testID="edition-affects">
+                    <Text
+                      wordSafe
+                      variant="subsectionTitle"
+                      accessibilityRole="header"
+                    >
+                      Who it affects
+                    </Text>
+                    <Text wordSafe variant="body" testID="edition-affects-text">
+                      {/[.!?]$/.test(affects) ? affects : `${affects}.`}
+                    </Text>
+                  </View>
+                ) : null}
               </View>
             </View>
             <EditionFacts edition={edition} provenance={source} />
@@ -192,13 +211,19 @@ export function EditionStory() {
               <RowOpenListener.Provider value={openStory}>
                 <InsetGroup testID="edition-subject-group">
                   {edition.kind === 'bill' ? (
-                    <BillRow
-                      billKey={/^\/bill\/([^/?]+)/.exec(edition.path)![1]!}
+                    // The bill's title in the row's serif, held to three
+                    // lines at every size: the plate above already prints
+                    // it in full (sweep 2, item 7.2). VoiceOver reads it
+                    // whole.
+                    <LinkRow
                       title={edition.shortTitle ?? edition.title}
+                      titleRole="rowRecord"
+                      titleLines={3}
+                      titleTestID="edition-subject-title"
                       href={destination}
-                      status=""
-                      showStatus={false}
                       menu={[]}
+                      accessibilityLabel={edition.shortTitle ?? edition.title}
+                      accessibilityHint="Opens the bill"
                       testID="edition-subject"
                     />
                   ) : edition.kind === 'politician' ? (
@@ -276,7 +301,10 @@ export function EditionStory() {
                 )}
               </InsetGroup>
             ) : null}
-            {figureLines ? null : (
+            {/* One sources affordance (sweep 2, item 7.4): the Sources
+                group lists the originals, so the foot's line is drawn only
+                when there is no group and no card or chart carries one. */}
+            {figureLines || sourceRows.length ? null : (
               <SourceLine {...source} testID="edition-sources" />
             )}
             <View onLayout={end.onEndLayout} testID="edition-end" />
@@ -363,7 +391,8 @@ function EditionFacts({
                   {bars.title}
                 </Text>
                 {/* Bars slides are shares: parts of one whole read as one
-                    bar; overlapping shares keep a 0 to 100% scale. */}
+                    bar; overlapping shares as labelled rows, scaled to the
+                    largest (sweep 2, item 7.5). */}
                 {barsAreWhole(edition.kind, bars) ? (
                   <ShareBar
                     parts={bars.items.map((bar) => ({
@@ -379,20 +408,17 @@ function EditionFacts({
                     {...provenance}
                   />
                 ) : (
-                  <BarSeries
-                    data={bars.items.map((bar) => ({
+                  <ShareRows
+                    items={bars.items.map((bar) => ({
                       label: bar.label,
                       value: bar.pct,
                     }))}
                     ink={editionInk(edition)}
                     format={(value) => `${value}%`}
-                    tableTitle={bars.title}
-                    share
-                    values="all"
+                    testID={`${id}-rows`}
                     sourceLine={
                       <SourceLine {...sheet} testID={`${id}-sources`} />
                     }
-                    {...provenance}
                   />
                 )}
                 {bars.note ? (
@@ -408,6 +434,9 @@ function EditionFacts({
                   date: event.date,
                 }))}
                 latestIndex={events.length - 1}
+                // No date-range caption: the stages' own dates sit directly
+                // above it (sweep 2, item 7.3).
+                caption={false}
                 {...timelineProvenance(edition)}
               />
             ) : division ? (
@@ -424,6 +453,7 @@ const styles = StyleSheet.create({
   page: { flex: 1 },
   reading: { gap: 16 },
   prose: { gap: 12 },
+  affects: { gap: rhythm.heading },
   fact: { gap: rhythm.heading },
 });
 

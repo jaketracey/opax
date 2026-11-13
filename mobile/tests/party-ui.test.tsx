@@ -18,7 +18,16 @@ import {
 import { Catalogs } from '../src/api/catalogs';
 import { combinedPartyNode } from '../src/api/party-page';
 import { apiClient, catalogs as runtime } from '../src/api/runtime';
-import { formatCount, moneyAccessibilityLabel } from '../src/design/format';
+import {
+  formatCount,
+  formatMoney,
+  formatMoneyCompact,
+  moneyAccessibilityLabel,
+} from '../src/design/format';
+import { HeightReveal } from '../src/design/reveal';
+import { isProcedural } from '../src/features/bills/divisions';
+import { PartyDebts } from '../src/features/people/PartyDepth';
+import { decodeFunding } from '../src/features/people/model';
 import { partyColors } from '../src/design/palette';
 import { PartyLabel, PersonRow, Portrait } from '../src/design/people';
 import { Screen, TitleAnchor } from '../src/design/layout';
@@ -36,6 +45,7 @@ import {
   faceCandidates,
   loadFaces,
   partyMembersRoute,
+  partyVoteLine,
 } from '../src/features/Party';
 import { ProfileBlock } from '../src/features/people/Block';
 import { decodeMoneyGraph } from '../src/features/money/data';
@@ -50,7 +60,7 @@ import {
   personRoute,
   resultsRoute,
 } from '../src/navigation/routes';
-import { LinkRow, MoneyRow } from '../src/design/rows';
+import { DivisionRow, LinkRow, MoneyRow, ValueRow } from '../src/design/rows';
 import { pinned, slugs } from './pinned';
 import { describeWrappingColumns } from './wrapping-columns';
 import { accessibilityElements } from './a11y-tree';
@@ -186,31 +196,38 @@ test.each([
   ['Legalise Cannabis Victoria', 2],
   ['Libertarian Party', 1],
 ])(
-  '%s shows the state-only count in the stat and Members row',
+  '%s names its state-only sitting members in Members, with no count tile',
   async (label, count) => {
     jest
       .mocked(runtime.partyPage)
       .mockResolvedValueOnce(await api.partyPage(label));
     const r = await render(label);
-    expect(r.root.findByType(StatStrip).props.tiles).toContainEqual(
-      expect.objectContaining({
-        value: String(count),
-        label: count === 1 ? 'sitting member' : 'sitting members',
-        testID: 'party-figure-members',
-      }),
-    );
-    const row = r.root
-      .findAllByType(LinkRow)
-      .find((n) => n.props.testID === 'party-current-count')!;
-    expect(row.props.title).toBe(
-      `${count} ${count === 1 ? 'sitting member' : 'sitting members'}`,
-    );
+    // Five or fewer: each member by name, with portrait or blank circle.
+    const named = r.root
+      .findAllByType(PersonRow)
+      .filter((n) => /^party-sitting-/.test(n.props.testID ?? ''));
+    expect(named).toHaveLength(count);
+    for (const row of named) {
+      expect(row.props.name).toBeTruthy();
+      expect(row.props.href).toBeTruthy();
+      expect(row.props.portrait).toBeTruthy();
+    }
+    // The count is not said again as a tile or a row.
+    for (const strip of r.root.findAllByType(StatStrip))
+      expect(
+        strip.props.tiles.map((t: { testID?: string }) => t.testID),
+      ).not.toContain('party-figure-members');
+    expect(has(r, 'party-current-count')).toBe(false);
+    const text = r.root
+      .findAllByType(NativeText)
+      .map((n) => [n.props.children].flat(Infinity).join(''))
+      .join('\n');
+    expect(text.match(/\bsitting members?\b/g)?.length ?? 0).toBeLessThan(2);
     const href = {
       pathname: '/directory',
       params: { kind: 'person', party: label, sitting: '1' },
     };
     expect(partyMembersRoute(label)).toEqual(href);
-    expect(row.props.href).toEqual(href);
     const block = r.root
       .findAllByType(ProfileBlock)
       .find((n) => n.props.id === 'party-members')!;
@@ -1130,7 +1147,7 @@ describe('the Libertarian Party, formerly the Liberal Democratic Party', () => {
       order.indexOf('party-title'),
     );
     expect(order.indexOf('party-history')).toBeLessThan(
-      order.indexOf('party-figures'),
+      order.indexOf('party-members-named'),
     );
     const line = r.root.find(
       (n) =>
@@ -1178,10 +1195,13 @@ describe('the Libertarian Party, formerly the Liberal Democratic Party', () => {
 
   test('past members under the former name show “Recorded as” it', async () => {
     const r = await render('liberal-democratic-party');
-    // One sitting member, under the current name.
-    expect(r.root.findByType(StatStrip).props.tiles).toContainEqual(
-      expect.objectContaining({ value: '1', label: 'sitting member' }),
-    );
+    // One sitting member, under the current name, by name.
+    expect(
+      r.root
+        .findAllByType(PersonRow)
+        .filter((n) => /^party-sitting-/.test(n.props.testID ?? ''))
+        .map((n) => [n.props.name, n.props.detail]),
+    ).toEqual([['David Limbrick', undefined]]);
     expect(host(r, 'party-past-toggle')).toBeTruthy();
     press(r, 'party-past-toggle');
     const rows = r.root
@@ -1367,7 +1387,7 @@ describe('VoiceOver and Dynamic Type on a party page', () => {
           label: '12 Jan 2024, AEC party register',
           role: 'button',
         });
-        expect(at('party-figure-members')).toBeGreaterThan(history + 1);
+        expect(at('party-sitting-david-limbrick')).toBeGreaterThan(history + 1);
         expect(read[at('party-past-toggle')]).toMatchObject({
           role: 'button',
           label: 'Past members, 2',
@@ -1413,4 +1433,249 @@ describe('VoiceOver and Dynamic Type on a party page', () => {
       act(() => r.unmount());
     },
   );
+});
+
+describe('sweep 2: a party page says each thing once', () => {
+  const rowsOf = (r: TestRenderer.ReactTestRenderer) =>
+    r.root
+      .findAllByType(DivisionRow)
+      .filter((n) => /^party-bill-/.test(n.props.testID ?? ''));
+  const firstLines = (row: TestRenderer.ReactTestInstance) =>
+    `${row.props.title}\n${row.props.meta}`;
+
+  test('Recent votes: procedural motions fold away, block votes have no bar and neighbours differ', async () => {
+    const all = view.data!.divisions.data!.rows;
+    const rule = (row: (typeof all)[number]) =>
+      isProcedural(
+        row.division.stage ?? row.division.title,
+        row.division.question,
+      );
+    const procedural = all.filter(rule);
+    expect(procedural.length).toBeGreaterThan(0);
+    const r = await render();
+    const shown = rowsOf(r);
+    expect(shown.length).toBe(Math.min(10, all.length - procedural.length));
+    // The bill page's rule: a vote under a time limit is folded only when its
+    // question is the time limit itself, so a guillotined passage or
+    // amendment stays in Recent votes.
+    const guillotined = all.filter(
+      (row) =>
+        /limitation of debate/i.test(row.division.stage ?? '') && !rule(row),
+    );
+    expect(guillotined.length).toBeGreaterThan(0);
+    expect(
+      shown.some((row) => /Limitation of debate/.test(row.props.meta)),
+    ).toBe(true);
+    press(r, 'party-divisions-procedural');
+    const folded = rowsOf(r).slice(shown.length);
+    expect(folded).toHaveLength(procedural.length);
+    const toggle = r.root.find(
+      (n) =>
+        n.props.testID === 'party-divisions-procedural' &&
+        typeof n.props.onPress === 'function',
+    );
+    expect(toggle.props.accessibilityLabel ?? '').toMatch(
+      /Procedural votes \(\d+\)/,
+    );
+    const rows = rowsOf(r);
+    // No two neighbours read the same over title, stage line and the line
+    // that tells them apart.
+    for (let i = 1; i < rows.length; i += 1)
+      expect(firstLines(rows[i]!)).not.toBe(firstLines(rows[i - 1]!));
+    for (const row of rows) {
+      const block = !(row.props.split.ayes && row.props.split.noes);
+      expect(row.props.bar).toBe(!block);
+      expect(row.props.votesLine).toMatch(
+        block
+          ? /^Labor: (all \d+|1) (for|against)$/
+          : /^Labor: \d+ for, \d+ against$/,
+      );
+      // No single-colour full-width bar is drawn.
+      if (block) expect(has(r, `${row.props.testID}-bar`)).toBe(false);
+    }
+    act(() => r.unmount());
+  });
+
+  test('a split vote keeps its bar and counts both sides', async () => {
+    const data = view.data!;
+    const rows = data.divisions.data!.rows;
+    const first = rows.find(
+      (row) =>
+        !isProcedural(
+          row.division.stage ?? row.division.title,
+          row.division.question,
+        ),
+    )!;
+    const split = { ...first, ayes: 20, noes: 5 };
+    jest.mocked(runtime.partyPage).mockResolvedValueOnce({
+      ...view,
+      data: {
+        ...data,
+        divisions: {
+          ...data.divisions,
+          data: { ...data.divisions.data!, rows: [split] },
+        },
+      },
+    });
+    const r = await render();
+    const [row] = rowsOf(r);
+    expect(row!.props.bar).toBe(true);
+    expect(row!.props.votesLine).toBe('Labor: 20 for, 5 against');
+    expect(
+      r.root.findAll(
+        (n) =>
+          typeof n.type === 'string' &&
+          n.props.testID === `${row!.props.testID}-bar`,
+      ),
+    ).toHaveLength(1);
+    act(() => r.unmount());
+  });
+
+  test('the party vote in words', () => {
+    expect(partyVoteLine('Labor', 0, 25)).toBe('Labor: all 25 against');
+    expect(partyVoteLine('Labor', 26, 0)).toBe('Labor: all 26 for');
+    expect(partyVoteLine('Labor', 20, 5)).toBe('Labor: 20 for, 5 against');
+    expect(partyVoteLine('Libertarian Party', 1, 0)).toBe(
+      'Libertarian Party: 1 for',
+    );
+  });
+
+  test.each([
+    ['Large', 1, false],
+    ['AX3', 2.643, true],
+    ['AX5', 3.571, true],
+  ] as const)(
+    'the receipts total appears once and whole at %s',
+    async (_size, fontScale, compact) => {
+      jest
+        .mocked(useWindowDimensions)
+        .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale });
+      const r = await render();
+      const total = view.data!.receipts.data!.node.total;
+      const text = r.root
+        .findAll((n) => typeof n.type === 'string')
+        .flatMap((n) => [n.props.children].flat())
+        .filter((v) => typeof v === 'string')
+        .join('\n');
+      const exact = formatMoney(total);
+      const short = formatMoneyCompact(total);
+      // One column: no receipts tile above the section.
+      expect(has(r, 'party-figure-receipts')).toBe(false);
+      expect(text.split(exact).length - 1).toBe(compact ? 0 : 1);
+      expect(text.split(short).length - 1).toBe(compact ? 1 : 0);
+      // VoiceOver hears the exact dollars at every size.
+      expect(host(r, 'party-receipts-total').props.accessibilityLabel).toMatch(
+        new RegExp(`^${moneyAccessibilityLabel(total)}, disclosed`),
+      );
+      act(() => r.unmount());
+    },
+  );
+
+  test('largest creditors: five, then "Show all N" eased open', async () => {
+    const record = {
+      data: decodeFunding(pinned('/graph/aec-extras.json')),
+      stale: false,
+      savedAt: 1,
+      asOf: '2026-09-21',
+    };
+    const top = record.data.parties.Labor!.debts!.top;
+    expect(top.length).toBeGreaterThan(5);
+    let r!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      r = TestRenderer.create(<PartyDebts record={record} name="Labor" />);
+    });
+    const creditors = () =>
+      r.root
+        .find((n) => n.props.testID === 'party-creditors')
+        .findAllByType(ValueRow)
+        .map((n) => n.props.label);
+    expect(creditors()).toEqual(top.slice(0, 5).map((l) => l.name));
+    const button = r.root.find(
+      (n) =>
+        n.props.testID === 'party-creditors-all' &&
+        typeof n.props.label === 'string',
+    );
+    expect(button.props.label).toBe(`Show all ${top.length}`);
+    // It says its state, as a Disclosure does.
+    expect(button.props.expanded).toBe(false);
+    act(() => button.props.onPress());
+    expect(creditors()).toEqual(top.map((l) => l.name));
+    // The rest open inside the shared height reveal.
+    expect(
+      r.root
+        .findAllByType(HeightReveal)
+        .some(
+          (n) =>
+            n.findAll((m) => m.props.testID === 'party-creditors-rest').length,
+        ),
+    ).toBe(true);
+    expect(
+      r.root.find(
+        (n) =>
+          n.props.testID === 'party-creditors-all' &&
+          typeof n.props.label === 'string',
+      ).props.label,
+    ).toBe('Show fewer');
+    expect(
+      r.root.find(
+        (n) =>
+          n.props.testID === 'party-creditors-all' &&
+          typeof n.props.label === 'string',
+      ).props.expanded,
+    ).toBe(true);
+    act(() => r.unmount());
+  });
+
+  test('with no strip on a phone, Members cites the roster and the blocks carry the partial note', async () => {
+    const small = await api.partyPage('Libertarian Party');
+    jest.mocked(runtime.partyPage).mockResolvedValueOnce({
+      ...small,
+      data: {
+        ...small.data!,
+        receipts: { ...small.data!.receipts, partial: true },
+      },
+    });
+    const r = await render('Libertarian Party');
+    const line = (id: string) =>
+      r.root.findAllByType(SourceLine).find((n) => n.props.testID === id);
+    // No tiles, so no "Party sources" line.
+    expect(line('party-figures-source')).toBeUndefined();
+    const members = line('party-members-source')!;
+    expect(members.props.citation).toBe('Parliamentary roster');
+    expect(members.props.state).toBe('partial');
+    expect(members.props.notes).toContain(
+      'Some records for this party could not be read.',
+    );
+    const receipts = line('party-receipts-source');
+    if (receipts) expect(receipts.props.state).toBe('partial');
+    act(() => r.unmount());
+  });
+
+  test('Labor on a phone: Members cites the roster; the strip keeps its own line', async () => {
+    const r = await render();
+    const lines = r.root.findAllByType(SourceLine);
+    expect(
+      lines.find((n) => n.props.testID === 'party-members-source')!.props
+        .citation,
+    ).toBe('Parliamentary roster');
+    expect(
+      lines.filter((n) => n.props.testID === 'party-figures-source'),
+    ).toHaveLength(1);
+    act(() => r.unmount());
+  });
+
+  test('the not-found party is centred like every missing record, its copy unchanged', async () => {
+    jest
+      .mocked(runtime.partyPage)
+      .mockResolvedValue({ data: null, stale: false } as typeof view);
+    const r = await render('No Such Party');
+    expect(r.root.findByType(Screen).props.centred).toBe(true);
+    const block = r.root.findByType(ContentUnavailable);
+    expect(block.props).toMatchObject({
+      title: 'This party isn’t in OPAX’s records yet',
+      body: 'Its page may be on opax.com.au.',
+      action: expect.objectContaining({ label: 'Open on opax.com.au' }),
+    });
+    act(() => r.unmount());
+  });
 });

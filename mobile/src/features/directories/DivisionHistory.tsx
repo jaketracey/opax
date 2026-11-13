@@ -146,7 +146,8 @@ export function filterDivisions(
       const agreed = outcomeWord(row.outcome, row) === 'Agreed to';
       if (agreed !== (filters.outcome === 'agreed')) return false;
     }
-    if (filters.procedural && isProcedural(row.stage)) return false;
+    if (filters.procedural && (row.procedural ?? isProcedural(row.stage)))
+      return false;
     if (!terms.length) return true;
     const text = billFoldText(`${row.title} ${row.stage ?? ''}`);
     return terms.every((t) => text.includes(t));

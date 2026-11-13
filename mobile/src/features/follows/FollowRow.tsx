@@ -6,6 +6,8 @@ import { LinkRow } from '../../design/rows';
 import { Portrait } from '../../design/people';
 import { rowMenus } from '../../design/row-link';
 import { rhythm } from '../../design/tokens';
+import { useAccessibilitySize } from '../../design/accessibility';
+import { ChangeLine } from './ChangeLine';
 import {
   billRoute,
   electorateRoute,
@@ -18,7 +20,6 @@ import {
   changeDate,
   sortChanges,
   changeAccessibilityLabel,
-  changeText,
   moreChangesText,
   quietText,
   todayChanges,
@@ -66,6 +67,7 @@ export function FollowRow({
   portraitURI,
   surface = 'following',
 }: FollowRowProps) {
+  const stacked = useAccessibilitySize();
   const title = state?.status === 'ready' ? state.title : follow.title;
   const changes =
     state?.status === 'ready'
@@ -73,14 +75,18 @@ export function FollowRow({
         ? todayChanges(state.changes)
         : sortChanges(state.changes)
       : [];
+  // An unseen change is the row's news (sweep 2 item 4): its sentence in
+  // ink, led by the new dot, in place of the status pill and date it
+  // restates. Once seen the change drops and the pill returns.
+  const fresh = !ownMP && state?.status === 'ready' ? changes[0] : undefined;
   const line = ownMP
     ? 'Shown in Your MP on Today'
     : state?.status === 'missing'
       ? 'No longer published'
       : !state || state.status === 'unavailable'
         ? 'Not checked yet'
-        : changes[0]
-          ? changeText(changes[0])
+        : fresh
+          ? undefined
           : surface === 'following'
             ? quietText(follow)
             : undefined;
@@ -101,42 +107,49 @@ export function FollowRow({
     follow.kind === 'bill' && state?.status === 'ready'
       ? state.current.status
       : undefined;
-  const metadata = billStatus ? (
-    <>
-      <StatusCapsule
-        status={String(billStatus.value)}
-        label={billStatusLabel(String(billStatus.value))}
-        hidden
-      />
-      {billStatus.asAt ? (
-        <Text wordSafe={surface === 'following'} variant="secondary">
-          {changeDate(billStatus.asAt)}
-        </Text>
-      ) : null}
-    </>
-  ) : undefined;
+  const metadata =
+    billStatus && !fresh ? (
+      <>
+        <StatusCapsule
+          status={String(billStatus.value)}
+          label={billStatusLabel(String(billStatus.value))}
+          hidden
+        />
+        {billStatus.asAt ? (
+          <Text wordSafe={surface === 'following'} variant="secondary">
+            {changeDate(billStatus.asAt)}
+          </Text>
+        ) : null}
+      </>
+    ) : undefined;
   return (
     <LinkRow
       title={title}
+      // A followed bill reads as every other bill row: serif, three lines
+      // to XXXL, six from AX1 (as Today's bill previews).
+      titleRole={follow.kind === 'bill' ? 'rowRecord' : undefined}
+      titleLines={follow.kind === 'bill' ? (stacked ? 6 : 3) : undefined}
+      secondary={
+        fresh ? (
+          <ChangeLine
+            change={fresh}
+            fresh
+            testID={`${testID ?? `follows-row-${follow.kind}-${follow.id}`}-change`}
+          />
+        ) : undefined
+      }
       detail={detail || undefined}
       href={state?.status === 'missing' ? undefined : route}
       accessory={state?.status === 'missing' ? 'none' : 'chevron'}
+      // Today and Following share one layout: the pill on its own line
+      // above the title, never a leading column beside it.
       aboveTitle={
-        surface === 'following' && metadata ? (
-          <View style={styles.metadata}>{metadata}</View>
-        ) : undefined
+        metadata ? <View style={styles.metadata}>{metadata}</View> : undefined
       }
       leadingAccessory={
-        surface === 'following' && follow.kind === 'person' ? (
+        follow.kind === 'person' ? (
           <Portrait uri={portraitURI} name={title} />
         ) : undefined
-      }
-      leading={
-        surface === 'following' ? undefined : follow.kind === 'person' ? (
-          <Portrait uri={portraitURI} name={title} />
-        ) : (
-          metadata
-        )
       }
       symbol={
         follow.kind === 'party'
@@ -156,9 +169,7 @@ export function FollowRow({
       })}
       accessibilityLabel={[
         `${title}, ${follow.kind}.`,
-        changes[0] && !ownMP
-          ? `Changed: ${changeAccessibilityLabel(changes[0])}.`
-          : line,
+        fresh ? `Changed: ${changeAccessibilityLabel(fresh)}.` : line,
         more ? `And ${changes.length - 1} more.` : undefined,
       ]
         .filter(Boolean)

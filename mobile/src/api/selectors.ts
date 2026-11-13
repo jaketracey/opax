@@ -967,6 +967,16 @@ export interface EditionFacts {
   events: { date: string; text: string }[];
   /** The division slide's counts. */
   division: { ayes: number; noes: number } | null;
+  /**
+   * The first list slide's sentences, verbatim ("In three sentences"). The
+   * story reads them as prose. Older cached projections omit it.
+   */
+  list?: string[];
+  /**
+   * A "Who it touches" picture slide's line, verbatim. Older cached
+   * projections omit it.
+   */
+  affects?: string | null;
 }
 /** The slides' own facts; an edition without slides has none. */
 function editionFacts(slides: AppEdition['edition']['slides']): EditionFacts {
@@ -977,6 +987,13 @@ function editionFacts(slides: AppEdition['edition']['slides']): EditionFacts {
   const division = all.find(
     (s) =>
       s.type === 'division' && s.ayes !== undefined && s.noes !== undefined,
+  );
+  const list = all.find((s) => s.type === 'list' && s.items?.length);
+  const affects = all.find(
+    (s) =>
+      s.type === 'picture' &&
+      /^who it (?:touches|affects)\b/i.test(s.kicker.trim()) &&
+      s.title.trim(),
   );
   let figureIndex = 0;
   const order = all.flatMap<NonNullable<EditionFacts['order']>[number]>((s) => {
@@ -1021,6 +1038,11 @@ function editionFacts(slides: AppEdition['edition']['slides']): EditionFacts {
       division.noes !== undefined
         ? { ayes: division.ayes, noes: division.noes }
         : null,
+    list:
+      list?.type === 'list' && list.items
+        ? list.items.map((item) => item.trim()).filter(Boolean)
+        : [],
+    affects: affects?.title.trim() || null,
   };
 }
 /**
