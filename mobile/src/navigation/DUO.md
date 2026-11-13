@@ -54,10 +54,22 @@ design decision remains with the lead if this transition is unacceptable.
 
 These files were inspected and left to their owners:
 
-- `src/features/ask/AskScreen.tsx:129`: the sources dock is still gated by
-  `isPad`, so it cannot appear on a phone-regular inner display. At line 432
-  the custom floating composer protects only the bottom edge, or no edge
-  while the keyboard is open, and can reach under a side bar.
+- `src/features/ask/AskScreen.tsx`: the custom floating composer protects
+  only the bottom edge, or no edge while the keyboard is open, and can reach
+  under a side bar. (An earlier note here said the sources dock was gated by
+  `isPad`; it is not. It docks wherever `splitAllowed` does, on an adaptive
+  iPhone as on iPad, sweep 2 item 10.)
+
+## Ask's sources pane is the other way round (sweep 2, item 10)
+
+Every other split (Search, the directories, Bills) puts the narrow list on
+the leading side with a draggable divider and the record in the detail pane.
+Ask puts the conversation on the leading side and its sources pane on the
+trailing side, behind a fixed hairline (`features/ask/AskLayout.tsx`). That
+is deliberate: the answer is the content and its sources are secondary, so
+they take the narrower pane, and the conversation's width does not move
+while the reader is mid-answer. Across a fold the pane takes the trailing
+side's width. Keep it that way unless the design lead changes it.
 
 No additional asymmetric-inset arithmetic was found in Today, Your MP or the
 split files searched for this shell audit.

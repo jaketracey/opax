@@ -40,6 +40,7 @@ import { useCatalogRecord } from '../src/features/bills/useCatalogRecord';
 import DirectoryScreen from '../src/features/directories/DirectoryScreen';
 import { loadDirectory } from '../src/features/directories/data';
 import Search from '../src/features/Search';
+import { RouteOptions } from '../src/navigation/preview';
 import {
   billEntryFromRoute,
   decodeEntry,
@@ -103,9 +104,14 @@ let client: ApiClient;
 let transport: jest.Mock;
 const mounted: TestRenderer.ReactTestRenderer[] = [];
 
-function windowSize(width: number, traits = regular, fontScale = 1) {
+function windowSize(
+  width: number,
+  traits = regular,
+  fontScale = 1,
+  height = 800,
+) {
   act(() => {
-    const size = { width, height: 800, scale: 2, fontScale };
+    const size = { width, height, scale: 2, fontScale };
     Dimensions.set({ window: size, screen: size });
     setWindowTraitsOverride(traits);
   });
@@ -681,5 +687,54 @@ it.each([
     expect(jest.mocked(catalogs.bills)).toHaveBeenCalledTimes(billsLoads);
     expect(jest.mocked(loadDirectory)).toHaveBeenCalledTimes(directoryLoads);
     expect(mockSearchMounts).toBe(searchMounts);
+  },
+);
+
+// Sweep 2, item 10, on the Duo's inner display. Search had its large title
+// turned off only on iPad, so the Duo kept one over two panes; and each
+// split's empty pane said its own thing in one grey line. Splits start at
+// 700 pt (a 669 pt portrait inner display is one column, like a phone), so
+// the two-pane case is the inner display in landscape, 951 by 669.
+it('Search in a split on the Duo has no large title; one column keeps it', async () => {
+  windowSize(951, regular, 1, 669);
+  const tree = await renderApp(surfaceApp(Search), '/');
+  expect(hosts(tree, 'search-split-detail').length).toBeGreaterThan(0);
+  const largeTitleOff = (view: TestRenderer.ReactTestRenderer) =>
+    view.root
+      .findAllByType(RouteOptions)
+      .some(
+        (node) =>
+          (node.props.options as Record<string, unknown>)
+            .headerLargeTitleEnabled === false,
+      );
+  expect(largeTitleOff(tree)).toBe(true);
+  windowSize(669, regular, 1, 951);
+  await settle();
+  expect(hosts(tree, 'search-split-detail')).toHaveLength(0);
+  expect(largeTitleOff(tree)).toBe(false);
+});
+it.each([
+  [
+    'Search',
+    Search,
+    '/',
+    'search-split-empty',
+    'Search for a person, bill or topic',
+  ],
+  ['Bills', BillsList, '/', 'bills-split-empty', 'Choose a bill'],
+  [
+    'directories',
+    DirectoryScreen,
+    '/?kind=person',
+    'directory-split-empty',
+    'Choose a parliamentarian',
+  ],
+] as const)(
+  '%s: the empty pane shows its placeholder with a symbol',
+  async (_name, Screen, location, id, words) => {
+    windowSize(951, regular, 1, 669);
+    const tree = await renderApp(surfaceApp(Screen), location);
+    expect(host(tree, id).props.children).toBe(words);
+    expect(hosts(tree, `${id}-symbol`).length).toBeGreaterThan(0);
   },
 );

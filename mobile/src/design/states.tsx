@@ -916,6 +916,7 @@ export function ContentUnavailable({
 export function EmptyState({
   message,
   title,
+  icon,
   size = 'block',
   testID,
 }: {
@@ -926,16 +927,25 @@ export function EmptyState({
   accent?: Accent;
   testID?: string;
 }) {
+  const pane = size === 'pane';
   return (
-    <View style={size === 'pane' ? styles.pane : undefined}>
+    <View style={pane ? styles.pane : undefined}>
+      {/* A split's empty detail pane draws its symbol over the line, so the
+          placeholder reads as one of the app's (sweep 2, item 10). A block
+          inside a page stays one line. */}
+      {pane && icon ? (
+        <View testID={testID ? `${testID}-symbol` : undefined}>
+          <Icon name={icon} size={44} tone="inkSoft" scale="large" />
+        </View>
+      ) : null}
       <Text
         wordSafe
         variant="body"
         tone="inkSoft"
         testID={testID}
-        style={size === 'pane' ? styles.center : undefined}
+        style={pane ? styles.center : undefined}
       >
-        {size === 'pane' ? (title ?? message) : (message ?? title)}
+        {pane ? (title ?? message) : (message ?? title)}
       </Text>
     </View>
   );
@@ -1154,6 +1164,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: rhythm.block,
     paddingHorizontal: rhythm.section,
     paddingBottom: rhythm.section * 2,
   },

@@ -33,6 +33,7 @@ import {
   useAdaptiveDevice,
   rowMenus,
   useLayout,
+  type SFSymbol,
 } from '../../design/primitives';
 import { useListSearchBar } from '../../design/search-bar';
 import type { SourceDetails } from '../../design/source';
@@ -56,10 +57,14 @@ import {
   entryLabel,
   entryFromRoute,
   entryRoute,
+  hasPaneActions,
   useSplitSelectionParams,
   type RecordEntry,
 } from '../split/entry';
-import { RecordDetail, RecordShare } from '../split/RecordDetail';
+import {
+  RecordDetail,
+  RecordShare,
+} from '../split/RecordDetail';
 import { loadDirectory, type DirectoryRecord } from './data';
 import {
   ElectorateDirectoryRow,
@@ -100,6 +105,12 @@ const singular: Record<DirectoryKind, string> = {
   person: 'parliamentarian',
   party: 'party',
   electorate: 'electorate',
+};
+// The empty detail pane's symbol: the one Search's Browse rows use.
+const paneSymbols: Record<DirectoryKind, SFSymbol> = {
+  person: 'person.crop.circle',
+  party: 'person.3',
+  electorate: 'map',
 };
 type Row = PeopleRow | PartyRow | Electorate;
 type Section = DirectorySection<Row>;
@@ -585,12 +596,15 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
           entryFromRoute={entryFromRoute}
           entryTitle={entryLabel}
           renderDetail={(entry) => <RecordDetail entry={entry} />}
-          detailActions={(entry) => <RecordShare entry={entry} />}
+          detailActions={(entry) =>
+            hasPaneActions(entry) ? <RecordShare entry={entry} /> : null
+          }
           keys={[...entries.keys()]}
           entryForKey={(key) => entries.get(key)!}
           empty={
             <EmptyState
               size="pane"
+              icon={paneSymbols[kind]}
               title={`Choose ${kind === 'electorate' ? 'an' : 'a'} ${singular[kind]}`}
               testID="directory-split-empty"
             />

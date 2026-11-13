@@ -459,8 +459,10 @@ function SplitContent<T>({
   const [onDetailLayout, detailRegion] = useMeasuredRegion();
 
   const below = stack.length > 1 ? stack.at(-2)! : null;
+  // No bar when it would be empty: no Back and no actions for this entry.
+  const actions = top ? (detailActions?.(top) ?? null) : null;
   const bar =
-    top && (below || detailActions) ? (
+    top && (below || actions) ? (
       <View style={styles.paneBar} testID="split-pane-bar">
         {below ? (
           <PaneBack
@@ -469,7 +471,7 @@ function SplitContent<T>({
           />
         ) : null}
         <View style={styles.grow} />
-        {detailActions?.(top)}
+        {actions}
       </View>
     ) : null;
   return (
