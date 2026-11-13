@@ -2,7 +2,7 @@ import { RouteOptions } from '../../navigation/preview';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 
 import { useRef } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useLayout } from '../../design/adaptive';
 import { InsetGroup, Screen } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
@@ -72,17 +72,7 @@ export default function Hub() {
             Public money
           </Heading>
         </View>
-        <View style={[styles.cards, regular ? styles.across : null]}>
-          <View style={regular ? styles.third : null}>
-            <GrantsCard />
-          </View>
-          <View style={regular ? styles.third : null}>
-            <ContractsCard />
-          </View>
-          <View style={regular ? styles.third : null}>
-            <PartiesCard />
-          </View>
-        </View>
+        <HubCardRow />
         <InsetGroup testID="money-hub-more">
           {seat ? (
             <LinkRow
@@ -127,6 +117,38 @@ export default function Hub() {
         </InsetGroup>
       </Screen>
     </>
+  );
+}
+
+/** Narrowest a question card may be beside the others, at default text. */
+const CARD_MIN_WIDTH = 240;
+
+/**
+ * The three question cards, side by side only where each keeps a card's
+ * width (scaled with the text size, as `Grid` scales its cells). Read inside
+ * the screen's column: a regular region as narrow as 560pt (a 669pt Duo
+ * unfolded in portrait) left three 190pt cards, so they stack there.
+ */
+function HubCardRow() {
+  const { regular, width } = useLayout();
+  const { fontScale } = useWindowDimensions();
+  const min = CARD_MIN_WIDTH * Math.min(Math.max(fontScale, 1), 2);
+  const across = regular && width >= min * 3 + rhythm.block * 2;
+  return (
+    <View
+      testID="money-hub-cards"
+      style={[styles.cards, across ? styles.across : null]}
+    >
+      <View style={across ? styles.third : null}>
+        <GrantsCard />
+      </View>
+      <View style={across ? styles.third : null}>
+        <ContractsCard />
+      </View>
+      <View style={across ? styles.third : null}>
+        <PartiesCard />
+      </View>
+    </View>
   );
 }
 
