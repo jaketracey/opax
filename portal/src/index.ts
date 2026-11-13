@@ -125,7 +125,7 @@ import { createResearch, researchLimits } from './research-loop'
 import { recordResearchAnswer, recordResearchComparison, recordResearchFailure } from './research-monitor'
 import { cachedKbLookup } from './kb-cache'
 import { ANSWER_WRITING_VERSION } from './research-writing'
-import { cacheableRoutedAnswer, calculatedPayAnswer, withAnswerLanguage, withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
+import { cacheableAskAnswer, cacheableRoutedAnswer, calculatedPayAnswer, withAnswerLanguage, withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
 import { groundAnswerPayload } from './research-grounding'
 import { researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
 import { ResearchError, type ResearchPayload } from './research-types'
@@ -1340,9 +1340,8 @@ function askCacheInput(input: AskInput, epoch: string): string | null {
   })
 }
 
-/** Worth keeping for a week: a real answer with at least one cited source. */
-const cacheableAnswer = (p: AskPayload): boolean =>
-  (p.answer_status !== 'evidence_only' || p.evidence_kind === 'original_position_proposal') && !isRefusal({ answer: p.answer }) && p.sources.some((s) => (s as { cited?: boolean }).cited === true)
+/** Worth keeping for a week: a real answer with at least one cited source, never a boundary fallback (research-response.ts). */
+const cacheableAnswer = (p: AskPayload): boolean => cacheableAskAnswer(p, isRefusal({ answer: p.answer }))
 
 /** Cut on word boundaries into pieces of about `size` characters; pieces concatenate to the input exactly. */
 function chunkText(text: string, size: number): string[] {

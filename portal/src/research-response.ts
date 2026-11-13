@@ -23,9 +23,21 @@ function plannerPayload(payload: Record<string, unknown>, previous?: ResearchPay
   return { ...payload, research }
 }
 
-/** A stored answer replays for a week, so only an answer may be stored: never a refusal, limitation or clarification, which the next ask may better. */
+/** Marks an answer the response boundary made because nothing else could be written: the record lines a run found
+ * ("Here is what the record shows") or the no-record answer. Either is what a failed run had left, never stored. */
+export type AnswerFallback = 'record_summary' | 'no_record'
+export const fallbackAnswer = (payload: Record<string, unknown>): boolean => payload.fallback === 'record_summary' || payload.fallback === 'no_record'
+
+/** A stored answer replays for a week, so only an answer may be stored: never a refusal, limitation or clarification,
+ * which the next ask may better, and never a boundary fallback, which a fresh run should replace. */
 export const cacheableRoutedAnswer = (payload: Record<string, unknown>, requireCitation: boolean): boolean =>
-  typeof payload.answer === 'string' && !!payload.answer.trim() && !protectedDecision(payload) && (!requireCitation || Object.keys(payload.citations ?? {}).length > 0)
+  typeof payload.answer === 'string' && !!payload.answer.trim() && !protectedDecision(payload) && !fallbackAnswer(payload) && (!requireCitation || Object.keys(payload.citations ?? {}).length > 0)
+
+/** The ordinary (knowledge-box) path's store rule: an answer with at least one cited source, not an excerpts-only
+ * stand-in, a refusal (`refused`, judged by the caller) or a boundary fallback. */
+export const cacheableAskAnswer = (payload: Record<string, unknown>, refused: boolean): boolean =>
+  (payload.answer_status !== 'evidence_only' || payload.evidence_kind === 'original_position_proposal') && !refused && !fallbackAnswer(payload) &&
+  (Array.isArray(payload.sources) ? payload.sources : []).some(s => (s as { cited?: boolean } | null)?.cited === true)
 
 /** The retrieved records in their own words, each cited: the passage most relevant to the question first, one per
  * record. Record facts are left to the writer's checks above; only passages a reader can open are listed. */
@@ -101,7 +113,7 @@ export function recordSummaryAnswer(payload: Record<string, unknown>, facts: Wri
   }
   const cited = new Set(lines.map(l => l.resource))
   const sources = [...rows, ...added].map(row => ({ ...row, cited: cited.has(text(row.resource)) }))
-  return { ...payload, answer, citations, sources, answered: true, answer_decision: 'answer' }
+  return { ...payload, answer, citations, sources, answered: true, answer_decision: 'answer', fallback: 'record_summary' satisfies AnswerFallback }
 }
 
 const SEARCHED: [RegExp, string][] = [
@@ -127,7 +139,16 @@ export function noRecordAnswer(payload: Record<string, unknown>): Record<string,
   const answer = `OPAX searched ${searchedRecords(payload)} and found no record that answers this question. ` +
     'Try asking again with a member, party, bill or year named, or ask about one part of the question at a time.'
   const decision = protectedDecision(payload) ? payload.answer_decision : 'limitation'
-  return { ...payload, answer, citations: {}, answered: true, answer_decision: decision }
+  // No line cites anything, so no source is marked cited.
+  const sources = sourceRows(payload).map(row => ({ ...row, cited: false }))
+  return { ...payload, answer, citations: {}, sources, answered: true, answer_decision: decision, fallback: 'no_record' satisfies AnswerFallback }
+}
+
+/** An answer written from an evidence-only payload's excerpts is an ordinary cited answer: the web shows an
+ * evidence-only answer's text as a notice above the same excerpts, which would print each quote twice. */
+function withoutExcerpts(payload: Record<string, unknown>): Record<string, unknown> {
+  const { answer_status: _status, evidence_excerpts: _excerpts, ...rest } = payload
+  return rest
 }
 
 /** One answer after another, citations shifted to the second's new place and each source listed once. */
@@ -173,14 +194,14 @@ export function ensureAnswerText(payload: Record<string, unknown>, question?: st
   const withRecords = (written: Record<string, unknown>) => {
     if (written.answer_decision !== 'limitation') return written
     const listed = records()
-    return listed ? joinAnswers(written, listed) : written
+    return listed ? { ...joinAnswers(written, listed), fallback: 'record_summary' satisfies AnswerFallback } : written
   }
   if (question && open && facts.length) { const written = write(question); if (written) return withRecords(written) }
-  if (open) { const listed = recordsAnswer(found, question ?? ''); if (listed) return listed }
+  if (open) { const listed = recordsAnswer(found, question ?? ''); if (listed) return excerpts.length ? withoutExcerpts(listed) : listed }
   if (question && open && claimed && !facts.length) { const line = write(question); if (line) return withRecords(line) }
   // Nothing could be written: show what the run found, each line cited; with nothing found, say what was searched.
   const listed = records()
-  if (listed) return { ...listed, answered: true, ...(open ? {} : { answer_decision: payload.answer_decision }) }
+  if (listed) return { ...(excerpts.length ? withoutExcerpts(listed) : listed), answered: true, ...(open ? {} : { answer_decision: payload.answer_decision }) }
   return noRecordAnswer(payload)
 }
 

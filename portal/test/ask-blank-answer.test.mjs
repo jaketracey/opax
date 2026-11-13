@@ -18,7 +18,10 @@ const h=await loadWorker(new URL('../src/index.ts',import.meta.url).pathname,new
 const daily=budgetDatabase()
 Object.assign(h.env,{OPENROUTER_API_KEY:'test-only-placeholder',AGENTIC_ASK_MODE:'route',RESEARCH_LOOP:'route',AGENTIC_INPUT_USD_PER_MILLION:'0.66',AGENTIC_OUTPUT_USD_PER_MILLION:'1.98',
   COMMUNITY_DB:daily.db,ASK_LIMITER:{limit:async()=>({success:true})},MODEL_LIMITER:{limit:async()=>({success:true})}})
-globalThis.caches={default:{match:async()=>undefined,put:async()=>{}}}
+// Every store is recorded: the edge cache and the shared KV copy (generation-cache.ts).
+const stored=[]
+globalThis.caches={default:{match:async()=>undefined,put:async(key,response)=>{stored.push({where:'edge',url:String(key.url??key),body:await response.clone().text()})}}}
+h.env.GENERATION_CACHE={get:async()=>null,put:async(key,value)=>{stored.push({where:'kv',url:key,body:value})}}
 h.env.ASSETS={fetch:async req=>new URL(req.url).pathname==='/parliamentarians.json'?Response.json({people:[]}):new Response('Missing',{status:404})}
 
 // Two retrieved speeches whose passages are too short to quote ("Hear, hear."): records found, nothing to excerpt.
@@ -27,13 +30,13 @@ const speech=(id,slug,title,speaker,date,text)=>[id.repeat(32),{slug,title,origi
 const unquotable=Object.fromEntries([speech('2','speech-920001','Housing Affordability','Jordan Sample','2024-03-20','Hear, hear.'),speech('3','speech-920002','Help to Buy Bill 2023: Second Reading','Alex Example','2024-02-08','I move.')])
 // The knowledge box: research finds nothing; the ordinary path's generation (synchronous JSON or the NDJSON stream)
 // writes nothing over whatever retrieval the case sets.
-let retrieved={}
+let retrieved={},generated={answer:'',citations:{}}
 globalThis.fetch=async(input,init)=>{
   const url=new URL(String(input)),headers=new Headers(init?.headers)
   assert.ok(url.hostname.startsWith('offline.'),`no network: ${url.href}`)
   if(!url.pathname.endsWith('/ask'))return Response.json({resources:{},fulltext:{total:0,facets:{}}})
-  if(headers.get('x-synchronous')==='true')return Response.json({answer:'',retrieval_results:{resources:retrieved}})
-  const items=[{type:'retrieval',results:{resources:retrieved}},{type:'status',code:'0'}]
+  if(headers.get('x-synchronous')==='true')return Response.json({answer:generated.answer,citations:generated.citations,retrieval_results:{resources:retrieved}})
+  const items=[{type:'retrieval',results:{resources:retrieved}},...(generated.answer?[{type:'answer',text:generated.answer},{type:'citations',citations:generated.citations}]:[]),{type:'status',code:'0'}]
   return new Response(items.map(item=>JSON.stringify({item})).join('\n')+'\n',{headers:{'content-type':'application/x-ndjson'}})
 }
 const usage={inputTokens:{total:900,noCache:900,cacheRead:0,cacheWrite:0},outputTokens:{total:120,text:120,reasoning:0}}
@@ -42,11 +45,11 @@ const prose=text=>({content:[{type:'text',text}],finishReason:{unified:'stop',ra
 const throws=()=>{throw new Error('provider unavailable')}
 const question='What has the government done about housing affordability?'
 
-const ask=async(turns,stream)=>{
+const ask=async(turns,stream,{cache=false}={})=>{
   globalThis.__researchModel=new MockLanguageModelV4({doGenerate:turns})
   const realWarn=console.warn,realLog=console.log,realError=console.error;console.warn=console.log=console.error=()=>{}
   try{
-    const response=await h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json','x-opax-nocache':'1'},body:JSON.stringify({question,kind:'speech'})})
+    const response=await h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json',...(cache?{}:{'x-opax-nocache':'1'})},body:JSON.stringify({question,kind:'speech'})})
     const raw=await response.text()
     while(pending.length)await Promise.all(pending.splice(0))
     if(!stream)return {status:response.status,body:JSON.parse(raw)}
@@ -94,7 +97,7 @@ test('route: retrieved records with no passage to quote are listed by title, spe
 })
 
 // The boundary every route passes, on the payloads the other ways hand it.
-const built=await build({stdin:{contents:"export {ensureAnswerText,withAnswerLanguage,RECORD_SUMMARY_LEAD} from './src/research-response';export {groundAnswerPayload} from './src/research-grounding';",resolveDir:new URL('../',import.meta.url).pathname,loader:'ts'},bundle:true,write:false,platform:'browser',format:'esm',logLevel:'silent'})
+const built=await build({stdin:{contents:"export {ensureAnswerText,withAnswerLanguage,RECORD_SUMMARY_LEAD,cacheableRoutedAnswer,cacheableAskAnswer} from './src/research-response';export {groundAnswerPayload} from './src/research-grounding';",resolveDir:new URL('../',import.meta.url).pathname,loader:'ts'},bundle:true,write:false,platform:'browser',format:'esm',logLevel:'silent'})
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
 const boundary=async(payload,q=question)=>(await api.withAnswerLanguage(Response.json(payload),q)).json()
 const fact={resource:'fact-1',slug:'',title:'Example Freight Pty Ltd',href:'https://opax.com.au/money/donor/example-freight',url:'https://opax.com.au/money/donor/example-freight',kind:'record',snippet:'Example Freight Pty Ltd: $2,681,740 in federal disclosed receipts in 2021-22.',cited:false}
@@ -130,6 +133,8 @@ test('boundary: an evidence-only payload with blank text is written from its exc
   const excerpt='The minister told the House that the housing accord would build new homes in every state over five years.'
   const out=await boundary({answer:'',answer_status:'evidence_only',evidence_excerpts:[{resource:talk.resource,text:excerpt}],citations:{},sources:[{...talk,snippet:''}]})
   shown(out,'evidence only');assert.match(out.answer,/Jordan Sample said “The minister told the House that the housing accord/)
+  // Read as an ordinary cited answer: the web would otherwise print the quote as its notice and again as the card.
+  assert.equal(out.answer_status,undefined);assert.equal(out.evidence_excerpts,undefined)
 })
 
 test('boundary: a typed limitation with blank text lists its records; a refusal with blank text is the no-record answer',async()=>{
@@ -163,4 +168,44 @@ test('boundary: nothing found anywhere names what was searched, from the researc
   // Explicit non-answers (a voice caller's partial, an internal decline) and errors stay as sent.
   for(const payload of [{answered:false,reason:'partial',partial:true,answer:'',citations:{},sources:[]},{error:'The record is temporarily unavailable. Please try again.'}])
     assert.deepEqual(api.ensureAnswerText(payload,question),payload)
+})
+
+// The boundary's fallbacks are what a failed run had left: a week in the cache would replay them in place of a fresh
+// try. Both store rules refuse them; the route stores run before the boundary writes them, and an answer is still kept.
+const passage='Jordan Sample told the Senate the housing accord would build new homes in every state over the next five years.'
+const pid=`${'4'.repeat(32)}/t/body/0-${passage.length}`
+const answerable=Object.fromEntries([speech('4','speech-930001','Housing Accord','Jordan Sample','2024-05-14',passage)])
+const answerText='Jordan Sample told the Senate the housing accord would build new homes in every state.'
+for(const stream of [false,true])test(`cache (${stream?'stream':'JSON'}): neither fallback is stored for a week; an ordinary cited answer is`,async()=>{
+  try{
+    for(const [label,records,cited] of [['no record',{},false],['record summary',unquotable,true]]){
+      retrieved=records;generated={answer:'',citations:{}};stored.length=0
+      const run=await ask([throws,throws,throws],stream,{cache:true})
+      shown(run.body,label,{cited});assert.ok(['no_record','record_summary'].includes(run.body.fallback),label)
+      assert.deepEqual(stored,[],`${label}: nothing stored`)
+    }
+    retrieved=answerable;generated={answer:answerText,citations:{[pid]:[[0,Array.from(answerText).length]]}};stored.length=0
+    const ordinary=await ask([throws,throws,throws],stream,{cache:true})
+    shown(ordinary.body,'ordinary');assert.equal(ordinary.body.answer,answerText);assert.equal(ordinary.body.fallback,undefined)
+    assert.ok(stored.some(s=>s.where==='edge'&&JSON.parse(s.body).answer===answerText),'the ordinary answer is stored')
+  }finally{retrieved={};generated={answer:'',citations:{}};stored.length=0}
+})
+
+const cited={...talk,cited:true}
+const fallbacks={
+  'record summary':()=>api.ensureAnswerText({answer:'',citations:{},sources:[talk]},question),
+  // A blank clarification lists no records: the no-record answer, from a payload whose source was marked cited.
+  'no record':()=>api.ensureAnswerText({answer:'',answer_decision:'clarification',citations:{[talk.resource+'/t/body/0']:[[0,4]]},sources:[cited]},question),
+  'limit then records':()=>api.ensureAnswerText({answer:'',answered:true,answer_decision:'answer',citations:{},sources:[],research:{mode:'loop',rounds:1,trail:[],sources:[],pre_writer_sources:[fact]}},'How much did Example Freight give in 2010?'),
+}
+for(const [label,make] of Object.entries(fallbacks))test(`cache rules: the routed and ordinary store rules refuse the ${label} fallback`,()=>{
+  const payload=make()
+  assert.equal(payload.fallback,label==='no record'?'no_record':'record_summary')
+  if(label==='no record')assert.ok(payload.sources.every(s=>s.cited===false),'the no-record answer cites nothing, so no source stays marked cited')
+  assert.equal(api.cacheableRoutedAnswer(payload,true),false,'routed');assert.equal(api.cacheableRoutedAnswer(payload,false),false,'routed, uncited allowed')
+  assert.equal(api.cacheableAskAnswer(payload,false),false,'ordinary')
+})
+test('cache rules: an ordinary cited answer is still storable on both routes',()=>{
+  const ordinary={answer:'Jordan Sample spoke on housing.',answer_decision:'answer',citations:{[talk.resource+'/t/body/0']:[[0,31]]},sources:[cited]}
+  assert.equal(api.cacheableRoutedAnswer(ordinary,true),true);assert.equal(api.cacheableAskAnswer(ordinary,false),true)
 })
