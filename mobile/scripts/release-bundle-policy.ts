@@ -39,6 +39,8 @@ export function assertNoVoiceFixtures(body: Buffer, productionVoice = false) {
 
 /** E2E launch arguments (the welcome tour's opt-in) never ship. */
 export const E2E_LAUNCH_FLAGS = [
+  'OPAXSeedFollows',
+  '/__fixture/follows',
   'OPAXWelcomeTour',
   'OPAXVicElection',
   // The in-app timing probe's switch and its marks file (src/perf).

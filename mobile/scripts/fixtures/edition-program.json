@@ -1,0 +1,100 @@
+{
+ "schema_version": 1,
+ "date": "2026-10-06",
+ "created_at": "2026-10-05T22:00:00.000Z",
+ "edition": {
+  "date": "2026-10-06",
+  "kind": "program",
+  "subject": "program:qa-community-program",
+  "title": "QA Community Facilities Program",
+  "text": "Where did $120m go? 340 grants, QA Community Facilities Program, 2023-24 to 2025-26.\n\nBy party holding the seat (92% of dollars mapped): Labor 55% (52% of seats), Coalition 28% (38%), Crossbench 11% (10%).\n\nhttps://opax.com.au/money/grants?jur=federal&program=qa-community-program",
+  "url": "https://opax.com.au/money/grants?jur=federal&program=qa-community-program",
+  "slides": [
+   {
+    "type": "cover",
+    "kicker": "Where did the money go?",
+    "title": "QA Community Facilities Program",
+    "line": "$120m in 340 grants, 2023-24 to 2025-26",
+    "photo": null,
+    "alt": "Synthetic QA program cover."
+   },
+   {
+    "type": "number",
+    "kicker": "The program",
+    "title": "What the record says",
+    "value": "$120m",
+    "label": "in 340 grants to 210 recipients",
+    "lines": [
+     "Financial years 2023-24 to 2025-26"
+    ],
+    "alt": "The program: $120m in 340 grants."
+   },
+   {
+    "type": "bars",
+    "kicker": "Whose seats",
+    "title": "By the party holding the seat",
+    "lines": [
+     "Of the $110m OPAX can place in a seat (92% of the dollars), by the member's party on the grant date."
+    ],
+    "items": [
+     {
+      "label": "Labor-held · 52% of seats",
+      "pct": 55
+     },
+     {
+      "label": "Coalition-held · 38% of seats",
+      "pct": 28
+     },
+     {
+      "label": "Crossbench-held · 10% of seats",
+      "pct": 11
+     }
+    ],
+    "note": "Share of seats: the House on the grant dates, weighted by value.",
+    "alt": "By party: Labor 55, Coalition 28, Crossbench 11."
+   },
+   {
+    "type": "bars",
+    "kicker": "How close to an election",
+    "title": "Time to the next federal election",
+    "lines": [],
+    "items": [
+     {
+      "label": "Under 3 months",
+      "pct": 12
+     },
+     {
+      "label": "3 to 6 months",
+      "pct": 20
+     },
+     {
+      "label": "6 to 12 months",
+      "pct": 30
+     },
+     {
+      "label": "1 to 2 years",
+      "pct": 25
+     },
+     {
+      "label": "Over 2 years",
+      "pct": 13
+     }
+    ],
+    "note": "Agreement start to the next federal election.",
+    "alt": "Timing bars."
+   },
+   {
+    "type": "source",
+    "kicker": "Check it",
+    "title": "Every figure links to its record",
+    "rows": [
+     "GrantConnect awards, Department of Finance, CC BY 3.0 AU",
+     "Award values, not payments"
+    ],
+    "url": "opax.com.au/money/grants",
+    "path": "federal → program qa-community-program",
+    "alt": "Check it."
+   }
+  ]
+ }
+}

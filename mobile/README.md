@@ -688,6 +688,18 @@ then on both carry one synthetic change: Anthony Albanese's register count
 28 to 29, and the Ending Financial Abuse bill (`au-federal-r7549`) passed as at
 1 October 2026. Run it on its own, by path:
 `OPAX_FIXTURE_DATA=changed scripts/e2e.sh <udid> .maestro/26-follows.yaml`.
+
+For Android's limit check, start the local fixture with
+`OPAX_FIXTURE_FOLLOWS=50`. A fresh e2e install reads `/__fixture/follows`
+and saves 50 distinct canonical identities from the pinned people catalog. Existing saved follows
+take precedence, so clear app data before seeding; subsequent edits survive
+relaunch. The default fixture returns an empty list. Production bundles omit
+the seed reader and path, and the API policy restricts this path to the local
+fixture origins on ports 8900 to 8999.
+
+`OPAX_FIXTURE_EDITION_FILE=<local JSON path>` serves a decoded local edition
+for a device check. `scripts/fixtures/edition-program.json` is explicitly
+synthetic and includes both party and election timing shares.
 The `26` shorthand without the variable never sees the change and fails. To repin, fetch the route once and
 update the file, hash, size and fetch time together.
 

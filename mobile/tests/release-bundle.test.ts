@@ -39,6 +39,8 @@ test.each([
 });
 
 test.each([
+  'OPAXSeedFollows',
+  '/__fixture/follows',
   'OPAXWelcomeTour',
   '-OPAXWelcomeTour on',
   'OPAXPerfProbe',
