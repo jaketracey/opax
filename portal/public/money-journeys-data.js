@@ -1,5 +1,5 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptScopeLabel} from './donor-disclosure.js?v=de4403826e';
-import {loadDonorViewIndex} from './donor-views.js?v=f76d422664';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptScopeLabel} from './donor-disclosure.js?v=e9b6d6e79c';
+import {loadDonorViewIndex} from './donor-views.js?v=9bb0d67a88';
 /** Guided views derived only from exported graph relationships and year cells. */
 const EXCLUDED_INDUSTRIES = new Set(['individual', 'individuals', 'unions', 'party_internal', 'government', 'other', 'unidentified']);
 const COMPANY_WORD = /\b(?:pty|ltd|limited|corporation|corp|bank|banking|group|holdings|plc)\b/i;

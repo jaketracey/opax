@@ -1,5 +1,5 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=de4403826e';
-import {loadDonorViewIndex} from './donor-views.js?v=f76d422664';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=e9b6d6e79c';
+import {loadDonorViewIndex} from './donor-views.js?v=9bb0d67a88';
 let donorIndex=new Map();
 loadDonorViewIndex().then(index=>{donorIndex=index});
 import { personUrl, partyUrl } from './canonical-urls.js?v=bcc9a57bab';

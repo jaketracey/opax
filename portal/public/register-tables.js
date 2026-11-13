@@ -1,5 +1,5 @@
 import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=f055b6abe2';
-import {donorDisclosure, financialYear, receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=de4403826e';
+import {donorDisclosure, financialYear, receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=e9b6d6e79c';
 import {interestHolder} from './interest-holder.js';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -242,7 +242,7 @@ export function governmentFunctionTableConfig(rows) {
 // for every money figure, light enough for the games and the Worker's tools);
 // they are re-exported here for the pages and tables that already import them.
 // financialYear ("2020-21") comes from there too, for any scope line written here.
-export {receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=de4403826e';
+export {receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=e9b6d6e79c';
 
 /**
  * A party's headline: its own federal returns, every receipt line once and all

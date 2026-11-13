@@ -467,15 +467,33 @@ export async function readPartyPages(read) {
   return canonicalPartyPages({ money, roster, divisions });
 }
 
-/** Accept source spellings and the existing label aliases, but return one page. */
+// Recognised sponsor labels removed by scripts/export_bills.py normalisation.
+// Keep them as route aliases without making extra party pages or changing labels.
+const SPONSOR_PARTY_ALIASES = {
+  'alp': 'Labor',
+  'liberal party of australia': 'Liberal',
+  'national party of australia': 'Nationals',
+  'liberal national party of queensland': 'LNP',
+  'queensland greens': 'Greens',
+  'independent member': 'Independent',
+  'independent members': 'Independent',
+  'united australia party (clive palmer': 'United Australia Party',
+  'country liberals (northern territory': 'Country Liberal Party',
+  'democratic labor party (dlp': 'DLP',
+  'democratic labor party': 'DLP',
+};
+
+/** Accept source spellings and recognised label aliases, but return one page. */
 export function resolvePartyPage(segment, pages) {
   const want = fold(segment);
+  const wantSlug = partySlug(segment);
   // A former name's own slug ("liberal-democratic-party") names its party's page: partyUrl now
   // writes the current address, so the raw slug is compared too, and the Worker answers it with a 301.
   const slugs = label => [partyUrl(label).split('/').at(-1), partySlug(label)];
-  const alias = Object.keys(PARTY_MAP).find(label => slugs(label).includes(want));
-  return pages.find(page => page.aliases.some(label => fold(label) === want || slugs(label).includes(want))
-    || page.href.split('/').at(-1) === want || identity(page.label) === identity(alias || segment)) || null;
+  const sponsor = Object.keys(SPONSOR_PARTY_ALIASES).find(label => fold(label) === want || partySlug(label) === wantSlug);
+  const alias = sponsor ? SPONSOR_PARTY_ALIASES[sponsor] : Object.keys(PARTY_MAP).find(label => slugs(label).includes(wantSlug));
+  return pages.find(page => page.aliases.some(label => fold(label) === want || slugs(label).includes(wantSlug))
+    || page.href.split('/').at(-1) === wantSlug || identity(page.label) === identity(alias || segment)) || null;
 }
 
 export function partyPageCoverage(page) {
