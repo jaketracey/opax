@@ -411,7 +411,7 @@ export function createResearch(options: ResearchOptions): Research {
       }
       // Record facts are always cited: uncited points beside them make the answer partly cited.
       const status = points?.answer_status === 'uncited' && facts.length ? 'partly_cited' : points?.answer_status
-      if (points && facts.length) { const led = leadWithModelAnswer({ answer: text, citations }, points); text = led.answer; for (const key of Object.keys(citations)) delete citations[key]; Object.assign(citations, led.citations) }
+      if (points && facts.length) { const led = leadWithModelAnswer({ answer: text, citations }, points, question); text = led.answer; for (const key of Object.keys(citations)) delete citations[key]; Object.assign(citations, led.citations) }
       // Research that found nothing still answers; the coverage note says the records did not cover it.
       const general = !facts.length && !passages.size && !!points && !Object.keys(points.citations).length
       return { answer: text, answer_decision:!points&&facts.length&&facts.every(f=>f.coverage)?'limitation':points?.answer_decision??'answer', citations, sources, ...(status ? { answer_status: status } : {}),
