@@ -25,6 +25,7 @@ import * as tokens from '../src/design/tokens';
 import {
   androidHeaderBar,
   askHeaderItems,
+  barScrollEdges,
   glassBar,
   headerItems,
   largeTitleBar,
@@ -32,6 +33,7 @@ import {
   pageItems,
   pageMenu,
   rootHeaderItems,
+  scrollBar,
   shortSheet,
   tabRootGround,
   useStackChrome,
@@ -2002,4 +2004,93 @@ test('More keeps its page title out and ends in one public-site action', () => {
       ),
     ).toHaveLength(1);
   }
+});
+
+// Duo audit finding 3: on the folded display the tab items move to a side
+// rail, but the title and search field stay at the top. A soft top edge let
+// scrolled text show through the glass search field and hid the title.
+describe('scroll edges on every bar shape', () => {
+  // Phones, the unfolded Duo and iPad keep a horizontal bar ('unspecified').
+  test.each([
+    ['iPhone', 'unspecified'],
+    ['Duo unfolded', 'unspecified'],
+    ['iPad', 'unspecified'],
+  ] as const)('%s: the top edge follows the page', (_device, edge) => {
+    expect(barScrollEdges(edge)).toEqual({ top: 'hard', bottom: 'soft' });
+    expect(barScrollEdges(edge, 'soft')).toEqual({
+      top: 'soft',
+      bottom: 'soft',
+    });
+    expect(barScrollEdges(edge, 'hidden')).toEqual({
+      top: 'hidden',
+      bottom: 'soft',
+    });
+  });
+  test.each([
+    ['leading', 'left', 'right'],
+    ['trailing', 'right', 'left'],
+  ] as const)(
+    'Duo folded, %s rail: the top edge stays hard under the title and search field',
+    (edge, rail, far) => {
+      // Pushed pages (Vic hub, Leads) and roots (Bills, Search) alike.
+      for (const active of ['hard', 'soft'] as const) {
+        const edges = barScrollEdges(edge, active);
+        expect(edges.top).toBe('hard');
+        expect(edges.bottom).toBe('soft');
+        expect(edges[rail]).toBe(active);
+        expect(edges[far]).toBe('soft');
+      }
+      // A solid bar draws its own ground; nothing scrolls under it.
+      expect(barScrollEdges(edge, 'hidden').top).toBe('hidden');
+    },
+  );
+  test('a glass tab root on the folded rail asks for the hard top edge', () =>
+    withGlass(() => {
+      expect(scrollBar(colors.paper, false, 'leading')).toMatchObject({
+        headerTransparent: true,
+        scrollEdgeEffects: { top: 'hard', left: 'soft' },
+      });
+      expect(scrollBar(colors.paper, false, 'unspecified')).toMatchObject({
+        scrollEdgeEffects: { top: 'soft', bottom: 'soft' },
+      });
+    }));
+  test.each(['leading', 'trailing'] as const)(
+    'pushed pages on a %s rail keep the hard top edge',
+    (edge) => {
+      mockBarEdge = edge;
+      let chrome!: ReturnType<typeof useStackChrome>;
+      function Harness() {
+        chrome = useStackChrome();
+        return null;
+      }
+      const renderer = tree(<Harness />);
+      try {
+        expect(chrome.scrollEdgeEffects).toMatchObject({
+          top: 'hard',
+          bottom: 'soft',
+        });
+      } finally {
+        act(() => renderer.unmount());
+      }
+    },
+  );
+  test('the Search root on the folded rail sets a hard top edge under its search field', () =>
+    withGlass(() => {
+      mockBarEdge = 'trailing';
+      const { page, navigation } = searchOwnerPage(false);
+      const renderer = tree(page(68));
+      try {
+        const resolved = Object.assign(
+          {},
+          ...navigation.setOptions.mock.calls.map(([options]) => options),
+        );
+        expect(resolved).toMatchObject({
+          headerTransparent: true,
+          scrollEdgeEffects: { top: 'hard', bottom: 'soft', right: 'soft' },
+        });
+        expect(resolved.headerLargeTitleEnabled).not.toBe(true);
+      } finally {
+        act(() => renderer.unmount());
+      }
+    }));
 });
