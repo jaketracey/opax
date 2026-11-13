@@ -124,6 +124,34 @@ jobs:
         if: steps.replay.outputs.present == 'true'
         run: node --test --test-reporter=spec test/ask-replay.test.mjs
 
+  # The data tooling suites (scripts/test_*.py, scripts/vm/test_*.py): roster identity, exports, nightly
+  # helpers. The roster replay (test_roster_export_wrappers.py) runs the real weekly export in a git sandbox
+  # and needs the sqlite3 CLI; without it the suite skips, so install it rather than pass silently.
+  # Left out until fixed (they fail on main with the locked Python):
+  #   scripts/vm/test_fixture_imports.py: export_bills.py imports 'corrections', which the fixture does not copy.
+  #   scripts/vm/test_build_evidence_bundle.py: ATTACH of a file: URI fails ("unable to open database")
+  #     under the uv-managed interpreter; it passes only with a system Python's sqlite3.
+  scripts-python:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+      - name: Install locked Python dependencies
+        run: uv sync --frozen --python "$(cat .python-version)"
+      - name: Ensure the sqlite3 CLI
+        run: command -v sqlite3 || { sudo apt-get update -qq && sudo apt-get install -y -qq sqlite3; }
+      - name: Test data scripts
+        run: |
+          git config --global user.name ci
+          git config --global user.email ci@example.invalid
+          # pytest's --ignore does not drop a file named on the command line, so filter the list here.
+          mapfile -t suites < <(ls scripts/test_*.py scripts/vm/test_*.py \
+            | grep -v -x -e scripts/vm/test_fixture_imports.py -e scripts/vm/test_build_evidence_bundle.py)
+          uv run --frozen --with pytest pytest -q -p no:cacheprovider -rs "${suites[@]}"
+
   portal:
     name: portal (${{ matrix.shard }}/4)
     runs-on: ubuntu-latest
