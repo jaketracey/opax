@@ -111,6 +111,6 @@ test('the party page prints its table\'s own scope line, in the browser and the 
   const worker = await readFile(new URL('../src/index.ts', import.meta.url), 'utf8');
   assert.ok(!app.includes('PARTY_RECEIPTS_SCOPE') && !/counted twice/.test(app));
   assert.ok(!/counted twice/.test(worker));
-  assert.ok(app.includes('<h3 class="subject-section-title">Where it came from</h3>${partyMoney?.scope ? `<p class="entry-scope">${esc(moneyScope("map"))}. ${esc(partyMoney.scope)}</p>` : ""}${partyTable}'));
+  assert.ok(app.includes('<h2 class="subject-section-title">Where it came from</h2>${partyMoney?.scope ? `<p class="entry-scope">${esc(moneyScope("map"))}. ${esc(partyMoney.scope)}</p>` : ""}${partyTable}'));
   assert.ok(worker.includes('<h2>Where it came from</h2>${scope ? `<p class="entry-scope">${escHtml(scope)}</p>`'));
 });

@@ -27,7 +27,7 @@ test('the index keeps accepted sponsor parties only, newest first, with the fiel
 test('"Bills sponsored" links each bill, says when it was introduced and its status, and names its source', () => {
   const bills = Array.from({length: 14}, (_, i) => ({key: `au-federal-s${100 + i}`, title: `Fixture Bill ${2000 + i}`, introduced: `${2000 + i}-02-03`, status: i ? 'lapsed' : 'before_parliament'}));
   const doc = new JSDOM(partyBillsHTML('Fixture Team', bills, h)).window.document;
-  assert.equal(doc.querySelector('h3').textContent, 'Bills sponsored (14)');
+  assert.equal(doc.querySelector('h2').textContent, 'Bills sponsored (14)');
   const links = [...doc.querySelectorAll('a.source-title')];
   assert.equal(links.length, 14);
   assert.equal(links[0].getAttribute('href'), '/bill/au-federal-s100');

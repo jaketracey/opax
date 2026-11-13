@@ -44,7 +44,7 @@ test('saved 2027 URL clamps to the same receipt year and rows on server and map'
  const clamp=value=>Math.max(min,Math.min(max,Number(value)));
  const view=receiptGraphView(raw,'donation_only',clamp(params.get('from')),clamp(params.get('to')));
  const client=await prepareMoneyConnectionsConfig(filterMoneyConnectionView(view,params));
- assert.equal(client.rows.length,89);
+ assert.equal(client.rows.length,91); // Main's alias-aware receipt export adds two 2024–25 flows.
  const serverRows=[];
  for(const page of [1,2]){
   const url=new URL('https://fixture.test/money?'+params);url.searchParams.set('c.page',String(page));
@@ -52,7 +52,7 @@ test('saved 2027 URL clamps to the same receipt year and rows on server and map'
   const doc=new JSDOM(html).window.document;
   const server=JSON.parse(doc.querySelector('[data-dt-page]').textContent);
   const expected=applyQuery(client.rows,client,{page});
-  assert.equal(server.total,89);assert.equal(server.page,page);
+  assert.equal(server.total,91);assert.equal(server.page,page);
   assert.deepEqual(server.rows,JSON.parse(JSON.stringify(expected.rows)));
   assert.match(doc.querySelector('.mc-explainer').textContent,/Donations only, 2024–25/);
   serverRows.push(...server.rows);
