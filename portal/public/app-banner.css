@@ -57,7 +57,7 @@
 .opax-skip-link:focus-visible {
   position: fixed; top: 0.5rem; left: 0.5rem; z-index: 60; width: auto; height: auto; margin: 0;
   clip-path: none; padding: var(--sp-8, 0.5rem) var(--sp-16, 1rem);
-  background: var(--paper-raised, #fff); color: var(--ink);
+  background: var(--paper-raised); color: var(--ink);
   border: var(--border-hairline, 1px) solid var(--line-control);
   outline: var(--border-focus, 2px) solid var(--bronze-ink); outline-offset: 2px;
   font: var(--type-metadata, 400 0.9375rem/1.45 sans-serif);
