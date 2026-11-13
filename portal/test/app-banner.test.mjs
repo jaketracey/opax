@@ -140,11 +140,13 @@ test('banner is ordinary content with a named link and a keyboard button, withou
   page.dom.window.close();
 });
 
-test('the banner is one line, no taller than its 44px dismiss target, at every width', () => {
-  assert.match(css, /\.opax-app-banner-row\s*\{[^}]*\bheight: var\(--size-target, 44px\)/);
+test('the banner is one 44px line at the default text size and wraps, never clips, with larger text', () => {
+  const row = css.match(/\.opax-app-banner-row\s*\{([^}]*)\}/)[1];
+  assert.match(row, /min-height: var\(--size-target, 44px\)/);
+  assert.doesNotMatch(row, /(^|[^-])height:/, 'no fixed height: at 200% text the row grows (WCAG 1.4.4)');
   const line = css.match(/\.opax-app-banner p\s*\{([^}]*)\}/)[1];
-  assert.match(line, /white-space: nowrap/);
-  assert.match(line, /text-overflow: ellipsis/);
+  assert.doesNotMatch(line, /white-space: nowrap|text-overflow|overflow: hidden/, 'the line wraps rather than clipping the link');
+  assert.match(css, /\.opax-app-banner a \{ white-space: nowrap;/, 'the link itself stays whole');
   assert.doesNotMatch(css, /\.opax-app-banner\s*\{[^}]*border-bottom/, 'the rule is drawn inside the 44px');
   assert.match(css, /@media \(width < 420px\)\s*\{\s*\.opax-app-banner-ipad\s*\{\s*display: none/);
 });
