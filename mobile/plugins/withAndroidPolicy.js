@@ -53,6 +53,22 @@ android.buildTypes {
     return mod;
   });
   config = withMainActivity(config, (mod) => {
+    const intentMarker = '// OPAX retain links received during JS startup';
+    if (!mod.modResults.contents.includes(intentMarker)) {
+      const anchor = 'class MainActivity : ReactActivity() {';
+      if (!mod.modResults.contents.includes(anchor))
+        throw new Error('Android links: review the MainActivity class anchor');
+      mod.modResults.contents = mod.modResults.contents.replace(
+        anchor,
+        `${anchor}
+  ${intentMarker}
+  override fun onNewIntent(intent: android.content.Intent) {
+    setIntent(intent)
+    super.onNewIntent(intent)
+  }
+`,
+      );
+    }
     const marker = '// OPAX Android is light-only';
     if (!mod.modResults.contents.includes(marker)) {
       const anchor = '    super.onCreate(null)';

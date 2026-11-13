@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import React, { act } from 'react';
 import TestRenderer from 'react-test-renderer';
-import { Platform } from 'react-native';
+import { Linking, Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import {
   DarkTheme,
@@ -12,6 +12,7 @@ import {
   Stack,
   ThemeProvider,
   useLocalSearchParams,
+  router,
 } from 'expo-router';
 import SharedLayout, {
   unstable_settings,
@@ -28,6 +29,14 @@ import LegacyMoneyNode from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/
 import MoneyRecord from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/money-record';
 import MoneyRecordScreen from '../src/features/money/MoneyRecord';
 import { publicMoneyScreens } from '../src/navigation/stack/public-money';
+import { installAndroidLinkCapture } from '../src/navigation/link-readiness';
+
+let mockRootNavigationKey: string | undefined = 'root';
+let mockContainerReady = false;
+const mockNavigationRef = {
+  isReady: () => mockContainerReady,
+  addListener: () => () => {},
+};
 
 // Root chrome tests keep saved-seat reads local and independent of build services.
 jest.mock('../src/features/your-mp/useSeat', () => ({
@@ -57,13 +66,10 @@ jest.mock('expo-router', () => {
     DefaultTheme: { dark: false },
     Redirect: () => null,
     useLocalSearchParams: jest.fn(),
-    useRootNavigationState: () => ({ key: 'root' }),
-    useNavigationContainerRef: () => ({
-      isReady: () => false,
-      addListener: () => () => {},
-    }),
+    useRootNavigationState: () => ({ key: mockRootNavigationKey }),
+    useNavigationContainerRef: () => mockNavigationRef,
     useSegments: () => [],
-    router: { push: jest.fn(), back: jest.fn() },
+    router: { push: jest.fn(), navigate: jest.fn(), back: jest.fn() },
   };
 });
 jest.mock('../src/navigation/KeyboardShortcuts', () => ({
@@ -99,6 +105,49 @@ jest.mock('../src/design/environment', () => ({
 }));
 
 const app = resolve(__dirname, '../src/app');
+test('Android drains warm links when the container is ready and the root snapshot is still partial', () => {
+  const original = Platform.OS;
+  let tree: TestRenderer.ReactTestRenderer | undefined;
+  let stopCapture: (() => void) | undefined;
+  let spy: jest.SpyInstance | undefined;
+  const routed = router.navigate as jest.Mock;
+  routed.mockClear();
+  try {
+    Object.defineProperty(Platform, 'OS', {
+      value: 'android',
+      configurable: true,
+    });
+    mockRootNavigationKey = undefined;
+    mockContainerReady = true;
+    let event!: (event: { url: string }) => void;
+    spy = jest
+      .spyOn(Linking, 'addEventListener')
+      .mockImplementation((_name, callback) => {
+        event = callback;
+        return { remove: () => {} } as ReturnType<
+          typeof Linking.addEventListener
+        >;
+      });
+    stopCapture = installAndroidLinkCapture();
+    event({ url: 'opax://party/labor' });
+    expect(routed).not.toHaveBeenCalled();
+    act(() => {
+      tree = TestRenderer.create(React.createElement(RootLayout));
+    });
+    expect(routed).toHaveBeenCalledTimes(1);
+    expect(routed).toHaveBeenCalledWith('/(tabs)/(today)/party/labor');
+  } finally {
+    if (tree) act(() => tree!.unmount());
+    stopCapture?.();
+    spy?.mockRestore();
+    mockRootNavigationKey = 'root';
+    mockContainerReady = false;
+    Object.defineProperty(Platform, 'OS', {
+      value: original,
+      configurable: true,
+    });
+  }
+});
 test.each([
   ['ios', 'auto'],
   ['android', 'dark'],

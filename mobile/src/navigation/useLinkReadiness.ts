@@ -1,22 +1,36 @@
-import { useNavigationContainerRef } from 'expo-router';
-import { useEffect } from 'react';
+import { router, useNavigationContainerRef, type Href } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
-import { setLinkNavigationReady } from './link-readiness';
+import {
+  setLinkNavigationReady,
+  subscribeAndroidLinks,
+} from './link-readiness';
+import { resolveSystemPath } from './system-path';
 
-/** Fonts, the app's stack and the navigation container must all be ready. */
-export function useLinkReadiness(stackMounted: boolean) {
+/** The root must render its navigator, then the container must report ready. */
+export function useLinkReadiness(rootRendered: boolean) {
   const navigation = useNavigationContainerRef();
+  const [ready, setReady] = useState(false);
   useEffect(() => {
     if (Platform.OS !== 'android') return;
-    const update = () =>
-      setLinkNavigationReady(stackMounted && navigation.isReady());
-    const ready = navigation.addListener('ready', update);
-    const state = navigation.addListener('state', update);
+    const unsubscribe = subscribeAndroidLinks((path) => {
+      const destination = resolveSystemPath({ path, initial: false });
+      if (destination) router.navigate(destination as Href);
+    });
+    const update = () => {
+      const next = rootRendered && navigation.isReady();
+      setLinkNavigationReady(next);
+      setReady(next);
+    };
+    const removeReady = navigation.addListener('ready', update);
+    const removeState = navigation.addListener('state', update);
     update();
     return () => {
-      ready();
-      state();
+      removeReady();
+      removeState();
       setLinkNavigationReady(false);
+      unsubscribe();
     };
-  }, [navigation, stackMounted]);
+  }, [navigation, rootRendered]);
+  return ready;
 }
