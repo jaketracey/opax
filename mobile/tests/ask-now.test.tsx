@@ -538,6 +538,85 @@ it.each([
   },
 );
 
+/**
+ * The waiting question is refused, so the answered conversation stays open;
+ * the reader clears the composer (no longer "Starts a new conversation") and
+ * asks a follow-up in it.
+ */
+async function followUpAfterRefusal() {
+  jest
+    .mocked(catalogs.roster)
+    .mockResolvedValueOnce({ data: { people: [] } } as never);
+  const waiting = await waitingBehindAnswer({ speaker: 'Alex Example' });
+  expect(asked()).toEqual(['A question already running?']);
+  act(() => askSession.setDraft(''));
+  return waiting;
+}
+const fourTurns = [
+  'A question already running?',
+  'The first answer.',
+  'A newer question?',
+  'The second answer.',
+];
+const committeeRow = [{ question: 'What did the committee find?' }];
+
+// Review P3-2: the saved copy was built from the thread at the first answer,
+// so rows arriving after a newer answer cut it back to two turns.
+it('Ask next rows that arrive after a newer answer in the same conversation keep all four turns', async () => {
+  const { running, followups } = await followUpAfterRefusal();
+  await act(async () => {
+    await askSession.submit('A newer question?');
+  });
+  await flush();
+  expect(askSession.snapshot()).toMatchObject({ id: running, busy: false });
+  expect(askSession.snapshot().thread.map((m) => m.text)).toEqual(fourTurns);
+  await act(async () =>
+    followups!({ questions: ['What did the committee find?'] }),
+  );
+  await flush();
+  for (const thread of [
+    askSession.snapshot().thread,
+    storedChat(running)!.thread,
+  ]) {
+    expect(thread.map((m) => m.text)).toEqual(fourTurns);
+    expect(thread[1]?.next).toEqual(committeeRow);
+    expect(thread[3]?.next).toBeUndefined();
+  }
+});
+
+// Review P3-1, accepted: rows that arrive while the newer answer is still
+// running are saved, then that answer's save writes the turns on screen over
+// them. The four turns are kept and the rows are dropped.
+it('Ask next rows that arrive while a newer answer in the same conversation runs are dropped, and all four turns are saved', async () => {
+  const { running, followups } = await followUpAfterRefusal();
+  let finish!: (value: unknown) => void;
+  post.mockImplementation(() => new Promise((resolve) => (finish = resolve)));
+  let asking!: Promise<void>;
+  await act(async () => {
+    asking = askSession.submit('A newer question?');
+  });
+  expect(askSession.snapshot()).toMatchObject({ id: running, busy: true });
+  await act(async () =>
+    followups!({ questions: ['What did the committee find?'] }),
+  );
+  await flush();
+  // The rows reach the saved copy only; the screen has an answer running.
+  expect(storedChat(running)?.thread[1]?.next).toEqual(committeeRow);
+  expect(askSession.snapshot().thread[1]?.next).toBeUndefined();
+  await act(async () => {
+    finish(answer('The second answer.'));
+    await asking;
+  });
+  await flush();
+  for (const thread of [
+    askSession.snapshot().thread,
+    storedChat(running)!.thread,
+  ]) {
+    expect(thread.map((m) => m.text)).toEqual(fourTurns);
+    expect(thread[1]?.next).toBeUndefined();
+  }
+});
+
 it('a running answer that asks for a full question keeps the waiting question unsent', async () => {
   let finish!: (value: unknown) => void;
   post.mockImplementationOnce(

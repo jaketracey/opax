@@ -638,8 +638,9 @@ export class AskController {
     }
   }
   /**
-   * Ask next for an answer whose conversation has left the screen (a queued
-   * question took over): generated once and written to the saved copy only.
+   * Ask next for an answer a queued question waited for: generated once and
+   * written to the saved copy, and shown only while that conversation is on
+   * screen with no answer running.
    */
   private async savedFollowups(
     id: string,
@@ -660,9 +661,13 @@ export class AskController {
           new AbortController().signal,
         ),
       );
-      // The waiting question did not start (the Person check refused it, or
-      // the roster failed to load), so this conversation is still on screen:
+      // When the waiting question did not start (the Person check refused it,
+      // or the roster failed to load), this conversation is still on screen:
       // its rows show at once, and its newest turns are the ones saved.
+      // If a newer question in it is still being answered, the rows are
+      // dropped: they reach only the saved copy, and that answer's save then
+      // writes the turns on screen, which have none. followups() drops rows
+      // the same way when a newer question starts.
       const s = this.state;
       const shown = s.id === id && !s.busy && s.thread.includes(turn);
       const saved = withNext(shown ? s.thread : thread, turn, next);

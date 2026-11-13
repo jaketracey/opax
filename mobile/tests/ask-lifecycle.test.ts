@@ -74,9 +74,21 @@ test('suggestions reserve their rows as soon as the answer finishes, before savi
   saved.resolve();
   await flush();
   expect(post.mock.calls[1]?.[0]).toBe('/api/followups');
-  next.resolve({ questions: [] });
+  const written = h.controller.snapshot().thread.at(-1)!;
+  const unchanged = { ...written };
+  next.resolve({ questions: ['What happened next?'] });
   await asking;
   expect(h.controller.snapshot().nextLoading).toBe(false);
+  // The rows come on a copy that replaces the answer turn: the turn object
+  // already on screen is left as it was, never written into.
+  const shown = h.controller.snapshot().thread.at(-1)!;
+  expect(shown).toMatchObject({
+    text: answer.answer,
+    next: [{ question: 'What happened next?' }],
+  });
+  expect(shown).not.toBe(written);
+  expect(written).toEqual(unchanged);
+  expect(written.next).toBeUndefined();
 });
 
 test.each([false, true])(
