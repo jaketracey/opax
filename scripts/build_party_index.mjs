@@ -12,23 +12,35 @@
 // all. seat_rosters adds the party a verified electorate roster records for a
 // roster person whose own record carries none: the same fallback the person page
 // uses (portal/public/roster-party.js), unambiguous or nothing, never a surname.
+// Each entry carries the roster's seat and date, and next_election: the first
+// election after that date the repository records for the jurisdiction (the
+// committed scripts/hubs/<jur>-election-<year>.json configs and the electorate
+// release's election dates). After it, the roster no longer says who sits.
 import {readFileSync,readdirSync,writeFileSync} from 'node:fs';
 import {dirname,join,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {rosterSeatParty} from '../portal/public/roster-party.js';
-const PUBLIC=join(dirname(fileURLToPath(import.meta.url)),'..','portal','public');
+import {rosterFold,rosterSeatParty} from '../portal/public/roster-party.js';
+const SCRIPTS=dirname(fileURLToPath(import.meta.url));
+const PUBLIC=join(SCRIPTS,'..','portal','public');
 export const PARTY_INDEX='/graph/party-members.json';
 // Presiding-officer codes stand in the party field on the days a member chaired.
 const NOT_A_PARTY=/^(?:PRES|DPRES|SPK|DSPK|CWM|CHAIR)$/i;
 
-/** Party -> roster people whose only party is a verified seat roster's, with the roster's date and seat. */
-export function seatRosterMembers(people,electorates) {
+const ISO_DAY=/^\d{4}-\d{2}-\d{2}$/;
+
+/** Party -> roster people whose only party is a verified seat roster's, with the roster's seat and date, and
+ *  the first recorded election in that jurisdiction after the date (null when none is recorded).
+ *  `elections` maps a jurisdiction to its election days. */
+export function seatRosterMembers(people,electorates,elections={}) {
   const out={};
   for(const p of people || []){
     if(p.party_now || p.party)continue;
     const r=rosterSeatParty(p,electorates);
     if(!r)continue;
-    (out[r.party] ||= []).push({name:p.name,pid:p.pid || null,electorate:r.electorate,as_of:r.as_of});
+    const seat=(p.representation || []).find(x=>rosterFold(x.electorate)===rosterFold(r.electorate)) || {};
+    const next=(elections[seat.jurisdiction] || []).filter(d=>ISO_DAY.test(d) && d>r.as_of).sort()[0] || null;
+    (out[r.party] ||= []).push({name:p.name,pid:p.pid || null,jurisdiction:seat.jurisdiction || null,chamber:seat.chamber || null,
+      electorate:r.electorate,as_of:r.as_of,next_election:next});
   }
   const sorted={};
   for(const party of Object.keys(out).sort((a,b)=>a.localeCompare(b)))
@@ -36,11 +48,22 @@ export function seatRosterMembers(people,electorates) {
   return sorted;
 }
 
+/** Jurisdiction -> election days the repository records: the electorate release's coverage, and each
+ *  committed election hub config (scripts/hubs/vic-election-2026.json: election_day). */
+export function recordedElections(manifest,hubsDir=join(SCRIPTS,'hubs')) {
+  const out={};
+  const add=(jur,day)=>{if(jur && ISO_DAY.test(String(day || '')))(out[jur] ||= new Set()).add(day);};
+  for(const [jur,c] of Object.entries(manifest?.coverage?.jurisdictions || {}))for(const day of c.election_dates || [])add(jur,day);
+  for(const file of readdirSync(hubsDir).filter(f=>/^[a-z]+-election-\d{4}\.json$/.test(f)).sort())
+    add(file.split('-')[0],JSON.parse(readFileSync(join(hubsDir,file),'utf8')).election_day);
+  return Object.fromEntries(Object.entries(out).map(([jur,days])=>[jur,[...days].sort()]));
+}
+
 function seatRosters(publicRoot) {
   const people=JSON.parse(readFileSync(join(publicRoot,'parliamentarians.json'),'utf8')).people;
   const manifest=JSON.parse(readFileSync(join(publicRoot,'electorates','manifest.json'),'utf8'));
   const index=JSON.parse(readFileSync(join(publicRoot,...String(manifest.index_url).split('/').filter(Boolean)),'utf8'));
-  return seatRosterMembers(people,index.electorates);
+  return seatRosterMembers(people,index.electorates,recordedElections(manifest));
 }
 
 export function partyIndexFile(publicRoot=PUBLIC) {
