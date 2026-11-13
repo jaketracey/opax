@@ -1,6 +1,6 @@
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
 import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
-import {receiptFigures, receiptScopeLabel} from './register-tables.js?v=193ceed10f';
+import {receiptFigures, receiptScopeLabel, industryName} from './register-tables.js?v=193ceed10f';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph
@@ -101,14 +101,8 @@ export function yearPhrase(year, jur, electionYears = []) {
   return jur === 'federal' && electionYears.includes(Number(year)) ? `${fyLabel(year)} (with the ${year} election returns)` : fyLabel(year);
 }
 
-/** An industry key as a name: "fossil_fuels" is "Fossil fuels", "mining & energy" "Mining & energy". */
-export function industryName(key) {
-  const k = String(key || '');
-  if (!k) return 'Industry not recorded';
-  if (['individual', 'individuals'].includes(k.toLowerCase())) return 'Industry not recorded';
-  const words = k.replace(/_/g, ' ');
-  return words.charAt(0).toUpperCase() + words.slice(1);
-}
+/** An industry key as a name: one helper with the party table (register-tables.js). */
+export { industryName };
 
 /**
  * The graph with every donation edge's figures read the way the map card,
