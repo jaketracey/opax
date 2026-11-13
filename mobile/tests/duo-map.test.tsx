@@ -659,8 +659,9 @@ test('scrolling charts keep the plot and table in place while midpoint axis and 
   expect(
     tree.root.findAllByProps({ testID: 'bar-series-values' }),
   ).toHaveLength(0);
+  // values="all" captions every bar.
   expect(
-    tree.root.findAllByProps({ testID: 'bar-series-caption' }).length,
+    tree.root.findAllByProps({ testID: 'bar-series-caption-2' }).length,
   ).toBeGreaterThan(0);
   expect(StyleSheet.flatten(plot.props.style)).toEqual({ height: 160 });
   expect(

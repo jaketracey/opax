@@ -17,6 +17,7 @@ import {
 import { StatePageProvider } from '../../design/states';
 import { colors, layout, rhythm } from '../../design/tokens';
 import { entityMatches } from './find';
+import { useFloatingBarFoot } from '../../navigation/floating-bar';
 export interface ReaderPart {
   id: string;
   text: string;
@@ -146,6 +147,7 @@ export function ReaderList({
   const lastJump = useRef<typeof jumpTo>(null);
   // A readable column on iPad, with a split pane's Back first.
   const column = useScreenColumn();
+  const foot = useFloatingBarFoot(rhythm.section * 2);
   // Highlight with the same document-wide pass as the find counter, including
   // parts that are not mounted in the virtualised list yet.
   const query = find?.query;
@@ -195,7 +197,7 @@ export function ReaderList({
           extraData={marks}
           keyExtractor={(part) => part.id}
           style={styles.screen}
-          contentContainerStyle={[styles.content, column.content]}
+          contentContainerStyle={[styles.content, column.content, foot]}
           onLayout={column.onLayout}
           contentInsetAdjustmentBehavior="automatic"
           // In the iPad split pane the list's search keyboard may still be

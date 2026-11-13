@@ -31,6 +31,7 @@ import { opaqueBar } from '../navigation/chrome';
 import { useAndroidRootScroll } from '../navigation/useAndroidRootScroll';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { useSafeSetOptions } from '../navigation/preview';
+import { useFloatingBarClearance } from '../navigation/floating-bar';
 import { useRootBarAppearance } from '../navigation/useRootBarAppearance';
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
 import { useAccessibilitySize } from './accessibility';
@@ -52,6 +53,7 @@ import type { DateInput } from './format';
 import { Icon } from './icon';
 import { useRefreshCommand } from './keyboard';
 import { RowLink } from './row-link';
+import { SourceSection } from './source';
 import {
   RowCellInsetContext,
   RowInsetContext,
@@ -185,6 +187,7 @@ export function Screen({
     contentInsetAdjustmentBehavior !== 'never',
   );
   const ground = grouped && designFlags.groupedSurfaces ? 'sunken' : 'paper';
+  const clearance = useFloatingBarClearance();
   const androidScroll = useRef<ScrollView>(null);
   const androidRoot = useAndroidRootScroll(androidScroll, colors[ground]);
   const setOptions = useSafeSetOptions();
@@ -259,6 +262,8 @@ export function Screen({
             { flexGrow: 1 },
             content,
             regular ? { gap: rhythmRegular.section } : null,
+            // The last block ends above the floating Today and Search buttons.
+            clearance ? { paddingBottom: rhythm.section + clearance } : null,
           ]}
           maintainVisibleContentPosition={maintainVisibleContentPosition}
           onContentSizeChange={
@@ -413,6 +418,7 @@ export function KeyboardStableScreen({
   const scroll = scrollRef ?? ownScroll;
   const keyboard = useStableKeyboard(scroll, keyboardTarget);
   const { onLayout, content, inner, bar } = useScreenColumn(column);
+  const clearance = useFloatingBarClearance();
   useRefreshCommand(
     refreshControl?.props.onRefresh,
     !!refreshControl?.props.refreshing,
@@ -434,6 +440,13 @@ export function KeyboardStableScreen({
             styles.content,
             content,
             keyboard.contentStyle,
+            // The last block ends above the floating Today and Search buttons.
+            clearance
+              ? {
+                  paddingBottom:
+                    keyboard.contentStyle.paddingBottom + clearance,
+                }
+              : null,
           ]}
           onLayout={(event) => {
             onLayout(event);
@@ -586,7 +599,7 @@ export function Section({
         />
       ) : null}
       {action && !isAction ? (action as ReactNode) : null}
-      {children}
+      <SourceSection>{children}</SourceSection>
     </View>
   );
 }

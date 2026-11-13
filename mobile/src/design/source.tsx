@@ -1,5 +1,14 @@
 import { Pressable } from './pressable';
-import { useState, type ReactNode, type Ref } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+  type Ref,
+} from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { presentSource } from '../navigation/sheets';
 import { useAccessibilitySize } from './accessibility';
@@ -202,6 +211,98 @@ export function sourceLineParts({
   return { date, name, rest };
 }
 
+type SourceRegistry = {
+  /** Each drawn line's text, with the lines that draw it in tree order. */
+  lines: Map<string, number[]>;
+  listeners: Set<() => void>;
+};
+let lineIds = 0;
+/** Ids follow render order, which is tree order for blocks drawn together. */
+const nextLineId = () => ++lineIds;
+const SourceSectionContext = createContext<SourceRegistry | null>(null);
+
+/**
+ * One section of a page: cards and charts inside it that carry the same
+ * source line ("Updated 13 Nov 2026 · OPAX daily edition") show it once,
+ * under the first of them, rather than under every card. A line that says
+ * something different (another date, source or state) still shows. VoiceOver
+ * reads the line once, as drawn. Sections can sit anywhere on a page; a
+ * `Section` is one.
+ */
+export function SourceSection({ children }: { children: ReactNode }) {
+  const [registry] = useState<SourceRegistry>(() => ({
+    lines: new Map(),
+    listeners: new Set(),
+  }));
+  return (
+    <SourceSectionContext.Provider value={registry}>
+      {children}
+    </SourceSectionContext.Provider>
+  );
+}
+
+/**
+ * What a line's sheet holds beyond the drawn text: its originals, notes,
+ * licence and rule. Two lines fold into one only when their sheets match, so
+ * a hidden line never takes a fuller sheet with it.
+ */
+export function sheetFingerprint(details: SourceDetails): string {
+  return JSON.stringify([
+    (details.originals ?? []).map((original) => [
+      original.label,
+      original.url,
+      original.record ?? null,
+      original.asOf == null ? null : String(original.asOf),
+    ]),
+    (details.notes ?? []).filter(Boolean),
+    details.licence ?? null,
+    details.licenceDataset ?? null,
+    details.rule ?? null,
+    details.header ?? null,
+    sourceCitations(details.citation).map((cited) => [
+      cited.label,
+      cited.title,
+    ]),
+  ]);
+}
+
+/** Whether this line is the first in its section to say `text`. */
+function useFirstInSection(text: string | null): boolean {
+  const registry = useContext(SourceSectionContext);
+  const [id] = useState(nextLineId);
+  const subscribe = useCallback(
+    (listener: () => void) => {
+      if (!registry) return () => {};
+      registry.listeners.add(listener);
+      return () => {
+        registry.listeners.delete(listener);
+      };
+    },
+    [registry],
+  );
+  const first = useSyncExternalStore(
+    subscribe,
+    () => (registry && text ? (registry.lines.get(text)?.[0] ?? null) : null),
+    () => null,
+  );
+  useLayoutEffect(() => {
+    if (!registry || !text) return;
+    const notify = () => registry.listeners.forEach((listener) => listener());
+    registry.lines.set(
+      text,
+      [...(registry.lines.get(text) ?? []), id].sort((a, b) => a - b),
+    );
+    notify();
+    return () => {
+      const rest = (registry.lines.get(text) ?? []).filter((n) => n !== id);
+      if (rest.length) registry.lines.set(text, rest);
+      else registry.lines.delete(text);
+      notify();
+    };
+  }, [registry, text, id]);
+  return first === null || first === id;
+}
+
 /** Adjacent blocks in one section can share one dated source line. */
 export function SourceLineGroup({
   children,
@@ -261,6 +362,14 @@ export function SourceLine({
     .filter(Boolean)
     .join(', ')
     .replace(/\u00a0/g, ' ');
+  // A link line ("View original"), or one whose sheet carries an action or
+  // extra content, is never folded into a section's line.
+  const shown = useFirstInSection(
+    label || details.extra || details.report || onPress
+      ? null
+      : `${spoken}\n${sheetFingerprint(details)}`,
+  );
+  if (!shown) return null;
   return (
     <>
       <SourceAffordance

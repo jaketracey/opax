@@ -34,6 +34,7 @@ import {
   displayedRecordTitle,
   type RecordRow as Row,
 } from './model';
+import { useFloatingBarFoot } from '../../navigation/floating-bar';
 
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 const PER = 20;
@@ -225,6 +226,7 @@ export default function RecordList({
       );
   }, [ready?.rows.length, ready?.paging, kind, ready]);
   const { onLayout, content } = useScreenColumn('readable');
+  const foot = useFloatingBarFoot();
   const briefsShown = ready
     ? ready.rows.some((r) => ready.briefs[r.resource ?? ''])
     : false;
@@ -285,7 +287,7 @@ export default function RecordList({
             style={styles.page}
             contentInsetAdjustmentBehavior="automatic"
             onLayout={onLayout}
-            contentContainerStyle={[styles.content, content]}
+            contentContainerStyle={[styles.content, content, foot]}
             data={ready?.rows ?? []}
             keyExtractor={(r, i) => `${r.slug}-${i}`}
             onEndReached={() => next()}
