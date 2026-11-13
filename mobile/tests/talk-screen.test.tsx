@@ -6,8 +6,8 @@ import { usePreventRemove } from 'expo-router/react-navigation';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Button, IconButton, Text } from '../src/design/primitives';
 import TalkScreen from '../src/features/talk/TalkScreen';
-import { emptySnapshot } from '../src/features/talk/model';
-import type { VoiceFailure, VoiceSnapshot, VoiceStatus } from '../src/voice';
+import { emptySnapshot, type TalkFailure } from '../src/features/talk/model';
+import type { VoiceSnapshot, VoiceStatus } from '../src/voice';
 
 // Design pass 4D: Talk stays minimal and calm. The orb is the only motion
 // (the native canvas is left out here), one plain status line sits under it,
@@ -58,7 +58,7 @@ function call(snapshot: Partial<VoiceSnapshot>, active = false) {
     snapshot: { ...emptySnapshot, ...snapshot },
     consent: true,
     consentLoaded: true,
-    error: null as VoiceFailure | null,
+    error: null as TalkFailure | null,
     terminal: null,
     busy: false,
     active,
@@ -381,4 +381,31 @@ test('the consent sheet keeps its buttons pinned under a capped root', () => {
     expect(
       footer.findAll((node) => node.props.testID === id).length,
     ).toBeGreaterThan(0);
+});
+
+test('each callOpen case shows its own line once no call is on screen', () => {
+  const cases: [TalkFailure, Partial<VoiceSnapshot>, string][] = [
+    // A 409 from Start.
+    [
+      'callOpen',
+      { state: 'failed', reason: 'failed' },
+      'Your earlier call is still ending. Try again in a minute.',
+    ],
+    // Start refused while a call is still being set up and not yet shown.
+    ['alreadyInCall', { state: 'checking' }, 'You’re already in a call.'],
+    // Typed text that reached native after the call ended.
+    [
+      'notLive',
+      { state: 'ended', reason: 'network' },
+      'The call ended before your message was sent.',
+    ],
+  ];
+  for (const [error, snapshot, copy] of cases) {
+    mockCall = { ...call({ ...snapshot, status: status() }), error };
+    const renderer = render();
+    expect([error, line(renderer, 'talk-message')?.props.children]).toEqual([
+      error,
+      copy,
+    ]);
+  }
 });

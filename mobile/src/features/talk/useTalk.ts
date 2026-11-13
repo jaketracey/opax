@@ -13,9 +13,12 @@ import {
 import {
   applyEvent,
   emptySnapshot,
+  eventFailure,
   eventKeys,
   isCallActive,
   recoverSnapshot,
+  sendFailure,
+  type TalkFailure,
   type TalkSnapshot,
 } from './model';
 
@@ -30,7 +33,7 @@ export function useTalk() {
   const current = useRef(snapshot);
   const [consent, showConsent] = useState(false);
   const [consentLoaded, setConsentLoaded] = useState(false);
-  const [error, setError] = useState<VoiceFailure | null>(null);
+  const [error, setError] = useState<TalkFailure | null>(null);
   const [terminal, setTerminal] = useState<EndReason | null>(null);
   const [busy, setBusy] = useState(false);
   // The focus generation whose status and consent reads have both finished.
@@ -92,7 +95,12 @@ export function useTalk() {
       sequence.current += 1;
       for (const key of eventKeys[event.type])
         revisions.current[key] = sequence.current;
-      if (event.type === 'error') setError(event.error);
+      if (event.type === 'error')
+        setError(eventFailure(event.error, current.current.state));
+      // "Already in a call" is about the call under way, so it lapses when
+      // that call moves on; it must not outlive it as the screen's message.
+      if (event.type === 'state')
+        setError((shown) => (shown === 'alreadyInCall' ? null : shown));
       if (event.type === 'state' && event.reason) setTerminal(event.reason);
       set(applyEvent(current.current, event));
     });
@@ -171,7 +179,10 @@ export function useTalk() {
     });
     return () => subscription.remove();
   }, [recover, refresh]);
-  async function run(action: () => ReturnType<typeof voice.start>) {
+  async function run(
+    action: () => ReturnType<typeof voice.start>,
+    describe: (error: VoiceFailure) => TalkFailure = (error) => error,
+  ) {
     if (dispatching.current) return;
     const generation = ++commandGeneration.current;
     dispatching.current = true;
@@ -180,7 +191,7 @@ export function useTalk() {
     // The call outlives a push inside Talk; only leaving Talk drops it.
     if (mounted.current && generation === commandGeneration.current) {
       dispatching.current = false;
-      if (!result.ok) setError(result.error);
+      if (!result.ok) setError(describe(result.error));
       setBusy(false);
     }
     return generation === commandGeneration.current ? result : undefined;
@@ -290,6 +301,6 @@ export function useTalk() {
       return result;
     },
     mute: () => run(() => voice.mute(current.current.mode !== 'muted')),
-    send: (text: string) => run(() => uiBridge.sendText(text)),
+    send: (text: string) => run(() => uiBridge.sendText(text), sendFailure),
   };
 }
