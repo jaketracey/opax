@@ -1445,14 +1445,27 @@ describe('sweep 2: a party page says each thing once', () => {
 
   test('Recent votes: procedural motions fold away, block votes have no bar and neighbours differ', async () => {
     const all = view.data!.divisions.data!.rows;
-    const procedural = all.filter((row) => isProcedural(row.division.stage));
-    // The fixture's wall of "Limitation of debate" is what this guards.
+    const rule = (row: (typeof all)[number]) =>
+      isProcedural(
+        row.division.stage ?? row.division.title,
+        row.division.question,
+      );
+    const procedural = all.filter(rule);
     expect(procedural.length).toBeGreaterThan(0);
     const r = await render();
     const shown = rowsOf(r);
     expect(shown.length).toBe(Math.min(10, all.length - procedural.length));
-    for (const row of shown)
-      expect(row.props.meta).not.toMatch(/Limitation of debate/);
+    // The bill page's rule: a vote under a time limit is folded only when its
+    // question is the time limit itself, so a guillotined passage or
+    // amendment stays in Recent votes.
+    const guillotined = all.filter(
+      (row) =>
+        /limitation of debate/i.test(row.division.stage ?? '') && !rule(row),
+    );
+    expect(guillotined.length).toBeGreaterThan(0);
+    expect(
+      shown.some((row) => /Limitation of debate/.test(row.props.meta)),
+    ).toBe(true);
     press(r, 'party-divisions-procedural');
     const folded = rowsOf(r).slice(shown.length);
     expect(folded).toHaveLength(procedural.length);
@@ -1486,7 +1499,13 @@ describe('sweep 2: a party page says each thing once', () => {
   test('a split vote keeps its bar and counts both sides', async () => {
     const data = view.data!;
     const rows = data.divisions.data!.rows;
-    const first = rows.find((row) => !isProcedural(row.division.stage))!;
+    const first = rows.find(
+      (row) =>
+        !isProcedural(
+          row.division.stage ?? row.division.title,
+          row.division.question,
+        ),
+    )!;
     const split = { ...first, ayes: 20, noes: 5 };
     jest.mocked(runtime.partyPage).mockResolvedValueOnce({
       ...view,
@@ -1577,6 +1596,8 @@ describe('sweep 2: a party page says each thing once', () => {
         typeof n.props.label === 'string',
     );
     expect(button.props.label).toBe(`Show all ${top.length}`);
+    // It says its state, as a Disclosure does.
+    expect(button.props.expanded).toBe(false);
     act(() => button.props.onPress());
     expect(creditors()).toEqual(top.map((l) => l.name));
     // The rest open inside the shared height reveal.
@@ -1595,6 +1616,51 @@ describe('sweep 2: a party page says each thing once', () => {
           typeof n.props.label === 'string',
       ).props.label,
     ).toBe('Show fewer');
+    expect(
+      r.root.find(
+        (n) =>
+          n.props.testID === 'party-creditors-all' &&
+          typeof n.props.label === 'string',
+      ).props.expanded,
+    ).toBe(true);
+    act(() => r.unmount());
+  });
+
+  test('with no strip on a phone, Members cites the roster and the blocks carry the partial note', async () => {
+    const small = await api.partyPage('Libertarian Party');
+    jest.mocked(runtime.partyPage).mockResolvedValueOnce({
+      ...small,
+      data: {
+        ...small.data!,
+        receipts: { ...small.data!.receipts, partial: true },
+      },
+    });
+    const r = await render('Libertarian Party');
+    const line = (id: string) =>
+      r.root.findAllByType(SourceLine).find((n) => n.props.testID === id);
+    // No tiles, so no "Party sources" line.
+    expect(line('party-figures-source')).toBeUndefined();
+    const members = line('party-members-source')!;
+    expect(members.props.citation).toBe('Parliamentary roster');
+    expect(members.props.state).toBe('partial');
+    expect(members.props.notes).toContain(
+      'Some records for this party could not be read.',
+    );
+    const receipts = line('party-receipts-source');
+    if (receipts) expect(receipts.props.state).toBe('partial');
+    act(() => r.unmount());
+  });
+
+  test('Labor on a phone: Members cites the roster; the strip keeps its own line', async () => {
+    const r = await render();
+    const lines = r.root.findAllByType(SourceLine);
+    expect(
+      lines.find((n) => n.props.testID === 'party-members-source')!.props
+        .citation,
+    ).toBe('Parliamentary roster');
+    expect(
+      lines.filter((n) => n.props.testID === 'party-figures-source'),
+    ).toHaveLength(1);
     act(() => r.unmount());
   });
 

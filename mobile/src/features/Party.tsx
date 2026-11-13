@@ -497,6 +497,13 @@ function PartyContent({
   ]
     .filter((c): c is NonNullable<typeof c> => !!c)
     .sort((a, b) => String(a.asOf ?? '~').localeCompare(String(b.asOf ?? '~')));
+  // With no strip on a phone, its "Party sources" line goes; the partial note
+  // it carried moves to the Members and Receipts blocks' own source lines.
+  const partyPartial =
+    !tiles.length && !!(view.members.partial || view.receipts.partial);
+  const partyPartialNote = (own: boolean | undefined) =>
+    partyPartial && !own ? PARTY_PARTIAL_NOTE : null;
+  const partyPartialLine = () => (partyPartial ? { partial: true } : undefined);
 
   const divisions = view.divisions.data;
   const associated = view.associated.data;
@@ -538,8 +545,11 @@ function PartyContent({
           view.rosterAsAt
             ? `Roster as at ${formatDate(view.rosterAsAt)}.`
             : null,
+          partyPartialNote(view.members.partial),
         ],
       })}
+      citation="Parliamentary roster"
+      line={partyPartialLine}
     >
       {(data) => (
         <View>
@@ -611,8 +621,10 @@ function PartyContent({
           'Sources are the largest donor-to-party flows in the disclosure returns, largest first; they are not all of the party’s receipts. No sequence or causal link is inferred.',
           disclosureYearNote,
           ...(fundingRecord ? fundingNotes(fundingRecord, label) : []),
+          partyPartialNote(view.receipts.partial),
         ],
       })}
+      line={partyPartialLine}
     >
       {(data) => (
         <Group>
@@ -899,7 +911,7 @@ function PartyContent({
           }
           notes={[
             view.members.partial || view.receipts.partial
-              ? 'Some records for this party could not be read.'
+              ? PARTY_PARTIAL_NOTE
               : null,
           ]}
           testID="party-figures-source"
@@ -968,6 +980,13 @@ function NamedMembers({
 }
 
 const VOTES_SHOWN = 10;
+const PARTY_PARTIAL_NOTE = 'Some records for this party could not be read.';
+/** The bill page's rule, with its stage-or-title fallback and the question. */
+const isProceduralRow = (row: DivisionData) =>
+  isProcedural(
+    row.division.stage ?? row.division.title ?? null,
+    row.division.question,
+  );
 
 /**
  * Recent votes: substantive divisions first, newest first; procedural
@@ -980,8 +999,8 @@ function PartyVotes({
   rows: readonly DivisionData[];
   label: string;
 }) {
-  const main = rows.filter((row) => !isProcedural(row.division.stage));
-  const procedural = rows.filter((row) => isProcedural(row.division.stage));
+  const main = rows.filter((row) => !isProceduralRow(row));
+  const procedural = rows.filter(isProceduralRow);
   const draw = (list: readonly DivisionData[]) =>
     list.map((row, i) => (
       <PartyDivision

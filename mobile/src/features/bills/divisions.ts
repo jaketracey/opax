@@ -305,27 +305,81 @@ export function questionPlain(text: string): string {
 }
 
 // One table for what counts as a procedural vote (specs/bills.md 4.2.5),
-// shared by the bill page, Votes in parliament and Today. Read from the
-// recorded stage only; a vote with no recorded stage is never procedural.
+// shared by the bill page, the party page, Votes in parliament and Today.
+// Read from the recorded stage; a vote with no recorded stage is never
+// procedural.
 const PROCEDURAL = [
   /limitation of debate/i,
   /\bclosure\b/i,
   /suspension of standing orders/i,
   /suspend standing orders/i,
   /\badjournment\b/i,
+  /\bbusiness motion\b/i,
+  /\bdeclaration of urgency\b/i,
+  /\burgency motion\b/i,
+  /\bmotion to dissent from ruling\b/i,
+  /\blet a vote happen\b/i,
 ];
 const THIRD_READING = /third reading/i;
+// "Limitation of debate" files every vote taken under the time limit, not
+// only the guillotine motion itself: the bill's passage, its readings and
+// its amendments are decided under that label too. The question put says
+// which. "Amendment" in a bill's own title ("Migration Amendment (…) Bill")
+// is not an amendment.
+const UNDER_TIME_LIMIT = /limitation of debate/i;
+const SUBSTANTIVE_QUESTION = [
+  /\b(?:be now|now be) passed\b/i,
+  /\b(?:second|third) time\b/i,
+  /\bremaining stages\b/i,
+  /\bamendments?\b(?!\s*(?:\([^)]*\)\s*)?(?:bill|act)\b)/i,
+  /\bstand as printed\b/i,
+  // They Vote For You's own title: "<Bill> - Limitation of Debate - <what>".
+  /\blimitation of debate\s*[-–]\s*(?![^-–]*\b(?:time|allot))\S/i,
+];
+/**
+ * The motion actually put: the words after the last "the question is that"
+ * in a transcript, or what a summary says the members voted on.
+ */
+function questionPut(question: string): string {
+  const said = [
+    ...question.matchAll(
+      /question (?:now )?(?:before the chair )?is (?:now )?that/gi,
+    ),
+  ].pop();
+  if (said)
+    return question.slice(
+      said.index + said[0].length,
+      said.index + said[0].length + 300,
+    );
+  const voted = /voted (?:against|in favour of|for) ([\s\S]{0,200})/i.exec(
+    question,
+  );
+  return voted ? voted[1]! : question.slice(0, 300);
+}
 
-/** True when the recorded stage is a procedural motion. */
-export function isProcedural(stage: string | null | undefined): boolean {
+/**
+ * True when the vote is a procedural motion: its recorded stage is one, and,
+ * for a vote under a time limit, its question is the time limit itself rather
+ * than the bill's passage, a reading or an amendment.
+ */
+export function isProcedural(
+  stage: string | null | undefined,
+  question?: string | null,
+): boolean {
   const s = String(stage ?? '').replace(/_/g, ' ');
-  return !!s.trim() && PROCEDURAL.some((rule) => rule.test(s));
+  if (!s.trim() || !PROCEDURAL.some((rule) => rule.test(s))) return false;
+  if (!UNDER_TIME_LIMIT.test(s) || !question) return true;
+  const put = questionPut(question);
+  return !SUBSTANTIVE_QUESTION.some((rule) => rule.test(put));
 }
 /** 1 third reading; 3 procedural; 2 everything else, unknown stages included. */
-export function voteTier(stage: string | null | undefined): 1 | 2 | 3 {
+export function voteTier(
+  stage: string | null | undefined,
+  question?: string | null,
+): 1 | 2 | 3 {
   const s = String(stage ?? '').replace(/_/g, ' ');
   if (THIRD_READING.test(s)) return 1;
-  return isProcedural(s) ? 3 : 2;
+  return isProcedural(s, question) ? 3 : 2;
 }
 /**
  * The page's order: third readings, then the other substantive votes, each
@@ -335,21 +389,18 @@ export function orderDivisions<
   D extends {
     stage?: string | null;
     title?: string | null;
+    question?: string | null;
     date: string;
     key: string;
   },
 >(divisions: readonly D[]): { main: D[]; procedural: D[] } {
-  const stageOf = (d: D) => d.stage ?? d.title ?? null;
+  const tier = (d: D) => voteTier(d.stage ?? d.title ?? null, d.question);
   const newest = (a: D, b: D) =>
     b.date.localeCompare(a.date) || a.key.localeCompare(b.key);
   const main = divisions
-    .filter((d) => voteTier(stageOf(d)) !== 3)
-    .sort(
-      (a, b) => voteTier(stageOf(a)) - voteTier(stageOf(b)) || newest(a, b),
-    );
-  const procedural = divisions
-    .filter((d) => voteTier(stageOf(d)) === 3)
-    .sort(newest);
+    .filter((d) => tier(d) !== 3)
+    .sort((a, b) => tier(a) - tier(b) || newest(a, b));
+  const procedural = divisions.filter((d) => tier(d) === 3).sort(newest);
   return { main, procedural };
 }
 

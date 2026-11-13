@@ -208,6 +208,7 @@ function Creditors({
             variant="plain"
             label={all ? 'Show fewer' : `Show all ${formatCount(rows.length)}`}
             trailingIcon={all ? 'chevron.up' : 'chevron.down'}
+            expanded={all}
             onPress={() => setAll((open) => !open)}
             testID="party-creditors-all"
           />
