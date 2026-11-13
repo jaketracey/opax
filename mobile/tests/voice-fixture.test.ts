@@ -1,9 +1,11 @@
-import { spawn, type ChildProcess } from 'node:child_process';
 import { request } from 'node:http';
-import { resolve } from 'node:path';
 import WebSocket from 'ws';
-let child: ChildProcess;
-let output = '';
+import {
+  fixtureHookTimeout,
+  startFixture,
+  type Fixture,
+} from './fixture-process';
+let fixture: Fixture;
 let port = 0;
 function http(
   path: string,
@@ -63,45 +65,11 @@ async function signIn(scenario: string) {
   return result.cookie!;
 }
 beforeAll(async () => {
-  child = spawn(
-    process.execPath,
-    ['--import', 'tsx', 'scripts/fixture-server.ts'],
-    {
-      cwd: resolve(__dirname, '..'),
-      env: { ...process.env, OPAX_FIXTURE_PORT: '0' },
-      stdio: ['ignore', 'pipe', 'pipe'],
-    },
-  );
-  await new Promise<void>((resolve, reject) => {
-    const timer = setTimeout(
-      () => reject(new Error(output || 'fixture startup timeout')),
-      15000,
-    );
-    const receive = (bytes: Buffer) => {
-      output += bytes.toString();
-      if (output.includes('OPAX_FIXTURE_READY')) {
-        port = Number(/OPAX_FIXTURE_READY port=(\d+)/.exec(output)?.[1]);
-        if (!port) return reject(new Error('Missing OS-assigned fixture port'));
-        clearTimeout(timer);
-        resolve();
-      }
-    };
-    child.stdout!.on('data', receive);
-    child.stderr!.on('data', receive);
-    child.on('error', reject);
-    child.once('exit', () => {
-      clearTimeout(timer);
-      reject(new Error(output));
-    });
-  });
-}, 20000);
-afterAll(async () => {
-  if (child?.exitCode === null)
-    await new Promise<void>((resolve) => {
-      child.once('exit', () => resolve());
-      child.kill('SIGTERM');
-    });
-});
+  fixture = startFixture();
+  await fixture.ready;
+  port = fixture.port();
+}, fixtureHookTimeout);
+afterAll(() => fixture?.stop());
 test('code proof is generic, single-use, and requires native request mode and Origin', async () => {
   const proof = await http('/api/community/auth/request', {
     email: 'happy@example.invalid',
