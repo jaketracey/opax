@@ -14,6 +14,7 @@ import {
   personRoute,
   partyRoute,
 } from '../../navigation/routes';
+import { resultsRoute } from '../../navigation/routes/search';
 import type { FollowState } from './markers';
 import {
   type Change,
@@ -49,6 +50,22 @@ export function followRoute(
     },
   };
 }
+/** A follow whose record is gone from the catalogue it was read from. */
+export const WITHDRAWN = 'No longer in OPAX';
+/**
+ * Where a withdrawn follow's row leads: Search, with its title asked. A
+ * renamed record turns up there; a withdrawn one says so in Search's own
+ * words. The query arrives as a link, so it never enters Recent.
+ */
+export const withdrawnRoute = (follow: Pick<Follow, 'kind' | 'title'>) =>
+  resultsRoute(
+    follow.kind === 'person'
+      ? 'people'
+      : follow.kind === 'bill'
+        ? 'bills'
+        : 'all',
+    { q: follow.title, link: '1' },
+  );
 export interface FollowRowProps {
   follow: Follow;
   state?: FollowState;
@@ -57,6 +74,12 @@ export interface FollowRowProps {
   onUnfollow?: () => void;
   portraitURI?: string;
   surface?: 'today' | 'following';
+  /**
+   * No status line under the title: the group's heading already says it
+   * (Following's withdrawn group), or there is nothing to say (a check that
+   * could not be trusted). VoiceOver still hears a withdrawn row's state.
+   */
+  hideStatus?: boolean;
 }
 export function FollowRow({
   follow,
@@ -66,6 +89,7 @@ export function FollowRow({
   onUnfollow,
   portraitURI,
   surface = 'following',
+  hideStatus = false,
 }: FollowRowProps) {
   const stacked = useAccessibilitySize();
   const title = state?.status === 'ready' ? state.title : follow.title;
@@ -82,7 +106,7 @@ export function FollowRow({
   const line = ownMP
     ? 'Shown in Your MP on Today'
     : state?.status === 'missing'
-      ? 'No longer published'
+      ? WITHDRAWN
       : !state || state.status === 'unavailable'
         ? 'Not checked yet'
         : fresh
@@ -95,8 +119,16 @@ export function FollowRow({
     !ownMP && changes.length > 1
       ? moreChangesText(changes.length - 1)
       : undefined;
-  const detail = [line, more].filter(Boolean).join('\n');
-  const route = followRoute(follow, state);
+  const detail = [hideStatus ? undefined : line, more]
+    .filter(Boolean)
+    .join('\n');
+  const missing = !ownMP && state?.status === 'missing';
+  const route = missing ? withdrawnRoute(follow) : followRoute(follow, state);
+  const unfollowNow =
+    onUnfollow ??
+    (() => {
+      void unfollow(followKey(follow)).catch(() => undefined);
+    });
   const path =
     follow.kind === 'person'
       ? `/subject/person/${follow.id}`
@@ -139,8 +171,11 @@ export function FollowRow({
         ) : undefined
       }
       detail={detail || undefined}
-      href={state?.status === 'missing' ? undefined : route}
-      accessory={state?.status === 'missing' ? 'none' : 'chevron'}
+      // A withdrawn record is not a dead end: its row searches for the
+      // title, and its menu is the one thing left to do with it.
+      href={state?.status === 'missing' && !missing ? undefined : route}
+      accessory={state?.status === 'missing' && !missing ? 'none' : 'chevron'}
+      accessibilityHint={missing ? 'Searches for this title' : undefined}
       // Today and Following share one layout: the pill on its own line
       // above the title, never a leading column beside it.
       aboveTitle={
@@ -158,18 +193,25 @@ export function FollowRow({
             ? 'map'
             : undefined
       }
-      menu={rowMenus.following({
-        title,
-        path,
-        onUnfollow:
-          onUnfollow ??
-          (() => {
-            void unfollow(followKey(follow)).catch(() => undefined);
-          }),
-      })}
+      menu={
+        missing
+          ? [
+              {
+                title: 'Unfollow',
+                symbol: 'minus.circle',
+                destructive: true,
+                onPress: unfollowNow,
+              },
+            ]
+          : rowMenus.following({ title, path, onUnfollow: unfollowNow })
+      }
       accessibilityLabel={[
         `${title}, ${follow.kind}.`,
-        fresh ? `Changed: ${changeAccessibilityLabel(fresh)}.` : line,
+        fresh
+          ? `Changed: ${changeAccessibilityLabel(fresh)}.`
+          : hideStatus && !missing
+            ? undefined
+            : line,
         more ? `And ${changes.length - 1} more.` : undefined,
       ]
         .filter(Boolean)

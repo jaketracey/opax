@@ -1,6 +1,18 @@
-import { useContext } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { useAccessibilitySize } from '../../../design/accessibility';
+import { useContext, useEffect, useState } from 'react';
+import {
+  Animated,
+  Easing,
+  Pressable,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
+import Svg, { Circle, Path } from 'react-native-svg';
+import {
+  useAccessibilitySize,
+  useReduceMotionSetting,
+} from '../../../design/accessibility';
+import { useDrawnColour } from '../../../design/engraving';
 import { haptic } from '../../../design/haptics';
 import { Icon } from '../../../design/icon';
 import { InsetGroup } from '../../../design/layout';
@@ -32,11 +44,14 @@ export function ChoiceList({
   q,
   value,
   revealed,
+  landing = false,
   onChange,
 }: {
   q: Question;
   value: number | undefined;
   revealed: boolean;
+  /** The answer is being checked on this page (not a reopened reveal). */
+  landing?: boolean;
   onChange: (index: number) => void;
 }) {
   return (
@@ -49,6 +64,7 @@ export function ChoiceList({
           chosen={value === i}
           correct={!!option.correct}
           revealed={revealed}
+          landing={landing}
           onPress={() => {
             if (revealed || value === i) return;
             haptic('selection');
@@ -67,6 +83,7 @@ function ChoiceRow({
   chosen,
   correct,
   revealed,
+  landing,
   onPress,
   testID,
 }: {
@@ -75,6 +92,7 @@ function ChoiceRow({
   chosen: boolean;
   correct: boolean;
   revealed: boolean;
+  landing: boolean;
   onPress: () => void;
   testID: string;
 }) {
@@ -89,6 +107,16 @@ function ChoiceRow({
       ? leading + choicePortrait.drawn + rhythm.tight
       : leading,
   );
+  // The reader's right answer: as the reveal lands, its check is struck
+  // again, once (sweep 3, item 6). Every other mark, a wrong answer, a
+  // reopened reveal and Reduce Motion (on, or not yet known) stay still.
+  const reduced = useReduceMotionSetting();
+  const [was, setWas] = useState(revealed);
+  const [drawing, setDrawing] = useState(false);
+  if (was !== revealed) {
+    setWas(revealed);
+    setDrawing(revealed && landing && chosen && correct && reduced === false);
+  }
   const mark = revealed
     ? correct
       ? chosen
@@ -132,7 +160,13 @@ function ChoiceRow({
           </Text>
         ) : null}
       </View>
-      {revealed ? (
+      {drawing ? (
+        <DrawnCheck
+          size={17}
+          onDone={() => setDrawing(false)}
+          testID={`${testID}-drawn`}
+        />
+      ) : revealed ? (
         correct ? (
           <Icon name={marks.correct} size={17} tone="navy" />
         ) : chosen ? (
@@ -142,6 +176,72 @@ function ChoiceRow({
         <Icon name={marks.correct} size={17} tone="navy" />
       ) : null}
     </Pressable>
+  );
+}
+
+// The tick, on the 24-unit square the disc is drawn in, and its length.
+const TICK = 'M7.4 12.5L10.6 15.7L16.6 8.7';
+const TICK_LENGTH = 13.8;
+const AnimatedPath = Animated.createAnimatedComponent(Path);
+
+/**
+ * The correct mark, drawn: the navy disc with its tick struck on as one
+ * stroke over about a quarter of a second. It stands in for the symbol only
+ * while it draws (ChoiceRow swaps the symbol back at the end), at the
+ * symbol's size and Dynamic Type scale.
+ */
+function DrawnCheck({
+  size,
+  onDone,
+  testID,
+}: {
+  size: number;
+  onDone: () => void;
+  testID: string;
+}) {
+  const { fontScale } = useWindowDimensions();
+  const scaled = Math.round(size * Math.min(Math.max(fontScale, 1), 1.5));
+  const disc = useDrawnColour('navy');
+  const tick = useDrawnColour('raised');
+  const [progress] = useState(() => new Animated.Value(0));
+  useEffect(() => {
+    const draw = Animated.timing(progress, {
+      toValue: 1,
+      duration: 250,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: false,
+    });
+    // Ended or interrupted, the symbol takes its place.
+    draw.start(() => onDone());
+    return () => draw.stop();
+    // Once, as it mounts.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return (
+    <Svg
+      width={scaled}
+      height={scaled}
+      viewBox="0 0 24 24"
+      accessible={false}
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+      testID={testID}
+    >
+      <Circle cx={12} cy={12} r={11} fill={disc} />
+      <AnimatedPath
+        d={TICK}
+        fill="none"
+        stroke={tick}
+        strokeWidth={2.2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray={TICK_LENGTH}
+        strokeDashoffset={progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [TICK_LENGTH, 0],
+        })}
+      />
+    </Svg>
   );
 }
 

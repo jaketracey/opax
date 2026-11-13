@@ -29,7 +29,7 @@ import { headerItems, pageMenu } from '../../navigation/chrome';
 import { familyNameKey, useFaceURIs } from '../your-mp/FaceStackRow';
 import { useSavedMember } from '../your-mp/useIsMyMember';
 import { savedSeatDirectory, useSeat } from '../your-mp/useSeat';
-import { FollowRow } from './FollowRow';
+import { FollowRow, WITHDRAWN } from './FollowRow';
 import type { FollowState } from './markers';
 import { checkedText, sortChanges } from './changes';
 import { useFollowStates, markAllSeen } from './useFollowStates';
@@ -63,8 +63,11 @@ export interface FollowEntry {
   title: string;
   ownMP: boolean;
 }
+export const WITHDRAWN_NOTE =
+  'These records were withdrawn or renamed. Search for them, or remove them.';
+export const CHECK_DOUBTED = "Couldn't check your list just now.";
 export interface FollowGroup {
-  key: 'changed' | FollowKind;
+  key: 'changed' | FollowKind | 'withdrawn';
   title: string;
   rows: FollowEntry[];
 }
@@ -80,10 +83,27 @@ const nameKey = (entry: FollowEntry) =>
     ? familyNameKey(entry.title)
     : entry.title.toLocaleLowerCase('en-AU');
 
+/** A follow whose record is gone. The reader's own MP keeps its pointer. */
+const withdrawn = (entry: FollowEntry) =>
+  !entry.ownMP && entry.state?.status === 'missing';
+/**
+ * Every follow reads as gone at once. One withdrawn record is news; a whole
+ * list of them is a catalogue that arrived wrong or short (a reading is
+ * "missing" when the record is absent from a catalogue that did load, so a
+ * failed fetch never gets here, but a mismatched one does). The page then
+ * says the check failed and offers it again, not eleven withdrawals.
+ */
+export function checkDoubted(entries: readonly FollowEntry[]) {
+  return (
+    entries.length > 1 && entries.every((e) => e.state?.status === 'missing')
+  );
+}
+
 /**
  * "Changed first, newest change first; then the rest by name, A to Z."
  * One Changed group, then People, Bills, Parties, Electorates for the
- * follows that did not change. Each follow appears once; empty groups go.
+ * follows that did not change, then the follows whose records are no longer
+ * in OPAX, together at the foot. Each follow appears once; empty groups go.
  */
 export function followGroups(entries: readonly FollowEntry[]): FollowGroup[] {
   const changed = entries
@@ -93,7 +113,7 @@ export function followGroups(entries: readonly FollowEntry[]): FollowGroup[] {
         (newestChange(b) ?? '').localeCompare(newestChange(a) ?? '') ||
         nameKey(a).localeCompare(nameKey(b)),
     );
-  const rest = entries.filter((e) => newestChange(e) === null);
+  const rest = entries.filter((e) => newestChange(e) === null && !withdrawn(e));
   return [
     { key: 'changed' as const, title: 'Changed', rows: changed },
     ...kindGroups.map(([kind, title]) => ({
@@ -103,6 +123,13 @@ export function followGroups(entries: readonly FollowEntry[]): FollowGroup[] {
         .filter((e) => e.follow.kind === kind)
         .sort((a, b) => nameKey(a).localeCompare(nameKey(b))),
     })),
+    {
+      key: 'withdrawn' as const,
+      title: WITHDRAWN,
+      rows: entries
+        .filter(withdrawn)
+        .sort((a, b) => nameKey(a).localeCompare(nameKey(b))),
+    },
   ].filter((g) => g.rows.length > 0);
 }
 
@@ -147,7 +174,7 @@ export default function Following() {
     const timer = setTimeout(() => setLeaving([]), revealMotion.duration);
     return () => clearTimeout(timer);
   }, [leaving]);
-  const entries: FollowEntry[] = (follows ?? []).map((f) => {
+  const read: FollowEntry[] = (follows ?? []).map((f) => {
     const state = states.get(followKey(f));
     return {
       follow: f,
@@ -156,6 +183,12 @@ export default function Following() {
       ownMP: f.kind === 'person' && own.has(f.id),
     };
   });
+  // A list that reads as wholly withdrawn is not believed: its rows keep
+  // their places, unchecked, under one sentence and a retry.
+  const doubted = checkDoubted(read);
+  const entries: FollowEntry[] = doubted
+    ? read.map((e) => ({ ...e, state: { status: 'unavailable' as const } }))
+    : read;
   const going = new Set(leaving.map((e) => followKey(e.follow)));
   const live = new Set(entries.map((e) => followKey(e.follow)));
   const groups = followGroups([
@@ -223,7 +256,7 @@ export default function Following() {
 
   // The quiet state reads as watched: when the record was last checked.
   const checked =
-    !inEdit && !failedAll && sources?.savedAt && !sources.error
+    !inEdit && !failedAll && !doubted && sources?.savedAt && !sources.error
       ? checkedText(sources.savedAt)
       : '';
 
@@ -294,6 +327,13 @@ export default function Following() {
           onRetry={() => setRefresh((n) => n + 1)}
           testID="follows-check-error"
         />
+      ) : doubted ? (
+        <InlineError
+          subject="follows"
+          message={CHECK_DOUBTED}
+          onRetry={() => setRefresh((n) => n + 1)}
+          testID="follows-check-doubted"
+        />
       ) : null}
       {follows === null ? (
         <Skeleton
@@ -321,6 +361,7 @@ export default function Following() {
               <InsetGroup
                 key={group.key}
                 header={group.title}
+                footer={group.key === 'withdrawn' ? WITHDRAWN_NOTE : undefined}
                 testID={`follows-${group.key}`}
               >
                 {group.rows.map((entry) => {
@@ -336,6 +377,9 @@ export default function Following() {
                       ) : (
                         <ListRow
                           entry={entry}
+                          // The heading says it once for the withdrawn
+                          // group; a doubted check has nothing to say.
+                          hideStatus={group.key === 'withdrawn' || doubted}
                           onUnfollow={() => remove(entry)}
                         />
                       )}
@@ -388,9 +432,11 @@ export default function Following() {
 
 function ListRow({
   entry,
+  hideStatus,
   onUnfollow,
 }: {
   entry: FollowEntry;
+  hideStatus: boolean;
   onUnfollow: () => void;
 }) {
   const [uri] = useFaceURIs(
@@ -403,6 +449,7 @@ function ListRow({
       state={entry.state}
       ownMP={entry.ownMP}
       portraitURI={uri ?? undefined}
+      hideStatus={hideStatus}
       onUnfollow={onUnfollow}
       testID={`follows-row-${entry.follow.kind}-${entry.follow.id}`}
     />

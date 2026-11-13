@@ -38,6 +38,14 @@ const mockKeyboard: {
   handlers: Partial<Record<string, (event: KeyboardFrame) => void>>;
   calls: number;
 } = { handlers: {}, calls: 0 };
+// AskColumns draws the docked column's empty state, which reads the Ask
+// session; the session opens the API runtime, which needs a build config.
+jest.mock('../src/api/runtime', () => ({
+  client: { askPost: jest.fn() },
+  catalogs: {},
+  apiClient: { get: jest.fn(), getForAction: jest.fn() },
+  portraits: { get: jest.fn(async () => null) },
+}));
 jest.mock('react-native-keyboard-controller', () => ({
   ...jest.requireActual('react-native-keyboard-controller/jest'),
   useKeyboardHandler: (

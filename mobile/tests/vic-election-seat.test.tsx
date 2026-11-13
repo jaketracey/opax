@@ -1,4 +1,6 @@
 import { mockVic, renderVic, resetVic, words } from './vic-election-render';
+import { StyleSheet } from 'react-native';
+import * as accessibility from '../src/design/accessibility';
 import { ContentUnavailable } from '../src/design/states';
 import Seat from '../src/features/vic-election/Seat';
 import { ElectionUnavailable } from '../src/features/vic-election/reads';
@@ -156,3 +158,43 @@ test('absent votes do not show an invented count', () => {
   mockVic.seat.record!.data.members[0]!.votes = null;
   expect(words(renderVic(<Seat />))).not.toContain('Votes recorded');
 });
+
+test.each([
+  ['Large', false],
+  ['AX', true],
+] as const)(
+  "at %s the vote split is the count row's detail, one element, not a loose line",
+  (_size, large) => {
+    const size = jest
+      .spyOn(accessibility, 'useAccessibilitySize')
+      .mockReturnValue(large);
+    try {
+      mockVic.seat.record!.data = decodeSeat(published);
+      const r = renderVic(<Seat />);
+      const row = r.root.find(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID === 'vic-seat-votes',
+      );
+      const year = mockVic.seat.record!.data.division_end.slice(0, 4);
+      expect(row.props.accessible).toBe(true);
+      expect(row.props.accessibilityLabel).toBe(
+        `Votes recorded in ${year}, 15. 12 for, 3 against`,
+      );
+      // Label, its detail under it, then the count: all inside the row.
+      expect(
+        row
+          .findAll((node) => typeof node.props.children === 'string')
+          .map((node) => node.props.children)
+          .filter((text, i, all) => all.indexOf(text) === i),
+      ).toEqual([`Votes recorded in ${year}`, '12 for, 3 against', '15']);
+      expect(StyleSheet.flatten(row.props.style).flexDirection).toBe(
+        large ? 'column' : 'row',
+      );
+      // Said once on the page.
+      expect(words(r).match(/12 for, 3 against/g)).toHaveLength(1);
+    } finally {
+      size.mockRestore();
+    }
+  },
+);

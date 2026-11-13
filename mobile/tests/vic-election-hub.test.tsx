@@ -514,6 +514,17 @@ test('finder results start at the resting top of a list below the pushed opaque 
     expect(measureInWindow).toHaveBeenCalled();
     expect(scrollTo).toHaveBeenCalledTimes(1);
     expect(scrollTo).toHaveBeenLastCalledWith({ y: 0, animated: false });
+
+    // Back at that rest (0, not -91), a new query schedules no reset: the
+    // "already there" check reads the list's own rest.
+    act(() =>
+      list().props.onScroll({ nativeEvent: { contentOffset: { y: 0 } } }),
+    );
+    act(() => {
+      searchBar.onChangeText!({ nativeEvent: { text: 'St Kilda' } } as never);
+    });
+    await act(async () => jest.runOnlyPendingTimers());
+    expect(scrollTo).toHaveBeenCalledTimes(1);
   } finally {
     jest.useRealTimers();
   }

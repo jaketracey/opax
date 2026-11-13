@@ -1,8 +1,13 @@
+import { StyleSheet, View } from 'react-native';
 import type { RecordResult } from '../../api/client';
+import { useAccessibilitySize } from '../../design/accessibility';
 import { PersonRow } from '../../design/people';
+import { useRowCellStyle, useRowInset } from '../../design/row-padding';
 import { LinkRow, ValueRow } from '../../design/rows';
 import { StatusCapsule } from '../../design/labels';
+import { spokenFigures } from '../../design/format';
 import { Text } from '../../design/text';
+import { minimumTarget, rhythm } from '../../design/tokens';
 import { fromWebPath, openSource } from '../../navigation/external';
 import {
   personRoute,
@@ -78,15 +83,13 @@ export function MemberRecord({
             />
           ) : null}
           {m.votes ? (
-            <>
-              <ValueRow
-                label={c.votes(record.data.division_end.slice(0, 4))}
-                value={String(m.votes.count)}
-              />
-              <Text wordSafe variant="secondary" tone="inkSoft">
-                {c.voteCounts(m.votes.ayes, m.votes.noes)}
-              </Text>
-            </>
+            // One row: the count, with its split as the label's detail
+            // (it was a loose line between this row and Recent votes).
+            <VoteCountRow
+              label={c.votes(record.data.division_end.slice(0, 4))}
+              detail={c.voteCounts(m.votes.ayes, m.votes.noes)}
+              value={String(m.votes.count)}
+            />
           ) : null}
           {m.recent_votes.length ? (
             <Block>
@@ -127,3 +130,61 @@ export function MemberRecord({
     </Block>
   );
 }
+
+/**
+ * A ValueRow with a second line under its label: "Votes recorded in 2026"
+ * over "6 for, 3 against", the count trailing. One element to VoiceOver.
+ * Stacks at accessibility sizes as ValueRow does.
+ */
+function VoteCountRow({
+  label,
+  detail,
+  value,
+}: {
+  label: string;
+  detail: string;
+  value: string;
+}) {
+  const stacked = useAccessibilitySize();
+  const cell = useRowCellStyle();
+  useRowInset();
+  return (
+    <View
+      accessible
+      accessibilityLabel={spokenFigures(`${label}, ${value}. ${detail}`)}
+      testID="vic-seat-votes"
+      style={[styles.row, stacked ? styles.stacked : null, cell]}
+    >
+      <View style={[styles.words, stacked ? null : styles.grow]}>
+        <Text wordSafe variant="body">
+          {label}
+        </Text>
+        <Text wordSafe variant="secondary" testID="vic-seat-votes-split">
+          {detail}
+        </Text>
+      </View>
+      <Text
+        wordSafe
+        variant="strong"
+        tabular
+        style={stacked ? undefined : styles.value}
+      >
+        {value}
+      </Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+    minHeight: minimumTarget,
+    paddingVertical: rhythm.row,
+  },
+  stacked: { flexDirection: 'column', alignItems: 'flex-start' },
+  words: { gap: rhythm.line, flexShrink: 1 },
+  grow: { flex: 1 },
+  value: { flexShrink: 0, textAlign: 'right' },
+});

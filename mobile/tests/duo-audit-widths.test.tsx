@@ -33,6 +33,14 @@ jest.mock('react-native', () => {
     Platform: { value: { ...actual.Platform, OS: 'ios', isPad: false } },
   });
 });
+// AskColumns draws the docked column's empty state, which reads the Ask
+// session; the session opens the API runtime, which needs a build config.
+jest.mock('../src/api/runtime', () => ({
+  client: { askPost: jest.fn() },
+  catalogs: {},
+  apiClient: { get: jest.fn(), getForAction: jest.fn() },
+  portraits: { get: jest.fn(async () => null) },
+}));
 jest.mock('../modules/opax-duo', () => ({
   OpaxDuo: null,
   ReservedRegionView: null,

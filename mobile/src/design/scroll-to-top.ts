@@ -30,19 +30,29 @@ type Measurable = {
  * A list's scroll responder is measured through its native scroll view.
  * Android's toolbar sits outside the scroll view and its top is zero.
  */
+type TopScroll = Measurable & {
+  scrollTo?: (options: { y: number; animated: boolean }) => void;
+  getNativeScrollRef?: () => Measurable | null | undefined;
+};
+
 export function scrollToTop(
-  scroll:
-    | (Measurable & {
-        scrollTo?: (options: { y: number; animated: boolean }) => void;
-        getNativeScrollRef?: () => Measurable | null | undefined;
-      })
-    | null,
+  scroll: TopScroll | null,
   headerBottom: number,
   animated = false,
 ) {
   if (!scroll?.scrollTo) return;
-  const over = Platform.OS === 'ios' ? headerOver(scroll, headerBottom) : 0;
-  scroll.scrollTo({ y: over ? -over : 0, animated });
+  scroll.scrollTo({ y: restOffset(scroll, headerBottom), animated });
+}
+
+/**
+ * The offset scrollToTop lands on: the scroll view's resting top. Callers
+ * that skip a reset when the page is already there compare against this,
+ * not -headerBottom, which is the rest only under the header.
+ */
+export function restOffset(scroll: TopScroll | null, headerBottom: number) {
+  if (Platform.OS !== 'ios') return 0;
+  const over = scroll ? headerOver(scroll, headerBottom) : headerBottom;
+  return over ? -over : 0;
 }
 
 /** How much of the header, in points, lies over the scroll view's top. */

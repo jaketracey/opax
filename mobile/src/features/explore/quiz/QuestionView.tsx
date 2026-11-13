@@ -1,4 +1,4 @@
-import { type Ref } from 'react';
+import { useState, type Ref } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Heading } from '../../../design/text';
 import { rhythm } from '../../../design/tokens';
@@ -40,6 +40,9 @@ export function QuestionView({
   onEditing: (editing: boolean) => void;
 }) {
   const revealed = !!response;
+  // The answer landed on this page, in front of the reader: its reveal may
+  // move. A question reopened already answered (a resumed round) is still.
+  const [landing] = useState(!response);
   const shown = response ? response.answer : answer;
   const value = shown === undefined ? undefined : answerValue(shown);
   return (
@@ -81,11 +84,18 @@ export function QuestionView({
           q={q}
           value={typeof value === 'number' ? value : undefined}
           revealed={revealed}
+          landing={landing}
           onChange={onAnswer}
         />
       )}
       {response ? (
-        <Reveal q={q} response={response} index={index} scored={scored} />
+        <Reveal
+          q={q}
+          response={response}
+          index={index}
+          scored={scored}
+          landing={landing}
+        />
       ) : null}
     </View>
   );

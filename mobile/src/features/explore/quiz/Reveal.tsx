@@ -1,11 +1,13 @@
-import { StyleSheet, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Animated, Easing, StyleSheet, View } from 'react-native';
 import { router } from 'expo-router';
+import { useReduceMotionSetting } from '../../../design/accessibility';
 import { InsetGroup } from '../../../design/layout';
 import { LinkRow } from '../../../design/rows';
 import { SourceLine } from '../../../design/source';
 import { symbols } from '../../../design/symbols';
 import { Text } from '../../../design/text';
-import { rhythm } from '../../../design/tokens';
+import { motion, rhythm } from '../../../design/tokens';
 import { useOpenAsk } from '../../ask/open';
 import { quizDestination } from '../quiz-links';
 import { useQuizMoneyGraph } from './money-graph';
@@ -46,33 +48,86 @@ export function QuizSourceLine({ q, testID }: { q: Question; testID: string }) {
 }
 
 /**
+ * A right answer's points, counted up from nothing as the reveal lands
+ * (sweep 3, item 6). Still, at the final figure, when the answer was not
+ * right, the reveal is being reread, or Reduce Motion is on or not yet
+ * known.
+ */
+function useCountUp(target: number, run: boolean) {
+  const [shown, setShown] = useState(run ? 0 : target);
+  useEffect(() => {
+    if (!run) return;
+    const progress = new Animated.Value(0);
+    const listener = progress.addListener(({ value }) =>
+      setShown(Math.round(value * target)),
+    );
+    const count = Animated.timing(progress, {
+      toValue: 1,
+      duration: motion.duration.gentle,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: false,
+    });
+    count.start(() => setShown(target));
+    return () => {
+      count.stop();
+      progress.removeListener(listener);
+    };
+  }, [run, target]);
+  return run ? shown : target;
+}
+
+/**
  * After Check: the grade, the points (not in Today's question), the fact,
  * which is the one place the answer is written, the explanation, and the
- * source line.
+ * source line. A right answer's points sit beside the grade in ink and
+ * count up once; anything else keeps its quiet line under the grade.
  */
 export function Reveal({
   q,
   response,
   index,
   scored,
+  landing = false,
 }: {
   q: Question;
   response: QuizResponse;
   index: number;
   scored: boolean;
+  /** The answer was just checked on this page (not a reopened reveal). */
+  landing?: boolean;
 }) {
+  const reduced = useReduceMotionSetting();
+  const right = scored && response.correct;
+  // Decided as the reveal mounts: a setting that changes mid-count does not
+  // restart it.
+  const [counts] = useState(landing && right && reduced === false);
+  const gained = useCountUp(response.gained, counts);
   return (
     <View style={styles.block} testID="quiz-reveal">
       <View style={styles.lines}>
-        <Text
-          wordSafe
-          variant="subsectionTitle"
-          accessibilityRole="text"
-          testID="quiz-grade"
-        >
-          {response.grade}
-        </Text>
-        {scored ? (
+        <View style={styles.grade}>
+          <Text
+            wordSafe
+            variant="subsectionTitle"
+            accessibilityRole="text"
+            testID="quiz-grade"
+          >
+            {response.grade}
+          </Text>
+          {right ? (
+            <Text
+              wordSafe
+              variant="strong"
+              tabular
+              // The figure in flight is never read out.
+              accessibilityLabel={pointsLine(response)}
+              testID="quiz-points"
+            >
+              {pointsLine({ ...response, gained })}
+            </Text>
+          ) : null}
+        </View>
+        {scored && !right ? (
           <Text variant="secondary" testID="quiz-points">
             {pointsLine(response)}
           </Text>
@@ -92,4 +147,13 @@ export function Reveal({
 const styles = StyleSheet.create({
   block: { gap: rhythm.block },
   lines: { gap: rhythm.line },
+  // The grade and a right answer's points share a baseline, and wrap onto
+  // two lines at large text.
+  grade: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'baseline',
+    columnGap: rhythm.tight,
+    rowGap: rhythm.line,
+  },
 });

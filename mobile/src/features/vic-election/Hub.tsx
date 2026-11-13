@@ -9,7 +9,7 @@ import { Skeleton, OfflineLine } from '../../design/states';
 import { Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
 import { useListSearchBar } from '../../design/search-bar';
-import { scrollToTop } from '../../design/scroll-to-top';
+import { restOffset, scrollToTop } from '../../design/scroll-to-top';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { RouteOptions } from '../../navigation/preview';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
@@ -138,12 +138,16 @@ export default function Hub() {
   // starts at the page's top, below the native header. A list that hasn't
   // moved since it mounted is already there.
   useEffect(() => {
-    const rest = Platform.OS === 'ios' ? -headerBottom : 0;
-    if (!finding || offset.current === null || offset.current <= rest + 1)
+    // The rest is the list's own: 0 below the pushed opaque bar, where
+    // -headerBottom scheduled a reset that moved nothing.
+    const list = () => listRef.current?.getScrollResponder() ?? null;
+    if (
+      !finding ||
+      offset.current === null ||
+      offset.current <= restOffset(list(), headerBottom) + 1
+    )
       return;
-    requestAnimationFrame(() =>
-      scrollToTop(listRef.current?.getScrollResponder() ?? null, headerBottom),
-    );
+    requestAnimationFrame(() => scrollToTop(list(), headerBottom));
     // Only a new query moves the page; a settling header height doesn't.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finding, q]);

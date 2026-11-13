@@ -31,6 +31,7 @@ import {
   rhythm,
   type Role,
 } from '../../design/tokens';
+import { AskEmptyState } from './AskIdle';
 import { KeyboardLift, type Obstacle } from './keyboard';
 
 /**
@@ -111,6 +112,16 @@ export function AskColumns({
         onLayout={(event) => setColumnHeight(event.nativeEvent.layout.height)}
       >
         {content}
+        {/* After the scroll view, which stays the column's first child for
+            UIKit's large-title tracking; it takes no touches. */}
+        {docked ? (
+          <AskEmptyState
+            bottom={
+              (restTop !== null ? Math.max(0, columnHeight - restTop) : 0) +
+              (keyboardVisible ? keyboard : 0)
+            }
+          />
+        ) : null}
         <SafeAreaView
           edges={docked ? [] : composerEdges}
           mode="padding"
