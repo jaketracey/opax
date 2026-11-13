@@ -494,6 +494,9 @@ export function mountDataTable(el, config) {
     template.innerHTML = render(config,page,query,view,error);
     const section = template.content.firstElementChild;
     root.classList.add('dt-root'); root.dataset.datatable = config.id; root.dataset.density = view.density;
+    // The phone layout travels with the redraw: a stacked table stays stacked once mounted.
+    const phone = section.getAttribute('data-phone');
+    if (phone) root.dataset.phone = phone; else delete root.dataset.phone;
     root.setAttribute('aria-label',config.caption);
     for (const child of [...root.childNodes]) if (child !== status) child.remove();
     let message;

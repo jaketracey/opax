@@ -121,6 +121,18 @@ test('hydration preserves unrelated URL state and removes only its default table
   assert.match(harness.html(),/Showing 1–5 of 9/);
   mounted.destroy();
 });
+test('a mounted table keeps its phone layout: stacked by default, a real table with phone:false',async ()=>{
+  const stacked = tableHarness();
+  const one = mountDataTable(stacked.root,config);
+  await new Promise(setImmediate);
+  assert.equal(stacked.root.dataset.phone,'stack','the stacked rules key on the mounted root');
+  one.destroy();
+  const grid = tableHarness();
+  const two = mountDataTable(grid.root,{...config,phone:false});
+  await new Promise(setImmediate);
+  assert.equal(grid.root.dataset.phone,undefined);
+  two.destroy();
+});
 test('analytics allow only the contracted table and page identifiers',()=>{
   for (const event of ['table_sort','table_filter','table_export']) assert.deepEqual(cleanEvent(event,{table_id:'workbench-money',page_type:'workbench',q:'private input',row:'private input'}),{table_id:'workbench-money',page_type:'workbench'});
 });
