@@ -19,34 +19,59 @@ const MAX_EXCEPTIONS = 10;
 const MAX_FRAMES = 250;
 const MAX_IMAGES = 500;
 
-const notAfterWord = String.raw`(?<![\p{L}\p{N}_])`;
-const notBeforeWord = String.raw`(?![\p{L}\p{N}_])`;
 /**
- * Message rules, in order. Free text cannot be recognised in general, so a
- * message keeps only what sits outside quotes, URL queries and fragments,
- * email addresses and long numbers, cut to a short length.
+ * Message rules, in order: [pattern, case-insensitive, replacement]. Free
+ * text cannot be recognised in general, so a message keeps only what sits
+ * outside quotes, URL paths, queries and fragments, email addresses and long
+ * numbers, cut to a short length.
+ *
+ * The Swift and Kotlin copies in the plugin patch use these exact pattern
+ * texts (tests/analytics-exceptions.test.ts compares them), so they are
+ * written for JavaScript's `u` flag and for ICU, which runs NSRegularExpression
+ * and Android's java.util.regex: `\x60` is a backtick.
  */
-const messageRules: readonly (readonly [RegExp, string])[] = [
-  // A URL keeps its scheme, host and path; the query string and fragment go.
-  [/([a-z][a-z0-9+.-]*:\/\/[^\s?#"'`<>]*)[?#][^\s"'`<>]*/giu, '$1'],
-  // A query string on any other path or token.
-  [/\?[^\s"'`<>]*=[^\s"'`<>]*/gu, ''],
-  [/[\p{L}\p{N}._%+-]+@[\p{L}\p{N}-]+(?:\.[\p{L}\p{N}-]+)+/gu, '[email]'],
-  // Quoted strings. Inside single quotes, an apostrophe followed by a letter
-  // (O'Brien, it's) does not close the quote.
+export const MESSAGE_RULES: readonly (readonly [string, boolean, string])[] = [
+  // A URL's user name and password.
+  [String.raw`([a-z][a-z0-9+.-]*://)[^\s/?#@"'\x60<>]*@`, true, '$1'],
+  // An OPAX URL keeps its host only: its paths can carry what a reader
+  // searched or asked.
   [
-    new RegExp(
-      `${notAfterWord}(?:"[^"\\n]*"|“[^”\\n]*”|«[^»\\n]*»|\`[^\`\\n]*\`|'(?:[^'\\n]|'(?=[\\p{L}\\p{N}_]))*'${notBeforeWord}|‘(?:[^’\\n]|’(?=[\\p{L}\\p{N}_]))*’${notBeforeWord})`,
-      'gu',
-    ),
+    String.raw`((?:[a-z][a-z0-9+.-]*://)?(?<![\p{L}\p{N}_.-])(?:[a-z0-9-]+\.)*opax\.com\.au)(?![\p{L}\p{N}_-]|\.[\p{L}\p{N}_-])(?::[0-9]+)?[/?#][^\s"'\x60<>]*`,
+    true,
+    '$1',
+  ],
+  // Any other URL or path keeps its path; the query string and fragment go.
+  [String.raw`(/[^\s?#"'\x60<>]*)[?#][^\s"'\x60<>]*`, false, '$1'],
+  // A query string on a bare token.
+  [String.raw`\?[^\s"'\x60<>]*=[^\s"'\x60<>]*`, false, ''],
+  [
+    String.raw`[\p{L}\p{N}._%+-]+@[\p{L}\p{N}-]+(?:\.[\p{L}\p{N}-]+)+`,
+    false,
+    '[email]',
+  ],
+  // Quoted strings. Double quotes, guillemets, corner brackets and backticks
+  // open anywhere (x"text"); single quotes and primes only after a space or
+  // punctuation, and an apostrophe followed by a letter (O'Brien, it's) does
+  // not close them.
+  [
+    String.raw`(?:"[^"\n]*"|“[^”\n]*”|„[^“”\n]*[“”]|”[^”\n]*”|‟[^”\n]*”|«[^»\n]*»|»[^«»\n]*[«»]|‹[^›\n]*›|›[^‹›\n]*[‹›]|「[^」\n]*」|『[^』\n]*』|〝[^〞〟\n]*[〞〟]|＂[^＂\n]*＂|″[^″\n]*″|\x60[^\x60\n]*\x60)|(?<![\p{L}\p{N}_])(?:'(?:[^'\n]|'(?=[\p{L}\p{N}_]))*'|‘(?:[^’\n]|’(?=[\p{L}\p{N}_]))*’|‚(?:[^‘’\n]|[‘’](?=[\p{L}\p{N}_]))*[‘’]|’(?:[^’\n]|’(?=[\p{L}\p{N}_]))*’|‛(?:[^’‛\n]|[’‛](?=[\p{L}\p{N}_]))*[’‛]|＇(?:[^＇\n]|＇(?=[\p{L}\p{N}_]))*＇|′(?:[^′\n]|′(?=[\p{L}\p{N}_]))*′)(?![\p{L}\p{N}_])`,
+    false,
     '[redacted]',
   ],
   // A quote that never closes hides the rest of its line.
-  [new RegExp(`${notAfterWord}["“«\`'‘][^\\n]*`, 'gu'), '[redacted]'],
+  [
+    String.raw`["“„”‟«»‹›「『〝＂″\x60][^\n]*|(?<![\p{L}\p{N}_])['‘‚’‛＇′][^\n]*`,
+    false,
+    '[redacted]',
+  ],
   // Codes, postcodes and phone numbers.
-  [/\p{N}{4,}/gu, '#'],
-  [/\s+/gu, ' '],
+  [String.raw`\p{N}{4,}`, false, '#'],
+  [String.raw`\s+`, false, ' '],
 ];
+const messageRules = MESSAGE_RULES.map(
+  ([pattern, ignoreCase, replacement]) =>
+    [new RegExp(pattern, ignoreCase ? 'giu' : 'gu'), replacement] as const,
+);
 
 /** The message an exception may carry, or undefined when nothing is left. */
 export function scrubExceptionMessage(value: unknown): string | undefined {

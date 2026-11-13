@@ -241,7 +241,8 @@ test('uncaught errors, unhandled rejections and caught errors arrive scrubbed', 
     }),
   ).toEqual([
     ['TypeError', 'Cannot read property [redacted] of undefined', false],
-    ['Error', 'Fetch failed: https://opax.com.au/api/ask', false],
+    // An OPAX URL keeps only its host (exceptions.ts).
+    ['Error', 'Fetch failed: https://opax.com.au', false],
     ['RangeError', '[redacted]', true],
   ]);
   for (const event of exceptions) {

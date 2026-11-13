@@ -4,6 +4,7 @@ import { analyticsConfig, analyticsOptions } from '../src/analytics';
 import { scrubEvent, type AnalyticsContext } from '../src/analytics/events';
 import {
   EXCEPTION_MESSAGE_MAX_LENGTH,
+  MESSAGE_RULES,
   scrubExceptionMessage,
 } from '../src/analytics/exceptions';
 
@@ -151,6 +152,16 @@ test.each([
   ['a relative query', `Bad request /api/ask?question=${encodeURIComponent(secrets.question)}`],
   ['an email', `Sign-in failed for ${secrets.email}`],
   ['a code', `Code ${secrets.code} was rejected`],
+  ['German quotes', `Kein Treffer für „${secrets.search}“`],
+  ['corner brackets', `一致なし「${secrets.talk}」`],
+  ['fullwidth quotes', `No match for ＂${secrets.question}＂`],
+  ['reversed single quotes', `No match for ‛${secrets.field}‛`],
+  ['double primes', `No match for ″${secrets.search}″`],
+  ['a quote straight after a letter', `Bad key x"${secrets.question}" here`],
+  ['an OPAX URL path', `GET https://opax.com.au/api/search/${encodeURIComponent(secrets.search)} failed`],
+  ['an OPAX host without a scheme', `Load opax.com.au/ask/${encodeURIComponent(secrets.talk)} failed`],
+  ['a bare fragment', `Load /ask#${encodeURIComponent(secrets.question)} failed`],
+  ['URL credentials', `fetch https://${encodeURIComponent(secrets.field)}:${secrets.code}@example.org/a failed`],
 ])('a message with %s keeps no private text', (_name, message) => {
   const scrubbed = scrubEvent(exceptionEvent(message), context)!;
   expect(leaks(scrubbed)).toEqual([]);
@@ -161,11 +172,18 @@ test('messages keep their shape and are cut to a short length', () => {
   expect(
     scrubExceptionMessage(`Cannot read property '${secrets.search}' of undefined`),
   ).toBe('Cannot read property [redacted] of undefined');
+  // An OPAX URL keeps its host; any other URL or path keeps its path.
   expect(
     scrubExceptionMessage(
       `Request to https://opax.com.au/api/search?q=${secrets.code}#top timed out`,
     ),
-  ).toBe('Request to https://opax.com.au/api/search timed out');
+  ).toBe('Request to https://opax.com.au timed out');
+  expect(
+    scrubExceptionMessage('Fetch https://example.org/img/a.png?w=2#x failed'),
+  ).toBe('Fetch https://example.org/img/a.png failed');
+  expect(scrubExceptionMessage('Route /ask#top missing')).toBe(
+    'Route /ask missing',
+  );
   expect(scrubExceptionMessage("Can't find variable: Fixture")).toBe(
     "Can't find variable: Fixture",
   );
@@ -316,6 +334,52 @@ const swiftSource = patchedSection('ios/PosthogReactNativePlugin.swift');
 const kotlinSource = patchedSection(
   'android/src/main/java/com/posthogreactnativeplugin/PosthogReactNativePluginModule.kt',
 );
+
+test('Swift and Kotlin use the JS message rules and the same field patterns', () => {
+  // Raw string literals hold the pattern text as written: #"..."# in Swift,
+  // """...""" in Kotlin and String.raw in exceptions.ts.
+  const swiftPatterns = [...swiftSource.matchAll(/opaxRegex\(#"(.*?)"#/g)].map(
+    (match) => match[1],
+  );
+  const kotlinPatterns = [
+    ...kotlinSource.matchAll(/opaxRegex\(\s*"""(.*?)"""/g),
+  ].map((match) => match[1]);
+  const jsPatterns = MESSAGE_RULES.map(([pattern]) => pattern);
+  expect(swiftPatterns.slice(0, jsPatterns.length)).toEqual(jsPatterns);
+  expect(kotlinPatterns.slice(0, jsPatterns.length)).toEqual(jsPatterns);
+  expect([...kotlinPatterns].sort()).toEqual([...swiftPatterns].sort());
+  // The same case-insensitive rules and replacements, in order.
+  const swiftRules = [
+    ...swiftSource.matchAll(
+      /^    \(opaxRegex\(#".*?"#(, \.caseInsensitive)?\), "(.*)"\),$/gm,
+    ),
+  ].map((match) => [Boolean(match[1]), match[2]]);
+  const kotlinRules = [
+    ...kotlinSource.matchAll(
+      /^    opaxRegex\(""".*?"""(, ignoreCase = true)?\) to "(.*)",$/gm,
+    ),
+  ].map((match) => [Boolean(match[1]), match[2]!.replace('\\$', '$')]);
+  const jsRules = MESSAGE_RULES.map(([, ignoreCase, replacement]) => [
+    ignoreCase,
+    replacement,
+  ]);
+  expect(swiftRules).toEqual(jsRules);
+  expect(kotlinRules).toEqual(jsRules);
+  // Android's java.util.regex runs on ICU, which rejects Java's (?U) flag:
+  // every Kotlin rule would throw when the file's class loads.
+  expect(kotlinSource).not.toMatch(/Regex\("\(\?U\)|"\(\?U\)\$pattern"/);
+  // The same context lists as events.ts, including the screen rule.
+  for (const value of [
+    '"posthog-react-native"',
+    '"Mobile", "Tablet", "Desktop", "TV"',
+    '"iOS", "iPadOS", "Android"',
+  ]) {
+    expect(swiftSource).toContain(value);
+    expect(kotlinSource).toContain(value);
+  }
+  expect(swiftSource).toContain('"$screen_name": .screen');
+  expect(kotlinSource).toContain('"\\$screen_name" to OpaxField.Screen');
+});
 
 test('the native SDK fetches no feature flags, person properties or GeoIP', () => {
   // posthog-react-native passes `preloadFeatureFlags: true` to the native SDK

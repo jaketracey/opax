@@ -48,7 +48,13 @@ const sectionPattern = /^[a-z][a-z0-9-]{0,31}$/;
 export const section: Rule = (value) =>
   typeof value === 'string' && sectionPattern.test(value) ? value : 'other';
 const version = pattern(/^\d{1,4}(?:\.\d{1,4}){0,3}$/);
-const build = pattern(/^\d{1,10}$/);
+// The native SDKs report the build as a whole number; it is kept as digits.
+const build: Rule = (value) =>
+  pattern(/^\d{1,10}$/)(
+    typeof value === 'number' && Number.isSafeInteger(value)
+      ? String(value)
+      : value,
+  );
 
 // Constructor names are categories, never error.name/message/stack or a
 // caller-provided class name. Unknown constructors use the fixed "other".

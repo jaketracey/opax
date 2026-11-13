@@ -1,6 +1,6 @@
 --- a/node_modules/@posthog/react-native-plugin/ios/PosthogReactNativePlugin.swift
 +++ b/node_modules/@posthog/react-native-plugin/ios/PosthogReactNativePlugin.swift
-@@ -29,6 +29,206 @@
+@@ -29,6 +29,246 @@
  
  private let fatalCaptureErrorCode = "PosthogReactNativePluginFatalCaptureError"
  
@@ -10,6 +10,7 @@
 +// same fixed lists (mobile/src/analytics/exceptions.ts and events.ts; keep the copies in step):
 +// only `$exception` leaves, rebuilt from the exception's type, a scrubbed message, its stack
 +// frames, the binary images and the app's version and build. Anything else is dropped.
++// mobile/scripts/check-native-scrub.sh runs this block against the JS rules.
 +private let opaxMessageMaxLength = 120
 +private let opaxMessageInputMaxLength = 4000
 +
@@ -17,19 +18,17 @@
 +    try? NSRegularExpression(pattern: pattern, options: options)
 +}
 +
-+private let opaxNotAfterWord = "(?<![\\p{L}\\p{N}_])"
-+private let opaxNotBeforeWord = "(?![\\p{L}\\p{N}_])"
++// The same pattern texts as MESSAGE_RULES in exceptions.ts, in the same order.
 +private let opaxMessageRules: [(NSRegularExpression?, String)] = [
-+    (opaxRegex("([a-z][a-z0-9+.-]*://[^\\s?#\"'`<>]*)[?#][^\\s\"'`<>]*", .caseInsensitive), "$1"),
-+    (opaxRegex("\\?[^\\s\"'`<>]*=[^\\s\"'`<>]*"), ""),
-+    (opaxRegex("[\\p{L}\\p{N}._%+-]+@[\\p{L}\\p{N}-]+(?:\\.[\\p{L}\\p{N}-]+)+"), "[email]"),
-+    (opaxRegex(opaxNotAfterWord
-+            + "(?:\"[^\"\\n]*\"|“[^”\\n]*”|«[^»\\n]*»|`[^`\\n]*`"
-+            + "|'(?:[^'\\n]|'(?=[\\p{L}\\p{N}_]))*'" + opaxNotBeforeWord
-+            + "|‘(?:[^’\\n]|’(?=[\\p{L}\\p{N}_]))*’" + opaxNotBeforeWord + ")"), "[redacted]"),
-+    (opaxRegex(opaxNotAfterWord + "[\"“«`'‘][^\\n]*"), "[redacted]"),
-+    (opaxRegex("\\p{N}{4,}"), "#"),
-+    (opaxRegex("\\s+"), " "),
++    (opaxRegex(#"([a-z][a-z0-9+.-]*://)[^\s/?#@"'\x60<>]*@"#, .caseInsensitive), "$1"),
++    (opaxRegex(#"((?:[a-z][a-z0-9+.-]*://)?(?<![\p{L}\p{N}_.-])(?:[a-z0-9-]+\.)*opax\.com\.au)(?![\p{L}\p{N}_-]|\.[\p{L}\p{N}_-])(?::[0-9]+)?[/?#][^\s"'\x60<>]*"#, .caseInsensitive), "$1"),
++    (opaxRegex(#"(/[^\s?#"'\x60<>]*)[?#][^\s"'\x60<>]*"#), "$1"),
++    (opaxRegex(#"\?[^\s"'\x60<>]*=[^\s"'\x60<>]*"#), ""),
++    (opaxRegex(#"[\p{L}\p{N}._%+-]+@[\p{L}\p{N}-]+(?:\.[\p{L}\p{N}-]+)+"#), "[email]"),
++    (opaxRegex(#"(?:"[^"\n]*"|“[^”\n]*”|„[^“”\n]*[“”]|”[^”\n]*”|‟[^”\n]*”|«[^»\n]*»|»[^«»\n]*[«»]|‹[^›\n]*›|›[^‹›\n]*[‹›]|「[^」\n]*」|『[^』\n]*』|〝[^〞〟\n]*[〞〟]|＂[^＂\n]*＂|″[^″\n]*″|\x60[^\x60\n]*\x60)|(?<![\p{L}\p{N}_])(?:'(?:[^'\n]|'(?=[\p{L}\p{N}_]))*'|‘(?:[^’\n]|’(?=[\p{L}\p{N}_]))*’|‚(?:[^‘’\n]|[‘’](?=[\p{L}\p{N}_]))*[‘’]|’(?:[^’\n]|’(?=[\p{L}\p{N}_]))*’|‛(?:[^’‛\n]|[’‛](?=[\p{L}\p{N}_]))*[’‛]|＇(?:[^＇\n]|＇(?=[\p{L}\p{N}_]))*＇|′(?:[^′\n]|′(?=[\p{L}\p{N}_]))*′)(?![\p{L}\p{N}_])"#), "[redacted]"),
++    (opaxRegex(#"["“„”‟«»‹›「『〝＂″\x60][^\n]*|(?<![\p{L}\p{N}_])['‘‚’‛＇′][^\n]*"#), "[redacted]"),
++    (opaxRegex(#"\p{N}{4,}"#), "#"),
++    (opaxRegex(#"\s+"#), " "),
 +]
 +
 +private func opaxScrubMessage(_ value: Any?) -> String? {
@@ -55,11 +54,38 @@
 +    case integer
 +    case flag
 +    case token(NSRegularExpression?)
++    case oneOf(Set<String>)
++    case build
++    case screen
 +}
 +
++// The whole string must match: NSRegularExpression's `$` also matches before a final newline.
 +private func opaxMatches(_ regex: NSRegularExpression?, _ text: String) -> Bool {
 +    guard let regex else { return false }
-+    return regex.firstMatch(in: text, range: NSRange(text.startIndex..., in: text)) != nil
++    let whole = NSRange(text.startIndex..., in: text)
++    return regex.firstMatch(in: text, options: [.anchored], range: whole)?.range == whole
++}
++
++// A whole number within JavaScript's safe integer range, as `Number.isSafeInteger`. Numbers from
++// the JS bridge can arrive as floats (a fatal JS error's `lineno`), so whole floats count.
++private func opaxWholeNumber(_ value: Any) -> Int64? {
++    guard let number = value as? NSNumber, CFGetTypeID(number) != CFBooleanGetTypeID() else { return nil }
++    let double = number.doubleValue
++    guard double.isFinite, double.rounded() == double, abs(double) <= 9_007_199_254_740_991 else { return nil }
++    return Int64(double)
++}
++
++private let opaxBuildDigits = opaxRegex(#"^[0-9]{1,10}$"#)
++private let opaxRouteSegment = opaxRegex(#"^(?:[a-z0-9][a-z0-9-]{0,47}|\[(?:\.\.\.)?[A-Za-z]{1,24}\])$"#)
++
++// events.ts `screenRule`: a route template ("/person/[slug]") stays, any other text is "/other".
++private func opaxScreenName(_ screen: String) -> String {
++    if screen == "/" { return screen }
++    let parts = screen.components(separatedBy: "/")
++    guard parts.count > 1, parts.count <= 9, parts[0].isEmpty,
++          parts.dropFirst().allSatisfy({ $0 != "index" && opaxMatches(opaxRouteSegment, $0) })
++    else { return "/other" }
++    return screen
 +}
 +
 +private func opaxKeep(_ field: OpaxField, _ value: Any) -> Any? {
@@ -72,15 +98,22 @@
 +        let end = text.firstIndex { $0 == "?" || $0 == "#" } ?? text.endIndex
 +        return opaxKeep(.text(max), String(text[..<end]))
 +    case .integer:
-+        guard let number = value as? NSNumber, CFGetTypeID(number) != CFBooleanGetTypeID(),
-+              !CFNumberIsFloatType(number) else { return nil }
-+        return number
++        return opaxWholeNumber(value).map { NSNumber(value: $0) }
 +    case .flag:
 +        guard let number = value as? NSNumber, CFGetTypeID(number) == CFBooleanGetTypeID() else { return nil }
 +        return number.boolValue
 +    case let .token(regex):
 +        guard let text = value as? String, opaxMatches(regex, text) else { return nil }
 +        return text
++    case let .oneOf(allowed):
++        guard let text = value as? String, allowed.contains(text) else { return nil }
++        return text
++    case .build:
++        let digits = opaxWholeNumber(value).map { String($0) } ?? value as? String
++        guard let digits, opaxMatches(opaxBuildDigits, digits) else { return nil }
++        return digits
++    case .screen:
++        return (value as? String).map(opaxScreenName)
 +    }
 +}
 +
@@ -95,9 +128,9 @@
 +    return clean
 +}
 +
-+private let opaxAddress = OpaxField.token(opaxRegex("^0x[0-9a-f]{1,16}$", .caseInsensitive))
++private let opaxAddress = OpaxField.token(opaxRegex(#"^0x[0-9a-f]{1,16}$"#, .caseInsensitive))
 +private let opaxFrameFields: [String: OpaxField] = [
-+    "platform": .token(opaxRegex("^[a-z:]{1,32}$")),
++    "platform": .token(opaxRegex(#"^[a-z:]{1,32}$"#)),
 +    "function": .text(256),
 +    "filename": .path(512),
 +    "abs_path": .path(512),
@@ -109,36 +142,48 @@
 +    "instruction_addr": opaxAddress,
 +    "image_addr": opaxAddress,
 +    "symbol_addr": opaxAddress,
-+    "chunk_id": .token(opaxRegex("^[0-9a-f-]{1,64}$", .caseInsensitive)),
++    "chunk_id": .token(opaxRegex(#"^[0-9a-f-]{1,64}$"#, .caseInsensitive)),
 +    "map_id": .text(128),
 +    "method_synthetic": .flag,
 +    "client_resolved": .flag,
 +]
 +private let opaxMechanismFields: [String: OpaxField] = [
-+    "type": .token(opaxRegex("^[a-z_]{1,40}$")),
++    "type": .token(opaxRegex(#"^[a-z_]{1,40}$"#)),
 +    "handled": .flag,
 +    "synthetic": .flag,
 +    "exception_id": .integer,
 +    "parent_id": .integer,
 +]
 +private let opaxImageFields: [String: OpaxField] = [
-+    "type": .token(opaxRegex("^[a-z]{1,16}$")),
-+    "debug_id": .token(opaxRegex("^[0-9a-f-]{1,64}$", .caseInsensitive)),
-+    "code_id": .token(opaxRegex("^[0-9a-f]{1,64}$", .caseInsensitive)),
++    "type": .token(opaxRegex(#"^[a-z]{1,16}$"#)),
++    "debug_id": .token(opaxRegex(#"^[0-9a-f-]{1,64}$"#, .caseInsensitive)),
++    "code_id": .token(opaxRegex(#"^[0-9a-f]{1,64}$"#, .caseInsensitive)),
 +    "code_file": .path(512),
 +    "image_addr": opaxAddress,
 +    "image_vmaddr": opaxAddress,
 +    "image_size": .integer,
-+    "arch": .token(opaxRegex("^[a-z0-9_]{1,16}$")),
++    "arch": .token(opaxRegex(#"^[a-z0-9_]{1,16}$"#)),
 +]
-+private let opaxExceptionType = opaxRegex("^[A-Za-z_$][A-Za-z0-9_$.:]{0,79}$")
++private let opaxExceptionType = opaxRegex(#"^[A-Za-z_$][A-Za-z0-9_$.:]{0,79}$"#)
 +private let opaxSwiftFatalTypes: Set<String> = ["Assertion failed", "Fatal error", "Precondition failed"]
 +private let opaxExceptionLevels: Set<String> = ["fatal", "error", "warning", "log", "info", "debug"]
-+// SDK context: short tokens only (no spaces), never free text.
-+private let opaxContextToken = opaxRegex("^[A-Za-z0-9._:+-]{1,64}$")
-+private let opaxContextKeys = [
-+    "$lib", "$lib_version", "$session_id", "$os_name", "$device_type", "$app_name", "$app_version",
-+    "$app_build", "platform", "app", "app_version", "app_build", "environment",
++private let opaxExceptionSource = OpaxField.token(opaxRegex(#"^[a-z_.]{1,40}$"#))
++private let opaxFingerprint = OpaxField.token(opaxRegex(#"^[A-Za-z0-9_.:-]{1,128}$"#))
++// SDK context: events.ts `sdkProperties`, the same fixed lists and patterns.
++private let opaxVersion = OpaxField.token(opaxRegex(#"^[0-9]{1,4}(?:\.[0-9]{1,4}){0,3}$"#))
++private let opaxContextFields: [String: OpaxField] = [
++    "$lib": .oneOf(["posthog-react-native"]),
++    "$lib_version": opaxVersion,
++    "$session_id": .token(opaxRegex(#"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"#, .caseInsensitive)),
++    "$device_type": .oneOf(["Mobile", "Tablet", "Desktop", "TV"]),
++    "$os_name": .oneOf(["iOS", "iPadOS", "Android"]),
++    "$app_name": .oneOf(["OPAX"]),
++    "$app_namespace": .oneOf(["au.com.opax.app"]),
++    "$app_version": opaxVersion,
++    "$app_build": .build,
++    "$screen_name": .screen,
++    "app_version": opaxVersion,
++    "app_build": .build,
 +]
 +
 +private func opaxScrubException(_ value: Any) -> [String: Any]? {
@@ -170,27 +215,21 @@
 +    let raw = event.properties
 +    let exceptions = (raw["$exception_list"] as? [Any] ?? []).prefix(10).compactMap(opaxScrubException)
 +    guard !exceptions.isEmpty else { return nil }
-+    var clean: [String: Any] = ["$exception_list": exceptions]
++    var clean = opaxPick(opaxContextFields, raw)
++    clean["$exception_list"] = exceptions
 +    if let level = raw["$exception_level"] as? String, opaxExceptionLevels.contains(level) {
 +        clean["$exception_level"] = level
 +    }
-+    if let source = raw["$exception_source"],
-+       let kept = opaxKeep(.token(opaxRegex("^[a-z_.]{1,40}$")), source) { clean["$exception_source"] = kept }
-+    if let fingerprint = raw["$exception_fingerprint"],
-+       let kept = opaxKeep(.token(opaxRegex("^[A-Za-z0-9_.:-]{1,128}$")), fingerprint) {
++    if let source = raw["$exception_source"], let kept = opaxKeep(opaxExceptionSource, source) {
++        clean["$exception_source"] = kept
++    }
++    if let fingerprint = raw["$exception_fingerprint"], let kept = opaxKeep(opaxFingerprint, fingerprint) {
 +        clean["$exception_fingerprint"] = kept
 +    }
 +    let images = (raw["$debug_images"] as? [Any] ?? []).prefix(500)
 +        .map { opaxPick(opaxImageFields, $0) }
 +        .filter { !$0.isEmpty }
 +    if !images.isEmpty { clean["$debug_images"] = images }
-+    for key in opaxContextKeys {
-+        let value = raw[key].map { ($0 as? NSNumber).map { "\($0)" } ?? $0 }
-+        if let text = value as? String, opaxMatches(opaxContextToken, text) { clean[key] = text }
-+    }
-+    if raw["$app_namespace"] as? String == "au.com.opax.app" { clean["$app_namespace"] = "au.com.opax.app" }
-+    if let screen = raw["$screen_name"] as? String,
-+       opaxMatches(opaxRegex("^/[A-Za-z0-9/\\[\\]._-]{0,200}$"), screen) { clean["$screen_name"] = screen }
 +    // A native crash report has no JS context: tag it as the app's own events are.
 +    clean["platform"] = "ios"
 +    clean["app"] = "opax"
@@ -203,11 +242,12 @@
 +    event.properties = clean
 +    return event
 +}
++// OPAX privacy patch end.
 +
  /// Holds the JS-approved properties for the thread on which the JS layer's own fatal capture
  /// is running, so `beforeSend` can tell that capture apart from a native re-report of the same
  /// crash — and can put back the values native's own enrichment would otherwise win.
-@@ -368,7 +568,8 @@
+@@ -368,7 +608,8 @@
                  hedgeLog("Failed to record the fatal JS marker state: \(error.localizedDescription)")
              }
          }
@@ -217,7 +257,7 @@
              // The JS layer's own fatal capture is the event we want; only native re-reports
              // of a crash JS already captured are duplicates. Matching the event name as well
              // as the thread-local keeps anything else posthog-ios emits on this thread during
-@@ -394,7 +595,7 @@
+@@ -394,7 +635,7 @@
                  event.distinctId = distinctId
              }
              return event
@@ -226,7 +266,7 @@
  
          // Surveys and session replay are iOS-only in posthog-ios, so the APIs below
          // don't exist on macOS. macOS gets error tracking only.
-@@ -457,6 +658,14 @@
+@@ -457,6 +698,14 @@
          // JS owns flags; it tells us when the native preload would be a duplicate. posthog-ios
          // has no remoteConfig switch to mirror — it deprecated the option and always loads.
          config.preloadFeatureFlags = sdkOptions["preloadFeatureFlags"] as? Bool ?? true
@@ -266,7 +306,7 @@
  
                // Always apply the session replay configuration so that recording started later
                // (e.g. startRecording or a linked feature flag) uses the right mode and masking;
-@@ -917,5 +926,221 @@
+@@ -917,5 +926,242 @@
    when (getString(map, "screenshotColorMode", "")) {
      "ARGB_8888" -> config.screenshotColorMode = PostHogScreenshotColorMode.ARGB_8888
      "RGB_565" -> config.screenshotColorMode = PostHogScreenshotColorMode.RGB_565
@@ -281,29 +321,27 @@
 +// stack frames, the binary images and the app's version and build. Anything else is dropped.
 +private val opaxMessageMaxLength = 120
 +private val opaxMessageInputMaxLength = 4000
++private const val OPAX_MAX_SAFE_INTEGER = 9007199254740991L
 +
-+// (?U): Unicode \s and \p classes, as in JavaScript's `u` flag.
++// Android's java.util.regex runs on ICU, as NSRegularExpression does, so the patterns are the
++// Swift copy's texts. ICU's \s and \p classes are Unicode already, and ICU rejects Java's (?U).
 +private fun opaxRegex(
 +  pattern: String,
 +  ignoreCase: Boolean = false,
-+): Regex = Regex("(?U)$pattern", if (ignoreCase) setOf(RegexOption.IGNORE_CASE) else emptySet())
++): Regex = Regex(pattern, if (ignoreCase) setOf(RegexOption.IGNORE_CASE) else emptySet())
 +
-+private const val OPAX_NOT_AFTER_WORD = "(?<![\\p{L}\\p{N}_])"
-+private const val OPAX_NOT_BEFORE_WORD = "(?![\\p{L}\\p{N}_])"
++// The same pattern texts as MESSAGE_RULES in exceptions.ts, in the same order.
 +private val opaxMessageRules: List<Pair<Regex, String>> =
 +  listOf(
-+    opaxRegex("([a-z][a-z0-9+.-]*://[^\\s?#\"'`<>]*)[?#][^\\s\"'`<>]*", ignoreCase = true) to "\$1",
-+    opaxRegex("\\?[^\\s\"'`<>]*=[^\\s\"'`<>]*") to "",
-+    opaxRegex("[\\p{L}\\p{N}._%+-]+@[\\p{L}\\p{N}-]+(?:\\.[\\p{L}\\p{N}-]+)+") to "[email]",
-+    opaxRegex(
-+      OPAX_NOT_AFTER_WORD +
-+        "(?:\"[^\"\\n]*\"|“[^”\\n]*”|«[^»\\n]*»|`[^`\\n]*`" +
-+        "|'(?:[^'\\n]|'(?=[\\p{L}\\p{N}_]))*'" + OPAX_NOT_BEFORE_WORD +
-+        "|‘(?:[^’\\n]|’(?=[\\p{L}\\p{N}_]))*’" + OPAX_NOT_BEFORE_WORD + ")",
-+    ) to "[redacted]",
-+    opaxRegex(OPAX_NOT_AFTER_WORD + "[\"“«`'‘][^\\n]*") to "[redacted]",
-+    opaxRegex("\\p{N}{4,}") to "#",
-+    opaxRegex("\\s+") to " ",
++    opaxRegex("""([a-z][a-z0-9+.-]*://)[^\s/?#@"'\x60<>]*@""", ignoreCase = true) to "\$1",
++    opaxRegex("""((?:[a-z][a-z0-9+.-]*://)?(?<![\p{L}\p{N}_.-])(?:[a-z0-9-]+\.)*opax\.com\.au)(?![\p{L}\p{N}_-]|\.[\p{L}\p{N}_-])(?::[0-9]+)?[/?#][^\s"'\x60<>]*""", ignoreCase = true) to "\$1",
++    opaxRegex("""(/[^\s?#"'\x60<>]*)[?#][^\s"'\x60<>]*""") to "\$1",
++    opaxRegex("""\?[^\s"'\x60<>]*=[^\s"'\x60<>]*""") to "",
++    opaxRegex("""[\p{L}\p{N}._%+-]+@[\p{L}\p{N}-]+(?:\.[\p{L}\p{N}-]+)+""") to "[email]",
++    opaxRegex("""(?:"[^"\n]*"|“[^”\n]*”|„[^“”\n]*[“”]|”[^”\n]*”|‟[^”\n]*”|«[^»\n]*»|»[^«»\n]*[«»]|‹[^›\n]*›|›[^‹›\n]*[‹›]|「[^」\n]*」|『[^』\n]*』|〝[^〞〟\n]*[〞〟]|＂[^＂\n]*＂|″[^″\n]*″|\x60[^\x60\n]*\x60)|(?<![\p{L}\p{N}_])(?:'(?:[^'\n]|'(?=[\p{L}\p{N}_]))*'|‘(?:[^’\n]|’(?=[\p{L}\p{N}_]))*’|‚(?:[^‘’\n]|[‘’](?=[\p{L}\p{N}_]))*[‘’]|’(?:[^’\n]|’(?=[\p{L}\p{N}_]))*’|‛(?:[^’‛\n]|[’‛](?=[\p{L}\p{N}_]))*[’‛]|＇(?:[^＇\n]|＇(?=[\p{L}\p{N}_]))*＇|′(?:[^′\n]|′(?=[\p{L}\p{N}_]))*′)(?![\p{L}\p{N}_])""") to "[redacted]",
++    opaxRegex("""["“„”‟«»‹›「『〝＂″\x60][^\n]*|(?<![\p{L}\p{N}_])['‘‚’‛＇′][^\n]*""") to "[redacted]",
++    opaxRegex("""\p{N}{4,}""") to "#",
++    opaxRegex("""\s+""") to " ",
 +  )
 +
 +internal fun opaxScrubMessage(value: Any?): String? {
@@ -321,9 +359,9 @@
 +    capped.appendCodePoint(codePoint)
 +    index += Character.charCount(codePoint)
 +    count++
-   }
++  }
 +  return capped.toString().trim().ifEmpty { null }
- }
++}
 +
 +private sealed class OpaxField {
 +  data class Text(val max: Int) : OpaxField()
@@ -335,6 +373,37 @@
 +  object Flag : OpaxField()
 +
 +  data class Token(val regex: Regex) : OpaxField()
++
++  data class OneOf(val allowed: Set<String>) : OpaxField()
++
++  object Build : OpaxField()
++
++  object Screen : OpaxField()
++}
++
++// A whole number within JavaScript's safe integer range, as `Number.isSafeInteger`.
++private fun opaxWholeNumber(value: Any?): Long? {
++  val whole =
++    when (value) {
++      is Int, is Long, is Short, is Byte -> (value as Number).toLong()
++      // Numbers from the JS bridge arrive as doubles.
++      is Double, is Float -> (value as Number).toDouble().takeIf { it.isFinite() && it == Math.floor(it) }?.toLong()
++      else -> null
++    }
++  return whole?.takeIf { it in -OPAX_MAX_SAFE_INTEGER..OPAX_MAX_SAFE_INTEGER }
++}
++
++private val opaxBuildDigits = opaxRegex("""^[0-9]{1,10}$""")
++private val opaxRouteSegment = opaxRegex("""^(?:[a-z0-9][a-z0-9-]{0,47}|\[(?:\.\.\.)?[A-Za-z]{1,24}\])$""")
++
++// events.ts `screenRule`: a route template ("/person/[slug]") stays, any other text is "/other".
++private fun opaxScreenName(screen: String): String {
++  if (screen == "/") return screen
++  val parts = screen.split("/")
++  val template =
++    parts.size in 2..9 && parts[0].isEmpty() &&
++      parts.drop(1).all { it != "index" && opaxRouteSegment.matches(it) }
++  return if (template) screen else "/other"
 +}
 +
 +private fun opaxKeep(
@@ -345,15 +414,12 @@
 +    is OpaxField.Text -> (value as? String)?.takeIf { it.isNotEmpty() && it.length <= field.max }
 +    is OpaxField.Path ->
 +      (value as? String)?.let { opaxKeep(OpaxField.Text(field.max), it.substringBefore('?').substringBefore('#')) }
-+    OpaxField.Whole ->
-+      when (value) {
-+        is Int, is Long, is Short, is Byte -> (value as Number).toLong()
-+        // Numbers from the JS bridge arrive as doubles.
-+        is Double -> value.takeIf { it.isFinite() && it == Math.floor(it) && Math.abs(it) <= 9007199254740991.0 }?.toLong()
-+        else -> null
-+      }
++    OpaxField.Whole -> opaxWholeNumber(value)
 +    OpaxField.Flag -> value as? Boolean
 +    is OpaxField.Token -> (value as? String)?.takeIf { field.regex.matches(it) }
++    is OpaxField.OneOf -> (value as? String)?.takeIf { it in field.allowed }
++    OpaxField.Build -> (opaxWholeNumber(value)?.toString() ?: value as? String)?.takeIf { opaxBuildDigits.matches(it) }
++    OpaxField.Screen -> (value as? String)?.let { opaxScreenName(it) }
 +  }
 +
 +private fun opaxPick(
@@ -364,14 +430,14 @@
 +  val clean = LinkedHashMap<String, Any>()
 +  for ((key, field) in fields) {
 +    clean[key] = opaxKeep(field, source[key]) ?: continue
-+  }
+   }
 +  return clean
-+}
+ }
 +
-+private val opaxAddress = OpaxField.Token(opaxRegex("^0x[0-9a-f]{1,16}$", ignoreCase = true))
++private val opaxAddress = OpaxField.Token(opaxRegex("""^0x[0-9a-f]{1,16}$""", ignoreCase = true))
 +private val opaxFrameFields: Map<String, OpaxField> =
 +  mapOf(
-+    "platform" to OpaxField.Token(opaxRegex("^[a-z:]{1,32}$")),
++    "platform" to OpaxField.Token(opaxRegex("""^[a-z:]{1,32}$""")),
 +    "function" to OpaxField.Text(256),
 +    "filename" to OpaxField.Path(512),
 +    "abs_path" to OpaxField.Path(512),
@@ -383,14 +449,14 @@
 +    "instruction_addr" to opaxAddress,
 +    "image_addr" to opaxAddress,
 +    "symbol_addr" to opaxAddress,
-+    "chunk_id" to OpaxField.Token(opaxRegex("^[0-9a-f-]{1,64}$", ignoreCase = true)),
++    "chunk_id" to OpaxField.Token(opaxRegex("""^[0-9a-f-]{1,64}$""", ignoreCase = true)),
 +    "map_id" to OpaxField.Text(128),
 +    "method_synthetic" to OpaxField.Flag,
 +    "client_resolved" to OpaxField.Flag,
 +  )
 +private val opaxMechanismFields: Map<String, OpaxField> =
 +  mapOf(
-+    "type" to OpaxField.Token(opaxRegex("^[a-z_]{1,40}$")),
++    "type" to OpaxField.Token(opaxRegex("""^[a-z_]{1,40}$""")),
 +    "handled" to OpaxField.Flag,
 +    "synthetic" to OpaxField.Flag,
 +    "exception_id" to OpaxField.Whole,
@@ -398,28 +464,38 @@
 +  )
 +private val opaxImageFields: Map<String, OpaxField> =
 +  mapOf(
-+    "type" to OpaxField.Token(opaxRegex("^[a-z]{1,16}$")),
-+    "debug_id" to OpaxField.Token(opaxRegex("^[0-9a-f-]{1,64}$", ignoreCase = true)),
-+    "code_id" to OpaxField.Token(opaxRegex("^[0-9a-f]{1,64}$", ignoreCase = true)),
++    "type" to OpaxField.Token(opaxRegex("""^[a-z]{1,16}$""")),
++    "debug_id" to OpaxField.Token(opaxRegex("""^[0-9a-f-]{1,64}$""", ignoreCase = true)),
++    "code_id" to OpaxField.Token(opaxRegex("""^[0-9a-f]{1,64}$""", ignoreCase = true)),
 +    "code_file" to OpaxField.Path(512),
 +    "image_addr" to opaxAddress,
 +    "image_vmaddr" to opaxAddress,
 +    "image_size" to OpaxField.Whole,
-+    "arch" to OpaxField.Token(opaxRegex("^[a-z0-9_]{1,16}$")),
++    "arch" to OpaxField.Token(opaxRegex("""^[a-z0-9_]{1,16}$""")),
 +  )
-+private val opaxExceptionType = opaxRegex("^[A-Za-z_$][A-Za-z0-9_$.:]{0,79}$")
++private val opaxExceptionType = opaxRegex("""^[A-Za-z_$][A-Za-z0-9_$.:]{0,79}$""")
 +private val opaxSwiftFatalTypes = setOf("Assertion failed", "Fatal error", "Precondition failed")
 +private val opaxExceptionLevels = setOf("fatal", "error", "warning", "log", "info", "debug")
-+private val opaxExceptionSource = OpaxField.Token(opaxRegex("^[a-z_.]{1,40}$"))
-+private val opaxFingerprint = OpaxField.Token(opaxRegex("^[A-Za-z0-9_.:-]{1,128}$"))
-+private val opaxScreenName = opaxRegex("^/[A-Za-z0-9/\\[\\]._-]{0,200}$")
++private val opaxExceptionSource = OpaxField.Token(opaxRegex("""^[a-z_.]{1,40}$"""))
++private val opaxFingerprint = OpaxField.Token(opaxRegex("""^[A-Za-z0-9_.:-]{1,128}$"""))
 +
-+// SDK context: short tokens only (no spaces), never free text.
-+private val opaxContextToken = opaxRegex("^[A-Za-z0-9._:+-]{1,64}$")
-+private val opaxContextKeys =
-+  listOf(
-+    "\$lib", "\$lib_version", "\$session_id", "\$os_name", "\$device_type", "\$app_name", "\$app_version",
-+    "\$app_build", "platform", "app", "app_version", "app_build", "environment",
++// SDK context: events.ts `sdkProperties`, the same fixed lists and patterns.
++private val opaxVersion = OpaxField.Token(opaxRegex("""^[0-9]{1,4}(?:\.[0-9]{1,4}){0,3}$"""))
++private val opaxContextFields: Map<String, OpaxField> =
++  mapOf(
++    "\$lib" to OpaxField.OneOf(setOf("posthog-react-native")),
++    "\$lib_version" to opaxVersion,
++    "\$session_id" to
++      OpaxField.Token(opaxRegex("""^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$""", ignoreCase = true)),
++    "\$device_type" to OpaxField.OneOf(setOf("Mobile", "Tablet", "Desktop", "TV")),
++    "\$os_name" to OpaxField.OneOf(setOf("iOS", "iPadOS", "Android")),
++    "\$app_name" to OpaxField.OneOf(setOf("OPAX")),
++    "\$app_namespace" to OpaxField.OneOf(setOf("au.com.opax.app")),
++    "\$app_version" to opaxVersion,
++    "\$app_build" to OpaxField.Build,
++    "\$screen_name" to OpaxField.Screen,
++    "app_version" to opaxVersion,
++    "app_build" to OpaxField.Build,
 +  )
 +
 +private fun opaxScrubException(value: Any?): Map<String, Any>? {
@@ -443,17 +519,6 @@
 +  return clean
 +}
 +
-+private fun opaxContextValue(value: Any?): String? {
-+  val text =
-+    when (value) {
-+      is String -> value
-+      is Int, is Long -> value.toString()
-+      is Double -> value.takeIf { it.isFinite() && it == Math.floor(it) }?.toLong()?.toString()
-+      else -> null
-+    }
-+  return text?.takeIf { opaxContextToken.matches(it) }
-+}
-+
 +// `set` is the deprecated legacy `$set` field; it is cleared, never read.
 +@Suppress("DEPRECATION")
 +internal fun opaxScrubNativeEvent(event: PostHogEvent): PostHogEvent? {
@@ -461,7 +526,7 @@
 +  val raw = event.properties ?: return null
 +  val exceptions = ((raw["\$exception_list"] as? List<*>) ?: emptyList<Any?>()).take(10).mapNotNull { opaxScrubException(it) }
 +  if (exceptions.isEmpty()) return null
-+  val clean = LinkedHashMap<String, Any>()
++  val clean = LinkedHashMap<String, Any>(opaxPick(opaxContextFields, raw))
 +  clean["\$exception_list"] = exceptions
 +  (raw["\$exception_level"] as? String)?.takeIf { it in opaxExceptionLevels }?.let { clean["\$exception_level"] = it }
 +  opaxKeep(opaxExceptionSource, raw["\$exception_source"])?.let { clean["\$exception_source"] = it }
@@ -472,11 +537,6 @@
 +      .map { opaxPick(opaxImageFields, it) }
 +      .filter { it.isNotEmpty() }
 +  if (images.isNotEmpty()) clean["\$debug_images"] = images
-+  for (key in opaxContextKeys) {
-+    opaxContextValue(raw[key])?.let { clean[key] = it }
-+  }
-+  if (raw["\$app_namespace"] == "au.com.opax.app") clean["\$app_namespace"] = "au.com.opax.app"
-+  (raw["\$screen_name"] as? String)?.takeIf { opaxScreenName.matches(it) }?.let { clean["\$screen_name"] = it }
 +  // A native crash report has no JS context: tag it as the app's own events are.
 +  clean["platform"] = "android"
 +  clean["app"] = "opax"
@@ -488,6 +548,7 @@
 +  clean["\$geoip_disable"] = true
 +  return event.copy(properties = clean, set = null)
 +}
++// OPAX privacy patch end.
 --- a/node_modules/@posthog/react-native-plugin/posthog-react-native-plugin.podspec
 +++ b/node_modules/@posthog/react-native-plugin/posthog-react-native-plugin.podspec
 @@ -33,11 +33,13 @@

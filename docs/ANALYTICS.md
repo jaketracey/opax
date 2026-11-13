@@ -281,8 +281,14 @@ version these settings and the release verifier were checked against.
 JS, so `mobile/patches/@posthog+react-native-plugin+2.13.0.patch` (pinned by
 `patches/privacy-patches.json`, replayed on install and prebuild) adds the same
 rules in Swift and Kotlin as the native SDK's last `beforeSend`, and drops every
-native event that is not `$exception`. The three copies must stay in step;
-`tests/analytics-exceptions.test.ts` checks the shared cap and drop rule.
+native event that is not `$exception`. The three copies must stay in step:
+`tests/analytics-exceptions.test.ts` checks that Swift and Kotlin use the JS
+message rules' exact pattern texts, and `tests/native-scrub.test.ts` runs the
+Swift copy, cut from the patch by `scripts/check-native-scrub.sh`, on the
+invented inputs in `tests/fixtures/exception-scrub-cases.json` and expects what
+JS keeps (skipped where `swift` is missing). Kotlin is compiled only by the
+Android build, but Android's `java.util.regex` runs on ICU like
+NSRegularExpression, so the same pattern texts behave the same.
 
 | Property | What it may hold |
 | --- | --- |
@@ -293,12 +299,17 @@ native event that is not `$exception`. The three copies must stay in step;
 | Common | `$lib`, `$lib_version`, `$session_id`, `$os_name`, `$device_type`, `$app_name`, `$app_namespace` (`au.com.opax.app`), `$app_version`, `$app_build`, `$screen_name` (the route template), `platform`, `app`, `app_version`, `app_build`, `environment`, `$process_person_profile` false, `$is_identified` false, `$geoip_disable` true |
 
 Messages keep their shape but lose anything that could be user text, in this
-order: a URL keeps its scheme, host and path, losing its query string and
-fragment; any other `?key=value` query goes; email addresses become `[email]`;
-quoted text (`"…"`, `'…'`, `“…”`, `‘…’`, `«…»`, backticks) becomes
-`[redacted]`, and a quote that never closes hides the rest of its line; runs of
-four or more digits (codes, postcodes, phone numbers) become `#`; the result is
-cut to 120 characters. So `Cannot read property 'wombat crossing' of
+order: a URL loses its user name and password; an OPAX URL (`opax.com.au` or a
+subdomain, with or without a scheme) keeps only its host, since its paths can
+carry a search or question; any other URL or path keeps its path, losing its
+query string and fragment (`/ask#top` becomes `/ask`); any other `?key=value`
+query goes; email addresses become `[email]`; quoted text becomes `[redacted]`:
+double quotes, curly, German and fullwidth quotes, guillemets, corner brackets,
+double primes and backticks wherever they open (`x"text"` included), and single
+quotes and primes after a space or punctuation, where an apostrophe followed by
+a letter (`O'Brien`, `it's`) does not close the quote; a quote that never
+closes hides the rest of its line; runs of four or more digits (codes,
+postcodes, phone numbers) become `#`; the result is cut to 120 characters. So `Cannot read property 'wombat crossing' of
 undefined` is sent as `Cannot read property [redacted] of undefined`. Unquoted
 free text cannot be recognised in general, which is why the cap is short.
 `$exception_steps`, app state, screen sizes, locale, device model, `$set` and
