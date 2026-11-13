@@ -41,7 +41,7 @@ const PUBLIC = join(ROOT, 'portal', 'public')
 const INDEX = join(PUBLIC, 'index.html')
 
 /** Assets referenced from index.html with a ?v= stamp. */
-const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'nav.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js', 'page-actions.css', 'register-tables.css', 'register-tables-entry.js', 'vote-tables.js', 'vote-tables.css', 'procurement.css']
+const STAMPED = ['app.js', 'spa-shell.js', 'spa-entry.js', 'style.css', 'analytics.js', 'gtm.js', 'events.js', 'navigation.js', 'quick-search.js', 'voice.css', 'nav.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'labels.js', 'page-actions.css', 'register-tables.css', 'register-tables-entry.js', 'vote-tables.css', 'procurement.css']
 
 const hashOf = (file) =>
   createHash('sha256').update(readFileSync(join(PUBLIC, file))).digest('hex').slice(0, 10)
@@ -140,7 +140,7 @@ export async function refreshFonts({ publicRoot = PUBLIC, fetcher = honestFetch 
  *  agencies.js and suppliers.js import each other: stamp the agencies → suppliers
  *  edge only, then app.js. Keep the reverse edge hand-versioned to avoid a hash cycle. */
 export const MODULE_STAMPS = [
-  ...['agencies.js','donor-views.js','ledger.js','quiz.js','money-journeys-data.js','home.js','wordsdollars.js','money-explain.js','grant-recipient.js','grants.js','growth-modules.js','supplier-growth.js','suppliers.js','map-research.js'].map(file=>[file,'donor-disclosure.js']),
+  ...['agencies.js','donor-views.js','ledger.js','quiz.js','money-journeys-data.js','wordsdollars.js','money-explain.js','grant-recipient.js','grants.js','growth-modules.js','supplier-growth.js','suppliers.js','map-research.js'].map(file=>[file,'donor-disclosure.js']),
   ['donor-disclosure.js','donor-entity.js'],
   ['money-journeys-data.js','donor-views.js'],
   ['canonical-urls.js', 'person-paths.js'],
@@ -152,7 +152,8 @@ export const MODULE_STAMPS = [
   ['datatable-workbench.js', 'datatable.js'],
   ['register-tables.js', 'donor-disclosure.js'], ['register-tables.js', 'datatable.js'], ['register-tables-entry.js', 'register-tables.js'], ['app.js', 'register-tables.js'], ['money-explain.js', 'register-tables.js'],
   ['vote-tables.js', 'labels.js'], ['vote-tables.js', 'division-markdown.js'], ['vote-tables.js', 'datatable.js'],
-  ['donor-views.js', 'donor-entity.js'], ['wordsdollars.js','donor-views.js'], ['quiz.js','donor-views.js'],  ['home.js', 'donor-views.js'],
+  ['register-tables-entry.js', 'vote-tables.js'],
+  ['donor-views.js', 'donor-entity.js'], ['wordsdollars.js','donor-views.js'], ['quiz.js','donor-views.js'],
 
   ['datatable.js', 'datatable-query.js'],
   ['contracts-table.js', 'datatable.js'], ['suppliers-table.js', 'datatable.js'],
@@ -177,7 +178,6 @@ export const MODULE_STAMPS = [
   ['grants.js', 'canonical-urls.js'], ['grants.js', 'labels.js'],
   ['grant-recipient.js', 'canonical-urls.js'],
   ['home-data.js', 'canonical-urls.js'],
-  ['home.js', 'canonical-urls.js'],
   ['ledger.js', 'canonical-urls.js'], ['ledger.js', 'labels.js'],
   ['money-journeys.js', 'canonical-urls.js'],
   ['quiz.js', 'canonical-urls.js'],

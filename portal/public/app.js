@@ -1,3 +1,10 @@
+// Promise consumers keep their existing readiness gates, but an unused helper
+// does not download or run until a route needs it. Concurrent consumers share it.
+function lazyReady(load) {
+  let promise;
+  return { then(resolve, reject) { return (promise ??= load()).then(resolve, reject); } };
+}
+
 let donorRows = (rows,_index,limit=Infinity) => [...(rows || [])].sort((a,b)=>b[1]-a[1]).slice(0,limit);
 let donorViewIndex = new Map();
 let donorDisclosure = record => ({name:typeof record==='string'?record:record?.label || '',href:null,reference:''});
@@ -31,16 +38,16 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=f14a0a91a9").then(module => { voteTables = module; });
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=f14a0a91a9").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=a3b722e085").then(module => { growthModules = module; });
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=a3b722e085").then(module => { growthModules = module; }));
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=ba98f7415d').then(module => { registerTables = module; });
+const registerTablesReady = lazyReady(() => import('/register-tables.js?v=ba98f7415d').then(module => { registerTables = module; }));
 let askPerson;
-const askPersonReady = import('/ask-person.js?v=fae51a8e69').then(module => { askPerson = module; });
+const askPersonReady = lazyReady(() => import('/ask-person.js?v=fae51a8e69').then(module => { askPerson = module; }));
 let uiLabels;
 const uiLabelsReady = import('/labels.js?v=89dda4a520').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
@@ -61,14 +68,14 @@ const splitSpeakers = person => attributionHelpers?.splitSpeakers(person) || [];
 const personScope = person => attributionHelpers?.personScope(person) || person?.speech_scope || null;
 const datedAffiliationParty = (row, person) => attributionHelpers?.datedAffiliationParty(row, person) || null;
 let heldBackHelpers;
-const heldBackReady = import('/held-back-transcripts.js?v=cca9daf969').then(module => { heldBackHelpers = module; });
+const heldBackReady = lazyReady(() => import('/held-back-transcripts.js?v=cca9daf969').then(module => { heldBackHelpers = module; }));
 
 let saDisplayHelpers;
 let saFullTextFlag = 'false';
-const saDisplayReady = Promise.all([
+const saDisplayReady = lazyReady(() => Promise.all([
   import('/sa-hansard.js?v=001257cb4a').then(module => { saDisplayHelpers = module; }),
   fetch('/api/display-policy').then(response => response.json()).then(policy => { saFullTextFlag = policy.SA_HANSARD_FULL_TEXT === 'true' ? 'true' : 'false'; }).catch(() => {}),
-]);
+]));
 
 const $ = (id) => document.getElementById(id);
 
@@ -1342,7 +1349,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=983972f8ee");
+    const { mountMoneyMap } = await import("/money-map.js?v=cdad713f1d");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1725,9 +1732,8 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   const root = $("money-map-root");
   root.classList.remove("show-key");
   root.innerHTML = MAP_DRAWING_HTML;
-  const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=983972f8ee"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=abd2e22b2b"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=cdad713f1d"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=abd2e22b2b"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1741,7 +1747,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
     });
     if (!isCurrent()) { research?.destroy(); return; }
     moneyResearch = research;
-    const handle = await mountMoneyMap(root, cfg.file, {
+    const handle = await mountMoneyMap(root, data, {
       signal: setup.signal, isCurrent,
       filters: recordsModule.readMoneyFilters(new URLSearchParams(location.search)),
       focus: params.get('journey') ? undefined : params.get('focus') || undefined,
@@ -1870,7 +1876,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=c4e8517fd5");
+    const module = await import("/suppliers.js?v=5370a7095c");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -2048,11 +2054,23 @@ function routePrerequisites(segs) {
     ...(view === 'chat' ? [saDisplayReady] : []),
   ];
 }
+function warmRouteHelpers(segs) {
+  const [view, kind] = segs;
+  const helpers = [];
+  if (['subject', 'bill', 'bills', 'declared'].includes(view)) helpers.push(growthModulesReady);
+  if (view === 'subject' || view === 'bill') helpers.push(voteTablesReady);
+  if (view === 'subject' && kind === 'person') helpers.push(heldBackReady);
+  if (view === 'declared' || view === 'subject' && ['person', 'party', 'donor'].includes(kind)) helpers.push(registerTablesReady);
+  // Overlap the required route downloads with the identity gate without
+  // holding the first panel on an optional renderer. Its own await still owns errors.
+  for (const helper of helpers) Promise.resolve(helper).catch(() => {});
+}
 async function route() {
   const frag = rawFragment();
   if (frag && !frag.startsWith("/") && !firstRoute) return; // native anchors still need their page rendered on first load
   const { segs, params } = parseHash();
   const requested = ++routeRequest;
+  warmRouteHelpers(segs);
   await Promise.allSettled(routePrerequisites(segs));
   if (requested !== routeRequest) return;
   if (!segs.length) { location.replace('/' + location.search + location.hash); return; }
@@ -2226,6 +2244,7 @@ async function route() {
     if (target && $("panel-methods").contains(target)) requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
   } else if (view === "stats") {
     showPanel("stats");
+    loadLiveStats();
     renderEvidenceStats();
     document.title = TITLES.stats;
     setCrumbs(crumbsFor("/stats"));
@@ -4618,7 +4637,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=983972f8ee");
+    const { mountMoneyMap } = await import("/money-map.js?v=cdad713f1d");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
@@ -6091,6 +6110,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   body.innerHTML = subjectSkeleton(SUBJECT_LABELS[kind] || "Receipt source", kind === "electorate" ? "" : name,
     `<span class="answer-skeleton subject-skel tag-skel" aria-hidden="true"><i></i></span>`,
     kind === "person" && params.get('attribution') !== 'unattributed');
+  // Reserve the map in the skeleton's first frame, before a lazy helper yields.
+  if (kind === "donor" || kind === "party") reserveSubjectMap(true);
   // A person's aside is the "On this page" rail, not a Quick facts card.
   if (kind === "person") $("subject-infobox")?.classList.add("entry-rail");
   // An electorate's address is a reference slug ("vic-vic-la-vic-berwick"), not
@@ -6118,7 +6139,6 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   if (kind === "campaigner") { await renderCampaignerEntry(name, key); return; }
 
   if (kind === "donor" || kind === "party") {
-    reserveSubjectMap(true);
     const [, fits] = await Promise.all([loadMoneyData(), loadFits()]);
     if (currentSubjectKey !== key) return;
     const node = findMoneyNode(kind, name);
@@ -6380,6 +6400,16 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       `<img class="subject-portrait" src="${esc(url)}" alt="${official ? "Official portrait" : "Portrait"} of ${esc(name)}" width="112" height="112">`;
     else portrait?.classList.replace("subject-portrait-pending", "subject-portrait-blank");
   });
+  // Static profile reads do not depend on the speech search. A verified roster
+  // entry needs them, so start them together and retain the same head gate below.
+  const loadElectorateReference = () => loadElectorateModule().then(async (module) => {
+    const [data, people] = await Promise.all([module.loadIndex(), module.loadPeople().catch(() => ({ people: [] }))]);
+    return { module, data, person: module.findPerson(people.people, name) };
+  }).catch(() => null);
+  const earlyFits = roster ? loadFits() : null;
+  const earlyElectorate = roster ? loadElectorateReference() : null;
+  const earlyMoney = roster && (roster.party || roster.representation?.length || /\S\s+\S/.test(String(roster.name || '')))
+    ? loadMoneyData().catch(() => null) : null;
   let speeches = [], speechesFailed = false;
   try {
     const data = await api(`/api/search?${new URLSearchParams({ q: speechScope ? '*' : speechSpeaker, speaker: speechSpeaker, top_k: "20", ...(speechScope ? { mode: 'keyword' } : {}), ...(unattributed ? { attribution: 'unattributed' } : {}) })}`);
@@ -6467,16 +6497,13 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   }
   const q = encodeURIComponent(name);
   const [fits, electorateReference, rosterData, , rosterLists] = await Promise.all([
-    loadFits(),
-    loadElectorateModule().then(async (module) => {
-      const [data, people] = await Promise.all([module.loadIndex(), module.loadPeople().catch(() => ({ people: [] }))]);
-      return { module, data, person: module.findPerson(people.people, name) };
-    }).catch(() => null),
+    earlyFits || loadFits(),
+    earlyElectorate || loadElectorateReference(),
     loadParliamentarians(),
     // The party receipts row below only points at the party's map entry when
     // the money data has one; an independent's would land on "Not among the
     // top 250 disclosed donors", so they get the map itself instead.
-    party || rosterFallback || listFallback ? loadMoneyData().catch(() => null) : null,
+    party || rosterFallback || listFallback ? earlyMoney || loadMoneyData().catch(() => null) : null,
     listFallback ? fetch("/data/roster-list-parties.json").then((r) => (r.ok ? r.json() : null)).catch(() => null) : null,
   ]);
   if (currentSubjectKey !== key) return;
@@ -15173,7 +15200,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=983972f8ee");
+    const { mountMoneyMap } = await import("/money-map.js?v=cdad713f1d");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",
@@ -15729,7 +15756,10 @@ fetch("/suggestions.json").then((r) => r.json()).then((s) => {
 // failed) is asked for again a minute later, under a fresh query so the
 // browser does not answer from its own copy. The tables say "Counting…" in
 // the meantime rather than "unavailable".
+let liveStatsStarted = false;
 function loadLiveStats(attempt = 0) {
+  if (!attempt && liveStatsStarted) return;
+  liveStatsStarted = true;
   aggregateApi(attempt ? `/api/stats?retry=${attempt}` : "/api/stats")
     .then((s) => {
       liveStats = s;
@@ -15754,7 +15784,6 @@ function loadLiveStats(attempt = 0) {
       else renderStatsLiveTables();
     });
 }
-loadLiveStats();
 
 // Legacy entry contract: /?ask=<question> (used by standalone map pages).
 {

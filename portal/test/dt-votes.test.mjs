@@ -87,7 +87,10 @@ test('SSR shows linked dated divisions and Status labels without embedding all s
 
 test('table captions own their label and the hub boot survives the app-script removal', () => {
   const shell = readFileSync(new URL('../public/index.html',import.meta.url),'utf8');
-  assert.match(shell,/<script type="module" src="\/vote-tables.js(?:\?v=[a-f0-9]+)?"><\/script>/);
+  assert.match(shell,/<script type="module" src="\/register-tables-entry.js(?:\?v=[a-f0-9]+)?"><\/script>/);
+  const entry = readFileSync(new URL('../public/register-tables-entry.js',import.meta.url),'utf8');
+  assert.match(entry,/document.querySelector\('\[data-vote-table\]'\)/);
+  assert.match(entry,/import\('\.\/vote-tables.js\?v=[a-f0-9]+'\)/);
   assert.match(shell,/href="\/vote-tables.css(?:\?v=[a-f0-9]+)?"/);
 });
 

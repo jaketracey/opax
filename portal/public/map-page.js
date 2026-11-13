@@ -1,7 +1,5 @@
 const container = document.getElementById('map')
 try {
-  const { mountMoneyMap } = await import('/money-map.js?v=983972f8ee')
-  document.getElementById('status')?.remove()
   // Embed testbed: /map.html?focus=party:Labor&chrome=mini exercises the
   // options subject pages use.
   const params = new URLSearchParams(location.search)
@@ -19,7 +17,16 @@ try {
       state[1] + '. Colour and territory are the donor\'s industry; size is disclosed dollars. ' +
       'Gifts under the disclosure threshold are not reported; state and federal returns are not summed.'
   }
-  await mountMoneyMap(container, state ? state[0] : '/graph/money.json', {
+  // The graph and the renderer are independent downloads. Start both together.
+  const [{ mountMoneyMap }, data] = await Promise.all([
+    import('/money-map.js?v=cdad713f1d'),
+    fetch(state ? state[0] : '/graph/money.json', {cache: 'no-cache'}).then(response => {
+      if (!response.ok) throw new Error('Map data unavailable')
+      return response.json()
+    }),
+  ])
+  document.getElementById('status')?.remove()
+  await mountMoneyMap(container, data, {
     focus: params.get('focus') || undefined,
     chrome: params.get('chrome') === 'mini' ? 'mini' : undefined,
     onSelect: (node) => console.log('[money-map] user selected:', node && node.id),
