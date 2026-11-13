@@ -691,6 +691,26 @@ class SourceMapTests(unittest.TestCase):
 
 
 class BundleAttackTests(unittest.TestCase):
+    def test_pinned_posthog_plugin_metadata_is_exempt_only_with_its_pin(self):
+        with tempfile.TemporaryDirectory() as d:
+            routes = Path(d)
+            (routes / "_layout.tsx").write_text("shipping route")
+            pin = ["@posthog/react-native-plugin", "2.13.0"]
+            paths = sorted(verify.POSTHOG_PLUGIN_METADATA_PATHS)
+            entries = ["./_layout.tsx", *pin, *paths]
+            storage = "\0".join(entries).encode()
+            bundle = hermes_bundle(storage, [packed(storage, entry.encode()) for entry in entries])
+            self.assertEqual(verify.bundle_route_keys(bundle, routes), ["./_layout.tsx"])
+            for missing in pin:
+                kept = [entry for entry in entries if entry != missing]
+                body = "\0".join(kept).encode()
+                with self.subTest(missing=missing), self.assertRaises(ReleaseError):
+                    verify.bundle_route_keys(hermes_bundle(body, [packed(body, e.encode()) for e in kept]), routes)
+            plant = "./src/workbench.tsx"
+            body = storage + b"\0" + plant.encode()
+            with self.assertRaises(ReleaseError):
+                verify.bundle_route_keys(hermes_bundle(body, [packed(body, e.encode()) for e in [*entries, plant]]), routes)
+
     def test_pinned_reanimated_metadata_is_not_a_route_but_new_paths_are_refused(self):
         with tempfile.TemporaryDirectory() as d:
             routes = Path(d)
