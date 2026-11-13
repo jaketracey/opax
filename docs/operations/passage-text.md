@@ -187,8 +187,9 @@ the four sidecars. The source defaults to the refresh-box `parli.db`, but
 `OPAX_EVIDENCE_SOURCE` can point to a frozen matching snapshot; the four sidecar
 paths also have explicit overrides. Old sidecars against a growing DB fail the
 readiness check's exact progress/count, grant-program, identity and additional coverage
-checks. Missing or mismatched inputs produce one warning and a
-`evidence: waiting for inputs (…)` status, preserve catch-up and return success
+checks. Mismatched inputs produce one warning and a `evidence: waiting for inputs (…)`
+status; missing inputs produce one info line, `evidence layers: snapshot <day>; rebuild
+pending a decision`. Both preserve catch-up and return success
 before staging or export; there is no export retry that night. Readiness probes have
 a separate **60-second budget plus 5-second kill grace**, configurable with
 `OPAX_EVIDENCE_READINESS_TIMEOUT`; timeout also reports waiting and returns success.

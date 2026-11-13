@@ -1271,10 +1271,10 @@ new_sandbox evidence_missing
 rm "$HOME/.cache/autoresearch/evidence-places.sqlite"
 OPAX_TODAY=2026-10-10 nightly
 check "missing sidecars keep the night green and skip export/staging" bash -c "[ '$NRC' -eq 0 ] && [ ! -f '$HOME/evidence.calls' ] && ! find '$HOME/.cache/autoresearch/pipeline' -maxdepth 1 -name 'evidence-stage.*' | grep -q . && git -C '$REPO' diff --quiet HEAD -- portal/public/evidence"
-check "one evidence warning names missing files and status says waiting" bash -c "[ \$(grep -c 'WARN: evidence:' '$SB/nightly.out') -eq 1 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"status\"]==\"ok\" and not d[\"failures\"] and \"evidence: waiting for inputs (missing:\" in d[\"summary\"] and \"evidence-places.sqlite\" in d[\"summary\"]'"
+check "missing sidecars are one info line naming them, not a warning; status names the snapshot" bash -c "[ \$(grep -c 'WARN: evidence' '$SB/nightly.out') -eq 0 ] && grep -q 'evidence layers: snapshot date unknown; rebuild pending a decision (missing: .*evidence-places.sqlite' '$SB/nightly.out' && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d[\"status\"]==\"ok\" and not d[\"failures\"] and \"evidence layers: snapshot date unknown; rebuild pending a decision\" in d[\"summary\"] and not any(w.startswith(\"evidence\") for w in d.get(\"warnings\", []))'"
 check "waiting retains catch-up and publishes the rest" bash -c "[ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && git --git-dir='$ORIGIN' show main:portal/public/votes.json | grep -q 'New Member'"
 OPAX_TODAY=2026-10-10 nightly
-check "missing inputs on the next night still succeed without exporting" bash -c "[ '$NRC' -eq 0 ] && [ ! -f '$HOME/evidence.calls' ] && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && [ \$(grep -c 'WARN: evidence:' '$SB/nightly.out') -eq 1 ]"
+check "missing inputs on the next night still succeed without exporting" bash -c "[ '$NRC' -eq 0 ] && [ ! -f '$HOME/evidence.calls' ] && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && [ \$(grep -c 'WARN: evidence' '$SB/nightly.out') -eq 0 ] && grep -q 'rebuild pending a decision' '$SB/nightly.out'"
 
 new_sandbox evidence_mismatch
 python3 - "$HOME/.cache/autoresearch/parli.db" <<'PYEOF'
