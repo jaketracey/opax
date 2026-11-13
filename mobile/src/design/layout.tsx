@@ -53,6 +53,7 @@ import type { DateInput } from './format';
 import { Icon } from './icon';
 import { useRefreshCommand } from './keyboard';
 import { RowLink } from './row-link';
+import { SourceSection } from './source';
 import {
   RowCellInsetContext,
   RowInsetContext,
@@ -598,7 +599,7 @@ export function Section({
         />
       ) : null}
       {action && !isAction ? (action as ReactNode) : null}
-      {children}
+      <SourceSection>{children}</SourceSection>
     </View>
   );
 }
