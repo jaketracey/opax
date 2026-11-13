@@ -415,7 +415,7 @@ test('page aliases, including combined www/path aliases, redirect once to an exp
     // A row folded into the person holding its verified id (fold_ids) keeps its old address as a forward:
     // its own slug, its printed name, and the suffixed slug a spelling twin held.
     ['/subject/person/mark-christopher-butler','/subject/person/mark-butler'],['/subject/person/Mark%20Christopher%20Butler','/subject/person/mark-butler'],
-    ['/subject/person/katter-bob-jnr','/subject/person/bob-katter'],['/subject/person/bob-baldwin','/subject/person/robert-baldwin'],
+    ['/subject/person/katter-bob-jnr','/subject/person/bob-katter'],['/subject/person/robert-baldwin','/subject/person/bob-baldwin'],
     ['/subject/person/deb-oneill','/subject/person/deborah-oneill'],
     ['/subject/person/brendan-oconnor-4272656e64616e204f2019436f6e6e6f72','/subject/person/brendan-oconnor'],
     ['/subject/person/BRUCE-BAIRD/','/subject/person/bruce-baird'],

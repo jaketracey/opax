@@ -92,9 +92,14 @@ test('app.js writes the same twin slug the Worker forwards',()=>{
 
 test('the shipped roster: the old address of every folded print forwards to its person',()=>{
  const index=personIndex(roster);
- for(const [slug,name] of [['mark-christopher-butler','Mark Butler'],['katter-bob-jnr','Bob Katter'],['bob-baldwin','Robert Baldwin'],
+ for(const [slug,name] of [['mark-christopher-butler','Mark Butler'],['katter-bob-jnr','Bob Katter'],['robert-baldwin','Bob Baldwin'],
   ['deb-oneill',"Deborah O'Neill"],[twinSlug('Brendan O’Connor'),"Brendan O'Connor"],[twinSlug("Yvette D'Ath"),'Yvette D’Ath'],['tollner','David Tollner']])
   assert.equal(index.formerSlugs.get(slug)?.name,name,slug);
+ // The release's public name keeps the address; the formal print with more speeches forwards to it (roster_fold.py id_holder).
+ for(const [pub,formal] of [['bob-baldwin','robert-baldwin'],['tony-windsor','antony-windsor'],['katie-allen','katrina-allen']]){
+  assert.ok(index.bySlug.get(pub)?.prints?.length,pub);
+  assert.equal(index.formerSlugs.get(formal),index.bySlug.get(pub),formal);
+ }
  // Every print reads as its person: by a forward, or (a twin) by the person's own slug.
  for(const p of roster)for(const print of p.prints||[]){
   const slug=personSlug(print);

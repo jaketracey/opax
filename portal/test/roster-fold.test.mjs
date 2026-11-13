@@ -78,7 +78,7 @@ test('the shipped roster: one row per verified person id, the other printed name
   }
   // Public office holders the audit found split across two profiles (portal audit F2).
   for (const [name, print] of [['Mark Butler', 'Mark Christopher Butler'], ['Bob Katter', 'Katter Bob Jnr'],
-    ['Robert Baldwin', 'Bob Baldwin'], ["Brendan O'Connor", 'Brendan O’Connor'], ["Deborah O'Neill", "Deb O'Neill"]]) {
+    ['Bob Baldwin', 'Robert Baldwin'], ["Brendan O'Connor", 'Brendan O’Connor'], ["Deborah O'Neill", "Deb O'Neill"]]) {
     const row = people.find(p => p.name === name);
     assert.ok(row?.prints?.includes(print), `${print} is folded into ${name}`);
     assert.equal(people.some(p => p.name === print), false, `${print} is no longer a row of its own`);

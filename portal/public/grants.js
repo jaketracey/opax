@@ -1,6 +1,6 @@
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
 import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
-import {subjectUrl} from './canonical-urls.js?v=8b5bbcba0f';
+import {subjectUrl} from './canonical-urls.js?v=e32f13c6c8';
 import {programKey, resolveProgram, resolveProgramId} from './facts/grant-programs.js?v=5b8dddc342';
 export {programKey, resolveProgram, resolveProgramId};
 /**

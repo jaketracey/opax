@@ -80,7 +80,7 @@ class MainPreservationTests(unittest.TestCase):
         self.assertEqual({pid:names for pid,names in ids.items() if len(names)>1},{})
         for stub,person in [('Macklin','Jenny Macklin'),('Hockey','Joe Hockey'),('Ripoll','Bernie Ripoll'),
                             ('Tollner','David Tollner'),('Mark Christopher Butler','Mark Butler'),
-                            ('Katter Bob Jnr','Bob Katter'),('Kevin Drum','Damian Drum'),('Bob Baldwin','Robert Baldwin'),
+                            ('Katter Bob Jnr','Bob Katter'),('Kevin Drum','Damian Drum'),('Robert Baldwin','Bob Baldwin'),
                             ("Deb O'Neill","Deborah O'Neill"),('Deborah O’Neill',"Deborah O'Neill")]:
             with self.subTest(stub=stub):
                 self.assertNotIn(stub,self.new)
@@ -143,8 +143,8 @@ class MainPreservationTests(unittest.TestCase):
 
     def test_folding_prints_changes_no_kb_resource(self):
         # Only surname prints without a recorded seat fold, so they retire or rewrite no roster-profile record. Rows
-        # that shared a verified id are one person: their duplicate records retire and a seat recorded under the
-        # other spelling moves to the person's record (the next publish_grants_research run; nothing else moves).
+        # that shared a verified id are one person: the duplicate records of the folded spellings retire (the next
+        # publish_grants_research run). The person keeps the release's public name, so no record moves or is added.
         research=json.loads((profiles.PUBLIC/'research/mlci.json').read_text())
         _,merged,by_id=audit._folds(self.main,self.shipped,self.reference)
         unfolded=[p for p in self.shipped if p['name'] not in merged]+[self.old[n] for n in merged]
@@ -155,10 +155,10 @@ class MainPreservationTests(unittest.TestCase):
         retired=sorted(title(before[k]) for k in before.keys()-after.keys())
         added=sorted(title(after[k]) for k in after.keys()-before.keys())
         self.assertEqual([k for k in before.keys()&after.keys() if before[k]!=after[k]],[])
-        self.assertEqual(retired,sorted(["Yvette D'Ath",'Ken O’Dowd','Gavan O’Connor','Bert van Manen','Tony Windsor',
-                                         'Kelly O’Dwyer','Katie Allen','Bob Baldwin','Brendan O’Connor']))
+        self.assertEqual(retired,sorted(["Yvette D'Ath",'Ken O’Dowd','Gavan O’Connor','Bert van Manen',
+                                         'Kelly O’Dwyer','Brendan O’Connor']))
         self.assertTrue(set(retired)<=by_id)
-        self.assertEqual(added,['Antony Windsor','Katrina Allen','Robert Baldwin'])
+        self.assertEqual(added,[])
 
     def test_transcript_counts_scopes_dates_and_verified_numeric_ids_are_unchanged(self):
         _,merged=audit.folds(self.main,self.shipped,self.reference)

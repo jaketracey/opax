@@ -46,8 +46,8 @@ class GrantsResearchTests(unittest.TestCase):
         # Reviewed, fixed totals: catches accidental publication loss or growth.
         # 18 Oct 2026: +18 roster profiles, the former senators (and Vanessa Bleyer) accepted in scripts/roster_accept.json.
         # 12 Nov 2026: +11 state representation profiles inside the reviewed term guard.
-        # 13 Nov 2026: -6, rows sharing one verified person id fold into one person (docs/ROSTER-FOLDS.md): the 9 folded
-        # prints that held a seat retire and 3 holders take the seat of their folded print.
+        # 13 Nov 2026: -6, rows sharing one verified person id fold into one person (docs/ROSTER-FOLDS.md): the 6 folded
+        # spellings that held a seat retire.
         self.assertEqual(len(rows),1469)
         self.assertEqual(len({r['slug'] for r in rows}),1469)
         self.assertEqual(sum(r['slug'].startswith('roster-profile-') for r in rows),1001)
@@ -71,7 +71,7 @@ class GrantsResearchTests(unittest.TestCase):
         directory=json.loads((ROOT/'portal/public/parliamentarians.json').read_text())
         counts=Counter(kind for kind,_,_ in tasks(data,directory))
         self.assertEqual(counts,{'project_location':226,'invitation_award_match':89,
-            'representation_review':558,  # 11 missing state seats pass the reviewed term guard; 13 Nov: -51 seatless prints folded by id, -3 holders took a seat
+            'representation_review':558,  # 11 missing state seats pass the reviewed term guard; 13 Nov: -54 seatless prints folded by id
             'cpi_method_reconciliation':1})
 
 if __name__=='__main__':unittest.main()
