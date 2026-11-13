@@ -52,6 +52,7 @@ import {
   type Follow,
 } from '../src/features/follows/store';
 import { catalogs, index } from './pinned';
+import { menuTitle } from '../src/design/menu-title';
 
 const mockDisk = new Map<string, string>();
 // Interrupts the Nth file change from now (1-based; 0 never), as a crash or
@@ -1016,7 +1017,7 @@ describe('Following', () => {
     };
     expect(more.menu.items.map((i) => i.label)).toEqual([
       'Mark all as seen',
-      'Open on opax.com.au',
+      menuTitle('Open on opax.com.au'),
     ]);
     expect(has(r, 'follows-unfollow-all')).toBe(false);
     await act(async () => bar().at(-1)!.onPress!());

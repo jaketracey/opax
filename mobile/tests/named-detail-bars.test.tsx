@@ -39,6 +39,7 @@ import {
   barTitleCandidates,
   useTitleOnScroll,
 } from '../src/navigation/useTitleOnScroll';
+import { menuTitle } from '../src/design/menu-title';
 
 const mockParams = { seat: 'federal-senate-nsw-new-south-wales' };
 jest.mock('expo-router', () => ({
@@ -348,7 +349,7 @@ test('Votes keeps Filters before More, its named back button and its scrolling t
     menu: {
       items: [
         expect.objectContaining({ label: 'Copy link' }),
-        expect.objectContaining({ label: 'Open on opax.com.au' }),
+        expect.objectContaining({ label: menuTitle('Open on opax.com.au') }),
       ],
     },
   });

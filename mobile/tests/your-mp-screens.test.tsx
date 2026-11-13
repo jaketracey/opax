@@ -62,6 +62,7 @@ import {
   roster,
   slugs,
 } from './pinned';
+import { menuTitle } from '../src/design/menu-title';
 jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn() },
   catalogs: {
@@ -1140,7 +1141,7 @@ describe('Your MP tab', () => {
       ...(official ? ['Parliament of Australia page'] : []),
       ...(canShare ? ['Share'] : []),
       '',
-      'Open on opax.com.au',
+      menuTitle('Open on opax.com.au'),
     ]);
     const last = rows.find(
       (row) =>

@@ -20,6 +20,7 @@ import { decodeRecords } from '../src/features/search/decoders';
 import { memberSuggestionRoster } from '../src/api/catalog-search';
 import records from '../scripts/fixtures/search/records.json';
 import { bills, index, roster, people, manifest, slugs } from './pinned';
+import { menuTitle } from '../src/design/menu-title';
 
 jest.mock('../src/api/runtime', () => ({
   recordSearch: { search: jest.fn(), summary: jest.fn() },
@@ -152,7 +153,7 @@ test('bars: All has Share; Speeches has Filters and ⋯ with Sort and Share', as
   expect(more.menu!.items.map((i) => i.label)).toEqual([
     'Sort',
     'Share',
-    'Open on opax.com.au',
+    menuTitle('Open on opax.com.au'),
   ]);
   expect(more.menu!.items[0]!.items!.map((i) => i.label)).toEqual([
     'Most relevant',

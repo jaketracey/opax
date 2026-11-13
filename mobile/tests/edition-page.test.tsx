@@ -63,6 +63,7 @@ import {
 import { shareRecord } from '../src/navigation/share';
 import RuleSheet from '../src/features/sheets/RuleSheet';
 import { sheetPayload } from '../src/navigation/sheets';
+import { menuTitle } from '../src/design/menu-title';
 
 jest.mock('../src/api/runtime', () => ({
   catalogs: {
@@ -781,7 +782,7 @@ describe('the native edition reader', () => {
       ]);
       expect(
         items[1].menu.items.map((item: { label: string }) => item.label),
-      ).toEqual(['Copy link', 'How this is chosen', 'Open on opax.com.au']);
+      ).toEqual(['Copy link', 'How this is chosen', menuTitle('Open on opax.com.au')]);
       expect(items[1]).toMatchObject({
         type: 'menu',
         accessibilityLabel: 'More for Daily edition',
@@ -812,7 +813,8 @@ describe('the native edition reader', () => {
       act(() =>
         items[1].menu.items
           .find(
-            (item: { label: string }) => item.label === 'Open on opax.com.au',
+            (item: { label: string }) =>
+              item.label === menuTitle('Open on opax.com.au'),
           )
           .onPress(),
       );

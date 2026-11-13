@@ -24,6 +24,7 @@ import { divisionHistoryRoute } from '../src/navigation/routes/bills';
 import { pinned, slugs } from './pinned';
 import { filterStore } from '../src/features/sheets/filter-model';
 import * as sharing from '../src/navigation/share';
+import { menuTitle } from '../src/design/menu-title';
 
 // Design pass 5, lane C (bills): the bill header's actions (P1-3), the
 // shared bill row (P2-8), a lapsed bill's last stop (P2-9), the list's
@@ -246,7 +247,7 @@ describe('bill header (P1-3)', () => {
     expect(menu.menu!.items.map((item) => item.label)).toEqual([
       'Copy link',
       'Open on the Parliament website',
-      'Open on opax.com.au',
+      menuTitle('Open on opax.com.au'),
     ]);
   });
 });

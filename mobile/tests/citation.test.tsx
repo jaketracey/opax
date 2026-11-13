@@ -15,6 +15,7 @@ import { bindShortLastWord } from '../src/design/record-title';
 import { presentSheet } from '../src/navigation/sheets';
 import type { Answer, Source, Turn } from '../src/features/ask/model';
 import { expectPublicSiteAction } from './more-menu-web';
+import { menuTitle } from '../src/design/menu-title';
 
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
@@ -297,7 +298,7 @@ test('⋯ holds an inline Cite section, then Copy link, Share and Report', () =>
     'Copy link',
     'Share',
     'Report a problem with this source',
-    'Open on opax.com.au',
+    menuTitle('Open on opax.com.au'),
   ]);
   expect(rows[0]!.inline).toBe(true);
   expect(rows[0]!.items!.map((row) => row.label)).toEqual([
