@@ -9,7 +9,7 @@ export function filterMoneyConnectionView(graph,params) {
 }
 
 /** Source names and amounts are preserved; only confident donor matches link.
- * @returns {import('./datatable.js?v=893767f2bd').DataTableConfig} */
+ * @returns {import('./datatable.js?v=5fe413541f').DataTableConfig} */
 export function moneyConnectionsConfig(graph) {
   const nodes=new Map(graph.nodes.map(n=>[n.id,n]));
   const rows=[],types=new Set();
@@ -41,6 +41,8 @@ export function moneyConnectionsConfig(graph) {
       {key:'records',label:'Records',type:'count',facet:'range'},
       {key:'years',label:'Years',type:'text'},
     ],primaryLink:row=>row.to_href,
+    // Each row holds one of the money columns; the line names the giver and the years.
+    phone:{figure:values.map(column=>column.key),meta:['type',{key:'from',label:'From'},{key:'records',unit:['record','records']},'years']},
     actions:[{icon:'⌖',label:'Focus in map',href:row=>`#money-focus=${encodeURIComponent(row.focusId)}`}],
     export:{filename:'opax-map-connections.csv'}};
 }

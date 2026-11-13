@@ -34,7 +34,9 @@ for(const path of paths) test(`server HTML contains the complete fixture core: $
   assert.equal(core.querySelector('h1').textContent,name);
   const kind = path.includes('/recipient/') ? 'Grant recipient' : path.includes('/agency/') ? 'Government agency' : path.includes('program=') ? 'Grant program' : 'Topics';
   assert.equal(doc.title,`${name} · ${kind} · OPAX`);
-  const summary = core.querySelector('h1 + p').textContent;
+  // A recipient's meta line sits under its title, as the client's own header draws it.
+  if (path.includes('/recipient/')) assert.equal(core.querySelector('h1 + p.grant-recipient-meta')?.textContent,`${path.includes('/qld/') ? 'Queensland' : 'Commonwealth'} · Company`);
+  const summary = core.querySelector('h1 ~ p:not(.grant-recipient-meta)').textContent;
   const expected = path.includes('/recipient/') ? `${name}: $25.0k in ${path.includes('/qld/') ? 'recorded Queensland expenditure across 25 expenditure rows. A multi-year funding agreement can appear in several financial years; rows are not distinct grants.' : 'published Commonwealth grant award values across 25 award records. Published award values do not establish payments received.'}`
     : path.includes('/agency/') ? `${name}: $50.0k in recorded contract commitments across 25 contracts and 25 suppliers.`
     : path.includes('program=') ? `${name}: $25.0k in 25 ${path.includes('jur=qld') ? 'recorded Queensland expenditure rows' : 'published Commonwealth grant awards'} to 1 recipient, financial years 2025-26.`

@@ -1,5 +1,5 @@
 /** Same shared table for server HTML, enhancement and CSV. No aggregation. */
-import {dataTableHTML} from './datatable.js?v=893767f2bd';
+import {dataTableHTML} from './datatable.js?v=5fe413541f';
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const phoneColumns={'Measure':'measure','Fiscal year':'fiscal_year','Value':'display_value'};
 export const saBudgetPhoneColumns=Object.values(phoneColumns);
@@ -11,7 +11,7 @@ export function saBudgetValue(row){
 }
 export const saBudgetConfig=(rows,table)=>({
   id:'sa-budget-'+table.replace('.','-'),caption:'SA Treasury · Table '+table,
-  pageType:'budget',urlKey:'sa'+table.replace('.',''),pageSize:10,rows,
+  pageType:'budget',urlKey:'sa'+table.replace('.',''),pageSize:10,rows,phone:false,
   columnsVisible:['measure','fiscal_year','display_value','status_as_published','amount','percentage','source_marker','locator'],
   columns:[
     {key:'measure',label:'Measure',type:'text',primary:true},

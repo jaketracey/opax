@@ -7,7 +7,8 @@ import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import { CHAMBER_LABELS, chamberLabel } from '../public/labels.js';
-import { divisionPlain } from '../public/division-markdown.js';
+import * as divisionMarkdownModule from '../public/division-markdown.js';
+const { divisionPlain } = divisionMarkdownModule;
 import { renderDivisionAnswer } from '../src/seo-content.ts';
 
 const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
@@ -69,7 +70,7 @@ function divisionPage() {
   const node = () => ({ textContent: '', innerHTML: '', hidden: true, focus() {}, querySelector: () => null });
   const context = {
     uiLabels: { chamberLabel, sourceLineHTML: (o) => `<p class="source">${o.source}: ${o.originals.map((x) => x.label).join(', ')}</p>` },
-    divisionMarkdown: { divisionPlain },
+    divisionMarkdown: divisionMarkdownModule,
     $: (id) => { if (!nodes.has(id)) nodes.set(id, node()); return nodes.get(id); },
     esc: (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]),
     setStatus() {}, setCrumbs() {}, crumbsFor: () => [], billOutcomeLabelHTML: (r) => r || '', fmtDate: (d) => d,
@@ -79,8 +80,10 @@ function divisionPage() {
     loadDivisionNames: () => new Promise(() => {}), sentenceCase: (s) => String(s || ''),
   };
   runInNewContext(`${fn('chamberLabel')}\n${fn('sourceLineHTML')}\n${constLine('billHouse')}\n${fn('billStage')}\n${fn('billQuestion')}
+    ${constLine('BILL_DESCRIPTION')}\n${constLine('BILL_PLACEHOLDER')}\n${constLine('billFlat')}\n${fn('billNoteRepair')}\n${fn('billStripStage')}\n${fn('billStripTitle')}
+    ${fn('billQuestionParts')}\n${fn('divisionQuestionLead')}\n${fn('divisionBillsHTML')}
     ${fn('divisionHeading')}\n${fn('renderDivisionDoc')}
-    Object.assign(globalThis, { billHouse, divisionHeading, renderDivisionDoc });`, context);
+    Object.assign(globalThis, { billHouse, divisionHeading, renderDivisionDoc, divisionBillsHTML });`, context);
   return { ...context, nodes };
 }
 
@@ -102,6 +105,10 @@ test('a state division is headed by its motion, with its chamber by name in the 
       assert.doesNotMatch(ctx.$(id).innerHTML + ctx.$(id).textContent, RAW, `${code} ${id}`);
       assert.doesNotMatch(ctx.$(id).innerHTML, /<h1\b/, `${code} ${id}: the page keeps one h1`);
     }
+    // The motion leads under the title, before the party and member blocks.
+    const bill = ctx.$('doc-bill').innerHTML;
+    assert.match(bill, /<p class="division-lead">That the following words/, `${code}: the question leads`);
+    assert.doesNotMatch(ctx.$('doc-text').innerHTML, /division-question/, `${code}: the question is not repeated below`);
     const federal = d.jurisdiction === 'federal';
     assert.equal(ctx.$('doc-text').innerHTML.includes('They Vote For You'), federal, `${code}: the count's source`);
   }
@@ -121,6 +128,13 @@ test('a state division is headed by its motion, with its chamber by name in the 
   assert.equal(ctx.divisionHeading({ house: 'vic_la', name: MOTION }, { title: 'Second reading' }).title, 'Second reading');
   assert.deepEqual({ ...ctx.divisionHeading({ house: 'xx_zz' }, null) }, { title: 'Division', house: 'Parliament' });
   assert.equal(ctx.billHouse('Assent'), 'Assent', 'a stage house the record writes out stays as written');
+  // The bills on one line: the first by name, the rest folded behind a count.
+  assert.equal(ctx.divisionBillsHTML([]), '');
+  const one = ctx.divisionBillsHTML([{ key: 'a', title: 'Fixture Bill 2026' }]);
+  assert.match(one, /^<div class="division-bills">On the <a [^>]*>Fixture Bill 2026<\/a><\/div>$/);
+  const three = ctx.divisionBillsHTML([{ key: 'a', title: 'Fixture Bill 2026' }, { key: 'b', title: 'Second Bill' }, { key: 'c', title: 'Third Bill' }]);
+  assert.match(three, /<summary>and 2 related bills<\/summary>/);
+  assert.match(ctx.divisionBillsHTML([{ key: 'a', title: 'A' }, { key: 'b', title: 'B' }]), /<summary>and 1 related bill<\/summary>/);
 });
 
 test("the Worker's division page has one h1, the motion, and names the chamber", () => {

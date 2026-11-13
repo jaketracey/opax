@@ -1,5 +1,5 @@
 // Division and voting-record rollout using the shared server-mode core.
-import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=893767f2bd';
+import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=5fe413541f';
 // Guard and render must share the core module's rejection-state registry.
 export {guardTableURL};
 import {shortDate} from './format.js';
@@ -9,6 +9,17 @@ import {divisionPlain} from './division-markdown.js?v=5991511166';
 const sentence = value => { const text = String(value || '').replace(/_/g, ' ').trim(); return text ? text[0].toUpperCase() + text.slice(1).toLowerCase() : ''; };
 const count = value => value == null || value === '' ? null : Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : null;
 const safeLink = value => typeof value === 'string' && /^(?:\/(?!\/)|https?:\/\/)/i.test(value) ? value : null;
+/* The Hansard heading's own prefix, in capitals: "BILLS - Treasury Laws
+   Amendment ...". Under BILLS the rest is the record's name; the other
+   headings keep their word, in sentence case ("Business - Rearrangement",
+   "Matters of urgency - Taxation"), as the older rows already read. Older rows write "Bills - " in title case. Only these headings:
+   a title that opens with an acronym keeps it. */
+const HEADINGS = /^(BILLS|Bills|BUSINESS|DOCUMENTS|MATTERS OF URGENCY|MATTERS OF PUBLIC IMPORTANCE|COMMITTEES|MOTIONS|NOTICES|PETITIONS|STATEMENTS|REGULATIONS AND DETERMINATIONS)\s+[-–—]\s+(\S.*)$/;
+export function headingTitle(value) {
+  const text = divisionPlain(value), heading = HEADINGS.exec(text);
+  if (!heading) return text;
+  return /^(?:BILLS|Bills)$/.test(heading[1]) ? heading[2] : `${sentence(heading[1])} - ${heading[2]}`;
+}
 const divisionLink = value => /^[a-z0-9][a-z0-9-]*$/.test(String(value || '')) ? `/doc/${String(value).startsWith('division-') ? value : `division-${value}`}` : null;
 
 export const divisionColumns = [
@@ -33,12 +44,16 @@ export function divisionTableConfig(params = {}, caption = 'Divisions', pageType
   if (params.start) scope['f.sitting'] = JSON.stringify([params.start]);
   return {id:'division-table', caption, columns:divisionColumns, source:{endpoint:'/api/table/divisions', params:scope},
     pageSize:25, defaultSort:{key:'date', dir:'desc'}, primaryLink:row => safeLink(row.href),
+    // The title already carries the date; the result and the count tell rows apart.
+    phone:{figure:['outcome', {key:'ayes', to:'noes'}], meta:['chamber']},
     export:{filename:'divisions.csv'}, urlKey:'dv', pageType};
 }
 export function voteTableConfig(person, caption = 'Voting record') {
   const people = [...new Set((Array.isArray(person) ? person : [person]).filter(Boolean))];
   return {id:'vote-table', caption, columns:voteColumns, source:{endpoint:'/api/table/votes', params:{'f.person':JSON.stringify(people)}},
     pageSize:25, defaultSort:{key:'date', dir:'desc'}, primaryLink:row => safeLink(row.href),
+    // Whether the member voted with their party, where the record says.
+    phone:{figure:['vote'], meta:['date', {key:'party_position', omit:['Not recorded']}]},
     export:{filename:'voting-record.csv'}, urlKey:'vr', pageType:'person'};
 }
 
@@ -75,7 +90,7 @@ const chambers = {senate:'Senate', representatives:'House of Representatives', n
 export function divisionRows(divisions = [], deduplicate = false) {
   const unique = new Map();
   for (const division of divisions) {
-    const stage = (division.stage ? sentence(division.stage) : divisionPlain(division.title)) || 'Division';
+    const stage = (division.stage ? sentence(division.stage) : headingTitle(division.title)) || 'Division';
     const date = String(division.date || '');
     // Keep the existing bill-list rule: repeated register counts are one row.
     const key = deduplicate ? [date, stage, division.ayes, division.noes, division.house].join('|') : division.slug || division.key || unique.size;
@@ -103,7 +118,7 @@ export function votingRows(votes = [], bills = []) {
     billIndexes.set(bills,index);
   }
   return votes.map(v => {
-    const title = divisionPlain(v.title || v.name || 'Division');
+    const title = headingTitle(v.title || v.name || 'Division');
     const matches = (index.get(titleKey(v.title || v.name)) || []).filter(b=>!v.jur || b.jurisdiction===v.jur);
     const billKey = v.bill_key || (matches.length===1 ? matches[0].key : '');
     return {title, date:String(v.date || ''),
