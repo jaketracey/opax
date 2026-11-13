@@ -1581,6 +1581,35 @@ test('Ask next rows send; New question is enabled once there is an answer', asyn
   reset.mockRestore();
 });
 
+test('New question still rests a header above zero where Ask measures under its root bar', async () => {
+  // Ask's scroll view starts at the window's top, under the translucent root
+  // bar: the measured reset is the same -headerBottom as before.
+  const measure = jest
+    .spyOn(
+      ScrollView.prototype as unknown as {
+        measureInWindow: (callback: (x: number, y: number) => void) => void;
+      },
+      'measureInWindow',
+    )
+    .mockImplementation((callback) => callback(0, 0));
+  try {
+    jest
+      .mocked(client.askPost)
+      .mockResolvedValueOnce(answer)
+      .mockResolvedValueOnce({ questions: [] });
+    await mount();
+    await type('A fixture question?');
+    await press('ask-submit');
+    scrollTo.mockClear();
+    measure.mockClear();
+    await act(async () => barButton('New question')!.onPress());
+    expect(measure).toHaveBeenCalled();
+    expect(scrollTo).toHaveBeenLastCalledWith({ y: -44, animated: false });
+  } finally {
+    measure.mockRestore();
+  }
+});
+
 test('a failed follow-up hides the previous Ask next and holds Try again while OPAX is busy', async () => {
   jest
     .mocked(client.askPost)
