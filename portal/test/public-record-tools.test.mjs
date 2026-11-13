@@ -111,6 +111,15 @@ test('supplier explicit funding links, contract section and connection evidence 
   const charity = await api.callTool(env, 'entity_profile', { kind: 'tax_charity', record_id: '12231938308' }); cited(charity);
   assert.ok(charity.rows.some(r => r.kind === 'charity_statement'));
 });
+test('connection profiles carry the day the connections run to, read from the published export', async () => {
+  const meta = (await asset('/evidence/index.json')).meta;
+  const day = new Intl.DateTimeFormat('en-CA', { timeZone: 'Australia/Sydney', year: 'numeric', month: '2-digit', day: '2-digit' }).format(Date.parse(meta.generated_at));
+  const found = await api.callTool(env, 'entity_profile', { kind: 'connection', query: 'Woollahra', limit: 1 });
+  const evidence = await api.callTool(env, 'entity_profile', { kind: 'connection', record_id: '9711b04a397f288fa1502b1e', section: 'evidence', limit: 1 });
+  for (const out of [found, evidence]) { assert.match(out.as_at, /^\d{4}-\d{2}-\d{2}$/); assert.equal(out.as_at, day); assert.equal(out.snapshot, meta.generated_at); }
+  const supplier = await api.callTool(env, 'entity_profile', { kind: 'supplier', query: 'Thales', limit: 1 });
+  assert.equal('as_at' in supplier, false, 'only connection profiles carry the connections date');
+});
 test('supplier grants join only on its published ABN, with original grant provenance', async () => {
   const directory = await asset('/suppliers.json'), grants = await asset('/graph/grants.federal.json');
   const recipients = new Set(grants.recipients.filter(r => !['person', 'individual', 'sole trader', 'aggregate', 'undisclosed'].includes(r.k)).map(r => r.id));
