@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML} from '../public/held-back-transcripts.js';
+import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML, noHansardHeldHTML, NO_HANSARD_HELD} from '../public/held-back-transcripts.js';
 import {renderPersonAnswer, panelPrerender} from '../src/seo-content.ts';
 
 const person = {name: 'Example Member', pid: 'fixture-member', states: ['federal'], chambers: ['representatives'], speeches: 0};
@@ -92,4 +92,26 @@ test('published counts remain a positive integer map keyed by person ID', () => 
   const counts = JSON.parse(readFileSync(new URL('../public/data/held-back-transcripts.json', import.meta.url), 'utf8'));
   assert.equal(Object.keys(counts).length, 375);
   assert.ok(Object.entries(counts).every(([id, count]) => /^\d+$/.test(id) && Number.isSafeInteger(count) && count > 0));
+});
+
+test('a list-only profile says no Hansard is held, in the browser and server alike; a linked person with speeches does not', async () => {
+  const roster = JSON.parse(readFileSync(new URL('../public/parliamentarians.json', import.meta.url), 'utf8')).people;
+  const by = new Map(roster.map(p => [p.name, p]));
+  // The SA Council members on the official list dated 2026-11-13 that OPAX's SA Hansard (to 2023) never prints.
+  for (const name of ['Mira El Dannawi', 'Hilton Gumbys', 'Rebecca Hewett', 'Benjamin Hood', 'Carlos Quaremba', 'Melanie Selwood']) {
+    const p = by.get(name);
+    assert.ok(p?.roster_only && p.speeches === 0, name);
+    assert.match(noHansardHeldHTML(p), /^<p class="person-no-hansard fineprint">No Hansard held for this period\. /);
+    const {html} = await renderPersonAnswer(p, readCounts({}, {}), new Map());
+    assert.ok(html.includes(noHansardHeldHTML(p)), name);
+    assert.doesNotMatch(html, /0 speeches/);
+  }
+  // Cory Bernardi is linked to his Council seat, not a list-only profile: his own speeches stand.
+  const cory = by.get('Cory Bernardi');
+  assert.ok(cory.chambers.includes('sa_lc') && cory.speeches > 0);
+  assert.equal(noHansardHeldHTML(cory), '');
+  assert.doesNotMatch((await renderPersonAnswer(cory, readCounts({}, {}), new Map())).html, /No Hansard held/);
+  assert.equal(noHansardHeldHTML(person), '');
+  assert.equal(noHansardHeldHTML(null), '');
+  assert.equal(NO_HANSARD_HELD, 'No Hansard held for this period.');
 });

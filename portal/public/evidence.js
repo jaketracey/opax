@@ -1,4 +1,4 @@
-import { personUrl, partyUrl } from './canonical-urls.js?v=c40e3d805e';
+import { personUrl, partyUrl } from './canonical-urls.js?v=bcc9a57bab';
 /* Source-backed connections. Only unambiguous identities are displayed. */
 import {shortDate} from './format.js';
 import { evidenceDateHTML } from './evidence-date.js';

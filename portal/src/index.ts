@@ -91,6 +91,7 @@ import { operatorAuthorized } from './operator-auth'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/party-page.js'
 import { referenceOnlyPeople } from '../public/roster-party.js'
+import { NO_HANSARD_HELD } from '../public/held-back-transcripts.js'
 import {foldDonorName} from '../public/donor-entity.js'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
@@ -4001,6 +4002,8 @@ interface Person {
   /** Surname prints folded into this person ("Shoebridge"; scripts/roster_fold.py): their speeches are this person's. */
   prints?: string[]
   speech_count_basis?: string
+  /** A list-only profile (scripts/roster_source_profiles.py): no speeches attributed, `speeches` is 0. */
+  roster_only?: boolean
   name: string
   speeches: number | null
   party: string | null
@@ -5262,8 +5265,8 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const role = p.speech_scope ? null : personRole(p, new Date().getUTCFullYear())
   const interests = await hasInterestsRegister(env, display, p.pid)
   title = personTitle(display, role, federal ? (interests ? 'Speeches, votes & interests' : 'Speeches & votes') : 'Speeches')
-  const count = p.speech_count_basis ? `No exact speech count yet; it will count only speeches they gave in the ${where} while in office.` : `${num(p.speeches ?? 0)} speeches in Hansard.`
-  const period = p.speech_scope ? '' : p.speech_count_basis ? `Transcript aggregate: ${years(p.first, p.last)}.` : `${years(p.first, p.last)}.`
+  const count = p.roster_only ? NO_HANSARD_HELD : p.speech_count_basis ? `No exact speech count yet; it will count only speeches they gave in the ${where} while in office.` : `${num(p.speeches ?? 0)} speeches in Hansard.`
+  const period = p.speech_scope ? '' : p.speech_count_basis ? `Transcript aggregate: ${years(p.first, p.last)}.` : p.roster_only ? `Recorded service: ${years(p.first, p.last)}.` : `${years(p.first, p.last)}.`
   const facts = `${display}${role ? `, ${roleLine(role)}` : who ? ` (${who})` : ''}: ${count}${period ? ` ${period}` : ''}`
   const holds = andList([federal ? 'votes' : '', interests ? 'register of interests' : '', p.party ? 'who funds their party' : ''].filter(Boolean))
   const tail = holds ? `Their ${holds}.` : 'Every speech cites the official record.'
