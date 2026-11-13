@@ -32,13 +32,19 @@ test.each(['0', '1'])(
     );
     // ios/app declares no tracking and no collected data for on-device
     // location. Anonymous analytics (docs/ANALYTICS.md) declares product
-    // interaction and a random install ID, unlinked, for Analytics only.
-    const analyticsTypes = ['ProductInteraction', 'DeviceID'].map((type) => ({
+    // interaction and a random install ID, unlinked, for Analytics only, and
+    // anonymous crash reports, unlinked, for App Functionality.
+    const analyticsTypes = [
+      ['ProductInteraction', 'Analytics'],
+      ['DeviceID', 'Analytics'],
+      ['CrashData', 'AppFunctionality'],
+      ['OtherDiagnosticData', 'AppFunctionality'],
+    ].map(([type, purpose]) => ({
       NSPrivacyCollectedDataType: `NSPrivacyCollectedDataType${type}`,
       NSPrivacyCollectedDataTypeLinked: false,
       NSPrivacyCollectedDataTypeTracking: false,
       NSPrivacyCollectedDataTypePurposes: [
-        'NSPrivacyCollectedDataTypePurposeAnalytics',
+        `NSPrivacyCollectedDataTypePurpose${purpose}`,
       ],
     }));
     const base = {

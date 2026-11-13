@@ -141,16 +141,19 @@ def verify_voice_info(info, enabled):
 
 
 def expected_privacy_types(voice_enabled):
-    """Type -> (linked, purposes): analytics' unlinked Analytics types, merged
-    with the voice label's linked App Functionality types when voice ships."""
+    """Type -> (linked, purposes): analytics' unlinked Analytics types and crash
+    reports' unlinked App Functionality types, merged with the voice label's
+    linked App Functionality types when voice ships (each purpose once)."""
+    function = "NSPrivacyCollectedDataTypePurposeAppFunctionality"
     expected = {"NSPrivacyCollectedDataType" + name: (False, ["NSPrivacyCollectedDataTypePurposeAnalytics"])
                 for name in ANALYTICS_DATA_TYPES}
+    expected.update({"NSPrivacyCollectedDataType" + name: (False, [function]) for name in CRASH_DATA_TYPES})
     if voice_enabled:
         for linked, names in ((True, VOICE_POLICY["linkedDataTypes"]), (False, VOICE_POLICY["unlinkedDataTypes"])):
             for name in names:
                 key = "NSPrivacyCollectedDataType" + name
                 was_linked, purposes = expected.get(key, (False, []))
-                expected[key] = (was_linked or linked, ["NSPrivacyCollectedDataTypePurposeAppFunctionality", *purposes])
+                expected[key] = (was_linked or linked, list(dict.fromkeys([function, *purposes])))
     return expected
 
 
@@ -689,7 +692,7 @@ def verify_app(app, args):
         check(True, "production privacy types, no tracking, existing required reasons retained")
     else:
         verify_collected_types(privacy, False)
-        check(True, "app privacy manifest: analytics types only, no collected location or tracking")
+        check(True, "app privacy manifest: analytics and crash report types only, no collected location or tracking")
     binary_privacy = scan_binary_privacy(app,
         output=Path(args.output).with_name("privacy-scan-" + args.kind + ".json"),
         evidence_dir=Path(args.output).parent / ("privacy-symbols-" + args.kind))

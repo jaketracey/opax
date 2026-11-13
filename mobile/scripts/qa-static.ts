@@ -173,6 +173,25 @@ assert.deepEqual(
   ],
   'Analytics declares Product Interaction and Device ID, never tracking',
 );
+assert.deepEqual(
+  release.ios.privacyManifests.NSPrivacyCollectedDataTypes.filter(
+    (entry: { NSPrivacyCollectedDataType: string }) =>
+      /CrashData|OtherDiagnosticData/.test(entry.NSPrivacyCollectedDataType),
+  ).map(
+    (entry: {
+      NSPrivacyCollectedDataType: string;
+      NSPrivacyCollectedDataTypeTracking: boolean;
+    }) => [
+      entry.NSPrivacyCollectedDataType,
+      entry.NSPrivacyCollectedDataTypeTracking,
+    ],
+  ),
+  [
+    ['NSPrivacyCollectedDataTypeCrashData', false],
+    ['NSPrivacyCollectedDataTypeOtherDiagnosticData', false],
+  ],
+  'Crash reports declare Crash Data and Other Diagnostic Data, never tracking',
+);
 for (const app of [release, e2e]) {
   assert.equal(app.name, 'OPAX');
   assert.equal(app.version, '1.1.4');

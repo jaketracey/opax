@@ -1089,6 +1089,11 @@ class ProductionVoiceTests(unittest.TestCase):
         rows.append({"NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeDeviceID",
                      "NSPrivacyCollectedDataTypeLinked": False, "NSPrivacyCollectedDataTypeTracking": False,
                      "NSPrivacyCollectedDataTypePurposes": [analytics]})
+        # Crash reports add unlinked Crash Data; their Other Diagnostic Data is
+        # already in the label, linked, for App Functionality.
+        rows.append({"NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeCrashData",
+                     "NSPrivacyCollectedDataTypeLinked": False, "NSPrivacyCollectedDataTypeTracking": False,
+                     "NSPrivacyCollectedDataTypePurposes": [function]})
         return {"NSPrivacyTracking": False, "NSPrivacyCollectedDataTypes": rows,
             "NSPrivacyAccessedAPITypes": [{"NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
                                          "NSPrivacyAccessedAPITypeReasons": ["CA92.1"]}]}
@@ -1181,13 +1186,20 @@ class ProductionVoiceTests(unittest.TestCase):
 
     def test_analytics_types_alone_without_voice(self):
         analytics = "NSPrivacyCollectedDataTypePurposeAnalytics"
+        function = "NSPrivacyCollectedDataTypePurposeAppFunctionality"
         def manifest(**change):
             return {"NSPrivacyTracking": False, "NSPrivacyCollectedDataTypes": [
                 {"NSPrivacyCollectedDataType": "NSPrivacyCollectedDataType" + name,
                  "NSPrivacyCollectedDataTypeLinked": False, "NSPrivacyCollectedDataTypeTracking": False,
-                 "NSPrivacyCollectedDataTypePurposes": [analytics], **change}
-                for name in ("ProductInteraction", "DeviceID")]}
+                 "NSPrivacyCollectedDataTypePurposes": [purpose], **change}
+                for name, purpose in (("ProductInteraction", analytics), ("DeviceID", analytics),
+                                      ("CrashData", function), ("OtherDiagnosticData", function))]}
         verify.verify_collected_types(manifest(), False)
+        # Crash reports must be declared: the analytics types alone now fail.
+        without_crashes = manifest()
+        without_crashes["NSPrivacyCollectedDataTypes"] = without_crashes["NSPrivacyCollectedDataTypes"][:2]
+        with self.assertRaises(ReleaseError):
+            verify.verify_collected_types(without_crashes, False)
         for change in ({"NSPrivacyCollectedDataTypeLinked": True}, {"NSPrivacyCollectedDataTypeTracking": True},
                        {"NSPrivacyCollectedDataTypePurposes": [analytics, "NSPrivacyCollectedDataTypePurposeThirdPartyAdvertising"]}):
             with self.subTest(change=change), self.assertRaises(ReleaseError):

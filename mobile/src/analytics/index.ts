@@ -71,8 +71,13 @@ export function analyticsContext(
 
 /**
  * The SDK's settings: anonymous only, no person profiles, no flags, surveys,
- * replay, exception or touch capture, no GeoIP, and every payload rebuilt by
+ * replay, push or touch capture, no GeoIP, and every payload rebuilt by
  * `scrubEvent` before it is queued or sent.
+ *
+ * Crash and error reports: uncaught exceptions, unhandled promise rejections
+ * and native crashes (iOS; Android Java/Kotlin and NDK). Never console lines,
+ * which can hold what a reader typed, and no breadcrumbs. The native SDK
+ * sends its own crash reports; the plugin patch scrubs those (exceptions.ts).
  */
 export function analyticsOptions(
   config: AnalyticsConfig,
@@ -89,11 +94,26 @@ export function analyticsOptions(
     sendFeatureFlagEvent: false,
     disableSurveys: true,
     enableSessionReplay: false,
-    errorTracking: { autocapture: false },
+    errorTracking: {
+      autocapture: {
+        uncaughtExceptions: true,
+        unhandledRejections: true,
+        console: [],
+        nativeCrashes: true,
+        androidNdkCrashes: true,
+      },
+      exceptionSteps: { enabled: false },
+    },
+    // Installing the native plugin turns these on by default.
+    capturePushNotificationSubscriptions: false,
+    capturePushNotificationOpened: false,
     captureAppLifecycleEvents: true,
     disableGeoip: true,
     customAppProperties: (defaults) => ({
       $app_name: 'OPAX',
+      // With the version and build, how PostHog matches a report to the
+      // release its symbols were uploaded for.
+      $app_namespace: 'au.com.opax.app',
       $app_version: context.appVersion,
       $app_build: context.appBuild,
       $os_name: context.platform === 'android' ? 'Android' : 'iOS',
@@ -175,8 +195,18 @@ export function track<E extends AnalyticsEvent>(
   }
 }
 
-/** The shared release gate and both payload scrubbers apply here too. */
+/**
+ * A render error a route boundary caught: the `opax_route_error` count, and
+ * one `$exception` with its stack. React does not pass a caught error on to
+ * the global handler in release builds, and console capture is off, so this
+ * is the only report of it. The shared release gate and the scrubbers apply.
+ */
 export function reportRouteError(error: unknown, segments: readonly string[]) {
+  try {
+    analytics()?.captureException(error);
+  } catch {
+    /* optional */
+  }
   try {
     const constructor =
       error !== null && typeof error === 'object'

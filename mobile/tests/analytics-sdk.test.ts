@@ -8,6 +8,8 @@ import type { AnalyticsContext } from '../src/analytics/events';
 // way a raw question could reach PostHog is tried at once: app events with
 // extra properties, SDK events the app never sends, super properties,
 // person properties, screen properties and a deep link URL on app open.
+// Crash and error reports go the same way: an uncaught error, an unhandled
+// rejection and a caught error, each carrying the question.
 // Nothing that leaves the device may contain the question.
 const question = 'Did Senator Example vote against the 2031 housing bill?';
 const encoded = encodeURIComponent(question);
@@ -42,7 +44,29 @@ async function decode(body: unknown): Promise<string> {
 
 let posthog: PostHog;
 const originalFetch = global.fetch;
+// The Hermes and React Native hooks the SDK installs its handlers on.
+type Handler = (error: unknown, isFatal: boolean) => void;
+let uncaught: Handler | undefined;
+let unhandled: ((id: number, error: unknown) => void) | undefined;
+const runtime = {
+  ErrorUtils: Reflect.get(globalThis, 'ErrorUtils'),
+  HermesInternal: Reflect.get(globalThis, 'HermesInternal'),
+};
 beforeAll(async () => {
+  Reflect.set(globalThis, 'ErrorUtils', {
+    getGlobalHandler: () => () => {},
+    setGlobalHandler: (handler: Handler) => {
+      uncaught = handler;
+    },
+  });
+  Reflect.set(globalThis, 'HermesInternal', {
+    hasPromise: () => true,
+    enablePromiseRejectionTracker: (options: {
+      onUnhandled: (id: number, error: unknown) => void;
+    }) => {
+      unhandled = options.onUnhandled;
+    },
+  });
   global.fetch = jest.fn(async (input: unknown, init?: RequestInit) => {
     sent.push({
       url: String(input),
@@ -108,11 +132,17 @@ beforeAll(async () => {
   posthog.capture('opax_question', { question });
   posthog.screen(`/ask/${question}`, { question });
   posthog.screen('/person/[slug]', { slug: 'jane-citizen', question });
+  uncaught!(new TypeError(`Cannot read property '${question}' of undefined`), false);
+  unhandled!(1, new Error(`Fetch failed: https://opax.com.au/api/ask?q=${encoded}`));
+  posthog.addExceptionStep(`Asked ${question}`);
+  posthog.captureException(new RangeError(`"${question}"`), { question });
   await posthog.flush();
 });
 afterAll(async () => {
   await posthog.shutdown();
   global.fetch = originalFetch;
+  Reflect.set(globalThis, 'ErrorUtils', runtime.ErrorUtils);
+  Reflect.set(globalThis, 'HermesInternal', runtime.HermesInternal);
 });
 
 function batch() {
@@ -156,6 +186,7 @@ test('only allowlisted events are sent, tagged with the platform and version', (
       'opax_app_start',
       'opax_screen_ready',
       '$screen',
+      '$exception',
     ]),
   );
   for (const name of names)
@@ -169,6 +200,7 @@ test('only allowlisted events are sent, tagged with the platform and version', (
       'opax_app_start',
       'opax_screen_ready',
       '$screen',
+      '$exception',
     ]).toContain(name);
   for (const event of events)
     expect(event.properties).toMatchObject({
@@ -194,4 +226,27 @@ test('only allowlisted events are sent, tagged with the platform and version', (
   expect(sent.map((request) => request.body).join('')).not.toMatch(
     /private-record|jane-citizen/,
   );
+});
+
+test('uncaught errors, unhandled rejections and caught errors arrive scrubbed', () => {
+  const exceptions = batch().filter((event) => event.event === '$exception');
+  expect(
+    exceptions.map((event) => {
+      const [exception] = event.properties.$exception_list as {
+        type: string;
+        value?: string;
+        mechanism: { handled: boolean };
+      }[];
+      return [exception!.type, exception!.value, exception!.mechanism.handled];
+    }),
+  ).toEqual([
+    ['TypeError', 'Cannot read property [redacted] of undefined', false],
+    ['Error', 'Fetch failed: https://opax.com.au/api/ask', false],
+    ['RangeError', '[redacted]', true],
+  ]);
+  for (const event of exceptions) {
+    expect(event.properties).not.toHaveProperty('$exception_steps');
+    expect(event.properties).not.toHaveProperty('question');
+    expect(event.properties).not.toHaveProperty('$app_state');
+  }
 });

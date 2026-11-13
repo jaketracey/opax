@@ -22,7 +22,7 @@ export const aboutCopy = {
   // docs/ANALYTICS.md, "iOS and Android app": shown only in builds that send it.
   privacyUsage: () =>
     phoneCopy(
-      'OPAX counts how the app is used, such as which screens open and how many sources an answer had, with a random ID made on this iPhone. The counts never include what you type, ask or search for, and aren’t linked to your account.',
+      'OPAX counts how the app is used, such as which screens open and how many sources an answer had, with a random ID made on this iPhone. It also sends anonymous crash and error reports, which say where in the app something went wrong. The counts and reports never include what you type, ask or search for, and aren’t linked to your account.',
     ),
   // journeys/follow.md 13.1 row 6: the one home of the storage line.
   privacyFollows: () =>
