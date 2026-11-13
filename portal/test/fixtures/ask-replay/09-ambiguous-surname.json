@@ -1,0 +1,207 @@
+{
+ "id": "ambiguous-surname",
+ "question": "What has Senator Sample said about housing?",
+ "input": {
+  "kind": "speech"
+ },
+ "model": [
+  {
+   "tool_calls": [
+    {
+     "name": "person_quotes",
+     "args": {
+      "person": "Jordan Sample",
+      "topic": "housing affordability"
+     }
+    }
+   ]
+  },
+  {
+   "tool_calls": [
+    {
+     "name": "answer",
+     "args": {
+      "points": [
+       {
+        "claim": "Jordan Sample told the Senate that rents in every capital city \"have risen faster than wages\" and criticised the Housing Australia Future Fund as too slow to build homes.",
+        "id": "99999999999999999999999999999999/t/body/0-110",
+        "quote": "have risen faster than wages"
+       },
+       {
+        "claim": "Jordan Sample, a Greens senator, has pressed for rent freezes and more public housing."
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "services": [
+  {
+   "path": "/find",
+   "match": [
+    "housing"
+   ],
+   "response": {
+    "resources": {
+     "99999999999999999999999999999999": {
+      "slug": "speech-910009",
+      "title": "Housing Australia Future Fund",
+      "origin": {
+       "created": "2024-03-20T00:00:00Z",
+       "collaborators": [
+        "Jordan Sample"
+       ]
+      },
+      "extra": {
+       "metadata": {
+        "kind": "speech"
+       }
+      },
+      "fields": {
+       "body": {
+        "paragraphs": {
+         "99999999999999999999999999999999/t/body/0-110": {
+          "text": "Rents in every capital city have risen faster than wages, and the fund will not build a single home for years."
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "path": "/slug/speech-910009",
+   "response": {
+    "id": "99999999999999999999999999999999",
+    "title": "Housing Australia Future Fund",
+    "origin": {
+     "created": "2024-03-20T00:00:00Z",
+     "collaborators": [
+      "Jordan Sample"
+     ]
+    },
+    "extra": {
+     "metadata": {
+      "date": "2024-03-20"
+     }
+    },
+    "data": {
+     "texts": {
+      "body": {
+       "value": {
+        "body": "Rents in every capital city have risen faster than wages, and the fund will not build a single home for years."
+       }
+      }
+     }
+    },
+    "usermetadata": {
+     "classifications": [
+      {
+       "labelset": "kind",
+       "label": "speech"
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "assets": {
+  "/parliamentarians.json": {
+   "meta": {},
+   "people": [
+    {
+     "name": "Jordan Sample",
+     "speeches": 412,
+     "party": "Greens",
+     "states": [
+      "federal"
+     ],
+     "chambers": [
+      "senate"
+     ],
+     "first": 2016,
+     "last": 2026,
+     "current": true,
+     "party_now": "Greens",
+     "prints": [
+      "Sample"
+     ]
+    },
+    {
+     "name": "Casey Example",
+     "speeches": 388,
+     "party": "Labor",
+     "states": [
+      "federal"
+     ],
+     "chambers": [
+      "house"
+     ],
+     "first": 2013,
+     "last": 2026,
+     "current": true,
+     "party_now": "Labor",
+     "prints": [
+      "Example"
+     ]
+    },
+    {
+     "name": "Penny Wong",
+     "speeches": 2937,
+     "party": "Labor",
+     "states": [
+      "federal"
+     ],
+     "chambers": [
+      "senate"
+     ],
+     "first": 2006,
+     "last": 2026,
+     "pid": "10678",
+     "current": true,
+     "party_now": "Labor",
+     "representation": [
+      {
+       "jurisdiction": "federal",
+       "chamber": "senate",
+       "electorate": "South Australia",
+       "state": "SA",
+       "basis": "Recorded parliamentary roster; exact name and chamber match"
+      }
+     ]
+    },
+    {
+     "name": "Morgan Sample",
+     "speeches": 960,
+     "party": "Liberal",
+     "states": [
+      "federal"
+     ],
+     "chambers": [
+      "senate"
+     ],
+     "first": 1999,
+     "last": 2016,
+     "current": false,
+     "party_now": "Liberal",
+     "prints": [
+      "Sample"
+     ]
+    }
+   ]
+  }
+ },
+ "expect": {
+  "answered": true,
+  "includes": [
+   "Jordan Sample",
+   "Morgan Sample"
+  ],
+  "citations": 1,
+  "cited": [
+   "99999999999999999999999999999999"
+  ]
+ }
+}

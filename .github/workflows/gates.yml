@@ -90,6 +90,40 @@ jobs:
         working-directory: mobile
         run: npx jest --silent --shard=${{ matrix.shard }}/6 --maxWorkers=4
 
+  # Stored Ask research payloads replayed through the current answer pipeline: no model, network,
+  # secrets or release build. Fails on an empty, limitation-only or uncited answer, or a changed API shape.
+  ask-replay:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: portal
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Identify the replay set
+        id: replay
+        run: |
+          if [ -f test/ask-replay.test.mjs ]; then
+            echo 'present=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'No Ask replay set in this commit; the replay does not apply.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        if: steps.replay.outputs.present == 'true'
+        with:
+          node-version: 24.21.0
+          cache: npm
+          cache-dependency-path: portal/package-lock.json
+      - name: Install
+        if: steps.replay.outputs.present == 'true'
+        run: npm ci
+      - name: Replay stored Ask payloads
+        if: steps.replay.outputs.present == 'true'
+        run: node --test --test-reporter=spec test/ask-replay.test.mjs
+
   portal:
     name: portal (${{ matrix.shard }}/4)
     runs-on: ubuntu-latest
