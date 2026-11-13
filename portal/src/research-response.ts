@@ -1,5 +1,6 @@
 import { claimClauses, proseClaimKeys } from './research-claims'
-import { appendWrittenPoints, proseFallback, rawToolEcho, tokens, writingFacts } from './research-writing'
+import { appendWrittenPoints, proseFallback, rawToolEcho, tokens, writingFacts, type WritingFact } from './research-writing'
+import { readableDate } from './tools/record-common'
 import { plainAnswerPayload, rewriteAnswerPayload, displayAnswerPayload } from './research-language'
 import { groundAnswerPayload } from './research-grounding'
 import {protectedDecision,answerDecision} from './research-coherence.mjs'
@@ -45,16 +46,113 @@ function recordsAnswer(payload: Record<string, unknown>, question: string): Reco
   return { ...payload, answer: held.answer, citations: held.citations, sources: sources.map(s => ({ ...s, cited: cited.has(String(s.resource)) })) }
 }
 
+/** Opens an answer made of the record lines a run found when nothing else could be written from them. */
+export const RECORD_SUMMARY_LEAD = 'Here is what the record shows.'
+type SourceRow = Record<string, unknown>
+const text = (value: unknown): string => typeof value === 'string' ? value.replace(/\s+/g, ' ').trim() : ''
+const sourceRows = (payload: Record<string, unknown>): SourceRow[] => (Array.isArray(payload.sources) ? payload.sources : []).filter((s): s is SourceRow => !!s && typeof s === 'object')
+/** One line naming a record: its title, who spoke and when, as the source row holds them. */
+function recordLine(row: SourceRow): string {
+  const title = text(row.title), speaker = text(row.speaker), date = text(row.date).slice(0, 10)
+  if (!title) return ''
+  const when = /^\d{4}(?:-\d{2}-\d{2})?$/.test(date) ? readableDate(date) : ''
+  return [speaker && !title.includes(speaker) ? `${speaker}, ${title}` : title, when].filter(Boolean).join(', ')
+}
+
+/** The record lines a run found, each cited, under a plain lead: the facts research gathered, the record summaries its
+ * tools returned, else the title of each record found. Used only when no answer could be written from them. */
+export function recordSummaryAnswer(payload: Record<string, unknown>, facts: WritingFact[]): Record<string, unknown> | null {
+  const rows = sourceRows(payload), research = payload.research as ResearchPayload | undefined
+  const listed = new Set(rows.map(row => text(row.resource))), added: SourceRow[] = []
+  const lines: { line: string; resource: string }[] = [], seen = new Set<string>()
+  const add = (line: string, resource: string) => {
+    line = text(line).replace(/^[-*•]\s*/, '')
+    const key = line.toLowerCase()
+    if (!resource || !/\p{L}/u.test(line) || seen.has(key) || lines.length >= 8) return
+    seen.add(key); lines.push({ line, resource })
+  }
+  for (const fact of facts) {
+    const resource = fact.source.resource
+    if (fact.coverage || fact.metadata || /^USER_CONTEXT_/i.test(resource)) continue
+    if (!listed.has(resource)) { listed.add(resource); added.push({ ...fact.source, snippet: fact.text }) }
+    add(fact.text, resource)
+  }
+  for (const row of rows) {
+    const resource = text(row.resource)
+    if (!resource || /^(?:USER_CONTEXT_|coverage)/i.test(resource) || row.coverage === true) continue
+    // A tool's record row is its own summary; a document is named by its title.
+    add(/^fact-/.test(resource) && text(row.snippet) ? text(row.snippet) : recordLine(row), resource)
+  }
+  // Research's own finds, when the response kept no source rows (a failed loop hands its sources to the fallback).
+  if (!lines.length) for (const [i, found] of (research?.sources ?? []).entries()) {
+    const url = text(found?.url), resource = `research-${i + 1}`
+    if (!url || !text(found?.title)) continue
+    const row: SourceRow = { resource, slug: '', kind: found.kind || 'record', title: found.title, href: url, url, snippet: '', ...(found.date ? { date: found.date } : {}), ...(found.speaker ? { speaker: found.speaker } : {}) }
+    added.push(row); add(recordLine(row), resource)
+  }
+  if (!lines.length) return null
+  let answer = RECORD_SUMMARY_LEAD
+  const citations: Record<string, [number, number][]> = {}
+  for (const { line, resource } of lines) {
+    answer += '\n- '
+    const from = Array.from(answer).length
+    answer += /[.!?]$/.test(line) ? line : line + '.'
+    ;(citations[resource + '/t/body/0'] ??= []).push([from, Array.from(answer).length])
+  }
+  const cited = new Set(lines.map(l => l.resource))
+  const sources = [...rows, ...added].map(row => ({ ...row, cited: cited.has(text(row.resource)) }))
+  return { ...payload, answer, citations, sources, answered: true, answer_decision: 'answer' }
+}
+
+const SEARCHED: [RegExp, string][] = [
+  [/^(?:search|person_quotes|read_passage|find_quotes|person_overview|count_speeches|speech_trend)$/, 'Hansard speeches'],
+  [/^(?:money_totals|party_receipts|ranked_money|campaign_spend|entity_profile)$/, 'donation and receipt records'],
+  [/^(?:paid_answer|parliamentary_pay|annual_reports|agency_reports|member_expenses)$/, 'pay and expense records'],
+  [/^(?:division|member_divisions|member_votes)$/, 'recorded votes'],
+  [/^(?:legislation|sponsored_bills|count_records)$/, 'bill records'],
+  [/^(?:grants|contracts|public_finances)$/, 'grant and contract records'],
+  [/^(?:royal_commissions|integrity_reports)$/, 'inquiry and integrity reports'],
+  [/^(?:declared_interests|access_registers)$/, 'interest and access registers'],
+]
+/** What a run searched, in plain words, from the tools its research trail used. */
+function searchedRecords(payload: Record<string, unknown>): string {
+  const trail = (payload.research as ResearchPayload | undefined)?.trail ?? []
+  const named = [...new Set(trail.flatMap(step => SEARCHED.filter(([tool]) => tool.test(String(step.tool))).map(([, words]) => words)))]
+  const kinds = named.length ? named : ['Hansard speeches', 'OPAX’s public records']
+  return kinds.length > 1 ? kinds.slice(0, -1).join(', ') + ' and ' + kinds.at(-1) : kinds[0]
+}
+/** The answer when a run found nothing at all: what it searched and what to ask next. No quotation of the question:
+ * quotation marks the sources do not hold come off at grounding. */
+export function noRecordAnswer(payload: Record<string, unknown>): Record<string, unknown> {
+  const answer = `OPAX searched ${searchedRecords(payload)} and found no record that answers this question. ` +
+    'Try asking again with a member, party, bill or year named, or ask about one part of the question at a time.'
+  const decision = protectedDecision(payload) ? payload.answer_decision : 'limitation'
+  return { ...payload, answer, citations: {}, answered: true, answer_decision: decision }
+}
+
+/** One answer after another, citations shifted to the second's new place and each source listed once. */
+function joinAnswers(first: Record<string, unknown>, second: Record<string, unknown>): Record<string, unknown> {
+  const head = String(first.answer ?? '').trimEnd(), offset = Array.from(head).length + 2
+  const citations: Record<string, [number, number][]> = { ...(first.citations as Record<string, [number, number][]> | undefined) }
+  for (const [id, ranges] of Object.entries((second.citations ?? {}) as Record<string, [number, number][]>))
+    citations[id] = [...(citations[id] ?? []), ...ranges.map(([a, b]) => [a + offset, b + offset] as [number, number])]
+  const rows = new Map<string, SourceRow>()
+  for (const [i, row] of [...sourceRows(first), ...sourceRows(second)].entries()) {
+    const key = text(row.resource) || `#${i}`, prior = rows.get(key)
+    rows.set(key, prior ? { ...prior, cited: prior.cited === true || row.cited === true } : row)
+  }
+  return { ...first, answer: head + '\n\n' + String(second.answer ?? ''), citations, sources: [...rows.values()], answered: true }
+}
+
 /** An answer with no text is written from what the response holds (old cached and streamed payloads included): the facts
  * research gathered, else the records retrieval found, in their own words and cited; else, for a response that claimed
- * an answer, one plain line on what the records could not establish. With none of those, the response says it is
- * unanswered (answered: false), which readers show as their no-answer view: an empty answer is never sent as answered.
- * An explicit non-answer (answered: false, including an internal partial) and an error stay as sent. */
+ * an answer, one plain line on what the records could not establish; else the record lines the run found, cited, under
+ * "Here is what the record shows"; else a no-record answer naming what was searched. A completed run never reaches a
+ * reader with no answer text. An explicit non-answer (answered: false, including an internal partial) and an error
+ * stay as sent. */
 export function ensureAnswerText(payload: Record<string, unknown>, question?: string): Record<string, unknown> {
   const claimed = payload.answered === true || payload.answer_decision === 'answer'
   if (typeof payload.answer === 'string' && payload.answer.trim() || payload.answered === false && !claimed || typeof payload.error === 'string') return payload
-  // An evidence-only answer is read from its excerpts.
-  if (payload.answer_status === 'evidence_only' && Array.isArray(payload.evidence_excerpts) && payload.evidence_excerpts.length) return payload
   const research = payload.research as ResearchPayload | undefined
   const facts = writingFacts({ answer: '', citations: {}, sources: (research?.pre_writer_sources ?? []).map(s => ({ ...s, cited: true })) } as QualitativeAnswer)
   // Reuse the writer's period, scope and grounding checks. A tool fact is never model-authored fallback text.
@@ -65,11 +163,25 @@ export function ensureAnswerText(payload: Record<string, unknown>, question?: st
     return typeof checked.answer === 'string' && checked.answer.trim() ? { ...checked, answered: true } : null
   }
   const open = !protectedDecision(payload)
-  if (question && open && facts.length) { const written = write(question); if (written) return written }
-  if (open) { const listed = recordsAnswer(payload, question ?? ''); if (listed) return listed }
-  if (question && open && claimed && !facts.length) { const line = write(question); if (line) return line }
-  // Nothing to write from: the response says it is unanswered rather than claiming an empty answer.
-  return { ...payload, answered: false }
+  // A typed limitation still shows the records the run found; a refusal or a clarification does not.
+  const lists = open || payload.answer_decision === 'limitation'
+  // An evidence-only payload's excerpts are records the run found; they count as its sources here.
+  const excerpts = (Array.isArray(payload.evidence_excerpts) ? payload.evidence_excerpts : []) as { resource?: unknown; text?: unknown }[]
+  const found = excerpts.length ? { ...payload, sources: sourceRows(payload).map(row => { const hit = excerpts.find(e => e?.resource === row.resource); return hit && !text(row.snippet) ? { ...row, snippet: text(hit.text) } : row }) } : payload
+  const records = () => lists ? recordsAnswer(found, question ?? '') ?? recordSummaryAnswer(found, facts) : null
+  // A written limitation is followed by what the run did find, so a limit is never all a reader sees of it.
+  const withRecords = (written: Record<string, unknown>) => {
+    if (written.answer_decision !== 'limitation') return written
+    const listed = records()
+    return listed ? joinAnswers(written, listed) : written
+  }
+  if (question && open && facts.length) { const written = write(question); if (written) return withRecords(written) }
+  if (open) { const listed = recordsAnswer(found, question ?? ''); if (listed) return listed }
+  if (question && open && claimed && !facts.length) { const line = write(question); if (line) return withRecords(line) }
+  // Nothing could be written: show what the run found, each line cited; with nothing found, say what was searched.
+  const listed = records()
+  if (listed) return { ...listed, answered: true, ...(open ? {} : { answer_decision: payload.answer_decision }) }
+  return noRecordAnswer(payload)
 }
 
 /** Add metadata only at the boundary. Existing JSON and SSE fields survive. */
