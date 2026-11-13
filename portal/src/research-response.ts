@@ -4,7 +4,8 @@ import { plainAnswerPayload, rewriteAnswerPayload, displayAnswerPayload } from '
 import { groundAnswerPayload } from './research-grounding'
 import {protectedDecision,answerDecision} from './research-coherence.mjs'
 import {sentenceParts} from './research-claim-audit.mjs'
-import type { QualitativeAnswer } from './research-types'
+import type { Passage, QualitativeAnswer } from './research-types'
+import { passagesAnswer } from './research-evidence'
 import type { ResearchPayload } from './research-types'
 import type { researchEvalUsage } from './research-eval'
 import { inferPeriod } from './ask-period'
@@ -25,19 +26,48 @@ function plannerPayload(payload: Record<string, unknown>, previous?: ResearchPay
 export const cacheableRoutedAnswer = (payload: Record<string, unknown>, requireCitation: boolean): boolean =>
   typeof payload.answer === 'string' && !!payload.answer.trim() && !protectedDecision(payload) && (!requireCitation || Object.keys(payload.citations ?? {}).length > 0)
 
-/** An answer with no text is written from the facts research gathered, including old cached and streamed payloads. */
+/** The retrieved records in their own words, each cited: the passage most relevant to the question first, one per
+ * record. Record facts are left to the writer's checks above; only passages a reader can open are listed. */
+function recordsAnswer(payload: Record<string, unknown>, question: string): Record<string, unknown> | null {
+  const sources = (Array.isArray(payload.sources) ? payload.sources : []).filter((s): s is Record<string, unknown> => !!s && typeof s === 'object')
+  const passages = new Map<string, Passage>()
+  for (const s of sources) {
+    const resource = typeof s.resource === 'string' ? s.resource : '', text = typeof s.snippet === 'string' ? s.snippet.trim() : ''
+    if (!resource || /^(?:fact-|coverage|research-|USER_CONTEXT_)/i.test(resource) || s.coverage === true || text.length < 20) continue
+    const id = resource + '/t/body/0'
+    if (passages.has(id)) continue
+    passages.set(id, { id, resource, slug: String(s.slug ?? ''), title: String(s.title ?? ''), text, url: String(s.href ?? s.url ?? ''), kind: String(s.kind ?? 'record'),
+      ...(typeof s.speaker === 'string' && s.speaker.trim() ? { speaker: s.speaker } : {}), ...(typeof s.date === 'string' && s.date ? { date: s.date } : {}) })
+  }
+  const held = passagesAnswer(passages, question)
+  if (!held?.answer.trim()) return null
+  const cited = new Set(Object.keys(held.citations).map(id => id.split('/')[0]))
+  return { ...payload, answer: held.answer, citations: held.citations, sources: sources.map(s => ({ ...s, cited: cited.has(String(s.resource)) })) }
+}
+
+/** An answer with no text is written from what the response holds (old cached and streamed payloads included): the facts
+ * research gathered, else the records retrieval found, in their own words and cited; else, for a response that claimed
+ * an answer, one plain line on what the records could not establish. With none of those, the response says it is
+ * unanswered (answered: false), which readers show as their no-answer view: an empty answer is never sent as answered.
+ * An explicit non-answer (answered: false, including an internal partial) and an error stay as sent. */
 export function ensureAnswerText(payload: Record<string, unknown>, question?: string): Record<string, unknown> {
-  if (typeof payload.answer === 'string' && payload.answer.trim() || payload.answered !== true && payload.answer_decision !== 'answer') return payload
-  if (question && !protectedDecision(payload)) {
-    const research = payload.research as ResearchPayload | undefined
-    const sources = research?.pre_writer_sources ?? []
-    const facts = writingFacts({ answer: '', citations: {}, sources: sources.map(s => ({ ...s, cited: true })) } as QualitativeAnswer)
-    // Reuse the writer's period, scope and grounding checks. A tool fact is never model-authored fallback text.
+  const claimed = payload.answered === true || payload.answer_decision === 'answer'
+  if (typeof payload.answer === 'string' && payload.answer.trim() || payload.answered === false && !claimed || typeof payload.error === 'string') return payload
+  // An evidence-only answer is read from its excerpts.
+  if (payload.answer_status === 'evidence_only' && Array.isArray(payload.evidence_excerpts) && payload.evidence_excerpts.length) return payload
+  const research = payload.research as ResearchPayload | undefined
+  const facts = writingFacts({ answer: '', citations: {}, sources: (research?.pre_writer_sources ?? []).map(s => ({ ...s, cited: true })) } as QualitativeAnswer)
+  // Reuse the writer's period, scope and grounding checks. A tool fact is never model-authored fallback text.
+  const write = (question: string) => {
     const period = inferPeriod(question), constraints = { ...(payload.answer_scope as import('./ask-constraints').AskConstraints | undefined), period }
     const written = proseFallback({ question, period, constraints, facts })
     const checked = groundAnswerPayload({ ...payload, ...written, answer_scope: constraints }, question)
-    if (typeof checked.answer === 'string' && checked.answer.trim()) return { ...checked, answered: true }
+    return typeof checked.answer === 'string' && checked.answer.trim() ? { ...checked, answered: true } : null
   }
+  const open = !protectedDecision(payload)
+  if (question && open && facts.length) { const written = write(question); if (written) return written }
+  if (open) { const listed = recordsAnswer(payload, question ?? ''); if (listed) return listed }
+  if (question && open && claimed && !facts.length) { const line = write(question); if (line) return line }
   // Nothing to write from: the response says it is unanswered rather than claiming an empty answer.
   return { ...payload, answered: false }
 }
