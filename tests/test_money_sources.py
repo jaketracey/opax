@@ -22,6 +22,7 @@ from scripts import donor_disclosure as dd
 from scripts import export_money_graph as federal
 from scripts import export_state_money as state
 from scripts.export_donor_disclosures import disclosure_catalog
+from scripts.test_donor_disclosure import recipient_fixture
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -117,6 +118,7 @@ class FederalSourceTests(ExportCase):
                    ext=[("Acme Pty Ltd", "LNP", 50, "2020-21", "finance", "qld", "qld_ecq")])
         db = sqlite3.connect(path)
         self.addCleanup(db.close)
+        recipient_fixture(db, [("Acme Pty Ltd", "Labor", 100, "2019-20", "Donation Received")])
         catalog = disclosure_catalog(db, [{"id": "donor:acme", "label": "Acme Pty Ltd", "kind": "donor",
                                            "aliases": [], "references": []}])
         by_jur = {d["jurisdiction"]: d for d in catalog["donors"]}
@@ -340,6 +342,7 @@ class CatalogueDedupeTests(unittest.TestCase):
                        [("Pratt Holdings Pty Ltd",), ("PRATT HOLDINGS P/L",)])
         candidates = [{"id": "donor:a", "label": "Pratt Holdings Pty Ltd", "kind": "donor", "aliases": [], "references": []},
                       {"id": "donor:b", "label": "PRATT HOLDINGS P/L", "kind": "donor", "aliases": [], "references": []}]
+        recipient_fixture(db, [("Pratt Holdings Pty Ltd", "Liberal", 300, "2019-20", "Donation Received"), ("PRATT HOLDINGS P/L", "Liberal", 200, "2020-21", "Donation Received")])
         records = disclosure_catalog(db, candidates)["donors"]
         self.assertEqual(len(records), 1)
         self.assertEqual(records[0]["total"], 500)
@@ -354,6 +357,7 @@ class CatalogueDedupeTests(unittest.TestCase):
                        [("Acme A", 300, "2019-20", 1), ("Acme B", 200, "2020-21", 2)])
         candidates = [{"id": "donor:a", "label": "Acme A", "kind": "donor", "aliases": [], "references": []},
                       {"id": "donor:b", "label": "Acme B", "kind": "donor", "aliases": [], "references": []}]
+        recipient_fixture(db, [("Acme A", "Liberal", 300, "2019-20", "Donation Received"), ("Acme B", "Liberal", 200, "2020-21", "Donation Received")])
         self.assertEqual(len(disclosure_catalog(db, candidates)["donors"]), 2)
 
 
