@@ -11,7 +11,7 @@ import {readFileSync} from 'node:fs';
 import {Worker} from 'node:worker_threads';
 import {JSDOM} from 'jsdom';
 import {build} from 'esbuild';
-import {partyMoneyData, partyMoneyTableConfig, partyReturnFigures, receiptScopeLabel, registerTableHTML} from '../public/register-tables.js';
+import {partyMoneyData, partyMoneyTableConfig, partyReturnFigures, partyReturnScopeLabel, receiptScopeLabel, registerTableHTML} from '../public/register-tables.js';
 import {resolveFlow, pageHTML, landingHTML, comparableFlows, receiptTypeNote, flowScope, receiptGraph} from '../public/money-explain.js';
 import {partyMoneyResponse} from '../src/party-money-table.ts';
 import {partyMoneyBucketFiles} from '../../scripts/build_growth_modules.mjs';
@@ -173,16 +173,21 @@ test('the D1 party-money and money-connections rows carry the page\'s figures an
 // A party's headline: its own returns, every receipt line once (partyReturnFigures).
 // The legacy total also holds donors' own declarations of the same gifts and
 // transfers between branches; the node's by_type only sums donors on the map.
-const HEADLINES = {Labor: 679431844, Liberal: 490240627, Nationals: 66516083, Greens: 34341319};
+const HEADLINES = {Labor: 679819682, Liberal: 481976690, Nationals: 66516083, Greens: 34362048, 'Country Liberal Party': 8416214};
+// What the headline counts and leaves out, the same words on the party page, the server page and the map card.
+const PARTY_SCOPE = 'Itemised receipts in the party\'s own federal returns, 1998-99 to 2024-25, each counted once. '
+  + 'Public funding, transfers between the party\'s own branches and amounts under the disclosure threshold are not included.';
 
 test('a party\'s headline is its own return, each line once, with the scope line; an older file keeps the record total', () => {
   for (const [label, expected] of Object.entries(HEADLINES)) {
     const node = graph.nodes.find(n => n.kind === 'party' && n.label === label);
     const own = partyReturnFigures(node);
     assert.equal(Math.round(own.total), expected, label);
-    assert.ok(own.total < node.total, `${label}: below the legacy all-record total`);
+    // The CLP's legacy total held only rows already mapped to it ($1.0m); its returns were counted under Liberal.
+    if (label === 'Country Liberal Party') assert.ok(own.total > node.total, label);
+    else assert.ok(own.total < node.total, `${label}: below the legacy all-record total`);
     assert.ok(own.total > Object.values(node.by_type).reduce((a, b) => a + b, 0), `${label}: above the donors drawn on the map`);
-    assert.equal(receiptScopeLabel(own), SCOPE);
+    assert.equal(partyReturnScopeLabel(own), PARTY_SCOPE);
     const lines = Object.values(node.return_by_type_year).flatMap(types => Object.values(types)).reduce((n, [, c]) => n + c, 0);
     assert.equal(own.count, lines);
   }
@@ -190,7 +195,13 @@ test('a party\'s headline is its own return, each line once, with the scope line
   const fallback = partyReturnFigures(older);
   assert.equal(fallback.total, older.total);
   assert.equal(fallback.typed, false);
-  assert.match(receiptScopeLabel(fallback), /a gift can appear twice/);
+  assert.match(partyReturnScopeLabel(fallback), /a gift can appear twice/);
+  // Cells with no line are no headline: the record total stands, never $0.
+  const empty = partyReturnFigures({...older, return_by_type: {}, return_by_type_year: {}});
+  assert.equal(empty.total, older.total);
+  for (const node of graph.nodes.filter(n => n.kind === 'party' && n.total > 0)) {
+    assert.ok(partyReturnFigures(node).total > 0, `${node.label} never heads with $0`);
+  }
 });
 
 function renderParty(path) {
@@ -212,17 +223,17 @@ test('the real party page heads Labor with its own return total and says what it
   assert.deepEqual(result.errors.filter(e => !/getContext\(\) method/.test(e)), []);
   const doc = new JSDOM(result.html).window.document;
   const flows = doc.querySelector('#entry-flows');
-  assert.equal(flows.getAttribute('data-rail-figure'), '$679.4m', '"Where it came from" carries the party-return total');
+  assert.equal(flows.getAttribute('data-rail-figure'), '$679.8m', '"Where it came from" carries the party-return total');
   const text = flows.textContent.replace(/\s+/g, ' ');
-  assert.match(text, /Received \(disclosed\)\s*\$679\.4m/);
-  assert.match(text, new RegExp(`Receipts counted\\s*${(33631).toLocaleString()}`));
-  assert.ok(text.replace(/Measured as\s*/, 'Measured as ').includes(`Measured as ${SCOPE}`), 'the head facts say what the total counts');
+  assert.match(text, /Received \(disclosed\)\s*\$679\.8m/);
+  assert.match(text, new RegExp(`Receipts counted\\s*${(33667).toLocaleString()}`));
+  assert.ok(text.replace(/Measured as\s*/, 'Measured as ').includes(`Measured as ${PARTY_SCOPE}`), 'the head facts say what the total counts and leaves out');
   assert.doesNotMatch(text, /\$880\.5m|includes internal party transfers/);
 });
 
 test('the money map card heads a party with its own return, in the view\'s window and measure', async () => {
   const built = await build({entryPoints: [new URL('../graph/index.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm'});
-  const {receiptGraphView, partyReturnWindow} = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
+  const {receiptGraphView, partyReturnWindow, partyReturnScope} = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
   const labor = receiptGraphView(graph).nodes.find(n => n.id === 'party:Labor');
   assert.equal(Math.round(labor.partyReturn.total), HEADLINES.Labor);
   assert.equal(Math.round(labor.total), Math.round(Object.values(labor.by_type).reduce((a, b) => a + b, 0)), 'map geometry still sums the donors on the map');
@@ -233,8 +244,13 @@ test('the money map card heads a party with its own return, in the view\'s windo
   const {return_by_type, return_by_type_year, ...older} = raw;
   assert.equal(partyReturnWindow(older), null, 'an older file keeps the card as it was');
   assert.equal(receiptGraphView(graph).nodes.find(n => n.kind === 'donor').partyReturn, undefined);
+  assert.equal(partyReturnWindow({...older, return_by_type: {}}), null, 'empty cells keep the card as it was, never $0');
+  assert.equal(partyReturnScope(1998, 2024), PARTY_SCOPE, 'the card says what the page says');
+  const clp = receiptGraphView(graph).nodes.find(n => n.id === 'party:Country Liberal Party');
+  assert.equal(Math.round(clp.partyReturn.total), HEADLINES['Country Liberal Party']);
   const card = readFileSync(new URL('../graph/index.ts', import.meta.url), 'utf8');
   assert.ok(card.includes("const headline = node.kind === 'party' && node.partyReturn ? node.partyReturn : node"));
+  assert.ok(card.includes("textContent = partyReturnScope(headline.firstYear, headline.lastYear)"));
 });
 
 test('"Explain this money" falls back to the party\'s own return lines when the AEC return totals are absent', () => {
@@ -253,5 +269,16 @@ test('the server party page states the party-return total with its scope', () =>
   const worker = readFileSync(new URL('../src/index.ts', import.meta.url), 'utf8');
   assert.ok(worker.includes('const own = partyReturnFigures(node as Parameters<typeof partyReturnFigures>[0])'));
   const own = partyReturnFigures(graph.nodes.find(n => n.id === 'party:Labor'));
-  assert.equal(`(${receiptScopeLabel(own).replace(/^A/, 'a')})`, `(all receipt types, 1998-99 to 2024-25, as the parties reported them in federal returns)`);
+  assert.ok(worker.includes('if (own.typed) scopeNote = partyReturnScopeLabel(own)'));
+  assert.equal(partyReturnScopeLabel(own), PARTY_SCOPE);
+});
+
+test('the real Country Liberal Party page heads with its own returns, not $0', {timeout: 120_000}, async () => {
+  const result = await renderParty('/subject/party/country-liberal-party');
+  assert.deepEqual(result.errors.filter(e => !/getContext\(\) method/.test(e)), []);
+  const flows = new JSDOM(result.html).window.document.querySelector('#entry-flows');
+  assert.equal(flows.getAttribute('data-rail-figure'), '$8.4m');
+  const text = flows.textContent.replace(/\s+/g, ' ');
+  assert.match(text, /Received \(disclosed\)\s*\$8\.4m/);
+  assert.doesNotMatch(text, /Received \(disclosed\)\s*\$0\b/);
 });

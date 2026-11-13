@@ -287,11 +287,25 @@ export function receiptScopeLabel(figures) {
  * and its scope line says a gift can appear twice there.
  */
 export function partyReturnFigures(node) {
-  if (!node?.return_by_type) {
+  if (!node?.return_by_type || !Object.keys(node.return_by_type).length) {
     const {by_type, by_type_year, ...legacy} = node || {};
     return receiptFigures(legacy);
   }
   return receiptFigures({by_type:node.return_by_type, by_type_year:node.return_by_type_year || {}});
+}
+
+/**
+ * What a party's headline counts, in a reader's words: what it is, then what it
+ * leaves out, so nobody reads it against the AEC's larger Total Receipts.
+ * Without return cells it is the record total, and receiptScopeLabel says so.
+ * The money map card prints the same words (graph/index.ts, partyReturnScope).
+ */
+export function partyReturnScopeLabel(figures) {
+  if (!figures?.typed) return receiptScopeLabel(figures);
+  const span = figures.firstYear == null ? '' : figures.firstYear === figures.lastYear
+    ? `, ${financialYear(figures.firstYear)}` : `, ${financialYear(figures.firstYear)} to ${financialYear(figures.lastYear)}`;
+  return `Itemised receipts in the party's own federal returns${span}, each counted once. `
+    + 'Public funding, transfers between the party\'s own branches and amounts under the disclosure threshold are not included.';
 }
 
 /**

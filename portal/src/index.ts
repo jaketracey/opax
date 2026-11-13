@@ -47,7 +47,7 @@ import { governmentFinancePage, governmentFinanceReader } from './government-fin
 import { govAdvertisingPage, govAdvertisingReader, govAdvertisingReady } from './gov-advertising'
 import { taxExpendituresPage, taxExpendituresReader, taxExpendituresReady } from './tax-expenditures'
 import {parseQuery,serializeQuery,type Page} from '../public/datatable.js'
-import {partyMoneyData,partyMoneyTableConfig,partyReturnFigures,receiptFigures,receiptScopeLabel,registerTableHTML} from '../public/register-tables.js'
+import {partyMoneyData,partyMoneyTableConfig,partyReturnFigures,partyReturnScopeLabel,receiptFigures,registerTableHTML} from '../public/register-tables.js'
 import {grantsHTML} from './grants-table'
 import {saGrantsPage,saGrantsReader} from './sa-grants'
 import {actInvoicesPage} from './act-invoices'
@@ -5551,6 +5551,8 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   const heading = dir === 'party' ? partyDisplayName(display) : display
   const title = `${heading} · OPAX`
   let facts: string
+  // A party's money figure says what it counts and leaves out (partyReturnScopeLabel).
+  let scopeNote = ''
   let tail = ''
   const ldType = dir==='donor' ? 'Dataset' : independent ? 'CollectionPage' : 'Organization'
   let card: CardSpec
@@ -5578,11 +5580,13 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
       // The party's own returns, each receipt line once (partyReturnFigures), as the browser page heads it.
       const own = partyReturnFigures(node as Parameters<typeof partyReturnFigures>[0])
       parts.push(own.typed
-        ? `${money(own.total)} in disclosed receipts (${receiptScopeLabel(own).replace(/^A/,'a')})`
+        ? `${money(own.total)} in disclosed receipts`
         : `${money(node.total)} in disclosed receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort})`)
+      if (own.typed) scopeNote = partyReturnScopeLabel(own)
     }
     if (parts.length) {
       facts = independent ? `${heading}: ${INDEPENDENTS_DESCRIPTION} ${parts.join('; ')}.` : `${heading}: ${parts.join('; ')}.`
+      if (scopeNote) facts += ` ${scopeNote}`
       tail = independent ? (speeches ? 'Their recorded speeches.' : '') : speeches && node ? 'What its members said, and who paid.' : speeches ? 'What its members said.' : node ? 'Who paid.' : ''
     } else {
       facts = independent ? INDEPENDENTS_DESCRIPTION : `${heading} in the OPAX record of Australian parliamentary speeches and disclosed political receipts.`

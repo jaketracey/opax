@@ -343,10 +343,18 @@ function typedReceiptFigures<T extends YearFigures>(x: T, lo: number, hi: number
 
 /** A party's own-return figures in a window, or null for a node or file without them. */
 export function partyReturnWindow(n: MoneyNode, lo = -Infinity, hi = Infinity, cpi = false, measure: ReceiptMeasure = 'all_types') {
-  if (n.kind !== 'party' || !n.return_by_type) return null
+  if (n.kind !== 'party' || !n.return_by_type || !Object.keys(n.return_by_type).length) return null
   const { total, count, firstYear, lastYear } = typedReceiptFigures({ total: 0, count: 0, firstYear: null, lastYear: null,
     by_type: n.return_by_type, by_type_year: n.return_by_type_year ?? {} }, lo, hi, cpi, measure)
   return { total, count, firstYear, lastYear }
+}
+
+/** What a party's headline counts and leaves out: the party page's words (register-tables.js, partyReturnScopeLabel). */
+export function partyReturnScope(first: number | null, last: number | null): string {
+  const fy = (year: number) => `${year}-${String((year + 1) % 100).padStart(2, '0')}`
+  const span = first == null ? '' : first === last || last == null ? `, ${fy(first)}` : `, ${fy(first)} to ${fy(last)}`
+  return `Itemised receipts in the party's own federal returns${span}, each counted once. `
+    + "Public funding, transfers between the party's own branches and amounts under the disclosure threshold are not included."
 }
 
 export function receiptMeasureLabel(measure: ReceiptMeasure): string {
@@ -1922,7 +1930,7 @@ export async function mountMoneyMap(
             ? `Held by receipt sources on this map across ${node.count.toLocaleString()} contracts · ${span}`
             : `Awarded to receipt sources on this map across ${node.count.toLocaleString()} grants · ${span}`)
           : `Disclosed across ${node.count.toLocaleString()} receipt records · ${span}`
-    if (node.partyReturn) el('p', 'mm-card-fine', card).textContent = 'As the party reported them in its federal returns, each receipt once, without public funding or transfers between its branches'
+    if (node.partyReturn && headline.count > 0) el('p', 'mm-card-fine', card).textContent = partyReturnScope(headline.firstYear, headline.lastYear)
     inflationFineprint(card)
 
     const listTitle = el('div', 'mm-card-section', card)
