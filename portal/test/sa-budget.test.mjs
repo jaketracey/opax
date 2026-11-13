@@ -1,21 +1,21 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,readdirSync,statSync} from 'node:fs';
-import {execFileSync} from 'node:child_process';
 import {build} from 'esbuild';
 import {JSDOM} from 'jsdom';
 import {budgetPage} from '../src/budget.ts';
 import {clearedSABudget,saBudgetRows,saBudgetSection} from '../src/sa-budget.ts';
 import {saBudgetConfig,saBudgetPhoneColumns,saBudgetValue,decorateSABudgetTable} from '../public/sa-budget-table.js';
 import {toCSV} from '../public/datatable.js';
+import {pythonSkip,runPython} from './helpers/python.mjs';
 
-const root=new URL('../../',import.meta.url);
-const h=JSON.parse(execFileSync('python3',['-c',"import json,sys;from scripts.sa_budget.check import projection;json.dump(projection(json.load(open('data/staged/sa-budget/hub.json'))),sys.stdout)"],{cwd:root,encoding:'utf8'}));
+const skip=pythonSkip(['openpyxl']);
+const h=skip?null:JSON.parse(runPython(['-c',"import json,sys;from scripts.sa_budget.check import projection;json.dump(projection(json.load(open('data/staged/sa-budget/hub.json'))),sys.stdout)"]));
 const fiscal=JSON.parse(readFileSync(new URL('../../data/staged/budget/hub.json',import.meta.url),'utf8'));
 const block=(title,text)=>`<section><h1>${title}</h1><p>${text}</p></section>`;
 const read=async path=>structuredClone(path==='/sa-budget/data.json'?h:fiscal);
 
-test('historical SA section server-renders four shared tables, cell citations and verbatim notices',async()=>{
+test('historical SA section server-renders four shared tables, cell citations and verbatim notices',{skip},async()=>{
  const p=await budgetPage(new URL('https://opax.com.au/budget?year=2015-16'),read,block);
  assert.equal(p.status,200);
  const d=new JSDOM(p.prerender).window.document;
@@ -40,7 +40,7 @@ test('historical SA section server-renders four shared tables, cell citations an
  assert.equal(texts.some(r=>r.resource_id===h.holds[0].id),false);
 });
 
-test('phone render includes Measure, Fiscal year and Value with status under the measure',()=>{
+test('phone render includes Measure, Fiscal year and Value with status under the measure',{skip},()=>{
  const doc=new JSDOM(saBudgetSection(h,new URL('https://opax.com.au/budget'))).window.document;
  assert.deepEqual(saBudgetPhoneColumns,['measure','fiscal_year','display_value']);
  for(const root of doc.querySelectorAll('[data-sa-budget-table]')){
@@ -58,7 +58,7 @@ test('phone render includes Measure, Fiscal year and Value with status under the
  assert.equal(saBudgetValue({value:null,source_marker:'—'}),'—');
 });
 
-test('fiscal year nowrap and responsive column rules are scoped to SA, with canonical years in CSV',()=>{
+test('fiscal year nowrap and responsive column rules are scoped to SA, with canonical years in CSV',{skip},()=>{
  const css=readFileSync(new URL('../public/budget.css',import.meta.url),'utf8');
  assert.match(css,/#sa-budget \.dt \[data-label="Fiscal year"\]\{white-space:nowrap\}/);
  assert.match(css,/@media\(max-width:760px\)/);
@@ -69,7 +69,7 @@ test('fiscal year nowrap and responsive column rules are scoped to SA, with cano
  assert.ok(csv.includes(h.documents[0].snapshot));
 });
 
-test('SA secondary status can be restored after the shared table repaints',()=>{
+test('SA secondary status can be restored after the shared table repaints',{skip},()=>{
  const doc=new JSDOM(saBudgetSection(h,new URL('https://opax.com.au/budget'))).window.document;
  const root=doc.querySelector('[data-sa-budget-table]');
  root.querySelectorAll('.sa-budget-status').forEach(n=>n.remove());
@@ -81,7 +81,7 @@ test('SA secondary status can be restored after the shared table repaints',()=>{
  assert.equal(root.querySelectorAll('.sa-budget-status').length,10);
 });
 
-test('HTML, hydration and CSV exclude computed totals, held values, unreviewed rights and altered cells',()=>{
+test('HTML, hydration and CSV exclude computed totals, held values, unreviewed rights and altered cells',{skip},()=>{
  const {promotion,...promoted}=JSON.parse(readFileSync(new URL('../public/sa-budget/data.json',import.meta.url),'utf8'));
  assert.equal(promotion.reviewed_commit,'afb8837ee9e6553aea25428ff93c569edc7de9e8');
  assert.deepEqual(promoted,h);
@@ -110,7 +110,7 @@ test('HTML, hydration and CSV exclude computed totals, held values, unreviewed r
  assert.match(csv,/Stored cell value/);assert.match(csv,/Excel display divisor/);
 });
 
-test('optional historical asset fails closed without changing the existing federal page',async()=>{
+test('optional historical asset fails closed without changing the existing federal page',{skip},async()=>{
  const p=await budgetPage(new URL('https://opax.com.au/budget'),async path=>{
   if(path==='/sa-budget/data.json')throw Error('No reviewed annual asset');return fiscal;
  },block);
@@ -118,7 +118,7 @@ test('optional historical asset fails closed without changing the existing feder
  assert.equal(saBudgetSection({...h,rows:[]},new URL('https://opax.com.au/budget')),'');
 });
 
-test('SA filters remain separate and every output value has a unique original cell',()=>{
+test('SA filters remain separate and every output value has a unique original cell',{skip},()=>{
  const text=saBudgetSection(h,new URL('https://opax.com.au/budget?sa13.q=Net%20debt'));
  const d=new JSDOM(text).window.document;
  assert.ok(d.querySelector('[data-sa-budget-table="1.3"] tbody').textContent.includes('Net debt'));

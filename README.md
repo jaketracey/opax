@@ -58,6 +58,8 @@ printf 'ARAG_KB_TOKEN=...\n' > .dev.vars   # the knowledge box token; zone and K
 npx wrangler dev                              # http://localhost:8787
 ```
 
+Run the portal tests with `npm test` from `portal/`. Some suites read Python fixtures that need `openpyxl`: in a fresh worktree run `uv sync --frozen` at the repo root first (or set `OPAX_PYTHON`), otherwise those tests skip, and with `CI` set they fail.
+
 Deploy with `npm run deploy` from `portal/` — **not** `npx wrangler deploy`. The
 npm script runs `scripts/stamp_assets.mjs` first, which content-hash stamps the
 `?v=` on `/app.js` and `/style.css` in `index.html`; those two are served
