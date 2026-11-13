@@ -13,6 +13,13 @@ export const VOICE_WATCH_SECONDS = 15
 export const VOICE_LIVENESS_SECONDS = 45
 /** A relay that cannot confirm its row this long closes itself, inside the liveness window. */
 const RELAY_SELF_STOP_SECONDS = 35
+/**
+ * Start is refused this long after the member's last call connected. Each
+ * Start that replaces a connected call leaves its relay up for at most
+ * VOICE_WATCH_SECONDS, so this caps how many provider sockets one member can
+ * pile up by pressing Start again and again.
+ */
+export const VOICE_START_COOLDOWN_SECONDS = 5
 
 type Session = {
   id: string; member_id: string | null; state: string; reserved_seconds: number; charged_seconds: number
@@ -33,15 +40,20 @@ const BALANCES_SQL = `SELECT
 const balanceArgs = (env: VoiceEnv, memberId: string | null, timestamp: number) =>
   [memberId, VOICE_ALLOWANCE_SECONDS, VOICE_ALLOWANCE_SECONDS, memberId, monthlyLimit(env), monthStart(timestamp) - VOICE_ALLOWANCE_SECONDS - RESERVATION_SECONDS - 60]
 
-// The charge for ending a connecting or active session at time ?: its time so
-// far plus the watch interval its relay may take to notice, but never past the
-// last instant a relay could still run (last heartbeat plus the liveness
-// window, since a relay that cannot heartbeat closes itself). Capped at the
-// reservation. Bind (timestamp + VOICE_WATCH_SECONDS).
+// The charge for ending a session at time ?: its time so far plus the watch
+// interval its relay may take to notice, but never past the last instant a
+// relay could still run (last heartbeat plus the liveness window, since a
+// relay that cannot heartbeat closes itself). Capped at the reservation. Bind
+// (timestamp + VOICE_WATCH_SECONDS). Start's takeover uses it for active rows
+// only; the liveness sweep uses it for any open row it ends.
 const ENDED_CHARGE_SQL = `MIN(reserved_seconds,MAX(0,MIN(?,last_seen_at+${VOICE_LIVENESS_SECONDS})-started_at))`
-/** The same charge in JS, for status. Rows from before liveness count their time so far. */
+/**
+ * What Start's takeover would charge this open row now, for status: nothing
+ * for a reserved or connecting row, ENDED_CHARGE_SQL for an active one. Rows
+ * from before liveness count their time so far.
+ */
 function endedCharge(session: Session, timestamp: number): number {
-  if (session.started_at == null) return 0
+  if (session.started_at == null || session.state === 'connecting') return 0
   const until = session.last_seen_at == null ? timestamp : Math.min(timestamp + VOICE_WATCH_SECONDS, session.last_seen_at + VOICE_LIVENESS_SECONDS)
   return Math.min(session.reserved_seconds, Math.max(0, until - session.started_at))
 }
@@ -81,21 +93,37 @@ function reserveStatement(env: VoiceEnv, memberId: string, timestamp: number): D
 
 /**
  * Start takes over: end the member's open session and reserve a new one in one
- * D1 transaction. An unused reservation is cancelled free. A connecting or
- * active session closes, charged ENDED_CHARGE_SQL; its relay sees the closed
- * row at its next watch (within VOICE_WATCH_SECONDS) and closes both sockets,
- * so at most one provider socket per member outlives that interval. Sessions
- * from before liveness (no heartbeat, so no watch) are left to expire.
+ * D1 transaction. An unused reservation is cancelled free. A connecting
+ * session is cancelled free too: it has no relay yet, so no audio has passed.
+ * Its connect() request sees the cancelled row at its activation write and
+ * closes the provider socket at once (if one opened, it lived for that one
+ * write and was never sent the conversation start). An active session closes,
+ * charged ENDED_CHARGE_SQL; its relay sees the closed row at its next watch
+ * (within VOICE_WATCH_SECONDS) and closes both sockets. Sessions from before
+ * liveness (no heartbeat, so no watch) are left to expire.
  * The reservation then runs the same balance, budget and capacity checks.
  */
 export async function takeOverVoiceSession(env: VoiceEnv, memberId: string, timestamp = now()): Promise<{session: Session | null; replaced: boolean}> {
   const end = env.COMMUNITY_DB.prepare(`UPDATE voice_sessions SET
-      state=CASE WHEN state='reserved' THEN 'cancelled' ELSE 'closed' END,
-      charged_seconds=CASE WHEN state='reserved' THEN 0 ELSE ${ENDED_CHARGE_SQL} END,
+      state=CASE WHEN state='active' THEN 'closed' ELSE 'cancelled' END,
+      charged_seconds=CASE WHEN state='active' THEN ${ENDED_CHARGE_SQL} ELSE 0 END,
       closed_at=?
     WHERE member_id=? AND (state='reserved' OR (state IN ('connecting','active') AND last_seen_at IS NOT NULL))`).bind(timestamp + VOICE_WATCH_SECONDS, timestamp, memberId)
   const [ended, reserved] = await env.COMMUNITY_DB.batch<Session>([end, reserveStatement(env, memberId, timestamp)])
   return {session: reserved.results?.[0] ?? null, replaced: Number(ended.meta?.changes ?? 0) > 0}
+}
+
+/**
+ * True while the member's last call connected under VOICE_START_COOLDOWN_SECONDS
+ * ago. Only a call that connected can hold a provider socket, so a Start that
+ * replaces a reservation never claimed is not held back. Cancelled rows hold
+ * none either: never claimed, released before a socket opened, or taken over
+ * while connecting. Two Starts racing past this check are still safe: the
+ * takeover batch runs them in turn, so the first reservation is cancelled
+ * free, before its connect() can activate it.
+ */
+export async function voiceStartCoolingDown(env: VoiceEnv, memberId: string, timestamp = now()): Promise<boolean> {
+  return Boolean(await env.COMMUNITY_DB.prepare("SELECT 1 FROM voice_sessions WHERE member_id=? AND state<>'cancelled' AND started_at>? LIMIT 1").bind(memberId, timestamp - VOICE_START_COOLDOWN_SECONDS).first())
 }
 
 /** The relay's heartbeat and watch in one write: false once the row was ended elsewhere. */
@@ -347,6 +375,8 @@ export async function voiceRoute(req: Request, env: VoiceEnv, ctx: ExecutionCont
       await limit(env, 'voice-start-member:' + current.id, 6, 60)
       await limit(env, 'voice-start-ip:' + (req.headers.get('cf-connecting-ip') ?? 'unknown'), 20, 60)
       await expireVoiceSessions(env)
+      // The same 409 shape as a call still ending, so clients need no new case.
+      if (await voiceStartCoolingDown(env, current.id)) throw new CommunityError(409, 'You started a voice conversation a moment ago. Please try again in a few seconds.')
       // Pressing Start ends the member's earlier conversation (any device) and
       // reserves the new one. Its relay closes within VOICE_WATCH_SECONDS.
       const {session, replaced} = await takeOverVoiceSession(env, current.id)
