@@ -1,7 +1,8 @@
+import {hydrateRecordCore} from './record-core.js';
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
 import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
 import {partyUrl} from './canonical-urls.js?v=6c889d487d';
-import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=235e3653b2';
+import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=17c09dbf90';
 
 const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const NUMBER = new Intl.NumberFormat('en-AU');
@@ -95,11 +96,12 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     return group;
   };
   function render(data, index) {
+    const coreActive = hydrateRecordCore('recipient',data,{jurisdiction});
     root.replaceChildren(); root.removeAttribute('aria-busy');
     const qld = jurisdiction === 'qld', recordNoun = qld ? 'expenditure rows' : 'award records';
     const header = node('div', null, 'grant-recipient-header');
     header.append(node('p', `${JURISDICTIONS[jurisdiction]} · ${kindLabel(data.k)}`, 'grant-recipient-kicker'));
-    const title = node('h1', data.n); title.tabIndex = -1; header.append(title);
+    const title = node('h1', data.n); title.tabIndex = -1; if (!coreActive) header.append(title);
     header.append(node('p', qld
       ? 'Published annual expenditure, including grants, service agreements and other assistance.'
       : 'Published Commonwealth grant awards. Award values do not establish payments received.', 'grant-recipient-intro'));
@@ -124,11 +126,12 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     for (const [label, value] of [[qld ? 'Published expenditure' : 'Published award value', money(data.t)], [recordNoun, NUMBER.format(data.c)], ['Financial years', data.y0 === data.y1 ? data.y0 : `${data.y0 || '—'} to ${data.y1 || '—'}`]]) {
       const item = node('div'); item.append(node('dt', label), node('dd', value)); metrics.append(item);
     }
-    root.append(metrics);
+    if (!coreActive) root.append(metrics);
     const jump = node('nav', null, 'grant-recipient-jump'); jump.setAttribute('aria-label', 'On this recipient page');
     for (const [label, anchor] of [['Records', 'recipient-records'], ['Breakdown', 'recipient-breakdown'], ['Identity', 'recipient-identity'], ['Donor registers', 'recipient-donations'], ['Sources', 'recipient-sources']]) jump.append(link('#' + anchor, label));
     root.append(jump);
     const layout = node('div', null, 'grant-recipient-layout'), main = node('div'), aside = node('aside');
+    if (!coreActive) {
     const records = section(qld ? 'Expenditure records' : 'Grant awards', 'recipient-records');
     const omitted = Math.max(Number(data.more) || 0, Number(data.c) - grants.length);
     records.append(node('p', omitted > 0
@@ -164,6 +167,7 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
       if (focus) { const heading = list.querySelector('h3'); if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); heading.scrollIntoView({ block: 'start' }); } }
     }
     renderRecords(); records.append(list, pagination); main.append(records);
+    }
     const breakdown = section('Funding breakdown', 'recipient-breakdown');
     breakdown.append(node('p', 'Agency, program and electorate lists show the largest entries only. They can be partial and should not be added together as a complete total.', 'grant-recipient-note'));
     if (Object.keys(data.by || {}).length) breakdown.append(financialYears(data.by, qld ? 'Expenditure by financial year' : 'Award value by financial year'));
@@ -224,7 +228,7 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     provenance.append(node('p', 'Summaries cover the published recipient total; individual records may cover only the largest entries. Source websites can change or be temporarily unavailable.', 'grant-recipient-note')); aside.append(provenance);
     layout.append(main, aside); root.append(layout);
     onTitle(data.n);
-    if (manageFocus) title.focus({ preventScroll: true });
+    if (manageFocus) (coreActive ? document.querySelector('#prerender h1') : title)?.focus({ preventScroll: true });
     const anchor = document.getElementById(location.hash.slice(1));
     if (anchor && root.contains(anchor)) requestAnimationFrame(() => { if (alive()) anchor.scrollIntoView({ block: 'start' }); });
   }

@@ -64,7 +64,7 @@ test('real search code sends own-house filters and drops witness or other-house 
   const add = (key, state, chamber, speaker_type, person_id) => {
     resources[key] = { slug: 'speech-' + key, title: 'Stewart', origin: { collaborators: ['Stewart'] },
       usermetadata: { classifications: Object.entries({ kind: 'speech', state, chamber, speaker_type, party: 'Labor' }).map(([labelset, label]) => ({ labelset, label })) },
-      extra: { metadata: { person_id, date: '2024-06-01' } }, fields: {} };
+      extra: { metadata: { person_id, date: '2024-06-01', ...(key === '1' ? {source_url:'https://example.org/official-record'} : {}) } }, fields: {} };
   };
   add('1','qld','qld_la','member','qld_stewart');
   add('2','federal','senate_committee','witness','11011');
@@ -81,6 +81,8 @@ test('real search code sends own-house filters and drops witness or other-house 
   });
   const result = await api({}, { q: 'Stewart', mode: 'keyword', kind: 'speech', topK: 20, url: new URL('https://local.test/api/search?speaker=Stewart') });
   assert.deepEqual(plain(result.results.map(r => r.slug)), ['speech-1']);
+  assert.equal(result.results[0].source_url,'https://example.org/official-record','Existing search response preserves a recorded source outside SA');
+  assert.equal(calls.length,1,'No extra upstream read for official URLs');
   assert.match(JSON.stringify(calls[0].filter_expression), /"chamber","label":"qld_la"/);
   assert.match(JSON.stringify(calls[0].filter_expression), /"not":\{"prop":"label","labelset":"speaker_type","label":"witness"/);
   const separate = await api({}, { q: 'Stewart', mode: 'keyword', kind: 'speech', topK: 20, url: new URL('https://local.test/api/search?speaker=Stewart&attribution=unattributed') });
