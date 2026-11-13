@@ -378,6 +378,20 @@ html[data-chat="docked"] .chat-privacy { display: none; }
 .crumbs-list a.crumb-label:focus-visible { outline-offset: -2px; }
 .crumb-here .crumb-label { color: var(--ink); font: var(--type-label); overflow: hidden; text-overflow: ellipsis; }
 .spa-ready .prerender-crumbs, .spa-booting .prerender-crumbs { display: none; }
+/* On a phone the trail is one fine line with no band or rule (24px), and it
+   stops at the page's parent: the title below names the page itself. Its
+   height holds while the strip is empty at boot, and the page under it takes
+   the line's own breath instead of a second one. */
+@media (width < 700px) {
+  .crumbs { background: none; border-bottom: 0; }
+  .crumbs-list { min-height: 1.5rem; }
+  .crumbs-list li.crumb-here:not(:first-child) { display: none; }
+  .crumbs-list li:has(+ li.crumb-here) { flex: 0 1 auto; min-width: 0; }
+  .crumbs-list li:has(+ li.crumb-here) .crumb-label { overflow: hidden; text-overflow: ellipsis; }
+  .crumb-label { padding: var(--space-line) 0; line-height: 1.25; }
+  #crumbs:not([hidden]) ~ main.compact { padding-top: 0; }
+  #crumbs:not([hidden]) ~ main.compact .subject-portrait { margin-top: 0; }
+}
 
 /* ---- footer: the band's twin at the foot of the page ----------------------- */
 footer {

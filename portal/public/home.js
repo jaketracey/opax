@@ -3,7 +3,7 @@ import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
 let donorIndex=new Map();
 loadDonorViewIndex().then(index=>{donorIndex=index});
 import { personUrl, partyUrl } from './canonical-urls.js?v=c40e3d805e';
-import { hydrateCollections, hydrateLatest, hydrateSitting, industryGroups, mapSourceHTML, mapSpan, refreshInfo } from '/home-data.js?v=b7668092b4';
+import { hydrateCollections, hydrateLatest, hydrateSitting, industryGroups, mapSourceHTML, mapSpan, refreshInfo } from '/home-data.js?v=c79f5a4e02';
 
 // The homepage and research workspace have separate document lifecycles.
 const legacyRoute = location.href.split('#')[1] || '';
@@ -427,7 +427,7 @@ async function mount() {
     const span = mapSpan(graph.meta);
     if (span) $("hp-map-span").textContent = span;
     const { mountMoneyMap } = await import(
-      "/money-map.js?v=7ca6ed22e2"
+      "/money-map.js?v=7e56b48a6e"
     );
     if (disposed) return;
     root.replaceChildren();

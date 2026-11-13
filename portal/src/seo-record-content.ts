@@ -3,7 +3,7 @@ export interface GrantRecord {
   guid?: string; rid?: string; rn?: string; k?: string
 }
 export interface GrantDetail {
-  id: string; n: string; t: number; c: number; r?: number; ag?: string; y0?: string; y1?: string
+  id: string; n: string; k?: string; t: number; c: number; r?: number; ag?: string; y0?: string; y1?: string
   grants?: GrantRecord[]; more?: number; grants_total?: number
 }
 export interface AgencyDetail {
@@ -16,4 +16,4 @@ export interface TopicSpeech {slug: string; title?: string; speaker?: string; da
 
 
 // The browser enhances these same tables in place after its existing data loads.
-export {grantCoreBody, grantSource, firstAgencySuppliers, agencyCoreBody, topicSummary, topicCoreBody} from '../public/record-core-content.js'
+export {grantCoreBody, recipientMetaLine, grantSource, firstAgencySuppliers, agencyCoreBody, topicSummary, topicCoreBody} from '../public/record-core-content.js'

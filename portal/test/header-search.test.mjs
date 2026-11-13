@@ -131,3 +131,27 @@ test('SPA header suggestions follow server pages and source URLs through browser
   options.navigate('/subject/person/example');
   assert.deepEqual(routed, ['/subject/person/example']);
 });
+
+test('header suggestions put a surname match first and lead contract rows with the supplier', async () => {
+  const code = readFileSync(new URL('../public/quick-search.js', import.meta.url), 'utf8');
+  const results = [
+    { kind: 'electorate', title: 'Albany', href: '/subject/electorate/albany' },
+    { kind: 'electorate', title: 'St Albans', href: '/subject/electorate/st-albans' },
+    { kind: 'person', title: 'Anthony Albanese', href: '/subject/person/anthony-albanese' },
+    { kind: 'contract', title: '3000708192 — Albany Creek State HIGH School', href: '/doc/contract-3000708192' },
+    { kind: 'person', title: 'Albany Person', href: '/subject/person/albany-person' },
+  ];
+  const context = { fetch: async () => ({ ok: true, json: async () => ({ results }) }), URLSearchParams };
+  context.globalThis = context;
+  runInNewContext(code, context);
+  const rows = await context.OpaxQuickSearch.suggestions('Alban');
+  assert.deepEqual(JSON.parse(JSON.stringify(rows.map(row => [row.label, row.type]))), [
+    ['Search the record for “Alban”', 'Search'],
+    ['Anthony Albanese', 'Parliamentarian'],
+    ['Albany', 'Electorate'],
+    ['St Albans', 'Electorate'],
+    ['Albany Creek State HIGH School · 3000708192', 'Contract'],
+    // A first name sharing the letters is not a surname match and keeps its server rank.
+    ['Albany Person', 'Parliamentarian'],
+  ]);
+});

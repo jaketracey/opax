@@ -222,6 +222,8 @@ type NodeVisual = EdgeAnchor & {
  */
 type PartyPlacement = {
   visual: NodeVisual
+  /** Set by the final collision pass in placeParties: this name gave way to a larger party's. */
+  dropped: boolean
   sx: number
   sy: number
   r: number
@@ -570,6 +572,8 @@ export class KnowledgeMapEngine {
   private hubs = new Map<string, HubVisual>()
   private hubGroup = new THREE.Group()
   private paintRank: NodeVisual[] = []
+  /** Scratch list for placeParties' last collision pass. */
+  private keptParties: PartyPlacement[] = []
   private worldCentre = new THREE.Vector3()
   private worldRadius = 320
 
@@ -600,6 +604,11 @@ export class KnowledgeMapEngine {
     this.reduced = event.matches
     this.edgeUniforms.uReduced.value = event.matches ? 1 : 0
     if (event.matches) this.idleSpin = false
+    this.renderDirty = true
+  }
+  private onFontsLoaded = () => {
+    if (this.disposed || !this.paintRank.length) return
+    this.measureLabels()
     this.renderDirty = true
   }
   private viewOwnedFlag = false
@@ -663,6 +672,11 @@ export class KnowledgeMapEngine {
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: !touchDevice, alpha: false })
     this.renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio || 1, touchDevice ? 1.5 : 2))
     this.reducedQuery?.addEventListener('change', this.onReducedChange)
+    // Label widths come from a 2D context, which measures a web font that has
+    // not arrived yet in its fallback: Public Sans set where Arial was measured
+    // overprints its neighbour. Measure again once the faces are in.
+    globalThis.document?.fonts?.addEventListener?.('loadingdone', this.onFontsLoaded)
+    globalThis.document?.fonts?.ready?.then(this.onFontsLoaded, () => {})
     // Register after Three's own listeners so its GL state is rebuilt first.
     // Keep the original canvas attached; replacing it prevents recovery.
     this.onContextLost = (event: Event) => {
@@ -3785,7 +3799,7 @@ export class KnowledgeMapEngine {
         visual, sx, sy, r: screenR, w: visual.labelW + 4,
         // Dimmed parties keep their names, quieter, as their spheres are.
         opacity: Math.max(0.55, Math.min(1, visual.opacity.current + 0.25)),
-        side: 0, x: 0, y: 0, x1: 0, y1: 0, x2: 0, y2: 0,
+        side: 0, x: 0, y: 0, x1: 0, y1: 0, x2: 0, y2: 0, dropped: false,
       }
       if (this.freeSide(placement, rank, discCount, plate)) direct.push(placement)
       else callouts.push(placement)
@@ -3804,7 +3818,27 @@ export class KnowledgeMapEngine {
         if (!moved) break
       }
     }
+    // The last word on collisions: a column clamped to a narrow plate can
+    // still run one name into another. Larger parties claim their boxes
+    // first; a smaller name that would land on one is dropped (its sphere and
+    // the key still name it), never overprinted.
+    const kept = this.keptParties
+    kept.length = 0
+    for (const p of direct) kept.push(p)
+    for (const p of callouts) kept.push(p)
+    kept.sort((a, b) => b.visual.r - a.visual.r)
+    for (let i = 0; i < kept.length; i++) {
+      const p = kept[i]!
+      let clear = true
+      for (let j = 0; j < i && clear; j++) {
+        const q = kept[j]!
+        if (q.dropped) continue
+        if (p.x1 < q.x2 - 0.5 && p.x2 > q.x1 + 0.5 && p.y1 < q.y2 - 0.5 && p.y2 > q.y1 + 0.5) clear = false
+      }
+      p.dropped = !clear
+    }
     for (const d of direct) {
+      if (d.dropped) continue
       this.placeBox(d.x1, d.y1, d.x2, d.y2, true)
       const transform = d.side === 0
         ? `translate(-50%, -100%) translate(${d.x.toFixed(1)}px, ${d.y.toFixed(1)}px)`
@@ -3815,7 +3849,7 @@ export class KnowledgeMapEngine {
         : `translate(-100%, -50%) translate(${d.x.toFixed(1)}px, ${d.y.toFixed(1)}px)`
       this.wantLabel(d.visual.label, transform, d.opacity)
     }
-    for (const c of callouts) this.drawCallout(c)
+    for (const c of callouts) if (!c.dropped) this.drawCallout(c)
   }
 
   /**
@@ -4026,6 +4060,7 @@ export class KnowledgeMapEngine {
     if (this.onContextLost) this.canvas.removeEventListener('webglcontextlost', this.onContextLost)
     if (this.onContextRestored) this.canvas.removeEventListener('webglcontextrestored', this.onContextRestored)
     this.reducedQuery?.removeEventListener('change', this.onReducedChange)
+    globalThis.document?.fonts?.removeEventListener?.('loadingdone', this.onFontsLoaded)
     this.resizeObserver.disconnect()
     this.clearScene()
     this.popup.remove()

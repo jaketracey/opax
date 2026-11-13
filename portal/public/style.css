@@ -294,6 +294,23 @@
 .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > h1,
 .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > h1 + p { display: block; }
 @media (max-width: 860px) { .spa-booting.spa-boot-compact:not(.spa-routed) #main { padding-top: var(--sp-16); } }
+/* A person's answer opens in the app's own header (seo-content.ts
+   personHeadPrerender): portrait circle, name and meta line, laid out as the
+   app lays them out, so the app fills the head in place. */
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > .subject-head { display: block; }
+@media (min-width: 701px) { .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > .subject-head:has(.subject-portrait) { display: grid; } }
+/* On a phone the routed page sits flush under its crumb line (nav.css): no
+   top padding and no margin over the portrait. The boot head does the same. */
+@media (width < 700px) {
+  .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #main:has(> #prerender > .subject-head) { padding-top: 0; }
+  .spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender > .subject-head > .subject-portrait { margin-top: 0; }
+}
+/* /money while the app boots: the map card's place under the title, saying
+   what is coming, as the card itself does once the page has routed. */
+.spa-booting.spa-boot-compact:not(.spa-boot-search):not(.spa-routed) #prerender[data-boot-field]::after {
+  content: attr(data-boot-field); display: grid; place-items: center; height: min(72vh, 720px); min-height: 440px;
+  margin-top: var(--space-group); border-radius: var(--radius-md); background: var(--paper-sunken); font: var(--type-fine); color: var(--ink-soft);
+}
 /* A person's record stays unseen while its head settles (app.js revealGrid). */
 .subject-grid.is-settling { visibility: hidden; }
 #prerender { padding-bottom: var(--sp-24); }
@@ -898,11 +915,12 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 3px var(
   }
 }
 
-/* Sample questions: plain links (concept 5), no label and no boxes, drawn as
+/* Sample questions: plain links (concept 5) under "Or start with", no boxes, drawn as
    the home page draws them (.hp-examples): one bronze link a row, body size,
    a 44px target on a phone or a touch screen. The growth modules on person
    and bill pages take the same list. */
 #ask-chips { margin-top: var(--space-heading); }
+.ask-samples-label { margin: 0 0 var(--space-line); font: var(--type-label); color: var(--ink-soft); }
 .ask-samples { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-line); }
 .ask-sample {
   display: inline-block; padding-block: var(--space-line);
@@ -1511,6 +1529,16 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 }
 @keyframes answer-skeleton { from { background-position: 120% 0; } to { background-position: -80% 0; } }
 @media (prefers-reduced-motion: reduce) { .answer-skeleton i { animation: none; } }
+/* Content that takes a skeleton's place fades in over the standard duration
+   rather than snapping in: each block a page appends where its bars stood
+   runs this once, as it is inserted. The bars themselves, and any block still
+   holding one, do not. Nothing moves under reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  :is(#bill-body, #subject-sections, #subject-infobox, #bill-text-slot) > :not(.answer-skeleton, .subject-skel, :has(.answer-skeleton)) {
+    animation: settle-in var(--duration-standard) var(--ease-standard) both;
+  }
+}
+@keyframes settle-in { from { opacity: 0; } to { opacity: 1; } }
 /* The search overview streams in one point at a time: each fades up as it
    lands, and a single shorter bar keeps the shape of what is still coming. */
 .summary-point.stream-in { animation: summary-fade var(--duration-gentle) var(--ease-standard) both; }
@@ -2007,6 +2035,8 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
   .subject-head:has(.subject-portrait) .subject-tag { align-self: start; margin: var(--sp-8) 0 0; }
 }
 .subject-tag { color: var(--ink-soft); font-size: var(--text-15); margin: 0 0 var(--sp-16); display: flex; align-items: center; gap: var(--sp-8); flex-wrap: wrap; }
+/* The dot before a part travels with it (app.js tagLineHTML). */
+.subject-tag-next::before { content: "·"; margin-inline-end: var(--sp-8); }
 .subject-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--sp-24) var(--sp-40); align-items: start; }
 .subject-main { min-width: 0; }
 .subject-map {
@@ -2216,12 +2246,13 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
 .receipts-value, .receipts-pct { text-align: right; color: var(--ink-soft); white-space: nowrap; }
 .receipts-pct { font-weight: var(--weight-strong); min-height: 1em; }
 .receipts-row a, .receipts-tiles a { font-variant-numeric: tabular-nums; }
-/* A figure that opens its AEC return: no underline, a small external mark in
-   bronze after it, the way the site's external actions are marked. */
+/* A figure's label that opens its AEC return: no underline, a small external
+   mark in bronze after the label's last word, the way the site's external
+   actions are marked. The mark never wraps away from that word. */
 .fig-src { text-decoration: none; color: inherit; }
 .fig-src::after {
-  content: "\2197"; display: inline-block; margin-left: 0.28em; vertical-align: 0.55em;
-  font: 600 0.5em/1 var(--sans); color: var(--bronze-ink);
+  content: "\2060\2197"; margin-left: 0.2em;
+  font: 600 1em/1 var(--sans); color: var(--bronze-ink);
 }
 .fig-src:hover, .fig-src:focus-visible { color: var(--bronze-ink); }
 .donor-balance { margin-top: var(--sp-24); max-width: 920px; position: relative; overflow: hidden; }
@@ -2360,12 +2391,21 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
 /* ---- a division (/doc/division-…): titled by its stage, its bills as link
    rows, the parties and the members in blocks, the question folded, one
    source line (pass 4G). */
-/* The bills it was on: a quiet list under the title, each row a 44px link,
-   a hairline between them so a wrapped title never runs into the next. */
+/* Under the title: what was put, in the record's words (the first sentence
+   in the reading serif, the rest folded), then the bills on one line: the
+   first by name, the others behind "and 2 related bills". */
 #panel-doc:has(.division-view) .doc-bill { margin-top: var(--space-heading); padding-top: 0; border-top: 0; }
-.division-bills { margin: 0 0 var(--space-block); }
-.division-bills > li { padding-block: 0; }
-.division-bills a { display: flex; align-items: center; min-height: var(--size-target); }
+.division-lead { margin: 0; max-width: var(--size-readable); font: var(--type-record); color: var(--ink); }
+.doc-bill > .division-question { margin: var(--space-tight) 0 0; }
+.division-bills { margin: var(--space-heading) 0 var(--space-block); font: var(--type-body); color: var(--ink-soft); }
+.division-bills a { color: var(--ink); text-decoration-color: var(--bronze-rule); text-underline-offset: 0.2em; }
+.division-bills-more { display: inline; }
+.division-bills-more > summary { display: inline; cursor: pointer; color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 0.2em; }
+.division-bills-more > summary::-webkit-details-marker { display: none; }
+.division-bills-more > summary::marker { content: ""; }
+.division-bills-more > summary:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+.division-bills-more > ul { margin: var(--space-tight) 0 0; }
+.division-bills-more li { padding-block: var(--space-line); }
 /* Each block below is a ui-section with its own top rule, so the doc page's
    divider under the head steps aside for the section step. */
 #panel-doc:has(.division-view) .doc-rule { display: none; }
@@ -4436,6 +4476,17 @@ html[data-panel="chat"] footer { display: none; }
 /* The year range and inflation switch float on the map's own paper: no edge. */
 #money-map-root .mm-scrub { border-color: transparent; }
 .money-map-status { margin: 0; padding: var(--space-heading) var(--space-block); }
+/* The card while the map loads (app.js MAP_DRAWING_HTML): sunken paper and one
+   fine line, centred, over the whole plate until the first frame. */
+#money-map-root { position: relative; }
+.map-drawing {
+  position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; margin: 0;
+  border-radius: inherit; background: var(--paper-sunken); font: var(--type-fine); color: var(--ink-soft);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .map-drawing { transition: opacity var(--duration-standard) var(--ease-standard); }
+}
+.map-drawing.is-done { opacity: 0; pointer-events: none; }
 #panel-money .journey-choice-empty { padding-top: var(--space-block); }
 
 #panel-search .search-record-kind { font-weight: var(--weight-strong); color: var(--navy); }
@@ -4573,6 +4624,24 @@ html[data-panel="chat"] footer { display: none; }
   .money-area-nav { flex-wrap: nowrap; gap: var(--space-group); overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; white-space: nowrap; }
   .money-area-nav::-webkit-scrollbar { display: none; }
   .money-area-nav a { flex: none; display: inline-flex; align-items: center; }
+  /* A clipped edge fades, so a cut word reads as "more this way". The fades
+     follow the strip's own scroll: none at the end it rests against, none at
+     all when every tab fits (an inactive timeline leaves both at 0). */
+  @supports (animation-timeline: scroll()) {
+    .money-area-nav {
+      mask-image: linear-gradient(to right, transparent, var(--ink) var(--area-fade-start), var(--ink) calc(100% - var(--area-fade-end)), transparent);
+      animation: area-nav-fade linear both; animation-timeline: scroll(self inline);
+    }
+  }
+}
+@property --area-fade-start { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@property --area-fade-end { syntax: "<length>"; inherits: false; initial-value: 0px; }
+@keyframes area-nav-fade {
+  0% { --area-fade-start: 0px; --area-fade-end: var(--space-group); }
+  4%, 96% { --area-fade-start: var(--space-group); --area-fade-end: var(--space-group); }
+  100% { --area-fade-start: var(--space-group); --area-fade-end: 0px; }
+}
+@media (max-width: 800px) {
   /* The panels the toolbar opens scroll inside themselves on a phone. */
   .money-workspace-toolbar :is(.research-filter-panel, #money-journey-controls) { max-height: 65vh; max-height: 65dvh; overflow-y: auto; overscroll-behavior: contain; }
 }
@@ -4847,8 +4916,8 @@ h3 {
    actions as the other public-record detail pages. */
 .grant-recipient-page { margin-top: var(--sp-32); min-width: 0; }
 .grant-recipient-header { max-width: 76ch; }
-.grant-recipient-header h1 { margin: 0 0 var(--sp-16); font: var(--type-title); color: var(--navy); overflow-wrap: anywhere; }
-.grant-recipient-kicker { margin: 0 0 var(--sp-12); color: var(--ink-soft); font: var(--type-label); }
+.grant-recipient-header h1 { margin: 0 0 var(--space-line); font: var(--type-title); color: var(--ink); overflow-wrap: anywhere; }
+.grant-recipient-meta { margin: 0 0 var(--sp-16); color: var(--ink-soft); font: var(--type-metadata); }
 .grant-recipient-intro { margin: 0; max-width: 68ch; font: var(--weight-regular) var(--text-16)/var(--leading-loose) var(--serif); }
 .grant-recipient-actions, .grant-recipient-jump { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--sp-24); }
 .grant-recipient-actions { margin-top: var(--sp-12); }
@@ -4856,13 +4925,13 @@ h3 {
 .grant-recipient-metrics { display: grid; grid-template-columns: 1.25fr .75fr 1fr; gap: var(--sp-24); margin: var(--sp-32) 0 0; padding: var(--sp-24) 0; border-block: var(--border-hairline) solid var(--divider-subtle); }
 .grant-recipient-metrics > div { display: flex; flex-direction: column-reverse; gap: var(--sp-8); }
 .grant-recipient-metrics dt { color: var(--ink-soft); font: var(--type-fine); }
-.grant-recipient-metrics dd { margin: 0; color: var(--navy); font: 600 clamp(1.25rem, 2.4vw, 1.8rem)/1.35 var(--serif); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.grant-recipient-metrics dd { margin: 0; color: var(--ink); font: 600 clamp(1.25rem, 2.4vw, 1.8rem)/1.35 var(--serif); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .grant-recipient-jump { padding: var(--sp-8) 0; margin: 0 0 var(--sp-16); }
 .grant-recipient-layout { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(16rem, 1fr); gap: var(--sp-48); align-items: start; }
 .grant-recipient-layout > * { min-width: 0; }
 .grant-recipient-layout aside { padding-left: var(--sp-32); border-left: var(--border-hairline) solid var(--divider-subtle); }
 .grant-recipient-section { margin: 0 0 var(--sp-40); scroll-margin-top: 110px; min-width: 0; }
-.grant-recipient-section h2 { margin: 0 0 var(--sp-16); font: var(--type-heading); color: var(--navy); }
+.grant-recipient-section h2 { margin: 0 0 var(--sp-16); font: var(--type-heading); color: var(--ink); }
 .grant-recipient-section h3 { margin: var(--sp-24) 0 var(--sp-8); font: var(--type-subheading); }
 .grant-recipient-section p, .grant-recipient-aliases { font: var(--type-metadata); overflow-wrap: anywhere; }
 .grant-recipient-section p { margin: var(--sp-8) 0 var(--sp-16); }
@@ -4876,11 +4945,13 @@ h3 {
 .grant-recipient-records > li { padding: var(--sp-20) 0; border-top: var(--border-hairline) solid var(--divider-subtle); }
 .grant-recipient-record-heading { display: flex; gap: var(--sp-8) var(--sp-16); justify-content: space-between; align-items: baseline; }
 .grant-recipient-record-heading h3 { margin: 0; overflow-wrap: anywhere; scroll-margin-top: 110px; }
-.grant-recipient-record-heading strong { flex: none; color: var(--navy); font: var(--type-strong); font-variant-numeric: tabular-nums; }
+.grant-recipient-record-heading strong { flex: none; color: var(--ink); font: var(--type-strong); font-variant-numeric: tabular-nums; }
 .grant-recipient-records .grant-recipient-description { font: var(--weight-regular) var(--text-15)/var(--leading-loose) var(--serif); }
 .grant-recipient-source-link { display: inline-flex; align-items: center; min-height: 44px; font: var(--type-label); }
 .grant-recipient-records .grant-recipient-source-note { margin: 0; color: var(--ink-soft); font: var(--type-fine); }
 .grant-recipient-program-options { display: flex; flex-direction: column; gap: var(--sp-4); }
+.grant-recipient-program-rounds > summary { display: inline-flex; align-items: center; min-height: var(--size-target); cursor: pointer; color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 0.2em; }
+.grant-recipient-program-rounds > span { display: flex; flex-wrap: wrap; gap: var(--sp-4) var(--sp-16); }
 .grant-recipient-pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sp-8); margin-top: var(--sp-16); font: var(--type-fine); }
 .grant-recipient-pagination button { min-height: 44px; padding: var(--sp-8) var(--sp-12); border: var(--border-hairline) solid var(--divider-subtle); background: transparent; color: var(--bronze-ink); cursor: pointer; font: inherit; }
 .grant-recipient-pagination button:disabled { color: var(--ink-faint); cursor: default; }

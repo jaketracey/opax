@@ -7,9 +7,18 @@
   <link rel="canonical" href="https://opax.com.au/map">
   <meta property="og:url" content="https://opax.com.au/map">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <!-- The two faces the page sets, self-hosted as on every other page: without
+       them /map fell back to Arial. -->
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/public-sans-normal-latin.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/merriweather-normal-latin.woff2">
   <link rel="stylesheet" href="/tokens.css?v=7a8beb93b4">
   <link rel="stylesheet" href="/ui-controls.css?v=ce29178242">
+  <link rel="stylesheet" href="/ui-source.css?v=78ddb8fc1b">
+  <script src="/ui-source.js?v=d594622c13" defer></script>
   <style>
+    @font-face { font-family: 'Public Sans'; font-style: normal; font-weight: 400 700; font-display: swap; src: url(/fonts/public-sans-normal-latin.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
+    @font-face { font-family: 'Public Sans'; font-style: normal; font-weight: 400 700; font-display: swap; src: url(/fonts/public-sans-normal-latin-ext.woff2) format('woff2'); unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF; }
+    @font-face { font-family: 'Merriweather'; font-style: normal; font-weight: 400 900; font-display: swap; src: url(/fonts/merriweather-normal-latin.woff2) format('woff2'); unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD; }
     html, body { height: 100%; margin: 0; }
     body {
       display: flex; flex-direction: column; background: var(--paper); color: var(--ink);
@@ -27,6 +36,10 @@
     header h1 { margin: 0; font: var(--type-subheading); }
     header p { flex: 1 1 320px; margin: 0; font: var(--type-fine); color: var(--ink-soft); }
     header .map-close.ui-button { position: absolute; top: var(--space-heading); right: var(--space-block); }
+    /* Totals and sources: the site's source line, its sheet holding the
+       server's facts. On a phone the sheet opens in place. */
+    .map-facts { padding: var(--space-tight) var(--space-block); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
+    .map-facts .ui-sheet { max-height: 60vh; overflow: auto; }
     #map { flex: 1; min-height: 0; }
     #status {
       display: flex; align-items: center; justify-content: center;
@@ -41,16 +54,16 @@
       </a>
     <h1>Money map</h1>
     <p>
-      Who funds Australian politics: the top 250 donors and the parties they gave to,
-      from AEC returns 1998&ndash;2026. Colour and territory are the donor's industry;
+      Who funds Australian politics: <span id="map-donors">the largest disclosed donors</span> and the parties they gave to,
+      from <span id="map-span">AEC returns</span>. Colour and territory are the donor's industry;
       size is lifetime dollars. Click the legend to isolate an industry.
     </p>
     <a class="map-close ui-button ui-icon-button" data-variant="quiet" href="/money" aria-label="Close full-screen map" title="Close full-screen map">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
     </a>
   </header>
-  <details><summary>Read map totals and sources</summary><div id="crawl-facts"><p>Commonwealth and state disclosure records are separate. Source: AEC, ECQ and VEC returns; AusTender contract notices. An association does not prove influence.</p></div></details>
+  <div class="map-facts"><details class="ui-pop ui-source"><summary><svg class="ui-source-glyph" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1.75h5.25L12.5 5v9.25h-8.5z"/><path d="M9 1.75V5.25h3.5M6.25 8.5h4M6.25 11h4"/></svg><span class="ui-source-text"><span class="ui-source-name">Map totals and sources</span></span></summary><div class="ui-sheet"><div id="crawl-facts"><p>Commonwealth and state disclosure records are separate. Source: AEC, ECQ and VEC returns; AusTender contract notices. An association does not prove influence.</p></div></div></details></div>
   <div id="map" tabindex="-1"><div id="status" role="status"></div></div>
-  <script type="module" src="/map-page.js?v=190f622034"></script>
+  <script type="module" src="/map-page.js?v=9d69053235"></script>
 </body>
 </html>
