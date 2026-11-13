@@ -368,7 +368,12 @@ function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
         },
         {
           text: talkCopy.webRecord.now,
-          onPress: () => void call.end().then(() => openOutside(source)),
+          onPress: () =>
+            void call.end().then(() => {
+              // The call has ended, so the back guard must not ask again (as in close()).
+              exitConfirmed.current = true;
+              openOutside(source);
+            }),
         },
       ],
     );
