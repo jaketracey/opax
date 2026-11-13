@@ -1,5 +1,5 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=8c73ceafd6';
-import {loadDonorViewIndex} from './donor-views.js?v=c475b569bf';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=6f3407d116';
+import {loadDonorViewIndex} from './donor-views.js?v=1cc1ecb232';
 let donorIndex=new Map();
 loadDonorViewIndex().then(index=>{donorIndex=index});
 import { personUrl, partyUrl } from './canonical-urls.js?v=e32f13c6c8';
@@ -427,7 +427,7 @@ async function mount() {
     const span = mapSpan(graph.meta);
     if (span) $("hp-map-span").textContent = span;
     const { mountMoneyMap } = await import(
-      "/money-map.js?v=7ca6ed22e2"
+      "/money-map.js?v=b257485bd7"
     );
     if (disposed) return;
     root.replaceChildren();

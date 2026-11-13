@@ -1,3 +1,3 @@
-import {hydrateRegisterTables} from './register-tables.js?v=a3a7c0a33d';
+import {hydrateRegisterTables} from './register-tables.js?v=3f42fd4c24';
 // Person and party pages are hydrated by their existing application renderers.
 if (/^\/(?:instruments|audit|register\/(?:vic-gifts|state-bills|gov-advertising|government-finance|tax-expenditures))\/?$/.test(location.pathname)) hydrateRegisterTables();
