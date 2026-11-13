@@ -164,7 +164,7 @@ test('the answer leads with the largest donation and gives other receipts and pu
 test('money_totals: donations for who gives, every type for money from, and a labelled line when a source gave no donations', async () => {
   const call = args => api.callTool(env, 'money_totals', args)
   const none = await call({donor: 'Invented Bank Ltd', party: 'Example', financial_year: '2019-20', measure: 'donations'})
-  assert.equal(none.coverage_only, true)
+  assert.equal(none.coverage_only, undefined, 'an answer: no donations, and what the returns do list')
   assert.deepEqual(none.rows, [])
   assert.equal(none.citations[0].text, "Example's returns list no donations from Invented Bank Ltd in financial year 2019-20.")
   assert.match(none.citations[1].text, /^Invented Bank Ltd recorded \$300,000 in other receipts \(such as loans or interest\) to Example in financial year 2019-20, which the AEC doesn't class as donations\.$/)
@@ -208,4 +208,18 @@ test('Ask constraints set the measure from the question, whatever the planner ch
   }
   const gives = api.extractAskConstraints('Who gives the most to Example?', period, named)
   assert.equal(api.periodPlan({shape: 'money', steps: [{tool: 'party_receipts', args: {party: 'Example'}}]}, period, {}, gives).steps[0].args.measure, 'donations', 'the planner path too')
+})
+
+test('a graph without receipt types never calls a figure donations', async () => {
+  const untyped = {meta: {generated: '2026-11-13'}, nodes: [{id: 'party:Example', label: 'Example', kind: 'party', total: 900, count: 3, byYear: {2020: [900, 3]}},
+    {id: BANK, label: 'Invented Bank Ltd', kind: 'donor', industry: 'finance', total: 900, count: 3, byYear: {2020: [900, 3]}}],
+    edges: [{source: BANK, target: 'party:Example', total: 900, count: 3, byYear: {2020: [900, 3]}}]}
+  const asset = async path => path === '/graph/money.json' ? structuredClone(untyped) : null
+  const out = await api.partyDonations({...deps, asset}, {party: 'Example', measure: 'donations'})
+  assert.equal(out.data.measure, undefined)
+  assert.deepEqual(out.data.rows.map(r => [r.donor, r.total_aud]), [['Invented Bank Ltd', 900]])
+  assert.match(api.factSheet([out]).facts[0].text, /^Example disclosed \$900 in receipts from Invented Bank Ltd/)
+  const totals = await api.callTool({origin: 'https://opax.test', asset}, 'money_totals', {party: 'Example', group_by: 'donor', measure: 'donations'})
+  assert.equal(totals.measure, 'all_types')
+  assert.match(totals.citations[0].text, /in federal disclosed receipts/)
 })

@@ -104,7 +104,7 @@ function declaredText(name: string, rows: DeclaredRow[]): string {
 
 export const tool: ToolDefinition = {
   name: 'money_totals',
-  description: 'Sum federal disclosed receipts for a party or donor, rank parties or donors by total, or show annual totals. Party totals use the full published party aggregates, not the selected donor flows. Use group_by=donor with party for its biggest receipt sources; group_by=party ranks recipient parties; group_by=year gives a chronological FY series. financial_year accepts 2017-18; from_year/to_year are inclusive FY starting years. With no period, use lifetime totals. measure=donations counts only AEC Donation Received in donor figures, for who gives, donates, funds or is a donor; other receipt types come back as separate labelled lines. measure=all_types (the default) counts every receipt type, for money from, receipts or paid: mixed disclosed receipts, not just gifts. Public funding is never a donor. Party totals always cover all receipt types. State the total first with its financial year or range; each citation binds its amount to that period. For grants use grants; for expenses use the expenses tool.',
+  description: 'Sum federal disclosed receipts for a party or donor, rank parties or donors by total, or show annual totals. Party totals use the full published party aggregates, not the selected donor flows. Use group_by=donor with party for its biggest receipt sources; group_by=party ranks recipient parties; group_by=year gives a chronological FY series. financial_year accepts 2017-18; from_year/to_year are inclusive FY starting years. With no period, use lifetime totals. measure=donations counts only AEC Donation Received in donor figures, for who gives, donates, funds or is a donor; other receipt types come back as separate labelled lines. measure=all_types (the default) counts every receipt type, for money from, receipts or paid: mixed disclosed receipts, not just gifts. Public funding is listed apart from donors. Party totals always cover all receipt types. State the total first with its financial year or range; each citation binds its amount to that period. For grants use grants; for expenses use the expenses tool.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     party: { type: 'string', minLength: 2, maxLength: 200, description: 'Recipient party name, e.g. Labor, Liberal Party, Nationals, LNP or Country Liberal Party.' },
     donor: { type: 'string', minLength: 2, maxLength: 200, description: 'Disclosed donor name, published alias or graph ID. Without party, totals across all recipient parties.' },
@@ -147,7 +147,8 @@ export const tool: ToolDefinition = {
     }
     const party = parties[0], donor = donors[0], group = String(args.group_by ?? (donor ? 'donor' : 'party'))
     // Without a cue in the question (ask-constraints sets one when there is), a total counts every receipt type.
-    const measure: Measure = args.measure === 'donations' ? 'donations' : 'all_types'
+    // A graph without typed cells cannot split a figure, so it never calls one donations.
+    const measure: Measure = args.measure === 'donations' && graph.edges.some(edge => edge.typeCells) ? 'donations' : 'all_types'
     const word = measure === 'donations' ? 'federal disclosed donations' : 'federal disclosed receipts'
     const measureNote = measure === 'donations'
       ? "Donor figures count donations only: receipts the party's return types as Donation Received. Other receipt types (other receipts such as loans or interest, subscriptions and receipts with no type) are given separately and are not donations. OPAX holds no debt record matched to a receipt, so none is called a loan. Public funding is never a donor."
@@ -251,7 +252,8 @@ export const tool: ToolDefinition = {
     if (!picked.length && others.length) {
       const who = donor ? donorDisclosure(donor).name : 'any source in the published selection'
       const text = `${party ? partyReturns(party.label) : "The parties' returns"} list no donations from ${who} in financial year${period.includes(' to ') ? 's' : ''} ${period}.`
-      return { rows: [], coverage_only: true, other_receipts: others.map(o => o.row), notes: [text, ...others.map(o => o.citation.text), ...notes], coverage, measure,
+      // An answer, not a coverage gap: the returns name no donations, and these are what they do list.
+      return { rows: [], other_receipts: others.map(o => o.row), notes: [text, ...others.map(o => o.citation.text), ...notes], coverage, measure,
         citations: [{ kind: 'record', text, url: others[0].citation.url }, ...others.map(o => o.citation)], ...(party ? { party: party.label } : {}), ...(donor ? { donor: donorDisclosure(donor).name } : {}) }
     }
     if (!picked.length) return { ...limitations(env, `OPAX has no dated disclosed receipt total recorded${party ? ' for ' + party.label : ''}${donor ? ' from ' + donorDisclosure(donor).name : ''} in financial years ${period}.`, notes), coverage }

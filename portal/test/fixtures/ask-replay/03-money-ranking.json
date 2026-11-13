@@ -35,15 +35,20 @@
    "text": {
     "sentences": [
      {
-      "text": "Example Freight Pty Ltd gave the Liberal Party the most in 2022-23: $2,681,740 in disclosed receipts.",
+      "text": "Liberal's returns list no donations from any source in the published selection in financial year 2022-23.",
       "facts": [
        1
       ]
      },
      {
-      "text": "Sample Banking Group Ltd was next with $1,314,270 across 16 receipts, then Harbour Example Holdings with $235,206.",
+      "text": "Example Freight Pty Ltd recorded $2,681,740 in other receipts (such as loans or interest) to Liberal in financial year 2022-23, which the AEC doesn't class as donations.",
       "facts": [
-       2,
+       2
+      ]
+     },
+     {
+      "text": "Sample Banking Group Ltd recorded $1,266,500 in other receipts (such as loans or interest) to Liberal in financial year 2022-23, which the AEC doesn't class as donations.",
+      "facts": [
        3
       ]
      }
@@ -2801,10 +2806,15 @@
  "expect": {
   "answered": true,
   "includes": [
+   "no donations",
    "Example Freight Pty Ltd",
-   "\\$2,681,740",
+   "\\$2,681,740 in other receipts",
    "Sample Banking Group Ltd"
   ],
-  "citations": 2
+  "citations": 2,
+  "excludes": [
+   "gave the Liberal Party the most",
+   "donated"
+  ]
  }
 }

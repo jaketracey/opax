@@ -67,21 +67,22 @@ test('donor names on pages and the map carry the tag linked to the AEC register,
 })
 
 test('party_receipts keeps each associated entity at its rank and names it with the tag',async()=>{
+ // Ranked by all receipt types, where both lead; the donations measure keeps the tag the same way (A34).
  for(const c of cases.map(receiptCase)){
-  const r=await api.partyDonations(deps,{...c.query,limit:15})
+  const r=await api.partyDonations(deps,{...c.query,limit:15,measure:'all_types'})
   const row=r.data.rows.find(x=>x.donor===c.name)
   assert.ok(row,c.name);assert.match(row.associated_entity,c.tag)
   assert.equal(r.data.rows[0].donor,c.name,`${c.name} is not moved down the ranking`)
   assert.ok(r.cite.some(x=>x.label.startsWith(`${c.name} (associated entity of `)),`${c.name} citation label`)
   assert.ok(r.data.rows.filter(x=>x!==row).every(x=>!x.associated_entity||/associated entity of/.test(x.associated_entity)))
  }
- const westpac=(await api.partyDonations(deps,{party:'Liberal',limit:15})).data.rows.find(x=>x.donor==='Westpac Banking Corporation')
+ const westpac=(await api.partyDonations(deps,{party:'Liberal',limit:15,measure:'all_types'})).data.rows.find(x=>x.donor==='Westpac Banking Corporation')
  assert.ok(westpac&&!('associated_entity' in westpac))
 })
 
 test('the written Ask answer names the top associated entity with its tag, for both parties',async()=>{
  for(const c of cases.map(receiptCase)){
-  const r=await api.partyDonations(deps,{...c.query,limit:5})
+  const r=await api.partyDonations(deps,{...c.query,limit:5,measure:'all_types'})
   const sheet=api.factSheet([r])
   assert.ok(sheet.facts.some(f=>f.text.includes(`${c.name} (associated entity of `)),`${c.name} fact`)
   const input={question:c.question,period:api.inferPeriod(c.question),facts:api.writingFacts(undefined,sheet.facts,sheet.notes)}

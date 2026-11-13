@@ -1,5 +1,5 @@
 /** Input labels describe the calculator's measure; model prose stays intact. */
-export const RECEIPTS_WRITING_RULE = 'Call each federal total by the measure label supplied with it, and keep its source, recipient, period and amount together in one sentence. Only a donation (AEC Donation Received) is called a donation or giving; give a receipt marked aside in its own words, after the ranking, and never call it a donation or a loan. Public funding is never a donor.'
+export const RECEIPTS_WRITING_RULE = 'Call each federal total by the measure label supplied with it, and keep its source, recipient, period and amount together in one sentence. Call a receipt a donation or giving only when its measure is donations (AEC Donation Received); give a receipt marked aside in its own words, after the ranking, as other receipts or public funding.'
 
 /** Legacy totals for donor-to-party pairs the typed AEC export holds without any receipt-type cells. */
 export const UNTYPED_RECEIPTS_LABEL='all receipt types (no type breakdown in the AEC data OPAX holds)'
