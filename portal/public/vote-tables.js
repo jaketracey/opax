@@ -9,6 +9,16 @@ import {divisionPlain} from './division-markdown.js?v=5991511166';
 const sentence = value => { const text = String(value || '').replace(/_/g, ' ').trim(); return text ? text[0].toUpperCase() + text.slice(1).toLowerCase() : ''; };
 const count = value => value == null || value === '' ? null : Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : null;
 const safeLink = value => typeof value === 'string' && /^(?:\/(?!\/)|https?:\/\/)/i.test(value) ? value : null;
+/* The Hansard heading's own prefix, in capitals: "BILLS - Treasury Laws
+   Amendment ...". Under BILLS and BUSINESS the rest is the record's name; the
+   other Senate headings keep their word, in sentence case ("Matters of urgency
+   - Taxation"). Only these headings: a title that opens with an acronym keeps it. */
+const HEADINGS = /^(BILLS|BUSINESS|DOCUMENTS|MATTERS OF URGENCY|MATTERS OF PUBLIC IMPORTANCE|COMMITTEES|MOTIONS|NOTICES|PETITIONS|STATEMENTS|REGULATIONS AND DETERMINATIONS)\s+[-–—]\s+(\S.*)$/;
+export function headingTitle(value) {
+  const text = divisionPlain(value), heading = HEADINGS.exec(text);
+  if (!heading) return text;
+  return /^(?:BILLS|BUSINESS)$/.test(heading[1]) ? heading[2] : `${sentence(heading[1])} - ${heading[2]}`;
+}
 const divisionLink = value => /^[a-z0-9][a-z0-9-]*$/.test(String(value || '')) ? `/doc/${String(value).startsWith('division-') ? value : `division-${value}`}` : null;
 
 export const divisionColumns = [
@@ -78,7 +88,7 @@ const chambers = {senate:'Senate', representatives:'House of Representatives', n
 export function divisionRows(divisions = [], deduplicate = false) {
   const unique = new Map();
   for (const division of divisions) {
-    const stage = (division.stage ? sentence(division.stage) : divisionPlain(division.title)) || 'Division';
+    const stage = (division.stage ? sentence(division.stage) : headingTitle(division.title)) || 'Division';
     const date = String(division.date || '');
     // Keep the existing bill-list rule: repeated register counts are one row.
     const key = deduplicate ? [date, stage, division.ayes, division.noes, division.house].join('|') : division.slug || division.key || unique.size;
@@ -106,7 +116,7 @@ export function votingRows(votes = [], bills = []) {
     billIndexes.set(bills,index);
   }
   return votes.map(v => {
-    const title = divisionPlain(v.title || v.name || 'Division');
+    const title = headingTitle(v.title || v.name || 'Division');
     const matches = (index.get(titleKey(v.title || v.name)) || []).filter(b=>!v.jur || b.jurisdiction===v.jur);
     const billKey = v.bill_key || (matches.length===1 ? matches[0].key : '');
     return {title, date:String(v.date || ''),

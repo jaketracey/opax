@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {divisionColumns, voteColumns, divisionRows, votingRows, divisionTableConfig, voteTableConfig, voteTableHTML, voteTablePage} from '../public/vote-tables.js';
+import {divisionColumns, voteColumns, divisionRows, votingRows, divisionTableConfig, voteTableConfig, voteTableHTML, voteTablePage, headingTitle} from '../public/vote-tables.js';
 import {guardTableURL} from '../public/vote-tables.js';
 import {build} from 'esbuild';
 const bundled=await build({entryPoints:[new URL('../src/hubs.ts',import.meta.url).pathname],bundle:true,write:false,platform:'node',format:'esm'});
@@ -89,4 +89,18 @@ test('table captions own their label and the hub boot survives the app-script re
   const shell = readFileSync(new URL('../public/index.html',import.meta.url),'utf8');
   assert.match(shell,/<script type="module" src="\/vote-tables.js(?:\?v=[a-f0-9]+)?"><\/script>/);
   assert.match(shell,/href="\/vote-tables.css(?:\?v=[a-f0-9]+)?"/);
+});
+
+test('vote titles drop the Hansard heading prefix and keep acronyms; phone rows tell divisions apart', () => {
+  assert.equal(headingTitle('BILLS - Treasury Laws Amendment (Fixture) Bill 2026 - Second Reading'), 'Treasury Laws Amendment (Fixture) Bill 2026 - Second Reading');
+  assert.equal(headingTitle('BUSINESS - Rearrangement'), 'Rearrangement');
+  assert.equal(headingTitle('MATTERS OF URGENCY - Taxation'), 'Matters of urgency - Taxation');
+  assert.equal(headingTitle('AUKUS Submarine Bill 2026 - Third Reading'), 'AUKUS Submarine Bill 2026 - Third Reading');
+  assert.equal(headingTitle('Bills - lower case is not a heading'), 'Bills - lower case is not a heading');
+  const [vote] = votingRows([{title:'BILLS - Fixture Bill 2026 - Third Reading', date:'2026-03-01', vote:'aye'}]);
+  assert.doesNotMatch(vote.title, /^BILLS\b/);
+  const [division] = divisionRows([{title:'BILLS - Fixture Bill 2026 - Third Reading', date:'2026-03-01', house:'senate', ayes:30, noes:28}]);
+  assert.doesNotMatch(JSON.stringify(division), /BILLS - /);
+  assert.deepEqual(divisionTableConfig({bill:'au-federal-fixture'}).phone, {figure:['outcome', {key:'ayes', to:'noes'}], meta:['chamber']});
+  assert.deepEqual(voteTableConfig('fixture-member').phone, {figure:['vote'], meta:['date']});
 });
