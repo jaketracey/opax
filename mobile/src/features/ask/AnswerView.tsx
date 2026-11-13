@@ -38,7 +38,7 @@ import { FigureBlock } from '../../design/record';
 import { LinkRow } from '../../design/rows';
 import { SourceAffordance, type SourceDetails } from '../../design/source';
 import { Text } from '../../design/text';
-import { colors, rhythm } from '../../design/tokens';
+import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
 import { personRoute } from '../../navigation/routes';
 import { askReportRoute } from '../../navigation/routes/ask';
@@ -704,7 +704,10 @@ function AnswerMenu({
       />
     );
   return (
-    <Host matchContents style={styles.menu}>
+    // A fixed frame, as Bills' pane ⋯: a content-sized host re-measured
+    // late after a width change (an iPhone Duo folding or rotating) and drew
+    // its glyph a line below the row it belongs to.
+    <Host style={styles.menu}>
       <Menu
         label="Answer options"
         systemImage="ellipsis.circle"
@@ -774,7 +777,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'flex-start',
   },
-  menu: { minWidth: 44, minHeight: 44 },
+  menu: { width: minimumTarget, height: minimumTarget },
   sheet: { gap: rhythm.group },
   notes: { gap: rhythm.block, paddingVertical: rhythm.row },
 });
