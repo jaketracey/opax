@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {readPartyPages, canonicalPartyPages, resolvePartyPage, partyPageCoverage, partyMembers} from '../public/party-page.js';
+import {readPartyPages, canonicalPartyPages, resolvePartyPage, partyPageCoverage, partyMembers, partyBills} from '../public/party-page.js';
 import {renderDirectory} from '../src/seo-content.ts';
 import {officialReportCrawlEntries} from '../../scripts/official_report_crawl.mjs';
 import {sitemapFiles, latestDate, exportDate, personPaths} from '../../scripts/build_crawl_catalog.mjs';
@@ -191,4 +191,45 @@ test('built official report sitemap lists every public record from all four coll
   assert.deepEqual(listed.sort(), entries.map(e => e.path).sort());
   assert.deepEqual(new Set(entries.map(e => e.path.split('/')[2].split('-').slice(0, 2).join('-'))), new Set(['royal-commission', 'integrity-report', 'annual-report', 'agency-report']));
   for (const file of manifest.files) assert.doesNotMatch(await readFile(new URL('crawl' + file.path, root), 'utf8'), /<loc>[^<]*\/reports(?:\/|<)/);
+});
+
+// Backlog A4b: three parties the record names only as a bill sponsor's party. Their pages list those bills, so
+// they are no longer empty and the party sitemap lists each once (im/crawl-discovery recorded them as excluded).
+test('A4b: sponsor-only parties have one page each, with their bills, and are in the party sitemap', async () => {
+  const pages = await readPartyPages(read);
+  const manifest = await read('/crawl/manifest.json');
+  const xml = (await Promise.all(manifest.files.filter(f => /^\/sitemaps\/parties-/.test(f.path)).map(f => readFile(new URL('crawl' + f.path, root), 'utf8')))).join('');
+  const listed = paths(xml);
+  assert.equal(new Set(listed).size, listed.length, 'no duplicate party URLs');
+  const roster = await read('/parliamentarians.json'), divisions = await read('/graph/party-members.json');
+  for (const [label, slug, first] of [['Nick Xenophon Team', 'nick-xenophon-team', 'au-federal-s1127'], ['Palmer United Party', 'palmer-united-party', 'au-federal-s1019'],
+    ['Rex Patrick Team', 'rex-patrick-team', 'au-federal-s1321']]) {
+    const matches = pages.filter(p => p.aliases.includes(label));
+    assert.equal(matches.length, 1, label);
+    const [page] = matches;
+    assert.equal(page.href, '/subject/party/' + slug);
+    assert.equal(resolvePartyPage(slug, pages), page);
+    assert.ok(page.bills && !page.money && !page.roster && !page.divisions, label);
+    assert.equal(partyPageCoverage(page), 'Bill sponsor records. No party-level disclosure file held by OPAX.');
+    const m = partyMembers(page.label, {roster, divisions});
+    assert.equal(m.current.length + m.former.length, 0, 'the bills, not members, make the page');
+    assert.equal(partyBills(page.label, divisions)[0].key, first);
+    assert.ok(listed.includes(page.href), label);
+    assert.equal(listed.filter(p => resolvePartyPage(p.split('/').at(-1), pages) === page).length, 1, label);
+  }
+  // A bill sponsor spelling of a party that already has a page adds no page: Centre Alliance stays one.
+  assert.equal(pages.filter(p => p.aliases.includes('Centre Alliance')).length, 1);
+  assert.equal(pages.filter(p => p.href === '/subject/party/labor').length, 1);
+});
+
+test('A4b: a sponsor party joins its page through the existing aliases, never a second page', () => {
+  const pages = canonicalPartyPages({
+    money: [{nodes: [{kind: 'party', label: 'One Nation'}]}],
+    divisions: {parties: {}, bills: {"Pauline Hanson's One Nation Party": [{key: 'k1', title: 'A Bill', introduced: '2020-01-01'}],
+      JLN: [{key: 'k2', title: 'B Bill', introduced: '2021-01-01'}], 'Fixture Sponsor Party': [{key: 'k3', title: 'C Bill', introduced: '2019-05-01'}]}},
+  });
+  assert.deepEqual(pages.map(p => p.label), ['Fixture Sponsor Party', 'JLN', 'One Nation']);
+  const fixture = pages.find(p => p.label === 'Fixture Sponsor Party');
+  assert.equal(fixture.lastmod, '2019-05-01');
+  assert.deepEqual(partyBills('One Nation', {bills: {"Pauline Hanson's One Nation Party": [{key: 'k1'}], 'One Nation': [{key: 'k1'}, {key: 'k4'}]}}).map(b => b.key).sort(), ['k1', 'k4']);
 });
