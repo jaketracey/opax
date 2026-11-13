@@ -60,6 +60,14 @@ for option in --watch --watchAll --watch=true --watchAll=true; do
   PASSED=$((PASSED + 1))
   echo "ok $PASSED - $option exec preserves interactivity and exit without retry"
 done
+# A plain `npx jest` forks workers with process.execArgv: the config adds
+# --no-sparkplug once, and keeps a caller's flag without a duplicate.
+for runner in 'node' 'node --no-sparkplug'; do
+  flags=$(cd "$SCRIPTS/.." && $runner -e "require('./jest.config.js'); process.stdout.write(String(process.execArgv.filter((a) => a === '--no-sparkplug').length))")
+  [ "$flags" = 1 ] || { echo "jest.config.js gave $flags --no-sparkplug flags under '$runner'" >&2; exit 1; }
+done
+PASSED=$((PASSED + 1))
+echo "ok $PASSED - direct Jest workers inherit --no-sparkplug from the config"
 # Check both Jest directly and the package script, so a hard-coded worker
 # argument in package.json cannot silently override a caller's budget.
 (cd "$SCRIPTS/.." && npx --no-install jest --showConfig --maxWorkers=6) > "$SCRATCH/direct-config.json"
