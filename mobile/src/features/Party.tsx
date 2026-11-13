@@ -33,7 +33,9 @@ import {
   moneyAccessibilityLabel,
 } from '../design/format';
 import { Group, Screen, Section, TitleAnchor } from '../design/layout';
-import { isPartyLabel, partySlug } from '../design/party';
+import { chamberName } from '../design/parliament';
+import { isPartyLabel, partyRename, partySlug } from '../design/party';
+import type { PartyRename } from '../design/party-renames';
 import { FaceStack, PersonRow } from '../design/people';
 import { StatStrip, type StatTileProps } from '../design/record';
 import { DivisionRow, LinkRow, MoneyRow } from '../design/rows';
@@ -398,6 +400,7 @@ function PartyContent({
   retry: () => void;
 }) {
   const label = view.label;
+  const rename = partyRename(label);
   const [titleTiming, setTitleTiming] = useState<string | undefined>();
   const scroll = useRef<ScrollView>(null);
   const y = useRef<Partial<Record<PartySection, number>>>({});
@@ -520,7 +523,9 @@ function PartyContent({
       about={() => ({
         title: 'Members',
         notes: [
-          'Sitting members include federal, state and territory parliamentarians with a confirmed current party affiliation. The directory is updated periodically. Undated affiliations appear separately as recorded; former members are excluded.',
+          view.past
+            ? 'Sitting members include federal, state and territory parliamentarians with a confirmed current party affiliation. The directory is updated periodically. Undated affiliations appear separately as recorded. Past members under a former name of the party are listed from their recorded votes, with the name they sat under.'
+            : 'Sitting members include federal, state and territory parliamentarians with a confirmed current party affiliation. The directory is updated periodically. Undated affiliations appear separately as recorded; former members are excluded.',
           view.rosterAsAt
             ? `Roster as at ${formatDate(view.rosterAsAt)}.`
             : null,
@@ -559,6 +564,7 @@ function PartyContent({
                         <CachedPortrait name={member.name} slug={member.slug} />
                       }
                       place={member.place || undefined}
+                      detail={recordedAs(member.recordedAs)}
                       href={personRoute(member.slug, member.name)}
                       testID={`party-member-${member.slug}`}
                       testDrawnName
@@ -571,6 +577,7 @@ function PartyContent({
               )}
             </Disclosure>
           ) : null}
+          {view.past ? <PastMembers block={view.past} retry={retry} /> : null}
         </View>
       )}
     </ProfileBlock>
@@ -618,6 +625,11 @@ function PartyContent({
                 .join(', ')}
             </Text>
           </View>
+          {data.recordedAs ? (
+            <Text wordSafe variant="footnote" testID="party-receipts-recorded">
+              {recordedAs(data.recordedAs)}
+            </Text>
+          ) : null}
           <Text wordSafe variant="footnote" testID="party-money-caveat">
             A floor, not a ceiling.
           </Text>
@@ -847,6 +859,7 @@ function PartyContent({
             }}
           />
         </ProfileTitle>
+        {rename ? <PartyHistory rename={rename} /> : null}
         {tiles.length ? (
           <StatStrip tiles={tiles} testID="party-figures" />
         ) : null}
@@ -932,7 +945,9 @@ function PartyDivision({ row, label }: { row: DivisionData; label: string }) {
   return (
     <DivisionRow
       title={row.title}
-      meta={`${stage} · ${chamberLabel(row.division.house)} · ${formatDate(row.division.date, 'short')}\n${label} members: ${formatCount(row.ayes)} for, ${formatCount(row.noes)} against`}
+      // A division under a former name keeps it: "Liberal Democratic Party
+      // members", never the party's later name.
+      meta={`${stage} · ${chamberLabel(row.division.house)} · ${formatDate(row.division.date, 'short')}\n${row.recordedAs ?? label} members: ${formatCount(row.ayes)} for, ${formatCount(row.noes)} against`}
       outcome={outcome}
       ayes={row.division.ayes}
       noes={row.division.noes}
@@ -947,8 +962,127 @@ function PartyDivision({ row, label }: { row: DivisionData; label: string }) {
   );
 }
 
+const recordedAs = (name: string | null | undefined) =>
+  name ? `Recorded as ${name}` : undefined;
+
+/**
+ * A renamed party's history under the heading: its earlier name and the
+ * AEC notices behind the change, which open from the source sheet.
+ */
+export function PartyHistory({ rename }: { rename: PartyRename }) {
+  return (
+    <View style={styles.history} testID="party-history">
+      <Text wordSafe variant="secondary" testID="party-history-text">
+        {rename.history}
+      </Text>
+      <SourceLine
+        title="Party name history"
+        citation={[
+          {
+            label: 'AEC party register',
+            title: 'AEC party registration notices',
+          },
+        ]}
+        asOf={rename.since}
+        dateRole="recorded"
+        originals={rename.sources.map((source) => ({
+          label: source.label,
+          url: source.href,
+        }))}
+        notes={[
+          'One party under its later name. Records keep the name they were made under: votes, bills, speeches and money recorded under the earlier name say so.',
+        ]}
+        licenceDataset="aec"
+        testID="party-history-source"
+      />
+    </View>
+  );
+}
+
+const yearsText = (years: readonly number[]) => {
+  const first = years[0];
+  const last = years.at(-1);
+  if (first === undefined || last === undefined) return null;
+  return first === last ? String(first) : `${first} to ${last}`;
+};
+
+/** Past members under a former name, from the voting record. */
+function PastMembers({
+  block,
+  retry,
+}: {
+  block: NonNullable<View_['past']>;
+  retry: () => void;
+}) {
+  if (block.status === 'loading')
+    return (
+      <Skeleton
+        shape="rows"
+        count={2}
+        label="Loading past members"
+        testID="party-past-loading"
+      />
+    );
+  if (block.status === 'error')
+    return (
+      <InlineError
+        subject="Past members"
+        onRetry={retry}
+        testID="party-past-error"
+      />
+    );
+  const rows = block.data ?? [];
+  if (!rows.length) return null;
+  return (
+    <Disclosure
+      label="Past members"
+      value={formatCount(rows.length)}
+      testID="party-past-toggle"
+    >
+      {() => (
+        <View>
+          {rows.map((member) => {
+            const id = member.slug ?? partySlug(member.name);
+            return (
+              <PersonRow
+                key={`${member.jurisdiction}|${member.house}|${member.name}`}
+                name={member.name}
+                portrait={
+                  member.slug ? (
+                    <CachedPortrait name={member.name} slug={member.slug} />
+                  ) : null
+                }
+                place={
+                  [
+                    chamberName(member.house, member.jurisdiction),
+                    yearsText(member.years),
+                  ]
+                    .filter(Boolean)
+                    .join(', ') || undefined
+                }
+                detail={recordedAs(member.recordedAs)}
+                href={
+                  member.slug
+                    ? personRoute(member.slug, member.name)
+                    : undefined
+                }
+                testID={`party-past-${id}`}
+                testDrawnName
+              />
+            );
+          })}
+          <Text wordSafe variant="footnote">
+            Listed from their recorded votes, under the name they sat under.
+          </Text>
+        </View>
+      )}
+    </Disclosure>
+  );
+}
+
 const styles = StyleSheet.create({
   top: { gap: rhythm.block },
+  history: { gap: rhythm.tight },
   faces: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
   block: { gap: rhythm.heading },
   // One point, at the foot of the last section rather than a section below.

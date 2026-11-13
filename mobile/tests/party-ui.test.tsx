@@ -23,6 +23,8 @@ import { PartyLabel, PersonRow, Portrait } from '../src/design/people';
 import { Screen, TitleAnchor } from '../src/design/layout';
 import { RegionProvider } from '../src/design/adaptive';
 import { SourceLine } from '../src/design/source';
+import { SourceContent } from '../src/features/sheets/SourceSheet';
+import { openOnWeb, openSource } from '../src/navigation/external';
 import { sheetPayload } from '../src/navigation/sheets';
 import { StatStrip } from '../src/design/record';
 import { ContentUnavailable } from '../src/design/states';
@@ -41,7 +43,6 @@ import {
   ProfileHeader,
 } from '../src/features/people/ProfileHeader';
 import { peopleScreens } from '../src/navigation/stack/people';
-import { openOnWeb } from '../src/navigation/external';
 import {
   moneyRecordRoute,
   partyRoute,
@@ -81,6 +82,8 @@ jest.mock('../src/navigation/external', () => ({
   openOnWeb: jest.fn(),
   openSource: jest.fn(),
   sourceUrl: (s: string) => s,
+  // The source sheet asks whether an original is an OPAX page.
+  fromWebPath: () => null,
 }));
 jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
   __esModule: true,
@@ -1091,5 +1094,142 @@ describe('the party header and Members faces (w5 polish)', () => {
       jest.fn(async (m: { slug: string }) => `file:///${m.slug}.webp`),
     );
     expect(all).toHaveLength(6);
+  });
+});
+
+describe('the Libertarian Party, formerly the Liberal Democratic Party', () => {
+  let ldp: Awaited<ReturnType<typeof api.partyPage>>;
+  beforeAll(async () => {
+    ldp = await api.partyPage('liberal-democratic-party');
+  });
+  beforeEach(() => {
+    jest.mocked(runtime.partyPage).mockResolvedValue(ldp);
+  });
+  // The host Text's own string.
+  const strings = (node: TestRenderer.ReactTestInstance) =>
+    [node.props.children].flat(Infinity).join('');
+  const ids = (r: TestRenderer.ReactTestRenderer) =>
+    r.root
+      .findAll((n) => typeof n.type === 'string' && n.props.testID)
+      .map((n) => n.props.testID as string);
+
+  test('the history line sits under the heading, its notices in the source sheet', async () => {
+    const r = await render('liberal-democratic-party');
+    expect(r.root.findByType(ProfileHeader).props.name).toBe(
+      'Libertarian Party',
+    );
+    expect(strings(host(r, 'party-history-text'))).toBe(
+      'Liberal Democratic Party (Liberal Democrats), renamed Libertarian Party. The AEC deregistered the Liberal Democratic Party on 19 July 2022 and registered the Libertarian Party on 12 January 2024.',
+    );
+    const order = ids(r);
+    expect(order.indexOf('party-history')).toBeGreaterThan(
+      order.indexOf('party-title'),
+    );
+    expect(order.indexOf('party-history')).toBeLessThan(
+      order.indexOf('party-figures'),
+    );
+    const line = r.root.find(
+      (n) =>
+        n.props.testID === 'party-history-source' &&
+        typeof n.props.onPress === 'function',
+    );
+    await act(async () => line.props.onPress());
+    const { params } = jest.mocked(router.push).mock.calls.at(-1)![0] as {
+      params: { key: string };
+    };
+    const details = sheetPayload(params.key, 'source')!.details;
+    expect(details.originals).toEqual([
+      {
+        label:
+          'AEC notice deregistering the Liberal Democratic Party (19 July 2022)',
+        url: 'https://www.aec.gov.au/Parties_and_Representatives/Party_Registration/Deregistered_parties/files/statement-of-reasons-liberal-democratic-party-s137-deregistration-statement-of-reasons.pdf',
+      },
+      {
+        label: 'AEC notice registering the Libertarian Party (12 January 2024)',
+        url: 'https://www.aec.gov.au/Parties_and_Representatives/Party_Registration/Registration_Decisions/2024/Registration-approved-Notice-Libertarian-Party.pdf',
+      },
+    ]);
+    // Each notice opens in the in-app browser, like other source links.
+    let sheet!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      sheet = TestRenderer.create(
+        <SourceContent details={details} testID="history-sheet" />,
+      );
+    });
+    for (const [index, original] of details.originals!.entries()) {
+      act(() =>
+        sheet.root
+          .find(
+            (n) =>
+              n.props.testID === `history-sheet-original-${index}` &&
+              typeof n.props.onPress === 'function',
+          )
+          .props.onPress(),
+      );
+      expect(openSource).toHaveBeenLastCalledWith(original.url, original.label);
+    }
+    act(() => sheet.unmount());
+    act(() => r.unmount());
+  });
+
+  test('past members under the former name show “Recorded as” it', async () => {
+    const r = await render('liberal-democratic-party');
+    // One sitting member, under the current name.
+    expect(r.root.findByType(StatStrip).props.tiles).toContainEqual(
+      expect.objectContaining({ value: '1', label: 'sitting member' }),
+    );
+    expect(host(r, 'party-past-toggle')).toBeTruthy();
+    press(r, 'party-past-toggle');
+    const rows = r.root
+      .findAllByType(PersonRow)
+      .filter((row) => /^party-past-/.test(row.props.testID ?? ''));
+    expect(
+      rows.map((row) => [
+        row.props.name,
+        row.props.place,
+        row.props.detail,
+        row.props.href ?? null,
+      ]),
+    ).toEqual([
+      [
+        'David Leyonhjelm',
+        'Senate, 2014 to 2019',
+        'Recorded as Liberal Democratic Party',
+        // OPAX holds no profile for them: a row, not a link.
+        null,
+      ],
+      [
+        'Duncan Spender',
+        'Senate, 2019',
+        'Recorded as Liberal Democratic Party',
+        null,
+      ],
+    ]);
+    expect(drawn(r)).toContain('Recorded as Liberal Democratic Party');
+    act(() => r.unmount());
+  });
+
+  test('Android draws the same history line', async () => {
+    const original = Platform.OS;
+    Platform.OS = 'android';
+    try {
+      const r = await render('liberal-democratic-party');
+      expect(r.root.findAllByType(TitleAnchor)).toHaveLength(0);
+      expect(strings(host(r, 'party-history-text'))).toContain(
+        'renamed Libertarian Party',
+      );
+      expect(has(r, 'party-history-source')).toBe(true);
+      act(() => r.unmount());
+    } finally {
+      Platform.OS = original;
+    }
+  });
+
+  test('other parties draw no history line and no past members', async () => {
+    jest.mocked(runtime.partyPage).mockResolvedValue(view);
+    const r = await render();
+    expect(has(r, 'party-history')).toBe(false);
+    expect(has(r, 'party-past-toggle')).toBe(false);
+    act(() => r.unmount());
   });
 });

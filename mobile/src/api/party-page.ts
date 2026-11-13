@@ -7,6 +7,7 @@ import type {
   PeopleCatalog,
   Roster,
   Slugs,
+  Votes,
 } from './catalog-decoders';
 import {
   joinPerson,
@@ -19,7 +20,12 @@ import {
   billName,
   billQuestionParts,
 } from './bill-transforms';
-import { isPartyLabel, samePartyLabel } from '../design/party';
+import {
+  formerPartyName,
+  isPartyLabel,
+  partyRename,
+  samePartyLabel,
+} from '../design/party';
 import { nameKey } from './ids';
 export { resolveParty } from '../design/party';
 
@@ -76,6 +82,7 @@ export function partyMembers(
       chamber: s.chamber,
       place: s.place,
       asAt: s.asAt,
+      ...recordedAs(s.party),
     })),
   );
   const recorded: PartyMember[] = [];
@@ -144,6 +151,7 @@ export function partyMembers(
         chamber: '',
         place: '',
         asAt: roster.meta.generated,
+        ...recordedAs(p.party),
       });
       for (const source of p.sources) sources.set(source.source_id, source);
     }
@@ -270,6 +278,66 @@ export interface PartyMember {
   chamber: string;
   place: string;
   asAt: string | null;
+  /** The label the record carries, when it is a former name of the party. */
+  recordedAs?: string;
+}
+/** The record's former party name, as recorded, for a "Recorded as" line. */
+const recordedAs = (party: string | null | undefined) => {
+  const former = formerPartyName(party);
+  return former ? { recordedAs: former } : {};
+};
+
+/** A past member from the voting record, under a former name of the party. */
+export interface PartyPastMember {
+  name: string;
+  /** Their profile's slug, or null when OPAX holds no profile for them. */
+  slug: string | null;
+  jurisdiction: string;
+  house: string;
+  /** First and last year of their recorded votes. */
+  years: readonly number[];
+  recordedAs: string;
+}
+/**
+ * Past members of a renamed party, from the voting record: everyone whose
+ * record carries one of its former names ("Liberal Democratic Party"). Only
+ * renamed parties list them: past members keep the label they sat under,
+ * and the party page otherwise excludes former members. People the members
+ * list already shows are left out.
+ */
+export function partyPastMembers(
+  label: string,
+  votes: Votes,
+  slugs: Slugs,
+  shown: readonly { name: string }[] = [],
+): PartyPastMember[] {
+  const rename = partyRename(label);
+  if (!rename) return [];
+  const seen = new Set(shown.map((m) => nameKey(m.name)));
+  const slugByName = new Map(
+    Object.entries(slugs.slugs).map(([slug, name]) => [nameKey(name), slug]),
+  );
+  const rows: PartyPastMember[] = [];
+  for (const record of Object.values(votes.records)) {
+    const former = formerPartyName(record.party);
+    if (!former || partyRename(former) !== rename) continue;
+    const key = nameKey(record.name);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    rows.push({
+      name: record.name,
+      slug: slugByName.get(key) ?? null,
+      jurisdiction: record.jurisdiction,
+      house: record.house,
+      years: record.years,
+      recordedAs: former,
+    });
+  }
+  return rows.sort(
+    (a, b) =>
+      (a.years[0] ?? 0) - (b.years[0] ?? 0) ||
+      a.name.localeCompare(b.name, 'en-AU'),
+  );
 }
 export function partyMoney(label: string, graph: Money) {
   const parties = graph.nodes
@@ -311,6 +379,8 @@ export function partyMoney(label: string, graph: Money) {
   };
   return {
     node,
+    /** The register's own label, when it is a former name of the party. */
+    recordedAs: formerPartyName(node.label),
     rank: parties.findIndex((n) => n.id === node.id) + 1,
     parties: parties.length,
     donors: donorRows(),
@@ -333,9 +403,10 @@ export function partyDivisions(label: string, bills: BillDetail[]) {
     .flatMap((bill) =>
       billDedupeDivisions(bill.divisions, bill).divisions.flatMap(
         (division) => {
-          const split = Object.entries(division.party_splits).find(([party]) =>
-            samePartyLabel(party, label),
-          )?.[1];
+          const [party, split] =
+            Object.entries(division.party_splits).find(([party]) =>
+              samePartyLabel(party, label),
+            ) ?? [];
           return split && (split.ayes || split.noes)
             ? [
                 {
@@ -344,6 +415,8 @@ export function partyDivisions(label: string, bills: BillDetail[]) {
                   division,
                   question: billQuestionParts(division, bill).head,
                   ...split,
+                  // The division's own label, when it is a former name.
+                  recordedAs: formerPartyName(party),
                 },
               ]
             : [];
