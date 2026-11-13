@@ -1,4 +1,5 @@
 /** The bill's published text, kept separate from the machine-written summary. */
+import { shortDate } from './format.js';
 const KEY = /^[a-z0-9][a-z0-9-]{1,160}$/;
 const safeSource = value => {
   try { const url = new URL(value); return url.protocol === 'https:' ? url.href : null; } catch { return null; }
@@ -16,7 +17,7 @@ const sourceLink = (url, label) => {
 };
 export function billTextVersionLabel(version) {
   const stage = version.stage_label || version.source_version || version.stage || 'Published version';
-  return `${stage}${version.date ? ` · ${version.date}` : ''}${version.status === 'complete' ? '' : version.status === 'incomplete' ? ' · incomplete text' : ' · text unavailable'}`;
+  return `${stage}${version.date ? ` · ${shortDate(version.date)}` : ''}${version.status === 'complete' ? '' : version.status === 'incomplete' ? ' · incomplete text' : ' · text unavailable'}`;
 }
 export function billTextPath(billKey, textUrl) {
   if (!KEY.test(billKey) || typeof textUrl !== 'string') return null;

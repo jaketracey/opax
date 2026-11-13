@@ -61,7 +61,7 @@ const splitSpeakers = person => attributionHelpers?.splitSpeakers(person) || [];
 const personScope = person => attributionHelpers?.personScope(person) || person?.speech_scope || null;
 const datedAffiliationParty = (row, person) => attributionHelpers?.datedAffiliationParty(row, person) || null;
 let heldBackHelpers;
-const heldBackReady = import('/held-back-transcripts.js?v=cca9daf969').then(module => { heldBackHelpers = module; });
+const heldBackReady = import('/held-back-transcripts.js?v=268cb1ecac').then(module => { heldBackHelpers = module; });
 
 let saDisplayHelpers;
 let saFullTextFlag = 'false';
@@ -4424,6 +4424,8 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
   const {rows: registerRows} = projection?.rows ? projection : registerTables.interestTableData(data);
   const registerConfig = registerTables.interestTableConfig(registerRows);
   const registerHTML = registerTables.registerTableHTML(registerConfig);
+  // "28 entries" above 14 rows: the file keeps up to six entries per category (register-tables.js).
+  const shownNote = registerTables.interestShownNote(data, registerRows.length, base);
   const added = Number(data.alterations?.added) || 0;
   const deleted = Number(data.alterations?.deleted) || 0;
   const since = data.statement_date ? `since the statement of ${esc(fmtDate(data.statement_date))}` : "since the statement";
@@ -4435,6 +4437,7 @@ async function renderPersonInterests(name, personId, sections, onRecord = () => 
     <h3 id="person-register" class="subject-section-title" data-rail-figure="${num(data.total)}">Declared interests</h3>
     <p class="person-register-updates"><a href="${esc(`/declared?person=${encodeURIComponent(data.name || name)}`)}">Just declared</a></p>
     <p class="interests-summary"><b>${num(data.total)}</b> ${data.total === 1 ? "entry" : "entries"} across ${num(buckets.length)} ${buckets.length === 1 ? "category" : "categories"} · ${alterations}</p>
+    ${shownNote ? `<p class="interests-shown">${shownNote}</p>` : ""}
     ${registerHTML}
 
     <p class="fineprint">Entries include statements and notified changes; they do not establish current holdings. Date is the notification date where supplied, otherwise the register snapshot date. Check the official entry.</p>
@@ -4694,17 +4697,35 @@ function goodMentions(results, limit = 3) {
   return results.filter((r) => mentionTitle(r) && !isRosterPassage(r.snippet)).slice(0, limit);
 }
 
+/** A person's dated seats (the electorate service periods) and offices (pay.json's Handbook spells),
+ *  matched by exact name or alias; [] when neither file knows them. */
+async function personMentionAliases(name) {
+  try {
+    const [reference, pay] = await Promise.all([
+      loadElectorateModule().then((m) => m.loadPeople()).catch(() => null), loadPay()]);
+    const key = String(name || "").trim().toLowerCase();
+    const seats = (reference?.people || []).filter((p) => [p.name, ...(p.aliases || [])].some((n) => String(n || "").trim().toLowerCase() === key));
+    const payPerson = pay?.people?.[pay.names?.[payNameKey(name)]];
+    // Two people of one name are not one person's seats.
+    return heldBackHelpers?.mentionAliases?.({ electorates: seats.length === 1 ? seats[0].electorates : [], spells: payPerson?.spells || [], party: payPerson?.party || "" }) || [];
+  } catch { return []; }
+}
+
 async function subjectMentions(name, container, heading, moneyContext = false, { person = false } = {}) {
   try {
     const [data, roster] = await Promise.all([
       api(`/api/search?${new URLSearchParams({ q: `"${name}"`, top_k: person ? "12" : "6" })}`), loadParliamentarians()]);
     if (!data.results?.length) return;
     // On a person page: three rows that read as debates, or no block at all.
-    const rows = person ? goodMentions(data.results) : data.results.slice(0, 5);
+    // A person's mentions are rows whose passage names them, by surname or by a seat or office they
+    // held on the passage's date (held-back-transcripts.js mentionNamesPerson, mentionAliases).
+    const aliases = person ? await personMentionAliases(name) : [];
+    const rows = person ? goodMentions(data.results.filter((r) => heldBackHelpers?.mentionNamesPerson ? heldBackHelpers.mentionNamesPerson(r, name, { aliases }) : true))
+      : data.results.slice(0, 5);
     if (!rows.length) return;
     fillDatedMentionParties(rows, roster);
     const items = rows.map((r) => `
-      <li><a href="/doc/${esc(r.slug)}" class="source-title doc-title">${esc(person ? mentionTitle(r) : displayTitle(r))}</a>
+      <li><a href="/doc/${esc(r.slug)}" class="source-title doc-title">${esc(person ? (heldBackHelpers?.mentionTitleCase || String)(mentionTitle(r)) : displayTitle(r))}</a>
         <span class="result-meta">${metaHTML(r, { linkSpeaker: true, linkParty: true })}</span>
         <p class="snippet">${esc((r.snippet || "").slice(0, 220))}</p>${excerptNoticeHTML(r)}</li>`).join("");
     container.insertAdjacentHTML("beforeend",
@@ -5579,6 +5600,13 @@ async function renderPartyDebts(label, sections) {
   const returnsTo = extras.meta?.latest_year ? ` to ${String(extras.meta.latest_year).replace("-", "–")}` : "";
   const originals = [{ label: "AEC Transparency Register", href: reg || "https://transparency.aec.gov.au/" }];
   let html = partyReceiptsHTML(returns, reg, updated, returnsTo);
+  // The header's one money line: the figure the receipts block leads with, and its scope.
+  const returnLine = html ? partyPage.latestReturnLine?.(returns, fmtMoney) : null;
+  const head = document.getElementById("subject-title")?.closest(".subject-head");
+  if (returnLine && head && !head.querySelector(".party-return-line")) {
+    head.querySelector(".subject-tag")?.insertAdjacentHTML("afterend",
+      `<p class="party-return-line"><a href="#party-receipts">${esc(returnLine.text)}</a></p>`);
+  }
   if (html && lodged.note) html = html.replace(/<\/section>\s*$/, `<p class="party-lodged-as">${esc(lodged.note)}</p></section>`);
   if (d || b) {
     const lenders = (d?.top || []).map((l) => [l.type === "Financial" ? `${l.name} (financial institution)` : l.name, l.amount || 0]);
@@ -5900,6 +5928,7 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
     </div>
     ${ayes + noes ? `<div class="votes-split" role="img" aria-label="${esc(ayePct)} percent ayes, ${esc(100 - ayePct)} percent noes"><i style="width:${ayePct}%"></i></div>
     <p class="votes-lede">${esc(ayePct)}% ayes${where ? ` in the ${where}` : ""}${span ? `, ${span}` : ""}.</p>` : ""}
+    ${rows.length ? `<p class="votes-scope">${esc(voteTables.voteScopeLine(rows.length, total, recent.recorded))}</p>` : ""}
     ${voteTables.voteTableHTML(config, voteTables.voteTablePage(rows, config))}
     ${sourceLineHTML({
       updated: votes?._meta?.content_changed_at || "",
@@ -6586,7 +6615,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   Promise.allSettled([topicQuestions, voteQuestions, interestQuestions]).then(() => {
     if (currentSubjectKey === key) body.querySelector(".growth-ask")?.setAttribute("data-questions-ready", "true");
   });
-  renderPersonSpeeches(speechSpeaker, speeches, chambers, sections, { scope: speechScope, notes: speechNotes }).then(() => refreshEntryRail(sections));
+  renderPersonSpeeches(speechSpeaker, speeches, chambers, sections, { scope: speechScope, notes: speechNotes, current: roster?.current === true }).then(() => refreshEntryRail(sections));
   renderPersonFirstSpeech(name, sections, roster).then(() => refreshEntryRail(sections));
   renderPersonDiary(name, sections, chambers).then(() => { polishPersonSections(sections); refreshEntryRail(sections); });
   const news = document.createElement("section");
@@ -6789,10 +6818,12 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
   sections.appendChild(slot);
   let newest = [];
   let latest = true;
+  let spanThrough = "";
   try {
     const data = await api(`/api/search?${new URLSearchParams({ q: opts.scope ? '*' : name, speaker: name, page: "1", per: "8", sort: "newest", ...(opts.scope ? { mode: 'keyword' } : {}), ...(opts.unattributed ? { attribution: 'unattributed' } : {}) })}`);
     newest = data.results || [];
     if (opts.scope) newest = newest.filter(r => belongsToScope(r, opts.scope));
+    spanThrough = newest.map((r) => String(r.date || "").slice(0, 10)).filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)).sort().at(-1) || "";
   } catch {
     latest = false;
     newest = [...fallback].sort((a, b) => String(b.date || "").localeCompare(String(a.date || ""))).slice(0, 8);
@@ -6804,6 +6835,9 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
   if (week?.speeches.length) newest = week.speeches;
   if (week) Object.assign(slot.dataset, {module: "sitting_speeches", pageType: "person", modulePosition: "4"});
   const noun = opts.evidence || opts.unattributed ? "evidence" : "speeches";
+  // Where the record's speeches stop, before the week they end in (person pages only).
+  const span = noun === "speeches" && latest && heldBackHelpers?.speechSpanLine
+    ? heldBackHelpers.speechSpanLine(spanThrough, { current: opts.current === true, today: new Intl.DateTimeFormat("en-CA", { timeZone: "Australia/Sydney" }).format(new Date()) }) : "";
   // A row is a brief (OPAX's words, in sans) or a passage (the record's, in
   // the serif); the list carries one machine label at its head while any row
   // is a brief, and each row says which it is to a screen reader.
@@ -6816,6 +6850,7 @@ async function renderPersonSpeeches(name, fallback, chambers, sections, opts = {
   const paint = (briefs) => {
     const any = newest.some((r) => typeof briefs[r.resource] === "string" && briefs[r.resource].trim());
     slot.innerHTML = `<div class="person-section-head"><h3 class="subject-section-title">${week?.week ? `Speeches in the week of ${esc(fmtDate(week.week))}` : latest ? `Latest ${noun}` : noun === "evidence" ? "Evidence" : "Speeches"}</h3>${any ? machine() : ""}</div>
+      ${span ? `<p class="person-speech-span">${esc(span)}</p>` : ""}
       <ul class="speech-rows" role="list">${newest.map((r) => {
         const brief = typeof briefs[r.resource] === "string" ? briefs[r.resource].trim() : "";
         const where = chambers.length > 1 && r.state ? ` · ${STATE_NAMES[r.state] || r.state}` : "";
@@ -7551,7 +7586,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=d9bcfae5c4").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=6d19f08fad").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -8772,7 +8807,8 @@ function ordinal(n) {
     : rem10 === 1 ? "st" : rem10 === 2 ? "nd" : rem10 === 3 ? "rd" : "th";
   return `${v}${suffix}`;
 }
-const BILL_OUTCOMES = { affirmative: "Agreed to", negative: "Negatived" };
+/* One outcome vocabulary across bill, division and party pages: the words the division tables use. */
+const BILL_OUTCOMES = { affirmative: "Agreed", negative: "Not agreed" };
 const billOutcome = (o) => BILL_OUTCOMES[String(o || "").toLowerCase()] || sentenceCase(o);
 /** The short title when the register carries one, else the title itself. */
 const billName = (b) => b?.short_title || b?.title || b?.key || "";
@@ -8824,7 +8860,7 @@ function billStatusTone(status) {
   if (/before|introduced|current/.test(s)) return "active";
   return "ended";
 }
-/** A division's outcome as a StatusLabel: agreed to is done, negatived has ended. */
+/** A division's outcome as a StatusLabel: agreed is done, not agreed has ended. */
 function billOutcomeLabelHTML(outcome) {
   const word = billOutcome(outcome) || "Outcome not recorded";
   return statusLabelHTML(word, String(outcome || "").toLowerCase() === "affirmative" ? "done" : "ended");
@@ -9060,7 +9096,9 @@ function billStageRuns(dates) {
     // The register's own words where the export kept them (bills-005), and a
     // defeated question said to be one (bills-004).
     let stage = billStage(d.event_raw || d.stage) || "Stage not named";
-    if (d.negatived && !/negatived/i.test(stage)) stage += " (negatived)";
+    // The register's "negatived" is the site's "not agreed" (one outcome vocabulary).
+    stage = stage.replace(/\bnegatived\b/gi, (w) => w[0] === "N" ? "Not agreed" : "not agreed");
+    if (d.negatived && !/not agreed/i.test(stage)) stage += " (not agreed)";
     const house = billHouse(d.house);
     const last = runs[runs.length - 1];
     if (last && last.stage === stage && last.house === house) {
@@ -9366,10 +9404,9 @@ function billDivisionsHTML(bill) {
         "A bill with no division here was not necessarily unopposed. This register does not establish whether a vote on the voices has occurred.",
         "No per-member or per-party vote is available without a formal division."]})}</section>`;
   }
-  const config = voteTables.divisionTableConfig({bill:bill.key});
   const rows = voteTables.divisionRows(divs, true);
   return `<section class="ui-section bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}>
-    ${voteTables.voteTableHTML(config, voteTables.voteTablePage(rows, config))}
+    ${voteTables.billDivisionsTablesHTML(rows, {bill: bill.key})}
     ${sourceLineHTML({
       updated: bill.exportedAt || "", source: "They Vote For You",
       notes: [
@@ -9379,6 +9416,7 @@ function billDivisionsHTML(bill) {
         collapsed ? `The source records some divisions more than once; ${collapsed} repeated record${collapsed === 1 ? "" : "s"}
           of the same division ${collapsed === 1 ? "is" : "are"} shown here once.` : "",
         "A division's title is its recorded stage. Open a division for its count on They Vote For You and the question put, in the record's words.",
+        rows.some((r) => r.kind !== "bill") ? "Votes under limitation of debate and votes on procedure are grouped by the stage the record files them under, not by reading the question. A vote under limitation of debate can be on an amendment or a reading, put when the time set for the debate ran out." : "",
       ],
       licence: "Division records: They Vote For You, OpenAustralia Foundation, ODbL.",
     })}

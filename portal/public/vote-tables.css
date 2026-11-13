@@ -10,3 +10,8 @@
 .vote-table .dt-bar-track { background: var(--votes-wash); }
 .vote-table .dt-bar { background: var(--votes-ink); }
 .vote-table .dt-choice input { accent-color: var(--votes-ink); }
+/* A bill's divisions, told: the sentence counting the folded votes, then each folded kind behind one disclosure. */
+.division-story { margin: 0 0 var(--space-block); font: var(--type-body); color: var(--ink); max-width: 65ch; }
+.division-group { margin-top: var(--space-block); }
+.division-group > summary { font: var(--type-strong); }
+.votes-scope { margin: var(--space-tight) 0 0; font: var(--type-metadata); color: var(--ink-soft); }

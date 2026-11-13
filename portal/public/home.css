@@ -187,3 +187,5 @@
   .hp-section[data-accent]::before { background: CanvasText; }
   .hp-portrait { border: var(--border-hairline) solid CanvasText; }
 }
+/* Two record lines above the title read as one block. */
+.hp-purpose .hp-sitting:has(+ .hp-most-divided:not([hidden])) { margin-bottom: 0; }

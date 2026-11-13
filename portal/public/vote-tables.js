@@ -48,6 +48,19 @@ export function divisionTableConfig(params = {}, caption = 'Divisions', pageType
     phone:{figure:['outcome', {key:'ayes', to:'noes'}], meta:['chamber']},
     export:{filename:'divisions.csv'}, urlKey:'dv', pageType};
 }
+/**
+ * What a profile's vote table holds against the whole count above it: "The 10 most recent of 2,938
+ * recorded divisions." Recorded votes are divisions; without them the rows are the latest votes on
+ * bills, a different unit, so the line says which.
+ */
+export function voteScopeLine(shown, total, recorded = true) {
+  const n = Number(shown) || 0, m = Number(total) || 0;
+  if (!n) return '';
+  const fmt = value => value.toLocaleString('en-AU');
+  if (!recorded) return `The ${n === 1 ? 'latest vote' : `${fmt(n)} latest votes`} on bills${m ? `, from ${fmt(m)} recorded division${m === 1 ? '' : 's'}` : ''}.`;
+  if (m <= n) return `All ${fmt(n)} recorded division${n === 1 ? '' : 's'}.`;
+  return `The ${n === 1 ? 'most recent' : `${fmt(n)} most recent`} of ${fmt(m)} recorded divisions.`;
+}
 export function voteTableConfig(person, caption = 'Voting record') {
   const people = [...new Set((Array.isArray(person) ? person : [person]).filter(Boolean))];
   return {id:'vote-table', caption, columns:voteColumns, source:{endpoint:'/api/table/votes', params:{'f.person':JSON.stringify(people)}},
@@ -110,13 +123,99 @@ export function divisionRows(divisions = [], deduplicate = false) {
     const key = deduplicate ? divisionIdentity(division) || `row:${unique.size}` : division.slug || division.key || unique.size;
     if (unique.has(key)) continue;
     const outcome = ({affirmative:'Agreed', negative:'Not agreed'}[division.outcome || division.result]) || sentence(division.outcome || division.result) || 'Not recorded';
-    unique.set(key, {title:[stage, date ? shortDate(date) : ''].filter(Boolean).join(', '), date,
+    unique.set(key, {title:[stage, date ? shortDate(date) : ''].filter(Boolean).join(', '), date, kind:divisionKind(division),
       chamber:chambers[division.house] || sentence(division.house) || 'Not recorded', outcome,
       ayes:count(division.ayes), noes:count(division.noes),
       href:divisionLink(division.slug || division.key) || safeLink(division.source_url || division.url)});
   }
   return [...unique.values()];
 }
+
+/* What a division was, read from the record's own stage or heading, never from the question's words
+   (a question opens with whoever was speaking, and a speech can mention anything). "limitation": a
+   question the record files under limitation of debate, put under a time limit on the debate; it can be
+   an amendment or a reading. "procedure": the house's own business (business motions, rearrangement,
+   suspending standing orders, declaring a bill urgent, closure, adjournment). Everything else is "bill". */
+const LIMITATION = /^limitation of debate$/i;
+const PROCEDURE = /^(?:business(?: motions?)?(?: - .*)?|rearrangement(?: of business)?|suspension of (?:standing|sessional|standing and sessional) orders|declaration of urgency|closure(?: of debate)?|adjournment|motion to adjourn)$/i;
+export function divisionKind(division) {
+  const labels = [String(division?.stage || '').replace(/_/g, ' ').trim(), headingTitle(division?.title || division?.name || '')]
+    .flatMap(label => [label, label.split(/;\s*/).at(-1)]).filter(Boolean);
+  if (labels.some(label => LIMITATION.test(label))) return 'limitation';
+  if (labels.some(label => PROCEDURE.test(label))) return 'procedure';
+  return 'bill';
+}
+
+const DIVISION_GROUPS = {
+  limitation: {id:'division-limitation-table', urlKey:'dl', caption:'Votes under limitation of debate',
+    summary:n => `${n} ${n === 1 ? 'vote' : 'votes'} under limitation of debate`,
+    phrase:'on this bill under a limitation of debate, a time limit set on the debate'},
+  procedure: {id:'division-procedure-table', urlKey:'dp', caption:'Votes on procedure',
+    summary:n => `${n} ${n === 1 ? 'vote' : 'votes'} on procedure`,
+    phrase:'on procedure for this bill, such as business motions or suspending standing orders'},
+};
+const theChamber = chamber => !chamber || chamber === 'Not recorded' ? 'parliament' : `the ${chamber}`;
+const plural = (n, one, many) => `${n.toLocaleString('en-AU')} ${n === 1 ? one : many}`;
+
+/**
+ * One sentence per chamber for a kind of folded division, counted from the rows the table shows, so
+ * the sentence and the rows always agree: "On 19 Aug 2026 the Senate voted 11 times on this bill
+ * under a limitation of debate, a time limit set on the debate: 5 agreed, 6 not agreed."
+ */
+export function divisionGroupSentences(rows = [], kind = 'limitation') {
+  const group = DIVISION_GROUPS[kind];
+  if (!group) return [];
+  const byChamber = new Map();
+  for (const row of rows) if (row.kind === kind) {
+    if (!byChamber.has(row.chamber)) byChamber.set(row.chamber, []);
+    byChamber.get(row.chamber).push(row);
+  }
+  return [...byChamber].map(([chamber, list]) => {
+    const dates = [...new Set(list.map(row => row.date).filter(Boolean))].sort();
+    const when = !dates.length ? '' : dates.length === 1 ? `On ${shortDate(dates[0])} ` : `Between ${shortDate(dates[0])} and ${shortDate(dates.at(-1))} `;
+    const who = theChamber(chamber);
+    const head = `${when}${when ? who : who[0].toUpperCase() + who.slice(1)} voted ${list.length === 1 ? 'once' : `${list.length.toLocaleString('en-AU')} times`} ${group.phrase}`;
+    const agreed = list.filter(row => row.outcome === 'Agreed').length, not = list.filter(row => row.outcome === 'Not agreed').length;
+    const other = list.length - agreed - not;
+    if (list.length === 1) return `${head}, and the question was ${agreed ? 'agreed' : not ? 'not agreed' : 'given no recorded outcome'}.`;
+    return `${head}: ${[`${agreed.toLocaleString('en-AU')} agreed`, `${not.toLocaleString('en-AU')} not agreed`, other ? `${plural(other, 'with no recorded outcome', 'with no recorded outcome')}` : ''].filter(Boolean).join(', ')}.`;
+  });
+}
+
+const escText = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+/** A table of rows already in hand: the same columns and phone layout, read and exported in the page. */
+function localDivisionConfig(base, rows, overrides) {
+  const {source: _source, ...rest} = base;
+  return {...rest, ...overrides, rows};
+}
+
+/**
+ * A bill's divisions, told: one sentence per folded kind above the table, the divisions on the bill
+ * itself in the main table, and the limitation-of-debate and procedural votes each folded into their
+ * own table under one disclosure. A bill with no folded votes keeps the one server-backed table.
+ */
+export function billDivisionsTablesHTML(rows = [], {bill = '', suffix = '', query = {}} = {}) {
+  const base = divisionTableConfig({bill}, 'Divisions', 'bill');
+  if (suffix) base.id += suffix;
+  const main = rows.filter(row => !DIVISION_GROUPS[row.kind]);
+  const folded = Object.keys(DIVISION_GROUPS).map(kind => ({kind, rows:rows.filter(row => row.kind === kind)})).filter(g => g.rows.length);
+  if (!folded.length) return voteTableHTML(base, voteTablePage(rows, base, query));
+  const sentences = folded.flatMap(g => divisionGroupSentences(g.rows, g.kind));
+  const story = `<p class="division-story">${sentences.map(escText).join(' ')}</p>`;
+  const mainHTML = main.length ? (() => {
+    const config = localDivisionConfig(base, main, {caption:'Divisions on the bill'});
+    return voteTableHTML(config, voteTablePage(main, config, query));
+  })() : '';
+  const groups = folded.map(({kind, rows: list}) => {
+    const group = DIVISION_GROUPS[kind];
+    const config = localDivisionConfig(base, list, {id:group.id + suffix, urlKey:group.urlKey, caption:group.caption,
+      export:{filename:`divisions-${kind}.csv`}});
+    // With nothing else to show, the folded votes are the table and stay open.
+    return `<details class="ui-disclosure division-group" data-kind="${kind}"${main.length ? '' : ' open'}><summary>${escText(group.summary(list.length))}</summary><div class="ui-disclosure-body">${voteTableHTML(config, voteTablePage(list, config))}</div></details>`;
+  }).join('');
+  return story + mainHTML + groups;
+}
+
 const billIndexes = new WeakMap();
 const titleKey = value => String(value || '').replace(/\s+/g,' ').trim().toLowerCase();
 export function votingRows(votes = [], bills = []) {
