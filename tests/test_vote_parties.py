@@ -164,7 +164,7 @@ class DatedParty(unittest.TestCase):
         self.assertEqual(V.label("Nats"), "Nationals")
         self.assertIsNone(V.label("SPK"))
 
-    def test_rows_with_a_source_party_are_never_touched_and_fills_are_recomputed(self):
+    def test_a_source_party_without_dated_evidence_stays_and_fills_are_recomputed(self):
         evidence = [service("Ivo Quarrington", "Example Labour", "2023-03-25", "2027-03-27")]
         record = division("nsw-lc-2026-05-01-1", "2026-05-01",
                           [row("Ivo Quarrington"), dict(row("Una Blackwood"), party="Source Party")])
@@ -176,6 +176,154 @@ class DatedParty(unittest.TestCase):
         self.assertNotIn("party_source", record["members"][0])
         self.assertNotIn("party_fill", record["_meta"])
 
+
+def release_term(name, party, start, end=None, through="2026-09-09", pid="99100", chamber="representatives"):
+    return V.entry("release-term", chamber, ("release", f"p{pid}"), [name], party, start, end,
+                   None if end else through, pids=[pid])
+
+
+def federal(key, date, members, house="representatives"):
+    return division(key, date, members, house, "federal")
+
+
+def labelled(name, party, pid="tvfy_99100", vote="aye"):
+    return dict(row(name, vote, pid), party=party)
+
+
+class SourceLabels(unittest.TestCase):
+    """Source labels given for every date (today's party) checked against dated records."""
+
+    def test_a_member_who_changed_party_shows_the_old_party_on_old_dates_and_the_new_one_after(self):
+        evidence = [release_term("Corin Ashdale", "Nationals", "2013-09-07", "2025-12-15"),
+                    release_term("Corin Ashdale", "One Nation", "2025-12-15")]
+        # The source labels every row with the party Corin Ashdale holds today.
+        records = [federal("federal-representatives-1", "2014-03-20", [labelled("Corin Ashdale", "One Nation")]),
+                   federal("federal-representatives-2", "2025-12-14", [labelled("Corin Ashdale", "One Nation")]),
+                   federal("federal-representatives-3", "2026-02-05", [labelled("Corin Ashdale", "One Nation")])]
+        got = fill(records, evidence)
+        self.assertEqual([r["members"][0]["party"] for r in records], ["Nationals", "Nationals", "One Nation"])
+        self.assertEqual(got[("federal-representatives-1", "Corin Ashdale")], ("Nationals", "label-corrected"))
+        self.assertEqual(got[("federal-representatives-3", "Corin Ashdale")], ("One Nation", "label-agrees"))
+        member = records[0]["members"][0]
+        self.assertEqual(member["party_source"], {"basis": "release-term", "url": None, "source_party": "One Nation"})
+        self.assertEqual(records[0]["_meta"]["party_check"]["corrected"], 1)
+        self.assertNotIn("party_source", records[2]["members"][0])
+
+    def test_a_naming_variant_is_never_rewritten(self):
+        evidence = [release_term("Tamsin Okoro", "Liberal", "2016-07-02", pid="99101"),
+                    release_term("Wynn Halloran", "Nick Xenophon Team", "2016-07-02", pid="99102"),
+                    release_term("Pell Varga", "ALP", "2016-07-02", pid="99103"),
+                    release_term("Odile Brack", "Nationals", "2016-07-02", pid="99104")]
+        records = [federal("federal-representatives-1", "2017-05-10", [
+            labelled("Tamsin Okoro", "LNP", "tvfy_99101"),               # Queensland LNP, filed Liberal
+            labelled("Wynn Halloran", "Centre Alliance", "tvfy_99102"),  # the same party, renamed
+            labelled("Pell Varga", "Labor", "tvfy_99103"),
+            labelled("Odile Brack", "Liberal National Party", "tvfy_99104")])]
+        got = fill(records, evidence)
+        self.assertEqual([m["party"] for m in records[0]["members"]],
+                         ["LNP", "Centre Alliance", "Labor", "Liberal National Party"])
+        self.assertTrue(all(reason in ("label-kept-variant", "label-agrees") for _, reason in got.values()))
+        self.assertFalse(any("party_source" in m for m in records[0]["members"]))
+        self.assertNotIn("party_check", records[0]["_meta"])
+
+    def test_liberal_and_nationals_are_still_two_parties(self):
+        evidence = [release_term("Tamsin Okoro", "Nationals", "2016-07-02", pid="99101")]
+        records = [federal("federal-representatives-1", "2017-05-10", [labelled("Tamsin Okoro", "Liberal", "tvfy_99101")])]
+        self.assertEqual(fill(records, evidence)[("federal-representatives-1", "Tamsin Okoro")],
+                         ("Nationals", "label-corrected"))
+
+    def test_ambiguous_evidence_holds_the_label_back(self):
+        # A dated list inside the term contradicts it: the record is unclear for that date.
+        term_ = release_term("Corin Ashdale", "Liberal", "2016-07-02")
+        listed = V.entry("release-roster", "representatives", ("release", "p99100"), ["Corin Ashdale"], "Independent",
+                         "2018-03-01", "2018-03-01", "2018-03-01", pids=["99100"], point=True)
+        records = [federal("federal-representatives-1", "2018-03-01", [labelled("Corin Ashdale", "Independent")]),
+                   federal("federal-representatives-2", "2018-03-02", [labelled("Corin Ashdale", "Independent")])]
+        got = fill(records, [term_, listed])
+        self.assertEqual(got[("federal-representatives-1", "Corin Ashdale")], (None, "label-withheld-conflicting"))
+        member = records[0]["members"][0]
+        self.assertNotIn("party", member)
+        self.assertEqual(member["party_withheld"], {"source_party": "Independent", "reason": "conflicting"})
+        self.assertEqual(records[0]["_meta"]["party_check"]["withheld"], 1)
+        # Two lists either side naming different parties are unclear too.
+        lists = [official("Una Blackwood", "Example Labour", "2023-04-01"),
+                 official("Una Blackwood", "Example Independents", "2026-09-25")]
+        record = division("nsw-lc-2025-06-01-1", "2025-06-01", [dict(row("Una Blackwood"), party="Example Labour")])
+        self.assertEqual(fill([record], lists)[("nsw-lc-2025-06-01-1", "Una Blackwood")],
+                         (None, "label-withheld-conflicting"))
+
+    def test_no_covering_evidence_or_an_ambiguous_identity_keeps_the_source_label(self):
+        evidence = [release_term("Corin Ashdale", "Nationals", "2013-09-07", "2016-05-09")]
+        records = [federal("federal-representatives-1", "2020-02-01", [labelled("Corin Ashdale", "One Nation")])]
+        self.assertEqual(fill(records, evidence)[("federal-representatives-1", "Corin Ashdale")],
+                         ("One Nation", "label-kept-evidence-ends-before-date"))
+        self.assertEqual(records[0]["members"][0]["party"], "One Nation")
+        twins = [release_term("Rhea Tolland", "Labor", "2016-07-02", pid="99105"),
+                 release_term("Rhea Tolland", "Greens", "2016-07-02", pid="99106")]
+        record = federal("federal-representatives-2", "2017-05-10", [labelled("Rhea Tolland", "Labor", None)])
+        self.assertEqual(fill([record], twins)[("federal-representatives-2", "Rhea Tolland")],
+                         ("Labor", "label-kept-ambiguous-identity"))
+
+    def test_senate_rows_are_untouched_without_dated_senate_evidence(self):
+        # House periods say nothing about the same person's Senate votes.
+        evidence = [release_term("Corin Ashdale", "Nationals", "2013-09-07")]
+        records = [federal("federal-senate-1", "2010-06-01", [labelled("Corin Ashdale", "One Nation")], "senate"),
+                   federal("federal-senate-2", "2010-06-01", [row("Ivo Quarrington", pid="tvfy_99200")], "senate")]
+        before = json.loads(json.dumps(records))
+        got = fill(records, evidence)
+        self.assertEqual(records, before)
+        self.assertEqual(got[("federal-senate-1", "Corin Ashdale")], ("One Nation", "label-kept-no-match"))
+
+    def test_corrections_and_holds_are_recomputed_from_the_source_label(self):
+        evidence = [release_term("Corin Ashdale", "Nationals", "2013-09-07", "2025-12-15")]
+        record = federal("federal-representatives-1", "2014-03-20", [labelled("Corin Ashdale", "One Nation")])
+        V.fill_dated_parties([record], evidence)
+        self.assertEqual(record["members"][0]["party"], "Nationals")
+        # Rerun on the published record: stable.
+        V.fill_dated_parties([record], evidence)
+        self.assertEqual(record["members"][0]["party"], "Nationals")
+        self.assertEqual(record["members"][0]["party_source"]["source_party"], "One Nation")
+        # The evidence is withdrawn: the source label comes back, with no trace of the correction.
+        V.fill_dated_parties([record], [])
+        self.assertEqual(record["members"][0], labelled("Corin Ashdale", "One Nation"))
+        self.assertNotIn("party_check", record["_meta"])
+        # A held label comes back the same way.
+        held = federal("federal-representatives-2", "2014-03-20", [dict(row("Corin Ashdale", pid="tvfy_99100"),
+                       party_withheld={"source_party": "One Nation", "reason": "conflicting"})])
+        V.fill_dated_parties([held], [])
+        self.assertEqual(held["members"][0], labelled("Corin Ashdale", "One Nation"))
+
+    def test_without_the_dated_release_no_label_is_checked_or_changed(self):
+        # A previous run corrected this row; tonight the release is missing.
+        evidence = [release_term("Corin Ashdale", "Nationals", "2013-09-07", "2025-12-15"),
+                    service("Corin Ashdale", "Nationals", "2013-09-07", "2025-12-15", chamber="representatives")]
+        record = federal("federal-representatives-1", "2014-03-20", [labelled("Corin Ashdale", "One Nation")])
+        V.fill_dated_parties([record], evidence)
+        self.assertEqual(record["members"][0]["party"], "Nationals")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "scripts").mkdir()
+            (root / "scripts/roster_service.json").write_text(json.dumps({"service": [
+                {"name": "Corin Ashdale", "chamber": "representatives", "party": "Nationals",
+                 "start": "2013-09-07", "end": "2025-12-15"}]}))
+            missing = V.load_evidence(root, None)
+        self.assertFalse(missing.check_labels)
+        self.assertTrue(len(missing))  # other sources still load and still fill gaps
+        outcomes = V.fill_dated_parties([record], missing)
+        self.assertEqual(record["members"][0], labelled("Corin Ashdale", "One Nation"))
+        self.assertEqual(outcomes, {})
+        self.assertTrue(V.load_evidence(ROOT).check_labels)
+
+    def test_same_party(self):
+        self.assertTrue(V.same_party("ALP", "Labor"))
+        self.assertTrue(V.same_party("LNP", "Nationals"))
+        self.assertTrue(V.same_party("Liberal National Party of Queensland", "Liberal"))
+        self.assertTrue(V.same_party("CLP", "Liberal"))
+        self.assertTrue(V.same_party("Palmer United Party", "United Australia Party"))
+        self.assertTrue(V.same_party("Pauline Hanson's One Nation Party", "One Nation"))
+        self.assertFalse(V.same_party("Liberal", "Nationals"))
+        self.assertFalse(V.same_party("Independent", "Liberal"))
+        self.assertFalse(V.same_party("SPK", "SPK"))
 
 class OneParliament(unittest.TestCase):
     """Dated evidence never reaches across a general election (scripts/general_elections.json)."""
@@ -290,6 +438,33 @@ class ExportIntegration(unittest.TestCase):
         self.assertNotIn("Unknown", json.dumps(tally["party_tallies"]))
         self.assertEqual((index["coverage"]["party_filled_count"], index["coverage"]["unknown_party_count"]), (1, 1))
 
+    def test_write_projection_corrects_a_label_from_another_period_and_tallies_follow(self):
+        evidence = [release_term("Corin Ashdale", "Nationals", "2013-09-07", "2025-12-15")]
+        def fresh():
+            record = federal("federal-representatives-1", "2014-03-20", [
+                labelled("Corin Ashdale", "One Nation"), labelled("Lark Penhallow", "Nationals", "tvfy_99300", "no")])
+            record.update(ayes=1, noes=1)
+            return {record["key"]: record}
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "divisions"
+            D.write_projection(fresh(), out, party_evidence=evidence)
+            before = {p.name: p.read_bytes() for p in out.iterdir()}
+            # The nightly reads the source labels afresh: byte-stable.
+            D.write_projection(fresh(), out, party_evidence=evidence)
+            self.assertEqual({p.name: p.read_bytes() for p in out.iterdir()}, before)
+            index = json.loads((out / "index.json").read_text())
+            # Withdrawn evidence clears the correction on the next run.
+            D.write_projection(fresh(), out, party_evidence=[])
+            cleared = json.loads((out / "index.json").read_text())
+        tally = index["divisions"][0]["party_tallies"]
+        self.assertEqual(tally, [{"party": "Nationals", "votes": {"aye": 1, "no": 1}}])
+        self.assertEqual(index["parties"], ["Nationals"])
+        self.assertEqual((index["coverage"]["party_corrected_count"], index["coverage"]["party_filled_count"],
+                          index["coverage"]["party_withheld_count"]), (1, 0, 0))
+        self.assertEqual(cleared["divisions"][0]["party_tallies"][0]["party"], "Nationals")
+        self.assertIn("One Nation", cleared["parties"])
+        self.assertEqual(cleared["coverage"]["party_corrected_count"], 0)
+
     def previous_with_fill(self, out):
         evidence = [service("Ivo Quarrington", "Example Labour", "2023-03-25", "2027-03-27")]
         record = division("nsw-lc-2026-05-01-1", "2026-05-01", [row("Ivo Quarrington"), row("Una Blackwood", "no")])
@@ -309,8 +484,13 @@ class ExportIntegration(unittest.TestCase):
         record = guarded["nsw-lc-2026-05-01-1"]
         self.assertTrue(record["_meta"]["refresh_retained"])
         ivo = next(m for m in record["members"] if m["name"] == "Ivo Quarrington")
-        self.assertEqual(ivo["party"], "Source Party")
-        self.assertNotIn("party_source", ivo)
+        # Last run's fill is gone: the row now starts from the source party, which
+        # is then checked like any source label. The dated record covering the
+        # date names another party, so it is corrected, keeping the source label.
+        self.assertEqual(ivo["party"], "Example Labour")
+        self.assertEqual(ivo["party_source"], {"basis": "service", "url": LIST, "source_party": "Source Party"})
+        self.assertNotIn("party_fill", record["_meta"])
+        self.assertEqual(record["_meta"]["party_check"]["corrected"], 1)
 
     def test_a_bills_only_run_keeps_previous_fills(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -322,6 +502,31 @@ class ExportIntegration(unittest.TestCase):
             guarded = D.write_projection({bills_only["key"]: bills_only}, out, carry=True, party_evidence=None)
         ivo = next(m for m in guarded["nsw-lc-2026-05-01-1"]["members"] if m["name"] == "Ivo Quarrington")
         self.assertEqual((ivo["party"], ivo["party_source"]["basis"]), ("Example Labour", "service"))
+
+    def test_a_missing_release_keeps_published_corrections_and_fills_as_they_are(self):
+        evidence = V.Evidence([release_term("Corin Ashdale", "Nationals", "2013-09-07", "2025-12-15"),
+                               release_term("Lark Penhallow", "Labor", "2013-09-07", pid="99300")], elections={})
+        def fresh(ashdale="One Nation"):
+            record = federal("federal-representatives-1", "2014-03-20", [
+                labelled("Corin Ashdale", ashdale), row("Lark Penhallow", "no", "tvfy_99300")])
+            record.update(ayes=1, noes=1)
+            return {record["key"]: record}
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "divisions"
+            D.write_projection(fresh(), out, party_evidence=evidence)
+            published = {p.name: p.read_bytes() for p in out.iterdir()}
+            shard = json.loads((out / "division-federal-representatives-1.json").read_text())
+            self.assertEqual([m.get("party") for m in shard["members"]], ["Nationals", "Labor"])
+            # Tonight the release does not load: nothing may be undone.
+            missing = V.Evidence([], elections={}, check_labels=False)
+            D.write_projection(fresh(), out, party_evidence=missing)
+            self.assertEqual({p.name: p.read_bytes() for p in out.iterdir()}, published)
+            # A source label that changed meanwhile is not given the old correction.
+            D.write_projection(fresh("Nationals"), out, party_evidence=missing)
+            shard = json.loads((out / "division-federal-representatives-1.json").read_text())
+        ashdale, penhallow = shard["members"]
+        self.assertEqual((ashdale["party"], "party_source" in ashdale), ("Nationals", False))
+        self.assertEqual((penhallow["party"], penhallow["party_source"]["basis"]), ("Labor", "release-term"))
 
     def test_without_evidence_rows_are_unchanged(self):
         record = division("nsw-lc-2026-05-01-1", "2026-05-01", [row("Ivo Quarrington")])

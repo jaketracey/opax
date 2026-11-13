@@ -291,7 +291,9 @@ const href = (value,config) => {
    figure is the first money or count column and the meta every other visible
    column; columns left out of a list stay in the grid at 700 px and up and in
    the CSV. Each part is one visible column, a pair read as "1998 to 2024"
-   (`to`), a count with its unit (`unit`), or a value after a word (`label`). */
+   (`to`), a count with its unit (`unit`), a value after a word (`label`), a
+   value with a second column after a word (`then`), and values to leave out
+   (`omit`). */
 const phoneEntries = (list, columns) => (Array.isArray(list) ? list : [])
   .map(entry => typeof entry === 'string' ? {key:entry} : entry && typeof entry === 'object' && typeof entry.key === 'string' ? entry : null)
   .filter(entry => entry && columns.some(c => c.key === entry.key));
@@ -302,14 +304,24 @@ function phoneLayout(config, columns, title, prominence) {
     : rest.filter(c => !figure.some(f => f.key === c.key)).map(c => ({key:c.key}));
   return {figure, meta};
 }
+/* One part of the phone line, as HTML. A screen reader hears the column it
+   came from ("Industry: Finance"), since the grid's cells are hidden on a
+   phone; a column with a link keeps it. */
 function phonePart(entry, row, config) {
   const column = config.columns.find(c => c.key === entry.key), end = entry.to ? config.columns.find(c => c.key === entry.to) : null;
   const from = formatCell(row[entry.key], column), to = end ? formatCell(row[end.key], end) : '';
   // A span of years or dates that starts and ends together is one; a count of 30 to 30 is two.
   const value = from && to && (from !== to || !['year','date'].includes(column.type)) ? `${from} to ${to}` : from || to;
-  if (!value) return '';
+  // A value the reader learns nothing from on every row ("Not recorded") is left out of the line.
+  if (!value || Array.isArray(entry.omit) && entry.omit.includes(value)) return '';
   const unit = Array.isArray(entry.unit) ? entry.unit[number(row[entry.key]) === 1 ? 0 : 1] : '';
-  return [typeof entry.label === 'string' ? entry.label : '', value, unit && !end ? unit : ''].filter(Boolean).join(' ');
+  // `then`: a second column read after a word ("Passed as at 3 Mar 2026"); its absence is said, never silent.
+  const next = entry.then && typeof entry.then.key === 'string' ? config.columns.find(c => c.key === entry.then.key) : null;
+  const after = next ? formatCell(row[next.key], next) || `${next.label.toLowerCase()} not recorded` : '';
+  const text = esc([typeof entry.label === 'string' ? entry.label : '', value, unit && !end ? unit : '', after && entry.then.word, after].filter(Boolean).join(' '));
+  const target = column.href ? href(column.href(row),config) : null;
+  const name = end ? `${column.label} to ${end.label}` : next ? `${column.label}, ${next.label}` : column.label;
+  return `<span class="dt-sr">${esc(name)}: </span>${target ? `<a href="${esc(target)}">${text}</a>` : text}`;
 }
 function phoneLineHTML(layout, row, config) {
   const meta = layout.meta.map(e => phonePart(e, row, config)).filter(Boolean);
@@ -318,7 +330,7 @@ function phoneLineHTML(layout, row, config) {
   const column = config.columns.find(c => c.key === layout.figure[0]?.key), n = number(row[column?.key]);
   const exact = column?.type === 'money' && n != null ? ` title="${esc(money.format(n))}"` : '';
   // A dot binds to the item after it (no-break space), so a wrapped line never ends in one.
-  return `<span class="dt-phone">${meta.length ? `<span class="dt-phone-meta">${meta.map(esc).join(' · ')}</span>` : ''}${figure.length ? `<span class="dt-phone-figure"${exact}>${figure.map(esc).join(', ')}</span>` : ''}</span>`;
+  return `<span class="dt-phone">${meta.length ? `<span class="dt-phone-meta">${meta.join(' ·\u00a0')}</span>` : ''}${figure.length ? `<span class="dt-phone-figure"${exact}>${figure.join(', ')}</span>` : ''}</span>`;
 }
 
 function chip(label, key, value, removable = true, title = label) {
@@ -453,6 +465,16 @@ export function mountDataTable(el, config) {
   const canonical=doc.head.querySelector('link[rel="canonical"]'), canonicalURL=canonical?.href;
   const requestLinks=new Map([...doc.querySelectorAll?.('a[href]') || []].map(link=>[link,link.getAttribute('href')]));
 
+  // Stacked under 700 px, the header row is clipped for screen readers only; its
+  // sort buttons leave the tab order there (the sort select does their job), so
+  // focus never lands on a control no one can see. They come back at 700 px.
+  const narrow = win.matchMedia?.('(width < 700px)');
+  function syncSortTabs() {
+    const hide = Boolean(narrow?.matches) && root.dataset.phone === 'stack';
+    for (const button of root.querySelectorAll('thead [data-sort]')) {
+      if (hide) button.setAttribute('tabindex','-1'); else button.removeAttribute('tabindex');
+    }
+  }
   function replaceURL(url) {
     win.history.replaceState(win.history.state,'',url); lastURL=String(url);
   }
@@ -504,6 +526,7 @@ export function mountDataTable(el, config) {
     root.append(...section.childNodes);
     if (status) { root.querySelector('.dt-footer').prepend(status); status.textContent = message; }
     mountTableLoaders(root);
+    syncSortTabs();
     for (const detail of root.querySelectorAll('details[data-panel]')) if (open.includes(detail.dataset.panel)) detail.open = true;
     if (focused) for (const field of root.querySelectorAll('[data-focus]')) if (field.dataset.focus === focused) {
       field.focus({preventScroll:true});
@@ -698,6 +721,8 @@ export function mountDataTable(el, config) {
   function popstate() { captureURL(); void refresh(); }
   root.addEventListener('click',click); root.addEventListener('change',change); root.addEventListener('input',input); root.addEventListener('submit',submit); root.addEventListener('keydown',keydown);
   win.addEventListener('popstate',popstate);
+  narrow?.addEventListener?.('change',syncSortTabs);
+  syncSortTabs();
   captureURL();
   void refresh();
   return {destroy() {
@@ -705,6 +730,7 @@ export function mountDataTable(el, config) {
     root.removeAttribute('aria-busy'); root.removeAttribute('data-dt-stale');
     for (const [event,listener] of [['click',click],['change',change],['input',input],['submit',submit],['keydown',keydown]]) root.removeEventListener(event,listener);
     win.removeEventListener('popstate',popstate);
+    narrow?.removeEventListener?.('change',syncSortTabs);
     setRobots(doc,root,false);
   }};
 }

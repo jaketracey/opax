@@ -3451,6 +3451,16 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search #search-empty .empty-actions { justify-content: flex-start; gap: var(--sp-8); margin-top: var(--sp-20); }
 #panel-search #search-empty h3 { margin-top: var(--sp-24); color: var(--ink); }
 #panel-search #search-empty .ui-button { max-width: 100%; min-width: 0; }
+/* "No records mention ...": the meaning-ranked records wait, closed, under their
+   own heading at the foot of the recovery block, and open in place below it. */
+#panel-search.is-meaning-closed :is(#results-bar, #search-answer, #search-results, #search-pager) { display: none !important; }
+#panel-search #search-empty .search-meaning { margin-top: var(--sp-32); padding-top: var(--sp-8); border-top: var(--border-hairline) solid var(--divider-subtle); }
+#panel-search #search-empty .search-meaning-title { margin: 0; }
+#panel-search .search-meaning-toggle { display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 0 var(--sp-12); min-height: var(--size-target); margin: 0; padding: 0; border: 0; background: none; color: var(--ink); font: var(--type-subheading); text-align: left; cursor: pointer; }
+#panel-search .search-meaning-toggle::before { content: "+" / ""; color: var(--bronze-ink); font: var(--type-strong); }
+#panel-search .search-meaning-toggle[aria-expanded="true"]::before { content: "−" / ""; }
+#panel-search .search-meaning-toggle:hover { color: var(--bronze-ink); }
+#panel-search .search-meaning-count { font: var(--type-fine); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 #panel-search .search-result-heading .result-title { display: flex; align-items: center; min-height: var(--size-target); }
 #panel-search .search-result-text.is-collapsed { display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
 /* Give the bronze reading action room beneath the faded passage. */
@@ -4556,7 +4566,7 @@ html[data-panel="chat"] footer { display: none; }
 .evidence-locations small {display:block;margin-top:var(--sp-4)}
 /* Programs & places: the list of connections (ui-list rows) beside the open
    one, which reads as a column of its own, unboxed. One column on a phone,
-   the list a short scroller above the open connection. */
+   the list in the page's flow, a connection opening as the next view. */
 .connections-page { min-width: 0; }
 .connections-layout { display: grid; grid-template-columns: minmax(calc(var(--size-control) * 5), 1fr) minmax(0, 2fr); gap: var(--space-group); align-items: start; margin-top: var(--space-heading); }
 .connection-choice { display: grid; gap: var(--space-line); width: 100%; min-height: var(--size-target); margin: 0; padding: 0; border: 0; background: none; color: inherit; text-align: left; cursor: pointer; }
@@ -4580,10 +4590,20 @@ html[data-panel="chat"] footer { display: none; }
 .connection-detail-art .wb-wrap { margin: 0 auto var(--space-heading); }
 .connection-detail-art .wb-label { display: none; }
 .connection-picks { justify-content: center; }
+/* "Show 20 more" and the way back belong to a phone's reading only. */
+.connection-more, .connection-back { display: none; }
 @media (max-width: 700px) {
-  .connections-layout { grid-template-columns: minmax(0, 1fr); }
-  #connection-list { max-height: 20rem; overflow: auto; }
-  .connection-detail-empty { display: none; }
+  /* One column in the page's own flow (no inner scroller): the starting card
+     above the list as a short invitation, then twenty rows and "Show 20 more". */
+  .connections-layout { grid-template-columns: minmax(0, 1fr); gap: var(--space-block); }
+  #connection-detail:has(> .connection-detail-empty) { position: static; order: -1; }
+  .connection-detail-empty { padding-block: var(--space-block); }
+  .connection-detail-empty .connection-detail-art .wb-wrap { margin-bottom: var(--space-tight); }
+  .connection-more:not([hidden]) { display: inline-flex; justify-self: start; }
+  /* A connection opened on a phone is the next view: the list and its controls step aside. */
+  .connections-reading :is(.ui-filter-bar, #connection-status, #connection-list, .connection-more) { display: none; }
+  .connections-reading .connection-back { display: inline-flex; margin: 0 0 var(--space-tight); }
+  .connections-reading .connection-back::before { content: "‹" / ""; margin-right: var(--sp-8); }
 }
 .evidence-years meter::-webkit-meter-optimum-value {background:var(--chart-mark)}
 .evidence-years meter::-moz-meter-bar {background:var(--chart-mark)}

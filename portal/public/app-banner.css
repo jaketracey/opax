@@ -1,6 +1,7 @@
 /* The site intentionally uses light tokens, including in device dark mode. */
-/* One line at every width: the row is the dismiss button's 44px target and no
-   more, and the rule under it is drawn inside that height. */
+/* One line at every width at the default text size: the row is the dismiss
+   button's 44px target, and the rule under it is drawn inside that height.
+   With larger text (200% zoom) the line wraps rather than clipping the link. */
 .opax-app-banner {
   flex: none;
   background: var(--paper-sunken);
@@ -16,7 +17,7 @@
   gap: var(--space-tight, 0.5rem);
   max-width: var(--layout-column-web-max, 1440px);
   width: 100%;
-  height: var(--size-target, 44px);
+  min-height: var(--size-target, 44px);
   margin-inline: auto;
   padding-inline: clamp(1.25rem, 4vw, 5rem);
 }
@@ -24,15 +25,12 @@
   flex: 1;
   min-width: 0;
   margin: 0;
-  /* Room for the link's focus ring inside the clipped line. */
+  /* Room for the link's focus ring inside the row. */
   padding-block: var(--space-line, 0.25rem);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 /* A small phone keeps the line whole by naming the device it is. */
 @media (width < 420px) { .opax-app-banner-ipad { display: none; } }
-.opax-app-banner a { color: var(--bronze-ink); text-decoration: underline; text-underline-offset: 0.15em; }
+.opax-app-banner a { white-space: nowrap; color: var(--bronze-ink); text-decoration: underline; text-underline-offset: 0.15em; }
 .opax-app-banner a:hover { color: var(--ink); }
 .opax-app-banner-dismiss {
   box-sizing: border-box;
@@ -54,3 +52,19 @@
 .opax-app-banner-dismiss svg { width: var(--size-icon-md, 20px); height: var(--size-icon-md, 20px); fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
 .opax-app-banner :focus-visible { outline: var(--border-focus, 2px) solid var(--bronze-ink); outline-offset: 2px; }
 @media (forced-colors: active) { .opax-app-banner :focus-visible { outline-color: Highlight; } }
+
+/* Skip to content: hidden until it has keyboard focus, then drawn over the band
+   as style.css draws its other skip links. Defined here because every page that
+   gets the banner gets the link, the map page (no style.css) included. */
+.opax-skip-link {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+.opax-skip-link:focus-visible {
+  position: fixed; top: 0.5rem; left: 0.5rem; z-index: 60; width: auto; height: auto; margin: 0;
+  clip-path: none; padding: var(--sp-8, 0.5rem) var(--sp-16, 1rem);
+  background: var(--paper-raised); color: var(--ink);
+  border: var(--border-hairline, 1px) solid var(--line-control);
+  outline: var(--border-focus, 2px) solid var(--bronze-ink); outline-offset: 2px;
+  font: var(--type-metadata, 400 0.9375rem/1.45 sans-serif);
+}

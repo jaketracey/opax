@@ -3,14 +3,14 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import ts from 'typescript';
-import {grantCoreBody} from '../src/seo-record-content.ts';
+import {grantCoreBody, recipientMetaLine} from '../src/seo-record-content.ts';
 const source=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
 const parsed=ts.createSourceFile('index.ts',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
 const names=new Set(['grantRecipientMeta','ogImageFor']);
 const code=ts.transpileModule(parsed.statements.filter(n=>ts.isFunctionDeclaration(n)&&names.has(n.name?.text)).map(n=>n.getText(parsed)).join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 test('a specific grant shares its own amount and source, not the recipient total',async()=>{
  const grant={id:'GA123',recipientId:'abn:00000000102',recipient:'Example City Council',amount:4000000,start:'2026-08-27',purpose:'Example pavilion renewal.',sourceUrl:'https://www.grants.gov.au/Ga/Show/original'};
- const c={URL,encodeURIComponent,SITE_ORIGIN:'https://opax.com.au',OG_VERSION:'4',grantCoreBody,timed:async(_name,fn)=>fn(),timedSync:(_name,fn)=>fn(),recordAssetJson:async()=>({'abn-00000000102':{id:grant.recipientId,n:grant.recipient,t:999999999,c:40,grants:[{id:grant.id,v:grant.amount,s:grant.start,n:grant.purpose,guid:'original'}]}}),money:n=>'$'+n,prerenderBlock:()=>'',loadGrantRecipients:async()=>[{id:grant.recipientId,n:grant.recipient,t:999999999,c:40,sh:2}]};runInNewContext(code,c);
+ const c={URL,encodeURIComponent,SITE_ORIGIN:'https://opax.com.au',OG_VERSION:'4',grantCoreBody,recipientMetaLine,timed:async(_name,fn)=>fn(),timedSync:(_name,fn)=>fn(),recordAssetJson:async()=>({'abn-00000000102':{id:grant.recipientId,n:grant.recipient,t:999999999,c:40,grants:[{id:grant.id,v:grant.amount,s:grant.start,n:grant.purpose,guid:'original'}]}}),money:n=>'$'+n,prerenderBlock:()=>'',loadGrantRecipients:async()=>[{id:grant.recipientId,n:grant.recipient,t:999999999,c:40,sh:2}]};runInNewContext(code,c);
  const url=new URL('https://opax.com.au/money/grants/federal/recipient/abn%3A00000000102?award=GA123&utm_source=facebook');
  const meta=await c.grantRecipientMeta('federal',grant.recipientId,url,{});
  assert.equal(meta.status,200);assert.equal(meta.card.stat.value,'$4000000');assert.match(meta.card.lines[0],/Example pavilion/);

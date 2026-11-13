@@ -1,8 +1,10 @@
 import {hydrateRecordCore} from './record-core.js';
+import {recipientMetaLine} from './record-core-content.js';
+import {renderNotFound} from './not-found.js';
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
 import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
 import {partyUrl} from './canonical-urls.js?v=e32f13c6c8';
-import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=bd9f34a02a';
+import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=12dc79654e';
 
 const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const NUMBER = new Intl.NumberFormat('en-AU');
@@ -117,7 +119,7 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     const header = node('div', null, 'grant-recipient-header');
     // When the server's record core leads the page, it is the header; the meta line belongs under the client's own title.
     const title = node('h1', data.n); title.tabIndex = -1;
-    if (!coreActive) header.append(title, node('p', `${JURISDICTIONS[jurisdiction]} · ${kindLabel(data.k)}`, 'grant-recipient-meta'));
+    if (!coreActive) header.append(title, node('p', recipientMetaLine(jurisdiction, data.k), 'grant-recipient-meta'));
     header.append(node('p', qld
       ? 'Published annual expenditure, including grants, service agreements and other assistance.'
       : 'Published Commonwealth grant awards. Award values do not establish payments received.', 'grant-recipient-intro'));
@@ -263,6 +265,13 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     } catch (error) {
       if (!alive() || error.name === 'AbortError') return;
       root.replaceChildren(); root.removeAttribute('aria-busy');
+      if (error.message === 'not-found') {
+        // No recipient at this address: the one not-found block (not-found.js), never the raw id.
+        const heading = renderNotFound(root, { kind: 'recipient', slug: id, headingId: 'grant-recipient-title' });
+        onTitle('Not found');
+        if (manageFocus) heading?.focus({ preventScroll: true });
+        return;
+      }
       const heading = node('h1', error.message === 'not-found' ? 'Recipient not found' : 'Recipient records could not load'); heading.tabIndex = -1;
       const message = node('p', error.message === 'not-found' ? 'No grant records for this recipient in this jurisdiction.' : 'The published records are temporarily unavailable. Try loading them again.'); message.setAttribute('role', 'alert'); root.append(heading, message);
       if (error.message !== 'not-found') { const retry = node('button', 'Try again', 'primary'); retry.type = 'button'; retry.addEventListener('click', () => { root.setAttribute('aria-busy', 'true'); retry.disabled = true; retry.textContent = 'Loading…'; load(); }); root.append(retry); }

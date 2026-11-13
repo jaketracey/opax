@@ -48,6 +48,22 @@ export function grantRows(grants, detail, jur, program) {
 export const supplierRows = rows => rows.map(s=>[title(link(`/subject/supplier/${encodeURIComponent(s.id)}`,s.name))+details([['ABN',s.abn],['Registered name',s.identity?.legal_name],['ABR type',s.identity?.type]]),esc(dollars(s.total)),esc(number(s.count))]);
 export const contractRows = rows => rows.map(c=>[title(esc(c.title || c.id))+details([['End date',c.end_date],['Procurement method',c.procurement_method]],c.description),c.supplier_id ? link(`/subject/supplier/${encodeURIComponent(c.supplier_id)}`,c.supplier || c.supplier_id) : esc(c.supplier || ''),esc(dollars(c.amount)),esc(c.start_date || ''),link(c.url || '',c.id)]);
 export const topicRows = rows => rows.map(s=>[title(link('/doc/'+encodeURIComponent(s.slug),s.title || s.slug))+details([],s.snippet),esc(s.speaker || ''),esc(s.date?.slice(0,10) || ''),safeHref(s.source_url || s.url || '') ? link(s.source_url || s.url || '','Official record') : 'Source link not recorded']);
+const KIND_LABELS = {
+  company: 'Company', association: 'Association / not-for-profit', trust: 'Trust',
+  partnership: 'Partnership', 'co-operative': 'Co-operative', council: 'Local council',
+  government: 'Government body', university: 'University / TAFE', 'health service': 'Health service',
+  'super fund': 'Super fund', union: 'Union', individual: 'Individual', undisclosed: 'Not disclosed',
+  other: 'Other',
+}
+/** A grant recipient's kind in words ("Company"); the client page and the Worker's record core share it. */
+export function kindLabel(k) {
+  return KIND_LABELS[k] || (k ? k.charAt(0).toUpperCase() + k.slice(1) : 'Other');
+}
+const JURISDICTION_NAMES = { federal: 'Commonwealth', qld: 'Queensland' };
+/** The meta line under a recipient's title: "Commonwealth · Company". */
+export function recipientMetaLine(jur, k) {
+  return `${JURISDICTION_NAMES[jur] || 'Commonwealth'} · ${kindLabel(k)}`;
+}
 const figures = (rows) => `<dl class="record-core-figures">${rows.map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>`;
 const grantSource = (jur, grant) => jur === "qld" ? "https://www.data.qld.gov.au/dataset/b102c881-2c7f-484a-a8b6-b056fe318964" : grant?.guid ? `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(grant.guid)}` : grant ? `https://www.grants.gov.au/Ga/ListResult?Type=Ga&AgencyStatus=-1&GaId=${encodeURIComponent(grant.id)}` : "https://www.grants.gov.au/";
 function grantCoreBody(detail, jur, canonical, program = false, dataPath) {

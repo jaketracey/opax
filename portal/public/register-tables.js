@@ -1,12 +1,30 @@
-import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=939d14e6a8';
+import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=5fe413541f';
 import {donorDisclosure} from './donor-disclosure.js?v=18e84bb744';
 import {interestHolder} from './interest-holder.js';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const date = value => /^\d{4}-\d{2}-\d{2}/.test(String(value || '')) ? String(value).slice(0, 10) : null;
 const href = value => { try { const url = new URL(value); return /^https?:$/.test(url.protocol) ? url.href : null; } catch { return null; } };
-/** An industry as the money map's chips name it: 'finance' -> 'Finance', 'mining_&_energy' -> 'Mining & energy'. */
-export const industryName = value => { const text = String(value ?? '').replace(/_/g,' ').trim(); return text ? text[0].toUpperCase() + text.slice(1) : 'Not supplied'; };
+/** An industry key as a name, for the party table and Explain (money-explain.js):
+ *  'finance' is 'Finance', 'mining_&_energy' 'Mining & energy'. 'individual' is
+ *  the pipeline's tag for a private person (export_money_graph.py rule 8), so it
+ *  reads 'Individual'; a missing tag (and the old 'Not supplied') reads
+ *  'Industry not recorded'. A name passes through unchanged, so a label maps to
+ *  itself and old links carrying raw codes still filter. */
+export const industryName = value => {
+  const text = String(value ?? '').replace(/_/g,' ').trim();
+  if (!text || /^(?:not supplied|industry not recorded)$/i.test(text)) return 'Industry not recorded';
+  if (/^individuals?$/i.test(text)) return 'Individual';
+  return text[0].toUpperCase() + text.slice(1);
+};
+/** A party money table: its industry filter takes the raw code an old link
+ *  carries ("finance") or the label the rows show ("Finance"). */
+const isPartyMoney = config => String(config?.urlKey || '').startsWith('partyMoney');
+export function partyMoneyTableQuery(query) {
+  const values = query?.filters?.industry;
+  if (!Array.isArray(values)) return query;
+  return {...query, filters:{...query.filters, industry:[...new Set(values.map(industryName))]}};
+}
 const categoryLabels = {shareholdings:'Shareholdings',real_estate:'Real estate',trusts:'Trusts',directorships:'Directorships',gifts:'Gifts',travel:'Sponsored travel and hospitality',memberships:'Memberships and offices',liabilities:'Liabilities',other:'Other (savings, income, assets, partnerships)'};
 
 export function instrumentTableConfig() {
@@ -138,7 +156,8 @@ export function stateBillsTableConfig(rows) {
       {key:'source_url',label:'Source URL',type:'text'},
       {key:'sha256',label:'SHA-256',type:'text'},
       {key:'licence_url',label:'Licence URL',type:'text'}],primaryLink:row=>row.href || null,
-    phone:{meta:['jurisdiction','introduced_date','status']}};
+    // A status is always read with the date the source gave it.
+    phone:{meta:['jurisdiction','parliament','introduced_date',{key:'sponsor_name',label:'Sponsor'},{key:'status',then:{key:'status_as_of',word:'as at'}},'last_action','publisher','licence']}};
 }
 
 /** Retain existing bookmarked register URLs while the shared core owns state. */
@@ -297,7 +316,7 @@ export function partyMoneyData(graph, partyId) {
     if (edge.target !== partyId || edge.flow || edge.grant || !donor) continue;
     const disclosure=donorDisclosure(donor,{return_type:graph.meta?.source || 'Electoral disclosure return',url:graph.meta?.source_url});
     const row = rows.get(donor.id) || {label:disclosure.name,href:disclosure.href,return_reference:disclosure.reference,
-      industry:donor.industry || 'Not supplied',total:0,count:0,firstYear:null,lastYear:null};
+      industry:donor.industry || '',total:0,count:0,firstYear:null,lastYear:null};
     const figures = receiptFigures(edge);
     typed &&= figures.typed;
     row.total += figures.total; row.count += figures.count;
@@ -334,6 +353,7 @@ export function registerTableHTML(config, query, requestURL) {
     const guarded=guardTableURL(config,requestURL);
     if (guarded.rejected || query == null) query=guarded.query;
   }
+  if (isPartyMoney(config)) query=partyMoneyTableQuery(query);
   const page = applyQuery(config.rows || [],config,query || {});
   const {initialQuery,...clientConfig}=config;
   const payload = JSON.stringify({config:clientConfig}).replace(/</g,'\\u003c');
@@ -344,6 +364,10 @@ export function mountRegisterTable(el, config) {
   if(config.urlKey === 'stateBills') {
     const query=stateBillsTableQuery(new URL(el.ownerDocument.defaultView.location.href).searchParams,config);
     config={...config,initialQuery:query,initialQueryKeys:['q','jurisdiction','parliament','page']};
+  }
+  if (isPartyMoney(config)) {
+    const guarded=guardTableURL(config,new URL(el.ownerDocument.defaultView.location.href));
+    if (!guarded.rejected) config={...config,initialQuery:partyMoneyTableQuery(guarded.query),initialQueryKeys:[]};
   }
   if (['instruments','audit'].includes(config.urlKey)) {
     const url=new URL(el.ownerDocument.defaultView.location.href),query=registerTableQuery(url.searchParams,config);

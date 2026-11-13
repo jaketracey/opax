@@ -1,5 +1,5 @@
 // Division and voting-record rollout using the shared server-mode core.
-import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=939d14e6a8';
+import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=5fe413541f';
 // Guard and render must share the core module's rejection-state registry.
 export {guardTableURL};
 import {shortDate} from './format.js';
@@ -10,15 +10,15 @@ const sentence = value => { const text = String(value || '').replace(/_/g, ' ').
 const count = value => value == null || value === '' ? null : Number.isFinite(Number(value)) && Number(value) >= 0 ? Number(value) : null;
 const safeLink = value => typeof value === 'string' && /^(?:\/(?!\/)|https?:\/\/)/i.test(value) ? value : null;
 /* The Hansard heading's own prefix, in capitals: "BILLS - Treasury Laws
-   Amendment ...". Under BILLS and BUSINESS the rest is the record's name; the
-   other Senate headings keep their word, in sentence case ("Matters of urgency
-   - Taxation"). Older rows write "Bills - " in title case. Only these headings:
+   Amendment ...". Under BILLS the rest is the record's name; the other
+   headings keep their word, in sentence case ("Business - Rearrangement",
+   "Matters of urgency - Taxation"), as the older rows already read. Older rows write "Bills - " in title case. Only these headings:
    a title that opens with an acronym keeps it. */
 const HEADINGS = /^(BILLS|Bills|BUSINESS|DOCUMENTS|MATTERS OF URGENCY|MATTERS OF PUBLIC IMPORTANCE|COMMITTEES|MOTIONS|NOTICES|PETITIONS|STATEMENTS|REGULATIONS AND DETERMINATIONS)\s+[-–—]\s+(\S.*)$/;
 export function headingTitle(value) {
   const text = divisionPlain(value), heading = HEADINGS.exec(text);
   if (!heading) return text;
-  return /^(?:BILLS|Bills|BUSINESS)$/.test(heading[1]) ? heading[2] : `${sentence(heading[1])} - ${heading[2]}`;
+  return /^(?:BILLS|Bills)$/.test(heading[1]) ? heading[2] : `${sentence(heading[1])} - ${heading[2]}`;
 }
 const divisionLink = value => /^[a-z0-9][a-z0-9-]*$/.test(String(value || '')) ? `/doc/${String(value).startsWith('division-') ? value : `division-${value}`}` : null;
 
@@ -52,7 +52,8 @@ export function voteTableConfig(person, caption = 'Voting record') {
   const people = [...new Set((Array.isArray(person) ? person : [person]).filter(Boolean))];
   return {id:'vote-table', caption, columns:voteColumns, source:{endpoint:'/api/table/votes', params:{'f.person':JSON.stringify(people)}},
     pageSize:25, defaultSort:{key:'date', dir:'desc'}, primaryLink:row => safeLink(row.href),
-    phone:{figure:['vote'], meta:['date']},
+    // Whether the member voted with their party, where the record says.
+    phone:{figure:['vote'], meta:['date', {key:'party_position', omit:['Not recorded']}]},
     export:{filename:'voting-record.csv'}, urlKey:'vr', pageType:'person'};
 }
 
