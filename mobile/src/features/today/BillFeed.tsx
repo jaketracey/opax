@@ -151,6 +151,8 @@ export function BillsBlock({
             value={kind}
             onChange={setKind}
             accessibilityLabel="Bills"
+            // At AX sizes the heading above already says Bills (sweep 1, 2.2).
+            menuTitle="Showing"
             testID="today-bills-segment"
           />
         </View>

@@ -73,6 +73,8 @@ export async function readDivisionHistory(
   if (candidates.length && !view.loaded)
     throw new ApiError('http', 'Bill division records could not be loaded.');
   throwIfAborted(signal);
+  // view.rows is this function's own accumulator, never a cached catalog.
+  // eslint-disable-next-line no-restricted-syntax
   view.rows.sort(
     (a, b) => b.date.localeCompare(a.date) || a.key.localeCompare(b.key),
   );

@@ -32,6 +32,7 @@ import {
   sourceUrl,
 } from '../../navigation/external';
 import { billRoute, partyRoute } from '../../navigation/routes';
+import { trackShare } from '../../navigation/share';
 import { copyText } from '../records/actions';
 import {
   countWords,
@@ -642,7 +643,9 @@ export function billMenuItems({
       symbol: 'link',
       onPress: () => {
         void copyText(canonicalUrl(path)).then((copied) => {
-          if (copied) haptic('success');
+          if (!copied) return;
+          haptic('success');
+          trackShare('copy_link', path);
         });
       },
     },

@@ -13,6 +13,7 @@ import { SourceAffordance } from '../../design/source';
 import { Text } from '../../design/text';
 import { colors, radii, rhythm } from '../../design/tokens';
 import { personRoute } from '../../navigation/routes';
+import type { SourcePlacement } from '../../analytics/events';
 import { openSource } from '../../navigation/external';
 import type { Source } from './model';
 import { sourcePassage } from './model';
@@ -78,6 +79,7 @@ export function CitationContent({
   onOpenRecord,
   onOpenPerson,
   focusKey,
+  placement = 'inline',
 }: {
   record: Source;
   n: number;
@@ -86,6 +88,8 @@ export function CitationContent({
   onOpenPerson?: (person: AskPerson) => void;
   /** Changes on re-targeting, so VoiceOver focus moves to the new title. */
   focusKey?: string;
+  /** Where the citation is shown, for analytics: the answer or the pane. */
+  placement?: SourcePlacement;
 }) {
   const title = sourceTitle(source);
   const meta = sourceMeta(source);
@@ -178,7 +182,7 @@ export function CitationContent({
           accessibilityRole="link"
           accessibilityLabel={`Original: ${origin}${sourceDate(source) ? `, ${sourceDate(source)}` : ''}`}
           accessibilityHint="Opens the original"
-          onPress={() => void openSource(source.url!, title)}
+          onPress={() => void openSource(source.url!, title, placement)}
           testID="citation-open"
         />
       ) : null}

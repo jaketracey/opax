@@ -295,17 +295,32 @@ describe('iOS: the composer rises with the keyboard', () => {
     expect(composer(tree).lift).toBe(0);
   });
 
-  test('the resting area keeps its bottom inset with the keyboard up: the lift covers it', () => {
-    const { tree } = render(columns({ keyboard: 253 }));
-    const edges = tree.root
-      .findAllByType(SafeAreaView)
-      .map((node) => node.props.edges);
-    expect(edges).toContainEqual(['left', 'right', 'bottom']);
-    expect(edges).not.toContainEqual(['left', 'right']);
-    // The end-state overlap no longer shortens the area: no layout jump.
-    layOut(tree, { width: WINDOW.width, height: AREA });
-    expect(composer(tree).top).toBe(AREA - COMPOSER);
-  });
+  test.each([
+    ['an iPhone', false, ['left', 'right', 'bottom']],
+    // iPad and an adaptive iPhone (the Duo): SidebarSafe owns the sides.
+    ['an adaptive iPhone', true, ['bottom']],
+  ] as const)(
+    'the resting area keeps its bottom inset with the keyboard up on %s: the lift covers it',
+    (_device, adaptive, expected) => {
+      if (adaptive)
+        act(() =>
+          setWindowTraitsOverride({
+            horizontal: 'regular',
+            vertical: 'regular',
+            foldable: false,
+          }),
+        );
+      const { tree } = render(columns({ keyboard: 253 }));
+      const edges = tree.root
+        .findAllByType(SafeAreaView)
+        .map((node) => node.props.edges as string[]);
+      // The composer's area, and the band inside it (positioned: no edges).
+      expect(edges).toEqual([expected, []]);
+      // The end-state overlap no longer shortens the area: no layout jump.
+      layOut(tree, { width: WINDOW.width, height: AREA });
+      expect(composer(tree).top).toBe(AREA - COMPOSER);
+    },
+  );
 
   test('Reduce Motion: no animation, the composer takes the keyboard’s end position at once', () => {
     mockReduceMotion = true;

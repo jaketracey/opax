@@ -8,6 +8,7 @@ import { fromWebPath } from './paths';
 import { searchRouteFromWebPath } from '../routes/search';
 import * as WebBrowser from 'expo-web-browser';
 import { currentSection, track } from '../../analytics';
+import type { SourcePlacement } from '../../analytics/events';
 import { hasSourcePreview, isE2E, webOrigin } from '../../design/environment';
 import { dark, light } from '../../design/palette';
 import {
@@ -313,13 +314,30 @@ export function sourceUrl(raw: string): string {
 }
 
 /**
+ * One `opax_source_open`: where it opened (in the app or the browser) and,
+ * from Ask or Talk, which part of the answer the reader opened it from.
+ */
+export function trackSourceOpen(
+  destination: 'app' | 'browser',
+  placement?: SourcePlacement,
+) {
+  track('opax_source_open', {
+    from_section: currentSection(),
+    destination,
+    ...(placement ? { placement } : {}),
+  });
+}
+
+/**
  * Opens an external source record or register in SFSafariViewController,
  * visibly presented (guideline 5.1.1(vii)). E2E builds never open a browser:
- * they show the destination locally instead.
+ * they show the destination locally instead. `placement` names the part of
+ * an Ask or Talk answer it was opened from, for analytics only.
  */
 export async function openSource(
   url: string,
   citation = 'Source record',
+  placement?: SourcePlacement,
 ): Promise<void> {
   let checked: string;
   try {
@@ -328,12 +346,11 @@ export async function openSource(
     Alert.alert("Couldn't open the original", 'Check your connection.');
     return;
   }
-  const section = currentSection();
   if (openNativePage(checked)) {
-    track('opax_source_open', { from_section: section, destination: 'app' });
+    trackSourceOpen('app', placement);
     return;
   }
-  track('opax_source_open', { from_section: section, destination: 'browser' });
+  trackSourceOpen('browser', placement);
   recordExternalURL(checked);
   if (isE2E) {
     if (hasSourcePreview) presentSourceDestination({ url: checked, citation });

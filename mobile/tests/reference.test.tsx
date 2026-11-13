@@ -71,6 +71,7 @@ jest.mock('../src/navigation/external', () => ({
   openSource: jest.fn(),
 }));
 jest.mock('../src/navigation/share', () => ({
+  trackShare: jest.fn(),
   canShare: true,
   shareHeaderItem: ({ path }: { path: string }) => ({
     type: 'button',

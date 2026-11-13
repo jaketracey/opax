@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 import { openOnWeb, openSource, canonicalUrl } from '../../navigation/external';
+import { trackShare } from '../../navigation/share';
 import { haptic } from '../../design/haptics';
 import type { RowMenuAction } from '../../design/row-link';
 import { FollowButton } from '../../design/controls';
@@ -68,7 +69,9 @@ export function pageActions({
       symbol: 'link',
       onPress: () => {
         void copyText(canonicalUrl(webPath)).then((copied) => {
-          if (copied) haptic('success');
+          if (!copied) return;
+          haptic('success');
+          trackShare('copy_link', webPath);
         });
       },
     },

@@ -88,7 +88,7 @@ import {
   personRoute,
 } from '../../navigation/routes';
 import { resultsRoute } from '../../navigation/routes/search';
-import { canShare, shareRecord } from '../../navigation/share';
+import { canShare, shareRecord, trackShare } from '../../navigation/share';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { CachedPortrait } from '../CachedPortrait';
 import { scopedQuestion } from '../ask/AskAbout';
@@ -1801,7 +1801,9 @@ function BillVoteRow({
       title: 'Copy link',
       onPress: () => {
         void copyText(link).then((copied) => {
-          if (copied) haptic('success');
+          if (!copied) return;
+          haptic('success');
+          trackShare('copy_link', '/bill');
         });
       },
     },

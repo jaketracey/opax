@@ -9,7 +9,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAccessibilitySize } from '../../design/accessibility';
 import {
   columns,
+  isPad,
   splitPaneWidth,
+  useAdaptiveDevice,
   useLayout,
   useMeasuredRegion,
   useScreenMargin,
@@ -66,6 +68,21 @@ export function AskColumns({
   const split = sides && 'leading' in sides ? sides : null;
   const paneWidth =
     split?.trailing.width ?? splitPaneWidth(region.width, large, region.rule);
+  // AskScreen's SidebarSafe already pads the screen's left and right insets
+  // on iPad and an adaptive iPhone (the Duo's tab rail). This native view
+  // pads by the screen's insets again, so there it keeps only the bottom:
+  // the folded Duo's composer stopped a whole rail (80pt) short of the
+  // column, and its placeholder wrapped.
+  const adaptive = useAdaptiveDevice();
+  const sidesOwned = isPad || (Platform.OS === 'ios' && adaptive);
+  const composerEdges: ('left' | 'right' | 'bottom')[] = [
+    ...(sidesOwned ? [] : (['left', 'right'] as const)),
+    // The bottom inset goes only where the window or layout makes room for
+    // the keyboard itself (Android). iOS keeps it: KeyboardLift measures the
+    // gap below the resting area, so dropping it too would sit the bar 34pt
+    // low on a phone.
+    ...(keyboardVisible && !keyboardTracked() ? [] : (['bottom'] as const)),
+  ];
   return (
     // These wrappers must be stacking contexts. Fabric can otherwise hoist
     // the scroll view beside an empty wrapper that stops UIKit's discovery.
@@ -77,13 +94,7 @@ export function AskColumns({
       >
         {content}
         <SafeAreaView
-          edges={
-            docked
-              ? []
-              : keyboardVisible && !keyboardTracked()
-                ? ['left', 'right']
-                : ['left', 'right', 'bottom']
-          }
+          edges={docked ? [] : composerEdges}
           mode="padding"
           pointerEvents="box-none"
           style={StyleSheet.absoluteFill}

@@ -144,6 +144,15 @@ export default function AskScreen() {
   const docked =
     adaptive && splitAllowed(room?.width ?? outer.width, outer.rule);
   const headerBottom = useHeaderBottom(!idle && !docked);
+  // iPhone, once a thread is open: the bar shows its inline title, but UIKit
+  // keeps the bar's large-title frame, so the automatic top inset kept the
+  // hidden large-title band and the question sat about 70 pt under the bar
+  // at rest (sweep 1, 7.1; scroll indicator from 172 pt under a 106 pt bar).
+  // The reported header still includes that band; take it off the inset.
+  // Idle, docked, iPad and Android: no band, no change.
+  const fullHeader = useHeaderBottom();
+  const hiddenBand =
+    Platform.OS === 'ios' ? Math.max(0, fullHeader - headerBottom) : 0;
   const column = useScreenColumn('readable');
   const { overlap: keyboard, visible: keyboardVisible } =
     useKeyboardOverlap(root);
@@ -338,6 +347,8 @@ export default function AskScreen() {
       testID="ask-screen"
       style={[styles.fill, groundStyle]}
       contentInsetAdjustmentBehavior="automatic"
+      contentInset={hiddenBand ? { top: -hiddenBand } : undefined}
+      scrollIndicatorInsets={hiddenBand ? { top: -hiddenBand } : undefined}
       keyboardShouldPersistTaps="handled"
       automaticallyAdjustKeyboardInsets={false}
       keyboardDismissMode={
@@ -358,6 +369,8 @@ export default function AskScreen() {
       scrollEventThrottle={16}
       contentContainerStyle={[
         styles.content,
+        // An open thread's question starts 8 pt under the bar at rest.
+        Platform.OS === 'ios' && !idle ? styles.threadContent : null,
         column.content,
         // Room for the docked composer (and the keyboard under it).
         {
@@ -469,4 +482,5 @@ export default function AskScreen() {
 const styles = StyleSheet.create({
   fill: { flex: 1 },
   content: { paddingTop: rhythm.block, gap: rhythm.section },
+  threadContent: { paddingTop: rhythm.heading },
 });

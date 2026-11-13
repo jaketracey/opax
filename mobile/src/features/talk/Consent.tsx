@@ -22,6 +22,7 @@ import { openOnWeb } from '../../navigation/external';
 import { useFittedSheetHeight } from '../sheets/fitted';
 import { setConsent } from './bridge';
 import { requestStartAfterConsent } from './consent-store';
+import { trackTalkConsent } from './measure';
 import { failureCopy, microphoneCopy, talkCopy } from './model';
 
 /** One line before every call (App Review 5.1.2(i) and honest AI output). */
@@ -84,10 +85,14 @@ export function ConsentSheet() {
   const mounted = useRef(false);
   const saving = useRef(false);
   const closed = useRef(false);
+  const accepted = useRef(false);
   useEffect(() => {
     mounted.current = true;
+    trackTalkConsent('consent_shown');
     return () => {
       mounted.current = false;
+      // Not now, a swipe down or anything else that closes it unanswered.
+      if (!accepted.current) trackTalkConsent('consent_declined');
     };
   }, []);
   const dismiss = () => {
@@ -113,6 +118,8 @@ export function ConsentSheet() {
       setFailed(true);
       return;
     }
+    accepted.current = true;
+    trackTalkConsent('consent_accepted');
     requestStartAfterConsent();
     dismiss();
   };

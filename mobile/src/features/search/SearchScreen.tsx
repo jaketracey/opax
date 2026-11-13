@@ -31,6 +31,7 @@ import { SearchIdle } from './SearchIdle';
 import { SearchField } from './SearchField';
 import { SearchSuggestions } from './SearchSuggestions';
 import { ResultsView } from './ResultsView';
+import { ScopeBar } from './ScopeBar';
 import { useResultsControls } from './controls';
 import { filtersFromParams, defaultSpeechFilters } from './filters';
 import { recentSearches, type RecentSearch } from './recent';
@@ -227,6 +228,10 @@ function SearchContent({
     else router.push(resultsRoute(group, { group, q: words }));
   };
   const items = phase === 'results' ? controls.items() : [];
+  // iPhone: the scope control stays under the search field while results
+  // scroll, so the reader can see what they searched (sweep 1, item 1).
+  const pinScopes =
+    phase === 'results' && Platform.OS === 'ios' && !Platform.isPad;
   return (
     <>
       <RouteOptions
@@ -258,6 +263,9 @@ function SearchContent({
         scrollToOverflowEnabled
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={retry} />
+        }
+        pinned={
+          pinScopes ? <ScopeBar value={scope} onChange={chooseScope} /> : null
         }
       >
         {Platform.OS === 'android' ? (
@@ -299,6 +307,7 @@ function SearchContent({
             onOpenFilters={controls.openFilters}
             onRetrySources={failed ? retry : undefined}
             onRows={onRows}
+            showScopes={!pinScopes}
           />
         )}
       </Screen>
