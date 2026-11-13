@@ -78,8 +78,11 @@ name: 30 Ask about drafts from records; each starts a new conversation, sends no
     id: ask-status
 # A running answer survives an arrival: the draft waits, marked as a new
 # conversation, and the composer's button stays Stop until it completes.
+# Clear any options left from an earlier draft before the slow question. The
+# electorate draft carries none, so there may be no Clear to tap.
 - tapOn:
     id: ask-options-clear
+    optional: true
 - tapOn:
     id: ask-question
 - eraseText: 200
