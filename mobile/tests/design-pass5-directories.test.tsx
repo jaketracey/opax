@@ -69,7 +69,7 @@ jest.mock('../src/design/primitives', () => {
   const out = {
     ...actual,
     useAdaptiveDevice: pad,
-    useLayout: () => ({ ...actual.useLayout(), regular: pad() }),
+    useLayout: () => ({ ...actual.useLayout(), regular: pad(), split: pad() }),
     SplitLayout: ({
       list,
       selected,

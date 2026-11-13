@@ -307,7 +307,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
 
   // iPad regular width: list left, the record right, the selection in the
   // route (`/directory?kind=person&open=person:…`), as Bills does.
-  const split = useLayout().regular;
+  const split = useLayout().split;
   const selected = decodeEntry(params.open);
   const selectedKey = selected ? encodeEntry(selected) : null;
   const listRef = useRef<SectionList<Row, Section>>(null);

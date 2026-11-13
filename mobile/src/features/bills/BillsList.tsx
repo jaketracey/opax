@@ -200,9 +200,8 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   const total = all ? scopeTotal(all, scope) : 0;
   const searching = !!query;
 
-  // iPad regular width: the selection lives in the route (`?bill=…`).
-  const regular = useLayout();
-  const split = regular.regular;
+  // Two panes (the split breakpoint): the selection lives in the route (`?bill=…`).
+  const split = useLayout().split;
   const selectedKey = params.bill || null;
   const titleFor = useCallback(
     (key: string) => {
