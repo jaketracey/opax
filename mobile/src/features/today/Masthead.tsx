@@ -11,42 +11,7 @@ import { OfflineLine } from '../../design/states';
 import { Text } from '../../design/text';
 import { isAccessibilityCategory, rhythm } from '../../design/tokens';
 import { androidDotScale, dotHeight, dotWidth } from './australia-dots-model';
-
-const weekdays = [
-  'Sunday',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-];
-const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-const dayWords = (day: Date) =>
-  `${weekdays[day.getUTCDay()]} ${day.getUTCDate()} ${months[day.getUTCMonth()]}`;
-
-/** "Monday 23 November": the words for a calendar day ("2026-11-23"). */
-export function calendarDayWords(day: string): string | null {
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(day);
-  if (!match) return null;
-  const date = new Date(
-    Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])),
-  );
-  return Number.isNaN(date.getTime()) ? null : dayWords(date);
-}
+import { dayWords, deviceDayWords } from './day-words';
 
 /** "Sunday 8 November": the Sydney calendar day of an instant. */
 export function mastheadDate(now: Date): string {
@@ -64,7 +29,7 @@ export function mastheadDate(now: Date): string {
   } catch {
     /* Fall through to the device calendar. */
   }
-  return `${weekdays[now.getDay()]} ${now.getDate()} ${months[now.getMonth()]}`;
+  return deviceDayWords(now);
 }
 
 const msToSydneyMidnight = (now: Date) => {

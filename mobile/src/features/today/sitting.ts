@@ -13,7 +13,7 @@ import {
 } from '../../api/validation';
 import { formatDate } from '../../design/format';
 import type { SourceDetails, SourceOriginal } from '../../design/source';
-import { calendarDayWords } from './Masthead';
+import { calendarDayWords } from './day-words';
 
 /**
  * The line under Today's date, from the Parliament's published sitting
