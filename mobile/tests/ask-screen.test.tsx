@@ -306,25 +306,37 @@ test.each([
   },
 );
 
-test('a thread starts in a fresh scroll view, its question 8 pt under the inline bar (sweep 1, 7.1)', async () => {
+test("an open thread's inset drops the hidden large-title band: its question sits 8 pt under the bar at rest (sweep 1, 7.1)", async () => {
   jest
     .mocked(client.askPost)
     .mockResolvedValueOnce(answer)
     .mockResolvedValueOnce({ questions: [] });
-  await mount(<AskScreen />);
+  // A 47 pt status area and 44 pt inline bar; UIKit keeps the bar's 52 pt
+  // large-title frame once the title goes inline, and reports it.
+  const compact = 91;
+  const expanded = compact + 52;
+  await mount(
+    <SafeAreaInsetsContext.Provider
+      value={{ top: 47, bottom: 34, left: 0, right: 0 }}
+    >
+      <HeaderHeightContext.Provider value={expanded}>
+        <AskScreen />
+      </HeaderHeightContext.Provider>
+    </SafeAreaInsetsContext.Provider>,
+  );
   const scrollView = () =>
     view!.root.find(
       (n) => n.props.testID === 'ask-screen' && n.type === ScrollView,
     );
-  const idle = scrollView().instance;
+  // Idle: the large title is real; UIKit's inset stands.
+  expect(scrollView().props.contentInset).toBeUndefined();
   expect(
     StyleSheet.flatten(scrollView().props.contentContainerStyle).paddingTop,
   ).toBe(rhythm.block);
   await type('A fixture question?');
   await press('ask-submit');
-  // The idle view's adjusted inset kept the large title's band, about 70 pt
-  // above the question at rest; a new native view takes the inline inset.
-  expect(scrollView().instance).not.toBe(idle);
+  expect(scrollView().props.contentInset).toEqual({ top: -52 });
+  expect(scrollView().props.scrollIndicatorInsets).toEqual({ top: -52 });
   expect(
     StyleSheet.flatten(scrollView().props.contentContainerStyle).paddingTop,
   ).toBe(rhythm.heading);
@@ -1612,16 +1624,20 @@ describe('the composer at AX5 (ask.md 2.11)', () => {
         window: { ...original, width: 402, height: 874, fontScale: 2.643 },
       }),
     );
-    jest.replaceProperty(Platform, 'OS', 'android');
-    const { r, field } = dock();
-    expect(field.props.placeholder).toBe('Ask about the public record');
-    expect(field.props.maxFontSizeMultiplier).toBeUndefined();
-    expect(
-      r.root.findAll((n) => n.props.testID === 'ask-placeholder'),
-    ).toHaveLength(0);
-    for (const icon of r.root.findAllByType(Icon))
-      expect(icon.props.maxScale).toBe(1);
-    act(() => r.unmount());
+    const platform = jest.replaceProperty(Platform, 'OS', 'android');
+    try {
+      const { r, field } = dock();
+      expect(field.props.placeholder).toBe('Ask about the public record');
+      expect(field.props.maxFontSizeMultiplier).toBeUndefined();
+      expect(
+        r.root.findAll((n) => n.props.testID === 'ask-placeholder'),
+      ).toHaveLength(0);
+      for (const icon of r.root.findAllByType(Icon))
+        expect(icon.props.maxScale).toBe(1);
+      act(() => r.unmount());
+    } finally {
+      platform.restore();
+    }
   });
 
   test('with the keyboard up the whole composer stays within 40% of what is visible', () => {

@@ -139,6 +139,15 @@ export default function AskScreen() {
     adaptive &&
     sizeClassFor(room?.width ?? outer.width, outer.rule) === 'regular';
   const headerBottom = useHeaderBottom(!idle && !docked);
+  // iPhone, once a thread is open: the bar shows its inline title, but UIKit
+  // keeps the bar's large-title frame, so the automatic top inset kept the
+  // hidden large-title band and the question sat about 70 pt under the bar
+  // at rest (sweep 1, 7.1; scroll indicator from 172 pt under a 106 pt bar).
+  // The reported header still includes that band; take it off the inset.
+  // Idle, docked, iPad and Android: no band, no change.
+  const fullHeader = useHeaderBottom();
+  const hiddenBand =
+    Platform.OS === 'ios' ? Math.max(0, fullHeader - headerBottom) : 0;
   const column = useScreenColumn('readable');
   const { overlap: keyboard, visible: keyboardVisible } =
     useKeyboardOverlap(root);
@@ -326,28 +335,14 @@ export default function AskScreen() {
       keyboard={keyboard}
     />
   );
-  // iPhone: the idle list's large title reserves its band in the scroll
-  // view's adjusted inset, and that inset outlived the switch to the inline
-  // title: at rest an open thread's question sat about 70 pt under the bar
-  // (sweep 1, 7.1). A thread gets a fresh native scroll view, which takes
-  // the inline bar's inset; a new conversation gets a fresh one at rest
-  // under the expanded title, as Search does. Only opening or closing a
-  // thread on the phone layout renews it: a Duo fold between docked and
-  // phone layouts keeps the thread, its scroll anchor and focused input.
-  const [scrollEpoch, setScrollEpoch] = useState({ idle, key: 0 });
-  if (scrollEpoch.idle !== idle)
-    setScrollEpoch({
-      idle,
-      key: scrollEpoch.key + (Platform.OS === 'ios' && !docked ? 1 : 0),
-    });
-  const scrollKey = `ask-${scrollEpoch.key}`;
   const content = (
     <ScrollView
-      key={scrollKey}
       ref={scroll}
       testID="ask-screen"
       style={[styles.fill, groundStyle]}
       contentInsetAdjustmentBehavior="automatic"
+      contentInset={hiddenBand ? { top: -hiddenBand } : undefined}
+      scrollIndicatorInsets={hiddenBand ? { top: -hiddenBand } : undefined}
       keyboardShouldPersistTaps="handled"
       automaticallyAdjustKeyboardInsets={false}
       keyboardDismissMode={
