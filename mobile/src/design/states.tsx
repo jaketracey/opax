@@ -821,11 +821,19 @@ export function ContentUnavailable({
   title,
   body,
   action,
+  inline = false,
   testID,
 }: {
   symbol: SFSymbol;
   title: string;
   body?: string;
+  /**
+   * Draw the symbol, title and body in React Native on iOS too, as Android
+   * does. SwiftUI's view pads itself, so its action sat about 60 pt under
+   * the body; inline, the action sits `rhythm.block` under it. For a state
+   * inside a page (Search's No results, sweep 2 item 8.4), not a whole one.
+   */
+  inline?: boolean;
   action?: {
     label: string;
     onPress: () => void;
@@ -852,7 +860,7 @@ export function ContentUnavailable({
       style={styles.unavailable}
       onLayout={(event) => setMeasuredWidth(event.nativeEvent.layout.width)}
     >
-      {Platform.OS === 'ios' ? (
+      {Platform.OS === 'ios' && !inline ? (
         // Verified in @expo/ui 57.0.21 HostProps: boolean | { vertical?, horizontal? }.
         // Propose the column width; only height follows SwiftUI, including AX5.
         <Host
@@ -884,7 +892,13 @@ export function ContentUnavailable({
         // accessibility sizes a stretched secondary button reads from the
         // leading edge, so it hung left under the title; it hugs here and
         // the row centres it, its label wrapping inside the column.
-        <View testID={action.containerTestID} style={styles.unavailableAction}>
+        <View
+          testID={action.containerTestID}
+          style={[
+            styles.unavailableAction,
+            inline ? styles.unavailableActionInline : null,
+          ]}
+        >
           <Button
             label={action.label}
             variant="secondary"
@@ -1134,6 +1148,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'stretch',
   },
+  // The block's own gap is `heading`; the action sits a block under the body.
+  unavailableActionInline: { marginTop: rhythm.block - rhythm.heading },
   pane: {
     flex: 1,
     alignItems: 'center',

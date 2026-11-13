@@ -67,7 +67,10 @@ export function EmptyResults({
   const [first, ...rest] = state.actions;
   return (
     <Group gap={rhythm.block} testID="search-empty">
+      {/* Inline: the action sits a block under the body, not under
+          SwiftUI's own padding (sweep 2, item 8.4). */}
       <ContentUnavailable
+        inline
         symbol="magnifyingglass"
         title={state.title ?? 'No results'}
         body={state.body}

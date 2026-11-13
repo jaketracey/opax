@@ -28,6 +28,9 @@ type Browse = {
   href: Parameters<typeof LinkRow>[0]['href'];
   testID: string;
 };
+/** A Try row's title clamps here at every text size. */
+export const TRY_TITLE_LINES = 2;
+
 /** Browse, fixed order, each pushing inside the current tab. */
 export const browseRows: readonly Browse[] = [
   {
@@ -182,6 +185,10 @@ export function SearchIdle({
             <LinkRow
               key={row.key}
               title={row.title}
+              // A bill's full title ran to nine lines at AX3, one row filling
+              // the screen under the field (sweep 2, item 8.3). The whole
+              // title stays in the label and on the page it opens.
+              titleLines={TRY_TITLE_LINES}
               detail={row.detail}
               symbol={row.symbol}
               accessibilityLabel={`${row.title}, ${row.detail}`}
