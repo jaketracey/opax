@@ -286,9 +286,9 @@ native event that is not `$exception`. The three copies must stay in step:
 message rules' exact pattern texts, and `tests/native-scrub.test.ts` runs the
 Swift copy, cut from the patch by `scripts/check-native-scrub.sh`, on the
 invented inputs in `tests/fixtures/exception-scrub-cases.json` and expects what
-JS keeps (skipped where `swift` is missing). Kotlin is compiled only by the
-Android build, but Android's `java.util.regex` runs on ICU like
-NSRegularExpression, so the same pattern texts behave the same.
+JS keeps (on a Mac a missing `swift` fails it; only Linux skips it). Kotlin
+is compiled only by the Android build, but Android's `java.util.regex` runs on
+ICU like NSRegularExpression, so the same pattern texts behave the same.
 
 | Property | What it may hold |
 | --- | --- |

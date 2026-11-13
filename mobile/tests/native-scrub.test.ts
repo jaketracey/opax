@@ -10,6 +10,7 @@ import { scrubExceptionMessage } from '../src/analytics/exceptions';
 // tests/fixtures/exception-scrub-cases.json and expects what the JS rules
 // keep. The Mac has `swift` but no Kotlin compiler, so Kotlin is not run here;
 // tests/analytics-exceptions.test.ts checks it uses the same pattern texts.
+// On a Mac a missing `swift` fails the test; only Linux (no Xcode) skips it.
 type Case = { event: string; properties: Record<string, unknown> };
 const casesPath = join(__dirname, 'fixtures/exception-scrub-cases.json');
 const cases = JSON.parse(readFileSync(casesPath, 'utf8')) as {
@@ -51,18 +52,22 @@ function shared(properties: Record<string, unknown> | undefined) {
   );
 }
 
-const swift = spawnSync('swift', ['--version'], { encoding: 'utf8' });
-const swiftTest = swift.status === 0 ? test : test.skip;
+const swiftTest = process.platform === 'linux' ? test.skip : test;
 
 swiftTest(
   'the Swift scrub in the plugin patch keeps what the JS rules keep',
   () => {
+    const swift = spawnSync('swift', ['--version'], { encoding: 'utf8' });
+    expect([swift.status, swift.error?.message ?? swift.stderr]).toEqual([
+      0,
+      expect.anything(),
+    ]);
     const result = spawnSync(
       'bash',
       [join(__dirname, '../scripts/check-native-scrub.sh'), casesPath],
       { encoding: 'utf8', timeout: 240_000, maxBuffer: 16 * 1024 * 1024 },
     );
-    expect(result.status).toBe(0);
+    expect([result.status, result.stderr]).toEqual([0, expect.anything()]);
     const native = JSON.parse(result.stdout) as {
       rulesCompiled: boolean;
       messages: (string | null)[];
