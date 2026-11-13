@@ -57,8 +57,10 @@ new_sandbox() {
   # Bills imports roster_identity, which in turn imports parli.ingest.speaker_names.
   # validate_data's people check imports roster_fold (twin_target), which imports roster_identity.
   # The division and vote exporters import division_rules (and through it parli.ingest.federal_affiliations) and
-  # corrections.apply; the division exporter imports vote_parties, whose roster sources (electorate release,
-  # roster evidence files, ext_state_roster) are absent here on purpose: each is logged and skipped; scripts/corrections/divisions.json is left out because the fixture DB has none of its records.
+  # corrections.apply; the division exporter imports vote_parties (and through it tvfy_refresh's party aliases),
+  # which reads the roster evidence files copied here and an empty electorate release written below; the fixture DB
+  # has no ext_state_roster, which is logged and skipped; scripts/corrections/divisions.json is left out because the
+  # fixture DB has none of its records.
   for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/vm/periodic_state.py scripts/export_bills.py scripts/roster_identity.py scripts/roster_fold.py \
            scripts/vm/bills_refresh.sh scripts/vm/bills_guard.py scripts/vm/keep_if_unchanged.py \
            scripts/vm/divisions_refresh.sh scripts/vm/divisions_guard.py scripts/vm/mobile_votes_contract.py \
@@ -67,7 +69,8 @@ new_sandbox() {
            scripts/bills_registry/bills_stages.py \
            scripts/export_division_pages.py scripts/export_recent_votes.py scripts/export_votes.py \
            scripts/division_rules.py scripts/corrections/__init__.py scripts/corrections/apply.py parli/ingest/federal_affiliations.py \
-           scripts/vote_parties.py scripts/general_elections.json \
+           scripts/vote_parties.py scripts/general_elections.json scripts/roster_state_evidence.json scripts/roster_service.json \
+           parli/ingest/tvfy_refresh.py parli/ingest/honest_http.py parli/ingest/state_rosters.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
            parli/__init__.py parli/arag.py parli/ingest/http.py parli/ingest/user-agent.json parli/ingest/__init__.py parli/ingest/speaker_names.py \
            portal/wrangler.jsonc portal/public/corpus.json; do
@@ -184,6 +187,11 @@ votes['_meta'] = {"schema": 1, "content_changed_at": "2026-09-01T00:00:00Z", "la
 open(f"{seed}/portal/public/votes.json", "w").write(json.dumps(votes) + "\n")
 seo = pathlib.Path(seed) / 'portal/public/seo'; seo.mkdir()
 (seo / 'recent-votes.json').write_text(json.dumps({'_meta': {'schema': 1, 'source': 'opax-parli-db', 'coverage': 'unavailable', 'person_count': 0, 'limit': 10}, 'people': {}}) + '\n')
+# The division export reads dated parties from the electorate release (scripts/vote_parties.py); an empty one holds none.
+electorates = pathlib.Path(seed) / 'portal/public/electorates'; (electorates / 'releases/fixture').mkdir(parents=True)
+(electorates / 'manifest.json').write_text(json.dumps({'index_url': '/electorates/releases/fixture/index.json', 'people_url': '/electorates/releases/fixture/people.json'}) + '\n')
+(electorates / 'releases/fixture/index.json').write_text(json.dumps({'electorates': []}) + '\n')
+(electorates / 'releases/fixture/people.json').write_text(json.dumps({'people': []}) + '\n')
 spec = importlib.util.spec_from_file_location('division_fixture', f'{seed}/scripts/export_division_pages.py')
 D = importlib.util.module_from_spec(spec); spec.loader.exec_module(D)
 division = {'key': 'federal-senate-1', 'slug': 'division-federal-senate-1', 'name': 'Fixture question',
