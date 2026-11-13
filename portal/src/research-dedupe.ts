@@ -7,15 +7,15 @@ const normal = (text:string) => text.normalize('NFKC').toLowerCase().replace(/[â
 const stop = new Set('a an and are as at be been by for from had has have in into is it its of on that the their this to was were which with also'.split(' '))
 const words = (text:string) => new Set(normal(text).split(' ').filter(w=>!stop.has(w)))
 // A shared number alone is not a shared claim. Different figures or qualifications always survive.
-const figures = (text:string) => (text.match(/\d[\d,]*(?:\.\d+)?%?|\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|hundred|thousand|million|billion|twice|half)\b/gi)??[]).map(n=>n.toLowerCase().replaceAll(',','')).join('|')
+const figures = (text:string) => (text.match(/[-âˆ’+]?\d[\d,]*(?:\.\d+)?%?|\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|hundred|thousand|million|billion|twice|half)\b/gi)??[]).map(n=>n.toLowerCase().replaceAll(',','')).join('|')
 const qualifications = (text:string) => (normal(text).match(/\b(?:no|not|never|only|alleged|denied|may|might|could|unconfirmed)\b/g)??[]).sort().join('|')
 export function sameStatement(earlier:string,later:string):boolean {
   if(figures(earlier)!==figures(later)||qualifications(earlier)!==qualifications(later))return false
   if(normal(earlier)===normal(later))return true
   if(normal(later).length>=20&&(' '+normal(earlier)+' ').includes(' '+normal(later)+' '))return true
   const a=words(earlier),b=words(later),shared=[...b].filter(w=>a.has(w)).length
-  // In a short sentence, even one additional name can change who the finding is about.
-  if(Math.min(normal(earlier).split(' ').length,normal(later).split(' ').length)<30&&a.size!==b.size)return false
+  // Even one additional name can change who the finding is about.
+  if(a.size!==b.size)return false
   // Substituting a category, name or claim word is new content even in a long shared template.
   return shared>=6&&shared===Math.min(a.size,b.size)&&shared/Math.max(a.size,b.size)>=0.9
 }

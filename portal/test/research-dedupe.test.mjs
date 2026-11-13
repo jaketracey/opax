@@ -131,6 +131,30 @@ for(const reverse of [false,true])test('a sentence under thirty words retains an
   assert.equal(facts.length,2);assert.ok(facts.some(f=>f.text.includes('Avery Sample')));
 });
 
+for(const reverse of [false,true])test('a sentence over thirty words retains an added name, '+(reverse?'named wording first':'unnamed wording first'),()=>{
+  const first='The Example Commission found that officials ignored repeated legal warnings from senior departmental advisers during the development and implementation of the recovery scheme despite concerns raised in detailed internal reviews about the legality and fairness of the proposed approach.';
+  const named=first.replace('found that officials','found that Avery Sample and officials');
+  const lines=reverse?[named,first]:[first,named];
+  assert.ok(first.split(' ').length>=30);
+  const payload=answer(lines,lines.map((text,i)=>source('record-'+i,text)));
+  assert.equal(api.distinctSummary(payload).answer,lines.join('\n\n'));
+  const facts=api.dedupeWritingFacts(lines.map((text,i)=>fact(i+1,text)));
+  assert.equal(facts.length,2);assert.ok(facts.some(f=>f.text.includes('Avery Sample')));
+});
+
+for(const sign of ['-','−','+'])test('a signed percentage keeps its '+sign+' sign through figure comparison',()=>{
+  const first='Support for the Example Party changed by 5% in 2019.';
+  const signed=first.replace('5%',sign+'5%');
+  for(const lines of [[first,signed],[signed,first]]){
+    assert.equal(api.dedupeWritingFacts(lines.map((text,i)=>fact(i+1,text))).length,2);
+    for(const differentSources of [false,true]){
+      const payload=answer(lines,lines.map((text,i)=>source('record-'+i,text,'https://example.test/report'+(differentSources?i:''))));
+      assert.equal(api.writingFacts(payload).length,2);
+      assert.equal(api.distinctSummary(payload).answer,lines.join('\n\n'));
+    }
+  }
+});
+
 test('punctuation folding cannot merge different decimal figures before writing',()=>{
   const a='The Example Commission reported 1.5 million claims for the recovery scheme.';
   const b='The Example Commission reported 1,5 million claims for the recovery scheme.';

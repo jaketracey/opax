@@ -26,6 +26,7 @@ export interface WritingInput { question: string; period: Period; facts: Writing
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
 const clean = (s: string) => s.replace(/\*\*/g, '').replace(/\s+/g, ' ').trim()
 const key = (s: string) => clean(s).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
+const signedKey = (s: string) => clean(s).toLowerCase().replace(/[^\p{L}\p{N}−+-]+/gu, ' ').trim()
 /** Remove repeated sentences at composition and public boundaries, preserving
  * original code-point citation ranges through every deletion. */
 export function distinctSummary<T extends Record<string, unknown>>(payload:T):T {
@@ -66,8 +67,8 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
     text = clean(record?decodeHTMLStrict(text):text).replace(/^[-*•]\s*/, '')
     if(record)source={...source,snippet:recordEvidenceText(source.snippet,source.url)}
     if (!/[\p{L}]/u.test(text) || /^\|?\s*[-: ]+(?:\|[-: ]+)*\|?$/.test(text)) return
-    const k = statementSource(source)+'|'+key(text)
-    if (seen.has(k)) {if(coverage){const prior=out.find(f=>statementSource(f.source)+'|'+key(f.text)===k);if(prior)prior.coverage=true}return}
+    const k = statementSource(source)+'|'+signedKey(text)
+    if (seen.has(k)) {if(coverage){const prior=out.find(f=>statementSource(f.source)+'|'+signedKey(f.text)===k);if(prior)prior.coverage=true}return}
     const metadata=/^(?:Period|Financial years):/i.test(text)
     const evidenceId=source.resource+'/t/body/0'
     let atoms=atomsFromText(text,evidenceId,source)
@@ -119,7 +120,7 @@ export function dedupeWritingFacts(facts:WritingFact[]):WritingFact[] {
   const out:WritingFact[]=[]
   // Structured record labels can wrap the claim in a report title and page reference.
   const core=(f:WritingFact)=>f.text===f.source.title&&/own words:|:\s*"/.test(f.text)?/"([^"]+)"/.exec(f.text)?.[1]??f.text:f.text
-  const contains=(a:string,b:string)=>key(b).length>=20&&(' '+key(a)+' ').includes(' '+key(b)+' ')&&tokens(b).every(n=>tokens(a).includes(n))
+  const contains=(a:string,b:string)=>signedKey(b).length>=20&&(' '+signedKey(a)+' ').includes(' '+signedKey(b)+' ')&&tokens(b).every(n=>tokens(a).includes(n))
   for(const fact of facts){
     const prior=out.find(f=>statementSource(f.source)===statementSource(fact.source)&&!!f.coverage===!!fact.coverage&&(sameStatement(f.text,fact.text)||contains(core(f),core(fact))||contains(core(fact),core(f))))
     if(prior){
