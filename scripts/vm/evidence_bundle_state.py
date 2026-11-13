@@ -121,8 +121,11 @@ def managed_inventory(bundle: Path, root: Path) -> dict:
     return report
 
 
-def prune(root: Path, active: dict | None, previous: dict | None, *, keep_previous: bool = True) -> list[str]:
-    """Remove only verified, exactly inventoried generated bundles; never foreign data."""
+def prune(root: Path, active: dict | None, previous: dict | None, *, keep_previous: bool = True,
+          keep_newest: bool = True) -> list[str]:
+    """Remove only verified, exactly inventoried generated bundles; never foreign data.
+
+    keep_newest=False with no active bundle keeps none (the pre-build drop)."""
     root = root.resolve(strict=True)
     candidates = {}
     for path in root.iterdir():
@@ -137,7 +140,7 @@ def prune(root: Path, active: dict | None, previous: dict | None, *, keep_previo
     prior = Path(previous["bundle_dir"]).resolve() if previous and previous.get("bundle_dir") else None
     if keep_previous and prior in candidates and prior != current:
         keep.add(prior)
-    elif keep_previous or current is None:
+    elif keep_previous or (current is None and keep_newest):
         older = sorted((path for path in candidates if path != current), key=lambda path: path.name, reverse=True)
         keep.update(older[:1])
     removed = []
@@ -163,7 +166,13 @@ def prune(root: Path, active: dict | None, previous: dict | None, *, keep_previo
 
 
 def prepare(root: Path, pointer: Path) -> list[str]:
-    """Before allocating: keep the active bundle, or one newest verified set."""
+    """Before allocating: drop every verified bundle, the active one included.
+
+    A bundle is about 14 GiB (13 Nov 2026), and the box keeps one between builds:
+    the published bundle. The published tree itself is in git, so a new build
+    replaces that bundle instead of sitting beside it. The pointer goes with its
+    bundle; receipts stay in the history directory.
+    """
     if not root.exists():
         return []
     active = None
@@ -173,7 +182,10 @@ def prepare(root: Path, pointer: Path) -> list[str]:
         except (OSError, ValueError, KeyError, TypeError):
             # An unknown/broken pointer is never permission to guess what to delete.
             return []
-    return prune(root, active, None, keep_previous=False)
+    removed = prune(root, None, None, keep_previous=False, keep_newest=False)
+    if active and Path(active["bundle_dir"]).name in removed:
+        pointer.unlink()
+    return removed
 
 
 def activate(candidate: Path, root: Path, pointer: Path, commit: str) -> dict:
@@ -203,7 +215,8 @@ def activate(candidate: Path, root: Path, pointer: Path, commit: str) -> dict:
     finally:
         temporary.unlink(missing_ok=True)
     try:
-        return {"removed": prune(root, report, previous), "warning": None}
+        # Only the published bundle stays: one bundle between builds (prepare drops it next time).
+        return {"removed": prune(root, report, previous, keep_previous=False), "warning": None}
     except (OSError, ValueError, KeyError, TypeError) as exc:
         # Publication and activation already succeeded. Cleanup failure must not
         # masquerade as an activation rollback or delete unrelated data.
@@ -229,7 +242,7 @@ def main() -> int:
             if args.bundle_root is None or args.pointer is None:
                 raise ValueError("bundle preparation needs a root and active pointer")
             removed = prepare(args.bundle_root, args.pointer)
-            print(f"evidence bundle preparation: {len(removed)} older verified bundles removed; active retained")
+            print(f"evidence bundle preparation: {len(removed)} verified bundles removed before the build (the active one too)")
             return 0
         if args.candidate is None or args.bundle_root is None:
             raise ValueError("bundle selection needs a candidate and bundle root")
@@ -243,7 +256,7 @@ def main() -> int:
             if result["warning"]:
                 print(f"WARNING evidence bundle retention: {result['warning']}; published bundle is active")
             else:
-                print(f"evidence bundle retention: {len(result['removed'])} older verified bundles removed; active and one previous retained")
+                print(f"evidence bundle retention: {len(result['removed'])} older verified bundles removed; only the published bundle retained")
         return 0
     except CheckpointBusy as exc:
         print(f"DEFERRED evidence bundle: {exc}", file=sys.stderr)
