@@ -21,12 +21,26 @@ export function industryMoneyIntent(question:string):{subject:string;recipient?:
   if(!monetary&&(!known.length&&!/^(?:the )?banks?(?:ing)?$/i.test(m[1])||known.includes('media')&&!/\b(?:industry|sector|lobby)\b/i.test(m[1])))return null
   return {subject:m[1],total:false,period}
  }
+ // Everyday wording ("who has received", "who took", "which MPs accepted", "money from X to Y") routes only when the
+ // source is a money-map grouping or the money is named as donations, so government funding keeps its own route.
+ const everyday=(source:string)=>{
+  const known=mentionedReceiptIndustries(source)
+  if(known.includes('media')&&!/\b(?:industry|sector|lobby|companies)\b/i.test(source))return false
+  return known.length>0||/^(?:the )?(?:big )?banks?(?:ing)?$/i.test(source)||/\b(?:donations?|donors?|receipts?)\b/i.test(q)
+ }
+ m=/^(?:who|which (?:political )?part(?:y|ies)|which (?:mps|members(?: of parliament)?|politicians|parliamentarians|senators))(?: (?:has|have|had))? (?:takes?|took|taken|receives?|received|gets?|got|gotten|accepts?|accepted) (?:the )?(?:most )?(?:(?:money|donations?|funding|receipts?|cash) )?from (.+)$/i.exec(q)
+ if(m&&/\b(?:money|donations?|funding|receipts?|cash)\b/i.test(q)&&everyday(m[1]))return {subject:m[1],total:false,period}
+ m=/^(?:(?:the )?(?:money|donations?|funding) )from (.+?)(?: (?:to|for|going to|given to|received by) (.+))?$/i.exec(q)
+ if(m&&everyday(m[1])){
+  const recipient=m[2]&&!/^(?:the )?(?:(?:political |major )?part(?:y|ies)|politicians|mps|parliament(?:arians)?|members(?: of parliament)?)$/i.test(m[2])?m[2]:undefined
+  return {subject:m[1],...(recipient?{recipient}:{}),total:!!recipient,period}
+ }
  m=/^who (?:takes?|receives?|gets?) (?:the )?(?:most )?(.+) money$/i.exec(q)
  if(m)return {subject:m[1],total:false,period}
- const prefix=/^how much (?:has|have|did) /i.exec(q)
+ const prefix=/^how much (?:money |in donations )?(?:has|have|did|does|do) /i.exec(q)
  if(prefix){
   const rest=q.slice(prefix[0].length)
-  const received=/ (?:received|receive|got|get|taken|take) (?:(?:money|donations?|funding) )?from /i.exec(rest)
+  const received=/ (?:received|receive|got|get|gets|taken|take|takes|accepted|accept) (?:(?:money|donations?|funding) )?from /i.exec(rest)
   if(received&&received.index>0&&received.index+received[0].length<rest.length)return {subject:rest.slice(received.index+received[0].length),recipient:rest.slice(0,received.index),total:true,period}
   const given=/ (?:donated|donate|given|give) to /i.exec(rest)
   if(given&&given.index>0&&given.index+given[0].length<rest.length)return {subject:rest.slice(0,given.index),recipient:rest.slice(given.index+given[0].length),total:true,period}

@@ -43,7 +43,7 @@ test('punctuation and whitespace scans retain the question and finish under 50 m
 })
 
 test('industry grammar consumes long punctuation, spaces and repeated delimiters under 50 ms',async()=>{
-  for(const question of ['Who receives money from mining'+punctuation+'x',spaces+'x','Who gets '+spaces+'x','How much has '+spaces+'x','How much has A'+spaces+'got from '+spaces+'x','How much has A'+spaces+'given to '+spaces+'x','A'+spaces+'donations to '+spaces+'x','How much has '+words+'received from '+words+'x'])await fast(()=>industry.industryMoneyIntent(question))
+  for(const question of ['Who receives money from mining'+punctuation+'x',spaces+'x','Who gets '+spaces+'x','How much has '+spaces+'x','How much has A'+spaces+'got from '+spaces+'x','How much has A'+spaces+'given to '+spaces+'x','A'+spaces+'donations to '+spaces+'x','How much has '+words+'received from '+words+'x','Money from '+spaces+'x','Money from '+words+'to '+words+'x','Money from mining'+' to x'.repeat(20_000),'Which MPs have received donations from '+spaces+'x','Who has taken money from '+words+'x'])await fast(()=>industry.industryMoneyIntent(question))
   assert.deepEqual(industry.industryMoneyIntent('How much has Example Supplier given to Labor in 2020?'),{subject:'Example Supplier',recipient:'Labor',total:true,period:'in 2020'})
   assert.deepEqual(industry.industryMoneyIntent('mining donations to Labor?'),{subject:'mining',recipient:'Labor',total:true,period:''})
   assert.deepEqual(industry.industryMoneyIntent('İnvented Example donations to Labor?'),{subject:'İnvented Example',recipient:'Labor',total:true,period:''})
