@@ -220,7 +220,8 @@ export function sydneyDay(at: number): string {
  *   coverage.{from|start|first}, coverage.{to|end|last}   first and last day it covers
  *   expires | expiry | expires_on | valid_until            no claims after this day
  *   timezone                                  Australia/Sydney (days are Sydney days)
- *   source: string | {publisher|name|title, url, published|publication_date}
+ *   source: string | {publisher|name|title (first found), url, published|publication_date}, or
+ *     else years[{year, source}] for today's year (the shape im/sitting-days publishes)
  *   days: [{date, house, senate}] (or {"YYYY-MM-DD": {house, senate}}); a
  *     missing flag is false, and days with neither flag are left out
  * `until` is the last day the list speaks for: 59 days after today, or the
@@ -234,7 +235,12 @@ export function widgetSitting(file: unknown, today: string): WidgetSitting | nul
   const from = first(coverage, ['from','start','first','start_date'])
   const to = first(coverage, ['to','end','last','until','end_date'])
   const expires = first(file, ['expires','expiry','expires_on','expires_at','valid_until'])
-  const source = typeof file.source === 'string' ? null : isObject(file.source) ? file.source : null
+  // im/sitting-days keeps each calendar's source in years[] ({year, status, source}); a
+  // top-level source, when there is one, wins.
+  const yearSource = Array.isArray(file.years)
+    ? file.years.find((y): y is Record<string, unknown> => isObject(y) && String(y.year) === today.slice(0, 4) && isObject(y.source))?.source
+    : undefined
+  const source = typeof file.source === 'string' ? null : isObject(file.source) ? file.source : isObject(yearSource) ? yearSource : null
   const published = first(source, ['published','publication_date','published_on']) ?? first(file, ['published','publication_date','published_on'])
   // A field that is there must read; only an absent one is left to the defaults.
   for (const v of [from, to, expires, published]) if (v !== undefined && !day(v)) return null
@@ -258,7 +264,7 @@ export function widgetSitting(file: unknown, today: string): WidgetSitting | nul
   if (!end) return null
   if ((day(from) && today < day(from)!) || today > end || (day(expires) && today > day(expires)!)) return null
   const until = [addDays(today, SITTING_WINDOW_DAYS - 1), end, day(expires)].filter((d): d is string => !!d).sort()[0]!
-  const name = typeof file.source === 'string' ? file.source : first(source, ['name','title','publisher'])
+  const name = typeof file.source === 'string' ? file.source : first(source, ['publisher','name','title'])
   return {source:nonempty(name) ? name.trim() : null, as_at:day(published), until, days:days.filter(d => d.date >= today && d.date <= until)}
 }
 

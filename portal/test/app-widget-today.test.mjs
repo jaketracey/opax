@@ -138,6 +138,16 @@ describe('the sitting calendar (assumed im/sitting-days shape)',()=>{
   test('sitting days from today through 59 days on, in order; non-sitting and past days out',()=>{
     assert.deepEqual(W.widgetSitting(fixture('sitting-days.json'),TODAY),{source:'Parliament of Australia',as_at:'2026-11-01',until:'2027-01-11',days:DAYS});
   });
+  test('the published calendar shape (im/sitting-days): source from years[] for this year',()=>{
+    const file=fixture('sitting-days.json');
+    const published={schema_version:1,published:'2026-11-13',timezone:'Australia/Sydney',coverage:{first:'2026-01-01',last:'2027-12-31'},expires:'2027-12-31',
+      years:[{year:2026,status:'published',source:{publisher:'Parliament of Australia',title:'Parliamentary Sittings 2026',url:'https://static.aph.gov.au/example-2026.ics',published:'2026-09-14'}},
+        {year:2027,status:'not_published'}],
+      days:file.days};
+    const sitting=W.widgetSitting(published,TODAY);
+    assert.equal(sitting.source,'Parliament of Australia');assert.equal(sitting.as_at,'2026-09-14');assert.deepEqual(sitting.days,DAYS);
+    assert.equal(W.widgetSitting({...published,years:[{year:2026,status:'published'}]},TODAY).source,null,'no source for this year: no name, still the days');
+  });
   test('the same calendar keyed by date reads the same',()=>{
     const file=fixture('sitting-days.json');
     const byDate=Object.fromEntries(file.days.map(({date,...flags})=>[date,flags]));
