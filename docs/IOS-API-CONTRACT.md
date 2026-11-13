@@ -312,6 +312,45 @@ For atomic replacement, stage the required catalogs under `data_version`, verify
 
 These readers add no migration or secret; the existing voice/journal schemas are required. W12 remains the separate votes-date launch dependency.
 
+**Parliament today widget file (widgets spec 2.3, lane B; branch `im/widget-today-api`, not deployed).** `GET /api/app/v1/widget/today` is the one file the Parliament today home-screen widget fetches: the same bytes for every reader, within 4 KB, already reduced to the words the app shows so the widget only lays out strings. It follows the app-reader rules above (GET and HEAD only, 405, 400 `invalid_query`, weak SHA-256 ETag and 304 on any matching `If-None-Match` form, no stale grace, network block `N`) with `Cache-Control: public, max-age=900`. It sets no cookie and reads no query string, cookie or client header beyond `If-None-Match`.
+
+```ts
+type WidgetTodayV1 = {
+  version: 1;
+  generated: string|null;     // newest of the sources' own times, not the request time
+  edition: {
+    date: string;             // journal date, YYYY-MM-DD
+    kind: 'politician'|'bill'|'grant'|'topic'|'program'|'largest';
+    kind_short: string;       // 'Bill', 'Parliamentarian', 'Grant', 'Grant program', 'Largest grants', 'Topic'
+    card_title: string;       // short title when the bill has one; over 80 characters, cut at a clause or word with '…'
+    line: string|null;        // the plate's line under the title, no trailing full stop
+    path: string;             // the edition's page: path and query
+  }|null;
+  vote: {
+    date: string;             // YYYY-MM-DD
+    chamber: 'House of Representatives'|'Senate'|null;
+    stage: 'Second reading'|'Third reading'|null;
+    title: string;            // the bill's short title, else its title
+    outcome: 'Agreed to'|'Not agreed to';
+    ayes: number; noes: number;
+    path: string;             // /bill/<bill_key>?division=<division_key>
+  }|null;
+  sitting: {
+    source: string|null;      // the calendar's publisher or title
+    as_at: string|null;       // the calendar's publication date
+    until: string;            // the last day the list speaks for
+    days: {date: string; house: boolean; senate: boolean}[];  // sitting days only, today to until, in order
+  }|null;
+};
+```
+
+- `edition` is the record `/api/app/v1/edition/latest` serves (the same SELECT, bound to today in Melbourne), reduced by ports of the app's `editionFor` and `editionTitles` (`mobile/src/api/selectors.ts`) and `plateLine` and `editionPerson` (`mobile/src/features/edition/model.ts`). `line` is what the plate draws under the title: for a member, party and seat ("Liberal · Wattle, NSW", as `Plate.tsx` draws it); otherwise `plateLine` with the card's first paragraph below it, which for a bill with a stage rail is its portfolio. `card_title` takes the short title from the bill's own `/bills/<key>.json`. `null` when no posted edition exists on or before today, or when the stored record is one the app's decoder refuses (a retired `/reports/` link, for example). The file does not apply the app's age tiers: the widget reads `date` and applies them itself.
+- `vote` is the first row of Today's How parliament voted over `/divisions/recent.json` (`recentReadingVotes`, `mobile/src/features/today/votes.ts`): second and third readings only, procedure and amendments left out, newest first, one per bill per day, decoded with the app's row allowance. `null` when the file is absent, unreadable or holds no reading vote. The portal does not publish `/divisions/recent.json` yet (data lane D1), so in production `vote` stays `null` until that file ships.
+- `sitting` reads `/parliament/sitting-days.json` (branch `im/sitting-days`). `days` holds only sitting days from today (Sydney) through `until`, in order. `until` is 59 days after today, or the calendar's coverage end or expiry when that is sooner, so an empty list in a recess still means "no sitting day on or before `until`". `null` when the file is absent, expired, does not cover today, or any field it carries cannot be read; unknown fields are ignored. The reader expects `days` as `[{date, house, senate}]` (or an object keyed by date), `coverage.{from,to}`, `expires` and `source.{publisher,url,published}`; `widgetSitting` in `portal/src/app-widget.ts` lists the accepted spellings.
+- Only the sitting list varies in length. If a body would pass 4 KB, the far end of that list is dropped and `until` moves back with it; real calendars stay near 2 KB.
+- A D1 failure or a failing asset binding (5xx or a thrown fetch) returns 503 `{error:"widget_unavailable"}`, no-store, `Retry-After: 60`, so the widget keeps its saved copy rather than saving an empty one. A missing part is `null` with 200.
+- `portal/test/app-widget-today.test.mjs` pins `card_title`, `line`, `outcome` and the chosen vote against copies of the app's fixtures and the strings the app's own functions produce. It also runs the real SELECT over migrated SQLite and checks the 304 forms, the 4 KB bound, that the handler reads only `If-None-Match`, and that the module reaches only `app-http.ts` and `app-edition.ts`.
+
 ### Server voice tools, MCP and publication operations
 
 These routes are outside the native client call plan. Voice tools are provider-to-Worker calls with a server secret and can reach ARAG, limited to 30 calls/minute/session. Native must not hold that secret or invoke the tools directly. MCP and publication operations remain source-only inventory.
