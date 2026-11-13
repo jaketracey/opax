@@ -274,6 +274,7 @@ export {
   roleColour,
   textContent,
   titleSizeCap,
+  wordSafeFloor,
   wordSafeOnFrame,
   wordSafeOnLines,
   wordSafeStart,

@@ -653,7 +653,7 @@ describe('word-safe text', () => {
       true,
     );
   });
-  test('steps the scale down, never below the reader default', () => {
+  test('steps the scale down, by default never below the reader default', () => {
     expect(lineScale(30 * 2.3, 30)).toBe(2.3);
     expect(nextWordSafeCap(30 * 2.3, 30)).toBe(2.07);
     expect(nextWordSafeCap(30 * 1.05, 30)).toBe(1);
@@ -701,8 +701,9 @@ describe('word-safe text', () => {
     // then multiplies by the same 2.55.
     expect(capScale(text(), 'sectionTitle')).toBeCloseTo(2.29 / 2.55, 6);
     // Each layout at the size now drawn that still breaks steps 10% lower,
-    // always as a share of the same uncapped 2.55, and stops at the reader's
-    // default size.
+    // always as a share of the same uncapped 2.55. A word still wider than
+    // its column goes below the reader's default size, and stops at 11pt
+    // (sectionTitle is 22pt, so half its role size; duo audit A5-1).
     for (const [at, next] of [
       [2.29, 2.06],
       [2.06, 1.85],
@@ -711,8 +712,15 @@ describe('word-safe text', () => {
       [1.5, 1.35],
       [1.35, 1.22],
       [1.22, 1.1],
-      [1.1, 1],
-      [1, 1],
+      [1.1, 0.99],
+      [0.99, 0.89],
+      [0.89, 0.8],
+      [0.8, 0.72],
+      [0.72, 0.65],
+      [0.65, 0.59],
+      [0.59, 0.53],
+      [0.53, 0.5],
+      [0.5, 0.5],
     ] as const) {
       layout(at);
       expect(capScale(text(), 'sectionTitle')).toBeCloseTo(next / 2.55, 6);

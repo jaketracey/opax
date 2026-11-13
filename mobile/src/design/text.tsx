@@ -130,16 +130,36 @@ export function lineScale(lineHeight: number, baseLineHeight: number): number {
 }
 
 /**
+ * The smallest size word-safe text steps down to, in points: Apple's smallest
+ * default text size (caption2 at Large).
+ */
+export const WORD_SAFE_MIN_POINTS = 11;
+
+/**
+ * The lowest word-safe cap for a role: the reader's default size, or below it
+ * down to WORD_SAFE_MIN_POINTS. A word wider than a narrow column at the
+ * default size, such as "(Strengthening" (about 125pt in rowRecord) in the
+ * iPhone Duo's folded two-column cards, otherwise stopped at 1 and broke
+ * mid-word ("Strengtheni / ng") for good.
+ */
+export function wordSafeFloor(fontSize: number): number {
+  if (!(fontSize > 0)) return 1;
+  return Math.min(1, Math.ceil((WORD_SAFE_MIN_POINTS / fontSize) * 100) / 100);
+}
+
+/**
  * The next scale cap after a mid-word break, from the line height in effect.
- * Null when the text is already at the reader's default size or below.
+ * Null when the text is already at the floor or below. The floor defaults to
+ * the reader's default size; Text passes its role's wordSafeFloor.
  */
 export function nextWordSafeCap(
   lineHeight: number,
   baseLineHeight: number,
+  floor = 1,
 ): number | null {
   const current = lineScale(lineHeight, baseLineHeight);
-  if (current <= 1.01) return null;
-  return Math.max(1, Math.round(current * 90) / 100);
+  if (current <= floor + 0.01) return null;
+  return Math.max(floor, Math.round(current * 90) / 100);
 }
 
 // Apple's title1 ramp. The recordTitle role alone stops at AX2 (43pt).
@@ -267,9 +287,11 @@ function provenToFit(state: WordSafeState): WordSafeState {
 /**
  * The state after one line measurement. Only the generation now drawn counts,
  * and only for this text. The cap only steps down, in 10% steps, after a
- * mid-word break measured at the size now drawn, and never at or below the
- * reader's default size, where there is nothing to step down to (a layout
- * from a larger size delivered late included). The first measurement must
+ * mid-word break measured at the size now drawn. It runs only above the
+ * reader's default text size (fontScale above 1); from there it may step
+ * below the role's default size, to `floor` (wordSafeFloor), when a word is
+ * still wider than its column (a layout from a larger size delivered late
+ * included). The first measurement must
  * also match the expected full scale when native conversion is available.
  * Without it, retain the measurement-backed baseline used by older binaries.
  * Returns `state` itself when nothing changes.
@@ -282,6 +304,7 @@ export function wordSafeOnLines(
   baseLineHeight: number,
   fontScale: number,
   validateScale = true,
+  floor = 1,
 ): WordSafeState {
   if (at.key !== state.key || at.gen !== state.gen || !lines.length)
     return state;
@@ -310,7 +333,7 @@ export function wordSafeOnLines(
   )
     return state;
   if (breaksMidWord(lines)) {
-    const next = nextWordSafeCap(lines[0]!.height, baseLineHeight);
+    const next = nextWordSafeCap(lines[0]!.height, baseLineHeight, floor);
     if (next === null || (state.cap && next >= state.cap)) return state;
     return {
       ...state,
@@ -539,6 +562,7 @@ export function Text({
         role.lineHeight + LINE_HEIGHT_NUDGE,
         fontScale,
         expectedFull !== undefined,
+        wordSafeFloor(role.fontSize),
       ),
     );
   };
