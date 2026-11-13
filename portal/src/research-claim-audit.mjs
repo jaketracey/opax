@@ -85,7 +85,7 @@ function amountOwners(text,f,known=[]){
  // Receipt subjects remain recipients even when a later 'to' phrase states a purpose.
  const receipt=[...before.matchAll(/\b(?:receiv(?:ed|es|ing|e)|secur(?:ed|es|ing|e)|got|won|earn(?:ed|s|ing)?|(?:was|were|been)\s+(?:paid|given|awarded))\b/gi)].at(-1)
  if(receipt){const actors=known.length?exactNames(before.slice(0,receipt.index)):nounPhrases(before.slice(0,receipt.index)),actor=actors.at(-1)
-  if(actor&&/^\s*(?:\w+ly\s*)*$/.test(before.slice(actor.end,receipt.index)))return [actor.name]
+  if(actor&&adverbsOnly(before.slice(actor.end,receipt.index)))return [actor.name]
  }
  // An explicit object after 'to' owns a receipt, regardless of who uttered it.
  const target=f.unit==='count'?'(?:to|for)':'to'
@@ -114,7 +114,7 @@ function givingActor(text,f,names,firstPerson){
  if(!verb||/\b(?:was|were|been|be)\s*$/i.test(before.slice(0,verb.index)))return undefined
  if(firstPerson&&/\bI\s*$/.test(before.slice(0,verb.index)))return firstPerson
  const preceding=mentions(before.slice(0,verb.index),names),actor=preceding.at(-1)
- return actor&&/^\s*(?:\w+ly\s*)*$/.test(before.slice(actor.end,verb.index))?actor.name:undefined
+ return actor&&adverbsOnly(before.slice(actor.end,verb.index))?actor.name:undefined
 }
 function recordName(name,row){
  const n=norm(name),text=norm(row.text),title=norm(row.title)
@@ -359,3 +359,6 @@ export function moneySentenceEdits(payload){
  }
  return [...edits.values()].sort((a,b)=>b.at-a.at)
 }
+
+// Each token must be an adverb; consume each word once, including joined adverbs.
+export const adverbsOnly = text => text.split(/\s+/).every(word => !word || /^\w+ly$/.test(word))

@@ -1,4 +1,4 @@
-import { normalize, tokens, bucket } from './catalog-query.mjs'
+import { normalize, tokens, bucket, questionSubject } from './catalog-query.mjs'
 import { canonicalChamber } from './ask-chamber.ts'
 export const CATALOG_KINDS = new Set(['person','party','donor','agency','supplier','receipt','contract','grant','bill','interest','expense','access','campaigner','report','pay','audit report','electorate','topic','instrument','division','sitting','estimates','video','page','register'])
 export interface CatalogRecord {
@@ -55,10 +55,20 @@ export function matchesCatalogFilters(meta: Meta, params: URLSearchParams): bool
   return true
 }
 /** A catalogue search ranked but not yet read: the best IDs and what reading them needs. */
-interface RankedCatalog { manifest: Manifest; base: string; meta: CatalogMeta; selected: [number, number][]; total: number }
+interface RankedCatalog { manifest: Manifest; base: string; meta: CatalogMeta; selected: [number, number][]; total: number; matched_query?: string }
 // Ask uses union matching and a per-kind window so contracts cannot crowd out
 // receipts or interests. The public search keeps its exact AND semantics.
 async function rankCatalog(url: URL, assets: Fetcher, options: { anyTerms?: boolean; perKind?: number } = {}): Promise<RankedCatalog> {
+  const exact = await rankCatalogTerms(url, assets, options)
+  if (exact.total || options.anyTerms) return exact
+  const subject = questionSubject(url.searchParams.get('q'))
+  if (!subject) return exact
+  const retry = new URL(url)
+  retry.searchParams.set('q', subject)
+  const found = await rankCatalogTerms(retry, assets, options)
+  return found.total ? { ...found, matched_query: subject } : exact
+}
+async function rankCatalogTerms(url: URL, assets: Fetcher, options: { anyTerms?: boolean; perKind?: number }): Promise<RankedCatalog> {
   const terms=tokens(url.searchParams.get('q'))
   if(terms.length>16)throw new Error('Use up to 16 search words')
   const manifest=await asset<Manifest>(assets,'/search-catalog/manifest.json',true)
@@ -142,7 +152,7 @@ export async function searchCatalog(url: URL, assets: Fetcher, options: { anyTer
   const {manifest,meta,selected,total}=ranked
   const read=await readRecords(assets,ranked,selected.map(([id])=>id))
   const records=selected.map(([id,score])=>({...read.get(id)!,score,sort_date:String(meta.year(id)||'')}))
-  return {results:records,total,truncated:total>200,coverage:manifest.coverage,version:manifest.version,counts:manifest.counts}
+  return {results:records,total,truncated:total>200,coverage:manifest.coverage,version:manifest.version,counts:manifest.counts,matched_query:ranked.matched_query}
 }
 
 /** One ranked catalogue result before its record is read: enough to order it by relevance or date and count its year. */
@@ -168,5 +178,5 @@ export async function searchCatalogPaged(url: URL, assets: Fetcher) {
     return {id,kind:meta.kind(id),date:date || undefined,sort_date:date || year || ''}
   })
   const records=async(rows: number[])=>early ? new Map(rows.map(id=>[id,early.get(id)!])) : readRecords(assets,ranked,rows)
-  return {stubs,records,total,truncated:total>200,coverage:manifest.coverage,version:manifest.version,counts:manifest.counts}
+  return {stubs,records,total,truncated:total>200,coverage:manifest.coverage,version:manifest.version,counts:manifest.counts,matched_query:ranked.matched_query}
 }

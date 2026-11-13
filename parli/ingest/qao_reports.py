@@ -190,6 +190,16 @@ def parse_index(html, url):
     return records, source_url(next_link["href"], url) if next_link else None, last_page
 
 
+def copyright_link(value):
+    try:
+        url = urlsplit(urljoin(SITE, value or ""))
+        return (url.scheme == "https" and url.hostname == "www.qao.qld.gov.au"
+                and not url.username and not url.password and url.port in (None, 443)
+                and url.path == "/copyright" and not url.query and not url.fragment)
+    except ValueError:
+        return False
+
+
 def licence_review(main):
     # A notice is cleared only by a recognised grant/owner notice. Unknown
     # reuse terms and third-party captions hold the entire body projection.
@@ -210,8 +220,8 @@ def licence_review(main):
         caption_credit = caption and re.search(r'\b(?:source|credit|courtesy|provided|supplied)\b', value, re.I)
         if cue.search(value) or caption_credit or (notice and value):
             if value not in evidence: evidence.append(value)
-            if value == "Copyright ©" and (node.get('href') in ('/copyright', COPYRIGHT)
-                    or node.find('a', href=re.compile(r'^(?:https://www.qao.qld.gov.au)?/copyright$'))):
+            if value == "Copyright ©" and (copyright_link(node.get('href'))
+                    or node.find('a', href=copyright_link)):
                 known_footer.add(value)
             if caption_credit and re.fullmatch(r'(?:Source|Credit):\s*(?:QAO|Queensland Audit Office)\.?', value, re.I):
                 known_footer.add(value)

@@ -102,11 +102,12 @@ test('a loop timeout with only record facts in hand answers from those facts, ca
  assert.deepEqual(run.qualitative.sources[0].receipt,{party:'Labor',source:'Tabcorp Holdings Limited',amount:2371237,period:'1998-99 to 2025-26',jurisdiction:'federal',industry:'gambling',filter:'gambling'});
 });
 
-test('a loop timeout before any draft falls back to the old path; passages are no longer listed as an excerpt answer',async()=>{
+test('a loop timeout before any draft answers from the passages it holds, cited, with no further model call',async()=>{
  let n=0;
  const f=loop(async()=>++n===1?reply([call('search',{query:'poker machine reform'})]):new Promise(()=>{}),{wallMs:250});
  const run=await f.run();
- assert.equal(run.answered,false);assert.equal(run.research.mode,'planner');assert.deepEqual(f.failures.map(e=>e.reason),['timeout']);assert.doesNotMatch(run.answer??'',/What the record says/);
+ assert.equal(run.answered,true);assert.equal(run.research.mode,'loop');assert.deepEqual(f.failures,[]);assert.equal(n,2)
+ assert.match(run.answer,/said “/);assert.ok(Object.keys(run.qualitative.citations).length)
 });
 
 // The page: the exact renderer, plus the kicker expression from the Ask result view.

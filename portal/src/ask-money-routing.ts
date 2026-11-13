@@ -1,3 +1,4 @@
+import {trimQuestionEnd, questionSpaces} from './question-text.mjs'
 import type {RecordQuestion} from './ask-records'
 import {rankedMoneyAnswer, fundingResearchFollowUp} from './ask-money'
 import {fundingContinuation, fundingUserTurns} from './ask-money-followup'
@@ -18,7 +19,7 @@ export async function federalPartyMoneyAnswer(input:RecordQuestion,assets:Fetche
  if(!intent&&fundingContinuation(input.question??'')&&prior.length){
   const unresolved=federalPartyRankingIntent(prior[prior.length-1])
   if(unresolved?.uncertain){
-   const fragment=(input.question??'').trim().replace(/^(?:and\s+)?(?:(?:what|how)\s+about\s+)/i,'').replace(/^and\s+/i,'').replace(/[?!.]+$/,'')
+   const fragment=trimQuestionEnd(questionSpaces(input.question??'').replace(/^(?:and )?(?:(?:what|how) about )/i,'').replace(/^and /i,''))
    const party=federalPartyRankingIntent('Who funds '+fragment+'?')
    const period=/^(?:in|during|for|since|from|before|after|until|through|between)\s+(?:19|20)\d{2}(?:[–-]\d{2})?(?:\s+(?:to|and|through)\s+(?:19|20)\d{2}(?:[–-]\d{2})?)?$/i.test(fragment)
    if(party||period)return {...federalPartyRankingClarification(party??unresolved),money_route:'federal-party-ranking-v1'}
@@ -26,7 +27,7 @@ export async function federalPartyMoneyAnswer(input:RecordQuestion,assets:Fetche
  }
  if(!direct&&(!fundingContinuation(input.question??'')||!prior.some(q=>federalPartyRankingQuestion(q))))return null
  const context=Array.isArray(input.context)?input.context.map(turn=>turn&&typeof turn.text==='string'&&(turn.author==='user'||turn.author==='question')?{...turn,text:federalPartyRankingQuestion(turn.text)??turn.text}:turn):undefined
- let scoped:RecordQuestion={...input,kind:'all',context,question:direct??input.question}
+ let scoped:RecordQuestion={...input,kind:'all',context,question:direct&&/\btop\s+10\b/i.test(input.question??'')?input.question:direct??input.question}
  if(!direct){
   // Resolve the continuation's intent before interpreting its record filters.
   // A new speech question can carry a topic after a money question.

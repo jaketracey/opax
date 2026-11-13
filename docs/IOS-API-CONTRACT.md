@@ -74,6 +74,15 @@ type CatalogRecord = {
 type UnifiedSearchPage = Omit<SearchPage, 'results'> & Partial<SearchRetrieval> & {
   results:(SearchResult | CatalogRecord)[]; warnings:string[]; catalog_matches:number;
   coverage?:string; index_version?:string;
+  // Only present when an initially empty catalogue query matches its question subject.
+  matched_query?:string;
+  // Optional on completed empty searches. Absent on typeahead and nonempty responses.
+  suggestions?:SearchSuggestion[];
+};
+type SearchSuggestion = {
+  kind:'did_you_mean'|'scope'|'ask'; label:string; href:string;
+  // Collection entries, not query matches. Omitted where a count needs retrieval.
+  count?:number;
 };
 type Resource = {
   slug: string; title: string; speaker: string | null; url: string | null;
@@ -119,6 +128,10 @@ Each upstream fallback emits one JSON log line with `event: 'search_fallback'`, 
 `BillVersion` has `id`, `source_version`, `stage`, `stage_label`, nullable `date`, `source_url`, `format`, `status:'complete'`, `text_url`, nullable `characters/pages/sections`, `coverage_note` and `sha256`. The manifest lists complete collected versions, not every version Parliament has issued. Integrity failures return 502 and are not cached. Missing versions return 404.
 
 For an explicit catalog-only kind other than `bill`, `mode=keyword|hybrid|semantic` does not start document retrieval: search-all runs only the asset catalog task. Catalog-only search does not generate an answer. The web can subsequently call briefs, resource reads or search-summary, each changing its cost. `total` for unified/document search describes a ranked window; `catalog_matches` and the coverage text must remain separate. The inspected facet/recent/brief caches generally do not include the data epoch, unlike search and resource caches.
+
+Empty-search recovery (November 2026) adds optional fields only to `/api/search-all`. Existing `/api/search` and `/api/app/v1/*` response fields are unchanged. Correction names come only from the public parliamentarian roster, published bill titles and the electorate list. Scope suggestions browse People, Bills, Speeches and Money; People and Bills counts are published collection entries, not matches for the original query. Ask suggestions use `/ask?q=<encoded query>&draft=1`: the web prefills the form and waits for an explicit submission. Wildcard filter searches offer browsing without turning `*` into an Ask question. No Ask or generation call is made to prepare suggestions. Clients may ignore these fields. Native v1's existing restriction against calling Ask still applies.
+
+The shipped native search decoder (app 1.1.3, `eb6fd2dce`) uses `pageShape = shape(...)` in `mobile/src/features/search/decoders.ts`; `shape` in `mobile/src/api/validation.ts` reads declared keys and accepts unknown keys. Empty and populated pages with additional page/result keys were checked against this decoder and the current integration decoder. These additive fields require no native decoder change. Web completion analytics adds only `had_suggestion:boolean` and `suggestion_kind:'did_you_mean'|'scope'|'ask'|'none'`. The category is the first available of correction, scope and Ask, or `none` for nonempty results. Query text, correction labels, destinations and query-derived identifiers are excluded.
 
 ### Generation routes, outside native v1 and documented from source only
 
@@ -286,6 +299,8 @@ type AppManifestV1 = {
 | `electorates/<filename>` | App files under `/electorates/releases/<release_id>/`: `index.json`, `people.json` and `el_<24-hex>.json` seats |
 
 The shared static interest declarations retain a required non-empty `holder: string` in member bucket items, `ties[].register`, donor ties and recent declarations. App 1.1.3 (`eb6fd2dce`) requires this shape in all four decoders. The legacy wire value `"unspecified"` means absent and must display nothing or "Not stated"; it is not a stated holder. Keep this compatibility value in shared app-read payloads. Web display adapters, `/api/register/interests`, the declared-interests tool and local table SQL normalise it to a nullable holder, with a plain `holder_label` where displayed. The register and recent catalogs retain their own source dates when replayed from cached exports.
+
+Null is not permitted on those shared static fields by this released-app contract. Changing only the exporter would reject whole member registers and donor-tie payloads, or lose recent declaration rows. `/api/app/v1/manifest` points to the same static catalogs; it does not adapt their holder values. The Today and Your MP rows decode those catalogs before display, including the household-holder naming. A null export therefore needs a compatible released decoder and a migration for existing installations first. The [holder reader audit](operations/interests-holder-compatibility-2026-11-13.md) records the checked paths. Worker JSON and server-rendered handling of null are covered independently by `portal/test/interest-alterations.test.mjs`.
 
 The twelve root paths match the app's static catalog allow-list in `mobile/src/api/policy.ts` on `ios/app`. Cold snapshots read those local assets, share concurrent reads and cache in memory for five minutes per asset binding. Web-only money/story-photo catalogs and electorate reference/crosswalk entries are omitted; absent or malformed non-essential release entries are ignored. Electorate release hashes/dates reuse the validated static manifest; seat files are not fetched to construct this response. No D1, KV, external fetch or model is used. Missing/redirected/non-JSON/malformed assets, incomplete required electorate files or invalid release URLs/hashes return 503 `{error:"manifest_unavailable"}`, no-store, `Retry-After: 60`. Failed snapshots are discarded and may be retried. Success uses `public, max-age=300, must-revalidate` with ETag; there is no `nocache` override.
 

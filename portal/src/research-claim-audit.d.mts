@@ -10,3 +10,4 @@ export function unclosedQuoteOffset(text:string):number
 
 export function sentenceParts(text:string):{text:string;at:number}[]
 export function moneySentenceEdits(payload:{answer?:unknown;sources?:unknown;citations?:unknown}):{at:number;text:string;replacement:string}[]
+export function adverbsOnly(text:string):boolean
