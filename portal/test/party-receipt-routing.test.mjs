@@ -11,7 +11,7 @@ const fixture=JSON.parse(fs.readFileSync(new URL('./fixtures/party-receipt-routi
 // Routes are checked against the published typed export (the Worker tests read public/, which this import checks is
 // typed); the untyped test near the end strips the receipt-type fields to keep the fallback shape.
 const asset=moneyAsset('typed'),assets=moneyAssets('typed'),untypedAssets=moneyAssets('untyped')
-const typedHeading={donations:'Donations',other_receipts:'Other receipts \\(includes loans\\)',subscriptions:'Subscriptions'}
+const typedHeading={donations:'Donations',other_receipts:'Other receipts',subscriptions:'Subscriptions'}
 function cited(p){assert.ok(Object.keys(p.citations).length>=2);for(const ranges of Object.values(p.citations))for(const[a,b]of ranges)assert.ok(a>=0&&b>a&&b<=Array.from(p.answer).length)}
 function complete(p){
  assert.equal(p.answer_status,'calculated');assert.ok(typedHeading[p.measure],p.measure)
@@ -66,7 +66,10 @@ test('receipt copy is input-only and reviewed web labels remain',async()=>{
  assert.ok(api.moneyOverviewPrompt(facts).includes(api.RECEIPTS_WRITING_RULE));assert.ok(api.writingPrompt({question:'How much did the party receive?',period:{kind:'all',label:''},facts:[]}).includes(api.RECEIPTS_WRITING_RULE))
  assert.ok(api.TOOL_SPECS.some(s=>s.name==='party_receipts'&&s.description.includes('receipt')));assert.ok(!api.TOOL_SPECS.some(s=>s.name==='party_donations'))
  const result=await api.partyDonations({asset,kb:async()=>{throw Error('Unexpected retrieval')}},{party:'Labor',limit:1})
- const fact=api.factSheet([result]).facts[0].text;assert.match(fact,/^Labor disclosed \$[\d,]+ in receipts from/);assert.doesNotMatch(fact,/ gave /)
+ // A donor breakdown ranks donations by default (A34) and says so; all receipt types say receipts.
+ const fact=api.factSheet([result]).facts[0].text;assert.match(fact,/^Labor disclosed \$[\d,]+ in donations from/);assert.doesNotMatch(fact,/ gave /)
+ const all=await api.partyDonations({asset,kb:async()=>{throw Error('Unexpected retrieval')}},{party:'Labor',limit:1,measure:'all_types'})
+ assert.match(api.factSheet([all]).facts[0].text,/^Labor disclosed \$[\d,]+ in receipts from/)
  const state=await api.calculatedLookup('ranked_money',{}, {question:'Who gives the most money to Labor in Victoria?'},{asset,origin:'https://example.invalid'});assert.deepEqual(state.notes,[])
  const app=fs.readFileSync(root+'public/app.js','utf8');assert.ok(app.includes('"Received by parties (disclosed)"'));assert.ok(app.includes('"Receipts counted"'));assert.doesNotMatch(app,/"Given \(disclosed\)"|"Donations counted"/)
  assert.ok(fs.readFileSync(root+'public/money-map.js','utf8').includes('Received across'));assert.doesNotMatch(fs.readFileSync(root+'public/money-map.js','utf8'),/Given across/)

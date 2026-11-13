@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {build} from 'esbuild';
-import {donorDisclosure, receiptFigures, receiptGraph} from '../public/donor-disclosure.js';
+import {donorDisclosure, publicFundingOnly, receiptFigures, receiptGraph} from '../public/donor-disclosure.js';
 
 const graph = JSON.parse(await readFile(new URL('../public/graph/money.json', import.meta.url), 'utf8'));
 const audit = JSON.parse(await readFile(new URL('../../docs/reports/2026-11-13-donor-receipt-aliases.json', import.meta.url), 'utf8'));
@@ -18,8 +18,10 @@ test('released spelling coverage permits only the documented ambiguous branch ex
   assert.equal(ambiguous, matching.by_result.ambiguous[0], 'every ambiguous row has a listed exception');
   assert.equal(matching.exceptions.filter(x => x.method === 'normalised').reduce((sum, x) => sum + x.rows, 0), 0,
     'zero unmatched case/punctuation/spacing-only rows');
-  assert.deepEqual(matching.by_result.matched_brackets, [106, 1436332]);
+  assert.deepEqual(matching.by_result.matched_brackets, [103, 1209050]);
   assert.deepEqual(matching.by_result.matched_normalised, [43, 993924]);
+  assert.deepEqual(matching.by_result.annotation_review, [1, 190322]);
+  assert.deepEqual(matching.by_result.state_mismatch, [2, 36960]);
 });
 
 test('released typed cells reconcile with the before/after audit and receipt coverage counts', () => {
@@ -28,13 +30,24 @@ test('released typed cells reconcile with the before/after audit and receipt cov
   const rows = donorFigures.reduce((sum, n) => sum + n.count, 0);
   assert.equal(total, audit.counts.after_exported.aud);
   assert.equal(rows, audit.counts.after_exported.rows);
-  assert.equal(rows, graph.meta.receipt_types.counts.exported_rows);
-  assert.equal(total - audit.counts.before_exported.aud, 2430256);
-  assert.equal(rows - audit.counts.before_exported.rows, 149);
-  assert.equal(audit.donors_gaining, 32);
+  const publicDollars = donorFigures.reduce((sum, n) => sum + n.publicFunding[0], 0);
+  const publicRows = donorFigures.reduce((sum, n) => sum + n.publicFunding[1], 0);
+  assert.equal(rows + publicRows, graph.meta.receipt_types.counts.exported_rows);
+  assert.deepEqual(audit.counts.after_exported_cells, {rows: rows + publicRows, aud: total + publicDollars});
+  assert.equal(total - audit.counts.before_exported.aud, 2202974);
+  assert.equal(rows - audit.counts.before_exported.rows, 146);
+  assert.equal(audit.donors_gaining, 30);
   assert.equal(audit.counts.existing_match_changed?.rows ?? 0, 0);
-  assert.deepEqual([audit.counts.after_unmatched_node.rows, audit.counts.after_unmatched_node.aud], [38917, 507878484]);
-  assert.equal(audit.counts.after_unmatched_node.rows, matching.by_result.unmatched[0] + matching.by_result.ambiguous[0]);
+  assert.deepEqual([audit.counts.after_unmatched_node.rows, audit.counts.after_unmatched_node.aud], [38913, 507747630]);
+  assert.equal(audit.counts.after_unmatched_node.rows,
+    matching.by_result.unmatched[0] + matching.by_result.ambiguous[0] + matching.by_result.state_mismatch[0]);
+  assert.deepEqual(graph.nodes.filter(publicFundingOnly).map(n => n.id), ['donor:nsw efa'], '#355 public-funding assertion stays in force');
+});
+
+test('the released annotated restatement stays in review and does not add a third gift', () => {
+  const candidates = graph.nodes.filter(n => n.kind === 'donor' && receiptFigures(n).total === 740646 && receiptFigures(n).count === 8);
+  assert.equal(candidates.length, 1, 'the reviewed donor keeps its original receipt figure');
+  assert.deepEqual(audit.counts.annotation_review, {rows: 1, aud: 190322});
 });
 
 test('the recovered individual receipts reach the donor page projection, map, party register and Ask', async () => {

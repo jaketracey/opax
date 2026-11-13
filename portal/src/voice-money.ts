@@ -1,5 +1,5 @@
 import {receiptMeasureLabel,receiptDollars,UNTYPED_RECEIPTS_LABEL} from './receipt-copy'
-import {donorAssociatedTo,donorDisclosure,hasPartyReceipts,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
+import {donorAssociatedTo,donorDisclosure,hasPartyReceipts,publicFundingOnly,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {financialYear, receiptPeriodQuery} from './receipt-period'
 import {latestReceiptYear, readReceiptPeriod, type PeriodOption} from './receipt-reading'
 
@@ -180,7 +180,8 @@ const typedFinancialYear=(period:string):number|undefined=>{
 function receiptEdges(graph:ReceiptGraph):CalculationEdge[] {
   if(!hasReceiptTypes(graph))return graph.edges
   return graph.edges.flatMap((edge):CalculationEdge[]=>!Object.values(edge.by_type??{}).some(Number.isFinite)?[{...edge,untyped:true as const}]:Object.entries(edge.by_type??{}).flatMap(([type,total])=>{
-    if(!Number.isFinite(total))return []
+    // Public Funding is election funding, never a donor's receipt (A35): no total, ranking or line counts it.
+    if(!Number.isFinite(total)||type==='public_funding')return []
     const periods=Object.entries(edge.by_type_year??{}).flatMap(([period,types])=>{
       const cell=types[type]
       return cell&&Number.isFinite(cell[0])&&Number.isInteger(cell[1])&&cell[1]>=0?[{period,cell}]:[]
@@ -396,7 +397,8 @@ export function voiceReceiptData(graph:ReceiptGraph,found:NonNullable<ReturnType
   if(!('type_breakdown' in found)||!found.flows.length)return found
   const result=found as ReceiptResult
   const edges=result.flows.flatMap(flow=>graph.edges.filter(e=>e.source===flow.donor_id&&e.target===flow.party_id&&!e.flow&&!e.grant))
-  if(!edges.length||!edges.every(e=>e.by_type&&!hasPartyReceipts(e)))return found
+  // Public Funding on a party's return is never a donor's declaration (A35): NSW Efa is not "declared on its own donor return".
+  if(!edges.length||edges.some(e=>publicFundingOnly(e))||!edges.every(e=>e.by_type&&!hasPartyReceipts(e)))return found
   const donors=new Set(result.flows.map(f=>f.donor_id)),parties=new Set(result.flows.map(f=>f.party_id))
   const records=(n:number)=>`${n.toLocaleString('en-AU')} record${n===1?'':'s'}`
   const declared=donors.size===1?'declared by the donor':'declared by the donors'

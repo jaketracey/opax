@@ -10,8 +10,10 @@ import sqlite3
 from collections import Counter
 from pathlib import Path
 
+from parli.ingest.aec_receipts import normal_type
 from scripts.aec_receipt_selection import load_selection
 from scripts.receipt_donor_match import ReceiptDonorMatcher
+from scripts.receipt_donor_match import has_receipt_annotation
 
 
 def audit(db, graph):
@@ -30,11 +32,14 @@ def audit(db, graph):
     counts, dollars = Counter(), Counter()
     donor_before, donor_after, rows_before, rows_after = Counter(), Counter(), Counter(), Counter()
     party_before, party_after = Counter(), Counter()
-    for donor, recipient, amount, period, recipient_kind in db.execute(
-        "SELECT donor_name,recipient,amount,financial_year,recipient_kind FROM aec_receipt_records WHERE record_side='recipient'"
+    for donor, recipient, amount, period, recipient_kind, receipt_type in db.execute(
+        "SELECT donor_name,recipient,amount,financial_year,recipient_kind,receipt_type FROM aec_receipt_records WHERE record_side='recipient'"
     ):
         reason = selection.exclusion(donor, recipient, amount, period, recipient_kind)
         if reason:
+            if reason == "flagged_review" and has_receipt_annotation(donor):
+                counts["annotation_review"] += 1
+                dollars["annotation_review"] += amount
             continue
         target = "party:" + selection.recipient_party[recipient]
         before = old_entities.get(selection.entity(donor)) or old_names.get(donor)
@@ -50,19 +55,23 @@ def audit(db, graph):
             elif (source, target) not in edges:
                 buckets.append(stage + "_unmatched_edge")
             else:
-                buckets.append(stage + "_exported")
-                donor_totals[source] += amount
-                donor_rows[source] += 1
-                party_totals[target] += amount
+                buckets.append(stage + "_exported_cells")
+                if normal_type(receipt_type) != "public_funding":
+                    buckets.append(stage + "_exported")
+                    donor_totals[source] += amount
+                    donor_rows[source] += 1
+                    party_totals[target] += amount
         if not before and match.candidates:
             buckets.append("before_spelling_candidates")
         if not before and after:
             buckets.append("newly_matched_node")
-            if (after, target) in edges:
+            if (after, target) in edges and normal_type(receipt_type) != "public_funding":
                 buckets.append("newly_exported")
         if not after and match.candidates:
             buckets.append("ambiguous")
             buckets.append("after_unmatched_" + match.method)
+        if match.method == "state_mismatch":
+            buckets.append("state_mismatch")
         if before and before != after:
             buckets.append("existing_match_changed")
         for bucket in buckets:
@@ -77,7 +86,7 @@ def audit(db, graph):
                      for party in sorted(party_before.keys() | party_after.keys())
                      if party_before[party] != party_after[party]]
     return {
-        "scope": "Eligible recipient-side receipts, existing federal map nodes and edges. Before: entity/raw spelling. After: unique normalised/bracketless fallback. No production calls.",
+        "scope": "Eligible recipient-side receipts, existing federal map nodes and edges. Before: entity/raw spelling. After: unique normalised/bracketless fallback with annotation review and state compatibility. Exported figures exclude Public Funding as in #355; exported_cells retains every typed cell for exporter coverage. No production calls.",
         "counts": {k: {"rows": counts[k], "aud": round(dollars[k], 2)} for k in sorted(counts)},
         "donors_gaining": len(gains),
         "top10_donor_gains": [{"before_aud": round(donor_before[node], 2), "after_aud": round(donor_after[node], 2),

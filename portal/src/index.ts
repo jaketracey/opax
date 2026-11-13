@@ -6,7 +6,7 @@ import {suppliersTableHTML} from '../public/suppliers-table.js'
 import {partyMoneyResponse} from './party-money-table'
 import {interestRegisterResponse} from './interest-register'
 import {loadDonorIndex} from './donor-index'
-import {donorDisclosure,donorLabelHTML,hasPartyReceipts,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
+import {donorDisclosure,donorLabelHTML,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
@@ -5652,11 +5652,14 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     // this measure: never "$0 across 0 receipts". Its record figures are its own donor
     // returns' declarations alone (no party listed any), said as that, as the map card says them.
     const reported = hasPartyReceipts(node as Parameters<typeof hasPartyReceipts>[0])
-    const declared = !reported && node.total > 0
+    // Public Funding only (NSW Efa): listed on the party's return as public funding, never a donor declaration (A35).
+    const funding = !reported && publicFundingOnly(node as Parameters<typeof publicFundingOnly>[0])
+    const declared = !reported && !funding && node.total > 0
       ? `its own donor return${node.count === 1 ? ' declares' : 's declare'} $${Math.round(node.total).toLocaleString('en-AU')} across ${num(node.count)} record${node.count === 1 ? '' : 's'}, ${span} (${node.sourceShort})`
       : ''
     const figure = reported ? `${money(own.total)} across ${num(own.count)} receipts, ${span} (${node.sourceShort})` : ''
     facts = reported ? `${display}: disclosed political ${what}, ${figure}.`
+      : funding ? `${display}: ${PUBLIC_FUNDING_ONLY}.`
       : `${display}: disclosed political ${what}. No party return lists a receipt from it${declared ? `; ${declared}` : ''}.`
     // An AEC associated entity says so with its figures, the same way for every party (export rule 9).
     const associated = donorDisclosure(node as DonorDisclosureRecord).associated
@@ -5665,7 +5668,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     card = {
       kicker: `Donor · ${industryLabel(node.industry)}`,
       title: display,
-      lines: [...(reported ? [figure] : ['No party return lists a receipt from it', ...(declared ? [`${declared.charAt(0).toUpperCase()}${declared.slice(1)}`] : [])]),
+      lines: [...(reported ? [figure] : funding ? [PUBLIC_FUNDING_ONLY] : ['No party return lists a receipt from it', ...(declared ? [`${declared.charAt(0).toUpperCase()}${declared.slice(1)}`] : [])]),
         ...(associated ? [`${associated.charAt(0).toUpperCase()}${associated.slice(1)}`] : [])],
     }
   } else {

@@ -126,7 +126,8 @@ def test_receipt_alias_fallback_counts_once_and_reports_ambiguous_rows(tmp_path)
     db.execute("UPDATE donations SET recipient_canonical='Labor'")
     lines = [("Alex Hart", 100), ("Alex (Morgan) Hart", 20), ("ALEX HART", 30), ("Alex,  Hart.", 40),
              ("Alex (Morgan Hart", 50), ("Jordan (Riley) Vale", 60), ("Jordan Vale", 70),
-             ("Jordan (Quinn) Vale", 80), ("JORDAN (QUINN) VALE", 10)]
+             ("Jordan (Quinn) Vale", 80), ("JORDAN (QUINN) VALE", 10),
+             ("Alex (see note page 18) Hart", 100)]
     load(db, "AllAnnualData", {"Detailed Receipts.csv": [
         annual(Value=str(amount), **{"Received From": name}) for name, amount in lines]})
     load(db, "AllElectionsData", {})
@@ -146,9 +147,11 @@ def test_receipt_alias_fallback_counts_once_and_reports_ambiguous_rows(tmp_path)
     counts = graph["meta"]["receipt_types"]["counts"]
     assert counts["exported_rows"] == 7
     assert counts["excluded_donor_or_edge_outside_map"] == 2
+    assert counts["excluded_flagged_review"] == 1
     matching = graph["meta"]["receipt_types"]["donor_matching"]
     assert matching["by_result"]["ambiguous"] == [1, 60]
     assert matching["by_result"]["unmatched"] == [1, 50]
+    assert matching["by_result"]["annotation_review"] == [1, 100]
     assert len(matching["exceptions"]) == 1
     assert matching["exceptions"][0]["candidate_nodes"] == 2
     result = audit(db, graph)
@@ -481,3 +484,54 @@ def test_the_pinned_associated_names_are_the_party_owned_entities_that_decide_a_
     for payer in ("Labor Resources Pty Ltd", "ALP Holdings", "Labor Services & Holdings Trust", "Labor Campaign Investment Pty Ltd",
                   "National Free Enterprise Foundation", "Pilliwinks as trustee for the National Party Foundation Trust"):
         assert entity_keys(payer)[1] in shorts, payer
+
+
+def test_public_funding_is_excluded_by_receipt_type_whatever_the_payer_is_called():
+    """A34/A35: Public Funding is never a donor, also under a spelling no name rule knows ("NSW Efa")."""
+    from scripts.aec_receipt_selection import ReceiptSelection
+    from scripts.export_interests import receipt_figures
+    selection = ReceiptSelection(aliases={}, exact={}, entity_kinds={}, recipient_party={"Example Party": "Example"}, flagged=set())
+    args = ("Zed Funding Body", "Example Party", 50000.0, "2010-11", "political_party")
+    # The name matches no public-funding or party pattern, so only the type can exclude it.
+    assert selection.exclusion(*args) is None
+    assert selection.exclusion(*args, receipt_type="Donation Received") is None
+    assert selection.exclusion(*args, receipt_type="Other Receipt") is None
+    assert selection.exclusion(*args, receipt_type="Public Funding") == "public_funding"
+    # The exporter's copy of the portal rule: a published Public Funding cell counts in no figure.
+    flow = {"by_type": {"donation_received": 100.0, "public_funding": 50000.0},
+            "by_type_year": {"2010-11": {"public_funding": [50000.0, 1]}, "2011-12": {"donation_received": [100.0, 1]}}}
+    assert receipt_figures(flow) == {"total": 100.0, "count": 1, "firstYear": 2011, "lastYear": 2011, "typed": True}
+    only = {"by_type": {"public_funding": 50000.0}, "by_type_year": {"2010-11": {"public_funding": [50000.0, 1]}}}
+    assert receipt_figures(only) == {"total": 0, "count": 0, "firstYear": None, "lastYear": None, "typed": True}
+
+
+def test_a_reexported_public_funding_payer_keeps_its_typed_cell_and_its_label(tmp_path):
+    """A35 review P2: the next export must not leave a Public Funding-only payer with an empty
+    by_type and its old total, which turned the portal's label back into "declared on its own
+    donor return". The cell stays typed public_funding; no figure counts it."""
+    from scripts.export_interests import receipt_figures
+    path = tmp_path / "db"
+    db = database(path)
+    entries = [annual(Value="5000"),
+               annual("Public Funding", Value="900000", **{"Received From": "Zed Funding Body", "Financial Year": "2010-2011"})]
+    donations.process_zip(db, archive("AllAnnualData", {"Detailed Receipts.csv": entries}), "AllAnnualData")
+    load(db, "AllElectionsData", {})
+    load(db, "AllReferendumData", {})
+    db.execute("UPDATE donations SET recipient_canonical='Labor',industry='finance'")
+    db.commit()
+    graph = export(path)
+    edge = next(e for e in graph["edges"] if e["source"] == "donor:zed funding body")
+    node = next(n for n in graph["nodes"] if n["id"] == "donor:zed funding body")
+    assert edge["by_type"] == {"public_funding": 900000} and node["by_type"] == {"public_funding": 900000}
+    assert edge["by_type_year"] == {"2010-11": {"public_funding": [900000, 1]}}
+    assert receipt_figures(edge)["total"] == 0
+    # The uncapped report still counts it nowhere.
+    assert report(db, tmp_path, graph)["full_party_receipts_exclusions"].get("public_funding") == 1
+    # The portal's own rule, on the re-exported records.
+    root = Path(__file__).resolve().parents[1] / "portal" / "public" / "donor-disclosure.js"
+    script = ("const m=await import(process.argv[1]);const [e,n]=JSON.parse(process.argv[2]);"
+              "console.log(JSON.stringify([m.publicFundingOnly(e),m.hasPartyReceipts(e),m.notListedLine(n)===m.PUBLIC_FUNDING_ONLY,"
+              "m.receiptGraph({meta:{},nodes:[n,{id:e.target,kind:'party',label:'Labor'}],edges:[e]}).edges.length]))")
+    out = subprocess.run(["node", "--input-type=module", "-e", script, root.as_uri(), json.dumps([edge, node])],
+                         capture_output=True, text=True, check=True)
+    assert json.loads(out.stdout) == [True, False, True, 0]

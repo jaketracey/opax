@@ -10,7 +10,7 @@ from pathlib import Path
 from parli.ingest.aec_receipts import FILES, normal_type, period_key
 from parli.ingest.money_aec_extras import canon_party
 from scripts.aec_receipt_selection import load_selection
-from scripts.receipt_donor_match import ReceiptDonorMatcher, bracketless_name
+from scripts.receipt_donor_match import ReceiptDonorMatcher, bracketless_name, has_receipt_annotation
 from scripts.export_money_graph import PUBLIC_FUNDING_RE, load_associated_register, norm_key
 
 PARTY_RETURN_NOTE = (
@@ -76,13 +76,18 @@ def attach_receipt_types(db, graph):
     for donor, recipient, amount, period, kind, recipient_kind in db.execute(
         "SELECT donor_name,recipient,amount,financial_year,receipt_type,recipient_kind FROM aec_receipt_records WHERE record_side='recipient'"):
         counts["recipient_rows"] += 1
+        # No receipt_type: a Public Funding row stays as its own typed cell, so a payer whose only
+        # receipt is Public Funding keeps that label instead of an empty by_type and a stale legacy total.
         reason = selection.exclusion(donor, recipient, amount, period, recipient_kind)
         if reason:
             counts["excluded_" + reason] += 1
+            if reason == "flagged_review" and has_receipt_annotation(donor):
+                matching["annotation_review"][0] += 1
+                matching["annotation_review"][1] += amount
             continue
         match = matcher.match(donor)
         source = match.node_id
-        bucket = "matched_" + match.method if source else "ambiguous" if match.candidates else "unmatched"
+        bucket = "matched_" + match.method if source else "ambiguous" if match.candidates else match.method
         matching[bucket][0] += 1
         matching[bucket][1] += amount
         if not source and match.candidates:
@@ -118,12 +123,12 @@ def attach_receipt_types(db, graph):
         "fields": "by_type contains AUD amounts; by_type_year maps financial year (short form) or election/referendum event to type: [AUD, row count]. Node cells sum visible receipt edges only, unlike legacy party node totals.",
         "normalisation": "AEC labels lowercased, punctuation/whitespace replaced with underscores. Donation Received = donation_received. Blank = unknown. Unspecified remains unspecified. No inference of loans from Other Receipt.",
         "scope": "Political Party Return recipients with an exact unambiguous existing party mapping, and donor-party edges on this map. Other recipient kinds remain in aec_receipt_records. This is a capped donor map, not all AEC receipts.",
-        "selection": "aec_receipt_selection.ReceiptSelection.exclusion is shared with the uncapped report: recipient-side positive itemised party receipts, exact recipient mapping, no reviewed outliers, government/party-unit entities or public-funding/party-name donor spellings. Map edge membership is the additional cap.",
+        "selection": "aec_receipt_selection.ReceiptSelection.exclusion is shared with the uncapped report: recipient-side positive itemised party receipts, exact recipient mapping, no reviewed outliers, government/party-unit entities or public-funding/party-name donor spellings. Map edge membership is the additional cap. A Public Funding receipt under any other spelling stays as its own public_funding cell, which no portal figure counts; the uncapped report leaves it out.",
         "donation_type": "donation_received",
         "counts": dict(counts),
         "donor_matching": {
-            "rule": "Existing entity or raw spelling first, then case/punctuation/spacing, then complete bracketed parts removed. Each fallback must identify exactly one existing node; node identities and map edges are never merged or created.",
-            "scope": "Eligible recipient-side rows before the map edge cap; [rows, AUD]. Ambiguous rows remain unmatched.",
+            "rule": "Annotation-style brackets route to flagged_review. Otherwise existing entity or raw spelling first, then case/punctuation/spacing, then complete bracketed parts removed. State brackets must agree with an alias's state brackets. Each fallback must identify exactly one existing node; state filtering never breaks a node tie. Node identities and map edges are never merged or created.",
+            "scope": "Eligible recipient-side rows before the map edge cap, plus annotation_review exclusions; [rows, AUD]. Ambiguous and state-mismatched rows remain unmatched.",
             "by_result": {k: [v[0], round(v[1], 2)] for k, v in sorted(matching.items())},
             "exceptions": [{**v, "aud": round(v["aud"], 2)} for k, v in sorted(exceptions.items())],
         },

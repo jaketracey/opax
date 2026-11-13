@@ -1,48 +1,64 @@
 {
-  "scope": "Eligible recipient-side receipts, existing federal map nodes and edges. Before: entity/raw spelling. After: unique normalised/bracketless fallback. No production calls.",
+  "scope": "Eligible recipient-side receipts, existing federal map nodes and edges. Before: entity/raw spelling. After: unique normalised/bracketless fallback with annotation review and state compatibility. Exported figures exclude Public Funding as in #355; exported_cells retains every typed cell for exporter coverage. No production calls.",
   "counts": {
     "after_exported": {
-      "rows": 16212,
-      "aud": 712055675.0
+      "rows": 16209,
+      "aud": 710857091.0
+    },
+    "after_exported_cells": {
+      "rows": 16210,
+      "aud": 711926864.0
     },
     "after_unmatched_brackets": {
       "rows": 6,
       "aud": 23050.0
     },
     "after_unmatched_node": {
-      "rows": 38917,
-      "aud": 507878484.0
+      "rows": 38913,
+      "aud": 507747630.0
     },
     "ambiguous": {
       "rows": 6,
       "aud": 23050.0
     },
+    "annotation_review": {
+      "rows": 1,
+      "aud": 190322.0
+    },
     "before_exported": {
       "rows": 16063,
-      "aud": 709625419.0
+      "aud": 708654117.0
+    },
+    "before_exported_cells": {
+      "rows": 16064,
+      "aud": 709723890.0
     },
     "before_spelling_candidates": {
-      "rows": 155,
-      "aud": 2453306.0
+      "rows": 152,
+      "aud": 2226024.0
     },
     "before_unmatched_node": {
-      "rows": 39066,
-      "aud": 510308740.0
+      "rows": 39059,
+      "aud": 509950604.0
     },
     "eligible": {
-      "rows": 55129,
-      "aud": 1219934159.0
+      "rows": 55123,
+      "aud": 1219674494.0
     },
     "newly_exported": {
-      "rows": 149,
-      "aud": 2430256.0
+      "rows": 146,
+      "aud": 2202974.0
     },
     "newly_matched_node": {
-      "rows": 149,
-      "aud": 2430256.0
+      "rows": 146,
+      "aud": 2202974.0
+    },
+    "state_mismatch": {
+      "rows": 2,
+      "aud": 36960.0
     }
   },
-  "donors_gaining": 32,
+  "donors_gaining": 30,
   "top10_donor_gains": [
     {
       "before_aud": 33749112.0,
@@ -71,13 +87,6 @@
       "gain_aud": 203033.0,
       "before_rows": 578,
       "after_rows": 587
-    },
-    {
-      "before_aud": 740646.0,
-      "after_aud": 930968.0,
-      "gain_aud": 190322.0,
-      "before_rows": 8,
-      "after_rows": 9
     },
     {
       "before_aud": 4144973.0,
@@ -113,15 +122,22 @@
       "gain_aud": 75000.0,
       "before_rows": 10,
       "after_rows": 11
+    },
+    {
+      "before_aud": 4509342.0,
+      "after_aud": 4577129.0,
+      "gain_aud": 67787.0,
+      "before_rows": 275,
+      "after_rows": 279
     }
   ],
   "party_changes": [
     {
       "party": "Greens",
-      "before_aud": 14156436.0,
-      "after_aud": 14225436.0,
+      "before_aud": 13086663.0,
+      "after_aud": 13155663.0,
       "gain_aud": 69000.0,
-      "percent": 0.487411
+      "percent": 0.527254
     },
     {
       "party": "Katter's Australian Party",
@@ -139,17 +155,17 @@
     },
     {
       "party": "Labor",
-      "before_aud": 360022497.0,
-      "after_aud": 362022681.0,
-      "gain_aud": 2000184.0,
-      "percent": 0.555572
+      "before_aud": 360120968.0,
+      "after_aud": 362084192.0,
+      "gain_aud": 1963224.0,
+      "percent": 0.545157
     },
     {
       "party": "Liberal",
       "before_aud": 201756942.0,
-      "after_aud": 201995264.0,
-      "gain_aud": 238322.0,
-      "percent": 0.118123
+      "after_aud": 201804942.0,
+      "gain_aud": 48000.0,
+      "percent": 0.023791
     },
     {
       "party": "Nationals",

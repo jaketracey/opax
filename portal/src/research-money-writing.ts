@@ -5,7 +5,9 @@ import { mergeRegisterItems } from './tools/interests'
 const key = (text: string) => text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
 const named = (question: string, name: string) => (' ' + key(question) + ' ').includes(' ' + key(name) + ' ')
 const dollars = (amount: number) => '$' + amount.toLocaleString('en-AU')
-const donorTotal = (f: WritingFact) => /^(.+?): (\$[\d,.]+) in federal disclosed receipts to (.+?) across ([\d,]+) receipts? in financial years (.+?) \(/.exec(f.text)
+const donorTotal = (f: WritingFact) => /^(.+?): (\$[\d,.]+) in federal disclosed (?:receipts|donations) to (.+?) across ([\d,]+) (?:receipts?|donations?) in financial years (.+?) \(/.exec(f.text)
+// money_totals says which measure a donor figure counts: donations (AEC Donation Received) or all receipt types.
+const measureWord = (f: WritingFact) => /^.+?: \$[\d,.]+ in federal disclosed donations to /.test(f.text) ? 'donations' : 'receipts'
 const donorName = (f: WritingFact) => f.source.receipt?.source ?? donorTotal(f)?.[1]
 
 /** Answer the requested field of a selected receipt aggregate, never the previous turn's metric. */
@@ -27,10 +29,10 @@ export function receiptWritingLines(input: WritingInput, available = input.facts
     const basis = input.facts.find(f => /Donor aggregates and flows exclude internal party transfers and public funding\./.test(f.text))
     if (!basis) return null
     const { f, m } = selected[0]
-    return [line(`No, internal party transfers and public funding are excluded from the ${m[2]} in federal disclosed receipts from ${m[1]}.`, [f.id, basis.id])]
+    return [line(`No, internal party transfers and public funding are excluded from the ${m[2]} in federal disclosed ${measureWord(f)} from ${m[1]}.`, [f.id, basis.id])]
   }
   if (/\b(?:how many|number of|count of)\b/i.test(input.question) && /\breceipts?\b/i.test(input.question)) {
-    return selected.map(({ f, m }) => line(`${m[4]} disclosed receipt${m[4] === '1' ? '' : 's'} from ${m[1]} ${m[4] === '1' ? 'was' : 'were'} recorded to ${m[3]} in financial years ${m[5]}.`, [f.id]))
+    return selected.map(({ f, m }) => line(`${m[4]} disclosed ${measureWord(f) === 'donations' ? 'donation' : 'receipt'}${m[4] === '1' ? '' : 's'} from ${m[1]} ${m[4] === '1' ? 'was' : 'were'} recorded to ${m[3]} in financial years ${m[5]}.`, [f.id]))
   }
   if (/\b(?:what|which) financial years?\b|\b(?:years?|period)\b.*\bcover\w*\b/i.test(input.question)) {
     if (selected.length === 1) { const { f, m } = selected[0]; return [line(`The ${m[1]} receipt total covers financial years ${m[5]}.`, [f.id])] }
@@ -38,15 +40,16 @@ export function receiptWritingLines(input: WritingInput, available = input.facts
     return [line(`The ${selected[0].m[1]} receipts are recorded in financial years ${years.slice(0, -1).join(', ')} and ${years.at(-1)}.`, selected.map(({ f }) => f.id))]
   }
   if (/\b(?:how much|total|donat\w*|gave)\b/i.test(input.question) && !/\b(?:who|which|what parties|whether)\b/i.test(input.question)) {
-    return selected.map(({ f, m }) => line(`${m[1]} provided ${m[2]} in federal disclosed receipts to ${m[3]} in financial years ${m[5]}.`, [f.id]))
+    return selected.map(({ f, m }) => line(measureWord(f) === 'donations' ? `${m[1]} gave ${m[2]} in federal disclosed donations to ${m[3]} in financial years ${m[5]}.`
+      : `${m[1]} provided ${m[2]} in federal disclosed receipts to ${m[3]} in financial years ${m[5]}.`, [f.id]))
   }
   return null
 }
 
 /** Label both ends of an explicit award relation for the independent claim reader. */
 export function moneyEvidenceRows(text: string, url = ''): string[] {
-  const industry = /^(.+?) (?:led the classified industry ranking|recorded the next ranked industry total), with (\$[\d,.]+) in federal disclosed receipts.*? in (financial years? .+?) \((1 July \d{4} to 30 June \d{4})\), across ([\d,]+) receipts? in the published donor selection\.$/.exec(text)
-  if (industry) return [`${industry[1]}: ${industry[2]} in federal disclosed receipts across ${industry[5]} receipts in ${industry[3]} (${industry[4]}).`]
+  const industry = /^(.+?) (?:led the classified industry ranking|recorded the next ranked industry total), with (\$[\d,.]+) in federal disclosed (receipts|donations).*? in (financial years? .+?) \((1 July \d{4} to 30 June \d{4})\), across ([\d,]+) receipts? in the published donor selection\.$/.exec(text)
+  if (industry) return [`${industry[1]}: ${industry[2]} in federal disclosed ${industry[3]} across ${industry[6]} receipts in ${industry[4]} (${industry[5]}).`]
   const total = /^(.+?) received (\$[\d,.]+) in published (Queensland Government grant and assistance expenditure|federal grant award values), (.+?) \(([\d,]+) (?:expenditure rows?|award records?);/.exec(text)
   if (total) return [`${total[1]}: ${total[2]} in ${total[3]} across ${total[5]} records in ${total[4].replace(/^all published years, /, '')}.`]
   const profile = /^Grant: (.+?) [—–] (\$[\d,.]+ across [\d,]+ grant records)\./.exec(text)
@@ -109,7 +112,7 @@ export function moneyWritingLines(input: WritingInput, available: WritingFact[])
   }
   if (partyTotals.length === 1 && /\b(?:how much|total|money|receipts)\b/i.test(input.question) && !/\b(?:each year|by year|trend|over time|most|top|largest|biggest)\b/i.test(input.question)) {
     const { f, m } = partyTotals[0]
-    const sources = facts.filter(f => f.source.receipt && !f.source.receipt.aggregate && key(f.source.receipt.party) === key(m[1]))
+    const sources = facts.filter(f => f.source.receipt && !f.source.receipt.aggregate && !f.source.receipt.aside && key(f.source.receipt.party) === key(m[1]))
       .sort((a, b) => b.source.receipt!.amount - a.source.receipt!.amount).slice(0, 3)
     return [line(`${m[1]} received ${m[2]} in federal disclosed receipts across ${m[3]} receipts in financial year ${m[4]}.`, f),
       ...sources.map(f => line(`- ${f.source.receipt!.source} provided ${dollars(f.source.receipt!.amount)} in disclosed receipts.`, f))]

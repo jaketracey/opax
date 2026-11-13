@@ -67,3 +67,33 @@ def test_unbracketed_tokens_malformed_brackets_and_near_names_are_not_dropped(na
 def test_empty_stripped_key_never_matches():
     assert bracketless_name("(Morgan)") == ""
     assert matcher([("alex", "(Morgan)")]).match("[Riley]").node_id is None
+
+
+@pytest.mark.parametrize("annotation", ["please see annotation note page 18", "SEE return", "NOTE 2", "Page 18", "ANNOTATION"])
+def test_annotated_restatement_routes_to_review_without_matching(annotation):
+    name = f"Example Manufacturing ({annotation}) Ltd"
+    lookup = matcher([("company", "Example Manufacturing Ltd")])
+    assert lookup.match(name).node_id is None
+    assert lookup.match(name).method == "annotation_review"
+    selection = ReceiptSelection({}, {}, {}, {"Example Party": "Labor"}, set())
+    assert selection.exclusion(name, "Example Party", 250, "2021-22", "political_party") == "flagged_review"
+
+
+def test_legitimate_bracketed_branch_still_matches():
+    lookup = matcher([("union", "Example Workers Union (QLD)")])
+    assert lookup.match("Example Workers (Construction Division) Union (qld)").node_id == "union"
+
+
+def test_state_brackets_cannot_match_a_different_state_alias():
+    lookup = matcher([("company", "Example Developments (QLD) Pty Ltd")])
+    result = lookup.match("Example Developments (NSW) Pty Ltd")
+    assert result.node_id is None
+    assert result.method == "state_mismatch"
+    assert lookup.match("Example Developments (Residential) (QLD) Pty Ltd").node_id == "company"
+
+
+def test_state_filtering_does_not_choose_between_existing_nodes():
+    lookup = matcher([("generic", "Example Audit"), ("state", "Example Audit (NSW)")])
+    result = lookup.match("Example Audit (VIC)")
+    assert result.node_id is None
+    assert result.candidates == {"generic", "state"}

@@ -40,8 +40,22 @@ def normal_name(name):
 
 def bracketless_name(name):
     name = decoded_name(name)
+    if annotation_name(name):
+        return ''
     stripped = re.sub(r'\([^()\[\]]*\)|\[[^()\[\]]*\]', ' ', name)
     return normal_name(name if re.search(r'[()\[\]]', stripped) else stripped)
+
+
+def annotation_name(name):
+    return any(re.search(r'\b(?:see|notes?|pages?|annotations?)\b', a or b, re.I)
+               for a, b in re.findall(r'\(([^()\[\]]*)\)|\[([^()\[\]]*)\]', decoded_name(name)))
+
+
+def state_brackets(name):
+    parts = [normal_name(a or b) for a, b in re.findall(r'\(([^()\[\]]*)\)|\[([^()\[\]]*)\]', decoded_name(name))]
+    return tuple(p for p in parts if re.search(
+        r'\b(?:nsw|qld|vic|wa|sa|tas|act|nt|q|new south wales|queensland|victoria|'
+        r'western australia|south australia|tasmania|australian capital territory|northern territory)\b', p))
 
 
 def year_key(value):
@@ -76,6 +90,7 @@ def audit(db, archive, graph, comparison, legacy=None):
     recipients = {name: next(iter(parties)) for name, parties in recipients.items() if len(parties) == 1}
     tags = {eid: 'unions' if kinds.get(eid) == 'union' else max(values, key=values.get) for eid, values in industries.items()}
     node_for_name, node_for_entity, normalised, bracketless = (defaultdict(set) for _ in range(4))
+    states_for_name = defaultdict(lambda: defaultdict(set))
     nodes = {n['id']: n for n in graph['nodes']}
     for node in nodes.values():
         if node['kind'] == 'donor':
@@ -87,6 +102,7 @@ def audit(db, archive, graph, comparison, legacy=None):
                     normalised[normal_name(name)].add(node['id'])
                 if bracketless_name(name):
                     bracketless[bracketless_name(name)].add(node['id'])
+                    states_for_name[bracketless_name(name)][node['id']].add(state_brackets(name))
     edges = {(e['source'], e['target']): e for e in graph['edges'] if nodes[e['source']]['kind'] == 'donor' and nodes[e['target']]['kind'] == 'party'}
     # Separate from production regex constants, to detect selection drift.
     government = re.compile(r'electoral comm?iss?ions?|election funding|electoral funding|electoral office|tax(ation)?\s+(office|authority)|\bato\b|\baec\b|\becq\b|department of|australian agency|commonwealth of australia|electoral comm\b', re.I)
@@ -106,20 +122,24 @@ def audit(db, archive, graph, comparison, legacy=None):
             eid = entity(donor)
             if not donor or recipient not in recipients or amount <= 0:
                 continue
-            if (donor, recipient, amount, period) in flagged:
+            if annotation_name(donor) or (donor, recipient, amount, period) in flagged:
                 continue
             if kinds.get(eid) in ('government', 'party_unit') or government.search(donor) or internal.search(donor):
                 continue
             party = recipients[recipient]
             typ = re.sub(r'[^a-z0-9]+', '_', row['Receipt Type'].strip().lower()).strip('_') or 'unknown'
-            for measure in ['all_types', *(['donation_only'] if typ == 'donation_received' else [])]:
+            for measure in ([] if typ == 'public_funding' else ['all_types', *(['donation_only'] if typ == 'donation_received' else [])]):
                 measured[('uncapped', tags.get(eid or donor), measure)][party] += amount
             source = None
-            for candidates in (node_for_entity.get(eid), node_for_name.get(donor),
-                               normalised.get(normal_name(donor)), bracketless.get(bracketless_name(donor))):
+            for tier, candidates in enumerate((node_for_entity.get(eid), node_for_name.get(donor),
+                                               normalised.get(normal_name(donor)), bracketless.get(bracketless_name(donor)))):
                 if candidates:
                     if len(candidates) == 1:
                         source = next(iter(candidates))
+                        states = state_brackets(donor)
+                        if tier == 3 and states and not any(not other or states == other
+                                for other in states_for_name[bracketless_name(donor)][source]):
+                            source = None
                     break
             key = (source, 'party:' + party)
             if key not in edges:
@@ -127,7 +147,7 @@ def audit(db, archive, graph, comparison, legacy=None):
             cell = cells[key][period][typ]
             cell[0] += amount; cell[1] += 1
             exported_rows += 1
-            for measure in ['all_types', *(['donation_only'] if typ == 'donation_received' else [])]:
+            for measure in ([] if typ == 'public_funding' else ['all_types', *(['donation_only'] if typ == 'donation_received' else [])]):
                 measured[('map', nodes[source].get('industry'), measure)][party] += amount
     for key, edge in edges.items():
         by_type = Counter()
@@ -163,6 +183,7 @@ def audit(db, archive, graph, comparison, legacy=None):
         assert original == current, 'Legacy graph fields changed'
     return {'method': 'Independent stdlib CSV/ZIP/Decimal calculation; no production receipt modules imported',
             'archive_sha256': hashlib.sha256(archive.read_bytes()).hexdigest(), 'receipt_edges_checked': len(edges),
+            'detailed_receipts_csv_sha256': hashlib.sha256(raw).hexdigest(),
             'exported_rows': exported_rows, 'legacy_fields_unchanged': bool(legacy), 'industries': result}
 
 

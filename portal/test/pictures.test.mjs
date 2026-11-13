@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 const here = dirname(fileURLToPath(import.meta.url));
 const publicDir = join(here, "..", "public");
 const manifestPath = join(publicDir, "years", "pictures.json");
+const bareAddressCredit = /^\s*https?:\/\/\S+(?:\s+https?:\/\/\S+)*\s*$/i;
 const allowedLicence = /^(?:Public domain|CC0(?: 1\.0)?|CC BY(?:-SA)? (?:2\.0|2\.5|3\.0|4\.0)(?: [A-Z]{2,3})?)$/i;
 
 assert.ok(existsSync(manifestPath), "years/pictures.json exists");
@@ -73,6 +74,17 @@ for (let year = 1998; year <= 2026; year++) {
     }
     assert.ok(String(picture.author || "").trim(), label + " credits an author");
     assert.ok(Object.hasOwn(picture, "credit"), label + " records the Commons Credit field or null");
+    // A credit names a person or archive; an address alone moves to credit_url
+    // (scripts/year_pictures_credits.py, BACKLOG A49).
+    assert.doesNotMatch(String(picture.credit ?? ""), bareAddressCredit, label + " credit names a person or archive, not a bare address");
+    if (Object.hasOwn(picture, "credit_url")) {
+      assert.match(String(picture.credit_url), /^https?:\/\/[^\s]+$/, label + " credit_url is a single address");
+      assert.doesNotMatch(String(picture.credit_url), /&amp;/, label + " credit_url has its entities decoded");
+      assert.ok(String(picture.credit || "").trim(), label + " keeps a named credit beside its link");
+    }
+    if (/^CC BY/i.test(String(picture.licence || ""))) {
+      assert.ok(String(picture.licence_url || "").startsWith("https://"), label + " links the licence its attribution requires");
+    }
     assert.match(String(picture.licence || ""), allowedLicence, label + " has an allowed licence");
     assert.ok(Object.hasOwn(picture, "licence_url"), label + " records the Commons licence URL or null");
     if (picture.licence_url != null) {

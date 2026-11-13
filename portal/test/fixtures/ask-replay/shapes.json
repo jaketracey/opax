@@ -98,6 +98,7 @@
     "since": "string",
     "until": "string"
    },
+   "receiptMeasure": "string",
    "stateGovernment": "boolean",
    "superlative": "string",
    "trend": "boolean"
@@ -133,9 +134,7 @@
       "evidenceId": "string",
       "metric": "string",
       "period": {
-       "label": "string",
-       "since": "string",
-       "until": "string"
+       "label": "string"
       },
       "unit": "string",
       "value": "string"
@@ -707,6 +706,106 @@
       "value": "string"
      }
     ],
+    "href": "string",
+    "kind": "string",
+    "resource": "string",
+    "slug": "string",
+    "snippet": "string",
+    "title": "string",
+    "url": "string"
+   }
+  ]
+ },
+ "spoken-finding": {
+  "agentic": {
+   "steps": "array"
+  },
+  "answer": "string",
+  "answer_decision": "string",
+  "answer_scope": {
+   "actUnfiltered": "boolean",
+   "dated": "boolean",
+   "people": [],
+   "period": {
+    "kind": "string",
+    "label": "string"
+   },
+   "stateGovernment": "boolean",
+   "trend": "boolean"
+  },
+  "answer_status": "string",
+  "answered": "boolean",
+  "citations": {
+   "<passage id>": [
+    [
+     "number"
+    ]
+   ]
+  },
+  "followups": [],
+  "research": {
+   "answer_stats": "object",
+   "claim_audit": "object",
+   "mode": "string",
+   "rounds": "number",
+   "sources": "array",
+   "trail": "array"
+  },
+  "sources": [
+   {
+    "chamber": "string",
+    "cited": "boolean",
+    "date": "string",
+    "href": "string",
+    "kind": "string",
+    "resource": "string",
+    "slug": "string",
+    "snippet": "string",
+    "speaker": "string",
+    "title": "string",
+    "url": "string"
+   }
+  ]
+ },
+ "robodebt-report-cited": {
+  "agentic": {
+   "steps": "array"
+  },
+  "answer": "string",
+  "answer_decision": "string",
+  "answer_scope": {
+   "actUnfiltered": "boolean",
+   "dated": "boolean",
+   "people": [],
+   "period": {
+    "kind": "string",
+    "label": "string"
+   },
+   "stateGovernment": "boolean",
+   "trend": "boolean"
+  },
+  "answered": "boolean",
+  "citations": {
+   "<passage id>": [
+    [
+     "number"
+    ]
+   ]
+  },
+  "followups": [],
+  "research": {
+   "answer_stats": "object",
+   "claim_audit": "object",
+   "mode": "string",
+   "pre_writer_sources": "array",
+   "rounds": "number",
+   "sources": "array",
+   "trail": "array"
+  },
+  "sources": [
+   {
+    "cited": "boolean",
+    "claim_atoms": [],
     "href": "string",
     "kind": "string",
     "resource": "string",

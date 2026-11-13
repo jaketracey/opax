@@ -4,9 +4,9 @@
   "source_sha256": "f81191a4c642df4d99e8217d69558e1c79c128a48ecedeac71e72c7185aa4864",
   "source_revision": "6243c86f2a441b12b1862196ddff027723a5e935",
   "source_generated": "2026-11-11",
-  "donation_layer_sha256": "b3790b577b999b9e7cd926379038f36099882fdeed3db6011bb685bf56a5ee23",
-  "guard": "donation layer of the money graph (test/money-guard.mjs): donor and party nodes without their contracts, grants and publicMoney totals, donor-to-party flows, and the meta rows describing them; the weekly public-money overlay is outside it. Re-pinned 2026-11-11 against the 2026-11-11 export: the AEC-only receipt rule (d786784a2) and the AEC associated-entity flag (export rule 9) changed the donation layer; each changed turn is reviewed in the PR. Re-pinned 2026-11-12 for additive recipient-side receipt types. Every pre-existing graph field and gold answer is unchanged; source_revision identifies that legacy data baseline. Receipt-types fix round 1 shares per-name exclusions with the uncapped report, removing six internal-party alias rows from typed cells only. Legacy gold rows remain unchanged. Re-pinned 2026-11-13 for the additive party-return cells (party return_by_type and return_by_type_year, meta.receipt_types.party_return_*): without them the layer hashes to the previous pin, party_receipts reads none of them, and every gold turn is unchanged. Typed-measure sweep 2026-11-13 (im/money-typed-sweep, 1ca526551): party_receipts reads each flow through its typed cells, so the gold rows now give what the parties' own returns list, each receipt once; donor-declared lines are no longer added and equal rows on a party return are kept as disclosed. That moves 14 gold turns; it does not change the donation layer or its fingerprint. Donor spelling recovery 2026-11-13: unique normalised/bracketless receipt matches change typed cells, with no node identities or legacy fields changed. Reviewed numeric gold updates and independent CSV reconciliation are in docs/reports/2026-11-13-donor-receipt-aliases.md; no fixture names or membership change.",
-  "gold_method": "partyDonations tool, exact published selection, federal disclosed receipts; no inference of gifts or influence",
+  "donation_layer_sha256": "1cb773519dee14865b5bb3ea107eebd008299f72518a8afbbbc6d4eba711952f",
+  "guard": "donation layer of the money graph (test/money-guard.mjs): donor and party nodes without their contracts, grants and publicMoney totals, donor-to-party flows, and the meta rows describing them; the weekly public-money overlay is outside it. Re-pinned 2026-11-11 against the 2026-11-11 export: the AEC-only receipt rule (d786784a2) and the AEC associated-entity flag (export rule 9) changed the donation layer; each changed turn is reviewed in the PR. Re-pinned 2026-11-12 for additive recipient-side receipt types. Every pre-existing graph field and gold answer is unchanged; source_revision identifies that legacy data baseline. Receipt-types fix round 1 shares per-name exclusions with the uncapped report, removing six internal-party alias rows from typed cells only. Legacy gold rows remain unchanged. Re-pinned 2026-11-13 for the additive party-return cells (party return_by_type and return_by_type_year, meta.receipt_types.party_return_*): without them the layer hashes to the previous pin, party_receipts reads none of them, and every gold turn is unchanged. Typed-measure sweep 2026-11-13 (im/money-typed-sweep, 1ca526551): party_receipts reads each flow through its typed cells, so the gold rows now give what the parties' own returns list, each receipt once; donor-declared lines are no longer added and equal rows on a party return are kept as disclosed. That moves 14 gold turns; it does not change the donation layer or its fingerprint. Donation ranking 2026-11-13 (im/money-donation-rank, BACKLOG A34 and A35): every gold question asks who gives, gave or donates, so each turn now runs party_receipts with measure=donations and ranks AEC Donation Received only. The sources the old all-types gold ranked are kept as labelled other-receipt lines (other_receipts) and Public Funding as public_funding, never a donor row. Each changed turn says why in gold_change, from the typed AEC cells. The donation layer and its fingerprint are unchanged. Donor spelling recovery 2026-11-13: unique normalised/bracketless receipt matches change typed cells, with no node identities or legacy fields changed. Reviewed numeric gold updates and independent CSV reconciliation are in docs/reports/2026-11-13-donor-receipt-aliases.md; no fixture names or membership change.",
+  "gold_method": "partyDonations tool, measure=donations (AEC Donation Received), exact published selection, federal disclosed receipts; other receipt types as labelled lines; no inference of gifts, loans or influence",
   "conversations": [
     {
       "id": "FOLLOW-D01",
@@ -20,17 +20,31 @@
           "decision": "answer",
           "rows": [
             {
-              "donor": "Westpac Banking Corporation",
-              "href": "/subject/donor/Westpac%20Banking%20Corporation",
-              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
-              "industry": "finance",
-              "total_aud": 204604,
-              "receipts": 4
+              "donor": "Sporting Shooters Association of Australia (Queensland) Inc",
+              "href": "/subject/donor/Sporting%20Shooters%20Association%20of%20Australia",
+              "return_reference": "AEC annual return · 1998-99 · https://transparency.aec.gov.au/",
+              "industry": "security",
+              "total_aud": 43057,
+              "receipts": 1
             }
           ],
           "tool_query": {
-            "party": "One Nation"
-          }
+            "party": "One Nation",
+            "measure": "donations"
+          },
+          "gold_change": "A34/A35, 13 Nov 2026: \"gives/donates/donors\" ranks AEC Donation Received only and Public Funding is never a donor. Westpac Banking Corporation $204,604 over 4 was Other Receipt $204,604 (4 rows, 2022-23 to 2024-25). New leader: Sporting Shooters Association of Australia (Queensland) Inc $43,057 over 1 Donation Received.",
+          "other_receipts": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "other_receipts_aud": 204604,
+              "subscriptions_aud": 0,
+              "untyped_aud": 0,
+              "receipts": 4,
+              "in_ranking": false,
+              "line": "Westpac Banking Corporation recorded $204,604 in other receipts (amounts other than donations or subscriptions) to One Nation in financial years 2022-23 to 2024-25."
+            }
+          ]
         },
         {
           "question": "what about Labor?",
@@ -41,19 +55,34 @@
           "decision": "answer",
           "rows": [
             {
-              "donor": "Westpac Banking Corporation",
-              "href": "/subject/donor/Westpac%20Banking%20Corporation",
-              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
-              "industry": "finance",
-              "total_aud": 47331887,
-              "receipts": 201
+              "donor": "Shop Distributive & Allied Employees Association",
+              "associated_entity": "associated entity of Labor, per AEC register (returns 2009-10 to 2024-25; 8 party entries)",
+              "href": "/subject/donor/Shop%2C%20Distributive%20and%20Allied%20Employees%20Association",
+              "return_reference": "AEC annual return · 2014-15 · https://transparency.aec.gov.au/",
+              "industry": "unions",
+              "total_aud": 11808585,
+              "receipts": 144
             }
           ],
           "tool_query": {
-            "party": "Labor"
+            "party": "Labor",
+            "measure": "donations"
           },
           "context_not": [
             "One Nation"
+          ],
+          "gold_change": "A34/A35, 13 Nov 2026: \"gives/donates/donors\" ranks AEC Donation Received only and Public Funding is never a donor. Westpac Banking Corporation $47,331,887 over 201 was Donation Received $875,018 (35 rows, 1998-99 to 2024-25); Other Receipt $46,358,124 (156 rows, 1998-99 to 2024-25); Unspecified $47,045 (7 rows, 1999-00 to 2002-03); Subscription $51,700 (3 rows, 2006-07 to 2014-15). New leader: Shop Distributive & Allied Employees Association $11,793,085 over 140 Donation Received.",
+          "other_receipts": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "other_receipts_aud": 46358124,
+              "subscriptions_aud": 51700,
+              "untyped_aud": 47045,
+              "receipts": 166,
+              "in_ranking": false,
+              "line": "Westpac Banking Corporation recorded $46,358,124 in other receipts (amounts other than donations or subscriptions), $51,700 in subscriptions and $47,045 in receipts the return gave no type for to Labor in financial years 1998-99 to 2024-25, which the AEC doesn't class as donations."
+            }
           ]
         },
         {
@@ -66,21 +95,36 @@
           "decision": "answer",
           "rows": [
             {
-              "donor": "Westpac Banking Corporation",
-              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "donor": "Shop Distributive & Allied Employees Association",
+              "associated_entity": "associated entity of Labor, per AEC register (returns 2009-10 to 2024-25; 8 party entries)",
+              "href": "/subject/donor/Shop%2C%20Distributive%20and%20Allied%20Employees%20Association",
               "return_reference": "AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
-              "industry": "finance",
-              "total_aud": 1177000,
-              "receipts": 6
+              "industry": "unions",
+              "total_aud": 403761,
+              "receipts": 5
             }
           ],
           "tool_query": {
             "party": "Labor",
             "from_year": 2019,
-            "to_year": 2019
+            "to_year": 2019,
+            "measure": "donations"
           },
           "context_not": [
             "One Nation"
+          ],
+          "gold_change": "A34/A35, 13 Nov 2026: \"gives/donates/donors\" ranks AEC Donation Received only and Public Funding is never a donor. Westpac Banking Corporation $1,177,000 over 6 was Other Receipt $1,177,000 (6 rows, 2019-20). New leader: Shop Distributive & Allied Employees Association $403,761 over 5 Donation Received.",
+          "other_receipts": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "other_receipts_aud": 1177000,
+              "subscriptions_aud": 0,
+              "untyped_aud": 0,
+              "receipts": 6,
+              "in_ranking": false,
+              "line": "Westpac Banking Corporation recorded $1,177,000 in other receipts (amounts other than donations or subscriptions) to Labor in financial year 2019-20."
+            }
           ]
         }
       ]
@@ -106,7 +150,8 @@
             }
           ],
           "tool_query": {
-            "party": "Greens"
+            "party": "Greens",
+            "measure": "donations"
           }
         },
         {
@@ -118,7 +163,8 @@
           "decision": "answer",
           "rows": [],
           "tool_query": {
-            "party": "Greens"
+            "party": "Greens",
+            "measure": "donations"
           },
           "novel_from_previous": true,
           "eligible_rows": [
@@ -139,36 +185,28 @@
               "receipts": 8
             },
             {
-              "donor": "Ruth Greble",
-              "href": "/subject/donor/Ruth%20Greble",
-              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
-              "industry": "individual",
-              "total_aud": 1680880,
-              "receipts": 47
-            },
-            {
               "donor": "Electrical Trades Union",
               "href": "/subject/donor/Electrical%20Trades%20Union%20of%20Australia",
               "return_reference": "AEC annual return · 2015-16 · https://transparency.aec.gov.au/",
               "industry": "unions",
-              "total_aud": 1667772,
-              "receipts": 17
+              "total_aud": 1367772,
+              "receipts": 16
             },
             {
-              "donor": "NSW Efa",
-              "href": "/subject/donor/NSW%20Efa",
-              "return_reference": "AEC annual return · 2010-11 · https://transparency.aec.gov.au/",
+              "donor": "Ruth Greble",
+              "href": "/subject/donor/Ruth%20Greble",
+              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
               "industry": "individual",
-              "total_aud": 1069773,
-              "receipts": 1
+              "total_aud": 1027880,
+              "receipts": 35
             },
             {
               "donor": "Bulbeck, Chilla",
               "href": "/subject/donor/Bulbeck%2C%20Chilla",
               "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
               "industry": "individual",
-              "total_aud": 891049,
-              "receipts": 23
+              "total_aud": 881049,
+              "receipts": 22
             },
             {
               "donor": "Communications, Electrical and Plumbing Union - Electrical, Energy and Services Division",
@@ -195,52 +233,137 @@
               "receipts": 2
             },
             {
-              "donor": "Bendigo & Adelaide Bank Limited",
-              "href": "/subject/donor/Bendigo%20and%20Adelaide%20Bank%20Limited",
-              "return_reference": "AEC annual return · 2012-13 · https://transparency.aec.gov.au/",
-              "industry": "finance",
-              "total_aud": 326258,
-              "receipts": 132
-            },
-            {
-              "donor": "Suncorp Group Limited",
-              "href": "/subject/donor/Suncorp%20Group%20Limited",
-              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
-              "industry": "finance",
-              "total_aud": 260598,
-              "receipts": 8
-            },
-            {
               "donor": "CFMEU Mining & Energy Division",
               "href": "/subject/donor/Construction%2C%20Forestry%2C%20Maritime%2C%20Mining%20and%20Energy%20Union",
               "return_reference": "AEC annual return · 2015-16 · https://transparency.aec.gov.au/",
               "industry": "unions",
-              "total_aud": 199000,
-              "receipts": 6
-            },
-            {
-              "donor": "Commonwealth Bank of Australia",
-              "href": "/subject/donor/Commonwealth%20Bank%20of%20Australia",
-              "return_reference": "AEC annual return · 2015-16 · https://transparency.aec.gov.au/",
-              "industry": "finance",
-              "total_aud": 152878,
-              "receipts": 6
+              "total_aud": 174000,
+              "receipts": 5
             },
             {
               "donor": "Australian Manufacturing Workers Union",
               "href": "/subject/donor/Australian%20Manufacturing%20Workers%27%20Union",
               "return_reference": "AEC annual return · 2023-24 · https://transparency.aec.gov.au/",
               "industry": "unions",
-              "total_aud": 115454,
-              "receipts": 5
+              "total_aud": 85454,
+              "receipts": 4
+            },
+            {
+              "donor": "Macquarie Technology Group LTD",
+              "href": "/subject/donor/Macquarie%20Technology%20Group%20Ltd",
+              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
+              "industry": "finance",
+              "total_aud": 28000,
+              "receipts": 3
+            },
+            {
+              "donor": "Maritime Union of Australia - Sydney Branch",
+              "href": "/subject/donor/Maritime%20Union%20of%20Australia",
+              "return_reference": "AEC annual return · 2010-11 · https://transparency.aec.gov.au/",
+              "industry": "unions",
+              "total_aud": 13000,
+              "receipts": 2
+            }
+          ],
+          "gold_change": "A34/A35, 13 Nov 2026: \"gives/donates/donors\" ranks AEC Donation Received only and Public Funding is never a donor. Ruth Greble $1,680,880 over 47 was Donation Received $1,027,880 (35 rows, 1998-99 to 2024-25); Unspecified $24,000 (1 row, 2000-01); Other Receipt $629,000 (11 rows, 2001-02 to 2020-21). Electrical Trades Union $1,667,772 over 17 was Donation Received $1,367,772 (16 rows, 2004-05 to 2024-25); blank type $300,000 (1 row, 2013-14). NSW Efa $1,069,773 over 1 was Public Funding $1,069,773 (1 row, 2010-11). Bulbeck, Chilla $826,049 over 19 was Donation Received $816,049 (18 rows, 2011-12 to 2024-25); Other Receipt $10,000 (1 row, 2012-13). Bendigo & Adelaide Bank Limited $326,258 over 132 was Other Receipt $326,258 (132 rows, 2003-04 to 2024-25). Suncorp Group Limited $260,598 over 8 was Other Receipt $260,598 (8 rows, 2023-24 to 2024-25). CFMEU Mining & Energy Division $195,000 over 5 was Donation Received $170,000 (4 rows, 2007-08 to 2013-14); blank type $25,000 (1 row, 2013-14). Commonwealth Bank of Australia $152,878 over 6 was Other Receipt $152,878 (6 rows, 1999-00 to 2013-14). Australian Manufacturing Workers Union $115,454 over 5 was Donation Received $85,454 (4 rows, 2001-02 to 2010-11); Other Receipt $30,000 (1 row, 2007-08). Australia Post $47,947 over 2 was Other Receipt $47,947 (2 rows, 2007-08 to 2024-25).",
+          "other_receipts": [
+            {
+              "donor": "Ruth Greble",
+              "href": "/subject/donor/Ruth%20Greble",
+              "other_receipts_aud": 629000,
+              "subscriptions_aud": 0,
+              "untyped_aud": 24000,
+              "receipts": 12,
+              "in_ranking": true,
+              "line": "Ruth Greble also recorded $629,000 in other receipts (amounts other than donations or subscriptions) and $24,000 in receipts the return gave no type for to Greens in financial years 2000-01 to 2020-21, which the AEC doesn't class as donations."
+            },
+            {
+              "donor": "Electrical Trades Union",
+              "href": "/subject/donor/Electrical%20Trades%20Union%20of%20Australia",
+              "other_receipts_aud": 0,
+              "subscriptions_aud": 0,
+              "untyped_aud": 300000,
+              "receipts": 1,
+              "in_ranking": true,
+              "line": "Electrical Trades Union also recorded $300,000 in receipts the return gave no type for to Greens in financial year 2013-14, which the AEC doesn't class as donations."
+            },
+            {
+              "donor": "Bulbeck, Chilla",
+              "href": "/subject/donor/Bulbeck%2C%20Chilla",
+              "other_receipts_aud": 10000,
+              "subscriptions_aud": 0,
+              "untyped_aud": 0,
+              "receipts": 1,
+              "in_ranking": true,
+              "line": "Bulbeck, Chilla also recorded $10,000 in other receipts (amounts other than donations or subscriptions) to Greens in financial year 2012-13."
+            },
+            {
+              "donor": "Bendigo & Adelaide Bank Limited",
+              "href": "/subject/donor/Bendigo%20and%20Adelaide%20Bank%20Limited",
+              "other_receipts_aud": 326258,
+              "subscriptions_aud": 0,
+              "untyped_aud": 0,
+              "receipts": 132,
+              "in_ranking": false,
+              "line": "Bendigo & Adelaide Bank Limited recorded $326,258 in other receipts (amounts other than donations or subscriptions) to Greens in financial years 2003-04 to 2024-25."
+            },
+            {
+              "donor": "Suncorp Group Limited",
+              "href": "/subject/donor/Suncorp%20Group%20Limited",
+              "other_receipts_aud": 260598,
+              "subscriptions_aud": 0,
+              "untyped_aud": 0,
+              "receipts": 8,
+              "in_ranking": false,
+              "line": "Suncorp Group Limited recorded $260,598 in other receipts (amounts other than donations or subscriptions) to Greens in financial years 2023-24 to 2024-25."
+            },
+            {
+              "donor": "CFMEU Mining & Energy Division",
+              "href": "/subject/donor/Construction%2C%20Forestry%2C%20Maritime%2C%20Mining%20and%20Energy%20Union",
+              "other_receipts_aud": 0,
+              "subscriptions_aud": 0,
+              "untyped_aud": 25000,
+              "receipts": 1,
+              "in_ranking": true,
+              "line": "CFMEU Mining & Energy Division also recorded $25,000 in receipts the return gave no type for to Greens in financial year 2013-14, which the AEC doesn't class as donations."
+            },
+            {
+              "donor": "Commonwealth Bank of Australia",
+              "href": "/subject/donor/Commonwealth%20Bank%20of%20Australia",
+              "other_receipts_aud": 152878,
+              "subscriptions_aud": 0,
+              "untyped_aud": 0,
+              "receipts": 6,
+              "in_ranking": false,
+              "line": "Commonwealth Bank of Australia recorded $152,878 in other receipts (amounts other than donations or subscriptions) to Greens in financial years 1999-00 to 2013-14."
+            },
+            {
+              "donor": "Australian Manufacturing Workers Union",
+              "href": "/subject/donor/Australian%20Manufacturing%20Workers%27%20Union",
+              "other_receipts_aud": 30000,
+              "subscriptions_aud": 0,
+              "untyped_aud": 0,
+              "receipts": 1,
+              "in_ranking": true,
+              "line": "Australian Manufacturing Workers Union also recorded $30,000 in other receipts (amounts other than donations or subscriptions) to Greens in financial year 2007-08."
             },
             {
               "donor": "Australia Post",
               "href": "/subject/donor/Australia%20Post",
-              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
-              "industry": "other",
-              "total_aud": 47947,
-              "receipts": 2
+              "other_receipts_aud": 47947,
+              "subscriptions_aud": 0,
+              "untyped_aud": 0,
+              "receipts": 2,
+              "in_ranking": false,
+              "line": "Australia Post recorded $47,947 in other receipts (amounts other than donations or subscriptions) to Greens in financial years 2007-08 to 2024-25."
+            }
+          ],
+          "public_funding": [
+            {
+              "source": "NSW Efa",
+              "amount_aud": 1069773,
+              "receipts": 1,
+              "period": "2010-11"
             }
           ]
         }
@@ -258,18 +381,31 @@
           "decision": "answer",
           "rows": [
             {
-              "donor": "Vapold Pty Ltd",
-              "associated_entity": "associated entity of Liberal Party of Australia (Victorian Division), per AEC register (returns 2008-09 to 2024-25)",
-              "href": "/subject/donor/Vapold%20Pty%20Ltd",
+              "donor": "Pratt Holdings Pty Ltd",
+              "href": "/subject/donor/Pratt%20Holdings%20Pty%20Ltd",
               "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
-              "industry": "other",
-              "total_aud": 27790108,
-              "receipts": 34
+              "industry": "property",
+              "total_aud": 10034400,
+              "receipts": 60
             }
           ],
           "tool_query": {
-            "party": "Liberal"
-          }
+            "party": "Liberal",
+            "measure": "donations"
+          },
+          "gold_change": "A34/A35, 13 Nov 2026: \"gives/donates/donors\" ranks AEC Donation Received only and Public Funding is never a donor. Vapold Pty Ltd $27,790,108 over 34 was Donation Received $6,969,513 (17 rows, 1999-00 to 2017-18); Other Receipt $20,820,595 (17 rows, 2000-01 to 2024-25). New leader: Pratt Holdings Pty Ltd $10,034,400 over 60 Donation Received.",
+          "other_receipts": [
+            {
+              "donor": "Vapold Pty Ltd",
+              "href": "/subject/donor/Vapold%20Pty%20Ltd",
+              "other_receipts_aud": 20820595,
+              "subscriptions_aud": 0,
+              "untyped_aud": 0,
+              "receipts": 17,
+              "in_ranking": true,
+              "line": "Vapold Pty Ltd also recorded $20,820,595 in other receipts (amounts other than donations or subscriptions) to Liberal in financial years 2000-01 to 2024-25."
+            }
+          ]
         },
         {
           "question": "how much was that?",
@@ -286,13 +422,28 @@
               "href": "/subject/donor/Vapold%20Pty%20Ltd",
               "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
               "industry": "other",
-              "total_aud": 27790108,
-              "receipts": 34
+              "total_aud": 6969513,
+              "receipts": 17
             }
           ],
           "tool_query": {
-            "party": "Liberal"
-          }
+            "party": "Liberal",
+            "measure": "donations"
+          },
+          "named_donor": "Vapold Pty Ltd",
+          "gold_change": "A34/A35, 13 Nov 2026: \"gives/donates/donors\" ranks AEC Donation Received only and Public Funding is never a donor. Vapold Pty Ltd $27,790,108 over 34 was Donation Received $6,969,513 (17 rows, 1999-00 to 2017-18); Other Receipt $20,820,595 (17 rows, 2000-01 to 2024-25).",
+          "other_receipts": [
+            {
+              "donor": "Vapold Pty Ltd",
+              "href": "/subject/donor/Vapold%20Pty%20Ltd",
+              "other_receipts_aud": 20820595,
+              "subscriptions_aud": 0,
+              "untyped_aud": 0,
+              "receipts": 17,
+              "in_ranking": true,
+              "line": "Vapold Pty Ltd also recorded $20,820,595 in other receipts (amounts other than donations or subscriptions) to Liberal in financial years 2000-01 to 2024-25."
+            }
+          ]
         }
       ]
     },
@@ -309,19 +460,34 @@
           "decision": "answer",
           "rows": [
             {
-              "donor": "Westpac Banking Corporation",
-              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "donor": "Shop Distributive & Allied Employees Association",
+              "associated_entity": "associated entity of Labor, per AEC register (returns 2009-10 to 2024-25; 8 party entries)",
+              "href": "/subject/donor/Shop%2C%20Distributive%20and%20Allied%20Employees%20Association",
               "return_reference": "AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
-              "industry": "finance",
-              "total_aud": 1177000,
-              "receipts": 6
+              "industry": "unions",
+              "total_aud": 403761,
+              "receipts": 5
             }
           ],
           "tool_query": {
             "party": "Labor",
             "from_year": 2019,
-            "to_year": 2019
-          }
+            "to_year": 2019,
+            "measure": "donations"
+          },
+          "gold_change": "A34/A35, 13 Nov 2026: \"gives/donates/donors\" ranks AEC Donation Received only and Public Funding is never a donor. Westpac Banking Corporation $1,177,000 over 6 was Other Receipt $1,177,000 (6 rows, 2019-20). New leader: Shop Distributive & Allied Employees Association $403,761 over 5 Donation Received.",
+          "other_receipts": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "other_receipts_aud": 1177000,
+              "subscriptions_aud": 0,
+              "untyped_aud": 0,
+              "receipts": 6,
+              "in_ranking": false,
+              "line": "Westpac Banking Corporation recorded $1,177,000 in other receipts (amounts other than donations or subscriptions) to Labor in financial year 2019-20."
+            }
+          ]
         },
         {
           "question": "what about the Greens?",
@@ -344,7 +510,8 @@
           "tool_query": {
             "party": "Greens",
             "from_year": 2019,
-            "to_year": 2019
+            "to_year": 2019,
+            "measure": "donations"
           },
           "context_not": [
             "Labor"
@@ -371,7 +538,8 @@
           "tool_query": {
             "party": "Greens",
             "from_year": 2023,
-            "to_year": 2023
+            "to_year": 2023,
+            "measure": "donations"
           },
           "context_not": [
             "Labor"
@@ -391,17 +559,32 @@
           "decision": "answer",
           "rows": [
             {
-              "donor": "Westpac Banking Corporation",
-              "href": "/subject/donor/Westpac%20Banking%20Corporation",
-              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
-              "industry": "finance",
-              "total_aud": 8436344,
-              "receipts": 58
+              "donor": "John McEwen House Pty Ltd",
+              "associated_entity": "associated entity of National Party of Australia, per AEC register (returns 2009-10 to 2024-25)",
+              "href": "/subject/donor/John%20McEwen%20House%20Pty%20Ltd",
+              "return_reference": "AEC annual return · 2019-20 · https://transparency.aec.gov.au/",
+              "industry": "other",
+              "total_aud": 1352741,
+              "receipts": 29
             }
           ],
           "tool_query": {
-            "party": "Nationals"
-          }
+            "party": "Nationals",
+            "measure": "donations"
+          },
+          "gold_change": "A34/A35, 13 Nov 2026: \"gives/donates/donors\" ranks AEC Donation Received only and Public Funding is never a donor. Westpac Banking Corporation $8,436,344 over 58 was Donation Received $228,157 (16 rows, 1998-99 to 2007-08); Other Receipt $8,190,126 (39 rows, 1998-99 to 2024-25); Unspecified $18,061 (3 rows, 1999-00 to 2002-03). New leader: John McEwen House Pty Ltd $1,352,741 over 29 Donation Received.",
+          "other_receipts": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "other_receipts_aud": 8190126,
+              "subscriptions_aud": 0,
+              "untyped_aud": 18061,
+              "receipts": 42,
+              "in_ranking": true,
+              "line": "Westpac Banking Corporation also recorded $8,190,126 in other receipts (amounts other than donations or subscriptions) and $18,061 in receipts the return gave no type for to Nationals in financial years 1998-99 to 2024-25, which the AEC doesn't class as donations."
+            }
+          ]
         },
         {
           "question": "and in 2019-20?",
@@ -424,7 +607,8 @@
           "tool_query": {
             "party": "Nationals",
             "from_year": 2019,
-            "to_year": 2019
+            "to_year": 2019,
+            "measure": "donations"
           }
         }
       ]
@@ -441,17 +625,31 @@
           "decision": "answer",
           "rows": [
             {
-              "donor": "LGT Crestone Wealth Management Limited",
-              "href": "/subject/donor/LGT%20Crestone",
-              "return_reference": "AEC annual return · 2024-25 · https://transparency.aec.gov.au/",
-              "industry": "finance",
-              "total_aud": 8857209,
-              "receipts": 14
+              "donor": "Adani Mining Pty Ltd",
+              "href": "/subject/donor/Adani%20Mining%20Pty%20Ltd",
+              "return_reference": "AEC annual return · 2018-19 · https://transparency.aec.gov.au/",
+              "industry": "mining",
+              "total_aud": 699998,
+              "receipts": 5
             }
           ],
           "tool_query": {
-            "party": "LNP"
-          }
+            "party": "LNP",
+            "measure": "donations"
+          },
+          "gold_change": "A34/A35, 13 Nov 2026: \"gives/donates/donors\" ranks AEC Donation Received only and Public Funding is never a donor. LGT Crestone Wealth Management Limited $8,857,209 over 14 was Other Receipt $8,857,209 (14 rows, 2022-23 to 2024-25). New leader: Adani Mining Pty Ltd $699,998 over 5 Donation Received.",
+          "other_receipts": [
+            {
+              "donor": "LGT Crestone Wealth Management Limited",
+              "href": "/subject/donor/LGT%20Crestone",
+              "other_receipts_aud": 8857209,
+              "subscriptions_aud": 0,
+              "untyped_aud": 0,
+              "receipts": 14,
+              "in_ranking": false,
+              "line": "LGT Crestone Wealth Management Limited recorded $8,857,209 in other receipts (amounts other than donations or subscriptions) to LNP in financial years 2022-23 to 2024-25."
+            }
+          ]
         },
         {
           "question": "what about One Nation?",
@@ -462,19 +660,33 @@
           "decision": "answer",
           "rows": [
             {
-              "donor": "Westpac Banking Corporation",
-              "href": "/subject/donor/Westpac%20Banking%20Corporation",
-              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
-              "industry": "finance",
-              "total_aud": 204604,
-              "receipts": 4
+              "donor": "Sporting Shooters Association of Australia (Queensland) Inc",
+              "href": "/subject/donor/Sporting%20Shooters%20Association%20of%20Australia",
+              "return_reference": "AEC annual return · 1998-99 · https://transparency.aec.gov.au/",
+              "industry": "security",
+              "total_aud": 43057,
+              "receipts": 1
             }
           ],
           "tool_query": {
-            "party": "One Nation"
+            "party": "One Nation",
+            "measure": "donations"
           },
           "context_not": [
             "LNP|Liberal National Party"
+          ],
+          "gold_change": "A34/A35, 13 Nov 2026: \"gives/donates/donors\" ranks AEC Donation Received only and Public Funding is never a donor. Westpac Banking Corporation $204,604 over 4 was Other Receipt $204,604 (4 rows, 2022-23 to 2024-25). New leader: Sporting Shooters Association of Australia (Queensland) Inc $43,057 over 1 Donation Received.",
+          "other_receipts": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "other_receipts_aud": 204604,
+              "subscriptions_aud": 0,
+              "untyped_aud": 0,
+              "receipts": 4,
+              "in_ranking": false,
+              "line": "Westpac Banking Corporation recorded $204,604 in other receipts (amounts other than donations or subscriptions) to One Nation in financial years 2022-23 to 2024-25."
+            }
           ]
         }
       ]
@@ -491,17 +703,31 @@
           "decision": "answer",
           "rows": [
             {
-              "donor": "Westpac Banking Corporation",
-              "href": "/subject/donor/Westpac%20Banking%20Corporation",
-              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
-              "industry": "finance",
-              "total_aud": 204604,
-              "receipts": 4
+              "donor": "Sporting Shooters Association of Australia (Queensland) Inc",
+              "href": "/subject/donor/Sporting%20Shooters%20Association%20of%20Australia",
+              "return_reference": "AEC annual return · 1998-99 · https://transparency.aec.gov.au/",
+              "industry": "security",
+              "total_aud": 43057,
+              "receipts": 1
             }
           ],
           "tool_query": {
-            "party": "One Nation"
-          }
+            "party": "One Nation",
+            "measure": "donations"
+          },
+          "gold_change": "A34/A35, 13 Nov 2026: \"gives/donates/donors\" ranks AEC Donation Received only and Public Funding is never a donor. Westpac Banking Corporation $204,604 over 4 was Other Receipt $204,604 (4 rows, 2022-23 to 2024-25). New leader: Sporting Shooters Association of Australia (Queensland) Inc $43,057 over 1 Donation Received.",
+          "other_receipts": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "other_receipts_aud": 204604,
+              "subscriptions_aud": 0,
+              "untyped_aud": 0,
+              "receipts": 4,
+              "in_ranking": false,
+              "line": "Westpac Banking Corporation recorded $204,604 in other receipts (amounts other than donations or subscriptions) to One Nation in financial years 2022-23 to 2024-25."
+            }
+          ]
         },
         {
           "question": "did that buy their votes?",
@@ -512,7 +738,8 @@
           "decision": "decline",
           "rows": [],
           "tool_query": {
-            "party": "One Nation"
+            "party": "One Nation",
+            "measure": "donations"
           }
         },
         {
@@ -524,19 +751,34 @@
           "decision": "answer",
           "rows": [
             {
-              "donor": "Westpac Banking Corporation",
-              "href": "/subject/donor/Westpac%20Banking%20Corporation",
-              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
-              "industry": "finance",
-              "total_aud": 47331887,
-              "receipts": 201
+              "donor": "Shop Distributive & Allied Employees Association",
+              "associated_entity": "associated entity of Labor, per AEC register (returns 2009-10 to 2024-25; 8 party entries)",
+              "href": "/subject/donor/Shop%2C%20Distributive%20and%20Allied%20Employees%20Association",
+              "return_reference": "AEC annual return · 2014-15 · https://transparency.aec.gov.au/",
+              "industry": "unions",
+              "total_aud": 11808585,
+              "receipts": 144
             }
           ],
           "tool_query": {
-            "party": "Labor"
+            "party": "Labor",
+            "measure": "donations"
           },
           "context_not": [
             "One Nation"
+          ],
+          "gold_change": "A34/A35, 13 Nov 2026: \"gives/donates/donors\" ranks AEC Donation Received only and Public Funding is never a donor. Westpac Banking Corporation $47,331,887 over 201 was Donation Received $875,018 (35 rows, 1998-99 to 2024-25); Other Receipt $46,358,124 (156 rows, 1998-99 to 2024-25); Unspecified $47,045 (7 rows, 1999-00 to 2002-03); Subscription $51,700 (3 rows, 2006-07 to 2014-15). New leader: Shop Distributive & Allied Employees Association $11,793,085 over 140 Donation Received.",
+          "other_receipts": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "other_receipts_aud": 46358124,
+              "subscriptions_aud": 51700,
+              "untyped_aud": 47045,
+              "receipts": 166,
+              "in_ranking": false,
+              "line": "Westpac Banking Corporation recorded $46,358,124 in other receipts (amounts other than donations or subscriptions), $51,700 in subscriptions and $47,045 in receipts the return gave no type for to Labor in financial years 1998-99 to 2024-25, which the AEC doesn't class as donations."
+            }
           ]
         }
       ]
@@ -553,7 +795,8 @@
           "decision": "clarify",
           "rows": [],
           "tool_query": {
-            "party": "One Nation"
+            "party": "One Nation",
+            "measure": "donations"
           }
         },
         {
@@ -564,19 +807,25 @@
             "Westpac"
           ],
           "decision": "answer",
-          "rows": [
+          "rows": [],
+          "tool_query": {
+            "party": "One Nation",
+            "measure": "donations"
+          },
+          "named_donor": "Westpac Banking Corporation",
+          "gold_change": "A34/A35, 13 Nov 2026: \"gives/donates/donors\" ranks AEC Donation Received only and Public Funding is never a donor. Westpac Banking Corporation $204,604 over 4 was Other Receipt $204,604 (4 rows, 2022-23 to 2024-25).",
+          "other_receipts": [
             {
               "donor": "Westpac Banking Corporation",
               "href": "/subject/donor/Westpac%20Banking%20Corporation",
-              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
-              "industry": "finance",
-              "total_aud": 204604,
-              "receipts": 4
+              "other_receipts_aud": 204604,
+              "subscriptions_aud": 0,
+              "untyped_aud": 0,
+              "receipts": 4,
+              "in_ranking": false,
+              "line": "Westpac Banking Corporation recorded $204,604 in other receipts (amounts other than donations or subscriptions) to One Nation in financial years 2022-23 to 2024-25."
             }
-          ],
-          "tool_query": {
-            "party": "One Nation"
-          }
+          ]
         }
       ]
     },
@@ -595,7 +844,8 @@
           "tool_query": {
             "party": "One Nation",
             "from_year": 1990,
-            "to_year": 1990
+            "to_year": 1990,
+            "measure": "donations"
           }
         },
         {
@@ -610,7 +860,8 @@
           "tool_query": {
             "party": "One Nation",
             "from_year": 2019,
-            "to_year": 2019
+            "to_year": 2019,
+            "measure": "donations"
           },
           "gold_limitation": "The selected federal graph has no One Nation donor rows in financial year 2019-20; this does not establish zero giving."
         }
@@ -628,17 +879,31 @@
           "decision": "answer",
           "rows": [
             {
-              "donor": "Westpac Banking Corporation",
-              "href": "/subject/donor/Westpac%20Banking%20Corporation",
-              "return_reference": "AEC annual return · 2011-12 · https://transparency.aec.gov.au/",
-              "industry": "finance",
-              "total_aud": 204604,
-              "receipts": 4
+              "donor": "Sporting Shooters Association of Australia (Queensland) Inc",
+              "href": "/subject/donor/Sporting%20Shooters%20Association%20of%20Australia",
+              "return_reference": "AEC annual return · 1998-99 · https://transparency.aec.gov.au/",
+              "industry": "security",
+              "total_aud": 43057,
+              "receipts": 1
             }
           ],
           "tool_query": {
-            "party": "One Nation"
-          }
+            "party": "One Nation",
+            "measure": "donations"
+          },
+          "gold_change": "A34/A35, 13 Nov 2026: \"gives/donates/donors\" ranks AEC Donation Received only and Public Funding is never a donor. Westpac Banking Corporation $204,604 over 4 was Other Receipt $204,604 (4 rows, 2022-23 to 2024-25). New leader: Sporting Shooters Association of Australia (Queensland) Inc $43,057 over 1 Donation Received.",
+          "other_receipts": [
+            {
+              "donor": "Westpac Banking Corporation",
+              "href": "/subject/donor/Westpac%20Banking%20Corporation",
+              "other_receipts_aud": 204604,
+              "subscriptions_aud": 0,
+              "untyped_aud": 0,
+              "receipts": 4,
+              "in_ranking": false,
+              "line": "Westpac Banking Corporation recorded $204,604 in other receipts (amounts other than donations or subscriptions) to One Nation in financial years 2022-23 to 2024-25."
+            }
+          ]
         },
         {
           "question": "Did Westpac give money to One Nation in most years?",
@@ -650,7 +915,8 @@
           "decision": "limited_or_years",
           "rows": [],
           "tool_query": {
-            "party": "One Nation"
+            "party": "One Nation",
+            "measure": "donations"
           }
         }
       ]
