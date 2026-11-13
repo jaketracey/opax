@@ -250,7 +250,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   const display = p.full && p.speech_scope ? p.full : p.name
   const seatList = seats?.electorates || null
   const description = `${display}. ${partyLine(p,seatList)}. ${(p.representation || []).map(r=>`${r.electorate}, ${chamber(r.chamber)}`).join('; ') || p.chambers.map(chamber).join(', ')}.`
-  let body = heldBackTranscriptsHTML(p.pid, heldBackCounts) + chairRoleTranscriptsHTML(p.pid, chairRoleCounts) + '<h2>Party and representation</h2><ul>'
+  let body = '<h2>Party and representation</h2><ul>'
   const party = personParty(p,seatList)?.party
   body += `<li>${party ? link(partyUrl(party),partyLine(p,seatList)) : 'Party not recorded'}</li>`
   for (const r of p.representation || []) {
@@ -258,6 +258,8 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     body += `<li>${seat ? link(seat.url,r.electorate) : escapeHtml(r.electorate)} — ${escapeHtml(chamber(r.chamber))}</li>`
   }
   body += `</ul>${original(profileUrl)}<p>${link('/parliamentarians.json','Parliamentarian data (JSON)')}. Recorded representation can include historical seats; affiliation with no current-roster flag is not verified as current or former.</p>`
+  // The notes on what the speech count leaves out sit with the speeches, never in the head.
+  body += heldBackTranscriptsHTML(p.pid, heldBackCounts) + chairRoleTranscriptsHTML(p.pid, chairRoleCounts)
   // The Senate's own video of a first speech, matched to this roster row by the fetcher; nothing when there is none.
   body += videoSectionHTML('First speech',personVideos(video?.videos,slugs.get(p.name),p),{id:'ssr-first-speech',note:'Video published by the Senate Public Information Office on YouTube.',after:`<p class="video-more">${link('/video/senate?kind=first-speech','All first speeches')}</p>`})
   if (!p.speech_scope) {

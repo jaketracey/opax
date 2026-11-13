@@ -44,6 +44,10 @@
 
 /* ---- 1. Ask or search: purpose beside the one primary action. */
 .hp-research { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr); gap: var(--space-section); align-items: start; padding-block: var(--space-section); }
+/* Whether parliament sits today: one metadata line above the title, no icon, no colour. */
+.hp-purpose .hp-sitting { font: var(--type-metadata); color: var(--ink-soft); max-width: none; margin: 0 0 var(--space-tight); }
+.hp-purpose .hp-sitting[hidden] { display: none; }
+.hp-sitting a { color: inherit; text-decoration-color: var(--bronze-rule); text-underline-offset: 0.2em; }
 .hp-purpose h1 { font: var(--type-title); color: var(--ink); }
 .hp-purpose p { font: var(--type-body); font-size: var(--text-17); color: var(--ink-soft); max-width: 52ch; margin-top: var(--space-block); }
 .hp-research-main { min-width: 0; }
