@@ -44,7 +44,6 @@ import { symbols } from '../src/design/symbols';
 import {
   accentTint,
   radii,
-  rhythm,
   statusTint,
   textStyles,
 } from '../src/design/tokens';
@@ -166,58 +165,22 @@ describe('Portrait', () => {
       expect(symbol.props.accessibilityElementsHidden).toBe(true);
     },
   );
-  test('a 44pt Zali Steggall portrait draws ZS without repeating her name to VoiceOver', () => {
-    const root = render(<Portrait size={44} name="Zali Steggall" />).root;
-    expect(strings(root)).toEqual(['ZS']);
-    expect(root.findAllByType(SymbolView)).toHaveLength(0);
-    const text = nativeTexts(root)[0]!;
-    expect(flat(text.props.style).fontSize).toBe(textStyles.strong.fontSize);
-    expect(text.props.accessible).toBe(false);
-    const circle = root.findAllByType(View)[0]!;
-    expect(circle.props.accessibilityElementsHidden).toBe(true);
-    expect(circle.props.importantForAccessibility).toBe('no-hide-descendants');
-  });
-  test.each([
-    ['  zali steggall  ', 'ZS'],
-    ['david van Dijk', 'DV'],
-    ['walsh', 'W'],
-    ['ßtefan müller', 'SS'],
-  ])(
-    'initials are upper-case and at most two letters (%s)',
-    (name, expected) => {
-      expect(strings(render(<Portrait name={name} />).root)).toEqual([
-        expected,
-      ]);
-    },
-  );
-  test.each([
-    [28, 'capsule'],
-    [44, 'strong'],
-    [56, 'strong'],
-    [72, 'tileFigure'],
-    [80, 'tileFigure'],
-    [96, 'tileFigure'],
-  ] as const)(
-    '%spt initials use %s and stay within the circle at AX5',
-    (size, variant) => {
+  test.each([28, 44, 56, 72, 80, 96] as const)(
+    'a named %spt portrait with no image is a blank circle, never initials',
+    (size) => {
       atSize(AX5, () => {
-        const root = render(
-          <Portrait size={size} name="William Watson" />,
-        ).root;
-        const text = nativeTexts(root)[0]!;
-        const style = flat(text.props.style);
-        const role = textStyles[variant];
-        expect(style.fontSize).toBe(role.fontSize);
-        expect(style.fontWeight).toBe(role.fontWeight);
-        expect(text.props.allowFontScaling).toBe(true);
-        const scale = Math.min(AX5, text.props.maxFontSizeMultiplier);
-        expect(scale).toBeGreaterThanOrEqual(1);
-        // Reserve space for two full-em letters and the role's full line height.
-        expect(2 * role.fontSize * scale).toBeLessThanOrEqual(
-          size - rhythm.line,
-        );
-        expect((style.lineHeight as number) * scale).toBeLessThanOrEqual(
-          size - rhythm.line,
+        const root = render(<Portrait size={size} name="Zali Steggall" />).root;
+        expect(nativeTexts(root)).toHaveLength(0);
+        expect(root.findAllByType(SymbolView)).toHaveLength(0);
+        const circle = root.findAllByType(View)[0]!;
+        const style = flat(circle.props.style);
+        // The circle keeps its size, so the row's layout does not move.
+        expect(style.width).toBe(size);
+        expect(style.height).toBe(size);
+        expect(style.borderRadius).toBe(size / 2);
+        expect(circle.props.accessibilityElementsHidden).toBe(true);
+        expect(circle.props.importantForAccessibility).toBe(
+          'no-hide-descendants',
         );
       });
     },
