@@ -17,7 +17,12 @@ Files are staged and replaced atomically, with the index last.
 
 Rows the source gives no party take the party a dated roster records for
 that chamber and date (scripts/vote_parties.py), recomputed on every run;
-anything less than one unambiguous dated party stays unknown.
+anything less than one unambiguous dated party stays unknown. Rows the source
+does give a party are checked against the same dated records: a label naming a
+different party in substance from the one held on that date is replaced by the
+dated party (the source label stays in party_source.source_party), a label the
+dated records leave unclear is held back (party_withheld), and a naming variant
+is never rewritten. Both are recomputed from the source label on every run.
 
 Publication rules (scripts/division_rules.py): presiding-officer codes are
 never published as a party, one label per party, placeholder questions are
@@ -369,7 +374,11 @@ def projection_index(records):
         "member_source_counts": dict(sorted(member_sources.items())),
         **{field: sum(d["_meta"][field] for d in records.values())
            for field in ("member_count", "named_member_count", "recorded_vote_count")},
-        "party_filled_count": sum(bool(m.get("party_source")) for d in records.values() for m in d.get("members", [])),
+        "party_filled_count": sum(bool(m.get("party_source")) and not m["party_source"].get("source_party")
+                                  for d in records.values() for m in d.get("members", [])),
+        "party_corrected_count": sum(bool((m.get("party_source") or {}).get("source_party"))
+                                     for d in records.values() for m in d.get("members", [])),
+        "party_withheld_count": sum(bool(m.get("party_withheld")) for d in records.values() for m in d.get("members", [])),
         "unknown_party_count": sum(not m.get("party") for d in records.values() for m in d.get("members", [])),
     }
     return {"schema": 2, "count": len(records), "coverage": coverage,
@@ -390,7 +399,8 @@ def write_projection(records, output, carry=False, strict=False, party_evidence=
     `carry` remains accepted for existing callers; the guard now always protects
     previously published evidence. The returned records include retained rows.
     `party_evidence` (scripts/vote_parties.load_evidence) fills dated parties
-    for rows the source leaves without one; None leaves rows as they are.
+    for rows the source leaves without one and checks source labels against
+    them; None leaves rows as they are.
     """
     output = Path(output)
     guarded = guard_projection(records, read_previous_projection(output), strict=strict)
@@ -473,7 +483,9 @@ def main():
     coverage = projection_index(records)["coverage"]
     print(f"Exported {len(records)} divisions; {sum(bool(d['members']) for d in records.values())} with member records; "
           f"retained {coverage['retained_count']} previous records ({json.dumps(coverage['retained_by_reason'], sort_keys=True)}); "
-          f"{coverage['party_filled_count']} rows given a dated roster party, {coverage['unknown_party_count']} rows without a party.")
+          f"{coverage['party_filled_count']} rows given a dated roster party, "
+          f"{coverage['party_corrected_count']} source labels replaced by the dated party, "
+          f"{coverage['party_withheld_count']} source labels held back, {coverage['unknown_party_count']} rows without a party.")
 
 
 if __name__ == "__main__":
