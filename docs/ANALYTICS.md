@@ -223,8 +223,8 @@ Other source opens leave it off.
 sharing), copies a record link, or copies an Ask answer.
 `record` and `copy_link` add a `record_type` from the shared path: subject
 pages give `person`, `party` or `electorate`, and bills, documents and money
-pages give `bill`, `doc` or `money`. Anything else, including topics, is
-`other`. A question or answer share has no `record_type`, and the path, title
+pages give `bill`, `doc` or `money`. Anything else is `other`, including
+topics and a source's own page on another site (Your MP's Lately originals). A question or answer share has no `record_type`, and the path, title
 and text are never sent.
 
 `opax_link_open` is sent once for each OPAX link that opens the app:

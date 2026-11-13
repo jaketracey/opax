@@ -14,6 +14,7 @@ import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
+import { trackShare } from '../../navigation/share';
 import { billRoute, personRoute } from '../../navigation/routes';
 import {
   changeDate,
@@ -303,6 +304,8 @@ export function LatestRow({
           title: 'Share',
           symbol: 'square.and.arrow.up',
           onPress: () => {
+            // The source's own link: shared as an "other" record, never its URL.
+            trackShare('record', record.url!);
             void Share.share({
               title: record.title,
               url: record.url,
@@ -315,7 +318,9 @@ export function LatestRow({
           symbol: 'link',
           onPress: () => {
             void copyText(record.url!).then((copied) => {
-              if (copied) haptic('success');
+              if (!copied) return;
+              haptic('success');
+              trackShare('copy_link', record.url!);
             });
           },
         },

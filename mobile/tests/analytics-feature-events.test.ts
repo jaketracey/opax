@@ -382,6 +382,7 @@ describe('fire points', () => {
     ['/doc/fixture-speech', 'doc'],
     ['/money/grants?jur=federal', 'money'],
     ['https://opax.com.au/subject/person/jane-citizen', 'person'],
+    ['https://example.org/bill/example-2031', 'other'],
     ['/ask', 'other'],
   ])('a shared %s is a %s', (path, type) => {
     expect(shareRecordType(path)).toBe(type);

@@ -25,16 +25,19 @@ export interface ShareTarget {
 
 /**
  * The coarse type of a shared web path, for analytics: which kind of page,
- * never which record. Anything unlisted is "other".
+ * never which record. Another site's link (a source's own page) and anything
+ * unlisted are "other".
  */
 export function shareRecordType(path: string): ShareRecordType {
-  let pathname: string;
+  let url: URL;
   try {
-    pathname = new URL(path, 'https://opax.invalid').pathname;
+    url = new URL(path, 'https://opax.invalid');
   } catch {
     return 'other';
   }
-  const [first, second] = pathname.split('/').filter(Boolean);
+  const ours = ['opax.invalid', 'opax.com.au', 'www.opax.com.au'];
+  if (!ours.includes(url.hostname) && url.origin !== webOrigin) return 'other';
+  const [first, second] = url.pathname.split('/').filter(Boolean);
   if (first === 'subject')
     return second === 'person' || second === 'party' || second === 'electorate'
       ? second
