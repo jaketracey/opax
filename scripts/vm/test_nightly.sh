@@ -65,6 +65,8 @@ new_sandbox() {
            scripts/bills_registry/bills_stages.py \
            scripts/export_division_pages.py scripts/export_recent_votes.py scripts/export_votes.py \
            scripts/division_rules.py scripts/corrections/__init__.py scripts/corrections/apply.py parli/ingest/federal_affiliations.py \
+           scripts/vote_parties.py scripts/roster_state_evidence.json scripts/roster_service.json \
+           parli/ingest/tvfy_refresh.py parli/ingest/honest_http.py parli/ingest/state_rosters.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
            parli/__init__.py parli/arag.py parli/ingest/http.py parli/ingest/user-agent.json parli/ingest/__init__.py parli/ingest/speaker_names.py \
            portal/wrangler.jsonc portal/public/corpus.json; do
@@ -181,6 +183,11 @@ votes['_meta'] = {"schema": 1, "content_changed_at": "2026-09-01T00:00:00Z", "la
 open(f"{seed}/portal/public/votes.json", "w").write(json.dumps(votes) + "\n")
 seo = pathlib.Path(seed) / 'portal/public/seo'; seo.mkdir()
 (seo / 'recent-votes.json').write_text(json.dumps({'_meta': {'schema': 1, 'source': 'opax-parli-db', 'coverage': 'unavailable', 'person_count': 0, 'limit': 10}, 'people': {}}) + '\n')
+# The division export reads dated parties from the electorate release (scripts/vote_parties.py); an empty one holds none.
+electorates = pathlib.Path(seed) / 'portal/public/electorates'; (electorates / 'releases/fixture').mkdir(parents=True)
+(electorates / 'manifest.json').write_text(json.dumps({'index_url': '/electorates/releases/fixture/index.json', 'people_url': '/electorates/releases/fixture/people.json'}) + '\n')
+(electorates / 'releases/fixture/index.json').write_text(json.dumps({'electorates': []}) + '\n')
+(electorates / 'releases/fixture/people.json').write_text(json.dumps({'people': []}) + '\n')
 spec = importlib.util.spec_from_file_location('division_fixture', f'{seed}/scripts/export_division_pages.py')
 D = importlib.util.module_from_spec(spec); spec.loader.exec_module(D)
 division = {'key': 'federal-senate-1', 'slug': 'division-federal-senate-1', 'name': 'Fixture question',
