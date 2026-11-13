@@ -35,7 +35,7 @@ _spec.loader.exec_module(release_policy)
 # same change in app.config.ts and the Data safety form.
 ANDROID_ANALYTICS_ENABLED = False
 
-from android_release import configured_version, verify_identity, verify_evidence, verify_ios_candidate, debug_artifacts, bundled_routes
+from android_release import configured_version, verify_identity, verify_evidence, verify_ios_candidate, debug_artifacts, bundled_routes, shipped_source_maps
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("aab", type=Path)
@@ -150,7 +150,8 @@ with zipfile.ZipFile(args.aab) as archive:
     assert abis == ["arm64-v8a", "x86_64"], "Unexpected release ABIs"
     # The composed Hermes map stays in Gradle's outputs
     # (android/app/build/generated/sourcemaps/react/release/), never in the AAB.
-    assert not [name for name in entries if name.lower().endswith(".map")], "Source map shipped in the AAB"
+    # R8's mapping under BUNDLE-METADATA/ is Play's and is never installed.
+    assert not shipped_source_maps(entries), "Source map shipped in the AAB"
     native_alignment = {}
     for name in entries:
         if not name.startswith("base/lib/") or not name.endswith(".so"):

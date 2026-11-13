@@ -20,7 +20,10 @@ its builds carry no analytics config, so the plugin never starts.
    classes are now allowed, the permissions stay within the allowlist
    (posthog-android adds only `INTERNET` and `ACCESS_NETWORK_STATE`), the ABIs
    and 16 KB alignment are unchanged (NDK crashes use a tombstone scanner, no
-   `.so`), and no `.map` ships in the AAB. The composed Hermes map is in
+   `.so`), and no `.map` an APK would install is in the AAB. R8's
+   `BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map` is Play
+   metadata and passes (the round 2 check refused it, which would have failed
+   every production AAB). The composed Hermes map is in
    `android/app/build/generated/sourcemaps/react/release/index.android.bundle.map`.
 4. **The rules load on Android.** Android's `java.util.regex` runs on ICU,
    which rejects Java's `(?U)` flag (NSRegularExpression, also ICU, refuses

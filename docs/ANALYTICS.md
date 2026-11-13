@@ -348,7 +348,9 @@ the script also uploads the R8 mapping under posthog-android's map ID
 (`au.com.opax.app@<versionName>+<versionCode>`); it is not wired into
 `build-play.sh` while Android sends nothing. Gradle writes the Android map to
 `android/app/build/generated/sourcemaps/react/release/index.android.bundle.map`,
-and `verify-play.py` refuses any `.map` in the AAB.
+and `verify-play.py` refuses any `.map` an APK would install. R8's mapping
+(`BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map`) is Play
+metadata that is never installed, so it passes.
 
 The privacy manifest declares Product Interaction and Device ID, not linked,
 not used for tracking, purpose Analytics, and Crash Data and Other Diagnostic

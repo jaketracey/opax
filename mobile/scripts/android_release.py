@@ -106,6 +106,14 @@ def debug_artifacts(archive, evidence, output):
     return result
 
 
+def shipped_source_maps(names):
+    """`.map` files a phone would install. BUNDLE-METADATA/ is Play's own
+    (R8's com.android.tools.build.obfuscation/proguard.map): Play keeps it to
+    deobfuscate crashes and never puts it in an APK."""
+    return [name for name in names
+            if name.lower().endswith(".map") and not name.startswith("BUNDLE-METADATA/")]
+
+
 def permission_allowlist(voice=False, microphone_prompt=False):
     # expo-network declares the two normal network-state permissions. They
     # expose connectivity state and do not add a runtime permission dialog.
