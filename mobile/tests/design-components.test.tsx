@@ -658,7 +658,7 @@ describe('SourceLine and SourceSheet', () => {
     );
     expect(line.props.accessibilityHint).toBe('Opens the sources');
     const [outer, name] = nativeTexts(root);
-    expect(outer!.props.children[0]).toBe('Updated 4 Oct 2026 · ');
+    expect(outer!.props.children[0]).toBe('Updated 4 Oct 2026\u00a0· ');
     expect(name!.props.children).toBe('AEC annual returns');
     expect(hex(flat(name!.props.style).color)).toBe(light.navy);
     expect(hex(flat(outer!.props.style).color)).toBe(light.inkSoft);
@@ -680,13 +680,13 @@ describe('SourceLine and SourceSheet', () => {
       />,
     ).root;
     expect(textContent(nativeTexts(root)[0]!.props.children)).toBe(
-      'Saved 5 Oct 2026 · They Vote For You and\u00a02\u00a0more · Divisions to 25 Sep 2026',
+      'Saved 5 Oct 2026\u00a0· They Vote For You and\u00a02\u00a0more · Divisions to 25 Sep 2026',
     );
   });
   test('an undated block says so: every figure stays dated', () => {
     const root = render(<SourceLine citation="AusTender" />).root;
     expect(textContent(nativeTexts(root)[0]!.props.children)).toBe(
-      'Date not published · AusTender',
+      'Date not published\u00a0· AusTender',
     );
   });
   test('the sheet: originals, as at, sources, notes, and the licence row to Sources and licences', () => {

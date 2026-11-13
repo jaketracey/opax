@@ -182,7 +182,7 @@ describe('SourceLine and its sheet (P2-4)', () => {
       />,
     ).root;
     expect(textContent(nativeTexts(root)[0]!.props.children)).toBe(
-      'Updated 9 Sep 2026 · AEC election results and\u00a01\u00a0more',
+      'Updated 9 Sep 2026\u00a0· AEC election results and\u00a01\u00a0more',
     );
     const said = strings(openSheet(root, 'src'));
     for (const title of [
@@ -213,7 +213,7 @@ describe('SourceLine and its sheet (P2-4)', () => {
       />,
     ).root;
     expect(textContent(nativeTexts(root)[0]!.props.children)).toBe(
-      'Updated 4 Oct 2026 · ParlInfo and\u00a01\u00a0more',
+      'Updated 4 Oct 2026\u00a0· ParlInfo and\u00a01\u00a0more',
     );
     const said = strings(openSheet(root, 'src'));
     expect(said).toEqual(

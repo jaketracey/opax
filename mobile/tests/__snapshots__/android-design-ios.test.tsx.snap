@@ -618,7 +618,7 @@ exports[`iOS design at font scale 1 BarSeries retains its iOS output 1`] = `
             ]
           }
         >
-          Updated 1 Nov 2026 · 
+          Updated 1 Nov 2026 · 
           <Text
             accessibilityLanguage="en-AU"
             allowFontScaling={true}
@@ -8057,7 +8057,7 @@ exports[`iOS design at font scale 2 BarSeries retains its iOS output 1`] = `
             ]
           }
         >
-          Updated 1 Nov 2026 · 
+          Updated 1 Nov 2026 · 
           <Text
             accessibilityLanguage="en-AU"
             allowFontScaling={true}

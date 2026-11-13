@@ -166,7 +166,7 @@ test.each([
         testID="src"
       />,
     );
-    expect(text(root)).toContain(`${line} · `);
+    expect(text(root)).toContain(`${line}\u00a0· `);
     press(root, 'src');
     expect(router.push).toHaveBeenCalledWith({
       pathname: '/source',

@@ -252,26 +252,29 @@ test.each([
   expect(typeof options.headerTitle).toBe('function');
 });
 
-test('Agencies restores the system Government agencies title and its alias', async () => {
+test('Agencies keeps the Government agencies title in the page so it can wrap', async () => {
   await act(async () => {
     view = TestRenderer.create(<Agencies />);
   });
-  expect(view!.root.findByType(RouteOptions).props.options).toMatchObject({
+  const options = view!.root.findByType(RouteOptions).props.options;
+  expect(options).toMatchObject({
     title: 'Government agencies',
-    headerLargeTitleEnabled: true,
     headerSearchBarOptions: { placement: 'stacked' },
   });
-  expect(view!.root.findByType(RouteOptions).props.options).not.toHaveProperty(
-    'headerTitle',
-  );
+  // Sweep 2: the system large title cannot wrap, so the page draws its own.
+  expect(options.headerLargeTitleEnabled).not.toBe(true);
+  expect(options).not.toHaveProperty('headerTitle');
   const list = view!.root.findByType(MoneyList);
   expect(typeof list.props.onScroll).toBe('function');
-  const alias = list.props.header.props.children[0];
-  expect(alias.type).toBe(TitleAlias);
-  expect(alias.props).toEqual({
-    title: 'Government agencies',
-    testID: 'agencies-title',
+  const heading = view!.root
+    .findAllByType(Heading)
+    .find((h) => h.props.testID === 'agencies-title')!;
+  expect(heading.props).toMatchObject({
+    level: 1,
+    kind: 'page',
+    children: 'Government agencies',
   });
+  expect(view!.root.findAllByType(TitleAlias)).toHaveLength(0);
 });
 
 test('Votes keeps Filters before More, its named back button and its scrolling title', async () => {
