@@ -1,5 +1,6 @@
 /** Receipt aggregates from the published money graph, preserving its distinct party and donor scopes. */
 import { donorAssociatedTo, donorDisclosure, hasPartyReceipts, otherReceiptsLine, partyReturns, publicFundingOnly, receiptGraph, receiptGraphScope, receiptSplit, type DonorDisclosureRecord } from '../../public/donor-disclosure.js'
+import { partyNameForPeriod } from '../../public/party-page.js'
 import { receiptYearWindow } from '../receipt-period'
 import { aud, clip, fold, siteUrl } from './record-common'
 import { lendingLines } from './declared-debts'
@@ -26,6 +27,7 @@ const RECIPIENT_NAMES: Record<string, string> = {
   'Country Liberal Party': 'the Country Liberal Party', 'One Nation': "Pauline Hanson's One Nation",
   'United Australia Party': 'the United Australia Party', 'Family First': 'the Family First Party',
   "Katter's Australian Party": "Katter's Australian Party", 'Centre Alliance': 'Centre Alliance',
+  'Libertarian Party': 'the Libertarian Party',
 }
 function resolve(nodes: MoneyNode[], name: string, kind: string): MoneyNode[] {
   const wanted = key(name)
@@ -70,7 +72,11 @@ function measured(series: ReceiptSeries, from: number, to: number, dated: boolea
 const limitations = (env: ToolEnv, text: string, notes: string[] = []): StructuredToolResult => ({ rows: [], coverage_only: true,
   citations: [{ kind: 'record', text, url: siteUrl(env, '/money?jur=federal&type=receipts') }], notes: [text, ...notes] })
 
-interface DeclaredRow { party: string; donor_declared_aud: number; records: number; period: string }
+// party is the name the gifts were made to (PR 344): a renamed party's flow that ends before
+// the new name was registered keeps its former name, and party_now gives the current one.
+interface DeclaredRow { party: string; party_now?: string; donor_declared_aud: number; records: number; period: string }
+/** "Labor", or "the Liberal Democratic Party (now the Libertarian Party)" for a row under a former name. */
+const declaredParty = (row: DeclaredRow) => row.party_now ? `the ${row.party} (now the ${row.party_now})` : row.party
 /**
  * A donor's flows that only its own donor return declares (hasPartyReceipts is false).
  * receiptGraph leaves them out of the each-gift-once figures, but OPAX holds the
@@ -87,7 +93,10 @@ function declaredOnly(raw: MoneyGraph, donor: MoneyNode, party: MoneyNode | unde
     const sized = amount(edge, from, to, dated)
     if (!sized || sized[0] <= 0) continue
     const years = !dated && edge.firstYear != null && edge.lastYear != null ? span(edge.firstYear, edge.lastYear) : span(from, to)
-    rows.push({ party: parties.get(edge.target)!.label, donor_declared_aud: sized[0], records: sized[1], period: years })
+    const inRange = Object.keys(edge.byYear ?? {}).map(Number).filter(year => !dated || year >= from && year <= to)
+    const lastYear = inRange.length ? Math.max(...inRange) : dated ? to : edge.lastYear ?? undefined
+    const recorded = partyNameForPeriod(parties.get(edge.target)!.label, lastYear)
+    rows.push({ party: recorded.name, ...(recorded.now ? { party_now: recorded.now } : {}), donor_declared_aud: sized[0], records: sized[1], period: years })
   }
   return rows.sort((a, b) => b.donor_declared_aud - a.donor_declared_aud || a.party.localeCompare(b.party))
 }
@@ -96,10 +105,11 @@ const records = (n: number) => `${n.toLocaleString('en-AU')} record${n === 1 ? '
 function declaredText(name: string, rows: DeclaredRow[]): string {
   const total = rows.reduce((sum, row) => sum + row.donor_declared_aud, 0), count = rows.reduce((sum, row) => sum + row.records, 0)
   const one = rows.length === 1 ? rows[0] : null
-  const recipients = one ? one.party : 'the parties'
-  return `${name}'s own donor return${count === 1 ? '' : 's'} declare${count === 1 ? 's' : ''} ${aud(total)} to ${one ? one.party : 'federal parties'} across ${records(count)}`
-    + `${one ? ` (${one.period})` : `: ${rows.map(row => `${row.party} ${aud(row.donor_declared_aud)} (${row.period})`).join('; ')}`}. `
-    + `${recipients === 'the parties' ? "The parties'" : `${recipients}'s`} own returns list no receipt from ${name}, so OPAX's figures, which count each gift once from the party's own return, do not include ${rows.length === 1 && count === 1 ? 'it' : 'them'}. `
+  // A former name's returns were lodged under that name: "The Liberal Democratic Party's own returns".
+  const owner = one ? `${one.party_now ? 'The ' : ''}${one.party}'s` : "The parties'"
+  return `${name}'s own donor return${count === 1 ? '' : 's'} declare${count === 1 ? 's' : ''} ${aud(total)} to ${one ? declaredParty(one) : 'federal parties'} across ${records(count)}`
+    + `${one ? ` (${one.period})` : `: ${rows.map(row => `${declaredParty(row)} ${aud(row.donor_declared_aud)} (${row.period})`).join('; ')}`}. `
+    + `${owner} own returns list no receipt from ${name}, so OPAX's figures, which count each gift once from the party's own return, do not include ${rows.length === 1 && count === 1 ? 'it' : 'them'}. `
     + (rows.length === 1 && count === 1 ? "The amount is the donor's declaration, not a receipt a party reported." : "The amounts are the donor's declarations, not receipts a party reported.")
 }
 

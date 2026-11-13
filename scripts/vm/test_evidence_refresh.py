@@ -331,9 +331,11 @@ import argparse,hashlib,json,os,pathlib,shutil,sqlite3,sys,time
 parser=argparse.ArgumentParser()
 parser.add_argument('--source',type=pathlib.Path,required=True)
 parser.add_argument('--bundle-root',type=pathlib.Path,required=True)
+parser.add_argument('--timeout-seconds',type=float,required=True)
 args=parser.parse_args()
 assert os.environ['OPAX_SYNC_KB']=='0'
 with (pathlib.Path(os.environ['HOME'])/'evidence-build.calls').open('a') as stream: stream.write('build\\n')
+(pathlib.Path(os.environ['HOME'])/'evidence-build.budget').write_text(repr(args.timeout_seconds))
 mode=os.environ.get('EVIDENCE_BUILD_MODE','ok')
 args.bundle_root.mkdir(parents=True,exist_ok=True)
 number=len((pathlib.Path(os.environ['HOME'])/'evidence-build.calls').read_text().splitlines())
@@ -436,7 +438,7 @@ else: print(json.dumps(report))
         self.inputs['additional'].unlink()
         for _ in range(2):
             result = self.run_refresh('ok')
-            self.assertIn('evidence layers: snapshot 8 Sep 2026; rebuild pending a decision (missing:', result)
+            self.assertIn('evidence layers: built 8 Sep 2026; no rebuild scheduled (OPAX_EVIDENCE_MONTHLY is off) (missing:', result)
             self.assertNotIn('waiting for inputs', result)
             self.assertIn(self.inputs['places'].name, result)
             self.assertIn(self.inputs['additional'].name, result)
@@ -450,10 +452,10 @@ else: print(json.dumps(report))
     def test_missing_inputs_with_an_undated_export_say_so_in_sydney_time(self):
         self.inputs['places'].unlink()
         result = self.run_refresh('ok')
-        self.assertIn('evidence layers: snapshot date unknown; rebuild pending a decision', result)
+        self.assertIn('evidence layers: build date unknown; no rebuild scheduled', result)
         self.date_shipped_export('2026-09-08T15:30:00Z')
         result = self.run_refresh('ok')
-        self.assertIn('evidence layers: snapshot 9 Sep 2026; rebuild pending a decision', result)
+        self.assertIn('evidence layers: built 9 Sep 2026; no rebuild scheduled', result)
         self.assertEqual(result.count('WARN:'), 0)
         self.assertTrue(self.pending.exists())
 
@@ -505,6 +507,51 @@ else: print(json.dumps(report))
         result = self.run_refresh('at_threshold')
         self.assertNotIn('FAIL:', result)
         self.assertFalse(self.pending.exists())
+
+    def test_builder_budget_follows_the_build_timeout(self):
+        budget = self.home / 'evidence-build.budget'
+        for limit, seconds in ((None, 5400.0), ('5h', 18000.0), ('270m', 16200.0), ('900s', 900.0), ('10', 10.0)):
+            with self.subTest(limit=limit):
+                self.pending.touch()  # catch-up owed, so every run builds
+                budget.unlink(missing_ok=True)
+                self.run_refresh('ok', OPAX_EVIDENCE_BUILD='1', **({'OPAX_EVIDENCE_BUILD_TIMEOUT': limit} if limit else {}))
+                self.assertEqual(float(budget.read_text()), seconds)
+
+    def test_evidence_run_builds_and_exports_while_acquisition_is_skipped(self):
+        self.pending.parent.mkdir(parents=True, exist_ok=True)
+        (self.pipe / 'evidence-refresh-v1.initialized').touch()
+        # A Monday with no catch-up owed would skip; skipped acquisition would skip too.
+        self.assertIn('evidence export skipped; catch-up retained',
+                      self.run_refresh('ok', OPAX_TODAY='2026-10-12', OPAX_EVIDENCE_BUILD='1', OPAX_NIGHTLY_SKIP_REFRESH='1'))
+        result = self.run_refresh('ok', OPAX_TODAY='2026-10-12', OPAX_EVIDENCE_BUILD='1', OPAX_NIGHTLY_SKIP_REFRESH='1',
+                                  EVIDENCE_RUN='1')
+        self.assertIn('building a frozen evidence bundle (monthly rebuild)', result)
+        self.assertIn('evidence export (monthly rebuild)', result)
+        self.assertEqual((self.home / 'evidence-build.calls').read_text(), 'build\n')
+        self.assertTrue(self.active.exists())
+        self.assertFalse(self.pending.exists())
+
+    def test_missing_inputs_name_the_monthly_schedule_when_it_is_on(self):
+        self.inputs['places'].unlink()
+        result = self.run_refresh('ok', OPAX_EVIDENCE_MONTHLY='1')
+        self.assertIn('evidence layers: build date unknown; rebuilt on the first Saturday of the month', result)
+        self.assertEqual(result.count('WARN:'), 0)
+        self.assertNotIn('FAIL:', result)
+
+    def test_a_layer_older_than_one_missed_monthly_rebuild_fails_the_night(self):
+        self.date_shipped_export('2026-09-08T09:21:53.082961+00:00')
+        self.inputs['places'].unlink()
+        for today, stale in (('2026-10-18', False), ('2026-10-19', True)):
+            with self.subTest(today=today):
+                result = self.run_refresh('ok', OPAX_EVIDENCE_MONTHLY='1', OPAX_TODAY=today)
+                if stale:
+                    self.assertIn('FAIL: evidence layers: built 8 Sep 2026, 41 days ago; the monthly rebuild has not published', result)
+                else:
+                    self.assertIn('evidence layers: built 8 Sep 2026; rebuilt on the first Saturday of the month', result)
+                    self.assertNotIn('FAIL:', result)
+                self.assertTrue(self.pending.exists())
+        # Without the monthly schedule there is nothing to miss: an info line, as before.
+        self.assertNotIn('FAIL:', self.run_refresh('ok', OPAX_TODAY='2026-12-25'))
 
     def test_build_is_opt_in_and_default_ignores_active_bundle(self):
         self.active.write_text('{"old":"retained"}')
@@ -644,21 +691,28 @@ else: print(json.dumps(report))
             evidence_bundle_state.activate(candidate, self.pipe / 'evidence-bundles', self.active, 'not-a-commit')
         self.assertEqual(self.active.read_bytes(), saved)
 
-    def test_prebuild_prunes_previous_verified_bundle_but_preserves_active_on_failure(self):
+    def test_one_bundle_between_builds_and_none_beside_a_new_build(self):
+        root = self.pipe / 'evidence-bundles'
+        history = self.pipe / 'evidence-bundle-history'
         for _ in range(2):
             self.run_refresh(OPAX_EVIDENCE_BUILD='1', OPAX_TODAY='2026-10-11')
-        root = self.pipe / 'evidence-bundles'
-        self.assertEqual(len(list(root.glob('*/READY.json'))), 2)
-        active = self.active.read_bytes()
-        active_dir = Path(json.loads(active)['bundle_dir'])
-        self.run_refresh(OPAX_EVIDENCE_BUILD='1', EVIDENCE_BUILD_MODE='fail', OPAX_TODAY='2026-10-11')
-        self.assertEqual(self.active.read_bytes(), active)
+            # Activation keeps only the published bundle.
+            self.assertEqual(len(list(root.glob('*/READY.json'))), 1)
+        active_dir = Path(json.loads(self.active.read_text())['bundle_dir'])
         self.assertTrue(active_dir.is_dir())
-        self.assertEqual(len(list(root.glob('*/READY.json'))), 1)
-        self.assertTrue(list((self.pipe / 'evidence-bundle-history').glob('*.receipt.json')))
+        self.assertEqual(len(list(history.glob('*.receipt.json'))), 1)
+        # Before allocating, the build drops the published bundle and its pointer; a failed
+        # build then leaves no bundle, and the public tree and catch-up stay as they were.
+        before = guard.read_tree(self.repo / guard.EVIDENCE)
+        self.run_refresh(OPAX_EVIDENCE_BUILD='1', EVIDENCE_BUILD_MODE='fail', OPAX_TODAY='2026-10-11')
+        self.assertFalse(active_dir.exists())
+        self.assertFalse(self.active.exists())
+        self.assertEqual(list(root.glob('*/READY.json')), [])
+        self.assertEqual(len(list(history.glob('*.receipt.json'))), 2)
+        self.assertEqual(guard.read_tree(self.repo / guard.EVIDENCE), before)
         self.assertTrue(self.pending.exists())
 
-    def test_retention_never_deletes_foreign_unknown_symlink_or_active_data(self):
+    def test_retention_never_deletes_foreign_unknown_or_symlinked_data(self):
         self.run_refresh(OPAX_EVIDENCE_BUILD='1')
         active = json.loads(self.active.read_text())
         root = self.pipe / 'evidence-bundles'
@@ -676,7 +730,9 @@ else: print(json.dumps(report))
                        if path.is_dir() and path != foreign and path.resolve() != Path(active['bundle_dir']))
         (unknown / 'do-not-delete.txt').write_text('unknown')
         evidence_bundle_state.prepare(root, self.active)
-        self.assertTrue(Path(active['source']).is_file())
+        # The published bundle is managed and verified, so the pre-build drop removes it.
+        self.assertFalse(Path(active['bundle_dir']).exists())
+        self.assertFalse(self.active.exists())
         self.assertTrue((foreign / 'foreign.db').is_file())
         self.assertTrue((unknown / 'do-not-delete.txt').is_file())
         self.assertTrue(linked.is_symlink())

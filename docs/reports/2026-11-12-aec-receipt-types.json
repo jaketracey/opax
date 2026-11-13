@@ -1352,9 +1352,10 @@
   "selection_rule": "Both scopes use aec_receipt_selection.ReceiptSelection.exclusion, including per-name public-funding and party-name exclusions even when another alias of the entity is visible. The map additionally requires an existing donor-party edge. Visible industry tags remain the released graph node tags; uncapped tags follow industry_method.",
   "industry_method": "Resolve donor names with the existing exact alias index. Sum existing AEC-row amounts by classified industry for each donor entity, ignoring other/unidentified; largest tag wins. Resolver-kind union forces unions. No new industry labels are inferred from the CSV.",
   "full_party_receipts_exclusions": {
-    "nonparty_or_unmapped_recipient": 2113,
+    "nonparty_or_unmapped_recipient": 2044,
     "flagged_review": 25,
-    "government_or_internal": 7856,
+    "government_or_internal": 7621,
+    "public_funding": 277,
     "blank_or_nonpositive": 1
   },
   "industries_full_party_receipts": {
@@ -1404,7 +1405,7 @@
     },
     "mining": {
       "all_types": {
-        "aud": 90652171.0,
+        "aud": 90902171.0,
         "top5": [
           {
             "recipient": "United Australia Party",
@@ -1429,7 +1430,7 @@
         ]
       },
       "donation_only": {
-        "aud": 79462801.0,
+        "aud": 79712801.0,
         "top5": [
           {
             "recipient": "United Australia Party",
@@ -1560,7 +1561,7 @@
     },
     "tobacco": {
       "all_types": {
-        "aud": 3259332.0,
+        "aud": 3429332.0,
         "top5": [
           {
             "recipient": "Liberal",
@@ -1573,11 +1574,15 @@
           {
             "recipient": "Nationals",
             "aud": 425700.0
+          },
+          {
+            "recipient": "Libertarian Party",
+            "aud": 170000.0
           }
         ]
       },
       "donation_only": {
-        "aud": 2151325.0,
+        "aud": 2321325.0,
         "top5": [
           {
             "recipient": "Liberal",
@@ -1590,13 +1595,17 @@
           {
             "recipient": "Nationals",
             "aud": 364700.0
+          },
+          {
+            "recipient": "Libertarian Party",
+            "aud": 170000.0
           }
         ]
       }
     },
     "finance": {
       "all_types": {
-        "aud": 203671178.0,
+        "aud": 203786884.0,
         "top5": [
           {
             "recipient": "Labor",
@@ -1621,7 +1630,7 @@
         ]
       },
       "donation_only": {
-        "aud": 39059336.0,
+        "aud": 39159336.0,
         "top5": [
           {
             "recipient": "Liberal",
@@ -1694,7 +1703,7 @@
     },
     "mining": {
       "all_types": {
-        "aud": 78848025.0,
+        "aud": 79098025.0,
         "top5": [
           {
             "recipient": "United Australia Party",
@@ -1719,7 +1728,7 @@
         ]
       },
       "donation_only": {
-        "aud": 71825110.0,
+        "aud": 72075110.0,
         "top5": [
           {
             "recipient": "United Australia Party",
@@ -1830,7 +1839,7 @@
     },
     "tobacco": {
       "all_types": {
-        "aud": 2946112.0,
+        "aud": 3116112.0,
         "top5": [
           {
             "recipient": "Liberal",
@@ -1843,11 +1852,15 @@
           {
             "recipient": "Nationals",
             "aud": 363200.0
+          },
+          {
+            "recipient": "Libertarian Party",
+            "aud": 170000.0
           }
         ]
       },
       "donation_only": {
-        "aud": 1918825.0,
+        "aud": 2088825.0,
         "top5": [
           {
             "recipient": "Liberal",
@@ -1860,13 +1873,17 @@
           {
             "recipient": "Nationals",
             "aud": 302200.0
+          },
+          {
+            "recipient": "Libertarian Party",
+            "aud": 170000.0
           }
         ]
       }
     },
     "finance": {
       "all_types": {
-        "aud": 169586920.0,
+        "aud": 169602626.0,
         "top5": [
           {
             "recipient": "Labor",

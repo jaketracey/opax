@@ -4,6 +4,7 @@ export {windowFigures, partyReturnWindow, partyReturnScope, receiptMeasureLabel,
 import {financialYear, fy, industryName} from '../public/money-scope.js'
 import {donorDisclosure,donorLookup,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {partyUrl} from '../public/canonical-urls.js'
+import {partyNameForPeriod} from '../public/labels.js'
 // ---------------------------------------------------------------------------
 // OPAX Money Map - public entry.
 //
@@ -277,7 +278,9 @@ const toMapEdge = (e: MoneyEdge): MapEdge => ({
 })
 
 /** One donor flow that only the donor's own return declares: its record figures, never a party's receipt. */
-export type DeclaredFlow = { party: string; total: number; count: number; firstYear: number | null; lastYear: number | null }
+// party is the name the gifts were made to (PR 344): a renamed party's flow that ends before the new
+// name was registered keeps its former name, and partyNow is the current one (labels.js partyNameForPeriod).
+export type DeclaredFlow = { party: string; partyNow?: string; total: number; count: number; firstYear: number | null; lastYear: number | null }
 
 /**
  * A donor's flows to parties that no party return lists (hasPartyReceipts is
@@ -292,7 +295,8 @@ export function declaredOnlyFlows(raw: MoneyGraph, donorId: string): DeclaredFlo
   for (const e of raw.edges) {
     // Public Funding on the party's return is not a donor's declaration (A35): its own line says what it is.
     if (e.source !== donorId || e.grant || e.flow || !parties.has(e.target) || hasPartyReceipts(e) || publicFundingOnly(e) || !(e.total > 0)) continue
-    rows.push({ party: parties.get(e.target)!, total: e.total, count: e.count ?? 0, firstYear: e.firstYear ?? null, lastYear: e.lastYear ?? null })
+    const recorded = partyNameForPeriod(parties.get(e.target)!, e.lastYear ?? undefined)
+    rows.push({ party: recorded.name, ...(recorded.now ? { partyNow: recorded.now } : {}), total: e.total, count: e.count ?? 0, firstYear: e.firstYear ?? null, lastYear: e.lastYear ?? null })
   }
   return rows.sort((a, b) => b.total - a.total || a.party.localeCompare(b.party))
 }
@@ -316,9 +320,10 @@ export function declaredFlowsText(rows: DeclaredFlow[]): string {
   const total = rows.reduce((sum, r) => sum + r.total, 0)
   const count = rows.reduce((sum, r) => sum + r.count, 0)
   const verb = count === 1 ? 'return declares' : 'returns declare'
-  if (rows.length === 1) return `own donor ${verb} ${dollars(total)} to ${rows[0].party} across ${records(count)}${years(rows[0])}`
+  const party = (r: DeclaredFlow) => r.partyNow ? `the ${r.party} (now the ${r.partyNow})` : r.party
+  if (rows.length === 1) return `own donor ${verb} ${dollars(total)} to ${party(rows[0])} across ${records(count)}${years(rows[0])}`
   return `own donor ${verb} ${dollars(total)} to federal parties across ${records(count)}: `
-    + rows.map(r => `${r.party} ${dollars(r.total)}${years(r)}`).join('; ')
+    + rows.map(r => `${party(r)} ${dollars(r.total)}${years(r)}`).join('; ')
 }
 
 /**

@@ -6,12 +6,12 @@ import {fy} from './money-scope.js';
    (/graph/party-members.json, scripts/build_party_index.mjs).
    Pure functions; app.js passes in its helpers. */
 
-import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=89dda4a520';
+import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=6d2e2e9cd8';
 import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=bcc9a57bab';
 
 // Server consumers use these re-exports too, keeping the stamped browser
 // dependencies and their identity tables to one copy in the Worker bundle.
-export * from './labels.js?v=89dda4a520';
+export * from './labels.js?v=6d2e2e9cd8';
 export * from './canonical-urls.js?v=bcc9a57bab';
 
 const fold = value => String(value ?? '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
@@ -383,6 +383,20 @@ function combinedNode(nodes) {
     .map(n => `${n.label} ${Math.round(n.total || 0).toLocaleString('en-AU', {style: 'currency', currency: 'AUD', maximumFractionDigits: 0})}`);
   return {...nodes[0], total: nodes.reduce((a, n) => a + (n.total || 0), 0), count: nodes.reduce((a, n) => a + (n.count || 0), 0),
     firstYear: years[0], lastYear: years.at(-1), lodgedAs: `Lodged as ${parts.join('; as ')}`};
+}
+/** A renamed party's money-map node: the part of its own-return total lodged under each name
+ *  (money.json `return_by_name`, {name: [AUD, lines, first year, last year]}), oldest first, as one line:
+ *  "Liberal Democratic Party $1.8m in 34 receipts, 2013-14 to 2022-23; Libertarian Party ...".
+ *  Empty when the node has one name or no split. */
+export function partyLodgedAsText(node, fmtMoney) {
+  const parts = Object.entries(node?.return_by_name || {})
+    .filter(([, cell]) => Array.isArray(cell) && Number(cell[1]) > 0)
+    .sort((a, b) => String(a[1][2] || '').localeCompare(String(b[1][2] || '')));
+  if (parts.length < 2) return '';
+  return parts.map(([name, [amount, lines, first, last]]) => {
+    const span = !first ? '' : first === last || !last ? `, ${fy(first)}` : `, ${fy(first)} to ${fy(last)}`;
+    return `${name} ${fmtMoney(Number(amount) || 0)} in ${Number(lines).toLocaleString('en-AU')} ${Number(lines) === 1 ? 'receipt' : 'receipts'}${span}`;
+  }).join('; ');
 }
 /** A renamed party's AEC annual-return rows (aec-extras.json `parties`) under every name it lodged as,
  *  one row per year (figures summed where two names lodged for one year), with which name each year

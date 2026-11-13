@@ -6,7 +6,8 @@ import {CONTRACTS_COVERAGE,contractsHubHTML} from '../public/contracts-table.js'
 import {suppliersTableHTML} from '../public/suppliers-table.js'
 import {partyMoneyResponse} from './party-money-table'
 import {interestRegisterResponse} from './interest-register'
-import {loadDonorIndex} from './donor-index'
+import {loadDonorIndex,loadDonorRecordsIndex,donorRecordsForName} from './donor-index'
+import {campaignerReturnsHTML,donorRecordsHTML,type CampaignerYear} from './subject-figures'
 import {donorDisclosure,donorLabelHTML,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
@@ -4076,7 +4077,7 @@ interface MoneyNode extends DonorDisclosureRecord {
   /** The money map's swatch for a party; drawn as the dot on its share card. */
   colour?: string
 }
-interface MoneyEntry extends MoneyNode { sourceShort: string; generated: string }
+interface MoneyEntry extends MoneyNode { sourceShort: string; generated: string; jurisdiction: string }
 interface MoneyData { generated: string; donors: Map<string, MoneyEntry>; parties: Map<string, MoneyEntry> }
 
 interface ReportEntry { slug: string; title: string; blurb: string; updated?: string }
@@ -4110,16 +4111,6 @@ const CAMPAIGNER_LABELS: Record<string, string> = {
   political_campaigner: 'Political campaigner',
 }
 
-/** One row of `entities.years`, in the column order the asset's meta declares. */
-type CampaignerYear = [
-  year: string,
-  receipts: number | null,
-  payments: number | null,
-  debts: number | null,
-  electoralExpenditure: number | null,
-  giftsReceived: number | null,
-]
-
 interface CampaignerRaw {
   name: string
   kind: string
@@ -4133,9 +4124,8 @@ interface CampaignerRaw {
 interface CampaignerFigure { amount: number; year: string }
 
 /**
- * What a meta description and a sitemap row need, reduced at parse time. The
- * year tables are most of the 510 KB file and only the front end reads them,
- * so holding 701 of them for the life of the isolate would buy nothing.
+ * Summary figures for metadata and sitemap rows. Keep the annual rows (about
+ * 510 KB for the catalogue) in isolate memory for readers of the server HTML.
  */
 interface Campaigner {
   name: string
@@ -4147,8 +4137,9 @@ interface Campaigner {
   lastYear: string
   receipts: CampaignerFigure | null
   spent: CampaignerFigure | null
+  years: CampaignerYear[]
 }
-interface CampaignersData { generated: string; entities: Campaigner[]; byFold: Map<string, Campaigner> }
+interface CampaignersData { generated: string; registerUrl: string; entities: Campaigner[]; byFold: Map<string, Campaigner> }
 
 /** Names as typed vs as stored: curly apostrophes, doubled spaces, case. */
 const foldName = (s: string): string =>
@@ -4187,7 +4178,7 @@ function loadPeople(env: Env): Promise<PeopleData> {
 type MoneyFile<N> = { meta?: { generated?: string; sourceShort?: string }; nodes: N[] }
 /** Donors and parties by folded name across the money graphs, in MONEY_GRAPH_PATHS order. */
 function moneyIndex<N extends { label: string; kind: string; aliases?: string[]; lookup_names?: string[] }>(files: MoneyFile<N>[]) {
-      type Entry = N & { sourceShort: string; generated: string }
+      type Entry = N & { sourceShort: string; generated: string; jurisdiction: string }
       const donors = new Map<string, Entry>()
       const parties = new Map<string, Entry>()
       let generated = ''
@@ -4203,7 +4194,7 @@ function moneyIndex<N extends { label: string; kind: string; aliases?: string[];
           // Federal (first file) wins; a state-only node stands in otherwise.
           // Jurisdictions are never summed (see money.qld.json meta.not_summed).
           if (!prev || (i === 0 && prev.sourceShort !== 'AEC returns')) {
-            const entry = { ...n, sourceShort, generated: gen }
+            const entry = { ...n, sourceShort, generated: gen, jurisdiction: ['federal','qld','vic','tas'][i] }
             map.set(key, entry)
             if (n.kind === 'donor') for (const alias of [...n.aliases || [], ...n.lookup_names || []]) {
               const aliasKey=foldName(alias)
@@ -4247,7 +4238,7 @@ function latestFigure(rows: CampaignerYear[], col: number): CampaignerFigure | n
 
 let campaignersMemo: Promise<CampaignersData> | null = null
 function loadCampaigners(env: Env): Promise<CampaignersData> {
-  campaignersMemo ??= assetJson<{ meta?: { generated?: string }; entities?: CampaignerRaw[] }>(env, '/graph/campaigners.json')
+  campaignersMemo ??= assetJson<{ meta?: { generated?: string; register_url?: string }; entities?: CampaignerRaw[] }>(env, '/graph/campaigners.json')
     .then((raw) => {
       const entities: Campaigner[] = []
       const byFold = new Map<string, Campaigner>()
@@ -4269,13 +4260,14 @@ function loadCampaigners(env: Env): Promise<CampaignersData> {
           lastYear: e.latest_year ?? rows[rows.length - 1]?.[0] ?? '',
           receipts: latestFigure(rows, 1),
           spent: latestFigure(rows, 4),
+          years: rows,
         }
         entities.push(entry)
         const f = foldName(entry.name)
         const prev = byFold.get(f)
         if (!prev || entry.filings > prev.filings) byFold.set(f, entry) // twin spellings: keep the fuller entry
       }
-      return { generated: raw.meta?.generated ?? '', entities, byFold }
+      return { generated: raw.meta?.generated ?? '', registerUrl: raw.meta?.register_url ?? '', entities, byFold }
     })
     .catch((err) => {
       campaignersMemo = null
@@ -5577,6 +5569,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   // A name no record holds is never repeated back (unknownSubjectMeta).
   let node: MoneyEntry | null, display: string
   let disclosureRecord: DonorDisclosureRecord | null = null
+  let offMapRecords: DonorDisclosureRecord[] = []
   if (dir === 'party') {
     const party = await partyFor(name, env)
     if (!party.label) return unknownSubjectMeta('party', party.loaded)
@@ -5589,6 +5582,11 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     disclosureRecord = node ?? index?.get('federal:' + foldDonorName(name)) ?? index?.get(foldDonorName(name)) ?? null
     // A name the index holds nowhere is a 404; an index that could not be read is a 503, never a missing-donor page.
     if (!disclosureRecord) return unknownSubjectMeta('donor', Boolean(index))
+    // A map node in one jurisdiction must not hide index-only figures in another.
+    // Keep the map's measure for its own jurisdiction, and each other record's scope.
+    const recordsIndex = await loadDonorRecordsIndex(env.ASSETS).catch(()=>null)
+    offMapRecords = (recordsIndex ? donorRecordsForName(recordsIndex,name) : [])
+      .filter(record => (record.jurisdiction || 'federal') !== node?.jurisdiction)
     display = disclosureRecord ? donorDisclosure(disclosureRecord).name : name
   }
   const canonical = dir==='party' ? `${SITE_ORIGIN}${partyUrl(display)}` : node && donorDisclosure(node).href ? new URL(donorDisclosure(node).href!,SITE_ORIGIN).href : `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`
@@ -5673,7 +5671,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
         ...(associated ? [`${associated.charAt(0).toUpperCase()}${associated.slice(1)}`] : [])],
     }
   } else {
-    facts = disclosureRecord?.kind==='reference' ? `${display}: source reference; no matching electoral donation established.` : `${display}: disclosed electoral returns outside the bounded money-map selection.`
+    facts = disclosureRecord?.kind==='reference' ? `${display}: source reference; no matching electoral donation established.` : `${display}: disclosed electoral returns. Not drawn on the money map, which shows only the largest donors.`
     card = {kicker:disclosureRecord?.kind==='reference'?'Source reference':'Donor',title:display,lines:[facts]}
   }
   // A renamed party's name history (labels.js PARTY_RENAMES): the line under its heading, with the notices.
@@ -5701,7 +5699,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     ogType: 'profile',
     status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: heading, url: canonical, description },
-    prerender: prerenderBlock(heading,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${indexLinks()}`
+    prerender: prerenderBlock(heading,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${donorRecordsHTML(offMapRecords)}${indexLinks()}`
       : historyHTML + (memberRows.length ? `<h2>${independent ? 'Parliamentarians' : 'Members'}</h2><ul>${memberRows.slice(0,24).map(({name: n, labels})=>{const href=personPath(people,n),as=recordedAsText(display,labels);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}${as ? ` (${escHtml(as.charAt(0).toLowerCase()+as.slice(1))})` : ''}</li>`}).join('')}</ul><p>${escHtml(PARTY_MEMBER_SCOPE)}</p>` : '')
         + (sponsored.length ? `<h2>Bills sponsored</h2><ul>${sponsored.slice(0,24).map(b=>{const as=recordedAsText(display,[b.party ?? ''],'sponsor recorded as');return `<li><a href="/bill/${encodeURIComponent(b.key)}">${escHtml(b.title)}</a>${b.introduced ? `, introduced ${escHtml(dayMonthYear(b.introduced))}` : ''}${as ? `, ${escHtml(as)}` : ''}</li>`}).join('')}</ul>` : '')
         + indexLinks()) + table,
@@ -5753,7 +5751,7 @@ async function campaignerMeta(name: string, url: URL, env: Env): Promise<PageMet
       // The ABN is the one identifier that survives a rename or a rebrand.
       ...(c.abn ? { identifier: { '@type': 'PropertyValue', propertyID: 'ABN', value: c.abn } } : {}),
     },
-    prerender: prerenderBlock(display, `${facts} ${tail}`),
+    prerender: prerenderBlock(display, `${facts} ${tail}`,campaignerReturnsHTML(display,c.years,data?.registerUrl ?? '')),
     card: {
       kicker: c.kindLabel,
       title: display,

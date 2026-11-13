@@ -258,7 +258,7 @@ const servedAec = JSON.parse(readFileSync(new URL('../public/graph/aec-extras.js
 for (const [group, cases] of [
   ['media & tech', [['media', 'Media', 17745788], ['telecom', 'Telecom', 5592395], ['media & tech', 'Media & tech', 27176074]]],
   ['legal & lobbying', [['legal', 'Legal', 4191698], ['lobbying', 'Lobbying', 1463051], ['legal & lobbying', 'Legal & lobbying', 5654749]]],
-  ['mining & energy', [['mining', 'Mining', 78848025], ['fossil_fuels', 'Fossil fuels', 6957496], ['mining & energy', 'Mining & energy', 85805521]]],
+  ['mining & energy', [['mining', 'Mining', 79098025], ['fossil_fuels', 'Fossil fuels', 6599697], ['mining & energy', 'Mining & energy', 85697722]]],
 ]) test(`served files: ${group} pages name the exact narrow or combined sum`, () => {
   for (const [industry, label, total] of cases) {
     const parsed = parseExplainParams(new URLSearchParams({industry}), served.federal, servedIndex);

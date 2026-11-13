@@ -36,4 +36,5 @@ export function dayMonthYear(day: string): string;
 export function recordedAsText(label: string, labels: string[] | null | undefined, lead?: string, renames?: import('./labels.js').PartyRename[]): string;
 export function partyHistory(label: string, renames?: import('./labels.js').PartyRename[]): { name: string; since: string | null; line: string; former: import('./labels.js').PartyFormerName[]; sources: { label: string; href: string }[] } | null;
 export function partyHistoryHTML(label: string, h: { esc: (s: unknown) => string }, renames?: import('./labels.js').PartyRename[]): string;
+export function partyLodgedAsText(node: { return_by_name?: Record<string, [number, number, string | null, string | null]> } | null | undefined, fmtMoney: (value: number) => string): string;
 export function partyReturns(label: string, parties: Record<string, { returns?: unknown[][] }> | null | undefined, same?: (a: string, b: string) => boolean): { rows: unknown[][]; names: string[]; note: string; entry: { returns?: unknown[][] } | null };
