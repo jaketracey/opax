@@ -1,6 +1,6 @@
 import { router, type Href } from 'expo-router';
 import { useRef } from 'react';
-import { Platform, Pressable, StyleSheet, type View } from 'react-native';
+import { Pressable, StyleSheet, type View } from 'react-native';
 import { CitationBadge } from '../../design/citation-mark';
 import { Icon } from '../../design/icon';
 import { confirmAction } from '../../design/menu';
@@ -207,15 +207,10 @@ export function AskSuggestionRow({
       onLongPress={
         leaves.length && !offline
           ? () =>
-              // Android anchors its menu to the row it came from; without
-              // a trigger it fell back to the top corner. iOS keeps its sheet.
-              confirmAction(
-                question,
-                leaves,
-                Platform.OS === 'android'
-                  ? (row.current ?? undefined)
-                  : undefined,
-              )
+              // The menu comes from the row: Android's popup without a
+              // trigger fell back to the top corner, and an iOS popover
+              // (iPad, an unfolded iPhone Duo) points at it.
+              confirmAction(question, leaves, row.current ?? undefined)
           : undefined
       }
       testID={testID}

@@ -1046,7 +1046,8 @@ describe('Following', () => {
       title: 'Unfollow all 2?',
       message: 'Today stops showing their changes.',
       options: ['Unfollow all', 'Cancel'],
-      destructiveButtonIndex: 0,
+      // Through confirmAction, as every iOS confirmation.
+      destructiveButtonIndex: [0],
     });
     await act(async () => answer(0));
     expect(await loadFollows()).toEqual([]);
