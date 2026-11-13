@@ -92,17 +92,22 @@ export function registerCategoryLabel(key: string): string {
   const plain = key.replaceAll('_', ' ');
   return plain.charAt(0).toUpperCase() + plain.slice(1);
 }
-// Who an entry belongs to, as the House register forms name them. The export
-// writes "unspecified" where a register (the Senate's, Queensland's) has no
-// holder column; that and any unknown value print nothing.
+// Who an entry belongs to, as the House register forms name them. Where a
+// register (the Senate's, Queensland's) has no holder column, the export
+// writes "unspecified" or, from backlog 14, null. Those and any unknown value
+// print nothing: no label, never "Not stated".
 const registerHolders: Record<string, string> = {
   self: 'Member',
   spouse: 'Spouse or partner',
   children: 'Dependent children',
 };
+const holderLabel = (holder: string | null) =>
+  holder && Object.hasOwn(registerHolders, holder)
+    ? registerHolders[holder]!
+    : '';
 /** Household copies share one activity row, with every distinct holder named. */
 export function registerHolderLine(
-  holders: readonly string[] = [],
+  holders: readonly (string | null)[] = [],
   operation?: 'addition' | 'deletion',
 ): string | undefined {
   const distinct = new Set(holders);
@@ -124,7 +129,7 @@ export function registerHolderLine(
   return `${operation === 'deletion' ? 'Removed from the register for' : 'Declared by'} ${list}`;
 }
 type RegisterRow = {
-  holder: string;
+  holder: string | null;
   description: string;
   kind: string;
   date?: string | null;
@@ -163,7 +168,7 @@ export function registerEntry(
             ? `Recorded ${when}`
             : '';
   const meta = [
-    registerHolders[row.holder] ?? '',
+    holderLabel(row.holder),
     change,
     row.page ? `page ${formatCount(row.page)}` : '',
     row.ocr ? 'OCR transcription' : '',

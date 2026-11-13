@@ -32,8 +32,9 @@ export interface LatestRecord extends FollowRecord {
   href?: Href;
   holderLine?: string;
 }
-type ActivityRecord = FollowRecord & { holders?: string[] };
-type DeclarationRecord = ActivityRecord & { holders: string[] };
+// A null holder is a register with no holder column (see registerHolderLine).
+type ActivityRecord = FollowRecord & { holders?: (string | null)[] };
+type DeclarationRecord = ActivityRecord & { holders: (string | null)[] };
 const recordSymbols: Record<FollowRecord['kind'], SFSymbol> = {
   vote: symbols.vote,
   register: symbols.interests,
@@ -164,10 +165,13 @@ export function latestRecords(
           declarations.set(identity, duplicate);
           continue;
         }
+        // Seen state stores this key. A null holder keys as the export's
+        // older "unspecified" placeholder, so a row already seen stays seen
+        // when the export switches to null.
         const record: DeclarationRecord = {
           key:
             key ??
-            `register:${category}:${row.date}:${row.kind}:${row.holder}:${row.description}`,
+            `register:${category}:${row.date}:${row.kind}:${row.holder ?? 'unspecified'}:${row.description}`,
           kind: 'register',
           date: row.date,
           title: row.description,
