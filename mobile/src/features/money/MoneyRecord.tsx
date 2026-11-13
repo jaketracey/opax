@@ -504,17 +504,34 @@ function NodeRecord({ params, id }: { params: MoneyParams; id: string }) {
         : null,
     [graph, filters],
   );
-  const name = param(params.name);
+  // A web or shared link names a donor ("/subject/donor/Pratt Holdings Pty
+  // Ltd" reads as node "donor:Pratt Holdings Pty Ltd"), but graph ids are
+  // normalised ("donor:pratt"). An id the graph doesn't hold is matched by
+  // name, exactly or on a recorded spelling (donorNodeFor), and the route
+  // takes the real id so back and share carry it. No match: not on the map.
+  const named = useMemo(
+    () =>
+      graph && id.startsWith('donor:') && !graph.nodes.some((n) => n.id === id)
+        ? donorNodeFor({ name: id.slice('donor:'.length) }, graph)
+        : null,
+    [graph, id],
+  );
+  useEffect(() => {
+    if (named)
+      navigation.setParams({ node: named.id, name: named.label } as never);
+  }, [named, navigation]);
+  const nodeId = named?.id ?? id;
+  const name = named?.label ?? param(params.name);
   const node =
     graph && view
-      ? id.startsWith('party:')
+      ? nodeId.startsWith('party:')
         ? (() => {
-            const party = partyNodeFor(graph, id);
+            const party = partyNodeFor(graph, nodeId);
             return party
               ? view.nodes.find((n) => n.id === party.id)
               : undefined;
           })()
-        : view.nodes.find((n) => n.id === id)
+        : view.nodes.find((n) => n.id === nodeId)
       : undefined;
   if (!record || !graph || !filters || !view)
     return <LoadState name={name} error={error} retry={retry} />;
