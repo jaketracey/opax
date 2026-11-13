@@ -487,7 +487,15 @@ export function FollowButton({
           up rather than jumping. The limit's Edit Following arrives with it. */}
       <HeightReveal reduceMotion={reduceMotion} testID={`${testID}-reveal`}>
         {message ? (
-          <Group gap={rhythm.tight} style={styles.followMessage}>
+          <Group
+            gap={rhythm.tight}
+            style={[
+              styles.followMessage,
+              // Android buttons start-align, so the limit's Edit Following
+              // would sit at the message's leading edge, off the centre line.
+              centre ? styles.followGroupCentred : null,
+            ]}
+          >
             <Animated.View style={{ opacity: confirmation ? opacity : 1 }}>
               <Text
                 wordSafe
@@ -1895,6 +1903,7 @@ const styles = StyleSheet.create({
   shrink: { flexShrink: 1 },
   hug: { alignSelf: 'flex-start' },
   followCentred: { alignSelf: 'center', alignItems: 'center' },
+  followGroupCentred: { alignItems: 'center' },
   followMessageCentred: { textAlign: 'center' },
   full: { alignSelf: 'stretch' },
   steps: {
