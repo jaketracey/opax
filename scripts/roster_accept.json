@@ -78,6 +78,165 @@
       "reason": "Add a missing recorded party only within the reviewed current-term guard in roster_service.json, or an explicit first-term exception. Hold earlier speech years until dated party history exists. Victorian affiliations stay in the already-dated seat catalog. Recheck full name, chamber, source URL, date and canonical party against offline public evidence."
     }
   },
+  "vote_party_periods": {
+    "note": "Reviewed per-record party periods for division vote rows (scripts/vote_parties.py, source accepted-record), each from a primary source. A record replaces the dated periods it lists under `replaces` and applies only while the evidence still holds exactly those periods; `periods` run from start to the day before end. `holds` take a window [start, end) out of a person's dated periods, so labels inside it are kept and the page keeps its caveat. `renames` give the name a party carried from each date. Reviewed 13 Nov 2026.",
+    "people": [
+      {
+        "name": "Harry Quick",
+        "chamber": "representatives",
+        "pid": "10525",
+        "checked": "2026-11-13",
+        "url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'AV5' and ROSTypeID eq 11",
+        "evidence": "Parliamentary Handbook records of service (PHID AV5): Australian Labor Party to 20 Aug 2007, Independent from 20 Aug 2007; member for Franklin 13 Mar 1993 to 17 Oct 2007 (ROSTypeID 9). House Hansard agrees: his speeches are headed ALP to 13 Aug 2007 and IND from 12 Sep 2007. The electorate release gave Independent for his whole service.",
+        "replaces": [
+          {
+            "party": "Independent",
+            "start": "1993-03-13",
+            "end": "2007-10-17"
+          }
+        ],
+        "periods": [
+          {
+            "party": "Labor",
+            "start": "1993-03-13",
+            "end": "2007-08-20"
+          },
+          {
+            "party": "Independent",
+            "start": "2007-08-20",
+            "end": "2007-10-17"
+          }
+        ]
+      },
+      {
+        "name": "Michael Johnson",
+        "aliases": [
+          "Michael Andrew Johnson"
+        ],
+        "chamber": "representatives",
+        "pid": "10342",
+        "checked": "2026-11-13",
+        "url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '00AMX' and ROSTypeID eq 11",
+        "evidence": "Parliamentary Handbook records of service (PHID 00AMX): Liberal Party of Australia to 20 May 2010, Independent from 21 May 2010; member for Ryan 10 Nov 2001 to 21 Aug 2010 (ROSTypeID 9). House Hansard agrees: his speeches are headed IND from 31 May 2010. The electorate release gave Liberal to the end of his service.",
+        "replaces": [
+          {
+            "party": "Liberal",
+            "start": "2001-11-10",
+            "end": "2010-08-21"
+          }
+        ],
+        "periods": [
+          {
+            "party": "Liberal",
+            "start": "2001-11-10",
+            "end": "2010-05-21"
+          },
+          {
+            "party": "Independent",
+            "start": "2010-05-21",
+            "end": "2010-08-21"
+          }
+        ]
+      },
+      {
+        "name": "Ian Goodenough",
+        "chamber": "representatives",
+        "pid": "10804",
+        "checked": "2026-11-13",
+        "url": "https://www.openaustralia.org.au/debates/?d=2025-02-11",
+        "evidence": "House Hansard, 11 Feb 2025, Statements by Members, Ian Goodenough (OPAX corpus speech 1194235; the url is OpenAustralia's index for that sitting day, as OpenAustralia refused the speech lookup on 13 Nov 2026): \"After 30 years with the Liberal Party, political circumstances ... caused me to move to the crossbench at the start of this year\". The Handbook (PHID 74046) gives one undated Liberal record and no date for the move. The release's 31 Dec 2024 end is a year-end placeholder; his own statement puts the move at the start of 2025, after the last 2024 sitting (28 Nov) and before the first 2025 sitting (4 Feb), so every 2024 sitting is Liberal. The boundary is restated at 1 Jan 2025; no sitting falls on the day this moves.",
+        "replaces": [
+          {
+            "party": "Liberal",
+            "start": "2013-09-07",
+            "end": "2024-12-31"
+          },
+          {
+            "party": "Independent",
+            "start": "2025-01-01",
+            "end": "2025-05-03"
+          }
+        ],
+        "periods": [
+          {
+            "party": "Liberal",
+            "start": "2013-09-07",
+            "end": "2025-01-01"
+          },
+          {
+            "party": "Independent",
+            "start": "2025-01-01",
+            "end": "2025-05-03"
+          }
+        ]
+      },
+      {
+        "name": "Barnaby Joyce",
+        "chamber": "senate",
+        "pid": "10350",
+        "checked": "2026-11-13",
+        "url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'E5D' and ROSTypeID eq 9",
+        "evidence": "Parliamentary Handbook records of service (PHID E5D): senator for Queensland 1 Jul 2005 to 8 Aug 2013, resigned to contest New England (ROSTypeID 9); his only party record is The Nationals (ROSTypeID 11, undated). His move to One Nation came in his House service (electorate release: from 20 Jan 2026). OpenAustralia's Senate Hansard heads his speeches National Party from 2006 to 2009 and Leader of The Nationals in the Senate from 2010 to 2013.",
+        "periods": [
+          {
+            "party": "Nationals",
+            "start": "2005-07-01",
+            "end": "2013-08-09"
+          }
+        ]
+      }
+    ],
+    "holds": [
+      {
+        "name": "Fraser Anning",
+        "chamber": "senate",
+        "pid": "10902",
+        "checked": "2026-11-13",
+        "url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '273829' and ROSTypeID eq 11",
+        "windows": [
+          {
+            "start": "2017-11-10",
+            "end": "2018-01-15"
+          },
+          {
+            "start": "2018-10-01",
+            "end": "2018-11-26"
+          }
+        ],
+        "reason": "Handbook dates conflict with contemporaneous reporting, pending a primary source: the Handbook gives One Nation from 10 Nov 2017 to 15 Jan 2018, where reporting has him leaving One Nation on the day he was sworn in, and Katter's Australian Party to 26 Nov 2018, where reporting has him expelled in late October 2018. The Handbook dates may be when the change was recorded. The Senate Journals would settle both (backlog A21; www.aph.gov.au and ParlInfo are not fetched)."
+      }
+    ],
+    "renames": [
+      {
+        "names": [
+          {
+            "name": "Nick Xenophon Team"
+          },
+          {
+            "name": "Centre Alliance",
+            "from": "2018-04-10"
+          }
+        ],
+        "checked": "2026-11-13",
+        "url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '76760' and ROSTypeID eq 11",
+        "evidence": "Parliamentary Handbook records of service: Stirling Griff (PHID 76760) and Rex Patrick are Nick Xenophon Team to 10 Apr 2018 and Centre Alliance from 10 Apr 2018 (scripts/handbook_party_service.json)."
+      },
+      {
+        "names": [
+          {
+            "name": "Palmer United Party"
+          },
+          {
+            "name": "United Australia Party",
+            "from": "2018-06-18"
+          }
+        ],
+        "checked": "2026-11-13",
+        "url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq '207807' and ROSTypeID eq 11",
+        "evidence": "The Handbook's party records date Palmer United Party periods to 2015 at the latest (Jacqui Lambie, Glenn Lazarus) and the first United Australia Party [2018] period from 18 Jun 2018 (Brian Burston). No party member sat in either chamber between Dio Wang's last Senate division in 2016 and that date, so the division record uses the new name from 18 Jun 2018 and the old one before it."
+      }
+    ]
+  },
   "export": {
     "generated": "2026-10-18",
     "people": 1621,
