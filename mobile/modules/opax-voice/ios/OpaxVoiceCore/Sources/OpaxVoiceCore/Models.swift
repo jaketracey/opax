@@ -24,6 +24,17 @@ public struct VoiceSource: Sendable, Codable, Equatable {
     public let title: String
     /// A validated OPAX record path, never a signed URL.
     public let path: String
+    /// What an Ask source row carries, when the voice tool sends it: the plain record title,
+    /// the speaker or body, the date (a day, month, year or short label such as "1999–2026")
+    /// and the record type ("Speech", "Pay record"). Older tool results send title and path only.
+    public let recordTitle: String?
+    public let speaker: String?
+    public let date: String?
+    public let type: String?
+    public init(title: String, path: String, recordTitle: String? = nil, speaker: String? = nil, date: String? = nil, type: String? = nil) {
+        self.title = title; self.path = path
+        self.recordTitle = recordTitle; self.speaker = speaker; self.date = date; self.type = type
+    }
 }
 /// The only surface an Expo bridge should forward. Contains neither audio nor credentials.
 public enum VoiceEvent: Sendable, Equatable {

@@ -42,7 +42,7 @@ import { ReservedRegionArea, useReservedRegions } from '../../design/fold-area';
 import { designFlags } from '../../design/flags';
 import { colors, layout, rhythm } from '../../design/tokens';
 import { closeSheetItem, androidHeaderBar } from '../../navigation/chrome';
-import { openOnWeb, webPageUrl } from '../../navigation/external';
+import { openOnWeb } from '../../navigation/external';
 import {
   talkRecordRouteFor,
   talkSignInRoute,
@@ -59,7 +59,11 @@ import {
   voiceTime,
   voiceTimeSpoken,
 } from './model';
-import { recordDestination } from './sources';
+import {
+  askDraftDestination,
+  canOpenSource,
+  recordDestination,
+} from './sources';
 import { useTalk } from './useTalk';
 import { AnswerCaption } from './AnswerCaption';
 import { workingCaption } from './caption-text';
@@ -327,19 +331,35 @@ function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
       ]);
     else finish();
   };
+  /** A web record, or an Ask pay row as a draft in Ask (Talk closes first, as with Ask instead). */
+  function openOutside(source: VoiceSource) {
+    const draft = askDraftDestination(source.path);
+    if (!draft) return void openOnWeb(source.path, source.title);
+    leaveTalk();
+    setTimeout(
+      () =>
+        router.navigate({
+          pathname: '/(tabs)/(ask)/ask',
+          params: draft.params,
+        } as Href),
+      500,
+    );
+  }
   function openRecord(source: VoiceSource) {
-    if (!webPageUrl(source.path)) return;
+    if (!canOpenSource(source.path)) return;
     if (recordDestination(source.path)) {
       router.push(talkRecordRouteFor(source.path));
       return;
     }
     if (!active) {
-      void openOnWeb(source.path, source.title);
+      openOutside(source);
       return;
     }
     Alert.alert(
       talkCopy.webRecord.title,
-      talkCopy.webRecord.message(source.title),
+      askDraftDestination(source.path)
+        ? talkCopy.webRecord.askMessage(source.title)
+        : talkCopy.webRecord.message(source.title),
       [
         { text: talkCopy.webRecord.keep, style: 'cancel' },
         {
@@ -349,7 +369,11 @@ function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
         {
           text: talkCopy.webRecord.now,
           onPress: () =>
-            void call.end().then(() => openOnWeb(source.path, source.title)),
+            void call.end().then(() => {
+              // The call has ended, so the back guard must not ask again (as in close()).
+              exitConfirmed.current = true;
+              openOutside(source);
+            }),
         },
       ],
     );
@@ -825,8 +849,8 @@ function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
                   symbol="arrow.up.right.square"
                   testID="talk-queued-source"
                   onPress={() => {
-                    void openOnWeb(queuedSource.path, queuedSource.title);
                     setQueuedSource(null);
+                    openOutside(queuedSource);
                   }}
                 />
               ) : null}

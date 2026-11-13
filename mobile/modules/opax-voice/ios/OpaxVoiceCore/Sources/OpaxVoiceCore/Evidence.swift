@@ -12,7 +12,7 @@ struct EvidenceModel: Sendable {
               url.user == nil, url.password == nil,
               // Match the web origin (HTTPS); HTTP links are cross-origin and refused.
               url.scheme == "https" else { return nil }
-        let pattern = "^/(?:doc/[^/]+|bill/[^/]+|subject/(?:person|party|supplier|donor|recipient|topic|campaigner|agency)/[^/]+|money(?:/(?:contracts|grants|donations|receipts|expenses|interests))?|declared|search|connections|topics|parties|reports(?:/[^/]+)?|journey/[^/]+)/?$"
+        let pattern = "^/(?:doc/[^/]+|bill/[^/]+|subject/(?:person|party|supplier|donor|recipient|topic|campaigner|agency)/[^/]+|money(?:/(?:contracts|grants|donations|receipts|expenses|interests))?|declared|search|connections|topics|parties|reports(?:/[^/]+)?|journey/[^/]+|ask)/?$"
         let parts = URLComponents(url: url, resolvingAgainstBaseURL: false)!
         guard parts.percentEncodedPath.range(of: pattern, options: .regularExpression) != nil,
               url.absoluteString.range(of: "%[01][0-9a-f]|%7f", options: [.regularExpression, .caseInsensitive]) == nil else { return nil }
@@ -30,9 +30,23 @@ struct EvidenceModel: Sendable {
         else { turns.append(turn); if turns.count > 80 { turns.removeFirst() } }
         markdown(turn.text)
     }
-    private mutating func addSource(title: String, url: String) {
-        guard let path = Self.sourcePath(url), sources.count < 12, !sources.contains(where: { $0.path == path }) else { return }
-        sources.append(VoiceSource(title: String(title.prefix(220)), path: path))
+    /// An optional source label: trimmed, and dropped (never cut) when empty or over `limit` UTF-16 units.
+    static func label(_ value: String?, limit: Int) -> String? {
+        guard let text = value?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty, text.utf16.count <= limit else { return nil }
+        return text
+    }
+    private mutating func addSource(title: String, url: String, recordTitle: String? = nil, speaker: String? = nil, date: String? = nil, type: String? = nil) {
+        guard let path = Self.sourcePath(url) else { return }
+        let cut = recordTitle?.trimmingCharacters(in: .whitespacesAndNewlines).prefix(220)
+        let source = VoiceSource(title: String(title.prefix(220)), path: path, recordTitle: Self.label(cut.map(String.init), limit: 880),
+                                 speaker: Self.label(speaker, limit: 120), date: Self.label(date, limit: 24), type: Self.label(type, limit: 40))
+        if let index = sources.firstIndex(where: { $0.path == path }) {
+            // A link the agent spoke first (title only) takes the tool result's labels when they arrive.
+            if !sources[index].labelled && source.labelled { sources[index] = source }
+            return
+        }
+        guard sources.count < 12 else { return }
+        sources.append(source)
     }
     private mutating func markdown(_ text: String) {
         let pattern = try! NSRegularExpression(pattern: "\\[([^\\]\\n]{1,220})\\]\\(([^\\s)]+)\\)")
@@ -51,7 +65,10 @@ struct EvidenceModel: Sendable {
         case .array(let items): for item in items.prefix(30) { collect(item, depth: depth + 1) }
         case .object:
             if let url = value["href"].string ?? value["destination"].string ?? value["url"].string {
-                addSource(title: value["title"].string ?? value["label"].string ?? "Open the source record", url: url)
+                // Voice tool sources carry Ask's fields (record_title, speaker, date, type); older results send title and url only.
+                addSource(title: value["title"].string ?? value["label"].string ?? "Open the source record", url: url,
+                          recordTitle: value["record_title"].string, speaker: value["speaker"].string,
+                          date: value["date"].string, type: value["type"].string)
             }
             for key in ["sources", "records", "result", "response", "body", "content", "text", "full_tool_result"] {
                 collect(value[key], depth: depth + 1)
@@ -59,4 +76,8 @@ struct EvidenceModel: Sendable {
         default: break
         }
     }
+}
+extension VoiceSource {
+    /// Carries any of Ask's source fields, not only a title and path.
+    var labelled: Bool { recordTitle != nil || speaker != nil || date != nil || type != nil }
 }

@@ -85,8 +85,8 @@ export function sourceMeta(s: Source): string {
     .filter(Boolean)
     .join(' · ');
 }
-/** "18 Aug 2026", a year, a financial year, or null when none was published. */
-export function sourceDate(s: Source): string | null {
+/** "18 Aug 2026", a year, a financial year, or null when none was published. Talk's sources share it. */
+export function sourceDate(s: { date?: string | null }): string | null {
   const date = s.date?.trim();
   if (!date) return null;
   if (/^\d{4}-\d{2}-\d{2}/.test(date))

@@ -30,7 +30,13 @@ jest.mock('../src/design/useHeaderBottom', () => ({
 }));
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
-  router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
+  router: {
+    push: jest.fn(),
+    replace: jest.fn(),
+    back: jest.fn(),
+    navigate: jest.fn(),
+    canGoBack: jest.fn(() => true),
+  },
   Stack: { Screen: () => null },
   useFocusEffect: jest.fn(),
 }));
@@ -267,4 +273,46 @@ test('limits chips to three, opens more in Sources, and uses the web record flow
     expect.stringContaining('Donations'),
     expect.any(Array),
   );
+});
+
+test('an Ask pay row asks before ending the call, then opens an unsent Ask draft', async () => {
+  const pay = {
+    title: 'Example office pay: every step since 1999',
+    path: '/ask?q=How%20much%20is%20the%20example%20office%20paid%3F',
+    recordTitle: 'Example office pay: every step since 1999',
+    date: '1999–2026',
+    type: 'Pay record',
+  };
+  event({
+    type: 'transcript',
+    turns: [{ role: 'agent', id: 1, text: 'The pay records are here.' }],
+  });
+  event({ type: 'sources', sources: [pay] });
+  await mount();
+  const [chip] = buttons(renderer.UNSAFE_root.findByType(AnswerCaption));
+  expect(chip!.props.accessibilityHint).toBe('Offers to open in Ask');
+  expect(chip!.props.accessibilityLabel).toBe(
+    `Open ${pay.title}, Pay record · 1999–2026`,
+  );
+  const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => undefined);
+  fireEvent.press(chip!);
+  expect(alert).toHaveBeenCalledWith(
+    'Open after the call?',
+    `${pay.title} opens in Ask, which would end the call.`,
+    expect.any(Array),
+  );
+  const actions = alert.mock.calls[0]![2]!;
+  const now = actions.find((action) => action.text === 'End call and open');
+  await act(async () => {
+    now!.onPress!();
+    await new Promise((resolve) => setTimeout(resolve, 600));
+  });
+  expect(router.back).toHaveBeenCalledTimes(1);
+  expect(router.navigate).toHaveBeenCalledWith({
+    pathname: '/(tabs)/(ask)/ask',
+    params: expect.objectContaining({
+      question: 'How much is the example office paid?',
+    }),
+  });
+  expect(router.push).not.toHaveBeenCalled();
 });

@@ -19,12 +19,14 @@ class EvidenceTests : SafeVoiceTest() {
     for (path in listOf(
       "/doc/fixture", "/bill/fixture", "/subject/person/fixture", "/subject/agency/fixture", "/money", "/money/receipts",
       "/declared", "/search?q=fixture", "/connections", "/topics", "/parties", "/reports/fixture", "/journey/fixture",
+      "/ask?q=How%20much%20is%20the%20example%20office%20paid%3F",
     )) {
       assertEquals(path, EvidenceModel.sourcePath(path))
     }
     for (path in listOf(
       "https://example.org/doc/fixture", "http://opax.com.au/doc/fixture", "https://user@opax.com.au/doc/fixture",
       "/api/voice/start", "/api/ask", "/community", "/doc/a/b", "/subject/invalid/a", "/doc/a%00", "/doc/a%1f", "/doc/a%7F",
+      "/ask/fixture", "/asking",
     )) {
       assertNull(path, EvidenceModel.sourcePath(path))
     }
@@ -53,6 +55,42 @@ class EvidenceTests : SafeVoiceTest() {
     val clarification = json(mapOf("sources" to emptyList<Any>(), "data" to mapOf("needs_period" to true)))
     for (data in listOf(standard, receipt, clarification)) model.collect(JsonValue.parse(data))
     assertEquals(listOf("/doc/fixture", "/money/receipts"), model.sources.map { it.path })
+  }
+
+  /** The ask_opax and search tool results since im/voice-ask: Ask's fields on each source, a pay row on /ask. */
+  @Test fun askStyleSourcesKeepTheirFieldsAndPayRows() {
+    val model = EvidenceModel()
+    val asked = json(mapOf("answered" to true, "spoken_answer" to "Synthetic", "source_url" to "https://opax.com.au/doc/speech-500101", "sources" to listOf(
+      mapOf("title" to "Alex Example: Committees", "record_title" to "Committees", "speaker" to "Alex Example", "date" to "2001-06-21", "type" to "Speech", "url" to "https://opax.com.au/doc/speech-500101"),
+      mapOf("title" to "Example office pay: every step since 1999", "record_title" to "Example office pay: every step since 1999", "speaker" to null, "date" to "1999–2026", "type" to "Pay record", "url" to "https://opax.com.au/ask?q=How%20much%20is%20the%20example%20office%20paid%3F"),
+      mapOf("title" to "Example Office Determination 2025", "record_title" to "Example Office Determination 2025", "speaker" to "Remuneration Tribunal", "date" to "2025-07-01", "type" to "Pay determination", "url" to "https://opax.com.au/doc/legal-700001"),
+    )))
+    model.collect(JsonValue.parse(asked))
+    assertEquals(listOf(
+      VoiceSource("Alex Example: Committees", "/doc/speech-500101", "Committees", "Alex Example", "2001-06-21", "Speech"),
+      VoiceSource("Example office pay: every step since 1999", "/ask?q=How%20much%20is%20the%20example%20office%20paid%3F",
+        "Example office pay: every step since 1999", null, "1999–2026", "Pay record"),
+      VoiceSource("Example Office Determination 2025", "/doc/legal-700001", "Example Office Determination 2025", "Remuneration Tribunal", "2025-07-01", "Pay determination"),
+    ), model.sources)
+  }
+
+  @Test fun shippedTitleOnlySourcesDecodeAsBefore() {
+    val model = EvidenceModel()
+    model.collect(JsonValue.parse(json(mapOf("source_url" to "https://opax.com.au/doc/fixture", "sources" to listOf(mapOf("title" to "Fixture — ESTIMATES — 2025-02-05", "url" to "https://opax.com.au/doc/fixture"))))))
+    assertEquals(listOf(VoiceSource("Fixture — ESTIMATES — 2025-02-05", "/doc/fixture")), model.sources)
+  }
+
+  @Test fun spokenLinkTakesTheToolLabelsAndBadLabelsAreDropped() {
+    val model = EvidenceModel()
+    model.add(TranscriptTurn(TranscriptTurn.Role.agent, 1, "See [the speech](/doc/speech-1)."), correction = false)
+    assertEquals(listOf(VoiceSource("the speech", "/doc/speech-1")), model.sources)
+    model.collect(JsonValue.parse(json(mapOf("sources" to listOf(
+      mapOf("title" to "Sam Sample: Pay", "record_title" to "  Pay  ", "speaker" to "x".repeat(121), "date" to "As at a date far too long to be one", "type" to " ", "url" to "/doc/speech-1"),
+    )))))
+    assertEquals(listOf(VoiceSource("Sam Sample: Pay", "/doc/speech-1", "Pay")), model.sources)
+    // A labelled source is not replaced by a later title-only mention.
+    model.add(TranscriptTurn(TranscriptTurn.Role.agent, 2, "Again, [the speech](/doc/speech-1)."), correction = false)
+    assertEquals("Pay", model.sources.single().recordTitle)
   }
 
   @Test fun optionalProviderEventsToleratedAndInvalidPcmEventDropped() {

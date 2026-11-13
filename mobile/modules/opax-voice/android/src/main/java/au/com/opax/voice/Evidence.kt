@@ -22,10 +22,27 @@ internal class EvidenceModel {
     markdown(turn.text)
   }
 
-  private fun addSource(title: String, url: String) {
+  private fun addSource(
+    title: String,
+    url: String,
+    recordTitle: String? = null,
+    speaker: String? = null,
+    date: String? = null,
+    type: String? = null,
+  ) {
     val path = sourcePath(url) ?: return
-    if (sources.size >= 12 || sources.any { it.path == path }) return
-    sources = sources + VoiceSource(prefix(title, 220), path)
+    val source = VoiceSource(
+      prefix(title, 220), path, label(recordTitle?.trim()?.let { prefix(it, 220) }, 880),
+      label(speaker, 120), label(date, 24), label(type, 40),
+    )
+    val index = sources.indexOfFirst { it.path == path }
+    if (index >= 0) {
+      // A link the agent spoke first (title only) takes the tool result's labels when they arrive.
+      if (!sources[index].labelled && source.labelled) sources = sources.toMutableList().also { it[index] = source }
+      return
+    }
+    if (sources.size >= 12) return
+    sources = sources + source
   }
 
   private fun markdown(text: String) {
@@ -42,7 +59,13 @@ internal class EvidenceModel {
       is JsonValue.Arr -> value.items.take(30).forEach { collect(it, depth + 1) }
       is JsonValue.Obj -> {
         val url = value["href"].string ?: value["destination"].string ?: value["url"].string
-        if (url != null) addSource(value["title"].string ?: value["label"].string ?: "Open the source record", url)
+        // Voice tool sources carry Ask's fields (record_title, speaker, date, type); older results send title and url only.
+        if (url != null) {
+          addSource(
+            value["title"].string ?: value["label"].string ?: "Open the source record", url,
+            value["record_title"].string, value["speaker"].string, value["date"].string, value["type"].string,
+          )
+        }
         for (key in listOf("sources", "records", "result", "response", "body", "content", "text", "full_tool_result")) {
           collect(value[key], depth + 1)
         }
@@ -56,7 +79,7 @@ internal class EvidenceModel {
     private val record = Regex(
       "^/(?:doc/[^/]+|bill/[^/]+|subject/(?:person|party|supplier|donor|recipient|topic|campaigner|agency)/[^/]+|" +
         "money(?:/(?:contracts|grants|donations|receipts|expenses|interests))?|declared|search|connections|topics|parties|" +
-        "reports(?:/[^/]+)?|journey/[^/]+)/?$",
+        "reports(?:/[^/]+)?|journey/[^/]+|ask)/?$",
     )
     private val control = Regex("%[01][0-9a-f]|%7f", RegexOption.IGNORE_CASE)
     // ICU's \s (Unicode White_Space), which NSRegularExpression uses.
@@ -76,6 +99,9 @@ internal class EvidenceModel {
       if (!record.matches(url.encodedPath) || control.containsMatchIn(url.toString())) return null
       return url.encodedPath + (url.encodedQuery?.let { "?$it" } ?: "") + (url.encodedFragment?.let { "#$it" } ?: "")
     }
+
+    /** An optional source label: trimmed, and dropped (never cut) when empty or over [limit] UTF-16 units. */
+    fun label(value: String?, limit: Int): String? = value?.trim()?.takeIf { it.isNotEmpty() && it.length <= limit }
 
     /** Swift's String.prefix: whole user-perceived characters, never half a pair. */
     fun prefix(text: String, count: Int): String {
