@@ -3398,6 +3398,16 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
 #panel-search #search-empty .empty-actions { justify-content: flex-start; gap: var(--sp-8); margin-top: var(--sp-20); }
 #panel-search #search-empty h3 { margin-top: var(--sp-24); color: var(--ink); }
 #panel-search #search-empty .ui-button { max-width: 100%; min-width: 0; }
+/* "No records mention ...": the meaning-ranked records wait, closed, under their
+   own heading at the foot of the recovery block, and open in place below it. */
+#panel-search.is-meaning-closed :is(#results-bar, #search-answer, #search-results, #search-pager) { display: none !important; }
+#panel-search #search-empty .search-meaning { margin-top: var(--sp-32); padding-top: var(--sp-8); border-top: var(--border-hairline) solid var(--divider-subtle); }
+#panel-search #search-empty .search-meaning-title { margin: 0; }
+#panel-search .search-meaning-toggle { display: inline-flex; align-items: baseline; flex-wrap: wrap; gap: 0 var(--sp-12); min-height: var(--size-target); margin: 0; padding: 0; border: 0; background: none; color: var(--ink); font: var(--type-subheading); text-align: left; cursor: pointer; }
+#panel-search .search-meaning-toggle::before { content: "+" / ""; color: var(--bronze-ink); font: var(--type-strong); }
+#panel-search .search-meaning-toggle[aria-expanded="true"]::before { content: "−" / ""; }
+#panel-search .search-meaning-toggle:hover { color: var(--bronze-ink); }
+#panel-search .search-meaning-count { font: var(--type-fine); color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 #panel-search .search-result-heading .result-title { display: flex; align-items: center; min-height: var(--size-target); }
 #panel-search .search-result-text.is-collapsed { display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
 /* Give the bronze reading action room beneath the faded passage. */

@@ -152,6 +152,7 @@ import { pressHeadlineAndText, pressTitle } from './press-title'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 import { withTranscriptNote } from './transcript-answer'
 import { notFoundHTML, type NotFoundKind } from '../public/not-found.js'
+import { noRecordMentions } from './search-mention'
 
 interface FindParagraph {
   score: number
@@ -741,12 +742,17 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
       return { ...record, score: row.score, sort_date: record.date || row.sort_date }
     })
   }
+  // No record mentions the query (src/search-mention.ts): the page leads with the
+  // recovery state, and the meaning-ranked records stay one tap away.
+  const noMention = !options.suggest && noRecordMentions({ query: url.searchParams.get('q'), mode: url.searchParams.get('mode'),
+    catalogTotal: catalog?.total || 0, documents: documents?.results || [] })
   const out = json({ query: url.searchParams.get('q'), kind: selected, sort, page, per_page: per, page_count: pageCount,
     results: shown, count: shown.length,
     total: rows.length, truncated: !!(catalog?.truncated || documents?.truncated || combined.length > 200 || warnings.length),
     years, warnings, catalog_matches: catalog?.total || 0, coverage: catalog?.coverage, index_version: catalog?.version,
     ...(catalog?.matched_query ? { matched_query: catalog.matched_query } : {}),
-    ...(!rows.length && !options.suggest ? { suggestions: await emptySearchSuggestions(url.searchParams.get('q') || '', env.ASSETS, catalog || undefined) } : {}),
+    ...(noMention ? { no_mention: true } : {}),
+    ...((!rows.length || noMention) && !options.suggest ? { suggestions: await emptySearchSuggestions(url.searchParams.get('q') || '', env.ASSETS, catalog || undefined) } : {}),
     ...(documents?.mode_used ? { mode_used: documents.mode_used } : {}),
     ...(documents?.fallback ? { fallback: documents.fallback } : {}),
   })

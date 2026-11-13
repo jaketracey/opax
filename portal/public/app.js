@@ -12658,13 +12658,14 @@ function refreshSearchPassageFolds() {
 
 /**
  * The count line: one line, beside the sort (concept 4). It says how many are
- * shown and how many were retrieved, and when retrieval hit its ceiling it
- * says the record holds more rather than implying the ceiling is the answer.
+ * shown and how many were retrieved; at retrieval's ceiling it calls them the
+ * closest records, so the ceiling never reads as the whole answer.
  * The filters are not repeated here: the chips under the search box carry them.
  */
 function resultsCountLine(s) {
   const n = s.total.toLocaleString();
-  const of = s.truncated ? `the ${n} strongest matches` : `${n} ${s.total === 1 ? "record" : "records"}`;
+  // At the retrieval ceiling the line says what the records are: the closest ones.
+  const of = s.truncated ? `${n} closest records` : `${n} ${s.total === 1 ? "record" : "records"}`;
   if (s.pageCount <= 1) return `${of[0].toUpperCase()}${of.slice(1)}`;
   const from = ((s.page - 1) * s.perPage + 1).toLocaleString();
   const to = Math.min(s.page * s.perPage, s.total).toLocaleString();
@@ -12984,6 +12985,9 @@ async function runSearchAnswer(q, f, key) {
 }
 
 let searchSeq = 0;
+// The search (its searchHash key) whose meaning-ranked records the reader opened
+// under "No records mention ..."; paging inside it keeps them open.
+let searchMeaningOpen = null;
 
 async function runSearch(page = 1) {
   const q = $("search-input").value.trim();
@@ -13029,6 +13033,8 @@ async function runSearch(page = 1) {
   $("search-results").replaceChildren();
   $("search-chips").hidden = true; // the examples step aside once a search runs
   $("search-empty").hidden = true;
+  if (fresh) searchMeaningOpen = null;
+  $("panel-search").classList.remove("is-meaning-closed");
   try {
     const data = await api(`/api/search-all?${searchQueryParams(q, f, page, sort)}`);
     if (mySeq !== searchSeq) return; // a newer search owns the results now
@@ -13061,9 +13067,14 @@ async function runSearch(page = 1) {
       hideLoader("search-wombat");
       $("search-status").classList.remove("visually-hidden");
       setStatus($("search-status"), data.warnings?.join(" ") || (data.matched_query ? `Showing records for “${data.matched_query}”.` : ""));
-      $("results-count").innerHTML = `<span class="results-count-main">${esc(resultsCountLine(lastSearch))}</span>${
-        lastSearch.truncated ? '<span class="results-count-note">The record holds more. </span>' : ""}`;
+      $("results-count").innerHTML = `<span class="results-count-main">${esc(resultsCountLine(lastSearch))}</span>`;
       $("results-bar").hidden = false;
+      // No record uses the query's words (the Worker's no_mention): say so first,
+      // with the recovery suggestions, and keep the closest records one tap away.
+      const noMention = Boolean(data.no_mention) && q !== "*";
+      if (noMention) renderSearchRecovery(q, f, searchRecoverySuggestions(q || f.speaker, data.suggestions),
+        { meaning: lastSearch.total, open: searchMeaningOpen === key, focus: fresh, key });
+      $("panel-search").classList.toggle("is-meaning-closed", noMention && searchMeaningOpen !== key);
       // The summary waits, collapsed, until the reader opens it.
       if (fresh) resetSearchAnswer(q || f.speaker);
       renderSearchDateRuler(lastSearch.years, q, f);
@@ -13114,7 +13125,7 @@ function searchSuggestionProperties(suggestions) {
   return { had_suggestion: kind !== "none", suggestion_kind: kind };
 }
 
-function renderSearchRecovery(q, f, suggestions = searchRecoverySuggestions(q || f.speaker)) {
+function renderSearchRecovery(q, f, suggestions = searchRecoverySuggestions(q || f.speaker), { meaning = 0, open = false, focus = true, key = null } = {}) {
   const box = $("search-empty");
   const filters = activeFilterSummary(f);
   const specs = filterChipSpecs(f);
@@ -13123,6 +13134,7 @@ function renderSearchRecovery(q, f, suggestions = searchRecoverySuggestions(q ||
   // "*" asks for everything under the filters (a party page's "Their speeches"): the filter found nothing, not the asterisk.
   const everything = q === "*";
   const title = everything ? (f.kind === "speech" ? "No speeches in the record for this filter" : "Nothing in the record for this filter")
+    : meaning ? `No records mention “${esc(q || f.speaker)}”`
     : `No matches for “${esc(q || f.speaker)}”`;
   const links = (kind) => suggestions.filter(s => s.kind === kind).map(s =>
     `<a class="ui-button" href="${esc(s.href)}">${esc(s.label)}${Number.isSafeInteger(s.count) && s.count >= 0 ? ` (${s.count.toLocaleString("en-AU")})` : ""}</a>`).join("");
@@ -13135,13 +13147,22 @@ function renderSearchRecovery(q, f, suggestions = searchRecoverySuggestions(q ||
     <div class="empty-actions" aria-label="Browse the record">${links("scope")}</div>
     <div class="empty-actions">${links("ask")}</div>
     <div class="empty-actions"><button type="button" class="ui-button" id="search-recovery-edit">${first ? `Remove ${esc(first.k.toLowerCase())} filter` : "Try fewer words"}</button>
-    <a class="ui-button" href="${esc(topicHref)}">${f.topic ? `Browse ${esc(TOPICS[f.topic] || f.topic)}` : "Browse topics"}</a></div>`;
+    <a class="ui-button" href="${esc(topicHref)}">${f.topic ? `Browse ${esc(TOPICS[f.topic] || f.topic)}` : "Browse topics"}</a></div>
+    ${meaning ? `<div class="search-meaning">
+      <h3 class="search-meaning-title"><button type="button" class="search-meaning-toggle" id="search-meaning-toggle" aria-expanded="${open}" aria-controls="search-results">Closest by meaning <span class="search-meaning-count">${esc(meaning.toLocaleString("en-AU"))} ${meaning === 1 ? "record" : "records"}</span></button></h3>
+      <p class="empty-lede">Records ranked by what they are about. None of them uses these words.</p></div>` : ""}`;
   $("search-recovery-edit").addEventListener("click", () => {
     if (first) clearSearchFilter(first.id);
     else { $("search-input").focus(); $("search-input").select(); }
   });
+  $("search-meaning-toggle")?.addEventListener("click", (e) => {
+    const opening = e.currentTarget.getAttribute("aria-expanded") !== "true";
+    e.currentTarget.setAttribute("aria-expanded", String(opening));
+    searchMeaningOpen = opening ? key : null;
+    $("panel-search").classList.toggle("is-meaning-closed", !opening);
+  });
   box.hidden = false;
-  $("search-suggestions-heading").focus();
+  if (focus) $("search-suggestions-heading").focus();
 }
 
 $("search-form").addEventListener("submit", (e) => {
