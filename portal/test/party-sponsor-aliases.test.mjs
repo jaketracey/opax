@@ -29,6 +29,12 @@ for (const [alias, canonical] of aliases) test(`${alias} forwards permanently to
   assert.equal(destination.status, 200);
 });
 
+test('the full DLP name in dated records forwards to its existing canonical party page', async () => {
+  const response = await worker.fetch('/subject/party/democratic-labor-party', {redirect: 'manual'});
+  assert.equal(response.status, 301);
+  assert.equal(response.headers.get('location'), 'https://opax.com.au/subject/party/dlp');
+});
+
 test('malformed former source labels remain 404', async () => {
   for (const slug of ['34-alp-34', '34-australian-greens-34', '34-australian-labor-party-34',
     '34-independent-members-34', '34-liberal-national-party-of-queensland-34', '34-palmer-united-party-34',

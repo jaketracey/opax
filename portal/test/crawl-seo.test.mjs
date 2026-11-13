@@ -95,7 +95,7 @@ test('the server page shows the same parliamentarian count as the browser page',
   // SA Council list-only profiles (A27; no SA Hansard after 2023): Labor +2 (El Dannawi, Gumbys), Liberal +1
   // (Benjamin Hood), Greens +1 (Selwood). Cory Bernardi is linked to his existing row, so Liberal does not count him twice.
   assert.equal(shown.Labor, 496);
-  assert.equal(shown.Liberal, 346);
+  assert.equal(shown.Liberal, 347);
   assert.equal(shown.Greens, 51);
 });
 

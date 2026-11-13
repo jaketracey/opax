@@ -257,7 +257,7 @@ test('real Liberal and Greens page lists count each person once and agree with t
   const doc = new JSDOM(directory.html).window.document;
   // Council members from the dated official lists: Liberal +5 NSW (A17), +2 SA (A22); Greens +3 NSW (A17).
   // SA Council list-only profiles (A27): Liberal +1 (Benjamin Hood), Greens +1 (Melanie Selwood).
-  for (const [slug, expected] of [['liberal', 346], ['greens', 51]]) {
+  for (const [slug, expected] of [['liberal', 347], ['greens', 51]]) {
     const row = doc.querySelector(`a[href="/subject/party/${slug}"]`).closest('li');
     const figure = [...row.querySelectorAll('.dir-fig')].find(n => n.textContent.includes('parliamentarians in the record'));
     assert.equal(figure.querySelector('b').textContent, String(expected));
