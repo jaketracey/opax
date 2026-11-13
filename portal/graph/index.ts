@@ -569,6 +569,8 @@ const CSS = `
 /* The source-record excerpts the Sources disclosure opens under the row. */
 .mm-evidence { margin: var(--space-line) 0 0; padding-top: var(--space-tight); border-top: var(--border-hairline) solid var(--divider-subtle); font: var(--type-fine); }
 .mm-evidence-note { margin: 0; font: var(--type-fine); color: var(--ink-soft); }
+/* The day the connections run to, one quiet line at the foot of the excerpts. */
+.mm-evidence .evidence-as-at { margin: var(--space-tight) 0 0; font: var(--type-fine); color: var(--ink-soft); }
 .mm-return-refs { margin: 0 0 var(--space-tight); color: var(--ink-soft); overflow-wrap: anywhere; }
 .mm-return-refs-title { margin: 0 0 var(--space-line); font: var(--type-label); color: var(--ink); }
 .mm-return-refs ul { margin: 0 0 var(--space-line); padding: 0; list-style: none; }

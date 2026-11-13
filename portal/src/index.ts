@@ -17,7 +17,7 @@ import { repairQuotes } from './research-evidence'
 import {ServerTiming, timed, timedSync, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import { chamberLabel, PARTY_MAP } from '../public/party-page.js'
-import {partySpeechLabel, partyMembers, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, readPartyPages, resolvePartyPage, type PartyPage} from '../public/party-page.js'
+import {partySpeechLabel, partyMembers, partyBills, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, readPartyPages, resolvePartyPage, dayMonthYear, type PartyPage, type PartyBill} from '../public/party-page.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
@@ -90,6 +90,7 @@ import { reviewerLoginEnabled } from './community-auth'
 import { operatorAuthorized } from './operator-auth'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/party-page.js'
+import { referenceOnlyPeople } from '../public/roster-party.js'
 import {foldDonorName} from '../public/donor-entity.js'
 import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
@@ -101,6 +102,7 @@ import { expireVoiceSessions, voiceRoute } from './voice'
 import { voiceAsk } from './voice-ask'
 import { ASK_FALLBACK_FLOOR_MS, fallbackAllowanceMs, gatheredPayload, shortenedCaller, trustedCaller, type AskCaller } from './ask-caller-budget'
 import { appEdition } from './app-edition'
+import { appWidgetToday } from './app-widget'
 import { appVicElection } from './app-vic-election'
 import { appManifest } from './app-manifest'
 import { appJson } from './app-http'
@@ -123,7 +125,7 @@ import { createResearch, researchLimits } from './research-loop'
 import { recordResearchAnswer, recordResearchComparison, recordResearchFailure } from './research-monitor'
 import { cachedKbLookup } from './kb-cache'
 import { ANSWER_WRITING_VERSION } from './research-writing'
-import { cacheableRoutedAnswer, withAnswerLanguage, withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
+import { cacheableRoutedAnswer, calculatedPayAnswer, withAnswerLanguage, withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
 import { groundAnswerPayload } from './research-grounding'
 import { researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
 import { ResearchError, type ResearchPayload } from './research-types'
@@ -151,6 +153,8 @@ import {renderMoneyConnectionsTable} from './money-connections-table'
 import { pressHeadlineAndText, pressTitle } from './press-title'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 import { withTranscriptNote } from './transcript-answer'
+import { notFoundHTML, NOT_FOUND_KINDS, type NotFoundKind } from '../public/not-found.js'
+import { noRecordMentions } from './search-mention'
 
 interface FindParagraph {
   score: number
@@ -740,12 +744,17 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
       return { ...record, score: row.score, sort_date: record.date || row.sort_date }
     })
   }
+  // No record mentions the query (src/search-mention.ts): the page leads with the
+  // recovery state, and the meaning-ranked records stay one tap away.
+  const noMention = !options.suggest && noRecordMentions({ query: url.searchParams.get('q'), mode: url.searchParams.get('mode'),
+    catalogTotal: catalog?.total || 0, documents: documents?.results || [] })
   const out = json({ query: url.searchParams.get('q'), kind: selected, sort, page, per_page: per, page_count: pageCount,
     results: shown, count: shown.length,
     total: rows.length, truncated: !!(catalog?.truncated || documents?.truncated || combined.length > 200 || warnings.length),
     years, warnings, catalog_matches: catalog?.total || 0, coverage: catalog?.coverage, index_version: catalog?.version,
     ...(catalog?.matched_query ? { matched_query: catalog.matched_query } : {}),
-    ...(!rows.length && !options.suggest ? { suggestions: await emptySearchSuggestions(url.searchParams.get('q') || '', env.ASSETS, catalog || undefined) } : {}),
+    ...(noMention ? { no_mention: true } : {}),
+    ...((!rows.length || noMention) && !options.suggest ? { suggestions: await emptySearchSuggestions(url.searchParams.get('q') || '', env.ASSETS, catalog || undefined) } : {}),
     ...(documents?.mode_used ? { mode_used: documents.mode_used } : {}),
     ...(documents?.fallback ? { fallback: documents.fallback } : {}),
   })
@@ -1659,9 +1668,13 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
   const t0 = Date.now()
   let answer = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
   mark('ask')
-  // A stall or an upstream error gets one lighter attempt before the reader hears about it;
-  // a spent model budget does not.
-  if (answer instanceof Response && !answer.headers.get(MODEL_BUDGET_HEADER) && (!firstBudget || firstBudget.remaining > 0)) answer = await askOnce(lighterAsk(body), ASK_SYNC_TIMEOUT_MS)
+  // A stall, an upstream error or a blank answer gets one lighter attempt before the reader hears about it;
+  // a spent model budget does not. A blank first answer keeps its retrieved records if the retry fails outright.
+  const blank = (a: AskAnswer | Response) => !(a instanceof Response) && !String(a.answer ?? '').trim()
+  if ((answer instanceof Response && !answer.headers.get(MODEL_BUDGET_HEADER) || blank(answer)) && (!firstBudget || firstBudget.remaining > 0)) {
+    const again = await askOnce(lighterAsk(body), ASK_SYNC_TIMEOUT_MS)
+    if (answer instanceof Response || !(again instanceof Response)) answer = again
+  }
   if (answer instanceof Response) return answer
   if (isRefusal(answer) && healthyRetrieval(answer) && Date.now() - t0 < ASK_RETRY_BUDGET_MS) {
     const again = await askOnce(body, ASK_SYNC_TIMEOUT_MS)
@@ -3894,7 +3907,9 @@ interface PageMeta {
   /** The page's trail after Home, when its builder knows better than its
    *  heading (a division sits under its bill). Settled for every page in
    *  buildMeta: the strip it prints and its BreadcrumbList both read it. */
-  trail?: Crumb[]
+  trail?: Crumb[]  /** An empty address (the site's 404, or a record route the data holds nothing at):
+   *  the shared not-found block, served without the app (public/not-found.js). */
+  notFound?: NotFoundKind
 }
 
 // Published indexes resolve identities; route grammar rejects malformed paths.
@@ -4001,7 +4016,7 @@ interface Person {
   representation?: { electorate: string; jurisdiction: string; chamber: string; state?: string | null }[]
   rosterOnly?: { asOf?: string; seats: string[] }
 }
-interface PeopleData { generated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person>; addresses: Map<string, Person>; bySlug: Map<string, Person>; slugOf: Map<string, string> }
+interface PeopleData { generated: string; people: Person[]; byName: Map<string, Person>; byFold: Map<string, Person>; addresses: Map<string, Person>; bySlug: Map<string, Person>; slugOf: Map<string, string>; formerSlugs: Map<string, Person> }
 
 async function speakerAttribution(env: Env, raw: string | null | undefined): Promise<SpeechScope | null> {
   if (!raw) return null
@@ -4149,17 +4164,13 @@ function loadPeople(env: Env): Promise<PeopleData> {
   peopleMemo ??= assetJson<{ meta?: { generated?: string }; people: Person[] }>(env, '/parliamentarians.json')
     .then(async (raw) => {
       const reference = await loadElectorates(env).catch(() => null)
-      const names = new Set(raw.people.flatMap((p) => [p.name, ...splitSpeakers(p)].map(foldName)))
-      for (const p of reference?.people || []) {
-        if ([p.name, ...p.aliases].some((n) => names.has(foldName(n)))) continue
-        const seats = p.electorates.filter((e) => e.current)
-        if (!seats.length) continue
+      // One rule with the party index (scripts/build_party_index.mjs), so party pages count them alike.
+      for (const { person: p, seats } of referenceOnlyPeople(raw.people, reference?.people)) {
         raw.people.push({ name: p.name, pid: p.legacy_person_id || p.person_id, speeches: 0,
           party: seats[0].party || null, party_now: seats[0].party || undefined, current: true,
           representation: seats.map(e=>({electorate:e.name,jurisdiction:e.jurisdiction,chamber:e.chamber})), states: [...new Set(seats.map((e) => e.jurisdiction))],
           chambers: [...new Set(seats.map((e) => e.chamber))], first: null, last: null,
           rosterOnly: { asOf: seats[0].as_of, seats: seats.map((e) => e.name) } })
-        names.add(foldName(p.name))
       }
       return { generated: raw.meta?.generated ?? '', people: raw.people, ...personIndex(raw.people) }
     })
@@ -4859,6 +4870,17 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
     const identity = new URL(meta.canonical)
     meta.prerender = meta.prerender.replace('id="prerender"', `id="prerender" data-record-core data-record-path="${escHtml(identity.pathname+identity.search)}"`)
   }
+  // An empty address draws the one not-found block, whichever route it reached
+  // (public/not-found.js). A 503 is not this: the data could not be read.
+  const empty = meta.status === 404 ? notFoundKindFor(route, url) : null
+  if (empty) {
+    meta.notFound = empty.kind
+    // The tab, the share title and the heading say the same thing.
+    meta.title = `${NOT_FOUND_KINDS[empty.kind].title} · OPAX`
+    // An address nothing answers sits under no section: its path names nothing (a withdrawn report's included).
+    if (empty.kind === 'page') meta.trail = [{ label: 'Page not found' }]
+    meta.prerender = `<section id="prerender" class="wrap">${notFoundHTML({ kind: empty.kind, slug: empty.slug, headingId: 'not-found-title' })}</section>`
+  }
   // Every non-home path has a single answer, including unavailable/not-found pages.
   meta.prerender ??= answerBlock(meta.title.replace(/ · OPAX$/, ''),meta.description)
   // The page's one trail, from the menus' own list: what a server-only
@@ -4871,6 +4893,19 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
   const breadcrumbs = breadcrumbList(meta.trail, meta.canonical)
   meta.jsonLd=meta.status>=400 || meta.noindex ? null : buildSchemaGraph({canonical:meta.canonical,title:meta.title,description:meta.description,jsonLd:meta.jsonLd,person:personIdentity,bill:billIdentity,breadcrumbs})
   return meta
+}
+
+/** Which not-found block a 404 draws, and the address it turns back into words.
+ *  Only the record routes a reader can mistype or follow from an old link; a
+ *  missing award on a recipient that exists keeps the recipient's page. */
+function notFoundKindFor(route: SeoRoute, url: URL): { kind: NotFoundKind; slug: string } | null {
+  if (route.kind === 'notfound') return { kind: 'page', slug: url.pathname }
+  if (route.kind === 'bill') return { kind: 'bill', slug: route.key }
+  if (route.kind === 'doc') return { kind: route.slug.startsWith('division-') ? 'division' : 'document', slug: route.slug }
+  if (route.kind === 'grant-recipient') return url.searchParams.has('award') ? null : { kind: 'recipient', slug: route.id }
+  if (route.kind === 'subject' && (route.dir === 'person' || route.dir === 'donor' || route.dir === 'electorate'))
+    return url.searchParams.get('attribution') === 'unattributed' ? null : { kind: route.dir, slug: route.name }
+  return null
 }
 
 /** Status as a reader meets it, from the registry's own vocabulary. */
@@ -5006,6 +5041,8 @@ async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMet
 /** The person a /subject/person/<segment> names: by slug, by name, by folded name. */
 function personAt(people: PeopleData, segment: string): Person | null {
   return people.byName.get(segment) ?? people.bySlug.get(segment.toLowerCase()) ?? people.byFold.get(foldName(segment))
+    // A row folded into its person keeps its old slug as a forward ("mark-christopher-butler").
+    ?? people.formerSlugs.get(segment.toLowerCase())
     // Older clients slugified reviewed full-name aliases such as Jess Pugh.
     ?? people.byFold.get(foldName(segment.replace(/-/g,' ')))
     // A surname row's own full name ("david-crisafulli" for "Crisafulli"): the address only, never a speaker.
@@ -5537,9 +5574,11 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     display = party.label
   } else {
     node = moneyData?.donors.get(foldName(name)) ?? null
-    disclosureRecord = node ?? (await loadDonorIndex(env.ASSETS).catch(()=>null))?.get(foldName(name)) ?? null
-    const known = Boolean(disclosureRecord)
-    if (!known) return unknownSubjectMeta('donor', known !== null)
+    // The index is keyed by its own fold (donorLookup: foldDonorName), so it is read with that fold.
+    const index = node ? null : await loadDonorIndex(env.ASSETS).catch(()=>null)
+    disclosureRecord = node ?? index?.get(foldDonorName(name)) ?? null
+    // A name the index holds nowhere is a 404; an index that could not be read is a 503, never "No donor by this name".
+    if (!disclosureRecord) return unknownSubjectMeta('donor', Boolean(index))
     display = disclosureRecord ? donorDisclosure(disclosureRecord).name : name
   }
   const canonical = dir==='party' ? `${SITE_ORIGIN}${partyUrl(display)}` : node && donorDisclosure(node).href ? new URL(donorDisclosure(node).href!,SITE_ORIGIN).href : `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`
@@ -5551,6 +5590,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   const ldType = dir==='donor' ? 'Dataset' : independent ? 'CollectionPage' : 'Organization'
   let card: CardSpec
   let memberNames: string[] = []
+  let sponsored: PartyBill[] = []
   if (dir === 'party') {
     // Speeches as the search index labels them (scripts/build_party_speeches.mjs), so the page promises
     // what its members said only where the record holds it: "Reason Party" has money, no Hansard.
@@ -5558,14 +5598,17 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     const speeches = partySpeechLabel(display, { indexed, roster: people, same: samePartyLabel })?.count ?? 0
     // The division records name those who sat for a party the roster files elsewhere
     // (scripts/build_party_index.mjs): one senator's own party has its senator.
-    const recorded = await assetJson<{ parties?: Record<string, { name: string }[]> }>(env, '/graph/party-members.json').catch(() => null)
+    const recorded = await assetJson<{ parties?: Record<string, { name: string }[]>; bills?: Record<string, PartyBill[]> }>(env, '/graph/party-members.json').catch(() => null)
     // Shared with the browser directory and party page: a distinct person may
     // have recorded affiliations with more than one party across their career.
     const members = partyMembers(display, {roster: people, divisions: recorded})
     memberNames = [...members.current, ...members.former].map(p=>p.name)
+    // The bills the register records a sponsor of this party for (scripts/build_party_index.mjs bills).
+    sponsored = partyBills(display, recorded)
     const parts: string[] = []
     const count = memberNames.length
     if (count) parts.push(`${num(count)} parliamentarian${count === 1 ? '' : 's'}${speeches ? ` and ${num(speeches)} speeches` : ''} in the record`)
+    if (sponsored.length) parts.push(`${num(sponsored.length)} bill${sponsored.length === 1 ? '' : 's'} sponsored`)
     if (node) parts.push(`${money(node.total)} in disclosed receipts, ${years(node.firstYear, node.lastYear)} (${node.sourceShort})`)
     if (parts.length) {
       facts = independent ? `${heading}: ${INDEPENDENTS_DESCRIPTION} ${parts.join('; ')}.` : `${heading}: ${parts.join('; ')}.`
@@ -5621,7 +5664,9 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: heading, url: canonical, description },
     prerender: prerenderBlock(heading,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${indexLinks()}`
-      : memberNames.length ? `<h2>${independent ? 'Parliamentarians' : 'Members'}</h2><ul>${memberNames.slice(0,24).map(n=>{const href=personPath(people,n);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}</li>`}).join('')}</ul><p>${escHtml(PARTY_MEMBER_SCOPE)}</p>${indexLinks()}` : indexLinks()) + table,
+      : (memberNames.length ? `<h2>${independent ? 'Parliamentarians' : 'Members'}</h2><ul>${memberNames.slice(0,24).map(n=>{const href=personPath(people,n);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}</li>`}).join('')}</ul><p>${escHtml(PARTY_MEMBER_SCOPE)}</p>` : '')
+        + (sponsored.length ? `<h2>Bills sponsored</h2><ul>${sponsored.slice(0,24).map(b=>`<li><a href="/bill/${encodeURIComponent(b.key)}">${escHtml(b.title)}</a>${b.introduced ? `, introduced ${escHtml(dayMonthYear(b.introduced))}` : ''}</li>`).join('')}</ul>` : '')
+        + indexLinks()) + table,
     card,
   }
 }
@@ -5957,7 +6002,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   // Its renderer owns any future caveat alongside an actual political money pairing.
   // The policy pages (privacy, support) name no association between records.
   // Official report records quote a publisher's own document; they pair no records.
-  if (route.kind !== 'official-reports' && !(route.kind === 'hub' && route.hub === 'vic-election') && !(route.kind === 'static' && SERVER_PANELS.has(route.page)) && route.kind !== 'source-report')
+  if (!meta.notFound && route.kind !== 'official-reports' && !(route.kind === 'hub' && route.hub === 'vic-election') && !(route.kind === 'static' && SERVER_PANELS.has(route.page)) && route.kind !== 'source-report')
     meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
   // Every page prints its trail in the server HTML too (readers without
   // scripts, crawlers), from the menus' own list; the app's strip replaces it
@@ -6006,10 +6051,12 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/hubs.css">'+(videoCard ? '<link rel="stylesheet" href="/video-card.css" data-video-card-style><script type="module" src="/video-card.js"></script>' : ''),{html:true}) } })
   if (route.kind === 'subject' && route.dir === 'person' && videoCard) rewriter.on('head', { element(el) { el.append('<link rel="stylesheet" href="/video-card.css" data-video-card-style>',{html:true}) } })
     .on('p#stats', { element(el) { el.remove() } })
-  // An address nothing answers is a server page too: the app would route it as something else.
-  if (route.kind === 'notfound') rewriter.on('script[src]', { element(el) {
+  // An address nothing answers is a server page too: the app would route it as
+  // something else, or draw a record shell around nothing. The block's own module
+  // draws its wombat.
+  if (route.kind === 'notfound' || meta.notFound) rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
-  } })
+  } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/not-found.css" data-not-found-style><script type="module" src="/not-found.js"></script>', { html: true }) } })
   if (route.kind === 'official-reports') rewriter.on('script[src]', { element(el) {
     if (/\/(app|spa-entry|spa-shell)\.js(?:\?|$)/.test(el.getAttribute('src') || '')) el.remove()
   } }).on('head', { element(el) { el.append('<link rel="stylesheet" href="/official-reports.css">' + (route.type ? '<script type="module" src="/official-reports.js"></script>' : ''), { html: true }) } })
@@ -6635,7 +6682,7 @@ async function executeAgentic(input: Record<string, unknown>, env: Env, ctx: Exe
   if (report) deps.onResearchFailure = async error => { failure = error; await report(error) }
   try {
     // Covers the whole path, including an SSE writer or provider that stalls.
-    run = await bounded(signal => runAgentic(question, { ...deps, signal, ...deps.withSignal?.(signal) }, progress, budgetMs, period, agenticFilters(input), namedScope), budgetMs, signal)
+    run = await bounded(signal => runAgentic(question, { ...deps, signal, ...deps.withSignal?.(signal) }, progress, budgetMs, period, agenticFilters(input), namedScope, typeof input.kind === 'string' ? input.kind : undefined), budgetMs, signal)
   } catch (error) {
     if (env.RESEARCH_LOOP === 'route' && !failure) {
       failure = new ResearchError(signal?.aborted ? 'aborted' : error instanceof Error && error.name === 'TimeoutError' ? 'timeout' : 'error')
@@ -6862,7 +6909,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     const finish = (run: AgenticPayload) => {
       const payload=agenticAskPayload(run, question)
       // Source rows are linked last: grounding reads the rows as evidence and re-derives which are cited.
-      const finalPayload=linkAskSources(withTranscriptNote(loopRoute?groundAnswerPayload(payload,question):payload),run.source_links,SITE_ORIGIN)
+      const finalPayload=linkAskSources(withTranscriptNote(loopRoute&&!calculatedPayAnswer(payload)?groundAnswerPayload(payload,question):payload),run.source_links,SITE_ORIGIN)
       const response = json(finalPayload)
       // An answer with no citation at all is not kept for a week, and a refusal or limitation not at all: the next ask may do better (as cacheableAnswer).
       if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && !shortenedCaller(caller) && run.qualitative?.answer_status !== 'uncited' && cacheableRoutedAnswer(finalPayload, loopRoute)) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
@@ -7259,6 +7306,7 @@ export default {
     // Public app adapters use this Worker's journal/assets, before any staging
     // proxy or general retrieval dispatch. No composition callback is supplied.
     if (url.pathname.startsWith('/api/app/v1/edition/')) return communityResponse(await appEdition(request, env))
+    if (url.pathname === '/api/app/v1/widget/today') return communityResponse(await appWidgetToday(request, env))
     if (url.pathname === '/api/app/v1/manifest') return communityResponse(await appManifest(request, env))
     if (url.pathname === '/api/app/v1/vic-election' || url.pathname.startsWith('/api/app/v1/vic-election/')) return communityResponse(await appVicElection(request, env))
     if (url.pathname.startsWith('/api/app/')) return communityResponse(appJson(request, {error:'not_found'}, 404))

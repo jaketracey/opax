@@ -51,7 +51,8 @@ test('find_people resolves common name typos against the published roster', asyn
 
 test('find_people accepts surname-first order, honorifics, punctuation and suffix variants', async () => {
   for (const [query, name] of [
-    ['Katter Bob Jnr', 'Katter Bob Jnr'], ['Katter, Bob Jr.', 'Katter Bob Jnr'],
+    // The Hansard print 'Katter Bob Jnr' is folded into Bob Katter, the person holding its verified id (fold_ids).
+    ['Katter Bob Jnr', 'Bob Katter'], ['Katter, Bob Jr.', 'Bob Katter'],
     ['Bob Katter Junior MP', 'Bob Katter'], ['The Hon. Senator Jacqui Lambie', 'Jacqui Lambie'],
     ['Senator Lambie, Jacqui', 'Jacqui Lambie'], ['Senator Lamby, Jacqui', 'Jacqui Lambie'],
     ['Dr Anthony Albanese MP', 'Anthony Albanese'], ['Van Manen Bert', 'Bert Van Manen'],
@@ -64,7 +65,7 @@ test('nickname resolution uses given names and preserves roster spelling and met
   for (const [query, name] of [
     ['Robert Katter', 'Bob Katter'], ['William Shorten', 'Bill Shorten'],
     ['Tony Albanese', 'Anthony Albanese'], ['Michael Baird', 'Mike Baird'],
-    ['Jacqueline Lambie', 'Jacqui Lambie'], ['Deb O’Neill', "Deb O'Neill"],
+    ['Jacqueline Lambie', 'Jacqui Lambie'], ['Deb O’Neill', "Deborah O'Neill"],
   ]) resolved(await findPeople(deps, { name: query }), name);
   const result = await runTool(deps, 'find_people', { name: 'Robert Katter' });
   const row = roster.people.find(p => p.name === 'Bob Katter');

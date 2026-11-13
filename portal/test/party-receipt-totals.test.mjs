@@ -133,3 +133,37 @@ test('a state flow keeps its record figures and the old receipt-type note', () =
   assert.equal(flow.total, state.edges.filter(e => e.source === edge.source && e.target === edge.target && !e.flow && !e.grant).reduce((s, e) => s + e.total, 0));
   assert.equal(flowScope(flow), '');
 });
+
+// The party page's Export CSV reads /api/table/party-money, which D1 serves from
+// scripts/load_tables.mjs. Those rows must be the table's rows with the table's figures.
+test('the D1 party-money and money-connections rows carry the page\'s figures and rows', async () => {
+  const {tableRows} = await import('../../scripts/load_tables.mjs');
+  const {rows} = await tableRows(undefined, {moneyOnly: true});
+  const party = rows['party-money'].map(r => r.row), connections = rows['money-connections'].map(r => r.row);
+  const find = (list, from, to) => list.filter(r => r.jurisdiction === 'federal' && r.from === from && r.to === to);
+  for (const list of [party, connections]) {
+    const [liberal] = find(list, PRATT, 'Liberal');
+    assert.deepEqual([liberal.amount, liberal.count, liberal.firstYear, liberal.lastYear], [10454400, 70, 1998, 2024]);
+    assert.deepEqual(find(list, PRATT, 'Labor').map(r => [r.amount, r.count]), [[8473476, 40]]);
+    assert.deepEqual(find(list, WESTPAC, 'Labor').map(r => [r.amount, r.count]), [[47331887, 201]]);
+  }
+  for (const [label, partyId, expected] of [['Labor', 'party:Labor', 301], ['Liberal', 'party:Liberal', 251]]) {
+    const d1 = party.filter(r => r.jurisdiction === 'federal' && r.to === label);
+    assert.equal(d1.length, expected, label);
+    const page = partyMoneyData(graph, partyId).rows;
+    assert.equal(page.length, expected, label);
+    const key = r => `${r.amount ?? r.total}|${r.count}|${r.firstYear}|${r.lastYear}`;
+    assert.deepEqual(d1.map(key).sort(), page.map(key).sort(), `${label}: the CSV and the table hold the same figures`);
+  }
+  // State graphs keep their record figures, and contract or grant rows are untouched.
+  const qld = JSON.parse(readFileSync(new URL('../public/graph/money.qld.json', import.meta.url), 'utf8'));
+  const qldNodes = new Map(qld.nodes.map(n => [n.id, n]));
+  const qldReceipts = qld.edges.filter(e => !e.flow && !e.grant && e.total > 0 && qldNodes.get(e.source)?.kind === 'donor' && qldNodes.get(e.target)?.kind === 'party');
+  const qldRows = party.filter(r => r.jurisdiction === 'qld');
+  assert.equal(qldRows.length, qldReceipts.length);
+  assert.equal(qldRows.reduce((s, r) => s + r.amount, 0), qldReceipts.reduce((s, e) => s + e.total, 0));
+  for (const r of connections.filter(r => r.type !== 'receipts' && r.jurisdiction === 'federal').slice(0, 50)) {
+    const edge = graph.edges[Number(r.id.split(':')[1])];
+    assert.equal(r.amount, edge.total);
+  }
+});

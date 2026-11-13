@@ -4,7 +4,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {rosterSeatParty} from '../public/roster-party.js';
+import {rosterSeatParty, rosterListParty} from '../public/roster-party.js';
 import {datedAffiliationParty} from '../public/speech-attribution.js';
 import {renderPersonAnswer, renderDirectory, partyLine} from '../src/seo-content.ts';
 
@@ -110,7 +110,13 @@ test('the person page reads the same fallback, only for a record with no party o
   assert.match(app, /electorateReference\.module\.rosterSeatParty\?\.\(roster, electorateReference\.data\.electorates\)/);
   assert.match(app, /if \(seatParty\) party = seatParty\.party;/);
   const electorates = readFileSync(new URL('../public/electorates.js', import.meta.url), 'utf8');
-  assert.match(electorates, /export \{ rosterSeatParty \} from '\.\/roster-party\.js/);
+  assert.match(electorates, /export \{ rosterSeatParty, rosterListParty \} from '\.\/roster-party\.js/);
+  // The dated official-list fallback: a full name only, never a single-name print, dated on the page.
+  assert.match(app, /const listFallback = !partyNow && !roster\?\.party && \/\\S\\s\+\\S\/\.test\(String\(roster\?\.name \|\| ""\)\);/);
+  assert.match(app, /electorateReference\.module\.rosterListParty\?\.\(roster, rosterLists\.observations\)/);
+  // The chip in the meta line is dated too, not only the source-details panel.
+  assert.match(app, /seatParty \? `<span>parliamentary roster as at \$\{esc\(fmtDate\(seatParty\.as_of\)\)\}<\/span>` : "",/);
+  assert.match(app, /\["Party", esc\(`\$\{seatParty\.party\} \(parliamentary roster as at \$\{fmtDate\(seatParty\.as_of\)\}\)`\)\]/);
 });
 
 
@@ -136,4 +142,57 @@ test('Moira Deeming retains the date on the pinned Victorian roster affiliation'
  assert.equal(member.party,undefined);
  assert.equal(partyLine(member,index.electorates),'Independent (parliamentary roster as at 9 Sep 2026)');
  assert.match(await partyItemOf(member,index.electorates),/Independent \(parliamentary roster as at 9 Sep 2026\)/);
+});
+
+// Dated official chamber lists (public/data/roster-list-parties.json) for full-name
+// profiles with no party and no verified seat party. Invented people only.
+const listed = (over = {}) => ({name: 'Morgan Fixture', aliases: ['Morgan Alexandra Fixture'], jurisdiction: 'nsw', chamber: 'nsw_lc',
+  electorate: 'New South Wales', party: 'Example Party', as_of: '2026-09-25', source_url: 'https://example.test/lc-list.pdf', ...over});
+const councillor = (over = {}) => ({name: 'Morgan Fixture', states: ['nsw'], chambers: ['nsw_lc'], ...over});
+const listReader = (observations) => async (path) => {
+  if (path === '/data/roster-list-parties.json') return {observations};
+  throw new Error('missing ' + path);
+};
+
+test('a full-name profile matched in a dated official list gets that party, dated', async () => {
+  assert.deepEqual(rosterListParty(councillor(), [listed()]), {party: 'Example Party', as_of: '2026-09-25',
+    electorate: 'New South Wales', url: null, source_url: 'https://example.test/lc-list.pdf'});
+  // A listed alias is the same person; folding as for seats.
+  assert.equal(rosterListParty(councillor({name: 'morgan alexandra FIXTURE'}), [listed()])?.party, 'Example Party');
+  // The latest dated observation decides: a later list after a change of party.
+  assert.equal(rosterListParty(councillor(), [listed({party: 'Earlier Party', as_of: '2023-04-01'}), listed()])?.party, 'Example Party');
+  const {html, description} = await renderPersonAnswer(councillor(), listReader([listed()]), new Map());
+  assert.equal(description, 'Morgan Fixture. Example Party (parliamentary roster as at 25 Sep 2026). Legislative Council (New South Wales).');
+  assert.match(html, /<li><a href="\/subject\/party\/example-party">Example Party \(parliamentary roster as at 25 Sep 2026\)<\/a><\/li>/);
+  const directory = await renderDirectory('person', new URL('https://opax.com.au/subject/person'), listReader([listed()]), [councillor()], new Map(), {});
+  assert.match(directory.html, /Morgan Fixture<\/a>: Example Party \(parliamentary roster as at 25 Sep 2026\)/);
+  // A verified seat party still comes first; the person's own party before both.
+  assert.equal(partyLine(councillor({party: 'Own Party'}), null, [listed()]), 'Own Party (recorded affiliation)');
+});
+
+test('a single-name profile, another chamber or a split latest list gives no party', async () => {
+  // A surname print never matches, even when the list holds that word as a name.
+  assert.equal(rosterListParty(councillor({name: 'Fixture'}), [listed({name: 'Fixture', aliases: []})]), null);
+  assert.equal(rosterListParty({name: 'Fixture', full: 'Morgan Fixture', chambers: ['nsw_lc']}, [listed()]), null);
+  const {description} = await renderPersonAnswer(councillor({name: 'Fixture'}), listReader([listed()]), new Map());
+  assert.equal(description, 'Fixture. Party not recorded. Legislative Council (New South Wales).');
+  // Only in a chamber the profile sat in.
+  assert.equal(rosterListParty(councillor({chambers: ['nsw_la']}), [listed()]), null);
+  // Two parties, or two seats, on the latest date.
+  assert.equal(rosterListParty(councillor(), [listed(), listed({party: 'Other Party'})]), null);
+  assert.equal(rosterListParty(councillor(), [listed(), listed({electorate: 'Elsewhere'})]), null);
+  // No valid date, no party, or no list.
+  assert.equal(rosterListParty(councillor(), [listed({as_of: '2026-02-30'})]), null);
+  assert.equal(rosterListParty(councillor(), [listed({party: ' '})]), null);
+  assert.equal(rosterListParty(councillor(), null), null);
+});
+
+test('the committed official-list file holds dated, full-name observations only', () => {
+  const doc = JSON.parse(readFileSync(new URL('../public/data/roster-list-parties.json', import.meta.url), 'utf8'));
+  assert.ok(doc.observations.length > 0);
+  for (const o of doc.observations) {
+    assert.match(o.as_of, /^\d{4}-\d{2}-\d{2}$/);
+    assert.match(o.name, /\S\s+\S/);
+    assert.ok(o.party && o.chamber);
+  }
 });

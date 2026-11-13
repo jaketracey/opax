@@ -20,7 +20,7 @@ test('the privacy page lists exactly the seven App Store label types, in label o
   const body = text(panel('privacy'));
   for (const fact of ['None of it is used to track you', 'counts every kind as connected to your identity',
     'no analytics, no advertising and no tracking', 'Cloudflare, ElevenLabs, Progress Agentic RAG and OpenRouter',
-    'An account holds up to 50', 'Your location is never sent', 'Last updated 10 October 2026',
+    'An account holds up to 50', 'Your location is never sent', 'Last updated 13 November 2026',
     'Community is on the website only', 'Before your first question is sent, Ask asks your permission',
     'nothing is sent until you agree', 'After an answer, Report this answer opens the support page'])
     assert.ok(body.includes(fact), fact);

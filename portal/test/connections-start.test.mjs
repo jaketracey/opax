@@ -19,17 +19,17 @@ const ENTITIES=[
 ];
 const record=entity=>({id:entity.id,records:entity.records,kind:entity.kind,years:{2024:3,2025:5},excerpts:[]});
 
-async function mount({index=null}={}){
+async function mount({index=null,meta,wide=true,entities=ENTITIES}={}){
  const dom=new JSDOM(`<!doctype html><html><body><main>${panel}</main></body></html>`,{url:'https://opax.test/connections'});
  const saved={document:globalThis.document,fetch:globalThis.fetch,matchMedia:globalThis.matchMedia};
  globalThis.document=dom.window.document;
- globalThis.matchMedia=()=>({matches:false});
+ globalThis.matchMedia=()=>({matches:!wide});
  const requests=[];
  globalThis.fetch=async url=>{
   requests.push(url);
-  if(url==='/evidence/index.json'){await index;return {ok:true,json:async()=>({entities:ENTITIES.map(e=>({...e}))})};}
+  if(url==='/evidence/index.json'){await index;return {ok:true,json:async()=>({...(meta?{meta}:{}),entities:entities.map(e=>({...e}))})};}
   const shard=url.match(/^\/evidence\/([a-f0-9]{2})\.json$/)?.[1];
-  const entries=Object.fromEntries(ENTITIES.filter(e=>e.id.startsWith(shard)).map(e=>[e.id,record(e)]));
+  const entries=Object.fromEntries(entities.filter(e=>e.id.startsWith(shard)).map(e=>[e.id,record(e)]));
   return {ok:true,json:async()=>({entries})};
  };
  const doc=dom.window.document;
@@ -112,4 +112,126 @@ test('a quick pick opens its connection as the list row does, and focus lands on
   assert.equal(detail.querySelector(':scope > h2').textContent,'Fictional Ridge');
   assert.equal(doc.activeElement,detail.querySelector(':scope > h2'));
  }finally{restore();}
+});
+
+test('the page says once, under its title, the day the connections run to, and an opened connection does not repeat it',async()=>{
+ const meta={generated_at:'2026-09-08T09:21:53+00:00',source_records:{speeches:100,ext_press_releases:20,government_grants:30}};
+ const {doc,page,settle,restore}=await mount({meta});
+ try{
+  const head=doc.querySelector('.connections-head');
+  const lines=doc.querySelectorAll('.ui-source');
+  assert.equal(lines.length,1,'one dated line on the page');
+  assert.equal(lines[0].parentElement,head,'it sits in the page head');
+  assert.equal(head.lastElementChild,lines[0],'at the foot of the head');
+  assert.ok(lines[0].textContent.includes('As at 8 Sep 2026'),lines[0].textContent);
+  assert.ok(lines[0].textContent.includes('Connections from records collected to 8 September 2026.'));
+  doc.querySelector('.connection-choice[data-entity="bb0000000000000000000002"]').click();
+  await settle();
+  assert.equal(doc.querySelectorAll('.ui-source').length,1,'the opened connection adds no second date');
+  assert.ok(!doc.getElementById('connection-detail').textContent.includes('As at'));
+  page.destroy();
+  assert.equal(head.querySelector('.ui-source'),null,'leaving the page takes the line with it');
+ }finally{restore();}
+});
+
+test('without a dated index the page shows no date line',async()=>{
+ const {doc,restore}=await mount();
+ try{
+  assert.ok(doc.querySelector('.connection-choice'),'the list still loads');
+  assert.equal(doc.querySelectorAll('.ui-source').length,0);
+ }finally{restore();}
+});
+
+// A phone: the list in the page's flow, twenty rows at a time, the starting card
+// above it, and a connection opening as the next view with a way back.
+const MANY=Array.from({length:45},(_,i)=>({id:`dd${String(i).padStart(22,'0')}`,name:i===1?'EXAMPLE WORK PROGRAM FOR NSW':`Example Place ${i}`,kind:i%2?'program':'place',records:1000-i}));
+
+test('a phone lists twenty connections, then twenty more on request, and names filed in capitals read in title case',async()=>{
+ const {doc,settle,restore}=await mount({wide:false,entities:MANY});
+ try{
+  const rows=()=>doc.querySelectorAll('#connection-list .connection-choice');
+  assert.equal(rows().length,20);
+  assert.match(doc.getElementById('connection-status').textContent,/^45 connections · Showing the first 20\./);
+  const more=doc.querySelector('.connection-more');
+  assert.equal(more.hidden,false);assert.equal(more.textContent,'Show 20 more');
+  assert.equal(more.previousElementSibling.id,'connection-list','the button follows the list');
+  more.click();await settle();
+  assert.equal(rows().length,40);
+  assert.equal(doc.activeElement,rows()[20],'focus moves to the first row added');
+  assert.equal(more.textContent,'Show 5 more');
+  more.click();await settle();
+  assert.equal(rows().length,45);assert.equal(more.hidden,true);
+  assert.equal(rows()[1].querySelector('.ui-row-name').textContent,'Example Work Program for NSW');
+ }finally{restore();}
+});
+
+test('a phone opens a connection as the next view, and its back control returns to the same row',async()=>{
+ const {doc,settle,restore}=await mount({wide:false});
+ try{
+  const root=doc.getElementById('connections-body');
+  const row=doc.querySelector('.connection-choice[data-entity="aa0000000000000000000003"]');
+  row.click();await settle();
+  assert.ok(root.classList.contains('connections-reading'),'the list steps aside');
+  const detail=doc.getElementById('connection-detail');
+  const back=detail.querySelector(':scope > button.connection-back');
+  assert.equal(back.textContent,'All connections');
+  assert.equal(back.nextElementSibling.tagName,'H2');
+  back.click();await settle();
+  assert.equal(root.classList.contains('connections-reading'),false);
+  assert.ok(detail.querySelector('.connection-detail-empty'),'the invitation returns');
+  assert.equal(doc.activeElement.dataset.entity,'aa0000000000000000000003','focus returns to the row it came from');
+ }finally{restore();}
+});
+
+test('a wide screen keeps the first forty and no paging control; the phone list never scrolls inside the page',async()=>{
+ const {doc,restore}=await mount({entities:MANY});
+ try{
+  assert.equal(doc.querySelectorAll('#connection-list .connection-choice').length,40);
+  assert.match(doc.getElementById('connection-status').textContent,/Showing the first 40\. Search to narrow the list\./);
+  assert.equal(doc.querySelector('.connection-more').hidden,true);
+ }finally{restore();}
+ const css=readFileSync(new URL('../public/style.css',import.meta.url),'utf8');
+ assert.doesNotMatch(css,/#connection-list\s*\{[^}]*(?:max-height|overflow)/,'no inner scroller');
+ assert.match(css,/#connection-detail:has\(> \.connection-detail-empty\) \{ position: static; order: -1; \}/,'the invitation sits above the list on a phone');
+});
+
+// Names filed in capitals, from the real evidence index (public records), in both directions:
+// acronyms, codes and numerals keep their capitals; ordinary words, short ones included, do not.
+test('names filed in capitals read in title case without breaking acronyms or short words', async () => {
+ const {displayName}=await import('../public/connections.js');
+ const cases=[
+  ['FREE TAFE & FREE APPRENTICESHIPS','Free TAFE & Free Apprenticeships'],
+  ['NAIDOC 2023','NAIDOC 2023'],
+  ['RFDS - RRMBS','RFDS - RRMBS'],
+  ['AURUKUN CCTV CONTRIBUTION','Aurukun CCTV Contribution'],
+  ['AP2.0 FIFA WC 2023 INF','AP2.0 FIFA WC 2023 Inf'],
+  ['RILIPO - ILUA','Rilipo - ILUA'],
+  ['ANZPAA NIFS CONTRIBUTIONS','ANZPAA NIFS Contributions'],
+  ['NEW MAPOON','New Mapoon'],
+  ['ST GEORGE','St George'],
+  ['MT COOLUM','Mt Coolum'],
+  ['EMU PARK','Emu Park'],
+  ['OLD TALGAI','Old Talgai'],
+  ['FIG TREE POCKET','Fig Tree Pocket'],
+  ['SOMERSET DAM','Somerset Dam'],
+  ['MOUNT ISA DC','Mount Isa DC'],
+  ['CLOSE THE GAP VET','Close the Gap VET'],
+  ['EQUIPPING TAFE FOR OUR FUTURE','Equipping TAFE for Our Future'],
+  ['NATIONAL PARTNERSHIP JOB TRAINER FUND','National Partnership Job Trainer Fund'],
+  ['EYE HEALTH','Eye Health'],
+  ['BACK TO WORK','Back to Work'],
+  ['STAGE VIII WORKS','Stage VIII Works'],
+  ['XIII COMMONWEALTH GAMES','XIII Commonwealth Games'],
+  ['COVID-19 SUPPORT','COVID-19 Support'],
+  ['SBP-BUS BOOST GRANTS','SBP-Bus Boost Grants'],
+  ['BAUHINIA, QLD','Bauhinia, QLD'],
+  ['VITAMIN D PROGRAM','Vitamin D Program'],
+  ["O'CONNOR PARK","O'Connor Park"],
+  ['MIX FM RADIO','Mix FM Radio'],
+  // Mixed case is the record's own spelling and passes through.
+  ['RILIPO Infrastructure - Torres Strait Island','RILIPO Infrastructure - Torres Strait Island'],
+  ['Department of Finance','Department of Finance'],
+  ['TAFE','TAFE'],
+ ];
+ for(const [from,to] of cases)assert.equal(displayName(from),to,from);
 });

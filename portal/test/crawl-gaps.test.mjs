@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
-import {readPartyPages, canonicalPartyPages, resolvePartyPage, partyPageCoverage, partyMembers} from '../public/party-page.js';
+import {readFile, stat} from 'node:fs/promises';
+import {readPartyPages, canonicalPartyPages, resolvePartyPage, partyPageCoverage, partyMembers, partyBills} from '../public/party-page.js';
 import {renderDirectory} from '../src/seo-content.ts';
 import {officialReportCrawlEntries} from '../../scripts/official_report_crawl.mjs';
 import {sitemapFiles, latestDate, exportDate, personPaths} from '../../scripts/build_crawl_catalog.mjs';
@@ -191,4 +191,89 @@ test('built official report sitemap lists every public record from all four coll
   assert.deepEqual(listed.sort(), entries.map(e => e.path).sort());
   assert.deepEqual(new Set(entries.map(e => e.path.split('/')[2].split('-').slice(0, 2).join('-'))), new Set(['royal-commission', 'integrity-report', 'annual-report', 'agency-report']));
   for (const file of manifest.files) assert.doesNotMatch(await readFile(new URL('crawl' + file.path, root), 'utf8'), /<loc>[^<]*\/reports(?:\/|<)/);
+});
+
+// Portal audit 12 Nov 2026, F12 and F13: the built crawl files, read as a crawler reads them.
+const sitemapPaths = async group => {
+  const manifest = await read('/crawl/manifest.json');
+  const files = manifest.files.filter(f => f.path.startsWith(`/sitemaps/${group}-`));
+  return {files, paths: (await Promise.all(files.map(f => readFile(new URL('crawl' + f.path, root), 'utf8')))).flatMap(paths)};
+};
+
+test('F13: the sitemap index lists the official report group, with the audit examples and no investigations', async () => {
+  const {reportsPublished} = await import('../../scripts/reports_flag.mjs');
+  assert.equal(reportsPublished(), false, 'REPORTS_ENABLED stays false');
+  const index = await readFile(new URL('crawl/sitemap.xml', root), 'utf8');
+  const {files, paths: listed} = await sitemapPaths('official-reports');
+  assert.ok(files.length >= 1);
+  for (const f of files) {
+    assert.ok(index.includes(`<loc>https://opax.com.au${f.path}</loc>`), f.path);
+    assert.ok(f.count <= 49_999, f.path);
+    assert.ok((await stat(new URL('crawl' + f.path, root))).size < 50 * 1024 * 1024, f.path);
+  }
+  for (const slug of ['annual-report-royal-australian-air-force-welfare-trust-fund-2024-25', 'agency-report-vic-ballarat-general-cemeteries-trust-2025-26-annual-report']) {
+    assert.ok(listed.includes('/report/' + slug), slug);
+  }
+  assert.ok(listed.every(p => p.startsWith('/report/')));
+  for (const group of Object.keys((await read('/crawl/manifest.json')).counts)) {
+    assert.ok(!(await sitemapPaths(group)).paths.some(p => p === '/reports' || p.startsWith('/reports/')), group);
+  }
+});
+
+test('F12: every party in the sitemap is one identity with a non-empty page; the parliamentary-only parties are in', async () => {
+  const pages = await readPartyPages(read);
+  const {paths: listed} = await sitemapPaths('parties');
+  assert.equal(new Set(listed).size, listed.length, 'no duplicate party URLs');
+  const resolved = listed.map(path => resolvePartyPage(path.split('/').at(-1), pages));
+  assert.ok(resolved.every(Boolean));
+  assert.equal(new Set(resolved).size, listed.length, 'no two URLs resolve to the same party');
+  // A page is empty without disclosed money, a member or a sponsored bill; such a page stays out of the sitemap.
+  const roster = await read('/parliamentarians.json'), divisions = await read('/graph/party-members.json');
+  for (const page of resolved) {
+    const m = partyMembers(page.label, {roster, divisions});
+    assert.ok(page.money || page.bills || m.current.length + m.former.length > 0, page.label);
+  }
+  for (const label of [...missing, 'Libertarian Party']) assert.ok(listed.includes(pages.find(p => p.label === label)?.href), label);
+  // The sponsor-only parties (Nick Xenophon Team, Palmer United Party, Rex Patrick Team) are listed: see the A4b tests.
+});
+
+// Backlog A4b: three parties the record names only as a bill sponsor's party. Their pages list those bills, so
+// they are no longer empty and the party sitemap lists each once (im/crawl-discovery recorded them as excluded).
+test('A4b: sponsor-only parties have one page each, with their bills, and are in the party sitemap', async () => {
+  const pages = await readPartyPages(read);
+  const manifest = await read('/crawl/manifest.json');
+  const xml = (await Promise.all(manifest.files.filter(f => /^\/sitemaps\/parties-/.test(f.path)).map(f => readFile(new URL('crawl' + f.path, root), 'utf8')))).join('');
+  const listed = paths(xml);
+  assert.equal(new Set(listed).size, listed.length, 'no duplicate party URLs');
+  const roster = await read('/parliamentarians.json'), divisions = await read('/graph/party-members.json');
+  for (const [label, slug, first] of [['Nick Xenophon Team', 'nick-xenophon-team', 'au-federal-s1127'], ['Palmer United Party', 'palmer-united-party', 'au-federal-s1019'],
+    ['Rex Patrick Team', 'rex-patrick-team', 'au-federal-s1321']]) {
+    const matches = pages.filter(p => p.aliases.includes(label));
+    assert.equal(matches.length, 1, label);
+    const [page] = matches;
+    assert.equal(page.href, '/subject/party/' + slug);
+    assert.equal(resolvePartyPage(slug, pages), page);
+    assert.ok(page.bills && !page.money && !page.roster && !page.divisions, label);
+    assert.equal(partyPageCoverage(page), 'Bill sponsor records. No party-level disclosure file held by OPAX.');
+    const m = partyMembers(page.label, {roster, divisions});
+    assert.equal(m.current.length + m.former.length, 0, 'the bills, not members, make the page');
+    assert.equal(partyBills(page.label, divisions)[0].key, first);
+    assert.ok(listed.includes(page.href), label);
+    assert.equal(listed.filter(p => resolvePartyPage(p.split('/').at(-1), pages) === page).length, 1, label);
+  }
+  // A bill sponsor spelling of a party that already has a page adds no page: Centre Alliance stays one.
+  assert.equal(pages.filter(p => p.aliases.includes('Centre Alliance')).length, 1);
+  assert.equal(pages.filter(p => p.href === '/subject/party/labor').length, 1);
+});
+
+test('A4b: a sponsor party joins its page through the existing aliases, never a second page', () => {
+  const pages = canonicalPartyPages({
+    money: [{nodes: [{kind: 'party', label: 'One Nation'}]}],
+    divisions: {parties: {}, bills: {"Pauline Hanson's One Nation Party": [{key: 'k1', title: 'A Bill', introduced: '2020-01-01'}],
+      JLN: [{key: 'k2', title: 'B Bill', introduced: '2021-01-01'}], 'Fixture Sponsor Party': [{key: 'k3', title: 'C Bill', introduced: '2019-05-01'}]}},
+  });
+  assert.deepEqual(pages.map(p => p.label), ['Fixture Sponsor Party', 'JLN', 'One Nation']);
+  const fixture = pages.find(p => p.label === 'Fixture Sponsor Party');
+  assert.equal(fixture.lastmod, '2019-05-01');
+  assert.deepEqual(partyBills('One Nation', {bills: {"Pauline Hanson's One Nation Party": [{key: 'k1'}], 'One Nation': [{key: 'k1'}, {key: 'k4'}]}}).map(b => b.key).sort(), ['k1', 'k4']);
 });

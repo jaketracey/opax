@@ -1,8 +1,9 @@
 import {hydrateRecordCore} from './record-core.js';
+import {renderNotFound} from './not-found.js';
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=2e8209b6ec';
 import {loadDonorViewIndex} from './donor-views.js?v=a3bd4b7d12';
-import {partyUrl} from './canonical-urls.js?v=6c889d487d';
-import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=679fa2581d';
+import {partyUrl} from './canonical-urls.js?v=e32f13c6c8';
+import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=59c62770f8';
 
 const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const NUMBER = new Intl.NumberFormat('en-AU');
@@ -246,6 +247,13 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     } catch (error) {
       if (!alive() || error.name === 'AbortError') return;
       root.replaceChildren(); root.removeAttribute('aria-busy');
+      if (error.message === 'not-found') {
+        // No recipient at this address: the one not-found block (not-found.js), never the raw id.
+        const heading = renderNotFound(root, { kind: 'recipient', slug: id, headingId: 'grant-recipient-title' });
+        onTitle('Not found');
+        if (manageFocus) heading?.focus({ preventScroll: true });
+        return;
+      }
       const heading = node('h1', error.message === 'not-found' ? 'Recipient not found' : 'Recipient records could not load'); heading.tabIndex = -1;
       const message = node('p', error.message === 'not-found' ? 'No grant records for this recipient in this jurisdiction.' : 'The published records are temporarily unavailable. Try loading them again.'); message.setAttribute('role', 'alert'); root.append(heading, message);
       if (error.message !== 'not-found') { const retry = node('button', 'Try again', 'primary'); retry.type = 'button'; retry.addEventListener('click', () => { root.setAttribute('aria-busy', 'true'); retry.disabled = true; retry.textContent = 'Loading…'; load(); }); root.append(retry); }

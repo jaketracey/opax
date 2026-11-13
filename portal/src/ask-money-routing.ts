@@ -1,4 +1,4 @@
-import {trimQuestionEnd, questionSpaces} from './question-text.mjs'
+import {trimQuestionEnd, questionSpaces, shortTrailingMarks} from './question-text.mjs'
 import type {RecordQuestion} from './ask-records'
 import {rankedMoneyAnswer, fundingResearchFollowUp} from './ask-money'
 import {fundingContinuation, fundingUserTurns} from './ask-money-followup'
@@ -9,6 +9,8 @@ export {federalPartyRankingQuestion,federalPartyRankingIntent} from './ask-money
 export type PartyMoneyAnswer=(NonNullable<Awaited<ReturnType<typeof rankedMoneyAnswer>>>|NonNullable<Awaited<ReturnType<typeof industryMoneyAnswer>>>)&{money_route:'federal-party-ranking-v1'}
 /** Resolve before model selection, model prose, cache reads or paid overview. */
 export async function federalPartyMoneyAnswer(input:RecordQuestion,assets:Fetcher):Promise<PartyMoneyAnswer|null> {
+ // Every parser below trims trailing marks; shorten a long run once so none of them copies it.
+ if(typeof input.question==='string')input={...input,question:shortTrailingMarks(input.question)}
  const industry=await industryMoneyAnswer(input,assets)
  if(industry)return {...industry,money_route:'federal-party-ranking-v1'}
  if(input.state&&input.state!=='federal')return null

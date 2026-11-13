@@ -172,7 +172,7 @@ export const MODULE_STAMPS = [
   ['electorates.js', 'canonical-urls.js'],
   // The electoral authorisation: a cached old vic-election.js would draw the old block.
   ['vic-election.js', 'authorisation.js'], ['electorates.js', 'vic-election.js'],
-  ['evidence.js', 'canonical-urls.js'],
+  ['evidence.js', 'canonical-urls.js'], ['evidence-date.js', 'labels.js'],
   ['grants.js', 'donor-views.js'], ['grant-recipient.js', 'donor-views.js'],
   ['grants.js', 'canonical-urls.js'], ['grants.js', 'labels.js'],
   ['grant-recipient.js', 'canonical-urls.js'],
@@ -204,6 +204,9 @@ export const MODULE_STAMPS = [
   ['app.js', 'grants.js'], ['app.js', 'ledger.js'], ['app.js', 'matrix.js'], ['app.js', 'wordsdollars.js'],
   ['app.js', 'thenvsnow.js'], ['app.js', 'stages.js'], ['app.js', 'wombat.js'], ['app.js', 'ask-steps.js'],
   ['home.js', 'home-data.js'], ['home.js', 'money-map.js'],
+  // The one not-found block's still wombat. The block's own module and stylesheet stay
+  // on the default module cache: two more immutable rules would pass _headers' 100.
+  ['not-found.js', 'wombat.js'],
 ]
 
 // Files stamped the same way that are not MODULE_STAMPS imports: a stylesheet

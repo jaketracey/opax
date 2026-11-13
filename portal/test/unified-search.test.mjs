@@ -7,13 +7,14 @@ import {SEARCH_SORTS,compareSearchResults} from '../src/search-sort.ts';
 import {CATALOG_KINDS} from '../src/catalog-search.ts';
 import {tokens as catalogTokens} from '../src/catalog-query.mjs';
 import {emptySearchSuggestions} from '../src/search-recovery.ts';
+import {noRecordMentions} from '../src/search-mention.ts';
 const source=readFileSync(new URL('../src/index.ts',import.meta.url),'utf8');
 const code=ts.transpileModule(source.slice(source.indexOf('async function apiUnifiedSearch'),source.indexOf('/** A bounded /find window')), {compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
 function fixture({localError=false,docError=false,suggest=false,localRows,docRows,matchedQuery}={}){
  const calls=[]; const requests=[]; const reads=[];
  const local={results:localRows || [{kind:'contract',slug:'catalog-1',title:'Woodside contract',href:'/subject/supplier/woodside',date:'2025-01-01'}],total:localRows?.length??1,truncated:false,coverage:'Published snapshot',version:'test',matched_query:matchedQuery};
  const docs={results:docRows || [{kind:'speech',slug:'speech-1',title:'Woodside debate',date:'2024-01-01'}],truncated:false};
- const ctx={URL,Request,Response,Set,Number,SEARCH_SORTS,compareSearchResults,CATALOG_KINDS,catalogTokens,emptySearchSuggestions,validateSearchQuery:()=>null,rateLimited:async()=>null,json:(x,status=200)=>Response.json(x,{status}),searchCatalog:async()=>{calls.push('catalog');if(localError)throw Error();return local},
+ const ctx={URL,Request,Response,Set,Number,SEARCH_SORTS,compareSearchResults,CATALOG_KINDS,catalogTokens,emptySearchSuggestions,noRecordMentions,validateSearchQuery:()=>null,rateLimited:async()=>null,json:(x,status=200)=>Response.json(x,{status}),searchCatalog:async()=>{calls.push('catalog');if(localError)throw Error();return local},
   // The paged catalogue as src/catalog-search.ts returns it: stubs in rank order, and their records on request.
   searchCatalogPaged:async()=>{calls.push('catalog');if(localError)throw Error();const rows=local.results;return {...local,stubs:rows.map((r,id)=>({id,kind:r.kind,date:r.date||undefined,sort_date:r.date||r.sort_date||''})),records:async ids=>{reads.push(ids);return new Map(ids.map(id=>[id,rows[id]]))}}},apiSearch:async(_r,u,_e,_c,options)=>{requests.push({url:u,options});calls.push(u.pathname+'?'+u.searchParams.get('kind'));return docError?new Response('',{status:502}):Response.json(docs)}};
  const fn=runInNewContext(code+';apiUnifiedSearch',ctx);
@@ -115,4 +116,23 @@ test('a relevance or date page reads only the catalogue records it shows; title 
  }
  const f=fixture({localRows});const {data}=await f.run({sort:'title_asc',per:'5'});
  assert.equal(f.reads.length,0);assert.equal(data.results[0].title,'Contract 0');
+});
+
+test('a query no record mentions says so first, with recovery, and keeps the meaning-ranked records',async()=>{
+ const docRows=[{kind:'speech',slug:'speech-9',title:'GovHubs in regional Victoria',speaker:'Example Member',snippet:'The hubs bring services together.',score:0.41,date:'2024-01-01'}];
+ const {data}=await fixture({localRows:[],docRows}).run({q:'zzqxv plorthub'});
+ assert.equal(data.no_mention,true);
+ assert.equal(data.count,1,'the closest records are still returned');
+ assert.ok(data.suggestions.some(s=>s.kind==='scope'),'with the recovery suggestions');
+ // A record that carries a query word, a register match, keyword mode or a strong meaning score keeps results first.
+ for(const [options,params] of [
+  [{localRows:[],docRows:[{...docRows[0],snippet:'Housing affordability in the regions.'}]},{q:'housing affordable'}],
+  [{docRows},{q:'zzqxv plorthub'}],
+  [{localRows:[],docRows},{q:'zzqxv plorthub',mode:'keyword'}],
+  [{localRows:[],docRows:[{...docRows[0],score:0.93}]},{q:'zzqxv plorthub'}],
+ ]){
+  const {data:kept}=await fixture(options).run(params);
+  assert.equal(kept.no_mention,undefined,JSON.stringify(params));
+  assert.equal(kept.suggestions,undefined,JSON.stringify(params));
+ }
 });

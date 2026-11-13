@@ -19,8 +19,8 @@ import {loadDonorViewIndex} from './donor-views.js?v=a3bd4b7d12';
 //
 // Styles: money-explain.css, loaded with the module.
 
-import { sourceLineHTML, partyLabelHTML } from './labels.js?v=6a4764139d';
-import { subjectUrl } from './canonical-urls.js?v=6c889d487d';
+import { sourceLineHTML, partyLabelHTML } from './labels.js?v=75e6c65ff7';
+import { subjectUrl } from './canonical-urls.js?v=e32f13c6c8';
 import { shortMoney, shortDate } from './format.js?v=9fcab43d8d';
 
 const STYLE_HREF = '/money-explain.css?v=9d581f0740';

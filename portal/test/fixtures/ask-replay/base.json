@@ -1,0 +1,73 @@
+{
+ "assets": {
+  "/bills/index.json": {
+   "bills": []
+  },
+  "/parliamentarians.json": {
+   "meta": {},
+   "people": [
+    {
+     "name": "Jordan Sample",
+     "speeches": 412,
+     "party": "Greens",
+     "states": [
+      "federal"
+     ],
+     "chambers": [
+      "senate"
+     ],
+     "first": 2016,
+     "last": 2026,
+     "current": true,
+     "party_now": "Greens",
+     "prints": [
+      "Sample"
+     ]
+    },
+    {
+     "name": "Casey Example",
+     "speeches": 388,
+     "party": "Labor",
+     "states": [
+      "federal"
+     ],
+     "chambers": [
+      "house"
+     ],
+     "first": 2013,
+     "last": 2026,
+     "current": true,
+     "party_now": "Labor",
+     "prints": [
+      "Example"
+     ]
+    },
+    {
+     "name": "Penny Wong",
+     "speeches": 2937,
+     "party": "Labor",
+     "states": [
+      "federal"
+     ],
+     "chambers": [
+      "senate"
+     ],
+     "first": 2006,
+     "last": 2026,
+     "pid": "10678",
+     "current": true,
+     "party_now": "Labor",
+     "representation": [
+      {
+       "jurisdiction": "federal",
+       "chamber": "senate",
+       "electorate": "South Australia",
+       "state": "SA",
+       "basis": "Recorded parliamentary roster; exact name and chamber match"
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

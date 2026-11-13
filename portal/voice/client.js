@@ -177,7 +177,7 @@ export function createVoiceAssistant({ mount = document.body, trigger = null, fe
     const busy = Boolean(attempt);
     const connected = attempt?.connected;
     start.hidden = busy || status?.signed_in === false;
-    start.disabled = loading || status?.enabled !== true || status?.signed_in !== true || secondsLeft() <= 0 || Boolean(status?.active_session);
+    start.disabled = loading || status?.enabled !== true || status?.signed_in !== true || secondsLeft() <= 0;
     start.replaceChildren();
     if (loading) start.append(element('span', 'btn-spinner'));
     start.append(document.createTextNode(loading ? 'Checking availability…' : 'Start talking'));
@@ -194,7 +194,7 @@ export function createVoiceAssistant({ mount = document.body, trigger = null, fe
     root.classList.toggle('is-connecting', busy && !connected);
     connectingSpinner.hidden = !busy || Boolean(connected);
     waves.hidden = busy && !connected;
-    if (busy) activityText.textContent = connected ? (attempt.muted ? 'Your microphone is muted' : attempt.mode === 'speaking' ? 'Opax is speaking' : 'Listening to you') : 'Connecting…';
+    if (busy) activityText.textContent = connected ? (attempt.muted ? 'Your microphone is muted' : attempt.mode === 'speaking' ? 'Opax is speaking' : 'Listening to you') : attempt.replacing ? 'Ending your earlier call…' : 'Connecting…';
     else activityText.textContent = secondsLeft() <= 0 && status?.signed_in && !status?.unlimited ? 'Your free voice time is complete' : status?.enabled === false ? 'Voice is unavailable right now' : 'Ready when you are';
   };
   async function refreshStatus() {
@@ -207,7 +207,7 @@ export function createVoiceAssistant({ mount = document.body, trigger = null, fe
       const next = await response.json();
       if (generation !== statusGeneration || destroyed) return;
       status = next;
-      if (!attempt) showNotice(!next.enabled ? 'Voice is taking a break. You can still use Ask to explore the record.' : next.active_session ? 'A voice conversation is already open on your account. End it there, then reopen this panel.' : next.signed_in && Number(next.remaining_seconds) <= 0 ? 'You have used your 10 free minutes. You can keep exploring with Ask and the public records.' : '');
+      if (!attempt) showNotice(!next.enabled ? 'Voice is taking a break. You can still use Ask to explore the record.' : next.signed_in && Number(next.remaining_seconds) <= 0 ? 'You have used your 10 free minutes. You can keep exploring with Ask and the public records.' : '');
     } catch {
       if (generation === statusGeneration && !destroyed) {
         status = null;
@@ -302,7 +302,9 @@ export function createVoiceAssistant({ mount = document.body, trigger = null, fe
       showNotice('Voice needs a browser with microphone support and a secure connection. You can use Ask here instead.');
       return;
     }
-    const value = { controller: new AbortController(), conversation: null, connected: false, muted: false, mode: 'listening', sessionId: null, deadline: null, finished: false };
+    // Start ends an earlier call on this account (another tab, device or a
+    // dropped connection); say so quietly until the new one is reserved.
+    const value = { controller: new AbortController(), conversation: null, connected: false, muted: false, mode: 'listening', sessionId: null, deadline: null, finished: false, replacing: Boolean(status?.active_session) };
     attempt = value;
     // Prime playback on the explicit start gesture, before the lazy import yields.
     // This is necessary for iOS; opening the panel never creates an audio context.
@@ -331,6 +333,8 @@ export function createVoiceAssistant({ mount = document.body, trigger = null, fe
       const response = await fetcher('/api/voice/start', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: '{}' });
       const data = await response.json();
       if (response.ok) value.sessionId = data.session_id;
+      value.replacing = false;
+      if (status) status.active_session = null;
       if (!validAttempt(value)) { await finishReservation(value); return; }
       if (!response.ok) {
         if (response.status === 401) { status.signed_in = false; throw new Error('signin'); }
@@ -371,7 +375,7 @@ export function createVoiceAssistant({ mount = document.body, trigger = null, fe
       render();
     } catch (error) {
       if (validAttempt(value)) {
-        const message = error?.name === 'NotAllowedError' ? 'Microphone access was not allowed. Enable it in your browser settings, then try again.' : error?.name === 'NotFoundError' ? 'We could not find a microphone. Connect one and try again.' : error?.message === 'signin' ? 'Sign in to use your free voice time.' : error?.message === 'allowance' ? 'Your 10 free minutes are complete. Keep exploring with Ask.' : error?.message === 'active' ? 'A voice conversation is already open on your account. End it there, then try again.' : error?.message === 'capacity' ? 'Voice is busy right now. Please try again in a little while.' : 'We could not start the conversation. Your microphone is off. Please try again.';
+        const message = error?.name === 'NotAllowedError' ? 'Microphone access was not allowed. Enable it in your browser settings, then try again.' : error?.name === 'NotFoundError' ? 'We could not find a microphone. Connect one and try again.' : error?.message === 'signin' ? 'Sign in to use your free voice time.' : error?.message === 'allowance' ? 'Your 10 free minutes are complete. Keep exploring with Ask.' : error?.message === 'active' ? 'Your earlier call is still ending. Please try again in a minute.' : error?.message === 'capacity' ? 'Voice is busy right now. Please try again in a little while.' : 'We could not start the conversation. Your microphone is off. Please try again.';
         await stop(message);
       }
     } finally { clearTimeout(timeout); }

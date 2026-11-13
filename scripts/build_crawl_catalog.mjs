@@ -195,7 +195,8 @@ export async function buildCrawl(root, {read: sourceRead, reports: published = r
   const [seats, seatPeople] = await Promise.all([read(seatManifest.index_url), read(seatManifest.people_url)]);
   const hubs = await optional('hubs/index.json');
   const people = [...roster.people];
-  const known = new Set(people.flatMap(p => [p.name,...splitSpeakers(p)].map(personNameKey)));
+  // A folded row's prints are names of its person too (as the Worker's loadPeople reads them): no seat-only twin.
+  const known = new Set(people.flatMap(p => [p.name,...splitSpeakers(p),...(p.prints || [])].map(personNameKey)));
   for (const p of seatPeople.people) {
     if ([p.name,...p.aliases].some(n => known.has(personNameKey(n)))) continue;
     const current = p.electorates.filter(e => e.current);

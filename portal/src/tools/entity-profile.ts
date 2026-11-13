@@ -3,6 +3,7 @@ import { receiptGraph, receiptScopeLabel } from '../../public/donor-disclosure.j
 import { clip, siteUrl } from './record-common'
 import { boundedValue, object, publishedResult, records, sourceUrl, wordsMatch, type RecordRow } from './published-records'
 import { readToolAsset, type ToolDefinition, type ToolEnv } from './types'
+import { evidenceAsAt } from '../../public/evidence-date.js'
 
 const NOTE = 'Published connections do not establish influence or misconduct. Contract values are awards, not payments. Evidence matches can be mentions rather than financial relationships.'
 const PRIVATE = new Set(['person', 'individual', 'sole trader', 'aggregate', 'undisclosed'])
@@ -74,13 +75,15 @@ export const tool: ToolDefinition = {
   stepLabel: args => ({ label: 'Reading entity profile', arg: clip(args.query ?? args.record_id, 40) }),
   async handler(env, args) {
     const kind = String(args.kind), section = String(args.section ?? 'overview'), id = String(args.record_id ?? ''), limit = Number(args.limit) || 5, offset = Number(args.offset) || 0
-    let rows: RecordRow[] = [], snapshot: unknown = null
+    let rows: RecordRow[] = [], snapshot: unknown = null, asAt = ''
     if (kind === 'tax_charity') rows = await taxRows(env, id)
     else {
       const path = kind === 'supplier' ? '/suppliers.json' : kind === 'agency' ? '/agencies.json' : '/evidence/index.json'
       const index = object(await readToolAsset(env, path)), list = index[kind === 'supplier' ? 'suppliers' : kind === 'agency' ? 'agencies' : 'entities']
       if (!Array.isArray(list)) throw new Error('Entity directory unavailable')
       snapshot = object(index.meta).generated_at ?? object(index.meta).generated ?? null
+      // Connections: the day the export runs to ("as at 8 September 2026"), the pages' own date.
+      if (kind === 'connection') asAt = evidenceAsAt(index.meta)
       const matches = records(list).filter(r => id ? r.id === id : wordsMatch(args.query, [r.name, r.abn, ...(Array.isArray(r.aliases) ? r.aliases : [])]))
       if (!id) rows = matches.map(r => ({ kind, record_id: r.id, name: r.name, abn: r.abn ?? null, total_aud: r.total, records: r.count ?? r.records,
         source_url: kind === 'connection' ? siteUrl(env, '/connections?' + new URLSearchParams({ entity: String(r.id) })) : 'https://www.tenders.gov.au/',
@@ -130,7 +133,7 @@ export const tool: ToolDefinition = {
     const total = rows.length, picked: RecordRow[] = rows.slice(offset, offset + limit).map(r => ({ ...boundedValue(r, 1000) as RecordRow, summary: clip(fact(r), 1200) }))
     return publishedResult(picked, picked.map(r => ({ kind: 'record', url: sourceUrl(r.source_url) ?? String(r.full_record_url), text: String(r.summary) })), {
       total, offset, next_offset: offset + picked.length < total ? offset + picked.length : null, truncated: offset + picked.length < total,
-      snapshot, notes: [NOTE, 'Joins use published supplier-to-funding IDs or exact ABNs. Names do not prove identity. Empty sections do not establish zero activity.', ...(total ? [] : ['No published profile or section row matches.'])],
+      snapshot, ...(asAt ? { as_at: asAt } : {}), notes: [NOTE, 'Joins use published supplier-to-funding IDs or exact ABNs. Names do not prove identity. Empty sections do not establish zero activity.', ...(total ? [] : ['No published profile or section row matches.'])],
     })
   },
 }

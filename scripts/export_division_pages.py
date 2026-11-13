@@ -15,6 +15,15 @@ when changed: a reviewed entry in scripts/corrections/divisions.json (carried on
 the record as _meta.corrections), or a TVFY placeholder question being withheld.
 Files are staged and replaced atomically, with the index last.
 
+Rows the source gives no party take the party a dated roster records for
+that chamber and date (scripts/vote_parties.py), recomputed on every run;
+anything less than one unambiguous dated party stays unknown. Rows the source
+does give a party are checked against the same dated records: a label naming a
+different party in substance from the one held on that date is replaced by the
+dated party (the source label stays in party_source.source_party), a label the
+dated records leave unclear is held back (party_withheld), and a naming variant
+is never rewritten. Both are recomputed from the source label on every run.
+
 Publication rules (scripts/division_rules.py): presiding-officer codes are
 never published as a party, one label per party, placeholder questions are
 withheld, and divisions TheyVoteForYou marks as duplicates carry
@@ -38,6 +47,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from corrections.apply import apply as apply_corrections, load as load_corrections  # noqa: E402
 import division_rules as rules  # noqa: E402
+import vote_parties  # noqa: E402
 
 CORRECTIONS = "divisions"
 DEFAULT_DB = os.environ.get("OPAX_DB") or str(Path.home() / ".cache/autoresearch/parli.db")
@@ -364,6 +374,12 @@ def projection_index(records):
         "member_source_counts": dict(sorted(member_sources.items())),
         **{field: sum(d["_meta"][field] for d in records.values())
            for field in ("member_count", "named_member_count", "recorded_vote_count")},
+        "party_filled_count": sum(bool(m.get("party_source")) and not m["party_source"].get("source_party")
+                                  for d in records.values() for m in d.get("members", [])),
+        "party_corrected_count": sum(bool((m.get("party_source") or {}).get("source_party"))
+                                     for d in records.values() for m in d.get("members", [])),
+        "party_withheld_count": sum(bool(m.get("party_withheld")) for d in records.values() for m in d.get("members", [])),
+        "unknown_party_count": sum(not m.get("party") for d in records.values() for m in d.get("members", [])),
     }
     return {"schema": 2, "count": len(records), "coverage": coverage,
             "parties": sorted({m["party"] for d in records.values() for m in d.get("members", []) if m.get("party")}), "divisions": [
@@ -377,14 +393,35 @@ def projection_index(records):
     ]}
 
 
-def write_projection(records, output, carry=False, strict=False):
+def write_projection(records, output, carry=False, strict=False, party_evidence=None):
     """Guard both DB and bill-only runs, stage every byte, then index last.
 
     `carry` remains accepted for existing callers; the guard now always protects
     previously published evidence. The returned records include retained rows.
+    `party_evidence` (scripts/vote_parties.load_evidence) refills dated parties
+    for rows the source leaves without one and checks source labels against
+    them, from the source labels each run. None (--from-bills), or evidence
+    without the dated release (check_labels False), recomputes nothing and
+    keeps the previous fills and corrections as published.
     """
     output = Path(output)
-    guarded = guard_projection(records, read_previous_projection(output), strict=strict)
+    previous = read_previous_projection(output)
+    guarded = guard_projection(records, previous, strict=strict)
+    if party_evidence is not None and not getattr(party_evidence, "check_labels", True):
+        # vote_parties.load_evidence has logged the missing release once.
+        party_evidence = None
+    if party_evidence is None:
+        # Nothing is recomputed: a fresh record takes last run's fills and
+        # corrections where its source label is unchanged (retained records
+        # already carry them).
+        for key, record in guarded.items():
+            if key in previous and not record["_meta"]["refresh_retained"]:
+                vote_parties.keep_published_parties(record, previous[key])
+    else:
+        # Before source parties are copied in: a party the source now publishes
+        # must win over last run's roster fill, and a corrected or withheld
+        # label goes back to its source label before it is checked again.
+        vote_parties.clear_fills(guarded.values())
     # Enrich a retained snapshot only from matching dated source facts and votes.
     # Never substitute current-roster affiliations or discard its extra members.
     for key, record in guarded.items():
@@ -405,6 +442,8 @@ def write_projection(records, output, carry=False, strict=False):
         # (a bill-export projection used the motion text as its name).
         if candidate.get("name") and record.get("name") != candidate["name"]:
             record["name"] = candidate["name"]
+    if party_evidence is not None:
+        vote_parties.fill_dated_parties(guarded.values(), party_evidence)
     for record in guarded.values():
         page_ids = str(record.get("_meta", {}).get("member_source_url") or "").startswith("https://theyvoteforyou.org.au/")
         for member in record.get("members", []):
@@ -448,16 +487,25 @@ def main():
     published = bill_projection(args.bills)
     if args.from_bills:
         records = published
+        # No database, so no Wikidata terms: keep the previous fills as they are
+        # rather than recompute from part of the evidence.
+        evidence = None
     else:
         with closing(sqlite3.connect(f"file:{Path(args.db).resolve()}?mode=ro", uri=True)) as db:
             db.execute("PRAGMA query_only=ON")
             db.execute("BEGIN")
             records = database_projection(db, published)
+            # Wikidata terms from the same snapshot as the votes.
+            evidence = vote_parties.load_evidence(ROOT, db)
         publication_rules(records)
-    records = write_projection(records, args.out, carry=args.from_bills, strict=args.strict_refresh)
+    records = write_projection(records, args.out, carry=args.from_bills, strict=args.strict_refresh,
+                               party_evidence=evidence)
     coverage = projection_index(records)["coverage"]
     print(f"Exported {len(records)} divisions; {sum(bool(d['members']) for d in records.values())} with member records; "
-          f"retained {coverage['retained_count']} previous records ({json.dumps(coverage['retained_by_reason'], sort_keys=True)}).")
+          f"retained {coverage['retained_count']} previous records ({json.dumps(coverage['retained_by_reason'], sort_keys=True)}); "
+          f"{coverage['party_filled_count']} rows given a dated roster party, "
+          f"{coverage['party_corrected_count']} source labels replaced by the dated party, "
+          f"{coverage['party_withheld_count']} source labels held back, {coverage['unknown_party_count']} rows without a party.")
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@ import {answerStyleChecks} from './research-answer-style.mjs'
 import {rankingRepairQuestion,repairSlotsMatch} from './research-ranking-repair.mjs'
 import {sourceMetadata,rankingScopeMatches} from './research-ranking-scope.mjs'
 // Shared, deterministic helpers; evidence remains data and the claim audit is diagnostic.
-export const danglingOpener = /^(?:[-*•]\s*|\d+[.)]\s*)?(?:other\b|also\b|in addition\b|further(?:more)?\b|however\b|meanwhile\b|additionally\b|moreover\b|and\b|another\b|the runners-up\b)/i
+export const danglingOpener = /^(?:[-*•]\s*|\d+[.)]\s*)?(?:other\b|also\b|in addition\b|further(?:more)?\b|however\b|meanwhile\b|additionally\b|moreover\b|and\b|another\b|the runners?-up\b)/i
 const folded = s => String(s??'').toLowerCase().replace(/[–—]/g,'-').replace(/[^\p{L}\p{N}]+/gu,' ').trim()
 /** Typed decisions and legacy status codes; prose wording grants no permission. */
 export function answerDecision(payload) {
