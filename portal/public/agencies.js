@@ -27,7 +27,7 @@ export async function mountProcurementPreview(root, profile, kind, life) {
   root.hidden = false;
   root.innerHTML = '<p role="status">Opening the 3D map…</p>';
   try {
-    const { mountMoneyMap } = await import('/money-map.js?v=c2f0b3de56');
+    const { mountMoneyMap } = await import('/money-map.js?v=82eebe5241');
     if (!life.alive()) return;
     const graph = procurementGraph(profile, kind);
     if (!graph.edges.length) { root.innerHTML = '<p>No relationships with positive recorded contract value are available for the map.</p>'; return; }
