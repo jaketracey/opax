@@ -2,9 +2,11 @@ import {personUrl} from '../public/party-page.js'
 import type {RecordQuestion} from './ask-records'
 import {federalPartyRankingIntent} from './ask-money-family'
 import {isReceiptGraph, mentionedReceiptIndustries, receiptAnswer, receiptDonorChoices, receiptGraphForQuestion, unmatchedReceiptRankingScope} from './voice-money'
-import {calculatedMoneyAnswer,rankedMoneyAnswer,readingChoices,withReading} from './ask-money'
+import {calculatedMoneyAnswer,donorTotalMoneyAnswer,rankedMoneyAnswer,readingChoices,withReading} from './ask-money'
 import {trimQuestionEnd, questionSpaces, shortTrailingMarks} from './question-text.mjs'
 import {splitPeriod} from './receipt-reading'
+import {financialYear} from './receipt-period'
+import {foldDonorName} from '../public/donor-entity.js'
 
 /** Financial recipient questions must resolve before topic retrieval or cached prose. */
 export function industryMoneyIntent(question:string):{subject:string;recipient?:string;total:boolean;period:string}|null {
@@ -42,8 +44,12 @@ export function industryMoneyIntent(question:string):{subject:string;recipient?:
   const rest=q.slice(prefix[0].length)
   const received=/ (?:received|receive|got|get|gets|taken|take|takes|accepted|accept) (?:(?:money|donations?|funding) )?from /i.exec(rest)
   if(received&&received.index>0&&received.index+received[0].length<rest.length)return {subject:rest.slice(received.index+received[0].length),recipient:rest.slice(0,received.index),total:true,period}
-  const given=/ (?:donated|donate|given|give) to /i.exec(rest)
-  if(given&&given.index>0&&given.index+given[0].length<rest.length)return {subject:rest.slice(0,given.index),recipient:rest.slice(given.index+given[0].length),total:true,period}
+  const given=/ (?:donated|donate|given|give)(?: to (.+))?$/i.exec(rest)
+  if(given&&given.index>0){
+   const recipient=given[1]
+   const allParties=!recipient||/^(?:(?:all|the|any) )?(?:political )?part(?:y|ies)$/i.test(recipient)
+   return {subject:rest.slice(0,given.index),...(allParties?{}:{recipient}),total:true,period}
+  }
  }
  const to=/ donations to /i.exec(q)?.index??-1
  if(to>0&&to+14<q.length)return {subject:q.slice(0,to),recipient:q.slice(to+14),total:true,period}
@@ -71,10 +77,12 @@ export async function industryMoneyAnswer(input:RecordQuestion,assets:Fetcher) {
  if(!selection)return gap('The money records are unavailable right now; [see the money map](/money).','evidence_gap')
  const {graph,file,jurisdiction}=selection
  const industries=[...new Set(graph.nodes.filter(n=>n.kind==='donor').map(n=>n.industry).filter((s):s is string=>!!s))]
- const subject=intent.subject.replace(/\bunion\b/gi,'unions')
- const selected=mentionedReceiptIndustries(subject,industries)
- const named=selected.length?[]:receiptDonorChoices(graph,subject)
- let recipient=intent.recipient?federalPartyRankingIntent('Who funds '+intent.recipient+'?')?.parties[0]:undefined
+ const exact=graph.nodes.filter(n=>n.kind==='donor'&&[n.label,...n.aliases??[],...n.lookup_names??[]].some(name=>foldDonorName(name)===foldDonorName(intent.subject)))
+ const subject=exact.length?intent.subject:intent.subject.replace(/\bunion\b/gi,'unions')
+ const selected=exact.length?[]:mentionedReceiptIndustries(subject,industries)
+ const named=exact.length?exact:selected.length?[]:receiptDonorChoices(graph,subject)
+ let recipient=intent.recipient?graph.nodes.find(n=>n.kind==='party'&&[n.label,...n.aliases??[]].some(name=>name.toLocaleLowerCase('en-AU')===intent.recipient!.replace(/^the /i,'').toLocaleLowerCase('en-AU')))?.label
+  ??federalPartyRankingIntent('Who funds '+intent.recipient+'?')?.parties[0]:undefined
  let member:{name:string;href:string}|undefined
  if(intent.recipient&&!recipient&&jurisdiction==='federal'){
   const roster=await assets.fetch(new Request('https://opax.com.au/parliamentarians.json')).then(r=>r.ok?r.json():null).catch(()=>null) as {people?:{name:string;party_now?:string;current?:boolean;states?:string[]}[]}|null
@@ -88,13 +96,24 @@ export async function industryMoneyAnswer(input:RecordQuestion,assets:Fetcher) {
  const scoped={...input,...(recipient?{party:recipient}:{}),...(intent.period?{from:undefined,to:undefined}:{})}
  const bankOnly=/^(?:the\s+)?banks?(?:ing)?$/i.test(subject)
  if(!bankOnly&&selected.length!==1&&!named.length)return gap(`OPAX groups money-map sources into ${industries.length} industries. Choose [gambling](/money?industry=gambling), [mining](/money?industry=mining), [property](/money?industry=property) or another grouping in the [money map](/money), or name an organisation to total its records.`)
- const cleaned=subject.replace(/\b(?:companies|company|lobby|lobbies|donors?)\b/gi,' ').replace(/\s+/g,' ').trim()
+ const cleaned=intent.total&&named.length===1?named[0].label:subject.replace(/\b(?:companies|company|lobby|lobbies|donors?)\b/gi,' ').replace(/\s+/g,' ').trim()
  const query=`Who receives the most disclosed receipts from ${bankOnly?'finance':cleaned}${recipient?' to '+recipient:''}${intent.period?' '+intent.period:''}?`
- const result=receiptAnswer(graph,query,jurisdiction,'https://opax.com.au',scoped)
+ let result=receiptAnswer(graph,query,jurisdiction,'https://opax.com.au',scoped)
  if(!result||'needs_scope' in result)return await rankedMoneyAnswer({...scoped,question:query,kind:'all'},assets)??gap(result?.answer??'Choose a named source or industry in the [money map](/money).')
+ const donorTotal=intent.total&&result.selected_donors.length===1&&!result.selected_industries.length
+ // Donation questions use the donor page's typed receipt selection, restricted
+ // to Donation Received. Other Receipt (including loans) never becomes giving.
+ if(donorTotal&&result.typed){
+  const donations=receiptAnswer(graph,query,jurisdiction,'https://opax.com.au',{...scoped,measure:'donations'})
+  if(donations&&!('needs_scope' in donations))result=donations
+ }
  const unmatched=unmatchedReceiptRankingScope(graph,result.read_query,result,scoped.party)
  if(unmatched)return gap(`Choose a published source, industry or party for **${safe(unmatched)}** in the [money map](/money) so the calculation covers the whole question.`)
  // The period read from the question is stated, and the other readings offered.
- const answer=calculatedMoneyAnswer(result,graph,query,file,scoped,{total:intent.total,bankGrouping:bankOnly,member})
- return withReading(answer,[result.period_reading,bankOnly?undefined:result.scope_reading],readingChoices(result,result.period_options)(recipient?'donors':'parties'),input.question??'')
+ const answer=donorTotal?donorTotalMoneyAnswer(result,graph):calculatedMoneyAnswer(result,graph,query,file,scoped,{total:intent.total,bankGrouping:bankOnly,member})
+ const {from,to}=result.requested_years
+ const partyPeriod=intent.period||(from!==null&&to!==null?from===to?`in ${financialYear(from)}`:`from ${financialYear(from)} to ${financialYear(to)}`:from!==null?`since ${financialYear(from)}`:to!==null?`through ${financialYear(to)}`:'')
+ const partyChoices=donorTotal&&!recipient?result.by_party.map(p=>({label:p.name,question:`How much has ${result.selected_donors[0]} donated to ${p.name}${partyPeriod?' '+partyPeriod:''}?` })):[]
+ const nameReading=donorTotal&&named.length===1&&cleaned!==subject?`Reading “${safe(subject)}” as ${safe(cleaned)}.`:undefined
+ return withReading(answer,[nameReading,result.period_reading,bankOnly?undefined:result.scope_reading],[...partyChoices,...readingChoices(result,result.period_options)(recipient?'donors':'parties')],input.question??'')
 }
