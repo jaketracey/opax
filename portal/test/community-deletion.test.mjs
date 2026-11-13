@@ -144,7 +144,7 @@ test('0012 test 7: failure halfway through deletion rolls back every scope row a
 test('0012 test 8: request and scheduled cleanup clear only orphaned terminal IDs one day after stored closed_at',async t=>{
  const f=fixture(t);await f.login('a');const at=time();t.mock.method(Date,'now',()=>at*1000);
  const cases=[['old','closed',null,at-86400],['young','closed',null,at-86399],['linked','closed','a',at-86401],['open','active',null,at-86401],['cancel','cancelled',null,at-86400],['expired','expired',null,at-86400],['no-close','closed',null,null]];
- for(const [id,state,member,closed] of cases)f.db.prepare('INSERT INTO voice_sessions VALUES (?,?,?,?,?,?,?,?,?,?)').run(id,member,state,600,600,at-90000,at+600,at-90000,closed,'conv_'+id);
+ for(const [id,state,member,closed] of cases)f.db.prepare('INSERT INTO voice_sessions(id,member_id,state,reserved_seconds,charged_seconds,created_at,expires_at,started_at,closed_at,conversation_id) VALUES (?,?,?,?,?,?,?,?,?,?)').run(id,member,state,600,600,at-90000,at+600,at-90000,closed,'conv_'+id);
  const r=await voiceRoute(new Request('https://example.test/api/voice/status',{headers:{cookie:f.cookies.a}}),f.env,{},()=>{throw Error('No reads')});assert.equal(r.status,200);
  for(const [id] of cases)assert.equal(f.row(id).conversation_id,['old','cancel','expired'].includes(id)?null:'conv_'+id);
  f.env.VOICE_ENABLED='false';f.env.COMMUNITY_ENABLED='false';await worker.scheduled({cron:'*/5 * * * *'},f.env,{});assert.equal(f.row('young').conversation_id,'conv_young');
@@ -160,7 +160,8 @@ test('0012 test 10: only cron expires orphan call and later clears ID, including
   const f=fixture(t);let clock=time();t.mock.method(Date,'now',()=>clock*1000);await f.login('a');const v=await active(f,'a');await f.remove();const deadline=f.row(v.id).expires_at;
   f.env.VOICE_ENABLED='false';
   if(failEmail){const prepare=f.env.COMMUNITY_DB.prepare;f.env.COMMUNITY_DB.prepare=sql=>{if(sql.includes('community_email_outbox'))throw Error('Reply-email failure');return prepare(sql)}}
-  const cron=()=>worker.scheduled({cron:'*/5 * * * *',scheduledTime:clock*1000},f.env,{});
+  // Its relay is still alive and heartbeating, so only the hard cap (expires_at) ends it.
+  const cron=()=>{f.db.prepare("UPDATE voice_sessions SET last_seen_at=? WHERE id=? AND state='active'").run(clock-1,v.id);return worker.scheduled({cron:'*/5 * * * *',scheduledTime:clock*1000},f.env,{})};
   clock=deadline-1;await cron();assert.equal(f.row(v.id).state,'active');
   clock=deadline+1;await cron();assert.equal(f.row(v.id).state,'expired');assert.equal(f.row(v.id).charged_seconds,600);assert.equal(f.row(v.id).closed_at,clock);const closed=clock;
   clock=closed+86399;await cron();assert.ok(f.row(v.id).conversation_id);clock=closed+86400;await cron();assert.equal(f.row(v.id).conversation_id,null);t.mock.restoreAll();
@@ -187,11 +188,12 @@ test('complete content deletion revokes all credentials, scrubs stubs and preser
 });
 
 test('post-0011 refuses deletion before quota/email; existing web sessions/signin survive applying 0012',async t=>{
- const f=fixture(t,{migrated:false});await f.login();const v=await active(f,'a');
+ const f=fixture(t,{migrated:false});await f.login();const v={id:'voice-before-0012'};
+ f.db.prepare("INSERT INTO voice_sessions VALUES (?,?,'active',600,600,?,?,?,NULL,?)").run(v.id,'a',time(),time()+630,time(),'conv_before_0012');
  for(const path of ['account/deletion-code','account/delete'])assert.equal((await f.call(path)).status,503);
  assert.equal(count(f.db,'community_limits'),0);assert.equal(f.outbox.length,0);assert.equal(f.row(v.id).member_id,'a');
  const request=await f.call('auth/request',{email:'a@example.test'});assert.equal(request.status,200);const token=new URL(f.outbox.at(-1).text.match(/https:\/\/\S+/)[0]).hash.slice(7);
- f.db.exec('BEGIN');f.db.exec(sqlFile('0012_voice_deletion_safe.sql'));f.db.exec('COMMIT');
+ f.db.exec('BEGIN');f.db.exec(sqlFile('0012_voice_deletion_safe.sql'));f.db.exec('COMMIT');f.db.exec(sqlFile('0018_voice_liveness.sql'));
  assert.equal((await f.call('auth/consume',{token})).status,200);assert.equal((await (await f.call('status',{},'a',{},'GET')).json()).member.email,'a@example.test');await f.remove();assert.equal(f.row(v.id).member_id,null);
 });
 
@@ -284,7 +286,7 @@ test('real Worker/D1 applies 0012 with existing content, rolls back deletion fai
   ]);
   const call=(path,data={})=>mf.dispatchFetch('https://example.test/api/community/'+path,{method:'POST',headers:{origin:'https://example.test','content-type':'application/json',cookie},body:JSON.stringify(data)});
   assert.equal((await call('account/deletion-code')).status,503);assert.equal(outbox.length,0);
-  await migrate('0012_voice_deletion_safe.sql');assert.deepEqual((await db.prepare('PRAGMA foreign_key_check').all()).results,[]);assert.equal((await db.prepare('SELECT count(*) n FROM direct_messages').first()).n,1);
+  await migrate('0012_voice_deletion_safe.sql');await migrate('0018_voice_liveness.sql');assert.deepEqual((await db.prepare('PRAGMA foreign_key_check').all()).results,[]);assert.equal((await db.prepare('SELECT count(*) n FROM direct_messages').first()).n,1);
   const r=await call('account/deletion-code');assert.equal(r.status,200);const {challenge_id}=await r.json(),code=outbox.at(-1).text.match(/deletion code: (\d{8})/)[1];
   await db.prepare("CREATE TRIGGER deletion_failure BEFORE DELETE ON members BEGIN SELECT RAISE(ABORT,'Test rollback'); END").run();
   assert.equal((await call('account/delete',{challenge_id,code})).status,503);assert.equal((await db.prepare("SELECT member_id FROM voice_sessions WHERE id='voice'").first()).member_id,'a');assert.equal((await db.prepare('SELECT count(*) n FROM member_sessions').first()).n,1);assert.equal((await db.prepare('SELECT used_at FROM community_deletion_challenges').first()).used_at,null);

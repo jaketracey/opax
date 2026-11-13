@@ -82,7 +82,7 @@ The chat composer's microphone button imports `/voice.js` the first time it is p
 | Route | Auth | Origin check | Body | Success | Refusals |
 | --- | --- | --- | --- | --- | --- |
 | `GET /api/voice/status` | Cookie optional | None | None | 200 status JSON | 503 if community disabled (`voice.ts:243`) |
-| `POST /api/voice/start` | Cookie required | Exact match (`voice.ts:249`) | JSON, at most 2,000 bytes | 201 reservation | 403 origin; 401 signed out; 415, 413; 429 rate limit; 409 call open; 403 allowance used; 429 capacity or budget; 503 not configured; generic 503 that can leave a `reserved` row (below) (`voice.ts:251-266`) |
+| `POST /api/voice/start` | Cookie required | Exact match (`voice.ts:249`) | JSON, at most 2,000 bytes | 201 reservation (`replaced: true` when it ended an earlier call) | 403 origin; 401 signed out; 415, 413; 429 rate limit; 409 only for a call opened before liveness (see Takeover below); 403 allowance used; 429 capacity or budget; 503 not configured; generic 503 that can leave a `reserved` row (below) (`voice.ts:251-266`) |
 | `GET /api/voice/connect?session_id=` | Cookie required | Exact match | WebSocket upgrade | 101 | 426 no upgrade; 400 bad ID; 409 used or expired; 503 that can leave the row `reserved`, `connecting`, `active` or cancelled (below) (`voice.ts:169-228`) |
 | `POST /api/voice/finish` | Cookie required | Exact match | `{session_id}`, at most 1,000 bytes | 200 status JSON | 401, 403, 400 (`voice.ts:272-279`) |
 | `POST /api/voice/tools/<name>` | Provider secret | None | JSON, at most 8,000 bytes | 200 tool result | 401, 403, 429, 503 (`voice.ts:233-242`) |
@@ -105,10 +105,17 @@ The chat composer's microphone button imports `/voice.js` the first time it is p
 **How the client recovers.**
 - A `reserved` row holds the full reservation against the member's allowance and the monthly budget until it is cancelled or expires. Its final charge is then 0 (`voice.ts:22`, `:42-43`). `finish` cancels it at once when the client knows its `session_id` (`voice.ts:272-276`). That also returns the withheld budget to other members sooner.
 - `finish` cannot release `connecting` or `active` rows, because it only cancels `reserved` ones.
-- While any of these rows is open, status shows an `active_session` with its `state` and `expires_at`, and `start` returns 409 for that member (`portal/migrations/0003_voice.sql:16-17`, `voice.ts:45`).
+- While any of these rows is open, status shows an `active_session` with its `state` and `expires_at`. Since 13 Nov 2026 `start` takes it over instead of refusing (below).
   - Use the stored `expires_at` from status. It is set at the claim and reset at activation (`voice.ts:51`, `:210`), so there is no fixed bound from the original start.
   - A row does not expire by time alone: expiry runs only when status (for a signed-in member), `start` or `finish` executes it (`voice.ts:246`, `:256`, `:277`). The app's status polling triggers it.
   - Once a row has expired, status returns `active_session: null`. It never reports an `expired` state (`voice.ts:25`, `:69-73`). The full charge stays on the row and shows only as a lower `remaining_seconds`.
+
+**Takeover and liveness (13 Nov 2026).** Pressing Start ends the member's earlier call and reserves the new one in one D1 batch (`takeOverVoiceSession`).
+- A `reserved` row is cancelled free. A `connecting` or `active` row becomes `closed`, charged its time so far plus 15 seconds, never past its last heartbeat plus 45 seconds, and capped at its reservation. The new reservation then runs the usual allowance, monthly budget and two-call capacity checks, so a refused start (403 or 429) still ends the earlier call.
+- The Worker relay writes `last_seen_at` when claimed and activated, then every 15 seconds; that same write reports whether its row is still open. When it is not, the relay closes both sockets (close 1000 "Voice conversation replaced"). A relay that cannot confirm its row for 35 seconds closes itself (1011 "Voice connection lost").
+- Status, start, finish and the cron end any `connecting` or `active` row unseen for more than 45 seconds as `expired`, charged up to its last heartbeat plus 45 seconds. A dropped relay (a Worker deploy, an evicted isolate) therefore holds the lock for under a minute, not until `expires_at`. `expires_at` stays the hard cap, fully charged.
+- Rows with no `last_seen_at` (opened before migration `0018_voice_liveness.sql`) have no watching relay, so start leaves them and returns 409 "Your earlier voice conversation is still ending. Please try again in a minute." until they expire.
+- Clients keep Start enabled while `active_session` is set. Status's `remaining_seconds` already counts the open call's unused time.
 
 The only refund signal is human-readable message text, and a WebSocket client usually cannot read the body of a refused upgrade. The allowance shown after any failure must therefore come from a fresh `GET /api/voice/status`, never from the HTTP status alone.
 
@@ -215,7 +222,7 @@ The relay closes all three with the same message.
 | Voice disabled | status `enabled:false` | "Voice is taking a break…" (`:209`) |
 | Signed out | status `signed_in:false`; start 401 | Sign-in link (`:145-147`, `:183`) |
 | Allowance used | status `remaining_seconds:0`; start 403 | "You have used your 10 free minutes…" (`:209`, `:336`, `:373`) |
-| Call already open | status `active_session`; start 409 | "A voice conversation is already open on your account…" (`:209`, `:338`) |
+| Call already open | status `active_session`; start takes it over (201 `replaced:true`) | Start stays enabled; "Ending your earlier call…" while reserving. A 409 (call from before liveness) says "Your earlier call is still ending. Please try again in a minute." |
 | Capacity **or** monthly budget spent | start 429, same message for both (`voice.ts:262`) | "Voice is busy right now…" (`:337`, `:373`) |
 | Microphone denied or missing | `NotAllowedError`, `NotFoundError` | (`:373`) |
 | Provider or network failure | close or error | "The connection ended…" or "Voice ran into a problem…" (`:364-365`) |
@@ -797,7 +804,7 @@ Each row is a fixture scenario selected by its session token, or an injected dep
 | Allowance used | status `remaining_seconds:0`; start 403 | "10 free minutes used" state |
 | Budget closed | start 429 `reason:"budget"` (after Worker change 6) | "Closed for this month" state |
 | At capacity | start 429 `reason:"capacity"` | "Busy, try again shortly" |
-| Call open elsewhere | status `active_session`; start 409 | Explain; poll status before enabling Start |
+| Call open elsewhere | status `active_session`; start 201 `replaced:true` and the other call closes within 15 s | Keep Start enabled; Start ends the earlier call. On a 409, say the earlier call is still ending and retry later |
 | Start 503 after the row was written | 503 with only the generic error, so no `session_id`; status shows `active_session` in state `reserved` until its `expires_at` (60 s after reservation), then none once expiry runs. The full reservation is held against both budgets meanwhile; the final charge is 0 (clock control) | Wait for status to clear. Never show time as used: status adds the held reservation back into `remaining_seconds` |
 | Connect refused before the claim | 503, 426 or 400; status shows the `reserved` row | Call `finish` with the known `session_id`, then refresh status |
 | Connect 503, released | 503; status then shows no open session and the same remaining time | "Couldn't connect; no time used", taken from status |
@@ -817,7 +824,7 @@ Each row is a fixture scenario selected by its session token, or an injected dep
 | Provider close | Relay-style close 1000 "Voice conversation ended" or 1011 "Voice provider connection interrupted" | Matching end state; allowance from status |
 | Agent ends call | `agent_tool_response` for `end_call` | End cleanly |
 | Provider error | `error` with `max_duration_exceeded` | End cleanly |
-| Reconnect | After a drop, the first `start` returns 409, then 201 | Start a new call once status shows no open session |
+| Reconnect | After a drop, `start` returns 201 and takes over the dropped call | Start a new call at once |
 
 A dropped call cannot be resumed. The reservation and the provider signature are both single-use. "Reconnect" therefore always means a new call.
 
