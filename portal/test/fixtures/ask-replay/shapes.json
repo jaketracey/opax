@@ -189,18 +189,7 @@
   },
   "answer": "string",
   "answer_decision": "string",
-  "answer_scope": {
-   "actUnfiltered": "boolean",
-   "dated": "boolean",
-   "jurisdiction": "string",
-   "people": [],
-   "period": {
-    "kind": "string",
-    "label": "string"
-   },
-   "stateGovernment": "boolean",
-   "trend": "boolean"
-  },
+  "answer_status": "string",
   "answered": "boolean",
   "citations": {
    "<passage id>": [
@@ -209,33 +198,27 @@
     ]
    ]
   },
-  "coverage": {
-   "note": "string"
-  },
   "followups": [],
+  "money_context": "string",
+  "pay_answer": "boolean",
+  "pay_next": [
+   {
+    "href": "string",
+    "label": "string"
+   }
+  ],
   "research": {
-   "answer_stats": "object",
-   "claim_audit": "object",
    "mode": "string",
-   "pre_writer_sources": "array",
    "rounds": "number",
    "sources": "array",
    "trail": "array"
   },
+  "scope": {
+   "state": "string"
+  },
   "sources": [
    {
     "cited": "boolean",
-    "claim_atoms": [
-     {
-      "chamber": "string",
-      "entity": "string",
-      "evidenceId": "string",
-      "metric": "string",
-      "period": {},
-      "unit": "string",
-      "value": "string"
-     }
-    ],
     "date": "string",
     "dateLabel": "string",
     "href": "string",

@@ -2,48 +2,9 @@
  "id": "pay",
  "question": "How much is a federal backbencher paid?",
  "input": {
-  "kind": "speech"
+  "kind": "all"
  },
- "model": [
-  {
-   "tool_calls": [
-    {
-     "name": "paid_answer",
-     "args": {}
-    }
-   ]
-  },
-  {
-   "tool_calls": [
-    {
-     "name": "answer",
-     "args": {
-      "facts": [
-       1
-      ]
-     }
-    }
-   ]
-  },
-  {
-   "text": {
-    "sentences": [
-     {
-      "text": "A federal backbencher, a senator or member with no other post, is paid a base salary of $239,270 a year.",
-      "facts": [
-       1
-      ]
-     },
-     {
-      "text": "That is the salary entitlement the Remuneration Tribunal sets, not a payslip: the electorate allowance ($39,700 to $57,100 a year), expenses and superannuation are not included.",
-      "facts": [
-       4
-      ]
-     }
-    ]
-   }
-  }
- ],
+ "model": [],
  "services": [],
  "assets": {
   "/pay.json": {
@@ -1292,8 +1253,9 @@
  "expect": {
   "answered": true,
   "includes": [
-   "\\$239,270"
+   "A federal backbencher’s base salary is \\$239,270 a year"
   ],
-  "citations": 1
+  "citations": 1,
+  "mode": "loop"
  }
 }
