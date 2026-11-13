@@ -6,7 +6,7 @@ import {isOrganisationDonor} from '../public/donor-entity.js';
 import * as registerTables from '../public/register-tables.js';
 import * as growthModules from '../public/growth-modules.js';
 import {supplierDonations,mountSupplierGrowth} from '../public/supplier-growth.js';
-import {cleanEvent,safePath} from '../analytics/privacy.mjs';
+import {cleanEvent,safePath,automationReason,whenMeasurable} from '../analytics/privacy.mjs';
 const read=f=>readFileSync(new URL(f,import.meta.url),'utf8');
 const app=read('../public/app.js');
 const json=f=>JSON.parse(read(f));
@@ -85,7 +85,7 @@ test('primary, modified and middle module openings count once; right clicks do n
  const listeners=new Map(),measured=[];
  class Element{closest(selector){return selector==='a[href]'?this:selector==='[data-module]'?{dataset:{module:'agency_grants',pageType:'supplier',modulePosition:'2'}}:null}}
  const code=read('../analytics/events.js').replace(/^import .*;\s*/gm,'');
- runInNewContext(code,{cleanEvent,safePath,Element,navigator:{},window:{},location:{href:'https://fixture.test/subject/supplier/test',pathname:'/subject/supplier/test',hostname:'fixture.test'},CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail}},addEventListener:(type,fn)=>{if(!listeners.has(type))listeners.set(type,[]);listeners.get(type).push(fn)},dispatchEvent:e=>{for(const fn of listeners.get(e.type)||[])fn(e);if(e.type==='opax:measured')measured.push(e.detail)}});
+ runInNewContext(code,{cleanEvent,safePath,automationReason,whenMeasurable,document:{},Element,navigator:{},window:{},location:{href:'https://fixture.test/subject/supplier/test',pathname:'/subject/supplier/test',hostname:'fixture.test'},CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail}},addEventListener:(type,fn)=>{if(!listeners.has(type))listeners.set(type,[]);listeners.get(type).push(fn)},dispatchEvent:e=>{for(const fn of listeners.get(e.type)||[])fn(e);if(e.type==='opax:measured')measured.push(e.detail)}});
  const target=new Element();
  for(const e of [{type:'click',button:0},{type:'click',button:0,ctrlKey:true},{type:'click',button:1},{type:'auxclick',button:1},{type:'auxclick',button:2}])for(const fn of listeners.get(e.type)||[])fn({...e,target});
  const moduleEvents=measured.filter(e=>e.event==='opax_module_click');assert.equal(moduleEvents.length,3);

@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { cleanEvent, beforeSend, safePath } from '../analytics/privacy.mjs';
+import { cleanEvent, beforeSend, safePath, automationReason, likelyBot, whenMeasurable } from '../analytics/privacy.mjs';
 
 test('search recovery adds only a boolean and a fixed category, never queries or corrections',()=>{
  const existing={page:1,result_count:0,total_count:0,duration_ms:42};
@@ -65,12 +65,12 @@ test('PostHog runs after the shared event emitter and the app scripts, all defer
 });
 
 
-function browserHarness(dnt = '0') {
+function browserHarness(dnt = '0', nav = {}, win = {}, doc = {}) {
   const listeners = new Map(), measured = [], scripts = [];
   const location = { hostname: 'opax.com.au', href: 'https://opax.com.au/search?q=private', pathname: '/search', search: '?q=private' };
   const context = {
-    URL, navigator: { doNotTrack: dnt }, window: {}, location,
-    document: { title: 'private', createElement: () => ({}), head: { appendChild: node => scripts.push(node) } },
+    URL, navigator: { doNotTrack: dnt, ...nav }, window: { ...win }, location,
+    document: { title: 'private', createElement: () => ({}), head: { appendChild: node => scripts.push(node) }, ...doc },
     CustomEvent: class { constructor(type, options) { this.type = type; this.detail = options.detail; } },
     addEventListener: (event, handler) => {
       if (!listeners.has(event)) listeners.set(event, []);
@@ -178,7 +178,7 @@ test('footer partners have explicit referral UTMs and fixed tracking identifiers
   const { runInNewContext } = await import('node:vm');
   const { context, emit } = browserHarness();
   const captured = [];
-  context.cleanEvent = cleanEvent; context.beforeSend = beforeSend;
+  Object.assign(context, { cleanEvent, beforeSend, automationReason, likelyBot, whenMeasurable });
   context.posthog = { init(){}, capture:(event,properties)=>captured.push({event,properties}) };
   const adapter = readFileSync(new URL('../analytics/index.js', import.meta.url), 'utf8').replace(/^import .*;\n/gm,'');
   runInNewContext(adapter, context);
@@ -196,7 +196,7 @@ test('PostHog loaded after the app replays every earlier event once, even after 
   const { runInNewContext } = await import('node:vm');
   const { context, emit } = browserHarness();
   const captured = [];
-  context.cleanEvent = cleanEvent; context.beforeSend = beforeSend;
+  Object.assign(context, { cleanEvent, beforeSend, automationReason, likelyBot, whenMeasurable });
   context.posthog = { init(){}, capture:(event,properties)=>captured.push({event,properties}) };
   runInNewContext(readFileSync(new URL('../public/events.js', import.meta.url), 'utf8'), context);
   emit('opax:analytics', {event:'opax_search_completed',properties:{result_count:4,query:'private'}});
@@ -207,4 +207,135 @@ test('PostHog loaded after the app replays every earlier event once, even after 
   assert.deepEqual(captured.map(e=>e.event), ['$pageview','opax_search_completed','opax_source_open']);
   assert.equal(context.window.opaxAnalyticsLog, null);
   assert.ok(!JSON.stringify(captured).includes('private'));
+});
+
+const CHROME = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36';
+test('clear automation signals are recognised from browser properties alone; real browsers are not', () => {
+  assert.equal(automationReason({ userAgent: CHROME, webdriver: true }), 'webdriver');
+  assert.equal(automationReason({ userAgent: CHROME.replace('Chrome/', 'HeadlessChrome/') }), 'automation_ua');
+  assert.equal(automationReason({ userAgent: CHROME, userAgentData: { brands: [{ brand: 'HeadlessChrome' }] } }), 'automation_ua');
+  assert.equal(automationReason({ userAgent: CHROME + ' Chrome-Lighthouse' }), 'automation_ua');
+  assert.equal(automationReason({ userAgent: 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)' }), 'automation_ua');
+  assert.equal(automationReason({ userAgent: CHROME }, { innerWidth: 0, innerHeight: 0 }, { visibilityState: 'visible' }), 'zero_viewport');
+  // Hidden, prerendering or not a browser: a zero size is not yet evidence.
+  for (const doc of [{ visibilityState: 'hidden' }, { visibilityState: 'visible', prerendering: true }, undefined])
+    assert.equal(automationReason({ userAgent: CHROME }, { innerWidth: 0, innerHeight: 0 }, doc), null);
+  for (const [nav, win] of [
+    [{ userAgent: CHROME, webdriver: false, userAgentData: { brands: [{ brand: 'Google Chrome' }] } }, { innerWidth: 1280, innerHeight: 720 }],
+    [{ userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1' }, { innerWidth: 390, innerHeight: 844 }],
+    [{}, {}],
+  ]) assert.equal(automationReason(nav, win), null);
+});
+
+test('likely_bot is one boolean from weak signals, including a page left with no interaction', () => {
+  const nav = { userAgent: CHROME, languages: ['en-AU'] };
+  assert.equal(likelyBot(nav), false);
+  assert.equal(likelyBot(nav, { leaving: true, interacted: true }), false);
+  assert.equal(likelyBot(nav, { leaving: true, interacted: false }), true);
+  assert.equal(likelyBot(nav, { leaving: false, interacted: false }), false);
+  assert.equal(likelyBot({ ...nav, languages: [] }), true);
+});
+
+for (const [name, nav, win, doc] of [['navigator.webdriver', { webdriver: true }, {}], ['a headless user agent', { userAgent: 'HeadlessChrome/141' }, {}], ['a zero-size viewport on screen', {}, { innerWidth: 0, innerHeight: 0 }, { visibilityState: 'visible' }]]) {
+  test(`${name} stops buffering, dataLayer, GA and PostHog`, async () => {
+    const { runInNewContext } = await import('node:vm');
+    const { context, emit, measured, scripts } = browserHarness('0', nav, win, doc);
+    let inits = 0; const captured = [];
+    Object.assign(context, { cleanEvent, beforeSend, automationReason, likelyBot, whenMeasurable });
+    context.posthog = { init() { inits++; }, capture: (event) => captured.push(event) };
+    for (const file of ['events', 'ga']) runInNewContext(readFileSync(new URL(`../public/${file}.js`, import.meta.url), 'utf8'), context);
+    runInNewContext(readFileSync(new URL('../analytics/index.js', import.meta.url), 'utf8').replace(/^import .*;\n/gm, ''), context);
+    emit('DOMContentLoaded');
+    emit('opax:analytics', { event: 'opax_ask_completed', properties: { source_count: 3 } });
+    assert.equal(measured.length, 0);
+    assert.equal(scripts.length, 0);
+    assert.equal(context.window.dataLayer, undefined);
+    assert.equal(inits, 0);
+    assert.deepEqual(captured, []);
+  });
+}
+
+test('PostHog SDK events are dropped if automation appears later, and $pageleave carries likely_bot only', async () => {
+  const { runInNewContext } = await import('node:vm');
+  const { context, emit } = browserHarness('0', { userAgent: CHROME, languages: ['en-AU'] }, { innerWidth: 1280, innerHeight: 720, outerWidth: 1280, outerHeight: 800 });
+  let options;
+  Object.assign(context, { cleanEvent, beforeSend, automationReason, likelyBot, whenMeasurable });
+  context.posthog = { init(_token, o) { options = o; }, capture() {} };
+  runInNewContext(readFileSync(new URL('../analytics/index.js', import.meta.url), 'utf8').replace(/^import .*;\n/gm, ''), context);
+  const leave = () => options.before_send({ event: '$pageleave', properties: { $current_url: 'https://opax.com.au/ask?q=private' } });
+  const left = leave();
+  assert.equal(left.properties.likely_bot, true);
+  assert.equal(left.properties.$current_url, 'https://opax.com.au/ask');
+  assert.equal(options.before_send({ event: '$pageview', properties: { $current_url: 'https://opax.com.au/' } }).properties.likely_bot, false);
+  emit('scroll');
+  assert.equal(leave().properties.likely_bot, false);
+  assert.ok(!JSON.stringify(left).includes('private'));
+  context.window.innerWidth = 0; context.document.visibilityState = 'visible';
+  assert.equal(leave(), null);
+});
+
+function deferredHarness(visibilityState) {
+  const docListeners = new Map();
+  const doc = { visibilityState, addEventListener: (type, fn) => docListeners.set(type, [...(docListeners.get(type) || []), fn]) };
+  const h = browserHarness('0', { userAgent: CHROME, languages: ['en-AU'] }, { innerWidth: 0, innerHeight: 0 }, doc);
+  let inits = 0; const captured = [];
+  Object.assign(h.context, { cleanEvent, beforeSend, automationReason, likelyBot, whenMeasurable });
+  h.context.posthog = { init() { inits++; }, capture: (event) => captured.push(event) };
+  h.fire = (type) => { for (const fn of docListeners.get(type) || []) fn(); };
+  h.posthogInits = () => inits; h.captured = captured;
+  return h;
+}
+async function loadAll(context) {
+  const { runInNewContext } = await import('node:vm');
+  runInNewContext(readFileSync(new URL('../public/events.js', import.meta.url), 'utf8'), context);
+  runInNewContext(readFileSync(new URL('../public/ga.js', import.meta.url), 'utf8'), context);
+  runInNewContext(readFileSync(new URL('../analytics/index.js', import.meta.url), 'utf8').replace(/^import .*;\n/gm, ''), context);
+}
+
+test('a zero viewport while hidden waits; on screen at full size it sends one view and starts GA and PostHog', async () => {
+  const h = deferredHarness('hidden');
+  await loadAll(h.context);
+  h.emit('DOMContentLoaded');
+  assert.equal(h.measured.length, 0);
+  assert.equal(h.scripts.length, 0);
+  assert.equal(h.posthogInits(), 0);
+  // Still hidden: nothing is decided yet.
+  h.fire('visibilitychange');
+  assert.equal(h.posthogInits(), 0);
+  Object.assign(h.context.window, { innerWidth: 390, innerHeight: 844 });
+  h.context.document.visibilityState = 'visible';
+  h.fire('visibilitychange'); h.fire('visibilitychange'); h.fire('prerenderingchange');
+  assert.deepEqual(h.measured.map((m) => m.event), ['opax_view']);
+  assert.equal(h.scripts.length, 1);
+  assert.equal(h.posthogInits(), 1);
+  assert.deepEqual(h.captured, ['$pageview']);
+  assert.deepEqual(Array.from(h.context.window.opaxGaLayer.filter((e) => e[0] === 'event'), (e) => e[1]), ['page_view']);
+  h.emit('opax:route');
+  assert.equal(h.measured.length, 1);
+});
+
+test('a prerendered page with no viewport is decided when it activates', async () => {
+  const h = deferredHarness('visible');
+  h.context.document.prerendering = true;
+  await loadAll(h.context);
+  assert.equal(h.measured.length, 0);
+  Object.assign(h.context.window, { innerWidth: 1280, innerHeight: 720 });
+  h.context.document.prerendering = false;
+  h.fire('prerenderingchange');
+  assert.equal(h.measured.length, 1);
+  assert.equal(h.posthogInits(), 1);
+});
+
+test('a zero viewport that is still zero once on screen stays off', async () => {
+  const h = deferredHarness('hidden');
+  await loadAll(h.context);
+  h.context.document.visibilityState = 'visible';
+  h.fire('visibilitychange');
+  Object.assign(h.context.window, { innerWidth: 1280, innerHeight: 720 });
+  h.fire('visibilitychange');
+  h.emit('opax:route');
+  assert.equal(h.measured.length, 0);
+  assert.equal(h.scripts.length, 0);
+  assert.equal(h.posthogInits(), 0);
+  assert.equal(h.context.window.dataLayer, undefined);
 });
