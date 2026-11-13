@@ -228,9 +228,10 @@ test("the pane's Ask drafts the same question as the bill page's", async () => {
       params: Record<string, string>;
     }
   ).params;
+  // Bills' split is the Bills tab: Ask is another tab, so it switches.
   expect(navigate).toHaveBeenCalledWith(
     expect.objectContaining({
-      pathname: '/ask',
+      pathname: '/(tabs)/(ask)/ask',
       params: expect.objectContaining(draft),
     }),
   );

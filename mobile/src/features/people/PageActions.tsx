@@ -101,7 +101,7 @@ export function usePageActions(
   const openAsk = useOpenAsk();
   return pageActions({
     ...subject,
-    onAsk: () => openAsk(askDraft(subject.kind, subject.name)),
+    onAsk: () => openAsk(askDraft(subject.kind, subject.name), subject.name),
   });
 }
 

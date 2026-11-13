@@ -1,6 +1,9 @@
 import { withNavigationOptions } from './navigation-options';
 import { useState } from 'react';
-import { HeaderHeightContext } from 'expo-router/react-navigation';
+import {
+  HeaderHeightContext,
+  NavigationContainerRefContext,
+} from 'expo-router/react-navigation';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import {
   act,
@@ -13,6 +16,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import {
   AccessibilityInfo,
   ActivityIndicator,
+  BackHandler,
   Dimensions,
   InteractionManager,
   Keyboard,
@@ -49,6 +53,7 @@ import {
   takeFocusRequest,
 } from '../src/design/keyboard';
 import { useOpenAsk } from '../src/features/ask/open';
+import { askReturnSnapshot, setAskReturn } from '../src/features/ask/return';
 import { fromWebPath } from '../src/navigation/external';
 import * as Duo from '../modules/opax-duo';
 import {
@@ -73,6 +78,9 @@ jest.mock('expo-router', () => ({
   },
   useLocalSearchParams: jest.fn(() => ({})),
   useSegments: () => ['(tabs)', '(today)'],
+  // As a focused screen: AndroidFocusBack's handler, while it is mounted.
+  useFocusEffect: (effect: () => void | (() => void)) =>
+    jest.requireActual('react').useEffect(effect, [effect]),
   router: {
     push: jest.fn(),
     navigate: jest.fn(),
@@ -224,6 +232,7 @@ afterEach(async () => {
   jest.mocked(useSeat).mockReturnValue({ status: 'none' } as never);
   jest.mocked(catalogs.roster).mockRejectedValue(new Error('Offline'));
   mockDirectory.current = null;
+  setAskReturn(null);
 });
 async function mount(screen = <AskScreen />) {
   await act(async () => {
@@ -884,6 +893,128 @@ test('Conversations hides with none saved; the bar keeps Conversations, New ques
       bar().unstable_headerRightItems().length,
   ).toBeLessThanOrEqual(3);
   expect(barButton('Talk')).toBeUndefined();
+});
+
+describe('the way back to the page an arrival came from (journeys/ask.md 4.2)', () => {
+  // The app's navigation container: the tab navigator holds Ask's tab.
+  const container = {
+    getRootState: () => ({
+      key: 'root',
+      routes: [
+        {
+          name: '(tabs)',
+          state: {
+            key: 'tabs',
+            index: 2,
+            routes: [
+              { name: '(today)' },
+              { name: '(search)' },
+              { name: '(ask)' },
+            ],
+          },
+        },
+      ],
+    }),
+    dispatch: jest.fn(),
+  };
+  const mountInApp = () =>
+    mount(
+      <NavigationContainerRefContext.Provider value={container as never}>
+        <AskScreen />
+      </NavigationContainerRefContext.Provider>,
+    );
+  const jumpBack = {
+    type: 'JUMP_TO',
+    target: 'tabs',
+    payload: { name: '(search)' },
+  };
+  beforeEach(() => container.dispatch.mockClear());
+
+  test('iOS: the bar leads with a back item named for the page, which switches back to its tab', async () => {
+    setAskReturn({ tab: '(search)', name: 'Sam Placeholder' });
+    await mountInApp();
+    const [back, history, ...rest] = bar().unstable_headerLeftItems();
+    expect(rest).toEqual([]);
+    expect(back).toMatchObject({
+      type: 'button',
+      label: 'Sam Placeholder',
+      accessibilityLabel: 'Back to Sam Placeholder',
+      testID: 'ask-back',
+      icon: { type: 'sfSymbol', name: 'chevron.backward' },
+      sharesBackground: false,
+    });
+    expect(history).toMatchObject({ label: 'Your conversations' });
+    await act(async () => (back as { onPress: () => void }).onPress());
+    expect(container.dispatch).toHaveBeenCalledTimes(1);
+    expect(container.dispatch).toHaveBeenCalledWith(jumpBack);
+    expect(askReturnSnapshot()).toBeNull();
+    expect(
+      bar()
+        .unstable_headerLeftItems()
+        .map((item) => item.label),
+    ).toEqual(['Your conversations']);
+  });
+
+  test('a visit by the Ask tab has no back item and leaves system Back alone', async () => {
+    const platform = jest.replaceProperty(Platform, 'OS', 'android');
+    const add = jest.spyOn(BackHandler, 'addEventListener');
+    try {
+      await mountInApp();
+      expect(add).not.toHaveBeenCalled();
+      expect(
+        bar()
+          .unstable_headerLeftItems()
+          .map((item) => item.label),
+      ).toEqual(['Your conversations']);
+    } finally {
+      add.mockRestore();
+      platform.restore();
+    }
+  });
+
+  test('Android: the navigation icon and system Back both go back to the page', async () => {
+    const platform = jest.replaceProperty(Platform, 'OS', 'android');
+    const listeners = new Set<() => boolean | null | undefined>();
+    const add = jest
+      .spyOn(BackHandler, 'addEventListener')
+      .mockImplementation((_event, handler) => {
+        listeners.add(handler);
+        return { remove: () => listeners.delete(handler) };
+      });
+    try {
+      setAskReturn({ tab: '(search)', name: 'Sam Placeholder' });
+      await mountInApp();
+      // Material's navigation icon, outermost in the app bar.
+      let header!: ReactTestRenderer;
+      act(() => {
+        header = create(
+          (
+            bar() as unknown as { headerLeft: () => React.ReactElement }
+          ).headerLeft(),
+        );
+      });
+      const icon = header.root.findAll(
+        (n) =>
+          n.props.testID === 'ask-back' &&
+          typeof n.props.onPress === 'function',
+      )[0]!;
+      expect(icon.props.accessibilityLabel).toBe('Back to Sam Placeholder');
+      expect(listeners.size).toBe(1);
+      let handled: boolean | null | undefined;
+      await act(async () => {
+        handled = [...listeners][0]!();
+      });
+      expect(handled).toBe(true);
+      expect(container.dispatch).toHaveBeenCalledWith(jumpBack);
+      expect(askReturnSnapshot()).toBeNull();
+      // Used once: Back on Ask is the tab bar's own again.
+      expect(listeners.size).toBe(0);
+      act(() => header.unmount());
+    } finally {
+      add.mockRestore();
+      platform.restore();
+    }
+  });
 });
 
 test('a deep-linked draft starts a new conversation and sends nothing', async () => {

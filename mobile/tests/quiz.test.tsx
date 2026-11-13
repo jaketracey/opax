@@ -433,7 +433,7 @@ test('a speaker link in a source sheet drafts in Ask and never sends', async () 
   expect(router.back).toHaveBeenCalled();
   expect(router.navigate).toHaveBeenCalledWith(
     expect.objectContaining({
-      pathname: '/ask',
+      pathname: '/(tabs)/(ask)/ask',
       params: expect.objectContaining({
         question: expect.stringMatching(
           /^What did .+ say in parliament in \d{4}\?$/,

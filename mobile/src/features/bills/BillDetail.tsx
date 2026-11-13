@@ -284,7 +284,7 @@ export default function BillDetail({
   const follow = useBillChanges(identity?.key ?? null);
 
   const openAsk = useOpenAsk();
-  const ask = () => openAsk(scopedQuestion('bill', title));
+  const ask = () => openAsk(scopedQuestion('bill', title), title);
   const share = () =>
     void shareRecord({ path: `/bill/${key}`, title: name || 'Bill' });
   // The bar title is the short name, and its view truncates inside the bar

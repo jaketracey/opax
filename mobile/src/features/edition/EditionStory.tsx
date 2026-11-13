@@ -53,7 +53,8 @@ export function EditionStory() {
   const title = useTitleOnScroll(titleRef, 'Daily edition');
   const openAsk = useOpenAsk();
   const onAsk = () => {
-    if (edition) openAsk({ question: editionQuestion(edition) });
+    if (edition)
+      openAsk({ question: editionQuestion(edition) }, 'Daily edition');
   };
   const onShare = () => {
     if (edition) void shareEdition(edition);
