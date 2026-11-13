@@ -990,7 +990,7 @@ export function PartyHistory({ rename }: { rename: PartyRename }) {
           url: source.href,
         }))}
         notes={[
-          'One party under its later name. Records keep the name they were made under: votes, bills, speeches and money recorded under the earlier name say so.',
+          'One party, under its later name. Votes, bills, speeches and money recorded under the earlier name keep that name.',
         ]}
         licenceDataset="aec"
         testID="party-history-source"
