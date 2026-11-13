@@ -1077,6 +1077,55 @@ describe('the native edition reader', () => {
     expect(lines).toHaveLength(1);
     expect(root.findAllByType(SourceLine).length).toBeGreaterThanOrEqual(3);
   });
+  test('with a chart before a figure, the one source line shown opens the full sheet', async () => {
+    const grant = {
+      ...edition,
+      kind: 'grant' as const,
+      path: '/money/grants/federal/recipient/R1?award=GA1',
+      facts: {
+        ...edition.facts,
+        figures: [{ value: '$10.0m', label: 'to an invented council' }],
+        bars: {
+          title: 'Topic labels',
+          items: [
+            { label: 'Health', pct: 60 },
+            { label: 'Roads', pct: 20 },
+          ],
+          note: null,
+        },
+        events: [],
+        division: null,
+        order: [
+          { type: 'bars' as const, index: 0 },
+          { type: 'figure' as const, index: 0 },
+        ],
+      },
+    };
+    jest
+      .mocked(catalogs.todayEdition)
+      .mockResolvedValue({ ...ready, data: grant });
+    const { root } = await render(<EditionStory />);
+    const shown = root
+      .findAllByType(SourceAffordance)
+      .filter((line) =>
+        String(line.props.accessibilityLabel).includes('OPAX daily edition'),
+      );
+    expect(shown).toHaveLength(1);
+    // The chart's line is the one kept, and it carries the figures' sheet.
+    expect(shown[0]!.props.testID).toBe('edition-fact-0-sources');
+    await press(root, 'edition-fact-0-sources');
+    const details = openedSourceDetails(root, 'edition-fact-0-sources');
+    expect(details.originals).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ label: 'OPAX daily edition' }),
+        expect.objectContaining({
+          label: 'GrantConnect',
+          record: 'record GA1',
+        }),
+      ]),
+    );
+    expect(details.rule).toEqual(expect.any(String));
+  });
   test('a withdrawn edition replaces saved prose after refresh', async () => {
     jest
       .mocked(catalogs.todayEdition)

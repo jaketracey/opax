@@ -241,6 +241,31 @@ export function SourceSection({ children }: { children: ReactNode }) {
   );
 }
 
+/**
+ * What a line's sheet holds beyond the drawn text: its originals, notes,
+ * licence and rule. Two lines fold into one only when their sheets match, so
+ * a hidden line never takes a fuller sheet with it.
+ */
+export function sheetFingerprint(details: SourceDetails): string {
+  return JSON.stringify([
+    (details.originals ?? []).map((original) => [
+      original.label,
+      original.url,
+      original.record ?? null,
+      original.asOf == null ? null : String(original.asOf),
+    ]),
+    (details.notes ?? []).filter(Boolean),
+    details.licence ?? null,
+    details.licenceDataset ?? null,
+    details.rule ?? null,
+    details.header ?? null,
+    sourceCitations(details.citation).map((cited) => [
+      cited.label,
+      cited.title,
+    ]),
+  ]);
+}
+
 /** Whether this line is the first in its section to say `text`. */
 function useFirstInSection(text: string | null): boolean {
   const registry = useContext(SourceSectionContext);
@@ -337,8 +362,13 @@ export function SourceLine({
     .filter(Boolean)
     .join(', ')
     .replace(/\u00a0/g, ' ');
-  // A link line ("View original") is never folded into a section's line.
-  const shown = useFirstInSection(label ? null : spoken);
+  // A link line ("View original"), or one whose sheet carries an action or
+  // extra content, is never folded into a section's line.
+  const shown = useFirstInSection(
+    label || details.extra || details.report || onPress
+      ? null
+      : `${spoken}\n${sheetFingerprint(details)}`,
+  );
   if (!shown) return null;
   return (
     <>

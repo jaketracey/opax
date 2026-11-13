@@ -76,11 +76,13 @@ export function EditionStory() {
   const sourceRows = edition
     ? editionSourceRows(edition, subject.originals)
     : [];
-  // A figure card carries the edition's SourceLine; the foot repeats it
-  // only when no figure has.
+  // A figure card or a bars chart carries the edition's SourceLine; the
+  // foot repeats it only when none has.
   const figureLines =
-    !!edition?.facts.figures.length &&
-    (edition.facts.order?.some((fact) => fact.type === 'figure') ?? true);
+    (!!edition?.facts.figures.length &&
+      (edition.facts.order?.some((fact) => fact.type === 'figure') ?? true)) ||
+    (!!edition?.facts.bars &&
+      (edition.facts.order?.some((fact) => fact.type === 'bars') ?? true));
   const offline =
     block?.error?.code === 'offline' || block?.error?.code === 'timeout';
   return (
@@ -282,6 +284,13 @@ function EditionFacts({
     dateRange: { start: edition.date, end: edition.date },
     citation: 'OPAX daily edition',
   };
+  // One sheet for every line here (figures and charts alike), so the line
+  // the section keeps always opens the full sources.
+  const sheet = {
+    ...source,
+    asOf: edition.date,
+    citation: 'OPAX daily edition',
+  };
   const order = edition.facts.order ?? [
     ...figures.map((_, index) => ({ type: 'figure' as const, index })),
     ...(bars ? [{ type: 'bars' as const, index: 0 }] : []),
@@ -300,12 +309,7 @@ function EditionFacts({
           const figureProps = {
             ...figure,
             ink: editionInk(edition),
-            citation: {
-              ...source,
-              asOf: edition.date,
-              citation: 'OPAX daily edition',
-              testID: `${id}-sources`,
-            },
+            citation: { ...sheet, testID: `${id}-sources` },
             testID: id,
           };
           return (
@@ -332,6 +336,9 @@ function EditionFacts({
                     ink={editionInk(edition)}
                     format={(value) => `${value}%`}
                     testID={`${id}-share`}
+                    sourceLine={
+                      <SourceLine {...sheet} testID={`${id}-sources`} />
+                    }
                     {...provenance}
                   />
                 ) : (
@@ -345,6 +352,9 @@ function EditionFacts({
                     tableTitle={bars.title}
                     share
                     values="all"
+                    sourceLine={
+                      <SourceLine {...sheet} testID={`${id}-sources`} />
+                    }
                     {...provenance}
                   />
                 )}
