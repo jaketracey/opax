@@ -83,6 +83,7 @@ import { BlockSource, votesSource } from './your-mp/Evidence';
 import { hasParliamentaryMembership, type ProfileView } from './your-mp/model';
 import { useIsMyMember } from './your-mp/useIsMyMember';
 import { useSetAsMyElectorate } from './your-mp/useSetAsMyElectorate';
+import { perfMark, useDrawnMark } from '../perf/probe';
 
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
@@ -232,7 +233,10 @@ export function ProfileScreen({
   arrival?: ProfileArrival;
   embedded?: boolean;
 }) {
-  const [load, setLoad] = useState<Load>({ status: 'loading' });
+  const [load, setLoad] = useState<Load>(() => {
+    perfMark('profile-render', 'loading');
+    return { status: 'loading' };
+  });
   useScreenReady('/person/[slug]', load.status !== 'loading', !embedded);
   const [attempt, setAttempt] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
@@ -456,6 +460,7 @@ function ProfileContent({
 }) {
   const { profile } = loaded;
   const b = profile.blocks;
+  useDrawnMark('profile-drawn');
   const scroll = useRef<ScrollView>(null);
   const y = useRef<Partial<Record<ProfileSection | 'changes', number>>>({});
   // Keep native host refs, never the synthetic layout event's target.

@@ -2,6 +2,7 @@ import { communityHome } from '../features/community/entry';
 import { fromWebPath } from '../navigation/external';
 import { inLinkTab } from '../navigation/link-tab';
 import { webOrigin } from '../design/environment';
+import { perfHeap, perfMark } from '../perf/probe';
 
 /** Names from links are never trusted as native back-button copy. */
 export function redirectSystemPath({
@@ -11,6 +12,8 @@ export function redirectSystemPath({
   path: string;
   initial: boolean;
 }) {
+  perfMark('intent', path);
+  perfHeap('intent-heap');
   try {
     const url = new URL(path, 'opax://');
     if (

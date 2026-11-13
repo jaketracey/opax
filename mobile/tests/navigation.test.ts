@@ -478,6 +478,11 @@ describe('workbench exclusion', () => {
       ),
     ).toBe(false);
   });
+  test('production blocks direct imports of the in-app timing probe', () => {
+    const file = '/repo/mobile/src/perf/probe.e2e.ts';
+    expect(blocked(blockList('production'), file)).toBe(true);
+    expect(blocked(blockList('e2e'), file)).toBe(false);
+  });
   test('production blocks direct imports of the welcome tour launch argument', () => {
     const file = '/repo/mobile/src/onboarding/launch-flag.e2e.ts';
     expect(blocked(blockList('production'), file)).toBe(true);
@@ -525,6 +530,7 @@ describe('workbench exclusion', () => {
       [
         ['src/design', 'text-probe', 'tokens'],
         ['src/features/electorate-map', 'outline-probe', 'suggestion'],
+        ['src/perf', 'probe', 'clock'],
       ].map(([directory, probe, ordinary]) => [
         variant,
         directory,
