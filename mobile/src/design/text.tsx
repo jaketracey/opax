@@ -173,6 +173,30 @@ export function titleSizeCap(
 }
 
 /**
+ * Android only. React Native caps `fontSize` with `maxFontSizeMultiplier` but
+ * converts an explicit `lineHeight` from SP without it, so capped text kept
+ * full-size leading: at font scale 2.0 a wrapped 1.353-capped line took twice
+ * its text height. The cap is folded into the role's own size and line height
+ * instead, like the title ceiling, and the native cap is then left off so it
+ * is not applied twice. Returns the multiplier on the role (1 when the cap is
+ * not reached). iOS keeps the native cap, which scales both.
+ */
+export function androidSizeCap(
+  baseLineHeight: number,
+  maxFontSizeMultiplier: number | null | undefined,
+  fontScale: number,
+  os: string = Platform.OS,
+): number {
+  if (os !== 'android' || !maxFontSizeMultiplier || maxFontSizeMultiplier < 1)
+    return 1;
+  return Math.min(
+    1,
+    androidCapScale(baseLineHeight, maxFontSizeMultiplier, fontScale) ??
+      maxFontSizeMultiplier / fontScale,
+  );
+}
+
+/**
  * A word-safe text's state for one identity: text size, window width, role,
  * weight and text. Every change of cap starts a logical generation. Event
  * callbacks alone cannot identify Fabric events, which use current props.
@@ -386,17 +410,23 @@ export function Text({
   // (nested text included, such as a field's "(required)"): any change starts
   // again from full size, and so does a wider column (wordSafeOnFrame).
   const content = textContent(props.children);
-  const titleCap = titleSizeCap(variant, fontScale);
   const baseLineHeight = role.lineHeight + LINE_HEIGHT_NUDGE;
+  const androidCap = androidSizeCap(
+    baseLineHeight,
+    given.maxFontSizeMultiplier,
+    fontScale,
+  );
+  // The title ceiling and Android's folded cap, whichever is lower.
+  const sizeCap = Math.min(titleSizeCap(variant, fontScale), androidCap);
   const rampScale = textRampScale(
     role.dynamicTypeRamp,
     fontScale,
     given.maxFontSizeMultiplier ?? 0,
     Platform.OS,
-    baseLineHeight * titleCap,
+    baseLineHeight * sizeCap,
   );
   const expectedFull =
-    rampScale === undefined ? undefined : rampScale * titleCap;
+    rampScale === undefined ? undefined : rampScale * sizeCap;
   const key = `${fontScale}|${width}|${variant}|${bold}|${drawnFamily}|${given.maxFontSizeMultiplier}|${content}`;
   // The state machine runs at event time in a ref, so frames and lines that
   // change nothing drawn never render; `shown` re-renders on a new generation.
@@ -435,9 +465,9 @@ export function Text({
     wordSafe && cap && full
       ? Platform.OS === 'android'
         ? (androidCapScale(baseLineHeight, cap, fontScale) ??
-          (cap / full) * titleCap)
-        : (cap / full) * titleCap
-      : titleCap;
+          (cap / full) * sizeCap)
+        : (cap / full) * sizeCap
+      : sizeCap;
   const heightKey = `${key}|${cap}|${scale}`;
   const probe = useTextProbe(props, heightKey, content);
   const measured = useRef<{
@@ -612,7 +642,9 @@ export function Text({
             }
       }
       allowFontScaling
-      maxFontSizeMultiplier={given.maxFontSizeMultiplier ?? 0}
+      maxFontSizeMultiplier={
+        androidCap < 1 ? 0 : (given.maxFontSizeMultiplier ?? 0)
+      }
       dynamicTypeRamp={role.dynamicTypeRamp}
       {...(Platform.OS === 'android'
         ? {

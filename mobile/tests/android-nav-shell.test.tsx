@@ -218,6 +218,54 @@ test('Android route sheets are dimmed native bottom sheets, full height at large
   ).toBe('Done');
 });
 
+test.each([1, 2])(
+  'Android sheet heading at font scale %s: the title keeps the default insets and Close stays on its row',
+  (fontScale) => {
+    platform('android');
+    const rn = jest.requireActual('react-native');
+    const dims = jest
+      .spyOn(rn, 'useWindowDimensions')
+      .mockReturnValue({ width: 412, height: 915, scale: 2.625, fontScale });
+    try {
+      const tree = render(
+        <SheetFrame title="Sources" testID="source-sheet">
+          Content
+        </SheetFrame>,
+      );
+      const rows = tree.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID === 'sheet-heading',
+      );
+      expect(rows).toHaveLength(1);
+      const row = rows[0]!;
+      const title = row.find(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.accessibilityRole === 'header',
+      );
+      const close = row.find(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.accessibilityLabel === 'Done',
+      );
+      expect(title.props.children).toBe('Sources');
+      expect(close).toBeDefined();
+      const rowStyle = StyleSheet.flatten(row.props.style);
+      const titleStyle = StyleSheet.flatten(title.props.style);
+      // Row inset plus title inset: the same screen margin at both sizes.
+      expect(rowStyle.paddingHorizontal).toBe(8);
+      expect(titleStyle.paddingHorizontal).toBe(8);
+      expect(titleStyle.flex).toBe(1);
+      expect(rowStyle.flexDirection).toBe('row');
+      // A wrapped title keeps Close at the top of the row.
+      if (fontScale > 1) expect(rowStyle.alignItems).toBe('flex-start');
+    } finally {
+      dims.mockRestore();
+    }
+  },
+);
+
 test('Android citation navigation retains previous, next and overflow actions inside the sheet', () => {
   platform('android');
   const previous = jest.fn();

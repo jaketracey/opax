@@ -108,3 +108,65 @@ test.each([1.3, 1.5, 2])(
     }
   },
 );
+
+describe('a maxFontSizeMultiplier cap', () => {
+  function drawn(os: 'android' | 'ios', fontScale: number) {
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
+    const window = Dimensions.get('window');
+    const screen = Dimensions.get('screen');
+    Object.defineProperty(Platform, 'OS', { configurable: true, value: os });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    try {
+      act(() =>
+        Dimensions.set({
+          window: { ...window, fontScale },
+          screen: { ...screen, fontScale },
+        }),
+      );
+      act(() => {
+        renderer = TestRenderer.create(
+          <Text variant="secondary" maxFontSizeMultiplier={1.353}>
+            The Senate next sits Monday 16 November
+          </Text>,
+        );
+      });
+      const text = renderer.root.findByType(NativeText);
+      return {
+        native: text.props.maxFontSizeMultiplier as number,
+        style: StyleSheet.flatten(text.props.style),
+      };
+    } finally {
+      act(() => {
+        renderer?.unmount();
+        Dimensions.set({ window, screen });
+      });
+      Object.defineProperty(Platform, 'OS', descriptor);
+    }
+  }
+  const role = textStyles.secondary;
+  const base = role.lineHeight + LINE_HEIGHT_NUDGE;
+
+  test('on Android at 2.0 caps the line height with the font size, from the role', () => {
+    const { spToDp } = jest.requireMock('../modules/opax-text-metrics');
+    const { native, style } = drawn('android', 2);
+    // Folded into the role's size, so the native cap is not applied twice.
+    expect(native).toBe(0);
+    // The drawn line height is the role's at the cap, not at 2.0.
+    expect(spToDp(style.lineHeight, 2)).toBeCloseTo(base * 1.353, 5);
+    // Size and leading keep the role's own ratio.
+    expect(style.lineHeight! / style.fontSize!).toBeCloseTo(
+      base / role.fontSize,
+      5,
+    );
+  });
+
+  test('on Android below the cap, and on iOS, nothing changes', () => {
+    const below = drawn('android', 1.15);
+    expect(below.native).toBe(1.353);
+    expect(below.style.fontSize).toBe(role.fontSize);
+    const ios = drawn('ios', 2);
+    expect(ios.native).toBe(1.353);
+    expect(ios.style.fontSize).toBe(role.fontSize);
+    expect(ios.style.lineHeight).toBeCloseTo(base, 5);
+  });
+});

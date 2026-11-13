@@ -48,14 +48,19 @@ describe('the rule, in the calendar timezone (Sydney is UTC+11 in November)', ()
     ['the Senate only', '2026-11-17T01:00:00Z', 'The Senate is sitting today'],
     ['the House only', '2026-10-27T01:00:00Z', 'The House is sitting today'],
     [
+      'a weekday off before a House-only sitting',
+      '2026-10-23T01:00:00Z',
+      'The House next sits Monday 26 October',
+    ],
+    [
       'a weekday off',
       '2026-11-13T01:00:00Z',
-      'Next sitting day: Monday 16 November',
+      'The Senate next sits Monday 16 November',
     ],
     [
       'the weekend between sittings',
       '2026-11-21T01:00:00Z',
-      'Next sitting day: Monday 23 November',
+      'Parliament next sits Monday 23 November',
     ],
   ])('%s', (_case, iso, text) => {
     expect(said(file, iso)).toBe(text);
@@ -64,7 +69,7 @@ describe('the rule, in the calendar timezone (Sydney is UTC+11 in November)', ()
   test('the day turns at midnight in the calendar timezone, not UTC', () => {
     // Both instants are 15 November in UTC.
     expect(said(file, '2026-11-15T12:59:59Z')).toBe(
-      'Next sitting day: Monday 16 November',
+      'The Senate next sits Monday 16 November',
     );
     expect(said(file, '2026-11-15T13:00:00Z')).toBe(
       'The Senate is sitting today',
@@ -76,7 +81,7 @@ describe('the rule, in the calendar timezone (Sydney is UTC+11 in November)', ()
       'The Senate is sitting today',
     );
     expect(said(perth, '2026-11-15T14:00:00Z')).toBe(
-      'Next sitting day: Monday 16 November',
+      'The Senate next sits Monday 16 November',
     );
   });
 
@@ -117,13 +122,43 @@ describe('the rule, in the calendar timezone (Sydney is UTC+11 in November)', ()
     next.days.push({ date: '2027-02-02', house: true, senate: true });
     const two = decodeSittingDays(next);
     const line = sittingLine(two, new Date('2026-12-21T01:00:00Z'))!;
-    expect(line.text).toBe('Next sitting day: Tuesday 2 February');
+    expect(line.text).toBe('Parliament next sits Tuesday 2 February');
     expect(line.years).toEqual([2026, 2027]);
     const sheet = sittingSources(two, line);
     expect(sheet.header).toBe('Published 1 December 2026');
-    expect(sheet.originals!.map((o) => o.record)).toEqual([
-      'Parliamentary Sittings 2026',
-      'Parliamentary Sittings 2027',
+    // Both years name the same readable page: one row, both calendars.
+    expect(sheet.originals).toEqual([
+      {
+        label: 'Parliament of Australia',
+        url: 'https://www.aph.gov.au/About_Parliament/Sitting_Calendar',
+        record: 'Parliamentary Sittings 2026 and Parliamentary Sittings 2027',
+        asOf: '2026-12-01',
+      },
+    ]);
+    // Without pages, each year's own calendar file is its row.
+    for (const y of next.years) delete y.source.page;
+    expect(
+      sittingSources(decodeSittingDays(next), line).originals!.map(
+        (o) => o.url,
+      ),
+    ).toEqual([
+      'https://static.aph.gov.au/-/media/05_About_Parliament/58_Sitting_Calendars/2026/Parliamentary_Sittings_2026.ics',
+      'https://static.aph.gov.au/-/media/05_About_Parliament/58_Sitting_Calendars/2027/Parliamentary_Sittings_2027.ics',
+    ]);
+  });
+
+  test('the readable page is optional: with no page the row opens the calendar file', () => {
+    const plain = copy();
+    delete plain.years[0].source.page;
+    const f = decodeSittingDays(plain);
+    const line = sittingLine(f, new Date('2026-11-13T01:00:00Z'))!;
+    expect(sittingSources(f, line).originals).toEqual([
+      {
+        label: 'Parliament of Australia',
+        url: 'https://static.aph.gov.au/-/media/05_About_Parliament/58_Sitting_Calendars/2026/Parliamentary_Sittings_2026.ics',
+        record: 'Parliamentary Sittings 2026',
+        asOf: '2026-09-14',
+      },
     ]);
   });
 });
@@ -160,6 +195,21 @@ describe('a bad file is refused whole', () => {
             source: {
               ...f.years[0].source,
               url: 'http://static.aph.gov.au/x.ics',
+            },
+          },
+        ],
+      }),
+    ],
+    [
+      'a plain http page',
+      (f) => ({
+        ...f,
+        years: [
+          {
+            ...f.years[0],
+            source: {
+              ...f.years[0].source,
+              page: 'http://www.aph.gov.au/About_Parliament/Sitting_Calendar',
             },
           },
         ],
@@ -236,17 +286,17 @@ describe('the drawn line', () => {
   const line = (r: TestRenderer.ReactTestRenderer) =>
     r.root.findAll((n) => n.props.testID === 'today-sitting')[0];
 
-  test('is a secondary text button, read as drawn, opening the calendar source', async () => {
+  test('is a secondary text button, read as drawn, opening the readable calendar page', async () => {
     const r = await render({ data: file, stale: false, savedAt: 1 });
     const button = line(r)!;
     expect(button.props.accessibilityRole).toBe('button');
     expect(button.props.accessibilityLabel).toBe(
-      'Next sitting day: Monday 16 November',
+      'The Senate next sits Monday 16 November',
     );
     expect(button.props.accessibilityHint).toBe('Opens the sources');
     const text = button.findByType(Text);
     expect(text.props.variant).toBe('secondary');
-    expect(text.props.children).toBe('Next sitting day: Monday 16 November');
+    expect(text.props.children).toBe('The Senate next sits Monday 16 November');
     expect(text.props.numberOfLines).toBeUndefined();
     act(() => button.props.onPress());
     expect(presentSource).toHaveBeenCalledWith(
@@ -255,7 +305,7 @@ describe('the drawn line', () => {
         originals: [
           {
             label: 'Parliament of Australia',
-            url: 'https://static.aph.gov.au/-/media/05_About_Parliament/58_Sitting_Calendars/2026/Parliamentary_Sittings_2026.ics',
+            url: 'https://www.aph.gov.au/About_Parliament/Sitting_Calendar',
             record: 'Parliamentary Sittings 2026',
             asOf: '2026-09-14',
           },
