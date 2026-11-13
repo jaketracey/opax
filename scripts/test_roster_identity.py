@@ -83,6 +83,8 @@ class ShippedRosterTests(unittest.TestCase):
 
     def test_each_has_its_own_id_or_none(self):
         people = {p["name"]: p for p in json.loads((ri.PUBLIC / "parliamentarians.json").read_text())["people"]}
+        # A print of the person holding the same verified id (scripts/roster_fold.py fold_ids) is read under that person.
+        people.update({s: p for p in list(people.values()) for s in p.get("prints") or [] if s not in people})
         for name, pid in self.EXPECTED.items():
             self.assertEqual(people[name].get("pid"), pid, name)
             if pid is None:
