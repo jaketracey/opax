@@ -133,11 +133,14 @@ export function useRootBarAppearance(
   const verticalBar = barEdge !== 'unspecified';
   const solidSetting = useSolidBar();
   const name = root?.name ?? '';
-  // Today's tall AX title band needs an opaque ground even when neither
-  // legibility setting is on. Keep UIKit's native title and collapse.
+  // Today's tall AX title band on a phone needs an opaque ground even when
+  // neither legibility setting is on. iPad and vertical bars keep their chrome.
   const solid =
     solidSetting ||
     (Platform.OS === 'ios' &&
+      !Platform.isPad &&
+      !verticalBar &&
+      largeTitleEnabled &&
       name === 'index' &&
       isAccessibilityCategory(fontScale));
   const colour =

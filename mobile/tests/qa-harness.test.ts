@@ -93,11 +93,11 @@ test('screens 4.26.0 patch applies cleanly to menus and the native search placeh
       name: 'RNSSearchBar.mm',
       before:
         '24e5319a0c5bf94b9ef45c96f561c2cfe239655b6495fa69ac9a34f710f6b50c',
-      after: 'ae3ba50deea79ec9e1d37b18dfc33e54b5ad742697a0d57eeaa6d06b7aa5bbb0',
+      after: 'b217e4b670ca1836fabd40c4f0477264f67301683b9745e89ed84eccdb3d63ae',
     },
   ];
   expect(digest(readFileSync(patch, 'utf8'))).toBe(
-    '0b1c08b44c1164deac122ea6e35e86f9aa40d975f5c57177c84887a7c589422d',
+    '891be11cde2861afc6accb171777cf922cdf47151e67a89867b53117389df795',
   );
   const root = mkdtempSync(join(tmpdir(), 'screens-patch-'));
   const directory = join(root, 'node_modules/react-native-screens/ios');
@@ -147,6 +147,19 @@ test('screens 4.26.0 patch applies cleanly to menus and the native search placeh
       expect(result.status).toBe(0);
       expect(result.stdout + result.stderr).not.toMatch(/offset|fuzz/i);
     }
+    for (const file of files)
+      expect(digest(readFileSync(join(directory, file.name), 'utf8'))).toBe(
+        file.after,
+      );
+    const reapplied = spawnSync(
+      '/usr/bin/patch',
+      ['--batch', '--forward', '--dry-run', '--fuzz=0', '-p1', '-i', patch],
+      { cwd: root, encoding: 'utf8' },
+    );
+    expect(reapplied.status).toBe(1);
+    expect(reapplied.stdout + reapplied.stderr).toMatch(
+      /RNSSearchBar\.mm[^]*(?:Ignoring previously applied \(or reversed\) patch|Reversed \(or previously applied\) patch detected)/,
+    );
     for (const file of files)
       expect(digest(readFileSync(join(directory, file.name), 'utf8'))).toBe(
         file.after,

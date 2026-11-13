@@ -68,6 +68,10 @@ import {
   useTitleOnScroll,
 } from '../src/navigation/useTitleOnScroll';
 import { menuTitle } from '../src/design/menu-title';
+import {
+  useRootBarAppearance,
+  useRootBarSearchOptions,
+} from '../src/navigation/useRootBarAppearance';
 
 const { colors } = tokens;
 
@@ -1537,6 +1541,69 @@ test.each([
       } finally {
         act(() => renderer.unmount());
         act(() => Dimensions.set({ window }));
+      }
+    }),
+);
+
+test.each(['leading', 'trailing'] as const)(
+  'Today on the %s Duo rail keeps its glass chrome at AX3 and AX5',
+  (edge) =>
+    withGlass(() => {
+      mockBarEdge = edge;
+      const window = Dimensions.get('window');
+      const { navigation, page, ground } = fadePage('index', '(today)');
+      const renderer = tree(page(68));
+      try {
+        for (const fontScale of [2.643, 3.571]) {
+          act(() => Dimensions.set({ window: { ...window, fontScale } }));
+          expect(navigation.setOptions).toHaveBeenLastCalledWith(
+            scrollBar(ground, false, edge),
+          );
+          expect(RootBar!.setSolid).not.toHaveBeenCalled();
+        }
+      } finally {
+        act(() => renderer.unmount());
+        act(() => Dimensions.set({ window }));
+      }
+    }),
+);
+
+test.each([false, true])(
+  'Today with an inline title (iPad=%s) keeps its glass chrome at AX3 and AX5',
+  (pad) =>
+    withGlass(() => {
+      const isPad = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(pad);
+      const window = Dimensions.get('window');
+      const { navigation, ground } = fadePage('index', '(today)');
+      function InlineRoot() {
+        useRootBarSearchOptions({ headerLargeTitleEnabled: false });
+        useRootBarAppearance(navigation.setOptions, {
+          ground,
+          owner: 'options',
+        });
+        return null;
+      }
+      const renderer = tree(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider
+            value={{ key: 'index-root', name: 'index' }}
+          >
+            <InlineRoot />
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+      try {
+        for (const fontScale of [2.643, 3.571]) {
+          act(() => Dimensions.set({ window: { ...window, fontScale } }));
+          expect(navigation.setOptions).toHaveBeenLastCalledWith(
+            scrollBar(ground),
+          );
+          expect(RootBar!.setSolid).not.toHaveBeenCalled();
+        }
+      } finally {
+        act(() => renderer.unmount());
+        act(() => Dimensions.set({ window }));
+        isPad.mockRestore();
       }
     }),
 );
