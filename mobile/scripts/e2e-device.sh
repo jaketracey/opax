@@ -13,6 +13,7 @@ BOOT_TIMEOUT=${OPAX_BOOT_TIMEOUT_SECONDS:-300}
 INSTALL_TIMEOUT=${OPAX_INSTALL_TIMEOUT_SECONDS:-240}
 UI_TIMEOUT=${OPAX_SIMCTL_TIMEOUT_SECONDS:-10}
 SHUTDOWN_TIMEOUT=${OPAX_SHUTDOWN_TIMEOUT_SECONDS:-20}
+PREFLIGHT_TIMEOUT=${OPAX_SIM_PREFLIGHT_TIMEOUT_SECONDS:-300}
 timed() {
   # exec preserves alarm across the command; background/wait handles TERM promptly.
   perl -e '$s=shift; $s =~ /^[1-9][0-9]*$/ or die "Invalid timeout\n"; alarm $s; exec @ARGV or die "exec: $!\n"' "$@" &
@@ -85,13 +86,27 @@ qa_simulator_admit "$UDID"
 OWN_DEVICE=1
 touch "$OUT/device-started"
 device_start=$SECONDS
-# OPAX_SIM_HEAL=1: a shut-down simulator whose daemons crash-loop (which makes
-# XCTest wait for the crash reporter after every Maestro self-test) is erased
-# before boot. A booted simulator is left alone.
-if [ "${OPAX_SIM_HEAL:-0}" = 1 ] && ! xcrun simctl list devices booted | grep -q "$UDID"; then
-  heal_rc=0
-  timed "$BOOT_TIMEOUT" bash scripts/sim-health.sh "$UDID" --erase > "$OUT/sim-health.log" 2>&1 || heal_rc=$?
-  case "$heal_rc" in 0|3) ;; *) echo "sim-health failed (exit $heal_rc); see $OUT/sim-health.log" >&2; exit "$heal_rc" ;; esac
+# Preflight, inside this run's own shared lock: erase a simulator whose poster
+# store is over OPAX_SIM_PREFLIGHT_POSTER_MB (500) or that wrote more than
+# OPAX_SIM_PREFLIGHT_CRASHES (2) system crash reports in the last
+# OPAX_SIM_PREFLIGHT_HOURS (1); the run then boots and installs as usual.
+# OPAX_SIM_PREFLIGHT=0 skips it, and it never runs without a configured lock.
+# README.md "Simulator preflight" explains why.
+if [ "${OPAX_SIM_PREFLIGHT:-1}" != 1 ]; then
+  echo 'Simulator preflight skipped (OPAX_SIM_PREFLIGHT=0).' > "$OUT/sim-health.log"
+elif [ -z "${OPAX_PASTE_LOCK:-}" ]; then
+  echo 'Simulator preflight skipped: no shared lock is configured, so it may not erase.' > "$OUT/sim-health.log"
+else
+  assert_device_lock
+  preflight_rc=0
+  timed "$PREFLIGHT_TIMEOUT" bash scripts/sim-health.sh "$UDID" --hours "${OPAX_SIM_PREFLIGHT_HOURS:-1}" \
+    --max-crashes "${OPAX_SIM_PREFLIGHT_CRASHES:-2}" --max-poster-mb "${OPAX_SIM_PREFLIGHT_POSTER_MB:-500}" \
+    --erase > "$OUT/sim-health.log" 2>&1 || preflight_rc=$?
+  case "$preflight_rc" in
+    0) ;;
+    3) touch "$OUT/device-erased" ;;
+    *) echo "sim-health failed (exit $preflight_rc); see $OUT/sim-health.log" >&2; exit "$preflight_rc" ;;
+  esac
 fi
 start=$SECONDS
 # Alarm the gate itself, so a timed-out gate cannot later admit a boot.
@@ -101,6 +116,15 @@ else
   timed "$BOOT_TIMEOUT" bash -c 'source scripts/qa-env.sh; boot_simulator "$1"' _ "$UDID" > "$OUT/simulator.log" 2>&1
 fi
 boot_seconds=$((SECONDS - start))
+# PosterBoard re-renders every lock-screen gallery snapshot on each boot (about
+# 100 MB and ten host cores for a minute) and never deletes the old sets. No
+# journey shows the lock screen, so the shared simulator keeps it disabled. The
+# setting survives reboots and applies from the next boot, so a run after an
+# erase disables it again. OPAX_SIM_POSTERBOARD=1 re-enables it (next boot).
+assert_device_lock
+posterboard=disable; [ "${OPAX_SIM_POSTERBOARD:-0}" != 1 ] || posterboard=enable
+timed "$UI_TIMEOUT" xcrun simctl spawn "$UDID" launchctl "$posterboard" system/com.apple.PosterBoard > "$OUT/posterboard.log" 2>&1 ||
+  echo "PosterBoard $posterboard failed (exit $?); see $OUT/posterboard.log" >&2
 ORIGINAL_SIZE=$(timed "$UI_TIMEOUT" xcrun simctl ui "$UDID" content_size)
 ORIGINAL_APPEARANCE=$(timed "$UI_TIMEOUT" xcrun simctl ui "$UDID" appearance)
 case "$(timed "$UI_TIMEOUT" xcrun simctl ui "$UDID" increase_contrast)" in enabled) ORIGINAL_CONTRAST=enabled ;; esac
