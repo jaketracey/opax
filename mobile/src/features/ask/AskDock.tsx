@@ -269,9 +269,13 @@ export function AskDock({
             accessibilityHint="Opens Options"
             accessibilityState={locked ? { disabled: true } : undefined}
             disabled={locked}
-            // 28 tall plus 8 above and below: a 44 pt target that stops
-            // short of Clear's own slop beside it.
-            hitSlop={{ top: 8, bottom: 8 }}
+            // 28 tall plus 8 above and below: a 44 pt target (10 for 48 dp
+            // on Android) that stops short of Clear's own slop beside it.
+            hitSlop={
+              Platform.OS === 'android'
+                ? { top: 10, bottom: 10 }
+                : { top: 8, bottom: 8 }
+            }
             onPress={onOptions}
             style={styles.optionsText}
             testID={s.fresh ? 'ask-draft-new-conversation' : 'ask-options-line'}
@@ -285,7 +289,8 @@ export function AskDock({
             accessibilityLabel={composerCopy.clear}
             accessibilityState={locked ? { disabled: true } : undefined}
             disabled={locked}
-            hitSlop={8}
+            // 28 plus 8 on each side is 44 pt; Android's minimum is 48 dp.
+            hitSlop={Platform.OS === 'android' ? 10 : 8}
             onPress={() => {
               if (s.fresh) askSession.clearFresh();
               else askSession.options({ ...defaultOptions });

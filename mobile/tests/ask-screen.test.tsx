@@ -1073,9 +1073,25 @@ test('a starter asks at once; the seat starter only fills the composer', async (
     },
   };
   jest.mocked(client.askPost).mockResolvedValue(answer);
-  await mount();
+  const renderer = await mount();
   const seat = one('ask-starter-seat');
   expect(seat).toBeDefined();
+  // Sweep 1 item 7.2: the member's row leads the four, above the day's three.
+  const order = renderer.root
+    .findAll(
+      (n) =>
+        typeof n.props?.testID === 'string' &&
+        /^ask-starter-(seat|\d)$/.test(n.props.testID) &&
+        typeof n.type === 'string',
+    )
+    .map((n) => n.props.testID as string)
+    .filter((id, i, all) => all.indexOf(id) === i);
+  expect(order).toEqual([
+    'ask-starter-seat',
+    'ask-starter-0',
+    'ask-starter-1',
+    'ask-starter-2',
+  ]);
   expect(a11y('ask-starter-seat', 'accessibilityLabel')).toBe(
     'What has Sam Placeholder said in parliament this year?',
   );

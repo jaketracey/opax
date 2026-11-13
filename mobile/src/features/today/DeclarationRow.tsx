@@ -7,7 +7,7 @@ import { catalogs } from '../../api/runtime';
 import { InsetGroup } from '../../design/layout';
 import { Skeleton } from '../../design/states';
 import { useAccessibilitySize } from '../../design/accessibility';
-import { formatDate } from '../../design/format';
+import { formatDate, unbroken } from '../../design/format';
 import { Icon } from '../../design/icon';
 import { chamberName } from '../../design/parliament';
 import { partyText, isPartyLabel } from '../../design/party';
@@ -89,7 +89,13 @@ export function declarantRow(
     : null;
   const common = {
     name: item.name,
-    portrait: <CachedPortrait name={item.name} testID={portraitTestID} />,
+    portrait: (
+      <CachedPortrait
+        name={item.name}
+        size={DECLARANT_PORTRAIT}
+        testID={portraitTestID}
+      />
+    ),
     accessibilityLabel: [
       item.name,
       party,
@@ -152,7 +158,8 @@ export function DeclarationEntry({
     `today-declaration-portrait-${index}`,
   );
   const preview = item.description ? entryPreview(item.description) : null;
-  const change = `${item.category} · ${registerChangeLabel(item.kind)} ${changeDate(item.date)}`;
+  // "added 30 Aug" never breaks, so no line ends on a lone date.
+  const change = `${item.category} · ${unbroken(`${registerChangeLabel(item.kind)} ${changeDate(item.date)}`)}`;
   const spokenChange = `${item.category}, ${registerChangeLabel(item.kind)} ${formatDate(item.date, 'long')}`;
   const href = declarationsForRoute(item.name);
   const menu: RowMenuAction[] = [
@@ -216,34 +223,44 @@ export function DeclarationEntry({
         >
           {person.portrait}
           <View style={[styles.words, stacked ? null : styles.inlineWords]}>
-            <RecordNameLink
-              name={item.name}
-              href={
-                item.profileSlug
-                  ? personRoute(item.profileSlug, item.name)
-                  : undefined
-              }
-              variant="name"
-              testID={`${person.testID}-name`}
-              style={styles.name}
-            />
-            {item.party ? (
-              <View style={styles.party}>
+            {/* Name and party on one line ("Andrew Wilkie · Independent"),
+                wrapping only when the pair is too wide. The party has one
+                style in this list: drawn, not a link (VoiceOver keeps the
+                party action), so no row's party is navy and another grey. */}
+            <View
+              style={styles.identity}
+              testID={`today-declaration-identity-${index}`}
+            >
+              <RecordNameLink
+                name={item.name}
+                href={
+                  item.profileSlug
+                    ? personRoute(item.profileSlug, item.name)
+                    : undefined
+                }
+                variant="name"
+                testID={`${person.testID}-name`}
+                style={styles.name}
+              />
+              {item.party ? (
                 <PartyLabel
                   party={item.party}
                   status={item.partyStatus}
                   formerly={item.formerly}
-                  linked
+                  linked={false}
                   nested
                   compact
+                  testID={`today-declaration-party-${index}`}
                 />
-              </View>
-            ) : null}
+              ) : null}
+            </View>
             {yourMP ? <YourMPMark testID={`${person.testID}-your-mp`} /> : null}
             {preview ? (
               <Text
-                wordSafe
                 variant="recordText"
+                numberOfLines={stacked ? undefined : PREVIEW_LINES}
+                ellipsizeMode="tail"
+                style={styles.item}
                 testID={`today-declaration-text-${index}`}
               >
                 {preview}
@@ -265,8 +282,13 @@ export function DeclarationEntry({
 }
 ownsRowPadding(DeclarationEntry);
 
-// The portrait column: the row portrait's 44 pt and the row's gap.
-const PORTRAIT_COLUMN = 44 + rhythm.heading;
+// A declarant's portrait: 40 pt, so the name line sits level with it and
+// four entries fit a screen at Large (sweep 1, item 3).
+export const DECLARANT_PORTRAIT = 40;
+// The portrait column: the portrait and the row's gap.
+const PORTRAIT_COLUMN = DECLARANT_PORTRAIT + rhythm.heading;
+// At Large an entry's words show three lines; the feed has the rest.
+export const PREVIEW_LINES = 3;
 
 const styles = StyleSheet.create({
   entry: {
@@ -286,9 +308,18 @@ const styles = StyleSheet.create({
   stacked: { flexDirection: 'column', gap: rhythm.tight },
   words: { gap: rhythm.line, alignSelf: 'stretch' },
   inlineWords: { flex: 1 },
-  name: { flexShrink: 0 },
-  // Keep the expanded party target clear of the declaration below it.
-  party: { minHeight: minimumTarget },
+  identity: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    columnGap: rhythm.tight,
+    rowGap: rhythm.line,
+    // The portrait's height, so a one-line name centres on it.
+    minHeight: DECLARANT_PORTRAIT,
+  },
+  name: { flexShrink: 1 },
+  // The item starts 8 pt under the name line (with the stack's 4 pt gap).
+  item: { marginTop: rhythm.tight - rhythm.line },
 });
 
 type DeclarationsBlockData = Block<Declaration[]>;

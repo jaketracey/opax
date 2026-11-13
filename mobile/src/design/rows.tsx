@@ -1121,7 +1121,14 @@ export function DivisionRow({
     <Pressable
       accessible
       accessibilityRole={expandable ? 'button' : href ? 'link' : undefined}
-      accessibilityLabel={[title, meta, outcome, spokenCounts, party]
+      accessibilityLabel={[
+        title,
+        // A no-break date is for layout; VoiceOver hears plain words.
+        meta.replace(/\u00a0/g, ' '),
+        outcome,
+        spokenCounts,
+        party,
+      ]
         .filter(Boolean)
         .join(', ')}
       accessibilityState={expandable ? { expanded } : undefined}

@@ -100,7 +100,9 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe.each(['today', 'feed'] as const)('%s declarations', (surface) => {
+// Today's entry draws name and party on one line instead (sweep 1, item 3:
+// tests/today-declaration-row.test.tsx); the full feed keeps the stack.
+describe.each(['feed'] as const)('%s declarations', (surface) => {
   const personID =
     surface === 'today' ? 'today-declaration-person-0' : 'declaration-person-0';
   const rowID = surface === 'today' ? 'today-declaration-0' : personID;

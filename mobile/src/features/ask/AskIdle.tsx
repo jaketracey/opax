@@ -66,8 +66,9 @@ export function fillComposer(question: string, speaker?: string) {
 
 /**
  * Ask with nothing asked yet (journeys/ask.md 4.1): one line under the
- * title, Try asking (today's starters, which ask at once, and the seat
- * starter, which only fills the composer), then the newest Conversations.
+ * title, Try asking (the seat starter first when a seat is saved, which
+ * only fills the composer, then today's starters, which ask at once), then
+ * the newest Conversations. Four rows either way.
  */
 export function AskIdle({
   onAsk,
@@ -123,6 +124,16 @@ export function AskIdle({
       <View>
         <SectionHeader title={idleCopy.tryAsking} />
         <InsetGroup testID={`${testPrefix}-starters`}>
+          {/* With a seat saved, the first row is about the reader's own
+              member (sweep 1 item 7.2); the day's starters follow. */}
+          {member ? (
+            <AskSuggestionRow
+              question={seatStarter(member)}
+              variant="fill"
+              onPress={() => fillComposer(seatStarter(member), member)}
+              testID={`${testPrefix}-starter-seat`}
+            />
+          ) : null}
           {starters.map((question, i) => (
             <AskSuggestionRow
               key={question}
@@ -143,14 +154,6 @@ export function AskIdle({
               testID={`${testPrefix}-starter-${i}`}
             />
           ))}
-          {member ? (
-            <AskSuggestionRow
-              question={seatStarter(member)}
-              variant="fill"
-              onPress={() => fillComposer(seatStarter(member), member)}
-              testID={`${testPrefix}-starter-seat`}
-            />
-          ) : null}
         </InsetGroup>
       </View>
       {!showConversations ? null : readFailed ? (

@@ -131,6 +131,20 @@ test('iOS keeps native Back handling while Talk is focused during a call', () =>
   }
 });
 
+test('an open session on the account still offers Start, with no refusal line', () => {
+  mockCall = call({
+    state: 'ready',
+    status: status({ activeSession: { state: 'active', expiresAt: null } }),
+  });
+  const renderer = render();
+  const start = renderer.root
+    .findAllByType(Button)
+    .find((node) => node.props.testID === 'talk-start')!;
+  expect(start).toBeDefined();
+  expect(start.props.disabled).toBeFalsy();
+  expect(line(renderer, 'talk-state')).toBeUndefined();
+});
+
 test('while voice is checked, the status says so and Start waits with a spinner', () => {
   mockCall = call({ state: 'idle', status: null });
   const renderer = render();

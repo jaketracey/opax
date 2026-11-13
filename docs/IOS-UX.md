@@ -776,7 +776,7 @@ Copy on these two screens is the web panel's own (`portal/voice/client.js`), wit
 | Ended by the person | "Conversation ended. Your microphone is off." |
 | Time used | "Your 10 free minutes are complete. Your microphone is off." Unlimited accounts: "This call has finished. Start another whenever you're ready." |
 | Allowance already used | "You have used your 10 free minutes. You can keep exploring the public records." Start is replaced by links to Search and Ask on opax.com.au |
-| Call open elsewhere | "A voice conversation is already open on your account. End it there, then try again." |
+| Earlier call still ending | Start takes over an earlier open call on the server. Only if that call is still ending (a 409): "Your earlier call is still ending. Try again in a minute." |
 | At capacity | "Voice is busy right now. Please try again in a little while." |
 | Budget closed for the month | "Voice is closed for the rest of this month. The public records are still here." Needs the budget signal in D3; until then the server cannot tell this from busy, and the app shows the busy message |
 | Voice switched off | "Voice is taking a break. You can still search the public records." |

@@ -258,15 +258,13 @@ function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
       ? statusFailed
         ? 'retry'
         : 'checking'
-      : blocked === 'callOpen'
-        ? 'retry'
-        : blocked
-          ? 'ask'
-          : microphoneDenied
-            ? 'settings'
-            : terminal || s.transcript.length
-              ? 'startAgain'
-              : 'start';
+      : blocked
+        ? 'ask'
+        : microphoneDenied
+          ? 'settings'
+          : terminal || s.transcript.length
+            ? 'startAgain'
+            : 'start';
   const sources = openableSources(s.sources);
   const showTranscript = captions && s.transcript.length > 0;
   // The call row and transcript only while captions show (7.4); hidden, the
@@ -281,8 +279,7 @@ function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
     !terminal &&
     !microphoneDenied &&
     blocked !== 'allowanceExhausted' &&
-    blocked !== 'budgetClosed' &&
-    blocked !== 'callOpen';
+    blocked !== 'budgetClosed';
   const example = exampleQuestion();
 
   useEffect(() => {
@@ -468,7 +465,7 @@ function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
   const records = useMemo(() => reportChoices(s.sources), [s.sources]);
   const canCaption = active || s.transcript.length > 0;
   const screenOptions = useMemo(() => {
-    const items = () => [
+    const menu = () =>
       talkMenu({
         title: menuTitle,
         active,
@@ -484,14 +481,26 @@ function TalkContent({ onReportAnswer }: { onReportAnswer: ReportAnswer }) {
             () => void openOnWeb('/privacy', talkCopy.menu.voicePrivacy),
           ),
         onWithdraw: () => handlers.current.withdraw(),
-      }),
-      { ...closeSheetItem(), onPress: () => handlers.current.close() },
-    ];
+      });
+    const done = () => ({
+      ...closeSheetItem(),
+      onPress: () => handlers.current.close(),
+    });
+    const items = () => [menu(), done()];
     return {
       title: active ? '' : talkCopy.title,
       headerTitleAlign: 'center' as const,
       gestureEnabled: !active,
-      unstable_headerRightItems: items,
+      // iOS centres the title only when it clears both sides: with ⋯ and
+      // Done both trailing, UIKit set "Talk to OPAX" leading. The menu takes
+      // the leading side, as every other sheet's title is centred (sweep 1
+      // item 10).
+      ...(android
+        ? { unstable_headerRightItems: items }
+        : {
+            unstable_headerLeftItems: () => [menu()],
+            unstable_headerRightItems: () => [done()],
+          }),
       // Android draws the same items in its own bar.
       ...(android ? { headerRight: () => androidHeaderBar(items()) } : {}),
     };

@@ -22,7 +22,7 @@ export function CachedPortrait({
 }: {
   name: string;
   slug?: string;
-  size?: 'row' | 'profile' | 56;
+  size?: 'row' | 'profile' | 40 | 56;
   testID?: string;
   onCredit?: (info: PortraitInfo | null) => void;
   retryKey?: number;

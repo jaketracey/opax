@@ -18,7 +18,7 @@ jest.mock('../src/api/image-policy', () => ({
     return uri;
   },
 }));
-test('portrait reads local unaltered bytes, skips VoiceOver beside a name and falls back to initials', () => {
+test('portrait reads local unaltered bytes, skips VoiceOver beside a name and falls back to a blank circle', () => {
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
     renderer = TestRenderer.create(
@@ -37,7 +37,7 @@ test('portrait reads local unaltered bytes, skips VoiceOver beside a name and fa
   expect(image.props.accessible).toBe(false);
   act(() => image.props.onError());
   expect(renderer.root.findAllByType(Image)).toHaveLength(0);
-  expect(JSON.stringify(renderer.toJSON())).toContain('AA');
+  expect(JSON.stringify(renderer.toJSON())).not.toContain('AA');
   act(() =>
     renderer.update(
       <Portrait

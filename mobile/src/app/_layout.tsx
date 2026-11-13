@@ -1,10 +1,22 @@
 import { fonts } from '../design/tokens.generated';
 // First: holds the native splash until the launch handoff replaces it.
 import { useFonts } from 'expo-font';
-import { Stack, router, useRootNavigationState, type Href } from 'expo-router';
+import {
+  Stack,
+  ThemeProvider,
+  router,
+  useRootNavigationState,
+  type Href,
+} from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Linking, Platform, StyleSheet, View } from 'react-native';
+import {
+  Linking,
+  Platform,
+  StyleSheet,
+  View,
+  useColorScheme,
+} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { startAnalytics, useScreenTracking } from '../analytics';
 import { useNavigationTiming } from '../analytics/timing';
@@ -21,6 +33,7 @@ import {
 import { useStackChrome } from '../navigation/chrome';
 import { KeyboardShortcuts } from '../navigation/KeyboardShortcuts';
 import { welcomeRoute } from '../navigation/routes';
+import { navigationTheme } from '../navigation/theme';
 import {
   ExternalURLProbe,
   presentSourceDestination,
@@ -49,6 +62,8 @@ export default function Layout() {
     [fonts.sansBold]: require('../../assets/fonts/PublicSans-Bold.ttf'),
   });
   const chrome = useStackChrome();
+  // The bars' light or dark follows the page's (navigation/theme.ts).
+  const scheme = useColorScheme();
   const tour = useTourState();
   const navigationReady = !!useRootNavigationState()?.key;
   const [handedOver, setHandedOver] = useState(false);
@@ -109,15 +124,17 @@ export default function Layout() {
           <AndroidMenuHost />
           <ExternalURLProbe />
           {isPad ? <KeyboardShortcuts /> : null}
-          <Stack
-            screenOptions={{
-              ...chrome,
-              headerShown: false,
-              contentStyle: { backgroundColor: colors.paper },
-            }}
-          >
-            {[...rootScreens(chrome)]}
-          </Stack>
+          <ThemeProvider value={navigationTheme(scheme)}>
+            <Stack
+              screenOptions={{
+                ...chrome,
+                headerShown: false,
+                contentStyle: { backgroundColor: colors.paper },
+              }}
+            >
+              {[...rootScreens(chrome)]}
+            </Stack>
+          </ThemeProvider>
           {handedOver ? null : <RootLaunchHandoff onDone={endHandoff} />}
         </View>
       </MyMemberProvider>

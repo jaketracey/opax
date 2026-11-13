@@ -281,6 +281,8 @@ function SearchContent({
         {phase === 'idle' ? (
           <SearchIdle
             onRecent={(item: RecentSearch) => submit(item.q, item.scope)}
+            onTry={(words) => submit(words, 'all')}
+            bills={sources?.bills ?? null}
           />
         ) : phase === 'typing' ? (
           <SearchSuggestions

@@ -100,10 +100,10 @@ export function SeatInvitation({
   const notNow = () => void hideInvitation(sydneyDay()).catch(() => undefined);
   return (
     <Card testID={testID} padded>
-      {/* Touch and hold anywhere outside the buttons (they take their own
-          touches): "Not now". Not an element itself, so VoiceOver still
-          reads the headline, the body and the two buttons one by one; it
-          reaches "Not now" as the headline's action. */}
+      {/* a11y-ok(pressable-role): touch and hold anywhere outside the
+          buttons (they take their own touches): "Not now". Not an element
+          itself, so VoiceOver still reads the headline, the body and the two
+          buttons one by one; it reaches "Not now" as the headline's action. */}
       <Pressable
         accessible={false}
         onLongPress={() =>

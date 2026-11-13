@@ -264,7 +264,7 @@ test('electorate directory party names open the party instead of selecting the e
   expect(router.push).toHaveBeenCalledWith(partyRoute('Labor'));
 });
 
-test('Today declaration names open the known member, with separate party and feed destinations', () => {
+test('Today declaration names open the known member; the party is drawn, with a VoiceOver action', () => {
   const entry = recentDeclarationsFor(
     decodeRecentInterests(pinned('/interests/recent.json')),
     300,
@@ -282,7 +282,17 @@ test('Today declaration names open the known member, with separate party and fee
     personRoute('susan-mcdonald', entry.name),
   );
   jest.clearAllMocks();
-  tap(partyLink(root));
+  // One party style in this list (sweep 1, item 3): the party is not a
+  // second sighted link inside the row. VoiceOver still opens it.
+  expect(partyLink(root)).toBeUndefined();
+  const row = root.find(
+    (node) =>
+      typeof node.type === 'string' &&
+      node.props.testID === 'today-declaration-0',
+  );
+  act(() =>
+    row.props.onAccessibilityAction({ nativeEvent: { actionName: 'party' } }),
+  );
   expect(router.push).toHaveBeenCalledWith(
     partyRoute('Liberal National Party of Queensland'),
   );

@@ -174,6 +174,15 @@ export function formatDate(
   return `${date.day} ${style === 'short' ? month.slice(0, 3) : month} ${date.year}`;
 }
 
+/**
+ * A short phrase that must never break across lines, such as a date in a
+ * meta line ("19 Aug 2026", not "19 / Aug 2026"): its spaces become
+ * no-break spaces. For drawn text only; say the plain words to VoiceOver.
+ */
+export function unbroken(text: string): string {
+  return text.replace(/ /g, '\u00a0');
+}
+
 /** Financial year with an en dash: 2024 → "2024–25". */
 export function formatFinancialYear(startYear: number): string {
   return `${startYear}–${String((startYear + 1) % 100).padStart(2, '0')}`;
