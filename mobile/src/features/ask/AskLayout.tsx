@@ -1,5 +1,10 @@
-import { type ReactNode, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { type ReactNode, useMemo, useRef, useState } from 'react';
+import {
+  Platform,
+  StyleSheet,
+  View,
+  type LayoutChangeEvent,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAccessibilitySize } from '../../design/accessibility';
 import {
@@ -15,6 +20,7 @@ import {
   placeClear,
   sidesOf,
   type Rect,
+  type Region,
 } from '../../design/fold';
 import {
   colors,
@@ -23,6 +29,14 @@ import {
   rhythm,
   type Role,
 } from '../../design/tokens';
+import { KeyboardLift, type Obstacle } from './keyboard';
+
+/**
+ * iOS lifts the resting composer with the keyboard frame by frame
+ * (KeyboardLift). Android lays it out above the IME once the window has
+ * resized, as before.
+ */
+const keyboardTracked = () => Platform.OS === 'ios';
 
 /** One conversation and one composer stay mounted as the sources dock changes. */
 export function AskColumns({
@@ -66,7 +80,7 @@ export function AskColumns({
           edges={
             docked
               ? []
-              : keyboardVisible
+              : keyboardVisible && !keyboardTracked()
                 ? ['left', 'right']
                 : ['left', 'right', 'bottom']
           }
@@ -120,11 +134,16 @@ function ComposerPosition({
   const region = useLayout();
   const reserved = useReservedRegions();
   const [height, setHeight] = useState(0);
+  const area = useRef<View>(null);
+  const tracked = keyboardTracked();
   const bounds: Rect = {
     x: 0,
     y: 0,
     width: measured?.width ?? region.width,
-    height: Math.max(0, (measured?.height ?? region.height) - keyboard),
+    height: Math.max(
+      0,
+      (measured?.height ?? region.height) - (tracked ? 0 : keyboard),
+    ),
   };
   const fold = activeVerticalFold(reserved.divisions);
   const sides = fold ? sidesOf(fold, bounds) : null;
@@ -138,33 +157,92 @@ function ComposerPosition({
     reserved,
     bounds,
   );
+  // Rising with the keyboard, the composer stays clear of a horizontal fold
+  // or a camera above it by moving above that too.
+  const { x: restX, y: restY, width: restWidth } = position;
+  const rest = useMemo(() => ({ top: restY, height }), [restY, height]);
+  const obstacles = useMemo(
+    () =>
+      liftObstacles(reserved, {
+        x: restX,
+        y: restY,
+        width: restWidth,
+        height,
+      }),
+    [reserved, restX, restY, restWidth, height],
+  );
+  const style = [
+    styles.position,
+    { left: position.x, top: position.y, width: position.width },
+  ];
+  const onPositionLayout = (event: LayoutChangeEvent) =>
+    setHeight(event.nativeEvent.layout.height);
+  const dock = (
+    <PhoneDock
+      keyboard={keyboard}
+      keyboardVisible={keyboardVisible}
+      ground={ground}
+      docked={docked}
+      positioned
+    >
+      {children}
+    </PhoneDock>
+  );
   return (
     <View
+      ref={area}
       style={styles.fill}
       pointerEvents="box-none"
       onLayout={onLayout}
+      collapsable={false}
       testID="ask-composer-bounds"
     >
-      <View
-        testID="ask-composer-position"
-        onLayout={(event) => setHeight(event.nativeEvent.layout.height)}
-        style={[
-          styles.position,
-          { left: position.x, top: position.y, width: position.width },
-        ]}
-      >
-        <PhoneDock
-          keyboard={keyboard}
-          keyboardVisible={keyboardVisible}
-          ground={ground}
-          docked={docked}
-          positioned
+      {tracked ? (
+        <KeyboardLift
+          area={area}
+          layoutKey={`${bounds.width}x${bounds.height}`}
+          rest={rest}
+          obstacles={obstacles}
+          style={style}
+          onLayout={onPositionLayout}
+          testID="ask-composer-position"
         >
-          {children}
-        </PhoneDock>
-      </View>
+          {dock}
+        </KeyboardLift>
+      ) : (
+        <View
+          testID="ask-composer-position"
+          onLayout={onPositionLayout}
+          style={style}
+        >
+          {dock}
+        </View>
+      )}
     </View>
   );
+}
+
+/**
+ * Active horizontal folds and cameras across the composer's column, wholly
+ * above its resting place, lowest first, in the area's points.
+ */
+export function liftObstacles(
+  reserved: { divisions: readonly Region[]; occlusions: readonly Region[] },
+  composer: Rect,
+): Obstacle[] {
+  return [
+    ...reserved.divisions.filter((r) => r.width > r.height),
+    ...reserved.occlusions,
+  ]
+    .filter(
+      (r) =>
+        r.active &&
+        r.x < composer.x + composer.width &&
+        r.x + r.width > composer.x &&
+        r.y + r.height <= composer.y,
+    )
+    .map((r) => ({ top: r.y, bottom: r.y + r.height }))
+    .sort((a, b) => b.top - a.top);
 }
 
 /** The same dock band changes its placement without replacing the input. */

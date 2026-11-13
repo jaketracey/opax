@@ -10,18 +10,15 @@ import {
   useRef,
   useState,
   useSyncExternalStore,
-  type RefObject,
 } from 'react';
 import {
   AccessibilityInfo,
   Keyboard,
-  LayoutAnimation,
   Platform,
   ScrollView,
   StyleSheet,
   View,
   useWindowDimensions,
-  type KeyboardEvent,
   type TextInput,
 } from 'react-native';
 import { catalogs } from '../../api/runtime';
@@ -73,6 +70,7 @@ import { useAskReturn } from './return';
 import { AskPaneProvider, useAskSources } from './SourcesPane';
 import { chatsSnapshot, loadChats, subscribeChats } from './store';
 import { useConversationAnchor } from './scroll-anchor';
+import { useKeyboardOverlap } from './keyboard';
 import { stopCopy } from './turn-copy';
 
 export { PhoneDock } from './AskLayout';
@@ -468,70 +466,6 @@ export default function AskScreen() {
   );
 }
 
-/** How far the software keyboard overlaps the bottom of `ref`, animated with it. */
-function useKeyboardOverlap(ref: RefObject<View | null>) {
-  const [overlap, setOverlap] = useState(0);
-  const [visible, setVisible] = useState(false);
-  const { height: windowHeight } = useWindowDimensions();
-  // Android resizes the native window with the IME. Measure the remaining
-  // overlap after that resize, including when the window changes late, so
-  // its height is never subtracted a second time in JS.
-  useEffect(() => {
-    if (Platform.OS !== 'android') return;
-    let active = true;
-    const measure = (top: number) => {
-      ref.current?.measureInWindow((_x, y, _w, height) => {
-        if (!active || !Keyboard.isVisible()) return;
-        setVisible(Keyboard.isVisible());
-        setOverlap(Math.max(0, Math.round(y + height - top)));
-      });
-    };
-    const metrics = Keyboard.metrics();
-    if (metrics) measure(metrics.screenY);
-    const show = Keyboard.addListener('keyboardDidShow', (event) => {
-      setVisible(true);
-      measure(event.endCoordinates.screenY);
-    });
-    const hide = Keyboard.addListener('keyboardDidHide', () => {
-      setVisible(false);
-      setOverlap(0);
-    });
-    return () => {
-      active = false;
-      show.remove();
-      hide.remove();
-    };
-  }, [ref, windowHeight]);
-  useEffect(() => {
-    if (Platform.OS === 'android') return;
-    const animate = (event: KeyboardEvent) => {
-      if (event.duration)
-        LayoutAnimation.configureNext({
-          duration: event.duration,
-          update: { type: LayoutAnimation.Types.keyboard },
-        });
-    };
-    const change = Keyboard.addListener('keyboardWillChangeFrame', (event) => {
-      const top = event.endCoordinates.screenY;
-      ref.current?.measureInWindow((_x, y, _w, height) => {
-        animate(event);
-        setOverlap(Math.max(0, Math.round(y + height - top)));
-      });
-    });
-    const hide = Keyboard.addListener('keyboardWillHide', (event) => {
-      animate(event);
-      setOverlap(0);
-    });
-    return () => {
-      change.remove();
-      hide.remove();
-    };
-  }, [ref]);
-  return {
-    overlap,
-    visible: Platform.OS === 'android' ? visible : overlap > 0,
-  };
-}
 const styles = StyleSheet.create({
   fill: { flex: 1 },
   content: { paddingTop: rhythm.block, gap: rhythm.section },
