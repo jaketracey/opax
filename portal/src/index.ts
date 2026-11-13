@@ -5683,7 +5683,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   let table = ''
   if (dir === 'party') {
     const read = <T>(path:string)=>assetJson<T>(env,path)
-    const graph = await read<Parameters<typeof partyMoneyData>[0]>('/graph/money.json').catch(()=>null)
+    const graph = await read<Parameters<typeof partyMoneyData>[0]>('/graph/money-receipts.json').catch(()=>null)
     const party = graph?.nodes.find(n=>n.kind === 'party' && foldName(n.label) === foldName(display)) ?? graph?.nodes.find(n=>n.kind === 'party' && samePartyLabel(n.label, display))
     if (graph && party) {
       const {rows,scope} = partyMoneyData(graph,party.id)
@@ -5700,7 +5700,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: heading, url: canonical, description },
     prerender: prerenderBlock(heading,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${node && receiptTypeLine(node) ? `<p class="entry-scope">${escHtml(receiptTypeLine(node))}.</p>` : ''}${donorRecordsHTML(offMapRecords)}${indexLinks()}`
-      : historyHTML + (memberRows.length ? `<h2>${independent ? 'Parliamentarians' : 'Members'}</h2><ul>${memberRows.slice(0,24).map(({name: n, labels})=>{const href=personPath(people,n),as=recordedAsText(display,labels);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}${as ? ` (${escHtml(as.charAt(0).toLowerCase()+as.slice(1))})` : ''}</li>`}).join('')}</ul><p>${escHtml(PARTY_MEMBER_SCOPE)}</p>` : '')
+      : historyHTML + (memberRows.length ? `<h2>${independent ? 'Parliamentarians' : 'Members'}</h2><ul>${memberRows.slice(0,24).map(({name: n, labels})=>{const href=personPath(people,n),as=recordedAsText(display,labels);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}${as ? ` (${escHtml(as.charAt(0).toLowerCase()+as.slice(1))})` : ''}</li>`}).join('')}</ul><p>${escHtml(PARTY_MEMBER_SCOPE)}</p>` : dir === 'party' ? `<h2>Members</h2><p>${escHtml(PARTY_NO_MEMBERS)}</p>` : '')
         + (sponsored.length ? `<h2>Bills sponsored</h2><ul>${sponsored.slice(0,24).map(b=>{const as=recordedAsText(display,[b.party ?? ''],'sponsor recorded as');return `<li><a href="/bill/${encodeURIComponent(b.key)}">${escHtml(b.title)}</a>${b.introduced ? `, introduced ${escHtml(dayMonthYear(b.introduced))}` : ''}${as ? `, ${escHtml(as)}` : ''}</li>`}).join('')}</ul>` : '')
         + indexLinks()) + table,
     card,

@@ -151,14 +151,16 @@ test('the D1 party-money and money-connections rows carry the page\'s figures an
     assert.deepEqual(find(list, PRATT, 'Labor').map(r => [r.amount, r.count]), [[8473476, 40]]);
     assert.deepEqual(find(list, WESTPAC, 'Labor').map(r => [r.amount, r.count]), [[47331887, 201]]);
   }
-  // 13 Nov 2026: Labor 301 to 300 and Liberal 251 to 250, Linc Energy leaving the map (see above).
-  for (const [label, partyId, expected] of [['Labor', 'party:Labor', 300], ['Liberal', 'party:Liberal', 250]]) {
+  const full = JSON.parse(readFileSync(new URL('../public/graph/money-receipts.json', import.meta.url), 'utf8'));
+  // Factual tables restore off-map sources; the drawing list retains the old cap.
+  for (const [label, partyId, expected, capped] of [['Labor', 'party:Labor', 9866, 300], ['Liberal', 'party:Liberal', 7856, 250]]) {
     const d1 = party.filter(r => r.jurisdiction === 'federal' && r.to === label);
     assert.equal(d1.length, expected, label);
-    const page = partyMoneyData(graph, partyId).rows;
+    const page = partyMoneyData(full, partyId).rows;
     assert.equal(page.length, expected, label);
     const key = r => `${r.amount ?? r.total}|${r.count}|${r.firstYear}|${r.lastYear}`;
     assert.deepEqual(d1.map(key).sort(), page.map(key).sort(), `${label}: the CSV and the table hold the same figures`);
+    assert.equal(connections.filter(r=>r.jurisdiction==='federal' && r.to===label && r.type==='receipts').length,capped,label+' drawing cap');
   }
   // State graphs keep their record figures, and contract or grant rows are untouched.
   const qld = JSON.parse(readFileSync(new URL('../public/graph/money.qld.json', import.meta.url), 'utf8'));

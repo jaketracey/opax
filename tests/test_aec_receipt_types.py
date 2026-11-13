@@ -660,6 +660,9 @@ def test_uncapped_money_export_is_independent_of_drawing_cap_and_keeps_receipt_r
     db.commit()
     with mock.patch.object(exporter, 'TOP_DONORS', 1):
         capped = export(path)
+    for node in capped['nodes']:
+        if node['kind'] == 'donor':
+            node['group'] = 'retail'  # drawing cluster disagrees with canonical fossil_fuels
     full, summary = export_receipts(db, capped)
     no_donors = {**capped, 'nodes': [n for n in capped['nodes'] if n['kind'] == 'party'], 'edges': []}
     _, with_no_map_edges = export_receipts(db, no_donors)
@@ -669,6 +672,8 @@ def test_uncapped_money_export_is_independent_of_drawing_cap_and_keeps_receipt_r
     assert small['by_type'] == {'donation_received': 150, 'loan': 800, 'other_receipt': 900}
     assert small['by_type_year']['2020-21']['donation_received'] == [150, 1]
     assert full['meta']['uncapped'] is True
+    assert all('group' not in n for n in full['nodes'] if n['kind'] == 'donor')
+    assert all(n['group'] == 'retail' for n in capped['nodes'] if n['kind'] == 'donor'), 'drawing metadata stays untouched'
     assert not any(n['label'] in ('Example Opaque Payer', 'Electoral Commission Example', 'Labor Branch Example')
                    and n.get('by_type', {}).get('donation_received') for n in full['nodes'])
 

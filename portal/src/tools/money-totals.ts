@@ -145,7 +145,7 @@ export const tool: ToolDefinition = {
     const graph = receiptGraph(raw)
     if (!raw || !graph?.nodes?.length || !Array.isArray(graph.edges)) throw new Error('Published money graph unavailable.')
     const scope = receiptGraphScope(graph)
-    const scopeNote = scope ? [`Donor and flow figures: ${scope}. Each receipt is counted once.`] : []
+    const scopeNote: string[] = []
     const allYears = graph.nodes.filter(node => node.kind === 'party' || node.kind === 'donor')
       .flatMap(node => Object.keys(raw.meta?.uncapped && node.by_type ? receiptFigures(node).cells : node.byYear ?? {}).map(Number)).filter(year => Number.isInteger(year) && year >= 1900 && year <= 2099)
     if (!allYears.length) throw new Error('Published receipt years unavailable.')
@@ -164,11 +164,13 @@ export const tool: ToolDefinition = {
     const party = parties[0], donor = donors[0], group = String(args.group_by ?? (donor ? 'donor' : 'party'))
     // Uncapped factual rankings default to donations; explicit receipts requests keep all types.
     // A graph without typed cells cannot split a figure, so it never calls one donations.
-    const measure: Measure = (args.measure === 'donations' || raw.meta?.uncapped && args.measure !== 'all_types') && graph.edges.some(edge => edge.typeCells) ? 'donations' : 'all_types'
+    const selectedPartyMeasure = raw.meta?.uncapped || donor || group === 'donor' || group === 'industry'
+    const measure: Measure = selectedPartyMeasure && (args.measure === 'donations' || raw.meta?.uncapped && args.measure !== 'all_types') && graph.edges.some(edge => edge.typeCells) ? 'donations' : 'all_types'
+    if (scope) scopeNote.push(`Selected figures: ${measure === 'donations' ? scope.replace(/^All receipt types/, 'Donations only') : scope}. Each receipt is counted once.`)
     const word = measure === 'donations' ? 'federal disclosed donations' : 'federal disclosed receipts'
     const measureNote = measure === 'donations'
-      ? "Donor figures count donations only: receipts the party's return types as Donation Received. Other receipt types (other receipts, subscriptions and receipts with no type) are given separately and are not donations. OPAX does not match receipts to the debts a return declares, so none is called a loan. Public funding is never a donor."
-      : 'Donor figures count every receipt type: donations, other receipts, subscriptions and receipts with no type. Only Donation Received is a donation. Public funding is never a donor.'
+      ? "Figures count donations only: receipts the party's return types as Donation Received. Other receipt types (other receipts, subscriptions and receipts with no type) are given separately and are not donations. OPAX does not match receipts to the debts a return declares, so none is called a loan. Public funding is never a donor."
+      : 'Figures count every receipt type: donations, other receipts, subscriptions and receipts with no type. Only Donation Received is a donation. Public funding is never a donor.'
 
     if (group === 'industry') {
       if (donor) return limitations(env, 'An industry ranking cannot be restricted to one donor.')
@@ -200,11 +202,12 @@ export const tool: ToolDefinition = {
       return { rows, citations, notes, coverage, period, group_by: group, matched: ranked.length, truncated: rows.length < ranked.length,
         excluded_non_industry_aud: excluded, measure, query: { file: '/graph/money-receipts.json', from_year: from, to_year: to, party: party?.label, measure } }
     }
-    const notes = ['Disclosed receipts include more than gifts and are not personal payments to politicians or evidence of influence.',
+    const notes = [measure === 'donations' ? 'Donations count only AEC Donation Received and are not personal payments to politicians or evidence of influence.' : 'Disclosed receipts include more than gifts and are not personal payments to politicians or evidence of influence.',
       'Financial-year keys are the starting year; election returns can be assigned to their polling or event year.']
     const edgeScope = !!(party && (donor || group === 'donor')) || !!(donor && group === 'party')
     if (!edgeScope && !donor && group !== 'donor') notes.push('Party aggregates cover the uncapped eligible recipient selection; public funding and internal transfers are excluded.')
     else notes.push('Donor aggregates and flows exclude internal party transfers and public funding. Rankings cover the uncapped published donor selection from recipient returns.', measureNote, ...scopeNote)
+    if (!notes.includes(measureNote)) notes.push(measureNote, ...scopeNote)
     const rows: TotalRow[] = [], links = new Map<TotalRow, MoneyNode | undefined>()
     const nodes = new Map(graph.nodes.map(node => [node.id, node]))
     const sources: { series: ReceiptSeries; party?: MoneyNode; donor?: MoneyNode }[] = edgeScope
@@ -283,13 +286,13 @@ export const tool: ToolDefinition = {
       const d = links.get(row)
       if (d) params.set('focus', d.id)
       const who = row.donor ? `${row.donor}${row.associated_entity ? ` (${row.associated_entity})` : ''}: ${aud(row.total_aud)} in ${word} to ${row.party ?? 'all recipient parties'}`
-        : `${row.party ?? 'Federal parties'}: ${aud(row.total_aud)} in federal disclosed receipts`
+        : `${row.party ?? 'Federal parties'}: ${aud(row.total_aud)} in ${word}`
       // Human-readable dates survive clients that remove ISO dates from source titles.
       // ISO boundaries remain in coverage; the basis travels with each selected citation.
       const dates = `(1 July ${row.year ?? from} to 30 June ${(row.year ?? to) + 1})`
       const basis = raw.meta?.uncapped || edgeScope || donor || group === 'donor' ? 'Donor aggregates and flows exclude internal party transfers and public funding.'
         : 'Party aggregates include internal party transfers and exclude identified public electoral funding.'
-      const text = `${who} across ${row.receipts.toLocaleString('en-AU')} ${row.donor && measure === 'donations' ? 'donation' : 'receipt'}${row.receipts === 1 ? '' : 's'} in financial years ${row.period} ${dates}${undated && row.year === undefined ? ', including undated receipts' : ''}. ${basis}`
+      const text = `${who} across ${row.receipts.toLocaleString('en-AU')} ${measure === 'donations' ? 'donation' : 'receipt'}${row.receipts === 1 ? '' : 's'} in financial years ${row.period} ${dates}${undated && row.year === undefined ? ', including undated receipts' : ''}. ${basis}`
       return { kind: 'export' as const, text, value: row.total_aud, url: siteUrl(env, '/money?' + params) }
     })
     // A lending question: no receipt is a loan; the party's declared debts follow as their own lines.

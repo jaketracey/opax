@@ -3,7 +3,7 @@ import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,hasPartyRece
 // receiptGraph is shared with every money page (donor-disclosure.js); re-exported for the tests that read it here.
 export {receiptGraph};
 import {loadDonorViewIndex} from './donor-views.js?v=f5cf08678b';
-import {partyReturnFigures, industryName} from './register-tables.js?v=970d2e6a25';
+import {partyReturnFigures, industryName} from './register-tables.js?v=5c01179f61';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph
@@ -137,7 +137,7 @@ export function receiptHeadline(graph) {
 /** What a flow's figures count, on its own line (receiptScopeLabel); empty for a state graph. */
 export function flowScope(flow) {
   if (!flow.edges.length || !flow.edges.every((e) => e.typed)) return '';
-  return receiptScopeLabel({ typed: true, firstYear: flow.firstYear, lastYear: flow.lastYear });
+  return receiptScopeLabel({ typed: true, firstYear: flow.firstYear, lastYear: flow.lastYear }, flow.donations ? 'donation_only' : 'all_types');
 }
 
 /** Every donation edge's year cells summed: a total that a year window can re-sum. */
@@ -189,7 +189,7 @@ export function parseExplainParams(params, graph, index) {
   }
   if(donors) return fail('Use a receipt source name, industry or recipient filter.');
   if (industry) {
-    const known = nodes.some((n) => n.kind === 'donor' && (n.industry === industry || n.group === industry));
+    const known = nodes.some((n) => n.kind === 'donor' && (n.industry === industry || !graph.meta?.uncapped && n.group === industry));
     if (!known) return fail('That industry is not in OPAX’s money data.');
     state.industry = industry;
     return { ok: true, state };
@@ -239,7 +239,7 @@ export function explainHrefFor(detail, graph, index) {
     if(donor)state.from=donor.id;else return null;
   } else if (detail.kind === 'industry') {
     const key = fold(detail.from);
-    const hit = nodes.find((n) => n.kind === 'donor' && (fold(n.industry) === key || fold(n.group) === key));
+    const hit = nodes.find((n) => n.kind === 'donor' && (fold(n.industry) === key || !graph.meta?.uncapped && fold(n.group) === key));
     if (!hit) return null;
     const industry = fold(hit.industry) === key ? hit.industry : hit.group;
     state.industry = industry;
@@ -275,7 +275,7 @@ export function resolveFlow(state, graph, index, { aec = null, electionYears = [
   const party = state.to ? byId.get(state.to) : null;
   const donor = state.from ? byId.get(state.from) : null;
   const meta = { ...(state.jur === 'federal' ? FEDERAL_META : {}), ...(graph.meta || {}) };
-  const inIndustry = (n) => n?.kind === 'donor' && (n.industry === state.industry || n.group === state.industry);
+  const inIndustry = (n) => n?.kind === 'donor' && (n.industry === state.industry || !graph.meta?.uncapped && n.group === state.industry);
 
   let kind, givers;
   if (donor) { kind = party ? 'pair' : 'donor'; givers = (e) => e.source === donor.id; }
@@ -313,7 +313,7 @@ export function resolveFlow(state, graph, index, { aec = null, electionYears = [
   const industryTotals = new Map();
   for (const e of edges) {
     const n = byId.get(e.source);
-    const key = n?.group || n?.industry || 'other';
+    const key = graph.meta?.uncapped ? n?.industry || 'other' : n?.group || n?.industry || 'other';
     industryTotals.set(key, (industryTotals.get(key) || 0) + (Number(e.total) || 0));
   }
   const industries = [...industryTotals].map(([key, total]) => ({ key, total })).sort((a, b) => b.total - a.total);
@@ -430,12 +430,13 @@ export function comparableFlows(flow, index, limit = 3) {
   const groups = new Map();
   for (const e of donation) {
     const n = byId.get(e.source);
-    if (n?.kind !== 'donor' || !n.group || n.group === state.industry || n.industry === state.industry || ['individuals', 'other'].includes(n.group)) continue;
-    groups.set(n.group, (groups.get(n.group) || 0) + (Number(e.total) || 0));
+    const key = graph.meta?.uncapped ? n?.industry : n?.group;
+    if (n?.kind !== 'donor' || !key || key === state.industry || ['individual', 'individuals', 'other'].includes(key)) continue;
+    groups.set(key, (groups.get(key) || 0) + (Number(e.total) || 0));
   }
   const rows = [...groups].map(([key, total]) => ({ key, total })).sort((a, b) => size(a.total) - size(b.total)).slice(0, limit)
     .map((r) => ({ label: industryName(r.key), total: r.total, href: explainPath({ jur: state.jur, industry: r.key }) }));
-  return { rule: 'Other industries on the map, closest in size', rows };
+  return { rule: graph.meta?.uncapped ? 'Other industries in the selection, closest in size' : 'Other industries on the map, closest in size', rows };
 }
 
 // --- parliament, for context --------------------------------------------------------

@@ -1,5 +1,7 @@
 # Off-map donor receipts (im-ask-money-uncapped, note 1)
 
+Historical report for `c8c96ca3e6cb193ffd12bf6f2522d3955ad1e48b`. The independent hotfix `f88e590f34ba20236e6ce529b207cdf509730bed`, merged in `741d377ec`, supersedes the exporter implementation below: it reads the same uncapped ReceiptSelection directly from recipient records, without requiring the new public graph. Its effect on main is **512 changed retained donor pages**, as detailed in the [hotfix report](2026-11-14-offmap-donor-hotfix.md). The 730-entry ledger below describes this earlier branch snapshot and comparison population, rather than main's live retained pages. Linc and Nimrod reconcile identically in both implementations.
+
 The retained federal donor export summed the legacy `donations` table after a donor left the drawing cap. That table holds both party receipt records and donor declarations. The typed map instead uses recipient-side records selected by `aec_receipt_selection.ReceiptSelection`. Changing map membership switched measures without changing a receipt.
 
 ## Sources and corrections

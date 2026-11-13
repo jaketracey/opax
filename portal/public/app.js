@@ -31,14 +31,14 @@ const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=45f00fccb7").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=b68af77301").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
 const growthModulesReady = import("/growth-modules.js?v=aab04ce6aa").then(module => { growthModules = module; });
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=970d2e6a25').then(module => { registerTables = module; });
+const registerTablesReady = import('/register-tables.js?v=5c01179f61').then(module => { registerTables = module; });
 let askPerson;
 const askPersonReady = import('/ask-person.js?v=a83f09ee1b').then(module => { askPerson = module; });
 let uiLabels;
@@ -1401,7 +1401,7 @@ async function renderDiscoveryPage(params, manageFocus) {
   slot.innerHTML = '<p role="status">Loading contracts…</p>';
   const seedNode = document.querySelector('#prerender [data-contracts-seed]');
   const seed = seedNode ? JSON.parse(seedNode.textContent) : null;
-  import('/contracts-table.js?v=e8d40dcf06').then(async ({mountContractsTable}) => {
+  import('/contracts-table.js?v=61c44a11ff').then(async ({mountContractsTable}) => {
     if (tableGeneration !== contractsTableGeneration) return;
     const handle = await mountContractsTable(slot, {seed: seed?.supplierId === null ? seed : undefined, signal: tableController.signal});
     if (tableGeneration === contractsTableGeneration) contractsTableHandle = handle; else handle.destroy();
@@ -1556,7 +1556,7 @@ async function openMoneyRecords(kind, params) {
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
     if (grants && !params.has('program') && !params.has('open') && !params.has('largest')) {
-      const mod = await import('/grants-table.js?v=6c195c4fb5');
+      const mod = await import('/grants-table.js?v=f599c77dbf');
       if (generation !== moneyRecordsGeneration) return;
       const controller = new AbortController();
       moneyRecordsHandle = {destroy() {controller.abort();}};
@@ -1596,7 +1596,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=d6513f3cfd');
+    const mod = await import('/money-explain.js?v=952144e899');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1726,7 +1726,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = MAP_DRAWING_HTML;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=3f185c0ece"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=047e1dca9a"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=3f185c0ece"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=09d48e04b6"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1869,7 +1869,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=f240bced37");
+    const module = await import("/suppliers.js?v=ae5503267d");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -3714,7 +3714,7 @@ function renderMoneyPanel(ind) {
   if (!moneyDonationReceipts) { box.hidden = true; return; }
   // A donor the parties' returns hold nothing from (only its own return does) is left out, as on the party page.
   const donors = moneyDonationReceipts.nodes.filter(
-    (n) => n.kind === "donor" && (n.industry === ind || n.group === ind) && hasPartyReceipts(n));
+    (n) => n.kind === "donor" && (n.industry === ind || !moneyDonationReceipts.meta?.uncapped && n.group === ind) && hasPartyReceipts(n));
   if (!donors.length) { box.hidden = true; return; }
   const donorIds = new Set(donors.map((n) => n.id));
   const total = donors.reduce((a, n) => a + (n.total || 0), 0);
@@ -6222,7 +6222,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       counter.set(label, (counter.get(label) || 0) + receiptFigures(e).total);
     }
     // A party's headline is its own returns, each receipt line once (partyReturnFigures);
-    // its by_type cells only sum the donors drawn on the map.
+    // its by_type cells sum the uncapped eligible recipient receipts.
     const own = isParty ? partyReturnFigures(node) : receiptFigures(node);
     const ownScope = isParty ? partyReturnScopeLabel(own) : receiptScopeLabel(own);
     // Declared only on the donor's own return, or listed only as public funding: the page says
@@ -6236,7 +6236,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const partyMoney=isParty ? registerTables.partyMoneyData(moneyData,node.id) : null;
     // While the map draws no donor to a party (its donor side held, export rule 10), the section says so, never an empty table.
     const partyTable=!partyMoney ? '' : partyMoney.rows.length ? registerTables.registerTableHTML(registerTables.partyMoneyTableConfig(partyMoney.rows,undefined,undefined,undefined,{party:node.label,jurisdiction:'federal'}))
-      : '<p class="entry-scope">The money map draws no donor to this party, so no donor rows are listed. The figures below count its own returns.</p>';
+      : '<p class="entry-scope">The selected recipient receipts list no source for this party. The figures below count its own returns.</p>';
     const flowRows = [...counter.entries()].sort((a,b)=>b[1]-a[1]).slice(0,10);
     // Identity once (principle 3): the title, then one meta line with the
     // party's own dot and full name (or the donor's industry) and its years.
@@ -6276,7 +6276,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       aliasRow,
     ];
     const entryNote = `${esc(AEC_NOTE)}${!isParty ? "" : own.typed
-      ? " The donor amounts below are the donors on the money map."
+      ? " The donor amounts below use the uncapped selected recipient receipts."
       : " The received total includes internal party transfers; the donor amounts below exclude them."}`;
     if (!isParty) head.insertAdjacentHTML("beforeend", sourceLineHTML({
       updated: moneyData.meta?.generated || "", source: "AEC annual returns", state: "totals are a floor",
@@ -6326,7 +6326,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         updated: moneyData.meta?.generated || "", dateLabel: isParty ? "Map updated" : "Updated", source: "AEC annual returns", state: "totals are a floor",
         originals: [{ label: "AEC Transparency Register", href: "https://transparency.aec.gov.au/" },
           { label: "Funding records", href: `/money/receipts?${new URLSearchParams(isParty ? { party: node.id } : { focus: node.id })}` },
-          isParty && { label: "The money map's data (JSON)", href: "/graph/money.json" }].filter(Boolean),
+          isParty && { label: "Selected receipt data (JSON)", href: "/graph/money-receipts.json" }].filter(Boolean),
         facts: isParty ? entryFacts : [],
         notes: [isParty ? entryNote : "", `The ${isParty ? "donors" : "parties"} with the largest disclosed sums${isParty ? ", party transfers left out" : ""}.${isParty ? "" : ` ${esc(AEC_NOTE)}`}`],
         licence: 'AEC Transparency Register returns, <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener" target="_blank">CC BY 4.0 ↗︎</a>.',
@@ -6950,7 +6950,7 @@ function topicPhrase(slug) {
 /** The donors pairing for a topic that maps onto an AEC donor industry. */
 function topicMoneyHTML(ind) {
   const donors = (moneyReceipts?.nodes || []).filter(
-    (n) => n.kind === "donor" && (n.industry === ind || n.group === ind) && hasPartyReceipts(n));
+    (n) => n.kind === "donor" && (n.industry === ind || !moneyReceipts.meta?.uncapped && n.group === ind) && hasPartyReceipts(n));
   if (!donors.length) return "";
   const total = donors.reduce((a, n) => a + (n.total || 0), 0);
   const rankedDonors = donorRows(donors.map(n => [n.label,n.total || 0]), donorViewIndex, 6);
@@ -9932,7 +9932,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=d6513f3cfd"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=952144e899"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=f5cf08678b");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }

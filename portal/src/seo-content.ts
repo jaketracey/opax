@@ -302,7 +302,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     }
   }
   body += '<h2>Receipt sources to their party</h2><p>Receipts to a party are not personal payments to this member. An association does not prove influence.</p>'
-  const graphs = [['/graph/money.json','AEC'],['/graph/money.qld.json','ECQ'],['/graph/money.vic.json','VEC']] as const
+  const graphs = [['/graph/money-receipts.json','AEC'],['/graph/money.qld.json','ECQ'],['/graph/money.vic.json','VEC']] as const
   const received = party ? await Promise.all(graphs.map(([path]) => partyReceipts(read,path,party))) : []
   for (const [i,found] of received.entries()) {
     const source = graphs[i][1]

@@ -88,6 +88,9 @@ def export_receipts(db, graph):
                 'firstYear': min(map(int, years)) if years else None,
                 'lastYear': max(map(int, years)) if years else None}
     for node in nodes.values():
+        if node['kind'] == 'donor':
+            # Drawing clusters can disagree with the audit's canonical industry.
+            node.pop('group', None)
         selected = fields(node_cells[node['id']])
         if node['kind'] == 'party':
             # Party receipt questions retain their separate whole-return contract.

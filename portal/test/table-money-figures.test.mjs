@@ -63,10 +63,9 @@ function byPair(rows) {
 }
 /** Every party page's rows, keyed the same way. */
 function pagePairs(graph) {
-  const out = new Map();
-  for (const party of graph.nodes.filter(n => n.kind === 'party'))
-    for (const row of partyMoneyData(graph, party.id).rows) out.set(pairKey(row.href, party.label), {total: row.total, count: row.count, firstYear: row.firstYear, lastYear: row.lastYear});
-  return out;
+  return byPair(graph.nodes.filter(n=>n.kind==='party').flatMap(party=>partyMoneyData(graph,party.id).rows.map(row=>({
+    from_href:row.href,to:party.label,amount:row.total,count:row.count,firstYear:row.firstYear,lastYear:row.lastYear,
+  }))));
 }
 /** The Connections table's receipt rows (receiptGraph), keyed the same way. */
 function connectionPairs(graph) {
@@ -100,7 +99,8 @@ test('built tables: every federal party\'s D1 rows equal its party page, and eve
   const {rows} = await tableRows(undefined, {moneyOnly: true});
   const federal = list => plain(list).filter(r => r.jurisdiction === 'federal');
   const party = federal(rows['party-money']), connections = federal(rows['money-connections']).filter(r => r.type === 'receipts');
-  const page = pagePairs(graph);
+  const full = JSON.parse(readFileSync(new URL('../public/graph/money-receipts.json', import.meta.url), 'utf8'));
+  const page = pagePairs(full);
   assert.ok(page.size > 700);
   assert.deepEqual(sorted(byPair(party)), sorted(page));
   assert.deepEqual(sorted(byPair(connections)), sorted(connectionPairs(graph)));
@@ -111,7 +111,8 @@ test('built tables: every federal party\'s D1 rows equal its party page, and eve
   // 13 Nov 2026: 131 to 140 donor-declared-only flows, the nine to the Libertarian Party that only the donor's own return declares (Ancora, Australian Energy Producers, Chevron, Australian Hotels Association, IAG, IT Alliance, Deloitte, Allianz, Sanofi), export rule 10.
   assert.equal(declaredOnly.length, 141);
   assert.deepEqual(declaredOnly.filter(e => publicFundingOnly(e)).map(e => e.source), ['donor:nsw efa']);
-  const ids = new Set(party.map(r => r.id));
+  const ids = new Set(connections.map(r => r.id));
+  for (const row of party) assert.ok(hasPartyReceipts(full.edges[Number(row.id.split(':')[1])]), row.from);
   for (const e of declaredOnly) assert.equal(ids.has(`federal:${graph.edges.indexOf(e)}`), false);
 });
 
