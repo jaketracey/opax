@@ -341,7 +341,10 @@ map inside the app. `scripts/release-ios.sh` then runs
 `scripts/upload-crash-symbols.sh`, which uploads that map and the archive's
 dSYMs with `posthog-cli` (0.20 or later). It needs a
 personal API key with the `error_tracking:write` scope in
-`POSTHOG_CLI_API_KEY`; without one it logs a single skip line. The key is
+`POSTHOG_CLI_API_KEY`; without one it logs a single skip line. When the
+variable is unset, the script loads `~/.config/opax/posthog.env` itself, inside
+the upload process only, and only if the file is mode 600 and owned by the
+person running it. It refuses any project but the OPAX one (507367). The key is
 redacted from release logs and never reaches a build step. Releases resolve
 per event from `$app_namespace`, `$app_version` and `$app_build`. For Android
 the script also uploads the R8 mapping under posthog-android's map ID

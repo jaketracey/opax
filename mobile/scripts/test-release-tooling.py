@@ -1309,6 +1309,161 @@ class ProductionVoiceTests(unittest.TestCase):
                 with self.subTest(marker=marker), self.assertRaises(ReleaseError): verify.verify_voice_native_code(app)
 
 
+class CrashSymbolKeyTests(unittest.TestCase):
+    """scripts/upload-crash-symbols.sh loads ~/.config/opax/posthog.env itself,
+    inside the upload only, and never prints the key. Every key here is invented;
+    a stub posthog-cli records its arguments and environment variable names,
+    never a value except the project and host, which are not secret."""
+    script = Path(__file__).resolve().parent / "upload-crash-symbols.sh"
+    chunk = "896a182b-d6a3-4253-bc6b-150f6ce96357"
+    key = "phx_INVENTED_UPLOAD_KEY_7f3a9c0d"
+    personal = "phx_INVENTED_PERSONAL_KEY_51d2e8aa"
+    host = "https://us.posthog.example"
+    skip_line = "Crash symbols: POSTHOG_CLI_API_KEY is not set; skipped the PostHog upload for ios 1.0.1 (40)."
+
+    def setUp(self):
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        root = Path(temp.name)
+        self.home = root / "home"
+        self.key_file = self.home / ".config/opax/posthog.env"
+        self.key_file.parent.mkdir(parents=True)
+        self.evidence = root / "evidence"
+        self.evidence.mkdir()
+        (self.evidence / "main.jsbundle.map").write_text(json.dumps({"version": 3, "sources": [], "mappings": ""}))
+        (self.evidence / "ios.chunk-id").write_text(self.chunk + "\n")
+        self.archive = root / "OPAX.xcarchive"
+        (self.archive / "dSYMs/OPAX.app.dSYM").mkdir(parents=True)
+        self.bin = root / "bin"
+        self.bin.mkdir()
+        self.calls = self.bin / "calls.jsonl"
+        stub = self.bin / "posthog-cli"
+        stub.write_text(f"#!{sys.executable}\n" + "\n".join((
+            "import json, os, sys",
+            "record = {'args': sys.argv[1:], 'names': sorted(os.environ),",
+            "          'project': os.environ.get('POSTHOG_CLI_PROJECT_ID'), 'host': os.environ.get('POSTHOG_CLI_HOST')}",
+            "with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'calls.jsonl'), 'a') as stream:",
+            "    stream.write(json.dumps(record) + '\\n')", "")))
+        stub.chmod(0o755)
+        # Another user's file: `id -u` answers a uid that owns nothing here.
+        self.foreign = root / "foreign"
+        self.foreign.mkdir()
+        (self.foreign / "id").write_text('#!/bin/sh\n[ "$1" = -u ] && { echo 4242; exit 0; }\nexec /usr/bin/id "$@"\n')
+        (self.foreign / "id").chmod(0o755)
+
+    def write_key_file(self, mode=0o600, body=None, **changes):
+        values = {"POSTHOG_PERSONAL_API_KEY": self.personal, "POSTHOG_CLI_TOKEN": self.key,
+                  "POSTHOG_HOST": self.host, "POSTHOG_CLI_API_KEY": self.key, "POSTHOG_PROJECT_ID": "507367", **changes}
+        self.key_file.write_text(body or "".join(f"export {name}={value}\n" for name, value in values.items()))
+        self.key_file.chmod(mode)
+
+    def env(self, path=(), **extra):
+        env = {name: value for name, value in os.environ.items() if not name.startswith("POSTHOG_")}
+        env.update(HOME=str(self.home), PATH=os.pathsep.join([*map(str, path), str(self.bin), env.get("PATH", "")]))
+        env.update(extra)
+        return env
+
+    def command(self, trace=False):
+        return ["bash", *(["-x"] if trace else []), str(self.script),
+                "ios", "1.0.1", "40", str(self.evidence), str(self.archive)]
+
+    def upload(self, trace=False, path=(), **extra):
+        return subprocess.run(self.command(trace), capture_output=True, text=True,
+                              env=self.env(path, **extra), timeout=120)
+
+    def stub_calls(self):
+        if not self.calls.exists():
+            return []
+        return [json.loads(line) for line in self.calls.read_text().splitlines()]
+
+    def assert_uploaded(self, result, host):
+        self.assertEqual(result.returncode, 0, result.stderr)
+        calls = self.stub_calls()
+        self.assertEqual([call["args"][:2] for call in calls], [["hermes", "upload"], ["dsym", "upload"]])
+        for call in calls:
+            self.assertEqual(call["project"], "507367")
+            self.assertEqual(call["host"], host)
+            self.assertIn("POSTHOG_CLI_API_KEY", call["names"])
+        self.assertTrue(result.stdout.splitlines()[-1].startswith("Crash symbols: uploaded ios 1.0.1 (40)"))
+        return calls
+
+    def assert_not_uploaded(self, result, code, line):
+        self.assertEqual(result.returncode, code, result.stderr)
+        output = (result.stdout + result.stderr).splitlines()
+        self.assertEqual(len(output), 1, output)
+        self.assertIn(line, output[0])
+        self.assertEqual(self.stub_calls(), [])
+
+    def needs_node(self):
+        if not shutil.which("node"):
+            self.skipTest("the upload stages the source map with node")
+
+    def test_a_private_key_file_uploads_to_the_opax_project(self):
+        self.needs_node()
+        self.write_key_file()
+        self.assert_uploaded(self.upload(), self.host)
+
+    def test_a_key_or_host_the_caller_set_wins_over_the_file(self):
+        self.needs_node()
+        # A preset key leaves the file unread, even a loose one.
+        self.write_key_file(mode=0o644)
+        calls = self.assert_uploaded(self.upload(POSTHOG_CLI_API_KEY="phx_INVENTED_CALLER_KEY"), None)
+        self.assertNotIn("POSTHOG_PERSONAL_API_KEY", calls[0]["names"])
+        self.calls.unlink()
+        self.write_key_file()
+        self.assert_uploaded(self.upload(POSTHOG_CLI_HOST="https://eu.posthog.example"), "https://eu.posthog.example")
+
+    def test_without_the_file_it_skips_with_one_line(self):
+        result = self.upload()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual((result.stdout + result.stderr).splitlines(), [self.skip_line])
+        self.assertEqual(self.stub_calls(), [])
+
+    def test_a_loose_or_foreign_key_file_is_refused(self):
+        for mode, path in ((0o644, ()), (0o640, ()), (0o600, (self.foreign,))):
+            with self.subTest(mode=oct(mode), foreign=bool(path)):
+                self.write_key_file(mode=mode)
+                self.assert_not_uploaded(self.upload(path=path), 0, "posthog.env must be mode 600 and yours; skipped")
+
+    def test_another_project_is_refused(self):
+        cases = (("the file's POSTHOG_PROJECT_ID", {"POSTHOG_PROJECT_ID": "999999"}, {}),
+                 ("the caller's POSTHOG_CLI_PROJECT_ID", {}, {"POSTHOG_CLI_PROJECT_ID": "999999"}),
+                 ("the file's POSTHOG_CLI_PROJECT_ID", {"POSTHOG_CLI_PROJECT_ID": "0507367"}, {}))
+        for label, in_file, from_caller in cases:
+            with self.subTest(label):
+                self.write_key_file(**in_file)
+                name = next(iter({**in_file, **from_caller}))
+                self.assert_not_uploaded(self.upload(**from_caller), 1, f"{name} is not the OPAX project (507367); refused")
+
+    def test_the_key_never_reaches_output_or_the_log(self):
+        self.needs_node()
+        secrets = (self.key, self.personal)
+        self.write_key_file()
+        # xtrace on from the start, as `bash -x` would run it during debugging.
+        result = self.upload(trace=True)
+        self.assert_uploaded(result, self.host)
+        for secret in secrets:
+            self.assertNotIn(secret, result.stdout + result.stderr)
+        # The silent load hides the file's own lines from a stderr trace, but a
+        # trace sent elsewhere (BASH_XTRACEFD) would not be: xtrace is off there.
+        for traced in (f". {self.key_file}", "HAVE_KEY="):
+            self.assertNotIn(traced, result.stderr)
+        # The release log: the parent never holds the key, so it cannot redact it.
+        self.assertFalse(any(secret in os.environ.values() for secret in secrets))
+        log = self.evidence / "crash-symbols.log"
+        run_logged(self.command(trace=True), log, env=self.env())
+        self.assertIn("Crash symbols: uploaded ios 1.0.1 (40)", log.read_text())
+        for secret in secrets:
+            self.assertNotIn(secret, log.read_text())
+        # A malformed file makes the shell name the stray word; that stays hidden.
+        self.calls.unlink()
+        self.write_key_file(body=f"export POSTHOG_PROJECT_ID=507367\nPOSTHOG_CLI_API_KEY= {self.key}\n")
+        result = self.upload(trace=True)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("could not load", result.stderr)
+        self.assertNotIn(self.key, result.stdout + result.stderr)
+
+
 from test_android_release import AndroidReleaseTests
 
 
