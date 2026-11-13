@@ -308,6 +308,7 @@ class Socket {
   dispatch(type,data){for(const fn of this.listeners[type]??[])fn(type==='close'?{code:1000,wasClean:true,...data}:{data})}
   send(data){this.sent.push(data)}
   close(code,reason){this.closed.push({code,reason})}
+  accept(){this.accepted=true}
 }
 function relayFixture(seconds=2){
   let time=0,id=0;const timers=new Map(),client=new Socket(),upstream=new Socket(),charges=[],conversations=[],holds=[];
@@ -569,5 +570,51 @@ test('takeOverVoiceSession ends and reserves in one D1 batch',async()=>{
     const second=await takeOverVoiceSession(f.env,a.id,5001);assert.equal(second.replaced,true);assert.notEqual(second.session.id,first.session.id);
     assert.deepEqual(calls,[['UPDATE','WITH'],['UPDATE','WITH']]);
     assert.deepEqual(row(f,first.session.id),{state:'cancelled',charged_seconds:0,reserved_seconds:600,closed_at:5001});
+  } finally {f.db.close()}
+});
+
+// Voice polish (13 Nov 2026): free connecting takeovers and the start cool-down. Invented members and ids; the clock is fake.
+test('a takeover while connecting is free, and the losing connect closes the provider socket before relaying anything',async t=>{
+  const T=Date.UTC(2026,10,13,6,0,0)/1000;let clock=T;t.mock.method(Date,'now',()=>clock*1000);
+  const f=fixture(),a=await f.login('connecting@example.test'),original={fetch:globalThis.fetch,pair:globalThis.WebSocketPair};
+  const upstream=new Socket(),browser=new Socket(),relay=new Socket(),seen={};
+  try {
+    const first=await (await f.call('start','POST',{},a.cookie)).json();
+    globalThis.WebSocketPair=function(){return {0:browser,1:relay}};
+    globalThis.fetch=async url=>{
+      if(String(url).includes('/get-signed-url'))return Response.json({signed_url:'wss://api.elevenlabs.io/v1/convai/conversation?conversation_signature=invented&conversation_id=conv_invented'});
+      // A slow provider handshake: eight seconds after the claim the member presses Start again.
+      clock=T+8;
+      seen.status=await (await f.call('status','GET',undefined,a.cookie)).json();
+      const replaced=await f.call('start','POST',{},a.cookie);seen.start={status:replaced.status,...await replaced.json()};
+      seen.row=row(f,first.session_id);
+      return {webSocket:upstream,body:null};
+    };
+    const connect=await f.call('connect?session_id='+first.session_id,'GET',undefined,a.cookie,{upgrade:'websocket'});
+    assert.equal(seen.status.active_session.state,'connecting');
+    assert.equal(seen.status.remaining_seconds,600,'status counts a connecting call as free to replace');
+    assert.equal(seen.start.status,201);assert.equal(seen.start.replaced,true);assert.equal(seen.start.remaining_seconds,600,'the new call gets the whole allowance back');
+    // Before this change: 8 s so far plus the 15 s watch, 23 s charged for a call that never relayed audio.
+    assert.deepEqual(seen.row,{state:'cancelled',charged_seconds:0,reserved_seconds:600,closed_at:T+8});
+    assert.equal(connect.status,409);assert.deepEqual(await connect.json(),{error:'This voice connection was replaced by a newer one.'});
+    assert.deepEqual(upstream.closed,[{code:1011,reason:'Session unavailable'}],'the provider socket closes in the same request, with no watch delay');
+    assert.deepEqual(upstream.sent,[],'nothing, not even the conversation start, reached the provider');
+    assert.deepEqual(relay.closed,[{code:1011,reason:'Session unavailable'}]);
+    assert.deepEqual(row(f,first.session_id),{state:'cancelled',charged_seconds:0,reserved_seconds:600,closed_at:T+8},'the failed activation leaves the charge at 0');
+    assert.equal(f.db.prepare("SELECT COUNT(*) n FROM voice_sessions WHERE member_id=? AND state='reserved'").get(a.id).n,1);
+  } finally {globalThis.fetch=original.fetch;globalThis.WebSocketPair=original.pair;f.db.close()}
+});
+
+test('takeover still charges an active call and the liveness sweep still charges a stalled connecting row',async t=>{
+  const T=Date.UTC(2026,10,13,6,10,0)/1000;let clock=T;t.mock.method(Date,'now',()=>clock*1000);
+  const f=fixture(),a=await f.login('active-charge@example.test'),b=await f.login('stalled@example.test');
+  try {
+    const active=await liveSession(f,a,T);clock=T+20;
+    assert.equal((await f.call('start','POST',{},a.cookie)).status,201);
+    assert.deepEqual(row(f,active),{state:'closed',charged_seconds:35,reserved_seconds:600,closed_at:T+20},'20 s so far plus the 15 s watch');
+    // A connecting row whose Worker died mid-handshake is not a takeover: the sweep keeps its rule.
+    const body=await (await f.call('start','POST',{},b.cookie)).json();assert.ok(await claimVoiceSession(f.env,b.id,body.session_id,T+20));
+    clock=T+70;await expireVoiceSessions(f.env);
+    assert.deepEqual(row(f,body.session_id),{state:'expired',charged_seconds:45,reserved_seconds:600,closed_at:T+70});
   } finally {f.db.close()}
 });
