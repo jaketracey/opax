@@ -38,7 +38,7 @@ async function run() {
   const virtualConsole = new VirtualConsole();
   virtualConsole.on('error', (...args) => errors.push(`console.error: ${args.map(describe).join(' ')}`));
   virtualConsole.on('jsdomError', error => errors.push(`page error: ${describe(error)}`));
-  const dom = new JSDOM(read('/index.html'), {
+  const dom = new JSDOM(workerData.document || read('/index.html'), {
     url: origin + path, runScripts: 'outside-only', pretendToBeVisual: true, virtualConsole,
   });
   const { window } = dom;
@@ -51,7 +51,9 @@ async function run() {
     try {
       if (url.origin !== origin) throw Error(`Unexpected request: ${method} ${url.origin}${url.pathname}`);
       if(method !== 'GET')throw Error(`Unexpected request: ${method} ${url.origin}${url.pathname}`);
+      if (workerData.apiFixtures && Object.hasOwn(workerData.apiFixtures,url.pathname)) return Response.json(workerData.apiFixtures[url.pathname]);
       if (Object.hasOwn(apiFixtures, url.pathname)) return Response.json(apiFixtures[url.pathname]);
+      if (workerData.recordCore && url.pathname.startsWith('/api/')) return Response.json({items:[],topics:[],parties:[],decades:[]});
       // A test's own copy of a published file (workerData.files: pathname → JSON).
       if (workerData.files && Object.hasOwn(workerData.files, url.pathname)) return Response.json(workerData.files[url.pathname]);
       if (url.pathname.startsWith('/api/')) throw Error(`Missing API fixture: ${url.pathname}`);
@@ -70,6 +72,9 @@ async function run() {
   // app logic, data loaders, routing, directory builders or row rendering.
   window.document.fonts = { ready: Promise.resolve() };
   window.structuredClone = structuredClone;
+  window.URL.createObjectURL = () => 'blob:fixture-download';
+  window.URL.revokeObjectURL = () => {};
+  if (workerData.recordCore) window.HTMLCanvasElement.prototype.getContext = () => null;
   window.matchMedia = media => ({ matches: media === '(prefers-reduced-motion: reduce)' || Boolean(workerData.media?.includes(media)), addEventListener() {}, removeEventListener() {} });
   window.ResizeObserver = window.IntersectionObserver = class { observe() {} unobserve() {} disconnect() {} };
   window.scrollTo = window.HTMLElement.prototype.scrollIntoView = () => {};
@@ -77,11 +82,14 @@ async function run() {
   window.HTMLDialogElement.prototype.close = function () { this.open = false; };
 
   let failed = false;
+  const target = workerData.recordCore ? window.document.body : window.document.getElementById('subject-body');
+  let emptiedCore = false;
   const observer = new window.MutationObserver(records => {
-    failed ||= failure.test(window.document.getElementById('subject-body').innerHTML)
+    if (workerData.recordCore) emptiedCore ||= [...window.document.querySelectorAll('#prerender tbody')].some(body=>!body.rows.length);
+    failed ||= failure.test(target.innerHTML)
       || records.some(record => [...record.addedNodes].some(node => failure.test(node.outerHTML || node.textContent || '')));
   });
-  observer.observe(window.document.getElementById('subject-body'), { childList: true, subtree: true, characterData: true });
+  observer.observe(target, { childList: true, subtree: true, characterData: true });
 
   const modules = new Map(), evaluations = new Map(), pending = new Set();
   let linkQueue = Promise.resolve();
@@ -136,7 +144,7 @@ async function run() {
     do {
       // Let imports, boot promises, row rendering and rejected promises settle.
       await new Promise(resolve => setTimeout(resolve, 10));
-      body = window.document.getElementById('subject-body');
+      body = target;
       if (body.querySelector(selector) || failure.test(body.innerHTML) || errors.length) break;
     } while (performance.now() < deadline);
     await Promise.allSettled([...pending]);
@@ -144,9 +152,9 @@ async function run() {
     await new Promise(resolve => setTimeout(resolve, workerData.settleMs || 20));
     return {
       rows: body.querySelectorAll(selector).length, failed: failed || failure.test(body.innerHTML),
-      html: workerData.html ? body.innerHTML : undefined, location: window.location.pathname, search: window.location.search,
+      html: workerData.html ? body.innerHTML : undefined, emptiedCore, location: window.location.pathname, search: window.location.search,
       honestFailure: body.textContent.includes('The directory could not be loaded. Try again shortly.'),
-      visible: !window.document.getElementById('panel-subject').hidden, errors,
+      visible: !window.document.getElementById(workerData.panel || 'panel-subject').hidden, errors,
       scripts: scripts.filter(node => node.src).map(node => new URL(node.src).pathname),
       imports: [...modules.keys()].map(url => new URL(url).pathname),
     };
