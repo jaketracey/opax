@@ -38,7 +38,8 @@ test('banks use the explicit finance grouping with loans beside the figures',asy
   assert.match(out.answer,/Westpac Banking Corporation/);assert.match(out.answer,/National Australia Bank/)
   assert.ok(out.sources.every(s=>new URL(s.url,'https://local.test').searchParams.get('party')==='party:Liberal'))
   assert.ok(out.sources.every(s=>new URL(s.url,'https://local.test').searchParams.get('industry')==='finance'))
-  if(money==='typed')assert.match(out.answer,/\| Total, 48 sources \| \$14,402,567 \| 100% \| \$64,102,300 \(includes loans\) \|/)
+  // The total covers the 39 sources with donations; sources with $0 in donations are not ranked.
+  if(money==='typed')assert.match(out.answer,/\| Total, 39 sources \| \$14,402,567 \| 100% \| \$60,885,834 \(includes loans\) \|/)
  }
 })
 test('a topic question stays with speech evidence',async()=>{

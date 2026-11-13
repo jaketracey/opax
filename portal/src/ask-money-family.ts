@@ -101,6 +101,13 @@ export function federalPartyRankingQuestion(question:string):string|null {
  const intent=federalPartyRankingIntent(question)
  return intent&&!intent.uncertain?intent.question??null:null
 }
+/** The exact question, or for an informal single-party ranking its natural reading. */
+export function federalPartyRankingReading(question:string):string|null {
+ const intent=federalPartyRankingIntent(question)
+ if(!intent)return null
+ if(!intent.uncertain)return intent.question??null
+ return intent.parties.length===1?`Who has the most disclosed receipts to ${intent.parties[0]}?`:null
+}
 export function federalPartyRankingClarification(intent:FederalPartyRankingIntent){
  const answer=intent.parties.length===1?`Do you mean the largest disclosed receipts to ${intent.parties[0]}?`:`Which party do you mean: ${intent.parties.join(' or ')}? I can rank their largest disclosed receipts.`
  return {answer,answer_status:'needs_scope' as const,money_ranking:true as const,citations:{},sources:[]}
