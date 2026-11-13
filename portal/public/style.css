@@ -2359,12 +2359,21 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
 /* ---- a division (/doc/division-…): titled by its stage, its bills as link
    rows, the parties and the members in blocks, the question folded, one
    source line (pass 4G). */
-/* The bills it was on: a quiet list under the title, each row a 44px link,
-   a hairline between them so a wrapped title never runs into the next. */
+/* Under the title: what was put, in the record's words (the first sentence
+   in the reading serif, the rest folded), then the bills on one line: the
+   first by name, the others behind "and 2 related bills". */
 #panel-doc:has(.division-view) .doc-bill { margin-top: var(--space-heading); padding-top: 0; border-top: 0; }
-.division-bills { margin: 0 0 var(--space-block); }
-.division-bills > li { padding-block: 0; }
-.division-bills a { display: flex; align-items: center; min-height: var(--size-target); }
+.division-lead { margin: 0; max-width: var(--size-readable); font: var(--type-record); color: var(--ink); }
+.doc-bill > .division-question { margin: var(--space-tight) 0 0; }
+.division-bills { margin: var(--space-heading) 0 var(--space-block); font: var(--type-body); color: var(--ink-soft); }
+.division-bills a { color: var(--ink); text-decoration-color: var(--bronze-rule); text-underline-offset: 0.2em; }
+.division-bills-more { display: inline; }
+.division-bills-more > summary { display: inline; cursor: pointer; color: var(--bronze-ink); text-decoration: underline; text-decoration-color: var(--bronze-rule); text-underline-offset: 0.2em; }
+.division-bills-more > summary::-webkit-details-marker { display: none; }
+.division-bills-more > summary::marker { content: ""; }
+.division-bills-more > summary:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+.division-bills-more > ul { margin: var(--space-tight) 0 0; }
+.division-bills-more li { padding-block: var(--space-line); }
 /* Each block below is a ui-section with its own top rule, so the doc page's
    divider under the head steps aside for the section step. */
 #panel-doc:has(.division-view) .doc-rule { display: none; }

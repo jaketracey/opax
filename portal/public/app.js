@@ -13319,6 +13319,21 @@ function divisionHeading(d, entry) {
   return { title: recorded || stage || motion || "Division", house: billHouse(d.house) || "Parliament" };
 }
 
+/** What the division was on, in one sentence: the motion put ("The question is
+ *  that ...") where the record states it, else the record's first sentence. */
+function divisionQuestionLead(d, entry, bill) {
+  const put = /\bThe question (?:is|being|was) that\b[^.?!]*[.?!]/.exec(billFlat(billNoteRepair(d.question || "")))?.[0];
+  return put || billQuestionParts({ question: d.question, stage: entry?.stage }, bill).head;
+}
+
+/** The bills a division was on, as one line: the first by name, the rest behind "and N related bills". */
+function divisionBillsHTML(bills) {
+  if (!bills.length) return "";
+  const link = (b) => `<a ${entityHrefAttr(billHash(b.key))}>${esc(b.title)}</a>`;
+  const rest = bills.slice(1);
+  return `<div class="division-bills">On the ${link(bills[0])}${rest.length ? ` <details class="division-bills-more"><summary>and ${rest.length} related ${rest.length === 1 ? "bill" : "bills"}</summary><ul class="ui-list" role="list">${rest.map((b) => `<li>${link(b)}</li>`).join("")}</ul></details>` : ""}</div>`;
+}
+
 function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   currentDoc = { slug, kind: "division", title: d.name || d.question || "", url: d.source_url, labels: { kind: "division" } };
   setStatus($("doc-status"), "");
@@ -13334,16 +13349,22 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
     ? crumbsFor("/bills", { label: bills[0].title, href: `/bill/${encodeURIComponent(bills[0].key)}` }, "Division")
     : crumbsFor("/ask?view=search", "Division"));
   const ayes = Number(d.ayes) || 0, noes = Number(d.noes) || 0;
+  // Each dot is bound to the part after it, and the date is one unit, so a
+  // wrapped line never ends in a dot or leaves the year alone.
   $("doc-meta").innerHTML = [
     billOutcomeLabelHTML(d.result || entry?.outcome),
     esc(`${ayes.toLocaleString()} ayes, ${noes.toLocaleString()} noes`),
-    esc(house), d.date ? esc(fmtDate(d.date)) : "",
-  ].filter(Boolean).join(" · ");
+    esc(house), d.date ? esc(fmtDate(d.date)).replace(/ /g, "\u00a0") : "",
+  ].filter(Boolean).join(" ·\u00a0");
   const question = billQuestion(d.question || d.name || "");
+  // The question leads, under the title; the whole of it is one tap away.
+  const lead = d.question ? divisionQuestionLead(d, entry, bills[0]) : "";
+  const questionHTML = `${lead ? `<p class="division-lead">${esc(lead)}</p>` : ""}${question && billFlat(question) !== lead
+    ? `<details class="ui-disclosure division-question"><summary>${lead ? "Read the full question" : "The question"}</summary><div class="ui-disclosure-body division-markdown">${billNoteHTML(question)}</div></details>` : ""}`;
   const ask = askHash(bills[0]?.title ? `How did parliament vote on the ${bills[0].title}?` : `What was the ${house} division of ${fmtDate(d.date)} about?`);
   $("doc-bill").innerHTML = `
-    ${bills.length ? `<ul class="ui-list division-bills" role="list" aria-label="${bills.length === 1 ? "The bill" : "The bills"} this division was on">${bills.map((b) =>
-      `<li class="ui-row-name"><a ${entityHrefAttr(billHash(b.key))}>${esc(b.title)}</a></li>`).join("")}</ul>` : ""}
+    ${questionHTML}
+    ${divisionBillsHTML(bills)}
     <div class="page-actions">
       <a class="ui-button" href="${esc(ask)}">Ask the record about this</a>
       ${moreMenuHTML([
@@ -13370,7 +13391,6 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
       <h3 class="ui-section-title" id="division-members-head">Who voted which way</h3>
       <p class="ui-status-line">Reading the member list…</p>
     </section>
-    ${question ? `<section class="ui-section division-block division-question-block"><details class="ui-disclosure division-question"><summary>The question</summary><div class="ui-disclosure-body division-markdown">${billNoteHTML(question)}</div></details></section>` : ""}
     ${sourceLineHTML({
       updated: retrieved, dateLabel: retrieved ? "Retrieved" : "Updated", source: countBy,
       originals: [safeUrl(d.source_url) && { label: countSource, href: d.source_url }, ...bills.map((b) => ({ label: b.title, href: `/bill/${encodeURIComponent(b.key)}` }))].filter(Boolean),
