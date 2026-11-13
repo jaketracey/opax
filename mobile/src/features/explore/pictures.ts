@@ -5,6 +5,7 @@ import {
   nonempty,
   nullable,
   object,
+  optional,
   url,
 } from '../../api/validation';
 import { isYearPicturePath } from '../../api/year-picture-policy';
@@ -17,6 +18,7 @@ export interface YearPicture {
   date: string | null;
   author: string;
   credit: string;
+  credit_url?: string;
   licence: string;
   licence_url: string | null;
   source_url: string;
@@ -32,6 +34,7 @@ export function decodePictures(value: unknown): Record<string, YearPicture[]> {
           file = nonempty(p.file);
         const width = count(p.width),
           height = count(p.height);
+        const creditURL = optional(url)(p.credit_url);
         if (
           !isYearPicturePath('/' + file) ||
           !file.startsWith(`years/pictures/${year}/`) ||
@@ -58,6 +61,7 @@ export function decodePictures(value: unknown): Record<string, YearPicture[]> {
               ? ''
               : nonempty(p.author)
             : nonempty(p.credit),
+          ...(creditURL ? { credit_url: creditURL } : {}),
           licence: nonempty(p.licence),
           licence_url: nullable(url)(p.licence_url),
           source_url: url(p.source_url),

@@ -526,6 +526,72 @@ describe('credits', () => {
     );
   });
 
+  test.each(['Alex Example', '  ALEX \t EXAMPLE\n'])(
+    'a photo credit matching its author is not repeated: %j',
+    async (credit) => {
+      explore.pictures.mockResolvedValue(
+        saved(
+          { '2025': [{ ...picture, author: 'Alex Example', credit }] },
+          null,
+        ),
+      );
+      const list = await render(<PhotoCreditsList />);
+      expect(texts(list)).toContain('Photo: Alex Example · Public domain');
+      expect(
+        list.root
+          .findAllByType(Text)
+          .filter(
+            (n) =>
+              n.props.variant === 'footnote' && n.props.children === credit,
+          ),
+      ).toHaveLength(0);
+      const source = pressable(list, 'explore-photo-source-Federation.jpg');
+      expect(source.props.accessibilityLabel).toBe(
+        `${picture.caption}, Photo: Alex Example · Public domain`,
+      );
+    },
+  );
+
+  test.each([
+    ['Example National Archive', 'Example National Archive'],
+    [' https://www.Example.org:8080/photos/?id=1 ', 'example.org'],
+  ])('a distinct photo credit %j is shown as %j', async (credit, shown) => {
+    explore.pictures.mockResolvedValue(
+      saved(
+        {
+          '2025': [
+            {
+              ...picture,
+              author: 'Alex Example',
+              credit,
+              credit_url: 'https://archive.example.org/source',
+            },
+          ],
+        },
+        null,
+      ),
+    );
+    const list = await render(<PhotoCreditsList />);
+    expect(
+      list.root
+        .findAllByType(Text)
+        .filter(
+          (n) => n.props.variant === 'footnote' && n.props.children === shown,
+        ),
+    ).toHaveLength(1);
+    expect(texts(list)).not.toMatch(/https?:\/\//);
+    expect(texts(list)).not.toContain('?id=1');
+    const source = pressable(list, 'explore-photo-source-Federation.jpg');
+    expect(source.props.accessibilityLabel).toBe(
+      `${picture.caption}, Photo: Alex Example · Public domain, ${shown}`,
+    );
+    await act(async () => source.props.onPress());
+    expect(openSource).toHaveBeenLastCalledWith(
+      picture.source_url,
+      'Wikimedia Commons',
+    );
+  });
+
   test('each font names its licence and keeps the notice behind one disclosure', async () => {
     const fonts = await render(<FontsList />);
     expect(texts(fonts)).not.toContain('Copyright Merriweather.');

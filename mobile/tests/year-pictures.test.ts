@@ -91,6 +91,25 @@ test.each(['file', 'width', 'licence', 'source_url'])(
     expect(() => decodePictures(duplicate)).toThrow();
   },
 );
+test('an optional credit_url is decoded alongside the named credit', () => {
+  const credit_url = 'https://archive.example.org/photos/2025';
+  const photo = { ...raw['2025'][0], credit: 'Example Archive', credit_url };
+  expect(decodePictures({ '2025': [photo] })['2025']![0]).toMatchObject({
+    credit: 'Example Archive',
+    credit_url,
+  });
+  expect(
+    decodePictures({ '2025': [raw['2025'][0]] })['2025']![0]!.credit_url,
+  ).toBeUndefined();
+});
+
+test('an optional credit_url still rejects an unsafe address', () => {
+  expect(() =>
+    decodePictures({
+      '2025': [{ ...raw['2025'][0], credit_url: 'javascript:alert(1)' }],
+    }),
+  ).toThrow();
+});
 test.each([
   '/years/pictures.json',
   '/years/pictures/1998/swanson-dock-picket.webp',

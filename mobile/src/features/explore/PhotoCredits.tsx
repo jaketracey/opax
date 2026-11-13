@@ -26,6 +26,7 @@ import {
   useBarSearch,
 } from '../sources/parts';
 import type { YearPicture } from './pictures';
+import { creditShown } from './photo-credit';
 import { explore } from './runtime';
 import { useFloatingBarFoot } from '../../navigation/floating-bar';
 
@@ -151,6 +152,7 @@ export function PhotoCreditsList() {
             <CreditRow
               title={p.caption}
               detail={`Photo: ${p.author} · ${p.licence}`}
+              note={creditShown(p.credit, p.author)}
               url={p.source_url}
               label="Wikimedia Commons"
               testID={`explore-photo-source-${p.file}`}

@@ -24,7 +24,7 @@ import { textWidth } from './row-layout';
  * governmen…". The step-down ran, then stopped at the reader's default size
  * (cap 1), where these words are still wider than the text column. These
  * tests drive the real Text through a model of TextKit's greedy wrap until
- * it settles, at the folded widths, AX3 and AX5.
+ * it settles, at the folded widths, xSmall, Large, AX3 and AX5.
  */
 
 const window = Dimensions.get('window');
@@ -137,6 +137,8 @@ const cases: [string, TextVariant, string][] = [
 const columns = [110, 120, 200, 330];
 
 describe.each([
+  ['xSmall', 0.824],
+  ['Large', 1],
   ['AX3', AX3],
   ['AX5', AX5],
 ])('%s on the folded display', (_, fontScale) => {
@@ -195,7 +197,28 @@ test('the floor is 11pt below the default size, never above it', () => {
   expect(nextWordSafeCap(30 * 0.65, 30, 0.65)).toBeNull();
 });
 
-test('at the default text size nothing steps down, as before', () => {
-  const { drawnPoints } = settle('body', 'Community', 60, 1);
-  expect(drawnPoints).toBe(textStyles.body.fontSize);
-});
+test.each([110, 120])(
+  'at Large a long title fits whole words above the floor in a %spt column',
+  (column) => {
+    const content = cases[0]![2];
+    const { lines, drawnPoints } = settle('rowRecord', content, column, 1);
+    expect(lines.map((line) => line.text).join('')).toBe(content);
+    expect(breaksMidWord(lines)).toBe(false);
+    expect(drawnPoints).toBeGreaterThan(WORD_SAFE_MIN_POINTS);
+    expect(drawnPoints).toBeLessThanOrEqual(textStyles.rowRecord.fontSize);
+  },
+);
+
+test.each([110, 120])(
+  'at Large a short title keeps its full size in a %spt column',
+  (column) => {
+    const { lines, drawnPoints } = settle(
+      'rowRecord',
+      'A short bill',
+      column,
+      1,
+    );
+    expect(breaksMidWord(lines)).toBe(false);
+    expect(drawnPoints).toBe(textStyles.rowRecord.fontSize);
+  },
+);

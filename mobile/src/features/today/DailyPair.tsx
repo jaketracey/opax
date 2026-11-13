@@ -10,6 +10,7 @@ import { exploreQuizRoute, exploreToolRoute } from '../../navigation/routes';
 import { shareRecord } from '../../navigation/share';
 import { presentSheet } from '../../navigation/sheets';
 import { Picture } from '../explore/Picture';
+import { creditShown } from '../explore/photo-credit';
 import type { YearPicture } from '../explore/pictures';
 import type { FrontPageQuestion } from '../explore/quiz-model';
 import { frontPageDeck } from '../explore/quiz/data';
@@ -19,6 +20,8 @@ import { frontPageSkip } from './archive-review';
 import { rules } from './sources';
 import { SurfaceGrid } from './SurfaceGrid';
 import { useTodayRead } from './TodayBlock';
+
+export { creditShown } from '../explore/photo-credit';
 
 /** A licence that allows the photograph on the front page (no NC or ND terms). */
 export const frontPageLicence = (licence: string) =>
@@ -77,22 +80,6 @@ function Kicker({
       </Text>
     </View>
   );
-}
-
-/**
- * The credit as the card prints it. The portal stores some credits as a
- * bare address ("https://pco.gov.ph/photos/?post_id=185409"); the card
- * names the host ("pco.gov.ph") and the full address stays on the photo's
- * sheet in the Time machine.
- */
-export function creditShown(credit: string): string {
-  const trimmed = credit.trim();
-  const match = /^https?:\/\/([^/?#\s]+)/i.exec(trimmed);
-  if (!match) return trimmed;
-  return match[1]!
-    .replace(/:\d+$/, '')
-    .replace(/^www\./i, '')
-    .toLowerCase();
 }
 
 /**
