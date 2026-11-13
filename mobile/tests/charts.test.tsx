@@ -753,6 +753,9 @@ test('a 50/50 share is one bar of two halves, each captioned and spoken', () => 
   expect(parts.accessibilityLabel).toBe(
     'Closed non-competitive, 50%. Everything else, 50%.',
   );
+  // The second half is a lighter tint of the same ink, not a fade.
+  expect(segments[0]!.backgroundColor).not.toBe(segments[1]!.backgroundColor);
+  expect(segments[1]!.opacity).toBeUndefined();
   expect(parts.accessibilityLabel).not.toMatch(/\u2014/);
 });
 

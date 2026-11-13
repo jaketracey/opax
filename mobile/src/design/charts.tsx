@@ -932,8 +932,25 @@ export function isPartOfWhole(values: readonly number[]): boolean {
   return Math.abs(sum - 100) <= Math.max(1, values.length / 2);
 }
 
-/** The first part takes the full ink; each later part is lighter. */
-const shareOpacity = [1, 0.5, 0.3, 0.18, 0.1];
+/** The first part takes the full ink; each later part is a lighter tint. */
+const shareInk = [1, 0.5, 0.3, 0.18, 0.1];
+
+/** `colour` mixed toward `ground`: weight 1 is the colour, 0 the ground. */
+export function shareTint(colour: string, ground: string, weight: number) {
+  const hex = /^#([0-9a-f]{6})$/i;
+  const a = hex.exec(colour)?.[1];
+  const b = hex.exec(ground)?.[1];
+  if (!a || !b || weight >= 1) return colour;
+  const channel = (value: string, at: number) =>
+    parseInt(value.slice(at, at + 2), 16);
+  return `#${[0, 2, 4]
+    .map((at) =>
+      Math.round(channel(a, at) * weight + channel(b, at) * (1 - weight))
+        .toString(16)
+        .padStart(2, '0'),
+    )
+    .join('')}`;
+}
 
 /**
  * A share of a whole as one bar: every part a segment of the full width, and
@@ -958,16 +975,19 @@ export function ShareBar({
 }) {
   const darkMode = useColorScheme() === 'dark';
   const contrast = useIncreaseContrast();
-  const palette = darkMode
-    ? contrast
-      ? darkHighContrast
-      : dark
-    : contrast
-      ? lightHighContrast
-      : light;
+  // Increase Contrast overrides a few roles; the rest are the scheme's own.
+  const base = darkMode ? dark : light;
+  const palette = {
+    ...base,
+    ...(contrast ? (darkMode ? darkHighContrast : lightHighContrast) : {}),
+  };
   const colour = palette[ink === 'ink' ? 'ink' : accents[ink].ink];
-  const opacity = (index: number) =>
-    shareOpacity[Math.min(index, shareOpacity.length - 1)]!;
+  const tint = (index: number) =>
+    shareTint(
+      colour,
+      palette.paper,
+      shareInk[Math.min(index, shareInk.length - 1)]!,
+    );
   const spoken = parts
     .map((part) => `${part.label}, ${format(part.value)}`)
     .join('. ');
@@ -994,8 +1014,7 @@ export function ShareBar({
                 testID={`${testID}-segment-${index}`}
                 style={{
                   width: `${Math.min(100, part.value)}%`,
-                  backgroundColor: colour,
-                  opacity: opacity(index),
+                  backgroundColor: tint(index),
                   // A paper seam keeps neighbouring parts apart.
                   borderLeftWidth: index ? 2 : 0,
                   borderLeftColor: palette.paper,
@@ -1012,10 +1031,7 @@ export function ShareBar({
           {parts.map((part, index) => (
             <View key={`${part.label}:${index}`} style={styles.shareRow}>
               <View
-                style={[
-                  styles.shareSwatch,
-                  { backgroundColor: colour, opacity: opacity(index) },
-                ]}
+                style={[styles.shareSwatch, { backgroundColor: tint(index) }]}
               />
               <Text wordSafe variant="footnote" style={styles.tableCell}>
                 {part.label}
