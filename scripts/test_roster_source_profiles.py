@@ -247,6 +247,110 @@ def test_list_rows_hold_when_the_list_moves_or_the_name_is_ambiguous(tmp_path):
     assert links == {} and held == [('Cory Sample', 'The linked person holds no seat in the list state')]
 
 
+def test_a_reviewed_term_start_dates_a_list_row_and_a_bad_one_is_held(tmp_path):
+    from scripts.roster_source_profiles import list_problem, list_row, state_evidence
+    snap, doc, evidence = list_fixture(tmp_path)
+    acc, _ = list_accept(doc, snap, evidence)
+    plain = acc['new']['Ada Example']
+    # Without a reviewed start the list's date stays the service start and the only year.
+    assert plain['service']['start'] == '2026-11-13' and plain['row']['first'] == 2026
+    dated = copy.deepcopy(plain)
+    dated['term_start'] = dict(start='2023-10-17', url='https://example.org/ada', checked='2026-11-13', note='fixture')
+    dated['service']['start'] = '2023-10-17'
+    row = list_row(dated, state_evidence(tmp_path))
+    assert (row['first'], row['last']) == (2023, 2026)
+    dated['row'] = row
+    assert list_problem('Ada Example', dated, root=tmp_path) is None
+    assert roster_accept.new_row_problem('Ada Example', dated, evidence, root=tmp_path) is None
+    # The service must carry the reviewed start, and the start must be sourced, ISO and not after the list's date.
+    stale = copy.deepcopy(dated)
+    stale['service']['start'] = '2026-11-13'
+    assert list_problem('Ada Example', stale, root=tmp_path)
+    for field, value in (('start', '2027-01-01'), ('start', '17 Oct 2023'), ('start', '2023-02-30'),
+                         ('url', 'http://example.org/ada'), ('note', ' ')):
+        bad = copy.deepcopy(dated)
+        bad['term_start'][field] = value
+        assert list_problem('Ada Example', bad, root=tmp_path), (field, value)
+    unsourced = copy.deepcopy(dated)
+    del unsourced['term_start']['url']
+    assert list_problem('Ada Example', unsourced, root=tmp_path)
+
+
+def service_fixture(tmp_path, periods=(('Liberal', '2006-05-04', '2017-02-07', None), ('Independent', '2017-02-07', None, '2020-01-20')),
+                    service_end='2020-01-20', current=False):
+    """The list fixture with Cory Sample linked, a Handbook record for his Senate service and a service group."""
+    from scripts.roster_source_profiles import enrich_lists, group_fields, list_ref, list_service, state_evidence
+    snap, doc, evidence = list_fixture(tmp_path)
+    acc, _ = list_accept(doc, snap, evidence)
+    (tmp_path / 'scripts/handbook_party_service.json').write_text(json.dumps(dict(people=[dict(
+        phid='ZZ1', pid='19998', name='Cory Sample', current=current, service_end=service_end, undated=[],
+        periods=[dict(party=a, start=b, end=c, through=d) for a, b, c, d in periods])])))
+    evidence['sa-service'] = dict(kind='identity', rule='official-list-service', checked='2026-11-13', url=LIST_URL,
+                                  reason='fixture')
+    group = dict(evidence='sa-service', list=list_ref(snap), list_name='Cory Sample', url=LIST_URL, checked='2026-11-13',
+                 term_start=dict(start='2026-03-21', url='https://example.org/cory', checked='2026-11-13', note='fixture'))
+    state = state_evidence(tmp_path)
+    linked = enrich_lists(copy.deepcopy(doc), acc, state, tmp_path)
+    cory = next(p for p in linked['people'] if p['name'] == 'Cory Sample')
+    group['fields'] = group_fields(list_service(cory, group, state, tmp_path))
+    acc['records']['Cory Sample'].append(group)
+    return doc, acc, evidence, state
+
+
+def test_a_linked_list_member_gets_dated_current_service_after_a_senate_career(tmp_path):
+    from scripts.roster_source_profiles import enrich_lists
+    doc, acc, evidence, state = service_fixture(tmp_path)
+    group = acc['records']['Cory Sample'][1]
+    affiliations = group['fields']['affiliations'][1]
+    assert group['fields']['current'] == [None, True] and group['fields']['party_now'] == [None, 'One Nation']
+    assert [(a['chamber'], a['party'], a['start'], a['end']) for a in affiliations] == [
+        ('senate', 'Liberal', '2006-05-04', '2017-02-07'), ('senate', 'Independent', '2017-02-07', '2020-01-20'),
+        ('sa_lc', 'One Nation', '2026-03-21', None)]
+    out = enrich_lists(copy.deepcopy(doc), acc, state, tmp_path)
+    cory = next(p for p in out['people'] if p['name'] == 'Cory Sample')
+    assert cory['current'] and cory['party_now'] == 'One Nation' and cory['affiliations'] == affiliations
+    # The speech-derived party stays; the overlay's gate passes both groups even though one writes a dated party.
+    assert cory['party'] == 'Liberal'
+    assert enrich_lists(copy.deepcopy(out), acc, state, tmp_path) == out
+    assert roster_accept.validate(acc, out['people'], curated={}, root=tmp_path) == []
+    blocked, groups, _new = roster_accept.judge(acc, out['people'], root=tmp_path, curated={})
+    assert blocked is None and all(why is None for *_, why in groups)
+    reverted = next(p for p in roster_accept.revert(out['people'], acc) if p['name'] == 'Cory Sample')
+    assert reverted == doc['people'][0]
+
+
+@pytest.mark.parametrize('case', ['start before the Senate end', 'open Senate service', 'no term start', 'edited value',
+                                  'unlinked', 'pinned in reviewed evidence'])
+def test_a_list_service_that_the_sources_do_not_give_is_held(tmp_path, case):
+    from scripts.roster_source_profiles import enrich_lists
+    if case == 'open Senate service':
+        # A senator the Handbook still lists as sitting gives no basis for a later Council seat.
+        with pytest.raises(ValueError):
+            service_fixture(tmp_path, current=True)
+        return
+    doc, acc, _evidence, state = service_fixture(tmp_path)
+    group = acc['records']['Cory Sample'][1]
+    curated = {}
+    if case == 'start before the Senate end':
+        group['term_start']['start'] = '2019-03-01'
+    elif case == 'no term start':
+        del group['term_start']
+    elif case == 'edited value':
+        group['fields']['party_now'][1] = 'Liberal'
+    elif case == 'unlinked':
+        del acc['records']['Cory Sample'][0]
+    elif case == 'pinned in reviewed evidence':
+        curated = {'Cory Sample': roster_accept.PARTY_FIELDS}
+    shipped = enrich_lists(copy.deepcopy(doc), dict(acc, records={'Cory Sample': [g for g in acc['records']['Cory Sample']
+                                                                                 if g is not group]}), state, tmp_path)
+    if case not in ('edited value', 'pinned in reviewed evidence'):
+        # What the export would lay down: nothing from the service group.
+        assert not next(p for p in enrich_lists(copy.deepcopy(doc), acc, state, tmp_path)['people']
+                        if p['name'] == 'Cory Sample').get('current')
+    _blocked, groups, _new = roster_accept.judge(acc, shipped['people'], root=tmp_path, curated=curated)
+    assert any(g is group and why for _n, _i, g, why in groups), case
+
+
 def test_shipped_sa_council_list_members_are_seven_and_bernardi_is_one_person():
     root = Path(__file__).resolve().parents[1]
     doc = json.loads((root / 'portal/public/parliamentarians.json').read_text())
@@ -261,6 +365,14 @@ def test_shipped_sa_council_list_members_are_seven_and_bernardi_is_one_person():
     assert [p['name'] for p in doc['people'] if 'bernardi' in p['name'].lower()] == ['Cory Bernardi']
     cory = by['Cory Bernardi']
     assert cory['pid'] == '10038' and 'sa_lc' in cory['chambers'] and not cory.get('roster_only')
+    # His reviewed Council service (roster_accept.json sa-council-service) makes him a sitting MLC who was a senator.
+    assert cory['current'] and cory['party_now'] == 'One Nation'
+    assert [(a['chamber'], a['start'], a['end']) for a in cory['affiliations']][-1] == ('sa_lc', '2026-03-21', None)
+    # Reviewed term starts (Wikidata position held); Benjamin Hood keeps the list date (see his note).
+    assert {n: (by[n]['first'], acc['new'][n]['service']['start']) for n in listed} == {
+        'Mira El Dannawi': (2023, '2023-10-17'), 'Hilton Gumbys': (2026, '2026-03-21'),
+        'Rebecca Hewett': (2026, '2026-03-21'), 'Benjamin Hood': (2026, '2026-11-13'),
+        'Carlos Quaremba': (2026, '2026-03-21'), 'Melanie Selwood': (2026, '2026-03-21')}
     identity = json.loads((root / 'scripts/person_identity.json').read_text())['same_person']
     assert identity['cory bernardi']['key'] == '10038'
     # D.G.E. Hood and the surname print "Hood" are not Benjamin Hood and keep their rows.

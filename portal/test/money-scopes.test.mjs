@@ -86,6 +86,17 @@ test('Former requires recorded service end; unknown service and stale roster rem
  assert.match(former.nextElementSibling.textContent,/Lena Example/);assert.doesNotMatch(former.nextElementSibling.textContent,/Rory|Cora/);
  assert.match(doc.body.textContent,/Sitting members across all parliaments/);assert.match(doc.body.textContent,/service end not recorded/);
 });
+test('without sitting members, recorded ends and unknown service share a flat neutral Members list',()=>{
+ const roster={people:[{name:'Rory Example',party:'Fern Party',current:false,last:2021},{name:'Lena Example',party:'Fern Party',current:false,affiliations:[{end:'2020-01-01'}]}]};
+ const h={...helpers,photoUrlFor:()=>null,personUrl:()=>'/subject/person',partyChipHTML:esc,stateName:s=>s,same:(a,b)=>a===b};
+ const doc=new JSDOM(partyMembersHTML('Fern Party',partyMembers('Fern Party',{roster}),h)).window.document;
+ assert.equal(doc.querySelector('h3').textContent,'Members');
+ assert.equal(doc.querySelectorAll('h4').length,0);
+ assert.equal(doc.querySelectorAll('ul.party-member-list').length,1);
+ assert.equal(doc.querySelectorAll('li.dir-row').length,2);
+ assert.match(doc.body.textContent,/Rory Example/);assert.match(doc.body.textContent,/Lena Example/);
+ assert.doesNotMatch(doc.body.textContent,/Former|Sitting|service end not recorded/);
+});
 test('short and unmatched mention speakers have a neutral display label',()=>{
  const f=api({splitPerson:()=>null,datedAffiliationParty:()=>null,isUnattributed:()=>false,isMultiSpeaker:()=>false,isWitness:()=>false,fmtDate:s=>s,partyChipHTML:esc,STATE_NAMES:{},speakerHref:()=>'/person'});
  const rows=[{speaker:'Ick',party:'Fern'},{speaker:'Unmatched Example'},{speaker:'Cora Example'}];

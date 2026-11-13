@@ -1569,7 +1569,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=697637b551' : '/ledger.js?v=db936b2461');
+    const mod = await import(grants ? '/grants.js?v=1164c57003' : '/ledger.js?v=db936b2461');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1619,7 +1619,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=a48d1b4ae5');
+    const mod = await import('/grant-recipient.js?v=65106d7ae9');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -5473,7 +5473,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=9273a1c8be'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=838a2e36e1'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -5675,9 +5675,11 @@ async function renderPartyMemberList(label, sections, key, { speechesLink = true
   const members = partyPage.partyMembers(label, { roster, divisions, same: samePartyLabel });
   const directoryParty = roster?.people?.find((p) => p.party && samePartyLabel(p.party, label))?.party;
   // Only a party the index holds speeches for, under the label the index files them as.
-  const speeches = speechesLink ? partyPage.partySpeechLabel(label, { indexed, roster, same: samePartyLabel }) : null;
+  const speeches = partyPage.partySpeechLabel(label, { indexed, roster, same: samePartyLabel });
+  const speechDate = indexed?.generated || roster?.meta?.generated;
   const html = partyPage.partyMembersHTML(label, members, partyPageHelpers(), {
-    speechesHref: speeches ? partySpeechSearch(speeches.label) : "",
+    speechesHref: speechesLink && speeches ? partySpeechSearch(speeches.label) : "",
+    speechSummary: speeches && speechDate ? `${speeches.count.toLocaleString('en-AU')} speeches in the record, as of ${partyPage.dayMonthYear(speechDate)}.` : "",
     directoryHref: directoryParty ? directoryHash("person", { party: directoryParty }) : "",
     updated: roster?.meta?.generated || "",
   });
@@ -9948,11 +9950,11 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=b70d70e779", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=09bdcac15d", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=144597fa61", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=db936b2461", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=697637b551", mount: "mountGrants" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=1164c57003", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=c21fcfa9de", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=e0fe3734aa", mount: "mountThenVsNow" },
@@ -9976,6 +9978,12 @@ async function openGame(which, params = null) {
       explore[which] = mod[game.mount]($(game.body), {
         displayTitle, topics: TOPICS, topicPhrase, searchHash, subjectHash, coverageRuleHTML,
       });
+      if (which === "tm") {
+        const {mountYearSnapshots} = await import('/year-snapshots.js');
+        const snapshots = mountYearSnapshots($(game.body));
+        const destroy = explore[which].destroy;
+        explore[which].destroy = () => { snapshots.destroy(); destroy(); };
+      }
     }
     // Every Explore dialog carries its hero into the sticky head once it
     // scrolls past: the Time Machine's big year, the others' own title.

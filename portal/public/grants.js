@@ -1792,7 +1792,7 @@ export function mountGrants (container, opts = {}) {
   }
 
   function renderProgramDetail (td, r, p) {
-    const coreActive = hydrateRecordCore('program',p,{jurisdiction:state.jur})
+    const coreActive = hydrateRecordCore('program',p,{jurisdiction:state.jur,recipientIds:recipientIndex()})
     if (!coreActive) td.id = "program-records"
     const notes = p.notes || null
     const progNotes = notes && notes.programs && notes.programs[state.jur] ? notes.programs[state.jur][p.id] : null

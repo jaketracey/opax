@@ -34,6 +34,9 @@ A field absent from a record is written null (the roster never holds a JSON null
     dated official list (official-list-member evidence) has no federal id: the row is list-only, with no speeches,
     and must be exactly what the list gives (scripts/roster_source_profiles.py list_row). The same evidence may link
     an existing person with a verified id to the list's chamber (list_link), adding only the chamber and seat.
+    A linked person's dated service there (official-list-service evidence, list_service) may then add `current`,
+    the list's party as `party_now` and `affiliations` (the Handbook's dated Senate periods, then the list seat from a
+    reviewed term start): the one group allowed to write a dated party, and only when it rebuilds exactly.
   - A dropped row is a shipped record that is not a person (parli.ingest.speaker_names.non_person_name: a group
     label such as 'Government members', a bare title, a parse fragment), carries no identity value, still is exactly
     the reviewed row, and is absent from the export (drop_problem). Nothing else is ever removed: the overlay keeps
@@ -184,6 +187,19 @@ def protected(row, curated):
     if not any(row.get(k) for k in ("pid", "full", "party", "parties", "party_now", "current")) and not row.get("representation"):
         out.append((NEUTRAL_FIELDS, "a neutral namesake"))
     return out
+
+
+# A linked list member's dated service in the list chamber (scripts/roster_source_profiles.py list_service): rebuilt
+# from the reviewed list, a reviewed term start and the Handbook's dated Senate periods, and verified before it may
+# write the dated fields the protections above otherwise pin.
+LIST_SERVICE = "official-list-service"
+LIST_SERVICE_FIELDS = {"current", "party_now", "affiliations"}
+
+
+def _own_dates(row, group):
+    """True when the shipped row's dated party is exactly what this group wrote (or would write)."""
+    pair = group["fields"].get("affiliations")
+    return set(group["fields"]) == LIST_SERVICE_FIELDS and _blank(pair[0]) and row.get("affiliations") in (None, pair[1])
 
 
 def _get(row, field):
@@ -344,6 +360,11 @@ def group_problem(name, group, evidence, row, curated, roster=True, root=ROOT):
         why = list_problem(name, group, row, root, link=True)
         if why:
             return why
+    if ev.get("rule") == LIST_SERVICE:
+        from scripts.roster_source_profiles import list_problem
+        why = list_problem(name, group, row, root, link="service")
+        if why:
+            return why
     if ev.get("rule") == "state-party-snapshot":
         from scripts.roster_state_parties import group_problem as state_party_problem
         why = state_party_problem(name, group, row, root)
@@ -360,6 +381,9 @@ def group_problem(name, group, evidence, row, curated, roster=True, root=ROOT):
         # profile. The rule above rechecks the dated official evidence; weak
         # names, witnesses, split identities and other protections still hold.
         if why == "a neutral namesake" and ev.get("rule") == "state-party-snapshot":
+            continue
+        # A verified list service is the dated party: the pin it trips on is the value it wrote itself.
+        if why == "a dated party" and ev.get("rule") == LIST_SERVICE and _own_dates(row, group):
             continue
         touched = set(fields) if pinned is EVERY_FIELD else set(fields) & pinned
         if touched and (pinned is EVERY_FIELD or ev["kind"] == "identity" or touched & IDENTITY_FIELDS):
@@ -496,7 +520,9 @@ def judge(accept, shipped_people=None, root=ROOT, curated=False):
         # Every other protection, and overlapping groups, retain the original fail-closed rule.
         protection = {f for _n, _i, g, why in verdicts if _shaped(g) for f in g["fields"]
                       if not (why is None and f == "aliases" and set(g["fields"]) == {"aliases"}
-                              and evidence.get(g["evidence"], {}).get("rule") == "catalog-aliases")}
+                              and evidence.get(g["evidence"], {}).get("rule") == "catalog-aliases")
+                      and not (why is None and f == "affiliations" and set(g["fields"]) == LIST_SERVICE_FIELDS
+                               and evidence.get(g["evidence"], {}).get("rule") == LIST_SERVICE)}
         whole = ("two groups touch the same field, so every group on the record is held" if len(fields) != len(set(fields))
                  else "a group touches a protection field (" + ", ".join(sorted(protection & PROTECTION_FIELDS)) +
                  "), so every group on the record is held" if protection & PROTECTION_FIELDS else None)

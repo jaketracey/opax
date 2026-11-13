@@ -210,12 +210,13 @@ export function recordedEnd(person) {
   return service.length > 0 && service.every(row => Boolean(row.end || row.end_date));
 }
 const SHOWN = 12;
+export const PARTY_NO_MEMBERS = "No members recorded in OPAX's roster for this party.";
 /** The Members block: portrait rows as the people directory draws them, sitting members first.
  *  `h` carries app.js's esc, photoUrlFor, personUrl, partyChipHTML, yearSpan, stateName, sourceLineHTML. */
-export function partyMembersHTML(label, members, h, {speechesHref = '', directoryHref = '', updated = ''} = {}) {
+export function partyMembersHTML(label, members, h, {speechesHref = '', speechSummary = '', directoryHref = '', updated = ''} = {}) {
   const independent = isIndependent(label);
   const total = members.current.length + members.former.length;
-  if (!total) return '';
+  if (!total) return `<section class="party-members" id="party-members"><h3 class="subject-section-title">Members</h3><p>${h.esc(PARTY_NO_MEMBERS)}</p></section>`;
   // Seat-roster members after a later election: not known to sit, not known to have left.
   const rostered = members.former.filter(m => m.seat_roster?.stale);
   const former = members.former.filter(m => !m.seat_roster?.stale && !m.roster?.current && recordedEnd(m.roster));
@@ -252,7 +253,7 @@ export function partyMembersHTML(label, members, h, {speechesHref = '', director
     datedGroup = Boolean(title) && dates.size === 1 && !dates.has('');
     if (datedGroup && !/as at/.test(title)) title = `${title}, as at ${dayMonthYear([...dates][0])}`;
     const shown = list.slice(0, SHOWN), rest = list.slice(SHOWN);
-    // With nobody sitting, the block's own heading says it all: no subheading.
+    // A flat Members list needs no subheading; split groups name only recorded service status.
     return `${title ? `<h4 class="entry-subhead">${h.esc(title)} (${list.length.toLocaleString()})</h4>` : ''}
       <ul class="subject-list dir-list party-member-list" role="list">${shown.map(row).join('')}</ul>
       ${rest.length ? `<details class="party-members-more"><summary>${rest.length.toLocaleString()} more ${h.esc((title || 'members').toLowerCase())}</summary>
@@ -262,10 +263,10 @@ export function partyMembersHTML(label, members, h, {speechesHref = '', director
     .map(day => group(`On the parliamentary roster as at ${dayMonthYear(day)}`, rostered.filter(m => m.seat_roster.as_of === day))).join('');
   return `<section class="party-members" id="party-members">
     <div class="entry-section-head"><h3 class="subject-section-title">${independent ? 'Parliamentarians' : 'Members'}</h3>${speechesHref ? `<a href="${h.esc(speechesHref)}">Their speeches</a>` : ''}</div>
+    ${speechSummary ? `<p class="ui-section-note">${h.esc(speechSummary)}</p>` : ''}
     ${members.current.length || rostered.length
-      ? group(independent ? 'Sitting parliamentarians' : 'Sitting members across all parliaments', members.current) + rosteredGroups + group(independent ? 'Former parliamentarians' : 'Former members', former)
-      : group('Former members', former)}
-    ${group('Other members in the record; service end not recorded', undated)}
+      ? group(independent ? 'Sitting parliamentarians' : 'Sitting members across all parliaments', members.current) + rosteredGroups + group(independent ? 'Former parliamentarians' : 'Former members', former) + group('Other members in the record; service end not recorded', undated)
+      : group('', [...former, ...undated])}
     ${directoryHref ? `<p class="entry-more"><a href="${h.esc(directoryHref)}">${h.esc(label)} in the parliamentarians directory</a></p>` : ''}
     ${h.sourceLineHTML({
       updated, source: 'Parliamentary roster, verified electorate rosters and recorded divisions',
