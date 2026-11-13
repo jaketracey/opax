@@ -78,6 +78,23 @@ test('the browser caches r5626 and the shared title lookup without per-division 
   assert.deepEqual(requests, ['/bills/au-federal-r5626.json', '/procedural-division-titles.json']);
 });
 
+test('the browser starts the title lookup before the bill JSON has arrived', async () => {
+  const bill = await read('/bills/au-federal-r5626.json');
+  const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
+  const start = app.indexOf('function fetchBill(key)');
+  const code = app.slice(app.indexOf('let proceduralTitlesPromise'), app.indexOf('// "bill:<key>"')) + app.slice(start, app.indexOf('/** The same record', start));
+  const requests = [], responses = new Map();
+  const fetchBill = runInNewContext(code+';fetchBill', {billFiles:new Map(), fetch:path => {
+    requests.push(path);
+    return new Promise(resolve => responses.set(path, resolve));
+  }});
+  const opening = fetchBill(bill.key);
+  assert.deepEqual(requests, ['/bills/au-federal-r5626.json', '/procedural-division-titles.json']);
+  responses.get('/procedural-division-titles.json')(Response.json({}));
+  responses.get('/bills/au-federal-r5626.json')(Response.json(bill));
+  assert.equal((await opening).key, bill.key);
+});
+
 test('every bill with embedded divisions agrees with the standalone source', async () => {
   const index = await read('/bills/index.json');
   let bills = 0, divisions = 0;

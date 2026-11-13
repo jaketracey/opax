@@ -26,14 +26,18 @@ const divisionLink = value => /^[a-z0-9][a-z0-9-]*$/.test(String(value || '')) ?
  * Limitation of debate can also be the stage of a content amendment or final passage.
  * Only explicit motions about running the debate belong in the procedural group. */
 export function isProceduralDivision(title) {
-  const text = divisionPlain(title).toLowerCase().replace(/[–—]/g, '-').replace(/\s+/g, ' ').trim();
+  const text = divisionPlain(title).toLowerCase().replace(/[‘’ʼ`]/g, "'").replace(/[–—]/g, '-').replace(/\s+/g, ' ').trim();
   return /\b(?:suspend(?:ing)?|suspension of) (?:the |so much of the )?(?:standing(?: and sessional)?|sessional) orders?\b/.test(text)
-    || /\bsuspend (?:the )?(?:usual )?(?:procedural |procedual )?(?:rules|orders)\b/.test(text)
-    || /\b(?:that the question be (?:now )?put|put the question|closure of (?:the )?debate|allotment of time)\b/.test(text)
-    || /(?:^|[-;:])\s*(?:closure|guillotine)\s*(?:$|[-;:(])/.test(text)
+    || /\bsuspend (?:the )?(?:usual )?(?:procedural |procedual )?(?:rules|orders)(?=\s*(?:$|[\[(])|\s+(?:to|so|for a motion)\b)/.test(text)
+    || /(?:^|\s)(?:that the question be (?:now )?put|put the question|speed things along)(?=\s*(?:$|[\[(]))/.test(text)
+    || /(?:^|\s)put the motion$/.test(text)
+    || /(?:^|\s)(?:closure of (?:the )?debate|allotment of time)\b/.test(text)
+    || /(?:^|[-;:]\s+)end debate\b/.test(text)
+    || /(?:^|[-;:]\s+)don't let (?:a )?vote happen(?=\s*(?:$|[\[(]))/.test(text)
+    || /(?:^|[-;:]\s+)(?:closure|guillotine)\s*(?:$|[-;:(])/.test(text)
     || /\b(?:member|senator) be no (?:longer|further) heard\b/.test(text)
-    || /(?:^|[-;:])\s*(?:(?:do not|don't) )?stopp?(?:ing)?\b[^.;:]*\b(?:speaking|talking)\b/.test(text)
-    || /\b(?:member|mp|senator)\b[^.;:]*\bstop speaking\b/.test(text)
+    || /(?:^|[-;:]\s+)(?:(?:do not|don't) )?(?:stop|stopping)\b[^.;:]*\b(?:speaking|speeaking|spearking|talking)\b/.test(text)
+    || /\b(?:member|mp|senator)\b[^.;:]*\sstop speaking\b/.test(text)
     || /\bstop debating (?:the )?bill until\b/.test(text)
     || /\b(?:adjourn(?:ment of)? (?:the )?debate|debate be (?:now )?adjourned)\b/.test(text)
     || /(?:^|[-;:])\s*(?:leave (?:be granted|to (?:introduce|move|proceed|withdraw))|(?:grant|refuse) leave|order of business|rearrangement of (?:the )?business|business - rearrangement)\b/.test(text);
@@ -52,8 +56,9 @@ export function billVoteSummary(groups) {
   const n = groups.substantive.length, p = groups.procedural.length;
   return `${n} substantive vote${n === 1 ? '' : 's'}${p ? `; ${p} procedural vote${p === 1 ? '' : 's'}` : ''}`;
 }
-export function billDivisionTablesHTML(divisions = [], titles = {}, query = {}, suffix = '', proceduralQuery = {}) {
+export function billDivisionTablesHTML(divisions = [], titles = {}, query = {}, suffix = '', proceduralQuery = {}, headingLevel = 2) {
   const groups = billDivisionGroups(divisions, titles);
+  const heading = headingLevel === 3 ? 'h3' : 'h2';
   const table = (rows, procedural) => {
     const config = divisionTableConfig({}, procedural ? 'Procedural votes' : 'Divisions');
     // Both groups query their complete, bounded bill export. An unfiltered server
@@ -65,7 +70,7 @@ export function billDivisionTablesHTML(divisions = [], titles = {}, query = {}, 
     return voteTableHTML(config, voteTablePage(rows, config, procedural ? proceduralQuery : query));
   };
   return `<p class="bill-vote-summary">${billVoteSummary(groups)}.</p>`
-    + (groups.substantive.length ? table(groups.substantive, false) : '<h2>Divisions</h2><p>No substantive divisions recorded.</p>')
+    + (groups.substantive.length ? table(groups.substantive, false) : `<${heading}>Divisions</${heading}><p>No substantive divisions recorded.</p>`)
     + (groups.procedural.length ? `<details class="ui-disclosure procedural-votes"><summary>Procedural votes (${groups.procedural.length})</summary><div class="ui-disclosure-body"><p>${PROCEDURAL_VOTES_NOTE}</p>${table(groups.procedural, true)}</div></details>` : '');
 }
 

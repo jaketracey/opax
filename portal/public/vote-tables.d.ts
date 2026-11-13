@@ -7,7 +7,7 @@ export const PROCEDURAL_VOTES_NOTE: string;
 export function proceduralTagHTML(): string;
 export function billDivisionGroups(divisions?: object[], titles?: Record<string,string>): {substantive: Row[]; procedural: Row[]};
 export function billVoteSummary(groups: {substantive: Row[]; procedural: Row[]}): string;
-export function billDivisionTablesHTML(divisions?: object[], titles?: Record<string,string>, query?: Query, suffix?: string, proceduralQuery?: Query): string;
+export function billDivisionTablesHTML(divisions?: object[], titles?: Record<string,string>, query?: Query, suffix?: string, proceduralQuery?: Query, headingLevel?: 2 | 3): string;
 export function divisionTableConfig(params?: Record<string,string>, caption?: string, pageType?: string): DataTableConfig;
 export function voteTableConfig(person: string | string[], caption?: string): DataTableConfig;
 export function personVoteKeys(name: string, personId?: string, votes?: Record<string,unknown> | null): string[];

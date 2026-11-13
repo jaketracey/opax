@@ -1,16 +1,17 @@
 {
+  "as_of": "2026-11-14",
   "audit_reported_candidates": 878,
   "candidates": 853,
-  "procedural": 785,
+  "procedural": 788,
   "bill_pages": 113,
   "exceptions": [
     {
-      "key": "federal-representatives-3681",
-      "title": "Members Suspension from the House"
+      "key": "federal-representatives-3041",
+      "title": "Commonwealth Inscribed Stock Amendment Bill 2013 - Consideration of Senate Message - Put the question re: removing the debt limit"
     },
     {
-      "key": "federal-representatives-4809",
-      "title": "Motions - Deputy Prime Minister - Stop MP Burke from speeaking"
+      "key": "federal-representatives-3681",
+      "title": "Members Suspension from the House"
     },
     {
       "key": "federal-representatives-5870",
@@ -19,18 +20,6 @@
     {
       "key": "federal-representatives-6000",
       "title": "Questions without Notice: Additional Answers - Minister for Energy and Emissions Reduction - Stop Mr Albanese from playing"
-    },
-    {
-      "key": "federal-representatives-6478",
-      "title": "Motions - Covid-19: State and Territory Border Closures - Speed things along"
-    },
-    {
-      "key": "federal-representatives-6479",
-      "title": "Motions - Covid-19: State and Territory Border Closures - Don't let a vote happen"
-    },
-    {
-      "key": "federal-representatives-6554",
-      "title": "Motions - Economy - Stop Mr Chalmers from spearking"
     },
     {
       "key": "federal-representatives-7043",
@@ -71,6 +60,10 @@
     {
       "key": "federal-senate-1767",
       "title": "Motions - Asylum Seekers - Stop excising territory"
+    },
+    {
+      "key": "federal-senate-1829",
+      "title": "Food Importation (Bovine Meat Standards) Bill 2010 — Second Reading — Put the question to read a second time"
     },
     {
       "key": "federal-senate-1840",
@@ -151,10 +144,6 @@
     {
       "key": "federal-senate-4943",
       "title": "Regional Investment Corporation Bill 2017 - in Committee - Disclosure of interests"
-    },
-    {
-      "key": "federal-senate-4953",
-      "title": "Environment and Infrastructure Legislation Amendment (Stop Adani) Bill 2017 - Second Reading - Speed things along"
     },
     {
       "key": "federal-senate-5317",

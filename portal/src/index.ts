@@ -4972,7 +4972,8 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
   const summary = detail?.summary?.sentences?.[0]?.trim()
   // The share card keeps the short count line; the description says what the page holds.
   const recordLine = counts.length ? `${andList(counts)} in the record.` : 'The official record, on OPAX.'
-  const tail = counts.length ? `${andList(counts)} in the record.`
+  // Divided bills keep both vote counts within the description's length budget.
+  const tail = counts.length ? (detail?.divisions?.length ? recordLine : `${andList(counts)}: who argued for and against it.`)
     : b.status === 'exposure_draft' ? 'The draft, its consultation and what it would change.'
     : 'Its progress, the bill text and every speech on it as the debate starts.'
   const portfolio = b.portfolio ? ` ${b.portfolio} portfolio.` : ''

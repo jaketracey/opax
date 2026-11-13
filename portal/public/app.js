@@ -31,7 +31,7 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=42ba8e3bf2").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=c5636b263d").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
@@ -8711,9 +8711,11 @@ function loadBillsDate() {
  *  failure rejects and is not kept, so the bill page can say so and a retry fetches again. */
 function fetchBill(key) {
   if (!billFiles.has(key)) {
-    const request = fetch(`/bills/${encodeURIComponent(key)}.json`, { cache: "no-cache" })
-      .then((r) => { if (r.ok) return r.json(); if (r.status === 404) return null; throw new Error(`bill ${r.status}`); })
-      .then(async bill => bill && (bill.divisions || []).length ? {...bill, division_titles:await loadProceduralTitles().catch(() => ({}))} : bill);
+    const request = Promise.all([
+      fetch(`/bills/${encodeURIComponent(key)}.json`, { cache: "no-cache" })
+        .then((r) => { if (r.ok) return r.json(); if (r.status === 404) return null; throw new Error(`bill ${r.status}`); }),
+      loadProceduralTitles().catch(() => ({})),
+    ]).then(([bill, titles]) => bill && (bill.divisions || []).length ? {...bill, division_titles:titles} : bill);
     request.catch(() => { if (billFiles.get(key) === request) billFiles.delete(key); });
     billFiles.set(key, request);
   }
@@ -9375,7 +9377,7 @@ function billDivisionsHTML(bill) {
         "No per-member or per-party vote is available without a formal division."]})}</section>`;
   }
   return `<section class="ui-section bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}>
-    ${voteTables.billDivisionTablesHTML(divs, bill.division_titles)}
+    ${voteTables.billDivisionTablesHTML(divs, bill.division_titles, {}, '', {}, 3)}
     ${sourceLineHTML({
       updated: bill.exportedAt || "", source: "They Vote For You",
       notes: [
@@ -9725,7 +9727,6 @@ const PARTY_BILLS_ENOUGH = 32; // stop as soon as this many bill files have arri
 const PARTY_BILLS_SHOW = 10;
 
 async function renderPartyBillDivisions(label, sections, key) {
-  await voteTablesReady;
   // The section takes its place in the column before anything is fetched:
   // where a reader finds it should not depend on how fast a file returns.
   const slot = document.createElement("section");
@@ -9735,6 +9736,8 @@ async function renderPartyBillDivisions(label, sections, key) {
   slot.innerHTML = `<h3 class="subject-section-title">Bills they divided on</h3>
     <p class="status">Reading the divisions…</p>`;
   sections.appendChild(slot);
+  await voteTablesReady;
+  if (currentSubjectKey !== key || !slot.isConnected) return;
   const idx = await loadDivisionBills();
   if (currentSubjectKey !== key || !slot.isConnected) return;
   if (!idx?.bills?.length) { slot.remove(); return; }

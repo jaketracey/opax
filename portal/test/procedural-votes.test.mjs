@@ -12,6 +12,9 @@ const pub = new URL('../public/', import.meta.url);
 const read = path => JSON.parse(readFileSync(new URL(path, pub), 'utf8'));
 const titles = read('procedural-division-titles.json');
 const fixtures = kind => JSON.parse(readFileSync(new URL(`fixtures/${kind}-division-titles.json`, import.meta.url), 'utf8'));
+const screenSnapshot = JSON.parse(readFileSync(new URL('fixtures/procedural-title-screen.json', import.meta.url), 'utf8'));
+const titleScreen = (divisions, asOf) => divisions.filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d.date || '') && d.date <= asOf
+  && /closure|suspension|no longer heard|put the question|stop/i.test(d.name || d.title || ''));
 // Thirty real titles each way, listed in these fixtures with their published division keys.
 // Keep the wording verbatim so punctuation, legislative titles and stages cross the real boundary.
 for (const [kind, expected] of [['procedural', true], ['substantive', false]]) {
@@ -37,11 +40,21 @@ const borderline = [
   ['federal-senate-7775', false, 'Suspends benefits and entitlements, not parliamentary rules.'],
   ['federal-representatives-5433', false, 'Suspends an opt-out policy phase, not debate.'],
   ['federal-senate-2750', false, 'Closure concerns Guantanamo Bay, not the debate.'],
+  ['federal-senate-3362', false, 'Reversing a position on an agency closure is a content motion.'],
   ['federal-senate-1408', false, 'Leave schedules unchanged is a content amendment, not leave to move a motion.'],
   ['federal-representatives-5870', false, 'Stop privatisation is a content motion.'],
   ['federal-senate-8087', false, 'Disclosure in a bill title is not closure of debate.'],
   ['federal-representatives-3681', false, 'A member suspension heading alone does not show a debate motion.'],
   ['federal-representatives-4969', true, 'Suspending parliamentary rules is explicit in this title.'],
+  ['federal-representatives-406', true, 'Speed things along is the closure motion, before the main question.'],
+  ['federal-representatives-3540', true, 'End debate on the main idea closes debate rather than deciding the main idea.'],
+  ['federal-representatives-3394', true, 'Put the motion is the closure question, not the second reading question.'],
+  ['federal-senate-3235', false, 'A qualified disallowance heading is outside the exact Put the motion closure label.'],
+  ['federal-representatives-4809', true, 'Speeaking is a recorded typo in a motion to stop an MP speaking.'],
+  ['federal-representatives-6554', true, 'Spearking is a recorded typo in a motion to stop an MP speaking.'],
+  ['federal-representatives-6479', true, 'Preventing a vote concerns the running of the debate.'],
+  ['federal-representatives-7986', false, 'Stop considering bill does not identify a closure motion.'],
+  ['federal-representatives-8062', false, 'Consider bill now does not identify a closure motion.'],
 ];
 for (const [key, procedural, why] of borderline) test(why, () => {
   assert.equal(tables.isProceduralDivision(read(`divisions/division-${key}.json`).name), procedural);
@@ -56,6 +69,30 @@ test('explicit procedure phrases, missing titles and content words', () => {
     'Parental Leave Bill 2026 - Second reading', 'Order for the production of documents',
     'Business - Small business grants', 'Leave second reading motion unchanged']) assert.equal(tables.isProceduralDivision(title), false, title);
   assert.equal(tables.isProceduralDivision('BILLS &ndash; Example Bill; **That the question be now put**'), true);
+});
+
+test('closure wording is anchored and curly apostrophes do not change the classification', () => {
+  for (const title of ['Mine pre-closure - rehabilitation', 'Non-stop talking points', 'Reverse position on closure',
+    'Put the question to the people', 'Suspend the rules of origin',
+    'Second Reading - Put the motion to the people', 'Put the motion (for disallowance)', 'Speed things along the coast',
+    'Stop considering bill', 'Consider bill now']) assert.equal(tables.isProceduralDivision(title), false, title);
+  for (const title of ['Speed things along', 'End debate', 'End debate on bill’s main idea',
+    'Second Reading - Put the motion', 'Put the question [closure]', 'Put the question (to read a second time)',
+    'Don’t let a vote happen', 'Don’t stop the MP from speaking']) assert.equal(tables.isProceduralDivision(title), true, title);
+});
+
+test('the published Speed things along titles are procedural, without inferring support for the bill', () => {
+  const divisions = readdirSync(new URL('divisions/', pub)).filter(f => f.startsWith('division-')).map(f => read(`divisions/${f}`));
+  const closure = divisions.filter(d => /speed things along\s*$/i.test(d.name || d.title || ''));
+  assert.ok(closure.length > 0);
+  for (const d of closure) {
+    const title = d.name || d.title;
+    assert.equal(tables.isProceduralDivision(title), true, d.key);
+    const records = tables.personVoteRecords(['fixture'], {fixture:{name:'Example Member', for:[{title}]}}).rows;
+    const [row] = tables.votingRows(records);
+    assert.equal(row.vote, 'Aye', d.key);
+    assert.equal(row.procedural, true, d.key);
+  }
 });
 
 test('release title lookup is rebuilt from published records using the shared classifier', () => {
@@ -109,6 +146,36 @@ test('person rows tag procedure and never describe it as support for the bill', 
 const app = readFileSync(new URL('app.js', pub), 'utf8');
 const sourceFile = ts.createSourceFile('app.js', app, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
 const functionSource = name => sourceFile.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === name).getText(sourceFile);
+
+test('a procedural-only bill keeps caller heading levels in the server and client', () => {
+  const bill = {...read('bills/au-federal-s1393.json'), division_titles:titles};
+  assert.equal(tables.billDivisionGroups(bill.divisions, titles).substantive.length, 0);
+  const server = new JSDOM(renderBillAnswer(bill, [], new Map()).html).window.document;
+  assert.equal([...server.querySelectorAll('h2')].find(h => h.textContent === 'Divisions')?.tagName, 'H2');
+  const context = {voteTables:tables, growthModules:{moduleAttrs:() => ''},
+    billDedupeDivisions:divisions => ({divisions, collapsed:0}), sourceLineHTML:() => ''};
+  runInNewContext(functionSource('billDivisionsHTML') + '\nthis.render = billDivisionsHTML;', context);
+  const client = new JSDOM(context.render(bill)).window.document;
+  assert.equal(client.querySelector('section h2'), null);
+  assert.equal(client.querySelector('section h3')?.textContent, 'Divisions');
+});
+
+test('the party vote section takes its place before the table module is ready', async () => {
+  const dom = new JSDOM('<div id="sections"></div>');
+  let ready, loads = 0;
+  const context = {document:dom.window.document, currentSubjectKey:'fixture',
+    voteTablesReady:new Promise(resolve => {ready = resolve;}),
+    loadDivisionBills:async () => {loads++; return {bills:[]};}};
+  runInNewContext(functionSource('renderPartyBillDivisions') + '\nthis.render = renderPartyBillDivisions;', context);
+  const sections = dom.window.document.querySelector('#sections');
+  const rendering = context.render('Example Party', sections, 'fixture');
+  assert.equal(sections.firstElementChild?.id, 'party-bills');
+  assert.equal(loads, 0);
+  ready();
+  await rendering;
+  assert.equal(loads, 1);
+  dom.window.close();
+});
 
 test('party vote rows, including folded runs, carry the procedural tag', async () => {
   const dom = new JSDOM('<div id="sections"></div>');
@@ -216,14 +283,23 @@ test('real server routes render both groups and metadata counts without a table 
 
 // The supplied audit list is not present on this Mac. Reproduce its title screen
 // against this checkout and keep every exception inspectable, without using parli.db.
-test('published title screen: count candidates and retain every conservative exception', () => {
+test('dated published title screen: count candidates and retain every conservative exception', () => {
   const divisions = readdirSync(new URL('divisions/', pub)).filter(f => f.startsWith('division-')).map(f => read(`divisions/${f}`));
-  const candidates = divisions.filter(d => /closure|suspension|no longer heard|put the question|stop/i.test(d.name || d.title || ''));
+  assert.match(screenSnapshot.as_of, /^\d{4}-\d{2}-\d{2}$/);
+  const candidates = titleScreen(divisions, screenSnapshot.as_of);
   const procedural = candidates.filter(d => tables.isProceduralDivision(d.name || d.title));
   const exceptions = candidates.filter(d => !tables.isProceduralDivision(d.name || d.title));
-  const snapshot = JSON.parse(readFileSync(new URL('fixtures/procedural-title-screen.json', import.meta.url), 'utf8'));
+  const snapshot = screenSnapshot;
   assert.equal(candidates.length, snapshot.candidates);
   assert.equal(procedural.length, snapshot.procedural);
   assert.equal(new Set(candidates.flatMap(d => (d.bills || []).map(b => b.key))).size, snapshot.bill_pages);
   assert.deepEqual(exceptions.map(d => ({key:d.key, title:d.name || d.title})), snapshot.exceptions);
+});
+
+test('the audit snapshot includes its cutoff day and ignores later or undated divisions', () => {
+  const date = new Date(`${screenSnapshot.as_of}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + 1);
+  const retained = {key:'fixture-cutoff', name:'Put the question', date:screenSnapshot.as_of};
+  const later = {...retained, key:'fixture-later', date:date.toISOString().slice(0,10)};
+  assert.deepEqual(titleScreen([retained, later, {...retained, date:undefined}], screenSnapshot.as_of), [retained]);
 });
