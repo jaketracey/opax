@@ -8,5 +8,11 @@ export const PARTY_MAP: Record<string, [string, string]>;
 export const PARTY_NAMES: Record<string, [string, string]>;
 export const PARTY_ALIASES: Record<string, string>;
 export function partyShortName(party: string): string;
+export interface PartyFormerName { name: string; aliases?: string[]; until?: string }
+export interface PartyRename { code: string; name: string; since?: string; former: PartyFormerName[]; history: string; sources: { label: string; href: string }[] }
+export const PARTY_RENAMES: PartyRename[];
+export function partyRename(label: string): PartyRename | null;
+export function partyFormerName(label: string): PartyFormerName | null;
+export function partyNames(party: string): [string, string];
 export const CHAMBER_LABELS: Record<string, string>;
 export function chamberLabel(code: string | null | undefined): string;

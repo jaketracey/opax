@@ -58,6 +58,14 @@ test('list: commissions by jurisdiction with counts and citations', async () => 
   assert.ok(out.rows.some(r => r.id === 'vic-family-violence'));
 });
 
+test('list citations read as the public record, not as OPAX stored it (a writer copied "57 recommendations loaded")', async () => {
+  const out = await call({ view: 'list', commission: 'robodebt', limit: 3 }); cited(out);
+  const line = out.citations.find(c => /Robodebt/.test(c.text))?.text ?? '';
+  assert.match(line, /Its reports make \d+ recommendations/, line);
+  assert.doesNotMatch(line, /\bloaded\b|\blisted\b|\b0 government response/, line);
+  assert.match(line, /hearing transcripts are held \(evidence, not findings\)/, line);
+});
+
 test('house jurisdiction codes ("vic", "federal") are accepted as the dataset codes', async () => {
   const vic = await call({ view: 'list', jurisdiction: 'vic', limit: 8 }); cited(vic);
   assert.ok(vic.rows.every(r => r.jurisdiction === 'Victoria'));

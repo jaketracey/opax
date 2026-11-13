@@ -37,7 +37,8 @@ async function asset<T>(assets: Fetcher, path: string, keep=false): Promise<T> {
   }
   return pending
 }
-function partyName(s:string){return normalize(s).replace(/australian labor party|australian labour party/g,'labor').replace(/liberal party of australia/g,'liberal').replace(/the nationals/g,'nationals')}
+// A renamed party's former names fold to its current one (labels.js PARTY_RENAMES), as scripts/build_search_catalog.mjs files them.
+function partyName(s:string){return normalize(s).replace(/australian labor party|australian labour party/g,'labor').replace(/liberal party of australia/g,'liberal').replace(/the nationals/g,'nationals').replace(/\bliberal democratic party\b|\bliberal democrats\b/g,'libertarian party')}
 export function matchesCatalogFilters(meta: Meta, params: URLSearchParams): boolean {
   const [kind,from,to,states,parties,speakers,topics,chamber,date]=meta
   const has = (field:string, value:string) => ('|'+field+'|').includes('|'+value+'|')

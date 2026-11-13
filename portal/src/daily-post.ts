@@ -337,7 +337,8 @@ function selectionSlide(award: ShardAward, graph: GrantsGraph | null): StorySlid
     : `This award was selected by ${sel.toLowerCase()}. Of the ${shortMoney(program.t)} the program awarded, ${shortMoney(program.cnc as number)} was closed and non-competitive.`
   const note = `Program figures: ${program.n}, ${formatNumber(program.c ?? 0)} awards${program.y0 ? ` from ${program.y0}${program.y1 && program.y1 !== program.y0 ? ` to ${program.y1}` : ''}` : ''}, ${shortMoney(program.t)} in total.`
   return { type: 'bars', kicker: 'How it was chosen', title, lines: [explain],
-    items: [{ label: 'Closed non-competitive', pct: share }, { label: 'Everything else', pct: Math.max(0, 100 - share) }], note,
+    // One program's dollars split two ways: parts of one whole.
+    items: [{ label: 'Closed non-competitive', pct: share }, { label: 'Everything else', pct: Math.max(0, 100 - share) }], note, whole: true,
     alt: `How it was chosen: ${title.toLowerCase()}. ${share} per cent of ${program.n}, ${shortMoney(program.cnc as number)} of ${shortMoney(program.t)}, was awarded without an open round.` }
 }
 
@@ -415,6 +416,7 @@ async function politicianPost(date: string, sources: DailyPostSources, exclude: 
   const count: StorySlide = { type: 'number', kicker: 'The record', title: 'What OPAX holds',
     lines: [span ? `Collected parliamentary records, ${span}.` : 'Collected parliamentary records.', 'Counts describe the collected record, not all parliamentary activity.'],
     value: speeches, label: 'speeches in the Opax record', alt: `The record: ${speeches} speeches by ${person.name} in the Opax record${span ? `, ${span}` : ''}.` }
+  // A speech can carry several labels, so the shares overlap: not parts of one whole, no `whole`.
   const bars: StorySlide | null = topics.length ? { type: 'bars', kicker: 'What they talk about', title: 'Most common topic labels', lines: [],
     items: topics.map(t => ({ label: TOPIC_NAMES[t.slug] ?? t.slug, pct: Math.round(t.share * 100) })),
     note: 'Shares of labelled speeches; a speech can carry several labels.',
@@ -874,12 +876,14 @@ async function programEdition(date: string, p: ProgramRecord, sources: DailyPost
     alt: `The program: ${formatMoney(p.t)} in ${formatNumber(p.c)} grants${p.r ? ` to ${formatNumber(p.r)} recipients` : ''}${years ? `, financial years ${years}` : ''}. ${governedLine(p)}`.trim() }
   const chosen: StorySlide | null = selectionKnown && selRows.length ? { type: 'bars', kicker: 'How it was chosen',
     title: cncPct === 100 ? 'No open round for any award' : cncPct !== null && cncPct >= 50 ? 'Mostly without an open round' : sentenceCase(p.sel[0][0].toLowerCase()),
-    lines: [], items: selRows.map(r => ({ label: sentenceCase(r.label.toLowerCase()), pct: r.pct })),
+    // Whole percentages of the dollars with a process recorded; the three largest shown, the rest is the remainder.
+    lines: [], items: selRows.map(r => ({ label: sentenceCase(r.label.toLowerCase()), pct: r.pct })), whole: true,
     note: selTotal >= p.t ? 'As recorded on GrantConnect for every award in the program.' : `Of the ${Math.round(selTotal / p.t * 100)}% of the dollars with a selection process recorded on GrantConnect.`,
     alt: `How it was chosen: ${selRows.map(r => `${r.label.toLowerCase()} ${r.pct} per cent`).join(', ')} of the dollars with a selection process recorded.` } : null
   const seats: StorySlide = { type: 'bars', kicker: 'Whose seats', title: 'By the party holding the seat',
     lines: [`Of the ${shortMoney(p.mapped[0])} OPAX can place in a seat (${placed}% of the dollars), by the member's party on the grant date.`],
-    items: split.map(s => ({ label: `${s.group}-held · ${s.seatPct}% of seats`, pct: s.pct })),
+    // The placed dollars across all three groups, adding to exactly 100 (programSplit refuses anything else).
+    items: split.map(s => ({ label: `${s.group}-held · ${s.seatPct}% of seats`, pct: s.pct })), whole: true,
     note: 'Share of seats: the House on the grant dates, weighted by value. Seats from award postcodes, approximate near boundaries.',
     alt: `By the party holding the seat on the grant date: ${split.map(s => `${s.group}-held seats ${s.pct} per cent of the placed dollars, ${s.seatPct} per cent of seats`).join('; ')}.` }
   const ledger: StorySlide | null = seatRows.length >= 3 ? { type: 'ledger', kicker: 'The seats', title: `The ${dayWords(seatRows.length).toLowerCase()} seats with the most`, lines: [],
@@ -893,7 +897,8 @@ async function programEdition(date: string, p: ProgramRecord, sources: DailyPost
   const timedTotal = timed.reduce((s, v) => s + v, 0)
   const timingPcts = wholePercents(timed)
   const when: StorySlide | null = timing && timedTotal >= p.t * 0.5 ? { type: 'bars', kicker: 'How close to an election', title: 'Time to the next federal election',
-    lines: [], items: buckets.map(([, label], i) => ({ label, pct: timingPcts[i] })),
+    // Every timed dollar in one of five buckets: whole percentages of one total.
+    lines: [], items: buckets.map(([, label], i) => ({ label, pct: timingPcts[i] })), whole: true,
     note: 'Agreement start to the next federal election. Agreements after 3 May 2025 have none yet.',
     alt: `Time from agreement start to the next federal election: ${buckets.map(([, label], i) => `${label.toLowerCase()} ${timingPcts[i]} per cent`).join(', ')}.` } : null
   const recipients: StorySlide | null = p.recipients.length >= 3 ? { type: 'ledger', kicker: 'Who received it', title: 'The largest recipients', lines: [],
@@ -1009,6 +1014,7 @@ async function topicPost(date: string, sources: DailyPostSources, exclude: strin
     const number: StorySlide = { type: 'number', kicker: 'The record', title: 'What parliament has said', lines: ['Figures describe collected records, not all parliamentary activity.'],
       value: formatNumber(count), label: `collected speeches${speakers ? ` from ${formatNumber(speakers)} speakers` : ''}`,
       alt: `The record: ${formatNumber(count)} collected speeches${speakers ? ` from ${formatNumber(speakers)} speakers` : ''} on ${report.title}.` }
+    // Scaled to the most frequent speaker, so the first bar is always 100: not parts of one whole, no `whole`.
     const bars: StorySlide | null = top.length ? { type: 'bars', kicker: 'Most speeches in this collection', title: 'Who speaks most', lines: [],
       items: top.map(([name, n]) => ({ label: `${name} · ${formatNumber(n)}`, pct: Math.max(1, Math.round(n / top[0][1] * 100)) })),
       note: 'Bars are relative to the most frequent speaker in the collection.',

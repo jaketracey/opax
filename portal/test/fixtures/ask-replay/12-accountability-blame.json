@@ -1,0 +1,122 @@
+{
+ "id": "accountability-blame",
+ "question": "Who is to blame for the sports rorts affair?",
+ "input": {
+  "kind": "speech"
+ },
+ "model": [
+  {
+   "tool_calls": [
+    {
+     "name": "search",
+     "args": {
+      "query": "sports grants blame minister Auditor-General"
+     }
+    }
+   ]
+  },
+  {
+   "tool_calls": [
+    {
+     "name": "answer",
+     "args": {
+      "points": [
+       {
+        "claim": "Jamie Example told the House the minister \"pork-barrelled sports grants into marginal seats\".",
+        "id": "cccccccccccccccccccccccccccccccc/t/body/0-137",
+        "quote": "pork-barrelled sports grants into marginal seats"
+       },
+       {
+        "claim": "The Auditor-General found the Minister for Sport's office ran a parallel assessment process, and the approved grants did not reflect Sport Australia's merit scores."
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "services": [
+  {
+   "path": "/find",
+   "match": [
+    "sports"
+   ],
+   "response": {
+    "resources": {
+     "cccccccccccccccccccccccccccccccc": {
+      "slug": "speech-910013",
+      "title": "Community Sport Infrastructure Program",
+      "origin": {
+       "created": "2020-02-05T00:00:00Z",
+       "collaborators": [
+        "Jamie Example"
+       ]
+      },
+      "extra": {
+       "metadata": {
+        "kind": "speech"
+       }
+      },
+      "fields": {
+       "body": {
+        "paragraphs": {
+         "cccccccccccccccccccccccccccccccc/t/body/0-137": {
+          "text": "This minister pork-barrelled sports grants into marginal seats and everyone on this side knows exactly who signed off on the spreadsheet."
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  {
+   "path": "/slug/speech-910013",
+   "response": {
+    "id": "cccccccccccccccccccccccccccccccc",
+    "title": "Community Sport Infrastructure Program",
+    "origin": {
+     "created": "2020-02-05T00:00:00Z",
+     "collaborators": [
+      "Jamie Example"
+     ]
+    },
+    "extra": {
+     "metadata": {
+      "date": "2020-02-05",
+      "speaker": "Jamie Example"
+     }
+    },
+    "data": {
+     "texts": {
+      "body": {
+       "value": {
+        "body": "This minister pork-barrelled sports grants into marginal seats and everyone on this side knows exactly who signed off on the spreadsheet."
+       }
+      }
+     }
+    },
+    "usermetadata": {
+     "classifications": [
+      {
+       "labelset": "kind",
+       "label": "speech"
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "assets": {},
+ "expect": {
+  "answered": true,
+  "lead": "^The Auditor-General found",
+  "includes": [
+   "Jamie Example"
+  ],
+  "citations": 1,
+  "cited": [
+   "cccccccccccccccccccccccccccccccc"
+  ]
+ }
+}
