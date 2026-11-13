@@ -3,7 +3,7 @@ import { personUrl, partyUrl } from './canonical-urls.js?v=c40e3d805e';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
 import { renderNotFound } from './not-found.js';
-import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=89dda4a520';
+import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=9dc97707be';
 import { pageMenuHTML as moreMenuHTML } from './page-actions-menu.js?v=8640c3d1ca';
 // The person page reads its verified-roster and dated official-list party fallbacks through this module (roster-party.js).
 export { rosterSeatParty, rosterListParty } from './roster-party.js';

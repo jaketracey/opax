@@ -31,18 +31,18 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=543bf0a704").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=ad0bcdd89e").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=5682105c48").then(module => { growthModules = module; });
+const growthModulesReady = import("/growth-modules.js?v=91a62dcf93").then(module => { growthModules = module; });
 let registerTables;
 const registerTablesReady = import('/register-tables.js?v=6fe318ff05').then(module => { registerTables = module; });
 let askPerson;
-const askPersonReady = import('/ask-person.js?v=fae51a8e69').then(module => { askPerson = module; });
+const askPersonReady = import('/ask-person.js?v=4850941f88').then(module => { askPerson = module; });
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=89dda4a520').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=9dc97707be').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
@@ -1554,7 +1554,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=2f0ac5c139' : '/ledger.js?v=3eca053be8');
+    const mod = await import(grants ? '/grants.js?v=7cca71c98a' : '/ledger.js?v=8163d69b07');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1585,7 +1585,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=5010c0cd39');
+    const mod = await import('/money-explain.js?v=4aa7dcefa8');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1604,7 +1604,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=af458c5346');
+    const mod = await import('/grant-recipient.js?v=5d6f5cfa04');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1858,7 +1858,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=4ad9f6ed4a");
+    const module = await import("/suppliers.js?v=b87582c4b1");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -4745,7 +4745,7 @@ function donorRecordHTML(record, meta) {
       ${record.firstYear ? tile(yearSpan(record.firstYear, record.lastYear), "years") : ""}
     </div>
     ${sourceLineHTML({ source, state: "totals are a floor", originals,
-      notes: [`Gifts disclosed under this exact name${meta?.commission ? ` to the ${esc(meta.commission)}` : ""}. The money map draws a bounded selection of donors, so the parties these gifts went to are in the returns themselves.`, esc(AEC_NOTE)],
+      notes: [`Gifts disclosed under this exact name${meta?.commission ? ` to the ${esc(meta.commission)}` : ""}. This donor is not drawn on the money map, which shows only the largest donors, so the parties these gifts went to are in the returns themselves.`, esc(AEC_NOTE)],
       licence: record.jurisdiction === "federal" ? AEC_LICENCE : "" })}
   </section>`;
 }
@@ -5455,7 +5455,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=e0a6265d56'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=e35d0cf0cf'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -7529,7 +7529,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=f422337d4b").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=38d9c6130c").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -9902,7 +9902,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=5010c0cd39"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=4aa7dcefa8"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=c475b569bf");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -9918,14 +9918,14 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=71e902e752", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=176001314e", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=6181b2b3c4", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=3eca053be8", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=2f0ac5c139", mount: "mountGrants" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=8163d69b07", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=7cca71c98a", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=6b98611d4a", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=e4cee22e35", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=104f347c23", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {

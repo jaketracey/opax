@@ -3,8 +3,8 @@ import {mountContractsTable} from './contracts-table.js?v=019010cca9';
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
-import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=37489fe89e";
-import { sourceLineHTML } from "./labels.js?v=89dda4a520";
+import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=e3516549bf";
+import { sourceLineHTML } from "./labels.js?v=9dc97707be";
 import { partyUrl } from "./canonical-urls.js?v=c40e3d805e";
 import { receiptGraph, receiptGraphScope } from "./donor-disclosure.js?v=8c73ceafd6";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);

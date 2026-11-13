@@ -5654,7 +5654,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
         ...(associated ? [`${associated.charAt(0).toUpperCase()}${associated.slice(1)}`] : [])],
     }
   } else {
-    facts = disclosureRecord?.kind==='reference' ? `${display}: source reference; no matching electoral donation established.` : `${display}: disclosed electoral returns outside the bounded money-map selection.`
+    facts = disclosureRecord?.kind==='reference' ? `${display}: source reference; no matching electoral donation established.` : `${display}: disclosed electoral returns. Not drawn on the money map, which shows only the largest donors.`
     card = {kicker:disclosureRecord?.kind==='reference'?'Source reference':'Donor',title:display,lines:[facts]}
   }
   // A renamed party's name history (labels.js PARTY_RENAMES): the line under its heading, with the notices.

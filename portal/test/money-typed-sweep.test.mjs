@@ -465,6 +465,22 @@ test('one predicate: hasPartyReceipts picks out the released donors and flows on
   assert.equal(hasPartyReceipts({total: 0, count: 0}), true, 'a record without typed cells (a state graph) keeps its figures');
 });
 
+test('a declared-only flow to a renamed party: the former name before the new one was registered, the current name after', async () => {
+  // Invented: Allianz's $500 moved to 2024-25, after the Libertarian Party was registered (12 January 2024).
+  const moved = structuredClone(published);
+  const flow = moved.edges.find(e => e.source === 'donor:allianz australia' && e.target === 'party:Libertarian Party');
+  Object.assign(flow, {byYear: {2024: [500, 1]}, firstYear: 2024, lastYear: 2024});
+  const movedEnv = {...env, asset: async path => path === '/graph/money.json' ? structuredClone(moved) : asset(path)};
+  movedEnv.ASSETS = {async fetch(req) { const body = await movedEnv.asset(new URL(req.url).pathname); return body ? Response.json(body) : new Response('missing', {status: 404}); }};
+  const out = await api.callTool(movedEnv, 'money_totals', {donor: 'donor:allianz australia', party: 'Libertarian Party'});
+  assert.deepEqual(out.donor_declared, [{party: 'Libertarian Party', donor_declared_aud: 500, records: 1, period: '2024-25'}]);
+  assert.match(out.citations[0].text, /declares \$500 to Libertarian Party across 1 record \(2024-25\)\. Libertarian Party's own returns list no receipt/);
+  // FY 2022-23 ends 30 June 2023, before the registration: still the former name.
+  Object.assign(flow, {byYear: {2022: [500, 1]}, firstYear: 2022, lastYear: 2022});
+  const before = await api.callTool(movedEnv, 'money_totals', {donor: 'donor:allianz australia', party: 'Libertarian Party'});
+  assert.equal(before.donor_declared[0].party, 'Liberal Democratic Party');
+});
+
 test('Ask money_totals: never a $0 donor row; a flow only the donor declared is said as the donor\'s declaration', async () => {
   for (const n of DECLARED_ONLY) {
     const out = await api.callTool(env, 'money_totals', {donor: n.id});
@@ -484,7 +500,11 @@ test('Ask money_totals: never a $0 donor row; a flow only the donor declared is 
   const allianz = await api.callTool(env, 'money_totals', {donor: 'donor:allianz australia', group_by: 'party'});
   assert.deepEqual(allianz.rows.map(r => r.party), ['Labor', 'Liberal', 'Nationals']);
   // 13 Nov 2026: Allianz's own 2018-19 declaration of $500 to the Liberal Democratic Party joins the note; that party's return lists no such receipt.
-  assert.ok(allianz.notes.some(n => n.startsWith("Not counted above: Allianz Australia Limited's own donor returns declare $68,298 to federal parties across 19 records: LNP $67,798 (2011-12 to 2022-23); Libertarian Party $500 (2018-19).")));
+  // It names the party as the gift was made, before the Libertarian Party was registered (#344, labels.js PARTY_RENAMES).
+  assert.ok(allianz.notes.some(n => n.startsWith("Not counted above: Allianz Australia Limited's own donor returns declare $68,298 to federal parties across 19 records: LNP $67,798 (2011-12 to 2022-23); the Liberal Democratic Party (now the Libertarian Party) $500 (2018-19).")));
+  assert.deepEqual(allianz.donor_declared.at(-1), {party: 'Liberal Democratic Party', party_now: 'Libertarian Party', donor_declared_aud: 500, records: 1, period: '2018-19'}, 'the writer gets the recorded name too');
+  const itAlliance = await api.callTool(env, 'money_totals', {donor: 'donor:it alliance australia'});
+  assert.match(itAlliance.citations[0].text, /^IT Alliance Australia Pty Ltd's own donor return declares \$1,000 to the Liberal Democratic Party \(now the Libertarian Party\) across 1 record \(2019-20\)\. The Liberal Democratic Party's own returns list no receipt/);
   // A ranking holds only donors the parties' returns list.
   const ranked = await api.callTool(env, 'money_totals', {group_by: 'donor', limit: 20});
   assert.equal(ranked.matched, published.nodes.filter(n => n.kind === 'donor' && hasPartyReceipts(n)).length);

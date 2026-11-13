@@ -4,7 +4,7 @@ import {renderNotFound} from './not-found.js';
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=8c73ceafd6';
 import {loadDonorViewIndex} from './donor-views.js?v=c475b569bf';
 import {partyUrl} from './canonical-urls.js?v=c40e3d805e';
-import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=2f0ac5c139';
+import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=7cca71c98a';
 
 const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const NUMBER = new Intl.NumberFormat('en-AU');

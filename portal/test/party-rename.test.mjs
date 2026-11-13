@@ -317,3 +317,25 @@ test('the merged Libertarian Party page shows its money: the headline, the scope
   assert.match(doc.querySelector('.party-history')?.textContent || '', /renamed Libertarian Party\. The AEC deregistered the Liberal Democratic Party on 19 July 2022/);
   assert.doesNotMatch(text, /—/, 'no em dashes');
 });
+
+test('search: the current name, the former name and its alias each find only the one party page', {timeout: 120_000}, async () => {
+  const {loadWorker, offline} = await import('./worker-harness.mjs');
+  const root = new URL('../', import.meta.url).pathname;
+  const restore = offline();
+  try {
+    const worker = await loadWorker(root + 'src/index.ts', root + 'public/');
+    const partyHits = (value, out = []) => {
+      if (Array.isArray(value)) value.forEach(v => partyHits(v, out));
+      else if (value && typeof value === 'object') {
+        if (value.kind === 'party' || String(value.href || '').startsWith('/subject/party/')) out.push(value.href);
+        else Object.values(value).forEach(v => partyHits(v, out));
+      }
+      return out;
+    };
+    for (const q of ['Libertarian Party', 'Liberal Democratic Party', 'Liberal Democrats']) {
+      const response = await worker.fetch(`/api/search-all?q=${encodeURIComponent(q)}`);
+      assert.equal(response.status, 200, q);
+      assert.deepEqual(partyHits(await response.json()), ['/subject/party/libertarian-party'], q);
+    }
+  } finally { restore(); }
+});

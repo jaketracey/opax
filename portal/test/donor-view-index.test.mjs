@@ -22,3 +22,15 @@ test('the published donor index carries source names, return references and matc
   if(donor.match.confidence!==1 || !['exact','curated'].includes(donor.match.method))assert.equal(view.href,'/subject/donor/'+encodeURIComponent(donor.source_name));
  }
 });
+
+// A donor that leaves a money map keeps its index entry, its page and its search result
+// (export_donor_disclosures.indexed_off_map carries it into donor-disclosures.json).
+test('every donor on main\'s published index is still reachable by its name', () => {
+  const pinned = JSON.parse(readFileSync(new URL('./fixtures/donor-index-main.json', import.meta.url))).donors;
+  const index = donorLookup(JSON.parse(readFileSync(new URL('../public/graph/donor-index.json', import.meta.url))).donors);
+  const lost = pinned.filter(row => !index.has(foldDonorName(row.split('\t')[1])));
+  assert.deepEqual(lost, []);
+  assert.ok(pinned.includes('federal\tLinc Energy'), 'Linc Energy, rank 251 since the Libertarian Party\'s donors were counted');
+  const linc = index.get(foldDonorName('Linc Energy'));
+  assert.deepEqual([linc.jurisdiction, linc.total, linc.count], ['federal', 671498, 18], 'its own returns, summed from the database');
+});
