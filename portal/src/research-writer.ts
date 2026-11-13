@@ -1,7 +1,7 @@
 import { generateText } from 'ai'
 import {researchTrace} from './research-trace'
 import { reserveQuestionTurn, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS } from './ask-budgets'
-import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, type WritingInput } from './research-writing'
+import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, dedupeWritingFacts, type WritingInput } from './research-writing'
 const VOTE_METRICS=new Set(['aye','no','all_aye','all_no','split'])
 import { researchTurnReservationUsd } from './research-budget'
 import { isResearchCreditError, researchCreditCooldown } from './research-credit'
@@ -16,7 +16,7 @@ import {moneyWritingInput,receiptWritingLines,completeMoneySelection} from './re
 /** Same pinned model, provider, limiter, token ceiling, wall cap and D1 reservation as research. */
 export function createAnswerWriter(options: ResearchOptions) {
   return async (input: WritingInput, stats: ResearchStats, signal: AbortSignal | undefined, remainingMs: number): Promise<QualitativeAnswer> => {
-    input=moneyWritingInput(input)
+    input=moneyWritingInput({...input,facts:dedupeWritingFacts(input.facts)})
     // Every check sees all the facts handed in, not just those a draft happened to cite.
     const found=input.facts.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     // A chamber named for a cited speaker is the one their source records (ask-chamber-phrases.ts).
