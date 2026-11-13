@@ -1,0 +1,17 @@
+{
+ "source": "AEC annual returns, Associated Entity Returns.csv (AllAnnualData), as loaded into ext_aec_returns by parli/ingest/money_aec_extras.py",
+ "note": "The fallback for scripts/aec_receipt_types.py when ext_aec_returns is absent: only the associated-entity names that decide a party-return line (a party unit's payment counted as an associated entity's, not a transfer). Regenerate with `python -m scripts.aec_receipt_types --db <parli.db> --pin`.",
+ "names": [
+  "ALP Holdings Pty Ltd as Trustee of the ALP Investment Trust",
+  "Australian Labor Party - Holdings Pty Ltd",
+  "Labor Dinner Club",
+  "Labor Resources Pty Ltd",
+  "Labor Services & Holding Pty Ltd ATF the Labor Services and Holding Trust",
+  "Liberal Properties (Northern Metropolitan Region) Limited",
+  "NSW Labor Campaign Investment Pty Ltd",
+  "National Free Enterprise Foundation (WA) Ltd",
+  "Pauline Hanson's One Nation Ltd",
+  "Pauline Hanson's One Nation Trust",
+  "Pilliwinks Pty Ltd as Trustee National Party Foundation"
+ ]
+}

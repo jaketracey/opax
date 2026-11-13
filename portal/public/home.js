@@ -427,7 +427,7 @@ async function mount() {
     const span = mapSpan(graph.meta);
     if (span) $("hp-map-span").textContent = span;
     const { mountMoneyMap } = await import(
-      "/money-map.js?v=6494696c46"
+      "/money-map.js?v=7ca6ed22e2"
     );
     if (disposed) return;
     root.replaceChildren();
