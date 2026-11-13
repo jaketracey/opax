@@ -71,6 +71,14 @@ test('restatement is read only from the subject and its description',()=>{
   assert.equal(api.restatesOpening('Jacinta Allan is the Victorian Premier.','Tim Pallas is the Treasurer.'),false)
 })
 
+test('without an inquiry in the record, the model’s first point leads whatever it names',()=>{
+  const record='- Example Holdings Pty Ltd was paid $2,000,000 for the land in 2018.'
+  const points='- Pat Example told the House the purchase was approved by a deputy secretary.\n- Sam Sample told the Senate the price was ten times the land\'s value.'
+  const answer=record+'\n'+points
+  const out=api.leadWithModelAnswer({answer,citations:{'fact-1/t/body/0':[[2,Array.from(record).length]]}},{answer:points,citations:{}},'Who was responsible for the land purchase?')
+  assert.match(out.answer,/^- Pat Example told the House/)
+})
+
 test('a money question keeps its calculated lead',()=>{
   const record='Example Holdings Pty Ltd gave the most to the Labor Party, $1,250,000 across 2022-23 and 2023-24.\n- Sample Group gave $640,000.'
   const point='Taylor Example told the House on 3 May 2024 that donations from developers should be capped.'
@@ -92,15 +100,17 @@ test('a what question still leads with the model’s first point, then the recor
   assert.match(cited(out,'speech-2/t/body/0')[0],/^Pat Example said/)
 })
 
-test('robodebt, second run: a passage line the writer placed among the record facts still leads, the restated inquiry goes',()=>{
+test('robodebt, second run: the model point reporting the Royal Commission leads, not another body clearing someone; the restated inquiry goes',()=>{
   // As composed: the writer's record prose (with one passage line inside it), then the model's points.
   const fixture=stored['event-01-run2'],lines=linesOf(fixture)
   const payload={...join(lines),sources:fixture.sources},points={answer:lines.slice(4).map(l=>l.text).join('\n'),citations:{}}
   const out=api.leadWithModelAnswer(payload,points,fixture.question)
   const [first]=sentences(out.answer)
-  assert.match(first,/Scott Morrison/,first)
+  assert.match(first,/^Mark Dreyfus told the House on 10 October 2024 that the royal commission concluded the former Liberal government's scheme/,first)
+  assert.doesNotMatch(first,/National Anti-Corruption Commission|cleared/)
   for(const date of ['18 August 2022','7 July 2023'])assert.equal(out.answer.split(date).length-1,1,date)
   assert.doesNotMatch(out.answer,/was the inquiry that established responsibility/)
+  assert.match(out.answer,/Zali Steggall told the House/,'the other body\'s finding stays, after the answer')
   assert.match(cited(out,'fact-22/t/body/0')[0],/^The Royal Commission into the Robodebt Scheme was established by Letters Patent/)
   assert.match(cited(out,'speech-1594111/t/body/0-648')[0],/^Mark Dreyfus told the House/)
 })

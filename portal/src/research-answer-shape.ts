@@ -57,29 +57,16 @@ export function leadWithFinding<T extends Record<string,unknown>>(payload:T,ques
 }
 
 const QUANTITATIVE_QUESTION=/\bhow (?:many|much)\b|\b(?:most|highest|lowest|least|largest|biggest|top|total|fewest|ranked?)\b/i
-// "Who was responsible", "who led it": the answer is people. "Who is Jacinta Allan?" asks about one named person.
-const peopleQuestion=(question:string)=>/\bwho\b/i.test(question)&&!/^\s*who\s+(?:is|was|are|were)\s+(?:[A-Z]|the\s+(?:current\s+)?(?:member|senator|premier|prime|leader|treasurer|minister))/.test(question)
-// Capitalised words that open names of bodies, places, dates and parties rather than people.
-const NOT_PERSON=new Set(('the a an in on at of that this these those it its he she they his her their mr mrs ms dr senator minister prime royal commission commissioner house senate parliament parliamentary australian australia national '+
-  'audit office auditor-general government department cabinet scheme report act bill labor liberal liberals greens party coalition commonwealth federal state victorian victoria queensland new south wales '+
-  'western northern southern eastern sydney melbourne brisbane perth adelaide canberra airport international court tribunal inquiry committee review letters patent general services social human independent member '+
-  'members leader opposition treasurer treasury centrelink assembly council legislative legislation estimates question questions notice january february march april may june july august september october '+
-  'november december monday tuesday wednesday thursday friday saturday sunday hansard record records day hearing transcript transcripts mp mps').split(' '))
-const nameKey=(name:string)=>name.toLowerCase().replace(/[’']s$/,'')
-/** People a sentence names in what it reports, beyond who said it and any names already in context. */
-function namedPeople(line:string,exclude:string[]):string[] {
-  const reported=line.replace(/^(?:[-*]\s*)?[^.]{0,80}?\b(?:told|said|asked|moved|stated|argued|claimed)\b/,'')
-  const out:string[]=[]
-  for(const match of reported.matchAll(/\b[A-Z][a-z’'-]+(?:\s+[A-Z][a-z’'-]+)+/g)){
-    const words=match[0].split(/\s+/).map(nameKey)
-    // A run of capitals can join a body and a name ("Cabinet Scott Morrison"); the person is its last two words.
-    const tail=words.slice(-2)
-    if(tail.some(w=>NOT_PERSON.has(w)||w.length<2))continue
-    const name=tail.join(' ')
-    if(exclude.some(e=>e.includes(name)))continue
-    out.push(name)
-  }
-  return out
+// The kind of inquiry a record opening names ("The Royal Commission into the Robodebt Scheme" is a royal commission).
+const INQUIRY_KIND=/\b(?:commission|inquiry|review|audit|investigation|report)\b/i
+const escapeRegExp=(text:string)=>text.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
+/** Words that refer to the inquiry a record opening is about: its name before "into …" and "the <kind>"
+ * ("Royal Commission", "the commission"). Null when the opening is not about an inquiry. */
+function inquiryReference(subject:string):RegExp|null {
+  const head=subject.replace(/\s+(?:into|of|on|for)\b.*$/i,'').replace(/^the\s+/i,'').trim()
+  if(!head||!INQUIRY_KIND.test(head))return null
+  const kind=head.split(/\s+/).pop()!
+  return new RegExp(`\\b${escapeRegExp(head)}|\\bthe ${escapeRegExp(kind)}(?![a-z])`,'i')
 }
 const firstSentence=(text:string)=>sentenceParts(text)[0]?.text??''
 const subjectOf=(sentence:string)=>{const m=/^(?:[-*]\s*)?((?:[A-Z][\w’'-]*|of|into|the|for|on|and)(?:\s+(?:[A-Z][\w’'-]*|of|into|the|for|on|and)){1,9})(?=,\s|\s+(?:is|was|are|were)\s)/.exec(sentence);return m?m[1]:''}
@@ -104,9 +91,9 @@ function mergedRestatement(first:string,second:string):string|null {
 }
 
 /** The model's direct answer leads an answer that also carries record facts or written record prose; the record prose
- * follows as context, then the model's other points. For a who question about people (not "who is X?") the lead is the
- * model's first point that names someone beyond its speaker and the record context, with the lines that continue it
- * from the same source. The record's opening is said once: a model point restating it goes, unless it is the cited
+ * follows as context, then the model's other points. The lead is the model's first point; when the record opens with
+ * an inquiry, it is the model's first point reporting that inquiry, if there is one. Lines that continue the lead from
+ * the same source stay with it. The record's opening is said once: a model point restating it goes, unless it is the cited
  * lead, when the record sentence keeps only what it adds. A count or money question keeps its calculated record lead. Every
  * kept line moves with its citations. */
 export function leadWithModelAnswer<T extends Record<string,unknown>>(payload:T,points:{answer?:unknown;citations?:unknown}|undefined,question=''):T {
@@ -138,13 +125,10 @@ export function leadWithModelAnswer<T extends Record<string,unknown>>(payload:T,
   const restating=new Set(modelLines.filter(l=>restatesOpening(firstSentence(l.text),recordOpening)))
   const candidates=modelLines.filter(l=>!restating.has(l)||l.ids.length>0)
   if(!candidates.length)return payload
-  let lead=candidates[0]
-  if(question&&peopleQuestion(question)){
-    const sources=(Array.isArray(payload.sources)?payload.sources:[]) as {speaker?:string}[]
-    const exclude=[question,...record.map(l=>l.text),...sources.map(s=>s.speaker??'')].map(t=>t.toLowerCase()).filter(Boolean)
-    const naming=(l:Line)=>{const speaker=/^(?:[-*]\s*)?(?:[A-Z][\w’'-]*\s+){0,3}?([A-Z][a-z’'-]+\s+[A-Z][a-z’'-]+)\s+(?:told|said|asked|moved|stated)\b/.exec(l.text)?.[1]?.toLowerCase();return !restating.has(l)&&namedPeople(l.text,speaker?[...exclude,speaker]:exclude).length>0}
-    if(!naming(lead))lead=candidates.find(naming)??lead
-  }
+  // The model's first point leads, unless the record opens with an inquiry: then the first of its points that reports
+  // that inquiry (its findings, its report, its commissioner) leads, so another body's view never comes first.
+  const inquiry=inquiryReference(subjectOf(recordOpening))
+  const lead=(inquiry&&candidates.find(l=>!restating.has(l)&&inquiry.test(l.text)))||candidates[0]
   let rewrite:string|null=null
   if(restating.has(lead)){const merged=mergedRestatement(firstSentence(lead.text),recordOpening);if(merged)rewrite=merged}
   const dropped=new Set([...restating].filter(l=>l!==lead&&(!l.ids.length||recordCited)))
