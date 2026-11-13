@@ -151,7 +151,7 @@ import {renderMoneyConnectionsTable} from './money-connections-table'
 import { pressHeadlineAndText, pressTitle } from './press-title'
 import { photoFor, validStory, STORY_VERSION as STORY_SLIDES_VERSION, type PhotoCatalogue, type StoryFormat } from './story'
 import { withTranscriptNote } from './transcript-answer'
-import { notFoundHTML, type NotFoundKind } from '../public/not-found.js'
+import { notFoundHTML, NOT_FOUND_KINDS, type NotFoundKind } from '../public/not-found.js'
 import { noRecordMentions } from './search-mention'
 
 interface FindParagraph {
@@ -4873,6 +4873,8 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
   const empty = meta.status === 404 ? notFoundKindFor(route, url) : null
   if (empty) {
     meta.notFound = empty.kind
+    // The tab, the share title and the heading say the same thing.
+    meta.title = `${NOT_FOUND_KINDS[empty.kind].title} · OPAX`
     // An address nothing answers sits under no section: its path names nothing (a withdrawn report's included).
     if (empty.kind === 'page') meta.trail = [{ label: 'Page not found' }]
     meta.prerender = `<section id="prerender" class="wrap">${notFoundHTML({ kind: empty.kind, slug: empty.slug, headingId: 'not-found-title' })}</section>`
@@ -5568,9 +5570,11 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     display = party.label
   } else {
     node = moneyData?.donors.get(foldName(name)) ?? null
-    disclosureRecord = node ?? (await loadDonorIndex(env.ASSETS).catch(()=>null))?.get(foldName(name)) ?? null
-    const known = Boolean(disclosureRecord)
-    if (!known) return unknownSubjectMeta('donor', known !== null)
+    // The index is keyed by its own fold (donorLookup: foldDonorName), so it is read with that fold.
+    const index = node ? null : await loadDonorIndex(env.ASSETS).catch(()=>null)
+    disclosureRecord = node ?? index?.get(foldDonorName(name)) ?? null
+    // A name the index holds nowhere is a 404; an index that could not be read is a 503, never "No donor by this name".
+    if (!disclosureRecord) return unknownSubjectMeta('donor', Boolean(index))
     display = disclosureRecord ? donorDisclosure(disclosureRecord).name : name
   }
   const canonical = dir==='party' ? `${SITE_ORIGIN}${partyUrl(display)}` : node && donorDisclosure(node).href ? new URL(donorDisclosure(node).href!,SITE_ORIGIN).href : `${SITE_ORIGIN}/subject/${dir}/${encodeURIComponent(display)}`

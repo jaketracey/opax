@@ -22,7 +22,7 @@ class Rewriter {
   transform(response){const handlers=this.handlers;return new Response(new ReadableStream({async start(controller){
     let html=await response.text();
     for(const [selector,handler] of handlers){
-      const mutate=(outer,open,inner,close)=>{let attr=open,body=inner,removed=false;const el={setAttribute(name,value){const re=new RegExp(` ${name}="[^"]*"`);const next=` ${name}="${escapeHtml(value)}"`;attr=re.test(attr)?attr.replace(re,next):attr.replace(/>$/,next+'>');},setInnerContent(value,opts){body=opts?.html?value:escapeHtml(value);},append(value){body+=value;},prepend(value){body=value+body;},remove(){removed=true;}};handler.element(el);return removed?'':attr+body+close;};
+      const mutate=(outer,open,inner,close)=>{let attr=open,body=inner,removed=false;const el={getAttribute(name){const m=new RegExp(` ${name}="([^"]*)"`).exec(attr);return m?m[1]:null;},setAttribute(name,value){const re=new RegExp(` ${name}="[^"]*"`);const next=` ${name}="${escapeHtml(value)}"`;attr=re.test(attr)?attr.replace(re,next):attr.replace(/>$/,next+'>');},setInnerContent(value,opts){body=opts?.html?value:escapeHtml(value);},append(value){body+=value;},prepend(value){body=value+body;},remove(){removed=true;}};handler.element(el);return removed?'':attr+body+close;};
       if(selector==='main#main')html=html.replace(/(<main\b[^>]*>)([\s\S]*?)(<\/main>)/,mutate);
       else if(selector==='div#crawl-facts')html=html.replace(/(<div\b[^>]*id="crawl-facts"[^>]*>)([\s\S]*?)(<\/div>)/,mutate);
       else if(selector==='title')html=html.replace(/(<title>)([\s\S]*?)(<\/title>)/,mutate);
@@ -591,7 +591,7 @@ test('an address nothing answers gets the site page, noindex, with a way on; a m
     const response=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});
     assert.equal(response.status,404,path);assert.equal(response.headers.get('x-robots-tag'),'noindex',path);
     const html=await response.text();
-    assert.match(html,/<title>Page not found · OPAX<\/title>/,path);
+    assert.match(html,/<title>Nothing at this address · OPAX<\/title>/,path);
     assert.match(html,/<nav class="crumbs prerender-crumbs"[^>]*>.*<span class="crumb-label">Page not found<\/span>/s,path);
     // The one not-found block (public/not-found.js): a title, one line, the search and a way home.
     assert.match(html,/<section class="not-found" data-not-found="page"[^>]*><div class="not-found-art" aria-hidden="true"><\/div><h1 id="not-found-title" tabindex="-1">Nothing at this address<\/h1><p class="not-found-line">The link may be old, or the record may not be published yet\.<\/p><form class="not-found-search" action="\/ask" method="get" role="search">/,path);
@@ -601,7 +601,7 @@ test('an address nothing answers gets the site page, noindex, with a way on; a m
   }
   for(const path of ['/no-such-script.js','/missing.png']){
     const response=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});
-    assert.equal(response.status,404,path);assert.doesNotMatch(await response.text(),/Page not found · OPAX/,path);
+    assert.equal(response.status,404,path);assert.doesNotMatch(await response.text(),/Nothing at this address · OPAX/,path);
   }
 });
 test('every empty record address is the one not-found block, served without the app, still a 404',async()=>{
@@ -621,6 +621,7 @@ test('every empty record address is the one not-found block, served without the 
     const html=await response.text();
     const block=html.slice(html.indexOf('<section id="prerender"'),html.indexOf('</section></section>')+20);
     assert.match(block,new RegExp(`<h1 id="not-found-title" tabindex="-1">${title}</h1>`),path);
+    assert.match(html,new RegExp(`<title>${title} · OPAX</title>`),`${path}: the tab says what the heading says`);
     assert.ok(block.includes(`name="q" type="search" value="${words}"`),path);
     assert.ok(block.includes(`<a class="ui-button" href="${pill}">`),path);
     // No profile shell, no source line, no alarm, never the raw identifier.
