@@ -191,6 +191,71 @@
             "end": "2013-08-09"
           }
         ]
+      },
+      {
+        "name": "Fatima Payman",
+        "chamber": "senate",
+        "pid": "11007",
+        "checked": "2026-11-13",
+        "url": "https://www.wikidata.org/wiki/Q112152550",
+        "evidence": "Wikidata Q112152550, member of political party (P102), fetched 13 Nov 2026: Australian Labor Party to July 2024 and independent from July 2024, both to the month only; Senate term from 1 Jul 2022 (P39). The Parliamentary Handbook (PHID 300707) gives one undated Labor record. Senate Hansard in the OPAX corpus (OpenAustralia) heads her speeches Australian Labor Party from 7 Feb to 30 Mar 2023 (last: speech 829730), Independent from 10 Feb to 26 Mar 2025 (speeches 1194181 to 1194942) and Australia's Voice from 22 Jul 2025 (speech 1195102) to 17 Sep 2026 (speech 1319678). The corpus agrees with Wikidata and dates Australia's Voice, which Wikidata does not list; the corpus is taken. Neither source gives the day in July 2024, so July 2024 is left out; she voted in no Senate division between 27 Jun and 13 Aug 2024 (OPAX division pages), so no division row falls in that gap. No Senate sat between 26 Mar and 22 Jul 2025. The last period ends the day after her latest heading in the corpus.",
+        "periods": [
+          {
+            "party": "Labor",
+            "start": "2022-07-01",
+            "end": "2024-07-01"
+          },
+          {
+            "party": "Independent",
+            "start": "2024-08-01",
+            "end": "2025-03-27"
+          },
+          {
+            "party": "Australia's Voice",
+            "start": "2025-07-22",
+            "end": "2026-09-18"
+          }
+        ]
+      },
+      {
+        "name": "Dorinda Cox",
+        "chamber": "senate",
+        "pid": "10964",
+        "checked": "2026-11-13",
+        "url": "https://www.wikidata.org/wiki/Q108441696",
+        "evidence": "Wikidata Q108441696, fetched 13 Nov 2026: one undated member of political party (P102) claim, Australian Greens, and a Senate term from 14 Sep 2021 (P39) in the Greens' parliamentary group; no date for her move to Labor. The Parliamentary Handbook (PHID 296215) gives one undated Greens record. Senate Hansard in the OPAX corpus (OpenAustralia) heads her speeches Australian Greens from 7 Feb 2023 (speech 827091) to 26 Mar 2025 (speech 1194951) and Australian Labor Party from 24 Jul 2025 (speech 1195345) to 19 Aug 2026 (speech 1205733). The change falls between those two headings and no source we hold dates it, so neither period reaches into the gap: Greens from the start of her Senate term to the day after her last Greens heading, Labor from her first Labor heading to the day after her latest. The Senate did not sit between 26 Mar and 22 Jul 2025; divisions on 22 and 23 Jul 2025 keep the source label, marked unchecked.",
+        "periods": [
+          {
+            "party": "Greens",
+            "start": "2021-09-14",
+            "end": "2025-03-27"
+          },
+          {
+            "party": "Labor",
+            "start": "2025-07-24",
+            "end": "2026-08-20"
+          }
+        ]
+      },
+      {
+        "name": "Gerard Rennick",
+        "chamber": "senate",
+        "pid": "10952",
+        "checked": "2026-11-13",
+        "url": "https://www.wikidata.org/wiki/Q64730677",
+        "evidence": "Wikidata Q64730677, fetched 13 Nov 2026: one undated member of political party (P102) claim, Gerard Rennick People First, and a Senate term from 1 Jul 2019 to 30 Jun 2025 (P39) in the Liberal-National Coalition parliamentary group; no date for leaving the Liberal National Party. The Parliamentary Handbook (PHID 283596) gives one undated Liberal record. Senate Hansard in the OPAX corpus (OpenAustralia) heads his speeches Liberal Party from 7 Feb 2023 (speech 827154) to 9 May 2023 (speech 829907) and Independent from 10 Feb 2025 (speech 1194180) to 26 Mar 2025 (speech 1194949). The corpus holds no Senate Hansard from June 2023 to January 2025, so his move is undated: Liberal runs from the start of his term to the day after his last Liberal heading, and the divisions between 10 May 2023 and 9 Feb 2025 keep the source label, marked unchecked. Where Wikidata's undated party and the corpus differ for 2025, the corpus heading (Independent) is taken.",
+        "periods": [
+          {
+            "party": "Liberal",
+            "start": "2019-07-01",
+            "end": "2023-05-10"
+          },
+          {
+            "party": "Independent",
+            "start": "2025-02-10",
+            "end": "2025-03-27"
+          }
+        ]
       }
     ],
     "holds": [
@@ -1157,7 +1222,7 @@
     "Patrick Dodson": {"evidence": "aph-handbook", "url": "https://handbookapi.aph.gov.au/api/individuals?%24filter=PHID%20eq%20%27SR5%27", "checked": "2026-10-18", "note": "Handbook PHID SR5 (DODSON, Patrick (Pat) Lionel Djargun): Senator, Western Australia, 2016-04-28 to 2024-01-26; parties Australian Labor Party", "row": {"name": "Patrick Dodson", "speeches": 100, "party": "Labor", "states": ["federal"], "chambers": ["senate"], "first": 2019, "last": 2023, "pid": "10846", "representation": [{"jurisdiction": "federal", "chamber": "senate", "electorate": "Western Australia", "state": "WA", "basis": "Recorded parliamentary roster; exact name and chamber match"}]}, "phid": "SR5", "service": {"chamber": "senate", "jurisdiction": "federal", "state": "Western Australia", "start": "2016-04-28", "end": "2024-01-26"}},
     "Peter Georgiou": {"evidence": "aph-handbook", "url": "https://handbookapi.aph.gov.au/api/individuals?%24filter=PHID%20eq%20%27269583%27", "checked": "2026-10-18", "note": "Handbook PHID 269583 (GEORGIOU, Panagiotis (Peter)): Senator, Western Australia, 2017-03-10 to 2019-06-30; parties Pauline Hanson's One Nation", "row": {"name": "Peter Georgiou", "speeches": 5, "party": "One Nation", "states": ["federal"], "chambers": ["senate"], "first": 2019, "last": 2019, "pid": "10898", "representation": [{"jurisdiction": "federal", "chamber": "senate", "electorate": "Western Australia", "state": "WA", "basis": "Recorded parliamentary roster; exact name and chamber match"}]}, "phid": "269583", "service": {"chamber": "senate", "jurisdiction": "federal", "state": "Western Australia", "start": "2017-03-10", "end": "2019-06-30"}},
     "Rex Patrick": {"evidence": "aph-handbook", "url": "https://handbookapi.aph.gov.au/api/individuals?%24filter=PHID%20eq%20%27144292%27", "checked": "2026-10-18", "note": "Handbook PHID 144292 (PATRICK, Rex Lyall): Senator, South Australia, 2017-11-14 to 2022-06-30; parties Nick Xenophon Team, Centre Alliance, Independent", "row": {"name": "Rex Patrick", "speeches": 895, "party": "Independent", "parties": ["Independent", "Centre Alliance"], "states": ["federal"], "chambers": ["senate"], "first": 2019, "last": 2022, "pid": "10903", "representation": [{"jurisdiction": "federal", "chamber": "senate", "electorate": "South Australia", "state": "SA", "basis": "Recorded parliamentary roster; exact name and chamber match"}]}, "phid": "144292", "service": {"chamber": "senate", "jurisdiction": "federal", "state": "South Australia", "start": "2017-11-14", "end": "2022-06-30"}},
-    "Sam McMahon": {"evidence": "aph-handbook", "url": "https://handbookapi.aph.gov.au/api/individuals?%24filter=PHID%20eq%20%27282728%27", "checked": "2026-10-18", "note": "Handbook PHID 282728 (MCMAHON, Samantha (Sam) Jane): Senator, Northern Territory, 2019-05-18 to 2022-05-21; parties The Nationals, Liberal Democratic Party", "row": {"name": "Sam McMahon", "speeches": 105, "party": "Country Liberal Party", "states": ["federal"], "chambers": ["senate"], "first": 2019, "last": 2022, "pid": "10948", "representation": [{"jurisdiction": "federal", "chamber": "senate", "electorate": "Northern Territory", "state": "NT", "basis": "Recorded parliamentary roster; exact name and chamber match"}]}, "phid": "282728", "service": {"chamber": "senate", "jurisdiction": "federal", "state": "Northern Territory", "start": "2019-05-18", "end": "2022-05-21"}},
+    "Sam McMahon": {"evidence": "aph-handbook", "url": "https://handbookapi.aph.gov.au/api/individuals?%24filter=PHID%20eq%20%27282728%27", "checked": "2026-10-18", "note": "Handbook PHID 282728 (MCMAHON, Samantha (Sam) Jane): Senator, Northern Territory, 2019-05-18 to 2022-05-21; parties The Nationals, Liberal Democratic Party. parties added 13 Nov 2026 (A21): the Handbook records of service (ROSTypeID 11, scripts/handbook_party_service.json) date The Nationals from 18 May 2019 to 7 Apr 2022 and the Liberal Democratic Party from 7 Apr 2022 to the end of her term; she cast no Senate vote after 7 Apr 2022, so no division row names the party and the roster is the only record that lists her under it", "row": {"name": "Sam McMahon", "speeches": 105, "party": "Country Liberal Party", "parties": ["Liberal Democratic Party", "Country Liberal Party"], "states": ["federal"], "chambers": ["senate"], "first": 2019, "last": 2022, "pid": "10948", "representation": [{"jurisdiction": "federal", "chamber": "senate", "electorate": "Northern Territory", "state": "NT", "basis": "Recorded parliamentary roster; exact name and chamber match"}]}, "phid": "282728", "service": {"chamber": "senate", "jurisdiction": "federal", "state": "Northern Territory", "start": "2019-05-18", "end": "2022-05-21"}},
     "Stirling Griff": {"evidence": "aph-handbook", "url": "https://handbookapi.aph.gov.au/api/individuals?%24filter=PHID%20eq%20%2776760%27", "checked": "2026-10-18", "note": "Handbook PHID 76760 (GRIFF, Stirling): Senator, South Australia, 2016-07-02 to 2022-06-30; parties Nick Xenophon Team, Centre Alliance", "row": {"name": "Stirling Griff", "speeches": 291, "party": "Centre Alliance", "states": ["federal"], "chambers": ["senate"], "first": 2019, "last": 2022, "pid": "10851", "representation": [{"jurisdiction": "federal", "chamber": "senate", "electorate": "South Australia", "state": "SA", "basis": "Recorded parliamentary roster; exact name and chamber match"}]}, "phid": "76760", "service": {"chamber": "senate", "jurisdiction": "federal", "state": "South Australia", "start": "2016-07-02", "end": "2022-06-30"}},
     "Tim Storer": {"evidence": "aph-handbook", "url": "https://handbookapi.aph.gov.au/api/individuals?%24filter=PHID%20eq%20%27275424%27", "checked": "2026-10-18", "note": "Handbook PHID 275424 (STORER, Tim): Senator, South Australia, 2018-02-16 to 2019-06-30; parties Nick Xenophon Team, Independent", "row": {"name": "Tim Storer", "speeches": 17, "party": "Independent", "states": ["federal"], "chambers": ["senate"], "first": 2019, "last": 2019, "pid": "10909", "representation": [{"jurisdiction": "federal", "chamber": "senate", "electorate": "South Australia", "state": "SA", "basis": "Recorded parliamentary roster; exact name and chamber match"}]}, "phid": "275424", "service": {"chamber": "senate", "jurisdiction": "federal", "state": "South Australia", "start": "2018-02-16", "end": "2019-06-30"}},
     "Vanessa Bleyer": {"evidence": "aph-handbook", "url": "https://handbookapi.aph.gov.au/api/recordsofservice?%24filter=PHID%20eq%20%2725813%27", "checked": "2026-10-18", "note": "Handbook PHID 25813 (BLEYER, Vanessa Elizabeth): Senator, state in record of service, 2026-08-20 to now; parties Australian Greens; chosen by the Parliament of Tasmania on 20 Aug 2026 vice P Whish-Wilson (resigned) (Handbook recordsofservice type 9)", "row": {"name": "Vanessa Bleyer", "speeches": 6, "party": "Greens", "states": ["federal"], "chambers": ["senate"], "first": 2026, "last": 2026, "pid": "11065", "current": true, "party_now": "Greens", "representation": [{"jurisdiction": "federal", "chamber": "senate", "electorate": "Tasmania", "state": "TASMANIA", "basis": "Recorded parliamentary roster; exact name and chamber match"}]}, "phid": "25813", "service": {"chamber": "senate", "jurisdiction": "federal", "state": "Tasmania", "start": "2026-08-20", "end": null}},
