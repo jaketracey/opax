@@ -48,6 +48,42 @@ function words(node: ReactTestInstance): string {
     .filter(Boolean)
     .join(text(node) ? '' : ' ');
 }
+/** Drawn text, independent of accessibility labels and grouping. Hidden
+ * accessibility descendants still draw their figures on screen. */
+function drawnWords(node: ReactTestInstance): string {
+  return node.children
+    .map((child) => (typeof child === 'string' ? child : drawnWords(child)))
+    .filter(Boolean)
+    .join(text(node) ? '' : ' ');
+}
+function moneyValues(value: string, spoken = false): number[] {
+  const scale: Record<string, number> = {
+    k: 1e3,
+    thousand: 1e3,
+    m: 1e6,
+    million: 1e6,
+    bn: 1e9,
+    billion: 1e9,
+  };
+  const dollarFigures = [
+    ...value.matchAll(
+      /((?<![\w$])[-\u2212])?\$(\d[\d,]*(?:\.\d+)?)(?:(k|m|bn)\b|\s+(thousand|million|billion)\b)?/g,
+    ),
+  ];
+  const spokenFigures = spoken
+    ? [
+        ...value.matchAll(
+          /\b(minus\s+)?(\d[\d,]*(?:\.\d+)?)(?:\s+(thousand|million|billion))?\s+dollars?\b/g,
+        ),
+      ]
+    : [];
+  return [...dollarFigures, ...spokenFigures].map(
+    (match) =>
+      (match[1] ? -1 : 1) *
+      Number(match[2]!.replace(/,/g, '')) *
+      (scale[match[3] ?? match[4] ?? ''] ?? 1),
+  );
+}
 function touchable(node: ReactTestInstance): boolean {
   if (
     node.props.onPress ||
@@ -145,6 +181,7 @@ export function auditAccessibility(
       if (
         headingVariants.has(node.props.variant) &&
         node.props.accessibilityRole !== 'header' &&
+        node.props.accessibilityRole !== 'text' &&
         !grouped
       ) {
         // Only the design Text carries this prop through to a host Text.
@@ -266,12 +303,18 @@ export function auditAccessibility(
         node.findAll((n) => titleVariants.has(n.props.variant)).length
       )
         titleCount++;
-      if (
-        (text(node) || p.accessible) &&
-        !grouped &&
-        label !== spokenFigures(label)
-      )
-        add('spoken-figures', node, 'Compact money must be spoken in words');
+      if ((text(node) || p.accessible) && !grouped) {
+        if (label !== spokenFigures(label))
+          add('spoken-figures', node, 'Compact money must be spoken in words');
+        const drawn = moneyValues(drawnWords(node));
+        const spoken = moneyValues(label, true);
+        if (drawn.some((value) => !spoken.includes(value)))
+          add(
+            'spoken-figures',
+            node,
+            'Spoken money must match the visible amount and rounding',
+          );
+      }
       if (r === 'progressbar' || (p.accessibilityState?.busy && !target)) {
         pending = true;
         if (!isLive && !options.announcements?.includes(label))

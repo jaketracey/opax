@@ -14,7 +14,6 @@ import {
 } from 'react';
 import {
   Pressable,
-  Platform,
   ScrollView,
   StyleSheet,
   useWindowDimensions,
@@ -297,10 +296,6 @@ export function MoneyMapPanel({
           accessibilityRole="button"
           accessibilityLabel={expanded ? 'Collapse details' : 'Expand details'}
           accessibilityState={{ expanded }}
-          hitSlop={{
-            top: (Platform.OS === 'android' ? 48 : 44) / 2 - HANDLE / 2,
-            bottom: (Platform.OS === 'android' ? 48 : 44) / 2 - HANDLE / 2,
-          }}
           onPress={toggle}
           style={styles.handleRow}
           testID="money-map-handle"
@@ -520,7 +515,8 @@ const styles = StyleSheet.create({
     minHeight: HANDLE,
     alignItems: 'center',
     justifyContent: 'center',
-    // A 44 pt target: the rows beneath are reachable past the strip.
+    // Preserve the strip's layout. The panel clips any target extension above
+    // it; a full target needs a design change (SCREEN_A11Y.md).
     paddingVertical: (minimumTarget - HANDLE) / 2,
     marginVertical: -((minimumTarget - HANDLE) / 2),
     zIndex: 1,

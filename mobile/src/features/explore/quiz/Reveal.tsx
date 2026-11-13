@@ -64,7 +64,12 @@ export function Reveal({
   return (
     <View style={styles.block} testID="quiz-reveal">
       <View style={styles.lines}>
-        <Text wordSafe variant="subsectionTitle" testID="quiz-grade">
+        <Text
+          wordSafe
+          variant="subsectionTitle"
+          accessibilityRole="text"
+          testID="quiz-grade"
+        >
           {response.grade}
         </Text>
         {scored ? (

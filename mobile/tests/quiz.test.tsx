@@ -361,6 +361,12 @@ test('the reveal keeps the reader’s own answer and marks the right one, by wor
     ).props.accessibilityLabel,
   ).toMatch(/Correct answer$/);
   expect(byID('quiz-grade').props.children).toBe('Not this time');
+  expect(
+    renderer!.root.find(
+      (node) =>
+        typeof node.type === 'string' && node.props.testID === 'quiz-grade',
+    ).props.accessibilityRole,
+  ).toBe('text');
   expect(byID('quiz-points').props.children).toBe('+0 points');
 });
 

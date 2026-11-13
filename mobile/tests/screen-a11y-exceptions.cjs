@@ -14,4 +14,12 @@ module.exports = [
     reason:
       'Choose a 44-point divider interaction region without taking taps from adjacent panes.',
   },
+  ...['ios', 'android'].map((platform) => ({
+    screens: ['src/features/money/MoneyScreen.tsx'],
+    rule: 'target-size',
+    element: 'money-map-handle',
+    detail: `height 20 + hitSlop 0 < ${platform === 'ios' ? 44 : 48} on ${platform}`,
+    reason:
+      'The panel clips the handle strip. Reserving a full target moves the content; extending into it takes taps from the title link or Legend. Needs an interaction design change.',
+  })),
 ];

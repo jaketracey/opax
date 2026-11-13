@@ -399,6 +399,13 @@ test('election rows push the election screen, newest first', async () => {
   expect(line('election-row-0-title')).toBe(
     '2025 federal election · 3\u00a0May\u00a02025',
   );
+  expect(
+    r.root.find(
+      (node) =>
+        typeof node.type === 'string' &&
+        node.props.testID === 'election-row-0-title',
+    ).props.accessibilityRole,
+  ).toBe('text');
   expect(line('election-row-0-result')).toBe('66.9% after preferences');
   expect(firstRow.props.accessibilityLabel).toContain(
     '66.9% after preferences',

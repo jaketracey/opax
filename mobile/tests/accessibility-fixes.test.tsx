@@ -147,6 +147,49 @@ test('iOS loading announces once per page, then announces an unavailable result'
   ]);
 });
 
+test.each(['ios', 'android'] as const)(
+  '%s announces once while four no-result characters are typed, and again in a new episode',
+  async (platform) => {
+    Platform.OS = platform;
+    jest
+      .spyOn(AccessibilityInfo, 'isScreenReaderEnabled')
+      .mockResolvedValue(true);
+    const announce = jest
+      .spyOn(AccessibilityInfo, 'announceForAccessibility')
+      .mockImplementation(() => {});
+    const empty = (query: string) => (
+      <StatePageProvider>
+        <ContentUnavailable
+          symbol="magnifyingglass"
+          title={`No results for "${query}"`}
+          announcement="No results"
+        />
+      </StatePageProvider>
+    );
+    const tree = await render(empty('z'));
+    for (const query of ['zz', 'zzz', 'zzzz']) {
+      await act(async () => tree.update(empty(query)));
+    }
+    expect(announce.mock.calls).toEqual([['No results']]);
+    expect(
+      tree.root.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          ['polite', 'assertive'].includes(node.props.accessibilityLiveRegion),
+      ),
+    ).toHaveLength(0);
+    await act(async () =>
+      tree.update(
+        <StatePageProvider>
+          <Text>Results</Text>
+        </StatePageProvider>,
+      ),
+    );
+    await act(async () => tree.update(empty('zzzzz')));
+    expect(announce.mock.calls).toEqual([['No results'], ['No results']]);
+  },
+);
+
 test('an unmounted loading target never announces after a delayed screen reader read', async () => {
   let answer!: (enabled: boolean) => void;
   jest.spyOn(AccessibilityInfo, 'isScreenReaderEnabled').mockReturnValue(

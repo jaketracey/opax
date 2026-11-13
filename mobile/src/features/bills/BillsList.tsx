@@ -367,6 +367,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
       <ContentUnavailable
         symbol="magnifyingglass"
         title={`No results for "${query}"`}
+        announcement="No results"
         body={
           // The filters still apply to a search: say so, not "spelling".
           on > 0

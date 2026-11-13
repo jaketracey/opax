@@ -41,7 +41,7 @@ export function PartyDot({ party }: { party: string }) {
 
 /**
  * Rows on a money record read compact from $1 million ("$7.5m", "$2m") and
- * exact below it; the page behind the row and VoiceOver keep exact dollars.
+ * exact below it. VoiceOver uses the same rounding as the row.
  * One rule for a donor's party rows and a party's donor rows, so the pair
  * of pages agree on the same money (sweep 2 item 6.3).
  */
@@ -69,20 +69,21 @@ export function PartyMoneyRow({
   href?: Href;
   testID?: string;
 }) {
+  const rounded = compact && rowCompact(amount);
   return (
     <LinkRow
       title={name}
       detail={detail}
-      value={
-        compact && rowCompact(amount)
-          ? formatMoneyCompact(amount)
-          : formatMoney(amount)
-      }
+      value={rounded ? formatMoneyCompact(amount) : formatMoney(amount)}
       valueEmphasis
       leading={<PartyDot party={name} />}
       href={href}
       accessory={href ? 'chevron' : 'none'}
-      accessibilityLabel={[name, detail, moneyAccessibilityLabel(amount)]
+      accessibilityLabel={[
+        name,
+        detail,
+        moneyAccessibilityLabel(amount, rounded),
+      ]
         .filter(Boolean)
         .join(', ')}
       testID={testID}

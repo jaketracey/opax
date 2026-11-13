@@ -1563,9 +1563,9 @@ describe('sweep 2: a party page says each thing once', () => {
       expect(has(r, 'party-figure-receipts')).toBe(false);
       expect(text.split(exact).length - 1).toBe(compact ? 0 : 1);
       expect(text.split(short).length - 1).toBe(compact ? 1 : 0);
-      // VoiceOver hears the exact dollars at every size.
+      // VoiceOver uses the same rounding as the figure at every size.
       expect(host(r, 'party-receipts-total').props.accessibilityLabel).toMatch(
-        new RegExp(`^${moneyAccessibilityLabel(total)}, disclosed`),
+        new RegExp(`^${moneyAccessibilityLabel(total, compact)}, disclosed`),
       );
       act(() => r.unmount());
     },

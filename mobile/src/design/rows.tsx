@@ -1251,27 +1251,28 @@ export function MoneyRow({
   external?: External;
   /**
    * Every amount compact ("$9.4m"), for a ranked list that must read one
-   * way. The accessibility label keeps the full amount.
+   * way. The accessibility label uses the same rounding as the figure.
    */
   compact?: boolean;
   testID?: string;
 }) {
+  const rounded = compact || Math.abs(amount) >= 10_000_000;
   return (
     <LinkRow
       title={name}
       detail={detail}
       titleLines={nameLines}
       detailLines={2}
-      value={
-        compact || Math.abs(amount) >= 10_000_000
-          ? formatMoneyCompact(amount)
-          : formatMoney(amount)
-      }
+      value={rounded ? formatMoneyCompact(amount) : formatMoney(amount)}
       valueEmphasis
       href={href}
       external={external}
       accessory={href || external ? 'chevron' : 'none'}
-      accessibilityLabel={[name, detail, moneyAccessibilityLabel(amount)]
+      accessibilityLabel={[
+        name,
+        detail,
+        moneyAccessibilityLabel(amount, rounded),
+      ]
         .filter(Boolean)
         .join(', ')}
       testID={testID}

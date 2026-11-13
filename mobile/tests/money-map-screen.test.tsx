@@ -436,7 +436,9 @@ test('clearing the focus collapses the panel, so the next focus starts at the pe
       .findAllByProps({ testID: 'money-map-handle' })
       .find((node) => typeof node.type === 'string')!;
   expect(handle().props.accessibilityState).toEqual({ expanded: true });
-  expect(handle().props.hitSlop).toEqual({ top: 12, bottom: 12 });
+  // An extension above the handle is clipped by the panel. This remains a
+  // target-size design exception rather than an unreachable hitSlop fix.
+  expect(handle().props.hitSlop).toBeUndefined();
   // The panel's own Clear.
   await act(async () => panel().onClear());
   await refresh();

@@ -170,21 +170,26 @@ export function useLoadingAnnouncement(label: string | null) {
 function useStatusAnnouncement(
   label: string | null,
   kind: 'loading' | 'unavailable',
+  scope: 'page' | 'episode' = 'page',
 ) {
   const page = usePageState();
   useEffect(() => {
-    if (!label || Platform.OS !== 'ios') return;
+    if (!label || (Platform.OS !== 'ios' && scope === 'page')) return;
     let active = true;
     void AccessibilityInfo.isScreenReaderEnabled().then(
       (enabled) => {
-        if (active && enabled) page[kind](label);
+        if (active && enabled) {
+          if (scope === 'episode')
+            AccessibilityInfo.announceForAccessibility(label);
+          else page[kind](label);
+        }
       },
       () => undefined,
     );
     return () => {
       active = false;
     };
-  }, [label, page, kind]);
+  }, [label, page, kind, scope]);
 }
 
 /** The same native View and geometry as each placeholder, with shared status semantics. */
@@ -876,12 +881,16 @@ export function ContentUnavailable({
   symbol,
   title,
   body,
+  announcement,
   action,
   testID,
 }: {
   symbol: SFSymbol;
   title: string;
   body?: string;
+  /** Fixed announcement once per mounted episode, including on Android.
+   * Keeps changing search copy out of a live region. */
+  announcement?: string;
   action?: {
     label: string;
     onPress: () => void;
@@ -891,10 +900,12 @@ export function ContentUnavailable({
   testID?: string;
 }) {
   useStatusAnnouncement(
-    [phoneCopy(title), body ? phoneCopy(body) : null]
-      .filter(Boolean)
-      .join('. '),
+    announcement ??
+      [phoneCopy(title), body ? phoneCopy(body) : null]
+        .filter(Boolean)
+        .join('. '),
     'unavailable',
+    announcement === undefined ? 'page' : 'episode',
   );
   const large = useAccessibilitySize();
   const layout = useLayout();
@@ -912,7 +923,7 @@ export function ContentUnavailable({
   return (
     <View
       testID={testID}
-      accessibilityLiveRegion="polite"
+      accessibilityLiveRegion={announcement === undefined ? 'polite' : 'none'}
       style={styles.unavailable}
       onLayout={(event) => setMeasuredWidth(event.nativeEvent.layout.width)}
     >

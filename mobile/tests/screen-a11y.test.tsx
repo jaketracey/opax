@@ -30,6 +30,67 @@ test('a heading styled as a section title must expose the header role', () => {
   ).toContain('heading');
 });
 
+test('title typography can explicitly describe ordinary text', () => {
+  function FixtureText(props: { variant: string; accessibilityRole: string }) {
+    return text('November 2026', {
+      accessibilityRole: props.accessibilityRole,
+    });
+  }
+  expect(
+    rules(
+      createElement(FixtureText, {
+        variant: 'subsectionTitle',
+        accessibilityRole: 'text',
+      }),
+    ),
+  ).not.toContain('heading');
+});
+
+test.each([
+  ['$28.7bn', '28,682,373,476 dollars'],
+  ['$28.7bn', '28.6 billion dollars'],
+  ['-$28.7bn', '28.7 billion dollars'],
+  ['$448k', '448 million dollars'],
+  ['$4,500', '4,501 dollars'],
+  ['$1m-$2m', '1 million dollars minus 2 million dollars'],
+])(
+  'spoken money must match the visible figure %s, including rounding and sign',
+  (drawn, spoken) => {
+    expect(
+      rules(
+        view(
+          {
+            accessible: true,
+            accessibilityLabel: `Sample recipient, ${spoken}`,
+          },
+          text(drawn),
+        ),
+      ),
+    ).toContain('spoken-figures');
+    expect(rules(text(drawn, { accessibilityLabel: spoken }))).toContain(
+      'spoken-figures',
+    );
+  },
+);
+
+test.each([
+  ['$28.7bn', '28.7 billion dollars'],
+  ['-$28.7bn', 'minus 28.7 billion dollars'],
+  ['$448k', '448 thousand dollars'],
+  ['$4,500', '4,500 dollars'],
+  ['$1m-$2m', '1 million dollars-2 million dollars'],
+])('spoken money accepts the visible rounding %s', (drawn, spoken) => {
+  // Even when child figures are hidden from accessibility, they remain visible.
+  expect(
+    audit(
+      view(
+        { accessible: true, accessibilityLabel: spoken },
+        view({ accessibilityElementsHidden: true }, text(drawn)),
+      ),
+    ),
+  ).toEqual([]);
+});
+
 test.each([
   { accessibilityRole: 'tab' },
   { accessibilityRole: 'button', disabled: true },

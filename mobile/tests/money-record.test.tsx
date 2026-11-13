@@ -831,8 +831,8 @@ test('sweep 2: a donor’s party rows are compact from $1 million and largest fi
     ['Liberal', '$2m'],
     ['Liberal National Party of Queensland', '$222,070'],
   ]);
-  // VoiceOver keeps exact dollars.
-  expect(rows[1]!.props.accessibilityLabel).not.toMatch(/7\.5/);
+  // VoiceOver uses the same rounded figure as the row.
+  expect(rows[1]!.props.accessibilityLabel).toContain('7.5 million dollars');
   await act(async () => r.unmount());
 });
 

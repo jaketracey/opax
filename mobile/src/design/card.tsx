@@ -202,6 +202,7 @@ export function Tile({
             <Text
               wordSafe
               variant="subsectionTitle"
+              accessibilityRole="text"
               style={styles.tileHeading}
               onTextLayout={(event) =>
                 setFirstLineHeight(event.nativeEvent.lines[0]?.height)

@@ -10,12 +10,12 @@ fails if an implementation or a named screen export has no rendered audit. This 
 and voice bridge test screen, whose voice boundary is mocked.
 
 The audit checks roles and readable action labels, content/decorative images,
-heading traits, checked/selected/disabled/expanded state, compact money labels,
+heading traits, checked/selected/disabled/expanded state, visible and spoken money amounts,
 grouped targets, loading live regions and fixed target dimensions plus hitSlop.
 Native SwiftUI buttons supply their own role; their labels are checked. Native
 navigation titles are checked as configuration, not as rendered native traits.
 
-## Findings
+## Original audit findings
 
 Baseline app source: `d41a99caf`, including row 153 (`27e0905ea`). The before and
 after runs use the same audit rules and screen fixtures. Counts are unique
@@ -46,7 +46,7 @@ Run summaries and per-suite evidence are written to the ignored
 ## Fixes
 
 - Shared Text, Pressable, preview-link hosts, value rows and chart bars reuse
-  `spokenFigures`. Drawn text and exact supplied amounts remain intact; compact
+  `spokenFigures`. Drawn text remains intact; compact
   labels such as `$2.4m` become `2.4 million dollars`.
   The map legend's grouped scale labels use `moneyAccessibilityLabel` as well.
 - Shared heading Text variants acquire the header trait. Explicit roles still
@@ -56,8 +56,8 @@ Run summaries and per-suite evidence are written to the ignored
   screen reader is active. Shared and local placeholder shapes use it. Hearing
   transcript pagination also announces loading. Unavailable states announce
   their content; action errors retain focus and expose an assertive live region.
-- The money-map handle exposes expanded state and gains invisible hitSlop for a
-  44-point iOS or 48-dp Android target.
+- The money-map handle exposes expanded state. Its target size remains a design
+  exception, as corrected below.
 - The About label specimen and gallery's inner photo targets are hidden from
   accessibility, leaving their containing element as the focus target.
 - Victorian election candidate rows retain their party link's visual design and
@@ -67,7 +67,35 @@ Run summaries and per-suite evidence are written to the ignored
   discovery and coverage failures, spoken labels, announcement cancellation and
   both platform announcement paths. Existing screen regressions check the
   grouping fixes and expanded handle state.
-  Four iOS control snapshots gained only the header trait; their visual output is unchanged.
+  Four iOS control snapshots originally gained the header trait; the review fix
+  removes it from those non-headings. Their visual output is unchanged.
+
+## Independent review fix round
+
+14 November 2026, from `312580b53`. The original counts above predate the
+stronger spoken-amount comparison and the handle correction. They are retained
+as historical audit evidence, not counts for this fix round.
+
+| Review finding                                   | Status and regression evidence                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| P2, repeated no-result announcements             | Done. Bills and Division history supply a fixed `No results` announcement per mounted empty-result episode on both platforms. Their changing title is outside a live region. `design-p5-C-bills.test.tsx`, `division-history-pagination.test.tsx` and `accessibility-fixes.test.tsx` type four successive queries, expect one announcement and verify a new episode announces again.                                                                                     |
+| P2, exact spoken amount under a rounded MoneyRow | Done. The spoken amount uses the same compact flag and ten-million threshold as the visible formatter. `rows.test.tsx` covers `$28.7bn`, negative amounts, threshold boundaries and explicit compact rows. `screen-a11y.test.tsx` rejects a grouped or standalone figure whose spoken amount, unit or sign differs from the visible rounding. The audit reads drawn descendants independently of accessibility labels, including descendants hidden from accessibility.  |
+| P3, heading traits on non-headings               | Done. MonthPager labels, quiz grades, election row titles and tile titles explicitly use the text role. Four `android-design-ios` snapshots cover MonthPager and Tile at font scales 1 and 2; quiz and electorate render tests check their native Text roles. The heading audit accepts explicit text overrides.                                                                                                                                                         |
+| P3, clipped money-map handle target              | Not done. Removed the ineffective extra hitSlop and recorded precise iOS and Android target-size exceptions. The 20-point strip sits at the top of an overflow-hidden panel. Reserving 44/48 points moves its content; overlapping that content takes taps from the title link or Legend. The existing panel layout needs an interaction design decision. `money-map-screen.test.tsx` retains expanded-state coverage and checks that the ineffective hitSlop is absent. |
+| P3, money ranges read as negatives               | Done. A JS-only lookbehind restricts minus signs to the start of a monetary token. `format.test.ts` covers `$1m-$2m`, the Unicode minus range separator and genuinely negative amounts.                                                                                                                                                                                                                                                                                  |
+
+The stronger audit also caught the same rounding mismatch in `PartyMoneyRow`
+and party receipt totals at accessibility text sizes. Both now speak the visible
+rounding. Existing `money-record.test.tsx` and `party-ui.test.tsx` regressions
+check those labels, including exact figures at default size and compact figures
+at AX3 and AX5; `people.test.tsx` compares the party total with its drawn figure.
+
+No simulator, emulator, device, native build, screen reader or audio service was
+used in this round. Native follow-up: verify one TalkBack announcement while
+typing through an empty-result episode, heading navigation skips the four
+non-heading types, and an eventual handle redesign gives a reachable 48-dp
+target without stealing adjacent taps. Check the equivalent VoiceOver behaviour
+and 44-point target on iOS when device QA is available.
 
 ## Design calls and limits
 
@@ -75,8 +103,11 @@ Run summaries and per-suite evidence are written to the ignored
   Search, Bills and Directory tests. Increasing hitSlop cannot extend beyond its
   parent. Choosing a 44-point iOS / 48-dp Android interaction region affects taps
   in the neighbouring panes, so its visual and interaction design is unchanged.
-  `screen-a11y-exceptions.cjs` retains only those three precise findings; new
+  `screen-a11y-exceptions.cjs` retains those three precise findings; new
   screens and different dimensions still fail.
+- `money-map-handle` retains its 20-point strip and clipped parent. The exception
+  records that fixed height with zero extra hitSlop, separately for iOS and
+  Android. It is not counted as fixed.
 - Unnamed detail placeholders intentionally reserve the real title's space.
   The title check defers while that subject is loading. Requiring a generic
   title at that point is a design decision, covered by the existing
