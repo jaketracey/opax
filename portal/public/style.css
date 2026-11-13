@@ -1609,6 +1609,8 @@ button.link.result-title:hover { color: var(--bronze-ink); }
 .chart-tick { fill: var(--ink-faint); font-size: var(--text-13); }
 .chart-peak { fill: var(--ink); font-size: var(--text-13); }
 .chart-note { color: var(--ink-faint); font-size: var(--text-13); margin: var(--sp-8) 0 0; }
+/* What a block of money figures counts, on its own line under its heading. */
+.entry-scope { color: var(--ink-soft); font-size: var(--text-13); margin: calc(-1 * var(--sp-4)) 0 var(--sp-12); max-width: 60ch; }
 /* Phones: the 640-unit viewBox shows at about half size, so the labels are
    set in larger units to land at a readable size; the year ticks drop below
    the axis and the svg may overflow its box by that much. */
