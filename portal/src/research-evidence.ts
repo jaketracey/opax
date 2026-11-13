@@ -126,7 +126,7 @@ export function passagesAnswer(passages:Map<string,Passage>,question:string,limi
  const chosen:typeof ranked=[]
  for(const c of ranked)if(chosen.length<limit&&!chosen.some(x=>x.p.slug===c.p.slug))chosen.push(c)
  if(!chosen.length)return null
- const points=chosen.map(({p,excerpt})=>{const quote=excerpt!.text.trim(),lead=p.date?`On ${readableDate(p.date)}, `:'',who=p.speaker?.trim()
+ const points=chosen.map(({p,excerpt})=>{const quote=excerpt!.text.trim(),d=p.date?readableDate(p.date):'',lead=d?(/^\d{4}$/.test(d)?`In ${d}, `:`On ${d}, `):'',who=p.speaker?.trim()
   return {claim:`${lead}${who?`${who} said`:'the record says'} “${quote}”`.replace(/^the/,'The'),id:p.id,quote}})
  return verifyResearchAnswer(pointsDraft(points),passages)
 }
