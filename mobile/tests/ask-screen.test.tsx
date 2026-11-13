@@ -2113,3 +2113,113 @@ test('a shorter starter list is the same day’s set, never a different one', ()
   for (const count of [1, 2, 3])
     expect(startersFor(day, count)).toEqual(four.slice(0, count));
 });
+
+// Duo audit A5-5 / 7a: on the folded display (402 x 678) at AX5 the resting
+// composer and the tab bar took the lower third and covered Try asking; a
+// tap on a starter seen through the band's clear edge focused the composer.
+describe('the idle page at accessibility sizes', () => {
+  const native = (id: string) =>
+    view!.root.find(
+      (node) => typeof node.type === 'string' && node.props.testID === id,
+    );
+  const COLUMN = 678;
+  const AREA = 678 - 34; // Less the home indicator's inset.
+  const COMPOSER = 120;
+  async function layOut() {
+    await act(async () => {
+      native('ask-conversation-column').props.onLayout({
+        nativeEvent: { layout: { x: 0, y: 0, width: 402, height: COLUMN } },
+      });
+      native('ask-composer-bounds').props.onLayout({
+        nativeEvent: { layout: { x: 0, y: 0, width: 402, height: AREA } },
+      });
+      native('ask-composer-position').props.onLayout({
+        nativeEvent: {
+          layout: { x: 0, y: AREA - COMPOSER, width: 402, height: COMPOSER },
+        },
+      });
+      view!.root.findByType(AskDock).props.onLayout({
+        nativeEvent: {
+          layout: { x: 0, y: 0, width: 402, height: COMPOSER - 16 },
+        },
+      });
+    });
+  }
+  const scrollStyle = () =>
+    StyleSheet.flatten(view!.root.findByType(ScrollView).props.style);
+  const contentStyle = () =>
+    StyleSheet.flatten(
+      view!.root.findByType(ScrollView).props.contentContainerStyle,
+    );
+  async function at(fontScale: number) {
+    const platform = jest.replaceProperty(Platform, 'OS', 'ios');
+    const window = Dimensions.get('window');
+    act(() =>
+      Dimensions.set({
+        window: { ...window, width: 402, height: 678, fontScale },
+      }),
+    );
+    return () => {
+      act(() => Dimensions.set({ window }));
+      platform.restore();
+    };
+  }
+
+  test.each([
+    ['AX3', 2.643],
+    ['AX5', 3.571],
+  ])(
+    '%s: the page ends at the resting composer, so every starter in view takes its tap',
+    async (_size, fontScale) => {
+      const restore = await at(fontScale);
+      try {
+        await mount();
+        await layOut();
+        // The scroll view stops where the composer's band starts.
+        const restTop = AREA - COMPOSER;
+        expect(scrollStyle().marginBottom).toBe(COLUMN - restTop);
+        expect(contentStyle().paddingBottom).toBe(rhythm.section);
+        // A starter in that view asks; it does not focus the composer.
+        const focus = jest.mocked(TextInput.prototype.focus);
+        focus.mockClear();
+        jest.mocked(client.askPost).mockReturnValue(new Promise(() => {}));
+        const starter = byId('ask-starter-0').find(
+          (node) => typeof node.props.onPress === 'function',
+        )!;
+        await act(async () => starter.props.onPress());
+        expect(focus).not.toHaveBeenCalled();
+        expect(client.askPost).toHaveBeenCalled();
+      } finally {
+        restore();
+      }
+    },
+  );
+
+  test('at the default size the glass composer still floats over the page', async () => {
+    const restore = await at(1);
+    try {
+      await mount();
+      await layOut();
+      expect(scrollStyle().marginBottom).toBeUndefined();
+      expect(contentStyle().paddingBottom).toBeGreaterThan(rhythm.section);
+    } finally {
+      restore();
+    }
+  });
+
+  test('a conversation keeps the full-height page with room for the composer', async () => {
+    const restore = await at(3.571);
+    try {
+      jest.spyOn(askSession, 'snapshot').mockReturnValue({
+        ...askSession.snapshot(),
+        thread: oneChat.chats[0]!.thread,
+      });
+      await mount();
+      await layOut();
+      expect(scrollStyle().marginBottom).toBeUndefined();
+    } finally {
+      jest.mocked(askSession.snapshot).mockRestore();
+      restore();
+    }
+  });
+});
