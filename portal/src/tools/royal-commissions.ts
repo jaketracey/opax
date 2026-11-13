@@ -54,8 +54,10 @@ function summaryOut(c: RecordRow): RecordRow {
 function summaryCite(env: ToolEnv, c: RecordRow): ToolCitation {
   const counts = object(c.counts)
   const parts = [dated('established', c.established), dated('interim report', c.interim_report_date), dated('final report', c.final_report_date)].filter(Boolean)
-  const loaded = counts.recommendations ? `${counts.recommendations} recommendations loaded${counts.with_status ? `, ${counts.with_status} with a government-published status` : ''}` : c.recommendations_status === 'no_report' ? 'No report published or loaded' : 'Recommendations not loaded'
-  return { kind: 'record', url: siteUrl(env, String(c.file)), text: clip(`${c.name} (${TYPES[String(c.inquiry_type)] ?? 'inquiry'}, ${c.jurisdiction_name})${parts.length ? ': ' + parts.join(', ') : ''}. ${loaded}; ${counts.responses ?? 0} government response or implementation documents listed${counts.transcripts ? `; ${counts.transcripts} hearing transcripts listed as documents (evidence, not findings)` : ''}${counts.court_context ? '; a court has ruled on parts of a report (see the profile\'s court_context)' : ''}.`, 600) }
+  // Worded as the public record reads ("its reports make 57 recommendations"), never as OPAX stored it: a writer that
+  // copied "57 recommendations loaded; 0 … documents listed" produced "The report loaded 57 recommendations, with 0 …".
+  const loaded = counts.recommendations ? `Its reports make ${counts.recommendations} recommendations${counts.with_status ? `, ${counts.with_status} with a government-published status` : ''}` : c.recommendations_status === 'no_report' ? 'OPAX holds no published report' : 'OPAX does not hold its recommendations'
+  return { kind: 'record', url: siteUrl(env, String(c.file)), text: clip(`${c.name} (${TYPES[String(c.inquiry_type)] ?? 'inquiry'}, ${c.jurisdiction_name})${parts.length ? ': ' + parts.join(', ') : ''}. ${loaded}; ${counts.responses ? `${counts.responses} government response or implementation documents are held` : 'no government response or implementation document is held'}${counts.transcripts ? `; ${counts.transcripts} hearing transcripts are held (evidence, not findings)` : ''}${counts.court_context ? '; a court has ruled on parts of a report (see the profile\'s court_context)' : ''}.`, 600) }
 }
 
 const courtFor = (c: RecordRow, key: unknown) => records(c.court_context).filter(x => x.applies_to === key).map(x => ({ text: x.text, source_url: sourceUrl(object(x.cite).url) }))
