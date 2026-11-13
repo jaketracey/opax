@@ -44,7 +44,7 @@ test('industry prose uses a full party name, one singular FY and short cited rep
 })
 
 test('industry party labels expand for every published recipient and FY ranges stay plural',async()=>{
- const names={Labor:'the Australian Labor Party',Liberal:'the Liberal Party',Nationals:'the National Party of Australia',Greens:'the Australian Greens',LNP:'the Liberal National Party of Queensland','Country Liberal Party':'the Country Liberal Party','One Nation':"Pauline Hanson's One Nation",'United Australia Party':'the United Australia Party','Family First':'the Family First Party',"Katter's Australian Party":"Katter's Australian Party",'Centre Alliance':'Centre Alliance'}
+ const names={Labor:'the Australian Labor Party',Liberal:'the Liberal Party',Nationals:'the National Party of Australia',Greens:'the Australian Greens',LNP:'the Liberal National Party of Queensland','Country Liberal Party':'the Country Liberal Party','One Nation':"Pauline Hanson's One Nation",'United Australia Party':'the United Australia Party','Family First':'the Family First Party',"Katter's Australian Party":"Katter's Australian Party",'Centre Alliance':'Centre Alliance','Libertarian Party':'the Libertarian Party'}
  const actual=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url)))
  assert.deepEqual(actual.nodes.filter(n=>n.kind==='party').map(n=>n.label).sort(),Object.keys(names).sort())
  for(const [party,name] of Object.entries(names)) {
