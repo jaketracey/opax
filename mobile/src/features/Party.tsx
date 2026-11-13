@@ -539,9 +539,7 @@ function PartyContent({
       about={() => ({
         title: 'Members',
         notes: [
-          view.past
-            ? 'Sitting members include federal, state and territory parliamentarians with a confirmed current party affiliation. The directory is updated periodically. Undated affiliations appear separately as recorded. Past members under a former name of the party are listed from their recorded votes, with the name they sat under.'
-            : 'Sitting members include federal, state and territory parliamentarians with a confirmed current party affiliation. The directory is updated periodically. Undated affiliations appear separately as recorded; former members are excluded.',
+          'Sitting members include federal, state and territory parliamentarians with a confirmed current party affiliation. The directory is updated periodically. Undated affiliations appear separately as recorded. Past members come from recorded votes and roster party service. Roster affiliations are past only when service ended or the person is no longer current.',
           view.rosterAsAt
             ? `Roster as at ${formatDate(view.rosterAsAt)}.`
             : null,
@@ -1198,8 +1196,8 @@ const yearsText = (years: readonly number[]) => {
   return first === last ? String(first) : `${first} to ${last}`;
 };
 
-/** Past members under a former name, from the voting record. */
-function PastMembers({
+/** Shared iOS and Android rows, with party service dates where recorded. */
+export function PastMembers({
   block,
   retry,
 }: {
@@ -1235,23 +1233,54 @@ function PastMembers({
         <View>
           {rows.map((member) => {
             const id = member.slug ?? partySlug(member.name);
+            const service = member.periods?.filter((p) => p.start || p.end);
+            const dates = (p: NonNullable<typeof service>[number]) =>
+              p.start && p.end
+                ? `${formatDate(p.start, 'short')} to ${formatDate(p.end, 'short')}`
+                : p.end
+                  ? `Until ${formatDate(p.end, 'short')}`
+                  : p.start
+                    ? `From ${formatDate(p.start, 'short')}`
+                    : '';
+            const oneHouse = service?.every(
+              (p) =>
+                p.jurisdiction === member.jurisdiction &&
+                p.chamber === member.house,
+            );
+            const place = service?.length
+              ? oneHouse
+                ? [
+                    chamberName(member.house, member.jurisdiction),
+                    service.map(dates).join('; '),
+                  ]
+                    .filter(Boolean)
+                    .join(', ')
+                : service
+                    .map((p) =>
+                      [
+                        chamberName(p.chamber ?? '', p.jurisdiction ?? ''),
+                        dates(p),
+                      ]
+                        .filter(Boolean)
+                        .join(', '),
+                    )
+                    .join('; ')
+              : [
+                  chamberName(member.house, member.jurisdiction),
+                  yearsText(member.years),
+                ]
+                  .filter(Boolean)
+                  .join(', ');
             return (
               <PersonRow
-                key={`${member.jurisdiction}|${member.house}|${member.name}`}
+                key={member.personId}
                 name={member.name}
                 portrait={
                   member.slug ? (
                     <CachedPortrait name={member.name} slug={member.slug} />
                   ) : null
                 }
-                place={
-                  [
-                    chamberName(member.house, member.jurisdiction),
-                    yearsText(member.years),
-                  ]
-                    .filter(Boolean)
-                    .join(', ') || undefined
-                }
+                place={place || undefined}
                 detail={recordedAs(member.recordedAs)}
                 href={
                   member.slug
@@ -1264,8 +1293,19 @@ function PastMembers({
             );
           })}
           <Text wordSafe variant="footnote">
-            Listed from their recorded votes, under the name they sat under.
+            Listed from recorded votes and party service, under the name they
+            sat under.
           </Text>
+          <SourceLine
+            title="Past members"
+            citation="Parliamentary roster and recorded votes"
+            asOf={block.asAt}
+            originals={block.sources}
+            state={
+              block.partial ? 'partial' : block.stale ? 'saved' : undefined
+            }
+            testID="party-past-source"
+          />
         </View>
       )}
     </Disclosure>

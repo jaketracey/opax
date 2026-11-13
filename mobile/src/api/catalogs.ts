@@ -1,6 +1,6 @@
 import { ReadSession } from './read-session';
 import { throwIfAborted } from './abort';
-import { partyRename, samePartyLabel } from '../design/party';
+import { samePartyLabel } from '../design/party';
 import { decodePartyFile } from '../features/directories/party-file';
 import { publicDiscovery } from '../features/money-public/discovery';
 import {
@@ -110,10 +110,7 @@ export interface PartyPageRecord {
     label: string;
     rosterAsAt: string | null;
     members: Block<ReturnType<typeof partyMembers>>;
-    /**
-     * A renamed party's past members under a former name, from the voting
-     * record. Absent for every other party.
-     */
+    /** Past members from voting records and roster party service. */
     past?: Block<PartyPastMember[]>;
     receipts: Block<NonNullable<ReturnType<typeof partyMoney>>>;
     associated: Block<{
@@ -350,12 +347,11 @@ export class Catalogs {
           ]
         : [],
     };
-    const renamed = !!partyRename(label);
     let view: NonNullable<PartyPageRecord['data']> = {
       label,
       rosterAsAt: core.data?.roster.data.meta.generated ?? null,
       members,
-      ...(renamed ? { past: loadingPartyBlock<PartyPastMember[]>() } : {}),
+      past: loadingPartyBlock<PartyPastMember[]>(),
       receipts: loadingPartyBlock(),
       associated: loadingPartyBlock(),
       divisions: loadingPartyBlock(),
@@ -375,33 +371,57 @@ export class Catalogs {
     progress?.(result());
     // Give React a turn to commit the title and Members before optional decode work.
     await new Promise<void>((resolve) => setTimeout(resolve, 0));
-    // A renamed party's past members sat under a former name: the voting
-    // record holds them, by the label they sat under.
+    // Past affiliations can be absent from a person's voting-party label.
     const readPast = async () => {
-      const block = await read(this.votes(signal), 'They Vote For You, ODbL');
+      const block = await read(
+        this.votes(signal, refresh),
+        'They Vote For You, ODbL',
+      );
+      const past = partyPastMembers(
+        label,
+        block.data ?? { records: {}, names: {}, meta: null },
+        core.data?.slugs.data ?? { generated: '', slugs: {} },
+        membership?.current ?? [],
+        core.data?.roster.data,
+        core.data?.people.data,
+      );
       view = {
         ...view,
         past: {
           ...block,
-          data: block.data
-            ? partyPastMembers(
-                label,
-                block.data,
-                core.data?.slugs.data ?? { generated: '', slugs: {} },
-                [
-                  ...(membership?.current ?? []),
-                  ...(membership?.recorded ?? []),
-                ],
-              )
-            : null,
-          asAt: block.data?.meta?.content_changed_at ?? null,
+          status: !block.data && past.length ? 'ready' : block.status,
+          data: block.data || past.length ? past : null,
+          stale: block.stale || core.stale,
+          partial:
+            block.partial || core.partial || (!block.data && past.length > 0),
+          asAt:
+            [
+              core.data?.roster.data.meta.generated,
+              block.data?.meta?.content_changed_at,
+            ]
+              .filter((date): date is string => !!date)
+              .sort()[0] ?? null,
+          sources: [
+            ...members.sources,
+            ...block.sources,
+            ...[
+              ...new Set(
+                past.flatMap(
+                  (p) =>
+                    p.periods?.flatMap((a) =>
+                      a.source_url ? [a.source_url] : [],
+                    ) ?? [],
+                ),
+              ),
+            ].map((url) => ({ label: 'Recorded party service', url })),
+          ],
         },
       };
       throwIfAborted(signal);
       progress?.(result());
     };
     await Promise.all([
-      ...(renamed ? [readPast()] : []),
+      readPast(),
       (money ? Promise.resolve(money) : readMoney())
         .then((block) => {
           view = {
@@ -558,8 +578,8 @@ export class Catalogs {
       { signal },
     );
   }
-  votes(signal?: AbortSignal) {
-    return this.client.get('/votes.json', decode.decodeVotes, false, {
+  votes(signal?: AbortSignal, refresh = false) {
+    return this.client.get('/votes.json', decode.decodeVotes, refresh, {
       signal,
     });
   }
