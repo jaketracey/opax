@@ -4,7 +4,7 @@ import type { RecordQuestion } from './ask-records'
 import type { CatalogRecord } from './catalog-search'
 import { payPersonRecord, payGeneralRecords } from './pay-records.mjs'
 import { personUrl } from '../public/party-page.js'
-import { loadOffices, officePayAnswer, officeEvidence, generalOfficeQuestion, PARLIAMENTARY_SECRETARY, type ParliamentSide } from './ask-pay-offices'
+import { loadOffices, officePayAnswer, officeEvidence, generalOfficeQuestion, PARLIAMENTARY_SECRETARY, type ParliamentSide, type ReportedHead } from './ask-pay-offices'
 
 /**
  * "Who is the highest paid politician?" has an answer, and it is not in any
@@ -144,6 +144,12 @@ function answerBuilder(data: PayData) {
 }
 
 const base = (data: PayData) => data.base[data.base.length - 1]
+// Source snippets are read as evidence. A labelled row ("Prime Minister: a loading of 160%") tells the claim audit
+// who owns a figure, so it keeps its label; an unlabelled snippet is a sentence that stands on its own.
+const baseSentence = (amount: number, who = 'parliamentarian', from?: string) => `A federal ${who}’s base salary is ${aud(amount)} a year${from ? `, since ${day(from)}` : ''} (Remuneration Tribunal determination, section 7).`
+const MINISTERIAL_SENTENCE = 'Ministers and other office holders receive an additional salary on top of the base, set as a percentage of the base salary.'
+const EACH_POST_SENTENCE = 'Each parliamentarian is paid the base salary, plus the percentage of it that their post adds.'
+const HANDBOOK_SENTENCE = 'The Parliamentary Handbook records who holds each post, and since when.'
 /** "Coverage: " is the answer renderer's cue to fold this under "About these numbers". */
 function limits(data: PayData, answer: string): string {
   const allowance = data.meta.electorate_allowance
@@ -184,7 +190,7 @@ function rankingAnswer(question: string, data: PayData) {
     const scoped = named.length === 1 ? pool.filter(row => named[0].members.includes(row.party || '')) : pool
     const floor = scoped.filter(row => row.pct === 0)
     b.add(`**${floor.length.toLocaleString('en-AU')} of ${scoped.length.toLocaleString('en-AU')} ${named.length === 1 ? `${named[0].label} ` : ''}${who}s are on the base salary of ${aud(base(data).amount)} a year**, the least a sitting parliamentarian is paid: they hold no post that carries a loading in this data.`)
-    b.instrument('mp-determination', `Base salary ${aud(base(data).amount)} (section 7).`)
+    b.instrument('mp-determination', baseSentence(base(data).amount))
     b.add(`\n\n${context(data)}`)
     return finish(b, data, [{ label: 'Who is the highest paid politician?', href: '/ask?q=' + encodeURIComponent('Who is the highest paid politician?') }])
   }
@@ -200,9 +206,9 @@ function rankingAnswer(question: string, data: PayData) {
       const best = side.rows[0]
       b.add(` The highest paid ${side.party.label} parliamentarian is ${plain(best.name)}, ${aud(best.salary)} a year as ${asPost(best.post)}${best.assumed ? ', if named in the Opposition Leader’s notice' : ''}.`)
     }
-    b.instrument('mp-determination', `Base salary ${aud(base(data).amount)} (section 7) and the percentage of base for each parliamentary office (section 11).`)
+    b.instrument('mp-determination', `A federal parliamentarian’s base salary is ${aud(base(data).amount)} a year (Remuneration Tribunal determination, section 7), and each parliamentary office adds a set percentage of that base on top (section 11).`)
     b.add(`\n\n${context(data)} ${sides.map(side => `${side.rows.length.toLocaleString('en-AU')} ${side.party.label}`).join(' and ')} ${who}s compared.`)
-    b.instrument('handbook', 'Who holds each post, and since when.')
+    b.instrument('handbook', HANDBOOK_SENTENCE)
     const per = limit || (sides.length > 2 ? 2 : 3)
     table(sides.flatMap(side => side.rows.slice(0, per)).sort((x, y) => y.salary - x.salary), true)
     return finish(b, data, [
@@ -218,7 +224,7 @@ function rankingAnswer(question: string, data: PayData) {
   const tied = scoped.filter(row => row.salary === top.salary).length
   if (tied > 1) b.add(` ${tied - 1} ${tied === 2 ? 'other is' : 'others are'} on the same salary.`)
   b.add(`\n\n${context(data)} ${scoped.length.toLocaleString('en-AU')} sitting ${named.length === 1 ? `${named[0].label} ` : ''}${who}s ranked.`)
-  b.instrument('handbook', 'Who holds each post, and since when.')
+  b.instrument('handbook', HANDBOOK_SENTENCE)
   table(scoped.slice(0, limit || 5), named.length !== 1)
   return finish(b, data, [
     { label: `${top.name}’s pay over time`, href: personHref(top.name) },
@@ -236,12 +242,12 @@ function personAnswer(person: PayPerson, data: PayData) {
     const last = person.spells[person.spells.length - 1]
     b.add(`**${name} was last paid ${aud(last[4])} a year** as ${asPost(last[2])}, on leaving parliament${person.to ? ` in ${day(person.to).replace(/^\d+\s/, '')}` : ''}.`)
   }
-  b.instrument(person.now && person.now.pct === data.offices.pm?.pct ? 'ministerial-report' : 'mp-determination', 'The base salary and the percentage of it that each post adds.')
+  b.instrument(person.now && person.now.pct === data.offices.pm?.pct ? 'ministerial-report' : 'mp-determination', EACH_POST_SENTENCE)
   if (person.peak.salary > (person.now?.salary || 0)) b.add(` The highest rate was ${aud(person.peak.salary)} a year as ${asPost(person.peak.post)}, in ${financialYear(person.peak.year)}.`)
   const years = person.by_year
   const partial = person.from <= data.meta.from
   b.add(`\n\n**${financialYear(years[0][0])} to ${financialYear(years[years.length - 1][0])}: ${about(person.total)} in salary entitlements**${partial ? `, counting only from ${day(data.meta.from)}, where this data starts` : ''}. Day by day, the base salary then in force plus the loading of the post then held; not adjusted for inflation.`)
-  b.instrument('handbook', `${person.name}: the posts held and their dates.`)
+  b.instrument('handbook', `${person.name}: the posts held and their dates, from the Parliamentary Handbook.`)
   b.add('\n\n| Period | Post | Loading | Salary a year |\n| --- | --- | ---: | ---: |')
   const recent = person.spells.slice(-8)
   for (const [from, to, post, pct, salary, assumed] of recent) {
@@ -266,7 +272,7 @@ function comparePeople(people: PayPerson[], data: PayData) {
   const [first, second] = rows
   b.add(rate(first) === rate(second) ? `**${plain(first.name)} and ${plain(second.name)} are on the same salary: ${aud(rate(first))} a year.**`
     : `**${plain(first.name)} is paid more: ${aud(rate(first))} a year against ${plain(second.name)}’s ${aud(rate(second))}.**`)
-  b.instrument('mp-determination', 'The base salary and the percentage of it that each post adds.')
+  b.instrument('mp-determination', EACH_POST_SENTENCE)
   b.add(`\n\n${context(data)} A former member is shown at the rate they left on.`)
   b.add('\n\n| Parliamentarian | Post | Loading | Salary a year |\n| --- | --- | ---: | ---: |')
   for (const p of rows) {
@@ -291,8 +297,12 @@ function postAnswer(question: string, data: PayData) {
     b.instrument(ministerial ? 'ministerial-report' : 'mp-determination', `${office.label}: ${loading(office.pct)} of the base salary.`)
     if (holders.length === 1) b.add(` ${plain(holders[0].name)} holds the post.`)
   } else {
-    b.add(`**A federal parliamentarian’s base salary is ${aud(step.amount)} a year**, for senators and members alike, since ${day(step.from)}. A post adds a loading on top, from 2% for a deputy whip to 160% for the Prime Minister.`)
-    b.instrument('mp-determination', `Base salary ${aud(step.amount)} (section 7).`)
+    const who = /\bbackbench/i.test(question) ? 'backbencher' : 'parliamentarian'
+    const loaded = Object.values(data.offices).filter(o => o.pct > 0).sort((x, y) => x.pct - y.pct), top = loaded.at(-1)
+    b.add(`**A federal ${who}’s base salary is ${aud(step.amount)} a year**, for senators and members alike, since ${day(step.from)}.`)
+    b.instrument('mp-determination', baseSentence(step.amount, who, step.from))
+    b.add(` Ministers and other office holders receive an additional percentage of base on top${top ? `, from ${loading(loaded[0].pct)} to ${loading(top.pct)} for the ${plain(top.label)}` : ''}.`)
+    b.instrument('ministerial-report', MINISTERIAL_SENTENCE)
   }
   b.add(`\n\n${context(data)}`)
   b.add('\n\n| Post | Loading | Salary a year |\n| --- | ---: | ---: |')
@@ -303,7 +313,7 @@ function postAnswer(question: string, data: PayData) {
     const salary = office.kind === 'ministerial' ? Math.round(step.amount * (1 + office.pct / 100)) : step.amount + Math.ceil((step.amount * office.pct) / 1000) * 10
     b.add(`\n| ${plain(office.label)} | ${loading(office.pct)} | ${aud(salary)} |`)
   }
-  b.instrument('ministerial-report', 'The additional salary of each ministerial office, as a percentage of base.', 2)
+  b.instrument('ministerial-report', MINISTERIAL_SENTENCE, 2)
   const steps = data.base.slice(-6)
   b.add(`\n\nThe base salary over time: ${steps.map(s => `${aud(s.amount)} from ${day(s.from)}`).join('; ')}.`)
   return finish(b, data, [
@@ -448,7 +458,7 @@ function parliamentSide(rest: string, data: PayData): ParliamentSide | null {
 }
 
 /** What a departmental secretary or statutory office holder is paid, from pay-offices.json. */
-async function officeAnswerFor(input: RecordQuestion, assets: Fetcher) {
+async function officeAnswerFor(input: RecordQuestion, assets: Fetcher, reported?: ReportedHead) {
   const question = input.question || ''
   if (input.kind && input.kind !== 'all' || input.speaker || input.topic || input.state && input.state !== 'federal') return null
   if (!PAY_WORDS.test(question)) return null
@@ -459,7 +469,7 @@ async function officeAnswerFor(input: RecordQuestion, assets: Fetcher) {
   let pay: PayData | null = null
   try { pay = await loadPay(assets) } catch { /* A comparison needs pay.json; an office alone does not. */ }
   return officePayAnswer(question, offices, { payWords: true, ranking: RANKING.test(question), amount: AMOUNT.test(question), compared: COMPARED.test(question) },
-    rest => pay ? parliamentSide(rest, pay) : null)
+    rest => pay ? parliamentSide(rest, pay) : null, reported)
 }
 
 let memo: Promise<PayData> | null = null
@@ -473,9 +483,10 @@ function loadPay(assets: Fetcher): Promise<PayData> {
   return memo
 }
 
-/** A calculated answer, or null when the question is not about what a federal parliamentarian is paid. */
-export async function paidAnswer(input: RecordQuestion, assets: Fetcher) {
-  const office = await officeAnswerFor(input, assets).catch(() => null)
+/** A calculated answer, or null when the question is not about what a federal parliamentarian is paid.
+ *  `reported` is the top agency-head figure from the annual reports, shown beside an agency-head ranking. */
+export async function paidAnswer(input: RecordQuestion, assets: Fetcher, reported?: ReportedHead) {
+  const office = await officeAnswerFor(input, assets, reported).catch(() => null)
   if (office) return office
   // An office the Tribunal pays, asked in a way the rates cannot answer (a past year,
   // say), goes to the record: never a parliamentarian's salary in its place.
