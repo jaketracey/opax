@@ -1,4 +1,4 @@
-import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=893767f2bd';
+import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=5ca04bccb3';
 import {donorDisclosure} from './donor-disclosure.js?v=18e84bb744';
 import {interestHolder} from './interest-holder.js';
 

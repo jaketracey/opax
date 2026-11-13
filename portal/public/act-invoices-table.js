@@ -1,6 +1,6 @@
 import {actInvoiceEntityName} from './act-invoices-context.js?v=61d4f9572c';
 /** Supplier identity is source-record text only. No links, facets or name search. */
-import {dataTableHTML,guardTableURL,serializeQuery} from './datatable.js?v=893767f2bd';
+import {dataTableHTML,guardTableURL,serializeQuery} from './datatable.js?v=5ca04bccb3';
 export const ACT_INVOICES_ID='kzmf-7uhp';
 export const ACT_INVOICES_SOURCE='https://www.data.act.gov.au/Government-and-Transparency/Notifiable-Invoices-Register/'+ACT_INVOICES_ID;
 export const ACT_INVOICES_SEARCH=['publish_description','reporting_entity'];
