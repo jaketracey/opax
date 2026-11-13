@@ -3,9 +3,10 @@ import {mountContractsTable} from './contracts-table.js?v=bd2b252bf0';
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
-import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=410d91a7a6";
+import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=c64ac55ccb";
 import { sourceLineHTML } from "./labels.js?v=6a4764139d";
 import { partyUrl } from "./canonical-urls.js?v=6c889d487d";
+import { receiptGraph, receiptGraphScope } from "./donor-disclosure.js?v=2e8209b6ec";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const number = (value) => (Number(value) || 0).toLocaleString("en-AU");
 const currency = (value) => (Number(value) || 0).toLocaleString("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 });
@@ -331,9 +332,12 @@ async function mountFunding(root, links, life, register = "") {
   root.hidden = false;
   root.innerHTML = `<h2 class="ui-section-title">Also in the funding record</h2><p class="ui-status-line" role="status">Opening the funding records…</p>${register}`;
   try {
-    const data = await json("/graph/money.json", life.signal);
+    // Each donor and flow read through its typed cells (receiptGraph): each receipt once, from
+    // the party's own return, as on the donor and party pages.
+    const data = receiptGraph(await json("/graph/money.json", life.signal));
     if (!life.alive()) return;
     const ids = new Set(links.map((link) => link.id));
+    const scope = receiptGraphScope(data, (edge) => ids.has(edge.source));
     const nodes = new Map((data.nodes || []).map((node) => [node.id, node]));
     const matchedNodes = [...ids].map((id) => nodes.get(id)).filter(Boolean);
     const nodeTotal = matchedNodes.reduce((sum, node) => sum + (Number(node.total) || 0), 0);
@@ -352,7 +356,7 @@ async function mountFunding(root, links, life, register = "") {
     }
     const rows = [...grouped.values()].sort((a, b) => b.total - a.total);
     const max = Math.max(1, ...rows.map((row) => row.total));
-    root.innerHTML = `<h2 class="ui-section-title">Also in the funding record</h2><p class="ui-section-note supplier-section-note">Disclosed party receipts recorded under this supplier’s identity, from the money map’s selected donor data${yearSpan ? ` (${yearSpan})` : ""}. These totals cover a different set of records and dates from the contracts above.</p>${rows.length ? `<ol class="ui-list supplier-bars" data-rule="none" role="list">${rows.map((row) => barRowHTML(`<a href="${partyUrl(row.name)}">${esc(row.name)}</a>`, currency(row.total), row.total / max, plural(row.count, "recorded receipt"))).join("")}</ol>` : matchedNodes.length ? `<p><strong>${currency(nodeTotal)}</strong> across ${plural(nodeCount, "recorded receipt")}${yearSpan ? ` (${yearSpan})` : ""}. No party breakdown for these receipts.</p>` : "<p>This identity is not on the money map.</p>"}${matchedNodes.length ? '<button type="button" class="ui-button supplier-map-toggle">Explore the money map</button><div class="supplier-money-map" hidden></div>' : ""}${register}`;
+    root.innerHTML = `<h2 class="ui-section-title">Also in the funding record</h2><p class="ui-section-note supplier-section-note">Disclosed party receipts recorded under this supplier’s identity, from the money map’s selected donor data${yearSpan ? ` (${yearSpan})` : ""}. These totals cover a different set of records and dates from the contracts above.</p>${scope ? `<p class="entry-scope">${esc(scope)}</p>` : ""}${rows.length ? `<ol class="ui-list supplier-bars" data-rule="none" role="list">${rows.map((row) => barRowHTML(`<a href="${partyUrl(row.name)}">${esc(row.name)}</a>`, currency(row.total), row.total / max, plural(row.count, "recorded receipt"))).join("")}</ol>` : matchedNodes.length ? `<p><strong>${currency(nodeTotal)}</strong> across ${plural(nodeCount, "recorded receipt")}${yearSpan ? ` (${yearSpan})` : ""}. No party breakdown for these receipts.</p>` : "<p>This identity is not on the money map.</p>"}${matchedNodes.length ? '<button type="button" class="ui-button supplier-map-toggle">Explore the money map</button><div class="supplier-money-map" hidden></div>' : ""}${register}`;
     root.querySelector(".supplier-map-toggle")?.addEventListener("click", async (event) => {
       const button = event.currentTarget;
       const slot = root.querySelector(".supplier-money-map");

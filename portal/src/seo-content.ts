@@ -1,6 +1,6 @@
 import {supplierContractsHTML} from '../public/contracts-table.js'
 import {decodeHTMLStrict} from 'entities'
-import {donorDisclosure,donorLabelHTML,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
+import {donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import { shortDate } from '../public/format.js'
 import { personUrl, partyUrl } from '../public/party-page.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
@@ -483,12 +483,15 @@ export async function renderSupplierAnswer(id: string, read: ReadAsset, params =
 export async function renderMoneyAnswer(title: string, read: ReadAsset): Promise<RenderedContent> {
   let body='<p>Published political receipts, Commonwealth contracts and grant awards are separate records. Award values are not verified expenditure, and an association does not prove influence.</p>'
   for(const [path,label] of [['/graph/money.json','Federal'],['/graph/money.qld.json','Queensland'],['/graph/money.vic.json','Victoria']]) {
-    const graph=await read<MoneyGraph & {meta:{generated:string}}>(path)
+    // Each flow read through its typed cells (each receipt once, from the party's own return),
+    // as on the donor and party pages; the state graphs have none and keep their record figures.
+    const graph=receiptGraph(await read<MoneyGraph & {meta:{generated:string}}>(path))
     const parties=graph.nodes.filter(n=>n.kind==='party')
     // Count donation edges, excluding public contracts, grants and other flow kinds.
     const ids=new Set(graph.nodes.filter(n=>n.kind==='donor').map(n=>n.id))
     const receipts=graph.edges.filter(e=>ids.has(e.source) && !e.grant && !e.flow)
-    body+=`<h2>${label} disclosed receipts</h2><p>${currency(receipts.reduce((sum,e)=>sum+e.total,0))} across ${count(receipts.length)} donor-to-party totals on this map. ${parties.length} parties. Updated ${escapeHtml(graph.meta.generated)}. Coverage: ${escapeHtml(graph.meta.coverage || 'See the source')}. Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || label)}.</p><ul>${parties.map(p=>`<li>${link(partyUrl(p.label),p.label)}</li>`).join('')}</ul><p>${link(path,`${label} map data export`)}</p>`
+    const scope=receiptGraphScope(graph)
+    body+=`<h2>${label} disclosed receipts</h2>${scope ? `<p>${escapeHtml(scope)}</p>` : ''}<p>${currency(receipts.reduce((sum,e)=>sum+e.total,0))} across ${count(receipts.length)} donor-to-party totals on this map. ${parties.length} parties. Updated ${escapeHtml(graph.meta.generated)}. Coverage: ${escapeHtml(graph.meta.coverage || 'See the source')}. Source: ${escapeHtml(graph.meta.sourceShort || graph.meta.source || label)}.</p><ul>${parties.map(p=>`<li>${link(partyUrl(p.label),p.label)}</li>`).join('')}</ul><p>${link(path,`${label} map data export`)}</p>`
   }
   // The index's meta from its own small file (public/supplier-row-buckets.js), else the 7.6 MB index.
   type SuppliersMeta = {meta:{generated_at:string;total:number;contract_count:number;source:string;published_from:string;published_to:string}}

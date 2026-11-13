@@ -215,6 +215,48 @@ def unique_index(pairs):
     return index
 
 
+# Event periods count at their polling year, as on the map.
+RECEIPT_EVENT_YEARS = {"braddon by-election": 2018, "wentworth by-election": 2018,
+                       "eden-monaro by-election": 2020, "fadden by-election": 2023}
+
+
+def _receipt_number(value):
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return 0
+    return number if number == number and number not in (float("inf"), float("-inf")) else 0
+
+
+def receipt_figures(x):
+    """One donor-to-party flow's figures by the rule every OPAX money figure uses
+    (receiptFigures in portal/public/donor-disclosure.js, which
+    portal/test/money-typed-sweep.test.mjs pins this copy to): the typed cells
+    (by_type, by_type_year), each receipt once from the party's own return, all
+    receipt types. The older total/count/firstYear/lastYear also hold the donor's
+    own declaration of the same gift and are used only for a graph without typed
+    cells (the state graphs)."""
+    by_type = x.get("by_type")
+    if not isinstance(by_type, dict):
+        return {"total": _receipt_number(x.get("total")), "count": _receipt_number(x.get("count")),
+                "firstYear": x.get("firstYear"), "lastYear": x.get("lastYear"), "typed": False}
+    count, first, last = 0, None, None
+    for period, types in (x.get("by_type_year") or {}).items():
+        found = re.search(r"\b(?:19|20)\d{2}\b", str(period))
+        year = int(found.group(0)) if found else RECEIPT_EVENT_YEARS.get(str(period).lower())
+        receipts = sum(_receipt_number(cell[1]) if isinstance(cell, list) and len(cell) > 1 else 0
+                       for cell in (types or {}).values())
+        count += receipts
+        if receipts <= 0 or not year:
+            continue
+        first = year if first is None else min(first, year)
+        last = year if last is None else max(last, year)
+    total = 0
+    for amount in by_type.values():
+        total += _receipt_number(amount)
+    return {"total": total, "count": count, "firstYear": first, "lastYear": last, "typed": True}
+
+
 def load_tie_registers(money_path, access_path, fits_path):
     with open(money_path, encoding="utf-8") as f:
         money = json.load(f)
@@ -229,13 +271,18 @@ def load_tie_registers(money_path, access_path, fits_path):
     edges = defaultdict(list)
     for edge in money.get("edges", []):
         source = edge.get("source")
-        if not str(source).startswith("donor:"):
+        if not str(source).startswith("donor:") or edge.get("grant") or edge.get("flow"):
+            continue
+        # The donor page's figure: each receipt once, from the party's own return. A flow
+        # only the donor declared (empty typed cells) is left out, as on the party page.
+        figures = receipt_figures(edge)
+        if figures["typed"] and figures["count"] <= 0 and figures["total"] == 0:
             continue
         edges[source].append({
             "party": str(edge.get("target") or "").removeprefix("party:"),
-            "total": round(edge.get("total") or 0),
-            "from": edge.get("firstYear"),
-            "to": edge.get("lastYear"),
+            "total": round(figures["total"]),
+            "from": figures["firstYear"],
+            "to": figures["lastYear"],
         })
     for source in edges:
         edges[source].sort(key=lambda x: (-x["total"], x["party"]))

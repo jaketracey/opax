@@ -1,5 +1,5 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
-import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph} from './donor-disclosure.js?v=2e8209b6ec';
+import {loadDonorViewIndex} from './donor-views.js?v=a3bd4b7d12';
 /** Guided views derived only from exported graph relationships and year cells. */
 const EXCLUDED_INDUSTRIES = new Set(['individual', 'individuals', 'unions', 'party_internal', 'government', 'other', 'unidentified']);
 const COMPANY_WORD = /\b(?:pty|ltd|limited|corporation|corp|bank|banking|group|holdings|plc)\b/i;
@@ -180,7 +180,9 @@ function timeJourney(view, requested) {
 }
 
 export function buildMoneyJourneys(data, selections = {}) {
-  const view = dataView(data);
+  // Each receipt flow read through its typed cells (receiptGraph): each receipt once,
+  // from the party's own return, as on the donor and party pages.
+  const view = dataView(receiptGraph(data));
   if (!view.companies.length) return [];
   return [publicMoneyJourney(view, selections['public-money']), multiplePartiesJourney(view, selections['multiple-parties']), industryJourney(view, selections.industry), timeJourney(view, selections['over-time'])].filter(Boolean);
 }
