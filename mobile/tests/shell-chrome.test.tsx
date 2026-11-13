@@ -966,28 +966,33 @@ describe('bar titles keep their initial layout clear of the bar items', () => {
       <BarTitle title="Interactive Gambling Bill" shown trailing={2} />,
     );
     try {
-      expect(style(view).maxWidth).toBe(
-        barTitleWidth(
-          window.width,
-          2,
-          undefined,
-          '',
-          undefined,
-          barItemGrowthAX,
-        ) -
-          2 * barTitleClearanceAX,
+      // The room keeps its 8 pt gaps once (build 62 took them twice, and
+      // "Interactive Gambling…" retreated to nothing); at AX they are
+      // padding inside the title view, so the view is the room plus both.
+      const room = barTitleWidth(
+        window.width,
+        2,
+        undefined,
+        '',
+        undefined,
+        barItemGrowthAX,
       );
-      expect(
-        view.root.findAll(
-          (node) =>
-            typeof node.type === 'string' &&
-            StyleSheet.flatten(node.props.style)?.paddingHorizontal ===
-              barTitleClearanceAX,
-        ),
-      ).not.toHaveLength(0);
+      expect(style(view).maxWidth).toBe(room);
+      const padded = view.root.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          StyleSheet.flatten(node.props.style)?.paddingHorizontal ===
+            barTitleClearanceAX,
+      );
+      expect(padded).not.toHaveLength(0);
+      expect(StyleSheet.flatten(padded[0].props.style).maxWidth).toBe(
+        room + 2 * barTitleClearanceAX,
+      );
+      // Fabric shrinks only text it sees truncated; a clipped line never is.
       expect(view.root.findByType(Animated.Text).props).toMatchObject({
         adjustsFontSizeToFit: true,
         minimumFontScale: 1 / inlineTitleScaleCap,
+        ellipsizeMode: 'tail',
       });
       // The retreat is measured at the Large size, the same as every size.
       for (const probe of view.root.findAll(

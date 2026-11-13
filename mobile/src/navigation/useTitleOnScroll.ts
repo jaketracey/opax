@@ -168,6 +168,9 @@ export function BarTitle({
   // follows the inline ramp to 23 pt. Choose the retreat at the Large size,
   // as every other size does, and let the drawn title shrink back towards
   // it to fit: a title that fits at Large is shown at AX3 (sweep 1, 2.6).
+  // The room already keeps 8 pt (20 pt beside a named back button) from
+  // each item; at AX sizes that gap becomes padding inside the title view,
+  // so UIKit cannot set the view against an item and print over it.
   const ax = isAccessibilityCategory(fontScale);
   const growth = ax ? barItemGrowthAX : 0;
   const clearance = ax ? 2 * barTitleClearanceAX : 0;
@@ -179,16 +182,13 @@ export function BarTitle({
   const ready =
     candidates.every((text) => measured(text) !== undefined) &&
     (!backTitle || backWidth !== undefined);
-  const namedRoom = Math.max(
-    0,
-    barTitleWidth(
-      safeWidth,
-      trailing,
-      trailingWidth,
-      backTitle,
-      backWidth,
-      growth,
-    ) - clearance,
+  const namedRoom = barTitleWidth(
+    safeWidth,
+    trailing,
+    trailingWidth,
+    backTitle,
+    backWidth,
+    growth,
   );
   const [measurement, setMeasurement] = useState({
     key,
@@ -224,10 +224,13 @@ export function BarTitle({
   // Once visible, keep the full fallback and its room for this reveal.
   // Late native measurements take effect after the heading returns.
   const fallback = measurement.expired;
-  const minimalRoom = Math.max(
-    0,
-    barTitleWidth(safeWidth, trailing, trailingWidth, '', undefined, growth) -
-      clearance,
+  const minimalRoom = barTitleWidth(
+    safeWidth,
+    trailing,
+    trailingWidth,
+    '',
+    undefined,
+    growth,
   );
   const retreat = retreatBarTitle(
     title,
@@ -280,6 +283,7 @@ export function BarTitle({
     : ready && shown
       ? retreat.room
       : namedRoom;
+  const shrink = fontScale > 1 && !fallback;
   return createElement(
     NativeView,
     {
@@ -292,10 +296,13 @@ export function BarTitle({
       Animated.Text,
       {
         numberOfLines: 1,
-        ellipsizeMode: fallback ? 'tail' : 'clip',
+        // Fabric only shrinks text it sees truncated, and a clipped line
+        // never reads as truncated: above Large the tail mode lets
+        // adjustsFontSizeToFit find the overflow (sweep 1, 2.6).
+        ellipsizeMode: fallback || shrink ? 'tail' : 'clip',
         maxFontSizeMultiplier: inlineTitleScaleCap,
         // Above Large, shrink towards the Large size the retreat measured.
-        ...(fontScale > 1 && !fallback
+        ...(shrink
           ? {
               adjustsFontSizeToFit: true,
               minimumFontScale: 1 / inlineTitleScaleCap,
