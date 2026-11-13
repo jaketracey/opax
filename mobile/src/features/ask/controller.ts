@@ -39,6 +39,16 @@ function followupPassages(data: Answer) {
     .slice(0, 8);
 }
 
+/**
+ * The thread with `turn` replaced by a copy that carries its Ask next rows.
+ * A new object, never a write into the turn: the screen and the saved copy
+ * see the rows only through an update or a save.
+ */
+function withNext(thread: readonly Turn[], turn: Turn, next: Followup[]) {
+  const answered: Turn = { ...turn, next };
+  return thread.map((m) => (m === turn ? answered : m));
+}
+
 export type AskState = {
   id: string | null;
   thread: Turn[];
@@ -619,19 +629,26 @@ export class AskController {
     turn.followupsRequested = true;
     if (!passages.length) return;
     try {
-      turn.next = decodeFollowups(
+      const next = decodeFollowups(
         await this.io.post(
           '/api/followups',
           { question: q, answer: data.answer, passages },
           new AbortController().signal,
         ),
       );
+      // The waiting question did not start (the Person check refused it, or
+      // the roster failed to load), so this conversation is still on screen:
+      // its rows show at once, and its newest turns are the ones saved.
+      const s = this.state;
+      const shown = s.id === id && !s.busy && s.thread.includes(turn);
+      const saved = withNext(shown ? s.thread : thread, turn, next);
+      if (shown) this.update({ thread: saved });
       const store = this.io.read();
       if (!store.chats.some((c) => c.id === id)) return;
       await this.io.save({
         ...store,
         chats: store.chats.map((c) =>
-          c.id === id ? { ...c, thread: thread.slice() } : c,
+          c.id === id ? { ...c, thread: saved } : c,
         ),
       });
     } catch {
@@ -660,8 +677,10 @@ export class AskController {
         ),
       );
       if (mine !== this.sequence) return;
-      turn.next = next;
-      this.update({ thread: this.state.thread.slice(), nextLoading: false });
+      this.update({
+        thread: withNext(this.state.thread, turn, next),
+        nextLoading: false,
+      });
       await this.persist();
     } catch {
       /* The composer stays available. Never retry generation. */

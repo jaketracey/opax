@@ -389,7 +389,7 @@ it.each([
  * the answer is written and saved, the waiting question goes, and the
  * answer's Ask next request is left open for the test to settle.
  */
-async function waitingBehindAnswer() {
+async function waitingBehindAnswer(scope: { speaker?: string } = {}) {
   let finish!: (value: unknown) => void;
   let followups: ((value: unknown) => void) | undefined;
   post.mockImplementation((path: string) =>
@@ -405,7 +405,7 @@ async function waitingBehindAnswer() {
   const running = askSession.snapshot().id!;
   askSession.arrive(
     'What has parliament said?',
-    { ...askSession.snapshot().options },
+    { ...askSession.snapshot().options, ...scope },
     { queue: true },
   );
   await act(async () =>
@@ -472,6 +472,65 @@ it('Ask next rows for a conversation deleted while they loaded are not saved', a
   expect(saveChats).not.toHaveBeenCalled();
   expect(storedChat(running)).toBeUndefined();
 });
+
+// Review: Ask next was written into the turn without an update, so rows for
+// a conversation still on screen did not show.
+it.each([
+  [
+    'the Person check refuses it',
+    () =>
+      jest
+        .mocked(catalogs.roster)
+        .mockResolvedValueOnce({ data: { people: [] } } as never),
+  ],
+  [
+    'the roster fails to load',
+    () =>
+      jest.mocked(catalogs.roster).mockRejectedValueOnce(new Error('Offline')),
+  ],
+])(
+  'Ask next rows show at once when the waiting question does not start (%s)',
+  async (_case, roster) => {
+    roster();
+    const { running, followups } = await waitingBehindAnswer({
+      speaker: 'Alex Example',
+    });
+    // The waiting question was refused: the answered conversation stays.
+    expect(asked()).toEqual(['A question already running?']);
+    let s = askSession.snapshot();
+    expect(s).toMatchObject({
+      id: running,
+      busy: false,
+      draft: 'What has parliament said?',
+    });
+    const written = s.thread.at(-1)!;
+    expect(written).toMatchObject({ role: 'answer' });
+    expect(written.next).toBeUndefined();
+    const updates = jest.fn();
+    const unsubscribe = askSession.subscribe(updates);
+    try {
+      await act(async () =>
+        followups!({ questions: ['What did the committee find?'] }),
+      );
+      await flush();
+    } finally {
+      unsubscribe();
+    }
+    expect(updates).toHaveBeenCalled();
+    s = askSession.snapshot();
+    expect(s.thread.at(-1)).toMatchObject({
+      role: 'answer',
+      text: 'The first answer.',
+      next: [{ question: 'What did the committee find?' }],
+    });
+    // A new turn, never a write into the one already on screen.
+    expect(s.thread.at(-1)).not.toBe(written);
+    expect(written.next).toBeUndefined();
+    expect(storedChat(running)?.thread.at(-1)?.next).toEqual([
+      { question: 'What did the committee find?' },
+    ]);
+  },
+);
 
 it('a running answer that asks for a full question keeps the waiting question unsent', async () => {
   let finish!: (value: unknown) => void;
