@@ -7,6 +7,7 @@ import {
 } from 'expo-router';
 import { createElement } from 'react';
 import {
+  Dimensions,
   Platform,
   Pressable,
   Text,
@@ -29,11 +30,13 @@ import {
   interfaceFonts as fonts,
   headingFace,
   headlineSizes,
+  isAccessibilityCategory,
   largeTitleSizes,
   schemeColour,
   textStyles,
 } from '../design/tokens';
 import { accountSnapshot } from '../features/account/store';
+import { askReturnSnapshot } from '../features/ask/return';
 import { voiceLinked } from '../voice/linked';
 import { canShare } from './share';
 import {
@@ -271,22 +274,56 @@ export function rootHeaderItems(props?: {
  */
 export function askBackItem(props: {
   name: string;
+  /** The visible word ("Bill", "Today"); else the way back's own. */
+  short?: string;
   onPress: () => void;
 }): TestableHeaderItem {
+  const short =
+    props.short ??
+    askReturnSnapshot()?.short ??
+    // A tab's own name is already short.
+    props.name;
+  const labelled = askBackLabelled();
   return {
     type: 'button',
-    label: props.name,
+    // With room, the item reads where it goes, as the system back button
+    // does ("‹ Bill", "‹ Today"); the record's long name stays in the
+    // accessibility label (sweep 2 item 9). UIKit draws an item's image
+    // in place of its title, so the labelled item is its title alone.
+    label: labelled ? `\u2039 ${short}` : props.name,
     accessibilityLabel: `Back to ${props.name}`,
     testID: 'ask-back',
     identifier: 'ask-back',
     tintColor: colors.navy,
-    icon: {
-      type: 'sfSymbol',
-      name: Platform.OS === 'android' ? 'arrow.left' : 'chevron.backward',
-    },
+    ...(labelled
+      ? {}
+      : {
+          icon: {
+            type: 'sfSymbol' as const,
+            name: Platform.OS === 'android' ? 'arrow.left' : 'chevron.backward',
+          },
+        }),
     sharesBackground: false,
     onPress: props.onPress,
   };
+}
+
+/** Narrower than this, Conversations, New and Account leave no room for a word. */
+export const ASK_BACK_LABEL_MIN_WIDTH = 381;
+
+/**
+ * Whether Ask's back item shows its word: iOS only (Android draws Material's
+ * navigation icon), below accessibility sizes, on a window wider than 380.
+ * At AX sizes and on a narrow window it is the chevron alone.
+ */
+export function askBackLabelled(
+  window: { width: number; fontScale: number } = Dimensions.get('window'),
+) {
+  return (
+    Platform.OS === 'ios' &&
+    !isAccessibilityCategory(window.fontScale) &&
+    window.width >= ASK_BACK_LABEL_MIN_WIDTH
+  );
 }
 
 export function askHeaderItems(props: {

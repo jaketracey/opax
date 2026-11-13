@@ -158,7 +158,13 @@ export function clearRim(
 export function visibleLabels(
   slots: readonly LabelSlot[],
   camera: { tx: number; ty: number; k: number },
-  viewport: { width: number; height: number; insets?: Insets },
+  viewport: {
+    width: number;
+    height: number;
+    insets?: Insets;
+    /** The card's lower edge when the map is clipped under it: no name starts above it. */
+    clipTop?: number;
+  },
   box: { width: number; height: number },
 ): Record<string, 1> {
   'worklet';
@@ -205,6 +211,8 @@ export function visibleLabels(
         slot.kind === 'cluster' ? sy - box.height - 4 : sy - box.height / 2;
       // Its last line must clear the panel's edge, with a little air.
       if (top + h > bottom - 6) continue;
+      // Nor runs up under the card the map is clipped beneath.
+      if (viewport.clipTop && top < viewport.clipTop + 2) continue;
       if (safeLeft > 0 && left < safeLeft + 6) continue;
       if (safeRight > 0 && left + box.width > viewport.width - safeRight - 6)
         continue;

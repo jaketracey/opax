@@ -56,7 +56,13 @@ import {
   useLayout,
   useScreenColumn,
 } from '../../design/primitives';
-import { colors, hairline, radii, rhythm } from '../../design/tokens';
+import {
+  colors,
+  hairline,
+  minimumTarget,
+  radii,
+  rhythm,
+} from '../../design/tokens';
 import { headerItems, opaqueBar, pageItems } from '../../navigation/chrome';
 import { moneyDonorsRoute } from '../../navigation/routes/public-money';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
@@ -485,9 +491,17 @@ function MapMode({
   offline: React.ReactNode;
 }) {
   const setOptions = useSafeSetOptions();
+  // List mode's title fades in by scroll and is hidden at rest; that hidden
+  // title survived the switch to the map, which then had no title at all
+  // (sweep 2 item 5.5). The map always names itself.
+  const barTitle = typeof options.title === 'string' ? options.title : '';
   useLayoutEffect(() => {
-    setOptions({ ...opaqueBar(colors.paper), headerTransparent: false });
-  }, [setOptions]);
+    setOptions({
+      ...opaqueBar(colors.paper),
+      headerTransparent: false,
+      headerTitle: barTitle,
+    });
+  }, [setOptions, barTitle]);
   const navigation = useNavigation();
   const router = useRouter();
   const { regular } = useLayout();
@@ -582,19 +596,40 @@ function MapMode({
   // At accessibility sizes a compact card and panel would fill the screen and
   // bury the controls: they share what the band leaves and scroll inside it.
   // Regular layouts keep their own caps, which already leave the band room.
+  // The band under the panel is the tab bar and the home indicator. It is
+  // measured from the panel host, but a panel taller than its room pushed
+  // the host under the tab bar, the gap read as 0 and the room grew to
+  // match: the focus figure sat under the tab bar (sweep 2 item 5.4). The
+  // safe inset is the floor of that band.
+  const band = Math.max(below, managed ? 0 : (safe?.bottom ?? 0));
+  const visible = (stage.height || window.height) - band;
   const limits =
     large && !regular
       ? largeTextLimits(
-          managed
-            ? pose.controls.height
-            : (stage.height || window.height) - below,
+          managed ? pose.controls.height : visible,
           topHeight,
           controlsHeight || (horizontalControls ? 48 : 190),
           searchOpen ? 'search' : expanded ? 'expanded' : 'map',
+          managed ? pose.sceneFloor : 0,
         )
       : null;
+  // Below accessibility sizes a phone's panel keeps its own height, unless
+  // a focus makes it taller than the room under the controls: then it stops
+  // at the controls and scrolls, so all four stay whole (item 5.6).
+  const phoneRoom =
+    !limits && !managed && !searchOpen && !expanded && !horizontalControls
+      ? Math.max(
+          minimumTarget,
+          visible - topHeight - (controlsHeight || 190) - rhythm.block * 2,
+        )
+      : undefined;
   const panelMaxHeight =
-    limits?.panelMaxHeight ?? (managed ? pose.panelMaxHeight : undefined);
+    limits?.panelMaxHeight ??
+    (managed
+      ? pose.panelMaxHeight
+      : phoneRoom !== undefined && peek > phoneRoom
+        ? phoneRoom
+        : undefined);
   const topMaxHeight =
     limits?.topMaxHeight ?? (managed ? pose.topMaxHeight : undefined);
   const insets = useMemo(
@@ -615,7 +650,7 @@ function MapMode({
                 ? 48 + rhythm.block
                 : 0),
             bottom:
-              (managed ? (safe?.bottom ?? 0) : below) +
+              (managed ? (safe?.bottom ?? 0) : band) +
               Math.min(peek, panelMaxHeight ?? peek) +
               rhythm.tight,
             left: (safe?.left ?? 0) + rhythm.tight,
@@ -629,13 +664,29 @@ function MapMode({
       managed,
       topHeight,
       peek,
-      below,
+      band,
       panelMaxHeight,
       horizontalControls,
       pose.controls.y,
       searchOpen,
       expanded,
     ],
+  );
+  // The map is drawn only between the card and the panel: no stroke above
+  // the card or under the bar, and no name half under either (item 5.6).
+  // A fold gives the map its own side, with nothing over it to clip. A
+  // regular width caps the card and panel to a column, so clipping the full
+  // width would blank the map beside them: only compact widths clip.
+  const clip = useMemo(
+    () =>
+      pose.folded || regular
+        ? null
+        : {
+            top:
+              topHeight > 0 ? (managed ? pose.controls.y : 0) + topHeight : 0,
+            bottom: Math.max(0, insets.bottom - rhythm.tight),
+          },
+    [pose.folded, regular, topHeight, managed, pose.controls.y, insets.bottom],
   );
   // Android's Back closes the search, then the panel, then the focus.
   useEffect(() => {
@@ -780,6 +831,16 @@ function MapMode({
     />
   );
   const cardWidth = regular ? { maxWidth: 420 } : null;
+  // A capped card says it scrolls: the system indicator flashes once when
+  // its content first runs past the cap (item 5.3).
+  const topScroll = useRef<ScrollView>(null);
+  const flashed = useRef(false);
+  const flashOnce = (contentHeight: number) => {
+    if (flashed.current || topMaxHeight === undefined) return;
+    if (contentHeight <= topMaxHeight - rhythm.tight) return;
+    flashed.current = true;
+    topScroll.current?.flashScrollIndicators();
+  };
   const topContent = searchOpen ? (
     <MoneyMapSearch
       model={model}
@@ -822,6 +883,7 @@ function MapMode({
           focus={focus}
           onFocus={(id) => setFocus(id)}
           insets={insets}
+          clip={clip}
           cacheKey={jurisdiction}
           accessibilityLabel={moneyMapLabel(model, focus)}
           actions={actions}
@@ -844,7 +906,7 @@ function MapMode({
                       pose.controls.height +
                       Math.min(peek, panelMaxHeight ?? peek) +
                       rhythm.block
-                    : below + peek + rhythm.block,
+                    : band + peek + rhythm.block,
                 }
           }
         />
@@ -883,7 +945,9 @@ function MapMode({
           >
             {topMaxHeight !== undefined ? (
               <ScrollView
+                ref={topScroll}
                 style={styles.topScroll}
+                onContentSizeChange={(_w, h) => flashOnce(h)}
                 keyboardShouldPersistTaps="handled"
                 // Android hides the bar at rest; a capped card shows it has more.
                 persistentScrollbar

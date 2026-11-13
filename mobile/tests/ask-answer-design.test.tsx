@@ -18,6 +18,7 @@ import {
 import { useAskSources } from '../src/features/ask/SourcesPane';
 import { RecordDetail } from '../src/features/split/RecordDetail';
 import { parseAnswer } from '../src/features/ask/answer-markdown';
+import { answeredText } from '../src/features/ask/share-answer';
 import {
   citationSelection,
   citationSheetLeft,
@@ -799,4 +800,19 @@ describe('the iPad pane is never empty', () => {
     );
     expect(citationSelection()).toEqual(selected);
   });
+});
+
+test('the sources sheet gives the answer’s date in the page’s short form (sweep 2 item 9)', () => {
+  const turn = answer();
+  const details = askSourceDetails({
+    turn,
+    question,
+    chat: 'fixture-chat',
+    index: 1,
+    legacy: null,
+  });
+  // "Answered 9 Nov 2026, 9:41 am", as the answer's foot says it, not
+  // "Answered 9 November 2026, 9:41 am".
+  expect(details.header).toBe(answeredText(turn).replace(/ · OPAX$/, ''));
+  expect(details.header).toMatch(/^Answered \d{1,2} [A-Z][a-z]{2} \d{4}, /);
 });

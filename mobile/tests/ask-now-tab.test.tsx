@@ -174,7 +174,11 @@ test('a Today starter switches to the Ask tab and asks there', async () => {
     text: question,
   });
   // Ask's bar leads back to Today (ask-entry-navigation.test.tsx).
-  expect(askReturnSnapshot()).toEqual({ tab: '(today)', name: 'Today' });
+  expect(askReturnSnapshot()).toEqual({
+    tab: '(today)',
+    name: 'Today',
+    short: 'Today',
+  });
   await act(async () => router.navigate('/(tabs)/(today)'));
   expect(route().segments).toEqual(['(tabs)', '(today)']);
   expect(names('(today)')).toEqual(['index']);

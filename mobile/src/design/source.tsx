@@ -497,6 +497,13 @@ export function SourceAffordance({
 }
 
 /**
+ * The dot after the date stays on the date's line: a no-break space before
+ * it, so a wrap falls after the dot, never before it ("Updated 21 Sep 2026
+ * / · GrantConnect" at AX3, sweep 2 item 11).
+ */
+export const dateSeparator = '\u00a0· ';
+
+/**
  * The line's text runs: plain strings where there is no name (so the text is
  * one string), the name as its own run in the link colour otherwise.
  */
@@ -505,10 +512,13 @@ function lineChildren(
   name: string | null | undefined,
   rest: readonly string[],
 ): ReactNode {
-  if (!name) return [date, ...rest].filter(Boolean).join(' · ');
+  if (!name)
+    return date && rest.length
+      ? `${date}${dateSeparator}${rest.join(' · ')}`
+      : [date, ...rest].filter(Boolean).join(' · ');
   if (!date && !rest.length) return name;
   return [
-    date ? `${date} · ` : '',
+    date ? `${date}${dateSeparator}` : '',
     <Text key="name" variant="footnote" tone="navy">
       {name}
     </Text>,

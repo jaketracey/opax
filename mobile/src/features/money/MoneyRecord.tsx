@@ -13,6 +13,7 @@ import {
   useRouter,
 } from 'expo-router';
 import {
+  Children,
   createContext,
   useContext,
   useEffect,
@@ -28,7 +29,6 @@ import { catalogs } from '../../api/runtime';
 import { copy } from '../../design/copy';
 import {
   counted,
-  formatCount,
   formatDate,
   formatMoney,
   formatMoneyCompact,
@@ -61,9 +61,10 @@ import {
   agencyRoute,
   leadRoute,
   moneyItemRoute,
+  moneyDonorsRoute,
   moneyRecordRoute,
+  publicMoneyRoute,
 } from '../../navigation/routes/public-money';
-import { resultsRoute } from '../../navigation/routes/search';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { isOrganisationDonor } from '../../privacy/donorEntity';
 import { leadsAbout } from '../leads/model';
@@ -83,7 +84,7 @@ import {
   type AgencySupplier,
   type GrantRecipient,
 } from './organisation';
-import { moneyPartyGroups, PartyDot, PartyMoneyRow } from './parts';
+import { moneyPartyGroups, PartyDot, PartyMoneyRow, rowCompact } from './parts';
 import {
   bothRegistersCaveat,
   filtersFromParams,
@@ -174,10 +175,13 @@ function Page({
   share,
   refreshing,
   onRefresh,
+  centred = false,
   children,
 }: {
   title?: string;
   testID?: string;
+  /** A missing record: its one block centred on the page. */
+  centred?: boolean;
   share?: { path: string; title: string } | null;
   refreshing?: boolean;
   onRefresh?: () => void;
@@ -197,6 +201,7 @@ function Page({
       <Screen
         onScroll={scrollTitle.onScroll}
         testID={testID}
+        centred={centred}
         refreshControl={
           onRefresh ? (
             <RefreshControl
@@ -217,14 +222,21 @@ function Page({
   );
 }
 
+/**
+ * The record's head as one block: kicker, name, then whatever qualifies the
+ * page (associated entity, offline line, caveat, window note) at the tight
+ * rhythm, not a section gap apiece (sweep 2 item 6.2).
+ */
 function Title({
   meta,
   name,
   party,
+  children,
 }: {
   meta?: string;
   name: string;
   party?: boolean;
+  children?: ReactNode;
 }) {
   const measure = useContext(MoneyTitleMeasure);
   return (
@@ -250,6 +262,7 @@ function Title({
           {name}
         </Heading>
       </View>
+      {children}
     </Group>
   );
 }
@@ -293,7 +306,8 @@ function RegisterSection({
   allYears?: {
     value: number;
     count: number;
-    noun: string;
+    one: string;
+    many: string;
     range: string;
   } | null;
   bars?: {
@@ -321,7 +335,7 @@ function RegisterSection({
       {allYears ? (
         <ValueRow
           label="All years"
-          value={`${formatMoney(allYears.value)} · ${formatCount(allYears.count)} ${allYears.noun} · ${allYears.range}`}
+          value={`${formatMoney(allYears.value)} · ${counted(allYears.count, allYears.one, allYears.many)} · ${allYears.range}`}
           testID={`${testID}-all-years`}
         />
       ) : null}
@@ -342,6 +356,9 @@ function RegisterSection({
   );
 }
 
+export const missingBody =
+  'It may be in an earlier release, or under another name.';
+
 function Missing({
   name,
   register,
@@ -351,23 +368,34 @@ function Missing({
   name?: string;
   register: 'grant' | 'contract' | 'donation';
   body?: string;
-  action?: { label: string; onPress: () => void };
+  action?: { label: string; onPress: () => void; testID?: string };
 }) {
   const router = useRouter();
+  // The shared not-found pattern (sweep 2 item 2): centred on the page, the
+  // exact title, the likely reason, and always somewhere to go.
   return (
-    <Page title={name}>
+    <Page title={name} centred>
       <ContentUnavailable
         symbol="magnifyingglass"
         title={`Not in the latest ${register} records`}
-        body={body}
+        body={body ?? missingBody}
         action={
           action ??
-          (name
+          (register === 'donation'
             ? {
-                label: `Search for ${name}`,
-                onPress: () => router.push(resultsRoute('all', { q: name })),
+                // The hub holds grants, contracts and agencies, not donors.
+                label: 'Search donors',
+                onPress: () =>
+                  router.push(
+                    moneyDonorsRoute(name?.trim() ? { q: name.trim() } : {}),
+                  ),
+                testID: 'money-node-missing-search',
               }
-            : undefined)
+            : {
+                label: 'Search public money',
+                onPress: () => router.push(publicMoneyRoute),
+                testID: 'money-node-missing-search',
+              })
         }
         testID="money-node-missing"
       />
@@ -440,22 +468,19 @@ function useLeadsAbout(name: string | null) {
   return leads;
 }
 
-function LeadRows({ name }: { name: string | null }) {
-  const leads = useLeadsAbout(name);
-  return (
-    <>
-      {leads.slice(0, 3).map((lead, index) => (
-        <LinkRow
-          key={lead.id}
-          title={lead.title}
-          detail="Lead"
-          symbol={symbols.leads}
-          href={leadRoute(lead.id)}
-          testID={`money-record-lead-${index}`}
-        />
-      ))}
-    </>
-  );
+function leadRows(leads: ReturnType<typeof useLeadsAbout>) {
+  return leads
+    .slice(0, 3)
+    .map((lead, index) => (
+      <LinkRow
+        key={lead.id}
+        title={lead.title}
+        symbol={symbols.leads}
+        accessibilityLabel={`Lead: ${lead.title}`}
+        href={leadRoute(lead.id)}
+        testID={`money-record-lead-${index}`}
+      />
+    ));
 }
 
 // ------------------------------------------------------------ graph nodes
@@ -465,7 +490,8 @@ function windowNote(filters: MoneyFilters, graph: MoneyGraph) {
     isAllYears(graph, filters) ? null : moneyYears(filters.from, filters.to),
     filters.industry ? industryDonors(filters.industry) : null,
   ].filter(Boolean);
-  return parts.length ? parts.join(' · ') : null;
+  // A lone "2024–25" under the name did not say what it was.
+  return parts.length ? `Showing ${parts.join(' · ')}` : null;
 }
 
 function roleMeta(node: MoneyNode) {
@@ -671,12 +697,13 @@ function NodeBody({
       testID,
     });
   };
-  const allYears = (figures: MoneyFigures, noun: string) =>
+  const allYears = (figures: MoneyFigures, one: string, many: string) =>
     narrowed
       ? {
           value: figures.total,
           count: figures.count,
-          noun,
+          one,
+          many,
           range: moneyYears(figures.firstYear, figures.lastYear),
         }
       : null;
@@ -721,15 +748,16 @@ function NodeBody({
         refreshing={refreshing}
         onRefresh={refresh}
       >
-        <Title meta={roleMeta(node)} name={node.label} party />
-        {record.stale && !record.staleReason ? (
-          <OfflineLine savedAt={record.savedAt} />
-        ) : null}
-        {note ? (
-          <Text wordSafe variant="secondary" testID="money-record-window">
-            {note}
-          </Text>
-        ) : null}
+        <Title meta={roleMeta(node)} name={node.label} party>
+          {record.stale && !record.staleReason ? (
+            <OfflineLine savedAt={record.savedAt} />
+          ) : null}
+          {note ? (
+            <Text wordSafe variant="secondary" testID="money-record-window">
+              {note}
+            </Text>
+          ) : null}
+        </Title>
         <RegisterSection
           title={words.title}
           testID="money-record-donations"
@@ -741,7 +769,7 @@ function NodeBody({
             source: donorSource('money-source'),
             testID: 'money-focus-amount',
           }}
-          allYears={allYears(full, words.many)}
+          allYears={allYears(full, words.one, words.many)}
           bars={bars(node, 'money', words.barsTitle, shortSource, true)}
         >
           {donors.length ? (
@@ -767,7 +795,7 @@ function NodeBody({
                     .filter(Boolean)
                     .join(' · ')}
                   amount={edge.total}
-                  compact
+                  compact={rowCompact(edge.total)}
                   href={pushRecord(other)}
                   testID={`money-focus-flow-${index}`}
                 />
@@ -783,7 +811,12 @@ function NodeBody({
             },
           ]}
         />
-        <More>
+        <More
+          leads={node.label}
+          map={
+            !fromMap ? <MapRow node={node} jurisdiction={jurisdiction} /> : null
+          }
+        >
           {profile.native ? (
             <LinkRow
               title={node.label}
@@ -792,8 +825,6 @@ function NodeBody({
               testID="money-native-profile"
             />
           ) : null}
-          <LeadRows name={node.label} />
-          {!fromMap ? <MapRow node={node} jurisdiction={jurisdiction} /> : null}
         </More>
       </Page>
     );
@@ -802,6 +833,7 @@ function NodeBody({
   if (node.kind === 'grantor') {
     const contracts = node.flow === 'contracts';
     const kind = contracts ? 'contracts' : 'grants';
+    const noun = contracts ? 'contract' : 'grant';
     const line = `in ${kind} to donors on the map, ${years}`;
     return (
       <Page
@@ -810,12 +842,13 @@ function NodeBody({
         refreshing={refreshing}
         onRefresh={refresh}
       >
-        <Title meta={roleMeta(node)} name={node.label} />
-        {note ? (
-          <Text wordSafe variant="secondary" testID="money-record-window">
-            {note}
-          </Text>
-        ) : null}
+        <Title meta={roleMeta(node)} name={node.label}>
+          {note ? (
+            <Text wordSafe variant="secondary" testID="money-record-window">
+              {note}
+            </Text>
+          ) : null}
+        </Title>
         <RegisterSection
           title={contracts ? 'Government contracts' : 'Grants received'}
           testID={contracts ? 'money-record-contracts' : 'money-record-grants'}
@@ -826,7 +859,7 @@ function NodeBody({
             source: publicSource(kind, 'money-source'),
             testID: 'money-focus-amount',
           }}
-          allYears={allYears(full, kind)}
+          allYears={allYears(full, noun, kind)}
           bars={bars(
             node,
             'ink',
@@ -872,6 +905,7 @@ function NodeBody({
   const parties = moneyPartyGroups(
     flows.filter(({ other }) => other.kind === 'party'),
     ({ other }) => other.label,
+    ({ edge }) => edge.total,
   );
   const partyCount = parties.main.length + parties.other.length;
   const donorWords = receiptSectionWords('donor', graph, !!node.typed);
@@ -916,6 +950,7 @@ function NodeBody({
       name={other.label}
       detail={moneyYears(edge.firstYear, edge.lastYear)}
       amount={edge.total}
+      compact
       href={pushRecord(other)}
       testID={`money-focus-flow-${index}`}
     />
@@ -927,6 +962,7 @@ function NodeBody({
   ) => {
     const noun = kind;
     const contractsKind = kind === 'contracts';
+    const one = contractsKind ? 'contract' : 'grant';
     const source = contractsKind ? contractsSource : grantsSource;
     return (
       <RegisterSection
@@ -936,7 +972,7 @@ function NodeBody({
         }
         figure={{
           value: block.total,
-          label: `in ${formatCount(block.count)} ${noun}, ${moneyYears(block.firstYear, block.lastYear)}`,
+          label: `in ${counted(block.count, one, noun)}, ${moneyYears(block.firstYear, block.lastYear)}`,
           caveat: contractsKind ? contractsCaveat : grantsCaveat,
           source: publicSource(
             kind,
@@ -948,7 +984,7 @@ function NodeBody({
             ? 'money-focus-contracts'
             : 'money-focus-grants',
         }}
-        allYears={fullBlock ? allYears(fullBlock, noun) : null}
+        allYears={fullBlock ? allYears(fullBlock, one, noun) : null}
         bars={bars(
           block,
           'ink',
@@ -978,24 +1014,25 @@ function NodeBody({
       refreshing={refreshing}
       onRefresh={refresh}
     >
-      <Title meta={roleMeta(node)} name={node.label} />
-      <AssociatedEntityLabel
-        associated={associated}
-        testID="money-focus-associated"
-      />
-      {record.stale && !record.staleReason ? (
-        <OfflineLine savedAt={record.savedAt} />
-      ) : null}
-      {sections > 1 ? (
-        <Text wordSafe variant="footnote" testID="money-record-both-caveat">
-          {bothRegistersCaveat}
-        </Text>
-      ) : null}
-      {note ? (
-        <Text wordSafe variant="secondary" testID="money-record-window">
-          {note}
-        </Text>
-      ) : null}
+      <Title meta={roleMeta(node)} name={node.label}>
+        <AssociatedEntityLabel
+          associated={associated}
+          testID="money-focus-associated"
+        />
+        {record.stale && !record.staleReason ? (
+          <OfflineLine savedAt={record.savedAt} />
+        ) : null}
+        {sections > 1 ? (
+          <Text wordSafe variant="footnote" testID="money-record-both-caveat">
+            {bothRegistersCaveat}
+          </Text>
+        ) : null}
+        {note ? (
+          <Text wordSafe variant="secondary" testID="money-record-window">
+            {note}
+          </Text>
+        ) : null}
+      </Title>
       {filters.donations ? (
         <RegisterSection
           title={donorWords.title}
@@ -1008,7 +1045,7 @@ function NodeBody({
             source: donorSource('money-source'),
             testID: 'money-focus-amount',
           }}
-          allYears={allYears(full, donorWords.many)}
+          allYears={allYears(full, donorWords.one, donorWords.many)}
           bars={bars(node, 'money', donorWords.barsTitle, shortSource, true)}
         >
           {partyCount ? (
@@ -1032,7 +1069,12 @@ function NodeBody({
       {grants ? publicSection('grants', grants, full.grants) : null}
       {contracts ? publicSection('contracts', contracts, full.contracts) : null}
       <Originals rows={originals} />
-      <More>
+      <More
+        leads={node.label}
+        map={
+          !fromMap ? <MapRow node={node} jurisdiction={jurisdiction} /> : null
+        }
+      >
         {node.kind === 'donor' && isOrganisationDonor(node) ? (
           <LinkRow
             title="Find on Wikipedia"
@@ -1040,23 +1082,43 @@ function NodeBody({
               url: `https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(node.label)}`,
               label: `Find ${node.label} on Wikipedia`,
             }}
+            symbol={symbols.search}
             accessibilityLabel={`Find ${node.label} on Wikipedia`}
             accessibilityHint="Opens in the browser"
             testID="money-record-wikipedia"
           />
         ) : null}
-        <LeadRows name={node.label} />
-        {!fromMap ? <MapRow node={node} jurisdiction={jurisdiction} /> : null}
       </More>
     </Page>
   );
 }
 
-function More({ children }: { children: ReactNode }) {
+/**
+ * The foot's one "More" group, under Originals: the record's other pages
+ * (Wikipedia, its leads, the map), each row with its symbol, instead of a
+ * pile of bare rows (sweep 2 item 6.4). Nothing to hold, no group.
+ */
+function More({
+  leads: about,
+  map,
+  children,
+}: {
+  leads: string | null;
+  /** The map row, last. */
+  map?: ReactNode;
+  children?: ReactNode;
+}) {
+  const leads = useLeadsAbout(about);
+  const rows = [
+    ...Children.toArray(children),
+    ...leadRows(leads),
+    ...Children.toArray(map),
+  ];
+  if (!rows.length) return null;
   return (
-    <View testID="money-record-more">
-      <View>{children}</View>
-    </View>
+    <InsetGroup header="More" testID="money-record-more">
+      {rows}
+    </InsetGroup>
   );
 }
 
@@ -1245,7 +1307,7 @@ function RecipientBody({
           },
         ]}
       />
-      <More>
+      <More leads={recipient.name}>
         {donor ? (
           <LinkRow
             title={donor.label}
@@ -1254,7 +1316,6 @@ function RecipientBody({
             testID="money-record-donor"
           />
         ) : null}
-        <LeadRows name={recipient.name} />
       </More>
     </Page>
   );
@@ -1413,7 +1474,7 @@ function SupplierBody({
           },
         ]}
       />
-      <More>
+      <More leads={supplier.name}>
         <LinkRow
           title={agency.name}
           symbol={symbols.contracts}
@@ -1428,7 +1489,6 @@ function SupplierBody({
             testID="money-record-donor"
           />
         ) : null}
-        <LeadRows name={supplier.name} />
       </More>
     </Page>
   );

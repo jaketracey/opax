@@ -1,6 +1,7 @@
 import { measureBarTitle } from './bar-title-metrics';
 import { SkeletonCrossfade } from '../src/design/states';
 import { act } from 'react';
+import { Heading } from '../src/design/text';
 import TestRenderer from 'react-test-renderer';
 import { Redirect } from 'expo-router';
 import { Animated, Dimensions, Platform, StyleSheet } from 'react-native';
@@ -40,11 +41,7 @@ import { unnamedRecipient } from '../src/features/money-public/privacy';
 import { organisationHref } from '../src/features/money-public/routes';
 import { LinkRow, MoneyRow, ValueRow } from '../src/design/rows';
 import { Screen as PageScreen } from '../src/design/layout';
-import {
-  MoneyList,
-  MoneyStatus,
-  TitleAlias,
-} from '../src/features/money-public/parts';
+import { MoneyList, MoneyStatus } from '../src/features/money-public/parts';
 import { FigureBlock } from '../src/design/record';
 import { BarTitle } from '../src/navigation/useTitleOnScroll';
 import {
@@ -727,22 +724,25 @@ test.each([
   },
 );
 
-test('Agencies keeps its system large title, stacked search and zero-height title alias', async () => {
+test('Agencies titles itself in the page, as its sibling pages do, with stacked search', async () => {
   const rendered = await mount(Agencies);
   const options = rendered.root.findByType(RouteOptions).props.options;
   expect(options).toMatchObject({
     title: 'Government agencies',
-    headerLargeTitleEnabled: true,
     headerSearchBarOptions: { placement: 'stacked' },
   });
+  // A system large title cut "Commonwealth grants" at AX3 (sweep 2 item 11).
+  expect(options).not.toHaveProperty('headerLargeTitleEnabled');
   expect(options).not.toHaveProperty('headerTitle');
   const list = rendered.root.findByType(MoneyList);
   expect(typeof list.props.onScroll).toBe('function');
-  const alias = list.props.header.props.children[0];
-  expect(alias.type).toBe(TitleAlias);
-  expect(alias.props).toEqual({
-    title: 'Government agencies',
+  const anchor = list.props.header.props.children[0];
+  expect(anchor.props.children.type).toBe(Heading);
+  expect(anchor.props.children.props).toMatchObject({
+    level: 1,
+    kind: 'page',
     testID: 'agencies-title',
+    children: 'Government agencies',
   });
   await act(async () => rendered.unmount());
 });
@@ -809,10 +809,8 @@ test.each([
           </NavigationContext.Provider>
         ));
         const options = rendered.root.findByType(RouteOptions).props.options;
-        expect(options).toMatchObject({
-          title,
-          headerLargeTitleEnabled: true,
-        });
+        expect(options).toMatchObject({ title });
+        expect(options).not.toHaveProperty('headerLargeTitleEnabled');
         expect(options).not.toHaveProperty('headerTitle');
         expect(options).not.toHaveProperty('headerBackTitle');
         expect(options).not.toHaveProperty('headerBackButtonMenuEnabled');
@@ -843,7 +841,7 @@ test.each([
   ['Queensland grants', Grants, { jur: 'qld' }, 'grants'],
   ['Government agencies', Agencies, {}, 'agencies'],
 ] as const)(
-  '%s reveals a capped title from its first header block while retaining its large title and back name',
+  '%s reveals a capped title from its page title and keeps its back name',
   async (title, Page, params, name) => {
     Object.assign(mockParams, params);
     const originalWindow = Dimensions.get('window');
@@ -887,9 +885,9 @@ test.each([
             </NavigationRouteContext.Provider>
           </NavigationContext.Provider>
         ));
+        expect(options.headerLargeTitleEnabled).not.toBe(true);
         expect(options).toMatchObject({
           title,
-          headerLargeTitleEnabled: true,
           headerBackTitle: backTitle,
           headerBackButtonMenuEnabled: true,
           headerBackButtonDisplayMode: 'default',
@@ -937,11 +935,14 @@ test.each([
         };
         expectVisible(false);
         const list = rendered.root.findByType(MoneyList);
-        const [alias, anchor] = list.props.header.props.children;
-        expect(alias.type).toBe(TitleAlias);
+        // The page's own title is the anchor; the status and the figure
+        // follow it.
+        const [anchor, block] = list.props.header.props.children;
         expect(anchor.props.collapsable).toBe(false);
-        expect(anchor.props.children[0].type).toBe(MoneyStatus);
-        expect(anchor.props.children[1].type).toBe(FigureBlock);
+        expect(anchor.props.children.type).toBe(Heading);
+        expect(anchor.props.children.props.children).toBe(title);
+        expect(block.props.children[0].type).toBe(MoneyStatus);
+        expect(block.props.children[1].type).toBe(FigureBlock);
         const pending: ((...values: number[]) => void)[] = [];
         const measure = jest.fn((done) => pending.push(done));
         anchor.props.ref.current = { measure };
@@ -1733,22 +1734,20 @@ test('Largest grants drops a program that repeats the recipient', async () => {
   const largest = await fixture.largest();
   const month = largest.data.latest;
   const index = await fixture.grants('federal');
-  money.grants = jest
-    .fn()
-    .mockResolvedValue({
-      ...index,
-      data: {
-        ...index.data,
-        recipients: [
-          {
-            ...index.data.recipients[0]!,
-            id: 'fixture-council',
-            name: 'Sample Council',
-            organisation: true,
-          },
-        ],
-      },
-    });
+  money.grants = jest.fn().mockResolvedValue({
+    ...index,
+    data: {
+      ...index.data,
+      recipients: [
+        {
+          ...index.data.recipients[0]!,
+          id: 'fixture-council',
+          name: 'Sample Council',
+          organisation: true,
+        },
+      ],
+    },
+  });
   const award = {
     ...largest.data.months[month]![0]!,
     recipientId: 'fixture-council',
@@ -1794,4 +1793,25 @@ test('the agency chart has one published source, scale labels and a latest-value
     ),
   ).toBe(false);
   await act(async () => page.unmount());
+});
+
+test('sweep 2: the four public money pages set their titles at one size, and every one wraps', async () => {
+  for (const [Page, testID, title] of [
+    [Hub, 'money-hub-title', 'Public money'],
+    [Largest, 'largest-title', 'Largest grants'],
+    [Grants, 'grants-title', 'Commonwealth grants'],
+    [Agencies, 'agencies-title', 'Government agencies'],
+  ] as const) {
+    const r = await mount(Page);
+    const heading = r.root
+      .findAllByType(Heading)
+      .find((h) => h.props.testID === testID)!;
+    expect(heading.props).toMatchObject({ level: 1, kind: 'page' });
+    expect([heading.props.children].flat().join('')).toBe(title);
+    // In the page, not the system's large title, which cannot wrap.
+    expect(r.root.findByType(RouteOptions).props.options).not.toHaveProperty(
+      'headerLargeTitleEnabled',
+    );
+    await act(async () => r.unmount());
+  }
 });

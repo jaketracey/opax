@@ -74,7 +74,12 @@ import {
 } from './model';
 import { noAnswerSearch } from './no-answer';
 import { peopleInAnswer, type AskPerson } from './people';
-import { answerCopyText, answeredLong, answeredText } from './share-answer';
+import {
+  answerCopyText,
+  answeredLong,
+  answeredShort,
+  answeredText,
+} from './share-answer';
 import { citedSources, sourceDate, sourceTitle } from './source-present';
 import { useAskPane } from './SourcesPane';
 import { askErrors } from './turn-copy';
@@ -472,7 +477,10 @@ export function askSourceDetails({
         : legacy
           ? new Date(legacy.at * 1000)
           : null,
-    header: answeredLong(turn, legacy),
+    // The page's own short form, so the answer and its sheet give one
+    // date ("Answered 13 Nov 2026, 6:59 pm", sweep 2 item 9); VoiceOver
+    // keeps the long month on the answer's foot.
+    header: answeredShort(turn, legacy) ?? 'Answered',
     report: {
       testID: 'ask-sources-report',
       label: 'Report this answer',

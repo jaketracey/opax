@@ -200,6 +200,14 @@ const entries = [
   ['electorate', '/electorate/synthetic', 'electorate-ask', 'electorate/[id]'],
   ['record', '/doc/synthetic-speech', 'doc-ask', 'doc/[slug]'],
 ] as const;
+const shortName = (kind: string) =>
+  ({
+    bill: 'Bill',
+    person: 'Profile',
+    party: 'Party',
+    electorate: 'Electorate',
+    record: 'Record',
+  })[kind];
 const pageName = (kind: string) =>
   kind === 'record' ? recordHeadline(speech) : 'Sam Placeholder';
 
@@ -226,6 +234,8 @@ test.each(entries)(
     expect(askReturnSnapshot()).toEqual({
       tab: '(today)',
       name: pageName(kind),
+      // The back item's word is the page's kind, not its long name.
+      short: shortName(kind),
     });
     expect(pressable(view, 'ask-back').props.accessibilityLabel).toBe(
       `Back to ${pageName(kind)}`,

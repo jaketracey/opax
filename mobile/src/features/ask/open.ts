@@ -6,6 +6,7 @@ import { askRoute, askTabPath } from '../../navigation/routes';
 import {
   askReturnSnapshot,
   setAskReturn,
+  shortReturnName,
   sourceTab,
   sourceTabNames,
 } from './return';
@@ -81,7 +82,11 @@ function useGoToAsk() {
     // Set before the switch: the tab layout ends it on any other tab.
     setAskReturn(
       source
-        ? { tab: source, name: from?.trim() || sourceTabNames[source] }
+        ? {
+            tab: source,
+            name: from?.trim() || sourceTabNames[source],
+            short: shortReturnName(source, segments),
+          }
         : null,
     );
     router.navigate({ ...route, pathname: askTabPath });

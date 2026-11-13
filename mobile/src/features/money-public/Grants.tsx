@@ -28,7 +28,6 @@ import {
   ListCaption,
   MoneyList,
   MoneyStatus,
-  TitleAlias,
   counted,
   fy,
   fyRange,
@@ -205,8 +204,10 @@ function GrantList({
       <RouteOptions
         options={{
           title,
-          headerLargeTitleEnabled: true,
-          headerLargeTitleShadowVisible: false,
+          // One title size across the public money pages, wrapping at any
+          // size: the in-content page title Public money and Largest grants
+          // use. A system large title cut "Commonwealth grants" to
+          // "Commonweal…" at AX3 (sweep 2 item 11).
           headerSearchBarOptions: search.options,
           ...moneyBar({ name: title, path }),
         }}
@@ -221,13 +222,16 @@ function GrantList({
         onScroll={scrollTitle.onScroll}
         header={
           <>
-            <TitleAlias title={title} testID="grants-title" />
             <NativeView
               ref={titleRef}
               collapsable={false}
               onLayout={scrollTitle.onTitleLayout}
-              style={{ gap: rhythm.block }}
             >
+              <Heading level={1} kind="page" testID="grants-title">
+                {title}
+              </Heading>
+            </NativeView>
+            <NativeView style={{ gap: rhythm.block }}>
               <MoneyStatus
                 status={status}
                 name={title}
@@ -398,9 +402,7 @@ function SeatView({ seat, state }: { seat: string; state?: string }) {
   const entry = data ? seatRow(data, seat, state) : undefined;
   const recipients = useMemo(
     () =>
-      new Set(
-        data?.recipients.filter((r) => r.organisation).map((r) => r.id),
-      ),
+      new Set(data?.recipients.filter((r) => r.organisation).map((r) => r.id)),
     [data],
   );
   const grants = useSeatGrants(entry?.key);

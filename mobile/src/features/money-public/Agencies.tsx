@@ -35,7 +35,6 @@ import {
   MoneyStatus,
   readableDates,
   recordSource,
-  TitleAlias,
   useDebouncedAnnounce,
   useMoneySearch,
   yearRange,
@@ -105,8 +104,10 @@ export default function Agencies() {
       <RouteOptions
         options={{
           title: name,
-          headerLargeTitleEnabled: true,
-          headerLargeTitleShadowVisible: false,
+          // One title size across the public money pages, wrapping at any
+          // size: the in-content page title Public money and Largest grants
+          // use. A system large title cut "Commonwealth grants" to
+          // "Commonweal…" at AX3 (sweep 2 item 11).
           headerSearchBarOptions: search.options,
           ...moneyBar({ name, path: '/subject/agency' }),
         }}
@@ -121,13 +122,16 @@ export default function Agencies() {
         onScroll={scrollTitle.onScroll}
         header={
           <>
-            <TitleAlias title={name} testID="agencies-title" />
             <View
               ref={titleRef}
               collapsable={false}
               onLayout={scrollTitle.onTitleLayout}
-              style={{ gap: rhythm.block }}
             >
+              <Heading level={1} kind="page" testID="agencies-title">
+                {name}
+              </Heading>
+            </View>
+            <View style={{ gap: rhythm.block }}>
               <MoneyStatus
                 status={status}
                 name={name}
