@@ -124,7 +124,7 @@ import { createResearch, researchLimits } from './research-loop'
 import { recordResearchAnswer, recordResearchComparison, recordResearchFailure } from './research-monitor'
 import { cachedKbLookup } from './kb-cache'
 import { ANSWER_WRITING_VERSION } from './research-writing'
-import { cacheableRoutedAnswer, withAnswerLanguage, withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
+import { cacheableRoutedAnswer, calculatedPayAnswer, withAnswerLanguage, withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
 import { groundAnswerPayload } from './research-grounding'
 import { researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
 import { ResearchError, type ResearchPayload } from './research-types'
@@ -6633,7 +6633,7 @@ async function executeAgentic(input: Record<string, unknown>, env: Env, ctx: Exe
   if (report) deps.onResearchFailure = async error => { failure = error; await report(error) }
   try {
     // Covers the whole path, including an SSE writer or provider that stalls.
-    run = await bounded(signal => runAgentic(question, { ...deps, signal, ...deps.withSignal?.(signal) }, progress, budgetMs, period, agenticFilters(input), namedScope), budgetMs, signal)
+    run = await bounded(signal => runAgentic(question, { ...deps, signal, ...deps.withSignal?.(signal) }, progress, budgetMs, period, agenticFilters(input), namedScope, typeof input.kind === 'string' ? input.kind : undefined), budgetMs, signal)
   } catch (error) {
     if (env.RESEARCH_LOOP === 'route' && !failure) {
       failure = new ResearchError(signal?.aborted ? 'aborted' : error instanceof Error && error.name === 'TimeoutError' ? 'timeout' : 'error')
@@ -6860,7 +6860,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     const finish = (run: AgenticPayload) => {
       const payload=agenticAskPayload(run, question)
       // Source rows are linked last: grounding reads the rows as evidence and re-derives which are cited.
-      const finalPayload=linkAskSources(withTranscriptNote(loopRoute?groundAnswerPayload(payload,question):payload),run.source_links,SITE_ORIGIN)
+      const finalPayload=linkAskSources(withTranscriptNote(loopRoute&&!calculatedPayAnswer(payload)?groundAnswerPayload(payload,question):payload),run.source_links,SITE_ORIGIN)
       const response = json(finalPayload)
       // An answer with no citation at all is not kept for a week, and a refusal or limitation not at all: the next ask may do better (as cacheableAnswer).
       if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && !shortenedCaller(caller) && run.qualitative?.answer_status !== 'uncited' && cacheableRoutedAnswer(finalPayload, loopRoute)) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
