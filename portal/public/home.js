@@ -3,7 +3,7 @@ import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
 let donorIndex=new Map();
 loadDonorViewIndex().then(index=>{donorIndex=index});
 import { personUrl, partyUrl } from './canonical-urls.js?v=c40e3d805e';
-import { hydrateCollections, hydrateLatest, hydrateSitting, industryGroups, mapSourceHTML, mapSpan, refreshInfo } from '/home-data.js?v=c79f5a4e02';
+import { hydrateCollections, hydrateLatest, hydrateSitting, industryGroups, mapSourceHTML, refreshInfo } from '/home-data.js?v=c79f5a4e02';
 
 // The homepage and research workspace have separate document lifecycles.
 const legacyRoute = location.href.split('#')[1] || '';
@@ -424,8 +424,7 @@ async function mount() {
     });
     renderIndustries(industryGroups(graph));
     $("hp-map-source").innerHTML = mapSourceHTML(graph.meta, await refreshInfo());
-    const span = mapSpan(graph.meta);
-    if (span) $("hp-map-span").textContent = span;
+    // The lede's span is the Worker's (seo-content.ts homeMapSpan): the receipt headline's years, not the file's coverage.
     const { mountMoneyMap } = await import(
       "/money-map.js?v=7e56b48a6e"
     );

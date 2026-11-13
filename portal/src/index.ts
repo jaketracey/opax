@@ -144,7 +144,7 @@ import * as storyRender from './og-render'
 import { personRole, personTitle, roleLine, billTitle } from './seo-titles'
 import { navGates, pageTrail, trail } from './nav-model.mjs'
 import { EMPTY_REPORTS_INDEX, REPORTS_INDEX, appUserAgent, reportDataPath, reportsAppData, reportsEnabled, reportsPath } from './reports-gate'
-import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, personHeadPrerender, homeMapFallbackHTML, mapDonorsPhrase, mapSpanPhrase, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, agencyTopSuppliers, type AgencyTopSuppliers, type Division, type ReadAsset } from './seo-content'
+import { answerBlock, associationCaveat, crumbSteps, printedTrail, headingOf, crumbsHTML, panelPrerender, SERVER_PANELS, type Crumb, renderPersonAnswer, personHeadPrerender, homeMapFallbackHTML, homeMapSpan, mapDonorsPhrase, mapSpanPhrase, renderBillAnswer, renderDivisionAnswer, renderDirectory, renderSupplierAnswer, renderMoneyAnswer, agencyTopSuppliers, type AgencyTopSuppliers, type Division, type ReadAsset } from './seo-content'
 import { buildSchemaGraph, serializeSchemaGraph, type PersonSchemaIdentity } from './seo-schema'
 import { AGENCY_TOP_SUPPLIERS_PATH, type AgencyTopRow } from '../public/agency-top-suppliers.js'
 import { SUPPLIER_ID_RE, supplierRowsPath } from '../public/supplier-row-buckets.js'
@@ -7350,14 +7350,15 @@ export default {
         const schema=JSON.stringify(buildSchemaGraph({canonical:`${SITE_ORIGIN}/`,title:SITE_TITLE,description:SITE_DESCRIPTION})).replace(/</g,'\\u003c')
         // The map card's fallback: the /money answer's federal figures and a link to
         // /money, which carries the full answer (seo-content.ts homeMapFallbackHTML).
-        const moneyHtml=await assetJson<unknown>(env,'/graph/money.json').then(homeMapFallbackHTML).catch(()=>null)
+        // The lede above the card states the span by the same rule (seo-content.ts homeMapSpan).
+        const [moneyHtml,span]=await assetJson<unknown>(env,'/graph/money.json').then(graph=>[homeMapFallbackHTML(graph),homeMapSpan(graph)] as const).catch(()=>[null,null] as const)
         // The menus read the published optional sections off the page (navigation.js).
         const gates=navGates(env)
         // The home page's Reports block goes with the reports (src/reports-gate.ts).
         const reports=reportsEnabled(env.REPORTS_ENABLED)
-        const out=new HTMLRewriter().on('html',{element(el){if(gates)el.setAttribute('data-nav-gates',gates)}}).on('div#hp-money-map',{element(el){if(moneyHtml)el.setInnerContent(moneyHtml,{html:true})}}).on('[data-reports-only]',{element(el){if(!reports)el.remove()}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry)
+        const out=new HTMLRewriter().on('html',{element(el){if(gates)el.setAttribute('data-nav-gates',gates)}}).on('div#hp-money-map',{element(el){if(moneyHtml)el.setInnerContent(moneyHtml,{html:true})}}).on('span#hp-map-span',{element(el){if(span)el.setInnerContent(span)}}).on('[data-reports-only]',{element(el){if(!reports)el.remove()}}).on('head',{element(el){el.append(`<script type="application/ld+json" id="ld-page">${schema}</script>`,{html:true})}}).transform(entry)
         const headers=new Headers(out.headers);headers.delete('content-length')
-        const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',entry.headers.get('etag'),moneyHtml,schema,gates]);headers.set('etag',etag)
+        const etag=await htmlValidator([env.CF_VERSION_METADATA?.id ?? '',entry.headers.get('etag'),moneyHtml,span,schema,gates]);headers.set('etag',etag)
         const unchanged=notModified(request,etag,headers)
         return communityResponse(unchanged || new Response(request.method==='HEAD' ? null : out.body,{status:out.status,headers}))
       }
