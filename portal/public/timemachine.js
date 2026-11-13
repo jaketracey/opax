@@ -407,7 +407,7 @@ const CSS = `
   font-family: var(--serif); font-weight: 700;
   font-size: clamp(3.4rem, 14vw, 6rem); line-height: 1.05;
   color: var(--navy); font-variant-numeric: tabular-nums;
-  min-width: 4ch; text-align: center;
+  min-width: 4ch; text-align: center; margin: 0;
 }
 /* The filmstrip under the brief is the way in; the button under the year is retired. */
 .tm-pictures-open, .tm-pictures-open[hidden] { display: none !important; }
@@ -922,7 +922,7 @@ export function mountTimeMachine(container, opts = {}) {
       <div class="tm-hero-row">
         <button type="button" class="ui-button ui-icon-button tm-step tm-step-back" aria-label="Previous year">‹</button>
         <div class="tm-year-lockup">
-          <div class="tm-year" aria-hidden="true"></div>
+          <h1 class="tm-year"></h1>
           <button type="button" class="tm-pictures-open" hidden></button>
         </div>
         <button type="button" class="ui-button ui-icon-button tm-step tm-step-fwd" aria-label="Next year">›</button>
@@ -1133,6 +1133,7 @@ export function mountTimeMachine(container, opts = {}) {
     track.setAttribute('aria-valuenow', String(year))
     track.setAttribute('aria-valuetext', `Parliament in ${year}`)
     yearEl.textContent = String(year)
+    yearEl.setAttribute('aria-label', `Parliament in ${year}`)
     for (const { y, node } of tickLabels) node.classList.toggle('tm-current', y === year)
     btnBack.disabled = year <= YEAR_MIN
     btnFwd.disabled = year >= YEAR_MAX

@@ -83,3 +83,19 @@ test('malformed vintages and non-http portfolio links cannot render unsafe marku
  const p=await budgetPage(new URL('https://opax.com.au/budget'),async()=>h,block);
  assert.equal(p.status,200);assert.doesNotMatch(p.prerender,/javascript:alert|<script>alert|5555555/);
 });
+
+
+test('budget source disclosures have separate summary and original-paper link stops',async()=>{
+ const p=await budgetPage(new URL('https://opax.com.au/budget'),read,block);
+ const d=new JSDOM(p.prerender).window.document;
+ const disclosures=[...d.querySelectorAll('.budget-receipt')];
+ assert.ok(disclosures.length>0);
+ for(const detail of disclosures) {
+  const summary=detail.querySelector(':scope > summary');
+  assert.ok(summary.textContent.includes('Table 3.1'));
+  assert.equal(summary.querySelector('a,button,input,[tabindex]'),null);
+  const original=detail.querySelector('p > a');
+  assert.equal(original.textContent,'Open the original paper');
+  assert.equal(original.href,source+'#page=91');
+ }
+});

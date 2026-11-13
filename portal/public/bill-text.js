@@ -42,7 +42,7 @@ export function mountBillText(container, { bill, requestedVersion = null, open =
   const aborter = new AbortController();
   let destroyed = false, generation = 0, manifest, selected, loadedId, loadedComplete = false, textAborter, downloadUrl;
   const root = element('section', null, 'ui-section bill-section bill-text-reader'); root.id = 'bill-full-text'; root.setAttribute('aria-labelledby', 'bill-text-title');
-  const title = element('h3', 'Bill text', 'ui-section-title'); title.id = 'bill-text-title'; title.tabIndex = -1;
+  const title = element('h2', 'Bill text', 'ui-section-title'); title.id = 'bill-text-title'; title.tabIndex = -1;
   const controls = element('div', null, 'bill-text-controls');
   const notice = element('p', null, 'fineprint bill-text-notice'); notice.setAttribute('role', 'status');
   const content = element('div', null, 'bill-text-content'); content.id = 'bill-text-content';
@@ -120,7 +120,7 @@ export function mountBillText(container, { bill, requestedVersion = null, open =
       if (enrichment && typeof enrichment.brief === 'string') {
         const overview = element('aside', null, 'bill-text-overview');
         overview.setAttribute('aria-label', 'Overview of this version');
-        overview.append(element('h4', 'In this version'), element('p', enrichment.brief));
+        overview.append(element('h3', 'In this version'), element('p', enrichment.brief));
         const topics = element('div', null, 'bill-text-topics');
         for (const topic of Array.isArray(enrichment.topics) ? enrichment.topics : []) {
           if (typeof topic !== 'string' || !/^[a-z]+(?:-[a-z]+)*$/.test(topic)) continue;
@@ -154,12 +154,12 @@ export function mountBillText(container, { bill, requestedVersion = null, open =
       const documentBody = element('div', null, 'bill-text-document');
       sections.forEach((section, index) => {
         const part = element('section', null, 'bill-text-part');
-        const heading = element('h4', section.title || `Section ${index + 1}`); heading.id = `bill-text-part-${index}`; heading.tabIndex = -1;
+        const heading = element('h3', section.title || `Section ${index + 1}`); heading.id = `bill-text-part-${index}`; heading.tabIndex = -1;
         const text = element('div', section.text, 'bill-text-source'); part.append(heading, text); documentBody.append(part);
       });
       content.append(documentBody); loadedId = version.id;
       button.disabled = false; button.textContent = 'Hide bill text';
-      if (focus) { const heading = content.querySelector('h4'); heading?.focus({ preventScroll: true }); heading?.scrollIntoView({ block: 'start' }); }
+      if (focus) { const heading = content.querySelector('h3'); heading?.focus({ preventScroll: true }); heading?.scrollIntoView({ block: 'start' }); }
       if (location.hash === '#bill-full-text') root.scrollIntoView({ block: 'start' });
     } catch (error) {
       if (!alive() || generation !== mine || error.name === 'AbortError') return;

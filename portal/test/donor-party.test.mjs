@@ -155,7 +155,7 @@ test('a minor party outside the money map: its one member, under the full name, 
   assert.equal(doc.querySelector('li.dir-row a').getAttribute('href'), '/subject/person/alex-fixture');
   assert.ok(doc.querySelector('.dir-mono'), 'no portrait: the blank circle, never initials');
   assert.ok([...doc.querySelectorAll('a')].some(a => a.textContent === 'Their speeches'));
-  assert.equal(doc.querySelectorAll('h4').length, 0, 'nobody sitting: no subheadings, and no "Sitting members (0)"');
+  assert.equal(doc.querySelectorAll('h3.entry-subhead').length, 0, 'nobody sitting: no subheadings, and no "Sitting members (0)"');
   assert.doesNotMatch(doc.body.textContent, /\(0\)|Not available|not recorded/i);
   // A party with nobody in the record draws no Members block at all, and no state money draws nothing.
   assert.equal(partyMembersHTML('Nobody Party', partyMembers('Nobody Party', {roster, divisions}), helpers), '');
@@ -209,7 +209,7 @@ test('the real app renders a published one-member party outside the money map: i
   assert.equal(doc.querySelector('#subject-title').textContent, label, 'the party name, not the address');
   assert.doesNotMatch(doc.body.textContent, /Outside the bounded money-map selection|Not available|Party not found/);
   for (const section of doc.querySelectorAll('#subject-sections > section')) {
-    const heading = section.querySelector('h3')?.textContent || '';
+    const heading = section.querySelector('h2')?.textContent || '';
     assert.ok(section.textContent.replace(heading, '').trim().length > 0, `empty section: ${section.id || heading}`);
   }
   assert.ok(doc.querySelector('a[href*="kind=speech"][href*="party="]'), 'a link to their speeches');
@@ -222,7 +222,7 @@ test('A4b: the real app gives a sponsor-only party its page: the name and its sp
   assert.equal(result.rows, 4);
   const doc = new JSDOM(result.html).window.document;
   assert.equal(doc.querySelector('#subject-title').textContent, 'Rex Patrick Team');
-  assert.equal(doc.querySelector('#party-sponsored-bills h3').textContent, 'Bills sponsored (4)');
+  assert.equal(doc.querySelector('#party-sponsored-bills h2').textContent, 'Bills sponsored (4)');
   const first = doc.querySelector('#party-sponsored-bills li a');
   assert.equal(first.textContent, 'Australian Federal Integrity Commission Bill 2021');
   assert.equal(first.getAttribute('href'), '/bill/au-federal-s1321');
@@ -236,7 +236,7 @@ test('the app presents independents as parliamentarians outside a party organisa
   const doc = new JSDOM(result.html).window.document;
   assert.equal(doc.querySelector('#subject-title').textContent, 'Independents');
   assert.ok(doc.body.textContent.includes('Parliamentarians who sat without a party. Not a party organisation.'));
-  assert.equal(doc.querySelector('#party-members h3').textContent, 'Parliamentarians');
+  assert.equal(doc.querySelector('#party-members h2').textContent, 'Parliamentarians');
   assert.match(doc.querySelector('.subject-tag').textContent, /\d+ sitting parliamentarians/);
   assert.doesNotMatch(doc.querySelector('.subject-tag').textContent, /sitting members/);
   assert.doesNotMatch(doc.body.textContent, /What its members said/);

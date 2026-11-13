@@ -160,7 +160,7 @@ test('person sections are reused once, and money/vote pairings carry the associa
  assert.doesNotMatch(votesCode,/associationHTML/);
  const interestCode=app.slice(app.indexOf('async function renderPersonInterests'),app.indexOf('let interestsTiesPromise'));
  assert.equal((interestCode.match(/associationHTML/g)||[]).length,1);
- assert.match(interestCode,/Disclosed money records<\/h3>\n      \$\{growthModules.associationHTML\(\)\}/);
+ assert.match(interestCode,/Disclosed money records<\/h2>\n      \$\{growthModules.associationHTML\(\)\}/);
  const payStart=app.indexOf('async function renderPersonPay');
  const payCode=app.slice(payStart,app.indexOf('\n}\n',payStart));
  assert.doesNotMatch(payCode,/associationHTML/);
@@ -172,7 +172,7 @@ test('suggested questions are plain links, and the bill module asks about the bi
  const html=askBlockHTML({name,pageType:'person',seed:'',questions:['What interests has Alex Example declared?']});
  assert.match(html,/<li><a href="\/ask\?[^"]+" rel="nofollow">What interests has Alex Example declared\?<\/a><\/li>/);
  assert.doesNotMatch(html,/class="ui-button" href/);
- assert.match(askBlockHTML({bill:{title:'A Bill'},pageType:'bill'}),/<h3 id="growth-ask-title">Ask about this bill<\/h3>/);
+ assert.match(askBlockHTML({bill:{title:'A Bill'},pageType:'bill'}),/<h2 id="growth-ask-title">Ask about this bill<\/h2>/);
 });
 test('module touch targets are scoped to module controls, never record titles',()=>{
  const css=read('../public/style.css');
