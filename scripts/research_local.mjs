@@ -144,8 +144,10 @@ const START_TIMEOUT_MS = 90_000;
 let worker = null, leaveRunning = false, stopping = false;
 // Stop the wrangler group this run started (TERM, then KILL after 5 s), close the bulk server, exit.
 async function stopWorker() {
-  const pid = worker?.pid; worker = null; bulkAssets.close();
-  if (pid && !leaveRunning) await stopGroup(pid, {graceMs: 5000});
+  bulkAssets.close();
+  // `worker` stays set until the group is gone, so a second Ctrl-C meanwhile still reaches the 'exit' fallback.
+  if (worker && !leaveRunning) await stopGroup(worker.pid, {graceMs: 5000});
+  worker = null;
 }
 async function shutdown(code) {
   if (stopping) process.exit(code); // a second Ctrl-C: the 'exit' fallback below still stops the group
