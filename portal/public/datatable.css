@@ -78,7 +78,8 @@
 .dt-page-size { display: flex; align-items: center; gap: var(--space-tight); }
 .dt-root[data-density="compact"] .dt td { padding-block: var(--space-tight); }
 .dt-sr { position: absolute; width: var(--border-hairline); height: var(--border-hairline); padding: 0; margin: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-@media (width < 600px) {
+/* Phones and narrow tablets: search, then Filters and export, then sort. */
+@media (width < 700px) {
   .dt-phone-sort { display: block; }
   .dt-toolbar { grid-template-columns: minmax(0, 1fr) auto; }
   .dt-toolbar form { grid-column: 1 / -1; }
@@ -88,11 +89,33 @@
   .dt-bar-track, .dt-scale { display: none; }
   .dt-filters > .dt-tools { min-width: min(calc(var(--size-control) * 6), calc(100vw - var(--space-screen) * 2)); }
   .dt-panel > :is(fieldset, div) { min-width: min(calc(var(--size-control) * 5), calc(100vw - var(--space-screen) * 2)); right: auto; left: 0; }
-  .dt td[data-primary] { min-width: min(calc(var(--size-control) * 3), 40vw); }
   .dt .dt-actions .dt-panel > div { left: auto; right: 0; }
   .dt-footer { align-items: flex-start; }
   .dt-paging { width: 100%; }
   .dt-page-size { flex-basis: 100%; }
+}
+/* A table that keeps its own phone grid (config.phone: false) scrolls sideways. */
+@media (width < 600px) {
+  .dt-root:not([data-phone="stack"]) .dt td[data-primary] { min-width: min(calc(var(--size-control) * 3), 40vw); }
+}
+/* Every other table, under 700 px: each row is a record. Its title (serif, full
+   width), then one line saying what the row is, with the figure the table is
+   about at its end (datatable.js phoneLineHTML). The header row stays for
+   screen readers; sorting is the select above. The grid returns at 700 px. */
+.dt-phone { display: none; }
+@media (width < 700px) {
+  .dt-root[data-phone="stack"] .dt-scroll { overflow-x: visible; }
+  .dt-root[data-phone="stack"] :is(.dt, .dt > tbody, .dt > caption) { display: block; }
+  .dt-root[data-phone="stack"] .dt > thead { position: absolute; width: var(--border-hairline); height: var(--border-hairline); overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .dt-root[data-phone="stack"] .dt > tbody > tr { display: flex; align-items: flex-start; gap: var(--space-tight); padding: var(--space-row); background: var(--paper-raised); border-bottom: var(--border-hairline) solid var(--divider-subtle); }
+  .dt-root[data-phone="stack"] .dt > tbody > tr > td { display: none; }
+  .dt-root[data-phone="stack"] .dt > tbody > tr > :is(td[data-phone-title], td.dt-actions, td[colspan]) { display: block; position: static; min-width: 0; padding: 0; border: 0; box-shadow: none; background: transparent; text-align: start; }
+  .dt-root[data-phone="stack"] .dt > tbody > tr > :is(td[data-phone-title], td[colspan]) { flex: 1 1 0; }
+  .dt-root[data-phone="stack"] .dt td[data-phone-title] > .dt-value { display: block; font: var(--type-subheading); }
+  .dt-root[data-phone="stack"] .dt-phone { display: flex; align-items: baseline; gap: var(--space-tight); margin-top: var(--space-line); font: var(--type-metadata); color: var(--ink-soft); }
+  .dt-root[data-phone="stack"] .dt-phone-meta { flex: 1 1 0; min-width: 0; }
+  .dt-root[data-phone="stack"] .dt-phone-figure { flex: none; margin-inline-start: auto; font: var(--type-strong); color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: end; }
+  .dt-root[data-phone="stack"] .dt-actions { width: auto; }
 }
 /* Typography shorthands above must not reset numeric figures. */
 .dt .dt-number { font-variant-numeric: tabular-nums; }

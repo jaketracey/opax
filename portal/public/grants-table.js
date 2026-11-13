@@ -21,6 +21,7 @@ export function grantsTableConfig(params = new URLSearchParams()) {
     primaryLink: row => row.recipientAvailable === 1
       && ['federal', 'qld'].includes(row.jurisdiction) && /^(?:abn|name):/.test(row.recipientId || '')
       ? `/money/grants/${row.jurisdiction}/recipient/${encodeURIComponent(row.recipientId)}` : null,
+    phone: {figure: ['amount'], meta: ['program', 'start_date']},
     export: {filename: 'grants.csv'},
   };
 }

@@ -41,6 +41,8 @@ export function moneyConnectionsConfig(graph) {
       {key:'records',label:'Records',type:'count',facet:'range'},
       {key:'years',label:'Years',type:'text'},
     ],primaryLink:row=>row.to_href,
+    // Each row holds one of the money columns; the line names the giver and the years.
+    phone:{figure:values.map(column=>column.key),meta:['type',{key:'from',label:'From'},'years']},
     actions:[{icon:'⌖',label:'Focus in map',href:row=>`#money-focus=${encodeURIComponent(row.focusId)}`}],
     export:{filename:'opax-map-connections.csv'}};
 }

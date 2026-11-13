@@ -5,6 +5,8 @@ import {interestHolder} from './interest-holder.js';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const date = value => /^\d{4}-\d{2}-\d{2}/.test(String(value || '')) ? String(value).slice(0, 10) : null;
 const href = value => { try { const url = new URL(value); return /^https?:$/.test(url.protocol) ? url.href : null; } catch { return null; } };
+/** An industry as the money map's chips name it: 'finance' -> 'Finance', 'mining_&_energy' -> 'Mining & energy'. */
+export const industryName = value => { const text = String(value ?? '').replace(/_/g,' ').trim(); return text ? text[0].toUpperCase() + text.slice(1) : 'Not supplied'; };
 const categoryLabels = {shareholdings:'Shareholdings',real_estate:'Real estate',trusts:'Trusts',directorships:'Directorships',gifts:'Gifts',travel:'Sponsored travel and hospitality',memberships:'Memberships and offices',liabilities:'Liabilities',other:'Other (savings, income, assets, partnerships)'};
 
 export function instrumentTableConfig() {
@@ -20,7 +22,7 @@ export function instrumentTableConfig() {
 /** Only licence-cleared campaign facts reach this shared register adapter. */
 export function govAdvertisingTableConfig(rows) {
   if(rows.some(row=>row.jurisdiction==='VIC'))return {id:'gov-advertising-table',caption:'Published advertising expenditure cells (overlapping table scopes)',pageType:'gov-advertising',urlKey:'advertising',pageSize:25,rows,defaultSort:{key:'financial_year',dir:'desc'},export:{filename:'government-advertising.csv'},
-    columnsVisible:['campaign','category','financial_year','entity','total','source_display','record_kind','basis','source_locator','licence'],
+    columnsVisible:['campaign','category','financial_year','entity','total','source_display','record_kind','basis','source_locator','licence'],phone:false,
     columns:[{key:'campaign',label:'Campaign examples / category',type:'text',primary:true},{key:'financial_year',label:'Financial year',type:'category',sortable:true,facet:'multi',hideWhenConstant:false},
       {key:'entity',label:'Department / agency',type:'category',facet:'multi',href:row=>/^\/subject\/agency\/a-[a-f0-9]{20}$/.test(row.agency_href||'')?row.agency_href:null},
       {key:'total',label:'Reported expenditure (AUD)',type:'money'},
@@ -28,7 +30,7 @@ export function govAdvertisingTableConfig(rows) {
       ...['category','basis','measure','source_display','source_value','unit','table_heading','campaign_period','period_note','source_locator','snapshot','licence','attribution','sha256','table_sha256','source_url','licence_url'].map(key=>({key,label:{table_heading:'Source table heading',source_display:'Published amount / unit',category:'Cost category',campaign_period:'Campaign period as published',period_note:'Reporting period note',basis:'GST basis',measure:'Published scope',source_value:'Published amount',unit:'Source unit',source_locator:'Original source / table',snapshot:'Source snapshot',licence:'Licence',attribution:'Attribution',sha256:'Document SHA-256',table_sha256:'Table SHA-256',source_url:'Source URL',licence_url:'Licence URL'}[key],type:key==='snapshot'?'date':'text',...(['source_locator','licence'].includes(key)?{href:row=>href(row[key==='licence'?'licence_url':'source_url'])}:{})})),
       ...(rows.some(r=>r.supplier)?[{key:'supplier',label:'Supplier',type:'text'}]:[])],primaryLink:()=>null};
   const categoryColumns = ['media','campaign_development','gst','other'].filter(key=>rows.some(row=>row[key]!=null));
-  return {id:'gov-advertising-table',caption:'Reported campaign expenditure',pageType:'gov-advertising',urlKey:'advertising',pageSize:25,rows,
+  return {id:'gov-advertising-table',caption:'Reported campaign expenditure',pageType:'gov-advertising',urlKey:'advertising',pageSize:25,rows,phone:false,
     defaultSort:{key:'financial_year',dir:'desc'},export:{filename:'government-advertising.csv'},
     columnsVisible:['campaign','financial_year','entity','total',...categoryColumns,'basis','measure','source_locator','snapshot','licence'],
     columns:[{key:'campaign',label:'Campaign',type:'text',primary:true},
@@ -135,7 +137,8 @@ export function stateBillsTableConfig(rows) {
       {key:'source_notes',label:'Source notes',type:'text'},
       {key:'source_url',label:'Source URL',type:'text'},
       {key:'sha256',label:'SHA-256',type:'text'},
-      {key:'licence_url',label:'Licence URL',type:'text'}],primaryLink:row=>row.href || null};
+      {key:'licence_url',label:'Licence URL',type:'text'}],primaryLink:row=>row.href || null,
+    phone:{meta:['jurisdiction','introduced_date','status']}};
 }
 
 /** Retain existing bookmarked register URLs while the shared core owns state. */
@@ -152,7 +155,7 @@ export function stateBillsTableQuery(params, config) {
 
 /** Source cells only: no calculated jurisdiction, level or sector totals. */
 export function taxExpendituresTableConfig(rows) {
-  return {id:'tax-expenditures-table',caption:'Treasury published revenue forgone estimates',pageType:'tax-expenditures',urlKey:'tax',pageSize:25,rows,
+  return {id:'tax-expenditures-table',caption:'Treasury published revenue forgone estimates',pageType:'tax-expenditures',urlKey:'tax',pageSize:25,rows,phone:false,
     defaultSort:{key:'measure_year',dir:'desc'},export:{filename:'tax-expenditures.csv'},
     columnsVisible:['title','item_id','measure_year','estimate_display','estimate_status','source_locator'],
     columns:[{key:'title',label:'Tax expenditure',type:'text',primary:true},
@@ -176,7 +179,7 @@ export function taxExpendituresTableConfig(rows) {
 }
 
 export function governmentFinanceTableConfig(rows) {
-  return {id:'government-finance-table',caption:'ABS published annual figures',pageType:'government-finance',urlKey:'gfs',pageSize:25,rows,
+  return {id:'government-finance-table',caption:'ABS published annual figures',pageType:'government-finance',urlKey:'gfs',pageSize:25,rows,phone:false,
     defaultSort:{key:'reference_year',dir:'desc'},export:{filename:'government-finance.csv'},
     columnsVisible:['jurisdiction','reference_year','measure','amount','release','source_locator'],
     columns:[{key:'jurisdiction',label:'Jurisdiction',type:'text',primary:true},
@@ -239,12 +242,13 @@ export function partyMoneyData(graph, partyId) {
 // The page's CSV comes from the table API for this party, so it keeps the return references the rows leave out.
 export function partyMoneyTableConfig(rows, id = 'party-money-table', urlKey = 'partyMoney', pageType = 'party', scope = null) {
   const exportEndpoint = scope?.party ? '/api/table/party-money?' + new URLSearchParams({'f.to':JSON.stringify([scope.party]),...(scope.jurisdiction ? {'f.jurisdiction':JSON.stringify([scope.jurisdiction])} : {})}) : null;
-  return {id,caption:'Disclosed receipts',pageType,urlKey,pageSize:50,rows:rows.map(({return_reference,...row})=>row),
+  return {id,caption:'Disclosed receipts',pageType,urlKey,pageSize:50,rows:rows.map(({return_reference,...row})=>({...row,industry:industryName(row.industry)})),
     defaultSort:{key:'total',dir:'desc'},export:{filename:'party-receipts.csv',...(exportEndpoint ? {endpoint:exportEndpoint} : {})},
     columns:[{key:'label',label:'Source',type:'text',primary:true},{key:'industry',label:'Industry',type:'category',facet:'multi'},
       {key:'total',label:'Received',type:'money',bar:true,format:'compact',facet:'range'},
       {key:'count',label:'Receipts',type:'count',facet:'range'},{key:'firstYear',label:'First year',type:'year'},
-      {key:'lastYear',label:'Last year',type:'year'}],primaryLink:row=>row.href || null};
+      {key:'lastYear',label:'Last year',type:'year'}],primaryLink:row=>row.href || null,
+    phone:{figure:['total'],meta:['industry',{key:'count',unit:['receipt','receipts']},{key:'firstYear',to:'lastYear'}]}};
 }
 
 /** The shared core owns query validation, pending states, history and CSV checks. */

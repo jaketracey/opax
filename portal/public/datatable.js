@@ -285,6 +285,42 @@ const href = (value,config) => {
   const start=value.indexOf('?'), hash=value.indexOf('#',start), query=guarded.url.search;
   return value.slice(0,start)+query+(hash < 0 ? '' : value.slice(hash));
 };
+/* Under 700 px a row is a record, not a grid line: its title, then one line
+   with what the row says (config.phone.meta, joined by dots) and, at its end,
+   the figure the table is about (config.phone.figure). Without a phone list the
+   figure is the first money or count column and the meta every other visible
+   column; columns left out of a list stay in the grid at 700 px and up and in
+   the CSV. Each part is one visible column, a pair read as "1998 to 2024"
+   (`to`), a count with its unit (`unit`), or a value after a word (`label`). */
+const phoneEntries = (list, columns) => (Array.isArray(list) ? list : [])
+  .map(entry => typeof entry === 'string' ? {key:entry} : entry && typeof entry === 'object' && typeof entry.key === 'string' ? entry : null)
+  .filter(entry => entry && columns.some(c => c.key === entry.key));
+function phoneLayout(config, columns, title, prominence) {
+  const rest = columns.filter(c => c !== title);
+  const figure = config.phone?.figure ? phoneEntries(config.phone.figure, rest) : prominence && prominence !== title ? [{key:prominence.key}] : [];
+  const meta = config.phone?.meta ? phoneEntries(config.phone.meta, rest)
+    : rest.filter(c => !figure.some(f => f.key === c.key)).map(c => ({key:c.key}));
+  return {figure, meta};
+}
+function phonePart(entry, row, config) {
+  const column = config.columns.find(c => c.key === entry.key), end = entry.to ? config.columns.find(c => c.key === entry.to) : null;
+  const from = formatCell(row[entry.key], column), to = end ? formatCell(row[end.key], end) : '';
+  // A span of years or dates that starts and ends together is one; a count of 30 to 30 is two.
+  const value = from && to && (from !== to || !['year','date'].includes(column.type)) ? `${from} to ${to}` : from || to;
+  if (!value) return '';
+  const unit = Array.isArray(entry.unit) ? entry.unit[number(row[entry.key]) === 1 ? 0 : 1] : '';
+  return [typeof entry.label === 'string' ? entry.label : '', value, unit && !end ? unit : ''].filter(Boolean).join(' ');
+}
+function phoneLineHTML(layout, row, config) {
+  const meta = layout.meta.map(e => phonePart(e, row, config)).filter(Boolean);
+  const figure = layout.figure.map(e => phonePart(e, row, config)).filter(Boolean);
+  if (!meta.length && !figure.length) return '';
+  const column = config.columns.find(c => c.key === layout.figure[0]?.key), n = number(row[column?.key]);
+  const exact = column?.type === 'money' && n != null ? ` title="${esc(money.format(n))}"` : '';
+  // A dot binds to the item after it (no-break space), so a wrapped line never ends in one.
+  return `<span class="dt-phone">${meta.length ? `<span class="dt-phone-meta">${meta.map(esc).join(' · ')}</span>` : ''}${figure.length ? `<span class="dt-phone-figure"${exact}>${figure.map(esc).join(', ')}</span>` : ''}</span>`;
+}
+
 function chip(label, key, value, removable = true, title = label) {
   return removable ? button(`${esc(label)} <span aria-hidden="true">×</span>`, `data-remove="${esc(key)}" data-value="${esc(value)}" aria-label="Remove ${esc(label)}"`) : button(`${esc(label)} <span aria-hidden="true">×</span>`, `data-show-constant="${esc(key)}" title="${esc(title)}" aria-label="Show ${esc(label)} column"`);
 }
@@ -335,12 +371,14 @@ function render(config, page, query = {}, view = {}, error = '') {
     return [c.key,range && !Array.isArray(range) ? Math.max(Math.abs(range.min),Math.abs(range.max)) : rows.reduce((max,r)=>Math.max(max,Math.abs(number(r[c.key]) || 0)),0)];
   }));
   const menuIdentities=new Map();
+  const stack = config.phone !== false, phoneTitle = stack ? columns.find(c => c.primary) || columns[0] : null;
+  const phone = stack ? phoneLayout(config, columns, phoneTitle, prominence) : null;
   const body = page.rows.map(row => `<tr role="row">${columns.map(column => {
     const value = row[column.key], display = formatCell(value,column), n = number(value);
     const exact = numeric(column) && n != null ? column.type === 'money' ? money.format(n) : decimal.format(n) : display;
     const link = column.href ? href(column.href(row),config) : column.primary && config.primaryLink ? href(config.primaryLink(row),config) : null;
     const bar = column.bar && n != null && maxima[column.key] ? `<span class="dt-bar-track" aria-hidden="true"><span class="dt-bar" style="--dt-bar:${Math.min(100,Math.round(Math.abs(n) / maxima[column.key] * 100))}%"></span></span>` : '';
-    return `<td role="cell" data-label="${esc(column.label)}" data-align="${esc(column.align || (numeric(column) ? 'end' : 'start'))}"${column.primary ? ' data-primary' : ''}${column === prominence ? ' data-prominent' : ''}${numeric(column) ? ' class="dt-number"' : column.type === 'date' ? ' class="dt-date"' : longToken.test(display) ? ' class="dt-long"' : ''} title="${esc(exact)}"><span class="dt-value">${link ? `<a href="${esc(link)}">${esc(display)}</a>` : esc(display) || '—'}</span>${bar}</td>`;
+    return `<td role="cell" data-label="${esc(column.label)}" data-align="${esc(column.align || (numeric(column) ? 'end' : 'start'))}"${column.primary ? ' data-primary' : ''}${column === prominence ? ' data-prominent' : ''}${numeric(column) ? ' class="dt-number"' : column.type === 'date' ? ' class="dt-date"' : longToken.test(display) ? ' class="dt-long"' : ''} title="${esc(exact)}"${column === phoneTitle ? ' data-phone-title' : ''}><span class="dt-value">${link ? `<a href="${esc(link)}">${esc(display)}</a>` : esc(display) || '—'}</span>${bar}${column === phoneTitle ? phoneLineHTML(phone, row, config) : ''}</td>`;
   }).join('')}${config.actions?.length ? `<td role="cell" class="dt-actions"><details class="dt-panel" data-panel="action-${menuIdentity(row,menuIdentities)}"><summary aria-label="Actions" title="Actions"><span aria-hidden="true">⋯</span></summary><div>${config.actions.map(action => {
     const target = href(action.href(row),config);
     return target ? `<a href="${esc(target)}"><span aria-hidden="true">${esc(action.icon)}</span> ${esc(action.label)}</a>` : '';
@@ -348,7 +386,7 @@ function render(config, page, query = {}, view = {}, error = '') {
   const start = page.total ? (page.page - 1) * page.pageSize + 1 : 0;
   const count = `Showing ${decimal.format(start)}–${decimal.format(page.total ? start + page.rows.length - 1 : 0)} of ${decimal.format(page.total)}`;
   const data = JSON.stringify(page).replace(/</g,'\\u003c').replace(/&/g,'\\u0026');
-  return `<section class="dt-root" data-datatable="${esc(config.id)}" data-density="${esc(view.density || config.density || 'comfortable')}" aria-label="${esc(config.caption)}"${loading ? ' aria-busy="true"' : ''}>
+  return `<section class="dt-root" data-datatable="${esc(config.id)}" data-density="${esc(view.density || config.density || 'comfortable')}"${stack ? ' data-phone="stack"' : ''} aria-label="${esc(config.caption)}"${loading ? ' aria-busy="true"' : ''}>
 <div class="dt-toolbar"><form role="search"><label class="dt-sr" for="${esc(config.id)}-search">Search ${esc(config.caption)}</label><input id="${esc(config.id)}-search" type="search" data-search data-focus="search" placeholder="Search" value="${esc(query.q || '')}" autocomplete="off"></form><select class="dt-phone-sort" data-sort-select aria-label="Sort">${config.columns.filter(sortable).map(c => ['asc','desc'].map(dir => `<option value="${esc(c.key)}:${dir}"${sort?.key === c.key && sort.dir === dir ? ' selected' : ''}>${esc(c.label)} ${dir === 'asc' ? 'ascending' : 'descending'}</option>`).join('')).join('')}</select><details class="dt-panel dt-filters" data-panel="filters">${summary('Filters')}<div class="dt-tools">${controls.join('')}<details class="dt-panel" data-panel="columns">${summary('Columns')}<fieldset><legend class="dt-sr">Visible columns</legend>${config.columns.map(c => `<label class="dt-choice"><input type="checkbox" data-column="${esc(c.key)}"${columns.includes(c) ? ' checked' : ''}${columns.length === 1 && columns[0] === c ? ' disabled' : ''}>${esc(c.label)}</label>`).join('')}</fieldset></details>${button('Compact', `data-density-toggle aria-pressed="${(view.density || config.density) === 'compact'}"`)}</div></details>${config.export === false ? '' : button('Export CSV', `data-export${view.rejected || loading || page.total === 0 ? ' disabled' : ''}`)}</div>
 <div class="dt-chips" aria-label="Applied filters">${active.join('')}${query.q || Object.keys(query.filters || {}).length || redactedSearch || redactedFilters || view.rejected ? button('Clear all', 'data-clear') : ''}</div>
 <div class="dt-scroll"><table class="dt" id="${esc(config.id)}" role="table"><caption>${esc(config.caption)}</caption><thead role="rowgroup"><tr role="row">${columns.map(column => `<th role="columnheader" scope="col" data-align="${esc(column.align || (numeric(column) ? 'end' : 'start'))}"${sortable(column) ? ` aria-sort="${sort?.key === column.key ? sort.dir === 'asc' ? 'ascending' : 'descending' : 'none'}"` : ''}>${sortable(column) ? button(`${esc(column.label)} ${icon(sort?.key === column.key ? sort.dir : 'unsorted')}`, `data-sort="${esc(column.key)}"`) : esc(column.label)}${column.bar && maxima[column.key] ? `<small class="dt-scale">0–${esc(formatCell(maxima[column.key],column))}</small>` : ''}</th>`).join('')}${config.actions?.length ? '<th scope="col"><span class="dt-sr">Actions</span></th>' : ''}</tr></thead><tbody role="rowgroup">${error ? `<tr><td colspan="${columns.length + (config.actions?.length ? 1 : 0)}"><div class="dt-empty" role="alert">${esc(error)} ${button('Try again','data-retry')}</div></td></tr>` : loading ? `<tr class="dt-loading-row"><td colspan="${columns.length + (config.actions?.length ? 1 : 0)}"><div class="dt-loading" data-dt-loader aria-hidden="true"></div></td></tr>` : body || `<tr><td colspan="${columns.length + (config.actions?.length ? 1 : 0)}"><div class="dt-empty">No results. Try another search or clear the filters.</div></td></tr>`}</tbody></table></div>

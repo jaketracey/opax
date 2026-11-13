@@ -4,7 +4,7 @@ import {dataTableHTML} from './datatable.js?v=893767f2bd';
 const withoutZeroCents=value=>value.replace(/(\$[\d,]+)\.00(?=["<]|$)/g,'$1');
 export const saGrantsPhoneColumns=['recipient','year','amount'];
 export const saGrantsConfig=(rows,id)=>({
-  id:'sa-grants-'+id,caption:'Published awards',pageType:'grants',urlKey:'sa'+id.slice(0,8),pageSize:10,rows,
+  id:'sa-grants-'+id,caption:'Published awards',pageType:'grants',urlKey:'sa'+id.slice(0,8),pageSize:10,rows,phone:false,
   columnsVisible:['recipient','year','amount','project_title','project_description','region','locator'],
   columns:[
     {key:'recipient',label:'Recipient',type:'text',primary:true},

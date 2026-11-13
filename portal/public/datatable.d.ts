@@ -5,7 +5,11 @@ export interface Column { key: string; label: string; type: ColumnType; sortable
 export interface Action { icon: string; label: string; href: (row: Row) => string | null }
 export interface Query { q?: string; filters?: Record<string, string[] | { min?: number; max?: number }>; sort?: { key: string; dir: 'asc' | 'desc' }; page?: number; pageSize?: number }
 export interface Page { rows: Row[]; total: number; page: number; pageSize: number; pending?: boolean; facets?: Record<string, { value: string; count: number }[] | { min: number; max: number }> }
-export interface DataTableConfig { id: string; caption: string; columns: Column[]; rows?: Row[]; source?: { endpoint: string; params?: Record<string, string> }; pageSize?: number; defaultSort?: Query['sort']; primaryLink?: (row: Row) => string | null; actions?: Action[]; export?: { filename: string; endpoint?: string } | false; urlKey?: string; density?: 'comfortable' | 'compact'; columnsVisible?: string[]; pageType: string; initialRejected?: boolean; initialQuery?: Query; initialQueryKeys?: string[]; loadingLabel?: string }
+/** One part of a phone row's line: a column, a pair read as "1998 to 2024" (`to`), a count with its unit (`unit: ['receipt', 'receipts']`), or a value after a word (`label: 'From'`). */
+export type PhoneEntry = string | { key: string; to?: string; unit?: [string, string]; label?: string };
+/** Under 700 px each row is its title, then `meta` joined by dots with `figure` at the end. `false` keeps the table's own phone grid. */
+export interface PhoneLayout { figure?: PhoneEntry[]; meta?: PhoneEntry[] }
+export interface DataTableConfig { id: string; caption: string; columns: Column[]; rows?: Row[]; source?: { endpoint: string; params?: Record<string, string> }; pageSize?: number; defaultSort?: Query['sort']; primaryLink?: (row: Row) => string | null; actions?: Action[]; export?: { filename: string; endpoint?: string } | false; urlKey?: string; density?: 'comfortable' | 'compact'; columnsVisible?: string[]; pageType: string; initialRejected?: boolean; initialQuery?: Query; initialQueryKeys?: string[]; loadingLabel?: string; phone?: PhoneLayout | false }
 export function guardTableURL(config: DataTableConfig, input: string | URL): {url: URL; query: Query; rejected: boolean};
 export function dataTableHTML(config: DataTableConfig, page: Page, requestURL?: string | URL): string;
 export function mountDataTable(el: Element, config: DataTableConfig): { destroy(): void };

@@ -1,6 +1,7 @@
-// DataTable layout contract (Jake, 14 Oct): the table flows with the page (no
-// capped inner scroll box), scrolls sideways only inside .dt-scroll with its
-// first column held, and wraps text between words. jsdom has no layout, so the
+// DataTable layout contract (Jake, 14 Oct; phones 13 Nov 2026): the table flows
+// with the page (no capped inner scroll box), scrolls sideways only inside
+// .dt-scroll with its first column held, and wraps text between words. Under
+// 700 px a table stacks each row as a record unless its config sets phone:false. jsdom has no layout, so the
 // stylesheets are read rule by rule (media rules included); Chrome and WebKit
 // measurements live in private/datatable-scroll/.
 import test from 'node:test';
@@ -27,6 +28,7 @@ const find = (selector,media = '') => {
   return found.at(-1).style;
 };
 const phone = tableCSS.find(rule => /width < 600px/.test(rule.media))?.media;
+const stackMedia = tableCSS.find(rule => /width < 700px/.test(rule.media) && rule.selector.includes('[data-phone="stack"]'))?.media;
 
 test('no fixed-height scroll wrapper: .dt-scroll flows with the page and only scrolls sideways',()=>{
   const wrap = find('.dt-scroll');
@@ -35,7 +37,9 @@ test('no fixed-height scroll wrapper: .dt-scroll flows with the page and only sc
   assert.equal(wrap.getPropertyValue('height'),'');
   assert.equal(wrap.getPropertyValue('overflow-y'),'');
   for (const rule of tableCSS.filter(r => /dt-scroll|\.dt-root\b(?!.*\.dt-)/.test(r.selector) || /^\.dt(\s|$|,)/.test(r.selector))) {
-    assert.ok(!/(^|\s)(max-)?height/.test([...rule.style].join(' ')) || rule.selector.includes('dt-panel') || rule.selector.includes('dt-icon'),`${rule.selector} ${rule.media} caps the table height`);
+    // The stacked phone header is visually hidden (a 1 px clip), not a height cap.
+    const hiddenHead = /> thead$/.test(rule.selector) && rule.style.getPropertyValue('clip-path') === 'inset(50%)';
+    assert.ok(!/(^|\s)(max-)?height/.test([...rule.style].join(' ')) || hiddenHead || rule.selector.includes('dt-panel') || rule.selector.includes('dt-icon'),`${rule.selector} ${rule.media} caps the table height`);
     assert.notEqual(rule.style.getPropertyValue('overflow-y'),'scroll');
     assert.notEqual(rule.style.getPropertyValue('overflow-y'),'auto');
   }
@@ -49,7 +53,7 @@ test('no fixed-height scroll wrapper: .dt-scroll flows with the page and only sc
   assert.equal(style.at(-1)?.style.getPropertyValue('overflow'),'visible');
 });
 
-test('the first column is sticky, and phones keep a real table that scrolls inside its wrapper',()=>{
+test('the first column is sticky; under 700 px rows stack as records, and phone:false tables keep a real table',()=>{
   const first = find('.dt :is(th, td):first-child:not([colspan])');
   assert.equal(first.getPropertyValue('position'),'sticky');
   assert.equal(first.getPropertyValue('left'),'0px');
@@ -58,6 +62,7 @@ test('the first column is sticky, and phones keep a real table that scrolls insi
   assert.equal(first.getPropertyValue('z-index'),'1');
   assert.equal(find('.dt td').getPropertyValue('background'),'var(--paper-raised)','the sticky cell must be opaque');
   assert.equal(find('.dt th').getPropertyValue('background'),'var(--paper-sunken)');
+  // A table that opts out (phone:false) keeps the sideways scroller and its header row under 600 px.
   assert.ok(phone,'phone media block present');
   const narrow = tableCSS.filter(rule => rule.media === phone);
   for (const rule of narrow) {
@@ -65,9 +70,40 @@ test('the first column is sticky, and phones keep a real table that scrolls insi
     assert.notEqual(rule.style.getPropertyValue('position'),'static');
     assert.notEqual(rule.style.getPropertyValue('overflow'),'visible',`${rule.selector} lets phone tables overflow the page`);
   }
-  assert.ok(!narrow.some(rule => rule.selector.includes('dt-scroll')),'phones keep the shared sideways scroller');
-  assert.ok(!narrow.some(rule => /thead/.test(rule.selector)),'phones keep the header row');
-  assert.match(find('.dt td[data-primary]',phone).getPropertyValue('min-width'),/min\(/);
+  assert.ok(!narrow.some(rule => /thead/.test(rule.selector)),'an opted-out table keeps its header row');
+  assert.match(find('.dt-root:not([data-phone="stack"]) .dt td[data-primary]',phone).getPropertyValue('min-width'),/min\(/);
+  // Every other table: under 700 px (and only there) each row is a record.
+  assert.equal(stackMedia,'(width < 700px)');
+  const stacked = tableCSS.filter(rule => rule.media === stackMedia && rule.selector.includes('[data-phone="stack"]'));
+  for (const rule of stacked) assert.match(rule.selector,/^\.dt-root\[data-phone="stack"\]/,'stacked rules stay scoped, so they outrank the sticky column and leave opted-out tables alone');
+  assert.equal(find('.dt-root[data-phone="stack"] .dt > tbody > tr',stackMedia).getPropertyValue('display'),'flex');
+  assert.equal(find('.dt-root[data-phone="stack"] .dt > tbody > tr > td',stackMedia).getPropertyValue('display'),'none');
+  const head = find('.dt-root[data-phone="stack"] .dt > thead',stackMedia);
+  assert.notEqual(head.getPropertyValue('display'),'none','the header row stays for screen readers');
+  assert.equal(head.getPropertyValue('clip-path'),'inset(50%)');
+  assert.equal(find('.dt-root[data-phone="stack"] .dt-phone-figure',stackMedia).getPropertyValue('white-space'),'nowrap');
+  assert.equal(find('.dt-phone').getPropertyValue('display'),'none','the phone line is hidden at 700 px and up');
+  assert.ok(!tableCSS.some(rule => !rule.media && rule.selector.includes('[data-phone="stack"]')),'nothing stacks at 700 px and up');
+});
+
+test('a phone row is its title, then one line: the parts joined by bound dots and the figure at its end',()=>{
+  const table={id:'phone-fixture',caption:'Fixture',pageType:'money',columns:[
+    {key:'name',label:'Recipient',type:'text',primary:true},{key:'industry',label:'Industry',type:'text'},
+    {key:'from',label:'From',type:'year'},{key:'to',label:'To',type:'year'},{key:'n',label:'Receipts',type:'count'},{key:'amount',label:'Received',type:'money'}],
+    phone:{meta:['industry',{key:'from',to:'to'},{key:'n',unit:['receipt','receipts']}],figure:['amount']}};
+  const rows=[{id:'a',name:'Example Holdings Pty Ltd',industry:'Mining',from:1998,to:2024,n:1,amount:125000}];
+  const html=dataTableHTML(table,applyQuery(rows,table,{}));
+  assert.match(html,/data-phone="stack"/);
+  const {document}=new JSDOM(html).window;
+  const cell=document.querySelector('td[data-phone-title]');
+  assert.equal(cell.getAttribute('data-label'),'Recipient');
+  assert.equal(cell.querySelector('.dt-phone-meta').textContent,'Mining ·\u00a01998 to 2024 ·\u00a01 receipt');
+  assert.match(cell.querySelector('.dt-phone-figure').textContent,/^\$125,000$|^\$125K$|^\$125k$/);
+  assert.equal(document.querySelectorAll('td[data-phone-title]').length,1);
+  // The grid and its cells are unchanged: the phone line is extra markup inside the title cell.
+  assert.equal(document.querySelectorAll('tbody td').length,6);
+  const off=dataTableHTML({...table,phone:false},applyQuery(rows,table,{}));
+  assert.doesNotMatch(off,/data-phone="stack"|class="dt-phone"|data-phone-title/);
 });
 
 test('cells wrap between words; numbers and dates stay whole and right-aligned figures use tabular digits',()=>{

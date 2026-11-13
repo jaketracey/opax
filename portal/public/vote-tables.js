@@ -33,12 +33,15 @@ export function divisionTableConfig(params = {}, caption = 'Divisions', pageType
   if (params.start) scope['f.sitting'] = JSON.stringify([params.start]);
   return {id:'division-table', caption, columns:divisionColumns, source:{endpoint:'/api/table/divisions', params:scope},
     pageSize:25, defaultSort:{key:'date', dir:'desc'}, primaryLink:row => safeLink(row.href),
+    // The title already carries the date; the result and the count tell rows apart.
+    phone:{figure:['outcome', {key:'ayes', to:'noes'}], meta:['chamber']},
     export:{filename:'divisions.csv'}, urlKey:'dv', pageType};
 }
 export function voteTableConfig(person, caption = 'Voting record') {
   const people = [...new Set((Array.isArray(person) ? person : [person]).filter(Boolean))];
   return {id:'vote-table', caption, columns:voteColumns, source:{endpoint:'/api/table/votes', params:{'f.person':JSON.stringify(people)}},
     pageSize:25, defaultSort:{key:'date', dir:'desc'}, primaryLink:row => safeLink(row.href),
+    phone:{figure:['vote'], meta:['date']},
     export:{filename:'voting-record.csv'}, urlKey:'vr', pageType:'person'};
 }
 

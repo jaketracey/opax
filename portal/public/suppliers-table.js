@@ -5,7 +5,8 @@ export function suppliersTableConfig({donor,rows}={}) {
       {key:'jurisdiction',label:'Jurisdiction',type:'category',facet:'multi'},{key:'abn',label:'ABN',type:'text'}],
     ...(rows ? {rows} : {source:{endpoint:'/api/table/suppliers',...(typeof donor==='string' ? {params:{donor}} : {})}}),columnsVisible:['name','total','count','agency_count'],
     primaryLink:row=>/^s-[a-f0-9]{20}$/.test(String(row.id)) ? `/subject/supplier/${row.id}` : null,
-    pageSize:50,defaultSort:{key:'total',dir:'desc'},urlKey:'t',export:{filename:'suppliers.csv'}};
+    pageSize:50,defaultSort:{key:'total',dir:'desc'},urlKey:'t',export:{filename:'suppliers.csv'},
+    phone:{figure:['total'],meta:[{key:'count',unit:['contract','contracts']},{key:'agency_count',unit:['agency','agencies']}]}};
 }
 export function suppliersTableHTML(page, params = new URLSearchParams()) {
   const config = suppliersTableConfig({donor: params.get('donor') ?? undefined});

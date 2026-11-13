@@ -11,7 +11,7 @@ export function saBudgetValue(row){
 }
 export const saBudgetConfig=(rows,table)=>({
   id:'sa-budget-'+table.replace('.','-'),caption:'SA Treasury · Table '+table,
-  pageType:'budget',urlKey:'sa'+table.replace('.',''),pageSize:10,rows,
+  pageType:'budget',urlKey:'sa'+table.replace('.',''),pageSize:10,rows,phone:false,
   columnsVisible:['measure','fiscal_year','display_value','status_as_published','amount','percentage','source_marker','locator'],
   columns:[
     {key:'measure',label:'Measure',type:'text',primary:true},

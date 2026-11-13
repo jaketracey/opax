@@ -52,6 +52,7 @@ export function contractsTableConfig({supplierId, rows, count = rows?.length || 
     columnsVisible: ['title', 'agency', 'amount', 'start_date'], pageSize: 50,
     defaultSort: {key: supplierId ? 'start_date' : 'amount', dir: 'desc'}, urlKey: 't',
     actions: [{icon: '↗', label: 'Open on AusTender', href: ausTenderURL}],
+    phone: {figure: ['amount'], meta: ['agency', 'start_date']},
     export: {filename: supplierId ? 'supplier-contracts.csv' : 'contracts.csv'},
   };
 }

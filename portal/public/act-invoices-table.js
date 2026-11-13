@@ -20,8 +20,8 @@ export const actInvoicesColumns=[
  {key:'contract_number',label:'Contract number',type:'text',sortable:false},
  ...['id','source_row_position','socrata_id','socrata_sid','socrata_position','snapshot','snapshot_sha256','dataset_id','source_url','licence','licence_url','attribution'].map(key=>({key,label:({id:'Snapshot record',source_row_position:'Source row position',socrata_id:'Socrata row ID',socrata_sid:'Socrata SID',socrata_position:'Socrata position',snapshot_sha256:'Snapshot SHA-256',dataset_id:'Dataset ID'})[key]||key.replaceAll('_',' '),type:key==='source_row_position'?'count':'text',sortable:false})),
 ];
-/** @returns {import('./datatable.js?v=893767f2bd').DataTableConfig} */
-export const actInvoicesConfig=()=>({id:'act-invoices',caption:'Published invoice records',pageType:'act-invoices',urlKey:'t',pageSize:50,
+/** @returns {import('./datatable.js?v=5ca04bccb3').DataTableConfig} */
+export const actInvoicesConfig=()=>({id:'act-invoices',caption:'Published invoice records',pageType:'act-invoices',urlKey:'t',pageSize:50,phone:false,
  columns:actInvoicesColumns,columnsVisible:['supplier_name','payment_day','amount','reporting_entity','publish_description'],
  defaultSort:{key:'payment_day',dir:'desc'},source:{endpoint:'/api/table/act-invoices'},export:{filename:'act-invoices.csv'}});
 /** Only this table's supported URL state survives into HTML, CSV links or history. */

@@ -17,5 +17,6 @@ export const aggregateConfig = {
     {key:'table_id',label:'Full source table',type:'text'},
   ],
   primaryLink:row=>row.source_url,
+  phone:{meta:['release','status']},
   export:{filename:'budget-aggregates.csv'},
 };
