@@ -1,6 +1,6 @@
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=18e84bb744';
 import {loadDonorViewIndex} from './donor-views.js?v=da68cf9f9e';
-import {receiptFigures, receiptScopeLabel, partyReturnFigures, industryName} from './register-tables.js?v=8fd4480ee8';
+import {receiptFigures, receiptScopeLabel, partyReturnFigures, industryName} from './register-tables.js?v=97abc13982';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph
