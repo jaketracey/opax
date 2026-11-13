@@ -69,7 +69,7 @@
 <link rel="stylesheet" href="/ui-source.css?v=78ddb8fc1b">
 <link rel="stylesheet" href="/page-actions.css?v=a416a2254f">
 <link rel="stylesheet" href="/voice.css?v=19eea6fcdc">
-<link rel="stylesheet" href="/nav.css?v=edd37b6174">
+<link rel="stylesheet" href="/nav.css?v=69e7b2c27e">
 <link rel="stylesheet" href="/procurement.css?v=db00e48205">
 <!-- labels.js: app.js imports it before its first render. -->
 <link rel="modulepreload" href="/labels.js?v=6d2e2e9cd8">
@@ -363,7 +363,7 @@
     </section>
 
     <section id="panel-search" class="panel" hidden aria-label="Search the record">
-      <h1 class="visually-hidden">Search all public records</h1>
+      <h2 class="visually-hidden">Search all public records</h2>
       <nav class="ui-tabs" aria-label="Research mode"><a href="/ask" data-entry-mode="ask">Ask a question</a><a href="/ask?view=search" aria-current="page">Search records</a></nav>
       <form id="search-form" class="search-grid">
         <div class="query-line" data-ui-size="large">
@@ -684,7 +684,7 @@
       <!-- A speech whose debate is exactly one bill in /bills/index.json gets
            the bill's dated status and its first summary sentence, quietly,
            under the byline. No match, no panel: it never guesses. -->
-      <aside id="doc-bill" class="doc-bill" aria-labelledby="doc-bill-head" hidden></aside>
+      <section id="doc-bill" class="doc-bill" aria-labelledby="doc-bill-head" hidden></section>
       <div id="doc-cite-panel" class="cite-panel" hidden>
         <!-- injected -->
       </div>
@@ -696,12 +696,12 @@
            between them, which is not a difference a reader should have to look
            for on a site whose whole claim is the record's own words. -->
       <div class="doc-reading-layout">
-      <aside id="doc-brief" class="doc-brief" aria-labelledby="doc-brief-head" hidden>
+      <section id="doc-brief" class="doc-brief" aria-labelledby="doc-brief-head" hidden>
         <div class="doc-brief-head">
-          <h3 class="subject-section-title" id="doc-brief-head">In brief</h3>
+          <h2 class="subject-section-title" id="doc-brief-head">In brief</h2>
         </div>
         <p id="doc-brief-text"></p>
-      </aside>
+      </section>
       <div id="doc-text" class="doc-text"></div>
       </div>
       <p class="fineprint" id="doc-caveat" hidden></p>
@@ -2102,7 +2102,7 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=2dc03bdec2" defer></script>
+<script src="/spa-shell.js?v=2154dc983c" defer></script>
 <script src="/navigation.js?v=f8e186e029" defer></script>
 <script src="/quick-search.js?v=1009512e8a" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>

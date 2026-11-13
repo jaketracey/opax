@@ -21,7 +21,7 @@ const billions=(r:Aggregate)=>r.value/(r.unit==='AUD million'?1000:1)
 const citation=(r:Aggregate)=>`${r.paper.split(':')[0]} · ${r.table_id.split(':')[0]} · PDF p.${r.pdf_page}`
 const link=(r:Aggregate,label:string)=>`<a href="${esc(r.source_url)}#page=${r.pdf_page}">${esc(label)}</a>`
 function receipt(r:Aggregate) {
-  return `<details class="budget-receipt"><summary>${link(r,citation(r))}</summary><p>Snapshot ${esc(r.snapshot)} · <a href="${esc(r.licence_url)}">${esc(r.licence)}</a></p><p class="budget-hash">SHA-256 ${esc(r.sha256)}</p></details>`
+  return `<details class="budget-receipt"><summary>${esc(citation(r))}</summary><p>${link(r,'Open the original paper')}</p><p>Snapshot ${esc(r.snapshot)} · <a href="${esc(r.licence_url)}">${esc(r.licence)}</a></p><p class="budget-hash">SHA-256 ${esc(r.sha256)}</p></details>`
 }
 export const budgetReader=catalogueReader
 /** Recheck the document/row join at the serving boundary, too. */

@@ -38,14 +38,14 @@ const page = (sheet) => new JSDOM(`<!doctype html><html><head><style>${sheet}</s
     </div>
     <section class="growth-ask"></section>
     <section class="ui-section bill-section bill-summary" data-accent="bills">
-      <div class="ui-section-head bill-section-head"><h3 class="ui-section-title">In short</h3></div>
+      <div class="ui-section-head bill-section-head"><h2 class="ui-section-title">In short</h2></div>
       <div class="bill-sentences"><p>One sentence.</p></div>
       <ul class="bill-changes"><li>One change.</li></ul>
       <p class="bill-affected">Everyone.</p>
     </section>
     <div id="bill-text-slot"></div>
     <section class="ui-section bill-section" data-accent="bills">
-      <h3 class="ui-section-title">How it moved</h3>
+      <h2 class="ui-section-title">How it moved</h2>
       <svg class="bill-ruler" width="100%" height="52"></svg>
       <details class="bill-stages"><summary>All 4 stages</summary>
         <ol class="ui-list bill-dates" role="list"><li class="bill-date"></li></ol></details>

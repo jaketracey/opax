@@ -11,7 +11,7 @@
 .budget-cards .budget-amount{font:var(--type-display);font-variant-numeric:tabular-nums;color:var(--ink);margin:0}
 .budget-amount span{font:var(--type-fine)}
 .budget-receipt{margin-block:var(--space-tight);overflow-wrap:anywhere}
-.budget-receipt summary{cursor:pointer}
+.budget-receipt summary{cursor:pointer;color:var(--bronze-ink);text-decoration:underline}
 .budget-hash{overflow-wrap:anywhere;font:var(--type-fine)}
 .budget-chart-scroll{overflow-x:auto}
 .budget-chart{width:100%;border-collapse:collapse;table-layout:fixed;margin-block:var(--space-block)}
