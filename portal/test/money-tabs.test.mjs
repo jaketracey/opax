@@ -124,3 +124,20 @@ test('the sitemap lists /money/contracts, not /discover', () => {
   assert.match(crawl, /'\/money\/contracts'/);
   assert.doesNotMatch(crawl, /'\/discover'/);
 });
+
+test('on a phone the open Money tab is centred in its strip, and a strip that fits is left alone', () => {
+  // A 390 px strip of five 160 px tabs, the fourth (Grants) open: layout is stubbed, as jsdom has none.
+  const strip = (scrollWidth) => {
+    const tab = { offsetWidth: 160, getBoundingClientRect: () => ({ left: 3 * 160 - nav.scrollLeft }) };
+    const nav = { isConnected: true, scrollLeft: 0, scrollWidth, clientWidth: 390,
+      querySelector: (sel) => (sel === '[aria-current]' ? tab : null), getBoundingClientRect: () => ({ left: 0 }) };
+    return nav;
+  };
+  const wide = strip(800);
+  nav.revealCurrentTab(wide);
+  assert.equal(wide.scrollLeft, 480 - (390 - 160) / 2, 'the open tab sits in the middle');
+  const fits = strip(390);
+  nav.revealCurrentTab(fits);
+  assert.equal(fits.scrollLeft, 0);
+  nav.revealCurrentTab(null);
+});

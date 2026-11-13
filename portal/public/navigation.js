@@ -201,6 +201,18 @@
     jur = jur || /^\/money\/grants\/(federal|qld)\/recipient\//.exec(path)?.[1];
     return `<nav class="area-nav money-area-nav" aria-label="Money">${money.map(([href,label]) => `<a href="${href}${jur && jur !== 'federal' && !oneJurisdiction.has(href) ? '?jur='+encodeURIComponent(jur) : ''}"${href===path || href==='/money/grants' && path.startsWith('/money/grants/')?' aria-current="page"':''}>${label}</a>`).join('')}</nav>`;
   }
+  /** On a phone the Money tabs scroll sideways: centre the open one in the
+   *  strip. Runs again once the web fonts have loaded, since they change the
+   *  tabs' widths. Never scrolls the page itself. */
+  function revealCurrentTab(nav) {
+    const centre = () => {
+      const tab = nav?.querySelector('[aria-current]');
+      if (!tab || !nav.isConnected || nav.scrollWidth <= nav.clientWidth) return;
+      nav.scrollLeft += tab.getBoundingClientRect().left - nav.getBoundingClientRect().left - (nav.clientWidth - tab.offsetWidth) / 2;
+    };
+    centre();
+    globalThis.document?.fonts?.ready.then(centre);
+  }
 
   // --- gates: optional sections published on some deployments only -----------
   // The Worker marks the ones it knows (<html data-nav-gates="vic-election reports">);
@@ -507,7 +519,7 @@
   // The page's menus are drawn and wired once, however often this script runs.
   const initialised = Symbol.for('opax.navigation.page');
   if (typeof document !== 'undefined' && document[initialised]) return;
-  globalThis.OpaxNavigation = { groups, footerOnly, shortcuts, sections, tools, money, active, trail, moneyNav, mountDesktop, mountDrawer, markCurrent, footerHTML, barHTML, published, FULL_NAV };
+  globalThis.OpaxNavigation = { groups, footerOnly, shortcuts, sections, tools, money, active, trail, moneyNav, revealCurrentTab, mountDesktop, mountDrawer, markCurrent, footerHTML, barHTML, published, FULL_NAV };
   if (typeof document === 'undefined') return;
   document[initialised] = true;
   for (const name of (document.documentElement.dataset.navGates || '').split(/\s+/)) if (name in gates) gates[name] = true;
@@ -582,7 +594,10 @@
     else document.addEventListener('DOMContentLoaded', attachSearch, { once: true });
   }
   document.addEventListener('keydown', slashOpensSearch);
-  for (const node of document.querySelectorAll('[data-money-navigation]')) node.innerHTML = moneyNav(location.pathname, new URLSearchParams(location.search).get('jur'));
+  for (const node of document.querySelectorAll('[data-money-navigation]')) {
+    node.innerHTML = moneyNav(location.pathname, new URLSearchParams(location.search).get('jur'));
+    if (!node.closest('[hidden]')) revealCurrentTab(node.firstElementChild);
+  }
   // The band's Ask control on pages the app does not run on (sitting weeks,
   // estimates, audit, instruments, community, not found): the same control, as
   // a link to the Ask page, where the app pages open the docked conversation.

@@ -1,10 +1,10 @@
 // Both URLs are content-stamped by scripts/stamp_assets.mjs.
-const stylesheet = '/app-banner.css?v=f3743e87ba'
+const stylesheet = '/app-banner.css?v=6a7d6f6e9c'
 const script = '/app-banner.js?v=9829079d3e'
 
 export const APP_BANNER_HTML = `<div class="opax-app-banner" id="opax-app-banner">
   <div class="opax-app-banner-row">
-    <p>OPAX is now on iPhone and iPad. <a href="https://apps.apple.com/au/app/opax/id6818756305">Get the app on the App Store</a></p>
+    <p>OPAX is on iPhone<span class="opax-app-banner-ipad"> and iPad</span>. <a href="https://apps.apple.com/au/app/opax/id6818756305">Get the app</a></p>
     <button type="button" class="opax-app-banner-dismiss" aria-label="Dismiss" data-app-banner-dismiss><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m5 5 10 10M15 5 5 15"/></svg></button>
   </div>
 </div>`

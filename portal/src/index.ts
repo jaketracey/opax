@@ -53,7 +53,7 @@ import {saGrantsPage,saGrantsReader} from './sa-grants'
 import {actInvoicesPage} from './act-invoices'
 import {GRANTS_COVERAGE} from '../public/grants-table.js'
 import {resolveProgram, programKey, type GrantProgram} from '../public/facts/grant-programs.js'
-import {grantCoreBody, agencyCoreBody, firstAgencySuppliers, topicCoreBody, topicSummary, type GrantDetail, type AgencyDetail, type TopicCounts, type TopicSpeech} from './seo-record-content'
+import {grantCoreBody, recipientMetaLine, agencyCoreBody, firstAgencySuppliers, topicCoreBody, topicSummary, type GrantDetail, type AgencyDetail, type TopicCounts, type TopicSpeech} from './seo-record-content'
 import sponsorParties from '../public/facts/sponsor-parties.json' with {type:'json'}
 import { hubPage } from './hubs'
 import { estimatesPage, readEstimatesRecord, type EstimatesCommittee, type EstimatesRecord, type EstimatesRound, type EstimatesRounds } from './estimates'
@@ -4470,10 +4470,11 @@ const indexLinks = (): string =>
 /** The no-JS page: its one title, one sentence and the directory links. No
  *  kicker: the title says what the page is once (principle 3). Server-only
  *  pages pass their breadcrumb trail after Home (crumbsHTML). */
-function prerenderBlock(heading: string, sentence: string, links = indexLinks(), crumbs: Crumb[] = []): string {
+function prerenderBlock(heading: string, sentence: string, links = indexLinks(), crumbs: Crumb[] = [], meta = ''): string {
   // Only a trail reaches for the helper (tests lift this function out on its own).
+  // meta: the record's one meta line under its title, as the client's own header draws it.
   return `${crumbs.length ? crumbsHTML(crumbs) : ''}<section id="prerender" class="wrap">` +
-    `<h1>${escHtml(heading)}</h1><p>${escHtml(sentence)}</p>${links}</section>`
+    `<h1>${escHtml(heading)}</h1>${meta ? `<p class="grant-recipient-meta">${escHtml(meta)}</p>` : ''}<p>${escHtml(sentence)}</p>${links}</section>`
 }
 
 /** Canonical for a route: the clean path, plus the query only where it names the page. */
@@ -5327,7 +5328,7 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
     const original = award.guid ? `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(award.guid)}` : `https://www.grants.gov.au/Ga/ListResult?Type=Ga&AgencyStatus=-1&GaId=${encodeURIComponent(award.id)}`
     return { title: `${award.id}: ${recipient.n} · OPAX`, description, canonical: selected, ogType: 'article', status: 200,
       jsonLd: { '@context': 'https://schema.org', '@type': 'Article', headline: `${award.id}: ${recipient.n}`, description, url: selected, citation: original },
-      prerender: prerenderBlock(`${award.id}: ${recipient.n}`, description, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath))),
+      prerender: prerenderBlock(`${award.id}: ${recipient.n}`, description, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath)), [], recipientMetaLine(jurisdiction, detail.k)),
       card: { kicker: `${award.id}${award.s ? ` · Starts ${award.s}` : ''}`, title: recipient.n, lines: [purpose, 'Award value, not payments received.'], stat: { value: money(award.v!), label: 'published grant award' } } }
   }
   const qld = jurisdiction === 'qld'
@@ -5339,7 +5340,7 @@ async function grantRecipientMeta(jurisdiction: 'federal' | 'qld', id: string, u
   return { title: `${recipient.n} · Grant recipient · OPAX`, description, canonical, ogType: 'profile', status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': 'ProfilePage', name: recipient.n, url: canonical, description,
       mainEntity: { '@type': 'Thing', name: recipient.n, ...(id.startsWith('abn:') ? { identifier: { '@type': 'PropertyValue', propertyID: 'ABN', value: id.slice(4) } } : {}) } },
-    prerender: prerenderBlock(recipient.n, `${facts} ${caveat}`, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath))),
+    prerender: prerenderBlock(recipient.n, `${facts} ${caveat}`, timedSync('recipient-html', () => grantCoreBody(detail, jurisdiction, canonical, false, shardPath)), [], recipientMetaLine(jurisdiction, detail.k)),
     card: { kicker: 'Grant recipient', title: recipient.n, lines: [`${money(recipient.t)} in ${basis}`, `${num(recipient.c)} ${countBasis}`, caveat] } }
 }
 

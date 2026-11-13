@@ -27,7 +27,7 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=26d27861c3").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=c174e74912").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
@@ -276,7 +276,8 @@ function donorBalanceHTML(flows, scope = "") {
   const scaleGroup = groups.reduce((best, group) => scaleRow[group] > scaleRow[best] ? group : best, groups[0]);
   const scale = Math.max(scaleRow[scaleGroup], 1);
   const groupLabel = { coalition: "Coalition", labor: "Labor", other: "other parties" };
-  const srcFigure = (value, label) => `<a class="fig-src" href="${source}" rel="noopener" target="_blank" aria-label="${esc(label)}">${esc(value)}</a>`;
+  // One pattern per figure: the number, then its label, and the label opens the AEC return (↗ after it).
+  const srcFigure = (value, text, label) => `<b>${esc(value)}</b><span><a class="fig-src" href="${source}" rel="noopener" target="_blank" aria-label="${esc(label)}">${esc(text)}</a></span>`;
   const width = (value) => Math.min(72, (value / scale) * 72).toFixed(1);
   const peakLabel = (row, group) => row === peak[group] && row[group]
     ? `<a class="balance-label" href="${source}" rel="noopener" target="_blank" aria-label="${esc(`${row.year}, ${groupLabel[group]} ${fmtMoney(row[group])}, AEC source`)}">${esc(fmtMoney(row[group]))}</a>`
@@ -307,9 +308,9 @@ function donorBalanceHTML(flows, scope = "") {
     <h3 class="subject-section-title" id="donor-balance-heading">The balance, year by year</h3>
     ${scope ? `<p class="entry-scope">${esc(scope)}</p>` : ""}
     <div class="tiles balance-tiles">
-      <div class="tile"><b>${srcFigure(fmtMoney(totals.coalition), `Total to Coalition parties ${fmtMoney(totals.coalition)}, AEC source`)}</b><span>to Coalition parties</span></div>
-      <div class="tile"><b>${srcFigure(fmtMoney(totals.labor), `Total to Labor ${fmtMoney(totals.labor)}, AEC source`)}</b><span>to Labor</span></div>
-      <div class="tile"><b>${srcFigure(fmtMoney(totals.other), `Total to other parties ${fmtMoney(totals.other)}, AEC source`)}</b><span>to other parties</span></div>
+      <div class="tile">${srcFigure(fmtMoney(totals.coalition), "to Coalition parties", `Total to Coalition parties ${fmtMoney(totals.coalition)}, AEC source`)}</div>
+      <div class="tile">${srcFigure(fmtMoney(totals.labor), "to Labor", `Total to Labor ${fmtMoney(totals.labor)}, AEC source`)}</div>
+      <div class="tile">${srcFigure(fmtMoney(totals.other), "to other parties", `Total to other parties ${fmtMoney(totals.other)}, AEC source`)}</div>
     </div>
     <div class="balance-legend" aria-label="Party groupings">
       <span><i class="balance-swatch balance-coalition" aria-hidden="true"></i>Coalition parties ${partyDotHTML("Liberal")}${partyDotHTML("Nationals")}${partyDotHTML("LNP")}</span>
@@ -1139,10 +1140,8 @@ function showPanel(name) {
   // The conversation is a panel like any other, but it is also the docked
   // assistant: the loop above just hid it, so the dock puts it back.
   syncAssistant(name);
-  // On a phone the Money tabs scroll sideways: bring the open one fully into view.
-  const tabs = $(`panel-${name}`)?.querySelector(".money-area-nav");
-  const tab = tabs?.querySelector("[aria-current]");
-  if (tab && tabs.scrollWidth > tabs.clientWidth) tabs.scrollLeft += tab.getBoundingClientRect().left - tabs.getBoundingClientRect().left - (tabs.clientWidth - tab.offsetWidth) / 2;
+  // On a phone the Money tabs scroll sideways: bring the open one into view.
+  OpaxNavigation.revealCurrentTab($(`panel-${name}`)?.querySelector(".money-area-nav"));
   document.querySelector("main").classList.toggle("compact", name !== "ask");
   const statsLink = document.querySelector(".masthead-link");
   if (statsLink) {
@@ -1362,7 +1361,7 @@ async function renderDiscoveryPage(params, manageFocus) {
   slot.innerHTML = '<p role="status">Loading contracts…</p>';
   const seedNode = document.querySelector('#prerender [data-contracts-seed]');
   const seed = seedNode ? JSON.parse(seedNode.textContent) : null;
-  import('/contracts-table.js?v=bd2b252bf0').then(async ({mountContractsTable}) => {
+  import('/contracts-table.js?v=019010cca9').then(async ({mountContractsTable}) => {
     if (tableGeneration !== contractsTableGeneration) return;
     const handle = await mountContractsTable(slot, {seed: seed?.supplierId === null ? seed : undefined, signal: tableController.signal});
     if (tableGeneration === contractsTableGeneration) contractsTableHandle = handle; else handle.destroy();
@@ -1518,7 +1517,7 @@ async function openMoneyRecords(kind, params) {
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
     if (grants && !params.has('program') && !params.has('open') && !params.has('largest')) {
-      const mod = await import('/grants-table.js?v=90ce4c8c09');
+      const mod = await import('/grants-table.js?v=8ae521f42e');
       if (generation !== moneyRecordsGeneration) return;
       const controller = new AbortController();
       moneyRecordsHandle = {destroy() {controller.abort();}};
@@ -1527,7 +1526,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=bd9f34a02a' : '/ledger.js?v=fccb8c9f74');
+    const mod = await import(grants ? '/grants.js?v=12dc79654e' : '/ledger.js?v=fccb8c9f74');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1577,7 +1576,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=7c64a08426');
+    const mod = await import('/grant-recipient.js?v=f5dbf7b65f');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -4501,6 +4500,12 @@ function subjectTag(body) {
   return body.querySelector(".subject-tag");
 }
 
+/** A tag line from its parts, each dot bound to the part after it (style.css
+ *  .subject-tag-next), so a line that wraps never ends in a dot. */
+function tagLineHTML(parts) {
+  return parts.filter(Boolean).map((part, i) => i ? `<span class="subject-tag-next">${part}</span>` : part).join("");
+}
+
 function infoboxHTML(rows, funfact, actions) {
   return `<p class="kicker" style="margin-top:0">Quick facts</p>
     <dl>${rows.filter(Boolean).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join("")}</dl>
@@ -6399,15 +6404,15 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // One meta line (principle 3): party, seat, house, parliament. The Quick
   // facts box said each of these again; its other facts are in the source
   // sheet under this line.
-  subjectTag(body).innerHTML = [
+  subjectTag(body).innerHTML = tagLineHTML([
     party ? partyChipHTML(party, { full: true }) : "",
     // A roster party is dated beside the chip, as the server's person answer dates it.
     seatParty ? `<span>parliamentary roster as at ${esc(fmtDate(seatParty.as_of))}</span>` : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
     electorateLinks ? `<span>${seatWord}${electorateLinks}</span>` : "",
-    representation.chambers.length ? `<span>${esc(representation.chambers.join(" · "))}</span>` : "",
-    representation.jurisdictions.length ? `<span>${esc(representation.jurisdictions.map(j=>j.label).join(" · "))}</span>` : "",
-  ].filter(Boolean).join(" · ") || "<span>From the parliamentary record</span>";
+    representation.chambers.length ? `<span>${esc(representation.chambers.join(" ·\u00a0"))}</span>` : "",
+    representation.jurisdictions.length ? `<span>${esc(representation.jurisdictions.map(j=>j.label).join(" ·\u00a0"))}</span>` : "",
+  ]) || "<span>From the parliamentary record</span>";
   const electorateRows = electorateReference
     ? electorateReference.module.personRepresentationRows(electorateReference.person, representation.representations, electorateReference.data.electorates)
     : representation.representations.length ? [["Recorded representation", representation.representations.map((r) =>
@@ -9809,7 +9814,7 @@ const GAMES = {
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=be6407a8d3", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=fccb8c9f74", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=bd9f34a02a", mount: "mountGrants" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=12dc79654e", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=3f70f2a4d0", mount: "mountWordsDollars" },
   tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=4097da66f7", mount: "mountThenVsNow" },
@@ -10590,6 +10595,9 @@ function initAskBuilder() {
   const topics = $("ask-topics-list");
   for (const name of Object.values(TOPICS)) topics.appendChild(Object.assign(document.createElement("option"), { value: name }));
   renderAskBuilder();
+  // On a phone the builder starts open: with the free box, the starters and
+  // the builder, the idle page has something to do on its first screen.
+  if (matchMedia("(width < 700px)").matches && $("ask-guided")) $("ask-guided").open = true;
   $("ask-builder-form").addEventListener("submit", (e) => {
     e.preventDefault();
     const q = askBuilderQuestion();
@@ -13472,6 +13480,21 @@ function divisionHeading(d, entry) {
   return { title: recorded || stage || motion || "Division", house: billHouse(d.house) || "Parliament" };
 }
 
+/** What the division was on, in one sentence: the motion put ("The question is
+ *  that ...") where the record states it, else the record's first sentence. */
+function divisionQuestionLead(d, entry, bill) {
+  const put = /\bThe question (?:is|being|was) that\b[^.?!]*[.?!]/.exec(billFlat(billNoteRepair(d.question || "")))?.[0];
+  return put || billQuestionParts({ question: d.question, stage: entry?.stage }, bill).head;
+}
+
+/** The bills a division was on, as one line: the first by name, the rest behind "and N related bills". */
+function divisionBillsHTML(bills) {
+  if (!bills.length) return "";
+  const link = (b) => `<a ${entityHrefAttr(billHash(b.key))}>${esc(b.title)}</a>`;
+  const rest = bills.slice(1);
+  return `<div class="division-bills">On the ${link(bills[0])}${rest.length ? ` <details class="division-bills-more"><summary>and ${rest.length} related ${rest.length === 1 ? "bill" : "bills"}</summary><ul class="ui-list" role="list">${rest.map((b) => `<li>${link(b)}</li>`).join("")}</ul></details>` : ""}</div>`;
+}
+
 function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   currentDoc = { slug, kind: "division", title: d.name || d.question || "", url: d.source_url, labels: { kind: "division" } };
   setStatus($("doc-status"), "");
@@ -13487,16 +13510,22 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
     ? crumbsFor("/bills", { label: bills[0].title, href: `/bill/${encodeURIComponent(bills[0].key)}` }, "Division")
     : crumbsFor("/ask?view=search", "Division"));
   const ayes = Number(d.ayes) || 0, noes = Number(d.noes) || 0;
+  // Each dot is bound to the part after it, and the date is one unit, so a
+  // wrapped line never ends in a dot or leaves the year alone.
   $("doc-meta").innerHTML = [
     billOutcomeLabelHTML(d.result || entry?.outcome),
     esc(`${ayes.toLocaleString()} ayes, ${noes.toLocaleString()} noes`),
-    esc(house), d.date ? esc(fmtDate(d.date)) : "",
-  ].filter(Boolean).join(" · ");
+    esc(house), d.date ? esc(fmtDate(d.date)).replace(/ /g, "\u00a0") : "",
+  ].filter(Boolean).join(" ·\u00a0");
   const question = billQuestion(d.question || d.name || "");
+  // The question leads, under the title; the whole of it is one tap away.
+  const lead = d.question ? divisionQuestionLead(d, entry, bills[0]) : "";
+  const questionHTML = `${lead ? `<p class="division-lead">${esc(lead)}</p>` : ""}${question && billFlat(question) !== lead
+    ? `<details class="ui-disclosure division-question"><summary>${lead ? "Read the full question" : "The question"}</summary><div class="ui-disclosure-body division-markdown">${billNoteHTML(question)}</div></details>` : ""}`;
   const ask = askHash(bills[0]?.title ? `How did parliament vote on the ${bills[0].title}?` : `What was the ${house} division of ${fmtDate(d.date)} about?`);
   $("doc-bill").innerHTML = `
-    ${bills.length ? `<ul class="ui-list division-bills" role="list" aria-label="${bills.length === 1 ? "The bill" : "The bills"} this division was on">${bills.map((b) =>
-      `<li class="ui-row-name"><a ${entityHrefAttr(billHash(b.key))}>${esc(b.title)}</a></li>`).join("")}</ul>` : ""}
+    ${questionHTML}
+    ${divisionBillsHTML(bills)}
     <div class="page-actions">
       <a class="ui-button" href="${esc(ask)}">Ask the record about this</a>
       ${moreMenuHTML([
@@ -13523,7 +13552,6 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
       <h3 class="ui-section-title" id="division-members-head">Who voted which way</h3>
       <p class="ui-status-line">Reading the member list…</p>
     </section>
-    ${question ? `<section class="ui-section division-block division-question-block"><details class="ui-disclosure division-question"><summary>The question</summary><div class="ui-disclosure-body division-markdown">${billNoteHTML(question)}</div></details></section>` : ""}
     ${sourceLineHTML({
       updated: retrieved, dateLabel: retrieved ? "As at" : "Updated", source: countBy,
       originals: [safeUrl(d.source_url) && { label: countSource, href: d.source_url }, ...bills.map((b) => ({ label: b.title, href: `/bill/${encodeURIComponent(b.key)}` }))].filter(Boolean),

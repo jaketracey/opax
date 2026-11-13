@@ -1,11 +1,12 @@
-import {dataTableHTML,mountDataTable,pendingPage} from './datatable.js?v=893767f2bd';
+import {dataTableHTML,mountDataTable,pendingPage} from './datatable.js?v=5fe413541f';
 export function suppliersTableConfig({donor,rows}={}) {
   return {id:'suppliers-table',caption:'Suppliers',pageType:'suppliers',    columns:[{key:'name',label:'Name',type:'text',primary:true},{key:'total',label:'Value',type:'money',bar:true,facet:'range'},
       {key:'count',label:'Contracts',type:'count'},{key:'agency_count',label:'Agencies',type:'count'},
       {key:'jurisdiction',label:'Jurisdiction',type:'category',facet:'multi'},{key:'abn',label:'ABN',type:'text'}],
     ...(rows ? {rows} : {source:{endpoint:'/api/table/suppliers',...(typeof donor==='string' ? {params:{donor}} : {})}}),columnsVisible:['name','total','count','agency_count'],
     primaryLink:row=>/^s-[a-f0-9]{20}$/.test(String(row.id)) ? `/subject/supplier/${row.id}` : null,
-    pageSize:50,defaultSort:{key:'total',dir:'desc'},urlKey:'t',export:{filename:'suppliers.csv'}};
+    pageSize:50,defaultSort:{key:'total',dir:'desc'},urlKey:'t',export:{filename:'suppliers.csv'},
+    phone:{figure:['total'],meta:[{key:'count',unit:['contract','contracts']},{key:'agency_count',unit:['agency','agencies']}]}};
 }
 export function suppliersTableHTML(page, params = new URLSearchParams()) {
   const config = suppliersTableConfig({donor: params.get('donor') ?? undefined});

@@ -41,7 +41,8 @@ test('declaration rows: official portraits only, the party from the roster, the 
  assert.match(html,/<img class="hp-portrait" src="\/photos\/10060.webp" alt=""/);
  assert.match(html,/party-alp/);
  assert.match(html,/“Two &quot;tickets&quot;”/);
- assert.match(html,/Gift · <span>recorded <time datetime="2026-10-07">7 Oct 2026<\/time><\/span> · <a href="https:\/\/www.aph.gov.au\/register" rel="noopener" target="_blank" aria-label="Register entry for Chris Bowen">Register<\/a><\/p>/);
+ // Each dot travels with the part after it (.hp-row-detail spans never wrap inside).
+ assert.match(html,/Gift <span>· recorded <time datetime="2026-10-07">7 Oct 2026<\/time><\/span> <span>· <a href="https:\/\/www.aph.gov.au\/register" rel="noopener" target="_blank" aria-label="Register entry for Chris Bowen">Register<\/a><\/span><\/p>/);
  assert.doesNotMatch(html,/↗/,'one ↗ per block at most, none per row');
  // A Commons portrait needs its credit beside it, so the row shows the blank circle.
  assert.match(declarationRowHTML(item,{photos:{'chris bowen':'wd-Q1'},parties}),/<span class="hp-portrait" aria-hidden="true"><\/span>/);
@@ -111,4 +112,14 @@ test('the homepage is five blocks with one primary action and no in-site arrows'
  for(const id of ['hp-map-source','hp-bills-source','hp-declared-source']) assert.match(main,new RegExp(`id="${id}"><details class="ui-pop ui-source"[^]*?Updated \\d{1,2} [A-Z][a-z]{2} \\d{4}`));
  assert.match(home,/<link rel="stylesheet" href="\/ui-source\.css\?v=[\w]+"/);
  assert.match(home,/<script src="\/ui-source\.js\?v=[\w]+" defer><\/script>/);
+});
+
+test('the home page ships its declaration rows in the same shape the script redraws, each dot inside the part after it',()=>{
+ const home=readFileSync(new URL('../public/home.html',import.meta.url),'utf8');
+ const details=[...home.matchAll(/<p class="hp-row-detail">(.*?)<\/p>/g)].map(m=>m[1]).filter(d=>/recorded/.test(d));
+ assert.ok(details.length,'the home page carries declaration rows');
+ for (const detail of details) {
+  assert.doesNotMatch(detail,/ · </,'no dot stands outside a part, where a wrapped line could end in it');
+  assert.match(detail,/ <span>· recorded <time /);
+ }
 });
