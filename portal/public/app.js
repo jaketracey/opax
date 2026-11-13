@@ -1342,7 +1342,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=c2f0b3de56");
+    const { mountMoneyMap } = await import("/money-map.js?v=82eebe5241");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1727,7 +1727,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   root.innerHTML = MAP_DRAWING_HTML;
   const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=c2f0b3de56"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=c8abdbd97f"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=82eebe5241"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=c8abdbd97f"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1870,7 +1870,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=49bfba239e");
+    const module = await import("/suppliers.js?v=6b826931e3");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -4618,7 +4618,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=c2f0b3de56");
+    const { mountMoneyMap } = await import("/money-map.js?v=82eebe5241");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
@@ -15166,7 +15166,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=c2f0b3de56");
+    const { mountMoneyMap } = await import("/money-map.js?v=82eebe5241");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",
