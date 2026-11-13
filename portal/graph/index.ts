@@ -1,4 +1,4 @@
-import {donorDisclosure,donorLookup,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
+import {donorDisclosure,donorLookup,hasPartyReceipts,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {partyUrl} from '../public/canonical-urls.js'
 // ---------------------------------------------------------------------------
 // OPAX Money Map - public entry.
@@ -378,6 +378,50 @@ export function receiptGraphView(raw: MoneyGraph, measure: ReceiptMeasure = 'all
     return own ? { ...shown, partyReturn: own } : shown
   }),
     edges: raw.edges.map(e => windowFigures(e, from, to, cpi, measure)) }
+}
+
+/** One donor flow that only the donor's own return declares: its record figures, never a party's receipt. */
+export type DeclaredFlow = { party: string; total: number; count: number; firstYear: number | null; lastYear: number | null }
+
+/**
+ * A donor's flows to parties that no party return lists (hasPartyReceipts is
+ * false), at the record figures of the donor's own declarations, largest first.
+ * Their typed figure is 0, so the scene and the card's rows already leave them
+ * out (moneyFlowType); the card says what they hold instead. Ask's money_totals
+ * reads the same flows the same way (declaredOnly there).
+ */
+export function declaredOnlyFlows(raw: MoneyGraph, donorId: string): DeclaredFlow[] {
+  const parties = new Map(raw.nodes.filter(n => n.kind === 'party').map(n => [n.id, n.label]))
+  const rows: DeclaredFlow[] = []
+  for (const e of raw.edges) {
+    if (e.source !== donorId || e.grant || e.flow || !parties.has(e.target) || hasPartyReceipts(e) || !(e.total > 0)) continue
+    rows.push({ party: parties.get(e.target)!, total: e.total, count: e.count ?? 0, firstYear: e.firstYear ?? null, lastYear: e.lastYear ?? null })
+  }
+  return rows.sort((a, b) => b.total - a.total || a.party.localeCompare(b.party))
+}
+
+/** The line a donor no party return lists carries in place of a $0 total. */
+export const NO_PARTY_RETURN = 'No party return lists a receipt from this donor.'
+
+/**
+ * What a donor's own returns declare to parties that list none of it, in a
+ * reader's words, to follow "Its" or "its": "own donor returns declare $847,340
+ * to federal parties across 65 records: Liberal $513,590 (2002-03 to 2010-11); ...".
+ * Exact dollars, as the returns give them; empty for no rows.
+ */
+export function declaredFlowsText(rows: DeclaredFlow[]): string {
+  if (!rows.length) return ''
+  const fy = (year: number) => `${year}-${String((year + 1) % 100).padStart(2, '0')}`
+  const years = (r: DeclaredFlow) => r.firstYear == null ? '' : r.firstYear === r.lastYear || r.lastYear == null
+    ? ` (${fy(r.firstYear)})` : ` (${fy(r.firstYear)} to ${fy(r.lastYear)})`
+  const dollars = (n: number) => `$${Math.round(n).toLocaleString('en-AU')}`
+  const records = (n: number) => `${n.toLocaleString('en-AU')} record${n === 1 ? '' : 's'}`
+  const total = rows.reduce((sum, r) => sum + r.total, 0)
+  const count = rows.reduce((sum, r) => sum + r.count, 0)
+  const verb = count === 1 ? 'return declares' : 'returns declare'
+  if (rows.length === 1) return `own donor ${verb} ${dollars(total)} to ${rows[0].party} across ${records(count)}${years(rows[0])}`
+  return `own donor ${verb} ${dollars(total)} to federal parties across ${records(count)}: `
+    + rows.map(r => `${r.party} ${dollars(r.total)}${years(r)}`).join('; ')
 }
 
 /**
@@ -1930,18 +1974,31 @@ export async function mountMoneyMap(
       ? 'Political party'
       : node.kind === 'grantor' ? 'Public money' : sentence(node.industry.replace(/_/g, ' ')))
     associatedLine(node)
-    if (hasReceiptTypes && (node.kind === 'donor' || node.kind === 'party')) el('p', 'mm-card-fine', card).textContent = receiptMeasureLabel(receiptMeasure)
+    // A donor no party return lists (hasPartyReceipts: its typed cells are empty) has no
+    // figure in this measure: the card says so, and what its own returns declare, in
+    // place of "$0" and "0 receipt records". A flow it also has that no party lists is
+    // said beneath its counted ones. Both are the donor's record figures, never summed.
+    const declaredOnly = node.kind === 'donor' && !hasPartyReceipts(node)
+    const declared = node.kind === 'donor' ? declaredOnlyFlows(raw, node.id) : []
+    if (hasReceiptTypes && (node.kind === 'donor' && !declaredOnly || node.kind === 'party')) el('p', 'mm-card-fine', card).textContent = receiptMeasureLabel(receiptMeasure)
 
     // A party heads its card with its whole return when the file has it (partyReturnWindow).
     const headline = node.kind === 'party' && node.partyReturn ? node.partyReturn : node
-    const total = el('div', 'mm-card-total', card)
-    total.textContent = formatMoney(headline.total)
-    const sub = el('div', 'mm-card-sub', card)
+    if (declaredOnly) {
+      el('p', 'mm-card-sub mm-card-declared', card).textContent = NO_PARTY_RETURN
+      if (declared.length) {
+        el('p', 'mm-card-fine', card).textContent = `Its ${declaredFlowsText(declared)}. `
+          + "These are the donor's declarations, not receipts a party reported, so the map's figures, which count each gift once from the party's own return, leave them out."
+      }
+    }
+    const total = declaredOnly ? null : el('div', 'mm-card-total', card)
+    if (total) total.textContent = formatMoney(headline.total)
+    const sub = declaredOnly ? null : el('div', 'mm-card-sub', card)
     const span = yearSpan(headline.firstYear, headline.lastYear)
     // Inside a year window the figures are the window's, and the span is
     // the years within it that carry anything; a subject with nothing there
     // says so rather than showing an empty zero.
-    sub.textContent = headline.count === 0 && view.span
+    if (sub) sub.textContent = headline.count === 0 && view.span
       ? (node.kind === 'grantor' ? `Nothing awarded in ${view.span}` : `Nothing disclosed in ${view.span}`)
       : node.kind === 'party'
         ? `Received across ${headline.count.toLocaleString()} receipts · ${span}`
@@ -1951,7 +2008,8 @@ export async function mountMoneyMap(
             : `Awarded to receipt sources on this map across ${node.count.toLocaleString()} grants · ${span}`)
           : `Disclosed across ${node.count.toLocaleString()} receipt records · ${span}`
     if (node.partyReturn && headline.count > 0) el('p', 'mm-card-fine', card).textContent = partyReturnScope(headline.firstYear, headline.lastYear)
-    inflationFineprint(card)
+    // The declared line gives nominal record figures, so it takes no inflation note.
+    if (!declaredOnly) inflationFineprint(card)
 
     const listTitle = el('div', 'mm-card-section', card)
     const list = el('ul', 'mm-rows', card)
@@ -1971,6 +2029,11 @@ export async function mountMoneyMap(
           yearSpan(edge.firstYear, edge.lastYear),
           () => setSelection(party.id, { user: true }),
         )
+      }
+      // No party lists a receipt from it, so there is nowhere it went to list.
+      if (declaredOnly) { listTitle.remove(); list.remove() }
+      else if (declared.length) {
+        el('p', 'mm-card-fine', card).textContent = `Not counted above: its ${declaredFlowsText(declared)}, which no party return lists.`
       }
       if ((node.grants || node.contracts) && grantsOn) {
         // Public money going the other way: shown beside the donations, never
@@ -2005,7 +2068,8 @@ export async function mountMoneyMap(
           why.textContent = 'On the map for the public money it holds, not for the size of its disclosed receipts.'
         }
       }
-      renderActions(card, node, plan, { kind: 'donor', from: node.label })
+      // Explain sums the receipts the parties listed; for a donor with none it would explain $0.
+      renderActions(card, node, declaredOnly ? { ...plan, actions: plan.actions.filter((a) => a.id !== 'explain') } : plan, { kind: 'donor', from: node.label })
     } else if (node.kind === 'grantor') {
       const contracts = node.flow === 'contracts'
       listTitle.textContent = contracts
