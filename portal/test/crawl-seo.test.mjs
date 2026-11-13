@@ -92,9 +92,11 @@ test('the server page shows the same parliamentarian count as the browser page',
   }
   // Maree Edwards (Bendigo West, Speaker) has no roster row; both count her. The "T Bull" print is not Labor's.
   // Council members from the dated official lists: Labor +8 NSW (A17); Liberal +5 NSW (A17), +2 SA (A22); Greens +3 NSW (A17).
-  assert.equal(shown.Labor, 494);
-  assert.equal(shown.Liberal, 345);
-  assert.equal(shown.Greens, 50);
+  // SA Council list-only profiles (A27; no SA Hansard after 2023): Labor +2 (El Dannawi, Gumbys), Liberal +1
+  // (Benjamin Hood), Greens +1 (Selwood). Cory Bernardi is linked to his existing row, so Liberal does not count him twice.
+  assert.equal(shown.Labor, 496);
+  assert.equal(shown.Liberal, 346);
+  assert.equal(shown.Greens, 51);
 });
 
 test('sitemap index and every type file have export lastmod, unique canonical URLs and accurate counts',async()=>{

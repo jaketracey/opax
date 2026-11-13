@@ -76,6 +76,13 @@
       "checked": "2026-11-12",
       "url": "scripts/roster_state_evidence.json",
       "reason": "Add a missing recorded party only within the reviewed current-term guard in roster_service.json, or an explicit first-term exception. Hold earlier speech years until dated party history exists. Victorian affiliations stay in the already-dated seat catalog. Recheck full name, chamber, source URL, date and canonical party against offline public evidence."
+    },
+    "sa-council-list": {
+      "kind": "identity",
+      "rule": "official-list-member",
+      "checked": "2026-11-13",
+      "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members",
+      "reason": "The Parliament of South Australia's Legislative Council member list for the 56th Parliament, reviewed in scripts/roster_state_evidence.json (as_of 2026-11-13; the page loads its members from the parliament's contact-details API, whose response is hashed there). No new source request. OPAX holds SA Council Hansard only to 2023, so a member it does not print has no speech row: they get a list-only profile (roster_only, zero speeches, no id; service dated from the list, which gives no term start). A member whose exact full name is one roster person with a verified id and a seat in South Australia is linked to the Council instead, never duplicated."
     }
   },
   "vote_party_periods": {
@@ -514,7 +521,7 @@
     "Constable": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "house_committee", "representatives"], ["representatives"]], "last": [2026, 2013], "separated_witnesses": [null, {"name": "Constable", "speaker_type": "witness", "speeches": 50, "states": ["federal"], "chambers": ["house_committee", "senate_committee"], "first": 2025, "last": 2026}], "speeches": [52, 2], "transcript": [null, {"speeches": 52, "witness_rows": 50, "states": ["federal"], "chambers": ["representatives", "house_committee", "senate_committee"], "first": 2013, "last": 2026}], "witness_rows": [50, null]}}],
     "Cook": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "sa_ha", "joint_committee", "house_committee"], ["sa_ha"]], "last": [2026, 2021], "separated_witnesses": [null, {"name": "Cook", "speaker_type": "witness", "speeches": 513, "states": ["federal"], "chambers": ["senate_committee", "house_committee", "joint_committee"], "first": 2025, "last": 2026}], "speeches": [804, 291], "states": [["federal", "sa"], ["sa"]], "transcript": [null, {"speeches": 804, "witness_rows": 513, "states": ["sa", "federal"], "chambers": ["sa_ha", "senate_committee", "house_committee", "joint_committee"], "first": 2020, "last": 2026}], "witness_rows": [513, null]}}],
     "Cooke": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "nsw_la", "joint_committee"], ["nsw_la"]], "separated_witnesses": [null, {"name": "Cooke", "speaker_type": "witness", "speeches": 25, "states": ["federal"], "chambers": ["joint_committee", "senate_committee"], "first": 2026, "last": 2026}], "speeches": [29, 4], "states": [["federal", "nsw"], ["nsw"]], "transcript": [null, {"speeches": 29, "witness_rows": 25, "states": ["nsw", "federal"], "chambers": ["nsw_la", "joint_committee", "senate_committee"], "first": 2025, "last": 2026}], "witness_rows": [25, null]}}],
-    "Cory Bernardi": [{"evidence": "hansard-growth", "fields": {"last": [2013, 2019], "speeches": [193, 265]}}],
+    "Cory Bernardi": [{"evidence": "hansard-growth", "fields": {"last": [2013, 2019], "speeches": [193, 265]}}, {"evidence": "sa-council-list", "list": {"chamber": "sa_lc", "as_of": "2026-11-13", "sha256": "da90f57e347b85e0eb1ea0e0a1e03e143cfccaa1236628927dd2e6a5aff3c9d2"}, "list_name": "Cory Bernardi", "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members", "checked": "2026-11-13", "fields": {"states": [["federal"], ["federal", "sa"]], "chambers": [["senate"], ["senate", "sa_lc"]], "representation": [[{"jurisdiction": "federal", "chamber": "senate", "electorate": "South Australia", "state": "SA", "basis": "Recorded parliamentary roster; exact name and chamber match"}], [{"jurisdiction": "federal", "chamber": "senate", "electorate": "South Australia", "state": "SA", "basis": "Recorded parliamentary roster; exact name and chamber match"}, {"jurisdiction": "sa", "chamber": "sa_lc", "electorate": "South Australia", "state": "SA", "basis": "Official member list as at 2026-11-13; list-only service, no speech attribution"}]]}, "note": "Parliament of South Australia Legislative Council list, 56th Parliament (contact-details API LCMembersDetails, sha256 da90f57e..., fetched 2026-11-13): pmId 7377, Hon Cory Bernardi, Pauline Hanson's One Nation. The list gives no term start. Linked, not duplicated: the roster's only Cory Bernardi is pid 10038, Senator for South Australia (speeches 2006-2019 in the record); exact full name and the same state."}],
     "Costello": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "joint_committee", "representatives"], ["representatives"]], "last": [2026, 2005], "separated_witnesses": [null, {"name": "Costello", "speaker_type": "witness", "speeches": 36, "states": ["federal"], "chambers": ["joint_committee", "senate_committee"], "first": 2026, "last": 2026}], "speeches": [49, 13], "transcript": [null, {"speeches": 49, "witness_rows": 36, "states": ["federal"], "chambers": ["representatives", "joint_committee", "senate_committee"], "first": 2002, "last": 2026}], "witness_rows": [36, null]}}],
     "Courtney Houssos": [{"evidence": "hansard-growth", "fields": {"speeches": [794, 805]}}],
     "Cross": [{"evidence": "witness-partition", "fields": {"chambers": [["joint_committee", "nsw_la"], ["nsw_la"]], "separated_witnesses": [null, {"name": "Cross", "speaker_type": "witness", "speeches": 9, "states": ["federal"], "chambers": ["joint_committee"], "first": 2026, "last": 2026}], "speeches": [12, 4], "states": [["federal", "nsw"], ["nsw"]], "transcript": [null, {"speeches": 13, "witness_rows": 9, "states": ["nsw", "federal"], "chambers": ["nsw_la", "joint_committee"], "first": 2025, "last": 2026}], "witness_rows": [9, null]}}],
@@ -1204,6 +1211,276 @@
           }
         ]
       }
+    },
+    "Mira El Dannawi": {
+      "evidence": "sa-council-list",
+      "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members",
+      "checked": "2026-11-13",
+      "list": {
+        "chamber": "sa_lc",
+        "as_of": "2026-11-13",
+        "sha256": "da90f57e347b85e0eb1ea0e0a1e03e143cfccaa1236628927dd2e6a5aff3c9d2"
+      },
+      "list_name": "Mira El Dannawi",
+      "service": {
+        "jurisdiction": "sa",
+        "chamber": "sa_lc",
+        "start": "2026-11-13",
+        "end": null
+      },
+      "row": {
+        "name": "Mira El Dannawi",
+        "speeches": 0,
+        "states": [
+          "sa"
+        ],
+        "chambers": [
+          "sa_lc"
+        ],
+        "first": 2026,
+        "last": 2026,
+        "roster_only": true,
+        "party": "Labor",
+        "current": true,
+        "party_now": "Labor",
+        "representation": [
+          {
+            "jurisdiction": "sa",
+            "chamber": "sa_lc",
+            "electorate": "South Australia",
+            "state": "SA",
+            "basis": "Official member list as at 2026-11-13; list-only service, no speech attribution"
+          }
+        ]
+      },
+      "note": "Parliament of South Australia Legislative Council list, 56th Parliament (contact-details API LCMembersDetails, sha256 da90f57e..., fetched 2026-11-13): pmId 7122, Hon Mira El Dannawi, ALP. The list gives no term start. No roster row, alias or electorate-catalog person has this name."
+    },
+    "Hilton Gumbys": {
+      "evidence": "sa-council-list",
+      "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members",
+      "checked": "2026-11-13",
+      "list": {
+        "chamber": "sa_lc",
+        "as_of": "2026-11-13",
+        "sha256": "da90f57e347b85e0eb1ea0e0a1e03e143cfccaa1236628927dd2e6a5aff3c9d2"
+      },
+      "list_name": "Hilton Gumbys",
+      "service": {
+        "jurisdiction": "sa",
+        "chamber": "sa_lc",
+        "start": "2026-11-13",
+        "end": null
+      },
+      "row": {
+        "name": "Hilton Gumbys",
+        "speeches": 0,
+        "states": [
+          "sa"
+        ],
+        "chambers": [
+          "sa_lc"
+        ],
+        "first": 2026,
+        "last": 2026,
+        "roster_only": true,
+        "aliases": [
+          "Hilton Jonas Gumbys"
+        ],
+        "party": "Labor",
+        "current": true,
+        "party_now": "Labor",
+        "representation": [
+          {
+            "jurisdiction": "sa",
+            "chamber": "sa_lc",
+            "electorate": "South Australia",
+            "state": "SA",
+            "basis": "Official member list as at 2026-11-13; list-only service, no speech attribution"
+          }
+        ]
+      },
+      "note": "Parliament of South Australia Legislative Council list, 56th Parliament (contact-details API LCMembersDetails, sha256 da90f57e..., fetched 2026-11-13): pmId 7380, Hon Hilton Jonas Gumbys, ALP. The list gives no term start. No roster row, alias or electorate-catalog person has this name."
+    },
+    "Rebecca Hewett": {
+      "evidence": "sa-council-list",
+      "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members",
+      "checked": "2026-11-13",
+      "list": {
+        "chamber": "sa_lc",
+        "as_of": "2026-11-13",
+        "sha256": "da90f57e347b85e0eb1ea0e0a1e03e143cfccaa1236628927dd2e6a5aff3c9d2"
+      },
+      "list_name": "Rebecca Hewett",
+      "service": {
+        "jurisdiction": "sa",
+        "chamber": "sa_lc",
+        "start": "2026-11-13",
+        "end": null
+      },
+      "row": {
+        "name": "Rebecca Hewett",
+        "speeches": 0,
+        "states": [
+          "sa"
+        ],
+        "chambers": [
+          "sa_lc"
+        ],
+        "first": 2026,
+        "last": 2026,
+        "roster_only": true,
+        "aliases": [
+          "Rebecca Jane Hewett"
+        ],
+        "party": "One Nation",
+        "current": true,
+        "party_now": "One Nation",
+        "representation": [
+          {
+            "jurisdiction": "sa",
+            "chamber": "sa_lc",
+            "electorate": "South Australia",
+            "state": "SA",
+            "basis": "Official member list as at 2026-11-13; list-only service, no speech attribution"
+          }
+        ]
+      },
+      "note": "Parliament of South Australia Legislative Council list, 56th Parliament (contact-details API LCMembersDetails, sha256 da90f57e..., fetched 2026-11-13): pmId 7376, Hon Rebecca Jane Hewett, Pauline Hanson's One Nation. The list gives no term start. No roster row, alias or electorate-catalog person has this name."
+    },
+    "Benjamin Hood": {
+      "evidence": "sa-council-list",
+      "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members",
+      "checked": "2026-11-13",
+      "list": {
+        "chamber": "sa_lc",
+        "as_of": "2026-11-13",
+        "sha256": "da90f57e347b85e0eb1ea0e0a1e03e143cfccaa1236628927dd2e6a5aff3c9d2"
+      },
+      "list_name": "Benjamin Hood",
+      "service": {
+        "jurisdiction": "sa",
+        "chamber": "sa_lc",
+        "start": "2026-11-13",
+        "end": null
+      },
+      "row": {
+        "name": "Benjamin Hood",
+        "speeches": 0,
+        "states": [
+          "sa"
+        ],
+        "chambers": [
+          "sa_lc"
+        ],
+        "first": 2026,
+        "last": 2026,
+        "roster_only": true,
+        "aliases": [
+          "Benjamin Robin Hood"
+        ],
+        "party": "Liberal",
+        "current": true,
+        "party_now": "Liberal",
+        "representation": [
+          {
+            "jurisdiction": "sa",
+            "chamber": "sa_lc",
+            "electorate": "South Australia",
+            "state": "SA",
+            "basis": "Official member list as at 2026-11-13; list-only service, no speech attribution"
+          }
+        ]
+      },
+      "note": "Parliament of South Australia Legislative Council list, 56th Parliament (contact-details API LCMembersDetails, sha256 da90f57e..., fetched 2026-11-13): pmId 7056, Hon Benjamin Robin Hood, Liberal. The list gives no term start. Not D.G.E. Hood (Dennis Garry Edward Hood, pmId 3126, also on the list) and not the surname print 'Hood' (no id; House of Assembly and committee rows)."
+    },
+    "Carlos Quaremba": {
+      "evidence": "sa-council-list",
+      "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members",
+      "checked": "2026-11-13",
+      "list": {
+        "chamber": "sa_lc",
+        "as_of": "2026-11-13",
+        "sha256": "da90f57e347b85e0eb1ea0e0a1e03e143cfccaa1236628927dd2e6a5aff3c9d2"
+      },
+      "list_name": "Carlos Quaremba",
+      "service": {
+        "jurisdiction": "sa",
+        "chamber": "sa_lc",
+        "start": "2026-11-13",
+        "end": null
+      },
+      "row": {
+        "name": "Carlos Quaremba",
+        "speeches": 0,
+        "states": [
+          "sa"
+        ],
+        "chambers": [
+          "sa_lc"
+        ],
+        "first": 2026,
+        "last": 2026,
+        "roster_only": true,
+        "aliases": [
+          "Carlos Leonel Quaremba"
+        ],
+        "party": "One Nation",
+        "current": true,
+        "party_now": "One Nation",
+        "representation": [
+          {
+            "jurisdiction": "sa",
+            "chamber": "sa_lc",
+            "electorate": "South Australia",
+            "state": "SA",
+            "basis": "Official member list as at 2026-11-13; list-only service, no speech attribution"
+          }
+        ]
+      },
+      "note": "Parliament of South Australia Legislative Council list, 56th Parliament (contact-details API LCMembersDetails, sha256 da90f57e..., fetched 2026-11-13): pmId 7379, Hon Carlos Leonel Quaremba, Pauline Hanson's One Nation. The list gives no term start. No roster row, alias or electorate-catalog person has this name."
+    },
+    "Melanie Selwood": {
+      "evidence": "sa-council-list",
+      "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members",
+      "checked": "2026-11-13",
+      "list": {
+        "chamber": "sa_lc",
+        "as_of": "2026-11-13",
+        "sha256": "da90f57e347b85e0eb1ea0e0a1e03e143cfccaa1236628927dd2e6a5aff3c9d2"
+      },
+      "list_name": "Melanie Selwood",
+      "service": {
+        "jurisdiction": "sa",
+        "chamber": "sa_lc",
+        "start": "2026-11-13",
+        "end": null
+      },
+      "row": {
+        "name": "Melanie Selwood",
+        "speeches": 0,
+        "states": [
+          "sa"
+        ],
+        "chambers": [
+          "sa_lc"
+        ],
+        "first": 2026,
+        "last": 2026,
+        "roster_only": true,
+        "party": "Greens",
+        "current": true,
+        "party_now": "Greens",
+        "representation": [
+          {
+            "jurisdiction": "sa",
+            "chamber": "sa_lc",
+            "electorate": "South Australia",
+            "state": "SA",
+            "basis": "Official member list as at 2026-11-13; list-only service, no speech attribution"
+          }
+        ]
+      },
+      "note": "Parliament of South Australia Legislative Council list, 56th Parliament (contact-details API LCMembersDetails, sha256 da90f57e..., fetched 2026-11-13): pmId 7378, Hon Melanie Selwood, Greens SA. The list gives no term start. No roster row, alias or electorate-catalog person has this name."
     }
   }
 }

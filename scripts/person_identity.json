@@ -13,7 +13,8 @@
     "patrick farmer": {"key": "10212", "why": "Pat Farmer (Macarthur 2001-2010); OpenAustralia lists him as Patrick Francis Farmer; the linker gave 10903, Rex Patrick"},
     "peter sidebottom": {"key": "10583", "why": "Sid Sidebottom (Braddon), printed with his first name Peter in 1998-99"},
     "robert baldwin": {"key": "10026", "why": "Bob Baldwin (Paterson); OpenAustralia lists him as Robert Charles Baldwin; the linker gave 10545, Stuart Robert"},
-    "r.a. simms": {"key": "10842", "why": "Robert Andrew Simms, federal Greens senator 2015-2016 and SA Legislative Council member from 2021; the same person is printed with initials in SA Hansard"}
+    "r.a. simms": {"key": "10842", "why": "Robert Andrew Simms, federal Greens senator 2015-2016 and SA Legislative Council member from 2021; the same person is printed with initials in SA Hansard"},
+    "cory bernardi": {"key": "10038", "why": "Cory Bernardi, federal senator for South Australia (Senate speeches 2006-2019 in the record) and on the SA Legislative Council list for the 56th Parliament as at 13 Nov 2026 (One Nation, pmId 7377); the same exact full name and state, and the only Bernardi in the roster, so the Council seat links to this id and no second person is made"}
   },
   "wrong_face": {
     "10080": "Tony Burke's portrait (byte-identical to 10081), not Anna Burke",
