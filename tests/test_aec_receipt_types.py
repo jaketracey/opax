@@ -324,3 +324,64 @@ def test_party_return_transfer_needs_the_payers_own_returns_in_the_same_node(tmp
     assert "return_by_type" not in nodes["Quiet Party"], "a node with no counted line keeps its record total"
     assert graph["meta"]["receipt_types"]["party_return_transfers"] == {party: [2000, 1], "North Party": [40, 1]}
     assert "only if the payer's own returns are counted in the same node" in graph["meta"]["receipt_types"]["party_return_note"]
+
+
+def test_party_return_counts_flagged_gifts_spelling_variant_entities_payroll_and_unions(tmp_path):
+    from parli.ingest import money_aec_extras
+    from scripts import aec_receipt_types
+    path = tmp_path / "db"
+    db = database(path)
+    party, rival = "Example Party", "Rival Party"
+    line = lambda donor, value, kind="Other Receipt", recipient=party: annual(kind, Value=str(value), **{"Received From": donor, "Recipient Name": recipient})
+    entries = {"Detailed Receipts.csv": [
+        line("Example Minerals Pty Ltd", 5000, "Donation Received"),  # flagged as an outlier elsewhere, a real gift here
+        line("Example Party Holdings", 400),  # associated entity, spelt unlike the AEC return
+        line("Example Party - NATIONAL", 300),  # the party's own office with a branch label: transfer
+        line("ECSA", 70),  # public money by abbreviation
+        line("Deputy Commissioner of Taxation", 60),  # a tax refund
+        line("Example Commission Agents Pty Ltd", 50),  # a company named Commission: counted
+        line("Parliament of NSW", 40),  # payroll levies, a government payer: counted
+        line("Parliament of Ruritania", 30),  # a foreign parliament: still government money
+        line("Example Shire Employees Union", 20),  # a union the resolver calls government: counted
+        line("Example Retail Ltd", 10, "Donation Received", rival),
+    ]}
+    donations.process_zip(db, archive("AllAnnualData", entries), "AllAnnualData")
+    load(db, "AllElectionsData", {})
+    load(db, "AllReferendumData", {})
+    db.execute("UPDATE donations SET industry='mining', recipient_canonical=CASE recipient WHEN ? THEN ? ELSE ? END", (rival, rival, party))
+    db.execute("UPDATE donations SET donation_type='flagged_review' WHERE donor_name='Example Minerals Pty Ltd'")
+    db.executescript("CREATE TABLE ext_donor_entities(entity_id,canonical_name,kind);"
+                     "CREATE TABLE ext_donor_aliases(alias_raw,entity_id,confidence,method);"
+                     "CREATE TABLE IF NOT EXISTS ext_aec_returns(entity_name,source_file);")
+    for eid, name, kind in (("holdings", "Example Party Holdings", "party_unit"), ("office", "Example Party - NATIONAL", "party_unit"),
+                            ("nsw", "Parliament of NSW", "government"), ("ruritania", "Parliament of Ruritania", "government"),
+                            ("shire-union", "Example Shire Employees Union", "government")):
+        db.execute("INSERT INTO ext_donor_entities VALUES (?,?,?)", (eid, name, kind))
+        db.execute("INSERT INTO ext_donor_aliases VALUES (?,?,1,'exact')", (name, eid))
+    db.execute("INSERT INTO ext_aec_returns VALUES ('Example Party Holding Pty. Limited as Trustee for the Example Party Trust',"
+               "'Associated Entity Returns.csv')")
+    db.commit()
+
+    def canon(name):  # reads the branch label as another party, as canon_party read " - NATIONAL"
+        name = name or ""
+        return rival if name.endswith("- NATIONAL") or "rival" in name.lower() else party if "example party" in name.lower() else None
+    with mock.patch.object(aec_receipt_types, "canon_party", canon), mock.patch.object(money_aec_extras, "canon_party", canon):
+        graph = export(path)
+    node = next(n for n in graph["nodes"] if n["id"] == "party:" + party)
+    assert node["return_by_type"] == {"donation_received": 5000, "other_receipt": 400 + 50 + 40 + 20}
+    assert graph["meta"]["receipt_types"]["party_return_transfers"] == {party: [300, 1]}
+    assert graph["meta"]["receipt_types"]["party_return_counts"]["excluded_public_funding"] == 3
+    assert "Payments made through parliament and council payrolls are counted as receipts" in graph["meta"]["receipt_types"]["party_return_note"]
+    # The shared outlier flag still holds for the capped map cells.
+    assert graph["meta"]["receipt_types"]["counts"]["excluded_flagged_review"] == 1
+
+
+def test_party_return_public_money_matches_whole_words():
+    from scripts.aec_receipt_types import party_return_public
+    for name in ("ECSA", "EFA", "ACT Election Commission", "Australian Electoral Commisssion", "Deputy Commissioner of Taxation",
+                 "Australian Government Solicitor", "DCIS Northern Territory Government", "Special Minister of State"):
+        assert party_return_public(name, None, "Other Receipt"), name
+    for name in ("Example Commission Agents Pty Ltd", "Efacon Pty Ltd", "Ecsaw Holdings", "Commonwealth Example Bank",
+                 "Legislative Assembly of Queensland", "Brisbane City Council", "Example Workers Union"):
+        assert not party_return_public(name, None, "Other Receipt"), name
+    assert party_return_public("Example Workers Union", "union", "Public Funding"), "the receipt type still decides"
