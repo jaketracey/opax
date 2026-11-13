@@ -24,22 +24,27 @@ each jurisdiction they sat in): federal 755 / 946, NSW 133 / 288, VIC 109 / 245,
 QLD 33 / 121. Queensland is low because most QLD Hansard names are surname-only, and
 surname-only matches are held to a stricter test (below).
 
-### 2026-11-13 pass: current members (+5 files)
+### 2026-11-13 pass: current members (+4 files)
 
 34 rows marked current had no portrait. OpenAustralia still answers `cf-mitigated: challenge` (403 on
 `/images/mpsL/11046.jpg`, one request), so it was not used. The new `scripts/wikidata_mpid_match.py`
 matches by identifier only: roster pid → the APH MP ID that `pay.json` holds for it → the Wikidata item
 with that "Parliament of Australia MP ID" (P10020) → its P18, else the free-licensed lead image of that
-item's own English Wikipedia article. Then `fetch_commons_portraits.py --new` and
+item's own English Wikipedia article. A file whose Commons credit or source names aph.gov.au, ParlInfo
+or any Australian parliament's site is refused whatever its Commons licence tag says: those are official
+portraits, and the APH site licence is CC BY-NC-ND (see the Licence handling section). Then `fetch_commons_portraits.py --new` and
 `recrop_commons_portraits.py --new` as usual. Added, all `wd-` keys with a credit line: Matt Smith
-(CC BY-SA 4.0), Renee Coffey (CC BY-SA 4.0), Claire Clutterham (CC BY-SA 4.0, article lead image), Emma
-Comer (CC BY 4.0), Vanessa Bleyer (CC BY-SA 2.5 AU). Still without a face, and why:
+(CC BY-SA 4.0), Renee Coffey (CC BY-SA 4.0), Claire Clutterham (CC BY-SA 4.0, article lead image), Vanessa
+Bleyer (CC BY-SA 2.5 AU). Still without a face, and why:
 
 * No image on Commons for the person's own Wikidata item or article (23): Alice Jordan-Baird, Alison
   Penfold, Ash Ambihaipahar, Ben Small, Cameron Caldwell, Carol Berry, David Batt, David Moncrieff, Gabriel
   Ng, Jamie Chaffey, Jess Teesdale, Jessica Collins, Julie-Ann Campbell, Kara Cook, Madonna Jarrett, Mary
   Aldred, Matt Gregg, Rowan Holzberger, Sean Bell, Simon Kennedy, Tom French, Tom Venning, Zhi Soon.
 * The only image is a group shot, dropped by YuNet and confirmed by eye (2): Trish Cook, David Farley.
+* The only image is an APH portrait (1): Emma Comer. `File:Emma Comer.jpg` gives its source as her
+  aph.gov.au page and is tagged CC BY 4.0 on Commons; it shipped in the first cut of this pass and was
+  removed in review.
 * Lynda Voltz (NSW LA, Auburn): the seat-holder match is unique (Q6708589) but there is no P18 and no
   free article image; NSW parliament portraits cannot be used (below).
 * Single-name prints left alone (3): "Spender", "Boyce" (their full-name rows already have faces),
