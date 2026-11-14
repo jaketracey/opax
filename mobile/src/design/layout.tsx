@@ -58,6 +58,7 @@ import { useRefreshCommand } from './keyboard';
 import { RowLink } from './row-link';
 import { SourceSection } from './source';
 import {
+  ColumnMarginContext,
   RowCellInsetContext,
   RowInsetContext,
   RowSelectedContext,
@@ -508,7 +509,11 @@ export function Screen({
                             regular ? rhythmRegular.section : rhythm.section
                           }
                         >
-                          {anchorHeadings(withOffline(children, offline))}
+                          <ColumnMarginContext.Provider
+                            value={content.paddingHorizontal}
+                          >
+                            {anchorHeadings(withOffline(children, offline))}
+                          </ColumnMarginContext.Provider>
                         </ScreenSectionGapContext.Provider>
                       </View>
                     </TitleContentContext.Provider>
@@ -651,7 +656,9 @@ export function KeyboardStableScreen({
         >
           <RegionProvider value={inner}>
             {bar}
-            {children}
+            <ColumnMarginContext.Provider value={content.paddingHorizontal}>
+              {children}
+            </ColumnMarginContext.Provider>
           </RegionProvider>
         </ScrollView>
       </SidebarSafe>

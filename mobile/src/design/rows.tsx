@@ -44,7 +44,7 @@ import {
   useRowInset,
   useRowSelected,
 } from './row-padding';
-import { selectedWash, splitRowStyles } from './selection';
+import { selectedWash, useSplitBleed } from './selection';
 import { Skeleton } from './states';
 import { symbols } from './symbols';
 import { Text, textContent } from './text';
@@ -140,6 +140,7 @@ export function LinkRow({
   const cellStyle = useRowCellStyle();
   const split = selected !== undefined && accessory !== 'checkmark';
   useRowSelected(split && !!selected && !disabled);
+  const splitBleed = useSplitBleed();
   const [hovered, onHover] = useHover();
   const onActivate = select ?? onPress ?? (href ? recordLink.open : undefined);
   const plainTitle = typeof title === 'string' ? title : textContent(title);
@@ -172,7 +173,7 @@ export function LinkRow({
       onPress={select ?? press}
       style={({ pressed }) => [
         styles.row,
-        split ? splitRowStyles.bleed : null,
+        split ? splitBleed : null,
         cellStyle,
         !disabled && split && selected
           ? selectedWash()
@@ -599,6 +600,7 @@ export function BillRow({
   useRowInset();
   const split = selected !== undefined;
   useRowSelected(!!selected);
+  const splitBleed = useSplitBleed();
   const [hovered, onHover] = useHover();
   const onActivate = select ?? onPress ?? (href ? recordLink.open : undefined);
   const formattedDate =
@@ -647,7 +649,7 @@ export function BillRow({
       onPress={select ?? onPress}
       style={({ pressed }) => [
         styles.row,
-        split ? splitRowStyles.bleed : null,
+        split ? splitBleed : null,
         cellStyle,
         selected
           ? selectedWash()

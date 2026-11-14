@@ -37,7 +37,7 @@ import {
   useRowInset,
   useRowSelected,
 } from './row-padding';
-import { selectedWash, splitRowStyles } from './selection';
+import { selectedWash, useSplitBleed } from './selection';
 import { symbols } from './symbols';
 import { Text } from './text';
 import { nameProbeProps } from './text-probe';
@@ -500,6 +500,7 @@ export function PersonRow({
   const cellStyle = useRowCellStyle();
   const split = selected !== undefined;
   useRowSelected(!!selected);
+  const splitBleed = useSplitBleed();
   const [hovered, onHover] = useHover();
   const onActivate =
     select ?? onPress ?? (href ? () => router.push(href) : undefined);
@@ -658,7 +659,7 @@ export function PersonRow({
       onPress={select ?? onPress}
       style={({ pressed }) => [
         styles.person,
-        split ? splitRowStyles.bleed : null,
+        split ? splitBleed : null,
         cellStyle,
         selected
           ? selectedWash()

@@ -260,9 +260,13 @@ describe('split rows', () => {
   });
   test('every split list selects alike, in navy: the accent is the detail pane’s', () => {
     expect(selectedWash('bills')).toEqual(selectedWash('people'));
-    expect(selectedWash('money')).toEqual({ backgroundColor: colors.navyWash });
-    // The rounded wash alone: no leading mark style survives (b65).
-    expect(Object.keys(splitRowStyles)).toEqual(['bleed']);
+    expect(selectedWash('money')).toEqual({
+      backgroundColor: colors.navyWash,
+      borderColor: colors.lineControl,
+    });
+    // The rounded wash and its outline: no leading mark style survives (b65),
+    // only the bleed for a 20pt column and for a 16pt one.
+    expect(Object.keys(splitRowStyles)).toEqual(['bleed', 'narrow']);
   });
   test('a split row says selected and drops the chevron: the pane is the destination', () => {
     let tree!: TestRenderer.ReactTestRenderer;

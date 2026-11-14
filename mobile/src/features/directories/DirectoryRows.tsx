@@ -19,7 +19,7 @@ import {
   useRowInset,
   useRowSelected,
 } from '../../design/row-padding';
-import { selectedWash, splitRowStyles } from '../../design/selection';
+import { selectedWash, useSplitBleed } from '../../design/selection';
 import { counted, formatCount } from '../../design/format';
 import { isPartyLabel, partySlug } from '../../design/party';
 import { chamberName, jurisdictionName } from '../../design/parliament';
@@ -219,6 +219,7 @@ export const ElectorateDirectoryRow = memo(function ElectorateDirectoryRow({
   useRowInset(16);
   const split = selected !== undefined;
   useRowSelected(!!selected);
+  const splitBleed = useSplitBleed();
   const lines = electorateLines(item);
   const select = onSelect ? () => onSelect(entryFor(item)) : undefined;
   const row = (
@@ -241,7 +242,7 @@ export const ElectorateDirectoryRow = memo(function ElectorateDirectoryRow({
       onPress={select}
       style={({ pressed }) => [
         styles.row,
-        split ? splitRowStyles.bleed : null,
+        split ? splitBleed : null,
         cellStyle,
         selected
           ? selectedWash()

@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useLayoutEffect } from 'react';
-import { colors } from './tokens';
+import { colors, layout } from './tokens';
 
 /** Marks a row component that draws its own vertical padding in a InsetGroup. */
 export const ROW_OWNS_PADDING = Symbol.for('opax.rowOwnsPadding');
@@ -57,6 +57,14 @@ export function useRowSelected(selected: boolean) {
     return () => report(false);
   }, [report, selected]);
 }
+
+/**
+ * The horizontal margin of the column a row sits in, so a split row's
+ * selected fill keeps the same gap to the column's edges in every list:
+ * Screen's column (16pt in a pane narrower than 414pt, as Search's is) or a
+ * list's own `layout.screenMargin` (Bills, the directories), the default.
+ */
+export const ColumnMarginContext = createContext<number>(layout.screenMargin);
 
 // The group keeps its text inset; rows bleed their interactive surface to the cell edges.
 export const RowCellInsetContext = createContext(0);

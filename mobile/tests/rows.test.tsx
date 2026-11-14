@@ -47,6 +47,7 @@ import { Card, Tile, TileGrid } from '../src/design/card';
 import { ChoiceChip, MachinePill, StatusCapsule } from '../src/design/labels';
 import { FigureBlock, PageFoot, StatStrip } from '../src/design/record';
 import { Divider } from '../src/design/controls';
+import { ColumnMarginContext } from '../src/design/row-padding';
 import {
   selectedWash,
   splitRowStyles,
@@ -512,11 +513,18 @@ for (const selected of [false, true]) {
   ])('split selection anatomy, selected=' + selected, (element) => {
     const root = render(element).root;
     expect(row(root).props.accessibilityState.selected).toBe(selected);
-    expect(rowStyle(row(root))).toMatchObject(flat(splitRowStyles.bleed));
+    const bleed = { ...flat(splitRowStyles.bleed) };
+    delete bleed.borderColor;
+    expect(rowStyle(row(root))).toMatchObject(bleed);
     expect(rowStyle(row(root)).backgroundColor).toEqual(
       selected ? selectedWash().backgroundColor : undefined,
     );
-    // The rounded wash alone marks the selection: no leading bar.
+    // The rounded wash in a 1pt outline marks the selection (the outline is
+    // drawn clear at rest, so nothing moves): no leading bar.
+    expect(rowStyle(row(root)).borderWidth).toBe(1);
+    expect(rowStyle(row(root)).borderColor).toBe(
+      selected ? colors.lineControl : 'transparent',
+    );
     expect(leadingBars(root)).toHaveLength(0);
     expect(glyphs(root)).not.toContain('chevron.right');
     expect(glyphs(root)).not.toContain('checkmark');
@@ -524,13 +532,52 @@ for (const selected of [false, true]) {
   });
 }
 test('the selected pill is inset around the text, which keeps the list’s leading edge', () => {
-  const bleed = flat(splitRowStyles.bleed);
-  // The fill reaches into the margin by exactly the padding it adds, so a
-  // selected row's text sits where every unselected row's does.
-  expect(bleed.paddingHorizontal).toBe(-(bleed.marginHorizontal as number));
-  expect(bleed.paddingHorizontal).toBeGreaterThanOrEqual(12);
-  expect(bleed.paddingHorizontal).toBeLessThan(layout.screenMargin);
-  expect(bleed.borderRadius).toBe(radii.container);
+  for (const style of [splitRowStyles.bleed, splitRowStyles.narrow]) {
+    const bleed = flat(style);
+    const outline = bleed.borderWidth as number;
+    // The fill reaches into the margin by exactly the padding and outline it
+    // adds, so a selected row's text sits where every unselected row's does,
+    // and the outline comes out of the row's padding, not its height.
+    expect(outline).toBe(1);
+    expect((bleed.paddingHorizontal as number) + outline).toBe(
+      -(bleed.marginHorizontal as number),
+    );
+    expect((bleed.paddingVertical as number) + outline).toBe(rhythm.row);
+    expect(bleed.borderRadius).toBe(radii.container);
+  }
+  expect(-(flat(splitRowStyles.bleed).marginHorizontal as number)).toBe(12);
+});
+test('the selected pill sits 8pt from the column’s edges in a 20pt and a 16pt column', () => {
+  // Bills and the directories pad their own lists by layout.screenMargin (the
+  // default); Screen says its own (16pt in a pane narrower than 414pt, as
+  // Search's is).
+  for (const margin of [undefined, 16, 20]) {
+    const element = <LinkRow title="Labor" href={href} selected testID="row" />;
+    const root = render(
+      margin === undefined ? (
+        element
+      ) : (
+        <ColumnMarginContext.Provider value={margin}>
+          {element}
+        </ColumnMarginContext.Provider>
+      ),
+    ).root;
+    const bleed = -(rowStyle(row(root)).marginHorizontal as number);
+    expect((margin ?? layout.screenMargin) - bleed).toBe(8);
+  }
+  // Screen tells its rows the margin it pads its column by.
+  for (const [width, margin] of [
+    [402, 16],
+    [430, 20],
+  ] as const) {
+    size(1, width);
+    const root = render(
+      <Screen>
+        <LinkRow title="Labor" href={href} selected testID="row" />
+      </Screen>,
+    ).root;
+    expect(-(rowStyle(row(root)).marginHorizontal as number)).toBe(margin - 8);
+  }
 });
 describe('separators beside a selected split row', () => {
   const ruleColours = (root: ReactTestInstance) =>
