@@ -220,6 +220,16 @@ class PatchReplayTests(unittest.TestCase):
         text = re.sub(r'\n *// OPAX menu accessibility:[\s\S]*?// OPAX menu accessibility end\.\n', '', text)
         text = re.sub(r'\n  if \(dict\[@"testID"\]\) \{\n    (self|menu|actionElement)'
                       r'\.accessibilityIdentifier = dict\[@"testID"\];\n  }\n', '', text)
+        # RNSSearchBar.mm: the marked placeholder sizer class, then exactly its
+        # ivar, its creation in init and its relayout in setPlaceholder.
+        text = re.sub(r'// OPAX placeholder fitting:[\s\S]*?// OPAX placeholder fitting end\.\n\n', '', text)
+        text = re.sub(r'#if !TARGET_OS_TV\n(?:'
+                      r'  RNSSearchPlaceholderSizer \*_placeholderSizer;\n|'
+                      r'  UISearchTextField \*field = _controller\.searchBar\.searchTextField;\n'
+                      r'  _placeholderSizer = \[\[RNSSearchPlaceholderSizer alloc\] initWithFrame:field\.bounds\];\n'
+                      r'  \[field addSubview:_placeholderSizer\];\n|'
+                      r'  \[_placeholderSizer setNeedsLayout\];\n'
+                      r')#endif\n', '', text)
         return text.replace('  UIMenu *menu = [UIMenu menuWithTitle:',
                             '  return [UIMenu menuWithTitle:').replace('  return menu;\n', '\n')
 
@@ -234,7 +244,7 @@ class PatchReplayTests(unittest.TestCase):
         self.assertEqual(hashlib.sha256(reviewed_patch.read_bytes()).hexdigest(), entry['sha256'],
                          'Follow-up: patches/privacy-patches.json must pin the reviewed menu-view patch')
         self.assertEqual({row['path'] for row in entry['files']},
-                         {'ios/RNSBarButtonItem.mm', 'ios/RNSScreen.mm'})
+                         {'ios/RNSBarButtonItem.mm', 'ios/RNSScreen.mm', 'ios/RNSSearchBar.mm'})
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             for row in entry['files']:
@@ -261,6 +271,15 @@ class PatchReplayTests(unittest.TestCase):
             self.assertIn('view.accessibilityIdentifier = item.accessibilityIdentifier;', screen)
             self.assertIn('navigationController.topViewController == self', screen)
             self.assertNotRegex(screen, r'valueForKey:|NSSelectorFromString|method_exchangeImplementations')
+            search = (root / 'node_modules/react-native-screens/ios/RNSSearchBar.mm').read_text()
+            self.assertEqual(search.count('@implementation RNSSearchPlaceholderSizer'), 1)
+            self.assertIn('[field addSubview:_placeholderSizer];', search)
+            self.assertIn('[_placeholderSizer setNeedsLayout];', search)
+            self.assertIn('UIContentSizeCategoryIsAccessibilityCategory(', search)
+            self.assertIn('field.attributedPlaceholder = placeholder;', search)
+            # Only the placeholder is fitted: typed text keeps UIKit Dynamic Type.
+            self.assertNotRegex(search, r'field\.font\s*=|adjustsFontForContentSizeCategory\s*=')
+            self.assertNotRegex(search, r'valueForKey:|NSSelectorFromString|method_exchangeImplementations')
 
     def test_clean_replay_idempotency_version_and_source_drift(self):
         mobile = Path(__file__).resolve().parent.parent
