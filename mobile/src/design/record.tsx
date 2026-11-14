@@ -28,7 +28,7 @@ import {
   type TextVariant,
 } from './tokens';
 import type { TermId } from '../features/learn/glossary';
-import { TermIn, withTermAction } from './term';
+import { useTermWords, withTermAction } from './term';
 
 /** A named record inside another target keeps its own destination. */
 export function RecordNameLink({
@@ -142,6 +142,7 @@ export function StatTile({
   testID,
 }: StatTileProps) {
   const termAction = withTermAction([], term);
+  const words = useTermWords(label, term);
   const highlight = useRowHighlight();
   const body = (
     <>
@@ -153,7 +154,7 @@ export function StatTile({
         {value}
       </Text>
       <Text wordSafe variant="footnote">
-        <TermIn text={label} term={term} />
+        {words}
         {onPress ? (
           <>
             {'\u00a0'}

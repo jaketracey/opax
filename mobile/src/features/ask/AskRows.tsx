@@ -26,7 +26,7 @@ import { personName, sourceMeta, sourceTitle } from './source-present';
 import { recordRoute } from '../records/route';
 import { openAnswerLink } from './AnswerBody';
 import type { AskPerson } from './people';
-import { TermIn, withTermAction } from '../../design/term';
+import { useTermWords, withTermAction } from '../../design/term';
 import type { TermMatch } from '../learn/term-map';
 
 /** A source's long-press menu, the same in Records cited, the sheet and the pane. */
@@ -189,6 +189,7 @@ export function AskSuggestionRow({
     leaves.map((item) => ({ name: item.title, label: item.title })),
     term?.term,
   );
+  const words = useTermWords(question, term?.term, term?.phrase);
   const row = useRef<View>(null);
   return (
     <Pressable
@@ -236,7 +237,7 @@ export function AskSuggestionRow({
         tone={offline ? 'inkSoft' : undefined}
         style={styles.main}
       >
-        <TermIn text={question} term={term?.term} phrase={term?.phrase} />
+        {words}
       </Text>
       {offline ? null : (
         <Icon

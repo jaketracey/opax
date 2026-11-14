@@ -7,7 +7,7 @@ import { Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
 import { learnCopy } from './copy';
 import { learnRoute } from './routes';
-import { hideLearnCard, useLearnSettings } from './settings';
+import { hideLearnCard, useLearnCard } from './settings';
 
 /**
  * Home's first-run card for the guide (README 8.1). New installs only
@@ -17,7 +17,7 @@ import { hideLearnCard, useLearnSettings } from './settings';
  * title and is its own element.
  */
 export function LearnCard({ testID = 'today-learn' }: { testID?: string }) {
-  const { card } = useLearnSettings();
+  const card = useLearnCard();
   if (card !== 'show') return null;
   return (
     <Card testID={testID} padded>
@@ -58,12 +58,11 @@ export function LearnCard({ testID = 'today-learn' }: { testID?: string }) {
 }
 
 /**
- * A Home block with the guide card under it while the card shows; the block
- * alone otherwise, so its layout is unchanged once the card is gone.
+ * A Home block with the guide card under it while the card shows. The same
+ * column either way, so the block never remounts when the card comes or
+ * goes; with the card gone it is the block alone (a gap needs two children).
  */
 export function WithLearnCard({ children }: { children: ReactNode }) {
-  const { card } = useLearnSettings();
-  if (card !== 'show') return <>{children}</>;
   return (
     <View style={styles.stack}>
       {children}

@@ -129,7 +129,7 @@ import { useSpeechSpeakers } from '../records/speaker';
 import { useCatalogRecord } from './useCatalogRecord';
 import { memberPosition, useMyMemberVotes } from './your-mp-vote';
 import { sydneyDay } from '../today/rules';
-import { TermIn, TermText, withTermAction } from '../../design/term';
+import { TermText, useTermWords, withTermAction } from '../../design/term';
 import { chamberTerm, stageTerm } from '../learn/term-map';
 
 type BillRecord = Awaited<ReturnType<typeof catalogs.billFor>>;
@@ -1815,6 +1815,7 @@ function BillVoteRow({
   }, [focus, targets]);
   const title = divisionTitle(division);
   const titleTerm = stageTerm(title);
+  const titleWords = useTermWords(title, titleTerm?.term, titleTerm?.phrase);
   const meta = divisionMeta(
     division,
     [chamberLabel(division.house), short(division.date)].join(' · '),
@@ -1910,11 +1911,7 @@ function BillVoteRow({
                 testID={`${id}-title`}
                 style={styles.grow}
               >
-                <TermIn
-                  text={title}
-                  term={titleTerm?.term}
-                  phrase={titleTerm?.phrase}
-                />
+                {titleWords}
               </Text>
             </View>
             <Text variant="secondary" wordSafe>

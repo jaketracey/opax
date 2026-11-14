@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { act, type ReactElement } from 'react';
+import { act, useEffect, type ReactElement } from 'react';
 import { Text as NativeText } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { resetTermClaimsForTests } from '../src/design/term';
@@ -291,15 +291,32 @@ describe('entry points', () => {
     expect(host(tree, 'today-learn')).toHaveLength(0);
   });
 
-  test('an existing install never sees the card, and the block keeps its shape', () => {
-    resetLearnSettingsForTests({ card: 'never' });
+  test('an existing install never sees the card, and the block never remounts', () => {
+    resetLearnSettingsForTests({ card: 'show' });
+    const mounts = jest.fn();
+    function Block() {
+      useEffect(mounts, []);
+      return <NativeText testID="block">Block</NativeText>;
+    }
     const tree = render(
       <WithLearnCard>
-        <NativeText testID="block">Block</NativeText>
+        <Block />
       </WithLearnCard>,
     );
+    expect(host(tree, 'today-learn')).toHaveLength(1);
+    // Closing the card (or an existing install's `never`) leaves the block
+    // alone in the same column: no card, no remount.
+    act(() => resetLearnSettingsForTests({ card: 'never' }));
+    act(() =>
+      tree.update(
+        <WithLearnCard>
+          <Block />
+        </WithLearnCard>,
+      ),
+    );
     expect(host(tree, 'today-learn')).toHaveLength(0);
-    expect(tree.toJSON()).toMatchObject({ props: { testID: 'block' } });
+    expect(host(tree, 'block')).toHaveLength(1);
+    expect(mounts).toHaveBeenCalledTimes(1);
   });
 
   test('More to explore has a How Parliament works row', () => {

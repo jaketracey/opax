@@ -10,7 +10,7 @@ import { minimumTarget, radii, rhythm, textStyles } from '../../design/tokens';
 import { presentSource } from '../../navigation/sheets';
 import { sittingLine, sittingSources } from './sitting';
 import { useTodayRead } from './TodayBlock';
-import { TermIn, withTermAction } from '../../design/term';
+import { useTermWords, withTermAction } from '../../design/term';
 import { sittingTerm } from '../learn/term-map';
 
 /** The sitting calendar's read: the saved or fetched file, or null for none. */
@@ -63,6 +63,9 @@ export function SittingLine({
   );
 }
 
+/** The sitting line's Dynamic Type cap, shared with its marked term. */
+const sittingCap = 1.353;
+
 /**
  * The drawn line: real text, read as drawn, a button that opens the
  * sources. Its touch band is 44 pt (48 on Android) but overlaps the date
@@ -85,6 +88,7 @@ export function SittingText({
   const band = Math.max(0, (minimumTarget - textHeight) / 2);
   const term = sittingTerm(text);
   const termAction = withTermAction([], term?.term);
+  const words = useTermWords(text, term?.term, term?.phrase, sittingCap);
   return (
     <Pressable
       accessibilityRole="button"
@@ -106,7 +110,7 @@ export function SittingText({
       <Text
         wordSafe={fixed}
         variant="secondary"
-        maxFontSizeMultiplier={1.353}
+        maxFontSizeMultiplier={sittingCap}
         accessible={false}
         onTextLayout={(event) => {
           const total = event.nativeEvent.lines.reduce(
@@ -117,7 +121,7 @@ export function SittingText({
             setTextHeight(total);
         }}
       >
-        <TermIn text={text} term={term?.term} phrase={term?.phrase} />
+        {words}
       </Text>
     </Pressable>
   );

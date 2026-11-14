@@ -11,9 +11,11 @@ import {
 import { Button } from '../../design/controls';
 import { InsetGroup, Screen } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
+import { scrollToTop } from '../../design/scroll-to-top';
 import { Term } from '../../design/term';
 import { Heading, Text } from '../../design/text';
 import { colors, radii, rhythm } from '../../design/tokens';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { ContentUnavailable } from '../../design/states';
 import { RouteOptions } from '../../navigation/preview';
 import type { LearnBlock, LearnInline } from './content-types';
@@ -113,13 +115,17 @@ export default function LearnChapter() {
   const [at, setAt] = useState(start - 1);
   const scroll = useRef<ScrollView>(null);
   const heading = useRef<View>(null);
-  const moved = useRef(false);
+  const headerBottom = useHeaderBottom();
+  // The screen the page was last reset for: Next resets it to the top, a
+  // header settling later never does.
+  const shown = useRef(at);
   useEffect(() => {
-    if (!moved.current) return;
-    scroll.current?.scrollTo({ y: 0, animated: false });
+    if (shown.current === at) return;
+    shown.current = at;
+    scrollToTop(scroll.current, headerBottom);
     const node = heading.current && findNodeHandle(heading.current);
     if (node) AccessibilityInfo.setAccessibilityFocus(node);
-  }, [at]);
+  }, [at, headerBottom]);
   if (!chapter)
     return (
       <Screen testID="learn-chapter">
@@ -140,6 +146,7 @@ export default function LearnChapter() {
         grouped
         barTitle={chapter.title}
         scrollRef={scroll}
+        scrollToOverflowEnabled
         testID="learn-chapter"
       >
         <View
@@ -179,7 +186,6 @@ export default function LearnChapter() {
               if (router.canGoBack()) router.back();
               return;
             }
-            moved.current = true;
             setAt(at + 1);
           }}
           testID="learn-next"

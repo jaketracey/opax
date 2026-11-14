@@ -3,7 +3,7 @@ import { act, type ReactElement } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { StatTile } from '../src/design/record';
 import { DivisionRow } from '../src/design/rows';
-import { resetTermClaimsForTests, TermIn } from '../src/design/term';
+import { resetTermClaimsForTests, useTermWords } from '../src/design/term';
 import { Text } from '../src/design/text';
 import { AskSuggestionRow } from '../src/features/ask/AskRows';
 import { starterList as starters } from '../src/features/ask/starters';
@@ -175,13 +175,21 @@ describe('the term map', () => {
 });
 
 describe('wired places', () => {
-  test('TermIn marks the words inside an existing Text', () => {
-    const tree = render(
-      <Text>
-        <TermIn text="The Senate next sits" term="senate" />
-      </Text>,
-    );
+  test('useTermWords marks the words inside an existing Text', () => {
+    function Line({ term }: { term: 'senate' | null }) {
+      return (
+        <Text testID="line">{useTermWords('The Senate next sits', term)}</Text>
+      );
+    }
+    const tree = render(<Line term="senate" />);
     expect(marked(tree, 'senate')).toHaveLength(1);
+    // Unmarked, the Text keeps a plain string (helpers and labels read it).
+    const plain = render(<Line term={null} />);
+    expect(
+      plain.root.findAll(
+        (node) => node.props.testID === 'line' && node.type === Text,
+      )[0]!.props.children,
+    ).toBe('The Senate next sits');
   });
 
   test('a profile’s divisions tile: the word, and the tile’s action', () => {

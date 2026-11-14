@@ -6,7 +6,7 @@ import type { ApiClient } from '../src/api/client';
 import { ApiError } from '../src/api/errors';
 import { assertAllowedPath } from '../src/api/policy';
 import { catalogs } from '../src/api/runtime';
-import { Text } from '../src/design/text';
+import { Text, textContent } from '../src/design/text';
 import { SittingLine, useSittingRead } from '../src/features/today/SittingLine';
 import {
   decodeSittingDays,
@@ -299,7 +299,16 @@ describe('the drawn line', () => {
     expect(button.props.accessibilityHint).toBe('Opens the sources');
     const text = button.findByType(Text);
     expect(text.props.variant).toBe('secondary');
-    expect(text.props.children).toBe('The Senate next sits Monday 16 November');
+    // Read as drawn; "Senate" is a marked glossary term inside the line.
+    expect(textContent(text.props.children)).toBe(
+      'The Senate next sits Monday 16 November',
+    );
+    expect(
+      text.findAll(
+        (n) =>
+          n.props.testID === 'term-inline-senate' && typeof n.type === 'string',
+      ),
+    ).toHaveLength(1);
     expect(text.props.numberOfLines).toBeUndefined();
     act(() => button.props.onPress());
     expect(presentSource).toHaveBeenCalledWith(

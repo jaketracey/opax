@@ -6,6 +6,7 @@ import {
   useId,
   useState,
   type ComponentProps,
+  type ReactNode,
 } from 'react';
 import {
   Platform,
@@ -137,20 +138,26 @@ export function Term({
 function TermRun({
   id,
   children,
+  cap,
   testID,
 }: {
   id: TermId;
   children: string;
+  /** The surrounding `<Text>`'s own maxFontSizeMultiplier, if it set one. */
+  cap?: number;
   testID?: string;
 }) {
   const press = useTermPress(id);
   // A bare run, so it inherits the surrounding text's role, size and colour.
+  // Uncapped like every design Text; under a capped Text it inherits the
+  // cap natively (the parent's Android size cap can change what it sends).
   return (
     <Run
       onPress={press}
       suppressHighlighting={false}
       accessibilityRole="link"
       accessibilityHint={explainsHint(glossaryTerm(id).word)}
+      maxFontSizeMultiplier={cap ? undefined : 0}
       style={styles.term}
       testID={testID ?? `term-inline-${id}`}
     >
@@ -186,28 +193,29 @@ export function findTermWords(
 }
 
 /**
- * One term's words inside text the caller already draws in a `<Text>`:
- * the words before, the marked term, the words after. Plain text when the
- * words aren't there.
+ * One term's words inside text the caller already draws in a `<Text>`, as
+ * that Text's children: the words before, the marked term, the words after.
+ * While the term isn't marked (underlines off, the words not there, or the
+ * term marked higher on the screen) it is the text itself, so the Text keeps
+ * a plain string. `cap` is that Text's own maxFontSizeMultiplier, if any.
  */
-export function TermIn({
-  text,
-  term,
-  phrase,
-}: {
-  text: string;
-  term: TermId | null | undefined;
-  phrase?: string;
-}) {
-  const found = term ? findTermWords(text, term, phrase) : null;
-  if (!term || !found) return <>{text}</>;
-  return (
-    <>
-      {text.slice(0, found.start)}
-      <Term id={term}>{text.slice(found.start, found.end)}</Term>
-      {text.slice(found.end)}
-    </>
-  );
+export function useTermWords(
+  text: string,
+  term: TermId | null | undefined,
+  phrase?: string,
+  cap?: number,
+): ReactNode {
+  const on = useUnderlineTerms();
+  const found = on && term ? findTermWords(text, term, phrase) : null;
+  const first = useFirstUse(found && term ? term : null);
+  if (!term || !found || !first) return text;
+  return [
+    text.slice(0, found.start),
+    <TermRun key="term" id={term} cap={cap}>
+      {text.slice(found.start, found.end)}
+    </TermRun>,
+    text.slice(found.end),
+  ].filter((part) => part !== '');
 }
 
 /**
@@ -249,7 +257,9 @@ export function TermText({
       onAccessibilityAction={a11y.onAccessibilityAction}
     >
       {children.slice(0, found.start)}
-      <TermRun id={term}>{children.slice(found.start, found.end)}</TermRun>
+      <TermRun id={term} cap={props.maxFontSizeMultiplier ?? undefined}>
+        {children.slice(found.start, found.end)}
+      </TermRun>
       {children.slice(found.end)}
     </Text>
   );

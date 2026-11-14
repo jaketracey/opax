@@ -57,7 +57,7 @@ import {
   type Accent,
 } from './tokens';
 import type { TermMatch } from '../features/learn/term-map';
-import { TermIn, withTermAction } from './term';
+import { useTermWords, withTermAction } from './term';
 
 const chevron = 'chevron.right';
 const checkmark = 'checkmark';
@@ -1131,6 +1131,7 @@ export function DivisionRow({
   votesLine,
   metaTerm,
 }: DivisionRowProps) {
+  const metaWords = useTermWords(meta, metaTerm?.term, metaTerm?.phrase);
   const termAction = withTermAction(
     href ? [] : rowAccessibilityActions(menu ?? []),
     metaTerm?.term,
@@ -1203,7 +1204,7 @@ export function DivisionRow({
           {title}
         </Text>
         <Text wordSafe variant="secondary">
-          <TermIn text={meta} term={metaTerm?.term} phrase={metaTerm?.phrase} />
+          {metaWords}
         </Text>
         <StatusCapsule status={outcome} />
         {bar ? (
