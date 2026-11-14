@@ -120,7 +120,7 @@ export function datedAffiliationParty(row, person) {
   if (scope && !belongsToScope(row, scope)) return null;
   const affiliations = (person?.affiliations || []).filter(term =>
     term.jurisdiction === row.state && term.chamber === row.chamber && term.start &&
-    term.start <= date && (!term.end || date <= term.end));
+    term.start <= date && (!term.end || date <= term.end) && (!term.through || date <= term.through));
   if (!affiliations.length || affiliations.some(term => !term.party)) return null;
   const parties = [...new Set(affiliations.map(term => term.party))];
   return parties.length === 1 ? parties[0] : null;

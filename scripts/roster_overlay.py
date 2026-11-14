@@ -26,6 +26,12 @@ When nothing accepted is new tonight, the shipped `meta` and rows are kept byte 
 nothing (scripts/vm/keep_if_unchanged.py); otherwise the rows are re-sorted and meta's totals recounted.
 OPAX_ROSTER_ACCEPT=1 still skips the whole step (a raw export for a review, never for a nightly install).
 
+Missing-party service groups additionally read scripts/roster_party_evidence.json
+through roster_party_gaps.source_fields: exact full-name dated house evidence may
+supply accepted party fields when SQL loses or folds that shipped print. Identity
+and speech fields still come from the shipped roster, and every normal accept
+check still runs. A conflicting nonempty export value holds the group.
+
   python3 scripts/roster_overlay.py --directory export.json [--shipped portal/public/parliamentarians.json]
                                     [--accept scripts/roster_accept.json]
 
@@ -49,6 +55,10 @@ def _accept_step(shipped, fresh, accept, accept_error, root):
     """(people, meta, accept report) with the reviewed changes installed (roster_accept.apply)."""
     if accept is None or accept_error:
         accept = roster_accept.empty()
+    if (roster_accept.shape(accept) is None
+            and any(ev.get('rule') == 'profile-party-service' for ev in accept.get('evidence', {}).values())):
+        from scripts.roster_party_gaps import source_fields
+        fresh = source_fields(shipped, fresh, accept, root)
     people, accepted = roster_accept.apply(shipped["people"], fresh["people"], accept, root)
     if accept_error:
         accepted["blocked"] = f"scripts/roster_accept.json {accept_error}"

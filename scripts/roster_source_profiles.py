@@ -391,6 +391,7 @@ def enrich_lists(out, accept, state, root=ROOT):
 
 def enrich(doc, accept, bundle):
     from scripts.roster_state_parties import enrich as state_parties
+    from scripts.roster_party_gaps import enrich as party_gaps
     state = json.loads((ROOT / 'scripts/roster_state_evidence.json').read_text())
     out = state_parties(doc, accept, bundle, state)
     by = {p['name']: p for p in out['people']}
@@ -413,7 +414,7 @@ def enrich(doc, accept, bundle):
     enrich_lists(out, accept, state)
     if 'meta' in out:
         out['meta']['people'] = len(out['people'])
-    return out
+    return party_gaps(out, accept)
 
 
 def enrich_catalog(bundle, accept):

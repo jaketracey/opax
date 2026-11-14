@@ -106,6 +106,23 @@ export function rosterListParty(person, observations) {
   };
 }
 
+/** A partial, reviewed own-house party period. This is a dated service fact,
+ * never an undated profile or speech-party fallback. */
+export function rosterServiceParty(person) {
+  if (!person?.name || !rosterFold(person.name).includes(' ')) return null;
+  const hits = (person.affiliations || []).filter(r =>
+    r.basis?.startsWith('Wikidata ') && r.party && isoDate(r.start) && isoDate(r.as_of) &&
+    person.states?.includes(r.jurisdiction) && person.chambers?.includes(r.chamber));
+  if (!hits.length) return null;
+  const latest = hits.reduce((a, r) => (r.end || r.through || r.as_of) > a ? (r.end || r.through || r.as_of) : a, '');
+  const top = hits.filter(r => (r.end || r.through || r.as_of) === latest);
+  if (new Set(top.map(r => r.party)).size !== 1) return null;
+  const r = top.sort((a, b) => b.start.localeCompare(a.start))[0];
+  return {party:r.party, as_of:r.as_of, electorate:r.electorate || '', url:null,
+    source_url:r.source_url || null, service_start:r.start, service_end:r.end || null,
+    service_through:r.through || r.as_of};
+}
+
 /**
  * People the electorates release lists as holding a seat now who have no row in the speech roster
  * (parliamentarians.json): a presiding officer Hansard prints only as "The SPEAKER" (Maree Edwards,

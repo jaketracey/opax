@@ -67,10 +67,11 @@ test('the browser party directory uses every canonical page and explains parliam
   assert.deepEqual(listed.sort(), pages.map(p => p.href).sort());
   const {JSDOM} = await import('jsdom');
   const doc = new JSDOM(result.html).window.document;
-  for (const slug of ['australian-conservatives', 'australian-motoring-enthusiast-party', 'derryn-hinchs-justice-party', 'gerard-rennick-people-first']) {
+  for (const slug of ['australian-conservatives', 'australian-motoring-enthusiast-party', 'gerard-rennick-people-first']) {
     const row = doc.querySelector(`a[href="/subject/party/${slug}"]`).closest('li');
     assert.equal(row.querySelector('.result-meta').textContent, 'Recorded divisions. No party-level disclosure file held by OPAX.');
   }
+  assert.equal(doc.querySelector('a[href="/subject/party/derryn-hinchs-justice-party"]').closest('li').querySelector('.result-meta').textContent, 'Parliamentary roster and recorded divisions. No party-level disclosure file held by OPAX.');
   assert.equal(doc.querySelector('a[href="/subject/party/independent"]').closest('li').querySelector('.result-meta').textContent, 'Parliamentarians who sat without a party. Not a party organisation.');
   assert.equal(doc.querySelector('a[href="/subject/party/dlp"]').textContent.trim(), 'Democratic Labour Party');
 });

@@ -6,7 +6,7 @@ import { receiptHeadline } from '../public/money-explain.js'
 import { personUrl, partyUrl } from '../public/party-page.js'
 import {sponsorPerson} from '../public/sponsor-person.js'
 import sponsorParties from '../public/facts/sponsor-parties.json' with {type:'json'}
-import {rosterSeatParty, rosterListParty, type RosterSeatParty, type RosterListObservation} from '../public/roster-party.js'
+import {rosterSeatParty, rosterListParty, rosterServiceParty, type RosterSeatParty, type RosterListObservation} from '../public/roster-party.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
 import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../public/datatable.js'
@@ -33,6 +33,7 @@ interface Person {
   /** A list-only profile: no speeches attributed (public/held-back-transcripts.js noHansardHeldHTML). */
   roster_only?: boolean;
   representation?: { electorate: string; jurisdiction: string; chamber: string }[];
+  affiliations?: { electorate?: string | null; jurisdiction: string; chamber: string; party?: string; start: string; end?: string | null; through?: string; as_of?: string; source_url?: string }[];
 }
 interface Seat {
   slug: string; name: string; url: string; jurisdiction: string; chamber: string
@@ -171,7 +172,7 @@ export const ROSTER_LIST_PARTIES_PATH = '/data/roster-list-parties.json'
 export type RosterLists = readonly RosterListObservation[] | null | undefined
 /** A verified seat roster's party, else the latest dated official list's (public/roster-party.js). */
 const rosterParty = (p: Person, seats?: readonly Seat[] | null, lists?: RosterLists): RosterSeatParty | null =>
-  rosterSeatParty(p, seats) || rosterListParty(p, lists)
+  rosterSeatParty(p, seats) || rosterListParty(p, lists) || rosterServiceParty(p)
 /** The party a person's own record carries, else the one a verified seat roster
  *  or a dated official chamber list records for them (public/roster-party.js), else nothing. */
 export function personParty(p: Person, seats?: readonly Seat[] | null, lists?: RosterLists): {party: string; roster: RosterSeatParty | null} | null {
@@ -186,7 +187,9 @@ export function partyLine(p: Person, seats?: readonly Seat[] | null, lists?: Ros
   if (!party) {
     // Said of the roster on its date, not of the person's career.
     const roster = rosterParty(p, seats, lists)
-    return roster ? `${roster.party} (parliamentary roster as at ${shortDate(roster.as_of)})` : 'Party not recorded'
+    return roster ? roster.service_start
+      ? `${roster.party} (service record ${roster.service_start}${roster.service_end ? ` to ${roster.service_end}` : `, observed through ${roster.service_through}`})`
+      : `${roster.party} (parliamentary roster as at ${shortDate(roster.as_of)})` : 'Party not recorded'
   }
   if (p.current === false) return `Formerly ${party}`
   const former = p.party_now && p.party && fold(p.party_now) !== fold(p.party) ? `; formerly ${p.party}` : ''
@@ -269,6 +272,11 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   for (const r of p.representation || []) {
     const seat = seats?.electorates.find(e=>fold(e.name)===fold(r.electorate) && e.jurisdiction===r.jurisdiction && e.chamber===r.chamber)
     body += `<li>${seat ? link(seat.url,r.electorate) : escapeHtml(r.electorate)} — ${escapeHtml(chamber(r.chamber))}</li>`
+  }
+  for (const r of p.affiliations || []) {
+    if (!p.states.includes(r.jurisdiction) || !p.chambers.includes(r.chamber) || !r.start) continue
+    const service = `${r.party || 'Party not recorded'}, ${chamber(r.chamber)}: ${r.start} to ${r.end || (r.through ? `observed through ${r.through}` : `ongoing at ${r.as_of || 'the review date'}`)}`
+    body += `<li>${r.source_url ? link(r.source_url,service) : escapeHtml(service)}</li>`
   }
   body += `</ul>${original(profileUrl)}<p>${link('/parliamentarians.json','Parliamentarian data (JSON)')}. Recorded representation can include historical seats; affiliation with no current-roster flag is not verified as current or former.</p>`
   // The notes on what the speech count leaves out sit with the speeches, never in the head.

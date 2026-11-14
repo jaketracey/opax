@@ -99,6 +99,21 @@ in the portal to the one holder of that surname in speakers.json, or lists the h
 What Wikidata lacks (a member elected in 2024 without a P39 statement) stays a surname
 until the roster is supplemented from the parliament's own member list.
 
+Missing profile parties have a separate, stricter export join in
+`scripts/roster_party_gaps.py`. It requires an exact full name and overlapping
+dated service in the same house; surname or initials resolution in ingestion
+does not authorise a party fill. Reviewed source facts are in
+`scripts/roster_party_evidence.json`, installed per field through
+`scripts/roster_accept.json`. Wikidata's P4100 parliamentary group dates only
+its own P39 service term. Explicitly dated P102 membership is intersected with
+that service; undated P102 membership and Coalition labels supply no party.
+Handbook parties without dates remain recorded affiliations without invented
+periods. Partial histories add only dated `affiliations`, leaving the flat
+party empty. Open observations stop at their recorded source date. The app and
+server display these periods; they do not establish service in another house.
+See the [14 November audit](reports/2026-11-14-profile-party-gaps.md) for counts,
+source limits and the anonymised unresolved-print list.
+
 ## Probe
 
 The probe that sized this pass is in the session log for 2026-09-06 and is cheap to
