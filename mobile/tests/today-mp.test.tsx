@@ -210,6 +210,30 @@ describe('Today\u2019s Your MP tile', () => {
     await act(async () => renderer.unmount());
   });
 
+  test('the chevron centres on the name\u2019s first line as drawn, at any text size', async () => {
+    const renderer = await tile();
+    const chevron = () =>
+      StyleSheet.flatten(
+        renderer.root.find(
+          (n) =>
+            typeof n.type === 'string' &&
+            n.props.testID === 'today-your-mp-name-chevron',
+        ).props.style,
+      );
+    expect(chevron().height).toBe(textStyles.subsectionTitle.lineHeight);
+    const name = renderer.root
+      .findAllByType(NativeText)
+      .find((n) => n.props.testID === 'today-your-mp-name')!;
+    act(() =>
+      name.props.onTextLayout({
+        nativeEvent: { lines: [{ text: 'Anthony', height: 78 }] },
+      }),
+    );
+    expect(chevron().height).toBe(78);
+    expect(chevron().justifyContent).toBe('center');
+    await act(async () => renderer.unmount());
+  });
+
   test('never stretches past a card\u2019s width on a wide single column', async () => {
     const renderer = await tile();
     const block = renderer.root.find(

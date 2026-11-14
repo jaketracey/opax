@@ -405,18 +405,7 @@ function MemberTile({
           />
           <View style={[styles.tileWords, !stacked && styles.tileWordsInline]}>
             <YourMPMark testID="today-your-mp-mark" />
-            <View style={styles.tileTitle}>
-              <Text
-                wordSafe
-                variant="subsectionTitle"
-                accessibilityRole="text"
-                style={styles.tileHeading}
-                testID="today-your-mp-name"
-              >
-                {name}
-              </Text>
-              <TileChevron />
-            </View>
+            <TileTitle testID="today-your-mp-name">{name}</TileTitle>
             <View
               style={[styles.tileIdentity, stacked && styles.tileIdentityStack]}
             >
@@ -452,20 +441,39 @@ function MemberTile({
 }
 
 /**
- * The tile's chevron sits on the name's line (as design Tile does), so the
- * lines under the name run the tile's full width and the plain line fits
- * one line on a phone at Large.
+ * The tile's title and its chevron on one line (as design Tile does), so the
+ * lines under the name run the tile's full width and the plain line fits one
+ * line on a phone at Large. The chevron centres on the title's first line
+ * as drawn, at every text size.
  */
-function TileChevron() {
+function TileTitle({ children, testID }: { children: string; testID: string }) {
+  const [firstLine, setFirstLine] = useState<number>();
   return (
-    <View style={styles.tileChevron}>
-      <Icon
-        name={symbols.chevron}
-        size={13}
-        maxScale={1.5}
-        tone="inkFaint"
-        weight="semibold"
-      />
+    <View style={styles.tileTitle}>
+      <Text
+        wordSafe
+        variant="subsectionTitle"
+        accessibilityRole="text"
+        style={styles.tileHeading}
+        onTextLayout={(event) =>
+          setFirstLine(event.nativeEvent.lines[0]?.height)
+        }
+        testID={testID}
+      >
+        {children}
+      </Text>
+      <View
+        testID={`${testID}-chevron`}
+        style={[styles.tileChevron, firstLine ? { height: firstLine } : null]}
+      >
+        <Icon
+          name={symbols.chevron}
+          size={13}
+          maxScale={1.5}
+          tone="inkFaint"
+          weight="semibold"
+        />
+      </View>
     </View>
   );
 }
@@ -496,18 +504,7 @@ function VacantTile({ seat }: { seat: Electorate }) {
             <Text wordSafe variant="footnote">
               Your electorate
             </Text>
-            <View style={styles.tileTitle}>
-              <Text
-                wordSafe
-                variant="subsectionTitle"
-                accessibilityRole="text"
-                style={styles.tileHeading}
-                testID="today-your-mp-seat"
-              >
-                {seat.name}
-              </Text>
-              <TileChevron />
-            </View>
+            <TileTitle testID="today-your-mp-seat">{seat.name}</TileTitle>
             <Text wordSafe variant="secondary" testID="today-your-mp-none">
               {none}
             </Text>
@@ -681,7 +678,7 @@ const styles = StyleSheet.create({
     gap: rhythm.tight,
   },
   tileHeading: { flex: 1 },
-  // The name's line height, so the chevron centres on its first line.
+  // The name's line height at Large; TileTitle sets the drawn line's height.
   tileChevron: {
     height: textStyles.subsectionTitle.lineHeight,
     justifyContent: 'center',
