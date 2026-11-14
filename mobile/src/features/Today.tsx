@@ -473,6 +473,9 @@ export default function Today() {
       column="wide"
       grouped
       clampScrollOnContentChange
+      // No text field here: the welcome's or the chooser's seat search,
+      // over Today, must not move it (keyboardInsets in layout.tsx, b67).
+      keyboardInsets={false}
       scrollRef={dots.scrollRef}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={refresh} />
