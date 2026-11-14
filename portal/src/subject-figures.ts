@@ -2,6 +2,7 @@ import {shortMoney} from '../public/format.js'
 import {sourceLineHTML} from '../public/party-page.js'
 import {donorDisclosure,receiptFigures,receiptScopeLabel,receiptTypeLine,hasPartyReceipts,notListedLine,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {escapeHtml as esc,safeHref} from './seo-content.ts'
+import {fy} from '../public/money-scope.js'
 
 /** The asset's years columns, also used by app.js renderCampaignerEntry. */
 export type CampaignerYear = [string,number|null,number|null,number|null,number|null,number|null]
@@ -11,7 +12,7 @@ export function campaignerReturnsHTML(name: string, rows: CampaignerYear[], regi
   if (!rows.length) return ''
   const body = rows.slice().reverse().map(row => {
     const figures = campaignerColumns.map((noun,i) => row[i+1] == null ? '' : `${noun} ${shortMoney(Number(row[i+1]))}`).filter(Boolean).join(' · ')
-    return `<tr><th scope="row">${esc(row[0])}</th><td>${esc(figures || 'nothing itemised on the return')}</td></tr>`
+    return `<tr><th scope="row">${esc(fy(row[0]))}</th><td>${esc(figures || 'nothing itemised on the return')}</td></tr>`
   }).join('')
   const href = safeHref(registerUrl)
   return `<h2>The money on the returns</h2><div class="table-scroll"><table data-campaigner-returns><caption>Every year on the return</caption><thead><tr><th scope="col">Year</th><th scope="col">The money on the returns</th></tr></thead><tbody>${body}</tbody></table></div>

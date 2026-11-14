@@ -40,11 +40,11 @@ test('a graph without typed cells keeps its figures and says what they count', (
 });
 
 test('the scope line names the measure, the financial years and the returns', () => {
-  assert.equal(receiptScopeLabel(receiptFigures(edge)), 'All receipt types, 2020-21 to 2021-22, as the parties reported them in federal returns');
+  assert.equal(receiptScopeLabel(receiptFigures(edge)), 'All receipt types, 2020–21 to 2021–22, as the parties reported them in federal returns');
   assert.equal(receiptScopeLabel(receiptFigures({...edge, by_type_year: {'2020-21': {donation_received: [100, 1]}}})),
-    'All receipt types, 2020-21, as the parties reported them in federal returns');
+    'All receipt types, 2020–21, as the parties reported them in federal returns');
   assert.equal(receiptScopeLabel(receiptFigures({...edge, by_type_year: {'1999-00': {donation_received: [1, 1]}, '2024-25': {donation_received: [1, 1]}}})),
-    'All receipt types, 1999-00 to 2024-25, as the parties reported them in federal returns');
+    'All receipt types, 1999–00 to 2024–25, as the parties reported them in federal returns');
 });
 
 // The released graph: every donor-to-party figure on the donor page equals the
@@ -60,7 +60,7 @@ test('in the released graph, each donor page figure matches the map card for the
   const own = receiptFigures(node);
   assert.equal(Math.round(own.total), 19572876);
   assert.equal(own.count, 120);
-  assert.equal(receiptScopeLabel(own), 'All receipt types, 1998-99 to 2024-25, as the parties reported them in federal returns');
+  assert.equal(receiptScopeLabel(own), 'All receipt types, 1998–99 to 2024–25, as the parties reported them in federal returns');
   // Every published receipt type counts but Public Funding, which is never a donor's money (NSW Efa to the Greens).
   for (const e of graph.edges) if (e.by_type) {
     const {public_funding: pf = 0, ...donor} = e.by_type;
@@ -97,11 +97,11 @@ test('the actual year-by-year balance sums the typed cells and prints its scope 
 test('the actual bar list puts its scope under its heading', async () => {
   const context = {esc: v => String(v), partyDotHTML: () => ''};
   runInNewContext(`${await appFunctions(['barList'])}\nthis.barList=barList;`, context);
-  const doc = new JSDOM(context.barList([['Liberal', 140]], {heading: 'Where the money went', scope: 'All receipt types, 2020-21'})).window.document;
+  const doc = new JSDOM(context.barList([['Liberal', 140]], {heading: 'Where the money went', scope: 'All receipt types, 2020–21'})).window.document;
   const figure = doc.querySelector('figure');
   assert.equal(figure.children[0].tagName, 'FIGCAPTION');
   assert.equal(figure.children[1].className, 'entry-scope');
-  assert.equal(figure.children[1].textContent, 'All receipt types, 2020-21');
+  assert.equal(figure.children[1].textContent, 'All receipt types, 2020–21');
   const plain = new JSDOM(context.barList([['Liberal', 140]], {heading: 'Where it came from'})).window.document;
   assert.equal(plain.querySelector('.entry-scope'), null);
 });
@@ -111,6 +111,6 @@ test('the party page prints its table\'s own scope line, in the browser and the 
   const worker = await readFile(new URL('../src/index.ts', import.meta.url), 'utf8');
   assert.ok(!app.includes('PARTY_RECEIPTS_SCOPE') && !/counted twice/.test(app));
   assert.ok(!/counted twice/.test(worker));
-  assert.ok(app.includes('<h2 class="subject-section-title">Where it came from</h2>${partyMoney?.scope ? `<p class="entry-scope">${esc(partyMoney.scope)}</p>` : ""}${partyTable}'));
-  assert.ok(worker.includes('<h2>Where it came from</h2>${scope ? `<p class="entry-scope">${escHtml(scope)}</p>`'));
+  assert.ok(app.includes('<h2 class="subject-section-title">Where it came from</h2>${partyMoney?.scope ? `<p class="entry-scope">${esc(registerTables.partyMapScope(partyMoney.scope))}</p>` : ""}${partyTable}'));
+  assert.ok(worker.includes('<h2>Where it came from</h2>${scope ? `<p class="entry-scope">${escHtml(partyMapScope(scope))}</p>`'));
 });

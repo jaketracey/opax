@@ -1,3 +1,4 @@
+import {fy} from '../public/money-scope.js';
 // The money map's entity card keeps the plain name and its sums; the return
 // references behind them sit in the Sources dropdown, never in the card body.
 // The WebGL engine is swapped for a no-op stub so the real card code runs in jsdom.
@@ -170,7 +171,7 @@ test('the entity card shows no return references for a donor or a party; Sources
 
     const refs = [...slot.querySelectorAll('.mm-return-refs li')].map((li) => li.textContent);
     assert.equal(refs.length, 10);
-    assert.equal(refs[0], 'AEC annual return · 2010-11 · RETURN-FIXTURE-0');
+    assert.equal(refs[0], 'AEC annual return · 2010–11 · RETURN-FIXTURE-0');
     assert.match(slot.querySelector('.mm-return-refs').textContent, /3 more return references in the data export/);
     const sources = [...donorCard.querySelectorAll('button.mm-action')].find((b) => b.textContent.includes('Sources'));
     assert.equal(sources.getAttribute('aria-controls'), slot.id);
@@ -207,7 +208,7 @@ for(const [id,label,declared] of DECLARED_CARDS)test(`subject map card: ${label}
     assert.ok(text.includes(label),'the subject card is open');
     assert.doesNotMatch(text,ZERO);
     assert.ok(text.includes('No party return lists a receipt from this donor.'),'the no-receipt line');
-    assert.ok(text.includes(declared),text);
+    assert.ok(text.includes(fy(declared)),text);
     assert.match(text,/not receipts a party reported/);
     assert.equal(card.querySelector('.mm-card-total'),null,'no headline figure');
     assert.doesNotMatch(text,/Where it went|All receipt types/,'no list of $0 rows and no measure label for a figure it does not have');
@@ -247,9 +248,8 @@ test('subject map card: a donor the parties list keeps its total, receipts and r
     const rows=[...allianz.card.querySelectorAll('.mm-rows li')].map(li=>li.textContent);
     assert.equal(rows.length,3,rows.join(' | '));
     assert.ok(rows.every(r=>!r.includes('LNP')),'the LNP flow no party return lists is not a $0 row');
-    // 13 Nov 2026: Allianz's own 2018-19 declaration of $500 to the Liberal Democratic Party joins the note, under the name it was made to (#344):
-    // the Libertarian Party was registered on 12 January 2024, after that year ended. The party's return lists no such receipt.
-    assert.ok(allianz.text.includes('Not counted above: its own donor returns declare $68,298 to federal parties across 19 records: LNP $67,798 (2011-12 to 2022-23); the Liberal Democratic Party (now the Libertarian Party) $500 (2018-19), which no party return lists.'), allianz.text);
+    const declarationNote = 'Not counted above: its own donor returns declare $68,298 to federal parties across 19 records: LNP $67,798 (2011-12 to 2022-23); the Liberal Democratic Party (now the Libertarian Party) $500 (2018-19), which no party return lists.';
+    assert.ok(allianz.text.includes(fy(declarationNote)), allianz.text);
   }finally{allianz.handle.destroy()}
 });
 

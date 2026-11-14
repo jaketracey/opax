@@ -255,6 +255,24 @@ const served = Object.fromEntries(['', '.qld', '.vic', '.tas'].map((s) => [s ? s
 const servedIndex = new Map();
 const servedAec = JSON.parse(readFileSync(new URL('../public/graph/aec-extras.json', import.meta.url)));
 
+// Exact pins follow main's alias-aware recipient receipt export.
+for (const [group, cases] of [
+  ['media & tech', [['media', 'Media', 17745788], ['telecom', 'Telecom', 5592395], ['media & tech', 'Media & tech', 27176074]]],
+  ['legal & lobbying', [['legal', 'Legal', 4249905], ['lobbying', 'Lobbying', 1469301], ['legal & lobbying', 'Legal & lobbying', 5719206]]],
+  ['mining & energy', [['mining', 'Mining', 79098025], ['fossil_fuels', 'Fossil fuels', 6629947], ['mining & energy', 'Mining & energy', 85727972]]],
+]) test(`served files: ${group} pages name the exact narrow or combined sum`, () => {
+  for (const [industry, label, total] of cases) {
+    const parsed = parseExplainParams(new URLSearchParams({industry}), served.federal, servedIndex);
+    assert.equal(parsed.ok, true);
+    const flow = resolveFlow(parsed.state, served.federal, servedIndex);
+    assert.equal(flow.total, total, industry);
+    const doc = new JSDOM(pageHTML(flow, {index: servedIndex})).window.document;
+    assert.equal(doc.querySelector('h1').textContent, `Where ${label.toLowerCase()} money went`);
+    assert.ok(doc.querySelector('.mx-figures').textContent.includes(shortMoney(total)), industry);
+    assert.ok(doc.querySelector('.mx-story').textContent.includes(`${label.toLowerCase()} receipt sources`), industry);
+  }
+});
+
 test('served files: the largest named federal flow reads back its own edge exactly', () => {
   // The page reads each edge's typed cells (receiptGraph: each gift once, from the
   // party's own return), so the edge it reads back is the converted one. The released

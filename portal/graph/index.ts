@@ -1,3 +1,7 @@
+import {displayName} from '../public/display-name.js'
+import {windowFigures, partyReturnWindow, partyReturnScope, receiptMeasureLabel, moneyYearBounds, receiptGraphView} from './receipt-view.ts'
+export {windowFigures, partyReturnWindow, partyReturnScope, receiptMeasureLabel, moneyYearBounds, receiptGraphView} from './receipt-view.ts'
+import {financialYear, fy, industryName} from '../public/money-scope.js'
 import {donorDisclosure,donorLookup,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,returnReference,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import {partyUrl} from '../public/canonical-urls.js'
 import {partyNameForPeriod} from '../public/labels.js'
@@ -245,7 +249,7 @@ const markColour = (n: MoneyNode): string =>
   n.kind === 'grantor' ? hubColour(n) : n.colour ?? (n.kind === 'party' ? partyDot(n.label) : clusterColour(n.group).colour)
 
 /** Sentence case for a lower-case data key shown as a label ("mining & energy"). */
-const sentence = (text: string) => ['individual', 'individuals'].includes(text.toLowerCase()) ? 'Industry not recorded' : text.charAt(0).toUpperCase() + text.slice(1)
+const sentence = industryName
 
 const toMapNode = (n: MoneyNode): MapNode => ({
   id: n.id,
@@ -272,115 +276,6 @@ const toMapEdge = (e: MoneyEdge): MapEdge => ({
   firstYear: e.firstYear,
   lastYear: e.lastYear,
 })
-
-type YearFigures = TypedReceipts & {
-  total: number
-  count: number
-  firstYear: number | null
-  lastYear: number | null
-  byYear?: Record<string, YearCell>
-  undated?: YearCell
-}
-
-/**
- * A node's or flow's figures inside a year window: its per-year cells in
- * [lo, hi] re-summed, plus the undated remainder, which no window hides. The
- * span narrows to the years that actually carry something. An older export
- * without cells keeps its lifetime figures untouched. Pure, for the smoke test.
- */
-export function windowFigures<T extends YearFigures>(
-  x: T,
-  lo: number,
-  hi: number,
-  adjustForInflation = false,
-  receiptMeasure: ReceiptMeasure = 'all_types',
-): T {
-  if (x.by_type) return typedReceiptFigures(x, lo, hi, adjustForInflation, receiptMeasure)
-  if (lo === -Infinity && hi === Infinity && !adjustForInflation) return x
-  if (!x.byYear) return x
-  let total = x.undated?.[0] ?? 0
-  let count = x.undated?.[1] ?? 0
-  let firstYear: number | null = null
-  let lastYear: number | null = null
-  const byYear: Record<string, YearCell> | undefined = adjustForInflation ? {} : undefined
-  for (const [key, [dollars, n]] of Object.entries(x.byYear)) {
-    const year = Number(key)
-    const scaledDollars = adjustForInflation ? dollars * cpiMultiplier(year) : dollars
-    if (byYear) byYear[key] = [scaledDollars, n]
-    if (year < lo || year > hi) continue
-    total += scaledDollars
-    count += n
-    if (firstYear === null || year < firstYear) firstYear = year
-    if (lastYear === null || year > lastYear) lastYear = year
-  }
-  return { ...x, total, count, firstYear, lastYear, ...(byYear ? { byYear } : {}) }
-}
-
-const RECEIPT_EVENT_YEARS: Record<string, number> = { 'braddon by-election': 2018, 'wentworth by-election': 2018, 'eden-monaro by-election': 2020, 'fadden by-election': 2023 }
-
-function typedReceiptFigures<T extends YearFigures>(x: T, lo: number, hi: number, cpi: boolean, measure: ReceiptMeasure): T {
-  // Public Funding is election funding, never a donor's money, under either measure (A35).
-  const wanted = (kind: string) => kind !== 'public_funding' && (measure === 'all_types' || kind === 'donation_received')
-  const bounded = Number.isFinite(lo) || Number.isFinite(hi)
-  let total = 0, count = 0
-  let firstYear: number | null = null, lastYear: number | null = null
-  const byYear: Record<string, YearCell> = {}
-  for (const [period, types] of Object.entries(x.by_type_year || {})) {
-    // Annual keys are financial years; event keys use polling year. Named
-    // by-elections follow the exporter's documented polling-year fallback.
-    const year = Number(period.match(/\b(?:19|20)\d{2}\b/)?.[0]) || RECEIPT_EVENT_YEARS[period.toLowerCase()]
-    if (bounded && (!year || year < lo || year > hi)) continue
-    let dollars = 0, n = 0
-    for (const [kind, cell] of Object.entries(types)) {
-      if (!wanted(kind)) continue
-      dollars += cell[0]; n += cell[1]
-    }
-    const amount = cpi && year ? dollars * cpiMultiplier(year) : dollars
-    total += amount; count += n
-    if (year && n > 0) {
-      const cell = byYear[String(year)] ||= [0, 0]
-      cell[0] += amount; cell[1] += n
-      firstYear = firstYear === null ? year : Math.min(firstYear, year)
-      lastYear = lastYear === null ? year : Math.max(lastYear, year)
-    }
-  }
-  // Lifetime amounts use the authoritative by_type cells. Never substitute
-  // legacy total/byYear, including for an empty typed object or missing year.
-  if (!bounded && !cpi) total = Object.entries(x.by_type!).reduce((sum, [kind, amount]) => sum + (wanted(kind) ? amount : 0), 0)
-  return { ...x, total, count, firstYear, lastYear, byYear, undated: undefined }
-}
-
-/** A party's own-return figures in a window, or null for a node or file without them. */
-export function partyReturnWindow(n: MoneyNode, lo = -Infinity, hi = Infinity, cpi = false, measure: ReceiptMeasure = 'all_types') {
-  if (n.kind !== 'party' || !n.return_by_type || !Object.keys(n.return_by_type).length) return null
-  const { total, count, firstYear, lastYear } = typedReceiptFigures({ total: 0, count: 0, firstYear: null, lastYear: null,
-    by_type: n.return_by_type, by_type_year: n.return_by_type_year ?? {} }, lo, hi, cpi, measure)
-  return { total, count, firstYear, lastYear }
-}
-
-/** What a party's headline counts and leaves out: the party page's words (register-tables.js, partyReturnScopeLabel). */
-export function partyReturnScope(first: number | null, last: number | null): string {
-  const fy = (year: number) => `${year}-${String((year + 1) % 100).padStart(2, '0')}`
-  const span = first == null ? '' : first === last || last == null ? `, ${fy(first)}` : `, ${fy(first)} to ${fy(last)}`
-  return `Itemised receipts in the party's own federal returns${span}, each counted once. `
-    + "Public funding, tax refunds and other government payments, transfers between the party's own branches and amounts under the disclosure threshold are not included."
-}
-
-export function receiptMeasureLabel(measure: ReceiptMeasure): string {
-  return measure === 'donation_only' ? 'Donation-only' : 'All receipt types'
-}
-
-/** One projection for map geometry, industry rankings, cards and the 2D fallback. */
-export function receiptGraphView(raw: MoneyGraph, measure: ReceiptMeasure = 'all_types', from = -Infinity, to = Infinity, cpi = false): MoneyGraph {
-  return { ...raw, nodes: raw.nodes.map(n => {
-    const shown = windowFigures(n, from, to, cpi, measure)
-    // A party's headline is its whole return; its by_type cells (and so its
-    // geometry) only sum the donors drawn on the map.
-    const own = partyReturnWindow(n, from, to, cpi, measure)
-    return own ? { ...shown, partyReturn: own } : shown
-  }),
-    edges: raw.edges.map(e => windowFigures(e, from, to, cpi, measure)) }
-}
 
 /** One donor flow that only the donor's own return declares: its record figures, never a party's receipt. */
 // party is the name the gifts were made to (PR 344): a renamed party's flow that ends before the new
@@ -417,7 +312,7 @@ export const NO_PARTY_RETURN = 'No party return lists a receipt from this donor.
  */
 export function declaredFlowsText(rows: DeclaredFlow[]): string {
   if (!rows.length) return ''
-  const fy = (year: number) => `${year}-${String((year + 1) % 100).padStart(2, '0')}`
+  const fy = financialYear
   const years = (r: DeclaredFlow) => r.firstYear == null ? '' : r.firstYear === r.lastYear || r.lastYear == null
     ? ` (${fy(r.firstYear)})` : ` (${fy(r.firstYear)} to ${fy(r.lastYear)})`
   const dollars = (n: number) => `$${Math.round(n).toLocaleString('en-AU')}`
@@ -732,7 +627,7 @@ const CSS = `
   display: flex; align-items: center; gap: var(--space-tight); }
 .mm-scrub-mini .mm-scrub-label { display: block; margin: 0; flex: none; }
 .mm-scrub-mini .mm-scrub-caption { display: none; }
-.mm-scrub-mini .mm-scrub-rail { flex: none; width: 104px; height: 44px; }
+.mm-scrub-mini .mm-scrub-rail { flex: 1 1 104px; min-width: 60px; width: 104px; height: 44px; }
 .mm-scrub-mini input[type='range'] { height: 44px; }
 .mm-scrub-mini input[type='range']::-webkit-slider-runnable-track { height: 44px; }
 .mm-scrub-mini input[type='range']::-moz-range-track { height: 44px; }
@@ -921,7 +816,7 @@ export function planCardActions(node: MoneyNode, ctx: CardActionContext): CardAc
   // is what parliament said about the donor itself. Quote the suffix-stripped
   // name: MPs say "Philip Morris", never "Philip Morris Limited".
   const actions: CardAction[] = []
-  const industry = node.industry.replace(/_/g, ' ')
+  const industry = industryName(node.industry)
   if (!['individual', 'other', ''].includes(node.industry.toLowerCase())) {
     actions.push({ id: 'ask', label: 'Ask', name: `Ask what parliament said about ${industry}`, href: ctx.askUrl(industry) })
   }
@@ -992,13 +887,8 @@ export async function mountMoneyMap(
     ((industry: string) =>
       `/ask?q=${encodeURIComponent(`What has parliament said about ${industry}?`)}`)
 
-  // Observed year extent of the flows, for the time scrub.
-  let yearMin = 2026
-  let yearMax = 1998
-  for (const e of raw.edges) {
-    if (e.firstYear) yearMin = Math.min(yearMin, e.firstYear)
-    if (e.lastYear) yearMax = Math.max(yearMax, e.lastYear)
-  }
+  // Receipt years bound the control; future grants and contracts do not extend returns.
+  const {min: yearMin, max: yearMax} = moneyYearBounds(raw)
   let yearLo = yearMin
   let yearHi = yearMax
   let adjustForInflation = false
@@ -1212,7 +1102,7 @@ export async function mountMoneyMap(
     // export predates the field and stays "AEC returns".
     const sourceShort = typeof raw.meta?.sourceShort === 'string' ? raw.meta.sourceShort : 'AEC returns'
     hint.textContent = `Drag to orbit · scroll to zoom · click a cluster to open it · ` +
-      `click a node or a flow · ${sourceShort} ${raw.meta?.coverage ?? '1998–2026'}`
+      `click a node or a flow · ${sourceShort} source coverage ${fy(raw.meta?.coverage ?? '1998–2026')}`
   }
 
   // --- Engine ----------------------------------------------------------
@@ -1641,7 +1531,7 @@ export async function mountMoneyMap(
     lo.value = String(yearLo)
     hi.value = String(yearHi)
     const showYears = () => {
-      years.textContent = yearLo === yearHi ? `${yearLo}` : `${yearLo} – ${yearHi}`
+      years.textContent = yearLo === yearHi ? financialYear(yearLo) : `${financialYear(yearLo)} to ${financialYear(yearHi)}`
       const span = Math.max(1, yearMax - yearMin)
       fill.style.left = `${((yearLo - yearMin) / span) * 100}%`
       fill.style.right = `${((yearMax - yearHi) / span) * 100}%`
@@ -1739,8 +1629,9 @@ export async function mountMoneyMap(
       dot.style.background = colour
     }
     const label = el('span', 'mm-row-name', body)
-    label.textContent = name
-    if (note) el('span', 'mm-row-assoc', label).textContent = note
+    label.title = name
+    label.textContent = displayName(name).replace(/\bLTD\b/g, 'Ltd')
+    if (note) el('span', 'mm-row-assoc', label).textContent = fy(note)
     const amt = el('span', 'mm-row-amt', body)
     amt.textContent = formatMoney(amount)
     if (years) {
@@ -1864,7 +1755,7 @@ export async function mountMoneyMap(
       const block = el('div', 'mm-return-refs', slot)
       el('p', 'mm-return-refs-title', block).textContent = references.length === 1 ? 'Return reference' : 'Return references'
       const list = el('ul', '', block)
-      for (const reference of references.slice(0, RETURN_REFS_SHOWN)) el('li', '', list).textContent = reference
+      for (const reference of references.slice(0, RETURN_REFS_SHOWN)) el('li', '', list).textContent = fy(reference)
       const more = references.length - RETURN_REFS_SHOWN
       if (more > 0) el('p', 'mm-evidence-note', block).textContent = `${more.toLocaleString()} more return reference${more === 1 ? '' : 's'} in the data export`
     }
@@ -1921,7 +1812,7 @@ export async function mountMoneyMap(
       if (e.target !== partyId) continue
       const donor = view.nodes.get(e.source)
       if (!donor || donor.industry === 'other') continue
-      const industry = donor.industry.replace(/_/g, ' ')
+      const industry = industryName(donor.industry)
       sums.set(industry, (sums.get(industry) ?? 0) + e.total)
     }
     let best: string | null = null
@@ -1953,7 +1844,8 @@ export async function mountMoneyMap(
       dot.style.background = colour
       dot.setAttribute('aria-hidden', 'true')
     }
-    title.append(text)
+    title.title = text
+    title.append(displayName(text).replace(/\bLTD\b/g, 'Ltd'))
   }
   /** What the card is about, as a status label in sentence case. */
   const cardTag = (text: string) => {
@@ -1967,7 +1859,7 @@ export async function mountMoneyMap(
     link.href = node.associatedWith?.[0]?.url ?? 'https://transparency.aec.gov.au/RegisterOfEntities?clientType=associatedentity'
     link.rel = 'external noopener'
     link.target = '_blank'
-    link.textContent = node.associatedTag.charAt(0).toUpperCase() + node.associatedTag.slice(1)
+    link.textContent = fy(node.associatedTag.charAt(0).toUpperCase() + node.associatedTag.slice(1))
   }
 
   const renderCard = (node: MoneyNode) => {
@@ -2000,7 +1892,7 @@ export async function mountMoneyMap(
     cardTitle(node.label, markColour(node))
     cardTag(node.kind === 'party'
       ? 'Political party'
-      : node.kind === 'grantor' ? 'Public money' : sentence(node.industry.replace(/_/g, ' ')))
+      : node.kind === 'grantor' ? 'Public money' : sentence(industryName(node.industry)))
     associatedLine(node)
     // A donor no party return lists (hasPartyReceipts: its typed cells are empty) has no
     // figure in this measure: the card says so, and what its own returns declare, in
@@ -2268,7 +2160,7 @@ export async function mountMoneyMap(
     closeButton(() => setEdgeSelection(null))
 
     cardTitle(`${donor.label} → ${party.label}`)
-    cardTag(`${sentence(donor.industry.replace(/_/g, ' '))} money`)
+    cardTag(`${industryName(donor.industry)} money`)
     associatedLine(donor)
     if (hasReceiptTypes) el('p', 'mm-card-fine', card).textContent = receiptMeasureLabel(receiptMeasure)
 
@@ -2288,7 +2180,7 @@ export async function mountMoneyMap(
 
     const actions = actionRow(card)
     if (edge.firstYear && edge.lastYear) {
-      const industry = donor.industry.replace(/_/g, ' ')
+      const industry = industryName(donor.industry)
       action(actions, 'Search', {
         name: `Search what was said about ${industry} in ${span}`,
         href: `/search?q=${encodeURIComponent(industry)}` +

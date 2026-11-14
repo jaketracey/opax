@@ -207,12 +207,12 @@ test('a minor party outside the money map: its one member, under the full name, 
   assert.ok(doc.querySelector('.dir-mono'), 'no portrait: the blank circle, never initials');
   assert.ok([...doc.querySelectorAll('a')].some(a => a.textContent === 'Their speeches'));
   assert.equal(doc.querySelectorAll('h3.entry-subhead').length, 0, 'nobody sitting: no subheadings, and no "Sitting members (0)"');
-  assert.doesNotMatch(doc.body.textContent, /\(0\)|Not available|not recorded/i);
+  assert.doesNotMatch(doc.body.textContent, /\(0\)|Not available|not recorded|Former/i);
   // A missing roster is stated plainly; a party without state money has no money block.
   const empty = new JSDOM(partyMembersHTML('Nobody Party', partyMembers('Nobody Party', {roster, divisions}), helpers)).window.document;
   assert.equal(empty.querySelector('#party-members > h2.subject-section-title').textContent, 'Members');
   assert.equal(empty.querySelector('#party-members p').textContent, "No members recorded in OPAX's roster for this party.");
-  assert.equal(empty.querySelectorAll('li.dir-row').length, 0);
+  assert.equal(empty.querySelectorAll('li.dir-row, .entry-subhead, ul').length, 0, 'no empty member list or subgroup');
   assert.equal(partyStateMoneyHTML('Fixture First Party', [['qld', {nodes: [], edges: []}]], helpers), '');
 });
 
@@ -292,7 +292,7 @@ test('the app presents independents as parliamentarians outside a party organisa
   assert.equal(doc.querySelector('#subject-title').textContent, 'Independents');
   assert.ok(doc.body.textContent.includes('Parliamentarians who sat without a party. Not a party organisation.'));
   assert.equal(doc.querySelector('#party-members h2').textContent, 'Parliamentarians');
-  assert.match(doc.querySelector('.subject-tag').textContent, /\d+ sitting parliamentarians/);
+  assert.match(doc.querySelector('.subject-tag').textContent, /\d+ marked current in the directory/);
   assert.doesNotMatch(doc.querySelector('.subject-tag').textContent, /sitting members/);
   assert.doesNotMatch(doc.body.textContent, /What its members said/);
 });

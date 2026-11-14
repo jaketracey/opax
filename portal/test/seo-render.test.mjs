@@ -618,7 +618,7 @@ test('every empty record address is the one not-found block, served without the 
   const cases=[
     ['/this-page-does-not-exist','Nothing at this address','this page does not exist','/'],
     ['/subject/person/zz-nobody-here','No parliamentarian at this address','zz nobody here','/subject/person'],
-    ['/subject/donor/Zzqx%20Nobody%20Pty%20Ltd','No donor by this name','Zzqx Nobody Pty Ltd','/subject/donor'],
+    ['/subject/donor/Zzqx%20Nobody%20Pty%20Ltd',"This donor isn't in OPAX",'Zzqx Nobody Pty Ltd','/subject/donor'],
     ['/bill/au-federal-r99999','No bill at this address','','/bills'],
     ['/doc/division-federal-senate-9999999','No division at this address','','/bills'],
     ['/subject/electorate/federal-representatives-nsw-nowhere','No electorate at this address','nowhere','/subject/electorate'],
@@ -629,8 +629,8 @@ test('every empty record address is the one not-found block, served without the 
     assert.equal(response.status,404,path);
     const html=await response.text();
     const block=html.slice(html.indexOf('<section id="prerender"'),html.indexOf('</section></section>')+20);
-    assert.match(block,new RegExp(`<h1 id="not-found-title" tabindex="-1">${title}</h1>`),path);
-    assert.match(html,new RegExp(`<title>${title} · OPAX</title>`),`${path}: the tab says what the heading says`);
+    assert.ok(block.includes(`<h1 id="not-found-title" tabindex="-1">${escapeHtml(title)}</h1>`),path);
+    assert.ok(html.includes(`<title>${escapeHtml(title)} · OPAX</title>`),`${path}: the tab says what the heading says`);
     assert.ok(block.includes(`name="q" type="search" value="${words}"`),path);
     assert.ok(block.includes(`<a class="ui-button" href="${pill}">`),path);
     // No profile shell, no source line, no alarm, never the raw identifier.

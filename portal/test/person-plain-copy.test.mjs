@@ -1,3 +1,4 @@
+import {fy} from '../public/money-scope.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
@@ -11,7 +12,7 @@ const functions = ['topicsHeading', 'isRosterPassage', 'mentionTitle', 'goodMent
 const declarations = app.statements.filter(n => ts.isFunctionDeclaration(n) && functions.includes(n.name?.text)).map(n => n.getText(app)).join('\n');
 const esc = s => String(s ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;');
 const api = runInNewContext(`${declarations};({${functions.join(',')}})`, {
-  esc,
+  esc, fy,
   titleSubject: r => r.subject || '',
   growthModules: {askEntry: (q, from) => `/ask?${new URLSearchParams({q, from})}`},
   URLSearchParams,
@@ -68,8 +69,8 @@ test('the party receipts row carries the latest financial year, every receipt ty
 });
 
 test('party and donor headers say the years of their returns, not "Active"', () => {
-  assert.equal(api.returnsSpan(1998, 2024), 'Returns 1998 to 2024');
-  assert.equal(api.returnsSpan(2019, 2019), 'Returns in 2019');
+  assert.equal(api.returnsSpan(1998, 2024), 'Returns 1998–99 to 2024–25');
+  assert.equal(api.returnsSpan(2019, 2019), 'Returns in 2019–20');
   assert.equal(api.returnsSpan(null, null), '');
   assert.doesNotMatch(source, /entry-active">Active /);
 });
