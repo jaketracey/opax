@@ -9,14 +9,14 @@ const budgets = {
   // The native field needs an explicit focus tap in the current app.
   // Count it alongside Continue and choosing the row; never hide it as typing.
   'first-launch-member': 3,
-  'today-latest-vote': 1,
+  'today-member-profile': 1,
   'today-official-page': 2,
   'figure-original': 2,
 };
 const required = {
   '66-my-mp-journey.yaml': [
     'first-launch-member',
-    'today-latest-vote',
+    'today-member-profile',
     'today-official-page',
   ],
   '67-my-mp-entry-points.yaml': ['figure-original'],

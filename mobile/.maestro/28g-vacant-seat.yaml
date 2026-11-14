@@ -4,9 +4,9 @@ name: 28g A federal seat with no member recorded, chosen from Today
 # journeys/first-launch.md 4.9. Run on its own, by path, against a fixture
 # roster with Grayndler's member removed:
 #   OPAX_FIXTURE_ROSTER=vacant scripts/e2e.sh <udid> .maestro/28g-vacant-seat.yaml
-# The chooser still lists the seat ("No member recorded yet"); Today's card
-# keeps the seat header, says so in one line in place of the member row and
-# Latest, and still draws the senators and its dated line.
+# The chooser still lists the seat ("No member recorded yet"); Today's tile
+# names the seat, says so in one line in place of the member, opens the
+# electorate and keeps its dated line.
 - launchApp:
     clearState: true
     arguments:
@@ -51,19 +51,10 @@ name: 28g A federal seat with no member recorded, chosen from Today
       id: today-your-mp
     timeout: 30000
 - assertVisible:
-    id: today-your-mp-seat
-- assertVisible:
-    id: today-your-mp-none
-    text: No member is recorded for this seat yet\.
+    id: today-your-mp-vacant
+    text: Your electorate, Grayndler\. No member is recorded for this seat yet\.
 - assertNotVisible:
     id: today-your-mp-member
-- scrollUntilVisible:
-    element:
-      id: today-senators
-    timeout: 90000
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
 - scrollUntilVisible:
     element:
       id: today-your-mp-sources

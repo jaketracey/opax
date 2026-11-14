@@ -1,11 +1,12 @@
 appId: au.com.opax.app
-name: 13d Today with a seat saved, the Your MP card first, each row its own push
+name: 13d Today with a seat saved, the Your MP tile first, one link to the profile
 ---
 # OPAXSeat federal saves Grayndler before the first paint (e2e builds only).
-# The card is a container (today.md 5.4): the seat header, the member row,
-# the Latest rows and the senators row are separate elements, and the card's
-# own dated line closes it. Every push from Today keeps the tab bar and its
-# back button reads "Today".
+# Your MP is one compact tile: the portrait, the name, the party, the
+# electorate and one plain line, read as one element. It opens the profile;
+# no votes, declarations, bills or senators draw on Today. The tile's own
+# dated line closes it. A push from Today keeps the tab bar and its back
+# button reads "Today".
 - launchApp:
     clearState: true
     arguments:
@@ -17,30 +18,14 @@ name: 13d Today with a seat saved, the Your MP card first, each row its own push
       id: today-your-mp
     timeout: 60000
 - assertVisible:
-    id: today-your-mp-seat
+    id: today-your-mp-member
+    text: Your MP, Anthony Albanese, .*Grayndler\. Represents you in federal parliament\.
 - assertNotVisible:
     id: today-invitation
-- scrollUntilVisible:
-    element:
-      id: today-your-mp-member
-    timeout: 90000
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-- scrollUntilVisible:
-    element:
-      id: today-your-mp-latest-0
-    timeout: 90000
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-- scrollUntilVisible:
-    element:
-      id: today-senators
-    timeout: 90000
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
+- assertNotVisible:
+    id: today-your-mp-latest-0
+- assertNotVisible:
+    id: today-senators
 - scrollUntilVisible:
     element:
       id: today-your-mp-sources
@@ -58,7 +43,7 @@ name: 13d Today with a seat saved, the Your MP card first, each row its own push
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/13d-edition-after-card
-# The seat header opens the electorate.
+# The tile opens the member's profile.
 - scrollUntilVisible:
     element:
       id: today-screen-message
@@ -66,42 +51,18 @@ name: 13d Today with a seat saved, the Your MP card first, each row its own push
     timeout: 90000
 - waitForAnimationToEnd
 - tapOn:
-    id: today-your-mp-seat
+    id: today-your-mp-member
 - extendedWaitUntil:
     visible:
-      id: electorate-screen
-    timeout: 30000
+      id: person-screen-title
+      text: Anthony Albanese
+    timeout: 60000
 - assertVisible:
     id: BackButton
     text: Today
 - assertVisible:
     id: tab-today
-- takeScreenshot: ${EVIDENCE}/13d-electorate
-- tapOn:
-    id: BackButton
-- assertVisible:
-    id: today-screen
-# The senators row opens the state's senators.
-- scrollUntilVisible:
-    element:
-      id: today-senators
-    timeout: 90000
-    visibilityPercentage: 10
-    centerElement: true
-    speed: 20
-- waitForAnimationToEnd
-- tapOn:
-    id: today-senators
-- extendedWaitUntil:
-    visible:
-      id: members-screen
-    timeout: 30000
-- assertVisible:
-    id: BackButton
-    text: Today
-- assertVisible:
-    id: tab-today
-- takeScreenshot: ${EVIDENCE}/13d-senators
+- takeScreenshot: ${EVIDENCE}/13d-profile
 - tapOn:
     id: BackButton
 - assertVisible:
