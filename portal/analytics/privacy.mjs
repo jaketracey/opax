@@ -34,14 +34,20 @@ const CHOICES = {
   opax_share: { kind: ['record', 'question', 'answer', 'copy_link'], record_type: ['person', 'party', 'bill', 'electorate', 'doc', 'money', 'other'] },
   opax_press: { action: ['asset_download', 'boilerplate_copy'] },
 };
-// Pages with no record in their address, counted by name rather than as
-// "/other". Their sub-pages (a sitting day, an audit report) stay "/other".
-const STATIC_PAGES = 'press|today|sitting|budget|privacy|support|audit|estimates|instruments';
-const KNOWN_PATH = new RegExp(String.raw`^\/(?:$|ask(?:\/|$)|chat(?:\/|$)|search(?:\/|$)|money(?:\/|$)|map(?:\/|$)|discover(?:\/|$)|connections\.html$|reports(?:\/|$)|explore(?:\/|$)|doc(?:\/|$)|subject(?:\/|$)|declared(?:\/|$)|about(?:\/|$)|methods(?:\/|$)|stats(?:\/|$)|expenses(?:\/|$)|bills?(?:\/|$)|(?:${STATIC_PAGES})\/?$)`);
+// Pages with no record in their address are counted by name, and only as
+// themselves: any extra segment ("/ask/<words>") is a typed or shared address,
+// not a page, so it is "/other".
+const STATIC_PAGES = 'ask|chat|search|map|discover|explore|declared|about|methods|stats|expenses|press|today|budget|privacy|support|instruments|terms|security|community|home|connections';
+// Pages with a record or section in the address; recordTemplate names them.
+const RECORD_PAGES = 'money|subject|doc|bills?|reports?|sitting|estimates|audit|instrument|official-reports|vic-election-2026|video|register';
+const KNOWN_PATH = new RegExp(String.raw`^\/(?:$|connections\.html$|(?:${STATIC_PAGES})\/?$|(?:${RECORD_PAGES})(?:\/|$))`);
+// Registers and the one video page have fixed addresses, so they are named.
+const COLLECTIONS = new Set(['royal-commissions', 'integrity', 'annual-reports', 'agency-reports']);
+const REGISTERS = new Set(['vic-gifts', 'state-bills', 'government-finance', 'act-invoices', 'sa-grants', 'gov-advertising', 'tax-expenditures']);
 export function safePath(value) {
   try {
     const url = new URL(value, 'https://opax.com.au');
-    const path = url.hash.startsWith('#/') ? url.hash.slice(1).split('?')[0] : url.pathname;
+    const path = url.hash.startsWith('#/') ? url.hash.slice(1).split(/[?#]/)[0] : url.pathname;
     // Unknown paths can contain arbitrary reader input; never collect them.
     if (!KNOWN_PATH.test(path)) return '/other';
     return recordTemplate(path);
@@ -69,7 +75,25 @@ function recordTemplate(path) {
     if (second === 'grants' && fourth === 'recipient') return '/money/grants/[jurisdiction]/recipient/[id]';
     return `/money/${second}/[id]`;
   }
-  return path;
+  // Hubs and reports: the page names the family, the record is a placeholder.
+  if (first === 'sitting' || first === 'estimates' || first === 'audit' || first === 'vic-election-2026') {
+    if (second === undefined) return `/${first}`;
+    return third === undefined ? `/${first}/[id]` : '/other';
+  }
+  if (first === 'instrument') return second === undefined ? '/instrument' : third === undefined ? '/instrument/[id]' : '/other';
+  if (first === 'report') return second !== undefined && third === undefined ? '/report/[slug]' : '/other';
+  if (first === 'official-reports') {
+    if (second === undefined) return '/official-reports';
+    return third === undefined && COLLECTIONS.has(second) ? `/official-reports/${second}` : '/other';
+  }
+  if (first === 'register') return second !== undefined && third === undefined && REGISTERS.has(second) ? `/register/${second}` : '/other';
+  if (first === 'video') return second === 'senate' && third === undefined ? '/video/senate' : '/other';
+  if (first === 'reports') {
+    if (second === undefined) return '/reports';
+    if (third === undefined) return '/reports/[slug]';
+    return third === 's' && fourth !== undefined ? '/reports/[slug]/s/[n]' : '/other';
+  }
+  return path.replace(/\/+$/, '') || '/';
 }
 export function cleanEvent(event, props = {}) {
   if (!Object.hasOwn(fields, event)) return null;

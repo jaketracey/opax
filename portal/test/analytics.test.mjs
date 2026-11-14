@@ -346,7 +346,8 @@ test('static pages are counted by name; their sub-pages and look-alikes stay /ot
   for (const page of ['press', 'today', 'sitting', 'budget', 'privacy', 'support', 'audit', 'estimates', 'instruments']) {
     assert.equal(safePath(`/${page}`), `/${page}`);
     assert.equal(safePath(`https://opax.com.au/${page}?q=private#private`), `/${page}`);
-    assert.equal(safePath(`/${page}/private-record`), '/other');
+    // Hubs name their sub-pages by template (test/analytics-routes.test.mjs); the rest have none.
+    assert.equal(safePath(`/${page}/private-record`), ['sitting', 'estimates', 'audit'].includes(page) ? `/${page}/[id]` : '/other');
     assert.equal(safePath(`/${page}private`), '/other');
   }
   assert.deepEqual(cleanEvent('opax_view', { page_path: '/press', page_section: 'press' }), { page_path: '/press', page_section: 'press' });

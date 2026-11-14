@@ -128,6 +128,24 @@ the page-view allowlist). The message has quoted text replaced with
 rejected or thrown non-error value redacted unless it is a plain literal, and is
 capped at 200 characters.
 
+## Page paths
+
+`page_path` and `$pathname` hold a route pattern, never the real address:
+`/subject/person/[slug]`, `/bill/[id]`, `/doc/[slug]`, `/sitting/[id]`,
+`/estimates/[id]`, `/vic-election-2026/[id]`, `/audit/[id]`, `/instrument/[id]`,
+`/report/[slug]`, `/official-reports/royal-commissions` (one name per fixed collection), `/reports/[slug]`,
+`/reports/[slug]/s/[n]` and the money patterns (`/money/receipts/[id]`,
+`/money/grants/[jurisdiction]/recipient/[id]`). Pages with fixed addresses are
+named as they are (`/ask`, `/terms`, `/register/vic-gifts`, `/video/senate`).
+A bare page (`/ask`, `/search`, `/about`) matches only itself: any text after
+it, in the address or a hash link, is `/other`, so a typed or shared link never
+puts its words into a page path. `/other` is for paths that are not a page. Patterns live in
+`portal/analytics/privacy.mjs`; `portal/test/analytics-routes.test.mjs` reads the
+Worker's route table (`matchSeoRoute`: its kinds, the addresses it spells out,
+directory kinds and grant jurisdictions), the Worker-first page list in
+`wrangler.jsonc`, the html pages in `portal/public` and the app's views, so a
+new route without a pattern fails the test.
+
 ## Build, test, deploy
 
 From `portal/`:
