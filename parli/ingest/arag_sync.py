@@ -182,6 +182,8 @@ def _optional_column(row: sqlite3.Row, name: str) -> Any:
 
 
 def map_speech(row: sqlite3.Row) -> dict:
+    from parli.ingest.speaker_identity import resolve_attribution
+    row = resolve_attribution(row)
     date = row["date"] or ""
     decade = f"{date[:3]}0s" if len(date) >= 4 and date[:4].isdigit() else None
     speaker = _optional_column(row, "speaker_name_clean") or clean_speaker_name(row["speaker_name"])

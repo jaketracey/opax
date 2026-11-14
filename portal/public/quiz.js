@@ -1,6 +1,6 @@
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=29940d56a6';
 import {loadDonorViewIndex} from './donor-views.js?v=be03bb4447';
-import {subjectUrl} from './canonical-urls.js?v=bcc9a57bab';
+import {subjectUrl} from './canonical-urls.js?v=9ce13e7ba5';
 /*
  * The record quiz — a MindMaze-spirited quiz over OPAX's real data.
  *

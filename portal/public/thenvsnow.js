@@ -27,7 +27,7 @@
  * never innerHTML.
  */
 import { machineLabelHTML } from './labels.js?v=fcb2a1091c'
-import {personUrl} from './canonical-urls.js?v=bcc9a57bab';
+import {personUrl} from './canonical-urls.js?v=9ce13e7ba5';
 import {isMultiSpeaker, isUnattributed, speakerLabel, resolvedParticipants, groupAvatarHTML} from './speech-attribution.js?v=1350457c5d';
 
 const ASK_URL = '/api/ask'
