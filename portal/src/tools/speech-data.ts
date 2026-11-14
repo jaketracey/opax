@@ -38,7 +38,7 @@ export const TOPICS = [
   'justice-law', 'foreign-affairs',
 ] as const
 export const STATES = ['federal', 'nsw', 'vic', 'sa', 'qld', 'act'] as const
-export const CHAMBERS = ['representatives', 'senate', 'nsw_la', 'nsw_lc', 'vic_la', 'vic_lc', 'sa_ha', 'sa_lc', 'qld_la', 'act_la'] as const
+export const CHAMBERS = ['representatives', 'federation', 'senate', 'nsw_la', 'nsw_lc', 'vic_la', 'vic_lc', 'sa_ha', 'sa_lc', 'qld_la', 'act_la'] as const
 const COMMITTEES = ['senate_committee', 'joint_committee', 'house_committee']
 // Labels written by the sync only on federal and (partly) Queensland speeches.
 const PARTY_LABELLED_STATES = new Set(['federal', 'qld'])
@@ -93,7 +93,9 @@ function clauses(f: SpeechFilter, members = true): unknown[] {
   c.push(f.venue === 'committee' ? COMMITTEE_ONLY : f.venue === 'all' ? null : CHAMBER_ONLY)
   if (f.topic) c.push(label('topic', f.topic))
   if (f.state) c.push(label('state', f.state))
-  if (f.chamber) c.push(label('chamber', f.chamber))
+  if (f.chamber) c.push(f.chamber === 'representatives'
+    ? { or: ['representatives', 'federation'].map(c => label('chamber', c)) }
+    : label('chamber', f.chamber))
   if (f.party) c.push(label('party', f.party))
   if (f.speaker) c.push({ prop: 'origin_collaborator', collaborator: f.speaker })
   return c.filter(Boolean)

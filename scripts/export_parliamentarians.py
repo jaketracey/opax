@@ -228,8 +228,9 @@ def main(argv=()) -> None:
     columns = {r[1] for r in db.execute('PRAGMA table_info(speeches)')}
     witness_type = "OR speaker_type = 'witness'" if 'speaker_type' in columns else ''
     speaker_type = 'speaker_type' if 'speaker_type' in columns else 'NULL'
+    source_party = "CASE WHEN fedchamb_flag IS NOT NULL THEN party_canonical ELSE party END" if "fedchamb_flag" in columns else "party"
     rows = db.execute(f"""
-        SELECT speaker_name, person_id, party, party_canonical, state, chamber,
+        SELECT speaker_name, person_id, {source_party} AS party, party_canonical, state, chamber,
                substr(date, 1, 10) AS speech_date,
                ((witness_name IS NOT NULL AND witness_name != '') {witness_type}) AS is_witness,
                COUNT(*) AS n, {speaker_type} AS speaker_type
@@ -252,7 +253,9 @@ def main(argv=()) -> None:
     print(f"[export] {len(rows):,} speaker groups ({time.time() - t0:.0f}s)", file=sys.stderr)
 
     people = {}
+    from parli.ingest.federation import published_chamber, published_person_chambers
     for speaker, pid, party, canonical, state, chamber, speech_date, is_witness, n, row_type in rows:
+        chamber = published_chamber(chamber)
         yr = (speech_date or '')[:4]
         name = normalize_speaker(speaker)
         if not name:
@@ -305,7 +308,7 @@ def main(argv=()) -> None:
             ranked = [p["parties"].most_common(1)[0][0]]
         rec = {"name": name, "speeches": p["n"]}
         rec["states"] = [s for s, _ in p["states"].most_common()]
-        rec["chambers"] = [c for c, _ in p["chambers"].most_common()]
+        rec["chambers"] = published_person_chambers(c for c, _ in p["chambers"].most_common())
         if p["years"]:
             rec["first"], rec["last"] = min(p["years"]), max(p["years"])
         if p["witness"] * 2 > p['n'] + p['witness']:

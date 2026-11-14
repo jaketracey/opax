@@ -133,7 +133,7 @@ def state_member_matches(row, m):
         return False
     if set(row.get("states") or []) != {m.get("state")}:
         return False
-    if m.get("chamber") not in set(row.get("chambers") or []) - COMMITTEES:
+    if m.get("chamber") not in {"representatives" if c == "federation" else c for c in row.get("chambers") or []} - COMMITTEES:
         return False
     if weak(row["name"]):
         start, end = _year(m.get("start")), _year(m.get("end"))
@@ -217,7 +217,7 @@ def mixed(row, pid, ids, m, now_year):
     end = now_year if m.get("end") is None else m["end"]
     if first is None or (m.get("start") is not None and first < m["start"]) or last > end:
         return f"{first}-{last} outside {m['start'] or '?'}-{'now' if m.get('end') is None else m['end']}"
-    foreign = sorted(set(row.get("chambers") or []) - COMMITTEES - {m.get("chamber")})
+    foreign = sorted({"representatives" if c == "federation" else c for c in row.get("chambers") or []} - COMMITTEES - {m.get("chamber")})
     if foreign:
         return "chamber " + ",".join(foreign)
     return None

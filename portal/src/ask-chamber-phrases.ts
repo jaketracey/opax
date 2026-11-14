@@ -20,6 +20,7 @@ const COMMITTEE: Record<string, string> = {senate:'Senate committee',joint:'join
 export function recordedChamber(key: string): Recorded | undefined {
   const k = canonicalChamber(key.trim().toLowerCase())
   if (k === 'senate') return {label:'Senate',state:'federal',house:'upper',kind:'senate'}
+  if (k === 'federation') return {label:'Federation Chamber',state:'federal',house:'lower',kind:'federation'}
   if (k === 'representatives') return {label:'House of Representatives',state:'federal',house:'lower',kind:'representatives'}
   const committee = /^(senate|joint|house)_committee$/.exec(k)
   if (committee) return {label:COMMITTEE[committee[1]],state:'federal',house:'committee',kind:'committee'}

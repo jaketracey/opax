@@ -1,0 +1,10 @@
+{
+  "documents": 49316,
+  "payload_sha256": "9cbfd1ead6b88122d041287e1b76dda293fa705a6bbae726895adb495247fa5f",
+  "apply": false,
+  "patched": 0,
+  "unchanged": 0,
+  "resources_created": 0,
+  "text_writes": 0,
+  "enrichment_queued": 0
+}

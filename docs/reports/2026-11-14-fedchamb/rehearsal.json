@@ -1,0 +1,30 @@
+{
+  "first": {
+    "changed_rows": 62540,
+    "citation_census": [
+      1316517,
+      1,
+      1323635,
+      870421266010
+    ],
+    "preserved_bodies": 62540,
+    "plan_sha256": "8542654375ea8359f2927e97bd8a04c4d222594122828e397ce536c6b6b18043",
+    "publication_enabled": false,
+    "kb_writes": 0,
+    "d1_writes": 0
+  },
+  "repeat": {
+    "changed_rows": 0,
+    "citation_census": [
+      1316517,
+      1,
+      1323635,
+      870421266010
+    ],
+    "preserved_bodies": 62540,
+    "plan_sha256": "8542654375ea8359f2927e97bd8a04c4d222594122828e397ce536c6b6b18043",
+    "publication_enabled": false,
+    "kb_writes": 0,
+    "d1_writes": 0
+  }
+}

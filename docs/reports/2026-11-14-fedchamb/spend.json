@@ -1,0 +1,84 @@
+{
+  "as_of": "2026-11-14",
+  "documents": 49316,
+  "publication_enabled": false,
+  "kb_writes": 0,
+  "d1_writes": 0,
+  "estimator": "enrich/scripts/federal_backfill_cost.ts",
+  "source_sha256": {
+    "enrich/scripts/federal_backfill_cost.ts": "8be22d1eb6b90169bf13cca8da4ae5135b8c58f2559f2a5a646eedb4bf3e6380",
+    "enrich/src/budget.ts": "a9f8319b553ae7577492eb458b65ce44c297c3d49218da5a9028f44d6f558174",
+    "enrich/src/prompts.ts": "0414d651fc7240f1aca3c0e4c11494ea8a714030ede8c2317e4c89253ef984ec",
+    "enrich/src/text.ts": "60242cb41c28c8b17709e877807672fab580c5af482e81d04a6f4159f7a3533b",
+    "enrich/wrangler.jsonc": "73d12f21a374e5d70ceb8ba4979ebea743a01f9bb47e97256edb0aee98c866c6"
+  },
+  "payload_sha256": "9cbfd1ead6b88122d041287e1b76dda293fa705a6bbae726895adb495247fa5f",
+  "payload_bytes": 259519800,
+  "text_utf8_bytes": 220776696,
+  "raw_estimator_receipt": {
+    "path": "opax-enrich: enrich/src/discover.ts \u2192 enrich/src/tick.ts \u2192 enrich/src/generate.ts \u2192 enrich/src/write.ts",
+    "documents": 49316,
+    "summaries": 49316,
+    "topic_labels": 49316,
+    "queue_rows_if_released": 98632,
+    "model_calls_first_pass": 49316,
+    "primary_model": "@cf/qwen/qwen3-30b-a3b-fp8",
+    "escalation_model": "@cf/openai/gpt-oss-120b",
+    "prompt_characters": 434004111,
+    "clipped_documents": 1737,
+    "mean_output_tokens": 620,
+    "first_pass": {
+      "neurons": 1505306.5943928533,
+      "usd": 16.558372538321386
+    },
+    "five_percent_primary_retry_plus_one_percent_escalation": {
+      "neurons": 1640873.891612033,
+      "usd": 18.04961280773236
+    },
+    "primary_max_output_every_call": {
+      "neurons": 6585125.8323928565,
+      "usd": 72.43638415632142
+    },
+    "method": "Actual combined Worker system/record messages and clip(); estimated input tokens = JS characters / 3.5; 620 output tokens (existing Qwen bake-off mean, includes thinking); neuronsFor() prices. One call supplies both summary and topics.",
+    "limitations": "Gross marginal USD before shared daily free allowance. Retry rates are scenarios, not measured for this corpus; excludes platform, D1 and KB costs. No generation or queueing performed. Metadata-only relabels may retain existing enrichment; this estimates complete re-enrichment as a conservative scenario.",
+    "pricing_source": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+    "priced_at": "2026-10-13"
+  },
+  "attribution_and_provenance_counts": {
+    "dated_person_resolved": 46812,
+    "dated_party_resolved": 46820,
+    "documents": 49316,
+    "relabel_original_ids_present": 55609,
+    "relabel_original_ids_missing": 6931
+  },
+  "metadata_repair": {
+    "new_resources": 0,
+    "text_submissions": 0,
+    "enrichment_queued": 0,
+    "explicit_model_calls": 0,
+    "maximum_get_plus_patch_requests": 98632,
+    "minimum_seconds_at_one_request_per_second": 98632,
+    "notes": "Patch existing slugs only, retain summaries/topics. Progress metadata-update processing is unmeasured; no claim of a free KB repair."
+  },
+  "progress": {
+    "published_consumption_usd_per_platform_token": 0.008,
+    "processing_tokens_per_mb": null,
+    "remaining_account_quota": null,
+    "actual_contract_overage_rate": null,
+    "processing_usd_formula": "0.008 * billable Progress platform tokens; conversion from bytes/documents and remaining included usage unknown.",
+    "existing_cohort_index_gb_by_historic_pilot_analogy": 2.4386762,
+    "existing_cohort_index_usd_per_month_at_published_overage": 9.7547048,
+    "net_new_resource_count": 0,
+    "incremental_index_gb": null,
+    "storage_method": "Historic 2,000-document pilot: +98.9 MB including briefs, 49.45 decimal KB/document. This cohort already exists; its analogous footprint is not an incremental storage bill.",
+    "pricing_source": "https://www.progress.com/agentic-rag/pricing"
+  },
+  "price_basis": {
+    "pinned_receipt": "docs/reports/2026-11-14-senate-spend.json on origin/im/senate-backfill",
+    "pinned_commit": "5d9ddc22fa049e0c77a2518042694d7a7aa20265",
+    "prices_verified_on_by_that_lane": "2026-11-14",
+    "independent_price_fetches_this_lane": 0
+  },
+  "existing_cumulative_model_run_ceiling_usd": 40,
+  "limits": "Full re-enrichment scenarios are gross marginal USD before shared free allowances, not a total KB bill. No model generation, queueing or remote repair was performed. The primary-max-output scenario exceeds the existing cumulative model ceiling; re-enrichment needs its own approved remaining cap. Progress processing, incremental index impact, D1/platform usage and contract quotas remain unknown."
+}

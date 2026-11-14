@@ -79,7 +79,7 @@ export const tool: ToolDefinition = {
     record_id: { type: 'string', minLength: 3, maxLength: 200, pattern: '^(?:speech-[0-9]+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+)$' },
     speaker: { type: 'string', minLength: 2, maxLength: 120, description: 'A named parliamentarian for speeches; exact source collaborator for releases.' },
     party: { type: 'string', minLength: 2, maxLength: 60, description: 'Speech party on the day, e.g. Labor or Coalition. Does not infer release affiliation.' },
-    chamber: { type: 'string', enum: ['representatives', 'senate', 'nsw_la', 'nsw_lc', 'vic_la', 'vic_lc', 'qld_la', 'sa_ha', 'sa_lc', 'act_la'] },
+    chamber: { type: 'string', enum: ['representatives', 'federation', 'senate', 'nsw_la', 'nsw_lc', 'vic_la', 'vic_lc', 'qld_la', 'sa_ha', 'sa_lc', 'act_la'] },
     jurisdiction: { type: 'string', enum: ['federal', 'nsw', 'vic', 'sa', 'qld', 'act'] },
     topic: { type: 'string', pattern: '^[a-z][a-z-]{1,60}$', description: 'Optional machine topic label, e.g. housing. Query words also search unlabelled text.' },
     venue: { type: 'string', enum: ['chamber', 'committee', 'all'] },
@@ -108,7 +108,9 @@ export const tool: ToolDefinition = {
       const clauses: unknown[] = [label('kind', args.kind), { prop: 'field', type: 'text', name: 'body' }]
       if (args.jurisdiction) clauses.push(label('state', args.jurisdiction))
       if (args.topic) clauses.push(label('topic', args.topic))
-      if (args.chamber) clauses.push(label('chamber', args.chamber))
+      if (args.chamber) clauses.push(args.chamber === 'representatives'
+        ? { or: ['representatives', 'federation'].map(c => label('chamber', c)) }
+        : label('chamber', args.chamber))
       if (parties?.length) clauses.push({ or: parties.map(p => label('party', p)) })
       if (aliases.length) clauses.push({ or: aliases.map(collaborator => ({ prop: 'origin_collaborator', collaborator })) })
       if (args.since || args.until) clauses.push({ prop: 'created', ...(args.since ? { since: args.since + 'T00:00:00Z' } : {}), ...(args.until ? { until: args.until + 'T23:59:59Z' } : {}) })
@@ -127,7 +129,7 @@ export const tool: ToolDefinition = {
       try { r = await original(env, slug) } catch { env.signal?.throwIfAborted(); if (args.record_id) throw new Error('Original source unavailable'); failures++; continue }
       if (r.kind !== args.kind) continue
       const labels = object(r.labels), meta = object(r.metadata), committee = COMMITTEES.includes(String(labels.chamber))
-      if (args.chamber && labels.chamber !== args.chamber || parties?.length && !parties.includes(String(meta.party_on_day ?? labels.party))) continue
+      if (args.chamber && labels.chamber !== args.chamber && !(args.chamber === 'representatives' && labels.chamber === 'federation') || parties?.length && !parties.includes(String(meta.party_on_day ?? labels.party))) continue
       const scope = personScope(person)
       if (!inWindow(r.date, args) || args.jurisdiction && labels.state !== args.jurisdiction || args.kind === 'speech' && !args.record_id && args.venue !== 'all' && committee !== (args.venue === 'committee')) continue
       const named = r.speaker_attribution === 'source collaborator' || r.speaker_attribution === 'record title'

@@ -239,7 +239,11 @@ function filterExpression(f: {
       : { prop: 'label', labelset: 'kind', label: f.kind })
   }
   if (f.party) clauses.push({ prop: 'label', labelset: 'party', label: f.party })
-  if (f.chamber) clauses.push({ prop: 'label', labelset: 'chamber', label: f.chamber })
+  // The Federation Chamber is part of the House, with the same membership.
+  // Keep broad House searches inclusive while storing one logical chamber.
+  if (f.chamber) clauses.push(f.chamber === 'representatives'
+    ? { or: ['representatives', 'federation'].map(label => ({ prop: 'label', labelset: 'chamber', label })) }
+    : { prop: 'label', labelset: 'chamber', label: f.chamber })
   if (f.venue) {
     const committee = { or: ['senate_committee', 'joint_committee', 'house_committee'].map(label => ({ prop: 'label', labelset: 'chamber', label })) }
     if (f.venue !== 'all') clauses.push(f.venue === 'committee' ? committee : { not: committee })
@@ -2924,35 +2928,44 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
 async function apiStats(env: Env, ctx: ExecutionContext, refresh = false): Promise<Response> {
   const wait = refresh ? AGGREGATE_WARM_TIMEOUT_MS : AGGREGATE_UPSTREAM_TIMEOUT_MS
   return cachedJson('/api/stats', async () => {
-    const [countersRes, kindsRes, statesRes] = await aggregateBatch([
+    const [countersRes, kindsRes, statesRes, chambersRes] = await aggregateBatch([
       aggregateFetch(env, '/counters', undefined, wait),
       aggregateFetch(env, `/catalog?faceted=${KIND_FACET}&page_size=0`, undefined, wait),
       aggregateFetch(env, `/catalog?faceted=${STATE_FACET}&page_size=0`, undefined, wait),
+      aggregateFetch(env, `/catalog?faceted=${CHAMBER_FACET}&page_size=0`, undefined, wait),
     ])
     if (!countersRes.ok) return json({ error: `counters failed (${countersRes.status})` }, 502)
     const counters = (await countersRes.json()) as Record<string, unknown>
     // A facet that fails leaves its key null: the page keeps the manifest figure.
     const kinds = kindsRes.ok ? facetCounts((await kindsRes.json()) as CatalogPage, KIND_FACET) : null
     let speechesByState: Record<string, number> | null = null
+    let speechesByChamber: Record<string, number> | null = null
     if (kinds && statesRes.ok) {
       const everyRecord = facetCounts((await statesRes.json()) as CatalogPage, STATE_FACET)
       const others = Object.keys(kinds).filter(kind => kind !== 'speech' && kinds[kind] > 0)
       const otherRes = others.length ? await aggregateFetch(env, '/catalog', { body: {
         filter_expression: { resource: anyClause(others.map(kind => labelClause('kind', kind))) },
-        faceted: [STATE_FACET],
+        faceted: [STATE_FACET, CHAMBER_FACET],
         page_size: 0,
       } }, wait) : null
       if (!otherRes || otherRes.ok) {
-        const notSpeeches = otherRes ? facetCounts((await otherRes.json()) as CatalogPage, STATE_FACET) : {}
+        const otherPage = otherRes ? (await otherRes.json()) as CatalogPage : null
+        const notSpeeches = otherPage ? facetCounts(otherPage, STATE_FACET) : {}
         speechesByState = Object.fromEntries(Object.entries(everyRecord)
           .map(([state, n]): [string, number] => [state, n - (notSpeeches[state] ?? 0)])
           .filter(([, n]) => n > 0))
+        if (chambersRes.ok) {
+          const everyChamber = facetCounts((await chambersRes.json()) as CatalogPage, CHAMBER_FACET)
+          const excluded = otherPage ? facetCounts(otherPage, CHAMBER_FACET) : {}
+          speechesByChamber = Object.fromEntries(Object.entries(everyChamber)
+            .map(([chamber, n]): [string, number] => [chamber, n - (excluded[chamber] ?? 0)]).filter(([, n]) => n > 0))
+        }
       }
     }
-    const out = json({ ...counters, kinds, speeches_by_state: speechesByState })
+    const out = json({ ...counters, kinds, speeches_by_state: speechesByState, speeches_by_chamber: speechesByChamber })
     // Preserve the existing partial-counter response on a cold miss, but do
     // not replace complete cached counts when either facet is unavailable.
-    if (!kinds || !speechesByState) out.headers.set('cache-control', 'no-store')
+    if (!kinds || !speechesByState || !speechesByChamber) out.headers.set('cache-control', 'no-store')
     return out
   }, ctx, STATS_CACHE_TTL, refresh)
 }
@@ -6518,7 +6531,7 @@ function validateFilters(get: (key: string) => unknown): string | null {
     if (!v) continue
     switch (key) {
       case 'chamber':
-        if (!['representatives', 'senate', 'nsw_la', 'nsw_lc', 'vic_la', 'vic_lc', 'sa_ha', 'sa_lc', 'qld_la', 'act_la', 'senate_committee', 'joint_committee', 'house_committee'].includes(v)) return 'unknown chamber'
+        if (!['representatives', 'federation', 'senate', 'nsw_la', 'nsw_lc', 'vic_la', 'vic_lc', 'sa_ha', 'sa_lc', 'qld_la', 'act_la', 'senate_committee', 'joint_committee', 'house_committee'].includes(v)) return 'unknown chamber'
         break
       case 'venue':
         if (!['chamber', 'committee', 'all'].includes(v)) return 'unknown venue'

@@ -28,7 +28,7 @@ test('P2 citation scope survives search hydration, pagination, requests and copi
  const names=['applySearchParams','currentFilters','searchHash','searchQueryParams'];
  const functions=ast.statements.filter(n=>ts.isFunctionDeclaration(n)&&names.includes(n.name?.text)).map(n=>n.getText(ast)).join('\n');
  const handlers=new Map();
- const elements=Object.fromEntries(['search-input','f-speaker','f-party','f-state','f-topic','f-from','f-to','search-kind','search-mode','search-options-btn','search-options-pop','search-options-close','search-options-apply','search-options-reset'].map(id=>[id,{
+ const elements=Object.fromEntries(['search-input','f-speaker','f-party','f-state','f-chamber','f-topic','f-from','f-to','search-kind','search-mode','search-options-btn','search-options-pop','search-options-close','search-options-apply','search-options-reset'].map(id=>[id,{
   value:'',add(){},addEventListener(type,fn){handlers.set(id+':'+type,fn)},setAttribute(){},focus(){},showModal(){this.open=true},close(){this.open=false},
  }]));
  const popover=ast.statements.find(n=>ts.isBlock(n)&&n.getText(ast).includes('const btn = $("search-options-btn")')).getText(ast);

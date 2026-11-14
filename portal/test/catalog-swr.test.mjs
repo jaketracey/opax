@@ -178,7 +178,7 @@ test('all other cachedJson callers retain their browser TTL and schedule stale r
 test('successful cold stats, topics and topic responses keep the current payload shapes', async () => {
   const h = harness();
   assert.deepEqual(await (await h.api.apiStats(h.env, h.ctx)).json(), {
-    resources: 120, paragraphs: 480, kinds: {speech: 100}, speeches_by_state: {federal: 30},
+    resources: 120, paragraphs: 480, kinds: {speech: 100}, speeches_by_state: {federal: 30}, speeches_by_chamber: {representatives: 100},
   });
   const topics = await (await h.api.apiTopics(h.env, h.ctx)).json();
   assert.equal(topics.labelled, 100); assert.equal(topics.topics.length, 21);
@@ -192,7 +192,7 @@ test('stats keeps its partial cold response but never overwrites complete stale 
   const h = harness({upstream: async path => path.includes('faceted=') ? new Response(null, {status: 503}) : Response.json(fixture.counters)});
   const partial = await h.api.apiStats(h.env, h.ctx);
   assert.equal(partial.status, 200);
-  assert.deepEqual(await partial.json(), {...fixture.counters, kinds: null, speeches_by_state: null});
+  assert.deepEqual(await partial.json(), {...fixture.counters, kinds: null, speeches_by_state: null, speeches_by_chamber: null});
   assert.equal(h.writes.length, 0);
   h.seed('/api/stats', {resources: 120, kinds: {speech: 100}}, 3601);
   const previous = h.rows.get('https://opax.com.au/api/stats');
@@ -245,7 +245,7 @@ test('warm-up waits for sibling reads after an early rejection and consumes non-
   await h.api.worker.scheduled({cron: '*/5 * * * *'}, h.env, h.ctx);
   // Housing fails twice on its own page and once in the matrix, which stops at that batch of four.
   assert.equal(peak, 4); assert.equal(active, 0); assert.equal(failures, 3);
-  assert.equal(h.calls.length, 3 + 3 + 1 + 1 + 8 + 16 + 21 * 2); assert.equal(h.writes.length, 25);
+  assert.equal(h.calls.length, 4 + 3 + 1 + 1 + 8 + 16 + 21 * 2); assert.equal(h.writes.length, 25);
   assert.deepEqual(await h.rows.get('https://opax.com.au/api/topic/housing').clone().json(), {count: 10});
 });
 
@@ -266,10 +266,10 @@ test('overlapping warm-up ticks share one run per isolate and release the lock w
   const first = h.api.warmCatalog(h.env, h.ctx);
   const second = h.api.warmCatalog(h.env, h.ctx);
   gate.resolve(); await Promise.all([first, second]);
-  assert.equal(h.calls.length, 87); assert.equal(h.writes.length, 28);
+  assert.equal(h.calls.length, 88); assert.equal(h.writes.length, 28);
   // A later tick finds every entry fresh and makes no upstream calls.
   await h.api.warmCatalog(h.env, h.ctx);
-  assert.equal(h.calls.length, 87); assert.equal(h.writes.length, 28);
+  assert.equal(h.calls.length, 88); assert.equal(h.writes.length, 28);
 });
 
 // A catalog shaped like 14 Oct's: three chambers over speeches and divisions, one unchambered kind.
@@ -300,7 +300,7 @@ function shapedCatalog({chambers = {representatives: 250000, senate: 200000, nsw
       if (!text.includes('"topic"')) {
         // Stats: the parliaments of everything that is not a speech.
         assert.deepEqual(plain(resource), {or: [{prop: 'label', labelset: 'kind', label: 'division'}, {prop: 'label', labelset: 'kind', label: 'bill'}]});
-        return page(15000, {[STATE]: facet(STATE, {federal: 12000, nsw: 3000})});
+        return page(15000, {[STATE]: facet(STATE, {federal: 12000, nsw: 3000}), "/classification.labels/chamber": facet("/classification.labels/chamber", {representatives: 7000, nsw_la: 3000})});
       }
       cellReads.push(resource.and[1]);
       if (text.includes('representatives')) return page(180000, {[STATE]: facet(STATE, {federal: 180000})});
@@ -341,5 +341,6 @@ test('speeches by parliament are every record less the records that are not spee
   const stats = await (await h.api.apiStats(h.env, h.ctx)).json();
   assert.deepEqual(stats.kinds, {speech: 530000, division: 10000, bill: 5000});
   assert.deepEqual(stats.speeches_by_state, {federal: 443000, nsw: 87000});
+  assert.deepEqual(stats.speeches_by_chamber, {representatives: 243000, senate: 200000, nsw_la: 87000});
   assert.equal(h.writes.length, 1);
 });

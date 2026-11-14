@@ -36,6 +36,7 @@ from typing import Any, Iterator, Optional
 
 from parli.arag import AragConfig, AragError, KbClient, load_dotenv
 from parli.ingest.speaker_roles import chair_role, chair_party_sql
+from parli.ingest.federation import published_chamber
 from parli.ingest.speech_hygiene import (
     clean_party,
     clean_speaker_name,
@@ -89,7 +90,8 @@ JUNK_PREDICATES = " AND NOT (" + " OR ".join([
 # Dedupe rules from the 2026-09-01 QA pass (validated live; final ~550K):
 #  a) wragge_xml is 1998-2005 federal House Hansard sitting entirely inside
 #     zenodo's coverage (94% prefix-confirmed redundant) — dropped wholesale.
-#  b) zenodo is House-ONLY; openaustralia House rows on zenodo sitting dates
+#  b) zenodo is the House family, including the Federation Chamber. Unverified
+#     openaustralia House rows on zenodo sitting dates
 #     are redundant, its Senate rows and post-2022 House rows are unique.
 #  c) exact (date, speaker_name, text) duplicates — 17.8K rows, almost all
 #     committee_senate transcripts double-ingested on 8 dates.
@@ -186,6 +188,9 @@ def map_speech(row: sqlite3.Row) -> dict:
     decade = f"{date[:3]}0s" if len(date) >= 4 and date[:4].isdigit() else None
     speaker = _optional_column(row, "speaker_name_clean") or clean_speaker_name(row["speaker_name"])
     party = _optional_column(row, "party_canonical") or clean_party(row["party"])
+    if _optional_column(row, 'fedchamb_flag') is not None:
+        # A missing dated affiliation must not resurrect an undated source label.
+        party = _optional_column(row, 'party_canonical')
     clean_body = _optional_column(row, "text_clean")
     if clean_body is None:
         clean_body = clean_speech_text(
@@ -205,11 +210,13 @@ def map_speech(row: sqlite3.Row) -> dict:
     if is_witness:
         speaker_type = 'witness'
         party = None
+    # Other sources retain the title grammar their existing readers parse.
+    title_separator = " - " if row["chamber"] == 'federation' else " — "
     witness_position = _optional_column(row, "witness_position")
     witness_organisation = _optional_column(row, "witness_organisation")
     return {
         "slug": f"speech-{row['speech_id']}",
-        "title": (" — ".join(title_bits) or f"Speech {row['speech_id']}")[:2000],
+        "title": (title_separator.join(title_bits) or f"Speech {row['speech_id']}")[:2000],
         "texts": _texts(clean_body),
         "origin": {
             "source_id": "opax-parli",
@@ -222,7 +229,7 @@ def map_speech(row: sqlite3.Row) -> dict:
                 ("source", row["source"]),
                 ("state", row["state"] or "federal"),
                 ("party", party),
-                ("chamber", row["chamber"]),
+                ("chamber", published_chamber(row["chamber"])),
                 ("decade", decade),
                 ("speaker_type", speaker_type),
                 ("chair_role", role),
@@ -238,7 +245,8 @@ def map_speech(row: sqlite3.Row) -> dict:
                 "word_count": row["word_count"],
                 "date": date,
                 **{k: _optional_column(row, k) for k in ('gid', 'oa_office_id', 'citation_anchor', 'talktype',
-                                                      'source_url', 'source_attribution')
+                                                      'source_url', 'source_attribution', 'fedchamb_flag',
+                                                      'source_input_id', 'source_row_number')
                    if _optional_column(row, k) is not None},
                 **({"witness_position": witness_position} if witness_position else {}),
                 **({"witness_organisation": witness_organisation} if witness_organisation else {}),

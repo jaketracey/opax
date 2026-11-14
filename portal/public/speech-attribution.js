@@ -43,7 +43,8 @@ export function resolvedParticipants(value) {
 
 export function belongsToScope(row, scope) {
   return !isWitness(row) && !['chair', 'unknown', 'multi_speaker', 'unattributed'].includes(row?.speaker_type) &&
-    row?.kind === 'speech' && row?.state === scope.state && row?.chamber === scope.chamber &&
+    row?.kind === 'speech' && row?.state === scope.state &&
+    (row?.chamber === scope.chamber || row?.chamber === 'federation' && scope.chamber === 'representatives') &&
     (!scope.speakers || scope.speakers.some(name => nameKey(name) === nameKey(row?.speaker))) &&
     (!scope.service || scope.service.some(t => typeof row?.date === 'string' &&
       t.start <= row.date.slice(0, 10) && row.date.slice(0, 10) <= t.end));
@@ -53,7 +54,9 @@ export function scopeFilter(scope) {
   return { and: [
     { prop: 'label', labelset: 'kind', label: 'speech' },
     { prop: 'label', labelset: 'state', label: scope.state },
-    { prop: 'label', labelset: 'chamber', label: scope.chamber },
+    ...(scope.chamber === 'representatives'
+      ? [{ or: ['representatives', 'federation'].map(label => ({ prop: 'label', labelset: 'chamber', label })) }]
+      : [{ prop: 'label', labelset: 'chamber', label: scope.chamber }]),
     ...(scope.speakers ? [{ or: scope.speakers.map(collaborator => ({ prop: 'origin_collaborator', collaborator })) }] : []),
     ...(scope.service ? [{ or: scope.service.map(t => ({ prop: 'created',
       since: `${t.start}T00:00:00Z`, until: `${t.end}T23:59:59Z` })) }] : []),
@@ -119,7 +122,8 @@ export function datedAffiliationParty(row, person) {
   const scope = personScope(person);
   if (scope && !belongsToScope(row, scope)) return null;
   const affiliations = (person?.affiliations || []).filter(term =>
-    term.jurisdiction === row.state && term.chamber === row.chamber && term.start &&
+    term.jurisdiction === row.state &&
+    (term.chamber === row.chamber || term.chamber === 'representatives' && row.chamber === 'federation') && term.start &&
     term.start <= date && (!term.end || date <= term.end));
   if (!affiliations.length || affiliations.some(term => !term.party)) return null;
   const parties = [...new Set(affiliations.map(term => term.party))];

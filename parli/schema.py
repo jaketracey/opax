@@ -93,6 +93,9 @@ CREATE TABLE IF NOT EXISTS speeches (
     state TEXT DEFAULT 'federal',  -- 'federal', 'nsw', 'vic', 'qld', etc.
     speaker_name_clean TEXT,
     party_canonical TEXT,
+    fedchamb_flag INTEGER,  -- Zenodo source flag, including the former Main Committee
+    source_input_id TEXT,   -- Original Zenodo uniqueID; never the public citation ID
+    source_row_number INTEGER,
     FOREIGN KEY (person_id) REFERENCES members(person_id)
 );
 

@@ -63,7 +63,7 @@
 <link rel="stylesheet" href="/register-tables.css?v=b98ab37c03">
 <script type="module" src="/register-tables-entry.js?v=e3a8404130"></script>
 <link rel="stylesheet" href="/vote-tables.css?v=af28a31b69">
-<script type="module" src="/vote-tables.js?v=4e3aec806a"></script>
+<script type="module" src="/vote-tables.js?v=8a843c5068"></script>
 <link rel="stylesheet" href="/style.css?v=a376871abb">
 <link rel="stylesheet" href="/ui-controls.css?v=ce29178242">
 <link rel="stylesheet" href="/ui-source.css?v=78ddb8fc1b">
@@ -72,7 +72,7 @@
 <link rel="stylesheet" href="/nav.css?v=69e7b2c27e">
 <link rel="stylesheet" href="/procurement.css?v=db00e48205">
 <!-- labels.js: app.js imports it before its first render. -->
-<link rel="modulepreload" href="/labels.js?v=fcb2a1091c">
+<link rel="modulepreload" href="/labels.js?v=8369c88b95">
 </head>
 <body class="research-app">
 <!-- Google Tag Manager (noscript) -->
@@ -406,6 +406,21 @@
                   <option value="federal">Federal</option><option value="nsw">NSW</option>
                   <option value="vic">VIC</option><option value="sa">SA</option>
                   <option value="qld">QLD</option><option value="tas">TAS</option><option value="wa">WA</option><option value="nt">NT</option><option value="act">ACT</option>
+                </select>
+              </span>
+              <span class="filter-item ui-field">
+                <label for="f-chamber">Chamber</label>
+                <select id="f-chamber" class="ui-input">
+                  <option value="">any</option>
+                  <option value="representatives">House (including Federation Chamber)</option>
+                  <option value="federation">Federation Chamber (formerly Main Committee)</option>
+                  <option value="senate">Senate</option>
+                  <option value="nsw_la">NSW Legislative Assembly</option><option value="nsw_lc">NSW Legislative Council</option>
+                  <option value="vic_la">Victorian Legislative Assembly</option><option value="vic_lc">Victorian Legislative Council</option>
+                  <option value="sa_ha">SA House of Assembly</option><option value="sa_lc">SA Legislative Council</option>
+                  <option value="qld_la">Queensland Legislative Assembly</option><option value="act_la">ACT Legislative Assembly</option>
+                  <option value="house_committee">House committees</option><option value="senate_committee">Senate committees</option>
+                  <option value="joint_committee">Joint committees</option>
                 </select>
               </span>
               <span class="filter-item ui-field">
@@ -993,6 +1008,8 @@
         <div class="table-scroll"><table class="about-table stats-live-table">
           <thead><tr><th>Speeches by parliament</th><th>Speeches</th></tr></thead>
           <tbody id="stats-parliaments"><tr><td colspan="2">Counting…</td></tr></tbody>
+          <thead><tr><th>Speeches by chamber</th><th>Speeches</th></tr></thead>
+          <tbody id="stats-chambers"><tr><td colspan="2">Counting…</td></tr></tbody>
           <thead><tr><th>Documents by kind</th><th>Documents</th></tr></thead>
           <tbody id="stats-kinds"><tr><td colspan="2">Counting…</td></tr></tbody>
         </table></div>
@@ -2102,11 +2119,11 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=2154dc983c" defer></script>
+<script src="/spa-shell.js?v=aba7e9c255" defer></script>
 <script src="/navigation.js?v=05ba025bca" defer></script>
 <script src="/quick-search.js?v=1009512e8a" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
-<script src="/app.js?v=b7725a8caf" defer></script>
+<script src="/app.js?v=4ddad9c8a7" defer></script>
 <!-- PostHog runs after the app (defer order) so the first route is not queued behind it; it replays the events measured before it (analytics/index.js). -->
 <script src="/analytics.js?v=5fb3114d72" defer></script>
 </body>

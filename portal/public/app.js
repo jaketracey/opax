@@ -31,18 +31,18 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=4e3aec806a").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=8a843c5068").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=1e074743c9").then(module => { growthModules = module; });
+const growthModulesReady = import("/growth-modules.js?v=78b98dc7d5").then(module => { growthModules = module; });
 let registerTables;
 const registerTablesReady = import('/register-tables.js?v=a1bf34a557').then(module => { registerTables = module; });
 let askPerson;
-const askPersonReady = import('/ask-person.js?v=e628525cf3').then(module => { askPerson = module; });
+const askPersonReady = import('/ask-person.js?v=551538d26d').then(module => { askPerson = module; });
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=fcb2a1091c').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=8369c88b95').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
@@ -1012,6 +1012,7 @@ function bibtexFor(s) {
     `  title = {${(s.title || s.slug).replace(/[{}]/g, "")}}`,
     year ? `  year = {${year}}` : null,
     month ? `  month = {${month}}` : null,
+    (s.chamber || s.labels?.chamber) ? `  institution = {${chamberLabel(s.chamber || s.labels?.chamber)}}` : null,
     `  howpublished = {Public record, via OPAX corpus v${corpusVersion()}}`,
     `  url = {${searchResultUrl(s)}}`,
     `  urldate = {${localISODate()}}`,
@@ -1025,6 +1026,7 @@ function risFor(s) {
   const lines = ["TY  - GOVDOC"];
   if (s.speaker) lines.push(`AU  - ${family}, ${given}`);
   lines.push(`TI  - ${s.title || s.slug}`);
+  if (s.chamber || s.labels?.chamber) lines.push(`PB  - ${chamberLabel(s.chamber || s.labels?.chamber)}`);
   if (s.date) lines.push(`PY  - ${s.date.slice(0, 4)}`, `DA  - ${s.date.slice(0, 10).replace(/-/g, "/")}`);
   lines.push(`UR  - ${searchResultUrl(s)}`);
   const official = s.sourceUrl ?? s.url;
@@ -1052,10 +1054,10 @@ function exportHeader(context) {
 }
 
 function sourcesCSV(rows, context) {
-  const head = "slug,kind,title,speaker,party,state,date,score,snippet,opax_url,source_url,excerpt_label";
+  const head = "slug,kind,title,speaker,party,state,date,score,snippet,opax_url,source_url,excerpt_label,chamber,chamber_name";
   const body = rows.map((r) =>
     [r.slug, r.kind || (r.slug || "").split("-")[0], r.title, r.speaker, r.party, r.state, r.date,
-      r.score ?? "", (r.snippet || "").slice(0, 300), searchResultUrl(r), r.url || "", r.excerpt_label || ""].map(csvCell).join(",")
+      r.score ?? "", (r.snippet || "").slice(0, 300), searchResultUrl(r), r.url || "", r.excerpt_label || "", r.chamber || r.labels?.chamber || "", chamberLabel(r.chamber || r.labels?.chamber)].map(csvCell).join(",")
   );
   return `${exportHeader(context)}\n${head}\n${body.join("\n")}\n`;
 }
@@ -1566,7 +1568,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=537b3bb707' : '/ledger.js?v=bc3204d336');
+    const mod = await import(grants ? '/grants.js?v=27588acaeb' : '/ledger.js?v=8adef0c44e');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1597,7 +1599,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=3a54178d61');
+    const mod = await import('/money-explain.js?v=5648db2b7e');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1616,7 +1618,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=e8cb8c0677');
+    const mod = await import('/grant-recipient.js?v=8a05296625');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1870,7 +1872,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=5b5924af27");
+    const module = await import("/suppliers.js?v=74d6e29b5e");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -5494,7 +5496,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=554ac92056'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=a9efdb68c2'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -7586,13 +7588,13 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=c07cfc6fc9").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=7a27788fa6").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
 // Chamber codes as parli.db records them, in the order the filter lists them.
 const DIR_CHAMBERS = {
-  representatives: "House of Representatives", senate: "Senate", senate_committee: "Senate committees",
+  representatives: "House of Representatives", federation: "Federation Chamber", senate: "Senate", senate_committee: "Senate committees",
   house_committee: "House committees", joint_committee: "Joint committees",
   nsw_la: "NSW Legislative Assembly", nsw_lc: "NSW Legislative Council",
   vic_la: "Victorian Legislative Assembly", vic_lc: "Victorian Legislative Council",
@@ -9960,7 +9962,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=3a54178d61"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=5648db2b7e"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=f76d422664");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -9976,14 +9978,14 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=e291622b79", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=04019b5844", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=1c29d72c36", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=bc3204d336", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=537b3bb707", mount: "mountGrants" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=8adef0c44e", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=27588acaeb", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=db6be4c6c9", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=23905e63c4", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=94b8296962", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -12416,6 +12418,7 @@ function currentFilters() {
     speaker: $("f-speaker").value.trim(),
     party: $("f-party").value,
     state: $("f-state").value,
+    chamber: $("f-chamber").value || undefined,
     topic: $("f-topic").value,
     // Do not introduce an end-of-year cutoff into an open exact-date citation.
     from: exactDates && sameYears ? "" : from,
@@ -12469,7 +12472,7 @@ function searchQueryParams(q, f, page, sort) {
 {
   const btn = $("search-options-btn");
   const pop = $("search-options-pop");
-  const ids = ["f-speaker", "f-party", "f-state", "f-topic", "f-from", "f-to", "search-kind", "search-mode"];
+  const ids = ["f-speaker", "f-party", "f-state", "f-chamber", "f-topic", "f-from", "f-to", "search-kind", "search-mode"];
   for (const id of ["f-from", "f-to"]) {
     const select = $(id);
     for (let year = RECORD_FIRST_YEAR; year <= RECORD_LAST_YEAR; year++) select.add(new Option(String(year), String(year)));
@@ -12583,7 +12586,7 @@ function filterChipSpecs(f) {
   if (f.party) out.push({ id: "party", k: "Party", v: f.party });
   if (f.state) out.push({ id: "state", k: "Parliament", v: STATE_NAMES[f.state] || f.state });
   if (f.topic) out.push({ id: "topic", k: "Topic", v: TOPICS[f.topic] || f.topic });
-  if (f.chamber) out.push({ id: "chamber", k: "Chamber", v: f.chamber.replace(/_/g, " ") });
+  if (f.chamber) out.push({ id: "chamber", k: "Chamber", v: chamberLabel(f.chamber) || f.chamber.replace(/_/g, " ") });
   if (f.venue && f.venue !== "all") out.push({ id: "venue", k: "Speeches", v: f.venue === "committee" ? "Committee hearings" : "Chamber speeches" });
   if (f.from || f.to || f.since || f.until) {
     const a = f.since || f.from || "1993", b = f.until || f.to || "2026";
@@ -12637,7 +12640,7 @@ const SEARCH_FILTER_RESETS = {
   party: () => { $("f-party").value = ""; },
   state: () => { $("f-state").value = ""; },
   topic: () => { $("f-topic").value = ""; },
-  chamber: () => { delete searchCitationScope.chamber; },
+  chamber: () => { delete searchCitationScope.chamber; $("f-chamber").value = ""; },
   venue: () => { delete searchCitationScope.venue; },
   years: () => { delete searchCitationScope.since; delete searchCitationScope.until; $("f-from").value = "1993"; $("f-to").value = "2026"; updateSearchYearsLabel(); },
   kind: () => { $("search-kind").value = "all"; },
@@ -12729,7 +12732,7 @@ function applySearchParams(params) {
   // ("Gerard Rennick People First"): add it, or the filter would drop to "any".
   const party = params.get("party");
   if (party && ![...$("f-party").options].some((o) => o.value === party)) $("f-party").add(new Option(party, party));
-  for (const name of ["speaker", "party", "state", "topic"]) $("f-" + name).value = params.get(name) || "";
+  for (const name of ["speaker", "party", "state", "chamber", "topic"]) $("f-" + name).value = params.get(name) || "";
   for (const [name, fallback] of [["from", RECORD_FIRST_YEAR], ["to", RECORD_LAST_YEAR]]) {
     const exact = params.get(name === "from" ? "since" : "until");
     const year = Number(exact?.slice(0, 4) || params.get(name)) || fallback;
@@ -13544,7 +13547,7 @@ function citePanelHTML(doc) {
   const url = opaxUrl(doc.slug);
   const aglc = `${chamberBit}, ${fmtDate(d)}${doc.speaker ? ` (${doc.speaker})` : ""} <${url}>.`;
   const apa = `${family}${given ? `, ${given[0]}.` : ""} (${year || "n.d."}). ${doc.title}. Parliamentary record, Australia. OPAX. ${url}`;
-  const src = { slug: doc.slug, title: doc.title, speaker: doc.speaker, date: d, sourceUrl: doc.url };
+  const src = { slug: doc.slug, title: doc.title, speaker: doc.speaker, date: d, sourceUrl: doc.url, chamber: doc.labels?.chamber };
   return `
     <h3>AGLC-style</h3><pre>${esc(aglc)}</pre>
     <p class="fineprint">For AGLC-compliant page references, use the official record via the source link. OPAX never invents Hansard page numbers.</p>
@@ -15747,6 +15750,7 @@ function renderStatsLiveTables() {
     }));
   };
   fill($("stats-parliaments"), STATS_PARLIAMENTS, live.speeches_by_state);
+  fill($("stats-chambers"), Object.entries(uiLabels.CHAMBER_LABELS), live.speeches_by_chamber);
   fill($("stats-kinds"), STATS_KINDS, live.kinds);
 }
 

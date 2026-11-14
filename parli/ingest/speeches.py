@@ -27,6 +27,7 @@ from pathlib import Path
 
 from parli.ingest import fts
 from parli.ingest.dedup import build_seen
+from parli.ingest.federation import HouseMembership, ensure_columns, flagged, input_id, logical_chamber
 from parli.schema import get_db, init_db
 
 CACHE_DIR = Path("~/.cache/autoresearch/hansard").expanduser()
@@ -61,6 +62,8 @@ def load_zenodo_parquet(db, seen: set[str]) -> int:
 
     import pyarrow.parquet as pq
 
+    ensure_columns(db)
+    membership = HouseMembership(db)
     count = 0
     pending = 0
     with zipfile.ZipFile(str(ZENODO_ZIP), "r") as zf:
@@ -127,9 +130,10 @@ def load_zenodo_parquet(db, seen: set[str]) -> int:
                 chamber = (
                     table.column(chamber_col)[i].as_py() if chamber_col else ""
                 ) or ""
-                chamber = chamber.lower().strip()
-                if chamber not in ("representatives", "senate"):
-                    chamber = "representatives"
+                flag = flagged(table.column('fedchamb_flag')[i].as_py()) if 'fedchamb_flag' in columns else False
+                original_id = input_id(table.column('uniqueID')[i].as_py()) if 'uniqueID' in columns else None
+                chamber = logical_chamber(chamber, flag)
+                person_id, dated_party = membership.at(speaker, speech_date) if chamber in ('representatives', 'federation') else (None, None)
 
                 # Deduplicate
                 dedup_key = f"{speaker}|{speech_date}|{text_hash(text)}"
@@ -143,11 +147,12 @@ def load_zenodo_parquet(db, seen: set[str]) -> int:
                     """
                     INSERT INTO speeches
                     (person_id, speaker_name, party, electorate, chamber,
-                     date, topic, text, word_count, source)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     date, topic, text, word_count, source, party_canonical,
+                     fedchamb_flag, source_input_id, source_row_number)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
-                        None,
+                        person_id,
                         speaker,
                         party,
                         electorate,
@@ -157,6 +162,10 @@ def load_zenodo_parquet(db, seen: set[str]) -> int:
                         text,
                         word_count,
                         "zenodo",
+                        dated_party,
+                        int(flag),
+                        original_id,
+                        i + 1,
                     ),
                 )
                 count += 1

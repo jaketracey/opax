@@ -2,10 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
+import {chamberLabel} from '../public/labels.js';
 const app=readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
 const source=app.slice(app.indexOf('function searchResultHref'),app.indexOf('function bibtexFor'))+app.slice(app.indexOf('function csvCell'),app.indexOf('/**\n * A small format menu'));
 const downloads=[],outcomes=[];
-const context={siteUrl:p=>'https://opax.com.au'+p,safeUrl:u=>typeof u==='string'&&/^https?:\/\//.test(u)?u:null,corpusVersion:()=> 'test',
+const context={chamberLabel,siteUrl:p=>'https://opax.com.au'+p,safeUrl:u=>typeof u==='string'&&/^https?:\/\//.test(u)?u:null,corpusVersion:()=> 'test',
  download:(name,mime,text)=>downloads.push({name,mime,text}),trackOutcome:(name,props)=>outcomes.push({name,props}),
  bibtexFor:r=>`@misc{${r.slug}}`,risFor:r=>`TY  - GEN\nID  - ${r.slug}\nER  -`};
 runInNewContext(source,context);

@@ -36,7 +36,7 @@ function entityHrefAttr(href) {
  *  `house`) as a reader names them. A state house carries its parliament in
  *  brackets, so the label stands alone in a kicker, a meta line or a share card. */
 export const CHAMBER_LABELS = {
-  representatives: 'House of Representatives', senate: 'Senate',
+  representatives: 'House of Representatives', federation: 'Federation Chamber', senate: 'Senate',
   senate_committee: 'Senate committees', house_committee: 'House committees', joint_committee: 'Joint committees',
   assembly: 'Legislative Assembly', council: 'Legislative Council',
   nsw_la: 'Legislative Assembly (New South Wales)', nsw_lc: 'Legislative Council (New South Wales)',

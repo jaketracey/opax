@@ -18,7 +18,8 @@ for await (const line of createInterface({ input: createReadStream(resolve(stage
   if (!line.trim()) continue
   const doc = JSON.parse(line)
   const label = (name: string) => doc.usermetadata.classifications.find((c: {labelset: string}) => c.labelset === name)?.label ?? null
-  if (label('source') !== 'openaustralia') throw new Error('Expected OpenAustralia payload')
+  const source = label('source')
+  if (source !== 'openaustralia' && !(source === 'zenodo' && label('chamber') === 'federation')) throw new Error('Expected federal backfill or Federation relabel payload')
   const text = String(doc.texts.body.body)
   const body = clip(text)
   clipped += Number(body.includes(' [...] '))
@@ -40,7 +41,7 @@ const report = {
   five_percent_primary_retry_plus_one_percent_escalation: scenario(primaryNeurons * 1.05 + escalationNeurons * 0.01),
   primary_max_output_every_call: scenario(cappedNeurons),
   method: 'Actual combined Worker system/record messages and clip(); estimated input tokens = JS characters / 3.5; 620 output tokens (existing Qwen bake-off mean, includes thinking); neuronsFor() prices. One call supplies both summary and topics.',
-  limitations: 'Gross marginal USD before shared daily free allowance. Retry rates are scenarios, not measured for this corpus; excludes platform, D1 and KB costs. No generation or queueing performed. OA source does not trigger the separate hansard_hist hold.',
+  limitations: 'Gross marginal USD before shared daily free allowance. Retry rates are scenarios, not measured for this corpus; excludes platform, D1 and KB costs. No generation or queueing performed. Metadata-only relabels may retain existing enrichment; this estimates complete re-enrichment as a conservative scenario.',
   pricing_source: 'https://developers.cloudflare.com/workers-ai/platform/pricing/',
   priced_at: '2026-10-13',
 }

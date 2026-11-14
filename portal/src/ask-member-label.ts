@@ -2,7 +2,7 @@
 export interface CountedMember { name: string; parliaments: string[] }
 interface MemberRecord { name: string; full?: string; chambers?: string[]; prints?: string[] }
 const PARLIAMENTS: Record<string, string> = {
-  representatives: 'Australian Parliament', senate: 'Australian Parliament',
+  representatives: 'Australian Parliament', federation: 'Australian Parliament', senate: 'Australian Parliament',
   act_la: 'ACT Legislative Assembly', qld_la: 'Queensland Parliament',
   vic_la: 'Parliament of Victoria', vic_lc: 'Parliament of Victoria',
   nsw_la: 'Parliament of New South Wales', nsw_lc: 'Parliament of New South Wales',
@@ -12,7 +12,8 @@ export function countedMember(name: string, roster: unknown, chamber?: string | 
   const people = (roster as { people?: MemberRecord[] } | null)?.people ?? []
   const matches = people.filter(p => p.name === name || p.prints?.includes(name))
   if (matches.length !== 1) return
-  const person = matches[0], chambers = (person.chambers ?? []).filter(c => PARLIAMENTS[c] && (!chamber || c === chamber))
+  const membership = (c: string) => c === 'federation' ? 'representatives' : c
+  const person = matches[0], chambers = (person.chambers ?? []).filter(c => PARLIAMENTS[c] && (!chamber || membership(c) === membership(chamber)))
   if (!chambers.length) return
   return { name: person.full?.trim() || person.name, parliaments: [...new Set(chambers.map(c => PARLIAMENTS[c]))] }
 }
