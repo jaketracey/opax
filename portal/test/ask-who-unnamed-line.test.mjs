@@ -3,9 +3,10 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import {build} from 'esbuild'
+import {importBundle} from './fixtures/import-bundle.mjs'
 
 const bundled=await build({stdin:{contents:"export * from './src/research-who-lead'; export * from './src/research-grounding';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
-const api=await import('data:text/javascript;base64,'+Buffer.from(bundled.outputFiles[0].text).toString('base64'))
+const api=await importBundle(bundled.outputFiles[0].text,'ask-who-unnamed-line')
 const speech=(resource,speaker,snippet,title)=>({resource,slug:'',title,url:'https://example.org/'+resource,snippet,kind:'speech',speaker,chamber:'house',date:'2020-02-04',cited:true})
 /** An answer of lines, each cited to its source when one is given, as the loop writes it (uncited lines have none). */
 function answer(lines){
