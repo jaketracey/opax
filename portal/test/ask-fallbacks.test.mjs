@@ -115,15 +115,27 @@ test('plain text before any lookup is answered from general knowledge, never lef
   assert.equal(run.model.doGenerateCalls.length,1)
 })
 
-test('malformed arguments and a plan in prose: the one forced answer call writes the cited answer',async()=>{
-  const run=await ask(robodebt,[calls(search),calls(['answer','{"points": [{"claim": "unfinished']),prose('Let me check the report again.'),
-    calls(['answer',{points:[{claim:said},{claim:'Jordan Sample told the Senate the commission found the scheme was "a crude and cruel mechanism, neither fair nor legal".',id:pid,quote:'a crude and cruel mechanism, neither fair nor legal'}]}])])
+const sampled={points:[{claim:said},{claim:'Jordan Sample told the Senate the commission found the scheme was "a crude and cruel mechanism, neither fair nor legal".',id:pid,quote:'a crude and cruel mechanism, neither fair nor legal'}]}
+test('malformed arguments and a plan in prose: the plan gets feedback once and the next turn writes the cited answer',async()=>{
+  const run=await ask(robodebt,[calls(search),calls(['answer','{"points": [{"claim": "unfinished']),prose('Let me check the report again.'),calls(['answer',sampled])])
+  assert.equal(run.status,200);answered(run.body,'continued answer')
+  assert.ok(run.body.answer.startsWith('The cited sources do not name a person or office as responsible.\n\n'+said),run.body.answer)
+  cited(run.body,rid,'continued answer')
+  // Research goes on in the same conversation, not in a separate final call.
+  const last=run.model.doGenerateCalls.at(-1)
+  assert.equal(last.toolChoice.type,'auto')
+  assert.match(JSON.stringify(last.prompt.at(-1)),/no tool call and no answer object/)
+  assert.equal(run.model.doGenerateCalls.length,4,'one re-ask, no more')
+})
+
+test('two plans in prose: research ends, and the one forced answer call writes the cited answer',async()=>{
+  const run=await ask(robodebt,[calls(search),prose('Let me check the report again.'),prose('I will look at the commission findings next.'),calls(['answer',sampled])])
   assert.equal(run.status,200);answered(run.body,'forced answer')
   assert.ok(run.body.answer.startsWith('The cited sources do not name a person or office as responsible.\n\n'+said),run.body.answer)
   cited(run.body,rid,'forced answer')
   const last=run.model.doGenerateCalls.at(-1)
   assert.deepEqual(last.toolChoice,{type:'tool',toolName:'answer'},'the re-ask requires the answer tool')
-  assert.equal(run.model.doGenerateCalls.length,4,'one re-ask, no more')
+  assert.equal(run.model.doGenerateCalls.length,4,'one feedback turn and one forced answer call, no more')
 })
 
 test('when the forced answer call also replies in prose, that prose is the answer',async()=>{
@@ -260,7 +272,7 @@ test('boundary: an empty answer is written from the records it lists, else their
 
 test('prose is used only when it reads as an answer',()=>{
   assert.equal(api.usableProse(said),said)
-  for(const text of ['Let me search the record for robodebt.','I will look at the report.','<tool_call>{"name":"search"}</tool_call>','{"points":[]}','```json\n{"facts":[1]}\n```','Sorry, I cannot answer that.','The records do not establish who was responsible.','Robodebt.',''])
+  for(const text of ['Let me search the record for robodebt.','I will look at the report.','<tool_call>{"name":"search"}</tool_call>','{"points":[]}','```json\n{"facts":[1]}\n```','I have enough verified passages from different speeches and dates. {"points":[{"claim":"Robodebt was unlawful.","id":"r1"','Sorry, I cannot answer that.','The records do not establish who was responsible.','Robodebt.',''])
     assert.equal(api.usableProse(text),null,text)
   assert.equal(api.usableProse('<think>plan the search</think>'+said),said)
   assert.equal(api.modelProse([{type:'reasoning',text:'hidden'},{type:'text',text:'A '},{type:'text',text:'B'}]),'A B')
