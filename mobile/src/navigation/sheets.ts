@@ -47,7 +47,7 @@ let overModal = false;
 export function setSheetSegments(segments: readonly string[]) {
   const first = segments.find((segment) => !segment.startsWith('('));
   if (
-    ['source', 'citation', 'machine-note', 'rule', 'licences'].includes(
+    ['source', 'citation', 'machine-note', 'rule', 'licences', 'plain-words'].includes(
       first ?? '',
     )
   )

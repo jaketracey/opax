@@ -25,10 +25,16 @@ import {
 import { useLayout, useScreenMargin } from '../../design/adaptive';
 import { LaunchHandoff } from '../../launch/LaunchHandoff';
 import { releaseSplash } from '../../launch/splash';
-import { welcomeSeatRoute } from '../../navigation/routes';
+import {
+  welcomeBasicsRoute,
+  welcomeSeatRoute,
+  welcomeTourRoute,
+} from '../../navigation/routes';
 import { firstRunSkipped } from '../../onboarding/measure';
 import { closeWelcome, markWelcomeSeen } from '../../onboarding/state';
 import { useSeat } from '../your-mp/useSeat';
+import { newcomerOption } from '../newcomer/option';
+import { newcomerWelcome } from '../newcomer/welcome-copy';
 import { welcomeCopy } from './copy';
 
 /** The welcome's content column on a wide screen (today.md 3.3). */
@@ -107,6 +113,12 @@ export function WelcomePage({
   const ground = designFlags.groupedSurfaces ? colors.sunken : colors.paper;
   const margin = useScreenMargin();
 
+  // Newcomer design pass (prototype): the option's own rows and buttons.
+  // The short welcome keeps the shipping page.
+  const option = short ? null : newcomerOption();
+  const newcomer = option ? newcomerWelcome[option] : null;
+  const features = newcomer?.features ?? welcomeCopy.features;
+
   const leave = (declined: boolean) => {
     if (leaving.current) return;
     leaving.current = true;
@@ -123,8 +135,21 @@ export function WelcomePage({
       // seen from here: a reader who leaves the app on the electorate step
       // comes back to Today and its invitation, not to this page again.
       void markWelcomeSeen().catch(() => undefined);
-      router.push(welcomeSeatRoute());
+      router.push(
+        newcomer?.primaryTo === 'tour'
+          ? welcomeTourRoute
+          : newcomer?.primaryTo === 'basics'
+            ? welcomeBasicsRoute
+            : welcomeSeatRoute(),
+      );
     }
+  };
+  /** The option's second button: straight to the electorate step. */
+  const skipBasics = () => {
+    if (leaving.current || advancing.current) return;
+    advancing.current = true;
+    void markWelcomeSeen().catch(() => undefined);
+    router.push(welcomeSeatRoute());
   };
   // Two-finger Z, Escape and Android back: "Not now" (today.md 3.2). A
   // replay with a seat saved changes nothing; the short welcome declines
@@ -177,14 +202,36 @@ export function WelcomePage({
   );
 
   const button = (
-    <Button
-      label={welcomeCopy.continue}
-      variant="primary"
-      size="large"
-      fullWidth
-      onPress={next}
-      testID="welcome-continue"
-    />
+    <View style={styles.buttons}>
+      {newcomer?.ask ? (
+        <Text
+          wordSafe
+          variant="strong"
+          style={styles.centred}
+          testID="welcome-ask"
+        >
+          {newcomer.ask}
+        </Text>
+      ) : null}
+      <Button
+        label={newcomer?.primary ?? welcomeCopy.continue}
+        variant="primary"
+        size="large"
+        fullWidth
+        onPress={next}
+        testID="welcome-continue"
+      />
+      {newcomer?.secondary ? (
+        <Button
+          label={newcomer.secondary}
+          variant="plain"
+          fullWidth
+          centredLabel
+          onPress={skipBasics}
+          testID="welcome-skip-basics"
+        />
+      ) : null}
+    </View>
   );
   const markSize = accessible ? 44 : wide ? 72 : 64;
   return (
@@ -243,7 +290,7 @@ export function WelcomePage({
             {welcomeCopy.title}
           </Text>
           <View style={styles.rows}>
-            {welcomeCopy.features.map((feature) => (
+            {features.map((feature) => (
               <View
                 key={feature.id}
                 accessible
@@ -354,5 +401,6 @@ const styles = StyleSheet.create({
   fine: { marginTop: rhythm.section, gap: rhythm.tight },
   centred: { textAlign: 'center' },
   unpinned: { marginTop: rhythm.group },
+  buttons: { gap: rhythm.tight },
   foot: { paddingTop: rhythm.block },
 });

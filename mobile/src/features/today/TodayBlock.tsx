@@ -18,6 +18,7 @@ import {
 import { SourceLine, type SourceDetails } from '../../design/source';
 import { InlineError, SkeletonCrossfade } from '../../design/states';
 import { Text } from '../../design/text';
+import type { TermId } from '../newcomer/terms';
 import { minimumTarget, rhythm, textStyles } from '../../design/tokens';
 
 /**
@@ -104,9 +105,12 @@ export function TodayBlock<T>({
   line,
   testID,
   report,
+  term,
   children,
 }: {
   title?: string;
+  /** Newcomer design pass (prototype): the term this block's title uses. */
+  term?: TermId;
   action?: SectionAction;
   state: TodayBlockState<T>;
   /** Controls between the header and the group (Bills' segments). */
@@ -156,6 +160,7 @@ export function TodayBlock<T>({
           title={title}
           action={action}
           testID={`${testID}-title`}
+          term={term}
         />
       ) : null}
       {above}

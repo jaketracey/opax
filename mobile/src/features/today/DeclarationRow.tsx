@@ -355,6 +355,7 @@ export function DeclarationsBlock({
   return (
     <TodayBlock
       title="Just declared"
+      term="interests"
       action={{
         accessibilityLabel: 'See all declarations',
         href: declarationsRoute,

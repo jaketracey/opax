@@ -13,6 +13,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type ComponentProps,
   type ReactElement,
   type ReactNode,
   type Ref,
@@ -37,6 +38,9 @@ import { useSafeSetOptions } from '../navigation/preview';
 import { useFloatingBarClearance } from '../navigation/floating-bar';
 import { useRootBarAppearance } from '../navigation/useRootBarAppearance';
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
+import { newcomerOption } from '../features/newcomer/option';
+import { Gloss, headerTip } from '../features/newcomer/TermTip';
+import type { TermId } from '../features/newcomer/terms';
 import { useAccessibilitySize } from './accessibility';
 import {
   columnBreakout,
@@ -686,8 +690,15 @@ export function SectionHeader({
   testID,
   level = 2,
   compact = false,
+  term,
 }: {
   title: string;
+  /**
+   * Newcomer design pass (prototype): the plain-words term this heading
+   * introduces. Option B draws its question mark after the title; option C
+   * draws one plain line under the heading. Nothing otherwise.
+   */
+  term?: TermId;
   action?: SectionAction;
   /** Independent control beside the heading, wrapping only when it cannot fit. */
   accessory?: ReactNode;
@@ -737,7 +748,25 @@ export function SectionHeader({
       : wraps
         ? styles.sectionHeadWrapping
         : styles.sectionHead;
-  return (
+  const heading = (style: ComponentProps<typeof Heading>['style']) => (
+    <Heading
+      level={level}
+      style={style}
+      testID={testID}
+      onLayout={
+        compact || (headingLayout && testID)
+          ? (event) => {
+              if (compact) setTitleHeight(event.nativeEvent.layout.height);
+              if (headingLayout && testID) headingLayout(testID, event);
+            }
+          : undefined
+      }
+    >
+      {title}
+    </Heading>
+  );
+  const tip = headerTip(term);
+  const band = (
     <View
       style={
         // Stacked at AX sizes, the header keeps its own margin to the group.
@@ -746,21 +775,19 @@ export function SectionHeader({
           : bandStyle
       }
     >
-      <Heading
-        level={level}
-        style={wraps ? styles.sectionHeadTitle : styles.grow}
-        testID={testID}
-        onLayout={
-          compact || (headingLayout && testID)
-            ? (event) => {
-                if (compact) setTitleHeight(event.nativeEvent.layout.height);
-                if (headingLayout && testID) headingLayout(testID, event);
-              }
-            : undefined
-        }
-      >
-        {title}
-      </Heading>
+      {tip ? (
+        <View
+          style={[
+            wraps ? styles.sectionHeadTitle : styles.grow,
+            styles.sectionHeadTerm,
+          ]}
+        >
+          {heading(styles.sectionHeadTermTitle)}
+          {tip}
+        </View>
+      ) : (
+        heading(wraps ? styles.sectionHeadTitle : styles.grow)
+      )}
       {action?.href && button ? (
         <RowLink href={action.href}>{button}</RowLink>
       ) : (
@@ -771,6 +798,13 @@ export function SectionHeader({
       ) : null}
     </View>
   );
+  if (!term || newcomerOption() !== 'c') return band;
+  return (
+    <View style={styles.sectionHeadGloss}>
+      {band}
+      <Gloss term={term} />
+    </View>
+  );
 }
 /** Section boundaries use space and a heading. */
 export function Section({
@@ -779,8 +813,11 @@ export function Section({
   children,
   testID,
   headingTestID,
+  term,
 }: {
   title?: string;
+  /** Newcomer design pass (prototype): see `SectionHeader`. */
+  term?: TermId;
   action?: SectionAction | ReactNode;
   children: ReactNode;
   testID?: string;
@@ -798,6 +835,7 @@ export function Section({
           title={title}
           action={isAction ? (action as SectionAction) : undefined}
           testID={headingTestID}
+          term={term}
         />
       ) : null}
       {action && !isAction ? (action as ReactNode) : null}
@@ -1069,6 +1107,9 @@ const styles = StyleSheet.create({
     gap: rhythm.tight,
   },
   sectionHeadTitle: { flexGrow: 1, flexShrink: 0, maxWidth: '100%' },
+  sectionHeadTerm: { flexDirection: 'row', alignItems: 'center' },
+  sectionHeadTermTitle: { flexShrink: 1 },
+  sectionHeadGloss: { gap: rhythm.line },
   sectionAccessory: {
     marginLeft: 'auto',
     maxWidth: '100%',

@@ -22,6 +22,9 @@ import { colors, rhythm } from '../../design/tokens';
 import { headerItems } from '../../navigation/chrome';
 import { openSource } from '../../navigation/external';
 import { seatStateRoute, welcomeSeatStateRoute } from '../../navigation/routes';
+import { newcomerOption } from '../newcomer/option';
+import { TermTip } from '../newcomer/TermTip';
+import { newcomerSeatHelp, newcomerSeatWhy } from '../newcomer/terms';
 import {
   firstRunChosen,
   firstRunSkipped,
@@ -184,6 +187,31 @@ export function AecRow() {
         testID="seat-aec"
       />
     </InsetGroup>
+  );
+}
+
+/**
+ * Why the welcome asks. The newcomer design pass (prototype) says what an
+ * electorate is first; options B and C add the term's tip beside it.
+ */
+function SeatWhy() {
+  const option = newcomerOption();
+  if (!option)
+    return (
+      <Text wordSafe variant="body" testID="welcome-seat-why">
+        {seatCopy.why}
+      </Text>
+    );
+  return (
+    <View style={{ gap: rhythm.line }}>
+      <Text wordSafe variant="body" testID="welcome-seat-why">
+        {newcomerSeatWhy}
+      </Text>
+      <Text wordSafe variant="secondary" tone="inkSoft">
+        {newcomerSeatHelp}
+      </Text>
+      {option === 'a' ? null : <TermTip term="electorate" variant="link" />}
+    </View>
   );
 }
 
@@ -620,9 +648,7 @@ export function SeatChooser({
           ) : (
             <>
               {asking ? (
-                <Text wordSafe variant="body" testID="welcome-seat-why">
-                  {seatCopy.why}
-                </Text>
+                <SeatWhy />
               ) : null}
               {saved && !vic ? (
                 <InsetGroup testID="seat-saved">

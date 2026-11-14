@@ -11,6 +11,9 @@ import { Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
 import { dark, light } from '../../design/tokens.generated';
 import { seatRoute } from '../../navigation/routes';
+import { newcomerOption } from '../newcomer/option';
+import { TermTip } from '../newcomer/TermTip';
+import { newcomerInvitation } from '../newcomer/terms';
 import { seatCopy } from '../seat/seat-model';
 import { migratedSeat, useSeat } from '../your-mp/useSeat';
 import outline from './australia-outline.json';
@@ -38,7 +41,7 @@ export function invitationBody(
   )
     return `${old.name} is no longer an electorate.`;
   if (old) return 'Choose your current federal electorate.';
-  return seatCopy.why;
+  return newcomerOption() ? newcomerInvitation : seatCopy.why;
 }
 
 /**
@@ -131,6 +134,9 @@ export function SeatInvitation({
           <Text wordSafe testID="today-invitation-body">
             {invitationBody(old)}
           </Text>
+          {newcomerOption() === 'b' ? (
+            <TermTip term="electorate" variant="link" />
+          ) : null}
         </View>
         <View style={styles.buttons}>
           <Button

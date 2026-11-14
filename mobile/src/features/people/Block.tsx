@@ -7,6 +7,7 @@ import type { SourceDetails } from '../../design/source';
 import { rhythm } from '../../design/tokens';
 import { BlockSource, type SourceOverrides } from '../your-mp/Evidence';
 import type { EvidenceBlock } from '../your-mp/model';
+import type { TermId } from '../newcomer/terms';
 
 /** A source sheet's title and notes. */
 type InfoNotes = { title?: string; notes?: SourceDetails['notes'] };
@@ -33,9 +34,12 @@ export function ProfileBlock<T>({
   originals,
   sourced = true,
   action,
+  term,
   children,
 }: {
   title: string;
+  /** Newcomer design pass (prototype): the term this block's title uses. */
+  term?: TermId;
   id: string;
   block: EvidenceBlock<T>;
   retry: () => void;
@@ -60,6 +64,7 @@ export function ProfileBlock<T>({
     return (
       <Section
         title={title}
+        term={term}
         action={action}
         testID={id}
         headingTestID={`${id}-heading`}
@@ -76,6 +81,7 @@ export function ProfileBlock<T>({
     return (
       <Section
         title={title}
+        term={term}
         action={action}
         testID={id}
         headingTestID={`${id}-heading`}
@@ -95,6 +101,7 @@ export function ProfileBlock<T>({
   return (
     <Section
       title={title}
+      term={term}
       action={action}
       testID={id}
       headingTestID={`${id}-heading`}

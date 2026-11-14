@@ -46,6 +46,8 @@ const productionStubs = [
   'src/features/today/launch-fixture',
   'src/features/people/party-timing',
   'src/onboarding/launch-flag',
+  // The newcomer design pass's option picker (prototype, e2e only).
+  'src/features/newcomer/option',
   'src/features/electorate-map/outline-probe',
   'src/features/money/money-probe',
   'src/navigation/dev-roots',

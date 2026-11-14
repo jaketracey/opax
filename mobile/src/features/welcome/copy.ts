@@ -8,7 +8,8 @@ import { symbols } from '../../design/symbols';
  * dashes, no full stops in titles, no example screens.
  */
 export interface WelcomeFeature {
-  id: 'your-mp' | 'sourced' | 'ask';
+  /** `basics`: the newcomer design pass's fourth row (prototype). */
+  id: 'your-mp' | 'sourced' | 'ask' | 'basics';
   symbol: SFSymbol;
   title: string;
   line: string;

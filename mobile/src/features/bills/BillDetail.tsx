@@ -1471,7 +1471,7 @@ function KeyDates({
     entries.length > 1 ? rulerPoints(entries, view.identity.data?.status) : [];
   return (
     <View ref={anchor} collapsable={false}>
-      <Section title="How it moved" testID="bill-key-dates">
+      <Section title="How it moved" term="reading" testID="bill-key-dates">
         {points.length ? (
           <View
             testID="bill-dates-ruler"
@@ -1682,6 +1682,7 @@ function Votes({
     >
       <Section
         title="How parliament voted"
+        term="division"
         testID="bill-divisions"
         headingTestID="bill-divisions-title"
       >

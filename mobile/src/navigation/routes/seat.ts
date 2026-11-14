@@ -26,3 +26,6 @@ export const welcomeSeatStateRoute = (code: string) => ({
   pathname: '/welcome/seat/state/[code]' as const,
   params: { code },
 });
+/** Newcomer design pass (prototype): option A's cards and option C's page. */
+export const welcomeTourRoute = { pathname: '/welcome/tour' as const };
+export const welcomeBasicsRoute = { pathname: '/welcome/basics' as const };

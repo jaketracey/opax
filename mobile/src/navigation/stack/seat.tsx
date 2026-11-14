@@ -22,6 +22,15 @@ export function welcomeScreens() {
       headerShown: false,
       scrollEdgeEffects: { top: 'hidden', bottom: 'soft' },
     }),
+    // Newcomer design pass (prototype): option A's cards, option C's page.
+    screen('tour', 'The basics', {
+      headerShown: true,
+      headerBackButtonDisplayMode: 'minimal',
+    }),
+    screen('basics', 'The basics', {
+      headerShown: true,
+      headerBackButtonDisplayMode: 'minimal',
+    }),
     screen('seat/index', 'Your electorate', {
       headerShown: true,
       headerBackButtonDisplayMode: 'minimal',

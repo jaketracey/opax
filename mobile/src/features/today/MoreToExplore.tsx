@@ -1,3 +1,9 @@
+import { router } from 'expo-router';
+import { welcomeBasicsRoute } from '../../navigation/routes';
+import { lessonCopy } from '../newcomer/lessons';
+import { newcomerOption } from '../newcomer/option';
+import { plainWordsRoute } from '../newcomer/TermTip';
+import { plainWordsCopy } from '../newcomer/terms';
 import { useLayout } from '../../design/adaptive';
 import { SurfaceGrid } from './SurfaceGrid';
 import type { ReactNode } from 'react';
@@ -86,6 +92,23 @@ export function MoreToExplore({
         </Tiles>
       </View>
       <InsetGroup>
+        {newcomerOption() === 'c' ? (
+          <LinkRow
+            title={lessonCopy.pageTitle}
+            symbol={symbols.yourMP}
+            onPress={() => router.push(welcomeBasicsRoute)}
+            testID="today-explore-basics"
+          />
+        ) : null}
+        {newcomerOption() ? (
+          <LinkRow
+            title={plainWordsCopy.title}
+            detail={plainWordsCopy.lead}
+            symbol={symbols.help}
+            onPress={() => router.push(plainWordsRoute())}
+            testID="today-explore-plain-words"
+          />
+        ) : null}
         <LinkRow
           title="Quizzes and tools"
           symbol={symbols.explore}

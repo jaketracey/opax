@@ -1,3 +1,5 @@
+import { newcomerOption } from '../newcomer/option';
+import { Gloss, TermTip } from '../newcomer/TermTip';
 import { router } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -245,6 +247,11 @@ export function YourMPCard({
         label={`${seat.name}, ${state}`}
         testID="today-your-mp-seat"
       />
+      {newcomerOption() === 'b' ? (
+        <TermTip term="mp" variant="link" />
+      ) : (
+        <Gloss term="mp" />
+      )}
       {view.status === 'error' ? (
         <InlineError
           subject="Your MP"

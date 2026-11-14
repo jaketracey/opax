@@ -52,6 +52,8 @@ export function rootScreens(chrome: NativeStackNavigationOptions = {}) {
       ['citation', 'Citation'],
       ['rule', 'How this is chosen'],
       ['licences', 'Sources and licences'],
+      // Newcomer design pass (prototype): the glossary sheet.
+      ['plain-words', 'Plain words'],
     ].map(([name, title]) => (
       <Stack.Screen
         key={name}
