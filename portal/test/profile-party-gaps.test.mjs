@@ -63,7 +63,10 @@ test('the raw and rendered no-party counts cannot grow',()=>{
   assert.ok(raw.length<=586);
   const unresolved=raw.filter(p=>!rosterSeatParty(p,seats)&&!rosterListParty(p,lists)&&!rosterServiceParty(p));
   assert.ok(unresolved.length<=430);
-  // Main has 1,565 people; row 179 adds the distinct Dickson Smith identity.
-  // Party-gap joins change fields only, so the cumulative roster has 1,566 rows.
-  assert.equal(roster.people.length,1566);
+  // Main has 1,565 people; row 179 adds the distinct Dickson Smith identity. Party-gap joins change
+  // fields only; the spelling twin "Jodi Mckay" folds into Jodi McKay (one person, one source owner).
+  assert.equal(roster.people.length,1565);
+  const mckay=roster.people.find(p=>p.name==='Jodi McKay');
+  assert.deepEqual([mckay.prints,mckay.party,mckay.speeches],[['Jodi Mckay'],'Labor',428]);
+  assert.ok(!roster.people.some(p=>p.name==='Jodi Mckay'));
 });

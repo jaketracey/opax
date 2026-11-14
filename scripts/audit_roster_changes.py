@@ -39,7 +39,8 @@ def _folds(before, after, reference, same=None):
     """Prints the `after` roster folded into a person, each proven on the baseline itself. A surname print
     (scripts/roster_fold.py decide) must be one the fold rule takes to that person there too; any other print is a
     row that shared the person's verified id (fold_ids), and the id rule must hold for the person's baseline row and
-    those rows together. Returns {print: person}, each person's expected row (the exact merge of their baseline
+    those rows together. A state spelling twin ("Jodi Mckay" beside "Jodi McKay") must be one roster_fold.twin_target
+    takes to that person on the baseline. Returns {print: person}, each person's expected row (the exact merge of their baseline
     row with their surname prints, then with their id's other rows, in name order as fold_ids merges them), and the
     set of prints folded by id."""
     folded = {stub: q['name'] for q in after for stub in q.get('prints') or []}
@@ -47,6 +48,10 @@ def _folds(before, after, reference, same=None):
     registry = roster_fold.registry_from_reference(reference)
     expected, by_id = {}, defaultdict(list)
     for stub in [p['name'] for p in before if p['name'] in folded]:
+        twin = roster_fold.twin_target(old[stub], before)
+        if twin is not None and twin['name'] == folded[stub]:
+            expected[twin['name']] = roster_fold.merge(expected.get(twin['name']) or copy.deepcopy(old[twin['name']]), old[stub])
+            continue
         target, why = roster_fold.decide(old[stub], before, registry)
         if target is not None and target['name'] == folded[stub]:
             expected[target['name']] = roster_fold.merge(expected.get(target['name']) or copy.deepcopy(old[target['name']]), old[stub])
@@ -85,7 +90,10 @@ def audit(before, after, reference, reviewed, accepted=None):
         if profiles.usable_alias(p['name']):prints[profiles.parts(p['name'])[-1]].append(p)
     changes = []
     for stub, person in folded.items():
-        if stub not in by_id:
+        if stub not in by_id and roster_fold.name_key(stub) == roster_fold.name_key(person):
+            changes.append(dict(name=stub, category='print folded', fields=['name'],
+                                reason=f'Spelling twin folded into {person}: the same full name, houses, years and seat'))
+        elif stub not in by_id:
             changes.append(dict(name=stub, category='print folded', fields=['name'],
                                 reason=f'Surname print folded into {person}: one person by surname, party, houses, years and the members register'))
         else:

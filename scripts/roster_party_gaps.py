@@ -38,7 +38,17 @@ def matches(row, source):
             and int((source.get('end') or source['as_of'])[:4]) >= row['first'])
 
 
+def twin_prints(row):
+    """True when every print folded into the row is its own full name in another case or apostrophe
+    (roster_fold.fold_twins: "Jodi Mckay" in "Jodi McKay"). Such a fold adds no identity a full-name
+    source must check, so the person keeps one party join under one name."""
+    prints = row.get('prints') or []
+    return bool(prints) and all(isinstance(p, str) and name_key(p) == name_key(row.get('name', '')) for p in prints)
+
+
 def proposal(row, evidence):
+    if twin_prints(row):
+        row = {k: v for k, v in row.items() if k != 'prints'}
     if any(row.get(k) for k in ('party', 'party_now', 'parties', 'recorded_parties', 'affiliations',
                                 'prints', 'speech_scope', 'identity_basis', 'witness_rows', 'separated_witnesses')):
         return None

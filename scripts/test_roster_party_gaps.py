@@ -99,6 +99,11 @@ class PartyJoins(unittest.TestCase):
             self.assertIsNone(proposal(candidate, {'people': [source()]}), patch)
         self.assertIsNone(proposal({**row,'pid':'99999'},{'people':[source(pid='12345')]}))
 
+    def test_a_spelling_twin_fold_keeps_the_full_name_join_and_no_other_print_does(self):
+        self.assertEqual(proposal(person(prints=['Alex EXAMPLE']),{'people':[source()]})['party'],'Example Party')
+        for prints in (['Example'],['Alex Example','A Example'],['Taylor Example']):
+            self.assertIsNone(proposal(person(prints=prints),{'people':[source()]}),prints)
+
     def test_same_name_with_two_identities_or_conflicting_parties_is_held(self):
         a, b = source(), source(identity='Q124')
         self.assertIsNone(proposal(person(), {'people':[a,b]}))
@@ -151,7 +156,12 @@ class PartyJoins(unittest.TestCase):
         accept=roster_accept.load()
         groups={name:[g for g in entries if g['evidence']=='profile-party-service'] for name,entries in accept['records'].items()}
         groups={n:gs for n,gs in groups.items() if gs}
-        self.assertEqual(len(groups),34)
+        # 34 reviewed profiles: the twin print "Jodi Mckay" is folded into Jodi McKay, so one group owns
+        # her source (Q6207887) and its print reads as her.
+        self.assertEqual(len(groups),33)
+        mckay=next(p for p in shipped['people'] if p['name']=='Jodi McKay')
+        self.assertEqual((mckay['prints'],mckay['party'],mckay['speeches']),(['Jodi Mckay'],'Labor',428))
+        self.assertNotIn('Jodi Mckay',{p['name'] for p in shipped['people']})
         before=copy.deepcopy(shipped)
         for row in before['people']:
             for g in groups.get(row['name'],[]):
@@ -162,7 +172,7 @@ class PartyJoins(unittest.TestCase):
         from scripts.roster_overlay import overlay
         after,report=overlay(before,fresh,accept)
         self.assertEqual(after['people'],shipped['people'])
-        self.assertEqual(report['accepted'],34)
+        self.assertEqual(report['accepted'],33)
         self.assertFalse(roster_accept.validate(accept,shipped['people']))
         # An unrelated mutation to an installed source-only identity is held.
         joined=next(n for n in groups if n in accept['new'])
@@ -186,8 +196,9 @@ class PartyJoins(unittest.TestCase):
 
     def test_no_party_count_cannot_grow(self):
         people=json.loads((ROOT/'portal/public/parliamentarians.json').read_text())['people']
-        # Main's 1,565 rows plus the distinct Smith identity from row 179.
-        self.assertEqual(len(people),1566)
+        # Main's 1,565 rows plus the distinct Smith identity from row 179, less the twin print
+        # "Jodi Mckay" folded into Jodi McKay (one person, one source owner).
+        self.assertEqual(len(people),1565)
         self.assertLessEqual(sum(not(p.get('party') or p.get('party_now')) for p in people),586)
 
 

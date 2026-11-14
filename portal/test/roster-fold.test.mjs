@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { build } from 'esbuild';
 import { printSpeakers, splitPerson, splitSpeakers, scopedCollaborators } from '../public/speech-attribution.js';
+import { rosterFold } from '../public/roster-party.js';
 
 const bundle = await build({ entryPoints: [new URL('../src/person-slug.ts', import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
 const { personIndex } = await import('data:text/javascript;base64,' + Buffer.from(bundle.outputFiles[0].text).toString('base64'));
@@ -61,8 +62,10 @@ test('the shipped roster: Shoebridge is David Shoebridge, and every print is one
     assert.equal(names.has(print), false, `${print} is folded and still a row`);
     assert.equal(seen.has(print), false, `${print} is folded into two people`);
     seen.add(print);
-    // A surname print, or another printed name of one verified person (fold_ids, docs/ROSTER-FOLDS.md).
-    if (print.includes(' ')) assert.ok(p.pid, `${print} is a full-name print folded without a verified id`);
+    // A surname print, another printed name of one verified person (fold_ids, docs/ROSTER-FOLDS.md), or a state
+    // spelling twin of the person's own name (roster_fold.twin_target: "Jodi Mckay" in "Jodi McKay").
+    const twin = rosterFold(print) === rosterFold(p.name) && !p.states.includes('federal');
+    if (print.includes(' ')) assert.ok(p.pid || twin, `${print} is a full-name print folded without a verified id`);
     assert.ok(p.name.includes(' '), `${p.name} is a full name`);
     // The apps' identity guard: a full-name row with senate_committee needs a pid.
     if (p.chambers.includes('senate_committee')) assert.ok(p.pid, `${p.name} took committee speeches without an id`);

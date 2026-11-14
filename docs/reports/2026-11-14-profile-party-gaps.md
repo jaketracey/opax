@@ -143,3 +143,7 @@ Correction output is retained in ignored `dev/party-gaps/review-*.log` files. Th
 An initial focused portal invocation used an unavailable `tsx` loader and exited before running tests. The repository's normal `node --test` command passes the focused suites; no dependency or deadline was changed.
 
 Final `git diff --check` passes. The correction and validation report are committed locally before the authorised branch push. No production action or message was sent; the local Wrangler is stopped.
+
+## One owner for Q6207887 (14 November 2026)
+
+Two of the 34 profiles, "Jodi McKay" and her spelling twin "Jodi Mckay", carried joins to the same Wikidata person (Q6207887), which the roster evidence-ownership guard refuses. The twin is now folded into Jodi McKay: one profile, 428 speeches, the same dated Labor service, and "Jodi Mckay" as a print whose old address redirects to her. Her accept group is the single owner, so 33 accept groups now cover the same 34 reviewed profiles. The exported roster has **1,565** rows; raw blanks stay **586** and gaps after the dated fallbacks stay **430**, because the folded row already had a party. The ledger above records the original 34-profile comparison and is unchanged. [Fold note](../ROSTER-FOLDS.md), [guard](../../scripts/test_roster_evidence.py).

@@ -900,36 +900,6 @@
         }
       }
     ],
-    "Jodi Mckay": [
-      {
-        "evidence": "profile-party-service",
-        "checked": "2026-11-14",
-        "url": "https://www.wikidata.org/wiki/Q6207887",
-        "fields": {
-          "party": [
-            null,
-            "Labor"
-          ],
-          "affiliations": [
-            null,
-            [
-              {
-                "party": "Labor",
-                "start": "2015-03-28",
-                "end": "2021-12-31",
-                "through": "2026-09-21",
-                "jurisdiction": "nsw",
-                "chamber": "nsw_la",
-                "electorate": "Strathfield",
-                "as_of": "2026-09-21",
-                "source_url": "https://www.wikidata.org/wiki/Q6207887",
-                "basis": "Wikidata P39 service with P4100 parliamentary group"
-              }
-            ]
-          ]
-        }
-      }
-    ],
     "David Leyonhjelm": [
       {
         "evidence": "profile-party-service",
