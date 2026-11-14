@@ -45,13 +45,16 @@ test('the prints that carried another member\'s id show only their own record', 
 
 test('the Cunningham and Dickson members reuse their own dated catalogue identities', () => {
   const stephen = row.get('Stephen Martin');
-  assert.equal(stephen.pid, 'person_9c02d321caef54b2ba21a1f8');
+  // A canonical id sits in person_id: the apps accept only legacy or roster ids in pid.
+  assert.equal(stephen.pid, undefined);
+  assert.equal(stephen.person_id, 'person_9c02d321caef54b2ba21a1f8');
   assert.equal(stephen.speeches, 299);
   assert.equal(stephen.representation[0].electorate, 'Cunningham');
   assert.ok(stephen.aliases.includes('Stephen Paul Martin'));
   assert.equal(row.has('Stephen Paul Martin'), false);
   const anthony = row.get('Anthony Charles Smith');
-  assert.equal(anthony.pid, 'person_efb744ffb3a25d578e592281');
+  assert.equal(anthony.pid, undefined);
+  assert.equal(anthony.person_id, 'person_efb744ffb3a25d578e592281');
   assert.equal(anthony.speeches, 76);
   assert.equal(anthony.representation[0].electorate, 'Dickson');
   assert.equal(row.get('Tony Smith').speeches, 380);

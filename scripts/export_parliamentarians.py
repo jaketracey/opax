@@ -386,7 +386,7 @@ def main(argv=()) -> None:
                     and raw['state'] in rec['states'] and raw['chamber'] in set(rec['chambers'])-COMMITTEES):
                 rec['full']=raw['name']
         # Key order as before: name, speeches, party, parties, states, chambers, first, last, pid, ...
-        order = ["name", "speeches", "party", "parties", "states", "chambers", "first", "last", "pid",
+        order = ["name", "speeches", "party", "parties", "states", "chambers", "first", "last", "pid", "person_id",
                  "current", "party_now", "full", "witness_rows", "recorded_parties", "separated_witnesses", "transcript", "_speech_groups"]
         out.append({k: rec[k] for k in order if k in rec})
 
