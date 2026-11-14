@@ -273,6 +273,9 @@ class EndingTests(unittest.TestCase):
                        "key_dates": [], "divisions": []}
                 (out / f"{key}.json").write_text(json.dumps(doc, ensure_ascii=False, indent=1) + "\n")
                 rows.append({"key": key, "status": published, "status_as_of": "2022-02-10", "divisions": 0})
+            # A few retained files were written compact; they stay compact.
+            compact = json.loads((out / "au-federal-r2.json").read_text())
+            (out / "au-federal-r2.json").write_text(json.dumps(compact, ensure_ascii=False, separators=(",", ":")) + "\n")
             index = {"generated_at": "2026-10-04T16:27:54+00:00", "count": len(rows), "meta": {}, "bills": rows}
             (out / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
             before = {p.name: json.loads(p.read_text()) for p in out.iterdir()}
@@ -307,6 +310,11 @@ class EndingTests(unittest.TestCase):
             self.assertEqual(list(after["index.json"]["bills"][0]),
                              ["key", "status", "status_as_of", "ended", "ended_label", "divisions"])
             self.assertEqual(after["index.json"]["generated_at"], index["generated_at"])
+            r1 = (out / "au-federal-r1.json").read_text().splitlines()
+            self.assertIn(' "ended": "removed",', r1)
+            r2 = (out / "au-federal-r2.json").read_text()
+            self.assertEqual(r2.count("\n"), 1)
+            self.assertIn('"status_as_of":"2022-02-10","ended":"negatived","ended_label":"Voted down",', r2)
 
 
 class SuppressionTests(unittest.TestCase):

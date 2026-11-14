@@ -1818,6 +1818,15 @@ def refresh_sponsor_parties(directory: Path, evidence=None) -> tuple[int, list[d
     return changed, held
 
 
+def same_layout(previous: str, record: dict) -> str:
+    """`record` serialised the way `previous` was: compact when the previous
+    text was compact, otherwise the export's `indent=1` layout."""
+    compact = json.dumps(json.loads(previous), ensure_ascii=False, separators=(",", ":"))
+    if previous.rstrip("\n") == compact:
+        return json.dumps(record, ensure_ascii=False, separators=(",", ":")) + "\n"
+    return json.dumps(record, ensure_ascii=False, indent=1) + "\n"
+
+
 def fill_endings(directory: Path, db: sqlite3.Connection) -> int:
     """Add `ended` and `ended_label` to a retained snapshot from the registry,
     without a fresh build: nothing else in any file changes. A bill gets them
@@ -1833,15 +1842,20 @@ def fill_endings(directory: Path, db: sqlite3.Connection) -> int:
             return None
         return bill.get("ended")
 
-    docs = [with_ended(doc, ended_for(doc)) for doc in docs]
+    filled = [with_ended(doc, ended_for(doc)) for doc in docs]
+    changed = 0
+    for before, after in zip(docs, filled):
+        if after != before:
+            # A file keeps its own layout: a few retained files are compact.
+            (directory / f"{after['key']}.json").write_text(same_layout(previous[after["key"]], after))
+            changed += 1
     index_path = directory / "index.json"
-    index = json.loads(index_path.read_text())
-    prior_index = json.loads(index_path.read_text())
-    index["bills"] = [with_ended(row, ended_for(row)) for row in index["bills"]]
-    changed = write_retained_bills(directory, docs, previous)
-    if index != prior_index:
-        index_path.write_text(json.dumps(index, ensure_ascii=False, indent=1) + "\n")
-    counts = collections.Counter(doc.get("ended") for doc in docs if doc.get("ended"))
+    prior_text = index_path.read_text()
+    index = json.loads(prior_text)
+    filled_index = {**index, "bills": [with_ended(row, ended_for(row)) for row in index["bills"]]}
+    if filled_index != index:
+        index_path.write_text(same_layout(prior_text, filled_index))
+    counts = collections.Counter(doc["ended"] for doc in filled if doc.get("ended"))
     log(f"ended: {dict(counts.most_common())}; {changed} bill files changed")
     return changed
 
