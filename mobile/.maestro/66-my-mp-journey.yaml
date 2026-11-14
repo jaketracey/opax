@@ -70,15 +70,11 @@ name: 66 My MP from first launch to the latest division and the official page
 - assertVisible:
     id: today-screen
 # budget: today-official-page
-# Choosing the seat leaves Today scrolled with the tile's top under the bar;
-# on iOS 26.3.1 a long press there opened the profile (14 Nov 2026). Centre it.
 - scrollUntilVisible:
     element:
       id: today-your-mp-member
     direction: UP
-    centerElement: true
     timeout: 30000
-- waitForAnimationToEnd
 - longPressOn:
     id: today-your-mp-member
 - tapOn: Parliament of Australia page

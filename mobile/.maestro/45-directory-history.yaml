@@ -165,7 +165,23 @@ name: 45 Electorates, dated representation, bill filters and Votes in parliament
     timeout: 600000
 - takeScreenshot: ${EVIDENCE}/45-division-history
 - assertVisible: '[\d,]+ votes'
-# Search is the native field in the bar, named by its placeholder.
+# Search is the native field in the bar, named by its placeholder. On iOS
+# 26.3.1 it starts tucked under the large title (14 Nov 2026): a short pull
+# reveals it, as on the Bills list.
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - repeat:
+          times: 3
+          while:
+            notVisible: Bill names
+          commands:
+            - swipe:
+                start: 50%, 35%
+                end: 50%, 55%
+                duration: 800
+            - waitForAnimationToEnd
 - tapOn: Bill names
 - inputText: Interactive Gambling
 - pressKey: Enter
