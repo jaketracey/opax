@@ -196,16 +196,22 @@ class CoverageTests(unittest.TestCase):
         path.write_text(json.dumps({'through': '2026-11-13', 'alerts': ['lost senate/2018'],
                                     'reports': ['known, being filled: NSW; lane im/nsw-hansard-gap']}))
         messages = wd.status_messages(self.root, now)
-        status = {'finished': now.isoformat(), 'status': 'failed',
-                  'failures': [m for s, m in messages if s == 'alert'],
+        # The refresh itself succeeded: coverage alerts page on their own field.
+        status = {'finished': now.isoformat(), 'status': 'ok', 'failures': [],
+                  'coverage_alerts': [m for s, m in messages if s == 'alert'],
                   'warnings': [m for s, m in messages if s == 'report']}
         corpus = {'refresh': {'checked_at': now.isoformat()}}
         problems, _, warnings = evaluate(corpus, status, now)
         self.assertTrue(any('lost senate/2018' in p for p in problems))
         self.assertTrue(any('known, being filled: NSW' in w for w in warnings))
-        status.update(status='ok', failures=[])
+        status.update(coverage_alerts=[])
         self.assertFalse(evaluate(corpus, status, now)[0])
         path.unlink()
+        # First night: no receipt and no baseline records only.
+        self.assertEqual(wd.status_messages(self.root, now),
+                         [('report', 'coverage: no receipt or baseline yet; the first check records a baseline only')])
+        # Once a baseline exists, a missing receipt means tonight's check never finished.
+        (self.root / 'coverage-snapshot-v1.json').write_text('{}')
         self.assertEqual(wd.status_messages(self.root, now)[0][0], 'alert')
 
     def test_future_baseline_and_corruption_alert_without_resetting_state(self):
@@ -291,7 +297,7 @@ warn() { echo "REPORT $*"; }
                                  '_', sys.executable, str(ROOT), str(self.root), str(self.db)],
                                 text=True, capture_output=True, check=True)
         self.assertIn('REFRESH_COMPLETED', result.stdout)
-        self.assertIn('COVERAGE FAIL: coverage: coverage regression: chamber-year senate/2026 rows 300 -> 0', result.stdout)
+        self.assertIn('COVERAGE ALERT: coverage: coverage regression: chamber-year senate/2026 rows 300 -> 0', result.stdout)
 
     def test_same_day_retry_uses_prior_night_counts_without_a_recovery_floor(self):
         args = self.args()
@@ -485,7 +491,7 @@ warn() { echo "REPORT $*"; }
             self.assertEqual(wd.run(args), 1)
             self.assertEqual(state_path.read_bytes(), baseline)
 
-    def test_coverage_alerts_do_not_leave_periodic_groups_due_but_still_fail_final_status(self):
+    def test_coverage_alerts_do_not_leave_periodic_groups_due_or_fail_the_refresh(self):
         today = wd.completed_day(datetime.now(timezone.utc)) + timedelta(days=1)
         functions = ''.join(shell_function(name) for name in (
             'fail', 'coverage_fail', 'warn', 'coverage_status', 'periodic_refresh_complete',
@@ -517,14 +523,15 @@ PERIODIC_STATE="$PIPE/periodic-refresh-v1.json"; groups="weekly monthly frl"
             driver += 'periodic_refresh_complete\nfinish\n'
             result = subprocess.run(['bash', '-c', driver, '_', sys.executable, str(ROOT),
                                      str(self.root), today.isoformat()], text=True, capture_output=True)
-            self.assertEqual(result.returncode, 1, result.stderr)
+            self.assertEqual(result.returncode, int(ordinary_failure), result.stderr)
             pending = periodic_state.read_state(state_path, today)
             self.assertEqual(any('due' in r for r in pending['groups'].values()), ordinary_failure)
             if not ordinary_failure:
                 self.assertTrue(all('last_success' in r for r in pending['groups'].values()))
             published = json.loads((self.root / 'nightly-last.json').read_text())
-            self.assertEqual(published['status'], 'failed')
-            self.assertIn('coverage: lasting coverage hold', published['failures'])
+            self.assertEqual(published['status'], 'failed' if ordinary_failure else 'ok')
+            self.assertEqual(published['failures'], ['export failed'] if ordinary_failure else [])
+            self.assertEqual(published['coverage_alerts'], ['coverage: lasting coverage hold'])
             self.assertFalse(any('died unexpectedly' in r for r in published['failures']))
             self.assertIn('STATUS_PUBLISHED', result.stdout)
 

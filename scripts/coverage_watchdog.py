@@ -372,8 +372,12 @@ def run(args, now=None):
 
 def status_messages(state_dir, now=None):
     """Read the local receipt for nightly's existing fail/warn arrays."""
+    report_path = Path(state_dir) / 'coverage-report-v1.json'
+    if not report_path.exists() and not (Path(state_dir) / 'coverage-snapshot-v1.json').exists():
+        # The first night before any check has run: nothing to compare, nothing to page.
+        return [('report', 'coverage: no receipt or baseline yet; the first check records a baseline only')]
     try:
-        report = json.loads((Path(state_dir) / 'coverage-report-v1.json').read_text())
+        report = json.loads(report_path.read_text())
         if report['through'] != completed_day(now or datetime.now(timezone.utc)).isoformat():
             raise ValueError('stale coverage receipt')
         if not all(isinstance(report[key], list) for key in ('alerts', 'reports')):

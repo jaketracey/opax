@@ -113,14 +113,20 @@ the watchdog refuses an unindexed table scan. Its SQLite budget is 40 seconds,
 with an outer 50-second timeout and two-second kill grace.
 
 `nightly.sh` reads the coverage receipt into separate `COVERAGE_FAILURES` and
-the existing `WARNINGS`. Coverage holds do not block periodic completion or
-cause weekly, monthly and FRL acquisition to repeat nightly. Final status
-combines operational and coverage failures in `nightly-status/status.json`
-and the scheduled `refresh-watchdog.yml` run, whose failure sends the existing
-GitHub email. Missing, stale, malformed or timed-out checks and a crashed status
-reader also fail that alert path. Known repair holes and thin occupied days appear as warnings
-in the existing annotations and job summary. A standalone daily run only logs
-and writes its receipt, as it has no status publisher of its own.
+the existing `WARNINGS`. Coverage fails soft: it never marks the refresh failed
+or changes the nightly exit code, and coverage holds do not block periodic
+completion or cause weekly, monthly and FRL acquisition to repeat nightly.
+`nightly-status/status.json` keeps `status` and `failures` for the refresh and
+publishes coverage alerts in their own `coverage_alerts` list. The scheduled
+`refresh-watchdog.yml` run treats each coverage alert as a problem, so its
+failure sends the existing GitHub email. Regressions, a missing receipt once a
+baseline exists (the check failed or its timeout killed it), stale or malformed
+receipts and a crashed status reader all take that alert path. The first night,
+with neither a receipt nor a baseline, is a warning only. Known repair holes and
+thin occupied days appear as warnings in the existing annotations and job
+summary. A standalone daily run only logs and writes its receipt, as it has no
+status publisher of its own. `scripts/vm/test_nightly.sh` runs the real check in
+its fake refresh (`OPAX_TEST_FOCUS=coverage` runs only those scenarios).
 
 The first successful night records a baseline without paging. Later nights
 compare chamber and chamber-year rows and held speech-days with the previous

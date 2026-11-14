@@ -33,17 +33,20 @@ Australia/Sydney date, including AEDT/UTC and year boundaries.
 The existing alert path is:
 
 `daily_refresh.sh` after normal refresh -> local coverage receipt ->
-`nightly.sh` separate `COVERAGE_FAILURES` / existing `WARNINGS` -> combined
-final failures in `nightly-status/status.json` ->
+`nightly.sh` separate `COVERAGE_FAILURES` / existing `WARNINGS` ->
+`coverage_alerts` / `warnings` in `nightly-status/status.json` ->
 `scripts/refresh_watchdog.py` -> `.github/workflows/refresh-watchdog.yml` failed
 scheduled run -> existing GitHub email. Warnings also reach its annotations and
 job summary. No new alert channel or workflow was introduced.
 
 Coverage exit status is deliberately separate from daily refresh failed steps.
 The nightly records an alert and continues its normal exports and publication.
-Its final status becomes failed so the existing alert fires. Census errors,
-missing index, timeout and missing/stale/malformed receipts also take this path.
-The status reader's exit code is checked so a crash alerts too. Coverage failures
+Its status stays the refresh's own outcome: coverage alerts are published in
+`coverage_alerts`, which the refresh watchdog pages on. Census errors, missing
+index, timeout, stale or malformed receipts, and a missing receipt once a
+baseline exists also take this path. The status reader's exit code is checked
+so a crash alerts too. The first night, with no receipt and no baseline, is a
+warning only. Coverage failures
 do not gate completion of successful weekly, monthly or FRL publication.
 A standalone daily run logs and stores findings; the nightly remains the status
 publisher. The integration test executes the actual daily check and nightly
