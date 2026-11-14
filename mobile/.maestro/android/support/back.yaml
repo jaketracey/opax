@@ -1,0 +1,4 @@
+appId: au.com.opax.app
+name: Android go back one screen with the back key
+---
+- back

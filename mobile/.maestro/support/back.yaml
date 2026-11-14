@@ -1,0 +1,26 @@
+appId: au.com.opax.app
+name: Go back one screen
+---
+# iOS 26 gives the navigation bar's back button the id BackButton. iOS 18
+# gives it none: it reads as the previous screen's title ("Search") or
+# "Back", so there the flow goes back as a reader can, by the swipe from the
+# left edge. Android replaces this file with its back key
+# (android/support/back.yaml).
+- evalScript: ${output.backTapped = false}
+- runFlow:
+    when:
+      visible:
+        id: BackButton
+    commands:
+      - tapOn:
+          id: BackButton
+      - evalScript: ${output.backTapped = true}
+- runFlow:
+    when:
+      true: ${!output.backTapped}
+    commands:
+      - swipe:
+          start: 1%, 50%
+          end: 90%, 50%
+          duration: 600
+- waitForAnimationToEnd
