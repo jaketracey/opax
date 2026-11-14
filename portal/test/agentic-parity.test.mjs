@@ -74,6 +74,11 @@ test('RESEARCH_LOOP=off: legacy fields remain byte-identical; stepped research m
     return Response.json({answer:'Fixture composition.',retrieval_results:{resources:{}}});
    }
    const top=expected.top || expected.party_ranking?.top || expected.speaker_ranking?.top || [{name:'Taylor Example',count:87}];
+   // A catalogue honours the decade label as the real one does: main reads it as a facet over every decade, this branch
+   // reads each decade on its own, and both must see the same per-decade counts (the 2020s hold 31, the 2010s 12, the rest none).
+   const DECADES={'1990s':0,'2000s':0,'2010s':12,'2020s':31},DECADE='/classification.labels/decade',decadeOf=JSON.stringify(b.filter_expression??{}).match(/"labelset":"decade","label":"(\d{4}s)"/)?.[1];
+   if(u.pathname.endsWith('/catalog')&&decadeOf)return Response.json({fulltext:{total:DECADES[decadeOf],facets:{}},resources:{}});
+   if(u.pathname.endsWith('/catalog')&&b.faceted?.includes(DECADE))return Response.json({fulltext:{total:147,facets:{[DECADE]:Object.fromEntries(Object.entries(DECADES).map(([k,n])=>[DECADE+'/'+k,n]))}},resources:{}});
    if(u.pathname.endsWith('/catalog')||u.pathname.endsWith('/search'))return Response.json({fulltext:{total:expected.total || 147,facets:{'/u/o':Object.fromEntries(top.map(row=>['/u/o/'+row.name,row.count])),'/l/party':{'/l/party/Labor':87,'/l/party/Greens':60},'/l/year':{'/l/year/2023':87,'/l/year/2024':60}}},resources:{}});
    return Response.json({resources:{}});
   };
