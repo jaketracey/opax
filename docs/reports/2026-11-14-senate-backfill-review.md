@@ -51,19 +51,31 @@ scratch outputs, with `nice -n 10` and load guards.
 
 ## Gates
 
-Desktop checks passed: **259 ingest/identity/coverage tests and 26 subtests**,
-**12 focused HTTP tests**, TypeScript, asset stamps, shell syntax and diff
-checks. External work held load5 near or above 40, so the full desktop npm
-and nightly suites were paused before that ceiling. They are being moved
-to the existing read-only GitHub Gates workflow: portal shards explicitly
-use concurrency 4 with the locked Python environment on PATH, and the data
-job now runs the Senate gate and the nightly shell regressions. This
-workflow has no production deploy, KB or D1 credentials. Final CI receipts
-will be recorded after completion.
+All required gates passed:
+
+* **259 ingest/identity/coverage tests and 26 subtests**, plus **12 focused
+  HTTP tests**, locally and in the [focused CI run](https://github.com/jaketracey/opax/actions/runs/43544038230).
+* **399 nightly sandbox checks, zero failures**, in that focused run.
+  The daily rc 1/124/137 and periodic rc 1/124 regressions all passed.
+* **5,018 portal tests**, zero failures, across four CI shards at
+  concurrency 4 with `.venv/bin` on PATH. All four TypeScript checks also
+  passed in the [portal run](https://github.com/jaketracey/opax/actions/runs/43541087812).
+* The existing data-script suite passed **710 tests and 14,537 subtests**
+  in the portal run. Asset stamps, shell syntax and diff checks passed on
+  the desktop.
+
+External work held desktop load5 near or above 40. The full desktop npm
+and nightly continuations were cancelled while paused; CI completed the
+verification on separate runners. The workflows have no production deploy,
+KB or D1 credentials. CI tested runtime code at `6df80dcf4`; the final
+documentation commit only records these receipts. Portal runtime code and
+tests are unchanged from its successful run at `5d9ddc22f`.
 
 The first CI nightly run exposed an interpreter-fixture issue: placing a
 symlink inside the sandbox's `.venv` dropped the caller's `pyvenv.cfg` and
 dependencies. The launcher now executes the original interpreter at its own
 path and checks that the prefix and `requests` import are preserved. The
 nightly/Senate gate has its own CI job, with a `senate_only` manual option
-for focused reruns. Ordinary Gates runs retain their other jobs.
+for focused reruns. Ordinary Gates runs retain their other jobs. The
+corrected fixture passed every nightly assertion, including the Python
+environment regression.
