@@ -157,7 +157,7 @@ def test_receipt_alias_fallback_counts_once_and_reports_ambiguous_rows(tmp_path)
     load(db, "AllElectionsData", {})
     load(db, "AllReferendumData", {})
     nodes = [{"id": "party:Labor", "kind": "party", "label": "Labor"}] + [
-        {"id": id, "kind": "donor", "label": name, "total": 999} for id, name in
+        {"id": id, "kind": "donor", "label": name, "total": 999, "industry": "individual"} for id, name in
         [("alex", "Alex Hart"), ("jordan", "Jordan Vale"), ("other", "Jordan (Quinn) Vale")]]
     graph = {"meta": {}, "nodes": nodes, "edges": [
         {"source": source, "target": "party:Labor", "total": 999} for source in ["alex", "jordan", "other"]]}
@@ -845,3 +845,70 @@ def test_uncapped_qualified_transactions_keep_their_own_identity(
             assert by_name[qualified]['donation_exclusions']['by_type'] == {'donation_received': 20000}
         else:
             assert 'donation_exclusions' not in by_name[qualified]
+
+
+def test_reviewed_identity_and_transaction_policy_agree_with_or_without_drawing_nodes(tmp_path):
+    from scripts.export_money_receipts import export_receipts
+    from scripts.aec_receipt_types import attach_receipt_types
+    path = tmp_path / 'db'
+    db = database(path)
+    rows = [annual(Value='100', **{'Received From':'Example Industries Ltd'}),
+            annual('Other Receipt', Value='30', **{'Received From':'Example Industries (NSW) Ltd'}),
+            annual(Value='20', **{'Received From':'Example Industries (Example Subsidiary Pty Ltd) Ltd'}),
+            annual(Value='10', **{'Received From':'Example Industries Ltd (Refund)'}),
+            annual(Value='5', **{'Received From':'Example Industries Ltd - Loan'})]
+    donations.process_zip(db, archive('AllAnnualData', {'Detailed Receipts.csv':rows}), 'AllAnnualData')
+    load(db, 'AllElectionsData', {})
+    load(db, 'AllReferendumData', {})
+    db.execute("UPDATE donations SET recipient_canonical='Labor',industry='retail'")
+    db.commit()
+    donor={'id':'donor:example-industries','label':'Example Industries Ltd','kind':'donor','industry':'retail',
+           'aliases':['Example Industries (NSW Branch) Ltd','Example Industries Ltd (Refund)']}
+    graph={'meta':{},'nodes':[{'id':'party:Labor','label':'Labor','kind':'party'},donor],
+           'edges':[{'source':donor['id'],'target':'party:Labor','total':999,'count':999}]}
+    with mock.patch('scripts.aec_receipt_types.reviewed_receipt_identities',return_value=[donor]), \
+         mock.patch('scripts.export_money_receipts.reviewed_receipt_identities',return_value=[donor]):
+        attach_receipt_types(db,graph)
+        full,summary=export_receipts(db,graph)
+        empty_map={**graph,'nodes':[n for n in graph['nodes'] if n['kind']=='party'],'edges':[]}
+        independent,independent_summary=export_receipts(db,empty_map)
+    assert full['edges']==independent['edges']
+    assert summary==independent_summary
+    assert summary['industries']['retail']=={'Labor':125}
+    base=next(n for n in full['nodes'] if n['id']==donor['id'])
+    assert 'Example Industries Ltd (Refund)' not in base['aliases']
+    assert 'Example Industries Ltd (Refund)' not in graph['nodes'][1]['aliases']
+    assert base['by_type']==graph['nodes'][1]['by_type']=={'donation_received':100,'other_receipt':30}
+    refund=next(n for n in full['nodes'] if n['label'].endswith('(Refund)'))
+    assert refund['by_type']==refund['donation_exclusions']['by_type']=={'donation_received':10}
+    loan=next(n for n in full['nodes'] if n['label'].endswith('- Loan'))
+    assert loan['by_type']=={'donation_received':5}
+    assert 'donation_exclusions' not in loan
+
+
+def test_qualified_entity_keeps_its_canonical_id_across_raw_name_spellings(tmp_path):
+    from scripts.export_money_receipts import export_receipts
+    path=tmp_path/'db'
+    db=database(path)
+    raw='Vale Jordan (Loan)'
+    canonical='Jordan Vale (Loan)'
+    rows=[annual(Value='5000',**{'Received From':'Jordan Vale'})]
+    rows += [annual('Other Receipt',Value='23750',**{'Received From':raw}) for _ in range(8)]
+    donations.process_zip(db,archive('AllAnnualData',{'Detailed Receipts.csv':rows}),'AllAnnualData')
+    load(db,'AllElectionsData',{})
+    load(db,'AllReferendumData',{})
+    db.execute("UPDATE donations SET recipient_canonical='Labor',industry='individual'")
+    db.executescript('CREATE TABLE ext_donor_entities(entity_id,canonical_name,kind);'
+                     'CREATE TABLE ext_donor_aliases(alias_raw,entity_id,confidence,method);')
+    db.execute('INSERT INTO ext_donor_entities VALUES (?,?,?)',('qualified',canonical,'individual'))
+    db.execute('INSERT INTO ext_donor_aliases VALUES (?,?,?,?)',(raw,'qualified',1,'fixture'))
+    db.commit()
+    graph=export(path)
+    full,_=export_receipts(db,graph)
+    qualified=[n for n in full['nodes'] if n['kind']=='donor' and n.get('by_type',{}).get('other_receipt')]
+    assert len(qualified)==1
+    [node]=qualified
+    assert node['id']=='donor:jordan vale loan'
+    assert node['label']==canonical
+    assert (node['total'],node['count'])==(190000,8)
+    assert raw in node['aliases']

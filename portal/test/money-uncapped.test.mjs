@@ -10,7 +10,7 @@ import {makeQuizContext} from '../public/quiz.js';
 const read = file => JSON.parse(readFileSync(new URL(file,import.meta.url),'utf8'));
 const graph = read('../public/graph/money-receipts.json');
 const summary = read('../public/graph/money-industry-totals.json');
-const audit = read('../../docs/reports/2026-11-14-uncapped-qualifier-review.json');
+const audit = read('../../docs/reports/2026-11-14-shared-money-identities.json');
 const b = await build({stdin:{contents:"export {tool} from './src/tools/money-totals';export {rankedMoneyAnswer} from './src/ask-money';export {federalPartyMoneyAnswer} from './src/ask-money-routing';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'node',format:'esm'});
 const api = await import('data:text/javascript;base64,'+Buffer.from(b.outputFiles[0].text).toString('base64'));
 const facts = moneyGold(graph);
@@ -27,9 +27,9 @@ test('uncapped donation totals reproduce every industry/party figure in the inde
 
 test('uncapped bracket census lists all ties and keeps the reviewed receipt pin', () => {
   assert.deepEqual(graph.meta.bracket_aliases.counts,audit.counts);
-  assert.deepEqual(audit.counts,{bracket_form_entities:459,bracket_split_entities:116,folded:1,ambiguous:12,kind_mismatch:15,state_mismatch:0,no_base:343,transaction_qualifier:2,state_branch:30,entity_qualifier:6,organisation_qualifier:50,identity_qualifier:0});
+  assert.deepEqual(audit.counts,{"bracket_form_entities":431,"bracket_split_entities":88,"folded":0,"ambiguous":10,"kind_mismatch":13,"state_mismatch":0,"no_base":343,"transaction_qualifier":3,"state_branch":20,"entity_qualifier":6,"organisation_qualifier":36,"identity_qualifier":0});
   const tied=audit.decisions.filter(d=>d.status==='ambiguous');
-  assert.equal(tied.length,12);assert.ok(tied.every(d=>d.candidate_sha256.length>1));
+  assert.equal(tied.length,10);assert.ok(tied.every(d=>d.candidate_sha256.length>1));
   assert.ok(audit.decisions.every(d=>/^[a-f0-9]{64}$/.test(d.source_sha256)));
   assert.equal(audit.samples_checked_by_eye.length,5);
   const reviewed=graph.nodes.filter(n=>n.kind==='donor'&&n.total===891049&&n.count===23);
@@ -63,7 +63,7 @@ test('money_totals uses uncapped donation cells for party and industry ranks', a
   const liberal=party.rows.find(r=>r.party==='Liberal');
   assert.equal(liberal.total_aud,Object.values(summary.industries).reduce((sum,rows)=>sum+(rows.Liberal||0),0));
   const industries=await api.tool.handler(env,{group_by:'industry',party:'Labor',limit:20});
-  assert.equal(industries.rows.find(r=>r.industry==='unions').total_aud,74594600);
+  assert.equal(industries.rows.find(r=>r.industry==='unions').total_aud,74821446);
 });
 
 test('Explain and quiz industry/party facts use uncapped donations; donor receipts stay labelled all types', () => {

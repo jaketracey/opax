@@ -4,16 +4,16 @@ from scripts.aec_receipt_selection import ReceiptSelection
 from scripts.receipt_donor_match import ReceiptDonorMatcher, bracketless_name
 
 
-def matcher(nodes, aliases=None):
+def matcher(nodes, aliases=None, industry=None):
     from scripts.donor_disclosure import exact_alias_index
     aliases = aliases or {}
     selection = ReceiptSelection(aliases, exact_alias_index(aliases), {}, {}, set())
-    return ReceiptDonorMatcher([{"id": id, "kind": "donor", "label": name} for id, name in nodes], selection)
+    return ReceiptDonorMatcher([{"id": id, "kind": "donor", "label": name, "industry": industry} for id, name in nodes], selection)
 
 
 @pytest.mark.parametrize("name", ["Alex (Morgan) Hart", "Alex [Morgan] Hart", "ALEX (MORGAN) HART"])
 def test_bracketed_middle_name_matches_one_existing_node(name):
-    result = matcher([("alex", "Alex Hart")]).match(name)
+    result = matcher([("alex", "Alex Hart")], industry="individual").match(name)
     assert result.node_id == "alex"
     assert result.method == "brackets"
 
@@ -211,3 +211,33 @@ def test_company_industry_blocks_personal_middle_name_heuristic_despite_resolver
 def test_returned_giving_exclusion_requires_an_explicit_transaction_not_a_company_name(name, returned):
     from scripts.receipt_donor_match import has_returned_qualifier
     assert bool(has_returned_qualifier(name)) is returned
+
+
+@pytest.mark.parametrize('name', ['Alex Hart (Refund)', 'Alex Hart (donation return)',
+                                  'Alex Hart (returned donation)', 'Alex Hart - Donation Returned',
+                                  'Alex Hart - Refund'])
+def test_additional_return_forms_are_preserved_and_excluded_from_giving(name):
+    from scripts.receipt_donor_match import has_returned_qualifier, has_transaction_qualifier
+    assert has_returned_qualifier(name)
+    assert has_transaction_qualifier(name)
+    lookup = ReceiptDonorMatcher([{'id':'base','kind':'donor','label':'Alex Hart','industry':'individual'}],
+                                 ReceiptSelection({}, {}, {}, {}, set()))
+    assert lookup.match(name).node_id is None
+
+
+def test_map_and_receipt_lookup_share_reviewed_aliases_and_transaction_guards():
+    selection = ReceiptSelection({}, {}, {}, {}, set())
+    reviewed = [
+        {'id':'union','kind':'donor','label':'Example Workers Union','industry':'unions',
+         'aliases':['EWU','Example Workers Union (NSW Branch)']},
+        {'id':'branch','kind':'donor','label':'Example Audit (NSW)','industry':'finance','aliases':[]},
+        {'id':'national','kind':'donor','label':'Example Audit','industry':'finance','aliases':[]},
+    ]
+    for drawing in [[],reviewed]:
+        lookup=ReceiptDonorMatcher(drawing,selection,reviewed)
+        for name in ['EWU (Representative)', 'Example Workers Union (Northern NSW Branch)']:
+            assert lookup.match(name).node_id=='union'
+        assert lookup.match('Example Audit (NSW)').node_id=='branch'
+        assert lookup.match('Example Audit (QLD)').node_id is None
+        for qualifier in ['Loan','Donation Returned','Refund','In Kind','Example Subsidiary P/L']:
+            assert lookup.match(f'Example Workers Union ({qualifier})').node_id is None

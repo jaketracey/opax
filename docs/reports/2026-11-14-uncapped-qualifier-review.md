@@ -60,4 +60,4 @@ Qualifier-fix gates, before the required merge-forward:
 
 **Merge-forward dependency:** origin/main is `fb921dec921da92d487e2767c0e402bfb7045691` and still does not contain row 171 (`13880d779`), including its `partyMapScope` helper. The qualifier fix is committed and pushed independently for review. The requested merge-forward and removal of “on the map” from the uncapped party-table scope, with the `money-copy.test.mjs` update and post-merge gates, remain pending row 171 landing first. This report does not claim that merge is complete.
 
-No production, model/provider or SSH calls. Network access was limited to authorized Git fetch/push.
+No production, model/provider or SSH calls. Network access was limited to authorised Git fetch/push.

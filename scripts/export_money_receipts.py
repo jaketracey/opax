@@ -14,7 +14,7 @@ from parli.ingest.aec_receipts import normal_type
 from scripts.aec_receipt_selection import load_selection
 from scripts.aec_receipt_types import add_receipt, receipt_cells, receipt_fields
 from scripts.export_money_graph import associated_fields, load_associated_register, norm_key, year_of
-from scripts.receipt_donor_match import ReceiptDonorMatcher, has_returned_qualifier
+from scripts.receipt_donor_match import ReceiptDonorMatcher, has_returned_qualifier, has_transaction_qualifier, transaction_key, reviewed_receipt_identities, receipt_identity_aliases, canonical_industries, RECEIPT_IDENTITY_RULE
 
 
 def merge_receipt_cells(target, source):
@@ -33,26 +33,14 @@ def export_receipts(db, graph, *, recover_brackets=True):
     entities = {r[0]: {"name": r[1], "kind": r[2]} for r in db.execute(
         "SELECT entity_id,canonical_name,kind FROM ext_donor_entities")} if db.execute(
         "SELECT 1 FROM sqlite_master WHERE name='ext_donor_entities'").fetchone() else {}
-    industries = defaultdict(Counter)
-    for donor, amount, industry in db.execute(
-        "SELECT donor_name,amount,industry FROM donations "
-        "WHERE source IN ('aec_annual','aec_election','aec_referendum')"):
-        if industry and industry not in ("other", "unidentified"):
-            industries[selection.entity(donor) or donor][industry] += amount or 0
-    tags = {eid: "unions" if selection.entity_kinds.get(eid) == "union" else max(tags, key=tags.get)
-            for eid, tags in industries.items()}
+    tags = canonical_industries(db, selection)
     register = load_associated_register(db, selection.aliases, selection.exact)
-    # Retain published IDs, names, disclosure links and party-return aggregates.
-    nodes = {n['id']: deepcopy(n) for n in graph['nodes'] if n['kind'] in ('party', 'donor')}
-    entity_nodes, name_nodes = {}, {}
-    for node in nodes.values():
-        if node['kind'] != 'donor':
-            continue
-        for name in [node['label'], *node.get('aliases', [])]:
-            name_nodes[name] = node['id']
-            eid = selection.entity(name)
-            if eid:
-                entity_nodes[eid] = node['id']
+    # Drawing donors supply display/declaration context only, after receipt
+    # identities are resolved. Their membership cannot seed factual IDs or ties.
+    drawing_donors = {n['id']: n for n in graph['nodes'] if n['kind'] == 'donor'}
+    nodes = {n['id']: deepcopy(n) for n in graph['nodes'] if n['kind'] == 'party'}
+    entity_nodes, qualified_entity_nodes, name_nodes = {}, {}, {}
+    matcher = ReceiptDonorMatcher([], selection, reviewed_receipt_identities(db, selection))
     cells, node_cells, names = defaultdict(receipt_cells), defaultdict(receipt_cells), defaultdict(set)
     donation_exclusions = defaultdict(receipt_cells)
     excluded = Counter()
@@ -66,19 +54,34 @@ def export_receipts(db, graph, *, recover_brackets=True):
             continue
         eid = selection.entity(donor)
         identity = eid or donor
-        source = entity_nodes.get(eid) if eid else name_nodes.get(donor)
+        # Resolve the actual disclosed spelling through exactly the same policy
+        # as map receipt projection, before resolving any new canonical entity.
+        matched = matcher.match(donor)
+        qualified = has_transaction_qualifier(donor)
+        canonical_label = entities.get(eid, {}).get('name') or donor
+        qualified_entity = qualified and transaction_key(canonical_label) == transaction_key(donor)
+        source = matched.node_id
+        if source and source not in nodes:
+            nodes[source] = deepcopy(matcher.nodes[source])
         if not source:
-            label = entities.get(eid, {}).get('name') or donor
+            source = (qualified_entity_nodes.get(eid) if qualified_entity and eid else name_nodes.get(donor)) if qualified else entity_nodes.get(eid) if eid else name_nodes.get(donor)
+            if source and qualified and not qualified_entity and nodes[source]['label'].casefold() != donor.casefold():
+                source = None
+        if not source:
+            label = donor if qualified and not qualified_entity else canonical_label
             source = 'donor:' + norm_key(label)
-            if source in nodes:
+            if source in nodes or source in matcher.reviewed:
                 source += '~' + (str(eid) if eid else donor)
             nodes[source] = {"id": source, "label": label, "kind": "donor", "aliases": []}
-            if eid:
+            if eid and not qualified:
                 entity_nodes[eid] = source
+            elif eid and qualified_entity:
+                qualified_entity_nodes[eid] = source
             else:
                 name_nodes[donor] = source
         names[source].add(donor)
-        nodes[source]['industry'] = tags.get(identity, 'other')
+        canonical_identity = selection.entity(nodes[source]['label']) if matched.node_id else identity
+        nodes[source]['industry'] = tags.get(canonical_identity, tags.get(identity, 'other'))
         target = 'party:' + selection.recipient_party[recipient]
         if target not in nodes:
             nodes[target] = {"id": target, "label": selection.recipient_party[recipient], "kind": "party"}
@@ -91,14 +94,17 @@ def export_receipts(db, graph, *, recover_brackets=True):
         if normal_type(kind) == 'donation_received' and has_returned_qualifier(donor):
             for key in ((source, target), source, target):
                 add_receipt(donation_exclusions[key], kind, period, amount)
-    # Identity recovery runs over the full selection, before any factual totals
-    # are published. The drawing matcher retains its existing lookup behaviour.
+    # Supplemental personal-name recovery runs over the full selection before
+    # totals are published; reviewed spellings used the shared matcher above.
     for source, spellings in names.items():
         nodes[source]['aliases'] = sorted(set(nodes[source].get('aliases', [])) | (spellings - {nodes[source]['label']}))
-    matcher = ReceiptDonorMatcher(nodes.values(), selection)
+    matcher.add_nodes(nodes.values())
     active = {source for source in node_cells if nodes[source]['kind'] == 'donor'}
     folds, decisions = matcher.bracket_folds(active) if recover_brackets else ({}, [])
     for source, target in folds.items():
+        if target not in nodes:
+            nodes[target] = deepcopy(matcher.nodes[target])
+            nodes[target]['industry'] = tags.get(selection.entity(nodes[target]['label']), nodes[source].get('industry', 'other'))
         merge_receipt_cells(node_cells[target], node_cells.pop(source))
         if source in donation_exclusions:
             merge_receipt_cells(donation_exclusions[target], donation_exclusions.pop(source))
@@ -112,6 +118,12 @@ def export_receipts(db, graph, *, recover_brackets=True):
             if (source, target) in donation_exclusions:
                 merge_receipt_cells(donation_exclusions[folds[source], target], donation_exclusions.pop((source, target)))
             del cells[source, target]
+    for source, node in drawing_donors.items():
+        if source not in nodes:
+            nodes[source] = deepcopy(node)
+        else:
+            aliases = set(node.get('aliases', [])) | set(nodes[source].get('aliases', []))
+            nodes[source] = {**deepcopy(node), **nodes[source], 'aliases': sorted(aliases)}
     def fields(cells):
         typed = receipt_fields(cells)
         years = defaultdict(lambda: [0, 0])
@@ -144,6 +156,7 @@ def export_receipts(db, graph, *, recover_brackets=True):
             elif not node.get('by_type', {}).get('public_funding'):
                 node.update({k: v for k, v in selected.items() if k.startswith('by_type')})
             node['aliases'] = sorted(set(node.get('aliases', [])) | (names[node['id']] - {node['label']}))
+            node['aliases'] = receipt_identity_aliases(node)
             eid = selection.entity(node['label'])
             node.update(associated_fields({'eid': eid, 'names': [node['label'], *node['aliases']], 'parties': donor_parties[node['id']]}, register))
     edges = [{'source': s, 'target': t, **fields(c), **exclusions((s, t))} for (s, t), c in sorted(cells.items())]
@@ -166,7 +179,7 @@ def export_receipts(db, graph, *, recover_brackets=True):
     statuses = Counter(row['status'] for row in decisions)
     meta['bracket_aliases'] = {
         'method': 'ReceiptDonorMatcher.brackets',
-        'rule': 'Only interior personal middle-name brackets fold into one plain individual base of the same known kind. Transaction qualifiers, state branches and separately resolved organisation/entity descriptors stay separate. Base ambiguity is never broken by kind, state, year, amount or map membership.',
+        'rule': RECEIPT_IDENTITY_RULE,
         'counts': {'bracket_form_entities': len(decisions),
                    'bracket_split_entities': sum(bool(row['candidates']) for row in decisions),
                    **{status: statuses[status] for status in ('folded', 'ambiguous', 'kind_mismatch', 'state_mismatch', 'no_base',

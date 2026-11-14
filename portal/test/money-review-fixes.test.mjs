@@ -97,7 +97,7 @@ test('Liberal and Labor agree across browser, SSR, register API and the actual C
   const buckets=new Map(partyMoneyBucketFiles('/graph/money-receipts.json',full));
   const local=await tableDatabase({memorySQL:true,datasets:{'party-money':loaded.rows['party-money']},metadata:loaded.metadata});
   try{
-    for(const [party,count,total] of [['Liberal',7855,403316945],['Labor',9866,579163899]]){
+    for(const [party,count,total] of [['Liberal',7853,403316945],['Labor',9832,579163899]]){
       const data=partyMoneyData(full,'party:'+party),browser=partyMoneyTableConfig(data.rows,undefined,undefined,undefined,{party,jurisdiction:'federal'});
       assert.equal(data.rows.length,count);assert.equal(data.rows.reduce((s,r)=>s+r.total,0),total);
       const expected=numericRows(configFrom(registerTableHTML(browser)).rows);
