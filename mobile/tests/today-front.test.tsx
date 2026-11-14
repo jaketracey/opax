@@ -61,6 +61,7 @@ import {
   recentRecordsRoute,
 } from '../src/navigation/routes';
 import { bills, catalogs, pinned } from './pinned';
+import { learnRoute } from '../src/features/learn/routes';
 
 jest.mock('../src/api/runtime', () => ({
   portraits: { get: jest.fn(async () => null) },
@@ -638,7 +639,7 @@ describe('Just declared', () => {
 });
 
 describe('More to explore', () => {
-  test('four tiles in order, then Quizzes and tools; no Money map, Explore, Reports or Community tile', () => {
+  test('four tiles in order, then Quizzes and tools and How Parliament works; no Money map, Explore, Reports or Community tile', () => {
     const { root } = render(<MoreToExplore />);
     expect(strings(host(root, 'today-explore')[0]!)).toMatch(
       /^More to explore/,
@@ -655,6 +656,7 @@ describe('More to explore', () => {
       largestGrantsRoute(),
       recentRecordsRoute,
       exploreRoute,
+      learnRoute,
     ]);
     expect(
       exploreTiles.find((t) => t.testID === 'today-largest-grants')!.line,
@@ -668,6 +670,9 @@ describe('More to explore', () => {
       expect(host(root, id)).toHaveLength(0);
     expect(strings(host(root, 'today-explore-open')[0]!)).toContain(
       'Quizzes and tools',
+    );
+    expect(strings(host(root, 'today-learn-open')[0]!)).toContain(
+      'How Parliament works',
     );
   });
   test('case A draws the daily pair under the header', () => {

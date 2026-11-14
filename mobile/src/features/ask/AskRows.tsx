@@ -26,6 +26,8 @@ import { personName, sourceMeta, sourceTitle } from './source-present';
 import { recordRoute } from '../records/route';
 import { openAnswerLink } from './AnswerBody';
 import type { AskPerson } from './people';
+import { useTermWords, withTermAction } from '../../design/term';
+import type { TermMatch } from '../learn/term-map';
 
 /** A source's long-press menu, the same in Records cited, the sheet and the pane. */
 export function sourceMenu(
@@ -163,6 +165,7 @@ export function AskSuggestionRow({
   offline = false,
   menu,
   minimumHeight,
+  term,
   testID,
 }: {
   question: string;
@@ -172,6 +175,8 @@ export function AskSuggestionRow({
   menu?: RowMenuAction[];
   /** Ask next's two-line slot; the full question remains its accessible label. */
   minimumHeight?: number;
+  /** The glossary term the question leans on ("senators"), marked inline. */
+  term?: TermMatch | null;
   testID?: string;
 }) {
   const highlight = useRowHighlight();
@@ -180,6 +185,11 @@ export function AskSuggestionRow({
   const leaves = (menu ?? []).flatMap((item) =>
     'items' in item ? item.items : [item],
   ) as Extract<RowMenuAction, { onPress: () => void }>[];
+  const termAction = withTermAction(
+    leaves.map((item) => ({ name: item.title, label: item.title })),
+    term?.term,
+  );
+  const words = useTermWords(question, term?.term, term?.phrase);
   const row = useRef<View>(null);
   return (
     <Pressable
@@ -194,15 +204,13 @@ export function AskSuggestionRow({
             : 'Puts this question in the box.'
       }
       accessibilityState={offline ? { disabled: true } : undefined}
-      accessibilityActions={leaves.map((item) => ({
-        name: item.title,
-        label: item.title,
-      }))}
-      onAccessibilityAction={(event) =>
+      accessibilityActions={termAction.actions}
+      onAccessibilityAction={(event) => {
+        if (termAction.handle(event.nativeEvent.actionName)) return;
         leaves
           .find((item) => item.title === event.nativeEvent.actionName)
-          ?.onPress()
-      }
+          ?.onPress();
+      }}
       onPress={offline ? undefined : onPress}
       onLongPress={
         leaves.length && !offline
@@ -229,7 +237,7 @@ export function AskSuggestionRow({
         tone={offline ? 'inkSoft' : undefined}
         style={styles.main}
       >
-        {question}
+        {words}
       </Text>
       {offline ? null : (
         <Icon

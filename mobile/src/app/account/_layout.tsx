@@ -6,6 +6,7 @@ import { AndroidReadingHeader } from '../../navigation/AndroidReadingHeader';
 import { accountScreens } from '../../navigation/stack/account';
 import { referenceScreens } from '../../navigation/stack/reference';
 import { askAccountScreens } from '../../navigation/stack/ask';
+import { learnAccountScreens } from '../../navigation/stack/learn';
 
 export { RouteErrorBoundary as ErrorBoundary } from '../../navigation/RouteErrorBoundary';
 // Genuine account links open with Account beneath them and a working back
@@ -21,7 +22,12 @@ export default function AccountStack() {
         ...(Platform.OS === 'android' ? { header: AndroidReadingHeader } : {}),
       }}
     >
-      {[...accountScreens(), ...referenceScreens(), ...askAccountScreens()]}
+      {[
+        ...accountScreens(),
+        ...referenceScreens(),
+        ...askAccountScreens(),
+        ...learnAccountScreens(),
+      ]}
     </Stack>
   );
 }
