@@ -1214,8 +1214,8 @@ exports[`iOS design at font scale 1 Button retains its iOS output 1`] = `
             "backgroundColor": {
               "dynamic": {
                 "dark": "#25303D",
-                "highContrastDark": "#25303D",
-                "highContrastLight": "#E4E6E7",
+                "highContrastDark": "#2E3C4C",
+                "highContrastLight": "#D3D9DF",
                 "light": "#E4E6E7",
               },
             },
@@ -3086,8 +3086,8 @@ exports[`iOS design at font scale 1 FilterChip retains its iOS output 1`] = `
         "backgroundColor": {
           "dynamic": {
             "dark": "#25303D",
-            "highContrastDark": "#25303D",
-            "highContrastLight": "#E4E6E7",
+            "highContrastDark": "#2E3C4C",
+            "highContrastLight": "#D3D9DF",
             "light": "#E4E6E7",
           },
         },
@@ -3315,8 +3315,8 @@ exports[`iOS design at font scale 1 FollowButton retains its iOS output 1`] = `
             "backgroundColor": {
               "dynamic": {
                 "dark": "#25303D",
-                "highContrastDark": "#25303D",
-                "highContrastLight": "#E4E6E7",
+                "highContrastDark": "#2E3C4C",
+                "highContrastLight": "#D3D9DF",
                 "light": "#E4E6E7",
               },
             },
@@ -3788,8 +3788,8 @@ exports[`iOS design at font scale 1 MachinePill retains its iOS output 1`] = `
           "backgroundColor": {
             "dynamic": {
               "dark": "#25303D",
-              "highContrastDark": "#25303D",
-              "highContrastLight": "#E4E6E7",
+              "highContrastDark": "#2E3C4C",
+              "highContrastLight": "#D3D9DF",
               "light": "#E4E6E7",
             },
           },
@@ -6176,8 +6176,8 @@ exports[`iOS design at font scale 1 StepButtons retains its iOS output 1`] = `
             "backgroundColor": {
               "dynamic": {
                 "dark": "#25303D",
-                "highContrastDark": "#25303D",
-                "highContrastLight": "#E4E6E7",
+                "highContrastDark": "#2E3C4C",
+                "highContrastLight": "#D3D9DF",
                 "light": "#E4E6E7",
               },
             },
@@ -6344,8 +6344,8 @@ exports[`iOS design at font scale 1 StepButtons retains its iOS output 1`] = `
             "backgroundColor": {
               "dynamic": {
                 "dark": "#25303D",
-                "highContrastDark": "#25303D",
-                "highContrastLight": "#E4E6E7",
+                "highContrastDark": "#2E3C4C",
+                "highContrastLight": "#D3D9DF",
                 "light": "#E4E6E7",
               },
             },
@@ -6805,8 +6805,8 @@ exports[`iOS design at font scale 1 Tag retains its iOS output 1`] = `
           "backgroundColor": {
             "dynamic": {
               "dark": "#25303D",
-              "highContrastDark": "#25303D",
-              "highContrastLight": "#E4E6E7",
+              "highContrastDark": "#2E3C4C",
+              "highContrastLight": "#D3D9DF",
               "light": "#E4E6E7",
             },
           },
@@ -8683,8 +8683,8 @@ exports[`iOS design at font scale 2 Button retains its iOS output 1`] = `
             "backgroundColor": {
               "dynamic": {
                 "dark": "#25303D",
-                "highContrastDark": "#25303D",
-                "highContrastLight": "#E4E6E7",
+                "highContrastDark": "#2E3C4C",
+                "highContrastLight": "#D3D9DF",
                 "light": "#E4E6E7",
               },
             },
@@ -10683,8 +10683,8 @@ exports[`iOS design at font scale 2 FilterChip retains its iOS output 1`] = `
         "backgroundColor": {
           "dynamic": {
             "dark": "#25303D",
-            "highContrastDark": "#25303D",
-            "highContrastLight": "#E4E6E7",
+            "highContrastDark": "#2E3C4C",
+            "highContrastLight": "#D3D9DF",
             "light": "#E4E6E7",
           },
         },
@@ -10917,8 +10917,8 @@ exports[`iOS design at font scale 2 FollowButton retains its iOS output 1`] = `
             "backgroundColor": {
               "dynamic": {
                 "dark": "#25303D",
-                "highContrastDark": "#25303D",
-                "highContrastLight": "#E4E6E7",
+                "highContrastDark": "#2E3C4C",
+                "highContrastLight": "#D3D9DF",
                 "light": "#E4E6E7",
               },
             },
@@ -11389,8 +11389,8 @@ exports[`iOS design at font scale 2 MachinePill retains its iOS output 1`] = `
           "backgroundColor": {
             "dynamic": {
               "dark": "#25303D",
-              "highContrastDark": "#25303D",
-              "highContrastLight": "#E4E6E7",
+              "highContrastDark": "#2E3C4C",
+              "highContrastLight": "#D3D9DF",
               "light": "#E4E6E7",
             },
           },
@@ -13879,8 +13879,8 @@ exports[`iOS design at font scale 2 StepButtons retains its iOS output 1`] = `
             "backgroundColor": {
               "dynamic": {
                 "dark": "#25303D",
-                "highContrastDark": "#25303D",
-                "highContrastLight": "#E4E6E7",
+                "highContrastDark": "#2E3C4C",
+                "highContrastLight": "#D3D9DF",
                 "light": "#E4E6E7",
               },
             },
@@ -14052,8 +14052,8 @@ exports[`iOS design at font scale 2 StepButtons retains its iOS output 1`] = `
             "backgroundColor": {
               "dynamic": {
                 "dark": "#25303D",
-                "highContrastDark": "#25303D",
-                "highContrastLight": "#E4E6E7",
+                "highContrastDark": "#2E3C4C",
+                "highContrastLight": "#D3D9DF",
                 "light": "#E4E6E7",
               },
             },
@@ -14520,8 +14520,8 @@ exports[`iOS design at font scale 2 Tag retains its iOS output 1`] = `
           "backgroundColor": {
             "dynamic": {
               "dark": "#25303D",
-              "highContrastDark": "#25303D",
-              "highContrastLight": "#E4E6E7",
+              "highContrastDark": "#2E3C4C",
+              "highContrastLight": "#D3D9DF",
               "light": "#E4E6E7",
             },
           },

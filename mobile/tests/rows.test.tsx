@@ -7,6 +7,7 @@ import { act, useContext, type ReactElement, type ReactNode } from 'react';
 import {
   Animated,
   Dimensions,
+  FlatList,
   Text as NativeText,
   Platform,
   Pressable,
@@ -45,10 +46,12 @@ import { AUTHORISATION_LINE } from '../src/design/authorisation';
 import { Card, Tile, TileGrid } from '../src/design/card';
 import { ChoiceChip, MachinePill, StatusCapsule } from '../src/design/labels';
 import { FigureBlock, PageFoot, StatStrip } from '../src/design/record';
+import { Divider } from '../src/design/controls';
+import { ColumnMarginContext } from '../src/design/row-padding';
 import {
-  SelectedMark,
   selectedWash,
   splitRowStyles,
+  useSplitSeparator,
 } from '../src/design/selection';
 import { SourceLine } from '../src/design/source';
 import {
@@ -152,6 +155,19 @@ const strings = (root: ReactTestInstance) =>
     .filter((child): child is string => typeof child === 'string');
 const glyphs = (root: ReactTestInstance) =>
   root.findAllByType(Icon).map((node) => node.props.name);
+// A leading bar beside the selection (b65 removed it): any thin view pinned
+// to the row's leading edge.
+const leadingBars = (root: ReactTestInstance) =>
+  root.findAll((node) => {
+    if (typeof node.type !== 'string') return false;
+    const style = flat(node.props.style) ?? {};
+    return (
+      style.position === 'absolute' &&
+      style.left === 0 &&
+      typeof style.width === 'number' &&
+      style.width <= 4
+    );
+  });
 beforeEach(() => {
   size();
   jest.clearAllMocks();
@@ -463,7 +479,7 @@ test('LinkRow checkmark selection is explicit and independent of split selection
     ).root;
     expect(row(root).props.accessibilityState.selected).toBe(selected);
     expect(glyphs(root)).toEqual(selected ? ['checkmark'] : []);
-    expect(root.findAllByType(SelectedMark)).toHaveLength(0);
+    expect(leadingBars(root)).toHaveLength(0);
     expect(rowStyle(row(root)).backgroundColor).toBeUndefined();
   }
   expect(
@@ -497,16 +513,156 @@ for (const selected of [false, true]) {
   ])('split selection anatomy, selected=' + selected, (element) => {
     const root = render(element).root;
     expect(row(root).props.accessibilityState.selected).toBe(selected);
-    expect(rowStyle(row(root))).toMatchObject(flat(splitRowStyles.bleed));
+    const bleed = { ...flat(splitRowStyles.bleed) };
+    delete bleed.borderColor;
+    expect(rowStyle(row(root))).toMatchObject(bleed);
     expect(rowStyle(row(root)).backgroundColor).toEqual(
       selected ? selectedWash().backgroundColor : undefined,
     );
-    expect(root.findAllByType(SelectedMark)).toHaveLength(selected ? 1 : 0);
+    // The rounded wash in a 1pt outline marks the selection (the outline is
+    // drawn clear at rest, so nothing moves): no leading bar.
+    expect(rowStyle(row(root)).borderWidth).toBe(1);
+    expect(rowStyle(row(root)).borderColor).toBe(
+      selected ? colors.lineControl : 'transparent',
+    );
+    expect(leadingBars(root)).toHaveLength(0);
     expect(glyphs(root)).not.toContain('chevron.right');
     expect(glyphs(root)).not.toContain('checkmark');
     expect(root.findByType(Hoverable).props).toHaveProperty('onHover');
   });
 }
+test('the selected pill is inset around the text, which keeps the list’s leading edge', () => {
+  for (const style of [splitRowStyles.bleed, splitRowStyles.narrow]) {
+    const bleed = flat(style);
+    const outline = bleed.borderWidth as number;
+    // The fill reaches into the margin by exactly the padding and outline it
+    // adds, so a selected row's text sits where every unselected row's does,
+    // and the outline comes out of the row's padding, not its height.
+    expect(outline).toBe(1);
+    expect((bleed.paddingHorizontal as number) + outline).toBe(
+      -(bleed.marginHorizontal as number),
+    );
+    expect((bleed.paddingVertical as number) + outline).toBe(rhythm.row);
+    expect(bleed.borderRadius).toBe(radii.container);
+  }
+  expect(-(flat(splitRowStyles.bleed).marginHorizontal as number)).toBe(12);
+});
+test('the selected pill sits 8pt from the column’s edges in a 20pt and a 16pt column', () => {
+  // Bills and the directories pad their own lists by layout.screenMargin (the
+  // default); Screen says its own (16pt in a pane narrower than 414pt, as
+  // Search's is).
+  for (const margin of [undefined, 16, 20]) {
+    const element = <LinkRow title="Labor" href={href} selected testID="row" />;
+    const root = render(
+      margin === undefined ? (
+        element
+      ) : (
+        <ColumnMarginContext.Provider value={margin}>
+          {element}
+        </ColumnMarginContext.Provider>
+      ),
+    ).root;
+    const bleed = -(rowStyle(row(root)).marginHorizontal as number);
+    expect((margin ?? layout.screenMargin) - bleed).toBe(8);
+  }
+  // Screen tells its rows the margin it pads its column by.
+  for (const [width, margin] of [
+    [402, 16],
+    [430, 20],
+  ] as const) {
+    size(1, width);
+    const root = render(
+      <Screen>
+        <LinkRow title="Labor" href={href} selected testID="row" />
+      </Screen>,
+    ).root;
+    expect(-(rowStyle(row(root)).marginHorizontal as number)).toBe(margin - 8);
+  }
+});
+describe('separators beside a selected split row', () => {
+  const ruleColours = (root: ReactTestInstance) =>
+    root
+      .findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID === 'inset-group-separator',
+      )
+      .map((node) => {
+        const style = flat(node.props.style);
+        expect(style.height).toBeGreaterThan(0);
+        return style.backgroundColor;
+      });
+  const group = (picked: string | null, accessory?: 'checkmark') => (
+    <InsetGroup>
+      {['a', 'b', 'c', 'd'].map((key) => (
+        <LinkRow
+          key={key}
+          title={key}
+          onPress={jest.fn()}
+          accessory={accessory}
+          selected={key === picked}
+        />
+      ))}
+    </InsetGroup>
+  );
+  const rule = colors.dividerSubtle;
+  test('an InsetGroup clears the rule above and below the selection, keeping its space', () => {
+    const view = render(group('b'));
+    expect(ruleColours(view.root)).toEqual([
+      'transparent',
+      'transparent',
+      rule,
+    ]);
+    act(() => view.update(group('d')));
+    expect(ruleColours(view.root)).toEqual([rule, rule, 'transparent']);
+    act(() => view.update(group('a')));
+    expect(ruleColours(view.root)).toEqual(['transparent', rule, rule]);
+    act(() => view.update(group(null)));
+    expect(ruleColours(view.root)).toEqual([rule, rule, rule]);
+  });
+  test('a checkmark row is a choice, not a split selection: its rules stay', () => {
+    expect(ruleColours(render(group('b', 'checkmark')).root)).toEqual([
+      rule,
+      rule,
+      rule,
+    ]);
+  });
+  test('a FlatList separator clears beside the selected item, and only in a split', () => {
+    const items = ['a', 'b', 'c', 'd'];
+    function List({ picked }: { picked: string | null }) {
+      const separator = useSplitSeparator(
+        items,
+        picked ? (item) => item === picked : null,
+      );
+      return (
+        <FlatList
+          data={items}
+          keyExtractor={(item) => item}
+          renderItem={({ item }) => (
+            <LinkRow
+              title={item}
+              onPress={jest.fn()}
+              selected={picked ? item === picked : undefined}
+            />
+          )}
+          ItemSeparatorComponent={separator}
+        />
+      );
+    }
+    const cleared = (root: ReactTestInstance) =>
+      root.findAllByType(Divider).map((node) => node.props.clear);
+    const view = render(<List picked="c" />);
+    expect(cleared(view.root)).toEqual([false, true, true]);
+    act(() => view.update(<List picked="a" />));
+    expect(cleared(view.root)).toEqual([true, false, false]);
+    act(() => view.update(<List picked={null} />));
+    expect(cleared(view.root)).toEqual([false, false, false]);
+    const hidden = view.root
+      .findAllByType(Divider)
+      .map((node) => node.findByType(View).props.style.backgroundColor);
+    expect(hidden).not.toContain('transparent');
+  });
+});
 test.each(['link', 'bill', 'person'])(
   '%s keyboard activation respects select, onPress and href',
   (kind) => {

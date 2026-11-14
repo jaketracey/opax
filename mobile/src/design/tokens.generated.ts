@@ -25,7 +25,7 @@ export const light = {
   navy: '#142A43',
   /** Pressed and hover on navy. */
   navyRaised: '#1D3A5C',
-  /** Secondary button fill; the people accent's wash. */
+  /** Secondary button fill; the people accent's wash; the selected row in a split list. */
   navyWash: '#E4E6E7',
   /** Brand artwork only: mark, icon and launch screen. */
   bronze: '#A0761B',
@@ -142,6 +142,7 @@ export const lightHighContrast: Partial<Record<Role, string>> = {
   inkSoft: '#23271F',
   inkFaint: '#575C52',
   onNavySoft: '#FFFFFF',
+  navyWash: '#D3D9DF',
   bronzeInk: '#5C4318',
   dividerSubtle: '#B8B4A8',
   moneyInk: '#29553D',
@@ -161,6 +162,7 @@ export const darkHighContrast: Partial<Record<Role, string>> = {
   inkSoft: '#ECEAE2',
   inkFaint: '#A9AEA2',
   onNavySoft: '#0E1A28',
+  navyWash: '#2E3C4C',
   bronzeInk: '#EBC57F',
   dividerSubtle: '#4C5047',
   moneyInk: '#A9DDBD',
