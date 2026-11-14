@@ -294,6 +294,10 @@ export function Screen({
     column,
     contentInsetAdjustmentBehavior !== 'never',
   );
+  // With UIKit's own side insets (nativeSides) the scroll view's content
+  // starts inside them, so this is measured from that inset edge, not the
+  // scroll view's. No current iPhone differs: its two landscape insets are
+  // equal, so nativeSides is off.
   const gutter = content.paddingLeft ?? content.paddingHorizontal;
   const ground = grouped && designFlags.groupedSurfaces ? 'sunken' : 'paper';
   const clearance = useFloatingBarClearance();

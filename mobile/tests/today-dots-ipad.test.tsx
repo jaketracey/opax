@@ -1,9 +1,12 @@
 import { act } from 'react';
+import { rhythm } from '../src/design/tokens';
+import { RELEARN_MS } from '../src/features/today/australia-dots-model';
 import {
   advance,
   expectAtRest,
   installDotHarness,
   mount,
+  scrollTo,
   windowOf,
 } from './today-dots-harness';
 
@@ -54,6 +57,7 @@ test('iPad portrait, landscape with the sidebar, back, and a Stage Manager resiz
   view.rest(bar);
   expectAtRest(view, bar);
   expect(view.art().left).toBe(-8 - view.gutter());
+  expect(view.art().left).toBe(-40);
 
   // Landscape: the scroll view starts after the sidebar.
   advance(100);
@@ -63,12 +67,14 @@ test('iPad portrait, landscape with the sidebar, back, and a Stage Manager resiz
   expectAtRest(view, bar);
   // 8 pt past the scroll view's edge, not 160 pt (half the sidebar) more.
   expect(view.art().left).toBe(-8 - view.gutter());
+  expect(view.art().left).toBe(-40);
 
   advance(2000);
   view.turn(portrait);
   view.layOut(portrait.width, portrait.height);
   expectAtRest(view, bar);
   expect(view.art().left).toBe(-8 - view.gutter());
+  expect(view.art().left).toBe(-40);
 
   // Stage Manager: a 600 pt window, compact, no sidebar.
   advance(2000);
@@ -77,5 +83,31 @@ test('iPad portrait, landscape with the sidebar, back, and a Stage Manager resiz
   expectAtRest(view, bar);
   expect(view.gutter()).toBe(20);
   expect(view.art().left).toBe(-8 - 20);
+  act(() => view.tree.unmount());
+});
+
+test('iPad turned while a record covers Today: the bar keeps its height and the inset', () => {
+  const view = mount(portrait, bar);
+  view.layOut(portrait.width, portrait.height);
+  view.rest(bar);
+  expectAtRest(view, bar);
+  view.cover();
+  advance(100);
+  view.turn(landscape);
+  view.layOut(landscape.width - sidebar, landscape.height);
+  advance(8000);
+  // The bar is the same height in landscape: nothing is reported.
+  view.show();
+  expectAtRest(view, bar);
+  expect(view.art().left).toBe(-40);
+  // A second after the focus, the collapse as Today scrolls leaves the inset.
+  advance(RELEARN_MS + 1);
+  view.header(74);
+  scrollTo(-bar + 40);
+  expect(view.art().top).toBe(30 - bar - rhythm.block);
+  expect(Math.min(...view.rows())).toBeLessThan(1);
+  view.rest(bar);
+  view.header(bar);
+  expectAtRest(view, bar);
   act(() => view.tree.unmount());
 });

@@ -8,6 +8,7 @@ import {
   RELEARN_MS,
   dotFadeDistance,
   nextRestInset,
+  restInsetShown,
 } from '../src/features/today/australia-dots-model';
 import {
   advance,
@@ -189,6 +190,103 @@ describe('Today map through a turn of the phone', () => {
   });
 });
 
+describe('Today map turned while covered', () => {
+  // react-native-screens reports a header's height only for the top screen
+  // of a stack on screen. Turned while Today is covered, its bar is reported
+  // only when Today is shown again, seconds later; the relearn stays open
+  // until then and closes a second after Today's focus.
+  test('a record pushed over Today, the phone turned, then a swipe back', () => {
+    const view = mount(portrait, 160);
+    view.layOut(portrait.width, portrait.height);
+    view.rest(160);
+    expectAtRest(view, 160);
+    view.cover();
+    expect(view.clockActive()).toBe(false);
+
+    advance(50);
+    view.turn(landscape);
+    view.layOut(landscape.width, landscape.height);
+    // The record is read for a while: nothing reports Today's bar.
+    advance(8000);
+    // Swiping back puts Today on top: its bar is reported before its focus.
+    view.header(67);
+    view.rest(67);
+    view.show();
+    expectAtRest(view, 67);
+    expect(view.clockActive()).toBe(true);
+
+    // Covered again and turned back; the bar comes back collapsed.
+    view.cover();
+    advance(3000);
+    view.turn(portrait);
+    view.layOut(portrait.width, portrait.height);
+    advance(5000);
+    view.header(116);
+    view.rest(116);
+    view.show();
+    expectAtRest(view, 116);
+    act(() => view.tree.unmount());
+  });
+
+  test('another tab selected through the turn, then Today again', () => {
+    const view = mount(portrait, 160);
+    view.layOut(portrait.width, portrait.height);
+    view.rest(160);
+    expectAtRest(view, 160);
+    view.cover();
+
+    advance(50);
+    view.turn(landscape);
+    view.layOut(landscape.width, landscape.height);
+    advance(8000);
+    // The tab bar selects Today: focus first, the bar's report after it.
+    view.show();
+    advance(150);
+    view.header(67);
+    view.rest(67);
+    expectAtRest(view, 67);
+
+    // Another tab again, turned back; Today returns with its title collapsed.
+    view.cover();
+    advance(50);
+    view.turn(portrait);
+    view.layOut(portrait.width, portrait.height);
+    advance(5000);
+    view.show();
+    advance(150);
+    view.header(116);
+    view.rest(116);
+    expectAtRest(view, 116);
+
+    // A second after the focus the tallest report holds again: pulled open,
+    // the inset rises to 160 and the collapse as Today scrolls leaves it.
+    advance(RELEARN_MS);
+    view.header(160);
+    view.rest(160);
+    expectAtRest(view, 160);
+    view.header(116);
+    scrollTo(-160 + 40);
+    expect(view.art().top).toBe(30 - 160 - rhythm.block);
+    expect(Math.min(...view.rows())).toBeLessThan(1);
+    view.rest(160);
+    view.header(160);
+    expectAtRest(view, 160);
+    act(() => view.tree.unmount());
+  });
+
+  test('shown again in the window it was covered in: the tallest report holds', () => {
+    const view = mount(portrait, 160);
+    view.layOut(portrait.width, portrait.height);
+    view.rest(160);
+    view.cover();
+    advance(5000);
+    view.show();
+    view.header(116);
+    expectAtRest(view, 160);
+    act(() => view.tree.unmount());
+  });
+});
+
 describe('Today map in a window narrower than the screen', () => {
   // The Duo's outer display (and an iPad's sidebar) take a side of the
   // window from the scroll view. The art bleeds 8 pt past the scroll view's
@@ -259,5 +357,29 @@ describe('nextRestInset', () => {
     expect(s.inset).toBe(116);
     s = nextRestInset(s, 160, 'p', 4000);
     expect(s.inset).toBe(160);
+  });
+  test('a window change while covered relearns until a second after Today is shown', () => {
+    let s = nextRestInset(at('p', 160), 160, 'l', 0, false);
+    expect(s.relearnUntil).toBe(Infinity);
+    // Another turn while still covered keeps it open.
+    s = nextRestInset(s, 160, 'p', 3000, false);
+    s = nextRestInset(s, 160, 'l', 4000, false);
+    expect(s.relearnUntil).toBe(Infinity);
+    // The report on the way back, long after the turn, replaces the inset.
+    s = nextRestInset(s, 67, 'l', 12_000, false);
+    expect(s.inset).toBe(67);
+    s = restInsetShown(s, 12_050)!;
+    expect(s.relearnUntil).toBe(12_050 + RELEARN_MS);
+    s = nextRestInset(s, 70, 'l', 12_200);
+    expect(s.inset).toBe(70);
+    s = nextRestInset(s, 60, 'l', 12_050 + RELEARN_MS + 1);
+    expect(s.inset).toBe(70);
+  });
+  test('being shown leaves a closed or timed relearn alone', () => {
+    expect(restInsetShown(null, 0)).toBeNull();
+    const closed = at('p', 160);
+    expect(restInsetShown(closed, 5000)).toBe(closed);
+    const timed = nextRestInset(closed, 160, 'l', 100);
+    expect(restInsetShown(timed, 200)).toBe(timed);
   });
 });

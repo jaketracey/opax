@@ -54,6 +54,7 @@ import {
   dotTarget,
   nextRestInset,
   outlineDotState,
+  restInsetShown,
   sampleDotRows,
   type DotHighlight,
   type DotRow,
@@ -100,6 +101,7 @@ export function useTodayDotsScroll() {
   const { width, height: tall, fontScale } = useWindowDimensions();
   const window = `${width}x${tall}@${fontScale}`;
   const ios = Platform.OS === 'ios';
+  const navigation = useContext(NavigationContext);
   const expandedHeader = useSharedValue(header);
   const rest = useRef<RestInset | null>(null);
   useLayoutEffect(() => {
@@ -107,11 +109,25 @@ export function useTodayDotsScroll() {
     // NativeStack's first inline estimate and the collapse as Today scrolls,
     // and starts again when the window turns, resizes or changes text size.
     // A session-wide maximum kept portrait's inset in landscape, so every
-    // row read as scrolled past its fade (lane ad-home-map-rotation).
-    rest.current = nextRestInset(rest.current, header, window, Date.now());
+    // row read as scrolled past its fade (lane ad-home-map-rotation). Turned
+    // while covered, Today's bar is reported only when it is shown again.
+    rest.current = nextRestInset(
+      rest.current,
+      header,
+      window,
+      Date.now(),
+      navigation?.isFocused() ?? true,
+    );
     if (expandedHeader.value !== rest.current.inset)
       expandedHeader.value = rest.current.inset;
-  }, [header, window, expandedHeader]);
+  }, [header, window, expandedHeader, navigation]);
+  useEffect(
+    () =>
+      navigation?.addListener('focus', () => {
+        rest.current = restInsetShown(rest.current, Date.now());
+      }),
+    [navigation],
+  );
   const scroll = useDerivedValue(() =>
     dotScrollDistance(raw.value, ios ? expandedHeader.value : 0),
   );

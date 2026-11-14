@@ -55,6 +55,8 @@ export function scrollTo(y: number) {
 export function installDotHarness() {
   beforeEach(() => {
     now = 1_000_000;
+    focused = true;
+    listeners.clear();
     spies.push(jest.spyOn(Date, 'now').mockImplementation(() => now));
     resetDotArrivalForTests();
     clock = () => false;
@@ -137,12 +139,23 @@ export function windowOf(
   Dimensions.set({ window: value, screen: value });
 }
 
+// Today's route: covered by a pushed record or another tab, then shown.
+let focused = true;
+const listeners = new Set<{ type: string; fn: () => void }>();
 const navigation = {
-  isFocused: () => true,
-  addListener: () => () => undefined,
+  isFocused: () => focused,
+  addListener: (type: string, fn: () => void) => {
+    const entry = { type, fn };
+    listeners.add(entry);
+    return () => listeners.delete(entry);
+  },
   setOptions: () => undefined,
   getState: () => undefined,
 };
+function emit(type: 'focus' | 'blur') {
+  focused = type === 'focus';
+  [...listeners].filter((l) => l.type === type).forEach((l) => l.fn());
+}
 
 function Today() {
   const dots = useTodayDotsScroll();
@@ -207,6 +220,17 @@ export function mount(size: { width: number; height: number }, header: number) {
     },
     turn(size: { width: number; height: number }, fontScale = 1) {
       act(() => windowOf(size, fontScale));
+    },
+    /**
+     * A record pushed over Today, or another tab selected: Today blurs and
+     * react-native-screens stops reporting its bar until it is shown.
+     */
+    cover() {
+      act(() => emit('blur'));
+    },
+    /** Today shown again: its `focus`. */
+    show() {
+      act(() => emit('focus'));
     },
     /** UIKit's resting offset: minus the bar over the scroll view. */
     rest(bar: number) {
