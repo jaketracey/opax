@@ -284,3 +284,66 @@ def test_cancelled_labels_neither_approve_provenance_nor_force_replay(db,members
         with pytest.raises(ValueError,match='provenance'):
             P.metadata_patch(live,staged)
         label['cancelled_by_user']=False
+
+
+@pytest.mark.parametrize('method,reply,refused', [
+    ('PATCH', {'error':'quota exceeded'}, True),
+    ('PATCH', {'error':'billing payment required'}, True),
+    ('PATCH', {'detail':'rate-limit exceeded'}, True),
+    ('PATCH', {'message':'429 Too Many Requests'}, True),
+    ('PATCH', {'detail':'subscription limit reached'}, True),
+    ('GET', {'error':'quota exceeded'}, True),
+    ('GET', {'error':'billing payment required'}, True),
+    ('PATCH', {'seqid':1234}, False),
+])
+def test_http_200_refusals_stop_before_next_resource(db,membership,tmp_path,monkeypatch,method,reply,refused):
+    import requests
+    from parli import arag
+
+    turn=add(db);plan=R.measure(db,[turn],set(),defaultdict(Counter))
+    R.apply_plan(db,plan,1,membership)
+    monkeypatch.setenv('OPAX_PUBLISH_FEDERATION','1')
+    first=S.map_speech(db.execute('SELECT * FROM speeches').fetchone())
+    second=json.loads(json.dumps(first))
+    second['slug']='speech-42';second['extra']['metadata']['speech_id']=42
+    path=tmp_path/'payloads.jsonl'
+    path.write_text(''.join(json.dumps(row)+'\n' for row in (first,second)))
+    args=Namespace(payloads=str(path),apply=True,max_documents=2,approved_sha256=R.file_digest(path))
+    live={}
+    for row in (first,second):
+        value=json.loads(json.dumps(row))
+        for label in value['usermetadata']['classifications']:
+            if label['labelset']=='chamber':label['label']='representatives'
+            label['cancelled_by_user']=False
+        value['extra']['metadata']['summary']='A speech about quota exceeded, billing payment required and 429 rate limits.'
+        live[row['slug']]=value
+    monkeypatch.setattr(arag.AragConfig,'from_env',classmethod(lambda cls:Namespace(
+        kb_configured=True,zone='fixture',kb_id='fixture',kb_token='fixture')))
+    monkeypatch.setattr(arag,'rag_base',lambda zone:'https://example.invalid/api/v1')
+    monkeypatch.setattr(P,'time',Namespace(monotonic=lambda:100.0,sleep=lambda seconds:None))
+    calls=[]
+    def request(verb,url,**kwargs):
+        slug=url.rsplit('/',1)[-1].split('?')[0]
+        calls.append((verb,slug))
+        assert kwargs['allow_redirects'] is False
+        assert kwargs['headers']['User-Agent']=='opax-improve-audit'
+        body=reply if verb==method else live[slug]
+        response=requests.Response()
+        response.status_code=200
+        response._content=json.dumps(body).encode()
+        return response
+    monkeypatch.setattr(requests,'request',request)
+    if refused:
+        with pytest.raises(RuntimeError,match='response-body refusal'):
+            P.run(args)
+        expected=[('GET','speech-41')]
+        if method=='PATCH':expected.append(('PATCH','speech-41'))
+        assert calls==expected
+    else:
+        assert P.run(args)['patched']==2
+        assert calls==[('GET','speech-41'),('PATCH','speech-41'),
+                       ('GET','speech-42'),('PATCH','speech-42')]
+    # The shared classifier also accepts the response text passed to backfill
+    # observers, without flagging resource summaries that mention these words.
+    assert P.is_refusal_body(json.dumps(reply)) is refused
+    assert not P.is_refusal_body(json.dumps(live['speech-41']))

@@ -15,6 +15,7 @@ import re
 import time
 
 from .federation_relabel import file_digest, load_guard
+from .progress_response import is_refusal_body
 
 
 def active_label_pairs(labels):
@@ -109,9 +110,13 @@ def run(args, client=None):
         client = ApprovedClient()
     for row in rows:
         live = client.get(row['slug'])
+        if is_refusal_body(live):
+            raise RuntimeError('Publication stopped on a Progress response-body refusal')
         patch = metadata_patch(live, row)
         if patch:
-            client.patch(row['slug'], patch)
+            reply = client.patch(row['slug'], patch)
+            if is_refusal_body(reply):
+                raise RuntimeError('Publication stopped on a Progress response-body refusal')
             report['patched'] += 1
         else:
             report['unchanged'] += 1
