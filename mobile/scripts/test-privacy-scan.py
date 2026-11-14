@@ -507,5 +507,44 @@ class PatchReplayTests(unittest.TestCase):
                 applicator.apply(root, patches)
 
 
+    def test_malformed_headers_and_counts_are_refused(self):
+        applicator = self.applicator()
+        good = b'--- a/node_modules/p/x\n+++ b/node_modules/p/x\n@@ -1 +1 @@\n-a\n+b\n'
+        self.assertEqual(sorted(applicator.sections(good)), ['node_modules/p/x'])
+        mismatch = good.replace(b'+++ b/node_modules/p/x', b'+++ b/node_modules/p/y')
+        with self.assertRaisesRegex(ValueError, 'names differ'):
+            applicator.sections(mismatch)
+        # More removed lines than the hunk header counted drives a count negative.
+        over = b'--- a/node_modules/p/x\n+++ b/node_modules/p/x\n@@ -1 +1,2 @@\n-a\n-b\n+c\n+d\n'
+        with self.assertRaisesRegex(ValueError, 'malformed'):
+            applicator.sections(over)
+
+    def test_a_later_package_failing_its_dry_run_leaves_an_earlier_package_untouched(self):
+        applicator = self.applicator()
+        sha = lambda content: hashlib.sha256(content).hexdigest()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); patches = root / 'patches'; patches.mkdir()
+            manifest = []
+            for name, old in (('opax-first', b'one\n'), ('opax-second', b'two\n')):
+                diff = (f'--- a/node_modules/{name}/f.txt\n+++ b/node_modules/{name}/f.txt\n'
+                        '@@ -1 +1 @@\n-' + old.decode() + '+new\n').encode()
+                (patches / f'{name}.patch').write_bytes(diff)
+                package = root / 'node_modules' / name; package.mkdir(parents=True)
+                (package / 'package.json').write_text('{"version":"1.0.0"}')
+                # The second package's hash matches the manifest but its file
+                # content differs from what the hunk expects, so only the dry
+                # run can catch it.
+                (package / 'f.txt').write_bytes(old if name == 'opax-first' else b'other\n')
+                manifest.append({'package': name, 'version': '1.0.0', 'patch': f'{name}.patch',
+                                 'sha256': sha(diff),
+                                 'files': [{'path': 'f.txt', 'before': sha(package.joinpath('f.txt').read_bytes()),
+                                            'after': sha(b'new\n')}]})
+            (patches / 'privacy-patches.json').write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(ValueError, 'refused: opax-second'):
+                applicator.apply(root, patches)
+            self.assertEqual((root / 'node_modules/opax-first/f.txt').read_bytes(), b'one\n')
+            self.assertEqual((root / 'node_modules/opax-second/f.txt').read_bytes(), b'other\n')
+
+
 if __name__ == '__main__':
     unittest.main()
