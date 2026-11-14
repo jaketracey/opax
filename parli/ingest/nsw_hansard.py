@@ -19,12 +19,16 @@ Usage:
 from parli.ingest import http as source_http
 
 import argparse
+import fcntl
 import hashlib
 import json
+import os
 import re
 import sqlite3
 import time
 import urllib.request
+import urllib.error
+from urllib.parse import urlsplit
 import xml.etree.ElementTree as ET
 from datetime import date
 from pathlib import Path
@@ -34,7 +38,7 @@ from parli.ingest.dedup import build_seen
 from parli.schema import get_db, init_db
 
 API_BASE = "https://api.parliament.nsw.gov.au/api/hansard/search"
-USER_AGENT = source_http.USER_AGENT
+USER_AGENT = "opax-improve-audit"
 
 # Map chamber names from the API to our DB codes
 CHAMBER_MAP = {
@@ -43,7 +47,19 @@ CHAMBER_MAP = {
 }
 
 # Rate limiting: seconds between API calls
-REQUEST_DELAY = 0.1
+REQUEST_DELAY = 1.0
+_next_request_at = 0.0
+# The bounded backfill sets this for discovery and every fragment request.
+REQUEST_DEADLINE: float | None = None
+
+
+class BudgetSpent(Exception):
+    """A clean checkpoint boundary, never a completed day."""
+
+
+def check_budget(reserve: float = 0.0) -> None:
+    if REQUEST_DEADLINE is not None and time.monotonic() + reserve >= REQUEST_DEADLINE:
+        raise BudgetSpent("NSW backfill time budget spent")
 
 # HTML tag stripping
 HTML_TAG_RE = re.compile(r"<[^>]+>")
@@ -58,24 +74,58 @@ BATCH_SIZE = 500
 PROGRESS_DIR = Path("~/.cache/autoresearch/nsw_hansard").expanduser()
 
 
-def _api_get(url: str, accept: str = "application/json", retries: int = 3) -> bytes:
-    """Make a GET request with rate limiting and retries."""
+def _api_get(url: str, accept: str = "application/json", retries: int = 2) -> bytes:
+    """NSW API only, one request per second, at most one retry, no redirects.
+
+    Use the shared challenge/redirect guards without its additional retry loop
+    or User-Agent override. A refusal exits through broad record handlers.
+    """
+    global _next_request_at
+    if not url.startswith(API_BASE + "/") or urlsplit(url).hostname != "api.parliament.nsw.gov.au":
+        raise ValueError("NSW Hansard requests must use the NSW Parliament API")
     req = source_http.Request(url, headers={
-        "User-Agent": source_http.USER_AGENT,
+        "User-Agent": USER_AGENT,
         "Accept": accept,
     })
-    for attempt in range(retries):
+    # This reviewed NSW lane explicitly requires this identifying audit agent.
+    # Request() otherwise forces the repository's normal OPAXBot identity.
+    req.remove_header("User-agent")
+    req.add_header("User-Agent", USER_AGENT)
+    for attempt in range(min(retries, 2)):
+        wait = max(0.0, _next_request_at - time.monotonic())
+        check_budget(wait)
+        time.sleep(wait)
+        check_budget()
+        _next_request_at = time.monotonic() + REQUEST_DELAY
+        timeout = 60 if REQUEST_DEADLINE is None else min(60, REQUEST_DEADLINE - time.monotonic())
         try:
-            time.sleep(REQUEST_DELAY)
-            with source_http.urlopen(req, timeout=60) as resp:
-                return resp.read()
-        except Exception as e:
-            if attempt == retries - 1:
-                raise
-            wait = 2 ** (attempt + 1)
-            print(f"  Retry {attempt + 1}/{retries} after error: {e} (waiting {wait}s)")
-            time.sleep(wait)
-    return b""
+            with source_http.build_opener().open(req, timeout=timeout) as resp:
+                chunks = []
+                while True:
+                    check_budget()
+                    # read1 returns after one buffered/socket read, so a slow
+                    # streaming body cannot hide the deadline inside read().
+                    chunk = resp.read1(65536)
+                    if not chunk:
+                        break
+                    chunks.append(chunk)
+                body = b"".join(chunks)
+                source_http.check_response(url, resp.status, body, resp.headers,
+                                           expected_json="json" in accept)
+                if not 200 <= resp.status < 300:
+                    raise urllib.error.HTTPError(url, resp.status, "non-2xx", resp.headers, None)
+                return body
+        except (urllib.error.URLError, TimeoutError, OSError) as error:
+            if isinstance(error, urllib.error.HTTPError):
+                source_http.check_response(url, error.code, error.read(), error.headers)
+                delay = source_http.retry_after(error.headers.get("Retry-After"))
+            else:
+                delay = 0
+            if attempt + 1 >= min(retries, 2):
+                raise source_http.SourceRefused(url, f"NSW API failed after one retry: {error}") from error
+            _next_request_at = max(_next_request_at, time.monotonic() + max(1, delay))
+            print(f"  NSW API retry 1/1: {error}", flush=True)
+    raise ValueError("At least one request attempt is required")
 
 
 def _api_json(url: str) -> list | dict:
@@ -126,220 +176,65 @@ def extract_text_from_body(body_elem: ET.Element) -> str:
 
 
 def extract_speeches_from_fragment(xml_root: ET.Element) -> list[dict]:
-    """Parse a fragment XML and extract individual speeches.
+    """Split source member anchors and bylines, retaining their original IDs.
 
-    Returns a list of dicts with keys:
-      speaker_name, speaker_id, electorate, topic, text
+    NSW uses both MemberSpeech-H and MemberUpper-H, and anchors between
+    paragraphs. Never carry a named speaker across an unidentifiable byline.
     """
-    speeches = []
-
-    # Get header info
-    header = xml_root.find(".//hansard.header")
-    chamber_name = ""
-    if header is not None:
-        ch = header.find("chamber")
-        if ch is not None and ch.text:
-            chamber_name = ch.text.strip()
-
-    # Get fragment data for topic and speaker info
-    frag_data = xml_root.find(".//fragment.data")
-    frag_text = xml_root.find(".//fragment.text")
-
-    if frag_text is None:
-        return speeches
-
-    body = frag_text.find("body")
+    chamber = xml_root.findtext(".//hansard.header/chamber", "").strip()
+    data = xml_root.find(".//fragment.data")
+    fragment = xml_root.find(".//fragment.text")
+    if fragment is None:
+        return []
+    body = next((e for e in fragment if e.tag.rsplit("}", 1)[-1] == "body"), None)
     if body is None:
-        # Sometimes the body has a namespace
-        for child in frag_text:
-            if child.tag == "body" or child.tag.endswith("}body"):
-                body = child
-                break
-    if body is None:
-        return speeches
+        return []
+    topic = "; ".join(t.text.strip() for t in data.findall(".//topicinfo/text") if t.text) if data is not None else ""
+    talkers = []
+    if data is not None:
+        for t in data.iter("talker"):
+            info = {"id": t.findtext("id", "").strip(),
+                    "name": t.findtext("name", "").strip(),
+                    "electorate": t.findtext("electorate", "").strip()}
+            if info not in talkers:
+                talkers.append(info)
+    empty = {"id": "", "name": "", "electorate": ""}
+    current = dict(talkers[0]) if len(talkers) == 1 else dict(empty)
+    parts, speeches = [], []
+    anchor_pending = False
 
-    # Extract topic from fragment data
-    topic = ""
-    if frag_data is not None:
-        topic_info = frag_data.find(".//topicinfo")
-        if topic_info is not None:
-            # Collect all text elements as topic parts
-            topic_parts = []
-            for t in topic_info.findall("text"):
-                if t.text:
-                    topic_parts.append(t.text.strip())
-            topic = "; ".join(topic_parts) if topic_parts else ""
-
-    # Extract speakers from fragment data
-    speakers_in_fragment = []
-    if frag_data is not None:
-        for speech_elem in frag_data.iter("speech"):
-            talker = speech_elem.find(".//talker")
-            if talker is not None:
-                speaker_info = {
-                    "id": (talker.findtext("id") or "").strip(),
-                    "name": (talker.findtext("name") or "").strip(),
-                    "electorate": (talker.findtext("electorate") or "").strip(),
-                }
-                speakers_in_fragment.append(speaker_info)
-
-        # Also check for questions/answers
-        for qa_tag in ("question", "answer"):
-            for qa_elem in frag_data.iter(qa_tag):
-                talker = qa_elem.find(".//talker")
-                if talker is not None:
-                    speaker_info = {
-                        "id": (talker.findtext("id") or "").strip(),
-                        "name": (talker.findtext("name") or "").strip(),
-                        "electorate": (talker.findtext("electorate") or "").strip(),
-                    }
-                    speakers_in_fragment.append(speaker_info)
-
-    # Now parse the HTML body to split by speaker
-    # Speakers are identified by <span class="MemberSpeech-H"> elements
-    # We split text at each speaker marker
-    current_speaker = speakers_in_fragment[0] if speakers_in_fragment else {
-        "id": "", "name": "", "electorate": ""
-    }
-    current_parts = []
-    speaker_changes = []
-
-    # Iterate through all elements in body to find speaker markers
-    for elem in body.iter():
-        cls = elem.get("class", "")
-        data_article = elem.get("data-article", "")
-
-        if cls == "MemberSpeech-H" or (
-            data_article in ("speech", "question", "answer", "interjection")
-        ):
-            # This is a speaker marker
-            speaker_name = (elem.text or "").strip()
-            speaker_id = elem.get("data-value", "")
-
-            # Save current speech if we have one
-            if current_parts:
-                text = clean_html(" ".join(current_parts))
-                if len(text) >= MIN_SPEECH_LEN:
-                    speaker_changes.append((dict(current_speaker), text))
-                current_parts = []
-
-            # Find matching speaker info
-            matched = False
-            for si in speakers_in_fragment:
-                if si["id"] == speaker_id or si["name"] == speaker_name:
-                    current_speaker = si
-                    matched = True
-                    break
-            if not matched and speaker_name:
-                current_speaker = {
-                    "id": speaker_id,
-                    "name": speaker_name,
-                    "electorate": "",
-                }
-
-            # Get the electorate from the following span if present
-            # (handled by the fragment data speakers list above)
-            continue
-
-        # Skip structural headings
-        if cls in ("SubDebate-H", "SubSubDebate-H"):
-            continue
-
-    # Collect all the text, split by speakers using a different approach
-    # Walk through <p> elements and accumulate text per speaker
-    all_paragraphs = list(body.iter("{http://www.w3.org/1999/xhtml}p"))
-    if not all_paragraphs:
-        # Try without namespace
-        all_paragraphs = list(body.iter("p"))
-
-    current_speaker = speakers_in_fragment[0] if speakers_in_fragment else {
-        "id": "", "name": "", "electorate": ""
-    }
-    current_parts = []
-
-    for p in all_paragraphs:
-        cls = p.get("class", "")
-
-        # Skip heading paragraphs
-        if cls in ("SubDebate-H", "SubSubDebate-H"):
-            continue
-
-        # Check for speaker change within this paragraph
-        new_speaker = None
-        for span in p.iter("{http://www.w3.org/1999/xhtml}span"):
-            span_cls = span.get("class", "")
-            if span_cls == "MemberSpeech-H":
-                speaker_name = (span.text or "").strip()
-                speaker_id = span.get("data-value", "")
-                new_speaker = {"id": speaker_id, "name": speaker_name, "electorate": ""}
-                # Try to find electorate from speakers list
-                for si in speakers_in_fragment:
-                    if si["id"] == speaker_id or si["name"] == speaker_name:
-                        new_speaker["electorate"] = si["electorate"]
-                        break
-        # Also try without namespace
-        if new_speaker is None:
-            for span in p.iter("span"):
-                span_cls = span.get("class", "")
-                if span_cls == "MemberSpeech-H":
-                    speaker_name = (span.text or "").strip()
-                    speaker_id = span.get("data-value", "")
-                    new_speaker = {"id": speaker_id, "name": speaker_name, "electorate": ""}
-                    for si in speakers_in_fragment:
-                        if si["id"] == speaker_id or si["name"] == speaker_name:
-                            new_speaker["electorate"] = si["electorate"]
-                            break
-
-        if new_speaker is not None:
-            # Save current speech
-            if current_parts:
-                text = clean_html(" ".join(current_parts))
-                if len(text) >= MIN_SPEECH_LEN:
-                    speeches.append({
-                        "speaker_name": current_speaker["name"],
-                        "speaker_id": current_speaker["id"],
-                        "electorate": current_speaker["electorate"],
-                        "topic": topic,
-                        "text": text,
-                        "chamber": chamber_name,
-                    })
-                current_parts = []
-            current_speaker = new_speaker
-
-        # Get all text from this paragraph
-        para_text = ET.tostring(p, encoding="unicode", method="text")
-        if para_text and para_text.strip():
-            current_parts.append(para_text.strip())
-
-    # Don't forget the last speech
-    if current_parts:
-        text = clean_html(" ".join(current_parts))
+    def flush():
+        text = clean_html(" ".join(parts))
         if len(text) >= MIN_SPEECH_LEN:
-            speeches.append({
-                "speaker_name": current_speaker["name"],
-                "speaker_id": current_speaker["id"],
-                "electorate": current_speaker["electorate"],
-                "topic": topic,
-                "text": text,
-                "chamber": chamber_name,
-            })
+            speeches.append({"speaker_name": current["name"], "speaker_id": current["id"],
+                             "electorate": current["electorate"], "topic": topic,
+                             "text": text, "chamber": chamber})
+        parts.clear()
 
-    # If no speaker-split speeches found, treat the whole fragment as one speech
-    if not speeches:
-        full_text = extract_text_from_body(body)
-        if len(full_text) >= MIN_SPEECH_LEN:
-            speaker = speakers_in_fragment[0] if speakers_in_fragment else {
-                "id": "", "name": "", "electorate": ""
-            }
-            speeches.append({
-                "speaker_name": speaker.get("name", ""),
-                "speaker_id": speaker.get("id", ""),
-                "electorate": speaker.get("electorate", ""),
-                "topic": topic,
-                "text": full_text,
-                "chamber": chamber_name,
-            })
-
+    for element in body.iter():
+        tag = element.tag.rsplit("}", 1)[-1]
+        if tag == "a" and element.get("data-mode") == "member":
+            flush()
+            sid = element.get("data-value", "")
+            candidates = [t for t in talkers if t["id"] == sid]
+            current = dict(candidates[0]) if len(candidates) == 1 else {**empty, "id": sid}
+            anchor_pending = True
+        elif tag == "p":
+            if element.get("class", "") in ("SubDebate-H", "SubSubDebate-H"):
+                continue
+            byline = next((e for e in element.iter() if e.get("class", "") in
+                           ("MemberSpeech-H", "MemberUpper-H", "OfficeSpeech-H", "OfficeUpper-H")), None)
+            if byline is not None:
+                name = clean_html(" ".join(byline.itertext())).rstrip(": ")
+                if not anchor_pending:
+                    flush()
+                    matches = [t for t in talkers if t["name"].rstrip(": ") == name]
+                    current = dict(matches[0]) if len(matches) == 1 else dict(empty)
+                if not current["name"]:
+                    current["name"] = name
+                anchor_pending = False
+            parts.append(ET.tostring(element, encoding="unicode", method="text").strip())
+    flush()
     return speeches
 
 
@@ -348,25 +243,30 @@ def get_sitting_days(start_date: date, end_date: date) -> list[dict]:
 
     Returns list of dicts: {date, chamber, toc_doc_id, pdf_doc_id}
     """
+    if start_date > end_date:
+        raise ValueError("NSW sitting calendar start must precede end")
     results = []
     years = range(start_date.year, end_date.year + 1)
 
     for year in years:
         print(f"  Fetching sitting days for {year}...")
-        try:
-            data = _api_json(f"{API_BASE}/year/{year}")
-        except Exception as e:
-            print(f"    Error fetching year {year}: {e}")
-            continue
+        data = _api_json(f"{API_BASE}/year/{year}")
+        if not isinstance(data, list) or not data:
+            raise ValueError(f"NSW calendar {year}: missing or invalid year discovery")
 
+        recognised = False
         for entry in data:
             sitting_date = entry["date"][:10]  # "YYYY-MM-DD"
-            if sitting_date < str(start_date) or sitting_date > str(end_date):
-                continue
-
+            if date.fromisoformat(sitting_date).year != year or not isinstance(entry.get("Events"), list):
+                raise ValueError(f"NSW calendar {year}: invalid sitting entry")
             for event in entry.get("Events", []):
                 chamber = event.get("Chamber", "")
                 if chamber not in CHAMBER_MAP:
+                    continue
+                recognised = True
+                if not event.get("TocDocId"):
+                    raise ValueError(f"NSW calendar {year}: missing chamber TOC for {sitting_date}")
+                if sitting_date < str(start_date) or sitting_date > str(end_date):
                     continue
                 results.append({
                     "date": sitting_date,
@@ -375,6 +275,8 @@ def get_sitting_days(start_date: date, end_date: date) -> list[dict]:
                     "toc_doc_id": event.get("TocDocId", ""),
                     "pdf_doc_id": event.get("PdfDocId", ""),
                 })
+        if not recognised:
+            raise ValueError(f"NSW calendar {year}: no recognised chamber in year discovery")
 
     results.sort(key=lambda x: (x["date"], x["chamber"]))
     return results
@@ -382,11 +284,7 @@ def get_sitting_days(start_date: date, end_date: date) -> list[dict]:
 
 def get_fragment_uids(toc_doc_id: str) -> list[str]:
     """Fetch table of contents and extract all topic/fragment UIDs."""
-    try:
-        xml_root = _api_xml(f"{API_BASE}/daily/tableofcontents/{toc_doc_id}")
-    except Exception as e:
-        print(f"    Error fetching TOC {toc_doc_id}: {e}")
-        return []
+    xml_root = _api_xml(f"{API_BASE}/daily/tableofcontents/{toc_doc_id}")
 
     uids = []
     for topic in xml_root.iter("topic"):
@@ -434,11 +332,7 @@ def ingest_day(
     pending = 0
 
     for uid in uids:
-        try:
-            xml_root = _api_xml(f"{API_BASE}/daily/fragment/{uid}")
-        except Exception as e:
-            print(f"      Error fetching fragment {uid}: {e}")
-            continue
+        xml_root = _api_xml(f"{API_BASE}/daily/fragment/{uid}")
 
         speeches = extract_speeches_from_fragment(xml_root)
 
@@ -502,11 +396,11 @@ def main():
         description="Ingest NSW Parliament Hansard speeches into the parli database."
     )
     parser.add_argument(
-        "--start", type=str, default="2020-01-01",
+        "--start", type=str, default=None,
         help="Start date (YYYY-MM-DD), default 2020-01-01",
     )
     parser.add_argument(
-        "--end", type=str, default=str(date.today()),
+        "--end", type=str, default=None,
         help="End date (YYYY-MM-DD), default today",
     )
     parser.add_argument(
@@ -522,11 +416,37 @@ def main():
         "--no-resume", action="store_true",
         help="Ignore progress file and re-ingest everything",
     )
+    parser.add_argument("--backfill-missing-days", action="store_true",
+                        help="Bounded, checkpointed repair of the reviewed NSW gap; requires OPAX_DB")
+    parser.add_argument("--coverage-json", type=Path)
+    parser.add_argument("--receipt-json", type=Path)
     fts.add_argument(parser)
     args = parser.parse_args()
 
-    start = date.fromisoformat(args.start)
-    end = date.fromisoformat(args.end)
+    if args.backfill_missing_days:
+        from parli.ingest import nsw_backfill
+        if args.dry_run or args.chamber or args.no_resume:
+            parser.error("Bounded repair uses its own atomic checkpoints; select a separate OPAX_DB for rehearsal")
+        db_path = os.environ.get("OPAX_DB")
+        if not db_path or os.environ.get("DATABASE_URL"):
+            parser.error("Bounded NSW repair requires an explicit SQLite OPAX_DB and no DATABASE_URL")
+        start = date.fromisoformat(args.start) if args.start else nsw_backfill.START
+        end = date.fromisoformat(args.end) if args.end else nsw_backfill.END
+        nsw_backfill.bounds(start, end)
+        cap = int(os.environ.get("OPAX_BACKFILL_NSW_CAP", nsw_backfill.DEFAULT_CAP))
+        budget = float(os.environ.get("OPAX_BACKFILL_NSW_BUDGET_S", nsw_backfill.DEFAULT_BUDGET_S))
+        # Open an existing database only. Never initialise the legacy default.
+        path = Path(db_path).expanduser().resolve()
+        with Path(str(path) + ".nsw-backfill.lock").open("a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            with sqlite3.connect(path.as_uri() + "?mode=rw", uri=True, timeout=5) as db:
+                db.execute("PRAGMA foreign_keys=ON")
+                nsw_backfill.run(db, start=start, end=end, cap=cap, budget_s=budget,
+                                 coverage_path=args.coverage_json, receipt_path=args.receipt_json)
+        return
+
+    start = date.fromisoformat(args.start or "2020-01-01")
+    end = date.fromisoformat(args.end) if args.end else date.today()
 
     print(f"NSW Hansard Ingestor")
     print(f"  Date range: {start} to {end}")
