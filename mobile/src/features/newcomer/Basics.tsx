@@ -14,6 +14,7 @@ import { headerItems } from '../../navigation/chrome';
 import { RouteOptions } from '../../navigation/preview';
 import { welcomeSeatRoute } from '../../navigation/routes';
 import { WELCOME_COLUMN } from '../welcome/Welcome';
+import { learnName } from './learn/copy';
 import { TermTip } from './TermTip';
 import { lessonCopy, lessons } from './lessons';
 import { LessonBlock } from './Tour';
@@ -94,6 +95,9 @@ export default function Basics({
             <TermTip term="government" variant="link" />
             <TermTip term="party" variant="link" />
           </View>
+          <Text wordSafe variant="secondary" tone="inkSoft">
+            {lessonCopy.more(learnName())}
+          </Text>
           {standalone ? null : (
             <Button
               label={lessonCopy.find}

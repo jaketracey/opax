@@ -21,7 +21,10 @@ export type TermId =
   | 'interests'
   | 'sitting'
   | 'record'
-  | 'machine';
+  | 'machine'
+  | 'receipts'
+  | 'committee'
+  | 'assent';
 
 export interface Term {
   id: TermId;
@@ -167,6 +170,37 @@ export const terms: Record<TermId, Term> = {
       'Some summaries and every Ask answer are written by a computer from the records they link to. They are always labelled, and the records are one tap away so you can check them.',
     ],
   },
+  receipts: {
+    id: 'receipts',
+    word: 'Receipts',
+    question: 'What are receipts?',
+    gloss: 'Money a party reports receiving. Donations are only part of it.',
+    body: [
+      'Receipts are all the money a party reports receiving in a year. Donations are part of it, but so are loans, membership fees and investment income.',
+      'That is why OPAX says receipts and not donations: the published totals mix them together.',
+    ],
+  },
+  committee: {
+    id: 'committee',
+    word: 'Committee',
+    question: 'What’s a committee?',
+    gloss: 'A small group of MPs or senators who look closely at a bill.',
+    body: [
+      'A committee is a small group of MPs or senators who look at a bill in detail, often hearing from experts and the public, and report back.',
+      'Not every bill goes to one.',
+    ],
+  },
+  assent: {
+    id: 'assent',
+    word: 'Royal Assent',
+    question: 'What’s Royal Assent?',
+    gloss:
+      'The Governor-General’s signature, the last step before a bill is law.',
+    body: [
+      'A bill is a proposed law. It becomes an Act when both houses pass it and the Governor-General signs it.',
+      'That signature is called Royal Assent.',
+    ],
+  },
 };
 
 /** The glossary's order: the way the ideas build on each other. */
@@ -184,11 +218,16 @@ export const termOrder: readonly TermId[] = [
   'sitting',
   'record',
   'machine',
+  'receipts',
+  'committee',
+  'assent',
 ];
 
 export const plainWordsCopy = {
   title: 'Plain words',
   lead: 'The ideas OPAX uses, in a sentence or two each.',
+  /** Shown on every answer until the guide's own text replaces these drafts. */
+  draft: 'Draft wording for the design pass. The guide’s text replaces it.',
   all: 'All plain words',
   /** Option B's switch in Account, and the sheet's way to it. */
   switchLabel: 'Explain terms',
@@ -204,3 +243,21 @@ export const newcomerSeatHelp =
 /** Today's invitation card, for a reader with no electorate yet. */
 export const newcomerInvitation =
   'Your MP is the one person elected to speak for your area in Parliament. Find your electorate to meet them.';
+
+/**
+ * Phrases the inline term finds in running text (a row's meta line, a status
+ * line), longest first. Only the first use of a term on a screen is marked.
+ */
+export const termPhrases: readonly (readonly [string, TermId])[] = [
+  ['House of Representatives', 'parliament'],
+  ['federal parliament', 'parliament'],
+  ['Second reading', 'reading'],
+  ['Third reading', 'reading'],
+  ['Royal Assent', 'assent'],
+  ['receipts', 'receipts'],
+  ['portfolio', 'government'],
+  ['electorate', 'electorate'],
+  ['Senate', 'parliament'],
+  ['House', 'parliament'],
+  ['ayes', 'division'],
+];

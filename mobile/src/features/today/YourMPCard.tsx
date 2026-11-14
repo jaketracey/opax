@@ -34,6 +34,7 @@ import {
 import { shareRecord } from '../../navigation/share';
 import { CachedPortrait } from '../CachedPortrait';
 import { newcomerOption } from '../newcomer/option';
+import { TermText, termAction } from '../newcomer/Term';
 import { Gloss, TermTip } from '../newcomer/TermTip';
 import { useFaceURIs } from '../your-mp/FaceStackRow';
 import { officialPageFor, type OfficialPage } from '../your-mp/MemberHeroRow';
@@ -395,6 +396,7 @@ function MemberTile({
               },
             ]
           : []),
+        ...(hook && termAction(hook) ? [termAction(hook)!] : []),
         {
           name: 'change',
           label: 'Change electorate',
@@ -443,7 +445,7 @@ function MemberTile({
               </Text>
             </View>
             {hook ? (
-              <Text
+              <TermText
                 wordSafe
                 variant="secondary"
                 tone="ink"
@@ -451,7 +453,7 @@ function MemberTile({
                 testID="today-your-mp-hook"
               >
                 {hook}
-              </Text>
+              </TermText>
             ) : null}
           </View>
         </View>

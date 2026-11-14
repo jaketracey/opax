@@ -67,6 +67,8 @@ export const lessonCopy = {
   /** Option C's page title. */
   pageTitle: 'Parliament in a minute',
   pageLead: 'Four ideas, and you’ll be able to read everything in OPAX.',
+  /** Where the rest lives, said once at the end of the basics. */
+  more: (name: string) => `There’s more in “${name}”, any time, from Today.`,
   /** Bar title for both, so the seat step's back button names them. */
   barTitle: 'The basics',
 } as const;

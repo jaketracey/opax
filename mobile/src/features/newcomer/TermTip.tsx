@@ -27,14 +27,19 @@ export function explainTerm(id: TermId) {
     rule: term.body.join('\n\n'),
     testID: `term-${id}`,
     extra: (
-      <InsetGroup>
-        <LinkRow
-          title={plainWordsCopy.all}
-          symbol={symbols.help}
-          onPress={() => router.push(plainWordsRoute())}
-          testID={`term-${id}-all`}
-        />
-      </InsetGroup>
+      <>
+        <InsetGroup>
+          <LinkRow
+            title={plainWordsCopy.all}
+            symbol={symbols.help}
+            onPress={() => router.push(plainWordsRoute())}
+            testID={`term-${id}-all`}
+          />
+        </InsetGroup>
+        <Text wordSafe variant="footnote" tone="inkSoft">
+          {plainWordsCopy.draft}
+        </Text>
+      </>
     ),
   });
 }

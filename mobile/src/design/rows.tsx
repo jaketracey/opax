@@ -1,3 +1,4 @@
+import { TermText } from '../features/newcomer/Term';
 import { Pressable } from './pressable';
 import { type Href } from 'expo-router';
 import { useRecordLink } from '../navigation/record-link';
@@ -72,6 +73,8 @@ export interface LinkRowProps extends Navigation {
   titleLines?: number;
   detailLines?: number;
   titleRole?: import('./tokens').TextVariant;
+  /** Newcomer design pass (prototype): mark the first glossary term in a string title. */
+  terms?: boolean;
   secondary?: ReactNode;
   /** Metadata above a full-width title, rather than beside its first line. */
   aboveTitle?: ReactNode;
@@ -101,6 +104,7 @@ export interface LinkRowProps extends Navigation {
 export function LinkRow({
   title,
   titleRole = 'body',
+  terms = false,
   titleLines,
   detailLines,
   secondary,
@@ -141,6 +145,10 @@ export function LinkRow({
   const [hovered, onHover] = useHover();
   const onActivate = select ?? onPress ?? (href ? recordLink.open : undefined);
   const plainTitle = typeof title === 'string' ? title : textContent(title);
+  // TermText takes a string; any other title keeps the plain Text.
+  const TitleText = (
+    terms && typeof title === 'string' ? TermText : Text
+  ) as typeof Text;
   const glyph = symbol;
   const ink = symbolInk;
   useRowInset(glyph ? 44 : 16);
@@ -210,7 +218,7 @@ export function LinkRow({
               </View>
             ) : null}
             {plainTitle ? (
-              <Text
+              <TitleText
                 wordSafe
                 numberOfLines={titleLines}
                 variant={titleRole}
@@ -227,7 +235,7 @@ export function LinkRow({
                 }
               >
                 {title}
-              </Text>
+              </TitleText>
             ) : null}
           </View>
           {secondary}
@@ -1191,9 +1199,9 @@ export function DivisionRow({
         <Text wordSafe variant="rowRecord">
           {title}
         </Text>
-        <Text wordSafe variant="secondary">
+        <TermText wordSafe variant="secondary">
           {meta}
-        </Text>
+        </TermText>
         <StatusCapsule status={outcome} />
         {bar ? (
           <View

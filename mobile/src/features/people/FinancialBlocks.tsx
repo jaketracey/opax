@@ -312,6 +312,7 @@ export function PartyReceiptsBlock({
           <View>
             <LinkRow
               title={`${possessive(p.party)} disclosed receipts`}
+              terms
               detail="Party disclosures, not this person’s finances"
               href={partyRoute(p.party, 'receipts')}
               accessibilityHint="Opens the party page"

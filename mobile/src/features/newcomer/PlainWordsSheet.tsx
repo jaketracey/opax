@@ -38,6 +38,9 @@ export default function PlainWordsSheet() {
           </Disclosure>
         ))}
       </InsetGroup>
+      <Text wordSafe variant="footnote" tone="inkSoft">
+        {plainWordsCopy.draft}
+      </Text>
     </SheetFrame>
   );
 }

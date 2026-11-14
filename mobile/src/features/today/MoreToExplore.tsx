@@ -1,3 +1,5 @@
+import { learnCopy, learnName } from '../newcomer/learn/copy';
+import { learnRoute } from '../newcomer/learn/routes';
 import { router } from 'expo-router';
 import { lessonCopy } from '../newcomer/lessons';
 import { newcomerOption } from '../newcomer/option';
@@ -98,6 +100,15 @@ export function MoreToExplore({
             symbol={symbols.yourMP}
             onPress={() => router.push(welcomeBasicsRoute)}
             testID="today-explore-basics"
+          />
+        ) : null}
+        {newcomerOption() ? (
+          <LinkRow
+            title={learnName()}
+            detail={learnCopy.lead}
+            symbol={symbols.bills}
+            href={learnRoute}
+            testID="today-explore-learn"
           />
         ) : null}
         {newcomerOption() ? (

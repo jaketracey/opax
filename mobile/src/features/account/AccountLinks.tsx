@@ -1,4 +1,7 @@
-import { type Href } from 'expo-router';
+import { learnName } from '../newcomer/learn/copy';
+import { learnRoute } from '../newcomer/learn/routes';
+import { newcomerOption } from '../newcomer/option';
+import { router, type Href } from 'expo-router';
 import { View } from 'react-native';
 import { isProduction } from '../../design/environment';
 import { InsetGroup } from '../../design/primitives';
@@ -89,6 +92,15 @@ export function AccountLinks({
         />
       </InsetGroup>
       <InsetGroup>
+        {newcomerOption() ? (
+          // Newcomer design pass (prototype): the guide, from Account.
+          <SettingsRow
+            title={learnName()}
+            tile={symbols.help}
+            onPress={() => closeSheetThen(() => router.push(learnRoute))}
+            testID="account-learn"
+          />
+        ) : null}
         <SettingsRow
           title={linksCopy.replayWelcome}
           tile={symbols.welcome}

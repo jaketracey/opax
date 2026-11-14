@@ -1,3 +1,6 @@
+import { newcomerOption } from '../newcomer/option';
+import { StageTracker } from '../newcomer/StageTracker';
+import { TermText } from '../newcomer/Term';
 import { LoadingStatus } from '../../design/states';
 import { RouteOptions } from '../../navigation/preview';
 import { useScreenReady } from '../../analytics/timing';
@@ -828,9 +831,9 @@ function BillHead({
           </Text>
         ) : null}
         {meta ? (
-          <Text variant="secondary" wordSafe testID="bill-introduced">
+          <TermText variant="secondary" wordSafe testID="bill-introduced">
             {meta}
-          </Text>
+          </TermText>
         ) : null}
       </View>
       <Sponsors identity={identity} directory={directory} />
@@ -1050,9 +1053,9 @@ function SeededHead({ row }: { row: IndexRow }) {
           </Text>
         ) : null}
         {meta ? (
-          <Text variant="secondary" wordSafe testID="bill-introduced">
+          <TermText variant="secondary" wordSafe testID="bill-introduced">
             {meta}
-          </Text>
+          </TermText>
         ) : null}
       </View>
       {members.length || display.sponsor_party ? (
@@ -1069,9 +1072,9 @@ function SeededHead({ row }: { row: IndexRow }) {
           </Text>
         </View>
       ) : display.portfolio ? (
-        <Text variant="secondary" wordSafe testID="bill-portfolio">
+        <TermText variant="secondary" wordSafe testID="bill-portfolio">
           {`${display.portfolio} portfolio`}
-        </Text>
+        </TermText>
       ) : null}
       <FollowButton
         kind="bill"
@@ -1189,9 +1192,9 @@ function Sponsors({
     );
   if (identity.portfolio)
     return (
-      <Text variant="secondary" wordSafe testID="bill-portfolio">
+      <TermText variant="secondary" wordSafe testID="bill-portfolio">
         {`${identity.portfolio} portfolio`}
-      </Text>
+      </TermText>
     );
   return null;
 }
@@ -1472,6 +1475,13 @@ function KeyDates({
   return (
     <View ref={anchor} collapsable={false}>
       <Section title="How it moved" term="reading" testID="bill-key-dates">
+        {/* Newcomer design pass (prototype): the six-step tracker leads. */}
+        {newcomerOption() ? (
+          <StageTracker
+            stages={view.keyDates.data ?? []}
+            status={view.identity.data?.status}
+          />
+        ) : null}
         {points.length ? (
           <View
             testID="bill-dates-ruler"
@@ -1867,14 +1877,14 @@ function BillVoteRow({
           <View style={styles.voteMain}>
             <View style={styles.voteTitle}>
               {isNew ? <NewDot testID={`${id}-new`} /> : null}
-              <Text
+              <TermText
                 variant="rowRecord"
                 wordSafe
                 testID={`${id}-title`}
                 style={styles.grow}
               >
                 {title}
-              </Text>
+              </TermText>
             </View>
             <Text variant="secondary" wordSafe>
               {meta}

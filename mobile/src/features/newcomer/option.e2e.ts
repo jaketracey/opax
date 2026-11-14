@@ -22,3 +22,23 @@ export function newcomerOption(): NewcomerOption | null {
   }
   return read;
 }
+
+/**
+ * The Learn hub's name on a capture: `OPAXLearnName: '1' | '2' | '3'` picks
+ * one of the three names put to Jake (learn/copy.ts). Kept like the option.
+ */
+const keptName = 'OPAXLearnNameKept';
+export function learnNameIndex(): 0 | 1 | 2 {
+  try {
+    const asked = String(Settings.get('OPAXLearnName') ?? '');
+    const value = ['1', '2', '3'].includes(asked)
+      ? asked
+      : String(Settings.get(keptName) ?? '1');
+    if (['1', '2', '3'].includes(asked)) Settings.set({ [keptName]: asked });
+    return (['1', '2', '3'].indexOf(value) as 0 | 1 | 2) < 0
+      ? 0
+      : (['1', '2', '3'].indexOf(value) as 0 | 1 | 2);
+  } catch {
+    return 0;
+  }
+}

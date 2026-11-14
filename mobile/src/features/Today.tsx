@@ -1,3 +1,4 @@
+import { LearnCard } from './newcomer/learn/LearnCard';
 import { useOverview as useElectionOverview } from './vic-election/reads';
 import { useElectionNow } from './vic-election/clock';
 import { todayEligible, todayWindow } from './vic-election/model';
@@ -424,7 +425,10 @@ export default function Today() {
             testID="today-unavailable"
           />
         ) : (
-          <BillsBlock key={name} attempt={attempt} onRetry={retry} />
+          <Fragment key={name}>
+            <LearnCard />
+            <BillsBlock attempt={attempt} onRetry={retry} />
+          </Fragment>
         );
       case 'votes':
         return nothingSaved ? null : (

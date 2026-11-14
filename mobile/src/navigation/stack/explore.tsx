@@ -27,6 +27,11 @@ export function exploreToolTitle(
 export function exploreScreens() {
   return [
     screen('explore/index', 'Quizzes and tools'),
+    // Newcomer design pass (prototype): the Learn hub, a chapter, and the
+    // tracker's capture gallery.
+    screen('learn/index', 'Guide'),
+    screen('learn/[chapter]', 'Chapter'),
+    screen('learn/tracker', 'Tracker states'),
     <Stack.Screen
       key="explore/[tool]"
       name="explore/[tool]"
