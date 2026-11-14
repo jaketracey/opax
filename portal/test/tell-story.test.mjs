@@ -142,7 +142,12 @@ test('explicit procedural titles keep every stage narrative count and occupy one
 
 test('the browser bill page uses the shared renderer and one outcome vocabulary', () => {
   const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
-  assert.match(app, /const BILL_OUTCOMES = \{ affirmative: "Agreed", negative: "Not agreed" \};/);
+  // The one wording lives in division-outcome.js, reached through labels.js; app.js keeps no table of its own.
+  assert.match(app, /const billOutcome = \(o, counts\) => uiLabels\.divisionOutcome\(o, counts\);/);
+  assert.doesNotMatch(app, /BILL_OUTCOMES|"Agreed to"|"Negatived"/);
+  // A "negatived" bill status reads in the same wording, never sentence-cased raw.
+  assert.doesNotMatch(app, /sentenceCase\((?:b\??\.|bill\.)status\)|sentenceCase\(s\), countBy\(\(b\) => b\.status/);
+  assert.match(app, /const billStatusWord = \(s\) => uiLabels\.billStatusWord\(s\);/);
   const code = app.slice(app.indexOf('function billDivisionsHTML('), app.indexOf('const BILL_SPEECH_BRIEF_NOTE'));
   const {billDivisionsHTML} = runInNewContext(code + ';({billDivisionsHTML})', {
     voteTables:{divisionRows, billDivisionTablesHTML},

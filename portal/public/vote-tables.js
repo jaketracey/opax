@@ -3,7 +3,7 @@ import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datata
 // Guard and render must share the core module's rejection-state registry.
 export {guardTableURL};
 import {shortDate} from './format.js';
-import {statusLabelHTML} from './labels.js?v=fcb2a1091c';
+import {statusLabelHTML, divisionOutcome, AGREED, NOT_AGREED} from './labels.js?v=47d3255202';
 import {divisionPlain} from './division-markdown.js?v=5991511166';
 
 const sentence = value => { const text = String(value || '').replace(/_/g, ' ').trim(); return text ? text[0].toUpperCase() + text.slice(1).toLowerCase() : ''; };
@@ -157,7 +157,7 @@ export function divisionRows(divisions = [], deduplicate = false, titles = {}) {
     // tallies, stage or question match (two amendments can both go 11 to 24 on one day).
     const key = deduplicate ? divisionIdentity(division) || `row:${unique.size}` : division.slug || division.key || unique.size;
     if (unique.has(key)) continue;
-    const outcome = ({affirmative:'Agreed', negative:'Not agreed'}[division.outcome || division.result]) || sentence(division.outcome || division.result) || 'Not recorded';
+    const outcome = divisionOutcome(division.outcome || division.result, division) || 'Not recorded';
     unique.set(key, {title:[stage, date ? shortDate(date) : ''].filter(Boolean).join(', '), date, kind:divisionKind(division),
       chamber:chambers[division.house] || sentence(division.house) || 'Not recorded', outcome,
       // The lookup identifies explicit procedure without changing the exported stage/heading kinds.
@@ -212,7 +212,7 @@ export function divisionGroupSentences(rows = [], kind = 'limitation') {
     const when = !dates.length ? '' : dates.length === 1 ? `On ${shortDate(dates[0])} ` : `Between ${shortDate(dates[0])} and ${shortDate(dates.at(-1))} `;
     const who = theChamber(chamber);
     const head = `${when}${when ? who : who[0].toUpperCase() + who.slice(1)} voted ${list.length === 1 ? 'once' : `${list.length.toLocaleString('en-AU')} times`} ${group.phrase}`;
-    const agreed = list.filter(row => row.outcome === 'Agreed').length, not = list.filter(row => row.outcome === 'Not agreed').length;
+    const agreed = list.filter(row => row.outcome === AGREED).length, not = list.filter(row => row.outcome === NOT_AGREED).length;
     const other = list.length - agreed - not;
     const moved = list.filter(row => row.procedural).length;
     const location = moved ? (list.length === 1 ? ' It is listed under Procedural votes.'
@@ -301,7 +301,7 @@ function outcomeCell(html) {
     const encoded = cell.match(/<span class="dt-value">([\s\S]*?)<\/span>/)?.[1] || '';
     const word = encoded && encoded !== '—' ? encoded.replace(/&(?:amp|lt|gt|quot|#39);/g,
       entity => ({'&amp;':'&','&lt;':'<','&gt;':'>','&quot;':'"','&#39;':"'"}[entity])) : 'Not recorded';
-    const label = statusLabelHTML(word, word === 'Agreed' ? 'done' : 'ended');
+    const label = statusLabelHTML(word, word === AGREED ? 'done' : 'ended');
     return start + (cell.includes('class="dt-value"') ? cell.replace(/(<span class="dt-value">)[\s\S]*?(<\/span>)/, (_, open, close) => open + label + close) : label) + end;
   });
 }
@@ -340,7 +340,7 @@ export function mountVoteTables(root = document) {
         if (cell.querySelector('.ui-status')) continue;
         const value = cell.querySelector('.dt-value') || cell;
         const word = value.textContent.trim();
-        value.innerHTML = statusLabelHTML(word, word === 'Agreed' ? 'done' : 'ended');
+        value.innerHTML = statusLabelHTML(word, word === AGREED ? 'done' : 'ended');
       }
     };
     const observer = new MutationObserver(decorate);
