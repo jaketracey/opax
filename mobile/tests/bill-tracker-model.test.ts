@@ -1,4 +1,5 @@
 import sample from './fixtures/bill-stages/sample.json';
+import { isTermId } from '../src/features/learn/glossary';
 import {
   billTracker,
   trackerStepTerm,
@@ -139,6 +140,19 @@ describe('started in the Senate', () => {
       '5 | The House | done | 2015-05-13',
       '6 | Royal Assent | done | 2015-05-26',
     ]);
+  });
+
+  test("every step's explainer is a term in the guide's glossary", () => {
+    for (const first of ['representatives', 'senate'] as const)
+      for (const id of [
+        'introduced',
+        'second',
+        'detail',
+        'passedFirst',
+        'other',
+        'assent',
+      ] as const)
+        expect(isTermId(trackerStepTerm(id, first))).toBe(true);
   });
 
   test('its explainer for the other house is the House', () => {

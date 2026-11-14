@@ -5,7 +5,7 @@ import { Pressable } from '../../design/pressable';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
-import { openTerm } from './tracker-open-term';
+import { openTerm } from '../learn/open-term';
 import {
   trackerStepTerm,
   type Tracker,

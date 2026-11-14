@@ -1,3 +1,5 @@
+import type { TermId } from '../learn/glossary';
+
 /**
  * The bill-stage tracker's model: six steps a reader can follow, built from
  * the bill's recorded stages (README §8.3 of the newcomer design pass).
@@ -536,7 +538,7 @@ export function trackerSummary(steps: readonly TrackerStep[]): string {
 export function trackerStepTerm(
   id: TrackerStepId,
   first: TrackerHouse,
-): string {
+): TermId {
   switch (id) {
     case 'introduced':
       return 'first-reading';

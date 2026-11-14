@@ -4,9 +4,9 @@ import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import sample from './fixtures/bill-stages/sample.json';
 import { BillStageTracker } from '../src/features/bills/tracker';
 import { billTracker, type Tracker } from '../src/features/bills/tracker-model';
-import { openTerm } from '../src/features/bills/tracker-open-term';
+import { openTerm } from '../src/features/learn/open-term';
 
-jest.mock('../src/features/bills/tracker-open-term', () => ({
+jest.mock('../src/features/learn/open-term', () => ({
   openTerm: jest.fn(),
 }));
 
