@@ -143,6 +143,10 @@ export const designPressables: Record<
     label: 'inside',
     note: '"Remove the <filter> filter, <value>"',
   },
+  Gloss: {
+    label: 'inside',
+    note: '"<Word>. <line>" from its required entry, with a hint',
+  },
   IconButton: { label: 'inside', note: 'accessibilityLabel (required)' },
   LinkRow: {
     label: 'inside',
