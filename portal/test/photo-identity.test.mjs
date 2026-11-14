@@ -4,7 +4,19 @@
 // a roster-dependent one is a warning, and a deploy ships the map without it.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { auditPhotoMap, auditShippedPhotoMap, formatPhotoMap, isWeakName, nameAgrees, servedPhotoMap } from '../../scripts/photo_identity.mjs';
+
+test('reviewed alias prints use their own portraits and namesakes stay apart', () => {
+  const fixture = JSON.parse(readFileSync(new URL('./fixtures/portrait-aliases.json', import.meta.url), 'utf8'));
+  const map = JSON.parse(readFileSync(new URL('../public/photos/people.json', import.meta.url), 'utf8'));
+  for (const [name, key] of Object.entries(fixture.aliases)) assert.equal(map[name], key, name);
+  for (const pair of fixture.namesakes) {
+    assert.notEqual(map[pair.print], pair.other_key, `${pair.print} must not use ${pair.other}'s portrait`);
+    if (map[pair.other]) assert.equal(map[pair.other], pair.other_key);
+  }
+  for (const name of fixture.held_prints) assert.equal(map[name], undefined, name);
+});
 
 test('a name agrees with its owner by surname and a first name, nickname or initials', () => {
   for (const [name, owner] of [
@@ -27,11 +39,19 @@ test('the pairs that shared a face do not agree', () => {
 });
 
 const owners = new Map([['10080', 'Anna Burke'], ['10081', 'Tony Burke'], ['10098', 'George Campbell'], ['10875', 'Damian Drum'],
-  ['10964', 'Dorinda Cox'], ['10473', 'John Murphy'], ['wd-Q1', 'Charlotte Walker'], ['11058', 'Charlotte Walker'], ['wd-Q2', 'Mark Bailey']]);
+  ['10964', 'Dorinda Cox'], ['10473', 'John Murphy'], ['wd-Q1', 'Charlotte Walker'], ['11058', 'Charlotte Walker'], ['wd-Q2', 'Mark Bailey'], ['10461', 'Sophie Mirabella']]);
 const file = (key) => Buffer.from(`face of ${key}`);
 const audit = (people, roster = [], identity = {}, bytesOf = file) => auditPhotoMap({ people, owners, roster, identity, bytesOf });
 const at = (problems, level) => problems.filter((p) => p.level === level).map((p) => p.message).join('\n');
 const fed = (name, pid, extra = {}) => ({ name, pid, states: ['federal'], chambers: ['senate'], ...extra });
+
+test('a reviewed portrait alias can reuse a file without assigning a roster id', () => {
+  const identity = { photo_aliases: { 'sophie panopoulos': { key: '10461' } } };
+  assert.deepEqual(audit({ 'sophie panopoulos': '10461' },
+    [fed('Sophie Panopoulos', null, { chambers: ['representatives'], first: 2002, last: 2006 })], identity), []);
+  assert.match(at(audit({ 'sophie panopoulos': '10461' }, [],
+    { ...identity, wrong_face: { '10461': 'quarantined fixture' } }), 'corrupt'), /whose file shows someone else/);
+});
 
 test('a clean map passes, with verified same-person prints and a wd- face for a pid', () => {
   assert.deepEqual(audit(
