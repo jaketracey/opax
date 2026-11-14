@@ -2,7 +2,7 @@
 import mockSafeAreaContext from 'react-native-safe-area-context/jest/mock';
 import { router } from 'expo-router';
 import { act } from 'react';
-import { Dimensions, Text as NativeText, View } from 'react-native';
+import { Dimensions, Platform, Text as NativeText, View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import {
   NavigationContext,
@@ -559,5 +559,52 @@ describe('chamber colours', () => {
       expect(theme.houseInk).not.toBe(theme.moneyInk);
       expect(theme.senateInk).not.toBe(theme.danger);
     }
+  });
+});
+
+describe('Android (JS level: no emulator on the Mac)', () => {
+  const os = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
+  beforeEach(() =>
+    Object.defineProperty(Platform, 'OS', {
+      configurable: true,
+      value: 'android',
+    }),
+  );
+  afterEach(() => Object.defineProperty(Platform, 'OS', os));
+  test('the welcome asks the same question, and either answer moves on', async () => {
+    const r = await render(<Welcome />);
+    expect(component(r, 'welcome-continue').props.label).toBe(
+      welcomeAsk.basics,
+    );
+    act(() => component(r, 'welcome-know').props.onPress());
+    expect(router.push).toHaveBeenCalledWith({
+      pathname: '/welcome/seat',
+      params: {},
+    });
+    await act(async () => r.unmount());
+  });
+  test('Skip sits in the Android bar as a header button', async () => {
+    const r = await render(
+      <InStack>
+        <WelcomeMinute />
+      </InStack>,
+    );
+    const options = mockSetOptions.mock.calls
+      .map(([o]) => o as { headerRight?: () => unknown })
+      .filter((o) => o?.headerRight)
+      .pop();
+    expect(options?.headerRight).toEqual(expect.any(Function));
+    expect(barItems()[0]?.label).toBe('Skip');
+    await act(async () => r.unmount());
+  });
+  test('the plain line is a button that opens the term', async () => {
+    installGloss();
+    await act(async () => setExplainTerms(true));
+    const r = await render(<SectionHeader title="Bills" gloss="bill" />);
+    const line = component(r, 'gloss-bill');
+    expect(line.props.accessibilityRole).toBe('button');
+    act(() => line.props.onPress());
+    expect(openTerm).toHaveBeenCalledWith('bill');
+    await act(async () => r.unmount());
   });
 });
