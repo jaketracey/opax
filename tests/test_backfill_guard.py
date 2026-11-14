@@ -1,7 +1,10 @@
 """Offline spending, shared-state and normal publisher regressions."""
 from datetime import datetime
 import json
+import os
 from pathlib import Path
+import subprocess
+import sys
 
 import pytest
 
@@ -88,12 +91,14 @@ def test_per_resource_bound_requires_500_and_uses_exact_decimal_bytes():
 @pytest.mark.parametrize('status,detail', [
     (429, '{"detail":{"try_after":99999999999,"back_pressure_type":"index"}}'),
     (403, '{"detail":"quota exceeded"}'), (402, 'payment required'),
-    (503, '{"detail":"billing account suspended"}'), (400, 'insufficient credits')])
+    (503, '{"detail":"billing account suspended"}'), (400, 'insufficient credits'),
+    (403, 'resource limit exceeded'), (403, 'usage limit reached'),
+    (507, 'Insufficient Storage'), (200, '{"error":"quota exceeded"}')])
 @pytest.mark.parametrize('method', ['GET', 'POST'])
 def test_any_guarded_progress_refusal_stops_without_retry(monkeypatch, status, detail, method):
     calls = []
     class Response:
-        ok, status_code, text, headers = False, status, detail, {}
+        ok, status_code, text, headers = status < 400, status, detail, {}
     def request(*args, **kwargs):
         calls.append(kwargs)
         return Response()
@@ -124,6 +129,17 @@ def test_counters_unavailable_or_corrupt_ledger_holds_closed():
         G.Guard().check(Broken(), 'senate')
 
 
+def test_unwritable_guard_state_still_holds_publication_without_failing_ordinary_refresh(monkeypatch):
+    kb = KB()
+    def unwritable(*_):
+        raise OSError('fixture full state filesystem')
+    monkeypatch.setattr(G, '_atomic', unwritable)
+    assert S._push_one(kb, body())[1].startswith(G.HOLD)
+    assert not kb.created
+    assert S._push_one(kb, {'slug': 'ordinary'}) == ('ordinary', None)
+    assert len(kb.created) == 1
+
+
 @pytest.mark.parametrize('stage', ['senate', 'nsw'])
 def test_switch_and_stop_prevent_normal_publication_but_not_ordinary_rows(stage, monkeypatch):
     kb = KB()
@@ -146,6 +162,11 @@ def test_shared_origin_and_worker_cap_are_identical_for_both_repairs():
         assert b['extra']['metadata']['enrichment_budget'] == {'run_id': 'backfill-2026-11', 'max_usd': 30}
         assert b['usermetadata']['classifications'].count({'labelset': 'origin', 'label': G.ORIGIN}) == 1
     assert G.stage_for({'extra': {'metadata': {'nsw_backfill': True}}}) == 'nsw'
+    kb = KB()
+    marked = {'slug': 'speech-nsw-fixture', 'extra': {'metadata': {'nsw_backfill': True}}}
+    assert S._push_one(kb, marked)[1] is None
+    assert kb.created[0]['extra']['metadata']['enrichment_budget'] == {'run_id': G.ORIGIN, 'max_usd': 30}
+    assert {'labelset': 'origin', 'label': G.ORIGIN} in kb.created[0]['usermetadata']['classifications']
 
 
 def test_larger_publication_run_checks_at_ten_days_and_end_without_a_second_publisher():
@@ -258,3 +279,25 @@ def test_projection_includes_queued_days_and_finishes_on_the_publication_night()
     coverage.write_text(json.dumps({'backfill_pending_days_by_year': {'2018': 0}}))
     report = G.status(guard.root, night)
     assert report['days_remaining'] == 0 and report['projected_finish_date'] == night
+
+
+@pytest.mark.parametrize('stage', ['senate_backfill', 'nsw_backfill', 'nsw_hansard_backfill'])
+@pytest.mark.parametrize('rc', [1, 124, 137])
+def test_both_stage_names_keep_errors_and_timeouts_out_of_periodic_failures(tmp_path, stage, rc):
+    config = next(line for line in Path('scripts/daily_refresh.sh').read_text().splitlines()
+                  if line.startswith('BACKFILL_STEPS='))
+    program = '''PIPE="$TASK_STATE"
+LOG="$PIPE/refresh.log"
+PY="$TASK_PYTHON"
+ALLOW_FAIL=,
+''' + config + '''
+. scripts/lib/refresh_lib.sh
+run_step "$TASK_STAGE" '' sh -c "exit $TASK_RC"
+result=$?
+[[ "$result" = "$TASK_RC" && ${#FAILED_STEPS[@]} = 0 && ${#BACKFILL_FAILURES[@]} = 1 ]]
+'''
+    result = subprocess.run(['bash', '-c', program], text=True, capture_output=True,
+                            env={**os.environ, 'TASK_STATE': str(tmp_path), 'TASK_PYTHON': sys.executable,
+                                 'TASK_STAGE': stage, 'TASK_RC': str(rc)})
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert f'{stage}] WARNING(rc={rc}' in result.stdout

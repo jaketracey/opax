@@ -81,7 +81,7 @@ ONLY="${OPAX_ONLY:-}"
 ALLOW_FAIL=",${OPAX_ALLOW_FAIL:-},"
 PARTIAL_OK=",arag_sync,"   # the KB push resumes from its checkpoint: hitting its own time limit is not a failure
 STALE_OK=",grants_apply,interests_federal,"   # refusal/unavailable source: rows kept, not a failure
-BACKFILL_STEPS=",senate_backfill,federal_coverage,"  # warnings cannot create periodic acquisition debt
+BACKFILL_STEPS=",senate_backfill,nsw_backfill,nsw_hansard_backfill,federal_coverage,"  # no periodic acquisition debt
 export OPAX_BACKFILL_STATE_DIR="${OPAX_BACKFILL_STATE_DIR:-$PIPE}"
 SYNC_GATE="${OPAX_SYNC_GATE:-}"
 

@@ -331,5 +331,5 @@ def test_nightly_wires_stage_after_normal_refresh_and_before_coverage():
     assert 'nice -n 10 "$PY" -m parli.ingest.senate_backfill' in shell
     assert 'federal source refused during normal refresh' in shell
     assert '${OPAX_SENATE_BACKFILL:-1}' in shell
-    assert 'BACKFILL_STEPS=",senate_backfill,federal_coverage,"' in shell
+    assert 'BACKFILL_STEPS=",senate_backfill,nsw_backfill,nsw_hansard_backfill,federal_coverage,"' in shell
     assert B.DEFAULT_DAYS == 10 and B.DEFAULT_BUDGET == 1200

@@ -125,7 +125,7 @@ def _request(
             continue
 
         if observer:
-            observer(res.status_code, '' if res.ok else res.text)
+            observer(res.status_code, res.text)
         elif not res.ok and os.environ.get('OPAX_BACKFILL_STATE_DIR'):
             # Ordinary refresh requests also close the shared repair gate on
             # quota/billing refusal, without changing their own failure policy.

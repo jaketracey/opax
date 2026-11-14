@@ -797,6 +797,7 @@ new_refresh_sandbox senate-on
 OPAX_ONLY=senate_backfill,federal_coverage refresh
 check "default on runs acquisition and the coverage guard" bash -c "[ '$RRC' -eq 0 ] && grep -q parli.ingest.senate_backfill '$RS_CALLS' && grep -q scripts/federal_hansard_coverage.py '$RS_CALLS'"
 new_refresh_sandbox senate-stop
+mkdir -p "$HOME/.cache/autoresearch/pipeline"
 touch "$HOME/.cache/autoresearch/pipeline/backfill.STOP"
 OPAX_ONLY=senate_backfill,federal_coverage refresh
 check "shared stop warns, skips acquisition and preserves coverage and daily completion" bash -c "[ '$RRC' -eq 0 ] && ! grep -q parli.ingest.senate_backfill '$RS_CALLS' && grep -q 'Backfill warnings: senate_backfill(shared-stop)' '$RS/out.txt' && grep -q scripts/federal_hansard_coverage.py '$RS_CALLS'"
