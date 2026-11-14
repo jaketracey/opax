@@ -144,6 +144,7 @@ native SDK builds without passing through JS, do not carry them.
 | `opax_map_action` | `action` (`open`, `filter`, `zoom`, `open_record` or `search`), `filter_count` (0 to 20) |
 | `opax_edition` | `action` (`open`, `story_open` or `reached_end`) |
 | `opax_first_run` | `step` (`welcome`, `seat` or `state`), `outcome` (`chosen` or `skipped`), and for a choice `method` (`search`, `location` or `browse`) |
+| `opax_section_failed` | `section`: which data block, from a fixed list (`page`, a catalog file family such as `read_roster`, or a page block such as `block_members`); `kind`: `network`, `4xx`, `5xx`, `decode` or `partial`; `route_pattern`: a fixed route-file pattern such as `/party/[slug]` |
 | `opax_route_error` | `error_class`: fixed constructor-name category; `route_pattern`: a fixed route-file pattern such as `/person/[slug]`; optional `error_message`: an exact, content-free diagnostic from a fixed allowlist, at most 80 characters |
 | `opax_app_start` | `duration_ms`: JS entry to the first committed Today render, only when Today is the first focused route of a cold JS runtime |
 | `opax_screen_ready` | `route_pattern`: one of `/`, `/person/[slug]`, `/bill/[key]`, `/your-mp`, `/search`, `/ask`; `duration_ms`: navigation to the first content commit, at most once per sampled visit |
@@ -296,6 +297,45 @@ this event still compare: `/welcome`, `/welcome/seat`,
 `/welcome/seat/state/[code]`, then `/`. `/consent` is Ask's "Before you ask"
 screen, shown before a reader's first question; it is not part of first run
 and the app has no analytics consent step.
+
+`opax_section_failed` reports a data block that failed to load, or that loaded
+with rows dropped: a party page's Members, the roster, a catalog file. It
+exists because a block can fail on every phone for hours while the page around
+it still draws, and no other event would show it. It carries three values and
+the standard context, nothing else:
+
+- `section`, one key from the fixed list `failedSections`
+  (`mobile/src/analytics/events.ts`). `read_*` is a catalog file family
+  (`read_roster`, `read_people`, `read_money`, `read_bills` and so on). The
+  request path is matched against fixed prefixes to choose the family and is
+  never sent, so a person, bill, seat or search phrase in a path stays on the
+  phone. `block_*` is a block of a loaded page (`block_members`,
+  `block_receipts`, `block_divisions` and so on), chosen from the block's
+  property name; an unlisted block is `block_other`. `page` is a page's whole
+  read.
+- `kind`: `network` (no connection or a timeout), `4xx` or `5xx` (the HTTP
+  status class, never the status), `decode` (the body could not be read,
+  including a newer export the app refused while it kept showing its saved
+  copy) or `partial` (the read succeeded with rows dropped).
+- `route_pattern`: the route template the reader was on, from the same fixed
+  list as `opax_route_error`; anything else is `/other`.
+
+No id, name, title, URL, status code, error message or stack is read into it.
+Two shared places send it, so no screen reports for itself
+(`mobile/src/analytics/sections.ts`): the API client tells it of every catalog
+read that failed (`onFailure`, wired in `mobile/src/api/runtime.ts`), and the
+record hooks (`useCatalogRecord`, `useRead`) tell it of each block in a loaded
+record that is in its error state or marked partial, and of a whole read that
+failed. A cancelled request and a path the app refused to request are not
+failures.
+
+It is sent at most once per section, kind and route for each launch, and at
+most 40 times per launch in all, so a retry loop, a re-render or an outage
+across every file cannot flood. It uses `track`, the same build-config gate
+(`extra.analytics`) and both scrubbers as every other event; a build without
+the analytics configuration sends nothing. A phone that is offline reports
+`network` once per section and route when it is next online, like any queued
+event.
 
 `opax_route_error` reports once for each error caught by the reporting route
 boundary, including a new failure after Try again. It uses `track`, the same

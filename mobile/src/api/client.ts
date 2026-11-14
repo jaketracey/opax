@@ -36,7 +36,21 @@ export interface RecordResult<T> {
   asOf: string | null;
 }
 type Decoder<T> = (value: unknown) => T;
+interface GetOptions {
+  absence?: boolean;
+  background?: boolean;
+  signal?: AbortSignal;
+  retries?: number;
+  timeoutMs?: number;
+  summaryStream?: boolean;
+}
 interface ClientOptions {
+  /**
+   * Told of each `get` that failed: the error it threw, 'decode' when a
+   * newer export could not be read and the saved copy was served, or
+   * 'partial' when rows were dropped. Diagnostics only (analytics/sections.ts).
+   */
+  onFailure?: (path: string, failure: unknown) => void;
   origin: string;
   version: string;
   build: string;
@@ -257,6 +271,31 @@ export class ApiClient {
     path: string,
     decode: Decoder<T>,
     force = false,
+    options: GetOptions = {},
+  ): Promise<RecordResult<T>> {
+    try {
+      const record = await this.read(path, decode, force, options);
+      // A newer export that could not be read (the saved copy is served), or
+      // a read that dropped rows: the reader may see nothing wrong.
+      if (record.staleReason === 'unreadable') this.failed(path, 'decode');
+      else if (record.partial) this.failed(path, 'partial');
+      return record;
+    } catch (error) {
+      this.failed(path, error);
+      throw error;
+    }
+  }
+  private failed(path: string, failure: unknown) {
+    try {
+      this.options.onFailure?.(path, failure);
+    } catch {
+      /* A listener never changes a read's outcome. */
+    }
+  }
+  private async read<T>(
+    path: string,
+    decode: Decoder<T>,
+    force = false,
     {
       absence = false,
       background = false,
@@ -264,14 +303,7 @@ export class ApiClient {
       retries = this.options.retries ?? 2,
       timeoutMs = this.options.timeoutMs ?? 8000,
       summaryStream = false,
-    }: {
-      absence?: boolean;
-      background?: boolean;
-      signal?: AbortSignal;
-      retries?: number;
-      timeoutMs?: number;
-      summaryStream?: boolean;
-    } = {},
+    }: GetOptions = {},
   ): Promise<RecordResult<T>> {
     if (path.startsWith('/api/community/'))
       throw new ApiError(

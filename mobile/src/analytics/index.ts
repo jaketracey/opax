@@ -15,6 +15,7 @@ import {
 } from './events';
 import { windowClass } from '../design/adaptive';
 import { routeErrorPattern } from './route-patterns';
+import { connectSectionReports } from './sections';
 
 /**
  * Anonymous product analytics (docs/ANALYTICS.md, "iOS and Android app").
@@ -239,6 +240,16 @@ export function useRouteErrorReporting(error: unknown) {
     reportRouteError(error, segments);
   }, [error, pattern, segments]);
 }
+
+// Section load failures (./sections.ts) are sent from here: the event's
+// three fixed fields, through the same allowlist and release gate as every
+// other event.
+connectSectionReports({
+  route: () =>
+    (currentScreen ? routeErrorPattern(currentScreen) : undefined) ?? '/other',
+  send: (section, kind, route) =>
+    track('opax_section_failed', { section, kind, route_pattern: route }),
+});
 
 /** The section of the screen the reader is on ("ask", "person", "today"). */
 export const currentSection = () => sectionOf(currentScreen);
