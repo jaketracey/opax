@@ -24,7 +24,7 @@ import { SourceLine, type SourceCitation } from '../../design/source';
 import { InlineError, LoadingStatus, Skeleton } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { colors, minimumTarget, rhythm, textStyles } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
 import {
   electorateRoute,
@@ -414,14 +414,18 @@ function MemberTile({
           />
           <View style={[styles.tileWords, !stacked && styles.tileWordsInline]}>
             <YourMPMark testID="today-your-mp-mark" />
-            <Text
-              wordSafe
-              variant="subsectionTitle"
-              accessibilityRole="text"
-              testID="today-your-mp-name"
-            >
-              {name}
-            </Text>
+            <View style={styles.tileTitle}>
+              <Text
+                wordSafe
+                variant="subsectionTitle"
+                accessibilityRole="text"
+                style={styles.tileHeading}
+                testID="today-your-mp-name"
+              >
+                {name}
+              </Text>
+              <TileChevron />
+            </View>
             <View
               style={[styles.tileIdentity, stacked && styles.tileIdentityStack]}
             >
@@ -451,9 +455,27 @@ function MemberTile({
             ) : null}
           </View>
         </View>
-        <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />
       </View>
     </Card>
+  );
+}
+
+/**
+ * The tile's chevron sits on the name's line (as design Tile does), so the
+ * lines under the name run the tile's full width and the plain line fits
+ * one line on a phone at Large.
+ */
+function TileChevron() {
+  return (
+    <View style={styles.tileChevron}>
+      <Icon
+        name={symbols.chevron}
+        size={13}
+        maxScale={1.5}
+        tone="inkFaint"
+        weight="semibold"
+      />
+    </View>
   );
 }
 
@@ -483,20 +505,23 @@ function VacantTile({ seat }: { seat: Electorate }) {
             <Text wordSafe variant="footnote">
               Your electorate
             </Text>
-            <Text
-              wordSafe
-              variant="subsectionTitle"
-              accessibilityRole="text"
-              testID="today-your-mp-seat"
-            >
-              {seat.name}
-            </Text>
+            <View style={styles.tileTitle}>
+              <Text
+                wordSafe
+                variant="subsectionTitle"
+                accessibilityRole="text"
+                style={styles.tileHeading}
+                testID="today-your-mp-seat"
+              >
+                {seat.name}
+              </Text>
+              <TileChevron />
+            </View>
             <Text wordSafe variant="secondary" testID="today-your-mp-none">
               {none}
             </Text>
           </View>
         </View>
-        <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />
       </View>
     </Card>
   );
@@ -658,7 +683,18 @@ const styles = StyleSheet.create({
   block: { gap: rhythm.group },
   // Capped so one column never stretches the tile (iPad, a Duo at AX sizes).
   tileColumn: { width: '100%', maxWidth: TILE_MAX_WIDTH },
-  tile: { flexDirection: 'row', alignItems: 'center', gap: rhythm.tight },
+  tile: { flexDirection: 'row', alignItems: 'center' },
+  tileTitle: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: rhythm.tight,
+  },
+  tileHeading: { flex: 1 },
+  // The name's line height, so the chevron centres on its first line.
+  tileChevron: {
+    height: textStyles.subsectionTitle.lineHeight,
+    justifyContent: 'center',
+  },
   tileMain: {
     flex: 1,
     flexDirection: 'row',
@@ -678,7 +714,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     columnGap: rhythm.line,
   },
-  tileIdentityStack: { flexDirection: 'column', alignItems: 'flex-start' },
+  tileIdentityStack: {
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    alignItems: 'flex-start',
+  },
   // The hook sits a step under the identity, as the tile's own sentence.
   tileHook: { marginTop: rhythm.line },
   header: {
