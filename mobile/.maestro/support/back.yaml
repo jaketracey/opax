@@ -5,11 +5,14 @@ name: Go back one screen
 # gives it none: it reads as the previous screen's title, or "Back" when that
 # does not fit. BACK names that title (escaped here for the regex). The tap is
 # kept above the tab bar, so a missing back button fails here rather than
-# tapping a tab of the same name, which would pop to the root and pass. (A
-# swipe from the left edge did not go back on iOS 18.6: Maestro's drag never
-# starts the edge gesture.)
+# tapping a tab of the same name, which would pop to the root and pass. On
+# iPad (tab bar at the top) or a screen with no tab bar, the iOS 18 tap fails
+# outright; iOS 26 taps BackButton and is unaffected. (A swipe from the left
+# edge did not go back on iOS 18.6: Maestro's drag never starts the edge
+# gesture.) Maestro skips a ${...} whose body holds a "$", so the escape list
+# writes it as \x24.
 # Android replaces this file with its back key (android/support/back.yaml).
-- evalScript: '${output.backTitle = (typeof BACK === ''undefined'' ? ''Back'' : BACK).split('''').map(c => ''^$.|?*+()[]''.indexOf(c) < 0 ? c : ''\\'' + c).join('''')}'
+- evalScript: '${output.backTitle = (typeof BACK === ''undefined'' ? ''Back'' : BACK).split('''').map(c => ''^\x24.|?*+()[]''.indexOf(c) < 0 ? c : ''\\'' + c).join('''')}'
 - evalScript: ${output.backTapped = false}
 - runFlow:
     when:
