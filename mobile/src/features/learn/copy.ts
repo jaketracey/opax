@@ -17,7 +17,8 @@ export const learnCopy = {
   next: 'Next',
   back: 'Back to the guide',
   more: 'More',
-  /** Account switches. */
+  /** Account › Glossary terms and its switches. */
+  termsPage: 'Glossary terms',
   underline: 'Underline terms',
   explain: 'Explain terms',
   switchesFooter:

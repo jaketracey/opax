@@ -1,4 +1,4 @@
-import { screen, untitled } from './screen';
+import { screen, screenInStack, untitled } from './screen';
 
 /**
  * "How Parliament works" (features/learn): pushed in whichever tab the
@@ -12,4 +12,10 @@ export function learnScreens() {
     // "Parliament in a minute": ad-newcomer-c owns the page.
     screen('learn/minute', 'Parliament in a minute'),
   ];
+}
+
+/** Account › Glossary terms: the guide's two switches. */
+export function learnAccountScreens() {
+  const screen = screenInStack('Account');
+  return [screen('terms', 'Glossary terms')];
 }

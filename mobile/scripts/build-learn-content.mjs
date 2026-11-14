@@ -32,6 +32,18 @@ export function typo(text) {
     .replace(/s'(?=[^A-Za-z]|$)/g, 's’');
 }
 
+/**
+ * An OPAX address as a site path ("/bill/au-federal-r7548"): origins belong
+ * in build config (scripts/qa-static.ts), so the app resolves the path
+ * against its own web origin. Any other address stays whole.
+ */
+export function sitePath(url) {
+  const match = /^https:\/\/(?:www\.)?opax\.com\.au(\/[^\s]*)$/.exec(url);
+  if (match) return match[1];
+  if (!/^https:\/\//.test(url)) fail(`bad link ${url}`);
+  return url;
+}
+
 function fail(message) {
   throw new Error(`learn content: ${message}`);
 }
@@ -87,8 +99,7 @@ function inline(text, resolve, where) {
         : [match[1], match[1]];
       parts.push({ t: shown.trim(), term: resolve(named.trim(), where) });
     } else {
-      if (!/^https:\/\//.test(match[3])) fail(`${where}: bad link ${match[3]}`);
-      parts.push({ t: match[2], url: match[3] });
+      parts.push({ t: match[2], url: sitePath(match[3]) });
     }
     last = match.index + match[0].length;
   }
@@ -174,7 +185,7 @@ export function buildContent({ files, raw, digest }) {
       ...(term.example
         ? {
             example: {
-              url: term.example.url,
+              url: sitePath(term.example.url),
               label: typo(term.example.label),
             },
           }
@@ -205,7 +216,7 @@ export function buildContent({ files, raw, digest }) {
     return {
       id: example.id,
       chapter: example.chapter,
-      url: example.url,
+      url: sitePath(example.url),
       label: typo(example.label),
       lookAt: typo(example.look_at),
     };

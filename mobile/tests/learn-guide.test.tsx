@@ -13,6 +13,7 @@ import {
   resetLearnSettingsForTests,
 } from '../src/features/learn/settings';
 import { MoreToExplore } from '../src/features/today/MoreToExplore';
+import { webOrigin } from '../src/design/environment';
 import { openSource } from '../src/navigation/external';
 
 let mockFontScale = 1;
@@ -251,25 +252,26 @@ describe('guide links', () => {
     // These open in the in-app browser sheet (openSource), as any web-only
     // OPAX page does. A native screen for one of them flips it here.
     const webOnly = [
-      'https://opax.com.au/sitting',
-      'https://opax.com.au/video/senate',
-      'https://opax.com.au/estimates',
-      'https://opax.com.au/money/receipts',
-      'https://opax.com.au/subject/donor',
-      'https://opax.com.au/register/state-bills',
+      '/sitting',
+      '/video/senate',
+      '/estimates',
+      '/money/receipts',
+      '/subject/donor',
+      '/register/state-bills',
     ];
     expect(urls.filter((url) => !guideRoute(url)).sort()).toEqual(
       [...webOnly].sort(),
     );
-    for (const url of urls) expect(url).toMatch(/^https:\/\/opax\.com\.au\//);
+    // Site paths only: origins belong in build config (qa-static).
+    for (const url of urls) expect(url).toMatch(/^\/[a-z]/);
   });
 
-  test('an address the app has no screen for opens as a source', () => {
-    openGuideLink('https://example.org/x', 'Elsewhere');
+  test('a web-only page opens as a source on the app’s own origin', () => {
+    openGuideLink('/sitting', 'Sitting weeks');
     expect(push).not.toHaveBeenCalled();
     expect(openSource).toHaveBeenCalledWith(
-      'https://example.org/x',
-      'Elsewhere',
+      new URL('/sitting', webOrigin).toString(),
+      'Sitting weeks',
     );
   });
 });
