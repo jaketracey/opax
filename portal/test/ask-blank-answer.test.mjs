@@ -7,7 +7,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import {build} from 'esbuild'
-import {MockLanguageModelV4} from 'ai/test'
+import {StreamingResearchModel as MockLanguageModelV4} from './fixtures/research-scripted-model.mjs'
 import {loadWorker,offline} from './worker-harness.mjs'
 import {budgetDatabase} from './fixtures/research-budget.mjs'
 import {AskStream} from './fixtures/research-app-decoders.mjs'

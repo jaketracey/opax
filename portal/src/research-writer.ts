@@ -1,4 +1,4 @@
-import { generateText } from 'ai'
+import { generateResearchText, completedAnswerEntries } from './research-generation'
 import {researchTrace} from './research-trace'
 import { reserveQuestionTurn, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS } from './ask-budgets'
 import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, dedupeWritingFacts, type WritingInput } from './research-writing'
@@ -15,7 +15,7 @@ import {moneyWritingInput,receiptWritingLines,completeMoneySelection} from './re
 
 /** Same pinned model, provider, limiter, token ceiling, wall cap and D1 reservation as research. */
 export function createAnswerWriter(options: ResearchOptions) {
-  return async (input: WritingInput, stats: ResearchStats, signal: AbortSignal | undefined, remainingMs: number): Promise<QualitativeAnswer> => {
+  return async (input: WritingInput, stats: ResearchStats, signal: AbortSignal | undefined, remainingMs: number, preview?: (payload:QualitativeAnswer)=>Promise<void>): Promise<QualitativeAnswer> => {
     input=moneyWritingInput({...input,facts:dedupeWritingFacts(input.facts)})
     // Every check sees all the facts handed in, not just those a draft happened to cite.
     const found=input.facts.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
@@ -85,7 +85,21 @@ export function createAnswerWriter(options: ResearchOptions) {
         turn={round:stats.rounds+1,input:null,output:null,cached_input:null,input_reserve:inputReserve,ms:0,cost_usd:null}
         ;(stats.turns ??=[]).push(turn)
         const stopped=new Promise<never>((_,reject)=>controller.signal.addEventListener('abort',()=>reject(controller.signal.reason),{once:true}))
-        const result=await Promise.race([generateText({model:options.model,prompt:currentPrompt,maxRetries:0,maxOutputTokens:outputReserve,abortSignal:controller.signal}),stopped])
+        let partial='',count=0
+        const result=await Promise.race([generateResearchText({model:options.model,prompt:currentPrompt,maxRetries:0,maxOutputTokens:outputReserve,abortSignal:controller.signal},preview?async chunk=>{
+          if(chunk.type!=='text-delta')return
+          partial+=chunk.text
+          const sentences=completedAnswerEntries(partial,'sentences')
+          if(sentences.length<=count)return
+          count=sentences.length
+          lastDraft=draftWrittenAnswer({sentences},activeInput)
+          const checked=verifyWrittenAnswer({sentences},activeInput)
+          // A receipt's lending check and the required headline/vote split can replace the complete draft.
+          // Retain that affected tail until its decision is known; no weaker per-sentence variant is substituted.
+          if(!checked||input.facts.some(f=>f.source.receipt)||!keepsAll(checked))return
+          const grounded=ground(checked)
+          if(keepsAll(grounded))await preview(grounded)
+        }:undefined),stopped])
         stats.usageUnknown=false
         const inputTokens=result.usage.inputTokens ?? inputReserve, outputTokens=result.usage.outputTokens ?? outputReserve
         const meta=result.providerMetadata?.openrouter as {provider?:string;usage?:{cost?:number}}|undefined

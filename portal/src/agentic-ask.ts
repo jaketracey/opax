@@ -513,7 +513,10 @@ export function planRetainsNamedScope(plan: Plan, scope: NamedScope): boolean {
 }
 
 // ---------------------------------------------------------------- orchestration
-export type Progress = (event: string, data: unknown) => Promise<void>
+export type Progress = ((event: string, data: unknown) => Promise<void>) & {
+  /** Internal checked sentence lane, present only for a fresh research SSE response. */
+  answer?: (payload: QualitativeAnswer) => Promise<void>
+}
 export interface AgenticDeps extends ToolDeps {
   modelPrices?: { input: number; output: number }
   /** A comparison run must never pay for a second old-path planner. */
@@ -645,6 +648,8 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (step && step.state !== 'running') attempted.push(step)
     await progress(event, data)
   }
+  // An exact-lookup correction is prepended after research; its opening cannot be streamed past.
+  loopProgress.answer=lookup?undefined:progress.answer
   const writeRun = async (run: AgenticPayload) => {
     if (!run.answered || !deps.research?.write) return run
     if(run.qualitative?.answer_decision&&run.qualitative.answer_decision!=='answer')return run
@@ -662,9 +667,11 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const stats = { reservedCostUsd:run.research?.reserved_cost_usd,rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
     if(run.research)run.research.pre_writer_sources=sheet.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     const input={question,period,facts:sheet,constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined}}
+    const combine=(written:QualitativeAnswer)=>run.passage_answer?leadWithModelAnswer(appendWrittenPoints(written,run.passage_answer) as unknown as Record<string,unknown>,run.passage_answer,question) as unknown as QualitativeAnswer:written
+    const preview=lookup||!progress.answer?undefined:async(written:QualitativeAnswer)=>progress.answer!(combine(written))
     const writingMs=Math.max(0,Math.min(8000,Math.min(budgetMs, deps.research.writingWallMs ?? budgetMs)-(Date.now()-started)))
-    const written = await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs),writingMs,deps.signal).catch(()=>proseFallback(input))
-    const complete=run.passage_answer ? leadWithModelAnswer(appendWrittenPoints(written,run.passage_answer) as unknown as Record<string,unknown>,run.passage_answer,question) as unknown as QualitativeAnswer : written
+    const written = await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs,preview),writingMs,deps.signal).catch(()=>proseFallback(input))
+    const complete=combine(written)
     run.answer=complete.answer;run.qualitative=complete;run.answer_source='model'
     run.tokens=stats.tokens;run.cost_usd=stats.costUsd ?? run.cost_usd
     run.timings.compose_ms+=Date.now()-started-run.timings.total_ms;run.timings.total_ms=Date.now()-started

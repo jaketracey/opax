@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {MockLanguageModelV4} from 'ai/test';
+import {StreamingResearchModel as MockLanguageModelV4} from './fixtures/research-scripted-model.mjs';
 import {loadWorker,offline} from './worker-harness.mjs';
 import {decodeAnswer,AskStream} from './fixtures/research-app-decoders.mjs';
 import {budgetDatabase} from './fixtures/research-budget.mjs';

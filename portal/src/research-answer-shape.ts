@@ -176,6 +176,7 @@ type SourceRow={resource?:string;kind?:string;title?:string;coverage?:boolean}
 // Facts about an inquiry rather than what it found: when it was set up, its dates, its commissioner, its counts.
 const ABOUT_BODY=new RegExp(String.raw`^[^.;:]{0,60}?\b${BODY}\b`,'i')
 const METADATA=/\b(?:established|Letters Patent|dated|final report|interim report|reported on|delivered|tabled|commissioners?|chaired|led by|recommendations|hearing transcripts?|hearings? (?:were|was) held)\b/i
+const authorityTopic=(question:string)=>(question.toLowerCase().match(/\p{L}{4,}/gu)??[]).filter(w=>!/^(?:who|what|which|were|responsible|accountable|culpable|fault|blame[sd]?|decided|approved|authori[sz]ed|signed|ordered|made|decision|call|most|ultimately|really|mainly|primarily|personally|affair|scandal|scheme|the)$/.test(w)).map(w=>w.slice(0,6))
 type SpokenSource=SourceRow&{speaker?:string;date?:string;chamber?:string}
 /** An official body's finding stated as fact ("The NACC found two officials corrupt …") whose only support is one
  * member's speech is that member's claim: the line becomes "Avery Quinlan told the House on 4 March 2026 that the NACC
@@ -245,7 +246,7 @@ export function leadWithAuthority<T extends Record<string,unknown>>(payload:T,qu
   // A line that can open the answer: not a coverage note, not leaning on the line before.
   const placed=(l:Line)=>!coverageOnly(l)&&!ANAPHORIC.test(l.text)
   // A finding about what was asked ("robodebt") comes before one about something else (another body's referral).
-  const topic=(question.toLowerCase().match(/\p{L}{4,}/gu)??[]).filter(w=>!/^(?:who|what|which|were|responsible|accountable|culpable|fault|blame[sd]?|decided|approved|authori[sz]ed|signed|ordered|made|decision|call|most|ultimately|really|mainly|primarily|personally|affair|scandal|scheme|the)$/.test(w)).map(w=>w.slice(0,6))
+  const topic=authorityTopic(question)
   const onTopic=(l:Line)=>topic.some(w=>l.text.toLowerCase().includes(w))
   const best=(test:(l:Line)=>boolean)=>lines.find(l=>placed(l)&&test(l)&&onTopic(l))??lines.find(l=>placed(l)&&test(l))
   const first=lines[0]
@@ -271,4 +272,26 @@ export function leadWithAuthority<T extends Record<string,unknown>>(payload:T,qu
     }
   }
   return {...payload,answer:written,citations}
+}
+
+/** Whether a later finding can still displace this lead. Shared with the incremental response boundary. */
+export function authorityLeadMayMove(payload:{answer?:unknown;sources?:unknown;citations?:unknown}):boolean {
+  const text=String(payload.answer??'').split('\n').find(line=>line.trim())?.trim()??''
+  const finding=FINDING.exec(text)
+  if(finding&&!SPEAKER_VERB.test(finding[0]))return false
+  const sources=(payload.sources??[]) as SourceRow[],entries=Object.entries(payload.citations??{}) as [string,unknown][]
+  const end=Array.from(text).length
+  const cited=entries.filter(([,ranges])=>Array.isArray(ranges)&&ranges.some(r=>Array.isArray(r)&&r[0]<end)).flatMap(([id])=>sources.filter(s=>s.resource&&(id===s.resource||id.startsWith(s.resource+'/'))))
+  return cited.length>0&&cited.every(s=>s.kind==='speech') || /^(?:\p{Lu}[\p{L}’'-]+\s+){1,3}(?:told|said|claimed|argued|alleged|accused)\b/u.test(text) || ABOUT_BODY.test(text)&&METADATA.test(text)
+}
+
+/** Once the first on-topic finding has arrived, later lines cannot outrank it. Earlier context stays in the tail. */
+export function settledAuthorityFinding(payload:Record<string,unknown>,question:string):boolean {
+  const first=String(payload.answer??'').split('\n').find(line=>line.trim())?.trim()??''
+  return authorityFindingLead(payload)&&authorityTopic(question).some(word=>first.toLowerCase().includes(word))
+}
+export function authorityFindingLead(payload:Record<string,unknown>):boolean {
+  const first=String(payload.answer??'').split('\n').find(line=>line.trim())?.trim()??''
+  const finding=FINDING.exec(first)
+  return !!finding&&!SPEAKER_VERB.test(finding[0])
 }
