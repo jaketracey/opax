@@ -14,6 +14,7 @@ import {
   electionStates,
   VIC_ELECTION_EARLY_OPEN,
   VIC_ELECTION_EARLY_CLOSE,
+  VIC_ELECTION_DAY_START,
   VIC_ELECTION_POLLS_OPEN,
   VIC_ELECTION_POLLS_CLOSE,
   type ElectionState,
@@ -33,7 +34,7 @@ export function electionState(o: ElectionContext, now: Date): ElectionState {
   const derived =
     time >= Date.parse(VIC_ELECTION_POLLS_CLOSE)
       ? 'polls_closed'
-      : time >= Date.parse(VIC_ELECTION_POLLS_OPEN)
+      : time >= Date.parse(VIC_ELECTION_DAY_START)
         ? 'election_day'
         : time >= Date.parse(VIC_ELECTION_EARLY_OPEN)
           ? 'early_voting'
@@ -90,7 +91,9 @@ export function electionCopy(o: ElectionContext, now: Date, awaiting = false) {
     state === 'pre_poll'
       ? c.beforeVoting
       : state === 'early_voting'
-        ? c.early
+        ? now.getTime() >= Date.parse(VIC_ELECTION_EARLY_CLOSE)
+          ? c.earlyClosed
+          : c.early
         : state === 'election_day'
           ? c.today
           : state === 'results_final'

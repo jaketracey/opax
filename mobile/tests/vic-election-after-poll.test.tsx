@@ -5,6 +5,8 @@ import Hub from '../src/features/vic-election/Hub';
 import Seat from '../src/features/vic-election/Seat';
 import { SeatRow } from '../src/features/vic-election/rows';
 import { TodayBlock } from '../src/features/vic-election/TodayBlock';
+import { ElectionSearchRow } from '../src/features/vic-election/SearchRow';
+import { electionCopy } from '../src/features/vic-election/model';
 import {
   decodeOverview,
   decodeSeat,
@@ -45,7 +47,11 @@ const moments = [
   ['2026-11-27T06:59:00Z', 'early_voting', 'Early voting runs 18–27 November'],
   ['2026-11-27T07:00:00Z', 'early_voting', 'Early voting has closed.'],
   ['2026-11-27T08:00:00Z', 'early_voting', 'Early voting has closed.'],
-  ['2026-11-27T20:59:00Z', 'early_voting', 'Early voting has closed.'],
+  [
+    '2026-11-27T20:59:00Z',
+    'election_day',
+    'Voting runs from 8 am to 6 pm AEDT.',
+  ],
   ['2026-11-27T21:00:00Z', 'election_day', 'Voting is open until 6 pm AEDT.'],
   ['2026-11-27T21:01:00Z', 'election_day', 'Voting is open until 6 pm AEDT.'],
   ['2026-11-28T06:59:00Z', 'election_day', 'Voting is open until 6 pm AEDT.'],
@@ -328,9 +334,15 @@ test.each([
     ...results(),
     districts: [{ name: seat.name, result: { ...result, margin: 4 } }],
   },
-])('invalid results fail validation as a whole (%#)', (current_results) => {
-  expect(() => decodeOverview({ ...overview, current_results })).toThrow();
-});
+])(
+  'invalid results are discarded as a whole, retaining the overview (%#)',
+  (current_results) => {
+    const decoded = decodeOverview({ ...overview, current_results });
+    expect(decoded.current_results).toBeUndefined();
+    expect(decoded.districts).toEqual(overview.districts);
+    expect(decoded.authorisation).toBe(overview.authorisation);
+  },
+);
 
 test('published results override an ageing polls_closed state once voting is closed', () => {
   payload('2026-11-29T01:00:00Z', 'results');
@@ -356,3 +368,127 @@ test('a final API label cannot promote partial result data to final', () => {
   );
   expect(words(tree)).not.toContain('Final lower house');
 });
+
+for (const os of ['ios', 'android']) {
+  describe(`review regressions on ${os}`, () => {
+    let descriptor: PropertyDescriptor;
+    beforeEach(() => {
+      descriptor = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
+      Object.defineProperty(Platform, 'OS', { configurable: true, value: os });
+    });
+    afterEach(() => {
+      Object.defineProperty(Platform, 'OS', descriptor);
+    });
+    test.each([
+      '2026-11-27T13:00:00Z',
+      '2026-11-27T13:01:00Z',
+      '2026-11-27T20:59:00Z',
+    ])(
+      'review fix 1: legacy API matches portal election day at %s',
+      (instant) => {
+        payload(instant, 'election_day', false);
+        for (const tree of [
+          renderVic(<Hub />),
+          renderVic(<Seat />),
+          renderVic(<TodayBlock choice={choice} seats={seats} />),
+        ]) {
+          expect(words(tree)).toContain('Election day is today');
+          expect(words(tree)).toContain('Voting runs from 8 am to 6 pm AEDT.');
+          expect(words(tree)).not.toContain('Voting is open');
+        }
+      },
+    );
+    test.each(['2026-11-27T13:00:00Z', '2026-11-27T21:00:00Z'])(
+      'review fix 2: election-day heading is said once at %s',
+      (instant) => {
+        payload(instant, 'election_day');
+        for (const tree of [
+          renderVic(<Hub />),
+          renderVic(<Seat />),
+          renderVic(<TodayBlock choice={choice} seats={seats} />),
+        ])
+          expect(words(tree).match(/Election day is today/g)).toHaveLength(1);
+      },
+    );
+    test('review fix 3: Friday evening heading says early voting closed', () => {
+      const o = decodeOverview(overview);
+      expect(electionCopy(o, new Date('2026-11-27T06:59:00Z')).heading).toBe(
+        'Early voting',
+      );
+      expect(electionCopy(o, new Date('2026-11-27T07:00:00Z')).heading).toBe(
+        'Early voting closed',
+      );
+      expect(electionCopy(o, new Date('2026-11-27T08:00:00Z')).heading).toBe(
+        'Early voting closed',
+      );
+    });
+    test('review fix 4: a malformed result row preserves the overview and hides results', () => {
+      mockVic.now = new Date('2026-11-29T01:00:00Z');
+      const decoded = decodeOverview({
+        ...overview,
+        state: 'results',
+        current_results: {
+          ...results(),
+          districts: [
+            ...results().districts,
+            { name: overview.districts[1]!.name, result: null },
+          ],
+        },
+      });
+      expect(decoded.current_results).toBeUndefined();
+      expect(decoded.districts).toEqual(overview.districts);
+      expect(decoded.key_dates).toEqual(overview.key_dates);
+      expect(decoded.authorisation).toBe(overview.authorisation);
+      mockVic.overview.record!.data = decoded;
+      const tree = renderVic(<Hub />);
+      expect(words(tree)).toContain('Lower house: 88 districts');
+      expect(words(tree)).toContain('The count is under way.');
+      expect(
+        tree.root.findAllByProps({ testID: 'vic-election-current-results' }),
+      ).toHaveLength(0);
+      expect(words(tree)).not.toContain(': results');
+      expect(() =>
+        decodeOverview({
+          ...overview,
+          districts: null,
+          current_results: { districts: null },
+        }),
+      ).toThrow();
+    });
+    test('review fix 5: an external result row explains that it opens the VEC website', () => {
+      payload('2026-11-29T01:00:00Z', 'results');
+      const tree = renderVic(<Seat />);
+      const external = tree.root.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID === 'vic-election-current-albert-park' &&
+          node.props.accessible,
+      );
+      expect(external.length).toBeGreaterThan(0);
+      for (const row of external) {
+        expect(row.props.accessibilityHint).toBe('Opens the VEC website.');
+        expect(row.props.accessibilityRole).toBe('link');
+        expect(row.props.accessibilityLabel).toContain('Example party');
+      }
+      const internal = renderVic(
+        <SeatRow
+          district={mockVic.overview.record!.data.districts[0]!}
+          currentResult={mockVic.seat.record!.data.current_result!}
+        />,
+      );
+      for (const row of internal.root.findAll(
+        (node) => typeof node.type === 'string' && node.props.accessible,
+      ))
+        expect(row.props.accessibilityHint).toBeUndefined();
+    });
+    test.each(['2026-11-28T07:00:00Z', '2026-12-28T01:00:00Z'])(
+      'review fix 6: Search uses neutral candidate wording after voting at %s',
+      (instant) => {
+        mockVic.now = new Date(instant);
+        const text = words(renderVic(<ElectionSearchRow />));
+        expect(text).toContain('Find your district and its candidates');
+        expect(text).not.toContain('who is standing');
+      },
+    );
+  });
+}

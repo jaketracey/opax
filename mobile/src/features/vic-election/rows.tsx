@@ -107,6 +107,7 @@ export function SeatRow({
         accessible
         accessibilityRole="link"
         accessibilityLabel={ax}
+        accessibilityHint={external ? c.vecWebsite : undefined}
         testID={testID ?? `vic-election-district-${d.slug}`}
         style={styles.row}
       >

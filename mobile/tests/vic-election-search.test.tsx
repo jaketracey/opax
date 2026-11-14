@@ -3,7 +3,7 @@ import { ElectionSearchRow } from '../src/features/vic-election/SearchRow';
 beforeEach(resetVic);
 test('Browse and folded election words open the published hub', () => {
   expect(words(renderVic(<ElectionSearchRow />))).toContain(
-    'Find your district and who is standing',
+    'Find your district and its candidates',
   );
   expect(words(renderVic(<ElectionSearchRow q="Élection" />))).toContain(
     'Victorian election 2026 · 28 November',

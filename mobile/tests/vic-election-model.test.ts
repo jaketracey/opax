@@ -21,7 +21,7 @@ for (const zone of ['Australia/Perth', 'UTC'])
     process.env.TZ = zone;
     try {
       expect(phase(o, at('2026-11-27T23:59:00'))).toBe('ahead');
-      expect(phase(o, at('2026-11-28T00:00:00'))).toBe('ahead');
+      expect(phase(o, at('2026-11-28T00:00:00'))).toBe('today');
       expect(phase(o, at('2026-11-28T08:00:00'))).toBe('today');
       expect(phase(o, at('2026-11-28T17:59:00'))).toBe('today');
       expect(phase(o, at('2026-11-28T18:00:00'))).toBe('closed');
@@ -74,7 +74,7 @@ test('Today copy shares the election state and explicit AEDT polling hours', () 
   ]);
   expect(todayStatus(o, at('2026-11-28T10:00:00'))).toEqual([
     'Election day is today',
-    'Election day is today. Voting is open until 6 pm AEDT.',
+    'Voting is open until 6 pm AEDT.',
   ]);
   expect(todayStatus(o, at('2026-11-28T19:00:00'))).toEqual([
     'Voting has closed',

@@ -15,6 +15,7 @@ import {
   type Decoded,
 } from '../../api/validation';
 import { decodeElectionState } from './state';
+import { ApiError } from '../../api/errors';
 
 const literal =
   <T extends string | number>(...values: T[]) =>
@@ -153,7 +154,6 @@ const notice = (v: unknown) =>
 const overview = shape({
   schema_version: version,
   state: decodeElectionState,
-  current_results: optional(currentResults),
   title: nonempty,
   web_url: https,
   updated: day,
@@ -187,28 +187,36 @@ const overview = shape({
 });
 export const decodeOverview = (v: unknown) => {
   const o = overview(v);
-  const r = o.current_results;
-  if (r) {
-    const u = new URL(r.url);
-    if (
-      r.election_day !== o.election_day ||
-      r.fetched < r.election_day ||
-      u.hostname !== 'www.vec.vic.gov.au' ||
-      !u.pathname.startsWith(
-        '/results/state-election-results/2026-state-election-results',
-      ) ||
-      r.districts.length > o.districts.length ||
-      (r.status === 'final' && r.districts.length !== o.districts.length) ||
-      new Set(r.districts.map((d) => d.name)).size !== r.districts.length ||
-      r.districts.some(
-        (d) =>
-          !o.districts.some((s) => s.name === d.name) ||
-          d.result.date > r.fetched,
+  // Current results are optional enrichment. Reject the whole results batch
+  // on any invalid row, without losing the overview's dates and records.
+  try {
+    const r = optional(currentResults)(object(v).current_results);
+    if (r) {
+      const u = new URL(r.url);
+      if (
+        r.election_day !== o.election_day ||
+        r.fetched < r.election_day ||
+        u.hostname !== 'www.vec.vic.gov.au' ||
+        !u.pathname.startsWith(
+          '/results/state-election-results/2026-state-election-results',
+        ) ||
+        r.districts.length > o.districts.length ||
+        (r.status === 'final' && r.districts.length !== o.districts.length) ||
+        new Set(r.districts.map((d) => d.name)).size !== r.districts.length ||
+        r.districts.some(
+          (d) =>
+            !o.districts.some((s) => s.name === d.name) ||
+            d.result.date > r.fetched,
+        )
       )
-    )
-      invalid();
+        invalid();
+    }
+    return { ...o, current_results: r };
+  } catch (error) {
+    if (!(error instanceof ApiError) || error.code !== 'invalid-data')
+      throw error;
+    return { ...o, current_results: undefined };
   }
-  return o;
 };
 const memberRef = { ...named, slug, href: path };
 const member = shape({

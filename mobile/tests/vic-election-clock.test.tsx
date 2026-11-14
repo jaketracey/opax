@@ -35,10 +35,16 @@ test.each([
     'early_voting',
   ],
   [
-    '2026-11-27T21:00:00Z',
+    '2026-11-27T13:00:00Z',
     'Early voting has closed',
-    'Voting is open until 6 pm AEDT.',
+    'Voting runs from 8 am to 6 pm AEDT.',
     'early_voting',
+  ],
+  [
+    '2026-11-27T21:00:00Z',
+    'Voting runs from 8 am to 6 pm AEDT.',
+    'Voting is open until 6 pm AEDT.',
+    'election_day',
   ],
   [
     '2026-11-28T07:00:00Z',
