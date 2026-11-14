@@ -70,7 +70,9 @@ export async function industryMoneyAnswer(input:RecordQuestion,assets:Fetcher) {
   const graph=await response.json() as Record<string,unknown>
   return isReceiptGraph(graph)?graph:null
  },input.state).catch(()=>null)
- if(!selection)return gap('The money records are unavailable right now; [see the money map](/money).','evidence_gap')
+ // From here, a question this route cannot calculate steps aside (null) so the Ask agent and its money
+ // tools answer it. The only reply without figures is the calculator's own reading of the question's names.
+ if(!selection)return null
  const {graph,file,jurisdiction}=selection
  // The question is read with each donor name in this map held aside, so digits or a
  // period word inside a disclosed name ("Comscrv (No. 2092) Pty Ltd - Loan") are never its period.
@@ -97,14 +99,15 @@ export async function industryMoneyAnswer(input:RecordQuestion,assets:Fetcher) {
    if(recipient)member={name:person.name,href:'/declared?'+new URLSearchParams({person:person.name})}
   }
  }
- if(intent.recipient&&!recipient)return gap('AEC returns record this money at party level. Choose a recipient party in the [money map](/money) to see its labelled totals.')
+ if(intent.recipient&&!recipient)return null
  const scoped={...input,...(recipient?{party:recipient}:{}),...(intent.period?{from:undefined,to:undefined}:{})}
  const bankOnly=/^(?:the\s+)?banks?(?:ing)?$/i.test(subject)
- if(!bankOnly&&selected.length!==1&&!named.length)return gap(`OPAX groups money-map sources into ${industries.length} industries. Choose [gambling](/money?industry=gambling), [mining](/money?industry=mining), [property](/money?industry=property) or another grouping in the [money map](/money), or name an organisation to total its records.`)
+ if(!bankOnly&&selected.length!==1&&!named.length)return null
  const cleaned=intent.total&&named.length===1?named[0].label:subject.replace(/\b(?:companies|company|lobby|lobbies|donors?)\b/gi,' ').replace(/\s+/g,' ').trim()
  const query=`Who receives the most disclosed receipts from ${bankOnly?'finance':cleaned}${recipient?' to '+recipient:''}${intent.period?' '+intent.period:''}?`
  let result=receiptAnswer(graph,query,jurisdiction,'https://opax.com.au',scoped)
- if(!result||'needs_scope' in result)return await rankedMoneyAnswer({...scoped,question:query,kind:'all'},assets)??gap(result?.answer??'Choose a named source or industry in the [money map](/money).')
+ // A lending question, an ambiguous donor name or a party this map lacks is the calculator's answer for these names.
+ if(!result||'needs_scope' in result)return await rankedMoneyAnswer({...scoped,question:query,kind:'all'},assets)??(result?gap(result.answer):null)
  const donorTotal=intent.total&&result.selected_donors.length===1&&!result.selected_industries.length
  // Donation questions use the donor page's typed receipt selection, restricted
  // to Donation Received. Other Receipt (including loans) never becomes giving.
@@ -113,7 +116,7 @@ export async function industryMoneyAnswer(input:RecordQuestion,assets:Fetcher) {
   if(donations&&!('needs_scope' in donations))result=donations
  }
  const unmatched=unmatchedReceiptRankingScope(graph,result.read_query,result,scoped.party)
- if(unmatched)return gap(`Choose a published source, industry or party for **${safe(unmatched)}** in the [money map](/money) so the calculation covers the whole question.`)
+ if(unmatched)return null
  // The period read from the question is stated, and the other readings offered.
  const answer=donorTotal?donorTotalMoneyAnswer(result,graph):calculatedMoneyAnswer(result,graph,query,file,scoped,{total:intent.total,bankGrouping:bankOnly,member})
  const {from,to}=result.requested_years
