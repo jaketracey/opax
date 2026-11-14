@@ -5,6 +5,12 @@ export const VIC_ELECTION_HUB_ENABLED = false;
 export const VIC_ELECTION_PATH = '/vic-election-2026';
 export const VIC_ELECTION_POLLS_OPEN = '2026-11-28T08:00:00+11:00';
 export const VIC_ELECTION_POLLS_CLOSE = '2026-11-28T18:00:00+11:00';
+export const VIC_ELECTION_DAY_START = '2026-11-28T00:00:00+11:00';
+export const VIC_ELECTION_EARLY_OPEN = '2026-11-18T09:00:00+11:00';
+export const VIC_ELECTION_EARLY_CLOSE = '2026-11-27T18:00:00+11:00';
+export const VIC_ELECTION_RESULTS_URL = 'https://www.vec.vic.gov.au/results/state-election-results';
+// Time-sensitive election responses must revalidate, including at the close of polls.
+export const VIC_ELECTION_CACHE = 'public, max-age=0, must-revalidate';
 export const VIC_ELECTION_ASSET = '/hubs/vic-election-2026.json';
 // Suburb, postcode and council splits for the seat finder, read only when someone searches.
 export const VIC_ELECTION_PLACES = '/hubs/vic-election-2026-places.json';
@@ -33,7 +39,7 @@ export function vicElectionPublicationPath(path) {
     || /^\/sitemaps\/vic-election-\d+\.xml(?:\/|$)/.test(normalized)
     || normalized.startsWith('/hubs/vic-election');
 }
-export const vicElectionLlms = '- [Victorian election 2026](https://opax.com.au/vic-election-2026): 28 November 2026; 88 state districts and 8 regions, sitting members and parliamentary records. Victorian divisions cover 2026 only; no state grants or Victorian interests. Speech aggregates have explicit period limits. No donor records.\n';
+export const vicElectionLlms = '- [Victorian election 2026](https://opax.com.au/vic-election-2026): 28 November 2026; 88 state districts and 8 regions, published member rosters and parliamentary records. Victorian divisions cover 2026 only; no state grants or Victorian interests. Speech aggregates have explicit period limits. No donor records.\n';
 export function vicElectionDiscovery(data, enabled = false) {
   return enabled ? { 'vic-election': data.pages.map(p => ({path:p.path,lastmod:p.lastmod})) } : {};
 }

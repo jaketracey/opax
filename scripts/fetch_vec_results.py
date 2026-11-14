@@ -1,11 +1,21 @@
-"""Fetch the VEC's district results for the 2022 Victorian state election and
-the by-elections held since, into scripts/hubs/vic-results-2022.json.
+"""Fetch completed VEC district results for the 2022 or 2026 Victorian state election
+into scripts/hubs/vic-results-<year>.json. The default 2022 mode also includes
+subsequent by-elections and the Narracan supplementary poll; 2026 mode does not.
 
 Records only: the elected member as the VEC lists them, and the party shares in
 the VEC's "Results after distribution of preferences" table. Other candidates'
 names are not kept. VEC website material is CC BY 4.0 (https://vec.vic.gov.au/legal).
 
-    python3 -I scripts/fetch_vec_results.py [--cache DIR]
+    python3 -I scripts/fetch_vec_results.py [--cache DIR] [--offline]
+    python3 -I scripts/fetch_vec_results.py --year 2026 --election-day 2026-11-28
+
+Traps: Narracan's 2023 supplementary poll replaces its failed 2022 district poll;
+later by-elections are historical context, never 2026 results. Preference
+distributions can stop with more than two candidates: use the inline or linked
+two-candidate count, not the first two distribution rows. Column order varies.
+The margin is winner share minus 50, not the gap between candidates. This parser
+requires an elected member and completed two-candidate count; it does not ingest
+live tallies or project winners. A changed page shape fails before replacing data.
 """
 import argparse, hashlib, html, json, re, sys, time, urllib.request
 from datetime import date
@@ -16,7 +26,9 @@ INDEX = VEC + '/results/state-election-results/2022-state-election-results'
 BY_ELECTIONS = VEC + '/results/state-election-results/state-by-elections-timeline'
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from parli.ingest import http as source_http
-UA = source_http.USER_AGENT
+UA = 'opax-improve-audit'
+OFFLINE = False
+LAST_REQUEST = 0.0
 OUT = Path(__file__).parent / 'hubs' / 'vic-results-2022.json'
 # Held since the 26 November 2022 general election. The Narracan supplementary
 # election replaced its 2022 district poll, which failed when a candidate died.
@@ -36,13 +48,27 @@ PARTIES = {
 
 
 def fetch(url, cache):
+    global LAST_REQUEST
     name = re.sub(r'[^a-z0-9]+', '-', url.lower().split('vec.vic.gov.au', 1)[1]).strip('-') + '.html'
     path = cache / name
     if not path.exists():
-        req = source_http.Request(url, headers={'User-Agent': UA})
-        with source_http.urlopen(req, timeout=60) as r:
-            path.write_bytes(r.read())
-        time.sleep(0.5)
+        if OFFLINE:
+            raise ValueError(f'Offline cache miss: {url}')
+        source_http.ensure_allowed(url)
+        time.sleep(max(0, 1.05 - (time.monotonic() - LAST_REQUEST)))
+        # No retries, proxies or automatic redirects; stop on the first refusal.
+        class NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, req, fp, code, msg, headers, newurl):
+                raise ValueError(f'Redirect refused: {url}')
+        opener = urllib.request.build_opener(urllib.request.ProxyHandler({}), NoRedirect())
+        req = urllib.request.Request(url, headers={'User-Agent': UA})
+        LAST_REQUEST = time.monotonic()
+        with opener.open(req, timeout=60) as r:
+            body = r.read()
+            source_http.check_response(url, r.status, body, r.headers)
+            if r.status != 200:
+                raise ValueError(f'HTTP {r.status}: {url}')
+            path.write_bytes(body)
     body = path.read_bytes()
     return body.decode('utf-8', 'replace'), hashlib.sha256(body).hexdigest()
 
@@ -102,20 +128,31 @@ def parse(page, url, cache):
 
 
 def main():
+    global OFFLINE
     ap = argparse.ArgumentParser()
     ap.add_argument('--cache', default=str(Path(__file__).parents[1] / 'portal' / 'private' / 'vec-results'))
+    ap.add_argument('--year', type=int, choices=[2022, 2026], default=2022)
+    ap.add_argument('--election-day')
+    ap.add_argument('--out', type=Path)
+    ap.add_argument('--offline', action='store_true', help='read held HTML only; fail on a cache miss')
     args = ap.parse_args()
+    OFFLINE = args.offline
+    election_day = args.election_day or ('2022-11-26' if args.year == 2022 else '2026-11-28')
+    if date.fromisoformat(election_day).year != args.year:
+        ap.error('--election-day must be in --year')
+    index_url = VEC + f'/results/state-election-results/{args.year}-state-election-results'
+    out = args.out or OUT.with_name(f'vic-results-{args.year}.json')
     cache = Path(args.cache)
     cache.mkdir(parents=True, exist_ok=True)
-    index, index_hash = fetch(INDEX, cache)
-    paths = sorted(set(re.findall(r'href="(/results/state-election-results/2022-state-election-results/results-by-district/[a-z0-9-]+-district-results)"', index)))
+    index, index_hash = fetch(index_url, cache)
+    paths = sorted(set(re.findall(r'href="(/results/state-election-results/' + str(args.year) + r'-state-election-results/results-by-district/[a-z0-9-]+-district-results)"', index)))
     districts, hashes = {}, {'index': index_hash}
     for path in paths:
         page, digest = fetch(VEC + path, cache)
         name = html.unescape(re.search(r'<h1[^>]*>\s*(.*?) District results', page, re.S).group(1)).strip()
-        districts[name] = {'general': {'date': '2022-11-26', 'url': VEC + path, **parse(page, path, cache)}}
+        districts[name] = {'general': {'date': election_day, 'url': VEC + path, **parse(page, path, cache)}}
         hashes[name] = digest
-    for name, held, kind, path in SINCE_2022:
+    for name, held, kind, path in SINCE_2022 if args.year == 2022 else []:
         page, digest = fetch(BY_ELECTIONS + path, cache)
         row = {'date': held, 'kind': kind, 'url': BY_ELECTIONS + path, **parse(page, path, cache)}
         if kind == 'supplementary':
@@ -125,12 +162,16 @@ def main():
         hashes[f'{name} {kind}'] = digest
     if len(districts) != 88:
         sys.exit(f'Expected 88 districts, found {len(districts)}')
-    OUT.write_text(json.dumps({
-        'source': 'Victorian Electoral Commission', 'index': INDEX, 'by_elections': BY_ELECTIONS,
+    encoded = json.dumps({
+        'source': 'Victorian Electoral Commission', 'index': index_url, 'by_elections': BY_ELECTIONS,
+        'election_day': election_day, 'status': 'final',
         'licence': 'CC BY 4.0 (https://vec.vic.gov.au/legal)', 'fetched': date.today().isoformat(),
         'districts': dict(sorted(districts.items())), 'sha256': hashes,
-    }, indent=1, ensure_ascii=False) + '\n')
-    print(f'{len(districts)} districts -> {OUT}')
+    }, indent=1, ensure_ascii=False) + '\n'
+    temporary = out.with_suffix('.json.tmp')
+    temporary.write_text(encoded)
+    temporary.replace(out)
+    print(f'{len(districts)} districts -> {out}')
 
 
 if __name__ == '__main__':
