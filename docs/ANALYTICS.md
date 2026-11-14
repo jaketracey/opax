@@ -78,13 +78,21 @@ and workers.dev previews do not send production analytics.
 ## iOS and Android app
 
 From 1.1.1 the iOS app sends anonymous product analytics to the same PostHog
-project, through the same `https://opax.com.au/ingest` proxy (native requests
+project, and the Android app now does too, through the same
+`https://opax.com.au/ingest` proxy (native requests
 carry no `Origin`, which the proxy already accepts). The SDK is
 `posthog-react-native`, pinned to an exact version, with its native crash
 plugin `@posthog/react-native-plugin` (see "Crash and error reports" below).
 The token and host live in build config (`mobile/app.config.ts`,
-`extra.analytics`), never in `src/`. Only iOS production builds carry that
-config. Development and e2e builds never do, even with `OPAX_ANALYTICS=1`.
+`extra.analytics`), never in `src/`. Only production builds carry that
+config, on iOS and Android alike. Development and e2e builds never do on
+either platform, even with `OPAX_ANALYTICS=1`. `npm run qa-static` checks all
+six platform and variant pairs, and the Android release tooling checks the
+built app: `build-play.sh` refuses a production build whose recorded Expo
+config (`private/play/<versionCode>/config.json` and `config-after.json`) or
+packaged `assets/app.config` lacks the exact host and project token,
+`verify-play.py` checks the same three again, and `verify-android-build.py`
+refuses an e2e APK that carries any analytics config.
 The runtime also refuses to create a client when `__DEV__` or Expo debug mode
 is true, when the execution environment is `storeClient`, when the
 variant or analytics environment is not production, or when the build number
@@ -103,17 +111,17 @@ are preventive gates, not a confirmed explanation of that historical traffic.
 `expo-dev-launcher` is not installed; there is no launcher module probe or
 native-module grant.
 
-Android stays off until its Google Play Data safety answers include analytics.
-Instrumentation and runtime gates are
-shared and tested for both iOS and Android; this lane does not enable Android
-ingestion or change Play Console answers.
+Android sends the same events, crash reports included, under the same
+runtime gates and scrubbers as iOS. Its Google Play Data safety answers must
+say so before an Android build with analytics is submitted
+(`ANDROID-STORE.md`, "Data safety").
 
 `mobile/src/analytics/events.ts` is the app's boundary, the counterpart of
 `analytics/events.js`. `cleanEvent` checks what app code asks to send; the
 SDK's `before_send` runs `scrubEvent`, which drops every event not listed below
 and rebuilds each payload from fixed lists, so SDK enrichment (deep-link URLs,
 screen sizes, locale, device name, flags, person and super properties) never
-leaves the phone. Every event carries `platform` (`ios`, or `android` once enabled), `app` (`opax`),
+leaves the phone. Every event carries `platform` (`ios` or `android`), `app` (`opax`),
 `app_version`, `app_build` and `environment`, with `$process_person_profile`
 false and `$geoip_disable` true. Every event also carries the window as two
 categories, read as it is sent: `layout` (`compact` or `regular`, the size
@@ -301,7 +309,7 @@ and the app has no analytics consent step.
 boundary, including a new failure after Try again. It uses `track`, the same
 build-config gate (`extra.analytics`) and both privacy scrubbers; there is no
 separate analytics consent setting in the app. Voice consent does not enable
-analytics. Android, e2e and all development builds send no report. No
+analytics. E2E and all development builds send no report. No
 identify call or new identifier is added. The same error also goes out once
 as a crash and error report (below).
 
@@ -367,9 +375,9 @@ other events, with no new modules, consent settings or text collection.
 
 ### Crash and error reports
 
-iOS production builds also send anonymous crash and error reports as PostHog
-`$exception` events, behind the same build gate as every other event:
-development, e2e, fixture and Android builds send none, and the app has no
+iOS and Android production builds also send anonymous crash and error
+reports as PostHog `$exception` events, behind the same build gate as every
+other event: development, e2e and fixture builds send none, and the app has no
 analytics opt-out to honour. They appear in PostHog Error tracking once the
 project setting "Enable exception autocapture" is on; until then the SDK
 captures nothing automatically.
@@ -386,7 +394,11 @@ captures nothing automatically.
   and `androidNdkCrashes` on. A crash is written to disk and sent on the next
   launch. Push notification capture, which the plugin turns on by default, is
   off in the options and in Info.plist
-  (`com.posthog.posthog.CAPTURE_PUSH_NOTIFICATION_OPENED`).
+  (`com.posthog.posthog.CAPTURE_PUSH_NOTIFICATION_OPENED`). Android needs no
+  such key: before `setup()` the plugin's only hook is a listener for intents
+  that reach a running app, and posthog-android 3.74.2 drops those until it is
+  set up and then whenever the options' `capturePushNotificationOpened` is
+  false. The app has no Firebase messaging either.
 
 The native SDK never sees the app's other PostHog settings: posthog-react-native
 passes it only its own options, with feature flag preloading on whenever native
@@ -474,12 +486,23 @@ person running it. It refuses any project but the OPAX one (507367). The key is
 redacted from release logs and never reaches a build step. Releases resolve
 per event from `$app_namespace`, `$app_version` and `$app_build`. For Android
 the script also uploads the R8 mapping under posthog-android's map ID
-(`au.com.opax.app@<versionName>+<versionCode>`); it is not wired into
-`build-play.sh` while Android sends nothing. Gradle writes the Android map to
-`android/app/build/generated/sourcemaps/react/release/index.android.bundle.map`,
-and `verify-play.py` refuses any `.map` an APK would install. R8's mapping
-(`BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map`) is Play
-metadata that is never installed, so it passes.
+(`au.com.opax.app@<versionName>+<versionCode>`). `scripts/build-play.sh`
+does for Android what `release-ios.sh` does for iOS: it builds with
+`OPAX_SYMBOLS_DIR` set to the evidence folder (`private/play/<versionCode>/`),
+so Metro records `android.chunk-id` there, then copies in the composed map
+Gradle writes
+(`android/app/build/generated/sourcemaps/react/release/index.android.bundle.map`)
+and R8's `mapping.txt`, logs the chunk ID and runs the upload into
+`crash-symbols.log`. Without a key it logs the one skip line, and a failed
+upload never fails the build; rerun `scripts/upload-crash-symbols.sh android
+<version> <versionCode> <evidence folder> <evidence folder>/mapping.txt`
+later, from the Mac. A key the caller exported reaches only the upload, never
+Expo, Gradle or Metro. `verify-play.py` refuses an AAB whose evidence folder
+lacks the composed map, whose recorded chunk ID is not the one in the shipped
+`index.android.bundle`, or whose `mapping.txt` is not the R8 mapping the AAB
+gives Play (`BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map`,
+Play metadata that is never installed). It also refuses any `.map` an APK
+would install.
 
 The privacy manifest declares Product Interaction and Device ID, not linked,
 not used for tracking, purpose Analytics, and Crash Data and Other Diagnostic

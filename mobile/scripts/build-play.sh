@@ -55,6 +55,13 @@ if [ "$INSIDE_GATE" != 1 ]; then
   exit
 fi
 if [ "$(uname -s)" = Linux ]; then qa_assert_native_lock; fi
+# A crash symbol upload key the caller exported (docs/ANALYTICS.md) reaches
+# only the upload at the end, never Expo, Gradle or Metro. Without one the
+# upload script loads its own key file, inside the upload only.
+UPLOAD_KEYS=()
+for NAME in POSTHOG_CLI_API_KEY POSTHOG_CLI_TOKEN; do
+  if [ -n "${!NAME+x}" ]; then UPLOAD_KEYS+=("$NAME=${!NAME}"); unset "$NAME"; fi
+done
 : "${JAVA_HOME:?Set JAVA_HOME to Java 21}"
 : "${ANDROID_HOME:?Set ANDROID_HOME to the Android SDK}"
 export OPAX_VARIANT=production OPAX_TARGET_PLATFORM=android OPAX_PLAY_BUILD=1
@@ -70,14 +77,20 @@ check_inputs
 ./node_modules/.bin/expo config --type public --json > "$OUT/config.json"
 python3 - "$OUT/config.json" "$EXPECTED_VOICE_MODE" <<'PY'
 import json, sys
+sys.path.insert(0, 'scripts')
+from android_release import verify_analytics_config
 config=json.load(open(sys.argv[1]))
 assert (config['extra'].get('productionVoiceEnabled') is True) == (sys.argv[2] == '1'), 'Effective Expo voice mode mismatch'
+# Production carries the opax.com.au/ingest analytics config, as on iOS.
+verify_analytics_config(config, 'production')
 PY
 # Upload builds keep the provenance guards and use a fresh android/.
+# OPAX_SYMBOLS_DIR reaches Metro through Gradle's bundle step, which records
+# the bundle's chunk ID there (android.chunk-id, metro.config.js).
 export OPAX_GRADLE_DAEMON=0 OPAX_GRADLE_CACHE_ENABLED=0
 android_gradle_args
 ./node_modules/.bin/expo prebuild --platform android --no-install > "$OUT/prebuild.log" 2>&1
-(cd android && "$JAVA_HOME/bin/java" -Xmx64m -Xms64m --enable-native-access=ALL-UNNAMED \
+(cd android && OPAX_SYMBOLS_DIR="$OUT" "$JAVA_HOME/bin/java" -Xmx64m -Xms64m --enable-native-access=ALL-UNNAMED \
   -Dorg.gradle.appname=gradlew -classpath gradle/wrapper/gradle-wrapper.jar \
   org.gradle.wrapper.GradleWrapperMain :app:bundleRelease :app:assembleRelease \
   "${ANDROID_GRADLE_ARGS[@]}" -PreactNativeArchitectures=arm64-v8a,x86_64) > "$OUT/gradle.log" 2>&1
@@ -87,11 +100,13 @@ python3 - "$OUT" "$EXPECTED_COMMIT" "$EXPECTED_VOICE_MODE" <<'PY'
 import json, os, re, shutil, sys, zipfile
 from pathlib import Path
 sys.path.insert(0, 'scripts')
-from android_release import configured_version, require, sha256
+from android_release import (ANDROID_CHUNK_ID, ANDROID_SOURCE_MAP, CHUNK_ID_PATTERN, R8_MAPPING, configured_version,
+                             require, sha256, verify_analytics_config)
 out=Path(sys.argv[1])
 before=json.loads((out/'config.json').read_text()); after=json.loads((out/'config-after.json').read_text())
 require(before == after, 'Release refused: effective Expo config changed during build')
 require((after['extra'].get('productionVoiceEnabled') is True) == (sys.argv[3] == '1'), 'Post-build voice mismatch')
+verify_analytics_config(after, 'production')
 artifacts={}
 for suffix, source in [('aab', 'bundle/release/app-release.aab'), ('apk', 'apk/release/app-release.apk')]:
     target=out/f"opax-{os.environ['OPAX_BUILD_NUMBER']}.{suffix}"
@@ -101,6 +116,7 @@ for suffix, source in [('aab', 'bundle/release/app-release.aab'), ('apk', 'apk/r
     with zipfile.ZipFile(target) as archive:
         config=json.loads(archive.read(('base/' if suffix == 'aab' else '')+'assets/app.config'))
         require((config['extra'].get('productionVoiceEnabled') is True) == (sys.argv[3] == '1'), 'Packaged voice mismatch')
+        verify_analytics_config(config, 'production')
 # Expo's generated Gradle properties are the effective CNG switches. Keep the
 # exact generated inputs so the conditional R8/symbol check can be reviewed.
 props=Path('android/gradle.properties').read_text()
@@ -115,12 +131,47 @@ with zipfile.ZipFile(out/f"opax-{os.environ['OPAX_BUILD_NUMBER']}.aab") as archi
     names=archive.namelist()
 r8=r8 or any(name.startswith('BUNDLE-METADATA/com.android.tools.build.obfuscation/') for name in names)
 symbols=symbols or any(name.startswith('BUNDLE-METADATA/com.android.tools.build.debugsymbols/') for name in names)
+# Crash report symbols (docs/ANALYTICS.md) stay here, never in the AAB, for
+# scripts/upload-crash-symbols.sh: the chunk ID Metro recorded, the Hermes map
+# Gradle composed and, with R8 on, R8's mapping. verify-play.py checks them.
+chunk_path=out/ANDROID_CHUNK_ID
+chunk_id=chunk_path.read_text().strip() if chunk_path.is_file() else ''
+require(bool(re.fullmatch(CHUNK_ID_PATTERN, chunk_id)), 'Metro recorded no bundle chunk ID in OPAX_SYMBOLS_DIR')
+shutil.copyfile('android/app/build/generated/sourcemaps/react/release/'+ANDROID_SOURCE_MAP, out/ANDROID_SOURCE_MAP)
+require((out/ANDROID_SOURCE_MAP).stat().st_size > 0, 'Empty composed Hermes source map')
+if r8:
+    shutil.copyfile('android/app/build/outputs/mapping/release/mapping.txt', out/R8_MAPPING)
+    require((out/R8_MAPPING).stat().st_size > 0, 'Empty R8 mapping')
 evidence={'commit':sys.argv[2], 'production_voice_mode':sys.argv[3], 'version':configured_version(Path.cwd()),
           'versionCode':int(os.environ['OPAX_BUILD_NUMBER']), 'artifacts':artifacts,
-          'r8_enabled':r8, 'native_symbols_enabled':symbols}
+          'r8_enabled':r8, 'native_symbols_enabled':symbols, 'js_chunk_id':chunk_id}
 (out/'build-evidence.json.pending').write_text(json.dumps(evidence, indent=2)+'\n')
 PY
 # Publish evidence only after the final HEAD/tree/voice check passes.
 check_inputs
 mv "$OUT/build-evidence.json.pending" "$OUT/build-evidence.json"
+# Upload the kept symbols to PostHog, as release-ios.sh does for iOS. The
+# script loads its key itself; without one it logs one skip line. A failed
+# upload never fails the build: rerun scripts/upload-crash-symbols.sh later
+# (from the Mac) against this evidence folder. The log is redacted.
+CHUNK_ID=$(cat "$OUT/android.chunk-id")
+VERSION=$(python3 -c 'import json, sys; print(json.load(open(sys.argv[1]))["version"])' "$OUT/build-evidence.json")
+MAPPING=()
+[ ! -f "$OUT/mapping.txt" ] || MAPPING=("$OUT/mapping.txt")
+for KEY in ${UPLOAD_KEYS[@]+"${UPLOAD_KEYS[@]}"}; do export "$KEY"; done
+if python3 - "$OUT/crash-symbols.log" "$VERSION" "$OPAX_BUILD_NUMBER" "$OUT" ${MAPPING[@]+"${MAPPING[@]}"} <<'PY'
+import sys
+sys.path.insert(0, 'scripts')
+from release_support import ReleaseError, run_logged
+try:
+    run_logged(['bash', 'scripts/upload-crash-symbols.sh', 'android', *sys.argv[2:]], sys.argv[1])
+except (ReleaseError, OSError):
+    sys.exit(1)
+PY
+then
+  tail -n 1 "$OUT/crash-symbols.log"
+else
+  echo "Crash symbols not uploaded; see $OUT/crash-symbols.log and rerun scripts/upload-crash-symbols.sh." >&2
+fi
+echo "Crash symbols: chunk $CHUNK_ID; index.android.bundle.map${MAPPING[@]+ and mapping.txt} kept in $OUT"
 echo "PASS local upload-signed Android $OPAX_BUILD_NUMBER; evidence: $OUT"

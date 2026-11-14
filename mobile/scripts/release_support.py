@@ -18,6 +18,13 @@ UPLOAD_KEY_NAMES = ("POSTHOG_CLI_API_KEY", "POSTHOG_CLI_TOKEN")
 # and scripts/upload-crash-symbols.sh and scripts/symbolicate-js.sh read them.
 JS_SOURCE_MAP = "main.jsbundle.map"
 JS_CHUNK_ID = "ios.chunk-id"
+# The analytics config every production build embeds, iOS and Android
+# (app.config.ts `extra.analytics`, docs/ANALYTICS.md): the opax.com.au/ingest
+# proxy and the public, write-only project token. E2E and development builds
+# carry none.
+ANALYTICS_CONFIG = {"host": "https://opax.com.au/ingest",
+                    "projectToken": "phc_AsHnQM2UrGBubA5HU9sagkGbg8vqQLNXu3WjEhPRDejr",
+                    "environment": "production"}
 KEY_BEGIN = "-----BEGIN " + "PRIVATE KEY-----"
 KEY_END = "-----END " + "PRIVATE KEY-----"
 
