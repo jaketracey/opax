@@ -111,7 +111,10 @@ name: 12 Local suggestions, the four scopes and the register lists
       id: results-interests-0
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/12-interests
-- runFlow: support/back.yaml
+- runFlow:
+    file: support/back.yaml
+    env:
+      BACK: Search
 - scrollUntilVisible:
     element:
       id: search-in-pay
@@ -134,7 +137,10 @@ name: 12 Local suggestions, the four scopes and the register lists
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/12-pay-source-line
-- runFlow: support/back.yaml
+- runFlow:
+    file: support/back.yaml
+    env:
+      BACK: Search
 - scrollUntilVisible:
     element:
       id: search-in-expenses
