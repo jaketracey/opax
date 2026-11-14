@@ -24,7 +24,7 @@ const divisions = p => [...new Set([p.pid, ...(votes._names?.[p.name.toLowerCase
   .reduce((a, k) => a + (Number(votes[k]?.divisions_total) || 0), 0);
 
 test('the prints that carried another member\'s id show only their own record', () => {
-  for (const name of ['Graeme Campbell', 'David Cox', 'Bill Taylor', 'Ian McLachlan', 'Kathy Sullivan', 'Ricky Johnston', 'Michael Cobb', 'Stephen Martin']) {
+  for (const name of ['Graeme Campbell', 'David Cox', 'Bill Taylor', 'Ian McLachlan', 'Kathy Sullivan', 'Ricky Johnston', 'Michael Cobb']) {
     const p = row.get(name);
     assert.ok(p, name);
     assert.equal(p.pid, undefined, `${name} has no pid of someone else's`);
@@ -41,6 +41,21 @@ test('the prints that carried another member\'s id show only their own record', 
   assert.equal(ctx.votesFor('Patrick Conaghan', patrick.pid).name, 'Pat Conaghan');
   assert.equal(row.get('Dorinda Cox').pid, '10964');
   assert.equal(divisions(row.get('Dorinda Cox')), votes['10964'].divisions_total);
+});
+
+test('the Cunningham and Dickson members reuse their own dated catalogue identities', () => {
+  const stephen = row.get('Stephen Martin');
+  assert.equal(stephen.pid, 'person_9c02d321caef54b2ba21a1f8');
+  assert.equal(stephen.speeches, 299);
+  assert.equal(stephen.representation[0].electorate, 'Cunningham');
+  assert.ok(stephen.aliases.includes('Stephen Paul Martin'));
+  assert.equal(row.has('Stephen Paul Martin'), false);
+  const anthony = row.get('Anthony Charles Smith');
+  assert.equal(anthony.pid, 'person_efb744ffb3a25d578e592281');
+  assert.equal(anthony.speeches, 76);
+  assert.equal(anthony.representation[0].electorate, 'Dickson');
+  assert.equal(row.get('Tony Smith').speeches, 380);
+  assert.equal(row.get('Fiona Martin').speeches, 244);
 });
 
 test('a surname print that holds more than one person joins no one\'s record and shows no face', () => {
