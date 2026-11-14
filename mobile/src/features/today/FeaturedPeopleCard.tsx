@@ -327,6 +327,9 @@ export function FeaturedPeopleCarousel({
           <GroundFade
             side="left"
             ground={ground}
+            // At rest the previous card ends a gap before the selected one:
+            // that last sliver is covered, so the fade shows only in a swipe.
+            hold={(BLEED - GAP) / BLEED}
             testID="today-featured-edge-leading"
             style={styles.before}
           />

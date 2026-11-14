@@ -258,6 +258,16 @@ describe('the carousel’s edges', () => {
       x1: '0',
       x2: '1',
     });
+    // At rest the previous card's last 4 pt lie under the opaque part.
+    expect(
+      leading!
+        .findAllByType(Stop)
+        .map((stop) => [Number(stop.props.offset), stop.props.stopOpacity]),
+    ).toEqual([
+      [0, 1],
+      [(BLEED - GAP) / BLEED, 1],
+      [1, 0],
+    ]);
     await scrollTo(root, (people.length - 1) * interval);
     expect(hosts(root, LEADING)).toHaveLength(1);
     expect(hosts(root, TRAILING)).toHaveLength(0);

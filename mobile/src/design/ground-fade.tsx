@@ -38,11 +38,14 @@ let known: boolean | undefined;
 export function GroundFade({
   side,
   ground = 'paper',
+  hold = 0,
   testID,
   style,
 }: {
   side: GroundFadeSide;
   ground?: GroundFadeGround;
+  /** The share of the fade, from the boundary, that stays opaque (0 to 1). */
+  hold?: number;
   testID?: string;
   style?: StyleProp<ViewStyle>;
 }) {
@@ -82,6 +85,17 @@ export function GroundFade({
       subscription.remove();
     };
   }, []);
+  const stops: [number, number][] =
+    hold > 0
+      ? [
+          [0, 1],
+          [hold, 1],
+          [1, 0],
+        ]
+      : [
+          [0, 1],
+          [1, 0],
+        ];
   return (
     <View
       pointerEvents="none"
@@ -95,8 +109,14 @@ export function GroundFade({
         <Svg width="100%" height="100%">
           <Defs>
             <LinearGradient id={id} {...VECTORS[side]}>
-              <Stop offset="0" stopColor={fill} stopOpacity={1} />
-              <Stop offset="1" stopColor={fill} stopOpacity={0} />
+              {stops.map(([offset, opacity]) => (
+                <Stop
+                  key={offset}
+                  offset={String(offset)}
+                  stopColor={fill}
+                  stopOpacity={opacity}
+                />
+              ))}
             </LinearGradient>
           </Defs>
           <Rect width="100%" height="100%" fill={`url(#${id})`} />
