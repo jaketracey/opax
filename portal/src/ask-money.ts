@@ -7,7 +7,7 @@ import {fundingContinuation, fundingFollowUp, fundingNameChoice, fundingScopeQue
 import {financialYear, receiptPeriodQuery} from './receipt-period'
 import {earliestReceiptYear, latestReceiptYear, readReceiptPeriod} from './receipt-reading'
 import {questionKey, sameQuestion} from './question-key'
-import {isReceiptGraph, mentionedReceiptIndustries, moneyQuestion, receiptAnswer, receiptGraphForQuestion, unmatchedReceiptRankingScope, voiceReceiptData, type ReceiptGraph} from './voice-money'
+import {asideDonorNames, isReceiptGraph, mentionedReceiptIndustries, moneyQuestion, receiptAnswer, receiptGraphForQuestion, unmatchedReceiptRankingScope, voiceReceiptData, type ReceiptGraph} from './voice-money'
 import {otherReceiptsLine,publicFundingLine,receiptSplit} from '../public/donor-disclosure.js'
 import type {ReceiptFact} from './research-types'
 
@@ -109,19 +109,20 @@ function heldMoneyComparison(result:ReceiptTotals,graph:ReceiptGraph,partyCompar
 }
 
 /** Compare two individual year cells, never their pooled range or lifetime sum. */
-function comparedYearAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:string, file:string, input:RecordQuestion) {
+function comparedYearAnswer(result:ReceiptTotals, graph:ReceiptGraph, query:string, file:string, input:RecordQuestion, periodText=query) {
   const clarify=(answer:string,answer_status='needs_period')=>({answer,citations:{},sources:[],answer_status,money_ranking:true})
-  let years=[...query.matchAll(/\b(?:19|20)\d{2}\b/g)].map(m=>Number(m[0])).sort((a,b)=>a-b)
+  // Years come from the question's own words; a number inside a donor's name is not one.
+  let years=[...periodText.matchAll(/\b(?:19|20)\d{2}\b/g)].map(m=>Number(m[0])).sort((a,b)=>a-b)
   // A change named by one year is read as the change into it from the year before.
   let reading:string|undefined
   // More than two years is read as the change from the first to the last.
   const named=new Set(years)
-  if(!/\b(?:before|after|since|until|through)\b/i.test(query)&&(named.size===1||named.size>2)){
+  if(!/\b(?:before|after|since|until|through)\b/i.test(periodText)&&(named.size===1||named.size>2)){
     years=named.size===1?[years[0]-1,years[0]]:[years[0],years[years.length-1]]
     reading=`Reading this as the change from ${financialYear(years[0])} to ${financialYear(years[1])}.`
     input={...input,from:undefined,to:undefined}
   }
-  if(years.length!==2 || years[0]===years[1] || /\b(?:before|after|since|until|through)\b/i.test(query)) {
+  if(years.length!==2 || years[0]===years[1] || /\b(?:before|after|since|until|through)\b/i.test(periodText)) {
     return clarify('Choose two individual financial years to compare, for example 2020 and 2021. Each year means the financial year starting in that year.')
   }
   if((input.from&&Number(input.from)!==years[0]) || (input.to&&Number(input.to)!==years[1])) {
@@ -378,11 +379,15 @@ export function withReading<T extends {answer:string;citations:Record<string,num
 function readMoneyRanking(input:RecordQuestion,graph:ReceiptGraph,file:string,jurisdiction:string,carried:Carried,asked:string,options:{topTen?:boolean;reading?:string;allowChoice?:boolean}={}):ReadPayload|null {
   // The question's own period is read first, while financial-year labels are
   // still visible ("since 2023–24" starts at 2023–24; "since 2023" at 2022–23).
-  const read=readReceiptPeriod(input.question||'',latestReceiptYear(graph),{compare:yearComparisonQuestion(receiptPeriodQuery(input.question||'').query)})
-  const query=receiptPeriodQuery(read.query).query.replace(/\btop\s+10\b/gi,'top')
+  // A donor name a router wrote in ("Comscrv (No. 2092) Pty Ltd - Loan") is held
+  // aside while the period is read, so its digits are never a year.
+  const own=asideDonorNames(graph,input.question||'')
+  const read=readReceiptPeriod(own.text,latestReceiptYear(graph),{compare:yearComparisonQuestion(receiptPeriodQuery(own.text).query)})
+  const periodText=receiptPeriodQuery(read.query).query.replace(/\btop\s+10\b/gi,'top')
+  const query=own.restore(periodText)
   // Explicit dates in this question outrank stale UI controls on every route.
-  if (/\b(?:19|20)\d{2}\b/.test(query)) input={...input,from:undefined,to:undefined}
-  const result=receiptAnswer(graph,query,jurisdiction,'https://opax.com.au',{...input,compareYears:yearComparisonQuestion(query)})
+  if (/\b(?:19|20)\d{2}\b/.test(periodText)) input={...input,from:undefined,to:undefined}
+  const result=receiptAnswer(graph,query,jurisdiction,'https://opax.com.au',{...input,compareYears:yearComparisonQuestion(periodText)})
   // A partial organisation name is answered for its likeliest match.
   const nameChoice=(fragment:string)=>{
     if(options.allowChoice===false)return null
@@ -400,7 +405,7 @@ function readMoneyRanking(input:RecordQuestion,graph:ReceiptGraph,file:string,ju
   const unmatched=unmatchedReceiptRankingScope(graph,scoped,result,input.party)
   if(unmatched){
     // Preserve unsupported comparison handling; no partial ranking is returned.
-    if((comparisonQuestion(query)||yearComparisonQuestion(query)) && (/\bfrom\s+(?!(?:19|20)\d{2}\b)/i.test(query)||/\b(?:lobby|industry|sector)\b/i.test(query)) && !result.selected_industries.length&&!result.selected_donors.length)return null
+    if((comparisonQuestion(query)||yearComparisonQuestion(periodText)) && (/\bfrom\s+(?!(?:19|20)\d{2}\b)/i.test(query)||/\b(?:lobby|industry|sector)\b/i.test(query)) && !result.selected_industries.length&&!result.selected_donors.length)return null
     return nameChoice(unmatched)||{answer:`OPAX calculates from the donor, industry and party names in the [money map](https://opax.com.au/money); **${unmatched}** is not one of them. Ask again with a name from the map and the calculation will cover your whole question.`,citations:{},sources:[],answer_status:'needs_scope',money_ranking:true}
   }
   if(/\bfrom\s+(?!(?:19|20)\d{2}\b)/i.test(query) && !result.selected_industries.length && !result.selected_donors.length) return null
@@ -408,8 +413,8 @@ function readMoneyRanking(input:RecordQuestion,graph:ReceiptGraph,file:string,ju
   // What was read, and the other readings as complete questions for the same selection.
   const lines=[options.reading,carried.reading,read.reading??result.period_reading,result.scope_reading]
   const choices=readingChoices(result,read.reading?read.options:result.period_options,carried.options)
-  if(yearComparisonQuestion(query)){
-    const compared=comparedYearAnswer(result,graph,query,file,input)
+  if(yearComparisonQuestion(periodText)){
+    const compared=comparedYearAnswer(result,graph,query,file,input,periodText)
     return withReading(compared,[...lines,'reading' in compared?compared.reading:undefined],'money_question' in compared?[]:choices('donors'),asked)
   }
   if(comparisonQuestion(query)){
@@ -458,7 +463,7 @@ export function donorTotalMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph):M
   if(declared)return declared
   const name=plain(result.subject),label=result.measure_label
   const {from,to}=result.requested_years
-  const period=result.period??(from!==null&&to!==null?`${financialYear(from)} to ${financialYear(to)}`:'the published financial years')
+  const period=result.period??(from!==null&&to!==null?from===to?`in ${financialYear(from)}`:`${financialYear(from)} to ${financialYear(to)}`:'the published financial years')
   let answer=`**${name}** has **${aud(result.total_aud)}** recorded in ${label} to ${result.selected_parties.length?plain(result.selected_parties.join(' and ')):'political parties'}, ${period}.`
   const nodes=new Map(graph.nodes.map(n=>[n.id,n]))
   const edges=graph.edges.filter(e=>{
