@@ -147,6 +147,7 @@ export function AskStatus({
       ref={focusView}
       accessible
       accessibilityLabel={announcement}
+      accessibilityState={{ busy: true }}
       accessibilityLanguage="en-AU"
       accessibilityLiveRegion="polite"
       testID="ask-status-row"

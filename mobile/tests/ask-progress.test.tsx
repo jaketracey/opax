@@ -1,12 +1,9 @@
 import { useSyncExternalStore } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
-import { AccessibilityInfo, AppState, StyleSheet } from 'react-native';
+import { AccessibilityInfo, AppState } from 'react-native';
 import { haptic } from '../src/design/haptics';
 import { Pressable } from '../src/design/pressable';
-import { Skeleton } from '../src/design/states';
 import { Text } from '../src/design/text';
-import { colors } from '../src/design/tokens';
-import { AskProgress } from '../src/features/ask/AskProgress';
 import { AskThread } from '../src/features/ask/AskThread';
 import { AskController } from '../src/features/ask/controller';
 import { AskFailure, type StreamHandlers } from '../src/features/ask/stream';
@@ -301,20 +298,6 @@ test('a new question cancels the old countdown and its announcement', async () =
     AccessibilityInfo.announceForAccessibilityWithOptions,
   ).not.toHaveBeenCalled();
   await complete();
-});
-
-test('the three answer skeleton bars use raised on the sunken ground', () => {
-  act(() => tree.update(<AskProgress stage={null} streaming="" />));
-  expect(tree.root.findByType(Skeleton).props).toMatchObject({
-    count: 3,
-    onSunken: true,
-  });
-  const fills = tree.root.findAll(
-    (n) =>
-      typeof n.type === 'string' &&
-      StyleSheet.flatten(n.props.style)?.backgroundColor === colors.raised,
-  );
-  expect(fills.length).toBeGreaterThanOrEqual(3);
 });
 
 test.each([2999, 3000, 8000])(

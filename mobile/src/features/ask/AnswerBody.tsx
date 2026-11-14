@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { CitationMark } from '../../design/citation-mark';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { webOrigin } from '../../design/environment';
-import { Text } from '../../design/text';
+import { Text, type OpaxTextProps } from '../../design/text';
 import { colors, hairline, rhythm } from '../../design/tokens';
 import { fromWebPath } from '../../navigation/routes';
 import {
@@ -14,6 +14,7 @@ import {
 } from '../../navigation/external';
 import type { SourcePlacement } from '../../analytics/events';
 import type { Block, Inline } from './answer-markdown';
+import { startsUnseen, type RevealInline } from './stream-reveal';
 
 /**
  * Opens a link in an answer: native pages in the Ask stack, else the browser.
@@ -91,9 +92,26 @@ export function AnswerBody({
     claim.sentence === span.sentence &&
     span.kind !== 'cite';
   // Only the claim's block lights, so its first lit span carries the ID.
-  const spans = (items: Inline[], block: string): ReactNode => {
+  const spans = (
+    items: RevealInline[],
+    block: string,
+    role: Pick<OpaxTextProps, 'variant' | 'tabular'> = {},
+  ): ReactNode => {
     const firstLit = items.findIndex((span) => isLit(span, block));
     return items.map((span, i) => {
+      // Streamed text not yet revealed: laid out in the block's own role so
+      // the lines break where they will, and drawn clear.
+      if (span.unseen && span.kind !== 'cite')
+        return (
+          <Text
+            key={i}
+            {...role}
+            {...(span.kind === 'strong' ? { variant: 'strong' } : null)}
+            style={styles.unseen}
+          >
+            {span.text}
+          </Text>
+        );
       const lit = isLit(span, block);
       const first = i === firstLit;
       const wash = lit ? styles.claim : null;
@@ -171,7 +189,7 @@ export function AnswerBody({
             return (
               <View key={key} ref={keep(key)} collapsable={false}>
                 <Text variant="strong" selectable={selectable}>
-                  {spans(block.spans, key)}
+                  {spans(block.spans, key, { variant: 'strong' })}
                 </Text>
               </View>
             );
@@ -184,7 +202,7 @@ export function AnswerBody({
                 style={styles.quote}
               >
                 <Text variant="recordText" selectable={selectable}>
-                  {spans(block.spans, key)}
+                  {spans(block.spans, key, { variant: 'recordText' })}
                 </Text>
               </View>
             );
@@ -201,7 +219,15 @@ export function AnswerBody({
                       collapsable={false}
                       style={styles.item}
                     >
-                      <Text variant="body" style={styles.marker}>
+                      <Text
+                        variant="body"
+                        style={[
+                          styles.marker,
+                          streaming && startsUnseen(item)
+                            ? styles.unseen
+                            : null,
+                        ]}
+                      >
                         {block.kind === 'bullets' ? '•' : `${block.start + i}.`}
                       </Text>
                       <Text
@@ -221,10 +247,12 @@ export function AnswerBody({
               <AnswerTable
                 key={key}
                 header={block.header.map((cell, c) =>
-                  spans(cell, `${key}.h${c}`),
+                  spans(cell, `${key}.h${c}`, { variant: 'footnote' }),
                 )}
                 rows={block.rows.map((row, r) =>
-                  row.map((cell, c) => spans(cell, `${key}.${r}.${c}`)),
+                  row.map((cell, c) =>
+                    spans(cell, `${key}.${r}.${c}`, { tabular: true }),
+                  ),
                 )}
                 stacked={stacked}
               />
@@ -292,6 +320,7 @@ function AnswerTable({
 const styles = StyleSheet.create({
   body: { gap: rhythm.block },
   claim: { backgroundColor: colors.navyWash },
+  unseen: { color: 'transparent' },
   quote: {
     borderLeftWidth: 2,
     borderLeftColor: colors.dividerSubtle,

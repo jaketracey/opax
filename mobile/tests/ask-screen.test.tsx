@@ -28,6 +28,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { announceAnswer } from '../src/features/ask/AnswerView';
 import AskScreen, { PhoneDock } from '../src/features/ask/AskScreen';
 import { useScreenReady } from '../src/analytics/timing';
 import {
@@ -1464,6 +1465,52 @@ test('a stream that stops partway keeps its text under one pill, read as Markdow
   ).toHaveLength(1);
   expect(drawn).toContain('This answer stopped partway.');
   expect(byId('ask-retry')).not.toEqual([]);
+});
+
+test('streamed pieces are never announced: one announcement when the answer completes', async () => {
+  const announce = jest
+    .spyOn(AccessibilityInfo, 'announceForAccessibilityWithOptions')
+    .mockImplementation(() => undefined);
+  let on: StreamHandlers | undefined,
+    finish: (value: unknown) => void = () => {};
+  jest.mocked(client.askPost).mockImplementationOnce(
+    (_path, _body, _signal, handlers) =>
+      new Promise((resolve) => {
+        on = handlers;
+        finish = resolve;
+      }),
+  );
+  await mount();
+  await type('Who spoke on housing?');
+  await press('ask-submit');
+  const pieces = ['Housing was debated. ', 'The bill passed. ', 'Two opposed.'];
+  for (const piece of pieces)
+    await act(async () => {
+      on!.delta(piece);
+    });
+  // The streamed text is not a live region, and its fading layer is hidden.
+  let node = byId('ask-streaming').at(-1)!.parent;
+  const regions: unknown[] = [];
+  while (node && node.props.testID !== 'ask-progress') {
+    if (node.props.accessibilityLiveRegion)
+      regions.push(node.props.accessibilityLiveRegion);
+    node = node.parent;
+  }
+  expect(new Set(regions)).toEqual(new Set(['none']));
+  expect(jest.mocked(announceAnswer)).not.toHaveBeenCalled();
+  for (const [said] of announce.mock.calls)
+    expect(pieces.some((piece) => String(said).includes(piece.trim()))).toBe(
+      false,
+    );
+  await act(async () => {
+    finish(answer);
+  });
+  expect(jest.mocked(announceAnswer)).toHaveBeenCalledTimes(1);
+  expect(byId('ask-progress')).toEqual([]);
+  for (const [said] of announce.mock.calls)
+    expect(pieces.some((piece) => String(said).includes(piece.trim()))).toBe(
+      false,
+    );
 });
 
 test('Stop puts the question back in an empty composer and says so', async () => {
