@@ -5,6 +5,8 @@ import { partyIdentity } from '../../design/party';
 import type { SourceDetails } from '../../design/source';
 import { sponsorKey, sponsorSlug } from '../bills/sponsors';
 import { editionPerson, editionSources } from '../edition/model';
+import { featuredHook } from '../newcomer/featured-hook';
+import { newcomerOption } from '../newcomer/option';
 import { daysBetween } from './rules';
 
 export const FEATURED_PEOPLE_RULE =
@@ -90,8 +92,16 @@ export function featuredPeople(
       (seat) => seat.jurisdiction === 'federal',
     )!;
     const place = [seat.electorate, seat.state].filter(Boolean).join(', ');
-    const paragraph =
-      person.speeches === undefined
+    const paragraph = newcomerOption()
+      ? // Newcomer design pass (prototype): who they are, then what to read.
+        featuredHook({
+          chamber: seat.chamber,
+          electorate: seat.electorate,
+          state: seat.state,
+          first: person.first,
+          speeches: person.speeches,
+        })
+      : person.speeches === undefined
         ? 'Explore their parliamentary record.'
         : `${person.name}: ${counted(person.speeches, 'speech', 'speeches')} in the OPAX record.`;
     result.push({
