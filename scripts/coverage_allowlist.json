@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "reviewed": "2026-11-14",
+  "entries": [
+    {
+      "id": "federal-2025-election",
+      "kind": "non_sitting",
+      "chambers": ["representatives", "senate"],
+      "start": "2025-03-28",
+      "end": "2025-07-21",
+      "reason": "Prorogation and election recess before the 48th Parliament first sat on 22 July 2025.",
+      "evidence": "scripts/test_export_drafts.py (lapse on 28 March); scripts/bills_registry/bills_common.py PARL_STARTS"
+    },
+    {
+      "id": "nsw-2019-election-recess",
+      "kind": "non_sitting",
+      "chambers": ["nsw_la", "nsw_lc"],
+      "start": "2018-11-23",
+      "end": "2019-05-06",
+      "reason": "Election recess between the November 2018 sittings and the May 2019 return. This interval is not a missing-sitting claim.",
+      "evidence": "origin/im/hansard-gaps 7a93ad1d0 report, State intervals and calendar-unknown discussion"
+    },
+    {
+      "id": "wa-not-held",
+      "kind": "not_held",
+      "chambers": ["wa_la", "wa_lc"],
+      "start": "1901-01-01",
+      "end": "2027-01-31",
+      "reason": "No WA plenary speech series is held. Review at expiry; this is a corpus boundary, not a non-sitting claim.",
+      "evidence": "origin/im/hansard-gaps 7a93ad1d0 Chamber coverage"
+    },
+    {
+      "id": "tas-not-held",
+      "kind": "not_held",
+      "chambers": ["tas_ha", "tas_lc"],
+      "start": "1901-01-01",
+      "end": "2027-01-31",
+      "reason": "No Tasmanian plenary speech series is held. Review at expiry; this is a corpus boundary, not a non-sitting claim.",
+      "evidence": "origin/im/hansard-gaps 7a93ad1d0 Chamber coverage"
+    },
+    {
+      "id": "nt-not-held",
+      "kind": "not_held",
+      "chambers": ["nt_la"],
+      "start": "1974-01-01",
+      "end": "2027-01-31",
+      "reason": "No NT plenary speech series is held. Review at expiry; this is a corpus boundary, not a non-sitting claim.",
+      "evidence": "origin/im/hansard-gaps 7a93ad1d0 Chamber coverage"
+    },
+    {
+      "id": "senate-2014-2018",
+      "kind": "known_being_filled",
+      "chambers": ["senate"],
+      "start": "2014-01-01",
+      "end": "2018-12-31",
+      "lane": "im/hansard-gaps (repair plan A)",
+      "reason": "Known, being filled: missing Senate historical acquisition. Keep visible without paging while the repair lane reconciles source days.",
+      "evidence": "origin/im/hansard-gaps 7a93ad1d0 repair plan A"
+    },
+    {
+      "id": "nsw-2023-oct2024",
+      "kind": "known_being_filled",
+      "chambers": ["nsw_la", "nsw_lc"],
+      "start": "2023-01-01",
+      "end": "2024-10-31",
+      "lane": "im/hansard-gaps (repair plan N)",
+      "reason": "Known, being filled: NSW 2023 to October 2024 acquisition hole. The expected state calendar is incomplete, so completion needs cached date evidence.",
+      "evidence": "origin/im/hansard-gaps 7a93ad1d0 repair plan N"
+    }
+  ]
+}

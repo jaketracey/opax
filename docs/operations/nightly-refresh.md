@@ -103,6 +103,49 @@ The refresh watchdog separates a current delivery chain from incomplete source c
 source pauses, retained-data warnings and pending periodic retries appear in its annotations
 and job summary. It fails for broken delivery or an unreadable periodic state.
 
+The daily refresh also runs `scripts/coverage_watchdog.py` after its normal work.
+It opens the corpus read-only, counts plenary rows by chamber and date using the
+covering `idx_speeches_coverage(chamber,date,hearing_type)` index, and writes
+`coverage-snapshot-v1.json` and `coverage-report-v1.json` under
+`~/.cache/autoresearch/pipeline/`. These files are runtime state, never repository
+data. Normal `OPAX_ENSURE_INDEXES=1` housekeeping provisions that index once;
+the watchdog refuses an unindexed table scan. Its SQLite budget is 40 seconds,
+with an outer 50-second timeout and two-second kill grace.
+
+`nightly.sh` reads the coverage receipt into its existing `FAILURES` and
+`WARNINGS`. Publication continues, then failures reach `nightly-status/status.json`
+and the scheduled `refresh-watchdog.yml` run, whose failure sends the existing
+GitHub email. Missing, stale, malformed or timed-out coverage checks also fail
+that alert path. Known repair holes and thin occupied days appear as warnings
+in the existing annotations and job summary. A standalone daily run only logs
+and writes its receipt, as it has no status publisher of its own.
+
+The first successful night records a baseline without paging. Later nights
+compare chamber and chamber-year rows and held speech-days with the previous
+successful snapshot. A loss to zero or by more than 50% pages, even inside a
+known repair interval. Same-day retries retain the prior-night comparison;
+missing intervening snapshots are reported. A regression stays open until its
+metric reaches the recorded recovery floor, so a stable empty year does not
+clear the alarm the next night. Completed dates use Australia/Sydney, not the
+host's UTC day. Five consecutive zero expected dates page; positive days below
+10% of the whole chamber's median are report-only.
+
+Expected dates come from the committed federal calendar, optional local
+`hansard/hansard-xml/all-sitting-days.csv`, cached `votes_state/nsw/year_*.json`,
+and optional `--expected-days chamber-date.csv` inputs. No calendar is acquired
+by the watchdog. Missing denominators are null, not 100% coverage. The bounded
+reviewed exceptions, their reasons, end dates and repair lane tags are in
+`scripts/coverage_allowlist.json`. Recesses remove expected dates; the WA,
+Tasmanian and NT corpus boundaries page for review after 31 January 2027.
+Known Senate 2014-2018 and NSW January 2023 to October 2024 holes remain visible
+until all evidenced dates in every affected chamber-year are held. If any year
+has no expected evidence, completion remains unverified and the warning stays.
+Resolution is recorded automatically; subsequent loss of those dates pages.
+The lane tags identify the audit's repair plans, not proof of a running backfill.
+
+Offline reproduction, live sanity checks and index/runtime evidence are in
+[`2026-11-14-coverage-watchdog.md`](../reports/2026-11-14-coverage-watchdog.md).
+
 The `divisions` and `seovotes` groups have independent validation, rollback and staging.
 Both exporters use a read-only database transaction. `divisions/index.json` has schema 2
 and explicit `coverage.retained_count`, `retained_by_reason`, member coverage and source counts.

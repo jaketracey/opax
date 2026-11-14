@@ -357,6 +357,15 @@ else
   [ -z "$stale" ] || warn "a source refused to change its register tonight (kept the last good rows): $stale"
   partial=$(last_run_line "$DAILY_LOG" 'Partial daily refresh:' | sed 's/.*next run: //')
   [ -z "$partial" ] || warn "cut by its time limit tonight, resumes from its checkpoint next run: $partial (the knowledge box takes only ~12-30k resources an hour)"
+  # Coverage failure must alert but must not stop exports or publication. Reuse
+  # failures/warnings -> nightly-status/status.json -> refresh_watchdog.py ->
+  # the existing scheduled GitHub workflow email, with no new alert channel.
+  while IFS=$'\t' read -r severity finding; do
+    case "$severity" in
+      alert) fail "$finding" ;;
+      report) warn "$finding" ;;
+    esac
+  done < <("$PY" scripts/coverage_watchdog.py --state-dir "$PIPE" --status-only)
 fi
 
 # ---- 2b. the periodic groups: weekly (Sundays, Sydney), monthly (the first Sunday), frl (Thursdays) ----------
