@@ -10,26 +10,28 @@ import { catalogs } from '../src/api/runtime';
 import {
   decodeElectorate,
   electorateFor,
-  profileFor,
   yourMPFor,
 } from '../src/api/catalogs';
-import { PersonRow } from '../src/design/people';
-import { YourMPCard, yourMPSources } from '../src/features/today/YourMPCard';
-import type { LatelyState } from '../src/features/your-mp/latest';
+import { Card } from '../src/design/card';
+import { InsetGroup } from '../src/design/layout';
+import { PersonRow, Portrait } from '../src/design/people';
+import {
+  TILE_MAX_WIDTH,
+  YourMPCard,
+  yourMPHook,
+  yourMPLabel,
+  yourMPSources,
+} from '../src/features/today/YourMPCard';
+import {
+  LatestRows,
+  type LatestRecord,
+} from '../src/features/your-mp/LatestRows';
 import { RepresentativesGroup } from '../src/features/your-mp/RepresentativesGroup';
 import { breaksMidWord } from '../src/design/text';
 import { textRampScale } from '../src/design/text-scale';
 import { textStyles } from '../src/design/tokens';
 import { textWidth } from './row-layout';
-import {
-  catalogs as fixtureCatalogs,
-  index,
-  manifest,
-  people,
-  pinned,
-  roster,
-  slugs,
-} from './pinned';
+import { index, manifest, people, pinned, roster, slugs } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
   catalogs: {
@@ -47,19 +49,6 @@ jest.mock('../src/design/row-link', () => ({
   ...jest.requireActual('../src/design/row-link'),
   RowLink: ({ children }: { children: React.ReactNode }) => children,
 }));
-let mockLately: LatelyState | null = null;
-jest.mock('../src/features/your-mp/latest', () => {
-  const actual = jest.requireActual('../src/features/your-mp/latest');
-  return {
-    ...actual,
-    latelyFor: (...args: Parameters<typeof actual.latelyFor>) =>
-      mockLately ?? actual.latelyFor(...args),
-  };
-});
-afterEach(() => {
-  mockLately = null;
-});
-
 const result = <T,>(data: T) => ({
   data,
   stale: false,
@@ -78,153 +67,17 @@ const view = yourMPFor(seat.electorate_id, index, manifest);
 const electorate = electorateFor(decodeElectorate(pinned(seat.detail_url)));
 
 beforeEach(() => {
+  jest.clearAllMocks();
   jest.mocked(catalogs.yourMP).mockResolvedValue(view);
   jest.mocked(catalogs.electorateFor).mockResolvedValue(result(electorate));
   jest.mocked(catalogs.profileFor).mockRejectedValue(new Error('Unavailable'));
   jest.mocked(catalogs.bills).mockRejectedValue(new Error('Unavailable'));
 });
 
-test.each(['today', 'your-mp'])(
-  '%s preserves the recorded member when their native profile cannot be linked',
-  async (screen) => {
-    const unlinked = { ...directory, slugs: result({ ...slugs, slugs: {} }) };
-    let renderer!: TestRenderer.ReactTestRenderer;
-    await act(async () => {
-      renderer = TestRenderer.create(
-        screen === 'today' ? (
-          <YourMPCard
-            seat={seat}
-            directory={unlinked}
-            stateSeatIds={[]}
-            attempt={0}
-            onRetry={jest.fn()}
-          />
-        ) : (
-          <RepresentativesGroup
-            seat={seat}
-            directory={unlinked}
-            view={view}
-            electorate={electorate}
-          />
-        ),
-      );
-    });
-    const member = view.members.data![0]!;
-    const row = renderer.root
-      .findAllByType(PersonRow)
-      .find((node) => node.props.name === member.person.name);
-    expect(row).toBeDefined();
-    expect(row!.props.href).toBeUndefined();
-    expect(row!.props.party).toBe(member.party);
-    expect(
-      renderer.root.findAllByProps({
-        testID: screen === 'today' ? 'today-your-mp-none' : 'your-member-none',
-      }),
-    ).toHaveLength(0);
-    await act(async () => renderer.unmount());
-  },
-);
-
-test('Today dates its roster by the oldest record and labels a saved senator roster', () => {
-  const source = yourMPSources(
-    {
-      ...view,
-      members: {
-        ...view.members,
-        asAt: '2026-11-10',
-        sources: [
-          { label: 'Fixture House roster', url: 'https://example.org/house' },
-        ],
-      },
-      senators: [
-        {
-          ...view.senators[0]!,
-          asAt: '2026-10-01',
-          stale: true,
-          savedAt: 123,
-          sources: [
-            {
-              label: 'Fixture Senate roster',
-              url: 'https://example.org/senate',
-            },
-          ],
-        },
-      ],
-    },
-    { status: 'loading' },
-    null,
-  );
-  expect(source.asOf).toBe('2026-10-01');
-  expect(source.originals).toEqual([
-    {
-      label: 'Fixture House roster',
-      url: 'https://example.org/house',
-      asOf: '2026-11-10',
-    },
-    {
-      label: 'Fixture Senate roster',
-      url: 'https://example.org/senate',
-      asOf: '2026-10-01',
-    },
-  ]);
-  expect(source.state).toBe('saved');
-  expect(source.savedAt).toBe(123);
-});
-
-test('Today labels saved vote, register and bill records even when the roster is fresh', () => {
-  const profile = profileFor(view.members.data![0]!.person_id, fixtureCatalogs);
-  for (const field of ['votes', 'interests'] as const) {
-    const source = yourMPSources(
-      view,
-      {
-        status: 'ready',
-        data: {
-          ...profile,
-          blocks: {
-            ...profile.blocks,
-            [field]: { ...profile.blocks[field], stale: true, savedAt: 321 },
-          },
-        },
-      },
-      null,
-    );
-    expect(source.state).toBe('saved');
-    expect(source.savedAt).toBe(321);
-  }
-  const source = yourMPSources(
-    view,
-    { status: 'loading' },
-    { asOf: '2026-10-01', stale: true, savedAt: 456 },
-  );
-  expect(source.state).toBe('saved');
-  expect(source.savedAt).toBe(456);
-});
-
-test('Today shows a long gift title in full words, never cut at 79 characters', async () => {
-  // Build 61 on an iPhone Duo: "…provided by Endeavou…" on the Today card.
-  const title =
-    'Fixture Cup Final: hospitality and a ticket to the match on 26/09/26 provided by Fixture Hospitality Group';
-  expect(title.length).toBeGreaterThan(80);
-  mockLately = {
-    status: 'ready',
-    records: [
-      {
-        key: 'register-fixture',
-        kind: 'register',
-        date: '2026-09-28',
-        action: 'Declared a gift',
-        title,
-        detail: '',
-        url: 'https://example.invalid/register',
-      } as never,
-    ],
-  };
-  const profile = profileFor(view.members.data![0]!.person_id, fixtureCatalogs);
-  jest.mocked(catalogs.profileFor).mockResolvedValue(profile as never);
-  // Default text size: at accessibility sizes the title runs in full.
-  const dimensions = jest
-    .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
-    .mockReturnValue({ width: 951, height: 669, scale: 3, fontScale: 1 });
+/** Today's tile, mounted with the pinned seat unless told otherwise. */
+async function tile(
+  props: Partial<React.ComponentProps<typeof YourMPCard>> = {},
+) {
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
     renderer = TestRenderer.create(
@@ -234,13 +87,287 @@ test('Today shows a long gift title in full words, never cut at 79 characters', 
         stateSeatIds={[]}
         attempt={0}
         onRetry={jest.fn()}
+        {...props}
       />,
+    );
+  });
+  return renderer;
+}
+const ids = (renderer: TestRenderer.ReactTestRenderer) =>
+  renderer.root
+    .findAll((n) => typeof n.type === 'string' && !!n.props.testID)
+    .map((n) => n.props.testID as string);
+const text = (renderer: TestRenderer.ReactTestRenderer, testID: string) =>
+  renderer.root.findAllByType(NativeText).find((n) => n.props.testID === testID)
+    ?.props.children;
+
+describe('Today\u2019s Your MP tile', () => {
+  const member = view.members.data![0]!;
+  // Jest's window is at an accessibility size by default: Large unless a
+  // test says otherwise.
+  let dimensions: jest.SpyInstance;
+  beforeEach(() => {
+    dimensions = jest
+      .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
+      .mockReturnValue({ width: 402, height: 874, scale: 3, fontScale: 1 });
+  });
+  afterEach(() => dimensions.mockRestore());
+
+  test('shows who the member is in one tile: name, party, electorate and the plain line', async () => {
+    const renderer = await tile();
+    const card = renderer.root.findByType(Card);
+    expect(card.props.testID).toBe('today-your-mp-member');
+    expect(text(renderer, 'today-your-mp-name')).toBe(member.person.name);
+    expect(text(renderer, 'today-your-mp-seat')).toBe(`\u00b7 ${seat.name}`);
+    expect(text(renderer, 'today-your-mp-hook')).toBe(
+      'Represents you in federal parliament',
+    );
+    expect(ids(renderer)).toContain('today-your-mp-party');
+    expect(ids(renderer)).toContain('today-your-mp-mark');
+    // One portrait, by the shared rules: a blank circle, never initials.
+    const portrait = renderer.root.findByType(Portrait);
+    expect(portrait.props.name).toBe(member.person.name);
+    expect(portrait.props.localURI).toBeUndefined();
+    await act(async () => renderer.unmount());
+  });
+
+  test('is one link to the profile with one spoken label built from the record', async () => {
+    const renderer = await tile();
+    const card = renderer.root.findByType(Card);
+    expect(card.props.href.params.slug).toBe('anthony-albanese');
+    expect(card.props.accessibilityLabel).toMatch(
+      new RegExp(
+        `^Your MP, ${member.person.name}, .+, ${seat.name}\\. Represents you in federal parliament\\.$`,
+      ),
+    );
+    expect(card.props.accessibilityHint).toBe('Opens the profile');
+    expect(
+      card.props.accessibilityActions.map((a: { label: string }) => a.label),
+    ).toEqual(['Follow', `Open ${seat.name}`, 'Change electorate']);
+    expect(
+      card.props.menu.map((item: { title: string }) => item.title),
+    ).toEqual(
+      expect.arrayContaining([`Open ${seat.name}`, 'Change electorate']),
+    );
+    await act(async () => renderer.unmount());
+  });
+
+  test('draws no votes, declarations, bills or senators, and reads none of them', async () => {
+    const renderer = await tile();
+    const drawn = ids(renderer);
+    for (const id of drawn) {
+      expect(id).not.toMatch(/latest|senators|declaration|your-mp-group/);
+    }
+    expect(drawn.filter((id) => id === 'today-your-mp-sources')).toHaveLength(
+      1,
+    );
+    expect(catalogs.yourMP).toHaveBeenCalledTimes(1);
+    expect(catalogs.profileFor).not.toHaveBeenCalled();
+    expect(catalogs.electorateFor).not.toHaveBeenCalled();
+    expect(catalogs.bills).not.toHaveBeenCalled();
+    await act(async () => renderer.unmount());
+  });
+
+  test('a seat with no recorded member says so and opens the electorate', async () => {
+    jest.mocked(catalogs.yourMP).mockResolvedValue({
+      ...view,
+      members: { ...view.members, data: [] },
+    });
+    const renderer = await tile();
+    const card = renderer.root.findByType(Card);
+    expect(card.props.testID).toBe('today-your-mp-vacant');
+    expect(card.props.accessibilityLabel).toBe(
+      `Your electorate, ${seat.name}. No member is recorded for this seat yet.`,
+    );
+    expect(card.props.accessibilityHint).toBe('Opens the electorate');
+    expect(text(renderer, 'today-your-mp-none')).toBe(
+      'No member is recorded for this seat yet.',
+    );
+    expect(ids(renderer)).not.toContain('today-your-mp-member');
+    expect(ids(renderer)).not.toContain('today-your-mp-hook');
+    await act(async () => renderer.unmount());
+  });
+
+  test('at accessibility sizes the portrait stacks over the words and the electorate takes its own line', async () => {
+    dimensions.mockReturnValue({
+      width: 402,
+      height: 874,
+      scale: 3,
+      fontScale: 3.571,
+    });
+    const renderer = await tile();
+    expect(text(renderer, 'today-your-mp-seat')).toBe(seat.name);
+    const portrait = renderer.root.findByType(Portrait);
+    expect(StyleSheet.flatten(portrait.parent!.props.style).flexDirection).toBe(
+      'column',
+    );
+    for (const id of ['today-your-mp-name', 'today-your-mp-hook']) {
+      const node = renderer.root
+        .findAllByType(NativeText)
+        .find((n) => n.props.testID === id)!;
+      expect(node.props.numberOfLines).toBeUndefined();
+    }
+    await act(async () => renderer.unmount());
+  });
+
+  test('never stretches past a card\u2019s width on a wide single column', async () => {
+    const renderer = await tile();
+    const block = renderer.root.find(
+      (n) => typeof n.type === 'string' && n.props.testID === 'today-your-mp',
+    );
+    expect(StyleSheet.flatten(block.props.style)).toMatchObject({
+      width: '100%',
+      maxWidth: TILE_MAX_WIDTH,
+    });
+    expect(TILE_MAX_WIDTH).toBeLessThanOrEqual(600);
+    await act(async () => renderer.unmount());
+  });
+
+  test('the plain line is said only of a federal lower-house seat', () => {
+    expect(yourMPHook(seat)).toBe('Represents you in federal parliament');
+    expect(
+      yourMPHook({ jurisdiction: 'federal', chamber: 'senate' }),
+    ).toBeNull();
+    expect(
+      yourMPHook({ jurisdiction: 'vic', chamber: 'representatives' }),
+    ).toBeNull();
+  });
+
+  test('the spoken label drops what the record lacks', () => {
+    expect(
+      yourMPLabel({
+        name: 'Jo Briskey',
+        party: 'Labor',
+        electorate: 'Maribyrnong',
+        hook: 'Represents you in federal parliament',
+      }),
+    ).toBe(
+      'Your MP, Jo Briskey, Labor, Maribyrnong. Represents you in federal parliament.',
+    );
+    expect(
+      yourMPLabel({
+        name: 'Jo Briskey',
+        party: null,
+        electorate: 'Maribyrnong',
+        hook: null,
+      }),
+    ).toBe('Your MP, Jo Briskey, Maribyrnong.');
+  });
+});
+
+test('Today keeps the recorded member when their profile cannot be linked: the tile opens the electorate', async () => {
+  const unlinked = { ...directory, slugs: result({ ...slugs, slugs: {} }) };
+  const renderer = await tile({ directory: unlinked });
+  const member = view.members.data![0]!;
+  const card = renderer.root.findByType(Card);
+  expect(card.props.testID).toBe('today-your-mp-member');
+  expect(card.props.accessibilityHint).toBe('Opens the electorate');
+  expect(card.props.accessibilityLabel).toContain(member.person.name);
+  expect(text(renderer, 'today-your-mp-name')).toBe(member.person.name);
+  expect(ids(renderer)).not.toContain('today-your-mp-none');
+  await act(async () => renderer.unmount());
+});
+
+test('Your MP keeps the recorded member when their profile cannot be linked', async () => {
+  const unlinked = { ...directory, slugs: result({ ...slugs, slugs: {} }) };
+  let renderer!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(
+      <RepresentativesGroup
+        seat={seat}
+        directory={unlinked}
+        view={view}
+        electorate={electorate}
+      />,
+    );
+  });
+  const member = view.members.data![0]!;
+  const row = renderer.root
+    .findAllByType(PersonRow)
+    .find((node) => node.props.name === member.person.name);
+  expect(row).toBeDefined();
+  expect(row!.props.href).toBeUndefined();
+  expect(row!.props.party).toBe(member.party);
+  expect(
+    renderer.root.findAllByProps({ testID: 'your-member-none' }),
+  ).toHaveLength(0);
+  await act(async () => renderer.unmount());
+});
+
+test('Today cites the House roster alone, dated and labelled as saved when it is', () => {
+  const source = yourMPSources({
+    ...view,
+    members: {
+      ...view.members,
+      asAt: '2026-11-10',
+      stale: true,
+      savedAt: 123,
+      sources: [
+        { label: 'Fixture House roster', url: 'https://example.org/house' },
+      ],
+    },
+    senators: [
+      {
+        ...view.senators[0]!,
+        asAt: '2026-10-01',
+        sources: [
+          {
+            label: 'Fixture Senate roster',
+            url: 'https://example.org/senate',
+          },
+        ],
+      },
+    ],
+  });
+  // The senators no longer draw on Today, so their roster is not cited.
+  expect(source.asOf).toBe('2026-11-10');
+  expect(source.citation).toEqual([
+    { label: 'Fixture House roster', asOf: '2026-11-10' },
+  ]);
+  expect(source.originals).toEqual([
+    {
+      label: 'Fixture House roster',
+      url: 'https://example.org/house',
+      asOf: '2026-11-10',
+    },
+  ]);
+  expect(source.state).toBe('saved');
+  expect(source.savedAt).toBe(123);
+  expect(yourMPSources(view).state).toBeNull();
+});
+
+test('Latest shows a long gift title in full words, never cut at 79 characters', async () => {
+  // Build 61 on an iPhone Duo: "…provided by Endeavou…" on the Today card
+  // (the rows now live on Your MP and the profile).
+  const title =
+    'Fixture Cup Final: hospitality and a ticket to the match on 26/09/26 provided by Fixture Hospitality Group';
+  expect(title.length).toBeGreaterThan(80);
+  const records = [
+    {
+      key: 'register-fixture',
+      kind: 'register',
+      date: '2026-09-28',
+      action: 'Declared a gift',
+      title,
+      detail: '',
+      url: 'https://example.invalid/register',
+    },
+  ] as unknown as LatestRecord[];
+  // Default text size: at accessibility sizes the title runs in full.
+  const dimensions = jest
+    .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
+    .mockReturnValue({ width: 951, height: 669, scale: 3, fontScale: 1 });
+  let renderer!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(
+      <InsetGroup>
+        <LatestRows records={records} testID="your-mp-latest" />
+      </InsetGroup>,
     );
   });
   const node = renderer.root.findAll(
     (n) =>
-      typeof n.type === 'string' &&
-      n.props.testID === 'today-your-mp-latest-0-title',
+      typeof n.type === 'string' && n.props.testID === 'your-mp-latest-0-title',
   )[0];
   expect(node).toBeDefined();
   expect(node!.props.children).toBe(title);
@@ -249,8 +376,8 @@ test('Today shows a long gift title in full words, never cut at 79 characters', 
   dimensions.mockRestore();
 });
 
-// The real card delegates vote titles to LatestRows. Exercise its mounted
-// Text, not just an isolated wordSafe example, on the narrow Duo column.
+// Exercise LatestRows' mounted Text, not just an isolated wordSafe example,
+// on the narrow Duo column.
 test.each([
   ['AX3', 2.643],
   ['AX5', 3.571],
@@ -261,25 +388,17 @@ test.each([
     const platform = jest.replaceProperty(Platform, 'OS', 'ios');
     const title =
       'Online Safety Amendment (Strengthening Enforcement for the Social Media Minimum Age) Bill 2026 amendment';
-    mockLately = {
-      status: 'ready',
-      records: [
-        {
-          key: 'vote-fixture',
-          kind: 'vote',
-          date: '2026-09-28',
-          action: 'Voted for',
-          title,
-          detail: 'Third reading',
-          url: 'https://example.invalid/vote',
-        } as never,
-      ],
-    };
-    jest
-      .mocked(catalogs.profileFor)
-      .mockResolvedValue(
-        profileFor(view.members.data![0]!.person_id, fixtureCatalogs) as never,
-      );
+    const records = [
+      {
+        key: 'vote-fixture',
+        kind: 'vote',
+        date: '2026-09-28',
+        action: 'Voted for',
+        title,
+        detail: 'Third reading',
+        url: 'https://example.invalid/vote',
+      },
+    ] as unknown as LatestRecord[];
     let renderer!: TestRenderer.ReactTestRenderer;
     try {
       await act(async () => {
@@ -287,21 +406,15 @@ test.each([
           window: { ...window, width: 402, height: 678, fontScale },
         });
         renderer = TestRenderer.create(
-          <YourMPCard
-            seat={seat}
-            directory={directory}
-            stateSeatIds={[]}
-            attempt={0}
-            onRetry={jest.fn()}
-          />,
+          <InsetGroup>
+            <LatestRows records={records} testID="your-mp-latest" />
+          </InsetGroup>,
         );
       });
       const text = () =>
         renderer.root
           .findAllByType(NativeText)
-          .find(
-            (node) => node.props.testID === 'today-your-mp-latest-0-title',
-          )!;
+          .find((node) => node.props.testID === 'your-mp-latest-0-title')!;
       expect(text()).toBeDefined();
       expect(text().props.numberOfLines).toBeUndefined();
       const column = 110;

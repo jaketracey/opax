@@ -44,25 +44,22 @@ name: 66 My MP from first launch to the latest division and the official page
     timeout: 60000
 - assertVisible:
     id: today-your-mp-member
-    text: Anthony Albanese.*
+    text: Your MP, Anthony Albanese.*
 # end: first-launch-member
 - takeScreenshot: ${EVIDENCE}/66-member
-# budget: today-latest-vote
-- scrollUntilVisible:
-    element:
-      id: today-your-mp-latest-0
-    timeout: 30000
+# budget: today-member-profile
 - tapOn:
-    id: today-your-mp-latest-0
+    id: today-your-mp-member
 - extendedWaitUntil:
     visible:
-      id: bill-division-.*-body
+      id: person-screen-title
+      text: Anthony Albanese
     timeout: 60000
-# end: today-latest-vote
+# end: today-member-profile
 - assertVisible:
     id: BackButton
     text: Today
-- takeScreenshot: ${EVIDENCE}/66-latest-division
+- takeScreenshot: ${EVIDENCE}/66-member-profile
 - tapOn:
     id: BackButton
 - assertVisible:
