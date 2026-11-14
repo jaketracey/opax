@@ -179,6 +179,15 @@ export function receiptSplit(x, from, to) {
       }
     }
   }
+  // Returned/refunded entries retain their disclosed AEC receipt types in the
+  // all-receipt figure, but never contribute to donations given.
+  if (x.donation_exclusions) {
+    const excluded = receiptSplit(x.donation_exclusions, from, to);
+    if (excluded) {
+      out.returned = excluded.donations;
+      for (let i = 0; i < 2; i++) out.donations[i] -= excluded.donations[i];
+    }
+  }
   return out;
 }
 
@@ -196,10 +205,11 @@ export function otherReceiptsLine(name, party, split, {also = false, period = ''
   if (split.other[0]) parts.push(`${aud(split.other[0])} in other receipts (amounts other than donations or subscriptions)`);
   if (split.subscriptions[0]) parts.push(`${aud(split.subscriptions[0])} in subscriptions`);
   if (split.untyped[0]) parts.push(`${aud(split.untyped[0])} in receipts the return gave no type for`);
+  if (split.returned?.[0]) parts.push(`${aud(split.returned[0])} in receipts explicitly marked returned or refunded (excluded from donations)`);
   if (!parts.length) return '';
   const list = parts.length === 1 ? parts[0] : parts.slice(0, -1).join(', ') + ' and ' + parts.at(-1);
   // Other receipts already say what they are not; subscriptions and untyped receipts need the clause.
-  const clause = split.subscriptions[0] || split.untyped[0] ? ", which the AEC doesn't class as donations" : '';
+  const clause = (split.subscriptions[0] || split.untyped[0]) && !split.returned?.[0] ? ", which the AEC doesn't class as donations" : '';
   return `${name} ${also ? 'also ' : ''}recorded ${list} to ${party}${period ? ` in ${period}` : ''}${clause}.`;
 }
 

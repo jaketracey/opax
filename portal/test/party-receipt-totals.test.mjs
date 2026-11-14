@@ -153,7 +153,7 @@ test('the D1 party-money and money-connections rows carry the page\'s figures an
   }
   const full = JSON.parse(readFileSync(new URL('../public/graph/money-receipts.json', import.meta.url), 'utf8'));
   // Factual tables restore off-map sources; the drawing list retains the old cap.
-  for (const [label, partyId, expected, capped] of [['Labor', 'party:Labor', 9811, 300], ['Liberal', 'party:Liberal', 7827, 250]]) {
+  for (const [label, partyId, expected, capped] of [['Labor', 'party:Labor', 9866, 300], ['Liberal', 'party:Liberal', 7855, 250]]) {
     const d1 = party.filter(r => r.jurisdiction === 'federal' && r.to === label);
     assert.equal(d1.length, expected, label);
     const page = partyMoneyData(full, partyId).rows;

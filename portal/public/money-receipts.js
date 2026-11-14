@@ -1,10 +1,11 @@
 // Donation-only view of the uncapped export. Other Receipt is never a loan or a gift.
-import {receiptGraph,receiptFigures} from './donor-disclosure.js?v=4cacde8280';
+import {receiptGraph,receiptFigures} from './donor-disclosure.js?v=e0bc5a8cae';
 export function donationGraph(graph) {
-  const only = row => !row.by_type ? row : ({...row,
-    by_type: {donation_received: row.by_type.donation_received || 0},
+  const only = row => !row.by_type ? row : ({...row, donation_exclusions: undefined,
+    by_type: {donation_received: (row.by_type.donation_received || 0) - (row.donation_exclusions?.by_type?.donation_received || 0)},
     by_type_year: Object.fromEntries(Object.entries(row.by_type_year || {}).map(([year, types]) =>
-      [year, types.donation_received ? {donation_received: types.donation_received} : {}])),
+      [year, types.donation_received ? {donation_received: types.donation_received.map((value, i) =>
+        value - (row.donation_exclusions?.by_type_year?.[year]?.donation_received?.[i] || 0))} : {}])),
   });
   return receiptGraph({...graph, receiptMeasure: false,
     nodes: graph.nodes.map(n => {

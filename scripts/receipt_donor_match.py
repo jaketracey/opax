@@ -9,6 +9,45 @@ BRACKETS = re.compile(r"\(([^()\[\]]*)\)|\[([^()\[\]]*)\]")
 ANNOTATION = re.compile(r"\b(?:see|notes?|pages?|annotations?)\b", re.I)
 STATE = re.compile(r"\b(?:nsw|qld|vic|wa|sa|tas|act|nt|q|new south wales|queensland|victoria|"
                    r"western australia|south australia|tasmania|australian capital territory|northern territory)\b")
+RETURNED = re.compile(r"\b(?:returned|refunded)\b", re.I)
+TRANSACTION = re.compile(r"\b(?:return\w*|refund\w*|loans?|lend\w*|repay\w*|repaid|reimburse\w*|"
+                         r"revers\w*|cancel\w*|duplicates?|in[\s-]*kind|non[\s-]*cash)\b", re.I)
+LEGAL_ENTITY = re.compile(r"\b(?:pty|ltd|limited|p\s*/\s*l|subsidiar\w*|franchise\w*|"
+                          r"trustee\w*|trading|t\s*/\s*as|no\.?\s*\d+)\b", re.I)
+
+
+def has_returned_qualifier(name):
+    parts = [m.group(1) or m.group(2) or '' for m in BRACKETS.finditer(clean_name(name or ''))]
+    return any(RETURNED.search(part) and not LEGAL_ENTITY.search(part) for part in parts)
+
+
+def bracket_fold_guard(name, kind, industry=None):
+    """Brackets are not identity evidence when they describe a transaction/entity.
+
+    Only an individual's interior middle-name form supplies additional identity
+    recovery. Organisation descriptors (including acronyms, locations and business
+    units) remain with their resolved entity; punctuation alone cannot prove that
+    a franchise, subsidiary or branch is the same legal donor as a plain base.
+    This rule never depends on whether either entity fits on the map.
+    """
+    name = clean_name(name)
+    matches = list(BRACKETS.finditer(name))
+    parts = [m.group(1) or m.group(2) or '' for m in matches]
+    if any(TRANSACTION.search(part) for part in parts):
+        return 'transaction_qualifier'
+    if state_brackets(name):
+        return 'state_branch'
+    if any(LEGAL_ENTITY.search(part) for part in parts):
+        return 'entity_qualifier'
+    if kind == 'organisation' or industry not in (None, 'individual', 'other', 'unidentified'):
+        return 'organisation_qualifier'
+    if kind == 'individual' and matches and all(
+            re.search(r'[A-Za-z]$', name[:m.start()].strip())
+            and re.match(r'[A-Za-z]', name[m.end():].strip())
+            and re.fullmatch(r"[A-Za-z][A-Za-z .'-]*", m.group(1) or m.group(2) or '')
+            for m in matches):
+        return None
+    return 'identity_qualifier'
 
 
 def has_receipt_annotation(name):
@@ -102,7 +141,8 @@ class ReceiptDonorMatcher:
     def bracket_folds(self, active_ids=None):
         """Explicit uncapped identity recovery; ordinary match() never merges nodes.
 
-        Use the same bracket normalisation, candidate ambiguity and state guard.
+        Use the same bracket normalisation and candidate ambiguity. Preserve
+        transaction qualifiers, branches and separately resolved organisations.
         Require one plain base before checking kind; kind cannot break a tie.
         Only selected recipient identities participate, independent of map caps.
         """
@@ -128,8 +168,9 @@ class ReceiptDonorMatcher:
                 target = result.node_id
                 status = 'kind_mismatch'
                 if self.kinds[source] and self.kinds[source] == self.kinds[target]:
-                    status = 'folded'
-                    folds[source] = target
+                    status = bracket_fold_guard(node['label'], self.kinds[source], node.get('industry')) or 'folded'
+                    if status == 'folded':
+                        folds[source] = target
             decisions.append({'source': source, 'status': status, 'method': result.method,
                               'candidates': sorted(candidates), **({'target': folds[source]} if source in folds else {})})
         return folds, decisions

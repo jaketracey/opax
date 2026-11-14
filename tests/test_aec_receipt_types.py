@@ -808,3 +808,40 @@ def test_retained_donor_export_uses_uncapped_selection_and_keeps_receipt_types(t
     assert (retained['total'], retained['count']) == (1850, 3)
     assert retained['by_type'] == {'donation_received': 150, 'other_receipt': 900, 'loan': 800}
     assert retained['by_type_year']['2020-21']['donation_received'] == [150, 1]
+
+
+@pytest.mark.parametrize('name,qualifier,base_value,base_count,qualified_value,qualified_count,kind', [
+    ('Alex Hart', 'Donation Returned', 5000, 1, 20000, 1, 'Donation Received'),
+    ('Jordan Vale', 'Loan', 55000, 7, 23750, 8, 'Other Receipt'),
+])
+def test_uncapped_qualified_transactions_keep_their_own_identity(
+        tmp_path, name, qualifier, base_value, base_count, qualified_value, qualified_count, kind):
+    """Invented identities reproduce both reviewed live amounts, without private names."""
+    from scripts.export_money_receipts import export_receipts
+    path = tmp_path / 'db'
+    db = database(path)
+    qualified = f'{name} ({qualifier})'
+    rows = [annual(Value=str(base_value), **{'Received From': name}) for _ in range(base_count)]
+    rows += [annual(kind, Value=str(qualified_value), **{'Received From': qualified})
+             for _ in range(qualified_count)]
+    donations.process_zip(db, archive('AllAnnualData', {'Detailed Receipts.csv': rows}), 'AllAnnualData')
+    load(db, 'AllElectionsData', {})
+    load(db, 'AllReferendumData', {})
+    db.execute("UPDATE donations SET recipient_canonical='Labor',industry='individual'")
+    db.commit()
+    graph = export(path)
+    without_map = {**graph, 'nodes': [n for n in graph['nodes'] if n['kind'] == 'party'], 'edges': []}
+    for drawing in [graph, without_map]:
+        full, summary = export_receipts(db, drawing)
+        by_name = {n['label']: n for n in full['nodes']}
+        assert (by_name[name]['total'], by_name[name]['count']) == (base_value * base_count, base_count)
+        assert qualified not in by_name[name]['aliases']
+        assert (by_name[qualified]['total'], by_name[qualified]['count']) == (qualified_value * qualified_count, qualified_count)
+        assert by_name[qualified]['by_type'] == {
+            'donation_received' if kind == 'Donation Received' else 'other_receipt': qualified_value * qualified_count}
+        assert full['meta']['bracket_aliases']['counts']['transaction_qualifier'] == 1
+        if qualifier == 'Donation Returned':
+            assert summary['industries']['individual'] == {'Labor': 5000}
+            assert by_name[qualified]['donation_exclusions']['by_type'] == {'donation_received': 20000}
+        else:
+            assert 'donation_exclusions' not in by_name[qualified]

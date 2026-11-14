@@ -170,8 +170,8 @@ export const tool: ToolDefinition = {
     if (scope) scopeNote.push(`Selected figures: ${measure === 'donations' ? scope.replace(/^All receipt types/, 'Donations only') : scope}. Each receipt is counted once.`)
     const word = measure === 'donations' ? 'federal disclosed donations' : 'federal disclosed receipts'
     const measureNote = measure === 'donations'
-      ? "Figures count donations only: receipts the party's return types as Donation Received. Other receipt types (other receipts, subscriptions and receipts with no type) are given separately and are not donations. OPAX does not match receipts to the debts a return declares, so none is called a loan. Public funding is never a donor."
-      : 'Figures count every receipt type: donations, other receipts, subscriptions and receipts with no type. Only Donation Received is a donation. Public funding is never a donor.'
+      ? "Figures count donations only: receipts the party's return types as Donation Received, excluding entries explicitly marked returned or refunded. Other receipt types (other receipts, subscriptions and receipts with no type) are given separately and are not donations. OPAX does not match receipts to the debts a return declares, so none is called a loan. Public funding is never a donor."
+      : 'Figures count every receipt type: donations, other receipts, subscriptions and receipts with no type. Donation figures use Donation Received excluding entries explicitly marked returned or refunded. Public funding is never a donor.'
 
     if (group === 'industry') {
       if (donor) return limitations(env, 'An industry ranking cannot be restricted to one donor.')
@@ -267,7 +267,8 @@ export const tool: ToolDefinition = {
       const years = !requested.dated && split.otherYears[0] != null ? span(split.otherYears[0], split.otherYears[1]!) : period
       const text = otherReceiptsLine(name, recipient, split, { also: listed, period: `financial year${years.includes(' to ') ? 's' : ''} ${years}` })
       return { row: { donor: name, party: recipient, other_receipts_aud: split.other[0], subscriptions_aud: split.subscriptions[0], untyped_aud: split.untyped[0],
-        receipts: split.other[1] + split.subscriptions[1] + split.untyped[1], period }, citation: { kind: 'export' as const, text, value: split.all[0] - split.donations[0], url: siteUrl(env, '/money?' + params) } }
+        ...(split.returned ? {returned_receipts_aud:split.returned[0]} : {}),
+        receipts: split.other[1] + split.subscriptions[1] + split.untyped[1] + (split.returned?.[1] || 0), period }, citation: { kind: 'export' as const, text, value: split.all[0] - split.donations[0], url: siteUrl(env, '/money?' + params) } }
     })
     if (!picked.length && others.length) {
       const who = donor ? donorDisclosure(donor).name : 'any source in the published selection'

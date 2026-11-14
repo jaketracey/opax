@@ -148,3 +148,66 @@ def test_uncapped_bracket_only_identities_stay_separate_and_are_listed():
     folds, decisions = ReceiptDonorMatcher(nodes, selection).bracket_folds()
     assert folds == {}
     assert all(d['status'] == 'ambiguous' and d['candidates'] == ['one', 'two'] for d in decisions)
+
+
+@pytest.mark.parametrize('qualifier', [
+    'Donation Returned', 'funds returned', 'Refunded', 'Loan', 'In Kind',
+    'in-kind', 'non cash', 'repaid', 'reimbursement', 'cancelled', 'reversed', 'duplicate',
+])
+def test_transaction_qualifiers_never_fold_even_inside_a_personal_name(qualifier):
+    selection = ReceiptSelection({}, {}, {}, {}, set())
+    for label in [f'Alex Hart ({qualifier})', f'Alex ({qualifier}) Hart']:
+        lookup = ReceiptDonorMatcher([
+            {'id': 'base', 'kind': 'donor', 'label': 'Alex Hart', 'industry': 'individual'},
+            {'id': 'qualified', 'kind': 'donor', 'label': label, 'industry': 'individual'},
+        ], selection)
+        folds, [decision] = lookup.bracket_folds()
+        assert folds == {}
+        assert decision['status'] == 'transaction_qualifier'
+
+
+@pytest.mark.parametrize('base,qualified,industry,status', [
+    ('Example Audit', 'Example Audit (NSW)', 'finance', 'state_branch'),
+    ('Example Realty', 'Example Realty (Alice Springs)', 'property', 'organisation_qualifier'),
+    ('Example Union', 'Example Union (Example Subsidiary P/L)', 'unions', 'entity_qualifier'),
+    ('Example Energy', 'Example Energy (Example Power Pty Ltd)', 'fossil_fuels', 'entity_qualifier'),
+    ('Example Holdings Ltd', 'Example Holdings (No. 2092) Ltd', 'other', 'entity_qualifier'),
+    ('Example Hospitality', 'Example Hospitality (T/as Example Bar)', 'hospitality', 'entity_qualifier'),
+])
+def test_separately_resolved_branches_and_business_entities_are_not_bracket_aliases(base, qualified, industry, status):
+    from scripts.donor_disclosure import exact_alias_index
+    aliases = {base: 'national', qualified: 'branch'}
+    selection = ReceiptSelection(aliases, exact_alias_index(aliases),
+                                 {'national': 'company', 'branch': 'company'}, {}, set())
+    lookup = ReceiptDonorMatcher([
+        {'id': 'base', 'kind': 'donor', 'label': base, 'industry': industry},
+        {'id': 'qualified', 'kind': 'donor', 'label': qualified, 'industry': industry},
+    ], selection)
+    folds, [decision] = lookup.bracket_folds()
+    assert folds == {}
+    assert decision['status'] == status
+    assert lookup.match(qualified).node_id == 'qualified'
+
+
+def test_company_industry_blocks_personal_middle_name_heuristic_despite_resolver_kind():
+    from scripts.donor_disclosure import exact_alias_index
+    aliases = {'Example Realty': 'base', 'Example (Alice Springs) Realty': 'branch'}
+    selection = ReceiptSelection(aliases, exact_alias_index(aliases),
+                                 {'base': 'individual', 'branch': 'individual'}, {}, set())
+    nodes = [{'id': label, 'label': label, 'kind': 'donor', 'industry': 'property'} for label in aliases]
+    folds, [decision] = ReceiptDonorMatcher(nodes, selection).bracket_folds()
+    assert folds == {}
+    assert decision['status'] == 'organisation_qualifier'
+
+
+@pytest.mark.parametrize('name,returned', [
+    ('Alex Hart (Donation Returned)', True),
+    ('Alex Hart (funds returned)', True),
+    ('Alex Hart (Refunded)', True),
+    ('Example (Returns Processing Pty Ltd)', False),
+    ('Example (Returned Goods Pty Ltd)', False),
+    ('Alex Hart (In Kind)', False),
+])
+def test_returned_giving_exclusion_requires_an_explicit_transaction_not_a_company_name(name, returned):
+    from scripts.receipt_donor_match import has_returned_qualifier
+    assert bool(has_returned_qualifier(name)) is returned

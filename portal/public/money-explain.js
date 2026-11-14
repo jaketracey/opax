@@ -1,9 +1,9 @@
 import {donationGraph} from './money-receipts.js';
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,receiptGraph,receiptScopeLabel} from './donor-disclosure.js?v=4cacde8280';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,receiptGraph,receiptScopeLabel,receiptSplit} from './donor-disclosure.js?v=e0bc5a8cae';
 // receiptGraph is shared with every money page (donor-disclosure.js); re-exported for the tests that read it here.
 export {receiptGraph};
-import {loadDonorViewIndex} from './donor-views.js?v=f5cf08678b';
-import {partyReturnFigures, industryName} from './register-tables.js?v=c59a1d42b7';
+import {loadDonorViewIndex} from './donor-views.js?v=a29d0e35e4';
+import {partyReturnFigures, industryName} from './register-tables.js?v=86b2c677e1';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph
@@ -588,7 +588,9 @@ export function receiptTypeNote(flow) {
   const split = rest > 0
     ? ` Of ${shortMoney(flow.total)}, ${shortMoney(donations)} is Donation Received and ${shortMoney(rest)} is other types.`
     : ' All of it is Donation Received.';
-  return `${intro} This total counts every type, so it can include receipts that are not gifts.${split} The AEC’s detailed receipts list each line with its type.`;
+  const returned = flow.edges.reduce((sum, edge) => sum + (receiptSplit(edge)?.returned?.[0] || 0), 0);
+  const qualifier = returned ? ` ${shortMoney(returned)} is explicitly marked returned or refunded and excluded from donation figures.` : '';
+  return `${intro} This total counts every type, so it can include receipts that are not gifts.${split}${qualifier} The AEC’s detailed receipts list each line with its type.`;
 }
 
 /** The disclosure rules behind each year, newest first, for the timeline. */

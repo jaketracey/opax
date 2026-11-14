@@ -9,11 +9,12 @@ from copy import deepcopy
 import json
 import hashlib
 from pathlib import Path
+from parli.ingest.aec_receipts import normal_type
 
 from scripts.aec_receipt_selection import load_selection
 from scripts.aec_receipt_types import add_receipt, receipt_cells, receipt_fields
 from scripts.export_money_graph import associated_fields, load_associated_register, norm_key, year_of
-from scripts.receipt_donor_match import ReceiptDonorMatcher
+from scripts.receipt_donor_match import ReceiptDonorMatcher, has_returned_qualifier
 
 
 def merge_receipt_cells(target, source):
@@ -53,6 +54,7 @@ def export_receipts(db, graph, *, recover_brackets=True):
             if eid:
                 entity_nodes[eid] = node['id']
     cells, node_cells, names = defaultdict(receipt_cells), defaultdict(receipt_cells), defaultdict(set)
+    donation_exclusions = defaultdict(receipt_cells)
     excluded = Counter()
     donor_parties = defaultdict(lambda: defaultdict(lambda: {'total': 0}))
     for donor, recipient, amount, period, kind, recipient_kind in db.execute(
@@ -84,6 +86,11 @@ def export_receipts(db, graph, *, recover_brackets=True):
         add_receipt(cells[source, target], kind, period, amount)
         add_receipt(node_cells[source], kind, period, amount)
         add_receipt(node_cells[target], kind, period, amount)
+        # Preserve the disclosed AEC type and all-receipt figure. A name explicitly
+        # marking money returned/refunded cannot contribute to giving rankings.
+        if normal_type(kind) == 'donation_received' and has_returned_qualifier(donor):
+            for key in ((source, target), source, target):
+                add_receipt(donation_exclusions[key], kind, period, amount)
     # Identity recovery runs over the full selection, before any factual totals
     # are published. The drawing matcher retains its existing lookup behaviour.
     for source, spellings in names.items():
@@ -93,6 +100,8 @@ def export_receipts(db, graph, *, recover_brackets=True):
     folds, decisions = matcher.bracket_folds(active) if recover_brackets else ({}, [])
     for source, target in folds.items():
         merge_receipt_cells(node_cells[target], node_cells.pop(source))
+        if source in donation_exclusions:
+            merge_receipt_cells(donation_exclusions[target], donation_exclusions.pop(source))
         names[target].update([nodes[source]['label'], *nodes[source].get('aliases', []), *names.pop(source, set())])
         for party, values in donor_parties.pop(source, {}).items():
             donor_parties[target][party]['total'] += values['total']
@@ -100,6 +109,8 @@ def export_receipts(db, graph, *, recover_brackets=True):
     for (source, target), values in list(cells.items()):
         if source in folds:
             merge_receipt_cells(cells[folds[source], target], values)
+            if (source, target) in donation_exclusions:
+                merge_receipt_cells(donation_exclusions[folds[source], target], donation_exclusions.pop((source, target)))
             del cells[source, target]
     def fields(cells):
         typed = receipt_fields(cells)
@@ -115,11 +126,14 @@ def export_receipts(db, graph, *, recover_brackets=True):
                 'byYear': {y: [round(c[0], 2), c[1]] for y, c in sorted(years.items())},
                 'firstYear': min(map(int, years)) if years else None,
                 'lastYear': max(map(int, years)) if years else None}
+    def exclusions(key):
+        return {'donation_exclusions': receipt_fields(donation_exclusions[key])} if key in donation_exclusions else {}
     for node in nodes.values():
         if node['kind'] == 'donor':
             # Drawing clusters can disagree with the audit's canonical industry.
             node.pop('group', None)
         selected = fields(node_cells[node['id']])
+        node.update(exclusions(node['id']))
         if node['kind'] == 'party':
             # Party receipt questions retain their separate whole-return contract.
             node.update(selected if 'total' not in node else {k: v for k, v in selected.items() if k.startswith('by_type')})
@@ -132,7 +146,7 @@ def export_receipts(db, graph, *, recover_brackets=True):
             node['aliases'] = sorted(set(node.get('aliases', [])) | (names[node['id']] - {node['label']}))
             eid = selection.entity(node['label'])
             node.update(associated_fields({'eid': eid, 'names': [node['label'], *node['aliases']], 'parties': donor_parties[node['id']]}, register))
-    edges = [{'source': s, 'target': t, **fields(c)} for (s, t), c in sorted(cells.items())]
+    edges = [{'source': s, 'target': t, **fields(c), **exclusions((s, t))} for (s, t), c in sorted(cells.items())]
     # Declaration-only flows remain available as declarations, never receipt totals.
     edges.extend({**deepcopy(e), 'source': folds.get(e['source'], e['source'])} for e in graph['edges'] if not e.get('grant') and not e.get('flow')
                  and not any(e.get('by_type', {}).get(k, 0) for k in e.get('by_type', {}) if k != 'public_funding')
@@ -140,7 +154,8 @@ def export_receipts(db, graph, *, recover_brackets=True):
     scope = ('Uncapped recipient-side itemised party receipts selected by '
              'aec_receipt_selection.ReceiptSelection; public funding, government/internal '
              'payers, reviewed outliers and nonpositive rows excluded. Donor declarations '
-             'are never added. Donations count Donation Received only; no loans are inferred.')
+             'are never added. Donations count Donation Received only, excluding explicitly '
+             'returned/refunded entries; their original types remain in all-receipt figures. No loans are inferred.')
     meta = {k: deepcopy(v) for k, v in graph['meta'].items() if k.startswith('party_return')}
     meta.update({'generated': graph['meta'].get('generated'), 'jurisdiction': 'federal',
                  'uncapped': True, 'source': 'AEC recipient returns', 'methodology': scope,
@@ -151,10 +166,11 @@ def export_receipts(db, graph, *, recover_brackets=True):
     statuses = Counter(row['status'] for row in decisions)
     meta['bracket_aliases'] = {
         'method': 'ReceiptDonorMatcher.brackets',
-        'rule': 'Bracket-bearing canonical source labels fold into one plain base of the same individual/organisation kind. Base ambiguity is never broken by kind, state, year, amount or map membership.',
+        'rule': 'Only interior personal middle-name brackets fold into one plain individual base of the same known kind. Transaction qualifiers, state branches and separately resolved organisation/entity descriptors stay separate. Base ambiguity is never broken by kind, state, year, amount or map membership.',
         'counts': {'bracket_form_entities': len(decisions),
                    'bracket_split_entities': sum(bool(row['candidates']) for row in decisions),
-                   **{status: statuses[status] for status in ('folded', 'ambiguous', 'kind_mismatch', 'state_mismatch', 'no_base')}},
+                   **{status: statuses[status] for status in ('folded', 'ambiguous', 'kind_mismatch', 'state_mismatch', 'no_base',
+                      'transaction_qualifier', 'state_branch', 'entity_qualifier', 'organisation_qualifier', 'identity_qualifier')}},
         'decisions': [{**{key: value for key, value in row.items() if key not in ('source', 'target', 'candidates')},
                        'source_sha256': private_key(row['source']),
                        'candidate_sha256': [private_key(value) for value in row['candidates']],
@@ -166,7 +182,8 @@ def export_receipts(db, graph, *, recover_brackets=True):
     sums = defaultdict(lambda: defaultdict(float))
     for edge in edges:
         industry = nodes[edge['source']].get('industry', 'other')
-        sums[industry][nodes[edge['target']]['label']] += edge.get('by_type', {}).get('donation_received', 0)
+        sums[industry][nodes[edge['target']]['label']] += (edge.get('by_type', {}).get('donation_received', 0)
+            - edge.get('donation_exclusions', {}).get('by_type', {}).get('donation_received', 0))
     summary = {'meta': {'schema': 1, 'generated': meta['generated'], 'uncapped': True,
                         'measure': 'donation_received', 'selection': scope},
                'industries': {ind: {party: round(amount, 2) for party, amount in sorted(parties.items()) if amount}

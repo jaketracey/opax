@@ -1,5 +1,7 @@
 # Row 173 merge-forward and uncapped bracket recovery
 
+**Historical baseline; the qualifier review report supersedes the broad folding rule and census below.**
+
 Merges main `fdba7591835bd9937da77d6417a29dd27879f312` into `im/ask-money-uncapped`. The orchestrator ruling supersedes the earlier stop report: the reviewed $891,049 / 23-receipt pin is retained. No private individual name is hard-coded in this report, code or tests.
 
 ## Fix and scope
@@ -19,8 +21,10 @@ Row 169 failed because its saved fixture served only the drawing path. It now se
 | Folded | 89 |
 | Ambiguous; retained and listed | 12 |
 | Different or unavailable kind; retained | 15 |
-| State mismatch | 0 |
+| Different explicitly state-labelled aliases rejected by the old lookup guard | 0 |
 | No other base; retained | 343 |
+
+The old guard allowed every branch to match an unqualified base; this zero did **not** protect national bodies from branch merges. The qualifier review preserves these identities instead.
 
 The 89 folds move **$8,152,511 / 261 typed receipts** between source identities. Every party `by_type` and `by_type_year` cell is identical before and after recovery: no gift is added, removed or counted twice. The [complete audit JSON](2026-11-14-uncapped-bracket-folds.json) lists every decision (including all 12 ambiguous entities and candidate hashes), the fold ledger, the independent pre-fold SQL industry recount and all post-fold industry/party values. Hashes identify private samples instead of names.
 
