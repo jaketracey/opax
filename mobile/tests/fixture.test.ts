@@ -5,6 +5,8 @@ import { resolve } from 'node:path';
 import { readFileSync } from 'node:fs';
 import snapshot from '../scripts/fixture-snapshot.json';
 import {
+  decodeBill,
+  decodeBillIndex,
   decodeEdition,
   decodeInterest,
   decodeRoster,
@@ -195,6 +197,31 @@ test.each(
     files[path],
   );
 });
+// The Bills list is the whole pinned index, so every row must open. On 14 Nov
+// an iPad split capture showed "This bill isn't in OPAX" beside a selected
+// row (au-federal-r7544): the fixture pinned the index but only a third of
+// the bill files, while production serves them all. Pin a new bill file in
+// scripts/fixtures/directory-snapshot.json, at the same sourceCommit.
+test('every bill in the served Bills list opens: its file is served and decodes as that bill', async () => {
+  const list = await request('/bills/index.json');
+  expect(list.status).toBe(200);
+  const keys = decodeBillIndex(JSON.parse(list.body)).bills.map((b) => b.key);
+  expect(keys.length).toBeGreaterThan(2900);
+  expect(keys).toContain('au-federal-r7544');
+  const failures: string[] = [];
+  const queue = [...keys];
+  await Promise.all(
+    Array.from({ length: 8 }, async () => {
+      for (let key = queue.shift(); key; key = queue.shift()) {
+        const detail = await request(`/bills/${key}.json`);
+        if (detail.status !== 200) failures.push(`${key}: ${detail.status}`);
+        else if (decodeBill(JSON.parse(detail.body)).key !== key)
+          failures.push(`${key}: decodes as another bill`);
+      }
+    }),
+  );
+  expect(failures).toEqual([]);
+}, 60_000);
 test.each(['person', 'interest', 'pay', 'expense'])(
   'local catalog search serves %s without outbound requests',
   async (kind) => {
