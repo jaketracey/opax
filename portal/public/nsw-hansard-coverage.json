@@ -52,7 +52,7 @@
         "2023-11-29",
         "2023-11-30"
       ],
-      "status": "known, awaiting approval",
+      "status": "known, incomplete",
       "incomplete_dates": [
         "2023-05-09",
         "2023-05-10",
@@ -149,7 +149,7 @@
         "2024-10-23",
         "2024-10-24"
       ],
-      "status": "known, awaiting approval",
+      "status": "known, incomplete",
       "incomplete_dates": [
         "2024-02-06",
         "2024-02-07",
@@ -246,7 +246,7 @@
         "2023-11-29",
         "2023-11-30"
       ],
-      "status": "known, awaiting approval",
+      "status": "known, incomplete",
       "incomplete_dates": [
         "2023-05-09",
         "2023-05-10",
@@ -340,7 +340,7 @@
         "2024-10-23",
         "2024-10-24"
       ],
-      "status": "known, awaiting approval",
+      "status": "known, incomplete",
       "incomplete_dates": [
         "2024-02-06",
         "2024-02-07",
@@ -390,6 +390,6 @@
     }
   ],
   "basis": "Live search observation supplied by the owner: 2023 empty in both chambers; 2024 has November only. Missing dates use the NSW API calendar.",
-  "acquisition_enabled": false,
-  "publication_enabled": false
+  "acquisition_enabled": true,
+  "publication_enabled": true
 }

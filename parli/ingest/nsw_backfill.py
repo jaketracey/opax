@@ -18,6 +18,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 from parli.ingest import nsw_hansard as adapter, nsw_publication as publication
+from parli.ingest import backfill_guard as growth
 from parli.ingest.speaker_names import normalize_speaker
 
 START = date(2023, 1, 1)
@@ -25,7 +26,7 @@ END = date(2025, 2, 28)
 DEFAULT_CAP = 4
 DEFAULT_BUDGET_S = 1200
 # Conservative allowances, shared convention with the Senate lane. Actual
-# publication stays in normal refresh; no KB calls are made by this stage.
+# publication stays in normal refresh; this stage only reads KB counters.
 PUBLISH_DOCS_PER_SECOND = 2
 SYNC_PREPARATION_S = 120
 PARSER_VERSION = publication.PARSER_VERSION
@@ -90,7 +91,7 @@ def known_gaps(calendar, counts, progress=None):
         group = groups.setdefault(key, {"source": "nsw_hansard", "chamber": chamber,
             "year": int(key[1]), "expected_days": 0, "missing_dates": [], "incomplete_dates": [],
             "held_turns": 0, "publication_pending": 0, "publication_failed": 0, "stage_errors": 0,
-            "status": "known, incomplete" if publication.approved() else "known, awaiting approval"})
+            "status": "known, incomplete"})
         group["expected_days"] += 1
         missing = counts.get((chamber, day), 0) == 0
         if missing:
@@ -106,7 +107,7 @@ def known_gaps(calendar, counts, progress=None):
 def coverage_receipt(calendar, counts, progress=None):
     return {"schema": 1, "source": "nsw_hansard", "discovery": "complete",
             "checked_at": datetime.now(timezone.utc).isoformat(),
-            "acquisition_enabled": os.environ.get("OPAX_BACKFILL_NSW", "0") == "1",
+            "acquisition_enabled": publication.approved(),
             "publication_enabled": publication.approved(),
             "start": str(START), "end": str(END), "gaps": known_gaps(calendar, counts, progress)}
 
@@ -274,10 +275,14 @@ def stage_day(db, sitting, revision=None):
 
 
 def run(db, *, start=START, end=END, cap=DEFAULT_CAP, budget_s=DEFAULT_BUDGET_S,
-        coverage_path=None, receipt_path=None, publication_state_path=None):
+        coverage_path=None, receipt_path=None, publication_state_path=None, guard=None, kb=None):
     bounds(start, end)
-    if cap < 0 or not math.isfinite(budget_s) or budget_s <= 0:
-        raise ValueError("NSW cap must be non-negative and budget must be positive and finite")
+    if not 0 <= cap <= DEFAULT_CAP or not math.isfinite(budget_s) or not 0 < budget_s <= DEFAULT_BUDGET_S:
+        raise ValueError("NSW cap must be 0..4 and budget must be positive and at most 1200 seconds")
+    # A standalone rehearsal omits the remote guard. The nightly CLI supplies
+    # it before opening its writable DB, then this loop checks each checkpoint.
+    if guard:
+        guard.ensure_running()
     began = time.monotonic()
     previous_deadline = adapter.REQUEST_DEADLINE
     adapter.REQUEST_DEADLINE = began + budget_s
@@ -318,6 +323,8 @@ def run(db, *, start=START, end=END, cap=DEFAULT_CAP, budget_s=DEFAULT_BUDGET_S,
             result["sync_preparation_allowance_s"] = SYNC_PREPARATION_S
             adapter.REQUEST_DEADLINE -= SYNC_PREPARATION_S
         for sitting in todo[:cap]:
+            if guard:
+                guard.ensure_running()
             check_load()
             current = sitting
             started = time.monotonic()
@@ -330,6 +337,8 @@ def run(db, *, start=START, end=END, cap=DEFAULT_CAP, budget_s=DEFAULT_BUDGET_S,
             result["days"].append({"date": sitting["date"], "chamber": sitting["chamber_code"],
                                    "toc_id": sitting["toc_doc_id"], "seconds": round(time.monotonic()-started, 3), **day_result})
             result["inserted"] += day_result["inserted"]
+            if guard and len(result['days']) % growth.CHECK_DAYS == 0:
+                guard.check(kb, 'nsw')
             result["publish_allowance_s"] += day_result.get("publish_allowance_s", 0)
             key = (sitting['chamber_code'], sitting['date'])
             if day_result['inserted'] and not counts.get(key, 0):
@@ -382,7 +391,22 @@ def run(db, *, start=START, end=END, cap=DEFAULT_CAP, budget_s=DEFAULT_BUDGET_S,
     finally:
         db.set_progress_handler(None, 0)
         adapter.REQUEST_DEADLINE = previous_deadline
+        # Budget/refusal exits still retain held turns and publication debt.
+        # Reuse the completed occupancy scan; never make an unknown scan zero.
+        if result['missing_before'] is not None and 'incomplete_left' not in result:
+            progress = publication.progress(db, publication.read_state(publication_state_path))
+            gaps = result['coverage_gaps'] = known_gaps(calendar, counts, progress)
+            result['incomplete_left'] = sum(len(g['incomplete_dates']) for g in gaps)
+            for field in ('held_turns', 'publication_pending', 'publication_failed'):
+                result[field] = sum(g[field] for g in gaps)
         result["seconds"] = round(time.monotonic() - began, 3)
+        if guard:
+            # Include held turns and publication backlog, not only occupancy.
+            guard.progress('nsw', remaining=result.get('incomplete_left', result['missing_left']),
+                           cap=cap, stop=result['stop'], done=len(result['days']),
+                           held_turns=result.get('held_turns'),
+                           publication_pending=result.get('publication_pending'),
+                           publication_failed=result.get('publication_failed'))
         if receipt_path:
             write_json(receipt_path, result)
         print("NSW backfill " + json.dumps(result), flush=True)

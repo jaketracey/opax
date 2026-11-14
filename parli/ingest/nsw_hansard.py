@@ -446,11 +446,19 @@ def main():
     parser.add_argument("--coverage-json", type=Path)
     parser.add_argument("--receipt-json", type=Path)
     parser.add_argument("--publication-state", type=Path)
+    parser.add_argument("--growth-guard", action="store_true",
+                        help="Nightly: read KB counters and enforce the shared growth ledger")
     fts.add_argument(parser)
     args = parser.parse_args()
 
     if args.backfill_missing_days:
         from parli.ingest import nsw_backfill
+        from parli.ingest import backfill_guard as growth
+        if not growth.enabled('nsw'):
+            print('NSW backfill disabled by OPAX_NSW_BACKFILL=0')
+            return
+        guard = growth.Guard()
+        guard.ensure_running()
         if args.dry_run or args.chamber or args.no_resume:
             parser.error("Bounded repair uses its own atomic checkpoints; select a separate OPAX_DB for rehearsal")
         db_path = os.environ.get("OPAX_DB")
@@ -461,6 +469,12 @@ def main():
         nsw_backfill.bounds(start, end)
         cap = int(os.environ.get("OPAX_BACKFILL_NSW_CAP", nsw_backfill.DEFAULT_CAP))
         budget = float(os.environ.get("OPAX_BACKFILL_NSW_BUDGET_S", nsw_backfill.DEFAULT_BUDGET_S))
+        kb = None
+        if args.growth_guard:
+            from parli.arag import AragConfig, KbClient, load_dotenv
+            load_dotenv()
+            kb = KbClient(AragConfig.from_env())
+            guard.check(kb, 'nsw')
         # Open an existing database only. Never initialise the legacy default.
         path = Path(db_path).expanduser().resolve()
         with Path(str(path) + ".nsw-backfill.lock").open("a") as lock:
@@ -469,7 +483,8 @@ def main():
                 db.execute("PRAGMA foreign_keys=ON")
                 nsw_backfill.run(db, start=start, end=end, cap=cap, budget_s=budget,
                                  coverage_path=args.coverage_json, receipt_path=args.receipt_json,
-                                 publication_state_path=args.publication_state)
+                                 publication_state_path=args.publication_state,
+                                 guard=guard if args.growth_guard else None, kb=kb)
         return
 
     start = date.fromisoformat(args.start or "2020-01-01")

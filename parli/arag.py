@@ -24,6 +24,8 @@ which scripts/arag_provision.py gates behind cost approval.
 """
 
 import json
+from contextlib import contextmanager
+from contextvars import ContextVar
 import os
 import time
 from dataclasses import dataclass
@@ -37,6 +39,17 @@ DEFAULT_ZONE = "aws-ap-southeast-2-1"
 # Transient statuses worth retrying (backpressure 429 is handled separately).
 _RETRY_STATUSES = {500, 502, 503, 504}
 _MAX_RETRIES = 6
+_RESPONSE_OBSERVER = ContextVar('progress_response_observer', default=None)
+
+
+@contextmanager
+def observe_responses(callback):
+    """Bounded, fail-closed repair requests; normal requests keep their policy."""
+    token = _RESPONSE_OBSERVER.set(callback)
+    try:
+        yield
+    finally:
+        _RESPONSE_OBSERVER.reset(token)
 
 
 def rag_base(zone: str) -> str:
@@ -94,6 +107,9 @@ def _request(
     told (capped 15 min/cycle, 24 h total per request) instead of failing."""
     attempt = 0
     bp_waited = 0.0
+    observer = _RESPONSE_OBSERVER.get()
+    if observer:
+        timeout, max_retries = min(timeout, 20), 0
     while True:
         try:
             res = requests.request(
@@ -108,6 +124,16 @@ def _request(
             attempt += 1
             continue
 
+        if observer:
+            observer(res.status_code, '' if res.ok else res.text)
+        elif not res.ok and os.environ.get('OPAX_BACKFILL_STATE_DIR'):
+            # Ordinary refresh requests also close the shared repair gate on
+            # quota/billing refusal, without changing their own failure policy.
+            from parli.ingest.backfill_guard import Guard, Stopped
+            try:
+                Guard().response(res.status_code, res.text)
+            except Stopped:
+                pass
         if res.ok:
             if res.status_code == 204 or not res.content:
                 return None

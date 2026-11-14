@@ -394,3 +394,58 @@ def test_http_error_body_budget_is_checked_and_closed(monkeypatch):
     with pytest.raises(n.BudgetSpent):real(n.API_BASE+'/year/2023')
     assert body.closed
     assert opener.open.call_count==1
+
+
+def test_hard_cap_and_budget_cannot_be_raised(db):
+    for cap, seconds in [(5,1200),(-1,1200),(4,1201),(4,float('nan'))]:
+        with pytest.raises(ValueError):
+            b.run(db, cap=cap, budget_s=seconds)
+    n.get_sitting_days.assert_not_called()
+
+
+def test_shared_stop_blocks_nightly_before_database_or_source(monkeypatch, tmp_path):
+    from parli.ingest import backfill_guard as growth
+    monkeypatch.setenv('OPAX_BACKFILL_STATE_DIR', str(tmp_path))
+    (tmp_path / 'backfill.STOP').touch()
+    monkeypatch.setenv('OPAX_DB', str(tmp_path / 'never-created.sqlite'))
+    monkeypatch.setattr('sys.argv', ['nsw_hansard', '--backfill-missing-days', '--growth-guard'])
+    with pytest.raises(growth.Stopped):
+        n.main()
+    assert not (tmp_path / 'never-created.sqlite').exists()
+    n.get_sitting_days.assert_not_called()
+
+
+def test_single_off_switch_blocks_nightly_before_database_or_source(monkeypatch, tmp_path):
+    monkeypatch.setenv('OPAX_NSW_BACKFILL', '0')
+    monkeypatch.setenv('OPAX_DB', str(tmp_path / 'never-created.sqlite'))
+    monkeypatch.setattr('sys.argv', ['nsw_hansard', '--backfill-missing-days', '--growth-guard'])
+    n.main()
+    assert not (tmp_path / 'never-created.sqlite').exists()
+    n.get_sitting_days.assert_not_called()
+
+
+def test_nightly_stage_updates_shared_status_with_incomplete_not_only_empty_days(db, tmp_path):
+    from parli.ingest import backfill_guard as growth
+    guard = growth.Guard(tmp_path)
+    result = b.run(db, guard=guard)
+    tracked = guard.read()['stages']['nsw']
+    assert result['missing_left'] == 0 and result['incomplete_left'] == 1
+    assert tracked['days_remaining'] == 1 and tracked['days_done'] == 1 and tracked['cap'] == 4
+    assert b.run(db, guard=guard)['inserted'] == 0
+
+
+def test_budget_exit_reports_held_days_as_incomplete_after_committing_a_day(db, tmp_path, monkeypatch):
+    from parli.ingest import backfill_guard as growth
+    guard = growth.Guard(tmp_path)
+    n.get_sitting_days.return_value = [SITTING, {**SITTING,'toc_doc_id':'second','date':'2023-05-10'}]
+    original = b.stage_day
+    def checkpoint_then_budget(*args):
+        result = original(*args)
+        monkeypatch.setattr(b,'check_load',Mock(side_effect=n.BudgetSpent('after checkpoint')))
+        return result
+    monkeypatch.setattr(b,'stage_day',checkpoint_then_budget)
+    result = b.run(db,guard=guard)
+    assert result['stop'] == 'budget' and len(result['days']) == 1
+    assert result['missing_left'] == 1 and result['incomplete_left'] == 2
+    assert result['held_turns'] == 1
+    assert guard.read()['stages']['nsw']['days_remaining'] == 2

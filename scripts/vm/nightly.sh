@@ -83,6 +83,7 @@ if [ -f "$ENV_FILE" ]; then set -a; . "$ENV_FILE"; set +a; fi
 BRANCH="${OPAX_BRANCH:-main}"
 STATUS_BRANCH="${OPAX_STATUS_BRANCH:-nightly-status}"
 PIPE="$HOME/.cache/autoresearch/pipeline"
+export OPAX_BACKFILL_STATE_DIR="${OPAX_BACKFILL_STATE_DIR:-$PIPE}"
 TODAY=$(TZ=Australia/Sydney date +%F)
 STARTED_AT=$(date -u +%FT%TZ)
 LOGFILE="$PIPE/nightly-$TODAY.log"
@@ -164,6 +165,10 @@ warnings, failures = rest[:int(nwarn)], rest[int(nwarn):]
 from pathlib import Path
 from datetime import date
 from scripts.vm.periodic_state import snapshot
+from parli.ingest.backfill_guard import state_dir, status as backfill_status
+backfill = backfill_status(state_dir(), day)
+if backfill.get('warning'):
+    warnings.append('Backfill growth guard: ' + backfill['warning'])
 try:
     periodic_state = snapshot(Path(path).parent / 'periodic-refresh-v1.json', date.fromisoformat(day))
 except (OSError, ValueError, KeyError, TypeError):
@@ -176,7 +181,7 @@ for receipt in [Path(path).parent / 'source-access.json', *(Path(path).parent / 
 json.dump({"date": day, "run": run, "status": status, "started": started,
            "finished": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
            "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures, "warnings": warnings,
-           "paused_sources": paused_sources, "periodic_state": periodic_state},
+           "paused_sources": paused_sources, "periodic_state": periodic_state, "backfill": backfill},
           open(path, "w"), indent=1)
 PYEOF
 }

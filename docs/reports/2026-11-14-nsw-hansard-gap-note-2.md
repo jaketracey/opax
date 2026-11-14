@@ -1,5 +1,7 @@
 # NSW Hansard repair review changes, 14 November 2026
 
+The spend hold and operating switches below are superseded by [note-3](2026-11-14-nsw-hansard-gap-note-3.md), following Jake's approval at 13:10. The parser, scope and rehearsal evidence remain applicable.
+
 This supersedes the operating defaults, scope, parser results and publication claims in [the original report](2026-11-14-nsw-hansard-gap.md). The branch was rebased onto `origin/main` at `2445af686`. It ships with acquisition **off** and publication **off**, pending Jake's approval of the hub's estimated NSW KB spend, approximately US$7 once plus US$4.60 per month. No production, KB or D1 writes, SSH, APH or ParlInfo access occurred during this review repair. All source material came from the existing adapter's retained NSW Parliament API fragments.
 
 ## Review items

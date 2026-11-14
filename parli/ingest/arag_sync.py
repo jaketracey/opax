@@ -35,7 +35,8 @@ from pathlib import Path
 from typing import Any, Iterator, Optional
 
 from parli.arag import AragConfig, AragError, KbClient, load_dotenv
-from parli.ingest import nsw_publication
+from parli.ingest import nsw_publication, backfill_guard as growth
+from itertools import groupby
 from parli.ingest.speaker_roles import chair_role, chair_party_sql
 from parli.ingest.speech_hygiene import (
     clean_party,
@@ -210,7 +211,7 @@ def map_speech(row: sqlite3.Row) -> dict:
         party = None
     witness_position = _optional_column(row, "witness_position")
     witness_organisation = _optional_column(row, "witness_organisation")
-    return {
+    body = {
         "slug": f"speech-{row['speech_id']}",
         "title": (" — ".join(title_bits) or f"Speech {row['speech_id']}")[:2000],
         "texts": _texts(clean_body),
@@ -251,6 +252,9 @@ def map_speech(row: sqlite3.Row) -> dict:
             }
         },
     }
+
+    stage = growth.stage_for(body)
+    return growth.tag(body, stage) if stage else body
 
 
 def map_legal(row: sqlite3.Row) -> dict:
@@ -323,18 +327,38 @@ def save_state(state: dict) -> None:
 # ---------------------------------------------------------------------------
 
 
-def _push_one(kb: KbClient, body: dict) -> tuple[str, Optional[str]]:
+def _push_one(kb: KbClient, body: dict, guard=None, deadline=None) -> tuple[str, Optional[str]]:
     """Returns (slug, error). A 409 slug conflict counts as already-done."""
-    if body.get('extra', {}).get('metadata', {}).get('nsw_backfill') and not nsw_publication.approved():
-        return body['slug'], 'NSW backfill publication held pending spend approval'
+    stage = growth.stage_for(body)
+    if stage and not growth.enabled(stage):
+        return body['slug'], growth.HOLD + f'{stage} disabled'
+    if stage and deadline is not None and time.monotonic() >= deadline:
+        return body['slug'], growth.HOLD + 'normal-sync backfill time budget spent; resumes next night'
     try:
-        kb.create_resource(body)
+        if stage:
+            growth.tag(body, stage)
+            if guard is None:
+                guard = growth.Guard()
+                guard.check(kb, stage + '-sync')
+            guard.ensure_running()
+            with guard.request_scope():
+                kb.create_resource(body)
+        else:
+            kb.create_resource(body)
         return body["slug"], None
+    except growth.Stopped as exc:
+        return body['slug'], growth.HOLD + str(exc)
     except AragError as e:
         if e.status == 409:
             return body["slug"], None
+        if stage:
+            # Also covers injected clients which raise without _request.
+            try:
+                guard.response(e.status, e.detail)
+            except growth.Stopped as exc:
+                return body['slug'], growth.HOLD + str(exc)
+            return body['slug'], growth.HOLD + f'Progress HTTP {e.status}; retry next night'
         return body["slug"], f"{e.status}: {e.detail[:200]}"
-
 
 def _batches(db: sqlite3.Connection, spec: dict, after: int, remaining: int,
              since: str, batch_size: int = 200) -> Iterator[list[sqlite3.Row]]:
@@ -350,13 +374,97 @@ def _batches(db: sqlite3.Connection, spec: dict, after: int, remaining: int,
         remaining -= len(rows)
 
 
+class BackfillPublication:
+    """Counters bracket normal sync too, including queued/retried old IDs.
+
+    Acquisition order keeps a chamber-day contiguous across batches. Check at
+    the next day's boundary after ten days, and at the end even for short runs.
+    """
+    def __init__(self, kb):
+        self.kb, self.guard = kb, growth.Guard()
+        self.stages, self.day, self.days = set(), None, 0
+        self.deadline = None
+
+    def before(self, stage, day):
+        if not stage or not growth.enabled(stage):
+            return
+        self.guard.ensure_running()
+        if self.deadline is None:
+            budget_env = ('OPAX_BACKFILL_NSW_BUDGET_S' if stage == 'nsw'
+                          else 'OPAX_SENATE_BACKFILL_BUDGET_SECONDS')
+            try:
+                seconds = float(os.environ.get(budget_env, '1200'))
+            except ValueError:
+                seconds = 0
+            if not 0 < seconds <= 1200:
+                raise growth.Stopped('invalid backfill publication budget; must be 1..1200 seconds')
+            self.deadline = time.monotonic() + seconds
+        if time.monotonic() >= self.deadline:
+            raise growth.Stopped('normal-sync backfill time budget spent; resumes next night')
+        key = (stage, day)
+        if stage not in self.stages or (key != self.day and self.days >= growth.CHECK_DAYS):
+            self.guard.check(self.kb, stage + '-sync')
+            self.stages.add(stage)
+            self.days = 0
+        if key != self.day:
+            self.days += 1
+            self.day = key
+
+    def finish(self):
+        if self.stages:
+            try:
+                self.guard.check(self.kb, 'normal-sync-end')
+            except growth.Stopped as exc:
+                print(growth.HOLD + str(exc), file=sys.stderr)
+
+def _push_pool(kb, bodies, tstate, guard=None, deadline=None):
+    with ThreadPoolExecutor(max_workers=WORKERS) as pool:
+        futures = [pool.submit(_push_one, kb, body, guard, deadline) for body in bodies]
+        for fut in as_completed(futures):
+            slug, err = fut.result()
+            if err:
+                tstate['failed'][slug] = err
+                print(f'  HOLD {slug}: {err}' if err.startswith(growth.HOLD) else f'  FAIL {slug}: {err}',
+                      file=sys.stderr)
+            else:
+                tstate['pushed'] += 1
+                tstate['failed'].pop(slug, None)
+
+def _push_batch(kb, bodies, tstate, publication=None):
+    publication = publication or BackfillPublication(kb)
+    def cohort(body):
+        stage = growth.stage_for(body)
+        meta = body.get('extra', {}).get('metadata', {})
+        labels = body.get('usermetadata', {}).get('classifications', [])
+        chamber = next((c['label'] for c in labels if c['labelset'] == 'chamber'), '')
+        return (stage, (chamber, meta.get('date'))) if stage else (None, None)
+    for (stage, day), group in groupby(bodies, cohort):
+        group = list(group)
+        try:
+            publication.before(stage, day)
+        except growth.Stopped as exc:
+            for body in group:
+                tstate['failed'][body['slug']] = growth.HOLD + str(exc)
+            continue
+        _push_pool(kb, group, tstate, publication.guard, publication.deadline)
+
+
 def sync_nsw_backfill(kb, db, state, limit, dry_run, since):
     """Drain repair-owned IDs independently of normal sync's high-water mark.
 
-    Default-off applies even to retries and previously checkpointed rows. The
-    normal read-only DB stays read-only; ack/failure receipts use sync's JSON.
+    The single switch and shared stop apply to retries and checkpointed rows.
+    The normal read-only DB stays read-only; ack/failure receipts use sync's JSON.
     """
     if not nsw_publication.managed(db) or not nsw_publication.approved() or limit <= 0:
+        return 0
+    try:
+        day_cap = int(os.environ.get('OPAX_BACKFILL_NSW_CAP', '4'))
+        if not 0 <= day_cap <= 4:
+            raise ValueError('NSW publication cap must be 0..4')
+    except ValueError:
+        print(growth.HOLD + 'invalid NSW publication day cap; maximum four', file=sys.stderr)
+        return 0
+    if day_cap == 0:
         return 0
     pub = nsw_publication.ledger(state)
     done = set(map(int, pub['published'])) | set(map(int, pub['excluded']))
@@ -373,7 +481,22 @@ def sync_nsw_backfill(kb, db, state, limit, dry_run, since):
                                         + nsw_publication.ready_ids_sql(db) + ')')}
     if not dry_run:
         pub['excluded'] = sorted(set(pub['excluded']) | (controlled - eligible - done))
+    # Recovery from a publication outage must respect the same four-day ceiling
+    # as acquisition. Leave later days pending, distinct from normal exclusions.
+    days = db.execute('SELECT chamber,date FROM (' + select +
+                      ') GROUP BY chamber,date ORDER BY MIN(speech_id) LIMIT ?',
+                      (0, 10**12, day_cap)).fetchall()
+    db.execute('CREATE TEMP TABLE IF NOT EXISTS nsw_publication_days (chamber TEXT,date TEXT,PRIMARY KEY(chamber,date))')
+    db.execute('DELETE FROM temp.nsw_publication_days')
+    db.executemany('INSERT INTO temp.nsw_publication_days VALUES (?,?)', [(r[0],r[1]) for r in days])
+    select = select.replace('ORDER BY speech_id LIMIT ?',
+                            ' AND (chamber,date) IN (SELECT chamber,date FROM temp.nsw_publication_days) ORDER BY speech_id LIMIT ?')
     after = attempted = 0
+    try:
+        publication = BackfillPublication(kb) if not dry_run and eligible else None
+    except OSError:
+        print(growth.HOLD + 'shared state directory unavailable; NSW publication deferred', file=sys.stderr)
+        return 0
     while attempted < limit:
         rows = db.execute(select, (after, min(200, limit-attempted))).fetchall()
         if not rows:
@@ -385,22 +508,27 @@ def sync_nsw_backfill(kb, db, state, limit, dry_run, since):
         for row in rows:
             body = map_speech(row)
             body['extra']['metadata']['nsw_backfill'] = True
+            growth.tag(body, 'nsw')
             bodies.append(body)
-        with ThreadPoolExecutor(max_workers=WORKERS) as pool:
-            futures = {pool.submit(_push_one, kb, body): row['speech_id'] for row,body in zip(rows,bodies)}
-            for future in as_completed(futures):
-                sid = futures[future]
-                slug, error = future.result()
-                if error:
-                    pub['failed'][str(sid)] = error
-                else:
-                    pub['published'].append(sid)
-                    pub['failed'].pop(str(sid), None)
-                    state.get('tables', {}).get('speeches', {}).get('failed', {}).pop(slug, None)
+        outcome = {'failed': {}, 'pushed': 0}
+        _push_batch(kb, bodies, outcome, publication)
+        for row, body in zip(rows, bodies):
+            sid, slug = row['speech_id'], body['slug']
+            if slug in outcome['failed']:
+                pub['failed'][str(sid)] = outcome['failed'][slug]
+            else:
+                pub['published'].append(sid)
+                pub['failed'].pop(str(sid), None)
+                state.get('tables', {}).get('speeches', {}).get('failed', {}).pop(slug, None)
         pub['published'] = sorted(set(pub['published']))
         save_state(state)
         after = rows[-1]['speech_id']
         attempted += len(rows)
+        if (growth.state_dir() / 'backfill.STOP').exists() or (
+                publication.deadline and time.monotonic() >= publication.deadline):
+            break
+    if publication:
+        publication.finish()
     if not dry_run:
         save_state(state)
     return attempted

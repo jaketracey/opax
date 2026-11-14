@@ -1,4 +1,4 @@
-"""NSW repair ownership and spend hold. No source or KB requests here.
+"""NSW repair ownership and publication progress. No source or KB requests here.
 
 Normal sync keeps its read-only SQLite connection. Publication acknowledgements
 and failures use its existing atomic JSON state, independently of its row cursor.
@@ -6,16 +6,16 @@ and failures use its existing atomic JSON state, independently of its row cursor
 from __future__ import annotations
 
 import json
-import os
 from collections import defaultdict
 from pathlib import Path
+from parli.ingest import backfill_guard as growth
 
 
 PARSER_VERSION = 2
 
 
 def approved():
-    return os.environ.get('OPAX_BACKFILL_NSW_PUBLISH', '0') == '1'
+    return growth.enabled('nsw') and not (growth.state_dir() / 'backfill.STOP').exists()
 
 
 def managed(db):

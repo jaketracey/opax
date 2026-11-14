@@ -37,7 +37,7 @@ export OPAX_TODAY=2026-10-10
 # The Senate video step (nightly 3d) calls $OPAX_NODE, which here is the recording fake the
 # portal-test gate scenarios count; it is covered offline by portal/test/senate-video.test.mjs.
 export OPAX_SENATE_VIDEO=0
-export OPAX_BACKFILL_NSW=0
+export OPAX_NSW_BACKFILL=0
 BASE_TOTAL=$(python3 -c "import json; print(json.load(open('$SRC/portal/public/corpus.json'))['expected_resources'])")
 BASE_SPEECH=$(python3 -c "import json; print(json.load(open('$SRC/portal/public/corpus.json'))['collected_speeches'])")
 REAL_NODE="${OPAX_TEST_REAL_NODE:-$(command -v node || true)}"
@@ -75,7 +75,7 @@ new_sandbox() {
            scripts/handbook_party_service.json scripts/roster_accept.json \
            parli/ingest/tvfy_refresh.py parli/ingest/honest_http.py parli/ingest/state_rosters.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
-           parli/__init__.py parli/arag.py parli/ingest/http.py parli/ingest/user-agent.json parli/ingest/__init__.py parli/ingest/speaker_names.py \
+           parli/ingest/backfill_guard.py parli/__init__.py parli/arag.py parli/ingest/http.py parli/ingest/user-agent.json parli/ingest/__init__.py parli/ingest/speaker_names.py \
            portal/wrangler.jsonc portal/public/corpus.json; do
     mkdir -p "$seed/$(dirname "$f")"
     cp "$SRC/$f" "$seed/$f" || { bad "cannot copy fixture dependency: $f"; exit 1; }

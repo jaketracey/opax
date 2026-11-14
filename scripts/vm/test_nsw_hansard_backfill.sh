@@ -38,12 +38,12 @@ run() {
   return "${RESULT:-0}"
 }
 . "$REPO/scripts/vm/nsw_hansard_backfill.sh"
-unset OPAX_BACKFILL_NSW
+unset OPAX_NSW_BACKFILL
 nsw_hansard_backfill
-test ! -f "$PIPE/args"
-export OPAX_BACKFILL_NSW=1
+test -f "$PIPE/args"
+export OPAX_NSW_BACKFILL=1
 nsw_hansard_backfill
-for expected in timeout --kill-after=60s 102s nice 10 parli.ingest.nsw_hansard --backfill-missing-days --publication-state; do
+for expected in timeout --kill-after=60s 102s nice 10 parli.ingest.nsw_hansard --backfill-missing-days --publication-state --growth-guard; do
   rg -q -x -- "$expected" "$PIPE/args"
 done
 rg -q 'WARN NSW coverage guard: 7 chamber sitting days incomplete' "$PIPE/log"
@@ -74,7 +74,7 @@ rm -f "$PIPE/periodic-completed"
 periodic_refresh_complete
 test -f "$PIPE/periodic-completed"
 rm "$PIPE/args"
-OPAX_BACKFILL_NSW=0 nsw_hansard_backfill
+OPAX_NSW_BACKFILL=0 nsw_hansard_backfill
 test ! -f "$PIPE/args"
 OPAX_NIGHTLY_SKIP_REFRESH=1 nsw_hansard_backfill
 test ! -f "$PIPE/args"
@@ -83,4 +83,15 @@ test ! -f "$PIPE/args"
 unset OPAX_BACKFILL_NSW_CAP OPAX_BACKFILL_NSW_BUDGET_S
 EXPECTED_CAP=4 EXPECTED_BUDGET=1200 nsw_hansard_backfill
 rg -q -x '1260s' "$PIPE/args"
-echo 'NSW nightly isolation, default-off and outer-timeout checks passed'
+rm "$PIPE/args"
+touch "$PIPE/backfill.STOP"
+nsw_hansard_backfill
+test ! -f "$PIPE/args"
+rg -q 'WARN Shared backfill.STOP' "$PIPE/log"
+test "${#FAILURES[@]}" -eq 0
+periodic_refresh_complete
+test -f "$PIPE/periodic-completed"
+rm "$PIPE/backfill.STOP"
+OPAX_BACKFILL_NSW_CAP=5 nsw_hansard_backfill
+test ! -f "$PIPE/args"
+echo 'NSW nightly isolation, default-on, stop file, cap and outer-timeout checks passed'

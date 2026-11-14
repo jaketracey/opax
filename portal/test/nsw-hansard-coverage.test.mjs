@@ -66,5 +66,6 @@ test('occupied days remain incomplete for held identities and failed or pending 
 test('disabled repair describes holes without a fill promise',()=>{
   const disabled={...fixture,acquisition_enabled:false,publication_enabled:false};
   assert.doesNotMatch(nswHansardCoverageNote(disabled),/being added|being filled/);
-  if(!receipt.publication_enabled) assert.ok(receipt.gaps.every(g=>g.status==='known, awaiting approval'));
+  assert.ok(receipt.gaps.every(g=>g.status==='known, incomplete'));
+  assert.doesNotMatch(nswHansardCoverageNote({...fixture,acquisition_enabled:true,publication_enabled:true}),/being added|being filled/);
 });
