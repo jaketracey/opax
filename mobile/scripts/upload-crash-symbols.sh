@@ -106,7 +106,7 @@ RELEASE=(--release-name au.com.opax.app --release-version "$VERSION" --build "$B
 "$CLI" hermes upload --directory "$STAGE" --release-mode event "${RELEASE[@]}"
 if [ "$PLATFORM" = ios ]; then
   [ -d "$NATIVE/dSYMs/OPAX.app.dSYM" ] || { echo "Crash symbols: no OPAX.app.dSYM in $NATIVE/dSYMs." >&2; exit 1; }
-  "$CLI" dsym upload --directory "$NATIVE/dSYMs" --main-dsym OPAX.app.dSYM "${RELEASE[@]}"
+  "$CLI" dsym upload --directory "$NATIVE/dSYMs" --main-dsym OPAX.app.dSYM --skip-on-conflict "${RELEASE[@]}"
 elif [ -n "$NATIVE" ]; then
   # posthog-android's map ID when the app embeds none: package@versionName+versionCode.
   "$CLI" proguard upload --path "$NATIVE" --map-id "au.com.opax.app@$VERSION+$BUILD" "${RELEASE[@]}"
