@@ -1,4 +1,4 @@
-import { generateResearchText, completedAnswerEntries } from './research-generation'
+import { generateResearchText, answerEntryScanner } from './research-generation'
 import {researchTrace} from './research-trace'
 import { reserveQuestionTurn, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS } from './ask-budgets'
 import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, dedupeWritingFacts, type WritingInput } from './research-writing'
@@ -9,18 +9,21 @@ import type { ResearchOptions } from './research-loop'
 import {groundAnswerPayload} from './research-grounding'
 import {withRecordedChambers} from './ask-chamber-phrases'
 import {auditPayload} from './research-claim-audit.mjs'
-import type { QualitativeAnswer, ResearchStats } from './research-types'
+import type { QualitativeAnswer, ResearchStats, AnswerPreview } from './research-types'
 import {recordAnswerLines} from './research-record-answer'
 import {moneyWritingInput,receiptWritingLines,completeMoneySelection} from './research-money-writing'
 
 /** Same pinned model, provider, limiter, token ceiling, wall cap and D1 reservation as research. */
 export function createAnswerWriter(options: ResearchOptions) {
-  return async (input: WritingInput, stats: ResearchStats, signal: AbortSignal | undefined, remainingMs: number, preview?: (payload:QualitativeAnswer)=>Promise<void>): Promise<QualitativeAnswer> => {
+  return async (input: WritingInput, stats: ResearchStats, signal: AbortSignal | undefined, remainingMs: number, preview?: AnswerPreview): Promise<QualitativeAnswer> => {
+    // Leave the enclosing bounded() race time to receive this writer's checked stopped-draft result.
+    const deadline=Date.now()+Math.max(0,remainingMs-50)
     input=moneyWritingInput({...input,facts:dedupeWritingFacts(input.facts)})
     // Every check sees all the facts handed in, not just those a draft happened to cite.
+    let releasedDraft:QualitativeAnswer|undefined
     const found=input.facts.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     // A chamber named for a cited speaker is the one their source records (ask-chamber-phrases.ts).
-    const ground=(payload:QualitativeAnswer)=>{const {research:_found,...checked}=groundAnswerPayload({...withRecordedChambers(payload),research:{pre_writer_sources:found}},input.question);return checked as unknown as QualitativeAnswer}
+    const ground=(payload:QualitativeAnswer)=>{const {research:_found,...checked}=groundAnswerPayload({...withRecordedChambers(payload),research:{pre_writer_sources:found}},input.question,releasedDraft?.answer);return checked as unknown as QualitativeAnswer}
     // Exact record findings have a complete prose answer without a writing turn, unless that prose is only a limit.
     if(recordAnswerLines(input)||receiptWritingLines(input)||completeMoneySelection(input)){const exact=proseFallback(input);if(exact.answer_decision!=='limitation')return ground(exact)}
     // No receipt is ever said to be lent (A34 review): the AEC types none as a loan, and OPAX matches none to a
@@ -28,10 +31,12 @@ export function createAnswerWriter(options: ResearchOptions) {
     const lendingWord=/\b(?:lent|lends?|lending|loan(?:s|ed)?|borrow(?:s|ed|ing)?)\b/i
     const saysLent=(answer:string)=>input.facts.some(f=>f.source.receipt)&&lendingWord.test(input.facts.reduce((rest,f)=>rest.split(f.text).join(' '),answer))
     let lastDraft:QualitativeAnswer|null=null
+    let requiredDraft=(draft:QualitativeAnswer)=>draft
     // A stopped writer keeps what it wrote; with nothing written, the facts are rendered as recorded.
     const fallback=():QualitativeAnswer=>{
       stats.coherence={...stats.coherence,fallback:true}
-      if(lastDraft&&lastDraft.answer.trim()&&!saysLent(lastDraft.answer)){const checked=ground(lastDraft);return {...checked,coherence:{...checked.coherence,fallback:true}}}
+      if(releasedDraft)return {...releasedDraft,coherence:{...releasedDraft.coherence,fallback:true}}
+      if(lastDraft&&lastDraft.answer.trim()&&!saysLent(lastDraft.answer)){const checked=requiredDraft(ground(lastDraft));return {...checked,coherence:{...checked.coherence,fallback:true}}}
       const facts=proseFallback(input)
       return ground({...facts,coherence:{...facts.coherence,fallback:true}})
     }, credits=options.creditCooldown ?? researchCreditCooldown
@@ -58,6 +63,7 @@ export function createAnswerWriter(options: ResearchOptions) {
     // facts-only version, which carries them. That protects content and never swaps in a limitation.
     const keepsAll=(payload:QualitativeAnswer)=>keepsHeadline(payload.answer)&&(!voteFacts.length||!keepsVotes(required.answer)||keepsVotes(payload.answer))
     const withRequired=(checked:QualitativeAnswer)=>required.answer_decision==='limitation'||keepsAll(checked)?checked:ground(required)
+    requiredDraft=withRequired
     const activeInput=input
     let prompt=writingPrompt(input)
     const startedWriting=Date.now()
@@ -75,7 +81,7 @@ export function createAnswerWriter(options: ResearchOptions) {
       if(!reservation)return fallback()
       const controller=new AbortController(), abort=()=>controller.abort(signal?.reason)
       signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort()
-      const timer=setTimeout(()=>controller.abort(new DOMException('Answer writing wall cap','TimeoutError')),Math.min(8000,remainingMs-(Date.now()-startedWriting)))
+      const timer=setTimeout(()=>controller.abort(new DOMException('Answer writing wall cap','TimeoutError')),Math.max(0,Math.min(8000,deadline-Date.now())))
       let receipt: number|undefined, turn: NonNullable<ResearchStats['turns']>[number]|undefined
       const started=Date.now()
       try {
@@ -85,21 +91,20 @@ export function createAnswerWriter(options: ResearchOptions) {
         turn={round:stats.rounds+1,input:null,output:null,cached_input:null,input_reserve:inputReserve,ms:0,cost_usd:null}
         ;(stats.turns ??=[]).push(turn)
         const stopped=new Promise<never>((_,reject)=>controller.signal.addEventListener('abort',()=>reject(controller.signal.reason),{once:true}))
-        let partial='',count=0
+        const scanner=answerEntryScanner('sentences'),sentences:unknown[]=[]
+        let observing=true
         const result=await Promise.race([generateResearchText({model:options.model,prompt:currentPrompt,maxRetries:0,maxOutputTokens:outputReserve,abortSignal:controller.signal},preview?async chunk=>{
-          if(chunk.type!=='text-delta')return
-          partial+=chunk.text
-          const sentences=completedAnswerEntries(partial,'sentences')
-          if(sentences.length<=count)return
-          count=sentences.length
-          lastDraft=draftWrittenAnswer({sentences},activeInput)
+          if(!observing||controller.signal.aborted||chunk.type!=='text-delta')return
+          const added=scanner.push(chunk.text)
+          if(!added.length)return
+          sentences.push(...added)
           const checked=verifyWrittenAnswer({sentences},activeInput)
           // A receipt's lending check and the required headline/vote split can replace the complete draft.
           // Retain that affected tail until its decision is known; no weaker per-sentence variant is substituted.
-          if(!checked||input.facts.some(f=>f.source.receipt)||!keepsAll(checked))return
-          const grounded=ground(checked)
-          if(keepsAll(grounded))await preview(grounded)
-        }:undefined),stopped])
+          if(!checked||input.facts.some(f=>f.source.receipt))return
+          const released=await preview({...withRecordedChambers(checked),research:{pre_writer_sources:found}} as QualitativeAnswer,keepsAll)
+          if(released)releasedDraft=released
+        }:undefined),stopped]).finally(()=>{observing=false})
         stats.usageUnknown=false
         const inputTokens=result.usage.inputTokens ?? inputReserve, outputTokens=result.usage.outputTokens ?? outputReserve
         const meta=result.providerMetadata?.openrouter as {provider?:string;usage?:{cost?:number}}|undefined

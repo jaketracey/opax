@@ -216,20 +216,19 @@ export const calculatedPayAnswer = (payload: Record<string, unknown>): boolean =
 
 /** One guard covers JSON, streamed fallbacks and cached payloads. */
 export async function withAnswerLanguage(response: Response,question?:string,askedAs?:string): Promise<Response> {
-  return mapResearchResponse(response, payload=>{
-    const freshResearch=response.headers.get('x-opax-cache')!=='HIT'&&(payload.research as {mode?:string}|undefined)?.mode==='loop'&&!fallbackAnswer(payload)
-    const out=checkedAnswerPayload(payload,question,false,freshResearch)
+  return mapResearchResponse(response, (payload,fixedPrefix)=>{
+    const out=checkedAnswerPayload(payload,question,false,fixedPrefix)
     return askedAs?{...out,asked_as:askedAs}:out
   }, true, true)
 }
 
 /** The same public checks run on each research sentence prefix and on the final payload. */
-export function checkedAnswerPayload(payload:Record<string,unknown>,question?:string,partial=false,preserveSeparators=partial):Record<string,unknown> {
+export function checkedAnswerPayload(payload:Record<string,unknown>,question?:string,partial=false,fixedPrefix=''):Record<string,unknown> {
     const ensure=(value:Record<string,unknown>)=>partial?value:ensureAnswerText(value,question)
     payload=ensure(payload)
     if(!question||calculatedPayAnswer(payload))return displayAnswerPayload(ensure(plainAnswerPayload(payload)))
-    const prepared=protectedDecision(payload)?payload:normaliseWrittenPayload(payload,question,preserveSeparators)
-    return displayAnswerPayload(ensure(normaliseCoveragePayload(groundAnswerPayload(prepared,question),question)))
+    const prepared=protectedDecision(payload)?payload:normaliseWrittenPayload(payload,question)
+    return displayAnswerPayload(ensure(normaliseCoveragePayload(groundAnswerPayload(prepared,question,fixedPrefix),question)))
 }
 
 export async function withResearchEval(response: Response, usage: () => ReturnType<typeof researchEvalUsage> & { model?: string }): Promise<Response> {
@@ -242,7 +241,7 @@ export async function withResearchEval(response: Response, usage: () => ReturnTy
   })
 }
 
-async function mapResearchResponse(response: Response, augment: (payload: Record<string, unknown>) => Record<string, unknown>, validateBeforeText = false,replayUnchangedDeltas=false): Promise<Response> {
+async function mapResearchResponse(response: Response, augment: (payload: Record<string, unknown>, fixedPrefix?:string) => Record<string, unknown>, validateBeforeText = false,replayUnchangedDeltas=false): Promise<Response> {
   if (!response.ok) return response
   const headers = new Headers(response.headers)
   headers.delete('content-length')
@@ -251,8 +250,9 @@ async function mapResearchResponse(response: Response, augment: (payload: Record
   let pending = ''
   const deltas:string[]=[]
   let deltaText='',replayable=true
-  let researchSentences=false, released=''
+  let researchSentences=false, released='',completed=false
   const frame = (value: string,separator='\n\n') => {
+    if(completed)return ''
     // These private events are produced only by the research sentence checker. They never reach a client.
     if(validateBeforeText&&/^event: research_sentences$/m.test(value)){researchSentences=true;return ''}
     if(validateBeforeText&&/^event: research_sentence$/m.test(value)){
@@ -274,11 +274,15 @@ async function mapResearchResponse(response: Response, augment: (payload: Record
     if (!/^event: done$/m.test(value)) return value
     let unchanged=false,tail=''
     const done=value.replace(/^data: (.+)$/m, (_line, data: string) => {
-      const original=JSON.parse(data),checked=augment(original)
+      const original=JSON.parse(data),checked=augment(original,released)
       if(researchSentences){
-        if(typeof checked.answer!=='string'||!checked.answer.startsWith(released))throw Error('Checked research prefix changed')
-        const text=checked.answer.slice(released.length)
-        if(text)tail='event: delta\ndata: '+JSON.stringify({text})+separator
+        const mismatch=typeof checked.answer!=='string'||!checked.answer.startsWith(released)
+        if(mismatch){
+          console.log(JSON.stringify({kind:'research_loop_stream_reset',reason:'checked_prefix_changed',released_chars:released.length,answer_chars:typeof checked.answer==='string'?checked.answer.length:0}))
+          tail='event: retry\ndata: '+JSON.stringify({reason:'checked_prefix_changed'})+separator
+        }
+        const text=typeof checked.answer==='string'?checked.answer.slice(mismatch?0:released.length):''
+        if(text)tail+='event: delta\ndata: '+JSON.stringify({text})+separator
       }
       unchanged=typeof original.answer==='string'&&checked.answer===original.answer&&deltaText===checked.answer
       return 'data: '+JSON.stringify(checked)
@@ -286,6 +290,7 @@ async function mapResearchResponse(response: Response, augment: (payload: Record
     const safe=!researchSentences&&replayUnchangedDeltas&&replayable&&unchanged?deltas.join(''):''
     deltas.length=0
     deltaText=''
+    completed=true
     return tail+safe+done
   }
   return new Response(response.body!.pipeThrough(new TransformStream<Uint8Array, Uint8Array>({
@@ -428,7 +433,7 @@ export function normaliseCoveragePayload(payload:Record<string,unknown>,question
 }
 
 /** Keep the fallback model's prose, removing repeated claims and financial figure sets before replay. */
-export function normaliseWrittenPayload(payload: Record<string, unknown>,question?:string,preserveSeparators=false): Record<string, unknown> {
+export function normaliseWrittenPayload(payload: Record<string, unknown>,question?:string): Record<string, unknown> {
   payload=plainAnswerPayload(normaliseCoveragePayload(payload,question))
   if (typeof payload.answer !== 'string' || !payload.answer.trim()) return payload
   if(!protectedDecision(payload)&&rawToolEcho(payload.answer)){
@@ -495,11 +500,7 @@ export function normaliseWrittenPayload(payload: Record<string, unknown>,questio
   for(const paragraph of kept) {
     if(answer)answer+='\n\n'
     for(const [index,part] of paragraph.entries()) {
-      if(index){
-        // A later duplicate must not reflow an earlier, already checked paragraph. Preserve untouched separators.
-        const gap=Array.from(original).slice(paragraph[index-1].until,part.from).join('')
-        answer+=preserveSeparators&&/^\s*$/.test(gap)?gap:' '
-      }
+      if(index)answer+=' '
       const offset=Array.from(answer).length
       for(let i=part.from;i<part.until;i++)mapping.set(i,offset+i-part.from)
       answer+=part.text

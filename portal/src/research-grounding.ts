@@ -91,7 +91,7 @@ function completePersonOverview(original:Record<string,unknown>,result:Record<st
 /** The final boundary tidies; it never replaces the answer. The claim audit is log output only. Two rules touch text:
  * quotation marks come off words no cited source holds (the sentence stays as paraphrase), and a dollar figure given
  * to the wrong party or period in its cited money record is corrected from that record, or else that sentence goes. */
-export function groundAnswerPayload(payload:Record<string,unknown>,question:string):Record<string,unknown> {
+export function groundAnswerPayload(payload:Record<string,unknown>,question:string,fixedPrefix=''):Record<string,unknown> {
   let out=plainAnswerPayload(payload)
   const audit=auditPayload(question,out)
   researchTrace('grounding.audit',{question,counts:audit.counts,findings:audit.findings})
@@ -106,7 +106,7 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
   // An accountability question opens on a finding or an official record, not a member's claim in debate.
   // A body's finding cited only to one member's speech is that member's claim, and says so (ASK_ATTRIBUTION_RULE).
   out=attributeSpokenFindings(out)
-  out=distinctSummary(cleanAnswerShape(protectedDecision(out)?out:leadWithAuthority(leadWithFinding(leadWithFinding(out),question),question)))
+  out=distinctSummary(cleanAnswerShape(protectedDecision(out)?out:leadWithAuthority(leadWithFinding(leadWithFinding(out,undefined,fixedPrefix),question,fixedPrefix),question,fixedPrefix)))
   out=completePersonOverview(payload,out,question)
   const research=out.research&&typeof out.research==='object'?out.research as Record<string,unknown>:undefined
   return {...out,...(research?{research:{...research,claim_audit:audit.counts}}:{})}

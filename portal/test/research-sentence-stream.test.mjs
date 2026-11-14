@@ -4,7 +4,7 @@ import {build} from 'esbuild'
 import {scriptedResearchModel} from './fixtures/research-scripted-model.mjs'
 import {sentenceSpans} from '../src/sentence-bounds.mjs'
 
-const bundled=await build({stdin:{contents:"export * from './src/research-generation'; export * from './src/research-grounding'; export * from './src/research-sentences'; export * from './src/research-sentence-stream'; export * from './src/research-response'; export * from './src/research-writer';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
+const bundled=await build({stdin:{contents:"export * from './src/research-generation'; export * from './src/research-grounding'; export * from './src/research-sentences'; export * from './src/research-sentence-stream'; export * from './src/research-response'; export * from './src/research-writer'; export * from './src/research-evidence'; export * from './src/agentic-ask'; export * from './src/research-loop'; export {createResearchCreditCooldown} from './src/research-credit'; export {proseFallback} from './src/research-writing';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
 const api=await import('data:text/javascript;base64,'+Buffer.from(bundled.outputFiles[0].text).toString('base64'))
 const deferred=()=>{let resolve;const promise=new Promise(r=>{resolve=r});return {promise,resolve}}
 const source=(resource,snippet,extra={})=>({resource,slug:'',title:'Housing report',href:'https://example.org/report',url:'https://example.org/report',snippet,cited:true,kind:'record',...extra})
@@ -50,6 +50,7 @@ test('sentence records retain abbreviations, sections, decimals, money and closi
     'The report called it “a useful step”.',
   ]
   assert.deepEqual(sentenceSpans(sentences.join(' ')).map(p=>p.text),sentences)
+  assert.deepEqual(api.researchSentences('Bill No. 3 uses s. 12 and cl. 4. $1.5m was allocated.').map(p=>p.text),['Bill No. 3 uses s. 12 and cl. 4.','$1.5m was allocated.'])
   const records=sentences.map(text=>({text,facts:[1],coverage:false}))
   const raw=JSON.stringify({answer_decision:'answer',sentences:records})
   for(let i=0;i<raw.length;i++){
@@ -93,6 +94,8 @@ test('a mutable accountability opening stays held for the final ordering check',
 })
 
 test('the actual SDK writer releases its first checked sentence before its last token',async()=>{
+  let groundingPasses=0
+  globalThis.__opaxResearchTrace=stage=>{if(stage==='grounding.audit')groundingPasses++}
   const first='The housing report found planning rules slowed approvals.',second='The report recommended simpler planning rules.'
   const gate=deferred(),heard=deferred(),deltas=[]
   let raw=''
@@ -105,7 +108,8 @@ test('the actual SDK writer releases its first checked sentence before its last 
   try{
     await Promise.race([heard.promise,new Promise((_,reject)=>setTimeout(()=>reject(Error('first sentence stayed withheld')),1000))])
     assert.equal(deltas.join(''),first)
-  }finally{gate.resolve()}
+    assert.equal(groundingPasses,1,'one grounding pass for the first completed sentence')
+  }finally{gate.resolve();delete globalThis.__opaxResearchTrace}
   const done=await writing
   assert.equal(model.doStreamCalls.length,1)
   assert.equal(deltas.join(''),done.answer)
@@ -138,16 +142,18 @@ test('a promoted on-topic finding streams while its earlier context stays in the
   assert.equal(deltas.join(''),finding,'only the settled lead is released before completion')
 })
 
-test('a later duplicate cannot reflow a released research prefix; fallback formatting stays unchanged',async()=>{
+test('duplicate removal restores legacy line breaks, resetting any affected released prefix',async()=>{
   const first='The housing report found planning rules slowed approvals.',second='The report recommended simpler planning rules.',deltas=[]
   const stream=api.researchSentenceStream(question,async text=>deltas.push(text))
   await stream.preview(payload(first));await stream.preview(payload(first+'\n'+second))
   const full={...payload(first+'\n'+second+'\n'+second),research:{mode:'loop'}}
   const wire=frame('research_sentences',{})+deltas.map(text=>frame('research_sentence',{text})).join('')+frame('done',full)
   const events=decode(await(await api.withAnswerLanguage(new Response(wire,{headers:{'content-type':'text/event-stream'}}),question)).text())
-  assert.equal(events.filter(e=>e.event==='delta').map(e=>e.data.text).join(''),events.at(-1).data.answer)
-  assert.equal(events.at(-1).data.answer,first+'\n'+second)
+  assert.equal(events.filter(e=>e.event==='retry').length,1)
+  assert.equal(events.at(-2).data.text,events.at(-1).data.answer)
+  assert.equal(events.at(-1).data.answer,first+' '+second)
   assert.equal(api.normaliseWrittenPayload(full,question).answer,first+' '+second,'legacy fallback normalisation keeps its previous formatting')
+  assert.equal((await(await api.withAnswerLanguage(Response.json(full),question)).json()).answer,first+' '+second,'fresh JSON uses the same legacy formatting')
 })
 
 test('changed cached quotations still release only the final checked payload',async()=>{
@@ -157,4 +163,167 @@ test('changed cached quotations still release only the final checked payload',as
   const events=decode(await(await api.withAnswerLanguage(new Response(wire,{headers:{'content-type':'text/event-stream','x-opax-cache':'HIT'}}),question)).text())
   assert.deepEqual(events.map(e=>e.event),['done'])
   assert.equal(events[0].data.answer,'The housing report found planning rules slowed approvals.')
+})
+
+test('incremental scanner visits each character once, including every JSON token split',()=>{
+  const records=[{text:'An escaped "quote" and braces { }.',facts:[1]},{facts:[2],text:'Another finding.'}]
+  const raw=JSON.stringify({answer_decision:'answer',sentences:records})
+  for(let split=1;split<raw.length;split++){
+    const scanner=api.answerEntryScanner('sentences')
+    assert.deepEqual([...scanner.push(raw.slice(0,split)),...scanner.push(raw.slice(split))],records)
+    assert.ok(scanner.scannedCharacters<=raw.length)
+  }
+  const scanner=api.answerEntryScanner('sentences'),found=[]
+  for(const char of raw)found.push(...scanner.push(char))
+  assert.deepEqual(found,records)
+  assert.ok(scanner.scannedCharacters<=raw.length)
+})
+
+test('P1-1: a later cited speaker cannot move the released bill lead',async()=>{
+  const q='What happened to the Example Bill 2024?'
+  const passages=[{id:'bill-1',resource:'bill-1',slug:'',title:'Example Bill 2024',text:'The Example Bill 2024 passed the Senate on 3 March 2024 after a second reading debate.',url:'https://example.org/bill',kind:'bill'},
+    {id:'sp-1',resource:'sp-1',slug:'',title:'Second reading speech',text:'Senator Jane Example said the bill would cut red tape for small business owners across the country.',url:'https://example.org/sp',kind:'speech',speaker:'Jane Example',chamber:'senate',date:'2024-02-01'}]
+  const points=[{claim:'The Example Bill 2024 passed the Senate on 3 March 2024.',id:'bill-1',quote:'passed the Senate on 3 March 2024 after a second reading debate'},
+    {claim:'Jane Example told the Senate the bill would cut red tape for small business.',id:'sp-1',quote:'the bill would cut red tape for small business owners across the country'}]
+  const map=new Map(passages.map(p=>[p.id,p])),named={people:[],parties:[],bills:[],ambiguous:false,unresolved:false}
+  const deltas=[],stream=api.researchSentenceStream(q,async text=>deltas.push(text))
+  const one=api.verifyResearchPoints(points.slice(0,1),map,q,named),full=api.verifyResearchPoints(points,map,q,named)
+  await stream.preview(one)
+  assert.equal(deltas.join(''),points[0].claim)
+  await stream.preview(full)
+  const done=api.groundAnswerPayload({...full,research:{mode:'loop'}},q,stream.released)
+  const wire=frame('research_sentences',{})+deltas.map(text=>frame('research_sentence',{text})).join('')+frame('done',done)
+  const events=decode(await(await api.withAnswerLanguage(new Response(wire,{headers:{'content-type':'text/event-stream'}}),q)).text())
+  assert.equal(events.some(e=>e.event==='retry'),false)
+  assert.equal(events.filter(e=>e.event==='delta').map(e=>e.data.text).join(''),events.at(-1).data.answer)
+  assert.ok(events.at(-1).data.answer.startsWith(points[0].claim))
+})
+
+const emptyScope={people:[],parties:[],bills:[],ambiguous:false,unresolved:false}
+const budgetOptions=model=>({model,inputPrice:0.1,outputPrice:0.3,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown()})
+const call=(name,args,id)=>({name,args,id})
+test('P1-2: rejected answer arguments stay private until a lookup and accepted answer',async()=>{
+  const q='What happened with the Leppington Triangle land purchase?',pid='r1/t/body/0'
+  const text='The Auditor-General found the Department of Infrastructure paid $29.8 million for the Leppington Triangle, about ten times its value, in July 2018.'
+  const kb=async()=>({resources:{r1:{slug:'speech-9',title:'Leppington Triangle',fields:{body:{paragraphs:{[pid]:{text}}}}}},fulltext:{total:1,facets:{}}})
+  const rejected='The Commonwealth bought the Leppington Triangle in 2018 for a new airport.'
+  const model=scriptedResearchModel([
+    {tool_calls:[call('answer',{points:[{claim:rejected}]},'a')]},
+    {tool_calls:[call('search',{query:'Leppington Triangle purchase'},'b')]},
+    {tool_calls:[call('answer',{points:[{claim:'The Auditor-General found the department paid $29.8 million for the Leppington Triangle, about ten times its value.',id:pid,quote:'paid $29.8 million for the Leppington Triangle, about ten times its value'}]},'c')]},
+  ])
+  const deltas=[],stream=api.researchSentenceStream(q,async text=>deltas.push(text)),progress=async()=>{}
+  progress.answer=stream.preview
+  const research=Object.assign(api.createResearch(budgetOptions(model)),{write:undefined})
+  const run=await api.runAgentic(q,{asset:async()=>null,kb,generate:async()=>{throw Error('planner must not run')},research},progress,40_000,api.inferPeriod(q),{},emptyScope)
+  assert.equal(model.calls.length,3)
+  assert.doesNotMatch(deltas.join(''),/Commonwealth bought/)
+  const done=api.checkedAnswerPayload({...run.qualitative,research:{mode:'loop'}},q,false,stream.released)
+  assert.equal(deltas.join(''),done.answer)
+  assert.match(run.answer,/Auditor-General/)
+})
+
+test('P1-2: a research failure followed by planner fallback cannot leak a rejected preview',async t=>{
+  t.mock.method(console,'error',()=>{})
+  const q='Who speaks most about housing?',rejected='Robin Example spoke most about housing.'
+  const model=scriptedResearchModel([{tool_calls:[call('answer',{points:[{claim:rejected}]},'a')]},{error:'provider disconnected'},{error:'provider disconnected'}])
+  const deltas=[],stream=api.researchSentenceStream(q,async text=>deltas.push(text)),progress=async()=>{}
+  progress.answer=stream.preview
+  let plans=0
+  const research=Object.assign(api.createResearch(budgetOptions(model)),{write:undefined})
+  const run=await api.runAgentic(q,{asset:async()=>null,kb:async()=>({fulltext:{total:12,facets:{'/u/o':{'/u/o/Pat Example':12}}}}),generate:async()=>{plans++;return {text:JSON.stringify({shape:'ranking',steps:[{tool:'count_speeches',args:{topic:'housing',group_by:'speaker'}}]})}},research},progress,40_000,api.inferPeriod(q),{},emptyScope)
+  assert.equal(plans,1)
+  assert.equal(run.research.mode,'planner')
+  assert.deepEqual(deltas,[])
+})
+
+test('P1-3: writer wall cap returns the checked released sentences before the enclosing timer',async()=>{
+  const sentences=['The housing report found planning rules slowed approvals.','The report recommended simpler planning rules.','It also said councils needed more staff to process applications.']
+  const model=scriptedResearchModel([{text:{answer_decision:'answer',sentences:sentences.map(text=>({text,facts:[1]}))}}],{tokensPerSecond:40})
+  const input={question,period:{kind:'all',label:''},facts:[{id:1,text:sentences.join(' '),source:source('housing',sentences.join(' '),{kind:'speech'})}]}
+  const deltas=[],stream=api.researchSentenceStream(question,async text=>deltas.push(text)),stats={rounds:1,tokens:{input:0,output:0}}
+  const write=api.createAnswerWriter(budgetOptions(model))
+  const written=await api.bounded(signal=>write(input,stats,signal,1500,stream.preview),1500).catch(()=>api.proseFallback(input))
+  assert.ok(deltas.length>=1)
+  assert.equal(written.answer,deltas.join(''))
+  assert.equal(written.coherence.fallback,true)
+})
+
+test('a prefix mismatch logs a count and sends retry, full checked delta and done, ignoring late previews',async()=>{
+  const first='The housing report found planning rules slowed approvals.',full='The housing report recommended simpler planning rules.'
+  const wire=frame('research_sentences',{})+frame('research_sentence',{text:first})+frame('done',payload(full))+frame('research_sentence',{text:'Late text.'})
+  const logs=[],original=console.log
+  console.log=v=>logs.push(JSON.parse(v))
+  let events
+  try{events=decode(await(await api.withAnswerLanguage(new Response(wire,{headers:{'content-type':'text/event-stream'}}),question)).text())}finally{console.log=original}
+  assert.deepEqual(events.map(e=>e.event),['delta','retry','delta','done'])
+  assert.equal(events.at(-2).data.text,events.at(-1).data.answer)
+  assert.equal(events.at(-1).data.answer,full)
+  assert.deepEqual(logs,[{kind:'research_loop_stream_reset',reason:'checked_prefix_changed',released_chars:first.length,answer_chars:full.length}])
+  const deltas=[],stream=api.researchSentenceStream(question,async text=>deltas.push(text))
+  stream.close();await stream.preview(payload(first));assert.deepEqual(deltas,[])
+})
+
+test('authority on-topic hold keeps an unrelated finding private until the requested finding arrives',async()=>{
+  const q='Who was responsible for robodebt?',deltas=[],stream=api.researchSentenceStream(q,async text=>deltas.push(text))
+  const context='Robin Example said the government ignored warnings.',unrelated='The NACC found officials mishandled a referral.',finding='The Royal Commission into Robodebt found the scheme was unlawful.'
+  await stream.preview(payload(context+'\n'+unrelated))
+  assert.deepEqual(deltas,[])
+  await stream.preview(payload(context+'\n'+unrelated+'\n'+finding))
+  assert.equal(deltas.join(''),finding)
+})
+
+test('person overview stays held until its complete source list can supply excerpts',async()=>{
+  const deltas=[],q='What has Jane Example said about housing?',stream=api.researchSentenceStream(q,async text=>deltas.push(text))
+  const text='Jane Example called for simpler housing approvals.'
+  await stream.preview({...payload(text),answer_scope:{people:['Jane Example']}})
+  assert.deepEqual(deltas,[])
+  const control=api.researchSentenceStream(q,async text=>deltas.push(text))
+  await control.preview(payload(text))
+  assert.equal(deltas.join(''),text,'the person-scope guard is the reason this otherwise stable sentence stayed held')
+})
+
+test('receipt and required-headline drafts stay held, and provider failure retains the old facts fallback',async()=>{
+  const cases=[
+    {question,period:{kind:'all',label:''},facts:[{id:1,text:'Example Holdings provided funding to Labor.',source:receipt('money','Labor')}]},
+    {question:'Who is the highest paid politician in 2005?',period:api.inferPeriod('in 2005'),first:'In 2005 Robin Example was the highest paid politician, with an annual salary entitlement of $288,990.',facts:[
+      {id:1,text:'Robin Example: $277,602 a year as Prime Minister, 2005-01-01 to 2005-06-30; base $106,770 plus 160%.',source:source('salary-1','Robin Example: $277,602 a year as Prime Minister, 2005-01-01 to 2005-06-30; base $106,770 plus 160%.')},
+      {id:2,text:'Robin Example: $288,990 a year as Prime Minister, 2005-07-01 to 2005-12-31; base $111,150 plus 160%.',source:source('salary-2','Robin Example: $288,990 a year as Prime Minister, 2005-07-01 to 2005-12-31; base $111,150 plus 160%.')},
+    ]},
+  ]
+  for(const input of cases){
+    const gate=deferred(),waiting=deferred(),deltas=[]
+    let raw=''
+    const model=scriptedResearchModel([{text:{answer_decision:'answer',sentences:[{text:input.first??'The housing report found planning rules slowed approvals.',facts:input.facts.map(f=>f.id)},{text:'TAIL_WAIT unfinished text.',facts:[1]}]}}],{onPiece:async piece=>{raw+=piece;if(raw.includes('TAIL_WAIT')){waiting.resolve();await gate.promise;throw Error('provider disconnected')}}})
+    const stream=api.researchSentenceStream(input.question,async text=>deltas.push(text)),write=api.createAnswerWriter(budgetOptions(model))
+    const writing=write(input,{rounds:1,tokens:{input:0,output:0}},undefined,3000,stream.preview)
+    try{await waiting.promise;await new Promise(r=>setTimeout(r,10));assert.deepEqual(deltas,[])}finally{gate.resolve()}
+    const done=await writing
+    assert.equal(model.calls.length,1)
+    const expected=api.groundAnswerPayload(api.proseFallback(input),input.question)
+    assert.equal(done.answer,expected.answer)
+  }
+})
+
+test('P1-3: the outer writer deadline retains its checked prefix and blocks detached previews',async()=>{
+  const first='The housing report found planning rules slowed approvals.',deltas=[]
+  const recorded='The housing report recorded delays across several councils.'
+  const qa=payload(recorded,[source('housing',recorded)],{'housing/t/body/0':[[0,recorded.length]]})
+  const written=payload(first,qa.sources,{'housing/t/body/0':[[0,first.length]]})
+  const stream=api.researchSentenceStream(question,async text=>deltas.push(text)),progress=async()=>{}
+  progress.answer=stream.preview
+  let late
+  const research=Object.assign(async()=>({rounds:1,steps:[],results:[],selected:[],tokens:{input:0,output:0},qualitative:qa}),{
+    writingWallMs:1000,
+    write:async(_input,_stats,_signal,_ms,preview)=>{
+      await preview(written)
+      late=()=>preview(payload(first+'\n\nThe report recommended simpler planning rules.'))
+      return new Promise(()=>{}) // A provider or cleanup task ignoring cancellation cannot replace released text.
+    },
+  })
+  const run=await api.runAgentic(question,{asset:async()=>null,kb:async()=>({}),generate:async()=>{throw Error('planner must not run')},research},progress,40_000,api.inferPeriod(question),{},emptyScope)
+  assert.equal(run.answer,deltas.join(''))
+  assert.equal(run.answer,first)
+  await late()
+  assert.deepEqual(deltas,[first])
 })

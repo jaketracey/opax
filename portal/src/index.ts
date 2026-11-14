@@ -6943,10 +6943,11 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
         namedScope=await resolveNamedScope(question,agenticToolDeps(env,budget.signal),Math.min(4_000,budget.remaining),agenticFilters(input))
       }
     }
+    let releasedResearchPrefix=''
     const finish = (run: AgenticPayload) => {
       const payload=agenticAskPayload(run, question)
       // Source rows are linked last: grounding reads the rows as evidence and re-derives which are cited.
-      const finalPayload=linkAskSources(withTranscriptNote(loopRoute&&!calculatedPayAnswer(payload)?groundAnswerPayload(payload,question):payload),run.source_links,SITE_ORIGIN)
+      const finalPayload=linkAskSources(withTranscriptNote(loopRoute&&!calculatedPayAnswer(payload)?groundAnswerPayload(payload,question,releasedResearchPrefix):payload),run.source_links,SITE_ORIGIN)
       const response = json(finalPayload)
       // An answer with no citation at all is not kept for a week, and a refusal or limitation not at all: the next ask may do better (as cacheableAnswer).
       if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && !shortenedCaller(caller) && run.qualitative?.answer_status !== 'uncited' && cacheableRoutedAnswer(finalPayload, loopRoute)) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
@@ -6971,15 +6972,18 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
           controller.enqueue(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`))
         }
         let sentenceLane=false
+        let closeSentences=()=>{}
         const enableSentences=async()=>{if(!sentenceLane){sentenceLane=true;await send('research_sentences',{})}}
         if(loopRoute){
-          const sentences=researchSentenceStream(question,async text=>{await enableSentences();await send('research_sentence',{text})})
+          const sentences=researchSentenceStream(question,async text=>{await enableSentences();await send('research_sentence',{text});releasedResearchPrefix+=text})
           send.answer=sentences.preview
+          closeSentences=sentences.close
         }
         ctx.waitUntil((async () => {
           try {
             await send('status', { phase: 'searching' })
             const run = await executeAgentic(input, env, ctx, send, budget.signal, budget.remaining, namedScope, trackRun)
+            closeSentences()
             if (gone || request.signal.aborted) return
             if (!loopRoute || run.answered && !run.over_budget) budget.signal.throwIfAborted()
             if (electorateData || run.answered && !run.over_budget) { const response = finish(run); if(loopRoute)await enableSentences(); await send('done', await response.json()) }
@@ -6994,7 +6998,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
             }
           } catch {
             if (!gone && !request.signal.aborted) controller.enqueue(encoder.encode('event: error\ndata: {"error":"The answer took too long. Please try again.","final":true}\n\n'))
-          } finally { budget.cancel(); if (!gone) controller.close() }
+          } finally { closeSentences(); budget.cancel(); if (!gone) controller.close() }
         })())
       },
       cancel() { gone = true; budget.cancel() },

@@ -80,15 +80,17 @@ const ask=async(fixture,stream)=>{
     const response=await h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json','x-opax-nocache':'1'},body:JSON.stringify({question:fixture.question,...fixture.input})})
     let raw='',firstTextMs
     const deltas=[]
+    let resets=0
     if(stream){
-      const decoder=new TextDecoder(),parser=new AskStream({stage(){},retry(){},delta(text){deltas.push(text);firstTextMs??=performance.now()-started}})
+      const decoder=new TextDecoder(),parser=new AskStream({stage(){},retry(){deltas.length=0;resets++},delta(text){deltas.push(text);firstTextMs??=performance.now()-started}})
       for await(const chunk of response.body){const text=decoder.decode(chunk,{stream:true});raw+=text;parser.push(text)}
       const tail=decoder.decode();raw+=tail;parser.push(tail,true)
       const done=parser.result()
       const doneMs=performance.now()-started
       if(done.answer)firstTextMs??=doneMs
       if(!process.env.ASK_REPLAY_ENTRY&&!done.pay_answer && !response.headers.has('x-opax-identity-route'))assert.equal(deltas.join(''),done.answer,'done.answer equals the concatenated checked deltas byte for byte')
-      measurements.push({id:fixture.id,first_text_ms:Math.round(firstTextMs??0),done_ms:Math.round(doneMs),deltas:deltas.length,answer:done.answer})
+      assert.equal(resets,0,'the stored replay answers never need stream recovery')
+      measurements.push({id:fixture.id,resets,first_text_ms:Math.round(firstTextMs??0),done_ms:Math.round(doneMs),deltas:deltas.length,answer:done.answer})
     }else raw=await response.text()
     while(pending.length)await Promise.all(pending.splice(0))
     return {response,raw,logs,model:globalThis.__researchModel,unserved:world.unserved}

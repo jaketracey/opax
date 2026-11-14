@@ -37,7 +37,7 @@ import { withRecordedChambers } from './ask-chamber-phrases'
 import { broadAbsenceQuestion, verifiedAbsenceCount, absenceClaim } from './research-absence'
 import { broadTopicOverview, overviewResearchHint, overviewContextOnly, overviewSearchPlan, personOverviewHint } from './ask-answer-grain'
 import { modelProse, usableProse } from './research-text-answer'
-import { generateResearchText, completedAnswerEntries } from './research-generation'
+import { generateResearchText } from './research-generation'
 
 /** The answer tool, shared by the research loop and its final answer call. */
 const ANSWER_DESCRIPTION = 'Finish with the answer. Answer the exact question in your first sentence. For a who question, name the people and their roles first, then what the inquiry or record found about each; for why, give the reason; for what happened, give the outcome. Then the supporting detail. Say each point once. Describe sources as the public record describes them (\"the Royal Commission\'s report found …\"), never how OPAX loaded or stored them. facts: structured record fact ids whose figures answer the question, each selected once. points: 2 to 8 complete sentences in Australian English (4 to 8 for a broad topic overview), the first answering the question directly. Cite a point with the id of the passage that supports it, or "fact-N" for record fact N, and a phrase of 5 to 25 words copied exactly from it; a point of context or background from general knowledge carries no id. Use quotation marks only around words copied exactly from a cited passage. ' + ASK_ATTRIBUTION_RULE + 'Name the chamber a passage records in its chamber field (senate is the Senate, representatives the House of Representatives). Describe a money record by the name on the record ("a donor named X gave $5,600 in 2021-22"), and link it to a politician only when the record itself says it is them. Give facts, points or both.'
@@ -687,7 +687,6 @@ export function createResearch(options: ResearchOptions): Research {
         context.constraints = constraints
         check()
       }
-      const streamedAnswers=new Map<string,{raw:string;count:number}>()
       await Promise.race([generateResearchText({
         model: options.model!, instructions, tools, toolChoice: 'required',
         prompt: JSON.stringify({ question, period: context.period, namedScope: context.named, constraints, budget: { rounds: limits.rounds, calls: RESEARCH_MAX_CALLS, answer_target_ms: ASK_ANSWER_TARGET_MS, wall_ms: limits.wallMs }, conversation: options.conversation ?? [], ...(results.length?{prior_records:results.map(output),prior_record_note:'These records were re-read for the person in the previous answer. Answer their role from these records and search for further records about the same person if needed. A non-parliamentarian need not have Hansard speeches.'}:{}) }),
@@ -773,25 +772,13 @@ export function createResearch(options: ResearchOptions): Research {
           }
           check()
         },
-      },context.progress.answer?async chunk=>{
-        if(chunk.type==='tool-input-start'&&chunk.toolName==='answer')streamedAnswers.set(chunk.id,{raw:'',count:0})
-        if(chunk.type!=='tool-input-delta')return
-        const pending=streamedAnswers.get(chunk.id)
-        if(!pending)return
-        pending.raw+=chunk.delta
-        const points=completedAnswerEntries(pending.raw,'points')
-        if(points.length<=pending.count)return
-        pending.count=points.length
-        // A record selection or non-speech/bill passage can enter writeRun and be rewritten. Keep that tail there,
-        // including when a later point in this answer might select one of the record passages already gathered.
-        if(!qualitativeRun||recordFacts().tools.size||[...passages.values()].some(p=>!['speech','bill'].includes(p.kind))||inFlight.size||hearingEvidenceQuestion(question))return
-        const candidate={points}
-        const checked=draftAnswer(candidate,null,()=>{})
-        if(checked){draft=candidate;await context.progress.answer?.({...checked,answer_scope:constraints})}
-      }:undefined), stopped])
+      },context.progress.answer?async()=>{}:undefined), stopped])
       check()
       if (!finished) fail(stats.rounds >= limits.rounds || calls >= RESEARCH_MAX_CALLS ? 'steps' : answerAttempts ? 'grounding' : 'no_finish')
       await Promise.race([settle(), stopped])
+      // An answer's arguments can still be rejected, or the loop can fail after execution. Only publish
+      // after acceptance and settlement, when this run can no longer fall back to the planner.
+      if(qualitative&&qualitativeRun&&!recordFacts().tools.size&&![...passages.values()].some(p=>!['speech','bill'].includes(p.kind))&&!hearingEvidenceQuestion(question))await context.progress.answer?.({...qualitative as QualitativeAnswer,answer_scope:constraints})
       return { constraints, steps, results, selected, ...stats, ...(qualitative ? { qualitative:{...(qualitative as QualitativeAnswer),answer_scope:constraints}, points:selectedPoints } : {}) }
     } catch (error) {
       if (!(error instanceof ResearchError) && isResearchCreditError(error)) {
