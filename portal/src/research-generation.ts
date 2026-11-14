@@ -23,7 +23,7 @@ export async function generateResearchText(options: Parameters<typeof generateTe
     if (chunk.type === 'error') throw chunk.error
     await observe(chunk)
   }
-  return { text: await result.text, usage: await result.usage, providerMetadata: await result.providerMetadata }
+  return { text: await result.text, usage: await result.usage, providerMetadata: await result.providerMetadata, responseMessages: await result.responseMessages }
 }
 
 /** Incremental JSON scanner. Each character is visited once, including across escaped strings and token splits.
