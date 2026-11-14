@@ -10,7 +10,8 @@ import { runTick } from '../src/tick.ts'
 import { validateSummary, WITNESS_OPENER_PROBLEM } from '../src/validate.ts'
 import { parseArgs } from '../scripts/regen/args.ts'
 import { acquireLock, admit, classifyResponse, headroomFrom, Ledger, meter, StopRun, usdToNeurons, type Caps } from '../scripts/regen/guard.ts'
-import { release, Runner, PRIMARY_MODEL, type AiPost } from '../scripts/regen/runner.ts'
+import { NO_BACKFILL, release, Runner, PRIMARY_MODEL, STEADY_RECHECK_MS, type AiPost } from '../scripts/regen/runner.ts'
+import { hasBackfill } from '../src/db.ts'
 import { SEQ_BAND, witnessHit } from '../scripts/regen/slices.ts'
 import * as store from '../scripts/regen/store.ts'
 import { FakeAi, FakeKb, makeD1, makeDeps, rows, speechText } from './helpers.ts'
@@ -73,23 +74,28 @@ function world(opts: { rids?: Record<string, Spec> } = {}) {
 
 const CAPS: Caps = { runNeurons: usdToNeurons(30), dailyBudget: 1_500_000, workerHeadroom: 756_167 }
 
-function runner(w: ReturnType<typeof world>, ai: AiPost, o: { caps?: Caps; worker?: number; compare?: boolean; limit?: number; runId?: string; concurrency?: number; onWorkerRead?: () => void; spendFails?: boolean } = {}) {
+function runner(w: ReturnType<typeof world>, ai: AiPost, o: { caps?: Caps; worker?: number; compare?: boolean; limit?: number; runId?: string; concurrency?: number; onWorkerRead?: () => void; spendFails?: boolean; backfill?: () => Promise<boolean>; wait?: boolean } = {}) {
   const ledger = new Ledger(join(w.dir, 'ledger.jsonl'))
   const logs: string[] = []
   let t = T0
+  const slept = { ms: 0 }
   const r = new Runner({
     db: w.d1.d1 as any, kb: w.kb, ai, ledger, resultsPath: join(w.dir, 'results.jsonl'), stopFile: join(w.dir, 'STOP'), caps: o.caps ?? CAPS,
     workerSpendToday: async () => {
       o.onWorkerRead?.()
       return o.worker ?? 0
     },
+    backfillActive: o.backfill ?? (async () => true),
     recordSpend: async (s) => {
       if (o.spendFails) throw new Error('D1 HTTP 503')
       await store.recordSpend(w.d1.d1 as any, s)
     },
-    now: () => (t += 10), sleep: async () => {}, log: (l) => logs.push(l),
-  }, { runId: o.runId ?? 'run-1', concurrency: o.concurrency ?? 2, compare: o.compare, limit: o.limit })
-  return { r, ledger, logs }
+    now: () => (t += 10), sleep: async (ms) => {
+      slept.ms += ms
+      t += ms // a real sleep moves the clock
+    }, log: (l) => logs.push(l),
+  }, { runId: o.runId ?? 'run-1', concurrency: o.concurrency ?? 2, compare: o.compare, limit: o.limit, waitForNextDay: o.wait })
+  return { r, ledger, logs, slept }
 }
 
 async function seeded(w: ReturnType<typeof world>, list: string[], variant: 'b' | 'role' = 'b', slice: 'zenodo' | 'witness' | 'gptoss' = 'zenodo') {
@@ -211,6 +217,26 @@ test('admit: the run cap, then today\'s share after the Worker\'s headroom or it
   assert.equal(admit(CAPS, t(0, 743_900), '2026-11-14', 0, 800).ok, false)
   assert.equal(admit(CAPS, t(0, 500_000), '2026-11-14', 1_100_000, 800).ok, false) // the Worker ran past its headroom
   assert.equal(headroomFrom([{ day: 'a', n: 630_139 }, { day: 'b', n: 4000 }]), 756_167)
+})
+
+test('admit boundary: cap US$0.05 (4545 neurons) with US$0.049 (4454) spent: a US$0.002 call (182) is refused, US$0.001 (91) passes, 92 is refused', () => {
+  const caps = { ...CAPS, runNeurons: usdToNeurons(0.05) }
+  assert.equal(caps.runNeurons, 4545)
+  const t = { neurons: 4454, usd: 0, calls: 0, byDay: { '2026-11-14': 4454 }, unsettled: 0, stops: 0 }
+  const kind = (upper: number) => {
+    const r = admit(caps, t, '2026-11-14', 0, upper)
+    return r.ok ? 'ok' : r.kind
+  }
+  assert.equal(kind(182), 'run-cap')
+  assert.equal(kind(92), 'run-cap')
+  assert.equal(kind(91), 'ok') // exactly at the cap is allowed; a strict < would refuse it
+  // the daily share has the same edge: ours + upper == allowance passes, one more is refused
+  const day = { ...CAPS, runNeurons: usdToNeurons(30) }
+  const allowance = day.dailyBudget - day.workerHeadroom
+  const d = { neurons: 0, usd: 0, calls: 0, byDay: { '2026-11-14': allowance - 100 }, unsettled: 0, stops: 0 }
+  assert.equal(admit(day, d, '2026-11-14', 0, 100).ok, true)
+  const over = admit(day, d, '2026-11-14', 0, 101)
+  assert.equal(over.ok ? 'ok' : over.kind, 'daily')
 })
 
 test('admit fails closed: a NaN or missing cap, spend or bound refuses; usdToNeurons refuses caps outside (0, 30]', () => {
@@ -510,6 +536,34 @@ test('daily share used up (the Worker\'s headroom kept): the run pauses without 
   assert.deepEqual([end.end, ai.calls.length, regen(w, 'a1').state], ['paused', 0, 'pending'])
 })
 
+test('no backfill in the Worker queue (steady budget): the run pauses before any call; a backfill row lets it go', async () => {
+  const w = world()
+  await seeded(w, ['a1'])
+  const ai = new ScriptAi(() => ok(NEW))
+  const real = () => hasBackfill(w.d1.d1)
+  assert.equal(await real(), false) // the world's queue holds only finished rows
+  const { r, ledger, logs } = runner(w, ai, { backfill: real })
+  assert.deepEqual([(await r.loop()).end, ai.calls.length, regen(w, 'a1').state, ledger.totals().neurons], ['paused', 0, 'pending', 0])
+  assert.equal(existsSync(join(w.dir, 'ledger.jsonl')), false) // not even a reservation
+  assert.equal(rows(w.d1.raw, `SELECT * FROM spend WHERE model LIKE 'regen:%'`).length, 0)
+  assert.ok(!logs.some((l) => l.includes('STOPPED')))
+  w.d1.raw.prepare(`INSERT INTO queue (rid, task, status, priority, created_at, updated_at) VALUES (?, 'speech_summary', 'pending', 0, 1, 1)`).run('b'.padEnd(32, 'f'))
+  assert.equal(await real(), true)
+  assert.deepEqual([(await runner(w, ai, { backfill: real }).r.loop()).end, ai.calls.length, regen(w, 'a1').state], ['done', 1, 'queued'])
+})
+
+test('with --wait, a no-backfill pause is rechecked every 10 minutes (not slept to the next day) and the run carries on', async () => {
+  const w = world()
+  await seeded(w, ['a1'])
+  const ai = new ScriptAi(() => ok(NEW))
+  let checks = 0
+  const { r, logs, slept } = runner(w, ai, { wait: true, backfill: async () => ++checks > 1 })
+  assert.equal((await r.loop()).end, 'done')
+  assert.ok(slept.ms > 0 && slept.ms <= STEADY_RECHECK_MS, `slept ${slept.ms} ms: one recheck interval, not until the next day`)
+  assert.deepEqual([ai.calls.length, regen(w, 'a1').state], [1, 'queued'])
+  assert.ok(logs.some((l) => l === `paused: ${NO_BACKFILL}`))
+})
+
 test('a per-item 400 (code 5006) skips and logs that row only; the run continues', async () => {
   const w = world({ rids: { a1: {}, b2: {} } })
   await seeded(w, ['a1', 'b2'])
@@ -640,6 +694,16 @@ test('pilot compare: EVERY row is held (nothing reaches production); a witness r
   assert.deepEqual([regen(w, 'w1').state, regen(w, 'w1').variant, queue(w, 'w1').result, queue(w, 'w1').outcome], ['queued', 'b', NEW, 'unwritten'])
   assert.deepEqual([regen(w, 'z1').state, queue(w, 'z1').result], ['queued', NEW]) // its only variant
   assert.equal(ai.calls.length, 3)
+})
+
+test('release --rids: only the listed held rows are queued; every other held row stays held', async () => {
+  const w = world({ rids: { z1: {}, z2: {} } })
+  await seeded(w, ['z1', 'z2'])
+  await runner(w, new ScriptAi(() => ok(NEW)), { compare: true }).r.loop()
+  assert.deepEqual([regen(w, 'z1').state, regen(w, 'z2').state], ['held', 'held'])
+  await release(w.d1.d1 as any, 'run-1', 'b', T0, false, new Set([w.rid('z2')]))
+  assert.deepEqual([regen(w, 'z1').state, queue(w, 'z1').result], ['held', OLD])
+  assert.deepEqual([regen(w, 'z2').state, queue(w, 'z2').result], ['queued', NEW])
 })
 
 test('order: one slice at a time in band order (zenodo, then witness, then gptoss), and --limit bounds the pilot', async () => {

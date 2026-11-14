@@ -87,6 +87,14 @@ The values are checked too:
   table, without `regen:` rows).
 - When the share is used up, the run pauses to the next UTC day (`--wait`) or exits.
 - The Senate and NSW backfills are not paused.
+- **No backfill, no admits.** The Worker's budget is 1.5M only while low-priority backfill rows remain
+  (its own `hasBackfill()`). Otherwise it is `STEADY_NEURON_BUDGET` (150k), and its guard sums every
+  `spend` row, ours included.
+  - So the runner admits nothing while the Worker has no backfill. Without this, our spend would use up the
+    150k and stop live enrichment, and the flush of our own briefs (`tick.ts` `mayContinue`).
+  - With `--wait`, it checks again every 10 minutes; without, it exits `paused`.
+  - The check is cached for a minute.
+  - `headroom` shows whether backfill rows exist now.
 
 **Order of checks for each request:**
 1. stop, pause and the STOP file;
@@ -171,6 +179,7 @@ Then judge the held rows: role against b for witness rows, with the 5b judge and
 ```sh
 node scripts/regen/cli.ts release --run 5b-cheap-1 --variant role --dry-run    # or --variant b if role is not better
 node scripts/regen/cli.ts release --run 5b-cheap-1 --variant role
+node scripts/regen/cli.ts release --run 5b-cheap-1 --variant role --rids <rid>,<rid>   # only rows that passed; the rest stay held
 ```
 
 `release` queues the chosen variant of each witness row. A zenodo row has one variant (b) and is queued

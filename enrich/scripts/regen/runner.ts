@@ -41,6 +41,12 @@ export interface RunDeps {
   caps: Caps
   /** The Worker's spend so far today (UTC), without the runner's own `regen:` rows; may be cached briefly by the caller. */
   workerSpendToday: (day: string) => Promise<number>
+  /**
+   * Whether the Worker is on its backfill budget (DAILY_NEURON_BUDGET, 1.5M): any low-priority row still to do
+   * (the Worker's own hasBackfill). Without one it is on STEADY_NEURON_BUDGET (150k), our booked spend would
+   * use that up and stop live enrichment, so the runner admits nothing. May be cached briefly by the caller.
+   */
+  backfillActive: () => Promise<boolean>
   /** Book a settled call into the Worker's D1 `spend` table (as `regen:<model>`) so the Worker's own guard sees it. */
   recordSpend: (s: { day: string; model: string; neurons: number; inTokens: number; outTokens: number }) => Promise<void>
   now: () => number
@@ -58,11 +64,18 @@ export interface RunOptions {
    * until `release` picks a variant. 'role' rows also get the plain-b variant generated for comparison.
    */
   compare?: boolean
-  /** When today's share is used up, sleep to the next UTC day and continue (else return 'paused'). */
+  /**
+   * When paused, wait and continue (else return 'paused'): to the next UTC day when today's share is used up,
+   * or STEADY_RECHECK_MS at a time while the Worker has no backfill.
+   */
   waitForNextDay?: boolean
 }
 
 export type RunEnd = { end: 'done' | 'limit' | 'paused' } | { end: 'stopped'; reason: string }
+
+/** While the Worker has no backfill, look again this often. */
+export const STEADY_RECHECK_MS = 10 * 60_000
+export const NO_BACKFILL = 'the Worker has no backfill rows, so it is on its steady budget (150k) and would count our spend against it: paused so live enrichment is never starved'
 
 /** The Worker's prompt record (tick.ts processRid), plus speaker_role for the 'role' variant. */
 export function recordFor(resource: KbResource, rid: string, variant: 'b' | 'role'): PromptRecord {
@@ -102,6 +115,8 @@ const sameBrief = (a: string | null | undefined, b: string | null | undefined): 
 export class Runner {
   private stop: StopRun | null = null
   private paused: string | null = null
+  /** Why the run is paused: today's share ('daily', resumes next UTC day) or no backfill ('steady', rechecked). */
+  private pauseKind: 'daily' | 'steady' = 'daily'
   private kbFailures = 0
   private skipsInARow = 0
   private lastSettle = -Infinity
@@ -146,13 +161,21 @@ export class Runner {
     if (this.blocked(ctx)) return false
     const day = utcDayOf(this.d.now())
     const worker = await this.d.workerSpendToday(day)
-    if (this.blocked(ctx)) return false // set while the D1 read was in flight
+    const backfill = await this.d.backfillActive()
+    if (this.blocked(ctx)) return false // set while the D1 reads were in flight
+    if (backfill !== true) {
+      ctx.paused = this.paused = NO_BACKFILL
+      this.pauseKind = 'steady'
+      return false
+    }
     this.d.ledger.sync()
     const upper = upperFor(model, body)
     const verdict = admit(this.d.caps, this.d.ledger.totals(), day, worker, upper)
     if (!verdict.ok) {
-      if (verdict.kind === 'daily') ctx.paused = this.paused = verdict.reason
-      else ctx.stop = this.stop = new StopRun(verdict.reason)
+      if (verdict.kind === 'daily') {
+        ctx.paused = this.paused = verdict.reason
+        this.pauseKind = 'daily'
+      } else ctx.stop = this.stop = new StopRun(verdict.reason)
       return false
     }
     const id = randomUUID()
@@ -380,7 +403,8 @@ export class Runner {
       if (paused) {
         if (!this.o.waitForNextDay) return { end: 'paused' }
         this.d.log(`paused: ${paused}`)
-        await this.sleepToNextDay()
+        if (this.pauseKind === 'steady') await this.sleepFor(STEADY_RECHECK_MS)
+        else await this.sleepToNextDay()
         this.paused = null
       }
     }
@@ -394,6 +418,14 @@ export class Runner {
     this.d.ledger.append({ t: 'stop', ts: this.d.now(), reason })
     this.d.log(`STOPPED: ${reason}`)
     return { end: 'stopped', reason }
+  }
+
+  private async sleepFor(ms: number): Promise<void> {
+    const wake = this.d.now() + ms
+    while (this.d.now() < wake) {
+      if (stopRequested(this.d.stopFile)) return
+      await this.d.sleep(Math.min(30_000, wake - this.d.now()))
+    }
   }
 
   private async sleepToNextDay(): Promise<void> {
@@ -411,9 +443,10 @@ export class Runner {
  * alternate) has one result and is queued as it is; a role row is queued as the chosen variant, or left held
  * if that variant was not generated.
  */
-export async function release(db: MiniD1, runId: string, variant: 'b' | 'role', now: number, dryRun: boolean): Promise<string[]> {
+export async function release(db: MiniD1, runId: string, variant: 'b' | 'role', now: number, dryRun: boolean, only?: ReadonlySet<string>): Promise<string[]> {
   const out: string[] = []
   for (const row of await store.rowsIn(db, runId, ['held'])) {
+    if (only && !only.has(row.rid)) continue // not listed: stays held
     const single = row.variant === 'b' && !row.alt_result
     const swap = !single && row.variant !== variant
     if (swap && (!row.alt_result || row.alt_variant !== variant)) {

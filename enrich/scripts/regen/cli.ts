@@ -4,6 +4,7 @@ import { spawnSync } from 'node:child_process'
 import { appendFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
+import { hasBackfill } from '../../src/db.ts'
 import { Kb } from '../../src/kb.ts'
 import { COMMANDS, parseArgs, REQUIRED } from './args.ts'
 import { d1Rest, type MiniD1 } from './d1rest.ts'
@@ -106,7 +107,8 @@ async function headroom(db: MiniD1): Promise<number> {
   const since = utcDayOf(Date.now() - 30 * 86_400_000)
   const days = await store.workerDays(db, since)
   const workerHeadroom = headroomFrom(days)
-  log(`headroom: Worker peak day since ${since} = ${Math.round(Math.max(0, ...days.map((d) => Number(d.n))))} neurons; kept for it ${workerHeadroom}; ours at most ${DAILY_BUDGET - workerHeadroom} a day`)
+  const backfill = await hasBackfill(db as any)
+  log(`headroom: Worker peak day since ${since} = ${Math.round(Math.max(0, ...days.map((d) => Number(d.n))))} neurons; kept for it ${workerHeadroom}; ours at most ${DAILY_BUDGET - workerHeadroom} a day while the Worker has backfill rows (now: ${backfill ? 'yes' : 'NO, so the runner pauses'})`)
   return workerHeadroom
 }
 
@@ -172,11 +174,16 @@ async function main(): Promise<void> {
     const ledger = new Ledger(PATHS.ledger)
     const c = await caps(db, flags.get('cap-usd') as number)
     let cache = { day: '', at: 0, n: 0 }
+    let backfill = { at: 0, on: false }
     const runner = new Runner({
       db, kb: kb(), ai: workersAi(), ledger, resultsPath: PATHS.results, stopFile: PATHS.stop, caps: c,
       workerSpendToday: async (day) => {
         if (cache.day !== day || Date.now() - cache.at > 5 * 60_000) cache = { day, at: Date.now(), n: await store.workerSpendToday(db, day) }
         return cache.n
+      },
+      backfillActive: async () => {
+        if (Date.now() - backfill.at > 60_000) backfill = { at: Date.now(), on: await hasBackfill(db as any) }
+        return backfill.on
       },
       recordSpend: (s) => store.recordSpend(db, s),
       now: () => Date.now(), sleep: (ms) => new Promise((r) => setTimeout(r, ms)), log,
@@ -199,7 +206,10 @@ async function main(): Promise<void> {
     await status(db, runId)
   } else if (cmd === 'release') {
     const variant = flags.get('variant') as 'b' | 'role'
-    for (const line of await release(db, runId, variant, Date.now(), dryRun)) log(`release${dryRun ? ' (dry run)' : ''} ${line}`)
+    const only = flags.has('rids') ? new Set(String(flags.get('rids')).split(',').map((r) => r.trim()).filter((r) => /^[0-9a-f]{32}$/.test(r))) : undefined
+    if (only && !only.size) throw new Error('release: --rids lists no rids')
+    for (const line of await release(db, runId, variant, Date.now(), dryRun, only)) log(`release${dryRun ? ' (dry run)' : ''} ${line}`)
+    if (only) log(`release: only the ${only.size} listed rids; every other held row stays held`)
   } else if (cmd === 'rollback') {
     // parseArgs has checked exactly one of --all, --slice, --rids
     let rows = await store.rowsIn(db, runId, ['queued', 'written'])

@@ -14,7 +14,7 @@ export const COMMANDS: Record<string, Record<string, Kind>> = {
   run: { ...RUN, 'cap-usd': 'usd', concurrency: 'int', limit: 'int', compare: 'bool', wait: 'bool' },
   status: { ...RUN },
   verify: { ...RUN },
-  release: { ...RUN, variant: 'variant', 'dry-run': 'bool' },
+  release: { ...RUN, variant: 'variant', rids: 'text', 'dry-run': 'bool' },
   rollback: { ...RUN, all: 'bool', slice: 'slice', rids: 'text', limit: 'int', 'dry-run': 'bool' },
 }
 
