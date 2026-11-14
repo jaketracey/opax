@@ -2,17 +2,43 @@ import { act, type ReactElement } from 'react';
 import TestRenderer from 'react-test-renderer';
 import {
   Dimensions,
+  Platform,
   ScrollView,
   StyleSheet,
   type LayoutChangeEvent,
 } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { HeaderHeightContext } from 'expo-router/react-navigation';
+import {
+  SafeAreaProvider,
+  SafeAreaInsetsContext,
+} from 'react-native-safe-area-context';
+import {
+  HeaderHeightContext,
+  NavigationRouteContext,
+} from 'expo-router/react-navigation';
+import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
+import type { WindowTraits } from '../src/design/adaptive';
 import type { NativeStackNavigationOptions } from 'expo-router';
 import AskConsent from '../src/features/ask/AskConsent';
 import { ConsentSheet } from '../src/features/talk/Consent';
 import { SHEET_HEADER } from '../src/features/sheets/fitted';
 import { withNavigationOptions } from './navigation-options';
+
+jest.mock('react-native', () => {
+  const actual = jest.requireActual('react-native');
+  return Object.defineProperties(Object.create(actual), {
+    Platform: {
+      value: {
+        ...actual.Platform,
+        isPad: false,
+      },
+    },
+  });
+});
+jest.mock('../src/design/adaptive', () => ({
+  ...jest.requireActual('../src/design/adaptive'),
+  useWindowTraits: () => mockTraits,
+}));
+let mockTraits: WindowTraits | null = null;
 
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
@@ -56,138 +82,309 @@ afterEach(() => {
     Dimensions.set({ window: originalWindow, screen: originalScreen });
   });
   mockVerticalBar = 'unspecified';
+  Object.assign(Platform, { isPad: false });
+  mockTraits = null;
 });
 
-function render(
-  component: ReactElement,
-  width: number,
-  height: number,
-  fontScale: number,
-  top = 24,
-  header = SHEET_HEADER,
-) {
-  const size = { width, height, scale: 2, fontScale };
-  Dimensions.set({ window: size, screen: size });
-  let options: NativeStackNavigationOptions = {};
-  let view!: TestRenderer.ReactTestRenderer;
+interface Pose {
+  width: number;
+  height: number;
+  isPad?: boolean;
+  traits?: WindowTraits | null;
+  top?: number;
+  bottom?: number;
+  header?: number;
+  fontScale?: number;
+  nativeProps?: NativeStackNavigationOptions['unstable_nativeProps'];
+}
+const regular: WindowTraits = {
+  horizontal: 'regular',
+  vertical: 'regular',
+  foldable: false,
+};
+const compact: WindowTraits = { ...regular, horizontal: 'compact' };
+
+function render(component: ReactElement, pose: Pose) {
+  const {
+    width,
+    height,
+    top = 24,
+    bottom = 20,
+    header = SHEET_HEADER,
+    fontScale = 3.12,
+  } = pose;
+  Object.assign(Platform, { isPad: pose.isPad ?? false });
+  mockTraits = pose.traits ?? null;
   act(() => {
-    view = TestRenderer.create(
-      withNavigationOptions(
-        <SafeAreaProvider
-          initialMetrics={{
-            frame: { x: 0, y: 0, width, height },
-            insets: { top, bottom: 20, left: 0, right: 0 },
-          }}
-        >
-          <HeaderHeightContext.Provider value={header}>
-            {component}
-          </HeaderHeightContext.Provider>
-        </SafeAreaProvider>,
-        (next) => {
-          options = next;
-        },
-      ),
+    const size = { width, height, scale: 2, fontScale };
+    Dimensions.set({ window: size, screen: size });
+  });
+  let options: NativeStackNavigationOptions = {};
+  const route = { key: 'current', name: 'consent' };
+  const descriptors = {
+    current: { options: { unstable_nativeProps: pose.nativeProps } },
+  };
+  let view!: TestRenderer.ReactTestRenderer;
+  let currentTop = top;
+  let currentHeader = header;
+  const tree = () =>
+    withNavigationOptions(
+      <NavigationRouteContext.Provider value={route}>
+        <DescriptorsContext.Provider value={descriptors as never}>
+          <SafeAreaProvider
+            initialMetrics={{
+              frame: { x: 0, y: 0, width, height },
+              insets: { top, bottom, left: 0, right: 0 },
+            }}
+          >
+            <SafeAreaInsetsContext.Provider
+              value={{ top: currentTop, bottom, left: 0, right: 0 }}
+            >
+              <HeaderHeightContext.Provider value={currentHeader}>
+                {component}
+              </HeaderHeightContext.Provider>
+            </SafeAreaInsetsContext.Provider>
+          </SafeAreaProvider>
+        </DescriptorsContext.Provider>
+      </NavigationRouteContext.Provider>,
+      (next) => {
+        options = next;
+      },
     );
+  act(() => {
+    view = TestRenderer.create(tree());
   });
   mounted.push(view);
   return {
     scroll: () => view.root.findByType(ScrollView),
-    cap: () =>
+    cap: (): number =>
       StyleSheet.flatten(view.root.findByType(ScrollView).props.style)
         .maxHeight,
-    layout: (sheetHeight: number) => {
-      // Delivered by the native modal Screen, outside the unconstrained
-      // fitToContents wrapper. Its height includes the sheet's own bar.
+    options: () => options,
+    resize: (
+      width: number,
+      height: number,
+      nextTop = top,
+      nextHeader = header,
+    ) =>
+      act(() => {
+        currentTop = nextTop;
+        currentHeader = nextHeader;
+        const size = { width, height, scale: 2, fontScale };
+        Dimensions.set({ window: size, screen: size });
+        view.update(tree());
+      }),
+    layout: (sheetHeight: number) =>
       act(() =>
         options.unstable_nativeProps?.onLayout?.({
           nativeEvent: {
             layout: { x: 0, y: 0, width: 540, height: sheetHeight },
           },
         } as LayoutChangeEvent),
-      );
-    },
+      ),
   };
 }
 
 describe.each(sheets)('$name fitted sheet', ({ component, actions }) => {
   test.each([
-    ['iPad form sheet portrait', 1024, 1366, 640, 'unspecified'],
-    ['iPad form sheet landscape', 1366, 1024, 540, 'unspecified'],
-    ['iPad page sheet portrait', 1024, 1366, 900, 'unspecified'],
-    ['iPad page sheet landscape', 1366, 1024, 700, 'unspecified'],
-    ['Duo outer', 466, 678, 560, 'trailing'],
-    ['Duo inner portrait', 669, 951, 640, 'unspecified'],
-    ['Duo inner landscape', 951, 669, 540, 'trailing'],
+    ['form sheet portrait', 1024, 1366, 640],
+    ['form sheet landscape', 1366, 1024, 540],
+    ['page sheet portrait', 1024, 1366, 900],
+    ['page sheet landscape', 1366, 1024, 700],
   ])(
-    '%s at AX5 can scroll to both actions',
-    (_name, width, height, sheetHeight, bar) => {
-      mockVerticalBar = bar;
-      const sheet = render(component, width, height, 3.12);
+    'iPad %s at AX5 keeps overflowing content and its last action in the scroll range',
+    (_name, width, height, sheetHeight) => {
+      const sheet = render(component, {
+        width,
+        height,
+        isPad: true,
+        traits: regular,
+      });
       sheet.layout(sheetHeight);
       const viewport = sheet.cap();
-      expect(viewport).toBeLessThanOrEqual(sheetHeight - SHEET_HEADER);
-      expect(viewport).toBeGreaterThan(0);
-
-      // Jest has no text layout engine. Supply overflowing native geometry:
-      // 1100 pt of content, ending in two 90 pt actions and 36 pt of padding.
-      // Both actions must belong to the capped scroll view, with enough range
-      // to bring each whole button into the viewport at the bottom.
-      const contentHeight = 1100;
-      const range = contentHeight - viewport;
-      expect(range).toBeGreaterThan(0);
+      expect(viewport).toBe(sheetHeight - SHEET_HEADER);
+      // Synthetic native AX5 layout. Actions end inside the content container,
+      // after the privacy row, with the existing 36 pt of bottom padding.
+      const content = {
+        height: 1100,
+        actions: [
+          { y: 884, height: 90 },
+          { y: 974, height: 90 },
+        ],
+      };
+      expect(content.height).toBeGreaterThan(viewport);
       expect(sheet.scroll().props.scrollEnabled).not.toBe(false);
-      for (const [index, id] of actions.entries()) {
+      for (const id of actions) {
         expect(
           sheet.scroll().findAllByProps({ testID: id }).length,
         ).toBeGreaterThan(0);
-        const actionTop = contentHeight - 216 + index * 90;
-        expect(actionTop - range).toBeGreaterThanOrEqual(0);
-        expect(actionTop + 90 - range).toBeLessThanOrEqual(viewport);
+      }
+      const last = content.actions.at(-1)!;
+      expect(last.y + last.height).toBeLessThanOrEqual(content.height);
+      expect(content.height - (last.y + last.height)).toBe(36);
+      const scrollEnd = content.height - viewport;
+      expect(last.y + last.height - scrollEnd).toBeLessThanOrEqual(viewport);
+      const ids = sheet
+        .scroll()
+        .findAll((node) => typeof node.type === 'string' && !!node.props.testID)
+        .map((node) => node.props.testID);
+      expect(ids.indexOf(actions[1])).toBeGreaterThan(ids.indexOf(actions[0]));
+    },
+  );
+
+  test('fixed iPad bounds can shrink and grow, ignoring zero measurements', () => {
+    const sheet = render(component, {
+      width: 1024,
+      height: 1366,
+      isPad: true,
+      traits: regular,
+      header: 64,
+    });
+    expect(sheet.cap()).toBe(1278);
+    for (const [height, expected] of [
+      [640, 576],
+      [480, 416],
+      [900, 836],
+      [0, 836],
+    ] as const) {
+      sheet.layout(height);
+      expect(sheet.cap()).toBe(expected);
+    }
+  });
+
+  test.each([
+    ['phone', false, null, 'unspecified'],
+    ['compact iPad', true, compact, 'unspecified'],
+    ['Duo outer trailing', false, compact, 'trailing'],
+    ['Duo outer leading', false, compact, 'leading'],
+    ['Duo inner', false, regular, 'unspecified'],
+  ] as const)(
+    '%s regrows in one portrait/landscape/portrait cycle',
+    (_name, isPad, traits, bar) => {
+      for (const bottom of [0, 34]) {
+        mockVerticalBar = bar;
+        const sheet = render(component, {
+          width: 375,
+          height: 667,
+          top: 20,
+          bottom,
+          isPad,
+          traits,
+        });
+        const barHeight = bar === 'unspecified' ? SHEET_HEADER : 0;
+        const portraitCap = 667 - 20 - barHeight;
+        for (let round = 0; round < 3; round++) {
+          // Model fitToContents feeding the capped content and inset back into
+          // the native sheet measurement, including the zero-inset SE case.
+          sheet.layout(sheet.cap() + barHeight + bottom);
+          sheet.resize(667, 375, 0, 32);
+          const landscapeBar = bar === 'unspecified' ? 32 : 0;
+          sheet.layout(sheet.cap() + landscapeBar + bottom);
+          expect(sheet.cap()).toBe(375 - landscapeBar);
+          sheet.resize(375, 667, 20, SHEET_HEADER);
+          sheet.layout(sheet.cap() + barHeight + bottom);
+          expect(sheet.cap()).toBe(portraitCap);
+        }
       }
     },
   );
 
-  test('tracks shrinking and growing sheet bounds without latching the first height', () => {
-    const sheet = render(component, 1024, 1366, 3.12, 24, 64);
-    sheet.layout(640);
-    expect(sheet.cap()).toBe(576);
-    sheet.layout(480);
-    expect(sheet.cap()).toBe(416);
-    sheet.layout(900);
-    expect(sheet.cap()).toBe(836);
-    sheet.layout(0);
-    expect(sheet.cap()).toBe(836);
-  });
-
   test.each([1, 1.35, 3.12])(
-    'phone sizing and content styles stay unchanged at font scale %s',
+    'realistic phone sheet measurements preserve the original cap and spacing at scale %s',
     (fontScale) => {
-      for (const [width, height] of [
-        [320, 568],
-        [390, 844],
-        [430, 932],
-        [844, 390],
-      ]) {
-        const sheet = render(component, width!, height!, fontScale, 47);
+      for (const [width, height, top] of [
+        [320, 568, 20],
+        [393, 852, 59],
+        [430, 932, 59],
+        [852, 393, 0],
+      ] as const) {
+        const sheet = render(component, {
+          width,
+          height,
+          top,
+          bottom: 34,
+          fontScale,
+        });
         const before = StyleSheet.flatten(
           sheet.scroll().props.contentContainerStyle,
         );
-        expect(sheet.cap()).toBe(height! - 47 - SHEET_HEADER);
-        sheet.layout(height! - 47);
-        expect(sheet.cap()).toBe(height! - 47 - SHEET_HEADER);
+        const originalCap = height - top - SHEET_HEADER;
+        // A full-height phone sheet stops 10 pt below the top safe area.
+        sheet.layout(height - top - 10);
+        expect(sheet.cap()).toBe(originalCap);
         expect(
           StyleSheet.flatten(sheet.scroll().props.contentContainerStyle),
         ).toEqual(before);
+        sheet.layout(240 + SHEET_HEADER);
+        expect(sheet.cap()).toBe(originalCap);
         expect(sheet.scroll().props.contentInsetAdjustmentBehavior).toBe(
           'automatic',
         );
-        // A short sheet still fits to its intrinsic content plus its own bar.
-        sheet.layout(240 + SHEET_HEADER);
-        expect(sheet.cap()).toBeGreaterThanOrEqual(240);
-        expect(
-          StyleSheet.flatten(sheet.scroll().props.style).height,
-        ).toBeUndefined();
       }
     },
   );
+
+  test('the same bar rule applies to fixed iPad measurements and the window fallback', () => {
+    mockVerticalBar = 'trailing';
+    const sheet = render(component, {
+      width: 1024,
+      height: 1366,
+      isPad: true,
+      traits: regular,
+    });
+    expect(sheet.cap()).toBe(1342);
+    sheet.layout(640);
+    expect(sheet.cap()).toBe(640);
+  });
+
+  test('keeps existing native props and forwards the existing layout handler once', () => {
+    const previous = jest.fn();
+    const appear = jest.fn();
+    const sheet = render(component, {
+      width: 1024,
+      height: 1366,
+      isPad: true,
+      traits: regular,
+      nativeProps: {
+        testID: 'native-consent',
+        onLayout: previous,
+        onAppear: appear,
+      },
+    });
+    expect(sheet.options().unstable_nativeProps).toMatchObject({
+      testID: 'native-consent',
+      onAppear: appear,
+    });
+    sheet.layout(640);
+    sheet.layout(540);
+    expect(previous).toHaveBeenCalledTimes(2);
+    expect(sheet.cap()).toBe(484);
+  });
+
+  test('a remounted sheet forwards to the original handler, not its own earlier one', () => {
+    const previous = jest.fn();
+    const first = render(component, {
+      width: 1024,
+      height: 1366,
+      isPad: true,
+      traits: regular,
+      nativeProps: { onLayout: previous },
+    });
+    const stale = first.options().unstable_nativeProps;
+    const second = render(component, {
+      width: 1024,
+      height: 1366,
+      isPad: true,
+      traits: regular,
+      nativeProps: stale,
+    });
+    expect(second.options().unstable_nativeProps?.onLayout).not.toBe(
+      stale?.onLayout,
+    );
+    second.layout(640);
+    expect(previous).toHaveBeenCalledTimes(1);
+    expect(second.cap()).toBe(584);
+    // The earlier instance is no longer in the chain.
+    expect(first.cap()).toBe(1366 - 24 - SHEET_HEADER);
+  });
 });

@@ -309,6 +309,10 @@ test.each([
     'src/header.ts',
     `import { HeaderHeightContext } from 'expo-router/react-navigation'`,
   ],
+  [
+    'src/features/sheets/fitted.ts',
+    `import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context'`,
+  ],
   ['src/icon.tsx', `import Icons from '@expo/vector-icons'`],
   [
     shareModule,

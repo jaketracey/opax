@@ -47,14 +47,26 @@ private enum OpaxSearchGeometryProbe {
   static func inset(_ value: UIEdgeInsets) -> [String: CGFloat] {
     ["top": value.top, "bottom": value.bottom, "left": value.left, "right": value.right]
   }
+  static func screenContainer(_ view: UIView?) -> UIView? {
+    var ancestor = view?.superview
+    while let current = ancestor {
+      if String(describing: type(of: current)).contains("RNSScreenView") { return current }
+      ancestor = current.superview
+    }
+    return nil
+  }
   static func sample() {
     guard let window = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).flatMap({ $0.windows }).first(where: { $0.isKeyWindow }) else { return }
     let all = views(window)
-    guard let screen = all.first(where: { ["search-screen", "today-screen", "ask-screen"].contains($0.accessibilityIdentifier ?? "") && !$0.isHidden }),
+    let consent = all.last { $0.accessibilityIdentifier == "ask-consent" && visibleFrame($0, window) != nil }
+    let consentSheet = screenContainer(consent)
+    guard let screen = consent ?? all.first(where: { ["search-screen", "today-screen", "ask-screen"].contains($0.accessibilityIdentifier ?? "") && !$0.isHidden }),
           let scroll = views(screen).compactMap({ $0 as? UIScrollView }).first else { return }
-    if label.superview !== window {
-      label.frame = CGRect(x: 2, y: window.bounds.midY, width: 2, height: 2)
-      window.addSubview(label)
+    // Keep the e2e-only probe accessible inside a presented consent sheet.
+    let probeHost = consentSheet ?? window
+    if label.superview !== probeHost {
+      label.frame = CGRect(x: 2, y: probeHost.bounds.midY, width: 2, height: 2)
+      probeHost.addSubview(label)
     }
     let inScreen = views(screen)
     let field = all.compactMap { $0 as? UISearchTextField }.first { !$0.isHidden && $0.window != nil }
@@ -74,6 +86,11 @@ private enum OpaxSearchGeometryProbe {
     let askDock = all.last { $0.accessibilityIdentifier == "ask-dock" && visibleFrame($0, window) != nil }
     let data: [String: Any] = [
       "screen": screen.accessibilityIdentifier ?? "", "button": rect(field, window),
+      "consentAX5": window.traitCollection.preferredContentSizeCategory == .accessibilityExtraExtraExtraLarge,
+      "consentSheet": visibleRect(consentSheet, window),
+      // Raw action bounds detect partial clipping; a clipped visibleRect
+      // would falsely make an off-sheet button appear contained.
+      "consentContinue": rect(consent.flatMap { views($0).first { $0.accessibilityIdentifier == "ask-consent-continue" } }, window),
       "windowHeight": window.bounds.height,
       "offset": ["x": scroll.contentOffset.x, "y": scroll.contentOffset.y],
       "inset": inset(scroll.contentInset), "adjustedInset": inset(scroll.adjustedContentInset),

@@ -1,0 +1,18 @@
+appId: au.com.opax.app
+---
+- copyTextFrom:
+    id: search-geometry
+- runScript: consent-bounds.js
+- repeat:
+    while:
+      true: ${!output.consentContinueInside}
+    times: 8
+    commands:
+      - waitForAnimationToEnd:
+          timeout: 1000
+      - copyTextFrom:
+          id: search-geometry
+      - runScript: consent-bounds.js
+- assertTrue:
+    condition: ${output.consentContinueInside}
+    label: Continue's complete native bounds are inside the presented sheet at AX5
