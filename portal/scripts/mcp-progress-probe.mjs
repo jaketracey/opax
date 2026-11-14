@@ -23,26 +23,33 @@ if(process.env.BASE&&process.env.BASE!==BASE){console.error(`This probe runs aga
 const run=process.argv.includes('--run')
 const out=process.env.MCP_PROBE_OUT||join(tmpdir(),'mcp-progress-probe-'+new Date().toISOString().replace(/[:.]/g,'-')+'.json')
 
-// Tools that can reach the knowledge base, in order, each with its own arguments. Each set is used once,
-// so no call is answered from a cache another call filled. read_record takes slugs from search results.
+// Tools that can reach the knowledge base (they are given its reader), in order, each with its own arguments.
+// Each set is used once, so no call is answered from a cache another call filled. read_record takes slugs
+// from search results. A register is called through query_register where that is listed (as a client would),
+// otherwise by its own name; [names] lists a register's current name first and its earlier one after.
 const PLAN=[
  ['search_records',[{query:'housing affordability',kind:'speech'},{query:'gambling advertising'},{query:'renewable energy target',kind:'press_release'},{query:'aged care workforce'},{query:'water buybacks murray darling',kind:'speech'}]],
  ['hansard_search',[{query:'negative gearing',chamber:'senate'},{speaker:'Andrew Wilkie',query:'poker machines'},{query:'childcare subsidy',since:'2024-01-01'},{speaker:'Penny Wong',query:'Pacific'},{query:'nuclear power',venue:'all'}]],
  ['member_profile',[{name:'Penny Wong'},{name:'Senator Lambie'},{electorate:'Grayndler',jurisdiction:'federal'},{slug:'anthony-albanese',detail:'full'}]],
  ['read_record',[]],
- ['corpus_records',[{kind:'speech',query:'housing supply'},{kind:'press_release',query:'bushfire recovery'},{kind:'speech',query:'cost of living',speaker:'Jim Chalmers'}]],
- ['count_speeches',[{topic:'housing'},{topic:'climate-environment',group_by:'party'}]],
- ['speech_trend',[{topic:'immigration',by:'decade'}]],
+ [['corpus_records'],[{kind:'speech',query:'housing supply'},{kind:'press_release',query:'bushfire recovery'},{kind:'speech',query:'cost of living',speaker:'Jim Chalmers'}]],
+ [['count_speeches'],[{topic:'housing'},{topic:'climate-environment',group_by:'party'}]],
+ [['speech_trend'],[{topic:'immigration',by:'decade'}]],
+ [['pay_calculator','paid_answer'],[{question:'What is the federal parliamentary base salary in 2025?'}]],
+ [['money_rankings','ranked_money'],[{question:'Which federal parties have the largest disclosed receipt totals in 2023-24?'}]],
+ // Given no reader, so these should make none: a check that nothing else reaches the knowledge base.
+ ['find_connections',[{query:'Snowy Hydro'}]],
+ ['corpus_coverage',[{}]],
+ [['find_records'],[{query:'Qantas'}]],
 ]
 const READS=3
-// Every other listed tool is called once with its own first example, to confirm it makes no query.
+const label=tool=>Array.isArray(tool)?tool[0]:tool
 
 function plan(){
  console.log(`MCP Progress probe (${run?'running':'plan only; pass --run to send'})`)
  console.log(`  target ${BASE}, no account, User-Agent ${AGENT}, one request a second`)
  console.log(`  stops at ${MAX_CALLS} tool calls or ${MAX_QUERIES} Progress queries, counted from x-opax-progress`)
- for(const [tool,sets] of PLAN)console.log(`  ${tool}: ${tool==='read_record'?READS+' slugs from search results':sets.map(a=>JSON.stringify(a)).join(' ')}`)
- console.log('  then each other listed tool once, with its first example')
+ for(const [tool,sets] of PLAN)console.log(`  ${label(tool)}${Array.isArray(tool)?' (register)':''}: ${tool==='read_record'?READS+' slugs from search results':sets.map(a=>JSON.stringify(a)).join(' ')}`)
  console.log(`  raw rows: ${out}`)
 }
 plan()
@@ -66,7 +73,7 @@ async function rpc(method,params,budget){
 }
 const parse=report=>{const m=/^find=(\d+), hedge=(\d+), other=(\d+)$/.exec(report??'');return m?{find:+m[1],hedge:+m[2],other:+m[3]}:null}
 function stop(reason){console.log('Stopped: '+reason);finish();process.exit(1)}
-async function call(tool,args){
+async function call(tool,args,as=tool){
  if(calls>=MAX_CALLS||queries>=MAX_QUERIES)return null
  const left=MAX_QUERIES-queries
  const answer=await rpc('tools/call',{name:tool,arguments:args},left)
@@ -76,9 +83,9 @@ async function call(tool,args){
  const total=used.find+used.hedge+used.other
  queries+=total
  const result=answer.body?.result,error=answer.body?.error
- const row={tool,args,status:answer.status,...used,total,is_error:!!result?.isError,limited:error?.code===-32029?error.message:null}
+ const row={tool:as,via:tool,args,status:answer.status,...used,total,is_error:!!result?.isError,limited:error?.code===-32029?error.message:null}
  rows.push(row)
- console.log(`${String(calls).padStart(2)} ${tool} ${JSON.stringify(args)}: ${answer.status} find=${used.find} hedge=${used.hedge} other=${used.other}${row.is_error?' (tool error)':''}${row.limited?' (limited: '+row.limited.slice(0,80)+')':''}  [${queries}/${MAX_QUERIES}]`)
+ console.log(`${String(calls).padStart(2)} ${as} ${JSON.stringify(args)}: ${answer.status} find=${used.find} hedge=${used.hedge} other=${used.other}${row.is_error?' (tool error)':''}${row.limited?' (limited: '+row.limited.slice(0,80)+')':''}  [${queries}/${MAX_QUERIES}]`)
  if(queries>MAX_QUERIES)stop('the query count passed the bound; this should be impossible with the budget header')
  if(row.limited)stop('a limit refused the call: '+row.limited)
  return result
@@ -107,18 +114,21 @@ await rpc('notifications/initialized',{})
 const listed=await rpc('tools/list',{})
 const tools=listed.body?.result?.tools??[]
 if(!tools.length)stop('tools/list returned no tools: '+listed.text.slice(0,200))
-const names=new Set(tools.map(t=>t.name))
+const names=new Set(tools.map(t=>t.name)),registers=names.has('query_register')
 const slugs=[]
 for(const [tool,sets] of PLAN){
- if(!names.has(tool)){console.log(`(${tool} is not listed here; skipped)`);continue}
+ let name=tool,wrap=args=>args
+ if(Array.isArray(tool)){
+  // A register: through query_register by its current name, or directly by whichever name is listed.
+  const direct=tool.find(n=>names.has(n))
+  if(registers&&!direct){name='query_register';wrap=args=>({register:tool[0],arguments:args})}
+  else if(direct)name=direct
+  else{console.log(`(${tool[0]} is not listed here; skipped)`);continue}
+ }else if(!names.has(tool)){console.log(`(${tool} is not listed here; skipped)`);continue}
  if(tool==='read_record'){for(const slug of slugs.slice(0,READS))await call(tool,{slug});continue}
- for(const args of sets){const result=await call(tool,args);if(tool==='search_records')slugs.push(...slugsFrom(result).filter(s=>!slugs.includes(s)))}
-}
-const planned=new Set(PLAN.map(([tool])=>tool))
-for(const tool of tools){
- if(planned.has(tool.name))continue
- const example=tool.inputSchema?.examples?.[0]
- if(!example){console.log(`(${tool.name} has no example; skipped)`);continue}
- if(await call(tool.name,example)===null)break
+ for(const args of sets){
+  const result=await call(name,wrap(args),label(tool))
+  if(tool==='search_records')slugs.push(...slugsFrom(result).filter(s=>!slugs.includes(s)))
+ }
 }
 finish()
