@@ -23,3 +23,26 @@ test('fixture prebuild fails if its native measurement startup cannot be inserte
     /launch anchor/,
   );
 });
+
+test('the merged fixture exports Ask visibility and placeholder measurements together', () => {
+  const fixture = configureAppDelegate(template, 'e2e');
+  for (const helper of ['visibleFrame', 'visibleRect'])
+    expect(fixture).toContain(`func ${helper}(`);
+  for (const field of [
+    'navContent',
+    'tab',
+    'askDock',
+    'scrollFrame',
+    'askProgress',
+    'placeholder',
+    'placeholderPointSize',
+    'placeholderWidth',
+    'placeholderLineHeight',
+    'placeholderAvailableWidth',
+    'placeholderAvailableHeight',
+    'askViewport',
+    'askComposer',
+  ])
+    expect(fixture).toContain(`"${field}":`);
+  expect(fixture).not.toContain('askStages');
+});

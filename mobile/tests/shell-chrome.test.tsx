@@ -40,7 +40,6 @@ import {
 } from '../src/navigation/chrome';
 import { RouteOptions } from '../src/navigation/preview';
 import { RootBar } from '../modules/opax-root-bar';
-import { useRootBarUnderBar } from '../src/navigation/useRootBarAppearance';
 
 import {
   ExternalURLProbe,
@@ -69,6 +68,11 @@ import {
   useTitleOnScroll,
 } from '../src/navigation/useTitleOnScroll';
 import { menuTitle } from '../src/design/menu-title';
+import {
+  useRootBarAppearance,
+  useRootBarSearchOptions,
+  useRootBarUnderBar,
+} from '../src/navigation/useRootBarAppearance';
 
 const { colors } = tokens;
 
@@ -1361,12 +1365,15 @@ function fadePage(
 }
 function withGlass(test: () => void) {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+  const window = Dimensions.get('window');
+  act(() => Dimensions.set({ window: { ...window, fontScale: 1 } }));
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
   jest.mocked(RootBar!.setSolid!).mockClear();
   jest.mocked(RootBar!.remove).mockClear();
   try {
     test();
   } finally {
+    act(() => Dimensions.set({ window }));
     Object.defineProperty(Platform, 'Version', version);
   }
 }
@@ -1502,6 +1509,196 @@ test('the accessibility backing keeps the edge hidden under scrolled text', () =
       mockSolidBar = false;
     }
   }));
+
+test.each([
+  ['AX3', 2.643],
+  ['AX5', 3.571],
+])(
+  'Today %s keeps a solid band across scroll, resize and focus',
+  (_size, fontScale) =>
+    withGlass(() => {
+      const window = Dimensions.get('window');
+      const { navigation, page, ground, identifier, listeners } = fadePage(
+        'index',
+        '(today)',
+      );
+      const renderer = tree(page(120));
+      try {
+        expect(RootBar!.setSolid).not.toHaveBeenCalled();
+        act(() => Dimensions.set({ window: { ...window, fontScale } }));
+        expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
+        expect(navigation.setOptions).toHaveBeenLastCalledWith(
+          expect.objectContaining(largeTitleBar(ground, true)),
+        );
+        navigation.setOptions.mockClear();
+        scrollTo(renderer, 400);
+        expect(edgeCalls(navigation)).not.toContain('hard');
+        act(() => renderer.update(page(68)));
+        expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
+        act(() => listeners.get('blur')!.forEach((listener) => listener()));
+        expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
+        jest.mocked(RootBar!.setSolid!).mockClear();
+        act(() => listeners.get('focus')!.forEach((listener) => listener()));
+        expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
+        act(() => Dimensions.set({ window }));
+        expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
+        expect(navigation.setOptions).toHaveBeenLastCalledWith(
+          expect.objectContaining(largeTitleBar(ground, false, true)),
+        );
+        scrollTo(renderer, -120);
+        expect(navigation.setOptions).toHaveBeenLastCalledWith(
+          expect.objectContaining(largeTitleBar(ground)),
+        );
+      } finally {
+        act(() => renderer.unmount());
+        act(() => Dimensions.set({ window }));
+      }
+    }),
+);
+
+test.each(
+  tabCases
+    .filter(([, name]) => name !== 'index')
+    .flatMap(([segment, name]) =>
+      (
+        [
+          ['AX3', 2.643],
+          ['AX5', 3.571],
+        ] as const
+      ).map(([size, fontScale]) => [segment, name, size, fontScale] as const),
+    ),
+)(
+  '%s %s at %s keeps its glass header across layout',
+  (segment, name, _size, fontScale) =>
+    withGlass(() => {
+      const window = Dimensions.get('window');
+      const { navigation, page, ground } = fadePage(name, segment);
+      const renderer = tree(page(120));
+      try {
+        act(() => Dimensions.set({ window: { ...window, fontScale } }));
+        for (const height of [68, 120, 144]) {
+          act(() => renderer.update(page(height)));
+          const appearance = navigation.setOptions.mock.calls
+            .map(([options]) => options)
+            .filter((options) => 'headerTransparent' in options)
+            .at(-1);
+          expect(appearance).toEqual(
+            expect.objectContaining({
+              ...largeTitleBar(ground),
+              headerLargeTitleEnabled: true,
+            }),
+          );
+          expect(RootBar!.setSolid).not.toHaveBeenCalled();
+        }
+      } finally {
+        act(() => renderer.unmount());
+        act(() => Dimensions.set({ window }));
+      }
+    }),
+);
+
+test.each(['leading', 'trailing'] as const)(
+  'Today on the %s Duo rail keeps its glass chrome at AX3 and AX5',
+  (edge) =>
+    withGlass(() => {
+      mockBarEdge = edge;
+      const window = Dimensions.get('window');
+      const { navigation, page, ground } = fadePage('index', '(today)');
+      const renderer = tree(page(100));
+      try {
+        for (const fontScale of [2.643, 3.571]) {
+          act(() => Dimensions.set({ window: { ...window, fontScale } }));
+          // The rail's top edge follows the content: soft at rest, hard
+          // from the first scroll point. AX never makes it solid.
+          expect(navigation.setOptions).toHaveBeenLastCalledWith(
+            scrollBar(ground, false, edge, false),
+          );
+          scrollTo(renderer, 20);
+          expect(navigation.setOptions).toHaveBeenLastCalledWith(
+            scrollBar(ground, false, edge, true),
+          );
+          scrollTo(renderer, -100);
+          expect(navigation.setOptions).toHaveBeenLastCalledWith(
+            scrollBar(ground, false, edge, false),
+          );
+          expect(RootBar!.setSolid).not.toHaveBeenCalled();
+        }
+      } finally {
+        act(() => renderer.unmount());
+        act(() => Dimensions.set({ window }));
+      }
+    }),
+);
+
+test.each([false, true])(
+  'Today with an inline title (iPad=%s) keeps its glass chrome at AX3 and AX5',
+  (pad) =>
+    withGlass(() => {
+      const isPad = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(pad);
+      const window = Dimensions.get('window');
+      const { navigation, ground } = fadePage('index', '(today)');
+      function InlineRoot() {
+        useRootBarSearchOptions({ headerLargeTitleEnabled: false });
+        useRootBarAppearance(navigation.setOptions, {
+          ground,
+          owner: 'options',
+        });
+        return null;
+      }
+      const renderer = tree(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider
+            value={{ key: 'index-root', name: 'index' }}
+          >
+            <InlineRoot />
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+      try {
+        for (const fontScale of [2.643, 3.571]) {
+          act(() => Dimensions.set({ window: { ...window, fontScale } }));
+          expect(navigation.setOptions).toHaveBeenLastCalledWith(
+            scrollBar(ground),
+          );
+          expect(RootBar!.setSolid).not.toHaveBeenCalled();
+        }
+      } finally {
+        act(() => renderer.unmount());
+        act(() => Dimensions.set({ window }));
+        isPad.mockRestore();
+      }
+    }),
+);
+
+test.each([
+  ['AX3', 2.643],
+  ['AX5', 3.571],
+])(
+  'iPad Today with a large title at %s keeps its glass chrome',
+  (_size, fontScale) =>
+    withGlass(() => {
+      const isPad = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(true);
+      const window = Dimensions.get('window');
+      const { navigation, page, ground } = fadePage('index', '(today)');
+      const renderer = tree(page(120));
+      try {
+        act(() => Dimensions.set({ window: { ...window, fontScale } }));
+        expect(navigation.setOptions).toHaveBeenLastCalledWith(
+          expect.objectContaining({
+            ...largeTitleBar(ground),
+            headerLargeTitleEnabled: true,
+          }),
+        );
+        scrollTo(renderer, 400);
+        expect(edgeCalls(navigation)).not.toContain('hidden');
+        expect(RootBar!.setSolid).not.toHaveBeenCalled();
+      } finally {
+        act(() => renderer.unmount());
+        act(() => Dimensions.set({ window }));
+        isPad.mockRestore();
+      }
+    }),
+);
 
 test.each([41, 52, 85])(
   'a pinned search field with a %s pt title never adds a backing',

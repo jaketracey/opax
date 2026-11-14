@@ -67,7 +67,7 @@ describe('Maestro startup budgets', () => {
   );
 });
 
-test('screens 4.26.0 patch applies cleanly to the menu item and its exposed view', () => {
+test('screens 4.26.0 patch applies cleanly to menus and the native search placeholder', () => {
   expect(
     JSON.parse(
       readFileSync('node_modules/react-native-screens/package.json', 'utf8'),
@@ -89,9 +89,15 @@ test('screens 4.26.0 patch applies cleanly to the menu item and its exposed view
         '7685f8732386a62dc82c8ab21fb37211ce4f51299af9e9ea6dea1a2d1c279207',
       after: 'd2dfc7ebfcca140ab2da8ed2e39c86ef53222ea6177dbdb5ab16593b0f8eb551',
     },
+    {
+      name: 'RNSSearchBar.mm',
+      before:
+        '24e5319a0c5bf94b9ef45c96f561c2cfe239655b6495fa69ac9a34f710f6b50c',
+      after: '464ae20aa8042e15813414a0808873b06ad413cf15f8bf640b36b15628d74218',
+    },
   ];
   expect(digest(readFileSync(patch, 'utf8'))).toBe(
-    '58341749258e695f7cdabca91ff6bfad69130324055421e73aa3e3786e88ec4c',
+    'b1be1be8d59326ea055d8eac51f4dd963f297032299ef49ba87f014adb1f8a33',
   );
   const root = mkdtempSync(join(tmpdir(), 'screens-patch-'));
   const directory = join(root, 'node_modules/react-native-screens/ios');
@@ -120,6 +126,14 @@ test('screens 4.26.0 patch applies cleanly to the menu item and its exposed view
         .replace(
           /\n *\/\/ OPAX menu accessibility:[^]*?\/\/ OPAX menu accessibility end\.\n/g,
           '',
+        )
+        .replace(
+          /\/\/ OPAX placeholder fitting:[^]*?\/\/ OPAX placeholder fitting end\.\n\n/,
+          '',
+        )
+        .replace(
+          /\n#if !TARGET_OS_TV\n  (?:RNSSearchPlaceholderSizer \*_placeholderSizer;|UISearchTextField \*field = _controller.searchBar.searchTextField;[^]*?\[field addSubview:_placeholderSizer\];|\[_placeholderSizer setNeedsLayout\];)\n#endif/g,
+          '',
         );
       expect(digest(upstream)).toBe(file.before);
       writeFileSync(join(directory, file.name), upstream);
@@ -133,6 +147,19 @@ test('screens 4.26.0 patch applies cleanly to the menu item and its exposed view
       expect(result.status).toBe(0);
       expect(result.stdout + result.stderr).not.toMatch(/offset|fuzz/i);
     }
+    for (const file of files)
+      expect(digest(readFileSync(join(directory, file.name), 'utf8'))).toBe(
+        file.after,
+      );
+    const reapplied = spawnSync(
+      '/usr/bin/patch',
+      ['--batch', '--forward', '--dry-run', '--fuzz=0', '-p1', '-i', patch],
+      { cwd: root, encoding: 'utf8' },
+    );
+    expect(reapplied.status).toBe(1);
+    expect(reapplied.stdout + reapplied.stderr).toMatch(
+      /RNSSearchBar\.mm[^]*(?:Ignoring previously applied \(or reversed\) patch|Reversed \(or previously applied\) patch detected)/,
+    );
     for (const file of files)
       expect(digest(readFileSync(join(directory, file.name), 'utf8'))).toBe(
         file.after,

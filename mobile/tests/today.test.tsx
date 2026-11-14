@@ -313,9 +313,11 @@ function setUp({
 }
 
 test.each(['index', 'your-mp', 'bills', 'search', 'ask'])(
-  'Today follows native header height without a final scroll event on the %s root',
+  'Today at Large follows native header height without a final scroll event on the %s root',
   async (name) => {
     setUp();
+    const window = Dimensions.get('window');
+    act(() => Dimensions.set({ window: { ...window, fontScale: 1 } }));
     const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
     Object.defineProperty(Platform, 'Version', {
       configurable: true,
@@ -365,6 +367,7 @@ test.each(['index', 'your-mp', 'bills', 'search', 'ask'])(
       for (const height of [192, 160]) act(() => renderer.update(page(height)));
       expect(setOptions).not.toHaveBeenCalled();
     } finally {
+      act(() => Dimensions.set({ window }));
       Object.defineProperty(Platform, 'Version', version);
     }
   },
