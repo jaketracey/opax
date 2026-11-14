@@ -9,8 +9,8 @@ import {
   billSourceLabel,
   billSplits,
   billStage,
-  billStatusWord,
 } from './bill-transforms';
+import { billStatusLabel } from './bill-status';
 import { outcomeWord } from '../features/bills/divisions';
 import type {
   AppEdition,
@@ -1308,7 +1308,7 @@ export function billFacetsFor(index: BillIndex) {
     )
     .map(([value, count]) => ({
       value,
-      label: billStatusWord(value),
+      label: billStatusLabel(value),
       count,
     }));
   const chambers = [...tally((b) => b.originating_house)]
@@ -1340,7 +1340,12 @@ export function billFor(bill: BillDetail, index: BillIndex) {
         title: bill.title,
         shortTitle: bill.short_title,
         status: bill.status,
-        statusLabel: billStatusWord(bill.status) || 'Status not recorded',
+        // The pill's word, from the bill's own record: the same one the
+        // stage tracker stops on (api/bill-status.ts).
+        statusLabel: billStatusLabel(bill.status, {
+          stages: bill.key_dates,
+          divisions: bill.divisions,
+        }),
         statusAsOf: bill.status_as_of,
         sponsor: display.sponsor,
         sponsorMembers: display.sponsorMembers,

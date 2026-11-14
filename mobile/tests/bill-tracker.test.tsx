@@ -115,17 +115,20 @@ test('a lapsed bill in the other house, and an undated step', async () => {
   const lapsed = await render(trackerFor('au-federal-s1384'));
   expect(drawn(host(lapsed, 'bill-tracker-other')[0]!)).toEqual([
     'The House',
-    'Lapsed',
+    'Lapsed · 28 Mar 2025',
   ]);
+  expect(host(lapsed, 'bill-tracker-other')[0]!.props.accessibilityLabel).toBe(
+    'The House, stopped here, Lapsed, 28 March 2025',
+  );
   act(() => renderer?.unmount());
-  const undated = await render(trackerFor('au-federal-r5920'));
-  expect(drawn(host(undated, 'bill-tracker-other')[0]!)).toEqual([
-    'The Senate',
+  const undated = await render(trackerFor('au-federal-alrc-2361'));
+  expect(drawn(host(undated, 'bill-tracker-passedFirst')[0]!)).toEqual([
+    'Passed the House',
     'No date recorded',
   ]);
-  expect(host(undated, 'bill-tracker-other')[0]!.props.accessibilityLabel).toBe(
-    'The Senate, done, no date recorded',
-  );
+  expect(
+    host(undated, 'bill-tracker-passedFirst')[0]!.props.accessibilityLabel,
+  ).toBe('Passed the House, done, no date recorded');
 });
 
 test('passed by the other house and back for its changes', async () => {

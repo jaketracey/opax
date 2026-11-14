@@ -1,5 +1,3 @@
-import { billStatusWord } from '../api/bill-transforms';
-
 // Reader-facing names for the catalog's jurisdiction and chamber IDs: the one
 // mapping every screen uses, so a raw ID ("vic_la", "federal") never reaches
 // the reader. Wording follows portal/public/profile-jurisdictions.js, with the
@@ -77,8 +75,4 @@ export function declarationKind(kind: string): string {
       } as Record<string, string>
     )[kind] ?? 'Register update'
   );
-}
-/** A bill's published status, with readable words for new register values. */
-export function billStatus(status: string): string {
-  return billStatusWord(status) || 'Status not recorded';
 }

@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { billDisplay, billSentenceCase } from '../src/api/bill-transforms';
 import { StatusCapsule } from '../src/design/labels';
-import { billStatus } from '../src/design/parliament';
+import { billStatusLabel as billStatus } from '../src/api/bill-status';
 import { BillRow, SuggestionRow } from '../src/design/rows';
 import { Text } from '../src/design/text';
 import { colors } from '../src/design/tokens';

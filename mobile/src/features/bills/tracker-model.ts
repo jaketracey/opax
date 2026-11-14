@@ -1,3 +1,14 @@
+import {
+  BILL_STAGE_TOKENS,
+  CHAMBER_STAGES,
+  billHouse,
+  billStageToken,
+  billStatusReading,
+  type BillDivisionRow,
+  type BillHouse,
+  type BillStageRow,
+  type BillStageToken,
+} from '../../api/bill-status';
 import type { TermId } from '../learn/glossary';
 
 /**
@@ -23,10 +34,10 @@ import type { TermId } from '../learn/glossary';
  *   Federation Chamber, lapsing, removal from the Notice Paper. It never
  *   moves a step on its own.
  * - The status folds every dead bill (negatived, lapsed, discharged,
- *   removed) into `lapsed`. A bill reads "Voted down" only when its last
- *   recorded stage falls on the day of a counted vote, at that same reading
- *   and in that house, that went against the bill's own question (53 of 53
- *   right across the record). Otherwise it reads the register's "Lapsed".
+ *   removed) into `lapsed`. Where it stopped and why is the status pill's
+ *   word, from the one helper both call (api/bill-status.ts), so the pill
+ *   and the tracker never disagree: "Voted down" only on firm evidence in
+ *   the bill's own record, otherwise the register's "Lapsed".
  *
  * A step that must have happened but has no row is done with no date: the
  * tracker never invents one. Anything the six steps can't say truthfully
@@ -57,7 +68,8 @@ export type TrackerStepState =
   /** After the step where a bill stopped. */
   | 'unreached';
 
-export type TrackerStopWord = 'Voted down' | 'Lapsed' | 'Withdrawn';
+/** The status pill's word for a dead bill: "Voted down", "Lapsed". */
+export type TrackerStopWord = string;
 
 export interface TrackerStep {
   id: TrackerStepId;
@@ -82,24 +94,13 @@ export interface Tracker {
   summary: string;
 }
 
-export type TrackerHouse = 'representatives' | 'senate';
+export type TrackerHouse = BillHouse;
 
 /** A stage row as the bill payload carries it (`key_dates`). */
-export interface TrackerStageRow {
-  stage: string;
-  date: string;
-  house: string | null;
-}
+export type TrackerStageRow = BillStageRow;
 
 /** A counted vote, as the bill payload carries it (`divisions`). */
-export interface TrackerDivision {
-  date: string;
-  house: string;
-  stage: string | null;
-  outcome: string;
-  question?: string | null;
-  title?: string | null;
-}
+export type TrackerDivision = BillDivisionRow;
 
 export interface TrackerInput {
   stages: readonly TrackerStageRow[];
@@ -119,39 +120,19 @@ export type TrackerFallback =
   | { reason: 'unknown-status'; value: string }
   | { reason: 'no-stages' }
   | { reason: 'contradiction'; value: string }
-  | { reason: 'referendum' };
+  | { reason: 'referendum' }
+  /**
+   * Passed, with neither assent nor final passage filed: the register's
+   * `passed` also covers "Passed both houses", so the steps can't say
+   * whether it is law.
+   */
+  | { reason: 'unproven-assent' };
 
 export type TrackerResult =
   | { kind: 'tracker'; tracker: Tracker }
   | { kind: 'fallback'; fallback: TrackerFallback };
 
-type Token =
-  | 'introduced'
-  | 'second_reading'
-  | 'committee'
-  | 'third_reading'
-  | 'passed'
-  | 'royal_assent'
-  | 'other';
-
-const TOKENS: ReadonlySet<string> = new Set<Token>([
-  'introduced',
-  'second_reading',
-  'committee',
-  'third_reading',
-  'passed',
-  'royal_assent',
-  'other',
-]);
-
-/** Stages that say which house they happened in. */
-const CHAMBER: ReadonlySet<Token> = new Set<Token>([
-  'introduced',
-  'second_reading',
-  'committee',
-  'third_reading',
-  'other',
-]);
+type Token = BillStageToken;
 
 export const TRACKER_STEPS = 6;
 
@@ -164,125 +145,14 @@ const ORDER: readonly TrackerStepId[] = [
   'assent',
 ];
 
-/** "second_reading", "Second reading" and "second reading" are one stage. */
-function token(stage: string): string {
-  return String(stage ?? '')
-    .trim()
-    .toLowerCase()
-    .replace(/[\s-]+/g, '_');
-}
-
-function houseOf(house: string | null | undefined): TrackerHouse | null {
-  const h = String(house ?? '')
-    .trim()
-    .toLowerCase();
-  if (h === 'representatives' || h === 'house' || h === 'reps') {
-    return 'representatives';
-  }
-  if (h === 'senate') return 'senate';
-  return null;
-}
-
 const other = (house: TrackerHouse): TrackerHouse =>
   house === 'senate' ? 'representatives' : 'senate';
-
-type Life = 'alive' | 'passed' | { dead: TrackerStopWord };
-
-/**
- * The register's status as the tracker reads it, or null for one it doesn't
- * cover (an exposure draft, a status not recorded).
- */
-function lifeOf(status: string | null | undefined): Life | null {
-  const s = String(status ?? '')
-    .trim()
-    .toLowerCase()
-    .replace(/_/g, ' ');
-  if (s === 'before parliament') return 'alive';
-  if (s === 'passed' || s === 'act' || s === 'assent') return 'passed';
-  if (/^(negatived|defeated|not passed|failed)\b/.test(s)) {
-    return { dead: 'Voted down' };
-  }
-  if (/^(withdrawn|discharged)\b/.test(s)) return { dead: 'Withdrawn' };
-  if (
-    /^(lapsed|not proceeding|not proceeded with|removed from the notice paper)\b/.test(
-      s,
-    )
-  ) {
-    return { dead: 'Lapsed' };
-  }
-  return null;
-}
 
 interface Row {
   token: Token;
   date: string;
   house: TrackerHouse | null;
   index: number;
-}
-
-const READING: Partial<Record<Token, RegExp>> = {
-  introduced: /^first reading$/i,
-  second_reading: /^second reading$/i,
-  third_reading: /^third reading$/i,
-};
-
-/**
- * Words that mark a vote on a procedure, not on the bill itself: "First
- * Reading - Suspend the usual procedural rules", an amendment to the second
- * reading motion. They Vote For You names a division "<bill> - <stage> -
- * <what was asked>", so only the last part is read (bill titles say
- * "Amendment" too).
- */
-const PROCEDURAL =
-  /suspen|procedur|amendment|adjourn|closure|end debate|limitation|postpone|refer|defer|business|leave|instruction/i;
-
-function asked(division: TrackerDivision): string {
-  const q = String(division.question || division.title || '')
-    .replace(/\s+/g, ' ')
-    .trim();
-  const parts = q.split(/\s+[-–—]\s+/);
-  return parts.length >= 3 ? parts[parts.length - 1]! : q.slice(0, 200);
-}
-
-/**
- * Whether the bill's last recorded stage was a reading the house voted
- * down: a counted vote that day, in that house, at that reading, against
- * the bill's own question, with nothing recorded after it.
- */
-function votedDownAt(
-  rows: readonly Row[],
-  divisions: readonly TrackerDivision[],
-): Row | null {
-  const stages = rows.filter(
-    (r) => CHAMBER.has(r.token) && r.token !== 'other',
-  );
-  const last = stages[stages.length - 1];
-  if (!last || !last.house) return null;
-  // ParlInfo's "First reading negatived" is filed as a second `introduced`
-  // row, the same day and house as the first: the house refused to let the
-  // bill in (7 of 7 across the record, with or without a counted vote).
-  if (
-    stages.every((r) => r.token === 'introduced') &&
-    stages.some((r, i) =>
-      stages.some(
-        (o, j) => j !== i && o.date === r.date && o.house === r.house,
-      ),
-    )
-  ) {
-    return last;
-  }
-  const reading = READING[last.token];
-  if (!reading) return null;
-  if (rows.some((r) => r.date > last.date)) return null;
-  const against = divisions.some(
-    (d) =>
-      /^negative$/i.test(String(d.outcome).trim()) &&
-      houseOf(d.house) === last.house &&
-      d.date === last.date &&
-      reading.test(String(d.stage ?? '').trim()) &&
-      !PROCEDURAL.test(asked(d)),
-  );
-  return against ? last : null;
 }
 
 function lastDate(rows: readonly Row[]): string | null {
@@ -300,27 +170,38 @@ export function billTracker(input: TrackerInput): TrackerResult {
   // date a step or take a place in the order.
   const undated = new Set<string>();
   for (const [index, s] of input.stages.entries()) {
-    const t = token(s.stage);
-    if (!TOKENS.has(t)) {
+    const t = billStageToken(s.stage);
+    if (!BILL_STAGE_TOKENS.has(t)) {
       return fallback({ reason: 'unknown-stage', value: String(s.stage) });
     }
-    const house = houseOf(s.house);
-    if (CHAMBER.has(t as Token) && !house) {
+    const house = billHouse(s.house);
+    if (CHAMBER_STAGES.has(t) && !house) {
       return fallback({ reason: 'unknown-house', value: String(s.house) });
     }
     if (!/^\d{4}-\d{2}-\d{2}/.test(String(s.date ?? ''))) {
-      undated.add(CHAMBER.has(t as Token) ? `${t}:${house}` : t);
+      undated.add(CHAMBER_STAGES.has(t) ? `${t}:${house}` : t);
       continue;
     }
     rows.push({
       token: t as Token,
       date: String(s.date).slice(0, 10),
-      house: CHAMBER.has(t as Token) ? house : null,
+      // "Finally passed both Houses" names the house that passed it last.
+      house: CHAMBER_STAGES.has(t) || t === 'passed' ? house : null,
       index,
     });
   }
   rows.sort((a, b) => a.date.localeCompare(b.date) || a.index - b.index);
-  const life = lifeOf(input.status);
+  // The status as the pill reads it: alive, passed, or stopped and why.
+  const reading = billStatusReading(input.status, {
+    stages: input.stages,
+    divisions: input.divisions,
+  });
+  const life =
+    reading.state === 'alive' || reading.state === 'passed'
+      ? reading.state
+      : reading.state === 'stopped'
+        ? { dead: reading.word }
+        : null;
   if (!life) {
     return fallback({
       reason: 'unknown-status',
@@ -331,7 +212,7 @@ export function billTracker(input: TrackerInput): TrackerResult {
   if (!chamberRows.length) return fallback({ reason: 'no-stages' });
 
   const first =
-    houseOf(input.originatingHouse) ??
+    billHouse(input.originatingHouse) ??
     rows.find((r) => r.token === 'introduced')?.house ??
     chamberRows[0]!.house!;
   const second = other(first);
@@ -372,16 +253,22 @@ export function billTracker(input: TrackerInput): TrackerResult {
   ) {
     return fallback({ reason: 'contradiction', value: 'passed' });
   }
+  if (
+    life === 'passed' &&
+    !assented &&
+    !passedRows.length &&
+    !undated.has('passed')
+  ) {
+    return fallback({ reason: 'unproven-assent' });
+  }
 
-  // Where a dead bill was voted down, when the record shows it.
-  const downAt =
-    typeof life === 'object' && life.dead === 'Lapsed'
-      ? votedDownAt(rows, input.divisions ?? [])
-      : null;
+  // Where a dead bill was voted down, when the record shows it, and the
+  // pill's word for why it stopped.
+  const downAt = reading.votedDown;
   const stopWord: TrackerStopWord | null =
-    typeof life === 'object' ? (downAt ? 'Voted down' : life.dead) : null;
+    typeof life === 'object' ? life.dead : null;
   const downInFirst = (t: Token) =>
-    downAt?.token === t && downAt.house === first;
+    downAt?.stage === t && downAt.house === first;
 
   // How far the record proves the bill went. Each test is "this step, or
   // anything that can only come after it".
@@ -424,7 +311,11 @@ export function billTracker(input: TrackerInput): TrackerResult {
     second: pastSecond ? lastDate(beforeNext) : null,
     detail: lastDate(detailRows),
     passedFirst: lastDate(firstThird),
-    other: bothHouses ? lastDate(secondThird) : null,
+    // The other house's third reading, or its final passage when ParlInfo
+    // files only that.
+    other: bothHouses
+      ? (lastDate(secondThird) ?? lastDate(inHouse(second, 'passed')))
+      : null,
     assent:
       assentRows[0]?.date ??
       acts.find((a) => a.assent_date)?.assent_date?.slice(0, 10) ??
@@ -437,11 +328,8 @@ export function billTracker(input: TrackerInput): TrackerResult {
     detail: detailRows.length > 0,
     passedFirst,
     other: bothHouses,
-    // Passed both houses with no assent recorded is waiting for it; an
-    // older record that says passed but files neither is done, undated.
-    assent:
-      assented ||
-      (life === 'passed' && !passedRows.length && !undated.has('passed')),
+    // Passed both houses with no assent recorded is waiting for it.
+    assent: assented,
   };
   // An optional step the bill went past: consideration in detail.
   const skipped = (id: TrackerStepId) =>
@@ -497,7 +385,7 @@ export function billTracker(input: TrackerInput): TrackerResult {
         return {
           ...base,
           state: 'ended',
-          date: downAt?.date ?? null,
+          date: reading.stoppedOn,
           note: stopWord,
         };
       }

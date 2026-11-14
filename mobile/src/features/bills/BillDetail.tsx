@@ -27,12 +27,15 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
+  billStatusLabel,
+  type BillStatusEvidence,
+} from '../../api/bill-status';
+import {
   billDisplay,
   billName,
   billSentenceCase,
   billSourceLabel,
   billStage,
-  billStatusWord,
   billTimeline,
   type BillTimelineEntry,
   type BillTimelineStage,
@@ -812,6 +815,7 @@ function BillHead({
     status_as_of: identity.statusAsOf,
     originating_house: identity.house,
     key_dates: view.keyDates.data ?? [],
+    votes: view.divisions.data?.rawRows,
   });
   const meta = metaLine(identity);
   return (
@@ -861,6 +865,7 @@ function billSourceDetails(
     status_as_of: identity.statusAsOf,
     originating_house: identity.house,
     key_dates: view.keyDates.data ?? [],
+    votes: view.divisions.data?.rawRows,
   });
   const sources = view.identity.sources;
   const originals: SourceOriginal[] = sources.map((s) =>
@@ -1023,7 +1028,9 @@ function metaLine(bill: {
 function SeededHead({ row }: { row: IndexRow }) {
   const display = billDisplay(row);
   const name = billName(row);
-  const status = billStatusWord(row.status) || 'Status not recorded';
+  // The index row carries no stages or votes: the register's word until the
+  // bill's own file says more.
+  const status = billStatusLabel(row.status);
   const event = row.status_stage ? statusEvent(row) : null;
   const meta = metaLine({
     status: row.status,
@@ -1351,6 +1358,7 @@ const TERMINAL_STATUS =
 export function rulerPoints(
   entries: readonly BillTimelineEntry[],
   status?: string | null,
+  evidence?: BillStatusEvidence,
 ) {
   const first = entries[0]!;
   const last = entries[entries.length - 1]!;
@@ -1381,7 +1389,7 @@ export function rulerPoints(
     at: entries.length - 1,
     label:
       /^other$/i.test(ended.trim()) && TERMINAL_STATUS.test(terminal)
-        ? billStatusWord(status)
+        ? billStatusLabel(status, evidence)
         : /^royal assent$/i.test(ended.trim())
           ? 'Royal Assent'
           : ended,
@@ -1486,7 +1494,10 @@ function KeyDates({
   const tracker = mapped.kind === 'tracker' ? mapped.tracker : null;
   const points =
     !tracker && entries.length > 1
-      ? rulerPoints(entries, identity?.status)
+      ? rulerPoints(entries, identity?.status, {
+          stages: view.keyDates.data,
+          divisions: view.divisions.data?.rawRows,
+        })
       : [];
   const allLabel =
     timeline.runs === 1

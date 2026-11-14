@@ -1,12 +1,12 @@
 {
   "_about": [
     "Real federal bills for the bill-stage tracker (mobile/src/features/bills/tracker-model.ts).",
-    "key_dates, status, originating_house, acts and the negative reading-stage divisions are the live app payload (GET https://opax.com.au/bills/<key>.json, read 14 Nov 2026), trimmed to the fields the tracker reads.",
+    "key_dates, status, originating_house, acts and the negative divisions that bear on a reading are the live app payload (GET https://opax.com.au/bills/<key>.json, read 14 Nov 2026), trimmed to the fields the tracker reads. s1400 and s1401 (added after review) are the same payload from a local portal build, with the House business motion negatived the day each arrived.",
     "parlinfo is ParlInfo's own wording for each stage row, from the OPAX bills registry (bill_events.event_raw); the app never sees it. Each expected line was checked against it by hand.",
     "Across all 2,989 bills in the register: 2,986 map to the tracker; 3 keep the dated list (2 Constitution Alterations past both houses, which go to a referendum, and 1 exposure draft). Voted down is shown for 56 bills, all negatived in ParlInfo; 30 more negatived bills have no linked vote and read the register status, Lapsed."
   ],
   "sampled": "2026-11-14",
-  "count": 72,
+  "count": 74,
   "bills": [
     {
       "key": "au-federal-s1518",
@@ -5410,6 +5410,122 @@
         "2013-06-24 Senate: Text of bill as passed both Houses"
       ],
       "expected": "Falls back: referendum"
+    },
+    {
+      "key": "au-federal-s1400",
+      "title": "Fair Work Legislation Amendment (Small Business Redundancy Exemption) Bill 2023",
+      "case": "other-vote-same-day",
+      "status": "lapsed",
+      "originating_house": "senate",
+      "key_dates": [
+        {
+          "stage": "introduced",
+          "date": "2023-11-06",
+          "house": "senate"
+        },
+        {
+          "stage": "second_reading",
+          "date": "2023-11-06",
+          "house": "senate"
+        },
+        {
+          "stage": "second_reading",
+          "date": "2023-11-09",
+          "house": "senate"
+        },
+        {
+          "stage": "second_reading",
+          "date": "2023-11-09",
+          "house": "senate"
+        },
+        {
+          "stage": "third_reading",
+          "date": "2023-11-09",
+          "house": "senate"
+        },
+        {
+          "stage": "introduced",
+          "date": "2023-11-13",
+          "house": "representatives"
+        }
+      ],
+      "divisions": [
+        {
+          "date": "2023-11-13",
+          "house": "representatives",
+          "stage": "Business motion",
+          "outcome": "negative",
+          "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debate/?id=2023-11-13.125.1) introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal), which means it failed. ### Motion text > *That so much of the standing and sessional orders be suspended as would prevent the [Fair Work Legislation Amendment (Small Business Redundancy Exemption) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=s1400) being called on immediately, and debate on the question that the amendment moved by the Manager of Opposition Business, that the bill be considered immediately, continuing.* Standing and sessional orders are the usual procedural rules of parliament."
+        }
+      ],
+      "acts": [],
+      "parlinfo": [
+        "2023-11-06 Senate: Introduced and read a first time",
+        "2023-11-06 Senate: Second reading moved",
+        "2023-11-09 Senate: Second reading debate",
+        "2023-11-09 Senate: Second reading agreed to",
+        "2023-11-09 Senate: Third reading agreed to",
+        "2023-11-13 House: Introduced and read a first time"
+      ],
+      "expected": "Stopped at step 5 of 6: The House. Lapsed."
+    },
+    {
+      "key": "au-federal-s1401",
+      "title": "Fair Work Legislation Amendment (Strengthening Protections Against Discrimination) Bill 2023",
+      "case": "other-vote-same-day",
+      "status": "lapsed",
+      "originating_house": "senate",
+      "key_dates": [
+        {
+          "stage": "introduced",
+          "date": "2023-11-06",
+          "house": "senate"
+        },
+        {
+          "stage": "second_reading",
+          "date": "2023-11-06",
+          "house": "senate"
+        },
+        {
+          "stage": "second_reading",
+          "date": "2023-11-09",
+          "house": "senate"
+        },
+        {
+          "stage": "second_reading",
+          "date": "2023-11-09",
+          "house": "senate"
+        },
+        {
+          "stage": "third_reading",
+          "date": "2023-11-09",
+          "house": "senate"
+        },
+        {
+          "stage": "introduced",
+          "date": "2023-11-13",
+          "house": "representatives"
+        }
+      ],
+      "divisions": [
+        {
+          "date": "2023-11-13",
+          "house": "representatives",
+          "stage": "Business motion",
+          "outcome": "negative",
+          "question": "The majority voted against a [motion](https://www.openaustralia.org.au/debates/?id=2023-11-13.121.2) introduced by Bradfield MP [Paul Fletcher](https://theyvoteforyou.org.au/people/representatives/bradfield/paul_fletcher) (Liberal), which means it failed. ### Motion text > *That so much of the standing and sessional orders be suspended as would prevent the order of the day for the consideration of the [Fair Work Legislation Amendment (Strengthening Protections Against Discrimination) Bill 2023](https://www.aph.gov.au/Parliamentary_Business/Bills_Legislation/Bills_Search_Results/Result?bId=s1401) being called on immediately.* Standing and sessional orders are the usual procedural rules of parliament."
+        }
+      ],
+      "acts": [],
+      "parlinfo": [
+        "2023-11-06 Senate: Introduced and read a first time",
+        "2023-11-06 Senate: Second reading moved",
+        "2023-11-09 Senate: Second reading debate",
+        "2023-11-09 Senate: Second reading agreed to",
+        "2023-11-09 Senate: Third reading agreed to",
+        "2023-11-13 House: Introduced and read a first time"
+      ],
+      "expected": "Stopped at step 5 of 6: The House. Lapsed."
     }
   ]
 }

@@ -1,4 +1,5 @@
 import sample from './fixtures/bill-stages/sample.json';
+import { billStatusLabel } from '../src/api/bill-status';
 import { isTermId } from '../src/features/learn/glossary';
 import {
   billTracker,
@@ -8,7 +9,7 @@ import {
 } from '../src/features/bills/tracker-model';
 
 /**
- * The bill-stage tracker against 72 real federal bills, read from the live
+ * The bill-stage tracker against 74 real federal bills, read from the live
  * app payload on 14 Nov 2026 (tests/fixtures/bill-stages/sample.json). Each
  * expected line was checked by hand against ParlInfo's own wording for the
  * bill, which the fixture carries beside the payload as `parlinfo`.
@@ -86,7 +87,7 @@ test('how many sampled bills map cleanly and how many keep the dated list', () =
   const fallbacks = sample.bills.filter(
     (b) => billTracker(input(b)).kind === 'fallback',
   );
-  expect(sample.bills.length - fallbacks.length).toBe(69);
+  expect(sample.bills.length - fallbacks.length).toBe(71);
   expect(fallbacks.map((b) => b.key)).toEqual([
     'au-federal-r7019',
     'au-federal-ed-online-safety-digital-duty-of-care-2026',
@@ -169,9 +170,30 @@ describe('lapsed', () => {
       '2 | Second reading | done | 2024-08-21',
       '3 | Consideration in detail | done | 2024-08-21',
       '4 | Passed the Senate | done | 2024-08-21',
-      '5 | The House | ended | Lapsed',
+      '5 | The House | ended | 2025-03-28',
       '6 | Royal Assent | unreached | ',
     ]);
+    // Stopped on the day it lapsed, in the pill's word.
+    expect(steps('au-federal-s1384')[4]).toMatchObject({
+      date: '2025-03-28',
+      note: 'Lapsed',
+    });
+  });
+
+  test('a lapsed stop is dated only by the row the register files it under', () => {
+    // "Removed from the Notice Paper", 19 Jun 2018, the bill's last row.
+    expect(steps('au-federal-s1090')[4]).toMatchObject({
+      state: 'ended',
+      date: '2018-06-19',
+      note: 'Lapsed',
+    });
+    // ParlInfo's "Second reading negatived" with no linked vote: the last
+    // row is the reading, not a lapse, so no date is claimed.
+    expect(steps('au-federal-s1503')[1]).toMatchObject({
+      state: 'ended',
+      date: null,
+      note: 'Lapsed',
+    });
   });
 
   test('before its third reading, the step names the stage, never "Passed"', () => {
@@ -245,37 +267,95 @@ describe('voted down', () => {
     );
   });
 
+  test('a vote that day on another question is not the bill voted down', () => {
+    // The House negatived a business motion to call each bill on, the day
+    // it arrived from the Senate. Not a reading: the bill lapsed later.
+    for (const key of ['au-federal-s1400', 'au-federal-s1401']) {
+      expect(read(bill(key))).toBe(
+        'Stopped at step 5 of 6: The House. Lapsed.',
+      );
+      expect(bill(key).divisions).toEqual([
+        expect.objectContaining({
+          date: '2023-11-13',
+          house: 'representatives',
+          stage: 'Business motion',
+          outcome: 'negative',
+        }),
+      ]);
+    }
+  });
+
+  test('the vote must fall on the day of the stage, in the same house', () => {
+    const b = bill('au-federal-s986');
+    const vote = b.divisions[0]!;
+    const moved = (change: Partial<typeof vote>) =>
+      read({ ...b, divisions: [{ ...vote, ...change }] } as SampleBill);
+    expect(read(b)).toBe('Stopped at step 2 of 6: Second reading. Voted down.');
+    // The same vote a day earlier, or in the other house, proves nothing.
+    expect(moved({ date: '2014-12-03' })).toBe(
+      'Stopped at step 2 of 6: Second reading. Lapsed.',
+    );
+    expect(moved({ house: 'representatives' })).toBe(
+      'Stopped at step 2 of 6: Second reading. Lapsed.',
+    );
+    expect(moved({ outcome: 'affirmative' })).toBe(
+      'Stopped at step 2 of 6: Second reading. Lapsed.',
+    );
+  });
+
+  test('the first-reading pattern counts only with nothing recorded after', () => {
+    const b = bill('au-federal-s1463');
+    expect(read(b)).toBe('Stopped at step 1 of 6: First reading. Voted down.');
+    const later = {
+      ...b,
+      key_dates: [
+        ...b.key_dates,
+        { stage: 'other', date: '2025-09-01', house: 'senate' },
+      ],
+    } as SampleBill;
+    expect(read(later)).not.toMatch(/Voted down/);
+    expect(billStatusLabel(later.status, { stages: later.key_dates })).toBe(
+      'Lapsed',
+    );
+  });
+
   test('a negatived bill with no linked vote keeps the register status', () => {
     expect(read(bill('au-federal-s1503'))).toBe(
       'Stopped at step 2 of 6: Second reading. Lapsed.',
     );
   });
 
-  test('a status the register may send later says so directly', () => {
+  test("a status the register may send later says so directly, in the pill's words", () => {
     const b = bill('au-federal-s1488');
     for (const [status, word] of [
       ['negatived', 'Voted down'],
       ['withdrawn', 'Withdrawn'],
-      ['discharged', 'Withdrawn'],
-      ['not_proceeded_with', 'Lapsed'],
+      ['discharged', 'Discharged'],
+      ['not_proceeded_with', 'Not proceeded with'],
     ] as const) {
       const result = billTracker({ ...input(b), status, divisions: [] });
       expect(result.kind === 'tracker' && result.tracker.summary).toBe(
         `Stopped at step 2 of 6: Second reading. ${word}.`,
       );
+      expect(billStatusLabel(status, { stages: b.key_dates })).toBe(word);
     }
   });
 });
 
 describe('no date recorded', () => {
   test('a step the bill must have passed is done, undated, never invented', () => {
-    // ParlInfo files no Senate third reading; the bill finally passed.
-    expect(compact('au-federal-r5920')[4]).toBe(
-      '5 | The Senate | done | No date recorded',
-    );
-    expect(steps('au-federal-r5920')[4]!.date).toBeNull();
+    // ParlInfo files no House third reading; the Senate passed it after.
     expect(compact('au-federal-alrc-2361')[3]).toBe(
       '4 | Passed the House | done | No date recorded',
+    );
+    expect(steps('au-federal-alrc-2361')[3]!.date).toBeNull();
+  });
+
+  test("the other house is dated by its final passage when that's all ParlInfo files", () => {
+    // No Senate third reading row; "Finally passed both Houses", Senate,
+    // 17 Aug 2017.
+    expect(compact('au-federal-r5920')[4]).toBe(
+      '5 | The Senate | done | 2017-08-17',
     );
   });
 
@@ -338,6 +418,23 @@ describe('the other steps', () => {
 });
 
 describe('never crashes, never claims', () => {
+  test('passed, with neither assent nor final passage on record, keeps the dated list', () => {
+    // The register's `passed` also covers "Passed both houses": without
+    // an assent or an Act the steps can't say it is law.
+    const b = bill('au-federal-r5920');
+    const result = billTracker({
+      ...input(b),
+      stages: b.key_dates.filter(
+        (d) => d.stage !== 'passed' && d.stage !== 'royal_assent',
+      ),
+      acts: [],
+    });
+    expect(result).toEqual({
+      kind: 'fallback',
+      fallback: { reason: 'unproven-assent' },
+    });
+  });
+
   test('an unknown house falls back', () => {
     expect(
       billTracker({

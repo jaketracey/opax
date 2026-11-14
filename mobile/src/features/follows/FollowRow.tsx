@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import { StatusCapsule } from '../../design/labels';
-import { billStatus as billStatusLabel } from '../../design/parliament';
+import { billStatusLabel } from '../../api/bill-status';
 import { Text } from '../../design/text';
 import { LinkRow } from '../../design/rows';
 import { Portrait } from '../../design/people';

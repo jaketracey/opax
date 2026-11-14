@@ -247,7 +247,7 @@ describe('change markers', () => {
       },
     ]);
   });
-  test('a bill negatived reads "Now not agreed", never "Negatived"', () => {
+  test('a bill negatived reads "Now voted down", the pill\'s word, never "Negatived"', () => {
     const bills = structuredClone(catalogs.bills!);
     Object.assign(bills.bills.find((b) => b.key === BILL)!, {
       status: 'negatived',
@@ -261,7 +261,7 @@ describe('change markers', () => {
         ),
       ).changes,
     ).toMatchObject([
-      { marker: 'status', text: 'Now not agreed; was before parliament' },
+      { marker: 'status', text: 'Now voted down; was before parliament' },
     ]);
   });
   test('party, seat, votes, pay and expenses changes name what moved', () => {

@@ -494,7 +494,7 @@ describe('how it moved: a terminal status names the last stop (P2-9)', () => {
   test.each([
     ['lapsed', 'Lapsed'],
     ['withdrawn', 'Withdrawn'],
-    ['negatived', 'Not agreed'],
+    ['negatived', 'Voted down'],
     ['not_proceeded_with', 'Not proceeded with'],
     ['discharged', 'Discharged'],
   ])('"Other" on a %s bill reads "%s"', (status, word) => {
@@ -528,8 +528,41 @@ describe('how it moved: a terminal status names the last stop (P2-9)', () => {
     expect(texts(host(tracker, 'bill-tracker-summary')[0]!).join(' ')).toMatch(
       /^Stopped at step \d of 6: .+\. Lapsed\.$/,
     );
-    expect(texts(tracker)).toContain('Lapsed');
+    expect(texts(tracker)).toContain('Lapsed · 11 Apr 2022');
     expect(texts(tracker).join(' ')).not.toMatch(/Other/);
+  });
+
+  describe('the status pill and the tracker say the same (api/bill-status.ts)', () => {
+    const pill = (root: ReactTestInstance) => host(root, 'bill-status')[0]!;
+    const summary = (root: ReactTestInstance) =>
+      texts(host(root, 'bill-tracker-summary')[0]!).join('');
+
+    test('voted down: the pill, its VoiceOver label, its date and the tracker', async () => {
+      // ParlInfo: "First reading negatived", 1 Jul 2026, on a counted vote.
+      mockParams.key = 'au-federal-s1500';
+      const root = await render(<BillDetail />);
+      expect(pill(root).props.accessibilityLabel).toBe(
+        'Status: Voted down. Voted down, 1 July 2026',
+      );
+      expect(texts(pill(root))[0]).toBe('Voted down');
+      expect(summary(root)).toBe(
+        'Stopped at step 1 of 6: First reading. Voted down.',
+      );
+    });
+
+    test.each(['au-federal-r6850', 'au-federal-s1479'])(
+      'lapsed with no vote that defeated it: %s reads Lapsed in both',
+      async (key) => {
+        mockParams.key = key;
+        const root = await render(<BillDetail />);
+        expect(pill(root).props.accessibilityLabel).toMatch(
+          /^Status: Lapsed\./,
+        );
+        expect(texts(pill(root))[0]).toBe('Lapsed');
+        expect(summary(root)).toMatch(/\. Lapsed\.$/);
+        expect(JSON.stringify(texts(root))).not.toMatch(/Voted down/);
+      },
+    );
   });
 });
 
