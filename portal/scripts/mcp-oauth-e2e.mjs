@@ -42,14 +42,15 @@ const toolCall={jsonrpc:'2.0',id:7,method:'tools/call',params:{name:'corpus_cove
  check('/mcp/member without a token is 401 with the resource metadata pointer',member.status===401&&pointer.includes('resource_metadata="'+BASE+'/.well-known/oauth-protected-resource/mcp/member"'),pointer)
  const bad=await rpc('/mcp',toolCall,{authorization:'Bearer opax_at_'+'a'.repeat(43)})
  check('a wrong token is 401, not served as no-account',bad.status===401&&(bad.headers.get('www-authenticate')||'').includes('invalid_token'))
- const page=await fetch(BASE+'/mcp',{headers:{accept:'text/html'}})
+ const page=await fetch(BASE+'/mcp',{headers:{accept:'text/html'}}),stream=await fetch(BASE+'/mcp',{headers:{accept:'text/event-stream'}})
+ check('an MCP client asking /mcp for an event stream is told POST only',stream.status===405)
  check('a browser opening /mcp gets the setup page',page.status===200&&(await page.text()).includes('Use OPAX in your AI tool'))
  if(process.env.LIMIT==='1'&&status.anonymous){
   let limited=null,sent=0
   // One client (one session id): the 61st tool call inside a minute is refused.
   for(;sent<70&&!limited;sent++){const response=await rpc('/mcp',toolCall,{'mcp-session-id':'e2e-limit-'+process.pid});if(response.status===429)limited=response;else await response.arrayBuffer()}
   const body=limited?await limited.json():null
-  check('no account: the client limit answers 429 with retry-after and a clear message',!!limited&&limited.headers.get('retry-after')==='60'&&/a minute for one client/.test(body?.error||''),limited?`after ${sent-1} accepted: HTTP 429 retry-after=${limited.headers.get('retry-after')} ${JSON.stringify(body)}`:'no 429 in '+sent)
+  check('no account: the client limit answers 429 with retry-after and a clear message',!!limited&&limited.headers.get('retry-after')==='60'&&body?.jsonrpc==='2.0'&&/a minute for one client/.test(body?.error?.message||''),limited?`after ${sent-1} accepted: HTTP 429 retry-after=${limited.headers.get('retry-after')} ${JSON.stringify(body)}`:'no 429 in '+sent)
   const other=await rpc('/mcp',toolCall,{'mcp-session-id':'e2e-other-'+process.pid})
   check('no account: another session at the same address is still served',other.status===200)
  }
@@ -125,6 +126,7 @@ if(SESSION){
   check('the rotated access token works; the earlier one does not',(await rpc('/mcp',toolCall,{authorization:'Bearer '+second.access_token})).status===200&&(await rpc('/mcp',toolCall,{authorization:'Bearer '+first.access_token})).status===401)
   const listed=await (await fetch(BASE+'/api/community/connections',{headers:{cookie}})).json()
   check('the member sees the connected client in their account',listed.connections?.some(c=>c.name.startsWith('OPAX e2e')),(listed.connections?.length??0)+' connection(s)')
+  await new Promise(resolve=>setTimeout(resolve,12000)) // past the few seconds in which a repeat is treated as a retry
   const reuse=await form({grant_type:'refresh_token',client_id:store.client.client_id,refresh_token:first.refresh_token})
   check('reusing a rotated refresh token is refused and removes the connection',reuse.status===400&&(await rpc('/mcp',toolCall,{authorization:'Bearer '+second.access_token})).status===401)
   const last=await fresh()

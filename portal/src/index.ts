@@ -5097,6 +5097,7 @@ async function canonicalRoutePath(url: URL, env: Env): Promise<string> {
   if(path==='/map.html') return '/map'
   if(path==='/community.html') return '/community'
   if(path==='/press.html') return '/press'
+  if(path==='/mcp.html') return '/mcp'
   if(path==='/connections.html') return '/connections'
   // The contracts page's first address; its query (the table's state, a chosen comparison) goes with it.
   if(path==='/discover') return '/money/contracts'
@@ -5186,7 +5187,7 @@ function retiredToolAddress(url: URL): boolean {
 }
 async function pageAliasRedirect(request: Request, url: URL, env: Env): Promise<Response | null> {
   if(missingEntitySlug(url.pathname)) return null
-  if(!['GET','HEAD'].includes(request.method) || url.pathname.startsWith('/api/') || url.pathname.startsWith('/ingest/') || url.pathname==='/mcp/member' || (url.pathname==='/mcp' && !(request.headers.get('accept') ?? '').includes('text/html')) || url.pathname.startsWith('/oauth/') || url.pathname.startsWith('/.well-known/oauth-') || url.pathname.startsWith('/og/')) return null
+  if(!['GET','HEAD'].includes(request.method) || url.pathname.startsWith('/api/') || url.pathname.startsWith('/ingest/') || url.pathname==='/mcp/member' || (url.pathname==='/mcp' && (request.headers.has('authorization') || (request.headers.get('accept') ?? '').includes('text/event-stream'))) || url.pathname.startsWith('/oauth/') || url.pathname.startsWith('/.well-known/oauth-') || url.pathname.startsWith('/og/')) return null
   const discoveryPath=url.pathname.replace(/\/+$/,'')
   if(['/sitemap.xml','/robots.txt','/llms.txt'].includes(discoveryPath) || /^\/sitemaps\/[^/]+\.xml$/.test(discoveryPath)) {
     if(canonicalPageRedirect(request,env.COMMUNITY_ORIGIN) || discoveryPath!==url.pathname)
@@ -6493,7 +6494,7 @@ function withSecurityHeaders(res: Response, url: URL): Response {
   const ownCsp = url.pathname === '/oauth/authorize' ? res.headers.get('content-security-policy') : null
   const isMcpData = (url.pathname === '/mcp' && !res.headers.get('content-type')?.startsWith('text/html')) || url.pathname === '/mcp/member'
   out.headers.set('content-security-policy', isUnsubscribePage ? CSP_UNSUBSCRIBE : ownCsp ? ownCsp : isApi || isOauth || isMcpData ? CSP_API : CSP_PAGE)
-  if (url.pathname.startsWith('/api/community/') || url.pathname.startsWith('/api/voice/') || isMcpData || url.pathname.startsWith('/oauth/')) { out.headers.set('cache-control', 'no-store'); out.headers.set('referrer-policy', 'no-referrer') }
+  if (url.pathname.startsWith('/api/community/') || url.pathname.startsWith('/api/voice/') || isMcpData || url.pathname.startsWith('/oauth/')) { out.headers.set('cache-control', 'no-store'); out.headers.set('referrer-policy', ownCsp ? 'same-origin' : 'no-referrer') }
   if (url.pathname === '/community' || url.pathname === '/community.html') out.headers.set('referrer-policy', 'no-referrer')
   if (NO_STORE_PATHS.has(url.pathname) && !out.headers.has('cache-control')) {
     out.headers.set('cache-control', 'no-store')
@@ -7429,8 +7430,9 @@ export default {
       const limited = await rateLimited(env.SEARCH_LIMITER, request); if (limited) return communityResponse(limited)
       return communityResponse(await anonymousVolume(env).then(status => json(status), () => json({ error: 'unavailable' }, 503)))
     }
-    // A reader's browser opening /mcp gets the setup page; every MCP request goes to the tools.
-    const mcpPage = url.pathname === '/mcp' && (request.method === 'GET' || request.method === 'HEAD') && !request.headers.has('authorization') && (request.headers.get('accept') ?? '').includes('text/html') && !(request.headers.get('accept') ?? '').includes('text/event-stream')
+    // A plain GET of /mcp is a reader's browser and gets the setup page. An MCP client's GET asks for an
+    // event stream (the protocol requires that Accept), and every POST goes to the tools.
+    const mcpPage = url.pathname === '/mcp' && (request.method === 'GET' || request.method === 'HEAD') && !request.headers.has('authorization') && !(request.headers.get('accept') ?? '').includes('text/event-stream')
     if (MCP_PATHS.includes(url.pathname) && !mcpPage) return communityResponse(await communityMcp(request, env, async path => {
       const target = new URL(path, env.COMMUNITY_ORIGIN)
       const local = new Request(target, { headers: { 'cf-connecting-ip': request.headers.get('cf-connecting-ip') || 'mcp' } })

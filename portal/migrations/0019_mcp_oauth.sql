@@ -22,6 +22,7 @@ CREATE TABLE oauth_grants (
   last_used_at INTEGER
 );
 CREATE INDEX oauth_grants_member ON oauth_grants(member_id);
+CREATE INDEX oauth_grants_client ON oauth_grants(client_id);
 CREATE TABLE oauth_codes (
   code_hash TEXT PRIMARY KEY,
   grant_id TEXT NOT NULL REFERENCES oauth_grants(id) ON DELETE CASCADE,

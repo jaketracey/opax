@@ -5,10 +5,10 @@
 // No caller is identified by a cookie, so any website may call /mcp from a
 // browser without gaining anything a direct request would not have.
 import {CommunityError,digest,json,limit,now,type Member} from './community-core'
-import {oauthMember} from './community-oauth'
+import {oauthMember,type OAuthMember} from './community-oauth'
 import {ANTHROPIC_EGRESS,OPENAI_EGRESS} from './mcp-shared-egress'
 
-export type McpCaller={kind:'anonymous',member:null}|{kind:'key'|'oauth',member:Member}
+export type McpCaller={kind:'anonymous',member:null}|{kind:'key',member:Member&{key_id:string}}|{kind:'oauth',member:OAuthMember}
 export const MCP_PATHS=['/mcp','/mcp/member']
 export const MCP_SCOPE='records:read'
 /** The address that always asks for sign-in, for clients that only start it on a 401. */
@@ -46,6 +46,8 @@ async function countAnonymous(env:Env):Promise<void> {
  const bucket=Math.floor(now()/HOUR)
  // Plain keys, unlike limit(): the volume reader sums these rows by hour. Login housekeeping removes them a day after expiry.
  const row=await env.COMMUNITY_DB.prepare('INSERT INTO community_limits(key,hits,expires_at) VALUES (?,1,?) ON CONFLICT(key) DO UPDATE SET hits=hits+1 RETURNING hits').bind(hourKey(bucket),(bucket+1)*HOUR).first<{hits:number}>()
+ // Once an hour, clear limit rows a day past their window, so the table cannot grow without bound when nobody is signing in.
+ if(row?.hits===1)await env.COMMUNITY_DB.prepare('DELETE FROM community_limits WHERE expires_at<?').bind(now()-86400).run()
  // Workers observability, the sink Ask monitoring writes to. Counts only; never an address or a query.
  if(row?.hits===setting(env,'MCP_ANON_ALERT_HOURLY',20000))console.warn(JSON.stringify({kind:'mcp_anon_volume',level:'alert',hour:bucket*HOUR,hits:row.hits}))
 }
@@ -83,17 +85,26 @@ export function sharedAddress(env:Env,ip:string):boolean {
  return [...builtInShared,...ranges(String(env.MCP_ANON_SHARED_RANGES??''))].some(([network,mask])=>((n&mask)>>>0)===network)
 }
 
+/** The unit a limit counts: an IPv4 address, or an IPv6 /64 (one subscriber holds a whole /64, so the full address would be no limit at all). */
+export function networkKey(ip:string):string {
+ if(!ip.includes(':'))return ip
+ const [head,tail='']=ip.toLowerCase().split('::'),left=head?head.split(':'):[],right=tail?tail.split(':'):[]
+ const groups=ip.includes('::')?[...left,...Array(Math.max(0,8-left.length-right.length)).fill('0'),...right]:left
+ return groups.slice(0,4).map(group=>group.replace(/^0+(?=.)/,'')).join(':')+'::/64'
+}
+
 // Requests every client makes just to connect. They count toward the address ceiling but not a client's own allowance.
 const HANDSHAKE=new Set(['initialize','notifications/initialized','tools/list','ping'])
 /**
  * Limits for a request without an account, spent once the method is known:
  *  - one client: 60 a minute. A client is its session (Mcp-Session-Id, issued at initialize) at its
- *    address, otherwise its User-Agent at its address;
+ *    address, otherwise its User-Agent at its address. The session id is the caller's own word, so this
+ *    is fairness between honest clients; the address ceiling is the real stop;
  *  - one address: a high ceiling only, far higher again for the addresses assistants share;
  *  - everyone together: a ceiling that protects the database.
  */
 export async function spendAnonymous(req:Request,env:Env,method:unknown):Promise<void> {
- const ip=req.headers.get('cf-connecting-ip')||'local',shared=sharedAddress(env,ip)
+ const ip=req.headers.get('cf-connecting-ip')||'local',shared=sharedAddress(env,ip),network=networkKey(ip)
  const session=req.headers.get('mcp-session-id'),named=session&&/^[\x21-\x7e]{8,128}$/.test(session)?session:null
  const perClient=setting(env,'MCP_ANON_PER_CLIENT_MINUTE',60),everyone=setting(env,'MCP_ANON_GLOBAL_MINUTE',3000)
  const perIp=shared?setting(env,'MCP_ANON_SHARED_IP_MINUTE',1500):setting(env,'MCP_ANON_PER_IP_MINUTE',300)
@@ -101,24 +112,20 @@ export async function spendAnonymous(req:Request,env:Env,method:unknown):Promise
  const addressMessage=tooMany(`the ceiling is ${perIp} a minute for one network address.`)
  // The Workers limiter refuses a flood from one ordinary address before it costs a database write. It fails open; the exact counts below still apply.
  if(!shared){
-  const edge=await env.MCP_ANON_LIMITER?.limit({key:ip}).catch(()=>null)
+  const edge=await env.MCP_ANON_LIMITER?.limit({key:network}).catch(()=>null)
   if(edge&&!edge.success)throw new McpLimitError(addressMessage)
  }
  // On a shared address a client with no session cannot be told from the next person's, so only the ceilings apply to it.
  const clientKey=named?'session:'+named:shared?null:'agent:'+(req.headers.get('user-agent')||'unnamed').slice(0,200)
  const countsForClient=clientKey&&!(typeof method==='string'&&HANDSHAKE.has(method))
- const checks=await Promise.allSettled([
-  limit(env,'mcp-anon-ip:'+ip,perIp,60),
-  countsForClient?limit(env,'mcp-anon-client:'+ip+':'+clientKey,perClient,60):Promise.resolve(),
-  limit(env,'mcp-anon-all',everyone,60),
-  countAnonymous(env),
- ])
- const failed=checks.find(check=>check.status==='rejected') as PromiseRejectedResult|undefined
- if(!failed)return
- if(!(failed.reason instanceof CommunityError)||failed.reason.status!==429)throw failed.reason
- if(checks[1].status==='rejected')throw new McpLimitError(tooMany(`the limit is ${perClient} a minute for one client.`))
- if(checks[0].status==='rejected')throw new McpLimitError(addressMessage)
- throw new McpLimitError('OPAX tools are busy for callers without an account. Wait a minute and try again, or connect with a free OPAX account for your own limit: '+env.COMMUNITY_ORIGIN+'/mcp')
+ // In order, so a request refused for its address or client never uses up anyone else's allowance:
+ // one caller cannot fill the overall ceiling from a single address.
+ const refusedAt=async(check:Promise<void>)=>{try{await check;return false}catch(e){if(e instanceof CommunityError&&e.status===429)return true;throw e}}
+ if(await refusedAt(limit(env,'mcp-anon-ip:'+network,perIp,60)))throw new McpLimitError(addressMessage)
+ if(countsForClient&&await refusedAt(limit(env,'mcp-anon-client:'+network+':'+clientKey,perClient,60)))throw new McpLimitError(tooMany(`the limit is ${perClient} a minute for one client.`))
+ // Assistants' shared addresses and everyone else have separate overall ceilings, so neither crowd can shut the other out.
+ if(await refusedAt(limit(env,shared?'mcp-anon-all-shared':'mcp-anon-all',everyone,60)))throw new McpLimitError('OPAX tools are busy for callers without an account. Wait a minute and try again, or connect with a free OPAX account for your own limit: '+env.COMMUNITY_ORIGIN+'/mcp')
+ await countAnonymous(env)
 }
 /** A session id for a no-account client, so its later requests are counted as its own. Nothing is stored for it. */
 export function withAnonymousSession(response:Response,method:unknown):Response {
@@ -127,7 +134,7 @@ export function withAnonymousSession(response:Response,method:unknown):Response 
 }
 export class McpLimitError extends CommunityError { constructor(message:string){super(429,message)} }
 
-/** Decide the caller, or answer the request here (preflight, 401). A member's limit is spent here on POST; a no-account caller's in spendAnonymous. */
+/** Decide the caller, or answer the request here (preflight, 401). Limits are spent afterwards, once the method is known. */
 export async function mcpCaller(req:Request,env:Env):Promise<McpCaller|Response> {
  const path=new URL(req.url).pathname
  if(req.method==='OPTIONS')return preflight()
@@ -144,16 +151,24 @@ export async function mcpCaller(req:Request,env:Env):Promise<McpCaller|Response>
  if(oauth){
   const member=await oauthMember(env,oauth,MCP_PATHS.map(p=>env.COMMUNITY_ORIGIN+p))
   if(!member)return unauthorised('This connection has expired or was removed. Sign in again.','invalid_token')
-  if(req.method==='POST')await limit(env,'mcp:'+member.id,60,60)
   return {kind:'oauth',member}
  }
  const key=header.match(/^Bearer (opax_[\w-]{43})$/)?.[1]
  if(!key)return unauthorised('Use an OPAX member key or sign in.','invalid_token')
  const record=await env.COMMUNITY_DB.prepare('SELECT m.*,k.id AS key_id FROM mcp_keys k JOIN members m ON m.id=k.member_id WHERE k.token_hash=? AND k.revoked_at IS NULL AND k.expires_at>? AND m.disabled=0').bind(await digest(key),now()).first<Member&{key_id:string}>()
  if(!record)return unauthorised('This access token is expired or revoked.','invalid_token')
- if(req.method==='POST'){
-  await limit(env,'mcp:'+record.id,60,60)
-  await env.COMMUNITY_DB.prepare('UPDATE mcp_keys SET last_used_at=? WHERE id=?').bind(now(),record.key_id).run()
- }
  return {kind:'key',member:record}
+}
+/**
+ * A member's limit, spent once the method is known: 60 a minute, as before. Connecting and listing tools
+ * (which every new session repeats) are counted apart, so many short sessions do not use up the allowance
+ * for tool calls. A connected client is counted per connection, so it cannot use up the member's keys' allowance.
+ */
+export async function spendMember(caller:Exclude<McpCaller,{kind:'anonymous'}>,env:Env,method:unknown):Promise<void> {
+ const who=caller.kind==='oauth'?'mcp-grant:'+caller.member.grant_id:'mcp:'+caller.member.id
+ try{
+  if(typeof method==='string'&&HANDSHAKE.has(method))await limit(env,who+':connect',300,60)
+  else await limit(env,who,60,60)
+ }catch(e){if(e instanceof CommunityError&&e.status===429)throw new McpLimitError('Too many requests: the limit is 60 tool calls a minute for one account. Wait a minute and try again.');throw e}
+ if(caller.kind==='key')await env.COMMUNITY_DB.prepare('UPDATE mcp_keys SET last_used_at=? WHERE id=?').bind(now(),caller.member.key_id).run()
 }

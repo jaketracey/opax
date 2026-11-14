@@ -8,11 +8,12 @@
 // The member is the existing email-login account; consent is given on a
 // script-free page. Codes and tokens are stored as hashes only.
 import {CommunityError,digest,json,limit,now,randomToken,type Member} from './community-core'
+import {networkKey,sharedAddress} from './mcp-access'
 
 const SCOPE='records:read'
 const RESOURCE_PATHS=['/mcp','/mcp/member']
 const CODE_SECONDS=120,ACCESS_SECONDS=3600,REFRESH_SECONDS=60*86400
-const CLIENT_IDLE_SECONDS=90*86400
+const CLIENT_IDLE_SECONDS=90*86400,RETRY_GRACE_SECONDS=10
 const MAX_GRANTS=20
 const COOKIE='__Host-opax_session='
 
@@ -20,7 +21,9 @@ class OAuthError extends Error { constructor(public code:string,public descripti
 type Client={id:string,name:string,redirect_uris:string}
 type Params={client_id:string,redirect_uri:string,code_challenge:string,state:string,resource:string}
 
-const ip=(req:Request)=>req.headers.get('cf-connecting-ip')||'local'
+const address=(req:Request)=>req.headers.get('cf-connecting-ip')||'local'
+/** The unit address limits count: an IPv4 address or an IPv6 /64. */
+const ip=(req:Request)=>networkKey(address(req))
 const esc=(value:string)=>value.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c] as string))
 const resources=(env:Env)=>RESOURCE_PATHS.map(path=>env.COMMUNITY_ORIGIN+path)
 const oauthJson=(body:unknown,status=200,headers:HeadersInit={})=>json(body,status,{pragma:'no-cache','access-control-allow-origin':'*',...headers})
@@ -61,8 +64,10 @@ export function authorizationServerMetadata(env:Env):Response {
 
 // --- redirect addresses -----------------------------------------------------
 
-const BLOCKED_SCHEMES=new Set(['javascript:','data:','vbscript:','file:','blob:','about:','ftp:','ws:','wss:','mailto:','tel:','sms:','view-source:','filesystem:','chrome:','intent:'])
-const LOOPBACK=new Set(['localhost','127.0.0.1','[::1]'])
+// App schemes: the MCP clients known to use one, or a reverse-domain scheme an app owns (RFC 8252 section 7.1).
+// Anything else could launch an unrelated program on the member's device.
+const APP_SCHEMES=new Set(['cursor:','vscode:','vscode-insiders:','windsurf:','zed:','claude:','raycast:','jetbrains:'])
+const LOOPBACK=new Set(['localhost','127.0.0.1'])
 function parse(value:string):URL|null {try{return new URL(value)}catch{return null}}
 const loopback=(url:URL)=>url.protocol==='http:'&&LOOPBACK.has(url.hostname)&&!url.username&&!url.password
 /** A redirect address a client may register: https, a loopback http address, or an app's own scheme. */
@@ -71,7 +76,7 @@ export function registrableRedirect(value:unknown,origin:string):value is string
  const url=parse(value);if(!url||url.username||url.password)return false
  if(url.protocol==='https:')return url.origin!==origin
  if(url.protocol==='http:')return loopback(url)
- return /^[a-z][a-z0-9+.-]{1,40}:$/.test(url.protocol)&&!BLOCKED_SCHEMES.has(url.protocol)&&value.startsWith(url.protocol+'//')
+ return (APP_SCHEMES.has(url.protocol)||/^[a-z][a-z0-9-]*(?:\.[a-z0-9-]+)+:$/.test(url.protocol))&&url.protocol.length<=60&&value.startsWith(url.protocol+'//')
 }
 /** Exact match only. A loopback address may differ in its port alone (RFC 8252 section 7.3). */
 export function redirectMatches(registered:string[],presented:string):boolean {
@@ -94,8 +99,11 @@ function redirectWith(redirect:string,values:Record<string,string>):string {
 // --- registration (RFC 7591) ------------------------------------------------
 
 async function register(req:Request,env:Env):Promise<Response> {
- await guarded(()=>limit(env,'oauth-register-ip:'+ip(req),30,3600))
- await guarded(()=>limit(env,'oauth-register-all',1000,86400))
+ // Assistants register from their makers' servers, which many people share; an ordinary address needs only a few.
+ // Each crowd has its own daily ceiling, so neither can use up the other's.
+ const shared=sharedAddress(env,address(req))
+ await guarded(()=>limit(env,'oauth-register-ip:'+ip(req),shared?300:10,3600))
+ await guarded(()=>limit(env,shared?'oauth-register-all-shared':'oauth-register-all',2000,86400))
  const data=await readBody(req,'json')
  const uris=data.redirect_uris
  if(!Array.isArray(uris)||uris.length<1||uris.length>8||!uris.every(uri=>registrableRedirect(uri,env.COMMUNITY_ORIGIN)))throw new OAuthError('invalid_redirect_uri','Give one to eight redirect addresses: https, a loopback http address, or an app scheme, with no fragment.')
@@ -119,12 +127,16 @@ async function register(req:Request,env:Env):Promise<Response> {
 
 // --- authorisation and consent ----------------------------------------------
 
-const PAGE_STYLE='body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:#1c1b19;background:#f6f3ec}main{max-width:34rem;margin:8vh auto;padding:2rem;background:#fff;border:1px solid #d8d2c4;border-radius:10px}h1{font-size:1.4rem;line-height:1.3;margin:0 0 1rem}p,li{margin:0 0 .75rem}ul{padding-left:1.2rem}.who{color:#555}.row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.5rem}button,.button{font:inherit;padding:.6rem 1.1rem;border-radius:6px;border:1px solid #1c1b19;background:#fff;color:#1c1b19;cursor:pointer;text-decoration:none;display:inline-block}button.primary,.button.primary{background:#1c1b19;color:#fff}.note{font-size:.9rem;color:#555}code{word-break:break-all}@media (prefers-color-scheme:dark){body{background:#151412;color:#eee}main{background:#1f1e1b;border-color:#3a3833}.who,.note{color:#bbb}button,.button{background:#1f1e1b;color:#eee;border-color:#eee}button.primary,.button.primary{background:#eee;color:#151412}}'
+// The site's own tokens (public/tokens.css): colours, type roles and spacing. No other stylesheet and no script.
+const PAGE_STYLE='body{margin:0;font:var(--type-body);color:var(--ink);background:var(--paper)}main{max-width:34rem;margin:8vh auto;padding:2rem;background:var(--paper-raised);border:1px solid var(--divider-subtle);border-radius:10px}h1{font:var(--type-heading);margin:0 0 1rem}p,li{margin:0 0 .75rem}ul{padding-left:1.2rem}.who,.note{color:var(--ink-soft)}.note{font:var(--type-fine)}.row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.5rem}button,.button{font:var(--type-strong);padding:.6rem 1.1rem;border-radius:6px;border:1px solid var(--navy);background:var(--paper-raised);color:var(--navy);cursor:pointer;text-decoration:none;display:inline-block}button.primary,.button.primary{background:var(--navy);color:var(--paper-raised)}code{word-break:break-all}'
 function page(title:string,bodyHtml:string,status=200,formAction="'self'"):Response {
- return new Response(`<!doctype html><html lang="en-AU"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>${esc(title)} · OPAX</title><style>${PAGE_STYLE}</style></head><body><main>${bodyHtml}</main></body></html>`,{status,headers:{
-  'content-type':'text/html; charset=utf-8','cache-control':'no-store','referrer-policy':'no-referrer','x-frame-options':'DENY',
+ return new Response(`<!doctype html><html lang="en-AU"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>${esc(title)} · OPAX</title><link rel="stylesheet" href="/tokens.css"><style>${PAGE_STYLE}</style></head><body><main>${bodyHtml}</main></body></html>`,{status,headers:{
+  'content-type':'text/html; charset=utf-8','cache-control':'no-store','x-frame-options':'DENY',
+  // same-origin, not no-referrer: under no-referrer a browser sends "Origin: null" with the form, and the decision needs the real Origin.
+  // The address holds no code or token, and nothing is sent to another site.
+  'referrer-policy':'same-origin',
   // No scripts at all. form-action must name the client's address too: browsers apply it to the redirect that follows the form.
-  'content-security-policy':`default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action ${formAction}; frame-ancestors 'none'`,
+  'content-security-policy':`default-src 'none'; style-src 'self' 'unsafe-inline'; base-uri 'none'; form-action ${formAction}; frame-ancestors 'none'`,
  }})
 }
 const problem=(message:string,status=400)=>page('Connection problem',`<h1>This connection could not be started</h1><p>${esc(message)}</p><p class="note">Nothing was shared. You can close this page and try again from your AI tool.</p>`,status)
@@ -140,7 +152,8 @@ async function sessionMember(req:Request,env:Env):Promise<Member|null> {
 /** Bound to the signed-in session and to this exact request, so a consent cannot be forged or moved to another client. */
 const consentProof=(session:string,p:Params)=>digest('opax-oauth-consent-v1\n'+session+'\n'+JSON.stringify([p.client_id,p.redirect_uri,p.code_challenge,p.state,p.resource]))
 
-/** Checks the client and its redirect address first: until both are known, errors are shown here and never sent on. */
+/** Every fault in a request is shown on this page and never sent on: OPAX redirects only after a signed-in
+ * member presses Allow or Cancel, so the address cannot be used to bounce a reader to someone else's site. */
 async function authorizeRequest(env:Env,get:(name:string)=>string|null):Promise<{client:Client,params:Params}|Response> {
  const clientId=get('client_id')||''
  const client=/^[\w-]{43}$/.test(clientId)?await env.COMMUNITY_DB.prepare('SELECT id,name,redirect_uris FROM oauth_clients WHERE id=?').bind(clientId).first<Client>():null
@@ -149,7 +162,7 @@ async function authorizeRequest(env:Env,get:(name:string)=>string|null):Promise<
  const redirect=get('redirect_uri')??(registered.length===1?registered[0]:'')
  if(!redirect||redirect.length>512||!redirectMatches(registered,redirect))return problem('The return address in this request does not match the one this app registered with OPAX.')
  const state=get('state')||''
- const back=(error:string,description:string)=>Response.redirect(redirectWith(redirect,{error,error_description:description,state:state.slice(0,1024),iss:env.COMMUNITY_ORIGIN}),302)
+ const back=(error:string,description:string)=>problem(`This app sent a request OPAX cannot accept (${error}). ${description}`)
  if(state.length>1024)return back('invalid_request','state is too long.')
  if(get('response_type')!=='code')return back('unsupported_response_type','Only the authorisation code flow is supported.')
  const challenge=get('code_challenge')||''
@@ -172,14 +185,14 @@ async function authorizePage(req:Request,env:Env):Promise<Response> {
  const checked=await authorizeRequest(env,name=>url.searchParams.get(name))
  if(checked instanceof Response)return checked
  const {client,params}=checked,member=await sessionMember(req,env),session=sessionToken(req)
- const name=esc(client.name),where=esc(redirectLabel(params.redirect_uri))
+ const name=esc(client.name),where=esc(redirectLabel(params.redirect_uri)),local=new URL(params.redirect_uri).protocol!=='https:'
  if(!member||!session){
   // The community page remembers this address and returns here once the emailed link has been used.
   const signIn='/community?view=signin&next='+encodeURIComponent(url.pathname+url.search)
   return page('Sign in to connect',`<h1>Sign in to OPAX to connect ${name}</h1><p>An app that calls itself <strong>${name}</strong> wants to read the public record through your OPAX account. It will send you back to <strong>${where}</strong>.</p><p>Connecting needs a free OPAX account. Sign in with your email first, then you will be asked whether to allow it.</p><div class="row"><a class="button primary" href="${esc(signIn)}">Sign in to OPAX</a><a class="button" href="${esc(url.pathname+url.search)}">I have signed in, continue</a></div><p class="note">If you did not start this from your AI tool, close this page.</p>`)
  }
  const hidden=Object.entries({...params,proof:await consentProof(session,params)}).map(([key,value])=>`<input type="hidden" name="${key}" value="${esc(value)}">`).join('')
- return page('Allow connection',`<h1>Allow ${name} to read the public record as you?</h1><p class="who">Signed in as ${esc(member.email)}</p><p>An app that calls itself <strong>${name}</strong> is asking to connect. OPAX cannot confirm who made it. After you choose, you will be sent to <strong>${where}</strong>.</p><ul><li>It can search and read public records with the OPAX tools, under your account's limits.</li><li>It cannot see your email address, reading lists, messages or anything else in your account, and it cannot post or change anything.</li><li>You can remove it at any time under Connect AI tools in your OPAX account.</li></ul><form method="post" action="/oauth/authorize">${hidden}<div class="row"><button class="primary" name="decision" value="allow">Allow</button><button name="decision" value="deny">Cancel</button></div></form><p class="note">Only allow this if you just asked your AI tool to connect to OPAX.</p>`,200,formActionFor(params.redirect_uri))
+ return page('Allow connection',`<h1>Allow ${name} to read the public record as you?</h1><p class="who">Signed in as ${esc(member.email)}</p><p>An app that calls itself <strong>${name}</strong> is asking to connect. OPAX cannot confirm who made it. After you choose, you will be sent to <strong>${where}</strong>.</p>${local?'<p>That is a program on your own device, not a website. Any program on this device could have opened this page, so only allow it if you started the connection yourself a moment ago.</p>':''}<ul><li>It can search and read public records with the OPAX tools, under your account's limits.</li><li>It cannot see your email address, reading lists, messages or anything else in your account, and it cannot post or change anything.</li><li>You can remove it at any time under Connect AI tools in your OPAX account.</li></ul><form method="post" action="/oauth/authorize">${hidden}<div class="row"><button class="primary" name="decision" value="allow">Allow</button><button name="decision" value="deny">Cancel</button></div></form><p class="note">Only allow this if you just asked your AI tool to connect to OPAX.</p>`,200,formActionFor(params.redirect_uri))
 }
 
 async function authorizeDecision(req:Request,env:Env):Promise<Response> {
@@ -238,12 +251,12 @@ async function issue(env:Env,grant:string,t:number):Promise<Response> {
 }
 
 async function token(req:Request,env:Env):Promise<Response> {
- // Assistants' servers share addresses between many members, so the address limit is wide and the client limit does the work.
+ // Assistants' servers share addresses between many members, so the address limit is wide. Codes and tokens are 256-bit, so guessing is not the risk.
  await guarded(()=>limit(env,'oauth-token-ip:'+ip(req),600,60))
+ // No limit is keyed on client_id: it is public, so such a limit would let anyone lock a client's members out.
  const form=await readBody(req,'form'),field=(name:string)=>typeof form[name]==='string'?form[name] as string:''
  const clientId=field('client_id')
  if(!/^[\w-]{43}$/.test(clientId))throw new OAuthError('invalid_client','Send the client_id this app registered with.',401)
- await guarded(()=>limit(env,'oauth-token-client:'+clientId,60,60))
  const t=now(),grantType=field('grant_type')
  const resource=field('resource').replace(/\/$/,'')
  if(resource&&!resources(env).includes(resource))throw new OAuthError('invalid_target','This sign-in only covers '+env.COMMUNITY_ORIGIN+'/mcp')
@@ -276,8 +289,9 @@ async function token(req:Request,env:Env):Promise<Response> {
   const row=await env.COMMUNITY_DB.prepare("UPDATE oauth_tokens SET used_at=? WHERE token_hash=? AND kind='refresh' AND used_at IS NULL AND expires_at>? RETURNING grant_id").bind(t,hash,t).first<{grant_id:string}>()
   if(!row){
    // A rotated token presented again is treated as stolen: the whole connection goes.
-   const spent=await env.COMMUNITY_DB.prepare("SELECT grant_id FROM oauth_tokens WHERE token_hash=? AND kind='refresh' AND used_at IS NOT NULL").bind(hash).first<{grant_id:string}>()
-   if(spent)await removeGrant(env,spent.grant_id)
+   // A repeat within a few seconds is a client retrying a request it thought was lost: refused, but the connection stays.
+   const spent=await env.COMMUNITY_DB.prepare("SELECT grant_id,used_at FROM oauth_tokens WHERE token_hash=? AND kind='refresh' AND used_at IS NOT NULL").bind(hash).first<{grant_id:string,used_at:number}>()
+   if(spent&&t-spent.used_at>RETRY_GRACE_SECONDS)await removeGrant(env,spent.grant_id)
    throw new OAuthError('invalid_grant','This refresh token has expired, was removed or was already used. Sign in again.')
   }
   const grant=await env.COMMUNITY_DB.prepare('SELECT client_id,resource FROM oauth_grants WHERE id=?').bind(row.grant_id).first<{client_id:string,resource:string}>()
@@ -303,9 +317,10 @@ async function revoke(req:Request,env:Env):Promise<Response> {
 }
 
 /** The member behind an access token, if it is live and was issued for this server's own addresses. */
-export async function oauthMember(env:Env,accessToken:string,audience:string[]):Promise<Member|null> {
+export type OAuthMember=Member&{grant_id:string}
+export async function oauthMember(env:Env,accessToken:string,audience:string[]):Promise<OAuthMember|null> {
  const t=now()
- const row=await env.COMMUNITY_DB.prepare("SELECT m.*,g.id AS grant_id,g.resource AS grant_resource,g.last_used_at AS grant_used FROM oauth_tokens k JOIN oauth_grants g ON g.id=k.grant_id JOIN members m ON m.id=g.member_id WHERE k.token_hash=? AND k.kind='access' AND k.expires_at>? AND m.disabled=0").bind(await digest(accessToken),t).first<Member&{grant_id:string,grant_resource:string,grant_used:number|null}>()
+ const row=await env.COMMUNITY_DB.prepare("SELECT m.*,g.id AS grant_id,g.resource AS grant_resource,g.last_used_at AS grant_used FROM oauth_tokens k JOIN oauth_grants g ON g.id=k.grant_id JOIN members m ON m.id=g.member_id WHERE k.token_hash=? AND k.kind='access' AND k.expires_at>? AND m.disabled=0").bind(await digest(accessToken),t).first<OAuthMember&{grant_resource:string,grant_used:number|null}>()
  if(!row||!audience.includes(row.grant_resource))return null
  if(!row.grant_used||row.grant_used<t-60)await env.COMMUNITY_DB.prepare('UPDATE oauth_grants SET last_used_at=? WHERE id=?').bind(t,row.grant_id).run()
  return row

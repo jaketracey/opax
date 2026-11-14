@@ -16,7 +16,7 @@ await build({entryPoints:[src('community.ts'),src('community-mcp.ts'),src('commu
 const {communityRoute}=await import(pathToFileURL(join(folder,'community.js')));
 const {communityMcp}=await import(pathToFileURL(join(folder,'community-mcp.js')));
 const {oauthRoute,redirectMatches,registrableRedirect}=await import(pathToFileURL(join(folder,'community-oauth.js')));
-const {anonymousVolume,sharedAddress}=await import(pathToFileURL(join(folder,'mcp-access.js')));
+const {anonymousVolume,sharedAddress,networkKey}=await import(pathToFileURL(join(folder,'mcp-access.js')));
 
 const ORIGIN='https://opax.test';
 const sha=value=>createHash('sha256').update(value).digest('hex');
@@ -42,8 +42,10 @@ function fixture(vars={}){
  }
  const oauth=(path,init={})=>oauthRoute(new Request(ORIGIN+path,init),env);
  const form=(path,fields,headers={})=>oauth(path,{method:'POST',headers:{'content-type':'application/x-www-form-urlencoded',...headers},body:new URLSearchParams(fields)});
- async function register(metadata={}){
-  const response=await oauth('/oauth/register',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({client_name:'Claude',redirect_uris:[CALLBACK],token_endpoint_auth_method:'none',...metadata})});
+ let registrations=0;
+ // Each registration comes from its own address unless a test names one, so the per-address limit is tested on purpose only.
+ async function register(metadata={},address='198.18.0.'+(++registrations)){
+  const response=await oauth('/oauth/register',{method:'POST',headers:{'content-type':'application/json','cf-connecting-ip':address},body:JSON.stringify({client_name:'Claude',redirect_uris:[CALLBACK],token_endpoint_auth_method:'none',...metadata})});
   return {response,client:response.status===201?await response.json():null};
  }
  const authorizeQuery=(clientId,extra={})=>'/oauth/authorize?'+new URLSearchParams({response_type:'code',client_id:clientId,redirect_uri:CALLBACK,code_challenge:CHALLENGE,code_challenge_method:'S256',state:'st-1',resource:ORIGIN+'/mcp',...extra});
@@ -122,7 +124,8 @@ test('no-account limits: one client, then a ceiling for the address and for ever
  assert.equal(limited.status,429);
  assert.equal(limited.headers.get('retry-after'),'60');
  assert.equal(limited.headers.get('access-control-allow-origin'),'*');
- const message=(await limited.json()).error;
+ const limitBody=await limited.json(),message=limitBody.error.message;
+ assert.equal(limitBody.jsonrpc,'2.0');assert.equal(limitBody.id,1);assert.equal(limitBody.error.code,-32029);
  assert.match(message,/3 a minute for one client/);
  assert.match(message,/free OPAX account/);
  // Connecting and listing tools do not use a client's allowance.
@@ -134,16 +137,64 @@ test('no-account limits: one client, then a ceiling for the address and for ever
  // The address ceiling is the backstop: the ninth request from it is refused whoever sends it.
  const ceiling=await f.mcp({'mcp-session-id':'session-three'},call());
  assert.equal(ceiling.status,429);
- assert.match((await ceiling.json()).error,/8 a minute for one network address/);
- // The overall ceiling answers "busy" rather than blaming this caller.
- for(const ip of ['198.51.100.1','198.51.100.2','198.51.100.3'])assert.equal((await f.mcp({'cf-connecting-ip':ip},call())).status,200);
+ assert.match((await ceiling.json()).error.message,/8 a minute for one network address/);
+ // Refused requests used none of the overall ceiling (12): seven were counted, so five more addresses still get through.
+ for(let i=0;i<5;i++)assert.equal((await f.mcp({},call())).status,429);
+ for(const ip of ['198.51.100.1','198.51.100.2','198.51.100.3','198.51.100.5','2001:db8:1:2::9'])assert.equal((await f.mcp({'cf-connecting-ip':ip},call())).status,200);
  const busy=await f.mcp({'cf-connecting-ip':'198.51.100.4'},call());
  assert.equal(busy.status,429);
- assert.match((await busy.json()).error,/busy/);
+ assert.match((await busy.json()).error.message,/busy/);
  // GET and preflight spend nothing.
  const before=f.db.prepare('SELECT sum(hits) n FROM community_limits').get().n;
  assert.equal((await f.mcp({}, {method:'GET'})).status,405);
  assert.equal(f.db.prepare('SELECT sum(hits) n FROM community_limits').get().n,before);
+ f.db.close();
+});
+
+test('an IPv6 caller is counted by its /64, so rotating addresses inside it is no escape',async()=>{
+ assert.equal(networkKey('203.0.113.7'),'203.0.113.7');
+ assert.equal(networkKey('2001:db8:1:2:aaaa:bbbb:cccc:dddd'),'2001:db8:1:2::/64');
+ assert.equal(networkKey('2001:db8:1:2::1'),'2001:db8:1:2::/64');
+ assert.equal(networkKey('2001:0db8:0001:0002::1'),'2001:db8:1:2::/64');
+ assert.equal(networkKey('2001:db8::1'),'2001:db8:0:0::/64');
+ assert.equal(networkKey('::1'),'0:0:0:0::/64');
+ const f=fixture({MCP_ANON_PER_CLIENT_MINUTE:'50',MCP_ANON_PER_IP_MINUTE:'3',MCP_ANON_GLOBAL_MINUTE:'100'});
+ for(let i=0;i<3;i++)assert.equal((await f.mcp({'cf-connecting-ip':'2001:db8:1:2::'+(i+1)},call())).status,200);
+ assert.equal((await f.mcp({'cf-connecting-ip':'2001:db8:1:2:ffff::9'},call())).status,429);
+ assert.equal((await f.mcp({'cf-connecting-ip':'2001:db8:1:3::1'},call())).status,200);
+ f.db.close();
+});
+
+test('the shared addresses and everyone else have separate overall ceilings',async()=>{
+ const f=fixture({MCP_ANON_PER_CLIENT_MINUTE:'50',MCP_ANON_PER_IP_MINUTE:'50',MCP_ANON_SHARED_IP_MINUTE:'50',MCP_ANON_GLOBAL_MINUTE:'2'});
+ for(let i=0;i<2;i++)assert.equal((await f.mcp({},call())).status,200);
+ assert.equal((await f.mcp({},call())).status,429); // ordinary callers are at their ceiling
+ assert.equal((await f.mcp({'cf-connecting-ip':'160.79.104.10'},call())).status,200); // Claude's users are not shut out by it
+ f.db.close();
+});
+
+test('limit rows a day past their window are cleared by the first no-account request of an hour',async()=>{
+ const f=fixture();
+ f.db.prepare('INSERT INTO community_limits(key,hits,expires_at) VALUES (?,?,?)').run('old',1,1);
+ f.db.prepare('INSERT INTO community_limits(key,hits,expires_at) VALUES (?,?,?)').run('recent',1,Math.floor(Date.now()/1000)-3600);
+ await f.mcp();
+ assert.equal(f.db.prepare("SELECT count(*) n FROM community_limits WHERE key='old'").get().n,0);
+ assert.equal(f.db.prepare("SELECT count(*) n FROM community_limits WHERE key='recent'").get().n,1);
+ f.db.close();
+});
+
+test('a member key keeps 60 tool calls a minute; connecting is counted apart; a connected client has its own count',async()=>{
+ const f=fixture(),session=await f.login();
+ const key=(await (await f.account('keys','POST',{name:'Laptop'},session.cookie)).json()).token,live=await f.connect(session);
+ for(let i=0;i<70;i++)assert.equal((await f.mcp(f.bearer(key))).status,200); // tools/list: seventy short sessions connect
+ for(let i=0;i<60;i++)assert.equal((await f.mcp(f.bearer(key),call())).status,200);
+ const limited=await f.mcp(f.bearer(key),call());
+ assert.equal(limited.status,429);assert.equal(limited.headers.get('retry-after'),'60');
+ const body=await limited.json();
+ assert.equal(body.error.code,-32029);assert.match(body.error.message,/60 tool calls a minute/);
+ assert.ok(f.db.prepare('SELECT last_used_at FROM mcp_keys').get().last_used_at>0);
+ // The connected client is not locked out by the key's use, nor the key by the client's.
+ assert.equal((await f.mcp(f.bearer(live.tokens.access_token),call())).status,200);
  f.db.close();
 });
 
@@ -166,7 +217,7 @@ test('addresses that Claude and ChatGPT share are not treated as one person',asy
  // ...and the shared ceiling (9 here) is far above an ordinary address's (4), but it is still a ceiling.
  const over=await f.mcp(claude,call());
  assert.equal(over.status,429);
- assert.match((await over.json()).error,/9 a minute for one network address/);
+ assert.match((await over.json()).error.message,/9 a minute for one network address/);
  // An ordinary address reaches the Workers limiter first; a shared one never does (asserted by the key above).
  assert.equal((await f.mcp({},call())).status,200);
  f.db.close();
@@ -194,7 +245,7 @@ test('the Workers limiter refuses a flood before any database write, and fails o
  const refused=fixture({MCP_ANON_LIMITER:{async limit({key}){assert.equal(key,'203.0.113.7');return {success:false}}}});
  const response=await refused.mcp();
  assert.equal(response.status,429);assert.equal(response.headers.get('retry-after'),'60');
- assert.match((await response.json()).error,/300 a minute for one network address/);
+ assert.match((await response.json()).error.message,/300 a minute for one network address/);
  assert.equal(refused.db.prepare('SELECT count(*) n FROM community_limits').get().n,0);
  const broken=fixture({MCP_ANON_LIMITER:{async limit(){throw new Error('limiter down')}}});
  assert.equal((await broken.mcp()).status,200);
@@ -264,13 +315,13 @@ test('resource and server metadata describe one issuer, PKCE S256 and public cli
 
 test('registration issues a public client and refuses unsafe redirect addresses',async()=>{
  const f=fixture();
- const {response,client}=await f.register({redirect_uris:[CALLBACK,'http://localhost:8787/callback','cursor://anysphere.cursor-mcp/oauth/callback'],client_name:'<b>Claude</b>\n"Desktop"'});
+ const {response,client}=await f.register({redirect_uris:[CALLBACK,'http://localhost:8787/callback','cursor://anysphere.cursor-mcp/oauth/callback','com.example.app://callback'],client_name:'<b>Claude</b>\n"Desktop"'});
  assert.equal(response.status,201);
  assert.match(client.client_id,/^[\w-]{43}$/);
  assert.equal(client.token_endpoint_auth_method,'none');
  assert.equal(client.client_secret,undefined);
  assert.equal(client.client_name,'b Claude b Desktop');
- for(const bad of [['http://example.com/cb'],['https://ok.example/cb#frag'],['javascript://x/%0aalert(1)'],['data://text/html,x'],['https://user:pw@ok.example/cb'],[ORIGIN+'/community'],['not a url'],[],Array(9).fill(CALLBACK),'https://ok.example/cb']){
+ for(const bad of [['http://example.com/cb'],['https://ok.example/cb#frag'],['javascript://x/%0aalert(1)'],['data://text/html,x'],['ms-msdt://x'],['smb://host/share'],['ssh://host'],['http://[::1]:8000/cb'],['https://user:pw@ok.example/cb'],[ORIGIN+'/community'],['not a url'],[],Array(9).fill(CALLBACK),'https://ok.example/cb']){
   const refused=await f.register({redirect_uris:bad});
   assert.equal(refused.response.status,400,JSON.stringify(bad));
   assert.equal((await refused.response.json()).error,'invalid_redirect_uri');
@@ -286,8 +337,12 @@ test('registration issues a public client and refuses unsafe redirect addresses'
 
 test('registration is limited per address',async()=>{
  const f=fixture();
- let status;for(let i=0;i<31;i++)status=(await f.register()).response.status;
- assert.equal(status,429);
+ for(let i=0;i<10;i++)assert.equal((await f.register({},'203.0.113.9')).response.status,201);
+ assert.equal((await f.register({},'203.0.113.9')).response.status,429);
+ assert.equal((await f.register({},'203.0.113.10')).response.status,201);
+ // An assistant maker's shared address registers for many people.
+ const shared=()=>f.oauth('/oauth/register',{method:'POST',headers:{'content-type':'application/json','cf-connecting-ip':'160.79.104.10'},body:JSON.stringify({redirect_uris:[CALLBACK]})});
+ for(let i=0;i<12;i++)assert.equal((await shared()).status,201);
  f.db.close();
 });
 
@@ -314,18 +369,32 @@ test('an unknown client or a wrong redirect address is shown an error and never 
  f.db.close();
 });
 
-test('requests without PKCE S256, the code flow or this resource are refused back to the client',async()=>{
+test('requests without PKCE S256, the code flow or this resource are refused on the page, never by redirect',async()=>{
  const f=fixture(),session=await f.login(),{client}=await f.register();
- for(const [extra,error] of [[{code_challenge:''},'invalid_request'],[{code_challenge_method:'plain'},'invalid_request'],[{code_challenge:'short'},'invalid_request'],[{response_type:'token'},'unsupported_response_type'],[{resource:'https://other.example/mcp'},'invalid_target']]){
-  const response=await f.oauth(f.authorizeQuery(client.client_id,extra),{headers:{cookie:session.cookie}});
-  assert.equal(response.status,302);
-  const to=new URL(response.headers.get('location'));
-  assert.equal(to.origin+to.pathname,CALLBACK);
-  assert.equal(to.searchParams.get('error'),error);
-  assert.equal(to.searchParams.get('state'),'st-1');
-  assert.equal(to.searchParams.get('iss'),ORIGIN);
-  assert.equal(to.searchParams.get('code'),null);
+ for(const [extra,error] of [[{code_challenge:''},'invalid_request'],[{code_challenge_method:'plain'},'invalid_request'],[{code_challenge:'short'},'invalid_request'],[{response_type:'token'},'unsupported_response_type'],[{resource:'https://other.example/mcp'},'invalid_target'],[{state:'s'.repeat(1025)},'invalid_request']]){
+  for(const headers of [{cookie:session.cookie},{}]){
+   const response=await f.oauth(f.authorizeQuery(client.client_id,extra),{headers});
+   assert.equal(response.status,400);
+   assert.equal(response.headers.get('location'),null); // not usable as a redirector
+   const html=await response.text();
+   assert.ok(html.includes(error));assert.doesNotMatch(html,/<form/);
+  }
  }
+ f.db.close();
+});
+
+test('a client that returns to a program on the device carries an extra warning',async()=>{
+ const f=fixture(),session=await f.login();
+ const {client}=await f.register({redirect_uris:['http://localhost:8787/callback','cursor://anysphere.cursor-mcp/oauth/callback']});
+ const local=await f.oauth(f.authorizeQuery(client.client_id,{redirect_uri:'http://localhost:51999/callback'}),{headers:{cookie:session.cookie}});
+ const html=await local.text();
+ assert.match(html,/this computer \(localhost\)/);assert.match(html,/Any program on this device/);
+ assert.match(local.headers.get('content-security-policy'),/form-action 'self' http:\/\/localhost:\*;/);
+ const scheme=await f.oauth(f.authorizeQuery(client.client_id,{redirect_uri:'cursor://anysphere.cursor-mcp/oauth/callback'}),{headers:{cookie:session.cookie}});
+ assert.match(await scheme.text(),/Any program on this device/);
+ assert.match(scheme.headers.get('content-security-policy'),/form-action 'self' cursor:;/);
+ const web=await f.oauth(f.authorizeQuery((await f.register()).client.client_id),{headers:{cookie:session.cookie}});
+ assert.doesNotMatch(await web.text(),/Any program on this device/);
  f.db.close();
 });
 
@@ -348,6 +417,8 @@ test('the consent page is script-free, names the client and return address, and 
  assert.match(csp,/default-src 'none'/);assert.match(csp,/frame-ancestors 'none'/);assert.match(csp,/form-action 'self' https:\/\/claude\.ai;/);
  assert.equal(response.headers.get('x-frame-options'),'DENY');
  assert.equal(response.headers.get('cache-control'),'no-store');
+ // A browser sends the real Origin with the form only if the page's referrer policy is not no-referrer.
+ assert.equal(response.headers.get('referrer-policy'),'same-origin');
  // The page holds no code or token: consent has not happened yet.
  assert.equal(f.db.prepare('SELECT count(*) n FROM oauth_grants').get().n,0);
  f.db.close();
@@ -496,6 +567,12 @@ test('refresh tokens rotate, and reusing a rotated one removes the connection',a
  assert.notEqual(second.access_token,first.tokens.access_token);
  assert.equal((await f.mcp(f.bearer(second.access_token))).status,200);
  assert.equal((await f.mcp(f.bearer(first.tokens.access_token))).status,401); // the earlier access token went with the rotation
+ // A repeat within seconds is a retry: refused, and nothing else changes.
+ const retried=await refresh(first.tokens.refresh_token);
+ assert.equal(retried.status,400);
+ assert.equal((await f.mcp(f.bearer(second.access_token))).status,200);
+ // Later than that it is a stolen token: the whole connection goes.
+ f.db.prepare("UPDATE oauth_tokens SET used_at=used_at-60 WHERE used_at IS NOT NULL").run();
  const reused=await refresh(first.tokens.refresh_token);
  assert.equal(reused.status,400);assert.equal((await reused.json()).error,'invalid_grant');
  assert.equal((await f.mcp(f.bearer(second.access_token))).status,401);
@@ -513,6 +590,8 @@ test('refresh tokens rotate, and reusing a rotated one removes the connection',a
 
 test('token and registration endpoints never read the session cookie and carry open CORS',async()=>{
  const f=fixture(),session=await f.login(),c=await f.consent(session);
+ // A public client_id is not a limit key: hammering one cannot lock its members out of the token endpoint.
+ for(let i=0;i<70;i++)assert.equal((await f.exchange(c.clientId,'x'.repeat(43))).status,400);
  const response=await f.exchange(c.clientId,c.code);
  assert.equal(response.headers.get('access-control-allow-origin'),'*');
  assert.equal(response.headers.get('access-control-allow-credentials'),null);
