@@ -49,6 +49,7 @@ export interface Passage {
 }
 /** `preserve` is the conservative migration decision for a figure-free legacy draft. */
 export type AnswerDecision = 'answer' | 'limitation' | 'clarification' | 'refusal' | 'preserve'
+export type AnswerPreview = (payload: QualitativeAnswer, accept?: (checked:QualitativeAnswer)=>boolean) => Promise<QualitativeAnswer | void>
 export interface QualitativeAnswer {
   answer: string
   /** Source limitations belong beside the answer, without occupying its citation ranges. */

@@ -4,7 +4,8 @@ import { researchPhaseWallMs } from './research-time'
 import { ASK_MAX_MODEL_USD, ASK_HARD_WALL_MS, ASK_ANSWER_TARGET_MS, ASK_MAX_TOOL_CALLS, ASK_MAX_ROUNDS, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS, ASK_TURN_OUTPUT_TOKENS, ASK_RESULT_BYTES, reserveQuestionTurn } from './ask-budgets'
 export { researchPhaseWallMs, WRITING_RESERVE_MS } from './research-time'
 import { createAnswerWriter } from './research-writer'
-import { leadWithModelAnswer } from './research-answer-shape'
+import { leadWithModelAnswer, ACCOUNTABILITY_QUESTION } from './research-answer-shape'
+import { whoBasis, type WhoBasis } from './research-who-lead'
 import { electoratePlan } from './tools/electorates'
 import { divisionModelRows } from './tools/division'
 import { loadStatuteTitles } from './ask-statute-titles.mjs'
@@ -37,6 +38,7 @@ import { withRecordedChambers } from './ask-chamber-phrases'
 import { broadAbsenceQuestion, verifiedAbsenceCount, absenceClaim } from './research-absence'
 import { broadTopicOverview, overviewResearchHint, overviewContextOnly, overviewSearchPlan, personOverviewHint } from './ask-answer-grain'
 import { modelProse, usableProse } from './research-text-answer'
+import { generateResearchText, answerEntryScanner, researchPreviewGuard } from './research-generation'
 
 /** The answer tool, shared by the research loop and its final answer call. */
 const ANSWER_DESCRIPTION = 'Finish with the answer. Answer the exact question in your first sentence. For a who question, name the people and their roles first, then what the inquiry or record found about each; for why, give the reason; for what happened, give the outcome. Then the supporting detail. Say each point once. Describe sources as the public record describes them (\"the Royal Commission\'s report found …\"), never how OPAX loaded or stored them. facts: structured record fact ids whose figures answer the question, each selected once. points: 2 to 8 complete sentences in Australian English (4 to 8 for a broad topic overview), the first answering the question directly. Cite a point with the id of the passage that supports it, or "fact-N" for record fact N, and a phrase of 5 to 25 words copied exactly from it; a point of context or background from general knowledge carries no id. Use quotation marks only around words copied exactly from a cited passage. ' + ASK_ATTRIBUTION_RULE + 'Name the chamber a passage records in its chamber field (senate is the Senate, representatives the House of Representatives). Describe a money record by the name on the record ("a donor named X gave $5,600 in 2021-22"), and link it to a politician only when the record itself says it is them. Give facts, points or both.'
@@ -53,6 +55,12 @@ export const RESEARCH_MAX_CALLS = ASK_MAX_TOOL_CALLS
 export const RESEARCH_RESULT_BYTES = ASK_RESULT_BYTES
 /** A repair turn needs about this much of the wall clock left; with less, the run ends on what it has. */
 export const REPAIR_MIN_MS = 6_000
+/** Selection rules whose outcome is known before any answer arguments arrive. */
+export function canPreviewResearchSelection(state:{inFlight:number;introductions:boolean;hearing:boolean;recordFacts:number;billSpeech:boolean;passageKinds:string[]}) {
+  return !state.inFlight&&!state.introductions&&!state.hearing&&!state.recordFacts&&
+    (!state.billSpeech||state.passageKinds.includes('speech'))&&
+    !state.passageKinds.some(kind=>!['speech','bill'].includes(kind))
+}
 const COUNT_ASKED = /\b(?:how (?:many|much|often)|number of|count|counts|most|least|fewest|frequen\w*|times)\b/i
 const boundedInt = (value: unknown, fallback: number, max: number) => Number.isFinite(Number(value)) && Number(value) > 0 ? Math.min(max, Math.max(1, Math.floor(Number(value)))) : fallback
 export const researchLimits = (options: { steps?: unknown; wallMs?: unknown; tokens?: unknown }) => ({
@@ -503,6 +511,27 @@ export function createResearch(options: ResearchOptions): Research {
       }
       return compose(speech ? [] : facts, points)
     }
+    const previewCheck=researchPreviewGuard('loop')
+    const previewTimeLeft=()=>limits.wallMs-(Date.now()-started)>=REPAIR_MIN_MS
+    // These gates are decided before answer arguments arrive. Record selections and hearing/introduction answers
+    // can still require another record or a writer, so their affected opening remains held. Content/schema checks
+    // run on complete point records below; later provider, usage or settlement failures use stream retry recovery.
+    const canPreviewAnswer=()=>qualitativeRun&&steps.length>0&&!finished&&!failed&&
+      !controller.signal.aborted&&!context.signal.aborted&&previewTimeLeft()&&
+      round>0&&round<=limits.rounds&&!credits.blocked()&&!!reservation&&
+      canPreviewResearchSelection({inFlight:inFlight.size,introductions:!!constraints.listIntroductions,
+        hearing:hearingEvidenceQuestion(question),recordFacts:recordFacts().tools.size,
+        billSpeech:isBillSpeechQuestion(question),passageKinds:[...passages.values()].map(p=>p.kind)})
+    let previewRound=0
+    // The passages are fixed while an answer call streams (no lookup is in flight), so a who lead can be decided early.
+    // Each answer source is one passage's text and title (research-evidence sourcesOf), read as leadWithWho reads it.
+    let basis:{size:number;who_basis:WhoBasis}|undefined
+    const previewSources=()=>{
+      if(!ACCOUNTABILITY_QUESTION.test(question))return {}
+      if(basis?.size!==passages.size)basis={size:passages.size,who_basis:whoBasis([...passages.values()].map(p=>({kind:p.kind,texts:[p.text,p.title]})))}
+      return {research:{who_basis:basis.who_basis}}
+    }
+    const pendingAnswers=new Map<string,{allowed:boolean;scanner:ReturnType<typeof answerEntryScanner>;points:unknown[]}>()
     tools.finish = tool({ description: 'Finish a numerical ranking or trend answer by selecting existing fact ids. The selected fact ids supply the final figures and answer text. Include each requested entity and metric.',
       inputSchema: jsonSchema<{ facts: number[] }>({ type: 'object', properties: { facts: { type: 'array', minItems: 1, maxItems: 30, uniqueItems: true, items: { type: 'integer', minimum: 1 } } }, required: ['facts'], additionalProperties: false }),
       execute: args => invoke({ tool: 'finish', args }, async () => {
@@ -686,7 +715,7 @@ export function createResearch(options: ResearchOptions): Research {
         context.constraints = constraints
         check()
       }
-      await Promise.race([generateText({
+      await Promise.race([generateResearchText({
         model: options.model!, instructions, tools, toolChoice: 'required',
         prompt: JSON.stringify({ question, period: context.period, namedScope: context.named, constraints, budget: { rounds: limits.rounds, calls: RESEARCH_MAX_CALLS, answer_target_ms: ASK_ANSWER_TARGET_MS, wall_ms: limits.wallMs }, conversation: options.conversation ?? [], ...(results.length?{prior_records:results.map(output),prior_record_note:'These records were re-read for the person in the previous answer. Answer their role from these records and search for further records about the same person if needed. A non-parliamentarian need not have Hansard speeches.'}:{}) }),
         maxRetries: 0, abortSignal: controller.signal, stopWhen: [isStepCount(limits.rounds), () => finished || !!failed],
@@ -771,10 +800,46 @@ export function createResearch(options: ResearchOptions): Research {
           }
           check()
         },
-      }), stopped])
+      },context.progress.answer?async chunk=>{
+        await previewCheck(async()=>{
+          if(chunk.type==='tool-input-start'&&chunk.toolName==='answer'){
+            const allowed=previewRound!==round&&canPreviewAnswer()
+            previewRound=round
+            pendingAnswers.set(chunk.id,{allowed,scanner:answerEntryScanner('points'),points:[]})
+            if(allowed){draftRoster??=context.deps.asset('/parliamentarians.json');draftRoster.catch(()=>{})}
+          }
+          if(chunk.type!=='tool-input-delta')return
+          const pending=pendingAnswers.get(chunk.id)
+          if(!pending?.allowed||controller.signal.aborted)return
+          const added=pending.scanner.push(chunk.delta)
+          if(!added.length)return
+          pending.points.push(...added)
+          // Match the answer schema for each complete record, without trusting a partial text property.
+          if(pending.points.length>8||pending.points.some(raw=>{
+            const p=object(raw)
+            return typeof p.claim!=='string'||!p.claim.length||p.claim.length>1200||
+              Object.keys(p).some(k=>!['claim','id','quote'].includes(k))||
+              p.id!==undefined&&(typeof p.id!=='string'||!p.id.length||p.id.length>240)||
+              p.quote!==undefined&&(typeof p.quote!=='string'||!p.quote.length||p.quote.length>1200)
+          })){pending.allowed=false;return}
+          const roster=await draftRoster
+          const tally=stats.answer,points=selectedPoints
+          let checked:QualitativeAnswer|null
+          try{checked=draftAnswer({points:pending.points},roster,()=>{})}
+          finally{stats.answer=tally;selectedPoints=points}
+          if(checked){
+            // Retain only complete, checked records if the wall or output ceiling interrupts this call.
+            // Accepted answer arguments overwrite this snapshot in execute; never replace an earlier call.
+            draft={points:[...pending.points]}
+            if(previewTimeLeft())await context.progress.answer?.({...checked,answer_scope:constraints,...previewSources()} as QualitativeAnswer)
+          }
+        })
+      }:undefined), stopped])
       check()
       if (!finished) fail(stats.rounds >= limits.rounds || calls >= RESEARCH_MAX_CALLS ? 'steps' : answerAttempts ? 'grounding' : 'no_finish')
       await Promise.race([settle(), stopped])
+      // Legacy text/citation answers have no structured point boundary; publish them after acceptance.
+      if(qualitative&&qualitativeRun&&!recordFacts().tools.size&&![...passages.values()].some(p=>!['speech','bill'].includes(p.kind))&&!hearingEvidenceQuestion(question)&&previewTimeLeft())await previewCheck(()=>context.progress.answer?.({...qualitative as QualitativeAnswer,answer_scope:constraints,...previewSources()} as QualitativeAnswer))
       return { constraints, steps, results, selected, ...stats, ...(qualitative ? { qualitative:{...(qualitative as QualitativeAnswer),answer_scope:constraints}, points:selectedPoints } : {}) }
     } catch (error) {
       if (!(error instanceof ResearchError) && isResearchCreditError(error)) {
