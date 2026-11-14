@@ -92,6 +92,7 @@ invalid or older candidates. The selected version is saved in `java.log`.
 | `OPAX_BUILD_GATE`         | Executable shell script wrapping builds, invoked with lane name and command arguments | Run the command directly, with a notice             |
 | `OPAX_SIM_GATE`           | Shell script booting an allowed simulator, invoked with lane name and UDID            | Boot directly, with a notice                        |
 | `OPAX_PASTE_LOCK`         | Shared directory lock for Maestro input                                               | Skip locking, with a notice                         |
+| `OPAX_SIM_ADMIT_IGNORE`   | UDIDs another slot on a two-slot host owns; admission does not refuse them             | Refuse every other booted simulator                 |
 | `OPAX_CAPACITY_CMD`       | Trusted local shell command checking host capacity                                    | Skip capacity checks, with a notice                 |
 | `OPAX_ALLOWED_UDIDS`      | Space-separated simulator allow-list                                                  | Accept the requested simulator, with a warning      |
 | `OPAX_PASTE_WAIT_SECONDS` | Digit-only deadline for capacity and pasteboard lock waits                            | 7,200 seconds; invalid values also use this default |

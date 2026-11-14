@@ -37,11 +37,13 @@ else
   nice -n 10 bash scripts/test-android-host.sh
   echo 'OPAX QA: simulator lifetime'
   nice -n 10 bash scripts/test-e2e.sh
+  echo 'OPAX QA: simulator admission'
+  nice -n 10 bash scripts/test-qa-simulator.sh
   echo 'OPAX QA: Jest retry policy'
   nice -n 10 bash scripts/test-jest-retry.sh
   echo 'OPAX QA: pass records and build speed regressions'
   nice -n 10 bash scripts/test-qa-pass-record.sh
-  bash scripts/qa-pass-record.sh write harness 0 'python3 scripts/test-release-tooling.py && python3 scripts/test-privacy-scan.py && bash scripts/test-qa-lock.sh && bash scripts/test-android-host.sh && bash scripts/test-e2e.sh && bash scripts/test-jest-retry.sh && bash scripts/test-qa-pass-record.sh'
+  bash scripts/qa-pass-record.sh write harness 0 'python3 scripts/test-release-tooling.py && python3 scripts/test-privacy-scan.py && bash scripts/test-qa-lock.sh && bash scripts/test-android-host.sh && bash scripts/test-e2e.sh && bash scripts/test-qa-simulator.sh && bash scripts/test-jest-retry.sh && bash scripts/test-qa-pass-record.sh'
 fi
 echo 'OPAX QA: Android flow preparation'
 nice -n 10 node --test scripts/test-android-flows.mjs

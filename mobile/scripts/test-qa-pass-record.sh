@@ -51,7 +51,7 @@ for name in ('qa.sh', 'qa-env.sh', 'qa-pass-record.sh', 'lint.sh',
     shutil.copyfile(scripts/name, seed/'mobile/scripts'/name)
 for name in ('test-release-tooling.py', 'test-privacy-scan.py', 'test-android-harness.py', 'test-android-results.py'):
     write(seed/'mobile/scripts'/name, 'import os\nfrom pathlib import Path\nwith Path(os.environ["QA_TEST_TRACE"]).open("a") as f: f.write(Path(__file__).name+"\\n")\n')
-for name in ('test-qa-lock.sh', 'test-android-host.sh', 'test-e2e.sh', 'test-jest-retry.sh', 'test-qa-pass-record.sh', 'check-release-bundle.sh'):
+for name in ('test-qa-lock.sh', 'test-android-host.sh', 'test-e2e.sh', 'test-qa-simulator.sh', 'test-jest-retry.sh', 'test-qa-pass-record.sh', 'check-release-bundle.sh'):
     executable(seed/'mobile/scripts'/name, 'echo "$(basename "$0") $*" >> "$QA_TEST_TRACE"\n')
 executable(seed/'mobile/scripts/jest-retry.sh', 'printf "%s\\n" "$@" > "$QA_TEST_JEST_ARGS"\n')
 write(seed/'mobile/src/client.ts', 'export const value = 1;\n')
