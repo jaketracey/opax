@@ -24,6 +24,61 @@ export interface DocumentRecord {
   metadata: Record<string, unknown>;
   summary: string | null;
   text: string;
+  /** A division's members who voted against their party's majority (/api/resource voted_against_party). */
+  votedAgainstParty?: VotedAgainstParty;
+}
+/**
+ * "Voted against their party" for one division, as the Worker builds it
+ * (portal/public/division-against-party.js): the same rule and the same words
+ * as the web page. Absent when nobody did.
+ */
+export interface VotedAgainstParty {
+  title: string;
+  help: string;
+  note: string | null;
+  members: {
+    name: string;
+    personSlug: string | null;
+    party: string;
+    text: string;
+    partyNote: string | null;
+  }[];
+}
+/** Read leniently: a malformed field drops only this section, never the record. */
+export function decodeVotedAgainstParty(
+  value: unknown,
+): VotedAgainstParty | null {
+  if (!value || typeof value !== 'object') return null;
+  try {
+    const raw = object(value);
+    const words = (v: unknown) =>
+      typeof v === 'string' && v.trim() ? v.trim() : null;
+    const members = (Array.isArray(raw.members) ? raw.members : []).flatMap(
+      (row: unknown) => {
+        const m = row && typeof row === 'object' ? object(row) : {};
+        const name = words(m.name),
+          party = words(m.party),
+          line = words(m.text);
+        if (!name || !party || !line) return [];
+        const slug = words(m.person_slug);
+        return [
+          {
+            name,
+            personSlug: slug && /^[a-z0-9-]+$/.test(slug) ? slug : null,
+            party,
+            text: line,
+            partyNote: words(m.party_note),
+          },
+        ];
+      },
+    );
+    const title = words(raw.title),
+      help = words(raw.help);
+    if (!members.length || !title || !help) return null;
+    return { title, help, note: words(raw.note), members };
+  } catch {
+    return null;
+  }
 }
 export function recordSlug(value: unknown): string {
   const slug = nonempty(value);
@@ -61,7 +116,12 @@ export function decodeDocument(value: unknown): DocumentRecord {
     metadata: object(raw.metadata ?? {}),
     summary: optional(text)(raw.summary) ?? null,
     text: text(raw.text),
+    ...againstParty(kind, raw.voted_against_party),
   };
+}
+function againstParty(kind: string, value: unknown) {
+  const view = kind === 'division' ? decodeVotedAgainstParty(value) : null;
+  return view ? { votedAgainstParty: view } : {};
 }
 /** /api/resource normalizes every text but bill text, which it sends
  * verbatim (entities and all) for the web's /doc reader. */

@@ -76,6 +76,7 @@ import {
   recordKind,
   textChunks,
   type DocumentRecord,
+  type VotedAgainstParty,
 } from './model';
 import { useSpeechSpeakers } from './speaker';
 import { useRecordNavigation } from './navigation';
@@ -664,6 +665,9 @@ function ReaderHeader({
           />
         </View>
       ) : null}
+      {doc.votedAgainstParty ? (
+        <AgainstParty view={doc.votedAgainstParty} />
+      ) : null}
       {doc.summary ? (
         <View style={styles.block}>
           <SectionHeader
@@ -708,6 +712,63 @@ function ReaderHeader({
         </Text>
       ) : null}
       <View style={styles.beforeText} />
+    </View>
+  );
+}
+
+/**
+ * "Voted against their party": each member whose vote went against their
+ * party's majority, in the Worker's words (the web page shows the same).
+ */
+function AgainstParty({ view }: { view: VotedAgainstParty }) {
+  const navigation = useRecordNavigation();
+  return (
+    <View style={styles.block} testID="doc-against-party">
+      <SectionHeader title={view.title} testID="doc-against-party-title" />
+      <Text
+        variant="footnote"
+        tone="inkSoft"
+        testID="doc-against-party-help"
+      >
+        {view.help}
+      </Text>
+      <View style={styles.rows}>
+        {view.members.map((m, index) => {
+          const detail = `${m.party}. ${m.text}.${m.partyNote ? ` ${m.partyNote}` : ''}`;
+          const slug = m.personSlug;
+          return slug ? (
+            <LinkRow
+              key={`${m.name}-${index}`}
+              title={m.name}
+              detail={detail}
+              dragPath={`/subject/person/${slug}`}
+              {...(navigation.inPane
+                ? { onPress: () => navigation.openPerson(slug, m.name) }
+                : { href: personRoute(slug) })}
+              testID={`doc-against-party-${index}`}
+            />
+          ) : (
+            <View key={`${m.name}-${index}`} style={styles.rows}>
+              <Text variant="body" wordSafe>
+                {m.name}
+              </Text>
+              <Text variant="secondary" wordSafe>
+                {detail}
+              </Text>
+            </View>
+          );
+        })}
+      </View>
+      {view.note ? (
+        <Text
+          variant="footnote"
+          tone="inkSoft"
+          testID="doc-against-party-note"
+          style={styles.rows}
+        >
+          {view.note}
+        </Text>
+      ) : null}
     </View>
   );
 }
