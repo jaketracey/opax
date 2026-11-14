@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Negative privacy gates with synthetic binaries; no Apple/network access."""
+import contextlib
 import hashlib
 import importlib.util
+import io
 import json
 import os
 from pathlib import Path
@@ -281,53 +283,101 @@ class PatchReplayTests(unittest.TestCase):
             self.assertNotRegex(search, r'field\.font\s*=|adjustsFontForContentSizeCategory\s*=')
             self.assertNotRegex(search, r'valueForKey:|NSSelectorFromString|method_exchangeImplementations')
 
-    def test_clean_replay_idempotency_version_and_source_drift(self):
+    @staticmethod
+    def applicator():
         mobile = Path(__file__).resolve().parent.parent
         spec = importlib.util.spec_from_file_location('privacy_patches', mobile / 'scripts/apply-privacy-patches.py')
-        applicator = importlib.util.module_from_spec(spec); spec.loader.exec_module(applicator)
+        module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+        apply = module.apply
+        def quiet(*args):
+            with contextlib.redirect_stdout(io.StringIO()):
+                return apply(*args)
+        module.apply = quiet
+        return module
+
+    def pristine_tree(self, root, entries):
+        """Every pinned file at its reviewed input, rebuilt without the applicator."""
+        mobile = Path(__file__).resolve().parent.parent
+        for entry in entries:
+            package = root / 'node_modules' / entry['package']; package.mkdir(parents=True, exist_ok=True)
+            (package / 'package.json').write_text(json.dumps({'version': entry['version']}))
+            for row in entry['files']:
+                dest = package / row['path']; dest.parent.mkdir(parents=True, exist_ok=True)
+                if row['after'] is None:
+                    dest.touch()
+                else:
+                    shutil.copyfile(mobile / 'node_modules' / entry['package'] / row['path'], dest)
+            if entry['package'] == 'react-native-screens':
+                for row in entry['files']:
+                    dest = package / row['path']
+                    dest.write_text(self.clean_screens_source(dest.read_text()))
+                continue
+            # Reconstruct pristine fixture inputs independently from the
+            # reviewed diff; macOS patch cannot reverse-create /dev/null files.
+            current = None; cursor = 0; original = []; after = []
+            def finish():
+                if current is not None:
+                    current.write_text(''.join(original + after[cursor:]))
+            for line in (mobile / 'patches' / entry['patch']).read_text().splitlines(True):
+                if line.startswith('--- '):
+                    finish()
+                    current = root / line[4:].strip().removeprefix('a/')
+                    after = current.read_text().splitlines(True)
+                    original = []; cursor = 0
+                elif line.startswith('+++ '):
+                    continue
+                elif line.startswith('@@ '):
+                    start = max(0, int(re.search(r'\+(\d+)', line).group(1)) - 1)
+                    original.extend(after[cursor:start]); cursor = start
+                elif line.startswith(' '):
+                    original.append(line[1:]); cursor += 1
+                elif line.startswith('-'):
+                    original.append(line[1:])
+                elif line.startswith('+'):
+                    cursor += 1
+            finish()
+        for entry in entries:
+            for row in entry['files']:
+                path = root / 'node_modules' / entry['package'] / row['path']
+                self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), row['before'], row['path'])
+
+    @staticmethod
+    def snapshot(root, entries):
+        """Bytes and mtime of every pinned file (None when absent)."""
+        state = {}
+        for entry in entries:
+            for row in entry['files']:
+                path = root / 'node_modules' / entry['package'] / row['path']
+                state[entry['package'], row['path']] = (
+                    (path.read_bytes(), path.stat().st_mtime_ns) if path.is_file() else None)
+        return state
+
+    @staticmethod
+    def put(path, content):
+        if content is None:
+            path.unlink(missing_ok=True)
+        else:
+            path.write_bytes(content)
+
+    def assert_all_after(self, root, entries):
+        for entry in entries:
+            for row in entry['files']:
+                path = root / 'node_modules' / entry['package'] / row['path']
+                actual = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else None
+                self.assertEqual(actual, row['after'], entry['package'] + '/' + row['path'])
+
+    def test_clean_replay_idempotency_version_and_source_drift(self):
+        mobile = Path(__file__).resolve().parent.parent
+        applicator = self.applicator()
         entries = json.loads((mobile / 'patches/privacy-patches.json').read_text())
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            for entry in entries:
-                package = root / 'node_modules' / entry['package']; package.mkdir(parents=True, exist_ok=True)
-                (package / 'package.json').write_text(json.dumps({'version': entry['version']}))
-                for row in entry['files']:
-                    dest = package / row['path']; dest.parent.mkdir(parents=True, exist_ok=True)
-                    if row['after'] is None:
-                        dest.touch()
-                    else:
-                        shutil.copyfile(mobile / 'node_modules' / entry['package'] / row['path'], dest)
-                if entry['package'] == 'react-native-screens':
-                    for row in entry['files']:
-                        dest = package / row['path']
-                        dest.write_text(self.clean_screens_source(dest.read_text()))
-                    continue
-                # Reconstruct pristine fixture inputs independently from the
-                # reviewed diff; macOS patch cannot reverse-create /dev/null files.
-                current = None; cursor = 0; original = []; after = []
-                def finish():
-                    if current is not None:
-                        current.write_text(''.join(original + after[cursor:]))
-                for line in (mobile / 'patches' / entry['patch']).read_text().splitlines(True):
-                    if line.startswith('--- '):
-                        finish()
-                        current = root / line[4:].strip().removeprefix('a/')
-                        after = current.read_text().splitlines(True)
-                        original = []; cursor = 0
-                    elif line.startswith('+++ '):
-                        continue
-                    elif line.startswith('@@ '):
-                        start = max(0, int(re.search(r'\+(\d+)', line).group(1)) - 1)
-                        original.extend(after[cursor:start]); cursor = start
-                    elif line.startswith(' '):
-                        original.append(line[1:]); cursor += 1
-                    elif line.startswith('-'):
-                        original.append(line[1:])
-                    elif line.startswith('+'):
-                        cursor += 1
-                finish()
+            self.pristine_tree(root, entries)
             applicator.apply(root)
+            self.assert_all_after(root, entries)
+            patched = self.snapshot(root, entries)
             applicator.apply(root)
+            self.assertEqual(self.snapshot(root, entries), patched)
             for entry in entries:
                 package = root / 'node_modules' / entry['package']
                 source = package / next(row['path'] for row in entry['files'] if row['after'])
@@ -340,6 +390,121 @@ class PatchReplayTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'version changed'):
                     applicator.apply(root)
                 (package / 'package.json').write_text(json.dumps({'version': entry['version']}))
+
+    def test_a_tree_from_an_earlier_patch_release_upgrades_file_by_file(self):
+        # 14 Nov: node_modules carrying the previous react-native-screens patch
+        # (bar button and screen at their outputs, search bar still pristine)
+        # was refused as "partially patched", so worktrees and Jest hosts could
+        # not take the RNSSearchBar.mm hunk. Every package must upgrade this way.
+        mobile = Path(__file__).resolve().parent.parent
+        applicator = self.applicator()
+        entries = json.loads((mobile / 'patches/privacy-patches.json').read_text())
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.pristine_tree(root, entries)
+            before = {key: value and value[0] for key, value in self.snapshot(root, entries).items()}
+            applicator.apply(root)
+            after = {key: value and value[0] for key, value in self.snapshot(root, entries).items()}
+            scenarios = [[('react-native-screens', 'ios/RNSSearchBar.mm')]]
+            scenarios += [[key] for key in before]  # One file still at its input.
+            scenarios += [[other for other in before if other[0] == key[0] and other != key]
+                          for key in before]  # One file already at its output.
+            for stale in scenarios:
+                with self.subTest(stale=stale):
+                    for key in before:
+                        self.put(root / 'node_modules' / key[0] / key[1], after[key])
+                    for key in stale:
+                        self.put(root / 'node_modules' / key[0] / key[1], before[key])
+                    untouched = {key: value for key, value in self.snapshot(root, entries).items()
+                                 if key not in stale}
+                    applicator.apply(root)
+                    self.assert_all_after(root, entries)
+                    upgraded = self.snapshot(root, entries)
+                    # Only the stale files were replayed; outputs kept their mtime.
+                    self.assertEqual({key: upgraded[key] for key in untouched}, untouched)
+                    applicator.apply(root)
+                    self.assertEqual(self.snapshot(root, entries), upgraded)
+        # Each pinned patch splits into exactly its manifest files, and the
+        # sections rejoin to the reviewed bytes, so a pristine tree replays
+        # the whole reviewed patch.
+        for entry in entries:
+            parts = applicator.sections((mobile / 'patches' / entry['patch']).read_bytes())
+            self.assertEqual(sorted(parts), sorted(f"node_modules/{entry['package']}/{row['path']}"
+                                                   for row in entry['files']))
+            self.assertEqual(b''.join(parts.values()), (mobile / 'patches' / entry['patch']).read_bytes())
+
+    def test_a_planted_edit_in_any_one_file_is_refused_before_anything_changes(self):
+        mobile = Path(__file__).resolve().parent.parent
+        applicator = self.applicator()
+        entries = json.loads((mobile / 'patches/privacy-patches.json').read_text())
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.pristine_tree(root, entries)
+            before = {key: value and value[0] for key, value in self.snapshot(root, entries).items()}
+            applicator.apply(root)
+            after = {key: value and value[0] for key, value in self.snapshot(root, entries).items()}
+            for base in (before, after):
+                for target in before:
+                    with self.subTest(base='before' if base is before else 'after', target=target):
+                        for key in before:
+                            self.put(root / 'node_modules' / key[0] / key[1], base[key])
+                        planted = (base[target] or b'') + b'\n// unexpected\n'
+                        self.put(root / 'node_modules' / target[0] / target[1], planted)
+                        state = self.snapshot(root, entries)
+                        with self.assertRaisesRegex(ValueError, 'Unexpected'):
+                            applicator.apply(root)
+                        self.assertEqual(self.snapshot(root, entries), state)
+
+    def test_file_creation_and_deletion_sections_replay_on_their_own(self):
+        applicator = self.applicator()
+        files = {'created.txt': (None, b'created one\ncreated two\n'),
+                 'kept.txt': (b'first\n-- comment\nlast\n', b'first\n++ comment\nlast\n'),
+                 'removed.txt': (b'removed one\nremoved two\n', None)}
+        # The removed and added lines look like "---"/"+++" headers.
+        diff = (b'--- /dev/null\n+++ b/node_modules/opax-fixture/created.txt\n'
+                b'@@ -0,0 +1,2 @@\n+created one\n+created two\n'
+                b'--- a/node_modules/opax-fixture/kept.txt\n+++ b/node_modules/opax-fixture/kept.txt\n'
+                b'@@ -1,3 +1,3 @@\n first\n--- comment\n+++ comment\n last\n'
+                b'--- a/node_modules/opax-fixture/removed.txt\n+++ /dev/null\n'
+                b'@@ -1,2 +0,0 @@\n-removed one\n-removed two\n')
+        sha = lambda content: content and hashlib.sha256(content).hexdigest()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); patches = root / 'patches'; patches.mkdir()
+            (patches / 'opax-fixture.patch').write_bytes(diff)
+            def manifest(names):
+                (patches / 'privacy-patches.json').write_text(json.dumps([{
+                    'package': 'opax-fixture', 'version': '1.0.0', 'patch': 'opax-fixture.patch',
+                    'sha256': sha(diff),
+                    'files': [{'path': name, 'before': sha(files[name][0]), 'after': sha(files[name][1])}
+                              for name in names]}]))
+            manifest(files)
+            package = root / 'node_modules/opax-fixture'; package.mkdir(parents=True)
+            (package / 'package.json').write_text('{"version":"1.0.0"}')
+            self.assertEqual(sorted(applicator.sections(diff)), [
+                f'node_modules/opax-fixture/{name}' for name in sorted(files)])
+            def state(**stages):
+                for name, (old, new) in files.items():
+                    self.put(package / name, new if stages.get(name) == 'after' else old)
+            def contents():
+                return {name: (package / name).read_bytes() if (package / name).is_file() else None
+                        for name in files}
+            outputs = {name: new for name, (_, new) in files.items()}
+            for stages in ({}, {'kept.txt': 'after', 'removed.txt': 'after'},
+                           {'created.txt': 'after', 'kept.txt': 'after'},
+                           {'created.txt': 'after', 'removed.txt': 'after'}):
+                with self.subTest(stages=stages):
+                    state(**stages)
+                    applicator.apply(root, patches)
+                    self.assertEqual(contents(), outputs)
+                    applicator.apply(root, patches)
+                    self.assertEqual(contents(), outputs)
+            state(**{'kept.txt': 'after', 'removed.txt': 'after'})
+            (package / 'created.txt').write_bytes(b'created one\n')
+            with self.assertRaisesRegex(ValueError, 'Unexpected'):
+                applicator.apply(root, patches)
+            manifest(['created.txt', 'kept.txt'])
+            with self.assertRaisesRegex(ValueError, 'differ from the manifest'):
+                applicator.apply(root, patches)
 
 
 if __name__ == '__main__':
