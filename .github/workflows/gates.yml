@@ -6,6 +6,11 @@ on:
   push:
     branches: ['ci/**']
   workflow_dispatch:
+    inputs:
+      senate_only:
+        description: Run only the Senate ingest and nightly regression gate
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -22,6 +27,7 @@ env:
 
 jobs:
   mobile-static:
+    if: ${{ !inputs.senate_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -54,6 +60,7 @@ jobs:
         run: npx tsc --noEmit && npm run -s lint && npm run -s qa-static
 
   mobile-jest:
+    if: ${{ !inputs.senate_only }}
     name: mobile-jest (${{ matrix.shard }}/6)
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -132,6 +139,27 @@ jobs:
   #   scripts/vm/test_build_evidence_bundle.py: ATTACH of a file: URI fails ("unable to open database")
   #     under the uv-managed interpreter; it passes only with a system Python's sqlite3.
   scripts-python:
+    if: ${{ !inputs.senate_only }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+      - name: Install locked Python dependencies
+        run: uv sync --frozen --python "$(cat .python-version)"
+      - name: Ensure the sqlite3 CLI
+        run: command -v sqlite3 || { sudo apt-get update -qq && sudo apt-get install -y -qq sqlite3; }
+      - name: Test data scripts
+        run: |
+          git config --global user.name ci
+          git config --global user.email ci@example.invalid
+          # pytest's --ignore does not drop a file named on the command line, so filter the list here.
+          mapfile -t suites < <(ls scripts/test_*.py scripts/vm/test_*.py \
+            | grep -v -x -e scripts/vm/test_fixture_imports.py -e scripts/vm/test_build_evidence_bundle.py)
+          uv run --frozen --with pytest pytest -q -p no:cacheprovider -rs "${suites[@]}"
+  senate-refresh:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -146,14 +174,6 @@ jobs:
         run: uv sync --frozen --python "$(cat .python-version)"
       - name: Ensure the sqlite3 CLI
         run: command -v sqlite3 || { sudo apt-get update -qq && sudo apt-get install -y -qq sqlite3; }
-      - name: Test data scripts
-        run: |
-          git config --global user.name ci
-          git config --global user.email ci@example.invalid
-          # pytest's --ignore does not drop a file named on the command line, so filter the list here.
-          mapfile -t suites < <(ls scripts/test_*.py scripts/vm/test_*.py \
-            | grep -v -x -e scripts/vm/test_fixture_imports.py -e scripts/vm/test_build_evidence_bundle.py)
-          uv run --frozen --with pytest pytest -q -p no:cacheprovider -rs "${suites[@]}"
       - name: Test Senate ingest and publication holds
         run: >-
           nice -n 10 uv run --frozen --with pytest pytest -q
@@ -162,10 +182,13 @@ jobs:
           scripts/test_roster_identity.py scripts/test_refresh_watchdog.py
           scripts/test_update_corpus_manifest.py parli/tests/test_speech_hygiene.py
           parli/tests/test_speech_repair.py
+      - name: Test federal source transport
+        run: nice -n 10 uv run --frozen --with pytest pytest tests/test_source_http.py -q -k 'federal or robots or urllib'
       - name: Test nightly warning and periodic completion paths
         run: PATH="$PWD/.venv/bin:$PATH" nice -n 10 bash scripts/vm/test_nightly.sh
 
   portal:
+    if: ${{ !inputs.senate_only }}
     name: portal (${{ matrix.shard }}/4)
     runs-on: ubuntu-latest
     timeout-minutes: 20

@@ -223,7 +223,16 @@ open(f"{seed}/portal/public/audit/derived.json", "w").write('{"complete": true}\
 PYEOF
   (cd "$seed" && git init -q && git add -A && git commit -q -m seed && git remote add origin "$ORIGIN" && git push -q origin HEAD:main)
   REPO="$HOME/opax"; git clone -q "$ORIGIN" "$REPO"
-  mkdir -p "$REPO/.venv/bin"; ln -s "$(command -v python3)" "$REPO/.venv/bin/python"
+  mkdir -p "$REPO/.venv/bin"
+  # A symlink placed in another .venv loses the caller's pyvenv.cfg and
+  # dependencies. Execute the original interpreter at its own path instead.
+  printf '#!/usr/bin/env bash\nexec %q "$@"\n' "$(command -v python3)" > "$REPO/.venv/bin/python"
+  chmod +x "$REPO/.venv/bin/python"
+  cp "$REPO/.venv/bin/python" "$REPO/.venv/bin/python3"
+  if [ "$("$REPO/.venv/bin/python" -c 'import requests, sys; print(sys.prefix)')" != "$(python3 -c 'import sys; print(sys.prefix)')" ]; then
+    bad "sandbox interpreter lost the caller's virtual environment"
+    exit 1
+  fi
   # state the preflight looks for
   python3 "$SRC/tests/fixtures/evidence-nightly/inputs.py" "$HOME/.cache/autoresearch"
   python3 - "$HOME/.cache/autoresearch/parli.db" <<'PYEOF'

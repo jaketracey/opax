@@ -60,3 +60,10 @@ use concurrency 4 with the locked Python environment on PATH, and the data
 job now runs the Senate gate and the nightly shell regressions. This
 workflow has no production deploy, KB or D1 credentials. Final CI receipts
 will be recorded after completion.
+
+The first CI nightly run exposed an interpreter-fixture issue: placing a
+symlink inside the sandbox's `.venv` dropped the caller's `pyvenv.cfg` and
+dependencies. The launcher now executes the original interpreter at its own
+path and checks that the prefix and `requests` import are preserved. The
+nightly/Senate gate has its own CI job, with a `senate_only` manual option
+for focused reruns. Ordinary Gates runs retain their other jobs.
