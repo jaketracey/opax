@@ -428,6 +428,20 @@ captures nothing automatically.
   off in the options and in Info.plist
   (`com.posthog.posthog.CAPTURE_PUSH_NOTIFICATION_OPENED`).
 
+- **Test error report.** A hidden control that proves, on a real release
+  build, that error reports arrive and are symbolicated: tap the version line
+  at the foot of Account seven times within four seconds, then confirm Send
+  (`mobile/src/analytics/test-report.ts`). It sends one handled JS exception
+  through the ordinary path (the build gate, `before_send`, the queue) with
+  `captureException`, so it arrives whether or not the project's exception
+  autocapture is on. It is marked as a test three ways, so dashboards can
+  leave it out: the property `opax_test: true`, the type `OpaxTestReport` and
+  the fixed message "OPAX test error report". It holds nothing else beyond
+  what every report holds. A build that sends nothing (development, e2e, or
+  no analytics configuration) says "Test reports are off in this build" and
+  sends nothing. There is no deliberate native crash: neither native SDK nor
+  the plugin exposes one, so it would need new native code.
+
 The native SDK never sees the app's other PostHog settings: posthog-react-native
 passes it only its own options, with feature flag preloading on whenever native
 crash capture is. The plugin patch fixes them after that: no feature flag
@@ -467,6 +481,7 @@ ICU like NSRegularExpression, so the same pattern texts behave the same.
 | Stack frames | `platform`, `function`, `filename`, `abs_path`, `module`, `package` (paths cut at the first `?` or `#`), `lineno`, `colno`, `in_app`, `instruction_addr`, `image_addr`, `symbol_addr`, `chunk_id`, `map_id`, `method_synthetic`, `client_resolved`. Source context, local variables and any other field are dropped |
 | `$debug_images` | Up to 500 binary images native frames point into: `type`, `debug_id`, `code_id`, `code_file`, `image_addr`, `image_vmaddr`, `image_size`, `arch` |
 | `$exception_level`, `$exception_source`, `$exception_fingerprint` | A fixed level word and short tokens |
+| `opax_test` | `true` on a test error report (JS only), otherwise absent |
 | Common | `$lib`, `$lib_version`, `$session_id`, `$os_name`, `$device_type`, `$app_name`, `$app_namespace` (`au.com.opax.app`), `$app_version`, `$app_build`, `$screen_name` (the route template), `platform`, `app`, `app_version`, `app_build`, `environment`, `$process_person_profile` false, `$is_identified` false, `$geoip_disable` true; on JS reports also `layout` and `foldable` |
 
 Messages keep their shape but lose anything that could be user text, in this
