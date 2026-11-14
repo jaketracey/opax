@@ -22,6 +22,8 @@ const reviewedExpoSubpaths = new Set([
   'expo-router/unstable-native-tabs',
   // The router's own navigation contexts (header height): no I/O.
   'expo-router/react-navigation',
+  // Pure React context of this screen's options, used to merge native props.
+  'expo-router/build/fork/native-stack/descriptors-context',
   // SwiftUI views and modifiers rendered in a Host: no I/O.
   '@expo/ui/swift-ui',
   '@expo/ui/swift-ui/modifiers',
