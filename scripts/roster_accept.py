@@ -68,14 +68,14 @@ SHIPPED = ROOT / "portal" / "public" / "parliamentarians.json"
 # Fields a corpus re-count may move; everything else on a record is identity.
 CORPUS_FIELDS = {"speeches", "first", "last", "witness_rows", "chambers", "states"}
 PARTITION_FIELDS = CORPUS_FIELDS | {"transcript", "separated_witnesses"}
-IDENTITY_FIELDS = {"party", "parties", "recorded_parties", "full", "representation", "current", "party_now", "pid",
+IDENTITY_FIELDS = {"party", "parties", "recorded_parties", "full", "representation", "current", "party_now", "pid", "person_id",
                    "prints", "aliases", "affiliations", "identity_evidence", "identity_basis", "speech_scope",
                    "speech_count_basis"}
 # What a curated record pins, by kind (protected()).
 PARTY_FIELDS = {"party", "parties", "party_now", "recorded_parties", "affiliations"}
-FOLD_FIELDS = {"prints", "pid", "full", "party", "parties", "party_now", "current", "representation"}
-ALIAS_FIELDS = PARTY_FIELDS | {"full", "pid", "representation", "aliases", "identity_basis", "identity_evidence"}
-NEUTRAL_FIELDS = PARTY_FIELDS | {"pid", "full", "current", "representation"}
+FOLD_FIELDS = {"prints", "pid", "person_id", "full", "party", "parties", "party_now", "current", "representation"}
+ALIAS_FIELDS = PARTY_FIELDS | {"full", "pid", "person_id", "representation", "aliases", "identity_basis", "identity_evidence"}
+NEUTRAL_FIELDS = PARTY_FIELDS | {"pid", "person_id", "full", "current", "representation"}
 EVERY_FIELD = None  # a pinned witness split: nothing on it may change
 # Fields that decide which protections a record has (protected(), curated pins by name and `full`). A group that
 # touches one would clear or move a protection for later nights, so every group on that record is held.
@@ -83,12 +83,12 @@ PROTECTION_FIELDS = {"name", "full", "prints", "speech_scope", "speech_count_bas
                      "aliases", "identity_evidence"}
 # The fields an accepted value may hold, each with its type (value_problem); anything else is held.
 _COUNT = {"speeches", "first", "last", "witness_rows"}
-_TEXT = {"party", "full", "party_now", "pid", "speech_count_basis", "identity_basis"}
+_TEXT = {"party", "full", "party_now", "pid", "person_id", "speech_count_basis", "identity_basis"}
 _TEXTS = {"chambers", "states", "parties", "recorded_parties", "prints", "aliases"}
 _RECORDS = {"representation", "affiliations", "identity_evidence"}
 _SUMMARIES = {"transcript", "separated_witnesses", "speech_scope"}
 FIELD_TYPES = _COUNT | _TEXT | _TEXTS | _RECORDS | _SUMMARIES | {"current", "roster_only"}
-NEW_ROW_FIELDS = {"name", "speeches", "party", "parties", "states", "chambers", "first", "last", "pid", "current",
+NEW_ROW_FIELDS = {"name", "speeches", "party", "parties", "states", "chambers", "first", "last", "pid", "person_id", "current",
                   "party_now", "representation", "full", "recorded_parties", "aliases", "roster_only"}
 
 

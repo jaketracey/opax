@@ -100,7 +100,8 @@ class ShippedRosterTests(unittest.TestCase):
     EXPECTED = {
         "Graeme Campbell": None, "Kathy Sullivan": None, "Kathryn Sullivan": None, "Ricky Johnston": None,
         "Bill Taylor": None, "Michael Cobb": None, "Ian McLachlan": None, "David Cox": None,
-        "Stephen Martin": "person_9c02d321caef54b2ba21a1f8",
+        # A canonical id sits in person_id, not pid: the apps accept only legacy or roster ids there.
+        "Stephen Martin": None,
         "Patrick Conaghan": "10922", "Patrick Farmer": "10212", "Alexander Somlyay": "10600", "Robert Baldwin": "10026",
     }
 
@@ -112,6 +113,7 @@ class ShippedRosterTests(unittest.TestCase):
             self.assertEqual(people[name].get("pid"), pid, name)
             if pid is None:
                 self.assertNotIn("current", people[name], name)
+        self.assertEqual(people["Stephen Martin"].get("person_id"), "person_9c02d321caef54b2ba21a1f8")
 
 
 if __name__ == "__main__":

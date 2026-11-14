@@ -195,7 +195,7 @@
             "Stephen Paul Martin"
           ]
         ],
-        "pid": [
+        "person_id": [
           null,
           "person_9c02d321caef54b2ba21a1f8"
         ],
@@ -220,7 +220,7 @@
         "speeches": 299,
         "first": 1998,
         "last": 2002,
-        "pid": "person_9c02d321caef54b2ba21a1f8",
+        "person_id": "person_9c02d321caef54b2ba21a1f8",
         "aliases": [
           "Stephen Paul Martin"
         ],
@@ -253,7 +253,7 @@
       ],
       "first": 1998,
       "last": 1998,
-      "pid": "person_efb744ffb3a25d578e592281",
+      "person_id": "person_efb744ffb3a25d578e592281",
       "representation": [
         {
           "jurisdiction": "federal",
