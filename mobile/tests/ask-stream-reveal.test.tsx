@@ -2,16 +2,22 @@ import { useSyncExternalStore } from 'react';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { AccessibilityInfo, StyleSheet } from 'react-native';
 import { useReduceMotionSetting } from '../src/design/accessibility';
+import { moveAccessibilityFocus } from '../src/design/keyboard';
 import { Skeleton } from '../src/design/states';
-import { textContent } from '../src/design/text';
-import { AskProgress, STREAM_FADE_MS } from '../src/features/ask/AskProgress';
+import {
+  AskProgress,
+  STREAM_FADE_MS,
+  STREAM_QUIET_MS,
+} from '../src/features/ask/AskProgress';
 import { AskThread } from '../src/features/ask/AskThread';
-import { parseAnswer } from '../src/features/ask/answer-markdown';
+import { AnswerBody } from '../src/features/ask/AnswerBody';
+import { parseAnswer, type Block } from '../src/features/ask/answer-markdown';
 import { AskController } from '../src/features/ask/controller';
 import { AskFailure, type StreamHandlers } from '../src/features/ask/stream';
 import {
   revealLength,
   revealWindow,
+  type RevealBlock,
   type RevealInline,
 } from '../src/features/ask/stream-reveal';
 
@@ -19,6 +25,10 @@ jest.mock('../src/design/accessibility', () => ({
   ...jest.requireActual('../src/design/accessibility'),
   useReduceMotionSetting: jest.fn(() => false),
   useAccessibilitySize: () => false,
+}));
+jest.mock('../src/design/keyboard', () => ({
+  ...jest.requireActual('../src/design/keyboard'),
+  moveAccessibilityFocus: jest.fn(),
 }));
 jest.mock('../src/design/haptics', () => ({ haptic: jest.fn() }));
 jest.mock('../src/features/ask/AnswerView', () => ({
@@ -116,9 +126,12 @@ test('waiting shows the status line alone: no skeleton in the answer shape', () 
   act(() => handlers.stage('Writing the answer'));
   tick(60_000);
   expect(byId('ask-status-row')).toHaveLength(1);
-  expect(tree.root.findAllByType(Skeleton)).toEqual([]);
-  expect(tree.root.findAllByProps({ label: 'Loading the answer' })).toEqual([]);
-  expect(byId('ask-streaming')).toEqual([]);
+  expect(tree.root.findAllByType(Skeleton)).toHaveLength(0);
+  expect(
+    tree.root.findAllByProps({ label: 'Loading the answer' }),
+  ).toHaveLength(0);
+  expect(byId('ask-streaming')).toHaveLength(0);
+  expect(byId('ask-stream-tail')).toHaveLength(0);
   // Nothing else is drawn in the live turn while it waits.
   expect(byId('ask-progress')[0]!.children).toHaveLength(1);
   // The line itself carries the waiting state.
@@ -147,8 +160,8 @@ test('the first delta puts text where the status line was, and the line fades ou
   });
   expect(STREAM_FADE_MS).toBeLessThan(200);
   tick(STREAM_FADE_MS);
-  expect(byId('ask-status-slot')).toEqual([]);
-  expect(byId('ask-status-row')).toEqual([]);
+  expect(byId('ask-status-slot')).toHaveLength(0);
+  expect(byId('ask-status-row')).toHaveLength(0);
   expect(settledText()).toBe('Housing was debated twice.');
 });
 
@@ -156,7 +169,7 @@ test('a cached replay in several pieces builds up, each new piece fading over te
   start();
   delta('Housing was debated twice. ');
   tick(STREAM_FADE_MS);
-  expect(fresh()).toEqual([]);
+  expect(fresh()).toHaveLength(0);
   delta('The bill passed in March. ');
   // Laid out at once, so later lines never jump; drawn only by the fade.
   expect(allText()).toBe(
@@ -187,13 +200,69 @@ test('a cached replay in several pieces builds up, each new piece fading over te
   );
   expect(drawn(fresh()[0]!)).toBe(' Two senators spoke against it.');
   tick(STREAM_FADE_MS);
-  expect(fresh()).toEqual([]);
+  expect(fresh()).toHaveLength(0);
   expect(settledText()).toBe(
     'Housing was debated twice. The bill passed in March. Two senators spoke against it.',
   );
-  expect(tree.root.findAllByProps({ style: { color: 'transparent' } })).toEqual(
-    [],
-  );
+  expect(
+    tree.root.findAllByProps({ style: { color: 'transparent' } }),
+  ).toHaveLength(0);
+});
+
+test('a quiet tail row keeps the busy state, at a fixed height, and shows its spinner only after a second with no new piece', () => {
+  start();
+  delta('Housing was debated twice. ');
+  const tail = () => byId('ask-stream-tail')[0]!;
+  const spinner = () => byId('ask-stream-tail-spinner');
+  // Reserved from the first text, so the indicator never moves anything.
+  expect(StyleSheet.flatten(tail().props.style).height).toBe(20);
+  expect(tail().props).toMatchObject({
+    accessible: true,
+    accessibilityLabel: 'Writing the answer',
+    accessibilityState: { busy: true },
+    accessibilityLiveRegion: 'none',
+  });
+  expect(spinner()).toHaveLength(0);
+  // A fast replay never reaches the wait: no flicker.
+  for (const piece of ['The bill ', 'passed ', 'in March.']) {
+    tick(STREAM_QUIET_MS - 1);
+    expect(spinner()).toHaveLength(0);
+    delta(piece);
+  }
+  tick(STREAM_QUIET_MS);
+  expect(spinner()).toHaveLength(1);
+  expect(spinner()[0]!.props).toMatchObject({
+    size: 'small',
+    accessibilityElementsHidden: true,
+    importantForAccessibility: 'no-hide-descendants',
+  });
+  expect(StyleSheet.flatten(tail().props.style).height).toBe(20);
+  // The next piece hides it again.
+  delta(' More.');
+  expect(spinner()).toHaveLength(0);
+});
+
+test('VoiceOver focus follows the handover from the status line to the tail row, once', () => {
+  const move = jest.mocked(moveAccessibilityFocus);
+  move.mockClear();
+  start();
+  act(() => handlers.stage('Writing the answer'));
+  expect(move).not.toHaveBeenCalled();
+  delta('Housing was debated twice. ');
+  tick(20);
+  expect(move).toHaveBeenCalledTimes(1);
+  expect(
+    (move.mock.calls[0]![0] as unknown as { props: { testID: string } }).props
+      .testID,
+  ).toBe('ask-stream-tail');
+  delta('The bill passed in March.');
+  tick(5000);
+  expect(move).toHaveBeenCalledTimes(1);
+  // A view that mounts mid-answer took no handover and takes no focus.
+  act(() => tree.update(<></>));
+  act(() => tree.update(<Thread />));
+  tick(5000);
+  expect(move).toHaveBeenCalledTimes(1);
 });
 
 test.each([true, null])(
@@ -203,13 +272,17 @@ test.each([true, null])(
     start();
     act(() => handlers.stage('Writing the answer'));
     delta('Housing was debated twice. ');
-    expect(byId('ask-status-row')).toEqual([]);
+    expect(byId('ask-status-row')).toHaveLength(0);
     expect(opacity(byId('ask-streamed')[0]!)).toBe(1);
     delta('The bill passed in March.');
     expect(settledText()).toBe(
       'Housing was debated twice. The bill passed in March.',
     );
-    expect(fresh()).toEqual([]);
+    expect(fresh()).toHaveLength(0);
+    // The tail's indicator is three still dots, never a spinner.
+    tick(STREAM_QUIET_MS);
+    expect(byId('ask-stream-tail-spinner')).toHaveLength(0);
+    expect(byId('ask-stream-tail-dots')).toHaveLength(1);
   },
 );
 
@@ -221,8 +294,8 @@ test('a remount mid-answer shows the text as it stands, with no second fade', ()
   act(() => tree.update(<Thread />));
   expect(settledText()).toBe('Housing was debated twice.');
   expect(opacity(byId('ask-streamed')[0]!)).toBe(1);
-  expect(fresh()).toEqual([]);
-  expect(byId('ask-status-row')).toEqual([]);
+  expect(fresh()).toHaveLength(0);
+  expect(byId('ask-status-row')).toHaveLength(0);
 });
 
 test('a retry that withdraws the text brings the status line back', () => {
@@ -230,7 +303,7 @@ test('a retry that withdraws the text brings the status line back', () => {
   delta('Housing was debated twice.');
   tick(STREAM_FADE_MS);
   act(() => handlers.retry());
-  expect(byId('ask-streaming')).toEqual([]);
+  expect(byId('ask-streaming')).toHaveLength(0);
   expect(byId('ask-status-row')).toHaveLength(1);
   expect(byId('ask-status-slot')[0]!.props.accessibilityElementsHidden).toBe(
     false,
@@ -242,12 +315,12 @@ test('a stall with no text still ends in one sentence and Try again', async () =
   act(() => handlers.stage('Writing the answer'));
   tick(85_000);
   expect(byId('ask-status-row')).toHaveLength(1);
-  expect(tree.root.findAllByType(Skeleton)).toEqual([]);
+  expect(tree.root.findAllByType(Skeleton)).toHaveLength(0);
   await act(async () => {
     fail(new AskFailure('timeout', 'The answer stalled.'));
     await request;
   });
-  expect(byId('ask-progress')).toEqual([]);
+  expect(byId('ask-progress')).toHaveLength(0);
   expect(byId('ask-error-timeout')).toHaveLength(1);
   const retry = tree.root.findAllByProps({ testID: 'ask-retry' });
   expect(retry.length).toBeGreaterThan(0);
@@ -256,21 +329,21 @@ test('a stall with no text still ends in one sentence and Try again', async () =
     request = controller.retry();
   });
   expect(byId('ask-status-row')).toHaveLength(1);
-  expect(tree.root.findAllByType(Skeleton)).toEqual([]);
+  expect(tree.root.findAllByType(Skeleton)).toHaveLength(0);
 });
 
 test('the bare progress component draws no skeleton at rest', () => {
   act(() => tree.update(<AskProgress stage={null} streaming="" />));
-  expect(tree.root.findAllByType(Skeleton)).toEqual([]);
+  expect(tree.root.findAllByType(Skeleton)).toHaveLength(0);
   expect(byId('ask-status-row')).toHaveLength(1);
 });
 
 describe('revealWindow', () => {
-  const blocks = parseAnswer(
-    'One **bold** start.\n\n- first item\n- second item\n\n| a | b |\n|---|---|\n| one | two |',
-    { streaming: true },
-  );
-  const seen = (from: number, to: number) => {
+  const prose =
+    'One **bold** start.\n\n- first item\n- second item\n\n> a quoted line';
+  const table = '\n\n| a | b |\n|---|---|\n| one | two |';
+  const blocks = parseAnswer(prose, { streaming: true });
+  const seen = (source: Block[], from: number, to: number) => {
     const out: string[] = [];
     const walk = (value: unknown): void => {
       if (Array.isArray(value)) value.forEach(walk);
@@ -278,25 +351,70 @@ describe('revealWindow', () => {
         const span = value as RevealInline & { text?: string };
         if (typeof span.text === 'string' && 'sentence' in span) {
           if (!span.unseen) out.push(span.text);
-        } else Object.values(value).forEach(walk);
+        } else if (!(value as RevealBlock).unseen)
+          Object.values(value).forEach(walk);
       }
     };
-    walk(revealWindow(blocks, from, to));
+    walk(revealWindow(source, from, to));
     return out.join('');
   };
   test('the settled and fading layers partition the text at any offset, losing nothing', () => {
     const total = revealLength(blocks);
-    const whole = seen(0, total);
+    const whole = seen(blocks, 0, total);
     expect(whole.length).toBe(total);
     for (let at = 0; at <= total; at++) {
-      expect(seen(0, at) + seen(at, total)).toBe(whole);
+      expect(seen(blocks, 0, at) + seen(blocks, at, total)).toBe(whole);
       expect(revealLength(revealWindow(blocks, 0, at))).toBe(total);
     }
   });
+  test('a table never fades: whole on the settled layer, laid out and undrawn on the fading one', () => {
+    const withTable = parseAnswer(prose + table, { streaming: true });
+    const before = revealLength(blocks);
+    const total = revealLength(withTable);
+    expect(total).toBeGreaterThan(before);
+    for (const at of [0, before, before + 2, total]) {
+      const settled = revealWindow(withTable, 0, at).at(-1)!;
+      expect(settled.kind).toBe('table');
+      expect(settled.unseen).toBeUndefined();
+      expect(JSON.stringify(settled)).not.toContain('unseen');
+      const fading = revealWindow(withTable, Math.max(1, at), total).at(-1)!;
+      expect(fading.unseen).toBe(true);
+    }
+    // The table's characters still count, so text after it keeps its place.
+    const after = parseAnswer(prose + table + '\n\nAfter it.', {
+      streaming: true,
+    });
+    const start = revealLength(after) - 'After it.'.length;
+    expect(seen(after, start, revealLength(after))).toBe('After it.');
+  });
+  test('the fading copy of a table is drawn at no opacity', () => {
+    const withTable = parseAnswer(prose + table, { streaming: true });
+    act(() =>
+      tree.update(
+        <AnswerBody blocks={revealWindow(withTable, 5, 9)} streaming />,
+      ),
+    );
+    const scroll = tree.root.findAll(
+      (n) => typeof n.type === 'string' && n.props.horizontal === true,
+    )[0]!;
+    expect(StyleSheet.flatten(scroll.props.style)).toMatchObject({
+      opacity: 0,
+    });
+    // Unrevealed text is a plain nested Text: it inherits its parent's font.
+    const clearText = tree.root.findAll(
+      (n) => typeof n.type === 'string' && clear(n as Node),
+    );
+    expect(clearText.length).toBeGreaterThan(0);
+    expect(
+      clearText.some(
+        (n) =>
+          Object.keys(StyleSheet.flatten(n.props.style)).join() === 'color',
+      ),
+    ).toBe(true);
+  });
   test('a cut never lands inside a surrogate pair', () => {
     const emoji = parseAnswer('ab😀cd', { streaming: true });
-    const text = textContent('ab😀cd');
-    const at = text.indexOf('😀') + 1;
+    const at = 'ab😀cd'.indexOf('😀') + 1;
     const first = (revealWindow(emoji, 0, at)[0] as { spans: RevealInline[] })
       .spans;
     expect(first.map((span) => ('text' in span ? span.text : ''))).toEqual([

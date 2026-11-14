@@ -2,6 +2,8 @@ import type { Block, Inline } from './answer-markdown';
 
 /** A span the reveal keeps laid out but undrawn (AnswerBody sets it clear). */
 export type RevealInline = Inline & { unseen?: boolean };
+/** A table the fading layer keeps laid out but undrawn. */
+export type RevealBlock = Block & { unseen?: boolean };
 
 const runs = (block: Block): Inline[][] => {
   switch (block.kind) {
@@ -35,12 +37,17 @@ function cut(text: string, at: number) {
  * The same blocks with every character outside `[from, to)` marked unseen.
  * Spans are split at the window's edges, so both the settled layer and the
  * layer fading in lay out the whole text and break lines identically.
+ *
+ * Tables never fade: the reader may have scrolled one sideways, and a copy
+ * on the fading layer would draw its new cells at the unscrolled place. The
+ * settled layer (`from` 0) draws a table whole as it arrives; any other
+ * layer keeps it laid out and undrawn.
  */
 export function revealWindow(
   blocks: readonly Block[],
   from: number,
   to: number,
-): Block[] {
+): RevealBlock[] {
   let offset = 0;
   const mark = (run: Inline[]): Inline[] => {
     const out: RevealInline[] = [];
@@ -72,17 +79,17 @@ export function revealWindow(
     }
     return out;
   };
-  return blocks.map((block): Block => {
+  const skip = (run: Inline[]) => {
+    for (const span of run) offset += length(span);
+  };
+  return blocks.map((block): RevealBlock => {
     switch (block.kind) {
       case 'bullets':
       case 'numbered':
         return { ...block, items: block.items.map(mark) };
       case 'table':
-        return {
-          ...block,
-          header: block.header.map(mark),
-          rows: block.rows.map((row) => row.map(mark)),
-        };
+        runs(block).forEach(skip);
+        return from === 0 ? block : { ...block, unseen: true };
       default:
         return { ...block, spans: mark(block.spans) };
     }

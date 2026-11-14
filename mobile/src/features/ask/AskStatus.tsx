@@ -63,14 +63,20 @@ export function useHeldLine(text: string, interval: number) {
 
 /** Kept at screen scope so a pending final writing announcement survives
  * the answer arriving. A null stage never replaces the latest pending stage. */
-export function useAskStageAnnouncement(stage: AskStage | null) {
+export function useAskStageAnnouncement(
+  stage: AskStage | null,
+  /** False once streamed text has replaced the status row. */
+  rowShown = stage !== null,
+) {
   const [announced, setAnnounced] = useState<AskStage>('Reading your question');
-  const active = useRef(false);
+  const row = useRef(false);
+  useEffect(() => {
+    row.current = rowShown;
+  }, [rowShown]);
   const last = useRef<string | null>(null);
   const at = useRef(-Infinity);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
-    active.current = stage !== null;
     if (!stage) return;
     if (timer.current !== null) clearTimeout(timer.current);
     if (stage === last.current) return;
@@ -79,9 +85,10 @@ export function useAskStageAnnouncement(stage: AskStage | null) {
         last.current = stage;
         at.current = Date.now();
         setAnnounced(stage);
-        // Android uses the row's live region while it exists. If the answer
-        // has already landed, deliver the pending final stage explicitly.
-        if (Platform.OS === 'ios' || !active.current)
+        // Android uses the row's live region while the row is there. Once
+        // the answer's first text has taken its place, or the answer has
+        // landed, the pending stage is spoken explicitly, as on iOS.
+        if (Platform.OS === 'ios' || !row.current)
           AccessibilityInfo.announceForAccessibilityWithOptions(stage, {
             queue: true,
           });

@@ -1,5 +1,11 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
-import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -7,8 +13,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useReduceMotionSetting } from '../../design/accessibility';
+import { moveAccessibilityFocus } from '../../design/keyboard';
 import { MachinePill } from '../../design/labels';
-import { motion, rhythm } from '../../design/tokens';
+import { colors, motion, rhythm } from '../../design/tokens';
 import { parseAnswer, type Block } from './answer-markdown';
 import { AnswerBody } from './AnswerBody';
 import { machineNote } from './AnswerView';
@@ -127,6 +134,83 @@ function StreamedBlocks({
   );
 }
 
+/** A gap this long after the last piece shows the tail's indicator. */
+export const STREAM_QUIET_MS = 1000;
+export const streamTailLabel = 'Writing the answer';
+
+/**
+ * The quiet row under the streamed text: the turn's busy element once the
+ * status line has given way. Its height is fixed and reserved from the first
+ * text, so showing or hiding the indicator moves nothing. The indicator
+ * waits for a second with no new piece, so a fast replay never flickers:
+ * the small system spinner, or three still dots under Reduce Motion. Never
+ * a live region: the stage was announced, and the answer is when it lands.
+ */
+function StreamTail({
+  text,
+  takeFocus,
+  still,
+}: {
+  text: string;
+  /** The status line handed over in this view: VoiceOver follows it here. */
+  takeFocus: boolean;
+  still: boolean;
+}) {
+  const row = useRef<View>(null);
+  const [focus] = useState(takeFocus);
+  useEffect(() => {
+    if (!focus) return;
+    // After the commit is on screen, so the row exists for VoiceOver.
+    const frame = requestAnimationFrame(() =>
+      moveAccessibilityFocus(row.current),
+    );
+    return () => cancelAnimationFrame(frame);
+  }, [focus]);
+  const [quiet, setQuiet] = useState({ text, shown: false });
+  if (quiet.text !== text) setQuiet({ text, shown: false });
+  useEffect(() => {
+    const timer = setTimeout(
+      () => setQuiet({ text, shown: true }),
+      STREAM_QUIET_MS,
+    );
+    return () => clearTimeout(timer);
+  }, [text]);
+  const shown = quiet.shown && quiet.text === text;
+  return (
+    <View
+      ref={row}
+      accessible
+      accessibilityLabel={streamTailLabel}
+      accessibilityState={{ busy: true }}
+      accessibilityLanguage="en-AU"
+      accessibilityLiveRegion="none"
+      style={styles.tail}
+      testID="ask-stream-tail"
+    >
+      {!shown ? null : still ? (
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          style={styles.dots}
+          testID="ask-stream-tail-dots"
+        >
+          <View style={styles.dot} />
+          <View style={styles.dot} />
+          <View style={styles.dot} />
+        </View>
+      ) : (
+        <ActivityIndicator
+          size="small"
+          color={colors.inkSoft}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          testID="ask-stream-tail-spinner"
+        />
+      )}
+    </View>
+  );
+}
+
 const parse = (text: string) =>
   text ? parseAnswer(text, { streaming: true }) : [];
 
@@ -158,8 +242,9 @@ export function StreamedAnswer({
  * The live half of an Ask turn (journeys/ask.md 4.4 step 2, 13 item 9):
  * until text arrives, one status line naming the stage beside a system
  * activity indicator and nothing else. The first text takes the line's
- * place as the line fades, then each piece fades in as it arrives. Stop is
- * the composer's trailing button.
+ * place as the line fades, then each piece fades in as it arrives, over a
+ * quiet tail row that keeps the busy state (and VoiceOver's focus) until the
+ * answer lands. Stop is the composer's trailing button.
  */
 export function AskProgress({
   stage,
@@ -180,9 +265,11 @@ export function AskProgress({
   // nothing.
   const [was, setWas] = useState(started);
   const [leaving, setLeaving] = useState(false);
+  const [handed, setHanded] = useState(false);
   if (was !== started) {
     setWas(started);
     setLeaving(started && motionOn);
+    setHanded(started);
   }
   useEffect(() => {
     if (!leaving) return;
@@ -212,6 +299,7 @@ export function AskProgress({
         <FadeIn animate={leaving} style={styles.block} testID="ask-streamed">
           <MachinePill note={machineNote} />
           <StreamedBlocks blocks={blocks} reveal testID="ask-streaming" />
+          <StreamTail text={streaming} takeFocus={handed} still={!motionOn} />
         </FadeIn>
       ) : null}
     </View>
@@ -221,4 +309,14 @@ const styles = StyleSheet.create({
   progress: { gap: rhythm.heading },
   block: { gap: rhythm.tight },
   leaving: { position: 'absolute', top: 0, left: 0, right: 0 },
+  // The small system spinner's height, at every text size.
+  tail: { height: 20, flexDirection: 'row', alignItems: 'center' },
+  dots: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  dot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    borderCurve: 'continuous',
+    backgroundColor: colors.inkSoft,
+  },
 });

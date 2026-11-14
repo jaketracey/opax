@@ -57,6 +57,7 @@ import {
   dispatchKeyCommand,
   requestFocus,
   takeFocusRequest,
+  moveAccessibilityFocus,
 } from '../src/design/keyboard';
 import { useOpenAsk } from '../src/features/ask/open';
 import { askReturnSnapshot, setAskReturn } from '../src/features/ask/return';
@@ -79,6 +80,10 @@ import { emptyReservedRegions } from '../src/design/fold';
 
 // The bar's items, as AskScreen sets them through Stack.Screen.
 const mockBar: { options: Record<string, unknown> } = { options: {} };
+jest.mock('../src/design/keyboard', () => ({
+  ...jest.requireActual('../src/design/keyboard'),
+  moveAccessibilityFocus: jest.fn(),
+}));
 jest.mock('../src/analytics/timing', () => ({ useScreenReady: jest.fn() }));
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
@@ -1467,10 +1472,13 @@ test('a stream that stops partway keeps its text under one pill, read as Markdow
   expect(byId('ask-retry')).not.toEqual([]);
 });
 
-test('streamed pieces are never announced: one announcement when the answer completes', async () => {
+test('streamed pieces are never announced, VoiceOver moves to the tail row at handover, and the answer is announced once', async () => {
   const announce = jest
     .spyOn(AccessibilityInfo, 'announceForAccessibilityWithOptions')
     .mockImplementation(() => undefined);
+  jest.mocked(announceAnswer).mockClear();
+  const move = jest.mocked(moveAccessibilityFocus);
+  move.mockClear();
   let on: StreamHandlers | undefined,
     finish: (value: unknown) => void = () => {};
   jest.mocked(client.askPost).mockImplementationOnce(
@@ -1483,34 +1491,52 @@ test('streamed pieces are never announced: one announcement when the answer comp
   await mount();
   await type('Who spoke on housing?');
   await press('ask-submit');
+  expect(byId('ask-stream-tail')).toHaveLength(0);
   const pieces = ['Housing was debated. ', 'The bill passed. ', 'Two opposed.'];
+  const spoken = () =>
+    announce.mock.calls.filter(([said]) =>
+      pieces.some((piece) => String(said).includes(piece.trim())),
+    );
   for (const piece of pieces)
     await act(async () => {
       on!.delta(piece);
+      await new Promise((resolve) => setTimeout(resolve, 40));
     });
-  // The streamed text is not a live region, and its fading layer is hidden.
-  let node = byId('ask-streaming').at(-1)!.parent;
-  const regions: unknown[] = [];
-  while (node && node.props.testID !== 'ask-progress') {
-    if (node.props.accessibilityLiveRegion)
-      regions.push(node.props.accessibilityLiveRegion);
-    node = node.parent;
-  }
-  expect(new Set(regions)).toEqual(new Set(['none']));
+  // Focus went to the tail row once, at the first text, and stayed.
+  expect(move).toHaveBeenCalledTimes(1);
+  expect(
+    (move.mock.calls[0]![0] as unknown as { props: { testID: string } }).props
+      .testID,
+  ).toBe('ask-stream-tail');
+  const tail = byId('ask-stream-tail').at(-1)!;
+  expect(tail.props).toMatchObject({
+    accessible: true,
+    accessibilityLabel: 'Writing the answer',
+    accessibilityState: { busy: true },
+    accessibilityLiveRegion: 'none',
+  });
+  // Once the status line has faded, nothing in the live turn is a live
+  // region: no piece is read as it lands.
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 200));
+  });
+  expect(byId('ask-status-row')).toHaveLength(0);
+  const regions = byId('ask-progress')
+    .at(-1)!
+    .findAll((n) => typeof n.props.accessibilityLiveRegion === 'string')
+    .map((n) => n.props.accessibilityLiveRegion);
+  expect(regions.length).toBeGreaterThan(0);
+  expect(regions.every((region) => region === 'none')).toBe(true);
+  expect(spoken()).toHaveLength(0);
   expect(jest.mocked(announceAnswer)).not.toHaveBeenCalled();
-  for (const [said] of announce.mock.calls)
-    expect(pieces.some((piece) => String(said).includes(piece.trim()))).toBe(
-      false,
-    );
   await act(async () => {
     finish(answer);
   });
   expect(jest.mocked(announceAnswer)).toHaveBeenCalledTimes(1);
-  expect(byId('ask-progress')).toEqual([]);
-  for (const [said] of announce.mock.calls)
-    expect(pieces.some((piece) => String(said).includes(piece.trim()))).toBe(
-      false,
-    );
+  expect(byId('ask-progress')).toHaveLength(0);
+  expect(byId('ask-stream-tail')).toHaveLength(0);
+  expect(spoken()).toHaveLength(0);
+  expect(move).toHaveBeenCalledTimes(1);
 });
 
 test('Stop puts the question back in an empty composer and says so', async () => {

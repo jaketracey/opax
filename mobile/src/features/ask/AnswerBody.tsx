@@ -1,10 +1,16 @@
 import { Fragment, type ReactNode, type RefObject } from 'react';
-import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Text as NativeText,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { router } from 'expo-router';
 import { CitationMark } from '../../design/citation-mark';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { webOrigin } from '../../design/environment';
-import { Text, type OpaxTextProps } from '../../design/text';
+import { Text } from '../../design/text';
 import { colors, hairline, rhythm } from '../../design/tokens';
 import { fromWebPath } from '../../navigation/routes';
 import {
@@ -13,8 +19,12 @@ import {
   trackSourceOpen,
 } from '../../navigation/external';
 import type { SourcePlacement } from '../../analytics/events';
-import type { Block, Inline } from './answer-markdown';
-import { startsUnseen, type RevealInline } from './stream-reveal';
+import type { Inline } from './answer-markdown';
+import {
+  startsUnseen,
+  type RevealBlock,
+  type RevealInline,
+} from './stream-reveal';
 
 /**
  * Opens a link in an answer: native pages in the Ask stack, else the browser.
@@ -59,7 +69,7 @@ export function AnswerBody({
   markFallback,
   testID,
 }: {
-  blocks: Block[];
+  blocks: RevealBlock[];
   /** Links are inert and no marks are drawn until the final answer. */
   streaming?: boolean;
   /** Android's explicit Select text mode, so ordinary citation taps stay live. */
@@ -92,25 +102,21 @@ export function AnswerBody({
     claim.sentence === span.sentence &&
     span.kind !== 'cite';
   // Only the claim's block lights, so its first lit span carries the ID.
-  const spans = (
-    items: RevealInline[],
-    block: string,
-    role: Pick<OpaxTextProps, 'variant' | 'tabular'> = {},
-  ): ReactNode => {
+  const spans = (items: RevealInline[], block: string): ReactNode => {
     const firstLit = items.findIndex((span) => isLit(span, block));
     return items.map((span, i) => {
-      // Streamed text not yet revealed: laid out in the block's own role so
-      // the lines break where they will, and drawn clear.
+      // Streamed text not yet revealed, laid out and drawn clear. A plain
+      // nested Text inherits its parent's font exactly; only bold names its
+      // role, as it does when drawn.
       if (span.unseen && span.kind !== 'cite')
-        return (
-          <Text
-            key={i}
-            {...role}
-            {...(span.kind === 'strong' ? { variant: 'strong' } : null)}
-            style={styles.unseen}
-          >
+        return span.kind === 'strong' ? (
+          <Text key={i} variant="strong" style={styles.unseen}>
             {span.text}
           </Text>
+        ) : (
+          <NativeText key={i} style={styles.unseen}>
+            {span.text}
+          </NativeText>
         );
       const lit = isLit(span, block);
       const first = i === firstLit;
@@ -189,7 +195,7 @@ export function AnswerBody({
             return (
               <View key={key} ref={keep(key)} collapsable={false}>
                 <Text variant="strong" selectable={selectable}>
-                  {spans(block.spans, key, { variant: 'strong' })}
+                  {spans(block.spans, key)}
                 </Text>
               </View>
             );
@@ -202,7 +208,7 @@ export function AnswerBody({
                 style={styles.quote}
               >
                 <Text variant="recordText" selectable={selectable}>
-                  {spans(block.spans, key, { variant: 'recordText' })}
+                  {spans(block.spans, key)}
                 </Text>
               </View>
             );
@@ -247,14 +253,13 @@ export function AnswerBody({
               <AnswerTable
                 key={key}
                 header={block.header.map((cell, c) =>
-                  spans(cell, `${key}.h${c}`, { variant: 'footnote' }),
+                  spans(cell, `${key}.h${c}`),
                 )}
                 rows={block.rows.map((row, r) =>
-                  row.map((cell, c) =>
-                    spans(cell, `${key}.${r}.${c}`, { tabular: true }),
-                  ),
+                  row.map((cell, c) => spans(cell, `${key}.${r}.${c}`)),
                 )}
                 stacked={stacked}
+                unseen={!!block.unseen}
               />
             );
         }
@@ -266,14 +271,17 @@ function AnswerTable({
   header,
   rows,
   stacked,
+  unseen,
 }: {
   header: ReactNode[];
   rows: ReactNode[][];
   stacked: boolean;
+  /** Laid out and undrawn: the fading layer's copy of a table. */
+  unseen: boolean;
 }) {
   if (stacked)
     return (
-      <View style={styles.stackedTable}>
+      <View style={[styles.stackedTable, unseen ? styles.undrawn : null]}>
         {rows.map((row, r) => (
           <View key={r} style={styles.stackedRow}>
             {row.map((cell, c) => (
@@ -291,7 +299,11 @@ function AnswerTable({
       </View>
     );
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={unseen ? styles.undrawn : null}
+    >
       <View style={styles.table}>
         <View style={styles.tableRow}>
           {header.map((cell, c) => (
@@ -321,6 +333,7 @@ const styles = StyleSheet.create({
   body: { gap: rhythm.block },
   claim: { backgroundColor: colors.navyWash },
   unseen: { color: 'transparent' },
+  undrawn: { opacity: 0 },
   quote: {
     borderLeftWidth: 2,
     borderLeftColor: colors.dividerSubtle,

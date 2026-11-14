@@ -208,7 +208,10 @@ export default function AskScreen() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.entry]);
-  const statusAnnouncement = useAskStageAnnouncement(s.stage);
+  const statusAnnouncement = useAskStageAnnouncement(
+    s.stage,
+    s.stage !== null && !s.streaming.trim(),
+  );
   async function loadNames() {
     if (loadingNames.current || names.length) return;
     loadingNames.current = true;

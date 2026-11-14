@@ -297,23 +297,25 @@ export function useFocusRequest(
   }, [target, ref]);
 }
 
+/** Moves VoiceOver or TalkBack to `node` (setAccessibilityFocus is iOS-only). */
+export function moveAccessibilityFocus(node: View | null) {
+  if (!node) return;
+  if (Platform.OS === 'android')
+    AccessibilityInfo.sendAccessibilityEvent(node, 'focus');
+  else {
+    const handle = findNodeHandle(node);
+    if (handle) AccessibilityInfo.setAccessibilityFocus(handle);
+  }
+}
+
 /**
  * Moves VoiceOver or TalkBack to the returned view when a request for
- * `target` arrives (setAccessibilityFocus is iOS-only).
+ * `target` arrives.
  */
 export function useAccessibilityFocusRequest(target: FocusTarget) {
   const view = useRef<View>(null);
   const focusable = useRef({
-    focus: () => {
-      const node = view.current;
-      if (!node) return;
-      if (Platform.OS === 'android')
-        AccessibilityInfo.sendAccessibilityEvent(node, 'focus');
-      else {
-        const handle = findNodeHandle(node);
-        if (handle) AccessibilityInfo.setAccessibilityFocus(handle);
-      }
-    },
+    focus: () => moveAccessibilityFocus(view.current),
   });
   useFocusRequest(target, focusable);
   return view;

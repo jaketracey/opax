@@ -289,6 +289,32 @@ test('polite stage announcements coalesce to two seconds from actual speech, inc
   expect(Platform.OS).toBe('ios');
 });
 
+function RowProbe({ stage, row }: { stage: AskStage | null; row: boolean }) {
+  return <View accessibilityLabel={useAskStageAnnouncement(stage, row)} />;
+}
+test('Android speaks a pending stage itself once streamed text has replaced the status row', () => {
+  const os = jest.replaceProperty(Platform, 'OS', 'android');
+  try {
+    act(() => {
+      view = create(<RowProbe stage="Reading your question" row />);
+    });
+    advance(0);
+    // The row is there: its live region speaks, not a second announcement.
+    expect(announce).not.toHaveBeenCalled();
+    act(() => view.update(<RowProbe stage="Writing the answer" row />));
+    // The first text takes the row's place before the stage is due.
+    act(() => view.update(<RowProbe stage="Writing the answer" row={false} />));
+    advance(1999);
+    expect(announce).not.toHaveBeenCalled();
+    advance(1);
+    expect(announce.mock.calls.map(([label]) => label)).toEqual([
+      'Writing the answer',
+    ]);
+  } finally {
+    os.restore();
+  }
+});
+
 test('unmount cancels pending announcements', () => {
   act(() => {
     view = create(<StageProbe stage="Reading your question" />);
