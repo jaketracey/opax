@@ -1372,6 +1372,11 @@ def link_speakers() -> None:
     db.execute("PRAGMA busy_timeout = 600000")
     init_db(db)
 
+    # Date/seat evidence takes precedence over the name-wide full-name lookup,
+    # and also repairs already-linked rows on each nightly rebuild.
+    from parli.ingest.speaker_identity import apply_identities
+    log.info("Reviewed House identities: %d speeches repaired", apply_identities(db))
+
     # Step 0: Seed historical members from wragge data
     seed_wragge_members(db)
 

@@ -21,7 +21,12 @@ export interface SourceRecord {
   historic?: boolean
   /** Full unit text for name provenance; figures still use the clipped model input. */
   nameText?: string
+  /** Set only by the 5b-cheap regeneration runner; 'witness' enables the witness opener check. */
+  speaker_role?: string | null
 }
+
+export const WITNESS_OPENER_PROBLEM =
+  "the speaker is a committee witness giving evidence: say what they told the committee; do not start with 'Asked' or 'Moved'"
 
 export const NAMES_PROBLEM = 'unsupported capitalised term; use only names that appear in the speech; describe private individuals by role'
 
@@ -291,6 +296,7 @@ export function validateSummary(value: unknown, item: SourceRecord): string[] {
     problems.push("do not open with a framing phrase such as 'In this speech', 'This release' or 'The speaker says'")
   }
   if ((flat.match(/[.!?](\s|$)/g) ?? []).length > 4) problems.push('more than three sentences')
+  if (item.speaker_role === 'witness' && /^\W*(asked|moved)\b/.test(lower)) problems.push(WITNESS_OPENER_PROBLEM)
 
   // --- summary_workers.cmd_submit: a brief that is the speech's own opening was not written from reading ---
   const head = squash(item.text ?? '').slice(0, 240).toLowerCase()

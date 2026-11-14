@@ -15,7 +15,7 @@ interface Seat {
   jurisdiction: string; chamber: string; name: string; url?: string; current?: boolean; as_of?: string
   periods?: { start?: string; end?: string | null }[]
 }
-interface ServicePerson { name: string; legacy_person_id?: string; electorates?: Seat[] }
+interface ServicePerson { name: string; person_id?: string; legacy_person_id?: string; electorates?: Seat[] }
 interface PayPerson { name: string; pid?: string; chamber?: string; from?: string; to?: string | null; sitting?: boolean }
 const fold = (name: string) => name.normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\s+/g, ' ').trim()
 const date = (value: unknown): value is string => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)
@@ -35,7 +35,7 @@ export async function personService(deps: ToolDeps, people: { name: string; pid?
   const servicePeople = electorates.status === 'fulfilled' ? electorates.value?.people ?? [] : []
   const payData = pay.status === 'fulfilled' ? pay.value : null
   return people.map(person => {
-    const matches = servicePeople.filter(p => person.pid && p.legacy_person_id === person.pid || fold(p.name) === fold(person.name))
+    const matches = servicePeople.filter(p => person.pid && (p.legacy_person_id === person.pid || p.person_id === person.pid) || fold(p.name) === fold(person.name))
     const seats = matches.length === 1 ? matches[0].electorates ?? [] : []
     const periods: ServicePeriod[] = seats.flatMap(seat => (seat.periods ?? []).filter(p => date(p.start) && (p.end == null || date(p.end))).map(p => ({
       jurisdiction: seat.jurisdiction, chamber: seat.chamber, electorate: seat.name,
