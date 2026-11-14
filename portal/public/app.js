@@ -1,3 +1,14 @@
+// Promise consumers keep their existing readiness gates, but an unused helper
+// does not download or run until a route needs it. Concurrent consumers share it.
+function lazyReady(load) {
+  let promise;
+  return { then(resolve, reject) { return (promise ??= load()).then(resolve, reject); } };
+}
+
+function yieldMainThread() {
+  return globalThis.scheduler?.yield ? globalThis.scheduler.yield() : new Promise(resolve => setTimeout(resolve, 0));
+}
+
 let donorRows = (rows,_index,limit=Infinity) => [...(rows || [])].sort((a,b)=>b[1]-a[1]).slice(0,limit);
 let donorViewIndex = new Map();
 let donorDisclosure = record => ({name:typeof record==='string'?record:record?.label || '',href:null,reference:''});
@@ -6,10 +17,13 @@ let receiptGraph = graph => graph, receiptGraphScope = () => '', receiptScopeLab
 // Until donor-views.js loads: a donor with no figure at all is left out, as hasPartyReceipts leaves out
 // a donor the parties' returns list nothing from (donor-disclosure.js).
 let hasPartyReceipts = (x) => Boolean(x?.total || x?.count), DONOR_DECLARED_ONLY = '', notListedLine = () => DONOR_DECLARED_ONLY;
-const donorViewReady = import('/donor-views.js?v=be03bb4447').then(module => {
+const donorHelpersReady = import('/donor-views.js?v=be03bb4447').then(module => {
   ({donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,receiptTypeLine,receiptFigures,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);
-  return module.loadDonorViewIndex();
-}).then(index => (donorViewIndex=index));
+  return module;
+});
+// The disclosure helpers remain available everywhere; only consumers of the
+// identity index pay for downloading, parsing and indexing its records.
+const donorViewReady = lazyReady(() => donorHelpersReady.then(module => module.loadDonorViewIndex()).then(index => (donorViewIndex=index)));
 const donorViewKey = name => String(name).normalize('NFKC').replace(/[‘’ʼ`]/g,"'").replace(/\s+/g,' ').trim().toLowerCase();
 const disclosedDonor = (name, jurisdiction) => donorViewIndex.get((jurisdiction ? jurisdiction + ':' : '') + donorViewKey(name)) || (jurisdiction ? null : {label:name});
 // The one not-found block (not-found.js), for an in-app link that lands on an empty address.
@@ -31,16 +45,16 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=50d61c68ca").then(module => { voteTables = module; });
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=4e3aec806a").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=348801ccf3").then(module => { growthModules = module; });
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=348801ccf3").then(module => { growthModules = module; }));
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=4f061ca4cf').then(module => { registerTables = module; });
+const registerTablesReady = lazyReady(() => import('/register-tables.js?v=4f061ca4cf').then(module => { registerTables = module; }));
 let askPerson;
-const askPersonReady = import('/ask-person.js?v=e628525cf3').then(module => { askPerson = module; });
+const askPersonReady = lazyReady(() => import('/ask-person.js?v=e628525cf3').then(module => { askPerson = module; }));
 let uiLabels;
 const uiLabelsReady = import('/labels.js?v=fcb2a1091c').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
@@ -61,14 +75,14 @@ const splitSpeakers = person => attributionHelpers?.splitSpeakers(person) || [];
 const personScope = person => attributionHelpers?.personScope(person) || person?.speech_scope || null;
 const datedAffiliationParty = (row, person) => attributionHelpers?.datedAffiliationParty(row, person) || null;
 let heldBackHelpers;
-const heldBackReady = import('/held-back-transcripts.js?v=1ac63b9250').then(module => { heldBackHelpers = module; });
+const heldBackReady = lazyReady(() => import('/held-back-transcripts.js?v=1ac63b9250').then(module => { heldBackHelpers = module; }));
 
 let saDisplayHelpers;
 let saFullTextFlag = 'false';
-const saDisplayReady = Promise.all([
+const saDisplayReady = lazyReady(() => Promise.all([
   import('/sa-hansard.js?v=001257cb4a').then(module => { saDisplayHelpers = module; }),
-  fetch('/api/display-policy').then(response => response.json()).then(policy => { saFullTextFlag = policy.SA_HANSARD_FULL_TEXT === 'true' ? 'true' : 'false'; }).catch(() => {}),
-]);
+  fetch('/api/display-policy').then(response => response.json()).then(policy => { saFullTextFlag = saDisplayHelpers?.saDisplayPayload !== cappedChatPayload && policy.SA_HANSARD_FULL_TEXT === 'true' ? 'true' : 'false'; }).catch(() => {}),
+]));
 
 const $ = (id) => document.getElementById(id);
 
@@ -1342,7 +1356,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=716454ddbb");
+    const { mountMoneyMap } = await import("/money-map.js?v=f0a9329cde");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1725,9 +1739,8 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   const root = $("money-map-root");
   root.classList.remove("show-key");
   root.innerHTML = MAP_DRAWING_HTML;
-  const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=716454ddbb"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=c2ff1963a0"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=f0a9329cde"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=7204198ec1"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1741,7 +1754,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
     });
     if (!isCurrent()) { research?.destroy(); return; }
     moneyResearch = research;
-    const handle = await mountMoneyMap(root, cfg.file, {
+    const handle = await mountMoneyMap(root, data, {
       signal: setup.signal, isCurrent,
       filters: recordsModule.readMoneyFilters(new URLSearchParams(location.search)),
       focus: params.get('journey') ? undefined : params.get('focus') || undefined,
@@ -1870,7 +1883,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=41bb9d3350");
+    const module = await import("/suppliers.js?v=d002e35d6d");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -2048,11 +2061,23 @@ function routePrerequisites(segs) {
     ...(view === 'chat' ? [saDisplayReady] : []),
   ];
 }
+function warmRouteHelpers(segs) {
+  const [view, kind] = segs;
+  const helpers = [];
+  if (['subject', 'bill', 'bills', 'declared'].includes(view)) helpers.push(growthModulesReady);
+  if (view === 'subject' || view === 'bill') helpers.push(voteTablesReady);
+  if (view === 'subject' && kind === 'person') helpers.push(heldBackReady);
+  if (view === 'declared' || view === 'subject' && ['person', 'party', 'donor'].includes(kind)) helpers.push(registerTablesReady);
+  // Overlap the required route downloads with the identity gate without
+  // holding the first panel on an optional renderer. Its own await still owns errors.
+  for (const helper of helpers) Promise.resolve(helper).catch(() => {});
+}
 async function route() {
   const frag = rawFragment();
   if (frag && !frag.startsWith("/") && !firstRoute) return; // native anchors still need their page rendered on first load
   const { segs, params } = parseHash();
   const requested = ++routeRequest;
+  warmRouteHelpers(segs);
   await Promise.allSettled(routePrerequisites(segs));
   if (requested !== routeRequest) return;
   if (!segs.length) { location.replace('/' + location.search + location.hash); return; }
@@ -2226,6 +2251,7 @@ async function route() {
     if (target && $("panel-methods").contains(target)) requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
   } else if (view === "stats") {
     showPanel("stats");
+    loadLiveStats();
     renderEvidenceStats();
     document.title = TITLES.stats;
     setCrumbs(crumbsFor("/stats"));
@@ -2377,8 +2403,13 @@ for (const id of ["ask-input", "search-input"]) {
     width = entry.contentRect.width;
     requestAnimationFrame(fit);
   }).observe(field);
-  document.fonts.ready.then(fit);
-  fit();
+  // FontFaceSet.ready and field measurements can force style and layout.
+  // Let the boot task finish before fitting, still before the next paint.
+  requestAnimationFrame(() => {
+    if (!field.isConnected) return;
+    document.fonts.ready.then(fit);
+    fit();
+  });
 }
 
 // The ask box after an answer. The answered question stays in the box (the
@@ -3661,9 +3692,12 @@ let moneyReceiptScope = "";
 let moneyDataPromise = null;
 function loadMoneyData() {
   // The same parse the donor privacy index reads (donor-views.js), not a second download.
-  moneyDataPromise ??= import('/donor-views.js?v=be03bb4447').then((module) => module.loadMoneyGraph("/graph/money.json").then((d) => {
+  moneyDataPromise ??= import('/donor-views.js?v=be03bb4447').then((module) => Promise.all([module.loadMoneyGraph("/graph/money.json"), donorViewReady]).then(async ([d]) => {
     moneyReceipts = module.receiptGraph(d);
     moneyReceiptScope = module.receiptGraphScope(moneyReceipts);
+    // Do not combine receipt projection and the dependent view's DOM work
+    // into one microtask. The same cached graph is published after yielding.
+    await yieldMainThread();
     return d;
   }))
     .then((d) => (moneyData = d)).catch(() => null)
@@ -4621,7 +4655,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=716454ddbb");
+    const { mountMoneyMap } = await import("/money-map.js?v=f0a9329cde");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
@@ -6130,6 +6164,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   body.innerHTML = subjectSkeleton(SUBJECT_LABELS[kind] || "Receipt source", kind === "electorate" ? "" : name,
     `<span class="answer-skeleton subject-skel tag-skel" aria-hidden="true"><i></i></span>`,
     kind === "person" && params.get('attribution') !== 'unattributed');
+  // Reserve the map in the skeleton's first frame, before a lazy helper yields.
+  if (kind === "donor" || kind === "party") reserveSubjectMap(true);
   // A person's aside is the "On this page" rail, not a Quick facts card.
   if (kind === "person") $("subject-infobox")?.classList.add("entry-rail");
   // An electorate's address is a reference slug ("vic-vic-la-vic-berwick"), not
@@ -6157,7 +6193,6 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   if (kind === "campaigner") { await renderCampaignerEntry(name, key); return; }
 
   if (kind === "donor" || kind === "party") {
-    reserveSubjectMap(true);
     const [, fits] = await Promise.all([loadMoneyData(), loadFits()]);
     if (currentSubjectKey !== key) return;
     const node = findMoneyNode(kind, name);
@@ -6256,8 +6291,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const reported = isParty || hasPartyReceipts(node);
     const declaredOnlyLine = notListedLine(node) || "The parties' returns list no receipt from it";
     const donorScope = isParty ? "" : ownScope;
-    const rankTotal = (n) => (isParty ? partyReturnFigures(n) : receiptFigures(n)).total || 0;
-    const rank = donors.sort((a, b) => rankTotal(b) - rankTotal(a)).findIndex((n) => n.id === node.id) + 1;
+    // Receipt projections walk every year/type cell. Compute each once per
+    // ranking, rather than again for every sort comparison. Keep ties stable.
+    const rankTotals = new Map(donors.map(n => [n, (isParty ? partyReturnFigures(n) : receiptFigures(n)).total || 0]));
+    const rank = donors.sort((a, b) => rankTotals.get(b) - rankTotals.get(a)).findIndex((n) => n.id === node.id) + 1;
     // The party's table counts each receipt once, as the donor page does, and says so (partyMoneyData's scope).
     const partyMoney=isParty ? registerTables.partyMoneyData(moneyData,node.id) : null;
     // While the map draws no donor to a party (its donor side held, export rule 10), the section says so, never an empty table.
@@ -6429,6 +6466,16 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       `<img class="subject-portrait" src="${esc(url)}" alt="${official ? "Official portrait" : "Portrait"} of ${esc(name)}" width="112" height="112">`;
     else portrait?.classList.replace("subject-portrait-pending", "subject-portrait-blank");
   });
+  // Static profile reads do not depend on the speech search. A verified roster
+  // entry needs them, so start them together and retain the same head gate below.
+  const loadElectorateReference = () => loadElectorateModule().then(async (module) => {
+    const [data, people] = await Promise.all([module.loadIndex(), module.loadPeople().catch(() => ({ people: [] }))]);
+    return { module, data, person: module.findPerson(people.people, name) };
+  }).catch(() => null);
+  const earlyFits = roster ? loadFits() : null;
+  const earlyElectorate = roster ? loadElectorateReference() : null;
+  const earlyMoney = roster && (roster.party || roster.representation?.length || /\S\s+\S/.test(String(roster.name || '')))
+    ? loadMoneyData().catch(() => null) : null;
   let speeches = [], speechesFailed = false;
   try {
     const data = await api(`/api/search?${new URLSearchParams({ q: speechScope ? '*' : speechSpeaker, speaker: speechSpeaker, top_k: "20", ...(speechScope ? { mode: 'keyword' } : {}), ...(unattributed ? { attribution: 'unattributed' } : {}) })}`);
@@ -6516,16 +6563,13 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   }
   const q = encodeURIComponent(name);
   const [fits, electorateReference, rosterData, , rosterLists] = await Promise.all([
-    loadFits(),
-    loadElectorateModule().then(async (module) => {
-      const [data, people] = await Promise.all([module.loadIndex(), module.loadPeople().catch(() => ({ people: [] }))]);
-      return { module, data, person: module.findPerson(people.people, name) };
-    }).catch(() => null),
+    earlyFits || loadFits(),
+    earlyElectorate || loadElectorateReference(),
     loadParliamentarians(),
     // The party receipts row below only points at the party's map entry when
     // the money data has one; an independent's would land on "Not among the
     // top 250 disclosed donors", so they get the map itself instead.
-    party || rosterFallback || listFallback ? loadMoneyData().catch(() => null) : null,
+    party || rosterFallback || listFallback ? earlyMoney || loadMoneyData().catch(() => null) : null,
     listFallback ? fetch("/data/roster-list-parties.json").then((r) => (r.ok ? r.json() : null)).catch(() => null) : null,
   ]);
   if (currentSubjectKey !== key) return;
@@ -6694,7 +6738,12 @@ function wireGrowthAsk(root) {
       form.requestSubmit();
     }
   });
-  const observer = new ResizeObserver(() => requestAnimationFrame(fit));
+  let width = -1;
+  const observer = new ResizeObserver(([entry]) => {
+    if (entry.contentRect.width === width) return;
+    width = entry.contentRect.width;
+    requestAnimationFrame(() => { if (form.isConnected) fit(); });
+  });
   observer.observe(field);
   const cleanup = () => {
     if (form.isConnected) return;
@@ -6702,8 +6751,13 @@ function wireGrowthAsk(root) {
     removeEventListener("opax:route", cleanup);
   };
   addEventListener("opax:route", cleanup);
-  document.fonts.ready.then(fit);
-  fit();
+  // Keep the page's DOM construction and its first field measurement in
+  // separate tasks. A height change must not feed back into another fit.
+  requestAnimationFrame(() => {
+    if (!form.isConnected) return;
+    document.fonts.ready.then(() => { if (form.isConnected) fit(); });
+    fit();
+  });
   form?.addEventListener("submit", event => {
     event.preventDefault();
     const question = form.querySelector('[name="q"]').value.trim();
@@ -11102,6 +11156,7 @@ function prefetchAskFollowups(ask) {
 // conversation's `updated` clock: the newer write wins.
 
 let chatThread = []; // {role: 'user'|'answer', text, sources?, next?, askedAs?}
+let chatRestoreRequest = 0;
 let chatKind = "all";
 // A conversation may be held with ONE speaker's record rather than the whole
 // corpus: a person page's "Ask about their speeches" opens one, and the name
@@ -11226,7 +11281,41 @@ function savedSpeaker(chat) {
   return typeof chat?.speaker === "string" ? chat.speaker.trim() : "";
 }
 
-function openSavedChat(id) {
+// A pending policy load must not restore a departed page or a closed dock.
+function chatRestoreCurrent() {
+  const route = routeRequest, surface = document.documentElement.dataset.chat;
+  return () => route === routeRequest && surface === document.documentElement.dataset.chat && !$("panel-chat").hidden;
+}
+// An unavailable policy module must still leave a readable answer. Without its
+// source classification, conservatively bound all prose, including source views.
+function cappedChatPayload(value) {
+  if (typeof value === 'string') {
+    const words = value.match(/\S+/gu) || [];
+    return words.length > 120 ? words.slice(0, 120).join(' ') + '…' : value;
+  }
+  if (Array.isArray(value)) return value.map(cappedChatPayload);
+  if (!value || typeof value !== 'object') return value;
+  const prose = ['answer', 'text', 'text_clean', 'body', 'snippet', 'passage', 'quote', 'quotes', 'evidence'];
+  const passage = prose.map(key => value[key]).find(v => typeof v === 'string' || Array.isArray(v) && v.every(item => typeof item === 'string'));
+  // Parallel fields and quote arrays are views of one bounded passage.
+  const excerpt = cappedChatPayload(Array.isArray(passage) ? passage.join(' ') : passage || '');
+  return Object.fromEntries(Object.entries(value).map(([key, val]) => [key,
+    key === 'citations' ? {} : ['answer_ranges', 'answerRanges'].includes(key) ? [] :
+    key === 'full_text_available' ? false :
+    prose.includes(key) && (typeof val === 'string' || Array.isArray(val) && val.every(item => typeof item === 'string'))
+      ? Array.isArray(val) ? [excerpt].filter(Boolean) : excerpt : cappedChatPayload(val)]));
+}
+async function chatPolicyReady(current = chatRestoreCurrent()) {
+  try { await saDisplayReady; } catch {
+    saFullTextFlag = 'false';
+    saDisplayHelpers = { saDisplayPayload: cappedChatPayload };
+  }
+  return current();
+}
+
+async function openSavedChat(id) {
+  const requested = ++chatRestoreRequest;
+  if (!await chatPolicyReady() || requested !== chatRestoreRequest) return;
   const store = chatStoreRead();
   const chat = store.chats.find((c) => c.id === id);
   if (!chat || chatBusy) return;
@@ -11347,6 +11436,7 @@ async function chatSyncPush() {
 // On opening the chat: pull the account's conversations and push any this
 // browser has that the account lacks or holds older. Last write wins.
 async function chatSyncPull() {
+  const current = chatRestoreCurrent();
   if (!(await chatAccount())) { renderChatHistory(); return; }
   let remote;
   try { remote = (await api("/api/community/chats")).chats || []; } catch { return; }
@@ -11371,8 +11461,10 @@ async function chatSyncPull() {
   }
   if (changed) {
     chatStoreWrite();
-    const active = activeChat(false);
-    if (active && active.thread !== chatThread && !chatBusy) { chatThread = active.thread; chatKind = active.kind; chatSpeaker = savedSpeaker(active); renderChatThread(); requestChatFollowups(); }
+    if (await chatPolicyReady(current)) {
+      const active = activeChat(false);
+      if (active && active.thread !== chatThread && !chatBusy) { chatThread = active.thread; chatKind = active.kind; chatSpeaker = savedSpeaker(active); renderChatThread(); requestChatFollowups(); }
+    }
   }
   renderChatHistory();
 }
@@ -11383,6 +11475,7 @@ async function chatSyncPull() {
 // conversation would be taking away the thing the dock exists to avoid. On
 // /chat the empty Ask box IS the fresh start, so that view still goes there.
 function startNewConversation() {
+  chatRestoreRequest++;
   chatAbort?.abort();
   chatFollowAbort?.abort();
   const store = chatStoreRead();
@@ -11407,7 +11500,10 @@ function startNewConversation() {
 $("chat-new")?.addEventListener("click", startNewConversation);
 $("dock-new")?.addEventListener("click", startNewConversation);
 
-function initChat(manageFocus) {
+async function initChat(manageFocus) {
+  const requested = ++chatRestoreRequest;
+  const current = chatRestoreCurrent();
+  if (!await chatPolicyReady(current) || requested !== chatRestoreRequest) return;
   if (!chatThread.length) loadChatSession();
   // The waiting state's pieces, warmed now so a question's first frame does
   // not wait on a module fetch.
@@ -11458,6 +11554,7 @@ function initChat(manageFocus) {
   // scroll the document to its end instead. Double-rAF so route()'s
   // scroll-to-top settles first.
   requestAnimationFrame(() => requestAnimationFrame(() => {
+    if (!current() || requested !== chatRestoreRequest) return;
     scrollChatToEnd();
     if (manageFocus) $("chat-input").focus({ preventScroll: true });
   }));
@@ -11944,6 +12041,10 @@ async function sendChat(question, carry) {
   const myAbort = new AbortController();
   chatAbort = myAbort;
   chatBusy = true;
+  if (!await chatPolicyReady() || chatAbort !== myAbort || myAbort.signal.aborted) {
+    if (chatAbort === myAbort) chatBusy = false;
+    return;
+  }
   // Everything before this question travels as context for the retrieval.
   // A user turn travels as the question the record was actually asked: the
   // money path's resolved question, or the Worker's standalone rewrite of a
@@ -12072,6 +12173,8 @@ async function sendChat(question, carry) {
       },
       delta(text) {
         if (!alive()) return;
+        // Without the policy helper, show only the bounded complete answer.
+        if (saDisplayHelpers?.saDisplayPayload === cappedChatPayload) return;
         if (!live) {
           liveWrap = document.createElement("div");
           liveWrap.className = "chat-turn chat-turn-answer answer-in";
@@ -12269,6 +12372,7 @@ function openDock() {
 
 function closeDock({ restoreFocus = true } = {}) {
   if (!dockOpen) return;
+  chatRestoreRequest++;
   dockOpen = false;
   document.documentElement.dataset.chat = "";
   if (!chatIsPage()) $("panel-chat").hidden = true;
@@ -15267,7 +15371,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=716454ddbb");
+    const { mountMoneyMap } = await import("/money-map.js?v=f0a9329cde");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",
@@ -15823,7 +15927,10 @@ fetch("/suggestions.json").then((r) => r.json()).then((s) => {
 // failed) is asked for again a minute later, under a fresh query so the
 // browser does not answer from its own copy. The tables say "Counting…" in
 // the meantime rather than "unavailable".
+let liveStatsStarted = false;
 function loadLiveStats(attempt = 0) {
+  if (!attempt && liveStatsStarted) return;
+  liveStatsStarted = true;
   aggregateApi(attempt ? `/api/stats?retry=${attempt}` : "/api/stats")
     .then((s) => {
       liveStats = s;
@@ -15848,7 +15955,6 @@ function loadLiveStats(attempt = 0) {
       else renderStatsLiveTables();
     });
 }
-loadLiveStats();
 
 // Legacy entry contract: /?ask=<question> (used by standalone map pages).
 {
