@@ -74,7 +74,7 @@ new_sandbox() {
            scripts/handbook_party_service.json scripts/roster_accept.json \
            parli/ingest/tvfy_refresh.py parli/ingest/honest_http.py parli/ingest/state_rosters.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
-           parli/__init__.py parli/arag.py parli/ingest/http.py parli/ingest/user-agent.json parli/ingest/__init__.py parli/ingest/speaker_names.py \
+           parli/__init__.py parli/arag.py parli/ingest/backfill_guard.py parli/ingest/http.py parli/ingest/user-agent.json parli/ingest/__init__.py parli/ingest/speaker_names.py \
            portal/wrangler.jsonc portal/public/corpus.json; do
     mkdir -p "$seed/$(dirname "$f")"
     cp "$SRC/$f" "$seed/$f" || { bad "cannot copy fixture dependency: $f"; exit 1; }
@@ -789,10 +789,17 @@ PYSTUB
 }
 refresh() { (cd "$RS" && "$RS/repo/scripts/daily_refresh.sh" >"$RS/out.txt" 2>&1); RRC=$?; }
 
-echo "== Senate backfill: off by default; errors and timeouts warn without failing daily refresh"
+echo "== Senate backfill: on by default; off/stop switches and failures preserve daily completion"
 new_refresh_sandbox senate-off
+OPAX_SENATE_BACKFILL=0 OPAX_ONLY=senate_backfill,federal_coverage refresh
+check "off skips acquisition but retains the coverage guard" bash -c "[ '$RRC' -eq 0 ] && ! grep -q parli.ingest.senate_backfill '$RS_CALLS' && grep -q scripts/federal_hansard_coverage.py '$RS_CALLS'"
+new_refresh_sandbox senate-on
 OPAX_ONLY=senate_backfill,federal_coverage refresh
-check "default off skips acquisition but retains the coverage guard" bash -c "[ '$RRC' -eq 0 ] && ! grep -q parli.ingest.senate_backfill '$RS_CALLS' && grep -q scripts/federal_hansard_coverage.py '$RS_CALLS'"
+check "default on runs acquisition and the coverage guard" bash -c "[ '$RRC' -eq 0 ] && grep -q parli.ingest.senate_backfill '$RS_CALLS' && grep -q scripts/federal_hansard_coverage.py '$RS_CALLS'"
+new_refresh_sandbox senate-stop
+touch "$HOME/.cache/autoresearch/pipeline/backfill.STOP"
+OPAX_ONLY=senate_backfill,federal_coverage refresh
+check "shared stop warns, skips acquisition and preserves coverage and daily completion" bash -c "[ '$RRC' -eq 0 ] && ! grep -q parli.ingest.senate_backfill '$RS_CALLS' && grep -q 'Backfill warnings: senate_backfill(shared-stop)' '$RS/out.txt' && grep -q scripts/federal_hansard_coverage.py '$RS_CALLS'"
 for repair_rc in 1 124 137; do
   new_refresh_sandbox "senate-warning-$repair_rc"
   OPAX_SENATE_BACKFILL=1 OPAX_ONLY=senate_backfill,federal_coverage FAIL_STEPS=senate_backfill FAIL_RC=$repair_rc refresh
@@ -1055,6 +1062,14 @@ for repair_rc in 1 124; do
   OPAX_TODAY=2026-10-12 FAKE_MODE=backfill FAKE_BACKFILL_RC=$repair_rc FAKE_WEEKLY_MODE=ok nightly
   check "persistent backfill rc=$repair_rc does not rerun completed monthly and FRL work" python3 -c "import json; s=json.load(open('$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json')); assert s['groups']['monthly']['last_attempt']=='2026-10-10' and s['groups']['frl']['last_attempt']=='2026-10-10', s"
 done
+new_sandbox senate-growth-stop
+mkdir -p "$HOME/.cache/autoresearch/pipeline"
+printf '{"reason":"cumulative KB growth exceeds 5.5 GB"}\n' > "$HOME/.cache/autoresearch/pipeline/backfill.STOP"
+printf '{"version":1,"bytes_added":5500000001,"resources_added":150000,"nights":{"2026-10-10":{"bytes_added":1,"resources_added":0}},"stages":{"senate":{"days_remaining":274,"cap":10}},"observations":[]}\n' > "$HOME/.cache/autoresearch/pipeline/backfill-ledger.json"
+OPAX_FORCE_GROUPS='weekly monthly frl' FAKE_WEEKLY_MODE=ok nightly
+check "growth stop alerts and publishes growth metrics while all periodic groups complete" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and not s[\"failures\"] and s[\"backfill_failures\"] and any(\"5.5 GB\" in w for w in s[\"warnings\"]), s; b=s[\"backfill\"]; assert b[\"cumulative_bytes_added\"]==5500000001 and b[\"cumulative_resources_added\"]==150000 and b[\"days_remaining\"]==274 and b[\"projected_finish_date\"] is None, b; assert all(\"due\" not in s[\"periodic_state\"][\"groups\"][g] for g in [\"weekly\",\"monthly\",\"frl\"]), s'"
+OPAX_TODAY=2026-10-12 FAKE_WEEKLY_MODE=ok nightly
+check "persistent growth stop does not repeat completed monthly or FRL acquisition" python3 -c "import json; s=json.load(open('$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json')); assert s['groups']['monthly']['last_attempt']=='2026-10-10' and s['groups']['frl']['last_attempt']=='2026-10-10', s"
 new_sandbox s24
 OPAX_TODAY=2026-09-21 FAKE_WEEKLY_MODE=ok nightly
 check "a Monday (2026-09-21): the periodic refresh is not called" test ! -e "$HOME/weekly.args"

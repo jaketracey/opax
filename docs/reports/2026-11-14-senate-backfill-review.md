@@ -1,5 +1,9 @@
 # Senate repair review fixes, 14 November 2026
 
+**Historical note-2 receipt.** Its failure isolation remains current, but
+the spending hold, two-day default and enabled coverage wording below are
+superseded by the [approved note-3 settings](2026-11-14-senate-backfill-approved.md).
+
 Rebased onto `origin/main` at `2445af686`. The coverage-watchdog lane is not
 on that base, so repair findings use their own warning list, independent of
 both fatal publication failures and the sibling lane's `COVERAGE_FAILURES`.
@@ -41,7 +45,7 @@ or procedural turns cannot clear a day while its publishable turns are
 held. The source-day/identity/citation rules and two-day/1,200-second
 enabled defaults are retained.
 
-[Enablement instructions](../operations/nightly-refresh.md#senate-2014-to-2018-repair-spending-hold)
+[Historical enablement instructions](../operations/nightly-refresh.md#senate-2014-to-2018-repair-approved-bounded-catch-up)
 require Jake's spend approval first. The estimate remains about US$22 to
 US$24 in model work plus about US$14/month list-price index overage for
 about 72.6k documents; Progress processing and contract overage remain

@@ -2,7 +2,7 @@
 
 New speech IDs are the existing arag_sync outbox. They are published by the
 following normal refresh, using its checkpoint, mapper and enrichment limits.
-This stage never calls the KB or D1. Standalone rehearsals require a scratch DB.
+This stage only reads KB counters. Standalone rehearsals require a scratch DB.
 """
 import argparse
 from contextlib import redirect_stdout
@@ -13,7 +13,6 @@ import json
 import math
 import os
 from pathlib import Path
-import signal
 import sqlite3
 import time
 import uuid
@@ -22,15 +21,14 @@ from scripts import vote_parties as parties
 from . import federal_backfill as backfill, openaustralia_xml as xml
 from . import http as source_http
 from . import senate_backfill_policy as policy
+from . import backfill_guard as growth
 from .honest_http import BudgetSpent, HonestHTTP, Refused
 from .speeches import load_modern_jsonl
 from .speaker_roles import chair_role
 
 MANIFEST = Path(__file__).resolve().parents[2] / 'data/manifests/senate-backfill-2014-2019.json'
 START, END = '2014-01-01', '2019-06-30'
-# Retain the spending default until Progress processing/overage is costed.
-# Time alone supports the existing ten-day maximum. See the report's spend check.
-DEFAULT_DAYS = 2
+DEFAULT_DAYS = 10
 DEFAULT_BUDGET = 1200
 # Cached normal sync: 76,905 speech acknowledgements / 8,606 seconds at ten
 # workers, rounded down. Includes the time spent on 318 news acknowledgements.
@@ -82,35 +80,27 @@ class DatedPeople:
 
 
 def configuration(max_days, budget):
-    if not 1 <= max_days <= 10:
-        raise ValueError('Senate max-days must be 1..10')
+    if max_days < 1:
+        raise ValueError('Senate max-days must be positive')
     if not math.isfinite(budget) or not 0 < budget <= 1200:
         raise ValueError('Senate budget-seconds must be positive and at most 1200')
 
 
-def check_readiness(deadline):
-    """Bound the existing client's backpressure waits as well as its sockets."""
-    began = time.monotonic()
-    previous = signal.getsignal(signal.SIGALRM)
-    timer = signal.getitimer(signal.ITIMER_REAL)
-    def spent(*_):
-        raise BudgetSpent('stage budget spent during enrichment-cap readiness')
-    signal.signal(signal.SIGALRM, spent)
-    signal.setitimer(signal.ITIMER_REAL, max(0.001, deadline - began))
-    try:
-        backfill.assert_enrichment_cap_ready()
-    finally:
-        signal.setitimer(signal.ITIMER_REAL, 0)
-        signal.signal(signal.SIGALRM, previous)
-        if timer[0]:
-            signal.setitimer(signal.ITIMER_REAL, max(0.001, timer[0] - (time.monotonic() - began)), timer[1])
+def guard_client():
+    from parli.arag import AragConfig, KbClient, load_dotenv
+    load_dotenv()
+    return KbClient(AragConfig.from_env())
 
 
 def run(db_path, stage, *, max_days=DEFAULT_DAYS, budget=DEFAULT_BUDGET,
-        manifest=MANIFEST, cache=None, offline=False, readiness=True):
+        manifest=MANIFEST, cache=None, offline=False):
     configuration(max_days, budget)
     began = time.monotonic()
     deadline = began + budget
+    guard = growth.Guard()
+    guard.ensure_running()
+    kb = guard_client()
+    guard.check(kb, 'senate')
     stage = Path(stage)
     stage.mkdir(parents=True, exist_ok=True)
     # Daily/nightly already hold their own locks. This additional lock prevents
@@ -120,10 +110,10 @@ def run(db_path, stage, *, max_days=DEFAULT_DAYS, budget=DEFAULT_BUDGET,
         if (stage / 'refused.json').exists():
             raise source_http.SourceRefused(xml.BASE, 'Senate backfill remains paused after a source refusal; review its retained receipt before resuming')
         return _run(db_path, stage, max_days, budget, manifest, cache, offline,
-                    readiness, began, deadline)
+                    guard, kb, began, deadline)
 
 
-def _run(db_path, stage, max_days, budget, manifest, cache, offline, readiness, began, deadline):
+def _run(db_path, stage, max_days, budget, manifest, cache, offline, guard, kb, began, deadline):
     available = backfill.source_days(manifest, ['senate'], START, END)
     total = len(available['senate'])
     archive = backfill.Archive(stage, cache, offline)
@@ -142,12 +132,11 @@ def _run(db_path, stage, max_days, budget, manifest, cache, offline, readiness, 
             missing, occupied, total = backfill.discover_days(db, available, START, END, 1000, ['senate'])
         report.update(missing_days_before=total, occupied_days_held=len(occupied),
                       discovery_seconds=time.monotonic() - began)
-        if readiness and missing:
-            check_readiness(deadline)
         with sqlite3.connect(db_path, timeout=1) as db:
             db.set_progress_handler(lambda: time.monotonic() >= local_deadline, 1000)
             backfill.ownership_schema(db)
-            # A single durable run retains the existing US$40 enrichment ceiling.
+            # Retain immutable insertion ownership. The sync maps both repairs
+            # to the separate shared US$30 Worker admission budget.
             run_id = policy.RUN_ID
             db.execute('INSERT OR IGNORE INTO oa_backfill_runs VALUES (?,?,?,?)', (run_id, START, END, 40))
             if tuple(db.execute('SELECT start,end,cap_usd FROM oa_backfill_runs WHERE run_id=?',
@@ -158,6 +147,8 @@ def _run(db_path, stage, max_days, budget, manifest, cache, offline, readiness, 
                 'SELECT date FROM oa_backfill_days WHERE run_id=? AND receipt IS NOT NULL', (run_id,))}
             candidates = [i for i in missing if i['date'] not in attempted]
             report['zero_row_days_held'] = len(missing) - len(candidates)
+            if not candidates and missing:
+                report['stop'] = 'identity-holds'
             if candidates:
                 report['sync_preparation_allowance_seconds'] = SYNC_PREPARATION_SECONDS
                 local_deadline = deadline - SYNC_PREPARATION_SECONDS
@@ -185,6 +176,7 @@ def _run(db_path, stage, max_days, budget, manifest, cache, offline, readiness, 
                 people = DatedPeople(xml.People(raw_people[0], raw_people[1:], db), parties.load_evidence(db=db))
                 report['setup_seconds'] = time.monotonic() - setup
             for item in candidates:
+                guard.ensure_running()
                 if len(report['days']) >= max_days:
                     report['stop'] = 'day-cap'
                     break
@@ -243,7 +235,11 @@ def _run(db_path, stage, max_days, budget, manifest, cache, offline, readiness, 
                     'publish_allowance_seconds': publish})
                 report['publish_allowance_seconds'] += publish
                 print(f"Senate backfill {day}: +{receipt['added']} rows; {len(report['days'])}/{max_days} days", flush=True)
+                if len(report['days']) % growth.CHECK_DAYS == 0:
+                    guard.check(kb, 'senate')
             report['days_left'] = total - sum(d['added'] > 0 for d in report['days'])
+        if report['days'] and len(report['days']) % growth.CHECK_DAYS:
+            guard.check(kb, 'senate')
     except BudgetSpent:
         report['stop'] = 'time-budget'
     except sqlite3.OperationalError as exc:
@@ -254,6 +250,9 @@ def _run(db_path, stage, max_days, budget, manifest, cache, offline, readiness, 
         report['stop'] = 'source-refused'
         xml.atomic(stage / 'refused.json', json.dumps({'source': xml.BASE,
             'reason': getattr(exc, 'reason', str(exc)), 'checked_at': datetime.now(timezone.utc).isoformat()}) + '\n')
+        raise
+    except growth.Stopped as exc:
+        report.update(stop='growth-guard', error=str(exc))
         raise
     except Exception as exc:
         report.update(stop='error', error=str(exc))
@@ -267,6 +266,8 @@ def _run(db_path, stage, max_days, budget, manifest, cache, offline, readiness, 
         report['source_cache_hits'] = archive.hits
         report['finished'] = datetime.now(timezone.utc).isoformat()
         xml.atomic(stage / 'report.json', json.dumps(report, indent=2) + '\n')
+        guard.progress('senate', remaining=report['days_left'], cap=max_days,
+                       stop=report['stop'], done=len(report['days']))
         print(f"Senate backfill: {len(report['days'])} days done, {report['days_left']} missing days left; "
               f"+{report['added']} rows; stop={report['stop']}; {report['elapsed_seconds']:.2f}s; "
               f"normal-sync publication allowance {report['publish_allowance_seconds']:.1f}s "
@@ -285,7 +286,7 @@ def main():
     ap.add_argument('--budget-seconds', type=float, default=float(os.environ.get('OPAX_SENATE_BACKFILL_BUDGET_SECONDS', DEFAULT_BUDGET)))
     args = ap.parse_args()
     if not policy.enabled():
-        print('Senate backfill disabled: spend approval pending (OPAX_SENATE_BACKFILL=0)')
+        print('Senate backfill disabled (OPAX_SENATE_BACKFILL=0)')
         return
     try:
         run(args.db, args.stage, max_days=args.max_days, budget=args.budget_seconds,

@@ -54,7 +54,7 @@ def manifest():
             {"name": "AEC donations (27+ industries classified)", "docs": 199233, "coverage": "1998–2026"},
         ],
         "refresh": {
-            "senate_backfill_enabled": False,
+            "senate_backfill_enabled": True,
             "checked_at": "2026-09-21T00:00:00+00:00",
             "bills_registry": 40, "current_parliament_bills": 10, "latest_bill_introduced": "2026-09-01",
             "latest_nsw_release": "2026-09-20",
@@ -82,7 +82,7 @@ class ParseLog(unittest.TestCase):
     def test_backfill_enablement_follows_current_operator_flag_even_with_old_coverage(self):
         previous = manifest()
         previous['refresh'].update(senate_backfill_enabled=True, federal_hansard_coverage={'empty_senate_years': [2014]})
-        for value, enabled in [(None, False), ('0', False), ('1', True)]:
+        for value, enabled in [(None, True), ('0', False), ('1', True)]:
             with self.subTest(value=value), patch.dict('os.environ', {}, clear=True):
                 if value is not None:
                     import os

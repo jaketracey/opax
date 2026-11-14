@@ -1,11 +1,11 @@
 # Senate Hansard catch-up, 14 November 2026
 
-**Current spend hold, note-2:** acquisition and normal-sync publication ship
-off by default (`OPAX_SENATE_BACKFILL=0`). Jake has not approved the KB spend.
-The enabled stage retains its two-day cap and 1,200-second budget. See the
-[enablement instructions](../operations/nightly-refresh.md#senate-2014-to-2018-repair-spending-hold).
-The dates below are earlier capacity scenarios; there is no completion date
-until the first enabled night is known.
+**Superseded scheduling and spend settings:** Jake approved the bounded
+spend at 13:10 on 14 November. Note-3 defaults on at ten days/night with a
+shared growth stop, a 1,200-second budget and a US$30 shared Worker ceiling.
+See the [current report](2026-11-14-senate-backfill-approved.md) and
+[runbook](../operations/nightly-refresh.md#senate-2014-to-2018-repair-approved-bounded-catch-up).
+The two-day dates and spending hold below are historical note-2 evidence.
 
 This implements plan A from the Hansard gaps audit for Senate sittings from
 1 January 2014 to 30 June 2019. The main site has no Senate search results for

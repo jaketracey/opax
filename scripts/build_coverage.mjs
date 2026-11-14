@@ -29,8 +29,7 @@ export function senateGapNote(corpus) {
     if (last && last[1] + 1 === year) last[1] = year;
     else runs.push([year, year]);
   }
-  const state = corpus.refresh?.senate_backfill_enabled === true ? 'is being added' : 'is not yet held';
-  return runs.length ? `Senate Hansard for ${runs.map(([a, b]) => a === b ? a : `${a} to ${b}`).join(', ')} ${state}.` : '';
+  return runs.length ? `Senate Hansard for ${runs.map(([a, b]) => a === b ? a : `${a} to ${b}`).join(', ')} is not yet held.` : '';
 }
 
 /** Read published snapshots, never fetch publishers or open private build inputs.

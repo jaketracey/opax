@@ -47,6 +47,14 @@ run_step() {
   if [ -n "${ONLY:-}" ] && ! printf ',%s,' "$ONLY" | grep -q ",$name,"; then
     return 0
   fi
+  case "$name" in
+    senate_backfill|nsw_backfill|nsw_hansard_backfill)
+      if [ -f "${OPAX_BACKFILL_STATE_DIR:-$PIPE}/backfill.STOP" ]; then
+        BACKFILL_FAILURES+=("$name(shared-stop)")
+        log "[$name] WARNING: shared backfill.STOP exists; acquisition held"
+        return 3
+      fi ;;
+  esac
   local before after rc t0 dur delta status
   before=$(count "$sql")
   t0=$(date +%s)

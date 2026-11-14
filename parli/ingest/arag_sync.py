@@ -37,6 +37,8 @@ from typing import Any, Iterator, Optional
 from parli.arag import AragConfig, AragError, KbClient, load_dotenv
 from parli.ingest.speaker_roles import chair_role, chair_party_sql
 from parli.ingest import senate_backfill_policy as senate_policy
+from parli.ingest import backfill_guard as growth
+from itertools import groupby
 from parli.ingest.speech_hygiene import (
     clean_party,
     clean_speaker_name,
@@ -208,7 +210,7 @@ def map_speech(row: sqlite3.Row) -> dict:
         party = None
     witness_position = _optional_column(row, "witness_position")
     witness_organisation = _optional_column(row, "witness_organisation")
-    return {
+    body = {
         "slug": f"speech-{row['speech_id']}",
         "title": (" — ".join(title_bits) or f"Speech {row['speech_id']}")[:2000],
         "texts": _texts(clean_body),
@@ -249,6 +251,8 @@ def map_speech(row: sqlite3.Row) -> dict:
             }
         },
     }
+    stage = growth.stage_for(body)
+    return growth.tag(body, stage) if stage else body
 
 
 def map_legal(row: sqlite3.Row) -> dict:
@@ -321,17 +325,37 @@ def save_state(state: dict) -> None:
 # ---------------------------------------------------------------------------
 
 
-def _push_one(kb: KbClient, body: dict) -> tuple[str, Optional[str]]:
+def _push_one(kb: KbClient, body: dict, guard=None, deadline=None) -> tuple[str, Optional[str]]:
     """Returns (slug, error). A 409 slug conflict counts as already-done."""
-    budget = body.get('extra', {}).get('metadata', {}).get('enrichment_budget', {})
-    if budget.get('run_id') == senate_policy.RUN_ID and not senate_policy.enabled():
-        return body['slug'], senate_policy.SPEND_HOLD
+    stage = growth.stage_for(body)
+    if stage and not growth.enabled(stage):
+        return body['slug'], growth.HOLD + f'{stage} disabled'
     try:
-        kb.create_resource(body)
+        if stage:
+            if deadline is not None and time.monotonic() >= deadline:
+                return body['slug'], growth.HOLD + 'normal-sync backfill time budget spent; resumes next night'
+            growth.tag(body, stage)
+            if guard is None:
+                guard = growth.Guard()
+                guard.check(kb, stage + '-sync')
+            guard.ensure_running()
+            with guard.request_scope():
+                kb.create_resource(body)
+        else:
+            kb.create_resource(body)
         return body["slug"], None
+    except growth.Stopped as exc:
+        return body['slug'], growth.HOLD + str(exc)
     except AragError as e:
         if e.status == 409:
             return body["slug"], None
+        if stage:
+            # Also covers injected clients which raise without _request.
+            try:
+                guard.response(e.status, e.detail)
+            except growth.Stopped as exc:
+                return body['slug'], growth.HOLD + str(exc)
+            return body['slug'], growth.HOLD + f'Progress HTTP {e.status}; retry next night'
         return body["slug"], f"{e.status}: {e.detail[:200]}"
 
 
@@ -347,33 +371,95 @@ def _batches(db: sqlite3.Connection, spec: dict, after: int, remaining: int,
         remaining -= len(rows)
 
 
-def _push_batch(kb, bodies, tstate):
+class BackfillPublication:
+    """Counters bracket normal sync too, including queued/retried old IDs.
+
+    Acquisition order keeps a chamber-day contiguous across batches. Check at
+    the next day's boundary after ten days, and at the end even for short runs.
+    """
+    def __init__(self, kb):
+        self.kb, self.guard = kb, growth.Guard()
+        self.stages, self.day, self.days = set(), None, 0
+        self.deadline = None
+
+    def before(self, stage, day):
+        if not stage or not growth.enabled(stage):
+            return
+        self.guard.ensure_running()
+        if self.deadline is None:
+            try:
+                seconds = float(os.environ.get('OPAX_SENATE_BACKFILL_BUDGET_SECONDS', '1200'))
+            except ValueError:
+                raise growth.Stopped('invalid backfill publication budget') from None
+            if not 0 < seconds <= 1200:
+                raise growth.Stopped('invalid backfill publication budget; must be 1..1200 seconds')
+            self.deadline = time.monotonic() + seconds
+        if time.monotonic() >= self.deadline:
+            raise growth.Stopped('normal-sync backfill time budget spent; resumes next night')
+        key = (stage, day)
+        if stage not in self.stages or (key != self.day and self.days >= growth.CHECK_DAYS):
+            self.guard.check(self.kb, stage + '-sync')
+            self.stages.add(stage)
+            self.days = 0
+        if key != self.day:
+            self.days += 1
+            self.day = key
+
+    def finish(self):
+        if self.stages:
+            try:
+                self.guard.check(self.kb, 'normal-sync-end')
+            except growth.Stopped as exc:
+                print(growth.HOLD + str(exc), file=sys.stderr)
+
+
+def _push_pool(kb, bodies, tstate, guard=None, deadline=None):
     with ThreadPoolExecutor(max_workers=WORKERS) as pool:
-        futures = [pool.submit(_push_one, kb, body) for body in bodies]
+        futures = [pool.submit(_push_one, kb, body, guard, deadline) for body in bodies]
         for fut in as_completed(futures):
             slug, err = fut.result()
             if err:
                 tstate['failed'][slug] = err
-                print(f'  HOLD {slug}: {err}' if err == senate_policy.SPEND_HOLD else f'  FAIL {slug}: {err}',
+                print(f'  HOLD {slug}: {err}' if err.startswith(growth.HOLD) else f'  FAIL {slug}: {err}',
                       file=sys.stderr)
             else:
                 tstate['pushed'] += 1
                 tstate['failed'].pop(slug, None)
 
 
+def _push_batch(kb, bodies, tstate, publication=None):
+    publication = publication or BackfillPublication(kb)
+    def cohort(body):
+        stage = growth.stage_for(body)
+        meta = body.get('extra', {}).get('metadata', {})
+        labels = body.get('usermetadata', {}).get('classifications', [])
+        chamber = next((c['label'] for c in labels if c['labelset'] == 'chamber'), '')
+        return (stage, (chamber, meta.get('date'))) if stage else (None, None)
+    for (stage, day), group in groupby(bodies, cohort):
+        group = list(group)
+        try:
+            publication.before(stage, day)
+        except growth.Stopped as exc:
+            for body in group:
+                tstate['failed'][body['slug']] = growth.HOLD + str(exc)
+            continue
+        _push_pool(kb, group, tstate, publication.guard, publication.deadline)
+
+
 def sync_table(kb: KbClient, db: sqlite3.Connection, table: str, spec: dict,
                state: dict, limit: int, dry_run: bool, since: str) -> None:
     tstate = state["tables"].setdefault(table, {"after": 0, "pushed": 0, "failed": {}})
     after = tstate["after"]
+    publication = BackfillPublication(kb) if not dry_run else None
     print(f"[{table}] resuming after {spec['pk']}={after}, "
           f"{tstate['pushed']:,} already pushed, {len(tstate['failed'])} failed")
 
     # The normal checkpoint may pass held Senate IDs while ordinary speeches
     # continue. Keep those IDs in the existing retry outbox, and release only
     # spending holds through this same worker pool when explicitly enabled.
-    if table == 'speeches' and not dry_run and senate_policy.enabled():
+    if table == 'speeches' and not dry_run:
         held = [slug for slug, error in tstate['failed'].items()
-                if error == senate_policy.SPEND_HOLD][:limit]
+                if error == senate_policy.SPEND_HOLD or error.startswith(growth.HOLD)][:limit]
         for offset in range(0, len(held), 200):
             bodies = []
             for slug in held[offset:offset + 200]:
@@ -383,7 +469,7 @@ def sync_table(kb: KbClient, db: sqlite3.Connection, table: str, spec: dict,
                     tstate['failed'].pop(slug, None)
                 else:
                     bodies.append(spec['map'](row))
-            _push_batch(kb, bodies, tstate)
+            _push_batch(kb, bodies, tstate, publication)
             save_state(state)
         limit -= len(held)
 
@@ -396,7 +482,7 @@ def sync_table(kb: KbClient, db: sqlite3.Connection, table: str, spec: dict,
                 print(f"  DRY {b['slug']:20s} {size:>9,} chars  {b['title'][:70]!r}")
             return
 
-        _push_batch(kb, bodies, tstate)
+        _push_batch(kb, bodies, tstate, publication)
 
         tstate["after"] = rows[-1][0] if spec["pk"] == "rowid" else rows[-1][spec["pk"]]
         save_state(state)
@@ -404,11 +490,14 @@ def sync_table(kb: KbClient, db: sqlite3.Connection, table: str, spec: dict,
         if done and done % 1000 < len(rows):
             print(f"[{table}] {done:,} pushed (checkpoint {spec['pk']}={tstate['after']})")
 
+    if publication:
+        publication.finish()
     save_state(state)
     print(f"[{table}] done: {tstate['pushed']:,} pushed, {len(tstate['failed'])} failed")
 
 
 def retry_failed(kb: KbClient, db: sqlite3.Connection, state: dict) -> None:
+    publication = BackfillPublication(kb)
     for table, spec in TABLES.items():
         tstate = state["tables"].get(table)
         if not tstate or not tstate["failed"]:
@@ -428,13 +517,23 @@ def retry_failed(kb: KbClient, db: sqlite3.Connection, state: dict) -> None:
             if row is None:
                 tstate["failed"].pop(slug)
                 continue
-            _, err = _push_one(kb, spec["map"](row))
+            body = spec['map'](row)
+            stage = growth.stage_for(body)
+            meta = body.get('extra', {}).get('metadata', {})
+            chamber = next((c['label'] for c in body.get('usermetadata', {}).get('classifications', [])
+                            if c['labelset'] == 'chamber'), '')
+            try:
+                publication.before(stage, (chamber, meta.get('date')))
+                _, err = _push_one(kb, body, publication.guard, publication.deadline)
+            except growth.Stopped as exc:
+                err = growth.HOLD + str(exc)
             if err is None:
                 tstate["pushed"] += 1
                 tstate["failed"].pop(slug)
             else:
                 tstate["failed"][slug] = err
         save_state(state)
+    publication.finish()
 
 
 # ---------------------------------------------------------------------------

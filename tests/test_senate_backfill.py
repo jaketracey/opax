@@ -2,12 +2,12 @@
 import json
 from pathlib import Path
 import sqlite3
-import signal
 
 import pytest
 
 from parli.ingest import senate_backfill as B, federal_backfill as F, openaustralia_xml as X
 from parli.ingest import arag_sync as S, senate_backfill_policy as policy
+from parli.ingest import backfill_guard as G
 from parli.ingest.honest_http import BudgetSpent, HonestHTTP, Refused
 from scripts.federal_hansard_coverage import alerts, measure
 from scripts import vote_parties as P
@@ -17,6 +17,11 @@ from test_federal_backfill import args
 @pytest.fixture(autouse=True)
 def isolated_source_receipts(tmp_path, monkeypatch):
     monkeypatch.setenv('OPAX_SOURCE_STATUS_FILE', str(tmp_path / 'source-access.json'))
+    monkeypatch.setenv('OPAX_BACKFILL_STATE_DIR', str(tmp_path / 'pipeline'))
+    class KB:
+        def counters(self):
+            return {'index_size': 1000, 'resources': 10}
+    monkeypatch.setattr(B, 'guard_client', KB)
 
 
 def fixture(tmp_path, monkeypatch, days=('2014-02-11', '2018-02-12', '2019-02-12')):
@@ -62,25 +67,27 @@ def test_backfill_cli_defaults_include_2014(monkeypatch):
     assert captured == [('2014-01-01', '2025-12-31')]
 
 
-def test_stage_cli_is_off_without_explicit_enablement(monkeypatch):
-    monkeypatch.delenv('OPAX_SENATE_BACKFILL', raising=False)
+def test_stage_cli_is_on_by_default_with_one_off_switch(monkeypatch):
+    monkeypatch.setenv('OPAX_SENATE_BACKFILL', '0')
     monkeypatch.setattr('sys.argv', ['senate_backfill', '--db', '/unused', '--stage', '/unused'])
     monkeypatch.setattr(B, 'run', lambda *a, **kw: pytest.fail('disabled CLI must not acquire or insert'))
     B.main()
     calls = []
-    monkeypatch.setenv('OPAX_SENATE_BACKFILL', '1')
+    monkeypatch.delenv('OPAX_SENATE_BACKFILL', raising=False)
     monkeypatch.setattr(B, 'run', lambda *a, **kw: calls.append(kw))
     B.main()
-    assert calls[0]['max_days'] == 2 and calls[0]['budget'] == 1200
+    assert calls[0]['max_days'] == 10 and calls[0]['budget'] == 1200
 
 
 def test_disabled_sync_holds_old_queued_ids_and_releases_them_after_checkpoint(tmp_path, monkeypatch):
     a, manifest = fixture(tmp_path, monkeypatch, ('2014-02-11',))
     run(a, manifest)
-    monkeypatch.delenv('OPAX_SENATE_BACKFILL', raising=False)
+    monkeypatch.setenv('OPAX_SENATE_BACKFILL', '0')
     monkeypatch.setattr(S, 'STATE_PATH', tmp_path / 'sync-state.json')
     created = []
     class KB:
+        def counters(self):
+            return {'index_size': 1000, 'resources': 10}
         def create_resource(self, body):
             created.append(body['slug'])
     with sqlite3.connect(a.db) as db:
@@ -96,7 +103,7 @@ def test_disabled_sync_holds_old_queued_ids_and_releases_them_after_checkpoint(t
         sync()
         assert created == [f'speech-{ordinary}']
         held = state['tables']['speeches']['failed']
-        assert len(held) == 2 and set(held.values()) == {policy.SPEND_HOLD}
+        assert len(held) == 2 and set(held.values()) == {G.HOLD + 'senate disabled'}
         assert state['tables']['speeches']['after'] == ordinary
         assert measure(db, sync_state=state)['backfill_pending_days_by_year']['2014'] == 63
         S.retry_failed(KB(), db, state)
@@ -142,14 +149,16 @@ def test_budget_stops_before_first_fetch_and_resumes(tmp_path, monkeypatch):
     assert run(a, manifest, max_days=1)['added'] == 4
 
 
-def test_readiness_wait_obeys_stage_budget_and_restores_alarm(tmp_path, monkeypatch):
+def test_enrichment_readiness_does_not_hold_acquisition_or_sync(tmp_path, monkeypatch):
     a, manifest = fixture(tmp_path, monkeypatch)
-    previous = signal.getsignal(signal.SIGALRM)
-    monkeypatch.setattr(F, 'assert_enrichment_cap_ready', lambda: signal.raise_signal(signal.SIGALRM))
+    monkeypatch.setattr(F, 'assert_enrichment_cap_ready', lambda: pytest.fail('enrichment must be asynchronous'))
     receipt = run(a, manifest)
-    assert receipt['stop'] == 'time-budget' and receipt['added'] == 0
-    assert signal.getsignal(signal.SIGALRM) == previous
-    assert signal.getitimer(signal.ITIMER_REAL)[0] == 0
+    assert receipt['added'] > 0
+    with X.read_only(a.db) as db:
+        db.row_factory = sqlite3.Row
+        body = S.map_speech(db.execute('SELECT * FROM speeches WHERE enrichment_run_id IS NOT NULL').fetchone())
+    assert body['extra']['metadata']['enrichment_budget'] == {'run_id': G.ORIGIN, 'max_usd': 30}
+    assert {'labelset': 'origin', 'label': 'backfill-2026-11'} in body['usermetadata']['classifications']
 
 
 def test_budget_accounts_for_publication_and_stops_between_days(tmp_path, monkeypatch):
@@ -250,7 +259,7 @@ def test_unknown_speakers_are_held_and_occupied_other_source_is_untouched(tmp_pa
         assert db.execute("SELECT COUNT(*) FROM speeches WHERE gid='unknown-fixture'").fetchone()[0] == 0
 
 
-@pytest.mark.parametrize('cap,budget', [(0, 1200), (11, 1200), (2, 0), (2, 1201), (2, float('nan'))])
+@pytest.mark.parametrize('cap,budget', [(0, 1200), (-1, 1200), (2, 0), (2, 1201), (2, float('nan'))])
 def test_invalid_caps_and_budgets_reject(cap, budget):
     with pytest.raises(ValueError):
         B.configuration(cap, budget)
@@ -321,6 +330,6 @@ def test_nightly_wires_stage_after_normal_refresh_and_before_coverage():
     assert shell.index('run_step arag_sync') < shell.index('run_step senate_backfill') < shell.index('run_step federal_coverage')
     assert 'nice -n 10 "$PY" -m parli.ingest.senate_backfill' in shell
     assert 'federal source refused during normal refresh' in shell
-    assert '${OPAX_SENATE_BACKFILL:-0}' in shell
+    assert '${OPAX_SENATE_BACKFILL:-1}' in shell
     assert 'BACKFILL_STEPS=",senate_backfill,federal_coverage,"' in shell
-    assert B.DEFAULT_DAYS == 2 and B.DEFAULT_BUDGET == 1200
+    assert B.DEFAULT_DAYS == 10 and B.DEFAULT_BUDGET == 1200

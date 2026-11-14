@@ -177,7 +177,7 @@ jobs:
       - name: Test Senate ingest and publication holds
         run: >-
           nice -n 10 uv run --frozen --with pytest pytest -q
-          tests/test_senate_backfill.py tests/test_federal_backfill.py
+          tests/test_senate_backfill.py tests/test_backfill_guard.py tests/test_federal_backfill.py
           tests/test_openaustralia_xml.py tests/test_vote_parties.py
           scripts/test_roster_identity.py scripts/test_refresh_watchdog.py
           scripts/test_update_corpus_manifest.py parli/tests/test_speech_hygiene.py

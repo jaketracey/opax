@@ -1,11 +1,11 @@
 # Senate backfill sync and spend review, 14 November 2026
 
-**Note-2 spending hold:** the stage and publication of queued repair rows
-now ship off by default (`OPAX_SENATE_BACKFILL=0`). The two-day cap below
-applies only when enabled after Jake's spend approval. Public coverage says
-"Senate Hansard for 2014 to 2018 is not yet held." The dated schedules below
-are timing scenarios, not an active schedule. See the
-[enablement instructions](../operations/nightly-refresh.md#senate-2014-to-2018-repair-spending-hold).
+**Historical note-1/2 spend evidence:** Jake approved the bounded spend at
+13:10 on 14 November. Current defaults are on, ten days and 1,200 seconds,
+with a shared growth guard and US$30 Worker ceiling. See the
+[note-3 report](2026-11-14-senate-backfill-approved.md) and
+[runbook](../operations/nightly-refresh.md#senate-2014-to-2018-repair-approved-bounded-catch-up).
+The two-day settings and spending hold below are superseded.
 
 The retained normal speech sync measured **8.94 to 18.61 successful speech
 acknowledgements per second with 10 workers**. The backfill now reserves at
