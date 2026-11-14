@@ -19,6 +19,7 @@ import {
   reportSlug,
   reportType,
 } from '../../api/report-decoders';
+import { wordCount } from '../../api/short-turn';
 
 const kind = matching(/^[a-z][a-z_]*$/);
 const localHref = matching(/^\/(?!\/)[^\s\\]*$/);
@@ -55,6 +56,8 @@ const recordShape = shape({
   year: optional(nonempty),
   citation: optional(decodeReportCitation),
   source_url: optional(url),
+  // Words in the turn; absent, null or malformed reads as unknown.
+  word_count: wordCount,
 });
 export function decodeRecord(value: unknown) {
   const row = recordShape(value);

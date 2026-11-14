@@ -1873,6 +1873,48 @@ describe('record list', () => {
     await act(async () => r.unmount());
   });
 
+  test('a short speech turn left out of the brief batch shows its own passage, never an empty row', async () => {
+    const rid = (n: number) => String(n).repeat(32);
+    jest.mocked(peopleDepth.list).mockResolvedValueOnce({
+      records: result(
+        decodeRecords({
+          results: [
+            {
+              slug: 'speech-fixture-short',
+              title: 'Fixture short turn',
+              kind: 'speech',
+              resource: rid(1),
+              word_count: 24,
+              snippet: 'The fixture member asked a brief question.',
+            },
+            {
+              slug: 'speech-fixture-long',
+              title: 'Fixture long speech',
+              kind: 'speech',
+              resource: rid(2),
+              word_count: 900,
+              snippet: 'A long fixture passage.',
+            },
+          ],
+        }),
+      ),
+      // What PeopleDepth returns: no brief was asked for the short turn.
+      briefs: { [rid(2)]: 'A fixture machine brief.' },
+    });
+    const r = await list('speeches');
+    const excerpt = (i: number) =>
+      r.root.find(
+        (n) =>
+          n.props.testID === `record-list-row-${i}` &&
+          n.props.excerpt !== undefined,
+      ).props.excerpt;
+    expect(excerpt(0)).toEqual({
+      text: 'The fixture member asked a brief question.',
+    });
+    expect(excerpt(1)).toEqual({ text: 'A fixture machine brief.' });
+    await act(async () => r.unmount());
+  });
+
   test('news is not available yet: no read, and no Try again that cannot work', async () => {
     const r = await list('news');
     expect(peopleDepth.list).not.toHaveBeenCalled();

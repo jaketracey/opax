@@ -1,6 +1,8 @@
 import { throwIfAborted } from '../../api/abort';
 import type { ApiClient } from '../../api/client';
+import { briefRids, type ShownPassage } from '../../api/short-turn';
 import {
+  cleanPassage,
   decodeAccess,
   decodeBriefs,
   decodeFunding,
@@ -43,7 +45,11 @@ export class PeopleDepth {
       decodeRecords,
       { signal },
     );
-    const briefs = await this.briefs(records.data.results, signal);
+    const briefs = await this.briefs(
+      records.data.results,
+      signal,
+      cleanPassage,
+    );
     return { records, briefs };
   }
   async mentions(name: string, briefs = false, signal?: AbortSignal) {
@@ -89,7 +95,12 @@ export class PeopleDepth {
       decodeRecords,
       { signal },
     );
-    const briefs = await this.briefs(records.data.results, signal);
+    // The list shows a speech's cleaned passage, a mention's plain one.
+    const briefs = await this.briefs(
+      records.data.results,
+      signal,
+      kind === 'speeches' ? cleanPassage : undefined,
+    );
     return { records, briefs };
   }
   async news(signal?: AbortSignal) {
@@ -101,14 +112,10 @@ export class PeopleDepth {
   private async briefs(
     rows: ReturnType<typeof decodeRecords>['results'],
     signal?: AbortSignal,
+    passage?: ShownPassage,
   ) {
-    const rids = [
-      ...new Set(
-        rows
-          .map((r) => r.resource)
-          .filter((r): r is string => !!r && /^[a-f0-9]{32}$/.test(r)),
-      ),
-    ];
+    // A known short speech turn shows its own passage, never a brief.
+    const rids = briefRids(rows, passage);
     if (!rids.length) return {};
     try {
       return (

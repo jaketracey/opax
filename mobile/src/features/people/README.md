@@ -23,6 +23,11 @@ cache and keep their saved-copy notices.
 | `/api/brief?rids=…`                                  | Show speeches or Party mentions, one batch  | 0 if no valid resource IDs; otherwise 1 | 0 after success       |
 | `/api/news`                                          | Show news on Person or Party                | 1 shared by both                        | 0                     |
 
+The brief batch also leaves out known short speech turns
+(`isShortSpeechTurn` in `src/api/short-turn.ts`: kind `speech`, `word_count`
+under 80; an absent or null count keeps the brief). Such a row shows its
+passage, as any row without a brief does.
+
 This lane does not add person joins: inputs are the guarded profile identity,
 party pages retain `partyMembers` and the party-status trap, and result speakers,
 meeting attendees, diary organisations, lobbyists and creditors are plain text.
