@@ -69,3 +69,28 @@ def test_hoods_primary_start_precedes_his_exact_print_without_borrowing_dennis_h
     assert hood['record_id'] == 1193228
     accept = json.loads((ROOT / 'scripts/roster_accept.json').read_text())
     assert accept['new']['Benjamin Hood']['service']['start'] == '2023-03-07' <= hood['date']
+
+
+def test_reviewed_dated_house_identities_hold_their_own_corpus_bounds():
+    """Row 179's resolved Dickson and Cunningham records bound their own member, not the namesake's id."""
+    bounds = {(b['actor'], b['chamber']): b for b in
+              json.loads((ROOT / 'scripts/roster_corpus_bounds.json').read_text())['bounds']}
+    review = json.loads((ROOT / 'scripts/roster_period_exceptions.json').read_text())
+    dickson = bounds[('pid:person_efb744ffb3a25d578e592281', 'representatives')]
+    assert (dickson['date'], dickson['record_id']) == ('1998-03-02', 5)
+    assert bounds[('pid:person_9c02d321caef54b2ba21a1f8', 'representatives')]['record_id'] == 73570
+    # The Casey and Fiona Martin ids keep no Dickson or Cunningham record, so no namesake allowance remains.
+    assert bounds[('pid:10592', 'representatives')]['date'] > '1998-10-03'
+    assert bounds[('pid:10937', 'representatives')]['date'] > '2002-08-16'
+    assert not [e for e in review['exceptions'] if e['reason'] == 'known-corpus-namesake'
+                and e['actor'] in ('pid:10592', 'pid:10937')]
+
+
+def test_a_partial_party_history_is_a_later_period_inside_the_service_it_was_read_from():
+    """Dib's Labor from 2023 and Williams's Liberal from 2020 do not claim first entry to the Assembly."""
+    periods = {p['key']: p for p in inventory()['periods']}
+    exceptions = {e['key']: e for e in json.loads((ROOT / 'scripts/roster_period_exceptions.json').read_text())['exceptions']}
+    for key, service in [('roster/Jihad Dib/affiliations/0', 'party-evidence/Q19872872/nsw_la/2015-03-28'),
+                         ('roster/Leslie Williams/affiliations/0', 'party-evidence/Q6531238/nsw_la/2011-03-26')]:
+        assert periods[service]['kind'] == 'party-evidence-service'
+        assert (exceptions[key]['reason'], exceptions[key]['earlier_period']) == ('later-period', service)
