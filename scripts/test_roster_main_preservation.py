@@ -32,7 +32,7 @@ class MainPreservationTests(unittest.TestCase):
         result=audit.audit(self.main,self.shipped,self.reference,self.reviewed)
         self.assertEqual(result['counts']['clean record changed'],0)
         self.assertEqual(result['counts'],{'witness split':16,'mix-up corrected':17,'witness-dominated':115,
-                                         'spans parliaments':108,'alias normalisation':11,'print folded':103,
+                                         'spans parliaments':108,'alias normalisation':11,'print folded':104,
                                          'id folded':57,'clean record changed':0})
         changed={r['name'] for r in result['changes']}
         _,merged=audit.folds(self.main,self.shipped,self.reference)
@@ -145,6 +145,7 @@ class MainPreservationTests(unittest.TestCase):
         # Only surname prints without a recorded seat fold, so they retire or rewrite no roster-profile record. Rows
         # that shared a verified id are one person: the duplicate records of the folded spellings retire (the next
         # publish_grants_research run). The person keeps the release's public name, so no record moves or is added.
+        # The NSW spelling twin "Jodi Mckay" is one full name with Jodi McKay's seat: its duplicate record retires too.
         research=json.loads((profiles.PUBLIC/'research/mlci.json').read_text())
         _,merged,by_id=audit._folds(self.main,self.shipped,self.reference)
         unfolded=[p for p in self.shipped if p['name'] not in merged]+[self.old[n] for n in merged]
@@ -156,8 +157,8 @@ class MainPreservationTests(unittest.TestCase):
         added=sorted(title(after[k]) for k in after.keys()-before.keys())
         self.assertEqual([k for k in before.keys()&after.keys() if before[k]!=after[k]],[])
         self.assertEqual(retired,sorted(["Yvette D'Ath",'Ken O’Dowd','Gavan O’Connor','Bert van Manen',
-                                         'Kelly O’Dwyer','Brendan O’Connor']))
-        self.assertTrue(set(retired)<=by_id)
+                                         'Kelly O’Dwyer','Brendan O’Connor','Jodi Mckay']))
+        self.assertTrue(set(retired)-{'Jodi Mckay'}<=by_id)
         self.assertEqual(added,[])
 
     def test_transcript_counts_scopes_dates_and_verified_numeric_ids_are_unchanged(self):

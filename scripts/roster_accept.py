@@ -405,6 +405,11 @@ def group_problem(name, group, evidence, row, curated, roster=True, root=ROOT):
             from scripts.roster_party_gaps import own_dates
             if own_dates(row, group):
                 continue
+        if why == "a folded person" and ev.get("rule") == "profile-party-service":
+            # A spelling-twin fold is one full name; the rule above verified it against the person's own row.
+            from scripts.roster_party_gaps import twin_prints
+            if twin_prints(row):
+                continue
         if why == "a neutral namesake" and ev.get("rule") == "profile-party-service":
             # The rule above independently verifies the full name and dated house.
             continue

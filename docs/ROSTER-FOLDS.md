@@ -308,3 +308,18 @@ published by this change.
 | 10977 | Colin Boyce (168, House, 2022-2026); Boyce (15, Joint cttee, House cttee, House, 2022-2026) | `boyce` | same person (surname print) | Colin Boyce `colin-boyce` (183) | 15 speeches + chamber |
 | 10164 | Yvette D’Ath (146, House, 2008-2011); Yvette D'Ath (134, House, 2011-2013) | `yvette-dath-597665747465204427417468` | same person (spelling twin) | Yvette D’Ath `yvette-dath` (280) | 134 speeches |
 | 10957 | Van (34, Senate cttee, 2025-2025); David Van (10, Senate, 2023-2025) | `van` | same person (surname print) | David Van `david-van` (44) | 34 speeches + chamber |
+
+# One source owner for a state spelling twin (14 November 2026)
+
+The profile-party-service joins (docs/reports/2026-11-14-profile-party-gaps.md) gave "Jodi McKay" (415 speeches)
+and her spelling twin "Jodi Mckay" (13 speeches, NSW Assembly, Strathfield, 2015-2016) the same Wikidata person,
+Q6207887, so two roster rows owned one single-person record and `scripts/test_roster_evidence.py` failed. The twin is
+folded into Jodi McKay by `roster_fold.twin_target` and `merge` (the rule the nightly fold already applies): she keeps
+her name, slug, seat and dated Labor service, takes the 13 speeches (428), and lists "Jodi Mckay" in `prints`, whose
+suffixed slug 301s to her. Her accept group is the only owner of Q6207887; the twin's group is gone.
+
+A fold whose prints are only the person's own full name in another case or apostrophe (`roster_party_gaps.twin_prints`)
+adds no identity, so the party-service rule still verifies the person's row against the full-name dated source; any
+other print still holds the join. `scripts/audit_roster_changes.py` proves such a fold with `twin_target` on the
+baseline. At the next roster-profile publish the twin's duplicate record retires. The other five reviewed state twins
+(`scripts/test_roster_fold.py`) carry no shared source and are unchanged.
