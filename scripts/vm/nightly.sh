@@ -103,13 +103,33 @@ log() { echo "$(ts) [nightly] $*" | tee -a "$LOGFILE"; }
 run() { "$@" 2>&1 | tee -a "$LOGFILE"; return "${PIPESTATUS[0]}"; }
 
 FAILURES=()
+COVERAGE_FAILURES=()
 WARNINGS=()
 STAMPED_FILES=()
 COMMIT_SHA=""
 DEPLOY="not pushed"
 RESULT_SUMMARY=""
 fail() { FAILURES+=("$*"); log "FAIL: $*"; }
+coverage_fail() { COVERAGE_FAILURES+=("$*"); log "COVERAGE ALERT: $*"; }
 warn() { WARNINGS+=("$*"); log "WARN: $*"; }
+
+# Coverage findings fail soft: an alert (a regression, a stale or missing check, a crashed
+# reader) goes to COVERAGE_FAILURES, which status.json publishes as coverage_alerts for
+# refresh_watchdog.py to page on, without marking the refresh itself failed. Reports go
+# to WARNINGS. The first night, with no receipt and no baseline yet, is a report only.
+coverage_status() {
+  local messages
+  if messages=$("$PY" "${OPAX_COVERAGE_READER:-scripts/coverage_watchdog.py}" --state-dir "$PIPE" --status-only); then
+    while IFS=$'\t' read -r severity finding; do
+      case "$severity" in
+        alert) coverage_fail "$finding" ;;
+        report) warn "$finding" ;;
+      esac
+    done <<< "$messages"
+  else
+    coverage_fail "coverage status reader failed; inspect $PIPE/coverage-report-v1.json"
+  fi
+}
 
 # ---- lock ------------------------------------------------------------------------
 exec 8>"$LOCKFILE"
@@ -157,10 +177,11 @@ publish_status() {
 
 write_status() {
   local status=$1
-  "$PY" - "$LASTFILE" "$status" "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" <<'PYEOF' 2>/dev/null || true
+  "$PY" - "$LASTFILE" "$status" "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${#FAILURES[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" "${COVERAGE_FAILURES[@]+"${COVERAGE_FAILURES[@]}"}" <<'PYEOF' 2>/dev/null || true
 import json, sys, datetime
-path, status, day, run, started, sha, deploy, summary, nwarn, *rest = sys.argv[1:]
-warnings, failures = rest[:int(nwarn)], rest[int(nwarn):]
+path, status, day, run, started, sha, deploy, summary, nwarn, nfail, *rest = sys.argv[1:]
+nwarn, nfail = int(nwarn), int(nfail)
+warnings, failures, coverage_alerts = rest[:nwarn], rest[nwarn:nwarn + nfail], rest[nwarn + nfail:]
 from pathlib import Path
 from datetime import date
 from scripts.vm.periodic_state import snapshot
@@ -175,7 +196,7 @@ for receipt in [Path(path).parent / 'source-access.json', *(Path(path).parent / 
     except (OSError, ValueError): pass
 json.dump({"date": day, "run": run, "status": status, "started": started,
            "finished": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-           "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures, "warnings": warnings,
+           "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures, "coverage_alerts": coverage_alerts, "warnings": warnings,
            "paused_sources": paused_sources, "periodic_state": periodic_state},
           open(path, "w"), indent=1)
 PYEOF
@@ -202,6 +223,7 @@ finish() {
   if declare -F evidence_abort >/dev/null; then evidence_abort; fi
   rm -f "$MARK"
   local rc=0
+  [ "${#COVERAGE_FAILURES[@]}" -eq 0 ] || log "coverage: ${#COVERAGE_FAILURES[@]} alert(s) published for the refresh watchdog; the refresh outcome is separate"
   if [ "${#FAILURES[@]}" -gt 0 ]; then
     rc=1
     log "===== nightly end: FAILED (${#FAILURES[@]} problem(s)) ====="
@@ -357,6 +379,10 @@ else
   [ -z "$stale" ] || warn "a source refused to change its register tonight (kept the last good rows): $stale"
   partial=$(last_run_line "$DAILY_LOG" 'Partial daily refresh:' | sed 's/.*next run: //')
   [ -z "$partial" ] || warn "cut by its time limit tonight, resumes from its checkpoint next run: $partial (the knowledge box takes only ~12-30k resources an hour)"
+  # Coverage must alert but must not stop exports, publication or the night's ok status.
+  # Reuse nightly-status/status.json (coverage_alerts, warnings) -> refresh_watchdog.py ->
+  # the existing scheduled GitHub workflow email, with no new alert channel.
+  coverage_status
 fi
 
 # ---- 2b. the periodic groups: weekly (Sundays, Sydney), monthly (the first Sunday), frl (Thursdays) ----------
@@ -371,7 +397,9 @@ select_groups() {
 }
 periodic_refresh_complete() {
   # A successful loader is not publication. Any held group or failed final
-  # nightly, NO_PUSH rehearsal or refused push leaves the durable debt intact.
+  # publication, NO_PUSH rehearsal or refused push leaves durable debt intact.
+  # COVERAGE_FAILURES alert separately and must not cause successful groups to
+  # repeat their acquisition every night while an old coverage hold persists.
   [ "$PERIODIC_ACCEPTED" = 1 ] && [ "${#FAILURES[@]}" -eq 0 ] \
     && [ "${OPAX_NIGHTLY_NO_PUSH:-0}" != 1 ] || return 0
   "$PY" scripts/vm/periodic_state.py complete --state "$PERIODIC_STATE" --date "$PERIODIC_DATE" \
