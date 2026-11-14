@@ -125,6 +125,8 @@ import {
 } from './parts';
 import { sponsorRows, type SponsorDirectory } from './sponsors';
 import { statusEvent, statusEventText } from './status-event';
+import { BillStageTracker } from './tracker';
+import { billTracker } from './tracker-model';
 import { useSpeechSpeakers } from '../records/speaker';
 import { useCatalogRecord } from './useCatalogRecord';
 import { memberPosition, useMyMemberVotes } from './your-mp-vote';
@@ -1469,11 +1471,31 @@ function KeyDates({
   const timeline = billTimeline(view.keyDates.data ?? []);
   const entries = timeline.entries;
   if (!entries.length) return null;
+  const identity = view.identity.data;
+  // The six-step tracker replaces the ruler wherever the record maps to it
+  // truthfully; any other bill keeps the ruler. Either way the full dated
+  // list stays one tap away, so no stage or date is lost.
+  const mapped = billTracker({
+    stages: view.keyDates.data ?? [],
+    status: identity?.status,
+    originatingHouse: identity?.house,
+    title: identity?.title,
+    divisions: view.divisions.data?.rawRows,
+    acts: view.acts.data ?? [],
+  });
+  const tracker = mapped.kind === 'tracker' ? mapped.tracker : null;
   const points =
-    entries.length > 1 ? rulerPoints(entries, view.identity.data?.status) : [];
+    !tracker && entries.length > 1
+      ? rulerPoints(entries, identity?.status)
+      : [];
+  const allLabel =
+    timeline.runs === 1
+      ? 'The recorded stage'
+      : `All ${formatCount(timeline.runs)} stages`;
   return (
     <View ref={anchor} collapsable={false}>
       <Section title="How it moved" testID="bill-key-dates">
+        {tracker ? <BillStageTracker tracker={tracker} /> : null}
         {points.length ? (
           <View
             testID="bill-dates-ruler"
@@ -1499,7 +1521,16 @@ function KeyDates({
             />
           </View>
         ) : null}
-        {entries.length === 1 ? (
+        {tracker ? (
+          <Disclosure
+            label={allLabel}
+            open={open}
+            onToggle={onToggle}
+            testID="bill-dates-all"
+          >
+            <DateRows entries={entries} freshStages={freshStages} />
+          </Disclosure>
+        ) : entries.length === 1 ? (
           <DateRows entries={entries} freshStages={freshStages} />
         ) : timeline.runs > points.length ||
           entries.some((entry) => entry.to) ? (

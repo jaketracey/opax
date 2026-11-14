@@ -219,7 +219,7 @@ test('the timeline reveals stages sharing dates even when every date is on the r
     'Third reading',
   );
 });
-test('How it moved has one source line: the ruler draws no date-range caption (sweep 1, item 9)', async () => {
+test('How it moved has one source line: the tracker replaces the ruler, with no date-range caption (sweep 1, item 9)', async () => {
   mockParams.key = 'au-federal-r7534';
   const record = await fixture.billFor(mockParams.key);
   mock.billFor.mockResolvedValue({
@@ -238,15 +238,57 @@ test('How it moved has one source line: the ruler draws no date-range caption (s
   });
   const root = await render(<BillDetail />);
   const section = host(root, 'bill-key-dates')[0]!;
+  expect(host(section, 'bill-tracker')).toHaveLength(1);
+  expect(host(section, 'stage-timeline')).toHaveLength(0);
+  expect(host(section, 'bill-dates-ruler')).toHaveLength(0);
+  expect(texts(section).join(' ')).not.toMatch(/\d{4} to \d{1,2} \w+ \d{4}/);
+  // VoiceOver hears the summary, then every step with its full date.
+  expect(texts(host(section, 'bill-tracker-summary')[0]!)).toEqual([
+    'All 6 steps done: this bill is law.',
+  ]);
+  const spoken = (id: string) =>
+    host(section, `bill-tracker-${id}`)[0]!.props.accessibilityLabel;
+  expect(spoken('introduced')).toBe(
+    'Introduced in the House, done, 17 August 2026',
+  );
+  // No second reading row: done, and never given a date.
+  expect(spoken('second')).toBe('Second reading, done, no date recorded');
+  expect(spoken('assent')).toBe('Royal Assent, done, 26 August 2026');
+  // The full dated list stays one tap away.
+  expect(host(section, 'bill-dates-all')).not.toHaveLength(0);
+  // The section's dated source line is the one line under it.
+  expect(host(section, 'bill-dates-source')).not.toHaveLength(0);
+});
+test('a bill the tracker cannot map truthfully keeps the dated ruler', async () => {
+  mockParams.key = 'au-federal-r7534';
+  const record = await fixture.billFor(mockParams.key);
+  mock.billFor.mockResolvedValue({
+    ...record,
+    data: {
+      ...record.data,
+      keyDates: {
+        ...record.data.keyDates,
+        data: [
+          { stage: 'Introduced', date: '2026-08-17', house: 'representatives' },
+          // A stage name outside the register's set.
+          {
+            stage: 'Referred to a joint committee',
+            date: '2026-08-18',
+            house: 'representatives',
+          },
+          { stage: 'Royal assent', date: '2026-08-26', house: null },
+        ],
+      },
+    },
+  });
+  const root = await render(<BillDetail />);
+  const section = host(root, 'bill-key-dates')[0]!;
+  expect(host(section, 'bill-tracker')).toHaveLength(0);
   expect(host(section, 'stage-timeline')).toHaveLength(1);
   expect(host(section, 'stage-timeline-caption')).toHaveLength(0);
-  expect(texts(section).join(' ')).not.toMatch(/\d{4} to \d{1,2} \w+ \d{4}/);
-  // VoiceOver still hears every stage with its full date.
   const ruler = host(section, 'bill-dates-ruler')[0]!;
   expect(ruler.props.accessibilityLabel).toContain('17 August 2026');
   expect(ruler.props.accessibilityLabel).toContain('26 August 2026');
-  // The section's dated source line is the one line under it.
-  expect(host(section, 'bill-dates-source')).not.toHaveLength(0);
 });
 /** The bar's trailing items, from the newest Stack.Screen options. */
 function barItems() {
@@ -482,10 +524,12 @@ describe('how it moved: a terminal status names the last stop (P2-9)', () => {
   test('a pinned lapsed bill whose register ends on "other" says Lapsed', async () => {
     mockParams.key = 'au-federal-r6850';
     const root = await render(<BillDetail />);
-    const ruler = host(root, 'bill-dates-ruler')[0]!;
-    expect(ruler.props.accessibilityLabel).toMatch(/; Lapsed, \d+ \w+ \d{4}$/);
-    expect(ruler.props.accessibilityLabel).not.toMatch(/Other/);
-    expect(texts(ruler)).toContain('Lapsed');
+    const tracker = host(root, 'bill-tracker')[0]!;
+    expect(texts(host(tracker, 'bill-tracker-summary')[0]!).join(' ')).toMatch(
+      /^Stopped at step \d of 6: .+\. Lapsed\.$/,
+    );
+    expect(texts(tracker)).toContain('Lapsed');
+    expect(texts(tracker).join(' ')).not.toMatch(/Other/);
   });
 });
 
