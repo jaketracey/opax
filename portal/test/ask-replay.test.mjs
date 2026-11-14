@@ -10,12 +10,14 @@
 // assets from public/; ASK_REPLAY_SHAPES=print prints the shapes to paste into shapes.json after a deliberate change.
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import {readdirSync,readFileSync} from 'node:fs'
-import {MockLanguageModelV4} from 'ai/test'
+import {readdirSync,readFileSync,writeFileSync} from 'node:fs'
+import {scriptedResearchModel} from './fixtures/research-scripted-model.mjs'
 import {loadWorker,offline} from './worker-harness.mjs'
 import {budgetDatabase} from './fixtures/research-budget.mjs'
 import {AskStream} from './fixtures/research-app-decoders.mjs'
 
+const measurements=[]
+const answers=JSON.parse(readFileSync(new URL('./fixtures/ask-replay/answers.json',import.meta.url),'utf8'))
 const dir=new URL('./fixtures/ask-replay/',import.meta.url)
 const shapes=JSON.parse(readFileSync(new URL('shapes.json',dir),'utf8'))
 // Assets every recorded request read (a small roster, an empty bill index); a fixture's own assets override them.
@@ -28,7 +30,7 @@ const dump=!!process.env.ASK_REPLAY_DUMP
 const discover=process.env.ASK_REPLAY_DISCOVER==='1'
 const restore=offline(),pending=[],ctx={waitUntil:p=>pending.push(p),passThroughOnException(){}}
 const plugin={name:'replayed-model',setup(b){b.onResolve({filter:/^@openrouter\/ai-sdk-provider$/},()=>({path:'replay',namespace:'ask-replay'}));b.onLoad({filter:/.*/,namespace:'ask-replay'},()=>({contents:'export const createOpenRouter=()=>()=>globalThis.__researchModel;',loader:'js'}))}}
-const h=await loadWorker(new URL('../src/index.ts',import.meta.url).pathname,new URL('../public',import.meta.url).pathname,ctx,{plugins:[plugin]})
+const h=await loadWorker(process.env.ASK_REPLAY_ENTRY??new URL('../src/index.ts',import.meta.url).pathname,new URL('../public',import.meta.url).pathname,ctx,{plugins:[plugin]})
 const daily=budgetDatabase()
 Object.assign(h.env,{OPENROUTER_API_KEY:'replay-placeholder',AGENTIC_ASK_MODE:'route',RESEARCH_LOOP:'route',AGENTIC_INPUT_USD_PER_MILLION:'0.66',AGENTIC_OUTPUT_USD_PER_MILLION:'1.98',
   COMMUNITY_DB:daily.db,ASK_LIMITER:{limit:async()=>({success:true})},MODEL_LIMITER:{limit:async()=>({success:true})}})
@@ -51,11 +53,6 @@ globalThis.fetch=async(input,init)=>{
   if(!hit){world.unserved.push(`service ${url.pathname} ${body.slice(0,160)}`);return Response.json({resources:{},fulltext:{total:0,facets:{}}})}
   return Response.json(hit.response)
 }
-const usage={inputTokens:{total:900,noCache:900,cacheRead:0,cacheWrite:0},outputTokens:{total:120,text:120,reasoning:0}}
-const turn=t=>t.error?()=>{throw new Error(t.error)}:t.tool_calls
-  ?{content:t.tool_calls.map((c,i)=>({type:'tool-call',toolName:c.name,toolCallId:c.id??`call-${i}`,input:JSON.stringify(c.args??{})})),finishReason:{unified:'tool-calls',raw:'tool_calls'},usage,warnings:[]}
-  :{content:[{type:'text',text:typeof t.text==='string'?t.text:JSON.stringify(t.text)}],finishReason:{unified:'stop',raw:'stop'},usage,warnings:[]}
-
 /** Type skeleton of a value: object keys and value types, arrays by their first element. */
 const shapeOf=v=>Array.isArray(v)?(v.length?[shapeOf(v[0])]:[]):v===null?'null':typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,shapeOf(v[k])])):typeof v
 const shallow=v=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.keys(v).sort().map(k=>[k,Array.isArray(v[k])?'array':v[k]===null?'null':typeof v[k]])):shapeOf(v)
@@ -76,18 +73,46 @@ const limitationOnly=answer=>{const ls=lines(answer);return !ls.length||ls.every
 
 const ask=async(fixture,stream)=>{
   world={fixture,unserved:[]}
-  globalThis.__researchModel=new MockLanguageModelV4({doGenerate:fixture.model.map(turn)})
+  globalThis.__researchModel=scriptedResearchModel(fixture.model,{tokensPerSecond:stream?Number(process.env.ASK_REPLAY_TOKENS_PER_SECOND??0):0})
   const logs=[];console.log=v=>logs.push(v);console.warn=console.error=()=>{}
   try{
+    const started=performance.now()
     const response=await h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json','x-opax-nocache':'1'},body:JSON.stringify({question:fixture.question,...fixture.input})})
-    const raw=await response.text()
+    let raw='',firstTextMs
+    const deltas=[],dlog=[]
+    let resets=0
+    if(stream){
+      const decoder=new TextDecoder(),parser=new AskStream({stage(){},retry(){deltas.length=0;dlog.length=0;resets++},delta(text){const at=performance.now()-started;deltas.push(text);dlog.push({t:at,n:text.length});firstTextMs??=at}})
+      for await(const chunk of response.body){const text=decoder.decode(chunk,{stream:true});raw+=text;parser.push(text)}
+      const tail=decoder.decode();raw+=tail;parser.push(tail,true)
+      const done=parser.result()
+      const doneMs=performance.now()-started
+      if(done.answer)firstTextMs??=doneMs
+      if(!process.env.ASK_REPLAY_ENTRY&&!done.pay_answer && !response.headers.has('x-opax-identity-route'))assert.equal(deltas.join(''),done.answer,'done.answer equals the concatenated checked deltas byte for byte')
+      assert.equal(resets,0,'the stored replay answers never need stream recovery')
+      if(!process.env.ASK_REPLAY_ENTRY&&!done.pay_answer&&!response.headers.has('x-opax-identity-route')){
+        const completed=logs.map(v=>JSON.parse(v)).filter(v=>v.kind==='research_loop_stream_complete')
+        assert.equal(completed.length,1,'one stream completion counter supplies the retry-rate denominator')
+        assert.equal(completed[0].retries,resets,'telemetry counts the retries the client actually saw')
+      }
+      const earlyChars=dlog.filter(d=>d.t<=doneMs-100).reduce((n,d)=>n+d.n,0)
+      measurements.push({id:fixture.id,resets,early_chars:earlyChars,early_fraction:earlyChars/done.answer.length,first_to_done_ms:Math.round(doneMs-(firstTextMs??doneMs)),dlog,first_text_ms:Math.round(firstTextMs??0),done_ms:Math.round(doneMs),deltas:deltas.length,answer:done.answer})
+    }else raw=await response.text()
     while(pending.length)await Promise.all(pending.splice(0))
     return {response,raw,logs,model:globalThis.__researchModel,unserved:world.unserved}
   }finally{console.log=realLog;console.warn=realWarn;console.error=realError;daily.sqlite.exec('DELETE FROM research_daily_spend')}
 }
 const decodeStream=raw=>{const parser=new AskStream({stage(){},delta(){},retry(){}});for(let i=0;i<raw.length;i+=23)parser.push(raw.slice(i,i+23));parser.push('',true);return parser.result()}
 
-test.after(()=>{restore();daily.close()})
+test.after(()=>{
+  restore();daily.close()
+  if(!process.env.ASK_REPLAY_ENTRY&&Number(process.env.ASK_REPLAY_TOKENS_PER_SECOND)===40&&measurements.length===16){
+    const streamed=measurements.reduce((n,m)=>n+m.early_chars,0),total=measurements.reduce((n,m)=>n+m.answer.length,0)
+    assert.ok(streamed/total>=.3,'at least 30% of replay answer characters arrive 100 ms before done')
+  }
+  if(process.env.ASK_REPLAY_RESULTS)writeFileSync(process.env.ASK_REPLAY_RESULTS,JSON.stringify(measurements,null,2)+'\n')
+  if(process.env.ASK_REPLAY_TOKENS_PER_SECOND){const sorted=measurements.map(m=>m.first_text_ms).sort((a,b)=>a-b);realLog(JSON.stringify({cases:sorted.length,p50_ms:sorted[Math.ceil(sorted.length*.5)-1],p95_ms:sorted[Math.ceil(sorted.length*.95)-1]}))}
+})
 test('every replay fixture is complete, holds no secret and has a pinned shape; the limitation check reads lines',()=>{
   assert.equal(fixtures.length>=10||!!process.env.ASK_REPLAY,true,'at least ten stored payloads')
   for(const f of fixtures){
@@ -112,6 +137,7 @@ for(const fixture of fixtures)test(`replay ${fixture.id}: ${fixture.question}`,a
 
   // The answer is there, and says more than that the record could not answer.
   assert.equal(typeof body.answer,'string')
+  assert.equal(body.answer,answers[fixture.id],'the answer is byte-identical to the pre-streaming replay baseline')
   assert.ok(body.answer.trim(),`empty answer ${context()}`)
   if(expect.decline){
     assert.match(body.answer,new RegExp(expect.decline,'i'),`the off-topic question still declines ${context()}`)
@@ -173,6 +199,7 @@ for(const fixture of fixtures)test(`replay ${fixture.id}: ${fixture.question}`,a
   if(expect.stream!==false){
     const streamed=await ask(fixture,true)
     assert.equal(streamed.response.status,200)
+    assert.equal(streamed.model.calls.length,fixture.model.length,'the stream uses every recorded model turn and no more')
     assert.match(streamed.response.headers.get('content-type')??'',/text\/event-stream/)
     const final=decodeStream(streamed.raw)
     assert.equal(final.answer,body.answer,'the stream ends with the same answer')
