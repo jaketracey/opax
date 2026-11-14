@@ -666,6 +666,42 @@ test('/privacy and /support are served whole, from their panels, with canonical 
   assert.ok(shell.includes('if(answer.hasAttribute("data-panel-copy"))for(const el of answer.querySelectorAll("[id]"))el.removeAttribute("id");main.prepend(answer);'));
 });
 
+test('/terms and /security are served whole as HTML, with canonical links and no drafting marks',async()=>{
+  for(const [path,name,title,facts] of [
+    ['/terms','terms','Terms of use · OPAX',['Using OPAX','Last updated 14 November 2026','Noice Pty Ltd (ABN 91 634 536 360)','the law of Victoria, Australia','You keep the rights in what you write','support@opax.com.au','href="/security"','Australian Consumer Law']],
+    ['/security','security','Security · OPAX',['Reporting a security problem','Last updated 14 November 2026','https://github.com/jaketracey/opax/security/advisories/new','mailto:support@opax.com.au?subject=Security','within 5 working days','Testing in good faith','href="/terms"']]]){
+    const r=await worker.fetch(new Request(origin+path),env,{waitUntil(){}});
+    assert.equal(r.status,200,path);
+    assert.match(r.headers.get('content-type')||'',/^text\/html/,path);
+    const html=await r.text();checkHtml(html);
+    assert.match(html,new RegExp(`<link rel="canonical" href="https://opax\\.com\\.au${path}"`),path);
+    assert.match(html,new RegExp(`<meta property="og:url" content="https://opax\\.com\\.au${path}"`),path);
+    assert.ok(html.includes(`<title>${title}</title>`),path);
+    assert.match(html,new RegExp(`<section id="prerender" class="wrap policy-page" data-panel-copy="${name}">`),path);
+    const main=html.match(/<main\b[^>]*data-server-rendered[^>]*>([\s\S]*?)<\/main>/)[1];
+    for(const fact of facts)assert.ok(main.includes(fact),`${path}: ${fact}`);
+    const copy=main.match(/<section id="prerender"[\s\S]*?<\/section>/)[0];
+    assert.doesNotMatch(copy.replace(/<[^>]+>/g,' '),/[\[\]\u2014]|Jake:|TODO|placeholder/i,`${path}: no brackets, drafting notes or em dashes`);
+    assert.doesNotMatch(main,/An association does not prove influence/,path);
+  }
+});
+test('/.well-known/security.txt is plain text with contacts, a future Expires and its canonical',async()=>{
+  const r=await worker.fetch(new Request(origin+'/.well-known/security.txt'),env,{waitUntil(){}});
+  assert.equal(r.status,200);
+  assert.equal(r.headers.get('content-type'),'text/plain; charset=utf-8');
+  const body=await r.text();
+  const fields=body.trim().split('\n').map(l=>l.split(/: (.*)/s).slice(0,2));
+  const all=k=>fields.filter(([f])=>f===k).map(([,v])=>v);
+  assert.deepEqual(all('Contact'),['https://github.com/jaketracey/opax/security/advisories/new','mailto:support@opax.com.au?subject=Security']);
+  assert.deepEqual(all('Canonical'),['https://opax.com.au/.well-known/security.txt']);
+  assert.deepEqual(all('Policy'),['https://opax.com.au/security']);
+  const [expires]=all('Expires');
+  assert.match(expires,/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(\.\d+)?Z$/);
+  // RFC 9116 wants a renewal before it lapses: fail 30 days ahead, not after.
+  assert.ok(Date.parse(expires)-Date.now()>30*864e5,`Expires ${expires} is within 30 days: renew it`);
+  assert.ok(Date.parse(expires)-Date.now()<=366*864e5,'Expires is at most a year away');
+});
+
 test('ordinary Victorian electorate summaries carry the exact authorisation server-side',async()=>{
   const manifest=await read('/electorates/manifest.json');
   const index=await read(manifest.index_url);
