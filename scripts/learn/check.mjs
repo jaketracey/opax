@@ -206,7 +206,10 @@ export function runCheck({ root = ROOT, snapshots = null } = {}) {
     scanText(`${g.term} ${g.short} ${g.more} ${g.example?.label || ''}`, where);
   }
   for (const f of facts) if (!used.has(f.id)) errors.push(`fact ${f.id}: not used by any chapter or glossary term`);
-  scanText(readFileSync(join(dir, 'facts.json'), 'utf8'), 'facts.json');
+  // Quotes are verbatim from their sources (the Constitution says "recognized"), so spelling is checked on
+  // the guide's own words in facts.json, and the em dash rule on the whole file.
+  if (EM_DASH.test(readFileSync(join(dir, 'facts.json'), 'utf8'))) errors.push('facts.json: contains an em dash');
+  scanText(facts.map((f) => [f.claim, f.note, f.derived].filter(Boolean).join(' ')).join('\n'), 'facts.json');
   scanText(readFileSync(join(dir, 'examples.json'), 'utf8'), 'examples.json');
 
   const needsAph = facts.filter((f) => f.status === 'needs_aph_source').map((f) => ({ id: f.id, claim: f.claim, note: f.note || '' }));

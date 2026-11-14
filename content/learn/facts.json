@@ -2866,7 +2866,7 @@
   },
   {
    "id": "aec-annual-returners",
-   "claim": "Annual returns are lodged by parties, significant third parties, associated entities, MPs, senators, third parties and annual donors.",
+   "claim": "Until 31 Dec 2026, annual returns are lodged by parties, significant third parties, associated entities, MPs and senators (only if they received gifts), third parties and annual donors.",
    "status": "sourced",
    "quotes": [
     {
@@ -2878,7 +2878,7 @@
   },
   {
    "id": "aec-election-returners",
-   "claim": "Candidates, Senate groups and election donors lodge election returns.",
+   "claim": "Until 31 Dec 2026, candidates, Senate groups and election donors lodge election returns; from 2027 these are replaced by expedited disclosure and annual candidate returns.",
    "status": "sourced",
    "quotes": [
     {
@@ -2889,12 +2889,12 @@
   },
   {
    "id": "registered-entities",
-   "claim": "Entities meeting certain criteria must be registered with the AEC.",
+   "claim": "The AEC registers three types of entity: political parties, significant third parties and associated entities.",
    "status": "sourced",
    "quotes": [
     {
-     "source": "aec-transparency-register",
-     "quote": "Entities who meet certain criteria regarding financial disclosure obligations must be registered."
+     "source": "aec-who-register",
+     "quote": "The Electoral Act provides for three types of entities to be registered by the AEC: political parties, significant third parties and associated entities."
     }
    ]
   },
@@ -2934,7 +2934,7 @@
   },
   {
    "id": "threshold-indexed",
-   "claim": "The threshold is indexed each 1 July by the consumer price index.",
+   "claim": "Under the current rules (until 31 Dec 2026), the threshold is indexed each 1 July by the consumer price index.",
    "status": "sourced",
    "quotes": [
     {
@@ -2945,7 +2945,7 @@
   },
   {
    "id": "annual-return-20-oct",
-   "claim": "Parties, significant third parties and associated entities lodge annual returns by 20 October.",
+   "claim": "Until 31 Dec 2026, parties, significant third parties and associated entities lodge annual returns by 20 October.",
    "status": "sourced",
    "quotes": [
     {
@@ -2956,7 +2956,7 @@
   },
   {
    "id": "annual-return-17-nov",
-   "claim": "MPs and senators who receive gifts lodge by 17 November.",
+   "claim": "Until 31 Dec 2026, MPs and senators who receive gifts lodge by 17 November.",
    "status": "sourced",
    "quotes": [
     {
@@ -2971,7 +2971,7 @@
   },
   {
    "id": "returns-published-feb",
-   "claim": "Annual returns are published on the first working day in February, for the previous financial year.",
+   "claim": "Until 31 Dec 2026, annual returns are published on the first working day in February, for the previous financial year.",
    "status": "sourced",
    "quotes": [
     {
@@ -2997,7 +2997,7 @@
   },
   {
    "id": "election-returns-published",
-   "claim": "Returns for each federal election are published after the event.",
+   "claim": "Under the current scheme, returns for each federal election are published after the event.",
    "status": "sourced",
    "quotes": [
     {
@@ -3074,9 +3074,13 @@
   },
   {
    "id": "reform-calendar-year",
-   "claim": "Returns move to a calendar year.",
+   "claim": "Returns move from a financial year (July to June) to a calendar year from 2027.",
    "status": "sourced",
    "quotes": [
+    {
+     "source": "aec-whats-changing",
+     "quote": "Financial year (July to June)"
+    },
     {
      "source": "aec-whats-changing",
      "quote": "Calendar year (1 January to 31 December)"
@@ -3145,7 +3149,7 @@
   },
   {
    "id": "reform-gift-cap-amounts",
-   "claim": "The cap is $50,000 a calendar year to one recipient for a federal purpose; $1.6 million overall.",
+   "claim": "The cap is $50,000 a calendar year to one recipient for a federal purpose, and $1.6 million in a calendar year across all recipients.",
    "status": "sourced",
    "quotes": [
     {
@@ -3199,6 +3203,61 @@
     {
      "source": "aec-election-funding",
      "quote": "payable in relation to any candidate or group who receives at least four per cent of the total first preference votes in an election."
+    }
+   ]
+  },
+  {
+   "id": "reform-donors-no-returns",
+   "claim": "From 2027 donors do not need to lodge annual returns.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "aec-whats-changing",
+     "quote": "Donors do not need to lodge annual returns."
+    }
+   ]
+  },
+  {
+   "id": "reform-annual-due-8w",
+   "claim": "From 2027 annual returns are due 8 weeks after the calendar year ends.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "aec-whats-changing",
+     "quote": "Annual returns due 8 weeks after the end of the calendar year (final week of February)."
+    }
+   ]
+  },
+  {
+   "id": "reform-publish-10w",
+   "claim": "From 2027 the AEC publishes annual return information within 10 weeks of the end of the calendar year.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "aec-whats-changing",
+     "quote": "Information from annual returns must be published within 10 weeks of the end of the calendar year."
+    }
+   ]
+  },
+  {
+   "id": "reform-election-returns-replaced",
+   "claim": "From 2027 election returns are replaced by expedited disclosure and annual candidate returns.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "aec-whats-changing",
+     "quote": "Election returns replaced by expedited disclosure and annual candidate returns."
+    }
+   ]
+  },
+  {
+   "id": "next-election-window",
+   "claim": "The next federal election is due between August 2027 and May 2028.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "aec-media-2026-07-23",
+     "quote": "which is due to be held between August 2027 and May 2028."
     }
    ]
   },
@@ -3366,7 +3425,7 @@
   },
   {
    "id": "writ-10-days",
-   "claim": "Writs are issued within 10 days of dissolution.",
+   "claim": "Writs are issued within 10 days of the House being dissolved.",
    "status": "sourced",
    "quotes": [
     {
@@ -3474,9 +3533,13 @@
   },
   {
    "id": "preference-transfer",
-   "claim": "Votes are transferred by the preferences marked, over multiple counts, until a candidate has an absolute majority.",
+   "claim": "The candidate with the fewest votes is eliminated and their votes transferred by the preferences marked, over multiple counts, until a candidate has an absolute majority.",
    "status": "sourced",
    "quotes": [
+    {
+     "source": "peo-preferential-video",
+     "quote": "Now we eliminate the person with the least votes."
+    },
     {
      "source": "aec-preferential",
      "quote": "multiple counts of ballot papers to occur to determine who has acquired an absolute majority of the total votes"
@@ -3603,9 +3666,17 @@
   },
   {
    "id": "casual-vacancy-fill",
-   "claim": "The seat goes to someone from the same party, chosen by that state or territory's parliament.",
+   "claim": "The state or territory parliament chooses the replacement; if the senator was elected for a party, the replacement must be a member of that party (Constitution s 15).",
    "status": "sourced",
    "quotes": [
+    {
+     "source": "constitution",
+     "quote": "he was publicly recognized by a particular political party as being an endorsed candidate of that party"
+    },
+    {
+     "source": "constitution",
+     "quote": "shall, unless there is no member of that party available to be chosen or appointed, be a member of that party."
+    },
     {
      "source": "peo-federal-elections",
      "quote": "They are replaced by a candidate from the same political party, chosen by the parliament or legislative assembly of that state/territory."
@@ -3696,7 +3767,7 @@
   },
   {
    "id": "councils-550",
-   "claim": "There are over 550 local councils.",
+   "claim": "There are more than 500 local councils.",
    "status": "sourced",
    "quotes": [
     {
@@ -3704,7 +3775,7 @@
      "quote": "There are over 550 local councils around Australia."
     }
    ],
-   "note": "The PEO video on the same topic says \"more than 560 councils\"; the fact sheet figure is used."
+   "note": "PEO gives 550 (fact sheet) and 560 (video); the copy says \"more than 500\", which both support."
   },
   {
    "id": "levels-overlap",
@@ -3778,7 +3849,7 @@
   },
   {
    "id": "s51-heads",
-   "claim": "Section 51 includes trade, taxation, defence, currency and external affairs.",
+   "claim": "Section 51 includes trade, taxation, defence, currency (coins and notes) and external affairs.",
    "status": "sourced",
    "quotes": [
     {
@@ -3966,8 +4037,23 @@
    ]
   },
   {
+   "id": "fair-work-act-2009",
+   "claim": "The Fair Work Act 2009 was made on 7 April 2009.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "frl-fair-work-act",
+     "quote": "\"name\":\"Fair Work Act 2009\""
+    },
+    {
+     "source": "frl-fair-work-act",
+     "quote": "\"makingDate\":\"2009-04-07T00:00:00\""
+    }
+   ]
+  },
+  {
    "id": "referral-2009",
-   "claim": "In 2009 all states except WA referred industrial relations; the Fair Work Act 2009 created the national system covering most workers.",
+   "claim": "In 2009 every state except WA referred its industrial relations powers; most workers are now in one national system.",
    "status": "sourced",
    "quotes": [
     {
@@ -3976,9 +4062,10 @@
     },
     {
      "source": "peo-qon-concurrent",
-     "quote": "Federal Parliament then passed the Fair Work Act 2009 creating the current national industrial relations system which covers the majority of Australian workers."
+     "quote": "creating the current national industrial relations system which covers the majority of Australian workers."
     }
-   ]
+   ],
+   "note": "PEO says the Act was passed after the referrals; the register shows it was made on 7 Apr 2009, before them. The fact-checker found the state-referral Acts on the register dated 25 Jun and 9 Dec 2009. Copy now gives the year only and no cause."
   },
   {
    "id": "state-parliaments-count",

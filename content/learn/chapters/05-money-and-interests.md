@@ -17,11 +17,13 @@ They do this by filling in forms. These forms are called returns. [[f:aec-disclo
 
 ## Who has to tell the AEC
 
-Some groups lodge an {{annual return}} each year. These include political parties, MPs and senators, and some donors. [[f:aec-annual-returners]]
+Until the end of 2026, some groups lodge an {{annual return}} for each financial year. These include parties, each {{associated entity}} and each {{significant third party}}. [[f:aec-annual-returners]] [[f:annual-return-20-oct]]
 
-Two other kinds of groups lodge them too: each {{associated entity}} and each {{significant third party}}. These groups must register with the AEC. [[f:aec-annual-returners]] [[f:registered-entities]]
+MPs and senators lodge one only if they received a gift. Some donors lodge one too. [[f:annual-return-17-nov]] [[f:aec-annual-returners]]
 
-Candidates and Senate groups lodge election returns after an election. [[f:aec-election-returners]]
+Parties, associated entities and significant third parties are the three kinds of group the AEC registers. [[f:registered-entities]]
+
+From 2027, donors will not need to lodge annual returns. [[f:reform-donors-no-returns]]
 
 ---screen---
 
@@ -31,17 +33,37 @@ Not every amount has to be listed. Amounts at or below a set level do not have t
 
 From 1 July 2026 to 31 December 2026, the threshold is more than $17,300. [[f:threshold-2026]]
 
-Until then, it goes up each 1 July, in line with prices. [[f:threshold-indexed]]
+Under the current rules, it rises each 1 July, in line with prices. [[f:threshold-indexed]] From 2027, it changes, as a later screen explains. [[f:reform-threshold]]
 
 ---screen---
 
-## When returns are due
+## Returns until the end of 2026
 
-Parties, significant third parties and associated entities must lodge their annual return by 20 October each year. [[f:annual-return-20-oct]]
+Under the current rules, each annual return covers a financial year, from July to June. [[f:reform-calendar-year]]
 
-MPs and senators who receive gifts must lodge by 17 November. [[f:annual-return-17-nov]]
+Parties, significant third parties and associated entities lodge theirs by 20 October. MPs and senators who received gifts lodge by 17 November. [[f:annual-return-20-oct]] [[f:annual-return-17-nov]]
 
-The AEC publishes annual returns on the first working day in February. They cover the financial year before. [[f:returns-published-feb]]
+The AEC publishes them on the first working day of the next February. [[f:returns-published-feb]]
+
+---screen---
+
+## Returns from 2027
+
+From 2027, each annual return covers a calendar year, from January to December. [[f:reform-calendar-year]]
+
+Returns are due 8 weeks after the year ends, in the last week of February. [[f:reform-annual-due-8w]]
+
+The AEC must publish what is in them within 10 weeks of the end of the year. [[f:reform-publish-10w]]
+
+---screen---
+
+## Election returns
+
+Until the end of 2026, candidates and Senate groups also lodge returns after each federal election. [[f:aec-election-returners]] The AEC publishes them 24 weeks after polling day. [[f:election-returns-24w]] [[f:election-returns-published]]
+
+From 2027, these election returns are replaced. Donations must be reported fast instead, and candidates lodge annual returns. [[f:reform-election-returns-replaced]]
+
+The next federal election is due between August 2027 and May 2028. So it will run under the new rules. [[f:next-election-window]] [[f:reform-start]]
 
 ---screen---
 
@@ -49,9 +71,9 @@ The AEC publishes annual returns on the first working day in February. They cove
 
 The AEC puts returns on a website called the {{Transparency Register}}. Anyone can look at it. [[f:transparency-register-def]]
 
-There are also returns for each federal election. They go online once the election is over. [[f:election-returns-published]]
+Under the current rules, annual returns go on it each February. [[f:returns-published-feb]]
 
-For now, the AEC must put election returns online 24 weeks after polling day. This rule runs until the end of 2026. [[f:election-returns-24w]]
+From 2027, details of donations will also go on it soon after they are reported, as a later screen explains. [[f:reform-publish-24h]]
 
 ---screen---
 
@@ -69,7 +91,7 @@ So OPAX calls this money "receipts", not "donations". A receipt is money a party
 
 New funding and disclosure rules start on 1 January 2027. [[f:reform-start]]
 
-The AEC says the disclosure threshold will change to "above $5,000". Returns will cover a calendar year, not a financial year. [[f:reform-threshold]] [[f:reform-calendar-year]]
+The AEC says the disclosure threshold will change to "above $5,000". [[f:reform-threshold]] Annual returns will also cover a calendar year, as an earlier screen showed. [[f:reform-calendar-year]]
 
 Rules to help with the move to the new scheme apply from 1 July 2026. [[f:reform-transitional]]
 
@@ -89,7 +111,7 @@ The AEC must then publish the details on its Transparency Register. [[f:reform-p
 
 From 2027 there are limits on gifts, called {{gift caps|gift cap}}. [[f:reform-gift-caps]]
 
-The AEC says a person can give no more than $50,000 a year to one recipient for a federal purpose. They can give no more than $1.6 million in total. [[f:reform-gift-cap-amounts]]
+The AEC says a person can give no more than $50,000 in a calendar year to one recipient for a federal purpose. They can give no more than $1.6 million in a calendar year, across all recipients. [[f:reform-gift-cap-amounts]]
 
 There are also limits on {{electoral expenditure}}, which is money spent on elections. [[f:reform-expenditure-caps]] [[f:electoral-expenditure-def]]
 
@@ -125,7 +147,9 @@ A money link is not proof of anything wrong. As OPAX puts it, "An association do
 
 OPAX can only show what has been disclosed. Amounts at or below the threshold do not have to be disclosed. [[f:threshold-def]]
 
-A return only appears once the AEC publishes it, which for annual returns is each February. [[f:returns-published-feb]]
+A return only appears once the AEC publishes it. Under the current rules, annual returns come out each February. [[f:returns-published-feb]]
+
+OPAX's money pages show returns lodged under the current rules. From 2027, the timing of returns changes. [[f:opax-receipts-page]] [[f:reform-publish-10w]]
 
 Some AEC rows have been changed since OPAX copied them, and OPAX notes these are still being checked. [[f:opax-amended-rows]]
 

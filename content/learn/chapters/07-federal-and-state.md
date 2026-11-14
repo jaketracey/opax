@@ -9,7 +9,7 @@ summary: How the Constitution splits law-making between the federal Parliament a
 
 Australia has {{three levels of government}}. There is the federal Parliament in Canberra. There are parliaments for each state and territory. And there are local councils. [[f:three-levels]]
 
-There are over 550 local councils around Australia. [[f:councils-550]]
+There are more than 500 local councils around Australia. [[f:councils-550]]
 
 Each level looks after different things. Sometimes their jobs overlap. [[f:levels-overlap]]
 
@@ -29,7 +29,7 @@ The Australian Constitution sets out how power is split between the federal leve
 
 The Constitution lists the things the federal Parliament can make laws about. [[f:s51-list]]
 
-Two parts of it, sections 51 and 52, list these areas. [[f:s51-list]] Section 51 includes trade with other countries, tax, defence and money. It also covers our dealings with other nations. [[f:s51-heads]]
+Two parts of it, sections 51 and 52, list these areas. [[f:s51-list]] Section 51 includes trade with other countries, tax, defence and currency (our coins and notes). It also covers our dealings with other nations. [[f:s51-heads]]
 
 These are things that affect the whole country. [[f:federal-whole-country]]
 
@@ -79,9 +79,9 @@ If people disagree about who can make a law, the {{High Court}} decides. [[f:hig
 
 A state can hand a power over to the federal Parliament. [[f:referral]]
 
-In 2009, every state except Western Australia handed over its power over workplace relations. The federal Parliament then passed the Fair Work Act 2009. [[f:referral-2009]]
+In 2009, the federal Parliament passed the Fair Work Act. [[f:fair-work-act-2009]] That year, every state except Western Australia handed over its workplace power. [[f:referral-2009]]
 
-This is why most Australian workers are now covered by one national system. [[f:referral-2009]]
+Most Australian workers are now in one national system. [[f:referral-2009]]
 
 ---screen---
 

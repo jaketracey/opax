@@ -39,7 +39,7 @@ At most elections, you vote for your House member and for half of your state's s
 
 An election starts with a {{writ}}. This is a formal order to hold an election. It sets the key dates. [[f:writ-def]]
 
-Writs are issued within 10 days of Parliament being closed. [[f:writ-10-days]]
+Writs are issued within 10 days of the House being dissolved. [[f:writ-10-days]]
 
 The roll closes at 8 pm, seven days after the writ is issued. [[f:roll-closes]]
 
@@ -71,7 +71,7 @@ To win a House seat, a candidate needs more than half of the formal votes. [[f:h
 
 First, the counters add up everyone's number 1 votes. [[f:first-preference-count]]
 
-If nobody has more than half, votes are passed on to other candidates. Each vote moves by the numbers the voter wrote. This keeps going until someone has more than half. [[f:preference-transfer]] [[f:house-50pc]]
+If nobody has more than half, the candidate with the fewest votes is knocked out. Their votes go to the next candidate each voter numbered. This keeps going until someone has more than half. [[f:preference-transfer]] [[f:house-50pc]]
 
 A ballot paper that is not filled in correctly is not counted. It is called an {{informal vote}}. [[f:informal-def]]
 
@@ -111,7 +111,7 @@ Voters in that one electorate go to the polls. The rest of the country does not 
 
 The Senate works differently. If a senator resigns, dies or becomes ineligible before their term ends, there is a {{casual vacancy}}. [[f:casual-vacancy-def]]
 
-The seat goes to someone from the same party. The parliament of that state or territory chooses them. There is no new vote by the public. [[f:casual-vacancy-fill]]
+The parliament of that state or territory chooses who fills the seat. If the senator was elected for a party, the new senator must come from the same party. There is no new vote by the public. [[f:casual-vacancy-fill]]
 
 ---screen---
 
@@ -129,7 +129,7 @@ An electorate's name can only change during a redistribution. [[f:electorate-nam
 
 OPAX lists electorates, federal and state, with the people recorded as representing each one. Each record has a dated source. [[f:opax-electorates]]
 
-OPAX also holds the AEC's notional seat figures from before the 2025 election. OPAX notes these are a starting point, not an election result. [[f:opax-notional]]
+OPAX also holds the AEC's notional seat figures from before the 2025 election. OPAX notes these are a starting point, not an election result. So they are not the real result of any election for that seat. [[f:opax-notional]]
 
 ---screen---
 

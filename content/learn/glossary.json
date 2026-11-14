@@ -1124,12 +1124,13 @@
    "slug": "annual-return",
    "chapter": "money-and-interests",
    "short": "A yearly form telling the AEC about money a party, MP or other group received or spent.",
-   "more": "Parties, significant third parties and associated entities lodge by 20 October. MPs and senators who receive gifts lodge by 17 November. The AEC publishes them on the first working day in February.",
+   "more": "Until the end of 2026, parties, significant third parties and associated entities lodge by 20 October, and the AEC publishes returns each February. From 2027, returns cover a calendar year and are due 8 weeks after it ends. The AEC then publishes them within 10 weeks of the year's end.",
    "facts": [
     "aec-annual-returners",
     "annual-return-20-oct",
-    "annual-return-17-nov",
-    "returns-published-feb"
+    "returns-published-feb",
+    "reform-annual-due-8w",
+    "reform-publish-10w"
    ],
    "see_also": [
     "disclosure-threshold",
@@ -1146,10 +1147,11 @@
    "slug": "disclosure-threshold",
    "chapter": "money-and-interests",
    "short": "The amount below which money does not have to be disclosed.",
-   "more": "From 1 July 2026 to 31 December 2026 it is more than $17,300. From 1 January 2027, the AEC says it will be above $5,000.",
+   "more": "From 1 July 2026 to 31 December 2026 it is more than $17,300. Under the current rules, it rises each 1 July. From 1 January 2027, the AEC says it will be above $5,000.",
    "facts": [
     "threshold-def",
     "threshold-2026",
+    "threshold-indexed",
     "reform-threshold"
    ],
    "see_also": [
@@ -1209,11 +1211,12 @@
    "slug": "transparency-register",
    "chapter": "money-and-interests",
    "short": "The AEC's public website of disclosure returns, registered groups and election funding.",
-   "more": "Annual returns are published there on the first working day in February. Returns for each federal election are published after the election.",
+   "more": "Until the end of 2026, annual returns are published there on the first working day in February. From 2027, the AEC must publish annual return details within 10 weeks of the end of the year, and donation details sooner.",
    "facts": [
     "transparency-register-def",
     "returns-published-feb",
-    "election-returns-published"
+    "reform-publish-10w",
+    "reform-publish-24h"
    ],
    "see_also": [
     "annual-return"
@@ -1231,8 +1234,8 @@
    "short": "A group linked to one or more political parties that must register with the AEC.",
    "more": "Associated entities lodge annual returns. From 2027, the AEC says one must operate wholly, or to a significant extent, for the benefit of registered parties.",
    "facts": [
-    "aec-annual-returners",
     "registered-entities",
+    "aec-annual-returners",
     "associated-entity-new-def"
    ],
    "see_also": [
@@ -1241,8 +1244,8 @@
    ],
    "sources": [
     "aec-disclosure",
-    "aec-transparency-register",
-    "aec-whats-changing"
+    "aec-whats-changing",
+    "aec-who-register"
    ]
   },
   {
@@ -1250,10 +1253,10 @@
    "slug": "significant-third-party",
    "chapter": "money-and-interests",
    "short": "A group, other than a party, that must register with the AEC and lodge annual returns.",
-   "more": "Significant third parties must register with the AEC. They lodge their annual return by 20 October each year, like parties and associated entities.",
+   "more": "Significant third parties must register with the AEC. Until the end of 2026, they lodge their annual return by 20 October, like parties and associated entities.",
    "facts": [
-    "aec-annual-returners",
     "registered-entities",
+    "aec-annual-returners",
     "annual-return-20-oct"
    ],
    "see_also": [
@@ -1262,8 +1265,8 @@
    ],
    "sources": [
     "aec-disclosure",
-    "aec-transparency-register",
-    "aec-whats-changing"
+    "aec-whats-changing",
+    "aec-who-register"
    ]
   },
   {
@@ -1288,7 +1291,7 @@
    "slug": "gift-cap",
    "chapter": "money-and-interests",
    "short": "From 2027, a limit on how much one person or group can give.",
-   "more": "The rules start on 1 January 2027. The AEC says the cap is $50,000 a calendar year to one recipient for a federal purpose, and $1.6 million in total.",
+   "more": "The rules start on 1 January 2027. The AEC says the cap is $50,000 in a calendar year to one recipient for a federal purpose. Across all recipients, the limit is $1.6 million in a calendar year.",
    "facts": [
     "reform-start",
     "reform-gift-caps",
@@ -1401,7 +1404,7 @@
    "slug": "writ",
    "chapter": "elections",
    "short": "A formal order to hold an election, with its key dates.",
-   "more": "Writs are issued within 10 days of Parliament being dissolved. The roll closes seven days after the writ is issued.",
+   "more": "Writs are issued within 10 days of the House being dissolved. The roll closes seven days after the writ is issued.",
    "facts": [
     "writ-def",
     "writ-10-days",
@@ -1528,7 +1531,8 @@
    ],
    "sources": [
     "aec-preferential",
-    "peo-glossary"
+    "peo-glossary",
+    "peo-preferential-video"
    ]
   },
   {
@@ -1576,7 +1580,7 @@
    "slug": "casual-vacancy",
    "chapter": "elections",
    "short": "An empty Senate seat, when a senator leaves before their term ends.",
-   "more": "It is filled by someone from the same party. The parliament of that state or territory chooses them.",
+   "more": "The parliament of that state or territory chooses who fills it. If the senator was elected for a party, the new senator must come from the same party.",
    "facts": [
     "casual-vacancy-def",
     "casual-vacancy-fill"
@@ -1586,6 +1590,7 @@
     "senator"
    ],
    "sources": [
+    "constitution",
     "peo-federal-elections"
    ]
   },
@@ -1613,7 +1618,7 @@
    "slug": "three-levels-of-government",
    "chapter": "federal-and-state",
    "short": "Federal, state and territory, and local government.",
-   "more": "Each level looks after different things, and sometimes their jobs overlap. There are over 550 local councils.",
+   "more": "Each level looks after different things, and sometimes their jobs overlap. There are more than 500 local councils.",
    "facts": [
     "three-levels",
     "levels-overlap",

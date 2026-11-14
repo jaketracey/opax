@@ -1371,6 +1371,14 @@
      "quote": "when the votes are equal the question shall pass in the negative."
     },
     {
+     "fact": "casual-vacancy-fill",
+     "quote": "he was publicly recognized by a particular political party as being an endorsed candidate of that party"
+    },
+    {
+     "fact": "casual-vacancy-fill",
+     "quote": "shall, unless there is no member of that party available to be chosen or appointed, be a member of that party."
+    },
+    {
      "fact": "s51-heads",
      "quote": "Trade and commerce with other countries, and among the States:"
     },
@@ -1441,6 +1449,10 @@
     {
      "fact": "house-150",
      "quote": "the total number of House of Representatives seats for each state and territory will remain unchanged"
+    },
+    {
+     "fact": "next-election-window",
+     "quote": "which is due to be held between August 2027 and May 2028."
     }
    ]
   },
@@ -1517,7 +1529,7 @@
    "id": "opax-web-app",
    "publisher": "OPAX",
    "title": "Web app: division and bill views (portal/public/app.js)",
-   "url": "https://github.com/jaketracey/opax/blob/adae6bff8d4d8163b2c4fb3a791f08ee0dd7fb5c/portal/public/app.js",
+   "url": "https://github.com/jaketracey/opax/blob/0c86665c0ee3a969181bb31cdb38d74478a23bef/portal/public/app.js",
    "repo_path": "portal/public/app.js",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -1555,7 +1567,7 @@
    "id": "opax-vote-tables",
    "publisher": "OPAX",
    "title": "Web: division and vote table rules (portal/public/vote-tables.js)",
-   "url": "https://github.com/jaketracey/opax/blob/adae6bff8d4d8163b2c4fb3a791f08ee0dd7fb5c/portal/public/vote-tables.js",
+   "url": "https://github.com/jaketracey/opax/blob/0c86665c0ee3a969181bb31cdb38d74478a23bef/portal/public/vote-tables.js",
    "repo_path": "portal/public/vote-tables.js",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -1577,7 +1589,7 @@
    "id": "opax-seo-content",
    "publisher": "OPAX",
    "title": "Web: server-rendered bill and division pages (portal/src/seo-content.ts)",
-   "url": "https://github.com/jaketracey/opax/blob/adae6bff8d4d8163b2c4fb3a791f08ee0dd7fb5c/portal/src/seo-content.ts",
+   "url": "https://github.com/jaketracey/opax/blob/0c86665c0ee3a969181bb31cdb38d74478a23bef/portal/src/seo-content.ts",
    "repo_path": "portal/src/seo-content.ts",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -1611,7 +1623,7 @@
    "id": "opax-division-tool",
    "publisher": "OPAX",
    "title": "Ask division tool: floor-crossing rule (portal/src/tools/division.ts)",
-   "url": "https://github.com/jaketracey/opax/blob/adae6bff8d4d8163b2c4fb3a791f08ee0dd7fb5c/portal/src/tools/division.ts",
+   "url": "https://github.com/jaketracey/opax/blob/0c86665c0ee3a969181bb31cdb38d74478a23bef/portal/src/tools/division.ts",
    "repo_path": "portal/src/tools/division.ts",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -1845,7 +1857,7 @@
    "id": "opax-bills-export",
    "publisher": "OPAX",
    "title": "Federal bill export (portal/public/bills/au-federal-*.json)",
-   "url": "https://github.com/jaketracey/opax/blob/adae6bff8d4d8163b2c4fb3a791f08ee0dd7fb5c/portal/public/bills",
+   "url": "https://github.com/jaketracey/opax/blob/0c86665c0ee3a969181bb31cdb38d74478a23bef/portal/public/bills",
    "repo_path": "portal/public/bills",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -2109,6 +2121,10 @@
     {
      "fact": "first-preference-count",
      "quote": "the counters add up all of the first preferences for each candidate"
+    },
+    {
+     "fact": "preference-transfer",
+     "quote": "Now we eliminate the person with the least votes."
     }
    ]
   },
@@ -2298,7 +2314,7 @@
     },
     {
      "fact": "referral-2009",
-     "quote": "Federal Parliament then passed the Fair Work Act 2009 creating the current national industrial relations system which covers the majority of Australian workers."
+     "quote": "creating the current national industrial relations system which covers the majority of Australian workers."
     }
    ]
   },
@@ -2414,6 +2430,10 @@
     },
     {
      "fact": "reform-calendar-year",
+     "quote": "Financial year (July to June)"
+    },
+    {
+     "fact": "reform-calendar-year",
      "quote": "Calendar year (1 January to 31 December)"
     },
     {
@@ -2459,6 +2479,22 @@
     {
      "fact": "electoral-expenditure-def",
      "quote": "electoral expenditure is any expenditure incurred by a relevant entity in relation to an election"
+    },
+    {
+     "fact": "reform-donors-no-returns",
+     "quote": "Donors do not need to lodge annual returns."
+    },
+    {
+     "fact": "reform-annual-due-8w",
+     "quote": "Annual returns due 8 weeks after the end of the calendar year (final week of February)."
+    },
+    {
+     "fact": "reform-publish-10w",
+     "quote": "Information from annual returns must be published within 10 weeks of the end of the calendar year."
+    },
+    {
+     "fact": "reform-election-returns-replaced",
+     "quote": "Election returns replaced by expedited disclosure and annual candidate returns."
     }
    ]
   },
@@ -2482,6 +2518,42 @@
     {
      "fact": "threshold-indexed",
      "quote": "This amount is indexed with effect from 1 July each year based on increases in the consumer price index."
+    }
+   ]
+  },
+  {
+   "id": "aec-who-register",
+   "publisher": "Australian Electoral Commission",
+   "title": "Which entities need to be registered?",
+   "url": "https://www.aec.gov.au/Parties_and_Representatives/financial_disclosure/who-needs-to-register.htm",
+   "retrieved": "2026-11-14",
+   "sha256": "aa0424c59fc9336f7d806d62b873845725b4232bfa2fd1f8bbabee8bd87f0980",
+   "snapshot": "raw/www_aec_gov_au_Parties_and_Representatives_financial_disclosure_who_needs_to_register_htm.html",
+   "quotes": [
+    {
+     "fact": "registered-entities",
+     "quote": "The Electoral Act provides for three types of entities to be registered by the AEC: political parties, significant third parties and associated entities."
+    }
+   ]
+  },
+  {
+   "id": "frl-fair-work-act",
+   "publisher": "Federal Register of Legislation",
+   "title": "Fair Work Act 2009 (C2009A00028), title record",
+   "url": "https://www.legislation.gov.au/C2009A00028/latest/text",
+   "fetched_from": "https://api.prod.legislation.gov.au/v1/titles('C2009A00028')",
+   "snapshot_text": "raw/frl_title_C2009A00028.json",
+   "retrieved": "2026-11-14",
+   "sha256": "577d94a1e28ed9efc6b7a2b54a2376c564da67ab6dac5d984fa954154c496b21",
+   "snapshot": "raw/frl_title_C2009A00028.json",
+   "quotes": [
+    {
+     "fact": "fair-work-act-2009",
+     "quote": "\"name\":\"Fair Work Act 2009\""
+    },
+    {
+     "fact": "fair-work-act-2009",
+     "quote": "\"makingDate\":\"2009-04-07T00:00:00\""
     }
    ]
   },
@@ -2513,10 +2585,6 @@
    "sha256": "0b49090007fe75051ac62f01c11b65124916ea748cb74828cf400334afd3e7fa",
    "snapshot": "raw/www_aec_gov_au_Parties_and_Representatives_financial_disclosure_transparency_register.html",
    "quotes": [
-    {
-     "fact": "registered-entities",
-     "quote": "Entities who meet certain criteria regarding financial disclosure obligations must be registered."
-    },
     {
      "fact": "returns-published-feb",
      "quote": "Information from annual returns is published on the first working day in February each year."
