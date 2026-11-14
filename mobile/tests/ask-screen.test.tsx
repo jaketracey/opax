@@ -1743,6 +1743,36 @@ describe('streamed text and VoiceOver', () => {
       });
     });
 
+    test('a flick is left its momentum; the follow resumes when it stops near the end', async () => {
+      await begin();
+      await lay('ask-progress', { y: 60, height: 600 });
+      await scrolled(followed(660));
+      scrollTo.mockClear();
+      await act(async () => {
+        scroller().props.onScrollBeginDrag({ nativeEvent: {} });
+      });
+      await scrolled(followed(660) - 12);
+      await act(async () => {
+        scroller().props.onScrollEndDrag({
+          nativeEvent: { velocity: { x: 0, y: -1.2 } },
+        });
+        scroller().props.onMomentumScrollBegin({ nativeEvent: {} });
+      });
+      await lay('ask-progress', { y: 60, height: 608 });
+      expect(scrollTo).not.toHaveBeenCalled();
+      await act(async () => {
+        scroller().props.onMomentumScrollEnd({ nativeEvent: {} });
+        await new Promise((resolve) => setTimeout(resolve, 40));
+      });
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: followed(668),
+        animated: true,
+      });
+      await act(async () => {
+        finish(answer);
+      });
+    });
+
     test('nothing moves when the answer lands', async () => {
       await begin();
       await lay('ask-progress', { y: 60, height: 600 });

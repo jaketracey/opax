@@ -246,6 +246,150 @@ describe('useStreamFollow', () => {
     });
   });
 
+  describe('offsets the platform pulls back are not the reader leaving', () => {
+    test('the keyboard closes with no drag: the clamp is not a fall, and more text is followed', () => {
+      report(() => follow.onProgress(700));
+      report(() => follow.onScroll(end(700)));
+      // The reader taps the composer: the keyboard covers 300 more.
+      render({ streaming: true, obscured: 400 });
+      act(() => jest.advanceTimersByTime(20));
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: end(700, 8, 400),
+        animated: true,
+      });
+      report(() => follow.onScroll(end(700, 8, 400)));
+      // Back, or a tap on the answer: it closes, the padding shrinks and
+      // the platform pulls the offset back into range, 280 lower.
+      render({ streaming: true, obscured: 100 });
+      report(() => follow.onScroll(end(700) + 20));
+      const before = scrollTo.mock.calls.length;
+      report(() => follow.onProgress(1200));
+      expect(scrollTo).toHaveBeenCalledTimes(before + 1);
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: end(1200),
+        animated: true,
+      });
+    });
+
+    test('content re-wraps shorter (a rotation): the clamp is not a fall, and more text is followed', () => {
+      report(() => follow.onProgress(900));
+      report(() => follow.onScroll(end(900)));
+      // Wider lines: the same text ends 300 higher, and the offset with it.
+      report(() => {
+        follow.onProgress(600);
+        follow.onScroll(end(600));
+      });
+      expect(scrollTo).toHaveBeenCalledTimes(1);
+      report(() => follow.onProgress(800));
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: end(800),
+        animated: true,
+      });
+      expect(scrollTo).toHaveBeenCalledTimes(2);
+    });
+
+    test('a bounce at the bottom does not end it', () => {
+      report(() => follow.onProgress(700));
+      report(() => {
+        follow.onScroll(end(700));
+        follow.onMomentumBegin();
+        follow.onScroll(end(700) + 30);
+        follow.onScroll(end(700) + 8);
+        follow.onScroll(end(700) - 6);
+        follow.onScroll(end(700));
+        follow.onMomentumEnd();
+      });
+      report(() => follow.onProgress(800));
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: end(800),
+        animated: true,
+      });
+      expect(scrollTo).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('letting go', () => {
+    beforeEach(() => {
+      report(() => follow.onProgress(700));
+      report(() => follow.onScroll(end(700)));
+      scrollTo.mockClear();
+    });
+
+    test('a short flick up keeps its momentum: nothing follows until it has run out', () => {
+      report(() => {
+        follow.onDrag();
+        follow.onScroll(end(700) - 18);
+        // Released moving, still within reach of the end.
+        follow.onDragEnd(-1.4);
+      });
+      expect(scrollTo).not.toHaveBeenCalled();
+      report(() => {
+        follow.onMomentumBegin();
+        follow.onScroll(end(700) - 20);
+        follow.onScroll(end(700) - 22);
+      });
+      report(() => follow.onProgress(760));
+      expect(scrollTo).not.toHaveBeenCalled();
+      // It carried the thread well away: still the reader's.
+      report(() => {
+        follow.onScroll(end(700) - 200);
+        follow.onMomentumEnd();
+      });
+      report(() => follow.onProgress(900));
+      expect(scrollTo).not.toHaveBeenCalled();
+    });
+
+    test('a flick that runs out within reach of the end is followed again, once it stops', () => {
+      report(() => {
+        follow.onDrag();
+        follow.onScroll(end(700) - 10);
+        follow.onDragEnd(0.8);
+        follow.onMomentumBegin();
+        follow.onScroll(end(700) - 4);
+      });
+      expect(scrollTo).not.toHaveBeenCalled();
+      report(() => follow.onProgress(712));
+      expect(scrollTo).not.toHaveBeenCalled();
+      report(() => follow.onMomentumEnd());
+      expect(scrollTo).toHaveBeenCalledTimes(1);
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: end(712),
+        animated: true,
+      });
+    });
+
+    test('a still release within reach of the end snaps back to it', () => {
+      report(() => follow.onProgress(760));
+      scrollTo.mockClear();
+      report(() => {
+        follow.onScroll(end(760));
+        follow.onDrag();
+        follow.onScroll(end(760) - 18);
+        follow.onDragEnd(0);
+      });
+      report(() => follow.onProgress(800));
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: end(800),
+        animated: true,
+      });
+    });
+  });
+
+  test('a frame queued as the stream ends is dropped with it, not left to run', () => {
+    const cancel = jest.spyOn(globalThis, 'cancelAnimationFrame');
+    try {
+      act(() => follow.onProgress(700));
+      expect(cancel).not.toHaveBeenCalled();
+      // The commit that ends the stream cancels it, before any frame.
+      act(() => tree.update(<Probe streaming={false} />));
+      expect(cancel).toHaveBeenCalledTimes(1);
+      act(() => jest.advanceTimersByTime(50));
+      expect(scrollTo).not.toHaveBeenCalled();
+    } finally {
+      cancel.mockRestore();
+    }
+  });
+
   test('an unmount cancels the pending frame', () => {
     act(() => follow.onProgress(700));
     act(() => tree.update(<></>));

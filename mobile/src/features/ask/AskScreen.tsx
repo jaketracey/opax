@@ -421,7 +421,10 @@ export default function AskScreen() {
       }}
       onContentSizeChange={onContentSizeChange}
       onScrollBeginDrag={follow.onDrag}
-      onScrollEndDrag={follow.onDragEnd}
+      onScrollEndDrag={(event) =>
+        follow.onDragEnd(event.nativeEvent.velocity?.y ?? 0)
+      }
+      onMomentumScrollBegin={follow.onMomentumBegin}
       onMomentumScrollEnd={follow.onMomentumEnd}
       onScroll={(event) => {
         atTop.current = event.nativeEvent.contentOffset.y <= 4;
