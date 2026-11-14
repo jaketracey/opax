@@ -14,7 +14,7 @@ import { fileURLToPath } from 'node:url';
 import { format, resolveConfig } from 'prettier';
 
 /** The content commit the app's copy of the guide was taken from. */
-export const SOURCE_SHA = '39d9d33bc';
+export const SOURCE_SHA = '08b657430';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const MOBILE = join(here, '..');
