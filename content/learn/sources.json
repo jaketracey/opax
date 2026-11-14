@@ -1,0 +1,1644 @@
+{
+ "_about": "One entry per source. Snapshots (HTML/text, sha256) are kept outside git in ~/opax-work/learn-sources/. OPAX entries point at the code or record that draws the screen.",
+ "sources": [
+  {
+   "id": "peo-law-making",
+   "publisher": "Parliamentary Education Office",
+   "title": "Law-making (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/law-making",
+   "retrieved": "2026-11-14",
+   "sha256": "aaa11050a78aa80203808d0819918366e7a7d0e749a4f8f0c6f489cba5dc6d97",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_how_parliament_works_bills_and_laws_law_making.html",
+   "quotes": [
+    {
+     "fact": "bill-definition",
+     "quote": "Laws start as bills – a written proposal for a new law or a change to an existing law."
+    },
+    {
+     "fact": "bill-identical-both-houses",
+     "quote": "a bill must be agreed to in identical form by both the Senate and House of Representatives"
+    },
+    {
+     "fact": "bill-idea-sources",
+     "quote": "Ideas for new laws can come from many different places:"
+    },
+    {
+     "fact": "bill-idea-sources",
+     "quote": "A government department may tell its minister about a problem that needs fixing."
+    },
+    {
+     "fact": "bill-idea-sources",
+     "quote": "Political parties have their own ideas about how Australia should be governed."
+    },
+    {
+     "fact": "bill-idea-sources",
+     "quote": "They can speak to members of parliament with suggestions for bills."
+    },
+    {
+     "fact": "bill-idea-sources",
+     "quote": "If the issue requires action, the committee may suggest that a bill be introduced."
+    },
+    {
+     "fact": "most-bills-ministers",
+     "quote": "Most bills are introduced by government ministers."
+    },
+    {
+     "fact": "private-bills",
+     "quote": "Other members of parliament can introduce their own bills, known as private members' or private senators' bills."
+    },
+    {
+     "fact": "commencement-28-days",
+     "quote": "starts on the date included in the law or, if no date is given, 28 days after Royal Assent."
+    },
+    {
+     "fact": "bill-time",
+     "quote": "It can take months or even years for a bill to become law but most bills take 2 to 3 months."
+    },
+    {
+     "fact": "bills-per-year",
+     "quote": "Around 200 bills are introduced into Parliament each year"
+    }
+   ]
+  },
+  {
+   "id": "peo-making-a-law",
+   "publisher": "Parliamentary Education Office",
+   "title": "Making a law (video transcript)",
+   "url": "https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/making-a-law",
+   "retrieved": "2026-11-14",
+   "sha256": "1df4fb9c1ac22fa71ae92d146194a22647ba4f44873d7859f2a7daee5a0b63a3",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_how_parliament_works_bills_and_laws_making_a_law.html",
+   "quotes": [
+    {
+     "fact": "committee-send-bill",
+     "quote": "Either house of Parliament can send a bill to a committee for detailed examination."
+    },
+    {
+     "fact": "committee-report",
+     "quote": "A committee might suggest changes to a bill or make other recommendations for the Houses to consider."
+    },
+    {
+     "fact": "senate-stages",
+     "quote": "it is sent to the other house – in this case, the Senate – where a similar process is followed."
+    },
+    {
+     "fact": "parliament-makes-laws",
+     "quote": "One of the main roles of the Australian Parliament is to make laws for the people of Australia."
+    }
+   ]
+  },
+  {
+   "id": "peo-usual-path",
+   "publisher": "Parliamentary Education Office",
+   "title": "The usual path of a bill",
+   "url": "https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/the-usual-path-of-a-bill",
+   "retrieved": "2026-11-14",
+   "sha256": "70d2bb9d1364272b5c36e4ae6c2df135914f525331ab4fe16b52e85ba0f7ee2b",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_how_parliament_works_bills_and_laws_the_usual_path_of_a_bill.html",
+   "quotes": [
+    {
+     "fact": "senate-referral-early",
+     "quote": "the Senate may refer the text of the bill to a Senate committee for inquiry (this can happen while the bill is in the House)."
+    },
+    {
+     "fact": "cid-optional",
+     "quote": "Consideration in detail (optional stage) – members discuss the bill in detail, including any changes to the bill"
+    },
+    {
+     "fact": "senate-stages",
+     "quote": "In the Senate a bill goes through the following stages:"
+    }
+   ]
+  },
+  {
+   "id": "peo-amendments",
+   "publisher": "Parliamentary Education Office",
+   "title": "Amendments (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/amendments",
+   "retrieved": "2026-11-14",
+   "sha256": "bcfbb41bf0aa197b5193ce8c76886e2bb3126cb0cf6753b1023b27c3b3bdeb33",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_how_parliament_works_bills_and_laws_amendments.html",
+   "quotes": [
+    {
+     "fact": "amendments-when",
+     "quote": "Amendments to bills are most often considered during committee of the whole in the Senate or consideration in detail in the House of Representatives."
+    },
+    {
+     "fact": "amendments-when",
+     "quote": "can speak about each amendment and vote for or against each amendment."
+    },
+    {
+     "fact": "amend-anyone",
+     "quote": "Any member of parliament can suggest an amendment to a bill. This is called 'moving an amendment'."
+    },
+    {
+     "fact": "amend-written",
+     "quote": "An amendment must be submitted in writing to the Clerk of the Senate or House."
+    },
+    {
+     "fact": "amend-written",
+     "quote": "The Clerk then distributes copies so that everyone can read the amendment"
+    },
+    {
+     "fact": "amendments-both-houses",
+     "quote": "Amendments can be introduced in either the Senate or the House of Representatives, and must be agreed to by both."
+    }
+   ]
+  },
+  {
+   "id": "peo-delegated-law",
+   "publisher": "Parliamentary Education Office",
+   "title": "Delegated law (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/how-parliament-works/bills-and-laws/delegated-law",
+   "retrieved": "2026-11-14",
+   "sha256": "97be27d2e3cdf45a55e1d12f12013b5b7251ec6545aeecd179c59b48b4f9f55c",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_how_parliament_works_bills_and_laws_delegated_law.html",
+   "quotes": [
+    {
+     "fact": "delegated-purpose",
+     "quote": "These laws provide a general framework and don’t include details about when, where and how the laws might be applied."
+    },
+    {
+     "fact": "delegated-purpose",
+     "quote": "give the power to make decisions about the details of these complex laws to the person or group with expert knowledge"
+    },
+    {
+     "fact": "delegated-what",
+     "quote": "There are different types of delegated law including determinations, regulations, ordinances and orders."
+    },
+    {
+     "fact": "delegated-same-force",
+     "quote": "Delegated law has the same power as a law made by the Australian Parliament."
+    },
+    {
+     "fact": "delegated-no-debate",
+     "quote": "It can be made and changed without having to be debated and passed by the Parliament."
+    },
+    {
+     "fact": "delegated-register-6-days",
+     "quote": "Each delegated law must be listed on a public register. It becomes law on the day it is registered."
+    },
+    {
+     "fact": "delegated-register-6-days",
+     "quote": "Then it must be presented to Parliament within 6 sitting days."
+    },
+    {
+     "fact": "disallow-15-days",
+     "quote": "Within 15 sitting days, a member of parliament must request the Senate or House of Representatives overrule the delegated law."
+    },
+    {
+     "fact": "disallow-15-days",
+     "quote": "The Senate or House of Representatives have 15 sitting days to discuss the delegated law and make a decision."
+    },
+    {
+     "fact": "disallow-15-days",
+     "quote": "If there is no discussion or no decision is made, the delegated law is overruled."
+    },
+    {
+     "fact": "delegated-some-not",
+     "quote": "Some delegated law cannot be overruled."
+    }
+   ]
+  },
+  {
+   "id": "peo-voting",
+   "publisher": "Parliamentary Education Office",
+   "title": "Voting in Parliament (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/voting-in-parliament",
+   "retrieved": "2026-11-14",
+   "sha256": "6b6243484c2f75144e133a33abc3654176e3ee47267f02ade01822917d799387",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_how_parliament_works_parliament_at_work_voting_in_parliament.html",
+   "quotes": [
+    {
+     "fact": "division-def",
+     "quote": "A division is a formal recorded vote where members of Parliament divide into 2 groups to vote for or against a proposal."
+    },
+    {
+     "fact": "majority-vote",
+     "quote": "The Australian Parliament makes decisions on proposed laws and other issues by a majority vote."
+    },
+    {
+     "fact": "voices-most",
+     "quote": "Most decisions of the Parliament are made by voting ‘on the voices’."
+    },
+    {
+     "fact": "division-bells",
+     "quote": "The division bells usually ring for 4 minutes."
+    },
+    {
+     "fact": "division-bells",
+     "quote": "Once the bells have stopped, the doors are locked."
+    },
+    {
+     "fact": "division-bells",
+     "quote": "Members of parliament who arrive after the bells stop are not allowed to enter."
+    },
+    {
+     "fact": "division-sides",
+     "quote": "asks those who want to vote for the proposal to move to the right side of their chair"
+    },
+    {
+     "fact": "division-sides",
+     "quote": "and those voting against to move to the left."
+    },
+    {
+     "fact": "division-recorded-announced",
+     "quote": "Votes are counted and the names of those voting are recorded."
+    },
+    {
+     "fact": "division-recorded-announced",
+     "quote": "The result is announced by the Presiding Officer."
+    },
+    {
+     "fact": "speaker-casting",
+     "quote": "the Speaker of the House does not vote unless the result is a tie."
+    },
+    {
+     "fact": "president-votes",
+     "quote": "The President of the Senate may always vote along with other senators."
+    },
+    {
+     "fact": "president-votes",
+     "quote": "This ensures all the states have equal representation when votes are taken in the Senate."
+    },
+    {
+     "fact": "senate-tie",
+     "quote": "If there is a tied vote in the Senate, the question is not agreed to"
+    }
+   ]
+  },
+  {
+   "id": "peo-crossing-floor",
+   "publisher": "Parliamentary Education Office",
+   "title": "Crossing the floor (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/crossing-the-floor",
+   "retrieved": "2026-11-14",
+   "sha256": "930d93d9b0ac735dd9d479e6fdaa1206355323486f6ff2be0ff78221000dac00",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_how_parliament_works_parliament_at_work_crossing_the_floor.html",
+   "quotes": [
+    {
+     "fact": "party-team",
+     "quote": "Members of parliamentary parties usually vote as a team in Parliament, with all party members voting the same way."
+    },
+    {
+     "fact": "party-rules",
+     "quote": "parties often have rules about voting as a team."
+    },
+    {
+     "fact": "whip-how-to-vote",
+     "quote": "are responsible for making sure party members know how to vote"
+    },
+    {
+     "fact": "team-power",
+     "quote": "working together gives members more power than acting alone"
+    },
+    {
+     "fact": "crossing-def",
+     "quote": "Crossing the floor is when a member of parliament votes against the rest of their party during a division – a formal vote."
+    },
+    {
+     "fact": "crossing-def",
+     "quote": "they walk across or ‘cross’ the floor to sit opposite the other members of their team."
+    },
+    {
+     "fact": "crossing-rare",
+     "quote": "Crossing the floor is rare and usually only happens after careful consideration."
+    },
+    {
+     "fact": "crossing-why",
+     "quote": "they strongly agree or disagree with a particular policy or decision"
+    },
+    {
+     "fact": "crossing-why",
+     "quote": "they believe a different outcome would be better for the people in their state, territory or electorate"
+    },
+    {
+     "fact": "crossing-why",
+     "quote": "the issue is a matter of personal values or conscience."
+    },
+    {
+     "fact": "crossing-cost",
+     "quote": "Crossing the floor may affect the support or opportunities a member receives within their party"
+    },
+    {
+     "fact": "free-vote-def",
+     "quote": "In a free vote – sometimes called a conscience vote – members of parliament are not required to vote with their party."
+    },
+    {
+     "fact": "free-vote-party-decides",
+     "quote": "Each parliamentary party decides when its members are allowed a free vote."
+    },
+    {
+     "fact": "free-vote-43",
+     "quote": "Between 1950 and 2021, only 43 votes on bills and other issues in the Parliament were decided by a free vote."
+    },
+    {
+     "fact": "free-vote-topics",
+     "quote": "Free votes have mostly been used to decide issues such as euthanasia, stem cell research or same-sex marriage."
+    }
+   ]
+  },
+  {
+   "id": "peo-committees",
+   "publisher": "Parliamentary Education Office",
+   "title": "Committees (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/committees",
+   "retrieved": "2026-11-14",
+   "sha256": "b4e86edae46db60a2fde2c4ae83607b88a67a94add69ac059ab45776e049e54e",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_how_parliament_works_parliament_at_work_committees.html",
+   "quotes": [
+    {
+     "fact": "committee-size",
+     "quote": "They are usually made up of 6 to 10 members of parliament and have a mix of government and non-government members."
+    },
+    {
+     "fact": "committee-submissions-hearings",
+     "quote": "Individuals and groups are invited to send submissions – opinions and proposals – to committees."
+    },
+    {
+     "fact": "committee-submissions-hearings",
+     "quote": "they invite people or groups to appear at hearings to provide more information or answer questions from committee members."
+    },
+    {
+     "fact": "committee-report",
+     "quote": "After the hearings are finished, the committee writes a report which is presented to Parliament."
+    },
+    {
+     "fact": "committee-issues-and-bills",
+     "quote": "Committees investigate issues and bills in detail."
+    },
+    {
+     "fact": "committee-report-use",
+     "quote": "Members of parliament might use the report to help them decide how they will vote on a bill or to develop bills or amendments"
+    }
+   ]
+  },
+  {
+   "id": "peo-budget",
+   "publisher": "Parliamentary Education Office",
+   "title": "Budget (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/how-parliament-works/parliament-at-work/budget",
+   "retrieved": "2026-11-14",
+   "sha256": "a2c5fa3cf9d10436e027103c62f1547f03628cc9a2c019e834d6cb0fff2f59ad",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_how_parliament_works_parliament_at_work_budget.html",
+   "quotes": [
+    {
+     "fact": "budget-bills",
+     "quote": "The Budget is a collection of bills – proposed laws – called appropriation bills."
+    }
+   ]
+  },
+  {
+   "id": "peo-whip",
+   "publisher": "Parliamentary Education Office",
+   "title": "Party whip (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/parliament-and-its-people/people-in-parliament/party-whip",
+   "retrieved": "2026-11-14",
+   "sha256": "c7c7d3dad9de2e46f23cb2ad3ba62d703bdb4bb934f9ee95fc79cf03bb18248c",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_parliament_and_its_people_people_in_parliament_party_whip.html",
+   "quotes": [
+    {
+     "fact": "whip-def",
+     "quote": "A party whip is a member of Parliament chosen by their political party to help keep their party organised"
+    },
+    {
+     "fact": "whip-def",
+     "quote": "They help the party work as a team."
+    },
+    {
+     "fact": "whip-small-parties",
+     "quote": "Smaller parties may only have a whip where they have members or choose not to have a whip."
+    },
+    {
+     "fact": "whip-duties",
+     "quote": "organising party members to make sure they attend and vote together during divisions"
+    },
+    {
+     "fact": "whip-duties",
+     "quote": "counting and recording the votes in a division"
+    },
+    {
+     "fact": "whip-duties",
+     "quote": "so numbers between the government and opposition stay balanced if members are away."
+    },
+    {
+     "fact": "whip-numbers",
+     "quote": "major parties usually have a chief whip and 2 deputy whips."
+    }
+   ]
+  },
+  {
+   "id": "peo-senate-numbers",
+   "publisher": "Parliamentary Education Office",
+   "title": "Senate current numbers",
+   "url": "https://peo.gov.au/understand-our-parliament/parliament-and-its-people/senate/senate-current-numbers",
+   "retrieved": "2026-11-14",
+   "sha256": "c8ea279973b2974612f3fd3cad8a3e034cc15d378148539561c77e75443dd69b",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_parliament_and_its_people_senate_senate_current_numbers.html",
+   "quotes": [
+    {
+     "fact": "senate-76",
+     "quote": "As at 15 May 2026"
+    },
+    {
+     "fact": "senate-numbers-2026",
+     "quote": "Government – 30 senators"
+    },
+    {
+     "fact": "senate-numbers-2026",
+     "quote": "Opposition – 27 senators"
+    },
+    {
+     "fact": "senate-numbers-2026",
+     "quote": "Australian Greens – 10 senators"
+    },
+    {
+     "fact": "senate-numbers-2026",
+     "quote": "One Nation – 4 senators"
+    },
+    {
+     "fact": "senate-numbers-2026",
+     "quote": "Jacqui Lambie Network – 1 senator"
+    },
+    {
+     "fact": "senate-numbers-2026",
+     "quote": "United Australia Party – 1 senator"
+    },
+    {
+     "fact": "senate-numbers-2026",
+     "quote": "Australia's Voice – 1 senator"
+    },
+    {
+     "fact": "senate-numbers-2026",
+     "quote": "Independents – 2 senators"
+    },
+    {
+     "fact": "senate-numbers-2026",
+     "quote": "As at 15 May 2026"
+    }
+   ]
+  },
+  {
+   "id": "peo-house-numbers",
+   "publisher": "Parliamentary Education Office",
+   "title": "House of Representatives current numbers",
+   "url": "https://peo.gov.au/understand-our-parliament/parliament-and-its-people/house-of-representatives/house-of-representatives-current-numbers",
+   "retrieved": "2026-11-14",
+   "sha256": "a536e81ab450bbb54b49ec28974def29c017328dabbeceb875782f8b490c4bb0",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_parliament_and_its_people_house_of_representatives_house_of_representatives_current_numbers.html",
+   "quotes": [
+    {
+     "fact": "house-150",
+     "quote": "As at 28 May 2026"
+    },
+    {
+     "fact": "house-numbers-2026",
+     "quote": "Government – 94 members"
+    },
+    {
+     "fact": "house-numbers-2026",
+     "quote": "Opposition – 41 members"
+    },
+    {
+     "fact": "house-numbers-2026",
+     "quote": "Australian Greens – 1 member"
+    },
+    {
+     "fact": "house-numbers-2026",
+     "quote": "Centre Alliance – 1 member"
+    },
+    {
+     "fact": "house-numbers-2026",
+     "quote": "Katter's Australian Party – 1 member"
+    },
+    {
+     "fact": "house-numbers-2026",
+     "quote": "One Nation – 2 members"
+    },
+    {
+     "fact": "house-numbers-2026",
+     "quote": "Independents – 10 members"
+    },
+    {
+     "fact": "house-numbers-2026",
+     "quote": "As at 28 May 2026"
+    }
+   ]
+  },
+  {
+   "id": "peo-senate-video",
+   "publisher": "Parliamentary Education Office",
+   "title": "The Senate (video transcript)",
+   "url": "https://peo.gov.au/understand-our-parliament/parliament-and-its-people/senate/the-senate",
+   "retrieved": "2026-11-14",
+   "sha256": "9c9a26ad7135aa29974a30102d8596abe767cb8005766d89a6e76c8008430b4c",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_parliament_and_its_people_senate_the_senate.html",
+   "quotes": [
+    {
+     "fact": "gov-senate-unusual",
+     "quote": "A government majority in the Senate is unusual, so the government must negotiate with senators from the opposition and crossbench."
+    }
+   ]
+  },
+  {
+   "id": "peo-house-video",
+   "publisher": "Parliamentary Education Office",
+   "title": "The House of Representatives (video transcript)",
+   "url": "https://peo.gov.au/understand-our-parliament/parliament-and-its-people/house-of-representatives/the-house-of-representatives",
+   "retrieved": "2026-11-14",
+   "sha256": "6292ca95f9aff609891597dae060180c42ffdbda08021c2595868e9de2fbc6c3",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_parliament_and_its_people_house_of_representatives_the_house_of_representatives.html",
+   "quotes": [
+    {
+     "fact": "parliament-parts",
+     "quote": "the Parliament is made up of the Monarch, represented by the Governor-General, and two houses of Parliament: the Senate and the House of Representatives."
+    },
+    {
+     "fact": "electorate-equal-voters",
+     "quote": "there is approximately the same number of voters living in each electorate."
+    }
+   ]
+  },
+  {
+   "id": "peo-senators",
+   "publisher": "Parliamentary Education Office",
+   "title": "Senators (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/parliament-and-its-people/people-in-parliament/senators",
+   "retrieved": "2026-11-14",
+   "sha256": "ba3528dc19d79411b59efeccacc6dfe22f79b4880d2bd1e52c76541ec5805790",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_parliament_and_its_people_people_in_parliament_senators.html",
+   "quotes": [
+    {
+     "fact": "senate-76",
+     "quote": "There are 76 senators. Each state is represented by 12 senators, and the Northern Territory and Australian Capital Territory are represented by 2 senators each."
+    },
+    {
+     "fact": "senator-represents-state",
+     "quote": "A senator is someone who has been elected to represent their state or territory in the Senate."
+    },
+    {
+     "fact": "senate-terms",
+     "quote": "State senators are elected for a period of 6 years"
+    },
+    {
+     "fact": "senate-terms",
+     "quote": "every 3 years half of the state senators are up for re-election"
+    },
+    {
+     "fact": "senate-terms",
+     "quote": "Senators representing the Australian Capital Territory and the Northern Territory have 3-year terms"
+    }
+   ]
+  },
+  {
+   "id": "peo-members",
+   "publisher": "Parliamentary Education Office",
+   "title": "Members of the House of Representatives (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/parliament-and-its-people/people-in-parliament/members-of-the-house-of-representatives",
+   "retrieved": "2026-11-14",
+   "sha256": "bf9a8549b95034a0991056e9d34ddfd284a067a805a8acab90a1111ebc93b1db",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_parliament_and_its_people_people_in_parliament_members_of_the_house_of_representatives.html",
+   "quotes": [
+    {
+     "fact": "house-150",
+     "quote": "There are 150 members. Each represents a different electorate."
+    },
+    {
+     "fact": "house-term",
+     "quote": "Members are elected to the House of Representatives at least every 3 years."
+    }
+   ]
+  },
+  {
+   "id": "peo-pm",
+   "publisher": "Parliamentary Education Office",
+   "title": "Prime Minister (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/parliament-and-its-people/government/prime-minister",
+   "retrieved": "2026-11-14",
+   "sha256": "c140ec0002f1ae5970d5cf30b726766e7dd9cc076b6edced74fe3d74903d177e",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_parliament_and_its_people_government_prime_minister.html",
+   "quotes": [
+    {
+     "fact": "pm-leads",
+     "quote": "The Prime Minister of Australia is the leader of the Australian Government."
+    },
+    {
+     "fact": "pm-chosen",
+     "quote": "The people of Australia do not vote for the Prime Minister."
+    },
+    {
+     "fact": "pm-chosen",
+     "quote": "the Prime Minister is chosen by a vote of the members of the party in government."
+    },
+    {
+     "fact": "pm-house",
+     "quote": "By convention – tradition – the Prime Minister is always a member of the House of Representatives, not a senator."
+    },
+    {
+     "fact": "pm-not-constitution",
+     "quote": "The role of Prime Minister is not mentioned in the Australian Constitution."
+    },
+    {
+     "fact": "pm-picks-ministers",
+     "quote": "selecting members of the government to be ministers"
+    }
+   ]
+  },
+  {
+   "id": "peo-cabinet",
+   "publisher": "Parliamentary Education Office",
+   "title": "Cabinet (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/parliament-and-its-people/government/cabinet",
+   "retrieved": "2026-11-14",
+   "sha256": "eb79d4a0234bc05d312446270b7e0386ff56d4958b4076531fa93404d32e7c21",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_parliament_and_its_people_government_cabinet.html",
+   "quotes": [
+    {
+     "fact": "cabinet-def",
+     "quote": "It includes the Prime Minister and about 20 ministers who are part of the executive government."
+    },
+    {
+     "fact": "cabinet-meets",
+     "quote": "Cabinet meets on a regular basis, often weekly."
+    },
+    {
+     "fact": "cabinet-meets",
+     "quote": "Cabinet's role is to develop government policy and make decisions about national issues."
+    },
+    {
+     "fact": "cabinet-solidarity",
+     "quote": "Once Cabinet has made a decision, all Cabinet ministers are expected to support the decision publicly."
+    }
+   ]
+  },
+  {
+   "id": "peo-ministers",
+   "publisher": "Parliamentary Education Office",
+   "title": "Ministers and shadow ministers (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/parliament-and-its-people/people-in-parliament/ministers-and-shadow-ministers",
+   "retrieved": "2026-11-14",
+   "sha256": "171160f309a04fe50ad1c9ddd11061f148989b736923d63e120c01c1c710b944",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_parliament_and_its_people_people_in_parliament_ministers_and_shadow_ministers.html",
+   "quotes": [
+    {
+     "fact": "pm-picks-ministers",
+     "quote": "The Prime Minister chooses experienced and knowledgeable government members to be ministers"
+    },
+    {
+     "fact": "minister-portfolio",
+     "quote": "Ministers are members of the Australian Government who have been given an area of responsibility for how Australia is run."
+    },
+    {
+     "fact": "minister-portfolio",
+     "quote": "This area of responsibility is known as a portfolio. Examples of ministerial portfolios include: health environment transport defence"
+    },
+    {
+     "fact": "minister-numbers",
+     "quote": "There are usually about 20 ministers in the House of Representatives and 10 in the Senate."
+    },
+    {
+     "fact": "shadow-ministers",
+     "quote": "They are chosen by the Leader of the Opposition. Each shadow minister concentrates on the work of a particular minister and government department."
+    },
+    {
+     "fact": "shadow-ministers",
+     "quote": "They also act as the opposition spokesperson for the area they are assigned."
+    }
+   ]
+  },
+  {
+   "id": "peo-speaker",
+   "publisher": "Parliamentary Education Office",
+   "title": "Speaker of the House of Representatives (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/parliament-and-its-people/people-in-parliament/speaker-of-the-house-of-representatives",
+   "retrieved": "2026-11-14",
+   "sha256": "73ab8942a01b960e19a5fef8f06aa9701e1fae15a5b7c6b099c2307a3e0012d9",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_parliament_and_its_people_people_in_parliament_speaker_of_the_house_of_representatives.html",
+   "quotes": [
+    {
+     "fact": "po-duties",
+     "quote": "call on members when it is their turn to speak"
+    },
+    {
+     "fact": "po-duties",
+     "quote": "conduct votes in the House and announce the results"
+    },
+    {
+     "fact": "po-chosen",
+     "quote": "After a federal election, members of the House of Representatives vote to choose the Speaker."
+    }
+   ]
+  },
+  {
+   "id": "peo-president",
+   "publisher": "Parliamentary Education Office",
+   "title": "President of the Senate (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/parliament-and-its-people/people-in-parliament/president-of-the-senate",
+   "retrieved": "2026-11-14",
+   "sha256": "2ffb8724ab50ed05a7732d49e740b2d8b50de55e925c54f75a61f02e665c8173",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_parliament_and_its_people_people_in_parliament_president_of_the_senate.html",
+   "quotes": [
+    {
+     "fact": "po-duties",
+     "quote": "maintain order and issue warnings if senators have broken the rules"
+    },
+    {
+     "fact": "po-chosen",
+     "quote": "They are elected by fellow senators to run the meetings of the Senate."
+    }
+   ]
+  },
+  {
+   "id": "peo-gg",
+   "publisher": "Parliamentary Education Office",
+   "title": "Governor-General (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/parliament-and-its-people/people-in-parliament/governor-general",
+   "retrieved": "2026-11-14",
+   "sha256": "4fc72a930fbf3be8ecf636518fa9b512a1c8eca494d62cbcffad3ca5e23c1772",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_parliament_and_its_people_people_in_parliament_governor_general.html",
+   "quotes": [
+    {
+     "fact": "gg-never-refused",
+     "quote": "No Governor-General has ever refused to give Royal Assent to a bill"
+    },
+    {
+     "fact": "gg-represents-king",
+     "quote": "The Governor-General is the King’s representative in Australia."
+    },
+    {
+     "fact": "gg-appointed",
+     "quote": "The Governor-General is appointed by the King on the recommendation of the Prime Minister."
+    },
+    {
+     "fact": "gg-advice",
+     "quote": "It is an established convention that the Governor-General follows the advice of the Government"
+    },
+    {
+     "fact": "royal-assent-gg",
+     "quote": "One of their most important jobs is giving Royal Assent to bills – proposed laws – passed by the Senate and House of Representatives."
+    }
+   ]
+  },
+  {
+   "id": "peo-independents",
+   "publisher": "Parliamentary Education Office",
+   "title": "Independents (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/parliament-and-its-people/crossbench/independents",
+   "retrieved": "2026-11-14",
+   "sha256": "cf08b24cccca360aee3af5293dcda47b0463965f048fb064fd6a8cd34003810a",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_parliament_and_its_people_crossbench_independents.html",
+   "quotes": [
+    {
+     "fact": "independent-def",
+     "quote": "An independent is a member of the Australian Parliament who does not belong to a political party."
+    },
+    {
+     "fact": "balance-of-power",
+     "quote": "The government often does not have a majority in the Senate."
+    },
+    {
+     "fact": "balance-of-power",
+     "quote": "Independent and minor party senators can have the balance of power – their vote can decide if a bill is passed or fails."
+    }
+   ]
+  },
+  {
+   "id": "peo-minor-parties",
+   "publisher": "Parliamentary Education Office",
+   "title": "Minor parties (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/parliament-and-its-people/crossbench/minor-parties",
+   "retrieved": "2026-11-14",
+   "sha256": "255f1be5ad920ec308d8ff76f2791860d7b7870dfff4e5a42faa3f6083adbf1e",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_parliament_and_its_people_crossbench_minor_parties.html",
+   "quotes": [
+    {
+     "fact": "independent-def",
+     "quote": "does not have enough members in the House of Representatives to be the government or the opposition."
+    }
+   ]
+  },
+  {
+   "id": "peo-opposition",
+   "publisher": "Parliamentary Education Office",
+   "title": "Opposition (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/parliament-and-its-people/opposition/the-opposition",
+   "retrieved": "2026-11-14",
+   "sha256": "b44cb11dcc39b67c0b5b3ebe97b6f4f822571aed6720a2edcb54ae19ab7616d3",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_parliament_and_its_people_opposition_the_opposition.html",
+   "quotes": [
+    {
+     "fact": "opposition-def",
+     "quote": "The opposition is the largest party – or coalition of parties – that does not have the support of the majority of members"
+    },
+    {
+     "fact": "opposition-alternative",
+     "quote": "The opposition is sometimes called the alternative government because it could form government if it was to win the support of the majority of members."
+    },
+    {
+     "fact": "opposition-role",
+     "quote": "The opposition has an important role in keeping the government accountable to the Australian Parliament."
+    },
+    {
+     "fact": "opposition-role",
+     "quote": "providing alternatives to government policies."
+    }
+   ]
+  },
+  {
+   "id": "peo-government",
+   "publisher": "Parliamentary Education Office",
+   "title": "Government (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/parliament-and-its-people/government/government",
+   "retrieved": "2026-11-14",
+   "sha256": "05026cd927af62c5c5cc49dccbcdc1fea2e64ebff92a28e9a532814824af251c",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_parliament_and_its_people_government_government.html",
+   "quotes": [
+    {
+     "fact": "gov-senate-maybe",
+     "quote": "The government may or may not hold the majority of seats in the Senate."
+    }
+   ]
+  },
+  {
+   "id": "peo-double-dissolution",
+   "publisher": "Parliamentary Education Office",
+   "title": "Double dissolution (fact sheet)",
+   "url": "https://peo.gov.au/understand-our-parliament/having-your-say/elections-and-voting/double-dissolution",
+   "retrieved": "2026-11-14",
+   "sha256": "a9f99871ff66b68af6158ed94c4fcc75e2325ff9441c094574a29493eb473a43",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_having_your_say_elections_and_voting_double_dissolution.html",
+   "quotes": [
+    {
+     "fact": "double-dissolution-steps",
+     "quote": "The Senate again rejects or fails to pass the bill, or passes the same bill with amendments to which the House will not agree."
+    },
+    {
+     "fact": "double-dissolution-7",
+     "quote": "There have been 7 double dissolutions of the Australian Parliament: 1914, 1951, 1974, 1975, 1983, 1987 and 2016."
+    },
+    {
+     "fact": "joint-sitting",
+     "quote": "the Governor-General may call a joint sitting of all senators and members of the House of Representatives."
+    },
+    {
+     "fact": "joint-sitting",
+     "quote": "At a joint sitting, all senators and members vote together on the bill or bills."
+    },
+    {
+     "fact": "joint-sitting-1974",
+     "quote": "There has only been one joint sitting of the Australian Parliament."
+    },
+    {
+     "fact": "joint-sitting-1974",
+     "quote": "In 1974, the 6 bills that had triggered a double dissolution were reintroduced into Parliament"
+    }
+   ]
+  },
+  {
+   "id": "peo-glossary",
+   "publisher": "Parliamentary Education Office",
+   "title": "Glossary",
+   "url": "https://peo.gov.au/understand-our-parliament/glossary",
+   "retrieved": "2026-11-14",
+   "sha256": "61a5f30dffbf4ff7716612177ddabf8f42eacd1b4cdc925cf00e0daf869b7a24",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_glossary.html",
+   "quotes": [
+    {
+     "fact": "royal-assent-final-step",
+     "quote": "The signing of a bill by the Governor-General, which is the final step in making a bill into a law."
+    },
+    {
+     "fact": "first-reading",
+     "quote": "in which the bill is introduced and the title of the bill is read for the first time."
+    },
+    {
+     "fact": "consideration-in-detail",
+     "quote": "A stage in the passage of a bill through the House of Representatives, in which members discuss the bill in detail, including any suggested changes."
+    },
+    {
+     "fact": "consideration-in-detail",
+     "quote": "A stage in the passage of a bill through the Senate, in which senators discuss the bill in detail, including any suggested changes."
+    },
+    {
+     "fact": "third-reading",
+     "quote": "in which members of parliament vote on the bill in its final form."
+    },
+    {
+     "fact": "money-bill-def",
+     "quote": "A proposed law that introduces a tax or suggests spending money for a particular purpose."
+    },
+    {
+     "fact": "delegated-what",
+     "quote": "Rules or regulations made by a government minister, executive office-holder or government department using power that is given to them by the Parliament."
+    },
+    {
+     "fact": "electorate-def",
+     "quote": "A geographical area represented by a member of parliament, also referred to as a seat."
+    },
+    {
+     "fact": "member-mp",
+     "quote": "A person elected to the House of Representatives, also referred to as an MP."
+    },
+    {
+     "fact": "government-def",
+     "quote": "the party, or coalition of parties, with the support of the majority of members in the House of Representatives."
+    },
+    {
+     "fact": "coalition-def",
+     "quote": "An agreement between two or more parliamentary parties to create a bigger group and strengthen their position."
+    },
+    {
+     "fact": "crossbench-def",
+     "quote": "The seats in the Senate or the House of Representatives occupied by minor parties and/or independents."
+    },
+    {
+     "fact": "presiding-officers",
+     "quote": "In the Senate called the President and in the House of Representatives called the Speaker."
+    },
+    {
+     "fact": "aec-def",
+     "quote": "The organisation responsible for running national elections and referendums."
+    },
+    {
+     "fact": "aye-def",
+     "quote": "The expression used in Parliament to indicate a 'yes' vote."
+    },
+    {
+     "fact": "pair-def",
+     "quote": "An arrangement in which a member of parliament abstains from voting in order to balance the vote for an absent member on the opposite side."
+    }
+   ]
+  },
+  {
+   "id": "peo-qon-federation-chamber",
+   "publisher": "Parliamentary Education Office",
+   "title": "Does the Federation Chamber have a part in the law making process?",
+   "url": "https://peo.gov.au/understand-our-parliament/your-questions-on-notice/questions/does-the-federation-chamber-have-a-part-in-the-law-making-process/",
+   "retrieved": "2026-11-14",
+   "sha256": "51c1c5b7be4b5c93f1b026daa91d30980604548de7a91c5a3df415270ad41604",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_your_questions_on_notice_questions_does_the_federation_chamber_have_a_part_in_the_law_making_process.html",
+   "quotes": [
+    {
+     "fact": "fed-chamber-what",
+     "quote": "The Federation Chamber is the second meeting place of the House of Representatives and can operate at the same time as the House."
+    },
+    {
+     "fact": "fed-chamber-what",
+     "quote": "All members of the House can attend the Federation Chamber."
+    },
+    {
+     "fact": "fed-chamber-use",
+     "quote": "debating bills on which there is expected to be agreement"
+    },
+    {
+     "fact": "fed-chamber-no-divisions",
+     "quote": "although divisions – formal recorded votes – cannot be taken there."
+    },
+    {
+     "fact": "fed-chamber-confirm",
+     "quote": "All decisions made in the Federation Chamber need to be confirmed by the House of Representatives."
+    }
+   ]
+  },
+  {
+   "id": "peo-qon-not-passed",
+   "publisher": "Parliamentary Education Office",
+   "title": "What happens to a law that is not passed by one of the houses?",
+   "url": "https://peo.gov.au/understand-our-parliament/your-questions-on-notice/questions/what-happens-to-a-law-that-is-not-passed-by-one-of-the-houses/",
+   "retrieved": "2026-11-14",
+   "sha256": "a63b6ebf7179eeba17a75ae23592f504ec24688d97b61bc832786c61ed34d7aa",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_your_questions_on_notice_questions_what_happens_to_a_law_that_is_not_passed_by_one_of_the_houses.html",
+   "quotes": [
+    {
+     "fact": "not-passed-not-law",
+     "quote": "If one of the houses doesn't pass a bill – a proposal for a new law – then it cannot become a law."
+    },
+    {
+     "fact": "not-passed-options",
+     "quote": "pass the bill again and send it back to the second house"
+    },
+    {
+     "fact": "not-passed-options",
+     "quote": "change the bill so the second house will be more likely to pass it"
+    },
+    {
+     "fact": "not-passed-options",
+     "quote": "lay the bill aside (not go forward with the bill)."
+    },
+    {
+     "fact": "double-dissolution-election",
+     "quote": "the Prime Minister can ask the Governor-General to call an election for all the seats in the House of Representatives and the Senate."
+    }
+   ]
+  },
+  {
+   "id": "peo-qon-second-reading",
+   "publisher": "Parliamentary Education Office",
+   "title": "What does it mean when members say \"I move that this bill now be read a second time\"?",
+   "url": "https://peo.gov.au/understand-our-parliament/your-questions-on-notice/questions/what-does-it-mean-when-members-say-i-move-that-this-bill-now-be-read-a-second-time/",
+   "retrieved": "2026-11-14",
+   "sha256": "a7a80b7f9cfd2326f60f9e8647a774ad36ec1d8419d5af2cef492c277ead2306",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_your_questions_on_notice_questions_what_does_it_mean_when_members_say_i_move_that_this_bill_now_be_read_a_second_.html",
+   "quotes": [
+    {
+     "fact": "three-readings",
+     "quote": "To pass through the Senate or House of Representatives, the title of the bill must be read out 3 times by the Clerk."
+    },
+    {
+     "fact": "three-readings",
+     "quote": "Each time the Clerk reads the title of the bill it signals the bill has passed a different stage."
+    },
+    {
+     "fact": "second-reading-motion",
+     "quote": "When a member of parliament says ‘I move that this bill now be read a second time’"
+    },
+    {
+     "fact": "second-reading-motion",
+     "quote": "the member or senator (usually a minister responsible for the bill) moves a motion – asks – that it be read a second time."
+    },
+    {
+     "fact": "second-reading-debate",
+     "quote": "members of parliament discuss the principle or main idea of the bill and can explain why they support or oppose the bill."
+    },
+    {
+     "fact": "second-reading-vote",
+     "quote": "If the vote passes, it signals that senators or members agree with the main idea of the bill"
+    },
+    {
+     "fact": "second-reading-vote",
+     "quote": "The bill can then progress through the next stages, including discussion of amendments – changes – to the bill."
+    }
+   ]
+  },
+  {
+   "id": "peo-qon-votes-needed",
+   "publisher": "Parliamentary Education Office",
+   "title": "How many votes are needed for a bill to pass the House of Representatives and the Senate?",
+   "url": "https://peo.gov.au/understand-our-parliament/your-questions-on-notice/questions/how-many-votes-are-needed-for-a-bill-to-pass-the-house-of-representatives-and-the-senate/",
+   "retrieved": "2026-11-14",
+   "sha256": "0f49b89b361f6344ef5b8e843d323bfdceacc2224521f35c73113db47a37506f",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_your_questions_on_notice_questions_how_many_votes_are_needed_for_a_bill_to_pass_the_house_of_representatives_and_.html",
+   "quotes": [
+    {
+     "fact": "voices-how",
+     "quote": "asks members of parliament to cast their vote for or against the bill by saying 'aye' or 'no'."
+    },
+    {
+     "fact": "voices-how",
+     "quote": "The President or Speaker decides which response has more support and announces the result."
+    },
+    {
+     "fact": "division-challenge",
+     "quote": "If the result is challenged by more than one member of parliament, a division is held."
+    },
+    {
+     "fact": "quorum-numbers",
+     "quote": "In the Senate, at least 19 senators (one quarter of the total number of senators) must vote in a division for it to count."
+    },
+    {
+     "fact": "quorum-numbers",
+     "quote": "In the House, 30 members must be present (one fifth of the total number of members)."
+    }
+   ]
+  },
+  {
+   "id": "peo-qon-private-bills",
+   "publisher": "Parliamentary Education Office",
+   "title": "Can the opposition or crossbench introduce bills in Parliament?",
+   "url": "https://peo.gov.au/understand-our-parliament/your-questions-on-notice/questions/can-the-opposition-or-crossbench-introduce-bills-in-parliament/",
+   "retrieved": "2026-11-14",
+   "sha256": "9e52a34b3b7b9e1445c6d6ab490510815279500f1e1d11156672654ce44a4190",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_your_questions_on_notice_questions_can_the_opposition_or_crossbench_introduce_bills_in_parliament.html",
+   "quotes": [
+    {
+     "fact": "private-bills-30",
+     "quote": "Since Federation in 1901, only about 30 private bills have passed the Parliament."
+    },
+    {
+     "fact": "private-bills-why",
+     "quote": "the Senate and House of Representatives spend most of their time considering government business"
+    },
+    {
+     "fact": "private-bills-why",
+     "quote": "the government usually has the majority in the House of Representatives, so a private bill will only succeed if the government supports it."
+    }
+   ]
+  },
+  {
+   "id": "peo-qon-after-house",
+   "publisher": "Parliamentary Education Office",
+   "title": "What needs to happen after a bill is passed in the House of Representatives before it goes to the Senate?",
+   "url": "https://peo.gov.au/understand-our-parliament/your-questions-on-notice/questions/what-needs-to-happen-after-a-bill-is-passed-in-the-house-of-representatives-before-it-goes-to-the-senate/",
+   "retrieved": "2026-11-14",
+   "sha256": "d9bfc4f3221e67feffc59af3933d72f9352f9478ce5796c4e510c7f231d2f166",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_your_questions_on_notice_questions_what_needs_to_happen_after_a_bill_is_passed_in_the_house_of_representatives_be.html",
+   "quotes": [
+    {
+     "fact": "house-message-to-senate",
+     "quote": "signs a document, known as a ‘message’, addressed to the President of the Senate, requesting the Senate’s ‘concurrence’ – agreement – with the bill."
+    },
+    {
+     "fact": "senate-options",
+     "quote": "decide to immediately debate the bill, send it to a committee for closer examination or schedule debate on the bill for a later day."
+    }
+   ]
+  },
+  {
+   "id": "peo-qon-gg-assent",
+   "publisher": "Parliamentary Education Office",
+   "title": "Can the Governor-General suggest changes to a bill or refuse to sign it?",
+   "url": "https://peo.gov.au/understand-our-parliament/your-questions-on-notice/questions/can-the-governor-general-suggest-changes-to-a-bill-or-refuse-to-sign-it/",
+   "retrieved": "2026-11-14",
+   "sha256": "f1003549d720d8dbc7c446a1c27fe8ffbf82028855a6b650f98a9a2fe6974d3e",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_your_questions_on_notice_questions_can_the_governor_general_suggest_changes_to_a_bill_or_refuse_to_sign_it.html",
+   "quotes": [
+    {
+     "fact": "becomes-act",
+     "quote": "After a bill is signed by the Governor-General it becomes an Act of Parliament – a law."
+    },
+    {
+     "fact": "gg-return-bill",
+     "quote": "send the bill back to the Parliament with suggestions for amendments – changes."
+    }
+   ]
+  },
+  {
+   "id": "peo-qon-prorogued",
+   "publisher": "Parliamentary Education Office",
+   "title": "What happens to bills when Parliament is prorogued for an election?",
+   "url": "https://peo.gov.au/understand-our-parliament/your-questions-on-notice/questions/what-happens-to-bills-when-parliament-is-prorogued-for-an-election/",
+   "retrieved": "2026-11-14",
+   "sha256": "1c30e4fd15c0e0dd384a799bef4074a99db02b3fea40f449ec012a6ad1a77c1c",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_your_questions_on_notice_questions_what_happens_to_bills_when_parliament_is_prorogued_for_an_election.html",
+   "quotes": [
+    {
+     "fact": "prorogued-bills-expire",
+     "quote": "When Parliament is prorogued so a federal election can be held, bills – proposed laws – and other business"
+    },
+    {
+     "fact": "prorogued-bills-expire",
+     "quote": "Bills and other business can be reintroduced in the next Parliament."
+    }
+   ]
+  },
+  {
+   "id": "peo-qon-which-house",
+   "publisher": "Parliamentary Education Office",
+   "title": "Who decides whether a bill will be introduced to the lower or upper house?",
+   "url": "https://peo.gov.au/understand-our-parliament/your-questions-on-notice/questions/who-decides-whether-a-bill-will-be-introduced-to-the-lower-or-upper-house/",
+   "retrieved": "2026-11-14",
+   "sha256": "31102fc6a85c1e9f359b1ed1e17098655cd54424f4e1ce93a91fc50673354081",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_your_questions_on_notice_questions_who_decides_whether_a_bill_will_be_introduced_to_the_lower_or_upper_house.html",
+   "quotes": [
+    {
+     "fact": "bill-starts-where-sponsor-sits",
+     "quote": "A bill – proposed law – is introduced in the house where the person responsible for it sits."
+    },
+    {
+     "fact": "most-bills-start-house",
+     "quote": "Most ministers are members of the House, so most bills are introduced there."
+    },
+    {
+     "fact": "money-bills-start-house",
+     "quote": "money and taxation bills must be introduced in the House of Representatives."
+    }
+   ]
+  },
+  {
+   "id": "peo-qon-amend-anyone",
+   "publisher": "Parliamentary Education Office",
+   "title": "Can anyone in parliament suggest changes to bills?",
+   "url": "https://peo.gov.au/understand-our-parliament/your-questions-on-notice/questions/can-anyone-in-parliament-suggest-changes-to-bills/",
+   "retrieved": "2026-11-14",
+   "sha256": "20e76ec0ab4a6711225e0d618623b8efae03390f411ae91d181e92f06edffcfd",
+   "snapshot": "raw/peo_gov_au_understand_our_parliament_your_questions_on_notice_questions_can_anyone_in_parliament_suggest_changes_to_bills.html",
+   "quotes": [
+    {
+     "fact": "amend-majority",
+     "quote": "If the majority agree to an amendment, the bill is changed."
+    },
+    {
+     "fact": "amend-who-most",
+     "quote": "Independent, minor party and opposition members are more likely to suggest amendments. This is because most bills introduced to Parliament are government bills"
+    }
+   ]
+  },
+  {
+   "id": "constitution",
+   "publisher": "Federal Register of Legislation",
+   "title": "Commonwealth of Australia Constitution Act (C2004Q00685, compilation C2013Q00005, rectified 2026-05-13)",
+   "url": "https://www.legislation.gov.au/C2004Q00685/latest/text",
+   "fetched_from": "https://api.prod.legislation.gov.au/v1/documents(titleid='C2004Q00685',start=1977-07-29,retrospectivestart=1977-07-29,rectificationversionnumber=1,type='Primary',uniqueTypeNumber=0,volumeNumber=0,format='Word')",
+   "snapshot_text": "text/constitution_C2013Q00005_r1.txt",
+   "retrieved": "2026-11-14",
+   "sha256": "5faa3dbbc348e67cd9635d1b97243238e6d4541ac833301adeab3f5375f66d15",
+   "snapshot": "raw/www_legislation_gov_au_C2004Q00685_latest_text.html",
+   "quotes": [
+    {
+     "fact": "money-bills-start-house",
+     "quote": "Proposed laws appropriating revenue or moneys, or imposing taxation, shall not originate in the Senate."
+    },
+    {
+     "fact": "amendment-shuttle",
+     "quote": "or passes it with amendments to which the House of Representatives will not agree"
+    },
+    {
+     "fact": "double-dissolution-house-bills",
+     "quote": "If the House of Representatives passes any proposed law, and the Senate rejects or fails to pass it"
+    },
+    {
+     "fact": "double-dissolution-steps",
+     "quote": "if after an interval of three months the House of Representatives, in the same or the next session, again passes the proposed law"
+    },
+    {
+     "fact": "gg-return-bill",
+     "quote": "The Governor-General may return to the House in which it originated any proposed law so presented to him"
+    },
+    {
+     "fact": "s53-no-amend",
+     "quote": "The Senate may not amend proposed laws imposing taxation, or proposed laws appropriating revenue or moneys for the ordinary annual services of the Government."
+    },
+    {
+     "fact": "s53-request",
+     "quote": "return to the House of Representatives any proposed law which the Senate may not amend, requesting, by message, the omission or amendment"
+    },
+    {
+     "fact": "s53-request",
+     "quote": "And the House of Representatives may, if it thinks fit, make any of such omissions or amendments"
+    },
+    {
+     "fact": "s24-twice",
+     "quote": "the number of such members shall be, as nearly as practicable, twice the number of the senators."
+    },
+    {
+     "fact": "s24-population",
+     "quote": "The number of members chosen in the several States shall be in proportion to the respective numbers of their people"
+    },
+    {
+     "fact": "s64-ministers-in-parliament",
+     "quote": "shall hold office for a longer period than three months unless he is or becomes a senator or a member of the House of Representatives."
+    },
+    {
+     "fact": "speaker-casting",
+     "quote": "The Speaker shall not vote unless the numbers are equal, and then he shall have a casting vote."
+    },
+    {
+     "fact": "senate-tie",
+     "quote": "when the votes are equal the question shall pass in the negative."
+    }
+   ]
+  },
+  {
+   "id": "aec-electorates",
+   "publisher": "Australian Electoral Commission",
+   "title": "Electorates",
+   "url": "https://www.aec.gov.au/electorates/",
+   "retrieved": "2026-11-14",
+   "sha256": "bbdf4b041525f43f3ff7717fbb842b90d668eedf39f9cafc3bfc62c3514a5f45",
+   "snapshot": "raw/www_aec_gov_au_electorates.html",
+   "quotes": [
+    {
+     "fact": "aec-electoral-division",
+     "quote": "Find my electoral division"
+    },
+    {
+     "fact": "aec-electoral-division",
+     "quote": "Current federal electoral divisions"
+    }
+   ]
+  },
+  {
+   "id": "aec-redistribution-faq",
+   "publisher": "Australian Electoral Commission",
+   "title": "Redistributions: Frequently Asked Questions",
+   "url": "https://www.aec.gov.au/FAQs/Redistributions.htm",
+   "retrieved": "2026-11-14",
+   "sha256": "3b2660139fd9fdd2818395d0ea90cfd110f57ab7cb0d851778510e94f3f54c59",
+   "snapshot": "raw/www_aec_gov_au_FAQs_Redistributions_htm.html",
+   "quotes": [
+    {
+     "fact": "aec-redistribution-aim",
+     "quote": "the last redistribution for that state or territory was determined seven years ago"
+    },
+    {
+     "fact": "aec-redistribution-aim",
+     "quote": "projected enrolment in each electorate should not vary from the projected state or territory average by more than 3.5 per cent."
+    }
+   ]
+  },
+  {
+   "id": "opax-web-app",
+   "publisher": "OPAX",
+   "title": "Web app: division and bill views (portal/public/app.js)",
+   "url": "https://github.com/jaketracey/opax/blob/5c5034e043329a348a46ea81e821bcecee2bae40/portal/public/app.js",
+   "repo_path": "portal/public/app.js",
+   "retrieved": "2026-11-14",
+   "quotes": [
+    {
+     "fact": "opax-division-sections",
+     "quote": "esc(`${ayes.toLocaleString()} ayes, ${noes.toLocaleString()} noes`),"
+    },
+    {
+     "fact": "opax-division-sections",
+     "quote": "id=\"division-split-head\">How the parties voted</h2>"
+    },
+    {
+     "fact": "opax-division-sections",
+     "quote": "id=\"division-members-head\">Who voted which way</h2>"
+    },
+    {
+     "fact": "opax-outcome-words",
+     "quote": "const BILL_OUTCOMES = { affirmative: \"Agreed\", negative: \"Not agreed\" };"
+    },
+    {
+     "fact": "opax-amendment-note",
+     "quote": "A division on an amendment is not a vote on the bill itself."
+    },
+    {
+     "fact": "opax-paired",
+     "quote": "[\"Paired, not counted\", names.paired, names.paired.length]"
+    },
+    {
+     "fact": "opax-party-split",
+     "quote": "<span class=\"visually-hidden\"> ayes to noes</span>"
+    }
+   ]
+  },
+  {
+   "id": "opax-vote-tables",
+   "publisher": "OPAX",
+   "title": "Web: division and vote table rules (portal/public/vote-tables.js)",
+   "url": "https://github.com/jaketracey/opax/blob/5c5034e043329a348a46ea81e821bcecee2bae40/portal/public/vote-tables.js",
+   "repo_path": "portal/public/vote-tables.js",
+   "retrieved": "2026-11-14",
+   "quotes": [
+    {
+     "fact": "opax-division-page",
+     "quote": "`/doc/${String(value).startsWith('division-') ? value : `division-${value}`}`"
+    },
+    {
+     "fact": "opax-procedural",
+     "quote": "\"procedure\": the house's own business (business motions, rearrangement, suspending standing orders, declaring a bill urgent, closure, adjournment)."
+    },
+    {
+     "fact": "opax-procedural",
+     "quote": "substantive vote${n === 1 ? '' : 's'}${p ? `; ${p} procedural vote"
+    }
+   ]
+  },
+  {
+   "id": "opax-seo-content",
+   "publisher": "OPAX",
+   "title": "Web: server-rendered bill and division pages (portal/src/seo-content.ts)",
+   "url": "https://github.com/jaketracey/opax/blob/5c5034e043329a348a46ea81e821bcecee2bae40/portal/src/seo-content.ts",
+   "repo_path": "portal/src/seo-content.ts",
+   "retrieved": "2026-11-14",
+   "quotes": [
+    {
+     "fact": "opax-recorded-stages",
+     "quote": "<h2>Recorded stages</h2>"
+    },
+    {
+     "fact": "opax-stage-dates-not-commencement",
+     "quote": "Stage dates describe the parliamentary progress recorded by the source. They do not establish when provisions commence."
+    },
+    {
+     "fact": "opax-division-sections",
+     "quote": "<h3>How each party voted</h3>"
+    },
+    {
+     "fact": "opax-division-sections",
+     "quote": "<h2>Question</h2>"
+    },
+    {
+     "fact": "opax-no-divisions",
+     "quote": "No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed."
+    },
+    {
+     "fact": "opax-party-split",
+     "quote": "<h3>How each party voted</h3>"
+    }
+   ]
+  },
+  {
+   "id": "opax-division-tool",
+   "publisher": "OPAX",
+   "title": "Ask division tool: floor-crossing rule (portal/src/tools/division.ts)",
+   "url": "https://github.com/jaketracey/opax/blob/5c5034e043329a348a46ea81e821bcecee2bae40/portal/src/tools/division.ts",
+   "repo_path": "portal/src/tools/division.ts",
+   "retrieved": "2026-11-14",
+   "quotes": [
+    {
+     "fact": "opax-crossing-rule",
+     "quote": "Crossing the floor means an aye or no against a strict party majority, for parties with at least five recorded aye/no votes."
+    },
+    {
+     "fact": "opax-crossing-rule",
+     "quote": "Independents, unknown parties, ties, paired and absent votes are excluded."
+    },
+    {
+     "fact": "opax-crossing-caveat",
+     "quote": "may reflect a later affiliation rather than the affiliation on the division date."
+    },
+    {
+     "fact": "opax-crossing-caveat",
+     "quote": "Calculated dissent is not independently verified historical floor crossing."
+    }
+   ]
+  },
+  {
+   "id": "opax-app-selectors",
+   "publisher": "OPAX",
+   "title": "App: bill and division selectors (mobile/src/api/selectors.ts, ios/app)",
+   "url": "https://github.com/jaketracey/opax/blob/62d6bf44f2492c3803f89fb57b56c1fb83ca38bf/mobile/src/api/selectors.ts",
+   "snapshot_text": "text/opax-app/selectors.ts.txt",
+   "retrieved": "2026-11-14",
+   "quotes": [
+    {
+     "fact": "opax-outcome-words",
+     "quote": "? 'Agreed to'"
+    },
+    {
+     "fact": "opax-outcome-words",
+     "quote": "? 'Negatived'"
+    }
+   ]
+  },
+  {
+   "id": "opax-app-bill-detail",
+   "publisher": "OPAX",
+   "title": "App: bill page and its division notes (mobile/src/features/bills/BillDetail.tsx, ios/app)",
+   "url": "https://github.com/jaketracey/opax/blob/62d6bf44f2492c3803f89fb57b56c1fb83ca38bf/mobile/src/features/bills/BillDetail.tsx",
+   "snapshot_text": "text/opax-app/BillDetail.tsx.txt",
+   "retrieved": "2026-11-14",
+   "quotes": [
+    {
+     "fact": "opax-voices-no-record",
+     "quote": "Only formal divisions leave a per-member record."
+    }
+   ]
+  },
+  {
+   "id": "opax-bill-r7548",
+   "publisher": "OPAX",
+   "title": "Sport Legislation Amendment (World Anti-Doping Code Implementation) Bill 2026",
+   "url": "https://opax.com.au/bill/au-federal-r7548",
+   "repo_path": "portal/public/bills/au-federal-r7548.json",
+   "retrieved": "2026-11-14",
+   "sha256": "1daf619e72357ef9c67d5bfccc6394eb37898c6b4f32afa2f95c839cc74775fd",
+   "snapshot": "raw/opax_com_au_bill_au_federal_r7548.html",
+   "quotes": [
+    {
+     "fact": "opax-recorded-stages",
+     "quote": "\"stage\": \"introduced\""
+    },
+    {
+     "fact": "ex-r7548-stages",
+     "quote": "\"status\": \"before_parliament\""
+    },
+    {
+     "fact": "ex-r7548-stages",
+     "quote": "\"stage\": \"second_reading\""
+    },
+    {
+     "fact": "ex-r7548-stages",
+     "quote": "\"status_as_of\": \"2026-09-17\""
+    }
+   ]
+  },
+  {
+   "id": "opax-div-senate-10811",
+   "publisher": "OPAX",
+   "title": "Senate division, 17 Sep 2026: Foreign Affairs, Defence and Trade References Committee; Reference",
+   "url": "https://opax.com.au/doc/division-federal-senate-10811",
+   "repo_path": "portal/public/divisions/division-federal-senate-10811.json",
+   "retrieved": "2026-11-14",
+   "sha256": "39717149891271c4819cb7a4a9bbac6aef3ae587052c1b3951dcbf3ca451f233",
+   "snapshot": "raw/opax_com_au_doc_division_federal_senate_10811.html",
+   "quotes": [
+    {
+     "fact": "ex-senate-10811-inquiry",
+     "quote": "That the following matter be referred to the Foreign Affairs, Defence and Trade References Committee for inquiry and report by 8 March 2027"
+    },
+    {
+     "fact": "ex-senate-10811-inquiry",
+     "quote": "\"ayes\":34"
+    },
+    {
+     "fact": "ex-senate-10811-inquiry",
+     "quote": "\"noes\":21"
+    }
+   ]
+  },
+  {
+   "id": "opax-div-reps-8545",
+   "publisher": "OPAX",
+   "title": "House division, 30 Nov 2023: Water Amendment (Restoring Our Rivers) Bill 2023, Senate message",
+   "url": "https://opax.com.au/doc/division-federal-representatives-8545",
+   "repo_path": "portal/public/divisions/division-federal-representatives-8545.json",
+   "retrieved": "2026-11-14",
+   "sha256": "eadb3d823788c2b28bba7c4bdad81e309ee5c9ed66f59f631c1950f9ddf85c0d",
+   "snapshot": "raw/opax_com_au_doc_division_federal_representatives_8545.html",
+   "quotes": [
+    {
+     "fact": "amendment-shuttle",
+     "quote": "Consideration of Senate Message - Agree with Senate amendments and so pass bill"
+    },
+    {
+     "fact": "ex-r7076-senate-amendments",
+     "quote": "Consideration of Senate Message - Agree with Senate amendments and so pass bill"
+    },
+    {
+     "fact": "ex-r7076-senate-amendments",
+     "quote": "\"ayes\":86"
+    },
+    {
+     "fact": "ex-r7076-senate-amendments",
+     "quote": "\"noes\":53"
+    },
+    {
+     "fact": "ex-r7076-senate-amendments",
+     "quote": "\"date\":\"2023-11-30\""
+    }
+   ]
+  },
+  {
+   "id": "opax-div-reps-10611",
+   "publisher": "OPAX",
+   "title": "House division, 18 Aug 2026: Interactive Gambling Amendment (Gambling Reform) Bill 2026, third reading",
+   "url": "https://opax.com.au/doc/division-federal-representatives-10611",
+   "repo_path": "portal/public/divisions/division-federal-representatives-10611.json",
+   "retrieved": "2026-11-14",
+   "sha256": "f48d79e7ed603c68b6572356d5265c1db1b008b55c7a16ea7c8a2e9161de98cc",
+   "snapshot": "raw/opax_com_au_doc_division_federal_representatives_10611.html",
+   "quotes": [
+    {
+     "fact": "opax-outcome-words",
+     "quote": "\"result\":\"affirmative\""
+    },
+    {
+     "fact": "ex-reps-10611-parties",
+     "quote": "Interactive Gambling Amendment (Gambling Reform) Bill 2026; Third Reading"
+    }
+   ]
+  },
+  {
+   "id": "opax-div-senate-9535",
+   "publisher": "OPAX",
+   "title": "Senate division, 6 Feb 2025: Criminal Code Amendment (Hate Crimes) Bill 2024, third reading",
+   "url": "https://opax.com.au/doc/division-federal-senate-9535",
+   "repo_path": "portal/public/divisions/division-federal-senate-9535.json",
+   "retrieved": "2026-11-14",
+   "sha256": "98af3156c86a367050c0ac97cec08042c08c00778c861f87ba3607c53e8a353d",
+   "snapshot": "raw/opax_com_au_doc_division_federal_senate_9535.html",
+   "quotes": [
+    {
+     "fact": "ex-senate-9535-crossing",
+     "quote": "Criminal Code Amendment (Hate Crimes) Bill 2024 - Third Reading - Pass the bill"
+    },
+    {
+     "fact": "ex-senate-9535-crossing",
+     "quote": "\"ayes\":41"
+    },
+    {
+     "fact": "ex-senate-9535-crossing",
+     "quote": "\"noes\":6"
+    }
+   ]
+  },
+  {
+   "id": "opax-div-reps-7544",
+   "publisher": "OPAX",
+   "title": "House division, 1 Dec 2021: Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, consideration in detail",
+   "url": "https://opax.com.au/doc/division-federal-representatives-7544",
+   "repo_path": "portal/public/divisions/division-federal-representatives-7544.json",
+   "retrieved": "2026-11-14",
+   "sha256": "131a3bd96b220e42fa8039035dd7d4a6b9a6cba60d1fa267099ecc5e542a68c4",
+   "snapshot": "raw/opax_com_au_doc_division_federal_representatives_7544.html",
+   "quotes": [
+    {
+     "fact": "ex-reps-7544-free-vote",
+     "quote": "(also known as a conscience vote), which means our MPs voted according to their own beliefs"
+    }
+   ]
+  },
+  {
+   "id": "opax-bills-export",
+   "publisher": "OPAX",
+   "title": "Federal bill export (portal/public/bills/au-federal-*.json)",
+   "url": "https://github.com/jaketracey/opax/blob/5c5034e043329a348a46ea81e821bcecee2bae40/portal/public/bills",
+   "repo_path": "portal/public/bills",
+   "retrieved": "2026-11-14",
+   "quotes": [
+    {
+     "fact": "opax-lapsed-status",
+     "quote": "\"status\": \"lapsed\""
+    },
+    {
+     "fact": "opax-passed-no-divisions",
+     "quote": "\"status\": \"passed\""
+    }
+   ]
+  }
+ ]
+}

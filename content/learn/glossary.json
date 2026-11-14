@@ -1,0 +1,866 @@
+{
+ "_about": "Glossary for popovers, /glossary and Ask. Each entry lists the fact ids behind its wording; sources are derived from those facts.",
+ "terms": [
+  {
+   "term": "bill",
+   "slug": "bill",
+   "chapter": "bill-to-act",
+   "short": "A written plan for a new law, or for a change to a law we already have.",
+   "more": "A bill is not a law yet. Both houses of Parliament must agree to exactly the same words. Then the Governor-General signs it and it becomes an Act.",
+   "example": {
+    "url": "https://opax.com.au/bill/au-federal-r7548",
+    "label": "A bill before Parliament"
+   },
+   "facts": [
+    "bill-definition",
+    "bill-identical-both-houses",
+    "royal-assent-final-step"
+   ],
+   "see_also": [
+    "act",
+    "first-reading",
+    "royal-assent"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-law-making"
+   ]
+  },
+  {
+   "term": "Act",
+   "slug": "act",
+   "chapter": "bill-to-act",
+   "short": "A law made by Parliament. A bill becomes an Act once the Governor-General signs it.",
+   "more": "An Act is also called an Act of Parliament. It starts on the date written in it, or 28 days after it is signed if no date is given.",
+   "facts": [
+    "becomes-act",
+    "commencement-28-days"
+   ],
+   "see_also": [
+    "bill",
+    "royal-assent",
+    "commencement"
+   ],
+   "sources": [
+    "peo-law-making",
+    "peo-qon-gg-assent"
+   ]
+  },
+  {
+   "term": "first reading",
+   "slug": "first-reading",
+   "chapter": "bill-to-act",
+   "short": "The first step for a bill in each house. The bill is brought in and its title is read out.",
+   "more": "The Clerk reads the title of a bill three times in each house. Each reading means the bill has passed another stage. On OPAX, this step shows as \"Introduced\".",
+   "facts": [
+    "first-reading",
+    "three-readings",
+    "opax-recorded-stages"
+   ],
+   "see_also": [
+    "second-reading",
+    "third-reading"
+   ],
+   "sources": [
+    "opax-bill-r7548",
+    "opax-seo-content",
+    "peo-glossary",
+    "peo-qon-second-reading"
+   ]
+  },
+  {
+   "term": "second reading",
+   "slug": "second-reading",
+   "chapter": "bill-to-act",
+   "short": "The stage where members debate the main idea of a bill and then vote on it.",
+   "more": "It starts when the minister asks that the bill \"now be read a second time\". If the vote passes, the house agrees with the main idea. The bill can then move on to the next stages.",
+   "example": {
+    "url": "https://opax.com.au/bill/au-federal-r7548",
+    "label": "A bill at second reading"
+   },
+   "facts": [
+    "second-reading-motion",
+    "second-reading-debate",
+    "second-reading-vote"
+   ],
+   "see_also": [
+    "first-reading",
+    "consideration-in-detail",
+    "third-reading"
+   ],
+   "sources": [
+    "peo-qon-second-reading"
+   ]
+  },
+  {
+   "term": "consideration in detail",
+   "slug": "consideration-in-detail",
+   "chapter": "bill-to-act",
+   "short": "The stage where members go through a bill part by part and vote on changes.",
+   "more": "In the Senate, this stage is called committee of the whole. It is optional. Most amendments are dealt with here.",
+   "facts": [
+    "consideration-in-detail",
+    "cid-optional",
+    "amendments-when"
+   ],
+   "see_also": [
+    "amendment",
+    "second-reading",
+    "third-reading"
+   ],
+   "sources": [
+    "peo-amendments",
+    "peo-glossary",
+    "peo-usual-path"
+   ]
+  },
+  {
+   "term": "third reading",
+   "slug": "third-reading",
+   "chapter": "bill-to-act",
+   "short": "The last vote on a bill in each house. Members vote on the bill in its final form.",
+   "more": "If the House passes a bill at the third reading, it sends the bill to the Senate with a formal message. The Senate then follows similar steps.",
+   "facts": [
+    "third-reading",
+    "house-message-to-senate",
+    "senate-stages"
+   ],
+   "see_also": [
+    "second-reading",
+    "royal-assent"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-making-a-law",
+    "peo-qon-after-house",
+    "peo-usual-path"
+   ]
+  },
+  {
+   "term": "amendment",
+   "slug": "amendment",
+   "chapter": "bill-to-act",
+   "short": "A change to a bill that an MP or senator suggests, debates and votes on.",
+   "more": "Any member can move an amendment. It must be given to the Clerk in writing. Changes made in one house must also be agreed to by the other house.",
+   "example": {
+    "url": "https://opax.com.au/doc/division-federal-representatives-8545",
+    "label": "The House agrees to Senate amendments"
+   },
+   "facts": [
+    "amend-anyone",
+    "amend-written",
+    "amendments-both-houses"
+   ],
+   "see_also": [
+    "consideration-in-detail",
+    "bill"
+   ],
+   "sources": [
+    "peo-amendments"
+   ]
+  },
+  {
+   "term": "committee",
+   "slug": "committee",
+   "chapter": "bill-to-act",
+   "short": "A small group of MPs or senators who look closely at a bill or an issue.",
+   "more": "Most committees have 6 to 10 members. They ask people and groups for their views, hold hearings and write a report. The report may suggest changes to a bill.",
+   "facts": [
+    "committee-size",
+    "committee-submissions-hearings",
+    "committee-report"
+   ],
+   "see_also": [
+    "senate-inquiry"
+   ],
+   "sources": [
+    "peo-committees",
+    "peo-making-a-law"
+   ]
+  },
+  {
+   "term": "Senate inquiry",
+   "slug": "senate-inquiry",
+   "chapter": "bill-to-act",
+   "short": "When the Senate asks one of its committees to look closely at a bill or an issue.",
+   "more": "The Senate can send a bill to a committee for inquiry, even while the bill is still in the House. The committee reports back to the Senate.",
+   "example": {
+    "url": "https://opax.com.au/doc/division-federal-senate-10811",
+    "label": "A Senate vote to start an inquiry"
+   },
+   "facts": [
+    "senate-referral-early",
+    "committee-issues-and-bills",
+    "committee-report"
+   ],
+   "see_also": [
+    "committee",
+    "senate"
+   ],
+   "sources": [
+    "peo-committees",
+    "peo-making-a-law",
+    "peo-usual-path"
+   ]
+  },
+  {
+   "term": "Federation Chamber",
+   "slug": "federation-chamber",
+   "chapter": "bill-to-act",
+   "short": "The House of Representatives' second room for debate. It can meet at the same time as the House.",
+   "more": "It is used for bills that most members are expected to agree on. No divisions can be held there. Its decisions must be confirmed by the House.",
+   "facts": [
+    "fed-chamber-what",
+    "fed-chamber-use",
+    "fed-chamber-no-divisions",
+    "fed-chamber-confirm"
+   ],
+   "see_also": [
+    "house-of-representatives",
+    "division"
+   ],
+   "sources": [
+    "peo-qon-federation-chamber"
+   ]
+  },
+  {
+   "term": "royal assent",
+   "slug": "royal-assent",
+   "chapter": "bill-to-act",
+   "short": "When the Governor-General signs a bill that both houses have passed. It is the final step.",
+   "more": "After royal assent, the bill becomes an Act. The Governor-General can send a bill back with suggested changes. No Governor-General has ever refused to sign one.",
+   "facts": [
+    "royal-assent-final-step",
+    "becomes-act",
+    "gg-return-bill",
+    "gg-never-refused"
+   ],
+   "see_also": [
+    "governor-general",
+    "act"
+   ],
+   "sources": [
+    "constitution",
+    "peo-gg",
+    "peo-glossary",
+    "peo-qon-gg-assent"
+   ]
+  },
+  {
+   "term": "commencement",
+   "slug": "commencement",
+   "chapter": "bill-to-act",
+   "short": "The day an Act starts to work.",
+   "more": "An Act starts on the date written in it. If no date is given, it starts 28 days after royal assent. OPAX stage dates do not show when a law starts.",
+   "facts": [
+    "commencement-28-days",
+    "opax-stage-dates-not-commencement"
+   ],
+   "see_also": [
+    "act",
+    "royal-assent"
+   ],
+   "sources": [
+    "opax-seo-content",
+    "peo-law-making"
+   ]
+  },
+  {
+   "term": "private member's bill",
+   "slug": "private-members-bill",
+   "chapter": "bill-to-act",
+   "short": "A bill brought in by an MP or senator who is not a minister.",
+   "more": "In the Senate it is called a private senator's bill. Since 1901, only about 30 private bills have passed. Most bills are government bills, brought in by ministers.",
+   "facts": [
+    "private-bills",
+    "private-bills-30",
+    "most-bills-ministers"
+   ],
+   "see_also": [
+    "bill",
+    "minister"
+   ],
+   "sources": [
+    "peo-law-making",
+    "peo-qon-private-bills"
+   ]
+  },
+  {
+   "term": "money bill",
+   "slug": "money-bill",
+   "chapter": "bill-to-act",
+   "short": "A bill that sets a tax or spends public money.",
+   "more": "Bills that tax or spend public money must start in the House. The Senate cannot change a tax bill or the bill for the government's ordinary yearly services. It can ask the House to make changes.",
+   "facts": [
+    "money-bill-def",
+    "money-bills-start-house",
+    "s53-no-amend",
+    "s53-request"
+   ],
+   "see_also": [
+    "bill",
+    "senate"
+   ],
+   "sources": [
+    "constitution",
+    "peo-glossary",
+    "peo-qon-which-house"
+   ]
+  },
+  {
+   "term": "delegated legislation",
+   "slug": "delegated-legislation",
+   "chapter": "bill-to-act",
+   "short": "Detailed rules, such as regulations, made by a minister or agency under power given by an Act.",
+   "more": "It has the same force as a law made by Parliament. It can be made without a debate and vote in Parliament. Parliament can still overrule it.",
+   "facts": [
+    "delegated-what",
+    "delegated-same-force",
+    "delegated-no-debate"
+   ],
+   "see_also": [
+    "disallowance",
+    "act"
+   ],
+   "sources": [
+    "peo-delegated-law",
+    "peo-glossary"
+   ]
+  },
+  {
+   "term": "disallowance",
+   "slug": "disallowance",
+   "chapter": "bill-to-act",
+   "short": "When the Senate or House overrules a piece of delegated legislation.",
+   "more": "An MP or senator has 15 sitting days to ask their house to overrule the rule. The house then has 15 sitting days to decide. If it does not decide, the rule is overruled.",
+   "facts": [
+    "disallow-15-days",
+    "delegated-register-6-days",
+    "delegated-some-not"
+   ],
+   "see_also": [
+    "delegated-legislation"
+   ],
+   "sources": [
+    "peo-delegated-law"
+   ]
+  },
+  {
+   "term": "lapsed",
+   "slug": "lapsed",
+   "chapter": "bill-to-act",
+   "short": "A bill that ran out of time because Parliament closed for an election before it passed.",
+   "more": "When Parliament is closed for an election, bills still waiting expire. They can be brought in again in the next Parliament. OPAX shows these bills as lapsed.",
+   "facts": [
+    "prorogued-bills-expire",
+    "opax-lapsed-status"
+   ],
+   "see_also": [
+    "bill"
+   ],
+   "sources": [
+    "opax-bills-export",
+    "peo-qon-prorogued"
+   ]
+  },
+  {
+   "term": "double dissolution",
+   "slug": "double-dissolution",
+   "chapter": "bill-to-act",
+   "short": "When both houses are ended at once for an election, to break a deadlock over a bill.",
+   "more": "It can happen when the Senate blocks a House bill twice, three months apart. Every seat in both houses then goes to an election. It has happened 7 times.",
+   "facts": [
+    "double-dissolution-steps",
+    "double-dissolution-election",
+    "double-dissolution-7"
+   ],
+   "see_also": [
+    "senate",
+    "house-of-representatives"
+   ],
+   "sources": [
+    "constitution",
+    "peo-double-dissolution",
+    "peo-qon-not-passed"
+   ]
+  },
+  {
+   "term": "House of Representatives",
+   "slug": "house-of-representatives",
+   "chapter": "whos-who",
+   "short": "The house of Parliament where each member represents one electorate. Government is formed here.",
+   "more": "It has 150 members (as at 28 May 2026). Most bills start here. Its meetings are run by the Speaker.",
+   "facts": [
+    "house-150",
+    "government-def",
+    "most-bills-start-house",
+    "presiding-officers"
+   ],
+   "see_also": [
+    "senate",
+    "member-of-parliament",
+    "electorate",
+    "speaker"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-house-numbers",
+    "peo-members",
+    "peo-qon-which-house"
+   ]
+  },
+  {
+   "term": "Senate",
+   "slug": "senate",
+   "chapter": "whos-who",
+   "short": "The house of Parliament where senators represent a whole state or territory.",
+   "more": "It has 76 senators (as at 15 May 2026): 12 for each state and 2 each for the NT and the ACT. Its meetings are run by the President of the Senate.",
+   "facts": [
+    "senate-76",
+    "senator-represents-state",
+    "presiding-officers"
+   ],
+   "see_also": [
+    "house-of-representatives",
+    "senator",
+    "president-of-the-senate"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-senate-numbers",
+    "peo-senators"
+   ]
+  },
+  {
+   "term": "member of parliament",
+   "slug": "member-of-parliament",
+   "chapter": "whos-who",
+   "short": "A person elected to the House of Representatives. Also called an MP.",
+   "more": "Each member represents one electorate. Members are elected at least every 3 years. A person elected to the Senate is called a senator.",
+   "facts": [
+    "member-mp",
+    "house-term",
+    "house-150",
+    "senate-76"
+   ],
+   "see_also": [
+    "electorate",
+    "senator"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-house-numbers",
+    "peo-members"
+   ]
+  },
+  {
+   "term": "senator",
+   "slug": "senator",
+   "chapter": "whos-who",
+   "short": "A person elected to the Senate to represent a state or territory.",
+   "more": "There are 76 senators. State senators serve 6-year terms, and half of them face election every 3 years. Territory senators serve 3-year terms.",
+   "facts": [
+    "senate-76",
+    "senate-terms",
+    "senator-represents-state"
+   ],
+   "see_also": [
+    "senate",
+    "member-of-parliament"
+   ],
+   "sources": [
+    "peo-senate-numbers",
+    "peo-senators"
+   ]
+  },
+  {
+   "term": "electorate",
+   "slug": "electorate",
+   "chapter": "whos-who",
+   "short": "The area an MP represents in the House. Also called a seat.",
+   "more": "Each electorate has about the same number of voters. The Australian Electoral Commission calls electorates \"electoral divisions\". In Parliament, a division is a vote, not a place.",
+   "facts": [
+    "electorate-def",
+    "electorate-equal-voters",
+    "aec-electoral-division"
+   ],
+   "see_also": [
+    "member-of-parliament",
+    "division"
+   ],
+   "sources": [
+    "aec-electorates",
+    "peo-glossary",
+    "peo-house-video"
+   ]
+  },
+  {
+   "term": "government",
+   "slug": "government",
+   "chapter": "whos-who",
+   "short": "The party, or group of parties, with the support of most members of the House.",
+   "more": "The government is led by the Prime Minister. It has members in the Senate too, but it may not have most of the seats there.",
+   "facts": [
+    "government-def",
+    "pm-leads",
+    "gov-senate-maybe"
+   ],
+   "see_also": [
+    "opposition",
+    "prime-minister",
+    "crossbench"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-government",
+    "peo-pm"
+   ]
+  },
+  {
+   "term": "opposition",
+   "slug": "opposition",
+   "chapter": "whos-who",
+   "short": "The largest party, or group of parties, that is not in government.",
+   "more": "It is sometimes called the alternative government. It checks the government's work and offers other policies. Its leader picks shadow ministers.",
+   "facts": [
+    "opposition-def",
+    "opposition-alternative",
+    "opposition-role",
+    "shadow-ministers"
+   ],
+   "see_also": [
+    "government",
+    "shadow-minister"
+   ],
+   "sources": [
+    "peo-ministers",
+    "peo-opposition"
+   ]
+  },
+  {
+   "term": "crossbench",
+   "slug": "crossbench",
+   "chapter": "whos-who",
+   "short": "MPs and senators from minor parties, and independents who belong to no party.",
+   "more": "When the government does not have most of the Senate seats, crossbench senators can decide if a bill passes. This is called the balance of power.",
+   "example": {
+    "url": "https://opax.com.au/doc/division-federal-representatives-10611",
+    "label": "Independents vote together on a House bill"
+   },
+   "facts": [
+    "crossbench-def",
+    "independent-def",
+    "balance-of-power"
+   ],
+   "see_also": [
+    "government",
+    "opposition"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-independents",
+    "peo-minor-parties"
+   ]
+  },
+  {
+   "term": "Prime Minister",
+   "slug": "prime-minister",
+   "chapter": "whos-who",
+   "short": "The leader of the government.",
+   "more": "Australians do not vote for the Prime Minister directly. The party in government chooses its leader. By tradition, the Prime Minister sits in the House.",
+   "facts": [
+    "pm-leads",
+    "pm-chosen",
+    "pm-house"
+   ],
+   "see_also": [
+    "government",
+    "minister",
+    "cabinet"
+   ],
+   "sources": [
+    "peo-pm"
+   ]
+  },
+  {
+   "term": "minister",
+   "slug": "minister",
+   "chapter": "whos-who",
+   "short": "A member of the government put in charge of an area, such as health or defence.",
+   "more": "That area is called a portfolio. Ministers are picked by the Prime Minister. A minister must be, or soon become, an MP or senator.",
+   "facts": [
+    "minister-portfolio",
+    "pm-picks-ministers",
+    "s64-ministers-in-parliament"
+   ],
+   "see_also": [
+    "cabinet",
+    "shadow-minister",
+    "prime-minister"
+   ],
+   "sources": [
+    "constitution",
+    "peo-ministers",
+    "peo-pm"
+   ]
+  },
+  {
+   "term": "Cabinet",
+   "slug": "cabinet",
+   "chapter": "whos-who",
+   "short": "The Prime Minister and the most senior ministers, who make the government's main decisions.",
+   "more": "It includes the Prime Minister and about 20 ministers. It often meets each week. Once Cabinet decides, all its members are expected to support the decision in public.",
+   "facts": [
+    "cabinet-def",
+    "cabinet-meets",
+    "cabinet-solidarity"
+   ],
+   "see_also": [
+    "minister",
+    "prime-minister"
+   ],
+   "sources": [
+    "peo-cabinet"
+   ]
+  },
+  {
+   "term": "shadow minister",
+   "slug": "shadow-minister",
+   "chapter": "whos-who",
+   "short": "A member of the opposition who follows the work of one minister.",
+   "more": "Shadow ministers are chosen by the Leader of the Opposition. They speak for the opposition on their area.",
+   "facts": [
+    "shadow-ministers"
+   ],
+   "see_also": [
+    "opposition",
+    "minister"
+   ],
+   "sources": [
+    "peo-ministers"
+   ]
+  },
+  {
+   "term": "Speaker",
+   "slug": "speaker",
+   "chapter": "whos-who",
+   "short": "The member who runs meetings of the House of Representatives.",
+   "more": "Members choose the Speaker after each election. The Speaker only votes if there is a tie.",
+   "facts": [
+    "po-chosen",
+    "presiding-officers",
+    "speaker-casting"
+   ],
+   "see_also": [
+    "president-of-the-senate",
+    "house-of-representatives"
+   ],
+   "sources": [
+    "constitution",
+    "peo-glossary",
+    "peo-president",
+    "peo-speaker",
+    "peo-voting"
+   ]
+  },
+  {
+   "term": "President of the Senate",
+   "slug": "president-of-the-senate",
+   "chapter": "whos-who",
+   "short": "The senator who runs meetings of the Senate.",
+   "more": "Senators elect the President. Unlike the Speaker, the President can always vote. If a Senate vote is tied, the proposal fails.",
+   "facts": [
+    "po-chosen",
+    "president-votes",
+    "senate-tie"
+   ],
+   "see_also": [
+    "speaker",
+    "senate"
+   ],
+   "sources": [
+    "constitution",
+    "peo-president",
+    "peo-speaker",
+    "peo-voting"
+   ]
+  },
+  {
+   "term": "whip",
+   "slug": "whip",
+   "chapter": "whos-who",
+   "short": "A member chosen by their party to help it work as a team in Parliament.",
+   "more": "Whips make sure members turn up and vote together. They count votes in a division and arrange pairs. Major parties usually have a chief whip and 2 deputy whips.",
+   "facts": [
+    "whip-def",
+    "whip-duties",
+    "whip-numbers"
+   ],
+   "see_also": [
+    "pair",
+    "party-line"
+   ],
+   "sources": [
+    "peo-whip"
+   ]
+  },
+  {
+   "term": "Governor-General",
+   "slug": "governor-general",
+   "chapter": "whos-who",
+   "short": "The King's representative in Australia.",
+   "more": "The King appoints the Governor-General on the Prime Minister's advice. By tradition, the Governor-General acts on the government's advice. One key job is giving royal assent to bills.",
+   "facts": [
+    "gg-represents-king",
+    "gg-appointed",
+    "gg-advice",
+    "royal-assent-gg"
+   ],
+   "see_also": [
+    "royal-assent"
+   ],
+   "sources": [
+    "peo-gg"
+   ]
+  },
+  {
+   "term": "division",
+   "slug": "division",
+   "chapter": "how-votes-work",
+   "short": "A formal vote in Parliament where each member's name and vote is recorded.",
+   "more": "A division is held when more than one member challenges a vote on the voices. Members who vote aye move to the right of the chair, and those voting no move to the left. On OPAX, each division has its own page.",
+   "example": {
+    "url": "https://opax.com.au/doc/division-federal-representatives-10611",
+    "label": "A House division"
+   },
+   "facts": [
+    "division-def",
+    "division-challenge",
+    "division-sides",
+    "opax-division-page"
+   ],
+   "see_also": [
+    "on-the-voices",
+    "pair",
+    "crossing-the-floor"
+   ],
+   "sources": [
+    "opax-vote-tables",
+    "peo-qon-votes-needed",
+    "peo-voting"
+   ]
+  },
+  {
+   "term": "on the voices",
+   "slug": "on-the-voices",
+   "chapter": "how-votes-work",
+   "short": "A quick vote where members call out \"aye\" or \"no\" and no names are recorded.",
+   "more": "Most decisions in Parliament are made this way. The Speaker or President decides which side has more support. If more than one member challenges the result, a division is held.",
+   "facts": [
+    "voices-most",
+    "voices-how",
+    "division-challenge",
+    "opax-voices-no-record"
+   ],
+   "see_also": [
+    "division"
+   ],
+   "sources": [
+    "opax-app-bill-detail",
+    "peo-qon-votes-needed",
+    "peo-voting"
+   ]
+  },
+  {
+   "term": "pair",
+   "slug": "pair",
+   "chapter": "how-votes-work",
+   "short": "An agreement where a member does not vote, to balance out an absent member on the other side.",
+   "more": "Party whips arrange pairs. On the OPAX website, paired members are listed as \"Paired, not counted\".",
+   "facts": [
+    "pair-def",
+    "whip-duties",
+    "opax-paired"
+   ],
+   "see_also": [
+    "whip",
+    "division"
+   ],
+   "sources": [
+    "opax-web-app",
+    "peo-glossary",
+    "peo-whip"
+   ]
+  },
+  {
+   "term": "party line",
+   "slug": "party-line",
+   "chapter": "how-votes-work",
+   "short": "When all members of a party vote the same way, as a team.",
+   "more": "Members of a party usually vote together. Parties often have rules about it, and whips make sure members know how to vote.",
+   "facts": [
+    "party-team",
+    "party-rules",
+    "whip-how-to-vote"
+   ],
+   "see_also": [
+    "crossing-the-floor",
+    "conscience-vote",
+    "whip"
+   ],
+   "sources": [
+    "peo-crossing-floor"
+   ]
+  },
+  {
+   "term": "conscience vote",
+   "slug": "conscience-vote",
+   "chapter": "how-votes-work",
+   "short": "A vote where a party lets its members vote by their own beliefs. Also called a free vote.",
+   "more": "Each party decides when to allow one. From 1950 to 2021, only 43 votes were free votes.",
+   "example": {
+    "url": "https://opax.com.au/doc/division-federal-representatives-7544",
+    "label": "A free vote on Maeve's Law"
+   },
+   "facts": [
+    "free-vote-def",
+    "free-vote-party-decides",
+    "free-vote-43"
+   ],
+   "see_also": [
+    "party-line",
+    "crossing-the-floor"
+   ],
+   "sources": [
+    "peo-crossing-floor"
+   ]
+  },
+  {
+   "term": "crossing the floor",
+   "slug": "crossing-the-floor",
+   "chapter": "how-votes-work",
+   "short": "When a member votes against the rest of their party in a division.",
+   "more": "It is rare and can cost a member support in their party. If you ask OPAX who crossed the floor, it checks each vote against most of the member's party. Party labels can be out of date, so treat that as a guide.",
+   "example": {
+    "url": "https://opax.com.au/doc/division-federal-senate-9535",
+    "label": "A Senate vote where a senator crossed the floor"
+   },
+   "facts": [
+    "crossing-def",
+    "crossing-rare",
+    "crossing-cost",
+    "opax-crossing-rule",
+    "opax-crossing-caveat"
+   ],
+   "see_also": [
+    "party-line",
+    "conscience-vote",
+    "division"
+   ],
+   "sources": [
+    "opax-division-tool",
+    "peo-crossing-floor"
+   ]
+  }
+ ]
+}

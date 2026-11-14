@@ -1,0 +1,2206 @@
+{
+ "_about": "One entry per fact marker [[f:id]]. status \"needs_aph_source\" means the fact could not be sourced without www.aph.gov.au or ParlInfo.",
+ "facts": [
+  {
+   "id": "bill-definition",
+   "claim": "A bill is a written proposal for a new law or a change to an existing law.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-law-making",
+     "quote": "Laws start as bills – a written proposal for a new law or a change to an existing law."
+    }
+   ]
+  },
+  {
+   "id": "bill-identical-both-houses",
+   "claim": "To become law, a bill must be agreed to in identical form by both houses.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-law-making",
+     "quote": "a bill must be agreed to in identical form by both the Senate and House of Representatives"
+    }
+   ]
+  },
+  {
+   "id": "royal-assent-final-step",
+   "claim": "Royal assent is the Governor-General signing a bill, the final step in making it a law.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "The signing of a bill by the Governor-General, which is the final step in making a bill into a law."
+    }
+   ]
+  },
+  {
+   "id": "becomes-act",
+   "claim": "Once signed by the Governor-General, a bill becomes an Act of Parliament.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-gg-assent",
+     "quote": "After a bill is signed by the Governor-General it becomes an Act of Parliament – a law."
+    }
+   ]
+  },
+  {
+   "id": "bill-idea-sources",
+   "claim": "Ideas for laws come from departments, political parties, community and business groups, and committees.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-law-making",
+     "quote": "Ideas for new laws can come from many different places:"
+    },
+    {
+     "source": "peo-law-making",
+     "quote": "A government department may tell its minister about a problem that needs fixing."
+    },
+    {
+     "source": "peo-law-making",
+     "quote": "Political parties have their own ideas about how Australia should be governed."
+    },
+    {
+     "source": "peo-law-making",
+     "quote": "They can speak to members of parliament with suggestions for bills."
+    },
+    {
+     "source": "peo-law-making",
+     "quote": "If the issue requires action, the committee may suggest that a bill be introduced."
+    }
+   ]
+  },
+  {
+   "id": "most-bills-ministers",
+   "claim": "Most bills are government bills, introduced by ministers.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-law-making",
+     "quote": "Most bills are introduced by government ministers."
+    }
+   ]
+  },
+  {
+   "id": "private-bills",
+   "claim": "Other members can introduce their own bills, known as private members' or private senators' bills.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-law-making",
+     "quote": "Other members of parliament can introduce their own bills, known as private members' or private senators' bills."
+    }
+   ]
+  },
+  {
+   "id": "private-bills-30",
+   "claim": "Since 1901, only about 30 private bills have passed.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-private-bills",
+     "quote": "Since Federation in 1901, only about 30 private bills have passed the Parliament."
+    }
+   ]
+  },
+  {
+   "id": "private-bills-why",
+   "claim": "Private bills rarely pass because most time goes to government business and the government usually has a House majority.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-private-bills",
+     "quote": "the Senate and House of Representatives spend most of their time considering government business"
+    },
+    {
+     "source": "peo-qon-private-bills",
+     "quote": "the government usually has the majority in the House of Representatives, so a private bill will only succeed if the government supports it."
+    }
+   ]
+  },
+  {
+   "id": "bill-starts-where-sponsor-sits",
+   "claim": "A bill is introduced in the house where the person responsible for it sits.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-which-house",
+     "quote": "A bill – proposed law – is introduced in the house where the person responsible for it sits."
+    }
+   ]
+  },
+  {
+   "id": "most-bills-start-house",
+   "claim": "Most ministers are in the House, so most bills start there.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-which-house",
+     "quote": "Most ministers are members of the House, so most bills are introduced there."
+    }
+   ]
+  },
+  {
+   "id": "money-bills-start-house",
+   "claim": "Bills that tax or spend public money cannot start in the Senate (Constitution s 53).",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "constitution",
+     "quote": "Proposed laws appropriating revenue or moneys, or imposing taxation, shall not originate in the Senate."
+    },
+    {
+     "source": "peo-qon-which-house",
+     "quote": "money and taxation bills must be introduced in the House of Representatives."
+    }
+   ]
+  },
+  {
+   "id": "first-reading",
+   "claim": "At the first reading the bill is introduced and its title read for the first time.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "in which the bill is introduced and the title of the bill is read for the first time."
+    }
+   ]
+  },
+  {
+   "id": "three-readings",
+   "claim": "The Clerk reads a bill's title 3 times in each house; each reading marks a stage passed.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-second-reading",
+     "quote": "To pass through the Senate or House of Representatives, the title of the bill must be read out 3 times by the Clerk."
+    },
+    {
+     "source": "peo-qon-second-reading",
+     "quote": "Each time the Clerk reads the title of the bill it signals the bill has passed a different stage."
+    }
+   ]
+  },
+  {
+   "id": "opax-recorded-stages",
+   "claim": "OPAX bill pages list the stages a bill has passed (web heading \"Recorded stages\"); the first is \"Introduced\".",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-seo-content",
+     "quote": "<h2>Recorded stages</h2>"
+    },
+    {
+     "source": "opax-bill-r7548",
+     "quote": "\"stage\": \"introduced\""
+    }
+   ]
+  },
+  {
+   "id": "second-reading-motion",
+   "claim": "The second reading starts with a motion that the bill now be read a second time.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-second-reading",
+     "quote": "When a member of parliament says ‘I move that this bill now be read a second time’"
+    },
+    {
+     "source": "peo-qon-second-reading",
+     "quote": "the member or senator (usually a minister responsible for the bill) moves a motion – asks – that it be read a second time."
+    }
+   ]
+  },
+  {
+   "id": "second-reading-debate",
+   "claim": "In the second reading debate members discuss the main idea of the bill and say why they support or oppose it.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-second-reading",
+     "quote": "members of parliament discuss the principle or main idea of the bill and can explain why they support or oppose the bill."
+    }
+   ]
+  },
+  {
+   "id": "second-reading-vote",
+   "claim": "Passing the second reading vote signals agreement with the main idea; the bill then moves to later stages including amendments.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-second-reading",
+     "quote": "If the vote passes, it signals that senators or members agree with the main idea of the bill"
+    },
+    {
+     "source": "peo-qon-second-reading",
+     "quote": "The bill can then progress through the next stages, including discussion of amendments – changes – to the bill."
+    }
+   ]
+  },
+  {
+   "id": "fed-chamber-what",
+   "claim": "The Federation Chamber is the House's second meeting place; it can sit at the same time as the House and all members may attend.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-federation-chamber",
+     "quote": "The Federation Chamber is the second meeting place of the House of Representatives and can operate at the same time as the House."
+    },
+    {
+     "source": "peo-qon-federation-chamber",
+     "quote": "All members of the House can attend the Federation Chamber."
+    }
+   ]
+  },
+  {
+   "id": "fed-chamber-use",
+   "claim": "The Federation Chamber debates bills on which agreement is expected.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-federation-chamber",
+     "quote": "debating bills on which there is expected to be agreement"
+    }
+   ]
+  },
+  {
+   "id": "fed-chamber-no-divisions",
+   "claim": "Divisions cannot be held in the Federation Chamber.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-federation-chamber",
+     "quote": "although divisions – formal recorded votes – cannot be taken there."
+    }
+   ]
+  },
+  {
+   "id": "fed-chamber-confirm",
+   "claim": "Federation Chamber decisions must be confirmed by the House.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-federation-chamber",
+     "quote": "All decisions made in the Federation Chamber need to be confirmed by the House of Representatives."
+    }
+   ]
+  },
+  {
+   "id": "committee-send-bill",
+   "claim": "Either house can send a bill to a committee.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-making-a-law",
+     "quote": "Either house of Parliament can send a bill to a committee for detailed examination."
+    }
+   ]
+  },
+  {
+   "id": "committee-size",
+   "claim": "Committees usually have 6 to 10 members.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-committees",
+     "quote": "They are usually made up of 6 to 10 members of parliament and have a mix of government and non-government members."
+    }
+   ]
+  },
+  {
+   "id": "committee-submissions-hearings",
+   "claim": "Committees invite submissions, then hold hearings.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-committees",
+     "quote": "Individuals and groups are invited to send submissions – opinions and proposals – to committees."
+    },
+    {
+     "source": "peo-committees",
+     "quote": "they invite people or groups to appear at hearings to provide more information or answer questions from committee members."
+    }
+   ]
+  },
+  {
+   "id": "committee-report",
+   "claim": "Committees report to Parliament and may suggest changes to a bill.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-committees",
+     "quote": "After the hearings are finished, the committee writes a report which is presented to Parliament."
+    },
+    {
+     "source": "peo-making-a-law",
+     "quote": "A committee might suggest changes to a bill or make other recommendations for the Houses to consider."
+    }
+   ]
+  },
+  {
+   "id": "senate-referral-early",
+   "claim": "The Senate may refer a bill to a Senate committee for inquiry, even while it is still in the House.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-usual-path",
+     "quote": "the Senate may refer the text of the bill to a Senate committee for inquiry (this can happen while the bill is in the House)."
+    }
+   ]
+  },
+  {
+   "id": "committee-issues-and-bills",
+   "claim": "Committees investigate issues as well as bills.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-committees",
+     "quote": "Committees investigate issues and bills in detail."
+    }
+   ]
+  },
+  {
+   "id": "committee-report-use",
+   "claim": "Members may use a committee report to decide their vote or to draft amendments.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-committees",
+     "quote": "Members of parliament might use the report to help them decide how they will vote on a bill or to develop bills or amendments"
+    }
+   ]
+  },
+  {
+   "id": "cid-optional",
+   "claim": "Consideration in detail is an optional stage after the second reading where the bill is discussed in detail.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-usual-path",
+     "quote": "Consideration in detail (optional stage) – members discuss the bill in detail, including any changes to the bill"
+    }
+   ]
+  },
+  {
+   "id": "consideration-in-detail",
+   "claim": "The detailed stage is called consideration in detail in the House and committee of the whole in the Senate.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "A stage in the passage of a bill through the House of Representatives, in which members discuss the bill in detail, including any suggested changes."
+    },
+    {
+     "source": "peo-glossary",
+     "quote": "A stage in the passage of a bill through the Senate, in which senators discuss the bill in detail, including any suggested changes."
+    }
+   ]
+  },
+  {
+   "id": "amendments-when",
+   "claim": "Most amendments are considered at consideration in detail or committee of the whole, where members speak and vote on each.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-amendments",
+     "quote": "Amendments to bills are most often considered during committee of the whole in the Senate or consideration in detail in the House of Representatives."
+    },
+    {
+     "source": "peo-amendments",
+     "quote": "can speak about each amendment and vote for or against each amendment."
+    }
+   ]
+  },
+  {
+   "id": "amend-anyone",
+   "claim": "Any member can move an amendment.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-amendments",
+     "quote": "Any member of parliament can suggest an amendment to a bill. This is called 'moving an amendment'."
+    }
+   ]
+  },
+  {
+   "id": "amend-written",
+   "claim": "Amendments are given in writing to the Clerk, who circulates copies.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-amendments",
+     "quote": "An amendment must be submitted in writing to the Clerk of the Senate or House."
+    },
+    {
+     "source": "peo-amendments",
+     "quote": "The Clerk then distributes copies so that everyone can read the amendment"
+    }
+   ]
+  },
+  {
+   "id": "amend-majority",
+   "claim": "If a majority agree to an amendment, the bill is changed.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-amend-anyone",
+     "quote": "If the majority agree to an amendment, the bill is changed."
+    }
+   ]
+  },
+  {
+   "id": "amend-who-most",
+   "claim": "Non-government members move most amendments because most bills are government bills.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-amend-anyone",
+     "quote": "Independent, minor party and opposition members are more likely to suggest amendments. This is because most bills introduced to Parliament are government bills"
+    }
+   ]
+  },
+  {
+   "id": "third-reading",
+   "claim": "At the third reading members vote on the bill in its final form.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "in which members of parliament vote on the bill in its final form."
+    }
+   ]
+  },
+  {
+   "id": "house-message-to-senate",
+   "claim": "After the House passes a bill, the Speaker sends a message to the Senate asking it to agree.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-after-house",
+     "quote": "signs a document, known as a ‘message’, addressed to the President of the Senate, requesting the Senate’s ‘concurrence’ – agreement – with the bill."
+    }
+   ]
+  },
+  {
+   "id": "senate-stages",
+   "claim": "In the second house a similar series of stages is followed.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-usual-path",
+     "quote": "In the Senate a bill goes through the following stages:"
+    },
+    {
+     "source": "peo-making-a-law",
+     "quote": "it is sent to the other house – in this case, the Senate – where a similar process is followed."
+    }
+   ]
+  },
+  {
+   "id": "senate-options",
+   "claim": "The Senate can debate a bill immediately, send it to a committee, or schedule it for later.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-after-house",
+     "quote": "decide to immediately debate the bill, send it to a committee for closer examination or schedule debate on the bill for a later day."
+    }
+   ]
+  },
+  {
+   "id": "amendments-both-houses",
+   "claim": "Amendments made in either house must be agreed to by both.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-amendments",
+     "quote": "Amendments can be introduced in either the Senate or the House of Representatives, and must be agreed to by both."
+    }
+   ]
+  },
+  {
+   "id": "amendment-shuttle",
+   "claim": "When the second house amends a bill, it returns to the first house to accept or reject the amendments, and this can repeat.",
+   "status": "needs_aph_source",
+   "quotes": [
+    {
+     "source": "constitution",
+     "quote": "or passes it with amendments to which the House of Representatives will not agree"
+    },
+    {
+     "source": "opax-div-reps-8545",
+     "quote": "Consideration of Senate Message - Agree with Senate amendments and so pass bill"
+    }
+   ],
+   "note": "The return of an amended bill to the first house by message, and repeated exchanges, are implied by s 57 and shown in OPAX records but not stated step by step in PEO, AEC or Constitution text."
+  },
+  {
+   "id": "not-passed-not-law",
+   "claim": "If one house does not pass a bill, it cannot become law.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-not-passed",
+     "quote": "If one of the houses doesn't pass a bill – a proposal for a new law – then it cannot become a law."
+    }
+   ]
+  },
+  {
+   "id": "not-passed-options",
+   "claim": "The originating house may pass it again, change it, or lay it aside.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-not-passed",
+     "quote": "pass the bill again and send it back to the second house"
+    },
+    {
+     "source": "peo-qon-not-passed",
+     "quote": "change the bill so the second house will be more likely to pass it"
+    },
+    {
+     "source": "peo-qon-not-passed",
+     "quote": "lay the bill aside (not go forward with the bill)."
+    }
+   ]
+  },
+  {
+   "id": "double-dissolution-house-bills",
+   "claim": "The double dissolution path in s 57 applies to bills passed by the House of Representatives.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "constitution",
+     "quote": "If the House of Representatives passes any proposed law, and the Senate rejects or fails to pass it"
+    }
+   ]
+  },
+  {
+   "id": "double-dissolution-steps",
+   "claim": "The trigger: the Senate rejects (or fails to pass, or amends unacceptably) a House bill twice, three months apart.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "constitution",
+     "quote": "if after an interval of three months the House of Representatives, in the same or the next session, again passes the proposed law"
+    },
+    {
+     "source": "peo-double-dissolution",
+     "quote": "The Senate again rejects or fails to pass the bill, or passes the same bill with amendments to which the House will not agree."
+    }
+   ],
+   "note": "Copy simplifies \"rejects, fails to pass, or passes with amendments the House will not agree to\" to \"blocks\"."
+  },
+  {
+   "id": "double-dissolution-election",
+   "claim": "The Prime Minister can then ask the Governor-General for an election for every seat in both houses.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-not-passed",
+     "quote": "the Prime Minister can ask the Governor-General to call an election for all the seats in the House of Representatives and the Senate."
+    }
+   ]
+  },
+  {
+   "id": "double-dissolution-7",
+   "claim": "There have been 7 double dissolutions.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-double-dissolution",
+     "quote": "There have been 7 double dissolutions of the Australian Parliament: 1914, 1951, 1974, 1975, 1983, 1987 and 2016."
+    }
+   ]
+  },
+  {
+   "id": "joint-sitting",
+   "claim": "If the deadlock continues after the election, a joint sitting can be called where senators and members vote together.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-double-dissolution",
+     "quote": "the Governor-General may call a joint sitting of all senators and members of the House of Representatives."
+    },
+    {
+     "source": "peo-double-dissolution",
+     "quote": "At a joint sitting, all senators and members vote together on the bill or bills."
+    }
+   ]
+  },
+  {
+   "id": "joint-sitting-1974",
+   "claim": "There has been only one joint sitting, in 1974.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-double-dissolution",
+     "quote": "There has only been one joint sitting of the Australian Parliament."
+    },
+    {
+     "source": "peo-double-dissolution",
+     "quote": "In 1974, the 6 bills that had triggered a double dissolution were reintroduced into Parliament"
+    }
+   ]
+  },
+  {
+   "id": "gg-return-bill",
+   "claim": "The Governor-General can return a bill with suggested amendments (Constitution s 58).",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-gg-assent",
+     "quote": "send the bill back to the Parliament with suggestions for amendments – changes."
+    },
+    {
+     "source": "constitution",
+     "quote": "The Governor-General may return to the House in which it originated any proposed law so presented to him"
+    }
+   ]
+  },
+  {
+   "id": "gg-never-refused",
+   "claim": "No Governor-General has refused royal assent.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-gg",
+     "quote": "No Governor-General has ever refused to give Royal Assent to a bill"
+    }
+   ]
+  },
+  {
+   "id": "commencement-28-days",
+   "claim": "An Act starts on the date it sets, or 28 days after royal assent if none is given.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-law-making",
+     "quote": "starts on the date included in the law or, if no date is given, 28 days after Royal Assent."
+    }
+   ]
+  },
+  {
+   "id": "opax-stage-dates-not-commencement",
+   "claim": "OPAX says stage dates do not establish commencement.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-seo-content",
+     "quote": "Stage dates describe the parliamentary progress recorded by the source. They do not establish when provisions commence."
+    }
+   ]
+  },
+  {
+   "id": "money-bill-def",
+   "claim": "A money bill introduces a tax or spends money.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "A proposed law that introduces a tax or suggests spending money for a particular purpose."
+    }
+   ]
+  },
+  {
+   "id": "budget-bills",
+   "claim": "The Budget is a set of appropriation bills.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-budget",
+     "quote": "The Budget is a collection of bills – proposed laws – called appropriation bills."
+    }
+   ]
+  },
+  {
+   "id": "s53-no-amend",
+   "claim": "The Senate cannot amend tax bills or the bill for the ordinary annual services of the Government.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "constitution",
+     "quote": "The Senate may not amend proposed laws imposing taxation, or proposed laws appropriating revenue or moneys for the ordinary annual services of the Government."
+    }
+   ],
+   "note": "Constitution s 53 limits Senate amendment to these bills (and to bills increasing a charge or burden); it does not cover every money bill. Copy follows s 53, not the broader PEO wording."
+  },
+  {
+   "id": "s53-request",
+   "claim": "The Senate may return such a bill requesting changes; the House may make them if it sees fit.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "constitution",
+     "quote": "return to the House of Representatives any proposed law which the Senate may not amend, requesting, by message, the omission or amendment"
+    },
+    {
+     "source": "constitution",
+     "quote": "And the House of Representatives may, if it thinks fit, make any of such omissions or amendments"
+    }
+   ]
+  },
+  {
+   "id": "delegated-purpose",
+   "claim": "Acts set a framework and can give the power to make detailed rules to a minister or expert body.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-delegated-law",
+     "quote": "These laws provide a general framework and don’t include details about when, where and how the laws might be applied."
+    },
+    {
+     "source": "peo-delegated-law",
+     "quote": "give the power to make decisions about the details of these complex laws to the person or group with expert knowledge"
+    }
+   ]
+  },
+  {
+   "id": "delegated-what",
+   "claim": "Delegated legislation includes regulations made by ministers or office holders under an Act.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "Rules or regulations made by a government minister, executive office-holder or government department using power that is given to them by the Parliament."
+    },
+    {
+     "source": "peo-delegated-law",
+     "quote": "There are different types of delegated law including determinations, regulations, ordinances and orders."
+    }
+   ]
+  },
+  {
+   "id": "delegated-same-force",
+   "claim": "Delegated law has the same power as an Act.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-delegated-law",
+     "quote": "Delegated law has the same power as a law made by the Australian Parliament."
+    }
+   ]
+  },
+  {
+   "id": "delegated-no-debate",
+   "claim": "It can be made or changed without being debated and passed by Parliament.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-delegated-law",
+     "quote": "It can be made and changed without having to be debated and passed by the Parliament."
+    }
+   ]
+  },
+  {
+   "id": "delegated-register-6-days",
+   "claim": "Delegated law is registered, becomes law that day, and must be presented to Parliament within 6 sitting days.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-delegated-law",
+     "quote": "Each delegated law must be listed on a public register. It becomes law on the day it is registered."
+    },
+    {
+     "source": "peo-delegated-law",
+     "quote": "Then it must be presented to Parliament within 6 sitting days."
+    }
+   ]
+  },
+  {
+   "id": "disallow-15-days",
+   "claim": "Within 15 sitting days a member can move to overrule it; the house then has 15 sitting days; with no decision it is overruled.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-delegated-law",
+     "quote": "Within 15 sitting days, a member of parliament must request the Senate or House of Representatives overrule the delegated law."
+    },
+    {
+     "source": "peo-delegated-law",
+     "quote": "The Senate or House of Representatives have 15 sitting days to discuss the delegated law and make a decision."
+    },
+    {
+     "source": "peo-delegated-law",
+     "quote": "If there is no discussion or no decision is made, the delegated law is overruled."
+    }
+   ]
+  },
+  {
+   "id": "delegated-some-not",
+   "claim": "Some delegated law cannot be overruled.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-delegated-law",
+     "quote": "Some delegated law cannot be overruled."
+    }
+   ]
+  },
+  {
+   "id": "prorogued-bills-expire",
+   "claim": "When Parliament is prorogued for an election, bills expire and can be reintroduced in the next Parliament.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-prorogued",
+     "quote": "When Parliament is prorogued so a federal election can be held, bills – proposed laws – and other business"
+    },
+    {
+     "source": "peo-qon-prorogued",
+     "quote": "Bills and other business can be reintroduced in the next Parliament."
+    }
+   ]
+  },
+  {
+   "id": "opax-lapsed-status",
+   "claim": "OPAX shows bills that expired this way with the status \"lapsed\".",
+   "status": "needs_aph_source",
+   "quotes": [
+    {
+     "source": "opax-bills-export",
+     "quote": "\"status\": \"lapsed\""
+    }
+   ],
+   "note": "OPAX carries the register status \"lapsed\" on 1,076 federal bills. That \"lapsed\" means a bill that expired at prorogation or dissolution is the register's meaning and needs an official source (APH bill status definitions)."
+  },
+  {
+   "id": "bill-time",
+   "claim": "Most bills take 2 to 3 months; some take years.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-law-making",
+     "quote": "It can take months or even years for a bill to become law but most bills take 2 to 3 months."
+    }
+   ]
+  },
+  {
+   "id": "bills-per-year",
+   "claim": "Around 200 bills are introduced each year.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-law-making",
+     "quote": "Around 200 bills are introduced into Parliament each year"
+    }
+   ]
+  },
+  {
+   "id": "parliament-parts",
+   "claim": "Parliament is the Monarch (represented by the Governor-General), the Senate and the House of Representatives.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-house-video",
+     "quote": "the Parliament is made up of the Monarch, represented by the Governor-General, and two houses of Parliament: the Senate and the House of Representatives."
+    }
+   ]
+  },
+  {
+   "id": "parliament-makes-laws",
+   "claim": "Making laws is one of Parliament's main roles.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-making-a-law",
+     "quote": "One of the main roles of the Australian Parliament is to make laws for the people of Australia."
+    }
+   ]
+  },
+  {
+   "id": "house-150",
+   "claim": "The House of Representatives has 150 members.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-members",
+     "quote": "There are 150 members. Each represents a different electorate."
+    },
+    {
+     "source": "peo-house-numbers",
+     "quote": "As at 28 May 2026"
+    }
+   ],
+   "as_at": "2026-05-28"
+  },
+  {
+   "id": "electorate-def",
+   "claim": "An electorate is the area a member represents, also called a seat.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "A geographical area represented by a member of parliament, also referred to as a seat."
+    }
+   ]
+  },
+  {
+   "id": "electorate-equal-voters",
+   "claim": "Each electorate has about the same number of voters.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-house-video",
+     "quote": "there is approximately the same number of voters living in each electorate."
+    }
+   ]
+  },
+  {
+   "id": "member-mp",
+   "claim": "A person elected to the House is a member, or MP.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "A person elected to the House of Representatives, also referred to as an MP."
+    }
+   ]
+  },
+  {
+   "id": "house-term",
+   "claim": "House members are elected at least every 3 years.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-members",
+     "quote": "Members are elected to the House of Representatives at least every 3 years."
+    }
+   ]
+  },
+  {
+   "id": "senate-76",
+   "claim": "There are 76 senators: 12 per state and 2 each for the NT and ACT.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-senators",
+     "quote": "There are 76 senators. Each state is represented by 12 senators, and the Northern Territory and Australian Capital Territory are represented by 2 senators each."
+    },
+    {
+     "source": "peo-senate-numbers",
+     "quote": "As at 15 May 2026"
+    }
+   ],
+   "as_at": "2026-05-15"
+  },
+  {
+   "id": "senator-represents-state",
+   "claim": "A senator represents a state or territory.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-senators",
+     "quote": "A senator is someone who has been elected to represent their state or territory in the Senate."
+    }
+   ]
+  },
+  {
+   "id": "senate-terms",
+   "claim": "State senators serve 6 years with half elected every 3 years; territory senators serve 3 years.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-senators",
+     "quote": "State senators are elected for a period of 6 years"
+    },
+    {
+     "source": "peo-senators",
+     "quote": "every 3 years half of the state senators are up for re-election"
+    },
+    {
+     "source": "peo-senators",
+     "quote": "Senators representing the Australian Capital Territory and the Northern Territory have 3-year terms"
+    }
+   ]
+  },
+  {
+   "id": "s24-twice",
+   "claim": "The Constitution says the House is to be, as nearly as practicable, twice the size of the Senate (s 24).",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "constitution",
+     "quote": "the number of such members shall be, as nearly as practicable, twice the number of the senators."
+    }
+   ]
+  },
+  {
+   "id": "s24-population",
+   "claim": "House seats are shared among states in proportion to population (s 24).",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "constitution",
+     "quote": "The number of members chosen in the several States shall be in proportion to the respective numbers of their people"
+    }
+   ]
+  },
+  {
+   "id": "aec-redistribution-aim",
+   "claim": "Electorate boundaries are redrawn from time to time; projected enrolment should stay within 3.5% of the state or territory average.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "aec-redistribution-faq",
+     "quote": "the last redistribution for that state or territory was determined seven years ago"
+    },
+    {
+     "source": "aec-redistribution-faq",
+     "quote": "projected enrolment in each electorate should not vary from the projected state or territory average by more than 3.5 per cent."
+    }
+   ]
+  },
+  {
+   "id": "house-numbers-2026",
+   "claim": "As at 28 May 2026: government 94, opposition 41, minor parties and independents 15 (1+1+1+2+10).",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-house-numbers",
+     "quote": "Government – 94 members"
+    },
+    {
+     "source": "peo-house-numbers",
+     "quote": "Opposition – 41 members"
+    },
+    {
+     "source": "peo-house-numbers",
+     "quote": "Australian Greens – 1 member"
+    },
+    {
+     "source": "peo-house-numbers",
+     "quote": "Centre Alliance – 1 member"
+    },
+    {
+     "source": "peo-house-numbers",
+     "quote": "Katter's Australian Party – 1 member"
+    },
+    {
+     "source": "peo-house-numbers",
+     "quote": "One Nation – 2 members"
+    },
+    {
+     "source": "peo-house-numbers",
+     "quote": "Independents – 10 members"
+    },
+    {
+     "source": "peo-house-numbers",
+     "quote": "As at 28 May 2026"
+    }
+   ],
+   "as_at": "2026-05-28",
+   "derived": "15 = 1 + 1 + 1 + 2 + 10"
+  },
+  {
+   "id": "senate-numbers-2026",
+   "claim": "As at 15 May 2026: government 30, opposition 27, minor parties and independents 19 (10+4+1+1+1+2).",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-senate-numbers",
+     "quote": "Government – 30 senators"
+    },
+    {
+     "source": "peo-senate-numbers",
+     "quote": "Opposition – 27 senators"
+    },
+    {
+     "source": "peo-senate-numbers",
+     "quote": "Australian Greens – 10 senators"
+    },
+    {
+     "source": "peo-senate-numbers",
+     "quote": "One Nation – 4 senators"
+    },
+    {
+     "source": "peo-senate-numbers",
+     "quote": "Jacqui Lambie Network – 1 senator"
+    },
+    {
+     "source": "peo-senate-numbers",
+     "quote": "United Australia Party – 1 senator"
+    },
+    {
+     "source": "peo-senate-numbers",
+     "quote": "Australia's Voice – 1 senator"
+    },
+    {
+     "source": "peo-senate-numbers",
+     "quote": "Independents – 2 senators"
+    },
+    {
+     "source": "peo-senate-numbers",
+     "quote": "As at 15 May 2026"
+    }
+   ],
+   "as_at": "2026-05-15",
+   "derived": "19 = 10 + 4 + 1 + 1 + 1 + 2"
+  },
+  {
+   "id": "government-def",
+   "claim": "The government is the party or coalition with majority support in the House.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "the party, or coalition of parties, with the support of the majority of members in the House of Representatives."
+    }
+   ]
+  },
+  {
+   "id": "coalition-def",
+   "claim": "A coalition is an agreement between parties to form a bigger group.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "An agreement between two or more parliamentary parties to create a bigger group and strengthen their position."
+    }
+   ]
+  },
+  {
+   "id": "gov-senate-maybe",
+   "claim": "The government may or may not hold a Senate majority.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-government",
+     "quote": "The government may or may not hold the majority of seats in the Senate."
+    }
+   ]
+  },
+  {
+   "id": "gov-senate-unusual",
+   "claim": "A government majority in the Senate is unusual.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-senate-video",
+     "quote": "A government majority in the Senate is unusual, so the government must negotiate with senators from the opposition and crossbench."
+    }
+   ]
+  },
+  {
+   "id": "pm-leads",
+   "claim": "The Prime Minister leads the government.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-pm",
+     "quote": "The Prime Minister of Australia is the leader of the Australian Government."
+    }
+   ]
+  },
+  {
+   "id": "pm-chosen",
+   "claim": "Australians do not vote for the PM; the governing party chooses its leader.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-pm",
+     "quote": "The people of Australia do not vote for the Prime Minister."
+    },
+    {
+     "source": "peo-pm",
+     "quote": "the Prime Minister is chosen by a vote of the members of the party in government."
+    }
+   ]
+  },
+  {
+   "id": "pm-house",
+   "claim": "By convention the PM is a member of the House.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-pm",
+     "quote": "By convention – tradition – the Prime Minister is always a member of the House of Representatives, not a senator."
+    }
+   ]
+  },
+  {
+   "id": "pm-not-constitution",
+   "claim": "The PM is not mentioned in the Constitution.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-pm",
+     "quote": "The role of Prime Minister is not mentioned in the Australian Constitution."
+    }
+   ]
+  },
+  {
+   "id": "pm-picks-ministers",
+   "claim": "The PM selects ministers.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-pm",
+     "quote": "selecting members of the government to be ministers"
+    },
+    {
+     "source": "peo-ministers",
+     "quote": "The Prime Minister chooses experienced and knowledgeable government members to be ministers"
+    }
+   ]
+  },
+  {
+   "id": "minister-portfolio",
+   "claim": "A minister's area of responsibility, such as health or defence, is a portfolio.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-ministers",
+     "quote": "Ministers are members of the Australian Government who have been given an area of responsibility for how Australia is run."
+    },
+    {
+     "source": "peo-ministers",
+     "quote": "This area of responsibility is known as a portfolio. Examples of ministerial portfolios include: health environment transport defence"
+    }
+   ]
+  },
+  {
+   "id": "minister-numbers",
+   "claim": "There are usually about 20 ministers in the House and 10 in the Senate.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-ministers",
+     "quote": "There are usually about 20 ministers in the House of Representatives and 10 in the Senate."
+    }
+   ]
+  },
+  {
+   "id": "s64-ministers-in-parliament",
+   "claim": "A minister must be or become a senator or member within 3 months (s 64).",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "constitution",
+     "quote": "shall hold office for a longer period than three months unless he is or becomes a senator or a member of the House of Representatives."
+    }
+   ]
+  },
+  {
+   "id": "cabinet-def",
+   "claim": "Cabinet is the PM and about 20 senior ministers.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-cabinet",
+     "quote": "It includes the Prime Minister and about 20 ministers who are part of the executive government."
+    }
+   ]
+  },
+  {
+   "id": "cabinet-meets",
+   "claim": "Cabinet meets regularly, often weekly, to decide policy and national issues.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-cabinet",
+     "quote": "Cabinet meets on a regular basis, often weekly."
+    },
+    {
+     "source": "peo-cabinet",
+     "quote": "Cabinet's role is to develop government policy and make decisions about national issues."
+    }
+   ]
+  },
+  {
+   "id": "cabinet-solidarity",
+   "claim": "Cabinet ministers publicly support Cabinet decisions.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-cabinet",
+     "quote": "Once Cabinet has made a decision, all Cabinet ministers are expected to support the decision publicly."
+    }
+   ]
+  },
+  {
+   "id": "opposition-def",
+   "claim": "The opposition is the largest party or coalition not in government.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-opposition",
+     "quote": "The opposition is the largest party – or coalition of parties – that does not have the support of the majority of members"
+    }
+   ]
+  },
+  {
+   "id": "opposition-alternative",
+   "claim": "The opposition is called the alternative government.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-opposition",
+     "quote": "The opposition is sometimes called the alternative government because it could form government if it was to win the support of the majority of members."
+    }
+   ]
+  },
+  {
+   "id": "opposition-role",
+   "claim": "The opposition keeps the government accountable and offers alternative policies.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-opposition",
+     "quote": "The opposition has an important role in keeping the government accountable to the Australian Parliament."
+    },
+    {
+     "source": "peo-opposition",
+     "quote": "providing alternatives to government policies."
+    }
+   ]
+  },
+  {
+   "id": "shadow-ministers",
+   "claim": "The Leader of the Opposition chooses shadow ministers, each following a minister.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-ministers",
+     "quote": "They are chosen by the Leader of the Opposition. Each shadow minister concentrates on the work of a particular minister and government department."
+    },
+    {
+     "source": "peo-ministers",
+     "quote": "They also act as the opposition spokesperson for the area they are assigned."
+    }
+   ]
+  },
+  {
+   "id": "independent-def",
+   "claim": "Crossbenchers belong to minor parties or are independents with no party.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-independents",
+     "quote": "An independent is a member of the Australian Parliament who does not belong to a political party."
+    },
+    {
+     "source": "peo-minor-parties",
+     "quote": "does not have enough members in the House of Representatives to be the government or the opposition."
+    }
+   ]
+  },
+  {
+   "id": "crossbench-def",
+   "claim": "Minor parties and independents sit on the crossbench.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "The seats in the Senate or the House of Representatives occupied by minor parties and/or independents."
+    }
+   ]
+  },
+  {
+   "id": "balance-of-power",
+   "claim": "Without a government Senate majority, crossbench senators can hold the balance of power.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-independents",
+     "quote": "The government often does not have a majority in the Senate."
+    },
+    {
+     "source": "peo-independents",
+     "quote": "Independent and minor party senators can have the balance of power – their vote can decide if a bill is passed or fails."
+    }
+   ]
+  },
+  {
+   "id": "presiding-officers",
+   "claim": "The Speaker runs the House and the President runs the Senate.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "In the Senate called the President and in the House of Representatives called the Speaker."
+    }
+   ]
+  },
+  {
+   "id": "po-duties",
+   "claim": "Presiding officers call speakers, keep order and conduct votes.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-speaker",
+     "quote": "call on members when it is their turn to speak"
+    },
+    {
+     "source": "peo-speaker",
+     "quote": "conduct votes in the House and announce the results"
+    },
+    {
+     "source": "peo-president",
+     "quote": "maintain order and issue warnings if senators have broken the rules"
+    }
+   ]
+  },
+  {
+   "id": "po-chosen",
+   "claim": "House members vote for the Speaker after an election; senators elect the President.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-speaker",
+     "quote": "After a federal election, members of the House of Representatives vote to choose the Speaker."
+    },
+    {
+     "source": "peo-president",
+     "quote": "They are elected by fellow senators to run the meetings of the Senate."
+    }
+   ]
+  },
+  {
+   "id": "whip-def",
+   "claim": "A whip is chosen by their party to keep it organised and working as a team.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-whip",
+     "quote": "A party whip is a member of Parliament chosen by their political party to help keep their party organised"
+    },
+    {
+     "source": "peo-whip",
+     "quote": "They help the party work as a team."
+    }
+   ]
+  },
+  {
+   "id": "whip-small-parties",
+   "claim": "Smaller parties may not have a whip.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-whip",
+     "quote": "Smaller parties may only have a whip where they have members or choose not to have a whip."
+    }
+   ]
+  },
+  {
+   "id": "whip-duties",
+   "claim": "Whips organise attendance and votes, count votes in divisions and negotiate pairs.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-whip",
+     "quote": "organising party members to make sure they attend and vote together during divisions"
+    },
+    {
+     "source": "peo-whip",
+     "quote": "counting and recording the votes in a division"
+    },
+    {
+     "source": "peo-whip",
+     "quote": "so numbers between the government and opposition stay balanced if members are away."
+    }
+   ]
+  },
+  {
+   "id": "whip-numbers",
+   "claim": "Major parties usually have a chief whip and 2 deputies.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-whip",
+     "quote": "major parties usually have a chief whip and 2 deputy whips."
+    }
+   ]
+  },
+  {
+   "id": "gg-represents-king",
+   "claim": "The Governor-General represents the King.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-gg",
+     "quote": "The Governor-General is the King’s representative in Australia."
+    }
+   ]
+  },
+  {
+   "id": "gg-appointed",
+   "claim": "The King appoints the Governor-General on the PM's recommendation.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-gg",
+     "quote": "The Governor-General is appointed by the King on the recommendation of the Prime Minister."
+    }
+   ]
+  },
+  {
+   "id": "gg-advice",
+   "claim": "By convention the Governor-General follows the government's advice.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-gg",
+     "quote": "It is an established convention that the Governor-General follows the advice of the Government"
+    }
+   ]
+  },
+  {
+   "id": "royal-assent-gg",
+   "claim": "Giving royal assent to bills is one of the Governor-General's key jobs.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-gg",
+     "quote": "One of their most important jobs is giving Royal Assent to bills – proposed laws – passed by the Senate and House of Representatives."
+    }
+   ]
+  },
+  {
+   "id": "aec-def",
+   "claim": "The AEC runs national elections.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "The organisation responsible for running national elections and referendums."
+    }
+   ]
+  },
+  {
+   "id": "aec-electoral-division",
+   "claim": "The AEC calls electorates \"electoral divisions\".",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "aec-electorates",
+     "quote": "Find my electoral division"
+    },
+    {
+     "source": "aec-electorates",
+     "quote": "Current federal electoral divisions"
+    }
+   ]
+  },
+  {
+   "id": "division-def",
+   "claim": "A division is a formal recorded vote.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-voting",
+     "quote": "A division is a formal recorded vote where members of Parliament divide into 2 groups to vote for or against a proposal."
+    }
+   ]
+  },
+  {
+   "id": "majority-vote",
+   "claim": "Parliament decides by majority vote.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-voting",
+     "quote": "The Australian Parliament makes decisions on proposed laws and other issues by a majority vote."
+    }
+   ]
+  },
+  {
+   "id": "voices-most",
+   "claim": "Most decisions are made on the voices.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-voting",
+     "quote": "Most decisions of the Parliament are made by voting ‘on the voices’."
+    }
+   ]
+  },
+  {
+   "id": "voices-how",
+   "claim": "On the voices, the presiding officer asks for 'aye' or 'no', judges which has more support and announces it.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-votes-needed",
+     "quote": "asks members of parliament to cast their vote for or against the bill by saying 'aye' or 'no'."
+    },
+    {
+     "source": "peo-qon-votes-needed",
+     "quote": "The President or Speaker decides which response has more support and announces the result."
+    }
+   ]
+  },
+  {
+   "id": "aye-def",
+   "claim": "'Aye' means yes.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "The expression used in Parliament to indicate a 'yes' vote."
+    }
+   ]
+  },
+  {
+   "id": "division-challenge",
+   "claim": "A division is held if more than one member challenges the voices result.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-votes-needed",
+     "quote": "If the result is challenged by more than one member of parliament, a division is held."
+    }
+   ]
+  },
+  {
+   "id": "division-bells",
+   "claim": "Bells ring usually for 4 minutes; then doors lock and latecomers cannot enter.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-voting",
+     "quote": "The division bells usually ring for 4 minutes."
+    },
+    {
+     "source": "peo-voting",
+     "quote": "Once the bells have stopped, the doors are locked."
+    },
+    {
+     "source": "peo-voting",
+     "quote": "Members of parliament who arrive after the bells stop are not allowed to enter."
+    }
+   ]
+  },
+  {
+   "id": "division-sides",
+   "claim": "Ayes move to the right of the chair and noes to the left.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-voting",
+     "quote": "asks those who want to vote for the proposal to move to the right side of their chair"
+    },
+    {
+     "source": "peo-voting",
+     "quote": "and those voting against to move to the left."
+    }
+   ]
+  },
+  {
+   "id": "division-recorded-announced",
+   "claim": "Votes are counted, names recorded and the result announced.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-voting",
+     "quote": "Votes are counted and the names of those voting are recorded."
+    },
+    {
+     "source": "peo-voting",
+     "quote": "The result is announced by the Presiding Officer."
+    }
+   ]
+  },
+  {
+   "id": "quorum-numbers",
+   "claim": "At least 19 senators must vote in a Senate division; 30 members must be present in the House.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-qon-votes-needed",
+     "quote": "In the Senate, at least 19 senators (one quarter of the total number of senators) must vote in a division for it to count."
+    },
+    {
+     "source": "peo-qon-votes-needed",
+     "quote": "In the House, 30 members must be present (one fifth of the total number of members)."
+    }
+   ]
+  },
+  {
+   "id": "speaker-casting",
+   "claim": "The Speaker votes only to break a tie (s 40).",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "constitution",
+     "quote": "The Speaker shall not vote unless the numbers are equal, and then he shall have a casting vote."
+    },
+    {
+     "source": "peo-voting",
+     "quote": "the Speaker of the House does not vote unless the result is a tie."
+    }
+   ]
+  },
+  {
+   "id": "president-votes",
+   "claim": "The President of the Senate can always vote, keeping state representation equal (s 23).",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-voting",
+     "quote": "The President of the Senate may always vote along with other senators."
+    },
+    {
+     "source": "peo-voting",
+     "quote": "This ensures all the states have equal representation when votes are taken in the Senate."
+    }
+   ]
+  },
+  {
+   "id": "senate-tie",
+   "claim": "A tied Senate vote fails (s 23).",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "constitution",
+     "quote": "when the votes are equal the question shall pass in the negative."
+    },
+    {
+     "source": "peo-voting",
+     "quote": "If there is a tied vote in the Senate, the question is not agreed to"
+    }
+   ]
+  },
+  {
+   "id": "opax-division-page",
+   "claim": "Each division has its own OPAX page at /doc/division-...",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-vote-tables",
+     "quote": "`/doc/${String(value).startsWith('division-') ? value : `division-${value}`}`"
+    }
+   ]
+  },
+  {
+   "id": "opax-division-sections",
+   "claim": "A division page shows the result, ayes and noes, house and date, the question, party splits and member names.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-web-app",
+     "quote": "esc(`${ayes.toLocaleString()} ayes, ${noes.toLocaleString()} noes`),"
+    },
+    {
+     "source": "opax-web-app",
+     "quote": "id=\"division-split-head\">How the parties voted</h2>"
+    },
+    {
+     "source": "opax-web-app",
+     "quote": "id=\"division-members-head\">Who voted which way</h2>"
+    },
+    {
+     "source": "opax-seo-content",
+     "quote": "<h3>How each party voted</h3>"
+    },
+    {
+     "source": "opax-seo-content",
+     "quote": "<h2>Question</h2>"
+    }
+   ]
+  },
+  {
+   "id": "opax-voices-no-record",
+   "claim": "OPAX: only formal divisions leave a per-member record.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-app-bill-detail",
+     "quote": "Only formal divisions leave a per-member record."
+    }
+   ]
+  },
+  {
+   "id": "opax-outcome-words",
+   "claim": "Outcome words: web \"Agreed\"/\"Not agreed\"; app \"Agreed to\"/\"Negatived\"; server pages show the record's \"affirmative\"/\"negative\".",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-web-app",
+     "quote": "const BILL_OUTCOMES = { affirmative: \"Agreed\", negative: \"Not agreed\" };"
+    },
+    {
+     "source": "opax-app-selectors",
+     "quote": "? 'Agreed to'"
+    },
+    {
+     "source": "opax-app-selectors",
+     "quote": "? 'Negatived'"
+    },
+    {
+     "source": "opax-div-reps-10611",
+     "quote": "\"result\":\"affirmative\""
+    }
+   ],
+   "note": "Three wordings for one outcome across web, app and server-rendered pages; worth unifying."
+  },
+  {
+   "id": "opax-procedural",
+   "claim": "OPAX separates procedural votes (business of the house) from substantive ones.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-vote-tables",
+     "quote": "\"procedure\": the house's own business (business motions, rearrangement, suspending standing orders, declaring a bill urgent, closure, adjournment)."
+    },
+    {
+     "source": "opax-vote-tables",
+     "quote": "substantive vote${n === 1 ? '' : 's'}${p ? `; ${p} procedural vote"
+    }
+   ]
+  },
+  {
+   "id": "opax-amendment-note",
+   "claim": "OPAX: a division on an amendment is not a vote on the bill itself.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-web-app",
+     "quote": "A division on an amendment is not a vote on the bill itself."
+    }
+   ]
+  },
+  {
+   "id": "opax-no-divisions",
+   "claim": "OPAX: no recorded divisions does not mean a bill was unopposed.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-seo-content",
+     "quote": "No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed."
+    }
+   ]
+  },
+  {
+   "id": "opax-passed-no-divisions",
+   "claim": "In OPAX's federal bill export, 1,021 of 1,793 passed bills (57%) have no recorded division.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-bills-export",
+     "quote": "\"status\": \"passed\""
+    }
+   ],
+   "derived": "Count of portal/public/bills/au-federal-*.json with status \"passed\" (1,793) and an empty divisions list (1,021), at the commit in the source URL."
+  },
+  {
+   "id": "pair-def",
+   "claim": "A pair: a member abstains to balance the vote of an absent member on the other side.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "An arrangement in which a member of parliament abstains from voting in order to balance the vote for an absent member on the opposite side."
+    }
+   ]
+  },
+  {
+   "id": "opax-paired",
+   "claim": "The OPAX web app lists paired members as \"Paired, not counted\".",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-web-app",
+     "quote": "[\"Paired, not counted\", names.paired, names.paired.length]"
+    }
+   ]
+  },
+  {
+   "id": "party-team",
+   "claim": "Party members usually vote as a team.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-crossing-floor",
+     "quote": "Members of parliamentary parties usually vote as a team in Parliament, with all party members voting the same way."
+    }
+   ]
+  },
+  {
+   "id": "party-rules",
+   "claim": "Parties often have rules about voting together.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-crossing-floor",
+     "quote": "parties often have rules about voting as a team."
+    }
+   ]
+  },
+  {
+   "id": "whip-how-to-vote",
+   "claim": "Whips make sure members know how to vote.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-crossing-floor",
+     "quote": "are responsible for making sure party members know how to vote"
+    }
+   ]
+  },
+  {
+   "id": "team-power",
+   "claim": "Working together gives members more power.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-crossing-floor",
+     "quote": "working together gives members more power than acting alone"
+    }
+   ]
+  },
+  {
+   "id": "crossing-def",
+   "claim": "Crossing the floor is voting against your party in a division, physically crossing to the other side.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-crossing-floor",
+     "quote": "Crossing the floor is when a member of parliament votes against the rest of their party during a division – a formal vote."
+    },
+    {
+     "source": "peo-crossing-floor",
+     "quote": "they walk across or ‘cross’ the floor to sit opposite the other members of their team."
+    }
+   ]
+  },
+  {
+   "id": "crossing-rare",
+   "claim": "Crossing the floor is rare.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-crossing-floor",
+     "quote": "Crossing the floor is rare and usually only happens after careful consideration."
+    }
+   ]
+  },
+  {
+   "id": "crossing-why",
+   "claim": "Members may cross over strong views, their voters or conscience.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-crossing-floor",
+     "quote": "they strongly agree or disagree with a particular policy or decision"
+    },
+    {
+     "source": "peo-crossing-floor",
+     "quote": "they believe a different outcome would be better for the people in their state, territory or electorate"
+    },
+    {
+     "source": "peo-crossing-floor",
+     "quote": "the issue is a matter of personal values or conscience."
+    }
+   ]
+  },
+  {
+   "id": "crossing-cost",
+   "claim": "Crossing can cost support within the party.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-crossing-floor",
+     "quote": "Crossing the floor may affect the support or opportunities a member receives within their party"
+    }
+   ]
+  },
+  {
+   "id": "opax-crossing-rule",
+   "claim": "Asked who crossed the floor, OPAX Ask flags a vote against a strict party majority, for parties with 5+ aye/no votes, excluding independents, ties, pairs and absences.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-division-tool",
+     "quote": "Crossing the floor means an aye or no against a strict party majority, for parties with at least five recorded aye/no votes."
+    },
+    {
+     "source": "opax-division-tool",
+     "quote": "Independents, unknown parties, ties, paired and absent votes are excluded."
+    }
+   ]
+  },
+  {
+   "id": "opax-crossing-caveat",
+   "claim": "OPAX party labels may be later affiliations; calculated dissent is not verified floor crossing.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-division-tool",
+     "quote": "may reflect a later affiliation rather than the affiliation on the division date."
+    },
+    {
+     "source": "opax-division-tool",
+     "quote": "Calculated dissent is not independently verified historical floor crossing."
+    }
+   ]
+  },
+  {
+   "id": "free-vote-def",
+   "claim": "In a free (conscience) vote members need not vote with their party.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-crossing-floor",
+     "quote": "In a free vote – sometimes called a conscience vote – members of parliament are not required to vote with their party."
+    }
+   ]
+  },
+  {
+   "id": "free-vote-party-decides",
+   "claim": "Each party decides when to allow a free vote.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-crossing-floor",
+     "quote": "Each parliamentary party decides when its members are allowed a free vote."
+    }
+   ]
+  },
+  {
+   "id": "free-vote-43",
+   "claim": "From 1950 to 2021 only 43 votes were free votes.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-crossing-floor",
+     "quote": "Between 1950 and 2021, only 43 votes on bills and other issues in the Parliament were decided by a free vote."
+    }
+   ]
+  },
+  {
+   "id": "free-vote-topics",
+   "claim": "Free votes have mostly been on euthanasia, stem cell research and same-sex marriage.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-crossing-floor",
+     "quote": "Free votes have mostly been used to decide issues such as euthanasia, stem cell research or same-sex marriage."
+    }
+   ]
+  },
+  {
+   "id": "opax-party-split",
+   "claim": "OPAX shows each party's ayes and noes side by side.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-web-app",
+     "quote": "<span class=\"visually-hidden\"> ayes to noes</span>"
+    },
+    {
+     "source": "opax-seo-content",
+     "quote": "<h3>How each party voted</h3>"
+    }
+   ]
+  },
+  {
+   "id": "ex-r7548-stages",
+   "claim": "The Sport Legislation Amendment (World Anti-Doping Code Implementation) Bill 2026 was introduced and had its second reading moved in the House on 17 Sep 2026; OPAX shows it before parliament as at that date.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-bill-r7548",
+     "quote": "\"status\": \"before_parliament\""
+    },
+    {
+     "source": "opax-bill-r7548",
+     "quote": "\"stage\": \"second_reading\""
+    },
+    {
+     "source": "opax-bill-r7548",
+     "quote": "\"status_as_of\": \"2026-09-17\""
+    }
+   ]
+  },
+  {
+   "id": "ex-senate-10811-inquiry",
+   "claim": "On 17 Sep 2026 the Senate voted 34 to 21 to refer veterans' health treatment limits to the Foreign Affairs, Defence and Trade References Committee, reporting by 8 March 2027.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-div-senate-10811",
+     "quote": "That the following matter be referred to the Foreign Affairs, Defence and Trade References Committee for inquiry and report by 8 March 2027"
+    },
+    {
+     "source": "opax-div-senate-10811",
+     "quote": "\"ayes\":34"
+    },
+    {
+     "source": "opax-div-senate-10811",
+     "quote": "\"noes\":21"
+    }
+   ]
+  },
+  {
+   "id": "ex-r7076-senate-amendments",
+   "claim": "The Senate amended the Water Amendment (Restoring Our Rivers) Bill 2023; on 30 Nov 2023 the House agreed 86 to 53; royal assent 7 Dec 2023.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-div-reps-8545",
+     "quote": "Consideration of Senate Message - Agree with Senate amendments and so pass bill"
+    },
+    {
+     "source": "opax-div-reps-8545",
+     "quote": "\"ayes\":86"
+    },
+    {
+     "source": "opax-div-reps-8545",
+     "quote": "\"noes\":53"
+    },
+    {
+     "source": "opax-div-reps-8545",
+     "quote": "\"date\":\"2023-11-30\""
+    }
+   ]
+  },
+  {
+   "id": "ex-reps-10611-parties",
+   "claim": "Third reading of the Interactive Gambling Amendment (Gambling Reform) Bill 2026, 18 Aug 2026: Labor 70 aye, Liberal 15 aye, Independents 10 no.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-div-reps-10611",
+     "quote": "Interactive Gambling Amendment (Gambling Reform) Bill 2026; Third Reading"
+    }
+   ],
+   "derived": "Counted from members[] in the division export: Labor aye 70; Liberal aye 15; Independent no 10; Nationals aye 9 no 1; LNP aye 9 no 1; Greens no 1; Centre Alliance no 1."
+  },
+  {
+   "id": "ex-senate-9535-crossing",
+   "claim": "Senate third reading of the Criminal Code Amendment (Hate Crimes) Bill 2024, 6 Feb 2025: passed 41 to 6; Liberal senators 8 aye and 1 no.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "opax-div-senate-9535",
+     "quote": "Criminal Code Amendment (Hate Crimes) Bill 2024 - Third Reading - Pass the bill"
+    },
+    {
+     "source": "opax-div-senate-9535",
+     "quote": "\"ayes\":41"
+    },
+    {
+     "source": "opax-div-senate-9535",
+     "quote": "\"noes\":6"
+    }
+   ],
+   "derived": "Counted from members[]: Liberal aye 8, no 1. OPAX's rule (opax-crossing-rule) flags the 1 Liberal no vote."
+  },
+  {
+   "id": "ex-reps-7544-free-vote",
+   "claim": "House division on Maeve's Law, 1 Dec 2021: Labor 49-5, Liberal 27-16, Nationals 8-5; the question notes call it a free vote.",
+   "status": "needs_aph_source",
+   "quotes": [
+    {
+     "source": "opax-div-reps-7544",
+     "quote": "(also known as a conscience vote), which means our MPs voted according to their own beliefs"
+    }
+   ],
+   "derived": "Party splits counted from members[] (92 of 93 ayes named).",
+   "note": "That this was a free vote rests on They Vote For You's note carried in OPAX's record, not an official source. Needs Hansard (APH) confirmation."
+  }
+ ]
+}

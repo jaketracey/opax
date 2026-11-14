@@ -1,0 +1,117 @@
+{
+ "_about": "Real OPAX pages used in \"See it in OPAX\". Each was fetched once with a read-only GET; status is the HTTP result.",
+ "examples": [
+  {
+   "id": "bill-at-second-reading",
+   "chapter": "bill-to-act",
+   "url": "https://opax.com.au/bill/au-federal-r7548",
+   "label": "Sport Legislation Amendment (World Anti-Doping Code Implementation) Bill 2026",
+   "look_at": "Recorded stages: introduced and second reading moved in the House on 17 Sep 2026; before parliament as at that date.",
+   "facts": [
+    "ex-r7548-stages"
+   ],
+   "checked": {
+    "at": "2026-11-14T16:28:07+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "senate-inquiry",
+   "chapter": "bill-to-act",
+   "url": "https://opax.com.au/doc/division-federal-senate-10811",
+   "label": "Senate refers veterans' health treatment limits to a committee (17 Sep 2026)",
+   "look_at": "The question: the matter, the committee and the 8 March 2027 reporting date. Agreed 34 to 21.",
+   "facts": [
+    "ex-senate-10811-inquiry"
+   ],
+   "checked": {
+    "at": "2026-11-14T16:28:08+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "bill-with-senate-amendments",
+   "chapter": "bill-to-act",
+   "url": "https://opax.com.au/bill/au-federal-r7076",
+   "label": "Water Amendment (Restoring Our Rivers) Bill 2023",
+   "look_at": "Senate committee-stage divisions, then the House agreeing to the Senate amendments on 30 Nov 2023, then royal assent on 7 Dec 2023.",
+   "facts": [
+    "ex-r7076-senate-amendments"
+   ],
+   "checked": {
+    "at": "2026-11-14T16:28:10+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "house-agrees-senate-amendments",
+   "chapter": "bill-to-act",
+   "url": "https://opax.com.au/doc/division-federal-representatives-8545",
+   "label": "House agrees to the Senate amendments (30 Nov 2023)",
+   "look_at": "Agreed 86 to 53; the question explains the bill can now become law.",
+   "facts": [
+    "ex-r7076-senate-amendments"
+   ],
+   "checked": {
+    "at": "2026-11-14T16:28:11+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "house-parties-and-crossbench",
+   "chapter": "whos-who",
+   "url": "https://opax.com.au/doc/division-federal-representatives-10611",
+   "label": "Interactive Gambling Amendment (Gambling Reform) Bill 2026, third reading (18 Aug 2026)",
+   "look_at": "How each party voted: Labor and Liberals aye; the 10 independents no.",
+   "facts": [
+    "ex-reps-10611-parties"
+   ],
+   "checked": {
+    "at": "2026-11-14T16:28:12+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "crossed-the-floor",
+   "chapter": "how-votes-work",
+   "url": "https://opax.com.au/doc/division-federal-senate-9535",
+   "label": "Criminal Code Amendment (Hate Crimes) Bill 2024, Senate third reading (6 Feb 2025)",
+   "look_at": "Passed 41 to 6. Liberal senators: 8 aye, 1 no.",
+   "facts": [
+    "ex-senate-9535-crossing"
+   ],
+   "checked": {
+    "at": "2026-11-14T16:28:13+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "conscience-vote",
+   "chapter": "how-votes-work",
+   "url": "https://opax.com.au/doc/division-federal-representatives-7544",
+   "label": "Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, consideration in detail (1 Dec 2021)",
+   "look_at": "Labor 49 to 5, Liberal 27 to 16, Nationals 8 to 5. The question notes call it a free vote.",
+   "facts": [
+    "ex-reps-7544-free-vote"
+   ],
+   "checked": {
+    "at": "2026-11-14T16:28:15+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  }
+ ]
+}
