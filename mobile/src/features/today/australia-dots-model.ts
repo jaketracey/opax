@@ -122,6 +122,82 @@ export function dotRowOpacity(yFraction: number, scroll: number): number {
   return clamp((1 - wipe) * 1.6 - yFraction * 0.6);
 }
 
+/**
+ * How long after the window changes (rotation, Stage Manager, a fold, a new
+ * text size) with Today on screen the bar's reports are taken as its rest
+ * height there. The window's size reaches JS first; NativeStack sends the
+ * header's new height about 100 ms later (its debounce), at most a few
+ * hundred under load.
+ */
+export const RELEARN_MS = 1000;
+
+/**
+ * The large-title bar's height with Today at rest, the inset the art is
+ * placed and faded from. It belongs to one window: an iPhone's portrait bar
+ * is about 160 pt, its landscape bar has no large title, and iOS often leaves
+ * the title collapsed when the phone turns back. So a window change starts
+ * it again from the bar's next reports; otherwise it keeps the tallest
+ * report, ignoring NativeStack's first inline estimate and the collapse as
+ * Today scrolls. When the bar is the same height in the new window (an iPad
+ * turning) nothing is reported and the inset carries over.
+ *
+ * react-native-screens reports a header's height only for the top screen of
+ * a stack on screen. When the window changes while Today is covered (a
+ * record pushed over it, another tab selected) its bar is reported only when
+ * Today is shown again, seconds later, so the relearn stays open until then
+ * and closes RELEARN_MS after Today's next focus (restInsetShown). A swipe
+ * back reports the bar before focus; a tab switch may report it after.
+ */
+export interface RestInset {
+  /** The window it was learnt in: width, height and text scale. */
+  window: string;
+  inset: number;
+  /** The header last reported. */
+  header: number;
+  /**
+   * Until then (ms) each report replaces the inset: the window just changed.
+   * Infinity while Today is covered after a change, until it is shown.
+   */
+  relearnUntil: number;
+}
+
+export function nextRestInset(
+  previous: RestInset | null,
+  header: number,
+  window: string,
+  now: number,
+  /** Whether Today is on screen, so its bar is reported now. */
+  shown = true,
+): RestInset {
+  if (!previous) return { window, inset: header, header, relearnUntil: 0 };
+  let next = previous;
+  if (window !== next.window)
+    next = {
+      ...next,
+      window,
+      relearnUntil: shown ? now + RELEARN_MS : Infinity,
+    };
+  if (header === next.header) return next;
+  return {
+    ...next,
+    header,
+    inset: now <= next.relearnUntil ? header : Math.max(next.inset, header),
+  };
+}
+
+/**
+ * Today is shown again (its `focus`): a relearn held open while it was
+ * covered closes RELEARN_MS from now, after the bar's reports in the new
+ * window have arrived.
+ */
+export function restInsetShown(
+  previous: RestInset | null,
+  now: number,
+): RestInset | null {
+  if (previous?.relearnUntil !== Infinity) return previous;
+  return { ...previous, relearnUntil: now + RELEARN_MS };
+}
+
 /** iOS offsets start at minus the expanded bar's automatic top inset. */
 export function dotScrollDistance(offset: number, topInset: number): number {
   'worklet';

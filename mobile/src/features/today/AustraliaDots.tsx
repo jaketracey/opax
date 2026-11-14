@@ -9,6 +9,7 @@ import {
   useEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
   type ReactNode,
 } from 'react';
 import {
@@ -35,6 +36,7 @@ import Animated, {
 import { useReduceMotionSetting } from '../../design/accessibility';
 import { useLayout } from '../../design/adaptive';
 import { SizedCanvas } from '../../design/canvas';
+import { ScreenGutterContext } from '../../design/layout';
 import { paletteFor } from '../../design/palette';
 import { isAccessibilityCategory, motion, rhythm } from '../../design/tokens';
 import outline from './australia-outline.json';
@@ -50,11 +52,14 @@ import {
   androidDotScale,
   dotArrival,
   dotTarget,
+  nextRestInset,
   outlineDotState,
+  restInsetShown,
   sampleDotRows,
   type DotHighlight,
   type DotRow,
   type DotState,
+  type RestInset,
 } from './australia-dots-model';
 
 const height = dotHeight;
@@ -93,13 +98,36 @@ export function useTodayDotsScroll() {
   const raw = useSharedValue(Number.NaN);
   useScrollOffset(scrollRef, raw);
   const header = useContext(HeaderHeightContext) ?? 0;
+  const { width, height: tall, fontScale } = useWindowDimensions();
+  const window = `${width}x${tall}@${fontScale}`;
   const ios = Platform.OS === 'ios';
+  const navigation = useContext(NavigationContext);
   const expandedHeader = useSharedValue(header);
+  const rest = useRef<RestInset | null>(null);
   useLayoutEffect(() => {
-    // Ignore NativeStack's initial inline estimate and retain the expanded
-    // inset while UIKit collapses. Both bar appearances remain transparent.
-    expandedHeader.value = Math.max(expandedHeader.value, header);
-  }, [header, expandedHeader]);
+    // The bar's height at rest in this window (nextRestInset): it ignores
+    // NativeStack's first inline estimate and the collapse as Today scrolls,
+    // and starts again when the window turns, resizes or changes text size.
+    // A session-wide maximum kept portrait's inset in landscape, so every
+    // row read as scrolled past its fade (lane ad-home-map-rotation). Turned
+    // while covered, Today's bar is reported only when it is shown again.
+    rest.current = nextRestInset(
+      rest.current,
+      header,
+      window,
+      Date.now(),
+      navigation?.isFocused() ?? true,
+    );
+    if (expandedHeader.value !== rest.current.inset)
+      expandedHeader.value = rest.current.inset;
+  }, [header, window, expandedHeader, navigation]);
+  useEffect(
+    () =>
+      navigation?.addListener('focus', () => {
+        rest.current = restInsetShown(rest.current, Date.now());
+      }),
+    [navigation],
+  );
   const scroll = useDerivedValue(() =>
     dotScrollDistance(raw.value, ios ? expandedHeader.value : 0),
   );
@@ -169,7 +197,11 @@ function DotField({
   const layout = useLayout();
   const window = useWindowDimensions();
   const android = Platform.OS === 'android';
-  const inset = Math.max(0, (window.width - layout.width) / 2);
+  // The art bleeds 8 pt past the scroll view's leading edge. Measured from
+  // the Screen's column, not the window: an iPad sidebar or the Duo's rail
+  // takes a side of the window, and the art slid under it.
+  const gutter = useContext(ScreenGutterContext);
+  const inset = gutter ?? Math.max(0, (window.width - layout.width) / 2);
   const rows = useMemo(() => dotRows(), []);
   const time = useSharedValue(0);
   const highlight = useSharedValue<DotHighlight>({
