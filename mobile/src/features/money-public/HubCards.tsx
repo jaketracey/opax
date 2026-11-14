@@ -43,13 +43,13 @@ import { money } from './runtime';
 export const ORDER_RULE =
   'Public money first: grants, then government contracts, then donations to parties. The order is fixed.';
 export const DONATIONS_CAVEAT =
-  "Totals are a minimum: donations under the disclosure threshold aren't published.";
+  'Totals are a minimum: donations under the disclosure threshold aren’t published.';
 export const CONTRACTS_CAVEAT =
   'Contract values as last published, not amounts paid.';
 export const GRANTS_CAVEAT =
   'Award values as last published, not amounts paid.';
 export const FUTURE_YEARS_NOTE =
-  "Some agreements are recorded against financial years that haven't started yet.";
+  'Some agreements are recorded against financial years that haven’t started yet.';
 
 /** One dated figure and the line saying what it counts, or why there is none. */
 export interface CardFigure {

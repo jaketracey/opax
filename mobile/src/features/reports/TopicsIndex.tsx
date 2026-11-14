@@ -140,7 +140,7 @@ export default function TopicsIndex() {
             <ContentUnavailable
               symbol="exclamationmark.triangle"
               title="Topics couldn’t be loaded"
-              body="OPAX didn't respond."
+              body="OPAX didn’t respond."
               action={{
                 label: 'Try again',
                 onPress: read.retry,

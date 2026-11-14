@@ -100,7 +100,7 @@ export function arriveInAsk(scope: AskScope, entry?: string) {
 
 export const askNowCopy = {
   waits: 'Asks when this answer finishes',
-  offline: "Draft added. You're offline, so it hasn't been asked.",
+  offline: 'Draft added. You’re offline, so it hasn’t been asked.',
 } as const;
 /**
  * A tapped question (Today's starters and any row that shows the exact
@@ -209,7 +209,7 @@ export function useAskScreenFocus() {
 
 export const inputCopy = {
   roster: 'Choose a person from the list in Options.',
-  offline: "People couldn’t be checked. Try again when you're online.",
+  offline: 'People couldn’t be checked. Try again when you’re online.',
 } as const;
 /**
  * Every Ask send goes through here: the consent sheet first (once per

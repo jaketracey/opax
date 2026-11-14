@@ -64,14 +64,14 @@ export const copy = Object.freeze({
       senate: 'The Senate',
     };
     const then = next ? ` ${who[next.houses]} next sits ${next.words}.` : '';
-    return `That's the record for ${day}.${then}`;
+    return `That’s the record for ${day}.${then}`;
   },
   deceasedNotice:
     'Aboriginal and Torres Strait Islander readers are advised that this app contains names and images of people who have died.',
   offline: (date: DateInput) =>
-    `You're offline. Showing what was saved on ${dayMonth(date, true)}.`,
+    `You’re offline. Showing what was saved on ${dayMonth(date, true)}.`,
   notSaved: phoneCopy('Not saved on this iPhone yet'),
-  notSavedBody: "It will load when you're back online.",
+  notSavedBody: 'It will load when you’re back online.',
   couldNotLoad: (subject: string) =>
     `${subject.charAt(0).toLocaleUpperCase('en-AU')}${subject.slice(1)} couldn’t be loaded.`,
   resetFilters: 'Reset filters',

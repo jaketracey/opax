@@ -67,7 +67,7 @@ export function quizSourceNotes(q: Question): string[] {
   const year = briefYear(q);
   if (q.template === 'words-year-voice')
     return [
-      `Counts of speeches in OPAX's sample of the debates ${year ? `its ${year} brief` : 'its year brief'} was written from. This shows who is most heard in those debates, not who spoke most in parliament.`,
+      `Counts of speeches in OPAX’s sample of the debates ${year ? `its ${year} brief` : 'its year brief'} was written from. This shows who is most heard in those debates, not who spoke most in parliament.`,
       `Machine-written from the passages found for ${year ?? 'the year'}. A reading aid, not the record.`,
     ];
   switch (quizPublisher(q)) {
@@ -77,7 +77,7 @@ export function quizSourceNotes(q: Question): string[] {
             'From the AEC disclosure rules and how OPAX builds its money data from annual returns.',
           ]
         : [
-            "Figures are receipts disclosed in annual returns to the Australian Electoral Commission, as OPAX holds them. Each receipt is counted once, from the party's own return.",
+            'Figures are receipts disclosed in annual returns to the Australian Electoral Commission, as OPAX holds them. Each receipt is counted once, from the party’s own return.',
           ];
     case 'OPAX topics':
       return [
@@ -90,7 +90,7 @@ export function quizSourceNotes(q: Question): string[] {
     default:
       return q.template.startsWith('money-')
         ? ['From how OPAX builds its money data from AEC annual returns.']
-        : ["From OPAX's own count of the documents it holds from each source."];
+        : ['From OPAX’s own count of the documents it holds from each source.'];
   }
 }
 

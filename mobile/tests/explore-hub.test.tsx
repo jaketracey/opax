@@ -199,7 +199,7 @@ test('a sort adds a Sort by submenu first, above a divider', () => {
 
 test('the quiz stack title says "Today\'s question" only for a question in the front-page deck', () => {
   const id = frontPageDeck[0]!.id;
-  expect(exploreToolTitle({ tool: 'quiz', q: id })).toBe("Today's question");
+  expect(exploreToolTitle({ tool: 'quiz', q: id })).toBe('Today’s question');
   expect(exploreToolTitle({ tool: 'quiz', q: 'qnot-a-question' })).toBe(
     'The record quiz',
   );

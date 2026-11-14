@@ -37,7 +37,7 @@ export const signedDollars = (value: number) =>
   `${value < 0 ? '-' : '+'}${fullDollars(value)}`;
 
 export const SEAT_TYPE_NOTE =
-  "This table reproduces the Centre for Public Integrity's published Table 3 as published, including its notional 2025 boundaries, four by-election results and Brisbane competitiveness exception. OPAX has not recalculated it from each project's location. The normalised value shares funding by the number of seats of each type.";
+  'This table reproduces the Centre for Public Integrity’s published Table 3 as published, including its notional 2025 boundaries, four by-election results and Brisbane competitiveness exception. OPAX has not recalculated it from each project’s location. The normalised value shares funding by the number of seats of each type.';
 const CPI = {
   label: 'Centre for Public Integrity',
   title: 'Centre for Public Integrity, Public money, political advantage',

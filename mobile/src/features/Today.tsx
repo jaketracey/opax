@@ -420,7 +420,7 @@ export default function Today() {
             key={name}
             symbol="wifi.slash"
             title={`Not saved on this ${thisDevice()} yet`}
-            body="It will load when you're back online."
+            body="It will load when you’re back online."
             testID="today-unavailable"
           />
         ) : (

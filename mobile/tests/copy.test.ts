@@ -29,7 +29,7 @@ test('shared copy keeps shell wording and the shorter website menu label', () =>
     deceasedNotice:
       'Aboriginal and Torres Strait Islander readers are advised that this app contains names and images of people who have died.',
     notSaved: 'Not saved on this iPhone yet',
-    notSavedBody: "It will load when you're back online.",
+    notSavedBody: 'It will load when you’re back online.',
     resetFilters: 'Reset filters',
     partial: 'partial',
     dateNotPublished: 'Date not published',
@@ -38,12 +38,12 @@ test('shared copy keeps shell wording and the shorter website menu label', () =>
     'Showing the copy saved on 8 November. The latest records couldn’t be loaded.',
   );
   expect(offline('2026-11-08')).toBe(
-    "You're offline. Showing what was saved on 8 Nov.",
+    'You’re offline. Showing what was saved on 8 Nov.',
   );
   expect(couldNotLoad('Bills')).toBe('Bills couldn’t be loaded.');
   expect(couldNotLoad('the bill')).toBe('The bill couldn’t be loaded.');
   expect(todayEnding('Saturday 14 November')).toBe(
-    "That's the record for Saturday 14 November.",
+    'That’s the record for Saturday 14 November.',
   );
   expect(
     todayEnding('Saturday 14 November', {
@@ -51,14 +51,14 @@ test('shared copy keeps shell wording and the shorter website menu label', () =>
       words: 'Tuesday 17 November',
     }),
   ).toBe(
-    "That's the record for Saturday 14 November. Parliament next sits Tuesday 17 November.",
+    'That’s the record for Saturday 14 November. Parliament next sits Tuesday 17 November.',
   );
   expect(Object.isFrozen(copy)).toBe(true);
 });
 test('date-only values retain the calendar day, and dates accept epoch or Date', () => {
   const date = new Date(2026, 0, 2, 12);
   expect(copy.offline(date)).toBe(
-    "You're offline. Showing what was saved on 2 Jan.",
+    'You’re offline. Showing what was saved on 2 Jan.',
   );
   expect(copy.offline(date.getTime())).toBe(copy.offline(date));
   expect(() => copy.offline('invalid')).toThrow(RangeError);

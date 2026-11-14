@@ -18,7 +18,7 @@ import { askSession, continueHeld } from './session';
 /** DIRECTION 6.5 step 2, verbatim. The vendor names stay (App Review 5.1.2(i)). */
 export const consentCopy = {
   title: 'Before you ask',
-  body: "Your question and this conversation go to OPAX's server. Progress Agentic RAG finds the records, and an AI model reached through OpenRouter writes the answer. Answers can be wrong, so check the cited records. Don't include personal details.",
+  body: 'Your question and this conversation go to OPAX’s server. Progress Agentic RAG finds the records, and an AI model reached through OpenRouter writes the answer. Answers can be wrong, so check the cited records. Don’t include personal details.',
   privacy: 'Privacy',
   continue: 'Continue',
   notNow: 'Not now',

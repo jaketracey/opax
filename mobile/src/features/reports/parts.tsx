@@ -28,7 +28,7 @@ export const REPORT_MACHINE_NOTE =
 export const AEC_NOTE =
   'AEC disclosure data: donations under the disclosure threshold are not reported and cannot appear here, so totals are a floor, not a ceiling.';
 export const WORDS_NOTE =
-  "What the industry disclosed to each party, beside that party's share of the debate in the labelled record. Comparison, never causation; every number opens the disclosures or speeches behind it.";
+  'What the industry disclosed to each party, beside that party’s share of the debate in the labelled record. Comparison, never causation; every number opens the disclosures or speeches behind it.';
 
 export interface ReadMeta {
   asOf: string | null;

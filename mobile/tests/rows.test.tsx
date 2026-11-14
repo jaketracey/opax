@@ -1199,7 +1199,7 @@ test('Screen places its one offline line after the marked date', () => {
   ).root;
   expect(strings(root)).toEqual([
     '9 November',
-    "You're offline. Showing what was saved on 7 Nov.",
+    'You’re offline. Showing what was saved on 7 Nov.',
     'Latest records',
   ]);
 });

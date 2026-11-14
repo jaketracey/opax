@@ -375,7 +375,7 @@ export function RecordBlock<T>({
         <EmptyState
           message={
             unlinked ??
-            `The app does not show this person's ${title.toLowerCase()} yet. See the record on opax.com.au.`
+            `The app does not show this person’s ${title.toLowerCase()} yet. See the record on opax.com.au.`
           }
           testID={`${id}-unlinked`}
         />

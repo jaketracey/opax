@@ -172,7 +172,7 @@ export function rankFor(score: number, total: number) {
   if (pct >= 0.35)
     return {
       name: 'Committee Member',
-      blurb: "You're asking the right questions.",
+      blurb: 'You’re asking the right questions.',
     };
   return {
     name: 'Backbencher',

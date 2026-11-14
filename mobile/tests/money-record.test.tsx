@@ -372,7 +372,7 @@ test('a donor in three registers: side by side, never summed, under one caveat',
       .children,
   ).toBe(bothRegistersCaveat);
   expect(bothRegistersCaveat).toBe(
-    "Appearing in both registers doesn't show that one led to the other.",
+    'Appearing in both registers doesn’t show that one led to the other.',
   );
   const [donations, grants, contracts] = order(r, [
     'money-record-donations',

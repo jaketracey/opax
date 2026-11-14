@@ -1121,7 +1121,7 @@ describe('shared state kit', () => {
   });
   test('an undated offline line does not invent a saved date', () => {
     const r = mount(<OfflineLine savedAt={null} />);
-    expect(r.root.findByType(Text).props.children).toBe("You're offline.");
+    expect(r.root.findByType(Text).props.children).toBe('You’re offline.');
   });
   test('ContentUnavailable proposes the column width and never fixes its height', () => {
     act(() =>
@@ -1295,7 +1295,7 @@ describe('shared state kit', () => {
         <ContentUnavailable
           symbol={symbols.offline}
           title="Not saved on this iPhone yet"
-          body="It will load when you're back online."
+          body="It will load when you’re back online."
         />,
       );
       expect(r.root.findAllByType(Host)).toHaveLength(0);

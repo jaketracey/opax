@@ -982,7 +982,7 @@ describe('the first second and the last line (sweep 3, lane A)', () => {
     // The masthead's own date; no sitting calendar in this suite, so the
     // date alone.
     expect(strings(hosts(r, 'today-ending')[0]!)).toBe(
-      `That's the record for ${mastheadDate(r.root.findByType(Masthead).props.now)}.`,
+      `That’s the record for ${mastheadDate(r.root.findByType(Masthead).props.now)}.`,
     );
   });
 

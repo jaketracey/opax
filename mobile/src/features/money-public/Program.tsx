@@ -353,7 +353,7 @@ function ProgramRecord({ params }: { params: ProgramParams }) {
                         jur === 'federal' ? GRANTS_CAVEAT : null,
                         ...data.index.meta.caveats,
                         seat
-                          ? `The program's total is ${formatMoneyCompact(program.total)} in ${counted(program.count, 'grant')}.`
+                          ? `The program’s total is ${formatMoneyCompact(program.total)} in ${counted(program.count, 'grant')}.`
                           : null,
                         seat ? SEAT_RULE : null,
                         note?.summary,

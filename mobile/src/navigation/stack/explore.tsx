@@ -21,7 +21,7 @@ export function exploreToolTitle(
 ): string {
   if (params?.name) return params.name;
   if (params?.tool === 'quiz' && frontPageQuestion(params.q))
-    return "Today's question";
+    return 'Today’s question';
   return names[params?.tool ?? ''] ?? 'Tool';
 }
 export function exploreScreens() {

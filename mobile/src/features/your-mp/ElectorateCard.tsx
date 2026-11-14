@@ -76,7 +76,7 @@ export function electorateCardSource(
       .map((s) => ({ label: s.label, url: s.url })),
     notes: census
       ? [
-          `Census figures are for the electorate's boundaries at the ${census.data!.year} Census. Not adjusted for boundary changes since the Census.`,
+          `Census figures are for the electorate’s boundaries at the ${census.data!.year} Census. Not adjusted for boundary changes since the Census.`,
         ]
       : [],
   };

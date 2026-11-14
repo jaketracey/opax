@@ -375,7 +375,7 @@ export default function Workbench() {
       <Block id="fields" title="Fields">
         <Field
           label="Find your MP"
-          placeholder="Electorate or member's name"
+          placeholder="Electorate or member’s name"
           hint={phoneCopy('Your choice is saved on this iPhone only.')}
         />
         <Field label="Email address" required keyboardType="email-address" />

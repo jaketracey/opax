@@ -94,7 +94,7 @@ name: 63 Money privacy, individuals counted, never named
     id: money-item-open-organisation
 - scrollUntilVisible:
     element:
-      text: OPAX doesn't name private individuals.
+      text: OPAX doesn’t name private individuals.
     direction: DOWN
     centerElement: true
     speed: 20
@@ -120,7 +120,7 @@ name: 63 Money privacy, individuals counted, never named
     id: money-item-open-organisation
 - scrollUntilVisible:
     element:
-      text: OPAX doesn't name private individuals.
+      text: OPAX doesn’t name private individuals.
     direction: DOWN
     centerElement: true
     speed: 20
