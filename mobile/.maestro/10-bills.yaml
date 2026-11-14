@@ -129,9 +129,9 @@ name: 10 Filter and search the bill list, then open a bill
 - assertNotVisible:
     id: bill-date-1
 - takeScreenshot: ${EVIDENCE}/10-one-day
-# Share is in the bottom toolbar and uses the canonical web path; e2e
-# carries a non-resolving origin.
-- tapOn: Share
+# Share is in the bar, named with the bill, and uses the canonical web path;
+# e2e carries a non-resolving origin.
+- tapOn: Share Child Support and Family Assistance .*
 # At AX5 the alert's title pushes the link below its fold: scroll to it.
 - scrollUntilVisible:
     element:

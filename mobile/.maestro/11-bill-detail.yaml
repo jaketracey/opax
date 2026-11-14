@@ -206,13 +206,23 @@ name: 11 Read a bill, its machine summary, votes and speeches
 - takeScreenshot: ${EVIDENCE}/11-division-sources
 - tapOn:
     id: bill-divisions-source-sheet-original-0
-- scrollUntilVisible:
-    element:
-      text: https://theyvoteforyou.org.au/divisions/senate/2026-08-19/.*
-    direction: DOWN
-    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: source-destination-url
+      text: https://theyvoteforyou\.org\.au/divisions/senate/2026-08-19/.*
+    timeout: 15000
 - takeScreenshot: ${EVIDENCE}/11-division-source
-- tapOn: OK
+# Original is presented over Sources, as in 13: close both.
+- tapOn: Done
+- extendedWaitUntil:
+    visible:
+      id: bill-divisions-source-sheet-original-0
+    timeout: 15000
+- tapOn: Done
+- extendedWaitUntil:
+    notVisible:
+      id: bill-divisions-source-sheet-original-0
+    timeout: 15000
 # Near the end of the page an element cannot be centred: scroll to it only.
 - assertVisible:
     id: bill-screen
