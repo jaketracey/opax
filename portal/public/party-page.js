@@ -527,16 +527,19 @@ export async function readPartyPages(read) {
   return canonicalPartyPages({ money, roster, divisions });
 }
 
-/** Accept source spellings and the existing label aliases, but return one page. */
+/** Accept source spellings and recognised label aliases, but return one page. */
 export function resolvePartyPage(segment, pages) {
   const want = fold(segment);
+  const wantSlug = partySlug(segment);
   // A former name's own slug ("liberal-democratic-party") names its party's page: partyUrl now
   // writes the current address, so the raw slug is compared too, and the Worker answers it with a 301.
   const slugs = label => [partyUrl(label).split('/').at(-1), partySlug(label)];
-  const sponsorAlias = Object.entries(SPONSOR_PARTY_ALIASES).find(([label]) => fold(label) === want || partySlug(label) === want)?.[1];
-  const alias = sponsorAlias || Object.keys(PARTY_MAP).find(label => slugs(label).includes(want));
-  return pages.find(page => page.aliases.some(label => fold(label) === want || slugs(label).includes(want))
-    || page.href.split('/').at(-1) === want || identity(page.label) === identity(alias || segment)) || null;
+  const exact = pages.find(page => page.href.split('/').at(-1) === wantSlug)
+    || pages.find(page => page.aliases.some(label => fold(label) === want || slugs(label).includes(wantSlug)));
+  if (exact) return exact;
+  const sponsor = Object.keys(SPONSOR_PARTY_ALIASES).find(label => fold(label) === want || partySlug(label) === wantSlug);
+  const alias = sponsor ? SPONSOR_PARTY_ALIASES[sponsor] : Object.keys(PARTY_MAP).find(label => slugs(label).includes(wantSlug));
+  return pages.find(page => identity(page.label) === identity(alias || segment)) || null;
 }
 
 export function partyPageCoverage(page) {
