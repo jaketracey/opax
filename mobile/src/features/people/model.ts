@@ -1,5 +1,6 @@
 import { decodeEntities, serverPassage } from '../../api/passage-text';
 import type { PersonProfile } from '../../api/person-identity';
+import { wordCount } from '../../api/short-turn';
 import {
   array,
   boolean,
@@ -60,8 +61,8 @@ export const decodeRecords = shape({
       chamber: optional(text),
       snippet: optional(text),
       speaker_type: optional(text),
-      // Words in the turn; absent or null (unknown) on servers before short-turn-v1.
-      word_count: optional(number),
+      // Words in the turn; absent, null or malformed reads as unknown.
+      word_count: wordCount,
     }),
   ),
   coverage: optional(text),
