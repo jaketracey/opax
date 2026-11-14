@@ -40,6 +40,8 @@ import { firstLaunchTour, markWelcomeSeen } from '../src/onboarding/state';
 import { welcomeMinuteRoute } from '../src/navigation/routes';
 
 const mockSetOptions = jest.fn();
+/** The last focus effect a page set: run it to come back to the page. */
+const mockFocus: { effect?: () => void } = {};
 jest.mock('expo-router', () => {
   const React = require('react');
   const host = (name: string) =>
@@ -63,7 +65,9 @@ jest.mock('expo-router', () => {
       setOptions: mockSetOptions,
       addListener: () => () => undefined,
     }),
-    useFocusEffect: () => undefined,
+    useFocusEffect: (effect: () => void) => {
+      mockFocus.effect = effect;
+    },
     useLocalSearchParams: () => ({}),
     router: { push: jest.fn(), back: jest.fn(), navigate: jest.fn() },
   };
@@ -157,6 +161,7 @@ const barItems = () => {
 beforeEach(() => {
   jest.clearAllMocks();
   mockSeat.current = { status: 'none' };
+  mockFocus.effect = undefined;
   setFontScale(1);
   // A read settings file with nothing set: the defaults (Explain terms off).
   resetLearnSettingsForTests({});
@@ -387,7 +392,7 @@ describe('Parliament in a minute', () => {
     expect(minuteIdeas.map((i) => i.title)).toEqual([
       'You have an MP',
       'Parliament has two rooms',
-      'They vote for you',
+      'How they vote',
       'OPAX shows you the record',
     ]);
     expect(words(r)).toContain(
@@ -417,6 +422,23 @@ describe('Parliament in a minute', () => {
       pathname: '/welcome/seat',
       params: {},
     });
+    await act(async () => r.unmount());
+  });
+  test('one push per visit: a second tap on Find or Skip pushes nothing more, until the page is back in view', async () => {
+    const r = await render(
+      <InStack>
+        <WelcomeMinute />
+      </InStack>,
+    );
+    const find = component(r, 'minute-find');
+    act(() => find.props.onPress());
+    act(() => find.props.onPress());
+    act(() => barItems()[0]!.onPress());
+    expect(router.push).toHaveBeenCalledTimes(1);
+    // Back from the electorate step: the page is in view again.
+    act(() => mockFocus.effect?.());
+    act(() => barItems()[0]!.onPress());
+    expect(router.push).toHaveBeenCalledTimes(2);
     await act(async () => r.unmount());
   });
   test('a replay with a seat saved says Continue, not Find my electorate', async () => {

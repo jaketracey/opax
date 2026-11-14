@@ -29,7 +29,7 @@ export const welcomeCopy = Object.freeze({
       id: 'sourced',
       symbol: symbols.source,
       title: 'Every figure is sourced',
-      line: 'Each number shows its date and opens the official record it came from.',
+      line: 'Each number shows its date and opens the original record it came from.',
     },
     {
       id: 'ask',

@@ -24,8 +24,8 @@ export interface MinuteIdea {
 
 /**
  * "Parliament in a minute" (README 4.2): four ideas, each building on the
- * last. The figures are the real ones: 150 electorates, 12 senators for each
- * state, 76 in all.
+ * last. The figures are the real ones: 150 electorates; 12 senators for each
+ * state and 2 each for the ACT and the NT, 76 in all.
  */
 export const minuteIdeas: readonly MinuteIdea[] = [
   {
@@ -33,20 +33,20 @@ export const minuteIdeas: readonly MinuteIdea[] = [
     title: 'You have an MP',
     body: [
       'Australia is split into 150 areas called electorates. Each one elects one person to speak for it in Canberra.',
-      'That person is your MP, short for member of parliament.',
+      'That person is your MP, short for Member of Parliament.',
     ],
   },
   {
     id: 'houses',
     title: 'Parliament has two rooms',
     body: [
-      'MPs sit in the House of Representatives. Senators sit in the Senate, 12 for each state, so you have a team of those too.',
+      'MPs sit in the House of Representatives. Senators sit in the Senate: 12 for each state and 2 each for the ACT and the NT, so you have a team of those too.',
       'A new law has to win a vote in both rooms.',
     ],
   },
   {
     id: 'votes',
-    title: 'They vote for you',
+    title: 'How they vote',
     body: [
       'A proposed law is called a bill. When Parliament votes on one and counts every name, that’s a division.',
       'It’s the clearest record there is of where your MP stands.',
@@ -57,7 +57,7 @@ export const minuteIdeas: readonly MinuteIdea[] = [
     title: 'OPAX shows you the record',
     body: [
       'How they voted. What they own and were given. What they’re paid.',
-      'Every figure links to its official source, and OPAX takes no side.',
+      'Every figure links to its source, and OPAX takes no side.',
     ],
   },
 ];
@@ -90,6 +90,3 @@ export const minuteCopy = Object.freeze({
     pay: 'What they’re paid',
   },
 });
-
-/** Step numbers for VoiceOver: "Idea 1 of 4". */
-export const ideaLabel = (n: number) => `Idea ${n} of ${minuteIdeas.length}`;
