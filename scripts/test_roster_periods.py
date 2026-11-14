@@ -84,3 +84,13 @@ def test_reviewed_dated_house_identities_hold_their_own_corpus_bounds():
     assert bounds[('pid:10937', 'representatives')]['date'] > '2002-08-16'
     assert not [e for e in review['exceptions'] if e['reason'] == 'known-corpus-namesake'
                 and e['actor'] in ('pid:10592', 'pid:10937')]
+
+
+def test_a_partial_party_history_is_a_later_period_inside_the_service_it_was_read_from():
+    """Dib's Labor from 2023 and Williams's Liberal from 2020 do not claim first entry to the Assembly."""
+    periods = {p['key']: p for p in inventory()['periods']}
+    exceptions = {e['key']: e for e in json.loads((ROOT / 'scripts/roster_period_exceptions.json').read_text())['exceptions']}
+    for key, service in [('roster/Jihad Dib/affiliations/0', 'party-evidence/Q19872872/nsw_la/2015-03-28'),
+                         ('roster/Leslie Williams/affiliations/0', 'party-evidence/Q6531238/nsw_la/2011-03-26')]:
+        assert periods[service]['kind'] == 'party-evidence-service'
+        assert (exceptions[key]['reason'], exceptions[key]['earlier_period']) == ('later-period', service)

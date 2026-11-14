@@ -96,6 +96,16 @@ def inventory(root=ROOT):
         for i, party in enumerate(term.get('party_periods', [])):
             add(p['name'], dict(party, chamber=seat['chamber']), 'catalog-party',
                 f'catalog/{term["representation_id"]}/party/{i}', actor=actor, url=url)
+    # The dated house service a reviewed party join was read from (scripts/roster_party_evidence.json). A partial
+    # history ("Labor from 2023") is a later interval inside that service, never first entry to the house, so the
+    # service itself is checked against the corpus too and can prove the later interval.
+    if (Path(root) / 'scripts/roster_party_evidence.json').exists():
+        installed = {(name_key(p['name']), row.get('chamber'), row.get('source_url')): p['name']
+                     for p in roster['people'] for row in p.get('affiliations', [])}
+        for s in read(root, 'scripts/roster_party_evidence.json')['people']:
+            name = installed.get((name_key(s['name']), s['chamber'], s['source_url']))
+            if name:
+                add(name, s, 'party-evidence-service', f'party-evidence/{s["identity"]}/{s["chamber"]}/{s["start"]}')
     for p in read(root, 'scripts/roster_witness_service.json')['services']:
         for i, row in enumerate(p['intervals']):
             coverage.append(dict(row, name=p['name'], chamber=p['chamber'], key=f'coverage/{p["print"]}/{i}'))
