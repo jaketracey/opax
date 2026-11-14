@@ -132,3 +132,12 @@ test('app.js fetchBriefMap and timemachine.js applyBriefs filter through briefWa
   const server=/const SHORT_TURN_WORDS = (\d+)/.exec(source.getFullText())[1];
   for(const js of [app,tm]) assert.equal(/const SHORT_TURN_WORDS = (\d+)/.exec(js)[1],server);
 });
+
+test('search page and window cache keys retire rows cached without word_count',()=>{
+  const text=source.getFullText();
+  for(const name of ['search','search-window']) {
+    const key=new RegExp(`cacheRequest\\(\\s*'${name}',[^\\n]*\\n?[^\\n]*`).exec(text)?.[0];
+    assert.ok(key,name);
+    assert.match(key,/word-count-v1/,`${name} cache key must move on with word_count in search rows`);
+  }
+});

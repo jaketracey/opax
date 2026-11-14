@@ -578,11 +578,11 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   // from page 1's entry; the window key drops them so paging and re-sorting
   // inside one result set costs no upstream call and no rate-limit quota.
   const keyParams = (drop: string[]) => cacheKeyParams(url.searchParams, drop)
-  // Retire older snippets, windows without retrieval-mode metadata, and rows without recorded source URLs.
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2\n${keyParams(['nocache'])}`))
+  // Retire older snippets, windows without retrieval-mode metadata, and rows without recorded source URLs or word_count.
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2-word-count-v1\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
-    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
+    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2-word-count-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
