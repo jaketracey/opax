@@ -53,6 +53,7 @@ import { useInCard } from './card';
 import { copy } from './copy';
 import { designFlags } from './flags';
 import type { DateInput } from './format';
+import { Gloss, useGlossEntry } from './gloss';
 import { Icon } from './icon';
 import { useRefreshCommand } from './keyboard';
 import { RowLink } from './row-link';
@@ -702,8 +703,14 @@ export function SectionHeader({
   testID,
   level = 2,
   compact = false,
+  gloss,
 }: {
   title: string;
+  /**
+   * A glossary term id: its plain line sits under the heading for readers
+   * with "Explain terms" on (design/gloss.tsx), and draws nothing otherwise.
+   */
+  gloss?: string;
   action?: SectionAction;
   /** Independent control beside the heading, wrapping only when it cannot fit. */
   accessory?: ReactNode;
@@ -717,6 +724,7 @@ export function SectionHeader({
   );
   const headingLayout = useContext(SectionHeadingLayoutContext);
   const stacked = useAccessibilitySize();
+  const glossEntry = useGlossEntry(gloss);
   const button = action ? (
     <Pressable
       accessibilityRole={action.href ? 'link' : 'button'}
@@ -753,7 +761,7 @@ export function SectionHeader({
       : wraps
         ? styles.sectionHeadWrapping
         : styles.sectionHead;
-  return (
+  const band = (
     <View
       style={
         // Stacked at AX sizes, the header keeps its own margin to the group.
@@ -787,6 +795,13 @@ export function SectionHeader({
       ) : null}
     </View>
   );
+  if (!gloss || !glossEntry) return band;
+  return (
+    <View style={styles.sectionHeadGloss}>
+      {band}
+      <Gloss id={gloss} entry={glossEntry} />
+    </View>
+  );
 }
 /** Section boundaries use space and a heading. */
 export function Section({
@@ -795,8 +810,11 @@ export function Section({
   children,
   testID,
   headingTestID,
+  gloss,
 }: {
   title?: string;
+  /** A glossary term id for the heading's plain line (`SectionHeader`). */
+  gloss?: string;
   action?: SectionAction | ReactNode;
   children: ReactNode;
   testID?: string;
@@ -814,6 +832,7 @@ export function Section({
           title={title}
           action={isAction ? (action as SectionAction) : undefined}
           testID={headingTestID}
+          gloss={gloss}
         />
       ) : null}
       {action && !isAction ? (action as ReactNode) : null}
@@ -1085,6 +1104,7 @@ const styles = StyleSheet.create({
     gap: rhythm.tight,
   },
   sectionHeadTitle: { flexGrow: 1, flexShrink: 0, maxWidth: '100%' },
+  sectionHeadGloss: { gap: rhythm.line },
   sectionAccessory: {
     marginLeft: 'auto',
     maxWidth: '100%',
