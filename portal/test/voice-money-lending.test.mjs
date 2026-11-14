@@ -16,6 +16,8 @@ const voice = await import('data:text/javascript;base64,' + Buffer.from(bundle.o
 const api = await localApi()
 
 const COMSCRV = 'Comscrv (No. 2092) Pty Ltd - Loan', AUSSIE = 'Aussie Home Loans Pty Ltd'
+// Every regex metacharacter, backslash included, is escaped before a name joins a pattern.
+const escapeRe = text => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 const graph = typedMoney()
 const nationals = graph.nodes.find(n => n.kind === 'party' && n.label === 'Nationals')
 const donated = {}
@@ -49,7 +51,7 @@ test('a short donor name the router expands to "... - Loan" gets its Donation Re
   assert.ok(ranked.answer.startsWith(`**Nationals** leads parties receiving money from ${COMSCRV}: **${donated[COMSCRV]}** in donations received`), ranked.answer.slice(0, 200))
   const spoken = await voiceMoney('Which party got the most money from Comscrv?')
   assert.doesNotMatch(spoken.data.answer, LENT)
-  assert.match(spoken.data.answer, new RegExp(`from ${COMSCRV.replace(/[().]/g, '\\$&')}: \\*\\*\\${donated[COMSCRV]}\\*\\*`))
+  assert.match(spoken.data.answer, new RegExp(`from ${escapeRe(COMSCRV)}: \\*\\*\\${donated[COMSCRV]}\\*\\*`))
 })
 
 test('a donor whose own name says Loans gets its figure on Ask and voice', async () => {
@@ -90,7 +92,7 @@ test('the ranking route reads a year, a financial year and a range beside a "No.
   const year = await ranked('Which party got the most money from Comscrv in 2019?')
   assert.equal(year.answer_status, 'calculated')
   assert.doesNotMatch(year.answer, LENT)
-  assert.match(year.answer, new RegExp(`^Held-period figures: \\*\\*Nationals\\*\\* leads parties receiving money from ${COMSCRV.replace(/[().]/g, '\\$&')}: \\*\\*\\${donated[COMSCRV]}\\*\\*`))
+  assert.match(year.answer, new RegExp(`^Held-period figures: \\*\\*Nationals\\*\\* leads parties receiving money from ${escapeRe(COMSCRV)}: \\*\\*\\${donated[COMSCRV]}\\*\\*`))
   assert.doesNotMatch(year.answer, /from 2019 to 2092|2092–93/)
 })
 
