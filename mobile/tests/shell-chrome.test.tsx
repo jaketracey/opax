@@ -351,6 +351,32 @@ test.each([
           navigation: { getState: () => ({ index: 1, routes: [] }) },
         });
       expect('headerTransparent' in tabEdition).toBe(!underBar);
+      // The directory and Just declared hold their band open with a search
+      // field and pin sticky section headers: a solid, backed bar there.
+      for (const name of ['directory', 'declarations']) {
+        const list = (
+          tabs.children as React.ReactElement<{
+            name: string;
+            options: (props: object) => Record<string, unknown>;
+          }>[]
+        )
+          .find((entry) => entry.props.name === name)!
+          .props.options({
+            route: { key: name, name, params: {} },
+            navigation: { getState: () => ({ index: 1, routes: [] }) },
+          });
+        expect(list.headerTransparent).toBe(underBar ? false : undefined);
+        expect('headerBackground' in list).toBe(underBar);
+      }
+      // Reduce Transparency or Increase Contrast: the solid bar, as the tab
+      // roots have.
+      mockSolidBar = true;
+      act(() => view!.unmount());
+      view = tree(<TabStack segment="(today)" />);
+      const solid = view.root.findByType(Stack).props.screenOptions;
+      expect(solid.headerTransparent).toBe(false);
+      expect(solid.scrollEdgeEffects.top).toBe('hard');
+      mockSolidBar = false;
       act(() => view!.unmount());
       view = tree(<TalkStack />);
       expect(
@@ -358,6 +384,7 @@ test.each([
       ).toBe(false);
     } finally {
       if (view) act(() => view!.unmount());
+      mockSolidBar = false;
       mockBarEdge = 'unspecified';
       if (descriptor) Object.defineProperty(Platform, 'Version', descriptor);
     }

@@ -9,7 +9,11 @@ import {
   disclosureYearNote,
   formatDisclosureYear,
 } from '../../design/format';
-import { FixedPage, useScreenColumn } from '../../design/layout';
+import {
+  FixedPage,
+  useClearBarRest,
+  useScreenColumn,
+} from '../../design/layout';
 import { MoneyRow } from '../../design/rows';
 import {
   ContentUnavailable,
@@ -64,6 +68,7 @@ export default function PartySources() {
       disclosureYearNote,
     ],
   };
+  const rest = useClearBarRest();
   const { onLayout, content } = useScreenColumn('readable');
   const foot = useFloatingBarFoot();
   return (
@@ -107,6 +112,7 @@ export default function PartySources() {
             testID="party-sources-screen"
             style={styles.page}
             contentInsetAdjustmentBehavior="automatic"
+            {...rest.list}
             stickySectionHeadersEnabled
             onLayout={onLayout}
             contentContainerStyle={[styles.content, content, foot]}

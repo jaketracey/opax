@@ -49,7 +49,7 @@ export function sharedScreens(
     ...editionScreens(underBar),
     ...vicElectionScreens(),
     ...yourMpScreens(segment, signedIn),
-    ...peopleScreens(),
+    ...peopleScreens(underBar),
     ...billsScreens(segment, signedIn),
     ...recordsScreens(),
     ...referenceSharedScreens(),

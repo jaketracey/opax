@@ -40,13 +40,24 @@ an opaque bar the page was laid out below it, so its heading scrolled under a
 ran to the top edge (b69, captured on the outer display). Pages pushed in a
 tab's stack now run under a clear bar beside a vertical bar
 (`useStackChrome({ tabStack: true })`), with a soft top edge: UIKit insets the
-scroll view below the band at rest (adjusted top 82, then 24). A list whose
-band holds a search field (People) keeps the band, and its rows fade under it.
-The money map does not scroll, so it keeps its opaque bar and backs it
-(`barBacking`). Sheets and modal stacks (Account, Talk) keep the opaque bar:
-their bar items sit over the sheet's trailing edge, and under a clear bar the
-text ran beneath them. A page that does not scroll and is pushed in a tab's
-stack must set `headerTransparent: false` itself, as the map does.
+scroll view below the band at rest (adjusted top 82, then 24). Reduce Transparency and
+Increase Contrast keep the solid bar, as on the tab roots (`useUnderRailBar`).
+
+Pages that keep a solid, backed bar on the rail (`solidRailBar`, `barBacking`):
+the directory and Just declared, whose search field holds the band open and
+whose sticky section headers React Native pins at the scroll view's top edge,
+under a clear bar; and the money map, which does not scroll. Sheets and modal
+stacks (Account, Talk) keep the opaque bar too: their bar items sit over the
+sheet's trailing edge, and under a clear bar the text ran beneath them. A page
+pushed in a tab's stack that does not scroll, or pins a header under a band
+that stays, must set `headerTransparent: false` itself.
+
+A scroll view that mounts after its page is on screen (the party page swaps a
+skeleton `Screen` for the loaded one) is a race with the push under the clear
+bar: about one open in six from a scrolled page it was left 24 pt past rest,
+its heading under the band's edge. `useClearBarRest` (in `Screen`, and the
+people lists) puts such a view back at rest until the reader drags. A fixed
+state in a plain View uses `FixedPage`, which clears the band.
 
 Toolbar items use the native item API with both `label` and symbol. Expo's
 `useHeaderConfigProps.js` maps `label` to native `title`; an accessibility label

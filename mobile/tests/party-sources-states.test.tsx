@@ -1,6 +1,7 @@
 // Largest sources by year: a failed receipts read or an unknown party is
 // not "No sources disclosed".
 import { act } from 'react';
+import { FixedPage } from '../src/design/layout';
 import TestRenderer from 'react-test-renderer';
 import { catalogs } from '../src/api/runtime';
 import { ContentUnavailable } from '../src/design/states';
@@ -41,6 +42,17 @@ test('a failed receipts read offers Try again rather than an empty record', asyn
   await act(async () => state(view).action.onPress());
   expect(catalogs.partyPage).toHaveBeenCalledTimes(2);
   expect(state(view).title).toBe('No sources disclosed');
+  await act(async () => view.unmount());
+});
+
+test('a failed page read draws its message in a page that clears a clear bar', async () => {
+  jest.mocked(catalogs.partyPage).mockRejectedValueOnce(new Error('down'));
+  const view = await mount();
+  expect(state(view).title).toBe('Couldn’t load largest sources');
+  // Beside a vertical bar the list runs under a clear bar (FixedPage).
+  expect(view.root.findByType(FixedPage).props.testID).toBe(
+    'party-sources-screen',
+  );
   await act(async () => view.unmount());
 });
 

@@ -1,5 +1,6 @@
 import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { FixedPage } from '../src/design/layout';
 import { ContentUnavailable } from '../src/design/states';
 import { loadProfile, type Loaded } from '../src/features/Person';
 import {
@@ -42,6 +43,10 @@ test.each(pages)(
     });
     const error = view.root.findByType(ContentUnavailable);
     expect(error.props.title).toMatch(/Couldn’t load/);
+    // The state clears a clear bar beside a vertical bar (FixedPage).
+    expect(view.root.findByType(FixedPage).props.testID).toMatch(
+      /^person-(votes|interests)-screen$/,
+    );
     expect(error.props.action.label).toBe('Try again');
     jest.mocked(loadProfile).mockResolvedValue(loaded('missing'));
     await act(async () => error.props.action.onPress());

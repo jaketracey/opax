@@ -7,7 +7,11 @@ import { serverPassage } from '../../api/passage-text';
 import { peopleDepth } from '../../api/runtime';
 import { counted, formatDate } from '../../design/format';
 import { MachinePill } from '../../design/labels';
-import { FixedPage, useScreenColumn } from '../../design/layout';
+import {
+  FixedPage,
+  useClearBarRest,
+  useScreenColumn,
+} from '../../design/layout';
 import { chamberName } from '../../design/parliament';
 import { phoneCopy } from '../../design/phone-copy';
 import { RecordRow } from '../../design/rows';
@@ -225,6 +229,7 @@ export default function RecordList({
         kind === 'news' ? '' : noun(kind, ready.rows.length),
       );
   }, [ready?.rows.length, ready?.paging, kind, ready]);
+  const rest = useClearBarRest();
   const { onLayout, content } = useScreenColumn('readable');
   const foot = useFloatingBarFoot();
   const briefsShown = ready
@@ -286,6 +291,7 @@ export default function RecordList({
             testID="record-list-screen"
             style={styles.page}
             contentInsetAdjustmentBehavior="automatic"
+            {...rest.list}
             onLayout={onLayout}
             contentContainerStyle={[styles.content, content, foot]}
             data={ready?.rows ?? []}

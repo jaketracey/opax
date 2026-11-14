@@ -65,12 +65,11 @@ import {
 } from '../../design/tokens';
 import {
   barBacking,
-  glassBar,
   headerItems,
   opaqueBar,
   pageItems,
+  useUnderRailBar,
 } from '../../navigation/chrome';
-import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
 import { moneyDonorsRoute } from '../../navigation/routes/public-money';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import {
@@ -504,9 +503,9 @@ function MapMode({
   const barTitle = typeof options.title === 'string' ? options.title : '';
   // The map does not scroll, so it keeps a solid bar and sits below it even
   // beside a vertical bar (the closed Duo), where the other pushed pages run
-  // under a clear one. That bar needs its own ground there, and the list must
-  // get the clear bar back when the map hands over to it.
-  const rail = useVerticalBarEdge() !== 'unspecified' && glassBar();
+  // under a clear one. That bar needs its own ground there; the list sets the
+  // stack's bar again when the map hands over to it (ListMode).
+  const rail = useUnderRailBar();
   useLayoutEffect(() => {
     setOptions({
       ...opaqueBar(colors.paper),
@@ -514,9 +513,6 @@ function MapMode({
       headerTitle: barTitle,
       ...(rail ? barBacking(colors.paper) : {}),
     });
-    if (!rail) return;
-    return () =>
-      setOptions({ headerTransparent: true, headerBackground: undefined });
   }, [setOptions, barTitle, rail]);
   const navigation = useNavigation();
   const router = useRouter();
@@ -1071,6 +1067,14 @@ function ListMode({
   // button keeps its label (money-03), and truncates inside the bar items.
   const barTitleRef = useRef<View>(null);
   const barTitle = useTitleOnScroll(barTitleRef, title || undefined);
+  // The map set a solid, backed bar on this route. The list takes the tab
+  // stack's bar again, from the same check, so a fold or unfold after the
+  // map still follows the other pushed pages.
+  const rail = useUnderRailBar();
+  const setOptions = useSafeSetOptions();
+  useLayoutEffect(() => {
+    setOptions({ headerTransparent: rail, headerBackground: undefined });
+  }, [setOptions, rail]);
   return (
     <GestureHandlerRootView style={styles.root}>
       <RouteOptions options={options} />

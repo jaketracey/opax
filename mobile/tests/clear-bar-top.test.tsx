@@ -1,12 +1,12 @@
 import { act } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import {
   HeaderHeightContext,
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
-import { FixedPage } from '../src/design/layout';
+import { FixedPage, Screen } from '../src/design/layout';
 
 let mockBarEdge: 'unspecified' | 'leading' | 'trailing' = 'unspecified';
 jest.mock('../modules/opax-root-bar', () => ({
@@ -69,3 +69,80 @@ test.each([
     expect(page(transparent)).toEqual({ flex: 1 });
   },
 );
+
+// A scroll view that mounts after its page is on screen (a skeleton swapped
+// for the loaded page) has been left 24 pt past rest under the clear bar,
+// its heading under the title band's edge (party page, b71 review).
+describe('a late scroll view under the clear bar', () => {
+  function screen(headerTransparent: boolean) {
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <NavigationRouteContext.Provider value={route as never}>
+          <DescriptorsContext.Provider
+            value={{ [route.key]: { options: { headerTransparent } } } as never}
+          >
+            <HeaderHeightContext.Provider value={82}>
+              <Screen testID="page">
+                <View />
+              </Screen>
+            </HeaderHeightContext.Provider>
+          </DescriptorsContext.Provider>
+        </NavigationRouteContext.Provider>,
+      );
+    });
+    const scroll = () => renderer.root.findByType(ScrollView);
+    const at = (y: number) =>
+      act(() =>
+        scroll().props.onScroll({ nativeEvent: { contentOffset: { y } } }),
+      );
+    return { renderer, scroll, at };
+  }
+  beforeEach(() => {
+    jest.useFakeTimers();
+    jest.replaceProperty(Platform, 'OS', 'ios');
+  });
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  test('left between rest and 0, it is put back at rest below the band', () => {
+    mockBarEdge = 'trailing';
+    const page = screen(true);
+    expect(page.scroll().props.contentOffset).toBeUndefined();
+    page.at(-58);
+    act(() => jest.advanceTimersByTime(1000));
+    expect(page.scroll().props.contentOffset).toEqual({ x: 0, y: -82 });
+    act(() => page.renderer.unmount());
+  });
+
+  test('at rest, or once the reader has dragged, it is left alone', () => {
+    mockBarEdge = 'trailing';
+    const rested = screen(true);
+    rested.at(-82);
+    act(() => jest.advanceTimersByTime(1000));
+    expect(rested.scroll().props.contentOffset).toBeUndefined();
+    act(() => rested.renderer.unmount());
+    const dragged = screen(true);
+    act(() => dragged.scroll().props.onScrollBeginDrag());
+    dragged.at(-24);
+    act(() => jest.advanceTimersByTime(1000));
+    expect(dragged.scroll().props.contentOffset).toBeUndefined();
+    act(() => dragged.renderer.unmount());
+  });
+
+  test.each([
+    ['unspecified', true],
+    ['trailing', false],
+  ] as const)(
+    'beside a %s bar with headerTransparent %s nothing is corrected',
+    (edge, transparent) => {
+      mockBarEdge = edge;
+      const page = screen(transparent);
+      page.at(-58);
+      act(() => jest.advanceTimersByTime(1000));
+      expect(page.scroll().props.contentOffset).toBeUndefined();
+      act(() => page.renderer.unmount());
+    },
+  );
+});

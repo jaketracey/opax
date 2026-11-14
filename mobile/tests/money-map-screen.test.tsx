@@ -185,7 +185,7 @@ test.each([26, 27])(
   },
 );
 
-test('beside a vertical bar the map backs its solid bar and hands the clear bar back', async () => {
+test('beside a vertical bar the map backs its solid bar and the list takes the clear bar back', async () => {
   const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
   Object.defineProperty(Platform, 'Version', { configurable: true, value: 27 });
   const os = jest.replaceProperty(Platform, 'OS', 'ios');
@@ -208,9 +208,11 @@ test('beside a vertical bar the map backs its solid bar and hands the clear bar 
       }>
     )();
     expect(backing.props.style.backgroundColor).toBe(colors.paper);
-    // The list that replaces the map runs under the stack's clear bar again.
-    act(() => renderer!.unmount());
-    renderer = undefined;
+    // The list that replaces the map takes the stack's clear bar again, from
+    // the same check, so a later fold or unfold still follows the stack.
+    await act(async () =>
+      renderer!.root.findByType(SegmentedPicker).props.onChange('list'),
+    );
     expect(options).toMatchObject({ headerTransparent: true });
     expect(options.headerBackground).toBeUndefined();
   } finally {
@@ -521,6 +523,35 @@ test('search to fly: the field replaces the card, a result flies and focuses', a
   );
   expect(r.root.findAllByType(MoneyMapSearch)).toHaveLength(0);
   act(() => r.unmount());
+});
+
+test('with a legibility setting on, the map and list keep the solid bar beside a vertical bar', async () => {
+  const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+  Object.defineProperty(Platform, 'Version', { configurable: true, value: 27 });
+  const os = jest.replaceProperty(Platform, 'OS', 'ios');
+  const edge = jest
+    .spyOn(rootBar, 'useVerticalBarEdge')
+    .mockReturnValue('trailing');
+  const solid = jest.spyOn(accessibility, 'useSolidBar').mockReturnValue(true);
+  let renderer: TestRenderer.ReactTestRenderer | undefined;
+  let options: Record<string, unknown> = {};
+  try {
+    renderer = await render(undefined, (value) => {
+      options = value;
+    });
+    expect(options).toMatchObject({ headerTransparent: false });
+    expect(options.headerBackground).toBeUndefined();
+    await act(async () =>
+      renderer!.root.findByType(SegmentedPicker).props.onChange('list'),
+    );
+    expect(options).toMatchObject({ headerTransparent: false });
+  } finally {
+    if (renderer) act(() => renderer!.unmount());
+    solid.mockRestore();
+    edge.mockRestore();
+    os.restore();
+    Object.defineProperty(Platform, 'Version', descriptor);
+  }
 });
 
 test('the List view keeps the same data and the picker switches both ways', async () => {

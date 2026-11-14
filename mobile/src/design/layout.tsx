@@ -1,6 +1,9 @@
 import { Pressable } from './pressable';
 import { type Href } from 'expo-router';
-import { NavigationRouteContext } from 'expo-router/react-navigation';
+import {
+  NavigationContext,
+  NavigationRouteContext,
+} from 'expo-router/react-navigation';
 import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
 import { useVerticalBarEdge } from '../../modules/opax-root-bar';
 import {
@@ -257,6 +260,72 @@ export function useClearBarTop(): number {
   return verticalBar && clear ? bottom : 0;
 }
 
+/** How long after mount a late scroll view may still be settling (ms). */
+const restChecks = [400, 900];
+
+/**
+ * A scroll view that mounts after its page is already on screen (a skeleton
+ * swapped for the loaded page, a message for a list) under a clear bar beside
+ * a vertical bar. UIKit insets a scroll view that is there when the page
+ * arrives and leaves it at rest. One that arrives later starts at offset 0,
+ * under the title band, and UIKit's two inset steps (the 24 pt safe area,
+ * then the band) are a race with the push: it has been left 24 pt past rest,
+ * its heading under the band's edge (party page, b71 review).
+ * This watches the offset and, until the reader drags, puts a view found
+ * between rest and 0 back at rest. `contentOffset` is the command: the prop
+ * sets the native offset unclamped, where `scrollTo` needs overflow enabled.
+ * Spread `props` on the scroll view; inert under an opaque bar.
+ */
+export function useClearBarRest() {
+  const top = useClearBarTop();
+  const navigation = useContext(NavigationContext);
+  const y = useRef<number | null>(null);
+  const dragged = useRef(false);
+  const [offset, setOffset] = useState<{ x: number; y: number } | undefined>();
+  const check = useCallback(() => {
+    if (!top || dragged.current || y.current === null) return;
+    if (y.current > -top + underBarSlack && y.current <= 0)
+      setOffset((now) => (now?.y === -top ? now : { x: 0, y: -top }));
+  }, [top]);
+  useEffect(() => {
+    if (!top) return;
+    const timers = restChecks.map((ms) => setTimeout(check, ms));
+    const end = (
+      navigation as
+        | {
+            addListener?: (name: string, listener: () => void) => () => void;
+          }
+        | undefined
+    )?.addListener?.('transitionEnd', check);
+    return () => {
+      timers.forEach(clearTimeout);
+      end?.();
+    };
+  }, [top, check, navigation]);
+  return {
+    track: (offsetY: number) => {
+      y.current = offsetY;
+    },
+    drag: () => {
+      dragged.current = true;
+    },
+    contentOffset: top ? offset : undefined,
+    /** For a list with no scroll handlers of its own. */
+    list: top
+      ? {
+          contentOffset: offset,
+          scrollEventThrottle: 16,
+          onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+            y.current = event.nativeEvent.contentOffset.y;
+          },
+          onScrollBeginDrag: () => {
+            dragged.current = true;
+          },
+        }
+      : null,
+  };
+}
+
 /**
  * A pushed page's whole-screen state that does not scroll: a skeleton or a
  * message in a plain View. It clears the bar where the page runs under one
@@ -372,6 +441,7 @@ export function Screen({
     // A detail pane must not recolour its parent route's navigation bar.
     if (!inPane && !nativeRoot) setOptions(opaqueBar(colors[ground]));
   }, [setOptions, ground, inPane, nativeRoot]);
+  const rest = useClearBarRest();
   const pinnedHere = Platform.OS === 'ios' && !!pinned;
   const [pinnedRest, setPinnedRest] = useState<number | null>(null);
   // A new band (Search submitted again) learns its rest offset again.
@@ -428,6 +498,7 @@ export function Screen({
             style={[styles.screen, { backgroundColor: colors[ground] }]}
             contentInsetAdjustmentBehavior={contentInsetAdjustmentBehavior}
             scrollToOverflowEnabled={scrollToOverflowEnabled}
+            contentOffset={nativeRoot ? undefined : rest.contentOffset}
             alwaysBounceVertical={Platform.OS === 'ios'}
             keyboardShouldPersistTaps="handled"
             automaticallyAdjustKeyboardInsets={keyboardInsets}
@@ -457,6 +528,7 @@ export function Screen({
               if (clampScrollOnContentChange) bounds.onScroll(event);
               const y = event.nativeEvent.contentOffset.y;
               scrollY.current = y;
+              rest.track(y);
               checkUnderBar();
               if (Platform.OS === 'android') androidRoot.onScroll(y);
               if (titleScroll.current) titleScroll.current(y, anchorBottom);
@@ -466,6 +538,7 @@ export function Screen({
             onScrollBeginDrag={
               pinnedHere
                 ? (event) => {
+                    rest.drag();
                     const y = event.nativeEvent.contentOffset.y;
                     // At rest UIKit's inset makes the offset negative; a drag
                     // that starts further down says nothing about the bar.
@@ -474,7 +547,7 @@ export function Screen({
                         rest === null ? y : Math.min(rest, y),
                       );
                   }
-                : undefined
+                : rest.drag
             }
             onScrollEndDrag={
               clampScrollOnContentChange ? bounds.onScroll : undefined

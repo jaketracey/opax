@@ -18,6 +18,7 @@ import {
   type ColorValue,
 } from 'react-native';
 import { openOnWeb } from './external';
+import { useSolidBar } from '../design/accessibility';
 import { copy } from '../design/copy';
 import { designFlags } from '../design/flags';
 import { liquidGlass } from '../design/glass';
@@ -181,6 +182,32 @@ export const barBacking = (ground: ColorValue = colors.paper) => ({
 });
 
 /**
+ * Whether a tab stack's pushed pages run under a clear bar: beside a vertical
+ * bar on iOS 26 and later, unless Reduce Transparency or Increase Contrast
+ * asks for a solid bar, as it does of the tab roots.
+ */
+export function useUnderRailBar(): boolean {
+  const edge = useVerticalBarEdge();
+  const solid = useSolidBar();
+  return edge !== 'unspecified' && glassBar() && !solid;
+}
+
+/**
+ * A page that keeps a solid bar where its stack's pages run under a clear
+ * one: its title band never folds away (a search field in the bar, a map
+ * that does not scroll), so content must end at the band, and a sticky
+ * section header must hold below it. `underBar` is the stack's answer
+ * (`useUnderRailBar`); elsewhere this adds nothing to the route.
+ */
+export const solidRailBar = (
+  underBar: boolean,
+  ground: ColorValue = colors.paper,
+) =>
+  underBar
+    ? { headerTransparent: false, ...opaqueBar(ground), ...barBacking(ground) }
+    : {};
+
+/**
  * `tabStack`: the pages pushed in a tab's stack. Beside a vertical bar (the
  * closed iPhone Duo) UIKit folds a pushed page's title band away once the
  * page scrolls, and keeps the top safe area (24 pt) as bar. An opaque bar
@@ -201,7 +228,8 @@ export function useStackChrome({
   // Bar titles resolve in the app's appearance, not the bar's (11b-3).
   const titleInk = schemeColour('ink', useColorScheme());
   const barEdge = useVerticalBarEdge();
-  const rail = tabStack && barEdge !== 'unspecified' && glassBar();
+  const underBar = useUnderRailBar();
+  const rail = tabStack && underBar;
   const category = contentSizeCategory(fontScale);
   const sizes = {
     largeTitle: largeTitleSizes[category],

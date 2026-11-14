@@ -4,7 +4,11 @@ import { useEffect, useState } from 'react';
 import { FlatList, SectionList, StyleSheet, View } from 'react-native';
 import { SegmentedPicker } from '../../design/controls';
 import { counted, formatCount } from '../../design/format';
-import { FixedPage, useScreenColumn } from '../../design/layout';
+import {
+  FixedPage,
+  useClearBarRest,
+  useScreenColumn,
+} from '../../design/layout';
 import { useListSearchBar } from '../../design/search-bar';
 import {
   ContentUnavailable,
@@ -152,6 +156,7 @@ export function PersonVotes() {
     onSearchButtonPress: setQuery,
     onCancelButtonPress: () => setQuery(''),
   });
+  const rest = useClearBarRest();
   const { onLayout, content } = useScreenColumn('readable');
   const foot = useFloatingBarFoot();
   const votes = load.status === 'ready' ? load.profile.blocks.votes : null;
@@ -205,6 +210,7 @@ export function PersonVotes() {
             testID="person-votes-screen"
             style={styles.page}
             contentInsetAdjustmentBehavior="automatic"
+            {...rest.list}
             onLayout={onLayout}
             contentContainerStyle={[styles.content, content, foot]}
             data={rows}
@@ -280,6 +286,7 @@ export function PersonInterests() {
   const params = useLocalSearchParams<{ slug: string; name?: string }>();
   const slug = one(params.slug) ?? '';
   const { load, retry } = useProfile(slug);
+  const rest = useClearBarRest();
   const { onLayout, content } = useScreenColumn('readable');
   const foot = useFloatingBarFoot();
   const interests =
@@ -324,6 +331,7 @@ export function PersonInterests() {
             testID="person-interests-screen"
             style={styles.page}
             contentInsetAdjustmentBehavior="automatic"
+            {...rest.list}
             stickySectionHeadersEnabled
             onLayout={onLayout}
             contentContainerStyle={[styles.content, content, foot]}
