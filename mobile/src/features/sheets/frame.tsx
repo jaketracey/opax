@@ -88,7 +88,8 @@ export function SheetFrame({
   // View clipped it with nothing to scroll (glossary terms, b67).
   // Only short (fitted) sheets clip; citation, source and table sheets keep
   // their detents. Read from the live bar edge, so a fold or rotation follows.
-  const railed = short && useVerticalBarEdge() !== 'unspecified';
+  const barEdge = useVerticalBarEdge();
+  const railed = short && barEdge !== 'unspecified';
   const accessible = useAccessibilitySize() || railed;
   const margin = useScreenMargin();
   const insets = useSafeAreaInsets();
