@@ -21,6 +21,9 @@ def sections(data):
     from "+++ b/", or from "--- a/" for a deletion to /dev/null.
     """
     parts, lead, current, old, new = {}, [], None, 0, 0
+    # readlines() splits at LF only, so a bare CR stays inside its line. GNU
+    # patch treats a bare CR as a line end; that is GNU behaviour, not ours
+    # (or macOS patch's), so reviewed patches must not contain bare CRs.
     lines = io.BytesIO(data).readlines()
     index = 0
     while index < len(lines):
@@ -35,6 +38,9 @@ def sections(data):
                 raise ValueError("Reviewed patch hunk is malformed")
             old -= kind != b"+"
             new -= kind != b"-"
+            if old < 0 or new < 0:
+                # More lines than the header counted: the hunk is mis-sized.
+                raise ValueError("Reviewed patch hunk is malformed")
             current.append(line)
         elif line.startswith(b"@@ "):
             counts = re.match(rb"@@ -\d+(?:,(\d+))? \+\d+(?:,(\d+))? @@", line)
@@ -47,6 +53,11 @@ def sections(data):
             if not target.startswith(b"+++ "):
                 raise ValueError("Reviewed patch header is malformed")
             index += 1
+            names = [re.sub(rb"^[ab]/", b"", n[4:].split(b"\t")[0].strip()) for n in (line, target)]
+            if b"/dev/null" not in names and names[0] != names[1]:
+                # macOS patch(1) writes to the "---" name, so a mismatch could
+                # patch a different file than the one we validated.
+                raise ValueError("Reviewed patch ---/+++ file names differ")
             name = line[4:] if target[4:].startswith(b"/dev/null") else target[4:]
             path = name.split(b"\t")[0].strip().decode().split("/", 1)[-1]
             if path in parts:
