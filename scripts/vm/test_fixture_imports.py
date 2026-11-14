@@ -53,7 +53,12 @@ class FixtureImportTests(unittest.TestCase):
     def test_real_bills_and_people_import_with_their_dependencies(self):
         self.copy("scripts/export_bills.py", "scripts/export_parliamentarians.py",
                   "scripts/roster_identity.py", "scripts/enrich_profile_jurisdictions.py",
+                  "scripts/roster_accept.py",
                   "scripts/bills_registry/bills_stages.py", "parli/__init__.py", "parli/arag.py",
+                  "scripts/vote_parties.py", "scripts/division_rules.py",
+                  "scripts/corrections/__init__.py", "scripts/corrections/apply.py",
+                  "parli/ingest/federal_affiliations.py", "parli/ingest/tvfy_refresh.py",
+                  "parli/ingest/honest_http.py",
                   "parli/ingest/__init__.py", "parli/ingest/arag_sync.py",
                   "parli/ingest/http.py", "parli/ingest/user-agent.json",
                   "parli/ingest/speech_hygiene.py", "parli/ingest/speaker_names.py",
