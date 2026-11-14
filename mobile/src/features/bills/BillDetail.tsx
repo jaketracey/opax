@@ -7,6 +7,7 @@ import {
   isValidElement,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -1626,6 +1627,18 @@ function Votes({
   const member = useMyMemberVotes(votes.has);
   const [rowWidth, setRowWidth] = useState<number>();
   const headerRef = useRef<View>(null);
+  useLayoutEffect(() => {
+    if (!votes.has) return;
+    // Fabric measures the committed column synchronously here, so the rows
+    // mount before paint. onLayout still handles subsequent width changes.
+    let active = true;
+    headerRef.current?.measure((_x, _y, width) => {
+      if (active && width > 0) setRowWidth(width);
+    });
+    return () => {
+      active = false;
+    };
+  }, [votes.has]);
   useEffect(() => {
     if (votes.sectionFocus) targets.scrollTo(headerRef, true);
   }, [votes.sectionFocus, targets]);

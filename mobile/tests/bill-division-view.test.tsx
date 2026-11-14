@@ -118,6 +118,74 @@ const style = (node: ReactTestInstance) =>
       : node.props.style,
   ) ?? {};
 
+test.each(
+  [1, 2.643, 3.571].flatMap((fontScale) =>
+    [277, 358].map((width) => [fontScale, width] as const),
+  ),
+)(
+  'cached votes fill the first frame at font scale %s and %spt without onLayout',
+  async (fontScale, width) => {
+    jest.mocked(useWindowDimensions).mockReturnValue({
+      width: 390,
+      height: 844,
+      scale: 3,
+      fontScale,
+    });
+    const record = await fixture.billFor(mockParams.key);
+    jest.mocked(runtime.billFor).mockResolvedValue({ ...record, stale: true });
+    let measured = 0;
+    const measure = jest
+      .spyOn(View.prototype, 'measure')
+      .mockImplementation(function (this: View, callback) {
+        if (
+          (this.props as { testID?: string }).testID === 'bill-divisions-layout'
+        ) {
+          measured++;
+          // Fabric supplies the committed width synchronously in a layout effect.
+          callback(0, 0, width, 900, 0, 0);
+        }
+      });
+    try {
+      const r = await render(false);
+      const rows = () =>
+        r.root.findAll(
+          (node) =>
+            typeof node.type === 'string' &&
+            /^bill-division-\d+-more$/.test(node.props.testID ?? ''),
+        );
+      expect(measured).toBe(1);
+      expect(rows().length).toBeGreaterThan(0);
+      for (const row of rows()) {
+        expect(style(row).width).toBe(width);
+        let opacity = 1;
+        for (
+          let parent: ReactTestInstance | null = row;
+          parent;
+          parent = parent.parent
+        ) {
+          const value = style(parent).opacity;
+          if (value !== undefined)
+            opacity *= typeof value === 'number' ? value : value.__getValue();
+        }
+        expect(opacity).toBe(1);
+      }
+      // Later layout events can resize the same mounted rows.
+      const first = rows()[0];
+      act(() =>
+        host(r.root, 'bill-divisions-layout').props.onLayout({
+          nativeEvent: { layout: { x: 0, y: 0, width: 614, height: 900 } },
+        }),
+      );
+      expect(rows()[0]).toBe(first);
+      expect(rows().every((row) => style(row).width === 614)).toBe(true);
+      expect(measured).toBe(1);
+      act(() => r.unmount());
+    } finally {
+      measure.mockRestore();
+    }
+  },
+);
+
 test.each([1, 2.643, 3.571])(
   'vote triggers first mount with a constrained width at font scale %s',
   async (fontScale) => {

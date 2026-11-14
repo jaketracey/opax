@@ -222,6 +222,45 @@ test.each(measuredWords)(
   },
 );
 
+test('trailing-space overhang cannot inflate the capped word bound beyond its column', () => {
+  const content = 'Representation ';
+  const role = textStyles.sectionTitle;
+  const base = role.lineHeight + LINE_HEIGHT_NUDGE;
+  let state = wordSafeStart(content, 2);
+  state = wordSafeOnFrame(state, state, 200);
+  state = wordSafeOnLines(
+    state,
+    state,
+    [
+      { text: 'Representatio', width: 198, height: base * 2 },
+      { text: 'n ', width: 15, height: base * 2 },
+    ],
+    content,
+    base,
+    true,
+    1,
+    role.fontSize,
+  );
+  state = wordSafeOnFrame(state, state, 200);
+  const next = wordSafeOnLines(
+    state,
+    state,
+    [
+      // 195pt of visible glyphs and 10pt of trailing space in a 200pt column.
+      { text: content, width: 205, height: base * state.cap },
+    ],
+    content,
+    base,
+    true,
+    1,
+    role.fontSize,
+  );
+  const boundAtCap = (next.word * state.cap) / state.full;
+  expect(boundAtCap).toBeGreaterThanOrEqual(195);
+  expect(boundAtCap).toBeLessThanOrEqual(200);
+  expect(next.cap).toBe(state.cap);
+});
+
 test('record titles cap at the title1 AX2 size; other roles stay uncapped', () => {
   expect(titleSizeCap('recordTitle', 3.571, 'ios')).toBeCloseTo(43 / 58);
   expect(titleSizeCap('recordTitle', 3.571, 'ios')).toBeCloseTo(43 / 58);

@@ -271,3 +271,53 @@ test('a fresh full-size fit recovers after a queued break even when old and new 
   );
   expect(ratio()).toBe(1);
 });
+
+test.each([
+  [2.643, 2],
+  [3.571, ax5],
+])(
+  'a full-size fit at %s recovers despite trailing-space overhang',
+  (fontScale, full) => {
+    setSize(fontScale);
+    act(() =>
+      renderer.update(
+        <Text wordSafe variant="sectionTitle">
+          Recorded representation
+        </Text>,
+      ),
+    );
+    const original = text();
+    const send = (first: string, firstWidth: number, at = full) =>
+      act(() =>
+        text().props.onTextLayout({
+          nativeEvent: {
+            lines: [
+              { text: first, width: firstWidth, height: base * at },
+              { text: 'representation', width: 212, height: base * at },
+            ],
+          },
+        }),
+      );
+    frame(200, base * full * 2);
+    act(() =>
+      text().props.onTextLayout({
+        nativeEvent: {
+          lines: [
+            { text: 'Recorded representatio', width: 198, height: base * full },
+            { text: 'n', width: 14, height: base * full },
+          ],
+        },
+      }),
+    );
+    expect(ratio()).toBeLessThan(1);
+    frame(220, base * full * 2);
+    send('Recorded', 225); // Visible overflow cannot prove the full size fits.
+    expect(ratio()).toBeLessThan(1);
+    send('Recorded ', 225); // Only the trailing space extends past the column.
+    expect(ratio()).toBe(1);
+    frame(220, base * full * 2);
+    send('Recorded ', 225);
+    expect(ratio()).toBe(1);
+    expect(text()).toBe(original);
+  },
+);
