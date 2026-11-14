@@ -3,6 +3,8 @@
 Base: `3bde3a0ebc7ce4831ce206cbfaa4e58ad93f2d6f` (`origin/main` when this lane started).
 Branch: `im/sponsor-dated`. The published bill files were read, never edited or regenerated.
 
+The sections below record the initial pre-row-172 snapshot. For the merge-forward comparison against reviewed main, see [row 183 merge-forward](2026-11-14-bill-sponsor-merge-forward.md).
+
 ## Measurement and classification
 
 The published index contains 2,989 bills. Of these, 687 have a sponsor, party and introduction date. Each primary sponsor was matched in the bill's own chamber and checked on that date using `vote_parties.load_evidence` and `Resolver`: the current electorate release's party periods, the held Parliamentary Handbook Senate periods, and the same reviewed replacements and holds used by dated division labels. Intervals include their start and exclude their end; open periods stop at `through`. No current party or speech observation establishes a correction. The audit requires no database or network access.

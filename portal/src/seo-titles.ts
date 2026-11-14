@@ -15,7 +15,7 @@ export const TITLE_MAX = 65
 export const BILL_TITLE_MAX = 70
 
 const LOWER_HOUSES = new Set(['representatives', 'nsw_la', 'vic_la', 'qld_la', 'sa_ha', 'act_la'])
-const COUNCILS = new Set(['nsw_lc', 'vic_lc', 'sa_lc'])
+const COUNCILS = new Set(['nsw_lc', 'vic_lc', 'sa_lc', 'wa_lc', 'tas_lc'])
 const STATE_TAGS: Record<string, string> = {
   NSW: 'NSW', 'NEW SOUTH WALES': 'NSW', VIC: 'Vic', VICTORIA: 'Vic', QLD: 'Qld', QUEENSLAND: 'Qld',
   SA: 'SA', 'SOUTH AUSTRALIA': 'SA', WA: 'WA', 'WESTERN AUSTRALIA': 'WA', TAS: 'Tas', TASMANIA: 'Tas',
@@ -70,24 +70,22 @@ export function personRole(p: RolePerson, year: number): PersonRole | null {
   const federal = seat.jurisdiction === 'federal'
   const sitting = datedSeat ? !!p.current : federal ? !!p.current : stateSitting
   const party = (sitting ? (datedSeat ? service?.party : null) ?? p.party_now : null) ?? p.party ?? ''
-  const senate = seat.chamber === 'senate'
+  const senate = federal && seat.chamber === 'senate'
   // Some state rosters append the member's portfolios ("Williamstown – Minister for Ports").
-  const place = seat.electorate.split(/\s+[–—-]\s+/)[0].trim()
-  // NSW and SA elect their upper houses statewide: no seat to name.
-  const statewide = COUNCILS.has(seat.chamber) && seat.chamber !== 'vic_lc'
+  const place = seat.electorate.split(/\s+[–—-]\s+/)[0].trim().replace(/^Legislative Council district of /, '')
   const role = senate ? `Senator for ${TERRITORIES[place] ?? place}`
-    : statewide ? 'MLC'
     : COUNCILS.has(seat.chamber) ? `MLC for ${place}`
     : LOWER_HOUSES.has(seat.chamber) ? `Member for ${place}`
     : `representative for ${place}`
   const stateTag = STATE_TAGS[String(seat.state ?? seat.jurisdiction).toUpperCase()] ?? ''
+  const statewide = COUNCILS.has(seat.chamber) && stateTag === STATE_TAGS[place.toUpperCase()]
   return {
     name: sitting && LOWER_HOUSES.has(seat.chamber) ? `${p.name} MP` : p.name,
     former: sitting ? '' : 'former ',
     party,
     role,
-    // A Senate seat is already a state; a federal or state electorate is not.
-    tag: !senate && stateTag ? ` (${stateTag})` : '',
+    // Senate and statewide Council seats already name their state.
+    tag: !senate && !statewide && stateTag ? ` (${stateTag})` : '',
     federal,
   }
 }

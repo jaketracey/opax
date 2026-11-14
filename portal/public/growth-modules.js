@@ -3,7 +3,7 @@ import {donorDisclosure,donorLabelHTML} from './donor-disclosure.js?v=de4403826e
 import { shortDate } from './format.js';
 import { isOrganisationDonor } from './donor-entity.js?v=3fd3e51b56';
 export { isOrganisationDonor };
-import { sourceLineHTML } from './labels.js?v=6d2e2e9cd8';
+import { sourceLineHTML } from './labels.js?v=fcb2a1091c';
 import { sponsorPerson, sponsorKey } from './sponsor-person.js?v=74d9a1f8cf';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const text = value => typeof value === 'string' ? value.trim() : '';
@@ -87,7 +87,7 @@ export function askBlockHTML({name = '', bill = null, questions = [], pageType, 
 
   const heading = bill ? 'Ask about this bill' : `Ask about ${name}`;
   return `<section class="growth-ask" ${moduleAttrs('ask',pageType,1)} aria-labelledby="growth-ask-title">
-    <h3 id="growth-ask-title">${esc(heading)}</h3>
+    <h2 id="growth-ask-title">${esc(heading)}</h2>
     <form class="growth-ask-form" action="/ask" method="get"${bill ? ` data-record-title="${esc(bill.title || bill.short_title)}" data-record-key="${esc(bill.key)}"` : ''}>
       <label class="visually-hidden" for="growth-ask-input">Your question</label>
       <textarea class="ui-input grow-field" id="growth-ask-input" name="q" rows="1" autocomplete="off" placeholder="${bill ? 'What does this bill change?' : 'Your question about '+esc(name)}" required>${esc(bill ? '' : seed)}</textarea>

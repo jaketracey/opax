@@ -11,6 +11,7 @@ from scripts import export_bills as export
 
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT = json.loads((ROOT / 'portal/test/fixtures/portal-facts.json').read_text())
+DATED_SPONSORS = json.loads((ROOT / 'portal/test/fixtures/dated-sponsor-parties.json').read_text())
 
 
 class PublishedBillFacts(unittest.TestCase):
@@ -18,16 +19,54 @@ class PublishedBillFacts(unittest.TestCase):
         self.assertEqual(len(AUDIT['parties']), 585)
         index = json.loads((ROOT / 'portal/public/bills/index.json').read_text())
         parties = {row['key']: row['sponsor_party'] for row in index['bills']}
-        records = export.SponsorPartyRecords()
+        dated = {row['key']: row['published_party'] for row in DATED_SPONSORS['rows'] + DATED_SPONSORS['fills']}
         for row in AUDIT['parties']:
             with self.subTest(key=row['key'], raw=row['raw']):
-                source = row.get('source_canonical', row['canonical'])
-                self.assertEqual(export.sponsor_party_token(row['raw']), source)
-                self.assertIn(parties[row['key']], (source, row['canonical']))
+                self.assertEqual(export.sponsor_party_token(row['raw']), row.get('source_canonical', row['canonical']))
+                self.assertEqual(parties[row['key']], dated.get(row['key'], row.get('source_canonical', row['canonical'])))
+
+    def test_next_export_resolver_matches_projected_audit_labels(self):
+        records = export.SponsorPartyRecords()
+        for row in AUDIT['parties']:
+            with self.subTest(key=row['key']):
                 bill = json.loads((ROOT / 'portal/public/bills' / (row['key'] + '.json')).read_text())
                 self.assertEqual(records.check(bill)['party'], row['canonical'])
                 refreshed = {**bill, 'sponsor_party': row['canonical']}
                 self.assertEqual(records.check(refreshed)['party'], row['canonical'])
+
+    def test_projection_preserves_reviewed_decision_map_except_mcmahons_registered_name(self):
+        records = export.SponsorPartyRecords()
+        changes = {}
+        for row in DATED_SPONSORS['rows'] + DATED_SPONSORS['fills']:
+            bill = json.loads((ROOT / 'portal/public/bills' / (row['key'] + '.json')).read_text())
+            party = records.check(bill)['party']
+            if party != row['published_party']:
+                changes[row['key']] = (row['published_party'], party)
+        self.assertEqual(changes, {
+            'au-federal-s1309': ('Nationals', 'Country Liberal Party'),
+        })
+
+    def test_full_projection_changes_no_other_primary_or_cosponsor(self):
+        from scripts.audit_bill_sponsor_parties import project
+        projection = project(ROOT)
+        evidence_bills = [json.loads((ROOT / 'portal/public/bills' / (key + '.json')).read_text())
+                          for key in projection['sponsors']]
+        held = export.fill_sponsor_parties(evidence_bills, evidence=export.vote_parties.load_evidence())
+        self.assertEqual({row['key'] for row in held}, {
+            'au-federal-s1297', 'au-federal-s1307', 'au-federal-s1316', 'au-federal-s1321'})
+        for bill in evidence_bills:
+            self.assertEqual({field: bill.get(field, []) for field in ('sponsor_party', 'sponsors')},
+                             projection['sponsors'][bill['key']], bill['key'])
+        changes = {}
+        for key, sponsor in projection['sponsors'].items():
+            bill = json.loads((ROOT / 'portal/public/bills' / (key + '.json')).read_text())
+            self.assertEqual(sponsor['sponsors'], bill.get('sponsors', []), key)
+            if sponsor['sponsor_party'] != bill.get('sponsor_party'):
+                changes[key] = (bill.get('sponsor_party'), sponsor['sponsor_party'])
+        self.assertEqual(changes, {
+            'au-federal-s1309': ('Nationals', 'Country Liberal Party'),
+            'au-federal-s1127': ('Nick Xenophon Team', 'Centre Alliance'),
+        })
 
     def test_retained_label_repair_never_infers_missing_affiliations(self):
         with tempfile.TemporaryDirectory() as scratch:
@@ -77,6 +116,14 @@ class PublishedBillFacts(unittest.TestCase):
             self.assertEqual(row['sponsor_party'], bill['sponsor_party'])
             for party in [bill['sponsor_party'], *(s.get('party') for s in bill.get('sponsors', []))]:
                 self.assertTrue(party is None or party in export.PUBLISHED_PARTIES, (row['key'], party))
+
+    def test_browser_alias_table_is_generated_from_the_exporters_accepted_aliases(self):
+        with tempfile.TemporaryDirectory() as scratch:
+            path = Path(scratch) / 'party-page.js'
+            source = ROOT / 'portal/public/party-page.js'
+            path.write_bytes(source.read_bytes())
+            export.write_sponsor_party_aliases(path)
+            self.assertEqual(path.read_bytes(), source.read_bytes())
 
     def test_reconciles_all_eight_tallies_from_the_reviewed_source_records(self):
         directory = ROOT / 'portal/public/divisions'

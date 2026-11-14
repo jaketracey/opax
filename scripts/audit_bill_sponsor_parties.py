@@ -62,7 +62,7 @@ def project(root: Path = ROOT) -> dict:
     records = SponsorPartyRecords(load_evidence(root=root, public=public))
     index = json.loads((public / "bills/index.json").read_text())
     bills = [json.loads((public / "bills" / f"{row['key']}.json").read_text()) for row in index["bills"]]
-    fill_sponsor_parties(bills, PartyTimeline({}, {}), records)
+    fill_sponsor_parties(bills, PartyTimeline({}, {}), records=records)
     sponsors = {b["key"]: {"sponsor_party": b["sponsor_party"], "sponsors": b.get("sponsors", [])}
                 for b in bills}
     return {"bills": [{**row, "sponsor_party": sponsors[row["key"]]["sponsor_party"]}

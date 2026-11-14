@@ -94,6 +94,27 @@ export function interestTableData(register) {
   return {rows,omitted:0};
 }
 
+/**
+ * Why the table holds fewer rows than the count above it. The register file keeps up to PER_BUCKET
+ * entries per category (scripts/export_interests.py) while `count` is every row of the category,
+ * so "28 entries" sits above 14 rows. Said once, with the way to the rest; '' when they agree.
+ * Returns trusted HTML (the link is checked here).
+ */
+export function interestShownNote(register, shown, registerURL = '') {
+  const total = Number(register?.total) || 0, n = Number(shown) || 0;
+  if (!n || n >= total) return '';
+  const counts = Object.values(register?.buckets || {}).map(b => Number(b?.count) || 0).filter(Boolean);
+  const listed = Object.values(register?.buckets || {}).map(b => (b?.items || []).length);
+  const capped = listed.length && Math.max(...listed);
+  const per = capped && counts.some(c => c > capped) ? `, up to ${capped} in each category` : '';
+  const link = href(registerURL);
+  const fmt = value => value.toLocaleString('en-AU');
+  // The file selects per category, not across the register, so the note says that and claims no order.
+  return `${fmt(n)} ${n === 1 ? 'entry is' : 'entries are'} listed here${per}. ${link
+    ? `All ${fmt(total)} are in <a href="${link.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}" rel="noopener" target="_blank">the register ↗︎</a>.`
+    : `All ${fmt(total)} are in the register.`}`;
+}
+
 export const categoryMembers = values => [...new Set((values || []).flatMap(value=>String(value).split(';').map(v=>v.trim()).filter(Boolean)))];
 
 export function interestTableConfig(rows) {

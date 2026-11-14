@@ -13,7 +13,7 @@ import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../p
 import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import {chamberLabel, machineLabelHTML, partyLabelHTML} from '../public/party-page.js'
 import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML, noHansardHeldHTML} from '../public/held-back-transcripts.js'
-import {divisionTableConfig, voteTableConfig, personVoteKeys, personVoteRecords, divisionRows, votingRows, voteTablePage, voteTableHTML} from '../public/vote-tables.js'
+import {divisionTableConfig, voteTableConfig, personVoteKeys, personVoteRecords, divisionRows, votingRows, voteTablePage, voteTableHTML, billDivisionsTablesHTML, voteScopeLine} from '../public/vote-tables.js'
 import type {Query} from '../public/datatable.js'
 import {personVideos, videoSectionHTML, type VideoRow} from '../public/video-card.js'
 import {agencyTopRows, type AgencyTopRow} from '../public/agency-top-suppliers.js'
@@ -282,6 +282,8 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
     if (votes.length) {
       const config = voteTableConfig(keys, hasRecent ? 'Recorded votes' : 'Latest bill votes')
       config.id += '-ssr'
+      const divisionsTotal = keys.reduce((sum,key)=>sum+(Number((voteData as Record<string,{divisions_total?: unknown}> | null)?.[key]?.divisions_total)||0),0)
+      body += `<p class="votes-scope">${escapeHtml(voteScopeLine(votes.length,divisionsTotal,hasRecent))}</p>`
       body += voteTableHTML(config,voteTablePage(votingRows(votes,bills?.bills || []),config,tableQuery))
       body += '<p>This list covers the votes in OPAX’s published data. Only formal divisions leave a per-member record. Party position is shown only when the vote source records it.</p>'
       body += `<p>Source: ${hasRecent ? link('/seo/recent-votes.json','OPAX recorded-vote data') : `${link('/votes.json','OPAX bill-vote data')} (They Vote For You and state Hansard)`}.</p>`
@@ -333,7 +335,7 @@ export function personHeadPrerender(html: string, p: Pick<Person,'name'|'full'|'
     : '<span class="subject-portrait subject-portrait-blank" aria-hidden="true"></span>'
   const seats = [...new Set((p.representation || []).map(r => r.electorate).filter(Boolean))]
   const house = p.chambers.length === 1 ? chamberLabel(p.chambers[0]) : ''
-  const word = p.current && seats.length ? (/senate|council/i.test(house) ? 'Senator for ' : /representatives|assembly/i.test(house) ? 'Member for ' : '') : ''
+  const word = p.current && seats.length ? (house === 'Senate' ? 'Senator for ' : /council/i.test(house) ? 'MLC for ' : /representatives|assembly/i.test(house) ? 'Member for ' : '') : ''
   const parliament = p.states.map(s => PARLIAMENT_NAMES[s] || '').filter(Boolean)
   const parts = [
     opts.party ? partyLabelHTML(opts.party, {full: true}) : '',
@@ -406,15 +408,16 @@ export function mapDonorsPhrase(graph: {nodes?: {kind?: string}[]; meta?: Record
 export function sponsorFor(b: Bill, people: Person[]): Person | null {
   return b.sponsor ? sponsorPerson(b.sponsor, b.sponsor_person_id, people) : null
 }
-const STAGE_LABELS: Record<string,string> = {introduced:'Introduced',second_reading:'Second reading',third_reading:'Third reading',passed_one_house:'Passed one house',passed_both:'Passed both houses',assented:'Assented',withdrawn:'Withdrawn',lapsed:'Lapsed',negatived:'Negatived'}
+const STAGE_LABELS: Record<string,string> = {introduced:'Introduced',second_reading:'Second reading',third_reading:'Third reading',passed_one_house:'Passed one house',passed_both:'Passed both houses',assented:'Assented',withdrawn:'Withdrawn',lapsed:'Lapsed',negatived:'Not agreed'}
 /** Recorded stages as shown: the source's own wording where the export kept it
- * (bills-005), a negatived question marked as such (bills-004), and rows that
+ * (bills-005), a negatived question marked as not agreed (bills-004), and rows that
  * would read identically shown once. */
 export function billStageLines(rows: NonNullable<Bill['key_dates']>) {
   const seen = new Set<string>()
   return rows.flatMap(d=>{
-    let label = d.event_raw || STAGE_LABELS[d.stage] || human(d.stage)
-    if (d.negatived && !/negatived/i.test(label)) label += ' (negatived)'
+    // The register's "negatived" is the site's "not agreed" (one outcome vocabulary, public/app.js BILL_OUTCOMES).
+    let label = (d.event_raw || STAGE_LABELS[d.stage] || human(d.stage)).replace(/\bnegatived\b/gi, w => w[0] === 'N' ? 'Not agreed' : 'not agreed')
+    if (d.negatived && !/not agreed/i.test(label)) label += ' (not agreed)'
     const line = {label, date: d.date, house: d.house, url: d.url}
     const id = JSON.stringify([line.label, line.date, line.house, line.url])
     if (seen.has(id)) return []
@@ -450,10 +453,8 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   }
   body += `<p>Stage dates describe the parliamentary progress recorded by the source. They do not establish when provisions commence. A bill before parliament is a proposal; its text can change before passage. Division totals describe the recorded question on that date. A procedural division does not necessarily establish support for every provision of a bill. Check the official bill text and explanatory memorandum for the wording.</p><p>${link(`/bills/${b.key}.json`,'Bill data export')} · ${link('/bills','Browse bills')} · ${link('/ask','Ask about the parliamentary record')} · ${link('/methods','Sources and methods')}</p>`
   body += `<h2>Sources</h2>${(b.sources || []).map(s=>`<p>${escapeHtml(human(s.kind))}</p>${original(s.url)}`).join('')}`
-  const config = divisionTableConfig({bill:b.key}, 'Divisions', 'bill')
-  config.id += '-ssr'
   const rows = divisionRows(divisions,true)
-  const block = () => rows.length ? voteTableHTML(config,voteTablePage(rows,config,tableQuery)) : '<h2>Divisions</h2><p>No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed.</p>'
+  const block = () => rows.length ? billDivisionsTablesHTML(rows,{bill:b.key,suffix:'-ssr',query:tableQuery}) : '<h2>Divisions</h2><p>No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed.</p>'
   const output = () => answerBlock(title,description,body.replace(divisionSlot,block()))
   return {html:output()}
 }
@@ -479,9 +480,11 @@ function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>,
   // only record is undated and names another party, or a reviewed hold) says its labels are the source's.
   const senate=d.house==='senate' && (d.jurisdiction ?? 'federal')==='federal' && !d._meta?.party_dated
   const senateNote=' These are the division source’s labels and can show a senator’s later party rather than the one held on this date, because the dated Senate party records held do not cover this date.'
-  const origin=!fromRoster ? (senate ? `Party labels are those given in the division record.${senateNote}` : 'Party labels are those recorded for this division, rather than current affiliations.')
+  const house=d.house==='representatives' && (d.jurisdiction ?? 'federal')==='federal'
+  const houseNote=' Where dated service records cover a member, the affiliation shown is the one held on the division date. Other labels come from the division source and can show a member’s later party.'
+  const origin=!fromRoster ? (senate || house ? `Party labels are those given in the division record.${senate ? senateNote : houseNote}` : 'Party labels are those recorded for this division, rather than current affiliations.')
     : fromRoster>=labelled ? 'The division record gives no parties. Each label here is the one a dated parliamentary roster records for that member on this date.'
-    : `Party labels are those recorded for this division, except for ${plural(fromRoster)} the division record lists without a party: their labels are the ones a dated parliamentary roster records for them on this date.${senate ? senateNote.replace(' These are', ' The others are') : ''}`
+    : `Party labels are those recorded for this division, except for ${plural(fromRoster)} the division record lists without a party: their labels are the ones a dated parliamentary roster records for them on this date.${senate ? senateNote.replace(' These are', ' The others are') : house ? houseNote : ''}`
   const correctedNote=corrected ? ` For ${plural(corrected)}, the division record gives a party not held on this date; the label shown is the party dated service records give for this date.` : ''
   const heldNote=withheld ? ` For ${count(withheld)} of them, the division record gives a party that dated records leave unclear for this date, so it is not shown.` : ''
   let html=`<h3>How each party voted</h3><p>${origin}${correctedNote}${ayes!==d.ayes || noes!==d.noes ? ` The member list is partial: ${ayes} recorded ayes and ${noes} recorded noes; the official tally above remains the source total.` : ''}</p>`

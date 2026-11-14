@@ -355,7 +355,9 @@ def test_shipped_sa_council_list_members_are_seven_and_bernardi_is_one_person():
     root = Path(__file__).resolve().parents[1]
     doc = json.loads((root / 'portal/public/parliamentarians.json').read_text())
     acc = roster_accept.load()
-    listed = {n for n, e in acc['new'].items() if e['evidence'] == 'sa-council-list'}
+    listed = {n for n, e in acc['new'].items()
+              if e.get('list', {}).get('chamber') == 'sa_lc'
+              and acc['evidence'][e['evidence']]['rule'] == 'official-list-member'}
     assert listed == {'Mira El Dannawi', 'Hilton Gumbys', 'Rebecca Hewett', 'Benjamin Hood', 'Carlos Quaremba',
                       'Melanie Selwood'}
     by = {p['name']: p for p in doc['people']}
@@ -365,13 +367,13 @@ def test_shipped_sa_council_list_members_are_seven_and_bernardi_is_one_person():
     assert [p['name'] for p in doc['people'] if 'bernardi' in p['name'].lower()] == ['Cory Bernardi']
     cory = by['Cory Bernardi']
     assert cory['pid'] == '10038' and 'sa_lc' in cory['chambers'] and not cory.get('roster_only')
-    # His reviewed Council service (roster_accept.json sa-council-service) makes him a sitting MLC who was a senator.
+    # His reviewed Council service makes him a sitting MLC who was a senator.
     assert cory['current'] and cory['party_now'] == 'One Nation'
     assert [(a['chamber'], a['start'], a['end']) for a in cory['affiliations']][-1] == ('sa_lc', '2026-03-21', None)
-    # Reviewed term starts (Wikidata position held); Benjamin Hood keeps the list date (see his note).
+    # Parliament member pages date service; a first-seen list date is not a term start.
     assert {n: (by[n]['first'], acc['new'][n]['service']['start']) for n in listed} == {
         'Mira El Dannawi': (2023, '2023-10-17'), 'Hilton Gumbys': (2026, '2026-03-21'),
-        'Rebecca Hewett': (2026, '2026-03-21'), 'Benjamin Hood': (2026, '2026-11-13'),
+        'Rebecca Hewett': (2026, '2026-03-21'), 'Benjamin Hood': (2023, '2023-03-07'),
         'Carlos Quaremba': (2026, '2026-03-21'), 'Melanie Selwood': (2026, '2026-03-21')}
     identity = json.loads((root / 'scripts/person_identity.json').read_text())['same_person']
     assert identity['cory bernardi']['key'] == '10038'

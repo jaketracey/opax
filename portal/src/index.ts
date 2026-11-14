@@ -4921,7 +4921,7 @@ const BILL_STATUS: Record<string, string> = {
   rejected: 'Rejected',
   withdrawn: 'Withdrawn',
   lapsed: 'Lapsed',
-  negatived: 'Negatived',
+  negatived: 'Not agreed',
   exposure_draft: 'Exposure draft',
 }
 

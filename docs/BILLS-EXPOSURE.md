@@ -121,7 +121,7 @@ the dated division resolver (`scripts/vote_parties.py`). A dated substantive
 disagreement replaces the source label. Personal registered parties beat
 Independent in either direction, regional registered labels bridge their
 party-room variants, and reviewed dated renames apply. Gaps retain the source
-label; a missing electorate release or Senate Handbook aborts publication. The speech/member timeline above remains a fallback only
+label; a missing electorate release or Senate Handbook aborts fresh publication. A retained refresh with supplied frozen Evidence keeps its published labels and source stamp. The exporter returns kept personal-party/Independent naming disagreements for review. The speech/member timeline above remains a fallback only
 for sponsors whose source gives no recognised party and whose roster period
 gives none. See the [sponsor audit](reports/2026-11-14-bill-sponsor-parties.md).
 
