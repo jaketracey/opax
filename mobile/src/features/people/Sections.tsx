@@ -411,10 +411,10 @@ function Diary({ identity }: { identity: PersonProfile }) {
               title: 'Ministerial diary',
               notes: [
                 m.jurisdiction === 'qld'
-                  ? "From the Queensland Government's monthly ministerial diary disclosures, published for " +
+                  ? 'From the Queensland Government’s monthly ministerial diary disclosures, published for ' +
                     m.name +
                     '.'
-                  : "From the NSW Cabinet Office's quarterly ministers' diary disclosures. NSW diaries are published by office, so meetings are attributed to the minister holding that office on the date.",
+                  : 'From the NSW Cabinet Office’s quarterly ministers’ diary disclosures. NSW diaries are published by office, so meetings are attributed to the minister holding that office on the date.',
                 'Staff, cabinet, departmental and other government meetings are counted but left out of the lists.',
               ],
             }}

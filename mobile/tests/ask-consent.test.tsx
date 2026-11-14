@@ -186,11 +186,11 @@ test('a first question opens the consent sheet and sends nothing', async () => {
   expect(askSession.snapshot().pending?.question).toBe('Who spoke on housing?');
   const words = consentWords();
   for (const part of [
-    "Your question and this conversation go to OPAX's server.",
+    'Your question and this conversation go to OPAX’s server.',
     'Progress Agentic RAG',
     'OpenRouter',
     'Answers can be wrong, so check the cited records.',
-    "Don't include personal details.",
+    'Don’t include personal details.',
     'Privacy',
     'Continue',
     'Not now',

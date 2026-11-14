@@ -409,7 +409,7 @@ test("Today's question opens on that question and never touches a round in progr
   });
   const before = quizSession.current();
   await mount(<Quiz q={q.id} />);
-  expect(options().title).toBe("Today's question");
+  expect(options().title).toBe('Today’s question');
   expect(has('quiz-progress')).toBe(false);
   expect(byID('quiz-question').props.accessibilityLabel).toBe(q.prompt);
   await answer(q);

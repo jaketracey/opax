@@ -192,7 +192,7 @@ describe('item 7: Today ends on a sentence', () => {
 
   test('the wording, in one place, in the sitting line’s form, Australian dates and no dashes', () => {
     expect(copy.todayEnding('Saturday 14 November')).toBe(
-      "That's the record for Saturday 14 November.",
+      'That’s the record for Saturday 14 November.',
     );
     expect(
       copy.todayEnding('Saturday 14 November', {
@@ -200,7 +200,7 @@ describe('item 7: Today ends on a sentence', () => {
         words: 'Tuesday 17 November',
       }),
     ).toBe(
-      "That's the record for Saturday 14 November. Parliament next sits Tuesday 17 November.",
+      'That’s the record for Saturday 14 November. Parliament next sits Tuesday 17 November.',
     );
     expect(
       copy.todayEnding('Friday 23 October', {
@@ -208,7 +208,7 @@ describe('item 7: Today ends on a sentence', () => {
         words: 'Monday 26 October',
       }),
     ).toBe(
-      "That's the record for Friday 23 October. The House next sits Monday 26 October.",
+      'That’s the record for Friday 23 October. The House next sits Monday 26 October.',
     );
     for (const houses of ['both', 'house', 'senate'] as const)
       expect(
@@ -239,7 +239,7 @@ describe('item 7: Today ends on a sentence', () => {
     expect(texts[0]!.props).toMatchObject({
       variant: 'secondary',
       children:
-        "That's the record for Saturday 14 November. The Senate next sits Monday 16 November.",
+        'That’s the record for Saturday 14 November. The Senate next sits Monday 16 November.',
     });
     // Above the disclaimer and the correction link, which stay as they were.
     const order = root
@@ -256,7 +256,7 @@ describe('item 7: Today ends on a sentence', () => {
 
   test('with no calendar, the date alone', async () => {
     expect(ending(await foot(null))).toBe(
-      "That's the record for Saturday 14 November.",
+      'That’s the record for Saturday 14 November.',
     );
   });
 
@@ -272,7 +272,7 @@ describe('item 7: Today ends on a sentence', () => {
     expect(host(root, 'today-independence')).toHaveLength(1);
     await act(async () => answer(answered(sitting).record));
     expect(ending(root)).toBe(
-      "That's the record for Saturday 14 November. The Senate next sits Monday 16 November.",
+      'That’s the record for Saturday 14 November. The Senate next sits Monday 16 November.',
     );
   });
 
@@ -291,13 +291,13 @@ describe('item 7: Today ends on a sentence', () => {
     expect(catalogs.sittingDays).toHaveBeenCalledTimes(2);
     expect(catalogs.sittingDays).toHaveBeenLastCalledWith(true);
     expect(host(r.root, 'today-sitting')).toHaveLength(0);
-    expect(ending(r.root)).toBe("That's the record for Saturday 14 November.");
+    expect(ending(r.root)).toBe('That’s the record for Saturday 14 November.');
   });
 
   test('a failed calendar read still ends the page, with the date alone', async () => {
     jest.mocked(catalogs.sittingDays).mockRejectedValue(new Error('aborted'));
     const { root } = await render(<Page />);
-    expect(ending(root)).toBe("That's the record for Saturday 14 November.");
+    expect(ending(root)).toBe('That’s the record for Saturday 14 November.');
   });
 
   test('without an ending the foot is as it was', async () => {

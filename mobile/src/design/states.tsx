@@ -53,7 +53,7 @@ import {
 
 export const stateCopy = {
   offlineUncached: phoneCopy(
-    "Not saved on this iPhone yet. It will load when you're back online.",
+    'Not saved on this iPhone yet. It will load when you’re back online.',
   ),
   offlineCached: phoneCopy(
     'Offline. Records saved on this iPhone stay readable.',
@@ -1155,7 +1155,7 @@ export function OfflineLine({
   if (owner !== id) return null;
   const message =
     customMessage ??
-    (savedAt === null ? "You're offline." : copy.offline(savedAt));
+    (savedAt === null ? 'You’re offline.' : copy.offline(savedAt));
   return (
     <View
       accessible

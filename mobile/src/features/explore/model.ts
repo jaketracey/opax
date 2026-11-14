@@ -188,7 +188,7 @@ export const TIDE_PARLIAMENTS = {
 export const tideScopeLabel = (scope: TideScope) =>
   scope === 'federal' ? 'Federal' : TIDE_PARLIAMENTS.label;
 export function tideNote(scope: TideScope) {
-  return `Each share is a subject's part of all speeches with a topic label in that decade, in ${scope === 'federal' ? 'federal parliament' : TIDE_PARLIAMENTS.names}. Not every speech has a topic label yet; the counts below show how many do in each decade.`;
+  return `Each share is a subject’s part of all speeches with a topic label in that decade, in ${scope === 'federal' ? 'federal parliament' : TIDE_PARLIAMENTS.names}. Not every speech has a topic label yet; the counts below show how many do in each decade.`;
 }
 export const TIDE_NOTE = tideNote('federal');
 /** A share as drawn: "12.4%". Shares arrive as fractions. */

@@ -502,7 +502,8 @@ test.each([
     expect(text(r)).not.toMatch(
       /No (voting summary|covered federal salary|expense summary|register file) is held/,
     );
-    expect(text(r)).not.toContain("party receipts for this person's party");
+    // Either apostrophe: the guard must not pass because the copy was curled.
+    expect(text(r)).not.toMatch(/party receipts for this person['’]s party/);
     expect(has(r, 'person-web-foot')).toBe(true);
     expect(mock.profileFor).not.toHaveBeenCalled();
     await act(async () => r.unmount());

@@ -57,7 +57,7 @@ export const conversationsCopy = {
   savedBoth: (device: string) =>
     `Saved on this ${device} and in your OPAX account.`,
   syncFailed: (device: string) =>
-    `Saved on this ${device}. Your other devices aren't up to date yet.`,
+    `Saved on this ${device}. Your other devices aren’t up to date yet.`,
 } as const;
 
 /**

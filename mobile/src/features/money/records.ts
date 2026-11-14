@@ -122,10 +122,10 @@ export function moneyWindowYears(
 }
 /** Said in every money source sheet that shows graph years. */
 export const moneyYearNote =
-  "Years are financial years. Election returns are counted in the financial year that starts in the election's year.";
+  'Years are financial years. Election returns are counted in the financial year that starts in the election’s year.';
 /** The one caveat every donations figure carries. */
 export const donationsCaveat =
-  "Totals are a minimum: donations under the disclosure threshold aren't published.";
+  'Totals are a minimum: donations under the disclosure threshold aren’t published.';
 /** What a typed figure counts (data.ts typedReceipts), as the web says it. */
 export const typedReceiptsScope =
   'All receipt types, as the parties reported them in federal returns.';
@@ -178,7 +178,7 @@ export function receiptSectionWords(
       };
 }
 const thresholdCaveat =
-  "It's a minimum: amounts under the disclosure threshold aren't published.";
+  'It’s a minimum: amounts under the disclosure threshold aren’t published.';
 
 /**
  * The words for the parties' summed figure (partyDonationsTotal) wherever it
@@ -221,10 +221,10 @@ export function partialYearFrom(
 
 /** Under public money beside donations (the map, a lead). */
 export const publicMoneyCaveat =
-  "Shown beside donations, never added to them. It doesn't show that one led to the other.";
+  'Shown beside donations, never added to them. It doesn’t show that one led to the other.';
 /** On an organisation page drawn from more than one register. */
 export const bothRegistersCaveat =
-  "Appearing in both registers doesn't show that one led to the other.";
+  'Appearing in both registers doesn’t show that one led to the other.';
 
 /** "mining & energy" → "Mining and energy": the group's name, never the raw key. */
 export function industryLabel(group: string) {

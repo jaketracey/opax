@@ -1403,7 +1403,7 @@ describe('the seat grant list', () => {
         expect(byID(r, 'grants-seat-empty')).toHaveLength(0);
       } else {
         expect(byID(r, 'grants-seat-empty')[0]!.props.message).toBe(
-          "The individual grants for Maribyrnong aren't listed yet.",
+          'The individual grants for Maribyrnong aren’t listed yet.',
         );
         expect(byID(r, 'grants-seat-total')[0]!.props.value).toBe(
           formatMoneyCompact(index.seats[0]!.total),

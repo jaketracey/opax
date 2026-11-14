@@ -471,7 +471,7 @@ function AgencyRecord({ params }: { params: AgencyParams }) {
                         citation={'AusTender'}
                       />
                     ) : (
-                      <EmptyState message="No contracts in this agency's records have a start date." />
+                      <EmptyState message="No contracts in this agency’s records have a start date." />
                     )}
                   </View>
                 ) : (

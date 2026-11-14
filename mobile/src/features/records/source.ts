@@ -24,7 +24,7 @@ export interface RecordSource {
 }
 
 const OPENAUSTRALIA_NOTE =
-  'This text comes from OpenAustralia\'s transcription of Hansard. It can join words together, for example "toSenator". Check the wording against Hansard before you quote it.';
+  'This text comes from OpenAustralia’s transcription of Hansard. It can join words together, for example "toSenator". Check the wording against Hansard before you quote it.';
 
 /** The one inline caveat (records.md 2.2): OpenAustralia text only. */
 export function recordCaveat(doc: DocumentRecord): string | null {
@@ -35,7 +35,7 @@ export function recordCaveat(doc: DocumentRecord): string | null {
 
 /** Publishers named by their own site; any other host is "Original publisher". */
 function publisher(where: string): string | null {
-  if (where === 'pm.gov.au') return "Prime Minister's media releases";
+  if (where === 'pm.gov.au') return 'Prime Minister’s media releases';
   if (/^minister\.[a-z0-9-]+\.gov\.au$/.test(where))
     return 'Ministerial media releases';
   if (where === 'grants.gov.au') return 'GrantConnect';

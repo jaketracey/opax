@@ -733,7 +733,7 @@ function ElectoratePage({
           block={censusBlock}
           title="About the Census figures"
           notes={[
-            `Census figures are for the electorate's boundaries at the ${census.year} Census. Not adjusted for boundary changes since the Census.`,
+            `Census figures are for the electorate’s boundaries at the ${census.year} Census. Not adjusted for boundary changes since the Census.`,
           ]}
           testID="electorate-census-source"
         />

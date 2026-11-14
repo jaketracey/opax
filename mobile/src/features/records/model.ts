@@ -29,7 +29,7 @@ export function recordSlug(value: unknown): string {
   const slug = nonempty(value);
   return isRecordSlug(slug)
     ? slug
-    : invalid("This link doesn't open a record.");
+    : invalid('This link doesn’t open a record.');
 }
 // /api/resource sends origin.url as-is, so records without an official link
 // (the 1990s federal speeches from Zenodo) arrive with url ''. A blank or
