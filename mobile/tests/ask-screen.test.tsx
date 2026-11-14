@@ -2519,7 +2519,13 @@ test.each([
       scrollTo(400);
       expect(edges().at(-1)).toBe('hard');
       await act(async () => barButton('New question')!.onPress());
-      // scrollToTop is mocked and emits no event. Idle must already be soft.
+      // A scrolled thread goes to its top first and is cleared two frames
+      // later (iOS). scrollToTop is mocked and emits no event. Idle must
+      // already be soft.
+      for (let frames = 0; frames < 2; frames++)
+        await act(async () => {
+          await new Promise((resolve) => requestAnimationFrame(resolve));
+        });
       expect(byId('ask-idle').length).toBeGreaterThan(0);
       expect(edges().at(-1)).toBe('soft');
       await act(async () =>
