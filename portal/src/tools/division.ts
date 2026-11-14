@@ -32,7 +32,7 @@ const inScope = (row: { key: string; date?: string; house?: string }, args: Tool
   (!args.jurisdiction || args.jurisdiction === 'all' || row.key.startsWith(String(args.jurisdiction) + '-')) &&
   (!args.chamber || chamberOf(row) === args.chamber) && (!args.date || row.date?.slice(0, 10) === args.date) &&
   (!args.since || !!row.date && row.date.slice(0, 10) >= String(args.since)) && (!args.until || !!row.date && row.date.slice(0, 10) <= String(args.until))
-const notes = [
+export const DIVISION_NOTES = [
   'Crossing the floor means an aye or no against a strict party majority, for parties with at least five recorded aye/no votes. Independents, unknown parties, ties, paired and absent votes are excluded.',
   'Party affiliations are the published labels and may reflect a later affiliation rather than the affiliation on the division date. Calculated dissent is not independently verified historical floor crossing.',
 ]
@@ -172,18 +172,20 @@ export const tool: ToolDefinition = {
     }
     candidates.sort((a, b) => Number(normalize(named.get(b.key)) === normalize(args.title)) - Number(normalize(named.get(a.key)) === normalize(args.title)) || String(b.date).localeCompare(String(a.date)) || a.key.localeCompare(b.key))
     const total = candidates.length, rows: Row[] = [], citations: ToolCitation[] = []
-    for (const candidate of candidates.slice(0, Number(args.limit) || 1)) {
+    // offset and max_bytes are for other tools that page this lookup; neither is in the public schema.
+    const offset = Number(args.offset) || 0, budget = Number(args.max_bytes) || 13_000
+    for (const candidate of candidates.slice(offset, offset + (Number(args.limit) || 1))) {
       const detail = loaded.find(d => d.key === candidate.key) ?? await readToolAsset(env, `/divisions/division-${candidate.key}.json`) as DivisionFile | null
       if (!detail?.key || detail.key !== candidate.key || !inScope(detail, args)) throw new Error('Division detail unavailable or inconsistent')
       const row = detailRow(env, detail, args), cite = citation(row, args)
-      if (rows.length && new TextEncoder().encode(JSON.stringify({ rows: [...rows, row], citations: [...citations, cite] })).length > 13_000) break
+      if (rows.length && new TextEncoder().encode(JSON.stringify({ rows: [...rows, row], citations: [...citations, cite] })).length > budget) break
       rows.push(row); citations.push(cite)
     }
     if (bill) citations.push({ kind: 'count', text: `${bill.title}: ${total} matching recorded ${total === 1 ? 'division' : 'divisions'}${args.date ? ' on ' + args.date : ''}${args.since ? ' since ' + args.since : ''}${args.until ? ' until ' + args.until : ''}${args.chamber ? ' in the ' + chamberName(String(args.chamber)) : ''}${args.title ? ' with title words ' + String(args.title) : ''}.`, value: total, url: siteUrl(env, '/bill/' + bill.key) })
     if (!total) citations.push({ kind: 'record', text: `${searchComplete ? 'OPAX has no recorded division matching' : 'No matching recorded division was found in the bounded title search for'} ${[args.title, args.division_id, args.date, args.chamber, args.jurisdiction, args.since && 'since ' + args.since, args.until && 'until ' + args.until].filter(Boolean).join(', ')}${searchComplete ? '.' : '; more records may match. Narrow by exact date or bill.'}`, url: siteUrl(env, '/divisions/index.json') })
-    return { rows, total, has_more: rows.length < total || !searchComplete, search_complete: searchComplete, operation: 'lookup',
+    return { rows, total, has_more: offset + rows.length < total || !searchComplete, search_complete: searchComplete, operation: 'lookup',
       ...(bill ? { bill: { id: bill.key, title: bill.title, linked_divisions: bill.divisions!.length } } : {}),
-      citations, notes: [...notes, ...(billTitleOnly ? ['No separate linked bill entry matches. These divisions match the bill name in their titles; this does not establish a complete linked-bill division count.'] : []), ...(rows.length < total ? [`Showing ${rows.length} of ${total} matching divisions. Specify a division_id to select one unambiguously; do not present this row window as every vote.`] : []), ...(!searchComplete ? ['Title lookup reached its 1,000-record search window. total is a lower bound; narrow by exact date or bill.'] : []), ...(rows.some(r => !r.coverage.complete) ? ['Some member lists are partial or unavailable; missing members are not absent votes.'] : [])],
+      citations, notes: [...DIVISION_NOTES, ...(billTitleOnly ? ['No separate linked bill entry matches. These divisions match the bill name in their titles; this does not establish a complete linked-bill division count.'] : []), ...(rows.length < total ? [`Showing ${rows.length} of ${total} matching divisions. Specify a division_id to select one unambiguously; do not present this row window as every vote.`] : []), ...(!searchComplete ? ['Title lookup reached its 1,000-record search window. total is a lower bound; narrow by exact date or bill.'] : []), ...(rows.some(r => !r.coverage.complete) ? ['Some member lists are partial or unavailable; missing members are not absent votes.'] : [])],
     }
   },
 }

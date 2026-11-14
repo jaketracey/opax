@@ -151,7 +151,8 @@ export const tool: ToolDefinition = {
     const snapshot = { generated_at: typeof index.generated_at === 'string' ? index.generated_at : null, latest_record_date: dateRange(all, field).last_record_date }
     const where = chamber ? `in the ${chamber.label}` : `in ${jurisdiction === 'federal' ? 'federal parliament' : jurisdiction.toUpperCase()}`
     const metric = kind === 'divisions' ? `recorded divisions${bill ? ` linked to ${bill.title}` : ''}` : `${args.status ? String(args.status).replace(/_/g, ' ') + ' ' : ''}bill records by introduction date`
-    const url = siteUrl(env, bill ? `/bill/${bill.key}` : `/${kind}`)
+    // Bills have a listing page; divisions are listed through search.
+    const url = siteUrl(env, bill ? `/bill/${bill.key}` : kind === 'divisions' ? '/search?kind=division' : '/bills')
     const coverage = { ...range, indexed_records: scopedCount, jurisdiction, chamber: args.chamber ?? null, completeness: 'published-records-only',
       // These are the exact query selection, separate from observed record coverage above.
       since: window.since ?? null, until: window.until ?? null, as_of: snapshot.generated_at?.slice(0, 10) ?? null,

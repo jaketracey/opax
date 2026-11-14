@@ -1,0 +1,1283 @@
+[
+ {
+  "name": "search_records",
+  "title": "Search the public record",
+  "description": "Full-text search across OPAX: parliamentary speeches, government press releases, bills, bill text, divisions and government grants. Returns 10 ranked results a page, each with an excerpt, a slug for read_record and an OPAX link. Set kind to narrow and page for more. Grant results carry a grant_recipient or grant_program id for read_grant_recipient and read_grant_program. For a member's own words use hansard_search.",
+  "annotations": {
+   "title": "Search the public record",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "inputSchema": {
+   "type": "object",
+   "properties": {
+    "query": {
+     "type": "string",
+     "description": "Words or a phrase."
+    },
+    "kind": {
+     "default": "all",
+     "description": "Only this kind of record.",
+     "type": "string",
+     "enum": [
+      "all",
+      "speech",
+      "press_release",
+      "bill",
+      "bill_text",
+      "division",
+      "grant"
+     ]
+    },
+    "page": {
+     "default": 1,
+     "type": "integer",
+     "maximum": 20
+    }
+   },
+   "required": [
+    "query"
+   ]
+  },
+  "outputSchema": {
+   "type": "object",
+   "properties": {
+    "results": {
+     "type": "array",
+     "items": {}
+    }
+   },
+   "required": [
+    "results"
+   ]
+  }
+ },
+ {
+  "name": "read_record",
+  "title": "Read a public record",
+  "description": "Open one record in full by its slug from search_records: a speech, press release, bill text, division, grant award or roster profile. Returns the text, metadata, the original source link and the OPAX page. Long speeches may exceed one response: read those in parts with hansard_search (record_id).",
+  "annotations": {
+   "title": "Read a public record",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "inputSchema": {
+   "type": "object",
+   "properties": {
+    "slug": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "slug"
+   ]
+  },
+  "outputSchema": {
+   "type": "object",
+   "properties": {
+    "opax_url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "opax_url"
+   ]
+  }
+ },
+ {
+  "name": "find_connections",
+  "title": "Find recorded connections",
+  "description": "Look up an organisation, grant program, place or electorate by name in OPAX's audited connections dataset, built from speeches, press releases and grant records. Returns up to 20 matching names with their kind, record counts and OPAX links. A recorded connection, or a matching phrase, does not establish influence.",
+  "annotations": {
+   "title": "Find recorded connections",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "inputSchema": {
+   "type": "object",
+   "properties": {
+    "query": {
+     "type": "string",
+     "description": "Part of a name."
+    }
+   },
+   "required": [
+    "query"
+   ]
+  },
+  "outputSchema": {
+   "type": "object",
+   "properties": {
+    "connections": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "url": {
+        "type": "string"
+       }
+      },
+      "required": [
+       "name",
+       "url"
+      ]
+     }
+    }
+   },
+   "required": [
+    "connections"
+   ]
+  }
+ },
+ {
+  "name": "corpus_coverage",
+  "title": "Check record coverage",
+  "description": "What OPAX's searchable record holds and how current it is: each source with its record count and the years it covers, known defects, enrichment statistics and when the record was last refreshed. Use it before saying that something is absent from the record, or to answer what OPAX covers.",
+  "annotations": {
+   "title": "Check record coverage",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "inputSchema": {
+   "type": "object",
+   "properties": {}
+  },
+  "outputSchema": {
+   "type": "object",
+   "properties": {
+    "version": {
+     "type": "string"
+    },
+    "sources": {
+     "type": "array",
+     "items": {}
+    }
+   },
+   "required": [
+    "version",
+    "sources"
+   ]
+  }
+ },
+ {
+  "name": "read_grant_recipient",
+  "title": "Read a grant recipient",
+  "description": "One recipient of federal or Queensland government grants, by the grant_recipient id from a search_records grant result: totals by financial year, agencies, programs and individual grants with source links. detail=full lists as many grants as fit; the default lists the 10 largest. grants_total, grants_listed and truncated say how complete the list is. Federal values are award values, not payments.",
+  "annotations": {
+   "title": "Read a grant recipient",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "inputSchema": {
+   "type": "object",
+   "properties": {
+    "jurisdiction": {
+     "type": "string",
+     "enum": [
+      "federal",
+      "qld"
+     ]
+    },
+    "id": {
+     "type": "string",
+     "description": "grant_recipient id."
+    },
+    "detail": {
+     "default": "concise",
+     "description": "full lists as many grants as fit; the default lists the 10 largest.",
+     "type": "string",
+     "enum": [
+      "concise",
+      "full"
+     ]
+    }
+   },
+   "required": [
+    "jurisdiction",
+    "id"
+   ]
+  },
+  "outputSchema": {
+   "type": "object",
+   "properties": {
+    "n": {
+     "type": "string"
+    },
+    "grants": {
+     "type": "array",
+     "items": {}
+    },
+    "grants_total": {
+     "type": "number"
+    },
+    "grants_listed": {
+     "type": "number"
+    },
+    "opax_url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "n",
+    "grants",
+    "grants_total",
+    "grants_listed",
+    "opax_url"
+   ]
+  }
+ },
+ {
+  "name": "read_grant_program",
+  "title": "Read a grant program",
+  "description": "One federal or Queensland grant program, by the grant_program id from search_records or a program_lookup candidate: totals, agencies, selection processes, seat and margin splits, top recipients and individual grants with source links. detail=full lists as many grants as fit; the default lists the 10 largest, with truncated set when more exist.",
+  "annotations": {
+   "title": "Read a grant program",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "inputSchema": {
+   "type": "object",
+   "properties": {
+    "jurisdiction": {
+     "type": "string",
+     "enum": [
+      "federal",
+      "qld"
+     ]
+    },
+    "id": {
+     "type": "string",
+     "description": "grant_program id."
+    },
+    "detail": {
+     "default": "concise",
+     "description": "full lists as many grants as fit; the default lists the 10 largest.",
+     "type": "string",
+     "enum": [
+      "concise",
+      "full"
+     ]
+    }
+   },
+   "required": [
+    "jurisdiction",
+    "id"
+   ]
+  },
+  "outputSchema": {
+   "type": "object",
+   "properties": {
+    "n": {
+     "type": "string"
+    },
+    "grants": {
+     "type": "array",
+     "items": {}
+    },
+    "grants_total": {
+     "type": "number"
+    },
+    "grants_listed": {
+     "type": "number"
+    },
+    "opax_url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "n",
+    "grants",
+    "grants_total",
+    "grants_listed",
+    "opax_url"
+   ]
+  }
+ },
+ {
+  "name": "member_profile",
+  "title": "Member profile and electorate lookup",
+  "description": "Who a parliamentarian is, or who represents a place. Give exactly one of name, slug, electorate (seat name, federal or state) or postcode (Victorian state districts only). Returns party, chamber, seat and the OPAX profile link; an electorate or postcode returns the seat with its current representatives. An ambiguous name returns candidates rather than a guess. Use it first to get the exact name other member tools expect.",
+  "annotations": {
+   "title": "Member profile and electorate lookup",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "inputSchema": {
+   "type": "object",
+   "properties": {
+    "name": {
+     "type": "string",
+     "description": "A parliamentarian's name, e.g. \"Penny Wong\" or \"Senator Wong\"."
+    },
+    "slug": {
+     "type": "string"
+    },
+    "electorate": {
+     "type": "string",
+     "description": "Electorate name, e.g. \"Grayndler\", or its OPAX electorate slug."
+    },
+    "postcode": {
+     "type": "string",
+     "description": "Four-digit postcode. Victorian state districts only."
+    },
+    "jurisdiction": {
+     "type": "string",
+     "enum": [
+      "federal",
+      "nsw",
+      "vic",
+      "qld",
+      "sa",
+      "wa",
+      "tas",
+      "act",
+      "nt"
+     ],
+     "description": "With electorate: only seats of this parliament. Seat names repeat across parliaments."
+    },
+    "detail": {
+     "type": "string",
+     "enum": [
+      "concise",
+      "full"
+     ],
+     "description": "full adds dated service periods and ready-made follow-up calls for a member."
+    },
+    "limit": {
+     "type": "integer",
+     "maximum": 10
+    },
+    "cursor": {
+     "type": "string"
+    }
+   }
+  },
+  "outputSchema": {
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "total": {
+     "type": [
+      "integer",
+      "null"
+     ]
+    },
+    "next_cursor": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "notes": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "items",
+    "next_cursor",
+    "notes",
+    "url"
+   ]
+  }
+ },
+ {
+  "name": "division_votes",
+  "title": "Division result and member votes",
+  "description": "A recorded vote (division) in federal or state parliament: the result, ayes and noes, how each party voted and who voted against their party. Give division_id, or find divisions by title words, bill, date, chamber or period, newest first. member adds one person's vote; detail=full lists every member's vote. A division result does not show that a bill became law: see bill_detail.",
+  "annotations": {
+   "title": "Division result and member votes",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "inputSchema": {
+   "type": "object",
+   "properties": {
+    "division_id": {
+     "type": "string",
+     "description": "From a previous result or an opax.com.au/doc/division-... address."
+    },
+    "title": {
+     "type": "string",
+     "description": "Words from the division title, e.g. \"housing affordability\"."
+    },
+    "bill": {
+     "type": "string",
+     "description": "Bill title or bill_id: only divisions linked to that bill."
+    },
+    "date": {
+     "type": "string"
+    },
+    "since": {
+     "type": "string"
+    },
+    "until": {
+     "type": "string"
+    },
+    "chamber": {
+     "type": "string"
+    },
+    "jurisdiction": {
+     "type": "string",
+     "enum": [
+      "federal",
+      "nsw",
+      "vic",
+      "qld",
+      "sa",
+      "act",
+      "nt",
+      "wa",
+      "tas"
+     ]
+    },
+    "member": {
+     "type": "string",
+     "description": "A member's name: adds their vote to each division."
+    },
+    "detail": {
+     "type": "string",
+     "enum": [
+      "concise",
+      "full"
+     ],
+     "description": "full adds every member's vote (at most 3 divisions per page)."
+    },
+    "limit": {
+     "type": "integer",
+     "maximum": 10
+    },
+    "cursor": {
+     "type": "string"
+    }
+   }
+  },
+  "outputSchema": {
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "total": {
+     "type": [
+      "integer",
+      "null"
+     ]
+    },
+    "next_cursor": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "notes": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "items",
+    "next_cursor",
+    "notes",
+    "url"
+   ]
+  }
+ },
+ {
+  "name": "member_voting_record",
+  "title": "Member voting record",
+  "description": "How one member voted across recorded divisions, newest first, with whether each vote was against their party's majority. Filter by topic words, bill, chamber and dates. view=tally returns counts only. Long records come in segments: follow next_cursor to the end and add the tallies before giving a whole-period total. A division with no row for the member is unrecorded, not an absence.",
+  "annotations": {
+   "title": "Member voting record",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "inputSchema": {
+   "type": "object",
+   "properties": {
+    "person": {
+     "type": "string"
+    },
+    "topic": {
+     "type": "string",
+     "description": "Words in the division title or linked bill titles, e.g. \"climate\"."
+    },
+    "bill": {
+     "type": "string",
+     "description": "Bill title words, or a bill_id for exactly that bill's divisions."
+    },
+    "since": {
+     "type": "string"
+    },
+    "until": {
+     "type": "string"
+    },
+    "chamber": {
+     "type": "string"
+    },
+    "jurisdiction": {
+     "type": "string",
+     "enum": [
+      "federal",
+      "nsw",
+      "vic",
+      "qld",
+      "sa",
+      "act",
+      "nt",
+      "wa",
+      "tas"
+     ]
+    },
+    "view": {
+     "type": "string",
+     "enum": [
+      "votes",
+      "tally"
+     ],
+     "description": "votes (default) lists divisions; tally counts without listing."
+    },
+    "detail": {
+     "type": "string",
+     "enum": [
+      "concise",
+      "full"
+     ],
+     "description": "full adds the party's ayes and noes and whether the member list was complete."
+    },
+    "limit": {
+     "type": "integer",
+     "maximum": 20
+    },
+    "cursor": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "person"
+   ]
+  },
+  "outputSchema": {
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "total": {
+     "type": [
+      "integer",
+      "null"
+     ]
+    },
+    "next_cursor": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "notes": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "items",
+    "next_cursor",
+    "notes",
+    "url"
+   ]
+  }
+ },
+ {
+  "name": "bill_search",
+  "title": "Search federal bills",
+  "description": "Find federal bills by title words, status, originating chamber, introduction dates or sponsor, newest first. Returns each bill's bill_id, status and OPAX page; follow with bill_detail for the dated stages. Sponsor metadata is often missing for government bills, so a sponsor list can undercount. State bills, federal instruments and bill counts are registers: legislation and count_records.",
+  "annotations": {
+   "title": "Search federal bills",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "inputSchema": {
+   "type": "object",
+   "properties": {
+    "query": {
+     "type": "string",
+     "description": "Words from the bill title, or a bill_id."
+    },
+    "sponsor": {
+     "type": "string",
+     "description": "A member's name: bills that record them as sponsor."
+    },
+    "status": {
+     "type": "string",
+     "enum": [
+      "before_parliament",
+      "passed",
+      "lapsed",
+      "exposure_draft"
+     ],
+     "description": "passed means passed both houses; lapsed includes bills defeated or not proceeded with."
+    },
+    "chamber": {
+     "type": "string",
+     "enum": [
+      "representatives",
+      "senate"
+     ]
+    },
+    "since": {
+     "type": "string"
+    },
+    "until": {
+     "type": "string"
+    },
+    "detail": {
+     "type": "string",
+     "enum": [
+      "concise",
+      "full"
+     ],
+     "description": "full adds the parliament number, portfolio and counts of linked divisions, speeches and Acts."
+    },
+    "limit": {
+     "type": "integer",
+     "maximum": 20
+    },
+    "cursor": {
+     "type": "string"
+    }
+   }
+  },
+  "outputSchema": {
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "total": {
+     "type": [
+      "integer",
+      "null"
+     ]
+    },
+    "next_cursor": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "notes": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "items",
+    "next_cursor",
+    "notes",
+    "url"
+   ]
+  }
+ },
+ {
+  "name": "bill_detail",
+  "title": "Bill detail and stage history",
+  "description": "One federal bill by bill_id or full title: status, sponsors with their parties, portfolio, Act number and the dated stage history (introduction, readings in each house, passage, royal assent) as items, with source links. detail=full adds linked divisions and a plain-language summary that is written by a model, not the record. Passing a house, passing both houses and assent are different events.",
+  "annotations": {
+   "title": "Bill detail and stage history",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "inputSchema": {
+   "type": "object",
+   "properties": {
+    "bill_id": {
+     "type": "string",
+     "description": "From bill_search, or an opax.com.au/bill/... address."
+    },
+    "title": {
+     "type": "string",
+     "description": "The bill's full title, used when no bill_id is known."
+    },
+    "detail": {
+     "type": "string",
+     "enum": [
+      "concise",
+      "full"
+     ],
+     "description": "full adds linked divisions and the model-written summary."
+    },
+    "limit": {
+     "type": "integer",
+     "maximum": 100
+    },
+    "cursor": {
+     "type": "string"
+    }
+   }
+  },
+  "outputSchema": {
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "total": {
+     "type": [
+      "integer",
+      "null"
+     ]
+    },
+    "next_cursor": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "notes": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "items",
+    "next_cursor",
+    "notes",
+    "url"
+   ]
+  }
+ },
+ {
+  "name": "money_receipts",
+  "title": "Political receipts and donors",
+  "description": "Money disclosed to federal parties in AEC returns: a party's or donor's total, a party's largest sources (view top_donors), where a donor's money went (top_recipients), yearly totals (by_year) or industry totals (by_industry), for a year, a range or all years. These are receipts, not donations: they include other receipts and subscriptions and may include loans. measure=donations_only counts only what the AEC types as Donation Received. Quote each figure with the scope in its statement. Rankings cover the largest donors OPAX publishes, not every donor.",
+  "annotations": {
+   "title": "Political receipts and donors",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "inputSchema": {
+   "type": "object",
+   "properties": {
+    "party": {
+     "type": "string",
+     "description": "Recipient party, e.g. Labor, Liberal, Nationals, Greens, One Nation."
+    },
+    "donor": {
+     "type": "string",
+     "description": "Donor or source name as disclosed, e.g. \"Mineralogy Pty Ltd\"."
+    },
+    "view": {
+     "type": "string",
+     "enum": [
+      "total",
+      "top_donors",
+      "top_recipients",
+      "by_year",
+      "by_industry"
+     ],
+     "description": "total (default with a party or donor), top_donors, top_recipients, by_year or by_industry."
+    },
+    "financial_year": {
+     "type": "string"
+    },
+    "from_year": {
+     "type": "integer",
+     "maximum": 2099
+    },
+    "to_year": {
+     "type": "integer",
+     "maximum": 2099
+    },
+    "measure": {
+     "type": "string",
+     "enum": [
+      "all_receipts",
+      "donations_only"
+     ],
+     "description": "all_receipts (default) or donations_only. Party totals always cover all receipt types."
+    },
+    "lending": {
+     "type": "boolean",
+     "description": "With a party: also list the debts the party's own returns declare. No receipt is labelled a loan."
+    },
+    "detail": {
+     "type": "string",
+     "enum": [
+      "concise",
+      "full"
+     ],
+     "description": "full adds the counting basis, coverage dates and receipts only the donor declared."
+    },
+    "limit": {
+     "type": "integer",
+     "maximum": 25
+    },
+    "cursor": {
+     "type": "string"
+    }
+   }
+  },
+  "outputSchema": {
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "total": {
+     "type": [
+      "integer",
+      "null"
+     ]
+    },
+    "next_cursor": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "notes": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "items",
+    "next_cursor",
+    "notes",
+    "url"
+   ]
+  }
+ },
+ {
+  "name": "member_interests",
+  "title": "Member declared interests",
+  "description": "One member's entries in the federal or Queensland register of interests: shareholdings, real estate, directorships, trusts, gifts, sponsored travel, liabilities and memberships, each with a link to the register. Filter by category, words or lodgement dates. Dates are lodgement or register dates, not when a gift was received. A declaration is not evidence of a conflict. To search across many members use the declared_interests register.",
+  "annotations": {
+   "title": "Member declared interests",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "inputSchema": {
+   "type": "object",
+   "properties": {
+    "person": {
+     "type": "string"
+    },
+    "category": {
+     "type": "string",
+     "enum": [
+      "shareholdings",
+      "real_estate",
+      "directorships",
+      "trusts",
+      "gifts",
+      "travel",
+      "liabilities",
+      "memberships",
+      "other"
+     ],
+     "description": "travel is sponsored travel or hospitality."
+    },
+    "query": {
+     "type": "string",
+     "description": "Words in the declaration, e.g. a company name."
+    },
+    "since": {
+     "type": "string"
+    },
+    "until": {
+     "type": "string"
+    },
+    "detail": {
+     "type": "string",
+     "enum": [
+      "concise",
+      "full"
+     ],
+     "description": "full adds the full declaration text, register page number and both declaration and register dates."
+    },
+    "limit": {
+     "type": "integer",
+     "maximum": 50
+    },
+    "cursor": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "person"
+   ]
+  },
+  "outputSchema": {
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "total": {
+     "type": [
+      "integer",
+      "null"
+     ]
+    },
+    "next_cursor": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "notes": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "items",
+    "next_cursor",
+    "notes",
+    "url"
+   ]
+  }
+ },
+ {
+  "name": "hansard_search",
+  "title": "Search Hansard speeches",
+  "description": "What was said in parliament: Hansard speeches by speaker, subject words, dates, chamber or party, each with a verbatim excerpt, speaker, date and links to the OPAX record and the original. Give speaker for a member's own words, query for a subject, or both. record_id reads on through one speech. Results are a ranked sample, not a count: the count_speeches register counts them. venue=committee searches committee hearings.",
+  "annotations": {
+   "title": "Search Hansard speeches",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "inputSchema": {
+   "type": "object",
+   "properties": {
+    "query": {
+     "type": "string",
+     "description": "Subject words or a phrase, e.g. \"negative gearing\"."
+    },
+    "speaker": {
+     "type": "string"
+    },
+    "since": {
+     "type": "string"
+    },
+    "until": {
+     "type": "string"
+    },
+    "jurisdiction": {
+     "type": "string",
+     "enum": [
+      "federal",
+      "nsw",
+      "vic",
+      "sa",
+      "qld",
+      "act"
+     ]
+    },
+    "chamber": {
+     "type": "string"
+    },
+    "party": {
+     "type": "string",
+     "description": "The speaker's party on the day, e.g. Labor, Coalition or Greens."
+    },
+    "venue": {
+     "type": "string",
+     "enum": [
+      "chamber",
+      "committee",
+      "all"
+     ],
+     "description": "chamber (default), committee hearings, or both."
+    },
+    "record_id": {
+     "type": "string",
+     "description": "Read one speech from a previous result. Not combined with other filters."
+    },
+    "detail": {
+     "type": "string",
+     "enum": [
+      "concise",
+      "full"
+     ],
+     "description": "full adds longer excerpts with their position in the speech and how the speaker was attributed."
+    },
+    "limit": {
+     "type": "integer",
+     "maximum": 5
+    },
+    "cursor": {
+     "type": "string"
+    }
+   }
+  },
+  "outputSchema": {
+   "type": "object",
+   "properties": {
+    "items": {
+     "type": "array",
+     "items": {
+      "type": "object"
+     }
+    },
+    "total": {
+     "type": [
+      "integer",
+      "null"
+     ]
+    },
+    "next_cursor": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "notes": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "url": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "items",
+    "next_cursor",
+    "notes",
+    "url"
+   ]
+  }
+ },
+ {
+  "name": "query_register",
+  "title": "Query a specialised register",
+  "description": "Query one of OPAX's specialised registers: grants, contracts, parliamentary pay and expenses, declared interests, lobbying and access registers, annual, agency and integrity reports, royal commissions, record and speech counts, state legislation and electorate rankings. Give register and its arguments. The register parameter lists every register with its main arguments, so call it directly; a call with wrong arguments returns that register's full guide, and register_guide gives the guide without a call.",
+  "annotations": {
+   "title": "Query a specialised register",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "inputSchema": {
+   "type": "object",
+   "properties": {
+    "register": {
+     "type": "string",
+     "enum": [
+      "grants",
+      "contracts",
+      "parliamentary_pay",
+      "pay_calculator",
+      "member_expenses",
+      "declared_interests",
+      "access_registers",
+      "entity_profile",
+      "money_rankings",
+      "campaign_spend",
+      "public_finances",
+      "annual_reports",
+      "agency_reports",
+      "integrity_reports",
+      "royal_commissions",
+      "division",
+      "count_records",
+      "count_speeches",
+      "speech_trend",
+      "corpus_records",
+      "legislation",
+      "electorates_rank",
+      "find_records"
+     ],
+     "description": "The register. Each one, with what it holds and its main arguments (* required; allowed values in brackets): grants (grant totals by recipient, program or year; largest grants; recipient, program, group_by (recipient|program|year), financial_year, state); contracts (Commonwealth contracts by supplier or agency; supplier, agency, group_by (agency|contract), rank_by (value|count)); parliamentary_pay (salaries of MPs, ministers and office holders by date; person, office, as_of, since, until, chamber); pay_calculator (a whole pay question: rankings and comparisons; question*, from, to, chamber); member_expenses (a member's parliamentary expenses by year; person*, year); declared_interests (interests registers searched across members or ministers; person, chamber, category, query); access_registers (ministerial diaries, lobbyists and foreign influence register; register* (meetings|lobbyists|fits), minister, organisation, lobbyist); entity_profile (supplier, agency and organisation profiles; tax and charity figures by ABN; kind* (supplier|agency|connection|tax_charity), query, section); money_rankings (a whole question ranking individual money records or comparing states; question*, from, to, state, party); campaign_spend (government advertising campaign costs; campaign*, entity, financial_year); public_finances (budget aggregates, government finance statistics, tax expenditures; dataset* (federal_budget|sa_budget|tax_expenditures|government_finance|advertising|sa_grants|vic_gifts), query, financial_year, entity); annual_reports (Commonwealth entity executive pay, staff, consultancies and expenses; view* (remuneration|agency_heads|bands|profile|compare|suppliers|kmp_counts|top_by_year), body, person, year); agency_reports (state agency annual report figures; view* (coverage|documents|facts), agency, year, metric); integrity_reports (anti-corruption commission reports, findings and recommendations; view* (reports|report|findings|recommendations|bodies|transcripts), body, query, subject); royal_commissions (royal commissions, their recommendations and responses; view* (list|profile|recommendations|transcripts), commission, words); division (floor-crossing counts, party agreement and party votes on a policy; chamber, date, title, bill, person); count_records (exact counts of divisions or bills by period, with pass rates; record_type* (divisions|bills), term (46th|47th|48th and others), status, chamber, date, since, until, group_by (year|month)); count_speeches (exact speech counts by topic, speaker or party; topic, speaker, party, since, until, group_by (speaker|party|none)); speech_trend (speech counts over time for a topic; topic, speaker, party, by (year|decade|term), from_year, to_year); corpus_records (press releases and committee hearings, as well as speeches; kind* (speech|press_release), query, record_id, speaker, since, until); legislation (ACT and Tasmanian bills; federal legislative instruments; kind* (state_bill|instrument), query, jurisdiction, status); electorates_rank (Census figures for electorates: rank, filter or look up; indicator* (median_income|median_age|unemployment_rate|rental_pct|population and others), jurisdiction, chamber, order (asc|desc)); find_records (which register holds a name or subject; query*, kind, jurisdiction, since, until)."
+    },
+    "arguments": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string"
+     },
+     "description": "The register's arguments, by the names listed in the description."
+    }
+   },
+   "required": [
+    "register",
+    "arguments"
+   ]
+  },
+  "outputSchema": {
+   "type": "object",
+   "properties": {
+    "rows": {
+     "type": "array"
+    },
+    "citations": {
+     "type": "array"
+    },
+    "notes": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "opax_url": {
+     "type": "string"
+    },
+    "error": {
+     "type": "string"
+    },
+    "deprecated": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "rows",
+    "citations",
+    "notes"
+   ]
+  }
+ },
+ {
+  "name": "register_guide",
+  "title": "Register guide",
+  "description": "How to use one register with query_register: what it holds, its arguments and example calls.",
+  "annotations": {
+   "title": "Register guide",
+   "readOnlyHint": true,
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": false
+  },
+  "inputSchema": {
+   "type": "object",
+   "properties": {
+    "register": {
+     "type": "string",
+     "description": "A register name from query_register."
+    }
+   },
+   "required": [
+    "register"
+   ]
+  },
+  "outputSchema": {
+   "type": "object",
+   "properties": {
+    "register": {
+     "type": "string"
+    },
+    "description": {
+     "type": "string"
+    },
+    "arguments": {
+     "type": "object",
+     "propertyNames": {
+      "type": "string"
+     }
+    },
+    "examples": {
+     "type": "array",
+     "items": {}
+    }
+   },
+   "required": [
+    "register",
+    "description",
+    "arguments",
+    "examples"
+   ]
+  }
+ }
+]

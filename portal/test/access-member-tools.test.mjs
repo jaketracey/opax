@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { build } from 'esbuild';
+// MCP adds two fields that Ask's copy of a result does not carry: the record-text notice and a former-name note.
+const mcpOnly = value => { if (!value || typeof value !== 'object' || Array.isArray(value)) return value; const { record_text_notice, deprecated, ...rest } = value; return rest; };
 
 const built = await build({ stdin: { contents: "export {callTool, askToolSpecs, listTools, ToolInputError} from './src/tools/index'; export {communityMcp} from './src/community-mcp';", resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'node', format: 'esm' });
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
@@ -189,12 +191,12 @@ test('all three tools are shared by authenticated MCP and Ask with matching sche
   const send = async (method, params) => (await api.communityMcp(new Request('https://opax.test/mcp', { method: 'POST', headers: { authorization: 'Bearer ' + token, accept: 'application/json, text/event-stream', 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) }), mcpEnv, async () => { throw Error('No legacy tool calls'); })).json();
   const listed = (await send('tools/list', {})).result.tools;
   for (const [name, args] of [['access_registers', { register: 'fits', minister: 'Tony Abbott', limit: 1 }], ['member_divisions', { person: 'Christopher Back', since: '2015-03-18', until: '2015-03-18', topic: 'Housing Affordability' }], ['sponsored_bills', { person: 'Katy Gallagher', limit: 1 }]]) {
-    const entry = listed.find(t => t.name === name); assert.ok(entry); const { $schema, ...wireSchema } = entry.inputSchema;
-    assert.deepEqual(wireSchema, api.listTools().find(t => t.name === name).inputSchema);
+    // Listed only where it is a register of query_register; every one of them still answers by name.
+    assert.equal(listed.find(t => t.name === 'query_register').inputSchema.properties.register.enum.includes(name), name === 'access_registers');
     const rpc = await send('tools/call', { name, arguments: args }); assert.equal(rpc.error, undefined, JSON.stringify(rpc));
     const ask = await api.askToolSpecs.find(t => t.name === name).run({ ...env, origin: 'https://opax.com.au' }, args);
-    assert.deepEqual(rpc.result.structuredContent, ask.data); cited(ask.data);
-    assert.equal((await send('tools/call', { name, arguments: { extra: true } })).error.code, -32602);
+    assert.deepEqual(mcpOnly(rpc.result.structuredContent), ask.data); cited(ask.data);
+    assert.equal((await send('tools/call', { name, arguments: { extra: true } })).result.isError, true);
   }
 });
 test('an inverted FITS interval keeps the register dates and is matched on its activity dates', async () => {

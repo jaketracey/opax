@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { build } from 'esbuild';
 import { computeElectorateGold } from '../../scripts/agentic_ask_electorates_gold.mjs';
+// MCP adds two fields that Ask's copy of a result does not carry: the record-text notice and a former-name note.
+const mcpOnly = value => { if (!value || typeof value !== 'object' || Array.isArray(value)) return value; const { record_text_notice, deprecated, ...rest } = value; return rest; };
 
 async function load(entry, plugins = []) {
   const out = await build({ entryPoints: [new URL(entry, import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm', plugins });
@@ -48,17 +50,20 @@ function fixture() {
   return { env, state, send };
 }
 
-test('MCP lists every registry schema with examples beside the existing tools', async () => {
+test('MCP lists the core tools by name and every other register through query_register', async () => {
   const f = fixture(), response = await f.send('tools/list');
   assert.equal(response.status, 200);
   const listed = (await response.json()).result.tools;
   const existing = ['corpus_coverage', 'find_connections', 'read_grant_program', 'read_grant_recipient', 'read_record', 'search_records'];
-  assert.deepEqual(listed.map(t => t.name).sort(), [...existing, ...tools.map(t => t.name)].sort());
-  const entry = listed.find(t => t.name === 'electorates_rank'), expected = listTools()[0];
-  assert.equal(entry.description, expected.description);
-  const { $schema, ...schema } = entry.inputSchema;
-  assert.deepEqual(schema, expected.inputSchema);
+  const direct = tools.filter(t => t.mcpOnly && t.outputSchema).map(t => t.name);
+  assert.deepEqual(listed.map(t => t.name).sort(), [...existing, ...direct, 'query_register', 'register_guide'].sort());
+  const entry = listed.find(t => t.name === 'query_register'), expected = listTools()[0];
+  assert.ok(entry.inputSchema.properties.register.enum.includes('electorates_rank'));
   assert.equal(entry.annotations.readOnlyHint, true);
+  const guide = (await (await f.send('tools/call', { name: 'register_guide', arguments: { register: 'electorates_rank' } })).json()).result.structuredContent;
+  assert.deepEqual(Object.keys(guide.arguments.properties), Object.keys(expected.inputSchema.properties));
+  assert.deepEqual(guide.arguments.properties.indicator.enum, expected.inputSchema.properties.indicator.enum);
+  assert.deepEqual(guide.examples.map(e => e.arguments), expected.inputSchema.examples.slice(0, 3));
   assert.equal(f.state.reads, 0);
   assert.ok(tools.some(t => t.name === 'division'));
   assert.ok(tools.some(t => t.name === 'count_records'));
@@ -67,7 +72,7 @@ test('MCP lists every registry schema with examples beside the existing tools', 
   assert.ok(plannerPrompt().user.includes(getTool('electorates_rank').description));
 });
 
-test('bad registry input returns JSON-RPC -32602 before any asset read', async () => {
+test('bad registry input returns a tool error before any asset read', async () => {
   const f = fixture();
   for (const args of [{}, { indicator: 'invented' }, { indicator: 'median_age', limit: 0 }, { indicator: 'median_age', limit: 1.5 },
     { indicator: 'median_age', operation: 'lookup' }, { indicator: 'median_income', min: 700, max: 500 },
@@ -76,8 +81,9 @@ test('bad registry input returns JSON-RPC -32602 before any asset read', async (
     const response = await f.send('tools/call', { name: 'electorates_rank', arguments: args });
     assert.equal(response.status, 200);
     const rpc = await response.json();
-    assert.equal(rpc.error.code, -32602, JSON.stringify(args));
-    assert.equal(rpc.result, undefined);
+    assert.equal(rpc.error, undefined);
+    assert.equal(rpc.result.isError, true, JSON.stringify(args));
+    assert.match(rpc.result.content[0].text, /^Invalid arguments for electorates_rank/);
     assert.equal(validToolArgs('electorates', args), false);
     assert.throws(() => parseToolArgs('electorates_rank', args), error => error.code === -32602);
   }
@@ -109,13 +115,12 @@ test('every registry module gets automatic name/slug/ID checks plus declared sel
   assert.equal(registry.parseToolArgs('fixture_select', { query: '<script>quoted source text</script>' }).query, '<script>quoted source text</script>');
 });
 
-test('unknown published electorate names, slugs and IDs return -32602 on MCP and a failed Ask step', async () => {
+test('unknown published electorate names, slugs and IDs return a tool error on MCP and a failed Ask step', async () => {
   const f = fixture();
   for (const electorate of ['Unknown Electorate', 'federal-representatives-nsw-invented', 'el_doesnotexist']) {
     const args = { indicator: 'median_age', operation: 'lookup', electorate };
     const rpc = await (await f.send('tools/call', { name: 'electorates_rank', arguments: args })).json();
-    assert.equal(rpc.error.code, -32602, electorate);
-    assert.equal(rpc.result, undefined);
+    assert.equal(rpc.result.isError, true, electorate);
     assert.ok(!JSON.stringify(rpc).includes(electorate));
     await assert.rejects(callTool(f.env, 'electorates_rank', args), error => error.code === -32602);
     const ask = await runTool({ asset, kb: async () => { throw Error('No KB'); } }, 'electorates', args);
@@ -138,8 +143,8 @@ for (const q of computeElectorateGold()) test(q.id + ': Ask tool step and MCP re
   assert.equal(response.status, 200);
   const rpc = await response.json();
   assert.equal(rpc.result.isError, false);
-  assert.deepEqual(rpc.result.structuredContent, ask.data);
-  assert.deepEqual(JSON.parse(rpc.result.content[0].text), ask.data);
+  assert.deepEqual(mcpOnly(rpc.result.structuredContent), ask.data);
+  assert.deepEqual(mcpOnly(JSON.parse(rpc.result.content[0].text)), ask.data);
   assert.deepEqual(await callTool(f.env, 'electorates_rank', step.args), ask.data);
   const data = rpc.result.structuredContent;
   assert.equal(data.available, q.expected.available);
@@ -175,5 +180,5 @@ test('staging MCP citations use the same canonical pages as the Ask tool step', 
   const args = { indicator: 'median_age', operation: 'lookup', electorate: 'Corangamite' };
   const ask = await runTool({ origin: 'https://opax.com.au', asset, kb: async () => { throw Error('No KB'); } }, 'electorates', args);
   const response = await f.send('tools/call', { name: 'electorates_rank', arguments: args });
-  assert.deepEqual((await response.json()).result.structuredContent, ask.data);
+  assert.deepEqual(mcpOnly((await response.json()).result.structuredContent), ask.data);
 });

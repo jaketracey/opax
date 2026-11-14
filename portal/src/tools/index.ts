@@ -25,15 +25,23 @@ import { tool as annualReports } from './annual-reports'
 import { tool as royalCommissions } from './royal-commissions'
 import { tool as integrityReports } from './integrity-reports'
 import { tool as agencyReports } from './agency-reports'
+import { memberProfile, memberInterests } from './mcp-people'
+import { divisionVotes, memberVotingRecord, billSearch, billDetail, hansardSearch } from './mcp-parliament'
+import { moneyReceipts } from './mcp-money'
 import { ToolInputError, type ToolArgs, type ToolDefinition, type ToolEnv, type StructuredToolResult } from './types'
 import type { ToolDeps, ToolSpec, ToolResult } from '../agentic-tools'
 export * from './types'
 import { validToolIdentifier } from './identifiers'
+import { personUrl } from '../../public/party-page.js'
+import { MCP_PAGES, PAGED_OUTPUT_SCHEMA, RECORD_OUTPUT_SCHEMA } from './mcp-listing'
 export * from './identifiers'
 
+const PERSON_PAGES = new Set(['parliamentary_pay', 'member_expenses', 'declared_interests'])
 export const TOOL_REGISTRY_VERSION = 'structured-tools-19-transcript-counts'
 /** Add each new data-tool module here once; Ask and MCP both read this catalog. */
-export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division, countRecords, moneyTotals, campaignSpend, corpusRecords, legislation, publicFinances, entityProfile, accessRegisters, memberDivisions, sponsoredBills, ...speechDataTools, personQuotes, search, readPassage, personOverview, ...calculatedRecordTools, annualReports, integrityReports, royalCommissions, agencyReports])
+export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division, countRecords, moneyTotals, campaignSpend, corpusRecords, legislation, publicFinances, entityProfile, accessRegisters, memberDivisions, sponsoredBills, ...speechDataTools, personQuotes, search, readPassage, personOverview, ...calculatedRecordTools, annualReports, integrityReports, royalCommissions, agencyReports,
+  // Public MCP record tools (mcpOnly): one paged envelope with an output schema, over the handlers above.
+  memberProfile, divisionVotes, memberVotingRecord, billSearch, billDetail, moneyReceipts, memberInterests, hansardSearch])
 const names = new Set<string>()
 for (const tool of tools) {
   if (!/^[a-z][a-z0-9_]*$/.test(tool.name) || names.has(tool.name)) throw new Error('Invalid or duplicate registry tool name')
@@ -57,16 +65,36 @@ function schemaFor(name: string) {
 export const getTool = (name: string) => tools.find(tool => tool.name === name)
 export const getAskTool = (name: string) => tools.find(tool => !tool.mcpOnly && (tool.askName ?? tool.name) === name)
 export const toolSchema = (name: string) => schemaFor(name)!
-export const listTools = () => tools.map(({ name, description, inputSchema }) => ({ name, description, inputSchema }))
+const outputSchemas = new Map<string, ReturnType<typeof z.fromJSONSchema>>()
+/** The zod form of a tool's output schema, built on first use: its own, or the shared record shape. */
+export function toolOutputSchema(name: string) {
+  const tool = getTool(name)
+  if (!tool) return undefined
+  // What MCP lists and checks: the short shared shapes. A tool's own fuller schema is checked by its tests.
+  const declared = tool.outputSchema ? PAGED_OUTPUT_SCHEMA : RECORD_OUTPUT_SCHEMA
+  let schema = outputSchemas.get(name)
+  if (!schema) outputSchemas.set(name, schema = z.fromJSONSchema(declared).meta(declared))
+  return schema
+}
+export const listTools = () => tools.map(({ name, title, description, inputSchema, outputSchema }) => ({ name, ...(title ? { title } : {}), description, inputSchema, ...(outputSchema ? { outputSchema } : {}) }))
+/** What was wrong and what a valid call looks like, so a model can correct itself in one step. */
+function inputError(name: string, problem?: string): ToolInputError {
+  const schema = getTool(name)?.inputSchema, required = Array.isArray(schema?.required) ? schema.required : [], example = schema?.examples?.[0]
+  return new ToolInputError(name, `Invalid arguments for ${name}${problem ? ': ' + problem : ''}.${required.length ? ` Required: ${required.join(', ')}.` : ''}${example ? ` Example: ${JSON.stringify(example)}.` : ''} See tools/list for the input schema.`)
+}
 export function parseToolArgs(name: string, args: unknown): ToolArgs {
   const tool = getTool(name), schema = schemaFor(name)
-  if (!tool || !schema) throw new ToolInputError(name)
+  if (!tool || !schema) throw new ToolInputError(name, `There is no tool named ${name}. See tools/list.`)
   const parsed = schema.safeParse(args)
-  if (!parsed.success || !parsed.data || typeof parsed.data !== 'object' || Array.isArray(parsed.data)) throw new ToolInputError(name)
+  if (!parsed.success) {
+    const issue = parsed.error.issues[0], field = issue?.path.join('.')
+    throw inputError(name, issue ? `${field ? field + ': ' : ''}${String(issue.message).slice(0, 160)}` : undefined)
+  }
+  if (!parsed.data || typeof parsed.data !== 'object' || Array.isArray(parsed.data)) throw inputError(name, 'arguments must be an object')
   const data = parsed.data as ToolArgs
   const identifiers = new Set([...Object.keys(tool.inputSchema.properties ?? {}).filter(key => /(?:^|_)(?:name|slug|id)$/.test(key)), ...tool.identifierFields ?? []])
-  for (const key of identifiers) if (data[key] !== undefined && !validToolIdentifier(data[key])) throw new ToolInputError(name)
-  if (tool.validate && !tool.validate(data)) throw new ToolInputError(name)
+  for (const key of identifiers) if (data[key] !== undefined && !validToolIdentifier(data[key])) throw inputError(name, `${key} must be a plain name or id (letters, numbers, spaces and . ' ( ) - only)`)
+  if (tool.validate && !tool.validate(data)) throw inputError(name, 'these arguments cannot be combined, or a date or range is not valid')
   return data
 }
 export function validRegisteredArgs(name: string, args: unknown): args is ToolArgs {
@@ -74,7 +102,7 @@ export function validRegisteredArgs(name: string, args: unknown): args is ToolAr
 }
 export async function validateToolArgs(env: ToolEnv, name: string, args: unknown): Promise<ToolArgs> {
   const parsed = parseToolArgs(name, args), tool = getTool(name)!
-  if (tool.validateKnown && !await tool.validateKnown(env, parsed)) throw new ToolInputError(name)
+  if (tool.validateKnown && !await tool.validateKnown(env, parsed)) throw inputError(name, 'a name or id is not in the published catalogue')
   return parsed
 }
 export async function callTool(env: ToolEnv, name: string, args: unknown): Promise<StructuredToolResult> {
@@ -82,7 +110,19 @@ export async function callTool(env: ToolEnv, name: string, args: unknown): Promi
   try {
     const parsed = await validateToolArgs(env, name, args)
     // Canonical wire JSON is identical in Ask and MCP, including optional metadata.
-    return JSON.parse(JSON.stringify(await tool!.handler(env, parsed))) as StructuredToolResult
+    const data = JSON.parse(JSON.stringify(await tool!.handler(env, parsed))) as StructuredToolResult
+    // Every record set names an OPAX page to cite: its own listing or record page where it has one, else the register's page.
+    if (Array.isArray(data.rows) && typeof data.opax_url !== 'string') {
+      const origin = new URL(env.origin ?? env.COMMUNITY_ORIGIN ?? 'https://opax.com.au').origin
+      // One row is cited by its own page; several rows by the page for the set, where the register has one.
+      const set = data.rows.length > 1 && MCP_PAGES[tool!.name] ? [data.list] : [data.list, ...(Array.isArray(data.citations) ? data.citations.map(c => c?.url) : [])]
+      const own = set.find((url): url is string => typeof url === 'string' && url.startsWith(origin + '/') && !/\.json(?:$|[?#])/.test(url))
+      // A result about one person names that person's page.
+      const row = data.rows[0] && typeof data.rows[0] === 'object' ? data.rows[0] as Record<string, unknown> : {}
+      const who = PERSON_PAGES.has(tool!.name) ? [row.person, row.name, row.member].find((name): name is string => typeof name === 'string' && personUrl(name) !== '/subject/person') : undefined
+      data.opax_url = own ?? origin + (who ? personUrl(who) : MCP_PAGES[tool!.name] ?? '/methods')
+    }
+    return data
   } catch (error) {
     if (error instanceof ToolInputError) throw error
     return { rows: [], citations: [], notes: [], error: 'Published tool data is temporarily unavailable.' }

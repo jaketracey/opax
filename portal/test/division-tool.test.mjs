@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { build } from 'esbuild';
 import { MockLanguageModelV4 } from 'ai/test';
+// MCP adds two fields that Ask's copy of a result does not carry: the record-text notice and a former-name note.
+const mcpOnly = value => { if (!value || typeof value !== 'object' || Array.isArray(value)) return value; const { record_text_notice, deprecated, ...rest } = value; return rest; };
 
 // Only the published table adapter is replaced. Registry, Ask and MCP use the
 // same division implementation, and every asset read stays in this process.
@@ -370,21 +372,21 @@ function mcpFixture(f) {
 
 test('MCP exposes the same division schema and returns exactly the Ask and registry data', async () => {
   const f = fixture(), send = mcpFixture(f);
-  const listed = (await send('tools/list')).result.tools.find(t => t.name === 'division');
-  assert.ok(listed);
-  assert.equal(listed.description, api.getTool('division').description);
-  const { $schema, ...schema } = listed.inputSchema;
-  assert.deepEqual(schema, api.getTool('division').inputSchema);
-  assert.equal(listed.annotations.readOnlyHint, true);
+  // division is a register of query_register, with its arguments in register_guide; it still answers by name.
+  const tools = (await send('tools/list')).result.tools, dispatch = tools.find(t => t.name === 'query_register');
+  assert.ok(dispatch.inputSchema.properties.register.enum.includes('division'));
+  assert.equal(dispatch.annotations.readOnlyHint, true);
+  const guide = (await send('tools/call', { name: 'register_guide', arguments: { register: 'division' } })).result.structuredContent;
+  assert.deepEqual(Object.keys(guide.arguments.properties), Object.keys(api.getTool('division').inputSchema.properties));
   const args = { division_id: 'federal-senate-100', person: 'Labor Rebel' };
   const direct = await api.callTool(f.env, 'division', args);
   const ask = await api.runTool(f.deps, 'division', args);
   const rpc = await send('tools/call', { name: 'division', arguments: args });
   assert.equal(rpc.result.isError, false);
-  assert.deepEqual(rpc.result.structuredContent, direct);
-  assert.deepEqual(JSON.parse(rpc.result.content[0].text), ask.data);
+  assert.deepEqual(mcpOnly(rpc.result.structuredContent), direct);
+  assert.deepEqual(mcpOnly(JSON.parse(rpc.result.content[0].text)), ask.data);
   const reads = f.reads.length;
-  assert.equal((await send('tools/call', { name: 'division', arguments: { date: '2025-02-30' } })).error.code, -32602);
+  assert.equal((await send('tools/call', { name: 'division', arguments: { date: '2025-02-30' } })).result.isError, true);
   assert.equal(f.reads.length, reads);
 });
 

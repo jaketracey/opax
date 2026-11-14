@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { build } from 'esbuild';
+// MCP adds two fields that Ask's copy of a result does not carry: the record-text notice and a former-name note.
+const mcpOnly = value => { if (!value || typeof value !== 'object' || Array.isArray(value)) return value; const { record_text_notice, deprecated, ...rest } = value; return rest; };
 
 // Discovery ranking is covered by the catalogue tests. These tests retain the
 // real tool registry, Ask adapter, bill asset reader and authenticated MCP path.
@@ -133,8 +135,8 @@ test('Ask and public MCP return the same lifecycle fields and date-first evidenc
     const ask = await f.ask(args), rpc = await f.mcp(args);
     assert.equal(ask.ok, true);
     assert.equal(rpc.isError, false);
-    assert.deepEqual(rpc.structuredContent, ask.data);
-    assert.deepEqual(JSON.parse(rpc.content[0].text), ask.data);
+    assert.deepEqual(mcpOnly(rpc.structuredContent), ask.data);
+    assert.deepEqual(mcpOnly(JSON.parse(rpc.content[0].text)), ask.data);
     const first = factSheet([ask]).facts[0];
     assert.ok(first.text.startsWith(date), 'the requested date is the first cited answer fact');
     assert.match(first.text, action);
