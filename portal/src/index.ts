@@ -8,7 +8,7 @@ import {partyMoneyResponse} from './party-money-table'
 import {interestRegisterResponse} from './interest-register'
 import {loadDonorIndex,loadDonorRecordsIndex,donorRecordsForName} from './donor-index'
 import {campaignerReturnsHTML,donorRecordsHTML,type CampaignerYear} from './subject-figures'
-import {offMapDonorNote,donorDisclosure,donorLabelHTML,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
+import {offMapDonorNote,donorDisclosure,donorLabelHTML,receiptTypeLine,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
@@ -49,7 +49,7 @@ import { governmentFinancePage, governmentFinanceReader } from './government-fin
 import { govAdvertisingPage, govAdvertisingReader, govAdvertisingReady } from './gov-advertising'
 import { taxExpendituresPage, taxExpendituresReader, taxExpendituresReady } from './tax-expenditures'
 import {parseQuery,serializeQuery,type Page} from '../public/datatable.js'
-import {partyMoneyData,partyMapScope,partyMoneyTableConfig,partyReturnFigures,partyReturnScopeLabel,receiptFigures,registerTableHTML} from '../public/register-tables.js'
+import {partyMoneyData,partyTableScope,partyMoneyTableConfig,partyReturnFigures,partyReturnScopeLabel,receiptFigures,registerTableHTML} from '../public/register-tables.js'
 import {grantsHTML} from './grants-table'
 import {saGrantsPage,saGrantsReader} from './sa-grants'
 import {actInvoicesPage} from './act-invoices'
@@ -4210,7 +4210,7 @@ function moneyIndex<N extends { label: string; kind: string; aliases?: string[];
 }
 let moneyMemo: Promise<MoneyData> | null = null
 function loadMoney(env: Env): Promise<MoneyData> {
-  moneyMemo ??= Promise.all(MONEY_GRAPH_PATHS.map((p) => assetJson<MoneyFile<MoneyNode>>(env, p)))
+  moneyMemo ??= Promise.all(MONEY_GRAPH_PATHS.map((p) => assetJson<MoneyFile<MoneyNode>>(env, p === '/graph/money.json' ? '/graph/money-receipts.json' : p)))
     .then((files) => moneyIndex(files))
     .catch((err) => {
       moneyMemo = null
@@ -5697,13 +5697,13 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
   let table = ''
   if (dir === 'party') {
     const read = <T>(path:string)=>assetJson<T>(env,path)
-    const graph = await read<Parameters<typeof partyMoneyData>[0]>('/graph/money.json').catch(()=>null)
+    const graph = await read<Parameters<typeof partyMoneyData>[0]>('/graph/money-receipts.json').catch(()=>null)
     const party = graph?.nodes.find(n=>n.kind === 'party' && foldName(n.label) === foldName(display)) ?? graph?.nodes.find(n=>n.kind === 'party' && samePartyLabel(n.label, display))
     if (graph && party) {
       const {rows,scope} = partyMoneyData(graph,party.id)
       const config = partyMoneyTableConfig(rows,undefined,undefined,undefined,{party:party.label,jurisdiction:'federal'})
       config.id = 'ssr-party-money-table'
-      table = `<section class="wrap"><h2>Where it came from</h2>${scope ? `<p class="entry-scope">${escHtml(partyMapScope(scope))}</p>` : ''}${registerTableHTML(config,undefined,url)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
+      table = `<section class="wrap"><h2>Where it came from</h2>${scope ? `<p class="entry-scope">${escHtml(partyTableScope(scope, graph.meta))}</p>` : ''}${registerTableHTML(config,undefined,url)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
     }
   }
   return {
@@ -5713,7 +5713,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
     ogType: 'profile',
     status: 200,
     jsonLd: { '@context': 'https://schema.org', '@type': ldType, name: heading, url: canonical, description },
-    prerender: prerenderBlock(heading,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${donorRecordsHTML(offMapRecords)}${indexLinks()}`
+    prerender: prerenderBlock(heading,sentence,dir==='donor' && disclosureRecord ? `<p>${donorLabelHTML(disclosureRecord)}</p>${node && receiptTypeLine(node) ? `<p class="entry-scope">${escHtml(receiptTypeLine(node))}.</p>` : ''}${donorRecordsHTML(offMapRecords)}${indexLinks()}`
       : historyHTML + (memberRows.length ? `<h2>${independent ? 'Parliamentarians' : 'Members'}</h2><ul>${memberRows.slice(0,24).map(({name: n, labels})=>{const href=personPath(people,n),as=recordedAsText(display,labels);return `<li>${href==='/subject/person' ? escHtml(n) : `<a href="${escHtml(href)}">${escHtml(n)}</a>`}${as ? ` (${escHtml(as.charAt(0).toLowerCase()+as.slice(1))})` : ''}</li>`}).join('')}</ul><p>${escHtml(PARTY_MEMBER_SCOPE)}</p>` : dir === 'party' ? `<h2>Members</h2><p>${escHtml(PARTY_NO_MEMBERS)}</p>` : '')
         + (sponsored.length ? `<h2>Bills sponsored</h2><ul>${sponsored.slice(0,24).map(b=>{const as=recordedAsText(display,[b.party ?? ''],'sponsor recorded as');return `<li><a href="/bill/${encodeURIComponent(b.key)}">${escHtml(b.title)}</a>${b.introduced ? `, introduced ${escHtml(dayMonthYear(b.introduced))}` : ''}${as ? `, ${escHtml(as)}` : ''}</li>`}).join('')}</ul>` : '')
         + indexLinks()) + table,

@@ -14,10 +14,12 @@ const questions=JSON.parse(await readFile(new URL('./fixtures/ask-routing-evals.
 
 test('all six industry and speech regression questions are in the routing evals',()=>assert.equal(questions.length,6))
 const monetaryFigure=/\$\s*\d|\b\d[\d,.]*\s*(?:AUD|dollars?|million|billion)\b/i
-// Typed (published): donations lead, with every receipt type beside them.
+// Deliberately supplied capped map fixture: donations lead, with every receipt type beside them.
+// Shared identity guards remove PwC NSW $1,500 giving, NAB Loan $1.45m Other Receipt,
+// and CEPU/CPSU branch cells from their former map parents. Uncapped facts have separate coverage.
 const typedLead=/^[^.!?]*\$[\d,]+[^.!?]*donations received \(AEC receipt type: Donation Received\)/
 test('industry questions lead with labelled ranked amounts and bypass speech research',async()=>{
- const leads={gambling:'**Liberal** leads parties receiving money from gambling-linked sources: **$1,093,352**',mining:'**United Australia Party** leads parties receiving money from mining-linked sources: **$61,625,526**',banks:'**Liberal** has received **$14,414,067** from finance-linked sources',unions:'**Labor** leads parties receiving money from union-linked sources: **$68,031,075**',tobacco:'**Liberal** leads parties receiving money from tobacco-linked sources: **$1,243,865**'}
+ const leads={gambling:'**Liberal** leads parties receiving money from gambling-linked sources: **$1,093,352**',mining:'**United Australia Party** leads parties receiving money from mining-linked sources: **$61,625,526**',banks:'**Liberal** has received **$14,412,567** from finance-linked sources',unions:'**Labor** leads parties receiving money from union-linked sources: **$68,022,075**',tobacco:'**Liberal** leads parties receiving money from tobacco-linked sources: **$1,243,865**'}
  for(const q of questions.filter(q=>q.kind==='money')){
   const out=await localAsk(api,q.question,{onResearch:()=>assert.fail('Money uses the calculator')})
   assert.equal(out.answer_status,'calculated');assert.equal(out.measure,'donations');assert.match(out.answer,typedLead)
@@ -32,7 +34,7 @@ test('industry questions lead with labelled ranked amounts and bypass speech res
 test('banks use the explicit finance grouping with the receipt types beside the figures',async()=>{
  // Typed (published): donations lead and the all-types column flags other receipts; untyped fallback: the mixed total names its types.
  // No figure is called a loan: OPAX matches no receipt to a declared debt (A34 review).
- for(const [money,label] of [['typed',/^\*\*Liberal\*\* has received \*\*\$14,414,067\*\* from finance-linked sources in donations received \(AEC receipt type: Donation Received\)/],['untyped',/disclosed receipts, all types \(donations, subscriptions and other receipts\)/]]){
+ for(const [money,label] of [['typed',/^\*\*Liberal\*\* has received \*\*\$14,412,567\*\* from finance-linked sources in donations received \(AEC receipt type: Donation Received\)/],['untyped',/disclosed receipts, all types \(donations, subscriptions and other receipts\)/]]){
   const out=await localAsk(api,'How much have the banks donated to the Liberals?',{money})
   assert.equal(out.answer_status,'calculated',money);assert.match(out.answer,label,money)
   assert.match(out.answer,/finance-linked \(banks, insurers and investment firms\)/)
@@ -40,7 +42,7 @@ test('banks use the explicit finance grouping with the receipt types beside the 
   assert.ok(out.sources.every(s=>new URL(s.url,'https://local.test').searchParams.get('party')==='party:Liberal'))
   assert.ok(out.sources.every(s=>new URL(s.url,'https://local.test').searchParams.get('industry')==='finance'))
   // The total covers the 39 sources with donations; sources with $0 in donations are not ranked.
-  if(money==='typed')assert.match(out.answer,/\| Total, 39 sources \| \$14,414,067 \| 100% \| \$60,897,334 \(mostly other receipts\) \|/)
+  if(money==='typed')assert.match(out.answer,/\| Total, 39 sources \| \$14,412,567 \| 100% \| \$59,445,834 \(mostly other receipts\) \|/)
  }
 })
 test('a topic question stays with speech evidence',async()=>{
@@ -68,8 +70,8 @@ test('a donor return reference keeps an untyped bank figure labelled as all rece
 test('union receipts name affiliation fees in the lead measure',async()=>{
  // Typed (published): union donations lead; affiliation fees sit in the all-types column.
  const out=await localAsk(api,'Who receives the most union money?')
- assert.equal(out.answer_status,'calculated');assert.match(out.answer,/^\*\*Labor\*\* leads parties receiving money from union-linked sources: \*\*\$68,031,075\*\* in donations received/)
- assert.match(out.answer,/\| Labor \| \$68,031,075 \| 96% \| \$183,707,129 \(mostly other receipts\) \|/)
+ assert.equal(out.answer_status,'calculated');assert.match(out.answer,/^\*\*Labor\*\* leads parties receiving money from union-linked sources: \*\*\$68,022,075\*\* in donations received/)
+ assert.match(out.answer,/\| Labor \| \$68,022,075 \| 96% \| \$183,528,445 \(mostly other receipts\) \|/)
  // Untyped fallback: the mixed total names affiliation fees in the lead measure.
  const legacy=await localAsk(api,'Who receives the most union money?',{money:'untyped'})
  assert.equal(legacy.answer_status,'calculated');assert.match(legacy.answer,/disclosed receipts, all types \(donations, affiliation fees and other receipts\)/)

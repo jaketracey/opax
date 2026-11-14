@@ -264,7 +264,7 @@ test('a step with a receipt figure says what it counts, under the figure; other 
     { title: 'Awards', body: 'Record 2', metric: { label: 'Recorded contract awards', value: 5000, format: 'currency' }, scene: { focusId: 'node:1' } },
   ] }];
   const h = setup({ journeys }); h.choose();
-  assert.ok(h.story.innerHTML.includes(`<span class="ui-stat-label">Recorded receipts</span></div><p class="journey-scope">${scope}</p></div>`));
+  assert.ok(h.story.innerHTML.includes(`<span class="ui-stat-label">Recorded receipts</span></div><p class="journey-scope">${scope}</p><p class="journey-cap">Totals are on the map, which shows only the largest donors.</p></div>`));
   h.click('next');
   assert.doesNotMatch(h.story.innerHTML, /journey-scope/);
 });

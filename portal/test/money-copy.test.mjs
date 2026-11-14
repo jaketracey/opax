@@ -57,7 +57,7 @@ for (const donor of donors) test(`off-map ${donor.jurisdiction} server and brows
   server.window.close();client.window.close();
 });
 
-test('party server and browser scope is one sentence with the map, measure, years and return source once',{timeout:120_000},async () => {
+test('party server and browser scope is one sentence with the selection, measure, years and return source once',{timeout:120_000},async () => {
   const path='/subject/party/labor';
   const response=await workerFetch(path);
   assert.equal(response.status,200);
@@ -66,7 +66,8 @@ test('party server and browser scope is one sentence with the map, measure, year
   const rendered=await browserPage('party',path,'#entry-flows',{});
   assert.deepEqual(rendered.errors.filter(error => !/getContext\(\) method/.test(error)),[]);
   const client=new JSDOM(rendered.html);
-  const expected='All receipt types from named donors on the map, 1998–99 to 2024–25, as the parties reported them in AEC federal returns.';
+  // Both renderers read the uncapped selected recipient receipts, and the line says so.
+  const expected='All receipt types from the uncapped selected recipient receipts, 1998–99 to 2024–25, as the parties reported them in AEC federal returns.';
   const heading=[...server.window.document.querySelectorAll('h2')].find(h => h.textContent==='Where it came from');
   assert.ok(heading,'the server table has its own section after the summary block');
   assert.equal(heading.nextElementSibling.textContent,expected);

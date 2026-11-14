@@ -196,6 +196,15 @@ export function receiptSplit(x, from, to) {
       }
     }
   }
+  // Returned/refunded entries retain their disclosed AEC receipt types in the
+  // all-receipt figure, but never contribute to donations given.
+  if (x.donation_exclusions) {
+    const excluded = receiptSplit(x.donation_exclusions, from, to);
+    if (excluded) {
+      out.returned = excluded.donations;
+      for (let i = 0; i < 2; i++) out.donations[i] -= excluded.donations[i];
+    }
+  }
   return out;
 }
 
@@ -213,11 +222,13 @@ export function otherReceiptsLine(name, party, split, {also = false, period = ''
   if (split.other[0]) parts.push(`${aud(split.other[0])} in other receipts (amounts other than donations or subscriptions)`);
   if (split.subscriptions[0]) parts.push(`${aud(split.subscriptions[0])} in subscriptions`);
   if (split.untyped[0]) parts.push(`${aud(split.untyped[0])} in receipts the return gave no type for`);
-  if (!parts.length) return '';
+  const returned = split.returned?.[0] ? `${name} ${also || parts.length ? 'also ' : ''}recorded ${aud(split.returned[0])} in receipts explicitly marked returned or refunded (excluded from donations).` : '';
+  if (!parts.length) return returned;
   const list = parts.length === 1 ? parts[0] : parts.slice(0, -1).join(', ') + ' and ' + parts.at(-1);
-  // Other receipts already say what they are not; subscriptions and untyped receipts need the clause.
+  // Keep this AEC classification attached to subscriptions/untyped receipts,
+  // separately from entries typed Donation Received but explicitly returned.
   const clause = split.subscriptions[0] || split.untyped[0] ? ", which the AEC doesn't class as donations" : '';
-  return `${name} ${also ? 'also ' : ''}recorded ${list} to ${party}${period ? ` in ${period}` : ''}${clause}.`;
+  return `${name} ${also ? 'also ' : ''}recorded ${list} to ${party}${period ? ` in ${period}` : ''}${clause}.` + (returned ? ' ' + returned : '');
 }
 
 /** "Labor's returns", "Greens' returns". */
@@ -257,12 +268,12 @@ export function receiptTypeLine(record) {
   if (!figures.typed) return '';
   const names = {donation_received:'Donation Received',other_receipt:'Other Receipt',subscription:'Subscription',
     loan:'Loan',unknown:'Unknown receipt type',unspecified:'Unspecified'};
-  return Object.entries(figures.byType).filter(([,amount]) => amount).map(([type,amount]) => {
+  const line = Object.entries(figures.byType).filter(([,amount]) => amount).map(([type,amount]) => {
     const count = figures.typeCounts[type] || 0;
     return `${names[type] || type.replaceAll('_',' ')}: ${aud(amount)} (${count.toLocaleString('en-AU')} receipt${count === 1 ? '' : 's'})`;
   }).join('; ');
+  return line + (record.donation_exclusions ? `. The AEC records ${aud(receiptFigures(record.donation_exclusions).total)} as returned or refunded; OPAX leaves it out of donations.` : '');
 }
-
 
 /**
  * The graph with every donor-to-party edge and every donor node read the way

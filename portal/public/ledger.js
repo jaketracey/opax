@@ -1,5 +1,5 @@
 import {industryName} from './money-scope.js';
-import {donorDisclosure,donorLookup,donorDisplayText,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=af7c0f0f03';
+import {donorDisclosure,donorLookup,donorDisplayText,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=d28448a137';
 import {subjectUrl} from './canonical-urls.js?v=9ce13e7ba5';
 import { filterMoneyEdges } from "./money-records.js?v=ia-ux-20260908-2";
 import { sourceLineHTML } from './labels.js?v=fcb2a1091c';
@@ -15,7 +15,7 @@ import { sourceLineHTML } from './labels.js?v=fcb2a1091c';
  *   mountLedger(container, { jurisdiction: 'qld' })  // open on a state file
  *   lg.destroy()                        // removes DOM + aborts loads
  *
- * Data source (same-origin): GET /graph/money.json, or one state file per
+ * Data source (same-origin): GET /graph/money-receipts.json, or one state file per
  * jurisdiction (/graph/money.qld.json, .vic, .tas) in the same shape
  *   nodes: donors + parties (label, industry, colour, lifetime totals)
  *   edges: aggregated donor→party flows (total, count, firstYear, lastYear)
@@ -24,7 +24,7 @@ import { sourceLineHTML } from './labels.js?v=fcb2a1091c';
  * are never summed: AEC returns already include state branch receipts.
  *
  * Two views over the same filtered set of flows:
- *   Flows    — one row per donor→party edge (573 rows max)
+ *   Flows    — one row per selected donor→party flow
  *   By donor — one row per donor, aggregated over the flows that pass the
  *              current filters, so "party = Labor, sort by Total" reads as
  *              "the biggest disclosed funders of Labor", not "big donors
@@ -36,7 +36,7 @@ import { sourceLineHTML } from './labels.js?v=fcb2a1091c';
  */
 
 const JURISDICTIONS = {
-  federal: { label: 'Federal', file: '/graph/money.json' },
+  federal: { label: 'Federal', file: '/graph/money-receipts.json' },
   qld: { label: 'Queensland', file: '/graph/money.qld.json' },
   vic: { label: 'Victoria', file: '/graph/money.vic.json' },
   tas: { label: 'Tasmania', file: '/graph/money.tas.json' },
@@ -856,19 +856,21 @@ export function mountLedger (container, opts = {}) {
       state.view === 'flows'
         ? 'OPAX — Political receipts: disclosed source→party flows'
         : 'OPAX — Political receipts: sources aggregated over the filtered flows',
-      meta.jurisdiction
+      state.jur !== 'federal'
         ? `Source: ${meta.commission} disclosures (${meta.sourceShort}), ${meta.coverage}, top disclosed receipt sources, via opax.com.au${file}`
-        : `Source: AEC receipt disclosure returns ${YEAR_MIN}–${YEAR_MAX} (top 250 disclosed receipt sources), via opax.com.au${file}`,
+        : `Source: AEC receipt disclosure returns ${YEAR_MIN}–${YEAR_MAX} (uncapped selected party receipts), via opax.com.au${file}`,
       `Exported ${new Date().toISOString().slice(0, 10)} · ${currentRows.length} rows · filters: ${describeFilters()} · sorted by ${sort.key} ${sort.dir}`,
-      meta.jurisdiction
+      state.jur !== 'federal'
         ? `Caveat: ${meta.threshold} Totals are a floor, not a ceiling.`
         : 'Caveat: donations under the AEC disclosure threshold are not reported: totals are a floor, not a ceiling.',
-      meta.jurisdiction
+      state.jur !== 'federal'
         ? 'Only records assigned to a party are included. Excluded: public funding and internal party transfers.'
         : 'Excluded: public electoral funding and internal party transfers.',
       meta.not_summed || NOT_SUMMED,
       'Year columns use the first year of each financial year; election returns may use the polling year. Year filters sum only dated yearly amounts and exclude undated records.',
     ]
+    const measured = receiptGraphScope(loadedData)
+    if (measured) comments.push(`Measure: ${measured}`)
     if (meta.licence) comments.push(`Licence: ${meta.licence}`)
     const csv = buildCSV(state.view, currentRows, comments)
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
@@ -1023,24 +1025,24 @@ export function mountLedger (container, opts = {}) {
    *  coverage, the threshold, the exclusions, the licence and the ways in. */
   function renderFineprint (data) {
     const m = data.meta || {}
-    const donors = data.nodes.filter((n) => n.kind === 'donor').length
+    const donors = new Set(flows.map(row => row.donorId)).size
     const measured = receiptGraphScope(data)
-    const register = m.jurisdiction
+    const register = state.jur !== 'federal'
       ? { label: m.commission, href: /^https?:\/\//i.test(m.source_url || '') ? m.source_url : '/methods' }
       : { label: 'AEC Transparency Register', href: 'https://transparency.aec.gov.au/' }
     fineEl.innerHTML = sourceLineHTML({
       updated: m.generated || '',
-      source: m.jurisdiction ? (m.sourceShort || m.commission) : 'AEC annual returns',
+      source: state.jur !== 'federal' ? (m.sourceShort || m.commission) : 'AEC annual returns',
       state: 'totals are a floor',
       originals: [{ label: 'Download the data (JSON)', href: JURISDICTIONS[state.jur].file }, register, { label: 'Methodology', href: '/methods' }],
       facts: [
-        ['Coverage', esc(m.jurisdiction ? `${m.commission} (${m.sourceShort}), ${m.coverage}` : `AEC disclosures ${YEAR_MIN}–${YEAR_MAX}`)],
-        ['Shown', esc(`Top ${NUM.format(donors)} disclosed receipt sources`)],
+        ['Coverage', esc(state.jur !== 'federal' ? `${m.commission} (${m.sourceShort}), ${m.coverage}` : `AEC disclosures ${YEAR_MIN}–${YEAR_MAX}`)],
+        ['Shown', esc(m.uncapped ? `All ${NUM.format(donors)} selected receipt sources` : `Top ${NUM.format(donors)} disclosed receipt sources`)],
         ...(measured ? [['Measured as', esc(measured)]] : []),
       ],
       notes: [
         'Totals are a floor, not a ceiling.',
-        esc(m.jurisdiction
+        esc(state.jur !== 'federal'
           ? `${m.threshold} Only records assigned to a party are included; public funding and internal party transfers excluded. ${m.not_summed || NOT_SUMMED}`
           : `Donations under the disclosure threshold are not reported. Public electoral funding and internal party transfers excluded. ${NOT_SUMMED}`),
       ],

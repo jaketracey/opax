@@ -1,8 +1,9 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,receiptGraph,receiptScopeLabel} from './donor-disclosure.js?v=af7c0f0f03';
+import {donationGraph} from './money-receipts.js';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,receiptGraph,receiptScopeLabel,receiptSplit} from './donor-disclosure.js?v=d28448a137';
 // receiptGraph is shared with every money page (donor-disclosure.js); re-exported for the tests that read it here.
 export {receiptGraph};
-import {loadDonorViewIndex} from './donor-views.js?v=a138263798';
-import {partyReturnFigures, industryName} from './register-tables.js?v=f22dd40f71';
+import {loadDonorViewIndex} from './donor-views.js?v=75f497c532';
+import {partyReturnFigures, industryName} from './register-tables.js?v=8d37f58e79';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph
@@ -136,7 +137,7 @@ export function receiptHeadline(graph) {
 /** What a flow's figures count, on its own line (receiptScopeLabel); empty for a state graph. */
 export function flowScope(flow) {
   if (!flow.edges.length || !flow.edges.every((e) => e.typed)) return '';
-  return receiptScopeLabel({ typed: true, firstYear: flow.firstYear, lastYear: flow.lastYear });
+  return receiptScopeLabel({ typed: true, firstYear: flow.firstYear, lastYear: flow.lastYear }, flow.donations ? 'donation_only' : 'all_types');
 }
 
 /** Every donation edge's year cells summed: a total that a year window can re-sum. */
@@ -188,7 +189,7 @@ export function parseExplainParams(params, graph, index) {
   }
   if(donors) return fail('Use a receipt source name, industry or recipient filter.');
   if (industry) {
-    const known = nodes.some((n) => n.kind === 'donor' && (n.industry === industry || n.group === industry));
+    const known = nodes.some((n) => n.kind === 'donor' && (n.industry === industry || !graph.meta?.uncapped && n.group === industry));
     if (!known) return fail('That industry is not in OPAX’s money data.');
     state.industry = industry;
     return { ok: true, state };
@@ -238,7 +239,7 @@ export function explainHrefFor(detail, graph, index) {
     if(donor)state.from=donor.id;else return null;
   } else if (detail.kind === 'industry') {
     const key = fold(detail.from);
-    const hit = nodes.find((n) => n.kind === 'donor' && (fold(n.industry) === key || fold(n.group) === key));
+    const hit = nodes.find((n) => n.kind === 'donor' && (fold(n.industry) === key || !graph.meta?.uncapped && fold(n.group) === key));
     if (!hit) return null;
     const industry = fold(hit.industry) === key ? hit.industry : hit.group;
     state.industry = industry;
@@ -266,14 +267,15 @@ function partyReturns(aec, partyLabel) {
 
 
 export function resolveFlow(state, graph, index, { aec = null, electionYears = [] } = {}) {
-  graph = receiptGraph(graph);
+  const donations = Boolean((state.industry || state.to && !state.from) && graph.meta?.uncapped);
+  graph = donations ? donationGraph(graph) : receiptGraph(graph);
   const nodes = graph.nodes || [];
   const byId = new Map(nodes.map((n) => [n.id, n]));
   const donation = (graph.edges || []).filter(isDonation);
   const party = state.to ? byId.get(state.to) : null;
   const donor = state.from ? byId.get(state.from) : null;
   const meta = { ...(state.jur === 'federal' ? FEDERAL_META : {}), ...(graph.meta || {}) };
-  const inIndustry = (n) => n?.kind === 'donor' && (n.industry === state.industry || n.group === state.industry);
+  const inIndustry = (n) => n?.kind === 'donor' && (n.industry === state.industry || !graph.meta?.uncapped && n.group === state.industry);
 
   let kind, givers;
   if (donor) { kind = party ? 'pair' : 'donor'; givers = (e) => e.source === donor.id; }
@@ -311,7 +313,7 @@ export function resolveFlow(state, graph, index, { aec = null, electionYears = [
   const industryTotals = new Map();
   for (const e of edges) {
     const n = byId.get(e.source);
-    const key = n?.group || n?.industry || 'other';
+    const key = graph.meta?.uncapped ? n?.industry || 'other' : n?.group || n?.industry || 'other';
     industryTotals.set(key, (industryTotals.get(key) || 0) + (Number(e.total) || 0));
   }
   const industries = [...industryTotals].map(([key, total]) => ({ key, total })).sort((a, b) => b.total - a.total);
@@ -351,7 +353,7 @@ export function resolveFlow(state, graph, index, { aec = null, electionYears = [
   }
 
   const flow = {
-    state, kind, jur: state.jur, meta, graph, electionYears,
+    state, kind, jur: state.jur, meta, graph, electionYears, donations,
     donor, party, industry: state.industry || (donor ? donor.industry : null),
     edges, context, parties, contextTotal, named, industries,
     total: sums.total, count: sums.count, years: sums.years, undated: sums.undated,
@@ -414,7 +416,7 @@ export function comparableFlows(flow, index, limit = 3) {
   if (flow.kind === 'party') {
     const rows = graph.nodes.filter((n) => n.kind === 'party' && n.id !== flow.party.id).map((p) => {
       const s = sumEdges(donation.filter((e) => e.target === p.id && byId.get(e.source)?.kind === 'donor'));
-      return { label: `${p.label}: all receipt sources on the map`, total: s.total, count: s.count, href: explainPath({ jur: state.jur, to: p.id }) };
+      return { label: `${p.label}: all receipt sources in the selection`, total: s.total, count: s.count, href: explainPath({ jur: state.jur, to: p.id }) };
     }).filter((r) => r.total > 0).sort((a, b) => b.total - a.total).slice(0, limit);
     return { rule: 'The other parties in these records, largest first', rows };
   }
@@ -428,12 +430,13 @@ export function comparableFlows(flow, index, limit = 3) {
   const groups = new Map();
   for (const e of donation) {
     const n = byId.get(e.source);
-    if (n?.kind !== 'donor' || !n.group || n.group === state.industry || n.industry === state.industry || ['individuals', 'other'].includes(n.group)) continue;
-    groups.set(n.group, (groups.get(n.group) || 0) + (Number(e.total) || 0));
+    const key = graph.meta?.uncapped ? n?.industry : n?.group;
+    if (n?.kind !== 'donor' || !key || key === state.industry || ['individual', 'individuals', 'other'].includes(key)) continue;
+    groups.set(key, (groups.get(key) || 0) + (Number(e.total) || 0));
   }
   const rows = [...groups].map(([key, total]) => ({ key, total })).sort((a, b) => size(a.total) - size(b.total)).slice(0, limit)
     .map((r) => ({ label: industryName(r.key), total: r.total, href: explainPath({ jur: state.jur, industry: r.key }) }));
-  return { rule: 'Other industries on the map, closest in size', rows };
+  return { rule: graph.meta?.uncapped ? 'Other industries in the selection, closest in size' : 'Other industries on the map, closest in size', rows };
 }
 
 // --- parliament, for context --------------------------------------------------------
@@ -546,10 +549,10 @@ export function narrative(flow, { partyName = (l) => l } = {}) {
     out.push(`${recordedIn(flow)} ${money(total)} from ${donor.label} to ${to} across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}, with money in ${plural(yearsWithMoney, 'financial year')}.`);
   } else if (kind === 'party') {
     const givers = flow.named.length;
-    out.push(`${recordedIn(flow)} ${money(total)} to ${to} from ${givers === 1 ? 'the one receipt source' : `the ${plural(givers, 'receipt source')}`} on OPAX’s map, across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}.`);
+    out.push(`${recordedIn(flow)} ${money(total)} to ${to} from ${givers === 1 ? 'the one receipt source' : `the ${plural(givers, 'receipt source')}`} in OPAX’s published receipt selection, across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}.`);
   } else {
     const givers = flow.named.length;
-    out.push(`${plural(givers, `${industryName(flow.state.industry).toLowerCase()} receipt source`)} on OPAX’s map ${givers === 1 ? 'accounts' : 'account'} for ${money(total)} to ${to} across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}.`);
+    out.push(`${plural(givers, `${industryName(flow.state.industry).toLowerCase()} receipt source`)} in OPAX’s published receipt selection ${givers === 1 ? 'accounts' : 'account'} for ${money(total)} to ${to} across ${plural(count, 'receipt')}${when ? `, from ${when}` : ''}.`);
   }
   if (flow.coarse) out.push(`${kind === 'unnamed' ? '' : ''}For a group of fewer than ${AGGREGATE_FLOOR} receipt sources this page gives the total and the count only.`);
   if (peak && yearsWithMoney > 1) {
@@ -571,6 +574,7 @@ export function narrative(flow, { partyName = (l) => l } = {}) {
 
 /** What the file calls a line, and what that means for this total. */
 export function receiptTypeNote(flow) {
+  if (flow.donations) return 'Industry rankings count donations only (AEC Donation Received) from the uncapped recipient selection. Public funding and loans are never donations.';
   if (flow.jur !== 'federal') {
     const line = STATE_LINES[flow.jur];
     return line ? `Every line here is a ${line.noun} as the ${flow.meta.commission || 'commission'} discloses it (${line.register}); no other kinds of receipt are included.` : '';
@@ -584,7 +588,9 @@ export function receiptTypeNote(flow) {
   const split = rest > 0
     ? ` Of ${shortMoney(flow.total)}, ${shortMoney(donations)} is Donation Received and ${shortMoney(rest)} is other types.`
     : ' All of it is Donation Received.';
-  return `${intro} This total counts every type, so it can include receipts that are not gifts.${split} The AEC’s detailed receipts list each line with its type.`;
+  const returned = flow.edges.reduce((sum, edge) => sum + (receiptSplit(edge)?.returned?.[0] || 0), 0);
+  const qualifier = returned ? ` ${shortMoney(returned)} is explicitly marked returned or refunded and excluded from donation figures.` : '';
+  return `${intro} This total counts every type, so it can include receipts that are not gifts.${split}${qualifier} The AEC’s detailed receipts list each line with its type.`;
 }
 
 /** The disclosure rules behind each year, newest first, for the timeline. */
@@ -734,9 +740,9 @@ function limitsHTML(flow, partyName) {
     if (meta.not_summed) item('State and federal figures are separate', esc(meta.not_summed));
     if (meta.coverage) item('The years covered', esc(`The ${meta.sourceShort || 'register'} records cover ${meta.coverage}.`));
   }
-  const top = federal ? 'The map holds the 250 largest receipt sources by lifetime total, plus receipt sources holding $50m or more in Commonwealth contracts and grants' : 'The map holds the 250 largest receipt sources by lifetime total in this jurisdiction';
+  const top = federal ? 'These flow totals use the uncapped selection of recipient-side itemised party receipts' : 'These flow totals are on the map, which shows only the largest donors';
   item('Smaller receipt sources are not on the map',
-    esc(`${top}. The flow totals in this explanation count only those receipt sources and leave out internal party transfers; a party’s own return totals count everything it received.`));
+    esc(`${top}. Flow totals leave out public funding and internal party transfers; a party’s own return totals count everything it received.`));
   // The first notes stay in view; the rest sit under one disclosure that the
   // mount opens on wide screens, so a phone reads three notes, not eight.
   const SHOWN = 3;
@@ -828,7 +834,7 @@ function sourceLine(flow) {
     source: federal ? 'AEC annual and election returns' : (meta.sourceShort || meta.commission || 'State register'),
     state: 'totals are a floor',
     originals: federal
-      ? [SOURCES.aecRegister, SOURCES.aecReceipts, { label: 'The money map’s data (JSON)', href: '/graph/money.json?v=suppliers-1' }]
+      ? [SOURCES.aecRegister, SOURCES.aecReceipts, { label: 'Uncapped receipt data (JSON)', href: '/graph/money-receipts.json' }]
       : [{ label: meta.commission || 'The register', href: meta.source_url }, { label: 'The money map’s data (JSON)', href: `/graph/money.${flow.jur}.json` }],
     facts: [['Coverage', esc(meta.coverage || '')]],
     notes: [esc('Every figure on this page is summed from the yearly totals in these records and every sentence is filled from those sums. Nothing here is written by a model.')],

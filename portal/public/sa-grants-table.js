@@ -1,5 +1,5 @@
 /** Source-record text only: no recipient facets, person links or identity keys. */
-import {dataTableHTML} from './datatable.js?v=766cd2970b';
+import {dataTableHTML} from './datatable.js?v=d86685a921';
 // Keep the shared numeric/CSV contract; only SA's visible zero cents are removed.
 const withoutZeroCents=value=>value.replace(/(\$[\d,]+)\.00(?=["<]|$)/g,'$1');
 export const saGrantsPhoneColumns=['recipient','year','amount'];

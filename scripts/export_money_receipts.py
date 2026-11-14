@@ -1,0 +1,210 @@
+"""Uncapped recipient receipts for factual calculations, built beside the drawing graph.
+
+No source fetch or ingestion: use the existing ReceiptSelection and canonical industry
+method from report_aec_receipt_types. Keep typed all-receipt cells for explicitly
+labelled receipt questions; only donation_received contributes to donation rankings.
+"""
+from collections import Counter, defaultdict
+from copy import deepcopy
+import json
+import hashlib
+from pathlib import Path
+from parli.ingest.aec_receipts import normal_type
+
+from scripts.aec_receipt_selection import load_selection
+from scripts.aec_receipt_types import add_receipt, receipt_cells, receipt_fields
+from scripts.export_money_graph import associated_fields, load_associated_register, norm_key, year_of
+from scripts.receipt_donor_match import ReceiptDonorMatcher, has_returned_qualifier, has_transaction_qualifier, transaction_key, reviewed_receipt_identities, receipt_identity_aliases, canonical_industries, RECEIPT_IDENTITY_RULE
+
+
+def merge_receipt_cells(target, source):
+    for kind, amount in source['by_type'].items():
+        target['by_type'][kind] += amount
+    for period, types in source['by_type_year'].items():
+        for kind, (amount, count) in types.items():
+            target['by_type_year'][period][kind][0] += amount
+            target['by_type_year'][period][kind][1] += count
+
+
+def export_receipts(db, graph, *, recover_brackets=True):
+    if not graph.get('meta', {}).get('receipt_types', {}).get('available'):
+        raise ValueError('Complete cached AEC receipt backfill required for uncapped money facts')
+    selection = load_selection(db)
+    entities = {r[0]: {"name": r[1], "kind": r[2]} for r in db.execute(
+        "SELECT entity_id,canonical_name,kind FROM ext_donor_entities")} if db.execute(
+        "SELECT 1 FROM sqlite_master WHERE name='ext_donor_entities'").fetchone() else {}
+    tags = canonical_industries(db, selection)
+    register = load_associated_register(db, selection.aliases, selection.exact)
+    # Drawing donors supply display/declaration context only, after receipt
+    # identities are resolved. Their membership cannot seed factual IDs or ties.
+    drawing_donors = {n['id']: n for n in graph['nodes'] if n['kind'] == 'donor'}
+    nodes = {n['id']: deepcopy(n) for n in graph['nodes'] if n['kind'] == 'party'}
+    entity_nodes, qualified_entity_nodes, name_nodes = {}, {}, {}
+    matcher = ReceiptDonorMatcher([], selection, reviewed_receipt_identities(db, selection))
+    cells, node_cells, names = defaultdict(receipt_cells), defaultdict(receipt_cells), defaultdict(set)
+    donation_exclusions = defaultdict(receipt_cells)
+    excluded = Counter()
+    donor_parties = defaultdict(lambda: defaultdict(lambda: {'total': 0}))
+    for donor, recipient, amount, period, kind, recipient_kind in db.execute(
+        "SELECT donor_name,recipient,amount,financial_year,receipt_type,recipient_kind "
+        "FROM aec_receipt_records WHERE record_side='recipient'"):
+        reason = selection.exclusion(donor, recipient, amount, period, recipient_kind, receipt_type=kind)
+        if reason:
+            excluded[reason] += 1
+            continue
+        eid = selection.entity(donor)
+        identity = eid or donor
+        # Resolve the actual disclosed spelling through exactly the same policy
+        # as map receipt projection, before resolving any new canonical entity.
+        matched = matcher.match(donor)
+        qualified = has_transaction_qualifier(donor)
+        canonical_label = entities.get(eid, {}).get('name') or donor
+        qualified_entity = qualified and transaction_key(canonical_label) == transaction_key(donor)
+        source = matched.node_id
+        if source and source not in nodes:
+            nodes[source] = deepcopy(matcher.nodes[source])
+        if not source:
+            source = (qualified_entity_nodes.get(eid) if qualified_entity and eid else name_nodes.get(donor)) if qualified else entity_nodes.get(eid) if eid else name_nodes.get(donor)
+            if source and qualified and not qualified_entity and nodes[source]['label'].casefold() != donor.casefold():
+                source = None
+        if not source:
+            label = donor if qualified and not qualified_entity else canonical_label
+            source = 'donor:' + norm_key(label)
+            if source in nodes or source in matcher.reviewed:
+                source += '~' + (str(eid) if eid else donor)
+            nodes[source] = {"id": source, "label": label, "kind": "donor", "aliases": []}
+            if eid and not qualified:
+                entity_nodes[eid] = source
+            elif eid and qualified_entity:
+                qualified_entity_nodes[eid] = source
+            else:
+                name_nodes[donor] = source
+        names[source].add(donor)
+        canonical_identity = selection.entity(nodes[source]['label']) if matched.node_id else identity
+        nodes[source]['industry'] = tags.get(canonical_identity, tags.get(identity, 'other'))
+        target = 'party:' + selection.recipient_party[recipient]
+        if target not in nodes:
+            nodes[target] = {"id": target, "label": selection.recipient_party[recipient], "kind": "party"}
+        donor_parties[source][selection.recipient_party[recipient]]['total'] += amount
+        add_receipt(cells[source, target], kind, period, amount)
+        add_receipt(node_cells[source], kind, period, amount)
+        add_receipt(node_cells[target], kind, period, amount)
+        # Preserve the disclosed AEC type and all-receipt figure. A name explicitly
+        # marking money returned/refunded cannot contribute to giving rankings.
+        if normal_type(kind) == 'donation_received' and has_returned_qualifier(donor):
+            for key in ((source, target), source, target):
+                add_receipt(donation_exclusions[key], kind, period, amount)
+    # Supplemental personal-name recovery runs over the full selection before
+    # totals are published; reviewed spellings used the shared matcher above.
+    for source, spellings in names.items():
+        nodes[source]['aliases'] = sorted(set(nodes[source].get('aliases', [])) | (spellings - {nodes[source]['label']}))
+    matcher.add_nodes(nodes.values())
+    active = {source for source in node_cells if nodes[source]['kind'] == 'donor'}
+    folds, decisions = matcher.bracket_folds(active) if recover_brackets else ({}, [])
+    for source, target in folds.items():
+        if target not in nodes:
+            nodes[target] = deepcopy(matcher.nodes[target])
+            nodes[target]['industry'] = tags.get(selection.entity(nodes[target]['label']), nodes[source].get('industry', 'other'))
+        merge_receipt_cells(node_cells[target], node_cells.pop(source))
+        if source in donation_exclusions:
+            merge_receipt_cells(donation_exclusions[target], donation_exclusions.pop(source))
+        names[target].update([nodes[source]['label'], *nodes[source].get('aliases', []), *names.pop(source, set())])
+        for party, values in donor_parties.pop(source, {}).items():
+            donor_parties[target][party]['total'] += values['total']
+        del nodes[source]
+    for (source, target), values in list(cells.items()):
+        if source in folds:
+            merge_receipt_cells(cells[folds[source], target], values)
+            if (source, target) in donation_exclusions:
+                merge_receipt_cells(donation_exclusions[folds[source], target], donation_exclusions.pop((source, target)))
+            del cells[source, target]
+    for source, node in drawing_donors.items():
+        if source not in nodes:
+            nodes[source] = deepcopy(node)
+        else:
+            aliases = set(node.get('aliases', [])) | set(nodes[source].get('aliases', []))
+            nodes[source] = {**deepcopy(node), **nodes[source], 'aliases': sorted(aliases)}
+    def fields(cells):
+        typed = receipt_fields(cells)
+        years = defaultdict(lambda: [0, 0])
+        for period, types in typed['by_type_year'].items():
+            year = year_of(period)
+            if year:
+                for amount, count in types.values():
+                    years[str(year)][0] += amount
+                    years[str(year)][1] += count
+        return {**typed, 'total': round(sum(typed['by_type'].values()), 2),
+                'count': sum(c[1] for t in typed['by_type_year'].values() for c in t.values()),
+                'byYear': {y: [round(c[0], 2), c[1]] for y, c in sorted(years.items())},
+                'firstYear': min(map(int, years)) if years else None,
+                'lastYear': max(map(int, years)) if years else None}
+    def exclusions(key):
+        return {'donation_exclusions': receipt_fields(donation_exclusions[key])} if key in donation_exclusions else {}
+    for node in nodes.values():
+        if node['kind'] == 'donor':
+            # Drawing clusters can disagree with the audit's canonical industry.
+            node.pop('group', None)
+        selected = fields(node_cells[node['id']])
+        node.update(exclusions(node['id']))
+        if node['kind'] == 'party':
+            # Party receipt questions retain their separate whole-return contract.
+            node.update(selected if 'total' not in node else {k: v for k, v in selected.items() if k.startswith('by_type')})
+        else:
+            # A declaration-only node retains its raw record for the labelled declaration answer.
+            if selected['count']:
+                node.update(selected)
+            elif not node.get('by_type', {}).get('public_funding'):
+                node.update({k: v for k, v in selected.items() if k.startswith('by_type')})
+            node['aliases'] = sorted(set(node.get('aliases', [])) | (names[node['id']] - {node['label']}))
+            node['aliases'] = receipt_identity_aliases(node)
+            eid = selection.entity(node['label'])
+            node.update(associated_fields({'eid': eid, 'names': [node['label'], *node['aliases']], 'parties': donor_parties[node['id']]}, register))
+    edges = [{'source': s, 'target': t, **fields(c), **exclusions((s, t))} for (s, t), c in sorted(cells.items())]
+    # Declaration-only flows remain available as declarations, never receipt totals.
+    edges.extend({**deepcopy(e), 'source': folds.get(e['source'], e['source'])} for e in graph['edges'] if not e.get('grant') and not e.get('flow')
+                 and not any(e.get('by_type', {}).get(k, 0) for k in e.get('by_type', {}) if k != 'public_funding')
+                 and (folds.get(e['source'], e['source']), e['target']) not in cells)
+    scope = ('Uncapped recipient-side itemised party receipts selected by '
+             'aec_receipt_selection.ReceiptSelection; public funding, government/internal '
+             'payers, reviewed outliers and nonpositive rows excluded. Donor declarations '
+             'are never added. Donations count Donation Received only, excluding explicitly '
+             'returned/refunded entries; their original types remain in all-receipt figures. No loans are inferred.')
+    meta = {k: deepcopy(v) for k, v in graph['meta'].items() if k.startswith('party_return')}
+    meta.update({'generated': graph['meta'].get('generated'), 'jurisdiction': 'federal',
+                 'uncapped': True, 'source': 'AEC recipient returns', 'methodology': scope,
+                 'coverage': graph['meta'].get('coverage'),
+                 'receipt_types': {**graph['meta']['receipt_types'], 'scope': scope,
+                                   'counts': {'excluded': dict(excluded), 'exported_rows': sum(e['count'] for e in edges if (e['source'], e['target']) in cells)}}})
+    private_key = lambda value: hashlib.sha256(value.encode()).hexdigest()
+    statuses = Counter(row['status'] for row in decisions)
+    meta['bracket_aliases'] = {
+        'method': 'ReceiptDonorMatcher.brackets',
+        'rule': RECEIPT_IDENTITY_RULE,
+        'counts': {'bracket_form_entities': len(decisions),
+                   'bracket_split_entities': sum(bool(row['candidates']) for row in decisions),
+                   **{status: statuses[status] for status in ('folded', 'ambiguous', 'kind_mismatch', 'state_mismatch', 'no_base',
+                      'transaction_qualifier', 'state_branch', 'entity_qualifier', 'organisation_qualifier', 'identity_qualifier')}},
+        'decisions': [{**{key: value for key, value in row.items() if key not in ('source', 'target', 'candidates')},
+                       'source_sha256': private_key(row['source']),
+                       'candidate_sha256': [private_key(value) for value in row['candidates']],
+                       **({'target_sha256': private_key(row['target'])} if 'target' in row else {})}
+                      for row in decisions],
+    }
+    out = {'meta': meta, 'nodes': sorted(nodes.values(), key=lambda n: n['id']), 'edges': edges}
+    # Small public donation-only industry/party summary; independent of map membership.
+    sums = defaultdict(lambda: defaultdict(float))
+    for edge in edges:
+        industry = nodes[edge['source']].get('industry', 'other')
+        sums[industry][nodes[edge['target']]['label']] += (edge.get('by_type', {}).get('donation_received', 0)
+            - edge.get('donation_exclusions', {}).get('by_type', {}).get('donation_received', 0))
+    summary = {'meta': {'schema': 1, 'generated': meta['generated'], 'uncapped': True,
+                        'measure': 'donation_received', 'selection': scope},
+               'industries': {ind: {party: round(amount, 2) for party, amount in sorted(parties.items()) if amount}
+                              for ind, parties in sorted(sums.items())}}
+    return out, summary
+
+
+def write_receipts(db, graph, receipts_path, totals_path):
+    receipts, totals = export_receipts(db, graph)
+    for path, data in ((receipts_path, receipts), (totals_path, totals)):
+        Path(path).write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')) + '\n')

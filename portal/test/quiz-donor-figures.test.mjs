@@ -179,10 +179,12 @@ test('wording: every donor and industry figure is put as receipts the parties re
       if (!q) continue;
       seen++;
       const copy = strip(q.prompt + ' ' + q.explanation);
-      assert.doesNotMatch(copy, GIVING, id + ': ' + copy);
-      assert.match(q.prompt, /receipts|reported/, id + ' says what the figure counts: ' + q.prompt);
+      if (id.startsWith('money-industry-') || id === 'money-party-from-industry') assert.match(copy, /donations/, id);
+      else assert.doesNotMatch(copy, GIVING, id + ': ' + copy);
+      assert.match(q.prompt, /receipts|reported|donations/, id + ' says what the figure counts: ' + q.prompt);
       assert.ok(!/—/.test(q.prompt + q.explanation), id + ' has no em dash');
-      assert.equal(q.scope, releasedCtx.receiptScope, id + ' carries the scope line');
+      if (id.startsWith('money-industry-') || id === 'money-party-from-industry') assert.match(q.scope, /donations only/, id);
+      else assert.equal(q.scope, releasedCtx.receiptScope, id + ' carries the scope line');
     }
     assert.ok(seen > 0, id + ' builds from the released data');
   }

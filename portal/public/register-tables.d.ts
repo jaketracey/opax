@@ -20,7 +20,7 @@ export function governmentFunctionTableConfig(rows:Row[]): DataTableConfig;
 export function taxExpendituresTableConfig(rows:Row[]): DataTableConfig;
 export function stateBillsTableQuery(params:URLSearchParams,config:DataTableConfig): Query;
 export function partyMoneyData(graph: PartyGraph, partyId: string): {rows:Row[];scope?:string};
-export function partyMapScope(scope?: string): string;
+export function partyTableScope(scope?: string, meta?: Record<string, unknown> | null): string;
 export function partyMoneyTableConfig(rows:Row[],id?:string,urlKey?:string,pageType?:string,scope?:{party:string;jurisdiction?:string}|null): DataTableConfig;
 export function registerTableHTML(config:DataTableConfig,query?:Query,requestURL?:string|URL): string;
 export function mountRegisterTable(el:Element,config:DataTableConfig): {destroy():void};

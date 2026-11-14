@@ -64,7 +64,7 @@ async function mount(data=graph,options={}, {url='https://opax.test/money',webgl
 const publishedGraph=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url),'utf8'));
 const receiptRanks={
   donation_only:[['Liberal',1093352],['Labor',1067066],['Nationals',258500],['LNP',50000]],
-  all_types:[['Labor',4706193],['Liberal',3538879],['Nationals',343740],['LNP',86300]],
+  all_types:[['Labor',4699593],['Liberal',3538879],['Nationals',343740],['LNP',86300]],
 };
 
 for(const webgl of [true,false])test(`${webgl?'map':'2D fallback'} receipt selection survives reload and shared links without adding history entries`,async()=>{
@@ -83,7 +83,7 @@ for(const webgl of [true,false])test(`${webgl?'map':'2D fallback'} receipt selec
         totals.set(party,(totals.get(party)||0)+edge.total);
       }
       assert.deepEqual([...totals].sort((a,b)=>b[1]-a[1]),receiptRanks[measure]);
-      assert.equal([...totals.values()].reduce((a,b)=>a+b,0),measure==='donation_only'?2468918:8675112);
+      assert.equal([...totals.values()].reduce((a,b)=>a+b,0),measure==='donation_only'?2468918:8668512);
     }
     function choose(measure){
       const history=mounted.window.history;
