@@ -18,6 +18,8 @@ import {
 import { useFaceURIs } from './FaceStackRow';
 import { partyFromCode } from '../bills/party-codes';
 
+const portraitSize = 80;
+
 export interface OfficialPage {
   label: 'Parliament of Australia page' | 'Parliament of Victoria page';
   url: string;
@@ -43,8 +45,8 @@ export function officialPageFor(
 }
 
 /**
- * The member at the top of the Your MP tab (`hero`, 80 pt) or Today's card
- * (`card`, 56 pt). One element: the whole row opens the profile; Follow,
+ * The member at the top of the Your MP tab, beside an 80 pt portrait. One
+ * element: the whole row opens the profile; Follow,
  * Share, Copy link and the official page are in its context menu and
  * VoiceOver actions. The name is a link label, never a heading.
  */
@@ -56,7 +58,6 @@ export function MemberHeroRow({
   tenure,
   personId,
   official,
-  size = 'hero',
   testID,
 }: {
   name: string;
@@ -67,12 +68,10 @@ export function MemberHeroRow({
   tenure: string | null;
   personId?: string;
   official?: OfficialPage | null;
-  size?: 'hero' | 'card';
   testID?: string;
 }) {
   const stacked = useAccessibilitySize();
   const cellStyle = useRowCellStyle();
-  const portraitSize = size === 'hero' ? 80 : 56;
   useRowInset(stacked ? 16 : 16 + portraitSize + rhythm.tight);
   const follow = useRowFollow('person', personId ?? slug, name);
   const [face] = useFaceURIs([{ name, slug }], 1);
@@ -129,7 +128,7 @@ export function MemberHeroRow({
             {/* Spec 2.1: SF Semibold on title2; tileFigure is the role with those metrics. */}
             <Text
               wordSafe
-              variant={size === 'hero' ? 'tileFigure' : 'name'}
+              variant="tileFigure"
               testID={testID && `${testID}-name`}
             >
               {name}
