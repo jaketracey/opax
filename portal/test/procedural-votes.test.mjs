@@ -183,8 +183,11 @@ test('every published bill narrative counts its shown group plus the explicitly 
           const location = sentences[cursor++];
           if (total === 1) assert.equal(location, 'It is listed under Procedural votes.', bill.key);
           else {
-            assert.match(location, /^[\d,]+ of these (?:is|are) listed under Procedural votes\.$/, bill.key);
-            assert.equal(number(location.split(' ')[0]), moved.length, bill.key);
+            const said = location.match(/^(?:(One) of these is|(Both) are|All ([\d,]+) are|([\d,]+) of these are) listed under Procedural votes\.$/);
+            assert.ok(said, `${bill.key}: ${location}`);
+            const count = said[1] ? 1 : said[2] ? 2 : number(said[3] || said[4]);
+            assert.equal(count, moved.length, bill.key);
+            assert.equal(Boolean(said[2] || said[3]), moved.length === total, `${bill.key}: "Both"/"All" only when every vote moved`);
           }
         }
         const agreed = rows.filter(r => r.outcome === 'Agreed').length;
@@ -217,11 +220,19 @@ const app = readFileSync(new URL('app.js', pub), 'utf8');
 const sourceFile = ts.createSourceFile('app.js', app, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
 const functionSource = name => sourceFile.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === name).getText(sourceFile);
 
-test('one moved vote reads naturally, while multiple votes retain their moved count', () => {
+test('moved votes are located in a plain sentence that never opens on a bare "1"', () => {
   const row = {kind:'procedure', chamber:'Senate', outcome:'Agreed', procedural:true};
+  const stay = {...row, procedural:false};
+  const location = rows => tables.divisionGroupSentences(rows, 'procedure')[0].match(/\.\s([^.]*\.)$/)?.[1];
   assert.match(tables.divisionGroupSentences([row], 'procedure')[0], /voted once .*\. It is listed under Procedural votes\.$/);
-  assert.match(tables.divisionGroupSentences([row, {...row, procedural:false}], 'procedure')[0], /1 of these is listed under Procedural votes\.$/);
-  assert.match(tables.divisionGroupSentences([row, row], 'procedure')[0], /2 of these are listed under Procedural votes\.$/);
+  assert.equal(location([row, stay]), 'One of these is listed under Procedural votes.');
+  assert.equal(location([row, stay, stay]), 'One of these is listed under Procedural votes.');
+  assert.equal(location([row, row, stay]), '2 of these are listed under Procedural votes.');
+  assert.equal(location([row, row]), 'Both are listed under Procedural votes.');
+  assert.equal(location([row, row, row]), 'All 3 are listed under Procedural votes.');
+  for (const rows of [[row], [row, stay], [row, row]]) {
+    assert.doesNotMatch(tables.divisionGroupSentences(rows, 'procedure')[0], /\.\s1 of these/);
+  }
 });
 
 test('the bill source note explains where procedural motions have moved', () => {
