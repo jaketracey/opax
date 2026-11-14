@@ -19,11 +19,16 @@ test('the privacy page lists exactly the seven App Store label types, in label o
   assert.doesNotMatch(list.replace(/<a [^>]*>[^<]*<\/a>/g, ''), /Emails or Text Messages|community|discussions|direct messages/i, 'Community data is web-only in the 1.0 app');
   const body = text(panel('privacy'));
   for (const fact of ['None of it is used to track you', 'counts every kind as connected to your identity',
-    'no analytics, no advertising and no tracking', 'Cloudflare, ElevenLabs, Progress Agentic RAG and OpenRouter',
+    'It has no advertising and no tracking, and sends no device or advertising identifier. Through PostHog, it counts which screens are used and sends a report when the app crashes or hits an error. These go through opax.com.au, carry no account details or anything you type, and are not linked to you.',
+    'no messages, contacts, photos, health, financial or purchase details or device identifiers.',
+    'Cloudflare, ElevenLabs, Progress Agentic RAG and OpenRouter',
     'An account holds up to 50', 'Your location is never sent', 'Last updated 13 November 2026',
     'Community is on the website only', 'Before your first question is sent, Ask asks your permission',
     'nothing is sent until you agree', 'After an answer, Report this answer opens the support page'])
     assert.ok(body.includes(fact), fact);
+  // The app sends PostHog analytics (since 1.1.0) and crash and error reports (1.1.4).
+  for (const stale of ['no analytics, no advertising', 'crash-reporting', 'crash reports or device identifiers'])
+    assert.ok(!body.includes(stale), stale);
 });
 
 test('the policy pages name the live contact addresses and the publisher, not an interim route', () => {
