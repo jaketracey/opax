@@ -302,7 +302,7 @@ test('bill stage fallback, status wording, rich divisions, speeches and duplicat
     speeches: { ...reading(1), records: [speech] },
   });
   expect(changes.map((c) => changeText(c, 2026))).toEqual([
-    'Second reading agreed to · Senate · 19 Aug',
+    'Second reading agreed · Senate · 19 Aug',
     'Speech by Jane Doe · 19 Aug',
   ]);
 });
@@ -426,7 +426,7 @@ test('richer fields are detected on existing catalogs without another data read'
   expect(state.status).toBe('ready');
   if (state.status !== 'ready') throw new Error('Missing fixture');
   expect(state.changes.map((c) => changeText(c, 2026))).toEqual([
-    'Second reading agreed to · Senate · 19 Aug',
+    'Second reading agreed · Senate · 19 Aug',
     'Speech by Jane Doe · 18 Aug',
   ]);
   expect(state.keys).toEqual(

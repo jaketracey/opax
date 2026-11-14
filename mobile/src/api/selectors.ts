@@ -6,11 +6,12 @@ import {
   billNoteLinks,
   billNoteText,
   billQuestionParts,
-  billSentenceCase,
   billSourceLabel,
   billSplits,
   billStage,
+  billStatusWord,
 } from './bill-transforms';
+import { outcomeWord } from '../features/bills/divisions';
 import type {
   AppEdition,
   BillDetail,
@@ -1307,7 +1308,7 @@ export function billFacetsFor(index: BillIndex) {
     )
     .map(([value, count]) => ({
       value,
-      label: billSentenceCase(value),
+      label: billStatusWord(value),
       count,
     }));
   const chambers = [...tally((b) => b.originating_house)]
@@ -1339,7 +1340,7 @@ export function billFor(bill: BillDetail, index: BillIndex) {
         title: bill.title,
         shortTitle: bill.short_title,
         status: bill.status,
-        statusLabel: billSentenceCase(bill.status) || 'Status not recorded',
+        statusLabel: billStatusWord(bill.status) || 'Status not recorded',
         statusAsOf: bill.status_as_of,
         sponsor: display.sponsor,
         sponsorMembers: display.sponsorMembers,
@@ -1383,12 +1384,7 @@ export function billFor(bill: BillDetail, index: BillIndex) {
           const { head, note } = billQuestionParts(d, bill);
           return {
             ...d,
-            outcomeLabel:
-              d.outcome === 'affirmative'
-                ? 'Agreed to'
-                : d.outcome === 'negative'
-                  ? 'Negatived'
-                  : billSentenceCase(d.outcome),
+            outcomeLabel: outcomeWord(d.outcome, d),
             // The motion put, when the record names one; otherwise the row
             // is named by its stage and date. The note is the record's prose.
             head,

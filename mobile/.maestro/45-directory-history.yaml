@@ -168,7 +168,7 @@ name: 45 Electorates, dated representation, bill filters and Votes in parliament
 # chamber/date line; the bill still heads the run.
 - assertVisible:
     id: division-history-au-federal-r7534-.*
-    text: '(Amendments?|Second reading|Third reading|Remaining stages|Clauses as printed), Senate · 19 Aug 2026 · under a time limit, (Agreed to|Not agreed to), .*'
+    text: '(Amendments?|Second reading|Third reading|Remaining stages|Clauses as printed), Senate · 19 Aug 2026 · under a time limit, (Agreed|Not agreed), .*'
     index: 0
 - assertVisible:
     id: division-history-bill-au-federal-r7534

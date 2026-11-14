@@ -79,7 +79,7 @@ test('How parliament voted finds three reading votes and leaves procedure out', 
     expect(isReadingVote(row)).toBe(true);
     expect(row.stageWords).toMatch(/^(Second|Third) reading$/);
     expect(row.chamberWords).toMatch(/^(House of Representatives|Senate)$/);
-    expect(['Agreed to', 'Not agreed to']).toContain(row.outcomeWord);
+    expect(['Agreed', 'Not agreed']).toContain(row.outcomeWord);
     expect(row.ayes + row.noes).toBeGreaterThan(0);
   }
   expect(rows[0]!.date >= rows[1]!.date && rows[1]!.date >= rows[2]!.date).toBe(

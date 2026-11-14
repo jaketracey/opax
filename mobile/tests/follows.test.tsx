@@ -247,6 +247,23 @@ describe('change markers', () => {
       },
     ]);
   });
+  test('a bill negatived reads "Now not agreed", never "Negatived"', () => {
+    const bills = structuredClone(catalogs.bills!);
+    Object.assign(bills.bills.find((b) => b.key === BILL)!, {
+      status: 'negatived',
+      status_as_of: '2026-10-01',
+    });
+    expect(
+      readyState(
+        followState(
+          { kind: 'bill', id: BILL, seen: seenFor('bill', BILL) },
+          sources({ bills }),
+        ),
+      ).changes,
+    ).toMatchObject([
+      { marker: 'status', text: 'Now not agreed; was before parliament' },
+    ]);
+  });
   test('party, seat, votes, pay and expenses changes name what moved', () => {
     const seen: Fingerprint = {
       ...seenFor('person', ALBANESE),

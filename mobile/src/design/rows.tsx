@@ -1085,7 +1085,7 @@ export function RecordRow({
 export interface DivisionRowProps {
   title: string;
   meta: string;
-  outcome: 'Agreed to' | 'Not agreed to' | 'Voted for' | 'Voted against';
+  outcome: 'Agreed' | 'Not agreed' | 'Voted for' | 'Voted against';
   ayes: number;
   noes: number;
   countsStyle: 'votes' | 'ayesNoes';

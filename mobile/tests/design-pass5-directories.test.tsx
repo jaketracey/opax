@@ -138,7 +138,7 @@ test('consecutive divisions of one bill sit under one line for the bill', () => 
 
 test('a division is spoken by its stage, where, outcome and count, then its bill', () => {
   expect(divisionLabel(division('a', 1))).toBe(
-    'Limitation of debate, Senate · 19 Aug 2026, Not agreed to, 11 ayes, 24 noes, Bill a',
+    'Limitation of debate, Senate · 19 Aug 2026, Not agreed, 11 ayes, 24 noes, Bill a',
   );
   expect(divisionLabel(division('a', 1, { stage: null }))).toMatch(/^Vote, /);
 });

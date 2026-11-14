@@ -274,7 +274,7 @@ describe('bill detail selectors', () => {
     expect(view.rows.length + view.collapsed).toBe(bill.divisions.length);
     expect(view.rows.length).toBeLessThan(bill.divisions.length);
     expect(new Set(view.rows.map((r) => r.outcomeLabel))).toEqual(
-      new Set(['Agreed to', 'Negatived']),
+      new Set(['Agreed', 'Not agreed']),
     );
     for (const row of view.rows) {
       expect(row.stageLabel).toBe(billStage(row.stage));

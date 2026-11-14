@@ -143,7 +143,7 @@ export function filterDivisions(
       if (house !== filters.chamber) return false;
     }
     if (filters.outcome) {
-      const agreed = outcomeWord(row.outcome, row) === 'Agreed to';
+      const agreed = outcomeWord(row.outcome, row) === 'Agreed';
       if (agreed !== (filters.outcome === 'agreed')) return false;
     }
     if (filters.procedural && (row.procedural ?? isProcedural(row.stage)))

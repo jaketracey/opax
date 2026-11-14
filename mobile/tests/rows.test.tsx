@@ -346,7 +346,7 @@ for (const scale of [1, 1.786, 3.571]) {
           key="DivisionRow"
           title="Example Bill"
           meta="Third reading"
-          outcome="Agreed to"
+          outcome="Agreed"
           ayes={76}
           noes={55}
           countsStyle="votes"
@@ -605,7 +605,7 @@ test('DivisionRow expands party content in place and leaves the navigation varia
     <DivisionRow
       title="Example"
       meta="Third reading"
-      outcome="Agreed to"
+      outcome="Agreed"
       ayes={76}
       noes={55}
       countsStyle="ayesNoes"
@@ -664,7 +664,7 @@ test.each([
       <DivisionRow
         title="Treasury Laws Amendment (Strengthening Enforcement and Other Measures) Bill 2026"
         meta="Limitation of debate · Senate · 20\u00a0Aug 2026"
-        outcome="Not agreed to"
+        outcome="Not agreed"
         ayes={31}
         noes={36}
         countsStyle="ayesNoes"
@@ -702,7 +702,7 @@ test('DivisionRow draws its vote bar by default; a block vote can drop it', () =
       <DivisionRow
         title="Example"
         meta="Third reading"
-        outcome="Agreed to"
+        outcome="Agreed"
         ayes={76}
         noes={55}
         countsStyle="ayesNoes"
@@ -724,7 +724,7 @@ test('DivisionRow draws its vote bar by default; a block vote can drop it', () =
     <DivisionRow
       title="Example"
       meta="Third reading"
-      outcome="Agreed to"
+      outcome="Agreed"
       ayes={76}
       noes={55}
       countsStyle="ayesNoes"
@@ -1265,7 +1265,7 @@ test.each([
       <DivisionRow
         title="Bill"
         meta="Third reading"
-        outcome="Agreed to"
+        outcome="Agreed"
         ayes={ayes}
         noes={noes}
         countsStyle={countsStyle}
@@ -1283,7 +1283,7 @@ test('passive record and division rows never draw a pressed highlight', () => {
       key="d"
       title="Bill"
       meta="Third reading"
-      outcome="Agreed to"
+      outcome="Agreed"
       ayes={1}
       noes={0}
       countsStyle="votes"

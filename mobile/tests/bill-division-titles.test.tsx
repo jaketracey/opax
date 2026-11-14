@@ -299,7 +299,7 @@ describe('the bill page draws the exported title', () => {
     const more = byID(item, `${id}-more`)[0]!;
     expect(more.props.accessibilityState).toEqual({ expanded: false });
     expect(more.props.accessibilityLabel).toMatch(
-      /^Amendment, Senate · 19 Aug 2026 · under a time limit, Not agreed to, 11 ayes, 24 noes/,
+      /^Amendment, Senate · 19 Aug 2026 · under a time limit, Not agreed, 11 ayes, 24 noes/,
     );
     expect(byID(item, `${id}-question`)).toHaveLength(0);
     press(`${id}-more`);

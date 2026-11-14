@@ -452,7 +452,7 @@ describe('how it moved: a terminal status names the last stop (P2-9)', () => {
   test.each([
     ['lapsed', 'Lapsed'],
     ['withdrawn', 'Withdrawn'],
-    ['negatived', 'Negatived'],
+    ['negatived', 'Not agreed'],
     ['not_proceeded_with', 'Not proceeded with'],
     ['discharged', 'Discharged'],
   ])('"Other" on a %s bill reads "%s"', (status, word) => {

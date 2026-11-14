@@ -118,7 +118,7 @@ name: 11 Read a bill, its machine summary, votes and speeches
     text: In committee
 - assertVisible:
     id: bill-division-0-more
-    text: 'In committee, Senate · 19 Aug 2026, Not agreed to, 11 ayes, 29 noes'
+    text: 'In committee, Senate · 19 Aug 2026, Not agreed, 11 ayes, 29 noes'
 # A tap during scroll momentum only stops the scroll on iOS: settle first.
 - scrollUntilVisible:
     element:

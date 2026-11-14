@@ -64,6 +64,7 @@ import {
   divisionMotion,
   divisionTitle,
   isProcedural,
+  outcomeWord,
 } from './bills/divisions';
 import { chamberLabel } from './bills/filters';
 import { useCatalogRecord } from './bills/useCatalogRecord';
@@ -1114,8 +1115,7 @@ function PartyDivision({
   /** A neighbour has the same bill, stage and day: which motion this is. */
   which?: string | null;
 }) {
-  const outcome =
-    row.division.outcome === 'affirmative' ? 'Agreed to' : 'Not agreed to';
+  const outcome = outcomeWord(row.division.outcome, row.division);
   const stage = divisionTitle(row.division);
   const block = !(row.ayes && row.noes);
   return (
