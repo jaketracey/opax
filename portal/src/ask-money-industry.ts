@@ -1,7 +1,7 @@
 import {personUrl} from '../public/party-page.js'
 import type {RecordQuestion} from './ask-records'
 import {federalPartyRankingIntent} from './ask-money-family'
-import {isReceiptGraph, mentionedReceiptIndustries, receiptAnswer, receiptDonorChoices, receiptGraphForQuestion, unmatchedReceiptRankingScope} from './voice-money'
+import {asideDonorNames, isReceiptGraph, mentionedReceiptIndustries, receiptAnswer, receiptDonorChoices, receiptGraphForQuestion, unmatchedReceiptRankingScope} from './voice-money'
 import {calculatedMoneyAnswer,donorTotalMoneyAnswer,rankedMoneyAnswer,readingChoices,withReading} from './ask-money'
 import {trimQuestionEnd, questionSpaces, shortTrailingMarks} from './question-text.mjs'
 import {splitPeriod} from './receipt-reading'
@@ -62,10 +62,6 @@ export async function industryMoneyAnswer(input:RecordQuestion,assets:Fetcher) {
  if(!named_intent)return null
  // A change over time is a year comparison, answered by the ranking route.
  if(/\b(?:change[sd]?|changing|increase[sd]?|decrease[sd]?|grew|growth|rose|fell)\b/i.test(input.question??''))return null
- // A period phrase inside the name or recipient is the question's period.
- const subjectSplit=splitPeriod(named_intent.subject),recipientSplit=named_intent.recipient?splitPeriod(named_intent.recipient):undefined
- const intent={...named_intent,subject:subjectSplit.text,recipient:recipientSplit?.text||named_intent.recipient,
-  period:[subjectSplit.period,recipientSplit?.period,named_intent.period].filter(Boolean).join(' ')}
  const gap=(answer:string,answer_status='needs_scope')=>({answer,answer_status,money_ranking:true,citations:{},sources:[]})
  if(input.speaker||input.chamber||input.topic||input.kind&&!['all','receipt','speech'].includes(input.kind))return gap('Choose receipt records and clear the speaker, chamber and topic filters to calculate this ranking.')
  const selection=await receiptGraphForQuestion(input.question??'',async file=>{
@@ -76,6 +72,15 @@ export async function industryMoneyAnswer(input:RecordQuestion,assets:Fetcher) {
  },input.state).catch(()=>null)
  if(!selection)return gap('The money records are unavailable right now; [see the money map](/money).','evidence_gap')
  const {graph,file,jurisdiction}=selection
+ // The question is read with each donor name in this map held aside, so digits or a
+ // period word inside a disclosed name ("Comscrv (No. 2092) Pty Ltd - Loan") are never its period.
+ const own=asideDonorNames(graph,input.question??'')
+ const read=own.text===(input.question??'')?named_intent:industryMoneyIntent(own.text)??named_intent
+ // A period phrase inside the name or recipient is the question's period.
+ const subjectSplit=splitPeriod(read.subject),recipientSplit=read.recipient?splitPeriod(read.recipient):undefined
+ const recipientText=recipientSplit?.text||read.recipient
+ const intent={...read,subject:own.restore(subjectSplit.text),recipient:recipientText&&own.restore(recipientText),
+  period:own.restore([subjectSplit.period,recipientSplit?.period,read.period].filter(Boolean).join(' '))}
  const industries=[...new Set(graph.nodes.filter(n=>n.kind==='donor').map(n=>n.industry).filter((s):s is string=>!!s))]
  const exact=graph.nodes.filter(n=>n.kind==='donor'&&[n.label,...n.aliases??[],...n.lookup_names??[]].some(name=>foldDonorName(name)===foldDonorName(intent.subject)))
  const subject=exact.length?intent.subject:intent.subject.replace(/\bunion\b/gi,'unions')
