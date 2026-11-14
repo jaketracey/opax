@@ -2,7 +2,7 @@ import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js'
 import {WebStandardStreamableHTTPServerTransport} from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js'
 import {z} from 'zod'
 import {body,CommunityError,digest,json,limit,now,type Member} from './community-core'
-import {tools,getTool,toolSchema,validateToolArgs,callTool,ToolInputError} from './tools'
+import {tools,getTool,toolSchema,toolOutputSchema,validateToolArgs,callTool,ToolInputError} from './tools'
 import {corpusKb} from './tools/corpus-records'
 import {evidenceAsAt} from '../public/evidence-date.js'
 export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=>Promise<Response>):Promise<Response>{
@@ -120,8 +120,9 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
    return grantResult(file,opax_url,jurisdiction)
   })
   for(const tool of tools){
-   server.registerTool(tool.name,{description:tool.description,inputSchema:toolSchema(tool.name),annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false}},async args=>{
-    const data=await callTool({ASSETS:env.ASSETS,TABLE_DB:env.TABLE_DB,COMMUNITY_ORIGIN:env.COMMUNITY_ORIGIN,origin:'https://opax.com.au',signal:req.signal,kb:corpusKb(env,req.signal)},tool.name,args),text=JSON.stringify(data)
+   const outputSchema=toolOutputSchema(tool.name)
+   server.registerTool(tool.name,{...(tool.title?{title:tool.title}:{}),description:tool.description,inputSchema:toolSchema(tool.name),...(outputSchema?{outputSchema}:{}),annotations:{readOnlyHint:true,destructiveHint:false,idempotentHint:true,openWorldHint:false}},async args=>{
+    const data=await callTool({ASSETS:env.ASSETS,TABLE_DB:env.TABLE_DB,COMMUNITY_ORIGIN:env.COMMUNITY_ORIGIN,VIC_ELECTION_HUB_ENABLED:env.VIC_ELECTION_HUB_ENABLED,origin:'https://opax.com.au',signal:req.signal,kb:corpusKb(env,req.signal)},tool.name,args),text=JSON.stringify(data)
     if(new TextEncoder().encode(text).length>180000)return {content:[{type:'text' as const,text:JSON.stringify({error:'This response is too large. Narrow the filters or limit.',url:env.COMMUNITY_ORIGIN+'/methods#mcp'})}],isError:true}
     return {content:[{type:'text' as const,text}],structuredContent:data,isError:!!data.error}
    })

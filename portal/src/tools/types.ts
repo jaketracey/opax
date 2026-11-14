@@ -3,7 +3,8 @@ import type { z } from 'zod'
 export type ToolArgs = Record<string, unknown>
 export type ToolInputSchema = Exclude<Parameters<typeof z.fromJSONSchema>[0], boolean> & { type: 'object'; examples: ToolArgs[] }
 /** Only public bindings/read adapters; generation credentials are not part of the tool interface. */
-export type ToolEnv = Partial<Pick<Env, 'ASSETS' | 'TABLE_DB' | 'COMMUNITY_ORIGIN'>> & {
+export type ToolOutputSchema = Exclude<Parameters<typeof z.fromJSONSchema>[0], boolean> & { type: 'object' }
+export type ToolEnv = Partial<Pick<Env, 'ASSETS' | 'TABLE_DB' | 'COMMUNITY_ORIGIN' | 'VIC_ELECTION_HUB_ENABLED'>> & {
   origin?: string
   signal?: AbortSignal
   asset?: (path: string) => Promise<unknown>
@@ -20,8 +21,12 @@ export interface StructuredToolResult {
 }
 export interface ToolDefinition {
   name: string
+  /** Human-readable name shown by MCP clients. */
+  title?: string
   description: string
   inputSchema: ToolInputSchema
+  /** JSON Schema of the structured result. A tool that declares it must always return a conforming result. */
+  outputSchema?: ToolOutputSchema
   stepLabel: (args: ToolArgs) => { label: string; arg?: string }
   handler: (env: ToolEnv, args: ToolArgs) => Promise<StructuredToolResult>
   /** Cross-field checks (e.g. min <= max), in addition to JSON Schema validation. */
@@ -41,7 +46,7 @@ export interface ToolDefinition {
 }
 export class ToolInputError extends Error {
   readonly code = -32602
-  constructor(name: string) { super('Invalid arguments for ' + name + '. See tools/list for the input schema.'); this.name = 'ToolInputError' }
+  constructor(name: string, message?: string) { super(message ?? 'Invalid arguments for ' + name + '. See tools/list for the input schema.'); this.name = 'ToolInputError' }
 }
 export async function readToolAsset(env: ToolEnv, path: string): Promise<unknown> {
   env.signal?.throwIfAborted()

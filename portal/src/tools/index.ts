@@ -25,6 +25,9 @@ import { tool as annualReports } from './annual-reports'
 import { tool as royalCommissions } from './royal-commissions'
 import { tool as integrityReports } from './integrity-reports'
 import { tool as agencyReports } from './agency-reports'
+import { memberProfile, memberInterests } from './mcp-people'
+import { divisionVotes, memberVotingRecord, billSearch, billDetail, hansardSearch } from './mcp-parliament'
+import { moneyReceipts } from './mcp-money'
 import { ToolInputError, type ToolArgs, type ToolDefinition, type ToolEnv, type StructuredToolResult } from './types'
 import type { ToolDeps, ToolSpec, ToolResult } from '../agentic-tools'
 export * from './types'
@@ -33,7 +36,9 @@ export * from './identifiers'
 
 export const TOOL_REGISTRY_VERSION = 'structured-tools-19-transcript-counts'
 /** Add each new data-tool module here once; Ask and MCP both read this catalog. */
-export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division, countRecords, moneyTotals, campaignSpend, corpusRecords, legislation, publicFinances, entityProfile, accessRegisters, memberDivisions, sponsoredBills, ...speechDataTools, personQuotes, search, readPassage, personOverview, ...calculatedRecordTools, annualReports, integrityReports, royalCommissions, agencyReports])
+export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division, countRecords, moneyTotals, campaignSpend, corpusRecords, legislation, publicFinances, entityProfile, accessRegisters, memberDivisions, sponsoredBills, ...speechDataTools, personQuotes, search, readPassage, personOverview, ...calculatedRecordTools, annualReports, integrityReports, royalCommissions, agencyReports,
+  // Public MCP record tools (mcpOnly): one paged envelope with an output schema, over the handlers above.
+  memberProfile, divisionVotes, memberVotingRecord, billSearch, billDetail, moneyReceipts, memberInterests, hansardSearch])
 const names = new Set<string>()
 for (const tool of tools) {
   if (!/^[a-z][a-z0-9_]*$/.test(tool.name) || names.has(tool.name)) throw new Error('Invalid or duplicate registry tool name')
@@ -57,7 +62,16 @@ function schemaFor(name: string) {
 export const getTool = (name: string) => tools.find(tool => tool.name === name)
 export const getAskTool = (name: string) => tools.find(tool => !tool.mcpOnly && (tool.askName ?? tool.name) === name)
 export const toolSchema = (name: string) => schemaFor(name)!
-export const listTools = () => tools.map(({ name, description, inputSchema }) => ({ name, description, inputSchema }))
+const outputSchemas = new Map<string, ReturnType<typeof z.fromJSONSchema>>()
+/** The zod form of a tool's declared output schema, built on first use; undefined for tools without one. */
+export function toolOutputSchema(name: string) {
+  const declared = getTool(name)?.outputSchema
+  if (!declared) return undefined
+  let schema = outputSchemas.get(name)
+  if (!schema) outputSchemas.set(name, schema = z.fromJSONSchema(declared).meta(declared))
+  return schema
+}
+export const listTools = () => tools.map(({ name, title, description, inputSchema, outputSchema }) => ({ name, ...(title ? { title } : {}), description, inputSchema, ...(outputSchema ? { outputSchema } : {}) }))
 export function parseToolArgs(name: string, args: unknown): ToolArgs {
   const tool = getTool(name), schema = schemaFor(name)
   if (!tool || !schema) throw new ToolInputError(name)

@@ -60,7 +60,8 @@ export const tool: ToolDefinition = {
     if (args.cursor && (!String(args.cursor).startsWith(scan_id + '-') || start > candidates.length)) throw new ToolInputError('member_divisions')
     const rows: RecordRow[] = [], citations: ToolCitation[] = []
     const counts = { aye: 0, no: 0, absent: 0, paired: 0, other: 0, member_unrecorded: 0, ambiguous_member: 0, against_party_majority: 0, party_comparisons: 0, party_comparison_unavailable: 0, matching_divisions: 0 }
-    const scanLimit = Number(args.scan_limit) || 100, rowLimit = Number(args.limit) || 5
+    // max_bytes is for other tools that page this scan; it is not in the public schema.
+    const scanLimit = Number(args.scan_limit) || 100, rowLimit = Number(args.limit) || 5, budget = Number(args.max_bytes) || 10_500
     let position = start, stop = false
     while (position < candidates.length && position - start < scanLimit && !stop) {
       env.signal?.throwIfAborted()
@@ -97,7 +98,7 @@ export const tool: ToolDefinition = {
             follow_up: { tool: 'division', arguments: { division_id, person: person.name } } }
           const citation: ToolCitation = { kind: 'record', url: source_url ?? url, text: `${person.name} ${vote === 'aye' || vote === 'no' ? 'voted ' : 'was explicitly recorded as '}${vote} in ${row.title} (${d.date}, ${d.house}, division ${division_id}).${compared ? ` ${party} recorded ${aye} ayes and ${no} noes; ${against ? 'against' : 'with'} the published party majority.` : ' No eligible party-majority comparison is established.'}` }
           // Stop before committing a row that cannot fit. This division is scanned next call.
-          if (rows.length && new TextEncoder().encode(JSON.stringify({ rows: [...rows, row], citations: [...citations, citation] })).length > 10_500) {
+          if (rows.length && new TextEncoder().encode(JSON.stringify({ rows: [...rows, row], citations: [...citations, citation] })).length > budget) {
             position--; counts.matching_divisions--; counts[countKey]--
             if (compared) { counts.party_comparisons--; if (against) counts.against_party_majority-- } else counts.party_comparison_unavailable--
             stop = true; break
