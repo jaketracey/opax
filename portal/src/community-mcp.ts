@@ -3,7 +3,8 @@ import {WebStandardStreamableHTTPServerTransport} from '@modelcontextprotocol/sd
 import {z} from 'zod'
 import {body,CommunityError,digest,json,limit,now,type Member} from './community-core'
 import {tools,getTool,toolSchema,toolOutputSchema,validateToolArgs,callTool,ToolInputError} from './tools'
-import {DISPATCH_TEXT,MCP_DIRECT,MCP_INSTRUCTIONS,MCP_OUTPUT_BYTES,MCP_REGISTERS,MCP_TEXT,listedSchema,mcpName,registryName} from './tools/mcp-listing'
+import {RECORD_TEXT_NOTICE} from './tools/mcp-common'
+import {DISPATCH_TEXT,MCP_DIRECT,MCP_EXAMPLES,MCP_REPLACED,MCP_INSTRUCTIONS,MCP_OUTPUT_BYTES,MCP_REGISTERS,MCP_TEXT,listedSchema,mcpName,registryName} from './tools/mcp-listing'
 import {corpusKb} from './tools/corpus-records'
 import {evidenceAsAt} from '../public/evidence-date.js'
 import {mcpToolTitle} from './mcp-tool-titles'
@@ -54,6 +55,8 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
     const recipient=recipientPath&&recipientId?{jurisdiction:recipientPath[1],id:recipientId}:jurisdiction&&params?.get('open')?{jurisdiction,id:params.get('open') as string}:null
     return recipient?{...row,opax_url,grant_recipient:recipient}:{...row,opax_url}
    })
+   // Record text is quoted source material: say so in the result itself, not only in the server instructions.
+   data.record_text_notice=RECORD_TEXT_NOTICE
    return {content:[{type:'text' as const,text:JSON.stringify(data)}],structuredContent:data,isError:false}
   }
   const readOnly={readOnlyHint:true,destructiveHint:false,idempotentHint:true,openWorldHint:false}
@@ -64,7 +67,7 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
   server.registerTool('read_record',{description:MCP_TEXT.read_record.description,outputSchema:z.looseObject({opax_url:z.string()}),inputSchema:{slug:z.string().regex(/^(?:speech-\d+|legal-\d+|news-\d+|bill-text-au-federal-[a-z0-9-]{1,180}|division-[a-z0-9-]+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+|grantconnect-award-ga\d+(?:-v\d+)?|grant-site-evidence-(?:ga\d+|mlci-invitation-\d{3})|mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/,'Use a slug exactly as search_records returns it, for example speech-931754.').describe('The slug of a search_records result.')},annotations:readOnly},async({slug})=>result('/api/resource/'+encodeURIComponent(slug)))
   server.registerTool('find_connections',{description:MCP_TEXT.find_connections.description,outputSchema:z.looseObject({connections:z.array(z.looseObject({name:z.string(),url:z.string()}))}),inputSchema:{query:z.string().min(2).max(120).describe('Part of a name.')},annotations:readOnly},async({query})=>{
    const response=await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+'/evidence/index.json'));if(!response.ok)return {content:[{type:'text' as const,text:JSON.stringify({error:'The connections dataset could not be read just now. Try again in a minute.'})}],isError:true}
-   const data=await response.json() as {meta?:unknown,entities:{id:string,name:string,kind:string,records:number}[]};const asAt=evidenceAsAt(data.meta);const hits=data.entities.filter(e=>e.name.toLowerCase().includes(query.toLowerCase())).slice(0,20).map(e=>({...e,url:env.COMMUNITY_ORIGIN+'/connections?entity='+e.id}));const found={...(asAt?{as_at:asAt}:{}),connections:hits};return {content:[{type:'text' as const,text:JSON.stringify(found)}],structuredContent:found}
+   const data=await response.json() as {meta?:unknown,entities:{id:string,name:string,kind:string,records:number}[]};const asAt=evidenceAsAt(data.meta);const hits=data.entities.filter(e=>e.name.toLowerCase().includes(query.toLowerCase())).slice(0,20).map(e=>({...e,url:env.COMMUNITY_ORIGIN+'/connections?entity='+e.id}));const found={...(asAt?{as_at:asAt}:{}),connections:hits,record_text_notice:RECORD_TEXT_NOTICE};return {content:[{type:'text' as const,text:JSON.stringify(found)}],structuredContent:found}
   })
   server.registerTool('corpus_coverage',{description:MCP_TEXT.corpus_coverage.description,inputSchema:{},outputSchema:z.looseObject({version:z.string(),sources:z.array(z.unknown())}),annotations:readOnly},async()=>{
    const unavailable={content:[{type:'text' as const,text:JSON.stringify({error:'The coverage statement could not be read just now. Try again in a minute.'})}],isError:true}
@@ -92,7 +95,7 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
    const size=(text:string)=>new TextEncoder().encode(text).length
    // The files list grants largest first. A short list by default; detail=full sends as many as one response holds.
    let listed=full?grants.length:Math.min(10,grants.length)
-   const encode=()=>JSON.stringify({...file,grants:grants.slice(0,listed),grants_total:file.grants_total??file.c??grants.length,grants_listed:listed,...(file.truncated||Number(file.more)>0||listed<grants.length||Number(file.grants_total)>listed?{truncated:true}:{}),field_guide:{...fieldGuide,t:qld?'total expenditure value':'total published award value',c:qld?'expenditure row count, not distinct awards':'award record count'},coverage,dataset_source_url,opax_url})
+   const encode=()=>JSON.stringify({...file,grants:grants.slice(0,listed),grants_total:file.grants_total??file.c??grants.length,grants_listed:listed,...(file.truncated||Number(file.more)>0||listed<grants.length||Number(file.grants_total)>listed?{truncated:true}:{}),record_text_notice:RECORD_TEXT_NOTICE,field_guide:{...fieldGuide,t:qld?'total expenditure value':'total published award value',c:qld?'expenditure row count, not distinct awards':'award record count'},coverage,dataset_source_url,opax_url})
    let payload=encode()
    if(size(payload)>MCP_OUTPUT_BYTES){
     listed=Math.min(200,listed);payload=encode()
@@ -139,12 +142,15 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
    const opax_url=env.COMMUNITY_ORIGIN+'/money/grants?'+new URLSearchParams({jur:jurisdiction,program:entry.id})
    return grantResult(file,opax_url,jurisdiction,detail==='full')
   })
-  const guide=(name:string)=>{const tool=getTool(registryName(name))!,text=MCP_TEXT[tool.name];return {register:name,title:text?.title??mcpToolTitle(name),description:text?.description??tool.description,arguments:listedSchema({...tool.inputSchema,examples:undefined}),examples:(tool.inputSchema.examples??[]).slice(0,3).map(example=>({register:name,arguments:example}))}}
-  async function run(tool:(typeof tools)[number],name:string,args:unknown){
+  const guide=(name:string)=>{const tool=getTool(registryName(name))!,text=MCP_TEXT[tool.name];return {register:name,title:text?.title??mcpToolTitle(name),description:text?.description??tool.description,arguments:listedSchema({...tool.inputSchema,examples:undefined}),examples:(MCP_EXAMPLES[tool.name]??tool.inputSchema.examples??[]).slice(0,3).map(example=>({register:name,arguments:example}))}}
+  async function run(tool:(typeof tools)[number],name:string,args:unknown,viaRegister=false){
    let data
    try{data=await callTool(toolEnv(),tool.name,args)}
    catch(error){if(error instanceof ToolInputError)return failed(JSON.stringify({error:error.message.replaceAll(tool.name,name),...(MCP_REGISTERS[name]?{guide:guide(name)}:{})}));throw error}
    if(data.error==='Published tool data is temporarily unavailable.')data.error='This record source could not be read just now. Try again in a minute; if it keeps failing, try a narrower request.'
+   // MCP-only fields, added after the shared tool call so Ask's result and its size budget are unchanged.
+   if(typeof data.record_text_notice!=='string')data.record_text_notice=RECORD_TEXT_NOTICE
+   if(!MCP_DIRECT.has(tool.name)&&!viaRegister)data.deprecated='"'+name+'" is a former tool name that will stop answering in a later release. Use '+(MCP_REPLACED[tool.name]??'query_register with register "'+mcpName(tool.name)+'"')+'.'
    const text=JSON.stringify(data)
    if(new TextEncoder().encode(text).length>MCP_OUTPUT_BYTES)return failed(JSON.stringify({error:'This result is larger than one response allows. Lower limit, or narrow the filters or dates.',url:'https://opax.com.au/methods#mcp'}))
    return {content:[{type:'text' as const,text}],structuredContent:data,isError:!!data.error}
@@ -157,7 +163,7 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
    for(const name of names)server.registerTool(name,{title:tool.title??MCP_TEXT[tool.name]?.title??mcpToolTitle(name),description:MCP_TEXT[tool.name]?.description??tool.description,inputSchema:toolSchema(tool.name),outputSchema:toolOutputSchema(tool.name),annotations:readOnly},async args=>run(tool,name,args))
   }
   const registerName=z.enum(Object.keys(MCP_REGISTERS) as [string,...string[]])
-  server.registerTool('query_register',{...DISPATCH_TEXT.query_register,inputSchema:{register:registerName,arguments:z.record(z.string(),z.unknown()).describe('The arguments register_guide lists for this register.')},outputSchema:toolOutputSchema('find_records'),annotations:readOnly},async({register,arguments:args})=>run(getTool(registryName(register))!,register,args))
+  server.registerTool('query_register',{...DISPATCH_TEXT.query_register,inputSchema:{register:registerName,arguments:z.record(z.string(),z.unknown()).describe('The arguments register_guide lists for this register.')},outputSchema:toolOutputSchema('find_records'),annotations:readOnly},async({register,arguments:args})=>run(getTool(registryName(register))!,register,args,true))
   server.registerTool('register_guide',{...DISPATCH_TEXT.register_guide,inputSchema:{register:z.string().describe('A register name from query_register.')},outputSchema:z.looseObject({register:z.string(),description:z.string(),arguments:z.record(z.string(),z.unknown()),examples:z.array(z.unknown())}),annotations:readOnly},async({register})=>{if(!Object.hasOwn(MCP_REGISTERS,register))return failed('There is no register named that. Registers: '+Object.keys(MCP_REGISTERS).join(', ')+'.');const found=guide(register);return {content:[{type:'text' as const,text:JSON.stringify(found)}],structuredContent:found,isError:false}})
   const transport=new WebStandardStreamableHTTPServerTransport({sessionIdGenerator:undefined,enableJsonResponse:true})
   await server.connect(transport)

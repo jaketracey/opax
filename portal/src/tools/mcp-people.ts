@@ -156,7 +156,7 @@ export const memberInterests: ToolDefinition = {
     // The register tool owns the directory, merging and date rules; only paging and shape differ here.
     const data = await declaredInterests.handler(env, { ...filters, limit: 100_000 }), rows = records(data.rows), first = rows[0]
     if (data.error) throw new Error(String(data.error))
-    const profile = first ? personLink(env, String(first.name)) : siteUrl(env, '/register/interests')
+    const profile = first ? personLink(env, String(first.name)) : siteUrl(env, '/declared')
     const paged = page('member_interests', args, rows, 20)
     return result({ ...paged, total: rows.length, url: profile,
       items: paged.items.map(r => ({ category: r.category, description: clip(r.description, full(args) ? 2000 : 280), holder: r.holder ?? null, kind: r.kind, date: r.date ?? null,

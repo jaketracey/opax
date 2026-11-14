@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { build } from 'esbuild';
 import { computeElectorateGold } from '../../scripts/agentic_ask_electorates_gold.mjs';
+// MCP adds two fields that Ask's copy of a result does not carry: the record-text notice and a former-name note.
+const mcpOnly = value => { if (!value || typeof value !== 'object' || Array.isArray(value)) return value; const { record_text_notice, deprecated, ...rest } = value; return rest; };
 
 async function load(entry, plugins = []) {
   const out = await build({ entryPoints: [new URL(entry, import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm', plugins });
@@ -141,8 +143,8 @@ for (const q of computeElectorateGold()) test(q.id + ': Ask tool step and MCP re
   assert.equal(response.status, 200);
   const rpc = await response.json();
   assert.equal(rpc.result.isError, false);
-  assert.deepEqual(rpc.result.structuredContent, ask.data);
-  assert.deepEqual(JSON.parse(rpc.result.content[0].text), ask.data);
+  assert.deepEqual(mcpOnly(rpc.result.structuredContent), ask.data);
+  assert.deepEqual(mcpOnly(JSON.parse(rpc.result.content[0].text)), ask.data);
   assert.deepEqual(await callTool(f.env, 'electorates_rank', step.args), ask.data);
   const data = rpc.result.structuredContent;
   assert.equal(data.available, q.expected.available);
@@ -178,5 +180,5 @@ test('staging MCP citations use the same canonical pages as the Ask tool step', 
   const args = { indicator: 'median_age', operation: 'lookup', electorate: 'Corangamite' };
   const ask = await runTool({ origin: 'https://opax.com.au', asset, kb: async () => { throw Error('No KB'); } }, 'electorates', args);
   const response = await f.send('tools/call', { name: 'electorates_rank', arguments: args });
-  assert.deepEqual((await response.json()).result.structuredContent, ask.data);
+  assert.deepEqual(mcpOnly((await response.json()).result.structuredContent), ask.data);
 });

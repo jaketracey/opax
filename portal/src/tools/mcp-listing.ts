@@ -55,6 +55,16 @@ export const MCP_TEXT: Readonly<Record<string, { title: string; description: str
   agency_reports: { title: 'State agency annual reports', description: 'Figures quoted, with their PDF page, from state and territory agency annual reports (mostly Victoria and New South Wales): agency head and executive pay, executive bands, staff, expenses, consultancies and oversight counts. Views: coverage, documents and facts. Commonwealth entities are in annual_reports.' },
 }
 
+/** What to call instead of a former name. Sent with every result a former name returns. */
+export const MCP_REPLACED: Readonly<Record<string, string>> = {
+  member_votes: 'member_voting_record, or division_votes for one division', member_divisions: 'member_voting_record', find_people: 'member_profile', person_overview: 'member_profile',
+  sponsored_bills: 'bill_search with sponsor', money_totals: 'money_receipts', party_receipts: 'money_receipts',
+  person_quotes: 'hansard_search', find_quotes: 'hansard_search', search: 'hansard_search', read_passage: 'hansard_search with record_id',
+}
+/** Guide examples where the tool's own first example needs more scope to return rows. */
+export const MCP_EXAMPLES: Readonly<Record<string, Record<string, unknown>[]>> = {
+  ranked_money: [{ question: 'What were the largest individual disclosed receipts to federal parties in 2023-24?', state: 'federal', from: '2023', to: '2023' }],
+}
 /** Registry tools listed by name. Every other listed register is reached through query_register. */
 export const MCP_DIRECT: ReadonlySet<string> = new Set(['member_profile', 'division_votes', 'member_voting_record', 'bill_search', 'bill_detail', 'money_receipts', 'member_interests', 'hansard_search'])
 /**
@@ -102,7 +112,7 @@ export const MCP_PAGES: Readonly<Record<string, string>> = {
 
 /** One result shape for every registry tool that does not declare its own. */
 export const RECORD_OUTPUT_SCHEMA = { type: 'object', properties: {
-  rows: { type: 'array' }, citations: { type: 'array' }, notes: { type: 'array', items: { type: 'string' } }, opax_url: { type: 'string' }, error: { type: 'string' },
+  rows: { type: 'array' }, citations: { type: 'array' }, notes: { type: 'array', items: { type: 'string' } }, opax_url: { type: 'string' }, error: { type: 'string' }, deprecated: { type: 'string' },
 }, required: ['rows', 'citations', 'notes'] } as ToolOutputSchema
 /** The listed shape of every paged tool. Each tool's own, fuller schema stays in its definition and is held to it by the tests. */
 export const PAGED_OUTPUT_SCHEMA = { type: 'object', properties: {

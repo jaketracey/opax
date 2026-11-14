@@ -1216,6 +1216,9 @@
     },
     "error": {
      "type": "string"
+    },
+    "deprecated": {
+     "type": "string"
     }
    },
    "required": [

@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { build } from 'esbuild';
 import { resource, speeches } from './fixtures/ask-person.mjs';
+// MCP adds two fields that Ask's copy of a result does not carry: the record-text notice and a former-name note.
+const mcpOnly = value => { if (!value || typeof value !== 'object' || Array.isArray(value)) return value; const { record_text_notice, deprecated, ...rest } = value; return rest; };
 
 const compiled = await build({ stdin: { contents: "export {callTool, askToolSpecs, listTools, ToolInputError} from './src/tools/index'; export {communityMcp} from './src/community-mcp'; export {corpusKb} from './src/tools/corpus-records';", resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'node', format: 'esm' });
 const api = await import('data:text/javascript;base64,' + Buffer.from(compiled.outputFiles[0].text).toString('base64'));
@@ -226,7 +228,7 @@ test('shared data tools and moved Ask capabilities have identical schemas and pa
       const rpc = await send('tools/call', { name, arguments: args });
       assert.equal(rpc.error, undefined, JSON.stringify(rpc));
       const ask = await api.askToolSpecs.find(t => t.name === name).run({ ...fixture.env, origin: 'https://opax.com.au' }, args);
-      assert.deepEqual(rpc.result.structuredContent, ask.data, name);
+      assert.deepEqual(mcpOnly(rpc.result.structuredContent), ask.data, name);
       assert.equal(ask.ok, true, JSON.stringify(ask));
       assert.ok(Array.isArray(ask.data.rows));
       if (['legislation', 'public_finances', 'entity_profile', 'corpus_records'].includes(name)) cited(ask.data);

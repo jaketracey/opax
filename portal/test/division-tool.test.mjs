@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { build } from 'esbuild';
 import { MockLanguageModelV4 } from 'ai/test';
+// MCP adds two fields that Ask's copy of a result does not carry: the record-text notice and a former-name note.
+const mcpOnly = value => { if (!value || typeof value !== 'object' || Array.isArray(value)) return value; const { record_text_notice, deprecated, ...rest } = value; return rest; };
 
 // Only the published table adapter is replaced. Registry, Ask and MCP use the
 // same division implementation, and every asset read stays in this process.
@@ -381,8 +383,8 @@ test('MCP exposes the same division schema and returns exactly the Ask and regis
   const ask = await api.runTool(f.deps, 'division', args);
   const rpc = await send('tools/call', { name: 'division', arguments: args });
   assert.equal(rpc.result.isError, false);
-  assert.deepEqual(rpc.result.structuredContent, direct);
-  assert.deepEqual(JSON.parse(rpc.result.content[0].text), ask.data);
+  assert.deepEqual(mcpOnly(rpc.result.structuredContent), direct);
+  assert.deepEqual(mcpOnly(JSON.parse(rpc.result.content[0].text)), ask.data);
   const reads = f.reads.length;
   assert.equal((await send('tools/call', { name: 'division', arguments: { date: '2025-02-30' } })).result.isError, true);
   assert.equal(f.reads.length, reads);

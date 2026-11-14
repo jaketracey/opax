@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { build } from 'esbuild';
+// MCP adds two fields that Ask's copy of a result does not carry: the record-text notice and a former-name note.
+const mcpOnly = value => { if (!value || typeof value !== 'object' || Array.isArray(value)) return value; const { record_text_notice, deprecated, ...rest } = value; return rest; };
 
 async function load(entry) {
   const built = await build({ entryPoints: [new URL(entry, import.meta.url).pathname], bundle: true, write: false, platform: 'node', format: 'esm' });
@@ -138,8 +140,8 @@ test('the authenticated MCP endpoint lists and calls count_records with the same
     const expected = await callTool({ origin: 'https://opax.com.au', ASSETS: f.env.ASSETS }, 'count_records', args);
     const result = (await rpc('tools/call', { name: 'count_records', arguments: args })).result;
     assert.equal(result.isError, false);
-    assert.deepEqual(result.structuredContent, expected);
-    assert.deepEqual(JSON.parse(result.content[0].text), expected);
+    assert.deepEqual(mcpOnly(result.structuredContent), expected);
+    assert.deepEqual(mcpOnly(JSON.parse(result.content[0].text)), expected);
   }
 });
 

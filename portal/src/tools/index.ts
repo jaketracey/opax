@@ -114,7 +114,9 @@ export async function callTool(env: ToolEnv, name: string, args: unknown): Promi
     // Every record set names an OPAX page to cite: its own listing or record page where it has one, else the register's page.
     if (Array.isArray(data.rows) && typeof data.opax_url !== 'string') {
       const origin = new URL(env.origin ?? env.COMMUNITY_ORIGIN ?? 'https://opax.com.au').origin
-      const own = [data.list, ...(Array.isArray(data.citations) ? data.citations.map(c => c?.url) : [])].find((url): url is string => typeof url === 'string' && url.startsWith(origin + '/') && !/\.json(?:$|[?#])/.test(url))
+      // One row is cited by its own page; several rows by the page for the set, where the register has one.
+      const set = data.rows.length > 1 && MCP_PAGES[tool!.name] ? [data.list] : [data.list, ...(Array.isArray(data.citations) ? data.citations.map(c => c?.url) : [])]
+      const own = set.find((url): url is string => typeof url === 'string' && url.startsWith(origin + '/') && !/\.json(?:$|[?#])/.test(url))
       // A result about one person names that person's page.
       const row = data.rows[0] && typeof data.rows[0] === 'object' ? data.rows[0] as Record<string, unknown> : {}
       const who = PERSON_PAGES.has(tool!.name) ? [row.person, row.name, row.member].find((name): name is string => typeof name === 'string' && personUrl(name) !== '/subject/person') : undefined

@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { build } from 'esbuild';
+// MCP adds two fields that Ask's copy of a result does not carry: the record-text notice and a former-name note.
+const mcpOnly = value => { if (!value || typeof value !== 'object' || Array.isArray(value)) return value; const { record_text_notice, deprecated, ...rest } = value; return rest; };
 
 const built = await build({ stdin: { contents: "export {callTool, askToolSpecs, listTools, ToolInputError} from './src/tools/index'; export {communityMcp} from './src/community-mcp';", resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'node', format: 'esm' });
 const api = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
@@ -193,7 +195,7 @@ test('all three tools are shared by authenticated MCP and Ask with matching sche
     assert.equal(listed.find(t => t.name === 'query_register').inputSchema.properties.register.enum.includes(name), name === 'access_registers');
     const rpc = await send('tools/call', { name, arguments: args }); assert.equal(rpc.error, undefined, JSON.stringify(rpc));
     const ask = await api.askToolSpecs.find(t => t.name === name).run({ ...env, origin: 'https://opax.com.au' }, args);
-    assert.deepEqual(rpc.result.structuredContent, ask.data); cited(ask.data);
+    assert.deepEqual(mcpOnly(rpc.result.structuredContent), ask.data); cited(ask.data);
     assert.equal((await send('tools/call', { name, arguments: { extra: true } })).result.isError, true);
   }
 });

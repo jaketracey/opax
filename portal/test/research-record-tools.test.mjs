@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { build } from 'esbuild';
 import { MockLanguageModelV4 } from 'ai/test';
+// MCP adds two fields that Ask's copy of a result does not carry: the record-text notice and a former-name note.
+const mcpOnly = value => { if (!value || typeof value !== 'object' || Array.isArray(value)) return value; const { record_text_notice, deprecated, ...rest } = value; return rest; };
 
 // The published tables are D1; these fixtures replace the in-process table API and record each query.
 const tableQueries = [];
@@ -130,7 +132,7 @@ test('every record tool is a register on MCP with its registry schema, and bad i
   const expenses = await send('tools/call', {name:'member_expenses',arguments:{person:'Robin Example',year:2025}});
   const expenseData = expenses.result.structuredContent;
   const askExpenses = await api.TOOL_SPECS.find(t=>t.name==='member_expenses').run(env,{person:'Robin Example',year:2025});
-  assert.deepEqual(expenseData,askExpenses.data);
+  assert.deepEqual(mcpOnly(expenseData),askExpenses.data);
   assert.equal(expenseData.rows[0].amount_aud,123456);
   assert.match(expenseData.citations[0].text,/calendar year 2025/);
   const pay = await send('tools/call', { name: 'parliamentary_pay', arguments: { person: 'Robin Example' } });
