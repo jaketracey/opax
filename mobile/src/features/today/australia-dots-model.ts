@@ -122,6 +122,52 @@ export function dotRowOpacity(yFraction: number, scroll: number): number {
   return clamp((1 - wipe) * 1.6 - yFraction * 0.6);
 }
 
+/**
+ * How long after the window changes (rotation, Stage Manager, a fold, a new
+ * text size) the bar's reports are taken as its rest height there. The
+ * window's size reaches JS first; NativeStack sends the header's new height
+ * about 100 ms later (its debounce), at most a few hundred under load.
+ */
+export const RELEARN_MS = 1000;
+
+/**
+ * The large-title bar's height with Today at rest, the inset the art is
+ * placed and faded from. It belongs to one window: an iPhone's portrait bar
+ * is about 160 pt, its landscape bar has no large title, and iOS often leaves
+ * the title collapsed when the phone turns back. So a window change starts
+ * it again from the bar's next reports; otherwise it keeps the tallest
+ * report, ignoring NativeStack's first inline estimate and the collapse as
+ * Today scrolls. When the bar is the same height in the new window (an iPad
+ * turning) nothing is reported and the inset carries over.
+ */
+export interface RestInset {
+  /** The window it was learnt in: width, height and text scale. */
+  window: string;
+  inset: number;
+  /** The header last reported. */
+  header: number;
+  /** Until then (ms) each report replaces the inset: the window just changed. */
+  relearnUntil: number;
+}
+
+export function nextRestInset(
+  previous: RestInset | null,
+  header: number,
+  window: string,
+  now: number,
+): RestInset {
+  if (!previous) return { window, inset: header, header, relearnUntil: 0 };
+  let next = previous;
+  if (window !== next.window)
+    next = { ...next, window, relearnUntil: now + RELEARN_MS };
+  if (header === next.header) return next;
+  return {
+    ...next,
+    header,
+    inset: now <= next.relearnUntil ? header : Math.max(next.inset, header),
+  };
+}
+
 /** iOS offsets start at minus the expanded bar's automatic top inset. */
 export function dotScrollDistance(offset: number, topInset: number): number {
   'worklet';

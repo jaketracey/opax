@@ -81,6 +81,15 @@ import { useStableKeyboard } from './useStableKeyboard';
 // The compatibility button's notes-only adapter now presents /rule.
 
 /**
+ * How far a Screen's column starts from its scroll view's leading edge: the
+ * content's leading padding. Decorative art that bleeds to the screen's
+ * edge (Today's dot map) measures from here, not from the window, which is
+ * wider wherever a sidebar or a vertical bar takes a side of it. Null
+ * outside a Screen.
+ */
+export const ScreenGutterContext = createContext<number | null>(null);
+
+/**
  * The column a screen's content sits in. On compact width (every iPhone,
  * and a narrow iPad window) content uses the 16 or 20 pt screen margin. On regular width it is centred at `readable` (700pt,
  * long text) or `wide` (1180pt, front pages and grids), and the children
@@ -285,6 +294,7 @@ export function Screen({
     column,
     contentInsetAdjustmentBehavior !== 'never',
   );
+  const gutter = content.paddingLeft ?? content.paddingHorizontal;
   const ground = grouped && designFlags.groupedSurfaces ? 'sunken' : 'paper';
   const clearance = useFloatingBarClearance();
   const androidScroll = useRef<ScrollView>(null);
@@ -507,7 +517,9 @@ export function Screen({
                             regular ? rhythmRegular.section : rhythm.section
                           }
                         >
-                          {anchorHeadings(withOffline(children, offline))}
+                          <ScreenGutterContext.Provider value={gutter}>
+                            {anchorHeadings(withOffline(children, offline))}
+                          </ScreenGutterContext.Provider>
                         </ScreenSectionGapContext.Provider>
                       </View>
                     </TitleContentContext.Provider>
