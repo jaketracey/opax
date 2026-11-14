@@ -51,15 +51,46 @@ async function countAnonymous(env:Env):Promise<void> {
  // Workers observability, the sink Ask monitoring writes to. Counts only; never an address or a query.
  if(row?.hits===setting(env,'MCP_ANON_ALERT_HOURLY',20000))console.warn(JSON.stringify({kind:'mcp_anon_volume',level:'alert',hour:bucket*HOUR,hits:row.hits}))
 }
+// --- the daily spend guard ---------------------------------------------------
+// Two counts per UTC day, each a number only. When either reaches its cap the no-account tier pauses by
+// itself until the day ends: /mcp answers as it does with the kill switch off, and members are unaffected.
+//  - metered: calls that can reach a backend billed per call. Today that is the Progress knowledge base
+//    (record search and reading); no MCP tool calls a language model or Workers AI.
+//  - requests: every no-account request, which bounds Cloudflare's own per-request and per-row charges.
+const DAY=86400
+const dayKey=(kind:'metered'|'requests',day:number)=>`mcp-anon-${kind}-day:${day}`
+const caps=(env:Env)=>({metered:setting(env,'MCP_ANON_DAILY_METERED_CAP',3000),requests:setting(env,'MCP_ANON_DAILY_REQUEST_CAP',200000)})
+async function countDay(env:Env,kind:'metered'|'requests'):Promise<number> {
+ const day=Math.floor(now()/DAY)
+ const row=await env.COMMUNITY_DB.prepare('INSERT INTO community_limits(key,hits,expires_at) VALUES (?,1,?) ON CONFLICT(key) DO UPDATE SET hits=hits+1 RETURNING hits').bind(dayKey(kind,day),(day+1)*DAY).first<{hits:number}>()
+ const hits=row?.hits??0
+ // Logged once, as the cap is reached (Workers observability, with the hourly volume line).
+ if(hits===caps(env)[kind])console.warn(JSON.stringify({kind:'mcp_anon_daily_cap',level:'alert',count:kind,day:day*DAY,hits}))
+ return hits
+}
+/** Which daily cap, if any, has paused the no-account tier today. */
+export async function anonymousPaused(env:Env):Promise<'metered'|'requests'|null> {
+ const day=Math.floor(now()/DAY),cap=caps(env)
+ const rows=await env.COMMUNITY_DB.prepare('SELECT key,hits FROM community_limits WHERE key IN (?,?)').bind(dayKey('metered',day),dayKey('requests',day)).all<{key:string,hits:number}>()
+ const hits=(kind:'metered'|'requests')=>rows.results.find(row=>row.key===dayKey(kind,day))?.hits??0
+ return hits('metered')>=cap.metered?'metered':hits('requests')>=cap.requests?'requests':null
+}
+const pausedMessage=(env:Env)=>'OPAX tools are paused for callers without an account until tomorrow (UTC): today\'s shared allowance is used up. Connect with a free OPAX account to keep going: '+env.COMMUNITY_ORIGIN+'/mcp'
+/** Count one call to a metered backend for a no-account caller; refuse it once today's cap is spent. */
+export async function spendMetered(env:Env):Promise<void> {
+ if(await countDay(env,'metered')>caps(env).metered)throw new McpLimitError(pausedMessage(env),DAY-now()%DAY)
+}
+
 /** Sustained means three complete hours in a row over the alert line, at any point in the last day. */
-export async function anonymousVolume(env:Env):Promise<{anonymous:boolean,volume:'normal'|'high',hours_over:number}> {
+export async function anonymousVolume(env:Env):Promise<{anonymous:boolean,volume:'normal'|'high',hours_over:number,paused_today:'metered'|'requests'|null}> {
  const bucket=Math.floor(now()/HOUR),line=setting(env,'MCP_ANON_ALERT_HOURLY',20000)
  const hours=Array.from({length:24},(_,i)=>bucket-1-i)
  const rows=await env.COMMUNITY_DB.prepare(`SELECT key,hits FROM community_limits WHERE key IN (${hours.map(()=>'?').join(',')})`).bind(...hours.map(hourKey)).all<{key:string,hits:number}>()
  const over=new Set(rows.results.filter(row=>row.hits>=line).map(row=>row.key))
  let run=0,longest=0
  for(const hour of hours){run=over.has(hourKey(hour))?run+1:0;longest=Math.max(longest,run)}
- return {anonymous:anonymousEnabled(env),volume:longest>=3?'high':'normal',hours_over:over.size}
+ const paused=anonymousEnabled(env)?await anonymousPaused(env):null
+ return {anonymous:anonymousEnabled(env)&&!paused,volume:longest>=3?'high':'normal',hours_over:over.size,paused_today:paused}
 }
 
 /** IPv4 ranges as [network, mask]; anything malformed is dropped. */
@@ -123,6 +154,8 @@ const windowLeft=()=>60-now()%60
  */
 export async function spendAnonymous(req:Request,env:Env,method:unknown):Promise<void> {
  const ip=req.headers.get('cf-connecting-ip')||'local',shared=sharedAddress(env,ip),network=networkKey(ip)
+ // The daily guard first, by a read alone: a paused tier costs no write.
+ if(await anonymousPaused(env))throw new CommunityError(401,pausedMessage(env))
  const named=sessionOf(req)
  const perClient=setting(env,'MCP_ANON_PER_CLIENT_MINUTE',60),everyone=setting(env,'MCP_ANON_GLOBAL_MINUTE',3000)
  const perIp=shared?setting(env,'MCP_ANON_SHARED_IP_MINUTE',1500):setting(env,'MCP_ANON_PER_IP_MINUTE',300)
@@ -147,6 +180,7 @@ export async function spendAnonymous(req:Request,env:Env,method:unknown):Promise
  // Assistants' shared addresses and everyone else have separate overall ceilings, so neither crowd can shut the other out.
  if(await refusedAt(limit(env,shared?'mcp-anon-all-shared':'mcp-anon-all',everyone,60)))throw new McpLimitError('OPAX tools are busy for callers without an account. Wait and try again, or connect with a free OPAX account for your own limit: '+env.COMMUNITY_ORIGIN+'/mcp',windowLeft())
  await countAnonymous(env)
+ await countDay(env,'requests')
 }
 /** A session id for a client, so its later requests are counted as its own. Nothing is stored for it. */
 export function withSession(response:Response,method:unknown):Response {

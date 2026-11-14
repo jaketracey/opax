@@ -2,12 +2,17 @@ import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js'
 import {WebStandardStreamableHTTPServerTransport} from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js'
 import {z} from 'zod'
 import {body,CommunityError,json} from './community-core'
-import {challenge,mcpCaller,McpLimitError,spendAnonymous,spendMember,withSession,withCors} from './mcp-access'
+import {challenge,mcpCaller,McpLimitError,spendAnonymous,spendMember,spendMetered,withSession,withCors} from './mcp-access'
 import {tools,getTool,toolSchema,validateToolArgs,callTool,ToolInputError} from './tools'
-import {corpusKb} from './tools/corpus-records'
+import {corpusKb as openCorpusKb} from './tools/corpus-records'
 import {evidenceAsAt} from '../public/evidence-date.js'
-export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=>Promise<Response>):Promise<Response>{
+export async function communityMcp(req:Request,env:Env,openPublic:(path:string)=>Promise<Response>):Promise<Response>{
  let rpcId:string|number|null=null
+ // Every route from a tool to the knowledge base passes through these two readers. For a caller without an
+ // account each use is counted against the day's cap on metered calls (mcp-access.ts) before it is made.
+ let metered=false
+ const readPublic=async(path:string)=>{if(metered)await spendMetered(env);return openPublic(path)}
+ const corpusKb=(...args:Parameters<typeof openCorpusKb>):ReturnType<typeof openCorpusKb>=>{const kb=openCorpusKb(...args);return async(path,body)=>{if(metered)await spendMetered(env);return kb(path,body)}}
  try{
   // Access (anonymous, member key or connected client), limits and CORS live in mcp-access.ts.
   const caller=await mcpCaller(req,env)
@@ -15,6 +20,7 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
   if(req.method!=='POST')return withCors(json({error:'This endpoint accepts MCP requests over HTTP POST.'},405,{'allow':'POST'}))
   const parsed=await body(req,16384)
   if(['string','number'].includes(typeof parsed.id))rpcId=parsed.id as string|number
+  metered=caller.kind==='anonymous'
   if(caller.kind==='anonymous')await spendAnonymous(req,env,parsed.method);else await spendMember(caller,req,env,parsed.method)
   // The SDK wraps validation failures as isError tool results. Registry tools
   // expose the required JSON-RPC InvalidParams error before SDK dispatch.

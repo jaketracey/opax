@@ -74,6 +74,9 @@ def evaluate(corpus, status, now, max_age=20):
 def evaluate_mcp(status):
     """Sustained no-account MCP volume is a problem; the tier being switched off is only a note."""
     problems, notes = [], []
+    if status.get('paused_today'):
+        problems.append(f"MCP without an account paused itself today: the daily cap on {status['paused_today']} was reached "
+                        '(MCP_ANON_DAILY_METERED_CAP / MCP_ANON_DAILY_REQUEST_CAP, docs/COMMUNITY.md)')
     if status.get('volume') == 'high':
         problems.append('MCP requests without an account have stayed above the alert line for three hours in a row in the last day; '
                         'check Worker logs for mcp_anon_volume and consider MCP_ANON_ENABLED=false (docs/COMMUNITY.md)')
@@ -107,6 +110,15 @@ def main():
         notes.extend(mcp_notes)
     except Exception as error:
         warnings.append(f'cannot read MCP volume status: {error}')
+    # ChatGPT's server addresses get the shared ceiling in the no-account limits; OpenAI changes the list.
+    try:
+        from refresh_mcp_egress import FILE as egress_file, SOURCE as egress_source, missing_ranges
+        behind = missing_ranges(fetch(egress_source), egress_file.read_text())
+        if behind:
+            warnings.append(f'OpenAI publishes {len(behind)} server ranges the MCP limits do not hold (first: {behind[0]}); '
+                            'run python3 scripts/refresh_mcp_egress.py --write and deploy')
+    except Exception as error:
+        warnings.append(f'cannot check the OpenAI server range list: {error}')
     for note in notes:
         print(note)
     for warning in warnings:

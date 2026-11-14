@@ -83,7 +83,7 @@ test('without a token the read-only tools answer, with open CORS and no credenti
  assert.match(preflight.headers.get('access-control-allow-headers'),/mcp-protocol-version/);
  // Nothing about the caller is stored beyond hashed limit buckets and an hourly count.
  assert.equal(f.db.prepare('SELECT count(*) n FROM members').get().n,0);
- assert.ok(f.db.prepare('SELECT key FROM community_limits').all().every(row=>/^[0-9a-f]{64}$/.test(row.key)||/^mcp-anon-hour:\d+$/.test(row.key)));
+ assert.ok(f.db.prepare('SELECT key FROM community_limits').all().every(row=>/^[0-9a-f]{64}$/.test(row.key)||/^mcp-anon-(?:hour|requests-day|metered-day):\d+$/.test(row.key)));
  f.db.close();
 });
 
@@ -290,21 +290,59 @@ test('a member is limited on their own account, not with the no-account callers'
  f.db.close();
 });
 
+test('the daily cap on metered calls pauses the no-account tier by itself; members carry on',async()=>{
+ const f=fixture({MCP_ANON_DAILY_METERED_CAP:'2'});
+ const search=session=>f.mcp({'mcp-session-id':session},{rpc:{jsonrpc:'2.0',id:1,method:'tools/call',params:{name:'search_records',arguments:{query:'housing'}}}});
+ const warnings=[],warn=console.warn;console.warn=line=>warnings.push(line);
+ try{
+  for(const session of ['session-aaaa','session-bbbb'])assert.equal((await search(session)).status,200);
+  // A tool that reads only published files is not metered.
+  assert.equal(f.db.prepare("SELECT hits FROM community_limits WHERE key LIKE 'mcp-anon-metered-day:%'").get().hits,2);
+  assert.equal((await f.mcp({},call())).status,401); // paused: answered like the kill switch
+ }finally{console.warn=warn}
+ assert.equal(warnings.filter(line=>line.includes('mcp_anon_daily_cap')).length,1);
+ const paused=await f.mcp();
+ assert.equal(paused.status,401);
+ assert.match(paused.headers.get('www-authenticate'),/resource_metadata=/);
+ assert.match((await paused.json()).error,/paused for callers without an account until tomorrow/);
+ assert.deepEqual(await anonymousVolume(f.env),{anonymous:false,volume:'normal',hours_over:0,paused_today:'metered'});
+ // A paused tier writes nothing more.
+ const before=f.db.prepare('SELECT sum(hits) n FROM community_limits').get().n;
+ await f.mcp();await search('session-cccc');
+ assert.equal(f.db.prepare('SELECT sum(hits) n FROM community_limits').get().n,before);
+ // Members are not counted and not paused.
+ const session=await f.login(),key=(await (await f.account('keys','POST',{name:'Laptop'},session.cookie)).json()).token;
+ assert.equal((await f.mcp(f.bearer(key),{rpc:{jsonrpc:'2.0',id:1,method:'tools/call',params:{name:'search_records',arguments:{query:'housing'}}}})).status,200);
+ assert.equal(f.db.prepare("SELECT hits FROM community_limits WHERE key LIKE 'mcp-anon-metered-day:%'").get().hits,2);
+ // The next UTC day starts clean.
+ f.db.prepare("UPDATE community_limits SET key='mcp-anon-metered-day:1' WHERE key LIKE 'mcp-anon-metered-day:%'").run();
+ assert.equal((await f.mcp()).status,200);
+ f.db.close();
+});
+
+test('the daily cap on all no-account requests pauses the tier too',async()=>{
+ const f=fixture({MCP_ANON_DAILY_REQUEST_CAP:'3'});
+ for(let i=0;i<3;i++)assert.equal((await f.mcp()).status,200);
+ assert.equal((await f.mcp()).status,401);
+ assert.equal((await anonymousVolume(f.env)).paused_today,'requests');
+ f.db.close();
+});
+
 test('sustained no-account volume is reported high after three full hours over the line',async()=>{
  const f=fixture({MCP_ANON_ALERT_HOURLY:'2'});
  const warnings=[],warn=console.warn;console.warn=line=>warnings.push(line);
  try{for(let i=0;i<3;i++)await f.mcp()}finally{console.warn=warn}
  assert.equal(warnings.length,1); // logged once, when the hour crosses the line
  assert.deepEqual(Object.keys(JSON.parse(warnings[0])).sort(),['hits','hour','kind','level']);
- assert.deepEqual(await anonymousVolume(f.env),{anonymous:true,volume:'normal',hours_over:0});
+ assert.deepEqual(await anonymousVolume(f.env),{anonymous:true,volume:'normal',hours_over:0,paused_today:null});
  const hour=Math.floor(Date.now()/3600000);
  const add=(back,hits)=>f.db.prepare('INSERT INTO community_limits(key,hits,expires_at) VALUES (?,?,?)').run('mcp-anon-hour:'+(hour-back),hits,(hour-back+1)*3600);
  // Two hours in a row, a quiet hour, then one more: busy but not sustained.
  for(const back of [6,7,9])add(back,5);
- assert.deepEqual(await anonymousVolume(f.env),{anonymous:true,volume:'normal',hours_over:3});
+ assert.deepEqual(await anonymousVolume(f.env),{anonymous:true,volume:'normal',hours_over:3,paused_today:null});
  // Three in a row anywhere in the last day is sustained, and stays reported for the daily check.
  add(8,2);
- assert.deepEqual(await anonymousVolume(f.env),{anonymous:true,volume:'high',hours_over:4});
+ assert.deepEqual(await anonymousVolume(f.env),{anonymous:true,volume:'high',hours_over:4,paused_today:null});
  add(30,99);
  assert.equal((await anonymousVolume(f.env)).hours_over,4);
  f.db.close();

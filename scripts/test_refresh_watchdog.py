@@ -2,6 +2,7 @@ import copy
 from datetime import datetime, timedelta, timezone
 import unittest
 
+from scripts.refresh_mcp_egress import held, missing_ranges, render
 from scripts.refresh_watchdog import evaluate, evaluate_mcp
 
 
@@ -96,6 +97,18 @@ class Watchdog(unittest.TestCase):
         self.assertIn('MCP_ANON_ENABLED=false', problems[0])
         self.assertEqual(evaluate_mcp({'anonymous': True, 'volume': 'normal', 'hours_over': 0}), ([], ['MCP without an account: on, volume normal']))
         self.assertEqual(evaluate_mcp({'anonymous': False, 'volume': 'normal'})[0], [])
+
+    def test_a_self_paused_mcp_tier_is_a_problem(self):
+        problems, _ = evaluate_mcp({'anonymous': False, 'volume': 'normal', 'paused_today': 'metered'})
+        self.assertEqual(len(problems), 1)
+        self.assertIn('daily cap on metered', problems[0])
+
+    def test_openai_ranges_the_worker_lacks_are_listed_and_a_rewrite_holds_them(self):
+        text = "export const ANTHROPIC_EGRESS = '160.79.104.0/21'\nexport const OPENAI_EGRESS = '1.2.3.0/24,' +\n  '5.6.7.8/32'\n"
+        payload = {'prefixes': [{'ipv4Prefix': '5.6.7.8/32'}, {'ipv4Prefix': '9.9.9.0/28'}, {'ipv6Prefix': '2001:db8::/32'}]}
+        self.assertEqual(held(text), {'1.2.3.0/24', '5.6.7.8/32'})  # Anthropic's range is not counted as OpenAI's
+        self.assertEqual(missing_ranges(payload, text), ['9.9.9.0/28'])
+        self.assertEqual(missing_ranges(payload, text.replace("'5.6.7.8/32'", render(payload).split(' = ')[1])), [])
 
 
 if __name__ == '__main__':
