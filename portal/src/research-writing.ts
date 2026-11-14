@@ -18,29 +18,20 @@ import {decodeHTMLStrict} from 'entities'
 import {moneyWritingInput,moneyWritingLines,moneyEvidenceRows} from './research-money-writing'
 import {inferPeriod} from './ask-period'
 import { transcriptTurns, shortTranscriptQuote, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, type TranscriptTurn } from './transcript-answer'
+import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
+import {isRecordCountQuestion} from './ask-scope-intent'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-27-recorded-chamber'
+export const ANSWER_WRITING_VERSION = 'written-answer-28-dedupe'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
 const clean = (s: string) => s.replace(/\*\*/g, '').replace(/\s+/g, ' ').trim()
 const key = (s: string) => clean(s).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
+const signedKey = (s: string) => clean(s).toLowerCase().replace(/[^\p{L}\p{N}−+-]+/gu, ' ').trim()
 /** Remove repeated sentences at composition and public boundaries, preserving
  * original code-point citation ranges through every deletion. */
 export function distinctSummary<T extends Record<string, unknown>>(payload:T):T {
-  const answer=String(payload.answer??''),seen=new Set<string>(),remove:{start:number;end:number}[]=[]
-  for(const part of sentenceParts(answer)) {
-    const signature=key(part.text)
-    if(!signature||/^what the records do show$/.test(signature))continue
-    if(seen.has(signature)||signature.length>=20&&[...seen].some(previous=>(' '+previous+' ').includes(' '+signature+' '))) {
-      const line=answer.lastIndexOf('\n',part.at-1)+1,prefix=answer.slice(line,part.at)
-      remove.push({start:/^\s*[-*]?\s*$/.test(prefix)?line:part.at,end:part.at+part.text.length})
-    } else seen.add(signature)
-  }
-  return rewriteAnswerPayload(payload,replace=>{
-    // Positional deletions must run from right to left, so identical text in
-    // the opening remains the cited answer rather than being removed too.
-    for(const {start,end} of remove.reverse())replace(new RegExp(`(?<=^[\\s\\S]{${start}})[\\s\\S]{${end-start}}`,'g'),'')
+  return rewriteAnswerPayload(dedupeAnswer(payload),replace=>{
     // Some register exports list a company once by name and again with its
     // business details. Keep the fuller item without repeating the name.
     replace(/:\s*[^:\n]+;[^\n]+/g,list=>{
@@ -77,8 +68,8 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
     text = clean(record?decodeHTMLStrict(text):text).replace(/^[-*•]\s*/, '')
     if(record)source={...source,snippet:recordEvidenceText(source.snippet,source.url)}
     if (!/[\p{L}]/u.test(text) || /^\|?\s*[-: ]+(?:\|[-: ]+)*\|?$/.test(text)) return
-    const k = key(text)
-    if (seen.has(k)) {if(coverage){const prior=out.find(f=>key(f.text)===k);if(prior)prior.coverage=true}return}
+    const k = statementSource(source)+'|'+signedKey(text)
+    if (seen.has(k)) {if(coverage){const prior=out.find(f=>statementSource(f.source)+'|'+signedKey(f.text)===k);if(prior)prior.coverage=true}return}
     const metadata=/^(?:Period|Financial years):/i.test(text)
     const evidenceId=source.resource+'/t/body/0'
     let atoms=atomsFromText(text,evidenceId,source)
@@ -123,14 +114,35 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
   }
   const source = out[0]?.source
   if (source) for (const note of notes) add(note, {...source,resource:'coverage-'+stableEvidenceKey(note),title:'Coverage of the selected records',snippet:note}, true)
-  return out.slice(0, 80)
+  return dedupeWritingFacts(out).slice(0, 80)
+}
+/** Tool retries and selected points can describe the same record twice. Keep one writer fact per statement. */
+export function dedupeWritingFacts(facts:WritingFact[]):WritingFact[] {
+  const out:WritingFact[]=[]
+  // Structured record labels can wrap the claim in a report title and page reference.
+  const core=(f:WritingFact)=>f.text===f.source.title&&/own words:|:\s*"/.test(f.text)?/"([^"]+)"/.exec(f.text)?.[1]??f.text:f.text
+  const contains=(a:string,b:string)=>signedKey(b).length>=20&&(' '+signedKey(a)+' ').includes(' '+signedKey(b)+' ')&&tokens(b).every(n=>tokens(a).includes(n))
+  for(const fact of facts){
+    const prior=out.find(f=>statementSource(f.source)===statementSource(fact.source)&&!!f.coverage===!!fact.coverage&&(sameStatement(f.text,fact.text)||contains(core(f),core(fact))||contains(core(fact),core(f))))
+    if(prior){
+      // The fuller statement keeps every additional figure and claim from this same record.
+      if(contains(core(fact),core(prior))&&!sameStatement(fact.text,prior.text)){
+        prior.text=fact.text
+        prior.atoms=fact.atoms?.map(a=>({...a,evidenceId:prior.evidenceId??a.evidenceId}))
+      }
+      prior.source={...prior.source,snippet:[...new Set([prior.source.snippet,fact.source.snippet,fact.text])].join('\n')}
+      continue
+    }
+    out.push({...fact,source:{...fact.source}})
+  }
+  return out
 }
 const dollars=(amount:number)=>'$'+amount.toLocaleString('en-AU')
 function stableEvidenceKey(text:string):string {let n=2166136261;for(const c of text)n=Math.imul(n^c.charCodeAt(0),16777619);return (n>>>0).toString(16)}
 function assemble(lines: WrittenSentence[], input: WritingInput, preserveCoverage=false): QualitativeAnswer {
   let answer = ''; const citations: QualitativeAnswer['citations'] = {}, sources = new Map<string, WritingFact['source']>()
   const hasAnswer=!preserveCoverage&&lines.some(line=>!line.coverage&&line.text.trim()&&!/^What the records do show:$/i.test(line.text))
-  const notes:string[]=[],seen=new Set<string>()
+  const notes:string[]=[]
   for (const line of lines) {
     if(hasAnswer&&line.coverage){
       if(coverageApplies(line.text,input)&&!notes.some(note=>key(note)===key(line.text))){
@@ -139,9 +151,6 @@ function assemble(lines: WrittenSentence[], input: WritingInput, preserveCoverag
       }
       continue
     }
-    const signature=key(line.text.replace(/^[-*]\s*/,''))
-    if(seen.has(signature))continue
-    seen.add(signature)
     if (answer) answer += '\n\n'
     const start = Array.from(answer).length; answer += line.text
     const citedClaims=new Set<string>()
@@ -156,7 +165,7 @@ function assemble(lines: WrittenSentence[], input: WritingInput, preserveCoverag
       const atoms=(fact.atoms??atomsFromText(fact.text,fact.evidenceId??source.resource+'/t/body/0',source)).map(atom=>
         atomPeriod&&!atom.period.since&&!atom.period.until&&!atom.period.label?{...atom,period:{label:atomPeriod.text.replace(/^(?:Period|Financial years):\s*/i,'').replace(/\.$/,'')},periodEvidenceId:atomPeriod.evidenceId??atomPeriod.source.resource+'/t/body/0'}:atom)
       // Equal figures for different counterparties or awards are separate claims.
-      const identity=source.receipt?JSON.stringify(source.receipt):key(fact.text)
+      const identity=(source.receipt?JSON.stringify(source.receipt):key(fact.text))+'|'+(fact.evidenceId??source.resource)
       if(identity&&citedClaims.has(identity))continue
       if(identity)citedClaims.add(identity)
       const previous=sources.get(source.resource)
@@ -179,6 +188,7 @@ const finish = (s: string) => /[.!?]$/.test(s) ? s : s+'.'
 export const payRate = (s: string) => /^(.+?): (\$\d(?:[\d,]*\d)?(?:\.\d+)?) a year as (.+?), (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2});/.exec(s)
 const day = (s: string) => new Date(s+'T00:00:00Z').toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})
 function coverageApplies(text:string,input:WritingInput):boolean {
+  if(/complete historical total/i.test(text))return totalsAsked(input)
   if (/^Title selection:|^Industry totals cover classified sources/i.test(text)) return true
   const tally=input.facts.some(f=>!f.coverage&&/\bin ([\d,]+) divisions\b/i.test(f.text)&&Number(/\bin ([\d,]+) divisions\b/i.exec(f.text)![1].replaceAll(',',''))>1)
   const divisionCount=tally||/\b(?:how many|count|number|total|most|all|every)\b/i.test(input.question)&&/\b(?:votes?|divisions?)\b/i.test(input.question)
@@ -189,14 +199,16 @@ function coverageApplies(text:string,input:WritingInput):boolean {
   if(/ranked (?:sample|matching)|topic|Hansard|committee|labelled speeches/i.test(text))return speechCount
   return true
 }
+const totalsAsked=(input:WritingInput)=>isRecordCountQuestion(input.question)||!!input.constraints?.recordCountKind||!!input.constraints?.speechRankingGrain||!!input.constraints?.industryRanking||!!input.constraints?.grantRecipient||/\b(?:how many|how much|number of|count|total|totals)\b/i.test(input.question)||
+  /\b(?:most|top|biggest|largest|so much)\b/i.test(input.question)&&(/\b(?:money|donations?|donors?|receipts?|funding|gifts?|payments?|dollars?)\b/i.test(input.question)||input.facts.some(f=>f.source.receipt))
 function coverageSentence(input: WritingInput): WrittenSentence | undefined {
   const all = input.facts.filter(f => f.coverage && !/^(?:Period|Financial years):/i.test(f.text)&&coverageApplies(f.text,input))
-  const basis=basisSentence(all),unconfirmed=all.filter(f=>f.text.includes(UNCONFIRMED_PERIOD))
+  const basis=basisSentence(all,totalsAsked(input)),unconfirmed=all.filter(f=>f.text.includes(UNCONFIRMED_PERIOD))
   // The period caveat sits beside the record's own caveat, never instead of it.
   if(unconfirmed.length)return {text:[UNCONFIRMED_PERIOD,basis?.text].filter(Boolean).join(' '),facts:[...new Set([...unconfirmed.map(f=>f.id),...basis?.facts??[]])],coverage:true}
   return basis
 }
-function basisSentence(all:WritingFact[]):WrittenSentence|undefined {
+function basisSentence(all:WritingFact[],totals:boolean):WrittenSentence|undefined {
   const text=all.map(f=>f.text.replace(UNCONFIRMED_PERIOD,'')).join(' ').trim()
   if(!text)return
   // These aggregates declare their exact selection and exclusions. Do not replace them with a generic caveat.
@@ -216,7 +228,7 @@ function basisSentence(all:WritingFact[]):WrittenSentence|undefined {
   if(/divisions are matched by (?:a word|words)|recorded vote (?:is not a statement of reasons|does not establish why)/i.test(text))return {text:[/divisions are matched/i.test(text)?'Divisions are matched by words in their titles; divisions filed under other titles may be missed.':'',/recorded vote/i.test(text)?'A recorded vote does not establish why a member voted that way.':''].filter(Boolean).join(' '),facts:ids,coverage:true}
   if(/contract/i.test(text))return {text:'These are published contract values, including amendments, rather than payments.',facts:ids,coverage:true}
   if(/topic|Hansard|committee|labelled speeches/i.test(text))return {text:'Topic-labelled speech records are incomplete, with older years and known Hansard gaps undercounted'+(/committee.*exclud|exclud.*committee/i.test(text)?' and committee-hearing turns excluded':'')+'.',facts:ids,coverage:true}
-  if(/unknown|unavailable|cannot establish|not.*covered/i.test(text))return {text:'Some selected records lack verified coverage for the requested scope, so they cannot establish a complete historical total.',facts:ids,coverage:true}
+  if(totals&&/unknown|unavailable|cannot establish|not.*covered/i.test(text))return {text:'Some selected records lack verified coverage for the requested scope, so they cannot establish a complete historical total.',facts:ids,coverage:true}
   const relevant=all.find(f=>/^It excludes/i.test(f.text))?.text
   return relevant ? {text:finish(clean(relevant.replace(/^It excludes/i,'These records exclude')).split(/(?<=[.!?])\s+/)[0]),facts:ids,coverage:true} : undefined
 
@@ -321,9 +333,9 @@ export function renderFacts(input:WritingInput,bullets=false):WrittenSentence[] 
   if(money)return money.map((line,i)=>bullets&&!i?{...line,text:'- '+line.text}:line)
   const limit=/each year|by year|year-by-year|trend|over time/i.test(input.question)?30:Math.min(30,Number(/top (\d+)/i.exec(input.question)?.[1])||8),seen=new Set<string>(),lines:WrittenSentence[]=[]
   for(const fact of foundFacts(input))for(const part of fact.source.receipt?[receiptLine(fact.source.receipt)]:fact.text.split(/\n+/)){
-    const text=factLine(part)
-    if(!text||seen.has(key(text))||lines.length>=limit||/^(?:Period|Financial years):/i.test(clean(part)))continue
-    seen.add(key(text));lines.push({text:(lines.length||bullets?'- ':'')+text,facts:[fact.id]})
+    const text=factLine(part),signature=statementSource(fact.source)+'|'+key(text??'')
+    if(!text||seen.has(signature)||lines.length>=limit||/^(?:Period|Financial years):/i.test(clean(part)))continue
+    seen.add(signature);lines.push({text:(lines.length||bullets?'- ':'')+text,facts:[fact.id]})
   }
   const period=lines.length?input.facts.find(f=>/^(?:Period|Financial years):\s*\D*\d{4}/i.test(f.text)):undefined
   if(period&&!foundFacts(input).some(f=>f.source.receipt))lines.push({text:finish('These figures cover '+clean(period.text).replace(/^(?:Period|Financial years):\s*/i,'').replace(/\.$/,'')),facts:[period.id]})
@@ -584,7 +596,7 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
   const obj=raw && typeof raw==='object' ? raw as {sentences?:unknown;answer_decision?:unknown} : {}
   if (!Array.isArray(obj.sentences)) return null
   const declared=answerDecision(obj)
-  const lines: WrittenSentence[]=[], seen=new Set<string>(), claims=new Set<string>(); let coverage=false
+  const lines: WrittenSentence[]=[], seen=new Map<string,WrittenSentence>(), claims=new Set<string>(),figuresSeen=new Set<string>(); let coverage=false
   for (const value of obj.sentences.slice(0,16)) {
     const line=value as WrittenSentence
     if (typeof line?.text!=='string' || !line.text.trim() || rawToolEcho(line.text)) continue
@@ -597,10 +609,15 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
     if (isLimit) coverage=true
     for (const sentence of text.split(/(?<=[.!?])\s+/)) {
       // A sentence repeating the same figures for the same owners as one already written adds nothing.
-      const k=key(sentence), identities=facts.flatMap(f=>(f.atoms??atomsFromText(f.text,f.evidenceId??f.source.resource,f.source)).filter(a=>tokens(sentence).includes(a.value)&&(!a.entity||sentence.includes(a.entity))).map(a=>writingClaimIdentity(a,f)))
-      if (!k || seen.has(k) || identities.length>0&&identities.every(id=>claims.has(id))) continue
-      seen.add(k); identities.forEach(id=>claims.add(id))
-      lines.push({text:finish(sentence),facts:ids,coverage:isLimit})
+      const provenance=[...new Set(facts.map(f=>statementSource(f.source)))].sort().join('|')
+      const k=provenance+'|'+key(sentence), identities=facts.flatMap(f=>(f.atoms??atomsFromText(f.text,f.evidenceId??f.source.resource,f.source)).filter(a=>tokens(sentence).includes(a.value)&&(!a.entity||sentence.includes(a.entity))).map(a=>provenance+'|'+writingClaimIdentity(a,f)))
+      if(!key(sentence))continue
+      const prior=seen.get(k)
+      if(prior){prior.facts=[...new Set([...prior.facts,...ids])];continue}
+      if(identities.length>0&&identities.every(id=>claims.has(id))&&tokens(sentence).every(n=>figuresSeen.has(n)))continue
+      const kept={text:finish(sentence),facts:ids,coverage:isLimit}
+      seen.set(k,kept); identities.forEach(id=>claims.add(id));tokens(sentence).forEach(n=>figuresSeen.add(n))
+      lines.push(kept)
     }
   }
   if (!lines.length) return null
@@ -650,11 +667,17 @@ export function appendWrittenPoints(written: QualitativeAnswer, points: Qualitat
     const owners=[...new Set(atoms.map(a=>a.entity).filter(e=>e&&text.toLowerCase().includes(e.toLowerCase())))]
     const keys=selected.filter(({atom:a})=>tokens(text).includes(a.value)&&(!owners.length||owners.includes(a.entity))).map(({atom,fact})=>writingClaimIdentity(atom,fact))
     if(/\b(?:highest|lowest|most|least|led|leader|ranked)\b/i.test(text))keys.push(...selected.filter(({atom:a})=>(!owners.length||owners.includes(a.entity))&&(a.metric==='salary'||a.metric.startsWith('speeches')||a.metric==='receipts')).map(({atom,fact})=>writingClaimIdentity({...atom,value:'ranking'},fact)))
-    return keys.length?[...new Set(keys)]:proseClaimKeys(text)
+    const provenance=[...new Set(sources.map(statementSource))].sort().join('|')
+    return (keys.length?[...new Set(keys)]:proseClaimKeys(text)).map(k=>provenance+'|'+k)
+  }
+  const signature=(payload:QualitativeAnswer,text:string,from:number,until:number)=>{
+    const ids=Object.entries(payload.citations).filter(([,ranges])=>ranges.some(([a,b])=>a<until&&b>from)).map(([id])=>id)
+    const provenance=[...new Set(payload.sources.filter(s=>ids.some(id=>id===s.resource||id.startsWith(s.resource+'/'))).map(statementSource))].sort().join('|')
+    return provenance+'|'+key(text.replace(/^[-*]\s*/,''))
   }
   for(const clause of claimClauses(answer)){
     const from=Array.from(answer.slice(0,clause.start)).length,until=from+Array.from(clause.text).length
-    seen.add(key(clause.text.replace(/^[-*]\s*/,'')));identities(written,clause.text,from,until).forEach(id=>claims.add(id))
+    seen.add(signature(written,clause.text,from,until));identities(written,clause.text,from,until).forEach(id=>claims.add(id))
   }
   const append=(text:string,from:number,until:number)=>{
     if(answer)answer+='\n\n';const offset=Array.from(answer).length;answer+=text
@@ -666,8 +689,8 @@ export function appendWrittenPoints(written: QualitativeAnswer, points: Qualitat
     const line=part[0],base=part.index!,all=claimClauses(line),kept:typeof all=[]
     for(const clause of all){
       const from=Array.from(points.answer.slice(0,base+clause.start)).length,until=from+Array.from(clause.text).length
-      const normal=key(clause.text.replace(/^[-*]\s*/,'')),keys=identities(points,clause.text,from,until)
-      if(seen.has(normal)||keys.length>0&&keys.every(id=>claims.has(id)))continue
+      const normal=signature(points,clause.text,from,until),keys=identities(points,clause.text,from,until)
+      if(seen.has(normal)||keys.length>0&&keys.every(id=>claims.has(id))&&tokens(clause.text).every(n=>tokens(answer).includes(n)))continue
       seen.add(normal);keys.forEach(id=>claims.add(id));kept.push(clause)
     }
     if(kept.length===all.length&&kept.length){const from=Array.from(points.answer.slice(0,base)).length;append(line,from,from+Array.from(line).length)}

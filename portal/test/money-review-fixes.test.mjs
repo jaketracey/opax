@@ -56,7 +56,7 @@ test('real retail and other industry totals match the canonical summary, includi
     const expected=Object.values(summary.industries[industry]).reduce((a,b)=>a+b,0);
     assert.equal(resolveFlow({jur:'federal',industry},full,null).total,expected,industry);
   }
-  assert.equal(resolveFlow({jur:'federal',industry:'retail'},full,null).total,7525586);
+  assert.equal(resolveFlow({jur:'federal',industry:'retail'},full,null).total,7532586); // $7,000 moves to its folded base's canonical retail industry
 });
 
 test('Explain’s primary scope says donations for industry/party facts and all types for a named donor',()=>{
@@ -97,7 +97,7 @@ test('Liberal and Labor agree across browser, SSR, register API and the actual C
   const buckets=new Map(partyMoneyBucketFiles('/graph/money-receipts.json',full));
   const local=await tableDatabase({memorySQL:true,datasets:{'party-money':loaded.rows['party-money']},metadata:loaded.metadata});
   try{
-    for(const [party,count,total] of [['Liberal',7856,403545081],['Labor',9866,579045428]]){
+    for(const [party,count,total] of [['Liberal',7827,403316945],['Labor',9811,579163899]]){
       const data=partyMoneyData(full,'party:'+party),browser=partyMoneyTableConfig(data.rows,undefined,undefined,undefined,{party,jurisdiction:'federal'});
       assert.equal(data.rows.length,count);assert.equal(data.rows.reduce((s,r)=>s+r.total,0),total);
       const expected=numericRows(configFrom(registerTableHTML(browser)).rows);

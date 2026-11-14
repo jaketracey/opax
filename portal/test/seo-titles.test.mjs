@@ -21,7 +21,7 @@ test('former members, state members and statewide councils', () => {
   const aitchison = { name: 'Jenny Aitchison', party: null, states: ['nsw'], last: 2026, representation: [seat('Maitland', 'nsw_la', 'nsw')] };
   assert.equal(personTitle('Jenny Aitchison', personRole(aitchison, 2026), 'Speeches'), 'Jenny Aitchison MP, Member for Maitland (NSW) · Speeches · OPAX');
   const mlc = { name: 'Bronnie Taylor', party: null, states: ['nsw'], last: 2023, representation: [seat('Legislative Council district of New South Wales', 'nsw_lc', 'nsw')] };
-  assert.equal(roleLine(personRole(mlc, 2026)), 'former MLC (NSW)');
+  assert.equal(roleLine(personRole(mlc, 2026)), 'former MLC for New South Wales');
   const minister = { name: 'Ingrid Stitt', party: null, states: ['vic'], last: 2026, representation: [seat('Western Metropolitan – Minister for Mental Health, Minister for Ageing', 'vic_lc', 'vic', 'VIC')] };
   assert.equal(roleLine(personRole(minister, 2026)), 'MLC for Western Metropolitan (Vic)');
   // Federal former, state sitting: the state seat is the one they hold now.
@@ -39,7 +39,7 @@ test('dated current service chooses the chamber and party for a career spanning 
       { ...seat('Werriwa', 'representatives'), start: '1994-01-29', end: '2005-01-21', party: 'Labor' },
       { ...seat('New South Wales', 'nsw_lc', 'nsw'), start: '2023-08-22', end: null, party: 'Independent' },
     ] };
-  assert.equal(roleLine(personRole(latham, 2026)), 'Independent MLC (NSW)');
+  assert.equal(roleLine(personRole(latham, 2026)), 'Independent MLC for New South Wales');
   assert.doesNotMatch(personTitle(latham.name, personRole(latham, 2026), 'Speeches'), /Werriwa|MP,/);
   // A mismatched or future service cannot supply a party for another seat.
   latham.affiliations[1].start = '2027-01-01';
@@ -60,11 +60,21 @@ test('a current state seat after an earlier Senate seat reads as the sitting mem
   const r = personRole(hartigan, 2026);
   assert.equal(r.former, '');
   assert.equal(r.federal, false);
-  assert.equal(roleLine(r), 'One Nation MLC (SA)');
-  assert.equal(personTitle(hartigan.name, r, 'Speeches'), 'Rowan Hartigan, One Nation MLC (SA) · Speeches · OPAX');
+  assert.equal(roleLine(r), 'One Nation MLC for South Australia');
+  assert.equal(personTitle(hartigan.name, r, 'Speeches'), 'Rowan Hartigan, One Nation MLC for South Australia · OPAX');
   // Without the dated Council service the same row falls back to the former Senate seat.
   const before = { ...hartigan, current: undefined, party_now: undefined, affiliations: undefined };
   assert.equal(roleLine(personRole(before, 2026)), 'former Liberal Senator for South Australia');
+});
+
+test('all five state upper houses use MLC in the summary and title', () => {
+  for (const [jurisdiction, state] of [['nsw', 'New South Wales'], ['vic', 'Victoria'], ['sa', 'South Australia'], ['wa', 'Western Australia'], ['tas', 'Tasmania']]) {
+    const person = {name: 'Aster Wattle', party: 'Labor', current: true, states: [jurisdiction], last: 2026,
+      representation: [seat(state, `${jurisdiction}_lc`, jurisdiction, jurisdiction.toUpperCase())]};
+    const role = personRole(person, 2026);
+    assert.equal(roleLine(role), `Labor MLC for ${state}`);
+    assert.ok(personTitle(person.name, role, 'Speeches').includes(`MLC for ${state}`));
+  }
 });
 
 test('a long title drops the suffix, then the state, then the party', () => {

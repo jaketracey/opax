@@ -139,6 +139,62 @@ def test_recipient_measure_never_adds_donor_declarations_and_preserves_equal_gif
     assert all(n["by_type"] == edge["by_type"] for n in graph["nodes"])
 
 
+def test_receipt_alias_fallback_counts_once_and_reports_ambiguous_rows(tmp_path):
+    from scripts.aec_receipt_types import attach_receipt_types
+    from scripts.audit_donor_receipt_aliases import audit
+    from scripts.reconcile_aec_receipts import audit as reconcile
+    db = database(tmp_path / "db")
+    db.executescript("CREATE TABLE ext_donor_aliases(alias_raw,entity_id);"
+                     "CREATE TABLE ext_donor_entities(entity_id,kind);")
+    donations._insert_donation(db, "Alex Hart", "Example Party", 100, "2020-21", "aec_annual")
+    db.execute("UPDATE donations SET recipient_canonical='Labor'")
+    lines = [("Alex Hart", 100), ("Alex (Morgan) Hart", 20), ("ALEX HART", 30), ("Alex,  Hart.", 40),
+             ("Alex (Morgan Hart", 50), ("Jordan (Riley) Vale", 60), ("Jordan Vale", 70),
+             ("Jordan (Quinn) Vale", 80), ("JORDAN (QUINN) VALE", 10),
+             ("Alex (see note page 18) Hart", 100)]
+    load(db, "AllAnnualData", {"Detailed Receipts.csv": [
+        annual(Value=str(amount), **{"Received From": name}) for name, amount in lines]})
+    load(db, "AllElectionsData", {})
+    load(db, "AllReferendumData", {})
+    nodes = [{"id": "party:Labor", "kind": "party", "label": "Labor"}] + [
+        {"id": id, "kind": "donor", "label": name, "total": 999} for id, name in
+        [("alex", "Alex Hart"), ("jordan", "Jordan Vale"), ("other", "Jordan (Quinn) Vale")]]
+    graph = {"meta": {}, "nodes": nodes, "edges": [
+        {"source": source, "target": "party:Labor", "total": 999} for source in ["alex", "jordan", "other"]]}
+    attach_receipt_types(db, graph)
+    assert [e["by_type"] for e in graph["edges"]] == [
+        {"donation_received": 190}, {"donation_received": 70}, {"donation_received": 90}]
+    assert all(e["total"] == 999 for e in graph["edges"])
+    assert graph["nodes"][0]["by_type"] == {"donation_received": 350}
+    cells = graph["edges"][0]["by_type_year"]["2020-21"]["donation_received"]
+    assert cells == [190, 4]
+    counts = graph["meta"]["receipt_types"]["counts"]
+    assert counts["exported_rows"] == 7
+    assert counts["excluded_donor_or_edge_outside_map"] == 2
+    assert counts["excluded_flagged_review"] == 1
+    matching = graph["meta"]["receipt_types"]["donor_matching"]
+    assert matching["by_result"]["ambiguous"] == [1, 60]
+    assert matching["by_result"]["unmatched"] == [1, 50]
+    assert matching["by_result"]["annotation_review"] == [1, 100]
+    assert len(matching["exceptions"]) == 1
+    assert matching["exceptions"][0]["candidate_nodes"] == 2
+    result = audit(db, graph)
+    assert result["counts"]["before_unmatched_node"] == {"rows": 6, "aud": 210}
+    assert result["counts"]["after_unmatched_node"] == {"rows": 2, "aud": 110}
+    assert result["counts"]["newly_exported"] == {"rows": 4, "aud": 100}
+    assert "existing_match_changed" not in result["counts"]
+    # Independent CSV/Decimal calculation, with no production matching imports.
+    archive_path = tmp_path / "annual.zip"
+    archive_path.write_bytes(archive("AllAnnualData", {"Detailed Receipts.csv": [
+        annual(Value=str(amount), **{"Received From": name}) for name, amount in lines]}))
+    assert reconcile(db, archive_path, graph, report(db, tmp_path, graph))["exported_rows"] == 7
+    # The party cap cannot choose between donors or create a missing edge.
+    graph["edges"] = graph["edges"][:1]
+    attach_receipt_types(db, graph)
+    assert graph["meta"]["receipt_types"]["counts"]["exported_rows"] == 4
+    assert graph["meta"]["receipt_types"]["donor_matching"]["by_result"]["ambiguous"] == [1, 60]
+
+
 def test_offline_backfill_reimport_keeps_types_ids_classifications_and_flags(tmp_path):
     path = tmp_path / "db"
     db = database(path)
@@ -588,6 +644,24 @@ def test_selecting_the_renamed_party_moves_only_its_node_its_donors_and_their_fl
     assert sum(donor_after["by_type"].values()) - sum(donor_before["by_type"].values()) == sum(flow["by_type"].values()) == 1300
 
 
+def test_independent_csv_reconciliation_counts_a_renamed_partys_unbucketed_receipts(tmp_path):
+    import re
+    from scripts import reconcile_aec_receipts as verifier
+    path, _, new = renamed_party_fixture(tmp_path)
+    db = sqlite3.connect(path)
+    rows = [annual(kind, Value=str(amount), **{"Received From": donor, "Recipient Name": recipient,
+            "Financial Year": year}) for donor, recipient, amount, year, kind in db.execute(
+                "SELECT donor_name,recipient,amount,financial_year,receipt_type FROM aec_receipt_records "
+                "WHERE source_file='Detailed Receipts.csv'")]
+    raw = tmp_path / "annual.zip"
+    raw.write_bytes(archive("AllAnnualData", {"Detailed Receipts.csv": rows}))
+    with renamed_party_rules(), mock.patch.object(verifier, "OWN_PARTIES", [
+            (re.compile(r"\bfixture (?:liberty|freedom)\b", re.I), new)]):
+        graph = export(path)
+        result = verifier.audit(db, raw, graph, report(db, tmp_path, graph))
+    assert result["exported_rows"] == 4
+
+
 def test_public_funding_is_excluded_by_receipt_type_whatever_the_payer_is_called():
     """A34/A35: Public Funding is never a donor, also under a spelling no name rule knows ("NSW Efa")."""
     from scripts.aec_receipt_selection import ReceiptSelection
@@ -676,6 +750,43 @@ def test_uncapped_money_export_is_independent_of_drawing_cap_and_keeps_receipt_r
     assert all(n['group'] == 'retail' for n in capped['nodes'] if n['kind'] == 'donor'), 'drawing metadata stays untouched'
     assert not any(n['label'] in ('Example Opaque Payer', 'Electoral Commission Example', 'Labor Branch Example')
                    and n.get('by_type', {}).get('donation_received') for n in full['nodes'])
+
+
+def test_uncapped_bracket_fold_preserves_each_receipt_and_does_not_depend_on_map_membership(tmp_path):
+    from scripts.export_money_receipts import export_receipts
+    path = tmp_path / 'db'
+    db = database(path)
+    entries = {'Detailed Receipts.csv': [annual(Value='100', **{'Received From': 'Example Person'}),
+        annual('Other Receipt', Value='10', **{'Received From': 'Example Person'}),
+        annual(Value='65', **{'Received From': 'Example (Middle) Person'})]}
+    donations.process_zip(db, archive('AllAnnualData', entries), 'AllAnnualData')
+    load(db, 'AllElectionsData', {})
+    load(db, 'AllReferendumData', {})
+    db.execute("UPDATE donations SET recipient_canonical='Labor',industry='individual'")
+    db.execute('CREATE TABLE ext_donor_entities(entity_id,canonical_name,kind)')
+    db.execute('CREATE TABLE ext_donor_aliases(alias_raw,entity_id,confidence,method)')
+    for eid, label in [('base', 'Example Person'), ('bracket', 'Example (Middle) Person')]:
+        db.execute('INSERT INTO ext_donor_entities VALUES (?,?,?)', (eid, label, 'individual'))
+        db.execute('INSERT INTO ext_donor_aliases VALUES (?,?,?,?)', (label, eid, 1, 'fixture'))
+    db.commit()
+    with mock.patch.object(exporter, 'TOP_DONORS', 1):
+        capped = export(path)
+    no_donors = {**capped, 'nodes': [n for n in capped['nodes'] if n['kind'] == 'party'], 'edges': []}
+    snapshots = []
+    for graph in [capped, no_donors]:
+        full, summary = export_receipts(db, graph)
+        counted = [n for n in full['nodes'] if n['kind'] == 'donor' and n.get('count')]
+        assert len(counted) == 1
+        [node] = counted
+        assert node['label'] == 'Example Person'
+        assert (node['total'], node['count']) == (175, 3)
+        assert node['by_type'] == {'donation_received': 165, 'other_receipt': 10}
+        assert 'Example (Middle) Person' in node['aliases']
+        assert summary['industries']['individual'] == {'Labor': 165}
+        assert full['meta']['bracket_aliases']['counts']['folded'] == 1
+        assert 'Example' not in json.dumps(full['meta']['bracket_aliases'])
+        snapshots.append((full['edges'], summary))
+    assert snapshots[0] == snapshots[1]
 
 
 def test_retained_donor_export_uses_uncapped_selection_and_keeps_receipt_types(tmp_path):

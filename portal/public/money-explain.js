@@ -3,7 +3,7 @@ import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,hasPartyRece
 // receiptGraph is shared with every money page (donor-disclosure.js); re-exported for the tests that read it here.
 export {receiptGraph};
 import {loadDonorViewIndex} from './donor-views.js?v=f5cf08678b';
-import {partyReturnFigures, industryName} from './register-tables.js?v=5c01179f61';
+import {partyReturnFigures, industryName} from './register-tables.js?v=c59a1d42b7';
 // /money/explain: one disclosed-money flow, explained from the data alone.
 //
 // Every figure here is summed from the year cells of the money graph

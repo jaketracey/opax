@@ -308,7 +308,7 @@ test('voice gives a donor-declared-only donor as its declaration, never as recei
  assert.equal(DONOR_DECLARED_LABEL,"declared by the donor; the party's returns show no matching receipt");
  const question='How much has Example Quill Holdings given to Labor?';
  const found=receiptAnswer(declared,question,'federal','https://opax.test');
- assert.equal(found.type_breakdown,false,'the shared calculator still falls back (Ask reads it unchanged)');
+ assert.equal(found.type_breakdown,false,'the shared calculator preserves the fallback; Ask and voice label it as a declaration');
  const data=voiceReceiptData(declared,found);
  assert.equal(data.donor_declared_only,true);assert.equal(data.measure_label,DONOR_DECLARED_LABEL);
  assert.equal(data.donor_declared_aud,64250);assert.equal(data.records,3);
@@ -317,8 +317,8 @@ test('voice gives a donor-declared-only donor as its declaration, never as recei
  // Through the voice tool: every word voice can read, links aside, says declaration and never receipts.
  const assets={fetch:async request=>Response.json(new URL(request.url).pathname==='/graph/money-receipts.json'?declared:{meta:{},nodes:[],edges:[]})};
  const voice=await runVoiceTool('search_records',{query:question,kind:'receipt'},{ASSETS:assets,COMMUNITY_ORIGIN:'https://opax.test'},async()=>{throw Error('No speech retrieval')});
- assert.equal(voice.data.answer,data.answer);assert.equal(voice.data.measure_label,DONOR_DECLARED_LABEL);
- const words=JSON.stringify(voice,(key,value)=>typeof value==='string'&&/^https?:/.test(value)?undefined:value);
+ assert.equal(voice.data.answer.split('\n\n')[0],data.answer);assert.equal(voice.data.measure_label,DONOR_DECLARED_LABEL);
+ const words=JSON.stringify(voice,(key,value)=>typeof value==='string'?value.replace(/https?:\/\/\S+/g,''):value);
  assert.doesNotMatch(words,/receipts|no type breakdown|receipt types/i);
  assert.match(words,/declared/);
  // A donor with receipts on the party's returns is unchanged.

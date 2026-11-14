@@ -4,6 +4,7 @@ from dataclasses import dataclass
 
 from parli.ingest.aec_receipts import normal_type, period_key
 from scripts.donor_disclosure import exact_alias_index, own_party_recipients, resolve_alias
+from scripts.receipt_donor_match import has_receipt_annotation
 from scripts.export_money_graph import PARTY_WORD_RE, PUBLIC_FUNDING_RE
 
 
@@ -33,7 +34,7 @@ class ReceiptSelection:
             return "not_recipient_side"
         if not donor or not recipient or not amount or amount <= 0:
             return "blank_or_nonpositive"
-        if (donor, recipient, period_key(period), amount) in self.flagged:
+        if has_receipt_annotation(donor) or (donor, recipient, period_key(period), amount) in self.flagged:
             return "flagged_review"
         if recipient_kind != "political_party" or recipient not in self.recipient_party:
             return "nonparty_or_unmapped_recipient"

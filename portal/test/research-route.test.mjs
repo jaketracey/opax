@@ -307,7 +307,7 @@ test('three receipt follow-ups use fresh tool fields with the iOS author/text co
  h.env.RESEARCH_LOOP='route'
  globalThis.fetch=(url,init)=>{
   const body=JSON.parse(init?.body??'{}')
-  if(body.prompt?.system?.startsWith('You rewrite follow-up'))return Promise.resolve(Response.json({answer:body.query?.includes('internal')?`Are internal party transfers counted in the $4,144,973 of federal disclosed receipts from the ${donor}?`:body.query,metadata:{tokens:{input:8,output:8}}}))
+  if(body.prompt?.system?.startsWith('You rewrite follow-up'))return Promise.resolve(Response.json({answer:body.query?.includes('internal')?`Are internal party transfers counted in the $4,316,973 of federal disclosed receipts from the ${donor}?`:body.query,metadata:{tokens:{input:8,output:8}}}))
   return originalFetch(url,init)
  }
  const fixture=JSON.parse(readFileSync(new URL('./fixtures/ask-money-followup-mining.json',import.meta.url)))
@@ -320,7 +320,7 @@ test('three receipt follow-ups use fresh tool fields with the iOS author/text co
    const response=await post(request.question,stream,{kind:'all',context,prior_resources:request.prior_resources})
    const wire=await response.text(),payload=response.headers.get('content-type')?.includes('event-stream')?decodeStream(wire):JSON.parse(wire)
    assert.equal(response.status,200)
-   assert.match(payload.answer,[/^32 disclosed receipts/,/^No, internal party transfers/,/financial years 1998-99 to 2024-25/][i])
+   assert.match(payload.answer,[/^37 disclosed receipts/,/^No, internal party transfers/,/financial years 1998-99 to 2024-25/][i])
    assert.doesNotMatch(payload.answer,/(?:^|\n)(?:The )?Mining\./)
    assert.equal(model.doGenerateCalls.length,2,'a complete selected receipt field needs no model writing turn')
    assert.ok(payload.research.trail.some(step=>step.tool==='money_totals'))

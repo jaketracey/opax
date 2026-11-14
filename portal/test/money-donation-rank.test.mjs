@@ -231,10 +231,10 @@ test('a graph without receipt types never calls a figure donations', async () =>
 test('the deterministic money route counts no Public Funding: the Greens total is the map\'s, and NSW Efa never ranks', async () => {
   const published = JSON.parse(await readFile(new URL('../public/graph/money.json', import.meta.url), 'utf8'))
   const mapTotal = receiptGraph(published).edges.filter(e => e.target === 'party:Greens' && !e.grant && !e.flow).reduce((a, e) => a + e.total, 0)
-  assert.equal(mapTotal, 13086663, 'the map leaves NSW Efa\'s $1,069,773 out of $14,156,436')
+  assert.equal(mapTotal, 13155663, 'the map leaves NSW Efa\'s $1,069,773 out of $14,225,436')
   const all = api.receiptAnswer(published, 'How much money did the Greens receive?', 'federal', 'https://opax.test', {measure: 'receipts_all'})
   assert.equal(all.all_types_aud, mapTotal)
-  assert.doesNotMatch(all.answer, /14,156,436/)
+  assert.doesNotMatch(all.answer, /14,225,436/)
   for (const measure of ['receipts_all', 'donations']) {
     const ranked = api.receiptAnswer(published, 'Who gave the most money to the Greens in 2010-11?', 'federal', 'https://opax.test', {measure})
     assert.ok(!JSON.stringify(ranked.by_donor ?? []).includes('NSW Efa'), `${measure}: NSW Efa is never a ranked source`)

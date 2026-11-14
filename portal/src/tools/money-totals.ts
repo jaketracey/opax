@@ -162,10 +162,11 @@ export const tool: ToolDefinition = {
       if (args[field] && matches.length !== 1) return limitations(env, matches.length ? `The disclosed ${field} name ${args[field]} is ambiguous; use its published graph ID.` : `OPAX has no published ${field} receipt aggregate matching ${args[field]}.`)
     }
     const party = parties[0], donor = donors[0], group = String(args.group_by ?? (donor ? 'donor' : 'party'))
-    // Uncapped factual rankings default to donations; explicit receipts requests keep all types.
+    // Uncapped rankings default to donations. A named source's receipt lookup
+    // retains its all-types contract unless the caller requests donations.
     // A graph without typed cells cannot split a figure, so it never calls one donations.
     const selectedPartyMeasure = raw.meta?.uncapped || donor || group === 'donor' || group === 'industry'
-    const measure: Measure = selectedPartyMeasure && (args.measure === 'donations' || raw.meta?.uncapped && args.measure !== 'all_types') && graph.edges.some(edge => edge.typeCells) ? 'donations' : 'all_types'
+    const measure: Measure = selectedPartyMeasure && (args.measure === 'donations' || raw.meta?.uncapped && !donor && args.measure !== 'all_types') && graph.edges.some(edge => edge.typeCells) ? 'donations' : 'all_types'
     if (scope) scopeNote.push(`Selected figures: ${measure === 'donations' ? scope.replace(/^All receipt types/, 'Donations only') : scope}. Each receipt is counted once.`)
     const word = measure === 'donations' ? 'federal disclosed donations' : 'federal disclosed receipts'
     const measureNote = measure === 'donations'

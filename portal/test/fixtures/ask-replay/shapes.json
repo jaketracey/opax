@@ -361,9 +361,6 @@
     ]
    ]
   },
-  "coverage": {
-   "note": "string"
-  },
   "followups": [],
   "research": {
    "answer_stats": "object",
@@ -675,9 +672,6 @@
      "number"
     ]
    ]
-  },
-  "coverage": {
-   "note": "string"
   },
   "followups": [],
   "research": {

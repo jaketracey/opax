@@ -7,7 +7,8 @@ import {fundingContinuation, fundingFollowUp, fundingNameChoice, fundingScopeQue
 import {financialYear, receiptPeriodQuery} from './receipt-period'
 import {earliestReceiptYear, latestReceiptYear, readReceiptPeriod} from './receipt-reading'
 import {questionKey, sameQuestion} from './question-key'
-import {isReceiptGraph, mentionedReceiptIndustries, moneyQuestion, receiptAnswer, receiptGraphForQuestion, unmatchedReceiptRankingScope, type ReceiptGraph} from './voice-money'
+import {isReceiptGraph, mentionedReceiptIndustries, moneyQuestion, receiptAnswer, receiptGraphForQuestion, unmatchedReceiptRankingScope, voiceReceiptData, type ReceiptGraph} from './voice-money'
+import {otherReceiptsLine,publicFundingLine,receiptSplit} from '../public/donor-disclosure.js'
 import type {ReceiptFact} from './research-types'
 
 const comparisonQuestion = (q:string) => /\b(?:more|less|higher|lower|compare|versus|vs)\b/i.test(q)
@@ -41,7 +42,7 @@ const plain=(s:string)=>s.replace(/[|\n\r\[\]*]/g,' ')
 const disclosureRegister=(jurisdiction:string)=>({federal:'AEC political disclosure records',qld:'Electoral Commission of Queensland disclosure records',vic:'Victorian Electoral Commission disclosure records',tas:'Tasmanian political disclosure records'}[jurisdiction]||'published political disclosure records')
 const recordCount=(n:number)=>`${n.toLocaleString('en-AU')} disclosed receipt ${n===1?'record':'records'}`
 const sourceCopy=(text:string)=>plain(text).replace(/\s+/g,' ').trim()
-type MoneyAnswerPayload={answer:string;citations:Record<string,number[][]>;sources:{resource:string;title:string;href:string;url:string;kind:string;snippet:string;cited:boolean;source?:string;dateLabel?:string;date?:string;receipt?:ReceiptFact}[];answer_status:string;money_ranking:boolean;measure?:ReceiptTotals['measure'];measure_label?:string;coverage:ReceiptTotals['period_coverage']&{held_since?:string|null;held_until?:string|null};money_context?:string;money_question?:string;money_facts?:MoneyFacts;scope?:{state:string;party?:string}}
+type MoneyAnswerPayload={answer:string;citations:Record<string,number[][]>;sources:{resource:string;title:string;href:string;url:string;kind:string;snippet:string;cited:boolean;source?:string;dateLabel?:string;date?:string;receipt?:ReceiptFact}[];answer_status:string;money_ranking:boolean;measure?:ReceiptTotals['measure']|'donor_declared';measure_label?:string;donor_declared_only?:boolean;donor_declared_aud?:number;records?:number;coverage:ReceiptTotals['period_coverage']&{held_since?:string|null;held_until?:string|null};money_context?:string;money_question?:string;money_facts?:MoneyFacts;scope?:{state:string;party?:string}}
 type ReceiptTotals = Exclude<ReturnType<typeof receiptAnswer>, null | {needs_scope:boolean}>
 /** The money map links that close an answer. A donation-led answer links the
  * map's Donation-only view of the same selection, and the all-types view too
@@ -431,8 +432,64 @@ export function readingChoices(result:ReceiptTotals,periodOptions:ReceiptTotals[
   }
 }
 
+/** Give Ask the same declaration wording as voice, retaining a ranked split. */
+function donorDeclaredMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph):MoneyAnswerPayload|null {
+  const declared=voiceReceiptData(graph,result)
+  if(!('donor_declared_only' in declared))return null
+  const fromDonors=result.selected_parties.length>0
+  const rows=fromDonors?result.by_donor:result.by_party
+  let answer=declared.answer
+  if(fromDonors&&rows.length>1)answer=`**${plain(rows[0].name)}** declared the most to ${plain(result.selected_parties.join(' and '))}: **${aud(rows[0].total_aud)}**. `+answer
+  answer+=`\n\n| ${fromDonors?'Source':'Recipient party'} | Declared by the donor${fromDonors&&rows.length>1?'s':''} | Records |\n| --- | ---: | ---: |`
+  for(const row of rows)answer+=`\n| ${plain(row.name)} | ${aud(row.total_aud)} | ${row.receipts.toLocaleString('en-AU')} |`
+  answer+=`\n| Total declared | ${aud(declared.donor_declared_aud)} | ${declared.records.toLocaleString('en-AU')} |`
+  const resource='donor-declarations',url=declared.sources[0].url,snippet=sourceCopy(answer)
+  const citations={[resource]:[[0,Array.from(answer).length]]}
+  answer+=`\n\n[See these on the money map](${url})`
+  return {answer,answer_status:'calculated',money_ranking:true,measure:declared.measure,measure_label:declared.measure_label,
+    donor_declared_only:true,donor_declared_aud:declared.donor_declared_aud,records:declared.records,coverage:declared.period_coverage,citations,
+    sources:[{resource,title:declared.sources[0].title,href:url,url,kind:'receipt',snippet,cited:true}]}
+}
+
+/** A named donor's total comes before the recipient choice. Typed amounts use
+ * the donor page's receipt cells; only Donation Received counts as a donation. */
+export function donorTotalMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph):MoneyAnswerPayload {
+  const declared=donorDeclaredMoneyAnswer(result,graph)
+  if(declared)return declared
+  const name=plain(result.subject),label=result.measure_label
+  const {from,to}=result.requested_years
+  const period=result.period??(from!==null&&to!==null?`${financialYear(from)} to ${financialYear(to)}`:'the published financial years')
+  let answer=`**${name}** has **${aud(result.total_aud)}** recorded in ${label} to ${result.selected_parties.length?plain(result.selected_parties.join(' and ')):'political parties'}, ${period}.`
+  const nodes=new Map(graph.nodes.map(n=>[n.id,n]))
+  const edges=graph.edges.filter(e=>{
+    const donor=nodes.get(e.source),party=nodes.get(e.target)
+    return !e.flow&&!e.grant&&donor?.kind==='donor'&&result.selected_donors.includes(donor.label)
+      &&party?.kind==='party'&&(!result.selected_parties.length||result.selected_parties.includes(party.label))
+  })
+  const rows=[...new Set(edges.map(e=>e.target))].map(id=>result.by_party.find(p=>p.id===id)??{id,name:nodes.get(id)!.label,total_aud:0,receipts:0})
+    .sort((a,b)=>b.total_aud-a.total_aud||a.name.localeCompare(b.name,'en-AU'))
+  answer+=`\n\n| Recipient party | ${receiptMeasureHeading(result.measure)} | Records |\n| --- | ---: | ---: |`
+  for(const row of rows)answer+=`\n| ${plain(row.name)} | ${aud(row.total_aud)} | ${row.receipts.toLocaleString('en-AU')} |`
+  answer+=`\n| Total recorded | ${aud(result.total_aud)} | ${result.receipts.toLocaleString('en-AU')} |`
+  // Other types remain labelled asides, never part of the donation total.
+  for(const edge of edges){
+    const split=receiptSplit(edge,from,to),party=plain(nodes.get(edge.target)!.label)
+    const other=otherReceiptsLine(name,party,split,{also:true})
+    if(other)answer+='\n\n'+other
+    if(split?.publicFunding[0])answer+='\n\n'+publicFundingLine(name,party,split.publicFunding[0])
+  }
+  answer+=result.typed?'\n\nThese donation figures count each gift once from the parties’ own returns. Amounts below the disclosure threshold are outside the register.':'\n\nThese records have no receipt-type breakdown; they cannot establish a donation-only total, and payments reported by both sides can appear twice.'
+  const resource='donor-total',url=result.sources[0].url,snippet=sourceCopy(answer)
+  const citations={[resource]:[[0,Array.from(answer).length]]}
+  answer+='\n\n'+moneyMapLinks(result,url,false)
+  return {answer,answer_status:'calculated',money_ranking:true,measure:result.measure,measure_label:label,coverage:result.period_coverage,citations,
+    sources:[{resource,title:`${name}: ${aud(result.total_aud)} in ${label}`,href:url,url,kind:'receipt',snippet,cited:true}],scope:{state:result.jurisdiction,...(result.selected_parties.length===1?{party:result.selected_parties[0]}:{})}}
+}
+
 /** Render the calculator's validated selection for every money ranking route. */
 export function calculatedMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph,query:string,file:string,input:RecordQuestion,options:{total?:boolean;bankGrouping?:boolean;topTen?:boolean;held?:boolean;member?:{name:string;href:string}}={}):MoneyAnswerPayload {
+  const declared=donorDeclaredMoneyAnswer(result,graph)
+  if(declared)return declared
   const jurisdiction=result.jurisdiction
   const donorIntent = !/\b(?:receiv\w*|takes?|gets?)\b/i.test(query) && (/\b(?:biggest|largest|top)\b[^?.]{0,60}\bdonors?\b/i.test(query) || (/^who\s+donat\w*\b/i.test(query) && !/\bto who(?:m)?\b/i.test(query)))
   const fromDonors=result.selected_parties.length>0 || donorIntent

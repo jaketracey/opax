@@ -75,19 +75,24 @@ export function pointsDraft(points:AnswerPoint[]):AnswerDraft {
  return {text,citations}
 }
 const sourcesOf=(used:Passage[],cited=true):QualitativeAnswer['sources']=>[...new Map(used.map(p=>[p.resource,{resource:p.resource,slug:p.slug,title:p.title,href:p.url,url:p.url,snippet:p.text,cited,kind:p.kind,...(p.date?{date:p.date}:{}),...(p.speaker?{speaker:p.speaker}:{}),...(p.chamber?{chamber:p.chamber}:{})}])).values()]
+/** The same character coverage check is used after a repeated sentence is removed. */
+export function answerCitationStatus(text:string,citations:QualitativeAnswer['citations']):QualitativeAnswer['answer_status'] {
+ const covered=new Set<number>()
+ for(const ranges of Object.values(citations))for(const [a,b] of ranges)for(let i=a;i<b;i++)covered.add(i)
+ const uncited=Array.from(text).some((ch,i)=>/[\p{L}\p{N}]/u.test(ch)&&!covered.has(i)&&!/^\s*[-*•]\s*$/.test(ch))
+ return !Object.keys(citations).length?'uncited':uncited?'partly_cited':undefined
+}
 /** Accept draft prose, attaching retrieved citations where available. */
 /** The draft is the answer. Its citations attach where they name a retrieved passage and a range inside the text;
  * text without a citation stands, and the answer says how much of it is cited. */
 export function verifyResearchAnswer(draft:AnswerDraft,passages:Map<string,Passage>,_question?:string,_named?:NamedScope,_positionQuery?:string,_roster?:unknown,_why?:(reason:string)=>void):QualitativeAnswer {
- const citations:QualitativeAnswer['citations']={},used:Passage[]=[],length=Array.from(draft.text).length,covered=new Set<number>()
+ const citations:QualitativeAnswer['citations']={},used:Passage[]=[],length=Array.from(draft.text).length
  for(const c of draft.citations??[]){
   const p=passages.get(c?.id)
   if(!p||!Number.isSafeInteger(c.start)||!Number.isSafeInteger(c.end)||c.start<0||c.end<=c.start||c.end>length)continue
   ;(citations[c.id]??=[]).push([c.start,c.end]);used.push(p)
-  for(let i=c.start;i<c.end;i++)covered.add(i)
  }
- const uncited=Array.from(draft.text).some((ch,i)=>/[\p{L}\p{N}]/u.test(ch)&&!covered.has(i)&&!/^\s*[-*•]\s*$/.test(ch))
- const status=!used.length?'uncited':uncited?'partly_cited':undefined
+ const status=answerCitationStatus(draft.text,citations)
  return {answer:draft.text,citations,sources:sourcesOf(used),...(status?{answer_status:status}:{})}
 }
 export function verifyResearchPoints(points:unknown,passages:Map<string,Passage>,question:string,named:NamedScope,positionQuery?:string,roster?:unknown,why?:(reason:string)=>void,tally:AnswerTally=emptyTally()):(QualitativeAnswer&{dropped:number})|null {

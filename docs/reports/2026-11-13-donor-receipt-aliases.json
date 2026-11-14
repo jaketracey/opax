@@ -1,0 +1,187 @@
+{
+  "scope": "Eligible recipient-side receipts, existing federal map nodes and edges. Before: entity/raw spelling. After: unique normalised/bracketless fallback with annotation review and state compatibility. Exported figures exclude Public Funding as in #355; exported_cells retains every typed cell for exporter coverage. No production calls.",
+  "counts": {
+    "after_exported": {
+      "rows": 16211,
+      "aud": 711000854.0
+    },
+    "after_exported_cells": {
+      "rows": 16212,
+      "aud": 712070627.0
+    },
+    "after_unmatched_brackets": {
+      "rows": 6,
+      "aud": 23050.0
+    },
+    "after_unmatched_node": {
+      "rows": 38954,
+      "aud": 509763561.0
+    },
+    "ambiguous": {
+      "rows": 6,
+      "aud": 23050.0
+    },
+    "annotation_review": {
+      "rows": 1,
+      "aud": 190322.0
+    },
+    "before_exported": {
+      "rows": 16065,
+      "aud": 708797880.0
+    },
+    "before_exported_cells": {
+      "rows": 16066,
+      "aud": 709867653.0
+    },
+    "before_spelling_candidates": {
+      "rows": 152,
+      "aud": 2226024.0
+    },
+    "before_unmatched_node": {
+      "rows": 39100,
+      "aud": 511966535.0
+    },
+    "eligible": {
+      "rows": 55166,
+      "aud": 1221834188.0
+    },
+    "newly_exported": {
+      "rows": 146,
+      "aud": 2202974.0
+    },
+    "newly_matched_node": {
+      "rows": 146,
+      "aud": 2202974.0
+    },
+    "state_mismatch": {
+      "rows": 2,
+      "aud": 36960.0
+    }
+  },
+  "donors_gaining": 30,
+  "top10_donor_gains": [
+    {
+      "before_aud": 33749112.0,
+      "after_aud": 34218088.0,
+      "gain_aud": 468976.0,
+      "before_rows": 454,
+      "after_rows": 464
+    },
+    {
+      "before_aud": 11532388.0,
+      "after_aud": 11792287.0,
+      "gain_aud": 259899.0,
+      "before_rows": 434,
+      "after_rows": 461
+    },
+    {
+      "before_aud": 14441409.0,
+      "after_aud": 14656539.0,
+      "gain_aud": 215130.0,
+      "before_rows": 447,
+      "after_rows": 458
+    },
+    {
+      "before_aud": 22365193.0,
+      "after_aud": 22568226.0,
+      "gain_aud": 203033.0,
+      "before_rows": 578,
+      "after_rows": 587
+    },
+    {
+      "before_aud": 4144973.0,
+      "after_aud": 4316973.0,
+      "gain_aud": 172000.0,
+      "before_rows": 32,
+      "after_rows": 37
+    },
+    {
+      "before_aud": 4280998.0,
+      "after_aud": 4443078.0,
+      "gain_aud": 162080.0,
+      "before_rows": 223,
+      "after_rows": 246
+    },
+    {
+      "before_aud": 3247355.0,
+      "after_aud": 3357073.0,
+      "gain_aud": 109718.0,
+      "before_rows": 167,
+      "after_rows": 175
+    },
+    {
+      "before_aud": 6415526.0,
+      "after_aud": 6505752.0,
+      "gain_aud": 90226.0,
+      "before_rows": 150,
+      "after_rows": 156
+    },
+    {
+      "before_aud": 568913.0,
+      "after_aud": 643913.0,
+      "gain_aud": 75000.0,
+      "before_rows": 11,
+      "after_rows": 12
+    },
+    {
+      "before_aud": 4509342.0,
+      "after_aud": 4577129.0,
+      "gain_aud": 67787.0,
+      "before_rows": 275,
+      "after_rows": 279
+    }
+  ],
+  "party_changes": [
+    {
+      "party": "Greens",
+      "before_aud": 13086663.0,
+      "after_aud": 13155663.0,
+      "gain_aud": 69000.0,
+      "percent": 0.527254
+    },
+    {
+      "party": "Katter's Australian Party",
+      "before_aud": 2115536.0,
+      "after_aud": 2190536.0,
+      "gain_aud": 75000.0,
+      "percent": 3.545201
+    },
+    {
+      "party": "LNP",
+      "before_aud": 27176291.0,
+      "after_aud": 27216541.0,
+      "gain_aud": 40250.0,
+      "percent": 0.148107
+    },
+    {
+      "party": "Labor",
+      "before_aud": 360096168.0,
+      "after_aud": 362059392.0,
+      "gain_aud": 1963224.0,
+      "percent": 0.545194
+    },
+    {
+      "party": "Liberal",
+      "before_aud": 201548942.0,
+      "after_aud": 201596942.0,
+      "gain_aud": 48000.0,
+      "percent": 0.023816
+    },
+    {
+      "party": "Nationals",
+      "before_aud": 35078961.0,
+      "after_aud": 35086461.0,
+      "gain_aud": 7500.0,
+      "percent": 0.02138
+    }
+  ],
+  "party_changes_over_one_percent": [
+    {
+      "party": "Katter's Australian Party",
+      "before_aud": 2115536.0,
+      "after_aud": 2190536.0,
+      "gain_aud": 75000.0,
+      "percent": 3.545201
+    }
+  ]
+}
