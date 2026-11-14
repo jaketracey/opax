@@ -12,41 +12,64 @@ test('standalone map starts through a same-origin module allowed by the CSP', ()
   assert.doesNotMatch(html, /<script\b(?![^>]*\bsrc=)[^>]*>[\s\S]*?\S[\s\S]*?<\/script>/)
 })
 
-async function boot({ search = '', importError, mountError } = {}) {
+async function boot({ search = '', importError, mountError, dataError, importGate, dataGate, started = [] } = {}) {
   const calls = []
+  const reads = []
+  const graph = {nodes: [], edges: []}
   const host = { replaceChildren() { this.cleared = true }, append(node) { this.error = node } }
   const status = { remove() { this.removed = true } }
   const description = {}
   const load = async () => {
+    started.push('renderer')
+    if (importGate) await importGate
     if (importError) throw importError
     return { mountMoneyMap: async (...args) => { calls.push(args); if (mountError) throw mountError } }
   }
   await runInNewContext(`(async () => {${source.replace(/import\('[^']+'\)/, 'load()')}})()`, {
     load, URLSearchParams, location: { search }, console: { error() {}, log() {} },
+    fetch: async (path, init) => {
+      started.push('data'); reads.push({path, cache: init?.cache})
+      if (dataGate) await dataGate
+      return {ok: !dataError, json: async () => graph}
+    },
     document: {
       getElementById: id => id === 'map' ? host : status,
       querySelector: () => description,
       createElement: () => ({ setAttribute(key, value) { this[key] = value } }),
     },
   })
-  return { calls, host, status, description }
+  return { calls, host, status, description, reads, graph }
 }
 
 test('standalone map mounts federal data and preserves focus and chrome options', async () => {
-  const { calls, status } = await boot({ search: '?focus=party:Labor&chrome=mini' })
-  assert.equal(calls[0][1], '/graph/money.json')
+  const { calls, status, reads, graph } = await boot({ search: '?focus=party:Labor&chrome=mini' })
+  assert.equal(calls[0][1], graph)
+  assert.deepEqual(reads, [{path: '/graph/money.json', cache: 'no-cache'}])
   assert.equal(calls[0][2].focus, 'party:Labor')
   assert.equal(calls[0][2].chrome, 'mini')
   assert.equal(status.removed, true)
 })
 
 test('standalone map preserves state jurisdiction data and attribution', async () => {
-  const { calls, description } = await boot({ search: '?jur=qld' })
-  assert.equal(calls[0][1], '/graph/money.qld.json')
+  const { calls, description, reads, graph } = await boot({ search: '?jur=qld' })
+  assert.equal(calls[0][1], graph)
+  assert.deepEqual(reads, [{path: '/graph/money.qld.json', cache: 'no-cache'}])
   assert.match(description.textContent, /Electoral Commission of Queensland/)
 })
 
-for (const failure of ['importError', 'mountError']) {
+test('the standalone renderer and data downloads overlap', async () => {
+  let rendererReady, dataReady
+  const importGate = new Promise(resolve => { rendererReady = resolve })
+  const dataGate = new Promise(resolve => { dataReady = resolve })
+  const started = []
+  const pending = boot({importGate, dataGate, started})
+  assert.deepEqual(started, ['renderer', 'data'])
+  dataReady(); rendererReady()
+  const {calls, graph} = await pending
+  assert.equal(calls[0][1], graph)
+})
+
+for (const failure of ['importError', 'mountError', 'dataError']) {
   test(`${failure} displays a recoverable error instead of leaving the loading screen`, async () => {
     const { host } = await boot({ [failure]: new Error('failed') })
     assert.equal(host.cleared, true)

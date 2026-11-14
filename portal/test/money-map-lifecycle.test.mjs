@@ -66,13 +66,15 @@ function harness({withoutSignal=false,delayedResearch=false,delayedData=false}={
     if(path.startsWith('/money-records.js'))return {readMoneyFilters};
     if(path.startsWith('/money-journeys.js'))return {mountMoneyJourneys:()=>({destroy(){},setRoute(){}})};
     assert.ok(path.startsWith('/money-map.js'));
-    return {mountMoneyMap:async(root,file)=>{
-      mounts.push(file);root.classList.add('mm-root');root.textContent=file;
+    return {mountMoneyMap:async(root,data)=>{
+      const jurisdiction=Object.keys(graphs).find(jur=>graphs[jur]===data);
+      assert.ok(jurisdiction,'the renderer reuses the loaded jurisdiction graph');
+      mounts.push(data);root.classList.add('mm-root');root.textContent=jurisdiction==='federal'?'/graph/money.json':`/graph/money.${jurisdiction}.json`;
       return {destroy(){root.classList.remove('mm-root');},setPaused(){},setFilters(){}};
     }};
   };
   runInNewContext(lifecycle,context);
-  return {context,element,pending,started,writes,mounts,eval:code=>runInNewContext(code,context),navigate:next=>{url=new URL(next,url);}};
+  return {context,element,pending,started,writes,mounts,graphs,eval:code=>runInNewContext(code,context),navigate:next=>{url=new URL(next,url);}};
 }
 
 for(const withoutSignal of [false,true]) {
@@ -93,7 +95,7 @@ for(const withoutSignal of [false,true]) {
     assert.equal(h.element('money-research-results').children[0],newer.results);
     assert.equal(h.context.moneyResearch,newer.handle);
     assert.equal(h.eval('moneyMapJur'),'qld');
-    assert.deepEqual(h.mounts,['/graph/money.qld.json']);
+    assert.deepEqual(h.mounts,[h.graphs.qld]);
     h.context.moneyResearch.destroy();
   });
 }
@@ -111,7 +113,7 @@ test('a returned stale research handle is disposed before assignment or map moun
   await h.started.promise;h.navigate('/money?jur=qld&q=queensland+fixture');await h.context.mountMoney('qld');
   const current=h.context.moneyResearch;h.pending.resolve();await old;
   assert.equal(h.context.oldHandleDestroyed,true);assert.equal(h.context.moneyResearch,current);
-  assert.deepEqual(h.mounts,['/graph/money.qld.json']);assert.equal(h.element('money-map-root').classList.contains('mm-root'),true);
+  assert.deepEqual(h.mounts,[h.graphs.qld]);assert.equal(h.element('money-map-root').classList.contains('mm-root'),true);
   current.destroy();
 });
 

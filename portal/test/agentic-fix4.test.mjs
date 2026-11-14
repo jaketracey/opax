@@ -76,7 +76,7 @@ test('P2 actual JSON and SSE answer the ten gold questions and six ranking phras
  }finally{restore();globalThis.caches=originalCache}
 });
 
-test('P2 parsed index preserves every main script, including the analytics loader',()=>{
+test('P2 parsed index preserves core main scripts and the route-loaded vote tables',()=>{
  const main=execFileSync('git',['show','origin/main:portal/public/index.html'],{cwd:root,encoding:'utf8'});
  const current=readFileSync(new URL('../public/index.html',import.meta.url),'utf8');
  const scripts=html=>{
@@ -86,9 +86,19 @@ test('P2 parsed index preserves every main script, including the analytics loade
    text:script.textContent,
   }))}finally{dom.window.close()}
  };
- // Every script on main must survive (stamps may differ); other lanes may add scripts.
+ // Core scripts survive with the same attributes. Vote tables moved to the
+ // route-aware entry, which still hydrates the standalone sitting hubs.
  const have=new Set(scripts(current).map(s=>JSON.stringify(s)))
- for(const s of scripts(main))assert.ok(have.has(JSON.stringify(s)),'main script dropped: '+JSON.stringify(s.attributes))
+ for(const s of scripts(main)){
+  if(s.attributes.some(([name,value])=>name==='src'&&value==='/vote-tables.js')){
+   assert.ok(scripts(current).some(script=>script.attributes.some(([name,value])=>name==='src'&&value==='/register-tables-entry.js')));
+   const entry=readFileSync(new URL('../public/register-tables-entry.js',import.meta.url),'utf8');
+   assert.match(entry,/import\('\.\/vote-tables.js\?v=[a-f0-9]+'\)/);
+   assert.match(entry,/document.querySelector\('\[data-vote-table\]'\)/);
+   continue;
+  }
+  assert.ok(have.has(JSON.stringify(s)),'main script dropped: '+JSON.stringify(s.attributes));
+ }
  const dom=new JSDOM(current);
  try{
   assert.equal(dom.window.document.querySelectorAll('script[src^="/analytics.js?"]').length,1);
