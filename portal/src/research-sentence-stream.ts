@@ -32,7 +32,7 @@ export function completeSentences(text: string): boolean {
 }
 
 /** Ordering can inspect the tail, so release only once the lead cannot be displaced by another finding. An
- * accountability question reaches this only for the body after the decided "do not name" line (see preview). */
+ * accountability question reaches this only once its "do not name" line is decided absent (see preview). */
 export function stableResearchLead(payload: Record<string, unknown>, question: string): boolean {
   const answer = String(payload.answer ?? '')
   const first = researchSentences(answer)[0]?.text ?? ''
@@ -42,15 +42,8 @@ export function stableResearchLead(payload: Record<string, unknown>, question: s
   return ACCOUNTABILITY_QUESTION.test(question)&&authorityFindingLead(payload) || answerStyleChecks(question, first, payload).direct_first_sentence === 'pass'
 }
 
-/** The checked answer after a lead line and its blank line, with citations rebased onto what remains. */
-function afterLead(payload: Record<string, unknown>, lead: string): Record<string, unknown> {
-  const answer = String(payload.answer ?? ''), shift = Array.from(lead).length
-  const citations = Object.fromEntries(Object.entries((payload.citations ?? {}) as Record<string, [number, number][]>).flatMap(([id, ranges]) => {
-    const kept = ranges.flatMap(([a, b]): [number, number][] => b > shift ? [[Math.max(0, a - shift), b - shift]] : [])
-    return kept.length ? [[id, kept]] : []
-  }))
-  return { ...payload, answer: answer.slice(lead.length), citations }
-}
+/** The first non-blank line without its list marker: the checked answer is plain lines, the model's draft can be a list. */
+const firstLine=(text:unknown)=>(String(text??'').split('\n').find(line=>line.trim())?.trim()??'').replace(/^(?:[-*•]|\d+[.)])\s+/,'')
 
 /** The sources an answer could still cite, summarised by the loop or writer that holds them (whoBasis). */
 const whoBasisOf = (payload: QualitativeAnswer): WhoBasis | undefined => (payload as unknown as { research?: { who_basis?: WhoBasis } }).research?.who_basis
@@ -63,11 +56,11 @@ export function researchSentenceStream(question: string, send: (text: string,che
     async preview(payload: QualitativeAnswer, accept?: (checked:QualitativeAnswer)=>boolean) {
       if (closed || !payload.answer.trim() || !completeSentences(payload.answer) || protectedDecision(payload)) return
       // A who question's lead (leadWithWho) reads the whole answer. Release only when it is already decided: either no
-      // available source names anyone, so the "do not name" line leads and the authority order follows it, or the first
-      // sentence is a supported subject no later sentence can outrank. Otherwise the answer is held until done.
+      // available source names anyone and a sentence of the answer already names someone, so the "do not name" line
+      // can no longer lead and the authority order decides, or the first sentence is a supported subject no later
+      // sentence can outrank. Otherwise the answer is held until done.
       const accountability=ACCOUNTABILITY_QUESTION.test(question),basis=accountability?whoBasisOf(payload):undefined
-      const unnamed=!!basis?.unnamed,lead=unnamed?UNNAMED_WHO_LEAD+'\n\n':''
-      const movingOpening=unnamed&&authorityLeadMayMove(payload)
+      const unnamed=!!basis?.unnamed
       // Overview excerpts are append-only and stay in the final tail; partial grounding checks the model points.
       // One grounding pass per new sentence record. Once released, the lead is fixed for later shaping.
       const checked = checkedAnswerPayload({ ...payload, research: { ...(payload as unknown as {research?:object}).research, mode: 'loop' } }, question,true,released)
@@ -75,12 +68,15 @@ export function researchSentenceStream(question: string, send: (text: string,che
       if (!text.trim()) return
       let answer=text
       if(unnamed){
-        if(!text.startsWith(lead))return
-        const body=afterLead(checked,lead)
-        if (!released && !stableResearchLead(body, question)) return
-        if(movingOpening&&!settledAuthorityFinding(body,question))return
+        // The line leads only while no sentence names anyone, and a later sentence may still name someone.
+        if(text.startsWith(UNNAMED_WHO_LEAD))return
+        // Shaping can also change the opening (a finding attributed to its speaker, then another finding promoted
+        // ahead of it), so an answer that does not open on the model's own first line waits for its on-topic finding.
+        const movingOpening=authorityLeadMayMove(payload)||firstLine(text)!==firstLine(payload.answer)
+        if (!released && !stableResearchLead(checked, question)) return
+        if(movingOpening&&!settledAuthorityFinding(checked,question))return
         // The promoted on-topic finding is settled. Its earlier context remains an affected tail until completion.
-        answer=lead+(movingOpening?researchSentences(String(body.answer??''))[0].text:String(body.answer??''))
+        answer=movingOpening?researchSentences(text)[0].text:text
       }else if(accountability){
         // A kept or moved sentence at the top rank stays first; recovered or rewritten text can still give way.
         if(!(checked.research as {who_lead_written?:boolean}|undefined)?.who_lead_written||!settledWhoLead(checked,question,basis))return

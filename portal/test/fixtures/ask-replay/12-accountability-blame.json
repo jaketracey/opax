@@ -110,7 +110,7 @@
  "assets": {},
  "expect": {
   "answered": true,
-  "lead": "^The cited sources do not name a person or office as responsible\\.",
+  "lead": "^The Auditor-General found the Minister for Sport's office",
   "includes": [
    "Jamie Example",
    "The Auditor-General found"
