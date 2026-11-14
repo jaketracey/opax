@@ -501,11 +501,12 @@ describe('featured carousel', () => {
   });
   test('snaps with a 16 pt peek, opens each person and exposes positions to VoiceOver', async () => {
     const { root } = await render(<FeaturedPeopleCarousel people={people} />);
-    act(() =>
+    // Async: the edge fade it mounts reads Reduce Transparency.
+    await act(async () => {
       host(root, 'today-featured').props.onLayout({
         nativeEvent: { layout: { width: 374 } },
-      }),
-    );
+      });
+    });
     const pages = root.findByType(ScrollView);
     expect(pages.props).toMatchObject({
       horizontal: true,
@@ -515,9 +516,11 @@ describe('featured carousel', () => {
       disableIntervalMomentum: true,
       decelerationRate: 'fast',
     });
+    // 16 pt of bleed on each side, for the edge fades.
     expect(pages.props.contentContainerStyle).toEqual({
       gap: 12,
-      paddingRight: 28,
+      paddingLeft: 16,
+      paddingRight: 44,
     });
     const cards = root.findAllByType(Card);
     expect(cards).toHaveLength(people.length);
