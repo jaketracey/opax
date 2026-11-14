@@ -2,8 +2,14 @@ appId: au.com.opax.app
 name: 04 Saved catalogs and bill with the fixture stopped, no saved search response
 ---
 # scripts/e2e-device.sh runs support/offline-warm.yaml (the bill, Search and
-# the profile, read online) and then stops the fixture.
+# the profile, read online) and then stops the fixture. This journey covers a
+# bill read minutes ago, opened offline, then pulled to refresh. A copy saved
+# hours ago and opened offline without a pull takes the same client fallback
+# (src/api/client.ts, a stale saved copy with no staleReason): tests/api.test.ts
+# covers that read, and tests/bills-ui.test.tsx a refresh that fails.
 - launchApp
+# The launch cover takes touches until it hands over, and would take the pull.
+- runFlow: support/launch-ready.yaml
 - openLink: opax://bill/au-federal-r7534
 - extendedWaitUntil:
     visible:

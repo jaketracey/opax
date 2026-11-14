@@ -42,8 +42,9 @@ name: 03 Read a sourced profile
     id: person-figures-source
 - takeScreenshot: ${EVIDENCE}/03-source
 # The strip's source line covers the identity rows and the figures; its
-# sheet lists every source with its own date and the original records. Sources open in the in-app browser once the sheet has
-# gone; e2e shows the destination locally.
+# sheet lists every source with its own date and the original records. An
+# outside original opens in the in-app browser above the sheet; e2e shows the
+# destination locally.
 - tapOn:
     id: person-figures-source
 # Every source sheet is titled "Sources" (the line's own title is not
