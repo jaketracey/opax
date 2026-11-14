@@ -537,6 +537,13 @@ async function render(embedded = false, paneWidth?: number) {
     );
   });
   mounted.push(r);
+  const votes = host(r.root, 'bill-divisions-layout')[0];
+  if (votes)
+    act(() =>
+      votes.props.onLayout({
+        nativeEvent: { layout: { width: paneWidth ?? 358, height: 900 } },
+      }),
+    );
   return r.root;
 }
 const texts = (node: ReactTestInstance): string[] =>

@@ -266,6 +266,25 @@ const MEASURED_AT_TOLERANCE = 0.03;
 const WIDTH_EPSILON = 0.5;
 const FIT_MARGIN = 1;
 const compact = (text: string) => text.replace(/\s/g, '');
+
+type WordSafeLine = {
+  text: string;
+  width: number;
+  height: number;
+  y?: number;
+};
+/**
+ * iOS reports TextKit's used rect, rather than the paragraph's line advance.
+ * Measure the advance between line origins. Treating the rect's height as
+ * the advance rejected fresh serif layouts as stale scales before they could
+ * reach the word-safe floor. Older events without origins retain the
+ * height-based fallback.
+ */
+function wordSafeLineHeight(lines: readonly WordSafeLine[]): number {
+  const first = lines[0]!;
+  const advance = (lines[1]?.y ?? NaN) - (first.y ?? NaN);
+  return Number.isFinite(advance) && advance > 0 ? advance : first.height;
+}
 /** Full size again, as a new generation; the uncapped multiplier still holds. */
 const restart = (state: WordSafeState): WordSafeState => ({
   ...wordSafeStart(state.key, state.full, state.gen + 1),
@@ -300,7 +319,7 @@ function provenToFit(state: WordSafeState): WordSafeState {
 export function wordSafeOnLines(
   state: WordSafeState,
   at: WordSafeInstance,
-  lines: readonly { text: string; width: number; height: number }[],
+  lines: readonly WordSafeLine[],
   content: string,
   baseLineHeight: number,
   validateScale = true,
@@ -312,7 +331,8 @@ export function wordSafeOnLines(
   if (!state.fullFrame) return state;
   if (compact(lines.map((line) => line.text).join('')) !== compact(content))
     return state;
-  const measuredAt = lineScale(lines[0]!.height, baseLineHeight);
+  const lineHeight = wordSafeLineHeight(lines);
+  const measuredAt = lineScale(lineHeight, baseLineHeight);
   if (!Number.isFinite(measuredAt)) return state;
   // A full-size, whole-word layout that fits the current frame proves every
   // word fits, even if it arrives after a queued narrow-column break capped
@@ -333,7 +353,7 @@ export function wordSafeOnLines(
   )
     return state;
   if (breaksMidWord(lines)) {
-    const next = nextWordSafeCap(lines[0]!.height, baseLineHeight, floor);
+    const next = nextWordSafeCap(lineHeight, baseLineHeight, floor);
     if (next === null || (state.cap && next >= state.cap)) return state;
     return {
       ...state,
@@ -554,11 +574,23 @@ export function Text({
     // onTextLayout can precede onLayout. Buffer it until this identity/step
     // has a frame. A queued portrait break cannot fit a one-line landscape
     // frame, and a queued wider layout cannot fit a narrower column.
+    if (!frame || !lines?.length) return;
+    const hasOrigins = lines.every((line) => Number.isFinite(line.y));
+    const bottom = hasOrigins
+      ? Math.max(...lines.map((line) => line.y + line.height))
+      : lines.reduce((sum, line) => sum + line.height, 0);
+    // Used rectangles may include trailing spaces outside the text column.
+    // Allow at most one drawn em per trailing space; visible glyphs and stale
+    // wider-column events still have to fit. Do not sum overlapping leading.
+    const drawnPoints = role.fontSize * (cap || expectedFull || 1);
     if (
-      !frame ||
-      !lines?.length ||
-      lines.reduce((sum, line) => sum + line.height, 0) > frame.height + 1 ||
-      lines.some((line) => line.width > frame.width + WIDTH_EPSILON)
+      bottom > frame.height + 1 ||
+      lines.some((line) => {
+        const trailing = /[ \t]+$/.exec(line.text)?.[0].length ?? 0;
+        return (
+          line.width > frame.width + trailing * drawnPoints + WIDTH_EPSILON
+        );
+      })
     )
       return;
     advance((state) =>

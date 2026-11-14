@@ -1634,35 +1634,38 @@ function Votes({
   const hidden = main.length - VOTES_SHOWN;
   const ordered = [...main, ...procedural];
   const all = view.divisions.data!.rows;
-  const row = (division: Division) => (
-    <BillVoteRow
-      key={division.key}
-      division={division}
-      width={rowWidth}
-      index={ordered.indexOf(division)}
-      bill={identity}
-      expanded={votes.expanded.has(division.key)}
-      onToggle={() => votes.toggle(division.key)}
-      focus={votes.focus?.key === division.key ? votes.focus.n : 0}
-      targets={targets}
-      isNew={votes.fresh.has(division.key)}
-      memberVote={
-        member
-          ? (() => {
-              const position = memberPosition(
-                member,
-                { title: identity.title, shortTitle: identity.shortTitle },
-                division,
-                all,
-              );
-              return position
-                ? { name: member.name, slug: member.slug, position }
-                : null;
-            })()
-          : null
-      }
-    />
-  );
+  // SwiftUI's matchContents trigger must first mount at the list's width.
+  // Mounting it unconstrained caches an overflowing intrinsic text layout.
+  const row = (division: Division) =>
+    rowWidth === undefined ? null : (
+      <BillVoteRow
+        key={division.key}
+        division={division}
+        width={rowWidth}
+        index={ordered.indexOf(division)}
+        bill={identity}
+        expanded={votes.expanded.has(division.key)}
+        onToggle={() => votes.toggle(division.key)}
+        focus={votes.focus?.key === division.key ? votes.focus.n : 0}
+        targets={targets}
+        isNew={votes.fresh.has(division.key)}
+        memberVote={
+          member
+            ? (() => {
+                const position = memberPosition(
+                  member,
+                  { title: identity.title, shortTitle: identity.shortTitle },
+                  division,
+                  all,
+                );
+                return position
+                  ? { name: member.name, slug: member.slug, position }
+                  : null;
+              })()
+            : null
+        }
+      />
+    );
   // Collapsing keeps the reader in the section: a header already above the
   // bar lands just under it.
   const collapse = () => {
@@ -1756,7 +1759,7 @@ function BillVoteRow({
 }: {
   division: Division;
   /** The list's width also constrains the intrinsically sized iOS menu trigger. */
-  width: number | undefined;
+  width: number;
   index: number;
   bill: Identity;
   expanded: boolean;

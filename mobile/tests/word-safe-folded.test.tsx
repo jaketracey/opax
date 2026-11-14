@@ -79,6 +79,7 @@ function settle(
   content: string,
   column: number,
   fontScale: number,
+  nativeGeometry = false,
 ) {
   act(() =>
     Dimensions.set({
@@ -107,14 +108,31 @@ function settle(
     const drawn = size * ramp;
     const height = (style.lineHeight as number) * ramp;
     lines = wrap(content, column, drawn, height);
+    // RN iOS reports TextKit's used rectangles, not the paragraph advance.
+    // Include leading and trailing-space overhang instead of idealised boxes.
+    // These are geometry fixtures, not measurements from a device capture.
+    const reported = nativeGeometry
+      ? lines.map((line, index) => ({
+          ...line,
+          y: index * height,
+          height: height + 1,
+          width:
+            line.width + (line.text.endsWith(' ') ? textWidth(' ', drawn) : 0),
+        }))
+      : lines;
     act(() =>
       text().props.onLayout({
         nativeEvent: {
-          layout: { x: 0, y: 0, width: column, height: lines.length * height },
+          layout: {
+            x: 0,
+            y: 0,
+            width: column,
+            height: Math.ceil(lines.length * height + (nativeGeometry ? 1 : 0)),
+          },
         },
       }),
     );
-    act(() => text().props.onTextLayout({ nativeEvent: { lines } }));
+    act(() => text().props.onTextLayout({ nativeEvent: { lines: reported } }));
   }
   const drawnPoints = size * ramp;
   act(() => renderer.unmount());
@@ -160,6 +178,44 @@ describe.each([
       expect(drawnPoints).toBeGreaterThanOrEqual(WORD_SAFE_MIN_POINTS - 0.2);
     },
   );
+});
+
+describe.each([
+  ['AX3', AX3],
+  ['AX5', AX5],
+] as const)('%s TextKit rectangles', (_, fontScale) => {
+  test.each(
+    ['(Consequential', '(Strengthening', 'amendment', 'Enforcement'].flatMap(
+      (word) => [110, 120, 277].map((column) => [word, column] as const),
+    ),
+  )('%s stays whole in a %spt column', (word, column) => {
+    const { lines, drawnPoints } = settle(
+      'rowRecord',
+      `Bill ${word} changes`,
+      column,
+      fontScale,
+      true,
+    );
+    expect(lines.map((line) => line.text).join('')).toBe(
+      `Bill ${word} changes`,
+    );
+    expect(lines.every((line) => line.width <= column)).toBe(true);
+    expect(breaksMidWord(lines)).toBe(false);
+    expect(drawnPoints).toBeGreaterThanOrEqual(WORD_SAFE_MIN_POINTS - 0.2);
+  });
+});
+
+test('Large text that already fits has the same size and line measurements with native rectangles', () => {
+  for (const content of [
+    'A short bill',
+    'Limitation of debate',
+    'Senate · 19 Aug 2026',
+  ]) {
+    const ideal = settle('rowRecord', content, 277, 1);
+    const native = settle('rowRecord', content, 277, 1, true);
+    expect(native).toEqual(ideal);
+    expect(native.drawnPoints).toBe(textStyles.rowRecord.fontSize);
+  }
 });
 
 test('the audit case: "(Strengthening" is wider than a 110pt column at the default size', () => {
