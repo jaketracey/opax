@@ -160,7 +160,8 @@ async function main() {
     } else {
       // No token means the anonymous tier: the request carries no Authorization header at all.
       const token = (opts.tokenFile ? readFileSync(opts.tokenFile, 'utf8') : process.env.OPAX_MCP_TOKEN ?? '').trim()
-      if (token && !/^opax_[\w-]{43}$/.test(token)) throw new Error('OPAX_MCP_TOKEN or --token-file is not an OPAX member access token.')
+      // A member key (opax_...) or an OAuth access token: any single bearer value.
+      if (token && !/^[\x21-\x7e]{20,4096}$/.test(token)) throw new Error('OPAX_MCP_TOKEN or --token-file does not hold a bearer token.')
       const configPath = join(work, 'mcp.json')
       // claude talks to a local pass-through, which adds the token and keeps to --rate.
       proxy = await startProxy({ upstream: opts.base, token, minIntervalMs: Math.round(1000 / opts.rate) })
@@ -168,7 +169,7 @@ async function main() {
       chmodSync(configPath, 0o600)
       server = await describeServer(proxy.url + '/mcp', '')
       if (!server.tool_count) throw new Error('The server at ' + opts.base + ' listed no tools (HTTP ' + server.status + ').' + (token ? ' Check the URL and token.' : ' It may not allow access without an account: pass a member token.'))
-      meta = { label: opts.label, base: opts.base, access: token ? 'member token' : 'anonymous', sha: opts.sha, rate_per_second: opts.rate, blocked: opts.blocked, model: opts.model, judge_model: opts.judgeModel, started: new Date().toISOString(), question_set: set.version, questions: questions.length }
+      meta = { label: opts.label, base: opts.base, access: !token ? 'anonymous' : /^opax_/.test(token) ? 'member key' : 'OAuth access token', sha: opts.sha, rate_per_second: opts.rate, blocked: opts.blocked, model: opts.model, judge_model: opts.judgeModel, started: new Date().toISOString(), question_set: set.version, questions: questions.length }
       console.error(`${questions.length} questions against ${opts.base} (${server.tool_count} tools, sha ${opts.sha})`)
       // Each answer is written as soon as it arrives, so an interrupted run can be resumed.
       const partial = outBase + '.partial.jsonl', done = new Map()

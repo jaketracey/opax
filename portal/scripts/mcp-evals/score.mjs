@@ -130,7 +130,9 @@ export function summarise(all) {
   const categories = {}
   for (const name of [...new Set(results.map(r => r.category))]) categories[name] = group(results.filter(r => r.category === name))
   const tools = {}
-  for (const row of all) for (const call of row.tool_calls ?? []) { const t = tools[call.name] ??= { calls: 0, errors: 0, bytes: 0 }; t.calls++; if (call.is_error) t.errors++; t.bytes += call.result_bytes ?? 0 }
+  // A dispatcher tool is counted per register, so its use stays comparable with one-tool-per-register builds.
+  const label = call => typeof call.args?.register === 'string' ? `${call.name}:${call.args.register}` : call.name
+  for (const row of all) for (const call of row.tool_calls ?? []) { const t = tools[label(call)] ??= { calls: 0, errors: 0, bytes: 0 }; t.calls++; if (call.is_error) t.errors++; t.bytes += call.result_bytes ?? 0 }
   return { overall: group(results), categories, tools, env_blocked: blocked.length ? { ...group(blocked), ids: blocked.map(r => r.id) } : null }
 }
 
