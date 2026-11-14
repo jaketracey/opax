@@ -126,13 +126,33 @@ name: 07 Choose an electorate by member name and restore it after relaunch
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/07-no-match
 # The first Cancel may only end the search; the sheet's Cancel closes it.
-- tapOn: Cancel
+# iOS 26 and later draw the active search's Cancel as a round ✕ named
+# Close (iOS 27, 14 Nov 2026); Android's prepared copy maps this Cancel.
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn: Cancel
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn: ^(Cancel|Close)$
 - runFlow:
     when:
       visible:
         id: seat-sheet
     commands:
-      - tapOn: Cancel
+      - runFlow:
+          when:
+            platform: Android
+          commands:
+            - tapOn: Cancel
+      - runFlow:
+          when:
+            platform: iOS
+          commands:
+            - tapOn: ^(Cancel|Close)$
 - assertVisible:
     id: your-seat-name
 # Forget: the tab returns to the invitation, with no stale member.

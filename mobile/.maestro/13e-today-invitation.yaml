@@ -114,7 +114,18 @@ name: 13e Today's invitation to choose a seat, by name, by location, and after N
 - assertVisible:
     id: use-my-location
 - takeScreenshot: ${EVIDENCE}/13e-locating
-- tapOn: Cancel
+# iOS 26 and later draw the active search's Cancel as a round ✕ named
+# Close (iOS 27, 14 Nov 2026); Android's prepared copy maps this Cancel.
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn: Cancel
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn: ^(Cancel|Close)$
 - extendedWaitUntil:
     notVisible:
       id: seat-sheet
