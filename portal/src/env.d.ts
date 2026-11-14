@@ -50,6 +50,8 @@ interface Env {
   BSKY_DID?: string
   BSKY_APP_PASSWORD?: string
   BSKY_SERVICE?: string
+  /** The ChatGPT app directory's domain-verification token, served at /.well-known/openai-apps-challenge (secret or var; unset = 404). */
+  OPENAI_APPS_CHALLENGE?: string
 
   /**
    * Per-pipeline generative model pins (wrangler vars, editable without a code

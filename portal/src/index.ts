@@ -110,6 +110,7 @@ import { appManifest } from './app-manifest'
 import { appJson } from './app-http'
 import { proxyPostHog } from './posthog'
 import { networkBlock } from './network-block'
+import { openaiAppsChallenge, OPENAI_APPS_CHALLENGE_PATH } from './openai-apps-challenge'
 import { handleBillText } from './bill-text'
 import { TOPIC_NAMES } from './topic-names.mjs'
 import { melbourneDate, DAILY_POST_KINDS, type DailyPostKind } from './daily-post'
@@ -7315,6 +7316,8 @@ export default {
     if (url.pathname === '/.well-known/atproto-did') return /^did:plc:[a-z2-7]{24}$/.test(env.BSKY_DID ?? '')
       ? new Response(env.BSKY_DID, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=300' } })
       : new Response('Not found', { status: 404 })
+    // The ChatGPT app directory's domain check: the token its portal issued, or 404 while none is set.
+    if (url.pathname === OPENAI_APPS_CHALLENGE_PATH) return openaiAppsChallenge(request, env.OPENAI_APPS_CHALLENGE)
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
     if (url.pathname === '/api/ops/ask-gold') {
