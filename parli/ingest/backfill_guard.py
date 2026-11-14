@@ -73,21 +73,31 @@ def _atomic(path, value):
     temporary.replace(path)
 
 
-# Quota, rate, billing and limit refusals, matched case-insensitively.
+# Quota, rate, billing, account and limit refusals, matched case-insensitively.
 REFUSAL = re.compile(
     r'quota|rate.?limit|too many requests|throttl|billing|payment|credit|'
     r'insufficient|exceed|limit.{0,20}reached|reached.{0,20}limit|'
-    r'(?:spend|subscription|usage|resource|storage|size|plan).?limit|upgrade.{0,20}plan',
+    r'(?:spend|subscription|usage|resource|storage|size|plan).?limit|upgrade.{0,20}plan|'
+    r'suspend|deactivat|trial|spending.?cap|\bcap\b|capped|subscription|inactive',
     re.I)
-REFUSAL_KEYS = ('error', 'errors', 'message', 'detail', 'details', 'msg')
+# Keys an API puts an error under, at any depth.
+REFUSAL_KEYS = ('error', 'errors', 'message', 'messages', 'detail', 'details', 'msg',
+                'reason', 'error_description')
+ERROR_STATUSES = ('error', 'errors', 'fail', 'failed', 'failure', 'refused', 'denied')
+# Inside a guarded request every status of 400 or more stops the backfill,
+# except 409 (the slug already exists: counted as done) and 404 (a missing
+# path or resource says nothing about the account or its spend).
+GUARDED_PASS = (404, 409)
 
 
 def refusal_text(detail):
     """The text of a 2xx body where a refusal could sit.
 
-    JSON: top-level error, message and detail keys and errors[].message (any
-    nesting). A plain-text body is read whole. Other JSON fields (resource
-    titles, text) are ignored, so a speech about quotas is not a refusal.
+    JSON, at any depth: everything under an error-like key (error, message,
+    reason, detail, msg and similar), and every string in an object that says
+    it failed (status "error", success or ok false). A plain-text body is read
+    whole. Other fields (resource titles, text) are ignored, so a speech
+    about quotas is not a refusal.
     """
     if detail is None:
         return ''
@@ -97,26 +107,27 @@ def refusal_text(detail):
         payload = json.loads(detail)
     except (ValueError, TypeError):
         return str(detail)
+    if isinstance(payload, str):
+        return payload
     found = []
     def walk(value, keyed):
         if isinstance(value, str):
             if keyed:
                 found.append(value)
         elif isinstance(value, dict):
+            status = value.get('status')
+            failed = ((isinstance(status, str) and status.lower() in ERROR_STATUSES)
+                      or value.get('success') is False or value.get('ok') is False)
             for key, item in value.items():
-                walk(item, keyed or str(key).lower() in REFUSAL_KEYS)
+                walk(item, keyed or failed or str(key).lower() in REFUSAL_KEYS)
         elif isinstance(value, list):
             for item in value:
                 walk(item, keyed)
-    if isinstance(payload, str):
-        return payload
-    for item in payload if isinstance(payload, list) else [payload]:
-        if isinstance(item, str) and isinstance(payload, list):
-            found.append(item)
-        elif isinstance(item, dict):
-            for key in REFUSAL_KEYS:
-                if key in item:
-                    walk(item[key], True)
+    if isinstance(payload, list):
+        for item in payload:
+            walk(item, isinstance(item, str))
+    else:
+        walk(payload, False)
     return '\n'.join(found)
 
 
@@ -207,13 +218,17 @@ class Guard:
             reason += '; shared stop file could not be written'
         raise Stopped(reason)
 
-    def response(self, status, detail):
+    def response(self, status, detail, guarded=True):
         # Called BEFORE the normal client's retry/backpressure handling. Every
         # guarded response, including a transient 429, is terminal for repairs.
         # A 200 can still carry a refusal: read every place an API puts one.
+        # Ordinary refresh requests (guarded=False) stop the repairs only on
+        # refusal wording, without changing their own failure policy.
         error = detail if status >= 400 else refusal_text(detail)
         if status in (402, 429, 507) or REFUSAL.search(error or ''):
             self.stop(f'Progress HTTP {status}: rate, quota or billing refusal')
+        if guarded and status >= 400 and status not in GUARDED_PASS:
+            self.stop(f'Progress HTTP {status}: error inside a guarded backfill request')
 
     def request_scope(self):
         from parli.arag import observe_responses
@@ -288,6 +303,37 @@ class Guard:
             _atomic(self.root / 'backfill-ledger.json', data)
 
 
+# The coverage watchdog's repair sitting-day inventories: one JSON per lane in
+# STATE_DIR/coverage-sitting-days, listing every expected sitting day of the
+# repaired years, held or not. The lane names are the ones the watchdog reads.
+SITTING_MANIFESTS = {
+    'senate': ('senate.json', 'im/senate-backfill', {'senate': range(2014, 2020)}),
+    'nsw': ('nsw.json', 'im/nsw-hansard-gap', {'nsw_la': range(2023, 2026), 'nsw_lc': range(2023, 2026)}),
+}
+
+
+def write_sitting_manifest(stage, days, evidence, root=None):
+    """Write `days` ((chamber, ISO date) pairs) for the watchdog; never fatal.
+
+    Returns the path, or None when the inventory could not be written.
+    """
+    name, lane, chambers = SITTING_MANIFESTS[stage]
+    inventory = {ch: {str(year): set() for year in years} for ch, years in chambers.items()}
+    for chamber, day in days:
+        year = day[:4]
+        if chamber in inventory and year in inventory[chamber]:
+            inventory[chamber][year].add(date.fromisoformat(day).isoformat())
+    data = {'schema_version': 1, 'lane': lane, 'generated_at': _now(), 'evidence': evidence,
+            'chambers': {ch: {y: sorted(d) for y, d in years.items()} for ch, years in inventory.items()}}
+    try:
+        folder = Path(root if root is not None else state_dir()) / 'coverage-sitting-days'
+        folder.mkdir(parents=True, exist_ok=True)
+        _atomic(folder / name, data)
+        return folder / name
+    except OSError:
+        return None
+
+
 def run_night(night, after):
     """The date of the `after`-th backfill night following `night`.
 
@@ -328,7 +374,13 @@ def status(root, night):
             # A scheduled periodic-night skip switches the stage off for one
             # night only; it is not a stop and the projection still stands.
             skipped = bool(os.environ.get('OPAX_BACKFILL_SKIPPED_TONIGHT'))
-            stopped = ((not enabled(stage) and not skipped) or (root / 'backfill.STOP').exists()
+            # Projections allow for Sunday skips only. A skip on another night
+            # means a periodic group is still owed; while it stays owed every
+            # night skips, so no date is honest until it clears.
+            owed = skipped and date.fromisoformat(night).weekday() != 6
+            if owed:
+                current['projection_basis'] = 'withheld: an owed periodic group skipped the backfill tonight'
+            stopped = (owed or (not enabled(stage) and not skipped) or (root / 'backfill.STOP').exists()
                        or current.get('stop') in ('source-refused', 'error', 'growth-guard', 'identity-holds'))
             # This night's acquisition has finished. Remaining days start next
             # night; normal-sync publication follows acquisition by one night.

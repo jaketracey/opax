@@ -183,7 +183,9 @@ def extract_text_from_body(body_elem: ET.Element) -> str:
     return clean_html(raw)
 
 
-IN_REPLY_RE = re.compile(r"\(?\s*In reply to\b", re.I)
+# The whole paragraph must be the deferred-answer header, "In reply to <member>
+# (21 November 2023).", so an ordinary speech opening "In reply to ..." stays.
+IN_REPLY_RE = re.compile(r"\(?\s*In reply to\b[^()]{1,200}\(\s*\d{1,2}\s+[A-Za-z]+\s+\d{4}\s*\)\s*\.?\s*\)?\s*", re.I)
 
 SPEAKER_HEADINGS = frozenset({
     "MemberSpeech-H", "MemberUpper-H", "MemberLower-H", "MemberQuestion-H", "MemberAnswer-H",
@@ -240,7 +242,7 @@ def extract_speeches_from_fragment(xml_root: ET.Element) -> list[dict]:
             # names the asker, not a speaker, so it is not a turn. Close the
             # previous turn and start the next one with no speaker, so nothing
             # after the header is credited to the asker.
-            if IN_REPLY_RE.match(clean_html(" ".join(element.itertext()))):
+            if IN_REPLY_RE.fullmatch(clean_html(" ".join(element.itertext()))):
                 flush()
                 current, pending_id = dict(empty), None
                 continue

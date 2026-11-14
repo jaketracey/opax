@@ -11,6 +11,12 @@ nsw_hansard_backfill() {
     warn "Shared backfill.STOP: NSW repair held; inspect the growth ledger; periodic completion unaffected"
     return 0
   fi
+  # The nightly's cutoff (nightly.sh section 1z): the stage may run up to 22 min.
+  if [ -n "${OPAX_BACKFILL_NOT_AFTER:-}" ] && { ! [[ "$OPAX_BACKFILL_NOT_AFTER" =~ ^[0-9]+$ ]] \
+      || [ $(( $(date +%s) + 1320 )) -gt "$OPAX_BACKFILL_NOT_AFTER" ]; }; then
+    warn "NSW Hansard repair skipped: within 22 min of the nightly backfill cutoff; resumes next night"
+    return 0
+  fi
   local rc remaining outer_s
   outer_s=$("$PY" -c 'import math,sys; n=float(sys.argv[1]); assert math.isfinite(n) and 0<n<=1200; print(math.ceil(n)+60)' "${OPAX_BACKFILL_NSW_BUDGET_S:-1200}" 2>/dev/null) || {
     warn "NSW Hansard repair budget invalid; stage deferred"

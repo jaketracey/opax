@@ -116,6 +116,9 @@ def run(db_path, stage, *, max_days=DEFAULT_DAYS, budget=DEFAULT_BUDGET,
 def _run(db_path, stage, max_days, budget, manifest, cache, offline, guard, kb, began, deadline):
     available = backfill.source_days(manifest, ['senate'], START, END)
     total = len(available['senate'])
+    # Every expected Senate sitting day of the repaired years, for the coverage watchdog.
+    growth.write_sitting_manifest('senate', [('senate', d) for d in available['senate']],
+                                  f'OpenAustralia Senate debates index, manifest {Path(manifest).name}')
     archive = backfill.Archive(stage, cache, offline)
     archive.http = HonestHTTP(deadline=deadline, user_agent='opax-improve-audit', allowed_origin=xml.BASE)
     local_deadline = deadline

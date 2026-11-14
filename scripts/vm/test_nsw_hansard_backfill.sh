@@ -92,6 +92,12 @@ test "${#FAILURES[@]}" -eq 0
 periodic_refresh_complete
 test -f "$PIPE/periodic-completed"
 rm "$PIPE/backfill.STOP"
+OPAX_BACKFILL_NOT_AFTER=$(( $(date +%s) + 600 )) nsw_hansard_backfill
+test ! -f "$PIPE/args"
+grep -qF 'WARN NSW Hansard repair skipped: within 22 min of the nightly backfill cutoff' "$PIPE/log"
+test "${#FAILURES[@]}" -eq 0
+OPAX_BACKFILL_NOT_AFTER=garbage nsw_hansard_backfill
+test ! -f "$PIPE/args"
 OPAX_BACKFILL_NSW_CAP=5 nsw_hansard_backfill
 test ! -f "$PIPE/args"
 echo 'NSW nightly isolation, default-on, stop file, cap and outer-timeout checks passed'

@@ -53,6 +53,13 @@ run_step() {
         BACKFILL_FAILURES+=("$name(shared-stop)")
         log "[$name] WARNING: shared backfill.STOP exists; acquisition held"
         return 3
+      fi
+      # The nightly's cutoff (nightly.sh section 1z): skip a stage that could still be running past it.
+      if [ -n "${OPAX_BACKFILL_NOT_AFTER:-}" ] && { ! [[ "$OPAX_BACKFILL_NOT_AFTER" =~ ^[0-9]+$ ]] \
+          || [ $(( $(date +%s) + 1320 )) -gt "$OPAX_BACKFILL_NOT_AFTER" ]; }; then
+        BACKFILL_FAILURES+=("$name(cutoff)")
+        log "[$name] WARNING: within 22 min of the nightly backfill cutoff; acquisition skipped tonight"
+        return 3
       fi ;;
   esac
   local before after rc t0 dur delta status

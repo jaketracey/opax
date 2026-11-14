@@ -131,7 +131,7 @@ def _request(
             # quota/billing refusal, without changing their own failure policy.
             from parli.ingest.backfill_guard import Guard, Stopped
             try:
-                Guard().response(res.status_code, res.text)
+                Guard().response(res.status_code, res.text, guarded=False)
             except Stopped:
                 pass
         if res.ok:

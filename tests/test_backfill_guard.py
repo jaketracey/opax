@@ -94,7 +94,15 @@ def test_per_resource_bound_requires_500_and_uses_exact_decimal_bytes():
     (200, '{"errors":[{"message":"billing limit reached"}]}'),
     (200, '{"detail":"Rate limit exceeded"}'), (200, '{"error":{"code":"insufficient_balance"}}'),
     (200, 'Payment required'), (200, '"Monthly limit reached"'),
-    (200, '[{"message":"plan limit reached"}]')])
+    (200, '[{"message":"plan limit reached"}]'),
+    # Re-review: error-like keys at any depth, and failed-status objects.
+    (200, '{"data":{"error":"quota exceeded"}}'), (200, '{"result":{"message":"Quota exceeded"}}'),
+    (200, '{"status":"error","reason":"usage limit"}'), (200, '{"detail":{"msg":"spending cap reached"}}'),
+    (200, '{"success":false,"info":"account suspended"}'),
+    # Re-review: any guarded status of 400 or more stops, whatever the wording.
+    (403, 'Account suspended'), (403, 'Your trial has ended'), (403, 'spending cap reached'),
+    (401, 'subscription inactive'), (401, 'unauthorised'), (400, 'bad request'),
+    (500, 'internal error'), (503, 'unavailable')])
 @pytest.mark.parametrize('method', ['GET', 'POST'])
 def test_any_guarded_progress_refusal_stops_without_retry(monkeypatch, status, detail, method):
     calls = []
@@ -378,6 +386,10 @@ def test_periodic_night_skip_is_reported_but_is_not_a_stop(monkeypatch):
     assert report['skipped_tonight'] == 'periodic groups tonight: weekly'
     assert report['stopped'] is False
     assert report['projected_finish_date'] == '2026-11-18'
+    # A Monday skip means an owed group: no date until it clears.
+    owed = G.status(guard.root, '2026-11-16')
+    assert owed['skipped_tonight'] and owed['projected_finish_date'] is None
+    assert owed['stages']['senate']['projection_basis'].startswith('withheld')
 
 
 def test_recent_interval_rate_catches_a_sustained_rise_the_average_absorbs():
@@ -452,3 +464,73 @@ def test_ceiling_projection_counts_unchecked_creations():
     guard.published(int(G.BYTE_CEILING / G.BYTES_PER_RESOURCE))
     with pytest.raises(G.Stopped, match='could cross 5.5 GB'):
         guard.before_batch(1)
+
+
+@pytest.mark.parametrize('status', [404, 409])
+def test_guarded_404_and_409_do_not_stop(monkeypatch, status):
+    class Response:
+        ok, status_code, text, headers, content = False, status, 'not found or exists', {}, b'x'
+    monkeypatch.setattr(arag.requests, 'request', lambda *a, **kw: Response())
+    guard = G.Guard()
+    with pytest.raises(arag.AragError), guard.request_scope():
+        arag._request('POST', 'https://example.test/resources', {})
+    assert not (guard.root / 'backfill.STOP').exists()
+
+
+@pytest.mark.parametrize('status,detail', [(403, 'Account suspended'), (401, 'subscription inactive'),
+                                           (403, 'spending cap reached'), (503, 'unavailable')])
+def test_guarded_http_error_stops_every_later_row(status, detail):
+    class Refusing(KB):
+        def create_resource(self, body):
+            self.created.append(body)
+            raise arag.AragError(status, 'mock', detail)
+    kb, state = Refusing(), {'failed': {}, 'pushed': 0}
+    S._push_batch(kb, [body('senate', 1), body('senate', 2), body('senate', 3)], state)
+    assert (G.state_dir() / 'backfill.STOP').exists()
+    # In-flight requests may finish; nothing more is sent once stopped.
+    sent = len(kb.created)
+    S._push_batch(kb, [body('senate', 4), body('nsw', 5)], state)
+    assert len(kb.created) == sent and state['pushed'] == 0
+    assert all(err.startswith(G.HOLD) for err in state['failed'].values())
+
+
+def test_ordinary_refresh_4xx_without_refusal_wording_leaves_repairs_running(monkeypatch):
+    class Response:
+        ok, status_code, text, headers = False, 400, 'malformed field', {}
+    monkeypatch.setattr(arag.requests, 'request', lambda *a, **kw: Response())
+    with pytest.raises(arag.AragError):
+        arag._request('POST', 'https://example.test/resources', {}, max_retries=0)
+    assert not (G.state_dir() / 'backfill.STOP').exists()
+
+
+@pytest.mark.parametrize('detail', ['{"result":{"status":"ok","message":"Resource created"}}',
+                                    '{"data":{"title":"Account suspended for the session","body":"trial"}}'])
+def test_nested_normal_200_still_passes(monkeypatch, detail):
+    class Response:
+        ok, status_code, text, headers, content = True, 200, detail, {}, detail.encode()
+        def json(self):
+            return json.loads(detail)
+    monkeypatch.setattr(arag.requests, 'request', lambda *a, **kw: Response())
+    guard = G.Guard()
+    with guard.request_scope():
+        arag._request('POST', 'https://example.test/resources', {})
+    assert not (guard.root / 'backfill.STOP').exists()
+
+
+def test_publication_deadline_never_passes_the_nightly_cutoff(monkeypatch):
+    import time
+    kb = KB()
+    monkeypatch.setenv('OPAX_BACKFILL_NOT_AFTER', str(int(time.time()) + 30))
+    publication = S.BackfillPublication(kb)
+    publication.before('senate', ('senate', '2014-02-01'))
+    assert publication.deadline - time.monotonic() <= 31
+    for past in (str(int(time.time()) - 1), 'not-a-number'):
+        monkeypatch.setenv('OPAX_BACKFILL_NOT_AFTER', past)
+        kb, state = KB(), {'failed': {}, 'pushed': 0}
+        S._push_batch(kb, [body('nsw', 1)], state)
+        assert kb.created == []
+        assert 'past the nightly backfill cutoff' in state['failed']['nsw-1']
+    monkeypatch.delenv('OPAX_BACKFILL_NOT_AFTER')
+    publication = S.BackfillPublication(KB())
+    publication.before('senate', ('senate', '2014-02-01'))
+    assert publication.deadline - time.monotonic() > 1000

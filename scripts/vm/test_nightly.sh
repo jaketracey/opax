@@ -277,6 +277,7 @@ PIPE="$HOME/.cache/autoresearch/pipeline"
 if [ -f .env ]; then set -a; . ./.env; set +a; fi   # like the real script
 # what the real script's senate_backfill step would see (the nightly's periodic-night skip)
 echo "OPAX_SENATE_BACKFILL=${OPAX_SENATE_BACKFILL-unset}" > "$HOME/daily.backfill-env"
+echo "${OPAX_BACKFILL_NOT_AFTER-unset}" > "$HOME/daily.backfill-not-after"
 sleep 1
 if [ "${FAKE_MODE:-ok}" = paused ]; then
   mkdir -p "$PIPE/source-access"
@@ -804,6 +805,12 @@ mkdir -p "$HOME/.cache/autoresearch/pipeline"
 touch "$HOME/.cache/autoresearch/pipeline/backfill.STOP"
 OPAX_ONLY=senate_backfill,federal_coverage refresh
 check "shared stop warns, skips acquisition and preserves coverage and daily completion" bash -c "[ '$RRC' -eq 0 ] && ! grep -q parli.ingest.senate_backfill '$RS_CALLS' && grep -q 'Backfill warnings: senate_backfill(shared-stop)' '$RS/out.txt' && grep -q scripts/federal_hansard_coverage.py '$RS_CALLS'"
+new_refresh_sandbox senate-cutoff
+OPAX_BACKFILL_NOT_AFTER=$(date +%s) OPAX_ONLY=senate_backfill,federal_coverage refresh
+check "inside 22 min of the nightly cutoff the Senate stage is skipped with a warning; coverage still runs" bash -c "[ '$RRC' -eq 0 ] && ! grep -q parli.ingest.senate_backfill '$RS_CALLS' && grep -q 'Backfill warnings: senate_backfill(cutoff)' '$RS/out.txt' && grep -q scripts/federal_hansard_coverage.py '$RS_CALLS'"
+: > "$RS_CALLS"
+OPAX_BACKFILL_NOT_AFTER=$(( $(date +%s) + 7200 )) OPAX_ONLY=senate_backfill,federal_coverage refresh
+check "well before the cutoff the Senate stage runs" bash -c "[ '$RRC' -eq 0 ] && grep -q parli.ingest.senate_backfill '$RS_CALLS'"
 for repair_rc in 1 124 137; do
   new_refresh_sandbox "senate-warning-$repair_rc"
   OPAX_SENATE_BACKFILL=1 OPAX_ONLY=senate_backfill,federal_coverage FAIL_STEPS=senate_backfill FAIL_RC=$repair_rc refresh
@@ -1096,6 +1103,14 @@ check "a Monday catching up an owed weekly group also skips the backfill" bash -
 new_sandbox s24-backfill-frl
 OPAX_TODAY=2026-10-15 FAKE_WEEKLY_MODE=none nightly
 check "the Thursday FRL night alone keeps the backfill on" bash -c "[ \"\$(cat '$HOME/weekly.args')\" = frl ] && [ \"\$(cat '$HOME/daily.backfill-env')\" = OPAX_SENATE_BACKFILL=unset ]"
+echo "== 24b. nightly: the backfill cutoff (6 h limit less the post-refresh and FRL reserves)"
+started=$(( $(date +%s) - 3600 ))   # both nights are already an hour in when the backfill would start
+new_sandbox s24-cutoff-frl
+OPAX_NIGHTLY_STARTED=$started OPAX_TODAY=2026-10-15 OPAX_NSW_BACKFILL=1 FAKE_WEEKLY_MODE=none nightly
+check "a Thursday FRL night that runs long skips the backfill, and the night and FRL still complete" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(cat '$HOME/daily.backfill-not-after')\" = $((started + 21600 - 7200 - 9900)) ] && grep -q 'NSW Hansard repair skipped: within 22 min of the nightly backfill cutoff' '$SB/nightly.out' && [ \"\$(cat '$HOME/weekly.args')\" = frl ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and not s[\"failures\"] and any(\"cutoff\" in f for f in s[\"backfill_failures\"]), s'"
+new_sandbox s24-cutoff-ordinary
+OPAX_NIGHTLY_STARTED=$started OPAX_TODAY=2026-09-22 FAKE_WEEKLY_MODE=ok nightly
+check "an ordinary night an hour in keeps the backfill: cutoff 4 h after the start, nothing skipped" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(cat '$HOME/daily.backfill-not-after')\" = $((started + 21600 - 7200)) ] && ! grep -q 'cutoff; ' '$SB/nightly.out' && [ \"\$(cat '$HOME/daily.backfill-env')\" = OPAX_SENATE_BACKFILL=unset ]"
 new_sandbox s24b
 OPAX_TODAY=2026-09-20 FAKE_WEEKLY_MODE=ok nightly
 check "Sunday 2026-09-20 (not the first): weekly only" bash -c "[ \"\$(cat '$HOME/weekly.args')\" = weekly ]"

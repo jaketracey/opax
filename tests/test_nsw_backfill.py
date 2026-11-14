@@ -10,6 +10,12 @@ import pytest
 from parli.ingest import nsw_backfill as b, nsw_hansard as n
 from parli.ingest import http
 
+
+@pytest.fixture(autouse=True)
+def isolated_state(tmp_path, monkeypatch):
+    # The stages write shared guard state and watchdog inventories here.
+    monkeypatch.setenv('OPAX_BACKFILL_STATE_DIR', str(tmp_path / 'pipeline-state'))
+
 SITTING = {"date": "2023-05-09", "chamber_code": "nsw_la", "chamber": "Legislative Assembly", "toc_doc_id": "toc"}
 TEXT = "This is a sufficiently long contribution from the named member to the parliamentary debate."
 XML = f'''<hansard><hansard.header><date>2023-05-09T10:00:00</date><chamber>Legislative Assembly</chamber></hansard.header>
@@ -532,3 +538,34 @@ def test_in_reply_to_header_is_not_stored_as_the_askers_speech(reply, monkeypatc
     # With no answer byline, the text after the header is never credited to the asker.
     speeches = n.extract_speeches_from_fragment(E.fromstring(DEFERRED_ANSWER.format(reply=reply, answer='')))
     assert all(s['speaker_id'] != '115' and 'TUDEHOPE' not in s['speaker_name'] for s in speeches)
+
+
+@pytest.mark.parametrize('text', [
+    'In reply to the member for Ryde, the Government has funded the upgrade in full.',
+    'In reply to the question asked on 21 November 2023, the Minister provided the following figures.',
+    'In reply to The Hon. DAMIEN TUDEHOPE (21 November 2023). The Minister then added a long answer.'])
+def test_an_ordinary_speech_opening_in_reply_to_is_kept(text, monkeypatch):
+    import xml.etree.ElementTree as E
+    monkeypatch.setattr(n, 'MIN_SPEECH_LEN', 1)
+    xml = DEFERRED_ANSWER.format(reply='In reply to', answer=BYLINE).replace(
+        '</body>', f'<p class="Normal-P"><span class="Normal-H">{text}</span></p></body>')
+    speeches = n.extract_speeches_from_fragment(E.fromstring(xml))
+    assert any(text in s['text'] for s in speeches)
+    assert not any(s['text'].startswith('In reply to The Hon. DAMIEN TUDEHOPE (21 November 2023).')
+                   and len(s['text']) < 60 for s in speeches)
+
+
+
+def test_full_scope_run_writes_the_watchdog_sitting_day_inventory(tmp_path):
+    from parli.ingest import backfill_guard as growth
+    days = [('nsw_la', '2023-05-09'), ('nsw_lc', '2024-02-06'), ('nsw_lc', '2025-02-11'),
+            ('nsw_la', '2022-12-01'), ('vic', '2023-05-09')]
+    path = growth.write_sitting_manifest('nsw', days, 'calendar', root=tmp_path)
+    data = json.loads(path.read_text())
+    assert path.name == 'nsw.json' and data['schema_version'] == 1 and data['lane'] == 'im/nsw-hansard-gap'
+    assert data['evidence'] and data['generated_at'].endswith('+00:00')
+    assert data['chambers'] == {'nsw_la': {'2023': ['2023-05-09'], '2024': [], '2025': []},
+                                'nsw_lc': {'2023': [], '2024': ['2024-02-06'], '2025': ['2025-02-11']}}
+    senate = json.loads(growth.write_sitting_manifest('senate', [('senate', '2014-02-11')], 'index', root=tmp_path).read_text())
+    assert set(senate['chambers']['senate']) == {str(y) for y in range(2014, 2020)}
+    assert growth.write_sitting_manifest('nsw', days, 'calendar', root='/proc/no-such-dir') is None

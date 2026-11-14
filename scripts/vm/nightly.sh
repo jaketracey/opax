@@ -362,7 +362,38 @@ fi
 if [ -n "$BACKFILL_SKIP_REASON" ]; then
   export OPAX_SENATE_BACKFILL=0 OPAX_NSW_BACKFILL=0 OPAX_BACKFILL_SKIPPED_TONIGHT="$BACKFILL_SKIP_REASON"
   log "backfill stages skipped tonight ($BACKFILL_SKIP_REASON); Senate and NSW resume on the next ordinary night"
+  # Sunday skips are planned for; an owed group on another night (catch-up) is not, so say so. The status
+  # projection is withheld on such a night (backfill_guard.status), and a group that stays owed shows here nightly.
+  if [ "$(date -d "${OPAX_TODAY:-$(TZ=Australia/Sydney date +%F)}" +%u 2>/dev/null)" != 7 ]; then
+    warn "Backfill skipped on a non-Sunday for an owed periodic group ($BACKFILL_SKIP_REASON); finish dates slip a night"
+  fi
 fi
+
+# The backfill cutoff. run-nightly.sh's limit (OPAX_NIGHTLY_LIMIT, 6 h) kills the whole night, publish included, so
+# the backfill must leave room for what follows it. OPAX_BACKFILL_NOT_AFTER (epoch seconds) is the latest a
+# backfill stage may still be running: started + limit - reserve. The reserve is the work after the NSW stage:
+#   every night  2 h  (OPAX_BACKFILL_POST_RESERVE_S=7200): evidence export up to 21 min, the pre-commit gate up to
+#                     its 75 min budget, corpus manifest, commit, push and deploy about 15 min (111 min, rounded up);
+#   FRL nights   +2 h 45 min (OPAX_BACKFILL_FRL_RESERVE_S=9900): the FRL crawl, 9,208 s measured on 18 Oct 2026.
+# A stage starts only if now + 22 min (its 20 min budget, outer timeout and kill grace) is inside the cutoff
+# (refresh_lib.sh for Senate, nsw_hansard_backfill.sh for NSW), and normal-sync publication of backfill rows stops
+# at the cutoff (arag_sync.BackfillPublication). On a Thursday the stages therefore run only if the daily refresh
+# was done within about 53 minutes of the start.
+limit_seconds() {
+  case "$1" in
+    *h) echo $(( ${1%h} * 3600 )) ;; *m) echo $(( ${1%m} * 60 )) ;; *s) echo "${1%s}" ;; *) echo "$1" ;;
+  esac
+}
+backfill_reserve=${OPAX_BACKFILL_POST_RESERVE_S:-7200}
+case " ${planned:-} " in *" frl "*) backfill_reserve=$((backfill_reserve + ${OPAX_BACKFILL_FRL_RESERVE_S:-9900})) ;; esac
+started=${OPAX_NIGHTLY_STARTED:-$(date +%s)}
+limit=$(limit_seconds "${OPAX_NIGHTLY_LIMIT:-6h}" 2>/dev/null)
+if [[ "$started" =~ ^[0-9]+$ ]] && [[ "$limit" =~ ^[0-9]+$ ]]; then
+  export OPAX_BACKFILL_NOT_AFTER=$((started + limit - backfill_reserve))
+else
+  export OPAX_BACKFILL_NOT_AFTER=0   # unreadable start or limit: no backfill tonight
+fi
+log "backfill cutoff $(date -d "@$OPAX_BACKFILL_NOT_AFTER" '+%F %T' 2>/dev/null) (limit ${OPAX_NIGHTLY_LIMIT:-6h} less ${backfill_reserve}s reserve)"
 
 # ---- 2. the refresh -------------------------------------------------------------------------
 if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" = 1 ] || [ "${OPAX_NIGHTLY_SKIP_DAILY:-0}" = 1 ]; then

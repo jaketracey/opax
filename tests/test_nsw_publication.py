@@ -85,7 +85,9 @@ def test_approved_queue_retries_failure_below_checkpoint_and_acknowledges_once(s
     receipt = state(after=999)
     kb = Mock()
     kb.counters.return_value = {'index_size': 1_000_000, 'resources': 1000}
-    kb.create_resource.side_effect = AragError(503, 'mock', 'temporary failure')
+    # A network failure (no HTTP status) is held and retried; any guarded
+    # HTTP error of 400 or more would stop the backfill instead.
+    kb.create_resource.side_effect = AragError(0, 'mock', 'network error: timed out')
     assert sync.sync_nsw_backfill(kb, staged, receipt, 1, False, sync.DEFAULT_SINCE) == 1
     assert pub.progress(staged, receipt)[('nsw_lc', '2023-05-09')]['publication_failed'] == 1
     assert receipt['tables']['speeches']['after'] == 999

@@ -403,6 +403,15 @@ class BackfillPublication:
             if not all(0 < seconds <= 1200 for seconds in budgets):
                 raise growth.Stopped('invalid backfill publication budget; must be 1..1200 seconds')
             seconds = min(budgets)
+            # Never past the nightly backfill cutoff (nightly.sh section 1z).
+            not_after = os.environ.get('OPAX_BACKFILL_NOT_AFTER')
+            if not_after is not None:
+                try:
+                    seconds = min(seconds, int(not_after) - time.time())
+                except ValueError:
+                    seconds = 0
+                if seconds <= 0:
+                    raise growth.Stopped('past the nightly backfill cutoff; resumes next night')
             self.deadline = time.monotonic() + seconds
         if time.monotonic() >= self.deadline:
             raise growth.Stopped('normal-sync backfill time budget spent; resumes next night')

@@ -299,6 +299,10 @@ def run(db, *, start=START, end=END, cap=DEFAULT_CAP, budget_s=DEFAULT_BUDGET_S,
         if refused:
             raise adapter.source_http.SourceRefused(adapter.API_BASE, "NSW repair remains paused: " + refused[0])
         calendar = adapter.get_sitting_days(start, end)
+        # Every expected sitting day of the repaired years, for the coverage watchdog.
+        if (start, end) == (START, END):
+            growth.write_sitting_manifest('nsw', [(s['chamber_code'], s['date']) for s in calendar],
+                                          'NSW Parliament Hansard API sitting-day calendar')
         db.set_progress_handler(lambda: int(time.monotonic() >= adapter.REQUEST_DEADLINE), 10000)
         try:
             counts = day_counts(db, start, end)
