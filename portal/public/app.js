@@ -61,7 +61,7 @@ const splitSpeakers = person => attributionHelpers?.splitSpeakers(person) || [];
 const personScope = person => attributionHelpers?.personScope(person) || person?.speech_scope || null;
 const datedAffiliationParty = (row, person) => attributionHelpers?.datedAffiliationParty(row, person) || null;
 let heldBackHelpers;
-const heldBackReady = import('/held-back-transcripts.js?v=268cb1ecac').then(module => { heldBackHelpers = module; });
+const heldBackReady = import('/held-back-transcripts.js?v=920ee85ae5').then(module => { heldBackHelpers = module; });
 
 let saDisplayHelpers;
 let saFullTextFlag = 'false';
@@ -7586,7 +7586,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=922c514c95").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=c07cfc6fc9").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 

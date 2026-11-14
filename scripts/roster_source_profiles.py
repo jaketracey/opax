@@ -170,7 +170,7 @@ def list_seat(snap, member):
 
 def term_start(entry, snap):
     """The service start a reviewed list entry may carry (`term_start`: {start, url, checked, note}), else the list's
-    date. The list gives no term start; a reviewed source may (Wikidata's position-held start). It must be an ISO
+    date. The list gives no term start; a reviewed member page or position-held record may. It must be an ISO
     date on or before the list's date, with an https source, a check date and a note saying what it rests on."""
     ts = entry.get('term_start')
     if ts is None:

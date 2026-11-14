@@ -175,6 +175,18 @@ Three committed source files sit beside the VEC config in `scripts/hubs/`:
   | The West Party | WEST | The West Party | neutral |
   | Victorian Socialists | VS | Victorian Socialists | neutral |
 
+The optional **`scripts/hubs/vic-results-2026.json`** is the after-poll results
+input. It is absent before acquisition, so no results section is rendered.
+Use the [2026 results runbook](reports/2026-11-14-vic-after-poll.md#results-data-path-and-rehearsal)
+for the exact fetch/build commands, fresh-cache requirement, held-2022 dry run
+and parser traps. `fetch_vec_results.py --year 2026 --election-day 2026-11-28`
+loads completed district counts only, with no historical by-elections. The
+builder validates the election year, VEC URLs, district names, shares and
+margins before publishing. A nonempty `partial` bundle enables `results` after
+polls close; `final` needs all 88 districts to enable `results_final`. Invalid
+results are omitted from HTML after validating the remaining core data; the
+app API rejects the invalid asset with 503. Upper house results link to VEC.
+
 The build writes the places into a separate `/hubs/vic-election-2026-places.json`,
 read only by the hub's "Which seat am I in?" finder. The finder is a plain GET form
 (`/vic-election-2026?place=3350`), answered by the Worker without scripts; result
