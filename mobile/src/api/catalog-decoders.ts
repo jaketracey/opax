@@ -346,6 +346,11 @@ export function decodeElectorate(v: unknown) {
   );
 }
 export type ElectorateDetail = Decoded<typeof decodeElectorate>;
+// How a dead bill ended: the bills export's `ended` code and `ended_label`
+// words, on index rows and bill files (read by api/bill-status.ts). Optional and display-only: a blank or malformed value is
+// dropped, never a reason to reject the bill.
+const endedText = (v: unknown) =>
+  typeof v === 'string' && v.trim() ? v.trim() : undefined;
 const billFields = {
   key: billKey,
   title: nonempty,
@@ -356,6 +361,8 @@ const billFields = {
   originating_house: nullable(text),
   status: nonempty,
   status_as_of: nullable(date),
+  ended: endedText,
+  ended_label: endedText,
   sponsor: nullable(text),
   sponsor_party: nullable(text),
   portfolio: nullable(text),

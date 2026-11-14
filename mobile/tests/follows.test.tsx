@@ -201,7 +201,8 @@ describe('change markers', () => {
     });
     expect(seenFor('bill', BILL).status).toEqual({
       value: 'before_parliament',
-      words: 'before parliament',
+      // The pill's words; the change line lowers the first letter.
+      words: 'Before parliament',
       asAt: '2026-09-17',
     });
     expect(seenFor('electorate', GRAYNDLER)).toMatchObject({
@@ -247,7 +248,7 @@ describe('change markers', () => {
       },
     ]);
   });
-  test('a bill negatived reads "Now not agreed", never "Negatived"', () => {
+  test('a bill negatived reads "Now voted down", the pill\'s word, never "Negatived"', () => {
     const bills = structuredClone(catalogs.bills!);
     Object.assign(bills.bills.find((b) => b.key === BILL)!, {
       status: 'negatived',
@@ -261,7 +262,45 @@ describe('change markers', () => {
         ),
       ).changes,
     ).toMatchObject([
-      { marker: 'status', text: 'Now not agreed; was before parliament' },
+      { marker: 'status', text: 'Now voted down; was before parliament' },
+    ]);
+  });
+  test("a bill the export says was removed reads ParlInfo's words, capitals kept", () => {
+    const bills = structuredClone(catalogs.bills!);
+    Object.assign(bills.bills.find((b) => b.key === BILL)!, {
+      status: 'lapsed',
+      ended: 'removed',
+      ended_label: 'Removed from the Notice Paper',
+      status_as_of: '2026-10-01',
+    });
+    expect(
+      readyState(
+        followState(
+          { kind: 'bill', id: BILL, seen: seenFor('bill', BILL) },
+          sources({ bills }),
+        ),
+      ).changes,
+    ).toMatchObject([
+      {
+        marker: 'status',
+        text: 'Now removed from the Notice Paper; was before parliament',
+      },
+    ]);
+  });
+  test('a reading stored lower-cased by an older app still reads as a sentence', () => {
+    const bills = structuredClone(catalogs.bills!);
+    Object.assign(bills.bills.find((b) => b.key === BILL)!, {
+      status: 'passed',
+      status_as_of: '2026-10-01',
+    });
+    const seen = seenFor('bill', BILL);
+    seen.status = { ...seen.status!, words: 'before parliament' };
+    expect(
+      readyState(
+        followState({ kind: 'bill', id: BILL, seen }, sources({ bills })),
+      ).changes,
+    ).toMatchObject([
+      { marker: 'status', text: 'Now passed; was before parliament' },
     ]);
   });
   test('party, seat, votes, pay and expenses changes name what moved', () => {

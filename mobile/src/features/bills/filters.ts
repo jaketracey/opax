@@ -1,12 +1,9 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
+import { billEnding, billStatusLabel } from '../../api/bill-status';
 import { billFoldText, billName } from '../../api/bill-transforms';
 import type { billsFor } from '../../api/catalogs';
 import { counted, formatCount } from '../../design/format';
-import {
-  billStatus,
-  CHAMBER_NOT_RECORDED,
-  chamberName,
-} from '../../design/parliament';
+import { CHAMBER_NOT_RECORDED, chamberName } from '../../design/parliament';
 import {
   filterStore,
   registerFilterModel,
@@ -257,7 +254,7 @@ export function boundBillsModel(
     )
     .map((value) => ({
       value,
-      label: billStatus(value),
+      label: billStatusLabel(value),
     }));
   const chambers = ['representatives', 'senate']
     .filter((c) => rows.some((r) => r.originating_house === c))
@@ -381,7 +378,7 @@ export function billRowText(
   bill: BillListRow & { status_stage?: string | null },
 ) {
   const name = billName(bill);
-  const status = billStatus(bill.status);
+  const status = billStatusLabel(bill.status, billEnding(bill));
   const event = rowDate(bill);
   const sponsor = bill.sponsor || null;
   const party = sponsor ? partyFromCode(bill.sponsor_party) : null;

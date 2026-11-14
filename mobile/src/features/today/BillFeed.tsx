@@ -7,7 +7,7 @@ import { catalogs } from '../../api/runtime';
 import { SegmentedPicker } from '../../design/controls';
 import { formatDate } from '../../design/format';
 import { InsetGroup } from '../../design/layout';
-import { billStatus } from '../../design/parliament';
+import { billEnding, billStatusLabel } from '../../api/bill-status';
 import { BillRow } from '../../design/rows';
 import { Skeleton } from '../../design/states';
 import { rhythm } from '../../design/tokens';
@@ -32,7 +32,7 @@ export const sponsorPartyName = (party: string | null | undefined) =>
  * the portfolio, or the sponsor and their party for a private bill.
  */
 export function billRowText(bill: Bill, kind: RecentBillsKind = 'new') {
-  const status = billStatus(bill.status);
+  const status = billStatusLabel(bill.status, billEnding(bill));
   const event =
     kind === 'new'
       ? bill.introduced

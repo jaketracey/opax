@@ -369,12 +369,15 @@ export function changesFor(
       // The change is the sentence (sweep 2 item 4): "Now passed; was
       // before parliament", the same words on screen and to VoiceOver.
       if (marker === 'status') {
-        const previously = was.words ? `; was ${was.words}` : '';
+        // The pill's words inside a sentence: "Now removed from the Notice
+        // Paper". Older readings stored them lower-cased already.
+        const inline = (w: string) => w.charAt(0).toLowerCase() + w.slice(1);
+        const previously = was.words ? `; was ${inline(was.words)}` : '';
         text =
           reading.value === 'royal_assent'
             ? `Received Royal Assent${previously}`
             : reading.words
-              ? `Now ${reading.words}${previously}`
+              ? `Now ${inline(reading.words)}${previously}`
               : undefined;
       }
       if (

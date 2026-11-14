@@ -29,7 +29,7 @@ import {
 import { catalogs } from '../../api/runtime';
 import { formatDate } from '../../design/format';
 import { haptic } from '../../design/haptics';
-import { billStatus } from '../../design/parliament';
+import { billEnding, billStatusLabel } from '../../api/bill-status';
 import {
   BillRow,
   Button,
@@ -725,11 +725,7 @@ function AgainstParty({ view }: { view: VotedAgainstParty }) {
   return (
     <View style={styles.block} testID="doc-against-party">
       <SectionHeader title={view.title} testID="doc-against-party-title" />
-      <Text
-        variant="footnote"
-        tone="inkSoft"
-        testID="doc-against-party-help"
-      >
+      <Text variant="footnote" tone="inkSoft" testID="doc-against-party-help">
         {view.help}
       </Text>
       <View style={styles.rows}>
@@ -922,7 +918,7 @@ function LinkedBillRow({ bill }: { bill: BillEntry }) {
     <BillRow
       billKey={bill.key}
       title={bill.title}
-      status={billStatus(bill.status)}
+      status={billStatusLabel(bill.status, billEnding(bill))}
       rawStatus={bill.status}
       date={bill.introduced}
       dateLabel="Introduced"

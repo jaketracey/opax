@@ -433,7 +433,7 @@ test('focused divisions remain uncapped at AX5', async () => {
   }
   act(() => r.unmount());
 });
-test('the whole bill page at AX5: uncapped text, the stage ruler as one element, no ⋯ beside Follow', async () => {
+test('the whole bill page at AX5: uncapped text, the tracker read summary first, no ⋯ beside Follow', async () => {
   delete mockParams.section;
   mockParams.key = 'au-federal-r7534';
   jest
@@ -447,13 +447,28 @@ test('the whole bill page at AX5: uncapped text, the stage ruler as one element,
     expect(text.props.numberOfLines).toBeUndefined();
     expect(text.props.maxFontSizeMultiplier).toBe(0);
   }
-  // The ruler's marks read as one element, whichever way it is drawn.
-  const ruler = r.root.find(
-    (n) => typeof n.type === 'string' && n.props.testID === 'bill-dates-ruler',
+  // The tracker replaces the ruler: its summary first, then one button a
+  // step, each saying its state and full date.
+  const tracker = r.root.find(
+    (n) => typeof n.type === 'string' && n.props.testID === 'bill-tracker',
   );
-  expect(ruler.props.accessibilityLabel).toBe(
-    'Introduced, 17 August 2026; Senate, 19 August 2026; Royal Assent, 26 August 2026',
+  const buttons = tracker.findAll(
+    (n) => typeof n.type === 'string' && n.props.accessibilityRole === 'button',
   );
+  expect(buttons.map((n) => n.props.accessibilityLabel)).toEqual([
+    'Introduced in the House, done, 17 August 2026',
+    'Second reading, done, 18 August 2026',
+    'Consideration in detail, none recorded',
+    'Passed the House, done, 18 August 2026',
+    'The Senate, done, 19 August 2026',
+    'Royal Assent, done, 26 August 2026',
+  ]);
+  expect(
+    r.root.findAll(
+      (n) =>
+        typeof n.type === 'string' && n.props.testID === 'bill-dates-ruler',
+    ),
+  ).toHaveLength(0);
   // Bill text is a row; Ask and Share are in the bottom toolbar and the
   // menus in the bar, so the content holds no ⋯ beside Follow.
   expect(

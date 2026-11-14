@@ -27,12 +27,16 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
+  billEnding,
+  billStatusLabel,
+  type BillStatusEvidence,
+} from '../../api/bill-status';
+import {
   billDisplay,
   billName,
   billSentenceCase,
   billSourceLabel,
   billStage,
-  billStatusWord,
   billTimeline,
   type BillTimelineEntry,
   type BillTimelineStage,
@@ -125,6 +129,8 @@ import {
 } from './parts';
 import { sponsorRows, type SponsorDirectory } from './sponsors';
 import { statusEvent, statusEventText } from './status-event';
+import { BillStageTracker } from './tracker';
+import { billTracker } from './tracker-model';
 import { useSpeechSpeakers } from '../records/speaker';
 import { useCatalogRecord } from './useCatalogRecord';
 import { memberPosition, useMyMemberVotes } from './your-mp-vote';
@@ -812,6 +818,9 @@ function BillHead({
     status_as_of: identity.statusAsOf,
     originating_house: identity.house,
     key_dates: view.keyDates.data ?? [],
+    votes: view.divisions.data?.rawRows,
+    ended: identity.ended,
+    ended_label: identity.endedLabel,
   });
   const meta = metaLine(identity);
   return (
@@ -866,6 +875,9 @@ function billSourceDetails(
     status_as_of: identity.statusAsOf,
     originating_house: identity.house,
     key_dates: view.keyDates.data ?? [],
+    votes: view.divisions.data?.rawRows,
+    ended: identity.ended,
+    ended_label: identity.endedLabel,
   });
   const sources = view.identity.sources;
   const originals: SourceOriginal[] = sources.map((s) =>
@@ -1034,7 +1046,9 @@ function metaLine(bill: {
 function SeededHead({ row }: { row: IndexRow }) {
   const display = billDisplay(row);
   const name = billName(row);
-  const status = billStatusWord(row.status) || 'Status not recorded';
+  // The index row carries no stages or votes, only the export's ending when
+  // it has one: the same word the bill's own file gives.
+  const status = billStatusLabel(row.status, billEnding(row));
   const event = row.status_stage ? statusEvent(row) : null;
   const meta = metaLine({
     status: row.status,
@@ -1367,6 +1381,7 @@ const TERMINAL_STATUS =
 export function rulerPoints(
   entries: readonly BillTimelineEntry[],
   status?: string | null,
+  evidence?: BillStatusEvidence,
 ) {
   const first = entries[0]!;
   const last = entries[entries.length - 1]!;
@@ -1397,7 +1412,7 @@ export function rulerPoints(
     at: entries.length - 1,
     label:
       /^other$/i.test(ended.trim()) && TERMINAL_STATUS.test(terminal)
-        ? billStatusWord(status)
+        ? billStatusLabel(status, evidence)
         : /^royal assent$/i.test(ended.trim())
           ? 'Royal Assent'
           : ended,
@@ -1487,11 +1502,38 @@ function KeyDates({
   const timeline = billTimeline(view.keyDates.data ?? []);
   const entries = timeline.entries;
   if (!entries.length) return null;
+  const identity = view.identity.data;
+  // The six-step tracker replaces the ruler wherever the record maps to it
+  // truthfully; any other bill keeps the ruler. Either way the full dated
+  // list stays one tap away, so no stage or date is lost.
+  const mapped = billTracker({
+    stages: view.keyDates.data ?? [],
+    status: identity?.status,
+    originatingHouse: identity?.house,
+    title: identity?.title,
+    divisions: view.divisions.data?.rawRows,
+    acts: view.acts.data ?? [],
+    ended: identity?.ended,
+    ended_label: identity?.endedLabel,
+  });
+  const tracker = mapped.kind === 'tracker' ? mapped.tracker : null;
   const points =
-    entries.length > 1 ? rulerPoints(entries, view.identity.data?.status) : [];
+    !tracker && entries.length > 1
+      ? rulerPoints(entries, identity?.status, {
+          stages: view.keyDates.data,
+          divisions: view.divisions.data?.rawRows,
+          ended: identity?.ended,
+          ended_label: identity?.endedLabel,
+        })
+      : [];
+  const allLabel =
+    timeline.runs === 1
+      ? 'The recorded stage'
+      : `All ${formatCount(timeline.runs)} stages`;
   return (
     <View ref={anchor} collapsable={false}>
       <Section title="How it moved" testID="bill-key-dates">
+        {tracker ? <BillStageTracker tracker={tracker} /> : null}
         {points.length ? (
           <View
             testID="bill-dates-ruler"
@@ -1517,7 +1559,16 @@ function KeyDates({
             />
           </View>
         ) : null}
-        {entries.length === 1 ? (
+        {tracker ? (
+          <Disclosure
+            label={allLabel}
+            open={open}
+            onToggle={onToggle}
+            testID="bill-dates-all"
+          >
+            <DateRows entries={entries} freshStages={freshStages} />
+          </Disclosure>
+        ) : entries.length === 1 ? (
           <DateRows entries={entries} freshStages={freshStages} />
         ) : timeline.runs > points.length ||
           entries.some((entry) => entry.to) ? (

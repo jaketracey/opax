@@ -1,4 +1,10 @@
-import { billSentenceCase, billStatusWord } from '../../api/bill-transforms';
+import {
+  billEnding,
+  billStatusLabel,
+  billStatusReading,
+  type BillDivisionRow,
+} from '../../api/bill-status';
+import { billSentenceCase } from '../../api/bill-transforms';
 import { formatDate } from '../../design/format';
 
 /**
@@ -7,7 +13,10 @@ import { formatDate } from '../../design/format';
  * assented on 26 Aug reads "Royal Assent 26 Aug 2026", not "Passed".
  */
 export interface StatusEvent {
-  /** "Royal Assent", "Passed both houses", "Introduced", "Lapsed", "Status as at". */
+  /**
+   * "Royal Assent", "Passed both houses", "Introduced", "Lapsed", "Voted
+   * down", "Status as at".
+   */
   label: string;
   /** ISO date. */
   date: string;
@@ -30,7 +39,14 @@ const words = (stage: string) =>
 /** The label one recorded stage gives its date, or null when it names no event. */
 function stageEvent(
   stage: KeyDate,
-  bill: { status: string; originating_house: string | null },
+  bill: {
+    status: string;
+    originating_house: string | null;
+    key_dates?: readonly KeyDate[] | null;
+    votes?: readonly BillDivisionRow[] | null;
+    ended?: string | null;
+    ended_label?: string | null;
+  },
 ): string | null {
   const s = words(stage.stage);
   if (/assent/.test(s)) return 'Royal Assent';
@@ -46,10 +62,16 @@ function stageEvent(
     return 'Passed both houses';
   if (/^(introduced|first reading)/.test(s)) return 'Introduced';
   const status = billSentenceCase(bill.status);
-  // "negatived" reads "Not agreed", the app's one wording (billStatusWord).
-  if (TERMINAL.test(s)) return billStatusWord(stage.stage);
+  // A stopped bill's words are the status pill's (api/bill-status.ts).
+  if (TERMINAL.test(s)) return billStatusLabel(stage.stage);
   // The register files the day a bill lapsed as "other".
-  if (s === 'other' && TERMINAL.test(status)) return billStatusWord(bill.status);
+  if (s === 'other' && TERMINAL.test(status)) {
+    return billStatusLabel(bill.status, {
+      stages: bill.key_dates,
+      divisions: bill.votes,
+      ...billEnding(bill),
+    });
+  }
   return null;
 }
 
@@ -59,9 +81,30 @@ export function statusEvent(bill: {
   originating_house: string | null;
   key_dates?: readonly KeyDate[] | null;
   status_stage?: string | null;
+  /**
+   * The bill's counted votes (the payload's `divisions`; an index row's
+   * `divisions` is only a count): the evidence a bill was voted down.
+   */
+  votes?: readonly BillDivisionRow[] | null;
+  /** The export's ending (`ended`, `ended_label`), when it carries one. */
+  ended?: string | null;
+  ended_label?: string | null;
 }): StatusEvent | null {
   const date = bill.status_as_of;
   if (!date) return null;
+  // Stopped that day, voted down or by ParlInfo's own ending: the date
+  // reads as the pill does.
+  const reading = billStatusReading(bill.status, {
+    stages: bill.key_dates,
+    divisions: bill.votes,
+    ...billEnding(bill),
+  });
+  if (
+    reading.stoppedOn === date &&
+    (reading.votedDown?.date === date || reading.ended)
+  ) {
+    return { label: reading.word, date, resolved: true };
+  }
   if (bill.status_stage) {
     const label = stageEvent(
       { stage: bill.status_stage, date, house: null },
