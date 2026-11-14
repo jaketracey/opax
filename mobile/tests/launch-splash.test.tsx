@@ -3,8 +3,12 @@ import {
   launchCoverGone,
   launchSettled,
   resetLaunchSettledForTests,
+  SETTLE_LIMIT_MS,
   settleLaunch,
   subscribeLaunchSettled,
+  WELCOME_DISMISS_MS,
+  welcomeDismissed,
+  welcomeMounted,
 } from '../src/launch/settled';
 import * as SplashScreen from 'expo-splash-screen';
 import { AccessibilityInfo, Dimensions, StyleSheet } from 'react-native';
@@ -525,25 +529,67 @@ describe('the launch cover', () => {
 // Sweep 3 captures, A8: motion meant to be seen arriving waits for the
 // launch to settle (launch/settled.ts).
 describe('the launch settles when the reader can see Today', () => {
-  beforeEach(() => resetLaunchSettledForTests());
+  beforeEach(() => {
+    resetLaunchSettledForTests();
+    jest.useFakeTimers();
+  });
+  afterEach(() => jest.useRealTimers());
+  const pass = (ms: number) => jest.advanceTimersByTime(ms);
+
   test('a plain launch: when the cover has gone', () => {
     expect(launchSettled()).toBe(false);
     launchCoverGone('plain');
     expect(launchSettled()).toBe(true);
   });
-  test('a cover released by the failsafe before the decision still settles', () => {
+  test('the failsafe removed the cover while the welcome decision was pending: not yet; when the decision lands plain', () => {
     launchCoverGone('pending');
+    expect(launchSettled()).toBe(false);
+    launchCoverGone('plain');
     expect(launchSettled()).toBe(true);
   });
-  test('under a first launch’s welcome the cover going is not enough', () => {
+  test('under a first launch’s welcome the cover going is not enough, however long it is read', () => {
+    const unmount = welcomeMounted();
     launchCoverGone('welcome');
+    pass(SETTLE_LIMIT_MS * 10);
     expect(launchSettled()).toBe(false);
+    // Its dismissal settles it, once the modal has slid away.
+    welcomeDismissed();
+    unmount();
+    pass(WELCOME_DISMISS_MS - 1);
+    expect(launchSettled()).toBe(false);
+    pass(1);
+    expect(launchSettled()).toBe(true);
+  });
+  // Review P2: with no limit, a welcome that never mounted (or a decision
+  // that never came) left every stage line undrawn for the session.
+  test.each(['welcome', 'pending'] as const)(
+    'nothing waits for ever: %s with no welcome on screen settles at the limit',
+    (phase) => {
+      launchCoverGone(phase);
+      pass(SETTLE_LIMIT_MS - 1);
+      expect(launchSettled()).toBe(false);
+      pass(1);
+      expect(launchSettled()).toBe(true);
+    },
+  );
+  test('a welcome remounted while it is up does not settle; one closed without notice does', () => {
+    launchCoverGone('welcome');
+    const first = welcomeMounted();
+    first();
+    const second = welcomeMounted();
+    pass(WELCOME_DISMISS_MS * 2);
+    expect(launchSettled()).toBe(false);
+    second();
+    pass(WELCOME_DISMISS_MS);
+    expect(launchSettled()).toBe(true);
   });
   test('listeners hear it once, and it stays settled', () => {
     const heard = jest.fn();
     const stop = subscribeLaunchSettled(heard);
     settleLaunch();
     settleLaunch();
+    launchCoverGone('welcome');
+    pass(SETTLE_LIMIT_MS);
     expect(heard).toHaveBeenCalledTimes(1);
     expect(launchSettled()).toBe(true);
     stop();

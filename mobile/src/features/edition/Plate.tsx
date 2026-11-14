@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, type Ref } from 'react';
+import { NavigationContext } from 'expo-router/react-navigation';
+import { useContext, useEffect, useRef, useState, type Ref } from 'react';
 import type { LayoutChangeEvent } from 'react-native';
 import { Image, Text as NativeText, StyleSheet, View } from 'react-native';
 import Animated, {
@@ -438,7 +439,10 @@ function StageTimeline({
   const [decided, setDecided] = useState<'draw' | 'finished' | null>(
     eligible ? null : 'finished',
   );
-  const phase = decided ?? timelineDecision(reduce, settled);
+  const navigation = useContext(NavigationContext);
+  const phase =
+    decided ??
+    timelineDecision(reduce, settled, navigation?.isFocused() ?? true);
   // Held once made (React's adjust-state-on-change pattern): Reduce Motion
   // turned on mid-draw finishes the line below, it does not decide again.
   if (decided === null && phase !== 'wait') setDecided(phase);

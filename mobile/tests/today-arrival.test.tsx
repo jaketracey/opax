@@ -9,6 +9,7 @@
 import { act, type ReactElement, type ReactNode } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import type * as ReanimatedTypes from 'react-native-reanimated';
+import { NavigationContext } from 'expo-router/react-navigation';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import snapshot from '../scripts/fixture-snapshot.json';
 import {
@@ -483,6 +484,34 @@ describe('item 8: the bill plate’s timeline draws once per launch', () => {
       expect(timelineDecision(true, false)).toBe('finished');
       expect(timelineDecision(true, true)).toBe('finished');
       expect(timelineDecision(null, true)).toBe('finished');
+      // Behind another page when the launch settles: finished, no draw.
+      expect(timelineDecision(false, true, false)).toBe('finished');
+      expect(timelineDecision(false, false, false)).toBe('wait');
+      expect(timelineDecision(false, true, true)).toBe('draw');
+    });
+
+    // A returning launch from a link opens the linked page over Today.
+    test('behind a linked page when the cover goes: finished, nothing draws, and no draw on the way back', async () => {
+      const timing = jest.spyOn(Reanimated, 'withTiming');
+      let focused = false;
+      const navigation = { isFocused: () => focused };
+      const behind = (
+        <NavigationContext.Provider value={navigation as never}>
+          <Plate edition={edition} />
+        </NavigationContext.Provider>
+      );
+      const r = await render(behind);
+      expect(rail(r.root).transform).toEqual([{ scaleX: 0 }]);
+      await act(async () => settleLaunch());
+      finished(r.root);
+      focused = true;
+      await act(async () => r.update(behind));
+      finished(r.root);
+      expect(drawsStarted(timing)).toHaveLength(0);
+      // It has had its turn: the story after it is finished too.
+      act(() => mounted.splice(0).forEach((m) => m.unmount()));
+      finished((await plate({ story: true, testID: 'today-edition' })).root);
+      expect(drawsStarted(timing)).toHaveLength(0);
     });
 
     test.each([

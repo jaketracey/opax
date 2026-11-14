@@ -131,19 +131,29 @@ export function dotsDrawn(fontScale: number, rule: string): boolean {
  * until the height first changes from that estimate, never longer than
  * HEADER_SETTLE_CAP_MS, so the move happens out of sight.
  *
- * Where nothing is placed from the header there is nothing to wait for:
- * accessibility sizes and a regular-width phone (no art), Android, and
- * iPad, whose captures show no move.
+ * Where nothing is placed from the header, or its height will not change,
+ * there is nothing to wait for: accessibility sizes and a regular-width
+ * phone (no art), Android, iPad (its captures show no move), an iPhone in
+ * landscape (no large title: the estimate is already the height), and a
+ * Today that mounts behind another page (a launch from a link).
  */
 function useHeaderSettled(header: number): boolean {
-  const { fontScale } = useWindowDimensions();
+  const { fontScale, width, height } = useWindowDimensions();
   const { rule } = useLayout();
+  const navigation = useContext(NavigationContext);
+  // The estimate this screen mounted with, and whether it was in front.
+  const [first] = useState(() => ({
+    header,
+    focused: navigation?.isFocused() ?? true,
+  }));
   const waits =
-    Platform.OS === 'ios' && !Platform.isPad && dotsDrawn(fontScale, rule);
-  // The estimate this screen mounted with.
-  const [first] = useState(header);
+    Platform.OS === 'ios' &&
+    !Platform.isPad &&
+    dotsDrawn(fontScale, rule) &&
+    height >= width &&
+    first.focused;
   const [capped, setCapped] = useState(false);
-  const known = !waits || header !== first;
+  const known = !waits || header !== first.header;
   useEffect(() => {
     if (known || capped) return;
     const timer = setTimeout(() => setCapped(true), HEADER_SETTLE_CAP_MS);

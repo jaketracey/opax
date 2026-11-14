@@ -76,11 +76,7 @@ export default function Layout() {
   const navigationReady =
     Platform.OS === 'android' ? containerReady : !!rootState?.key;
   const [handedOver, setHandedOver] = useState(false);
-  const endHandoff = useCallback(() => {
-    setHandedOver(true);
-    // Motion held for the launch may start (launch/settled.ts).
-    launchCoverGone(splashPhase());
-  }, []);
+  const endHandoff = useCallback(() => setHandedOver(true), []);
   const launch = useLaunchWelcome(tour);
   useScreenTracking();
   useNavigationTiming();
@@ -124,6 +120,13 @@ export default function Layout() {
       } as Href);
     });
   }, []);
+  // Motion held for the launch may start once the cover has gone
+  // (launch/settled.ts). Read again when the launch decision lands: a cover
+  // the failsafe removed while it was pending settles nothing until then.
+  // After the effect above, which makes that decision.
+  useEffect(() => {
+    if (handedOver) launchCoverGone(splashPhase());
+  }, [handedOver, launch]);
   if (!loaded && !error) return null;
   // Seat services start with the app, rather than with route discovery.
   const { MyMemberProvider } =

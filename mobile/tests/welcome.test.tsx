@@ -11,11 +11,11 @@ import Welcome, {
   continuePinned,
   overflows,
   WELCOME_COLUMN,
-  WELCOME_DISMISS_MS,
 } from '../src/features/welcome/Welcome';
 import {
   launchSettled,
   resetLaunchSettledForTests,
+  WELCOME_DISMISS_MS,
 } from '../src/launch/settled';
 import { releaseSplash } from '../src/launch/splash';
 import { track } from '../src/analytics';
@@ -346,6 +346,8 @@ describe('the full welcome', () => {
 // is when the welcome has closed and slid away.
 describe('closing the welcome settles the launch', () => {
   beforeEach(() => resetLaunchSettledForTests());
+  // closeWelcome is mocked here (its own call is in onboarding.test.ts):
+  // this is the page going with no notice, which still counts.
   test('not while it is up; once its modal has slid away', async () => {
     const r = await render(<Welcome launch />);
     expect(launchSettled()).toBe(false);
@@ -361,6 +363,24 @@ describe('closing the welcome settles the launch', () => {
         jest.advanceTimersByTime(1);
       });
       expect(launchSettled()).toBe(true);
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+  test('a welcome remounted while it is up settles nothing', async () => {
+    const first = await render(<Welcome launch />);
+    jest.useFakeTimers();
+    try {
+      await act(async () => first.unmount());
+      let second!: TestRenderer.ReactTestRenderer;
+      await act(async () => {
+        second = TestRenderer.create(<Welcome launch />);
+      });
+      act(() => {
+        jest.advanceTimersByTime(WELCOME_DISMISS_MS * 4);
+      });
+      expect(launchSettled()).toBe(false);
+      await act(async () => second.unmount());
     } finally {
       jest.useRealTimers();
     }

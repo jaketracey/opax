@@ -812,6 +812,57 @@ describe('the page', () => {
       }
     });
 
+    test('an iPhone in landscape has no large title to wait for', async () => {
+      const window = Dimensions.get('window');
+      const screen = Dimensions.get('screen');
+      const landscape = { width: 874, height: 402, scale: 3, fontScale: 1 };
+      Dimensions.set({ window: landscape, screen: landscape });
+      try {
+        setUp({ cached: 'missing' });
+        const renderer = await render(page(48));
+        layOut(renderer);
+        expect(releaseSplash).toHaveBeenCalledWith('today');
+      } finally {
+        Dimensions.set({ window, screen });
+      }
+    });
+
+    test('a Today that mounts behind a linked page does not hold the cover', async () => {
+      const undo = phone();
+      try {
+        setUp({ cached: 'missing' });
+        const navigation = {
+          isFocused: () => false,
+          addListener: () => () => {},
+          setOptions: jest.fn(),
+        };
+        const renderer = await render(
+          <NavigationContext.Provider value={navigation as never}>
+            {page(106)}
+          </NavigationContext.Provider>,
+        );
+        layOut(renderer);
+        expect(releaseSplash).toHaveBeenCalledWith('today');
+      } finally {
+        undo();
+      }
+    });
+
+    test('the release costs Today no render of its own', async () => {
+      const undo = phone();
+      try {
+        setUp({ cached: 'missing' });
+        const renderer = await render(page(174));
+        const masthead = renderer.root.findByType(Masthead);
+        const before = masthead.props.mark;
+        layOut(renderer);
+        // Today did not render again: its children are the same elements.
+        expect(renderer.root.findByType(Masthead).props.mark).toBe(before);
+      } finally {
+        undo();
+      }
+    });
+
     test('nothing is placed from the header at accessibility sizes: no wait', async () => {
       const undo = phone(3.12);
       try {

@@ -30,6 +30,11 @@ import MoneyRecord from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/mone
 import MoneyRecordScreen from '../src/features/money/MoneyRecord';
 import { publicMoneyScreens } from '../src/navigation/stack/public-money';
 import {
+  launchSettled,
+  resetLaunchSettledForTests,
+  welcomeMounted,
+} from '../src/launch/settled';
+import {
   installAndroidLinkCapture,
   linkDeliveryPath,
   type LinkDelivery,
@@ -89,10 +94,13 @@ jest.mock('expo-router', () => {
 jest.mock('../src/navigation/KeyboardShortcuts', () => ({
   KeyboardShortcuts: () => null,
 }));
+let mockSplashPhase: 'pending' | 'plain' | 'welcome' = 'plain';
+let mockCoverDone: (() => void) | undefined;
 jest.mock('../src/launch/splash', () => ({
   decideLaunchSequence: jest.fn(async () => undefined),
   decideSplashPlain: jest.fn(),
   holdSplashForWelcome: jest.fn(),
+  splashPhase: () => mockSplashPhase,
 }));
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
 jest.mock('../src/onboarding/state', () => ({
@@ -104,7 +112,10 @@ jest.mock('../src/onboarding/state', () => ({
 }));
 jest.mock('../src/launch/LaunchHandoff', () => ({
   LaunchHandoff: () => null,
-  RootLaunchHandoff: () => null,
+  RootLaunchHandoff: ({ onDone }: { onDone: () => void }) => {
+    mockCoverDone = onDone;
+    return null;
+  },
 }));
 jest.mock('../src/features/account/store', () => ({
   useAccount: () => ({ status: null }),
@@ -201,6 +212,46 @@ test('the root stack sits in a navigation theme that follows the scheme', () => 
   } finally {
     act(() => tree.unmount());
   }
+});
+// Sweep 3 captures, A8 (review P2): motion held for the launch starts when
+// the root's cover has finished. With this wiring gone, every bill plate's
+// stage line stayed undrawn for the session and no test noticed.
+describe('the root tells the launch when its cover has gone', () => {
+  let tree: TestRenderer.ReactTestRenderer | undefined;
+  beforeEach(() => {
+    resetLaunchSettledForTests();
+    mockCoverDone = undefined;
+  });
+  afterEach(() => {
+    if (tree) act(() => tree!.unmount());
+    tree = undefined;
+    mockSplashPhase = 'plain';
+  });
+  const launch = (phase: typeof mockSplashPhase) => {
+    mockSplashPhase = phase;
+    act(() => {
+      tree = TestRenderer.create(React.createElement(RootLayout));
+    });
+  };
+
+  test('a plain launch settles when the cover finishes, not before', () => {
+    launch('plain');
+    expect(launchSettled()).toBe(false);
+    act(() => mockCoverDone!());
+    expect(launchSettled()).toBe(true);
+    // The cover is unmounted with it.
+    expect(tree!.root.findAllByProps({ onDone: mockCoverDone })).toHaveLength(
+      0,
+    );
+  });
+
+  test('under a first launch’s welcome the cover finishing settles nothing', () => {
+    const unmount = welcomeMounted();
+    launch('welcome');
+    act(() => mockCoverDone!());
+    expect(launchSettled()).toBe(false);
+    unmount();
+  });
 });
 const sharedFolder = '(tabs)/(today,your-mp,bills,search,ask)';
 const layouts = {

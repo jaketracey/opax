@@ -2,6 +2,7 @@ import { File, Paths } from 'expo-file-system';
 import { router } from 'expo-router';
 import { useSyncExternalStore } from 'react';
 import { isE2E } from '../design/environment';
+import { welcomeDismissed } from '../launch/settled';
 import { TwoSlotStore } from '../storage/two-slot';
 import { e2eTourRequested } from './launch-flag';
 
@@ -194,6 +195,9 @@ export function useTourState(): TourState {
 export function closeWelcome(navigation: {
   getParent: () => { goBack: () => void } | undefined;
 }) {
+  // The reader is about to see Today: motion held for the launch may start
+  // once the modal has slid away.
+  welcomeDismissed();
   const root = navigation.getParent();
   if (root) root.goBack();
   else router.back();

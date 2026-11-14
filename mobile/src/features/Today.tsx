@@ -277,11 +277,20 @@ export default function Today() {
   // The launch cover goes once Today has laid out and its rest geometry is
   // final (useTodayDotsScroll: the large title's height on an iPhone), so
   // nothing moves as the cover fades.
-  const [laidOut, setLaidOut] = useState(false);
-  const onLayout = useCallback(() => setLaidOut(true), []);
+  // Refs, not state: the release needs no render of its own.
+  const laidOut = useRef(false);
+  const headerSettled = useRef(dots.headerSettled);
+  const release = useCallback(() => {
+    if (laidOut.current && headerSettled.current) releaseSplash('today');
+  }, []);
+  const onLayout = useCallback(() => {
+    laidOut.current = true;
+    release();
+  }, [release]);
   useEffect(() => {
-    if (laidOut && dots.headerSettled) releaseSplash('today');
-  }, [laidOut, dots.headerSettled]);
+    headerSettled.current = dots.headerSettled;
+    release();
+  }, [dots.headerSettled, release]);
   const ready = !!launch && seat.status !== 'loading';
   useScreenReady('/', ready);
   // Once the body is drawn, the profile catalogs are read from their saved

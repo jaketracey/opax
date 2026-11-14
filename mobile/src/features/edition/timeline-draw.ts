@@ -31,15 +31,19 @@ export function timelineMayDraw(key: string): boolean {
  * it is finished at once. Otherwise it waits, undrawn, until the launch has
  * settled (the cover has faded and any welcome has closed, launch/settled),
  * so the draw is seen; then it draws. If the setting is still unknown by
- * then, it is shown finished: no motion starts on a guess.
+ * then, it is shown finished: no motion starts on a guess. So is a plate
+ * whose screen is not the one in front when the launch settles (a launch
+ * from a link opens the linked page over Today): nothing draws behind a
+ * page, and the line is simply there when the reader comes back.
  */
 export function timelineDecision(
   reduceMotion: boolean | null,
   launchSettled: boolean,
+  focused = true,
 ): 'wait' | 'draw' | 'finished' {
   if (reduceMotion === true) return 'finished';
   if (!launchSettled) return 'wait';
-  return reduceMotion === false ? 'draw' : 'finished';
+  return reduceMotion === false && focused ? 'draw' : 'finished';
 }
 
 /** Its turn is used, drawn or shown finished. */

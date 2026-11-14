@@ -8,6 +8,10 @@ import { invitationPlace } from '../src/features/today/order';
 
 // An in-memory documents folder for the "seen" flag.
 const mockFiles = new Map<string, string>();
+const mockWelcomeDismissed = jest.fn();
+jest.mock('../src/launch/settled', () => ({
+  welcomeDismissed: () => mockWelcomeDismissed(),
+}));
 jest.mock('expo-file-system', () => {
   class File {
     path: string;
@@ -200,8 +204,12 @@ describe('welcome visibility', () => {
   test('closing the welcome pops the whole modal from the root stack', () => {
     const { closeWelcome } = loadState(false);
     const goBack = jest.fn();
+    mockWelcomeDismissed.mockClear();
     closeWelcome({ getParent: () => ({ goBack }) });
     expect(goBack).toHaveBeenCalledTimes(1);
+    // The reader is about to see Today: the launch may settle
+    // (launch/settled.ts; the timing is in launch-splash.test.tsx).
+    expect(mockWelcomeDismissed).toHaveBeenCalledTimes(1);
   });
 });
 

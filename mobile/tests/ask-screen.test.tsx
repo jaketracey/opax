@@ -1,5 +1,5 @@
 import { withNavigationOptions } from './navigation-options';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   HeaderHeightContext,
   NavigationContext,
@@ -2802,6 +2802,113 @@ describe('the docked conversation column with nothing asked', () => {
       timing.mockRestore();
       snapshot.mockRestore();
       reduce.mockRestore();
+    }
+  });
+
+  // What is drawn, frame by frame (review of 29cb85066). Jest's Reanimated
+  // mock ends every timing at once, so here the state's shared value runs
+  // its fade on Jest's clock and renders each frame.
+  test('the fade is drawn: lighter each frame from the send, gone at 200 ms', async () => {
+    type Fade = { fade: true; to: number; duration: number };
+    type Shared = {
+      value: number;
+      get: () => number;
+      set: (next: number | Fade) => void;
+      stop: () => void;
+    };
+    const shared = jest
+      .spyOn(Reanimated, 'useSharedValue')
+      .mockImplementation(((initial: number) => {
+        const [, draw] = useState(0);
+        const held = useRef<Shared | null>(null);
+        if (!held.current) {
+          let frames: ReturnType<typeof setInterval> | null = null;
+          const value: Shared = {
+            value: initial,
+            get: () => value.value,
+            stop: () => {
+              if (frames) clearInterval(frames);
+              frames = null;
+            },
+            set: (next) => {
+              value.stop();
+              if (typeof next !== 'object') {
+                if (next === value.value) return;
+                value.value = next;
+                draw((n) => n + 1);
+                return;
+              }
+              const from = value.value;
+              const start = Date.now();
+              frames = setInterval(() => {
+                const t = Math.min(1, (Date.now() - start) / next.duration);
+                value.value = from + (next.to - from) * t;
+                if (t === 1) value.stop();
+                draw((n) => n + 1);
+              }, 16);
+            },
+          };
+          held.current = value;
+        }
+        return held.current;
+      }) as never);
+    const timing = jest
+      .spyOn(Reanimated, 'withTiming')
+      .mockImplementation(((to: number, config?: { duration?: number }) =>
+        to === 0 && config?.duration === EMPTY_FADE_MS
+          ? { fade: true, to, duration: EMPTY_FADE_MS }
+          : to) as never);
+    const cancel = jest
+      .spyOn(Reanimated, 'cancelAnimation')
+      .mockImplementation(((value: Partial<Shared>) =>
+        value.stop?.()) as never);
+    const base = askSession.snapshot();
+    const snapshot = jest.spyOn(askSession, 'snapshot').mockReturnValue(base);
+    const drawn = () =>
+      StyleSheet.flatten(hosts('ask-empty')[0]!.props.style).opacity as number;
+    try {
+      await at(834, 1194, pad, true, async () => {
+        await mount();
+        expect(drawn()).toBe(1);
+        jest.useFakeTimers();
+        try {
+          snapshot.mockReturnValue({ ...base, busy: true });
+          await act(async () => {
+            view!.update(
+              withNavigationOptions(<AskScreen />, (options) => {
+                mockBar.options = options;
+              }),
+            );
+          });
+          // The commit that sends the question: whole, and already leaving.
+          expect(drawn()).toBe(1);
+          const frames: number[] = [];
+          for (let at = 48; at < EMPTY_FADE_MS; at += 48) {
+            await act(async () => {
+              jest.advanceTimersByTime(48);
+            });
+            frames.push(drawn());
+          }
+          expect(frames).toHaveLength(4);
+          // Each frame lighter than the last, never back to whole.
+          expect(frames[0]).toBeLessThan(1);
+          for (let i = 1; i < frames.length; i++)
+            expect(frames[i]).toBeLessThan(frames[i - 1]!);
+          expect(frames.at(-1)).toBeGreaterThan(0);
+          expect(frames.at(-1)).toBeLessThan(0.1);
+          await act(async () => {
+            jest.advanceTimersByTime(EMPTY_FADE_MS - 192);
+          });
+          expect(hosts('ask-empty')).toHaveLength(0);
+        } finally {
+          jest.useRealTimers();
+        }
+      });
+    } finally {
+      snapshot.mockRestore();
+      cancel.mockRestore();
+      timing.mockRestore();
+      shared.mockRestore();
     }
   });
 });
