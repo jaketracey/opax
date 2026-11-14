@@ -28,7 +28,7 @@ export interface DocumentRecord {
   votedAgainstParty?: VotedAgainstParty;
 }
 /**
- * "Voted against their party" for one division, as the Worker builds it
+ * "Voted differently from most of their party" for one division, as the Worker builds it
  * (portal/public/division-against-party.js): the same rule and the same words
  * as the web page. Absent when nobody did.
  */

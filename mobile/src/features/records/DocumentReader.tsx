@@ -717,7 +717,7 @@ function ReaderHeader({
 }
 
 /**
- * "Voted against their party": each member whose vote went against their
+ * "Voted differently from most of their party": each member whose vote went against their
  * party's majority, in the Worker's words (the web page shows the same).
  */
 function AgainstParty({ view }: { view: VotedAgainstParty }) {

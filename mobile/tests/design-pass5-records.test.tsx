@@ -301,8 +301,8 @@ test.each([false, true])(
 // The Worker's /api/resource voted_against_party for Senate division 9535 (portal
 // public/division-against-party.js), in the web page's words.
 const against9535 = {
-  title: 'Voted against their party',
-  help: 'Voting against your own party is often called crossing the floor.',
+  title: 'Voted differently from most of their party',
+  help: "Each member's vote is compared with how most of their party voted. The record does not show whether a party allowed a free vote.",
   member_list_complete: true,
   note: null,
   members: [
@@ -323,8 +323,8 @@ test('a division shows who voted against their party, linked, in the web page wo
   const raw = responses['/api/resource/division-federal-senate-10701'] as Record<string, unknown>;
   const division = decodeDocument({ ...raw, voted_against_party: against9535 });
   expect(division.votedAgainstParty).toEqual({
-    title: 'Voted against their party',
-    help: 'Voting against your own party is often called crossing the floor.',
+    title: 'Voted differently from most of their party',
+    help: "Each member's vote is compared with how most of their party voted. The record does not show whether a party allowed a free vote.",
     note: null,
     members: [
       {
@@ -339,8 +339,8 @@ test('a division shows who voted against their party, linked, in the web page wo
   jest.mocked(records.document).mockResolvedValue(record(division));
   const view = await mount(<DocumentReader />);
   const shown = text(view);
-  expect(shown).toContain('Voted against their party');
-  expect(shown).toContain('Voting against your own party is often called crossing the floor.');
+  expect(shown).toContain('Voted differently from most of their party');
+  expect(shown).toContain("Each member's vote is compared with how most of their party voted. The record does not show whether a party allowed a free vote.");
   expect(shown).toContain('Liberal. Voted no; the other 8 Liberal senators voted aye.');
   const row = view.root.findAll(
     (node) => node.props.testID === 'doc-against-party-0' && node.props.title === 'Alex Antic',
@@ -357,7 +357,7 @@ test('a division with nobody against their party, or an older response, shows no
     jest.mocked(records.document).mockResolvedValue(record(division));
     const view = await mount(<DocumentReader />);
     expect(view.root.findAllByProps({ testID: 'doc-against-party' })).toHaveLength(0);
-    expect(text(view)).not.toMatch(/against their party|crossing the floor/i);
+    expect(text(view)).not.toMatch(/most of their party|free vote|crossing the floor/i);
     await act(async () => view.unmount());
   }
 });
