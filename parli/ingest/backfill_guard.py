@@ -235,8 +235,12 @@ def status(root, night):
 def nightly_fields(root, night, warnings):
     """Shared receipt fields; repair warnings never become periodic failures."""
     backfill = status(root, night)
+    # Accept the existing NSW wrapper's warnings too, so both callers expose
+    # the same field without depending on Senate's shell warning function.
+    repair_prefixes = ('Backfill did not complete: ', 'NSW Hansard repair ',
+                       'NSW Hansard API refused', 'Shared backfill.STOP:')
     failures = [w.removeprefix('Backfill did not complete: ') for w in warnings
-                if w.startswith('Backfill did not complete: ')]
+                if w.startswith(repair_prefixes)]
     if backfill.get('warning'):
         failures.append('growth guard: ' + backfill['warning'])
         warnings.append('Backfill growth guard: ' + backfill['warning'])

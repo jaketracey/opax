@@ -316,3 +316,13 @@ def test_shared_receipt_fields_keep_repair_timeouts_in_warnings(stage):
     assert fields['backfill_failures'] == [f'{stage}(rc=124)']
     assert warnings == [warning]
     assert 'failures' not in fields
+
+
+@pytest.mark.parametrize('warning', [
+    'NSW Hansard repair outer timeout (rc=124); retained checkpoints resume later',
+    'NSW Hansard API refused; repair stopped and previous data kept'])
+def test_canonical_nsw_wrapper_warnings_use_the_same_receipt_fields(warning):
+    warnings = [warning, 'NSW coverage guard: 4 chamber sitting days incomplete']
+    fields = G.nightly_fields(G.state_dir(), '2026-11-14', warnings)
+    assert fields['backfill_failures'] == [warning]
+    assert len(warnings) == 2 and 'failures' not in fields

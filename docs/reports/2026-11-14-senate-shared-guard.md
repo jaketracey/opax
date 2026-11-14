@@ -46,7 +46,7 @@ repair errors, timeouts and growth stops stay outside fatal daily/nightly
 failures, so weekly, monthly and FRL completion can be recorded.
 
 An offline compatibility tree built from NSW's canonical code passed
-**43 shared tests** with its unchanged publisher and only the final shared
+**45 shared tests** with its unchanged publisher and only the final shared
 guard, tests, client and receipt-writer function overlaid. This exercises
 the actual NSW budget API, stop handling, ten-day publication checks,
 receipt fields and watchdog alert path without NSW acquisition or network.
