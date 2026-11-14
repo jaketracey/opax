@@ -89,7 +89,20 @@ function exactReceiptDonors(graph:ReceiptGraph, query:string) {
   // A party word inside an identified organisation is part of the donor's
   // name. Mask that occurrence only; a separate recipient mention remains.
   const partyQuery=specific.reduce((text,m)=>text.slice(0,m.start)+' '.repeat(m.end-m.start)+text.slice(m.end),q).replace(/\s+/g,' ').trim()
-  return {nodes:[...new Map(specific.map(m=>[m.node.id,m.node])).values()],ambiguous:undefined,partyQuery}
+  return {nodes:[...new Map(specific.map(m=>[m.node.id,m.node])).values()],ambiguous:undefined,partyQuery,phrases:[...new Set(specific.map(m=>m.phrase))]}
+}
+
+/** The question's own words, with each recognised donor name held aside. A word inside a
+ * disclosed name ("Comscrv (No. 2092) Pty Ltd - Loan", "Aussie Home Loans") is the donor's
+ * name, not the question's lending word or period, whether the asker or a router wrote it. */
+function asideDonorNames(graph:ReceiptGraph, query:string) {
+  const named=exactReceiptDonors(graph,normal(query)),held:string[]=[]
+  let text=query
+  for(const phrase of [...named.phrases??[]].sort((a,b)=>b.length-a.length)) {
+    const written=new RegExp('(?<![a-z0-9])'+phrase.split(' ').map(w=>w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('[^a-z0-9]+')+'(?![a-z0-9])','gi')
+    text=text.replace(written,name=>{held.push(name);return 'heldname'+String.fromCharCode(97+(held.length-1)%26).repeat(1+Math.floor((held.length-1)/26))+'x'})
+  }
+  return {text,restore:(s:string)=>held.length?s.replace(/\bheldname([a-z]+)x\b/gi,(m,k:string)=>held[(k.length-1)*26+k.toLowerCase().charCodeAt(0)-97]??m):s}
 }
 const rankingWords = new Set('who which what are is was were be been being gets get got getting takes take took taking receives receive received receiving gives giving donates donate donated donating donors donor sources source contributors contribution contributions largest biggest most top more less higher lower compare comparison compared versus vs than both either these those each with financial nominal aud dollars dollar amount amounts disclosed published recorded records record shown included selected selection lifetime across throughout during up until through starting ending between lobby lobbies to whom s change changed changes increase increased increases decrease decreased decreases grew growth rose fell'.split(' '))
 
@@ -205,12 +218,13 @@ function receiptTotalTo(graph:ReceiptGraph,partyId:string) {
 
 /** Sum only donor-to-party receipt edges; node totals and public-money flows never enter the sum. */
 export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:string, origin:string, filters: {party?:string; from?:string; to?:string; compareYears?:boolean; measure?:ReceiptMeasure} = {}) {
-  if(lendingQuestion(query))return {needs_scope:true,answer:jurisdiction==='federal'?'The published records cannot establish how much was lent. Federal debt records report balances owed at 30 June, not new lending, and name only the latest year’s largest creditors. Mixed receipt totals cannot establish loan amounts.':'The receipt records cannot establish how much was lent; a separate record identifying loans and their basis is needed.',sources:jurisdiction==='federal'?[{title:'AEC debt records: balance owed at 30 June; latest year only',url:origin+'/graph/aec-extras.json'}]:[],jurisdiction}
+  const own=Array.isArray(graph.nodes)?asideDonorNames(graph,query):{text:query,restore:(s:string)=>s}
+  if(lendingQuestion(own.text))return {needs_scope:true,answer:jurisdiction==='federal'?'The published records cannot establish how much was lent. Federal debt records report balances owed at 30 June, not new lending, and name only the latest year’s largest creditors. Mixed receipt totals cannot establish loan amounts.':'The receipt records cannot establish how much was lent; a separate record identifying loans and their basis is needed.',sources:jurisdiction==='federal'?[{title:'AEC debt records: balance owed at 30 June; latest year only',url:origin+'/graph/aec-extras.json'}]:[],jurisdiction}
   if(!Array.isArray(graph.nodes)||!Array.isArray(graph.edges)) return null
   // The question's own period is read into an explicit financial-year window;
   // the reading is stated with the answer and the other readings are offered.
   const latest=latestReceiptYear(graph)
-  const read=readReceiptPeriod(query,latest,{compare:!!filters.compareYears||!!(filters.from&&filters.to)})
+  const read=readReceiptPeriod(own.text,latest,{compare:!!filters.compareYears||!!(filters.from&&filters.to)})
   let periodReading=read.reading,periodOptions:PeriodOption[]=read.options
   let periodQuery=receiptPeriodQuery(read.query)
   if(periodQuery.error) {
@@ -219,7 +233,8 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
     periodReading='Reading this across all published financial years, because these records are grouped by financial year.'
     periodOptions=latest===undefined?[]:[{label:`${financialYear(latest)} only`,from:latest,to:latest}]
   }
-  query=periodQuery.query
+  const periodText=periodQuery.query
+  query=own.restore(periodText)
   // A broad word with one natural grouping in this map is read as that
   // grouping, and the reading is stated with the answer.
   let scopeReading:string|undefined
@@ -260,12 +275,12 @@ export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:str
     if(receiptDonorChoices(graph,fragment).length)return {needs_scope:true,donor_query:fragment,answer:'Matching names in this map include '+receiptDonorChoices(graph,fragment).map(n=>n.label).join('; ')+'. Please use the full organisation name so separate records are not combined.',sources:[],jurisdiction}
   }
   if(!donors.length&&!parties.length&&!all) return null
-  const years=[...query.matchAll(/\b(?:19|20)\d{2}\b/g)].map(m=>Number(m[0]))
+  const years=[...periodText.matchAll(/\b(?:19|20)\d{2}\b/g)].map(m=>Number(m[0])),pq=normal(periodText)
   let from:number|undefined,to:number|undefined
   if(years.length>=2) { from=Math.min(...years);to=Math.max(...years) }
   if(years.length===1) {
-    if(/\b(?:since|from|after)\s+(?:19|20)\d{2}\b/.test(q)) from=years[0]+(/\bafter\s+(?:19|20)\d{2}\b/.test(q)?1:0)
-    else if(/\b(?:before|until|through)\s+(?:19|20)\d{2}\b/.test(q)) to=years[0]-(/\bbefore\s+(?:19|20)\d{2}\b/.test(q)?1:0)
+    if(/\b(?:since|from|after)\s+(?:19|20)\d{2}\b/.test(pq)) from=years[0]+(/\bafter\s+(?:19|20)\d{2}\b/.test(pq)?1:0)
+    else if(/\b(?:before|until|through)\s+(?:19|20)\d{2}\b/.test(pq)) to=years[0]-(/\bbefore\s+(?:19|20)\d{2}\b/.test(pq)?1:0)
     else from=to=years[0]
   }
   if(filters.from && /^\d{4}$/.test(filters.from)) from=Number(filters.from)
