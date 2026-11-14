@@ -1355,8 +1355,9 @@ test.each(['ios', 'android'] as const)(
     const state = root.findByType(ContentUnavailable);
     expect(state.props).toMatchObject({
       symbol: 'doc.text.magnifyingglass',
-      title: 'Bill not found',
-      body: 'This link may be old.',
+      // The shared not-found pattern (sweep 2, item 2).
+      title: 'This bill isn’t in OPAX',
+      body: 'The link may be old, or the bill may not be collected yet.',
       action: { label: 'Search bills' },
     });
     act(() => state.props.action.onPress());

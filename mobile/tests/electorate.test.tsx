@@ -15,7 +15,8 @@ import { ContentUnavailable, SkeletonCrossfade } from '../src/design/states';
 import { PartyLabel, PersonRow } from '../src/design/people';
 import { Heading, Text } from '../src/design/text';
 import { Screen, SectionHeader } from '../src/design/layout';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { HeaderHeightContext } from 'expo-router/react-navigation';
 import Members from '../src/features/your-mp/Members';
 import Election from '../src/features/your-mp/Election';
 import { chooseElectorateDate } from '../src/features/directories/ElectorateDateSheet';
@@ -898,25 +899,73 @@ test('a Senate seat lists six members then one face-stack row to the members lis
 test('not found and failure states', async () => {
   mockParams.id = 'el_000000000000000000000000';
   let r = await render(<Electorate />);
+  // The shared not-found pattern (sweep 2, item 2): centred on paper, one
+  // voice, no full stop, and the electorate directory to search.
   expect(unavailable(r, 'electorate-error')).toBe(
-    "We couldn't find this electorate.",
+    'This electorate isn’t in OPAX',
   );
   const missing = r.root
     .findAllByType(ContentUnavailable)
     .find((node) => node.props.testID === 'electorate-error')!;
-  expect(missing.props.body).toBeTruthy();
-  expect(missing.props.action.label).toBe('Search');
+  expect(missing.props.body).toBe('It may have been renamed or abolished.');
+  expect(missing.props.action.label).toBe('Search electorates');
   act(() => missing.props.action.onPress());
-  expect(router.navigate).toHaveBeenCalledWith('/search');
+  expect(router.navigate).toHaveBeenCalledWith({
+    pathname: '/directory',
+    params: { kind: 'electorate' },
+  });
+  // A page of its own, like Members and topics: the loading page centred
+  // drew the block 57 pt low on the device. Nothing to refresh.
+  const page = r.root.findByType(Screen);
+  expect(page.props.centred).toBe(true);
+  expect(page.props.grouped).toBeFalsy();
+  expect(page.props.refreshControl).toBeUndefined();
   await act(async () => r.unmount());
   mockParams.id = seat('Grayndler').electorate_id;
   mock.electorateFor.mockRejectedValue(new ApiError('http', 'nope'));
   r = await render(<Electorate />);
   expect(unavailable(r, 'electorate-error')).toBe(
-    "This electorate couldn't be loaded.",
+    'This electorate couldn’t be loaded.',
   );
   expect(has(r, 'electorate-retry')).toBe(true);
   await act(async () => r.unmount());
+});
+
+test('a missing electorate under the glass bar centres with the other not-found pages', async () => {
+  // Sweep 2 lane A: only this route's bar is glass (iOS 26 and later), so
+  // the page runs under it and the centred block sat half the bar's height
+  // (58 pt) low on the device. The block is padded by the bar.
+  const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+  const padding = async (version: number) => {
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: version,
+    });
+    mockParams.id = 'el_000000000000000000000000';
+    const r = await render(
+      <HeaderHeightContext.Provider value={116}>
+        <Electorate />
+      </HeaderHeightContext.Provider>,
+    );
+    const block = r.root.find(
+      (node) =>
+        node.props.testID === 'electorate-not-found' &&
+        typeof node.type !== 'string',
+    );
+    expect(
+      block.findAllByType(ContentUnavailable).map((n) => n.props.testID),
+    ).toEqual(['electorate-error']);
+    const value = StyleSheet.flatten(block.props.style).paddingBottom;
+    await act(async () => r.unmount());
+    return value;
+  };
+  try {
+    expect(await padding(26)).toBe(116);
+    // An opaque bar (iOS 18.4 to 25) sits above the page: nothing to lift.
+    expect(await padding(18)).toBe(0);
+  } finally {
+    Object.defineProperty(Platform, 'Version', descriptor);
+  }
 });
 
 test('loading draws a skeleton, never empty copy', async () => {
@@ -1002,9 +1051,22 @@ test('a Members link to a seat not in the release says so, never loads for good'
   load('New South Wales');
   mockParams.seat = 'fixture-removed-seat';
   const r = await render(<Members />);
+  // The shared not-found pattern (sweep 2, item 2).
   expect(unavailable(r, 'members-missing')).toBe(
-    "These members couldn't be found.",
+    'These members aren’t in OPAX',
   );
+  const missing = r.root
+    .findAllByType(ContentUnavailable)
+    .find((node) => node.props.testID === 'members-missing')!;
+  expect(missing.props.symbol).toBe('person.crop.circle');
+  expect(missing.props.body).toBe('The list may have changed.');
+  expect(missing.props.action.label).toBe('Browse parliamentarians');
+  act(() => missing.props.action.onPress());
+  expect(router.navigate).toHaveBeenCalledWith({
+    pathname: '/directory',
+    params: { kind: 'person' },
+  });
+  expect(r.root.findByType(Screen).props.centred).toBe(true);
   await act(async () => r.unmount());
 });
 

@@ -560,7 +560,8 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         empty={
           <EmptyState
             size="pane"
-            message="No bill selected"
+            icon="doc.text"
+            title="Choose a bill"
             testID="bills-split-empty"
           />
         }

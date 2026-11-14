@@ -51,8 +51,10 @@ import {
   textContent,
 } from '../src/design/text';
 import {
+  buttonCapsule,
   controlHeight,
   minimumTarget,
+  rhythm,
   textStyles,
   type TextVariant,
 } from '../src/design/tokens';
@@ -1121,10 +1123,10 @@ describe('shared state kit', () => {
     const r = mount(<OfflineLine savedAt={null} />);
     expect(r.root.findByType(Text).props.children).toBe("You're offline.");
   });
-  test('ContentUnavailable at AX5 proposes the column width and never fixes its height', () => {
+  test('ContentUnavailable proposes the column width and never fixes its height', () => {
     act(() =>
       Dimensions.set({
-        window: { ...window, width: 375, fontScale: 3.571 },
+        window: { ...window, width: 375, fontScale: 1 },
         screen,
       }),
     );
@@ -1159,6 +1161,115 @@ describe('shared state kit', () => {
     });
     act(() => r.root.findByType(Button).props.onPress());
     expect(retry).toHaveBeenCalledTimes(1);
+  });
+  // Sweep 2 lane A: at AX3 SwiftUI's view came out a line short on three of
+  // seven not-found pages and cut the title to "This electorate…". At
+  // accessibility sizes the title is React Native's word-safe text.
+  test.each([2.353, 3.571])(
+    'ContentUnavailable wraps its title in full at font scale %s',
+    (fontScale) => {
+      act(() =>
+        Dimensions.set({
+          window: { ...window, width: 402, fontScale },
+          screen,
+        }),
+      );
+      const r = mount(
+        <ContentUnavailable
+          symbol="map"
+          title="This electorate isn’t in OPAX"
+          body="It may have been renamed or abolished."
+          action={{ label: 'Search electorates', onPress: noop }}
+          testID="electorate-error"
+        />,
+      );
+      expect(r.root.findAllByType(Host)).toHaveLength(0);
+      const text = (children: string) =>
+        r.root.findAll(
+          (node) => node.type === Text && node.props.children === children,
+        );
+      expect(text('This electorate isn’t in OPAX')).toHaveLength(1);
+      const title = text('This electorate isn’t in OPAX')[0]!;
+      // The page's only title is a heading to VoiceOver, as SwiftUI's
+      // view says it (review of sweep 2 lane A).
+      expect(title.props).toMatchObject({
+        variant: 'sectionTitle',
+        wordSafe: true,
+        accessibilityRole: 'header',
+      });
+      expect(StyleSheet.flatten(title.props.style).textAlign).toBe('center');
+      expect(title.props.numberOfLines).toBeUndefined();
+      expect(
+        text('It may have been renamed or abolished.')[0]!.props.variant,
+      ).toBe('body');
+    },
+  );
+  // Sweep 2, item 2: at AX3 a stretched secondary button read from the
+  // leading edge and hung left under the centred title. The action hugs
+  // and a row centres it at every size.
+  test.each([1, 2.353, 3.571])(
+    'ContentUnavailable centres its action at font scale %s',
+    (fontScale) => {
+      act(() =>
+        Dimensions.set({
+          window: { ...window, width: 402, fontScale },
+          screen,
+        }),
+      );
+      const r = mount(
+        <ContentUnavailable
+          symbol={symbols.search}
+          title="This bill isn’t in OPAX"
+          body="The link may be old, or the bill may not be collected yet."
+          action={{
+            label: 'Search bills',
+            onPress: noop,
+            containerTestID: 'missing-action',
+          }}
+        />,
+      );
+      const row = r.root.find(
+        (node) =>
+          node.props.testID === 'missing-action' &&
+          typeof node.type === 'string',
+      );
+      expect(StyleSheet.flatten(row.props.style)).toMatchObject({
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignSelf: 'stretch',
+      });
+      expect(r.root.findByType(Button).props).toMatchObject({
+        hug: true,
+        centredLabel: true,
+      });
+    },
+  );
+  test('an inline ContentUnavailable draws its button 12 pt under the body', () => {
+    // Sweep 2, item 8.4: Search's No results. The capsule is 32 pt inside a
+    // 44 pt target; measured to the target the button drew 22 pt under the
+    // body's line on the device.
+    const r = mount(
+      <ContentUnavailable
+        inline
+        symbol={symbols.search}
+        title="No results"
+        body="Check the spelling or try a new search."
+        action={{
+          label: 'Ask OPAX about this',
+          onPress: noop,
+          containerTestID: 'inline-action',
+        }}
+      />,
+    );
+    const row = r.root.find(
+      (node) =>
+        node.props.testID === 'inline-action' && typeof node.type === 'string',
+    );
+    const blockGap = rhythm.heading;
+    const band = (minimumTarget - buttonCapsule) / 2;
+    expect(
+      blockGap + StyleSheet.flatten(row.props.style).marginTop + band,
+    ).toBe(12);
   });
   test.each([false, true])(
     'ContentUnavailable action=%s is optional',

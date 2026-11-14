@@ -42,22 +42,21 @@ name: 21d Talk refusal states, voice disabled, the monthly budget closed and a d
     file: support/talk-fixture-account.yaml
     env:
       TALK_EMAIL: drop@example.invalid
+# Talk's action is pinned at the foot of a screen that does not scroll (the
+# idle orb, 13 Nov), so these scrolls only wait for it. Centring it timed
+# out on the device whenever lines under it held it low (sweep 2 lane A).
 - scrollUntilVisible:
     timeout: 60000
     element:
       id: talk-start
-    centerElement: true
 # clearState removed stored consent, so this call asks first. The consent
 # sheet covers Start; tap Agree, then wait for the dropped connection.
 - tapOn:
     id: talk-start
-# The consent sheet's buttons are pinned, in view at every size.
-- extendedWaitUntil:
-    visible:
-      id: talk-agree
-    timeout: 15000
-- tapOn:
-    id: talk-agree
+- runFlow:
+    file: support/talk-consent.yaml
+    env:
+      CONSENT_BUTTON: talk-agree
 - scrollUntilVisible:
     timeout: 60000
     element:

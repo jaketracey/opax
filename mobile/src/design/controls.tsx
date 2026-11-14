@@ -52,6 +52,7 @@ import { Text, type TextTone } from './text';
 import {
   androidControls,
   colors,
+  buttonCapsule,
   controlHeight,
   interfaceFonts as fonts,
   hairline,
@@ -159,6 +160,13 @@ export interface ButtonProps {
   loading?: boolean;
   fullWidth?: boolean;
   hug?: boolean;
+  /**
+   * Keep a wrapped label centred at accessibility sizes, as a primary
+   * button does. For an action centred under centred text (a not-found
+   * page's), where a label read from the leading edge hung left. Android
+   * centres every label.
+   */
+  centredLabel?: boolean;
   accessibilityHint?: string;
   /** Disclosure state; disabled and busy remain controlled by the button. */
   expanded?: AccessibilityState['expanded'];
@@ -191,6 +199,7 @@ export function Button({
   loading = false,
   fullWidth = false,
   hug = false,
+  centredLabel: centred = false,
   accessibilityLabel,
   accessibilityHint,
   expanded,
@@ -210,6 +219,7 @@ export function Button({
   // fixed frame for word-safe text, which could otherwise chase a width that
   // follows its own size. The capsule becomes a rounded rectangle there.
   const stacked = useAccessibilitySize();
+  const centredLabel = variant === 'primary' || centred;
   const inert = disabled || loading;
   // Loading keeps the resting look; only a disabled button changes colour.
   const resting = disabled && !loading ? states.disabled : states.rest;
@@ -282,8 +292,9 @@ export function Button({
             !toggle
               ? styles.quiet
               : null,
-            // A filled primary button keeps its label centred, wrapped or not.
-            stacked && variant !== 'primary' ? styles.leading : null,
+            // A filled primary button keeps its label centred, wrapped or not,
+            // and so does one asked to (`centredLabel`).
+            stacked && !centredLabel ? styles.leading : null,
             {
               backgroundColor:
                 variant === 'primary' || (toggle && variant === 'default')
@@ -308,7 +319,7 @@ export function Button({
                 style={[
                   styles.buttonContent,
                   {
-                    minHeight: 32,
+                    minHeight: buttonCapsule,
                     paddingVertical: 4,
                     paddingHorizontal: 12,
                     borderRadius: stacked ? radii.container : radii.capsule,
@@ -331,7 +342,7 @@ export function Button({
                   wordSafe
                   style={
                     stacked
-                      ? variant === 'primary'
+                      ? centredLabel
                         ? [styles.shrink, styles.center]
                         : styles.shrink
                       : styles.center

@@ -88,6 +88,8 @@ export function ResultsView({
   onOpenFilters,
   onRows,
   onRetrySources,
+  onSettled,
+  submission = 0,
   showScopes = true,
 }: {
   q: string;
@@ -105,6 +107,17 @@ export function ResultsView({
    * and the keyboard's Up and Down.
    */
   onRows?: (rows: PaneRow[]) => void;
+  /**
+   * Once the count is known, how many results the query found in this
+   * scope. Search saves a query to Recent only when it found something
+   * (sweep 2, item 8.2).
+   */
+  onSettled?: (q: string, scope: Scope, total: number) => void;
+  /**
+   * Counts submits. The same query submitted again while its results stay
+   * up changes nothing else, so this reports the count again for Recent.
+   */
+  submission?: number;
   showScopes?: boolean;
 }) {
   const roster = (sources?.roster ?? null) as Parameters<
@@ -130,12 +143,19 @@ export function ResultsView({
   }, [rowsKey, onRows]);
   const header = useHeader(q, scope, sources, speeches, reports);
   useAnnounce(scope, q, header.count, header.settled);
+  const settledTotal = header.settled ? header.total : null;
+  useEffect(() => {
+    if (settledTotal !== null) onSettled?.(q, scope, settledTotal);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settledTotal, q, scope, submission]);
   return (
     <Group gap={rhythm.block} testID={`search-results-${scope}`}>
       <View style={styles.header} testID="search-results-header">
         {showScopes ? <ScopeBar value={scope} onChange={onScope} /> : null}
         <ResultsHeader
-          count={header.settled ? header.count : null}
+          // With nothing found the block below says "No results"; the
+          // source line does not also say "0 results" (sweep 2, 8.4).
+          count={header.settled && header.total > 0 ? header.count : null}
           details={header.settled ? header.source : null}
           filters={
             scope === 'speeches' && hasFilters(filters)
@@ -307,6 +327,7 @@ function useHeader(
     const n = scopeMatches(q, sources, scope).length;
     return {
       settled: !!sources,
+      total: n,
       count:
         scope === 'people'
           ? `${counted(n, 'person', 'people')}`
@@ -320,7 +341,12 @@ function useHeader(
   const settled =
     speeches.first?.status === 'ready' || speeches.first?.status === 'error';
   if (scope === 'speeches')
-    return { settled, count: speeches.count, source: speeches.source };
+    return {
+      settled,
+      total: speeches.first?.status === 'ready' ? speeches.total : 0,
+      count: speeches.count,
+      source: speeches.source,
+    };
   // All: the on-device matches plus the speeches window ("200+ results").
   const local = allLocal(q, sources).total;
   const remote = speeches.first?.status === 'ready' ? speeches.total : 0;
@@ -336,6 +362,7 @@ function useHeader(
       settled &&
       !!sources &&
       (!q.trim() || reports?.status === 'ready' || reports?.status === 'error'),
+    total: n,
     count: `${formatCount(n)}${capped ? '+' : ''} ${n === 1 && !capped ? 'result' : 'results'}`,
     source:
       remoteSource || local_

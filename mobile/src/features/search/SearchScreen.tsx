@@ -93,6 +93,12 @@ function SearchContent({
   const input = useRef<TextInput>(null);
   const [tabReset, setTabReset] = useState(0);
   const applied = useRef<string | null>(null);
+  // A typed or Recent query waits here until its results are counted: only
+  // one that found something enters Recent (sweep 2, item 8.2).
+  const pendingRecent = useRef<string | null>(null);
+  // The same query submitted again keeps its results up; this tells them to
+  // report their count again, so Recent moves it to the top.
+  const [submission, setSubmission] = useState(0);
   const { sources, roster, failed, refreshing, retry } = useSearchSources();
   const signedIn = !!useAccount().status?.signedIn;
   const openAsk = useOpenAsk();
@@ -142,9 +148,16 @@ function SearchContent({
       (search.ref as RefObject<SearchBarCommands | null>).current?.blur();
       Keyboard.dismiss();
     }
-    // A query that arrived by link never enters Recent (4.5).
-    if (!link) recentSearches.add(words, nextScope);
+    // A query that arrived by link never enters Recent (4.5); any other
+    // enters once its results are counted and there is at least one.
+    pendingRecent.current = link ? null : words;
+    setSubmission((n) => n + 1);
     scrollToTop(scroll.current, headerBottom);
+  }
+  function settled(words: string, settledScope: Scope, total: number) {
+    if (pendingRecent.current !== words) return;
+    pendingRecent.current = null;
+    if (total > 0) recentSearches.add(words, settledScope);
   }
   function chooseScope(next: Scope) {
     if (!submitted) return;
@@ -222,6 +235,23 @@ function SearchContent({
   }, [params]);
 
   const phase = searchPhase(text, editing, !!submitted);
+  // Clearing or cancelling a search shows the idle list from its top, so
+  // Recent is the first thing under the field, not the results' offset
+  // (sweep 2, item 8.1). The tab reset remounts the scroll view instead.
+  const lastPhase = useRef(phase);
+  const liveHeaderBottom = useRef(headerBottom);
+  useEffect(() => {
+    liveHeaderBottom.current = headerBottom;
+  }, [headerBottom]);
+  useEffect(() => {
+    const was = lastPhase.current;
+    lastPhase.current = phase;
+    if (phase !== 'idle' || was === 'idle') return;
+    const frame = requestAnimationFrame(() =>
+      scrollToTop(scroll.current, liveHeaderBottom.current),
+    );
+    return () => cancelAnimationFrame(frame);
+  }, [phase]);
   const seeAll = (group: GroupKind) => {
     const words = text.trim();
     if (group === 'people' || group === 'bills') submit(words, group);
@@ -307,6 +337,8 @@ function SearchContent({
             onOpenFilters={controls.openFilters}
             onRetrySources={failed ? retry : undefined}
             onRows={onRows}
+            onSettled={settled}
+            submission={submission}
             showScopes={!pinScopes}
           />
         )}

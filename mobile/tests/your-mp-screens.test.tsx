@@ -435,7 +435,7 @@ test('a crossed electorate detail is rejected before names or figures render', a
     r.root.findAll(
       (n) =>
         n.props.testID === 'electorate-error' &&
-        n.props.title === "This electorate couldn't be loaded.",
+        n.props.title === 'This electorate couldn’t be loaded.',
     ).length,
   ).toBeGreaterThan(0);
   await act(async () => r.unmount());

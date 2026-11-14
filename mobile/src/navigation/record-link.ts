@@ -126,6 +126,18 @@ function identity({
   ]);
 }
 
+/**
+ * The record a route's params name, the same identity the Back guard uses. A
+ * link to another record of the route on top reuses its screen (react
+ * navigation updates the params), so record routes key their screen on this
+ * and the new record starts at its own top (sweep 2, item 11).
+ */
+export function recordKey(path: string, params: Params): string {
+  const route = recordRoutes.find((candidate) => candidate.path === path);
+  if (!route) throw new Error(`${path} is not a record route`);
+  return identity({ route, params });
+}
+
 type RouteState = {
   index?: number;
   routes: readonly { name: string; params?: object; state?: RouteState }[];

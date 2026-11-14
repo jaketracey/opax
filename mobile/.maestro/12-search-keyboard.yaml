@@ -60,9 +60,11 @@ name: 12 Search keyboard submits once with the Search key and keeps the native i
     id: search-geometry
 - evalScript: ${output.first = JSON.parse(maestro.copiedText); console.log('FIRST_SUBMIT ' + maestro.copiedText)}
 # Pass 5 (P1-1): an answered search stops asking, so no submit control is
-# drawn once the results are up.
+# drawn once the results are up. Since 9 Nov the app has no submit control
+# (the Search key submits) and the probe's "button" is the field itself, so
+# the geometry no longer carries that check (sweep 2 lane A).
 - assertTrue:
-    condition: ${output.first.results && output.first.keyboardHeight == 0 && output.first.button.y === undefined}
+    condition: ${output.first.results && output.first.keyboardHeight == 0}
     label: One Search key press submits, dismisses the keyboard and draws no submit control
 - takeScreenshot: ${EVIDENCE}/12-keyboard-after-first-tap
 # The same query again: empty the field, type it, submit. The session cache
@@ -90,7 +92,7 @@ name: 12 Search keyboard submits once with the Search key and keeps the native i
     id: search-geometry
 - evalScript: ${output.second = JSON.parse(maestro.copiedText); console.log('SECOND_SUBMIT ' + maestro.copiedText)}
 - assertTrue:
-    condition: ${output.second.results && output.second.keyboardHeight == 0 && output.second.button.y === undefined}
+    condition: ${output.second.results && output.second.keyboardHeight == 0}
     label: Same-query second submission submits once and dismisses the keyboard
 - takeScreenshot: ${EVIDENCE}/12-keyboard-after-second-tap
 # Dismissing the keyboard without the Search key never searches.

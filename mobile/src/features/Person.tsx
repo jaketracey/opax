@@ -42,7 +42,7 @@ import {
 import { Text } from '../design/text';
 import { rhythm } from '../design/tokens';
 import { useHeaderBottom } from '../design/useHeaderBottom';
-import { closeSheetItem, headerItems, pageItems } from '../navigation/chrome';
+import { headerItems, pageItems } from '../navigation/chrome';
 import { openOnWeb } from '../navigation/external';
 import { billRoute, electorateRoute, partyRoute } from '../navigation/routes';
 import { shareRecord } from '../navigation/share';
@@ -328,9 +328,11 @@ export function ProfileScreen({
                   headerTitle: 'No profile',
                 }
               : {}),
+            // A missing profile has only the back button: Done did nothing
+            // Back does not (sweep 2, item 2).
             ...headerItems(
               load.status === 'not-found'
-                ? () => [closeSheetItem()]
+                ? undefined
                 : identity
                   ? pageItems({
                       name: identity.name,

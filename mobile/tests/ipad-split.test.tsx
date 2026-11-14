@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 
 import { dispatchKeyCommand, keyCommandSpecs } from '../src/design/keyboard';
-import { SplitLayout, useSplitCursor } from '../src/design/split';
+import { SplitLayout, usePaneBar, useSplitCursor } from '../src/design/split';
 import { LinkRow } from '../src/design/rows';
 import { SelectedMark, selectedWash } from '../src/design/selection';
 import { colors } from '../src/design/tokens';
@@ -334,4 +334,91 @@ test('an initial selection fills a regular pane immediately without changing com
   expect(select).not.toHaveBeenCalled();
   expect(draw).not.toHaveBeenCalled();
   act(() => view.unmount());
+});
+
+// Sweep 2, item 10: no pane bar when it would be empty. A person or an
+// electorate has no share path, so its pane drew an empty strip a full touch
+// target tall over the record.
+test('a person or electorate in the detail pane has no pane bar; a bill keeps Share', () => {
+  /* eslint-disable @typescript-eslint/no-require-imports */
+  const { hasPaneActions } = require('../src/features/split/entry');
+  /* eslint-enable @typescript-eslint/no-require-imports */
+  type Entry = { kind: string; key: string };
+  const person: Entry = { kind: 'person', key: 'casey-fixture' };
+  const seat: Entry = { kind: 'electorate', key: 'el_fixture' };
+  const bill: Entry = { kind: 'bill', key: 'au-federal-r1' };
+  expect(hasPaneActions(person)).toBe(false);
+  expect(hasPaneActions(seat)).toBe(false);
+  expect(hasPaneActions(bill)).toBe(true);
+  expect(hasPaneActions({ kind: 'party', key: 'Labor' })).toBe(true);
+  expect(hasPaneActions({ kind: 'doc', key: 'speech-1' })).toBe(true);
+  mockLayout.regular = true;
+  // A record screen draws the pane bar it is given (Screen's `bar`).
+  function PaneDetail({ kind }: { kind: string }) {
+    const bar = usePaneBar();
+    return <View testID={`detail-${kind}`}>{bar}</View>;
+  }
+  const draw = (entry: Entry) =>
+    TestRenderer.create(
+      <SplitLayout<Entry>
+        id={`bar-${entry.kind}`}
+        list={<View />}
+        selected={entry}
+        onSelect={jest.fn()}
+        renderDetail={(e) => <PaneDetail kind={e.kind} />}
+        detailActions={(e) =>
+          hasPaneActions(e) ? <View testID="pane-share" /> : null
+        }
+        entryKey={(e) => `${e.kind}:${e.key}`}
+        empty={<View />}
+      />,
+    );
+  for (const [entry, bar] of [
+    [person, false],
+    [seat, false],
+    [bill, true],
+  ] as const) {
+    let view!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      view = draw(entry);
+    });
+    mounted.push(view);
+    expect(
+      view.root.findAllByProps({ testID: `detail-${entry.kind}` }).length,
+    ).toBeGreaterThan(0);
+    expect(
+      view.root.findAll(
+        (n) =>
+          typeof n.type === 'string' && n.props.testID === 'split-pane-bar',
+      ).length > 0,
+    ).toBe(bar);
+  }
+});
+
+// Sweep 2, item 10: one placeholder voice, with its symbol drawn.
+test('an empty pane draws its symbol over its line; a block stays one line', () => {
+  /* eslint-disable @typescript-eslint/no-require-imports */
+  const { EmptyState } = require('../src/design/states');
+  const { Icon } = require('../src/design/icon');
+  /* eslint-enable @typescript-eslint/no-require-imports */
+  let view!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    view = TestRenderer.create(
+      <EmptyState
+        size="pane"
+        icon="doc.text"
+        title="Choose a bill"
+        testID="pane-empty"
+      />,
+    );
+  });
+  mounted.push(view);
+  expect(view.root.findByType(Icon).props.name).toBe('doc.text');
+  act(() => {
+    view = TestRenderer.create(
+      <EmptyState icon="doc.text" message="No matching records." />,
+    );
+  });
+  mounted.push(view);
+  expect(view.root.findAllByType(Icon)).toHaveLength(0);
 });

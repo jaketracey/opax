@@ -43,11 +43,13 @@ name: 21a Talk signed out, consent, a live call, captions, report, and a call on
 - tapOn:
     text: Open
     optional: true
+# Talk's action is pinned at the foot of a screen that does not scroll (the
+# idle orb, 13 Nov), so these scrolls only wait for it. Centring it timed
+# out on the device whenever lines under it held it low (sweep 2 lane A).
 - scrollUntilVisible:
     timeout: 60000
     element:
       id: talk-sign-in
-    centerElement: true
 - extendedWaitUntil:
     visible:
       id: talk-sign-in
@@ -76,25 +78,26 @@ name: 21a Talk signed out, consent, a live call, captions, report, and a call on
     timeout: 60000
     element:
       id: talk-start
-    centerElement: true
 - assertVisible:
     id: talk-allowance
 - takeScreenshot: ${EVIDENCE}/21-ready
 - tapOn:
     id: talk-start
-# Consent is its own sheet; its two buttons are pinned under the text, so
-# they are in view at every size without scrolling.
+# Consent is its own sheet on Ask's shape: the "Machine-written" pill and
+# the words are on screen on arrival (sweep 2, item 1: at Large the old
+# pinned footer drew them under the buttons), and the buttons end the
+# scroll range.
 - extendedWaitUntil:
     visible:
       id: talk-consent-sheet
     timeout: 15000
 - assertVisible:
-    id: talk-agree
-- assertVisible:
-    id: talk-not-now
+    id: talk-consent-machine
 - takeScreenshot: ${EVIDENCE}/21-consent
-- tapOn:
-    id: talk-agree
+- runFlow:
+    file: support/talk-consent.yaml
+    env:
+      CONSENT_BUTTON: talk-agree
 - scrollUntilVisible:
     timeout: 60000
     element:
@@ -162,7 +165,6 @@ name: 21a Talk signed out, consent, a live call, captions, report, and a call on
     element:
       id: talk-start
     direction: DOWN
-    centerElement: true
 - tapOn:
     id: talk-start
 - extendedWaitUntil:
