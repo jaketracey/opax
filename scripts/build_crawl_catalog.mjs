@@ -351,7 +351,7 @@ export async function buildCrawl(root, {read: sourceRead, reports: published = r
   // The separate investigations are in the sitemap only while they are published.
   for (const r of published ? reports.reports : []) add('topics-reports',`/reports/${r.slug}`,r.updated,undefined,r.generated_at || corpus.version);
   for (const slug of Object.keys(TOPIC_NAMES)) add('topics-reports',`/subject/topic/${slug}`,null,undefined,corpus.version);
-  for (const path of ['/official-reports',...Object.keys(REPORT_COLLECTIONS).map(reportRoot),'/','/ask','/money','/money/receipts','/money/grants','/bills','/connections','/map',...(published ? ['/reports'] : []),'/explore','/money/contracts','/about','/methods','/stats','/declared','/expenses','/privacy','/support','/subject/topic',...['person','party','donor','campaigner','supplier','agency','electorate'].map(d=>`/subject/${d}`)]) add('static',path,null,undefined,corpus.version);
+  for (const path of ['/official-reports',...Object.keys(REPORT_COLLECTIONS).map(reportRoot),'/','/ask','/money','/money/receipts','/money/grants','/bills','/connections','/map',...(published ? ['/reports'] : []),'/explore','/money/contracts','/about','/methods','/stats','/declared','/expenses','/privacy','/support','/terms','/security','/subject/topic',...['person','party','donor','campaigner','supplier','agency','electorate'].map(d=>`/subject/${d}`)]) add('static',path,null,undefined,corpus.version);
   const result = sitemapFiles(groups);
   const out = join(root,'crawl');
   await rm(out,{recursive:true,force:true});
