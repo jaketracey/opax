@@ -314,9 +314,8 @@ the standard context, nothing else:
   property name; an unlisted block is `block_other`. `page` is a page's whole
   read.
 - `kind`: `network` (no connection or a timeout), `4xx` or `5xx` (the HTTP
-  status class, never the status), `decode` (the body could not be read,
-  including a newer export the app refused while it kept showing its saved
-  copy) or `partial` (the read succeeded with rows dropped).
+  status class, never the status), `decode` (the body could not be read) or
+  `partial` (the read succeeded with rows dropped).
 - `route_pattern`: the route template the reader was on, from the same fixed
   list as `opax_route_error`; anything else is `/other`.
 
@@ -330,8 +329,11 @@ failed. A cancelled request and a path the app refused to request are not
 failures.
 
 It is sent at most once per section, kind and route for each launch, and at
-most 40 times per launch in all, so a retry loop, a re-render or an outage
-across every file cannot flood. It uses `track`, the same build-config gate
+most 12 times per kind per launch, so a retry loop, a re-render or an outage
+across every file cannot flood, and a launch with no connection cannot use up
+the room for a `decode` or `5xx`. A read that fails while the phone shows its
+saved copy is reported the same way: the reader sees the record, so the report
+is the only sign of the failure. It uses `track`, the same build-config gate
 (`extra.analytics`) and both scrubbers as every other event; a build without
 the analytics configuration sends nothing. A phone that is offline reports
 `network` once per section and route when it is next online, like any queued

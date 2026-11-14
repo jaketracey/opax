@@ -174,15 +174,25 @@ describe('dedupe', () => {
       reportReadFailure('/parliamentarians.json', httpError(503));
     expect(send).toHaveBeenCalledTimes(3);
   });
-  test('a launch sends at most the limit, whatever fails', () => {
-    for (const section of failedSections)
-      for (const kind of sectionFailureKinds)
-        reportReadFailure(
-          '/x',
-          // Distinct routes make every report distinct.
-          (route = `/${section}/${kind}`) && 'partial',
-        );
+  test('a launch sends at most the limit of each kind, whatever fails', () => {
+    // Distinct routes make every report distinct.
+    for (let index = 0; index < 100; index++) {
+      route = `/offline/${index}`;
+      reportReadFailure('/votes.json', new ApiError('offline', 'Offline'));
+    }
     expect(send).toHaveBeenCalledTimes(SECTION_REPORT_LIMIT);
+    // No connection all launch leaves room for the failures that matter.
+    reportReadFailure('/votes.json', httpError(503));
+    reportReadFailure('/votes.json', new ApiError('invalid-data', 'Bad'));
+    expect(send.mock.calls.slice(SECTION_REPORT_LIMIT)).toEqual([
+      ['read_votes', '5xx', route],
+      ['read_votes', 'decode', route],
+    ]);
+    for (let index = 0; index < 100; index++) {
+      route = `/server/${index}`;
+      reportReadFailure('/votes.json', httpError(503));
+    }
+    expect(send).toHaveBeenCalledTimes(2 * SECTION_REPORT_LIMIT + 1);
   });
   test('with no client connected, nothing is sent or remembered', () => {
     connectSectionReports(null);

@@ -17,8 +17,12 @@
 import { ApiError } from '../api/errors';
 import type { FailedSection, SectionFailureKind } from './events';
 
-/** At most this many reports per launch, whatever fails. */
-export const SECTION_REPORT_LIMIT = 40;
+/**
+ * At most this many reports of each kind per launch, whatever fails. The
+ * limit is per kind so a launch with no connection cannot use it up before a
+ * decode or server failure.
+ */
+export const SECTION_REPORT_LIMIT = 12;
 
 type Sink = {
   /** The route template the reader is on, from the fixed list. */
@@ -31,11 +35,13 @@ type Sink = {
 };
 let sink: Sink | null = null;
 const sent = new Set<string>();
+const sentOfKind = new Map<SectionFailureKind, number>();
 
 /** The analytics client connects itself here; null disconnects (tests). */
 export function connectSectionReports(next: Sink | null) {
   sink = next;
   sent.clear();
+  sentOfKind.clear();
 }
 
 /**
@@ -50,8 +56,10 @@ export function reportSectionFailure(
     if (!sink) return;
     const route = sink.route();
     const key = `${section}|${kind}|${route}`;
-    if (sent.has(key) || sent.size >= SECTION_REPORT_LIMIT) return;
+    const count = sentOfKind.get(kind) ?? 0;
+    if (sent.has(key) || count >= SECTION_REPORT_LIMIT) return;
     sent.add(key);
+    sentOfKind.set(kind, count + 1);
     sink.send(section, kind, route);
   } catch {
     /* Reporting never interrupts a read. */
@@ -110,18 +118,12 @@ export function sectionForPath(path: string): FailedSection {
 }
 
 /**
- * The API client's `onFailure`: a read that threw, a newer export that could
- * not be read (the saved copy is shown instead), or a read with rows dropped.
+ * The API client's `onFailure`: a read that threw, a read that failed while
+ * the saved copy was shown instead, or a read with rows dropped.
  */
-export function reportReadFailure(
-  path: string,
-  failure: unknown | 'partial' | 'decode',
-) {
+export function reportReadFailure(path: string, failure: unknown | 'partial') {
   try {
-    const kind =
-      failure === 'partial' || failure === 'decode'
-        ? failure
-        : failureKind(failure);
+    const kind = failure === 'partial' ? failure : failureKind(failure);
     if (kind) report(sectionForPath(path), kind);
   } catch {
     /* optional */

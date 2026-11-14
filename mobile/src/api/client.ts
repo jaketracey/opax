@@ -46,9 +46,9 @@ interface GetOptions {
 }
 interface ClientOptions {
   /**
-   * Told of each `get` that failed: the error it threw, 'decode' when a
-   * newer export could not be read and the saved copy was served, or
-   * 'partial' when rows were dropped. Diagnostics only (analytics/sections.ts).
+   * Told of each `get` that failed: the error it threw, the error a saved
+   * copy was served in place of, or 'partial' when rows were dropped.
+   * Diagnostics only (analytics/sections.ts).
    */
   onFailure?: (path: string, failure: unknown) => void;
   origin: string;
@@ -275,10 +275,8 @@ export class ApiClient {
   ): Promise<RecordResult<T>> {
     try {
       const record = await this.read(path, decode, force, options);
-      // A newer export that could not be read (the saved copy is served), or
-      // a read that dropped rows: the reader may see nothing wrong.
-      if (record.staleReason === 'unreadable') this.failed(path, 'decode');
-      else if (record.partial) this.failed(path, 'partial');
+      // A read that dropped rows: the reader may see nothing wrong.
+      if (record.partial) this.failed(path, 'partial');
       return record;
     } catch (error) {
       this.failed(path, error);
@@ -598,7 +596,11 @@ export class ApiClient {
         // body this reader cannot use.
       }
     }
-    if (cached)
+    if (cached) {
+      // The read failed and the saved copy stands in for it. The reader sees
+      // the record, so this is the only sign of the failure: an outage on a
+      // file most phones have saved would otherwise never be reported.
+      this.failed(path, lastError);
       return {
         ...result(cached, true),
         ...(lastError.code === 'invalid-data'
@@ -607,6 +609,7 @@ export class ApiClient {
             ? {}
             : { staleReason: 'unavailable' as const }),
       };
+    }
     throw lastError;
   }
   /** Explicit submission only. Bounded Ask recovery, never a disk cache. */
