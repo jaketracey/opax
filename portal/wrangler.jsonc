@@ -13,7 +13,7 @@
     // sign-in requests and host-only account cookies share one origin.
     // Clean URLs for the standalone HTML test tools need the same shared chrome
     // as their .html addresses. Scripts, styles and data still bypass the Worker.
-    "run_worker_first": ["/", "/home", "/home/", "/*.html", "/*-test", "/*-test/", "/datatable-workbench", "/datatable-workbench/", "/community", "/community/", "/press", "/press/", "/connections", "/connections/", "/map", "/map/", "/budget", "/budget/", "/register/vic-gifts", "/register/vic-gifts/", "/register/gov-advertising", "/register/gov-advertising/", "/gov-advertising/ready.json", "/register/state-bills", "/register/state-bills/", "/register/government-finance", "/register/government-finance/", "/instruments", "/instruments/", "/instrument", "/instrument/*", "/audit", "/audit/*", "/report/*", "/official-reports", "/official-reports/*", "/api/*", "/table-index", "/table-index/*", "/bill-texts/*", "/og/*", "/ingest/*", "/mcp", "/vic-election-2026", "/vic-election-2026/*", "/hubs/*", "/sitemap.xml", "/sitemap.xml/", "/sitemaps/*", "/robots.txt", "/robots.txt/", "/llms.txt", "/llms.txt/", "/reports/*.json"]
+    "run_worker_first": ["/", "/home", "/home/", "/*.html", "/*-test", "/*-test/", "/datatable-workbench", "/datatable-workbench/", "/community", "/community/", "/press", "/press/", "/connections", "/connections/", "/map", "/map/", "/budget", "/budget/", "/register/vic-gifts", "/register/vic-gifts/", "/register/gov-advertising", "/register/gov-advertising/", "/gov-advertising/ready.json", "/register/state-bills", "/register/state-bills/", "/register/government-finance", "/register/government-finance/", "/instruments", "/instruments/", "/instrument", "/instrument/*", "/audit", "/audit/*", "/report/*", "/official-reports", "/official-reports/*", "/api/*", "/table-index", "/table-index/*", "/bill-texts/*", "/og/*", "/ingest/*", "/mcp", "/mcp/member", "/oauth/*", "/.well-known/oauth-authorization-server", "/.well-known/oauth-protected-resource", "/.well-known/oauth-protected-resource/*", "/vic-election-2026", "/vic-election-2026/*", "/hubs/*", "/sitemap.xml", "/sitemap.xml/", "/sitemaps/*", "/robots.txt", "/robots.txt/", "/llms.txt", "/llms.txt/", "/reports/*.json"]
   },
 
   "kv_namespaces": [{"binding":"GENERATION_CACHE","id":"e0b56c0457374743b580e7210e7b4515"}],
@@ -85,6 +85,17 @@
     "COMMUNITY_ORIGIN": "https://opax.com.au",
     "COMMUNITY_EMAIL_FROM": "hello@login.opax.com.au",
     "COMMUNITY_ENABLED": "true",
+    // The public-record MCP tools answer without an account. "false" returns /mcp to members only
+    // (keys and connected clients keep working). Limits are per minute; the alert line is per hour.
+    // One client gets 60; an address has a ceiling only, higher for the addresses Claude and ChatGPT share.
+    "MCP_ANON_ENABLED": "true",
+    "MCP_ANON_PER_CLIENT_MINUTE": "60",
+    "MCP_ANON_PER_IP_MINUTE": "300",
+    "MCP_ANON_SHARED_IP_MINUTE": "1500",
+    "MCP_ANON_GLOBAL_MINUTE": "3000",
+    "MCP_ANON_ALERT_HOURLY": "20000",
+    // Extra IPv4 ranges treated as shared assistant addresses, beside the built-in Anthropic and OpenAI lists.
+    "MCP_ANON_SHARED_RANGES": "",
     "ARAG_ZONE": "aws-ap-southeast-2-1",
     // Folded into every response-cache key (/api/ask 7 days, /api/search,
     // /api/resource, /api/followups). Bump it whenever the corpus changes
@@ -173,7 +184,10 @@
     // overviews, follow-ups, stories, summaries), one key for all readers, so a
     // cold cache after a CACHE_EPOCH bump cannot run up a bill. Past it the cached
     // or fallback output stands (src/index.ts modelBudgetSpent). Per location.
-    { "name": "MODEL_LIMITER", "namespace_id": "1005", "simple": { "limit": 60, "period": 60 } }
+    { "name": "MODEL_LIMITER", "namespace_id": "1005", "simple": { "limit": 60, "period": 60 } },
+    // MCP requests without an account, per address: the cheap first check, before the
+    // exact per-client and per-address counts in the community database (src/mcp-access.ts).
+    { "name": "MCP_ANON_LIMITER", "namespace_id": "1006", "simple": { "limit": 300, "period": 60 } }
   ],
   "env": {
     "staging": {
@@ -186,7 +200,17 @@
       "workers_dev": true,
       "routes": [{ "pattern": "staging.opax.com.au", "custom_domain": true }],
       "services": [{ "binding": "STAGING_API", "service": "opax-portal" }],
-      "vars": { "SA_HANSARD_FULL_TEXT":"false", "APP_MINIMUM_VERSION":"0.0.0", "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-11-14-nightly",
+      // Rate-limit bindings are not inherited by an environment. The same limits as production,
+      // under staging's own namespaces so its counters never mix with production's.
+      "ratelimits": [
+        { "name": "ASK_LIMITER", "namespace_id": "2001", "simple": { "limit": 20, "period": 60 } },
+        { "name": "FOLLOWUPS_LIMITER", "namespace_id": "2002", "simple": { "limit": 20, "period": 60 } },
+        { "name": "SEARCH_LIMITER", "namespace_id": "2003", "simple": { "limit": 120, "period": 60 } },
+        { "name": "OG_LIMITER", "namespace_id": "2004", "simple": { "limit": 60, "period": 60 } },
+        { "name": "MODEL_LIMITER", "namespace_id": "2005", "simple": { "limit": 60, "period": 60 } },
+        { "name": "MCP_ANON_LIMITER", "namespace_id": "2006", "simple": { "limit": 300, "period": 60 } }
+      ],
+      "vars": { "SA_HANSARD_FULL_TEXT":"false", "APP_MINIMUM_VERSION":"0.0.0", "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "MCP_ANON_ENABLED":"true", "MCP_ANON_PER_CLIENT_MINUTE":"60", "MCP_ANON_PER_IP_MINUTE":"300", "MCP_ANON_SHARED_IP_MINUTE":"1500", "MCP_ANON_GLOBAL_MINUTE":"3000", "MCP_ANON_ALERT_HOURLY":"20000", "MCP_ANON_SHARED_RANGES":"", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-11-14-nightly",
         "VIC_ELECTION_HUB_ENABLED": "false",
         "REPORTS_ENABLED": "false",
         "REPORTS_APP_DATA": "true",

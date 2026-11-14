@@ -2,7 +2,7 @@ import copy
 from datetime import datetime, timedelta, timezone
 import unittest
 
-from scripts.refresh_watchdog import evaluate
+from scripts.refresh_watchdog import evaluate, evaluate_mcp
 
 
 class Watchdog(unittest.TestCase):
@@ -89,6 +89,13 @@ class Watchdog(unittest.TestCase):
         self.assertTrue(any('monthly (due 2026-10-04)' in item for item in evaluate(self.corpus, self.status, self.now)[2]))
         self.status['periodic_state'] = {'error': 'unreadable'}
         self.assertTrue(any('periodic' in item for item in evaluate(self.corpus, self.status, self.now)[0]))
+
+    def test_sustained_mcp_volume_without_an_account_is_a_problem(self):
+        problems, notes = evaluate_mcp({'anonymous': True, 'volume': 'high', 'hours_over': 5})
+        self.assertEqual(len(problems), 1)
+        self.assertIn('MCP_ANON_ENABLED=false', problems[0])
+        self.assertEqual(evaluate_mcp({'anonymous': True, 'volume': 'normal', 'hours_over': 0}), ([], ['MCP without an account: on, volume normal']))
+        self.assertEqual(evaluate_mcp({'anonymous': False, 'volume': 'normal'})[0], [])
 
 
 if __name__ == '__main__':

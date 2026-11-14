@@ -100,6 +100,8 @@ import { htmlValidator, notModified } from './html-etag'
 import { cacheKeyParams } from './cache-key'
 import { searchFind, type SearchRetrieval } from './search-find'
 import { communityMcp } from './community-mcp'
+import { oauthRoute } from './community-oauth'
+import { anonymousVolume, MCP_PATHS } from './mcp-access'
 import { expireVoiceSessions, voiceRoute } from './voice'
 import { voiceAsk } from './voice-ask'
 import { ASK_FALLBACK_FLOOR_MS, fallbackAllowanceMs, gatheredPayload, shortenedCaller, trustedCaller, type AskCaller } from './ask-caller-budget'
@@ -5184,7 +5186,7 @@ function retiredToolAddress(url: URL): boolean {
 }
 async function pageAliasRedirect(request: Request, url: URL, env: Env): Promise<Response | null> {
   if(missingEntitySlug(url.pathname)) return null
-  if(!['GET','HEAD'].includes(request.method) || url.pathname.startsWith('/api/') || url.pathname.startsWith('/ingest/') || url.pathname==='/mcp' || url.pathname.startsWith('/og/')) return null
+  if(!['GET','HEAD'].includes(request.method) || url.pathname.startsWith('/api/') || url.pathname.startsWith('/ingest/') || url.pathname==='/mcp/member' || (url.pathname==='/mcp' && !(request.headers.get('accept') ?? '').includes('text/html')) || url.pathname.startsWith('/oauth/') || url.pathname.startsWith('/.well-known/oauth-') || url.pathname.startsWith('/og/')) return null
   const discoveryPath=url.pathname.replace(/\/+$/,'')
   if(['/sitemap.xml','/robots.txt','/llms.txt'].includes(discoveryPath) || /^\/sitemaps\/[^/]+\.xml$/.test(discoveryPath)) {
     if(canonicalPageRedirect(request,env.COMMUNITY_ORIGIN) || discoveryPath!==url.pathname)
@@ -6486,8 +6488,12 @@ function withSecurityHeaders(res: Response, url: URL): Response {
   const out = new Response(NULL_BODY_STATUS.has(res.status) ? null : res.body, { status: res.status, statusText: res.statusText, headers: res.headers, ...(res.webSocket ? { webSocket: res.webSocket } : {}) })
   for (const [k, v] of Object.entries(BASE_SECURITY_HEADERS)) out.headers.set(k, v)
   const isUnsubscribePage = url.pathname === '/api/community/email/unsubscribe' && res.headers.get('content-type')?.startsWith('text/html')
-  out.headers.set('content-security-policy', isUnsubscribePage ? CSP_UNSUBSCRIBE : isApi ? CSP_API : CSP_PAGE)
-  if (url.pathname.startsWith('/api/community/') || url.pathname.startsWith('/api/voice/') || url.pathname === '/mcp') { out.headers.set('cache-control', 'no-store'); out.headers.set('referrer-policy', 'no-referrer') }
+  // The consent page is script-free and names its own form target (community-oauth.ts); every other sign-in address is data.
+  const isOauth = url.pathname.startsWith('/oauth/') || url.pathname.startsWith('/.well-known/oauth-')
+  const ownCsp = url.pathname === '/oauth/authorize' ? res.headers.get('content-security-policy') : null
+  const isMcpData = (url.pathname === '/mcp' && !res.headers.get('content-type')?.startsWith('text/html')) || url.pathname === '/mcp/member'
+  out.headers.set('content-security-policy', isUnsubscribePage ? CSP_UNSUBSCRIBE : ownCsp ? ownCsp : isApi || isOauth || isMcpData ? CSP_API : CSP_PAGE)
+  if (url.pathname.startsWith('/api/community/') || url.pathname.startsWith('/api/voice/') || isMcpData || url.pathname.startsWith('/oauth/')) { out.headers.set('cache-control', 'no-store'); out.headers.set('referrer-policy', 'no-referrer') }
   if (url.pathname === '/community' || url.pathname === '/community.html') out.headers.set('referrer-policy', 'no-referrer')
   if (NO_STORE_PATHS.has(url.pathname) && !out.headers.has('cache-control')) {
     out.headers.set('cache-control', 'no-store')
@@ -7415,7 +7421,17 @@ export default {
       if (env.STAGING_API) return display(await env.STAGING_API.fetch(local), target)
       return display(await route(local, target, env, ctx), target)
     }, voiceAsk(env, (ask, caller) => apiAskRouted(ask, new URL(ask.url), env, ctx, caller))))
-    if (url.pathname === '/mcp') return communityResponse(await communityMcp(request, env, async path => {
+    // Sign in to connect: metadata, registration, consent, tokens (community-oauth.ts).
+    const oauth = await oauthRoute(request, env)
+    if (oauth) return communityResponse(oauth)
+    // Whether the no-account tier is on and whether its volume has stayed high; the daily watchdog reads this.
+    if (url.pathname === '/api/mcp/status' && request.method === 'GET') {
+      const limited = await rateLimited(env.SEARCH_LIMITER, request); if (limited) return communityResponse(limited)
+      return communityResponse(await anonymousVolume(env).then(status => json(status), () => json({ error: 'unavailable' }, 503)))
+    }
+    // A reader's browser opening /mcp gets the setup page; every MCP request goes to the tools.
+    const mcpPage = url.pathname === '/mcp' && (request.method === 'GET' || request.method === 'HEAD') && !request.headers.has('authorization') && (request.headers.get('accept') ?? '').includes('text/html') && !(request.headers.get('accept') ?? '').includes('text/event-stream')
+    if (MCP_PATHS.includes(url.pathname) && !mcpPage) return communityResponse(await communityMcp(request, env, async path => {
       const target = new URL(path, env.COMMUNITY_ORIGIN)
       const local = new Request(target, { headers: { 'cf-connecting-ip': request.headers.get('cf-connecting-ip') || 'mcp' } })
       if (target.pathname === '/api/search-all') return display(await apiUnifiedSearch(local, target, env, ctx), target)

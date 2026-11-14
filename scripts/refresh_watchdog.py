@@ -71,6 +71,16 @@ def evaluate(corpus, status, now, max_age=20):
     return problems, notes, list(dict.fromkeys(warnings))
 
 
+def evaluate_mcp(status):
+    """Sustained no-account MCP volume is a problem; the tier being switched off is only a note."""
+    problems, notes = [], []
+    if status.get('volume') == 'high':
+        problems.append('MCP requests without an account have stayed above the alert line for three hours in a row in the last day; '
+                        'check Worker logs for mcp_anon_volume and consider MCP_ANON_ENABLED=false (docs/COMMUNITY.md)')
+    notes.append(f"MCP without an account: {'on' if status.get('anonymous') else 'off'}, volume {status.get('volume', 'unknown')}")
+    return problems, notes
+
+
 def main():
     now = datetime.now(timezone.utc)
     max_age = float(os.environ.get('MAX_AGE_HOURS', '20'))
@@ -89,6 +99,14 @@ def main():
         problems, notes, warnings = evaluate(corpus, status, now, max_age)
     except Exception as error:
         problems.append(f'cannot read refresh evidence: {error}')
+    # The no-account MCP tier: the Worker counts its requests by the hour and reports
+    # "high" when three full hours in a row passed its alert line in the last day (MCP_ANON_ALERT_HOURLY).
+    try:
+        mcp_problems, mcp_notes = evaluate_mcp(fetch(os.environ.get('SITE', 'https://opax.com.au') + '/api/mcp/status'))
+        problems.extend(mcp_problems)
+        notes.extend(mcp_notes)
+    except Exception as error:
+        warnings.append(f'cannot read MCP volume status: {error}')
     for note in notes:
         print(note)
     for warning in warnings:

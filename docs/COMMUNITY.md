@@ -2,7 +2,7 @@
 
 ## Product contract
 
-The public record stays open. An email account enables private or shared reading lists, public profiles, source-led discussions and read-only MCP tools. All community features are available to members without payment.
+The public record stays open. An email account enables private or shared reading lists, public profiles and source-led discussions. The read-only MCP tools need no account; an account gives a member their own limit. All community features are available to members without payment.
 
 ## Implementation
 
@@ -14,7 +14,19 @@ The public record stays open. An email account enables private or shared reading
 - Reading lists start private. Owners control sharing and deletion; public profiles omit email. Saved records use Opax's `/doc/` paths.
 - Saved conversations (13 September 2026): the chat keeps every conversation in the browser's localStorage (`opax-chats`, twenty newest, trimmed sources) and mirrors a signed-in member's to `member_chats` (migration 0006) through `GET/PUT/DELETE /api/community/chats[/:id]` - one owner per row, private, the reader's `updated` clock deciding between devices (an older write is acknowledged as `stale`). Fifty per member; a body up to 600 KB and eighty turns. Nothing anonymous is stored server-side.
 - Members can report discussion content; moderators can review reports and hide content. Assign moderation ownership before opening discussions.
-- MCP supports stateless HTTP POST with personal bearer tokens. Tokens are stored hashed, expire after 90 days and can be revoked. A member can have three active tokens. Compatible clients need bearer-token support; OAuth discovery is not implemented.
+- MCP is stateless HTTP POST at `/mcp`. The access layer is `portal/src/mcp-access.ts`; three kinds of caller reach the same read-only public-record tools:
+  - **No account** (built 14 November 2026): a request with no `Authorization` header is served. No personal data is read or stored for it. Limits per minute, each counted in `community_limits` under a hashed key:
+    - one client, 60 (`MCP_ANON_PER_CLIENT_MINUTE`). A client is its `Mcp-Session-Id` at its address; OPAX issues one at `initialize` (a random value, never stored or looked up). Without a session it is the `User-Agent` at its address. `initialize`, `tools/list` and `ping` do not use this allowance.
+    - one address, a ceiling of 300 (`MCP_ANON_PER_IP_MINUTE`). The Workers rate limiter `MCP_ANON_LIMITER` (300 a minute per address) refuses a flood before any database write and fails open.
+    - addresses many people share, a ceiling of 1,500 (`MCP_ANON_SHARED_IP_MINUTE`) and no per-client allowance without a session. These are Anthropic's and OpenAI's published server ranges (`portal/src/mcp-shared-egress.ts`; refresh the OpenAI list from `https://openai.com/chatgpt-connectors.json`) plus any in `MCP_ANON_SHARED_RANGES`. Claude and ChatGPT call from those servers, not from each person's address, so one person's allowance would throttle everyone.
+    - everyone together, 3,000 (`MCP_ANON_GLOBAL_MINUTE`).
+    Over a limit the answer is HTTP 429 with `Retry-After: 60` and a message that names the limit and the account option. `/mcp` is outside `network-block.ts`, so no network is refused there.
+  - **Kill switch:** `MCP_ANON_ENABLED` must be exactly `"true"` for the no-account tier. Any other value returns `/mcp` to members only (HTTP 401 with the sign-in pointer); keys and connected clients keep working. Change it in `portal/wrangler.jsonc` and deploy. It is an emergency lever: a connector listed as needing no sign-in fails its directory health checks while the switch is off, so tell the directories (Anthropic: mcp-review@anthropic.com; OpenAI: platform support) if it stays off for long.
+  - **Volume alert:** each no-account request adds to an hourly count (`mcp-anon-hour:<hour>` in `community_limits`, a count only). When an hour passes `MCP_ANON_ALERT_HOURLY` (20,000) the Worker writes one `mcp_anon_volume` warning to Workers observability, the same sink Ask monitoring uses. `GET /api/mcp/status` returns `{anonymous, volume, hours_over}`; `volume` is `high` when three hours in a row passed the line in the last day. The daily refresh watchdog (`scripts/refresh_watchdog.py`) reads it and fails, which emails the repository owner.
+  - **Member key:** a personal bearer token (`opax_…`). Tokens are stored hashed, expire after 90 days and can be revoked. A member can have three active tokens. 60 requests a minute per member.
+  - **Sign in to connect** (OAuth 2.1, `portal/src/community-oauth.ts`, migration 0019): for clients that can sign in. `/mcp/member` is the same server but always answers 401 without a token, because clients only start sign-in on a 401. Details are in the section below.
+- A presented token that is wrong, expired or removed is answered 401, never served as a no-account request. `/mcp` sends credential-free CORS headers (`Access-Control-Allow-Origin: *`): no caller is identified by a cookie, so a browser page gains nothing a direct request would not have.
+- A browser opening `/mcp` (GET with `Accept: text/html` and no token) gets the setup page `portal/public/mcp.html`.
 - MCP tools cover record search (`search_records`, including a `grant` kind), record reading (`read_record`), grant recipient detail (`read_grant_recipient`), grant program detail (`read_grant_program`), connection search (`find_connections`) and corpus coverage (`corpus_coverage`) — all read-only. Search/read results include absolute Opax citations. Oversized record responses are stopped while streaming.
 - Grant search hits point at the file to open next. A recipient row carries `grant_recipient: {jurisdiction, id}` for `read_grant_recipient`; a program row (catalog slug `grant-program-<jur>-<key>`, title ending in "(grant program)") carries `grant_program: {jurisdiction, id}` for `read_grant_program`.
 - Recipient citations use `/money/grants/<jurisdiction>/recipient/<encoded-id>` for standalone pages. Legacy `/money/grants?jur=...&open=...` links remain readable, and MCP search recognizes both forms.
@@ -72,6 +84,28 @@ For staging, use `cd portal && npx wrangler secret put REVIEWER_LOGIN_CODE --env
 
 Reviewer deletion uses a fresh member-bound deletion challenge and the same `REVIEWER_LOGIN_CODE`, without sending email (local patch; release pending). It retains the existing deletion MAC, cookie, Origin, expiry and all admission limits. The current reviewer binding is checked in constant time before redemption; an unset, malformed or rotated secret invalidates old review proofs. Successful review deletion emits `community_reviewer_deletion` with timestamp and colo, never the code. Other members still receive emailed deletion codes. Deletion only mutates account database rows; it never writes secrets or vars and cannot change the constant allowlist or env binding. A later reviewer sign-in creates a fresh account with ordinary defaults and allowance.
 
+## Sign in to connect (MCP OAuth 2.1)
+
+Built 14 November 2026 to the MCP authorisation specification (2026-07-28). Not live until migration 0019 is applied to the production community database and the security review signs off. It is not needed for a no-sign-in directory listing.
+
+| Address | Purpose |
+| --- | --- |
+| `/.well-known/oauth-protected-resource`, `…/mcp`, `…/mcp/member` | RFC 9728 resource metadata. The 401 from `/mcp` and `/mcp/member` points here in `WWW-Authenticate` (`resource_metadata`, `scope`). |
+| `/.well-known/oauth-authorization-server` | RFC 8414 metadata: issuer is the site origin, `S256` only, public clients only (`none`), RFC 9207 `iss` in the response. |
+| `POST /oauth/register` | RFC 7591 dynamic registration. JSON, 8 KB, 30 an hour per address and 1,000 a day overall. No secret is issued. Registrations with no connection lapse after 90 idle days. |
+| `GET /oauth/authorize` | Script-free page. Signed out: a link to the email sign-in, which returns here. Signed in: explicit consent, naming the client's own claimed name and where it returns to. |
+| `POST /oauth/authorize` | The decision. Needs the site's own `Origin`, the session cookie and a proof bound to that session and to the exact client, redirect address, PKCE challenge, state and resource. |
+| `POST /oauth/token` | `authorization_code` (PKCE verifier required) and `refresh_token`. Form-encoded. 60 a minute per client, 600 per address. |
+| `POST /oauth/revoke` | RFC 7009. Either token removes the whole connection. Always 200. |
+| `GET /api/community/connections`, `DELETE …/connections/:id` | A signed-in member lists and removes their connected clients (shown beside API keys under Connect AI tools). |
+
+- **Redirect addresses** match the registered string exactly. The one exception is RFC 8252 section 7.3: an `http` loopback address (`localhost`, `127.0.0.1`, `[::1]`) may differ in its port. Registration accepts `https`, loopback `http` and an app's own scheme (`cursor://…`); it refuses fragments, credentials, plain `http`, script and data schemes and the site's own origin. Until the client and its redirect address are both recognised, an error is shown on the page and nothing is redirected.
+- **Clients checked** (14 November 2026): Claude `https://claude.ai/api/mcp/auth_callback`; ChatGPT `https://chatgpt.com/connector_platform_oauth_redirect` or `https://chatgpt.com/connector/oauth/{id}`; Claude Code `http://localhost:<port>/callback`; Cursor `http://localhost:8787/callback`, `https://www.cursor.com/agents/mcp/oauth/callback` and `cursor://anysphere.cursor-mcp/oauth/callback`; VS Code `http://127.0.0.1:33418` and `https://vscode.dev/redirect`. All register themselves as public clients, so no address is hard-coded.
+- **Tokens:** access tokens (`opax_at_…`) last one hour; refresh tokens (`opax_rt_…`) last 60 days and rotate on every use. Authorisation codes last two minutes and work once. Only SHA-256 hashes are stored. A second use of a code or of a rotated refresh token removes the connection and every token under it. A token is accepted only if its connection was issued for this server's own `/mcp` or `/mcp/member` address (RFC 8707 audience).
+- **Scope:** one, `records:read`: the public-record tools under the member's own 60 a minute. A connected client cannot read the member's email address, lists or messages and cannot post.
+- **Client ID Metadata Documents** are not supported yet; clients fall back to dynamic registration.
+- **Account deletion** removes a member's connections, codes and tokens, and works on a database that has not had migration 0019.
+
 ## Account deletion (W5 and W6, live since 3 October 2026)
 
 Account deletion went live in production on 3 October 2026, together with native code sign-in. It implements the defaults requested for decision 5 in [IOS-APP.md](IOS-APP.md#11-open-decisions). `/community?view=account` links to an accessible `/community?view=delete-account` flow with a fresh code field, permanent-deletion disclosure, cancel link, loading/status feedback and field errors using the shared controls.
@@ -97,7 +131,7 @@ Every table in migrations 0001–0012 is accounted for:
 | `member_sessions` | Delete **all** member sessions, web and iOS |
 | `login_links` | Delete all normalized-email proofs, including used/unused web links and native challenges |
 | `community_deletion_challenges` | Cascade every member-bound deletion proof on member deletion |
-| `mcp_keys`, `voice_access`, `member_chats` | Delete all member rows, including revoked/expired keys and saved chat JSON |
+| `mcp_keys`, `oauth_grants` (with its `oauth_codes` and `oauth_tokens`), `voice_access`, `member_chats` | Delete all member rows, including revoked/expired keys and saved chat JSON |
 | `reading_lists`, `reading_list_items` | Delete owned lists; their items cascade |
 | `community_threads` | Delete openings with no surviving reply; otherwise scrub title to `Deleted discussion`, body to empty, source to NULL and opening time to zero, then unlink owner; preserve hidden moderation status. At the end of later deletions, remove owner-less stubs left without replies, including dependent reactions/activity/reports |
 | `community_replies` | Delete all authored replies, including hidden ones; preserve other members’ replies under surviving stubs |
