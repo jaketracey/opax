@@ -42,6 +42,7 @@ export const linksCopy = {
   methods: 'Methods',
   coverage: 'Coverage by source',
   privacy: 'Privacy policy',
+  terms: 'Terms of use',
   support: 'OPAX support',
   correction: 'Report a correction',
   correctionFooter: 'We aim to respond within 2 business days.',

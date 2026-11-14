@@ -14,6 +14,7 @@ export const symbols = Object.freeze({
   methods: 'list.bullet.rectangle',
   verified: 'checkmark.seal',
   privacy: 'lock.fill',
+  terms: 'doc.text',
   help: 'questionmark.circle',
   email: 'envelope.fill',
   welcome: 'hand.wave.fill',

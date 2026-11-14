@@ -602,6 +602,15 @@ test('privacy links open the privacy page, keeping a section anchor', async () =
   alert.mockRestore();
 });
 
+test('the terms and security pages open on the web like the privacy page', () => {
+  for (const path of ['/terms', '/security'])
+    expect([path, sourceUrl(canonicalUrl(path)), canonicalUrl(path)]).toEqual([
+      path,
+      `${webOrigin}${path}`,
+      `${webOrigin}${path}`,
+    ]);
+});
+
 test('web record navigation retains its query while sharing stays canonical', async () => {
   const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
   await openOnWeb('/declared?person=Anthony%20Albanese', 'Open the record');
