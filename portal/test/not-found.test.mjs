@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {JSDOM} from 'jsdom';
 import {readFileSync} from 'node:fs';
 import {notFoundHTML, notFoundWords, NOT_FOUND_KINDS, NOT_FOUND_LINE} from '../public/not-found.js';
 
@@ -22,7 +23,10 @@ test('the address comes back as words a reader would search for, never as an ide
 test('one block for every empty address: the wombat, a plain title, one line, the search and one pill', () => {
   for (const kind of Object.keys(NOT_FOUND_KINDS)) {
     const html = notFoundHTML({kind, slug: 'au-federal-r99999', headingId: 'h'});
-    assert.match(html, new RegExp(`<h1 id="h" tabindex="-1">${NOT_FOUND_KINDS[kind].title}</h1>`), kind);
+    const heading = new JSDOM(html).window.document.querySelector('h1');
+    assert.equal(heading.textContent, NOT_FOUND_KINDS[kind].title, kind);
+    assert.equal(heading.id, 'h', kind);
+    assert.equal(heading.getAttribute('tabindex'), '-1', kind);
     assert.ok(html.includes(`<p class="not-found-line">${NOT_FOUND_LINE}</p>`), kind);
     assert.match(html, /<div class="not-found-art" aria-hidden="true"><\/div>/, kind);
     assert.match(html, /<form class="not-found-search" action="\/ask" method="get" role="search"><input type="hidden" name="view" value="search">/, kind);
@@ -32,7 +36,7 @@ test('one block for every empty address: the wombat, a plain title, one line, th
   }
   assert.equal(NOT_FOUND_KINDS.person.title, 'No parliamentarian at this address');
   assert.equal(NOT_FOUND_KINDS.bill.title, 'No bill at this address');
-  assert.equal(NOT_FOUND_KINDS.donor.title, 'No donor by this name');
+  assert.equal(NOT_FOUND_KINDS.donor.title, "This donor isn't in OPAX");
   assert.match(notFoundHTML({kind: 'person', slug: 'zz-nobody-here'}), /name="q" type="search" value="zz nobody here"/);
   assert.match(notFoundHTML({kind: 'donor', slug: '<b>"x"</b>'}), /value="&lt;b&gt;&quot;x&quot;&lt;\/b&gt;"/);
 });

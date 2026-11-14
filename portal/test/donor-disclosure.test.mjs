@@ -26,18 +26,25 @@ const {storySlideTree}=await bundle('../src/og.ts');
 const {renderPersonAnswer}=await bundle('../src/seo-content.ts');
 const {parseTableQuery}=await bundle('../src/table-api.ts');
 const map=await bundle('../graph/index.ts'),fallback=await bundle('../graph/connection-fallback.ts');
+import {displayName} from '../public/display-name.js';
 const INLINE_REFERENCE=/AEC annual return ·|more return references|RETURN-FIXTURE-7|GA-FIXTURE-7/;
 function noInlineReference(html){const doc=new JSDOM(html).window.document;doc.querySelectorAll('script,template').forEach(n=>n.remove());assert.doesNotMatch(doc.body.textContent,INLINE_REFERENCE);assert.equal(doc.querySelectorAll('.donor-return-reference').length,0)}
 // Every published donor name links (Jake, 16 Oct): a confident match to the matched entity's page,
 // any other record to the page for its own exact spelling. `href` null means plain text.
 const pageHref=(record,confident)=>confident?record.match.href:'/subject/donor/'+encodeURIComponent(record.source_name);
-function nameIn(html,record,href){const doc=new JSDOM(html).window.document;assert.ok(doc.body.textContent.includes(record.source_name));noInlineReference(html);const links=[...doc.querySelectorAll('a[href]')].filter(a=>a.textContent.includes(record.source_name));assert.equal(links.length>0,Boolean(href));if(href)assert.equal(links[0].getAttribute('href'),href)}
+function nameIn(html,record,href,expectedName){
+ assert.equal(typeof expectedName,'string','each surface pins its exact casing');
+ const doc=new JSDOM(html).window.document;noInlineReference(html);
+ const links=[...doc.querySelectorAll('a[href]')].filter(a=>a.textContent===expectedName);
+ assert.equal(links.length>0,Boolean(href),`expected exact linked name ${expectedName}`);
+ if(href)assert.equal(links[0].getAttribute('href'),href);
+}
 for(const confident of [false,true]){
  const record=donor(confident),data=graph(record),label=confident?'confident':'uncertain',href=pageHref(record,confident);
- test(label+': display is the disclosure spelling alone, linked to its donor page',()=>{assert.equal(donorDisplayText(record),record.source_name);assert.equal(donorDisclosure(record).name,record.source_name);assert.equal(donorDisclosure(record).href,href);nameIn(donorLabelHTML(record),record,href)});
+ test(label+': records retain source casing and linked labels use display casing',()=>{assert.equal(donorDisplayText(record),record.source_name);assert.equal(donorDisclosure(record).name,record.source_name);assert.equal(donorDisclosure(record).href,href);nameIn(donorLabelHTML(record),record,href,'Example, Alex')});
  test(label+': map fallback and card profile action follow the same linking rule',()=>{
   const previous=globalThis.document,dom=new JSDOM('<div id="map"></div>',{url:'https://opax.test/money'});globalThis.document=dom.window.document;
-  try{const handle=fallback.mountConnectionFallback(dom.window.document.querySelector('#map'),data);nameIn(dom.window.document.body.innerHTML,record,href);handle.destroy()}finally{globalThis.document=previous;dom.window.close()}
+  try{const handle=fallback.mountConnectionFallback(dom.window.document.querySelector('#map'),data);nameIn(dom.window.document.body.innerHTML,record,href,record.source_name);handle.destroy()}finally{globalThis.document=previous;dom.window.close()}
   assert.ok(JSON.stringify(map.planCardActions(record,{subject:null,grantsOn:false,routeBase:'/money',askUrl:()=>'/ask'})).includes(href));
  });
  test(label+': money-connections, party-money and receipt rows retain names, references and totals',async()=>{
@@ -55,7 +62,7 @@ for(const confident of [false,true]){
  test(label+': SSR person receipt block names the donor without guessing an entity or showing the return',async()=>{
   const person={name:'Fixture Member',full:'Fixture Member',pid:'fixture-person',party:'Labor',party_now:'Labor',states:['federal'],chambers:['representatives'],representation:[],speeches:0};
   const read=async path=>{if(path==='/graph/money.json')return data;if(path.startsWith('/graph/money.'))return {nodes:[],edges:[],meta:{}};if(path==='/votes.json')return {};if(path==='/interests/index.json')return {people:{},_by_name:{}};if(path==='/bills/index.json')return {bills:[]};if(path==='/seo-links.json')return {sponsored:{}};throw Error('Missing optional fixture')};
-  nameIn((await renderPersonAnswer(person,read,new Map())).html,record,href);
+  nameIn((await renderPersonAnswer(person,read,new Map())).html,record,href,'Example, Alex');
  });
  test(label+': Ask money answers, receipt JSON and MCP money tools preserve the source facts',async()=>{
   const question='Who are the largest donors to Labor in the 2024-25 financial year?';
@@ -91,9 +98,9 @@ test('donor pages and OG cards publish the disclosure spelling without inline re
   const worker=await loadWorker(new URL('../src/index.ts',import.meta.url).pathname,new URL('../public/',import.meta.url).pathname);
   const asset=worker.env.ASSETS.fetch;
   worker.env.ASSETS.fetch=async req=>{const p=new URL(req.url).pathname;if(p==='/graph/donor-index.json')return Response.json({donors:[outside]});return /^\/graph\/money(?:\.(qld|vic|tas))?\.json$/.test(p)?Response.json(p==='/graph/money.json'?data:{nodes:[],edges:[],meta:{}}):asset(req)};
-  for(const [record,linked] of [[uncertain,false],[confident,true],[outside,false]]){
+  for(const [record,linked,shown] of [[uncertain,false,'Fixture, Blair'],[confident,true,'Example, Alex'],[outside,false,'Outside, Casey']]){
    const path='/subject/donor/'+encodeURIComponent(record.lookup_names[0]);
-   const response=await worker.fetch(path);assert.equal(response.status,200);const html=await response.text();nameIn(html,record,pageHref(record,linked));
+   const response=await worker.fetch(path);assert.equal(response.status,200);const html=await response.text();nameIn(html,record,pageHref(record,linked),shown);assert.equal(new JSDOM(html).window.document.querySelector('#prerender h1').textContent,record.source_name);
    const ld=new JSDOM(html).window.document.querySelector('script[type="application/ld+json"]');assert.ok(ld.textContent.includes('Dataset'));
    const card=await (await worker.fetch('/og'+path+'.png')).json();assert.equal(card.title,record.source_name);assert.ok(card.lines.length>0 && card.lines.every(line=>typeof line==='string' && line.trim()),'no blank card line');assert.doesNotMatch(card.lines.join(' '),INLINE_REFERENCE);
   }
@@ -108,7 +115,7 @@ test('search records and the actual catalog renderer link every donor name, conf
  const dom=new JSDOM('<ul id="search-results"></ul>');
  const context={document:dom.window.document,$:id=>dom.window.document.getElementById(id),esc:v=>String(v).replaceAll('&','&amp;').replaceAll('<','&lt;'),recordTypeLink:kind=>kind,lastSearch:{query:'',filters:{},briefs:{}},isMultiSpeaker:()=>false,cleanPassage:v=>v,highlightHTML:v=>v,excerptNoticeHTML:()=>'',searchResultHref:r=>r.href,decorateMetaPortraits:()=>{},requestAnimationFrame:()=>{},refreshSearchPassageFolds:()=>{}};
  runInNewContext(source.slice(fn.getStart(ast),fn.end)+'\nthis.render=renderResults;',context);
- for(const linked of [false,true]){const record=donor(linked),r=donorSearchRecord('federal',record);context.render([r]);nameIn(dom.window.document.body.innerHTML,record,pageHref(record,linked));assert.equal(dom.window.document.querySelectorAll('button').length,1,'catalog snippet controls remain available');}
+ for(const linked of [false,true]){const record=donor(linked),r=donorSearchRecord('federal',record);context.render([r]);assert.equal(r.title,record.source_name);nameIn(dom.window.document.body.innerHTML,record,pageHref(record,linked),record.source_name);assert.equal(dom.window.document.querySelectorAll('button').length,1,'catalog snippet controls remain available');}
  dom.window.close();
 });
 
@@ -150,7 +157,7 @@ test('the actual donor directory finds extra source names and links every row, w
  const context={donorViewReady:Promise.resolve(),donorViewIndex:index,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine,loadMoneyFile:async()=>({nodes:[],edges:[],meta:{commission:'Fixture commission'}}),loadAccess:async()=>({donors:{}}),loadFits:async()=>({}),normName:v=>String(v).toLowerCase(),byNumDesc:()=>()=>0,byName:()=>0,moneyFor:()=>0,STATE_NOT_SUMMED:'Separate jurisdictions',AEC_NOTE:'',esc:v=>String(v),donorNameHTML:name=>donorLabelHTML(index.get(name.toLowerCase()))};
  runInNewContext(source.slice(fn.getStart(ast),fn.end)+'\nthis.build=buildDonorsDirectory;',context);
  const directory=await context.build();assert.equal(directory.items.length,1);assert.ok(directory.text(directory.items[0]).includes(record.label));
- const html=directory.row(directory.items[0]);const doc=new JSDOM(html).window.document;assert.ok(doc.body.textContent.includes(record.label));assert.ok(!doc.body.textContent.includes('GA-FIXTURE-7'));assert.deepEqual([...doc.querySelectorAll('a')].map(a=>a.getAttribute('href')),['/subject/donor/SOURCE%2C%20GRAHAM']);assert.doesNotMatch(doc.body.textContent,/\$0|0 donations/);
+ const html=directory.row(directory.items[0]);const doc=new JSDOM(html).window.document;assert.ok(doc.body.textContent.includes(displayName(record.label)));assert.ok(!doc.body.textContent.includes('GA-FIXTURE-7'));assert.deepEqual([...doc.querySelectorAll('a')].map(a=>a.getAttribute('href')),['/subject/donor/SOURCE%2C%20GRAHAM']);assert.doesNotMatch(doc.body.textContent,/\$0|0 donations/);
 });
 
 test('daily and story copy never turn a source-only reference into an established donation',()=>{

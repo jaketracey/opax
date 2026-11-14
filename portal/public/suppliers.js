@@ -1,12 +1,12 @@
-import {mountSuppliersTable} from './suppliers-table.js?v=23c79063b0';
-import {mountContractsTable} from './contracts-table.js?v=e8d40dcf06';
+import {mountSuppliersTable} from './suppliers-table.js?v=874cc60b8b';
+import {mountContractsTable} from './contracts-table.js?v=eb22e78169';
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
-import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=4e920ad9df";
+import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=e352e15c9f";
 import { sourceLineHTML } from "./labels.js?v=fcb2a1091c";
 import { partyUrl } from "./canonical-urls.js?v=bcc9a57bab";
-import { receiptGraph, receiptGraphScope } from "./donor-disclosure.js?v=29940d56a6";
+import { receiptGraph, receiptGraphScope } from "./donor-disclosure.js?v=af7c0f0f03";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const number = (value) => (Number(value) || 0).toLocaleString("en-AU");
 const currency = (value) => (Number(value) || 0).toLocaleString("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 0 });
@@ -364,7 +364,7 @@ async function mountFunding(root, links, life, register = "") {
       slot.hidden = false;
       slot.innerHTML = '<p role="status">Opening the money map…</p>';
       try {
-        const { mountMoneyMap } = await import("/money-map.js?v=f0a9329cde");
+        const { mountMoneyMap } = await import("/money-map.js?v=7df361d5b7");
         if (!life.alive()) return;
         slot.textContent = "";
         const handle = await mountMoneyMap(slot, "/graph/money.json", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });

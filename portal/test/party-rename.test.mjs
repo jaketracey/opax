@@ -144,7 +144,7 @@ test('money on the page: both names combined, saying which name each part was lo
   });
   assert.deepEqual(returns.names, ['Liberal Democrats', 'Libertarian Party']);
   assert.deepEqual(returns.rows.map(r => [r[0], r[1]]), [['2020-21', 100], ['2021-22', 200], ['2023-24', 300]]);
-  assert.equal(returns.note, 'Returns lodged as Liberal Democrats (2020-21 to 2021-22) and as Libertarian Party (2023-24), combined here.');
+  assert.equal(returns.note, 'Returns lodged as Liberal Democrats (2020–21 to 2021–22) and as Libertarian Party (2023–24), combined here.');
   assert.equal(partyReturns('Labor', {Labor: {returns: [['2023-24', 1]]}}).note, '', 'one name, no note');
   const state = partyStateMoneyHTML('Libertarian Party', [['vic', {meta: {jurisdictionLabel: 'Victoria'}, nodes: [
     {id: 'p1', kind: 'party', label: 'Liberal Democrats', total: 1000, count: 2, firstYear: 2019, lastYear: 2021},
@@ -239,7 +239,7 @@ test('money map node: an invented renamed party\'s own-return total, said under 
   const fmt = n => `$${Math.round(n).toLocaleString('en-AU')}`;
   const node = {label: 'Fixture Freedom Party', return_by_name: {
     'Fixture Freedom Party': [300, 1, '2023-24', '2023-24'], 'Fixture Liberty Party': [1050, 2, '2019-20', '2020-21']}};
-  assert.equal(partyLodgedAsText(node, fmt), 'Fixture Liberty Party $1,050 in 2 receipts, 2019-20 to 2020-21; Fixture Freedom Party $300 in 1 receipt, 2023-24');
+  assert.equal(partyLodgedAsText(node, fmt), 'Fixture Liberty Party $1,050 in 2 receipts, 2019–20 to 2020–21; Fixture Freedom Party $300 in 1 receipt, 2023–24');
   assert.equal(partyLodgedAsText({return_by_name: {'Fixture Freedom Party': [300, 1, '2023-24', '2023-24']}}, fmt), '', 'one name, no line');
   assert.equal(partyLodgedAsText({label: 'Labor'}, fmt), '');
 });
@@ -304,9 +304,9 @@ test('the merged Libertarian Party page shows its money: the headline, the scope
   assert.match(text, /Received \(disclosed\)\s*\$2\.2m/);
   assert.match(text, /Receipts counted\s*44/);
   const scope = partyReturnScopeLabel(partyReturnFigures(LIB));
-  assert.ok(scope.startsWith('Itemised receipts in the party\'s own federal returns, 2013-14 to 2024-25, each counted once.'));
+  assert.ok(scope.startsWith('Itemised receipts in the party\'s own federal returns, 2013–14 to 2024–25, each counted once.'));
   assert.ok(text.replace(/Measured as\s*/, 'Measured as ').includes(`Measured as ${scope}`), 'the standard scope line');
-  assert.match(text, /Lodged as\s*Liberal Democratic Party \$1\.8m in 34 receipts, 2013-14 to 2022-23; Libertarian Party \S+ in 10 receipts, 2023-24 to 2024-25/);
+  assert.match(text, /Lodged as\s*Liberal Democratic Party \$1\.8m in 34 receipts, 2013–14 to 2022–23; Libertarian Party \S+ in 10 receipts, 2023–24 to 2024–25/);
   // Its donors are listed, each by the party's own returns.
   assert.doesNotMatch(text, /The money map draws no donor to this party/);
   // The six with lines on the party's own returns; the nine whose only rows are their own declarations are not rows.

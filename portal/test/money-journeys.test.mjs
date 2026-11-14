@@ -258,7 +258,7 @@ test('returning to a subject before its cancelled request settles keeps the new 
 });
 
 test('a step with a receipt figure says what it counts, under the figure; other steps say nothing', () => {
-  const scope = 'All receipt types, 2019-20 to 2021-22, as the parties reported them in federal returns';
+  const scope = 'All receipt types, 2019–20 to 2021–22, as the parties reported them in federal returns';
   const journeys = [{ id: 'funding', title: 'Funding', description: 'Follow recorded receipts', steps: [
     { title: 'Receipts', body: 'Record 1', metric: { label: 'Recorded receipts', value: 1000, format: 'currency' }, scope, scene: { focusId: 'node:0' } },
     { title: 'Awards', body: 'Record 2', metric: { label: 'Recorded contract awards', value: 5000, format: 'currency' }, scene: { focusId: 'node:1' } },

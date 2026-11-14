@@ -1,10 +1,10 @@
 import {hydrateRecordCore} from './record-core.js';
 import {recipientMetaLine} from './record-core-content.js';
 import {renderNotFound} from './not-found.js';
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=29940d56a6';
-import {loadDonorViewIndex} from './donor-views.js?v=be03bb4447';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=af7c0f0f03';
+import {loadDonorViewIndex} from './donor-views.js?v=a138263798';
 import {partyUrl} from './canonical-urls.js?v=bcc9a57bab';
-import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=8a3523e2ca';
+import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=ad954217d6';
 
 const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const NUMBER = new Intl.NumberFormat('en-AU');

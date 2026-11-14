@@ -5,6 +5,10 @@
 // no record holds stays plain text: its page would be a 404.
 import {foldDonorName} from './donor-entity.js?v=3fd3e51b56';
 
+import {displayName} from './display-name.js';
+import {financialYear, fy} from './money-scope.js';
+export {financialYear, fy, moneyScope, industryName} from './money-scope.js';
+
 const safeHref = value => typeof value === 'string' && /^(?:\/(?!\/)|https?:\/\/)/i.test(value) ? value : null;
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
 export function confidentDonorMatch(record) {
@@ -50,8 +54,9 @@ export function donorPageHref(record, name = record?.source_name ?? record?.labe
 // An AEC associated entity also carries its register line, linked to the register.
 export function donorLabelHTML(record, fallback) {
   const {name,href,associated,associatedUrl} = donorDisclosure(record,fallback);
-  const label = href ? `<a href="${escape(href)}">${escape(name)}</a>` : escape(name);
-  return associated ? `${label} <span class="donor-assoc"><a href="${escape(associatedUrl)}" rel="external noopener" target="_blank">${escape(sentenceCase(associated))}</a></span>` : label;
+  const shown = displayName(name).replace(/\bLTD\b/g, 'Ltd');
+  const label = href ? `<a href="${escape(href)}" title="${escape(name)}">${escape(shown)}</a>` : `<span title="${escape(name)}">${escape(shown)}</span>`;
+  return associated ? `${label} <span class="donor-assoc"><a href="${escape(associatedUrl)}" rel="external noopener" target="_blank">${escape(sentenceCase(fy(associated)))}</a></span>` : label;
 }
 export function donorDisplayText(record, fallback) {
   const {name,associated} = donorDisclosure(record,fallback);
@@ -71,7 +76,12 @@ export function donorLookup(records) {
         // unscoped name links the disclosure spelling; scoped keys keep its figures.
         const sameConfirmedEntity=prior?.match?.entity_id && prior.match.entity_id===record.match?.entity_id && confidentDonorMatch(prior) && confidentDonorMatch(record);
         if(sameConfirmedEntity && prior.jurisdiction===record.jurisdiction)index.set(key,prior);
-        else if(prior && (prior.id!==record.id || prior.source_name!==record.source_name || prior.jurisdiction!==record.jurisdiction))index.set(key,{label:name,...(sameConfirmedEntity?{match:prior.match}:{}),returnReferences:[...prior.returnReferences || [],...record.returnReferences || []]});
+        else if(prior && (prior.id!==record.id || prior.source_name!==record.source_name || prior.jurisdiction!==record.jurisdiction)){
+          // The shared spelling keeps every record it stands for, so a page can
+          // list each commission's figures without adding them together.
+          const merged=[...(prior.records || [prior]),record];
+          index.set(key,{label:name,records:merged,...(sameConfirmedEntity?{match:prior.match}:{}),returnReferences:merged.flatMap(r=>r.returnReferences || [])});
+        }
         else index.set(key,record);
       }
     }
@@ -224,7 +234,7 @@ export function publicFundingOnly(x) {
   return f.count === 0 && f.total === 0 && f.publicFunding[1] > 0;
 }
 
-export const financialYear = year => `${year}-${String((year + 1) % 100).padStart(2, '0')}`;
+
 
 /** The scope of a receiptFigures result, in a reader's words, for its own line under the figure. */
 export function receiptScopeLabel(figures, measure = 'all_types') {
@@ -233,6 +243,12 @@ export function receiptScopeLabel(figures, measure = 'all_types') {
     ? `, ${financialYear(figures.firstYear)}` : `, ${financialYear(figures.firstYear)} to ${financialYear(figures.lastYear)}`;
   // The map's "Donation-only" measure (graph/index.ts) keeps only the donation_received cells.
   return `${measure === 'donation_only' ? 'Donations only' : 'All receipt types'}${span}, as the parties reported them in federal returns`;
+}
+
+/** The same explanation on server and browser pages for a donor outside the map. */
+export function offMapDonorNote(record) {
+  return 'Receipts disclosed under this exact name. This donor is not drawn on the money map, which shows a bounded selection of donors. Recipient parties are listed in the source returns.'
+    + (record?.jurisdiction === 'federal' ? ' State disclosures are shown separately and are not added to these figures.' : '');
 }
 
 /** Name every included receipt type, so an all-receipt total is never called donations. */

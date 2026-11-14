@@ -1,5 +1,5 @@
-import {cpiMultiplier} from '../graph/cpi.ts';
-import {receiptGraph, receiptGraphScope} from '../public/donor-disclosure.js';
+import {receiptGraphView, moneyYearBounds} from '../graph/receipt-view.ts';
+import {receiptScopeLabel} from '../public/donor-disclosure.js';
 import {moneyConnectionsConfig, filterMoneyConnectionView, type MoneyConnectionGraph} from '../public/money-connections.js';
 import {dataTableHTML, applyQuery, guardTableURL} from '../public/datatable.js';
 import type {ReadAsset} from './seo-content';
@@ -21,20 +21,15 @@ export async function renderMoneyConnectionsTable(url: URL, read: ReadAsset): Pr
   const path=['qld','vic','tas'].includes(jur)?`/graph/money.${jur}.json`:'/graph/money.json';
   // Each receipt flow read through its typed cells (each receipt once, from the party's own
   // return), as on the map, the donor page and the party page; state graphs keep their figures.
-  const graph=receiptGraph(await read<MoneyConnectionGraph>(path));
-  const years=graph.edges.flatMap(e=>[e.firstYear,e.lastYear]).filter((n): n is number=>typeof n==='number');
-  const min=Math.min(...years),max=Math.max(...years);
+  const raw=await read<MoneyConnectionGraph>(path);
+  const {min,max}=moneyYearBounds(raw);
   const year=(key: string,fallback: number)=>/^\d{4}$/.test(params.get(key) || '')?Math.max(min,Math.min(max,Number(params.get(key)))):fallback;
-  const from=year('from',min),to=year('to',max),lo=Math.min(from,to),hi=Math.max(from,to);
-  const windowed={...graph,edges:graph.edges.filter(e=>e.byYear || (e.firstYear ?? min)<=hi && (e.lastYear ?? max)>=lo).map(edge=>{
-    if(!edge.byYear)return edge;
-    let total=edge.undated?.[0] ?? 0,count=edge.undated?.[1] ?? 0,firstYear: number | null=null,lastYear: number | null=null;
-    for(const [key,[amount,records]] of Object.entries(edge.byYear)) {
-      const y=Number(key);if(y<lo || y>hi)continue;
-      total+=amount*(params.get('cpi')==='1'?cpiMultiplier(y):1);count+=records;
-      firstYear=firstYear===null?y:Math.min(firstYear,y);lastYear=lastYear===null?y:Math.max(lastYear,y);
-    }
-    return {...edge,total,count,firstYear,lastYear};
-  })};
-  return render(moneyConnectionsConfig(filterMoneyConnectionView(windowed,params)),receiptGraphScope(windowed));
+  const from=year('from',min),to=year('to',max);
+  const bounded=params.has('from') || params.has('to');
+  const measure=params.get('receipt')==='donations'?'donation_only':'all_types';
+  const windowed=receiptGraphView(raw,measure,bounded?Math.min(from,to):-Infinity,bounded?Math.max(from,to):Infinity,params.get('cpi')==='1');
+  const typed=windowed.edges.filter(e=>e.by_type && !e.flow && !e.grant && (e.count ?? 0)>0);
+  const first=typed.map(e=>e.firstYear).filter((y): y is number=>y!=null),last=typed.map(e=>e.lastYear).filter((y): y is number=>y!=null);
+  const scope=typed.length?receiptScopeLabel({typed:true,firstYear:first.length?Math.min(...first):null,lastYear:last.length?Math.max(...last):null},measure):'';
+  return render(moneyConnectionsConfig(filterMoneyConnectionView(windowed,params)),scope);
 }

@@ -421,7 +421,7 @@ async function mount() {
     $("hp-map-source").innerHTML = mapSourceHTML(graph.meta, await refreshInfo());
     // The lede's span is the Worker's (seo-content.ts homeMapSpan): the receipt headline's years, not the file's coverage.
     const { mountMoneyMap } = await import(
-      "/money-map.js?v=f0a9329cde"
+      "/money-map.js?v=7df361d5b7"
     );
     if (disposed) return;
     root.replaceChildren();

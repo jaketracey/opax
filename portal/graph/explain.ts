@@ -1,3 +1,4 @@
+import {industryName} from '../public/money-scope.js'
 import {donorDisclosure,donorLabelHTML} from '../public/donor-disclosure.js'
 // ---------------------------------------------------------------------------
 // OPAX "Explain this flow" — one disclosed-money story and its record check.
@@ -391,8 +392,7 @@ async function resolveFlow(detail: ExplainDetail, helpers: ExplainHelpers): Prom
 
 function labelForIndustry(value: string | null, helpers: ExplainHelpers) {
   if (!value) return 'Disclosed receipt sources'
-  if (['individual', 'individuals'].includes(value.toLowerCase())) return 'Industry not recorded'
-  return helpers.industryLabel ? helpers.industryLabel(value) : value.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase())
+  return helpers.industryLabel ? helpers.industryLabel(value) : industryName(value)
 }
 
 function stageShortLabel(value: string) {
