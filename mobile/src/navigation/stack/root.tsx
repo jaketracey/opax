@@ -2,7 +2,6 @@ import { Stack, type NativeStackNavigationOptions } from 'expo-router';
 import { cloneElement } from 'react';
 import type { NavigationState } from 'expo-router/react-navigation';
 import { routeSheetOptions } from '../../features/sheets/frame';
-import { currentVerticalBarEdge } from '../../../modules/opax-root-bar';
 import { isAccessibilityCategory } from '../../design/tokens';
 import { PixelRatio, Platform } from 'react-native';
 import { AndroidReadingHeader } from '../AndroidReadingHeader';
@@ -75,9 +74,7 @@ export function rootScreens(chrome: NativeStackNavigationOptions = {}) {
               (route.params as { variant?: string } | undefined)?.variant ===
               'table',
             citation: name === 'citation',
-            accessible:
-              isAccessibilityCategory(PixelRatio.getFontScale()) ||
-              currentVerticalBarEdge() !== 'unspecified',
+            accessible: isAccessibilityCategory(PixelRatio.getFontScale()),
           }),
           ...(name === 'licences'
             ? {

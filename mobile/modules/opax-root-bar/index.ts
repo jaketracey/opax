@@ -44,11 +44,6 @@ function subscribe(listener: () => void) {
   };
 }
 
-/** The bar edge now, for route options that are computed outside a component. */
-export function currentVerticalBarEdge(): VerticalBarEdge {
-  return RootBar?.getVerticalBarEdge?.() ?? edge;
-}
-
 /** UIKit's preferred bar edge, independent of window aspect ratio or idiom. */
 export function useVerticalBarEdge(): VerticalBarEdge {
   return useSyncExternalStore(

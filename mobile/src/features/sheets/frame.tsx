@@ -86,7 +86,9 @@ export function SheetFrame({
   // content as measured at the first layout, before the rail's inset narrows
   // the column, so the text wrapped taller than the sheet and the plain fitted
   // View clipped it with nothing to scroll (glossary terms, b67).
-  const railed = useVerticalBarEdge() !== 'unspecified';
+  // Only short (fitted) sheets clip; citation, source and table sheets keep
+  // their detents. Read from the live bar edge, so a fold or rotation follows.
+  const railed = short && useVerticalBarEdge() !== 'unspecified';
   const accessible = useAccessibilitySize() || railed;
   const margin = useScreenMargin();
   const insets = useSafeAreaInsets();

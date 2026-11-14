@@ -28,6 +28,7 @@ import { emptyReservedRegions, type Rect } from '../src/design/fold';
 import { ReservedRegionsProvider } from '../src/design/fold-area';
 import { KeyboardStableScreen, Screen } from '../src/design/layout';
 import { SheetFrame } from '../src/features/sheets/frame';
+import { RouteOptions } from '../src/navigation/preview';
 import { ConsentSheet } from '../src/features/talk/Consent';
 import { talkDockPlacement } from '../src/features/talk/geometry';
 import { emptySnapshot } from '../src/features/talk/model';
@@ -145,6 +146,8 @@ const mockCall = {
 };
 jest.mock('../src/features/talk/useTalk', () => ({ useTalk: () => mockCall }));
 
+const sheetOptions = (tree: TestRenderer.ReactTestRenderer) =>
+  tree.root.findByType(RouteOptions).props.options;
 const zero = { top: 0, bottom: 0, left: 0, right: 0 };
 const asymmetric = { ...zero, right: 60 };
 const outer = { width: 380, height: 560, scale: 3, fontScale: 1 };
@@ -454,11 +457,29 @@ describe('compact outer surfaces', () => {
     // Beside the rail UIKit's fitted height was measured before the column
     // narrowed, so the sheet scrolls in a full-height detent instead.
     expect(railed.root.findAllByType(ScrollView)).toHaveLength(1);
+    expect(sheetOptions(railed).sheetAllowedDetents).toEqual([1]);
     expect(
       StyleSheet.flatten(
         railed.root.findByType(ScrollView).props.contentContainerStyle,
       ),
     ).toMatchObject({ paddingLeft: 16, paddingRight: 76 });
+  });
+  test('a non-short sheet beside the rail keeps its half-height detents', () => {
+    mockBarEdge = 'trailing';
+    const citation = render(
+      <SheetFrame title="Source" citation testID="outer-citation">
+        <View />
+      </SheetFrame>,
+    );
+    expect(sheetOptions(citation).sheetAllowedDetents).toEqual([0.5, 1]);
+    expect(sheetOptions(citation).sheetInitialDetentIndex).toBe(0);
+    // The rail turning on or off re-derives the short sheet's detents.
+    const short = render(
+      <SheetFrame title="Term" short compact testID="outer-short">
+        <View />
+      </SheetFrame>,
+    );
+    expect(sheetOptions(short).sheetAllowedDetents).toEqual([1]);
   });
   test.each([Screen, KeyboardStableScreen])(
     'scroll screens sit in a side safe area and report the usable column',
