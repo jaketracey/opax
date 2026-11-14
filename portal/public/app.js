@@ -566,10 +566,19 @@ function aggregateApi(path, { signal, wait = AGGREGATE_WAIT_MS } = {}) {
     .finally(() => { clearTimeout(timer); signal?.removeEventListener("abort", forward); });
 }
 
+// Mirrors SHORT_TURN_WORDS in src/index.ts: speech turns under this many
+// words show their own text, never a machine brief.
+const SHORT_TURN_WORDS = 80;
+/** A row wants a brief unless it is a speech turn known to be short (fail open). */
+function briefWanted(row) {
+  const words = row?.word_count;
+  return !(row?.kind === "speech" && typeof words === "number" && words > 0 && words < SHORT_TURN_WORDS);
+}
+
 /** Read optional machine briefs without ever asking for whole resources. */
 async function fetchBriefMap(resources) {
   const validRid = /^[0-9a-f]{32}$/;
-  const rids = [...new Set((resources || []).map((r) => r.resource).filter((rid) => validRid.test(rid)))];
+  const rids = [...new Set((resources || []).filter(briefWanted).map((r) => r.resource).filter((rid) => validRid.test(rid)))];
   const briefs = {};
   // /api/brief deliberately caps a call at 24. Keep the groups serial so a
   // long topic spine never fans out into dozens of simultaneous KB reads.
@@ -10100,7 +10109,7 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=bdb5e22abb", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=526db913ca", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=bda25e21c7", mount: "mountQuiz" },
   ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=06503ff262", mount: "mountLedger" },

@@ -156,7 +156,7 @@ test('non-SA JSON body and cache headers stay byte-identical',async()=>{
 
 test('raw resource retrieval remains complete and the public response alone applies display policy',async()=>{
   const source=ts.createSourceFile('index.ts',readFileSync(new URL('../src/index.ts',import.meta.url),'utf8'),ts.ScriptTarget.Latest,true);
-  const handler=source.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='apiResource').getText(source);
+  const handler=source.statements.filter(n=>ts.isFunctionDeclaration(n)&&/^(?:shortTurn|apiResource)$/.test(n.name?.text??'')||ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>d.name.getText(source)==='SHORT_TURN_WORDS')).map(n=>n.getText(source)).join('\n');
   const record={...sa,origin:{url:sa.url},usermetadata:{classifications:Object.entries(sa.labels).map(([labelset,label])=>({labelset,label}))},extra:{metadata:sa.metadata},data:{texts:{body:{value:{body:sa.text}},'da-summary-t-body':{value:{body:sa.summary}}}}};
   const api=runInNewContext(ts.transpile(handler)+';apiResource',{...passage,Response,isPublicSlug:()=>true,isWitness:()=>false,speakerAttribution:async()=>null,DIVISION_SLUG_RE:/^division-/,cacheRequest:()=>new Request('https://opax.test/cache'),cacheBypass:()=>true,kbFetch:async()=>Response.json(record),json:Response.json,cacheStore:()=>{},withCacheStatus:r=>r,RESOURCE_CACHE_TTL:3600});
   const req=new Request(`https://opax.test/api/resource/${sa.slug}`);

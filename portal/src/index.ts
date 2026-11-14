@@ -580,11 +580,11 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   // from page 1's entry; the window key drops them so paging and re-sorting
   // inside one result set costs no upstream call and no rate-limit quota.
   const keyParams = (drop: string[]) => cacheKeyParams(url.searchParams, drop)
-  // Retire older snippets, windows without retrieval-mode metadata, and rows without recorded source URLs.
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2\n${keyParams(['nocache'])}`))
+  // Retire older snippets, windows without retrieval-mode metadata, and rows without recorded source URLs or word_count.
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2-word-count-v1\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
-    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
+    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2-word-count-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
@@ -892,6 +892,8 @@ async function searchWindow(
       // Divisions carry their date on origin.created rather than in metadata.
       date: (meta.date as string) ?? (resource.origin as { created?: string } | undefined)?.created?.slice(0, 10) ?? null,
       url: resource.origin?.url || null,
+      // Lets the clients leave short speech turns out of /api/brief; null when unknown.
+      word_count: typeof meta.word_count === 'number' && Number.isFinite(meta.word_count) ? meta.word_count : null,
       ...(typeof meta.source_url === 'string' ? {source_url:meta.source_url} : {}), // Recorded official URL, reused by topic pages and citations.
       snippet: windowed,
       // BASIC already includes resource and computed field classifications.
@@ -2806,6 +2808,22 @@ async function apiFollowups(request: Request, env: Env, ctx: ExecutionContext): 
   }
 }
 
+// Briefs of speech turns under this many words had a 12% serious-error rate;
+// the turn text is short enough to show whole. Speech turns only: press
+// releases, research notes and grants keep their summaries at any length.
+// The web clients mirror this number (SHORT_TURN_WORDS in app.js and
+// timemachine.js) to leave short turns out of /api/brief.
+const SHORT_TURN_WORDS = 80
+/**
+ * Whether a speech turn is too short for a brief: its metadata word_count
+ * when that is a number, else the words of the text in hand. An unknown
+ * length is not short, so the brief stays (fail open).
+ */
+function shortTurn(wordCount: unknown, text = ''): boolean {
+  const words = typeof wordCount === 'number' && Number.isFinite(wordCount) ? wordCount : text.split(/\s+/).filter(Boolean).length
+  return words > 0 && words < SHORT_TURN_WORDS
+}
+
 /**
  * One document, cached an hour: summaries and topic labels arrive over time
  * from the enrichment passes, and an hour is the balance between a page
@@ -2829,7 +2847,7 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
       }
     }
   }
-  const cacheKey = cacheRequest('resource-body-v3-witness-passage-v3-mixed-speakers-v1', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
+  const cacheKey = cacheRequest('resource-body-v3-witness-passage-v3-mixed-speakers-v1-short-turn-v1', `${encodeURIComponent(env.CACHE_EPOCH)}/${slug}`)
   const bypass = cacheBypass(request, url)
   if (!bypass) {
     const hit = await caches.default.match(cacheKey)
@@ -2890,8 +2908,9 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
     }
   }
   // Machine summary written by the enrichment pass (ask-task, destination
-  // "summary"): lands as the text field "da-summary-t-body". Optional.
-  const brief = texts['da-summary-t-body']?.value?.body?.trim() || null
+  // "summary"): lands as the text field "da-summary-t-body". Optional, and
+  // withheld from a short speech turn, whose own text is shown instead.
+  const brief = labels.kind === 'speech' && shortTurn(metadata.word_count, press.text) ? null : texts['da-summary-t-body']?.value?.body?.trim() || null
   const [presentation] = await joinMixedSpeakers([{resource: r.id || '', speaker_type: labels.speaker_type,
     ...speechPresentation(labels.speaker_type, metadata, r.title || slug)}], env.ASSETS)
   if (labels.speaker_type === 'multi_speaker') { delete labels.party; metadata.person_id = null; metadata.electorate = null }
@@ -3138,18 +3157,24 @@ async function apiRecent(env: Env): Promise<Response> {
  * come from /find (which returns paragraphs, never the summary text field).
  * One small per-field KB call per rid — GET /resource/{rid}/text/da-summary-t-body
  * is ~500 bytes — never the whole resource. Rids without a summary (the pass
- * has not reached them) are simply absent from the answer. Up to 24 rids;
- * cached an hour on the sorted rid set.
+ * has not reached them) are simply absent from the answer. Short speech
+ * turns (shortTurn) are left out by the clients, which read word_count off
+ * the search row and send only long or unknown-length rids, so this stays
+ * one call per rid. Up to 24 rids; cached an hour on the sorted rid set,
+ * under a versioned key (BRIEF_CACHE_VERSION) so a rule change drops old
+ * answers.
  */
 const BRIEF_MAX = 24
 const RID_RE = /^[0-9a-f]{32}$/
+// short-turn-v1: answers cached before short speech turns lost their briefs.
+const BRIEF_CACHE_VERSION = 'short-turn-v1'
 async function apiBrief(url: URL, env: Env): Promise<Response> {
   const rids = [...new Set((url.searchParams.get('rids') ?? '').split(',').map((r) => r.trim()).filter((r) => RID_RE.test(r)))]
     .sort()
     .slice(0, BRIEF_MAX)
   if (!rids.length) return json({ briefs: {} })
   const cache = caches.default
-  const cacheKey = new Request(`https://opax.com.au/api/brief?rids=${rids.join(',')}`)
+  const cacheKey = new Request(`https://opax.com.au/api/brief?v=${BRIEF_CACHE_VERSION}&rids=${rids.join(',')}`)
   const cached = await cache.match(cacheKey)
   if (cached) return withCacheStatus(await Promise.resolve(cached), 'HIT')
   const briefs: Record<string, string> = {}
