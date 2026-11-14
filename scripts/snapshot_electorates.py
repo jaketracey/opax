@@ -20,6 +20,8 @@ def main():
     with sqlite3.connect(args.db.resolve().as_uri() + '?mode=ro', uri=True) as db:
         db.row_factory = sqlite3.Row
         snapshot = {name: [dict(row) for row in db.execute(f'SELECT * FROM {name}')] for name in ('members', 'electorate_demographics')}
+        if db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='ext_state_roster'").fetchone():
+            snapshot['ext_state_roster'] = [dict(row) for row in db.execute('SELECT * FROM ext_state_roster')]
     snapshot['federal_roster_verified_as_of'] = args.federal_roster_verified_as_of.isoformat()
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(snapshot, ensure_ascii=False) + '\n')

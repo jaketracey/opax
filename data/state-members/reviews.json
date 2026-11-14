@@ -1,0 +1,273 @@
+{
+  "schema_version": 1,
+  "reviewed_as_of": "2026-11-14",
+  "review_input": "Orchestrator state-members note 1; local parli.db opened with mode=ro and published OPAX data.",
+  "nsw_assembly": {
+    "election_date": "2023-03-25",
+    "by_election_check": {
+      "coverage": "not_held",
+      "events": [],
+      "wins": [],
+      "sources": [],
+      "reason": "No NSW election or by-election items are held in parli.db or the retained state-member evidence. No complete negative check is available. An empty events array does not mean no by-elections."
+    },
+    "quarantined_electorates": [
+      {
+        "electorate": "Wahroonga",
+        "reason": "Current membership is disputed in the review request. The held seat term starts on 2023-03-25, but held evidence cannot resolve the concern and the official list refused access. No resignation or replacement is asserted."
+      }
+    ]
+  },
+  "profile_links": [
+    {
+      "legacy_person_id": "qld_martin",
+      "member": "James Martin",
+      "profile_name": "Martin",
+      "decision": "unlinked",
+      "reason": "The surname public profile combines multiple people across jurisdictions; the state database ID alone is narrower than that profile.",
+      "public_profile_states": [
+        "qld",
+        "nsw",
+        "federal"
+      ],
+      "public_profile_chambers": [
+        "qld_la",
+        "nsw_lc",
+        "representatives"
+      ],
+      "database_speech_groups": [
+        {
+          "state": "qld",
+          "chamber": "qld_la",
+          "electorate": "Stretton",
+          "rows": 35,
+          "first": "2024-02-14",
+          "last": "2026-09-15"
+        },
+        {
+          "state": "qld",
+          "chamber": "qld_la",
+          "electorate": "",
+          "rows": 31,
+          "first": "2024-03-19",
+          "last": "2026-09-15"
+        }
+      ],
+      "speech_scope": null
+    },
+    {
+      "legacy_person_id": "qld_lee",
+      "member": "David Lee",
+      "profile_name": "Lee",
+      "decision": "unlinked",
+      "reason": "The surname public profile combines multiple people across jurisdictions; the state database ID alone is narrower than that profile.",
+      "public_profile_states": [
+        "act",
+        "federal",
+        "qld"
+      ],
+      "public_profile_chambers": [
+        "act_la",
+        "senate_committee",
+        "qld_la",
+        "joint_committee",
+        "representatives",
+        "house_committee"
+      ],
+      "database_speech_groups": [
+        {
+          "state": "qld",
+          "chamber": "qld_la",
+          "electorate": "Hervey Bay",
+          "rows": 34,
+          "first": "2024-12-10",
+          "last": "2026-09-15"
+        },
+        {
+          "state": "qld",
+          "chamber": "qld_la",
+          "electorate": "",
+          "rows": 20,
+          "first": "2025-03-12",
+          "last": "2026-06-25"
+        }
+      ],
+      "speech_scope": null
+    },
+    {
+      "legacy_person_id": "qld_smith",
+      "member": "Tom Smith",
+      "profile_name": "Smith",
+      "decision": "unlinked",
+      "reason": "The surname public profile combines multiple people across jurisdictions; the state database ID alone is narrower than that profile.",
+      "public_profile_states": [
+        "qld",
+        "nsw"
+      ],
+      "public_profile_chambers": [
+        "qld_la",
+        "nsw_la"
+      ],
+      "database_speech_groups": [
+        {
+          "state": "qld",
+          "chamber": "qld_la",
+          "electorate": "",
+          "rows": 132,
+          "first": "2024-02-14",
+          "last": "2026-09-16"
+        },
+        {
+          "state": "qld",
+          "chamber": "qld_la",
+          "electorate": "Bundaberg",
+          "rows": 47,
+          "first": "2024-02-14",
+          "last": "2026-09-16"
+        }
+      ],
+      "speech_scope": null
+    },
+    {
+      "legacy_person_id": "sa_brown",
+      "member": "Michael Brown",
+      "profile_name": "Brown",
+      "decision": "unlinked",
+      "reason": "The surname public profile combines multiple people across jurisdictions; the state database ID alone is narrower than that profile.",
+      "public_profile_states": [
+        "sa",
+        "qld"
+      ],
+      "public_profile_chambers": [
+        "sa_ha",
+        "qld_la"
+      ],
+      "database_speech_groups": [
+        {
+          "state": "sa",
+          "chamber": "sa_ha",
+          "electorate": "",
+          "rows": 100,
+          "first": "2020-02-06",
+          "last": "2022-07-05"
+        },
+        {
+          "state": "sa",
+          "chamber": "sa_ha",
+          "electorate": "Playford",
+          "rows": 28,
+          "first": "2020-03-04",
+          "last": "2021-12-01"
+        },
+        {
+          "state": "sa",
+          "chamber": "sa_ha",
+          "electorate": "Florey",
+          "rows": 113,
+          "first": "2022-05-03",
+          "last": "2024-06-04"
+        }
+      ],
+      "speech_scope": null
+    },
+    {
+      "legacy_person_id": "qld_field",
+      "member": "Russell Field",
+      "profile_name": "Field",
+      "decision": "retained",
+      "reason": "Reviewed speech scope restricts the public profile to Queensland Assembly service; database rows agree.",
+      "public_profile_states": [
+        "qld"
+      ],
+      "public_profile_chambers": [
+        "qld_la"
+      ],
+      "database_speech_groups": [
+        {
+          "state": "qld",
+          "chamber": "qld_la",
+          "electorate": "Capalaba",
+          "rows": 25,
+          "first": "2024-12-10",
+          "last": "2026-09-15"
+        },
+        {
+          "state": "qld",
+          "chamber": "qld_la",
+          "electorate": "",
+          "rows": 14,
+          "first": "2024-12-11",
+          "last": "2026-09-15"
+        }
+      ],
+      "speech_scope": {
+        "state": "qld",
+        "chamber": "qld_la",
+        "service": [
+          {
+            "start": "2024-10-26",
+            "end": "2026-12-31"
+          }
+        ]
+      }
+    }
+  ],
+  "cross_jurisdiction_follow_up": [
+    {
+      "name": "Bridget Archer",
+      "federal_person_id": "person_94fc1c2457a65dc794cdd2ad",
+      "state_person_ids": [
+        "person_f73c7b1e7c075cbe8e1ad4fa"
+      ],
+      "decision": "follow_up",
+      "reason": "Roster aliases are name strings, scoped to a jurisdiction; they cannot express a cross-jurisdiction person-ID equivalence. Merging would also change protected federal person rows."
+    },
+    {
+      "name": "Gavin Pearce",
+      "federal_person_id": "person_c745588fefbd5dd693c39b6c",
+      "state_person_ids": [
+        "person_0d5fc71505625b94b5fc5133"
+      ],
+      "decision": "follow_up",
+      "reason": "Roster aliases are name strings, scoped to a jurisdiction; they cannot express a cross-jurisdiction person-ID equivalence. Merging would also change protected federal person rows."
+    },
+    {
+      "name": "Brian Mitchell",
+      "federal_person_id": "person_19bc61ed22a455a3b77f2851",
+      "state_person_ids": [
+        "person_92b2f43278635db9acf9d628"
+      ],
+      "decision": "follow_up",
+      "reason": "Roster aliases are name strings, scoped to a jurisdiction; they cannot express a cross-jurisdiction person-ID equivalence. Merging would also change protected federal person rows."
+    },
+    {
+      "name": "Michael Ferguson",
+      "federal_person_id": "person_8f3c01fa6b9e55f2a60dec57",
+      "state_person_ids": [
+        "person_ad39d9011ccc51e3976cec3f"
+      ],
+      "decision": "follow_up",
+      "reason": "Roster aliases are name strings, scoped to a jurisdiction; they cannot express a cross-jurisdiction person-ID equivalence. Merging would also change protected federal person rows."
+    },
+    {
+      "name": "Janelle Saffin",
+      "federal_person_id": "person_5f81c5b9f77d5f4a8778155d",
+      "state_person_ids": [
+        "person_3330bd4c8c5d53fa9510153d",
+        "person_b4c7767fc9cf59a3b09dfe8b",
+        "person_bdfa80090f945ae5a3265801"
+      ],
+      "decision": "follow_up",
+      "reason": "Roster aliases are name strings, scoped to a jurisdiction; they cannot express a cross-jurisdiction person-ID equivalence. Merging would also change protected federal person rows."
+    },
+    {
+      "name": "Nick Champion",
+      "federal_person_id": "person_6989194dd7ee50baa7bc40bb",
+      "state_person_ids": [
+        "person_c6cba632c1b45c7893efbba6"
+      ],
+      "decision": "follow_up",
+      "reason": "Roster aliases are name strings, scoped to a jurisdiction; they cannot express a cross-jurisdiction person-ID equivalence. Merging would also change protected federal person rows."
+    }
+  ]
+}

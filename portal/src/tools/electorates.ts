@@ -229,8 +229,12 @@ export async function electorates(deps: ToolDeps, input: ElectoratesInput): Prom
   await Promise.all(Array.from({ length: Math.min(4, seats.length) }, async () => {
     while (cursor < seats.length) {
       const s = seats[cursor++]
-      if (!s.detail_url.startsWith(base) || !/^\/subject\/electorate\/[a-z0-9-]+$/.test(s.url)) throw new Error('Invalid electorate release or page URL')
-      const detail = await asset<{ electorate_id: string; demographics: Profile[] }>(deps, s.detail_url)
+      if (!/^\/electorates\/releases\/[a-f0-9]+\/el_[a-f0-9]+\.json$/.test(s.detail_url)
+          || !s.detail_url.endsWith(`/${s.electorate_id}.json`)
+          || !/^\/subject\/electorate\/[a-z0-9-]+$/.test(s.url)) throw new Error('Invalid electorate release or page URL')
+      // Unchanged electorate links can retain their original immutable URL.
+      // Read the byte-identical copy in this manifest's release for a bounded snapshot.
+      const detail = await asset<{ electorate_id: string; demographics: Profile[] }>(deps, `${base}${s.electorate_id}.json`)
       if (detail.electorate_id !== s.electorate_id || !Array.isArray(detail.demographics)) throw new Error('Invalid electorate detail')
       const profiles = detail.demographics.filter((p) => p.year === 2021)
       const values = profiles.map((p) => p.indicators?.[indicator])

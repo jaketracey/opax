@@ -1,0 +1,138 @@
+{
+  "release_id": "99e8ac162f6c3fdd",
+  "jurisdictions": [
+    {
+      "jurisdiction": "act",
+      "electorates": 5,
+      "filled_before": 0,
+      "filled_after": 5,
+      "members": 25,
+      "still_empty": 0,
+      "dates": [
+        "2026-11-14"
+      ]
+    },
+    {
+      "jurisdiction": "nsw",
+      "electorates": 94,
+      "filled_before": 0,
+      "filled_after": 30,
+      "members": 70,
+      "still_empty": 64,
+      "dates": [
+        "2026-09-21",
+        "2026-09-25"
+      ]
+    },
+    {
+      "jurisdiction": "nt",
+      "electorates": 25,
+      "filled_before": 0,
+      "filled_after": 0,
+      "members": 0,
+      "still_empty": 25,
+      "dates": []
+    },
+    {
+      "jurisdiction": "qld",
+      "electorates": 93,
+      "filled_before": 0,
+      "filled_after": 93,
+      "members": 93,
+      "still_empty": 0,
+      "dates": [
+        "2026-06-02"
+      ]
+    },
+    {
+      "jurisdiction": "sa",
+      "electorates": 48,
+      "filled_before": 0,
+      "filled_after": 48,
+      "members": 69,
+      "still_empty": 0,
+      "dates": [
+        "2026-11-14"
+      ]
+    },
+    {
+      "jurisdiction": "tas",
+      "electorates": 20,
+      "filled_before": 0,
+      "filled_after": 20,
+      "members": 50,
+      "still_empty": 0,
+      "dates": [
+        "2026-08-25",
+        "2026-11-14"
+      ]
+    },
+    {
+      "jurisdiction": "wa",
+      "electorates": 60,
+      "filled_before": 0,
+      "filled_after": 0,
+      "members": 0,
+      "still_empty": 60,
+      "dates": []
+    }
+  ],
+  "lower_houses": [
+    {
+      "jurisdiction": "act",
+      "electorates": 5,
+      "member_places": 25,
+      "filled_before": 0,
+      "filled_after": 25,
+      "unfilled": 0
+    },
+    {
+      "jurisdiction": "nsw",
+      "electorates": 93,
+      "member_places": 93,
+      "filled_before": 0,
+      "filled_after": 29,
+      "unfilled": 64
+    },
+    {
+      "jurisdiction": "nt",
+      "electorates": 25,
+      "member_places": 25,
+      "filled_before": 0,
+      "filled_after": 0,
+      "unfilled": 25
+    },
+    {
+      "jurisdiction": "qld",
+      "electorates": 93,
+      "member_places": 93,
+      "filled_before": 0,
+      "filled_after": 93,
+      "unfilled": 0
+    },
+    {
+      "jurisdiction": "sa",
+      "electorates": 47,
+      "member_places": 47,
+      "filled_before": 0,
+      "filled_after": 47,
+      "unfilled": 0
+    },
+    {
+      "jurisdiction": "tas",
+      "electorates": 5,
+      "member_places": 35,
+      "filled_before": 0,
+      "filled_after": 35,
+      "unfilled": 0
+    },
+    {
+      "jurisdiction": "wa",
+      "electorates": 59,
+      "member_places": 59,
+      "filled_before": 0,
+      "filled_after": 0,
+      "unfilled": 59
+    }
+  ]
+}

@@ -609,7 +609,7 @@ class Builder:
                 "terms": sum(t["electorate_id"] in seats for t in self.rows["terms"].values()),
                 "demographic_profiles": sum(d["electorate_id"] in seats for d in self.rows["demographics"].values())}
         self.coverage["jurisdictions"] = jurisdictions
-        self.coverage["notes"] += ["Senate and state Council results/history are not yet indexed. NSW, SA and WA Council roster data is not yet verified.",
+        self.coverage["notes"] += ["Senate and state Council results/history are not yet indexed. WA Council roster data is not yet verified.",
                                     "State electorate status describes the 2025 ABS geography; it is not a verification of subsequent legal changes."]
         return {"schema_version": SCHEMA_VERSION, "coverage": self.coverage,
                 **{name: list(rows.values()) for name, rows in self.rows.items()}}
@@ -643,12 +643,19 @@ def main():
     args = p.parse_args()
     b = Builder(args.cache, args.as_of, refresh=args.refresh)
     b.aec(); b.geography(); b.legacy(args.legacy); b.history(); b.victoria(); b.statewide_councils()
-    bundle = b.bundle()
+    from parli.ingest.state_members import join_state_members, wikidata_observations
+    state_data = Path(__file__).resolve().parents[2] / "data/state-members"
+    held = json.loads(args.legacy.read_text()).get("ext_state_roster")
+    if held is None:
+        held = json.loads((state_data / "held-wikidata.json").read_text())
+    official = json.loads((state_data / "official-lists.json").read_text())["observations"]
+    catalog = json.loads((state_data.parents[1] / "portal/public/parliamentarians.json").read_text())["people"]
+    bundle, _issues = join_state_members(b.bundle(), [*wikidata_observations(held), *official], catalog=catalog)
     validate(bundle)
     print(check_people(bundle))
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(canonical_json(bundle) + "\n")
-    print({k: len(v) for k, v in b.rows.items()})
+    print({k: len(bundle[k]) for k in TABLES})
 
 
 if __name__ == "__main__":

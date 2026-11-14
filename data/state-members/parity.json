@@ -1,0 +1,18 @@
+{
+  "before_release": "9e281b4ef4edbd38",
+  "after_release": "99e8ac162f6c3fdd",
+  "jurisdictions": {
+    "vic": {
+      "electorates": 96,
+      "detail_inventory_sha256": "8b4e9f4d9a92351ccbfeba17ba80a793aa9f20d6bb815135b3a4fbaabbe08726",
+      "summary_sha256": "2f0475958a8c32f47983e744c5d65112d256f49ba3d1455d58eda49a3f5bf24f",
+      "people_sha256": "de06ec10f46d688556d95c411838dfc25d125fe079cdf30f55f32c9b1a8dae1e"
+    },
+    "federal": {
+      "electorates": 184,
+      "detail_inventory_sha256": "f7d1a4a05634db2e3dd9b862426a5fcbfdfdf84e97dffb46b0dba4bf7627f39c",
+      "summary_sha256": "c5f6d7fd9a828c5ed865a8ae41e6e534b529d3428f47944d4b207e6ca30dda51",
+      "people_sha256": "0bec94f966fe4f813c0faaa6ccc59d3e5ee6a5dd5a72ffb11c61c9e07b49d73d"
+    }
+  }
+}

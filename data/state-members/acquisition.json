@@ -1,0 +1,189 @@
+[
+  {
+    "state": "nsw",
+    "url": "https://www.parliament.nsw.gov.au/members/Pages/all-members.aspx",
+    "status": 403,
+    "fetched_at": "2026-11-13T20:29:58+00:00",
+    "path": "nsw-members-85caf85dc14f.raw",
+    "sha256": "85caf85dc14f64b9b8ba03f552fd5b22ecdd1b14cab782be937dce96da05cbcc",
+    "content_type": "text/html; charset=UTF-8",
+    "location": null,
+    "refused": true
+  },
+  {
+    "state": "qld",
+    "url": "https://www.parliament.qld.gov.au/Members/Current-Members",
+    "status": 403,
+    "fetched_at": "2026-11-13T20:29:59+00:00",
+    "path": "qld-members-1a857f35d68f.raw",
+    "sha256": "1a857f35d68f91e3c6bc7302ec30dde4468a7aac38bc60055e6ac508fc8f6034",
+    "content_type": "text/html",
+    "location": null,
+    "refused": true
+  },
+  {
+    "state": "sa",
+    "url": "https://www.parliament.sa.gov.au/en/House-of-Assembly/Members",
+    "status": 200,
+    "fetched_at": "2026-11-13T20:30:00+00:00",
+    "path": "sa-members-fd2a82b2b0f6.raw",
+    "sha256": "fd2a82b2b0f61ba1a94ba85bdcbd2929447249c4f4485323747b16e70bd39907",
+    "content_type": "text/html; charset=utf-8",
+    "location": null,
+    "refused": false
+  },
+  {
+    "state": "wa",
+    "url": "https://www.parliament.wa.gov.au/Parliament/Memblist.nsf/WAllMembersFlat",
+    "status": 403,
+    "fetched_at": "2026-11-13T20:30:01+00:00",
+    "path": "wa-members-a0e49aebfc7e.raw",
+    "sha256": "a0e49aebfc7ea7d964d2ec97d1ee4e12c91ca75236db92961d41e3f8f2efb3bb",
+    "content_type": "text/html",
+    "location": null,
+    "refused": true
+  },
+  {
+    "state": "tas",
+    "url": "https://www.parliament.tas.gov.au/members",
+    "status": 404,
+    "fetched_at": "2026-11-13T20:30:04+00:00",
+    "path": "tas-members-24e9f9d81462.raw",
+    "sha256": "24e9f9d8146218808aa9637cc7692b39adcc0c0bd40e56bed199c3993f1ae44f",
+    "content_type": "text/html; charset=utf-8",
+    "location": null,
+    "refused": false
+  },
+  {
+    "state": "act",
+    "url": "https://www.parliament.act.gov.au/members/current",
+    "status": 200,
+    "fetched_at": "2026-11-13T20:30:05+00:00",
+    "path": "act-members-fcefcb138fd7.raw",
+    "sha256": "fcefcb138fd7e45cdf83ecb84118390336ffd85982c89104d4ed861e53b59263",
+    "content_type": "text/html; charset=utf-8",
+    "location": null,
+    "refused": false
+  },
+  {
+    "state": "nt",
+    "url": "https://parliament.nt.gov.au/members",
+    "status": 403,
+    "fetched_at": "2026-11-13T20:30:06+00:00",
+    "path": "nt-members-3f12c72b1865.raw",
+    "sha256": "3f12c72b1865d1be372febf39582a617e39467cd31217cb40a189c8780ba6c2f",
+    "content_type": "text/html; charset=UTF-8",
+    "location": null,
+    "refused": true
+  },
+  {
+    "state": "tas",
+    "url": "https://www.parliament.tas.gov.au/house-of-assembly/ha-members",
+    "status": 404,
+    "fetched_at": "2026-11-13T20:30:34+00:00",
+    "path": "tas-assembly-6c18c38890f2.raw",
+    "sha256": "6c18c38890f2df0090736ba4f5406c7455402b59e7e62d3d486c9b337e700e1e",
+    "content_type": "text/html; charset=utf-8",
+    "location": null,
+    "refused": false
+  },
+  {
+    "state": "sa",
+    "url": "https://contact-details.parliament.sa.gov.au/",
+    "status": 200,
+    "fetched_at": "2026-11-13T20:30:38+00:00",
+    "path": "sa-contact-app-e91ee19a69af.raw",
+    "sha256": "e91ee19a69afe892863ebbbd9e78d2c56aa4a5d2e30f5b35c44429d8822601f3",
+    "content_type": "text/html",
+    "location": null,
+    "refused": false
+  },
+  {
+    "state": "tas",
+    "url": "https://www.parliament.tas.gov.au/house-of-assembly/currentmembers",
+    "status": 200,
+    "fetched_at": "2026-11-13T20:30:39+00:00",
+    "path": "tas-assembly-current-882a0a8184d4.raw",
+    "sha256": "882a0a8184d4eb06c1b6526b058144c2db4abb798dd0860ab8d831a1ea6428bd",
+    "content_type": "text/html; charset=utf-8",
+    "location": null,
+    "refused": false
+  },
+  {
+    "state": "tas",
+    "url": "https://www.parliament.tas.gov.au/legislative-council/members",
+    "status": 200,
+    "fetched_at": "2026-11-13T20:30:40+00:00",
+    "path": "tas-council-current-aafa9cf62a50.raw",
+    "sha256": "aafa9cf62a503887169371401f753b89ee6323abc5644726df0c5a97b34e8e31",
+    "content_type": "text/html; charset=utf-8",
+    "location": null,
+    "refused": false
+  },
+  {
+    "state": "sa",
+    "url": "https://contact-details.parliament.sa.gov.au/main.494719f543b3a87a5183.js",
+    "status": 200,
+    "fetched_at": "2026-11-13T20:31:03+00:00",
+    "path": "sa-contact-js-054094844c57.raw",
+    "sha256": "054094844c5726a75e0abda360ef04b6abf324a07a170a01369cc5c718dedbab",
+    "content_type": "application/x-javascript",
+    "location": null,
+    "refused": false
+  },
+  {
+    "state": "tas",
+    "url": "https://www.parliament.tas.gov.au/__data/assets/excel_doc/0026/14597/HAMembers.xlsx",
+    "status": 200,
+    "fetched_at": "2026-11-13T20:31:11+00:00",
+    "path": "tas-assembly-xlsx-60d4c194db29.raw",
+    "sha256": "60d4c194db29666042b9ae08681bb162ae7c1cf0cde5e0ba5be7fb15336dadcc",
+    "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "location": null,
+    "refused": false
+  },
+  {
+    "state": "tas",
+    "url": "https://www.parliament.tas.gov.au/__data/assets/excel_doc/0016/110428/Mail-Merge-as-at-25-August-2026.xlsx",
+    "status": 200,
+    "fetched_at": "2026-11-13T20:31:12+00:00",
+    "path": "tas-council-xlsx-cd1336b4d54c.raw",
+    "sha256": "cd1336b4d54c3934576914f11919b3b6622b4c8a729676d65799bc947d361ee2",
+    "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "location": null,
+    "refused": false
+  },
+  {
+    "state": "sa",
+    "url": "https://contact-details.parliament.sa.gov.au/assets/client-config.json",
+    "status": 200,
+    "fetched_at": "2026-11-13T20:31:27+00:00",
+    "path": "sa-contact-config-edc125aa10de.raw",
+    "sha256": "edc125aa10de2d9b9e51662085f6c1d650ee02fddd447131b6b0d783281f16b0",
+    "content_type": "application/json",
+    "location": null,
+    "refused": false
+  },
+  {
+    "state": "sa",
+    "url": "https://contact-details-api.parliament.sa.gov.au/api/HAMembersDetails",
+    "status": 200,
+    "fetched_at": "2026-11-13T20:31:54+00:00",
+    "path": "sa-assembly-api-36e0de2c1a00.raw",
+    "sha256": "36e0de2c1a004692909fb19c95471c879297d8e423a485dc0cc2fb82e09add11",
+    "content_type": "application/json; charset=utf-8",
+    "location": null,
+    "refused": false
+  },
+  {
+    "state": "sa",
+    "url": "https://contact-details-api.parliament.sa.gov.au/api/LCMembersDetails",
+    "status": 200,
+    "fetched_at": "2026-11-13T20:34:18.969137+00:00",
+    "path": "sa-council-api-da90f57e347b.raw",
+    "sha256": "da90f57e347b85e0eb1ea0e0a1e03e143cfccaa1236628927dd2e6a5aff3c9d2",
+    "content_type": "application/json; charset=utf-8",
+    "location": null,
+    "refused": false
+  }
+]

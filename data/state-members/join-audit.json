@@ -1,0 +1,1536 @@
+{
+  "before_release": "d2423b2d3f8ba6f6",
+  "after_release": "99e8ac162f6c3fdd",
+  "issues": [
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Upper Hunter",
+      "electorate_id": "el_68b2e65e2a2f52d1b7bcee1f",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Strathfield",
+      "electorate_id": "el_2e9090684cdb5a0da2478068",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Bega",
+      "electorate_id": "el_ccc3cd14c54e5a799d960ad4",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Willoughby",
+      "electorate_id": "el_360895c4879c5a398005afaa",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "roster exceeds capacity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Epping",
+      "electorate_id": "el_c250656e744a59a292529435"
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Sydney",
+      "electorate_id": "el_13634d112fb45a52b5d12f96",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Charlestown",
+      "electorate_id": "el_8a4d8cb2f7be5fa2a85007dd",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Newcastle",
+      "electorate_id": "el_cd8d45061edc5e37b43f2c3c",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Maitland",
+      "electorate_id": "el_71973bb1b50750a1ad164db4",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Miranda",
+      "electorate_id": "el_3ca875a532635f169e26baae",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Terrigal",
+      "electorate_id": "el_c9e186b3ff475557a7a9049e",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Prospect",
+      "electorate_id": "el_46f80f69e201530d8fe793d0",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Rockdale",
+      "electorate_id": "el_5f61d7ce513351da939737fb",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Mount Druitt",
+      "electorate_id": "el_9de963ec77285a4899e61acf",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Londonderry",
+      "electorate_id": "el_a5ec7abf554156ceaf081fd3",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Swansea",
+      "electorate_id": "el_459a3f6cd29e5f5e9eb36447",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Macquarie Fields",
+      "electorate_id": "el_d25541a395b9599da97eaf9a",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Blue Mountains",
+      "electorate_id": "el_59bf378d243d58dd9631337a",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Granville",
+      "electorate_id": "el_32481f6d5f955109996d2875",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Summer Hill",
+      "electorate_id": "el_8468be53d28d511abd0a19e7",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Wahroonga",
+      "electorate_id": "el_8d1f83eeedaf58f88c823a6f",
+      "detail": "Current membership is disputed in the review request. The held seat term starts on 2023-03-25, but held evidence cannot resolve the concern and the official list refused access. No resignation or replacement is asserted."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Newtown",
+      "electorate_id": "el_d0301dfed43e5cd994acf910",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "The Entrance",
+      "electorate_id": "el_aeee7728839d5c0fa87f2917",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Kogarah",
+      "electorate_id": "el_dfeb00a2db98511584e8adf2",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Ballina",
+      "electorate_id": "el_7168578b6d3f5ebfbe4a0c6f",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Campbelltown",
+      "electorate_id": "el_b3988875e38a554980d544d0",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Port Stephens",
+      "electorate_id": "el_5a4bd896673a5190bd50ec89",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Orange",
+      "electorate_id": "el_097e98d486e853b99f6fe9a0",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Wollongong",
+      "electorate_id": "el_1731250a800654b184e7ba5d",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Manly",
+      "electorate_id": "el_b1ce1b589d265e8391984362",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "North Shore",
+      "electorate_id": "el_c6a3fdbb4bc85ae488016708",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Blacktown",
+      "electorate_id": "el_a74c555758f55b7d8117a6f2",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Cootamundra",
+      "electorate_id": "el_05823962e2205226906a2e8f",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Shellharbour",
+      "electorate_id": "el_1098ca88a9275c20ac203ec8",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Lane Cove",
+      "electorate_id": "el_41412caac7385c14b89ee452",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Cessnock",
+      "electorate_id": "el_e59c4c54df3b5b4896684bf8",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Wyong",
+      "electorate_id": "el_cf615cafc4685424a8a35381",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Tweed",
+      "electorate_id": "el_bf009a0253de5d819e905cee",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Lake Macquarie",
+      "electorate_id": "el_4f248112afe15edba22e3d50",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Wagga Wagga",
+      "electorate_id": "el_319904dd1ce55079adf5a8ec",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Lismore",
+      "electorate_id": "el_fecc3dd0ac3f5583ae7823d0",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Coffs Harbour",
+      "electorate_id": "el_8245540bf83659ecb4380a9a",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Coogee",
+      "electorate_id": "el_de86af996cc35d4fa84e87ee",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Murray",
+      "electorate_id": "el_a0b439c880dc5c50a38ebf81",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Barwon",
+      "electorate_id": "el_5213bb921c6c5e1f98cb5353",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Albury",
+      "electorate_id": "el_301baeaa9ba85d758d405311",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Goulburn",
+      "electorate_id": "el_9619f66c8f6e592b9e19a3e5",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Hawkesbury",
+      "electorate_id": "el_d740c1f23cf452aa9961eca6",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Tamworth",
+      "electorate_id": "el_c9fda3709dca531083a45b2a",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Gosford",
+      "electorate_id": "el_dba05d77e52a543aaee11740",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Auburn",
+      "electorate_id": "el_ca70d03b558d5cb091378ae4",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Oatley",
+      "electorate_id": "el_5da03fc8c1fe5cbca1bb047d",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Cronulla",
+      "electorate_id": "el_f042189905b25cc88a039054",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Hornsby",
+      "electorate_id": "el_23df95622680575398b4e98a",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Maroubra",
+      "electorate_id": "el_0fe09e84a5145246b36622f8",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Bathurst",
+      "electorate_id": "el_9970250241b75f0ea6d8a893",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Heffron",
+      "electorate_id": "el_3e7bb5a4131959c0b68be727",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Keira",
+      "electorate_id": "el_1ee27dfe0f875e468aa88e34",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Wallsend",
+      "electorate_id": "el_2bb259755389586baa611eef",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "NSW current membership not proved",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Canterbury",
+      "electorate_id": "el_72a4298aa5235521bc7e42ee",
+      "detail": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q111482817",
+      "name": "Chris Rath",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q111940431",
+      "name": "Scott Barrett",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q111972517",
+      "name": "Sue Higginson",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q113965085",
+      "name": "Aileen MacDonald",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117421502",
+      "name": "Susan Carter",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117689146",
+      "name": "Amanda Cohn",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117818820",
+      "name": "John Ruddick",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117837219",
+      "name": "Emily Suvaal",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117837222",
+      "name": "Rachel Merton",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q16186846",
+      "name": "Peter Primrose",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q19873536",
+      "name": "Ben Franklin",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q19879829",
+      "name": "Bronnie Taylor",
+      "electorate": "Legislative Council district of New South Wales"
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q27450715",
+      "name": "John Graham",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q29965792",
+      "name": "Taylor Martin",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q39743779",
+      "name": "Wes Fang",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q47524082",
+      "name": "Natalie Ward",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q5051778",
+      "name": "Cate Faehrmann",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q5605496",
+      "name": "Greg Donnelly",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q62960643",
+      "name": "Tara Moriarty",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q62961056",
+      "name": "Abigail Boyd",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q63153112",
+      "name": "Emma Hurst",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q63155097",
+      "name": "Rod Roberts",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q63155181",
+      "name": "Mark Buttigieg",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q71235827",
+      "name": "Sam Farraway",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q7164431",
+      "name": "Penny Sharpe",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q7342222",
+      "name": "Robert Borsak",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q7422611",
+      "name": "Sarah Mitchell",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q7683250",
+      "name": "Tania Mihailuk",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q982227",
+      "name": "Mark Latham",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130654928",
+      "name": "Sean Dillon",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130654935",
+      "name": "Bisma Asif",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130680796",
+      "name": "Donna Kirkland",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130680797",
+      "name": "Kerri-Anne Dooley",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130680801",
+      "name": "Kendall Morton",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130680803",
+      "name": "Bree James",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130680805",
+      "name": "Natalie Marr",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130680807",
+      "name": "Nigel Dalton",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130680809",
+      "name": "Nigel Hutton",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130680902",
+      "name": "Adam Baillie",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130713536",
+      "name": "Hermann Vorster",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130721639",
+      "name": "John Barounis",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130794308",
+      "name": "Ariana Doolan",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130878777",
+      "name": "Glen Kelly",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q131000591",
+      "name": "Barbara O'Shea",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q131127271",
+      "name": "David Lee",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q131175472",
+      "name": "Russell Field",
+      "electorate": null
+    },
+    {
+      "reason": "roster exceeds capacity",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Ipswich West",
+      "electorate_id": "el_97bf99d4a000533599735c3f"
+    },
+    {
+      "reason": "roster exceeds capacity",
+      "jurisdiction": "qld",
+      "chamber": "qld_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Mulgrave",
+      "electorate_id": "el_e259ffd398635fd593f836de"
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_ha",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q111305122",
+      "name": "Ashton Hurn",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_ha",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q52074546",
+      "name": "Penny Pratt",
+      "electorate": "Frome"
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_ha",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q5534059",
+      "name": "Geoff Brock",
+      "electorate": "Frome"
+    },
+    {
+      "reason": "roster exceeds capacity",
+      "jurisdiction": "sa",
+      "chamber": "sa_ha",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Playford",
+      "electorate_id": "el_f3e9112205a0577e9d70c469"
+    },
+    {
+      "reason": "roster exceeds capacity",
+      "jurisdiction": "sa",
+      "chamber": "sa_ha",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "Colton",
+      "electorate_id": "el_8c8889e1a73e5b1b8dde1398"
+    },
+    {
+      "reason": "roster exceeds capacity",
+      "jurisdiction": "sa",
+      "chamber": "sa_ha",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "electorate": "MacKillop",
+      "electorate_id": "el_07529ce9e4a653b7bf8c8c2c"
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q108327458",
+      "name": "Heidi Girolamo",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q1383644",
+      "name": "Ian Hunter",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q16062407",
+      "name": "Tung Ngo",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q21066567",
+      "name": "Robert Simms",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q28839980",
+      "name": "Justin Hanson",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q50726965",
+      "name": "Emily Bourke",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q50727412",
+      "name": "Frank Pangallo",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q50727865",
+      "name": "Connie Bonaros",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q51743401",
+      "name": "Clare Scriven",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q52225394",
+      "name": "Reggie Martin",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q5258529",
+      "name": "Dennis Hood",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q54669952",
+      "name": "Laura Henderson",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q6202225",
+      "name": "Jing Lee",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q6450701",
+      "name": "Kyam Maher",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q6837123",
+      "name": "Michelle Lensink",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q7381884",
+      "name": "Russell Wortley",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q7681578",
+      "name": "Tammy Franks",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q7705045",
+      "name": "Terry Stephens",
+      "electorate": null
+    },
+    {
+      "reason": "no electorate match",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q90334712",
+      "name": "Nicola Centofanti",
+      "electorate": null
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117006730",
+      "name": "Karen McKeown",
+      "electorate": "Penrith"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117193480",
+      "name": "Charishma Kaliyanda",
+      "electorate": "Liverpool"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117294364",
+      "name": "Liza Butler",
+      "electorate": "South Coast"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117294421",
+      "name": "Sally Quinnell",
+      "electorate": "Camden"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117294450",
+      "name": "Kylie Wilkinson",
+      "electorate": "East Hills"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117297956",
+      "name": "Richie Williamson",
+      "electorate": "Clarence"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117299394",
+      "name": "Nathan Hagarty",
+      "electorate": "Leppington"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117468562",
+      "name": "Jordan Lane",
+      "electorate": "Ryde"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q117481176",
+      "name": "Michael Kemp",
+      "electorate": "Oxley"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_la",
+      "as_of": "2026-09-21",
+      "basis": "held_wikidata_terms",
+      "source_key": "Q130564406",
+      "name": "Jacqui Scruby",
+      "electorate": "Pittwater"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:Abigail Boyd",
+      "name": "Abigail Boyd",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:Mark Buttigieg",
+      "name": "Mark Buttigieg",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:Amanda Cohn",
+      "name": "Amanda Cohn",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:John Graham",
+      "name": "John Graham",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:Sue Higginson",
+      "name": "Sue Higginson",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:Mark Latham",
+      "name": "Mark Latham",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:Aileen MacDonald",
+      "name": "Aileen MacDonald",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:Rod Roberts",
+      "name": "Rod Roberts",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "nsw",
+      "chamber": "nsw_lc",
+      "as_of": "2026-09-25",
+      "basis": "official_current_list",
+      "source_key": "held:nsw:nsw_lc:Penny Sharpe",
+      "name": "Penny Sharpe",
+      "electorate": "New South Wales"
+    },
+    {
+      "reason": "ambiguous person identity; retained separate source identity",
+      "jurisdiction": "sa",
+      "chamber": "sa_lc",
+      "as_of": "2026-11-14",
+      "basis": "official_current_list",
+      "source_key": "https://www.parliament.sa.gov.au/Search/Member?type=member&id=6928",
+      "name": "Laura Henderson",
+      "electorate": "South Australia"
+    }
+  ],
+  "issue_counts": {
+    "NSW current membership not proved": 59,
+    "roster exceeds capacity": 6,
+    "no electorate match": 68,
+    "ambiguous person identity; retained separate source identity": 20
+  }
+}

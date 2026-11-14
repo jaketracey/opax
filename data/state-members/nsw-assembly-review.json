@@ -1,0 +1,1126 @@
+{
+  "before_release": "d2423b2d3f8ba6f6",
+  "after_release": "99e8ac162f6c3fdd",
+  "nsw_assembly_named_before": 88,
+  "nsw_assembly_named_after": 29,
+  "rule_b_check": {
+    "coverage": "not_held",
+    "events": [],
+    "wins": [],
+    "sources": [],
+    "reason": "No NSW election or by-election items are held in parli.db or the retained state-member evidence. No complete negative check is available. An empty events array does not mean no by-elections."
+  },
+  "seats": [
+    {
+      "electorate": "Albury",
+      "named_before": [
+        "Justin Clancy"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Auburn",
+      "named_before": [
+        "Lynda Voltz"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Badgerys Creek",
+      "named_before": [
+        "Tanya Davies"
+      ],
+      "named_after": [
+        {
+          "name": "Tanya Davies",
+          "qid": "Q7683986",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q7683986"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Ballina",
+      "named_before": [
+        "Tamara Smith"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Balmain",
+      "named_before": [
+        "Kobi Shetty"
+      ],
+      "named_after": [
+        {
+          "name": "Kobi Shetty",
+          "qid": "Q117316523",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117316523"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Bankstown",
+      "named_before": [
+        "Jihad Dib"
+      ],
+      "named_after": [
+        {
+          "name": "Jihad Dib",
+          "qid": "Q19872872",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q19872872"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Barwon",
+      "named_before": [
+        "Roy Butler"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Bathurst",
+      "named_before": [
+        "Paul Toole"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Bega",
+      "named_before": [
+        "Michael Holland"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Blacktown",
+      "named_before": [
+        "Stephen Bali"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Blue Mountains",
+      "named_before": [
+        "Trish Doyle"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Cabramatta",
+      "named_before": [
+        "Tri Vo"
+      ],
+      "named_after": [
+        {
+          "name": "Tri Vo",
+          "qid": "Q117360945",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117360945"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Camden",
+      "named_before": [
+        "Sally Quinnell"
+      ],
+      "named_after": [
+        {
+          "name": "Sally Quinnell",
+          "qid": "Q117294421",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117294421"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Campbelltown",
+      "named_before": [
+        "Greg Warren"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Canterbury",
+      "named_before": [
+        "Sophie Cotsis"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Castle Hill",
+      "named_before": [],
+      "named_after": [],
+      "reason": "No held dated open Wikidata term matches this electorate. Official current list returned HTTP 403; acquisition stopped for the site."
+    },
+    {
+      "electorate": "Cessnock",
+      "named_before": [
+        "Clayton Barr"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Charlestown",
+      "named_before": [
+        "Jodie Harrison"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Clarence",
+      "named_before": [
+        "Richie Williamson"
+      ],
+      "named_after": [
+        {
+          "name": "Richie Williamson",
+          "qid": "Q117297956",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117297956"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Coffs Harbour",
+      "named_before": [
+        "Gurmesh Singh"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Coogee",
+      "named_before": [
+        "Marjorie O'Neill"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Cootamundra",
+      "named_before": [
+        "Steph Cooke"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Cronulla",
+      "named_before": [
+        "Mark Speakman"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Davidson",
+      "named_before": [
+        "Matt Cross"
+      ],
+      "named_after": [
+        {
+          "name": "Matt Cross",
+          "qid": "Q117475212",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117475212"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Drummoyne",
+      "named_before": [
+        "Stephanie Di Pasqua"
+      ],
+      "named_after": [
+        {
+          "name": "Stephanie Di Pasqua",
+          "qid": "Q117294393",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117294393"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Dubbo",
+      "named_before": [],
+      "named_after": [],
+      "reason": "No held dated open Wikidata term matches this electorate. Official current list returned HTTP 403; acquisition stopped for the site."
+    },
+    {
+      "electorate": "East Hills",
+      "named_before": [
+        "Kylie Wilkinson"
+      ],
+      "named_after": [
+        {
+          "name": "Kylie Wilkinson",
+          "qid": "Q117294450",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117294450"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Epping",
+      "named_before": [],
+      "named_after": [],
+      "reason": "roster exceeds capacity"
+    },
+    {
+      "electorate": "Fairfield",
+      "named_before": [
+        "David Saliba"
+      ],
+      "named_after": [
+        {
+          "name": "David Saliba",
+          "qid": "Q117461917",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117461917"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Gosford",
+      "named_before": [
+        "Liesl Tesch"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Goulburn",
+      "named_before": [
+        "Wendy Tuckerman"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Granville",
+      "named_before": [
+        "Julia Finn"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Hawkesbury",
+      "named_before": [
+        "Robyn Preston"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Heathcote",
+      "named_before": [
+        "Maryanne Stuart"
+      ],
+      "named_after": [
+        {
+          "name": "Maryanne Stuart",
+          "qid": "Q117303619",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117303619"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Heffron",
+      "named_before": [
+        "Ron Hoenig"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Holsworthy",
+      "named_before": [],
+      "named_after": [],
+      "reason": "No held dated open Wikidata term matches this electorate. Official current list returned HTTP 403; acquisition stopped for the site."
+    },
+    {
+      "electorate": "Hornsby",
+      "named_before": [
+        "Matt Kean"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Keira",
+      "named_before": [
+        "Ryan Park"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Kellyville",
+      "named_before": [],
+      "named_after": [],
+      "reason": "No held dated open Wikidata term matches this electorate. Official current list returned HTTP 403; acquisition stopped for the site."
+    },
+    {
+      "electorate": "Kiama",
+      "named_before": [
+        "Katelin McInerney"
+      ],
+      "named_after": [
+        {
+          "name": "Katelin McInerney",
+          "qid": "Q136249311",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2025-09-13"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q136249311"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Kogarah",
+      "named_before": [
+        "Chris Minns"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Lake Macquarie",
+      "named_before": [
+        "Greg Piper"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Lane Cove",
+      "named_before": [
+        "Anthony Roberts"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Leppington",
+      "named_before": [
+        "Nathan Hagarty"
+      ],
+      "named_after": [
+        {
+          "name": "Nathan Hagarty",
+          "qid": "Q117299394",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117299394"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Lismore",
+      "named_before": [
+        "Janelle Saffin"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Liverpool",
+      "named_before": [
+        "Charishma Kaliyanda"
+      ],
+      "named_after": [
+        {
+          "name": "Charishma Kaliyanda",
+          "qid": "Q117193480",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117193480"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Londonderry",
+      "named_before": [
+        "Prue Car"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Macquarie Fields",
+      "named_before": [
+        "Anoulack Chanthivong"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Maitland",
+      "named_before": [
+        "Jenny Aitchison"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Manly",
+      "named_before": [
+        "James Griffin"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Maroubra",
+      "named_before": [
+        "Michael Daley"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Miranda",
+      "named_before": [
+        "Eleni Petinos"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Monaro",
+      "named_before": [
+        "Steve Whan"
+      ],
+      "named_after": [
+        {
+          "name": "Steve Whan",
+          "qid": "Q7614277",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q7614277"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Mount Druitt",
+      "named_before": [
+        "Edmond Atalla"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Murray",
+      "named_before": [
+        "Helen Dalton"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Myall Lakes",
+      "named_before": [
+        "Tanya Thompson"
+      ],
+      "named_after": [
+        {
+          "name": "Tanya Thompson",
+          "qid": "Q117296802",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117296802"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Newcastle",
+      "named_before": [
+        "Tim Crakanthorp"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Newtown",
+      "named_before": [
+        "Jenny Leong"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "North Shore",
+      "named_before": [
+        "Felicity Wilson"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Northern Tablelands",
+      "named_before": [
+        "Brendan Moylan"
+      ],
+      "named_after": [
+        {
+          "name": "Brendan Moylan",
+          "qid": "Q126891271",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2024-06-22"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q126891271"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Oatley",
+      "named_before": [
+        "Mark Coure"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Orange",
+      "named_before": [
+        "Philip Donato"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Oxley",
+      "named_before": [
+        "Michael Kemp"
+      ],
+      "named_after": [
+        {
+          "name": "Michael Kemp",
+          "qid": "Q117481176",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117481176"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Parramatta",
+      "named_before": [
+        "Donna Davis"
+      ],
+      "named_after": [
+        {
+          "name": "Donna Davis",
+          "qid": "Q116965322",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q116965322"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Penrith",
+      "named_before": [
+        "Karen McKeown"
+      ],
+      "named_after": [
+        {
+          "name": "Karen McKeown",
+          "qid": "Q117006730",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117006730"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Pittwater",
+      "named_before": [
+        "Jacqui Scruby"
+      ],
+      "named_after": [
+        {
+          "name": "Jacqui Scruby",
+          "qid": "Q130564406",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2024-10-19"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q130564406"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Port Macquarie",
+      "named_before": [
+        "Robert Dwyer"
+      ],
+      "named_after": [
+        {
+          "name": "Robert Dwyer",
+          "qid": "Q133522302",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2025-03-15"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q133522302"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Port Stephens",
+      "named_before": [
+        "Kate Washington"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Prospect",
+      "named_before": [
+        "Hugh McDermott"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Riverstone",
+      "named_before": [
+        "Warren Kirby"
+      ],
+      "named_after": [
+        {
+          "name": "Warren Kirby",
+          "qid": "Q117294315",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117294315"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Rockdale",
+      "named_before": [
+        "Steve Kamper"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Ryde",
+      "named_before": [
+        "Jordan Lane"
+      ],
+      "named_after": [
+        {
+          "name": "Jordan Lane",
+          "qid": "Q117468562",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117468562"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Shellharbour",
+      "named_before": [
+        "Anna Watson"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "South Coast",
+      "named_before": [
+        "Liza Butler"
+      ],
+      "named_after": [
+        {
+          "name": "Liza Butler",
+          "qid": "Q117294364",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117294364"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Strathfield",
+      "named_before": [
+        "Jason Yat-Sen Li"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Summer Hill",
+      "named_before": [
+        "Jo Haylen"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Swansea",
+      "named_before": [
+        "Yasmin Catley"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Sydney",
+      "named_before": [
+        "Alex Greenwich"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Tamworth",
+      "named_before": [
+        "Kevin Anderson"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Terrigal",
+      "named_before": [
+        "Adam Crouch"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "The Entrance",
+      "named_before": [
+        "David Mehan"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Tweed",
+      "named_before": [
+        "Geoff Provest"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Upper Hunter",
+      "named_before": [
+        "Dave Layzell"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Vaucluse",
+      "named_before": [
+        "Kellie Sloane"
+      ],
+      "named_after": [
+        {
+          "name": "Kellie Sloane",
+          "qid": "Q6385794",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q6385794"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Wagga Wagga",
+      "named_before": [
+        "Joe McGirr"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Wahroonga",
+      "named_before": [
+        "Alister Henskens"
+      ],
+      "named_after": [],
+      "reason": "Current membership is disputed in the review request. The held seat term starts on 2023-03-25, but held evidence cannot resolve the concern and the official list refused access. No resignation or replacement is asserted."
+    },
+    {
+      "electorate": "Wakehurst",
+      "named_before": [
+        "Michael Regan"
+      ],
+      "named_after": [
+        {
+          "name": "Michael Regan",
+          "qid": "Q21062491",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q21062491"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Wallsend",
+      "named_before": [
+        "Sonia Hornery"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Willoughby",
+      "named_before": [
+        "Tim James"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Winston Hills",
+      "named_before": [
+        "Mark Taylor"
+      ],
+      "named_after": [
+        {
+          "name": "Mark Taylor",
+          "qid": "Q16937410",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q16937410"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Wollondilly",
+      "named_before": [
+        "Judy Hannan"
+      ],
+      "named_after": [
+        {
+          "name": "Judy Hannan",
+          "qid": "Q117319799",
+          "evidence": {
+            "election_date": "2023-03-25",
+            "rule": "a",
+            "term_starts": [
+              "2023-03-25"
+            ]
+          },
+          "source_url": "https://www.wikidata.org/wiki/Q117319799"
+        }
+      ],
+      "reason": null
+    },
+    {
+      "electorate": "Wollongong",
+      "named_before": [
+        "Paul Scully"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    },
+    {
+      "electorate": "Wyong",
+      "named_before": [
+        "David Harris"
+      ],
+      "named_after": [],
+      "reason": "Neither NSW rule (a) nor rule (b) is proved by held data."
+    }
+  ]
+}

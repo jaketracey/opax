@@ -52,7 +52,7 @@ test('the shipped index gives the three minor state parties their sitting member
   // Victorian members from the seat roster; NSW Council members from the dated official list (A17).
   assert.deepEqual(names('Animal Justice Party'), ['Emma Hurst', 'Georgie Purcell']);
   assert.deepEqual(names('Legalise Cannabis'), ['David Ettershank', 'Jeremy Buckingham', 'Rachel Payne']);
-  assert.deepEqual(names('Shooters, Fishers and Farmers'), ['Jeff Bourman', 'Mark Banasiak', 'Robert Borsak']);
+  assert.deepEqual(names('Shooters, Fishers and Farmers'), ['Carlo Di Falco', 'Jeff Bourman', 'Mark Banasiak', 'Robert Borsak']);
 });
 
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'})[c]);

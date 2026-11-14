@@ -23,7 +23,19 @@ test('RESEARCH_LOOP=off: legacy fields remain byte-identical; stepped research m
   const current=await loadWorker(root+'portal/src/index.ts',root+'portal/public',ctx),main=await loadWorker(join(scratch,'portal/src/index.ts'),root+'portal/public',ctx);
   for(const h of [current,main]){
    h.env.RESEARCH_LOOP='off';
-   const assets=h.env.ASSETS;h.env.ASSETS={fetch(req){const p=new URL(req.url).pathname;if(!goldMode&&p.startsWith('/graph/money'))return Response.json({nodes:[],edges:[]});if(!goldMode&&p==='/parliamentarians.json')return Response.json({people:[]});return assets.fetch(req)}};
+   const assets=h.env.ASSETS;h.env.ASSETS={async fetch(req){
+    const p=new URL(req.url).pathname;
+    if(!goldMode&&p.startsWith('/graph/money'))return Response.json({nodes:[],edges:[]});
+    if(!goldMode&&p==='/parliamentarians.json')return Response.json({people:[]});
+    // The pinned reader predates preserved immutable links. Give it the same
+    // byte-identical detail copies under its original single-release contract.
+    if(h===main&&/^\/electorates\/releases\/[a-f0-9]+\/index.json$/.test(p)){
+     const index=await (await assets.fetch(req)).json(),base=p.slice(0,p.lastIndexOf('/')+1);
+     for(const seat of index.electorates)seat.detail_url=`${base}${seat.electorate_id}.json`;
+     return Response.json(index);
+    }
+    return assets.fetch(req);
+   }};
    h.env.AGENTIC_ASK_MODE='route';h.env.ASK_LIMITER={limit:async()=>({success:true})};
   }
   main.env.AGENTIC_ASK_MODE='off';

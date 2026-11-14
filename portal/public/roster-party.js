@@ -61,14 +61,16 @@ export function rosterSeatParty(person, electorates) {
   }
   if (hits.length !== 1) return null;
   const { rep, seat } = hits[0];
-  const party = typeof rep.party === 'string' ? rep.party.trim() : '';
+  const label = Object.hasOwn(rep, 'party_canonical') ? rep.party_canonical : rep.party;
+  const party = typeof label === 'string' ? label.trim() : '';
   if (!party) return null;
   return {
     party,
     as_of: seat.representation_as_of,
     electorate: seat.name,
     url: typeof seat.url === 'string' ? seat.url : null,
-    source_url: typeof rep.person?.source_url === 'string' ? rep.person.source_url : null,
+    source_url: typeof rep.source_url === 'string' ? rep.source_url
+      : typeof rep.person?.source_url === 'string' ? rep.person.source_url : null,
   };
 }
 

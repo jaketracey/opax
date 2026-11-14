@@ -263,12 +263,17 @@ class Registry:
         return self.result([r for r in rows if r["poll_date"] == latest], coverage="indexed contests only")
 
 
-def export_bundle(bundle: dict, directory: Path, *, generated: str) -> dict:
+def export_bundle(bundle: dict, directory: Path, *, generated: str,
+                  preserved_details: dict[str, dict] | None = None) -> dict:
     """Content-addressed release assets; publish manifest last. No truncation of data."""
     validate(bundle)
     _iso(generated)
     bundle = {**bundle, **{name: sorted(bundle.get(name, []), key=lambda r: r[key]) for name, (key, _) in TABLES.items()}}
-    release_id = hashlib.sha256(canonical_json({"bundle": bundle, "generated": generated, "export_version": EXPORT_VERSION}).encode()).hexdigest()[:16]
+    preserved_details = preserved_details or {}
+    identity = {"bundle": bundle, "generated": generated, "export_version": EXPORT_VERSION}
+    if preserved_details:
+        identity["preserved_details"] = preserved_details
+    release_id = hashlib.sha256(canonical_json(identity).encode()).hexdigest()[:16]
     release = directory / "releases" / release_id
     release.mkdir(parents=True, exist_ok=True)
     base = f"/electorates/releases/{release_id}"
@@ -295,11 +300,19 @@ def export_bundle(bundle: dict, directory: Path, *, generated: str) -> dict:
         rosters = sorted(related["rosters"], key=lambda r: (r["as_of"], r.get("priority", 0)), reverse=True)
         roster = rosters[0] if rosters else None
         members = [dict(m, person=registry.people[m["person_id"]]) for m in roster["members"]] if roster else []
-        summary = dict(e, url=f"/subject/electorate/{e['slug']}", detail_url=f"{base}/{eid}.json",
+        detail_url = preserved_details[eid]["detail_url"] if eid in preserved_details else f"{base}/{eid}.json"
+        summary = dict(e, url=f"/subject/electorate/{e['slug']}", detail_url=detail_url,
                        representatives=members, representation_as_of=roster["as_of"] if roster else None,
-                       representation_status=("verified" if roster.get("complete") else "partial") if roster else "unknown",
+                       representation_status=(("listed" if roster.get("observation_only") else "verified")
+                                              if roster.get("complete") else "partial") if roster else "unknown",
                        latest_election=contests[0]["election"]["poll_date"] if contests else None,
                        election_count=len(contests), history_count=len(related["terms"]))
+        provenance = {}
+        if roster and roster.get("observation_only"):
+            primary = sources[roster["members"][0]["sources"][0]]
+            provenance = dict(representation_observation_only=True, representation_basis=roster["basis"],
+                              representation_source=primary["label"], representation_source_url=primary["url"])
+            summary.update(provenance)
         index.append(summary)
         pids = {t["person_id"] for t in related["terms"]} | {m["person_id"] for r in rosters for m in r["members"]}
         for pid in sorted(pids):
@@ -308,9 +321,9 @@ def export_bundle(bundle: dict, directory: Path, *, generated: str) -> dict:
             item["electorates"].append({"electorate_id": eid, "name": e["name"], "jurisdiction": e["jurisdiction"],
                                        "chamber": e["chamber"], "url": summary["url"],
                                        "current": any(m["person_id"] == pid for m in members),
-                                       "party": next((m.get("party") for m in members if m["person_id"] == pid), None),
+                                       "party": next((m.get("party_canonical", m.get("party")) for m in members if m["person_id"] == pid), None),
                                        "periods": [{"start": t.get("start"), "end": t.get("end")} for t in related["terms"] if t["person_id"] == pid],
-                                       "as_of": summary["representation_as_of"]})
+                                       "as_of": summary["representation_as_of"], **provenance})
         related["relations"] = [dict(r, related=registry.electorates[r["related_id"]]) for r in related["relations"]]
         detail = dict(summary, **related, elections=contests,
                       people={pid: registry.people[pid] for pid in sorted(pids)})
@@ -327,6 +340,8 @@ def export_bundle(bundle: dict, directory: Path, *, generated: str) -> dict:
                     collect(child)
         collect(detail)
         detail["sources"] = {sid: sources[sid] for sid in sorted(used)}
+        if eid in preserved_details and canonical_json(detail) != canonical_json(preserved_details[eid]):
+            raise ValueError(f"Protected electorate output changed: {eid}")
         write(f"{eid}.json", detail)
     meta = {"schema_version": SCHEMA_VERSION, "export_version": EXPORT_VERSION, "release_id": release_id, "generated": generated,
             "coverage": bundle.get("coverage", {}), "sources": list(sources.values())}
