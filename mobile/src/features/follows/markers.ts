@@ -2,7 +2,7 @@ import { ApiError } from '../../api/errors';
 import { isPartialCatalog } from '../../api/validation';
 import type { Catalogs } from '../../api/catalogs';
 import { catalogSources, personId, profileFor } from '../../api/catalogs';
-import { billStatusLabel } from '../../api/bill-status';
+import { billEnding, billStatusLabel } from '../../api/bill-status';
 import { billName } from '../../api/bill-transforms';
 import { partyMembers } from '../../api/party-page';
 import { nameKey } from '../../api/ids';
@@ -305,8 +305,12 @@ function billFingerprint(key: string, sources: FollowSources) {
   const markers: Fingerprint = {
     status: {
       value: row.status,
-      words: billStatusLabel(row.status).toLowerCase(),
+      // The pill's words; the change line lowers the first letter.
+      words: billStatusLabel(row.status, billEnding(row)),
       asAt: row.status_as_of,
+      // The status pill reads it too (FollowRow).
+      ...(row.ended ? { ended: row.ended } : {}),
+      ...(row.ended_label ? { ended_label: row.ended_label } : {}),
     },
     moved: { value: row.status_as_of, asAt: row.status_as_of },
     divisions: {

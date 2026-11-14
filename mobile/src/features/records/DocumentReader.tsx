@@ -29,7 +29,7 @@ import {
 import { catalogs } from '../../api/runtime';
 import { formatDate } from '../../design/format';
 import { haptic } from '../../design/haptics';
-import { billStatusLabel } from '../../api/bill-status';
+import { billEnding, billStatusLabel } from '../../api/bill-status';
 import {
   BillRow,
   Button,
@@ -918,7 +918,7 @@ function LinkedBillRow({ bill }: { bill: BillEntry }) {
     <BillRow
       billKey={bill.key}
       title={bill.title}
-      status={billStatusLabel(bill.status)}
+      status={billStatusLabel(bill.status, billEnding(bill))}
       rawStatus={bill.status}
       date={bill.introduced}
       dateLabel="Introduced"

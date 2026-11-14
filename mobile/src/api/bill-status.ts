@@ -1,4 +1,4 @@
-import { billStatusWord } from './bill-transforms';
+import { billSentenceCase, billStatusWord } from './bill-transforms';
 
 /**
  * The one place a bill's status becomes words: the status pill on every
@@ -7,16 +7,20 @@ import { billStatusWord } from './bill-transforms';
  * bill stopped. Everything calls `billStatusReading` or `billStatusLabel`, so
  * the pill and the tracker can't disagree.
  *
- * The register files every bill that died as `lapsed`: negatived,
- * discharged, removed from the Notice Paper and lapsed alike. A bill reads
- * "Voted down" only on firm evidence in its own record (`billVotedDown`):
- * its last recorded stage fell on the day of a counted vote, at that reading
- * and in that house, against the bill's own question; or ParlInfo's
- * first-reading pattern. Measured against ParlInfo's wording for every
- * federal bill: 56 of 56 right (tests/fixtures/bill-stages). Other dead bills
- * keep the register's word. When the export carries ParlInfo's own
- * distinction (a `negatived` status), this is where it maps, to the same
- * "Voted down".
+ * The register's `status` files every bill that died as `lapsed`:
+ * negatived, discharged, removed from the Notice Paper and lapsed alike.
+ *
+ * - When the bills export carries `ended` (ParlInfo's own ending, on index
+ *   rows and bill files alike), that is the word, everywhere: "Voted down",
+ *   "Removed from the Notice Paper", "Discharged from the Notice Paper". A
+ *   counted vote, when one is linked, only adds where and when.
+ * - Without it (an export or a cache from before `ended`), a bill file reads
+ *   "Voted down" only on firm evidence in its own record (`billVotedDown`):
+ *   its last recorded stage fell on the day of a counted vote, at that
+ *   reading and in that house, against the bill's own question; or
+ *   ParlInfo's first-reading pattern. 56 bills, every one negatived in
+ *   ParlInfo (tests/fixtures/bill-stages/voted-down-keys.json). An index
+ *   row has no record to read and says the register's "Lapsed".
  */
 
 export type BillHouse = 'representatives' | 'senate';
@@ -88,13 +92,28 @@ export interface BillDivisionRow {
 export interface BillStatusEvidence {
   stages?: readonly BillStageRow[] | null;
   divisions?: readonly BillDivisionRow[] | null;
+  /** The export's `ended`: how ParlInfo says a dead bill ended. */
+  ended?: string | null;
+  /** The export's `ended_label`: its words, for a code the app doesn't know. */
+  ended_label?: string | null;
 }
 
-/** Where a bill was voted down: the reading, the house and the day. */
+/** A bill's `ended` and `ended_label`, as index rows and bill files carry them. */
+export const billEnding = (bill: {
+  ended?: string | null;
+  ended_label?: string | null;
+}): BillStatusEvidence => ({
+  ended: bill.ended,
+  ended_label: bill.ended_label,
+});
+
+/** Where a bill was voted down: the stage, the house and the day. */
 export interface BillVotedDown {
-  stage: 'introduced' | 'second_reading' | 'third_reading';
+  stage: 'introduced' | 'second_reading' | 'committee' | 'third_reading';
   house: BillHouse;
   date: string;
+  /** A counted vote is linked: the division behind it. */
+  counted: boolean;
 }
 
 export type BillStatusState =
@@ -108,14 +127,42 @@ export interface BillStatusReading {
   /** The pill's word: "Voted down", "Lapsed", "Passed", "Before parliament". */
   word: string;
   state: BillStatusState;
-  /** The firm evidence behind "Voted down", when the record holds it. */
+  /** The export's `ended` code the word came from, or null. */
+  ended: string | null;
+  /** Where and when it was voted down, when the record shows it. */
   votedDown: BillVotedDown | null;
   /**
    * The day a bill stopped, when its record dates it: the vote that
-   * defeated it, or the row the register files a lapse or a removal under
-   * (`other`, "Lapsed at dissolution") when nothing comes after it.
+   * defeated it (or, negatived with none linked, its final recorded day), or
+   * the row the register files a lapse or a removal under (`other`, "Lapsed
+   * at dissolution") when nothing comes after it.
    */
   stoppedOn: string | null;
+}
+
+/**
+ * The export's ending codes (scripts/export_bills.py ENDED_LABELS), in the
+ * same words. A code not listed here reads its `ended_label`.
+ */
+const ENDED_WORDS: Record<string, string> = {
+  negatived: 'Voted down',
+  removed: 'Removed from the Notice Paper',
+  discharged: 'Discharged from the Notice Paper',
+  withdrawn: 'Withdrawn',
+  laid_aside: 'Laid aside',
+  not_proceeding: 'Not proceeding',
+  lapsed: 'Lapsed',
+};
+
+function endingOf(evidence: BillStatusEvidence | null | undefined) {
+  const code = String(evidence?.ended ?? '')
+    .trim()
+    .toLowerCase();
+  if (!code) return null;
+  const word =
+    ENDED_WORDS[code] ??
+    (String(evidence?.ended_label ?? '').trim() || billSentenceCase(code));
+  return { code, word };
 }
 
 const STOPPED =
@@ -180,6 +227,7 @@ export function billVotedDown(
     stage: last.token as BillVotedDown['stage'],
     house: last.house!,
     date: last.date,
+    counted: false,
   });
   // ParlInfo's "First reading negatived" is filed as a second `introduced`
   // row, the same day and house as the first: the house refused to let the
@@ -204,7 +252,35 @@ export function billVotedDown(
       reading.test(String(d.stage ?? '').trim()) &&
       !PROCEDURAL.test(asked(d)),
   );
-  return against ? found() : null;
+  return against ? { ...found(), counted: true } : null;
+}
+
+/**
+ * Where ParlInfo's "negatived" fell, when no counted vote is linked: the
+ * bill's last recorded stage in a house ("Second reading negatived",
+ * "Negatived in Committee of the Whole").
+ */
+function negativedAt(
+  evidence: BillStatusEvidence | null | undefined,
+): BillVotedDown | null {
+  const stages = datedRows(evidence).filter(
+    (r) => CHAMBER_STAGES.has(r.token) && r.token !== 'other' && r.house,
+  );
+  const last = stages[stages.length - 1];
+  return last
+    ? {
+        stage: last.token as BillVotedDown['stage'],
+        house: last.house!,
+        date: last.date,
+        counted: false,
+      }
+    : null;
+}
+
+/** The bill's final recorded day. */
+function finalDay(evidence: BillStatusEvidence | null | undefined) {
+  const rows = datedRows(evidence);
+  return rows.length ? rows[rows.length - 1]!.date : null;
 }
 
 /** The day of the last recorded row, when it is an `other` row. */
@@ -233,6 +309,26 @@ export function billStatusReading(
           : s === 'exposure draft'
             ? 'draft'
             : 'unknown';
+  const ending = state === 'stopped' ? endingOf(evidence) : null;
+  if (ending) {
+    // ParlInfo's own ending decides the word. A linked vote only adds where
+    // and when; without one, the final recorded day dates it.
+    const votedDown =
+      ending.code === 'negatived'
+        ? (billVotedDown(evidence) ?? negativedAt(evidence))
+        : null;
+    const stoppedOn =
+      ending.code === 'negatived'
+        ? (votedDown?.date ?? finalDay(evidence))
+        : lapsedOn(evidence);
+    return {
+      word: ending.word,
+      state,
+      ended: ending.code,
+      votedDown,
+      stoppedOn,
+    };
+  }
   // The register's `lapsed` folds every dead bill together, so only the
   // record can say one was voted down. A word ParlInfo gave itself
   // (negatived, withdrawn, discharged) is taken as it stands.
@@ -244,7 +340,7 @@ export function billStatusReading(
       : billStatusWord(status) || 'Status not recorded';
   const stoppedOn =
     state !== 'stopped' ? null : (votedDown?.date ?? lapsedOn(evidence));
-  return { word, state, votedDown, stoppedOn };
+  return { word, state, ended: null, votedDown, stoppedOn };
 }
 
 /** The status pill's word (and its VoiceOver label's). */

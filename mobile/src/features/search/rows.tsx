@@ -16,7 +16,7 @@ import {
   useRowFollow,
   type RowMenuAction,
 } from '../../design/primitives';
-import { billStatusLabel } from '../../api/bill-status';
+import { billEnding, billStatusLabel } from '../../api/bill-status';
 import { jurisdictionName } from '../../design/parliament';
 import { formatDate } from '../../design/format';
 import { personRoute, partyRoute } from '../../navigation/routes/people';
@@ -310,7 +310,7 @@ function BillMatch({
       <SuggestionRow
         kind="bill"
         name={title}
-        secondary={[billStatusLabel(bill.status), introduced]
+        secondary={[billStatusLabel(bill.status, billEnding(bill)), introduced]
           .filter(Boolean)
           .join(' · ')}
         matches={matched(q)}
@@ -322,7 +322,7 @@ function BillMatch({
     <BillRow
       billKey={bill.key}
       title={title}
-      status={billStatusLabel(bill.status)}
+      status={billStatusLabel(bill.status, billEnding(bill))}
       rawStatus={bill.status}
       date={bill.introduced}
       meta={bill.portfolio ? { portfolio: bill.portfolio } : undefined}

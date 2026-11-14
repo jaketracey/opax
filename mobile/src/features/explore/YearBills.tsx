@@ -11,7 +11,7 @@ import {
   Text,
 } from '../../design/primitives';
 import { counted } from '../../design/format';
-import { billStatusLabel } from '../../api/bill-status';
+import { billEnding, billStatusLabel } from '../../api/bill-status';
 import { rhythm } from '../../design/tokens';
 import { billRoute } from '../../navigation/routes/bills';
 import type { BillIndex } from '../../api/catalog-decoders';
@@ -34,7 +34,7 @@ function Row({ bill }: { bill: Bill }) {
     <BillRow
       billKey={bill.key}
       title={title}
-      status={billStatusLabel(bill.status)}
+      status={billStatusLabel(bill.status, billEnding(bill))}
       rawStatus={bill.status}
       date={bill.introduced}
       dateLabel="Introduced"

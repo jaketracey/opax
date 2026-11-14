@@ -1,5 +1,5 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
-import { billStatusLabel } from '../../api/bill-status';
+import { billEnding, billStatusLabel } from '../../api/bill-status';
 import { billFoldText, billName } from '../../api/bill-transforms';
 import type { billsFor } from '../../api/catalogs';
 import { counted, formatCount } from '../../design/format';
@@ -378,7 +378,7 @@ export function billRowText(
   bill: BillListRow & { status_stage?: string | null },
 ) {
   const name = billName(bill);
-  const status = billStatusLabel(bill.status);
+  const status = billStatusLabel(bill.status, billEnding(bill));
   const event = rowDate(bill);
   const sponsor = bill.sponsor || null;
   const party = sponsor ? partyFromCode(bill.sponsor_party) : null;

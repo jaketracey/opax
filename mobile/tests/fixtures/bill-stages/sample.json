@@ -1,12 +1,13 @@
 {
   "_about": [
-    "Real federal bills for the bill-stage tracker (mobile/src/features/bills/tracker-model.ts).",
-    "key_dates, status, originating_house, acts and the negative divisions that bear on a reading are the live app payload (GET https://opax.com.au/bills/<key>.json, read 14 Nov 2026), trimmed to the fields the tracker reads. s1400 and s1401 (added after review) are the same payload from a local portal build, with the House business motion negatived the day each arrived.",
+    "Real federal bills for the bill-stage tracker (mobile/src/features/bills/tracker-model.ts) and the status helper (mobile/src/api/bill-status.ts).",
+    "key_dates, status, originating_house, acts and the negative divisions that bear on a reading are the live app payload (GET https://opax.com.au/bills/<key>.json, read 14 Nov 2026), trimmed to the fields the tracker reads. s1400, s1401 and r5300 (added after review) are the same payload from a local portal build; s1400 and s1401 keep the House business motion negatived the day each arrived.",
+    "ended and ended_label are the bills export's new fields (scripts/export_bills.py on im/bill-end-reasons, ac93b52a8), copied from its portal/public/bills files: ParlInfo's own ending. expected is the line without them (today's export); expected_ended the line with them.",
     "parlinfo is ParlInfo's own wording for each stage row, from the OPAX bills registry (bill_events.event_raw); the app never sees it. Each expected line was checked against it by hand.",
-    "Across all 2,989 bills in the register: 2,986 map to the tracker; 3 keep the dated list (2 Constitution Alterations past both houses, which go to a referendum, and 1 exposure draft). Voted down is shown for 56 bills, all negatived in ParlInfo; 30 more negatived bills have no linked vote and read the register status, Lapsed."
+    "Across all 2,989 bills in the register: 2,986 map to the tracker; 3 keep the dated list (2 Constitution Alterations past both houses, which go to a referendum, and 1 exposure draft). Without ended, Voted down is shown for 56 bills (voted-down-keys.json), all negatived in ParlInfo; with ended, for all 84 the export marks negatived."
   ],
   "sampled": "2026-11-14",
-  "count": 74,
+  "count": 75,
   "bills": [
     {
       "key": "au-federal-s1518",
@@ -777,6 +778,8 @@
       "title": "International Aid (Promoting Gender Equality) Bill 2015",
       "case": "senate-first-lapsed",
       "status": "lapsed",
+      "ended": "lapsed",
+      "ended_label": "Lapsed",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -814,13 +817,16 @@
         "2016-04-19 Senate: Restored to Notice Paper",
         "2016-05-09 Senate: Lapsed at dissolution"
       ],
-      "expected": "Stopped at step 2 of 6: Second reading. Lapsed."
+      "expected": "Stopped at step 2 of 6: Second reading. Lapsed.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Lapsed."
     },
     {
       "key": "au-federal-s997",
       "title": "Defence Legislation Amendment (Parliamentary Approval of Overseas Service) Bill 2015",
       "case": "senate-first-lapsed",
       "status": "lapsed",
+      "ended": "lapsed",
+      "ended_label": "Lapsed",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -876,13 +882,16 @@
         "2017-02-09 Senate: Second reading debate",
         "2019-07-01 Senate: Lapsed at end of Parliament"
       ],
-      "expected": "Stopped at step 2 of 6: Second reading. Lapsed."
+      "expected": "Stopped at step 2 of 6: Second reading. Lapsed.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Lapsed."
     },
     {
       "key": "au-federal-s995",
       "title": "Competition and Consumer Amendment (Australian Country of Origin Food Labelling) Bill 2015",
       "case": "senate-first-lapsed",
       "status": "lapsed",
+      "ended": "lapsed",
+      "ended_label": "Lapsed",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -932,7 +941,8 @@
         "2016-09-15 Senate: Restored to Notice Paper",
         "2019-07-01 Senate: Lapsed at end of Parliament"
       ],
-      "expected": "Stopped at step 2 of 6: Second reading. Lapsed."
+      "expected": "Stopped at step 2 of 6: Second reading. Lapsed.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Lapsed."
     },
     {
       "key": "au-federal-r7542",
@@ -1391,6 +1401,8 @@
       "title": "Sex Discrimination Amendment (Restoring Biological Definitions) Bill 2025",
       "case": "voted-down-first-reading",
       "status": "lapsed",
+      "ended": "negatived",
+      "ended_label": "Voted down",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -1418,13 +1430,16 @@
         "2025-07-31 Senate: Introduced",
         "2025-07-31 Senate: First reading negatived"
       ],
-      "expected": "Stopped at step 1 of 6: First reading. Voted down."
+      "expected": "Stopped at step 1 of 6: First reading. Voted down.",
+      "expected_ended": "Stopped at step 1 of 6: First reading. Voted down."
     },
     {
       "key": "au-federal-s1429",
       "title": "Sex Discrimination Amendment (Acknowledging Biological Reality) Bill 2024",
       "case": "voted-down-first-reading",
       "status": "lapsed",
+      "ended": "negatived",
+      "ended_label": "Voted down",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -1459,13 +1474,16 @@
         "2024-09-12 Senate: Introduced",
         "2024-09-12 Senate: First reading negatived"
       ],
-      "expected": "Stopped at step 1 of 6: First reading. Voted down."
+      "expected": "Stopped at step 1 of 6: First reading. Voted down.",
+      "expected_ended": "Stopped at step 1 of 6: First reading. Voted down."
     },
     {
       "key": "au-federal-s986",
       "title": "Family Tax Benefit (Tighter Income Test) Bill 2014",
       "case": "voted-down-second-reading",
       "status": "lapsed",
+      "ended": "negatived",
+      "ended_label": "Voted down",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -1512,13 +1530,16 @@
         "2014-12-04 Senate: Second reading debate",
         "2014-12-04 Senate: Second reading negatived"
       ],
-      "expected": "Stopped at step 2 of 6: Second reading. Voted down."
+      "expected": "Stopped at step 2 of 6: Second reading. Voted down.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Voted down."
     },
     {
       "key": "au-federal-s970",
       "title": "Defence Legislation Amendment (Parliamentary Approval of Overseas Service) Bill 2014",
       "case": "voted-down-second-reading",
       "status": "lapsed",
+      "ended": "negatived",
+      "ended_label": "Voted down",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -1558,13 +1579,16 @@
         "2014-09-04 Senate: Second reading debate",
         "2014-09-04 Senate: Second reading negatived"
       ],
-      "expected": "Stopped at step 2 of 6: Second reading. Voted down."
+      "expected": "Stopped at step 2 of 6: Second reading. Voted down.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Voted down."
     },
     {
       "key": "au-federal-s940",
       "title": "Landholders’ Right to Refuse (Gas and Coal) Bill 2013",
       "case": "voted-down-second-reading",
       "status": "lapsed",
+      "ended": "negatived",
+      "ended_label": "Voted down",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -1604,13 +1628,16 @@
         "2014-03-06 Senate: Second reading debate",
         "2014-03-06 Senate: Second reading negatived"
       ],
-      "expected": "Stopped at step 2 of 6: Second reading. Voted down."
+      "expected": "Stopped at step 2 of 6: Second reading. Voted down.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Voted down."
     },
     {
       "key": "au-federal-s1488",
       "title": "Criminal Code Amendment (Keeping Australia Safe) Bill 2026",
       "case": "voted-down-second-reading",
       "status": "lapsed",
+      "ended": "negatived",
+      "ended_label": "Voted down",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -1663,13 +1690,16 @@
         "2026-04-01 Senate: Second reading debate",
         "2026-04-01 Senate: Second reading negatived"
       ],
-      "expected": "Stopped at step 2 of 6: Second reading. Voted down."
+      "expected": "Stopped at step 2 of 6: Second reading. Voted down.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Voted down."
     },
     {
       "key": "au-federal-s1464",
       "title": "Members of Parliament (Staff) Amendment (Providing Certainty and Improving Integrity) Bill 2025",
       "case": "voted-down-third-reading",
       "status": "lapsed",
+      "ended": "negatived",
+      "ended_label": "Voted down",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -1721,13 +1751,16 @@
         "2025-09-03 Senate: Second reading agreed to",
         "2025-09-03 Senate: Third reading negatived"
       ],
-      "expected": "Stopped at step 4 of 6: Third reading. Voted down."
+      "expected": "Stopped at step 4 of 6: Third reading. Voted down.",
+      "expected_ended": "Stopped at step 4 of 6: Third reading. Voted down."
     },
     {
       "key": "au-federal-r7201",
       "title": "Defence Amendment (Parliamentary Joint Committee on Defence) Bill 2024",
       "case": "voted-down-other-house",
       "status": "lapsed",
+      "ended": "negatived",
+      "ended_label": "Voted down",
       "originating_house": "representatives",
       "key_dates": [
         {
@@ -1828,13 +1861,16 @@
         "2024-07-04 Senate: Second reading agreed to",
         "2024-07-04 Senate: Third reading negatived"
       ],
-      "expected": "Stopped at step 5 of 6: The Senate. Voted down."
+      "expected": "Stopped at step 5 of 6: The Senate. Voted down.",
+      "expected_ended": "Stopped at step 5 of 6: The Senate. Voted down."
     },
     {
       "key": "au-federal-r6349",
       "title": "Migration Amendment (Strengthening the Character Test) Bill 2019",
       "case": "voted-down-other-house",
       "status": "lapsed",
+      "ended": "negatived",
+      "ended_label": "Voted down",
       "originating_house": "representatives",
       "key_dates": [
         {
@@ -1911,13 +1947,16 @@
         "2021-10-20 Senate: Second reading debate",
         "2021-10-20 Senate: Second reading negatived"
       ],
-      "expected": "Stopped at step 5 of 6: The Senate. Voted down."
+      "expected": "Stopped at step 5 of 6: The Senate. Voted down.",
+      "expected_ended": "Stopped at step 5 of 6: The Senate. Voted down."
     },
     {
       "key": "au-federal-r5728",
       "title": "Plebiscite (Same-Sex Marriage) Bill 2016",
       "case": "voted-down-other-house",
       "status": "lapsed",
+      "ended": "negatived",
+      "ended_label": "Voted down",
       "originating_house": "representatives",
       "key_dates": [
         {
@@ -2018,13 +2057,16 @@
         "2016-11-07 Senate: Second reading debate",
         "2016-11-07 Senate: Second reading negatived"
       ],
-      "expected": "Stopped at step 5 of 6: The Senate. Voted down."
+      "expected": "Stopped at step 5 of 6: The Senate. Voted down.",
+      "expected_ended": "Stopped at step 5 of 6: The Senate. Voted down."
     },
     {
       "key": "au-federal-s1503",
       "title": "Protecting Australians from Foreign Terrorist Fighters Bill 2026",
       "case": "negatived-no-linked-vote",
       "status": "lapsed",
+      "ended": "negatived",
+      "ended_label": "Voted down",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -2057,6 +2099,7 @@
         "2026-09-10 Senate: Second reading negatived"
       ],
       "expected": "Stopped at step 2 of 6: Second reading. Lapsed.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Voted down.",
       "limit": "ParlInfo: second reading negatived. No counted vote is linked to the bill, so it reads the register status, Lapsed."
     },
     {
@@ -2064,6 +2107,8 @@
       "title": "Sex Discrimination Amendment (Restoring Common Sense and Recognising Biological Sex) Bill 2026",
       "case": "negatived-no-linked-vote",
       "status": "lapsed",
+      "ended": "negatived",
+      "ended_label": "Voted down",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -2091,13 +2136,16 @@
         "2026-07-01 Senate: Introduced",
         "2026-07-01 Senate: First reading negatived"
       ],
-      "expected": "Stopped at step 1 of 6: First reading. Voted down."
+      "expected": "Stopped at step 1 of 6: First reading. Voted down.",
+      "expected_ended": "Stopped at step 1 of 6: First reading. Voted down."
     },
     {
       "key": "au-federal-s1482",
       "title": "A New Tax System (Family Assistance) Amendment (No Jab No Pay Repeal) Bill 2025",
       "case": "negatived-no-linked-vote",
       "status": "lapsed",
+      "ended": "negatived",
+      "ended_label": "Voted down",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -2130,6 +2178,7 @@
         "2026-09-16 Senate: Second reading negatived"
       ],
       "expected": "Stopped at step 2 of 6: Second reading. Lapsed.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Voted down.",
       "limit": "ParlInfo: second reading negatived. No counted vote is linked to the bill, so it reads the register status, Lapsed."
     },
     {
@@ -2137,6 +2186,8 @@
       "title": "Criminal Code Amendment (Animal Protection) Bill 2015",
       "case": "lapsed-first-house",
       "status": "lapsed",
+      "ended": "lapsed",
+      "ended_label": "Lapsed",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -2186,13 +2237,16 @@
         "2016-08-31 Senate: Restored to Notice Paper",
         "2019-07-01 Senate: Lapsed at end of Parliament"
       ],
-      "expected": "Stopped at step 2 of 6: Second reading. Lapsed."
+      "expected": "Stopped at step 2 of 6: Second reading. Lapsed.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Lapsed."
     },
     {
       "key": "au-federal-s993",
       "title": "Australian Centre for Social Cohesion Bill 2015",
       "case": "lapsed-first-house",
       "status": "lapsed",
+      "ended": "lapsed",
+      "ended_label": "Lapsed",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -2242,13 +2296,16 @@
         "2016-09-15 Senate: Restored to Notice Paper",
         "2019-07-01 Senate: Lapsed at end of Parliament"
       ],
-      "expected": "Stopped at step 2 of 6: Second reading. Lapsed."
+      "expected": "Stopped at step 2 of 6: Second reading. Lapsed.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Lapsed."
     },
     {
       "key": "au-federal-s992",
       "title": "Commonwealth Electoral Amendment (Donations Reform) Bill 2014",
       "case": "lapsed-first-house",
       "status": "lapsed",
+      "ended": "lapsed",
+      "ended_label": "Lapsed",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -2304,13 +2361,16 @@
         "2016-08-31 Senate: Restored to Notice Paper",
         "2019-07-01 Senate: Lapsed at end of Parliament"
       ],
-      "expected": "Stopped at step 2 of 6: Second reading. Lapsed."
+      "expected": "Stopped at step 2 of 6: Second reading. Lapsed.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Lapsed."
     },
     {
       "key": "au-federal-s989",
       "title": "Defence Amendment (Fair Pay for Members of the ADF) Bill 2014",
       "case": "lapsed-other-house",
       "status": "lapsed",
+      "ended": "lapsed",
+      "ended_label": "Lapsed",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -2360,13 +2420,16 @@
         "2015-03-19 House: Introduced and read a first time",
         "2016-04-15 House: Lapsed at prorogation"
       ],
-      "expected": "Stopped at step 5 of 6: The House. Lapsed."
+      "expected": "Stopped at step 5 of 6: The House. Lapsed.",
+      "expected_ended": "Stopped at step 5 of 6: The House. Lapsed."
     },
     {
       "key": "au-federal-s1384",
       "title": "Migration Amendment (Overseas Organ Transplant Disclosure and Other Measures) Bill 2024",
       "case": "lapsed-other-house",
       "status": "lapsed",
+      "ended": "lapsed",
+      "ended_label": "Lapsed",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -2428,13 +2491,16 @@
         "2024-08-21 House: Introduced and read a first time",
         "2025-03-28 House: Lapsed at dissolution"
       ],
-      "expected": "Stopped at step 5 of 6: The House. Lapsed."
+      "expected": "Stopped at step 5 of 6: The House. Lapsed.",
+      "expected_ended": "Stopped at step 5 of 6: The House. Lapsed."
     },
     {
       "key": "au-federal-s1377",
       "title": "Defence Capability Assurance and Oversight Bill 2024",
       "case": "lapsed-other-house",
       "status": "lapsed",
+      "ended": "lapsed",
+      "ended_label": "Lapsed",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -2496,13 +2562,16 @@
         "2024-02-12 House: Introduced and read a first time",
         "2025-03-28 House: Lapsed at dissolution"
       ],
-      "expected": "Stopped at step 5 of 6: The House. Lapsed."
+      "expected": "Stopped at step 5 of 6: The House. Lapsed.",
+      "expected_ended": "Stopped at step 5 of 6: The House. Lapsed."
     },
     {
       "key": "au-federal-s1307",
       "title": "Customs Amendment (Banning Goods Produced By Forced Labour) Bill 2021",
       "case": "lapsed-other-house",
       "status": "lapsed",
+      "ended": "lapsed",
+      "ended_label": "Lapsed",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -2552,13 +2621,16 @@
         "2021-08-23 House: Introduced and read a first time",
         "2022-04-11 House: Lapsed at dissolution"
       ],
-      "expected": "Stopped at step 5 of 6: The House. Lapsed."
+      "expected": "Stopped at step 5 of 6: The House. Lapsed.",
+      "expected_ended": "Stopped at step 5 of 6: The House. Lapsed."
     },
     {
       "key": "au-federal-s1178",
       "title": "Telecommunications and Other Legislation Amendment (Miscellaneous Amendments) Bill 2019",
       "case": "lapsed-after-passing-first",
       "status": "lapsed",
+      "ended": "lapsed",
+      "ended_label": "Lapsed",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -2610,13 +2682,16 @@
         "2019-02-14 Senate: Committee of the Whole debate (Amendment details: 1 Opposition agreed to)",
         "2019-07-01 Senate: Lapsed at end of Parliament"
       ],
-      "expected": "Stopped at step 4 of 6: Third reading. Lapsed."
+      "expected": "Stopped at step 4 of 6: Third reading. Lapsed.",
+      "expected_ended": "Stopped at step 4 of 6: Third reading. Lapsed."
     },
     {
       "key": "au-federal-r6256",
       "title": "Treasury Laws Amendment (Prohibiting Energy Market Misconduct) Bill 2018",
       "case": "lapsed-after-passing-first",
       "status": "lapsed",
+      "ended": "lapsed",
+      "ended_label": "Lapsed",
       "originating_house": "representatives",
       "key_dates": [
         {
@@ -2681,13 +2756,16 @@
         "2018-12-06 House: Consideration in detail debate",
         "2019-04-11 House: Lapsed at dissolution"
       ],
-      "expected": "Stopped at step 4 of 6: Third reading. Lapsed."
+      "expected": "Stopped at step 4 of 6: Third reading. Lapsed.",
+      "expected_ended": "Stopped at step 4 of 6: Third reading. Lapsed."
     },
     {
       "key": "au-federal-s1284",
       "title": "Customs Amendment (Banning Goods Produced By Uyghur Forced Labour) Bill 2020",
       "case": "withdrawn-discharged",
       "status": "lapsed",
+      "ended": "discharged",
+      "ended_label": "Discharged from the Notice Paper",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -2714,6 +2792,7 @@
         "2021-06-24 Senate: Discharged from Notice Paper"
       ],
       "expected": "Stopped at step 2 of 6: Second reading. Lapsed.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Discharged from the Notice Paper.",
       "limit": "ParlInfo: discharged from the Notice Paper. The register files it as lapsed."
     },
     {
@@ -2721,6 +2800,8 @@
       "title": "Social Services Legislation Amendment (Ending the Poverty Trap) Bill 2018",
       "case": "withdrawn-discharged",
       "status": "lapsed",
+      "ended": "discharged",
+      "ended_label": "Discharged from the Notice Paper",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -2777,6 +2858,7 @@
         "2020-06-17 Senate: Discharged from Notice Paper"
       ],
       "expected": "Stopped at step 2 of 6: Second reading. Lapsed.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Discharged from the Notice Paper.",
       "limit": "ParlInfo: discharged from the Notice Paper. The register files it as lapsed."
     },
     {
@@ -2784,6 +2866,8 @@
       "title": "Commonwealth Electoral Amendment (Lowering Voting Age and Increasing Voter Participation) Bill 2018",
       "case": "withdrawn-discharged",
       "status": "lapsed",
+      "ended": "discharged",
+      "ended_label": "Discharged from the Notice Paper",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -2840,6 +2924,7 @@
         "2023-02-08 Senate: Discharged from Notice Paper"
       ],
       "expected": "Stopped at step 2 of 6: Second reading. Lapsed.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Discharged from the Notice Paper.",
       "limit": "ParlInfo: discharged from the Notice Paper. The register files it as lapsed."
     },
     {
@@ -2847,6 +2932,8 @@
       "title": "Medicinal Cannabis Legislation Amendment (Securing Patient Access) Bill 2017",
       "case": "removed-notice-paper",
       "status": "lapsed",
+      "ended": "removed",
+      "ended_label": "Removed from the Notice Paper",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -2897,6 +2984,7 @@
         "2018-06-19 House: Removed from the Notice Paper in accordance with (SO 42)"
       ],
       "expected": "Stopped at step 5 of 6: The House. Lapsed.",
+      "expected_ended": "Stopped at step 5 of 6: The House. Removed from the Notice Paper.",
       "limit": "ParlInfo: removed from the Notice Paper (House SO 42). The register files it as lapsed."
     },
     {
@@ -2904,6 +2992,8 @@
       "title": "Banking and Financial Services Commission of Inquiry Bill 2017",
       "case": "removed-notice-paper",
       "status": "lapsed",
+      "ended": "removed",
+      "ended_label": "Removed from the Notice Paper",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -2974,6 +3064,7 @@
         "2018-02-06 House: Removed from the Notice Paper in accordance with (SO 42)"
       ],
       "expected": "Stopped at step 5 of 6: The House. Lapsed.",
+      "expected_ended": "Stopped at step 5 of 6: The House. Removed from the Notice Paper.",
       "limit": "ParlInfo: removed from the Notice Paper (House SO 42). The register files it as lapsed."
     },
     {
@@ -4748,6 +4839,8 @@
       "title": "Reserve Bank Amendment (Australian Reconstruction and Development Board) Bill 2013 [No. 2]",
       "case": "old-sparse",
       "status": "lapsed",
+      "ended": "lapsed",
+      "ended_label": "Lapsed",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -4767,13 +4860,16 @@
         "2013-06-27 Senate: Introduced and read a first time",
         "2013-06-27 Senate: Second reading moved"
       ],
-      "expected": "Stopped at step 2 of 6: Second reading. Lapsed."
+      "expected": "Stopped at step 2 of 6: Second reading. Lapsed.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Lapsed."
     },
     {
       "key": "au-federal-alrc-5065",
       "title": "Guardian for Unaccompanied Children Bill 2013",
       "case": "old-sparse",
       "status": "lapsed",
+      "ended": "lapsed",
+      "ended_label": "Lapsed",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -4793,13 +4889,16 @@
         "2013-06-27 Senate: Introduced and read a first time",
         "2013-06-27 Senate: Second reading moved"
       ],
-      "expected": "Stopped at step 2 of 6: Second reading. Lapsed."
+      "expected": "Stopped at step 2 of 6: Second reading. Lapsed.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Lapsed."
     },
     {
       "key": "au-federal-alrc-5063",
       "title": "Copyright Legislation Amendment (Fair Go for Fair Use) Bill 2013",
       "case": "old-sparse",
       "status": "lapsed",
+      "ended": "lapsed",
+      "ended_label": "Lapsed",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -4819,7 +4918,8 @@
         "2013-06-27 Senate: Introduced and read a first time",
         "2013-06-27 Senate: Second reading moved"
       ],
-      "expected": "Stopped at step 2 of 6: Second reading. Lapsed."
+      "expected": "Stopped at step 2 of 6: Second reading. Lapsed.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Lapsed."
     },
     {
       "key": "au-federal-alrc-2430",
@@ -5030,6 +5130,8 @@
       "title": "A Fair Go for Australians in Trade Bill 2018 [No. 2]",
       "case": "known-limits",
       "status": "lapsed",
+      "ended": "lapsed",
+      "ended_label": "Lapsed",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -5068,6 +5170,7 @@
         "2019-07-01 Senate: Lapsed at end of Parliament"
       ],
       "expected": "Stopped at step 2 of 6: Second reading. Lapsed.",
+      "expected_ended": "Stopped at step 2 of 6: Second reading. Lapsed.",
       "limit": "ParlInfo records the second reading agreed (12 Nov 2018) before the bill lapsed; the payload cannot tell agreed from debated, so it stops a step early."
     },
     {
@@ -5324,6 +5427,8 @@
       "title": "Constitution Alteration (Local Government) 2013",
       "case": "fallback",
       "status": "lapsed",
+      "ended": "lapsed",
+      "ended_label": "Lapsed",
       "originating_house": "representatives",
       "key_dates": [
         {
@@ -5409,13 +5514,16 @@
         "2013-06-24 Senate: Third reading agreed to",
         "2013-06-24 Senate: Text of bill as passed both Houses"
       ],
-      "expected": "Falls back: referendum"
+      "expected": "Falls back: referendum",
+      "expected_ended": "Falls back: referendum"
     },
     {
       "key": "au-federal-s1400",
       "title": "Fair Work Legislation Amendment (Small Business Redundancy Exemption) Bill 2023",
       "case": "other-vote-same-day",
       "status": "lapsed",
+      "ended": "not_proceeding",
+      "ended_label": "Not proceeding",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -5467,13 +5575,16 @@
         "2023-11-09 Senate: Third reading agreed to",
         "2023-11-13 House: Introduced and read a first time"
       ],
-      "expected": "Stopped at step 5 of 6: The House. Lapsed."
+      "expected": "Stopped at step 5 of 6: The House. Lapsed.",
+      "expected_ended": "Stopped at step 5 of 6: The House. Not proceeding."
     },
     {
       "key": "au-federal-s1401",
       "title": "Fair Work Legislation Amendment (Strengthening Protections Against Discrimination) Bill 2023",
       "case": "other-vote-same-day",
       "status": "lapsed",
+      "ended": "not_proceeding",
+      "ended_label": "Not proceeding",
       "originating_house": "senate",
       "key_dates": [
         {
@@ -5525,7 +5636,148 @@
         "2023-11-09 Senate: Third reading agreed to",
         "2023-11-13 House: Introduced and read a first time"
       ],
-      "expected": "Stopped at step 5 of 6: The House. Lapsed."
+      "expected": "Stopped at step 5 of 6: The House. Lapsed.",
+      "expected_ended": "Stopped at step 5 of 6: The House. Not proceeding."
+    },
+    {
+      "key": "au-federal-r5300",
+      "title": "Minerals Resource Rent Tax Repeal and Other Measures Bill 2013 [No. 2]",
+      "case": "laid-aside",
+      "status": "lapsed",
+      "ended": "laid_aside",
+      "ended_label": "Laid aside",
+      "originating_house": "representatives",
+      "key_dates": [
+        {
+          "stage": "introduced",
+          "date": "2014-06-23",
+          "house": "representatives"
+        },
+        {
+          "stage": "second_reading",
+          "date": "2014-06-23",
+          "house": "representatives"
+        },
+        {
+          "stage": "second_reading",
+          "date": "2014-06-26",
+          "house": "representatives"
+        },
+        {
+          "stage": "second_reading",
+          "date": "2014-06-26",
+          "house": "representatives"
+        },
+        {
+          "stage": "third_reading",
+          "date": "2014-06-26",
+          "house": "representatives"
+        },
+        {
+          "stage": "introduced",
+          "date": "2014-07-07",
+          "house": "senate"
+        },
+        {
+          "stage": "second_reading",
+          "date": "2014-07-07",
+          "house": "senate"
+        },
+        {
+          "stage": "second_reading",
+          "date": "2014-07-14",
+          "house": "senate"
+        },
+        {
+          "stage": "second_reading",
+          "date": "2014-07-15",
+          "house": "senate"
+        },
+        {
+          "stage": "second_reading",
+          "date": "2014-07-17",
+          "house": "senate"
+        },
+        {
+          "stage": "second_reading",
+          "date": "2014-07-17",
+          "house": "senate"
+        },
+        {
+          "stage": "committee",
+          "date": "2014-07-17",
+          "house": "senate"
+        },
+        {
+          "stage": "third_reading",
+          "date": "2014-07-17",
+          "house": "senate"
+        },
+        {
+          "stage": "other",
+          "date": "2014-07-18",
+          "house": "representatives"
+        },
+        {
+          "stage": "other",
+          "date": "2014-07-18",
+          "house": "senate"
+        },
+        {
+          "stage": "other",
+          "date": "2014-08-26",
+          "house": "representatives"
+        },
+        {
+          "stage": "other",
+          "date": "2014-09-01",
+          "house": "representatives"
+        },
+        {
+          "stage": "other",
+          "date": "2014-09-01",
+          "house": "representatives"
+        }
+      ],
+      "divisions": [
+        {
+          "date": "2014-07-17",
+          "house": "senate",
+          "stage": "Bill",
+          "outcome": "negative",
+          "question": "No motion text available"
+        },
+        {
+          "date": "2014-07-17",
+          "house": "senate",
+          "stage": "Bill",
+          "outcome": "negative",
+          "question": "No motion text available"
+        }
+      ],
+      "acts": [],
+      "parlinfo": [
+        "2014-06-23 House: Introduced and read a first time",
+        "2014-06-23 House: Second reading moved",
+        "2014-06-26 House: Second reading debate",
+        "2014-06-26 House: Second reading agreed to",
+        "2014-06-26 House: Third reading agreed to",
+        "2014-07-07 Senate: Introduced and read a first time",
+        "2014-07-07 Senate: Second reading moved",
+        "2014-07-14 Senate: Second reading debate",
+        "2014-07-15 Senate: Second reading debate",
+        "2014-07-17 Senate: Second reading debate",
+        "2014-07-17 Senate: Second reading agreed to",
+        "2014-07-17 Senate: Committee of the Whole debate (Amendment details: 2 Opposition and 2 Palmer United Party agreed to)",
+        "2014-07-17 Senate: Third reading agreed to",
+        "2014-07-18 House: Consideration of Senate message (Details: House disagreed to Senate amendments)",
+        "2014-07-18 Senate: Consideration of House of Reps message (Details: Senate insisted on its amendments)",
+        "2014-08-26 House: Message from Senate reported",
+        "2014-09-01 House: Consideration of Senate message (Details: Bill laid aside)",
+        "2014-09-01 House: Laid aside"
+      ],
+      "expected": "Stopped at step 5 of 6: The Senate. Lapsed.",
+      "expected_ended": "Stopped at step 5 of 6: The Senate. Laid aside."
     }
   ]
 }

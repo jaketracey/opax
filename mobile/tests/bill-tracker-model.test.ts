@@ -9,7 +9,7 @@ import {
 } from '../src/features/bills/tracker-model';
 
 /**
- * The bill-stage tracker against 74 real federal bills, read from the live
+ * The bill-stage tracker against 75 real federal bills, read from the live
  * app payload on 14 Nov 2026 (tests/fixtures/bill-stages/sample.json). Each
  * expected line was checked by hand against ParlInfo's own wording for the
  * bill, which the fixture carries beside the payload as `parlinfo`.
@@ -74,6 +74,19 @@ test('the sample covers every case the brief names, in at least 60 bills', () =>
   }
 });
 
+/** The bill as the export carries it once it names how a dead bill ended. */
+const withEnded = (bill: SampleBill): TrackerInput => ({
+  ...input(bill),
+  ended: 'ended' in bill ? bill.ended : undefined,
+  ended_label: 'ended_label' in bill ? bill.ended_label : undefined,
+});
+const readEnded = (bill: SampleBill) => {
+  const result = billTracker(withEnded(bill));
+  return result.kind === 'tracker'
+    ? result.tracker.summary
+    : `Falls back: ${result.fallback.reason}`;
+};
+
 describe('every sampled bill reads its checked line', () => {
   test.each(sample.bills.map((b) => [b.key, b.case, b] as const))(
     '%s (%s)',
@@ -83,11 +96,39 @@ describe('every sampled bill reads its checked line', () => {
   );
 });
 
+describe("with the export's ending, every sampled bill reads its checked line", () => {
+  const ended = sample.bills.filter((b) => 'ended' in b);
+  test('the sample carries every ending the export writes today', () => {
+    expect(new Set(ended.map((b) => ('ended' in b ? b.ended : '')))).toEqual(
+      new Set([
+        'negatived',
+        'removed',
+        'discharged',
+        'lapsed',
+        'not_proceeding',
+        'laid_aside',
+      ]),
+    );
+  });
+  test.each(ended.map((b) => [b.key, b.case, b] as const))(
+    '%s (%s)',
+    (_key, _case, b) => {
+      expect(readEnded(b)).toBe(
+        'expected_ended' in b ? b.expected_ended : b.expected,
+      );
+    },
+  );
+  test('a bill without an ending reads as it does today', () => {
+    for (const b of sample.bills.filter((x) => !('ended' in x)))
+      expect(readEnded(b)).toBe(b.expected);
+  });
+});
+
 test('how many sampled bills map cleanly and how many keep the dated list', () => {
   const fallbacks = sample.bills.filter(
     (b) => billTracker(input(b)).kind === 'fallback',
   );
-  expect(sample.bills.length - fallbacks.length).toBe(71);
+  expect(sample.bills.length - fallbacks.length).toBe(72);
   expect(fallbacks.map((b) => b.key)).toEqual([
     'au-federal-r7019',
     'au-federal-ed-online-safety-digital-duty-of-care-2026',
@@ -414,6 +455,99 @@ describe('the other steps', () => {
       kind: 'fallback',
       fallback: { reason: 'referendum' },
     });
+  });
+});
+
+describe("ParlInfo's own ending (the export's `ended`)", () => {
+  const stop = (result: ReturnType<typeof billTracker>) =>
+    result.kind === 'tracker'
+      ? result.tracker.steps.find((s) => s.state === 'ended')
+      : undefined;
+
+  test('negatived with no linked division: Voted down, dated by its final day', () => {
+    // ParlInfo: "Second reading negatived", 10 Sep 2026; no counted vote.
+    const b = bill('au-federal-s1503');
+    expect(b.divisions).toEqual([]);
+    expect(read(b)).toBe('Stopped at step 2 of 6: Second reading. Lapsed.');
+    expect(readEnded(b)).toBe(
+      'Stopped at step 2 of 6: Second reading. Voted down.',
+    );
+    expect(stop(billTracker(withEnded(b)))).toMatchObject({
+      id: 'second',
+      date: '2026-09-10',
+      note: 'Voted down',
+    });
+  });
+
+  test('negatived with a counted vote keeps the vote', () => {
+    const b = bill('au-federal-s986');
+    expect(stop(billTracker(withEnded(b)))).toMatchObject({
+      date: '2014-12-04',
+      note: 'Voted down',
+    });
+    expect(stop(billTracker(withEnded(b)))).toEqual(
+      stop(billTracker(input(b))),
+    );
+  });
+
+  test('the ending decides the word, not the vote rule', () => {
+    // A vote that meets the rule, on a bill ParlInfo says lapsed.
+    const b = bill('au-federal-s986');
+    const result = billTracker({ ...input(b), ended: 'lapsed' });
+    expect(stop(result)).toMatchObject({ note: 'Lapsed' });
+  });
+
+  test('laid aside', () => {
+    // The houses disagreed over the Senate's amendments; the House laid
+    // the bill aside, 1 Sep 2014.
+    expect(readEnded(bill('au-federal-r5300'))).toBe(
+      'Stopped at step 5 of 6: The Senate. Laid aside.',
+    );
+    expect(
+      stop(billTracker(withEnded(bill('au-federal-r5300')))),
+    ).toMatchObject({ date: '2014-09-01' });
+  });
+
+  test('a code the app does not know reads its ended_label', () => {
+    const b = bill('au-federal-s1090');
+    expect(
+      stop(
+        billTracker({
+          ...input(b),
+          ended: 'struck_off',
+          ended_label: 'Struck off the Notice Paper',
+        }),
+      ),
+    ).toMatchObject({ note: 'Struck off the Notice Paper' });
+    // With no label either, the code in plain words.
+    expect(
+      stop(billTracker({ ...input(b), ended: 'struck_off' })),
+    ).toMatchObject({ note: 'Struck off' });
+  });
+
+  test('negatived in Committee of the Whole in its first house stops there', () => {
+    // s1384 cut to its Senate committee day, as if the Senate had voted the
+    // bill down in committee.
+    const b = bill('au-federal-s1384');
+    const cut = b.key_dates.slice(
+      0,
+      b.key_dates.findIndex((d) => d.stage === 'committee') + 1,
+    );
+    expect(
+      billTracker({ ...input(b), stages: cut, ended: 'negatived' }),
+    ).toMatchObject({
+      kind: 'tracker',
+      tracker: {
+        summary: 'Stopped at step 3 of 6: Consideration in detail. Voted down.',
+      },
+    });
+  });
+
+  test('an ending on a bill still alive or passed is not read', () => {
+    const b = bill('au-federal-r7539');
+    expect(billTracker({ ...input(b), ended: 'negatived' })).toEqual(
+      billTracker(input(b)),
+    );
   });
 });
 

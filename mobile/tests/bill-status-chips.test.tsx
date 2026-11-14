@@ -150,6 +150,38 @@ describe.each([
   });
 });
 
+test("a followed bill's pill reads the export's ending, as every bill row does", () => {
+  const bill = bills.bills[0]!;
+  const root = render(
+    <FollowRow
+      follow={{
+        kind: 'bill',
+        id: bill.key,
+        title: bill.title,
+        followedAt: 1,
+        seen: null,
+        seenAt: null,
+      }}
+      state={{
+        status: 'ready',
+        title: bill.title,
+        current: {
+          status: {
+            value: 'lapsed',
+            words: 'lapsed',
+            asAt: null,
+            ended: 'removed',
+            ended_label: 'Removed from the Notice Paper',
+          },
+        },
+        keys: [],
+        changes: [],
+      }}
+    />,
+  );
+  checkChip(root, 'lapsed', 'Removed from the Notice Paper', false);
+});
+
 test('chip colour depends on the raw value independently of the label', () => {
   checkChip(
     render(

@@ -36,8 +36,10 @@ import type { TermId } from '../learn/glossary';
  * - The status folds every dead bill (negatived, lapsed, discharged,
  *   removed) into `lapsed`. Where it stopped and why is the status pill's
  *   word, from the one helper both call (api/bill-status.ts), so the pill
- *   and the tracker never disagree: "Voted down" only on firm evidence in
- *   the bill's own record, otherwise the register's "Lapsed".
+ *   and the tracker never disagree: the export's `ended` when it carries
+ *   one ("Voted down", "Removed from the Notice Paper"); without it,
+ *   "Voted down" only on firm evidence in the bill's own record, otherwise
+ *   the register's "Lapsed".
  *
  * A step that must have happened but has no row is done with no date: the
  * tracker never invents one. Anything the six steps can't say truthfully
@@ -111,6 +113,9 @@ export interface TrackerInput {
   divisions?: readonly TrackerDivision[];
   /** The Acts the bill became (`acts`): proof of assent, with its day. */
   acts?: readonly { assent_date: string | null }[];
+  /** The export's `ended` and `ended_label`: ParlInfo's own ending. */
+  ended?: string | null;
+  ended_label?: string | null;
 }
 
 /** Why a bill keeps the dated list instead of the tracker. */
@@ -195,6 +200,8 @@ export function billTracker(input: TrackerInput): TrackerResult {
   const reading = billStatusReading(input.status, {
     stages: input.stages,
     divisions: input.divisions,
+    ended: input.ended,
+    ended_label: input.ended_label,
   });
   const life =
     reading.state === 'alive' || reading.state === 'passed'
@@ -325,7 +332,8 @@ export function billTracker(input: TrackerInput): TrackerResult {
     // Voted down at the first reading: the bill never got in.
     introduced: !downInFirst('introduced'),
     second: pastSecond,
-    detail: detailRows.length > 0,
+    // Negatived in Committee of the Whole: stopped there.
+    detail: detailRows.length > 0 && !downInFirst('committee'),
     passedFirst,
     other: bothHouses,
     // Passed both houses with no assent recorded is waiting for it.

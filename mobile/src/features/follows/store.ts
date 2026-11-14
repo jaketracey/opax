@@ -21,6 +21,9 @@ export interface Reading {
   words?: string;
   asAt: string | null;
   records?: FollowRecord[];
+  /** A bill's ending, when the export names one (`ended`, `ended_label`). */
+  ended?: string;
+  ended_label?: string;
 }
 export type Fingerprint = Record<string, Reading>;
 export interface Follow {
@@ -89,6 +92,10 @@ function decodeReading(v: unknown): Reading | null {
     value,
     ...(typeof v.words === 'string' ? { words: v.words } : {}),
     asAt: typeof v.asAt === 'string' ? v.asAt : null,
+    ...(typeof v.ended === 'string' ? { ended: v.ended } : {}),
+    ...(typeof v.ended_label === 'string'
+      ? { ended_label: v.ended_label }
+      : {}),
     ...(Array.isArray(v.records)
       ? {
           records: v.records.filter(

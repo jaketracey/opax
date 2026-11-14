@@ -1,4 +1,5 @@
 import {
+  billEnding,
   billStatusLabel,
   billStatusReading,
   type BillDivisionRow,
@@ -43,6 +44,8 @@ function stageEvent(
     originating_house: string | null;
     key_dates?: readonly KeyDate[] | null;
     votes?: readonly BillDivisionRow[] | null;
+    ended?: string | null;
+    ended_label?: string | null;
   },
 ): string | null {
   const s = words(stage.stage);
@@ -66,6 +69,7 @@ function stageEvent(
     return billStatusLabel(bill.status, {
       stages: bill.key_dates,
       divisions: bill.votes,
+      ...billEnding(bill),
     });
   }
   return null;
@@ -82,15 +86,23 @@ export function statusEvent(bill: {
    * `divisions` is only a count): the evidence a bill was voted down.
    */
   votes?: readonly BillDivisionRow[] | null;
+  /** The export's ending (`ended`, `ended_label`), when it carries one. */
+  ended?: string | null;
+  ended_label?: string | null;
 }): StatusEvent | null {
   const date = bill.status_as_of;
   if (!date) return null;
-  // Voted down that day: the date reads as the pill does.
+  // Stopped that day, voted down or by ParlInfo's own ending: the date
+  // reads as the pill does.
   const reading = billStatusReading(bill.status, {
     stages: bill.key_dates,
     divisions: bill.votes,
+    ...billEnding(bill),
   });
-  if (reading.votedDown?.date === date) {
+  if (
+    reading.stoppedOn === date &&
+    (reading.votedDown?.date === date || reading.ended)
+  ) {
     return { label: reading.word, date, resolved: true };
   }
   if (bill.status_stage) {

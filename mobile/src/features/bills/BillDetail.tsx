@@ -27,6 +27,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
+  billEnding,
   billStatusLabel,
   type BillStatusEvidence,
 } from '../../api/bill-status';
@@ -816,6 +817,8 @@ function BillHead({
     originating_house: identity.house,
     key_dates: view.keyDates.data ?? [],
     votes: view.divisions.data?.rawRows,
+    ended: identity.ended,
+    ended_label: identity.endedLabel,
   });
   const meta = metaLine(identity);
   return (
@@ -866,6 +869,8 @@ function billSourceDetails(
     originating_house: identity.house,
     key_dates: view.keyDates.data ?? [],
     votes: view.divisions.data?.rawRows,
+    ended: identity.ended,
+    ended_label: identity.endedLabel,
   });
   const sources = view.identity.sources;
   const originals: SourceOriginal[] = sources.map((s) =>
@@ -1028,9 +1033,9 @@ function metaLine(bill: {
 function SeededHead({ row }: { row: IndexRow }) {
   const display = billDisplay(row);
   const name = billName(row);
-  // The index row carries no stages or votes: the register's word until the
-  // bill's own file says more.
-  const status = billStatusLabel(row.status);
+  // The index row carries no stages or votes, only the export's ending when
+  // it has one: the same word the bill's own file gives.
+  const status = billStatusLabel(row.status, billEnding(row));
   const event = row.status_stage ? statusEvent(row) : null;
   const meta = metaLine({
     status: row.status,
@@ -1490,6 +1495,8 @@ function KeyDates({
     title: identity?.title,
     divisions: view.divisions.data?.rawRows,
     acts: view.acts.data ?? [],
+    ended: identity?.ended,
+    ended_label: identity?.endedLabel,
   });
   const tracker = mapped.kind === 'tracker' ? mapped.tracker : null;
   const points =
@@ -1497,6 +1504,8 @@ function KeyDates({
       ? rulerPoints(entries, identity?.status, {
           stages: view.keyDates.data,
           divisions: view.divisions.data?.rawRows,
+          ended: identity?.ended,
+          ended_label: identity?.endedLabel,
         })
       : [];
   const allLabel =

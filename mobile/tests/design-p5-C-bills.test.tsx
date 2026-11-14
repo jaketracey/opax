@@ -28,6 +28,7 @@ import { ScopeChips } from '../src/features/search/ScopeChips';
 import { billTextRoute } from '../src/navigation/routes';
 import { divisionHistoryRoute } from '../src/navigation/routes/bills';
 import { pinned, slugs } from './pinned';
+import s1503 from './fixtures/bill-stages/au-federal-s1503.json';
 import { filterStore } from '../src/features/sheets/filter-model';
 import * as sharing from '../src/navigation/share';
 import { menuTitle } from '../src/design/menu-title';
@@ -548,6 +549,68 @@ describe('how it moved: a terminal status names the last stop (P2-9)', () => {
       expect(summary(root)).toBe(
         'Stopped at step 1 of 6: First reading. Voted down.',
       );
+    });
+
+    describe('negatived with no linked division (s1503)', () => {
+      // ParlInfo: "Second reading negatived", 10 Sep 2026, on the voices.
+      // The export's bill file, with and without its new ending.
+      const page = (withEnding: boolean) => {
+        const { ended, ended_label, ...today } = s1503;
+        const served = withEnding ? s1503 : today;
+        expect(ended).toBe('negatived');
+        expect(ended_label).toBe('Voted down');
+        const catalogs = new Catalogs({
+          get: async (path, decode) => ({
+            data: decode(
+              path === '/bills/au-federal-s1503.json'
+                ? served
+                : path === '/api/person-slugs'
+                  ? slugs
+                  : pinned(path),
+            ),
+            stale: false,
+            savedAt: 1000,
+            asOf: null,
+          }),
+        });
+        mock.billFor.mockImplementation((key, refresh) =>
+          catalogs.billFor(key, refresh),
+        );
+        mockParams.key = 'au-federal-s1503';
+        return render(<BillDetail />);
+      };
+
+      test('with the ending: the pill, its VoiceOver label and the tracker stop all read Voted down', async () => {
+        const root = await page(true);
+        expect(pill(root).props.accessibilityLabel).toBe(
+          'Status: Voted down. Voted down, 10 September 2026',
+        );
+        expect(texts(pill(root))[0]).toBe('Voted down');
+        expect(summary(root)).toBe(
+          'Stopped at step 2 of 6: Second reading. Voted down.',
+        );
+        expect(
+          host(root, 'bill-tracker-second')[0]!.props.accessibilityLabel,
+        ).toBe('Second reading, stopped here, Voted down, 10 September 2026');
+        // No counted vote is linked, so none is drawn.
+        expect(
+          root.findAll(
+            (n) =>
+              typeof n.type === 'string' &&
+              /^bill-division-\d/.test(String(n.props.testID ?? '')),
+          ),
+        ).toEqual([]);
+      });
+
+      test("without it (today's export): Lapsed in both", async () => {
+        const root = await page(false);
+        expect(pill(root).props.accessibilityLabel).toMatch(
+          /^Status: Lapsed\./,
+        );
+        expect(summary(root)).toBe(
+          'Stopped at step 2 of 6: Second reading. Lapsed.',
+        );
+      });
     });
 
     test.each(['au-federal-r6850', 'au-federal-s1479'])(

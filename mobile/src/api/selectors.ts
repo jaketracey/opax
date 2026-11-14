@@ -10,7 +10,7 @@ import {
   billSplits,
   billStage,
 } from './bill-transforms';
-import { billStatusLabel } from './bill-status';
+import { billEnding, billStatusLabel } from './bill-status';
 import { outcomeWord } from '../features/bills/divisions';
 import type {
   AppEdition,
@@ -1345,7 +1345,10 @@ export function billFor(bill: BillDetail, index: BillIndex) {
         statusLabel: billStatusLabel(bill.status, {
           stages: bill.key_dates,
           divisions: bill.divisions,
+          ...billEnding(bill),
         }),
+        ended: bill.ended ?? null,
+        endedLabel: bill.ended_label ?? null,
         statusAsOf: bill.status_as_of,
         sponsor: display.sponsor,
         sponsorMembers: display.sponsorMembers,

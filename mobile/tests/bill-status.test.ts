@@ -1,7 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import sample from './fixtures/bill-stages/sample.json';
+import votedDownKeys from './fixtures/bill-stages/voted-down-keys.json';
 import {
+  billEnding,
   billStatusLabel,
   billStatusReading,
   billVotedDown,
@@ -27,7 +29,9 @@ const evidence = (b: SampleBill) => ({
   stages: b.key_dates,
   divisions: b.divisions,
 });
-const tracked = (b: SampleBill) => {
+const ending = (b: SampleBill) =>
+  'ended' in b ? { ended: b.ended, ended_label: b.ended_label } : {};
+const tracked = (b: SampleBill, withEnding = false) => {
   const result = billTracker({
     stages: b.key_dates,
     status: b.status,
@@ -35,6 +39,7 @@ const tracked = (b: SampleBill) => {
     title: b.title,
     divisions: b.divisions,
     acts: b.acts,
+    ...(withEnding ? ending(b) : {}),
   });
   return result.kind === 'tracker' ? result.tracker : null;
 };
@@ -48,6 +53,77 @@ describe('every sampled bill: the pill says what the tracker says', () => {
     if (/Voted down\.$/.test(b.expected)) expect(pill).toBe('Voted down');
     if (/Lapsed\.$/.test(b.expected)) expect(pill).toBe('Lapsed');
   });
+});
+
+describe("with the export's ending: the index row, the bill page and the tracker say the same", () => {
+  const ended = sample.bills.filter((b) => 'ended' in b);
+  test.each(ended.map((b) => [b.key, b] as const))('%s', (_key, b) => {
+    // An index row has only the status and the ending; the bill page has
+    // its stages and votes too. The ending decides for both.
+    const index = billStatusLabel(b.status, ending(b));
+    const page = billStatusLabel(b.status, { ...evidence(b), ...ending(b) });
+    expect(page).toBe(index);
+    // alrc-4163 keeps the dated list (a referendum); every other stop agrees.
+    const tracker = tracked(b, true);
+    if (tracker)
+      expect(tracker.steps.find((s) => s.state === 'ended')?.note).toBe(index);
+    else expect(b.key).toBe('au-federal-alrc-4163');
+    expect(index).toBe('ended_label' in b ? b.ended_label : '');
+  });
+});
+
+test('both shapes: without the ending, a bill reads as it does today', () => {
+  for (const b of sample.bills) {
+    const today = billStatusLabel(b.status, evidence(b));
+    expect(
+      billStatusLabel(b.status, {
+        ...evidence(b),
+        ended: null,
+        ended_label: null,
+      }),
+    ).toBe(today);
+    // An index row without one says the register's word.
+    if (b.status === 'lapsed') expect(billStatusLabel(b.status)).toBe('Lapsed');
+  }
+});
+
+test('negatived with no linked division: "Voted down" on the row, the page and the tracker', () => {
+  // ParlInfo: "Second reading negatived", 10 Sep 2026, with no counted vote.
+  const b = sample.bills.find((x) => x.key === 'au-federal-s1503')!;
+  expect(b.divisions).toEqual([]);
+  const reading = billStatusReading(b.status, { ...evidence(b), ...ending(b) });
+  expect(reading).toEqual({
+    word: 'Voted down',
+    state: 'stopped',
+    ended: 'negatived',
+    votedDown: {
+      stage: 'second_reading',
+      house: 'senate',
+      date: '2026-09-10',
+      counted: false,
+    },
+    stoppedOn: '2026-09-10',
+  });
+  expect(billStatusLabel(b.status, ending(b))).toBe('Voted down');
+  expect(tracked(b, true)!.summary).toBe(
+    'Stopped at step 2 of 6: Second reading. Voted down.',
+  );
+});
+
+test('the 56 read from the record alone, for the export lane to compare', () => {
+  expect(votedDownKeys.count).toBe(56);
+  expect(votedDownKeys.keys).toHaveLength(56);
+  // Every sampled bill agrees with the list, both ways.
+  for (const b of sample.bills) {
+    const down = billStatusLabel(b.status, evidence(b)) === 'Voted down';
+    expect([b.key, down]).toEqual([b.key, votedDownKeys.keys.includes(b.key)]);
+    // And every one of them is negatived in ParlInfo.
+    if (down)
+      expect(ending(b)).toEqual({
+        ended: 'negatived',
+        ended_label: 'Voted down',
+      });
+  }
 });
 
 test('the voted-down cases: "Voted down" on the pill and the tracker', () => {
@@ -83,9 +159,12 @@ test('a voted-down reading says where and when', () => {
       stage: 'second_reading',
       house: 'senate',
       date: '2016-11-07',
+      counted: true,
     },
     stoppedOn: '2016-11-07',
+    ended: null,
   });
+  expect(billVotedDown(evidence(b))).toMatchObject({ counted: true });
 });
 
 test('a status ParlInfo words itself is the one place it maps', () => {
@@ -104,6 +183,14 @@ test('a status ParlInfo words itself is the one place it maps', () => {
   expect(billStatusLabel('exposure_draft')).toBe('Exposure draft');
   expect(billStatusLabel('lapsed')).toBe('Lapsed');
   expect(billStatusLabel('')).toBe('Status not recorded');
+  // An ending on a bill still alive or passed is not read.
+  expect(billStatusLabel('passed', { ended: 'negatived' })).toBe('Passed');
+  expect(
+    billStatusLabel('before_parliament', {
+      ended: 'removed',
+      ended_label: 'Removed from the Notice Paper',
+    }),
+  ).toBe('Before parliament');
   // A word ParlInfo gave itself is not second-guessed by the record.
   const down = sample.bills.find((x) => x.key === 'au-federal-s986')!;
   expect(billStatusLabel('withdrawn', evidence(down))).toBe('Withdrawn');
@@ -112,11 +199,29 @@ test('a status ParlInfo words itself is the one place it maps', () => {
 describe('every row that draws a status pill reads the helper', () => {
   const indexRow = bills.bills[0]!;
   const row = { ...indexRow, ...billDisplay(indexRow), status: 'negatived' };
+  const removed = {
+    ...indexRow,
+    ...billDisplay(indexRow),
+    status: 'lapsed',
+    ended: 'removed',
+    ended_label: 'Removed from the Notice Paper',
+  };
+  const lapsed = { ...removed, ended: undefined, ended_label: undefined };
   test('the bills list and the iPad split sidebar (bills/filters.ts)', () => {
     expect(listRowText(row).status).toBe('Voted down');
+    expect(listRowText(removed).status).toBe('Removed from the Notice Paper');
+    expect(listRowText(lapsed).status).toBe('Lapsed');
   });
   test("Today's bill feed", () => {
     expect(feedRowText(row).status).toBe('Voted down');
+    expect(feedRowText(removed).status).toBe('Removed from the Notice Paper');
+    expect(feedRowText(lapsed).status).toBe('Lapsed');
+  });
+  test('billEnding reads the two fields an index row carries', () => {
+    expect(billEnding(removed)).toEqual({
+      ended: 'removed',
+      ended_label: 'Removed from the Notice Paper',
+    });
   });
 });
 
@@ -143,6 +248,24 @@ test('no screen words a bill status but the helper', () => {
   };
   walk(root);
   expect(offenders).toEqual([]);
+  // Every index-row site passes the row's ending.
+  for (const site of [
+    'features/bills/filters.ts',
+    'features/bills/BillDetail.tsx',
+    'features/today/BillFeed.tsx',
+    'features/explore/YearBills.tsx',
+    'features/search/rows.tsx',
+    'features/records/DocumentReader.tsx',
+    'features/follows/markers.ts',
+    'features/follows/FollowRow.tsx',
+    'features/bills/status-event.ts',
+    'api/selectors.ts',
+  ]) {
+    expect([site, fs.readFileSync(path.join(root, site), 'utf8')]).toEqual([
+      site,
+      expect.stringMatching(/\bbillEnding\(/),
+    ]);
+  }
   // The sites, each through the helper.
   for (const site of [
     'api/selectors.ts',
