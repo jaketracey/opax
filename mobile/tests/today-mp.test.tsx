@@ -118,7 +118,8 @@ describe('Today\u2019s Your MP tile', () => {
     const card = renderer.root.findByType(Card);
     expect(card.props.testID).toBe('today-your-mp-member');
     expect(text(renderer, 'today-your-mp-name')).toBe(member.person.name);
-    expect(text(renderer, 'today-your-mp-seat')).toBe(`\u00b7 ${seat.name}`);
+    expect(text(renderer, 'today-your-mp-seat')).toBe(seat.name);
+    expect(text(renderer, 'today-your-mp-separator')).toBe('\u00b7');
     expect(text(renderer, 'today-your-mp-hook')).toBe(
       'Represents you in federal parliament',
     );
@@ -185,6 +186,101 @@ describe('Today\u2019s Your MP tile', () => {
     );
     expect(ids(renderer)).not.toContain('today-your-mp-member');
     expect(ids(renderer)).not.toContain('today-your-mp-hook');
+    await act(async () => renderer.unmount());
+  });
+
+  test('on a narrow phone at Large a wrapped party and seat line never starts with the separator', async () => {
+    dimensions.mockReturnValue({
+      width: 320,
+      height: 568,
+      scale: 2,
+      fontScale: 1,
+    });
+    const renderer = await tile();
+    // The seat is its own unit, drawn whole: no separator in front of it.
+    expect(text(renderer, 'today-your-mp-seat')).toBe(seat.name);
+    expect(text(renderer, 'today-your-mp-separator')).toBe('·');
+    // The separator ends the party's unit, so a wrap breaks after it.
+    const holds = (node: TestRenderer.ReactTestInstance, id: string) =>
+      node.findAll((n) => n.props.testID === id).length > 0;
+    /** The innermost host view holding all of `inside` and none of `outside`. */
+    const innermost = (inside: string[], outside: string[] = []) =>
+      renderer.root
+        .findAll(
+          (n) =>
+            n.type === 'View' &&
+            inside.every((id) => holds(n, id)) &&
+            !outside.some((id) => holds(n, id)),
+        )
+        .at(-1)!;
+    const unit = innermost(
+      ['today-your-mp-party', 'today-your-mp-separator'],
+      ['today-your-mp-seat'],
+    );
+    expect(unit).toBeDefined();
+    expect(StyleSheet.flatten(unit.props.style)).toMatchObject({
+      flexDirection: 'row',
+    });
+    expect(StyleSheet.flatten(unit.props.style).flexWrap).toBeUndefined();
+    // The line that wraps holds the party's unit and the seat as siblings.
+    const line = innermost(['today-your-mp-separator', 'today-your-mp-seat']);
+    expect(StyleSheet.flatten(line.props.style)).toMatchObject({
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    });
+    await act(async () => renderer.unmount());
+  });
+
+  test('cites the member note only under a member', async () => {
+    const note =
+      'Your member, their party and their seat from the parliament roster.';
+    const notes = (renderer: TestRenderer.ReactTestRenderer) =>
+      renderer.root.find(
+        (n) =>
+          typeof n.type !== 'string' &&
+          n.props.testID === 'today-your-mp-sources',
+      ).props.notes;
+    const shown = await tile();
+    expect(notes(shown)).toEqual([note]);
+    await act(async () => shown.unmount());
+    for (const data of [[], [...view.members.data!, ...view.members.data!]]) {
+      jest.mocked(catalogs.yourMP).mockResolvedValue({
+        ...view,
+        members: { ...view.members, data },
+      });
+      const vacant = await tile();
+      expect(vacant.root.findByType(Card).props.testID).toBe(
+        'today-your-mp-vacant',
+      );
+      expect(notes(vacant)).toEqual([]);
+      await act(async () => vacant.unmount());
+    }
+  });
+
+  test('when the roster fails the seat still shows, with Change electorate and a retry', async () => {
+    jest.mocked(catalogs.yourMP).mockRejectedValue(new Error('Unavailable'));
+    const onRetry = jest.fn();
+    const renderer = await tile({ onRetry });
+    const drawn = ids(renderer);
+    expect(drawn).toContain('today-your-mp-error');
+    expect(drawn).toContain('today-your-mp-error-seat');
+    const header = renderer.root.find(
+      (n) =>
+        typeof n.type === 'string' &&
+        n.props.testID === 'today-your-mp-error-seat',
+    );
+    expect(header.props.accessibilityLabel).toMatch(
+      new RegExp(`^${seat.name}, `),
+    );
+    expect(
+      header.findAllByType(NativeText).map((n) => n.props.children),
+    ).toContain(seat.name);
+    // Touch and hold: the RowLink around the header carries the menu.
+    let link = header.parent;
+    while (link && !link.props.menu) link = link.parent;
+    expect(
+      link!.props.menu.map((item: { title: string }) => item.title),
+    ).toContain('Change electorate');
     await act(async () => renderer.unmount());
   });
 

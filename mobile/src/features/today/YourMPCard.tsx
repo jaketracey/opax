@@ -91,9 +91,9 @@ function useLoad<T>(
 }
 
 /**
- * The state seat's header: the seat's name and its state, one link that
- * pushes the electorate page inside Today. Touch and hold: Change
- * electorate, Share.
+ * A seat's header (the state seat card, and Your MP when its roster fails):
+ * the seat's name and its state, one link that pushes the electorate page
+ * inside Today. Touch and hold: Change electorate, Share.
  */
 function SeatHeader({
   seat,
@@ -240,12 +240,7 @@ export function YourMPCard({
   return (
     <View testID="today-your-mp" style={styles.tileColumn}>
       {view.status === 'error' ? (
-        <InlineError
-          subject="Your MP"
-          message="Your MP couldn’t be loaded."
-          onRetry={onRetry}
-          testID="today-your-mp-error"
-        />
+        <YourMPError seat={seat} onRetry={onRetry} />
       ) : view.status === 'loading' ? (
         <YourMPSkeleton />
       ) : (
@@ -259,6 +254,42 @@ export function YourMPCard({
       )}
     </View>
   );
+}
+
+/**
+ * The roster could not be read: the seat still shows, as the header the
+ * tile replaced, so the reader keeps its name, the electorate link and
+ * Change electorate on touch and hold.
+ */
+function YourMPError({
+  seat,
+  onRetry,
+}: {
+  seat: Electorate;
+  onRetry: () => void;
+}) {
+  const state = stateInRunningCopy(seat.state_code);
+  return (
+    <View style={styles.section}>
+      <SeatHeader
+        seat={seat}
+        subtitle={state}
+        label={`${seat.name}, ${state}`}
+        testID="today-your-mp-error-seat"
+      />
+      <InlineError
+        subject="Your MP"
+        message="Your MP couldn’t be loaded."
+        onRetry={onRetry}
+        testID="today-your-mp-error"
+      />
+    </View>
+  );
+}
+
+/** The member the tile draws: one recorded member, or none. */
+function tileMember(view: YourMPView) {
+  return view.members.data?.length === 1 ? view.members.data[0]! : null;
 }
 
 /** The seat's own actions, shared by every form of the tile. */
@@ -293,7 +324,7 @@ function YourMPTile({
   directory: Directory;
   view: YourMPView;
 }) {
-  const member = view.members.data?.length === 1 ? view.members.data[0]! : null;
+  const member = tileMember(view);
   if (!member) return <VacantTile seat={seat} />;
   const identity = representativeProfile(member.person_id, directory);
   const person = directory.people.data.people.find(
@@ -339,6 +370,15 @@ function MemberTile({
   const [face] = useFaceURIs([{ name, slug: slug ?? undefined }], 1);
   const hook = yourMPHook(seat);
   const context = party ? { party, status: partyStatus } : null;
+  const partyLabel = context ? (
+    <PartyLabel
+      {...context}
+      linked={false}
+      nested
+      compact
+      testID="today-your-mp-party"
+    />
+  ) : null;
   const menu: RowMenuAction[] = [
     ...(slug ? rowMenus.person({ slug, name, ...follow }) : []),
     ...(official
@@ -409,17 +449,24 @@ function MemberTile({
             <View
               style={[styles.tileIdentity, stacked && styles.tileIdentityStack]}
             >
-              {context ? (
-                <PartyLabel
-                  {...context}
-                  linked={false}
-                  nested
-                  compact
-                  testID="today-your-mp-party"
-                />
-              ) : null}
+              {partyLabel && !stacked ? (
+                // The separator ends the party's unit, so a wrapped line
+                // breaks after it and the seat starts its own line whole.
+                <View style={styles.tileParty}>
+                  {partyLabel}
+                  <Text
+                    variant="secondary"
+                    style={styles.tileSeparator}
+                    testID="today-your-mp-separator"
+                  >
+                    ·
+                  </Text>
+                </View>
+              ) : (
+                partyLabel
+              )}
               <Text wordSafe variant="secondary" testID="today-your-mp-seat">
-                {context && !stacked ? `· ${seat.name}` : seat.name}
+                {seat.name}
               </Text>
             </View>
             {hook ? (
@@ -518,6 +565,8 @@ function VacantTile({ seat }: { seat: Electorate }) {
 /**
  * The tile's line: the parliament roster, which gives the member's name,
  * party and seat. Nothing else draws on the tile, so nothing else is cited.
+ * The note names the member's details, so it is there only when the tile
+ * draws a member.
  */
 export function yourMPSources(view: YourMPView) {
   const roster = view.members;
@@ -532,9 +581,9 @@ export function yourMPSources(view: YourMPView) {
     asOf: oldestDate([roster.asAt]),
     citation,
     originals,
-    notes: [
-      'Your member, their party and their seat from the parliament roster.',
-    ],
+    notes: tileMember(view)
+      ? ['Your member, their party and their seat from the parliament roster.']
+      : [],
     savedAt: roster.stale ? (roster.savedAt ?? null) : null,
     state: roster.stale
       ? ('saved' as const)
@@ -707,6 +756,14 @@ const styles = StyleSheet.create({
     flexWrap: 'nowrap',
     alignItems: 'flex-start',
   },
+  // The party and its separator: one unit of the wrapping identity line.
+  tileParty: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: rhythm.line,
+    maxWidth: '100%',
+  },
+  tileSeparator: { flexShrink: 0 },
   // The hook sits a step under the identity, as the tile's own sentence.
   tileHook: { marginTop: rhythm.line },
   header: {

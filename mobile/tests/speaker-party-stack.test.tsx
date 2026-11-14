@@ -221,74 +221,68 @@ test.each([false, true])(
   },
 );
 
-test.each(['hero', 'card'] as const)(
-  '%s member text stays compact and retains profile and party actions',
-  (size) => {
-    for (const scale of [1, 1.786, 3.571]) {
-      const root = draw(
-        <MemberHeroRow
-          name="Jo Briskey with a long recorded name"
-          slug="jo-briskey"
-          party="Labor"
-          tenure="Member since 2025"
-          size={size}
-          testID="member"
-        />,
-        scale,
-      );
-      const name = root
-        .findAllByType(Text)
-        .find((node) => node.props.testID === 'member-name')!;
-      const words = parentView(name);
-      const party = root.findByType(PartyLabel);
-      const detail = parentView(party);
-      expect(flat(words)).toMatchObject({
-        flexDirection: 'column',
-        gap: rhythm.line,
-        alignSelf: 'stretch',
-      });
-      expect(flat(words).flex).toBe(scale === 1 ? 1 : undefined);
-      expect(parentView(detail)).toBe(words);
-      expect(flat(detail)).toMatchObject({
-        minHeight: minimumTarget,
-        gap: rhythm.line,
-      });
-      expect(strings(detail)).toEqual(['Labor', 'Member since 2025']);
-      expect(root.findByType(Portrait).props.size).toBe(
-        size === 'hero' ? 80 : 56,
-      );
-      const member = root.find(
-        (node) =>
-          typeof node.type === 'string' &&
-          node.props.testID === 'member' &&
-          node.props.accessible,
-      );
-      const visual = member.find(
-        (node) => typeof node.props.style === 'function',
-      );
-      expect(
-        StyleSheet.flatten(visual.props.style({ pressed: false }))
-          .paddingVertical,
-      ).toBe(rhythm.row);
-      expect(member.props.accessibilityActions).toContainEqual({
-        name: 'party',
-        label: 'Open party',
-      });
-      act(() => member.props.onAccessibilityTap());
-      expect(router.push).toHaveBeenLastCalledWith(personRoute('jo-briskey'));
-      act(() =>
-        member.props.onAccessibilityAction({
-          nativeEvent: { actionName: 'party' },
-        }),
-      );
-      expect(router.push).toHaveBeenLastCalledWith(partyRoute('Labor'));
-      tap(partyTarget(party));
-      expect(router.push).toHaveBeenLastCalledWith(partyRoute('Labor'));
-      for (const text of words.findAllByType(Text))
-        expect(text.props.numberOfLines).toBeUndefined();
-    }
-  },
-);
+test('member text stays compact and retains profile and party actions', () => {
+  for (const scale of [1, 1.786, 3.571]) {
+    const root = draw(
+      <MemberHeroRow
+        name="Jo Briskey with a long recorded name"
+        slug="jo-briskey"
+        party="Labor"
+        tenure="Member since 2025"
+        testID="member"
+      />,
+      scale,
+    );
+    const name = root
+      .findAllByType(Text)
+      .find((node) => node.props.testID === 'member-name')!;
+    const words = parentView(name);
+    const party = root.findByType(PartyLabel);
+    const detail = parentView(party);
+    expect(flat(words)).toMatchObject({
+      flexDirection: 'column',
+      gap: rhythm.line,
+      alignSelf: 'stretch',
+    });
+    expect(flat(words).flex).toBe(scale === 1 ? 1 : undefined);
+    expect(parentView(detail)).toBe(words);
+    expect(flat(detail)).toMatchObject({
+      minHeight: minimumTarget,
+      gap: rhythm.line,
+    });
+    expect(strings(detail)).toEqual(['Labor', 'Member since 2025']);
+    expect(root.findByType(Portrait).props.size).toBe(80);
+    const member = root.find(
+      (node) =>
+        typeof node.type === 'string' &&
+        node.props.testID === 'member' &&
+        node.props.accessible,
+    );
+    const visual = member.find(
+      (node) => typeof node.props.style === 'function',
+    );
+    expect(
+      StyleSheet.flatten(visual.props.style({ pressed: false }))
+        .paddingVertical,
+    ).toBe(rhythm.row);
+    expect(member.props.accessibilityActions).toContainEqual({
+      name: 'party',
+      label: 'Open party',
+    });
+    act(() => member.props.onAccessibilityTap());
+    expect(router.push).toHaveBeenLastCalledWith(personRoute('jo-briskey'));
+    act(() =>
+      member.props.onAccessibilityAction({
+        nativeEvent: { actionName: 'party' },
+      }),
+    );
+    expect(router.push).toHaveBeenLastCalledWith(partyRoute('Labor'));
+    tap(partyTarget(party));
+    expect(router.push).toHaveBeenLastCalledWith(partyRoute('Labor'));
+    for (const text of words.findAllByType(Text))
+      expect(text.props.numberOfLines).toBeUndefined();
+  }
+});
 
 test.each([null, 'Member since 2025'])(
   'member text omits a missing party without a spacer, tenure: %s',

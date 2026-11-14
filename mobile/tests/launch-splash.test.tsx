@@ -505,6 +505,38 @@ describe('the launch cover', () => {
     advance(1);
     expect(onDone).toHaveBeenCalledTimes(1);
   });
+  test('a landscape cold launch hands over on the same beats as portrait', () => {
+    // 4ag F4 (14 Nov): a capture showed the cover in landscape about 3 s
+    // after launch. A device trace on a 17 Pro (iOS 27) found no landscape
+    // wait: the cover went 1.3 to 1.5 s after JS start in landscape and 1.5
+    // to 1.7 s in portrait, both held only by the two splash images. The
+    // capture's settle wait had returned early on the still cover.
+    const portrait = { width: 402, height: 874, scale: 3, fontScale: 1 };
+    const landscape = { width: 874, height: 402, scale: 3, fontScale: 1 };
+    type Window = typeof portrait;
+    const handover = (ready: boolean, window: Window, turnTo?: Window) => {
+      Dimensions.set({ window, screen: window });
+      const { onDone } = draw({ sequence: 'short', ready, latest: true });
+      loaded();
+      // Turned while the cover holds: the hold neither restarts nor waits.
+      if (turnTo) act(() => Dimensions.set({ window: turnTo, screen: turnTo }));
+      let elapsed = 0;
+      while (onDone.mock.calls.length === 0 && elapsed < 10_000) {
+        advance(10);
+        elapsed += 10;
+      }
+      act(() => view?.unmount());
+      view = undefined;
+      return elapsed;
+    };
+    for (const ready of [true, false]) {
+      const upright = handover(ready, portrait);
+      expect(upright).toBeLessThanOrEqual(longestHandoff(false));
+      expect(handover(ready, landscape)).toBe(upright);
+      expect(handover(ready, portrait, landscape)).toBe(upright);
+      expect(handover(ready, landscape, portrait)).toBe(upright);
+    }
+  });
   test('the first frame holds until Reduce Motion is known', () => {
     jest.mocked(useReduceMotionSetting).mockReturnValue(null);
     const { onDone } = draw({ sequence: 'short' });
