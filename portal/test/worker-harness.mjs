@@ -3,6 +3,7 @@
 import {readFileSync, existsSync} from 'node:fs';
 import {join} from 'node:path';
 import {build} from 'esbuild';
+import {importBundle} from './fixtures/import-bundle.mjs';
 
 const esc = v => String(v).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 /** Only the transformations the Worker's SEO and share-card code use. */
@@ -60,7 +61,7 @@ export async function loadWorker(entry, root, ctxOrOptions, optionsOrCtx) {
   const executionContext=[ctxOrOptions,optionsOrCtx].find(isContext) ?? options.executionContext;
   const compiled = await build({entryPoints: [entry], bundle: true, platform: 'browser', format: 'esm', write: false, external: ['node:*'],
     plugins: [...(options.plugins || []), {name: 'omit-images', setup(b) { b.onResolve({filter: /^\.\/og-render$/}, () => ({path: 'images', namespace: 'harness'})); b.onLoad({filter: /.*/, namespace: 'harness'}, () => ({contents: 'const spec=card=>new TextEncoder().encode(JSON.stringify(card));export const renderOgPng=spec;export const renderOgJpeg=spec;export const renderStoryJpeg=spec;', loader: 'js'})); }}]});
-  const {default: worker} = await import('data:text/javascript;base64,' + Buffer.from(compiled.outputFiles[0].text).toString('base64'));
+  const {default: worker} = await importBundle(compiled.outputFiles[0].text, 'worker');
   const files = new Map(), parsed = new Map();
   const at = path => join(root, path.replace(/^\//, ''));
   const file = path => { if (!files.has(path)) files.set(path, existsSync(at(path)) ? readFileSync(at(path)) : null); return files.get(path); };

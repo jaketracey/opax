@@ -10,6 +10,7 @@ export class StreamingResearchModel extends MockLanguageModelV4 {
     this.doStream=async options=>{
       this.doStreamCalls.push(options)
       const reply=await this.doGenerate(options)
+      if(!reply)throw Error(`scripted model has no reply for call ${this.doStreamCalls.length}`)
       return {stream:new ReadableStream({start(controller){
         controller.enqueue({type:'stream-start',warnings:reply.warnings??[]})
         for(const [i,part] of reply.content.entries()){
@@ -35,7 +36,7 @@ export class StreamingResearchModel extends MockLanguageModelV4 {
 /** One script serves both SDK transports. Four characters approximate a token; pacing includes JSON and fact ids. */
 export function scriptedResearchModel(turns,{tokensPerSecond=0,onPiece=()=>{}}={}) {
   const calls=[]
-  const next=options=>{calls.push(options);const turn=turns[calls.length-1];if(!turn)throw Error('Script exhausted');if(turn.error)throw Error(turn.error);return turn}
+  const next=options=>{calls.push(options);const turn=turns[calls.length-1];if(!turn)throw Error(`scripted model has no reply for call ${calls.length}`);if(turn.error)throw Error(turn.error);return turn}
   const model=new MockLanguageModelV4({
     doGenerate:async options=>{
       const t=next(options),text=typeof t.text==='string'?t.text:JSON.stringify(t.text)
