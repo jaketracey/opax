@@ -479,10 +479,9 @@ function cacheStore(ctx: ExecutionContext, key: Request, res: Response, maxAge: 
  * so a hot question replayed from cache costs no quota. Fail OPEN: a limiter
  * outage (or a build without the binding) must not take the site down.
  */
-async function rateLimited(limiter: RateLimit | undefined, request: Request): Promise<Response | null> {
+async function rateLimited(limiter: RateLimit | undefined, request: Request, key = request.headers.get('cf-connecting-ip') ?? 'unknown'): Promise<Response | null> {
   if (!limiter) return null
   try {
-    const key = request.headers.get('cf-connecting-ip') ?? 'unknown'
     const { success } = await limiter.limit({ key })
     if (success) return null
   } catch (err) {
@@ -605,7 +604,8 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
     if (cached) win = await cached.json() as SearchWindow
   }
   if (!win) {
-    const limited = options.suggest ? null : await rateLimited(env.SEARCH_LIMITER, request)
+    // An MCP request from an assistant's shared address is counted per person (env.MCP_LIMIT_KEY); everyone else by IP.
+    const limited = options.suggest ? null : await rateLimited(env.SEARCH_LIMITER, request, env.MCP_LIMIT_KEY)
     if (limited) return limited
     win = await searchWindow(env, { q, mode, kind, topK, url, signal: request.signal, ...(options.suggest ? { reranker: 'noop' as const, signal: AbortSignal.any([request.signal, AbortSignal.timeout(1500)]) } : {}) })
     if (!win) {
@@ -659,7 +659,7 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
   if (extendedStates.has(check.searchParams.get('state') || '')) check.searchParams.delete('state')
   const bad = validateSearchQuery(check)
   if (bad) return bad
-  const limited = await rateLimited(env.SEARCH_LIMITER, request)
+  const limited = await rateLimited(env.SEARCH_LIMITER, request, env.MCP_LIMIT_KEY)
   if (limited) return limited
   const localWanted = selected === 'all' || CATALOG_KINDS.has(selected)
   const documentsWanted = (selected === 'bill' || selected === 'division' || !CATALOG_KINDS.has(selected)) && !extendedStates.has(url.searchParams.get('state') || '')
@@ -7468,12 +7468,13 @@ export default {
     // A plain GET of /mcp is a reader's browser and gets the setup page. An MCP client's GET asks for an
     // event stream (the protocol requires that Accept), and every POST goes to the tools.
     const mcpPage = url.pathname === '/mcp' && (request.method === 'GET' || request.method === 'HEAD') && !request.headers.has('authorization') && !(request.headers.get('accept') ?? '').includes('text/event-stream')
-    if (MCP_PATHS.includes(url.pathname) && !mcpPage) return communityResponse(await communityMcp(request, env, async (path, meter) => {
+    if (MCP_PATHS.includes(url.pathname) && !mcpPage) return communityResponse(await communityMcp(request, env, async (path, meter, limitKey) => {
       const target = new URL(path, env.COMMUNITY_ORIGIN)
       const local = new Request(target, { headers: { 'cf-connecting-ip': request.headers.get('cf-connecting-ip') || 'mcp' } })
       // The tools' searches and record reads run in this Worker, so kbFetch passes each Progress query to the
       // request's meter. Staging too, with its own reader key: forwarding them to production would hide them.
-      const scoped: Env = { ...env, STAGING_API: undefined, KB_METER: meter }
+      // Its search limit counts one person on an assistant's shared address, not everyone behind it (limitKey).
+      const scoped: Env = { ...env, STAGING_API: undefined, KB_METER: meter, MCP_LIMIT_KEY: limitKey }
       if (target.pathname === '/api/search-all') return display(await apiUnifiedSearch(local, target, scoped, ctx), target)
       return display(await route(local, target, scoped, ctx), target)
     }))

@@ -43,7 +43,7 @@ function fixture(upstream = answer, extra = {}) {
     SEARCH_PER_DEFAULT: 20, SEARCH_PER_MAX: 200, SEARCH_WINDOW_TOPK: 200, SEARCH_TOPK_MAX: 200,
     SEARCH_WINDOW_CACHE_TTL: 3600, SEARCH_FALLBACK_CACHE_TTL: 60, SEARCH_CACHE_TTL: 600,
     sha256Hex: async text => text, cacheRequest: (kind, key) => new Request('https://cache.test/' + kind + '/' + encodeURIComponent(key)),
-    cacheBypass: () => false, rateLimited: async () => { limits.push(1); return null; },
+    cacheBypass: () => false, rateLimited: async (limiter, request, key) => { limits.push(key ?? 'ip:' + request.headers.get('cf-connecting-ip')); return null; },
     caches: { default: {
       match: async key => {
         const entry = cache.get(key.url);
@@ -384,4 +384,31 @@ test('each Progress query passes the request meter first, the keyword retry mark
   const { response } = await refused.run();
   assert.equal(response.status, 503);
   assert.equal(refused.calls.length, 0);
+});
+
+test('search counts an MCP caller under the key the MCP layer chose, and everyone else by IP', async () => {
+  const web = fixture();
+  await web.run({}, { unified: true });
+  assert.deepEqual(web.limits, ['ip:null', 'ip:null'], 'the website keeps the per-IP key (unified search, then the window it misses)');
+  const mcp = fixture(answer, { MCP_LIMIT_KEY: 'shared:session:abc' });
+  await mcp.run({}, { unified: true });
+  assert.deepEqual(mcp.limits, ['shared:session:abc', 'shared:session:abc']);
+});
+
+// The limiter itself, from index.ts: the key it is given, else the client IP; 120 a minute as in wrangler.jsonc.
+const limiterCode = ts.transpileModule(source.statements.filter(n => ts.isFunctionDeclaration(n) && ['rateLimited', 'json'].includes(n.name?.text)).map(n => n.getText(source)).join('\n'), { compilerOptions: { target: ts.ScriptTarget.ES2022 } }).outputText;
+test('the search limit stays 120 a minute for an ordinary IP; on a shared address one session cannot drain another', async () => {
+  const counts = new Map();
+  const SEARCH_LIMITER = { limit: async ({ key }) => { counts.set(key, (counts.get(key) ?? 0) + 1); return { success: counts.get(key) <= 120 }; } };
+  const { rateLimited } = runInNewContext(limiterCode + ';({rateLimited})', { Response, JSON, console });
+  const from = ip => new Request('https://local.test/api/search-all?q=housing', { headers: { 'cf-connecting-ip': ip } });
+  for (let i = 0; i < 120; i++) assert.equal(await rateLimited(SEARCH_LIMITER, from('203.0.113.9')), null);
+  const refused = await rateLimited(SEARCH_LIMITER, from('203.0.113.9'));
+  assert.equal(refused.status, 429);
+  assert.equal(refused.headers.get('retry-after'), '60');
+  // Claude's shared address: one session uses up its own 120, and the next session and the address itself are untouched.
+  for (let i = 0; i < 120; i++) assert.equal(await rateLimited(SEARCH_LIMITER, from('160.79.104.10'), 'shared:session:one'), null);
+  assert.equal((await rateLimited(SEARCH_LIMITER, from('160.79.104.10'), 'shared:session:one')).status, 429);
+  assert.equal(await rateLimited(SEARCH_LIMITER, from('160.79.104.10'), 'shared:session:two'), null);
+  assert.equal(await rateLimited(SEARCH_LIMITER, from('160.79.104.10')), null);
 });

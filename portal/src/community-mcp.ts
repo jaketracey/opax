@@ -2,20 +2,22 @@ import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js'
 import {WebStandardStreamableHTTPServerTransport} from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js'
 import {z} from 'zod'
 import {body,CommunityError,json} from './community-core'
-import {challenge,mcpCaller,McpLimitError,progressMeter,spendAnonymous,spendMember,withSession,withCors,type KbMeter} from './mcp-access'
+import {challenge,limitKey,mcpCaller,McpLimitError,progressMeter,spendAnonymous,spendMember,withSession,withCors,type KbMeter} from './mcp-access'
 import {tools,getTool,toolSchema,toolOutputSchema,validateToolArgs,callTool,ToolInputError} from './tools'
 import {RECORD_TEXT_NOTICE} from './tools/mcp-common'
 import {DISPATCH_TEXT,MCP_DIRECT,MCP_EXAMPLES,MCP_REPLACED,MCP_INSTRUCTIONS,MCP_OUTPUT_BYTES,RECORD_READ_BYTES,MCP_REGISTERS,MCP_TEXT,REGISTER_LIST,listedSchema,mcpName,registryName} from './tools/mcp-listing'
 import {corpusKb as openCorpusKb} from './tools/corpus-records'
 import {evidenceAsAt} from '../public/evidence-date.js'
 import {mcpToolTitle} from './mcp-tool-titles'
-export async function communityMcp(req:Request,env:Env,openPublic:(path:string,meter:KbMeter)=>Promise<Response>):Promise<Response>{
+export async function communityMcp(req:Request,env:Env,openPublic:(path:string,meter:KbMeter,limitKey:string)=>Promise<Response>):Promise<Response>{
  let rpcId:string|number|null=null
  // Every Progress query a tool makes passes this request's meter (mcp-access.ts) just before it is made: the
  // public search and record routes hand it to kbFetch, and the corpus reader calls it here. For a caller
  // without an account each query is spent against today's allowance, so the cap counts real queries.
  let meter=progressMeter(req,env,false)
- const readPublic=(path:string)=>openPublic(path,meter.spend)
+ // The key the website's search limit counts this caller under: one person, not a shared assistant address.
+ let searchKey=req.headers.get('cf-connecting-ip')||'local'
+ const readPublic=(path:string)=>openPublic(path,meter.spend,searchKey)
  const corpusKb=(...args:Parameters<typeof openCorpusKb>):ReturnType<typeof openCorpusKb>=>{const kb=openCorpusKb(...args);return async(path,body)=>{await meter.spend(path);return kb(path,body)}}
  const reported=(response:Response)=>{const report=meter.report();if(report)response.headers.set('x-opax-progress',report);return response}
  try{
@@ -26,6 +28,7 @@ export async function communityMcp(req:Request,env:Env,openPublic:(path:string,m
   const parsed=await body(req,16384)
   if(['string','number'].includes(typeof parsed.id))rpcId=parsed.id as string|number
   meter=progressMeter(req,env,caller.kind==='anonymous')
+  searchKey=limitKey(req,env,caller)
   if(caller.kind==='anonymous')await spendAnonymous(req,env,parsed.method);else await spendMember(caller,req,env,parsed.method)
   const params=parsed.params as {name?:unknown,arguments?:unknown}|undefined
   const toolEnv=()=>({ASSETS:env.ASSETS,TABLE_DB:env.TABLE_DB,COMMUNITY_ORIGIN:env.COMMUNITY_ORIGIN,VIC_ELECTION_HUB_ENABLED:env.VIC_ELECTION_HUB_ENABLED,origin:'https://opax.com.au',signal:req.signal,kb:corpusKb(env,req.signal)})
