@@ -110,7 +110,9 @@ test('robodebt: a researched answer naming the ministers stays whole, uncited li
   const grounded=api.groundAnswerPayload({...verified,research:{mode:'loop'}},question)
   const out=await(await api.withAnswerLanguage(Response.json({...grounded,answered:true}),question)).json()
   for(const name of ['Catherine Holmes','Scott Morrison','Alan Tudge','Christian Porter','Stuart Robert','Kate Thwaites','Janet Rice'])assert.match(out.answer,new RegExp(name),name)
-  assert.match(out.answer,/^The cited sources do not name a person or office as responsible\.\n\nThe Royal Commission into the Robodebt Scheme, led by Commissioner Catherine Holmes, found/)
+  // The answer names the ministers, so it does not open on the line saying no person or office is named.
+  assert.match(out.answer,/^The Royal Commission into the Robodebt Scheme, led by Commissioner Catherine Holmes, found/)
+  assert.doesNotMatch(out.answer,/do not name a person or office/)
   assert.match(out.answer,/crude, cruel, unfair and unlawful/)
   assert.doesNotMatch(out.answer,/no public record|does not establish|could not/i)
   assert.ok(Object.keys(out.citations).some(id=>id.startsWith('speech-11')))
