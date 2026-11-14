@@ -3,9 +3,10 @@ import assert from 'node:assert/strict'
 import {build} from 'esbuild'
 import {scriptedResearchModel} from './fixtures/research-scripted-model.mjs'
 import {sentenceSpans} from '../src/sentence-bounds.mjs'
+import {importBundle} from './fixtures/import-bundle.mjs'
 
 const bundled=await build({stdin:{contents:"export * from './src/research-generation'; export * from './src/research-grounding'; export * from './src/research-sentences'; export * from './src/research-sentence-stream'; export * from './src/research-response'; export * from './src/research-writer'; export * from './src/research-evidence'; export * from './src/agentic-ask'; export * from './src/research-loop'; export {agenticAskPayload} from './src/agentic-response'; export {createResearchCreditCooldown} from './src/research-credit'; export {proseFallback} from './src/research-writing'; export * from './src/research-who-lead';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
-const api=await import('data:text/javascript;base64,'+Buffer.from(bundled.outputFiles[0].text).toString('base64'))
+const api=await importBundle(bundled.outputFiles[0].text,'research-sentence-stream')
 const deferred=()=>{let resolve;const promise=new Promise(r=>{resolve=r});return {promise,resolve}}
 const source=(resource,snippet,extra={})=>({resource,slug:'',title:'Housing report',href:'https://example.org/report',url:'https://example.org/report',snippet,cited:true,kind:'record',...extra})
 const payload=(answer,sources=[],citations={})=>({answer,sources,citations,answer_decision:'answer'})
