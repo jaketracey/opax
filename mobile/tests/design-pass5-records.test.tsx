@@ -54,7 +54,7 @@ import RecentRecords from '../src/features/records/RecentRecords';
 import { records } from '../src/features/records/runtime';
 import { recordSource } from '../src/features/records/source';
 import { barTitleWidth } from '../src/navigation/useTitleOnScroll';
-import { billTextContentsRoute } from '../src/navigation/routes';
+import { billTextContentsRoute, personRoute } from '../src/navigation/routes';
 import { bills, index, manifest, people, roster, slugs } from './pinned';
 
 const responses: Record<string, unknown> = fixtures.responses;
@@ -297,6 +297,70 @@ test.each([false, true])(
     await act(async () => view.unmount());
   },
 );
+
+// The Worker's /api/resource voted_against_party for Senate division 9535 (portal
+// public/division-against-party.js), in the web page's words.
+const against9535 = {
+  title: 'Voted differently from most of their party',
+  help: "Each member's vote is compared with how most of their party voted. The record does not show whether a party allowed a free vote.",
+  member_list_complete: true,
+  note: null,
+  members: [
+    {
+      name: 'Alex Antic',
+      person_slug: 'alex-antic',
+      party: 'Liberal',
+      vote: 'no',
+      party_vote: 'aye',
+      party_ayes: 8,
+      party_noes: 1,
+      text: 'Voted no; the other 8 Liberal senators voted aye',
+    },
+  ],
+};
+
+test('a division shows who voted against their party, linked, in the web page words', async () => {
+  const raw = responses['/api/resource/division-federal-senate-10701'] as Record<string, unknown>;
+  const division = decodeDocument({ ...raw, voted_against_party: against9535 });
+  expect(division.votedAgainstParty).toEqual({
+    title: 'Voted differently from most of their party',
+    help: "Each member's vote is compared with how most of their party voted. The record does not show whether a party allowed a free vote.",
+    note: null,
+    members: [
+      {
+        name: 'Alex Antic',
+        personSlug: 'alex-antic',
+        party: 'Liberal',
+        text: 'Voted no; the other 8 Liberal senators voted aye',
+        partyNote: null,
+      },
+    ],
+  });
+  jest.mocked(records.document).mockResolvedValue(record(division));
+  const view = await mount(<DocumentReader />);
+  const shown = text(view);
+  expect(shown).toContain('Voted differently from most of their party');
+  expect(shown).toContain("Each member's vote is compared with how most of their party voted. The record does not show whether a party allowed a free vote.");
+  expect(shown).toContain('Liberal. Voted no; the other 8 Liberal senators voted aye.');
+  const row = view.root.findAll(
+    (node) => node.props.testID === 'doc-against-party-0' && node.props.title === 'Alex Antic',
+  )[0]!;
+  expect(row.props.href).toEqual(personRoute('alex-antic'));
+  await act(async () => view.unmount());
+});
+
+test('a division with nobody against their party, or an older response, shows no section', async () => {
+  const raw = responses['/api/resource/division-federal-senate-10701'] as Record<string, unknown>;
+  for (const value of [undefined, null, { ...against9535, members: [] }, 'bad', { members: [{ name: 1 }] }]) {
+    const division = decodeDocument({ ...raw, voted_against_party: value });
+    expect(division.votedAgainstParty).toBeUndefined();
+    jest.mocked(records.document).mockResolvedValue(record(division));
+    const view = await mount(<DocumentReader />);
+    expect(view.root.findAllByProps({ testID: 'doc-against-party' })).toHaveLength(0);
+    expect(text(view)).not.toMatch(/most of their party|free vote|crossing the floor/i);
+    await act(async () => view.unmount());
+  }
+});
 
 test('an embedded reader draws Ask about this in the header', async () => {
   const view = await mount(<DocumentReader embedded />);
