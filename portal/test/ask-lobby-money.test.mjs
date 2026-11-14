@@ -51,13 +51,15 @@ test('a topic question stays with speech evidence',async()=>{
  const out=await localAsk(api,q,{onResearch:()=>research++})
  assert.equal(research,1);assert.match(out.answer,/682/);assert.ok(out.sources.every(s=>s.kind==='count'))
 })
-test('known industries and totals keep exact party and year controls; unknown scope gets a choice',async()=>{
+test('known industries and totals keep exact party and year controls; unknown scope goes to the agent',async()=>{
  for(const question of ['gambling donations','Who gets the most donations from gambling?','Who receives money from the alcohol industry?'])assert.equal((await localAsk(api,question,{onResearch:()=>assert.fail(question)})).answer_status,'calculated')
  const out=await localAsk(api,'How much has Labor received from mining in 2020?',{filters:{from:'2024',to:'2024',party:'Liberal'}})
  assert.equal(out.answer_status,'calculated');assert.match(out.answer,/2020–21/)
  assert.ok(out.sources.every(s=>{const p=new URL(s.url,'https://local.test').searchParams;return p.get('party')==='party:Labor'&&p.get('from')==='2020'&&p.get('to')==='2020'}))
+ // A source outside the money map is not calculated here, and not met with a pointer to the map: the agent and its money tools answer it.
  for(const question of ['Who takes the most money from the unicorn lobby?','How much has Unknown Example received from mining?','Who gets the most money from data mining companies?']){
-  const r=await localAsk(api,question,{onResearch:()=>assert.fail(question)});assert.match(r.answer_status,/needs_scope|evidence_gap/);assert.doesNotMatch(r.answer,/\$|682|617/)
+  assert.equal(await api.federalPartyMoneyAnswer({question},assets),null,question)
+  let researched=false;await localAsk(api,question,{onResearch:()=>{researched=true}});assert.ok(researched,question)
  }
  const filtered=await localAsk(api,questions[0].question,{filters:{topic:'gambling',kind:'speech'}});assert.equal(filtered.answer_status,'needs_scope')
 })
