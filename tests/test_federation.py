@@ -217,7 +217,8 @@ def test_snapshot_hardlink_alias_is_also_protected(tmp_path,monkeypatch):
     assert original.read_bytes()==b'Invented read-only fixture'
 
 
-def test_publisher_default_off_digest_budget_metadata_only_and_replay(db,membership,tmp_path,monkeypatch):
+@pytest.mark.parametrize('native_response', [False, True])
+def test_publisher_default_off_digest_budget_metadata_only_and_replay(db,membership,tmp_path,monkeypatch,native_response):
     turn=add(db);plan=R.measure(db,[turn],set(),defaultdict(Counter))
     R.apply_plan(db,plan,1,membership)
     monkeypatch.setenv('OPAX_PUBLISH_FEDERATION','1')
@@ -232,12 +233,20 @@ def test_publisher_default_off_digest_budget_metadata_only_and_replay(db,members
                 {'labelset':'topic','label':'housing'}],'custom':'retain'},
                 'extra':{'metadata':{'speech_id':41,'date':'2009-02-03','summary':'Existing summary','other':'retain'}}}
             self.patches=[]
+            if native_response:
+                self.native_labels()
+        def native_labels(self):
+            for label in self.live['usermetadata']['classifications']:
+                label.setdefault('cancelled_by_user', False)
+            self.live['usermetadata']['classifications'].reverse()
         def get(self,slug):
             assert slug=='speech-41'
             return self.live
         def patch(self,slug,body):
             assert set(body)=={'usermetadata','extra'}
             self.patches.append(body);self.live.update(body)
+            if native_response:
+                self.native_labels()
     stub=Stub();args.apply=True
     monkeypatch.delenv('OPAX_PUBLISH_FEDERATION')
     with pytest.raises(ValueError,match='OFF'):P.run(args,stub)
@@ -249,9 +258,29 @@ def test_publisher_default_off_digest_budget_metadata_only_and_replay(db,members
     args.max_documents=1
     assert P.run(args,stub)['patched']==1
     assert stub.live['extra']['metadata']['summary']=='Existing summary'
-    assert {'labelset':'topic','label':'housing'} in stub.live['usermetadata']['classifications']
+    assert ('topic','housing') in P.active_label_pairs(stub.live['usermetadata']['classifications'])
     assert P.run(args,stub)['unchanged']==1
     assert len(stub.patches)==1
     stub.live['extra']['metadata']['date']='2010-02-03'
     with pytest.raises(ValueError,match='identity or date'): P.run(args,stub)
     assert len(stub.patches)==1
+
+
+def test_cancelled_labels_neither_approve_provenance_nor_force_replay(db,membership,monkeypatch):
+    turn=add(db);plan=R.measure(db,[turn],set(),defaultdict(Counter))
+    R.apply_plan(db,plan,1,membership)
+    monkeypatch.setenv('OPAX_PUBLISH_FEDERATION','1')
+    staged=S.map_speech(db.execute('SELECT * FROM speeches').fetchone())
+    live=json.loads(json.dumps(staged))
+    labels=live['usermetadata']['classifications']
+    for label in labels:
+        label['cancelled_by_user']=False
+    labels.extend([{'labelset':'chamber','label':'senate','cancelled_by_user':True},
+                   {'labelset':'party','label':'Old party','cancelled_by_user':True}])
+    assert P.metadata_patch(live,staged) is None
+    for labelset in ('kind','source'):
+        label=next(c for c in labels if c['labelset']==labelset)
+        label['cancelled_by_user']=True
+        with pytest.raises(ValueError,match='provenance'):
+            P.metadata_patch(live,staged)
+        label['cancelled_by_user']=False

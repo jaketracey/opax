@@ -17,11 +17,17 @@ import time
 from .federation_relabel import file_digest, load_guard
 
 
+def active_label_pairs(labels):
+    """Compare labels by meaning, ignoring native response bookkeeping."""
+    return frozenset((c['labelset'], c['label']) for c in labels
+                     if not c.get('cancelled_by_user', False))
+
+
 def metadata_patch(live, staged):
     """One logical chamber label; preserve all unrelated labels and metadata."""
     labels = live.get('usermetadata', {}).get('classifications', [])
-    if ({'labelset': 'kind', 'label': 'speech'} not in labels
-            or {'labelset': 'source', 'label': 'zenodo'} not in labels):
+    active = active_label_pairs(labels)
+    if not {('kind', 'speech'), ('source', 'zenodo')} <= active:
         raise ValueError('Live resource lacks the approved Zenodo speech provenance')
     current = (live.get('extra') or {}).get('metadata') or {}
     expected = staged['extra']['metadata']
@@ -29,20 +35,23 @@ def metadata_patch(live, staged):
             or current.get('date') != expected['date']
             or live.get('slug', staged['slug']) != staged['slug']):
         raise ValueError('Live citation identity or date conflicts with the approved manifest')
-    chambers = {c['label'] for c in labels if c['labelset'] == 'chamber'}
+    chambers = {label for labelset, label in active if labelset == 'chamber'}
     if not chambers or chambers - {'representatives', 'federation'}:
         raise ValueError('Live chamber conflicts with the approved House transfer')
     user = copy.deepcopy(live.get('usermetadata') or {})
     incoming = staged['usermetadata']['classifications']
     user['classifications'] = [c for c in labels if c['labelset'] not in ('chamber', 'party')]
-    user['classifications'] += [c for c in incoming if c['labelset'] in ('chamber', 'party')]
+    user['classifications'] += [c for c in incoming if c['labelset'] in ('chamber', 'party')
+                                and not c.get('cancelled_by_user', False)]
     extra = copy.deepcopy(live.get('extra') or {})
     meta = extra.setdefault('metadata', {})
     proposed = staged['extra']['metadata']
     for key in ('person_id', 'fedchamb_flag', 'source_input_id', 'source_row_number'):
         if key in proposed:
             meta[key] = proposed[key]
-    if user == live.get('usermetadata') and extra == live.get('extra'):
+    # Only classifications can change within usermetadata. A server response may
+    # add cancelled_by_user=False, reorder labels or retain cancellation records.
+    if active_label_pairs(user['classifications']) == active and extra == live.get('extra'):
         return None
     return dict(usermetadata=user, extra=extra)
 
@@ -54,8 +63,8 @@ def run(args, client=None):
     if len(set(slugs)) != len(slugs) or any(not re.fullmatch(r'speech-\d+', s) for s in slugs):
         raise ValueError('Manifest must contain unique existing speech citation slugs')
     for row in rows:
-        labels = row.get('usermetadata', {}).get('classifications', [])
-        if {'labelset': 'chamber', 'label': 'federation'} not in labels or {'labelset': 'source', 'label': 'zenodo'} not in labels:
+        labels = active_label_pairs(row.get('usermetadata', {}).get('classifications', []))
+        if not {('chamber', 'federation'), ('source', 'zenodo')} <= labels:
             raise ValueError('Only reviewed Zenodo Federation payloads are supported')
     sha = file_digest(path)
     report = dict(documents=len(rows), payload_sha256=sha, apply=args.apply, patched=0,

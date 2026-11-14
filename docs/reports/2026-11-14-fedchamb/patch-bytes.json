@@ -1,0 +1,40 @@
+{
+  "as_of": "2026-11-14",
+  "payload_sha256": "9cbfd1ead6b88122d041287e1b76dda293fa705a6bbae726895adb495247fa5f",
+  "network_requests": 0,
+  "kb_writes": 0,
+  "serialisation": "Python json.dumps(patch, allow_nan=False).encode(utf-8), matching requests JSON encoding; excludes HTTP headers, TLS and GET responses.",
+  "baseline_assumptions": "Synthetic live usermetadata and extra copied from each staged payload. Chamber set to representatives, native cancelled_by_user=false on all labels, new provenance keys removed. Same dated party and person assumed. metadata_patch computes the real request shape. Existing live enrichment and other unknown metadata excluded. No live resource read or patch.",
+  "manifest_metadata_only": {
+    "documents": 49316,
+    "minimum_bytes": 566,
+    "mean_bytes": 661.117933327926,
+    "median_bytes": 663.0,
+    "p95_bytes": 672,
+    "maximum_bytes": 687,
+    "total_bytes": 32603692,
+    "total_decimal_mb": 32.603692
+  },
+  "illustrative_enriched": {
+    "assumptions": "Baseline plus a 1,024-byte ASCII summary in extra.metadata.summary and five native topic labels of 32 ASCII bytes each. A sensitivity scenario, not a measured live enrichment distribution.",
+    "documents": 49316,
+    "minimum_bytes": 2085,
+    "mean_bytes": 2180.117933327926,
+    "median_bytes": 2182.0,
+    "p95_bytes": 2191,
+    "maximum_bytes": 2206,
+    "total_bytes": 107514696,
+    "total_decimal_mb": 107.514696
+  },
+  "added_provenance_extra_json_bytes": {
+    "documents": 49316,
+    "minimum_bytes": 47,
+    "mean_bytes": 82.28591126612054,
+    "median_bytes": 82.0,
+    "p95_bytes": 86,
+    "maximum_bytes": 90,
+    "total_bytes": 4058012,
+    "total_decimal_mb": 4.058012
+  },
+  "limitations": "Estimates request transfer, not index_size or processing tokens. Unknown existing summaries/topics, relations and other live metadata must be added; this is not a wire-byte cap. JSON escaping can enlarge non-ASCII text. Real current party/person differences are unknown."
+}

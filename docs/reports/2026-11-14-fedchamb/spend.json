@@ -58,7 +58,13 @@
     "explicit_model_calls": 0,
     "maximum_get_plus_patch_requests": 98632,
     "minimum_seconds_at_one_request_per_second": 98632,
-    "notes": "Patch existing slugs only, retain summaries/topics. Progress metadata-update processing is unmeasured; no claim of a free KB repair."
+    "notes": "Metadata-only PATCH of existing slugs retains summaries/topics. No model enrichment is needed. Usermetadata triggers text/filter re-indexing without extraction processing; expected steady-state net index growth approximately zero, not a measured hosted result. Progress processing charges remain unpriced.",
+    "model_usd": 0,
+    "patch_byte_receipt": "docs/reports/2026-11-14-fedchamb/patch-bytes.json",
+    "patch_bytes_mean_before_unknown_live_enrichment": 661.117933327926,
+    "patch_bytes_total_before_unknown_live_enrichment": 32603692,
+    "illustrative_enriched_patch_bytes_mean": 2180.117933327926,
+    "illustrative_enriched_patch_bytes_total": 107514696
   },
   "progress": {
     "published_consumption_usd_per_platform_token": 0.008,
@@ -69,9 +75,54 @@
     "existing_cohort_index_gb_by_historic_pilot_analogy": 2.4386762,
     "existing_cohort_index_usd_per_month_at_published_overage": 9.7547048,
     "net_new_resource_count": 0,
-    "incremental_index_gb": null,
+    "incremental_index_gb": 0,
     "storage_method": "Historic 2,000-document pilot: +98.9 MB including briefs, 49.45 decimal KB/document. This cohort already exists; its analogous footprint is not an incremental storage bill.",
-    "pricing_source": "https://www.progress.com/agentic-rag/pricing"
+    "pricing_source": "https://www.progress.com/agentic-rag/pricing",
+    "incremental_index_gb_status": "Approximate steady-state source-based estimate, not an observed hosted index_size difference or a byte-exact guarantee.",
+    "shared_backfill_index_ceiling_gb": 5.5,
+    "index_size_before": null,
+    "index_size_after": null,
+    "temporary_segment_growth_bytes": null,
+    "usermetadata_triggers_reindex": true,
+    "extra_alone_triggers_full_prefilter_reindex": false,
+    "metadata_only_triggers_content_processing": false,
+    "index_effect_method": "Writer marks usermetadata edits for prefilter re-indexing. Index builder replaces text/filter and metadata relation entries for existing IDs; unchanged paragraph/vector entries are not rewritten. Extra is absent from resource index inputs. New segments and deletion records can cause transient growth until merges purge obsolete entries. Label dictionary/posting changes may alter final bytes. Approximately zero net steady-state growth for 49,316 existing resources; no new cohort footprint. Keep shared 5.5 GB ceiling unchanged and observe an approved pilot before extending batches.",
+    "source_audit": {
+      "as_of": "2026-11-14",
+      "repository": "https://github.com/nuclia/nucliadb",
+      "commit": "d2ea91b51a456e5a181238c0f35a57d9a940511e",
+      "method": "Read-only public source fetches, User-Agent opax-improve-audit, at least 1.05 seconds between request starts, no redirects or retries. No refusals occurred. No production or KB calls. Hosted deployment revision is unverified.",
+      "http_requests": 19,
+      "user_agent": "opax-improve-audit",
+      "minimum_request_interval_seconds": 1.05,
+      "sources": [
+        {
+          "url": "https://github.com/nuclia/nucliadb/blob/d2ea91b51a456e5a181238c0f35a57d9a940511e/nucliadb/src/nucliadb/writer/api/v1/resource.py#L712-L774",
+          "download_sha256": "6b2d9da1f02166a21183d6cf24607bde5786701daa5ca1ccbc8cd69fb6567f29",
+          "supports": "Usermetadata triggers resource re-indexing; extra alone is not a full re-index trigger. Metadata-only payloads with no content fields skip extraction processing."
+        },
+        {
+          "url": "https://github.com/nuclia/nucliadb/blob/d2ea91b51a456e5a181238c0f35a57d9a940511e/nidx/src/indexer.rs#L353-L377",
+          "download_sha256": "ff59e97d8f743ee6dcc3f6a9ae7f4f89e3cdb3fdf70a011f7734bb6323bc9a57",
+          "supports": "Commits newly written segments and deletion records together, rather than appending permanent duplicate resource IDs."
+        },
+        {
+          "url": "https://github.com/nuclia/nucliadb/blob/d2ea91b51a456e5a181238c0f35a57d9a940511e/nucliadb/src/nucliadb/ingest/orm/index_message.py#L210-L260",
+          "download_sha256": "0ca8b59d33035cc3fc361e690442c3d2a3b77e10fe7bf4807538d320552bd7e9",
+          "supports": "Prefilter update replaces text/filter entries for existing field IDs. Extra is absent from resource index inputs at lines 49-67. Vector updates require vectors or deleted splits at lines 455-461."
+        },
+        {
+          "url": "https://github.com/nuclia/nucliadb/blob/d2ea91b51a456e5a181238c0f35a57d9a940511e/nucliadb/tests/ingest/integration/orm/test_index_message.py#L54-L85",
+          "download_sha256": "412586f8c4b2810d4f764038c765f5670939c3c1132db4383acf9d19e459da8d",
+          "supports": "Regression test asserts equal counts of text entries and deletions, metadata relation replacement, and no paragraph or vector deletions."
+        },
+        {
+          "url": "https://github.com/nuclia/nucliadb/blob/d2ea91b51a456e5a181238c0f35a57d9a940511e/nidx/src/scheduler/log_merge.rs#L59-L110",
+          "download_sha256": "5b387d99a73701b758569975398bc341b32ced3f4b4bb5beb816c3381d4c2717",
+          "supports": "Merge policy supports purging deletions; physical segment storage can temporarily grow before compaction."
+        }
+      ]
+    }
   },
   "price_basis": {
     "pinned_receipt": "docs/reports/2026-11-14-senate-spend.json on origin/im/senate-backfill",
@@ -80,5 +131,6 @@
     "independent_price_fetches_this_lane": 0
   },
   "existing_cumulative_model_run_ceiling_usd": 40,
-  "limits": "Full re-enrichment scenarios are gross marginal USD before shared free allowances, not a total KB bill. No model generation, queueing or remote repair was performed. The primary-max-output scenario exceeds the existing cumulative model ceiling; re-enrichment needs its own approved remaining cap. Progress processing, incremental index impact, D1/platform usage and contract quotas remain unknown."
+  "limits": "Metadata-only repair model cost is US$0. Full re-enrichment scenarios are optional, gross marginal USD before shared free allowances, not a total KB bill. No generation, queueing, production read or remote repair was performed. The primary-max-output scenario exceeds the existing cumulative model ceiling. Progress processing fees, contract quotas and transient index growth remain unmeasured. Approximately zero incremental steady-state index GB is inferred from pinned upstream source, not confirmed on the hosted KB; the shared 5.5 GB ceiling remains in force.",
+  "metadata_repair_model_usd": 0
 }
