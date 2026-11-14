@@ -43,7 +43,12 @@ name: 03 Read a sourced profile
 # gone; e2e shows the destination locally.
 - tapOn:
     id: person-figures-source
-- assertVisible: Profile sources
+# Every source sheet is titled "Sources" (the line's own title is not
+# drawn), so the sheet is checked as this line's own by its id.
+- extendedWaitUntil:
+    visible:
+      id: person-figures-source-sheet
+    timeout: 15000
 - takeScreenshot: ${EVIDENCE}/03-source-sheet
 - tapOn: .*OpenAustralia parliamentary service records.*
 - extendedWaitUntil:

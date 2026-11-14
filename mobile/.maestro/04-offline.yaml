@@ -9,9 +9,18 @@ name: 04 Saved catalogs and bill with the fixture stopped, no saved search respo
     visible:
       id: bill-title
     timeout: 60000
+# The warm read is a few minutes old, inside the bill file's max-age (the
+# fixture sends 300 s), so the page opens on that copy as current. A pull to
+# refresh forces a read, which fails with the fixture stopped: the page keeps
+# the saved copy and says it is offline, however old the copy is.
+- swipe:
+    start: 50%, 30%
+    end: 50%, 85%
+    duration: 800
 - scrollUntilVisible:
     element:
       id: bill-offline
+    direction: UP
     timeout: 60000
 - assertVisible:
     id: bill-offline
