@@ -113,7 +113,7 @@ test('the writer is told the shown line; without one its prompt is unchanged',()
  assert.deepEqual({...rest,contract:rest.contract.slice(0,-api.OPENING_LINE_WRITING_RULE.length)},JSON.parse(base));
 });
 test('the cost table applies twice and holds only a hash, a fixed label, a latency and a cost',()=>{
- const sql=readFileSync(new URL('../migrations/0019_ask_call_costs.sql',import.meta.url),'utf8');
+ const sql=readFileSync(new URL('../migrations/0020_ask_call_costs.sql',import.meta.url),'utf8');
  const script=`import sqlite3,sys\ndb=sqlite3.connect(':memory:')\nsql=sys.stdin.read()\ndb.executescript(sql)\ndb.executescript(sql)\nassert [r[1] for r in db.execute('PRAGMA table_info(ask_call_costs)')]==['question_hash','label','latency_ms','cost_usd','created_at']\ndb.execute('INSERT INTO ask_call_costs (question_hash,label,latency_ms,cost_usd) VALUES (?,?,?,?)',('a'*64,'opening_line',700,0.0001))\ndb.execute('INSERT INTO ask_call_costs (question_hash,label,latency_ms,cost_usd) VALUES (?,?,?,?)',('a'*64,'opening_line',700,None))\nassert db.execute('SELECT COUNT(*) FROM ask_call_costs').fetchone()[0]==2\nfor values in [('question text','opening_line',1,0),('a'*64,'Looking at the record',1,0),('a'*64,'opening_line',-1,0),('a'*64,'opening_line',1,-1)]:\n try: db.execute('INSERT INTO ask_call_costs (question_hash,label,latency_ms,cost_usd) VALUES (?,?,?,?)',values)\n except sqlite3.IntegrityError: pass\n else: raise AssertionError('invalid cost row accepted')\n`;
  const r=spawnSync('python3',['-c',script],{input:sql,encoding:'utf8'});assert.equal(r.status,0,r.stderr);
 });
