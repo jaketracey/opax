@@ -9,8 +9,9 @@ import { isHistoricSpeech } from '../../src/historic.ts'
 import { KbBackpressure, type KbApi, type KbResource } from '../../src/kb.ts'
 import type { PromptRecord } from '../../src/prompts.ts'
 import { clip, existingSummary, pickText, wordCount } from '../../src/text.ts'
-import { admit, appendDurable, classifyResponse, meter, SkipItem, StopRun, stopRequested, upperFor, USD_PER_NEURON, utcDayOf, type Caps, type Ledger } from './guard.ts'
+import { admit, appendDurable, classifyResponse, MAX_SKIPS_IN_A_ROW, meter, SkipItem, StopRun, stopRequested, upperFor, USD_PER_NEURON, utcDayOf, type Caps, type Ledger } from './guard.ts'
 import type { MiniD1 } from './d1rest.ts'
+import { outsideSlice } from './slices.ts'
 import * as store from './store.ts'
 import type { RegenRow } from './store.ts'
 
@@ -22,7 +23,11 @@ export const PRIMARY_MAX_TOKENS = 256
 export const ESCALATION_MAX_TOKENS = 4000
 
 export interface AiPost {
-  post(model: string, body: Record<string, unknown>): Promise<{ status: number; raw: string }>
+  /**
+   * One Workers AI request. `gate` must be called immediately before the request is sent (after any token
+   * refresh or other wait); it throws StopRun when the run has been stopped meanwhile, and nothing is sent.
+   */
+  post(model: string, body: Record<string, unknown>, gate: () => void): Promise<{ status: number; raw: string }>
 }
 
 export interface RunDeps {
@@ -34,8 +39,10 @@ export interface RunDeps {
   resultsPath: string
   stopFile: string
   caps: Caps
-  /** The Worker's spend so far today (UTC), may be cached briefly by the caller. */
+  /** The Worker's spend so far today (UTC), without the runner's own `regen:` rows; may be cached briefly by the caller. */
   workerSpendToday: (day: string) => Promise<number>
+  /** Book a settled call into the Worker's D1 `spend` table (as `regen:<model>`) so the Worker's own guard sees it. */
+  recordSpend: (s: { day: string; model: string; neurons: number; inTokens: number; outTokens: number }) => Promise<void>
   now: () => number
   sleep: (ms: number) => Promise<void>
   log: (line: string) => void
@@ -46,7 +53,10 @@ export interface RunOptions {
   concurrency: number
   /** Stop after this many items were attempted (the pilot). */
   limit?: number
-  /** Pilot: for 'role' rows also generate the plain-b variant, store both, queue neither (state 'held'). */
+  /**
+   * Pilot: hold EVERY row (state 'held'); nothing reaches the queue, so nothing is written to production,
+   * until `release` picks a variant. 'role' rows also get the plain-b variant generated for comparison.
+   */
   compare?: boolean
   /** When today's share is used up, sleep to the next UTC day and continue (else return 'paused'). */
   waitForNextDay?: boolean
@@ -93,6 +103,8 @@ export class Runner {
   private stop: StopRun | null = null
   private paused: string | null = null
   private kbFailures = 0
+  private skipsInARow = 0
+  private lastSettle = -Infinity
   attempted = 0
 
   private readonly d: RunDeps
@@ -102,37 +114,66 @@ export class Runner {
     this.o = o
   }
 
-  /** Before every request: STOP file, run cap, today's share; then the reservation is written. Atomic (no await after admission). */
+  /** A stop, a pause or the STOP file; true when the call must not go out. */
+  private blocked(ctx: ItemCtx): boolean {
+    if (this.stop) {
+      ctx.stop = this.stop
+      return true
+    }
+    if (this.paused) {
+      ctx.paused = this.paused
+      return true
+    }
+    if (stopRequested(this.d.stopFile)) {
+      ctx.stop = this.stop = new StopRun('STOP file present')
+      return true
+    }
+    return false
+  }
+
+  /**
+   * Before every request: stop, pause, STOP file; the Worker's spend (a D1 read); then the same checks again,
+   * the ledger re-read from disk, the run cap and today's share; then the reservation is written. Nothing is
+   * awaited between the second check and the reservation.
+   */
   private async beforeCall(ctx: ItemCtx, model: string, body: Record<string, unknown>): Promise<boolean> {
     if (model === PRIMARY_MODEL) {
       body.max_tokens = PRIMARY_MAX_TOKENS
       body.enable_thinking = false // pilot arm b: qwen3.8 with thinking off
     } else body.max_tokens = ESCALATION_MAX_TOKENS
-    if (this.stop) {
-      ctx.stop = this.stop
-      return false
-    }
-    if (this.paused) {
-      ctx.paused = this.paused
-      return false
-    }
-    if (stopRequested(this.d.stopFile)) {
-      ctx.stop = this.stop = new StopRun('STOP file present')
-      return false
-    }
+    if (this.blocked(ctx)) return false
     const day = utcDayOf(this.d.now())
     const worker = await this.d.workerSpendToday(day)
+    if (this.blocked(ctx)) return false // set while the D1 read was in flight
+    this.d.ledger.sync()
     const upper = upperFor(model, body)
     const verdict = admit(this.d.caps, this.d.ledger.totals(), day, worker, upper)
     if (!verdict.ok) {
-      if (verdict.kind === 'run-cap') ctx.stop = this.stop = new StopRun(verdict.reason)
-      else ctx.paused = this.paused = verdict.reason
+      if (verdict.kind === 'daily') ctx.paused = this.paused = verdict.reason
+      else ctx.stop = this.stop = new StopRun(verdict.reason)
       return false
     }
     const id = randomUUID()
     this.d.ledger.append({ t: 'reserve', id, ts: this.d.now(), day, rid: ctx.rid, model, upper })
     ctx.reservation = { id, upper, day }
     return true
+  }
+
+  /** Called by AiPost immediately before the request is sent: a stop or STOP file set during a wait sends nothing. */
+  private gate(): void {
+    if (this.stop) throw this.stop
+    if (stopRequested(this.d.stopFile)) throw (this.stop = new StopRun('STOP file present'))
+  }
+
+  /** Copy a settled call into the Worker's D1 spend table. If that fails the run stops (the result in hand is kept). */
+  private async book(ctx: ItemCtx, day: string, model: string, neurons: number, p: number | null, c: number | null): Promise<void> {
+    if (!(neurons > 0)) return
+    try {
+      await this.d.recordSpend({ day, model, neurons, inTokens: p ?? 0, outTokens: c ?? 0 })
+    } catch (err) {
+      this.stop ??= new StopRun(`could not book spend into D1 (the Worker's guard would not see it): ${String((err as Error)?.message ?? err).slice(0, 200)}`)
+      ctx.stop ??= this.stop
+    }
   }
 
   /** The metered model call: settles the reservation from the response's usage, or stops / skips. */
@@ -145,31 +186,39 @@ export class Runner {
     let status: number
     let raw: string
     try {
-      ;({ status, raw } = await this.d.ai.post(model, body))
+      ;({ status, raw } = await this.d.ai.post(model, body, () => this.gate()))
     } catch (err) {
       if (err instanceof StopRun) {
-        settle(0, 0, 'none') // raised before the request went out (e.g. the OAuth token could not be refreshed)
+        settle(0, 0, 'none') // raised before the request went out (the gate, or the OAuth token could not be refreshed)
         throw (ctx.stop = this.stop = err)
       }
       // Unknown whether it was billed: book the upper bound and stop.
       settle(0, res.upper, 'upper')
+      await this.book(ctx, res.day, model, res.upper, null, null)
       ctx.unanswered = true
       throw (ctx.stop = this.stop = new StopRun(`network error: ${String((err as Error)?.message ?? err).slice(0, 200)}`))
     }
     const v = classifyResponse(status, raw)
     if (v.action !== 'ok') {
       settle(status, 0, 'none')
-      if (v.action === 'skip') throw (ctx.skip = new SkipItem(v.reason))
+      if (v.action === 'skip') {
+        this.skipsInARow += 1
+        if (this.skipsInARow >= MAX_SKIPS_IN_A_ROW) throw (ctx.stop = this.stop = new StopRun(`${this.skipsInARow} per-item errors in a row, the last: ${v.reason}`))
+        throw (ctx.skip = new SkipItem(v.reason))
+      }
       throw (ctx.stop = this.stop = new StopRun(v.reason))
     }
+    this.skipsInARow = 0
     let m
     try {
       m = meter(model, v.json.result, res.upper)
     } catch (err) {
       settle(status, res.upper, 'upper')
+      await this.book(ctx, res.day, model, res.upper, null, null)
       throw (ctx.stop = this.stop = err instanceof StopRun ? err : new StopRun(String(err)))
     }
     settle(status, m.neurons, m.source, m.promptTokens, m.completionTokens)
+    await this.book(ctx, res.day, model, m.neurons, m.promptTokens, m.completionTokens)
     if (m.source === 'upper') this.d.log(`note ${ctx.rid}: response had no usage; booked the upper bound ${res.upper}`)
     ctx.calls += 1
     ctx.neurons += m.neurons
@@ -217,6 +266,11 @@ export class Runner {
       await store.transition(db, row.rid, 'generating', 'skipped', now(), { note: 'not in the knowledge box' })
       return
     }
+    const outside = outsideSlice(row.slice, row, resource)
+    if (outside) {
+      await store.transition(db, row.rid, 'generating', 'skipped', now(), { note: `outside the ${row.slice} slice: ${outside}` })
+      return
+    }
     const live = existingSummary(resource.data?.texts)
     if (!sameBrief(live, row.old_result)) {
       await store.transition(db, row.rid, 'generating', 'skipped', now(), { note: 'live brief differs from the snapshot', kb_brief: live })
@@ -229,8 +283,8 @@ export class Runner {
     if (main && this.o.compare && altVariant && !ctx.stop && !ctx.paused) alt = await this.generateOne(ctx, recordFor(resource, row.rid, altVariant))
 
     if (main) {
-      appendDurable(this.d.resultsPath, { rid: row.rid, run_id: row.run_id, variant: row.variant, model: main.model, value: main.value, alt_variant: alt ? altVariant : null, alt_model: alt?.model ?? null, alt_value: alt?.value ?? null, neurons: ctx.neurons, calls: ctx.calls, ts: now() })
-      const held = !!(this.o.compare && altVariant)
+      const held = !!this.o.compare
+      appendDurable(this.d.resultsPath, { rid: row.rid, run_id: row.run_id, variant: row.variant, model: main.model, value: main.value, alt_variant: alt ? altVariant : null, alt_model: alt?.model ?? null, alt_value: alt?.value ?? null, held, neurons: ctx.neurons, calls: ctx.calls, ts: now() })
       await store.transition(db, row.rid, 'generating', held ? 'held' : 'generated', now(), {
         new_result: main.value, new_model: main.model, neurons: ctx.neurons, calls: ctx.calls, kb_brief: live,
         ...(alt ? { alt_variant: altVariant, alt_result: alt.value, alt_model: alt.model } : {}),
@@ -267,10 +321,11 @@ export class Runner {
     for (const row of await store.rowsIn(db, this.o.runId, ['generating'])) {
       const r = stored.get(row.rid)
       if (r) {
-        const held = !!r.alt_value
+        // Held if it was generated in compare mode (even when its second variant failed), or if this run compares.
+        const held = !!(r.held || r.alt_value || this.o.compare)
         await store.transition(db, row.rid, 'generating', held ? 'held' : 'generated', now(), {
           new_result: r.value, new_model: r.model, neurons: r.neurons, calls: r.calls,
-          ...(held ? { alt_variant: r.alt_variant, alt_result: r.alt_value, alt_model: r.alt_model } : {}),
+          ...(r.alt_value ? { alt_variant: r.alt_variant, alt_result: r.alt_value, alt_model: r.alt_model } : {}),
         })
         this.d.log(`recovered ${row.rid} from the local results file`)
       } else {
@@ -288,6 +343,11 @@ export class Runner {
   async loop(): Promise<RunEnd> {
     await this.recover()
     for (;;) {
+      if (this.d.now() - this.lastSettle >= 10 * 60_000) {
+        // Rows the Worker has written since: force back to the snapshot's value, state written.
+        await store.markWritten(this.d.db, this.o.runId, this.d.now())
+        this.lastSettle = this.d.now()
+      }
       if (stopRequested(this.d.stopFile)) this.stop ??= new StopRun('STOP file present')
       if (this.stop) return this.halt(this.stop.reason)
       const left = this.o.limit === undefined ? Infinity : this.o.limit - this.attempted
@@ -344,16 +404,21 @@ export class Runner {
   }
 }
 
-/** Pilot release: queue the chosen variant of every held row (no model call). */
+/**
+ * Pilot release: queue the chosen variant of every held row (no model call). A plain row (variant b, no
+ * alternate) has one result and is queued as it is; a role row is queued as the chosen variant, or left held
+ * if that variant was not generated.
+ */
 export async function release(db: MiniD1, runId: string, variant: 'b' | 'role', now: number, dryRun: boolean): Promise<string[]> {
   const out: string[] = []
   for (const row of await store.rowsIn(db, runId, ['held'])) {
-    const swap = row.variant !== variant
+    const single = row.variant === 'b' && !row.alt_result
+    const swap = !single && row.variant !== variant
     if (swap && (!row.alt_result || row.alt_variant !== variant)) {
       out.push(`${row.rid}: no ${variant} result stored; left held`)
       continue
     }
-    out.push(`${row.rid}: queue ${variant}${swap ? ' (alternate)' : ''}`)
+    out.push(`${row.rid}: queue ${single ? 'b (its only variant)' : variant}${swap ? ' (alternate)' : ''}`)
     if (dryRun) continue
     if (swap) {
       await db.prepare(`UPDATE ${store.TABLE} SET variant = alt_variant, new_result = alt_result, new_model = alt_model,

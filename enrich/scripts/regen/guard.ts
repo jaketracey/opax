@@ -1,12 +1,18 @@
 // 5b-cheap regeneration guard: what a Workers AI response means, what it cost, and whether the next
 // call may go out. Pure functions plus a file ledger; no network. See scripts/regen/README.md.
-import { appendFileSync, closeSync, existsSync, fsyncSync, openSync, readFileSync, writeSync } from 'node:fs'
+import { appendFileSync, closeSync, existsSync, fstatSync, fsyncSync, openSync, readFileSync, readSync, unlinkSync, writeSync } from 'node:fs'
 import { NEURON_PRICES } from '../../src/budget.ts'
 import { callUpper } from '../../src/run-budget.ts'
 
 /** Workers AI list price: US$0.011 per 1,000 neurons. */
 export const USD_PER_NEURON = 0.011 / 1000
-export const usdToNeurons = (usd: number): number => Math.floor(usd / USD_PER_NEURON)
+/** Jake's hard cap for this run (note-5b-go): no cap above it is accepted anywhere. */
+export const HARD_CAP_USD = 30
+/** A cap in US dollars as neurons; throws unless 0 < usd <= HARD_CAP_USD (a NaN or missing cap never passes). */
+export function usdToNeurons(usd: number): number {
+  if (!(typeof usd === 'number' && Number.isFinite(usd) && usd > 0 && usd <= HARD_CAP_USD)) throw new StopRun(`cap must be above US$0 and at most US$${HARD_CAP_USD}, got ${usd}`)
+  return Math.floor(usd / USD_PER_NEURON)
+}
 
 /** The run stops; nothing more is sent until an operator restarts it. */
 export class StopRun extends Error {
@@ -31,8 +37,17 @@ export class SkipItem extends Error {
 /** Billing, quota or limit wording anywhere outside the model's own text stops the run. */
 export const BILLING_WORDING = /billing|payment|quota|limit|exceed|insufficient|credit|allocation|exhaust|suspend|overage|budget|plan/i
 
-/** A 4xx that is about this request only (bad or oversized input), not about the account. */
+/** Statuses that MAY be about this request only. Only with an allowlisted error code (below) is it a skip. */
 export const PER_ITEM_STATUSES = new Set([400, 413, 422])
+
+/**
+ * Workers AI error codes that are about this request's input only: 5006 (input failed the model's schema).
+ * Any other code, or none, stops the run: 4006 and 3036 are allocation limits, 10000 is authentication.
+ */
+export const PER_ITEM_CODES = new Set([5006])
+
+/** After this many per-item skips in a row the run stops: the "per-item" error is probably not. */
+export const MAX_SKIPS_IN_A_ROW = 3
 
 /** Keys whose string values are model output; wording inside them never stops the run. */
 const CONTENT_KEYS = new Set(['content', 'text', 'response', 'reasoning', 'reasoning_content', 'output_text', 'arguments', 'refusal'])
@@ -59,7 +74,9 @@ export function classifyResponse(status: number, raw: string): Verdict {
   const brief = `HTTP ${status}: ${envelope.slice(0, 300)}`
   if (status === 402 || status === 403 || status === 429) return { action: 'stop', reason: brief }
   if (status >= 400) {
-    if (PER_ITEM_STATUSES.has(status) && !BILLING_WORDING.test(envelope)) return { action: 'skip', reason: brief }
+    const errors: any[] = Array.isArray(json?.errors) ? json.errors : []
+    const perItem = PER_ITEM_STATUSES.has(status) && errors.length > 0 && errors.every((e) => PER_ITEM_CODES.has(Number(e?.code)))
+    if (perItem && !BILLING_WORDING.test(envelope)) return { action: 'skip', reason: brief }
     return { action: 'stop', reason: brief }
   }
   if (status < 200 || status >= 300) return { action: 'stop', reason: brief }
@@ -117,18 +134,42 @@ export interface Totals {
 /**
  * Append-only JSONL ledger, fsynced per line, rebuilt on start. Every call writes a reservation BEFORE it
  * goes out and a settlement after, so a crash can only over-count (an open reservation counts at its upper).
+ * `sync()` reads whatever was appended since the last read (by any process), so the totals always cover the
+ * whole file; the runner calls it right before each admission.
  */
 export class Ledger {
   private open = new Map<string, { day: string; upper: number }>()
   private settled = { neurons: 0, calls: 0, byDay: {} as Record<string, number>, stops: 0 }
+  private offset = 0
+  private partial = ''
 
   readonly path: string
   constructor(path: string) {
     this.path = path
-    if (!existsSync(path)) return
-    for (const line of readFileSync(path, 'utf8').split('\n')) {
-      if (!line.trim()) continue
-      this.apply(JSON.parse(line) as LedgerLine)
+    this.sync()
+  }
+
+  /** Apply every complete line appended to the file since the last read. */
+  sync(): void {
+    if (!existsSync(this.path)) return
+    const fd = openSync(this.path, 'r')
+    try {
+      const size = fstatSync(fd).size
+      if (size < this.offset) throw new StopRun(`ledger ${this.path} shrank (${this.offset} -> ${size} bytes): refusing to continue`)
+      if (size === this.offset) return
+      const buf = Buffer.alloc(size - this.offset)
+      let got = 0
+      while (got < buf.length) {
+        const n = readSync(fd, buf, got, buf.length - got, this.offset + got)
+        if (n === 0) break
+        got += n
+      }
+      this.offset += got
+      const lines = (this.partial + buf.subarray(0, got).toString('utf8')).split('\n')
+      this.partial = lines.pop() ?? ''
+      for (const line of lines) if (line.trim()) this.apply(JSON.parse(line) as LedgerLine)
+    } finally {
+      closeSync(fd)
     }
   }
 
@@ -150,7 +191,7 @@ export class Ledger {
     } finally {
       closeSync(fd)
     }
-    this.apply(l)
+    this.sync() // applies this line, and anything another process appended
   }
 
   totals(): Totals {
@@ -193,13 +234,18 @@ export interface Caps {
  * ours + upper <= dailyBudget - max(worker spend so far today, worker headroom).
  */
 export function admit(caps: Caps, totals: Totals, today: string, workerToday: number, upper: number):
-  { ok: true } | { ok: false; kind: 'run-cap' | 'daily'; reason: string } {
-  if (totals.neurons + upper > caps.runNeurons) {
+  { ok: true } | { ok: false; kind: 'run-cap' | 'daily' | 'invalid'; reason: string } {
+  const ours = totals.byDay[today] ?? 0
+  const inputs = { runNeurons: caps.runNeurons, dailyBudget: caps.dailyBudget, workerHeadroom: caps.workerHeadroom, spent: totals.neurons, ours, workerToday, upper }
+  // Fail closed: a non-number refuses here, and each comparison below is written so that a NaN refuses too.
+  if (!Object.values(inputs).every((n) => typeof n === 'number' && Number.isFinite(n)) || !(upper > 0) || !(caps.runNeurons > 0)) {
+    return { ok: false, kind: 'invalid', reason: `guard input is not a usable number: ${JSON.stringify(inputs)}` }
+  }
+  if (!(totals.neurons + upper <= caps.runNeurons)) {
     return { ok: false, kind: 'run-cap', reason: `run cap: ${Math.round(totals.neurons)} + ${upper} > ${caps.runNeurons} neurons (US$${(caps.runNeurons * USD_PER_NEURON).toFixed(2)})` }
   }
-  const ours = totals.byDay[today] ?? 0
   const allowance = caps.dailyBudget - Math.max(workerToday, caps.workerHeadroom)
-  if (ours + upper > allowance) {
+  if (!(ours + upper <= allowance)) {
     return { ok: false, kind: 'daily', reason: `daily share: ours ${Math.round(ours)} + ${upper} > ${allowance} (budget ${caps.dailyBudget} - max(worker today ${Math.round(workerToday)}, headroom ${caps.workerHeadroom}))` }
   }
   return { ok: true }
@@ -212,3 +258,38 @@ export function headroomFrom(days: Array<{ day: string; n: number }>, factor = 1
 }
 
 export const stopRequested = (stopFile: string): boolean => existsSync(stopFile)
+
+// ------------------------------------------------------------------ single runner
+
+/**
+ * Take the state directory's lock: an exclusive create (`wx`) holding our PID. If the lock exists, refuse and
+ * say whose it is; a lock is never taken over automatically, even when its process looks gone. Returns the release.
+ */
+export function acquireLock(path: string, what: string): () => void {
+  let fd: number
+  try {
+    fd = openSync(path, 'wx')
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code !== 'EEXIST') throw err
+    let holder = ''
+    try {
+      holder = readFileSync(path, 'utf8').trim()
+    } catch {}
+    throw new StopRun(`another regen command holds the lock ${path} (${holder || 'no details'}). If that process is gone (check with /bin/ps -p <pid>), remove the file by hand; a lock is never taken over automatically`)
+  }
+  const mine = JSON.stringify({ pid: process.pid, what, started: new Date().toISOString() })
+  try {
+    writeSync(fd, mine + '\n')
+    fsyncSync(fd)
+  } finally {
+    closeSync(fd)
+  }
+  let released = false
+  return () => {
+    if (released) return
+    released = true
+    try {
+      if (readFileSync(path, 'utf8').trim() === mine) unlinkSync(path)
+    } catch {}
+  }
+}

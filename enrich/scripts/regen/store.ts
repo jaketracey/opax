@@ -7,16 +7,20 @@
 //   generated    new brief stored here, queue not yet updated
 //   held         pilot compare mode: both variants stored, nothing queued until `release`
 //   queued       queue row now carries the new brief as outcome 'unwritten', force 1: the Worker's flush writes it
-//   written      the Worker has written it (queue outcome 'written' with the new brief)
+//   written      the Worker has written it (queue outcome 'written' with the new brief) and force is back
+//                to the snapshot's value
 //   failed       no valid brief (validator, per-item 4xx, or stopped mid-item); the old brief stays
 //   skipped      the queue row or the live KB brief no longer matched the snapshot; nothing generated
 //   interrupted  found 'generating' at start-up with no stored result: never retried automatically
-//   rolled-back  old brief handed back to the Worker the same way
+//   rolled-back  old brief handed back to the Worker the same way (force reset once the Worker has written it)
 import type { MiniD1 } from './d1rest.ts'
+import { SEQ_BAND, seqBase, SLICES, type SliceName } from './slices.ts'
 
 export const TABLE = 'regen_5b_cheap'
 export const PROMPT_VERSION = '5b-cheap-1'
 export const TASK = 'speech_summary'
+/** The runner's own rows in the Worker's D1 `spend` table: the Worker's guard counts them, the runner's read of the Worker's spend does not. */
+export const SPEND_PREFIX = 'regen:'
 
 export const DDL = [
   `CREATE TABLE IF NOT EXISTS ${TABLE} (
@@ -78,7 +82,11 @@ export async function init(db: MiniD1): Promise<void> {
  * briefs that are written and finished) into the table. INSERT OR IGNORE: a re-seed never replaces
  * the original old brief. rids travel as one JSON array parameter (D1 caps bound parameters at 100).
  */
-export async function seed(db: MiniD1, o: { runId: string; slice: string; variant: 'b' | 'role'; seqBase: number; rids: string[]; now: number }): Promise<number> {
+export async function seed(db: MiniD1, o: { runId: string; slice: SliceName; variant: 'b' | 'role'; rids: string[]; now: number }): Promise<number> {
+  if (!Object.hasOwn(SLICES, o.slice)) throw new Error(`unknown slice '${o.slice}'`)
+  if (!(SLICES[o.slice].variants as readonly string[]).includes(o.variant)) throw new Error(`slice ${o.slice} does not take variant ${o.variant}`)
+  if (o.rids.length >= SEQ_BAND) throw new Error('too many rids for one slice band')
+  const base = seqBase(o.slice)
   let added = 0
   for (let i = 0; i < o.rids.length; i += 500) {
     const chunk = o.rids.slice(i, i + 500)
@@ -88,14 +96,19 @@ export async function seed(db: MiniD1, o: { runId: string; slice: string; varian
       FROM json_each(?7) AS j JOIN queue AS q ON q.rid = j.value AND q.task = '${TASK}'
       WHERE q.status = 'done' AND q.outcome = 'written' AND q.terminal_reason IS NULL
         AND q.model LIKE '@cf/%' AND q.result IS NOT NULL AND TRIM(q.result) != ''`)
-      .bind(o.runId, o.slice, o.seqBase + i, o.variant, PROMPT_VERSION, o.now, JSON.stringify(chunk)).run()
+      .bind(o.runId, o.slice, base + i, o.variant, PROMPT_VERSION, o.now, JSON.stringify(chunk)).run()
     added += r.meta.changes
   }
   return added
 }
 
+/** The next pending rows, all from the earliest slice that still has any: a batch never mixes slices, and a later slice waits. */
 export async function nextPending(db: MiniD1, runId: string, limit: number): Promise<RegenRow[]> {
-  const r = await db.prepare(`SELECT * FROM ${TABLE} WHERE run_id = ?1 AND state = 'pending' ORDER BY seq LIMIT ?2`).bind(runId, limit).all<RegenRow>()
+  // The band is an integer literal (a bound JS number may arrive as REAL and turn this into real division).
+  const band = String(Math.trunc(SEQ_BAND))
+  const r = await db.prepare(`SELECT * FROM ${TABLE} WHERE run_id = ?1 AND state = 'pending'
+      AND seq / ${band} = (SELECT MIN(seq) / ${band} FROM ${TABLE} WHERE run_id = ?1 AND state = 'pending')
+    ORDER BY seq LIMIT ?2`).bind(runId, limit).all<RegenRow>()
   return r.results
 }
 
@@ -138,35 +151,57 @@ export async function queueNewBrief(db: MiniD1, rid: string, now: number): Promi
   return r.meta.changes === 1
 }
 
-/** queued -> written once the Worker reports the write with our brief. */
+/**
+ * After the Worker has written: put the queue row's `force` back to the snapshot's value (so a later Worker
+ * pass never overwrites a brief because of us), then queued -> written. The same for rolled-back rows whose
+ * old brief the Worker has written back. One batch; every statement is conditional, so repeating it is safe.
+ * Returns how many rows became written.
+ */
 export async function markWritten(db: MiniD1, runId: string, now: number): Promise<number> {
-  const r = await db.prepare(`UPDATE ${TABLE} SET state = 'written', updated_at = ?2
-    WHERE run_id = ?1 AND state = 'queued' AND EXISTS (SELECT 1 FROM queue q WHERE q.rid = ${TABLE}.rid AND q.task = '${TASK}'
-      AND q.status = 'done' AND q.outcome = 'written' AND q.result = ${TABLE}.new_result)`).bind(runId, now).run()
-  return r.meta.changes
+  const [, written] = await db.batch([
+    db.prepare(`UPDATE queue SET force = (SELECT r.old_force FROM ${TABLE} r WHERE r.rid = queue.rid), updated_at = ?2
+      WHERE task = '${TASK}' AND rid IN (SELECT rid FROM ${TABLE} WHERE run_id = ?1 AND state = 'queued')
+        AND status = 'done' AND outcome = 'written'
+        AND result = (SELECT r.new_result FROM ${TABLE} r WHERE r.rid = queue.rid)
+        AND force != (SELECT r.old_force FROM ${TABLE} r WHERE r.rid = queue.rid)`).bind(runId, now),
+    db.prepare(`UPDATE ${TABLE} SET state = 'written', updated_at = ?2
+      WHERE run_id = ?1 AND state = 'queued' AND EXISTS (SELECT 1 FROM queue q WHERE q.rid = ${TABLE}.rid AND q.task = '${TASK}'
+        AND q.status = 'done' AND q.outcome = 'written' AND q.result = ${TABLE}.new_result AND q.force = ${TABLE}.old_force)`).bind(runId, now),
+    db.prepare(`UPDATE queue SET force = (SELECT r.old_force FROM ${TABLE} r WHERE r.rid = queue.rid), updated_at = ?2
+      WHERE task = '${TASK}' AND rid IN (SELECT rid FROM ${TABLE} WHERE run_id = ?1 AND state = 'rolled-back')
+        AND status = 'done' AND outcome = 'written'
+        AND result = (SELECT r.old_result FROM ${TABLE} r WHERE r.rid = queue.rid)
+        AND force != (SELECT r.old_force FROM ${TABLE} r WHERE r.rid = queue.rid)`).bind(runId, now),
+  ])
+  return written.meta.changes
 }
 
-/** Rows whose new brief the Worker could not write (quarantined, rejected), for the report. */
+/** Rows whose new brief the Worker could not write (quarantined, rejected, skipped), for the report. */
 export async function deliveryProblems(db: MiniD1, runId: string): Promise<Array<{ rid: string; status: string; outcome: string | null; last_error: string | null }>> {
   const r = await db.prepare(`SELECT q.rid, q.status, q.outcome, q.last_error FROM ${TABLE} r JOIN queue q ON q.rid = r.rid AND q.task = '${TASK}'
-    WHERE r.run_id = ?1 AND r.state = 'queued' AND q.status != 'done'`).bind(runId).all<any>()
+    WHERE r.run_id = ?1 AND r.state = 'queued' AND NOT (q.status = 'done' AND q.outcome IN ('unwritten', 'written'))`).bind(runId).all<any>()
   return r.results
 }
 
 /**
  * Rollback, the same way forward: the queue row gets the OLD brief back as a forced unwritten result and
- * the Worker writes it. Only rows still carrying our new brief are touched.
+ * the Worker writes it. Only rows still carrying our new brief are touched. One batch: the queue update, then
+ * the state, which follows from the queue (it now holds the old brief). If a batch were ever cut short,
+ * running rollback again finishes it. True when this call marked the row rolled-back.
  */
 export async function rollbackRow(db: MiniD1, rid: string, now: number): Promise<boolean> {
-  const q = await db.prepare(`UPDATE queue SET
-      result = (SELECT r.old_result FROM ${TABLE} r WHERE r.rid = queue.rid),
-      model = (SELECT r.old_model FROM ${TABLE} r WHERE r.rid = queue.rid),
-      force = 1, status = 'done', outcome = 'unwritten', terminal_reason = NULL, last_error = '${PROMPT_VERSION} rollback', updated_at = ?2
-    WHERE rid = ?1 AND task = '${TASK}'
-      AND EXISTS (SELECT 1 FROM ${TABLE} r WHERE r.rid = queue.rid AND r.state IN ('queued', 'written') AND r.new_result = queue.result)`).bind(rid, now).run()
-  if (q.meta.changes !== 1) return false
-  await db.prepare(`UPDATE ${TABLE} SET state = 'rolled-back', updated_at = ?2 WHERE rid = ?1 AND state IN ('queued', 'written')`).bind(rid, now).run()
-  return true
+  const [, state] = await db.batch([
+    db.prepare(`UPDATE queue SET
+        result = (SELECT r.old_result FROM ${TABLE} r WHERE r.rid = queue.rid),
+        model = (SELECT r.old_model FROM ${TABLE} r WHERE r.rid = queue.rid),
+        force = 1, status = 'done', outcome = 'unwritten', terminal_reason = NULL, last_error = '${PROMPT_VERSION} rollback', updated_at = ?2
+      WHERE rid = ?1 AND task = '${TASK}'
+        AND EXISTS (SELECT 1 FROM ${TABLE} r WHERE r.rid = queue.rid AND r.state IN ('queued', 'written') AND r.new_result = queue.result)`).bind(rid, now),
+    db.prepare(`UPDATE ${TABLE} SET state = 'rolled-back', updated_at = ?2
+      WHERE rid = ?1 AND state IN ('queued', 'written')
+        AND EXISTS (SELECT 1 FROM queue q WHERE q.rid = ?1 AND q.task = '${TASK}' AND q.result = ${TABLE}.old_result)`).bind(rid, now),
+  ])
+  return state.meta.changes === 1
 }
 
 export async function counts(db: MiniD1, runId: string): Promise<Array<{ slice: string; state: string; n: number; neurons: number }>> {
@@ -174,14 +209,25 @@ export async function counts(db: MiniD1, runId: string): Promise<Array<{ slice: 
   return r.results
 }
 
-/** The Worker's own spend so far today (UTC), from its D1 ledger. */
+/** The Worker's own spend so far today (UTC), from its D1 ledger, without the runner's `regen:` rows. */
 export async function workerSpendToday(db: MiniD1, day: string): Promise<number> {
-  const r = await db.prepare(`SELECT COALESCE(SUM(neurons), 0) AS n FROM spend WHERE day = ?1`).bind(day).first<{ n: number }>()
+  const r = await db.prepare(`SELECT COALESCE(SUM(neurons), 0) AS n FROM spend WHERE day = ?1 AND model NOT LIKE '${SPEND_PREFIX}%'`).bind(day).first<{ n: number }>()
   return Number(r?.n ?? 0)
 }
 
-/** The Worker's daily totals over the last `days` UTC days, for the headroom. */
+/** The Worker's daily totals since a UTC day, without the runner's `regen:` rows, for the headroom. */
 export async function workerDays(db: MiniD1, sinceDay: string): Promise<Array<{ day: string; n: number }>> {
-  const r = await db.prepare(`SELECT day, SUM(neurons) AS n FROM spend WHERE day >= ?1 GROUP BY day ORDER BY day`).bind(sinceDay).all<{ day: string; n: number }>()
+  const r = await db.prepare(`SELECT day, SUM(neurons) AS n FROM spend WHERE day >= ?1 AND model NOT LIKE '${SPEND_PREFIX}%' GROUP BY day ORDER BY day`).bind(sinceDay).all<{ day: string; n: number }>()
   return r.results
+}
+
+/**
+ * Book one settled call into the Worker's D1 `spend` table as `regen:<model>`, the same upsert the Worker
+ * uses (db.ts recordSpend), so the Worker's own daily guard (SUM over the day) counts the runner's spend.
+ */
+export async function recordSpend(db: MiniD1, s: { day: string; model: string; neurons: number; inTokens: number; outTokens: number }): Promise<void> {
+  await db.prepare(`INSERT INTO spend (day, model, neurons, calls, in_tokens, out_tokens) VALUES (?1, ?2, ?3, 1, ?4, ?5)
+     ON CONFLICT(day, model) DO UPDATE SET neurons = neurons + excluded.neurons, calls = calls + 1,
+       in_tokens = in_tokens + excluded.in_tokens, out_tokens = out_tokens + excluded.out_tokens`)
+    .bind(s.day, SPEND_PREFIX + s.model, s.neurons, s.inTokens, s.outTokens).run()
 }

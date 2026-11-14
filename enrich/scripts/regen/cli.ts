@@ -1,13 +1,15 @@
 // 5b-cheap regeneration CLI. See scripts/regen/README.md. Tokens are read from local files and never printed.
-//   node scripts/regen/cli.ts <command> --run <run-id> [options]
+//   node scripts/regen/cli.ts <command> --run <run-id> [options]     (flags are space-separated: --limit 50)
 import { spawnSync } from 'node:child_process'
 import { appendFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
 import { Kb } from '../../src/kb.ts'
+import { COMMANDS, parseArgs, REQUIRED } from './args.ts'
 import { d1Rest, type MiniD1 } from './d1rest.ts'
-import { headroomFrom, Ledger, StopRun, usdToNeurons, USD_PER_NEURON, utcDayOf, type Caps } from './guard.ts'
+import { acquireLock, headroomFrom, Ledger, StopRun, usdToNeurons, USD_PER_NEURON, utcDayOf, type Caps } from './guard.ts'
 import { release, Runner, type AiPost } from './runner.ts'
+import type { SliceName } from './slices.ts'
 import * as store from './store.ts'
 
 const HOME = homedir()
@@ -18,6 +20,7 @@ const PATHS = {
   stop: join(STATE_DIR, 'STOP'),
   log: join(STATE_DIR, 'run.log'),
   account: join(STATE_DIR, 'account'),
+  lock: join(STATE_DIR, 'LOCK'),
 }
 const D1_TOKEN_FILE = join(HOME, '.cache/opax/cf-deploy.token')
 const KB_ENV_FILE = join(HOME, '.cache/opax/kb.env')
@@ -25,17 +28,8 @@ const WRANGLER_TOML = process.env.WRANGLER_CONFIG ?? join(HOME, 'Library/Prefere
 const WRANGLER_BIN = process.env.WRANGLER_BIN ?? join(import.meta.dirname, '../../node_modules/.bin/wrangler')
 const DAILY_BUDGET = 1_500_000
 
-function args(): { cmd: string; flags: Map<string, string> } {
-  const [cmd = 'help', ...rest] = process.argv.slice(2)
-  const flags = new Map<string, string>()
-  for (let i = 0; i < rest.length; i += 1) {
-    if (!rest[i].startsWith('--')) continue
-    const next = rest[i + 1]
-    if (next === undefined || next.startsWith('--')) flags.set(rest[i].slice(2), 'true')
-    else flags.set(rest[i].slice(2), rest[++i])
-  }
-  return { cmd, flags }
-}
+/** Commands that only read: everything else takes the single-runner lock. */
+const READ_ONLY = new Set(['help', 'headroom', 'status'])
 
 const log = (line: string): void => {
   const stamped = `${new Date().toISOString()} ${line}`
@@ -88,10 +82,18 @@ async function oauthToken(): Promise<string> {
 function workersAi(): AiPost {
   const account = accountId()
   return {
-    async post(model, body) {
+    async post(model, body, gate) {
+      let token: string
+      try {
+        token = await oauthToken() // may wait for the token to expire and refresh
+      } catch (err) {
+        // Nothing was sent: a stop, not an unanswered (possibly billed) request.
+        throw err instanceof StopRun ? err : new StopRun(`could not read the wrangler OAuth token: ${String((err as Error)?.message ?? err).slice(0, 200)}`)
+      }
+      gate() // a stop or STOP file set during that wait: nothing is sent
       const res = await fetch(`https://api.cloudflare.com/client/v4/accounts/${account}/ai/run/${model}`, {
         method: 'POST',
-        headers: { authorization: `Bearer ${await oauthToken()}`, 'content-type': 'application/json' },
+        headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
         body: JSON.stringify(body),
         signal: AbortSignal.timeout(120_000),
       })
@@ -100,12 +102,17 @@ function workersAi(): AiPost {
   }
 }
 
-async function caps(db: MiniD1, capUsd: number): Promise<Caps> {
+async function headroom(db: MiniD1): Promise<number> {
   const since = utcDayOf(Date.now() - 30 * 86_400_000)
   const days = await store.workerDays(db, since)
   const workerHeadroom = headroomFrom(days)
   log(`headroom: Worker peak day since ${since} = ${Math.round(Math.max(0, ...days.map((d) => Number(d.n))))} neurons; kept for it ${workerHeadroom}; ours at most ${DAILY_BUDGET - workerHeadroom} a day`)
-  return { runNeurons: usdToNeurons(capUsd), dailyBudget: DAILY_BUDGET, workerHeadroom }
+  return workerHeadroom
+}
+
+async function caps(db: MiniD1, capUsd: number): Promise<Caps> {
+  const runNeurons = usdToNeurons(capUsd) // throws unless 0 < cap <= 30
+  return { runNeurons, dailyBudget: DAILY_BUDGET, workerHeadroom: await headroom(db) }
 }
 
 function rids(file: string): string[] {
@@ -126,32 +133,44 @@ async function status(db: MiniD1, runId: string): Promise<void> {
 }
 
 async function main(): Promise<void> {
-  mkdirSync(STATE_DIR, { recursive: true })
-  const { cmd, flags } = args()
-  const runId = flags.get('run') ?? ''
-  const need = () => {
-    if (!/^[a-z0-9-]{3,40}$/.test(runId)) throw new Error('--run <id> required (lowercase letters, digits, dashes)')
+  const { cmd, flags } = parseArgs(process.argv.slice(2)) // throws on anything it does not recognise
+  if (cmd === 'help') {
+    for (const [name, spec] of Object.entries(COMMANDS)) {
+      const need = new Set(REQUIRED[name] ?? [])
+      console.log(`${name} ${Object.entries(spec).map(([f, k]) => (k === 'bool' ? `[--${f}]` : need.has(f) ? `--${f} <${k}>` : `[--${f} <${k}>]`)).join(' ')}`)
+    }
+    return
   }
-  const dryRun = flags.get('dry-run') === 'true'
-  const db = cmd === 'help' ? (null as unknown as MiniD1) : d1()
+  mkdirSync(STATE_DIR, { recursive: true })
+  if (!READ_ONLY.has(cmd)) {
+    const unlock = acquireLock(PATHS.lock, `${cmd} ${process.argv.slice(3).join(' ')}`)
+    process.on('exit', unlock)
+    for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP'] as const) {
+      process.on(sig, () => {
+        unlock()
+        process.exit(128 + ({ SIGINT: 2, SIGTERM: 15, SIGHUP: 1 } as const)[sig])
+      })
+    }
+  }
+  const runId = String(flags.get('run') ?? '')
+  const dryRun = flags.get('dry-run') === true
+  const db = d1()
 
   if (cmd === 'init') {
     await store.init(db)
     log(`init: ${store.TABLE} ready`)
   } else if (cmd === 'headroom') {
-    await caps(db, Number(flags.get('cap-usd') ?? 30))
+    await headroom(db)
   } else if (cmd === 'seed') {
-    need()
+    const slice = flags.get('slice') as SliceName
     const variant = flags.get('variant') as 'b' | 'role'
-    if (variant !== 'b' && variant !== 'role') throw new Error('--variant b|role')
-    const list = rids(flags.get('rids') ?? '')
-    const n = await store.seed(db, { runId, slice: flags.get('slice') ?? 'x', variant, seqBase: Number(flags.get('seq-base') ?? 0), rids: list, now: Date.now() })
-    log(`seed ${runId}: ${n} of ${list.length} rids snapshotted into ${flags.get('slice')} (${variant}); the rest were not finished Workers AI briefs or already seeded`)
+    const list = rids(String(flags.get('rids')))
+    const n = await store.seed(db, { runId, slice, variant, rids: list, now: Date.now() })
+    log(`seed ${runId}: ${n} of ${list.length} rids snapshotted into ${slice} (${variant}); the rest were not finished Workers AI briefs or already seeded`)
   } else if (cmd === 'run') {
-    need()
     if (existsSync(PATHS.stop)) throw new Error(`STOP file present (${PATHS.stop}): remove it to run`)
     const ledger = new Ledger(PATHS.ledger)
-    const c = await caps(db, Number(flags.get('cap-usd') ?? 30))
+    const c = await caps(db, flags.get('cap-usd') as number)
     let cache = { day: '', at: 0, n: 0 }
     const runner = new Runner({
       db, kb: kb(), ai: workersAi(), ledger, resultsPath: PATHS.results, stopFile: PATHS.stop, caps: c,
@@ -159,53 +178,48 @@ async function main(): Promise<void> {
         if (cache.day !== day || Date.now() - cache.at > 5 * 60_000) cache = { day, at: Date.now(), n: await store.workerSpendToday(db, day) }
         return cache.n
       },
+      recordSpend: (s) => store.recordSpend(db, s),
       now: () => Date.now(), sleep: (ms) => new Promise((r) => setTimeout(r, ms)), log,
     }, {
-      runId, concurrency: Number(flags.get('concurrency') ?? 2), limit: flags.has('limit') ? Number(flags.get('limit')) : undefined,
-      compare: flags.get('compare') === 'true', waitForNextDay: flags.get('wait') === 'true',
+      runId, concurrency: (flags.get('concurrency') as number | undefined) ?? 2, limit: flags.get('limit') as number | undefined,
+      compare: flags.get('compare') === true, waitForNextDay: flags.get('wait') === true,
     })
-    log(`run ${runId}: start; ledger US$${ledger.totals().usd.toFixed(4)} so far; cap US$${(c.runNeurons * USD_PER_NEURON).toFixed(2)}`)
+    log(`run ${runId}: start; ledger US$${ledger.totals().usd.toFixed(4)} so far; cap US$${(c.runNeurons * USD_PER_NEURON).toFixed(2)}; limit ${flags.get('limit') ?? 'none'}; concurrency ${(flags.get('concurrency') as number | undefined) ?? 2}; ${flags.get('compare') ? 'compare: every row held until release' : 'rows queued for the Worker as they finish'}`)
     const end = await runner.loop()
     log(`run ${runId}: ${end.end}${'reason' in end ? `: ${end.reason}` : ''}`)
     await status(db, runId)
     if (end.end === 'stopped') process.exitCode = 3
   } else if (cmd === 'status') {
-    need()
     await status(db, runId)
   } else if (cmd === 'verify') {
-    need()
     const n = await store.markWritten(db, runId, Date.now())
     const problems = await store.deliveryProblems(db, runId)
     log(`verify ${runId}: ${n} newly confirmed written by the Worker; ${problems.length} queued rows the Worker could not write`)
     for (const p of problems.slice(0, 20)) console.log(`  ${p.rid} ${p.status} ${p.outcome}: ${(p.last_error ?? '').slice(0, 160)}`)
     await status(db, runId)
   } else if (cmd === 'release') {
-    need()
     const variant = flags.get('variant') as 'b' | 'role'
-    if (variant !== 'b' && variant !== 'role') throw new Error('--variant b|role')
     for (const line of await release(db, runId, variant, Date.now(), dryRun)) log(`release${dryRun ? ' (dry run)' : ''} ${line}`)
   } else if (cmd === 'rollback') {
-    need()
+    // parseArgs has checked exactly one of --all, --slice, --rids
     let rows = await store.rowsIn(db, runId, ['queued', 'written'])
     if (flags.has('rids')) {
-      const keep = new Set(flags.get('rids')!.split(','))
+      const keep = new Set(String(flags.get('rids')).split(','))
       rows = rows.filter((r) => keep.has(r.rid))
     } else if (flags.has('slice')) rows = rows.filter((r) => r.slice === flags.get('slice'))
-    else if (flags.get('all') !== 'true') throw new Error('rollback needs --all, --slice <name> or --rids a,b,c')
-    if (flags.has('limit')) rows = rows.slice(0, Number(flags.get('limit')))
+    if (flags.has('limit')) rows = rows.slice(0, flags.get('limit') as number)
     log(`rollback ${runId}${dryRun ? ' (DRY RUN: nothing is written)' : ''}: ${rows.length} rows`)
     let done = 0
     for (const r of rows) {
       const q = await store.queueRow(db, r.rid)
       const ours = (q?.result ?? '').trim() === (r.new_result ?? '').trim()
-      console.log(`  ${r.rid} [${r.slice}/${r.state}] queue=${q?.status}/${q?.outcome} carries ${ours ? 'the new brief' : 'something else (left alone)'}`)
+      const back = (q?.result ?? '').trim() === r.old_result.trim()
+      console.log(`  ${r.rid} [${r.slice}/${r.state}] queue=${q?.status}/${q?.outcome} carries ${ours ? 'the new brief' : back ? 'the old brief (finishing an earlier rollback)' : 'something else (left alone)'}`)
       console.log(`    restore: ${r.old_result.slice(0, 140)}`)
       console.log(`    replace: ${(r.new_result ?? '').slice(0, 140)}`)
-      if (!dryRun && ours && (await store.rollbackRow(db, r.rid, Date.now()))) done += 1
+      if (!dryRun && (ours || (back && r.state !== 'rolled-back')) && (await store.rollbackRow(db, r.rid, Date.now()))) done += 1
     }
     if (!dryRun) log(`rollback ${runId}: ${done} rows handed back to the Worker with their old brief (forced); its next tick writes them`)
-  } else {
-    console.log('commands: init | headroom | seed --run R --slice S --variant b|role --seq-base N --rids FILE | run --run R [--concurrency 2] [--limit N] [--compare] [--wait] [--cap-usd 30] | status --run R | verify --run R | release --run R --variant b|role [--dry-run] | rollback --run R (--all|--slice S|--rids a,b) [--limit N] [--dry-run]')
   }
 }
 
