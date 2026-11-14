@@ -564,6 +564,16 @@ test('the record tools hold no personal or account data and no generation path',
     assert.doesNotMatch(source, /COMMUNITY_DB|mcp_keys|members\b.*\bemail|\/api\/ask|ASK_MODEL|DEEPSEEK|fetch\(/, file);
     assert.doesNotMatch(source, /—/, file + ': no em dash in public text');
   }
+  // Tool arguments are never logged or stored: no console output, analytics or database write on the MCP path.
+  // The only writes are the key's last-used time and the hashed rate-limit counter, neither of which holds arguments.
+  const { readdir } = await import('node:fs/promises');
+  const toolFiles = (await readdir(new URL('../src/tools/', import.meta.url))).filter(name => name.endsWith('.ts')).map(name => 'tools/' + name);
+  for (const file of ['community-mcp.ts', 'mcp-tool-titles.ts', ...toolFiles]) {
+    const source = await readFile(new URL('../src/' + file, import.meta.url), 'utf8');
+    assert.doesNotMatch(source, /console\.(?:log|info|warn|error|debug)|posthog|\.capture\(|waitUntil|\.put\(/, file + ' logs or stores nothing');
+    const writes = source.match(/\b(?:INSERT|UPDATE|DELETE)\b[^'`]*/g) ?? [];
+    assert.deepEqual(writes, file === 'community-mcp.ts' ? ['UPDATE mcp_keys SET last_used_at=? WHERE id=?'] : [], file + ' database writes');
+  }
   // The same answer with no account context at all: nothing in a result depends on who asked.
   const bare = { asset, origin: 'https://opax.com.au' };
   assert.deepEqual(await call('bill_detail', { bill_id: 'au-federal-r7534' }, bare), await call('bill_detail', { bill_id: 'au-federal-r7534' }));
