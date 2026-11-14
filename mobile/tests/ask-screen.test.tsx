@@ -2159,6 +2159,7 @@ describe('the idle page at accessibility sizes', () => {
       (node) => typeof node.type === 'string' && node.props.testID === id,
     );
   const COLUMN = 678;
+  const AREA = COLUMN - 34; // layOut()'s default: less the home indicator's inset.
   const COMPOSER = 120;
   async function layOut(columnHeight = COLUMN) {
     const areaHeight = columnHeight - 34;
@@ -2271,7 +2272,7 @@ describe('the idle page at accessibility sizes', () => {
       );
       await mount();
       await layOut();
-      const inset = COLUMN - (COLUMN - 34 - COMPOSER);
+      const inset = COLUMN - (AREA - COMPOSER);
       expect(scrollStyle().marginBottom).toBe(inset);
       visible.mockReturnValue(true);
       act(() =>

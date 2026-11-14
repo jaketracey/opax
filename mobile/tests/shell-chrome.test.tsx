@@ -1604,12 +1604,22 @@ test.each(['leading', 'trailing'] as const)(
       mockBarEdge = edge;
       const window = Dimensions.get('window');
       const { navigation, page, ground } = fadePage('index', '(today)');
-      const renderer = tree(page(68));
+      const renderer = tree(page(100));
       try {
         for (const fontScale of [2.643, 3.571]) {
           act(() => Dimensions.set({ window: { ...window, fontScale } }));
+          // The rail's top edge follows the content: soft at rest, hard
+          // from the first scroll point. AX never makes it solid.
           expect(navigation.setOptions).toHaveBeenLastCalledWith(
-            scrollBar(ground, false, edge),
+            scrollBar(ground, false, edge, false),
+          );
+          scrollTo(renderer, 20);
+          expect(navigation.setOptions).toHaveBeenLastCalledWith(
+            scrollBar(ground, false, edge, true),
+          );
+          scrollTo(renderer, -100);
+          expect(navigation.setOptions).toHaveBeenLastCalledWith(
+            scrollBar(ground, false, edge, false),
           );
           expect(RootBar!.setSolid).not.toHaveBeenCalled();
         }
