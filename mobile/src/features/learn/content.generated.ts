@@ -109,7 +109,7 @@ export const glossaryTerms: readonly LearnTerm<TermId>[] = [
     more: 'A bill is not a law yet. Both houses of Parliament must agree to exactly the same words. Then the Governor-General signs it and it becomes an Act.',
     chapter: 'bill-to-act',
     example: {
-      url: 'https://opax.com.au/bill/au-federal-r7548',
+      url: '/bill/au-federal-r7548',
       label: 'A bill before Parliament',
     },
     seeAlso: ['act', 'first-reading', 'royal-assent'],
@@ -140,7 +140,7 @@ export const glossaryTerms: readonly LearnTerm<TermId>[] = [
     more: 'It starts when the minister asks that the bill "now be read a second time". If the vote passes, the house agrees with the main idea. The bill can then move on to the next stages.',
     chapter: 'bill-to-act',
     example: {
-      url: 'https://opax.com.au/bill/au-federal-r7548',
+      url: '/bill/au-federal-r7548',
       label: 'A bill at second reading',
     },
     seeAlso: ['first-reading', 'consideration-in-detail', 'third-reading'],
@@ -171,7 +171,7 @@ export const glossaryTerms: readonly LearnTerm<TermId>[] = [
     more: 'Any member can move an amendment. It must be given in writing to the Clerk, the top official of the house. Changes made in one house must also be agreed to by the other house.',
     chapter: 'bill-to-act',
     example: {
-      url: 'https://opax.com.au/doc/division-federal-representatives-8545',
+      url: '/doc/division-federal-representatives-8545',
       label: 'The House agrees to Senate amendments',
     },
     seeAlso: ['consideration-in-detail', 'bill'],
@@ -193,7 +193,7 @@ export const glossaryTerms: readonly LearnTerm<TermId>[] = [
     more: 'The Senate can send a bill to a committee for inquiry, even while the bill is still in the House. The committee reports back to the Senate.',
     chapter: 'bill-to-act',
     example: {
-      url: 'https://opax.com.au/doc/division-federal-senate-10811',
+      url: '/doc/division-federal-senate-10811',
       label: 'A Senate vote to start an inquiry',
     },
     seeAlso: ['committee', 'senate'],
@@ -344,7 +344,7 @@ export const glossaryTerms: readonly LearnTerm<TermId>[] = [
     more: 'When the government does not have most of the Senate seats, crossbench senators can decide if a bill passes. This is called the balance of power.',
     chapter: 'whos-who',
     example: {
-      url: 'https://opax.com.au/doc/division-federal-representatives-10611',
+      url: '/doc/division-federal-representatives-10611',
       label: 'Independents vote together on a House bill',
     },
     seeAlso: ['government', 'opposition'],
@@ -424,7 +424,7 @@ export const glossaryTerms: readonly LearnTerm<TermId>[] = [
     more: 'A division is held when more than one member challenges a vote on the voices. Members who vote aye sit to the Speaker’s or President’s right, and those voting no sit to their left. On OPAX, each division has its own page.',
     chapter: 'how-votes-work',
     example: {
-      url: 'https://opax.com.au/doc/division-federal-representatives-10611',
+      url: '/doc/division-federal-representatives-10611',
       label: 'A House division',
     },
     seeAlso: ['on-the-voices', 'pair', 'crossing-the-floor'],
@@ -454,7 +454,7 @@ export const glossaryTerms: readonly LearnTerm<TermId>[] = [
     more: 'Members of a party usually vote together. Parties often have rules about it, and whips make sure members know how to vote.',
     chapter: 'how-votes-work',
     example: {
-      url: 'https://opax.com.au/doc/division-federal-representatives-7714',
+      url: '/doc/division-federal-representatives-7714',
       label: 'Members of the same party voted on both sides',
     },
     seeAlso: ['crossing-the-floor', 'conscience-vote', 'whip'],
@@ -475,7 +475,7 @@ export const glossaryTerms: readonly LearnTerm<TermId>[] = [
     more: 'It is rare and can cost a member support in their party. If you ask OPAX who crossed the floor, it checks each vote against most of the member’s party. Party labels can be out of date, so treat that as a guide.',
     chapter: 'how-votes-work',
     example: {
-      url: 'https://opax.com.au/doc/division-federal-senate-9535',
+      url: '/doc/division-federal-senate-9535',
       label: 'One Liberal senator voted no while the other 8 voted aye',
     },
     seeAlso: ['party-line', 'conscience-vote', 'division'],
@@ -487,7 +487,7 @@ export const glossaryTerms: readonly LearnTerm<TermId>[] = [
     more: 'There are about 18 to 20 sitting weeks a year. A sitting day is a day a house meets. When Parliament is not sitting, members spend much of their time in their electorates.',
     chapter: 'watching-parliament',
     example: {
-      url: 'https://opax.com.au/sitting',
+      url: '/sitting',
       label: 'Federal sitting weeks',
     },
     seeAlso: ['question-time'],
@@ -499,7 +499,7 @@ export const glossaryTerms: readonly LearnTerm<TermId>[] = [
     more: 'It starts at 2 pm in both houses and usually lasts about an hour. The first question always comes from the opposition. It can be watched live.',
     chapter: 'watching-parliament',
     example: {
-      url: 'https://opax.com.au/video/senate',
+      url: '/video/senate',
       label: 'Senate Question Time videos',
     },
     seeAlso: ['question-without-notice', 'question-on-notice', 'dorothy-dixer'],
@@ -572,7 +572,7 @@ export const glossaryTerms: readonly LearnTerm<TermId>[] = [
     more: 'They are held after the Budget in May, with extra hearings in October and February. They are open to the public and can be watched online. Hansard records everything said.',
     chapter: 'watching-parliament',
     example: {
-      url: 'https://opax.com.au/estimates',
+      url: '/estimates',
       label: 'Senate estimates rounds and transcripts',
     },
     seeAlso: ['committee', 'hansard'],
@@ -619,7 +619,7 @@ export const glossaryTerms: readonly LearnTerm<TermId>[] = [
     more: 'A return’s total receipts include loans as well as gifts. That is why OPAX calls this money receipts, not donations.',
     chapter: 'money-and-interests',
     example: {
-      url: 'https://opax.com.au/money/receipts',
+      url: '/money/receipts',
       label: 'Political receipts',
     },
     seeAlso: ['gift', 'annual-return'],
@@ -692,7 +692,7 @@ export const glossaryTerms: readonly LearnTerm<TermId>[] = [
     more: 'OPAX shows the newest things added to and taken off these registers, grouped by week. Each entry links to its source.',
     chapter: 'money-and-interests',
     example: {
-      url: 'https://opax.com.au/declared',
+      url: '/declared',
       label: 'Declared interests',
     },
     seeAlso: ['annual-return'],
@@ -882,7 +882,7 @@ export const glossaryTerms: readonly LearnTerm<TermId>[] = [
     more: 'Each state has its own constitution, which sets out its parliament’s powers. State laws apply within that state.',
     chapter: 'federal-and-state',
     example: {
-      url: 'https://opax.com.au/doc/division-nsw-la-2026-10-21-1',
+      url: '/doc/division-nsw-la-2026-10-21-1',
       label: 'A vote in the NSW Legislative Assembly',
     },
     seeAlso: ['legislative-assembly', 'residual-powers'],
@@ -1362,7 +1362,7 @@ export const learnChapters: readonly LearnChapter<TermId>[] = [
             items: [
               {
                 label: 'The House votes on a gambling bill',
-                url: 'https://opax.com.au/doc/division-federal-representatives-10611',
+                url: '/doc/division-federal-representatives-10611',
                 note: [
                   'look at how each party voted. Labor and the Liberals voted aye. The 10 independents voted no.',
                 ],
@@ -2020,26 +2020,26 @@ export const learnChapters: readonly LearnChapter<TermId>[] = [
               {
                 label:
                   'Sport Legislation Amendment (World Anti-Doping Code Implementation) Bill 2026',
-                url: 'https://opax.com.au/bill/au-federal-r7548',
+                url: '/bill/au-federal-r7548',
                 note: [
                   'a bill at second reading. Look at the stages recorded so far.',
                 ],
               },
               {
                 label: 'A Senate vote to start an inquiry',
-                url: 'https://opax.com.au/doc/division-federal-senate-10811',
+                url: '/doc/division-federal-senate-10811',
                 note: [
                   'this inquiry is into an issue, not a bill. Read the question to see what the committee must look into.',
                 ],
               },
               {
                 label: 'Water Amendment (Restoring Our Rivers) Bill 2023',
-                url: 'https://opax.com.au/bill/au-federal-r7076',
+                url: '/bill/au-federal-r7076',
                 note: [
                   'the Senate changed this bill. ',
                   {
                     t: 'The House then agreed to the changes',
-                    url: 'https://opax.com.au/doc/division-federal-representatives-8545',
+                    url: '/doc/division-federal-representatives-8545',
                   },
                   '.',
                 ],
@@ -2395,14 +2395,14 @@ export const learnChapters: readonly LearnChapter<TermId>[] = [
             items: [
               {
                 label: 'A Senate vote on a hate crimes bill',
-                url: 'https://opax.com.au/doc/division-federal-senate-9535',
+                url: '/doc/division-federal-senate-9535',
                 note: [
                   'the Senate passed it 41 to 6. One Liberal senator voted no while the other 8 voted aye.',
                 ],
               },
               {
                 label: 'Members of the same party voted on both sides',
-                url: 'https://opax.com.au/doc/division-federal-representatives-7714',
+                url: '/doc/division-federal-representatives-7714',
                 note: [
                   'the House passed the Restoring Territory Rights Bill 2022, 99 to 38. Liberal, Labor and Nationals members voted both aye and no.',
                 ],
@@ -2798,19 +2798,19 @@ export const learnChapters: readonly LearnChapter<TermId>[] = [
             items: [
               {
                 label: 'Sitting weeks',
-                url: 'https://opax.com.au/sitting',
+                url: '/sitting',
                 note: [
                   'see which house sat each week, and the bills and divisions from that week.',
                 ],
               },
               {
                 label: 'Senate video',
-                url: 'https://opax.com.au/video/senate',
+                url: '/video/senate',
                 note: ['watch the Senate’s own videos of Question Time.'],
               },
               {
                 label: 'Senate estimates',
-                url: 'https://opax.com.au/estimates',
+                url: '/estimates',
                 note: ['find a round of hearings, then a committee and a day.'],
               },
             ],
@@ -3227,19 +3227,19 @@ export const learnChapters: readonly LearnChapter<TermId>[] = [
             items: [
               {
                 label: 'Political receipts',
-                url: 'https://opax.com.au/money/receipts',
+                url: '/money/receipts',
                 note: [
                   'money parties got, by who gave it, by party and by year.',
                 ],
               },
               {
                 label: 'Receipt sources',
-                url: 'https://opax.com.au/subject/donor',
+                url: '/subject/donor',
                 note: ['the people and groups named in the returns.'],
               },
               {
                 label: 'Declared interests',
-                url: 'https://opax.com.au/declared',
+                url: '/declared',
                 note: [
                   'the latest changes to what MPs and senators have listed.',
                 ],
@@ -3620,12 +3620,12 @@ export const learnChapters: readonly LearnChapter<TermId>[] = [
             items: [
               {
                 label: 'Electorates',
-                url: 'https://opax.com.au/subject/electorate',
+                url: '/subject/electorate',
                 note: ['find a seat and see who has held it.'],
               },
               {
                 label: 'Sources and coverage',
-                url: 'https://opax.com.au/stats',
+                url: '/stats',
                 note: ['see what records OPAX has, and for which years.'],
               },
             ],
@@ -4011,19 +4011,19 @@ export const learnChapters: readonly LearnChapter<TermId>[] = [
             items: [
               {
                 label: 'A vote in the NSW Legislative Assembly',
-                url: 'https://opax.com.au/doc/division-nsw-la-2026-10-21-1',
+                url: '/doc/division-nsw-la-2026-10-21-1',
                 note: [
                   'the Great Koala National Park bill, 71 to 13. Look at the house name at the top.',
                 ],
               },
               {
                 label: 'State bills',
-                url: 'https://opax.com.au/register/state-bills',
+                url: '/register/state-bills',
                 note: ['bills from the Tasmanian and ACT parliaments.'],
               },
               {
                 label: 'Sources and coverage',
-                url: 'https://opax.com.au/stats',
+                url: '/stats',
                 note: ['the years OPAX holds for each parliament.'],
               },
             ],
@@ -4038,7 +4038,7 @@ export const learnExamples: readonly LearnExample[] = [
   {
     id: 'bill-at-second-reading',
     chapter: 'bill-to-act',
-    url: 'https://opax.com.au/bill/au-federal-r7548',
+    url: '/bill/au-federal-r7548',
     label:
       'Sport Legislation Amendment (World Anti-Doping Code Implementation) Bill 2026',
     lookAt:
@@ -4047,7 +4047,7 @@ export const learnExamples: readonly LearnExample[] = [
   {
     id: 'senate-inquiry',
     chapter: 'bill-to-act',
-    url: 'https://opax.com.au/doc/division-federal-senate-10811',
+    url: '/doc/division-federal-senate-10811',
     label:
       'Senate refers veterans’ health treatment limits to a committee (17 Sep 2026)',
     lookAt:
@@ -4056,7 +4056,7 @@ export const learnExamples: readonly LearnExample[] = [
   {
     id: 'bill-with-senate-amendments',
     chapter: 'bill-to-act',
-    url: 'https://opax.com.au/bill/au-federal-r7076',
+    url: '/bill/au-federal-r7076',
     label: 'Water Amendment (Restoring Our Rivers) Bill 2023',
     lookAt:
       'Senate committee-stage divisions, then the House agreeing to the Senate amendments on 30 Nov 2023, then royal assent on 7 Dec 2023.',
@@ -4064,7 +4064,7 @@ export const learnExamples: readonly LearnExample[] = [
   {
     id: 'house-agrees-senate-amendments',
     chapter: 'bill-to-act',
-    url: 'https://opax.com.au/doc/division-federal-representatives-8545',
+    url: '/doc/division-federal-representatives-8545',
     label: 'House agrees to the Senate amendments (30 Nov 2023)',
     lookAt:
       'Agreed 86 to 53; the question explains the bill can now become law.',
@@ -4072,7 +4072,7 @@ export const learnExamples: readonly LearnExample[] = [
   {
     id: 'house-parties-and-crossbench',
     chapter: 'whos-who',
-    url: 'https://opax.com.au/doc/division-federal-representatives-10611',
+    url: '/doc/division-federal-representatives-10611',
     label:
       'Interactive Gambling Amendment (Gambling Reform) Bill 2026, third reading (18 Aug 2026)',
     lookAt:
@@ -4081,7 +4081,7 @@ export const learnExamples: readonly LearnExample[] = [
   {
     id: 'one-against-party',
     chapter: 'how-votes-work',
-    url: 'https://opax.com.au/doc/division-federal-senate-9535',
+    url: '/doc/division-federal-senate-9535',
     label:
       'Criminal Code Amendment (Hate Crimes) Bill 2024, Senate third reading (6 Feb 2025)',
     lookAt:
@@ -4090,7 +4090,7 @@ export const learnExamples: readonly LearnExample[] = [
   {
     id: 'same-party-both-sides',
     chapter: 'how-votes-work',
-    url: 'https://opax.com.au/doc/division-federal-representatives-7714',
+    url: '/doc/division-federal-representatives-7714',
     label:
       'Restoring Territory Rights Bill 2022, House third reading (3 Aug 2022)',
     lookAt:
@@ -4099,7 +4099,7 @@ export const learnExamples: readonly LearnExample[] = [
   {
     id: 'sitting-weeks',
     chapter: 'watching-parliament',
-    url: 'https://opax.com.au/sitting',
+    url: '/sitting',
     label: 'Federal sitting weeks',
     lookAt:
       'Which house sat each week, and the bills and divisions from that week.',
@@ -4107,28 +4107,28 @@ export const learnExamples: readonly LearnExample[] = [
   {
     id: 'senate-video',
     chapter: 'watching-parliament',
-    url: 'https://opax.com.au/video/senate',
+    url: '/video/senate',
     label: 'Senate video',
     lookAt: 'The Senate’s own videos of Question Time and first speeches.',
   },
   {
     id: 'senate-estimates',
     chapter: 'watching-parliament',
-    url: 'https://opax.com.au/estimates',
+    url: '/estimates',
     label: 'Senate estimates',
     lookAt: 'Each round of hearings, with transcripts by committee and day.',
   },
   {
     id: 'political-receipts',
     chapter: 'money-and-interests',
-    url: 'https://opax.com.au/money/receipts',
+    url: '/money/receipts',
     label: 'Political receipts',
     lookAt: 'Disclosed receipts by source, party, industry and year.',
   },
   {
     id: 'receipt-sources',
     chapter: 'money-and-interests',
-    url: 'https://opax.com.au/subject/donor',
+    url: '/subject/donor',
     label: 'Receipt sources',
     lookAt:
       'People and groups named in published returns, federal and state kept apart.',
@@ -4136,7 +4136,7 @@ export const learnExamples: readonly LearnExample[] = [
   {
     id: 'declared-interests',
     chapter: 'money-and-interests',
-    url: 'https://opax.com.au/declared',
+    url: '/declared',
     label: 'Declared interests',
     lookAt:
       'The newest additions to and deletions from registers of interests.',
@@ -4144,7 +4144,7 @@ export const learnExamples: readonly LearnExample[] = [
   {
     id: 'electorates',
     chapter: 'elections',
-    url: 'https://opax.com.au/subject/electorate',
+    url: '/subject/electorate',
     label: 'Electorates',
     lookAt:
       'Electorates, federal and state, with recorded representation and dated sources.',
@@ -4152,21 +4152,21 @@ export const learnExamples: readonly LearnExample[] = [
   {
     id: 'coverage',
     chapter: 'elections',
-    url: 'https://opax.com.au/stats',
+    url: '/stats',
     label: 'Sources and coverage',
     lookAt: 'Which records OPAX holds, with years for each parliament.',
   },
   {
     id: 'state-bills',
     chapter: 'federal-and-state',
-    url: 'https://opax.com.au/register/state-bills',
+    url: '/register/state-bills',
     label: 'State bills',
     lookAt: 'Bill registry entries from the Tasmanian and ACT parliaments.',
   },
   {
     id: 'nsw-division',
     chapter: 'federal-and-state',
-    url: 'https://opax.com.au/doc/division-nsw-la-2026-10-21-1',
+    url: '/doc/division-nsw-la-2026-10-21-1',
     label:
       'National Park Estate (Great Koala National Park Reservations) Bill 2026, NSW Legislative Assembly (21 Oct 2026)',
     lookAt: 'The house name at the top; 71 ayes to 13 noes.',

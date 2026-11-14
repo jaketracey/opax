@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react';
 import { tourSeen } from '../../onboarding/state';
 import { TwoSlotStore } from '../../storage/two-slot';
+import { learnFixture } from './launch-fixture';
 
 /**
  * "How Parliament works" settings, device-only and never sent anywhere.
@@ -75,16 +76,23 @@ export function loadLearnSettings(): Promise<LearnSettings> {
       file = { version: 1, card: seen ? 'never' : 'show' };
       void store.save(file).catch(() => undefined);
     }
-    // A change made before the read finished wins over the file.
-    current = { ...defaults, ...strip(file), ...pending };
+    // A change made before the read finished wins over the file; an e2e
+    // launch argument wins over both (captures only).
+    const next = { ...defaults, ...strip(file), ...pending, ...learnFixture() };
     pending = {};
     loaded = true;
-    emit();
+    // The same answers keep the same snapshot: nothing redraws for nothing.
+    if (!same(next, current)) {
+      current = next;
+      emit();
+    }
     return current;
   })();
   return loading;
 }
 let pending: Partial<LearnSettings> = {};
+const same = (a: LearnSettings, b: LearnSettings) =>
+  a.underline === b.underline && a.explain === b.explain && a.card === b.card;
 function strip(file: LearnFile): Partial<LearnSettings> {
   const { version: _version, ...rest } = file;
   return rest;
@@ -116,13 +124,24 @@ export function useLearnSettings(): LearnSettings {
     learnSettingsSnapshot,
   );
 }
+/** One setting, so a change to another (the Home card) redraws nothing. */
+function useLearnSetting<K extends keyof LearnSettings>(
+  key: K,
+): LearnSettings[K] {
+  const read = () => current[key];
+  return useSyncExternalStore(subscribeLearnSettings, read, read);
+}
 /** Inline glossary terms: on unless the reader turned them off. */
 export function useUnderlineTerms(): boolean {
-  return useLearnSettings().underline;
+  return useLearnSetting('underline');
 }
 /** Option C's plain lines under headings: off unless the reader asked. */
 export function useExplainTerms(): boolean {
-  return useLearnSettings().explain;
+  return useLearnSetting('explain');
+}
+/** Home's first-run guide card: `show` on a new install only. */
+export function useLearnCard(): LearnSettings['card'] {
+  return useLearnSetting('card');
 }
 
 export function setUnderlineTerms(on: boolean): Promise<void> {

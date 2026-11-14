@@ -6,7 +6,7 @@ import {
   type LatestRecord,
 } from '../src/features/your-mp/LatestRows';
 import { Link, router } from 'expo-router';
-import { act, type ReactElement } from 'react';
+import { act, isValidElement, type ReactElement } from 'react';
 import {
   ActionSheetIOS,
   Image,
@@ -156,11 +156,19 @@ const pressable = (r: TestRenderer.ReactTestRenderer, testID: string) =>
   )[0]!;
 const has = (r: TestRenderer.ReactTestRenderer, testID: string) =>
   r.root.findAll((n) => n.props.testID === testID).length > 0;
+/** A Text's own words, nested runs (a marked glossary term) included. */
+const words = (node: unknown): string[] =>
+  typeof node === 'string'
+    ? [node]
+    : Array.isArray(node)
+      ? node.flatMap(words)
+      : isValidElement<{ children?: unknown }>(node) && node.type !== Text
+        ? words(node.props.children)
+        : [];
 const text = (r: TestRenderer.ReactTestRenderer) =>
   r.root
     .findAllByType(Text)
-    .flatMap((n) => n.props.children)
-    .filter((v) => typeof v === 'string')
+    .flatMap((n) => words(n.props.children))
     .join(' ')
     .replace(/\s+/g, ' ');
 beforeEach(() => {

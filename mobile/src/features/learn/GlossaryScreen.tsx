@@ -73,7 +73,7 @@ export default function Glossary() {
                 <LinkRow
                   key={id}
                   title={termTitle(id)}
-                  secondary={glossaryTerm(id).short}
+                  detail={glossaryTerm(id).short}
                   onPress={() => openTerm(id)}
                   testID={`learn-glossary-term-${id}`}
                 />

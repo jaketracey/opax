@@ -44,6 +44,7 @@ const productionStubs = [
   'src/features/follows/launch-fixture',
   'src/design/text-probe',
   'src/features/today/launch-fixture',
+  'src/features/learn/launch-fixture',
   'src/features/people/party-timing',
   'src/onboarding/launch-flag',
   'src/features/electorate-map/outline-probe',

@@ -7,6 +7,8 @@ import { InsetGroup, SectionHeader } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
 import { symbols } from '../../design/symbols';
 import { rhythm } from '../../design/tokens';
+import { learnCopy } from '../learn/copy';
+import { learnRoute } from '../learn/routes';
 import {
   exploreRoute,
   largestGrantsRoute,
@@ -60,7 +62,7 @@ export const exploreTiles = [
  * More to explore (today.md 5.10): the header (no action); in case A the
  * daily pair first; then the four tiles, two by two (one per line at
  * accessibility sizes); then one row, "Quizzes and tools", to the Explore
- * hub. Every push stays inside Today.
+ * hub, and "How Parliament works", the guide. Every push stays inside Today.
  */
 export function MoreToExplore({
   pair = null,
@@ -92,6 +94,13 @@ export function MoreToExplore({
           symbolInk="votes"
           href={exploreRoute}
           testID="today-explore-open"
+        />
+        <LinkRow
+          title={learnCopy.name}
+          symbol="text.book.closed"
+          symbolInk="navy"
+          href={learnRoute}
+          testID="today-learn-open"
         />
       </InsetGroup>
     </View>

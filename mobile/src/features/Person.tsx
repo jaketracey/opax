@@ -734,6 +734,7 @@ function ProfileContent({
       value: formatCount(votes),
       // One line at Large, the chevron after the last word (sweep 1, item 9).
       label: votes === 1 ? 'division' : 'divisions',
+      term: 'division',
       onPress: b.votes.status !== 'unlinked' ? () => jump('votes') : undefined,
       testID: 'person-figure-votes',
     });

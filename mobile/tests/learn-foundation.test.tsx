@@ -12,7 +12,9 @@ import {
   termA11y,
   TermText,
 } from '../src/design/term';
-import { AccountTermSwitches } from '../src/features/learn/AccountLearn';
+import AccountTerms, {
+  AccountTermsRow,
+} from '../src/features/learn/AccountLearn';
 import {
   glossaryTerms,
   learnChapters,
@@ -169,7 +171,8 @@ describe('the guide content module', () => {
             if (typeof run === 'string') {
               expect(run).not.toMatch(/\[\[f:|\{\{|\}\}/);
             } else if ('term' in run) expect(isTermId(run.term)).toBe(true);
-            else expect(run.url).toMatch(/^https:\/\/opax\.com\.au\//);
+            // Site paths: origins belong in build config (qa-static).
+            else expect(run.url).toMatch(/^\/[a-z]/);
           }
         }
     }
@@ -224,7 +227,15 @@ describe('the guide settings', () => {
 
   test('the Account switches show and change both settings', async () => {
     await loadLearnSettings();
-    const tree = render(<AccountTermSwitches />);
+    const row = render(<AccountTermsRow />);
+    expect(
+      row.root.findAll(
+        (node) =>
+          node.props.testID === 'account-terms-row' &&
+          node.props.onPress !== undefined,
+      ).length,
+    ).toBeGreaterThan(0);
+    const tree = render(<AccountTerms />);
     const underline = byTestID(tree, 'account-underline-terms')[0]!;
     const explain = byTestID(tree, 'account-explain-terms')[0]!;
     expect(underline.props.accessibilityRole).toBe('switch');

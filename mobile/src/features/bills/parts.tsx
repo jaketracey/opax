@@ -42,6 +42,7 @@ import {
 } from './divisions';
 import { billRowText, type BillListRow } from './filters';
 import { blocNames, blocOrder, partyBloc, type PartyBloc } from './party-codes';
+import { TermText } from '../../design/term';
 
 /**
  * One bill in the Bills list: the shared `BillRow` (Today draws the same).
@@ -746,13 +747,14 @@ export function PartyVotes({
           const noes = rows.reduce((n, r) => n + r.noes, 0);
           return (
             <View key={bloc} style={styles.bloc} testID={`${testID}-${bloc}`}>
-              <Text
+              <TermText
                 variant="strong"
                 accessibilityRole="header"
                 accessibilityLabel={`${blocNames[bloc]}, ${countWords(ayes, noes, { spoken: true })}`}
+                term={bloc === 'crossbench' ? 'crossbench' : null}
               >
                 {`${blocNames[bloc]} · ${countWords(ayes, noes)}`}
-              </Text>
+              </TermText>
               {rows.map((split) => (
                 <PartyVoteRow
                   key={split.party}
@@ -771,9 +773,9 @@ export function PartyVotes({
         </Text>
       ) : null}
       {paired ? (
-        <Text variant="footnote" tone="inkSoft">
+        <TermText variant="footnote" tone="inkSoft" term="pair">
           {`${counted(paired, 'pair', 'pairs')}`}
-        </Text>
+        </TermText>
       ) : null}
     </View>
   );
