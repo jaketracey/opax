@@ -8,6 +8,10 @@ export const learnCopy = {
   name: 'How Parliament works',
   lead: 'How laws are made, who does what, and how to read the record, in plain words.',
   glossary: 'A to Z glossary',
+  /** Home's first-run card. */
+  cardLine: 'Short chapters and an A to Z glossary, in plain words.',
+  openGuide: 'Open the guide',
+  hideCard: 'Hide How Parliament works',
   minute: 'Parliament in a minute',
   seeIt: 'See it in OPAX',
   next: 'Next',
