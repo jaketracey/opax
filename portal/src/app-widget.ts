@@ -17,6 +17,7 @@
 import {appJson, appRead, melbourneDay, readOnly, validDate} from './app-http'
 import {storedEdition, type EditionRow} from './app-edition'
 import type {DailyPost} from './daily-post'
+import {divisionOutcome} from '../public/division-outcome.js'
 
 type WidgetEnv = Pick<Env, 'COMMUNITY_DB' | 'ASSETS'>
 type Json = Record<string, unknown>
@@ -28,7 +29,7 @@ export const DIVISIONS_PATH = '/divisions/recent.json'
 export const SITTING_PATH = '/parliament/sitting-days.json'
 
 export interface WidgetEdition {date: string; kind: DailyPost['kind']; kind_short: string; card_title: string; line: string | null; path: string}
-export interface WidgetVote {date: string; chamber: string | null; stage: string | null; title: string; outcome: 'Agreed to' | 'Not agreed to'; ayes: number; noes: number; path: string}
+export interface WidgetVote {date: string; chamber: string | null; stage: string | null; title: string; outcome: 'Agreed' | 'Not agreed'; ayes: number; noes: number; path: string}
 export interface WidgetSitting {
   until: string; until_reason: 'window' | 'coverage_end' | 'expired'
   calendars: {year: number; source: string | null; as_at: string | null}[]
@@ -158,12 +159,10 @@ export function stageWords(stage: string | null | undefined): string | null {
   const match = READING.exec(String(stage ?? '').replace(/_/g, ' '))
   return match ? `${match[1]![0]!.toUpperCase()}${match[1]!.slice(1).toLowerCase()} reading` : null
 }
-/** divisions.ts outcomeWord: never "Negatived"; an unnamed outcome reads from its counts. */
-export function outcomeWord(outcome: string | null | undefined, counts?: {ayes: number; noes: number}): 'Agreed to' | 'Not agreed to' {
-  const o = String(outcome ?? '').toLocaleLowerCase('en-AU')
-  if (/^(affirmative|agreed|carried|passed|aye)/.test(o)) return 'Agreed to'
-  if (/^(negative|negatived|not|defeated|lost|rejected|no)/.test(o)) return 'Not agreed to'
-  return counts && counts.ayes > counts.noes ? 'Agreed to' : 'Not agreed to'
+/** divisions.ts outcomeWord, and the site's one wording (public/division-outcome.js): "Agreed" or
+ *  "Not agreed", never "Negatived"; an unnamed outcome reads from its counts. */
+export function outcomeWord(outcome: string | null | undefined, counts?: {ayes: number; noes: number}): 'Agreed' | 'Not agreed' {
+  return divisionOutcome(outcome, counts) === 'Agreed' ? 'Agreed' : 'Not agreed'
 }
 
 const optionalText = (v: unknown) => v === undefined || v === null || typeof v === 'string'

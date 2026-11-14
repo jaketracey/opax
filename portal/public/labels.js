@@ -8,6 +8,9 @@
    module's graph so the analytics bundle (events.js reaches labels.js through
    growth-modules.js) never carries it. */
 import { shortDate } from './format.js';
+// A division's result, worded once (division-outcome.js): the SPA, pages and Worker read it from here.
+// Unstamped like format.js: another stamped module would pass _headers' 100 rules.
+export * from './division-outcome.js';
 
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);

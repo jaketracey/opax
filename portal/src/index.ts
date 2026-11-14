@@ -17,7 +17,7 @@ import { identityAnswer, identityResponse } from './ask-identity'
 import { repairQuotes } from './research-evidence'
 import {ServerTiming, timed, timedSync, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
-import { chamberLabel, PARTY_MAP } from '../public/party-page.js'
+import { chamberLabel, PARTY_MAP, divisionOutcome } from '../public/party-page.js'
 import {partySpeechLabel, partyMembers, partyBills, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, PARTY_NO_MEMBERS, readPartyPages, resolvePartyPage, dayMonthYear, partyHistory, recordedAsText, type PartyPage, type PartyBill} from '../public/party-page.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig, billDivisionGroups, PROCEDURAL_TITLES_PATH} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
@@ -5850,10 +5850,11 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
   if (r.labels.kind === 'division' || DIVISION_SLUG_RE.test(slug)) {
     const ayes = r.metadata.ayes_count, noes = r.metadata.noes_count
     const bill = typeof r.metadata.bill_ref === 'string' ? r.metadata.bill_ref : ''
-    const outcome = r.labels.result === 'affirmative' ? 'Passed' : r.labels.result === 'negative' ? 'Defeated' : ''
+    // One wording for a division's result (division-outcome.js): Agreed or Not agreed, never the record's token.
+    const outcome = divisionOutcome(r.labels.result, {ayes, noes, chamber: r.labels.chamber})
     const description = clip(
       `${chamber ?? 'Parliamentary'} division${date ? `, ${longDate(date)}` : ''}${bill ? `: ${bill}` : ''}. ` +
-      `${outcome}${typeof ayes === 'number' && typeof noes === 'number' ? ` ${ayes} votes to ${noes}` : ''}. Who voted which way, on OPAX.`,
+      `${[outcome, typeof ayes === 'number' && typeof noes === 'number' ? `${ayes} votes to ${noes}` : ''].filter(Boolean).join(', ')}. Who voted which way, on OPAX.`,
     )
     const tally = typeof ayes === 'number' && typeof noes === 'number' ? `, ${ayes} votes to ${noes}` : ''
     // The KB titles a division "Senate division, 13 September 2023: <motion>";

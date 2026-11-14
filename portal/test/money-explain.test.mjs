@@ -194,7 +194,7 @@ test('a named flow draws every section, the parliament context with its no-causa
   const parliament = m.root.querySelector('#mx-parliament');
   assert.equal(parliament.hidden, false);
   assert.match(parliament.textContent, /These are listed for context\. A receipt does not show that a vote or speech was influenced\./);
-  assert.match(parliament.textContent, /Labor: 12 ayes, 1 no · Third reading agreed to · 1 Oct 2019/);
+  assert.match(parliament.textContent, /Labor: 12 ayes, 1 no · Third reading agreed · 1 Oct 2019/);
   assert.equal(parliament.querySelector('a[href="/doc/speech-1"]')?.textContent, 'Member One');
   assert.ok(!parliament.textContent.includes('Member Two'));
   // Every outside source opens the original; the share sentence names its basis.

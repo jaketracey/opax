@@ -11,7 +11,7 @@ import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
 import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../public/datatable.js'
 import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
-import {chamberLabel, machineLabelHTML, partyLabelHTML} from '../public/party-page.js'
+import {chamberLabel, machineLabelHTML, partyLabelHTML, divisionOutcome, notAgreedWording} from '../public/party-page.js'
 import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML, noHansardHeldHTML} from '../public/held-back-transcripts.js'
 import {voteTableConfig, personVoteKeys, personVoteRecords, votingRows, voteTablePage, voteTableHTML, billDivisionTablesHTML, voteScopeLine} from '../public/vote-tables.js'
 import type {Query} from '../public/datatable.js'
@@ -416,8 +416,8 @@ const STAGE_LABELS: Record<string,string> = {introduced:'Introduced',second_read
 export function billStageLines(rows: NonNullable<Bill['key_dates']>) {
   const seen = new Set<string>()
   return rows.flatMap(d=>{
-    // The register's "negatived" is the site's "not agreed" (one outcome vocabulary, public/app.js BILL_OUTCOMES).
-    let label = (d.event_raw || STAGE_LABELS[d.stage] || human(d.stage)).replace(/\bnegatived\b/gi, w => w[0] === 'N' ? 'Not agreed' : 'not agreed')
+    // The register's "negatived" is the site's "not agreed" (one outcome wording, public/division-outcome.js).
+    let label = notAgreedWording(d.event_raw || STAGE_LABELS[d.stage] || human(d.stage))
     if (d.negatived && !/not agreed/i.test(label)) label += ' (not agreed)'
     const line = {label, date: d.date, house: d.house, url: d.url}
     const id = JSON.stringify([line.label, line.date, line.house, line.url])
@@ -506,7 +506,7 @@ function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>,
 
 export function renderDivisionAnswer(d: Division, people: Person[], slugs: Map<string,string>): RenderedContent {
   const title = divisionPlain(d.name || d.question || 'Parliamentary division').split(/(?<=[.!?])\s/)[0]
-  const description = `${chamber(d.house)}, ${d.date || 'Date not recorded'}. ${d.result || d.outcome || 'Result not recorded'}: ayes ${d.ayes ?? 'not recorded'}, noes ${d.noes ?? 'not recorded'}.`
+  const description = `${chamber(d.house)}, ${d.date || 'Date not recorded'}. ${divisionOutcome(d.result || d.outcome, d) || 'Result not recorded'}: ayes ${d.ayes ?? 'not recorded'}, noes ${d.noes ?? 'not recorded'}.`
   let body = `<h2>Question</h2><div class="division-markdown">${renderDivisionMarkdown(d.question || d.name || 'Question not recorded')}</div>${original(d.source_url || d.url)}<h2>How each member voted</h2>`
   body += divisionVotes(d,people,slugs)
   body += `<h2>Related bills</h2><ul>${(d.bills || []).map(b=>`<li>${link(`/bill/${b.key}`,b.title)}</li>`).join('')}</ul><p>Only formal divisions leave a per-member record. A procedural vote is not necessarily a vote for or against a bill.</p>`

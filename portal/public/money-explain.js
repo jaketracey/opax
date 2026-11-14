@@ -20,7 +20,7 @@ import {partyReturnFigures, industryName} from './register-tables.js?v=4f061ca4c
 //
 // Styles: money-explain.css, loaded with the module.
 
-import { sourceLineHTML, partyLabelHTML } from './labels.js?v=fcb2a1091c';
+import { sourceLineHTML, partyLabelHTML, divisionOutcome } from './labels.js?v=47d3255202';
 import { subjectUrl } from './canonical-urls.js?v=9ce13e7ba5';
 import { shortMoney, shortDate } from './format.js?v=9fcab43d8d';
 
@@ -506,7 +506,10 @@ export function partyOnBill(bill, partyLabel, firstYear, lastYear) {
   return {
     key: bill.key, title: bill.short_title || bill.title, divisions: divisions.length,
     deciding: { date: deciding.date, stage: deciding.stage || '', ayes: Number(split.ayes) || 0, noes: Number(split.noes) || 0,
-      outcome: deciding.outcome, url: /^https:\/\/theyvoteforyou\.org\.au\//.test(deciding.url || '') ? deciding.url : '' },
+      outcome: deciding.outcome,
+      // The division's own totals, when recorded, word a result the record does not name.
+      ...(Number.isFinite(deciding.ayes) && Number.isFinite(deciding.noes) ? { counts: { ayes: deciding.ayes, noes: deciding.noes, house: deciding.house } } : {}),
+      url: /^https:\/\/theyvoteforyou\.org\.au\//.test(deciding.url || '') ? deciding.url : '' },
     speeches,
   };
 }
@@ -750,7 +753,7 @@ function parliamentHTML(rows, flow, partyName, words) {
   const party = flow.party;
   const items = rows.map((b) => {
     const d = b.deciding;
-    const outcome = d.outcome === 'affirmative' ? 'agreed to' : d.outcome === 'negative' ? 'not agreed to' : '';
+    const outcome = divisionOutcome(d.outcome, d.counts).toLowerCase();
     const voted = `${party.label}: ${plural(d.ayes, 'aye', 'ayes')}, ${plural(d.noes, 'no', 'noes')}`;
     const speeches = b.speeches.length ? `<p class="mx-bill-speeches">${b.speeches.map((s) => `<a href="/doc/${encodeURIComponent(s.slug)}">${esc(s.speaker)}</a>${s.date ? ` <small>${esc(shortDate(s.date))}</small>` : ''}`).join(' · ')}</p>` : '';
     return `<li class="mx-bill">

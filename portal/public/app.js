@@ -45,18 +45,18 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=50d61c68ca").then(module => { voteTables = module; }));
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=a1c0091839").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=348801ccf3").then(module => { growthModules = module; }));
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=3d0840062b").then(module => { growthModules = module; }));
 let registerTables;
 const registerTablesReady = lazyReady(() => import('/register-tables.js?v=4f061ca4cf').then(module => { registerTables = module; }));
 let askPerson;
-const askPersonReady = lazyReady(() => import('/ask-person.js?v=e628525cf3').then(module => { askPerson = module; }));
+const askPersonReady = lazyReady(() => import('/ask-person.js?v=8e25450273').then(module => { askPerson = module; }));
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=fcb2a1091c').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=47d3255202').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
@@ -1580,7 +1580,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=be0246bb92' : '/ledger.js?v=34880eea21');
+    const mod = await import(grants ? '/grants.js?v=8f4a75485d' : '/ledger.js?v=7a555e7c1d');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1611,7 +1611,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=c0be84e051');
+    const mod = await import('/money-explain.js?v=572c01a0be');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1630,7 +1630,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=c6cddf8120');
+    const mod = await import('/grant-recipient.js?v=103ca68112');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1883,7 +1883,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=57f99fe544");
+    const module = await import("/suppliers.js?v=0b1e566c2f");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -5530,7 +5530,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=0ebc7d740c'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=70da29ce9d'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -7643,7 +7643,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=f9961d152e").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=69c97c9e05").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -8893,9 +8893,12 @@ function ordinal(n) {
     : rem10 === 1 ? "st" : rem10 === 2 ? "nd" : rem10 === 3 ? "rd" : "th";
   return `${v}${suffix}`;
 }
-/* One outcome vocabulary across bill, division and party pages: the words the division tables use. */
-const BILL_OUTCOMES = { affirmative: "Agreed", negative: "Not agreed" };
-const billOutcome = (o) => BILL_OUTCOMES[String(o || "").toLowerCase()] || sentenceCase(o);
+/* One outcome wording across bill, division and party pages: "Agreed" or
+   "Not agreed" (division-outcome.js, through labels.js); an unnamed result
+   reads from the counts, and the record's own token is never shown. */
+const billOutcome = (o, counts) => uiLabels.divisionOutcome(o, counts);
+/** A bill status in the same wording: "negatived" reads "Not agreed" (division-outcome.js). */
+const billStatusWord = (s) => uiLabels.billStatusWord(s);
 /** The short title when the register carries one, else the title itself. */
 const billName = (b) => b?.short_title || b?.title || b?.key || "";
 
@@ -8947,14 +8950,14 @@ function billStatusTone(status) {
   return "ended";
 }
 /** A division's outcome as a StatusLabel: agreed is done, not agreed has ended. */
-function billOutcomeLabelHTML(outcome) {
-  const word = billOutcome(outcome) || "Outcome not recorded";
-  return statusLabelHTML(word, String(outcome || "").toLowerCase() === "affirmative" ? "done" : "ended");
+function billOutcomeLabelHTML(outcome, counts) {
+  const word = billOutcome(outcome, counts);
+  return statusLabelHTML(word || "Outcome not recorded", word === uiLabels.AGREED ? "done" : "ended");
 }
 
 /** "Passed, as at 12 Feb 2022" — the status is never shown undated. */
 function billStatusLine(b) {
-  const status = sentenceCase(b?.status) || "Status not recorded";
+  const status = billStatusWord(b?.status) || "Status not recorded";
   const as = b?.status_as_of ? `, status as at ${fmtDate(b.status_as_of)}` : "";
   return `${status}${as}`;
 }
@@ -9005,7 +9008,7 @@ function billRowHTML(b) {
   return `<li>
     <a class="source-title bill-row-title" ${entityHrefAttr(billHash(b.key))}>${esc(billName(b))}</a>
     <span class="result-meta bill-row-meta">${[
-      b.status ? statusLabelHTML(sentenceCase(b.status), billStatusTone(b.status)) : "",
+      b.status ? statusLabelHTML(billStatusWord(b.status), billStatusTone(b.status)) : "",
       year ? esc(year) : "",
       b.sponsor_party ? partyChipHTML(billParty(b.sponsor_party)) : "",
       sponsorLabel ? esc(sponsorLabel) : esc(billPortfolio(b)),
@@ -9101,13 +9104,13 @@ async function openBillsIndex(params, manageFocus) {
     name: billName,
     text: (b) => [b.title, b.short_title, b.sponsor, b.portfolio, b.status, b._year].filter(Boolean).join(" "),
     href: (b) => billHash(b.key),
-    hint: (b) => sentenceCase(b.status),
+    hint: (b) => billStatusWord(b.status),
     filters: [
       { key: "parliament", label: "Parliament",
         options: parliaments.map((p) => countOpt(String(p), `${ordinal(p)} parliament`, countBy((b) => b.parliament, p))),
         test: (b, v) => String(b.parliament) === v },
       { key: "status", label: "Status",
-        options: statuses.map((s) => countOpt(s, sentenceCase(s), countBy((b) => b.status, s))),
+        options: statuses.map((s) => countOpt(s, billStatusWord(s), countBy((b) => b.status, s))),
         test: (b, v) => b.status === v },
       { key: "year", label: "Year",
         options: years.map((y) => countOpt(y, y, countBy((b) => b._year, y))),
@@ -9182,8 +9185,8 @@ function billStageRuns(dates) {
     // The register's own words where the export kept them (bills-005), and a
     // defeated question said to be one (bills-004).
     let stage = billStage(d.event_raw || d.stage) || "Stage not named";
-    // The register's "negatived" is the site's "not agreed" (one outcome vocabulary).
-    stage = stage.replace(/\bnegatived\b/gi, (w) => w[0] === "N" ? "Not agreed" : "not agreed");
+    // The register's "negatived" is the site's "not agreed" (one outcome wording, division-outcome.js).
+    stage = uiLabels.notAgreedWording(stage);
     if (d.negatived && !/not agreed/i.test(stage)) stage += " (not agreed)";
     const house = billHouse(d.house);
     const last = runs[runs.length - 1];
@@ -9468,7 +9471,7 @@ function billDivisionHTML(d, bill) {
     split.rest, split.notes,
   ].join("");
   return `<li class="bill-division">
-    <p class="bill-division-out">${billOutcomeLabelHTML(d.outcome)}
+    <p class="bill-division-out">${billOutcomeLabelHTML(d.outcome, d)}
       <span class="bill-division-count">${ayes.toLocaleString()} ayes, ${noes.toLocaleString()} noes</span></p>
     <p class="ui-row-title bill-division-q">${target ? `<a href="${esc(target)}">${esc(title)}</a>` : esc(title)}</p>
     ${meta ? `<p class="ui-row-meta">${meta}</p>` : ""}
@@ -9705,7 +9708,7 @@ async function openBill(key, manageFocus) {
     billPortfolio(bill) ? esc(billPortfolio(bill)) : "",
   ].filter(Boolean);
   const billhome = safeUrl((bill.sources || []).find((s) => s.kind === "billhome")?.url);
-  const statusWord = sentenceCase(bill.status) || "Status not recorded";
+  const statusWord = billStatusWord(bill.status) || "Status not recorded";
   // Two drawn actions (principle 5): Ask, and ⋯ for the rest. The foot's
   // repeat of the same three buttons is gone.
   const actions = `<div class="page-actions bill-actions">
@@ -9756,7 +9759,7 @@ function renderOtherSponsorBills(bill, body, view, generation) {
     if (!summary?.person || !rows.length) { slot.remove(); return; }
     slot.innerHTML = `<section class="ui-section bill-section growth-records" data-records-ready="true" ${growthModules.moduleAttrs("sponsor_bills", "bill", 3)}>
       <h2 class="ui-section-title">Other bills from this sponsor</h2>
-      <ul class="ui-list bill-sponsor-list" role="list">${rows.map(b => `<li><p class="ui-row-title"><a href="${esc(billHash(b.key))}">${esc(billName(b))}</a></p><p class="ui-row-meta">${esc(fmtDate(b.introduced))} · ${esc(sentenceCase(b.status))}</p></li>`).join("")}</ul>
+      <ul class="ui-list bill-sponsor-list" role="list">${rows.map(b => `<li><p class="ui-row-title"><a href="${esc(billHash(b.key))}">${esc(billName(b))}</a></p><p class="ui-row-meta">${esc(fmtDate(b.introduced))} · ${esc(billStatusWord(b.status))}</p></li>`).join("")}</ul>
       ${sourceLineHTML({source: "Parliamentary bill register", updated: summary.generated || "", notes: ["Bills in the same jurisdiction, matched to the same roster person using the sponsor identity rules."]})}
     </section>`;
   };
@@ -9903,7 +9906,7 @@ async function renderPartyBillDivisions(label, sections, key) {
   const divHTML = (r) => `<li class="party-bill-div">
     <span class="result-meta">${[
       r.d.title ? esc(r.d.title) : r.d.stage ? esc(billStage(r.d.stage)) : "", r.d.date ? esc(fmtDate(r.d.date)) : "",
-      r.d.outcome ? `<b>${esc(billOutcome(r.d.outcome))}</b>` : "",
+      billOutcome(r.d.outcome, r.d) ? `<b>${esc(billOutcome(r.d.outcome, r.d))}</b>` : "",
       voteTables.isProceduralDivision(r.d.title || r.d.name || r.bill.division_titles?.[r.d.key]) ? voteTables.proceduralTagHTML() : "",
       // A renamed party's division keeps the name it voted under (party-page.js recordedAsText).
       partyPage?.recordedAsText(label, [r.party]) ? esc(partyPage.recordedAsText(label, [r.party])) : "",
@@ -9925,7 +9928,7 @@ async function renderPartyBillDivisions(label, sections, key) {
       for (const r of runs) { const k = pick(r); if (k) n.set(k, (n.get(k) || 0) + 1); }
       return [...n].map(([k, c]) => `${c} ${k}`).join(", ");
     };
-    const outcomes = tally((r) => r.d.outcome ? billOutcome(r.d.outcome).toLowerCase() : "");
+    const outcomes = tally((r) => billOutcome(r.d.outcome, r.d).toLowerCase());
     const sides = tally((r) => r.ayes > r.noes ? "for" : r.noes > r.ayes ? "against" : "split");
     const stage = stageOf(first);
     return `<li class="party-bill-div party-bill-folded">
@@ -10050,7 +10053,7 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=c0be84e051"), loadMoneyFile(jur)]);
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=572c01a0be"), loadMoneyFile(jur)]);
     const { loadDonorViewIndex } = await import("/donor-views.js?v=be03bb4447");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
@@ -10066,14 +10069,14 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=bdb5e22abb", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=666b827db7", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
   quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=1688526c4a", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=34880eea21", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=be0246bb92", mount: "mountGrants" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=7a555e7c1d", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=8f4a75485d", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
   wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=1bc8c0ddf3", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=ec4ba2c237", mount: "mountThenVsNow" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=356a4b7c51", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -13825,7 +13828,7 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   // Each dot is bound to the part after it, and the date is one unit, so a
   // wrapped line never ends in a dot or leaves the year alone.
   $("doc-meta").innerHTML = [
-    billOutcomeLabelHTML(d.result || entry?.outcome),
+    billOutcomeLabelHTML(d.result || entry?.outcome, d),
     esc(`${ayes.toLocaleString()} ayes, ${noes.toLocaleString()} noes`),
     esc(house), d.date ? esc(fmtDate(d.date)).replace(/ /g, "\u00a0") : "",
   ].filter(Boolean).join(" ·\u00a0");

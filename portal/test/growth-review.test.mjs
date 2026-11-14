@@ -5,6 +5,7 @@ import {runInNewContext} from 'node:vm';
 import {isOrganisationDonor} from '../public/donor-entity.js';
 import * as registerTables from '../public/register-tables.js';
 import * as growthModules from '../public/growth-modules.js';
+import * as uiLabels from '../public/labels.js';
 import {supplierDonations,mountSupplierGrowth} from '../public/supplier-growth.js';
 import {cleanEvent,safePath,automationReason,whenMeasurable} from '../analytics/privacy.mjs';
 const read=f=>readFileSync(new URL(f,import.meta.url),'utf8');
@@ -54,10 +55,13 @@ test('typed generic bill question carries full bill title and key through the re
 });
 test('related sponsor rows wait for visibility, never loading the bill index or roster',async()=>{
  const code=app.slice(app.indexOf('function renderOtherSponsorBills('),app.indexOf('/* --- bills on the person page'));
+ // The rows word a bill's status through app.js's own billStatusWord, which reads the labels module.
+ const statusAt=app.indexOf('const billStatusWord =');
+ const statusWord=app.slice(statusAt,app.indexOf('\n',statusAt));
  let observe,reads=0;
  const slot={isConnected:true,innerHTML:'',remove(){this.removed=true}};
- const {renderOtherSponsorBills}=runInNewContext(code+';({renderOtherSponsorBills})',{
-  growthModules,billView:'view',billTextGeneration:1,loadSponsorSummary:async()=>{reads++;return {person:{name:'Andrew Gee'},bills:[{key:'other',jurisdiction:'federal',title:'Other Bill'}]};},IntersectionObserver:class{constructor(fn){observe=fn}observe(){}disconnect(){}},addEventListener(){},sourceLineHTML:()=>'',billHash:k=>'/bill/'+k,billName:b=>b.title,fmtDate:()=>'',sentenceCase:()=>'',esc:String,
+ const {renderOtherSponsorBills}=runInNewContext(statusWord+'\n'+code+';({renderOtherSponsorBills})',{
+  uiLabels,growthModules,billView:'view',billTextGeneration:1,loadSponsorSummary:async()=>{reads++;return {person:{name:'Andrew Gee'},bills:[{key:'other',jurisdiction:'federal',title:'Other Bill'}]};},IntersectionObserver:class{constructor(fn){observe=fn}observe(){}disconnect(){}},addEventListener(){},sourceLineHTML:()=>'',billHash:k=>'/bill/'+k,billName:b=>b.title,fmtDate:()=>'',sentenceCase:()=>'',esc:String,
  });
  renderOtherSponsorBills({key:'current',jurisdiction:'federal',sponsor:'GEE, Andrew, MP'},{querySelector:()=>slot},'view',1);
  assert.equal(reads,0);observe([{isIntersecting:true}]);await new Promise(resolve=>setImmediate(resolve));assert.equal(reads,1);assert.match(slot.innerHTML,/Other Bill/);
