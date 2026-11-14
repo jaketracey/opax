@@ -27,7 +27,7 @@ OPAX_MCP_TOKEN=opax_... node portal/scripts/mcp-evals/run.mjs --base https://sta
 # or: --token-file <path>
 ```
 
-Useful options: `--only id,id`, `--category name`, `--limit n` (never more than 40), `--concurrency n`, `--rate n` (most requests a second, 0.9 by default: the server allows one member or client 60 a minute, and a run that goes over it is marked invalid), `--blocked hansard` (see below), `--rejudge <results.json>` (re-score an earlier run without calling the server). `--help` lists them all.
+Useful options: `--only id,id`, `--category name`, `--limit n` (never more than 40), `--concurrency n`, `--rate n` (most requests a second: 0.9 by default and never above 1, because the server allows one member or client 60 a minute and a run that goes over it is marked invalid), `--repeat n` (the whole set n times, then the gate), `--blocked hansard` (see below), `--rejudge <results.json>` (re-score an earlier run without calling the server). `--help` lists them all.
 
 Results go to `portal/private/mcp-evals/` (git-ignored): `<label>-<time>.json` with every answer and call, and `<label>-<time>.md` with the per-category table and each failure.
 
@@ -63,6 +63,40 @@ No write path to the record exists in a test, so the pass-through plants the hos
 - `proxy.mjs`: the local pass-through (token, rate limit, planted text).
 - `questions.json`: the question set.
 - `../../test/mcp-evals-score.test.mjs`: offline tests for scoring.
+
+## The release gate
+
+`gate.mjs` decides whether a build passes, from recorded runs (no network, no model calls). Both parts are required.
+
+1. **cited:** the median of 3 runs is 33 of 35 questions or better. The threshold scales with the number of citable questions (33 of 35, rounded up), so adding questions with a gold page does not loosen it.
+2. **opax_url:** every tool whose output schema promises a page link returned one on every successful call. Read from the tool results themselves, with no judge.
+
+```sh
+# three full runs, then the gate (about 15 minutes, about US$4; hold the eval lock throughout)
+node portal/scripts/mcp-evals/run.mjs --base https://staging.opax.com.au/mcp --sha <deployed commit> --label gate --repeat 3
+
+# or the gate on runs already recorded
+node portal/scripts/mcp-evals/gate.mjs run1.json run2.json run3.json [--out gate.json]
+```
+
+The exit code is 0 for PASS, 1 for FAIL and 2 for INCOMPLETE. INCOMPLETE is never a pass.
+
+**Why 3 full runs.** cited is a deterministic check: the answer either links the canonical page or it does not. Scoring the same answers three times gives the same number three times. The swing between runs (30 to 35 on one build) comes from the answering model choosing different tools and different links, and only fresh answers measure that. If cited ever gets a judge, a judge repeat would be worth adding beside this, not instead of it.
+
+**Which tools are expected to return a link.** Each run records, from `tools/list`, which tools declare `opax_url` or `url` as a string in their output schema (`url_field` in the results file). Those tools are checked, and the gate lists any it never saw called. A tool without an output schema is not held to anything, so declare the link in the schema to put a tool under the gate. A call counts as a miss when it succeeded (no `isError`, no `error` field) and its result has no `opax_url` or `url` that is an opax.com.au page. A link to a data file (`.json`, `.csv`, `.pdf`) or an `/api/` path is not a page. Record-level links (each item's own `url`) are reported but not gated.
+
+**INCOMPLETE** means the gate could not decide, for one of these reasons:
+
+- fewer than 3 runs (the latest 3 by start time are used when more are given);
+- the runs are of different builds or endpoints (`--allow-mixed-builds` shows an indication anyway and says so);
+- a run was rate-limited, or does not cover the whole question set;
+- the runs predate link capture, so the expected tools or the result links are unknown;
+- no listed tool promises a link, or no call to one succeeded;
+- a result could not be read as JSON.
+
+A single miss is a FAIL even when the runs are incomplete in other ways.
+
+cited is re-scored from each stored answer with the gold in `questions.json` as it is now, so a corrected gold applies to old runs too. The gate says when that differs from the count recorded in a run.
 
 ## Interrupted runs
 

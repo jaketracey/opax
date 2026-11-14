@@ -9,9 +9,10 @@
 import { spawn } from 'node:child_process'
 import { appendFileSync, mkdtempSync, writeFileSync, readFileSync, mkdirSync, rmSync, chmodSync, existsSync } from 'node:fs'
 import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
+import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { startProxy } from './proxy.mjs'
+import { evaluateGate, renderGate, exitCode, GATE_RUNS } from './gate.mjs'
 import { scoreCitation, efficiency, summarise, renderMarkdown, judgePrompt, parseJudge, parseStream } from './score.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
@@ -19,7 +20,7 @@ const MAX_QUESTIONS = 40
 const SERVER = 'opax'
 
 function parseArgs(argv) {
-  const out = { base: 'https://staging.opax.com.au/mcp', model: 'claude-sonnet-5-5', judgeModel: 'claude-sonnet-5-5', questions: join(here, 'questions.json'), out: resolve('portal/private/mcp-evals'), concurrency: 4, label: 'run', sha: 'unknown', timeout: 300, limit: MAX_QUESTIONS, rate: 0.9, blocked: [] }
+  const out = { base: 'https://staging.opax.com.au/mcp', model: 'claude-sonnet-5-5', judgeModel: 'claude-sonnet-5-5', questions: join(here, 'questions.json'), out: resolve('portal/private/mcp-evals'), concurrency: 4, label: 'run', sha: 'unknown', timeout: 300, limit: MAX_QUESTIONS, rate: 0.9, repeat: 1, blocked: [] }
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i], next = () => { const v = argv[++i]; if (v === undefined) throw new Error('Missing value for ' + a); return v }
     if (a === '--base') out.base = next()
@@ -35,7 +36,8 @@ function parseArgs(argv) {
     else if (a === '--category') out.category = next().split(',').map(s => s.trim()).filter(Boolean)
     else if (a === '--limit') out.limit = Math.max(1, Math.min(MAX_QUESTIONS, Number(next()) || MAX_QUESTIONS))
     else if (a === '--timeout') out.timeout = Number(next()) || 300
-    else if (a === '--rate') out.rate = Math.max(0.1, Math.min(20, Number(next()) || 0.9))
+    else if (a === '--rate') out.rate = Math.max(0.1, Math.min(1, Number(next()) || 0.9))
+    else if (a === '--repeat') out.repeat = Math.max(1, Math.min(5, Math.floor(Number(next())) || 1))
     else if (a === '--blocked') out.blocked = next().split(',').map(s => s.trim()).filter(Boolean)
     else if (a === '--resume') out.resume = resolve(next())
     else if (a === '--rejudge') out.rejudge = resolve(next())
@@ -59,8 +61,11 @@ const HELP = `Usage: node run.mjs [options]     (anonymous unless OPAX_MCP_TOKEN
   --questions <path>    question set (default questions.json beside this script)
   --out <dir>           output directory (default portal/private/mcp-evals, git-ignored)
   --timeout <seconds>   per-question limit (default 300)
-  --rate <n>            most requests a second sent to the server (default 0.9, which stays under
-                        the limit of 60 a minute for one member or client)
+  --rate <n>            most requests a second sent to the server (default 0.9, never above 1, which
+                        stays under the limit of 60 a minute for one member or client)
+  --repeat <n>          run the whole set n times in a row (labels <label>-r1, -r2 ...). It then applies the
+                        release gate (see gate.mjs); use ${GATE_RUNS}, as fewer runs leave the gate incomplete. Hold the eval lock for all of it:
+                        ${GATE_RUNS} runs take about 15 minutes and cost about US$4
   --blocked a,b         data the environment lacks (e.g. hansard): questions that require it are run but
                         reported apart and left out of the scores
   --resume <jsonl>      carry on an interrupted run from its .partial.jsonl file (answers already
@@ -91,6 +96,7 @@ async function rpc(base, token, method, params, id = 1) {
 }
 
 /** What the server advertises: recorded with every run so a change in tools or wording is visible. */
+const urlField = schema => ['opax_url', 'url'].find(key => { const type = schema?.properties?.[key]?.type; return type === 'string' || (Array.isArray(type) && type.includes('string')) }) ?? null
 async function describeServer(base, token) {
   const init = await rpc(base, token, 'initialize', { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 'opax-mcp-evals', version: '1' } })
   const list = await rpc(base, token, 'tools/list', undefined, 2)
@@ -99,7 +105,7 @@ async function describeServer(base, token) {
     status: init.status, protocolVersion: init.body?.result?.protocolVersion ?? null, serverInfo: init.body?.result?.serverInfo ?? null,
     instructions: init.body?.result?.instructions ?? null, tool_count: tools.length,
     tools_list_bytes: Buffer.byteLength(JSON.stringify(tools)), with_output_schema: tools.filter(t => t.outputSchema).length, with_title: tools.filter(t => t.title || t.annotations?.title).length,
-    tools: tools.map(t => ({ name: t.name, description_chars: (t.description ?? '').length, output_schema: !!t.outputSchema })),
+    tools: tools.map(t => ({ name: t.name, description_chars: (t.description ?? '').length, output_schema: !!t.outputSchema, url_field: urlField(t.outputSchema) })),
   }
 }
 
@@ -137,16 +143,8 @@ async function pool(items, size, worker) {
   return results
 }
 
-async function main() {
-  const opts = parseArgs(process.argv.slice(2))
-  if (opts.help) { console.log(HELP); return }
-  const set = JSON.parse(readFileSync(opts.questions, 'utf8'))
-  let questions = set.questions
-  if (opts.only) questions = questions.filter(q => opts.only.includes(q.id))
-  if (opts.category) questions = questions.filter(q => opts.category.includes(q.category))
-  questions = questions.slice(0, opts.limit)
-  if (!questions.length) throw new Error('No questions selected.')
-  mkdirSync(opts.out, { recursive: true })
+/** One full run of the question set. Writes <label>-<time>.json and .md, and returns the report. */
+async function runOnce(opts, set, questions) {
   const work = mkdtempSync(join(tmpdir(), 'opax-mcp-evals-'))
   const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)
   const outBase = join(opts.out, `${opts.label}-${stamp}`)
@@ -206,7 +204,35 @@ async function main() {
     console.log(outBase + '.json')
     console.log(outBase + '.md')
     console.log(JSON.stringify(summary.overall))
+    return { report, file: outBase + '.json' }
   } finally { if (proxy) await proxy.close(); if (existsSync(work)) rmSync(work, { recursive: true, force: true }) }
+}
+
+async function main() {
+  const opts = parseArgs(process.argv.slice(2))
+  if (opts.help) { console.log(HELP); return }
+  const set = JSON.parse(readFileSync(opts.questions, 'utf8'))
+  let questions = set.questions
+  if (opts.only) questions = questions.filter(q => opts.only.includes(q.id))
+  if (opts.category) questions = questions.filter(q => opts.category.includes(q.category))
+  questions = questions.slice(0, opts.limit)
+  if (!questions.length) throw new Error('No questions selected.')
+  if (opts.repeat > 1 && (opts.resume || opts.rejudge)) throw new Error('--repeat cannot be combined with --resume or --rejudge.')
+  mkdirSync(opts.out, { recursive: true })
+  const runs = []
+  for (let i = 1; i <= opts.repeat; i++) {
+    if (opts.repeat > 1) console.error(`run ${i} of ${opts.repeat}`)
+    const done = await runOnce({ ...opts, label: opts.repeat > 1 ? `${opts.label}-r${i}` : opts.label }, set, questions)
+    runs.push({ name: basename(done.file, '.json'), report: done.report })
+  }
+  if (opts.repeat > 1) {
+    // The gate judges the build against the whole set, so a subset run is reported as incomplete.
+    const gate = evaluateGate({ runs, questions: set.questions })
+    const base = join(opts.out, `${opts.label}-gate-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)}`)
+    writeFileSync(base + '.json', JSON.stringify(gate, null, 1)); writeFileSync(base + '.txt', renderGate(gate))
+    console.log(base + '.json'); console.log(renderGate(gate))
+    process.exitCode = exitCode(gate)
+  }
 }
 
 main().catch(error => { console.error(error.message); process.exit(1) })

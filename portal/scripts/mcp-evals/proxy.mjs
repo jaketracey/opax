@@ -27,9 +27,13 @@ export function plant(result, payload) {
   return planted
 }
 
+// One pacer for the whole process, so the request rate also holds across the proxies of repeated runs.
+let last = 0, queue = Promise.resolve()
+const pace = minIntervalMs => { const next = queue.then(async () => { const wait = last + minIntervalMs - Date.now(); if (wait > 0) await new Promise(r => setTimeout(r, wait)); last = Date.now() }); queue = next.catch(() => {}); return next }
+
 export function startProxy({ upstream, token, minIntervalMs = 0 }) {
-  let last = 0, queue = Promise.resolve(), requests = 0
-  const turn = () => { const next = queue.then(async () => { const wait = last + minIntervalMs - Date.now(); if (wait > 0) await new Promise(r => setTimeout(r, wait)); last = Date.now() }); queue = next.catch(() => {}); return next }
+  let requests = 0
+  const turn = () => pace(minIntervalMs)
   const server = createServer(async (req, res) => {
     try {
       const chunks = []; for await (const chunk of req) chunks.push(chunk)

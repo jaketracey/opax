@@ -22,6 +22,7 @@ export function parseStream(stdout, server) {
         const call = calls.get(block.tool_use_id); if (!call) continue
         const text = typeof block.content === 'string' ? block.content : (block.content ?? []).map(part => part.text ?? '').join('')
         call.is_error = !!block.is_error; call.result_bytes = Buffer.byteLength(text)
+        call.urls = resultUrls(text)
         if (block.is_error) call.error = text.slice(0, 240)
       }
     } else if (event.type === 'result') {
@@ -35,6 +36,30 @@ export function parseStream(stdout, server) {
   }
   return out
 }
+
+/** A canonical OPAX page: an opax.com.au web page, not a data file, an API path or another site. */
+export function isPageUrl(value) {
+  if (typeof value !== 'string') return false
+  let url; try { url = new URL(value) } catch { return false }
+  if (url.protocol !== 'https:' || !OPAX_HOSTS.has(url.hostname)) return false
+  return !/^\/api\//.test(url.pathname) && !/\.(?:json|jsonl|csv|xlsx|xml|pdf)$/i.test(url.pathname)
+}
+
+const URL_FIELDS = ['opax_url', 'url']
+const RECORD_LISTS = ['items', 'rows', 'results']
+/**
+ * What a tool result says about its own page links, read from the result alone (no judge):
+ * the result's page link (opax_url, else url) and how many of its records carry one.
+ */
+export function resultUrls(text) {
+  let data; try { data = JSON.parse(text) } catch { return { readable: false } }
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return { readable: false }
+  const top = URL_FIELDS.map(key => data[key]).find(value => typeof value === 'string') ?? null
+  const list = RECORD_LISTS.map(key => data[key]).find(Array.isArray) ?? []
+  return { readable: true, error: typeof data.error === 'string', top, top_page: isPageUrl(top), items: list.length, items_with_url: list.filter(row => row && typeof row === 'object' && URL_FIELDS.some(key => isPageUrl(row[key]))).length }
+}
+/** The tool's name, with a dispatcher's register, so a call reads the same in a report and in the gate. */
+export const callLabel = call => typeof call.args?.register === 'string' ? `${call.name}:${call.args.register}` : call.name
 
 /** Every web address in an answer, with OPAX hosts folded onto the canonical one. */
 export function answerUrls(answer) {
@@ -131,8 +156,7 @@ export function summarise(all) {
   for (const name of [...new Set(results.map(r => r.category))]) categories[name] = group(results.filter(r => r.category === name))
   const tools = {}
   // A dispatcher tool is counted per register, so its use stays comparable with one-tool-per-register builds.
-  const label = call => typeof call.args?.register === 'string' ? `${call.name}:${call.args.register}` : call.name
-  for (const row of all) for (const call of row.tool_calls ?? []) { const t = tools[label(call)] ??= { calls: 0, errors: 0, bytes: 0 }; t.calls++; if (call.is_error) t.errors++; t.bytes += call.result_bytes ?? 0 }
+  for (const row of all) for (const call of row.tool_calls ?? []) { const t = tools[callLabel(call)] ??= { calls: 0, errors: 0, bytes: 0 }; t.calls++; if (call.is_error) t.errors++; t.bytes += call.result_bytes ?? 0 }
   return { overall: group(results), categories, tools, env_blocked: blocked.length ? { ...group(blocked), ids: blocked.map(r => r.id) } : null }
 }
 
