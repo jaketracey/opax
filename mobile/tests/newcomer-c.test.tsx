@@ -19,6 +19,7 @@ import {
   lightHighContrast,
 } from '../src/design/palette';
 import { chamberSeats, hemicycle } from '../src/features/newcomer/art';
+import { MinutePage } from '../src/features/newcomer/MinutePage';
 import {
   minuteCopy,
   minuteIdeas,
@@ -460,7 +461,7 @@ describe('Parliament in a minute', () => {
   test('drawings and numbers are hidden from VoiceOver; the words carry them', async () => {
     const r = await render(
       <InStack>
-        <LearnMinute />
+        <MinutePage mode="guide" />
       </InStack>,
     );
     for (const id of [
@@ -482,7 +483,7 @@ describe('Parliament in a minute', () => {
     setFontScale(3.12);
     const r = await render(
       <InStack>
-        <LearnMinute />
+        <MinutePage mode="guide" />
       </InStack>,
     );
     const chambers = host(r, 'minute-art-chambers');
