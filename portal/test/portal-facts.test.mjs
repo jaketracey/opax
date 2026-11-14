@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 import {resolveProgram, programKey} from '../public/facts/grant-programs.js';
 import {runInNewContext} from 'node:vm';
 import {programRecord} from '../../scripts/build_search_catalog.mjs';
+import {billSponsorProjection} from './helpers/bill-sponsor-projection.mjs';
 import {renderBillAnswer} from '../src/seo-content.ts';
 
 const pub = new URL('../public/', import.meta.url);
@@ -117,13 +118,16 @@ test('every bill with embedded divisions agrees with the standalone source', asy
 test('audited party labels are canonical in index and detail; renderers reject dirty labels', async () => {
   const index = await read('/bills/index.json');
   const allowed = await read('/facts/sponsor-parties.json');
+  const projected = billSponsorProjection();
   const dated = new Map([...datedSponsors, ...sponsorDecisions.fills].map(row => [row.key, row.published_party]));
   for (const expected of audit.parties) {
     const row = index.bills.find(b => b.key === expected.key);
     const bill = await read(`/bills/${expected.key}.json`);
     assert.equal(bill.sponsor_party, row.sponsor_party, expected.key);
     assert.ok(!bill.sponsor_party || allowed.includes(bill.sponsor_party), expected.key);
-    assert.equal(bill.sponsor_party, dated.get(expected.key) ?? expected.canonical, expected.key);
+    const source = Object.hasOwn(expected, 'source_canonical') ? expected.source_canonical : expected.canonical;
+    assert.equal(bill.sponsor_party, dated.has(expected.key) ? dated.get(expected.key) : source, expected.key);
+    assert.equal(projected.sponsors[expected.key].sponsor_party, expected.canonical, expected.key);
   }
   for (const party of ['xx', 'monarchist', 'Australia&#39;s Voice']) {
     const html = renderBillAnswer({key:'example', title:'Example bill', sponsor_party:party}, [], new Map()).html;

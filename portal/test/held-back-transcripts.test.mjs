@@ -101,7 +101,7 @@ test('a list-only profile describes attribution, in the browser and server alike
   for (const name of ['Mira El Dannawi', 'Hilton Gumbys', 'Rebecca Hewett', 'Benjamin Hood', 'Carlos Quaremba', 'Melanie Selwood']) {
     const p = by.get(name);
     assert.ok(p?.roster_only && p.speeches === 0, name);
-    assert.match(noHansardHeldHTML(p), /^<p class="person-no-hansard fineprint">No speeches are attributed to this profile yet\. /);
+    assert.equal(noHansardHeldHTML(p), '<p class="person-no-hansard fineprint">No speeches are attributed to this profile yet. This profile comes from the parliament’s member list.</p>');
     const {html} = await renderPersonAnswer(p, readCounts({}, {}), new Map());
     assert.ok(html.includes(noHansardHeldHTML(p)), name);
     assert.doesNotMatch(html, /0 speeches/);
