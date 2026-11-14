@@ -415,7 +415,17 @@ export function useTitleOnScroll(
   const backTitle =
     Platform.OS === 'ios' ? (backTitleOverride ?? namedBackTitle) : undefined;
   const headerHeight = useHeaderBottom();
+  // The iPhone Duo's side rail (b67): the status bar, tabs and bar items sit
+  // on the vertical rail, and the title in a band at the top (24-82 pt on
+  // the outer display, b65), whose bottom edge is the native header height.
+  // A plain string title there sat above the page's own heading at rest (the
+  // double title), so the rail takes the iPhone path: hidden while the
+  // heading is on screen, faded in once it has gone under the bar. On the
+  // outer display UIKit folds the band away as the page scrolls (before and
+  // after b67), so the page shows its heading alone. The band keeps no room
+  // for items, which are on the rail.
   const verticalBar = useVerticalBarEdge() !== 'unspecified';
+  const barTrailingWidth = verticalBar ? 0 : trailingWidth;
   const [anchor, setAnchor] = useState<number | null>(null);
   const shown = useRef(false);
   const offset = useRef(0);
@@ -433,7 +443,7 @@ export function useTitleOnScroll(
   }, []);
   const updateShown = useCallback(
     (next: boolean) => {
-      if (!title || verticalBar || next === shown.current) return;
+      if (!title || next === shown.current) return;
       shown.current = next;
       setOptions(
         Platform.OS === 'android'
@@ -444,25 +454,16 @@ export function useTitleOnScroll(
                   title,
                   shown: next,
                   trailing,
-                  trailingWidth,
+                  trailingWidth: barTrailingWidth,
                   backTitle,
                   person,
                 }),
             },
       );
     },
-    [
-      title,
-      setOptions,
-      trailing,
-      trailingWidth,
-      backTitle,
-      person,
-      verticalBar,
-    ],
+    [title, setOptions, trailing, barTrailingWidth, backTitle, person],
   );
   const measureHeading = useCallback(() => {
-    if (verticalBar) return;
     const request = ++measurementRequest.current;
     const node = ref?.current;
     // A virtualised heading can unmount above the viewport. Keep its
@@ -482,15 +483,9 @@ export function useTitleOnScroll(
       // window coordinates only, with 1 pt slack.
       updateShown(pageY + height / 2 <= headerHeight + 1);
     });
-  }, [ref, headerHeight, updateShown, verticalBar]);
+  }, [ref, headerHeight, updateShown]);
   useLayoutEffect(() => {
     if (!title) return;
-    // UIKit owns title sizing and placement on the rail. HeaderHeightContext
-    // remains a height and cannot be used as a horizontal collapse boundary.
-    if (verticalBar) {
-      setOptions({ title: routeTitle, headerTitle: title });
-      return invalidateMeasurements;
-    }
     if (!windowRef)
       shown.current = anchor !== null && offset.current + headerHeight > anchor;
     const visible = shown.current;
@@ -504,7 +499,7 @@ export function useTitleOnScroll(
                 title,
                 shown: visible,
                 trailing,
-                trailingWidth,
+                trailingWidth: barTrailingWidth,
                 backTitle,
                 person,
               }),
@@ -521,13 +516,12 @@ export function useTitleOnScroll(
     setOptions,
     headerHeight,
     trailing,
-    trailingWidth,
+    barTrailingWidth,
     backTitle,
     person,
     windowRef,
     measureHeading,
     invalidateMeasurements,
-    verticalBar,
   ]);
   const onScroll = useCallback(
     (event: number | NativeSyntheticEvent<NativeScrollEvent>) => {
