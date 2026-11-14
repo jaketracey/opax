@@ -8,13 +8,13 @@ The original [52-case audit](2026-11-14-bill-sponsor-parties.md) remains a histo
 
 There is one `fill_sponsor_parties(bills, timeline=None, evidence=None, *, records=None) -> list[dict]` implementation. Positional Evidence, `evidence=` and explicit `records=` use the same resolver, mutation and held-disagreement path. Supplying both evidence and records fails explicitly. The build still supplies database-enriched Evidence; the retained refresh still supplies `evidence=` and consumes the returned holds. The audit projection supplies `records=`.
 
-A fresh build validates both evidence loaders before resolving or publishing. An explicit Records projection also aborts on an unavailable electorate release or Senate Handbook. A retained refresh supplied with frozen Evidence keeps the published labels and source stamp. Missing, conflicting and reviewed held periods keep their source labels. A pid cannot correct a party without a matching printed surname, while blank labels can still be filled. The timeline remains a fallback only for missing parties.
+A fresh build validates both evidence loaders before resolving or publishing. An explicit Records projection also aborts on an unavailable electorate release or Senate Handbook. A manual retained refresh loads Evidence explicitly, keeps the published labels and source stamp on an evidence outage, and exits zero. Fresh database builds and explicit Records projections still abort on unavailable evidence. Existing source labels may also use agreeing observations within one parliament; brackets cannot fill blanks or cross a general election. Missing, conflicting and reviewed held periods keep their source labels. A pid cannot correct a party without a matching printed surname, while blank labels can still be filled. The timeline remains a fallback only for missing parties.
 
-The uniform own-registered-party rule, regional registered-party rule and reviewed renames share this path. The four Patrick source-party/Independent disagreements remain returned holds: s1297, s1307, s1316 and s1321. No Rex Patrick Team foundation date is inferred. The earlier invented personal-party fixture now explicitly maps that invented holder as its owner; its original expected hold and retained-refresh assertions are preserved.
+The uniform own-registered-party rule, regional registered-party rule and reviewed renames share this path. The four Patrick source-party/Independent disagreements remain returned holds: s1297, s1307, s1316 and s1321. No Rex Patrick Team foundation date is inferred. The post-merge review found that the ownership guard had narrowed main's Rex Patrick Team hold and that the fixture ownership patches masked the regression. The correction restores the source Rex Patrick Team / dated Independent hold for every sponsor id, and removes both fixture ownership patches. All nine original main test methods are unchanged and pass.
 
 ## Every projection difference from reviewed main
 
-The read-only projection checks all 2,989 detail records, all primary sponsors and every co-sponsor. It changes exactly two primary parties and zero co-sponsors. There are no additional blank-party fills or identity changes.
+The read-only projection checks all 2,989 detail records and their primary sponsors. It changes exactly two primary parties. No published bill has a `sponsors[]` array. Co-sponsor handling is exercised only by unit tests and the DB build; the full database build was not run on this Mac. Therefore this published-data scan supplies no co-sponsor coverage. There are no additional blank-party fills or identity changes.
 
 | Bill | Introduced | Reviewed published label | Projected label | Held evidence |
 | --- | --- | --- | --- | --- |
@@ -135,3 +135,46 @@ The first complete portal run passed 4,957 of 4,958 tests. Its sole failure was 
 The crawl builder regenerated the sitemap to 29 parties, retaining the reviewed identity. No count assertion or reviewed fact was removed. The final focused rerun, including this assertion and all sponsor patterns, passed all 410 entries. The final Python rerun with full-data Evidence/Records parity passed all 203 tests.
 
 The final complete portal rerun passed all 4,958 tests. The merge-forward acceptance items are complete; the only remaining publication change is the next nightly export of the two reviewed naming deltas above.
+
+
+## Post-merge hold-rule review correction
+
+Reviewed input: `07225dd5da51977243efe6d267c576e01d7dffe8`.
+
+| Item | Correction | Regression evidence |
+| --- | --- | --- |
+| P1, source/group hold | Before the personal-party ownership branch, any source Rex Patrick Team / dated Independent label is retained as a convention and returned as a hold. No owner id is required. Both `patch.dict` workarounds were removed. | Main's unmodified `test_registered_party_and_group_disagreement_is_returned_for_review` and all nine original main tests pass. Contract parity runs without ownership patches. `test_registered_cosponsor_hold_does_not_require_a_unique_person_id` checks a different id and no id with two matching ids. |
+| P3, bracket policy | Restore `allow_bracket=True` when checking an existing source label, as on main. Blank labels still require direct coverage. | `test_source_label_bracket_is_restored_without_filling_blanks_or_crossing_elections` checks the restored correction, no blank fill, and no bracket across a general election. |
+| P3, manual refresh outage | Manual `--refresh-sponsor-parties` loads Evidence explicitly, retains the published labels and stamp during an outage, and returns zero. Fresh database builds and strict Records projections continue to abort safely. | `test_manual_refresh_exits_zero_and_keeps_published_labels_on_loader_outage` exercises the actual CLI main function with each loader failing, verifies file bytes and exit zero, and rejects any database connection. Existing strict build/projection outage tests remain. |
+| P3, comments | Restore the registry-read comments: source party labels are retained for the introduction-date check, rather than always winning or only filling blanks. | Diff review against the earlier branch wording. |
+| P3, coverage statement | No published bill has a `sponsors[]` array: zero of 2,989. Co-sponsor handling is exercised only by unit tests and the DB build; the full DB build was not run here. | Complete local published-file census; explicit synthetic co-sponsor fixtures. |
+
+Main's original sponsor test source was loaded verbatim from `9fc487882` and run against the corrected exporter. The original file path was supplied for its published-file lookup; test bodies were not edited. All nine original test method ASTs also match the branch methods exactly.
+
+The negative control against `07225dd5d` reproduced one failure in the nine unmodified main tests:
+
+```text
+AssertionError: 'Independent' != 'Rex Patrick Team'
+- Independent
++ Rex Patrick Team
+FAILED (failures=1)
+```
+
+The first run of the added bracket test incorrectly expected the complete fill path to leave a blank empty, despite its deliberately supplied timeline fallback. That test failed as follows:
+
+```text
+AssertionError: 'Greens' is not None
+FAILED (failures=1)
+```
+
+The test now checks the Records resolver's blank result directly, so it verifies that brackets never fill a blank without suppressing the existing timeline fallback.
+
+A one-off read-only audit invocation attempted to import the script as a package without its script directory on the Python path. It failed with:
+
+```text
+ModuleNotFoundError: No module named 'export_bills'
+```
+
+Rerunning the supported `python3 scripts/audit_bill_sponsor_parties.py --project` command succeeded. The projection still changes only s1309 (Nationals to Country Liberal Party) and s1127 (Nick Xenophon Team to Centre Alliance); bill and member totals are unchanged. Published bill files remain byte-identical to the reviewed main snapshot. The nightly exporter path remains unchanged.
+
+Final correction gates: main's unmodified sponsor suite 9 passed; Python exporter/refresh/division gate 206 passed; focused portal 410 passed; full portal 4,958 passed with zero failures, cancellations or skips (173.6 seconds). Both portal runs used the shared slot wrapper at concurrency 4. TypeScript, stamp and whitespace checks passed. All requested corrections are complete; the only projected published-label deltas remain s1309 and s1127.

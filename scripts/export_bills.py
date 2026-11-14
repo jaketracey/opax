@@ -694,9 +694,8 @@ def load_v2_bills(db: sqlite3.Connection) -> list[dict]:
         lifecycle = lifecycle_fields(evs)
         # aliases_json is a list of alias titles per the contract, but the
         # registry currently writes an object of listing extras for ParlInfo
-        # rows. Read either, and take the source's own sponsor party when the
-        # object carries one -- that is the party as the bill page printed it,
-        # which beats anything derived here.
+        # rows. Read either, retaining the source party for the dated check in
+        # fill_sponsor_parties rather than treating it as current affiliation.
         extras: dict = {}
         aliases: list = []
         try:
@@ -736,7 +735,7 @@ def load_v2_bills(db: sqlite3.Connection) -> list[dict]:
             "sponsor": source_text(row.get("sponsor_name")) or (sponsors[0]["name"] if sponsors else None),
             "sponsors": sponsors,
             # The source's party label only when it names a known party; the
-            # dated party record fills the rest (fill_sponsor_parties).
+            # dated party record checks it at introduction (fill_sponsor_parties).
             "sponsor_party": sponsors[0]["party"] if sponsors else None,
             "sponsor_person_id": row.get("sponsor_person_id"),
             "portfolio": None if prints is not None else row.get("portfolio"),
@@ -853,7 +852,8 @@ class SponsorPartyRecords:
         if source and rule == "pid" and hits and (not vote_parties.surname(name) or not any(
                 vote_parties.surname(name) in hit["surnames"] for hit in hits)):
             return {**kept, "reason": "pid-surname-mismatch"}
-        party, basis, url = self.resolver.party_on(hits, day, same=vote_parties.same_party) if hits else (
+        party, basis, url = self.resolver.party_on(
+            hits, day, same=vote_parties.same_party, allow_bracket=bool(source)) if hits else (
             None, rule, None)
         if not party:
             return {**kept, "reason": basis}
@@ -870,6 +870,9 @@ class SponsorPartyRecords:
         regional = SPONSOR_REGIONAL_PARTIES.get((house, pid))
         if not source:
             chosen, reason = dated, "filled"
+        elif source == "Rex Patrick Team" and dated == "Independent":
+            # Preserve the reviewed source/group hold without requiring an owner id.
+            chosen, reason = source, "convention"
         elif "Independent" in (source, dated) and any(
                 PERSONAL_SPONSOR_PARTIES.get(p) == pid for p in (source, dated)):
             chosen = source if PERSONAL_SPONSOR_PARTIES.get(source) == pid else dated
@@ -1706,6 +1709,9 @@ def refresh_sponsor_parties(directory: Path, evidence=None) -> tuple[int, list[d
     """Recheck the retained snapshot without a database, fetch or registry refresh."""
     directory = Path(directory)
     docs, previous = retained_bills(directory)
+    # A manual retained refresh keeps main's frozen-evidence behaviour. Fresh
+    # database builds and explicit Records projections still require all evidence.
+    evidence = vote_parties.load_evidence() if evidence is None else evidence
     held = fill_sponsor_parties(docs, evidence=evidence)
     index_path = directory / "index.json"
     index = json.loads(index_path.read_text())
