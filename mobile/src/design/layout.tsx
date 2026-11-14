@@ -259,6 +259,7 @@ export function Screen({
   contentInsetAdjustmentBehavior = 'automatic',
   scrollToOverflowEnabled = false,
   clampScrollOnContentChange = false,
+  keyboardInsets = true,
 }: {
   onLayout?: ViewProps['onLayout'];
   /** The rendered content, rather than the surrounding scroll viewport. */
@@ -273,6 +274,15 @@ export function Screen({
   scrollToOverflowEnabled?: boolean;
   /** Async front pages may lose blocks while the reader is at the end. */
   clampScrollOnContentChange?: boolean;
+  /**
+   * iOS: inset the content for the keyboard. React Native's handler hears
+   * every keyboard in the window, a sheet's over this page included, and
+   * re-applies the offset through a clamp that ignores UIKit's automatic top
+   * inset. A tab root resting under its large title (offset -headerBottom)
+   * then lands at 0, its first lines under the bar. Pages with no text field
+   * of their own turn it off (Your MP under the seat chooser, b67).
+   */
+  keyboardInsets?: boolean;
   testID?: string;
   grouped?: boolean;
   /** Centre a whole-screen state while allowing AX content to scroll. */
@@ -388,7 +398,7 @@ export function Screen({
             scrollToOverflowEnabled={scrollToOverflowEnabled}
             alwaysBounceVertical={Platform.OS === 'ios'}
             keyboardShouldPersistTaps="handled"
-            automaticallyAdjustKeyboardInsets
+            automaticallyAdjustKeyboardInsets={keyboardInsets}
             keyboardDismissMode="on-drag"
             refreshControl={refreshControl}
             contentContainerStyle={[

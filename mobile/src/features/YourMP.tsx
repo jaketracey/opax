@@ -290,6 +290,14 @@ export default function YourMP() {
       : null;
   return (
     <Screen
+      // Each federal seat opens a fresh scroll view, at rest under the
+      // expanded title: a seat chosen or changed from further down the old
+      // page starts at its own top. A negative scrollTo cannot do it on iOS:
+      // it stops at 0, behind the bar.
+      key={home ? federal!.electorate_id : 'no-seat'}
+      // No text field here: the seat chooser's keyboard, over this page,
+      // must not move it (keyboardInsets in layout.tsx, b67).
+      keyboardInsets={false}
       grouped
       testID="your-mp-screen"
       refreshControl={
