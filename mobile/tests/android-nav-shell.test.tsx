@@ -16,6 +16,9 @@ import * as safeArea from 'react-native-safe-area-context';
 import { screen } from '../src/navigation/stack/screen';
 import { exploreScreens } from '../src/navigation/stack/explore';
 import { Icon } from '../src/design/icon';
+import { AndroidMenuHost } from '../src/design/menu';
+import { Pressable as MenuPressable } from '../src/design/pressable';
+import { Text } from '../src/design/text';
 import {
   NavigationContext,
   NavigationRouteContext,
@@ -118,6 +121,55 @@ test('Android header actions use icons, ripple, hints and disabled semantics', (
     });
   }
   expect(buttons.at(-1)!.findByType(Icon).props.name).toBe('ellipsis');
+});
+
+test('Android More menus draw an untitled section’s items in place, destructive in red', () => {
+  platform('android');
+  const forget = jest.fn();
+  // Your MP's shape: the destructive item alone in an untitled inline section.
+  const tree = render(
+    <>
+      <AndroidMenuHost />
+      {androidHeaderBar(
+        pageItems({
+          name: 'Grayndler',
+          menu: [
+            { title: 'Copy link', symbol: 'link', onPress: jest.fn() },
+            {
+              title: '',
+              inline: true,
+              items: [
+                {
+                  title: 'Forget my electorate',
+                  symbol: 'minus.circle',
+                  destructive: true,
+                  onPress: forget,
+                },
+              ],
+            },
+          ],
+        })(),
+      )}
+    </>,
+  );
+  const more = tree.find(
+    (node) =>
+      node.props?.testID === 'header-more' &&
+      typeof node.props.onPress === 'function',
+  );
+  act(() => more.props.onPress());
+  const rows = tree
+    .findAllByType(MenuPressable)
+    .filter((row) => row.props.accessibilityRole === 'menuitem');
+  expect(rows.map((row) => row.props.accessibilityLabel)).toEqual([
+    'Copy link',
+    'Forget my electorate',
+    'Open on opax.com.au',
+  ]);
+  const label = rows[1]!.findByType(Text);
+  expect(label.props.tone).toBe('danger');
+  act(() => rows[1]!.props.onPress());
+  expect(forget).toHaveBeenCalledTimes(1);
 });
 
 test.each(['ios', 'android'] as const)(
