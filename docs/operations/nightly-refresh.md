@@ -38,6 +38,14 @@ ordinary additions count too and index shrinkage never refunds headroom.
 Counters are read before acquisition, before queued backfill publication,
 after every ten chamber-days, and at the end of shorter groups.
 
+The shared implementation starts from NSW's `d92c41831` guard and tests.
+The [alignment report](../reports/2026-11-14-senate-shared-guard.md) records
+the common additions and identical-file hand-off. Receipt writers use
+`nightly_fields()` for `backfill`, `backfill_failures` and growth warnings;
+these fields never enter periodic-group failures. Senate supplies its
+publication-aware coverage count through `progress(**details)`, keeping
+Senate-specific coverage discovery outside the shared guard.
+
 `backfill.STOP` holds both repairs and their queued publication. The guard
 writes it if growth exceeds **5,500,000,000 bytes**, average growth exceeds
 **59,280 bytes/resource** over at least **500 added resources**, or Progress

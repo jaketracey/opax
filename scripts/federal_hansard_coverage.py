@@ -8,6 +8,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from parli.ingest import openaustralia_xml as xml
+from parli.ingest import backfill_guard as growth
 
 MANIFEST = Path(__file__).resolve().parents[1] / 'data/manifests/senate-backfill-2014-2019.json'
 
@@ -54,6 +55,19 @@ def alerts(coverage):
     return [f'Senate Hansard has zero stored rows for {year}' for year in coverage['empty_senate_years']]
 
 
+def update_backfill_progress(coverage):
+    """Supply Senate's publication-aware count through the shared progress API."""
+    root = growth.state_dir()
+    if not (root / 'backfill-ledger.json').exists():
+        return
+    guard = growth.Guard(root)
+    current = guard.read()['stages'].get('senate')
+    if current is not None:
+        guard.progress('senate', remaining=sum(coverage['backfill_pending_days_by_year'].values()),
+                       cap=current['cap'], stop=current.get('stop'), done=current.get('days_done', 0),
+                       acquisition_days_remaining=current.get('acquisition_days_remaining', current['days_remaining']))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--db', required=True)
@@ -67,6 +81,7 @@ def main():
         coverage = measure(db, sync_state=state)
     coverage['checked_at'] = datetime.now(timezone.utc).isoformat()
     xml.atomic(Path(args.output), json.dumps(coverage, indent=2) + '\n')
+    update_backfill_progress(coverage)
     for message in alerts(coverage):
         print('WARNING: ' + message)
     print(f"Senate coverage: {len(coverage['empty_senate_years'])} empty expected sitting years")

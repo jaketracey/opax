@@ -387,10 +387,12 @@ class BackfillPublication:
             return
         self.guard.ensure_running()
         if self.deadline is None:
+            budget_env = ('OPAX_BACKFILL_NSW_BUDGET_S' if stage == 'nsw'
+                          else 'OPAX_SENATE_BACKFILL_BUDGET_SECONDS')
             try:
-                seconds = float(os.environ.get('OPAX_SENATE_BACKFILL_BUDGET_SECONDS', '1200'))
+                seconds = float(os.environ.get(budget_env, '1200'))
             except ValueError:
-                raise growth.Stopped('invalid backfill publication budget') from None
+                seconds = 0
             if not 0 < seconds <= 1200:
                 raise growth.Stopped('invalid backfill publication budget; must be 1..1200 seconds')
             self.deadline = time.monotonic() + seconds

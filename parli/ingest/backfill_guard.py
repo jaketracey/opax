@@ -175,11 +175,11 @@ class Guard:
         except Exception:
             self.stop('KB counters unavailable or growth ledger invalid; repair held closed')
 
-    def progress(self, stage, *, remaining, cap, stop, done):
+    def progress(self, stage, *, remaining, cap, stop, done, **details):
         with self.locked():
             data = self.read()
             data['stages'][stage] = {'days_remaining': remaining, 'days_done': done,
-                                     'cap': cap, 'stop': stop, 'updated': _now()}
+                                     'cap': cap, 'stop': stop, 'updated': _now(), **details}
             _atomic(self.root / 'backfill-ledger.json', data)
 
 
@@ -188,7 +188,8 @@ def status(root, night):
     root = Path(root)
     result = {'byte_ceiling': BYTE_CEILING, 'max_bytes_per_resource': BYTES_PER_RESOURCE,
               'minimum_resources': MIN_RESOURCES, 'bytes_added': 0, 'resources_added': 0,
-              'cumulative_bytes_added': 0, 'cumulative_resources_added': 0, 'stages': {}}
+              'cumulative_bytes_added': 0, 'cumulative_resources_added': 0,
+              'bytes_remaining': BYTE_CEILING, 'stopped': False, 'stages': {}}
     try:
         data = json.loads((root / 'backfill-ledger.json').read_text())
         result.update(data.get('nights', {}).get(night, {}))
@@ -200,26 +201,22 @@ def status(root, night):
                                                 if data['resources_added'] else None)
         for stage, progress in data['stages'].items():
             current = dict(progress)
+            current['projection_basis'] = 'cap estimate plus publication; identity holds, budgets and stops can extend it'
             remaining = current['days_remaining']
-            current['acquisition_days_remaining'] = remaining
-            if stage == 'senate':
-                try:
-                    coverage = json.loads((root / 'federal-hansard-coverage.json').read_text())
-                    current['days_remaining'] = sum(coverage['backfill_pending_days_by_year'].values())
-                except (OSError, ValueError, KeyError, TypeError):
-                    pass
-            cap = int(os.environ.get(f'OPAX_{stage.upper()}_BACKFILL_DAYS', current['cap']))
+            acquisition = current.get('acquisition_days_remaining', remaining)
+            cap_env = 'OPAX_BACKFILL_NSW_CAP' if stage == 'nsw' else f'OPAX_{stage.upper()}_BACKFILL_DAYS'
+            cap = int(os.environ.get(cap_env, current['cap']))
             stopped = (not enabled(stage) or (root / 'backfill.STOP').exists()
                        or current.get('stop') in ('source-refused', 'error', 'growth-guard', 'identity-holds'))
             # This night's acquisition has finished. Remaining days start next
             # night; normal-sync publication follows acquisition by one night.
             current['projected_finish_date'] = ((date.fromisoformat(night) + timedelta(
-                days=math.ceil(remaining / cap) + 1 if current['days_remaining'] else 0)).isoformat()
+                days=math.ceil(acquisition / cap) + int(remaining > 0))).isoformat()
                 if remaining is not None and cap > 0 and not stopped else None)
             result['stages'][stage] = current
     except FileNotFoundError:
         pass
-    except (ValueError, KeyError, TypeError):
+    except (OSError, ValueError, KeyError, TypeError):
         result['warning'] = 'backfill growth ledger unreadable'
     if (root / 'backfill.STOP').exists():
         result['stopped'] = True
@@ -233,3 +230,14 @@ def status(root, night):
     result['projected_finish_date'] = (max(s['projected_finish_date'] for s in stages)
                                        if stages and all(s['projected_finish_date'] for s in stages) else None)
     return result
+
+
+def nightly_fields(root, night, warnings):
+    """Shared receipt fields; repair warnings never become periodic failures."""
+    backfill = status(root, night)
+    failures = [w.removeprefix('Backfill did not complete: ') for w in warnings
+                if w.startswith('Backfill did not complete: ')]
+    if backfill.get('warning'):
+        failures.append('growth guard: ' + backfill['warning'])
+        warnings.append('Backfill growth guard: ' + backfill['warning'])
+    return {'backfill': backfill, 'backfill_failures': list(dict.fromkeys(failures))}

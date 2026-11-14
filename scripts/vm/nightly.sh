@@ -160,20 +160,15 @@ publish_status() {
 
 write_status() {
   local status=$1
-  "$PY" - "$LASTFILE" "$status" "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${#BACKFILL_FAILURES[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${BACKFILL_FAILURES[@]+"${BACKFILL_FAILURES[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" <<'PYEOF' 2>/dev/null || true
+  "$PY" - "$LASTFILE" "$status" "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" <<'PYEOF' 2>/dev/null || true
 import json, sys, datetime
-path, status, day, run, started, sha, deploy, summary, nwarn, nbackfill, *rest = sys.argv[1:]
-warnings, rest = rest[:int(nwarn)], rest[int(nwarn):]
-backfill_failures, failures = rest[:int(nbackfill)], rest[int(nbackfill):]
+path, status, day, run, started, sha, deploy, summary, nwarn, *rest = sys.argv[1:]
+warnings, failures = rest[:int(nwarn)], rest[int(nwarn):]
 from pathlib import Path
 from datetime import date
 from scripts.vm.periodic_state import snapshot
-from parli.ingest.backfill_guard import state_dir, status as backfill_status
-backfill = backfill_status(state_dir(), day)
-if backfill.get('warning'):
-    detail = 'growth guard: ' + backfill['warning']
-    backfill_failures.append(detail)
-    warnings.append('Backfill did not complete: ' + detail)
+from parli.ingest.backfill_guard import state_dir, nightly_fields
+backfill_fields = nightly_fields(state_dir(), day, warnings)
 try:
     periodic_state = snapshot(Path(path).parent / 'periodic-refresh-v1.json', date.fromisoformat(day))
 except (OSError, ValueError, KeyError, TypeError):
@@ -186,7 +181,7 @@ for receipt in [Path(path).parent / 'source-access.json', *(Path(path).parent / 
 json.dump({"date": day, "run": run, "status": status, "started": started,
            "finished": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
            "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures, "warnings": warnings,
-           "backfill_failures": backfill_failures, "backfill": backfill,
+           **backfill_fields,
            "paused_sources": paused_sources, "periodic_state": periodic_state},
           open(path, "w"), indent=1)
 PYEOF

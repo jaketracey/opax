@@ -1,5 +1,8 @@
 """Offline regression checks for the nightly catch-up and durable coverage alarm."""
 import json
+import os
+import subprocess
+import sys
 from pathlib import Path
 import sqlite3
 
@@ -9,7 +12,7 @@ from parli.ingest import senate_backfill as B, federal_backfill as F, openaustra
 from parli.ingest import arag_sync as S, senate_backfill_policy as policy
 from parli.ingest import backfill_guard as G
 from parli.ingest.honest_http import BudgetSpent, HonestHTTP, Refused
-from scripts.federal_hansard_coverage import alerts, measure
+from scripts.federal_hansard_coverage import alerts, measure, update_backfill_progress
 from scripts import vote_parties as P
 from test_federal_backfill import args
 
@@ -333,3 +336,90 @@ def test_nightly_wires_stage_after_normal_refresh_and_before_coverage():
     assert '${OPAX_SENATE_BACKFILL:-1}' in shell
     assert 'BACKFILL_STEPS=",senate_backfill,nsw_backfill,nsw_hansard_backfill,federal_coverage,"' in shell
     assert B.DEFAULT_DAYS == 10 and B.DEFAULT_BUDGET == 1200
+
+
+def test_larger_stage_cap_checks_counters_every_ten_days_and_keeps_idempotence(tmp_path, monkeypatch):
+    days = tuple(f'2014-02-{d:02d}' for d in range(1, 22))
+    a, manifest = fixture(tmp_path, monkeypatch, days)
+    kb = GuardKB()
+    monkeypatch.setattr(B, 'guard_client', lambda: kb)
+    result = run(a, manifest, max_days=21)
+    assert len(result['days']) == 21 and result['days_left'] == 0
+    assert kb.gets == 4 and kb.created == []
+    assert run(a, manifest, max_days=21)['added'] == 0
+
+
+def test_shared_stop_blocks_stage_before_database_or_source_access(monkeypatch):
+    root = G.state_dir()
+    root.mkdir(parents=True)
+    (root / 'backfill.STOP').touch()
+    monkeypatch.setattr(B, 'guard_client', lambda: pytest.fail('no request while stopped'))
+    with pytest.raises(G.Stopped):
+        B.run('/unused', '/unused')
+
+
+def test_midrun_growth_stop_commits_ten_days_and_never_attempts_the_eleventh(tmp_path, monkeypatch):
+    days = tuple(f'2014-02-{d:02d}' for d in range(1, 13))
+    a, manifest = fixture(tmp_path, monkeypatch, days)
+    class Growing(GuardKB):
+        def counters(self):
+            if self.gets:
+                self.size += 6_000_000_000
+                self.resources += 150_000
+            return super().counters()
+    kb = Growing()
+    monkeypatch.setattr(B, 'guard_client', lambda: kb)
+    with pytest.raises(G.Stopped):
+        run(a, manifest, max_days=12)
+    report = json.loads((Path(a.stage) / 'report.json').read_text())
+    assert report['stop'] == 'growth-guard' and len(report['days']) == 10
+    assert report['days_left'] == 2 and kb.gets == 2 and not kb.created
+    with pytest.raises(G.Stopped):
+        run(a, manifest, max_days=12)
+    assert kb.gets == 2
+
+
+@pytest.mark.parametrize('stage', ['senate_backfill', 'nsw_backfill', 'nsw_hansard_backfill'])
+@pytest.mark.parametrize('rc', [1, 124, 137])
+def test_both_stage_names_keep_errors_and_timeouts_out_of_periodic_failures(tmp_path, stage, rc):
+    config = next(line for line in Path('scripts/daily_refresh.sh').read_text().splitlines()
+                  if line.startswith('BACKFILL_STEPS='))
+    program = '''PIPE="$TASK_STATE"
+LOG="$PIPE/refresh.log"
+PY="$TASK_PYTHON"
+ALLOW_FAIL=,
+''' + config + '''
+. scripts/lib/refresh_lib.sh
+run_step "$TASK_STAGE" '' sh -c "exit $TASK_RC"
+result=$?
+[[ "$result" = "$TASK_RC" && ${#FAILED_STEPS[@]} = 0 && ${#BACKFILL_FAILURES[@]} = 1 ]]
+'''
+    result = subprocess.run(['bash', '-c', program], text=True, capture_output=True,
+                            env={**os.environ, 'TASK_STATE': str(tmp_path), 'TASK_PYTHON': sys.executable,
+                                 'TASK_STAGE': stage, 'TASK_RC': str(rc)})
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert f'{stage}] WARNING(rc={rc}' in result.stdout
+
+
+class GuardKB:
+    def __init__(self):
+        self.size, self.resources, self.gets, self.created = 1_000_000, 1000, 0, []
+
+    def counters(self):
+        self.gets += 1
+        return {'index_size': self.size, 'resources': self.resources}
+
+
+def test_coverage_supplies_queued_days_without_senate_logic_in_shared_guard():
+    guard = G.Guard()
+    guard.progress('senate', remaining=0, cap=10, stop='complete', done=10,
+                   acquisition_days_remaining=0)
+    guard.progress('nsw', remaining=4, cap=4, stop='cap', done=4)
+    update_backfill_progress({'backfill_pending_days_by_year': {'2018': 10}})
+    report = G.status(guard.root, '2026-11-14')
+    assert report['stages']['senate']['days_remaining'] == 10
+    assert report['stages']['senate']['acquisition_days_remaining'] == 0
+    assert report['stages']['senate']['projected_finish_date'] == '2026-11-15'
+    assert report['stages']['nsw']['days_remaining'] == 4
+    update_backfill_progress({'backfill_pending_days_by_year': {}})
+    assert G.status(guard.root, '2026-11-15')['stages']['senate']['projected_finish_date'] == '2026-11-15'

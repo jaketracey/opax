@@ -267,7 +267,8 @@ def _run(db_path, stage, max_days, budget, manifest, cache, offline, guard, kb, 
         report['finished'] = datetime.now(timezone.utc).isoformat()
         xml.atomic(stage / 'report.json', json.dumps(report, indent=2) + '\n')
         guard.progress('senate', remaining=report['days_left'], cap=max_days,
-                       stop=report['stop'], done=len(report['days']))
+                       stop=report['stop'], done=len(report['days']),
+                       acquisition_days_remaining=report['days_left'])
         print(f"Senate backfill: {len(report['days'])} days done, {report['days_left']} missing days left; "
               f"+{report['added']} rows; stop={report['stop']}; {report['elapsed_seconds']:.2f}s; "
               f"normal-sync publication allowance {report['publish_allowance_seconds']:.1f}s "

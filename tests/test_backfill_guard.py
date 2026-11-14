@@ -1,17 +1,12 @@
 """Offline spending, shared-state and normal publisher regressions."""
 from datetime import datetime
 import json
-import os
 from pathlib import Path
-import subprocess
-import sys
 
 import pytest
 
 from parli import arag
 from parli.ingest import arag_sync as S, backfill_guard as G
-from parli.ingest import senate_backfill as B
-from test_senate_backfill import fixture, run
 
 
 class KB:
@@ -129,17 +124,6 @@ def test_counters_unavailable_or_corrupt_ledger_holds_closed():
         G.Guard().check(Broken(), 'senate')
 
 
-def test_unwritable_guard_state_still_holds_publication_without_failing_ordinary_refresh(monkeypatch):
-    kb = KB()
-    def unwritable(*_):
-        raise OSError('fixture full state filesystem')
-    monkeypatch.setattr(G, '_atomic', unwritable)
-    assert S._push_one(kb, body())[1].startswith(G.HOLD)
-    assert not kb.created
-    assert S._push_one(kb, {'slug': 'ordinary'}) == ('ordinary', None)
-    assert len(kb.created) == 1
-
-
 @pytest.mark.parametrize('stage', ['senate', 'nsw'])
 def test_switch_and_stop_prevent_normal_publication_but_not_ordinary_rows(stage, monkeypatch):
     kb = KB()
@@ -162,11 +146,6 @@ def test_shared_origin_and_worker_cap_are_identical_for_both_repairs():
         assert b['extra']['metadata']['enrichment_budget'] == {'run_id': 'backfill-2026-11', 'max_usd': 30}
         assert b['usermetadata']['classifications'].count({'labelset': 'origin', 'label': G.ORIGIN}) == 1
     assert G.stage_for({'extra': {'metadata': {'nsw_backfill': True}}}) == 'nsw'
-    kb = KB()
-    marked = {'slug': 'speech-nsw-fixture', 'extra': {'metadata': {'nsw_backfill': True}}}
-    assert S._push_one(kb, marked)[1] is None
-    assert kb.created[0]['extra']['metadata']['enrichment_budget'] == {'run_id': G.ORIGIN, 'max_usd': 30}
-    assert {'labelset': 'origin', 'label': G.ORIGIN} in kb.created[0]['usermetadata']['classifications']
 
 
 def test_larger_publication_run_checks_at_ten_days_and_end_without_a_second_publisher():
@@ -191,61 +170,8 @@ def test_publication_budget_holds_remaining_rows_and_keeps_ordinary_refresh(monk
     assert not (G.state_dir() / 'backfill.STOP').exists()
 
 
-def test_publication_checks_budget_within_a_batch_not_only_between_days(monkeypatch):
-    kb, state, clock = KB(), {'failed': {}, 'pushed': 0}, [0]
-    monkeypatch.setattr(S.time, 'monotonic', lambda: clock[0])
-    monkeypatch.setattr(S, 'WORKERS', 1)
-    def slow(body):
-        kb.created.append(body)
-        clock[0] += 1201
-    kb.create_resource = slow
-    docs = [body() for _ in range(4)]
-    for i, doc in enumerate(docs):
-        doc['slug'] = f'speech-{i}'
-    S._push_batch(kb, docs, state)
-    assert len(kb.created) == 1 and len(state['failed']) == 3
-    assert all('time budget' in reason for reason in state['failed'].values())
 
 
-def test_larger_stage_cap_checks_counters_every_ten_days_and_keeps_idempotence(tmp_path, monkeypatch):
-    days = tuple(f'2014-02-{d:02d}' for d in range(1, 22))
-    a, manifest = fixture(tmp_path, monkeypatch, days)
-    kb = KB()
-    monkeypatch.setattr(B, 'guard_client', lambda: kb)
-    result = run(a, manifest, max_days=21)
-    assert len(result['days']) == 21 and result['days_left'] == 0
-    assert kb.gets == 4 and kb.created == []
-    assert run(a, manifest, max_days=21)['added'] == 0
-
-
-def test_shared_stop_blocks_stage_before_database_or_source_access(monkeypatch):
-    root = G.state_dir()
-    root.mkdir(parents=True)
-    (root / 'backfill.STOP').touch()
-    monkeypatch.setattr(B, 'guard_client', lambda: pytest.fail('no request while stopped'))
-    with pytest.raises(G.Stopped):
-        B.run('/unused', '/unused')
-
-
-def test_midrun_growth_stop_commits_ten_days_and_never_attempts_the_eleventh(tmp_path, monkeypatch):
-    days = tuple(f'2014-02-{d:02d}' for d in range(1, 13))
-    a, manifest = fixture(tmp_path, monkeypatch, days)
-    class Growing(KB):
-        def counters(self):
-            if self.gets:
-                self.size += 6_000_000_000
-                self.resources += 150_000
-            return super().counters()
-    kb = Growing()
-    monkeypatch.setattr(B, 'guard_client', lambda: kb)
-    with pytest.raises(G.Stopped):
-        run(a, manifest, max_days=12)
-    report = json.loads((Path(a.stage) / 'report.json').read_text())
-    assert report['stop'] == 'growth-guard' and len(report['days']) == 10
-    assert report['days_left'] == 2 and kb.gets == 2 and not kb.created
-    with pytest.raises(G.Stopped):
-        run(a, manifest, max_days=12)
-    assert kb.gets == 2
 
 
 def test_nightly_metrics_include_growth_days_and_publication_projection():
@@ -266,38 +192,127 @@ def test_nightly_metrics_include_growth_days_and_publication_projection():
     assert report['stopped'] and report['warning'] and report['projected_finish_date'] is None
 
 
-def test_projection_includes_queued_days_and_finishes_on_the_publication_night():
-    kb, guard = KB(), G.Guard()
-    data = guard.check(kb, 'senate')
-    night = next(iter(data['nights']))
-    guard.progress('senate', remaining=0, cap=10, stop='complete', done=10)
-    coverage = guard.root / 'federal-hansard-coverage.json'
-    coverage.write_text(json.dumps({'backfill_pending_days_by_year': {'2018': 10}}))
-    report = G.status(guard.root, night)
+def test_real_nightly_status_exposes_shared_growth_and_drives_existing_alert_path(tmp_path, monkeypatch):
+    from datetime import timezone
+    from scripts.refresh_watchdog import evaluate
+    import re
+    import sys
+    guard, kb = G.Guard(), KB()
+    guard.check(kb, 'senate')
+    kb.size += 40_000_000
+    kb.resources += 1000
+    ledger = guard.check(kb, 'nsw')
+    night = next(iter(ledger['nights']))
+    guard.progress('nsw', remaining=161, cap=4, stop='cap', done=4)
+    try:
+        guard.stop('test: cumulative growth ceiling exceeded')
+    except G.Stopped:
+        pass
+    shell = Path('scripts/vm/nightly.sh').read_text()
+    body = re.search(r'write_status\(\).*?<<\'PYEOF\'.*?\n(.*?)\nPYEOF',shell,re.S)[1]
+    output = tmp_path / 'status.json'
+    monkeypatch.setattr(sys, 'argv', ['-',str(output),'ok',night,'nightly',
+                                    datetime.now(timezone.utc).isoformat(),'sha','published','', '0'])
+    exec(compile(body,'nightly.write_status','exec'), {})
+    status = json.loads(output.read_text())
+    assert status['failures'] == [] and status['status'] == 'ok'
+    assert status['backfill_failures'] == ['growth guard: test: cumulative growth ceiling exceeded']
+    assert any('growth guard' in warning for warning in status['warnings'])
+    assert status['backfill']['bytes_added'] == 40_000_000
+    assert status['backfill']['cumulative_resources_added'] == 1000
+    assert status['backfill']['byte_ceiling'] == 5_500_000_000
+    assert status['backfill']['stages']['nsw']['days_remaining'] == 161
+    now = datetime.now(timezone.utc)
+    corpus = {'refresh':{'checked_at':now.isoformat()}}
+    problems, _, warnings = evaluate(corpus, status, now)
+    assert any('growth guard stopped repairs' in problem for problem in problems)
+    assert any('growth guard' in warning for warning in warnings)
+
+
+def test_corrupt_ledger_closes_gate_without_source_or_publisher_calls():
+    guard, kb = G.Guard(), KB()
+    (guard.root / 'backfill-ledger.json').write_text('{')
+    with pytest.raises(G.Stopped, match='ledger invalid'):
+        guard.check(kb, 'nsw')
+    assert (guard.root / 'backfill.STOP').exists() and kb.created == []
+
+
+def test_publication_stops_queued_requests_mid_day_when_budget_spent(monkeypatch):
+    kb, clock = KB(), [0]
+    monkeypatch.setattr(S.time, 'monotonic', lambda: clock[0])
+    monkeypatch.setattr(S, 'WORKERS', 1)
+    original = kb.create_resource
+    def slow_create(document):
+        original(document)
+        clock[0] = 1201
+    kb.create_resource = slow_create
+    state = {'failed':{},'pushed':0}
+    documents = [body('nsw') for _ in range(3)]
+    for index, document in enumerate(documents):
+        document['slug'] = f'nsw-{index}'
+    S._push_batch(kb, documents, state)
+    assert len(kb.created) == state['pushed'] == 1
+    assert len(state['failed']) == 2
+    assert all('time budget spent' in error for error in state['failed'].values())
+    assert not (G.state_dir() / 'backfill.STOP').exists()
+
+
+@pytest.mark.parametrize('budget', ['bad','nan','1201','-1'])
+def test_invalid_publication_budget_holds_without_breaking_normal_sync(monkeypatch, budget):
+    monkeypatch.setenv('OPAX_BACKFILL_NSW_BUDGET_S', budget)
+    kb, state = KB(), {'failed':{},'pushed':0}
+    S._push_batch(kb, [body('nsw'), {'slug':'ordinary'}], state)
+    assert [item['slug'] for item in kb.created] == ['ordinary']
+    assert 'invalid backfill publication budget' in state['failed']['nsw-1']
+
+
+def test_completed_source_has_no_extra_publication_night_and_empty_status_has_headroom():
+    guard = G.Guard()
+    initial = G.status(guard.root, '2026-11-14')
+    assert initial['bytes_remaining'] == initial['byte_ceiling'] == 5_500_000_000
+    assert initial['stopped'] is False
+    guard.progress('nsw', remaining=0, cap=4, stop='complete', done=0)
+    complete = G.status(guard.root, '2026-11-14')
+    assert complete['days_remaining'] == 0
+    assert complete['projected_finish_date'] == '2026-11-14'
+
+
+def test_unwritable_guard_state_still_holds_publication_without_failing_ordinary_refresh(monkeypatch):
+    kb = KB()
+    def unwritable(*_):
+        raise OSError('fixture full state filesystem')
+    monkeypatch.setattr(G, '_atomic', unwritable)
+    assert S._push_one(kb, body())[1].startswith(G.HOLD)
+    assert not kb.created
+    assert S._push_one(kb, {'slug': 'ordinary'}) == ('ordinary', None)
+    assert len(kb.created) == 1
+
+
+@pytest.mark.parametrize('stage', ['senate', 'nsw'])
+def test_queued_publication_days_and_unresolved_holds_have_honest_projection(stage, monkeypatch):
+    guard = G.Guard()
+    guard.progress(stage, remaining=10, acquisition_days_remaining=0, cap=10, stop='complete', done=10)
+    report = G.status(guard.root, '2026-11-14')
     assert report['days_remaining'] == 10
-    assert report['projected_finish_date'] > night
-    coverage.write_text(json.dumps({'backfill_pending_days_by_year': {'2018': 0}}))
-    report = G.status(guard.root, night)
-    assert report['days_remaining'] == 0 and report['projected_finish_date'] == night
+    assert report['projected_finish_date'] == '2026-11-15'
+    guard.progress(stage, remaining=0, acquisition_days_remaining=0, cap=10, stop='complete', done=0)
+    assert G.status(guard.root, '2026-11-15')['projected_finish_date'] == '2026-11-15'
+    guard.progress(stage, remaining=1, cap=10, stop='identity-holds', done=0)
+    assert G.status(guard.root, '2026-11-15')['projected_finish_date'] is None
 
 
-@pytest.mark.parametrize('stage', ['senate_backfill', 'nsw_backfill', 'nsw_hansard_backfill'])
-@pytest.mark.parametrize('rc', [1, 124, 137])
-def test_both_stage_names_keep_errors_and_timeouts_out_of_periodic_failures(tmp_path, stage, rc):
-    config = next(line for line in Path('scripts/daily_refresh.sh').read_text().splitlines()
-                  if line.startswith('BACKFILL_STEPS='))
-    program = '''PIPE="$TASK_STATE"
-LOG="$PIPE/refresh.log"
-PY="$TASK_PYTHON"
-ALLOW_FAIL=,
-''' + config + '''
-. scripts/lib/refresh_lib.sh
-run_step "$TASK_STAGE" '' sh -c "exit $TASK_RC"
-result=$?
-[[ "$result" = "$TASK_RC" && ${#FAILED_STEPS[@]} = 0 && ${#BACKFILL_FAILURES[@]} = 1 ]]
-'''
-    result = subprocess.run(['bash', '-c', program], text=True, capture_output=True,
-                            env={**os.environ, 'TASK_STATE': str(tmp_path), 'TASK_PYTHON': sys.executable,
-                                 'TASK_STAGE': stage, 'TASK_RC': str(rc)})
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert f'{stage}] WARNING(rc={rc}' in result.stdout
+def test_nsw_projection_uses_its_canonical_cap_setting(monkeypatch):
+    guard = G.Guard()
+    guard.progress('nsw', remaining=8, cap=4, stop='cap', done=4)
+    monkeypatch.setenv('OPAX_BACKFILL_NSW_CAP', '2')
+    assert G.status(guard.root, '2026-11-14')['projected_finish_date'] == '2026-11-19'
+
+
+@pytest.mark.parametrize('stage', ['senate_backfill', 'nsw_hansard_backfill'])
+def test_shared_receipt_fields_keep_repair_timeouts_in_warnings(stage):
+    warning = f'Backfill did not complete: {stage}(rc=124)'
+    warnings = [warning]
+    fields = G.nightly_fields(G.state_dir(), '2026-11-14', warnings)
+    assert fields['backfill_failures'] == [f'{stage}(rc=124)']
+    assert warnings == [warning]
+    assert 'failures' not in fields
