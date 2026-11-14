@@ -47,6 +47,25 @@ export const copy = Object.freeze({
   machineWritten: 'Machine-written',
   independence:
     'OPAX is independent and non-partisan. It is not a government app.',
+  /**
+   * Today's last line, above the independence line (sweep 3, item 7): the
+   * masthead's date ("Saturday 14 November") and, when the published
+   * sitting calendar says, the next sitting day and who sits, in the
+   * sitting line's form ("The Senate next sits Monday 16 November"). The
+   * whole wording is here, read and drawn as one line.
+   */
+  todayEnding: (
+    day: string,
+    next?: { houses: 'both' | 'house' | 'senate'; words: string } | null,
+  ) => {
+    const who = {
+      both: 'Parliament',
+      house: 'The House',
+      senate: 'The Senate',
+    };
+    const then = next ? ` ${who[next.houses]} next sits ${next.words}.` : '';
+    return `That's the record for ${day}.${then}`;
+  },
   deceasedNotice:
     'Aboriginal and Torres Strait Islander readers are advised that this app contains names and images of people who have died.',
   offline: (date: DateInput) =>

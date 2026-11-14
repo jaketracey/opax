@@ -49,6 +49,7 @@ import {
   dotHeight,
   androidDotScale,
   dotArrival,
+  dotTarget,
   outlineDotState,
   sampleDotRows,
   type DotHighlight,
@@ -109,9 +110,15 @@ export function useTodayDotsScroll() {
  * Decorative only. Hidden at AX sizes so the title and first card have room,
  * and on a regular phone (iPhone Duo): there the art fell under the large
  * title and the date, and text is never drawn over it.
+ *
+ * Today draws it from the first frame, `neutral` while the seat is read, so
+ * its clearance holds the date where it will stay (sweep 3, item 1: the date
+ * dropped 16 pt when the map arrived with the seat).
  */
 export function AustraliaDots(props: {
   state: DotState | null;
+  /** The seat is not known yet: no tint and no walk until it is. */
+  neutral?: boolean;
   scroll: SharedValue<number>;
   expandedHeader: SharedValue<number>;
 }) {
@@ -124,10 +131,12 @@ export function AustraliaDots(props: {
 
 function DotField({
   state,
+  neutral = false,
   scroll,
   expandedHeader,
 }: {
   state: DotState | null;
+  neutral?: boolean;
   scroll: SharedValue<number>;
   expandedHeader: SharedValue<number>;
 }) {
@@ -164,7 +173,7 @@ function DotField({
   const rows = useMemo(() => dotRows(), []);
   const time = useSharedValue(0);
   const highlight = useSharedValue<DotHighlight>({
-    target: state ? dotStates.indexOf(state) : -1,
+    target: dotTarget(state, neutral),
     from: [],
     changedAt: -1,
   });
@@ -183,8 +192,10 @@ function DotField({
         };
     })();
   }, [calm, reduced, highlight]);
+  // A new target crossfades from the levels drawn now (from neutral, the
+  // seat's tint fades in); under Reduce Motion it is held at once.
   useEffect(() => {
-    const target = state ? dotStates.indexOf(state) : -1;
+    const target = dotTarget(state, neutral);
     runOnUI(() => {
       if (highlight.value.target === target) return;
       const from = dotStates.map((_, group) =>
@@ -196,7 +207,7 @@ function DotField({
         changedAt: calm.value ? -1 : time.value,
       };
     })();
-  }, [state, highlight, time, calm]);
+  }, [state, neutral, highlight, time, calm]);
   useEffect(() => {
     focused.value = navigation?.isFocused() ?? false;
     const focus = navigation?.addListener('focus', () => {

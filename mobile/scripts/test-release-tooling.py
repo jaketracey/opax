@@ -919,6 +919,15 @@ class BundleAttackTests(unittest.TestCase):
                     verify.verify_no_e2e_launch_flags(bundle)
         with self.assertRaises(ReleaseError):
             verify.verify_no_e2e_launch_flags(b"plain JS OPAXWelcomeTour")
+        # Today's capture fixture, including the plate's draw switch.
+        for flag in (b"OPAXSeat", b"OPAXEditionCache", b"OPAXEditionAge",
+                     b"OPAXWelcomeDeclined", b"OPAXPlateDraw", b"OPAXVicElection"):
+            with self.subTest(flag=flag):
+                bundle = hermes_bundle(flag, [packed(flag, flag)])
+                with self.assertRaisesRegex(ReleaseError, "no e2e launch arguments"):
+                    verify.verify_no_e2e_launch_flags(bundle)
+                with self.assertRaises(ReleaseError):
+                    verify.verify_no_e2e_launch_flags(b"plain JS " + flag)
         storage = b"shippingOPAXWelcomeTour"
         bundle = hermes_bundle(storage, [packed(storage, b"shipping")])
         self.assertEqual(verify.verify_no_e2e_launch_flags(bundle), 1)
