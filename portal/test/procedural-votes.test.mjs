@@ -106,6 +106,16 @@ test('release title lookup is rebuilt from published records using the shared cl
   assert.equal(groups.procedural.length, 1, 'Use the division title when an older bill has none.');
 });
 
+test('lookup titles identify procedure without changing the exported stage narrative', () => {
+  const division = {key:'fixture-lookup', stage:'First reading', date:'2026-08-19', house:'senate', outcome:'affirmative'};
+  const groups = tables.billDivisionGroups([division], {'fixture-lookup':'Business - Rearrangement'});
+  assert.equal(groups.procedural.length, 1);
+  assert.equal(groups.procedural[0].kind, 'bill');
+  const html = tables.billDivisionTablesHTML([division], {'fixture-lookup':'Business - Rearrangement'});
+  assert.doesNotMatch(html, /division-story/);
+  assert.match(html, /First reading/);
+});
+
 for (const [key, substantive, procedural] of [['au-federal-r7447', 11, 1], ['au-federal-r7363', 8, 1], ['au-federal-r5187', 8, 7]]) {
   test(`${key}: server and client separate counts, keep links and collapse procedure`, () => {
     const bill = {...read(`bills/${key}.json`), division_titles:titles};
@@ -119,11 +129,16 @@ for (const [key, substantive, procedural] of [['au-federal-r7447', 11, 1], ['au-
       assert.match(disclosure.querySelector('summary').textContent, /^Procedural votes/);
       assert.equal(disclosure.querySelector('p').textContent, tables.PROCEDURAL_VOTES_NOTE);
       assert.equal(doc.querySelector('.bill-vote-summary').textContent, `${substantive} substantive votes; ${procedural} procedural vote${procedural === 1 ? '' : 's'}.`);
-      assert.equal(doc.querySelector('table').caption.textContent, 'Divisions');
+      assert.equal(doc.querySelector('table').caption.textContent, 'Divisions on the bill');
       const configs = [...doc.querySelectorAll('[data-vote-config]')].map(el => JSON.parse(el.textContent));
-      assert.equal(configs[0].rows.length, substantive);
-      assert.equal(configs[1].rows.length, procedural);
+      const proceduralConfig = configs.find(c => c.urlKey === 'pv');
+      assert.equal(configs.filter(c => c.urlKey !== 'pv').reduce((n, c) => n + c.rows.length, 0), substantive);
+      assert.equal(proceduralConfig.rows.length, procedural);
       assert.ok(configs.every(c => !c.source), 'Hydration, filters, sorting and CSV use the same complete groups.');
+      assert.equal(new Set(configs.flatMap(c => c.rows.map(r => r.href))).size, substantive + procedural, 'Every division appears in exactly one table.');
+      const stageRows = [...groups.substantive, ...groups.procedural];
+      const sentences = ['limitation', 'procedure'].flatMap(kind => tables.divisionGroupSentences(stageRows, kind));
+      assert.equal(doc.querySelector('.division-story')?.textContent || '', sentences.join(' '), 'Keep the reviewed stage, scope and outcome narrative.');
       const visibleLinks = [...doc.querySelector('table').querySelectorAll('tbody a')].map(a => a.getAttribute('href'));
       for (const row of groups.procedural) assert.ok(!visibleLinks.includes(row.href));
       for (const row of groups.procedural) assert.ok(disclosure.querySelector(`a[href="${row.href}"]`));

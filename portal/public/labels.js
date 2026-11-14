@@ -64,6 +64,7 @@ export const PARTY_MAP = {
   'centre alliance': ['oth', 'CA'], "katter's australian party": ['oth', 'KAP'],
   'united australia party': ['oth', 'UAP'], 'australian democrats': ['oth', 'AD'],
   'family first': ['oth', 'FF'], 'dlp': ['oth', 'DLP'], 'jln': ['oth', 'JLN'],
+  'democratic labor party': ['oth', 'DLP'],
   // The division records spell two of these out in full.
   'jacqui lambie network': ['oth', 'JLN'], "pauline hanson's one nation party": ['onp', 'ONP'],
 };

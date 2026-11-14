@@ -10,6 +10,7 @@ export function partyReturnFigures(node: (ReceiptCells & {return_by_type?:Record
 export function instrumentTableConfig(): DataTableConfig;
 export function auditTableConfig(records: AuditRow[]): DataTableConfig;
 export function interestTableData(register: InterestRegister): {rows:Row[];omitted:number};
+export function interestShownNote(register: InterestRegister, shown: number, registerURL?: string | null): string;
 export function interestTableConfig(rows: Row[]): DataTableConfig;
 export function vicGiftsTableConfig(params?:Record<string,string>,populatedFields?:string[]): DataTableConfig;
 export function vicGiftsQuery(rows:Row[],config:DataTableConfig,query?:Query): import('./datatable.js').Page;

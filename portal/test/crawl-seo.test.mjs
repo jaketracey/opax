@@ -83,7 +83,7 @@ test('the server page shows the same parliamentarian count as the browser page',
   for (const [label, slug] of [['Independent', 'independent'], ['Jacqui Lambie Network', 'jacqui-lambie-network'], ['Labor', 'labor'], ['Liberal', 'liberal'], ['Greens', 'greens']]) {
     // The browser's figure: the group headings' counts ("Sitting members (193)") summed.
     const html = partyMembersHTML(label, partyMembers(label, {roster, divisions, same}), h);
-    const browser = [...html.matchAll(/<h4 class="entry-subhead">[^<]*\((\d[\d,]*)\)<\/h4>/g)].reduce((n, m) => n + Number(m[1].replace(/,/g, '')), 0);
+    const browser = [...html.matchAll(/<h3 class="entry-subhead">[^<]*\((\d[\d,]*)\)<\/h3>/g)].reduce((n, m) => n + Number(m[1].replace(/,/g, '')), 0);
     const meta = await moneySubjectMeta('party', slug, new URL('https://opax.com.au/subject/party/' + slug), env);
     const server = Number(meta.prerender.match(/([\d,]+) parliamentarians?(?: and [\d,]+ speeches)? in the record/)?.[1].replace(/,/g, ''));
     assert.ok(browser > 0, label);
@@ -95,15 +95,15 @@ test('the server page shows the same parliamentarian count as the browser page',
   // SA Council list-only profiles (A27; no SA Hansard after 2023): Labor +2 (El Dannawi, Gumbys), Liberal +1
   // (Benjamin Hood), Greens +1 (Selwood). Cory Bernardi is linked to his existing row, so Liberal does not count him twice.
   assert.equal(shown.Labor, 496);
-  assert.equal(shown.Liberal, 346);
+  assert.equal(shown.Liberal, 347);
   assert.equal(shown.Greens, 51);
 });
 
-test('an SA Council list-only profile is a sitting MLC with no Hansard held, not "0 speeches"', async () => {
+test('an SA Council list-only profile is a sitting MLC with no speeches attributed yet', async () => {
   // Hilton Gumbys: on the SA Legislative Council list dated 2026-11-13, no SA Hansard in OPAX after 2023 (A27).
   const meta = await personMeta('Hilton Gumbys', new URL('https://opax.com.au/subject/person/hilton-gumbys'), env);
   assert.equal(meta.status, 200);
-  assert.match(meta.description, /No Hansard held for this period\./);
+  assert.match(meta.description, /No speeches are attributed to this profile yet\./);
   assert.match(meta.description, /Recorded service: 2026\./);
   assert.match(meta.description, /MLC/);
   assert.doesNotMatch(meta.description, /former|0 speeches/);

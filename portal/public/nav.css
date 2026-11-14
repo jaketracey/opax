@@ -68,6 +68,8 @@
 .site-header :focus-visible { outline: var(--border-focus) solid var(--bronze-bright); outline-offset: 2px; }
 /* The search box is paper: its ring is the paper one. */
 .site-header .header-search-panel :focus-visible { outline-color: var(--bronze-ink); }
+/* Dropdown links sit on paper, so use the paper focus ring there too. */
+.site-header .nav-panel :focus-visible { outline-color: var(--bronze-ink); }
 .nav-caret { width: 10px; height: 6px; flex: none; opacity: 0.75; }
 .nav-trigger[aria-expanded="true"] .nav-caret { transform: rotate(180deg); }
 

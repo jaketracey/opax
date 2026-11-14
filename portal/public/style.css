@@ -1714,7 +1714,7 @@ a.barrow-name:hover { color: var(--bronze-ink); }
 
 /* ---- document page ------------------------------------------------------ */
 
-#panel-doc h2 { font: 700 clamp(1.55rem, 2.8vw, 2.1rem)/1.2 var(--serif); margin: var(--sp-2) 0 var(--sp-4); max-width: 68ch; }
+#panel-doc .doc-head > h2 { font: 700 clamp(1.55rem, 2.8vw, 2.1rem)/1.2 var(--serif); margin: var(--sp-2) 0 var(--sp-4); max-width: 68ch; }
 #panel-doc #doc-title { margin: var(--space-line) 0 var(--space-tight); max-width: var(--size-readable); }
 .doc-topic { font: italic var(--type-record); color: var(--ink-soft); margin: 0 0 var(--sp-8); max-width: 68ch; }
 .doc-meta { color: var(--ink-soft); font-size: var(--text-15); margin: 0; }
@@ -2035,6 +2035,11 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
   .subject-head:has(.subject-portrait) .subject-tag { align-self: start; margin: var(--sp-8) 0 0; }
 }
 .subject-tag { color: var(--ink-soft); font-size: var(--text-15); margin: 0 0 var(--sp-16); display: flex; align-items: center; gap: var(--sp-8); flex-wrap: wrap; }
+/* The party header's one money line, under the meta line it qualifies (party-page.js latestReturnLine). */
+.party-return-line { margin: calc(-1 * var(--sp-8)) 0 var(--sp-16); font: var(--type-metadata); color: var(--ink-soft); }
+.party-return-line a { color: inherit; text-decoration-color: var(--line-control); text-underline-offset: 0.2em; }
+/* Person page: where the speeches in the record stop, and why a register table holds fewer rows than its count. */
+.person-speech-span, .interests-shown { margin: 0 0 var(--space-tight); font: var(--type-metadata); color: var(--ink-soft); }
 /* The dot before a part travels with it (app.js tagLineHTML). */
 .subject-tag-next::before { content: "·"; margin-inline-end: var(--sp-8); }
 .subject-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--sp-24) var(--sp-40); align-items: start; }
@@ -2358,8 +2363,8 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
 .person-topics-head {
   display: flex; align-items: center; justify-content: space-between; gap: var(--sp-12); flex-wrap: wrap;
 }
-.person-topics-head h3, .person-topics > h3 { margin: 0; font: var(--type-subheading); }
-.person-topics-head h3 span { color: var(--ink-faint); font: var(--type-fine); }
+.person-topics-head h2, .person-topics > h2 { margin: 0; font: var(--type-subheading); }
+.person-topics-head h2 span { color: var(--ink-faint); font: var(--type-fine); }
 .person-topic-bars { margin-top: var(--sp-16); }
 .person-topic-bars figcaption {
   color: var(--ink); font: var(--weight-strong) var(--text-15)/var(--leading-normal) var(--serif);  text-transform: none;
@@ -3363,7 +3368,7 @@ body:has(#search-options-pop[open]) { overflow: hidden; }
    both reading modes, so it cannot move the controls when toggled. */
 #panel-search .results-lead { flex: 1 1 20rem; min-width: 0; }
 #panel-search .results-actions {
-  flex: 0 0 auto; flex-wrap: nowrap; gap: var(--sp-8);
+  flex: 0 1 auto; flex-wrap: wrap; gap: var(--sp-8);
   --ui-font: .875rem; --ui-pad: 16px;
 }
 #panel-search .results-actions > * { flex: 0 0 auto; }
@@ -4378,7 +4383,7 @@ html[data-panel="chat"] footer { display: none; }
 .area-nav a { color: var(--ink-soft); padding: var(--space-row) 0; min-height: var(--size-target); font: var(--type-body); text-decoration: none; }
 .area-nav a[aria-current] { color: var(--navy); border-bottom: var(--border-focus) solid var(--navy); font: var(--type-strong); }
 .bill-text-overview { margin: var(--sp-24) 0; padding: var(--sp-20) 0; border-block: var(--border-hairline) solid var(--divider-subtle); }
-.bill-text-overview h4 { margin: 0 0 var(--sp-8); }
+.bill-text-overview h3 { font: var(--weight-bold) var(--text-16)/var(--leading-normal) var(--sans); margin: 0 0 var(--sp-8); }
 .bill-text-overview p { max-width: 75ch; }
 .bill-text-topics { display: flex; flex-wrap: wrap; gap: var(--sp-8) var(--sp-16); margin: var(--sp-12) 0; }
 .bill-text-topics a { color: var(--bronze-ink); text-transform: capitalize; }
@@ -4629,10 +4634,12 @@ html[data-panel="chat"] footer { display: none; }
   /* A clipped edge fades, so a cut word reads as "more this way". The fades
      follow the strip's own scroll: none at the end it rests against, none at
      all when every tab fits (an inactive timeline leaves both at 0). */
-  @supports (animation-timeline: scroll()) {
-    .money-area-nav {
-      mask-image: linear-gradient(to right, transparent, var(--ink) var(--area-fade-start), var(--ink) calc(100% - var(--area-fade-end)), transparent);
-      animation: area-nav-fade linear both; animation-timeline: scroll(self inline);
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: scroll()) {
+      .money-area-nav {
+        mask-image: linear-gradient(to right, transparent, var(--ink) var(--area-fade-start), var(--ink) calc(100% - var(--area-fade-end)), transparent);
+        animation: area-nav-fade linear both; animation-timeline: scroll(self inline);
+      }
     }
   }
 }
@@ -4889,7 +4896,7 @@ h1, .hero-intro h1, #subject-title, #bill-title,
    overflow-wrap:break-word;
 }
 /* Section headings retain their local spacing and share the home-page scale. */
-h2, .subject-section-title, .report-section h3, .connections-page h2, .allocation-detail h2, .allocation-comparison h2, .allocation-results-heading, .subject-person #subject-sections .subject-section-title, .person-topics-head h3, .person-topics > h3 {
+h2, .subject-section-title, .report-section h3, .connections-page h2, .allocation-detail h2, .allocation-comparison h2, .allocation-results-heading, .subject-person #subject-sections .subject-section-title, .person-topics-head h2, .person-topics > h2 {
   font:var(--type-heading); color:var(--ink);
 }
 h3 {
@@ -5000,10 +5007,10 @@ h3 {
 .bill-text-tools { margin: var(--sp-20) 0 var(--sp-32); }
 .bill-text-document { max-width: 78ch; }
 .bill-text-part { margin: 0 0 var(--sp-40); }
-.bill-text-part h4 { margin: 0 0 var(--sp-16); padding-top: var(--sp-16); border-top: var(--border-hairline) solid var(--divider-subtle); font: var(--type-strong); color: var(--navy); scroll-margin-top: calc(var(--header-h) + var(--space-block)); }
+.bill-text-part h3 { margin: 0 0 var(--sp-16); padding-top: var(--sp-16); border-top: var(--border-hairline) solid var(--divider-subtle); font: var(--type-strong); color: var(--navy); scroll-margin-top: calc(var(--header-h) + var(--space-block)); }
 .bill-text-source { white-space: pre-wrap; overflow-wrap: anywhere; tab-size: 4; font: var(--weight-regular) var(--text-16)/var(--leading-loose) var(--serif); color: var(--ink); }
 .bill-text-skeleton { gap: var(--sp-16); width: 100%; margin: var(--sp-8) 0 var(--sp-24); min-height: 7rem; }
-.bill-text-reader :is(a, button, select, h4):focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
+.bill-text-reader :is(a, button, select, h3):focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 3px; }
 @media (max-width: 600px) {
   .bill-text-version-field, .bill-text-section-field { flex-basis: 100%; }
   .bill-text-source { font-size: var(--text-15); line-height: var(--leading-loose); }
@@ -5230,18 +5237,19 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 
 /* Landing modules use the view's bronze accent and the shared controls. */
 .growth-ask { margin: var(--space-group) 0 var(--space-section); padding: var(--space-block) 0; border-block: var(--border-hairline) solid var(--divider-default); }
-.growth-ask h3 { margin: 0 0 var(--space-heading); font: var(--type-subheading); }
+.growth-ask h2 { margin: 0 0 var(--space-heading); font: var(--type-subheading); }
 .growth-ask-form { display: flex; align-items: start; gap: var(--space-tight); }
 .growth-ask-form .ui-input { flex: 1; min-width: 0; font: var(--type-body); resize: vertical; white-space: pre-wrap; overflow-wrap: normal; word-break: normal; }
 .growth-ask-form .ui-button { flex-shrink: 0; }
-/* Suggested questions are the home page's list of links: one line each, the
-   whole line the target. Ask receives the full question from the href. */
+/* Suggested questions are the home page's list of links, the whole question
+   the target. A long one wraps to a second line rather than stopping
+   mid-word under an ellipsis. Ask receives the full question from the href. */
 .growth-questions { display: grid; list-style: none; margin: var(--space-tight) 0 0; padding: 0; }
 .growth-questions:empty { display: none; }
 .growth-questions li { min-width: 0; }
 .growth-questions a {
   display: block; width: fit-content; max-width: 100%; padding-block: calc((var(--size-target) - 1.55em) / 2);
-  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  white-space: normal; overflow-wrap: normal; word-break: normal; text-wrap: pretty;
   color: var(--bronze-ink); text-decoration-color: var(--bronze-rule); text-underline-offset: 0.2em;
 }
 .growth-ask :is(input, textarea, button), .growth-records summary { min-height: var(--size-target); }
@@ -5259,8 +5267,6 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
   .growth-ask { margin-bottom: var(--space-group); }
   .growth-ask-form { flex-wrap: wrap; }
   .growth-ask-form textarea { flex-basis: calc(100% - 6rem); }
-  /* On a phone a suggestion wraps to a second line rather than stopping mid-word. */
-  .growth-questions a { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; white-space: normal; text-overflow: clip; }
 }
 /* A phone's first screen keeps the composer and one suggestion; the record follows. */
 @media (max-width: 600px) {

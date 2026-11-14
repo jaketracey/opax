@@ -132,6 +132,8 @@ test('policy and sign-in exclusions cover legacy hash links and SPA history chan
 test('banner is ordinary content with a named link and a keyboard button, without live announcements', () => {
   const page = boot();
   assert.equal(page.banner.tagName, 'DIV');
+  assert.equal(page.banner.getAttribute('role'), 'region');
+  assert.equal(page.banner.getAttribute('aria-label'), 'OPAX app');
   assert.equal(page.banner.querySelector('[role], [aria-live], [autofocus], [tabindex]'), null);
   assert.equal(page.banner.querySelector('a').textContent, 'Get the app');
   assert.match(page.banner.querySelector('a').getAttribute('href'), /^https:\/\/apps\.apple\.com\//);

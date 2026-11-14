@@ -44,10 +44,12 @@
     "build:independent": "node ../scripts/build_parallel.mjs",
     "build:registers": "node scripts/build-register-tables.mjs",
     "check:built": "node ../scripts/check_built.mjs",
-    "research:local": "node ../scripts/research_local.mjs"
+    "research:local": "node ../scripts/research_local.mjs",
+    "test:a11y": "node test/a11y-browser.mjs"
   },
   "devDependencies": {
     "@types/three": "^0.185.4",
+    "axe-core": "4.11.0",
     "esbuild": "^0.28.2",
     "jsdom": "^30.1.2",
     "sharp": "^0.35.5",

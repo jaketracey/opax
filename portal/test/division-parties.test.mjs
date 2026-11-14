@@ -98,13 +98,13 @@ test('party lines covering under half the members say so before the lines', () =
   assert.doesNotMatch(html, /Unknown/);
 });
 
-test('Senate pages outside the dated range say the labels are the source’s and can be a later party; House wording is unchanged', () => {
+test('Senate and House pages disclose where source labels can show a later party', () => {
   const members = [{ name: 'Morgan Fixture', vote: 'aye', party: 'Later Party' }, { name: 'Riley Sample', vote: 'no', party: 'Other Party' }];
   const senate = text(renderDivisionAnswer(division(members, { key: 'federal-senate-1', slug: 'division-federal-senate-1', house: 'senate', jurisdiction: 'federal' }), [], new Map()).html);
   assert.match(senate, /Party labels are those given in the division record\. These are the division source’s labels and can show a senator’s later party rather than the one held on this date, because the dated Senate party records held do not cover this date\./);
   assert.doesNotMatch(senate, /rather than current affiliations/);
   const house = text(renderDivisionAnswer(division(members, { key: 'federal-representatives-1', slug: 'division-federal-representatives-1', house: 'representatives', jurisdiction: 'federal' }), [], new Map()).html);
-  assert.match(house, /Party labels are those recorded for this division, rather than current affiliations\./);
+  assert.match(house, /Where dated service records cover a member, the affiliation shown is the one held on the division date\. Other labels come from the division source and can show a member’s later party\./);
   assert.doesNotMatch(house, /senator/);
   // A Senate page with some roster-filled rows still flags the others.
   const mixed = text(renderDivisionAnswer(division([...members, { name: 'Casey Instance', vote: 'aye', party: 'Example Party', party_source: roster }],
@@ -112,7 +112,7 @@ test('Senate pages outside the dated range say the labels are the source’s and
   assert.match(mixed, /The others are the division source’s labels and can show a senator’s later party/);
 });
 
-test('a Senate page inside the dated range reads as a House page: it describes the record, not the pipeline', () => {
+test('a Senate page inside the dated range describes the record; House pages retain the coverage caveat', () => {
   const dated = { _meta: { party_dated: { record: 'handbook', from: '2006-01-01', through: '2026-11-13' } } };
   const corrected = { basis: 'handbook-term', url: 'https://example.test/handbook', source_party: 'Later Party' };
   const members = [
@@ -123,7 +123,8 @@ test('a Senate page inside the dated range reads as a House page: it describes t
   const house = text(renderDivisionAnswer(division(members, { key: 'federal-representatives-3', slug: 'division-federal-representatives-3', house: 'representatives', jurisdiction: 'federal', date: '2007-02-06' }), [], new Map()).html);
   const wording = (page) => /How each party voted (.*?) Earlier Party ?:/.exec(page)?.[1];
   assert.equal(wording(senate), 'Party labels are those recorded for this division, rather than current affiliations. For 1 member, the division record gives a party not held on this date; the label shown is the party dated service records give for this date.');
-  assert.equal(wording(senate), wording(house));
+  assert.match(wording(house), /affiliation shown is the one held on the division date/);
+  assert.match(wording(house), /Other labels come from the division source and can show a member’s later party/);
   assert.doesNotMatch(senate, /senator’s later party|division source’s labels|Handbook|pipeline/);
   assert.deepEqual(partyLines(renderDivisionAnswer(division(members, { house: 'senate', jurisdiction: 'federal', ...dated }), [], new Map()).html), ['Earlier Party: aye 1', 'Other Party: no 1']);
   assert.doesNotMatch(wording(senate), /—/);

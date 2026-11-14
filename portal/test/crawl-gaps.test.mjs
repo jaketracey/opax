@@ -243,29 +243,32 @@ test('F12: every party in the sitemap is one identity with a non-empty page; the
     assert.ok(page.money || page.bills || m.current.length + m.former.length > 0, page.label);
   }
   for (const label of [...missing, 'Libertarian Party']) assert.ok(listed.includes(pages.find(p => p.label === label)?.href), label);
-  // The sponsor-only parties (Nick Xenophon Team, Palmer United Party, Rex Patrick Team) are listed: see the A4b tests.
+  // Parties named by sponsor records are listed too; see the A4b tests.
 });
 
-// Backlog A4b: three parties the record names only as a bill sponsor's party. Their pages list those bills, so
-// they are no longer empty and the party sitemap lists each once (im/crawl-discovery recorded them as excluded).
-test('A4b: sponsor-only parties have one page each, with their bills, and are in the party sitemap', async () => {
+// Dated divisions now supply members for two formerly sponsor-only parties.
+// Each party keeps one page with its held member and bill evidence.
+test('A4b: sponsor parties have one page each with their recorded members and bills, and are in the party sitemap', async () => {
   const pages = await readPartyPages(read);
   const manifest = await read('/crawl/manifest.json');
   const xml = (await Promise.all(manifest.files.filter(f => /^\/sitemaps\/parties-/.test(f.path)).map(f => readFile(new URL('crawl' + f.path, root), 'utf8')))).join('');
   const listed = paths(xml);
   assert.equal(new Set(listed).size, listed.length, 'no duplicate party URLs');
   const roster = await read('/parliamentarians.json'), divisions = await read('/graph/party-members.json');
-  for (const [label, slug, first] of [['Nick Xenophon Team', 'nick-xenophon-team', 'au-federal-s1127'], ['Palmer United Party', 'palmer-united-party', 'au-federal-s1019'],
-    ['Rex Patrick Team', 'rex-patrick-team', 'au-federal-s1321']]) {
+  for (const [label, slug, first, count, source] of [
+    ['Nick Xenophon Team', 'nick-xenophon-team', 'au-federal-s1127', 5, 'Recorded divisions'],
+    ['Palmer United Party', 'palmer-united-party', 'au-federal-s1019', 4, 'Recorded divisions'],
+    ['Rex Patrick Team', 'rex-patrick-team', 'au-federal-s1321', 0, 'Bill sponsor records']]) {
     const matches = pages.filter(p => p.aliases.includes(label));
     assert.equal(matches.length, 1, label);
     const [page] = matches;
     assert.equal(page.href, '/subject/party/' + slug);
     assert.equal(resolvePartyPage(slug, pages), page);
-    assert.ok(page.bills && !page.money && !page.roster && !page.divisions, label);
-    assert.equal(partyPageCoverage(page), 'Bill sponsor records. No party-level disclosure file held by OPAX.');
+    assert.ok(page.bills && !page.money && !page.roster, label);
+    assert.equal(page.divisions, count > 0, label);
+    assert.equal(partyPageCoverage(page), `${source}. No party-level disclosure file held by OPAX.`);
     const m = partyMembers(page.label, {roster, divisions});
-    assert.equal(m.current.length + m.former.length, 0, 'the bills, not members, make the page');
+    assert.equal(m.current.length + m.former.length, count, label);
     assert.equal(partyBills(page.label, divisions)[0].key, first);
     assert.ok(listed.includes(page.href), label);
     assert.equal(listed.filter(p => resolvePartyPage(p.split('/').at(-1), pages) === page).length, 1, label);
