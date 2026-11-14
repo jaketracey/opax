@@ -504,19 +504,39 @@ export function orderDivisions<
   return { main, procedural };
 }
 
+/** A division's result as the reader sees it, the same words as the web. */
+export type OutcomeWord = 'Agreed' | 'Not agreed';
+
+const AGREED_WORDS = /^(?:affirmative|agreed(?: to)?|carried|passed|ayes?)$/;
+const NOT_AGREED_WORDS =
+  /^(?:negative|negatived|not agreed(?: to)?|defeated|lost|rejected|no|noes)$/;
+
+/** The record's named result as "Agreed" or "Not agreed"; null when it names none. */
+export function namedOutcomeWord(
+  outcome: string | null | undefined,
+): OutcomeWord | null {
+  const o = String(outcome ?? '')
+    .trim()
+    .toLocaleLowerCase('en-AU')
+    .replace(/[_\s]+/g, ' ');
+  if (AGREED_WORDS.test(o)) return 'Agreed';
+  if (NOT_AGREED_WORDS.test(o)) return 'Not agreed';
+  return null;
+}
+
 /**
- * "Agreed to" or "Not agreed to", never "Negatived". An outcome the record
- * does not name reads from its own counts, as the chamber decides it.
+ * "Agreed" or "Not agreed", never "Negatived" or the record's own token
+ * ("affirmative"). An outcome the record does not name reads from its own
+ * counts, as the chamber decides it: a tie is not agreed.
  */
 export function outcomeWord(
   outcome: string | null | undefined,
   counts?: { ayes: number; noes: number },
-): 'Agreed to' | 'Not agreed to' {
-  const o = String(outcome ?? '').toLocaleLowerCase('en-AU');
-  if (/^(affirmative|agreed|carried|passed|aye)/.test(o)) return 'Agreed to';
-  if (/^(negative|negatived|not|defeated|lost|rejected|no)/.test(o))
-    return 'Not agreed to';
-  return counts && counts.ayes > counts.noes ? 'Agreed to' : 'Not agreed to';
+): OutcomeWord {
+  return (
+    namedOutcomeWord(outcome) ??
+    (counts && counts.ayes > counts.noes ? 'Agreed' : 'Not agreed')
+  );
 }
 
 const plural = (n: number, one: string, many: string) =>

@@ -1,4 +1,5 @@
 import type { Fingerprint, Follow, Reading } from './store';
+import { namedOutcomeWord } from '../bills/divisions';
 
 export type QuestionType =
   | 'bill-stage'
@@ -217,11 +218,7 @@ function recordText(record: FollowRecord): string | null {
     case 'division':
       return [
         record.stage,
-        record.outcome === 'not agreed to' || record.outcome === 'no'
-          ? 'not agreed to'
-          : record.outcome === 'agreed to' || record.outcome === 'aye'
-            ? 'agreed to'
-            : '',
+        namedOutcomeWord(record.outcome)?.toLocaleLowerCase('en-AU') ?? '',
         record.chamber ? `· ${record.chamber}` : '',
       ]
         .filter(Boolean)

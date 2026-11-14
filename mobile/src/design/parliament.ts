@@ -1,4 +1,4 @@
-import { billSentenceCase } from '../api/bill-transforms';
+import { billStatusWord } from '../api/bill-transforms';
 
 // Reader-facing names for the catalog's jurisdiction and chamber IDs: the one
 // mapping every screen uses, so a raw ID ("vic_la", "federal") never reaches
@@ -80,5 +80,5 @@ export function declarationKind(kind: string): string {
 }
 /** A bill's published status, with readable words for new register values. */
 export function billStatus(status: string): string {
-  return billSentenceCase(status) || 'Status not recorded';
+  return billStatusWord(status) || 'Status not recorded';
 }

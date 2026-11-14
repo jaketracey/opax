@@ -202,7 +202,7 @@ describe('StatusCapsule', () => {
   test.each([
     ['Passed', 'neutral'],
     ['Assented', 'neutral'],
-    ['Agreed to', 'neutral'],
+    ['Agreed', 'neutral'],
     ['Voted for', 'neutral'],
     ['Before parliament', 'active'],
     ['Introduced', 'active'],
@@ -211,7 +211,7 @@ describe('StatusCapsule', () => {
     ['Lapsed', 'neutral'],
     ['Negatived', 'neutral'],
     ['Not passed', 'neutral'],
-    ['Not agreed to', 'neutral'],
+    ['Not agreed', 'neutral'],
     ['Voted against', 'neutral'],
     ['Withdrawn', 'neutral'],
     ['Outcome not recorded', 'neutral'],

@@ -191,10 +191,16 @@ describe('votes: order and words (4.2.5)', () => {
       expect(main[i - 1]!.date >= main[i]!.date).toBe(true);
   });
 
-  test('outcomes are "Agreed to" or "Not agreed to"; counts are words', () => {
-    expect(outcomeWord('affirmative')).toBe('Agreed to');
-    expect(outcomeWord('negative')).toBe('Not agreed to');
-    expect(outcomeWord('', { ayes: 30, noes: 10 })).toBe('Agreed to');
+  test('outcomes are "Agreed" or "Not agreed"; counts are words', () => {
+    expect(outcomeWord('affirmative')).toBe('Agreed');
+    expect(outcomeWord('negative')).toBe('Not agreed');
+    expect(outcomeWord('', { ayes: 30, noes: 10 })).toBe('Agreed');
+    expect(outcomeWord('', { ayes: 10, noes: 10 })).toBe('Not agreed');
+    expect(outcomeWord(null, { ayes: 10, noes: 30 })).toBe('Not agreed');
+    expect(outcomeWord('negatived')).toBe('Not agreed');
+    expect(outcomeWord('Agreed to')).toBe('Agreed');
+    // An unnamed word is never shown: it reads from the counts.
+    expect(outcomeWord('not recorded', { ayes: 30, noes: 10 })).toBe('Agreed');
     expect(countWords(12, 27)).toBe('12 ayes, 27 noes');
     expect(countWords(0, 25)).toBe('25 noes');
     expect(countWords(0, 25, { spoken: true })).toBe('no ayes, 25 noes');
@@ -295,7 +301,7 @@ describe('Votes in parliament: the votes sit under the bill title (6.1)', () => 
     expect(texts(vote)).toContain('Amendments');
     expect(texts(vote)).toContain('Senate · 19 Aug 2026 · under a time limit');
     expect(vote.props.accessibilityLabel).toMatch(
-      /^Amendments, Senate · 19 Aug 2026 · under a time limit, (Agreed to|Not agreed to), /,
+      /^Amendments, Senate · 19 Aug 2026 · under a time limit, (Agreed|Not agreed), /,
     );
     load.mockRestore();
   });
@@ -719,7 +725,7 @@ describe('the bill page', () => {
     ]);
     const label = host(root, `bill-division-${index}-more`)[0]!.props
       .accessibilityLabel;
-    expect(label).toMatch(/^Limitation of debate, Senate · .*Not agreed to,/);
+    expect(label).toMatch(/^Limitation of debate, Senate · .*Not agreed,/);
     expect(label).not.toMatch(/Second reading|under a time limit/);
   });
   test.each([1, 3.571])(

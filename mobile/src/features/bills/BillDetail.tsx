@@ -32,6 +32,7 @@ import {
   billSentenceCase,
   billSourceLabel,
   billStage,
+  billStatusWord,
   billTimeline,
   type BillTimelineEntry,
   type BillTimelineStage,
@@ -1020,7 +1021,7 @@ function metaLine(bill: {
 function SeededHead({ row }: { row: IndexRow }) {
   const display = billDisplay(row);
   const name = billName(row);
-  const status = billSentenceCase(row.status) || 'Status not recorded';
+  const status = billStatusWord(row.status) || 'Status not recorded';
   const event = row.status_stage ? statusEvent(row) : null;
   const meta = metaLine({
     status: row.status,
@@ -1378,7 +1379,7 @@ export function rulerPoints(
     at: entries.length - 1,
     label:
       /^other$/i.test(ended.trim()) && TERMINAL_STATUS.test(terminal)
-        ? terminal
+        ? billStatusWord(status)
         : /^royal assent$/i.test(ended.trim())
           ? 'Royal Assent'
           : ended,

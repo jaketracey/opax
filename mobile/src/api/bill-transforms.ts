@@ -234,6 +234,12 @@ export function billSentenceCase(s: string | null | undefined) {
     .trim();
   return t ? t[0]!.toUpperCase() + t.slice(1) : '';
 }
+/** A bill status as the reader sees it: the register's "negatived" is "Not agreed". */
+export function billStatusWord(status: string | null | undefined): string {
+  return /^negatived$/i.test(String(status ?? '').trim())
+    ? 'Not agreed'
+    : billSentenceCase(status);
+}
 /** A stage as the register wrote it; a parsed-out compound title is clipped. */
 export function billStage(stage: string | null | undefined) {
   const t = billSentenceCase(stage);

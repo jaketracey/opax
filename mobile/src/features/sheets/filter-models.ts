@@ -142,8 +142,8 @@ export function divisionsFilterModel(
       facet('chamber', 'Chamber', bothChambers),
       facet('outcome', 'Outcome', [
         any(),
-        { value: 'agreed', label: 'Agreed to' },
-        { value: 'not-agreed', label: 'Not agreed to' },
+        { value: 'agreed', label: 'Agreed' },
+        { value: 'not-agreed', label: 'Not agreed' },
       ]),
       ...(options.kinds
         ? [facet('kind', 'Kind', [any('All divisions'), ...options.kinds])]

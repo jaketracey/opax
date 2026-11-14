@@ -272,7 +272,7 @@ const cases: [string, () => ReactElement][] = [
       <R.DivisionRow
         title="Housing Bill 2026"
         meta="4 October 2026"
-        outcome="Agreed to"
+        outcome="Agreed"
         ayes={76}
         noes={55}
         countsStyle="votes"

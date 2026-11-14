@@ -2574,7 +2574,7 @@ exports[`iOS design at font scale 1 Disclosure retains its iOS output 1`] = `
 exports[`iOS design at font scale 1 DivisionRow retains its iOS output 1`] = `
 <View
   accessibilityActions={[]}
-  accessibilityLabel="Housing Bill 2026, 4 October 2026, Agreed to, 76 votes to 55"
+  accessibilityLabel="Housing Bill 2026, 4 October 2026, Agreed, 76 votes to 55"
   accessibilityRole="button"
   accessibilityState={
     {
@@ -2700,7 +2700,7 @@ exports[`iOS design at font scale 1 DivisionRow retains its iOS output 1`] = `
     </Text>
     <View
       accessibilityElementsHidden={false}
-      accessibilityLabel="Status: Agreed to"
+      accessibilityLabel="Status: Agreed"
       accessible={true}
       importantForAccessibility="auto"
       style={
@@ -2760,7 +2760,7 @@ exports[`iOS design at font scale 1 DivisionRow retains its iOS output 1`] = `
           ]
         }
       >
-        Agreed to
+        Agreed
       </Text>
     </View>
     <View
@@ -10167,7 +10167,7 @@ exports[`iOS design at font scale 2 Disclosure retains its iOS output 1`] = `
 exports[`iOS design at font scale 2 DivisionRow retains its iOS output 1`] = `
 <View
   accessibilityActions={[]}
-  accessibilityLabel="Housing Bill 2026, 4 October 2026, Agreed to, 76 votes to 55"
+  accessibilityLabel="Housing Bill 2026, 4 October 2026, Agreed, 76 votes to 55"
   accessibilityRole="button"
   accessibilityState={
     {
@@ -10293,7 +10293,7 @@ exports[`iOS design at font scale 2 DivisionRow retains its iOS output 1`] = `
     </Text>
     <View
       accessibilityElementsHidden={false}
-      accessibilityLabel="Status: Agreed to"
+      accessibilityLabel="Status: Agreed"
       accessible={true}
       importantForAccessibility="auto"
       style={
@@ -10353,7 +10353,7 @@ exports[`iOS design at font scale 2 DivisionRow retains its iOS output 1`] = `
           ]
         }
       >
-        Agreed to
+        Agreed
       </Text>
     </View>
     <View
