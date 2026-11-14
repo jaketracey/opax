@@ -1232,7 +1232,7 @@ does not clear them.
 
 ## NSW historical Hansard repair and shared growth guard
 
-Jake approved the bounded repair spend on 14 November 2026 at 13:10 Sydney time.
+The owner approved the bounded repair spend on 14 November 2026 at 13:10 Sydney time.
 Merge the NSW attribution and periodic-completion fixes with this runner before
 activation. The default is on; `OPAX_NSW_BACKFILL=0` stops acquisition and every
 publication/retry entry. The former separate acquisition/publication switches
@@ -1258,6 +1258,14 @@ four-day acquisition cap cannot reach a ten-day interval. The shared interface
 is `Guard.check(kb, stage)`, `ensure_running()`, `request_scope()` and
 `progress(stage, remaining=..., cap=..., stop=..., done=...)`. The Senate lane
 uses the same interface and ledger, without importing NSW code.
+
+The final shared `nightly_fields()` writer emits `backfill`,
+`backfill_failures` and repair warnings outside fatal `failures`. NSW supplies
+`acquisition_days_remaining` separately from queued publication. Unresolved-only
+work uses `identity-holds` and leaves the finish date unknown. The canonical
+guard holds requests in memory if stop-file persistence fails, and recognises
+quota error envelopes in successful HTTP responses too. Exact shared-file
+checksums are retained in `docs/reports/2026-11-14-nsw-shared-files.sha256`.
 
 Counters use read-only `GET /counters` with normal sync's existing KB service
 account. The first observation establishes the baseline; positive changes in

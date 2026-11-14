@@ -449,3 +449,58 @@ def test_budget_exit_reports_held_days_as_incomplete_after_committing_a_day(db, 
     assert result['missing_left'] == 1 and result['incomplete_left'] == 2
     assert result['held_turns'] == 1
     assert guard.read()['stages']['nsw']['days_remaining'] == 2
+
+
+def test_shared_projection_separates_acquisition_from_incomplete_held_days(db, tmp_path):
+    from parli.ingest import backfill_guard as growth
+    guard = growth.Guard(tmp_path)
+    n.get_sitting_days.return_value = [{**SITTING,'date':f'2023-05-{day:02d}', 'toc_doc_id':f'toc-{day}'}
+                                      for day in range(9,15)]
+    result = b.run(db,cap=1,guard=guard)
+    assert result['acquisition_days_remaining'] == 5
+    assert result['incomplete_left'] == 6 and result['held_turns'] == 1
+    report = growth.status(tmp_path,'2026-11-14')['stages']['nsw']
+    assert report['days_remaining'] == 6 and report['acquisition_days_remaining'] == 5
+    assert report['projected_finish_date'] == '2026-11-20'
+
+
+def test_shared_projection_stays_unknown_when_only_identity_holds_remain(db, tmp_path):
+    from parli.ingest import backfill_guard as growth
+    guard = growth.Guard(tmp_path)
+    result = b.run(db,guard=guard)
+    assert result['acquisition_days_remaining'] == 0
+    assert result['held_turns'] == 1 and result['stop'] == 'identity-holds'
+    assert growth.status(tmp_path,'2026-11-14')['projected_finish_date'] is None
+    assert b.run(db,guard=guard)['inserted'] == 0
+    assert growth.status(tmp_path,'2026-11-15')['projected_finish_date'] is None
+
+
+def test_shared_projection_keeps_publication_only_debt_until_next_refresh(db, tmp_path):
+    import xml.etree.ElementTree as ET
+    from parli.ingest import backfill_guard as growth
+    guard = growth.Guard(tmp_path)
+    root = ET.fromstring(XML)
+    body = root.find('.//body')
+    for node in list(body)[2:]:
+        body.remove(node)
+    n._api_get.return_value = ET.tostring(root).replace(TEXT.encode(), (TEXT*4).encode())
+    result = b.run(db,guard=guard)
+    assert result['held_turns'] == 0 and result['publication_pending'] == 1
+    assert result['acquisition_days_remaining'] == 0 and result['incomplete_left'] == 1
+    assert growth.status(tmp_path,'2026-11-14')['projected_finish_date'] == '2026-11-15'
+    assert b.run(db,guard=guard)['inserted'] == 0
+    assert n._api_get.call_count == 1
+
+
+def test_shared_growth_stop_has_its_own_receipt_state_and_keeps_periodic_failures_separate(db, tmp_path, monkeypatch):
+    from parli.ingest import backfill_guard as growth
+    guard = growth.Guard(tmp_path)
+    monkeypatch.setattr(guard,'ensure_running',Mock(side_effect=[None,growth.Stopped('fixture growth stop')]))
+    receipt = tmp_path/'receipt.json'
+    with pytest.raises(growth.Stopped,match='fixture growth stop'):
+        b.run(db,guard=guard,receipt_path=receipt)
+    assert json.loads(receipt.read_text())['stop'] == 'growth-guard'
+    assert guard.read()['stages']['nsw']['stop'] == 'growth-guard'
+    assert growth.status(tmp_path,'2026-11-14')['projected_finish_date'] is None
+    assert db.execute('SELECT COUNT(*) FROM nsw_backfill_errors').fetchone()[0] == 0
+    n.get_fragment_uids.assert_not_called()

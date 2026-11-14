@@ -1,7 +1,9 @@
 # NSW Hansard approved bounded repair, 14 November 2026
 
+The final shared guard, checksum identities and current integration gates are recorded in [note-4](2026-11-14-nsw-hansard-gap-note-4.md).
+
 This supersedes the spend hold in [note-2](2026-11-14-nsw-hansard-gap-note-2.md).
-Jake approved the spend at 13:10 Sydney time. The complete branch includes both
+The owner approved the spend at 13:10 Sydney time. The complete branch includes both
 P1 corrections before the default-on change and is rebased onto `origin/main`
 `fb921dec9`. Activation is through merging the complete reviewed branch; no
 production process was started from this desktop. No production, KB or D1

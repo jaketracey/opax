@@ -1,4 +1,4 @@
-# Bounded NSW repair, after normal refresh. Jake approved spend on 14 November.
+# Bounded NSW repair, after normal refresh. Spend approved by the owner on 14 November.
 # Repair warnings must never enter FAILURES or leave periodic acquisition owed.
 # shellcheck shell=bash
 nsw_hansard_backfill() {

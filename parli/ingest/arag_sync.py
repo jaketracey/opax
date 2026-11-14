@@ -242,7 +242,7 @@ def map_speech(row: sqlite3.Row) -> dict:
                 "word_count": row["word_count"],
                 "date": date,
                 **{k: _optional_column(row, k) for k in ('gid', 'oa_office_id', 'citation_anchor', 'talktype',
-                                                      'source_url', 'source_attribution')
+                                                      'source_url', 'source_attribution', 'source_party', 'party_basis')
                    if _optional_column(row, k) is not None},
                 **({"witness_position": witness_position} if witness_position else {}),
                 **({"witness_organisation": witness_organisation} if witness_organisation else {}),
@@ -252,7 +252,6 @@ def map_speech(row: sqlite3.Row) -> dict:
             }
         },
     }
-
     stage = growth.stage_for(body)
     return growth.tag(body, stage) if stage else body
 
@@ -332,10 +331,10 @@ def _push_one(kb: KbClient, body: dict, guard=None, deadline=None) -> tuple[str,
     stage = growth.stage_for(body)
     if stage and not growth.enabled(stage):
         return body['slug'], growth.HOLD + f'{stage} disabled'
-    if stage and deadline is not None and time.monotonic() >= deadline:
-        return body['slug'], growth.HOLD + 'normal-sync backfill time budget spent; resumes next night'
     try:
         if stage:
+            if deadline is not None and time.monotonic() >= deadline:
+                return body['slug'], growth.HOLD + 'normal-sync backfill time budget spent; resumes next night'
             growth.tag(body, stage)
             if guard is None:
                 guard = growth.Guard()

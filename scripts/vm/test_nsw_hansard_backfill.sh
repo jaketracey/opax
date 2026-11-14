@@ -44,9 +44,9 @@ test -f "$PIPE/args"
 export OPAX_NSW_BACKFILL=1
 nsw_hansard_backfill
 for expected in timeout --kill-after=60s 102s nice 10 parli.ingest.nsw_hansard --backfill-missing-days --publication-state --growth-guard; do
-  rg -q -x -- "$expected" "$PIPE/args"
+  grep -qxF -- "$expected" "$PIPE/args"
 done
-rg -q 'WARN NSW coverage guard: 7 chamber sitting days incomplete' "$PIPE/log"
+grep -qF 'WARN NSW coverage guard: 7 chamber sitting days incomplete' "$PIPE/log"
 # Use the actual nightly periodic-completion function, with only its state writer stubbed.
 "$REAL_PY" - "$REPO/scripts/vm/nightly.sh" "$PIPE/periodic.sh" <<'PY'
 import re,sys
@@ -68,7 +68,7 @@ for result in 1 4 124 137; do
   test -f "$PIPE/periodic-completed"
 done
 BAD_RECEIPT=1 nsw_hansard_backfill
-rg -q 'WARN NSW Hansard repair receipt unreadable' "$PIPE/log"
+grep -qF 'WARN NSW Hansard repair receipt unreadable' "$PIPE/log"
 test "${#FAILURES[@]}" -eq 0
 rm -f "$PIPE/periodic-completed"
 periodic_refresh_complete
@@ -82,12 +82,12 @@ OPAX_NIGHTLY_SKIP_DAILY=1 nsw_hansard_backfill
 test ! -f "$PIPE/args"
 unset OPAX_BACKFILL_NSW_CAP OPAX_BACKFILL_NSW_BUDGET_S
 EXPECTED_CAP=4 EXPECTED_BUDGET=1200 nsw_hansard_backfill
-rg -q -x '1260s' "$PIPE/args"
+grep -qxF '1260s' "$PIPE/args"
 rm "$PIPE/args"
 touch "$PIPE/backfill.STOP"
 nsw_hansard_backfill
 test ! -f "$PIPE/args"
-rg -q 'WARN Shared backfill.STOP' "$PIPE/log"
+grep -qF 'WARN Shared backfill.STOP' "$PIPE/log"
 test "${#FAILURES[@]}" -eq 0
 periodic_refresh_complete
 test -f "$PIPE/periodic-completed"

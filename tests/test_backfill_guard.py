@@ -86,12 +86,14 @@ def test_per_resource_bound_requires_500_and_uses_exact_decimal_bytes():
 @pytest.mark.parametrize('status,detail', [
     (429, '{"detail":{"try_after":99999999999,"back_pressure_type":"index"}}'),
     (403, '{"detail":"quota exceeded"}'), (402, 'payment required'),
-    (503, '{"detail":"billing account suspended"}'), (400, 'insufficient credits')])
+    (503, '{"detail":"billing account suspended"}'), (400, 'insufficient credits'),
+    (403, 'resource limit exceeded'), (403, 'usage limit reached'),
+    (507, 'Insufficient Storage'), (200, '{"error":"quota exceeded"}')])
 @pytest.mark.parametrize('method', ['GET', 'POST'])
 def test_any_guarded_progress_refusal_stops_without_retry(monkeypatch, status, detail, method):
     calls = []
     class Response:
-        ok, status_code, text, headers = False, status, detail, {}
+        ok, status_code, text, headers = status < 400, status, detail, {}
     def request(*args, **kwargs):
         calls.append(kwargs)
         return Response()
@@ -214,6 +216,7 @@ def test_real_nightly_status_exposes_shared_growth_and_drives_existing_alert_pat
     exec(compile(body,'nightly.write_status','exec'), {})
     status = json.loads(output.read_text())
     assert status['failures'] == [] and status['status'] == 'ok'
+    assert status['backfill_failures'] == ['growth guard: test: cumulative growth ceiling exceeded']
     assert any('growth guard' in warning for warning in status['warnings'])
     assert status['backfill']['bytes_added'] == 40_000_000
     assert status['backfill']['cumulative_resources_added'] == 1000
@@ -272,3 +275,54 @@ def test_completed_source_has_no_extra_publication_night_and_empty_status_has_he
     complete = G.status(guard.root, '2026-11-14')
     assert complete['days_remaining'] == 0
     assert complete['projected_finish_date'] == '2026-11-14'
+
+
+def test_unwritable_guard_state_still_holds_publication_without_failing_ordinary_refresh(monkeypatch):
+    kb = KB()
+    def unwritable(*_):
+        raise OSError('fixture full state filesystem')
+    monkeypatch.setattr(G, '_atomic', unwritable)
+    assert S._push_one(kb, body())[1].startswith(G.HOLD)
+    assert not kb.created
+    assert S._push_one(kb, {'slug': 'ordinary'}) == ('ordinary', None)
+    assert len(kb.created) == 1
+
+
+@pytest.mark.parametrize('stage', ['senate', 'nsw'])
+def test_queued_publication_days_and_unresolved_holds_have_honest_projection(stage, monkeypatch):
+    guard = G.Guard()
+    guard.progress(stage, remaining=10, acquisition_days_remaining=0, cap=10, stop='complete', done=10)
+    report = G.status(guard.root, '2026-11-14')
+    assert report['days_remaining'] == 10
+    assert report['projected_finish_date'] == '2026-11-15'
+    guard.progress(stage, remaining=0, acquisition_days_remaining=0, cap=10, stop='complete', done=0)
+    assert G.status(guard.root, '2026-11-15')['projected_finish_date'] == '2026-11-15'
+    guard.progress(stage, remaining=1, cap=10, stop='identity-holds', done=0)
+    assert G.status(guard.root, '2026-11-15')['projected_finish_date'] is None
+
+
+def test_nsw_projection_uses_its_canonical_cap_setting(monkeypatch):
+    guard = G.Guard()
+    guard.progress('nsw', remaining=8, cap=4, stop='cap', done=4)
+    monkeypatch.setenv('OPAX_BACKFILL_NSW_CAP', '2')
+    assert G.status(guard.root, '2026-11-14')['projected_finish_date'] == '2026-11-19'
+
+
+@pytest.mark.parametrize('stage', ['senate_backfill', 'nsw_hansard_backfill'])
+def test_shared_receipt_fields_keep_repair_timeouts_in_warnings(stage):
+    warning = f'Backfill did not complete: {stage}(rc=124)'
+    warnings = [warning]
+    fields = G.nightly_fields(G.state_dir(), '2026-11-14', warnings)
+    assert fields['backfill_failures'] == [f'{stage}(rc=124)']
+    assert warnings == [warning]
+    assert 'failures' not in fields
+
+
+@pytest.mark.parametrize('warning', [
+    'NSW Hansard repair outer timeout (rc=124); retained checkpoints resume later',
+    'NSW Hansard API refused; repair stopped and previous data kept'])
+def test_canonical_nsw_wrapper_warnings_use_the_same_receipt_fields(warning):
+    warnings = [warning, 'NSW coverage guard: 4 chamber sitting days incomplete']
+    fields = G.nightly_fields(G.state_dir(), '2026-11-14', warnings)
+    assert fields['backfill_failures'] == [warning]
+    assert len(warnings) == 2 and 'failures' not in fields

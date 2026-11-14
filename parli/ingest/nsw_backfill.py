@@ -292,6 +292,7 @@ def run(db, *, start=START, end=END, cap=DEFAULT_CAP, budget_s=DEFAULT_BUDGET_S,
     initialise(db)
     # SQLite's scan is included in the wall budget. Do not leave its handler set.
     current = None
+    todo = None
     try:
         check_load()
         refused = db.execute("SELECT value FROM nsw_backfill_state WHERE key='refused'").fetchone()
@@ -371,6 +372,9 @@ def run(db, *, start=START, end=END, cap=DEFAULT_CAP, budget_s=DEFAULT_BUDGET_S,
         if time.monotonic() < adapter.REQUEST_DEADLINE:
             raise
         result["stop"] = "budget"
+    except growth.Stopped as error:
+        result['stop'], result['reason'] = 'growth-guard', str(error)
+        raise
     except BaseException as error:
         detail = getattr(error, "reason", None) or str(error)
         result["stop"], result["error"] = "error", detail
@@ -399,11 +403,17 @@ def run(db, *, start=START, end=END, cap=DEFAULT_CAP, budget_s=DEFAULT_BUDGET_S,
             result['incomplete_left'] = sum(len(g['incomplete_dates']) for g in gaps)
             for field in ('held_turns', 'publication_pending', 'publication_failed'):
                 result[field] = sum(g[field] for g in gaps)
+        result['acquisition_days_remaining'] = (max(0, len(todo) - len(result['days']))
+                                                if todo is not None else result['missing_left'])
+        if (result['acquisition_days_remaining'] == 0 and result.get('held_turns', 0) > 0
+                and result['stop'] in ('complete', 'incomplete', 'cap', 'budget')):
+            result['stop'] = 'identity-holds'
         result["seconds"] = round(time.monotonic() - began, 3)
         if guard:
             # Include held turns and publication backlog, not only occupancy.
             guard.progress('nsw', remaining=result.get('incomplete_left', result['missing_left']),
                            cap=cap, stop=result['stop'], done=len(result['days']),
+                           acquisition_days_remaining=result['acquisition_days_remaining'],
                            held_turns=result.get('held_turns'),
                            publication_pending=result.get('publication_pending'),
                            publication_failed=result.get('publication_failed'))

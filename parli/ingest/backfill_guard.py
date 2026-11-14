@@ -85,21 +85,37 @@ class Guard:
             yield
 
     def ensure_running(self):
+        if getattr(self, '_stopped', None):
+            raise Stopped(self._stopped)
         if (self.root / 'backfill.STOP').exists():
             raise Stopped('shared backfill.STOP exists; inspect the growth ledger before resuming')
 
     def stop(self, reason):
-        with self.locked():
-            if not (self.root / 'backfill.STOP').exists():
-                _atomic(self.root / 'backfill.STOP', {'reason': reason, 'at': _now()})
+        self._stopped = reason
+        try:
+            with self.locked():
+                if not (self.root / 'backfill.STOP').exists():
+                    _atomic(self.root / 'backfill.STOP', {'reason': reason, 'at': _now()})
+        except OSError:
+            # Even a failed stop-file write must hold repairs rather than
+            # turn a repair warning into an ordinary refresh failure.
+            reason += '; shared stop file could not be written'
         raise Stopped(reason)
 
     def response(self, status, detail):
         # Called BEFORE the normal client's retry/backpressure handling. Every
         # guarded response, including a transient 429, is terminal for repairs.
-        if status == 429 or (status >= 400 and (status == 402 or re.search(
-                r'quota|billing|payment|credit|insufficient.?fund|spend.?limit|subscription.?limit',
-                detail, re.I))):
+        error = detail
+        if status < 400:
+            try:
+                payload = json.loads(detail)
+                error = json.dumps(payload.get('error')) if isinstance(payload, dict) and payload.get('error') else ''
+            except (ValueError, TypeError):
+                error = ''
+        if status in (402, 429, 507) or re.search(
+                r'quota|billing|payment|credit|insufficient.?fund|insufficient.?balance|'
+                r'(?:spend|subscription|usage|resource|storage|size|plan).?limit|upgrade.{0,20}plan',
+                error, re.I):
             self.stop(f'Progress HTTP {status}: rate, quota or billing refusal')
 
     def request_scope(self):
@@ -187,12 +203,15 @@ def status(root, night):
             current = dict(progress)
             current['projection_basis'] = 'cap estimate plus publication; identity holds, budgets and stops can extend it'
             remaining = current['days_remaining']
-            cap = int(os.environ.get(f'OPAX_{stage.upper()}_BACKFILL_DAYS', current['cap']))
-            stopped = not enabled(stage) or (root / 'backfill.STOP').exists()
+            acquisition = current.get('acquisition_days_remaining', remaining)
+            cap_env = 'OPAX_BACKFILL_NSW_CAP' if stage == 'nsw' else f'OPAX_{stage.upper()}_BACKFILL_DAYS'
+            cap = int(os.environ.get(cap_env, current['cap']))
+            stopped = (not enabled(stage) or (root / 'backfill.STOP').exists()
+                       or current.get('stop') in ('source-refused', 'error', 'growth-guard', 'identity-holds'))
             # This night's acquisition has finished. Remaining days start next
             # night; normal-sync publication follows acquisition by one night.
             current['projected_finish_date'] = ((date.fromisoformat(night) + timedelta(
-                days=math.ceil(remaining / cap) + int(remaining > 0))).isoformat()
+                days=math.ceil(acquisition / cap) + int(remaining > 0))).isoformat()
                 if remaining is not None and cap > 0 and not stopped else None)
             result['stages'][stage] = current
     except FileNotFoundError:
@@ -211,3 +230,18 @@ def status(root, night):
     result['projected_finish_date'] = (max(s['projected_finish_date'] for s in stages)
                                        if stages and all(s['projected_finish_date'] for s in stages) else None)
     return result
+
+
+def nightly_fields(root, night, warnings):
+    """Shared receipt fields; repair warnings never become periodic failures."""
+    backfill = status(root, night)
+    # Accept the existing NSW wrapper's warnings too, so both callers expose
+    # the same field without depending on Senate's shell warning function.
+    repair_prefixes = ('Backfill did not complete: ', 'NSW Hansard repair ',
+                       'NSW Hansard API refused', 'Shared backfill.STOP:')
+    failures = [w.removeprefix('Backfill did not complete: ') for w in warnings
+                if w.startswith(repair_prefixes)]
+    if backfill.get('warning'):
+        failures.append('growth guard: ' + backfill['warning'])
+        warnings.append('Backfill growth guard: ' + backfill['warning'])
+    return {'backfill': backfill, 'backfill_failures': list(dict.fromkeys(failures))}
