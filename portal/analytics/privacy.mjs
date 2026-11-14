@@ -36,8 +36,12 @@ const CHOICES = {
 };
 // Pages with no record in their address, counted by name rather than as
 // "/other". Their sub-pages (a sitting day, an audit report) stay "/other".
-const STATIC_PAGES = 'press|today|sitting|budget|privacy|support|audit|estimates|instruments';
-const KNOWN_PATH = new RegExp(String.raw`^\/(?:$|ask(?:\/|$)|chat(?:\/|$)|search(?:\/|$)|money(?:\/|$)|map(?:\/|$)|discover(?:\/|$)|connections\.html$|reports(?:\/|$)|explore(?:\/|$)|doc(?:\/|$)|subject(?:\/|$)|declared(?:\/|$)|about(?:\/|$)|methods(?:\/|$)|stats(?:\/|$)|expenses(?:\/|$)|bills?(?:\/|$)|(?:${STATIC_PAGES})\/?$)`);
+const STATIC_PAGES = 'press|today|sitting|budget|privacy|support|audit|estimates|instruments|instrument|terms|security|community|home|connections|official-reports|vic-election-2026';
+// Pages with a record or section in the address; recordTemplate names them.
+const RECORD_PAGES = 'report|sitting|estimates|audit|instrument|official-reports|vic-election-2026|video|register';
+const KNOWN_PATH = new RegExp(String.raw`^\/(?:$|ask(?:\/|$)|chat(?:\/|$)|search(?:\/|$)|money(?:\/|$)|map(?:\/|$)|discover(?:\/|$)|connections\.html$|reports(?:\/|$)|explore(?:\/|$)|doc(?:\/|$)|subject(?:\/|$)|declared(?:\/|$)|about(?:\/|$)|methods(?:\/|$)|stats(?:\/|$)|expenses(?:\/|$)|bills?(?:\/|$)|(?:${RECORD_PAGES})(?:\/|$)|(?:${STATIC_PAGES})\/?$)`);
+// Registers and the one video page have fixed addresses, so they are named.
+const REGISTERS = new Set(['vic-gifts', 'state-bills', 'government-finance', 'act-invoices', 'sa-grants', 'gov-advertising', 'tax-expenditures']);
 export function safePath(value) {
   try {
     const url = new URL(value, 'https://opax.com.au');
@@ -68,6 +72,24 @@ function recordTemplate(path) {
     if (third === undefined) return `/money/${second}`;
     if (second === 'grants' && fourth === 'recipient') return '/money/grants/[jurisdiction]/recipient/[id]';
     return `/money/${second}/[id]`;
+  }
+  // Hubs and reports: the page names the family, the record is a placeholder.
+  if (first === 'sitting' || first === 'estimates' || first === 'audit' || first === 'vic-election-2026') {
+    if (second === undefined) return `/${first}`;
+    return third === undefined ? `/${first}/[id]` : '/other';
+  }
+  if (first === 'instrument') return second === undefined ? '/instrument' : third === undefined ? '/instrument/[id]' : '/other';
+  if (first === 'report') return second !== undefined && third === undefined ? '/report/[slug]' : '/other';
+  if (first === 'official-reports') {
+    if (second === undefined) return '/official-reports';
+    return third === undefined ? '/official-reports/[collection]' : '/other';
+  }
+  if (first === 'register') return second !== undefined && third === undefined && REGISTERS.has(second) ? `/register/${second}` : '/other';
+  if (first === 'video') return second === 'senate' && third === undefined ? '/video/senate' : '/other';
+  if (first === 'reports') {
+    if (second === undefined) return '/reports';
+    if (third === undefined) return '/reports/[slug]';
+    return third === 's' && fourth !== undefined ? '/reports/[slug]/s/[n]' : '/other';
   }
   return path;
 }

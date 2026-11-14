@@ -128,6 +128,20 @@ the page-view allowlist). The message has quoted text replaced with
 rejected or thrown non-error value redacted unless it is a plain literal, and is
 capped at 200 characters.
 
+## Page paths
+
+`page_path` and `$pathname` hold a route pattern, never the real address:
+`/subject/person/[slug]`, `/bill/[id]`, `/doc/[slug]`, `/sitting/[id]`,
+`/estimates/[id]`, `/vic-election-2026/[id]`, `/audit/[id]`, `/instrument/[id]`,
+`/report/[slug]`, `/official-reports/[collection]`, `/reports/[slug]`,
+`/reports/[slug]/s/[n]` and the money patterns (`/money/receipts/[id]`,
+`/money/grants/[jurisdiction]/recipient/[id]`). Pages with fixed addresses are
+named as they are (`/ask`, `/terms`, `/register/vic-gifts`, `/video/senate`).
+`/other` is for paths that are not a page. Patterns live in
+`portal/analytics/privacy.mjs`; `portal/test/analytics-routes.test.mjs` reads the
+Worker's route table (`matchSeoRoute`) and the app's views, so a new route
+without a pattern fails the test.
+
 ## Build, test, deploy
 
 From `portal/`:
