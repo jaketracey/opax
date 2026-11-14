@@ -839,6 +839,19 @@ test('reply text: a rejected answer object gets the answer tool\'s feedback in t
   assert.deepEqual(model.calls.map(choiceOf),['required','auto','auto'])
 })
 
+test('reply text: a reply that only says what the model will look up next gets feedback, and research goes on',async()=>{
+  const first='The housing report found planning rules slowed approvals.'
+  const model=scriptedResearchModel([{tool_calls:[call('search',{query:'housing report'},'s')]},{text:'I will search the committee hearings next.'},{text:JSON.stringify({points:[{claim:first}]})}])
+  const {research,kb}=replyResearch(model)
+  const run=await api.runAgentic(question,{asset:async()=>null,kb,generate:async()=>{throw Error('planner must not run')},research},async()=>{},40_000,api.inferPeriod(question),{},emptyScope)
+  assert.equal(model.calls.length,3,'one more research turn, no final answer call')
+  assert.equal(run.answered,true)
+  assert.equal(run.answer.replace(/^- /,''),first)
+  assert.equal(run.research.answer_stats.salvaged,undefined)
+  assert.match(JSON.stringify(model.calls[2].prompt.at(-1)),/no tool call and no answer object/)
+  assert.deepEqual(model.calls[2].prompt.slice(0,model.calls[1].prompt.length),model.calls[1].prompt)
+})
+
 test('reply text: an answer tool call, though the tool is not offered, is still checked and answers',async()=>{
   const first='The housing report found planning rules slowed approvals.'
   const model=scriptedResearchModel([{tool_calls:[call('search',{query:'housing report'},'s')]},{tool_calls:[call('answer',{points:[{claim:first}]},'a')]}])

@@ -888,16 +888,21 @@ export function createResearch(options: ResearchOptions): Research {
           }
         })
       }:undefined)
-      let conversation: ModelMessage[] | undefined, roundsBefore = 0
+      let conversation: ModelMessage[] | undefined, roundsBefore = 0, planFed = false
       for (;;) {
         const reply = await Promise.race([turns(conversation, roundsBefore), stopped])
         check()
         // A reply-text answer gets the answer tool's own check. A rejected one gets the tool's feedback in the same
-        // conversation, a repair turn as after a rejected tool call, while rounds remain. Other reply text ends research.
+        // conversation, a repair turn as after a rejected tool call, while rounds remain. The model can also end its turn
+        // on a line about what it will look up next: that plan (no answer object, and not usable prose, which answers as
+        // written) gets the same kind of feedback once and research goes on; a second plan ends research, and the salvage
+        // answers from what it holds. Other reply text ends research.
         if (finished || !qualitativeRun) break
         const replied = replyAnswer(reply.text)
-        if (!replied) break
-        const feedback = await answerCall(replied)
+        const planned = !replied && !planFed && !!reply.text.trim() && !REPLY_OBJECT.test(reply.text) && !usableProse(reply.text)
+        if (planned) planFed = true
+        if (!replied && !planned) break
+        const feedback = replied ? await answerCall(replied) : errorResult('answer', 'the reply had no tool call and no answer object; call a tool to keep researching, or reply with the answer object')
         check()
         if (finished || stats.rounds >= limits.rounds) break
         conversation = [...(conversation ?? [{ role: 'user' as const, content: request }]), ...reply.responseMessages, { role: 'user' as const, content: JSON.stringify(feedback) }]
