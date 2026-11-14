@@ -5349,7 +5349,7 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
       kicker: 'Parliamentarian',
       title: display,
       lines: [[p.party, where].filter(Boolean).join(' · '), ...(p.speech_scope ? [] : [`${p.speech_count_basis ? 'Transcript aggregate' : 'Collected records'}: ${years(p.first, p.last)}`])],
-      ...(p.speech_count_basis ? {} : { stat: { value: num(p.speeches ?? 0), label: 'speeches in the Opax record' } }),
+      ...(p.speech_count_basis ? {} : { stat: { value: num(p.speeches ?? 0), label: 'speeches in the OPAX record' } }),
       ...(p.representation?.some(r => r.jurisdiction === 'vic') ? {authorisation: VIC_ELECTION_AUTHORISATION_LINE} : {}),
       dot: partyColour(moneyParties, p.party),
       portraitId,

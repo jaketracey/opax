@@ -7,7 +7,7 @@ import {fundingContinuation, fundingFollowUp, fundingNameChoice, fundingScopeQue
 import {financialYear, receiptPeriodQuery} from './receipt-period'
 import {earliestReceiptYear, latestReceiptYear, readReceiptPeriod} from './receipt-reading'
 import {questionKey, sameQuestion} from './question-key'
-import {asideDonorNames, isReceiptGraph, mentionedReceiptIndustries, moneyQuestion, receiptAnswer, receiptGraphForQuestion, unmatchedReceiptRankingScope, voiceReceiptData, type ReceiptGraph} from './voice-money'
+import {asideDonorNames, isReceiptGraph, mentionedReceiptIndustries, moneyQuestion, receiptAnswer, receiptDonorChoices, receiptGraphForQuestion, unmatchedReceiptRankingScope, voiceReceiptData, type ReceiptGraph} from './voice-money'
 import {otherReceiptsLine,publicFundingLine,receiptSplit} from '../public/donor-disclosure.js'
 import type {ReceiptFact} from './research-types'
 
@@ -376,7 +376,7 @@ export function withReading<T extends {answer:string;citations:Record<string,num
  * Each reading taken (a period, a grouping, the likeliest of several matching
  * names) is stated in one line, and the other readings are offered.
  */
-function readMoneyRanking(input:RecordQuestion,graph:ReceiptGraph,file:string,jurisdiction:string,carried:Carried,asked:string,options:{topTen?:boolean;reading?:string;allowChoice?:boolean}={}):ReadPayload|null {
+function readMoneyRanking(input:RecordQuestion,graph:ReceiptGraph,file:string,jurisdiction:string,carried:Carried,asked:string,options:{topTen?:boolean;reading?:string;choices?:number}={}):ReadPayload|null {
   // The question's own period is read first, while financial-year labels are
   // still visible ("since 2023–24" starts at 2023–24; "since 2023" at 2022–23).
   // A donor name a router wrote in ("Comscrv (No. 2092) Pty Ltd - Loan") is held
@@ -388,15 +388,39 @@ function readMoneyRanking(input:RecordQuestion,graph:ReceiptGraph,file:string,ju
   // Explicit dates in this question outrank stale UI controls on every route.
   if (/\b(?:19|20)\d{2}\b/.test(periodText)) input={...input,from:undefined,to:undefined}
   const result=receiptAnswer(graph,query,jurisdiction,'https://opax.com.au',{...input,compareYears:yearComparisonQuestion(periodText)})
-  // A partial organisation name is answered for its likeliest match.
-  const nameChoice=(fragment:string)=>{
-    if(options.allowChoice===false)return null
-    const escaped=fragment.split(/\s+/).map(word=>word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('[^a-z0-9]+')
-    const written=new RegExp('\\b'+escaped+'\\b','i').exec(query)?.[0]??fragment
-    const choice=fundingNameChoice(graph,fragment,jurisdiction,label=>query.replace(new RegExp('\\b'+escaped+'\\b','i'),()=>label),input,written)
+  // A partial organisation name is answered for its likeliest match. Several
+  // short names in one question are read one at a time, each reading stated,
+  // and a comparison keeps its own wording with the name replaced.
+  const choicesLeft=options.choices??3
+  const nameChoice=(fragment:string):ReadPayload|null=>{
+    if(choicesLeft<=0)return null
+    const keep=comparisonQuestion(query)||yearComparisonQuestion(periodText)
+    // Words as written, allowing "and" where the map writes "&" ("Ernst and Young").
+    const pattern=(name:string)=>name.split(/\s+/).map(word=>word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('[^a-z0-9]+(?:and[^a-z0-9]+)?')
+    const choose=(name:string,pending='')=>{
+      const escaped=pattern(name)
+      const written=new RegExp('\\b'+escaped+'\\b','i').exec(query)?.[0]??name
+      // A second organisation counts only when the question lists it ("A and B", "A, B").
+      const several=new RegExp('(?:,|&|\\band)\\s*'+escaped+'\\b|\\b'+escaped+'\\s*(?:,|&|and\\b)','i').test(query)
+      return fundingNameChoice(graph,name,jurisdiction,label=>query.replace(new RegExp('\\b'+escaped+'\\b','i'),()=>label),input,written,{keep,pending,several})
+    }
+    let choice=choose(fragment)
+    // Otherwise the longest run of words that begins a name in this map is read
+    // first; the rest of the fragment is read on the next pass. A run ends only
+    // where the question lists another name ("and", "&" or a comma), never
+    // inside one name ("Rail, Tram & Bus").
+    const words=fragment.split(/\s+/).filter(Boolean)
+    const names=(text:string)=>receiptDonorChoices(graph,text).length>0
+    const splits=(at:number)=>new RegExp('\\b'+pattern(words[at-1])+'\\s*(?:,|&|\\band\\b)\\s*'+pattern(words[at])+'\\b','i').test(query)
+      && !Array.from({length:at},(_,from)=>from).some(from=>[' ',' and '].some(join=>names(words.slice(from,at).join(' ')+join+words.slice(at).join(' ').split(' ')[0])))
+    for(let size=words.length-1;size>0&&!choice;size--)
+      for(let at=0;at+size<=words.length&&!choice;at++){
+        const name=words.slice(at,at+size).join(' ')
+        if(names(name)&&(at===0||splits(at))&&(at+size===words.length||splits(at+size)))choice=choose(name,[...words.slice(0,at),...words.slice(at+size)].join(' '))
+      }
     if(!choice)return null
     return readMoneyRanking({...input,question:choice.question},graph,file,jurisdiction,
-      {reading:[carried.reading,read.reading,choice.reading].filter(Boolean).join(' '),options:[...carried.options,...choice.options??[]]},asked,{...options,allowChoice:false})
+      {reading:[carried.reading,read.reading,choice.reading].filter(Boolean).join(' '),options:[...carried.options,...choice.options??[]]},asked,{...options,choices:choicesLeft-1})
   }
   const missingScope=()=>({answer:'Name a donor, industry or recipient party from the [money map](https://opax.com.au/money) and OPAX will calculate its disclosed receipts.',citations:{},sources:[],answer_status:'needs_scope',money_ranking:true})
   if(!result) return comparisonQuestion(query)||yearComparisonQuestion(query)?null:nameChoice(unmatchedReceiptRankingScope(graph,query,{selected_donors:[],selected_parties:[],selected_industries:[]}))||missingScope()
@@ -406,7 +430,8 @@ function readMoneyRanking(input:RecordQuestion,graph:ReceiptGraph,file:string,ju
   if(unmatched){
     // Preserve unsupported comparison handling; no partial ranking is returned.
     if((comparisonQuestion(query)||yearComparisonQuestion(periodText)) && (/\bfrom\s+(?!(?:19|20)\d{2}\b)/i.test(query)||/\b(?:lobby|industry|sector)\b/i.test(query)) && !result.selected_industries.length&&!result.selected_donors.length)return null
-    return nameChoice(unmatched)||{answer:`OPAX calculates from the donor, industry and party names in the [money map](https://opax.com.au/money); **${unmatched}** is not one of them. Ask again with a name from the map and the calculation will cover your whole question.`,citations:{},sources:[],answer_status:'needs_scope',money_ranking:true}
+    // Names already read are stated; no option drops the unmatched words.
+    return nameChoice(unmatched)||withReading({answer:`OPAX calculates from the donor, industry and party names in the [money map](https://opax.com.au/money); **${unmatched}** is not one of them. Ask again with a name from the map and the calculation will cover your whole question.`,citations:{},sources:[],answer_status:'needs_scope',money_ranking:true},[options.reading,carried.reading],[],asked)
   }
   if(/\bfrom\s+(?!(?:19|20)\d{2}\b)/i.test(query) && !result.selected_industries.length && !result.selected_donors.length) return null
   if(/\b(?:lobby|industry|sector)\b/i.test(query) && !result.selected_industries.length && !result.selected_donors.length) return null
@@ -427,11 +452,14 @@ function readMoneyRanking(input:RecordQuestion,graph:ReceiptGraph,file:string,ju
   return withReading(answer,lines,choices(result.selected_parties.length?'donors':'parties'),asked)
 }
 
+/** The named organisations as one phrase the calculator reads back ("A and B"). */
+const namedDonors=(result:ReceiptTotals)=>result.selected_donors.length?result.selected_donors.join(' and '):undefined
+
 /** Each period or name option as a complete question for the same selection. */
 export function readingChoices(result:ReceiptTotals,periodOptions:ReceiptTotals['period_options'],carried:FollowUp[]=[]) {
   return (mode:FundingSelection['mode']):FollowUp[]=>{
     const selection:FundingSelection={party:result.selected_parties[0],industry:result.selected_industries[0],
-      donor:result.selected_industries.length?undefined:result.selected_donors.length===1?result.selected_donors[0]:undefined,...result.requested_years,mode}
+      donor:result.selected_industries.length?undefined:namedDonors(result),...result.requested_years,mode}
     return [...carried,...periodChoices(selection,periodOptions,result.jurisdiction),
       ...result.scope_options.map(o=>({label:o.label,question:fundingScopeQuestion({...selection,...(o.party?{party:o.party}:{})},result.jurisdiction)}))]
   }
@@ -626,7 +654,7 @@ export function calculatedMoneyAnswer(result:ReceiptTotals,graph:ReceiptGraph,qu
   if(options.member)answer+=` · [${plain(options.member.name)}’s declared interests](${options.member.href})`
   const context=moneyContext(result)
   const money_question=fundingScopeQuestion({party:result.selected_parties[0],industry,
-    donor:industry?undefined:result.selected_donors.length===1?result.selected_donors[0]:undefined,
+    donor:industry?undefined:namedDonors(result),
     ...result.requested_years,mode:fromDonors?'donors':allFlows?'connections':'parties'},jurisdiction)
   const money_facts=moneyFacts(money_question,allFlows?'source and recipient party':fromDonors?'source':'recipient party',context,rows,jurisdiction,result.selected_parties[0],result.total_aud)
   if(money_facts){
