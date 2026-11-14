@@ -1,11 +1,11 @@
-/** Who voted against the rest of their party in one division: the one rule Ask's division tool,
+/** Who voted differently from most of their party in one division: the one rule Ask's division tool,
  * the division pages (Worker and browser) and the /api/resource division response all use.
  * A member counts only when their party is a named party with at least five recorded aye/no
  * votes and a strict majority on the other side. Independents, presiding-officer labels, unknown
  * parties, ties, paired and absent votes never count. Plain JS so the browser can load it too. */
 
-export const AGAINST_PARTY_TITLE = 'Voted against their party';
-export const AGAINST_PARTY_HELP = 'Voting against your own party is often called crossing the floor.';
+export const AGAINST_PARTY_TITLE = 'Voted differently from most of their party';
+export const AGAINST_PARTY_HELP = 'Each member\'s vote is compared with how most of their party voted. The record does not show whether a party allowed a free vote.';
 export const AGAINST_PARTY_MIN_VOTES = 5;
 
 /** Independents and presiding-officer labels do not describe a coherent party. The export no longer

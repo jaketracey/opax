@@ -1,4 +1,4 @@
-// "Voted against their party" on division pages: one rule (public/division-against-party.js) for
+// "Voted differently from most of their party" on division pages: one rule (public/division-against-party.js) for
 // Ask's division tool, the Worker page, the browser page and the /api/resource division response,
 // pinned on real published divisions.
 import test from 'node:test';
@@ -29,7 +29,7 @@ const browser = runInNewContext(`${fn('divisionAgainstHTML')}; divisionAgainstHT
 /** The section's text on the Worker page: from its heading to the member lists. */
 function serverSection(d) {
   const html = renderDivisionAnswer(d, [], new Map()).html;
-  const at = html.indexOf('<h3>Voted against their party</h3>');
+  const at = html.indexOf('<h3>Voted differently from most of their party</h3>');
   if (at < 0) return '';
   return text(html.slice(at, html.indexOf('<h3>', at + 4)));
 }
@@ -45,7 +45,7 @@ test('Senate 9535: one Liberal senator voted no while the other 8 voted aye', ()
   assert.ok(d.members.some(m => m.party === 'Independent' && m.vote === 'no'));
   assert.ok(d.members.some(m => m.party === 'United Australia Party' && m.vote === 'no'));
   const section = serverSection(d);
-  assert.equal(section, 'Voted against their party Voting against your own party is often called crossing the floor. Alex Antic (Liberal). Voted no; the other 8 Liberal senators voted aye.');
+  assert.equal(section, 'Voted differently from most of their party Each member\'s vote is compared with how most of their party voted. The record does not show whether a party allowed a free vote. Alex Antic (Liberal). Voted no; the other 8 Liberal senators voted aye.');
   assert.match(renderDivisionAnswer(d, [], new Map()).html, new RegExp(`<a href="${personUrl('Alex Antic')}"[^>]*>Alex Antic</a> \\(Liberal\\)`));
   assert.equal(text(browser(d)), section, 'the browser page shows the same words');
   assert.match(browser(d), new RegExp(`<a href="${personUrl('Alex Antic')}">Alex Antic</a>`));
@@ -78,7 +78,7 @@ test('a party-line division shows no section and no "nobody" line', () => {
   const d = division('federal-senate-9534');
   assert.equal(against.votedAgainstParty(d), null);
   const html = renderDivisionAnswer(d, [], new Map()).html;
-  assert.doesNotMatch(html, /against their party|crossing the floor|crossed the floor/i);
+  assert.doesNotMatch(html, /most of their party|free vote|crossing the floor|crossed the floor/i);
   assert.equal(browser(d), '');
 });
 

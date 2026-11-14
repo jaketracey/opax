@@ -48,10 +48,10 @@ let voteTables;
 const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=50d61c68ca").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
-// Who voted against their party: the rule and words the Worker page, the app and Ask share.
+// Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
 // Hand-stamped: bump ?v= when it changes (a content stamp would need a 101st _headers rule).
 let divisionAgainst;
-const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?v=1").then(module => { divisionAgainst = module; }));
+const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?v=2").then(module => { divisionAgainst = module; }));
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
 const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=348801ccf3").then(module => { growthModules = module; }));
@@ -13813,7 +13813,7 @@ function divisionBillsHTML(bills) {
   return `<div class="division-bills">On the ${link(bills[0])}${rest.length ? ` <details class="division-bills-more"><summary>and ${rest.length} related ${rest.length === 1 ? "bill" : "bills"}</summary><ul class="ui-list" role="list">${rest.map((b) => `<li>${link(b)}</li>`).join("")}</ul></details>` : ""}</div>`;
 }
 
-/** "Voted against their party", by the shared rule (division-against-party.js), in the
+/** "Voted differently from most of their party", by the shared rule (division-against-party.js), in the
  *  Worker page's words; empty when nobody did or the module could not load. */
 function divisionAgainstHTML(d) {
   const view = divisionAgainst?.votedAgainstParty(d);
