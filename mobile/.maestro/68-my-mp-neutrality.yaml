@@ -1,8 +1,10 @@
 appId: au.com.opax.app
 name: 68 My MP neutrality across Labor, Coalition and crossbench, with and without official URLs
 ---
-# Fixture contract: DATA-7 URLs held for Albanese, Ley and Steggall; no URLs
-# for Plibersek, Tehan and Haines. Each trio has the same data availability.
+# Fixture contract: DATA-7 URLs held for Albanese and Steggall; no URLs for
+# David Farley, Plibersek, Tehan and Haines. The pinned roster (4 Sep 2026)
+# has no sitting Coalition member with an official URL: Sussan Ley's Farrer
+# term ended 27 Feb 2026 and David Farley (One Nation) holds it since 9 May.
 # No party determines which verbs, menu items or Your MP capsule are shown.
 - runFlow:
     file: support/my-mp-neutrality-member.yaml
@@ -17,9 +19,9 @@ name: 68 My MP neutrality across Labor, Coalition and crossbench, with and witho
     env:
       SEAT: Farrer
       SEAT_SLUG: federal-representatives-nsw-farrer
-      MEMBER: Sussan Ley
-      SLUG: sussan-ley
-      HAS_URL: 'yes'
+      MEMBER: David Farley
+      SLUG: david-farley
+      HAS_URL: 'no'
 - runFlow:
     file: support/my-mp-neutrality-member.yaml
     env:
