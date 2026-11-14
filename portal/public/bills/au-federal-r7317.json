@@ -13,6 +13,8 @@
  "portfolio": "Infrastructure, Transport, Regional Development, Communications and the Arts",
  "status": "lapsed",
  "status_as_of": "2025-07-21",
+ "ended": "lapsed",
+ "ended_label": "Lapsed",
  "key_dates": [
   {
    "stage": "introduced",

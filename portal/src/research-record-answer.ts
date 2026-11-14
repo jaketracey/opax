@@ -50,7 +50,14 @@ function divisionFinding(text: string) {
 }
 const partyFinding = (finding: NonNullable<ReturnType<typeof divisionFinding>>, party: RegExpMatchArray) => `${party[1]} voted ${party[2]}${party[3] ?? ''} on ${finding.title} ${finding.context}, with ${party[4]} ayes and ${party[5]} noes`
 const memberFinding = (finding: NonNullable<ReturnType<typeof divisionFinding>>, member: RegExpMatchArray) => `${member[1]} (${member[2]}) voted ${member[3]} on ${finding.title} ${finding.context}`
-const statusFinding = (m: RegExpExecArray) => `The ${m[1]} ${m[2] === 'passed' ? 'passed' : m[2] === 'lapsed' ? 'did not pass; it lapsed' : 'has recorded status ' + m[2]} as at ${m[3]}`
+/** "lapsed (Removed from the Notice Paper)": a dead bill's status with its exact ending (record-common billCitations). */
+const endingClause = (label: string) => /^lapsed\b/i.test(label) ? 'it lapsed'
+  : /^not\b/i.test(label) ? `it is recorded as ${label[0].toLowerCase()}${label.slice(1)}`
+  : `it was ${label[0].toLowerCase()}${label.slice(1)}`
+const statusFinding = (m: RegExpExecArray) => {
+  const ended = /^(lapsed|negatived) \((.+)\)$/.exec(m[2])
+  return `The ${m[1]} ${m[2] === 'passed' ? 'passed' : ended ? `did not pass; ${endingClause(ended[2])}` : m[2] === 'lapsed' ? 'did not pass; it lapsed' : 'has recorded status ' + m[2]} as at ${m[3]}`
+}
 const statusPattern = /^The (.+) has recorded status (.+?) as at (.+)\.$/
 
 /** Project the division tool's labelled fields to prose before claim binding.

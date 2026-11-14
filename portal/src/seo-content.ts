@@ -42,6 +42,8 @@ interface Seat {
 }
 interface Bill {
   key: string; title: string; short_title?: string; status?: string; status_as_of?: string;
+  /** A dead bill's exact ending in words ("Removed from the Notice Paper"); absent otherwise. */
+  ended_label?: string;
   sponsor?: string; sponsor_person_id?: string; sponsor_party?: string; portfolio?: string; introduced?: string;
   sponsors?: { name: string; person_id?: string | null; party?: string | null }[];
   sources?: { kind: string; url: string }[];
@@ -74,6 +76,8 @@ const PAGE_SIZE = 50
 export const escapeHtml = (value: unknown): string => String(value ?? '').slice(0,5000).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!))
 const fold = (s: string) => s.normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g,' ').trim().toLowerCase()
 const human = (s: string | null | undefined) => String(s ?? '').replace(/_/g,' ')
+/** A dead bill's exact ending when the export names one (`ended_label`), else its status. */
+const billStatusText = (b: { status?: string; ended_label?: string }, fallback: string) => b.ended_label?.trim() || human(b.status || fallback)
 const count = (n: number) => n.toLocaleString('en-AU')
 const currency = (n: number) => new Intl.NumberFormat('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0}).format(n)
 // A chamber code by name (labels.js); a written-out stage house ("Assent") as written, never a code.
@@ -435,7 +439,7 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   const party = b.sponsor_party && sponsorParties.includes(b.sponsor_party) ? b.sponsor_party : null
   // A private member's "(s) ..." sponsor print is not a portfolio (bills-007).
   const portfolio = b.portfolio && !/^\s*\(s\)/.test(b.portfolio) ? b.portfolio : ''
-  const description = `${human(b.status || 'Status not recorded')}${b.status_as_of ? `, as at ${b.status_as_of}` : ''}. ${portfolio ? `${portfolio} portfolio.` : ''}`
+  const description = `${billStatusText(b, 'Status not recorded')}${b.status_as_of ? `, as at ${b.status_as_of}` : ''}. ${portfolio ? `${portfolio} portfolio.` : ''}`
   const coSponsors = (b.sponsors || []).slice(1).map(s=>{
     const person = sponsorPerson(s.name, s.person_id ?? undefined, people) as Person | null
     return (person ? link(personHref(person,slugs),person.name) : escapeHtml(s.name)) + (s.party && sponsorParties.includes(s.party) ? ` (${escapeHtml(s.party)})` : '')
@@ -451,7 +455,7 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   const sameSponsor = related.filter(r=>r.key!==b.key && !!b.sponsor && fold(r.sponsor || '')===fold(b.sponsor)).slice(0,20)
   const samePortfolio = related.filter(r=>r.key!==b.key && !!b.portfolio && fold(r.portfolio || '')===fold(b.portfolio)).slice(0,20)
   for(const [label,rows] of [['Other bills from this sponsor',sameSponsor],['Other bills in this portfolio',samePortfolio]] as const) {
-    if (rows.length) body += `<h2>${label}</h2><ul>${rows.map(r=>`<li>${link(`/bill/${r.key}`,r.short_title || r.title)} — introduced ${escapeHtml(r.introduced || 'date not recorded')}, ${escapeHtml(human(r.status || 'status not recorded'))}</li>`).join('')}</ul>`
+    if (rows.length) body += `<h2>${label}</h2><ul>${rows.map(r=>`<li>${link(`/bill/${r.key}`,r.short_title || r.title)} — introduced ${escapeHtml(r.introduced || 'date not recorded')}, ${escapeHtml(billStatusText(r, 'status not recorded'))}</li>`).join('')}</ul>`
   }
   body += `<p>Stage dates describe the parliamentary progress recorded by the source. They do not establish when provisions commence. A bill before parliament is a proposal; its text can change before passage. Division totals describe the recorded question on that date. A procedural vote does not establish support for the bill. Check the official bill text and explanatory memorandum for the wording.</p><p>${link(`/bills/${b.key}.json`,'Bill data export')} · ${link('/bills','Browse bills')} · ${link('/ask','Ask about the parliamentary record')} · ${link('/methods','Sources and methods')}</p>`
   body += `<h2>Sources</h2>${(b.sources || []).map(s=>`<p>${escapeHtml(human(s.kind))}</p>${original(s.url)}`).join('')}`
@@ -532,7 +536,7 @@ export async function renderDirectory(dir: string, url: URL, read: ReadAsset, pe
   if (dir==='bills') {
     const data = await read<{bills:Bill[]}>('/bills/index.json')
     const hubs = await read<{weeks:{start:string;end:string}[]}>('/hubs/index.json')
-    const content = paginate(url,data.bills.map(b=>({href:`/bill/${b.key}`,label:b.short_title || b.title,detail:human(b.status || '')})),'Bills','Australian parliamentary bills: recorded stages, sponsors, divisions and machine-written summaries where available.')
+    const content = paginate(url,data.bills.map(b=>({href:`/bill/${b.key}`,label:b.short_title || b.title,detail:billStatusText(b, '')})),'Bills','Australian parliamentary bills: recorded stages, sponsors, divisions and machine-written summaries where available.')
     content.html = content.html.replace('</h1>',`</h1><p>${link(currentSittingPath(hubs.weeks,sydneyDay()),'This sitting week')}</p>`)
     return content
   }

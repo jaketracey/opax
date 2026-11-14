@@ -13,6 +13,8 @@
  "portfolio": null,
  "status": "lapsed",
  "status_as_of": "2024-11-20",
+ "ended": "negatived",
+ "ended_label": "Voted down",
  "key_dates": [
   {
    "stage": "introduced",

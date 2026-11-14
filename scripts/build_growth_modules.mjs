@@ -119,7 +119,7 @@ export async function buildGrowth(root=fileURLToPath(new URL('../portal/public',
   const person=sponsorPerson(bill.sponsor,bill.sponsor_person_id,roster.people);
   const rows=person ? grouped.get(`${bill.jurisdiction}:${person.pid || person.name}`) || [] : [];
   const bills=[...rows].sort((a,b)=>String(b.introduced||'').localeCompare(String(a.introduced||''))).slice(0,6)
-   .map(b=>Object.fromEntries(['key','title','short_title','introduced','status','jurisdiction'].map(k=>[k,b[k]])));
+   .map(b=>Object.fromEntries(['key','title','short_title','introduced','status','ended_label','jurisdiction'].map(k=>[k,b[k]])));
   await write(path,{person:person ?Object.fromEntries(['name','full','pid'].filter(k=>person[k]!=null).map(k=>[k,person[k]])):null,bills,generated:index.meta?.generated || ''});
  }
  // Rank once during the build; browsers fetch only the five awards for one agency.

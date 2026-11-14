@@ -13,6 +13,8 @@
  "portfolio": "Treasury",
  "status": "lapsed",
  "status_as_of": "2014-07-10",
+ "ended": "negatived",
+ "ended_label": "Voted down",
  "key_dates": [
   {
    "stage": "introduced",

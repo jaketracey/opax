@@ -30,7 +30,7 @@ export function canonicalPartyPages(sources?: {
 export function readPartyPages(read: <T>(path: string, init?: {cache: 'no-cache'}) => Promise<T>): Promise<PartyPage[]>;
 export function resolvePartyPage(segment: string, pages: PartyPage[]): PartyPage | null;
 export function partyPageCoverage(page: PartyPage): string;
-export interface PartyBill { key: string; title: string; introduced: string | null; status: string | null; party?: string }
+export interface PartyBill { key: string; title: string; introduced: string | null; status: string | null; ended_label?: string; party?: string }
 export function partyBills(label: string, divisions: { bills?: Record<string, PartyBill[]> } | null | undefined, same?: (a: string, b: string) => boolean): PartyBill[];
 export function partyBillsHTML(label: string, bills: PartyBill[], h: { esc: (s: unknown) => string; sourceLineHTML: (o: object) => string }, opts?: { updated?: string }): string;
 export function dayMonthYear(day: string): string;
