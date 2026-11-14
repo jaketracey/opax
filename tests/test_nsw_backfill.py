@@ -142,6 +142,13 @@ def test_parser_splits_member_anchors_without_metadata():
     assert all(s['text'].count(TEXT)==1 for s in speeches)
 
 
+def test_unknown_speaker_heading_fails_closed_instead_of_inheriting_name():
+    import xml.etree.ElementTree as E
+    xml = XML.replace(b'MemberSpeech-H', b'MemberNewForm-H')
+    with pytest.raises(ValueError, match='Unrecognised NSW speaker heading'):
+        n.extract_speeches_from_fragment(E.fromstring(xml))
+
+
 def test_calendar_exception_and_empty_year_fail(monkeypatch):
     original = __import__('importlib').reload(n).get_sitting_days
     monkeypatch.setattr(n,'_api_json',Mock(side_effect=ValueError('bad year')))
@@ -266,3 +273,124 @@ def test_year_without_recognised_chambers_is_error_but_recess_subset_is_valid(mo
     payload[0]['Events'][0]['TocDocId']=''
     with pytest.raises(ValueError,match='missing chamber TOC'):
         original(date(2023,1,1),date(2023,12,31))
+
+
+def test_review_fragment_separates_nanva_question_from_graham_answer():
+    import xml.etree.ElementTree as E
+    source=Path(__file__).parent/'fixtures/nsw-hansard/HANSARD-1820781676-94532.xml'
+    speeches=n.extract_speeches_from_fragment(E.parse(source).getroot())
+    questions=[s for s in speeches if s['speaker_id']=='2295']
+    answers=[s for s in speeches if s['speaker_id']=='2224']
+    assert len(questions)==2 and len(answers)==2
+    assert all('Answer only:' not in s['text'] for s in questions)
+    assert all('Question only:' not in s['text'] for s in answers)
+    assert all('JOHN GRAHAM' in s['speaker_name'] for s in answers)
+    assert any('Continuation' in s['text'] for s in answers)
+
+
+@pytest.mark.parametrize('heading', [
+    'MemberSpeech-H', 'MemberUpper-H', 'MemberLower-H', 'MemberQuestion-H',
+    'MemberAnswer-H', 'OfficeSpeech-H', 'OfficeUpper-H', 'OfficeLower-H',
+])
+def test_all_cached_heading_forms_start_a_separate_turn(heading):
+    import xml.etree.ElementTree as E
+    xml=XML.decode().replace('MemberUpper-H',heading)
+    speeches=n.extract_speeches_from_fragment(E.fromstring(xml))
+    assert len(speeches)==3
+    assert speeches[0]['speaker_name']=='Mr CHRIS MINNS'
+    assert all(s['text'].count(TEXT)==1 for s in speeches)
+
+
+def test_explicit_span_id_wins_over_pending_anchor_and_unresolved_byline_resets_speaker():
+    import xml.etree.ElementTree as E
+    xml=XML.decode().replace('class="MemberUpper-H"','class="MemberAnswer-H" data-mode="member" data-value="2224"')
+    speeches=n.extract_speeches_from_fragment(E.fromstring(xml))
+    assert speeches[0]['speaker_id']=='2224'
+    # A new surname byline cannot inherit the preceding member's personal ID.
+    xml=xml.replace('<a data-mode="member" data-value="999"/>','').replace('Ms JANE EXAMPLE','Mr UNKNOWN')
+    assert n.extract_speeches_from_fragment(E.fromstring(xml))[-1]['speaker_id']==''
+
+
+def test_held_turns_retry_after_dated_evidence_improves_on_an_occupied_owned_day(db):
+    db.executemany('INSERT INTO members VALUES (?,?,?,?,?,?)',[
+        ('a','Jane Example','nsw_la','nsw','2020-01-01',None),
+        ('b','Jane Example','nsw_la','nsw','2020-01-01',None)])
+    db.commit()
+    first=b.run(db)
+    assert first['inserted']==1 and first['held_turns']==2
+    original=db.execute('SELECT speech_id FROM speeches').fetchone()[0]
+    assert b.run(db)['inserted']==0
+    db.execute("UPDATE members SET left_house='2022-12-31' WHERE person_id='b'");db.commit()
+    retry=b.run(db)
+    assert retry['inserted']==1 and retry['held_turns']==1
+    assert retry['incomplete_left']==1
+    assert db.execute('SELECT person_id FROM speeches WHERE speech_id=?',(original,)).fetchone()[0]=='nsw_hansard_108'
+    assert b.run(db)['inserted']==0
+    assert n._api_get.call_count==1
+
+
+def test_wholly_held_day_is_retried_after_resolver_revision(db,monkeypatch):
+    n._api_get.return_value=XML.replace(b'Mr CHRIS MINNS',b'Mr UNKNOWN').replace(b'Ms JANE EXAMPLE',b'Mr UNKNOWN')
+    assert b.run(db)['inserted']==0
+    assert b.run(db)['incomplete_left']==1
+    n._api_get.assert_called_once()
+    resolve=b.resolve_member
+    db.execute("INSERT INTO members VALUES ('known','Chris Minns','nsw_la','nsw','2023-01-01',NULL)")
+    db.commit()
+    def improved(db,speech,chamber,day):
+        if speech['speaker_id']=='108':return 'known',None
+        return resolve(db,speech,chamber,day)
+    monkeypatch.setattr(b,'resolve_member',improved)
+    assert b.run(db)['inserted']==1
+    assert n._api_get.call_count==1
+
+
+def test_held_and_publication_failures_prevent_false_clear():
+    progress={('nsw_la','2023-05-09'):{'held_turns':2,'publication_pending':3,'publication_failed':1,'stage_errors':0}}
+    counts={('nsw_la','2023-05-09'):10}
+    receipt=b.coverage_receipt([SITTING],counts,progress)
+    assert receipt['gaps'][0]['missing_dates']==[]
+    assert receipt['gaps'][0]['incomplete_dates']==['2023-05-09']
+    b.guard_coverage([SITTING],counts,receipt,progress)
+    receipt['gaps']=[]
+    with pytest.raises(ValueError,match='coverage guard'):
+        b.guard_coverage([SITTING],counts,receipt,progress)
+
+
+def test_owned_day_error_is_retried_without_changing_existing_speech_ids(db):
+    assert b.run(db)['inserted'] == 2
+    ids = db.execute('SELECT speech_id FROM speeches ORDER BY speech_id').fetchall()
+    db.execute("UPDATE nsw_backfill_days SET error='receipt unavailable'")
+    db.commit()
+    retried = b.run(db)
+    assert len(retried['days']) == 1 and retried['inserted'] == 0
+    assert db.execute('SELECT speech_id FROM speeches ORDER BY speech_id').fetchall() == ids
+    assert db.execute('SELECT error FROM nsw_backfill_days').fetchone()[0] is None
+    assert n._api_get.call_count == 1
+
+
+def test_2022_cannot_be_written_even_when_an_old_calendar_returns_it(db):
+    n.get_sitting_days.return_value=[{**SITTING,'date':'2022-10-19'}]
+    with pytest.raises(ValueError,match='bounds'):
+        b.run(db)
+    assert db.execute('SELECT COUNT(*) FROM speeches').fetchone()[0]==0
+
+
+def test_http_error_body_budget_is_checked_and_closed(monkeypatch):
+    import importlib,io
+    real=importlib.reload(n)._api_get
+    clock=[0.0]
+    monkeypatch.setattr(n.time,'monotonic',lambda:clock[0])
+    monkeypatch.setattr(n.time,'sleep',lambda s:None)
+    monkeypatch.setattr(n,'_next_request_at',0)
+    monkeypatch.setattr(n,'REQUEST_DEADLINE',1)
+    class Slow(io.BytesIO):
+        def read1(self,size):
+            clock[0]=2
+            return b'error'
+    body=Slow()
+    opener=Mock();opener.open.side_effect=urllib.error.HTTPError(n.API_BASE,500,'error',{},body)
+    monkeypatch.setattr(n.source_http,'build_opener',lambda:opener)
+    with pytest.raises(n.BudgetSpent):real(n.API_BASE+'/year/2023')
+    assert body.closed
+    assert opener.open.call_count==1

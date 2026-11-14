@@ -35,6 +35,7 @@ from pathlib import Path
 from typing import Any, Iterator, Optional
 
 from parli.arag import AragConfig, AragError, KbClient, load_dotenv
+from parli.ingest import nsw_publication
 from parli.ingest.speaker_roles import chair_role, chair_party_sql
 from parli.ingest.speech_hygiene import (
     clean_party,
@@ -115,7 +116,9 @@ def prepare_dedupe(db: sqlite3.Connection, since: str, after: int | None = None)
     the desktop's NVMe, a night's worth of temp-file I/O on a network disk. Leave `after` unset (the
     repair path, --full) for every date."""
     t0 = time.time()
-    only_new_dates = (f"date IN (SELECT DISTINCT date FROM speeches WHERE speech_id > {int(after)}) AND "
+    owned_dates = (" OR speech_id IN (SELECT speech_id FROM nsw_backfill_turns WHERE speech_id IS NOT NULL)"
+                   if nsw_publication.managed(db) else "")
+    only_new_dates = (f"date IN (SELECT DISTINCT date FROM speeches WHERE speech_id > {int(after)}{owned_dates}) AND "
                       if after else "")
     db.execute("CREATE TEMP TABLE IF NOT EXISTS zenodo_dates AS "
                "SELECT DISTINCT date FROM speeches WHERE source='zenodo'")
@@ -322,6 +325,8 @@ def save_state(state: dict) -> None:
 
 def _push_one(kb: KbClient, body: dict) -> tuple[str, Optional[str]]:
     """Returns (slug, error). A 409 slug conflict counts as already-done."""
+    if body.get('extra', {}).get('metadata', {}).get('nsw_backfill') and not nsw_publication.approved():
+        return body['slug'], 'NSW backfill publication held pending spend approval'
     try:
         kb.create_resource(body)
         return body["slug"], None
@@ -334,6 +339,8 @@ def _push_one(kb: KbClient, body: dict) -> tuple[str, Optional[str]]:
 def _batches(db: sqlite3.Connection, spec: dict, after: int, remaining: int,
              since: str, batch_size: int = 200) -> Iterator[list[sqlite3.Row]]:
     select = spec["select"].format(since=since)
+    if spec['pk'] == 'speech_id':
+        select = select.replace('ORDER BY speech_id LIMIT ?', nsw_publication.exclude_sql(db) + ' ORDER BY speech_id LIMIT ?')
     while remaining > 0:
         rows = db.execute(select, (after, min(batch_size, remaining))).fetchall()
         if not rows:
@@ -343,6 +350,62 @@ def _batches(db: sqlite3.Connection, spec: dict, after: int, remaining: int,
         remaining -= len(rows)
 
 
+def sync_nsw_backfill(kb, db, state, limit, dry_run, since):
+    """Drain repair-owned IDs independently of normal sync's high-water mark.
+
+    Default-off applies even to retries and previously checkpointed rows. The
+    normal read-only DB stays read-only; ack/failure receipts use sync's JSON.
+    """
+    if not nsw_publication.managed(db) or not nsw_publication.approved() or limit <= 0:
+        return 0
+    pub = nsw_publication.ledger(state)
+    done = set(map(int, pub['published'])) | set(map(int, pub['excluded']))
+    db.execute('CREATE TEMP TABLE IF NOT EXISTS nsw_publication_done (speech_id INTEGER PRIMARY KEY)')
+    db.execute('DELETE FROM temp.nsw_publication_done')
+    db.executemany('INSERT INTO temp.nsw_publication_done VALUES (?)', [(sid,) for sid in done])
+    predicate = (f' AND speech_id IN ({nsw_publication.ready_ids_sql(db)}) '
+                 'AND speech_id NOT IN (SELECT speech_id FROM temp.nsw_publication_done) ')
+    select = TABLES['speeches']['select'].format(since=since).replace('ORDER BY speech_id LIMIT ?', predicate + ' ORDER BY speech_id LIMIT ?')
+    # Apply exactly normal sync's eligibility rules. Excluded short/procedural
+    # or duplicate texts are distinct from an acknowledged publication.
+    eligible = {r[0] for r in db.execute(select.replace('SELECT *', 'SELECT speech_id', 1), (0, 10**12))}
+    controlled = {r[0] for r in db.execute('SELECT speech_id FROM speeches WHERE length(text)>=200 AND speech_id IN ('
+                                        + nsw_publication.ready_ids_sql(db) + ')')}
+    if not dry_run:
+        pub['excluded'] = sorted(set(pub['excluded']) | (controlled - eligible - done))
+    after = attempted = 0
+    while attempted < limit:
+        rows = db.execute(select, (after, min(200, limit-attempted))).fetchall()
+        if not rows:
+            break
+        if dry_run:
+            print(f'[NSW backfill] {len(rows)} approved candidates; dry run, no publication')
+            return len(rows)
+        bodies = []
+        for row in rows:
+            body = map_speech(row)
+            body['extra']['metadata']['nsw_backfill'] = True
+            bodies.append(body)
+        with ThreadPoolExecutor(max_workers=WORKERS) as pool:
+            futures = {pool.submit(_push_one, kb, body): row['speech_id'] for row,body in zip(rows,bodies)}
+            for future in as_completed(futures):
+                sid = futures[future]
+                slug, error = future.result()
+                if error:
+                    pub['failed'][str(sid)] = error
+                else:
+                    pub['published'].append(sid)
+                    pub['failed'].pop(str(sid), None)
+                    state.get('tables', {}).get('speeches', {}).get('failed', {}).pop(slug, None)
+        pub['published'] = sorted(set(pub['published']))
+        save_state(state)
+        after = rows[-1]['speech_id']
+        attempted += len(rows)
+    if not dry_run:
+        save_state(state)
+    return attempted
+
+
 def sync_table(kb: KbClient, db: sqlite3.Connection, table: str, spec: dict,
                state: dict, limit: int, dry_run: bool, since: str) -> None:
     tstate = state["tables"].setdefault(table, {"after": 0, "pushed": 0, "failed": {}})
@@ -350,7 +413,9 @@ def sync_table(kb: KbClient, db: sqlite3.Connection, table: str, spec: dict,
     print(f"[{table}] resuming after {spec['pk']}={after}, "
           f"{tstate['pushed']:,} already pushed, {len(tstate['failed'])} failed")
 
+    examined = 0
     for rows in _batches(db, spec, after, limit, since):
+        examined += len(rows)
         bodies = [spec["map"](r) for r in rows]
         if dry_run:
             # Never advance or persist the checkpoint on a dry run.
@@ -376,6 +441,10 @@ def sync_table(kb: KbClient, db: sqlite3.Connection, table: str, spec: dict,
         if done and done % 1000 < len(rows):
             print(f"[{table}] {done:,} pushed (checkpoint {spec['pk']}={tstate['after']})")
 
+    if table == 'speeches':
+        sync_nsw_backfill(kb, db, state, max(0, limit-examined), dry_run, since)
+    if dry_run:
+        return
     save_state(state)
     print(f"[{table}] done: {tstate['pushed']:,} pushed, {len(tstate['failed'])} failed")
 
@@ -400,6 +469,9 @@ def retry_failed(kb: KbClient, db: sqlite3.Connection, state: dict) -> None:
             if row is None:
                 tstate["failed"].pop(slug)
                 continue
+            if table == 'speeches' and nsw_publication.owned(db, pk_val):
+                nsw_publication.ledger(state)['failed'].setdefault(str(pk_val), tstate['failed'][slug])
+                continue
             _, err = _push_one(kb, spec["map"](row))
             if err is None:
                 tstate["pushed"] += 1
@@ -407,6 +479,8 @@ def retry_failed(kb: KbClient, db: sqlite3.Connection, state: dict) -> None:
             else:
                 tstate["failed"][slug] = err
         save_state(state)
+
+    sync_nsw_backfill(kb, db, state, SAFETY_LIMIT, False, DEFAULT_SINCE)
 
 
 # ---------------------------------------------------------------------------
@@ -536,6 +610,8 @@ def repair_speech_texts(
             if row is None or row["text_clean"] is None:
                 state["failed"].pop(slug, None)
                 continue
+            if nsw_publication.owned(db, speech_id):
+                continue
             result = _patch_speech_text(kb, row, capture_sample=False)
             status = result["status"]
             run[status] = run.get(status, 0) + 1
@@ -555,7 +631,7 @@ def repair_speech_texts(
             "SELECT * FROM speeches WHERE speech_id > ? AND text_clean IS NOT NULL "
             f"AND ({condition}) AND date >= {since!r} AND LENGTH(text) >= {MIN_SPEECH_CHARS} "
             f"{JUNK_PREDICATES} {DEDUPE_PREDICATES} "
-            "ORDER BY speech_id LIMIT ?"
+            f"{nsw_publication.exclude_sql(db)} ORDER BY speech_id LIMIT ?"
         )
         rows = db.execute(sql, (state["after"], batch_size)).fetchall()
         if not rows:

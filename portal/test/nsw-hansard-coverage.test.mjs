@@ -52,3 +52,19 @@ test('coverage guard rejects unknown discovery, absent receipts and malformed ga
   }
   assert.throws(()=>coverageCollections(path=>path==='nsw-hansard-coverage.json'?null:read(path)),/coverage guard/);
 });
+
+
+test('occupied days remain incomplete for held identities and failed or pending publication',()=>{
+  const incomplete={...fixture,gaps:[{...fixture.gaps[0],missing_dates:[],incomplete_dates:['2023-05-09'],
+    held_turns:2,publication_pending:3,publication_failed:1}]};
+  const note=nswHansardCoverageNote(incomplete);
+  for(const phrase of ['NSW Assembly 2023: 1 sitting day incomplete','2 turns awaiting speaker identification',
+      '3 speeches awaiting publication','1 publication failure']) assert.ok(note.includes(phrase),phrase);
+  assert.doesNotMatch(note,/being added|being filled/);
+});
+
+test('disabled repair describes holes without a fill promise',()=>{
+  const disabled={...fixture,acquisition_enabled:false,publication_enabled:false};
+  assert.doesNotMatch(nswHansardCoverageNote(disabled),/being added|being filled/);
+  if(!receipt.publication_enabled) assert.ok(receipt.gaps.every(g=>g.status==='known, awaiting approval'));
+});

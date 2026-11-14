@@ -5,6 +5,7 @@ turns live in the selected SQLite, never in the legacy global progress file.
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import os
@@ -16,10 +17,10 @@ from collections import Counter
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
-from parli.ingest import nsw_hansard as adapter
+from parli.ingest import nsw_hansard as adapter, nsw_publication as publication
 from parli.ingest.speaker_names import normalize_speaker
 
-START = date(2022, 10, 1)
+START = date(2023, 1, 1)
 END = date(2025, 2, 28)
 DEFAULT_CAP = 4
 DEFAULT_BUDGET_S = 1200
@@ -27,6 +28,8 @@ DEFAULT_BUDGET_S = 1200
 # publication stays in normal refresh; no KB calls are made by this stage.
 PUBLISH_DOCS_PER_SECOND = 2
 SYNC_PREPARATION_S = 120
+PARSER_VERSION = publication.PARSER_VERSION
+RESOLVER_VERSION = "personal-source-id-v2"
 CHAMBERS = {"nsw_la": "NSW Assembly", "nsw_lc": "NSW Council"}
 DDL = """
 CREATE TABLE IF NOT EXISTS nsw_backfill_days (
@@ -67,43 +70,70 @@ def check_load():
 
 
 def day_counts(db, start=START, end=END):
-    """All-source occupancy: an occupied chamber day is never appended to."""
+    """All-source occupancy; only repair-owned held turns may be appended."""
     bounds(start, end)
     return {(ch, day): n for ch, day, n in db.execute(
         "SELECT chamber,date,COUNT(*) FROM speeches WHERE chamber IN ('nsw_la','nsw_lc') "
         "AND date BETWEEN ? AND ? GROUP BY chamber,date", (str(start), str(end)))}
 
 
-def known_gaps(calendar, counts):
-    """Watchdog hook: current zero-row source sittings, grouped by chamber/year.
+def known_gaps(calendar, counts, progress=None):
+    """Watchdog hook: missing or incomplete sittings, grouped by chamber/year.
 
-    Pure and offline. Empty list means filled only after successful discovery;
-    callers must never substitute [] for a discovery exception.
+    Pure and offline. Pass publication.progress(db, state) to retain held turns
+    and unacknowledged publication. Never substitute [] for discovery failure.
     """
     groups = {}
-    for s in calendar:
-        key = (s["chamber_code"], s["date"][:4])
-        g = groups.setdefault(key, {"source": "nsw_hansard", "chamber": key[0],
-                                   "year": int(key[1]), "expected_days": 0, "missing_dates": [],
-                                   "status": "known, being filled"})
-        g["expected_days"] += 1
-        if counts.get((key[0], s["date"]), 0) == 0:
-            g["missing_dates"].append(s["date"])
-    return [g for _, g in sorted(groups.items()) if g["missing_dates"]]
+    for sitting in calendar:
+        chamber, day = sitting["chamber_code"], sitting["date"]
+        key = (chamber, day[:4])
+        group = groups.setdefault(key, {"source": "nsw_hansard", "chamber": chamber,
+            "year": int(key[1]), "expected_days": 0, "missing_dates": [], "incomplete_dates": [],
+            "held_turns": 0, "publication_pending": 0, "publication_failed": 0, "stage_errors": 0,
+            "status": "known, incomplete" if publication.approved() else "known, awaiting approval"})
+        group["expected_days"] += 1
+        missing = counts.get((chamber, day), 0) == 0
+        if missing:
+            group["missing_dates"].append(day)
+        details = (progress or {}).get((chamber, day), {})
+        for field in ("held_turns", "publication_pending", "publication_failed", "stage_errors"):
+            group[field] += details.get(field, 0)
+        if missing or any(details.values()):
+            group["incomplete_dates"].append(day)
+    return [group for _, group in sorted(groups.items()) if group["incomplete_dates"]]
 
 
-def coverage_receipt(calendar, counts):
+def coverage_receipt(calendar, counts, progress=None):
     return {"schema": 1, "source": "nsw_hansard", "discovery": "complete",
             "checked_at": datetime.now(timezone.utc).isoformat(),
-            "start": str(START), "end": str(END), "gaps": known_gaps(calendar, counts)}
+            "acquisition_enabled": os.environ.get("OPAX_BACKFILL_NSW", "0") == "1",
+            "publication_enabled": publication.approved(),
+            "start": str(START), "end": str(END), "gaps": known_gaps(calendar, counts, progress)}
 
 
-def guard_coverage(calendar, counts, receipt):
-    """An empty warning list must agree with the successfully discovered days."""
+def guard_coverage(calendar, counts, receipt, progress=None):
+    """Occupancy cannot hide held turns or unacknowledged publication."""
     if (receipt.get("discovery") != "complete" or receipt.get("schema") != 1
             or receipt.get("source") != "nsw_hansard"
-            or receipt.get("gaps") != known_gaps(calendar, counts)):
+            or receipt.get("gaps") != known_gaps(calendar, counts, progress)):
         raise ValueError("NSW coverage guard: chamber-year gaps disagree with source sitting days")
+
+
+def initialise(db):
+    db.executescript(DDL)
+    columns = {row[1] for row in db.execute('PRAGMA table_info(nsw_backfill_days)')}
+    for name, definition in [('parser_version', 'INTEGER NOT NULL DEFAULT 0'),
+                             ('resolver_revision', "TEXT NOT NULL DEFAULT ''")]:
+        if name not in columns:
+            db.execute(f'ALTER TABLE nsw_backfill_days ADD COLUMN {name} {definition}')
+    db.commit()
+
+
+def resolver_revision(db):
+    evidence = list(db.execute("SELECT person_id,full_name,chamber,entered_house,left_house FROM members "
+                              "WHERE chamber IN ('nsw_la','nsw_lc') AND person_id NOT LIKE 'nsw_hansard_%' ORDER BY person_id"))
+    version = [PARSER_VERSION, RESOLVER_VERSION, os.environ.get('OPAX_BACKFILL_NSW_RESOLVER_REVISION', '')]
+    return hashlib.sha256(json.dumps([version, [list(row) for row in evidence]]).encode()).hexdigest()
 
 
 def write_json(path, data):
@@ -148,12 +178,17 @@ def resolve_member(db, speech, chamber, day):
     return pid, None
 
 
-def stage_day(db, sitting):
-    """Checkpoint downloads, then commit the complete day and its provenance atomically."""
+def stage_day(db, sitting, revision=None):
+    """Commit one complete assembly, or retry only held turns in an owned day."""
     toc, day, chamber = sitting["toc_doc_id"], sitting["date"], sitting["chamber_code"]
-    record = db.execute("SELECT uids FROM nsw_backfill_days WHERE toc_id=?", (toc,)).fetchone()
+    if not str(START) <= day <= str(END):
+        raise ValueError("NSW sitting outside approved repair bounds")
+    revision = revision or resolver_revision(db)
+    record = db.execute("SELECT uids,parser_version FROM nsw_backfill_days WHERE toc_id=?", (toc,)).fetchone()
     if record:
         uids = json.loads(record[0])
+        if record[1] != PARSER_VERSION and db.execute('SELECT 1 FROM nsw_backfill_turns WHERE toc_id=? LIMIT 1', (toc,)).fetchone():
+            raise ValueError('Older NSW parser output is quarantined; replay its retained fragments in an isolated stage')
     else:
         check_load()
         uids = list(dict.fromkeys(adapter.get_fragment_uids(toc)))
@@ -172,23 +207,20 @@ def stage_day(db, sitting):
                 or adapter.CHAMBER_MAP.get(root.findtext(".//hansard.header/chamber")) != chamber
                 or root.find(".//fragment.text") is None):
             raise ValueError(f"NSW fragment date/chamber/body mismatch: {uid}")
-        import hashlib
         db.execute("INSERT INTO nsw_backfill_fragments VALUES (?,?,?,?)",
                    (toc, uid, body, hashlib.sha256(body).hexdigest()))
         db.commit()
     check_load()
     inserted = held = eligible = publishable = 0
-    # No partially published day: a budget/refusal/error rolls back only assembly,
-    # retaining each successful download for the next night.
     try:
         db.execute("BEGIN IMMEDIATE")
-        if db.execute("SELECT 1 FROM speeches WHERE chamber=? AND date=? LIMIT 1", (chamber, day)).fetchone():
+        # An independently occupied day remains outside repair ownership.
+        if db.execute("SELECT 1 FROM speeches WHERE chamber=? AND date=? AND speech_id NOT IN "
+                      "(SELECT speech_id FROM nsw_backfill_turns WHERE toc_id=? AND speech_id IS NOT NULL) LIMIT 1",
+                      (chamber, day, toc)).fetchone():
             db.execute("UPDATE nsw_backfill_days SET status='occupied' WHERE toc_id=?", (toc,))
             db.commit()
             return {"inserted": 0, "held": 0, "eligible": 0, "status": "occupied"}
-        # Owner DB occupancy wins over a stale completed checkpoint. Retained
-        # fragments can restore a subsequently removed day without another fetch.
-        db.execute("DELETE FROM nsw_backfill_turns WHERE toc_id=?", (toc,))
         seen = set()
         for uid in uids:
             check_load()
@@ -197,8 +229,15 @@ def stage_day(db, sitting):
                 check_load()
                 digest = adapter.text_hash(speech["text"])
                 key = (speech["speaker_id"], speech["speaker_name"], digest)
-                pid, reason = resolve_member(db, speech, chamber, day)
                 eligible += 1
+                previous = db.execute('SELECT speech_id,status,body_hash FROM nsw_backfill_turns WHERE toc_id=? AND uid=? AND turn=?',
+                                      (toc, uid, turn)).fetchone()
+                if previous and previous[2] != digest:
+                    raise ValueError('NSW source turn changed; explicit reconciliation required')
+                if previous and previous[0] is not None and db.execute('SELECT 1 FROM speeches WHERE speech_id=?', (previous[0],)).fetchone():
+                    seen.add(key)
+                    continue
+                pid, reason = resolve_member(db, speech, chamber, day)
                 speech_id, status = None, "held"
                 if not pid:
                     held += 1
@@ -214,16 +253,16 @@ def stage_day(db, sitting):
                     speech_id, status = cursor.lastrowid, "inserted"
                     inserted += 1
                     publishable += int(len(speech["text"]) >= 200)
-                db.execute("INSERT INTO nsw_backfill_turns VALUES (?,?,?,?,?,?,?,?,?)",
-                           (toc, uid, turn, speech["speaker_id"], speech["speaker_name"], speech_id,
-                            status, reason, digest))
+                db.execute("INSERT OR REPLACE INTO nsw_backfill_turns VALUES (?,?,?,?,?,?,?,?,?)",
+                           (toc, uid, turn, speech["speaker_id"], speech["speaker_name"], speech_id, status, reason, digest))
         if not eligible:
             raise ValueError(f"NSW day yielded no eligible turns: {toc}")
         allowance = publishable / PUBLISH_DOCS_PER_SECOND
         adapter.check_budget(allowance + 5)
-        status = "complete" if inserted else "held"
-        db.execute("UPDATE nsw_backfill_days SET status=?,inserted=?,held=?,error=NULL WHERE toc_id=?",
-                   (status, inserted, held, toc))
+        status = "incomplete" if held else "loaded"
+        total = db.execute("SELECT COUNT(*) FROM nsw_backfill_turns WHERE toc_id=? AND status='inserted'", (toc,)).fetchone()[0]
+        db.execute("UPDATE nsw_backfill_days SET status=?,inserted=?,held=?,error=NULL,parser_version=?,resolver_revision=? WHERE toc_id=?",
+                   (status, total, held, PARSER_VERSION, revision, toc))
         db.commit()
         if adapter.REQUEST_DEADLINE is not None:
             adapter.REQUEST_DEADLINE -= allowance
@@ -235,7 +274,7 @@ def stage_day(db, sitting):
 
 
 def run(db, *, start=START, end=END, cap=DEFAULT_CAP, budget_s=DEFAULT_BUDGET_S,
-        coverage_path=None, receipt_path=None):
+        coverage_path=None, receipt_path=None, publication_state_path=None):
     bounds(start, end)
     if cap < 0 or not math.isfinite(budget_s) or budget_s <= 0:
         raise ValueError("NSW cap must be non-negative and budget must be positive and finite")
@@ -245,7 +284,7 @@ def run(db, *, start=START, end=END, cap=DEFAULT_CAP, budget_s=DEFAULT_BUDGET_S,
     result = {"source": "nsw_hansard", "cap": cap, "budget_s": budget_s,
               "days": [], "inserted": 0, "stop": "cap", "missing_before": None, "missing_left": None,
               "publish_allowance_s": 0, "sync_preparation_allowance_s": 0}
-    db.executescript(DDL)
+    initialise(db)
     # SQLite's scan is included in the wall budget. Do not leave its handler set.
     current = None
     try:
@@ -261,21 +300,20 @@ def run(db, *, start=START, end=END, cap=DEFAULT_CAP, budget_s=DEFAULT_BUDGET_S,
             db.set_progress_handler(None, 0)
         missing = [s for s in calendar if counts.get((s["chamber_code"], s["date"]), 0) == 0]
         result["missing_before"] = result["missing_left"] = len(missing)
-        result["coverage_gaps"] = known_gaps(calendar, counts)
-        for gap in result["coverage_gaps"]:
-            print(f"NSW coverage guard: {CHAMBERS[gap['chamber']]} {gap['year']}: "
-                  f"{len(gap['missing_dates'])} sitting days missing; known, being filled", flush=True)
-        # Nightly emits the post-normal-refresh, pre-backfill view. New rows can
-        # enter normal publication next night before their coverage warning clears.
-        if coverage_path:
-            if (start, end) != (START, END):
-                raise ValueError("Coverage requires the whole reviewed NSW interval")
-            coverage = coverage_receipt(calendar, counts)
-            guard_coverage(calendar, counts, coverage)
-            write_json(coverage_path, coverage)
-        statuses = dict(db.execute("SELECT toc_id,status FROM nsw_backfill_days"))
-        todo = [s for s in missing if statuses.get(s["toc_doc_id"]) != "held"]
-        result["held_days"] = len(missing) - len(todo)
+        publication_state = publication.read_state(publication_state_path)
+        revision = resolver_revision(db)
+        records = {row[0]: row[1:] for row in db.execute(
+            "SELECT toc_id,held,resolver_revision,parser_version,inserted,error FROM nsw_backfill_days")}
+        # Retry owned holds when resolver code or dated member evidence improves.
+        # Unchanged office holds do not consume the cap every night indefinitely.
+        todo = [s for s in calendar if
+                (counts.get((s['chamber_code'], s['date']), 0) == 0 and s['toc_doc_id'] not in records)
+                or (s['toc_doc_id'] in records and (
+                    records[s['toc_doc_id']][2] != PARSER_VERSION
+                    or bool(records[s['toc_doc_id']][4])
+                    or (records[s['toc_doc_id']][0] > 0 and records[s['toc_doc_id']][1] != revision)
+                    or (counts.get((s['chamber_code'], s['date']), 0) == 0 and (records[s['toc_doc_id']][0] == 0 or records[s['toc_doc_id']][3] > 0))))]
+        result['held_days'] = sum(row[0] > 0 for row in records.values())
         if todo and cap:
             result["sync_preparation_allowance_s"] = SYNC_PREPARATION_S
             adapter.REQUEST_DEADLINE -= SYNC_PREPARATION_S
@@ -284,7 +322,7 @@ def run(db, *, start=START, end=END, cap=DEFAULT_CAP, budget_s=DEFAULT_BUDGET_S,
             current = sitting
             started = time.monotonic()
             try:
-                day_result = stage_day(db, sitting)
+                day_result = stage_day(db, sitting, revision)
             finally:
                 db.execute("UPDATE nsw_backfill_days SET seconds=seconds+? WHERE toc_id=?",
                            (time.monotonic() - started, sitting["toc_doc_id"]))
@@ -293,10 +331,28 @@ def run(db, *, start=START, end=END, cap=DEFAULT_CAP, budget_s=DEFAULT_BUDGET_S,
                                    "toc_id": sitting["toc_doc_id"], "seconds": round(time.monotonic()-started, 3), **day_result})
             result["inserted"] += day_result["inserted"]
             result["publish_allowance_s"] += day_result.get("publish_allowance_s", 0)
-            result["missing_left"] -= int(day_result["inserted"] > 0)
+            key = (sitting['chamber_code'], sitting['date'])
+            if day_result['inserted'] and not counts.get(key, 0):
+                result['missing_left'] -= 1
+            counts[key] = counts.get(key, 0) + day_result['inserted']
             print(json.dumps(result["days"][-1]), flush=True)
+        progress = publication.progress(db, publication_state)
+        result['coverage_gaps'] = known_gaps(calendar, counts, progress)
+        result['incomplete_left'] = sum(len(g['incomplete_dates']) for g in result['coverage_gaps'])
+        result['held_turns'] = sum(g['held_turns'] for g in result['coverage_gaps'])
+        result['publication_pending'] = sum(g['publication_pending'] for g in result['coverage_gaps'])
+        result['publication_failed'] = sum(g['publication_failed'] for g in result['coverage_gaps'])
+        for gap in result['coverage_gaps']:
+            print(f"NSW coverage guard: {CHAMBERS[gap['chamber']]} {gap['year']}: "
+                  f"{len(gap['incomplete_dates'])} sitting days incomplete; {gap['status']}", flush=True)
+        if coverage_path:
+            if (start, end) != (START, END):
+                raise ValueError('Coverage requires the whole reviewed NSW interval')
+            coverage = coverage_receipt(calendar, counts, progress)
+            guard_coverage(calendar, counts, coverage, progress)
+            write_json(coverage_path, coverage)
         if len(todo) <= cap:
-            result["stop"] = "complete" if not result["missing_left"] else "held"
+            result['stop'] = 'complete' if not result['incomplete_left'] else 'incomplete'
         nights = math.ceil(len(todo) / cap) if cap else None
         result["estimated_nights_before"] = nights
         result["estimated_completion_if_next_night"] = str(date.today() + timedelta(days=nights)) if nights else None

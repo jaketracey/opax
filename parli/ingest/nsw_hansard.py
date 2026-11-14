@@ -74,6 +74,18 @@ BATCH_SIZE = 500
 PROGRESS_DIR = Path("~/.cache/autoresearch/nsw_hansard").expanduser()
 
 
+def _read_body(response) -> bytes:
+    """Read success and error bodies at deadline checkpoints."""
+    chunks = []
+    while True:
+        check_budget()
+        chunk = response.read1(65536)
+        check_budget()
+        if not chunk:
+            return b"".join(chunks)
+        chunks.append(chunk)
+
+
 def _api_get(url: str, accept: str = "application/json", retries: int = 2) -> bytes:
     """NSW API only, one request per second, at most one retry, no redirects.
 
@@ -100,16 +112,7 @@ def _api_get(url: str, accept: str = "application/json", retries: int = 2) -> by
         timeout = 60 if REQUEST_DEADLINE is None else min(60, REQUEST_DEADLINE - time.monotonic())
         try:
             with source_http.build_opener().open(req, timeout=timeout) as resp:
-                chunks = []
-                while True:
-                    check_budget()
-                    # read1 returns after one buffered/socket read, so a slow
-                    # streaming body cannot hide the deadline inside read().
-                    chunk = resp.read1(65536)
-                    if not chunk:
-                        break
-                    chunks.append(chunk)
-                body = b"".join(chunks)
+                body = _read_body(resp)
                 source_http.check_response(url, resp.status, body, resp.headers,
                                            expected_json="json" in accept)
                 if not 200 <= resp.status < 300:
@@ -117,8 +120,13 @@ def _api_get(url: str, accept: str = "application/json", retries: int = 2) -> by
                 return body
         except (urllib.error.URLError, TimeoutError, OSError) as error:
             if isinstance(error, urllib.error.HTTPError):
-                source_http.check_response(url, error.code, error.read(), error.headers)
-                delay = source_http.retry_after(error.headers.get("Retry-After"))
+                try:
+                    # Check refusal headers before waiting for any error body.
+                    source_http.check_response(url, error.code, headers=error.headers)
+                    source_http.check_response(url, error.code, _read_body(error), error.headers)
+                    delay = source_http.retry_after(error.headers.get("Retry-After"))
+                finally:
+                    error.close()
             else:
                 delay = 0
             if attempt + 1 >= min(retries, 2):
@@ -175,12 +183,19 @@ def extract_text_from_body(body_elem: ET.Element) -> str:
     return clean_html(raw)
 
 
-def extract_speeches_from_fragment(xml_root: ET.Element) -> list[dict]:
-    """Split source member anchors and bylines, retaining their original IDs.
+SPEAKER_HEADINGS = frozenset({
+    "MemberSpeech-H", "MemberUpper-H", "MemberLower-H", "MemberQuestion-H", "MemberAnswer-H",
+    "OfficeSpeech-H", "OfficeUpper-H", "OfficeLower-H",
+})
 
-    NSW uses both MemberSpeech-H and MemberUpper-H, and anchors between
-    paragraphs. Never carry a named speaker across an unidentifiable byline.
+
+def extract_speeches_from_fragment(xml_root: ET.Element) -> list[dict]:
+    """A named byline always starts a turn. Explicit byline IDs beat anchors.
+
+    Never inherit the preceding speaker when a new byline is unresolved. Source
+    IDs can occur on spans as well as anchors, including questions and answers.
     """
+    from parli.ingest.speaker_names import normalize_speaker
     chamber = xml_root.findtext(".//hansard.header/chamber", "").strip()
     data = xml_root.find(".//fragment.data")
     fragment = xml_root.find(".//fragment.text")
@@ -193,15 +208,14 @@ def extract_speeches_from_fragment(xml_root: ET.Element) -> list[dict]:
     talkers = []
     if data is not None:
         for t in data.iter("talker"):
-            info = {"id": t.findtext("id", "").strip(),
-                    "name": t.findtext("name", "").strip(),
+            info = {"id": t.findtext("id", "").strip(), "name": t.findtext("name", "").strip(),
                     "electorate": t.findtext("electorate", "").strip()}
             if info not in talkers:
                 talkers.append(info)
     empty = {"id": "", "name": "", "electorate": ""}
     current = dict(talkers[0]) if len(talkers) == 1 else dict(empty)
     parts, speeches = [], []
-    anchor_pending = False
+    pending_id = None
 
     def flush():
         text = clean_html(" ".join(parts))
@@ -215,24 +229,35 @@ def extract_speeches_from_fragment(xml_root: ET.Element) -> list[dict]:
         tag = element.tag.rsplit("}", 1)[-1]
         if tag == "a" and element.get("data-mode") == "member":
             flush()
-            sid = element.get("data-value", "")
-            candidates = [t for t in talkers if t["id"] == sid]
-            current = dict(candidates[0]) if len(candidates) == 1 else {**empty, "id": sid}
-            anchor_pending = True
+            pending_id = element.get("data-value", "")
+            current = {**empty, "id": pending_id}
         elif tag == "p":
             if element.get("class", "") in ("SubDebate-H", "SubSubDebate-H"):
                 continue
-            byline = next((e for e in element.iter() if e.get("class", "") in
-                           ("MemberSpeech-H", "MemberUpper-H", "OfficeSpeech-H", "OfficeUpper-H")), None)
-            if byline is not None:
+            unknown = {e.get('class') for e in element.iter()
+                       if e.get('class', '').startswith(('Member', 'Office'))
+                       and e.get('class') not in SPEAKER_HEADINGS}
+            if unknown:
+                raise ValueError(f"Unrecognised NSW speaker heading: {sorted(unknown)}")
+            bylines = [e for e in element.iter() if e.get("class") in SPEAKER_HEADINGS
+                       and any(c.isalpha() for c in "".join(e.itertext()))]
+            # Offices can have a second span naming their occupant in brackets.
+            # It remains an office turn, never a second guessed personal turn.
+            if len(bylines) > 1 and not all(e.get("class", "").startswith("Office") for e in bylines):
+                raise ValueError("Multiple NSW speaker bylines in one paragraph require review")
+            if bylines:
+                flush()
+                byline = bylines[0]
                 name = clean_html(" ".join(byline.itertext())).rstrip(": ")
-                if not anchor_pending:
-                    flush()
-                    matches = [t for t in talkers if t["name"].rstrip(": ") == name]
-                    current = dict(matches[0]) if len(matches) == 1 else dict(empty)
-                if not current["name"]:
-                    current["name"] = name
-                anchor_pending = False
+                sid = byline.get("data-value") if byline.get("data-mode") == "member" else pending_id
+                normal = (normalize_speaker(name) or "").casefold()
+                matches = [t for t in talkers if normal and (normalize_speaker(t["name"]) or "").casefold() == normal]
+                if not sid and len(matches) == 1:
+                    sid = matches[0]["id"]
+                # The byline supplies the name even when an ID matched metadata.
+                current = {"id": sid or "", "name": name,
+                           "electorate": matches[0]["electorate"] if len(matches) == 1 else ""}
+                pending_id = None
             parts.append(ET.tostring(element, encoding="unicode", method="text").strip())
     flush()
     return speeches
@@ -420,6 +445,7 @@ def main():
                         help="Bounded, checkpointed repair of the reviewed NSW gap; requires OPAX_DB")
     parser.add_argument("--coverage-json", type=Path)
     parser.add_argument("--receipt-json", type=Path)
+    parser.add_argument("--publication-state", type=Path)
     fts.add_argument(parser)
     args = parser.parse_args()
 
@@ -442,7 +468,8 @@ def main():
             with sqlite3.connect(path.as_uri() + "?mode=rw", uri=True, timeout=5) as db:
                 db.execute("PRAGMA foreign_keys=ON")
                 nsw_backfill.run(db, start=start, end=end, cap=cap, budget_s=budget,
-                                 coverage_path=args.coverage_json, receipt_path=args.receipt_json)
+                                 coverage_path=args.coverage_json, receipt_path=args.receipt_json,
+                                 publication_state_path=args.publication_state)
         return
 
     start = date.fromisoformat(args.start or "2020-01-01")

@@ -1,5 +1,7 @@
 # NSW Hansard gap repair, 14 November 2026
 
+**Superseded:** see [the review changes and spend hold](2026-11-14-nsw-hansard-gap-note-2.md) for the corrected parser, 2023 lower bound, held/publication tracking and default-off switches. The acquisition measurements below are historical evidence, not the current operating defaults or a completion commitment.
+
 Branch: `im/nsw-hansard-gap`. This implements the bounded nightly repair and its coverage warning. It does not change production data from this desktop. The final handoff names the pushed commit.
 
 ## Calendar and confirmed missing days
