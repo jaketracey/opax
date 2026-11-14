@@ -83,9 +83,13 @@ def inventory(root=ROOT):
         for i, row in enumerate(p['periods']):
             add(p['name'], dict(row, chamber='senate'), 'handbook-party', f'handbook/{p["pid"]}/{i}',
                 actor=actor, url=handbook['url'], observed_through=row.get('through'))
+    # A roster row may carry the catalogue's own person id as its verified pid (reviewed dated House
+    # identities, parli.ingest.speaker_identity); its catalogue terms are then that same actor, not a name.
+    roster_pids = {str(p['pid']) for p in roster['people'] if p.get('pid')}
     for term in bundle['terms']:
         p, seat = catalog_people[term['person_id']], seats[term['electorate_id']]
-        actor = identity(p['name'], seat['chamber'], p.get('legacy_person_id'), p.get('aliases', []))
+        pid = p.get('legacy_person_id') or (p['person_id'] if p['person_id'] in roster_pids else None)
+        actor = identity(p['name'], seat['chamber'], pid, p.get('aliases', []))
         url = next((sources[s]['url'] for s in term.get('sources', []) if s in sources), None)
         row = dict(term, chamber=seat['chamber'])
         add(p['name'], row, 'catalog-term', 'catalog/' + term['representation_id'], actor=actor, url=url)
