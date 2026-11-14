@@ -372,6 +372,90 @@ test("an open thread's inset drops the hidden large-title band: its question sit
   ).toBe(rhythm.heading);
 });
 
+// b64 on the Duo's outer display (466 x 678 pt): the status bar sits on the
+// side rail, so the top inset is 0, yet UIKit sets the bar below the top edge
+// (back pill about 23-72 pt) and shows no large title. Ask's inline geometry
+// assumed a 44 pt bar from the 0 pt inset and took a 32 pt "band" off the
+// thread's inset, so the question drew under the back pill and title.
+test.each([
+  // device, bar edge, window, insets, measured header, real compact bar
+  ['Duo outer, side rail', 'trailing', 466, 678, 0, 60, 76, 76],
+  // A 62 pt Dynamic Island inset (56.5 pt status area), 44 pt bar, and the
+  // 52 pt large-title frame UIKit keeps once the title goes inline (sweep 1,
+  // 7.1).
+  ['standard iPhone', 'unspecified', 402, 874, 62, 0, 152.5, 100.5],
+] as const)(
+  'the %s thread starts its question below the measured bar, at rest and when pinned',
+  async (_device, edge, width, height, top, right, measured, bar) => {
+    const window = Dimensions.get('window');
+    const barEdge = jest
+      .spyOn(RootBar, 'useVerticalBarEdge')
+      .mockReturnValue(edge);
+    const platform = jest.replaceProperty(Platform, 'OS', 'ios');
+    const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(false);
+    const frames = jest
+      .spyOn(global, 'requestAnimationFrame')
+      .mockImplementation(() => 0);
+    act(() => {
+      Dimensions.set({ window: { ...window, width, height } });
+      setWindowTraitsOverride({
+        horizontal: 'compact',
+        vertical: 'regular',
+        foldable: edge !== 'unspecified',
+      });
+      resetAdaptiveDeviceForTests();
+    });
+    jest
+      .mocked(client.askPost)
+      .mockResolvedValueOnce(answer)
+      .mockResolvedValueOnce({ questions: [] });
+    try {
+      await mount(
+        <SafeAreaInsetsContext.Provider
+          value={{ top, bottom: 20, left: 0, right }}
+        >
+          <HeaderHeightContext.Provider value={measured}>
+            <AskScreen />
+          </HeaderHeightContext.Provider>
+        </SafeAreaInsetsContext.Provider>,
+      );
+      await type('A fixture question?');
+      await press('ask-submit');
+      const scroll = view!.root.find(
+        (n) => n.props.testID === 'ask-screen' && n.type === ScrollView,
+      );
+      // At rest: UIKit's automatic inset is the measured header; the thread's
+      // own contentInset only removes a real hidden large-title band.
+      const restTop =
+        measured +
+        (scroll.props.contentInset?.top ?? 0) +
+        StyleSheet.flatten(scroll.props.contentContainerStyle).paddingTop;
+      expect(restTop).toBeGreaterThanOrEqual(bar);
+      // And not far below it: the iPhone band fix stays (8 pt, not 60).
+      expect(restTop).toBe(bar + rhythm.heading);
+      // Pinned: the new turn's top lands just under the real bar.
+      await act(async () => {
+        byId('ask-turn')[0]!.props.onLayout({
+          nativeEvent: { layout: { y: 400 } },
+        });
+      });
+      const pinned = scrollTo.mock.lastCall![0] as unknown as { y: number };
+      expect(400 - pinned.y).toBeGreaterThanOrEqual(bar);
+      expect(400 - pinned.y).toBe(bar + rhythm.heading);
+    } finally {
+      act(() => {
+        Dimensions.set({ window });
+        setWindowTraitsOverride(undefined);
+        resetAdaptiveDeviceForTests();
+      });
+      frames.mockRestore();
+      idiom.mockRestore();
+      platform.restore();
+      barEdge.mockRestore();
+    }
+  },
+);
+
 test.each(['before', 'after'] as const)(
   'send pins below the compact bar when fallback frames run %s the turn layout and native height arrives late',
   async (frameOrder) => {
