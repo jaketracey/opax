@@ -127,7 +127,7 @@ let lastAsk = { question: "", sources: [] };
 let currentDocSlug = null;
 let currentDoc = null;
 
-const PANELS = ["money-records","connections","discover", "ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "privacy", "support", "bill"];
+const PANELS = ["money-records","connections","discover", "ask", "chat", "search", "money", "reports", "explore", "doc", "subject", "declared", "about", "methods", "stats", "expenses", "privacy", "support", "terms", "security", "bill"];
 // /bills is the bill panel's index; it has no panel of its own, so isRoute has
 // to be told the word is ours before the click handler will follow it.
 const PANEL_ALIASES = { bills: "bill" };
@@ -1225,6 +1225,8 @@ const TITLES = {
   expenses: "Expense definitions · OPAX",
   privacy: "Privacy · OPAX",
   support: "Support · OPAX",
+  terms: "Terms of use · OPAX",
+  security: "Security · OPAX",
   bill: "Bill · OPAX",
   bills: "Federal bills: votes, speeches & summaries · OPAX",
 };
@@ -2279,6 +2281,10 @@ async function route() {
     document.title = TITLES.support;
     setCrumbs(crumbsFor("/support"));
     renderSupport(params);
+  } else if (view === "terms" || view === "security") {
+    showPanel(view);
+    document.title = TITLES[view];
+    setCrumbs(crumbsFor(`/${view}`));
   } else {
     showPanel("ask");
     document.title = TITLES.ask;
@@ -16027,6 +16033,8 @@ const VIEW_DESCRIPTIONS = {
   expenses: "What each category in the Independent Parliamentary Expenses Authority's quarterly reports covers.",
   privacy: "What the OPAX website and app collect, which companies receive it, how long it is kept and how to delete your account.",
   support: "How to report a wrong record or answer, and help with signing in and deleting an OPAX account.",
+  terms: "The terms for using the OPAX website, the OPAX app and OPAX's research tools: what OPAX is, what you may do with it, and what it does not promise.",
+  security: "How to report a security problem with the OPAX website, app or research tools, and what to expect.",
 };
 const directoryPageCounts = new Map();
 function syncPathMeta() {

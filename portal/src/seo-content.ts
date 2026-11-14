@@ -137,7 +137,7 @@ export function answerBlock(title: string, description: string, body = '', crumb
   return `${crumbsHTML(crumbs)}<section id="prerender" class="wrap"><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p>${body}</section>`
 }
 /** Pages whose whole text is served by the Worker, copied from their panel in index.html. */
-export const SERVER_PANELS: ReadonlySet<string> = new Set(['privacy', 'support', 'methods', 'about', 'stats'])
+export const SERVER_PANELS: ReadonlySet<string> = new Set(['privacy', 'support', 'terms', 'security', 'methods', 'about', 'stats'])
 /**
  * The server-rendered copy of an information or policy page: the inner
  * markup of its panel in the shell (index.html), so the page a crawler or a

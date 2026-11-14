@@ -50,7 +50,7 @@ const ROUTES = [
 // The app's panels, each by an address it opens on.
 const PANEL_ROUTES = { 'money-records': '/money/receipts', connections: '/connections', discover: '/money/contracts', ask: '/ask', chat: '/chat',
   search: '/ask?view=search', money: '/money', reports: '/reports', explore: '/explore', doc: '/doc/division-x', subject: '/subject/person',
-  declared: '/declared', about: '/about', methods: '/methods', stats: '/stats', expenses: '/expenses', privacy: '/privacy', support: '/support', bill: '/bills' };
+  declared: '/declared', about: '/about', methods: '/methods', stats: '/stats', expenses: '/expenses', privacy: '/privacy', support: '/support', terms: '/terms', security: '/security', bill: '/bills' };
 
 test('every page kind is reachable from the menus or a documented entry', () => {
   const known = new Set(ROUTES.map(r => r.route));
@@ -135,6 +135,8 @@ const TRAILS = [
   ['/expenses', 'About OPAX › Expense definitions'],
   ['/privacy', 'About OPAX › Privacy'],
   ['/support', 'About OPAX › Support'],
+  ['/terms', 'About OPAX › Terms of use'],
+  ['/security', 'About OPAX › Security'],
   ['/community', 'About OPAX › Community'],
   ['/ask', 'Ask'],
   ['/ask?view=search', 'Search'],

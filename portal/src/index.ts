@@ -3778,6 +3778,16 @@ type DirectoryKind = 'person' | 'party' | 'donor' | 'campaigner' | 'supplier' | 
 const isDirectoryKind = (s: string): s is DirectoryKind => s in DIRECTORY_KINDS
 
 // Static pages: title as app.js TITLES sets it, blurb from the masthead menus.
+/** /.well-known/security.txt (RFC 9116). Renew Expires before it passes: a test fails 30 days ahead. */
+const SECURITY_TXT = [
+  'Contact: https://github.com/jaketracey/opax/security/advisories/new',
+  'Contact: mailto:support@opax.com.au?subject=Security',
+  'Expires: 2027-11-14T00:00:00.000Z',
+  'Preferred-Languages: en',
+  `Canonical: ${SITE_ORIGIN}/.well-known/security.txt`,
+  `Policy: ${SITE_ORIGIN}/security`,
+  '',
+].join('\n')
 const STATIC_PAGES: Record<string, { title: string; description: string; query?: boolean }> = {
   ask: { title: 'Ask & search the record · OPAX', description: 'Ask questions with answers citing supporting records, or search Australian parliamentary speeches, votes, funding and disclosures.', query: true },
   bills: {
@@ -3858,6 +3868,14 @@ const STATIC_PAGES: Record<string, { title: string; description: string; query?:
   privacy: {
     title: 'Privacy · OPAX',
     description: 'What the OPAX website and iPhone and iPad app collect, which companies receive it, how long it is kept, what voice sends to ElevenLabs and how to delete your account.',
+  },
+  terms: {
+    title: 'Terms of use · OPAX',
+    description: "The terms for using the OPAX website, the OPAX app and OPAX's research tools: what OPAX is, what you may do with it, and what it does not promise.",
+  },
+  security: {
+    title: 'Security · OPAX',
+    description: 'How to report a security problem with the OPAX website, app or research tools, and what to expect.',
   },
 }
 
@@ -6050,7 +6068,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   const noindex = meta.noindex || meta.status >= 400 || originalTableState || tableState || moneyTableState || (['/ask', '/search'].includes(url.pathname.replace(/\/+$/, '')) && Boolean(url.search))
   // Election coverage names unavailable grants, but renders no financial records.
   // Its renderer owns any future caveat alongside an actual political money pairing.
-  // The policy pages (privacy, support) name no association between records.
+  // The policy pages (privacy, support, terms, security) name no association between records.
   // Official report records quote a publisher's own document; they pair no records.
   if (!meta.notFound && route.kind !== 'official-reports' && !(route.kind === 'hub' && route.hub === 'vic-election') && !(route.kind === 'static' && SERVER_PANELS.has(route.page)) && route.kind !== 'source-report')
     meta.prerender=associationCaveat(meta.prerender || '',`${meta.description} ${meta.prerender || ''}`)
@@ -7346,6 +7364,8 @@ export default {
     if (url.pathname === '/.well-known/atproto-did') return /^did:plc:[a-z2-7]{24}$/.test(env.BSKY_DID ?? '')
       ? new Response(env.BSKY_DID, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=300' } })
       : new Response('Not found', { status: 404 })
+    // RFC 9116: where to report a security problem. The same contacts as /security.
+    if (url.pathname === '/.well-known/security.txt') return new Response(request.method === 'HEAD' ? null : SECURITY_TXT, { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } })
     const isApi = url.pathname.startsWith('/api/')
     const communityResponse = (response: Response) => { const secured = withSecurityHeaders(response, url); if (env.STAGING_API) secured.headers.set('x-robots-tag', 'noindex, nofollow'); return secured }
     if (url.pathname === '/api/ops/ask-gold') {
