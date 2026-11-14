@@ -2,7 +2,7 @@ import { ApiError } from '../../api/errors';
 import { isPartialCatalog } from '../../api/validation';
 import type { Catalogs } from '../../api/catalogs';
 import { catalogSources, personId, profileFor } from '../../api/catalogs';
-import { billName, billSentenceCase } from '../../api/bill-transforms';
+import { billName, billStatusWord } from '../../api/bill-transforms';
 import { partyMembers } from '../../api/party-page';
 import { nameKey } from '../../api/ids';
 import { formatMoney } from '../../design/format';
@@ -304,7 +304,7 @@ function billFingerprint(key: string, sources: FollowSources) {
   const markers: Fingerprint = {
     status: {
       value: row.status,
-      words: billSentenceCase(row.status).toLowerCase(),
+      words: billStatusWord(row.status).toLowerCase(),
       asAt: row.status_as_of,
     },
     moved: { value: row.status_as_of, asAt: row.status_as_of },

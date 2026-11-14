@@ -1,4 +1,4 @@
-import { billSentenceCase } from '../../api/bill-transforms';
+import { billSentenceCase, billStatusWord } from '../../api/bill-transforms';
 import { formatDate } from '../../design/format';
 
 /**
@@ -46,9 +46,10 @@ function stageEvent(
     return 'Passed both houses';
   if (/^(introduced|first reading)/.test(s)) return 'Introduced';
   const status = billSentenceCase(bill.status);
-  if (TERMINAL.test(s)) return billSentenceCase(stage.stage);
+  // "negatived" reads "Not agreed", the app's one wording (billStatusWord).
+  if (TERMINAL.test(s)) return billStatusWord(stage.stage);
   // The register files the day a bill lapsed as "other".
-  if (s === 'other' && TERMINAL.test(status)) return status;
+  if (s === 'other' && TERMINAL.test(status)) return billStatusWord(bill.status);
   return null;
 }
 

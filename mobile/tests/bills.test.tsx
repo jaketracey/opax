@@ -135,6 +135,18 @@ describe('the status event (2.1)', () => {
     expect(statusEventText(event!, 'long')).toBe('Royal Assent 26 August 2026');
   });
 
+  test('a negatived bill\'s status event reads "Not agreed", never "Negatived"', () => {
+    const bill = detail('au-federal-r7534');
+    for (const status_stage of ['negatived', 'other']) {
+      const event = statusEvent({
+        ...bill,
+        status: 'negatived',
+        status_stage,
+      });
+      expect(event).toMatchObject({ label: 'Not agreed', resolved: true });
+    }
+  });
+
   test('passed but not assented reads "Passed both houses"', () => {
     const bill = detail('au-federal-r7534');
     const event = statusEvent({
