@@ -496,7 +496,10 @@ function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>,
   // Said in words, never as a party line: an "Unknown" total would read as a party.
   if(missing && !minority) html+=`<p>${parties.length ? `No party is recorded for ${plural(missing)} on this date; they are not counted in any party line above.` : `No party is recorded for any of the ${plural(missing)} on this date.`}${heldNote}</p>`
   if(full) for(const side of [...new Set(members.map(m=>m.vote))]) {
-    html+=`<h3>${side==='aye' ? 'Ayes' : side==='no' ? 'Noes' : human(side)}</h3><ul>${members.filter(m=>m.vote===side).map(m=>`<li>${link(personUrl(m.name),m.name)}${m.party ? ` (${escapeHtml(m.party)})` : ''} — ${escapeHtml(side)}</li>`).join('')}</ul>`
+    const list=members.filter(m=>m.vote===side)
+    const tally=(side==='aye' ? d.ayes : side==='no' ? d.noes : list.length) ?? list.length
+    const count=list.length===tally ? list.length.toLocaleString('en-AU') : `${list.length.toLocaleString('en-AU')} named (tally ${tally.toLocaleString('en-AU')})`
+    html+=`<h3>${side==='aye' ? 'Ayes' : side==='no' ? 'Noes' : human(side)} ${count}</h3><ul>${list.map(m=>`<li>${link(personUrl(m.name),m.name)}${m.party ? ` (${escapeHtml(m.party)})` : ''} · ${escapeHtml(side)}</li>`).join('')}</ul>`
   }
   return html
 }

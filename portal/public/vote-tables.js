@@ -215,7 +215,8 @@ export function divisionGroupSentences(rows = [], kind = 'limitation') {
     const agreed = list.filter(row => row.outcome === 'Agreed').length, not = list.filter(row => row.outcome === 'Not agreed').length;
     const other = list.length - agreed - not;
     const moved = list.filter(row => row.procedural).length;
-    const location = moved ? ` ${plural(moved, 'of these is listed', 'of these are listed')} under Procedural votes.` : '';
+    const location = moved ? (list.length === 1 ? ' It is listed under Procedural votes.'
+      : ` ${plural(moved, 'of these is listed', 'of these are listed')} under Procedural votes.`) : '';
     if (list.length === 1) return `${head}, and the question was ${agreed ? 'agreed' : not ? 'not agreed' : 'given no recorded outcome'}.${location}`;
     return `${head}: ${[`${agreed.toLocaleString('en-AU')} agreed`, `${not.toLocaleString('en-AU')} not agreed`, other ? `${plural(other, 'with no recorded outcome', 'with no recorded outcome')}` : ''].filter(Boolean).join(', ')}.${location}`;
   });

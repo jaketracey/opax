@@ -181,8 +181,11 @@ test('every published bill narrative counts its shown group plus the explicitly 
         assert.deepEqual([...shown, ...moved].map(r => r.href).sort(), rows.map(r => r.href).sort(), `${bill.key}: retain every identity`);
         if (moved.length) {
           const location = sentences[cursor++];
-          assert.match(location, /^[\d,]+ of these (?:is|are) listed under Procedural votes\.$/, bill.key);
-          assert.equal(number(location.split(' ')[0]), moved.length, bill.key);
+          if (total === 1) assert.equal(location, 'It is listed under Procedural votes.', bill.key);
+          else {
+            assert.match(location, /^[\d,]+ of these (?:is|are) listed under Procedural votes\.$/, bill.key);
+            assert.equal(number(location.split(' ')[0]), moved.length, bill.key);
+          }
         }
         const agreed = rows.filter(r => r.outcome === 'Agreed').length;
         const not = rows.filter(r => r.outcome === 'Not agreed').length;
@@ -213,6 +216,28 @@ test('person rows tag procedure and never describe it as support for the bill', 
 const app = readFileSync(new URL('app.js', pub), 'utf8');
 const sourceFile = ts.createSourceFile('app.js', app, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
 const functionSource = name => sourceFile.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === name).getText(sourceFile);
+
+test('one moved vote reads naturally, while multiple votes retain their moved count', () => {
+  const row = {kind:'procedure', chamber:'Senate', outcome:'Agreed', procedural:true};
+  assert.match(tables.divisionGroupSentences([row], 'procedure')[0], /voted once .*\. It is listed under Procedural votes\.$/);
+  assert.match(tables.divisionGroupSentences([row, {...row, procedural:false}], 'procedure')[0], /1 of these is listed under Procedural votes\.$/);
+  assert.match(tables.divisionGroupSentences([row, row], 'procedure')[0], /2 of these are listed under Procedural votes\.$/);
+});
+
+test('the bill source note explains where procedural motions have moved', () => {
+  const bill = {...read('bills/au-federal-r7447.json'), division_titles:titles};
+  const context = {voteTables:tables, growthModules:{moduleAttrs:() => ''},
+    billDedupeDivisions:divisions => ({divisions, collapsed:0}),
+    sourceLineHTML:({notes}) => notes.filter(Boolean).join(' ')};
+  runInNewContext(functionSource('billDivisionsHTML') + '\nthis.render = billDivisionsHTML;', context);
+  const firstReading = {divisions:[{key:'fixture-lookup', stage:'First reading'}],
+    division_titles:{'fixture-lookup':'Business - Rearrangement'}};
+  for (const input of [bill, firstReading]) {
+    const html = context.render(input);
+    assert.match(html, /Procedural motions are listed under Procedural votes, including those recorded at another stage/);
+    assert.doesNotMatch(html, /votes on procedure are grouped by the stage/);
+  }
+});
 
 test('a procedural-only bill has an h2 heading in the server and client', () => {
  for (const key of ['au-federal-s1393', 'au-federal-r5675']) {

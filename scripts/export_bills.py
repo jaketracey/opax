@@ -849,8 +849,9 @@ class SponsorPartyRecords:
             return {**kept, "reason": "records-unavailable"}
         name = sponsor_print({"sponsor": member.get("name")})
         rule, hits = self.resolver.match(house, day, name, member.get("person_id"), set())
-        if source and rule == "pid" and hits and (not vote_parties.surname(name) or not any(
-                vote_parties.surname(name) in hit["surnames"] for hit in hits)):
+        surname_mismatch = source and rule == "pid" and hits and (not vote_parties.surname(name) or not any(
+            vote_parties.surname(name) in hit["surnames"] for hit in hits))
+        if surname_mismatch and source != "Rex Patrick Team":
             return {**kept, "reason": "pid-surname-mismatch"}
         party, basis, url = self.resolver.party_on(
             hits, day, same=vote_parties.same_party, allow_bracket=bool(source)) if hits else (
@@ -860,6 +861,10 @@ class SponsorPartyRecords:
         dated = sponsor_party_token(party)
         if not dated:
             return {**kept, "reason": "unrecognised-dated-party", "record_party": party}
+        if surname_mismatch:
+            # Keep the identity guard, but expose the same reviewed source/group
+            # disagreement as main even when the printed surname disagrees.
+            return {**kept, "reason": "pid-surname-mismatch", "dated_party": dated}
         result = {**kept, "dated_party": dated, "record_party": party,
                   "basis": basis, "url": url, "rule": rule}
         pid = str(member.get("person_id") or "").removeprefix("tvfy_")
@@ -913,7 +918,10 @@ def fill_sponsor_parties(bills: list[dict], timeline: PartyTimeline | None = Non
 
     def dated(bill, sponsor, source):
         outcome = records.check(bill, {**sponsor, "party": source})
-        if outcome["reason"] == "convention" and source != outcome.get("dated_party") \
+        review = outcome["reason"] == "convention" or (
+            outcome["reason"] == "pid-surname-mismatch" and source == "Rex Patrick Team"
+            and outcome.get("dated_party") == "Independent")
+        if review and source != outcome.get("dated_party") \
                 and "Independent" in (source, outcome.get("dated_party")):
             held.append({"key": bill["key"], "sponsor": sponsor.get("name"),
                          "date": vote_parties.iso(bill.get("introduced")),
