@@ -131,6 +131,18 @@ test('only a query that found something enters Recent', async () => {
   await act(async () => renderer.unmount());
 });
 
+test('the same query submitted again while its results stay up moves to the top of Recent', async () => {
+  // Review of sweep 2 lane A: the results did not report again (same query,
+  // same scope), so the query waited for a count that never came.
+  const renderer = await mount();
+  await search('housing');
+  await act(async () => recentSearches.add('water', 'all'));
+  expect(recent()).toEqual(['water', 'housing']);
+  await search('housing');
+  expect(recent()).toEqual(['housing', 'water']);
+  await act(async () => renderer.unmount());
+});
+
 test('no results: no "0 results" on the source line, the action a block under the body', async () => {
   const renderer = await mount();
   await search('zzqqxxvv');

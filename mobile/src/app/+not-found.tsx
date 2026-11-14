@@ -23,7 +23,7 @@ export default function NotFound() {
       <Screen centred testID="not-found">
         <ContentUnavailable
           symbol="link"
-          title="This page isn't in the app"
+          title="This page isn’t in the app"
           body="The link may be old, or the page may have moved."
           action={{
             label: router.canGoBack() ? 'Go back' : 'Go to Today',

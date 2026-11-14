@@ -37,17 +37,29 @@ export function isMissingRecord(
 
 /**
  * The shared not-found pattern for a record (sweep 2, item 2): one voice,
- * the likely reason, and Search to go on from.
+ * the likely reason, and Search to go on from. In a sheet (the citation
+ * formats) the sheet goes first, as a source sheet leaves for a record;
+ * otherwise it would stay up in this tab's stack behind Search.
  */
-export function MissingRecord({ testID }: { testID?: string }) {
+export function MissingRecord({
+  sheet = false,
+  testID,
+}: {
+  sheet?: boolean;
+  testID?: string;
+}) {
   return (
     <ContentUnavailable
       symbol="doc.text.magnifyingglass"
       title="This record isn’t in OPAX"
       body="The link may be old."
       action={{
-        label: 'Search the record',
-        onPress: () => router.navigate('/search'),
+        label: 'Search OPAX',
+        onPress: () => {
+          // Guarded like the shared Done: a cold open has nothing beneath.
+          if (sheet && router.canGoBack()) router.back();
+          router.navigate('/search');
+        },
         testID: testID ? `${testID}-search` : undefined,
       }}
       testID={testID}
@@ -66,6 +78,7 @@ export function RecordLoadError({
   slug,
   onRetry,
   subject = RECORD,
+  sheet = false,
   testID,
 }: {
   error: unknown;
@@ -73,10 +86,12 @@ export function RecordLoadError({
   onRetry: () => void;
   /** "This record", "This bill's text", "New records". */
   subject?: string;
+  /** Shown in a sheet: leaving for Search closes it first. */
+  sheet?: boolean;
   testID?: string;
 }) {
   if (isMissingRecord(error, slug, subject))
-    return <MissingRecord testID={testID} />;
+    return <MissingRecord sheet={sheet} testID={testID} />;
   if (error instanceof ApiError && error.code === 'not-found')
     return (
       <ContentUnavailable

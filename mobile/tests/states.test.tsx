@@ -1189,9 +1189,12 @@ describe('shared state kit', () => {
         );
       expect(text('This electorate isn’t in OPAX')).toHaveLength(1);
       const title = text('This electorate isn’t in OPAX')[0]!;
+      // The page's only title is a heading to VoiceOver, as SwiftUI's
+      // view says it (review of sweep 2 lane A).
       expect(title.props).toMatchObject({
         variant: 'sectionTitle',
         wordSafe: true,
+        accessibilityRole: 'header',
       });
       expect(StyleSheet.flatten(title.props.style).textAlign).toBe('center');
       expect(title.props.numberOfLines).toBeUndefined();
@@ -1234,7 +1237,10 @@ describe('shared state kit', () => {
         justifyContent: 'center',
         alignSelf: 'stretch',
       });
-      expect(r.root.findByType(Button).props.hug).toBe(true);
+      expect(r.root.findByType(Button).props).toMatchObject({
+        hug: true,
+        centredLabel: true,
+      });
     },
   );
   test('an inline ContentUnavailable draws its button 12 pt under the body', () => {

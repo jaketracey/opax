@@ -34,7 +34,7 @@ import { type DateInput } from './format';
 import { Icon, type SFSymbol } from './icon';
 import { phoneCopy } from './phone-copy';
 import { symbols } from './symbols';
-import { Text } from './text';
+import { Heading, Text } from './text';
 import {
   buttonCapsule,
   colors,
@@ -885,9 +885,10 @@ export function ContentUnavailable({
       ) : (
         <View style={styles.unavailable}>
           <Icon name={symbol} size={44} tone="inkSoft" scale="large" />
-          <Text variant="sectionTitle" wordSafe style={styles.center}>
+          {/* The page's only title: a header, as SwiftUI's view says it. */}
+          <Heading level={2} style={styles.center}>
             {phoneCopy(title)}
-          </Text>
+          </Heading>
           {body ? (
             <Text variant="body" tone="inkSoft" style={styles.center}>
               {phoneCopy(body)}
@@ -899,7 +900,7 @@ export function ContentUnavailable({
         // Centred under the centred text at every size (sweep 2, item 2). At
         // accessibility sizes a stretched secondary button reads from the
         // leading edge, so it hung left under the title; it hugs here and
-        // the row centres it, its label wrapping inside the column.
+        // the row centres it, its label wrapping centred inside the column.
         <View
           testID={action.containerTestID}
           style={[
@@ -911,6 +912,7 @@ export function ContentUnavailable({
             label={action.label}
             variant="secondary"
             hug
+            centredLabel
             onPress={action.onPress}
             testID={action.testID ?? (testID ? `${testID}-retry` : undefined)}
           />

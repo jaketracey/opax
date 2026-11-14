@@ -1,4 +1,4 @@
-// Sweep 2, item 2: an unknown link opens "This page isn't in the app" inside
+// Sweep 2, item 2: an unknown link opens "This page isn’t in the app" inside
 // a tab's stack, through the shared folder's own +not-found, so the tab bar
 // stays. The root +not-found is only the fallback.
 import { act } from 'react';
@@ -35,7 +35,7 @@ test.each(['/(tabs)/(today)/no-such-page', '/no-such-page', '/person/a/b'])(
     await act(async () => router.push(path as never));
     expect(rendered.getSegments()).toEqual(['(tabs)', '(today)', '+not-found']);
     const state = rendered.UNSAFE_root.findByType(ContentUnavailable);
-    expect(state.props.title).toBe("This page isn't in the app");
+    expect(state.props.title).toBe('This page isn’t in the app');
     expect(state.props.action.label).toBe('Go back');
     await act(async () => rendered.unmount());
   },

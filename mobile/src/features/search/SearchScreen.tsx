@@ -96,6 +96,9 @@ function SearchContent({
   // A typed or Recent query waits here until its results are counted: only
   // one that found something enters Recent (sweep 2, item 8.2).
   const pendingRecent = useRef<string | null>(null);
+  // The same query submitted again keeps its results up; this tells them to
+  // report their count again, so Recent moves it to the top.
+  const [submission, setSubmission] = useState(0);
   const { sources, roster, failed, refreshing, retry } = useSearchSources();
   const signedIn = !!useAccount().status?.signedIn;
   const openAsk = useOpenAsk();
@@ -148,6 +151,7 @@ function SearchContent({
     // A query that arrived by link never enters Recent (4.5); any other
     // enters once its results are counted and there is at least one.
     pendingRecent.current = link ? null : words;
+    setSubmission((n) => n + 1);
     scrollToTop(scroll.current, headerBottom);
   }
   function settled(words: string, settledScope: Scope, total: number) {
@@ -334,6 +338,7 @@ function SearchContent({
             onRetrySources={failed ? retry : undefined}
             onRows={onRows}
             onSettled={settled}
+            submission={submission}
             showScopes={!pinScopes}
           />
         )}

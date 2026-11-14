@@ -25,6 +25,7 @@ import {
   MachinePill,
 } from '../src/design/primitives';
 import { useReduceMotion } from '../src/design/accessibility';
+import Citations from '../src/features/records/CitationScreen';
 import DocumentReader from '../src/features/records/DocumentReader';
 import { FindControls } from '../src/features/records/FindControls';
 import { ReaderList } from '../src/features/records/ReaderList';
@@ -84,7 +85,13 @@ jest.mock('expo-router', () => {
     createElement(name, props, props.children);
   return {
     useSegments: () => [],
-    router: { push: jest.fn(), setParams: jest.fn(), back: jest.fn() },
+    router: {
+      push: jest.fn(),
+      setParams: jest.fn(),
+      back: jest.fn(),
+      navigate: jest.fn(),
+      canGoBack: () => true,
+    },
     Link: Object.assign(part('Link'), {
       Trigger: part('LinkTrigger'),
       Preview: () => null,
@@ -425,6 +432,35 @@ test.each([
   await act(async () => view.unmount());
 });
 
+test('the citation sheet closes before a missing record leaves for Search', async () => {
+  // Review of sweep 2 lane A: Search opened under the sheet, which stayed
+  // up in this tab's stack.
+  mockParams = { slug: '../nope' };
+  jest
+    .mocked(records.document)
+    .mockRejectedValue(new ApiError('invalid-data', 'bad slug'));
+  jest.mocked(catalogs.corpus).mockRejectedValue(new Error('offline'));
+  const order: string[] = [];
+  jest.mocked(router.back).mockImplementation(() => {
+    order.push('back');
+  });
+  jest.mocked(router.navigate).mockImplementation((href) => {
+    order.push(`navigate ${String(href)}`);
+  });
+  try {
+    const view = await mount(<Citations />);
+    const state = view.root.findByType(ContentUnavailable);
+    expect(state.props.title).toBe('This record isn’t in OPAX');
+    expect(state.props.action.label).toBe('Search OPAX');
+    act(() => state.props.action.onPress());
+    expect(order).toEqual(['back', 'navigate /search']);
+    await act(async () => view.unmount());
+  } finally {
+    jest.mocked(router.back).mockReset();
+    jest.mocked(router.navigate).mockReset();
+  }
+});
+
 test('a link that names no record says so', async () => {
   mockParams = { slug: '../nope' };
   jest
@@ -436,7 +472,13 @@ test('a link that names no record says so', async () => {
   const state = view.root.findByType(ContentUnavailable);
   expect(state.props.title).toBe('This record isn’t in OPAX');
   expect(state.props.body).toBe('The link may be old.');
-  expect(state.props.action.label).toBe('Search the record');
+  expect(state.props.action.label).toBe('Search OPAX');
+  // A page, not a sheet: Search opens from here with nothing to close.
+  jest.mocked(router.back).mockClear();
+  jest.mocked(router.navigate).mockClear();
+  act(() => state.props.action.onPress());
+  expect(router.back).not.toHaveBeenCalled();
+  expect(router.navigate).toHaveBeenCalledWith('/search');
   expect(view.root.findByType(ReaderList).props.centred).toBe(true);
   // Screen's foot, not the reader's double one: the block sat 18 pt above
   // the other not-found pages on the device.

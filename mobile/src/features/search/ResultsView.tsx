@@ -89,6 +89,7 @@ export function ResultsView({
   onRows,
   onRetrySources,
   onSettled,
+  submission = 0,
   showScopes = true,
 }: {
   q: string;
@@ -112,6 +113,11 @@ export function ResultsView({
    * (sweep 2, item 8.2).
    */
   onSettled?: (q: string, scope: Scope, total: number) => void;
+  /**
+   * Counts submits. The same query submitted again while its results stay
+   * up changes nothing else, so this reports the count again for Recent.
+   */
+  submission?: number;
   showScopes?: boolean;
 }) {
   const roster = (sources?.roster ?? null) as Parameters<
@@ -141,7 +147,7 @@ export function ResultsView({
   useEffect(() => {
     if (settledTotal !== null) onSettled?.(q, scope, settledTotal);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settledTotal, q, scope]);
+  }, [settledTotal, q, scope, submission]);
   return (
     <Group gap={rhythm.block} testID={`search-results-${scope}`}>
       <View style={styles.header} testID="search-results-header">

@@ -903,7 +903,7 @@ test('not found and failure states', async () => {
   mock.electorateFor.mockRejectedValue(new ApiError('http', 'nope'));
   r = await render(<Electorate />);
   expect(unavailable(r, 'electorate-error')).toBe(
-    "This electorate couldn't be loaded.",
+    'This electorate couldn’t be loaded.',
   );
   expect(has(r, 'electorate-retry')).toBe(true);
   await act(async () => r.unmount());

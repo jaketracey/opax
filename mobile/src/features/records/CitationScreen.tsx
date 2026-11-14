@@ -80,7 +80,7 @@ export default function Citations() {
   return (
     <Screen grouped testID="doc-citations">
       {error ? (
-        <RecordLoadError error={error} slug={slug} onRetry={retry} />
+        <RecordLoadError error={error} slug={slug} onRetry={retry} sheet />
       ) : !doc || !citation ? (
         <CitationSkeleton />
       ) : (
