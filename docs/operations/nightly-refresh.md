@@ -149,8 +149,12 @@ Known holes through 3 April 2019 (Senate), 21 November 2024 (NSW Assembly) and
 affected chamber-year are held. If any year
 has no expected evidence, completion remains unverified and the warning stays.
 Resolution is recorded automatically; subsequent loss of those dates pages.
-Each known hole has a 14 December 2026 review deadline; overdue unresolved holes
-page. The lane tags identify `im/senate-backfill` and `im/nsw-hansard-gap`.
+Each known hole currently has a 14 December 2026 review deadline while held for
+a spend decision. Both backfill stages merge switched off until Jake approves
+enabling them. Its owner lane then sets each hole's review date to its completion
+ETA plus 14 days in the enabling change. Known scheduled fills remain report-only
+through their review dates; overdue unresolved holes page. The lane tags identify
+`im/senate-backfill` and `im/nsw-hansard-gap`.
 The [repair manifest and acknowledgement contract](coverage-watchdog.md) defines
 the file format and accepted-regression fields. It recommends that the hub build
 the covering index by hand on the box before merging, about four minutes once.

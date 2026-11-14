@@ -232,7 +232,8 @@ def analyse(counts, expected, bases, entries, through, previous=None, drop_fract
             if len(run) >= 5:
                 # Compare actual date sets: shifted/merged runs with new missing
                 # dates page, unchanged or shortened runs remain report-only.
-                prior_runs = history.get('zero_runs', {}).get(ch, [])
+                # Use the prior night so a same-day retry cannot clear a new alarm.
+                prior_runs = (previous or {}).get('zero_runs', {}).get(ch, [])
                 unchanged = any(set(run) <= set(old) for old in prior_runs)
                 message = f"zero expected-day run: {ch} {run[0]} to {run[-1]} ({len(run)} days)"
                 (reports if unchanged else alerts).append(message)

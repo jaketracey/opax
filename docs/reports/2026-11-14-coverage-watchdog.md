@@ -195,7 +195,7 @@ allowlist intervals are specified above.
 
 ## Gates
 
-- 34 offline coverage tests passed, including actual shell-block execution,
+- 35 offline coverage tests passed, including actual shell-block execution,
   zero regressions, recesses, known-hole reporting/resolution/reopening, initial
   baseline, same-day retries, thin days, corrupt/future state and AEDT/UTC dates.
 - 11 existing refresh-watchdog tests passed.
@@ -227,3 +227,10 @@ production indexing or email delivery was triggered from this Mac.
 - P3 retry: a healthy first run changes rows from 300 to 200 without creating a
   recovery floor; a same-day retry at 120 must compare with 300 and alert. The
   mutant comparing with 200 incorrectly clears that alert and is caught.
+- Delta review: new and longer zero-run alerts compare with the previous night
+  and survive same-day reruns. The added fixture reproduced both downgrades
+  before the fix and fails if the comparison is reverted to the latest snapshot.
+- Delta review dates: each known hole retains 2026-12-14 while held for a spend
+  decision. Both stages merge switched off. The owning lane records each hole's
+  ETA and sets its review date to ETA plus 14 days when Jake enables the stage;
+  scheduled fills stay report-only through that date.

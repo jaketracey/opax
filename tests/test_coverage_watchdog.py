@@ -324,6 +324,27 @@ warn() { echo "REPORT $*"; }
         self.assertTrue(any('(6 days)' in a for a in result['alerts']))
         self.assertFalse(self.analyse(previous=longer)[1]['alerts'])
 
+    def test_new_zero_run_stays_alerting_on_same_day_reruns(self):
+        args = self.args()
+        report_path = self.root / 'coverage-report-v1.json'
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(wd.run(args), 0)
+            args.through = '2026-02-05'
+            days = ['2026-01-19', '2026-01-20', '2026-01-21', '2026-01-22', '2026-01-23']
+            for extra in ([], ['2026-01-26']):
+                days.extend(extra)
+                args.calendar.write_text(json.dumps({'expires': '2026-12-31', 'days': [
+                    {'date': day, 'house': False, 'senate': True} for day in days]}))
+                for attempt in range(2):
+                    with self.subTest(days=len(days), attempt=attempt):
+                        self.assertEqual(wd.run(args), 1)
+                        report = json.loads(report_path.read_text())
+                        self.assertTrue(any('zero expected-day run:' in a for a in report['alerts']))
+            args.through = '2026-02-06'
+            self.assertEqual(wd.run(args), 0)
+        report = json.loads(report_path.read_text())
+        self.assertTrue(any('zero expected-day run:' in r for r in report['reports']))
+
     def test_known_hole_review_deadline_pages_until_filled(self):
         known = self.entry('known_being_filled')
         known['review_by'] = '2026-02-27'
@@ -351,6 +372,8 @@ warn() { echo "REPORT $*"; }
             self.assertEqual(holes[ch]['end'], end)
             self.assertEqual(holes[ch]['lane'], lane)
             self.assertEqual(holes[ch]['review_by'], '2026-12-14')
+            self.assertEqual(holes[ch]['review_reason'],
+                             'backfill held for a spend decision; reset to ETA + 14 days when enabled')
 
     def test_accepted_regression_allowlist_validation(self):
         path = self.root / 'allowlist.json'

@@ -55,8 +55,14 @@ when present its dates join the other calendar evidence automatically.
 
 The three known holes end on 3 April 2019 (Senate), 21 November 2024 (NSW
 Assembly) and 10 February 2025 (NSW Council). Their lanes are listed above.
-Each has `review_by: 2026-12-14`. An unresolved hole becomes an alert after that
-date. Once all expected dates within every affected chamber-year have rows,
+Each currently has `review_by: 2026-12-14`, with the reason "backfill held for a
+spend decision; reset to ETA + 14 days when enabled". Senate pace and KB spend
+await Jake's decision. Both backfill stages merge switched off until he approves
+enabling them. In that enabling change, each owner lane updates each affected
+hole's own review date to its completion ETA plus 14 calendar days and records
+the ETA and review reason. A known scheduled fill stays report-only through that
+date; an unresolved hole becomes an alert afterwards.
+Once all expected dates within every affected chamber-year have rows,
 the warning retires and its resolved ID persists. Extended intervals use new
 IDs so an older, shorter resolved interval cannot hide the extension.
 
@@ -104,5 +110,6 @@ coverage alerts through the existing status-branch watchdog email path.
 `coverage_status` checks the reader command's exit status, so a crash also alerts.
 
 Five-day zero runs page when new or longer. Identical or shortened runs remain
-in reports. The current run date sets are persisted, and retries use the latest
-observed run state while row-count comparisons retain the prior night's totals.
+in reports. Run date sets are persisted, and both run and row-count comparisons
+use the prior night's snapshot. New or lengthened runs remain alerts throughout
+same-day retries; an unchanged run becomes report-only the following night.
