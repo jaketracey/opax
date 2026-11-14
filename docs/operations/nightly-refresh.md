@@ -24,6 +24,31 @@ but cannot exceed 1,200 seconds. Normal sync also bounds its backfill work
 to that budget. Its existing publisher releases held IDs below its normal
 checkpoint. Enrichment runs independently through the Worker catalogue cursor.
 
+**No backfill on weekly or monthly nights.** Before the refresh, the nightly
+reads the periodic plan without writing it (`periodic_state.py preview`). On any
+night that will run the weekly or monthly group, catch-up nights included, it
+exports `OPAX_SENATE_BACKFILL=0` and `OPAX_NSW_BACKFILL=0` for that night only:
+neither stage acquires and normal sync publishes no backfill resource (they wait
+in the retry outbox). Both resume on the next ordinary night. The pace (Senate
+10 sitting days, NSW 4 chamber-days) is per night the stages run, so in practice
+six nights a week. An unreadable plan skips them too. `status.json.backfill`
+then carries `skipped_tonight` with the reason; a skip is not a stop and keeps
+the projection. Thursday's FRL night alone does not skip them.
+
+**Projected finish, first possible night Sunday 15 November 2026 (skipped):**
+
+| Stage | Days | Nights | Last acquisition | Publication |
+| --- | ---: | ---: | --- | --- |
+| Senate, all manifest days | 284 | 29 | Fri 18 Dec 2026 | Sat 19 Dec 2026 |
+| Senate, if the five early-2019 days are already held | 279 | 28 | Thu 17 Dec 2026 | Fri 18 Dec 2026 |
+| NSW, live-confirmed scope | 161 | 41 | Fri 1 Jan 2027 | Sat 2 Jan 2027 |
+| NSW, older local snapshot scope | 188 | 47 | Fri 8 Jan 2027 | Sat 9 Jan 2027 |
+
+Without the Sunday skip these were 13/14 December (Senate) and 25 December
+(NSW). Merge timing, missed nights, identity holds, budget stops and a growth
+stop move them. Status recalculates every night from the cap and the days left,
+counting only non-Sunday nights.
+
 Set `OPAX_SENATE_BACKFILL=0` to stop both new acquisition and pending Senate
 publication. The shared guard recognises `OPAX_NSW_BACKFILL=0` for NSW.
 Ordinary publication and coverage checks continue. Removing the override
@@ -48,8 +73,15 @@ Senate-specific coverage discovery outside the shared guard.
 
 `backfill.STOP` holds both repairs and their queued publication. The guard
 writes it if growth exceeds **5,500,000,000 bytes**, average growth exceeds
-**59,280 bytes/resource** over at least **500 added resources**, or Progress
-returns a 429, quota or billing error. An unreadable ledger or unavailable
+**59,280 bytes/resource** over at least **500 added resources**, either all-time
+or over the latest check interval (widened back to 500 resources), or Progress
+returns a 429, quota or billing error. Before each publication batch it also
+projects the ledger, plus resources created since the last counters check, plus
+the batch, at the current per-resource rate, and stops before a batch that
+could cross 5.5 GB. A refusal in a 200 body counts: a top-level `error`,
+`message` or `detail`, any `errors[].message`, or a plain-text body that
+mentions quota, rate limit, billing, payment, insufficient, exceeded or a
+reached limit. A refused create is held, never recorded as published. An unreadable ledger or unavailable
 counters also holds repairs closed. Requests use the existing KB service
 token, never log it, have a 20-second socket timeout and do not retry a
 guarded refusal. Up to ten requests already in flight may finish. A stop
@@ -76,7 +108,8 @@ is retained for resumption compatibility and does not set the published
 Worker budget. There is no enrichment-readiness wait in this stage.
 
 Nightly `status.json.backfill` reports this night's and cumulative bytes
-and resources, remaining bytes against the ceiling, average bytes per
+and resources (bytes, plus `gb_added`, `cumulative_gb_added`, `gb_ceiling` and
+`gb_remaining` in decimal GB to 2 places), remaining bytes against the ceiling, average bytes per
 resource, per-stage and total days remaining, and a projected publication
 finish date. A stop or disabled stage suppresses its projection. A projection
 assumes the configured cap is achieved each night; holds, budget stops and
@@ -1070,6 +1103,9 @@ publication, run the builder alone with `--keep-audited-candidate` (see "Buildin
 | Sunday: weekly | loaders 30 min (lobbyists 22 min, `frl_acts` 3 min, ABN-linked `contract_suppliers` 7 min, ACNC/ATO 1 min once loaded) + exports 8 min (`x_speakers` and `x_people` a speeches scan each, ~3 min) | ~40 min |
 | First Sunday: monthly, on top | `qld_contracts` 7 min, `diaries_qld` 10-13 min, IPEA 2 min, `speaker_hygiene` 11 min (a full `speeches` read), `grant_recipients` 4 min, exports 5 min | ~40 min |
 | Thursday: frl | `frl_instruments` (in-force instrument crawl, ≥10 s between requests) + `x_instruments` 12 s | 9,208 s measured on the box, 18 Oct 2026 (~2.6 h) |
+| Ordinary nights only: Senate backfill | 10 sitting days, local work plus reserved normal-sync publication; one publication budget shared with NSW per sync run | at most 20 min plus 60 s outer timeout and 60 s kill grace (~22 min) |
+| Ordinary nights only: NSW backfill | 4 chamber-days after the daily refresh | at most 20 min plus 60 s outer timeout and 60 s kill grace (~22 min) |
+| Weekly, monthly or catch-up nights | both backfill stages skipped | 0 |
 | Pre-commit test gate | search catalog build + stamps + the suite | ~15 min a full run on the box (18 Oct 2026); a red gate's blame search is capped by `OPAX_GATE_BUDGET` (75 min from the first run; the suite took 23 min on 10 Nov 2026) |
 
 A first-Sunday night conservatively budgets about 20 + 40 + 40 + 5 min plus a push of up to 2 h,
@@ -1090,6 +1126,11 @@ Evidence adds at most another 21 minutes per attempted run: the two new timeout 
 bring the conservative ~5-hour budget to ~5 h 42 min. This leaves limited headroom under
 the 6-hour unit limit; source/audit disk contention and repeated portal attribution runs
 remain risks. An evidence timeout holds only evidence and lets the nightly continue.
+
+The Senate and NSW backfill stages add about 22 + 22 minutes. On a first Sunday that would
+have been about 6 h 26 min, over the limit, so they never run on a weekly, monthly or catch-up
+night (see "Senate 2014 to 2018 repair" above): the first-Sunday budget stays at ~5 h 42 min.
+An ordinary night drops the weekly and monthly 80 minutes and adds the 44, about 5 h 6 min.
 
 ## Why the refresh is written for a small, slow disk
 
