@@ -291,9 +291,11 @@ export default function BillTextReader({
             : {}),
           accessibilityLabel: `Version, ${stageText(shown.stage_label)}${shown.date ? `, ${formatDate(shown.date)}` : ''}`,
           menu: {
+            // The state draws the tick: iOS's checkmark, Android's menu
+            // tick (menuActions carries it as selected).
             items: versions.map((version) => ({
               type: 'action' as const,
-              label: `${android && version.id === id ? '✓ ' : ''}${versionLabel(version)}`,
+              label: versionLabel(version),
               state: version.id === id ? ('on' as const) : ('off' as const),
               onPress: () => choose(version.id),
             })),

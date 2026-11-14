@@ -1,6 +1,7 @@
 import { withNavigationOptions } from './navigation-options';
 import { router } from 'expo-router';
 import { RouteOptions } from '../src/navigation/preview';
+import { showMenu } from '../src/design/menu';
 import { menuLeaves } from '../src/design/row-link';
 import {
   recordActions,
@@ -842,6 +843,38 @@ test('Android retains Version, Contents and More as bar items', async () => {
     expect(labels).not.toContain('Version');
     expect(labels).toContain('Ask about this bill');
   } finally {
+    if (view) await act(async () => view!.unmount());
+    Platform.OS = original;
+  }
+});
+
+test('Android ticks the shown version once: the menu tick, no ✓ in its label', async () => {
+  const original = Platform.OS;
+  let view: TestRenderer.ReactTestRenderer | undefined;
+  let bar: TestRenderer.ReactTestRenderer | undefined;
+  try {
+    Platform.OS = 'android';
+    mockBillText();
+    view = await mount(<BillTextReader />);
+    await act(async () => {
+      bar = TestRenderer.create(
+        (mockOptions.headerRight as () => React.ReactElement)(),
+      );
+    });
+    const version = bar!.root.find(
+      (node) =>
+        typeof node.props?.onPress === 'function' &&
+        String(node.props.accessibilityLabel).startsWith('Version, '),
+    );
+    await act(async () => version.props.onPress());
+    const [, actions] = jest.mocked(showMenu).mock.calls.at(-1)!;
+    // The Android menu draws its tick for a selected row (menu.tsx).
+    expect(actions.map((action) => [action.title, !!action.selected])).toEqual([
+      ['As passed: synthetic fixture, 1 Oct 2026', true],
+      ['First reading: synthetic fixture, 1 Oct 2026', false],
+    ]);
+  } finally {
+    if (bar) await act(async () => bar!.unmount());
     if (view) await act(async () => view!.unmount());
     Platform.OS = original;
   }

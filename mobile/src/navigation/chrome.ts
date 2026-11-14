@@ -520,6 +520,9 @@ type HeaderMenu = Extract<NativeStackHeaderItem, { type: 'menu' }>;
  * sheet. An inline section (iOS draws it between separators, untitled, as
  * Your MP's "Forget my electorate") has no row of its own: its items join
  * this sheet in place, and an action keeps its red, dimmed or ticked state.
+ * The sheet draws no section headings, so a titled inline section (Cite)
+ * joins it too: its items name what they copy ("Copy APA 7"), as Android's
+ * record and Ask row menus already list them.
  */
 function menuActions(items: HeaderMenu['menu']['items']): MenuAction[] {
   return items
