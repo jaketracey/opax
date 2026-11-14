@@ -9,7 +9,7 @@ import {
   View,
   findNodeHandle,
 } from 'react-native';
-import { AndroidReadingHeader } from '../../navigation/AndroidReadingHeader';
+import { readingHeader } from '../../navigation/AndroidReadingHeader';
 import { catalogs } from '../../api/runtime';
 import { Screen } from '../../design/layout';
 import { InlineError, Skeleton } from '../../design/states';
@@ -80,7 +80,7 @@ export default function ExpenseGlossary() {
         options={{
           title: 'Expense categories',
           ...(Platform.OS === 'android'
-            ? { header: AndroidReadingHeader }
+            ? { header: readingHeader }
             : {}),
           ...headerItems(() => [closeSheetItem()]),
         }}

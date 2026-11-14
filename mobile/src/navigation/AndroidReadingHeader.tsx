@@ -127,6 +127,18 @@ export function AndroidReadingHeader({
   );
 }
 
+/**
+ * The measured header as a `header` option set from a screen (RouteOptions).
+ * native-stack calls `header(props)` as a plain function, so a component with
+ * hooks passed directly runs them in the stack's own render. Set after the
+ * first render, that adds hooks and the screen fails ("Rendered more hooks
+ * than during the previous render": the Android glossaries in b69). This
+ * draws the header as an element, with hooks of its own.
+ */
+export function readingHeader(props: NativeStackHeaderProps) {
+  return <AndroidReadingHeader {...props} />;
+}
+
 const styles = StyleSheet.create({
   bar: { backgroundColor: colors.paper },
   large: {

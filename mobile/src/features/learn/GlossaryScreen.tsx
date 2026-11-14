@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Platform } from 'react-native';
 import { InsetGroup, Screen } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
-import { AndroidReadingHeader } from '../../navigation/AndroidReadingHeader';
+import { readingHeader } from '../../navigation/AndroidReadingHeader';
 import { RouteOptions } from '../../navigation/preview';
 import { matches, NoResults, paperBar, useBarSearch } from '../sources/parts';
 import { learnCopy } from './copy';
@@ -57,7 +57,7 @@ export default function Glossary() {
           headerSearchBarOptions: search.options,
           ...paperBar,
           ...(Platform.OS === 'android'
-            ? { header: AndroidReadingHeader }
+            ? { header: readingHeader }
             : {}),
         }}
       />
