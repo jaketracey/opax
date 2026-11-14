@@ -40,7 +40,9 @@ def measure(db, *, through_year=None, sync_state=None):
     pending_years = Counter()
     for item in json.loads(MANIFEST.read_text())['days']:
         day = item['date']
-        if item['chamber'] == 'senate' and day_rows.get(day, 0) - pending_by_day[day] <= 0:
+        # Excluded short/procedural rows must not clear a day's notice while
+        # its publishable rows are held in the normal sync retry outbox.
+        if item['chamber'] == 'senate' and (day_rows.get(day, 0) <= 0 or pending_by_day[day] > 0):
             pending_years[day[:4]] += 1
     return {'expected_years': expected, 'senate_rows': rows, 'senate_published_rows': published,
             'backfill_pending_days_by_year': dict(sorted(pending_years.items())),

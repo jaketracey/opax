@@ -1,5 +1,12 @@
 # Senate backfill sync and spend review, 14 November 2026
 
+**Note-2 spending hold:** the stage and publication of queued repair rows
+now ship off by default (`OPAX_SENATE_BACKFILL=0`). The two-day cap below
+applies only when enabled after Jake's spend approval. Public coverage says
+"Senate Hansard for 2014 to 2018 is not yet held." The dated schedules below
+are timing scenarios, not an active schedule. See the
+[enablement instructions](../operations/nightly-refresh.md#senate-2014-to-2018-repair-spending-hold).
+
 The retained normal speech sync measured **8.94 to 18.61 successful speech
 acknowledgements per second with 10 workers**. The backfill now reserves at
 **8.9 documents/second**, rounded down from the bulk run, replacing the
@@ -176,6 +183,8 @@ Dates shift with the actual first night, missed nights, source refusals or
 holds. They are capacity estimates, not promises of full indexing or
 enrichment completion. The coverage copy remains:
 **“Senate Hansard for 2014 to 2018 is being added.”**
+That is the enabled-state wording. Under the current spending hold, it
+instead reads **"Senate Hansard for 2014 to 2018 is not yet held."**
 
 ## Follow-up validation
 

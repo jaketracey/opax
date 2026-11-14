@@ -1,5 +1,12 @@
 # Senate Hansard catch-up, 14 November 2026
 
+**Current spend hold, note-2:** acquisition and normal-sync publication ship
+off by default (`OPAX_SENATE_BACKFILL=0`). Jake has not approved the KB spend.
+The enabled stage retains its two-day cap and 1,200-second budget. See the
+[enablement instructions](../operations/nightly-refresh.md#senate-2014-to-2018-repair-spending-hold).
+The dates below are earlier capacity scenarios; there is no completion date
+until the first enabled night is known.
+
 This implements plan A from the Hansard gaps audit for Senate sittings from
 1 January 2014 to 30 June 2019. The main site has no Senate search results for
 2014 to 2018 in the supplied live checks. The desktop database is an older
@@ -24,7 +31,9 @@ and KB sync. Defaults:
   Measured sync throughput supports 10 days on time alone. See the
   [sync and spend review](2026-11-14-senate-sync.md) before raising it.
 * `OPAX_SENATE_BACKFILL_BUDGET_SECONDS=1200`, configurable downwards.
-* `OPAX_SENATE_BACKFILL=0` disables acquisition without disabling coverage.
+* `OPAX_SENATE_BACKFILL=0` is the default. It holds acquisition and pending
+  normal-sync publication without disabling coverage. Enable with `1` only
+  after Jake approves the spend.
 
 The budget covers discovery, membership setup, source acquisition, parsing,
 identity/party checks, insertion and durable local receipts. It also charges
@@ -102,7 +111,8 @@ Newly owned rows awaiting the normal sync checkpoint, or held in its failed
 queue, do not clear the published-coverage notice.
 
 The OpenAustralia row on the site's coverage page currently reads:
-**“Senate Hansard for 2014 to 2018 is being added.”** A year drops out when
+**“Senate Hansard for 2014 to 2018 is not yet held.”** It switches to
+"is being added" only when the stage is enabled. A year drops out when
 every source-manifest day in that year has rows acknowledged by normal
 sync. Publishing the first sitting does not clear a still-incomplete year.
 Other empty or incomplete years remain listed; early-2019 residue is listed

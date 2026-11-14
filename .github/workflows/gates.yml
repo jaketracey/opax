@@ -139,6 +139,9 @@ jobs:
         with:
           persist-credentials: false
       - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24.21.0
       - name: Install locked Python dependencies
         run: uv sync --frozen --python "$(cat .python-version)"
       - name: Ensure the sqlite3 CLI
@@ -151,6 +154,16 @@ jobs:
           mapfile -t suites < <(ls scripts/test_*.py scripts/vm/test_*.py \
             | grep -v -x -e scripts/vm/test_fixture_imports.py -e scripts/vm/test_build_evidence_bundle.py)
           uv run --frozen --with pytest pytest -q -p no:cacheprovider -rs "${suites[@]}"
+      - name: Test Senate ingest and publication holds
+        run: >-
+          nice -n 10 uv run --frozen --with pytest pytest -q
+          tests/test_senate_backfill.py tests/test_federal_backfill.py
+          tests/test_openaustralia_xml.py tests/test_vote_parties.py
+          scripts/test_roster_identity.py scripts/test_refresh_watchdog.py
+          scripts/test_update_corpus_manifest.py parli/tests/test_speech_hygiene.py
+          parli/tests/test_speech_repair.py
+      - name: Test nightly warning and periodic completion paths
+        run: PATH="$PWD/.venv/bin:$PATH" nice -n 10 bash scripts/vm/test_nightly.sh
 
   portal:
     name: portal (${{ matrix.shard }}/4)
@@ -204,7 +217,7 @@ jobs:
         run: npx tsc --noEmit
       - name: Test portal
         # Equivalent to npm test, with Node's shard option before the file list.
-        run: node --test --test-shard=${{ matrix.shard }}/4 test/*.test.mjs
+        run: nice -n 10 node --test --test-concurrency=4 --test-shard=${{ matrix.shard }}/4 test/*.test.mjs
       - name: Test portal Python loaders
         if: matrix.shard == 1
         working-directory: .

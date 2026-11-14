@@ -282,6 +282,7 @@ fi
   echo "$(date '+%F %T')   committee_senate   newest 2026-06-05  rows 10"
   echo "$(date '+%F %T') ===== daily refresh end ====="
   [ "${FAKE_MODE:-ok}" = partial ] && echo "$(date '+%F %T') Partial daily refresh: cut by its time limit, resumes from its checkpoint next run: arag_sync"
+  [ "${FAKE_MODE:-ok}" = backfill ] && echo "$(date '+%F %T') Backfill warnings: senate_backfill(rc=${FAKE_BACKFILL_RC:-1})"
 } >> "$PIPE/daily.log"
 echo "GET https://www.openaustralia.org.au/api/getDebates?key=$OPENAUSTRALIA_API_KEY&date=2026-09-28"
 python3 - <<'PYEOF'
@@ -779,6 +780,19 @@ PYSTUB
 }
 refresh() { (cd "$RS" && "$RS/repo/scripts/daily_refresh.sh" >"$RS/out.txt" 2>&1); RRC=$?; }
 
+echo "== Senate backfill: off by default; errors and timeouts warn without failing daily refresh"
+new_refresh_sandbox senate-off
+OPAX_ONLY=senate_backfill,federal_coverage refresh
+check "default off skips acquisition but retains the coverage guard" bash -c "[ '$RRC' -eq 0 ] && ! grep -q parli.ingest.senate_backfill '$RS_CALLS' && grep -q scripts/federal_hansard_coverage.py '$RS_CALLS'"
+for repair_rc in 1 124 137; do
+  new_refresh_sandbox "senate-warning-$repair_rc"
+  OPAX_SENATE_BACKFILL=1 OPAX_ONLY=senate_backfill,federal_coverage FAIL_STEPS=senate_backfill FAIL_RC=$repair_rc refresh
+  check "repair rc=$repair_rc is listed separately and daily exits 0" bash -c "[ '$RRC' -eq 0 ] && grep -q 'Backfill warnings: senate_backfill(rc=$repair_rc)' '$RS/out.txt' && ! grep -q 'Incomplete refresh: failed steps' '$RS/out.txt' && grep -q scripts/federal_hansard_coverage.py '$RS_CALLS'"
+done
+new_refresh_sandbox senate-coverage-warning
+OPAX_ONLY=federal_coverage FAIL_STEPS=federal_hansard_coverage.py refresh
+check "a failed coverage reader cannot create periodic refresh debt" bash -c "[ '$RRC' -eq 0 ] && grep -q 'Backfill warnings: federal_coverage(rc=1)' '$RS/out.txt'"
+
 echo "== 14. daily_refresh.sh: a failing sa step makes the run incomplete unless it is allowed"
 new_refresh_sandbox r9
 FAIL_STEPS=sa_hansard refresh
@@ -1025,6 +1039,13 @@ check "dir mode: a failing exporter exits with its status, restores the tree and
 rm -rf "$ES"; unset PY
 
 echo "== 24. nightly: which periodic groups run (Sydney date) and what happens when they run"
+for repair_rc in 1 124; do
+  new_sandbox "senate-periodic-$repair_rc"
+  OPAX_FORCE_GROUPS='weekly monthly frl' FAKE_MODE=backfill FAKE_BACKFILL_RC=$repair_rc FAKE_WEEKLY_MODE=ok nightly
+  check "backfill rc=$repair_rc remains a warning and all published periodic groups complete" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and not s[\"failures\"] and s[\"backfill_failures\"]==[\"senate_backfill(rc=$repair_rc)\"] and any(\"senate_backfill\" in w for w in s[\"warnings\"]), s; assert all(\"due\" not in s[\"periodic_state\"][\"groups\"][g] and s[\"periodic_state\"][\"groups\"][g][\"last_success\"]==\"2026-10-10\" for g in [\"weekly\",\"monthly\",\"frl\"]), s'"
+  OPAX_TODAY=2026-10-12 FAKE_MODE=backfill FAKE_BACKFILL_RC=$repair_rc FAKE_WEEKLY_MODE=ok nightly
+  check "persistent backfill rc=$repair_rc does not rerun completed monthly and FRL work" python3 -c "import json; s=json.load(open('$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json')); assert s['groups']['monthly']['last_attempt']=='2026-10-10' and s['groups']['frl']['last_attempt']=='2026-10-10', s"
+done
 new_sandbox s24
 OPAX_TODAY=2026-09-21 FAKE_WEEKLY_MODE=ok nightly
 check "a Monday (2026-09-21): the periodic refresh is not called" test ! -e "$HOME/weekly.args"

@@ -11,6 +11,37 @@ replaces the hand-run procedure (WSL desktop, then a laptop worktree, then a man
 Enrichment (topic labels, speech summaries) is **not** part of this: a Cloudflare Worker does that.
 The nightly only brings new records in and publishes them.
 
+## Senate 2014 to 2018 repair: spending hold
+
+The Senate catch-up ships **off**: `OPAX_SENATE_BACKFILL=0` is the default.
+Acquisition does not run, and normal speech sync holds any previously queued
+rows from `senate-2014-2019-v1` without sending them to the KB. Ordinary speech
+publication continues. The public coverage line says
+**"Senate Hansard for 2014 to 2018 is not yet held."**
+
+Only after Jake approves the spend, set these in the existing nightly
+environment on the refresh owner:
+
+```sh
+OPAX_SENATE_BACKFILL=1
+OPAX_SENATE_BACKFILL_DAYS=2
+OPAX_SENATE_BACKFILL_BUDGET_SECONDS=1200
+```
+
+Enablement allows the separate capped stage after normal refresh and allows
+normal sync to release held IDs, including IDs below its current checkpoint.
+The public coverage line then says "is being added" for the outstanding
+years. The manifest records the current flag even if coverage evidence is
+unchanged. Set the flag back to `0` to pause acquisition and pending
+publication. No separate publisher or enrichment path is installed.
+
+Repair and coverage-check errors or outer timeouts are listed in
+`BACKFILL_FAILURES`, published in `status.json` as `backfill_failures` and
+warnings, and repeated by the refresh watchdog. They do not enter fatal
+`FAILURES`, so successful weekly, monthly and FRL publication still records
+completion. Genuine acquisition/publication failures retain their existing
+retry rules. See the [review and spend estimate](../reports/2026-11-14-senate-sync.md).
+
 ## What happens each night
 
 ```

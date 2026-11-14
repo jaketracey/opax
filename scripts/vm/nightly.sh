@@ -103,6 +103,7 @@ log() { echo "$(ts) [nightly] $*" | tee -a "$LOGFILE"; }
 run() { "$@" 2>&1 | tee -a "$LOGFILE"; return "${PIPESTATUS[0]}"; }
 
 FAILURES=()
+BACKFILL_FAILURES=()
 WARNINGS=()
 STAMPED_FILES=()
 COMMIT_SHA=""
@@ -110,6 +111,7 @@ DEPLOY="not pushed"
 RESULT_SUMMARY=""
 fail() { FAILURES+=("$*"); log "FAIL: $*"; }
 warn() { WARNINGS+=("$*"); log "WARN: $*"; }
+backfill_warn() { BACKFILL_FAILURES+=("$*"); warn "Backfill did not complete: $*"; }
 
 # ---- lock ------------------------------------------------------------------------
 exec 8>"$LOCKFILE"
@@ -157,10 +159,11 @@ publish_status() {
 
 write_status() {
   local status=$1
-  "$PY" - "$LASTFILE" "$status" "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" <<'PYEOF' 2>/dev/null || true
+  "$PY" - "$LASTFILE" "$status" "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${#BACKFILL_FAILURES[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${BACKFILL_FAILURES[@]+"${BACKFILL_FAILURES[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" <<'PYEOF' 2>/dev/null || true
 import json, sys, datetime
-path, status, day, run, started, sha, deploy, summary, nwarn, *rest = sys.argv[1:]
-warnings, failures = rest[:int(nwarn)], rest[int(nwarn):]
+path, status, day, run, started, sha, deploy, summary, nwarn, nbackfill, *rest = sys.argv[1:]
+warnings, rest = rest[:int(nwarn)], rest[int(nwarn):]
+backfill_failures, failures = rest[:int(nbackfill)], rest[int(nbackfill):]
 from pathlib import Path
 from datetime import date
 from scripts.vm.periodic_state import snapshot
@@ -176,6 +179,7 @@ for receipt in [Path(path).parent / 'source-access.json', *(Path(path).parent / 
 json.dump({"date": day, "run": run, "status": status, "started": started,
            "finished": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
            "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures, "warnings": warnings,
+           "backfill_failures": backfill_failures,
            "paused_sources": paused_sources, "periodic_state": periodic_state},
           open(path, "w"), indent=1)
 PYEOF
@@ -357,6 +361,8 @@ else
   [ -z "$stale" ] || warn "a source refused to change its register tonight (kept the last good rows): $stale"
   partial=$(last_run_line "$DAILY_LOG" 'Partial daily refresh:' | sed 's/.*next run: //')
   [ -z "$partial" ] || warn "cut by its time limit tonight, resumes from its checkpoint next run: $partial (the knowledge box takes only ~12-30k resources an hour)"
+  backfill=$(last_run_line "$DAILY_LOG" 'Backfill warnings:' | sed 's/.*Backfill warnings: //')
+  for repair in $backfill; do backfill_warn "$repair"; done
 fi
 
 # ---- 2b. the periodic groups: weekly (Sundays, Sydney), monthly (the first Sunday), frl (Thursdays) ----------
@@ -372,6 +378,7 @@ select_groups() {
 periodic_refresh_complete() {
   # A successful loader is not publication. Any held group or failed final
   # nightly, NO_PUSH rehearsal or refused push leaves the durable debt intact.
+  # Backfill warnings are independent of publication and never keep groups due.
   [ "$PERIODIC_ACCEPTED" = 1 ] && [ "${#FAILURES[@]}" -eq 0 ] \
     && [ "${OPAX_NIGHTLY_NO_PUSH:-0}" != 1 ] || return 0
   "$PY" scripts/vm/periodic_state.py complete --state "$PERIODIC_STATE" --date "$PERIODIC_DATE" \

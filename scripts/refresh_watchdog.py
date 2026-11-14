@@ -52,6 +52,7 @@ def evaluate(corpus, status, now, max_age=20):
     if status.get('status') != 'ok':
         problems.extend(f"last nightly run: {item}" for item in status.get('failures') or ['no failure detail'])
     warnings.extend(str(item) for item in status.get('warnings', []))
+    warnings.extend(f'Backfill did not complete: {item}' for item in status.get('backfill_failures', []))
     paused = dict(corpus.get('refresh', {}).get('source_access', {}))
     paused.update(status.get('paused_sources', {}))
     for name, receipt in sorted(paused.items()):

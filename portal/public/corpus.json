@@ -312,6 +312,7 @@
       "wragge_xml": "2005-12-08",
       "zenodo": "2022-09-08"
     },
+    "senate_backfill_enabled": false,
     "federal_hansard_coverage": {
       "expected_years": [
         2014,

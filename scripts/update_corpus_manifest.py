@@ -447,6 +447,8 @@ def compute(prev: dict, kb: dict, log: dict, bills: dict, nsw_release: str | Non
 
     if federal_coverage is not None:
         put(refresh, 'federal_hansard_coverage', federal_coverage, 'federal_hansard_coverage')
+    put(refresh, 'senate_backfill_enabled', os.environ.get('OPAX_SENATE_BACKFILL', '0') == '1',
+        'senate_backfill_enabled')
 
     # Fields that can move without the box changing.
     for key in ("bills_registry", "current_parliament_bills", "latest_bill_introduced"):

@@ -21,6 +21,7 @@ import uuid
 from scripts import vote_parties as parties
 from . import federal_backfill as backfill, openaustralia_xml as xml
 from . import http as source_http
+from . import senate_backfill_policy as policy
 from .honest_http import BudgetSpent, HonestHTTP, Refused
 from .speeches import load_modern_jsonl
 from .speaker_roles import chair_role
@@ -147,7 +148,7 @@ def _run(db_path, stage, max_days, budget, manifest, cache, offline, readiness, 
             db.set_progress_handler(lambda: time.monotonic() >= local_deadline, 1000)
             backfill.ownership_schema(db)
             # A single durable run retains the existing US$40 enrichment ceiling.
-            run_id = 'senate-2014-2019-v1'
+            run_id = policy.RUN_ID
             db.execute('INSERT OR IGNORE INTO oa_backfill_runs VALUES (?,?,?,?)', (run_id, START, END, 40))
             if tuple(db.execute('SELECT start,end,cap_usd FROM oa_backfill_runs WHERE run_id=?',
                                 (run_id,)).fetchone()) != (START, END, 40):
@@ -283,6 +284,9 @@ def main():
     ap.add_argument('--max-days', type=int, default=int(os.environ.get('OPAX_SENATE_BACKFILL_DAYS', DEFAULT_DAYS)))
     ap.add_argument('--budget-seconds', type=float, default=float(os.environ.get('OPAX_SENATE_BACKFILL_BUDGET_SECONDS', DEFAULT_BUDGET)))
     args = ap.parse_args()
+    if not policy.enabled():
+        print('Senate backfill disabled: spend approval pending (OPAX_SENATE_BACKFILL=0)')
+        return
     try:
         run(args.db, args.stage, max_days=args.max_days, budget=args.budget_seconds,
             manifest=args.manifest, cache=args.cache_dir, offline=args.offline)

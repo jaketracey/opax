@@ -7,6 +7,7 @@ import signal
 import pytest
 
 from parli.ingest import senate_backfill as B, federal_backfill as F, openaustralia_xml as X
+from parli.ingest import arag_sync as S, senate_backfill_policy as policy
 from parli.ingest.honest_http import BudgetSpent, HonestHTTP, Refused
 from scripts.federal_hansard_coverage import alerts, measure
 from scripts import vote_parties as P
@@ -59,6 +60,58 @@ def test_backfill_cli_defaults_include_2014(monkeypatch):
     monkeypatch.setattr('sys.argv', ['openaustralia_xml', '--backfill-missing-days', '--offline'])
     X.main()
     assert captured == [('2014-01-01', '2025-12-31')]
+
+
+def test_stage_cli_is_off_without_explicit_enablement(monkeypatch):
+    monkeypatch.delenv('OPAX_SENATE_BACKFILL', raising=False)
+    monkeypatch.setattr('sys.argv', ['senate_backfill', '--db', '/unused', '--stage', '/unused'])
+    monkeypatch.setattr(B, 'run', lambda *a, **kw: pytest.fail('disabled CLI must not acquire or insert'))
+    B.main()
+    calls = []
+    monkeypatch.setenv('OPAX_SENATE_BACKFILL', '1')
+    monkeypatch.setattr(B, 'run', lambda *a, **kw: calls.append(kw))
+    B.main()
+    assert calls[0]['max_days'] == 2 and calls[0]['budget'] == 1200
+
+
+def test_disabled_sync_holds_old_queued_ids_and_releases_them_after_checkpoint(tmp_path, monkeypatch):
+    a, manifest = fixture(tmp_path, monkeypatch, ('2014-02-11',))
+    run(a, manifest)
+    monkeypatch.delenv('OPAX_SENATE_BACKFILL', raising=False)
+    monkeypatch.setattr(S, 'STATE_PATH', tmp_path / 'sync-state.json')
+    created = []
+    class KB:
+        def create_resource(self, body):
+            created.append(body['slug'])
+    with sqlite3.connect(a.db) as db:
+        db.row_factory = sqlite3.Row
+        ordinary = db.execute("INSERT INTO speeches(date,chamber,speaker_name,text,source) "
+            "VALUES ('2026-10-29','representatives','Ordinary Member',?,'openaustralia')",
+            ('An ordinary new parliamentary contribution about public transport. ' * 10,)).lastrowid
+        db.commit()
+        S.prepare_dedupe(db, B.START)
+        state = {'tables': {}}
+        def sync(limit=100):
+            S.sync_table(KB(), db, 'speeches', S.TABLES['speeches'], state, limit, False, B.START)
+        sync()
+        assert created == [f'speech-{ordinary}']
+        held = state['tables']['speeches']['failed']
+        assert len(held) == 2 and set(held.values()) == {policy.SPEND_HOLD}
+        assert state['tables']['speeches']['after'] == ordinary
+        assert measure(db, sync_state=state)['backfill_pending_days_by_year']['2014'] == 63
+        S.retry_failed(KB(), db, state)
+        assert created == [f'speech-{ordinary}']
+        # Restart after the ordinary checkpoint has passed both held IDs.
+        state = S.load_state()
+        monkeypatch.setenv('OPAX_SENATE_BACKFILL', '1')
+        sync(limit=1)
+        assert len(created) == 2 and len(state['tables']['speeches']['failed']) == 1
+        sync()
+        assert len(created) == 3 and len(set(created)) == 3
+        assert not state['tables']['speeches']['failed']
+        assert state['tables']['speeches']['after'] == ordinary
+        sync()
+        assert len(created) == 3
 
 
 def test_cap_resume_and_second_run_adds_zero(tmp_path, monkeypatch):
@@ -268,4 +321,6 @@ def test_nightly_wires_stage_after_normal_refresh_and_before_coverage():
     assert shell.index('run_step arag_sync') < shell.index('run_step senate_backfill') < shell.index('run_step federal_coverage')
     assert 'nice -n 10 "$PY" -m parli.ingest.senate_backfill' in shell
     assert 'federal source refused during normal refresh' in shell
+    assert '${OPAX_SENATE_BACKFILL:-0}' in shell
+    assert 'BACKFILL_STEPS=",senate_backfill,federal_coverage,"' in shell
     assert B.DEFAULT_DAYS == 2 and B.DEFAULT_BUDGET == 1200

@@ -36,6 +36,7 @@ from typing import Any, Iterator, Optional
 
 from parli.arag import AragConfig, AragError, KbClient, load_dotenv
 from parli.ingest.speaker_roles import chair_role, chair_party_sql
+from parli.ingest import senate_backfill_policy as senate_policy
 from parli.ingest.speech_hygiene import (
     clean_party,
     clean_speaker_name,
@@ -322,6 +323,9 @@ def save_state(state: dict) -> None:
 
 def _push_one(kb: KbClient, body: dict) -> tuple[str, Optional[str]]:
     """Returns (slug, error). A 409 slug conflict counts as already-done."""
+    budget = body.get('extra', {}).get('metadata', {}).get('enrichment_budget', {})
+    if budget.get('run_id') == senate_policy.RUN_ID and not senate_policy.enabled():
+        return body['slug'], senate_policy.SPEND_HOLD
     try:
         kb.create_resource(body)
         return body["slug"], None
@@ -343,12 +347,45 @@ def _batches(db: sqlite3.Connection, spec: dict, after: int, remaining: int,
         remaining -= len(rows)
 
 
+def _push_batch(kb, bodies, tstate):
+    with ThreadPoolExecutor(max_workers=WORKERS) as pool:
+        futures = [pool.submit(_push_one, kb, body) for body in bodies]
+        for fut in as_completed(futures):
+            slug, err = fut.result()
+            if err:
+                tstate['failed'][slug] = err
+                print(f'  HOLD {slug}: {err}' if err == senate_policy.SPEND_HOLD else f'  FAIL {slug}: {err}',
+                      file=sys.stderr)
+            else:
+                tstate['pushed'] += 1
+                tstate['failed'].pop(slug, None)
+
+
 def sync_table(kb: KbClient, db: sqlite3.Connection, table: str, spec: dict,
                state: dict, limit: int, dry_run: bool, since: str) -> None:
     tstate = state["tables"].setdefault(table, {"after": 0, "pushed": 0, "failed": {}})
     after = tstate["after"]
     print(f"[{table}] resuming after {spec['pk']}={after}, "
           f"{tstate['pushed']:,} already pushed, {len(tstate['failed'])} failed")
+
+    # The normal checkpoint may pass held Senate IDs while ordinary speeches
+    # continue. Keep those IDs in the existing retry outbox, and release only
+    # spending holds through this same worker pool when explicitly enabled.
+    if table == 'speeches' and not dry_run and senate_policy.enabled():
+        held = [slug for slug, error in tstate['failed'].items()
+                if error == senate_policy.SPEND_HOLD][:limit]
+        for offset in range(0, len(held), 200):
+            bodies = []
+            for slug in held[offset:offset + 200]:
+                row = db.execute('SELECT * FROM speeches WHERE speech_id=?',
+                                 (int(slug.removeprefix('speech-')),)).fetchone()
+                if row is None:
+                    tstate['failed'].pop(slug, None)
+                else:
+                    bodies.append(spec['map'](row))
+            _push_batch(kb, bodies, tstate)
+            save_state(state)
+        limit -= len(held)
 
     for rows in _batches(db, spec, after, limit, since):
         bodies = [spec["map"](r) for r in rows]
@@ -359,16 +396,7 @@ def sync_table(kb: KbClient, db: sqlite3.Connection, table: str, spec: dict,
                 print(f"  DRY {b['slug']:20s} {size:>9,} chars  {b['title'][:70]!r}")
             return
 
-        with ThreadPoolExecutor(max_workers=WORKERS) as pool:
-            futures = {pool.submit(_push_one, kb, b): b for b in bodies}
-            for fut in as_completed(futures):
-                slug, err = fut.result()
-                if err:
-                    tstate["failed"][slug] = err
-                    print(f"  FAIL {slug}: {err}", file=sys.stderr)
-                else:
-                    tstate["pushed"] += 1
-                    tstate["failed"].pop(slug, None)
+        _push_batch(kb, bodies, tstate)
 
         tstate["after"] = rows[-1][0] if spec["pk"] == "rowid" else rows[-1][spec["pk"]]
         save_state(state)

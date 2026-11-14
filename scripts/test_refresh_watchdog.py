@@ -15,6 +15,14 @@ class Watchdog(unittest.TestCase):
         problems, _, warnings = evaluate(self.corpus, self.status, self.now)
         self.assertEqual((problems, warnings), ([], []))
 
+    def test_backfill_failures_alert_without_failing_delivery_or_needing_duplicate_warning(self):
+        self.status['backfill_failures'] = ['senate_backfill(rc=124)']
+        problems, _, warnings = evaluate(self.corpus, self.status, self.now)
+        self.assertEqual(problems, [])
+        self.assertEqual(warnings, ['Backfill did not complete: senate_backfill(rc=124)'])
+        self.status['warnings'] = warnings
+        self.assertEqual(evaluate(self.corpus, self.status, self.now)[2], warnings)
+
     def test_current_delivery_still_alerts_on_empty_senate_years(self):
         self.corpus['refresh']['federal_hansard_coverage'] = {
             'empty_senate_years': [2014, 2018], 'unpublished_senate_years': [2014, 2015, 2018]}
