@@ -2422,6 +2422,9 @@ article.mx-page .mx-section { margin-top: var(--space-section); }
 .division-names { list-style: none; margin: 0; padding: 0; columns: 2 12rem; column-gap: var(--space-group); font: var(--type-body); }
 .division-names li { break-inside: avoid; padding: var(--space-line) 0; }
 .division-none { margin: 0; font: var(--type-metadata); color: var(--ink-soft); }
+.division-against-help, .division-against-note { margin: 0 0 var(--space-tight); font: var(--type-metadata); color: var(--ink-soft); }
+.division-against-list { margin: 0 0 var(--space-tight); padding-left: 1.25rem; font: var(--type-body); }
+.division-against-list li { padding: var(--space-line) 0; }
 .division-question .division-markdown { max-width: var(--size-readable); font: var(--type-record); }
 @media (max-width: 600px) { .division-sides { grid-template-columns: 1fr; } .division-names { columns: 1; } }
 
