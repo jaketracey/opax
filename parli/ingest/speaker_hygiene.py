@@ -360,6 +360,16 @@ CREATE TABLE IF NOT EXISTS ext_ingest_log (
 """
 
 
+def queue_speech_patch(db, sid, reason, stamp):
+    """Queue an existing corpus source; historical Wragge stays outside the KB."""
+    source = db.execute('SELECT source FROM speeches WHERE speech_id=?', (sid,)).fetchone()
+    if source and source[0] in KB_SOURCES_EXCLUDED:
+        return
+    db.execute("INSERT INTO ext_kb_patch_queue (slug, reason, status, queued_at) VALUES (?, ?, 'pending', ?) "
+               "ON CONFLICT(slug) DO UPDATE SET status = 'pending', reason = excluded.reason, queued_at = excluded.queued_at",
+               (f'speech-{sid}', reason, stamp))
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0], formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--db", default=os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db"))
@@ -440,18 +450,14 @@ def main() -> None:
             cur.execute("UPDATE speeches SET person_id = ?, speaker_name_clean = ? WHERE speech_id = ?", (pid, clean, sid))
         cur.execute("INSERT OR REPLACE INTO ext_committee_relinks VALUES (?,?,?,?,?,?,?,?)",
                     (sid, old_pid, old_clean, clean, new_type, None, reason, stamp))
-        cur.execute("INSERT INTO ext_kb_patch_queue (slug, reason, status, queued_at) VALUES (?, ?, 'pending', ?) "
-                    "ON CONFLICT(slug) DO UPDATE SET status = 'pending', reason = excluded.reason, queued_at = excluded.queued_at",
-                    (f"speech-{sid}", reason, stamp))
+        queue_speech_patch(db, sid, reason, stamp)
     for sid, (pid, clean, party, reason, old_pid, old_clean) in party_changes.items():
         cur.execute("UPDATE speeches SET person_id = ?, speaker_name_clean = ?, party_canonical = ? WHERE speech_id = ?",
                     (pid, clean, party, sid))
         if reason == "committee_link":   # an attribution change; a party fill is not one
             cur.execute("INSERT OR REPLACE INTO ext_committee_relinks VALUES (?,?,?,?,?,?,?,?)",
                         (sid, old_pid, old_clean, clean, "member", None, reason, stamp))
-        cur.execute("INSERT INTO ext_kb_patch_queue (slug, reason, status, queued_at) VALUES (?, ?, 'pending', ?) "
-                    "ON CONFLICT(slug) DO UPDATE SET status = 'pending', reason = excluded.reason, queued_at = excluded.queued_at",
-                    (f"speech-{sid}", reason, stamp))
+        queue_speech_patch(db, sid, reason, stamp)
     cur.execute("INSERT INTO ext_ingest_log (table_name, source, rows_loaded, rows_deleted, loaded_at, notes) VALUES (?,?,?,?,?,?)",
                 ("speeches", SOURCE, len(changes) + len(party_changes), 0, stamp, ", ".join(f"{k}={v}" for k, v in sorted(stats.items()))))
     cur.execute("COMMIT")

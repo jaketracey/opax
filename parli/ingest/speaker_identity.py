@@ -16,8 +16,15 @@ IDENTITIES = EVIDENCE['identities']
 BY_ID = {p['person_id']: p for p in IDENTITIES}
 BY_NAME = {p['name']: p for p in IDENTITIES}
 HANDBOOK = {p['PHID']: p for p in EVIDENCE['handbook_people']}
-FIRST_DAY = min(p['start'] for p in IDENTITIES)
-LAST_DAY = max(p['end'] for p in IDENTITIES)
+RULES = [(p, rule) for p in IDENTITIES for rule in [
+    dict(prints=p['prints'], old_person_ids=[p['old_person_id']], seat=p['seat'],
+         allow_missing_seat=p['allow_missing_seat'], start=p['start'], end=p['end'],
+         allow_unlinked=p.get('allow_unlinked', True),
+         sources=p.get('speech_sources', ['zenodo', 'openaustralia'])),
+    *p.get('additional_rules', []),
+]]
+FIRST_DAY = min(r['start'] for _, r in RULES)
+LAST_DAY = max(r['end'] for _, r in RULES)
 logger = logging.getLogger(__name__)
 
 
@@ -26,7 +33,6 @@ def identity_for(row):
     row = dict(row)
     if (row.get('state') not in (None, '', 'federal')
             or row.get('chamber') != 'representatives'
-            or row.get('source') not in ('zenodo', 'openaustralia')
             or row.get('speaker_type') in ('chair', 'unknown', 'witness')
             or row.get('witness_name')):
         return None
@@ -34,16 +40,22 @@ def identity_for(row):
     if not FIRST_DAY <= day <= LAST_DAY:
         return None
     printed = normalize_speaker(row.get('speaker_name'))
-    for person in IDENTITIES:
+    matches = {}
+    for person, rule in RULES:
         pid = row.get('person_id')
-        if (printed not in person['prints'] or not person['start'] <= day <= person['end']
-                or pid not in (None, '', person['old_person_id'], person['person_id'])):
+        allowed_id = (pid in (*rule['old_person_ids'], person['person_id'])
+                      or (pid in (None, '') and rule.get('allow_unlinked', False)))
+        if (row.get('source') not in rule['sources'] or printed not in rule['prints']
+                or not rule['start'] <= day <= rule['end']
+                or not allowed_id):
             continue
         seat = (row.get('electorate') or '').strip()
-        if seat != person['seat'] and not (not seat and person['allow_missing_seat']):
+        seats = rule.get('seat_prints', [rule['seat']])
+        if seat not in seats and not (not seat and rule['allow_missing_seat']):
             continue
-        return person
-    return None
+        matches[person['person_id']] = person
+    # Conflicting evidence never becomes an order-dependent attribution.
+    return next(iter(matches.values())) if len(matches) == 1 else None
 
 
 def resolve_attribution(row):
@@ -88,7 +100,7 @@ def identity_changes(db, *, skipped_person_ids=()):
                           'electorate', 'chamber', 'date', 'source', 'state',
                           'speaker_type', 'witness_name') if k in columns]
     rows = db.execute('SELECT ' + ','.join(fields) + " FROM speeches WHERE chamber = 'representatives' "
-                      "AND source IN ('zenodo', 'openaustralia') AND date BETWEEN ? AND ?", (FIRST_DAY, LAST_DAY))
+                      "AND source IN ('zenodo', 'openaustralia', 'wragge_xml') AND date BETWEEN ? AND ?", (FIRST_DAY, LAST_DAY))
     for raw in rows:
         row = dict(zip(fields, raw))
         person = identity_for(row)
@@ -100,7 +112,7 @@ def identity_changes(db, *, skipped_person_ids=()):
 
 def apply_identities(db):
     """Nightly resolver pre-pass, including audit receipts and pending KB patches."""
-    from parli.ingest.speaker_hygiene import RELINKS_DDL, now_iso
+    from parli.ingest.speaker_hygiene import RELINKS_DDL, now_iso, queue_speech_patch
     skipped = ensure_members(db)
     db.executescript(RELINKS_DDL)
     changes = list(identity_changes(db, skipped_person_ids=skipped))
@@ -110,8 +122,6 @@ def apply_identities(db):
                    (pid, name, sid))
         db.execute('INSERT OR REPLACE INTO ext_committee_relinks VALUES (?,?,?,?,?,?,?,?)',
                    (sid, old_pid, old_name, name, 'member', name, reason, stamp))
-        db.execute("INSERT INTO ext_kb_patch_queue (slug, reason, status, queued_at) VALUES (?,?,'pending',?) "
-                   "ON CONFLICT(slug) DO UPDATE SET reason=excluded.reason, status='pending', queued_at=excluded.queued_at",
-                   (f'speech-{sid}', reason, stamp))
+        queue_speech_patch(db, sid, reason, stamp)
     db.commit()
     return len(changes)

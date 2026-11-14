@@ -1,6 +1,6 @@
 {
   "reviewed": "2026-11-14",
-  "note": "Reuse these existing catalogue identities. Match House, service date, original print, seat and prior id; retain raw attribution as evidence. No surname-wide alias.",
+  "note": "Reviewed dated House identities. Match source, original print, House, service date, exact seat print and prior id. Retain raw attribution as evidence. Missing seats require a full personal print in the reviewed rule; surname-only missing seats stay unresolved.",
   "handbook_cache_sha256": "3754df31cdb3df2e7f08eb06a08e501f0cb26ca5d2f211bdb819f957eb3ed3b8",
   "handbook_people": [
     {
@@ -106,6 +106,56 @@
       "ServiceHistory_Start": "1996-03-02",
       "ServiceHistory_End": "1998-10-03",
       "Gender": "Male"
+    },
+    {
+      "PHID": "275266",
+      "GivenName": "Steven",
+      "MiddleNames": "Leigh",
+      "FamilyName": "MARTIN",
+      "PreferredName": "",
+      "DisplayName": "MARTIN, Steven Leigh OAM",
+      "Party": "The Nationals",
+      "Electorate": "",
+      "SenateState": "Tasmania",
+      "StateAbbrev": "Tas",
+      "State": "Tasmania",
+      "InCurrentParliament": "False",
+      "MPorSenator": [
+        "Senator"
+      ],
+      "RepresentedParliaments": [
+        45
+      ],
+      "ServiceHistory_Start": "2018-02-09",
+      "ServiceHistory_End": "2019-06-30",
+      "Gender": "Male"
+    },
+    {
+      "PHID": "KN9",
+      "GivenName": "Vincent",
+      "MiddleNames": "Joseph",
+      "FamilyName": "MARTIN",
+      "PreferredName": "",
+      "DisplayName": "MARTIN, Vincent Joseph",
+      "Party": "Australian Labor Party",
+      "Electorate": "Banks",
+      "SenateState": "",
+      "StateAbbrev": "NSW",
+      "State": "New South Wales",
+      "InCurrentParliament": "False",
+      "MPorSenator": [
+        "Member"
+      ],
+      "RepresentedParliaments": [
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "ServiceHistory_Start": "1969-10-25",
+      "ServiceHistory_End": "1980-09-19",
+      "Gender": "Male"
     }
   ],
   "identities": [
@@ -142,7 +192,26 @@
           "url": "https://raw.githubusercontent.com/openaustralia/openaustralia-parser/061ec16fdc68ef52544a35d8c4f6413e4622e6cb/data/people.csv"
         }
       ],
-      "handbook_url": "https://handbookapi.aph.gov.au/api/individuals?$filter=PHID%20eq%20%27SK6%27"
+      "handbook_url": "https://handbookapi.aph.gov.au/api/individuals?$filter=PHID%20eq%20%27SK6%27",
+      "additional_rules": [
+        {
+          "prints": [
+            "Tony Smith"
+          ],
+          "old_person_ids": [
+            "10592"
+          ],
+          "seat": "Dickson",
+          "allow_missing_seat": false,
+          "start": "1996-03-02",
+          "end": "1998-10-03",
+          "sources": [
+            "wragge_xml"
+          ],
+          "catalog_term_id": "term_7c92080334c6545eaee623fe",
+          "allow_unlinked": false
+        }
+      ]
     },
     {
       "person_id": "person_9c02d321caef54b2ba21a1f8",
@@ -178,7 +247,239 @@
         }
       ],
       "handbook_url": "https://handbookapi.aph.gov.au/api/individuals?$filter=PHID%20eq%20%278I4%27",
-      "full_name": "Stephen Paul Martin"
+      "full_name": "Stephen Paul Martin",
+      "additional_rules": [
+        {
+          "prints": [
+            "Stephen Martin"
+          ],
+          "old_person_ids": [
+            "10905"
+          ],
+          "seat": "Cunningham",
+          "allow_missing_seat": true,
+          "start": "1996-04-30",
+          "end": "2002-08-16",
+          "sources": [
+            "zenodo"
+          ],
+          "catalog_term_id": "term_9c1dd8c325e95220a1499cbd",
+          "allow_unlinked": false
+        },
+        {
+          "prints": [
+            "Martin"
+          ],
+          "old_person_ids": [
+            "10937"
+          ],
+          "seat": "Cunningham",
+          "allow_missing_seat": false,
+          "start": "1996-04-30",
+          "end": "2002-08-16",
+          "sources": [
+            "wragge_xml"
+          ],
+          "catalog_term_id": "term_9c1dd8c325e95220a1499cbd",
+          "allow_unlinked": false
+        },
+        {
+          "prints": [
+            "Martin"
+          ],
+          "old_person_ids": [
+            "10937"
+          ],
+          "seat": "Macarthur",
+          "seat_prints": [
+            "Macarthur",
+            "MACARTHUR"
+          ],
+          "allow_missing_seat": false,
+          "start": "1984-12-01",
+          "end": "1993-03-13",
+          "sources": [
+            "wragge_xml"
+          ],
+          "catalog_term_id": "term_59774310ac7f5781829d8fe1",
+          "allow_unlinked": false
+        }
+      ]
+    },
+    {
+      "person_id": "person_6b7f7f7533045b15bff880a6",
+      "name": "Vincent Martin",
+      "full_name": "Vincent Joseph Martin",
+      "phid": "KN9",
+      "old_person_id": "10937",
+      "prints": [
+        "Martin"
+      ],
+      "seat": "Banks",
+      "allow_missing_seat": false,
+      "state": "NSW",
+      "house": "representatives",
+      "start": "1969-10-25",
+      "end": "1980-09-19",
+      "speech_sources": [
+        "wragge_xml"
+      ],
+      "sources": [
+        {
+          "fetched_at": "2026-09-09T02:34:26+00:00",
+          "label": "OpenAustralia parliamentary service records",
+          "licence": "See source terms",
+          "sha256": "3c9a623c968eb3ce660626d0cc43eb4e503bd41be5ff83831718a36452a200b6",
+          "source_id": "source_4cc474fc3e765af4ab62ed6b",
+          "url": "https://raw.githubusercontent.com/openaustralia/openaustralia-parser/master/data/representatives.csv"
+        },
+        {
+          "fetched_at": "2026-11-10T13:05:07+00:00",
+          "label": "OpenAustralia people register (person ids)",
+          "licence": "See source terms",
+          "sha256": "42e310b1a1e8b63243e6027f0c07303bf068c1ef9db5d9fc9744880d93ed007f",
+          "source_id": "source_ffaddf0505bc5ba69160e6f1",
+          "url": "https://raw.githubusercontent.com/openaustralia/openaustralia-parser/061ec16fdc68ef52544a35d8c4f6413e4622e6cb/data/people.csv"
+        }
+      ],
+      "handbook_url": "https://handbookapi.aph.gov.au/api/individuals?$filter=PHID%20eq%20%27KN9%27",
+      "openaustralia_person_id": "10421",
+      "openaustralia_member_count": "356",
+      "identity_basis": "Existing OpenAustralia person 421 and representative 356; stable catalogue id from oa:Vincent Joseph Martin. The published post-1993 catalogue has no term for this earlier member.",
+      "additional_rules": [
+        {
+          "prints": [
+            "Martin"
+          ],
+          "old_person_ids": [
+            "10937"
+          ],
+          "seat": "Banks",
+          "seat_prints": [
+            "BANKS, NEW SOUTH WALES"
+          ],
+          "allow_missing_seat": false,
+          "start": "1969-10-25",
+          "end": "1980-09-19",
+          "sources": [
+            "wragge_xml"
+          ],
+          "allow_unlinked": false
+        }
+      ],
+      "allow_unlinked": false
+    }
+  ],
+  "service_terms": [
+    {
+      "start": "1993-03-13",
+      "end": "1993-05-04",
+      "chamber": "representatives",
+      "seat_prints": [
+        "Cunningham"
+      ],
+      "source_member_count": "354",
+      "person_id": "person_9c02d321caef54b2ba21a1f8",
+      "seat": "Cunningham",
+      "source": "OpenAustralia representatives.csv",
+      "source_sha256": "3c9a623c968eb3ce660626d0cc43eb4e503bd41be5ff83831718a36452a200b6"
+    },
+    {
+      "start": "1984-12-01",
+      "end": "1993-03-13",
+      "chamber": "representatives",
+      "seat_prints": [
+        "Macarthur",
+        "MACARTHUR"
+      ],
+      "source_member_count": "355",
+      "person_id": "person_9c02d321caef54b2ba21a1f8",
+      "seat": "Macarthur",
+      "source": "OpenAustralia representatives.csv",
+      "source_sha256": "3c9a623c968eb3ce660626d0cc43eb4e503bd41be5ff83831718a36452a200b6"
+    },
+    {
+      "start": "1993-05-04",
+      "end": "1996-04-30",
+      "chamber": "representatives",
+      "seat_prints": [
+        "Cunningham"
+      ],
+      "source_member_count": "579",
+      "person_id": "person_9c02d321caef54b2ba21a1f8",
+      "seat": "Cunningham",
+      "source": "OpenAustralia representatives.csv",
+      "source_sha256": "3c9a623c968eb3ce660626d0cc43eb4e503bd41be5ff83831718a36452a200b6"
+    },
+    {
+      "start": "1996-04-30",
+      "end": "2002-08-16",
+      "chamber": "representatives",
+      "seat_prints": [
+        "Cunningham"
+      ],
+      "source_member_count": "580",
+      "person_id": "person_9c02d321caef54b2ba21a1f8",
+      "seat": "Cunningham",
+      "source": "OpenAustralia representatives.csv",
+      "source_sha256": "3c9a623c968eb3ce660626d0cc43eb4e503bd41be5ff83831718a36452a200b6"
+    },
+    {
+      "start": "1996-03-02",
+      "end": "1998-10-03",
+      "chamber": "representatives",
+      "seat_prints": [
+        "Dickson"
+      ],
+      "source_member_count": "485",
+      "person_id": "person_efb744ffb3a25d578e592281",
+      "seat": "Dickson",
+      "source": "OpenAustralia representatives.csv",
+      "source_sha256": "3c9a623c968eb3ce660626d0cc43eb4e503bd41be5ff83831718a36452a200b6"
+    },
+    {
+      "start": "1969-10-25",
+      "end": "1980-09-19",
+      "chamber": "representatives",
+      "seat_prints": [
+        "Banks",
+        "BANKS, NEW SOUTH WALES"
+      ],
+      "source_member_count": "356",
+      "person_id": "person_6b7f7f7533045b15bff880a6",
+      "seat": "Banks",
+      "source": "OpenAustralia representatives.csv",
+      "source_sha256": "3c9a623c968eb3ce660626d0cc43eb4e503bd41be5ff83831718a36452a200b6"
+    },
+    {
+      "person_id": "10905",
+      "seat": "Tasmania",
+      "chamber": "senate",
+      "start": "2018-02-09",
+      "end": "2019-06-30",
+      "source": "Held Parliamentary Handbook individuals",
+      "phid": "275266",
+      "source_sha256": "3754df31cdb3df2e7f08eb06a08e501f0cb26ca5d2f211bdb819f957eb3ed3b8"
+    },
+    {
+      "person_id": "10937",
+      "seat": "Reid",
+      "chamber": "representatives",
+      "start": "2019-05-18",
+      "end": "2022-05-21",
+      "source": "Held Parliamentary Handbook individuals",
+      "phid": "282982",
+      "source_sha256": "3754df31cdb3df2e7f08eb06a08e501f0cb26ca5d2f211bdb819f957eb3ed3b8"
+    },
+    {
+      "person_id": "10592",
+      "seat": "Casey",
+      "chamber": "representatives",
+      "start": "2001-11-10",
+      "end": "2022-04-11",
+      "source": "Held Parliamentary Handbook individuals",
+      "phid": "00APG",
+      "source_sha256": "3754df31cdb3df2e7f08eb06a08e501f0cb26ca5d2f211bdb819f957eb3ed3b8"
     }
   ]
 }

@@ -38,7 +38,7 @@ def test_source_rules_reject_contradictory_seats_dates_houses_and_witnesses():
     assert identity_for(row)
     for change in [dict(electorate='Casey'), dict(date='2001-11-10'), dict(chamber='senate'),
                    dict(state='vic'), dict(speaker_type='witness'), dict(witness_name='Witness'),
-                   dict(person_id='10937'), dict(source='wragge_xml')]:
+                   dict(person_id='10937'), dict(source='committee_senate')]:
         assert identity_for(dict(row, **change)) is None
     martin = next(r for r in ROWS if r['person_id'] == '10937')
     assert identity_for(martin)['name'] == 'Stephen Martin'
@@ -68,7 +68,7 @@ def test_nightly_repair_reuses_catalogue_ids_queues_all_89_and_is_idempotent():
     assert apply_identities(db) == 89
     assert apply_identities(db) == 0
     assert db.execute('SELECT COUNT(*) FROM ext_kb_patch_queue').fetchone()[0] == 89
-    assert db.execute('SELECT COUNT(*) FROM members').fetchone()[0] == 2
+    assert db.execute('SELECT COUNT(*) FROM members').fetchone()[0] == 3
     # entered_house is the full House career, distinct from the Cunningham
     # party/service interval used to resolve the four 2002 prints.
     assert db.execute("SELECT entered_house FROM members WHERE person_id='person_9c02d321caef54b2ba21a1f8'").fetchone()[0] == '1984-12-01'
@@ -105,7 +105,7 @@ def test_member_conflict_skips_only_that_identity_and_logs_it(conflicting_index,
                       (conflict['person_id'],)).fetchone()[:] == ('Conflicting catalogue record', 'senate')
     assert db.execute('SELECT COUNT(*) FROM ext_kb_patch_queue').fetchone()[0] == expected
     assert db.execute('SELECT COUNT(*) FROM ext_committee_relinks').fetchone()[0] == expected
-    assert db.execute('SELECT COUNT(*) FROM members').fetchone()[0] == (1 if dry_run else 2)
+    assert db.execute('SELECT COUNT(*) FROM members').fetchone()[0] == (1 if dry_run else 3)
     for row in db.execute('SELECT * FROM speeches'):
         original = next(r for r in ROWS if r['speech_id'] == row['speech_id'])
         if dry_run or original['person_id'] == conflict['old_person_id']:
