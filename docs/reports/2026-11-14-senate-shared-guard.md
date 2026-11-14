@@ -10,7 +10,8 @@ The final shared files are handed off in
 `/home/jake/opax-work/scratch/backfill_guard/`: `backfill_guard.py` and
 `test_backfill_guard.py`, with `SHA256SUMS`. That directory also contains
 the shared `arag.py` response observer and `write_status.sh` receipt-writer
-function, plus exact integration instructions for NSW. NSW should adopt
+function, plus a checked `nsw-shared.patch` and integration instructions
+for NSW. NSW should adopt
 those identical files and the writer function before merge. No other
 branch was changed or pushed from this lane.
 
@@ -44,6 +45,12 @@ publisher now uses NSW's stage-specific publication-budget environment
 selection. NSW's four-day ceiling is unchanged. The P1 fix remains:
 repair errors, timeouts and growth stops stay outside fatal daily/nightly
 failures, so weekly, monthly and FRL completion can be recorded.
+
+Relative to `d92c41831`, the final module has **43 added and 9 removed
+lines**, and its shared tests have **56 added and 2 removed lines**. The
+hand-off copies match this branch byte-for-byte. The patch changes only
+the shared guard, tests, response observer and receipt-writer function;
+NSW's acquisition and publisher implementation are retained.
 
 An offline compatibility tree built from NSW's canonical code passed
 **45 shared tests** with its unchanged publisher and only the final shared
@@ -102,5 +109,27 @@ turns to identity, dated membership and party. No new real source days or
 Hansard or KB requests were used for this update. Production DB, KB and D1
 were not written, and no SSH was used.
 
-Final Python, full portal, nightly sandbox and stamp results are recorded
-below after the branch gates complete.
+All required gates passed on runtime commit
+`be9d095c62a41c398fb61b23bf4000f7dcb49e02` in the
+[final full Gates run](https://github.com/jaketracey/opax/actions/runs/43550497221):
+
+* **318 ingest, identity, guard and coverage tests plus 26 subtests**, and
+  **12 focused source-transport tests**. The same Python counts passed
+  locally with `nice -n 10`.
+* **403 nightly sandbox checks, zero failures**, including repair return
+  codes 1, 124 and 137, shared stop-file holds, growth status and completed
+  weekly, monthly and FRL groups staying complete.
+* **5,044 portal tests, zero failures**, across four shards at concurrency
+  4 with `.venv/bin` on PATH. `npx tsc --noEmit` and asset stamps passed in
+  CI and locally.
+* **753 data-script tests and 14,563 subtests**.
+* **45 shared guard tests against NSW's canonical publisher** in the
+  offline compatibility tree, with the final hand-off files. The publisher
+  import path was checked to confirm that this exercised NSW's code.
+
+Shell syntax and diff checks passed. The branch was rebased onto
+`ca800951e`, still the remote main head at final verification. No `.ops/`
+files are included. Shared desktop load briefly crossed 40; the remaining
+local gate was stopped and later rerun below the limit, while the heavier
+gates ran on CI. The final report commit changes documentation only;
+runtime files are exactly those tested above.
