@@ -33,9 +33,12 @@ export function ProfileBlock<T>({
   originals,
   sourced = true,
   action,
+  gloss,
   children,
 }: {
   title: string;
+  /** A glossary term id: the heading's plain line ("Explain terms"). */
+  gloss?: string;
   id: string;
   block: EvidenceBlock<T>;
   retry: () => void;
@@ -60,6 +63,7 @@ export function ProfileBlock<T>({
     return (
       <Section
         title={title}
+        gloss={gloss}
         action={action}
         testID={id}
         headingTestID={`${id}-heading`}
@@ -76,6 +80,7 @@ export function ProfileBlock<T>({
     return (
       <Section
         title={title}
+        gloss={gloss}
         action={action}
         testID={id}
         headingTestID={`${id}-heading`}
@@ -95,6 +100,7 @@ export function ProfileBlock<T>({
   return (
     <Section
       title={title}
+      gloss={gloss}
       action={action}
       testID={id}
       headingTestID={`${id}-heading`}

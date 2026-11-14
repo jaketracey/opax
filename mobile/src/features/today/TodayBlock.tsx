@@ -104,9 +104,12 @@ export function TodayBlock<T>({
   line,
   testID,
   report,
+  gloss,
   children,
 }: {
   title?: string;
+  /** A glossary term id: the heading's plain line ("Explain terms"). */
+  gloss?: string;
   action?: SectionAction;
   state: TodayBlockState<T>;
   /** Controls between the header and the group (Bills' segments). */
@@ -156,6 +159,7 @@ export function TodayBlock<T>({
           title={title}
           action={action}
           testID={`${testID}-title`}
+          gloss={gloss}
         />
       ) : null}
       {above}
