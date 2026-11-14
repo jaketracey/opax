@@ -1,25 +1,32 @@
 import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js'
 import {WebStandardStreamableHTTPServerTransport} from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js'
 import {z} from 'zod'
-import {body,CommunityError,digest,json,limit,now,type Member} from './community-core'
+import {body,CommunityError,json} from './community-core'
+import {challenge,mcpCaller,McpLimitError,progressMeter,spendAnonymous,spendMember,withSession,withCors,type KbMeter} from './mcp-access'
 import {tools,getTool,toolSchema,toolOutputSchema,validateToolArgs,callTool,ToolInputError} from './tools'
 import {RECORD_TEXT_NOTICE} from './tools/mcp-common'
 import {DISPATCH_TEXT,MCP_DIRECT,MCP_EXAMPLES,MCP_REPLACED,MCP_INSTRUCTIONS,MCP_OUTPUT_BYTES,MCP_REGISTERS,MCP_TEXT,REGISTER_LIST,listedSchema,mcpName,registryName} from './tools/mcp-listing'
-import {corpusKb} from './tools/corpus-records'
+import {corpusKb as openCorpusKb} from './tools/corpus-records'
 import {evidenceAsAt} from '../public/evidence-date.js'
 import {mcpToolTitle} from './mcp-tool-titles'
-export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=>Promise<Response>):Promise<Response>{
+export async function communityMcp(req:Request,env:Env,openPublic:(path:string,meter:KbMeter)=>Promise<Response>):Promise<Response>{
+ let rpcId:string|number|null=null
+ // Every Progress query a tool makes passes this request's meter (mcp-access.ts) just before it is made: the
+ // public search and record routes hand it to kbFetch, and the corpus reader calls it here. For a caller
+ // without an account each query is spent against today's allowance, so the cap counts real queries.
+ let meter=progressMeter(req,env,false)
+ const readPublic=(path:string)=>openPublic(path,meter.spend)
+ const corpusKb=(...args:Parameters<typeof openCorpusKb>):ReturnType<typeof openCorpusKb>=>{const kb=openCorpusKb(...args);return async(path,body)=>{await meter.spend(path);return kb(path,body)}}
+ const reported=(response:Response)=>{const report=meter.report();if(report)response.headers.set('x-opax-progress',report);return response}
  try{
-  if(String(env.COMMUNITY_ENABLED)!=='true')throw new CommunityError(503,'Community access is being prepared.')
-  const origin=req.headers.get('origin');if(origin&&origin!==env.COMMUNITY_ORIGIN)throw new CommunityError(403,'This origin is not allowed.')
-  const token=req.headers.get('authorization')?.match(/^Bearer (opax_[\w-]{43})$/)?.[1]
-  if(!token)return json({error:'Use an Opax community access token.'},401,{'www-authenticate':'Bearer realm="Opax community tools"'})
-  const record=await env.COMMUNITY_DB.prepare('SELECT m.*,k.id AS key_id FROM mcp_keys k JOIN members m ON m.id=k.member_id WHERE k.token_hash=? AND k.revoked_at IS NULL AND k.expires_at>? AND m.disabled=0').bind(await digest(token),now()).first<Member&{key_id:string}>()
-  if(!record)throw new CommunityError(401,'This access token is expired or revoked.')
-  await limit(env,'mcp:'+record.id,60,60)
-  if(req.method!=='POST')return json({error:'This endpoint accepts MCP requests over HTTP POST.'},405,{'allow':'POST'})
+  // Access (anonymous, member key or connected client), limits and CORS live in mcp-access.ts.
+  const caller=await mcpCaller(req,env)
+  if(caller instanceof Response)return withCors(caller)
+  if(req.method!=='POST')return withCors(json({error:'This endpoint accepts MCP requests over HTTP POST.'},405,{'allow':'POST'}))
   const parsed=await body(req,16384)
-  await env.COMMUNITY_DB.prepare('UPDATE mcp_keys SET last_used_at=? WHERE id=?').bind(now(),record.key_id).run()
+  if(['string','number'].includes(typeof parsed.id))rpcId=parsed.id as string|number
+  meter=progressMeter(req,env,caller.kind==='anonymous')
+  if(caller.kind==='anonymous')await spendAnonymous(req,env,parsed.method);else await spendMember(caller,req,env,parsed.method)
   const params=parsed.params as {name?:unknown,arguments?:unknown}|undefined
   const toolEnv=()=>({ASSETS:env.ASSETS,TABLE_DB:env.TABLE_DB,COMMUNITY_ORIGIN:env.COMMUNITY_ORIGIN,VIC_ELECTION_HUB_ENABLED:env.VIC_ELECTION_HUB_ENABLED,origin:'https://opax.com.au',signal:req.signal,kb:corpusKb(env,req.signal)})
   const failed=(text:string)=>({content:[{type:'text' as const,text}],isError:true})
@@ -27,7 +34,7 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
   // (MCP: input validation errors are tool execution errors, not protocol errors).
   if(parsed.jsonrpc==='2.0'&&['string','number'].includes(typeof parsed.id)&&parsed.method==='tools/call'&&typeof params?.name==='string'&&getTool(registryName(params.name))){
    try{await validateToolArgs(toolEnv(),registryName(params.name),params.arguments??{})}
-   catch(error){if(error instanceof ToolInputError)return json({jsonrpc:'2.0',id:parsed.id,result:failed(error.message.replaceAll(registryName(params.name),params.name))});throw error}
+   catch(error){if(error instanceof ToolInputError)return reported(withCors(json({jsonrpc:'2.0',id:parsed.id,result:failed(error.message.replaceAll(registryName(params.name),params.name))})));throw error}
   }
   const server=new McpServer({name:'opax-public-record',version:'1.0.0'},{instructions:MCP_INSTRUCTIONS})
   // Every tool is listed with a title (mcp-tool-titles.ts), both on the tool and in its annotations.
@@ -168,7 +175,10 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
   const transport=new WebStandardStreamableHTTPServerTransport({sessionIdGenerator:undefined,enableJsonResponse:true})
   await server.connect(transport)
   try{
-   const response=await transport.handleRequest(req,{parsedBody:parsed})
+   const handled=await transport.handleRequest(req,{parsedBody:parsed})
+   // A query refused part-way through a tool is answered as the limit it hit, not as the tool's own error.
+   const refused=meter.refused();if(refused)throw refused
+   const response=reported(withCors(withSession(handled,parsed.method)))
    if(parsed.method!=='tools/list'||!response.ok)return response
    // Every client holds this list in context: send each schema without examples, length bounds or SDK bookkeeping.
    const body=await response.json() as {result?:{tools?:Record<string,unknown>[]}}
@@ -176,5 +186,10 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
    const headers=new Headers(response.headers);headers.delete('content-length')
    return new Response(JSON.stringify(body),{status:response.status,headers})
   }finally{await server.close()}
- }catch(e){if(e instanceof CommunityError)return json({error:e.message},e.status,e.status===401?{'www-authenticate':'Bearer realm="Opax community tools"'}:{});return json({error:'Opax tools are temporarily unavailable.'},503)}
+ }catch(e){
+  // A limit is answered as a JSON-RPC error with Retry-After, so a client can tell the model and back off.
+  if(e instanceof CommunityError&&e.status===429){const wait=e instanceof McpLimitError?e.retryAfter:60;return reported(withCors(json({jsonrpc:'2.0',id:rpcId,error:{code:-32029,message:e.message,data:{retry_after_seconds:wait}}},429,{'retry-after':String(wait)})))}
+  if(e instanceof CommunityError)return withCors(json({error:e.message},e.status,e.status===401?{'www-authenticate':challenge(env,new URL(req.url).pathname)}:{}))
+  return withCors(json({error:'Opax tools are temporarily unavailable.'},503))
+ }
 }

@@ -86,6 +86,8 @@ interface Env {
   RESEARCH_SHADOW?: boolean
   /** Request-local policy, created only after operatorAuthorized passes. */
   RESEARCH_EVAL?: import('./research-eval').ResearchEvalState
+  /** Request-local: an MCP request's Progress meter (mcp-access.ts), called by kbFetch before each knowledge-base query. */
+  KB_METER?: import('./mcp-access').KbMeter
   /** Provisioned by Jake; optional so missing configuration falls back. */
   OPENROUTER_API_KEY?: string
   /** Optional operator-configured token prices, USD per million, for monitoring. */

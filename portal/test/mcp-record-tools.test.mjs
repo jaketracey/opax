@@ -593,15 +593,45 @@ test('the record tools hold no personal or account data and no generation path',
     assert.doesNotMatch(source, /—/, file + ': no em dash in public text');
   }
   // Tool arguments are never logged or stored: no console output, analytics or database write on the MCP path.
-  // The only writes are the key's last-used time and the hashed rate-limit counter, neither of which holds arguments.
+  // The only writes are in the access layer (mcp-access.ts), and none holds arguments: the key's last-used time,
+  // the hashed rate-limit counter (community-core limit()), the no-account hourly count (keyed by the hour) and its
+  // housekeeping delete, the daily counts (a pool key names its pool and UTC day; a network's key is hashed), and the
+  // token bucket (key hashed from address and session or User-Agent; values are times). Its warnings log counts,
+  // pools and days only. The Progress meter sees a knowledge-base path only to sort it into a count; the access
+  // layer never sees the call's params.
   const { readdir } = await import('node:fs/promises');
   const toolFiles = (await readdir(new URL('../src/tools/', import.meta.url))).filter(name => name.endsWith('.ts')).map(name => 'tools/' + name);
-  for (const file of ['community-mcp.ts', 'mcp-tool-titles.ts', ...toolFiles]) {
-    const source = await readFile(new URL('../src/' + file, import.meta.url), 'utf8');
+  const count = 'INSERT INTO community_limits(key,hits,expires_at) VALUES (?,1,?) ON CONFLICT(key) DO UPDATE SET hits=hits+1 RETURNING hits';
+  const allowedWrites = {
+    'mcp-access.ts': [
+      count, // countAnonymous: mcp-anon-hour:<hour>
+      'DELETE FROM community_limits WHERE expires_at<?', // countAnonymous: rows a day past their window
+      count, // addToday: mcp-anon-<count>-day:<pool>:<day>, or a hashed network-day key
+      'INSERT INTO community_limits(key,hits,expires_at) VALUES (?,?,?) ON CONFLICT(key) DO UPDATE SET hits=max(hits,?)+?,expires_at=excluded.expires_at WHERE max(hits,?)-?<=? RETURNING hits', // bucket()
+      'UPDATE mcp_keys SET last_used_at=? WHERE id=?', // spendMember, member keys
+    ],
+  };
+  const allowedLogs = {
+    'mcp-access.ts': [
+      "console.warn(JSON.stringify({kind:'mcp_anon_volume',level:'alert',hour:bucket*HOUR,hits:row.hits}))",
+      "console.warn(JSON.stringify({kind:'mcp_anon_network_cap',level:'warn',count,day:today()*DAY,hits}))",
+      "console.warn(JSON.stringify({kind:'mcp_anon_daily_cap',level:'alert',count,pool:at.pool,day:today()*DAY,hits}))",
+    ],
+  };
+  for (const file of ['community-mcp.ts', 'mcp-access.ts', 'mcp-tool-titles.ts', ...toolFiles]) {
+    let source = await readFile(new URL('../src/' + file, import.meta.url), 'utf8');
+    for (const line of allowedLogs[file] ?? []) { assert.ok(source.includes(line), file + ' still logs ' + line); source = source.replace(line, ''); }
     assert.doesNotMatch(source, /console\.(?:log|info|warn|error|debug)|posthog|\.capture\(|waitUntil|\.put\(/, file + ' logs or stores nothing');
+    if (file === 'mcp-access.ts') assert.doesNotMatch(source, /\bparams\b|\barguments\b|parsedBody/, file + ' never reads the call itself');
     const writes = source.match(/\b(?:INSERT|UPDATE|DELETE)\b[^'`]*/g) ?? [];
-    assert.deepEqual(writes, file === 'community-mcp.ts' ? ['UPDATE mcp_keys SET last_used_at=? WHERE id=?'] : [], file + ' database writes');
+    assert.deepEqual(writes, allowedWrites[file] ?? [], file + ' database writes');
   }
+  // A connected (OAuth) client's token check writes only the grant's last-used time.
+  const oauth = await readFile(new URL('../src/community-oauth.ts', import.meta.url), 'utf8'), start = oauth.indexOf('export async function oauthMember');
+  const oauthMember = oauth.slice(start, oauth.indexOf('\n}\n', start));
+  assert.ok(start >= 0 && oauthMember.length > 0);
+  assert.doesNotMatch(oauthMember, /console\.|waitUntil|\.put\(/);
+  assert.deepEqual(oauthMember.match(/\b(?:INSERT|UPDATE|DELETE)\b[^'`]*/g) ?? [], ['UPDATE oauth_grants SET last_used_at=? WHERE id=?'], 'oauthMember database writes');
   // The same answer with no account context at all: nothing in a result depends on who asked.
   const bare = { asset, origin: 'https://opax.com.au' };
   assert.deepEqual(await call('bill_detail', { bill_id: 'au-federal-r7534' }, bare), await call('bill_detail', { bill_id: 'au-federal-r7534' }));

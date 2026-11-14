@@ -1379,8 +1379,10 @@
       </ul>
       <h2 id="mcp">MCP research tools</h2>
       <div id="mcp-docs">
-      <p>Connect a research client to <code>https://opax.com.au/mcp</code> using Streamable HTTP
-      and a Bearer key from <a href="/account?tab=tools">your account</a>. Send JSON-RPC requests
+      <p>Connect a research client to <code>https://opax.com.au/mcp</code> using Streamable HTTP.
+      No account is needed; <code>https://opax.com.au/mcp/member</code> signs in with an OPAX account,
+      and a Bearer key from <a href="/account?tab=tools">your account</a> also works.
+      <a href="/mcp">Setup for each tool</a>. Send JSON-RPC requests
       over HTTP POST with <code>Content-Type: application/json</code> and
       <code>Accept: application/json, text/event-stream</code>. Use <code>tools/list</code> for
       the current schemas and <code>tools/call</code> to run a tool. All tools are read-only.</p>
@@ -1505,7 +1507,8 @@
 
       <h2 id="privacy-summary">In short</h2>
       <ul class="about-list">
-        <li>Reading the record needs no account, on the website or in the app.</li>
+        <li>Reading the record needs no account, on the website, in the app or through an AI
+        assistant connected to OPAX.</li>
         <li>Every request reaches OPAX's servers with your IP address, which is used to limit
         request rates and refuse abusive traffic.</li>
         <li>The website counts visits with Google Analytics and PostHog, and sends PostHog
@@ -1799,11 +1802,34 @@
       marketing email. Cloudflare's email service keeps its own delivery records, under
       <a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">Cloudflare's privacy policy</a>.</p>
 
-      <h3>Research tools</h3>
-      <p>Members can create keys that let research tools search the record through OPAX's MCP
-      service. Keys are stored as hashes, expire after 90 days, can be revoked at any time and
-      record when they were last used. Searches made with a key go through the same search as
-      the website. The <a href="/methods#mcp">MCP tool reference</a> lists inputs and examples.</p>
+      <h3>Research tools (MCP)</h3>
+      <p>AI assistants and other research clients can read OPAX's public record through its MCP
+      service at <code>https://opax.com.au/mcp</code>. It needs no account. Every tool is
+      read-only and returns published records only. <a href="/mcp">How to connect</a>.</p>
+      <p>When an assistant uses a tool, OPAX receives the tool's name and the inputs the assistant
+      chose, such as search words, a name or a date. OPAX does not receive your conversation, your
+      account with the assistant's maker, or anything else about you. The request usually arrives
+      from the assistant maker's servers, such as Anthropic's or OpenAI's, so OPAX sees their IP
+      address, not yours. A client running on your own computer connects from your address.</p>
+      <p>OPAX uses the IP address, and a random session number it gives the client when it connects,
+      to limit request rates: 60 tool requests a minute for one client, with a higher ceiling for one
+      address, and a daily allowance for each network. The counters are stored as hashes and deleted
+      after they expire. OPAX also keeps a count of how many requests and record searches arrived each
+      hour and each day without an account, split only by whether they came from an assistant maker's
+      servers, with nothing about who sent them. Requests are logged like any other request to OPAX's server; the log records that the
+      service was called and the outcome, not the tool or its inputs. Searches of speeches and
+      releases made through a tool go to Progress in the same way as a search on the website. No
+      tool sends anything to a language model.</p>
+      <p>What the assistant's maker keeps about your use of OPAX's tools is set by its own privacy
+      policy.</p>
+      <p><strong>With an account.</strong> Members get their own limit, in one of two ways. A member
+      can create keys, which are stored as hashes, expire after 90 days, can be revoked at any time
+      and record when they were last used. Or a member can sign in from an assistant that supports
+      it: OPAX then keeps the name the assistant gave, where it returns to, when it was connected
+      and last used, and hashes of its access codes, which expire after an hour and are renewed for
+      up to 60 days. The assistant can read public records as you. It cannot see your email
+      address, lists or messages. You can remove a connected assistant in your account at any time,
+      and deleting your account removes them all.</p>
 
       <h2 id="voice">Talking to OPAX by voice</h2>
       <p>Talk to OPAX is an optional voice assistant for signed-in members. It answers from the
@@ -1859,8 +1885,8 @@
       <ul class="about-list">
         <li>Your email address, display name, bio and settings, and any voice access OPAX gave
         your account.</li>
-        <li>Every session on every device, any unused sign-in links and codes, and your research
-        tool keys.</li>
+        <li>Every session on every device, any unused sign-in links and codes, your research
+        tool keys and any assistants you connected by signing in.</li>
         <li>Everything you wrote or saved: discussions, replies, reading lists, saved
         conversations, messages you sent, likes, bookmarks, follows, blocks, reports you made,
         and notifications to or from you.</li>
@@ -1985,6 +2011,10 @@
       <ul class="about-list">
         <li><strong>Help with OPAX</strong>, the app or your account:
         <a href="mailto:support@opax.com.au">support@opax.com.au</a>.</li>
+        <li><strong>OPAX in an AI assistant</strong>: if a tool returned something wrong or will
+        not connect, send what you asked and what came back to
+        <a href="mailto:support@opax.com.au">support@opax.com.au</a>. <a href="/mcp">Setup and
+        troubleshooting</a>.</li>
         <li><strong>Your personal information</strong>, including a request to see, correct or
         delete it: <a href="mailto:privacy@opax.com.au">privacy@opax.com.au</a>.</li>
         <li><strong>Public questions</strong> about the record or the methods can also go to an
@@ -2082,7 +2112,7 @@
 
 <footer>
   <!-- The site index: every section, drawn from the same list as the menus. -->
-  <nav class="wrap footer-index" id="footer-index" aria-label="Site index"><!-- nav:index:start --><div class="footer-col"><h2 class="footer-col-h">Parliament</h2><ul role="list"><li><a class="footer-link" href="/sitting">Sitting weeks</a></li><li><a class="footer-link" href="/video/senate">Senate video</a></li><li><a class="footer-link" href="/estimates">Senate estimates</a></li><li><a class="footer-link" href="/bills">Bills</a></li><li><a class="footer-link" href="/register/state-bills">State bills</a></li></ul></div><div class="footer-col"><h2 class="footer-col-h">People &amp; places</h2><ul role="list"><li><a class="footer-link" href="/subject/person">Parliamentarians</a></li><li><a class="footer-link" href="/subject/party">Parties</a></li><li><a class="footer-link" href="/declared">Declared interests</a></li><li><a class="footer-link" href="/subject/electorate">Electorates</a></li></ul></div><div class="footer-col"><h2 class="footer-col-h">Money</h2><ul role="list"><li><a class="footer-link" href="/money">Money map</a></li><li><a class="footer-link" href="/money/receipts">Political receipts</a></li><li><a class="footer-link" href="/subject/donor">Receipt sources</a></li><li><a class="footer-link" href="/subject/campaigner">Campaigners &amp; third parties</a></li><li><a class="footer-link" href="/register/act-invoices">ACT notifiable invoices</a></li><li><a class="footer-link" href="/register/gov-advertising">Government advertising</a></li><li><a class="footer-link" href="/register/tax-expenditures">Tax expenditures</a></li><li><a class="footer-link" href="/register/government-finance">Government finance</a></li><li><a class="footer-link" href="/money/contracts">Government contracts</a></li><li><a class="footer-link" href="/subject/supplier">Suppliers</a></li><li><a class="footer-link" href="/subject/agency">Agencies</a></li><li><a class="footer-link" href="/money/grants">Grants</a></li><li><a class="footer-link" href="/connections">Programs &amp; places</a></li></ul></div><div class="footer-col"><h2 class="footer-col-h">Topics &amp; reports</h2><ul role="list"><li><a class="footer-link" href="/subject/topic">Topics A–Z</a></li><li><a class="footer-link" href="/explore">Interactive tools</a></li><li><a class="footer-link" href="/official-reports">All official reports</a></li><li><a class="footer-link" href="/official-reports/royal-commissions">Royal commissions</a></li><li><a class="footer-link" href="/official-reports/integrity">Integrity reports</a></li><li><a class="footer-link" href="/official-reports/annual-reports">Annual reports</a></li><li><a class="footer-link" href="/official-reports/agency-reports">Agency reports</a></li><li><a class="footer-link" href="/audit">Queensland audit reports</a></li></ul></div><div class="footer-col"><h2 class="footer-col-h">About</h2><ul role="list"><li><a class="footer-link" href="/about">About OPAX</a></li><li><a class="footer-link" href="/community">Community</a></li><li><a class="footer-link" href="/press">Press kit</a></li><li><a class="footer-link" href="/methods">Methods &amp; how to cite</a></li><li><a class="footer-link" href="/stats">Sources &amp; coverage</a></li><li><a class="footer-link" href="/expenses">Expense definitions</a></li><li><a class="footer-link" href="/privacy">Privacy</a></li><li><a class="footer-link" href="/support">Support</a></li></ul></div><!-- nav:index:end -->
+  <nav class="wrap footer-index" id="footer-index" aria-label="Site index"><!-- nav:index:start --><div class="footer-col"><h2 class="footer-col-h">Parliament</h2><ul role="list"><li><a class="footer-link" href="/sitting">Sitting weeks</a></li><li><a class="footer-link" href="/video/senate">Senate video</a></li><li><a class="footer-link" href="/estimates">Senate estimates</a></li><li><a class="footer-link" href="/bills">Bills</a></li><li><a class="footer-link" href="/register/state-bills">State bills</a></li></ul></div><div class="footer-col"><h2 class="footer-col-h">People &amp; places</h2><ul role="list"><li><a class="footer-link" href="/subject/person">Parliamentarians</a></li><li><a class="footer-link" href="/subject/party">Parties</a></li><li><a class="footer-link" href="/declared">Declared interests</a></li><li><a class="footer-link" href="/subject/electorate">Electorates</a></li></ul></div><div class="footer-col"><h2 class="footer-col-h">Money</h2><ul role="list"><li><a class="footer-link" href="/money">Money map</a></li><li><a class="footer-link" href="/money/receipts">Political receipts</a></li><li><a class="footer-link" href="/subject/donor">Receipt sources</a></li><li><a class="footer-link" href="/subject/campaigner">Campaigners &amp; third parties</a></li><li><a class="footer-link" href="/register/act-invoices">ACT notifiable invoices</a></li><li><a class="footer-link" href="/register/gov-advertising">Government advertising</a></li><li><a class="footer-link" href="/register/tax-expenditures">Tax expenditures</a></li><li><a class="footer-link" href="/register/government-finance">Government finance</a></li><li><a class="footer-link" href="/money/contracts">Government contracts</a></li><li><a class="footer-link" href="/subject/supplier">Suppliers</a></li><li><a class="footer-link" href="/subject/agency">Agencies</a></li><li><a class="footer-link" href="/money/grants">Grants</a></li><li><a class="footer-link" href="/connections">Programs &amp; places</a></li></ul></div><div class="footer-col"><h2 class="footer-col-h">Topics &amp; reports</h2><ul role="list"><li><a class="footer-link" href="/subject/topic">Topics A–Z</a></li><li><a class="footer-link" href="/explore">Interactive tools</a></li><li><a class="footer-link" href="/official-reports">All official reports</a></li><li><a class="footer-link" href="/official-reports/royal-commissions">Royal commissions</a></li><li><a class="footer-link" href="/official-reports/integrity">Integrity reports</a></li><li><a class="footer-link" href="/official-reports/annual-reports">Annual reports</a></li><li><a class="footer-link" href="/official-reports/agency-reports">Agency reports</a></li><li><a class="footer-link" href="/audit">Queensland audit reports</a></li></ul></div><div class="footer-col"><h2 class="footer-col-h">About</h2><ul role="list"><li><a class="footer-link" href="/about">About OPAX</a></li><li><a class="footer-link" href="/community">Community</a></li><li><a class="footer-link" href="/press">Press kit</a></li><li><a class="footer-link" href="/mcp">Use OPAX in your AI tool</a></li><li><a class="footer-link" href="/methods">Methods &amp; how to cite</a></li><li><a class="footer-link" href="/stats">Sources &amp; coverage</a></li><li><a class="footer-link" href="/expenses">Expense definitions</a></li><li><a class="footer-link" href="/privacy">Privacy</a></li><li><a class="footer-link" href="/support">Support</a></li></ul></div><!-- nav:index:end -->
   </nav>
   <div class="wrap footer-lines">
     <p>OPAX is independent and open source (AGPL-3.0). It is not affiliated with any parliament,
@@ -2101,8 +2131,8 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=2154dc983c" defer></script>
-<script src="/navigation.js?v=cef8a2208b" defer></script>
+<script src="/spa-shell.js?v=a3e9542157" defer></script>
+<script src="/navigation.js?v=e11a322c70" defer></script>
 <script src="/quick-search.js?v=1009512e8a" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>
 <script src="/app.js?v=477e6a4547" defer></script>

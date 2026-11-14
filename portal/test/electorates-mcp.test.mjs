@@ -164,12 +164,17 @@ for (const q of computeElectorateGold()) test(q.id + ': Ask tool step and MCP re
 test('registry calls retain MCP auth, origin, rate and body-size protections', async () => {
   const f = fixture(), params = { name: 'electorates_rank', arguments: { indicator: 'median_income' } };
   assert.equal((await f.send('tools/call', params, { headers: { authorization: '' } })).status, 401);
-  assert.equal((await f.send('tools/list', {}, { headers: { origin: 'https://evil.test' } })).status, 403);
+  // No caller is identified by a cookie, so another origin gains nothing: it is answered, with credential-free CORS.
+  const crossOrigin = await f.send('tools/list', {}, { headers: { origin: 'https://evil.test' } });
+  assert.equal(crossOrigin.status, 200);
+  assert.equal(crossOrigin.headers.get('access-control-allow-origin'), '*');
+  assert.equal(crossOrigin.headers.get('access-control-allow-credentials'), null);
   f.state.authorized = false;
   assert.equal((await f.send('tools/call', params)).status, 401);
   f.state.authorized = true;
   assert.equal((await f.send('tools/call', params, { payload: JSON.stringify({ padding: 'x'.repeat(17000) }) })).status, 413);
-  f.state.hits = 60;
+  // The account ceiling (300 tool calls a minute across a member's sessions); the per-session bucket is in mcp-oauth.test.mjs.
+  f.state.hits = 300;
   assert.equal((await f.send('tools/call', params)).status, 429);
   assert.equal(f.state.reads, 0);
 });

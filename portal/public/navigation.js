@@ -90,6 +90,7 @@
           page('/about', 'About OPAX', 'What OPAX is and how answers are made.'),
           page('/community', 'Community', 'Reading lists and research, shared.'),
           page('/press', 'Press kit', 'Boilerplate, facts, images and how to cite.'),
+          page('/mcp', 'Use OPAX in your AI tool', 'Connect Claude, ChatGPT and other assistants.'),
         ] },
         { heading: 'Using the record', links: [
           page('/methods', 'Methods & how to cite', 'Sources, limitations and citation formats.'),
@@ -120,7 +121,7 @@
   // Reached from a money page's Explain action; it sits under the money map.
   const EXPLAIN = page('/money/explain', 'Explain this flow');
   // The About pages sit under About OPAX in the trail.
-  const UNDER_ABOUT = new Set(['/methods', '/stats', '/expenses', '/privacy', '/support', '/community', '/press']);
+  const UNDER_ABOUT = new Set(['/methods', '/stats', '/expenses', '/privacy', '/support', '/community', '/press', '/mcp']);
 
   const menuPages = groups.flatMap(g => g.columns.flatMap(c => [...c.links, ...(c.section ? [c.section] : [])]));
   const sectionPages = new Map([...menuPages, ...footerOnly].filter(p => !p.record).map(p => [p.href, p]));

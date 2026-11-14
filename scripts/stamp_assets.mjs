@@ -421,6 +421,8 @@ const PAGES = [
   { page: 'community.html', chrome: true, bare: true, files: ['style.css', 'ui-controls.css', 'nav.css', 'community.css', 'community.js', 'navigation.js', 'quick-search.js'] },
   // The press kit (/press) wears the same chrome, synced the same way.
   { page: 'press.html', chrome: true, bare: true, files: ['style.css', 'ui-controls.css', 'nav.css', 'navigation.js', 'quick-search.js', 'analytics.js', 'events.js', 'gtm.js'] },
+  // The AI tool setup page (/mcp for a browser; MCP clients get the tools at the same address).
+  { page: 'mcp.html', chrome: true, bare: true, files: ['style.css', 'ui-controls.css', 'nav.css', 'navigation.js', 'quick-search.js', 'analytics.js', 'events.js', 'gtm.js'] },
   { page: 'ui-workbench.html', chrome: false, bare: false, files: ['style.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'ui-workbench.css', 'ui-workbench.js'] },
   { page: 'home.html', chrome: true, bare: false, files: ['style.css', 'ui-controls.css', 'ui-source.css', 'ui-source.js', 'home.css', 'nav.css', 'home.js', 'navigation.js', 'quick-search.js', 'analytics.js', 'events.js', 'gtm.js'] },
   // /map is served from map.html. ui-controls.css is immutable, so a bare link

@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en-AU"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Connect an AI assistant to OPAX with MCP: search and read the Australian public record from Claude, ChatGPT, Claude Code, Cursor or VS Code. Free, read-only, no account needed.">
+<link rel="canonical" href="https://opax.com.au/mcp">
+<meta property="og:site_name" content="OPAX">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="en_AU">
+<meta property="og:title" content="Use OPAX in your AI tool · OPAX">
+<meta property="og:description" content="Search and read the Australian public record from Claude, ChatGPT, Claude Code, Cursor or VS Code. Free, read-only, no account needed.">
+<meta property="og:url" content="https://opax.com.au/mcp">
+<meta property="og:image" content="https://opax.com.au/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<title>Use OPAX in your AI tool · OPAX</title><link rel="icon" href="/favicon.svg"><link rel="stylesheet" href="/style.css?v=a376871abb"><link rel="stylesheet" href="/ui-controls.css?v=ce29178242"><link rel="stylesheet" href="/nav.css?v=69e7b2c27e">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/merriweather-normal-latin.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/public-sans-normal-latin.woff2">
+<style>
+@font-face{font-family:'Merriweather';font-style:italic;font-weight:400 900;font-display:swap;src:url(/fonts/merriweather-italic-vietnamese.woff2) format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+@font-face{font-family:'Merriweather';font-style:italic;font-weight:400 900;font-display:swap;src:url(/fonts/merriweather-italic-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Merriweather';font-style:italic;font-weight:400 900;font-display:swap;src:url(/fonts/merriweather-italic-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Merriweather';font-style:normal;font-weight:400 900;font-display:swap;src:url(/fonts/merriweather-normal-vietnamese.woff2) format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+@font-face{font-family:'Merriweather';font-style:normal;font-weight:400 900;font-display:swap;src:url(/fonts/merriweather-normal-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Merriweather';font-style:normal;font-weight:400 900;font-display:swap;src:url(/fonts/merriweather-normal-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Public Sans';font-style:normal;font-weight:400 700;font-display:swap;src:url(/fonts/public-sans-normal-vietnamese.woff2) format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+@font-face{font-family:'Public Sans';font-style:normal;font-weight:400 700;font-display:swap;src:url(/fonts/public-sans-normal-latin-ext.woff2) format('woff2');unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:'Public Sans';font-style:normal;font-weight:400 700;font-display:swap;src:url(/fonts/public-sans-normal-latin.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+</style>
+<!-- fonts:end -->
+<script src="/events.js?v=70d31cbc5b" defer></script>
+<script src="/gtm.js?v=0764911f84" defer></script>
+<script src="/quick-search.js?v=1009512e8a" defer></script>
+<script type="module" src="/navigation.js?v=e11a322c70"></script>
+<!-- After the page's own scripts; PostHog replays earlier events (analytics/index.js). -->
+<script src="/analytics.js?v=5fb3114d72" defer></script>
+<style>#mcp-main{padding-top:var(--sp-24);padding-bottom:var(--space-section)}#mcp-main pre{overflow-x:auto;padding:var(--sp-12) var(--sp-16);border:var(--border-hairline) solid var(--divider-subtle);border-radius:6px}#mcp-main ol.about-list{padding-left:1.4em}</style>
+</head>
+<body data-skip-target="mcp-main"><a class="visually-hidden" href="#mcp-main" data-skip>Skip to content</a>
+<!-- site-header:start -->
+<header class="site-header">
+  <div class="wrap masthead">
+    <div class="masthead-id">
+      <a class="logo" href="/" aria-label="OPAX home">
+        <svg class="logo-mark" viewBox="0 0 176 160" role="img" aria-hidden="true"><g transform="translate(0 14)"><path class="logo-land" d="M108.6 23.0L113.3 31.2L116.6 37.9L124.0 48.0L132.9 58.7L134.0 66.4L128.5 80.9L125.7 90.4L117.5 95.3L111.9 93.6L104.1 92.4L97.8 84.9L93.3 83.6L82.3 74.2L65.5 80.3L52.6 83.9L46.2 81.8L47.8 75.4L45.3 67.0L42.0 60.5L44.2 49.4L52.6 45.8L62.1 40.2L64.4 36.4L69.0 32.0L73.3 30.1L78.7 32.8L81.8 27.0L84.6 24.4L89.9 26.1L95.8 26.5L94.9 29.1L92.6 32.6L96.2 35.4L100.6 36.6L104.7 39.2L106.6 33.1L106.9 27.4Z"/><path class="logo-land" d="M113.8 100.1L121.3 100.4L121.9 104.3L119.0 109.0L115.3 105.8Z"/></g><path class="logo-star" d="M 88.0 1.0 L 90.9 7.1 L 97.0 10.0 L 90.9 12.9 L 88.0 19.0 L 85.1 12.9 L 79.0 10.0 L 85.1 7.1 Z"/><path class="logo-star" d="M 142.7 29.9 L 144.8 34.2 L 149.2 36.4 L 144.8 38.5 L 142.7 42.9 L 140.6 38.5 L 136.2 36.4 L 140.6 34.2 Z"/><path class="logo-star" d="M 156.2 87.6 L 158.8 93.0 L 164.2 95.6 L 158.8 98.2 L 156.2 103.6 L 153.6 98.2 L 148.2 95.6 L 153.6 93.0 Z"/><path class="logo-star" d="M 118.4 137.1 L 120.3 141.1 L 124.4 143.1 L 120.3 145.0 L 118.4 149.1 L 116.4 145.0 L 112.4 143.1 L 116.4 141.1 Z"/><path class="logo-star" d="M 57.6 135.1 L 60.2 140.5 L 65.6 143.1 L 60.2 145.7 L 57.6 151.1 L 55.0 145.7 L 49.6 143.1 L 55.0 140.5 Z"/><path class="logo-star" d="M 19.8 89.1 L 21.9 93.5 L 26.3 95.6 L 21.9 97.7 L 19.8 102.1 L 17.6 97.7 L 13.3 95.6 L 17.6 93.5 Z"/><path class="logo-star" d="M 33.3 27.4 L 36.2 33.4 L 42.3 36.4 L 36.2 39.3 L 33.3 45.4 L 30.3 39.3 L 24.3 36.4 L 30.3 33.4 Z"/></svg>
+      </a>
+    </div>
+
+    <!-- The menu bar. navigation.js draws the five groups and their panels from
+         one list (the sheet below and the footer index come from it too); these
+         links are what a reader without scripts gets. -->
+    <nav class="masthead-nav" id="primary-nav" aria-label="Primary">
+      <ul class="nav-list"><!-- nav:bar:start --><li class="nav-group"><a class="nav-trigger" href="/sitting">Parliament</a></li><li class="nav-group"><a class="nav-trigger" href="/subject/person">People &amp; places</a></li><li class="nav-group"><a class="nav-trigger" href="/money">Money</a></li><li class="nav-group"><a class="nav-trigger" href="/subject/topic">Topics &amp; reports</a></li><li class="nav-group"><a class="nav-trigger" href="/about">About</a></li><!-- nav:bar:end -->
+      </ul>
+    </nav>
+
+    <!-- Search and Ask on every page; Menu where the bar has no room. app.js
+         (or navigation.js, on pages without the app) puts Ask after the search box. -->
+    <div class="nav-actions">
+      <button type="button" class="header-search-toggle" id="header-search-open" aria-expanded="false" aria-controls="header-search-panel"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg><span class="nav-search-text">Search<span class="nav-search-more"> people, bills, topics</span></span><kbd class="nav-kbd" aria-hidden="true">/</kbd></button>
+      <div class="header-search-panel" id="header-search-panel" hidden>
+        <div class="mast-search ui-input-wrap" data-ui-size="default">
+          <label for="mast-q" class="visually-hidden">Search all of OPAX</label>
+          <svg class="mast-search-icon ui-control-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg>
+          <input class="ui-input" id="mast-q" type="text" autocomplete="off" placeholder="Search all of OPAX&#8230;"
+                 role="combobox" aria-expanded="false" aria-controls="mast-sugg" aria-autocomplete="list">
+          <div class="mast-sugg" id="mast-sugg" hidden role="listbox" aria-label="Suggestions"></div>
+        </div>
+      </div>
+      <button type="button" class="nav-toggle" id="nav-open" aria-expanded="false" aria-controls="nav-drawer">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+        <span class="nav-toggle-text">Menu</span>
+      </button>
+    </div>
+  </div>
+</header>
+<dialog class="nav-drawer nav-sheet" id="nav-drawer" aria-label="Menu" tabindex="-1">
+  <div class="drawer-head">
+    <p class="drawer-name">Menu</p>
+    <button type="button" class="drawer-close" id="drawer-close" aria-label="Close menu">
+      <svg class="drawer-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><line class="x1" x1="5" y1="5" x2="19" y2="19"/><line class="x2" x1="19" y1="5" x2="5" y2="19"/></svg>
+    </button>
+  </div>
+  <form class="drawer-search ui-input-wrap" id="drawer-search" role="search" data-ui-size="large">
+    <label for="drawer-q" class="visually-hidden">Search the record</label>
+    <svg class="drawer-search-icon ui-control-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="9" r="5.2"/><path d="M13 13l4 4"/></svg>
+    <input class="ui-input" id="drawer-q" type="search" autocomplete="off" placeholder="Search all of OPAX…" enterkeyhint="search"
+           role="combobox" aria-expanded="false" aria-controls="drawer-sugg" aria-autocomplete="list">
+    <div class="drawer-sugg" id="drawer-sugg" hidden role="listbox" aria-label="Suggestions"></div>
+  </form>
+  <nav class="sheet-nav" aria-label="Sections"></nav>
+</dialog>
+<!-- site-header:end -->
+<main id="mcp-main" class="wrap" tabindex="-1">
+<article class="policy-page">
+<div class="ui-page-head">
+<h1>Use OPAX in your AI tool</h1>
+<p class="ui-lede">OPAX has a connector for AI assistants. Add it once, and your assistant can search Australian speeches, votes, bills, donations, grants and contracts on OPAX and link every answer to the official record. It is free and read-only, and it works without an account.</p>
+</div>
+
+<h2 id="mcp-what">What it is</h2>
+<p>The connector uses the Model Context Protocol (MCP), an open standard most AI assistants support. Your assistant sends a search or a record request to OPAX, and OPAX returns the records with their source links. OPAX does not write the answer and does not see your conversation, only the requests your assistant sends.</p>
+<p>The tools only read the public record. They cannot post, change anything or see anyone's account.</p>
+
+<h2 id="mcp-address">The address</h2>
+<p>There are two addresses for the same tools. Pick one.</p>
+<ul class="about-list">
+<li><strong>No account:</strong> <code>https://opax.com.au/mcp</code>. Nothing to sign in to.</li>
+<li><strong>With your OPAX account:</strong> <code>https://opax.com.au/mcp/member</code>. Your assistant opens an OPAX sign-in page and asks you to allow it. You get your own limits, not shared with anyone. An OPAX account is free and needs only an email address.</li>
+</ul>
+
+<h2 id="mcp-tools">What the tools do</h2>
+<ul class="about-list">
+<li><strong><code>search_records</code>:</strong> search speeches, bills, votes, press releases, grants and other records by words, person, party, chamber and date.</li>
+<li><strong><code>read_record</code>:</strong> open one record in full, with its official source link.</li>
+<li><strong><code>find_connections</code>:</strong> find recorded links between people, parties and organisations, such as donations, meetings and declared interests. A recorded link is not evidence of influence.</li>
+<li><strong><code>corpus_coverage</code>:</strong> see what OPAX holds, collection by collection, and how current each one is.</li>
+<li><strong><code>read_grant_recipient</code> and <code>read_grant_program</code>:</strong> open a grant recipient or a grant program, with totals and individual grants.</li>
+</ul>
+<p>More tools cover registers and published reports. Your assistant reads the current list and how to use each tool when it connects. The <a href="/methods#mcp">Methods page</a> has the reference.</p>
+
+<h2 id="mcp-claude">Claude</h2>
+<ol class="about-list">
+<li>Open <strong>Customize</strong>, then <strong>Connectors</strong>.</li>
+<li>Choose <strong>Add</strong>, then <strong>Add custom connector</strong>.</li>
+<li>Name it OPAX and paste <code>https://opax.com.au/mcp</code>. To use your OPAX account, paste <code>https://opax.com.au/mcp/member</code> instead.</li>
+<li>Choose <strong>Add</strong>. With the account address, choose <strong>Connect</strong>, sign in to OPAX and choose <strong>Allow</strong>.</li>
+</ol>
+<p>On a Team or Enterprise plan, an owner adds the connector in the organisation's settings first.</p>
+
+<h2 id="mcp-chatgpt">ChatGPT</h2>
+<ol class="about-list">
+<li>Custom connectors need developer mode, which is available on some ChatGPT plans. Turn it on in <strong>Settings</strong> under <strong>Apps and connectors</strong>.</li>
+<li>Choose to add a custom MCP server.</li>
+<li>Name it OPAX and paste <code>https://opax.com.au/mcp</code>, with no authentication. To use your OPAX account, paste <code>https://opax.com.au/mcp/member</code> and choose OAuth.</li>
+<li>Create it. With the account address, sign in to OPAX and choose <strong>Allow</strong> when ChatGPT opens the page.</li>
+</ol>
+
+<h2 id="mcp-claude-code">Claude Code</h2>
+<p>Run this in your terminal:</p>
+<pre tabindex="0"><code>claude mcp add --transport http opax https://opax.com.au/mcp</code></pre>
+<p>To use your OPAX account, add the account address, then type <code>/mcp</code> inside Claude Code, pick OPAX and sign in:</p>
+<pre tabindex="0"><code>claude mcp add --transport http opax https://opax.com.au/mcp/member</code></pre>
+
+<h2 id="mcp-cursor">Cursor</h2>
+<p>Open <code>~/.cursor/mcp.json</code> and add OPAX inside <code>mcpServers</code>:</p>
+<pre tabindex="0"><code>{
+  "mcpServers": {
+    "opax": { "url": "https://opax.com.au/mcp" }
+  }
+}</code></pre>
+<p>To use your OPAX account, use <code>https://opax.com.au/mcp/member</code>. Cursor shows a sign-in button beside OPAX in its MCP settings.</p>
+
+<h2 id="mcp-vscode">VS Code</h2>
+<p>Run this in your terminal:</p>
+<pre tabindex="0"><code>code --add-mcp '{"name":"opax","type":"http","url":"https://opax.com.au/mcp"}'</code></pre>
+<p>Or add it to <code>.vscode/mcp.json</code> in a project:</p>
+<pre tabindex="0"><code>{
+  "servers": {
+    "opax": { "type": "http", "url": "https://opax.com.au/mcp" }
+  }
+}</code></pre>
+<p>To use your OPAX account, use <code>https://opax.com.au/mcp/member</code>. VS Code asks you to sign in when it starts the server.</p>
+
+<h2 id="mcp-other">Other tools</h2>
+<p>Add a remote MCP server that uses Streamable HTTP, with the address <code>https://opax.com.au/mcp</code>. No authentication is needed.</p>
+
+<h2 id="mcp-key">If your tool cannot sign in: use a key</h2>
+<p>Some tools only accept a fixed header. For those, create an API key in <a href="/community?view=tools">your OPAX account</a> and send it as a header with either address:</p>
+<pre tabindex="0"><code>Authorization: Bearer opax_your_key</code></pre>
+<p>In Claude Code, for example:</p>
+<pre tabindex="0"><code>claude mcp add --transport http opax https://opax.com.au/mcp --header "Authorization: Bearer opax_your_key"</code></pre>
+<p>A key lasts 90 days. Keep it private, and remove it in your account if it is ever shared by mistake.</p>
+
+<h2 id="mcp-account">What signing in allows</h2>
+<p>When you sign in, OPAX shows the name the app gives and where it will send you back, and asks you to allow it. Allowing lets that app read public records as you, under your own limit. It cannot see your email address, reading lists, messages or anything else in your account, and it cannot post.</p>
+<p>You can see the apps you have connected and remove any of them in <a href="/community?view=tools">your OPAX account</a>. A removed app stops working straight away.</p>
+
+<h2 id="mcp-limits">Limits</h2>
+<ul class="about-list">
+<li><strong>No account:</strong> 60 tool requests a minute for one conversation or app, with up to 30 at once. There is also a ceiling for each network address and for everyone together, so at a busy time a request can be turned away. Each network has a daily allowance, and so does all use without an account; when one is used up, the tools say so until midnight UTC.</li>
+<li><strong>With an account or a key:</strong> 60 tool requests a minute for each conversation, with up to 30 at once, and up to 300 a minute across your conversations. These are yours alone.</li>
+</ul>
+<p>If a limit is reached, the tool returns a message saying so. Wait a minute and try again. Very large records are shortened and say so.</p>
+
+<h2 id="mcp-trouble">If something goes wrong</h2>
+<ul class="about-list">
+<li><strong>The tool says there were too many requests:</strong> wait a little; the message says how long. If it keeps happening, use the account address so you have your own limit.</li>
+<li><strong>The tool says OPAX is paused for callers without an account:</strong> the shared daily allowance is used up. It returns the next day (UTC), or use the account address now.</li>
+<li><strong>The tool says this network has used today's allowance:</strong> your network has made as many searches today as one network may without an account. It resets at midnight UTC, or use the account address now.</li>
+<li><strong>The assistant asks you to sign in again:</strong> the connection lapsed or was removed. Connect again from the assistant.</li>
+<li><strong>The sign-in page says the app is not recognised:</strong> remove OPAX from the assistant and add it again.</li>
+<li><strong>A tool returned something wrong, or a record is missing:</strong> email <a href="mailto:support@opax.com.au">support@opax.com.au</a> with what you asked and what came back. <a href="/privacy">What OPAX receives when a tool is used</a> is on the Privacy page.</li>
+</ul>
+
+<h2 id="mcp-cite">Check and cite</h2>
+<p>Every result carries a link to the OPAX page and to the official source. Ask your assistant to show them, and check the record before you quote it. Summaries marked as machine-written are OPAX text, not the official record. How to cite is on the <a href="/methods">Methods page</a>.</p>
+</article>
+</main>
+<!-- site-footer:start -->
+<footer>
+  <!-- The site index: every section, drawn from the same list as the menus. -->
+  <nav class="wrap footer-index" id="footer-index" aria-label="Site index"><!-- nav:index:start --><div class="footer-col"><h2 class="footer-col-h">Parliament</h2><ul role="list"><li><a class="footer-link" href="/sitting">Sitting weeks</a></li><li><a class="footer-link" href="/video/senate">Senate video</a></li><li><a class="footer-link" href="/estimates">Senate estimates</a></li><li><a class="footer-link" href="/bills">Bills</a></li><li><a class="footer-link" href="/register/state-bills">State bills</a></li></ul></div><div class="footer-col"><h2 class="footer-col-h">People &amp; places</h2><ul role="list"><li><a class="footer-link" href="/subject/person">Parliamentarians</a></li><li><a class="footer-link" href="/subject/party">Parties</a></li><li><a class="footer-link" href="/declared">Declared interests</a></li><li><a class="footer-link" href="/subject/electorate">Electorates</a></li></ul></div><div class="footer-col"><h2 class="footer-col-h">Money</h2><ul role="list"><li><a class="footer-link" href="/money">Money map</a></li><li><a class="footer-link" href="/money/receipts">Political receipts</a></li><li><a class="footer-link" href="/subject/donor">Receipt sources</a></li><li><a class="footer-link" href="/subject/campaigner">Campaigners &amp; third parties</a></li><li><a class="footer-link" href="/register/act-invoices">ACT notifiable invoices</a></li><li><a class="footer-link" href="/register/gov-advertising">Government advertising</a></li><li><a class="footer-link" href="/register/tax-expenditures">Tax expenditures</a></li><li><a class="footer-link" href="/register/government-finance">Government finance</a></li><li><a class="footer-link" href="/money/contracts">Government contracts</a></li><li><a class="footer-link" href="/subject/supplier">Suppliers</a></li><li><a class="footer-link" href="/subject/agency">Agencies</a></li><li><a class="footer-link" href="/money/grants">Grants</a></li><li><a class="footer-link" href="/connections">Programs &amp; places</a></li></ul></div><div class="footer-col"><h2 class="footer-col-h">Topics &amp; reports</h2><ul role="list"><li><a class="footer-link" href="/subject/topic">Topics A–Z</a></li><li><a class="footer-link" href="/explore">Interactive tools</a></li><li><a class="footer-link" href="/official-reports">All official reports</a></li><li><a class="footer-link" href="/official-reports/royal-commissions">Royal commissions</a></li><li><a class="footer-link" href="/official-reports/integrity">Integrity reports</a></li><li><a class="footer-link" href="/official-reports/annual-reports">Annual reports</a></li><li><a class="footer-link" href="/official-reports/agency-reports">Agency reports</a></li><li><a class="footer-link" href="/audit">Queensland audit reports</a></li></ul></div><div class="footer-col"><h2 class="footer-col-h">About</h2><ul role="list"><li><a class="footer-link" href="/about">About OPAX</a></li><li><a class="footer-link" href="/community">Community</a></li><li><a class="footer-link" href="/press">Press kit</a></li><li><a class="footer-link" href="/mcp">Use OPAX in your AI tool</a></li><li><a class="footer-link" href="/methods">Methods &amp; how to cite</a></li><li><a class="footer-link" href="/stats">Sources &amp; coverage</a></li><li><a class="footer-link" href="/expenses">Expense definitions</a></li><li><a class="footer-link" href="/privacy">Privacy</a></li><li><a class="footer-link" href="/support">Support</a></li></ul></div><!-- nav:index:end -->
+  </nav>
+  <div class="wrap footer-lines">
+    <p>OPAX is independent and open source (AGPL-3.0). It is not affiliated with any parliament,
+    government agency or political party.</p>
+    <p id="stats"></p>
+    <p><a href="https://github.com/jaketracey/opax" rel="noopener">Source code on GitHub</a> ·
+       <a href="/methods">Methods &amp; how to cite</a> ·
+       <a href="/privacy">Privacy</a> ·
+       <a href="/support">Support</a> ·
+       Powered by <a href="https://www.progress.com/agentic-rag?utm_source=opax&amp;utm_medium=referral&amp;utm_campaign=powered_by&amp;utm_content=footer" data-analytics-partner="progress_agentic_rag" rel="noopener">Progress Agentic RAG</a>
+       and <a href="https://corpuskit.org?utm_source=opax&amp;utm_medium=referral&amp;utm_campaign=powered_by&amp;utm_content=footer" data-analytics-partner="corpuskit" rel="noopener">CorpusKit</a></p>
+  </div>
+</footer>
+<!-- site-footer:end -->
+</body></html>
