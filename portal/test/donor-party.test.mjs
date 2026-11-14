@@ -24,7 +24,7 @@ async function donorsDirectory(files, indexRecords) {
   const disclosed = name => index.get(foldDonorName(name)) || {label: name};
   const context = {
     donorViewReady: Promise.resolve(), donorViewIndex: index, receiptGraph, receiptGraphScope, receiptScopeLabel, hasPartyReceipts, DONOR_DECLARED_ONLY, notListedLine,
-    loadMoneyFile: async jur => files[jur] || null, loadAccess: async () => ({donors: {}}), loadFits: async () => ({}),
+    loadMoneyData: async () => files.federal || null, loadMoneyFile: async jur => files[jur] || null, loadAccess: async () => ({donors: {}}), loadFits: async () => ({}),
     normName: new Function('x', fnSource('normName').replace(/^function normName\(x\) \{|\}$/g, '')),
     byNumDesc: () => () => 0, byName: () => 0, moneyFor: () => 0, STATE_NOT_SUMMED: '', AEC_NOTE: '', esc,
     donorNameHTML: name => donorLabelHTML(disclosed(name)), donorGroupColour: () => '#000', industryLabel: v => String(v || ''),

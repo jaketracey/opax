@@ -1,0 +1,105 @@
+{
+  "source": "Existing report_aec_receipt_types.report algorithm, fossil_fuels added to displayed sectors only",
+  "database": "Local cached receipt-types review.sqlite; read-only; no fetches",
+  "full_party_receipts_scope": "All cached Political Party Return itemised recipient receipts, uncapped donors. Exact existing recipient-party mappings and existing canonical donor industry tags. No donor declarations, public bodies, internal party transfers, nonpositive amounts or reviewed outliers. Property is OPAX's broad property/construction tag, not a reviewed developer-only list. Mining excludes the separate fossil_fuels tag.",
+  "fossil_fuels_uncapped": {
+    "all_types": {
+      "aud": 13256737.0,
+      "top5": [
+        {
+          "recipient": "Labor",
+          "aud": 6776642.0
+        },
+        {
+          "recipient": "Liberal",
+          "aud": 5409009.0
+        },
+        {
+          "recipient": "LNP",
+          "aud": 578774.0
+        },
+        {
+          "recipient": "Nationals",
+          "aud": 340812.0
+        },
+        {
+          "recipient": "Katter's Australian Party",
+          "aud": 150000.0
+        }
+      ]
+    },
+    "donation_only": {
+      "aud": 3497250.0,
+      "top5": [
+        {
+          "recipient": "Liberal",
+          "aud": 1961350.0
+        },
+        {
+          "recipient": "Labor",
+          "aud": 981002.0
+        },
+        {
+          "recipient": "LNP",
+          "aud": 218399.0
+        },
+        {
+          "recipient": "Nationals",
+          "aud": 184999.0
+        },
+        {
+          "recipient": "Katter's Australian Party",
+          "aud": 150000.0
+        }
+      ]
+    }
+  },
+  "fossil_fuels_map": {
+    "all_types": {
+      "aud": 6599697.0,
+      "top5": [
+        {
+          "recipient": "Labor",
+          "aud": 3708132.0
+        },
+        {
+          "recipient": "Liberal",
+          "aud": 2773580.0
+        },
+        {
+          "recipient": "Nationals",
+          "aud": 90610.0
+        },
+        {
+          "recipient": "LNP",
+          "aud": 27375.0
+        }
+      ]
+    },
+    "donation_only": {
+      "aud": 1081975.0,
+      "top5": [
+        {
+          "recipient": "Liberal",
+          "aud": 807000.0
+        },
+        {
+          "recipient": "Labor",
+          "aud": 249975.0
+        },
+        {
+          "recipient": "Nationals",
+          "aud": 25000.0
+        }
+      ]
+    }
+  },
+  "audit_industries_match": [
+    "gambling",
+    "mining",
+    "property",
+    "unions",
+    "tobacco",
+    "finance"
+  ]
+}

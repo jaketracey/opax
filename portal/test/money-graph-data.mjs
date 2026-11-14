@@ -15,6 +15,7 @@ const root = new URL('../public', import.meta.url).pathname
 export const MONEY_PATH = '/graph/money.json'
 const read = path => JSON.parse(readFileSync(root + path, 'utf8'))
 
+export const RECEIPTS_PATH = '/graph/money-receipts.json'
 const typedCache = read(MONEY_PATH)
 assert.deepEqual(
   typedCache.meta?.receipt_types && {available: typedCache.meta.receipt_types.available, schema: typedCache.meta.receipt_types.schema, donation_type: typedCache.meta.receipt_types.donation_type},
@@ -32,14 +33,15 @@ const untypedCache = stripReceiptTypes(typedCache)
 
 export const typedMoney = () => structuredClone(typedCache)
 export const untypedMoney = () => structuredClone(untypedCache)
-const variants = {typed: typedMoney, untyped: untypedMoney}
+export const uncappedMoney = () => read(RECEIPTS_PATH)
+const variants = {typed: typedMoney, untyped: untypedMoney, uncapped: uncappedMoney}
 
 /** Asset reader returning parsed JSON (null when missing); money.json is the chosen variant. */
 export function moneyAsset(variant) {
   const graph = variants[variant]
   assert.ok(graph, 'money variant must be typed or untyped')
   return async path => {
-    if (path === MONEY_PATH) return graph()
+    if (path === MONEY_PATH || path === RECEIPTS_PATH) return graph()
     try { return read(path) } catch { return null }
   }
 }

@@ -1,3 +1,4 @@
+import {donationGraph} from '../public/money-receipts.js';
 import {industryName as sharedIndustryName} from '../public/money-scope.js';
 import {displayName as sourceDisplayName} from '../public/display-name.js';
 import test from 'node:test';
@@ -30,6 +31,8 @@ globalThis.fetch = async () => { throw Error('Money tests must never call a publ
 test.after(() => { globalThis.fetch = savedFetch; });
 const cache = new Map();
 async function asset(path) {
+  // This cross-surface contract suite deliberately injects the capped snapshot as a fixture.
+  if (path === '/graph/money-receipts.json') path = '/graph/money.json';
   if (!cache.has(path)) {
     try { cache.set(path, JSON.parse(await readFile(new URL('../public' + path, import.meta.url), 'utf8'))); }
     catch (e) { if (e.code === 'ENOENT') return null; throw e; }
@@ -185,7 +188,7 @@ test('search snippets: donor and flow records give the typed figure with the sco
   const pratt = published.nodes.find(n => n.id === PRATT);
   const record = donorSearchRecord('federal', pratt);
   assert.match(record.snippet, /\$19\.6m|\$19,572,876|19\.57/);
-  assert.match(record.snippet, /across 120 records\./);
+  assert.match(record.snippet, /across 120 receipts\./);
   assert.ok(record.snippet.includes(SCOPE));
   assert.doesNotMatch(record.snippet, /31\.7m|221 records/);
   const state = donorSearchRecord('qld', {id: 'donor:x', kind: 'donor', label: 'Example Pty Ltd', total: 500, count: 2, firstYear: 2020, lastYear: 2021});
@@ -298,16 +301,19 @@ const dollars = n => '$' + Math.round(n);
 
 test('Ask industry panel: finance totals, Westpac and the Labor bar are the typed figures, with the scope line', async () => {
   const box = new JSDOM('<div id="ask-money"></div>').window.document.getElementById('ask-money');
-  const context = appContext({$: () => box, moneyReceipts: receiptGraph(published), moneyReceiptScope: receiptGraphScope(published)});
+  const context = appContext({$: () => box, moneyDonationReceipts: donationGraph(published), moneyDonationScope: SCOPE.replace(/^All receipt types/, "Donations only")});
   runInNewContext(`${await appFunctions(['renderMoneyPanel', 'industryLabel', 'barList', 'tile'])}\nthis.panel=renderMoneyPanel;`, context);
   context.panel('finance');
   const sums = industrySums('finance');
+  const donationView = donationGraph(published), financeIds = new Set(published.nodes.filter(n=>n.industry==='finance').map(n=>n.id));
+  sums.typedTotal = donationView.nodes.filter(n=>financeIds.has(n.id)).reduce((sum,n)=>sum+n.total,0);
+  sums.toLabor = donationView.edges.filter(e=>financeIds.has(e.source)&&e.target==='party:Labor').reduce((sum,e)=>sum+e.total,0);
   assert.notEqual(Math.round(sums.typedTotal), Math.round(sums.legacyTotal));
-  assert.equal(box.querySelector('.entry-scope').textContent, SCOPE);
+  assert.match(box.querySelector('.entry-scope').textContent, /^Donations only.*Uncapped recipient selection/);
   assert.ok(box.querySelector('.tiles').textContent.includes(dollars(sums.typedTotal)), box.querySelector('.tiles').textContent);
   assert.ok(!box.querySelector('.tiles').textContent.includes(dollars(sums.legacyTotal)));
   const [sources, parties] = box.querySelectorAll('figure.chart');
-  const westpacNode = receiptGraph(published).nodes.find(n => n.id === WESTPAC);
+  const westpacNode = donationGraph(published).nodes.find(n => n.id === WESTPAC);
   assert.ok(sources.textContent.includes(dollars(westpacNode.total)), 'Westpac at its typed donor figure');
   assert.ok(parties.textContent.includes(dollars(sums.toLabor)), 'finance to Labor at the typed flows');
 });
@@ -324,7 +330,7 @@ test('donors directory: Pratt Holdings at $19.6m across 120 receipts, Liberal an
   const qld = await readPublic('/graph/money.qld.json');
   const build = async files => {
     const context = appContext({
-      donorViewReady: Promise.resolve(), loadMoneyFile: async jur => files[jur] ?? {nodes: []}, loadAccess: async () => ({}), loadFits: async () => ({}),
+      donorViewReady: Promise.resolve(), loadMoneyData: async () => files.federal, loadMoneyFile: async jur => files[jur] ?? {nodes: []}, loadAccess: async () => ({}), loadFits: async () => ({}),
       receiptGraph, receiptGraphScope, STATE_NOT_SUMMED: '', byNumDesc: () => () => 0, byName: () => 0, moneyFor: () => 0,
     });
     runInNewContext(`${await appFunctions(['buildDonorsDirectory', 'normName', 'industryLabel'])}\nthis.directory=buildDonorsDirectory;`, context);
@@ -377,7 +383,7 @@ test('quiz: donor and industry questions read the typed figures; party questions
   assert.equal(Math.round(ctx.donorsById.get(PRATT).total), 19572876);
   assert.equal(ctx.donorsById.get(PRATT).count, 120);
   const finance = published.nodes.filter(n => n.kind === 'donor' && n.industry === 'finance');
-  assert.equal(Math.round(ctx.industries.get('finance').total), Math.round(finance.reduce((sum, n) => sum + byTypeTotal(n), 0)));
+  assert.equal(Math.round(ctx.industries.get('finance').total), Math.round(finance.reduce((sum, n) => sum + (n.by_type?.donation_received || 0), 0)));
   assert.equal(edge(ctx.money, PRATT, 'party:Liberal').total, PRATT_LIBERAL, 'the industry-to-party question sums typed flows');
   assert.equal(ctx.parties.find(p => p.id === 'party:Labor'), published.nodes.find(n => n.id === 'party:Labor'));
 });
@@ -441,7 +447,8 @@ test('quiz: donor and industry answers carry the scope line in the reveal; party
   for (const id of typed) {
     const q = TEMPLATES.find(t => t.id === id).build(ctx, createRng(7));
     assert.ok(q, id);
-    assert.equal(q.scope, SCOPE, id);
+    if (id.startsWith('money-industry-') || id === 'money-party-from-industry') assert.match(q.scope, /donations only.*Donation Received/);
+    else assert.equal(q.scope, SCOPE, id);
   }
   const party = TEMPLATES.find(t => t.id === 'money-party-peak-year').build(ctx, createRng(7));
   assert.ok(party && party.scope === undefined, 'party totals are a different measure');
@@ -488,7 +495,7 @@ test('a declared-only flow to a renamed party: the former name before the new on
   const moved = structuredClone(published);
   const flow = moved.edges.find(e => e.source === 'donor:allianz australia' && e.target === 'party:Libertarian Party');
   Object.assign(flow, {byYear: {2024: [500, 1]}, firstYear: 2024, lastYear: 2024});
-  const movedEnv = {...env, asset: async path => path === '/graph/money.json' ? structuredClone(moved) : asset(path)};
+  const movedEnv = {...env, asset: async path => path === '/graph/money-receipts.json' ? structuredClone(moved) : asset(path)};
   movedEnv.ASSETS = {async fetch(req) { const body = await movedEnv.asset(new URL(req.url).pathname); return body ? Response.json(body) : new Response('missing', {status: 404}); }};
   const out = await api.callTool(movedEnv, 'money_totals', {donor: 'donor:allianz australia', party: 'Libertarian Party'});
   assert.deepEqual(out.donor_declared, [{party: 'Libertarian Party', donor_declared_aud: 500, records: 1, period: '2024-25'}]);
@@ -529,11 +536,11 @@ test('Ask money_totals: never a $0 donor row; a flow only the donor declared is 
   assert.ok(ranked.rows.every(r => r.total_aud > 0));
 });
 
-test('donors directory: no row at $0; declared-only donors carry the labelled line; off-map federal rows retain selected receipts', async () => {
+test('donors directory: no row at $0; declared-only donors carry the labelled line; off-map federal rows retain selected receipt totals', async () => {
   const index = await readPublic('/graph/donor-index.json');
   const graphs = {federal: published, qld: await readPublic('/graph/money.qld.json'), vic: await readPublic('/graph/money.vic.json'), tas: await readPublic('/graph/money.tas.json')};
   const context = appContext({
-    donorViewReady: Promise.resolve(), loadMoneyFile: async jur => graphs[jur], loadAccess: async () => ({}), loadFits: async () => ({}),
+    donorViewReady: Promise.resolve(), loadMoneyData: async () => graphs.federal, loadMoneyFile: async jur => graphs[jur], loadAccess: async () => ({}), loadFits: async () => ({}),
     receiptGraph, receiptGraphScope, STATE_NOT_SUMMED: '', byNumDesc: () => () => 0, byName: () => 0, moneyFor: () => 0,
     donorViewIndex: donorLookup(index.donors), donorGroupColour: () => '#000', donorNameHTML: name => name, entityHrefAttr: href => `href="${href}"`,
     anyPartyDotHTML: () => '', yearSpan: (a, b) => `${a}-${b}`,
@@ -556,9 +563,10 @@ test('donors directory: no row at $0; declared-only donors carry the labelled li
   }
   assert.ok(directory.filters.find(f => f.key === 'jur').test(declared[0][0], 'federal'), 'still listed as disclosed to the AEC');
   const offMap = html.filter(([d]) => d.recordMeasure && d.money.federal);
-  assert.equal(offMap.length,0,'retained federal entries now carry typed recipient receipts');
-  const linc = html.find(([d])=>d.label==='Linc Energy');
+  assert.equal(offMap.length, 0, "federal retained records now carry selected typed receipts");
+  const linc = html.find(([d]) => d.label === "Linc Energy");
   assert.deepEqual([linc[0].money.federal.total,linc[0].money.federal.count],[357799,9]);
+  assert.ok(!linc[1].includes("AEC records"));
   const onMap = html.find(([d]) => d.label === 'Pratt Holdings Pty Ltd')[1];
   assert.ok(onMap.includes('AEC returns') && !onMap.includes('AEC records'));
 });
@@ -573,7 +581,7 @@ test('search: no donor or receipt record says $0.00; declared-only donors carry 
   for (const file of ['money.json', 'money.qld.json', 'money.vic.json', 'money.tas.json']) for (const n of (await readPublic('/graph/' + file)).nodes) onMap.add(n.id);
   for (const n of index.donors) if (n.kind !== 'reference' && !onMap.has(n.id)) assert.doesNotMatch(donorSearchRecord(n.jurisdiction || 'federal', n).snippet, ZERO, n.label);
   const offMap = index.donors.find(n => n.kind === 'donor' && (n.jurisdiction || 'federal') === 'federal' && !onMap.has(n.id) && n.total > 0);
-  assert.match(donorSearchRecord('federal', offMap).snippet, /records\. All receipt types.*as the parties reported them in federal returns\.$/);
+  assert.match(donorSearchRecord('federal', offMap).snippet, /receipts\. All receipt types.*as the parties reported them in federal returns\.$/);
   const source = await readFile(new URL('../../scripts/build_search_catalog.mjs', import.meta.url), 'utf8');
   assert.ok(source.includes('   if(!hasPartyReceipts(e))continue;'), 'receipt records use the same predicate');
 });

@@ -1,5 +1,5 @@
-import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=766cd2970b';
-import {donorDisclosure, financialYear, receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=af7c0f0f03';
+import {applyQuery, dataTableHTML, guardTableURL, mountDataTable, parseQuery} from './datatable.js?v=d86685a921';
+import {donorDisclosure, financialYear, receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=d28448a137';
 import {interestHolder} from './interest-holder.js';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -253,7 +253,7 @@ export function governmentFunctionTableConfig(rows) {
 // for every money figure, light enough for the games and the Worker's tools);
 // they are re-exported here for the pages and tables that already import them.
 // financialYear ("2020-21") comes from there too, for any scope line written here.
-export {receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=af7c0f0f03';
+export {receiptFigures, receiptScopeLabel} from './donor-disclosure.js?v=d28448a137';
 
 /**
  * A party's headline: its own federal returns, every receipt line once and all
@@ -318,9 +318,12 @@ export function partyMoneyData(graph, partyId) {
   return {rows:kept,...(typed && kept.length ? {scope:receiptScopeLabel({typed,firstYear,lastYear})} : {})};
 }
 
-/** Add the map's donor selection to the table's receipt scope for display. */
-export function partyMapScope(scope) {
-  return scope ? scope.replace(/^All receipt types/, 'All receipt types from named donors on the map').replace('federal returns', 'AEC federal returns') + '.' : '';
+/** The table's receipt scope for display, naming the selection its rows come from: the uncapped
+ *  selected recipient receipts, or the named donors a capped map file draws. */
+export function partyTableScope(scope, meta) {
+  if (!scope) return '';
+  if (meta?.uncapped) return scope.replace(/^All receipt types/, 'All receipt types from the uncapped selected recipient receipts').replace('federal returns', 'AEC federal returns') + '.';
+  return scope.replace(/^All receipt types/, 'All receipt types from named donors on the map').replace('federal returns', 'AEC federal returns') + '.';
 }
 
 // The table's rows (and so the page's hydration JSON) leave out return_reference;

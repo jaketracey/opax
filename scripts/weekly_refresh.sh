@@ -220,7 +220,8 @@ if [ "$want_weekly" = 1 ]; then
   # classifications, reviewed exclusions and legacy totals on every re-import.
   if run_step aec_receipt_types "SELECT COUNT(*) FROM aec_receipt_records" \
     "$PY" -m parli.ingest.donations --cache-only --backfill-types --db "$DB"; then
-    run_step x_money "" "$EXPORT" json portal/public/graph/money.json "$PY" scripts/export_money_graph.py
+    run_step x_money "" "$EXPORT" json portal/public/graph/money.json "$PY" scripts/export_money_graph.py \
+      --receipts-out portal/public/graph/money-receipts.json --industry-totals-out portal/public/graph/money-industry-totals.json
   else
     log "[x_money] SKIP: AEC receipt types unavailable; last good graph kept"
   fi

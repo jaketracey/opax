@@ -47,7 +47,7 @@ const graph = {
     edge('grantor:federal', 'donor:alpha-holdings', { 2017: [50000000, 5] }, { grant: true }),
   ],
 };
-const env = { origin: 'https://opax.com.au', asset: async path => structuredClone(path === '/graph/money.json' ? graph : null) };
+const env = { origin: 'https://opax.com.au', asset: async path => structuredClone(path === '/graph/money-receipts.json' ? graph : null) };
 const call = args => api.callTool(env, 'money_totals', args);
 const fy = value => String(value).replaceAll('–', '-');
 function period(row, first, last = first) {
@@ -246,7 +246,7 @@ test('no disclosure in a period stays distinct from a recorded zero', async () =
 
 test('published Nationals and donor values reconcile to the real byYear cells', async () => {
   const published = JSON.parse(await readFile(new URL('../public/graph/money.json', import.meta.url), 'utf8'));
-  const publishedEnv = { origin: env.origin, asset: async path => path === '/graph/money.json' ? structuredClone(published) : null };
+  const publishedEnv = { origin: env.origin, asset: async path => path === '/graph/money-receipts.json' ? structuredClone(published) : null };
   const party = published.nodes.find(row => row.id === 'party:Nationals');
   assert.ok(party?.byYear?.['2017'], 'published fixture contains the required financial year');
   const out = await api.callTool(publishedEnv, 'money_totals', { party: 'Nationals', financial_year: '2017-18' });
@@ -340,17 +340,17 @@ test('industry rankings sum all selected flows before limiting, preserving perio
   data.edges.push(edge('donor:beta-association','party:Liberal',{2017:[9999,1]}))
   const env = { asset: async () => data, origin: 'https://opax.com.au' }
   const result = await api.callTool(env, 'money_totals', { party: 'Liberal', financial_year: '2017-18', group_by: 'industry' })
-  assert.deepEqual(result.rows.map(r => [r.industry,r.total_aud]), [['property',400],['mining',180]])
-  assert.match(result.citations[0].text, /^Property led the classified industry ranking/)
+  assert.deepEqual(result.rows.map(r => [r.industry,r.total_aud]), [['mining',10179],['property',400]])
+  assert.match(result.citations[0].text, /^Mining led the classified industry ranking/)
   assert.match(result.citations[0].text, /2017-18/)
   for (const cite of result.citations) {
     assert.match(cite.text, /1 July 2017 to 30 June 2018/)
     assert.doesNotMatch(cite.text, /\b\d{4}-\d{2}-\d{2}\b/)
   }
-  assert.equal(new URL(result.citations[0].url).searchParams.get('industry'),'property')
+  assert.equal(new URL(result.citations[0].url).searchParams.get('industry'),'mining')
   const labor = await api.callTool(env, 'money_totals', { party: 'Labor', from_year: 2017, to_year: 2018, group_by: 'industry', limit: 1 })
   assert.equal(labor.rows[0].total_aud,670)
-  assert.match(labor.notes.join(' '), /not every AEC receipt/)
+  assert.match(labor.notes.join(' '), /uncapped published donor selection/)
   data.nodes.find(n => n.id === 'donor:gamma-example').industry = 'individual'
   assert.equal((await api.callTool(env, 'money_totals', { party:'Liberal',financial_year:'2017-18',group_by:'industry' })).rows[0].industry,'mining')
 })

@@ -17,7 +17,7 @@ export const TABLE_DATASETS = {
   instruments: {columns: [text('id','Register id'), text('title','Title'), category('portfolios','Portfolio'), category('type','Type'), category('status','Status'), date('commenced','Commenced'), number('year', 'year','Registration year'), date('registered','Registered')], defaultSort: {key: 'title', dir: 'asc'}},
   'audit-reports': {columns: [text('id'), text('title'), text('report_label', 'Report'), category('sectors'), category('entities'), jurisdiction, number('number'), number('year', 'year'), date('tabled_date', 'Tabled'), text('canonical_url', 'Source')], defaultSort: {key: 'tabled_date', dir: 'desc'}},
   interests: {columns: [text('id'), text('name'), category('category'), category('holder'), jurisdiction, category('chamber'), text('description'), date('date'), number('year', 'year'), text('url', 'Source')], defaultSort: {key: 'name', dir: 'asc'}},
-  'party-money': {columns: money, defaultSort: {key: 'amount', dir: 'desc'}},
+  'party-money': {columns: money.map(c=>c.key==='amount' ? {...c,label:'Received (AUD)'} : c.key==='count' ? {...c,label:'Receipts'} : c), defaultSort: {key: 'amount', dir: 'desc'}},
 };
 
 export const tableText = value => String(value ?? '').normalize('NFKC').toLowerCase().replace(/\s+/g, ' ').trim();

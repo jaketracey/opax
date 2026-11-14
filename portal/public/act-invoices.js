@@ -1,5 +1,5 @@
-import {mountDataTable} from './datatable.js?v=766cd2970b';
-import {actInvoicesConfig,actInvoicesURL,decorateActInvoices} from './act-invoices-table.js?v=efafb4fce1';
+import {mountDataTable} from './datatable.js?v=d86685a921';
+import {actInvoicesConfig,actInvoicesURL,decorateActInvoices} from './act-invoices-table.js?v=e3408016b1';
 for(const root of document.querySelectorAll('[data-act-invoices-table]')){
  const definitions=JSON.parse(root.querySelector('[data-act-entity-definitions]')?.textContent||'{}');
  const guard=actInvoicesURL(new URL(location.href));

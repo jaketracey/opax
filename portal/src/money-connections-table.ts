@@ -14,7 +14,7 @@ export async function renderMoneyConnectionsTable(url: URL, read: ReadAsset): Pr
   const render=(config: ReturnType<typeof moneyConnectionsConfig>, scope='') => {
     config.initialRejected=clean.rejected;
     const page=applyQuery(config.rows || [],config,clean.query);
-    return `<section class="research-records" aria-label="Money connections"><h2>Connections matching the map filters</h2><p class="fineprint mc-explainer">Aggregated connections for the map’s selected years; open an entity for its records.${scope ? ` Receipts: ${escapeText(scope)}.` : ''}</p><div class="money-connections-table">${dataTableHTML(config,page,clean.url)}</div></section>`;
+    return `<section class="research-records" aria-label="Money connections"><h2>Connections matching the map filters</h2><p class="fineprint mc-explainer">Totals on the map, which shows only the largest donors, for the selected years; open an entity for its records.${scope ? ` Receipts: ${escapeText(scope)}.` : ''}</p><div class="money-connections-table">${dataTableHTML(config,page,clean.url)}</div></section>`;
   };
   if(clean.rejected)return render(moneyConnectionsConfig({nodes:[],edges:[]}));
   const jur=params.get('jur') || 'federal';

@@ -2,6 +2,8 @@
 export const fy = value => String(value ?? '').replace(/(\d{4})[-–](\d{2})(?![\d-])/g, '$1–$2');
 export const financialYear = year => fy(`${year}-${String((Number(year) + 1) % 100).padStart(2, '0')}`);
 export function moneyScope(kind, {year = '', branches = 0} = {}) {
+  // The uncapped receipt export: every selected recipient receipt, not only the donors the map draws.
+  if (kind === 'receipts') return `from the uncapped selected recipient receipts, all receipt types from AEC federal returns${year ? `, ${fy(year)}` : ''}`;
   if (kind === 'map') return `from named donors on the map, all receipt types from AEC federal returns${year ? `, ${fy(year)}` : ''}`;
   if (kind === 'return') return `total receipts on the ${fy(year)} AEC federal return, all receipt types${branches > 1 ? `, ${branches} branches summed` : ''}`;
   return '';

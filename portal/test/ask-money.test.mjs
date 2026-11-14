@@ -87,9 +87,9 @@ test('implicit funding wording preserves scope restrictions and unknown qualifie
 });
 
 test('the live fossil-fuel ranking failure is corrected using all selected edges',async()=>{
- const r=await ask('Who receives the most disclosed receipts from fossil fuel donors?');
- // 13 Nov 2026: Liberal $957,000 to $807,000 and Labor $269,975 to $249,975 (the recovered aliases stay counted): Linc Energy left the federal map at rank 251 when NIOA's two 2015-16 gifts of $20,000 to the Liberal Democratic Party (one on the party's return, one the donor's own) lifted NIOA into the top 250 (export rule 10); its fossil-fuel receipts left with it.
- assert.match(r.answer,/^\*\*Liberal\*\*/);assert.match(r.answer,/\| Liberal \| \$807,000 \| 75% \| \$2,801,080 \(mostly other receipts\) \|/);assert.match(r.answer,/\| Labor \| \$249,975 \| 23% \| \$3,710,882 \(mostly other receipts\) \|/);
+ const r=await rankedMoneyAnswer({question:'Who receives the most disclosed receipts from fossil fuel donors?'},moneyAssets('uncapped'));
+ // 13 Nov 2026: Liberal $957,000 to $807,000 and Labor $269,975 to $249,975: Linc Energy left the federal map at rank 251 when NIOA's two 2015-16 gifts of $20,000 to the Liberal Democratic Party (one on the party's return, one the donor's own) lifted NIOA into the top 250 (export rule 10); its fossil-fuel receipts left with it.
+ assert.match(r.answer,/^\*\*Liberal\*\*/);assert.match(r.answer,/\| Liberal \| \$1,961,350 \| 56% \| \$5,409,009 \(mostly other receipts\) \|/);assert.match(r.answer,/\| Labor \| \$981,002 \| 28% \| \$6,776,642 \(mostly other receipts\) \|/);
  assert.equal(r.answer_status,'calculated');assert.match(r.answer,/These figures are party-level totals from recipient returns in OPAX’s published selection/);
  assert.ok(r.sources.some(s=>s.href.includes('industry=fossil_fuels')&&s.href.includes('party=party%3ALiberal')));
 });
@@ -228,6 +228,8 @@ test('party comparisons calculate a dollar difference and cite each scoped side'
  for(const [id,ranges] of Object.entries(r.citations)) {assert.ok(r.sources.some(s=>s.resource===id));for(const [start,end] of ranges)assert.ok(start>=0&&end>start&&end<=Array.from(r.answer).length)}
 });
 
+// These calculator tests deliberately supply money.json; factual uncapped totals are pinned in money-uncapped.test.mjs.
+// The shared guard preserves CEPU Tas $9,000 and PwC NSW $1,500 donations outside their map parents.
 test('industry comparisons do not treat banks as every finance organisation',async()=>{
  const unsupported=await ask('Who gives more money to Labor, unions or banks?');
  assert.equal(unsupported.answer_status,'calculated');assert.match(unsupported.answer,/Finance/);
@@ -235,7 +237,7 @@ test('industry comparisons do not treat banks as every finance organisation',asy
  const r=await ask('Who gives more money to Labor, unions or finance?');
  assert.equal(r.answer_status,'calculated');assert.match(r.answer,/\| Source industry \|/);
  const unions=industryTotal('unions','Labor'),finance=industryTotal('finance','Labor');
- assert.ok(r.answer.includes(`Unions accounted for ${aud(unions-finance)} more to Labor than Finance`));assert.deepEqual([unions,finance].map(aud),['$68,031,075','$8,722,283']);
+ assert.ok(r.answer.includes(`Unions accounted for ${aud(unions-finance)} more to Labor than Finance`));assert.deepEqual([unions,finance].map(aud),['$68,022,075','$8,722,283']);
  assert.ok(r.answer.includes(aud(unions)));assert.ok(r.answer.includes(aud(finance)));
  assert.ok(r.sources.some(s=>s.href.includes('industry=unions')&&s.href.includes('party=party%3ALabor')));
  assert.ok(r.sources.some(s=>s.href.includes('industry=finance')&&s.href.includes('party=party%3ALabor')));
@@ -627,11 +629,11 @@ test('compound party names retain distinct federal identities and reject unsuppo
  assert.match(country.answer,/Donors declared \$107,300/);assert.equal(aud(clpEdges.reduce((s,e)=>s+e.total,0)),'$107,300');
  assert.doesNotMatch(country.answer,/no type breakdown|donations received|other financial years|See these donations/);
  assert.match(country.answer,/\[See these on the money map\]\([^)]*party=party%3ACountry\+Liberal\+Party\)/);
- const pair=await ask('Who gets more money, Liberal or LNP?');assert.equal(pair.answer_status,'calculated');assert.match(pair.answer,/Liberal received \$96,440,827 more than LNP/); // 13 Nov 2026: was $96,465,828; Linc Energy left the federal map at rank 251 when NIOA's two 2015-16 gifts of $20,000 to the Liberal Democratic Party (one on the party's return, one the donor's own) lifted NIOA into the top 250 (export rule 10).
+ const pair=await ask('Who gets more money, Liberal or LNP?');assert.equal(pair.answer_status,'calculated');assert.match(pair.answer,/Liberal received \$96,439,327 more than LNP/); // 13 Nov 2026: was $96,465,828; Linc Energy left the federal map at rank 251 when NIOA's two 2015-16 gifts of $20,000 to the Liberal Democratic Party (one on the party's return, one the donor's own) lifted NIOA into the top 250 (export rule 10).
  assert.equal(new Set(pair.sources.slice(1).map(s=>new URL(s.href,'https://opax.test').searchParams.get('party'))).size,2);
  // The comparison gives the CLP's all-types total under its own label, and says it is not like for like.
  const clp=await ask('Who gets more money, Country Liberal Party or Liberal?');
- assert.equal(clp.answer_status,'calculated');assert.equal(clp.comparison_complete,false);assert.match(clp.answer,/^Liberal recorded \$100,378,375 in donations received/); // 13 Nov 2026: was $100,528,375; Linc Energy's $150,000 left with it when NIOA's 2015-16 gifts to the Liberal Democratic Party lifted NIOA into the top 250.
+ assert.equal(clp.answer_status,'calculated');assert.equal(clp.comparison_complete,false);assert.match(clp.answer,/^Liberal recorded \$100,376,875 in donations received/); // 13 Nov 2026: was $100,528,375; Linc Energy's $150,000 left with it when NIOA's 2015-16 gifts to the Liberal Democratic Party lifted NIOA into the top 250.
  assert.match(clp.answer,/ Country Liberal Party recorded \$107,300 in all receipt types \(no type breakdown in the AEC data OPAX holds\), 1998–99 to 2004–05\. The AEC data OPAX holds for Country Liberal Party doesn't split receipts by type, so its total can't be set beside the donation figures as like for like\./);
  assert.doesNotMatch(clp.answer,/One comparison side has matching records|Country Liberal Party recorded \$[\d,]+ in donations/);
  const clpLinks=[...clp.answer.matchAll(/\[(See [^\]]+ on the money map)\]\(([^)]+)\)/g)].map(m=>[m[1],new URL(m[2]).searchParams.get('party'),new URL(m[2]).searchParams.get('receipt')]);
@@ -763,7 +765,7 @@ test('a year comparison never sets a year without receipt types beside typed fig
   {source:'donor:example casino',target:'party:Labor',total:300,count:1,firstYear:2020,lastYear:2020,byYear:{2020:[300,1]},by_type:{donation_received:300},by_type_year:{'2020-21':{donation_received:[300,1]}}},
   {source:'donor:example betting',target:'party:Labor',total:500,count:2,firstYear:2021,lastYear:2021,byYear:{2021:[500,2]},by_type:{},by_type_year:{}}]};
  const base=moneyAssets('typed');
- const own={fetch:async request=>new URL(request.url).pathname==='/graph/money.json'?Response.json(synthetic):base.fetch(request)};
+ const own={fetch:async request=>new URL(request.url).pathname==='/graph/money-receipts.json'?Response.json(synthetic):base.fetch(request)};
  const r=await rankedMoneyAnswer({question:'How did gambling receipts to Labor change from 2020 to 2021?'},own);
  assert.equal(r.answer_status,'calculated');assert.equal(r.comparison_complete,false);
  assert.match(r.answer,/^Labor in 2020–21 recorded \$300 in donations received/);
@@ -779,7 +781,7 @@ test('a year left out for having no type breakdown keeps its reason beside the p
   {source:'donor:example casino',target:'party:Labor',total:300,count:1,firstYear:2025,lastYear:2025,byYear:{2025:[300,1]},by_type:{donation_received:300},by_type_year:{'2025-26':{donation_received:[300,1]}}},
   {source:'donor:example betting',target:'party:Labor',total:500,count:2,firstYear:2021,lastYear:2021,byYear:{2021:[500,2]},by_type:{},by_type_year:{}}]};
  const base=moneyAssets('typed');
- const own={fetch:async request=>new URL(request.url).pathname==='/graph/money.json'?Response.json(synthetic):base.fetch(request)};
+ const own={fetch:async request=>new URL(request.url).pathname==='/graph/money-receipts.json'?Response.json(synthetic):base.fetch(request)};
  const r=await rankedMoneyAnswer({question:'How did gambling receipts to Labor change from 2021 to 2030?'},own);
  assert.equal(r.answer_status,'calculated');assert.equal(r.comparison_complete,false);assert.doesNotMatch(r.answer,/\$500/);
  assert.match(r.answer,/The published records run from 2021–22 to 2025–26\. The AEC data OPAX holds for 2021–22 doesn't split receipts by type, so it can't be set beside the donation figures\./);

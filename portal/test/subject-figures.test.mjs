@@ -50,7 +50,7 @@ const mappedState = {...qld,id:'donor:wattle:qld',source_name:mappedName,label:m
 const assets = {
   '/graph/campaigners.json':{meta:{register_url:'https://example.test/register'},entities:[campaigner]},
   '/graph/donor-index.json':{donors:[federal,qld,reference,mappedFederal,{...mappedState,total:undefined,count:undefined}]},
-  ...Object.fromEntries(['/graph/money.json','/graph/money.qld.json','/graph/money.vic.json','/graph/money.tas.json'].map(path => [path,{meta:{},nodes:[],edges:[]}])),
+  ...Object.fromEntries(['/graph/money-receipts.json','/graph/money.json','/graph/money.qld.json','/graph/money.vic.json','/graph/money.tas.json'].map(path => [path,{meta:{},nodes:[],edges:[]}])),
   '/graph/money.qld.json':{meta:{sourceShort:'ECQ'},nodes:[mappedState],edges:[]},
 };
 

@@ -10,7 +10,7 @@ from pathlib import Path
 from parli.ingest.aec_receipts import FILES, normal_type, period_key
 from parli.ingest.money_aec_extras import PARTY_FORMER_NAMES, canon_party, current_party
 from scripts.aec_receipt_selection import load_selection
-from scripts.receipt_donor_match import ReceiptDonorMatcher, bracketless_name, has_receipt_annotation
+from scripts.receipt_donor_match import ReceiptDonorMatcher, bracketless_name, has_receipt_annotation, reviewed_receipt_identities, receipt_identity_aliases, RECEIPT_IDENTITY_RULE
 from scripts.export_money_graph import PUBLIC_FUNDING_RE, load_associated_register, norm_key
 
 PARTY_RETURN_NOTE = (
@@ -70,7 +70,10 @@ def attach_receipt_types(db, graph):
         graph["meta"]["receipt_types"] = {"available": False, "reason": "Complete cached AEC receipt backfill required"}
         return graph
     selection = load_selection(db)
-    matcher = ReceiptDonorMatcher(graph["nodes"], selection)
+    for node in graph['nodes']:
+        if node['kind'] == 'donor':
+            node['aliases'] = receipt_identity_aliases(node)
+    matcher = ReceiptDonorMatcher(graph["nodes"], selection, reviewed_receipt_identities(db, selection))
     by_edge, by_node = defaultdict(receipt_cells), defaultdict(receipt_cells)
     edge_keys = {(e["source"], e["target"]) for e in graph["edges"] if not e.get("grant") and not e.get("flow")}
     counts = defaultdict(int)
@@ -130,7 +133,7 @@ def attach_receipt_types(db, graph):
         "donation_type": "donation_received",
         "counts": dict(counts),
         "donor_matching": {
-            "rule": "Annotation-style brackets route to flagged_review. Otherwise existing entity or raw spelling first, then case/punctuation/spacing, then complete bracketed parts removed. State brackets must agree with an alias's state brackets. Each fallback must identify exactly one existing node; state filtering never breaks a node tie. Node identities and map edges are never merged or created.",
+            "rule": RECEIPT_IDENTITY_RULE,
             "scope": "Eligible recipient-side rows before the map edge cap, plus annotation_review exclusions; [rows, AUD]. Ambiguous and state-mismatched rows remain unmatched.",
             "by_result": {k: [v[0], round(v[1], 2)] for k, v in sorted(matching.items())},
             "exceptions": [{**v, "aud": round(v["aud"], 2)} for k, v in sorted(exceptions.items())],

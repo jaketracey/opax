@@ -29,7 +29,7 @@ test('graph selection masks exact donor names only when resolving conflicting re
  const query='money from The Federal Group in Tasmania';
  const selection=await receiptGraphForQuestion(query,load);
  assert.equal(selection.jurisdiction,'tas');assert.equal(selection.file,'/graph/money.tas.json');
- assert.deepEqual(reads,['/graph/money.json','/graph/money.tas.json']);
+ assert.deepEqual(reads,['/graph/money-receipts.json','/graph/money.tas.json']);
  // A region word is first checked against the federal donors' names (one extra read), then decides.
  reads.length=0;assert.equal((await receiptGraphForQuestion('gambling in Queensland',load)).jurisdiction,'qld');assert.ok(reads.length<=2);
  // Inside a complete donor name it is part of the name, and the federal default stands.
@@ -315,7 +315,7 @@ test('voice gives a donor-declared-only donor as its declaration, never as recei
  assert.equal(data.answer,"Example Quill Holdings Pty Ltd declared $64,250 to Labor on its own donor returns (financial years 2018–19 to 2019–20), across 3 records. Labor's returns show no matching receipt, so OPAX's money figures, which count each gift once from the party's own return, do not include these amounts.");
  for(const key of ['total_aud','receipts','all_types_aud','other_receipts_aud','type_breakdown','by_party','by_donor'])assert.equal(key in data,false,key);
  // Through the voice tool: every word voice can read, links aside, says declaration and never receipts.
- const assets={fetch:async request=>Response.json(new URL(request.url).pathname==='/graph/money.json'?declared:{meta:{},nodes:[],edges:[]})};
+ const assets={fetch:async request=>Response.json(new URL(request.url).pathname==='/graph/money-receipts.json'?declared:{meta:{},nodes:[],edges:[]})};
  const voice=await runVoiceTool('search_records',{query:question,kind:'receipt'},{ASSETS:assets,COMMUNITY_ORIGIN:'https://opax.test'},async()=>{throw Error('No speech retrieval')});
  assert.equal(voice.data.answer.split('\n\n')[0],data.answer);assert.equal(voice.data.measure_label,DONOR_DECLARED_LABEL);
  const words=JSON.stringify(voice,(key,value)=>typeof value==='string'?value.replace(/https?:\/\/\S+/g,''):value);

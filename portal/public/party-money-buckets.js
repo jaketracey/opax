@@ -1,5 +1,5 @@
 /**
- * Each party's disclosed-receipt rows from a money graph (/graph/money*.json, up to 1.9 MB each),
+ * Each party's disclosed-receipt rows from the uncapped federal selection or a state graph,
  * grouped into buckets by party, so a server-rendered profile reads its party's rows rather than
  * the three graphs. scripts/build_growth_modules.mjs writes them with register-tables.js's
  * partyMoneyData at release.
