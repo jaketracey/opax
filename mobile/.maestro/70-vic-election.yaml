@@ -39,15 +39,8 @@ env:
           timeout: 60000
       - assertVisible: '.*Election day is Saturday 28 November.*'
       - assertVisible: '.*In 8 days.*'
-      - scrollUntilVisible:
-          element:
-            id: today-vic-election-authorisation
-          centerElement: true
-      - assertVisible:
-          id: today-vic-election-authorisation
-          text: Authorised by.*
+      - assertNotVisible: '.*Authorised by.*'
       - takeScreenshot: ${EVIDENCE}/70-today-ahead
-      # The authorisation capture can leave this row beneath the inline bar.
       - scrollUntilVisible:
           element:
             id: today-vic-election-status
@@ -180,7 +173,6 @@ env:
           timeout: 60000
       - assertVisible: '.*Voting has closed.*'
       - takeScreenshot: ${EVIDENCE}/70-today-closed
-      # The authorisation capture can leave this row beneath the inline bar.
       - scrollUntilVisible:
           element:
             id: today-vic-election-status

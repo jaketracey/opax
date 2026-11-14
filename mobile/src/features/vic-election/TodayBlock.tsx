@@ -1,10 +1,8 @@
-import { AUTHORISATION_LINE } from '../../design/authorisation';
 import { View } from 'react-native';
 import type { Electorate } from '../../api/catalogs';
 import { InsetGroup } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
 import { Skeleton } from '../../design/states';
-import { Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
 import {
   vicElectionRoute,
@@ -59,14 +57,6 @@ export function TodayBlock({
           label={c.loading}
           testID="today-vic-election-sources"
         />
-        <Text
-          wordSafe
-          variant="footnote"
-          tone="inkSoft"
-          testID="today-vic-election-authorisation"
-        >
-          {AUTHORISATION_LINE}
-        </Text>
       </View>
     );
   const district = savedDistrict(choice?.stateSeatIds ?? [], seats, o);
@@ -95,14 +85,6 @@ export function TodayBlock({
         />
       </InsetGroup>
       <OverviewSource record={read.record} today />
-      <Text
-        wordSafe
-        variant="footnote"
-        tone="inkSoft"
-        testID="today-vic-election-authorisation"
-      >
-        {o.authorisation}
-      </Text>
     </View>
   );
 }

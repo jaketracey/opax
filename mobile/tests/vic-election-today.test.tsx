@@ -2,6 +2,7 @@ import { mockVic, renderVic, resetVic, words } from './vic-election-render';
 import { TodayBlock } from '../src/features/vic-election/TodayBlock';
 import { ElectionUnavailable } from '../src/features/vic-election/reads';
 import type { Electorate } from '../src/api/catalogs';
+import { PageFoot } from '../src/design/record';
 const choice = { version: 1 as const, seatId: 'vic', stateSeatIds: [] };
 const seats = [
   { electorate_id: 'vic', state_code: 'VIC', jurisdiction: 'federal' },
@@ -16,7 +17,7 @@ for (const [instant, text] of [
     mockVic.now = new Date(instant!);
     const r = renderVic(<TodayBlock choice={choice} seats={seats} />);
     expect(words(r)).toContain(text);
-    expect(words(r)).toContain(mockVic.overview.record!.data.authorisation);
+    expect(words(r)).not.toContain('Authorised by');
     expect(words(r)).toContain('Find your district');
   });
 test('names the matched district, and marks a saved copy', () => {
@@ -55,4 +56,26 @@ test('retires on 6 December', () => {
   expect(words(renderVic(<TodayBlock choice={choice} seats={seats} />))).toBe(
     '',
   );
+});
+test('Today never shows the authorisation line, a state record footer still does', () => {
+  const none = (r: ReturnType<typeof renderVic>) => {
+    expect(
+      r.root.findAllByProps({ testID: 'today-vic-election-authorisation' }),
+    ).toHaveLength(0);
+    expect(words(r)).not.toContain('Authorised by');
+  };
+  mockVic.now = new Date('2026-11-20T10:00:00+11:00');
+  const loaded = renderVic(<TodayBlock choice={choice} seats={seats} />);
+  expect(
+    loaded.root.findAllByProps({ testID: 'today-vic-election' }).length,
+  ).toBeGreaterThan(0);
+  none(loaded);
+  mockVic.overview = { record: null, error: null, loading: true };
+  const loading = renderVic(<TodayBlock choice={choice} seats={seats} />);
+  expect(
+    loading.root.findAllByProps({ testID: 'today-vic-election' }).length,
+  ).toBeGreaterThan(0);
+  none(loading);
+  const foot = renderVic(<PageFoot variant="authorised" />);
+  expect(words(foot)).toContain('Authorised by');
 });
