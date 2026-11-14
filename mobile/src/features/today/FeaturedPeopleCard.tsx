@@ -15,11 +15,12 @@ import { copy } from '../../design/copy';
 import { GroundFade } from '../../design/ground-fade';
 import { formatDate } from '../../design/format';
 import { Icon } from '../../design/icon';
+import { SectionHeader } from '../../design/layout';
 import { SurfaceContext } from '../../design/row-padding';
 import { SourceLine } from '../../design/source';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import { colors, minimumTarget, radii } from '../../design/tokens';
+import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
 import { personRoute } from '../../navigation/routes/people';
 import { canShare } from '../../navigation/share';
 import { presentSheet, presentSource } from '../../navigation/sheets';
@@ -38,6 +39,11 @@ const PEEK = 16;
  * card fades out there instead of stopping dead at the column's edge.
  */
 const BLEED = 16;
+
+/** Today's heading over the carousel, and its one neutral line of context. */
+export const FEATURED_HEADING = 'Featured parliamentarians';
+export const FEATURED_CONTEXT =
+  'Today’s featured member, then one from each party. It changes daily.';
 
 /** Today keeps the edition's existing loading, absence and freshness rules. */
 export function TodayEditionCard({
@@ -180,6 +186,16 @@ export function FeaturedPeopleCarousel({
         scroll.current?.scrollTo({ x, animated: false });
       }}
     >
+      <View style={styles.heading}>
+        <SectionHeader
+          compact
+          title={FEATURED_HEADING}
+          testID="today-featured-title"
+        />
+        <Text wordSafe variant="secondary" testID="today-featured-context">
+          {FEATURED_CONTEXT}
+        </Text>
+      </View>
       <View style={multiple ? styles.pages : undefined}>
         <ScrollView
           ref={scroll}
@@ -381,7 +397,8 @@ export function FeaturedPeopleCarousel({
 }
 
 const styles = StyleSheet.create({
-  carousel: { gap: 4 },
+  carousel: { gap: rhythm.heading },
+  heading: { gap: 4 },
   pages: { marginHorizontal: -BLEED },
   // Over the margin only: the selected card starts where this ends.
   before: { position: 'absolute', top: 0, bottom: 0, left: 0, width: BLEED },
