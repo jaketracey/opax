@@ -23,10 +23,18 @@ name: 03 Read a sourced profile
     text: Member for Grayndler.*
 - assertNotVisible: .*· federal.*
 - takeScreenshot: ${EVIDENCE}/03-profile
+# The source line is the page's last row, so it never reaches the centre:
+# centring spent five more swipes and ran past the 20 s default with the row
+# in full view (iOS 18.4/18.6, 14 Nov 2026). Scroll it on screen, then one
+# swipe settles the page at its end, where the row sits clear of the tab bar
+# for the tap below.
 - scrollUntilVisible:
     element:
       id: person-figures-source
-    centerElement: true
+    timeout: 60000
+- swipe:
+    start: 50%, 60%
+    end: 50%, 30%
 - assertVisible:
     id: person-figures-source
 - takeScreenshot: ${EVIDENCE}/03-source

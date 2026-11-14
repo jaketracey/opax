@@ -1,7 +1,8 @@
 appId: au.com.opax.app
 name: 04 Saved catalogs and bill with the fixture stopped, no saved search response
 ---
-# scripts/e2e.sh warms the catalogs and bill before stopping the fixture.
+# scripts/e2e-device.sh runs support/offline-warm.yaml (the bill, Search and
+# the profile, read online) and then stops the fixture.
 - launchApp
 - openLink: opax://bill/au-federal-r7534
 - extendedWaitUntil:
@@ -21,12 +22,13 @@ name: 04 Saved catalogs and bill with the fixture stopped, no saved search respo
     env:
       QUERY: Anthony Albanese
       PREFIX: 04-offline
+# A full name has one match: the person is the top suggestion.
 - scrollUntilVisible:
     element:
-      id: search-suggestion-person-.*
+      id: search-top-suggestion
     timeout: 30000
 - tapOn:
-    id: search-suggestion-person-.*
+    id: search-top-suggestion
 - extendedWaitUntil:
     visible:
       id: person-electorate

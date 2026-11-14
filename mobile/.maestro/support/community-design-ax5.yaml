@@ -4,10 +4,7 @@ name: Community design review at AX5
 - launchApp:
     clearState: true
     permissions: {}
-- extendedWaitUntil:
-    notVisible:
-      id: launch-handoff
-    timeout: 30000
+- runFlow: launch-ready.yaml
 - openLink: opax://community/thread?id=discussion-a
 - extendedWaitUntil:
     visible: Reading a bill together

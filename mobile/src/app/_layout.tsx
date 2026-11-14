@@ -9,7 +9,7 @@ import {
   type Href,
 } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Linking,
   Platform,
@@ -25,7 +25,7 @@ import { hasSourcePreview } from '../design/environment';
 import { AndroidMenuHost } from '../design/menu';
 import { colors } from '../design/tokens';
 import { KeyboardFrames } from '../features/ask/keyboard';
-import { RootLaunchHandoff } from '../launch/LaunchHandoff';
+import { RootLaunchCover } from '../launch/RootLaunchCover';
 import {
   decideLaunchSequence,
   decideSplashPlain,
@@ -73,8 +73,6 @@ export default function Layout() {
   // ready. Its events are the live signal for links and the launch welcome.
   const navigationReady =
     Platform.OS === 'android' ? containerReady : !!rootState?.key;
-  const [handedOver, setHandedOver] = useState(false);
-  const endHandoff = useCallback(() => setHandedOver(true), []);
   const launch = useLaunchWelcome(tour);
   useScreenTracking();
   useNavigationTiming();
@@ -143,7 +141,7 @@ export default function Layout() {
                 {[...rootScreens(chrome)]}
               </Stack>
             </ThemeProvider>
-            {handedOver ? null : <RootLaunchHandoff onDone={endHandoff} />}
+            <RootLaunchCover />
           </View>
         </KeyboardFrames>
       </MyMemberProvider>

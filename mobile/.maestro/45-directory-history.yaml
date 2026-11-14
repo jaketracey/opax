@@ -2,6 +2,7 @@ appId: au.com.opax.app
 name: 45 Electorates, dated representation, bill filters and Votes in parliament
 ---
 - launchApp
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - scrollUntilVisible:

@@ -5,6 +5,7 @@ name: 30 Ask idle, a starter, the answer with its records, a follow-up, a clarif
     permissions:
       all: unset
     clearState: true
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-ask
 - assertVisible:

@@ -2,6 +2,7 @@ appId: au.com.opax.app
 name: 09 Electorate representation, elections, Census context and sources
 ---
 - launchApp
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-your-mp
 # No seat: the invitation. A saved seat: Change electorate in the bar menu.

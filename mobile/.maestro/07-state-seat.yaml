@@ -69,6 +69,7 @@ name: 07 Choose a state district explicitly where a verified roster exists
       END: your-mp-end
       PREFIX: 07-state-details
 - launchApp
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-your-mp
 - scrollUntilVisible:

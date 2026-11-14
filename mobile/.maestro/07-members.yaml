@@ -3,6 +3,7 @@ name: 07 Members of a seat, one route from Your MP and from Today
 ---
 - launchApp:
     clearState: true
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-your-mp
 - extendedWaitUntil:

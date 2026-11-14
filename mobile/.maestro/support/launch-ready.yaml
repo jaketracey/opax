@@ -1,0 +1,16 @@
+appId: au.com.opax.app
+name: Wait until the launch cover has gone
+---
+# The launch cover takes every touch until it fades, and it is hidden from
+# accessibility, so Maestro sees the tab bar beneath it. A tap made in the
+# first seconds after launchApp lands on the cover and is lost (iOS 18 on a
+# loaded host, 14 Nov 2026). Debug and e2e builds draw `launch-settled` once
+# the cover has gone (src/launch/RootLaunchCover.tsx).
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: launch-settled
+          timeout: 60000

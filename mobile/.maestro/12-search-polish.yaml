@@ -6,6 +6,7 @@ name: 12 Search empty states with a way on, and native electorate suggestions
 # the query.
 - launchApp:
     clearState: true
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - runFlow:
@@ -44,6 +45,7 @@ name: 12 Search empty states with a way on, and native electorate suggestions
 - takeScreenshot: ${EVIDENCE}/12-empty-all-again
 - launchApp:
     clearState: true
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - runFlow:

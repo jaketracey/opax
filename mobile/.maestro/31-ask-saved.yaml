@@ -5,6 +5,7 @@ name: 31 Ask options, the options line, Conversations after relaunch, swipe Dele
     permissions:
       all: unset
     clearState: true
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-ask
 # Options: the shared filter sheet, "Person" not "Speaker", no builder.
@@ -48,6 +49,7 @@ name: 31 Ask options, the options line, Conversations after relaunch, swipe Dele
 - launchApp:
     permissions:
       all: unset
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-ask
 - extendedWaitUntil:
@@ -78,6 +80,7 @@ name: 31 Ask options, the options line, Conversations after relaunch, swipe Dele
 - launchApp:
     permissions:
       all: unset
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-ask
 - extendedWaitUntil:

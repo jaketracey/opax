@@ -72,11 +72,13 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
 - tapOn:
     text: Open
     optional: true
+# Sign in sits in the sheet's pinned footer, so it never reaches the centre:
+# centring spent five swipes of about 7 s each (the orb never settles) and ran
+# out of time with the button in full view (iOS 18.4/18.6, 14 Nov 2026).
 - scrollUntilVisible:
     element:
       id: talk-sign-in
     timeout: 30000
-    centerElement: true
 - assertVisible:
     id: talk-sign-in
 - assertNotVisible:

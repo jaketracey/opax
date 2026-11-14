@@ -7,6 +7,7 @@ name: 46 From a bill in the Bills tab, Ask about this opens a draft; the bill te
 # switches to the Ask tab and never submits; the draft waits for the reader,
 # and Ask's bar leads back to the bill (journeys/ask.md 4.2).
 - launchApp
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-bills
 - extendedWaitUntil:

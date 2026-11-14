@@ -10,6 +10,7 @@ name: 61 Search to source, the five questions in journeys/search.md section 8
 - launchApp:
     clearState: true
     permissions: {}
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - runFlow:
@@ -52,6 +53,7 @@ name: 61 Search to source, the five questions in journeys/search.md section 8
 - launchApp:
     clearState: true
     permissions: {}
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - runFlow:
@@ -103,6 +105,7 @@ name: 61 Search to source, the five questions in journeys/search.md section 8
 - launchApp:
     clearState: true
     permissions: {}
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - runFlow:
@@ -149,6 +152,7 @@ name: 61 Search to source, the five questions in journeys/search.md section 8
 - launchApp:
     clearState: true
     permissions: {}
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - runFlow:
@@ -239,6 +243,7 @@ name: 61 Search to source, the five questions in journeys/search.md section 8
 - takeScreenshot: ${EVIDENCE}/61-q5-original
 - stopApp
 - launchApp
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - extendedWaitUntil:

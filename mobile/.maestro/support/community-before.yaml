@@ -5,10 +5,7 @@ appId: au.com.opax.app
     permissions: {}
 - assertVisible:
     id: today-screen
-- extendedWaitUntil:
-    notVisible:
-      id: launch-handoff
-    timeout: 30000
+- runFlow: launch-ready.yaml
 - takeScreenshot: ${EVIDENCE}/community-before-today
 - tapOn: Account
 - assertVisible:

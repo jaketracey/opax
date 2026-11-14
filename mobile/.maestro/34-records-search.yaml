@@ -7,6 +7,7 @@ name: 34 Speeches, filters, sort, cited summary and the results' sources
 - launchApp:
     clearState: true
     permissions: {}
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - takeScreenshot: ${EVIDENCE}/34-search-form

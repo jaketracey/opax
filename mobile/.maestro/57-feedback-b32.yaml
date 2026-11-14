@@ -4,6 +4,7 @@ name: 57 TestFlight build 32 feedback - Search focus, Browse, directory labels a
 # AD-10Dcy and ANiiV6Bw: idle Search answers a short tap at once (no freeze
 # while the suggestion roster builds) and draws no placeholder rows in Browse.
 - launchApp
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - scrollUntilVisible:
@@ -88,6 +89,7 @@ name: 57 TestFlight build 32 feedback - Search focus, Browse, directory labels a
 # tester opened it from Parliamentarians (Search's People results keep only
 # members of the dated release, which he is not). A relaunch clears filters.
 - launchApp
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - scrollUntilVisible:

@@ -7,6 +7,7 @@ name: 35 Grants programs from All's Money rows and local party and topic suggest
 - launchApp:
     clearState: true
     permissions: {}
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - runFlow:

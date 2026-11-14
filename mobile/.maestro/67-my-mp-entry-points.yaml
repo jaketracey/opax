@@ -3,6 +3,7 @@ name: 67 My MP entry points, one search row, save, replace, senator and a seat l
 ---
 - launchApp:
     clearState: true
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - tapOn:
