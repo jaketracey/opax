@@ -312,3 +312,108 @@ test('a fuller independent opening retains its details when removing the other o
   const p=payload([first,second]),out=api.distinctSummary(p)
   assert.equal(out.answer,p.answer);assert.deepEqual(out.citations,p.citations)
 })
+
+for(const pronoun of ['it','It','they','They','he','He','she','She','this','This','these','These'])test('a near-repeat opening keeps the subject of its pronoun tail: '+pronoun,()=>{
+  const first=live182.answer.split('\n\n')[2].split(';')[0]+`; ${pronoun} referred six people to the NACC.`
+  const second=live182.answer.split('\n\n')[3]
+  for(const lines of [[first,second],[second,first]]){
+    const p=payload(lines),out=api.distinctSummary(p)
+    assert.equal(out.answer,p.answer)
+    assert.deepEqual(out.citations,p.citations);valid(out)
+  }
+})
+
+for(const pronoun of ['it','It','they','They','he','He','she','She','this','This','these','These'])test('an identical opening keeps the subject of its pronoun tail: '+pronoun,()=>{
+  const opening='Labor voted no on 3 May 2023'
+  const lines=[opening+'.',opening+`; ${pronoun} received 17 votes.`]
+  const p=payload(lines),out=api.distinctSummary(p)
+  assert.equal(out.answer,p.answer)
+  assert.deepEqual(out.citations,p.citations);valid(out)
+})
+
+for(const tail of ['Kate Thwaites described 17 recommendations.','The department received 17 recommendations.'])test('a standalone name or noun phrase still permits an identical opening merge: '+tail,()=>{
+  const opening='Labor voted no on 3 May 2023'
+  const p=payload([opening+'.',opening+'; '+tail]),out=api.distinctSummary(p)
+  assert.equal(out.answer,opening+'.\n\n'+tail)
+  assert.deepEqual(Object.keys(out.citations),Object.keys(p.citations));valid(out)
+})
+
+for(const [open,close] of [['"','"'],['“','”']])test('quoted clause boundaries cannot be removed as identical openings: '+open,()=>{
+  const opening='Labor voted no on 3 May 2023'
+  const p=payload([opening+'.',open+opening+'; Cabinet approved 17 payments.'+close])
+  const out=api.distinctSummary(p)
+  assert.equal(out.answer,p.answer)
+  assert.deepEqual(out.citations,p.citations);valid(out)
+})
+
+for(const assertion of ['I will say this plainly: Mr Ellery failed every test of integrity in the recovery scheme.','Minister Rowan Ellery failed every test of integrity in the recovery scheme.'])test('a speech assertion is not copied above a full who-answer: '+assertion,()=>{
+  const p=payload(['The recovery scheme was examined in the report.'])
+  Object.assign(p.sources[0],{kind:'speech',speaker:'Morgan Sample',chamber:'representatives',date:'2021-03-01',title:'Recovery scheme debate',snippet:assertion})
+  const out=api.leadWithWho(p,question)
+  assert.equal(out.answer,'The cited sources do not name a person or office as responsible.\n\n'+p.answer)
+  assert.deepEqual(cited(out,'fact-0'),cited(p,'fact-0'));valid(out)
+})
+
+test('a colon finding supports an existing sentence without being copied as a source fallback',()=>{
+  const finding='The commission found Rowan Ellery allowed Cabinet to be misled about the recovery scheme.'
+  const p=payload(['The commission reported on the recovery scheme.',finding])
+  Object.assign(p.sources[1],{kind:'speech',speaker:'Morgan Sample',title:'Recovery scheme debate',snippet:'The royal commission concluded: Rowan Ellery allowed Cabinet to be misled about the recovery scheme.'})
+  const out=api.leadWithWho(p,question)
+  assert.equal(out.answer,[finding,p.answer.split('\n\n')[0]].join('\n\n'))
+  for(const id of Object.keys(p.citations))assert.deepEqual(cited(out,id),cited(p,id));valid(out)
+  const omitted=payload(['The commission reported on the recovery scheme.']);omitted.sources[0]= {...p.sources[1],resource:'fact-0'}
+  assert.match(api.leadWithWho(omitted,question).answer,/^The cited sources do not name a person or office as responsible\./)
+})
+
+test('a commission finding leads ahead of a member assertion about a named minister',()=>{
+  const assertion='Minister Rowan Ellery failed every test of integrity in the recovery scheme.'
+  const finding='The royal commission found that Cabinet approved the recovery scheme without legislative authority.'
+  const p=payload([assertion,finding])
+  Object.assign(p.sources[0],{kind:'speech',speaker:'Morgan Sample',title:'Recovery scheme debate'})
+  const out=api.leadWithWho(p,question)
+  assert.equal(out.answer,[finding,assertion].join('\n\n'))
+  for(const id of Object.keys(p.citations))assert.deepEqual(cited(out,id),cited(p,id));valid(out)
+  const only=payload([assertion]);Object.assign(only.sources[0],p.sources[0])
+  assert.equal(api.leadWithWho(only,question).answer,'The cited sources do not name a person or office as responsible.\n\n'+assertion)
+  // An unrelated record citation on the assertion cannot qualify its speech as a finding.
+  p.citations['fact-1'].push([...p.citations['fact-0'][0]])
+  const mixed=api.leadWithWho(p,question)
+  assert.equal(mixed.answer.split('\n\n')[0],finding);valid(mixed)
+})
+
+for(const negative of [
+  'The commission discussed the member for Sample (Avery Quinlan), who was prime minister, was not the minister whose department failed the recovery scheme.',
+  'The commission discussed the member for Sample (Avery Quinlan), who was prime minister, was cleared of responsibility for the recovery scheme.',
+  'The commission discussed the member for Sample (Avery Quinlan), who had no responsibility for the recovery scheme.',
+  'The commission cleared the member for Sample (Avery Quinlan), who had responsibility for the recovery scheme.',
+])test('a negated parenthetical subject is not promoted or recovered: '+negative,()=>{
+  const own='The royal commission found that Cabinet approved the recovery scheme without legislative authority.'
+  for(const lines of [[own,negative],[negative,own]]){
+    const p=payload(lines),out=api.leadWithWho(p,question)
+    assert.equal(out.answer.split('\n\n')[0],own)
+    assert.ok(out.answer.includes(negative));valid(out)
+  }
+  const p=payload(['The report examined the recovery scheme.']);p.sources[0].snippet=negative
+  assert.match(api.leadWithWho(p,question).answer,/^The cited sources do not name a person or office as responsible\./)
+})
+
+for(const [full,short,seat] of [['Stuart Robert','Mr Robert','Fadden'],['John Howard','Mr Howard','Bennelong']])test('an official sharing an MP surname does not support that MP as the who-lead: '+short,()=>{
+  const own='The royal commission found that Cabinet approved the recovery scheme without legislative authority.'
+  const named=`The commission found that the member for ${seat} (${full}), who failed to ensure the recovery scheme was lawful, ignored repeated warnings.`
+  const p=payload([own,named])
+  Object.assign(p.sources[1],{kind:'speech',speaker:'Morgan Sample',title:'Recovery scheme debate',snippet:`The commission found that ${short} failed to ensure the recovery scheme was lawful. The witness was a departmental official.`})
+  const out=api.leadWithWho(p,question)
+  assert.equal(out.answer.split('\n\n')[0],own)
+  assert.ok(out.answer.includes(named));valid(out)
+  // A different seat is not support for the role named in the answer either.
+  p.sources[1].snippet+=` The member for Elsewhere (${full}) discussed the report.`
+  assert.equal(api.leadWithWho(p,question).answer.split('\n\n')[0],own)
+})
+
+test('the no-subject fallback orders the actual finding before a member assertion and report metadata',()=>{
+  const lines=['Morgan Sample said the recovery scheme was a political disaster.','The commission delivered its report in July 2023.','The royal commission concluded the recovery scheme was unlawful.']
+  const p=payload(lines);Object.assign(p.sources[0],{kind:'speech',speaker:'Morgan Sample',title:'Recovery scheme debate'})
+  const out=api.leadWithWho(p,question)
+  assert.equal(out.answer,['The cited sources do not name a person or office as responsible.',lines[2],lines[0],lines[1]].join('\n\n'))
+  for(const id of Object.keys(p.citations))assert.deepEqual(cited(out,id),cited(p,id));valid(out)
+})

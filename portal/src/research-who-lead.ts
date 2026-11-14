@@ -11,25 +11,33 @@ const cp=(text:string)=>Array.from(text).length
 const name=String.raw`\p{Lu}[\p{L}’'-]+(?:\s+\p{Lu}[\p{L}’'-]+)+`
 const namedRole=new RegExp(String.raw`\b(?:[Ff]ormer\s+)?(?:[Pp]rime [Mm]inister|[Mm]inisters?|[Ss]ecretar(?:y|ies)|[Oo]fficials?|[Dd]irectors?|[Cc]hief [Ee]xecutives?)\s+(${name}(?:\s+and\s+${name})?)`,'u')
 const action=/\b(?:approv\w*|authoris\w*|authoriz\w*|decid\w*|order\w*|signed off|responsib\w*|accountab\w*|conduct|misled|ignored|failed|breached|criticis\w*|criticiz\w*|findings)\b/i
-// Hansard's honorific and surname can identify a public figure named in full by the writer.
+// A surname alone is not an MP identity. Reconcile it only when the answer and source
+// explicitly share the member's parliamentary role, including the seat named beside the full name.
 const publicNames=Object.keys(PERSON_PATHS.exact)
-const actorName=(value:string)=>{
+const escape=(value:string)=>value.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')
+const actorName=(value:string,context:string,evidence:string)=>{
   const short=value.replace(/^(?:Mr|Ms|Mrs|Dr|Sir)\.?\s+/,'')
   if(short===value)return value
   const held=publicNames.filter(n=>n.endsWith(' '+short))
-  return held.length===1?held[0]:value
+  if(held.length!==1)return value
+  const role=new RegExp(String.raw`\b(member for [\p{L} '-]+)\s+\(${escape(held[0])}\)`,'iu').exec(context)?.[1]
+  return role&&new RegExp('\\b'+escape(role)+'\\b','i').test(evidence)?held[0]:value
 }
-function actors(text:string):string[] {
+const negative=(before:string,after:string)=>/\b(?:cleared|exonerated|acquitted|no|not)\b[^.;]{0,65}$/i.test(before)||/^\s+(?:(?:was|were)\s+not|no)\b/i.test(after)
+const finding=(text:string)=>/\b(?:commission(?:er)?|court|inquiry|report|tribunal|ombudsman)\b[^.!?;]{0,200}\b(?:found|finds|findings|concluded|determined|ruled|criticised|rejected)\b/i.test(text)
+function actors(text:string,allowColon=false,context=''):string[] {
   // A speaker, commissioner or witness is not thereby the subject of a finding.
   if(!action.test(text))return []
   const match=namedRole.exec(text)
   const before=match?text.slice(0,match.index):'',after=match?text.slice(match.index+match[0].length):''
-  const role=match&&(action.test(after)||/\b(?:findings|conduct)\b[^.;]{0,60}\b(?:of|about|regarding|on|against)\s*$|\b(?:approved|authorised|authorized|ordered) by\s*$|\bcriticis(?:ed|es)\s*$/i.test(before))&&!/\b(?:cleared|exonerated|acquitted|no|not)\b[^.;]{0,65}$/i.test(before)&&!/^\s+(?:(?:was|were)\s+not|no)\b/i.test(after)?match[1]:undefined
-  const subject=new RegExp(String.raw`(?:^|:\s*|\b(?:that|found|concluded)\s+)(${name})\s+(?:approved|authorised|authorized|decided|ordered|allowed|misled|ignored|failed|breached)\b`,'u').exec(text)?.[1]
+  const role=match&&(action.test(after)||/\b(?:findings|conduct)\b[^.;]{0,60}\b(?:of|about|regarding|on|against)\s*$|\b(?:approved|authorised|authorized|ordered) by\s*$|\bcriticis(?:ed|es)\s*$/i.test(before))&&!negative(before,after)?match[1]:undefined
+  // Colon quotations can corroborate an existing sentence, never nominate a copied lead.
+  const subject=new RegExp(String.raw`(?:^|${allowColon?':\\s*|':''}\b(?:that|found|concluded)\s+)(${name})\s+(?:approved|authorised|authorized|decided|ordered|allowed|misled|ignored|failed|breached)\b`,'u').exec(text)?.[1]
   const conductMatch=new RegExp(String.raw`\b[Ff]indings (?:about|regarding|on|against) (?:the conduct of )?(${name}(?:\s+and\s+${name})?)`,'u').exec(text)
   const conduct=conductMatch&&!/\b(?:no|not|cleared|exonerated|acquitted)\b[^.;]{0,65}$/i.test(text.slice(0,conductMatch.index))&&!/^\s+(?:(?:was|were)\s+not|no)\b/i.test(text.slice(conductMatch.index+conductMatch[0].length))?conductMatch[1]:undefined
-  const relative=new RegExp(String.raw`\((${name})\),\s+who\b[^.;]{0,300}\b(?:approved|authorised|authorized|allowed|misled|ignored|failed|responsibility)\b`,'u').exec(text)?.[1]
-  if(role||subject||conduct||relative)return (role??subject??conduct??relative!).split(/\s+and\s+/).map(actorName)
+  const relativeMatch=new RegExp(String.raw`\((${name})\),\s+who\b[^.;]{0,300}?\b(?:approved|authorised|authorized|allowed|misled|ignored|failed|responsibility)\b`,'u').exec(text)
+  const relative=relativeMatch&&!negative(text.slice(0,relativeMatch.index),'')&&!/\b(?:no|not|cleared|exonerated|acquitted)\b/i.test(relativeMatch[0].slice(relativeMatch[1].length+2))?relativeMatch[1]:undefined
+  if(role||subject||conduct||relative)return (role??subject??conduct??relative!).split(/\s+and\s+/).map(value=>actorName(value,context,text))
   if(/\b(?:approved|authorised|authorized) by Cabinet\b|\bCabinet (?:approved|authorised|authorized)\b/.test(text))return ['Cabinet']
   const office=/\b(?:the )?((?:(?:Department|Ministry) of|(?:Minister|Secretary) for) [A-Z][\p{L} ]+?(?:['’]s office)?) (?:(?:had |has )?(?:approved|authorised|ignored|failed|ran)|was responsible)\b/u.exec(text)?.[1]
   return office?[office]:[]
@@ -47,7 +55,8 @@ export function leadWithWho<T extends Record<string,unknown>>(payload:T,question
   const evidence=(s:Source)=>[s.snippet,s.title].filter(Boolean).join('\n')
   const support=(p:typeof parts[number])=>selected.filter(s=>Object.entries(citations).some(([id,r])=>(id===s.resource||id.startsWith(s.resource+'/'))&&r.some(([a,b])=>a<p.b&&b>p.a)))
   const candidates=parts.flatMap(p=>{
-    const named=actors(p.text),sources=support(p),held=new Set(sources.flatMap(s=>actors(evidence(s))))
+    const named=actors(p.text),sources=support(p).filter(s=>s.kind==='record'||finding(p.text)&&finding(evidence(s)))
+    const held=new Set(sources.flatMap(s=>actors(evidence(s),true,answer)))
     return named.length&&named.every(actor=>held.has(actor))?[{p,sources}]:[]
   })
   // Prefer a named subject over an office, and the body's own record over a relayed finding.
@@ -63,7 +72,7 @@ export function leadWithWho<T extends Record<string,unknown>>(payload:T,question
   }
   // The writer can omit names that are present in a cited passage. Recover only a complete source sentence
   // explicitly relating those names to the finding or decision, with the original speaker attribution.
-  const held=selected.flatMap(s=>sentenceParts(evidence(s)).filter(p=>actors(p.text).length).map(p=>({s,text:p.text})))
+  const held=selected.flatMap(s=>sentenceParts(evidence(s)).filter(p=>actors(p.text,false,answer).length&&(s.kind==='record'||finding(p.text))).map(p=>({s,text:p.text})))
     .sort((a,b)=>score(b.text,[b.s])-score(a.text,[a.s]))[0]
   if(held){
     let text=held.text.replace(/,\s*the member said[.!]?$/i,'.')

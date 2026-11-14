@@ -125,7 +125,7 @@ export function dedupeAnswer<T extends Record<string,unknown>>(payload:T):T {
   const recordsOnly=(p:Part)=>p.ids.length>0&&p.ids.every(id=>sources.some(s=>(id===s.resource||id.startsWith(s.resource+'/'))&&s.kind==='record'&&!s.speaker&&!s.coverage))
   const removed:Part[]=[],kept:Part[]=[]
   const transfers=(from:Part,to:Part)=>{
-    // Removing this opening would leave its coordinated tail without a subject.
+    // Removing this opening would leave its tail without a standalone subject.
     if(from.clause==='dependent')return null
     const ranges:{id:string;start:number;end:number}[]=[]
     const shared=repeatedQuote(from.text,to.text)??sharedCitationSpan(from.text,to.text)
@@ -172,8 +172,9 @@ export function dedupeAnswer<T extends Record<string,unknown>>(payload:T):T {
   for(const p of sentenceParts(answer)){
     const quotes=quotationSpans(p.text)
     const boundary=[...p.text.matchAll(/;|\s+and\s+(?=[\p{Ll}]+ed\b)/gu)].find(m=>!quotes.some(q=>m.index!>=q.at&&m.index!<q.end))
-    const end=boundary?.index??p.text.length
-    consider({...part(p.text.slice(0,end),p.at),clause:boundary?(boundary[0]===';'?'independent':'dependent'):undefined})
+    const end=boundary?.index??p.text.length,tail=boundary?p.text.slice(end+boundary[0].length).trimStart():''
+    const standalone=/^\p{Lu}/u.test(tail)&&! /^(?:it|its|they|their|he|his|she|her|this|these|that|those)\b/i.test(tail)
+    consider({...part(p.text.slice(0,end),p.at),clause:boundary?(boundary[0]===';'&&standalone?'independent':'dependent'):undefined})
   }
   if(!removed.length)return payload
   const out=rewriteAnswerPayload({...payload,citations},replace=>{
