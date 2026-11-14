@@ -33,7 +33,27 @@ in the retry outbox). Both resume on the next ordinary night. The pace (Senate
 10 sitting days, NSW 4 chamber-days) is per night the stages run, so in practice
 six nights a week. An unreadable plan skips them too. `status.json.backfill`
 then carries `skipped_tonight` with the reason; a skip is not a stop and keeps
-the projection. Thursday's FRL night alone does not skip them.
+the projection. A skip on any night other than Sunday means a periodic group is
+still owed (catch-up): the nightly warns, and status withholds the finish dates
+until the group clears, since every night skips while it stays owed. Thursday's
+FRL night does not skip them; the cutoff below keeps it safe.
+
+**The backfill cutoff.** `run-nightly.sh`'s 6 h limit kills the whole night,
+publish included, so the nightly exports `OPAX_BACKFILL_NOT_AFTER` (epoch
+seconds): the start (`OPAX_NIGHTLY_STARTED`, set by `run-nightly.sh`) plus the
+limit, less a reserve for what follows the NSW stage:
+
+| Reserve | Seconds | Covers |
+| --- | ---: | --- |
+| Every night (`OPAX_BACKFILL_POST_RESERVE_S`) | 7,200 | evidence export up to 21 min, the pre-commit gate up to its 75 min budget, corpus manifest, commit, push and deploy about 15 min (111 min, rounded up) |
+| FRL nights, added (`OPAX_BACKFILL_FRL_RESERVE_S`) | 9,900 | the FRL crawl, 9,208 s measured on 18 Oct 2026 |
+
+So the cutoff is 4 h after the start on an ordinary night and 1 h 15 min on a
+Thursday. Each stage starts only if now + 22 min (its budget, outer timeout and
+kill grace) is inside the cutoff, otherwise it warns (`senate_backfill(cutoff)`,
+"NSW Hansard repair skipped") and resumes the next night. Normal-sync
+publication of backfill rows stops at the cutoff too. On a Thursday the stages
+run only if the daily refresh finished within about 53 minutes.
 
 **Projected finish, first possible night Sunday 15 November 2026 (skipped):**
 
@@ -78,10 +98,22 @@ or over the latest check interval (widened back to 500 resources), or Progress
 returns a 429, quota or billing error. Before each publication batch it also
 projects the ledger, plus resources created since the last counters check, plus
 the batch, at the current per-resource rate, and stops before a batch that
-could cross 5.5 GB. A refusal in a 200 body counts: a top-level `error`,
-`message` or `detail`, any `errors[].message`, or a plain-text body that
-mentions quota, rate limit, billing, payment, insufficient, exceeded or a
-reached limit. A refused create is held, never recorded as published. An unreadable ledger or unavailable
+could cross 5.5 GB. Inside a guarded backfill request, any HTTP status of 400
+or more stops both stages, except 409 (the slug exists, counted as done) and
+404 (no account or spend signal): a 5xx stops them too, until the stop file is
+reviewed and removed. A refusal in a 200 body counts: anything under an
+error-like key (`error`, `message`, `reason`, `detail`, `msg` and similar) at
+any depth, every string in an object whose `status` is "error" or whose
+`success`/`ok` is false, or a plain-text body, that mentions quota, rate limit,
+billing, payment, insufficient, exceeded, a reached limit, suspended, trial,
+cap or subscription. A refused create is held, never recorded as published.
+Ordinary refresh requests stop the repairs only on that wording.
+
+Each stage also writes the coverage watchdog's sitting-day inventory,
+`coverage-sitting-days/senate.json` (Senate 2014 to 2019, from the source-day
+manifest) and `coverage-sitting-days/nsw.json` (both NSW chambers 2023 to 2025,
+from the NSW calendar, on full-scope runs), in `OPAX_BACKFILL_STATE_DIR`. The
+`lane` values are the ones the watchdog's reader expects. An unreadable ledger or unavailable
 counters also holds repairs closed. Requests use the existing KB service
 token, never log it, have a 20-second socket timeout and do not retry a
 guarded refusal. Up to ten requests already in flight may finish. A stop
