@@ -1590,6 +1590,37 @@ describe('streamed text and VoiceOver', () => {
     ).toBe(false);
   });
 
+  test('Android: text that draws nothing yet leaves the status row and its live region to speak the stage', async () => {
+    await mount();
+    await type('Who spoke on housing?');
+    await press('ask-submit');
+    await wait(50);
+    // Not blank, but no block yet: the row has not left.
+    await act(async () => {
+      on!.delta('**');
+    });
+    announce.mockClear();
+    // Android only while the stage comes due (the screen audit is per
+    // platform, and this screen was drawn for iOS).
+    const platform = jest.replaceProperty(Platform, 'OS', 'android');
+    try {
+      await wait(2200);
+    } finally {
+      platform.restore();
+    }
+    const row = byId('ask-status-row').at(-1)!;
+    expect(row.props).toMatchObject({
+      accessibilityLiveRegion: 'polite',
+      accessibilityLabel: 'Writing the answer',
+    });
+    expect(byId('ask-stream-tail')).toHaveLength(0);
+    // The live region speaks the label: an announcement would say it twice.
+    expect(said()).toEqual([]);
+    await act(async () => {
+      finish(answer);
+    });
+  });
+
   test('the audit reaches the tail row, and its one finding is the recorded exception', async () => {
     await mount();
     await type('Who spoke on housing?');
