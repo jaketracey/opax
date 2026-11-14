@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import export_bills as eb  # noqa: E402
@@ -97,7 +98,7 @@ class FillSponsorIds(unittest.TestCase):
         self.assertNotIn("aph_1", members())
 
 
-class DatedSponsorParties(unittest.TestCase):
+class RetainedDatedSponsorParties(unittest.TestCase):
     def evidence(self):
         return v.Evidence([
             v.entry("service", "representatives", ("name", "avery fixture"), ["Avery Fixture"],
@@ -144,6 +145,24 @@ class DatedSponsorParties(unittest.TestCase):
         self.assertEqual(held, [{"key": "k", "sponsor": "SAMPLE, Sen Robin", "date": "2021-05-12",
                                  "source_party": "Rex Patrick Team", "dated_party": "Independent"}])
 
+    def test_registered_party_hold_survives_a_different_pid_record_surname(self):
+        for cosponsor in (False, True):
+            with self.subTest(cosponsor=cosponsor):
+                other = {"name": "OTHER, Sen Morgan", "person_id": "99992", "party": "Rex Patrick Team"}
+                b = {**bill("OTHER, Sen Morgan", introduced="2021-05-12", pid="99992"),
+                     "sponsor_party": "Rex Patrick Team", "sponsors": [dict(other)]}
+                if cosponsor:
+                    b.update(sponsor="FIXTURE, Avery, MP", sponsor_person_id="99991",
+                             sponsor_party="Nationals", originating_house="senate")
+                    b["sponsors"] = [{"name": b["sponsor"], "person_id": "99991", "party": "Nationals"}, dict(other)]
+                for records in (None, eb.SponsorPartyRecords(self.evidence())):
+                    held = eb.fill_sponsor_parties([b], **(
+                        {"evidence": self.evidence()} if records is None else {"records": records}))
+                    self.assertEqual(b["sponsors"][-1]["party"], "Rex Patrick Team")
+                    self.assertEqual(b["sponsor_party"], "Nationals" if cosponsor else "Rex Patrick Team")
+                    self.assertEqual(held, [{"key": "k", "sponsor": "OTHER, Sen Morgan", "date": "2021-05-12",
+                                             "source_party": "Rex Patrick Team", "dated_party": "Independent"}])
+
     def test_retained_refresh_updates_detail_and_index_without_changing_the_snapshot_date(self):
         with tempfile.TemporaryDirectory() as scratch:
             directory = Path(scratch)
@@ -161,6 +180,286 @@ class DatedSponsorParties(unittest.TestCase):
             self.assertEqual(repaired["bills"][0]["sponsor_party"], "Independent")
             self.assertEqual(repaired["generated_at"], index["generated_at"])
             self.assertEqual(eb.refresh_sponsor_parties(directory, self.evidence()), (0, []))
+
+    def test_evidence_and_explicit_records_share_mutation_and_hold_contract(self):
+        original = {**bill("SAMPLE, Sen Robin", introduced="2021-05-12", pid="99992"),
+                    "sponsor_party": "Rex Patrick Team"}
+        results = []
+        for mode in ("positional", "keyword", "records"):
+            b = dict(original)
+            if mode == "positional":
+                held = eb.fill_sponsor_parties([b], None, self.evidence())
+            elif mode == "keyword":
+                held = eb.fill_sponsor_parties([b], evidence=self.evidence())
+            else:
+                held = eb.fill_sponsor_parties([b], records=eb.SponsorPartyRecords(self.evidence()))
+            results.append((b, held))
+        self.assertEqual(results[0], results[1])
+        self.assertEqual(results[0], results[2])
+        self.assertEqual(results[0][1], [{"key": "k", "sponsor": "SAMPLE, Sen Robin",
+                                        "date": "2021-05-12", "source_party": "Rex Patrick Team",
+                                        "dated_party": "Independent"}])
+        with self.assertRaisesRegex(ValueError, "Supply evidence or records, not both"):
+            eb.fill_sponsor_parties([], evidence=self.evidence(), records=eb.SponsorPartyRecords(self.evidence()))
+
+    def test_registered_cosponsor_hold_does_not_require_a_unique_person_id(self):
+        evidence = v.Evidence([v.entry(
+            "service", "senate", ("name", "robin sample"), ["Robin Sample"],
+            "Independent", "2020-01-01", "2022-07-01", pids=["99992", "99993"])])
+        for pid in ("99993", None):
+            with self.subTest(pid=pid):
+                b = {**bill("FIXTURE, Sen Avery", introduced="2021-05-12", pid="99991"),
+                     "sponsor_party": "Liberal", "sponsors": [
+                         {"name": "FIXTURE, Sen Avery", "person_id": "99991", "party": "Liberal"},
+                         {"name": "SAMPLE, Sen Robin", "person_id": pid, "party": "Rex Patrick Team"}]}
+                held = eb.fill_sponsor_parties([b], evidence=evidence)
+                self.assertEqual(b["sponsor_party"], "Liberal")
+                self.assertEqual(b["sponsors"][1]["party"], "Rex Patrick Team")
+                self.assertEqual(held, [{"key": "k", "sponsor": "SAMPLE, Sen Robin",
+                                         "date": "2021-05-12", "source_party": "Rex Patrick Team",
+                                         "dated_party": "Independent"}])
+
+    def test_manual_refresh_exits_zero_and_keeps_published_labels_on_loader_outage(self):
+        for loader in ("release_evidence", "handbook_evidence"):
+            with self.subTest(loader=loader), tempfile.TemporaryDirectory() as scratch:
+                directory = Path(scratch)
+                b = {**bill("SAMPLE, Sen Robin", introduced="2021-05-12", pid="99992"),
+                     "sponsor_party": "Rex Patrick Team"}
+                (directory / "k.json").write_text(json.dumps(b))
+                index = {"generated_at": "2024-07-01", "bills": [{"key": "k", "sponsor_party": "Rex Patrick Team"}]}
+                (directory / "index.json").write_text(json.dumps(index))
+                before = {p.name: p.read_bytes() for p in directory.iterdir()}
+                aliases = directory / "party-page.js"
+                aliases.write_bytes((Path(__file__).resolve().parents[1] / "portal/public/party-page.js").read_bytes())
+                with patch.object(v, loader, side_effect=OSError("fixture outage")), \
+                        patch.object(eb.sqlite3, "connect", side_effect=AssertionError("manual refresh opened a database")), \
+                        patch.object(sys, "argv", ["export_bills.py", "--refresh-sponsor-parties", str(directory),
+                                                   "--party-aliases", str(aliases)]):
+                    self.assertEqual(eb.main(), 0)
+                self.assertEqual({name: (directory / name).read_bytes() for name in before}, before)
+
+    def test_retained_refresh_keeps_published_parties_when_evidence_is_unavailable(self):
+        for house, name, pid, evidence in [
+                ("representatives", "FIXTURE, Avery, MP", "99991",
+                 v.Evidence(self.evidence(), check_labels=False)),
+                ("senate", "SAMPLE, Sen Robin", "99992",
+                 v.Evidence(self.evidence(), frozen={("federal", "senate")}))]:
+            with self.subTest(house=house), tempfile.TemporaryDirectory() as scratch:
+                directory = Path(scratch)
+                b = {**bill(name, house=house, introduced="2024-06-03", pid=pid),
+                     "sponsor_party": "Liberal"}
+                index = {"generated_at": "2024-07-01", "bills": [{"key": "k", "sponsor_party": "Liberal"}]}
+                (directory / "k.json").write_text(json.dumps(b))
+                (directory / "index.json").write_text(json.dumps(index))
+                before = {p.name: p.read_bytes() for p in directory.iterdir()}
+                self.assertEqual(eb.refresh_sponsor_parties(directory, evidence), (0, []))
+                self.assertEqual({p.name: p.read_bytes() for p in directory.iterdir()}, before)
+
+
+
+class PublishedDatedSponsorParties(unittest.TestCase):
+    def published_bill(self, key, source_party):
+        path = Path(__file__).resolve().parents[1] / f"portal/public/bills/{key}.json"
+        b = json.loads(path.read_text())
+        # The registry's stale source label must survive a published refresh
+        # in the test input, so reverting the check still fails afterwards.
+        b["sponsor_party"] = source_party
+        # Exercise both fields written by a fresh registry export.
+        b["sponsors"] = [{"name": b["sponsor"], "person_id": b["sponsor_person_id"],
+                          "party": b["sponsor_party"]}]
+        return b
+
+    def test_gee_r7202_uses_independent_on_introduction(self):
+        b = self.published_bill("au-federal-r7202", "Nationals")
+        eb.fill_sponsor_parties([b], eb.PartyTimeline({}, {}))
+        self.assertEqual(b["sponsor_party"], "Independent")
+        self.assertEqual(b["sponsors"][0]["party"], "Independent")
+
+    def test_van_s1415_uses_independent_on_introduction(self):
+        b = self.published_bill("au-federal-s1415", "Liberal")
+        eb.fill_sponsor_parties([b], eb.PartyTimeline({}, {}))
+        self.assertEqual(b["sponsor_party"], "Independent")
+        self.assertEqual(b["sponsors"][0]["party"], "Independent")
+
+    def test_source_fixtures_survive_an_already_refreshed_publication(self):
+        for key, source in [("au-federal-r7202", "Nationals"), ("au-federal-s1415", "Liberal")]:
+            refreshed = self.published_bill(key, "Independent")
+            refreshed["sponsor_party"] = "Independent"
+            refreshed["sponsors"][0]["party"] = "Independent"
+            with patch.object(Path, "read_text", return_value=json.dumps(refreshed)):
+                b = self.published_bill(key, source)
+            self.assertEqual(b["sponsor_party"], source)
+            self.assertEqual(b["sponsors"][0]["party"], source)
+
+    def test_mcmahon_uses_registered_country_liberal_party(self):
+        b = self.published_bill("au-federal-s1309", "Liberal")
+        eb.fill_sponsor_parties([b], eb.PartyTimeline({}, {}))
+        self.assertEqual(b["sponsor_party"], "Country Liberal Party")
+        self.assertEqual(b["sponsors"][0]["party"], "Country Liberal Party")
+
+    def test_s1127_uses_reviewed_centre_alliance_rename(self):
+        b = self.published_bill("au-federal-s1127", "Nick Xenophon Team")
+        eb.fill_sponsor_parties([b], eb.PartyTimeline({}, {}))
+        self.assertEqual(b["sponsor_party"], "Centre Alliance")
+        self.assertEqual(b["sponsors"][0]["party"], "Centre Alliance")
+
+    def test_patrick_keeps_own_registered_team_without_an_invented_start(self):
+        b = self.published_bill("au-federal-s1297", "Rex Patrick Team")
+        eb.fill_sponsor_parties([b], eb.PartyTimeline({}, {}))
+        self.assertEqual(b["sponsor_party"], "Rex Patrick Team")
+
+    def test_anning_does_not_own_katters_party(self):
+        b = self.published_bill("au-federal-s1153", "Katter's Australian Party")
+        eb.fill_sponsor_parties([b], eb.PartyTimeline({}, {}))
+        self.assertEqual(b["sponsor_party"], "Independent")
+
+
+class SponsorPartyPeriods(unittest.TestCase):
+    def records(self, *periods):
+        evidence = eb.vote_parties.Evidence([
+            eb.vote_parties.entry("release-term", "senate", ("release", "example"),
+                                  ["Taylor Example"], party, start, end, through,
+                                  pids=["99001"])
+            for party, start, end, through in periods], elections={})
+        return eb.SponsorPartyRecords(evidence)
+
+    def bill(self, party="Liberal", day="2024-05-15"):
+        return {"key": "fixture", "sponsor": "EXAMPLE, Sen Taylor", "sponsor_person_id": "99001",
+                "sponsor_party": party, "introduced": day, "originating_house": "senate"}
+
+    def apply(self, b, records):
+        # A current member or a later speech must not override a source label in a gap.
+        eb.fill_sponsor_parties([b], eb.PartyTimeline({"99001": (["2025-01-01"], ["Greens"])},
+                                                   {"99001": "Labor"}), records=records)
+        return b["sponsor_party"]
+
+    def test_lnp_alias_is_preserved(self):
+        records = self.records(("Nationals", "2020-01-01", "2025-01-01", None))
+        self.assertEqual(self.apply(self.bill("LNP"), records), "LNP")
+
+    def test_source_label_bracket_is_restored_without_filling_blanks_or_crossing_elections(self):
+        points = [v.entry("official-list", "senate", ("name", "taylor example"),
+                          ["Taylor Example"], "Independent", day, day, day,
+                          pids=["99001"], point=True) for day in ("2023-01-01", "2024-12-01")]
+        records = eb.SponsorPartyRecords(v.Evidence(points, elections={"senate": ["2022-05-21"]}))
+        self.assertEqual(records.check(self.bill())["basis"], "bracket")
+        self.assertEqual(self.apply(self.bill(), records), "Independent")
+        self.assertIsNone(records.check(self.bill(None))["party"])
+        records.evidence.elections["senate"].append("2024-01-01")
+        records.resolver = v.Resolver(records.evidence)
+        self.assertEqual(self.apply(self.bill(), records), "Liberal")
+
+    def test_no_dated_record_keeps_source(self):
+        self.assertEqual(self.apply(self.bill(), self.records()), "Liberal")
+
+    def test_gap_and_period_boundaries(self):
+        records = self.records(("Liberal", "2020-01-01", "2023-06-19", None),
+                               ("Independent", "2023-06-19", "2025-01-01", None))
+        for day, expected in [("2019-12-31", "Liberal"), ("2023-06-18", "Liberal"),
+                              ("2023-06-19", "Independent"), ("2024-05-15", "Independent"),
+                              ("2025-01-01", "Liberal")]:
+            with self.subTest(day=day):
+                self.assertEqual(self.apply(self.bill(day=day), records), expected)
+
+    def test_open_period_stops_at_observed_through(self):
+        records = self.records(("Independent", "2023-06-19", None, "2024-05-15"))
+        self.assertEqual(self.apply(self.bill(), records), "Independent")
+        self.assertEqual(self.apply(self.bill(day="2024-05-16"), records), "Liberal")
+
+    def test_internal_gap_keeps_source(self):
+        records = self.records(("Greens", "2020-01-01", "2024-05-01", None),
+                               ("Independent", "2024-06-01", "2025-01-01", None))
+        self.assertEqual(self.apply(self.bill(), records), "Liberal")
+
+    def test_conflicting_periods_keep_source(self):
+        records = self.records(("Independent", "2020-01-01", "2025-01-01", None),
+                               ("Greens", "2020-01-01", "2025-01-01", None))
+        self.assertEqual(self.apply(self.bill(), records), "Liberal")
+
+    def test_no_date_and_wrong_house_keep_source(self):
+        records = self.records(("Independent", "2020-01-01", "2025-01-01", None))
+        self.assertEqual(self.apply(self.bill(day=None), records), "Liberal")
+        b = self.bill()
+        b["originating_house"] = "representatives"
+        self.assertEqual(self.apply(b, records), "Liberal")
+
+    def test_each_cosponsor_is_checked(self):
+        b = self.bill()
+        b["sponsors"] = [{"name": b["sponsor"], "person_id": "99001", "party": "Liberal"},
+                         {"name": "OTHER, Sen Morgan", "person_id": "99002", "party": "Liberal"}]
+        records = self.records(("Independent", "2020-01-01", "2025-01-01", None))
+        evidence = [*records.evidence, eb.vote_parties.entry(
+            "handbook-term", "senate", ("handbook", "other"), ["Morgan Other"], "Greens",
+            "2020-01-01", "2025-01-01", pids=["99002"])]
+        records = eb.SponsorPartyRecords(eb.vote_parties.Evidence(evidence, elections={}))
+        self.apply(b, records)
+        self.assertEqual(b["sponsor_party"], "Independent")
+        self.assertEqual([s["party"] for s in b["sponsors"]], ["Independent", "Greens"])
+
+    def test_missing_source_prefers_bounded_record_to_timeline(self):
+        records = self.records(("Independent", "2020-01-01", "2025-01-01", None))
+        self.assertEqual(self.apply(self.bill(None), records), "Independent")
+
+    def test_own_registered_party_beats_independent_on_either_side(self):
+        for personal in ("Rex Patrick Team", "Nick Xenophon Team", "Jacqui Lambie Network",
+                         "Australian Conservatives", "Katter's Australian Party"):
+            for source, dated in [(personal, "Independent"), ("Independent", personal)]:
+                with self.subTest(source=source, dated=dated), patch.object(
+                        eb, "PERSONAL_SPONSOR_PARTIES", {personal: "99001"}):
+                    records = self.records((dated, "2000-01-01", "2025-01-01", None))
+                    self.assertEqual(self.apply(self.bill(source, "2001-01-01"), records), personal)
+                    self.assertFalse(eb.vote_parties.same_party(personal, "Independent"))
+
+    def test_someone_elses_registered_party_does_not_override_independent(self):
+        records = self.records(("Independent", "2020-01-01", "2025-01-01", None))
+        self.assertEqual(self.apply(self.bill("Katter's Australian Party"), records), "Independent")
+
+    def test_liberal_and_nationals_are_not_an_independent_naming_convention(self):
+        records = self.records(("Independent", "2020-01-01", "2025-01-01", None))
+        for source in ("Liberal", "Nationals"):
+            self.assertEqual(self.apply(self.bill(source), records), "Independent")
+
+    def test_missing_records_abort_instead_of_reverting_publications(self):
+        records = self.records(("Independent", "2020-01-01", "2025-01-01", None))
+        records.evidence.frozen = frozenset({("federal", "senate")})
+        with self.assertRaisesRegex(RuntimeError, "Bill export aborted: Senate Handbook unavailable"):
+            self.apply(self.bill(), records)
+        records.evidence.frozen = frozenset()
+        records.evidence.check_labels = False
+        with self.assertRaisesRegex(RuntimeError, "Bill export aborted: electorate release unavailable"):
+            self.apply(self.bill(), records)
+
+    def test_loader_outages_abort_build_before_publication(self):
+        for loader, message in [("release_evidence", "electorate release"),
+                                ("handbook_evidence", "Senate Handbook")]:
+            with self.subTest(loader=loader), patch.object(eb.vote_parties, loader, side_effect=OSError("fixture outage")), \
+                    patch.object(eb.PartyTimeline, "load", return_value=eb.PartyTimeline({}, {})), \
+                    patch.object(eb, "load_v2_bills", return_value=[self.bill()]), \
+                    patch.object(eb, "load_suppressed", return_value=[]), \
+                    patch.object(eb, "has_table", return_value=False):
+                with sqlite3.connect(":memory:") as db:
+                    with self.assertRaisesRegex(RuntimeError, "Bill export aborted: " + message):
+                        eb.build(db, False)
+
+    def test_pid_cannot_correct_a_different_printed_surname(self):
+        records = self.records(("Independent", "2020-01-01", "2025-01-01", None))
+        b = self.bill()
+        b["sponsor"] = "OTHER, Sen Morgan"
+        self.assertEqual(self.apply(b, records), "Liberal")
+        b["sponsor_party"] = None
+        self.assertEqual(self.apply(b, records), "Independent")
+
+    def test_reviewed_rename_boundary_is_inclusive(self):
+        records = self.records(("Centre Alliance", "2010-01-01", "2025-01-01", None))
+        records.evidence.renames = [[(None, "Nick Xenophon Team"), ("2018-04-10", "Centre Alliance")]]
+        for day, expected in [("2018-04-09", "Nick Xenophon Team"), ("2018-04-10", "Centre Alliance")]:
+            self.assertEqual(self.apply(self.bill("Nick Xenophon Team", day), records), expected)
+
+    def test_new_dated_party_is_an_allowed_published_token(self):
+        records = self.records(("Australian Conservatives", "2020-01-01", "2025-01-01", None))
+        party = self.apply(self.bill("Independent"), records)
+        self.assertEqual(party, "Australian Conservatives")
+        self.assertIn(party, eb.PUBLISHED_PARTIES)
 
 
 if __name__ == "__main__":

@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 import {JSDOM} from 'jsdom';
-import {workerFetch} from '../test/helpers/worker-fetch.mjs';
-import {donorRecordsHTML} from './subject-figures.ts';
-import {loadDonorRecordsIndex,donorRecordsForName} from './donor-index.ts';
+import {workerFetch} from './helpers/worker-fetch.mjs';
+import {donorRecordsHTML} from '../src/subject-figures.ts';
+import {loadDonorRecordsIndex,donorRecordsForName} from '../src/donor-index.ts';
 import {foldDonorName} from '../public/donor-entity.js';
 import {shortMoney} from '../public/format.js';
 import {receiptScopeLabel} from '../public/donor-disclosure.js';
@@ -106,8 +106,7 @@ test('campaigner server HTML contains every annual row with the browser words an
 });
 
 test('off-map server HTML retains each jurisdiction and matches hydrated figures without summing them',async()=>{
-  // The browser currently loses this unscoped collision. Evaluate its numeric
-  // renderer on each retained source record, as the directory does.
+  // Compare the numeric renderer on each retained source record with the server.
   const browser = runInNewContext(`${functionSource('donorRecordHTML')};donorRecordHTML`,{
     fmtMoney,yearSpan,esc:value=>String(value),safeUrl:value=>value,
     tile:(figure,label)=>`<p>${figure} ${label}</p>`,sourceLineHTML:()=>'',

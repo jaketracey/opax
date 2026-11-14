@@ -14,18 +14,22 @@ Writes contact sheets to scripts/_photos_work/recrop_sheet_<n>.png for a visual 
 import sys as _http_sys
 from pathlib import Path as _HttpPath
 _http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
-from parli.ingest import http as source_http
+from scripts import portrait_http as source_http
 import json, os, sys, collections, time, urllib.parse
 from pathlib import Path
 import cv2, numpy as np, requests
 from PIL import Image, ImageDraw
+cv2.setNumThreads(1)
 W=Path(__file__).resolve().parents[1]; PH=W/"portal/public/photos"; WK=W/"scripts/_photos_work"; SRC=WK/"src"
 pm=json.load(open(PH/"people.json")); credits=json.load(open(PH/"credits.json")); matches=json.load(open(WK/"wikidata_matches.json"))
-drop_names=set(json.load(open(WK/"wikidata_drop.json")))
+drop_names=set(json.load(open(WK/"wikidata_drop.json"))) if (WK/"wikidata_drop.json").exists() else set()
 ONLY=None   # --new: only this run's matches (wikidata_matches_new.json); sources are fetched at 640px if missing
 if "--new" in sys.argv:
     ONLY={f"wd-{m['qid']}" for m in json.load(open(WK/"wikidata_matches_new.json")).values()}
 S=source_http.Session(); S.headers["User-Agent"]=source_http.USER_AGENT
+# Reviewed bounds for this exact source: retain Thomson's whole face while
+# excluding the small background head and the chin above her hair.
+CROP_OVERRIDES={"wd-Q6773405": {"file":"File:Marsha Thomson.JPG", "size":(476,614), "box":(108,70,408,370)}}
 def fetch_src(key):
     f=credits[key]["file"][5:]; SRC.mkdir(exist_ok=True)
     r=S.get("https://commons.wikimedia.org/wiki/Special:FilePath/"+urllib.parse.quote(f), params={"width":"640"}, timeout=60)
@@ -55,7 +59,14 @@ for key in sorted(k for k in credits if k.startswith("wd-")):
     h,w=im.shape[:2]; fs=faces(im)
     if len(fs)>=2 and fs[1][3]>=0.6*fs[0][3]:
         log[key]="group"; dropped_keys.add(key); continue
-    if fs:
+    if key in CROP_OVERRIDES:
+        override=CROP_OVERRIDES[key]
+        if credits[key]["file"]!=override["file"] or (w,h)!=override["size"]:
+            raise ValueError(f"reviewed crop source changed: {key}")
+        left,top,right,bottom=override["box"]; side=right-left
+        assert bottom-top==side and 0<=left<right<=w and 0<=top<bottom<=h
+        log[key]="face-reviewed"
+    elif fs:
         x,y,fw,fh=fs[0]; side=int(min(max(fw,fh)*2.6, min(w,h))); cx=x+fw/2; cy=y+fh*0.45
         left=int(min(max(0,cx-side/2), w-side)); top=int(min(max(0,cy-side/2), h-side)); log[key]="face"
     else:

@@ -4,6 +4,7 @@ import {readFileSync} from 'node:fs';
 import {resolveProgram, programKey} from '../public/facts/grant-programs.js';
 import {runInNewContext} from 'node:vm';
 import {programRecord} from '../../scripts/build_search_catalog.mjs';
+import {billSponsorProjection} from './helpers/bill-sponsor-projection.mjs';
 import {renderBillAnswer} from '../src/seo-content.ts';
 
 const pub = new URL('../public/', import.meta.url);
@@ -61,22 +62,40 @@ test('all eight audited embedded tallies match their standalone source records',
   }
 });
 
-test('the browser opens and caches r5626 with one bill request and no division requests', async () => {
+test('the browser caches r5626 and the shared title lookup without per-division requests', async () => {
   const bill = await read('/bills/au-federal-r5626.json');
   assert.equal(bill.divisions.length, 48);
   const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
   const start = app.indexOf('function fetchBill(key)');
-  const code = app.slice(start, app.indexOf('/** The same record', start));
+  const code = app.slice(app.indexOf('let proceduralTitlesPromise'), app.indexOf('// "bill:<key>"')) + app.slice(start, app.indexOf('/** The same record', start));
+  const titles = await read('/procedural-division-titles.json');
   const requests = [];
   const fetchBill = runInNewContext(code+';fetchBill', {billFiles:new Map(), fetch:async path => {
     requests.push(path);
-    assert.equal(path, '/bills/au-federal-r5626.json');
-    return Response.json(bill);
+    assert.ok(['/bills/au-federal-r5626.json', '/procedural-division-titles.json'].includes(path));
+    return Response.json(path.startsWith('/bills/') ? bill : titles);
   }});
   const opened = await fetchBill(bill.key);
-  assert.deepEqual(opened, bill);
+  assert.deepEqual(JSON.parse(JSON.stringify(opened)), {...bill, division_titles:titles});
   assert.equal(await fetchBill(bill.key), opened);
-  assert.equal(requests.length, 1);
+  assert.deepEqual(requests, ['/bills/au-federal-r5626.json', '/procedural-division-titles.json']);
+});
+
+test('the browser starts the title lookup before the bill JSON has arrived', async () => {
+  const bill = await read('/bills/au-federal-r5626.json');
+  const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
+  const start = app.indexOf('function fetchBill(key)');
+  const code = app.slice(app.indexOf('let proceduralTitlesPromise'), app.indexOf('// "bill:<key>"')) + app.slice(start, app.indexOf('/** The same record', start));
+  const requests = [], responses = new Map();
+  const fetchBill = runInNewContext(code+';fetchBill', {billFiles:new Map(), fetch:path => {
+    requests.push(path);
+    return new Promise(resolve => responses.set(path, resolve));
+  }});
+  const opening = fetchBill(bill.key);
+  assert.deepEqual(requests, ['/bills/au-federal-r5626.json', '/procedural-division-titles.json']);
+  responses.get('/procedural-division-titles.json')(Response.json({}));
+  responses.get('/bills/au-federal-r5626.json')(Response.json(bill));
+  assert.equal((await opening).key, bill.key);
 });
 
 test('every bill with embedded divisions agrees with the standalone source', async () => {
@@ -99,13 +118,16 @@ test('every bill with embedded divisions agrees with the standalone source', asy
 test('audited party labels are canonical in index and detail; renderers reject dirty labels', async () => {
   const index = await read('/bills/index.json');
   const allowed = await read('/facts/sponsor-parties.json');
+  const projected = billSponsorProjection();
   const dated = new Map([...datedSponsors, ...sponsorDecisions.fills].map(row => [row.key, row.published_party]));
   for (const expected of audit.parties) {
     const row = index.bills.find(b => b.key === expected.key);
     const bill = await read(`/bills/${expected.key}.json`);
     assert.equal(bill.sponsor_party, row.sponsor_party, expected.key);
     assert.ok(!bill.sponsor_party || allowed.includes(bill.sponsor_party), expected.key);
-    assert.equal(bill.sponsor_party, dated.get(expected.key) ?? expected.canonical, expected.key);
+    const source = Object.hasOwn(expected, 'source_canonical') ? expected.source_canonical : expected.canonical;
+    assert.equal(bill.sponsor_party, dated.has(expected.key) ? dated.get(expected.key) : source, expected.key);
+    assert.equal(projected.sponsors[expected.key].sponsor_party, expected.canonical, expected.key);
   }
   for (const party of ['xx', 'monarchist', 'Australia&#39;s Voice']) {
     const html = renderBillAnswer({key:'example', title:'Example bill', sponsor_party:party}, [], new Map()).html;

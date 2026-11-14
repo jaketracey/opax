@@ -1,0 +1,22 @@
+{
+  "aliases": {
+    "rex patrick": "10903",
+    "cook": "wd-Q18685498",
+    "lane": "wd-Q117468562",
+    "higginson": "wd-Q111972517",
+    "st clair": "wd-Q7627118",
+    "o'byrne": "wd-Q6837187",
+    "o'connor": "wd-Q5527997",
+    "a. koutsantonis": "wd-Q7816502",
+    "kathryn sullivan": "wd-Q16106114",
+    "sophie panopoulos": "10461"
+  },
+  "namesakes": [
+    { "print": "graeme campbell", "other": "george campbell", "other_key": "10098" },
+    { "print": "david cox", "other": "dorinda cox", "other_key": "10964" },
+    { "print": "stephen martin", "other": "steve martin", "other_key": "10905" },
+    { "print": "kathryn sullivan", "other": "jon sullivan", "other_key": "10615" },
+    { "print": "o'connor", "other": "brendan o'connor", "other_key": "10496" }
+  ],
+  "held_prints": ["cox", "mckenzie", "price", "wortley", "t smith", "bilyk", "butler", "kelly", "kerr", "anna burke", "burke", "bruce scott", "jenkins"]
+}

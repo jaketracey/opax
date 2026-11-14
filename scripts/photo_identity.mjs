@@ -20,7 +20,8 @@
  *    TheyVoteForYou name for a numeric key (votes.json, else pay.json), the
  *    Wikidata label for a wd- key (credits.json). Surnames equal; a first name
  *    agrees by prefix either way (Phil/Phillip); initials agree with the owner's.
- *    scripts/person_identity.json lists the verified exceptions (same_person);
+ *    scripts/person_identity.json lists verified exceptions (same_person, or
+ *    photo_aliases for portraits only, never roster ids);
  *  - a name on a file listed as wrong_face there; a key with no file; two keys
  *    holding byte-identical files.
  * Roster, true of the map only while the roster says so (the weekly export can
@@ -98,7 +99,7 @@ export function auditPhotoMap({ people, owners, roster = [], identity = {}, byte
   const problems = []
   const corrupt = (message, names) => problems.push({ level: 'corrupt', message, names })
   const drift = (message, names) => problems.push({ level: 'roster', message, names })
-  const same = identity.same_person || {}
+  const same = { ...(identity.photo_aliases || {}), ...(identity.same_person || {}) }
   const wrong = identity.wrong_face || {}
   const rows = new Map(roster.map((p) => [String(p.name).trim().toLowerCase(), p]))
   const rosterPid = (name) => { const pid = String(rows.get(name)?.pid ?? ''); return /^\d+$/.test(pid) ? pid : null }
