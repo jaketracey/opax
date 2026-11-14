@@ -10,6 +10,7 @@ import {
   ToastAndroid,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { useScreenMargin } from '../../design/adaptive';
 import { useKeyCommand } from '../../design/keyboard';
@@ -25,8 +26,6 @@ import {
   headerItems,
 } from '../../navigation/chrome';
 import { sheetOptions } from '../../navigation/stack/screen';
-import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
-import { useFittedSheetHeight } from './fitted';
 
 export function routeSheetOptions({
   short = false,
@@ -82,14 +81,15 @@ export function SheetFrame({
   children: ReactNode;
   options?: NativeStackNavigationOptions;
 }) {
-  const accessible = useAccessibilitySize();
+  // A sheet that must scroll rather than fit its content: accessibility sizes,
+  // and the closed Duo's outer display. There UIKit fits a short sheet to its
+  // content as measured at the first layout, before the rail's inset narrows
+  // the column, so the text wrapped taller than the sheet and the plain fitted
+  // View clipped it with nothing to scroll (glossary terms, b67).
+  const railed = useVerticalBarEdge() !== 'unspecified';
+  const accessible = useAccessibilitySize() || railed;
   const margin = useScreenMargin();
   const insets = useSafeAreaInsets();
-  const maxHeight = useFittedSheetHeight();
-  // The closed Duo's outer display is 560 pt tall: a fitted sheet there is
-  // the screen's height at most. Elsewhere short sheets fit their content and
-  // never scroll (tests/sheets.test.tsx).
-  const railed = useVerticalBarEdge() !== 'unspecified';
   const done = closeSheetItem();
   useKeyCommand('list-escape', () => {
     if (done.type === 'button') done.onPress?.();
@@ -204,9 +204,10 @@ export function SheetFrame({
     styles.content,
     {
       paddingHorizontal: margin,
-      // A fitted View has no scroll view to apply UIKit's horizontal insets.
-      paddingLeft: margin + (fitted ? insets.left : 0),
-      paddingRight: margin + (fitted ? insets.right : 0),
+      // A fitted View has no scroll view to apply UIKit's horizontal insets,
+      // and UIKit's automatic adjustment is vertical only beside a rail.
+      paddingLeft: margin + (fitted || railed ? insets.left : 0),
+      paddingRight: margin + (fitted || railed ? insets.right : 0),
       paddingTop: fitted && compact ? rhythm.tight : rhythm.group,
       paddingBottom: fitted
         ? compact && Platform.OS === 'ios'
@@ -225,26 +226,7 @@ export function SheetFrame({
         }}
       />
       <SurfaceContext.Provider value="sunken">
-        {fitted && railed ? (
-          // UIKit fits the sheet to this content, but only up to the screen:
-          // on the Duo's outer display the fitted height is the screen's, and
-          // a plain View clipped what ran past it with nothing to scroll
-          // (glossary terms, b67). The cap is the sheet's own height, so a
-          // short term still fits exactly and a long one scrolls.
-          <ScrollView
-            testID={testID ? `${testID}-scroll` : undefined}
-            style={[styles.screen, styles.fittedScroll, { maxHeight }]}
-            contentInsetAdjustmentBehavior="automatic"
-          >
-            <View
-              collapsable={false}
-              testID={testID}
-              style={[styles.screen, contentStyle]}
-            >
-              {children}
-            </View>
-          </ScrollView>
-        ) : fitted ? (
+        {fitted ? (
           <View
             collapsable={false}
             testID={testID}
@@ -311,7 +293,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   screen: { backgroundColor: colors.sunken },
-  fittedScroll: { flexGrow: 0 },
   content: {
     paddingTop: rhythm.group,
     gap: rhythm.group,
