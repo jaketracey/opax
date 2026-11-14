@@ -8,7 +8,7 @@
 // The member is the existing email-login account; consent is given on a
 // script-free page. Codes and tokens are stored as hashes only.
 import {CommunityError,digest,json,limit,now,randomToken,type Member} from './community-core'
-import {networkKey,sharedAddress} from './mcp-access'
+import {networkKey,sharedAddress,wideNetwork} from './mcp-access'
 
 const SCOPE='records:read'
 const RESOURCE_PATHS=['/mcp','/mcp/member']
@@ -100,9 +100,12 @@ function redirectWith(redirect:string,values:Record<string,string>):string {
 
 async function register(req:Request,env:Env):Promise<Response> {
  // Assistants register from their makers' servers, which many people share; an ordinary address needs only a few.
- // Each crowd has its own daily ceiling, so neither can use up the other's.
+ // Each crowd has its own daily ceiling, so neither can use up the other's, and inside the direct crowd one
+ // network (an IPv4 address or an IPv6 /48) has a daily allowance of its own, so it cannot use up the crowd's.
+ // In order: a registration refused for its address or network uses none of the wider allowance.
  const shared=sharedAddress(env,address(req))
  await guarded(()=>limit(env,'oauth-register-ip:'+ip(req),shared?300:10,3600))
+ if(!shared)await guarded(()=>limit(env,'oauth-register-net:'+wideNetwork(address(req)),50,86400))
  await guarded(()=>limit(env,shared?'oauth-register-all-shared':'oauth-register-all',2000,86400))
  const data=await readBody(req,'json')
  const uris=data.redirect_uris

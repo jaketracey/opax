@@ -16,7 +16,7 @@ await build({entryPoints:[src('community.ts'),src('community-mcp.ts'),src('commu
 const {communityRoute}=await import(pathToFileURL(join(folder,'community.js')));
 const {communityMcp}=await import(pathToFileURL(join(folder,'community-mcp.js')));
 const {oauthRoute,redirectMatches,registrableRedirect}=await import(pathToFileURL(join(folder,'community-oauth.js')));
-const {anonymousVolume,sharedAddress,networkKey}=await import(pathToFileURL(join(folder,'mcp-access.js')));
+const {anonymousVolume,sharedAddress,networkKey,wideNetwork}=await import(pathToFileURL(join(folder,'mcp-access.js')));
 
 const ORIGIN='https://opax.test';
 const sha=value=>createHash('sha256').update(value).digest('hex');
@@ -62,9 +62,12 @@ function fixture(vars={}){
  }
  const exchange=(clientId,code,extra={})=>form('/oauth/token',{grant_type:'authorization_code',client_id:clientId,code,code_verifier:VERIFIER,redirect_uri:CALLBACK,resource:ORIGIN+'/mcp',...extra});
  async function connect(session){const c=await consent(session);const response=await exchange(c.clientId,c.code);assert.equal(response.status,200);return {...c,tokens:await response.json()}}
- const mcp=(headers={},{path='/mcp',method='POST',rpc={jsonrpc:'2.0',id:1,method:'tools/list',params:{}}}={})=>communityMcp(new Request(ORIGIN+path,{method,headers:{accept:'application/json, text/event-stream','content-type':'application/json','cf-connecting-ip':'203.0.113.7','user-agent':'test-client/1',...headers},body:method==='POST'?JSON.stringify(rpc):undefined}),env,async()=>Response.json({results:[]}));
+ // The public search and record routes, as index.ts serves them: each makes Progress queries through the meter it is given.
+ // By default one query a read; a test sets f.queries to make a search use its keyword retry too.
+ const reads={queries:['/find']};
+ const mcp=(headers={},{path='/mcp',method='POST',rpc={jsonrpc:'2.0',id:1,method:'tools/list',params:{}}}={})=>communityMcp(new Request(ORIGIN+path,{method,headers:{accept:'application/json, text/event-stream','content-type':'application/json','cf-connecting-ip':'203.0.113.7','user-agent':'test-client/1',...headers},body:method==='POST'?JSON.stringify(rpc):undefined}),env,async(path,meter)=>{for(const query of reads.queries)await meter(query==='hedge'?'/find':query,query==='hedge');return Response.json({results:[]})});
  const bearer=token=>({authorization:'Bearer '+token});
- return {db,env,outbox,account,login,oauth,form,register,authorizeQuery,consent,exchange,connect,mcp,bearer};
+ return {db,env,outbox,account,login,oauth,form,register,authorizeQuery,consent,exchange,connect,mcp,bearer,reads};
 }
 
 // --- the no-account tier ------------------------------------------------------
@@ -83,7 +86,7 @@ test('without a token the read-only tools answer, with open CORS and no credenti
  assert.match(preflight.headers.get('access-control-allow-headers'),/mcp-protocol-version/);
  // Nothing about the caller is stored beyond hashed limit buckets and an hourly count.
  assert.equal(f.db.prepare('SELECT count(*) n FROM members').get().n,0);
- assert.ok(f.db.prepare('SELECT key FROM community_limits').all().every(row=>/^[0-9a-f]{64}$/.test(row.key)||/^mcp-anon-(?:hour|requests-day|metered-day):\d+$/.test(row.key)));
+ assert.ok(f.db.prepare('SELECT key FROM community_limits').all().every(row=>/^[0-9a-f]{64}$/.test(row.key)||/^mcp-anon-(?:hour:\d+|(?:progress|requests)-day:(?:shared|direct):\d+)$/.test(row.key)));
  f.db.close();
 });
 
@@ -290,42 +293,149 @@ test('a member is limited on their own account, not with the no-account callers'
  f.db.close();
 });
 
-test('the daily cap on metered calls pauses the no-account tier by itself; members carry on',async()=>{
- const f=fixture({MCP_ANON_DAILY_METERED_CAP:'2'});
- const search=session=>f.mcp({'mcp-session-id':session},{rpc:{jsonrpc:'2.0',id:1,method:'tools/call',params:{name:'search_records',arguments:{query:'housing'}}}});
+const search=(f,headers={})=>f.mcp(headers,{rpc:{jsonrpc:'2.0',id:7,method:'tools/call',params:{name:'search_records',arguments:{query:'housing'}}}});
+const hits=(f,like)=>f.db.prepare('SELECT coalesce(sum(hits),0) n FROM community_limits WHERE key LIKE ?').get(like).n;
+const untilMidnight=()=>86400-Math.floor(Date.now()/1000)%86400;
+const CLAUDE='160.79.104.10';
+test('the daily cap counts Progress queries one by one and pauses only the pool that spent it; members carry on',async()=>{
+ const f=fixture({MCP_ANON_DAILY_PROGRESS_DIRECT:'3'});
  const warnings=[],warn=console.warn;console.warn=line=>warnings.push(line);
  try{
-  for(const session of ['session-aaaa','session-bbbb'])assert.equal((await search(session)).status,200);
-  // A tool that reads only published files is not metered.
-  assert.equal(f.db.prepare("SELECT hits FROM community_limits WHERE key LIKE 'mcp-anon-metered-day:%'").get().hits,2);
-  assert.equal((await f.mcp({},call())).status,401); // paused: answered like the kill switch
+  // A search whose main query is slow makes two: the main one and the keyword retry. Both count.
+  f.reads.queries=['/find','hedge'];
+  assert.equal((await search(f,{'mcp-session-id':'session-aaaa'})).status,200);
+  assert.equal(hits(f,'mcp-anon-progress-day:direct:%'),2);
+  // A tool that reads only published files makes no query.
+  assert.equal((await f.mcp({},call())).status,200);
+  assert.equal(hits(f,'mcp-anon-progress-day:direct:%'),2);
+  // The third query is the last; the fourth is refused part-way through the tool, and the answer is the limit
+  // it hit (429, Retry-After to midnight UTC, the JSON-RPC shape), not the tool's own error.
+  const refused=await search(f,{'mcp-session-id':'session-bbbb'});
+  assert.equal(refused.status,429);
+  assert.ok(Math.abs(seconds(refused)-untilMidnight())<=2);
+  const body=await refused.json();
+  assert.equal(body.id,7);assert.equal(body.error.code,-32029);assert.equal(body.error.data.retry_after_seconds,seconds(refused));
+  assert.match(body.error.message,/paused for callers without an account until tomorrow/);
  }finally{console.warn=warn}
  assert.equal(warnings.filter(line=>line.includes('mcp_anon_daily_cap')).length,1);
- const paused=await f.mcp();
+ assert.deepEqual(Object.keys(JSON.parse(warnings.find(line=>line.includes('mcp_anon_daily_cap')))).sort(),['count','day','hits','kind','level','pool']);
+ // The direct pool is paused, answered like the kill switch; a paused pool writes nothing more.
+ const paused=await f.mcp({'cf-connecting-ip':'198.51.100.20'});
  assert.equal(paused.status,401);
  assert.match(paused.headers.get('www-authenticate'),/resource_metadata=/);
  assert.match((await paused.json()).error,/paused for callers without an account until tomorrow/);
- assert.deepEqual(await anonymousVolume(f.env),{anonymous:false,volume:'normal',hours_over:0,paused_today:'metered'});
- // A paused tier writes nothing more.
- const before=f.db.prepare('SELECT sum(hits) n FROM community_limits').get().n;
- await f.mcp();await search('session-cccc');
- assert.equal(f.db.prepare('SELECT sum(hits) n FROM community_limits').get().n,before);
+ const before=hits(f,'%');
+ await f.mcp();await search(f);
+ assert.equal(hits(f,'%'),before);
+ // Claude's and ChatGPT's users draw on their own pool, so they carry on.
+ assert.equal((await search(f,{'cf-connecting-ip':CLAUDE})).status,200);
+ assert.deepEqual(await anonymousVolume(f.env),{anonymous:true,volume:'normal',hours_over:0,paused_today:['direct:progress']});
  // Members are not counted and not paused.
  const session=await f.login(),key=(await (await f.account('keys','POST',{name:'Laptop'},session.cookie)).json()).token;
- assert.equal((await f.mcp(f.bearer(key),{rpc:{jsonrpc:'2.0',id:1,method:'tools/call',params:{name:'search_records',arguments:{query:'housing'}}}})).status,200);
- assert.equal(f.db.prepare("SELECT hits FROM community_limits WHERE key LIKE 'mcp-anon-metered-day:%'").get().hits,2);
+ const counted=hits(f,'mcp-anon-progress-day:%');
+ assert.equal((await search(f,f.bearer(key))).status,200);
+ assert.equal(hits(f,'mcp-anon-progress-day:%'),counted);
  // The next UTC day starts clean.
- f.db.prepare("UPDATE community_limits SET key='mcp-anon-metered-day:1' WHERE key LIKE 'mcp-anon-metered-day:%'").run();
+ f.db.prepare("UPDATE community_limits SET key='mcp-anon-progress-day:direct:1' WHERE key LIKE 'mcp-anon-progress-day:direct:%'").run();
  assert.equal((await f.mcp()).status,200);
  f.db.close();
 });
 
-test('the daily cap on all no-account requests pauses the tier too',async()=>{
- const f=fixture({MCP_ANON_DAILY_REQUEST_CAP:'3'});
- for(let i=0;i<3;i++)assert.equal((await f.mcp()).status,200);
- assert.equal((await f.mcp()).status,401);
- assert.equal((await anonymousVolume(f.env)).paused_today,'requests');
+test('one network cannot pause the no-account tier for everyone, even with a new session id on every call',async()=>{
+ assert.equal(wideNetwork('203.0.113.7'),'203.0.113.7');
+ assert.equal(wideNetwork('2001:db8:1:2:aaaa::1'),'2001:db8:1::/48');
+ assert.equal(wideNetwork('2001:0db8:0001:ffff::9'),'2001:db8:1::/48');
+ const f=fixture({MCP_ANON_DAILY_PROGRESS_NETWORK:'5',MCP_ANON_DAILY_PROGRESS_DIRECT:'20',MCP_ANON_DAILY_PROGRESS_SHARED:'12'});
+ const warnings=[],warn=console.warn;console.warn=line=>warnings.push(line);
+ let refused;
+ try{
+  // The reviewer's attack: one address, a fresh session id each call, as fast as the minute limits allow.
+  for(let i=0;i<5;i++)assert.equal((await search(f,{'mcp-session-id':'attack-'+i+'-session'})).status,200);
+  refused=await search(f,{'mcp-session-id':'attack-5-session'});
+ }finally{console.warn=warn}
+ assert.equal(refused.status,429);
+ assert.ok(Math.abs(seconds(refused)-untilMidnight())<=2);
+ assert.match((await refused.json()).error.message,/This network has used today's allowance/);
+ assert.equal(warnings.filter(line=>line.includes('mcp_anon_network_cap')).length,1);
+ assert.ok(warnings.every(line=>!line.includes('203.0.113')),'no address is logged');
+ // From then on it is refused by a read alone, and the pool holds only the five it made.
+ const before=hits(f,'%');
+ for(let i=6;i<10;i++)assert.equal((await search(f,{'mcp-session-id':'attack-'+i+'-session'})).status,429);
+ assert.equal(hits(f,'%'),before);
+ assert.equal(hits(f,'mcp-anon-progress-day:direct:%'),5);
+ // Everyone else carries on: another network, an IPv6 site, and Claude's shared addresses.
+ assert.equal((await search(f,{'cf-connecting-ip':'198.51.100.30'})).status,200);
+ for(const ip of ['2001:db8:1:1::1','2001:db8:1:2::1','2001:db8:1:3::1','2001:db8:1:4::1','2001:db8:1:5::1'])assert.equal((await search(f,{'cf-connecting-ip':ip})).status,200);
+ // An IPv6 site is one network however many /64s it rotates through; the next /48 is another.
+ assert.equal((await search(f,{'cf-connecting-ip':'2001:db8:1:6::1'})).status,429);
+ assert.equal((await search(f,{'cf-connecting-ip':'2001:db8:2:1::1'})).status,200);
+ for(let i=0;i<8;i++)assert.equal((await search(f,{'cf-connecting-ip':CLAUDE,'mcp-session-id':'claude-'+i+'-session'})).status,200);
+ assert.deepEqual((await anonymousVolume(f.env)).paused_today,[]);
+ // Network counts are hashed, like every other per-address row.
+ assert.equal(f.db.prepare("SELECT count(*) n FROM community_limits WHERE key LIKE '%network%' OR key LIKE '%203.0.113%'").get().n,0);
  f.db.close();
+});
+
+test('by default the no-account tier makes at most 500 Progress queries a day: 150 a network, 250 a pool',async()=>{
+ const f=fixture();
+ let n=0;const one=ip=>search(f,{'cf-connecting-ip':ip,'mcp-session-id':'default-'+(++n)+'-session'});
+ for(let i=0;i<150;i++)assert.equal((await one('198.51.100.50')).status,200);
+ assert.equal((await one('198.51.100.50')).status,429);
+ for(let i=0;i<100;i++)assert.equal((await one('198.51.100.51')).status,200);
+ // The direct pool's 250 are spent: the next caller from anywhere direct is paused before it makes a query.
+ assert.equal((await one('198.51.100.52')).status,401);
+ for(let i=0;i<250;i++)assert.equal((await one(CLAUDE)).status,200);
+ assert.equal((await one(CLAUDE)).status,401);
+ assert.equal(hits(f,'mcp-anon-progress-day:%'),500);
+ assert.deepEqual((await anonymousVolume(f.env)).paused_today,['shared:progress','direct:progress']);
+ f.db.close();
+});
+
+test('migration 0019 can be applied again by hand without error',()=>{
+ const db=new DatabaseSync(':memory:'),sql=readFileSync(new URL('../migrations/0019_mcp_oauth.sql',import.meta.url),'utf8');
+ db.exec('CREATE TABLE members(id TEXT PRIMARY KEY)');
+ db.exec(sql);db.exec(sql);
+ assert.equal(db.prepare("SELECT count(*) n FROM sqlite_master WHERE name LIKE 'oauth_%'").get().n,9); // four tables, five indexes
+ db.close();
+});
+
+test('the daily cap on no-account requests: one network, then the pool',async()=>{
+ const f=fixture({MCP_ANON_DAILY_REQUESTS_NETWORK:'3',MCP_ANON_DAILY_REQUESTS_DIRECT:'5'});
+ for(let i=0;i<3;i++)assert.equal((await f.mcp()).status,200);
+ const network=await f.mcp();
+ assert.equal(network.status,429);
+ assert.match((await network.json()).error.message,/This network has used today's allowance/);
+ // The refused request did not count toward the pool: another network gets the two left.
+ for(let i=0;i<2;i++)assert.equal((await f.mcp({'cf-connecting-ip':'198.51.100.40'})).status,200);
+ assert.equal((await f.mcp({'cf-connecting-ip':'198.51.100.41'})).status,401);
+ assert.deepEqual((await anonymousVolume(f.env)).paused_today,['direct:requests']);
+ assert.equal((await f.mcp({'cf-connecting-ip':CLAUDE})).status,200);
+ // Both pools spent: the tier reports itself off.
+ const both=fixture({MCP_ANON_DAILY_REQUESTS_DIRECT:'1',MCP_ANON_DAILY_REQUESTS_SHARED:'1'});
+ await both.mcp();await both.mcp({'cf-connecting-ip':CLAUDE});
+ assert.deepEqual(await anonymousVolume(both.env),{anonymous:false,volume:'normal',hours_over:0,paused_today:['shared:requests','direct:requests']});
+ for(const x of [f,both])x.db.close();
+});
+
+test('on staging each response reports its Progress queries, and a caller can lower its own budget',async()=>{
+ const f=fixture({MCP_PROGRESS_REPORT:'true'});
+ f.reads.queries=['/find','hedge'];
+ const counted=await search(f);
+ assert.equal(counted.status,200);
+ assert.equal(counted.headers.get('x-opax-progress'),'find=1, hedge=1, other=0');
+ // A budget of one: the second query is refused before it is made, and the request reports the one it made.
+ const capped=await search(f,{'x-opax-progress-budget':'1','mcp-session-id':'probe-session'});
+ assert.equal(capped.status,429);
+ assert.equal(capped.headers.get('x-opax-progress'),'find=1, hedge=0, other=0');
+ assert.match((await capped.json()).error.message,/Progress budget its caller set/);
+ // Members are reported too, and a tool that reads only files makes no query.
+ assert.equal((await f.mcp({},call())).headers.get('x-opax-progress'),'find=0, hedge=0, other=0');
+ // Elsewhere (production) neither header does anything.
+ const prod=fixture();prod.reads.queries=['/find','hedge'];
+ const plain=await search(prod,{'x-opax-progress-budget':'0'});
+ assert.equal(plain.status,200);
+ assert.equal(plain.headers.get('x-opax-progress'),null);
+ for(const x of [f,prod])x.db.close();
 });
 
 test('sustained no-account volume is reported high after three full hours over the line',async()=>{
@@ -334,15 +444,15 @@ test('sustained no-account volume is reported high after three full hours over t
  try{for(let i=0;i<3;i++)await f.mcp()}finally{console.warn=warn}
  assert.equal(warnings.length,1); // logged once, when the hour crosses the line
  assert.deepEqual(Object.keys(JSON.parse(warnings[0])).sort(),['hits','hour','kind','level']);
- assert.deepEqual(await anonymousVolume(f.env),{anonymous:true,volume:'normal',hours_over:0,paused_today:null});
+ assert.deepEqual(await anonymousVolume(f.env),{anonymous:true,volume:'normal',hours_over:0,paused_today:[]});
  const hour=Math.floor(Date.now()/3600000);
  const add=(back,hits)=>f.db.prepare('INSERT INTO community_limits(key,hits,expires_at) VALUES (?,?,?)').run('mcp-anon-hour:'+(hour-back),hits,(hour-back+1)*3600);
  // Two hours in a row, a quiet hour, then one more: busy but not sustained.
  for(const back of [6,7,9])add(back,5);
- assert.deepEqual(await anonymousVolume(f.env),{anonymous:true,volume:'normal',hours_over:3,paused_today:null});
+ assert.deepEqual(await anonymousVolume(f.env),{anonymous:true,volume:'normal',hours_over:3,paused_today:[]});
  // Three in a row anywhere in the last day is sustained, and stays reported for the daily check.
  add(8,2);
- assert.deepEqual(await anonymousVolume(f.env),{anonymous:true,volume:'high',hours_over:4,paused_today:null});
+ assert.deepEqual(await anonymousVolume(f.env),{anonymous:true,volume:'high',hours_over:4,paused_today:[]});
  add(30,99);
  assert.equal((await anonymousVolume(f.env)).hours_over,4);
  f.db.close();
@@ -405,6 +515,18 @@ test('registration is limited per address',async()=>{
  // An assistant maker's shared address registers for many people.
  const shared=()=>f.oauth('/oauth/register',{method:'POST',headers:{'content-type':'application/json','cf-connecting-ip':'160.79.104.10'},body:JSON.stringify({redirect_uris:[CALLBACK]})});
  for(let i=0;i<12;i++)assert.equal((await shared()).status,201);
+ f.db.close();
+});
+
+test('one network cannot use up the day\'s registrations: an IPv6 site gets 50 a day across all its /64s',async()=>{
+ const f=fixture();
+ // Five registrations from each of ten /64s in one /48 stay under each /64's hourly ten.
+ for(let net=0;net<10;net++)for(let i=0;i<5;i++)assert.equal((await f.register({},`2001:db8:7:${net+1}::${i+1}`)).response.status,201);
+ const refused=await f.register({},'2001:db8:7:99::1');
+ assert.equal(refused.response.status,429);
+ // Other networks still register: the next /48, an ordinary IPv4 address.
+ assert.equal((await f.register({},'2001:db8:8:1::1')).response.status,201);
+ assert.equal((await f.register({},'203.0.113.60')).response.status,201);
  f.db.close();
 });
 

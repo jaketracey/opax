@@ -74,9 +74,12 @@ def evaluate(corpus, status, now, max_age=20):
 def evaluate_mcp(status):
     """Sustained no-account MCP volume is a problem; the tier being switched off is only a note."""
     problems, notes = [], []
-    if status.get('paused_today'):
-        problems.append(f"MCP without an account paused itself today: the daily cap on {status['paused_today']} was reached "
-                        '(MCP_ANON_DAILY_METERED_CAP / MCP_ANON_DAILY_REQUEST_CAP, docs/COMMUNITY.md)')
+    paused = status.get('paused_today') or []
+    if isinstance(paused, str):
+        paused = [paused]
+    if paused:
+        problems.append(f"MCP without an account paused itself today for {', '.join(paused)} (pool:count): the daily cap was reached "
+                        '(MCP_ANON_DAILY_PROGRESS_* / MCP_ANON_DAILY_REQUESTS_*, docs/COMMUNITY.md)')
     if status.get('volume') == 'high':
         problems.append('MCP requests without an account have stayed above the alert line for three hours in a row in the last day; '
                         'check Worker logs for mcp_anon_volume and consider MCP_ANON_ENABLED=false (docs/COMMUNITY.md)')

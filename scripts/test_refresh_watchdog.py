@@ -98,10 +98,11 @@ class Watchdog(unittest.TestCase):
         self.assertEqual(evaluate_mcp({'anonymous': True, 'volume': 'normal', 'hours_over': 0}), ([], ['MCP without an account: on, volume normal']))
         self.assertEqual(evaluate_mcp({'anonymous': False, 'volume': 'normal'})[0], [])
 
-    def test_a_self_paused_mcp_tier_is_a_problem(self):
-        problems, _ = evaluate_mcp({'anonymous': False, 'volume': 'normal', 'paused_today': 'metered'})
+    def test_a_self_paused_mcp_pool_is_a_problem(self):
+        problems, _ = evaluate_mcp({'anonymous': True, 'volume': 'normal', 'paused_today': ['direct:progress']})
         self.assertEqual(len(problems), 1)
-        self.assertIn('daily cap on metered', problems[0])
+        self.assertIn('paused itself today for direct:progress', problems[0])
+        self.assertEqual(evaluate_mcp({'anonymous': True, 'volume': 'normal', 'paused_today': []})[0], [])
 
     def test_openai_ranges_the_worker_lacks_are_listed_and_a_rewrite_holds_them(self):
         text = "export const ANTHROPIC_EGRESS = '160.79.104.0/21'\nexport const OPENAI_EGRESS = '1.2.3.0/24,' +\n  '5.6.7.8/32'\n"

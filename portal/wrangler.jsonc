@@ -90,10 +90,17 @@
     // One client gets 60; an address has a ceiling only, higher for the addresses Claude and ChatGPT share.
     // OFF in production until the tool quality gates pass and the spend guard below is agreed: do not merge this as "true".
     "MCP_ANON_ENABLED": "false",
-    // The automatic daily guard: when either count is reached the no-account tier pauses itself until the
-    // UTC day ends. Metered = calls that can reach the Progress knowledge base; requests = every no-account request.
-    "MCP_ANON_DAILY_METERED_CAP": "3000",
-    "MCP_ANON_DAILY_REQUEST_CAP": "200000",
+    // The automatic daily guard (src/mcp-access.ts), per UTC day. Two pools: the addresses Claude and ChatGPT
+    // share, and everyone else ("direct"). A pool at either cap pauses the no-account tier for its callers until
+    // the day ends. PROGRESS = actual Progress knowledge-base queries, counted one by one (500 a day in all until
+    // the price per query is measured); REQUESTS = every no-account request. NETWORK = one direct network's own
+    // daily allowance (an IPv4 address or an IPv6 /48), so one network cannot spend the direct pool.
+    "MCP_ANON_DAILY_PROGRESS_SHARED": "250",
+    "MCP_ANON_DAILY_PROGRESS_DIRECT": "250",
+    "MCP_ANON_DAILY_PROGRESS_NETWORK": "150",
+    "MCP_ANON_DAILY_REQUESTS_SHARED": "100000",
+    "MCP_ANON_DAILY_REQUESTS_DIRECT": "100000",
+    "MCP_ANON_DAILY_REQUESTS_NETWORK": "20000",
     "MCP_ANON_PER_CLIENT_MINUTE": "60",
     "MCP_ANON_PER_IP_MINUTE": "300",
     "MCP_ANON_SHARED_IP_MINUTE": "1500",
@@ -215,14 +222,13 @@
         { "name": "MODEL_LIMITER", "namespace_id": "2005", "simple": { "limit": 60, "period": 60 } },
         { "name": "MCP_ANON_LIMITER", "namespace_id": "2006", "simple": { "limit": 300, "period": 60 } }
       ],
-      "vars": { "SA_HANSARD_FULL_TEXT":"false", "APP_MINIMUM_VERSION":"0.0.0", "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "MCP_ANON_ENABLED":"true", "MCP_ANON_DAILY_METERED_CAP":"3000", "MCP_ANON_DAILY_REQUEST_CAP":"200000", "MCP_ANON_PER_CLIENT_MINUTE":"60", "MCP_ANON_PER_IP_MINUTE":"300", "MCP_ANON_SHARED_IP_MINUTE":"1500", "MCP_ANON_GLOBAL_MINUTE":"3000", "MCP_ANON_ALERT_HOURLY":"20000", "MCP_ANON_SHARED_RANGES":"", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-11-14-nightly",
+      "vars": { "SA_HANSARD_FULL_TEXT":"false", "APP_MINIMUM_VERSION":"0.0.0", "VOICE_ENABLED":"true", "VOICE_AGENT_ID":"agent_1501m22syqc3fhqsjkxnfy7d0xag", "VOICE_MONTHLY_SECONDS":"3000", "COMMUNITY_ORIGIN":"https://staging.opax.com.au", "COMMUNITY_EMAIL_FROM":"hello@login.opax.com.au", "COMMUNITY_ENABLED":"true", "MCP_ANON_ENABLED":"true", "MCP_ANON_DAILY_PROGRESS_SHARED":"250", "MCP_ANON_DAILY_PROGRESS_DIRECT":"250", "MCP_ANON_DAILY_PROGRESS_NETWORK":"150", "MCP_ANON_DAILY_REQUESTS_SHARED":"100000", "MCP_ANON_DAILY_REQUESTS_DIRECT":"100000", "MCP_ANON_DAILY_REQUESTS_NETWORK":"20000", "MCP_PROGRESS_REPORT":"true", "MCP_ANON_PER_CLIENT_MINUTE":"60", "MCP_ANON_PER_IP_MINUTE":"300", "MCP_ANON_SHARED_IP_MINUTE":"1500", "MCP_ANON_GLOBAL_MINUTE":"3000", "MCP_ANON_ALERT_HOURLY":"20000", "MCP_ANON_SHARED_RANGES":"", "ARAG_ZONE": "aws-ap-southeast-2-1", "CACHE_EPOCH": "2026-11-14-nightly",
         "VIC_ELECTION_HUB_ENABLED": "false",
         "REPORTS_ENABLED": "false",
         "REPORTS_APP_DATA": "true",
         "INDEXNOW_EPOCH_VERSION": "1794596960850",
         "INDEXNOW_ENABLED": "false",
         "INDEXNOW_DRY_RUN": "true", "DAILY_POST_ENABLED": "false", "BLUESKY_POST_ENABLED": "false", "BLOCKED_ASNS": "45102,24429,37963", "GENERATION_BLOCKED_ASNS": "32934", "GENERATION_BLOCKED_CIDRS": "116.179.32.0/21,220.181.108.0/24,119.249.100.0/24,180.97.39.0/24,43.172.194.0/23,43.172.196.0/23,43.172.198.0/24,43.173.173.0/24,43.173.174.0/23,43.173.176.0/22,43.173.180.0/23,43.173.182.0/24,161.120.171.0/24,161.120.172.0/22,161.120.176.0/21,161.120.184.0/22,161.120.188.0/24" },
-      "ratelimits": [],
       // Never post from staging; triggers would otherwise be inherited.
       "triggers": { "crons": [] },
       "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": ["/*"] }

@@ -27,10 +27,10 @@ const answer = () => Response.json(payload);
 const hang = () => new Promise(() => {});
 const filters = { field: { and: [{ prop: 'label', labelset: 'state', label: 'federal' }] } };
 
-function fixture(upstream = answer) {
+function fixture(upstream = answer, extra = {}) {
   const calls = [], writes = [], cache = new Map(), pendingWrites = [], limits = [];
   const ctx = { waitUntil: work => pendingWrites.push(work) };
-  const env = { CACHE_EPOCH: 'fixture', ARAG_KB_TOKEN: 'fixture' };
+  const env = { CACHE_EPOCH: 'fixture', ARAG_KB_TOKEN: 'fixture', ...extra };
   const context = {
     URL, URLSearchParams, Request, Response, AbortSignal, searchFind, cacheKeyParams, compareSearchResults,
     normalizePassage, passageWindow, speechPresentation, joinMixedSpeakers, pressTitle, isWitness,
@@ -367,4 +367,21 @@ test('unified document search returns no-store and Retry-After when both modes f
   assert.equal(response.status, 503);
   assert.equal(response.headers.get('retry-after'), '5');
   assert.equal(response.headers.get('cache-control'), 'no-store');
+});
+
+test('each Progress query passes the request meter first, the keyword retry marked; a cached window passes none', async () => {
+  const seen = [];
+  const f = fixture(call => call.body.features.includes('semantic') ? Response.json({}, { status: 500 }) : answer(), { KB_METER: async (path, hedge) => { seen.push([path, hedge]); } });
+  const first = await f.run();
+  assert.equal(first.data.mode_used, 'keyword');
+  assert.equal(f.calls.length, 2);
+  assert.deepEqual(seen, [['/find', false], ['/find', true]]);
+  await f.run();
+  assert.equal(f.calls.length, 2, 'served from the window cache');
+  assert.equal(seen.length, 2, 'a cached answer spends nothing');
+  // A refused query is never sent, and the search gives up rather than retrying past the refusal.
+  const refused = fixture(answer, { KB_METER: async () => { throw new Error('allowance spent'); } });
+  const { response } = await refused.run();
+  assert.equal(response.status, 503);
+  assert.equal(refused.calls.length, 0);
 });

@@ -1813,9 +1813,10 @@
       address, not yours. A client running on your own computer connects from your address.</p>
       <p>OPAX uses the IP address, and a random session number it gives the client when it connects,
       to limit request rates: 60 tool requests a minute for one client, with a higher ceiling for one
-      address. The counters are stored as hashes and deleted after they expire. OPAX also keeps a
-      count of how many requests arrived each hour and each day without an account, with nothing
-      about who sent them. Requests are logged like any other request to OPAX's server; the log records that the
+      address, and a daily allowance for each network. The counters are stored as hashes and deleted
+      after they expire. OPAX also keeps a count of how many requests and record searches arrived each
+      hour and each day without an account, split only by whether they came from an assistant maker's
+      servers, with nothing about who sent them. Requests are logged like any other request to OPAX's server; the log records that the
       service was called and the outcome, not the tool or its inputs. Searches of speeches and
       releases made through a tool go to Progress in the same way as a search on the website. No
       tool sends anything to a language model.</p>
