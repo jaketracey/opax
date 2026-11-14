@@ -76,7 +76,7 @@ export default function ExploreHub() {
         {offline ? (
           <OfflineLine
             savedAt={null}
-            message="You're offline. The record quiz still works."
+            message="You’re offline. The record quiz still works."
             testID="explore-offline"
           />
         ) : null}

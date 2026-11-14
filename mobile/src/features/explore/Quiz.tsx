@@ -42,7 +42,7 @@ import { ResultView } from './quiz/ResultView';
 
 type Mode = 'intro' | 'round' | 'result' | 'single';
 const quizName = toolName('quiz');
-const todayName = "Today's question";
+const todayName = 'Today’s question';
 
 /**
  * The record quiz: one screen, four phases (intro, a round of eight with
@@ -276,7 +276,7 @@ export default function Quiz({
         {offline && mode === 'intro' ? (
           <OfflineLine
             savedAt={null}
-            message="You're offline. The record quiz still works."
+            message="You’re offline. The record quiz still works."
             testID="quiz-offline"
           />
         ) : null}

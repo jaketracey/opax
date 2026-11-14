@@ -288,7 +288,7 @@ describe('Account › Ask', () => {
     act(() => byID(root, 'ask-settings-delete-all')[0]!.props.onPress());
     const [title, actions] = jest.mocked(confirmAction).mock.calls[0]!;
     expect(title).toBe(
-      "Delete all conversations?\nThey'll also be removed from your OPAX account.",
+      'Delete all conversations?\nThey’ll also be removed from your OPAX account.',
     );
     await act(async () => actions[0]!.onPress());
     expect(deleteAllRemoteChats).toHaveBeenCalled();

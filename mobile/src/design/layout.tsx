@@ -990,7 +990,7 @@ function withOffline(
       <Icon name={offlineSymbol} size={15} maxScale={1.5} tone="inkSoft" />
       <Text wordSafe variant="secondary" style={{ flexShrink: 1 }}>
         {offline.savedAt === null
-          ? "You're offline."
+          ? 'You’re offline.'
           : copy.offline(offline.savedAt)}
       </Text>
     </View>,

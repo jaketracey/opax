@@ -15,7 +15,7 @@ import {
  */
 export const reportAddress = 'corrections@opax.com.au';
 export const reportReasons = [
-  "A source doesn't say this",
+  'A source doesn’t say this',
   'A date, name or figure is wrong',
   'It isn’t neutral',
   'Something else',

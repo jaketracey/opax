@@ -380,12 +380,15 @@ test.each([undefined, null, result])(
   },
 );
 
-test('a district result on a region is discarded without losing its members', () => {
-  expect(decodeSeat({ ...region, current_result: result })).toEqual({
-    ...decodeSeat(region),
-    current_result: undefined,
-  });
-});
+test.each([result, {}, 'unavailable'])(
+  'any current result on a region is discarded without losing its members (%#)',
+  (current_result) => {
+    expect(decodeSeat({ ...region, current_result })).toEqual({
+      ...decodeSeat(region),
+      current_result: undefined,
+    });
+  },
+);
 
 test('bad required seat fields still fail when the current result is also bad', () => {
   expect(() =>

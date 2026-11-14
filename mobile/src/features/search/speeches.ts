@@ -25,7 +25,7 @@ export const speechSorts = [
 export type SpeechSort = (typeof speechSorts)[number]['value'];
 
 export const SPEECH_RULE =
-  "Most relevant first; Newest and Oldest sort by the record's date.";
+  'Most relevant first; Newest and Oldest sort by the record’s date.';
 export const SEARCH_NOTES = [
   'Not every speech is labelled with a topic yet.',
   'Some parliaments are not searchable yet: Tasmania, Western Australia and the Northern Territory.',

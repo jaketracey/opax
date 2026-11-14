@@ -68,7 +68,7 @@ const PATH = '/bills?view=divisions';
 const TITLE = 'Votes in parliament';
 const PAGE_SIZE = 16;
 const RULE =
-  'Every recorded vote on a bill, newest first, grouped by bill. With "Leave out procedural votes" on, procedural motions such as time limits, closure, suspension of standing orders and adjournment are hidden. Votes on a bill\'s passage, readings and amendments stay, including those taken under a time limit.';
+  'Every recorded vote on a bill, newest first, grouped by bill. With "Leave out procedural votes" on, procedural motions such as time limits, closure, suspension of standing orders and adjournment are hidden. Votes on a bill’s passage, readings and amendments stay, including those taken under a time limit.';
 const NOTE =
   'A vote here is a division: a question decided by counting members. Most questions are decided on the voices, without a recorded vote.';
 

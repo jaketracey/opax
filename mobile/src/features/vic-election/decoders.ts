@@ -240,6 +240,18 @@ const member = shape({
     return votes.length <= 3 ? votes : invalid();
   },
 });
+/** Invalid data reads as missing; any other error still throws. */
+const invalidAsMissing =
+  <T>(decode: (v: unknown) => T) =>
+  (v: unknown): T | undefined => {
+    try {
+      return decode(v);
+    } catch (error) {
+      if (!(error instanceof ApiError) || error.code !== 'invalid-data')
+        throw error;
+      return undefined;
+    }
+  };
 const seat = shape({
   schema_version: version,
   state: decodeElectionState,
@@ -273,16 +285,13 @@ export const decodeSeat = (v: unknown) => {
   if (!s.members.length || (s.kind === 'region' && s.result !== null))
     invalid();
   // Current results are optional enrichment, as on the overview. A bad
-  // result must not hide the seat's members and historical records.
-  try {
-    const current_result = optional(currentContest)(object(v).current_result);
-    if (s.kind === 'region' && current_result) invalid();
-    return { ...s, current_result };
-  } catch (error) {
-    if (!(error instanceof ApiError) || error.code !== 'invalid-data')
-      throw error;
-    return { ...s, current_result: undefined };
-  }
+  // result must not hide the seat's members and historical records. They are
+  // district contests: a region has none, so anything sent with one is dropped.
+  const current_result =
+    s.kind === 'district'
+      ? invalidAsMissing(optional(currentContest))(object(v).current_result)
+      : undefined;
+  return { ...s, current_result };
 };
 const findSeat = (v: unknown) => {
   const o = object(v);

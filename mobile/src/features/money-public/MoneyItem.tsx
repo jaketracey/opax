@@ -522,7 +522,7 @@ async function readMoneyItem(
           notes: [
             CONTRACTS_CAVEAT,
             contracts.length < s.count
-              ? `${contracts.length.toLocaleString('en-AU')} of the ${counted(s.count, 'contract')} ${contracts.length === 1 ? 'is' : 'are'} listed in this agency's file.`
+              ? `${contracts.length.toLocaleString('en-AU')} of the ${counted(s.count, 'contract')} ${contracts.length === 1 ? 'is' : 'are'} listed in this agency’s file.`
               : '',
             s.organisation ? '' : privateNote,
           ].filter(Boolean),

@@ -108,7 +108,7 @@ function grantNotes(index: GrantIndex) {
       ? `The list shows the ${index.programs.length.toLocaleString('en-AU')} largest of ${c.programsTotal.toLocaleString('en-AU')} programs.`
       : null,
     c.undisclosedDollars
-      ? `${formatMoneyCompact(c.undisclosedDollars)} went to recipients the register doesn't name.`
+      ? `${formatMoneyCompact(c.undisclosedDollars)} went to recipients the register doesn’t name.`
       : null,
     index.jur === 'federal' ? FUTURE_YEARS_NOTE : null,
     index.meta.threshold,
@@ -526,7 +526,7 @@ function SeatView({ seat, state }: { seat: string; state?: string }) {
           (grants.record?.data.missing ||
             (grants.record && !grants.grants.length)) ? (
             <EmptyState
-              message={`The individual grants for ${seat} aren't listed yet.`}
+              message={`The individual grants for ${seat} aren’t listed yet.`}
               testID="grants-seat-empty"
             />
           ) : null

@@ -44,7 +44,7 @@ const INVITATIONS = {
   title: 'The department’s invitation list, November 2025',
 };
 export const SEPARATE_LISTS =
-  "Invitations and awards are separate lists. Don't add them together.";
+  'Invitations and awards are separate lists. Don’t add them together.';
 export const LATEST_VALUES =
   'Latest award values, not payments made that year.';
 

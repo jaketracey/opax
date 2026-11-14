@@ -222,7 +222,7 @@ export function Items({
       ) : null}
       {total ? (
         <Group gap={rhythm.tight}>
-          <Text variant="secondary">{`${total} ${total === 1 ? 'recommendation has' : 'recommendations have'} a status published by government, shown in the government's own words.`}</Text>
+          <Text variant="secondary">{`${total} ${total === 1 ? 'recommendation has' : 'recommendations have'} a status published by government, shown in the government’s own words.`}</Text>
           {counts.map(({ label, count }) => (
             <Text
               key={label}

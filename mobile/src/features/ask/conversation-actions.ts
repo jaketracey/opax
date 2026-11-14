@@ -63,7 +63,7 @@ export async function deleteAllConversations(status: ChatAccount) {
 }
 export const deleteAllCopy = {
   title: 'Delete all conversations?',
-  account: "They'll also be removed from your OPAX account.",
+  account: 'They’ll also be removed from your OPAX account.',
 } as const;
 /** The confirmation every "Delete all" goes through (Conversations, Account › Ask). */
 export function confirmDeleteAll(
