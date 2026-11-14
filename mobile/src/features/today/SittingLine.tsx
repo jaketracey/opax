@@ -10,6 +10,8 @@ import { minimumTarget, radii, rhythm, textStyles } from '../../design/tokens';
 import { presentSource } from '../../navigation/sheets';
 import { sittingLine, sittingSources } from './sitting';
 import { useTodayRead } from './TodayBlock';
+import { TermIn, withTermAction } from '../../design/term';
+import { sittingTerm } from '../learn/term-map';
 
 /** The sitting calendar's read: the saved or fetched file, or null for none. */
 export interface SittingRead {
@@ -81,11 +83,17 @@ export function SittingText({
     textStyles.secondary.lineHeight,
   );
   const band = Math.max(0, (minimumTarget - textHeight) / 2);
+  const term = sittingTerm(text);
+  const termAction = withTermAction([], term?.term);
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={text}
       accessibilityHint="Opens the sources"
+      accessibilityActions={term ? termAction.actions : undefined}
+      onAccessibilityAction={(event) =>
+        void termAction.handle(event.nativeEvent.actionName)
+      }
       testID="today-sitting"
       onPress={() => presentSource(details, { testID: 'today-sitting' })}
       style={({ pressed }) => [
@@ -109,7 +117,7 @@ export function SittingText({
             setTextHeight(total);
         }}
       >
-        {text}
+        <TermIn text={text} term={term?.term} phrase={term?.phrase} />
       </Text>
     </Pressable>
   );

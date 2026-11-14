@@ -56,6 +56,8 @@ import {
   textStyles,
   type Accent,
 } from './tokens';
+import type { TermMatch } from '../features/learn/term-map';
+import { TermIn, withTermAction } from './term';
 
 const chevron = 'chevron.right';
 const checkmark = 'checkmark';
@@ -1107,6 +1109,8 @@ export interface DivisionRowProps {
    * VoiceOver hears it in place of the counts. Off by default.
    */
   votesLine?: string;
+  /** The glossary term in `meta` ("Second reading"), marked inline. */
+  metaTerm?: TermMatch | null;
 }
 export function DivisionRow({
   title,
@@ -1125,7 +1129,12 @@ export function DivisionRow({
   split,
   bar = true,
   votesLine,
+  metaTerm,
 }: DivisionRowProps) {
+  const termAction = withTermAction(
+    href ? [] : rowAccessibilityActions(menu ?? []),
+    metaTerm?.term,
+  );
   const [localExpanded, setExpanded] = useState(false);
   const expanded = controlledExpanded ?? localExpanded;
   const toggleExpanded = onToggle ?? (() => setExpanded((value) => !value));
@@ -1174,13 +1183,15 @@ export function DivisionRow({
       testID={testID}
       onPress={expandable ? () => toggleExpanded() : undefined}
       accessibilityActions={
-        href ? undefined : rowAccessibilityActions(menu ?? [])
+        // A linked row's own actions come from its link; it adds only the term's.
+        href && !metaTerm ? undefined : termAction.actions
       }
-      onAccessibilityAction={(event) =>
+      onAccessibilityAction={(event) => {
+        if (termAction.handle(event.nativeEvent.actionName)) return;
         menuLeaves(menu ?? [])
           .find((action) => action.title === event.nativeEvent.actionName)
-          ?.onPress()
-      }
+          ?.onPress();
+      }}
       style={({ pressed }) => [
         styles.row,
         cellStyle,
@@ -1192,7 +1203,7 @@ export function DivisionRow({
           {title}
         </Text>
         <Text wordSafe variant="secondary">
-          {meta}
+          <TermIn text={meta} term={metaTerm?.term} phrase={metaTerm?.phrase} />
         </Text>
         <StatusCapsule status={outcome} />
         {bar ? (

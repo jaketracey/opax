@@ -186,6 +186,31 @@ export function findTermWords(
 }
 
 /**
+ * One term's words inside text the caller already draws in a `<Text>`:
+ * the words before, the marked term, the words after. Plain text when the
+ * words aren't there.
+ */
+export function TermIn({
+  text,
+  term,
+  phrase,
+}: {
+  text: string;
+  term: TermId | null | undefined;
+  phrase?: string;
+}) {
+  const found = term ? findTermWords(text, term, phrase) : null;
+  if (!term || !found) return <>{text}</>;
+  return (
+    <>
+      {text.slice(0, found.start)}
+      <Term id={term}>{text.slice(found.start, found.end)}</Term>
+      {text.slice(found.end)}
+    </>
+  );
+}
+
+/**
  * Standing text that holds one term: "2,929 divisions voted in". VoiceOver
  * reads the whole line with the hint "Explains division"; activating it
  * opens the answer. Without the words in the text it is a plain `Text`.
@@ -197,20 +222,21 @@ export function TermText({
   testID,
   ...props
 }: Omit<TextProps, 'children'> & {
-  term: TermId;
+  /** None, or a term not in the words: a plain `Text`. */
+  term: TermId | null | undefined;
   phrase?: string;
   children: string;
 }) {
   const on = useUnderlineTerms();
-  const found = on ? findTermWords(children, term, phrase) : null;
-  const first = useFirstUse(found ? term : null);
-  const a11y = termA11y(term);
-  if (!found || !first)
+  const found = on && term ? findTermWords(children, term, phrase) : null;
+  const first = useFirstUse(found && term ? term : null);
+  if (!term || !found || !first)
     return (
       <Text {...props} testID={testID}>
         {children}
       </Text>
     );
+  const a11y = termA11y(term);
   return (
     <Text
       {...props}
@@ -235,7 +261,7 @@ export function TermText({
  * standing text whose only job is the term.
  */
 export function termA11y(id: TermId) {
-  const name = `explain-${id}`;
+  const name = termActionName(id);
   return {
     accessibilityActions: [
       { name, label: explainAction(glossaryTerm(id).word) },
@@ -246,6 +272,27 @@ export function termA11y(id: TermId) {
         event.nativeEvent.actionName === 'activate'
       )
         openTerm(id);
+    },
+  };
+}
+
+export const termActionName = (id: TermId) => `explain-${id}`;
+
+/**
+ * A row's own actions with the term's added: `actions` for its rotor list,
+ * and `handle(name)` true when the term's action was the one taken.
+ */
+export function withTermAction<A extends { name: string; label?: string }>(
+  actions: readonly A[] | undefined,
+  id: TermId | null | undefined,
+) {
+  const extra = id ? termA11y(id).accessibilityActions : [];
+  return {
+    actions: [...(actions ?? []), ...extra],
+    handle: (name: string) => {
+      if (!id || name !== termActionName(id)) return false;
+      openTerm(id);
+      return true;
     },
   };
 }

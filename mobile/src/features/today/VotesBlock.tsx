@@ -7,6 +7,7 @@ import { billRoute, divisionHistoryRoute } from '../../navigation/routes';
 import { votesSources } from './sources';
 import { blockState, reportOf, TodayBlock, useTodayRead } from './TodayBlock';
 import { recentReadingVotes, voteMeta, type ReadingVote } from './votes';
+import { stageTerm } from '../learn/term-map';
 
 /**
  * How parliament voted (today.md 5.8): three second- and third-reading
@@ -77,6 +78,7 @@ function VoteRow({ vote, index }: { vote: ReadingVote; index: number }) {
     <DivisionRow
       title={vote.name}
       meta={voteMeta(vote)}
+      metaTerm={stageTerm(voteMeta(vote))}
       outcome={vote.outcomeWord}
       ayes={vote.ayes}
       noes={vote.noes}

@@ -1,4 +1,9 @@
-import { Linking, View, type TextProps } from 'react-native';
+import {
+  Linking,
+  View,
+  type AccessibilityActionEvent,
+  type TextProps,
+} from 'react-native';
 import { Pressable } from './pressable';
 import type { Href } from 'expo-router';
 import { useRecordLink } from '../navigation/record-link';
@@ -22,6 +27,8 @@ import {
   type Accent,
   type TextVariant,
 } from './tokens';
+import type { TermId } from '../features/learn/glossary';
+import { TermIn, withTermAction } from './term';
 
 /** A named record inside another target keeps its own destination. */
 export function RecordNameLink({
@@ -121,6 +128,8 @@ export interface StatTileProps {
   label: string;
   ink?: Accent;
   onPress?: () => void;
+  /** The glossary term in `label` ("divisions"), marked inline. */
+  term?: TermId | null;
   testID?: string;
 }
 const statChevron = 'chevron.right';
@@ -129,8 +138,10 @@ export function StatTile({
   label,
   ink,
   onPress,
+  term,
   testID,
 }: StatTileProps) {
+  const termAction = withTermAction([], term);
   const highlight = useRowHighlight();
   const body = (
     <>
@@ -142,7 +153,7 @@ export function StatTile({
         {value}
       </Text>
       <Text wordSafe variant="footnote">
-        {label}
+        <TermIn text={label} term={term} />
         {onPress ? (
           <>
             {'\u00a0'}
@@ -155,6 +166,13 @@ export function StatTile({
   const props = {
     accessible: true,
     accessibilityLabel: spokenFigures(`${value}, ${label}`),
+    ...(term
+      ? {
+          accessibilityActions: termAction.actions,
+          onAccessibilityAction: (event: AccessibilityActionEvent) =>
+            void termAction.handle(event.nativeEvent.actionName),
+        }
+      : {}),
     testID,
   };
   return onPress ? (

@@ -129,6 +129,8 @@ import { useSpeechSpeakers } from '../records/speaker';
 import { useCatalogRecord } from './useCatalogRecord';
 import { memberPosition, useMyMemberVotes } from './your-mp-vote';
 import { sydneyDay } from '../today/rules';
+import { TermIn, TermText, withTermAction } from '../../design/term';
+import { chamberTerm, stageTerm } from '../learn/term-map';
 
 type BillRecord = Awaited<ReturnType<typeof catalogs.billFor>>;
 type BillView = BillRecord['data'];
@@ -830,9 +832,14 @@ function BillHead({
           </Text>
         ) : null}
         {meta ? (
-          <Text variant="secondary" wordSafe testID="bill-introduced">
+          <TermText
+            variant="secondary"
+            wordSafe
+            testID="bill-introduced"
+            {...chamberTermProps(meta)}
+          >
             {meta}
-          </Text>
+          </TermText>
         ) : null}
       </View>
       <Sponsors identity={identity} directory={directory} />
@@ -993,6 +1000,12 @@ type IndexRow = NonNullable<ReturnType<typeof catalogs.billIndexRow>> & {
   status_stage?: string | null;
 };
 
+/** The chamber's glossary term in the meta line, for `TermText`. */
+function chamberTermProps(meta: string) {
+  const match = chamberTerm(meta);
+  return { term: match?.term ?? null, phrase: match?.phrase };
+}
+
 /** The meta line: "Introduced 17 Sep 2026 · House of Representatives". */
 function metaLine(bill: {
   status: string;
@@ -1052,9 +1065,14 @@ function SeededHead({ row }: { row: IndexRow }) {
           </Text>
         ) : null}
         {meta ? (
-          <Text variant="secondary" wordSafe testID="bill-introduced">
+          <TermText
+            variant="secondary"
+            wordSafe
+            testID="bill-introduced"
+            {...chamberTermProps(meta)}
+          >
             {meta}
-          </Text>
+          </TermText>
         ) : null}
       </View>
       {members.length || display.sponsor_party ? (
@@ -1796,6 +1814,7 @@ function BillVoteRow({
     if (focus) targets.scrollTo(anchor, true);
   }, [focus, targets]);
   const title = divisionTitle(division);
+  const titleTerm = stageTerm(title);
   const meta = divisionMeta(
     division,
     [chamberLabel(division.house), short(division.date)].join(' · '),
@@ -1846,6 +1865,10 @@ function BillVoteRow({
         ]
       : []),
   ];
+  const termAction = withTermAction(
+    actions.map((a) => ({ name: a.title, label: a.title })),
+    titleTerm?.term,
+  );
   return (
     <View ref={anchor} collapsable={false} testID={id} style={styles.vote}>
       <ContextMenu items={actions}>
@@ -1863,15 +1886,13 @@ function BillVoteRow({
             .join(', ')}
           accessibilityHint="Shows the party votes and the question"
           accessibilityState={{ expanded }}
-          accessibilityActions={actions.map((a) => ({
-            name: a.title,
-            label: a.title,
-          }))}
-          onAccessibilityAction={(event) =>
+          accessibilityActions={termAction.actions}
+          onAccessibilityAction={(event) => {
+            if (termAction.handle(event.nativeEvent.actionName)) return;
             actions
               .find((a) => a.title === event.nativeEvent.actionName)
-              ?.onPress()
-          }
+              ?.onPress();
+          }}
           onPress={onToggle}
           testID={`${id}-more`}
           style={({ pressed }) => [
@@ -1889,7 +1910,11 @@ function BillVoteRow({
                 testID={`${id}-title`}
                 style={styles.grow}
               >
-                {title}
+                <TermIn
+                  text={title}
+                  term={titleTerm?.term}
+                  phrase={titleTerm?.phrase}
+                />
               </Text>
             </View>
             <Text variant="secondary" wordSafe>
