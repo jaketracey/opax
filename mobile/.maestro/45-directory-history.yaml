@@ -182,6 +182,13 @@ name: 45 Electorates, dated representation, bill filters and Votes in parliament
 - tapOn:
     id: filters-row-procedural
 - tapOn: Done
+# The count heads the list, above the rows the search scrolled to.
+- scrollUntilVisible:
+    element:
+      id: division-history-count
+    direction: UP
+    speed: 20
+    timeout: 60000
 - extendedWaitUntil:
     visible:
       id: division-history-count
