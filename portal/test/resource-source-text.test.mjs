@@ -43,7 +43,7 @@ test('mixed resource/native envelope preserves participants without a personal i
 });
 
 test('new corpus source pages show t-body text and keep machine summaries separate',async()=>{
-  const result=await readSource({'t-body':field('Invitations are not awarded grants.'),'da-summary-t-body':field('Machine summary')},undefined,{extra:{metadata:{word_count:2400}}});
+  const result=await readSource({'t-body':field('Invitations are not awarded grants.'),'da-summary-t-body':field('Machine summary')});
   assert.equal(result.text,'Invitations are not awarded grants.');
   assert.equal(result.summary,'Machine summary');
   assert.equal(result.labels.kind,'research_report');
