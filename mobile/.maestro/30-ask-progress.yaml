@@ -5,6 +5,7 @@ name: 30 Ask progress, Stop with and without a draft, Try again and the busy wai
     permissions:
       all: unset
     clearState: true
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-ask
 - assertVisible:

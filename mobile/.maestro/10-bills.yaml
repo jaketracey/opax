@@ -9,6 +9,7 @@ name: 10 Filter and search the bill list, then open a bill
 # full-visibility check, so whole-element checks and tap targets use speed 20
 # (about half a screen per swipe).
 - launchApp
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-bills
 - extendedWaitUntil:

@@ -1,16 +1,32 @@
 appId: au.com.opax.app
 name: 04 Saved catalogs and bill with the fixture stopped, no saved search response
 ---
-# scripts/e2e.sh warms the catalogs and bill before stopping the fixture.
+# scripts/e2e-device.sh runs support/offline-warm.yaml (the bill, Search and
+# the profile, read online) and then stops the fixture. This journey covers a
+# bill read minutes ago, opened offline, then pulled to refresh. A copy saved
+# hours ago and opened offline without a pull takes the same client fallback
+# (src/api/client.ts, a stale saved copy with no staleReason): tests/api.test.ts
+# covers that read, and tests/bills-ui.test.tsx a refresh that fails.
 - launchApp
+# The launch cover takes touches until it hands over, and would take the pull.
+- runFlow: support/launch-ready.yaml
 - openLink: opax://bill/au-federal-r7534
 - extendedWaitUntil:
     visible:
       id: bill-title
     timeout: 60000
+# The warm read is a few minutes old, inside the bill file's max-age (the
+# fixture sends 300 s), so the page opens on that copy as current. A pull to
+# refresh forces a read, which fails with the fixture stopped: the page keeps
+# the saved copy and says it is offline, however old the copy is.
+- swipe:
+    start: 50%, 30%
+    end: 50%, 85%
+    duration: 800
 - scrollUntilVisible:
     element:
       id: bill-offline
+    direction: UP
     timeout: 60000
 - assertVisible:
     id: bill-offline
@@ -21,12 +37,13 @@ name: 04 Saved catalogs and bill with the fixture stopped, no saved search respo
     env:
       QUERY: Anthony Albanese
       PREFIX: 04-offline
+# A full name has one match: the person is the top suggestion.
 - scrollUntilVisible:
     element:
-      id: search-suggestion-person-.*
+      id: search-top-suggestion
     timeout: 30000
 - tapOn:
-    id: search-suggestion-person-.*
+    id: search-top-suggestion
 - extendedWaitUntil:
     visible:
       id: person-electorate

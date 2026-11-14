@@ -4,10 +4,7 @@ name: 49 Explore from Today, words per dollar, the Time machine and who owns whi
 - launchApp:
     clearState: true
     permissions: {}
-- extendedWaitUntil:
-    notVisible:
-      id: launch-handoff
-    timeout: 30000
+- runFlow: support/launch-ready.yaml
 - assertVisible:
     id: today-screen
 # Today's Explore entry opens the hub.

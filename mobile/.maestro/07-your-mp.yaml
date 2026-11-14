@@ -3,6 +3,7 @@ name: 07 Choose an electorate by member name and restore it after relaunch
 ---
 - launchApp:
     clearState: true
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-your-mp
 # No seat: the invitation, never the chooser in place.
@@ -96,6 +97,7 @@ name: 07 Choose an electorate by member name and restore it after relaunch
       END: your-mp-end
       PREFIX: 07-home
 - launchApp
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-your-mp
 - extendedWaitUntil:

@@ -2,6 +2,7 @@ appId: au.com.opax.app
 name: People lane profile helper
 ---
 - launchApp: { permissions: {} }
+- runFlow: launch-ready.yaml
 - tapOn:
     id: tab-search
 - runFlow:

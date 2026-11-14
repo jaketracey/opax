@@ -23,19 +23,33 @@ name: 03 Read a sourced profile
     text: Member for Grayndler.*
 - assertNotVisible: .*· federal.*
 - takeScreenshot: ${EVIDENCE}/03-profile
+# The source line is the page's last row, so it never reaches the centre:
+# centring spent five more swipes and ran past the 20 s default with the row
+# in full view (iOS 18.4/18.6, 14 Nov 2026). Scroll it on screen, then one
+# swipe settles the page at its end, where the row sits clear of the tab bar
+# for the tap below.
 - scrollUntilVisible:
     element:
       id: person-figures-source
-    centerElement: true
+    timeout: 60000
+- swipe:
+    start: 50%, 60%
+    end: 50%, 30%
 - assertVisible:
     id: person-figures-source
 - takeScreenshot: ${EVIDENCE}/03-source
 # The strip's source line covers the identity rows and the figures; its
-# sheet lists every source with its own date and the original records. Sources open in the in-app browser once the sheet has
-# gone; e2e shows the destination locally.
+# sheet lists every source with its own date and the original records. An
+# outside original opens in the in-app browser above the sheet; e2e shows the
+# destination locally.
 - tapOn:
     id: person-figures-source
-- assertVisible: Profile sources
+# Every source sheet is titled "Sources" (the line's own title is not
+# drawn), so the sheet is checked as this line's own by its id.
+- extendedWaitUntil:
+    visible:
+      id: person-figures-source-sheet
+    timeout: 15000
 - takeScreenshot: ${EVIDENCE}/03-source-sheet
 - tapOn: .*OpenAustralia parliamentary service records.*
 - extendedWaitUntil:
@@ -58,7 +72,23 @@ name: 03 Read a sourced profile
 - assertVisible:
     id: source-destination-url
 - takeScreenshot: ${EVIDENCE}/03-source-destination-end
+# An outside original opens above the Sources sheet, which stays beneath it
+# (tests/sheets.test.tsx): Done returns to the sheet, and the sheet's own
+# Done returns to the profile.
 - tapOn: Done
+- extendedWaitUntil:
+    notVisible:
+      id: source-destination-url
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: person-figures-source-sheet
+    timeout: 15000
+- tapOn: Done
+- extendedWaitUntil:
+    notVisible:
+      id: person-figures-source-sheet
+    timeout: 15000
 # Share uses the canonical web path; e2e carries a non-resolving origin.
 - tapOn: Share Anthony Albanese
 - assertVisible: https://opax.invalid/subject/person/anthony-albanese

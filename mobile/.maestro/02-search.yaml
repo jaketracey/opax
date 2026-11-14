@@ -4,6 +4,7 @@ name: 02 Search the public people catalog
 - launchApp:
     clearState: true
     permissions: {}
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - runFlow:

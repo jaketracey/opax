@@ -6,10 +6,7 @@ name: 50 Community public reading, guidelines and discussion actions
     permissions: {}
 - assertVisible:
     id: today-screen
-- extendedWaitUntil:
-    notVisible:
-      id: launch-handoff
-    timeout: 30000
+- runFlow: support/launch-ready.yaml
 - takeScreenshot: ${EVIDENCE}/50-today-entry
 - tapOn: Account
 - takeScreenshot: ${EVIDENCE}/50-account-entry

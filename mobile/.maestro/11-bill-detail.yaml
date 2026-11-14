@@ -16,6 +16,7 @@ name: 11 Read a bill, its machine summary, votes and speeches
 # steps on the bill page first checks the page is still shown, so a lost
 # page fails at once rather than after a long scroll.
 - launchApp
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-bills
 - extendedWaitUntil:
@@ -248,6 +249,7 @@ name: 11 Read a bill, its machine summary, votes and speeches
 
 # An exposure draft: released, not introduced, with its consultation.
 - launchApp
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-bills
 - extendedWaitUntil:

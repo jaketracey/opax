@@ -172,6 +172,13 @@ for journey in "$@"; do
   fi
 done
 if [ "$OFFLINE" = 1 ]; then
+  # Journey 04 reads from the disk cache. Read its bill, Search and profile
+  # online first, whatever ran before it (01-03, 04 alone or the suite).
+  assert_device_lock
+  rc=0
+  qa_maestro_run "$OUT/offline-warm-maestro.log" "$OUT/offline-warm-maestro" --device "$UDID" test --test-output-dir "$OUT/offline-warm-maestro" --debug-output "$OUT/offline-warm-maestro" --format junit --output "$OUT/offline-warm-report.xml" -e EVIDENCE=screenshots -e FIXTURE_PORT="${OPAX_FIXTURE_PORT:-8910}" -e REMOTE_SHARE_UI="${OPAX_REMOTE_SHARE_UI:-false}" .maestro/support/offline-warm.yaml || rc=$?
+  printf 'offline-warm exit=%s\n' "$rc" >> "$OUT/maestro-exits.txt"
+  if [ "$rc" != 0 ]; then cat "$OUT/offline-warm-maestro.log" >&2; [ "$suite_rc" != 0 ] || suite_rc=$rc; fi
   stop_fixture
   assert_device_lock
   rc=0

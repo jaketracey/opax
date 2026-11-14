@@ -566,6 +566,7 @@ for (const original of files(source)) {
 // Android helper replacements occupy the same relative paths as their shared
 // callers. Root geometry helpers have no support/ prefix in the iOS suite.
 for (const name of [
+  'back',
   'restore-tab-bar',
   'search-dismiss',
   'search-keyboard-reveal',

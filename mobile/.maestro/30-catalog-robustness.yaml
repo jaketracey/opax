@@ -5,6 +5,7 @@ name: 30 People and Person survive a null optional roster field
 # optional speeches field differs from the pinned public roster.
 - launchApp:
     clearState: true
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - assertVisible:

@@ -6,6 +6,7 @@ name: 12 Search empty states with a way on, and native electorate suggestions
 # the query.
 - launchApp:
     clearState: true
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - runFlow:
@@ -44,6 +45,7 @@ name: 12 Search empty states with a way on, and native electorate suggestions
 - takeScreenshot: ${EVIDENCE}/12-empty-all-again
 - launchApp:
     clearState: true
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - runFlow:
@@ -51,19 +53,18 @@ name: 12 Search empty states with a way on, and native electorate suggestions
     env:
       QUERY: Grayndler
       PREFIX: 12-electorate
-# Swipe on the content: iOS visibility checks can see rows behind the keyboard.
-- swipe:
-    start: 90%, 40%
-    end: 90%, 20%
-- scrollUntilVisible:
-    element:
-      id: search-suggestion-electorate-.*
-    timeout: 90000
-    centerElement: true
-    visibilityPercentage: 1
+# A place name with one strong match draws it as the top suggestion, first
+# under the field and in no Electorates group (ranking.ts suggestionList), so
+# there is no search-suggestion-electorate-* row. The old swipe here pushed
+# that row under the search bar.
+- extendedWaitUntil:
+    visible:
+      id: search-top-suggestion
+      text: Grayndler, .*
+    timeout: 30000
 - takeScreenshot: ${EVIDENCE}/12-electorate-suggestion
 - tapOn:
-    id: search-suggestion-electorate-.*
+    id: search-top-suggestion
 - extendedWaitUntil:
     visible:
       id: electorate-name

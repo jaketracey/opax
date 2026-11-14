@@ -195,7 +195,8 @@ if [ "${MOCK_NO_LOCK:-0}" != 1 ]; then
   owner_group=$(sed -n 's/^pgid=//p' "$OPAX_PASTE_LOCK/owner")
   [ "$own_group" = "$owner_group" ] || { echo driver-outside-group >> "$SCRATCH/violations"; exit 94; }
 fi
-phase=online; [[ "$*" != *04-offline.yaml* ]] || phase=offline
+phase=online
+case "$*" in *offline-warm.yaml*) phase=warm ;; *04-offline.yaml*) phase=offline ;; esac
 { [ -f "$OPAX_PASTE_LOCK/owner" ] || [ "${MOCK_NO_LOCK:-0}" = 1 ]; } && [ -d "$SCRATCH/booted" ] && [ "${MOCK_IN_GATE:-0}" = 1 ] && [ -e "$SCRATCH/$MOCK_LANE.gate-active" ] || { echo maestro-unlocked >> "$SCRATCH/violations"; exit 92; }
 if [ "${MOCK_NO_LOCK:-0}" = 1 ]; then echo none; else sed -n 's/^token=//p' "$OPAX_PASTE_LOCK/owner"; fi > "$SCRATCH/$MOCK_LANE.$phase.token"
 lock=held; [ "${MOCK_NO_LOCK:-0}" != 1 ] || lock=unconfigured
@@ -234,7 +235,7 @@ case "$1" in
   scripts/collect-screenshots.ts)
     # Another lane may already hold the next lock while we collect files.
     token=$(sed -n 's/^token=//p' "$OPAX_PASTE_LOCK/owner" 2>/dev/null || true)
-    for phase in online offline; do
+    for phase in online warm offline; do
       file="$SCRATCH/$MOCK_LANE.$phase.token"
       if [ -n "$token" ] && [ -f "$file" ] && [ "$token" = "$(cat "$file")" ]; then
         echo collect-locked >> "$SCRATCH/violations"; exit 93
@@ -365,9 +366,9 @@ rc=0
 /bin/rm -f "$REPORTS"/*.ips
 pass 'preflight never runs without the lock: skipped when off or unconfigured, refused under a foreign lock'
 
-for phase in online offline install boot restore; do
+for phase in online warm offline install boot restore; do
   export MOCK_FAIL=$phase
-  flows=(01); [ "$phase" != offline ] || flows+=(04)
+  flows=(01); case "$phase" in warm|offline) flows+=(04) ;; esac
   run_lane "fail-$phase" "${flows[@]}"
   expected=26
   case "$phase" in install) expected=24 ;; boot) expected=23 ;; restore) expected=0 ;; esac
@@ -378,12 +379,20 @@ unset MOCK_FAIL
 run_lane offline 01 04
 check_rc offline 0
 cmp "$SCRATCH/offline.online.token" "$SCRATCH/offline.offline.token" || fail 'second phase changed lock'
+cmp "$SCRATCH/offline.online.token" "$SCRATCH/offline.warm.token" || fail 'offline warm-up changed lock'
 grep -q 'offline fixture-stop lock=held' "$SCRATCH/trace" || fail 'offline fixture not stopped under lock'
 pass 'offline second phase retains the same lock until shutdown'
 run_lane offline-only 04
 check_rc offline-only 0
-[ ! -e "$SCRATCH/offline-only.online.token" ] && [ -e "$SCRATCH/offline-only.offline.token" ] || fail 'offline-only phase selection'
-pass 'offline-only journey boots and shuts down under the lock'
+[ ! -e "$SCRATCH/offline-only.online.token" ] && [ -e "$SCRATCH/offline-only.warm.token" ] && [ -e "$SCRATCH/offline-only.offline.token" ] || fail 'offline-only phase selection'
+cmp "$SCRATCH/offline-only.warm.token" "$SCRATCH/offline-only.offline.token" || fail 'offline-only warm-up changed lock'
+# The warm-up reads online, before the fixture stops, under the same lock.
+warm_line=$(grep -n '^offline-only maestro warm lock=held' "$SCRATCH/trace" | head -1 | cut -d: -f1)
+stop_line=$(grep -n '^offline-only fixture-stop lock=held' "$SCRATCH/trace" | head -1 | cut -d: -f1)
+offline_line=$(grep -n '^offline-only maestro offline lock=held' "$SCRATCH/trace" | head -1 | cut -d: -f1)
+[ -n "$warm_line" ] && [ -n "$stop_line" ] && [ -n "$offline_line" ] && [ "$warm_line" -lt "$stop_line" ] && [ "$stop_line" -lt "$offline_line" ] || fail 'offline warm-up not before the fixture stop'
+grep -q 'offline-warm.yaml' "$SCRATCH/offline-only.warm.maestro-args" || fail 'offline warm-up ran another flow'
+pass 'offline-only journey warms online, stops the fixture and reads offline, all under one lock'
 for phase in boot install maestro; do
   export MOCK_PAUSE=$phase
   run_lane "term-$phase" 01

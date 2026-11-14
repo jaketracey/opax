@@ -5,6 +5,7 @@ name: 32 Check a claim; the mark opens its passage beside the live answer, re-ta
     permissions:
       all: unset
     clearState: true
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-ask
 - tapOn:

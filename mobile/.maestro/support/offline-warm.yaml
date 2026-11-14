@@ -1,0 +1,33 @@
+appId: au.com.opax.app
+name: Read online what journey 04 then reads with the fixture stopped
+---
+# scripts/e2e-device.sh runs this with the fixture up, straight before it
+# stops the fixture for journey 04, so 04 never depends on which journeys ran
+# first. Each page saves what it read: the bill's own file, the Search
+# catalogs and the profile. No journey before 04 opens this bill.
+- launchApp
+- runFlow: launch-ready.yaml
+- openLink: opax://bill/au-federal-r7534
+- tapOn:
+    text: Open
+    optional: true
+# The bill page replaces its pending screen once the bill's file has loaded.
+- extendedWaitUntil:
+    visible:
+      id: bill-screen
+    timeout: 60000
+- openLink: opax://search
+- tapOn:
+    text: Open
+    optional: true
+- runFlow:
+    file: search-query.yaml
+    env:
+      QUERY: Anthony Albanese
+      PREFIX: 04-warm
+- tapOn:
+    id: search-top-suggestion
+- extendedWaitUntil:
+    visible:
+      id: person-electorate
+    timeout: 60000

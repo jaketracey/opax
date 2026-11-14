@@ -5,6 +5,7 @@ name: 30 People in this answer shows each verified portrait and leaves people wi
     permissions:
       all: unset
     clearState: true
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-ask
 - assertVisible:

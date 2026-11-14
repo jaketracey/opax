@@ -6,6 +6,7 @@ name: 12 Local suggestions, the four scopes and the register lists
 # the tap lands clear of the navigation bar and the floating tab bar.
 - launchApp:
     clearState: true
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - runFlow:
@@ -15,12 +16,13 @@ name: 12 Local suggestions, the four scopes and the register lists
       PREFIX: 12
 # The keyboard stays up: the Search key below submits. iOS visibility checks
 # can see rows behind the keyboard, which is enough to prove they are drawn.
+# A full name has one match: the person is the top suggestion and in no
+# People group (journey 61 has the group row, for a surname).
 - extendedWaitUntil:
     visible:
-      id: search-suggestion-person-.*
+      id: search-top-suggestion
+      text: Anthony Albanese.*
     timeout: 30000
-- assertVisible:
-    id: search-top-suggestion
 - takeScreenshot: ${EVIDENCE}/12-suggestions
 # Typing never searches: the suggestions are drawn on the device.
 - assertNotVisible:
@@ -109,7 +111,10 @@ name: 12 Local suggestions, the four scopes and the register lists
       id: results-interests-0
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/12-interests
-- tapOn: { id: BackButton }
+- runFlow:
+    file: support/back.yaml
+    env:
+      BACK: Search
 - scrollUntilVisible:
     element:
       id: search-in-pay
@@ -132,7 +137,10 @@ name: 12 Local suggestions, the four scopes and the register lists
     centerElement: true
     speed: 20
 - takeScreenshot: ${EVIDENCE}/12-pay-source-line
-- tapOn: { id: BackButton }
+- runFlow:
+    file: support/back.yaml
+    env:
+      BACK: Search
 - scrollUntilVisible:
     element:
       id: search-in-expenses

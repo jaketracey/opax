@@ -5,6 +5,7 @@ name: 30 Ask about drafts from records; each starts a new conversation, sends no
     permissions:
       all: unset
     clearState: true
+- runFlow: support/launch-ready.yaml
 # A conversation first, so each arrival can be seen to start a new one.
 - tapOn:
     id: tab-ask

@@ -2,6 +2,7 @@ appId: au.com.opax.app
 name: 44 Native people and parties directories
 ---
 - launchApp
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - scrollUntilVisible:

@@ -3,6 +3,7 @@ name: Open a roster profile from the public search
 ---
 - launchApp:
     permissions: {}
+- runFlow: support/launch-ready.yaml
 - tapOn:
     id: tab-search
 - runFlow:
