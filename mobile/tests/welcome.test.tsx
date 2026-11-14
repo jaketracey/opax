@@ -416,3 +416,48 @@ describe('the welcome stack', () => {
     await act(async () => r.unmount());
   });
 });
+
+// 28-ax5-notice (iOS 18.4 and 26.3): with no bar, the notice scrolled up
+// under the clock with nothing behind the status bar.
+describe('the status bar over the scrolled welcome', () => {
+  test.each([
+    ['full', () => <Welcome />, 'welcome-screen'],
+    ['short', () => <ShortWelcome />, 'welcome-short'],
+  ])(
+    'the %s welcome draws the page ground behind the status bar, over the scroll',
+    async (_name, page, screen) => {
+      setFontScale(3.12);
+      const r = await render(page());
+      const backdrop = host(r, 'welcome-status-backdrop');
+      const style = Object.assign({}, ...flat(backdrop.props.style));
+      expect(style).toMatchObject({ position: 'absolute', top: 0, height: 59 });
+      expect(style.left).toBe(0);
+      expect(style.right).toBe(0);
+      expect(style.backgroundColor).toBeTruthy();
+      expect(grounds(r, screen)).toContain(style.backgroundColor);
+      // Drawn after the scroll view, so over it; never takes a touch or a
+      // VoiceOver stop.
+      const root = host(r, screen);
+      const order = root
+        .findAll(
+          (n) =>
+            typeof n.type === 'string' &&
+            ['welcome-scroll', 'welcome-status-backdrop'].includes(
+              n.props.testID,
+            ),
+        )
+        .map((n) => n.props.testID as string);
+      expect(order).toEqual(['welcome-scroll', 'welcome-status-backdrop']);
+      expect(backdrop.props.pointerEvents).toBe('none');
+      expect(backdrop.props.accessibilityElementsHidden).toBe(true);
+      // The page still starts below the status bar, so at rest nothing sits
+      // under the backdrop.
+      const content = Object.assign(
+        {},
+        ...flat(host(r, 'welcome-scroll').props.contentContainerStyle),
+      );
+      expect(content.paddingTop).toBeGreaterThan(59);
+      await act(async () => r.unmount());
+    },
+  );
+});

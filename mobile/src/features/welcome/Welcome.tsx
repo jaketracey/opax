@@ -303,6 +303,23 @@ export function WelcomePage({
           {pinned ? null : <View style={styles.unpinned}>{button}</View>}
         </View>
       </ScrollView>
+      {Platform.OS === 'ios' ? (
+        // The page has no bar (seat.tsx hides its top scroll edge), so the
+        // status bar had nothing behind it and text scrolled up under the
+        // clock at AX5 (28-ax5-notice). Opaque in the page ground, as the
+        // pinned foot and the opaque bars are: unseen at rest, where the
+        // content starts below it, and a backdrop once text scrolls under.
+        <View
+          pointerEvents="none"
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          testID="welcome-status-backdrop"
+          style={[
+            styles.statusBackdrop,
+            { height: insets.top, backgroundColor: ground },
+          ]}
+        />
+      ) : null}
       {pinned ? (
         <View
           style={[
@@ -355,4 +372,5 @@ const styles = StyleSheet.create({
   centred: { textAlign: 'center' },
   unpinned: { marginTop: rhythm.group },
   foot: { paddingTop: rhythm.block },
+  statusBackdrop: { position: 'absolute', top: 0, left: 0, right: 0 },
 });
