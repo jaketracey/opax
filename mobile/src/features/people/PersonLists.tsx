@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { FlatList, SectionList, StyleSheet, View } from 'react-native';
 import { SegmentedPicker } from '../../design/controls';
 import { counted, formatCount } from '../../design/format';
-import { useScreenColumn } from '../../design/layout';
+import { FixedPage, useScreenColumn } from '../../design/layout';
 import { useListSearchBar } from '../../design/search-bar';
 import {
   ContentUnavailable,
@@ -181,7 +181,7 @@ export function PersonVotes() {
       !votes ||
       votes.status === 'error' ||
       votes.status === 'loading' ? (
-        <View style={styles.page} testID="person-votes-screen">
+        <FixedPage style={styles.page} testID="person-votes-screen">
           {load.status === 'ready' ? (
             <BlockUnavailable
               block={votes}
@@ -198,7 +198,7 @@ export function PersonVotes() {
               testID="person-votes-list"
             />
           )}
-        </View>
+        </FixedPage>
       ) : (
         <StatePageProvider refreshing={false}>
           <FlatList
@@ -300,7 +300,7 @@ export function PersonInterests() {
       !interests ||
       interests.status === 'error' ||
       interests.status === 'loading' ? (
-        <View style={styles.page} testID="person-interests-screen">
+        <FixedPage style={styles.page} testID="person-interests-screen">
           {load.status === 'ready' ? (
             <BlockUnavailable
               block={interests}
@@ -317,7 +317,7 @@ export function PersonInterests() {
               testID="person-interests-list"
             />
           )}
-        </View>
+        </FixedPage>
       ) : (
         <StatePageProvider refreshing={false}>
           <SectionList

@@ -165,11 +165,43 @@ export const androidBar = {
   action: textStyles.secondary.fontSize,
 } as const;
 
-export function useStackChrome() {
+/**
+ * A solid ground behind an opaque bar, for a page that keeps one beside a
+ * vertical bar (the map). UIKit's own bar background stops 10 pt above the
+ * title band there, and the strip above it showed the system's grey.
+ */
+export const barBacking = (ground: ColorValue = colors.paper) => ({
+  headerBackground: () =>
+    createElement(View, {
+      pointerEvents: 'none',
+      accessibilityElementsHidden: true,
+      importantForAccessibility: 'no-hide-descendants',
+      style: { flex: 1, backgroundColor: ground },
+    }),
+});
+
+/**
+ * `tabStack`: the pages pushed in a tab's stack. Beside a vertical bar (the
+ * closed iPhone Duo) UIKit folds a pushed page's title band away once the
+ * page scrolls, and keeps the top safe area (24 pt) as bar. An opaque bar
+ * lays the page out below that strip, so the page's own heading scrolled
+ * under it and was cut off, while Today, whose bar is clear, ran to the top
+ * edge (b69). There these pages run under a clear bar as the tab roots do:
+ * UIKit insets the scroll view below the band at rest, and the page reaches
+ * the top edge once the band has gone. The top edge is soft, since a hard one
+ * paints a strip of its own above the band at rest.
+ * Sheets and modal stacks keep the opaque bar: a sheet's bar items sit over
+ * its trailing edge, and only an opaque bar keeps the content beside them.
+ * Phones, the unfolded Duo and iPad report 'unspecified' and are unchanged.
+ */
+export function useStackChrome({
+  tabStack = false,
+}: { tabStack?: boolean } = {}) {
   const { fontScale } = useWindowDimensions();
   // Bar titles resolve in the app's appearance, not the bar's (11b-3).
   const titleInk = schemeColour('ink', useColorScheme());
   const barEdge = useVerticalBarEdge();
+  const rail = tabStack && barEdge !== 'unspecified' && glassBar();
   const category = contentSizeCategory(fontScale);
   const sizes = {
     largeTitle: largeTitleSizes[category],
@@ -182,7 +214,8 @@ export function useStackChrome() {
       : {}),
     // Pushed, inline and sheet layouts reserve space for a solid native bar.
     // Tab roots and explicit large-title lists opt into translucency separately.
-    headerTransparent: false,
+    // Beside a vertical bar a tab stack's pushed pages run under the bar.
+    headerTransparent: rail,
     ...opaqueBar(),
     headerTitleStyle: {
       fontFamily: textStyles.inlineTitle.fontFamily,
@@ -210,7 +243,10 @@ export function useStackChrome() {
     // hard edge and matching opaque ground on record and inline screens.
     // Tab roots and sans large-title lists use the soft edge.
     // The bottom stays soft at the minimising tab bar.
-    scrollEdgeEffects: barScrollEdges(barEdge),
+    scrollEdgeEffects: {
+      ...barScrollEdges(barEdge),
+      top: rail ? ('soft' as const) : ('hard' as const),
+    },
     headerLargeTitleEnabled: false,
     headerLargeTitleShadowVisible: false,
     headerBackButtonDisplayMode: 'default' as const,

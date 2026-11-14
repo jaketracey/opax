@@ -63,7 +63,14 @@ import {
   radii,
   rhythm,
 } from '../../design/tokens';
-import { headerItems, opaqueBar, pageItems } from '../../navigation/chrome';
+import {
+  barBacking,
+  glassBar,
+  headerItems,
+  opaqueBar,
+  pageItems,
+} from '../../navigation/chrome';
+import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
 import { moneyDonorsRoute } from '../../navigation/routes/public-money';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import {
@@ -495,13 +502,22 @@ function MapMode({
   // title survived the switch to the map, which then had no title at all
   // (sweep 2 item 5.5). The map always names itself.
   const barTitle = typeof options.title === 'string' ? options.title : '';
+  // The map does not scroll, so it keeps a solid bar and sits below it even
+  // beside a vertical bar (the closed Duo), where the other pushed pages run
+  // under a clear one. That bar needs its own ground there, and the list must
+  // get the clear bar back when the map hands over to it.
+  const rail = useVerticalBarEdge() !== 'unspecified' && glassBar();
   useLayoutEffect(() => {
     setOptions({
       ...opaqueBar(colors.paper),
       headerTransparent: false,
       headerTitle: barTitle,
+      ...(rail ? barBacking(colors.paper) : {}),
     });
-  }, [setOptions, barTitle]);
+    if (!rail) return;
+    return () =>
+      setOptions({ headerTransparent: true, headerBackground: undefined });
+  }, [setOptions, barTitle, rail]);
   const navigation = useNavigation();
   const router = useRouter();
   const { regular } = useLayout();

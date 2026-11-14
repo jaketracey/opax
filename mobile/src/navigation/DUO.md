@@ -33,6 +33,21 @@ own heading. The title's width keeps no room for trailing items, as they are on
 the rail. Screens without an in-content heading (Ask, search results) keep
 their stack title, which UIKit draws in the band.
 
+Once that band folds away, UIKit keeps the top safe area (24 pt) as bar. Under
+an opaque bar the page was laid out below it, so its heading scrolled under a
+24 pt strip and was cut off, and at rest the top 14 pt showed the system's grey
+(UIKit's bar background stops 10 pt above the band). Today, under a clear bar,
+ran to the top edge (b69, captured on the outer display). Pages pushed in a
+tab's stack now run under a clear bar beside a vertical bar
+(`useStackChrome({ tabStack: true })`), with a soft top edge: UIKit insets the
+scroll view below the band at rest (adjusted top 82, then 24). A list whose
+band holds a search field (People) keeps the band, and its rows fade under it.
+The money map does not scroll, so it keeps its opaque bar and backs it
+(`barBacking`). Sheets and modal stacks (Account, Talk) keep the opaque bar:
+their bar items sit over the sheet's trailing edge, and under a clear bar the
+text ran beneath them. A page that does not scroll and is pushed in a tab's
+stack must set `headerTransparent: false` itself, as the map does.
+
 Toolbar items use the native item API with both `label` and symbol. Expo's
 `useHeaderConfigProps.js` maps `label` to native `title`; an accessibility label
 alone does not supply that title. Talk's End call action uses this API on the

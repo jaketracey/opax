@@ -12,12 +12,16 @@ export const unstable_settings = tabSettings;
 export { RouteErrorBoundary as ErrorBoundary } from '../../../navigation/RouteErrorBoundary';
 export default function TabStack({ segment }: { segment: string }) {
   const account = useAccount();
+  const chrome = useStackChrome({ tabStack: true });
   return (
-    <Stack
-      initialRouteName={tabRootName(segment)}
-      screenOptions={useStackChrome()}
-    >
-      {[...sharedScreens(segment, !!account.status?.signedIn)]}
+    <Stack initialRouteName={tabRootName(segment)} screenOptions={chrome}>
+      {[
+        ...sharedScreens(
+          segment,
+          !!account.status?.signedIn,
+          chrome.headerTransparent,
+        ),
+      ]}
     </Stack>
   );
 }

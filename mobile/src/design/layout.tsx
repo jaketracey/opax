@@ -1,5 +1,8 @@
 import { Pressable } from './pressable';
 import { type Href } from 'expo-router';
+import { NavigationRouteContext } from 'expo-router/react-navigation';
+import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
+import { useVerticalBarEdge } from '../../modules/opax-root-bar';
 import {
   Children,
   cloneElement,
@@ -235,6 +238,34 @@ function BarStickyHeader(props: {
 }
 /** React Native's sticky header settles its explicit value after 64 ms. */
 const stickyDebounce = 64;
+
+/**
+ * The top padding a page's fixed state needs under a clear bar beside a
+ * vertical bar (the closed iPhone Duo), where a tab stack's pushed pages run
+ * under the bar. UIKit insets a scroll view below the title band; a skeleton
+ * or a whole-page message in a plain View starts at the window's top edge,
+ * under the band and its title. Zero under an opaque bar (iPhone, iPad, the
+ * unfolded Duo, and the same page opened in a sheet).
+ */
+export function useClearBarTop(): number {
+  const route = useContext(NavigationRouteContext);
+  const descriptors = useContext(DescriptorsContext);
+  const bottom = useHeaderBottom();
+  const verticalBar = useVerticalBarEdge() !== 'unspecified';
+  const clear =
+    !!route && descriptors[route.key]?.options.headerTransparent === true;
+  return verticalBar && clear ? bottom : 0;
+}
+
+/**
+ * A pushed page's whole-screen state that does not scroll: a skeleton or a
+ * message in a plain View. It clears the bar where the page runs under one
+ * (`useClearBarTop`); elsewhere it is the View it replaces.
+ */
+export function FixedPage({ style, ...props }: ViewProps) {
+  const top = useClearBarTop();
+  return <View {...props} style={top ? [style, { paddingTop: top }] : style} />;
+}
 
 /**
  * A scrolling screen on paper, under the native navigation bar. It is the

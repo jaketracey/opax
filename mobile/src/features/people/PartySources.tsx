@@ -9,7 +9,7 @@ import {
   disclosureYearNote,
   formatDisclosureYear,
 } from '../../design/format';
-import { useScreenColumn } from '../../design/layout';
+import { FixedPage, useScreenColumn } from '../../design/layout';
 import { MoneyRow } from '../../design/rows';
 import {
   ContentUnavailable,
@@ -92,7 +92,7 @@ export default function PartySources() {
         }}
       />
       {error && !record ? (
-        <View style={styles.page} testID="party-sources-screen">
+        <FixedPage style={styles.page} testID="party-sources-screen">
           <ContentUnavailable
             symbol="exclamationmark.triangle"
             title="Couldn’t load largest sources"
@@ -100,7 +100,7 @@ export default function PartySources() {
             action={{ label: 'Try again', onPress: retry }}
             testID="party-sources-error"
           />
-        </View>
+        </FixedPage>
       ) : (
         <StatePageProvider refreshing={false}>
           <SectionList

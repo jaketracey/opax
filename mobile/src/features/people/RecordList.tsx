@@ -7,7 +7,7 @@ import { serverPassage } from '../../api/passage-text';
 import { peopleDepth } from '../../api/runtime';
 import { counted, formatDate } from '../../design/format';
 import { MachinePill } from '../../design/labels';
-import { useScreenColumn } from '../../design/layout';
+import { FixedPage, useScreenColumn } from '../../design/layout';
 import { chamberName } from '../../design/parliament';
 import { phoneCopy } from '../../design/phone-copy';
 import { RecordRow } from '../../design/rows';
@@ -245,15 +245,15 @@ export default function RecordList({
         }}
       />
       {kind === 'news' ? (
-        <View style={styles.page} testID="record-list-screen">
+        <FixedPage style={styles.page} testID="record-list-screen">
           <ContentUnavailable
             symbol="newspaper"
             title="News isn’t available yet"
             testID="record-list-unavailable"
           />
-        </View>
+        </FixedPage>
       ) : load.status === 'error' ? (
-        <View style={styles.page} testID="record-list-screen">
+        <FixedPage style={styles.page} testID="record-list-screen">
           <ContentUnavailable
             symbol={
               load.status === 'error' && load.offline
@@ -279,7 +279,7 @@ export default function RecordList({
             }}
             testID="record-list-error"
           />
-        </View>
+        </FixedPage>
       ) : (
         <StatePageProvider refreshing={false}>
           <FlatList

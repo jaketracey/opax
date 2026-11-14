@@ -18,6 +18,7 @@ import {
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import TestRenderer from 'react-test-renderer';
 import TalkStack from '../src/app/talk/_layout';
+import TabStack from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/_layout';
 import AskRoute from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/ask';
 import { designFlags } from '../src/design/flags';
 import { Screen } from '../src/design/layout';
@@ -273,6 +274,95 @@ test('inline and sheet bars cover content and roots keep a native scroll edge', 
   expect(shortSheet.sheetExpandsWhenScrolledToEdge).toBe(true);
   act(() => view.unmount());
 });
+
+// The closed Duo, b69: UIKit folds a pushed page's title band away on scroll
+// and leaves the top safe area (24 pt) as bar. An opaque bar lays the page out
+// below that strip, so the page's own heading was cut off under it.
+test.each([
+  ['trailing', 26, true],
+  ['leading', 27, true],
+  ['unspecified', 26, false],
+  ['unspecified', 27, false],
+  // Before iOS 26 there is no glass bar, whatever the trait reports.
+  ['trailing', 18, false],
+] as const)(
+  'a tab stack page beside a %s bar on iOS %s runs under the bar: %s',
+  (edge, version, underBar) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version');
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: version,
+    });
+    mockBarEdge = edge;
+    let pushed!: ReturnType<typeof useStackChrome>;
+    let sheet!: ReturnType<typeof useStackChrome>;
+    function Harness() {
+      pushed = useStackChrome({ tabStack: true });
+      sheet = useStackChrome();
+      return null;
+    }
+    let view: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      view = tree(<Harness />);
+      expect(pushed.headerTransparent).toBe(underBar);
+      // Soft, as a tab root at rest: a hard edge paints a strip of its own
+      // above the title band.
+      expect(pushed.scrollEdgeEffects.top).toBe(underBar ? 'soft' : 'hard');
+      expect(pushed.scrollEdgeEffects.bottom).toBe('soft');
+      // Away from a vertical bar the two stacks are the same, option for
+      // option: iPhone, the unfolded Duo and iPad are unchanged.
+      if (!underBar) expect(pushed).toEqual(sheet);
+      // A sheet's bar items sit over its content's trailing edge, so sheets
+      // and modal stacks keep the opaque bar beside any bar.
+      expect(sheet.headerTransparent).toBe(false);
+      expect(sheet.scrollEdgeEffects.top).toBe('hard');
+      expect(shortSheet.headerTransparent).toBe(false);
+      // The edition backs its opaque bar; under a clear bar it has neither.
+      const edition = editionScreens(
+        pushed.headerTransparent,
+      )[0]!.props.options({
+        route: { key: 'edition', name: 'edition', params: {} },
+        navigation: { getState: () => ({ index: 1, routes: [] }) },
+      });
+      expect('headerBackground' in edition).toBe(!underBar && version >= 26);
+      expect(edition.headerTransparent).toBe(underBar ? undefined : false);
+      expect(edition.scrollEdgeEffects).toEqual(
+        underBar ? undefined : { top: 'hard', bottom: 'soft' },
+      );
+      // The wiring: a tab's stack asks for it, and hands the edition the
+      // same answer; Talk's modal stack does not.
+      act(() => view!.unmount());
+      view = tree(<TabStack segment="(today)" />);
+      const tabs = view.root.findByType(Stack).props;
+      expect(tabs.screenOptions.headerTransparent).toBe(underBar);
+      expect(tabs.screenOptions.scrollEdgeEffects.top).toBe(
+        underBar ? 'soft' : 'hard',
+      );
+      const tabEdition = (
+        tabs.children as React.ReactElement<{
+          name: string;
+          options: (props: object) => Record<string, unknown>;
+        }>[]
+      )
+        .find((entry) => entry.props.name === 'edition')!
+        .props.options({
+          route: { key: 'edition', name: 'edition', params: {} },
+          navigation: { getState: () => ({ index: 1, routes: [] }) },
+        });
+      expect('headerTransparent' in tabEdition).toBe(!underBar);
+      act(() => view!.unmount());
+      view = tree(<TalkStack />);
+      expect(
+        view.root.findByType(Stack).props.screenOptions.headerTransparent,
+      ).toBe(false);
+    } finally {
+      if (view) act(() => view!.unmount());
+      mockBarEdge = 'unspecified';
+      if (descriptor) Object.defineProperty(Platform, 'Version', descriptor);
+    }
+  },
+);
 
 test.each([
   ['system', 1, 34],

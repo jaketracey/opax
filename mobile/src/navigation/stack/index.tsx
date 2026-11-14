@@ -38,10 +38,15 @@ export const tabSettings = {
   search: { initialRouteName: tabRoots['(search)'] },
   ask: { initialRouteName: tabRoots['(ask)'] },
 };
-export function sharedScreens(segment: string, signedIn: boolean) {
+export function sharedScreens(
+  segment: string,
+  signedIn: boolean,
+  /** Pushed pages run under the bar (useStackChrome's `tabStack`). */
+  underBar = false,
+) {
   const screens = [
     ...todayScreens(segment, signedIn),
-    ...editionScreens(),
+    ...editionScreens(underBar),
     ...vicElectionScreens(),
     ...yourMpScreens(segment, signedIn),
     ...peopleScreens(),

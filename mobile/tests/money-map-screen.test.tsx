@@ -1,5 +1,5 @@
 import { withNavigationOptions } from './navigation-options';
-import { act } from 'react';
+import { act, type ReactElement } from 'react';
 import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
 import { colors } from '../src/design/tokens';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
@@ -37,6 +37,7 @@ import { defaultMoneyFilters, moneyView } from '../src/features/money/view';
 import { IconButton, SegmentedPicker } from '../src/design/primitives';
 import { pinned } from './pinned';
 import { track } from '../src/analytics';
+import * as rootBar from '../modules/opax-root-bar';
 
 jest.mock('../src/api/runtime', () => ({ apiClient: { get: jest.fn() } }));
 jest.mock('../src/analytics', () => ({
@@ -174,6 +175,8 @@ test.each([26, 27])(
         headerTransparent: false,
         headerStyle: { backgroundColor: colors.paper },
       });
+      // Away from a vertical bar UIKit's own bar background is the ground.
+      expect(options.headerBackground).toBeUndefined();
       expect(byTestID(renderer.root, 'money-map-card')).toBeDefined();
     } finally {
       if (renderer) act(() => renderer!.unmount());
@@ -181,6 +184,42 @@ test.each([26, 27])(
     }
   },
 );
+
+test('beside a vertical bar the map backs its solid bar and hands the clear bar back', async () => {
+  const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+  Object.defineProperty(Platform, 'Version', { configurable: true, value: 27 });
+  const os = jest.replaceProperty(Platform, 'OS', 'ios');
+  const edge = jest
+    .spyOn(rootBar, 'useVerticalBarEdge')
+    .mockReturnValue('trailing');
+  let renderer: TestRenderer.ReactTestRenderer | undefined;
+  let options: Record<string, unknown> = {};
+  try {
+    renderer = await render(undefined, (value) => {
+      options = value;
+    });
+    // The map does not scroll: it stays below a solid bar, on its own ground
+    // (UIKit's bar background stops short of the top edge on the rail).
+    expect(options).toMatchObject({ headerTransparent: false });
+    expect(typeof options.headerBackground).toBe('function');
+    const backing = (
+      options.headerBackground as () => ReactElement<{
+        style: { backgroundColor: unknown };
+      }>
+    )();
+    expect(backing.props.style.backgroundColor).toBe(colors.paper);
+    // The list that replaces the map runs under the stack's clear bar again.
+    act(() => renderer!.unmount());
+    renderer = undefined;
+    expect(options).toMatchObject({ headerTransparent: true });
+    expect(options.headerBackground).toBeUndefined();
+  } finally {
+    if (renderer) act(() => renderer!.unmount());
+    edge.mockRestore();
+    os.restore();
+    Object.defineProperty(Platform, 'Version', descriptor);
+  }
+});
 
 test.each([
   ['iPhone', 390, 844, false, 0],
