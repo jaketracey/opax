@@ -2,7 +2,10 @@
 # Source inside the shared native lock, before claiming/booting a simulator.
 # Kept-device state survives release in the lock's persistent OPAX directory.
 # Admission refuses every other booted device, including devices booted outside
-# this harness. A later run on the kept UDID without OPAX_KEEP_SIM_BOOTED=1
+# this harness. OPAX_SIM_ADMIT_IGNORE (space-separated UDIDs, empty by default) names
+# devices another slot of the same host owns, so a two-slot host (Rihana's Mac:
+# slots a and b, each with its own pasteboard lock and fixture port) can run two
+# simulators; any device not listed still refuses admission. A later run on the kept UDID without OPAX_KEEP_SIM_BOOTED=1
 # shuts it down and clears the record; an explicit simctl shutdown also stops it.
 qa_simulator_admit() {
   local udid=$1 booted kept=
@@ -14,12 +17,13 @@ qa_simulator_admit() {
   if [ -n "${OPAX_PASTE_LOCK:-}" ]; then
     kept=$(cat "$OPAX_PASTE_LOCK.opax/kept-simulator" 2>/dev/null || true)
   fi
-  python3 - "$udid" "$booted" "$kept" <<'PYDEV'
+  python3 - "$udid" "$booted" "$kept" "${OPAX_SIM_ADMIT_IGNORE:-}" <<'PYDEV'
 import json, sys
 wanted = sys.argv[1]
 devices = json.loads(sys.argv[2])['devices']
+ignore = set(sys.argv[4].split()) - {wanted}
 others = [d['udid'] for group in devices.values() for d in group
-          if d['state'] == 'Booted' and d['udid'] != wanted]
+          if d['state'] == 'Booted' and d['udid'] != wanted and d['udid'] not in ignore]
 if others:
     kept = sys.argv[3]
     detail = f'; harness kept UDID {kept}' if kept in others else '; booted outside this harness'
