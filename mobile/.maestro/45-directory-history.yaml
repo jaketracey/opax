@@ -51,9 +51,11 @@ name: 45 Electorates, dated representation, bill filters and Votes in parliament
 - takeScreenshot: ${EVIDENCE}/45-native-date-picker
 - tapOn: '2|Tuesday, 2 January.*'
 - tapOn: Done
+# The members section is headed by the chosen date.
 - scrollUntilVisible:
     element:
-      text: Representation on 2 January 2024
+      id: electorate-members-heading
+      text: Members? on 2 January 2024
     visibilityPercentage: 10
     centerElement: true
     speed: 20
@@ -66,9 +68,10 @@ name: 45 Electorates, dated representation, bill filters and Votes in parliament
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/45-dated-share
 - tapOn: OK
+# The seat's history follows its members.
 - scrollUntilVisible:
     element:
-      text: Representation history
+      id: electorate-past-members
     visibilityPercentage: 10
     centerElement: true
     speed: 20
