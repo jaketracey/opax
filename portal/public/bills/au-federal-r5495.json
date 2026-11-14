@@ -13,6 +13,8 @@
  "portfolio": "Infrastructure and Regional Development",
  "status": "lapsed",
  "status_as_of": "2015-11-26",
+ "ended": "negatived",
+ "ended_label": "Voted down",
  "key_dates": [
   {
    "stage": "introduced",

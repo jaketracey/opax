@@ -13,6 +13,8 @@
  "portfolio": "Communications and the Arts",
  "status": "lapsed",
  "status_as_of": "2019-07-01",
+ "ended": "lapsed",
+ "ended_label": "Lapsed",
  "key_dates": [
   {
    "stage": "introduced",

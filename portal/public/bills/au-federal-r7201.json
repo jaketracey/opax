@@ -13,6 +13,8 @@
  "portfolio": "Defence",
  "status": "lapsed",
  "status_as_of": "2024-07-04",
+ "ended": "negatived",
+ "ended_label": "Voted down",
  "key_dates": [
   {
    "stage": "introduced",

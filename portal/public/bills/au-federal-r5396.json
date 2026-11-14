@@ -13,6 +13,8 @@
  "portfolio": "Education",
  "status": "lapsed",
  "status_as_of": "2015-03-17",
+ "ended": "negatived",
+ "ended_label": "Voted down",
  "key_dates": [
   {
    "stage": "introduced",

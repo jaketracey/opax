@@ -13,6 +13,8 @@
  "portfolio": "Employment",
  "status": "lapsed",
  "status_as_of": "2014-09-03",
+ "ended": "negatived",
+ "ended_label": "Voted down",
  "key_dates": [
   {
    "stage": "introduced",
