@@ -59,6 +59,7 @@ const toolCall={jsonrpc:'2.0',id:7,method:'tools/call',params:{name:'corpus_cove
 // --- sign in to connect ---------------------------------------------------------
 if(SESSION){
  const cookie='__Host-opax_session='+SESSION
+ const before=(await (await fetch(BASE+'/api/community/connections',{headers:{cookie}})).json()).connections?.length??0
  const store={client:undefined,tokens:undefined,verifier:undefined,authorize:undefined}
  const provider={
   get redirectUrl(){return REDIRECT},
@@ -134,7 +135,7 @@ if(SESSION){
   const revoked=await fetch(BASE+'/oauth/revoke',{method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},body:new URLSearchParams({token:tokens.refresh_token})})
   check('revocation removes the connection',revoked.status===200&&(await rpc('/mcp',toolCall,{authorization:'Bearer '+tokens.access_token})).status===401)
   const after=await (await fetch(BASE+'/api/community/connections',{headers:{cookie}})).json()
-  check('no connection is left behind',after.connections?.length===0)
+  check('this run left no connection behind',after.connections?.length===before)
  }
 }else console.log('SKIP sign in to connect (no SESSION)')
 console.log(failed?`${failed} check(s) failed`:'all checks passed')
