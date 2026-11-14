@@ -38,7 +38,9 @@ The runner never writes the knowledge box. For each row it does these steps:
    - the row is inside its slice's filter.
 3. **Generation.** It generates with the Worker's own `generate()`: the same prompts, schema,
    validators, retry and gpt-oss escalation.
-   - qwen3.8 runs at `max_tokens` 256 with `enable_thinking: false`.
+   - qwen3.8 runs at `max_tokens` 256 with thinking off: `chat_template_kwargs: {enable_thinking: false}`.
+     A top-level `enable_thinking` is ignored by Workers AI. The model then reasons until it hits
+     `max_tokens`, and every reply is cut off (seen in the first pilot minute, 14 Nov).
    - gpt-oss keeps 4000.
    - For witness rows, variant `role` adds `speaker_role` to the record, plus one prompt line and
      validator check: never open "Asked" or "Moved".

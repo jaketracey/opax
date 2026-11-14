@@ -298,7 +298,8 @@ test('run: qwen3.8 no-think at max_tokens 256, metered from usage, booked into D
   assert.equal(ai.calls.length, 1)
   assert.equal(ai.calls[0].model, '@cf/qwen/qwen3.8-27b')
   assert.equal(ai.calls[0].body.max_tokens, 256)
-  assert.equal(ai.calls[0].body.enable_thinking, false)
+  assert.deepEqual(ai.calls[0].body.chat_template_kwargs, { enable_thinking: false })
+  assert.equal('enable_thinking' in ai.calls[0].body, false)
   assert.equal(ai.calls[0].body.response_format.type, 'json_schema')
   const expected = (1000 * 40909 + 60 * 290909) / 1e6
   assert.ok(Math.abs(ledger.totals().neurons - expected) < 1e-9)

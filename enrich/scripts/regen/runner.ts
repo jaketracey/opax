@@ -139,7 +139,9 @@ export class Runner {
   private async beforeCall(ctx: ItemCtx, model: string, body: Record<string, unknown>): Promise<boolean> {
     if (model === PRIMARY_MODEL) {
       body.max_tokens = PRIMARY_MAX_TOKENS
-      body.enable_thinking = false // pilot arm b: qwen3.8 with thinking off
+      // Thinking off, in the form Workers AI honours (5b pilot arm b). A top-level `enable_thinking` is ignored:
+      // the model then reasons until max_tokens and every reply is cut off.
+      body.chat_template_kwargs = { enable_thinking: false }
     } else body.max_tokens = ESCALATION_MAX_TOKENS
     if (this.blocked(ctx)) return false
     const day = utcDayOf(this.d.now())
