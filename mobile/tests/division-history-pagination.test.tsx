@@ -276,3 +276,91 @@ test('search and filters match votes beyond the displayed page and reset paginat
     jest.useRealTimers();
   }
 });
+
+test.each(['android', 'ios'] as const)(
+  '%s keeps Filters reachable while a search is open',
+  async (platform) => {
+    jest.useFakeTimers();
+    const originalOS = Platform.OS;
+    Platform.OS = platform;
+    try {
+      const r = await render(record());
+      const options = () => r.root.findByType(RouteOptions).props.options;
+      const inList = () =>
+        r.root
+          .findAllByType(Button)
+          .filter(
+            (node) => node.props.testID === 'division-history-search-filters',
+          );
+      const barFilters = () =>
+        (
+          options().unstable_headerRightItems() as {
+            identifier?: string;
+            onPress: () => void;
+          }[]
+        ).find((item) => item.identifier === 'division-history-filters');
+      expect(inList()).toHaveLength(0);
+      if (platform === 'ios') {
+        // Nothing changes on iOS here: the bar item and the native search
+        // options are as they were, and no pinned Filters is drawn.
+        expect(options().headerSearchBarOptions).not.toHaveProperty('onOpen');
+        expect(options().headerSearchBarOptions).not.toHaveProperty('onClose');
+        await act(async () =>
+          options().headerSearchBarOptions.onChangeText({
+            nativeEvent: { text: 'wildlife' },
+          }),
+        );
+        await act(async () => jest.advanceTimersByTime(150));
+        expect(inList()).toHaveLength(0);
+        expect(barFilters()).toBeDefined();
+        await act(async () => r.unmount());
+        return;
+      }
+      // Android hides the bar's items from the search's open to its close.
+      await act(async () => options().headerSearchBarOptions.onOpen());
+      expect(inList()).toHaveLength(1);
+      // Pinned under the search field, outside the list that scrolls.
+      expect(
+        list(r)
+          .findAllByType(Button)
+          .filter(
+            (node) => node.props.testID === 'division-history-search-filters',
+          ),
+      ).toHaveLength(0);
+      await act(async () =>
+        options().headerSearchBarOptions.onChangeText({
+          nativeEvent: { text: 'wildlife' },
+        }),
+      );
+      await act(async () => jest.advanceTimersByTime(150));
+      expect(countText(r)).toBe('20 votes');
+      const button = inList()[0]!;
+      expect(button.props).toMatchObject({
+        label: 'Filters',
+        accessibilityLabel: 'Filters',
+      });
+      // The same filter route, and so the same owner, as the bar's Filters.
+      await act(async () => button.props.onPress());
+      const fromList = jest.mocked(router.push).mock.calls.at(-1)![0];
+      await act(async () => barFilters()!.onPress());
+      expect(jest.mocked(router.push).mock.calls.at(-1)![0]).toEqual(fromList);
+      const owner = (fromList as { params: { owner: string } }).params.owner;
+      const store = filterStore('divisions', owner)!;
+      await act(async () => store.set({ ...store.get(), chamber: 'senate' }));
+      // Search and filter combine.
+      expect(visible(r)).toEqual(rows.slice(20, 36));
+      expect(inList()[0]!.props.accessibilityLabel).toBe('Filters, 1 on');
+      await act(async () =>
+        options().headerSearchBarOptions.onChangeText({
+          nativeEvent: { text: '' },
+        }),
+      );
+      await act(async () => options().headerSearchBarOptions.onClose());
+      expect(inList()).toHaveLength(0);
+      await act(async () => r.unmount());
+    } finally {
+      Platform.OS = originalOS;
+      jest.useRealTimers();
+    }
+  },
+);

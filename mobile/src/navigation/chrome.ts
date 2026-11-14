@@ -515,20 +515,41 @@ export function pageItems(props: {
 
 type HeaderMenu = Extract<NativeStackHeaderItem, { type: 'menu' }>;
 
-/** A bar menu's rows as an Android sheet; a submenu opens its own sheet. */
+/**
+ * A bar menu's rows as an Android sheet; a titled submenu opens its own
+ * sheet. An inline section (iOS draws it between separators, untitled, as
+ * Your MP's "Forget my electorate") has no row of its own: its items join
+ * this sheet in place, and an action keeps its red, dimmed or ticked state.
+ * The sheet draws no section headings, so a titled inline section (Cite)
+ * joins it too: its items name what they copy ("Copy APA 7"), as Android's
+ * record and Ask row menus already list them.
+ */
 function menuActions(items: HeaderMenu['menu']['items']): MenuAction[] {
   return items
     .filter((item) => !('hidden' in item && item.hidden))
-    .map((item) => ({
-      title: item.label,
-      onPress:
-        item.type === 'action'
-          ? item.onPress
-          : () => {
-              if (Platform.OS === 'android')
-                showMenu(item.label, menuActions(item.items));
+    .flatMap((item): MenuAction[] =>
+      item.type === 'submenu'
+        ? item.inline
+          ? menuActions(item.items)
+          : [
+              {
+                title: item.label,
+                onPress: () => {
+                  if (Platform.OS === 'android')
+                    showMenu(item.label, menuActions(item.items));
+                },
+              },
+            ]
+        : [
+            {
+              title: item.label,
+              onPress: item.onPress,
+              ...(item.destructive ? { destructive: true } : {}),
+              ...(item.disabled ? { disabled: true } : {}),
+              ...(item.state === 'on' ? { selected: true } : {}),
             },
-    }));
+          ],
+    );
 }
 
 /**
