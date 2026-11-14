@@ -13,6 +13,8 @@
  "portfolio": "(s) ENTSCH, Warren, MPGAMBARO, Teresa, MPBUTLER, Terri, MPFERGUSON, Laurie, MPBANDT, Adam, MPMCGOWAN, Cathy, MPWILKIE, Andrew, MP",
  "status": "lapsed",
  "status_as_of": "2016-04-15",
+ "ended": "lapsed",
+ "ended_label": "Lapsed",
  "key_dates": [
   {
    "stage": "introduced",

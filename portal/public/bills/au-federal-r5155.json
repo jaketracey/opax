@@ -13,6 +13,8 @@
  "portfolio": "Immigration and Border Protection",
  "status": "lapsed",
  "status_as_of": "2015-10-15",
+ "ended": "discharged",
+ "ended_label": "Discharged from the Notice Paper",
  "key_dates": [
   {
    "stage": "introduced",

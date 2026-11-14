@@ -99,6 +99,40 @@ SUPPRESSED_PATH = Path(__file__).resolve().parent / "bills_registry" / "suppress
 NEGATIVED_STATUS = "negatived"
 _NEGATIVED_EVENT = re.compile(r"\bnegatived\b", re.I)
 
+# How a dead bill ended, in the register's own words. The four-value status
+# folds every ending into `lapsed` (bills_common.map_status), and ParlInfo's
+# status text for nearly all of them is just "Not Proceeding", so the reason is
+# read from the final recorded event: "Removed from the Notice Paper in
+# accordance with (SO 42)", "Discharged from Notice Paper", "Lapsed at
+# dissolution", a negatived question. With no ending event the status text
+# itself is the ending. `ended` names it and `ended_label` is how a reader
+# meets it; a bill neither names gets neither field. `status` is unchanged.
+ENDED_LABELS = {
+    "negatived": "Voted down",
+    "discharged": "Discharged from the Notice Paper",
+    "removed": "Removed from the Notice Paper",
+    "withdrawn": "Withdrawn",
+    "laid_aside": "Laid aside",
+    "not_proceeding": "Not proceeding",
+    "lapsed": "Lapsed",
+}
+DEAD_STATUSES = ("lapsed", NEGATIVED_STATUS)
+_ENDED_EVENT = (
+    (re.compile(r"\bremoved from (?:the )?notice paper\b", re.I), "removed"),
+    (re.compile(r"\bdischarged from (?:the )?notice paper\b", re.I), "discharged"),
+    (re.compile(r"^\s*(?:bill )?withdrawn\b", re.I), "withdrawn"),
+    (re.compile(r"\blaid aside\b", re.I), "laid_aside"),
+    (re.compile(r"^\s*lapsed\b", re.I), "lapsed"),
+)
+_ENDED_STATUS = (
+    (re.compile(r"\bnegatived\b|\bdefeated\b", re.I), "negatived"),
+    (re.compile(r"\bremoved\b", re.I), "removed"),
+    (re.compile(r"\bdischarged\b", re.I), "discharged"),
+    (re.compile(r"\bwithdrawn\b", re.I), "withdrawn"),
+    (re.compile(r"\bnot proceeding\b", re.I), "not_proceeding"),
+    (re.compile(r"\blapsed\b", re.I), "lapsed"),
+)
+
 HOUSE_CODE = {
     "house of representatives": "representatives",
     "representatives": "representatives",
@@ -474,6 +508,48 @@ def final_status(status: str | None, events: list[dict]) -> str | None:
     return NEGATIVED_STATUS if negatived and max(negatived) == last else status
 
 
+def event_ending(event: dict) -> str | None:
+    raw = event.get("event_raw") or ""
+    return next((ended for rx, ended in _ENDED_EVENT if rx.search(raw)), None)
+
+
+def bill_ended(status: str | None, status_raw: str | None, events: list[dict]) -> str | None:
+    """How a dead bill ended (ENDED_LABELS), given its final status. A
+    negatived bill ended negatived. A lapsed one ended as its final recorded
+    day's events say when they name one ending; otherwise as its status text
+    says ("Not Proceeding"). A bill still alive or passed, or one whose record
+    names no ending, gets None: never a guess."""
+    if status == NEGATIVED_STATUS:
+        return NEGATIVED_STATUS
+    if status != "lapsed":
+        return None
+    dated = [e for e in events if e.get("date")]
+    if dated:
+        last = max(e["date"] for e in dated)
+        found = {event_ending(e) for e in dated if e["date"] == last} - {None}
+        if len(found) == 1:
+            return found.pop()
+    raw = source_text(status_raw) or ""
+    return next((ended for rx, ended in _ENDED_STATUS if rx.search(raw)), None)
+
+
+def with_ended(record: dict, ended: str | None) -> dict:
+    """`record` with `ended` and `ended_label` set (or removed when ended is
+    None), placed straight after `status_as_of` the way the export writes them."""
+    rest = {k: v for k, v in record.items() if k not in ("ended", "ended_label")}
+    fields = {"ended": ended, "ended_label": ENDED_LABELS[ended]} if ended in ENDED_LABELS else {}
+    if not fields:
+        return rest
+    out: dict = {}
+    for k, v in rest.items():
+        out[k] = v
+        if k == "status_as_of":
+            out.update(fields)
+    if "ended" not in out:
+        out.update(fields)
+    return out
+
+
 def key_dates(events: list[dict]) -> list[dict]:
     """The published stage rows: every recorded event with the source's own
     wording (`event_raw`), a negatived vote marked as such, and an exact repeat
@@ -667,6 +743,7 @@ def load_legacy_bills(db: sqlite3.Connection) -> list[dict]:
             "status": final_status(r["status"], evs),
             "status_raw": r["status"],
             "status_as_of": last,
+            "ended": bill_ended(final_status(r["status"], evs), r["status"], evs),
             "assent": lifecycle["royal_assent"],
             **lifecycle,
             "key_dates": key_dates(evs),
@@ -742,6 +819,7 @@ def load_v2_bills(db: sqlite3.Connection) -> list[dict]:
             "status": final_status(row.get("status"), evs),
             "status_raw": row.get("status_raw"),
             "status_as_of": row.get("status_as_of") or max((e["date"] for e in evs if e["date"]), default=None),
+            "ended": bill_ended(final_status(row.get("status"), evs), row.get("status_raw"), evs),
             "assent": lifecycle["royal_assent"],
             **lifecycle,
             "key_dates": key_dates(evs),
@@ -1330,6 +1408,7 @@ def build(db: sqlite3.Connection, legacy: bool) -> tuple[list[dict], dict]:
     fill_sponsor_parties(bills, timeline, sponsor_evidence)
     log_sponsor_party_labels(bills)
     log(f"status: {sum(b['status'] == NEGATIVED_STATUS for b in bills)} bills negatived on their final event")
+    log(f"ended: {dict(collections.Counter(b['ended'] for b in bills if b.get('ended')).most_common())}")
 
     divisions = load_divisions(db, timeline)
     log(f"divisions: {len(divisions)} federal")
@@ -1406,6 +1485,7 @@ def build(db: sqlite3.Connection, legacy: bool) -> tuple[list[dict], dict]:
             "portfolio": b["portfolio"],
             "status": b["status"],
             "status_as_of": b["status_as_of"],
+            **with_ended({}, b.get("ended")),
             "passed_both_houses": b["passed_both_houses"],
             "passed_both_houses_date": b["passed_both_houses_date"],
             "royal_assent": b["royal_assent"],
@@ -1463,6 +1543,7 @@ def index_row(d: dict) -> dict:
         "jurisdiction": d["jurisdiction"], "parliament": d["parliament"],
         "introduced": d["introduced"], "originating_house": d["originating_house"],
         "status": d["status"], "status_as_of": d["status_as_of"],
+        **with_ended({}, d.get("ended")),
         "passed_both_houses": d.get("passed_both_houses"),
         "passed_both_houses_date": d.get("passed_both_houses_date"),
         "royal_assent": d.get("royal_assent"), "act_number": d.get("act_number"),
@@ -1737,6 +1818,48 @@ def refresh_sponsor_parties(directory: Path, evidence=None) -> tuple[int, list[d
     return changed, held
 
 
+def same_layout(previous: str, record: dict) -> str:
+    """`record` serialised the way `previous` was: compact when the previous
+    text was compact, otherwise the export's `indent=1` layout."""
+    compact = json.dumps(json.loads(previous), ensure_ascii=False, separators=(",", ":"))
+    if previous.rstrip("\n") == compact:
+        return json.dumps(record, ensure_ascii=False, separators=(",", ":")) + "\n"
+    return json.dumps(record, ensure_ascii=False, indent=1) + "\n"
+
+
+def fill_endings(directory: Path, db: sqlite3.Connection) -> int:
+    """Add `ended` and `ended_label` to a retained snapshot from the registry,
+    without a fresh build: nothing else in any file changes. A bill gets them
+    only while both its published status and the registry's say it is dead, so
+    a bill revived since the snapshot is left alone. Returns files changed."""
+    directory = Path(directory)
+    docs, previous = retained_bills(directory)
+    registry = {b["key"]: b for b in load_v2_bills(db)}
+
+    def ended_for(record: dict) -> str | None:
+        bill = registry.get(record["key"])
+        if not bill or record.get("status") not in DEAD_STATUSES or bill["status"] not in DEAD_STATUSES:
+            return None
+        return bill.get("ended")
+
+    filled = [with_ended(doc, ended_for(doc)) for doc in docs]
+    changed = 0
+    for before, after in zip(docs, filled):
+        if after != before:
+            # A file keeps its own layout: a few retained files are compact.
+            (directory / f"{after['key']}.json").write_text(same_layout(previous[after["key"]], after))
+            changed += 1
+    index_path = directory / "index.json"
+    prior_text = index_path.read_text()
+    index = json.loads(prior_text)
+    filled_index = {**index, "bills": [with_ended(row, ended_for(row)) for row in index["bills"]]}
+    if filled_index != index:
+        index_path.write_text(same_layout(prior_text, filled_index))
+    counts = collections.Counter(doc["ended"] for doc in filled if doc.get("ended"))
+    log(f"ended: {dict(counts.most_common())}; {changed} bill files changed")
+    return changed
+
+
 def write_sponsor_party_aliases(path: Path) -> None:
     """One explicit alias table for browser and Worker party URL resolution."""
     block = ("// sponsor-party-aliases:begin\n"
@@ -1991,6 +2114,8 @@ def main() -> int:
                     help="verify all retained bill tallies against standalone records, without a DB or fetch")
     ap.add_argument("--normalise-sponsor-labels", type=Path, metavar="DIR",
                     help="decode/map existing sponsor party labels without inferring affiliations or fetching")
+    ap.add_argument("--fill-endings", type=Path, metavar="DIR",
+                    help="add each dead bill's ended/ended_label to a retained export from the registry; nothing else changes")
     ap.add_argument("--refresh-sponsor-parties", type=Path, metavar="DIR",
                     help="check retained sponsor labels against held dated records, without a DB or fetch")
     ap.add_argument("--party-aliases", type=Path, default=Path("portal/public/party-page.js"),
@@ -2038,6 +2163,13 @@ def main() -> int:
         return 0
 
     db = connect(args.db)
+    if args.fill_endings:
+        try:
+            fill_endings(args.fill_endings, db)
+        finally:
+            db.rollback()
+            db.close()
+        return 0
     try:
         if not args.legacy and not has_table(db, "bills_v2"):
             log("bills_v2 is not in the database yet -- rerun with --legacy, or wait "

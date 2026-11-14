@@ -137,3 +137,22 @@ test('BL-PORT-012 remains a portfolio answer with the recorded Youth and Sport e
   const fields = await api.billFields({ asset: localAsset }, key);
   assert.match(api.billCitations(fields, detail.title, 'https://opax.test/bill/' + key, input.question)[0].text, /Youth and Sport portfolio/);
 });
+
+test('a dead bill names its exact ending in the status citation and its projection', async () => {
+  const key = 'au-federal-r6002', detail = await localAsset('/bills/' + key + '.json');
+  assert.equal(detail.ended, 'removed');
+  const fields = await api.billFields({ asset: localAsset }, key);
+  assert.equal(fields.ended_label, 'Removed from the Notice Paper');
+  const url = 'https://opax.test/bill/' + key;
+  const status = api.billCitations(fields, detail.title, url, 'What happened to this bill?').find(c => /has recorded status/.test(c.text));
+  assert.match(status.text, /has recorded status lapsed \(Removed from the Notice Paper\) as at/);
+  assert.match(api.recordEvidenceText(status.text, url), /did not pass; it was removed from the Notice Paper as at/);
+  for (const [label, words] of [['Voted down', 'it was voted down'], ['Lapsed', 'it lapsed'], ['Not proceeding', 'it is recorded as not proceeding']]) {
+    assert.match(api.recordEvidenceText(`The Example Bill 2019 has recorded status lapsed (${label}) as at 1 July 2019.`, url), new RegExp(`did not pass; ${words} as at`));
+  }
+  // A file without the fields keeps today's wording.
+  const { ended, ended_label, ...plain } = fields;
+  const before = api.billCitations(plain, detail.title, url, 'What happened to this bill?').find(c => /has recorded status/.test(c.text));
+  assert.match(before.text, /has recorded status lapsed as at/);
+  assert.match(api.recordEvidenceText(before.text, url), /did not pass; it lapsed as at/);
+});

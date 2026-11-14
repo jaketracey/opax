@@ -13,6 +13,8 @@
  "portfolio": "Immigration, Citizenship, Migrant Services and Multicultural Affairs",
  "status": "lapsed",
  "status_as_of": "2021-10-20",
+ "ended": "negatived",
+ "ended_label": "Voted down",
  "key_dates": [
   {
    "stage": "introduced",
