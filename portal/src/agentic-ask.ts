@@ -32,7 +32,9 @@ import type { AnswerTally } from './research-evidence'
 import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ReceiptFact, type ResearchResult } from './research-types'
 
 import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION } from './research-writing'
-import { leadWithModelAnswer } from './research-answer-shape'
+import { leadWithModelAnswer, ACCOUNTABILITY_QUESTION } from './research-answer-shape'
+import { whoBasis } from './research-who-lead'
+import { researchPreviewGuard } from './research-generation'
 
 export const AGENTIC_PROMPT_VERSION = `agentic-ask-11-topic-scope/${ANSWER_WRITING_VERSION}`
 export const AGENTIC_BUDGET_MS = ASK_HARD_WALL_MS
@@ -513,7 +515,10 @@ export function planRetainsNamedScope(plan: Plan, scope: NamedScope): boolean {
 }
 
 // ---------------------------------------------------------------- orchestration
-export type Progress = (event: string, data: unknown) => Promise<void>
+export type Progress = ((event: string, data: unknown) => Promise<void>) & {
+  /** Internal checked sentence lane, present only for a fresh research SSE response. */
+  answer?: import('./research-types').AnswerPreview
+}
 export interface AgenticDeps extends ToolDeps {
   modelPrices?: { input: number; output: number }
   /** A comparison run must never pay for a second old-path planner. */
@@ -645,6 +650,8 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     if (step && step.state !== 'running') attempted.push(step)
     await progress(event, data)
   }
+  // An exact-lookup correction is prepended after research; its opening cannot be streamed past.
+  loopProgress.answer=lookup?undefined:progress.answer
   const writeRun = async (run: AgenticPayload) => {
     if (!run.answered || !deps.research?.write) return run
     if(run.qualitative?.answer_decision&&run.qualitative.answer_decision!=='answer')return run
@@ -662,9 +669,27 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const stats = { reservedCostUsd:run.research?.reserved_cost_usd,rounds:run.research?.rounds ?? 0,tokens:{...run.tokens},costUsd:run.cost_usd ?? undefined,turns:run.research?.turns ? [...run.research.turns] : [] }
     if(run.research)run.research.pre_writer_sources=sheet.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     const input={question,period,facts:sheet,constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined}}
+    const combine=(written:QualitativeAnswer)=>run.passage_answer?leadWithModelAnswer(appendWrittenPoints(written,run.passage_answer) as unknown as Record<string,unknown>,run.passage_answer,question) as unknown as QualitativeAnswer:written
+    let active=true,checkedPartial:QualitativeAnswer|undefined
+    // Everything this answer can cite: the writer's facts with their sources, and any model passage answer it extends.
+    // A source's snippet, fact texts and title are read alone and joined, as written sources join them.
+    const bySource=new Map<string,typeof sheet>()
+    for(const f of sheet)bySource.set(f.source.resource,[...(bySource.get(f.source.resource)??[]),f])
+    const who=ACCOUNTABILITY_QUESTION.test(question)?whoBasis([...bySource.values()].map(group=>({kind:group[0].source.kind,coverage:group.every(f=>f.coverage),texts:[group[0].source.snippet,...group.map(f=>f.text),group[0].source.title]}))
+      .concat((run.passage_answer?.sources??[]).map(s=>({kind:s.kind,coverage:!!s.coverage,texts:[s.snippet,s.title]})))):undefined
+    const previewCheck=researchPreviewGuard('compose')
+    const preview:import('./research-types').AnswerPreview|undefined=lookup||!progress.answer?undefined:async(written,accept)=>{
+      if(!active)return
+      return previewCheck(async()=>{
+        const combined=combine(written)
+        const checked=await progress.answer!(who?{...combined,research:{...(combined as {research?:object}).research,who_basis:who}} as QualitativeAnswer:combined,accept)
+        if(checked)checkedPartial=checked
+        return checked
+      })
+    }
     const writingMs=Math.max(0,Math.min(8000,Math.min(budgetMs, deps.research.writingWallMs ?? budgetMs)-(Date.now()-started)))
-    const written = await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs),writingMs,deps.signal).catch(()=>proseFallback(input))
-    const complete=run.passage_answer ? leadWithModelAnswer(appendWrittenPoints(written,run.passage_answer) as unknown as Record<string,unknown>,run.passage_answer,question) as unknown as QualitativeAnswer : written
+    const written = await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs,preview),writingMs,deps.signal).catch(()=>checkedPartial??proseFallback(input)).finally(()=>{active=false})
+    const complete=combine(written)
     run.answer=complete.answer;run.qualitative=complete;run.answer_source='model'
     run.tokens=stats.tokens;run.cost_usd=stats.costUsd ?? run.cost_usd
     run.timings.compose_ms+=Date.now()-started-run.timings.total_ms;run.timings.total_ms=Date.now()-started

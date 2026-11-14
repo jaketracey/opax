@@ -131,12 +131,15 @@ test('a checked party correction stays first after the writer and preserves cita
   const q = 'As a Liberal senator, how has Dorinda Cox voted on climate legislation?'
   const answer = 'Dorinda Cox has recorded climate votes.', resource = 'vote-record', source = { resource, slug: '', title: 'Climate votes', href: 'https://example.org/vote', url: 'https://example.org/vote', snippet: answer, cited: true, kind: 'record' }
   let wrote = false
+  const progress=async()=>{}
+  progress.answer=async()=>{throw Error('lookup correction must hold previews')}
   const research = Object.assign(async (_q, context) => {
+    assert.equal(context.progress.answer,undefined,'exact lookup guards loop previews')
     assert.deepEqual(context.named.parties, [])
     assert.equal(context.scope({ tool: 'member_votes', args: { person: 'Dorinda Cox', keyword: 'climate' } }).args.party, undefined)
     return { rounds: 1, steps: [], results: [], selected: [], tokens: { input: 0, output: 0 }, qualitative: { answer, citations: { [resource + '/t/body/0']: [[0, answer.length]] }, sources: [source] } }
-  }, { write: async () => { wrote = true; return { answer, answer_decision: 'answer', citations: { [resource + '/t/body/0']: [[0, answer.length]] }, sources: [source] } } })
-  const run = await api.runAgentic(q, deps({ research }), async () => {}, 40_000, api.inferPeriod(q), {}, api.extractNamedScope(q, roster, bills))
+  }, { write: async (_input,_stats,_signal,_ms,preview) => { assert.equal(preview,undefined,'exact lookup guards writer previews'); wrote = true; return { answer, answer_decision: 'answer', citations: { [resource + '/t/body/0']: [[0, answer.length]] }, sources: [source] } } })
+  const run = await api.runAgentic(q, deps({ research }), progress, 40_000, api.inferPeriod(q), {}, api.extractNamedScope(q, roster, bills))
   assert.equal(wrote, true)
   assert.match(run.answer, /^Dorinda Cox is recorded as Labor, not Liberal\.\n\nDorinda/)
   const range = run.qualitative.citations[resource + '/t/body/0'][0]
