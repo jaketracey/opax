@@ -358,7 +358,7 @@ function AgencyRecord({ params }: { params: AgencyParams }) {
               status={status}
               name={name}
               notFound={{
-                title: "This agency isn't in the latest contract records",
+                title: 'This agency isn’t in the latest contract records',
                 action: {
                   label: 'See all agencies',
                   onPress: () => router.push(agenciesRoute),

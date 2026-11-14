@@ -107,7 +107,7 @@ export function SearchSuggestions({
       {failed ? (
         <InlineError
           subject="Suggestions"
-          message="Suggestions couldn't be loaded."
+          message="Suggestions couldn’t be loaded."
           onRetry={onRetry}
           testID="search-suggestions-error"
         />

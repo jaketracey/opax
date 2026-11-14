@@ -1,3 +1,4 @@
+import { LoadingStatus } from '../../design/states';
 import { useEffect, useState } from 'react';
 import { Platform, RefreshControl, StyleSheet, View } from 'react-native';
 import type { RecordResult } from '../../api/client';
@@ -202,7 +203,7 @@ export default function WordsDollars() {
             testID="wd-error"
           />
         ) : !money.record || !figures ? (
-          <View
+          <LoadingStatus
             accessible
             accessibilityRole="progressbar"
             accessibilityLabel="Loading donations and speeches"
@@ -218,7 +219,7 @@ export default function WordsDollars() {
               <Skeleton shape="figure" count={1} />
               <Skeleton shape="rows" count={4} />
             </View>
-          </View>
+          </LoadingStatus>
         ) : (
           <View style={styles.body}>
             {figures.empty ? (

@@ -208,6 +208,12 @@ export const controlHeight = {
   large: size.controlLarge,
 } as const;
 export type ControlSize = keyof typeof controlHeight;
+/**
+ * An iOS button's drawn capsule below AX1. Its touch target is
+ * `minimumTarget`, so the capsule sits inside empty space; layouts that
+ * measure to what is drawn use this (ContentUnavailable's inline action).
+ */
+export const buttonCapsule = 32;
 
 // Merriweather has no bundled SemiBold; Bold supplies serif inline titles.
 export type FontFamily = string | undefined;

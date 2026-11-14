@@ -12,10 +12,12 @@ import {
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import editionJSON from '../scripts/fixtures/edition-latest.json';
 import personJSON from '../scripts/fixtures/edition-politician.json';
+import programJSON from '../scripts/fixtures/edition-program.json';
 import {
   decodeBill,
   decodeEdition,
   editionFor,
+  editionStoryFold,
   type Block,
   type EditionView,
 } from '../src/api/catalogs';
@@ -1524,6 +1526,40 @@ test('AX5: a long first stage name wraps to a second line, never an ellipsis; de
   expect(row).toBeDefined();
 });
 
+test.each([1, 2])(
+  'program bars at Android font %s retain both blocks and each heading once',
+  async (fontScale) => {
+    Platform.OS = 'android';
+    const window = { width: 412, height: 923, scale: 2.625, fontScale };
+    Dimensions.set({ window, screen: window });
+    jest
+      .mocked(catalogs.todayEdition)
+      .mockResolvedValue(editionFor(decodeEdition(programJSON)));
+    const { root } = await render(<EditionStory />);
+    const read = readAloud(root).join('\n');
+    for (const title of [
+      'By the party holding the seat',
+      'Time to the next federal election',
+    ]) {
+      expect(read.split(title)).toHaveLength(2);
+    }
+    // The base uses labelled horizontal shares: every label is visible, with
+    // no repeated table title or thinned column axis at either font scale.
+    expect(root.findAllByType(BarSeries)).toHaveLength(0);
+    expect(root.findAllByType(ShareRows)).toHaveLength(1);
+    expect(root.findAllByType(ShareBar)).toHaveLength(1);
+    for (const label of [
+      'Labor-held',
+      'Coalition-held',
+      'Crossbench-held',
+      'Under 3 months',
+      'Over 2 years',
+    ]) {
+      expect(read).toContain(label);
+    }
+  },
+);
+
 describe('the edition facts with VoiceOver, at Large, AX3 and AX5', () => {
   const facts = (
     bars: EditionView['facts']['bars'],
@@ -1873,5 +1909,81 @@ describe('sweep 2: the edition story says it once', () => {
     ],
   ] as const)('%s is a %s row', (row, kind) => {
     expect(sourceRowKind(row)).toBe(kind);
+  });
+});
+
+describe('sweep 3, item 12: the parliamentarian story does not open on footnotes', () => {
+  test('the caveat the chart repeats goes, and the record years join the figure label', async () => {
+    jest
+      .mocked(catalogs.todayEdition)
+      .mockResolvedValue({ ...ready, data: person });
+    const { root } = await render(<EditionStory />);
+    // Plate, then the figure card: no prose between them.
+    expect(
+      root.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          /^edition-paragraph-\d+$/.test(String(node.props.testID)),
+      ),
+    ).toHaveLength(0);
+    const figure = root.findByType(FigureBlock).props;
+    expect(figure.value).toBe('768');
+    expect(figure.label).toBe(
+      `${person.facts.figures[0]!.label}, 2008 to 2026`,
+    );
+    // The chart keeps its own note, the one place the caveat is now said.
+    const said = root
+      .findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          typeof node.props.children === 'string',
+      )
+      .map((node) => String(node.props.children));
+    expect(
+      said.filter((text) => text.startsWith('Shares of labelled speeches')),
+    ).toEqual([person.facts.bars!.note]);
+    expect(said.join(' ')).not.toMatch(/Records: 2008/);
+  });
+  test('the fold drops only a note-repeating line with no figure, and moves the years only onto a drawn figure', () => {
+    const facts = person.facts;
+    expect(editionStoryFold(storyParagraphs(person), facts)).toEqual({
+      paragraphs: [],
+      figures: [
+        { value: '768', label: `${facts.figures[0]!.label}, 2008 to 2026` },
+      ],
+    });
+    // No figure card to carry them: the years stay as prose.
+    expect(
+      editionStoryFold(['Records: 2008–2026.'], { ...facts, figures: [] }),
+    ).toEqual({ paragraphs: ['Records: 2008–2026.'], figures: [] });
+    // One year, and a hyphen, read the same way.
+    expect(
+      editionStoryFold(['Records: 2026.'], facts).figures[0]!.label,
+    ).toMatch(/, 2026$/);
+    expect(
+      editionStoryFold(['Records: 2019-2026'], facts).figures[0]!.label,
+    ).toMatch(/, 2019 to 2026$/);
+    // A caveat with its own figure, or about something else, is kept; so
+    // is one when the chart has no note.
+    const kept = [
+      'Shares of labelled speeches; 40% carry no label.',
+      'Counts describe the collected record.',
+    ];
+    expect(editionStoryFold(kept, facts).paragraphs).toEqual(kept);
+    expect(
+      editionStoryFold(['Shares of labelled speeches; labels overlap.'], {
+        ...facts,
+        bars: { ...facts.bars!, note: null },
+        barGroups: undefined,
+      }).paragraphs,
+    ).toEqual(['Shares of labelled speeches; labels overlap.']);
+  });
+  test("a bill's story and figures are untouched", () => {
+    const bill = ready.data!;
+    const paragraphs = storyParagraphs(bill);
+    expect(editionStoryFold(paragraphs, bill.facts)).toEqual({
+      paragraphs,
+      figures: bill.facts.figures,
+    });
   });
 });

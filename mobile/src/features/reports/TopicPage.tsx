@@ -29,6 +29,7 @@ import { rhythm } from '../../design/tokens';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { openOnWeb } from '../../navigation/external';
+import { topicsRoute } from '../../navigation/routes';
 import { copyRecordLink, shareRecord } from '../../navigation/share';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useOpenAsk } from '../ask/open';
@@ -85,15 +86,21 @@ export default function TopicPage() {
   return <TopicContent key={slug} slug={slug} params={params} />;
 }
 
+/** The shared not-found pattern (sweep 2, item 2), with Browse topics. */
 function UnknownTopic() {
   return (
     <>
       <RouteOptions stableItems options={{ title: '' }} />
-      <Screen testID="topic-screen">
+      <Screen testID="topic-screen" centred>
         <ContentUnavailable
           symbol={symbols.topic}
-          title="Topic not found"
-          body="This topic isn't in OPAX."
+          title="This topic isn’t in OPAX"
+          body="Topics come from the labels on speeches."
+          action={{
+            label: 'Browse topics',
+            onPress: () => router.navigate(topicsRoute),
+            testID: 'topic-unknown-browse',
+          }}
           testID="topic-unknown"
         />
       </Screen>
@@ -342,7 +349,7 @@ function TopicContent({ slug, params }: { slug: string; params: Params }) {
           ) : (
             <ContentUnavailable
               symbol="exclamationmark.triangle"
-              title="This topic couldn't be loaded"
+              title="This topic couldn’t be loaded"
               body="OPAX didn't respond."
               action={{
                 label: 'Try again',

@@ -174,7 +174,7 @@ test('the full viewer reads a local photo, keeps its frame and retries in place'
   expect(apiClient.getForAction).not.toHaveBeenCalled();
   const obsoleteError = image.props.onError;
   act(() => obsoleteError());
-  expect(texts(renderer)).toContain("Photo couldn't be loaded.");
+  expect(texts(renderer)).toContain('Photo couldn’t be loaded.');
   await act(async () =>
     renderer.root
       .findAllByType(Button)
@@ -304,6 +304,17 @@ test('the Time machine opens on a year at once, with its menu, pager, voices and
     renderer.root.findAllByProps({ testID: 'tm-year-input' }),
   ).toHaveLength(0);
   const menu = renderer.root.findByProps({ testID: 'tm-year-menu' });
+  const gallery = renderer.root.findAllByProps({ testID: 'tm-gallery' })[0]!;
+  const photoTargets = gallery.findAll(
+    (node) =>
+      node.props.onPress &&
+      node.props.importantForAccessibility === 'no-hide-descendants',
+  );
+  expect(photoTargets.length).toBeGreaterThan(0);
+  for (const target of photoTargets) {
+    expect(target.props.accessible).toBe(false);
+    expect(target.props.accessibilityElementsHidden).toBe(true);
+  }
   expect(menu.props.accessibilityLabel).toBe('Year, 2025');
   expect(texts(renderer)).toContain('2025');
   const all = texts(renderer);

@@ -1,0 +1,6 @@
+{
+  "platforms": ["android"],
+  "android": {
+    "modules": ["au.com.opax.links.OpaxLinksModule"]
+  }
+}

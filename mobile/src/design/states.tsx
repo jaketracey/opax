@@ -24,6 +24,7 @@ import {
   type DimensionValue,
   type StyleProp,
   type ViewStyle,
+  type ViewProps,
 } from 'react-native';
 import { ApiError } from '../api/errors';
 import { useAccessibilitySize, useReduceMotionSetting } from './accessibility';
@@ -34,8 +35,9 @@ import { type DateInput } from './format';
 import { Icon, type SFSymbol } from './icon';
 import { phoneCopy } from './phone-copy';
 import { symbols } from './symbols';
-import { Text } from './text';
+import { Heading, Text } from './text';
 import {
+  buttonCapsule,
   colors,
   controlHeight,
   hairline,
@@ -56,7 +58,7 @@ export const stateCopy = {
   offlineCached: phoneCopy(
     'Offline. Records saved on this iPhone stay readable.',
   ),
-  genericError: "The public record couldn't be loaded.",
+  genericError: 'The public record couldn’t be loaded.',
   searchBusy: 'Search is busy. Try again in a minute.',
   searchUnavailable: 'Search is temporarily unavailable.',
   retry: copy.tryAgain,
@@ -78,11 +80,25 @@ export function errorMessage(
 
 function pageState(announcementsEnabled = true) {
   let announced = false;
+  let loadingAnnounced = false;
+  const contentAnnouncements = new Set<string>();
   const failures = new Set<symbol>();
   const offline = new Set<symbol>();
   const listeners = new Set<() => void>();
   const notify = () => listeners.forEach((listener) => listener());
   return {
+    loading(label: string) {
+      if (announcementsEnabled && !loadingAnnounced) {
+        loadingAnnounced = true;
+        AccessibilityInfo.announceForAccessibility(label);
+      }
+    },
+    unavailable(label: string) {
+      if (announcementsEnabled && !contentAnnouncements.has(label)) {
+        contentAnnouncements.add(label);
+        AccessibilityInfo.announceForAccessibility(label);
+      }
+    },
     subscribe(listener: () => void) {
       listeners.add(listener);
       return () => {
@@ -144,6 +160,52 @@ export function StatePageProvider({
     <StatePageContext.Provider value={page}>
       {children}
     </StatePageContext.Provider>
+  );
+}
+
+/** Android uses the live region; iOS announces once per page load, only
+ * while a screen reader is active. Late reads are cancelled on unmount. */
+export function useLoadingAnnouncement(label: string | null) {
+  useStatusAnnouncement(label, 'loading');
+}
+function useStatusAnnouncement(
+  label: string | null,
+  kind: 'loading' | 'unavailable',
+  scope: 'page' | 'episode' = 'page',
+) {
+  const page = usePageState();
+  useEffect(() => {
+    if (!label || (Platform.OS !== 'ios' && scope === 'page')) return;
+    let active = true;
+    void AccessibilityInfo.isScreenReaderEnabled().then(
+      (enabled) => {
+        if (active && enabled) {
+          if (scope === 'episode')
+            AccessibilityInfo.announceForAccessibility(label);
+          else page[kind](label);
+        }
+      },
+      () => undefined,
+    );
+    return () => {
+      active = false;
+    };
+  }, [label, page, kind, scope]);
+}
+
+/** The same native View and geometry as each placeholder, with shared status semantics. */
+export function LoadingStatus(
+  props: ViewProps & { accessibilityLabel: string },
+) {
+  useLoadingAnnouncement(props.accessibilityLabel);
+  return (
+    <View
+      {...props}
+      accessible
+      accessibilityRole="progressbar"
+      accessibilityState={{ ...props.accessibilityState, busy: true }}
+      accessibilityLiveRegion="polite"
+    />
   );
 }
 
@@ -432,7 +494,7 @@ function DetailSkeleton({
     </>
   );
   return (
-    <View
+    <LoadingStatus
       accessible
       accessibilityRole="progressbar"
       accessibilityLabel={label}
@@ -446,7 +508,7 @@ function DetailSkeleton({
       >
         {content}
       </View>
-    </View>
+    </LoadingStatus>
   );
 }
 
@@ -475,7 +537,7 @@ export function Skeleton({
     );
   if (shape === 'bill-header')
     return (
-      <View
+      <LoadingStatus
         accessible
         accessibilityRole="progressbar"
         accessibilityLabel={label}
@@ -527,11 +589,11 @@ export function Skeleton({
           </View>
           {bar(96, 32, onSunken, true)}
         </View>
-      </View>
+      </LoadingStatus>
     );
   const items = Array.from({ length: Math.max(0, count) }, (_, index) => index);
   return (
-    <View
+    <LoadingStatus
       accessible
       accessibilityRole="progressbar"
       accessibilityLabel={label}
@@ -591,7 +653,7 @@ export function Skeleton({
           ))
         )}
       </View>
-    </View>
+    </LoadingStatus>
   );
 }
 /** Screen supplies its own section gap, including adaptive-width boundaries. */
@@ -820,12 +882,25 @@ export function ContentUnavailable({
   symbol,
   title,
   body,
+  announcement,
   action,
+  inline = false,
   testID,
 }: {
   symbol: SFSymbol;
   title: string;
   body?: string;
+  /** Fixed announcement once per mounted episode, including on Android.
+   * Keeps changing search copy out of a live region. */
+  announcement?: string;
+  /**
+   * Draw the symbol, title and body in React Native on iOS too, as Android
+   * does. SwiftUI's view pads itself, so its action sat about 60 pt under
+   * the body; inline, its capsule sits 12 pt under it. For a state
+   * inside a page (Search's No results, sweep 2 item 8.4), not a whole one.
+   * Accessibility sizes draw this way on every page.
+   */
+  inline?: boolean;
   action?: {
     label: string;
     onPress: () => void;
@@ -834,8 +909,21 @@ export function ContentUnavailable({
   };
   testID?: string;
 }) {
-  const large = useAccessibilitySize();
+  useStatusAnnouncement(
+    announcement ??
+      [phoneCopy(title), body ? phoneCopy(body) : null]
+        .filter(Boolean)
+        .join('. '),
+    'unavailable',
+    announcement === undefined ? 'page' : 'episode',
+  );
   const layout = useLayout();
+  // At accessibility sizes SwiftUI's view came out a line short on three of
+  // the seven not-found pages and cut the title to one line ("This
+  // electorate…", sweep 2 lane A, AX3). React Native's word-safe text wraps
+  // the title in full there, as it does on Android.
+  const accessibilitySize = useAccessibilitySize();
+  const system = Platform.OS === 'ios' && !inline && !accessibilitySize;
   const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
   const columnWidth =
     measuredWidth ??
@@ -850,12 +938,13 @@ export function ContentUnavailable({
   return (
     <View
       testID={testID}
+      accessibilityLiveRegion={announcement === undefined ? 'polite' : 'none'}
       style={styles.unavailable}
       onLayout={(event) => setMeasuredWidth(event.nativeEvent.layout.width)}
     >
-      {Platform.OS === 'ios' ? (
+      {system ? (
         // Verified in @expo/ui 57.0.21 HostProps: boolean | { vertical?, horizontal? }.
-        // Propose the column width; only height follows SwiftUI, including AX5.
+        // Propose the column width; only height follows SwiftUI.
         <Host
           style={{ width: columnWidth, maxWidth: '100%' }}
           matchContents={{ vertical: true }}
@@ -870,9 +959,10 @@ export function ContentUnavailable({
       ) : (
         <View style={styles.unavailable}>
           <Icon name={symbol} size={44} tone="inkSoft" scale="large" />
-          <Text variant="sectionTitle" wordSafe style={styles.center}>
+          {/* The state's title: a header, as SwiftUI's view says it. */}
+          <Heading level={2} style={styles.center}>
             {phoneCopy(title)}
-          </Text>
+          </Heading>
           {body ? (
             <Text variant="body" tone="inkSoft" style={styles.center}>
               {phoneCopy(body)}
@@ -881,17 +971,22 @@ export function ContentUnavailable({
         </View>
       )}
       {action ? (
+        // Centred under the centred text at every size (sweep 2, item 2). At
+        // accessibility sizes a stretched secondary button reads from the
+        // leading edge, so it hung left under the title; it hugs here and
+        // the row centres it, its label wrapping centred inside the column.
         <View
           testID={action.containerTestID}
-          style={
-            large
-              ? { alignSelf: 'stretch' }
-              : { flexDirection: 'row', justifyContent: 'center' }
-          }
+          style={[
+            styles.unavailableAction,
+            inline ? styles.unavailableActionInline : null,
+          ]}
         >
           <Button
             label={action.label}
             variant="secondary"
+            hug
+            centredLabel
             onPress={action.onPress}
             testID={action.testID ?? (testID ? `${testID}-retry` : undefined)}
           />
@@ -905,6 +1000,7 @@ export function ContentUnavailable({
 export function EmptyState({
   message,
   title,
+  icon,
   size = 'block',
   testID,
 }: {
@@ -915,16 +1011,25 @@ export function EmptyState({
   accent?: Accent;
   testID?: string;
 }) {
+  const pane = size === 'pane';
   return (
-    <View style={size === 'pane' ? styles.pane : undefined}>
+    <View style={pane ? styles.pane : undefined}>
+      {/* A split's empty detail pane draws its symbol over the line, so the
+          placeholder reads as one of the app's (sweep 2, item 10). A block
+          inside a page stays one line. */}
+      {pane && icon ? (
+        <View testID={testID ? `${testID}-symbol` : undefined}>
+          <Icon name={icon} size={44} tone="inkSoft" scale="large" />
+        </View>
+      ) : null}
       <Text
         wordSafe
         variant="body"
         tone="inkSoft"
         testID={testID}
-        style={size === 'pane' ? styles.center : undefined}
+        style={pane ? styles.center : undefined}
       >
-        {size === 'pane' ? (title ?? message) : (message ?? title)}
+        {pane ? (title ?? message) : (message ?? title)}
       </Text>
     </View>
   );
@@ -949,6 +1054,7 @@ function ErrorSentence({
         ref={sentenceRef}
         accessible
         accessibilityRole={alert ? 'alert' : undefined}
+        accessibilityLiveRegion={alert ? 'assertive' : undefined}
         accessibilityLabel={sentence}
         style={styles.errorSentence}
       >
@@ -1132,10 +1238,26 @@ const styles = StyleSheet.create({
     gap: rhythm.heading,
     alignSelf: 'stretch',
   },
+  unavailableAction: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignSelf: 'stretch',
+  },
+  // The drawn button, not its target, sits `heading + line` (12 pt) under
+  // the body's line, within 16 pt of its descenders (sweep 2, item 8.4). The
+  // block's own gap is `heading`. On iOS the capsule sits inside its 44 pt
+  // target, so that empty band is taken back (the margin is negative);
+  // Android fills its whole target.
+  unavailableActionInline: {
+    marginTop:
+      rhythm.line -
+      (Platform.OS === 'ios' ? (minimumTarget - buttonCapsule) / 2 : 0),
+  },
   pane: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: rhythm.block,
     paddingHorizontal: rhythm.section,
     paddingBottom: rhythm.section * 2,
   },

@@ -9,7 +9,7 @@ import { Skeleton, OfflineLine } from '../../design/states';
 import { Text } from '../../design/text';
 import { rhythm } from '../../design/tokens';
 import { useListSearchBar } from '../../design/search-bar';
-import { scrollToTop } from '../../design/scroll-to-top';
+import { restOffset, scrollToTop } from '../../design/scroll-to-top';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { RouteOptions } from '../../navigation/preview';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
@@ -17,7 +17,10 @@ import { useOffline } from '../../api/useOffline';
 import { savedSeatDirectory, useSeat } from '../your-mp/useSeat';
 import { vicCopy as c } from './copy';
 import { useElectionNow } from './clock';
-import { dayCount, dateWords, phase, savedDistrict, timeWords } from './model';
+import { dayCount, dateWords, electionCopy, savedDistrict } from './model';
+import { VIC_ELECTION_INSTANTS } from './state';
+import { ElectionStatus } from './Status';
+import { ElectionResults } from './Results';
 import { useOverview } from './reads';
 import { KeyDates } from './KeyDates';
 import { Finder } from './Finder';
@@ -63,6 +66,7 @@ export default function Hub() {
   const now = useElectionNow(
     o
       ? [
+          ...VIC_ELECTION_INSTANTS,
           o.polls_close,
           ...o.key_dates.flatMap((d) => (d.passes_at ? [d.passes_at] : [])),
         ]
@@ -138,21 +142,25 @@ export default function Hub() {
   // starts at the page's top, below the native header. A list that hasn't
   // moved since it mounted is already there.
   useEffect(() => {
-    const rest = Platform.OS === 'ios' ? -headerBottom : 0;
-    if (!finding || offset.current === null || offset.current <= rest + 1)
+    // The rest is the list's own: 0 below the pushed opaque bar, where
+    // -headerBottom scheduled a reset that moved nothing.
+    const list = () => listRef.current?.getScrollResponder() ?? null;
+    if (
+      !finding ||
+      offset.current === null ||
+      offset.current <= restOffset(list(), headerBottom) + 1
+    )
       return;
-    requestAnimationFrame(() =>
-      scrollToTop(listRef.current?.getScrollResponder() ?? null, headerBottom),
-    );
+    requestAnimationFrame(() => scrollToTop(list(), headerBottom));
     // Only a new query moves the page; a settling header height doesn't.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [finding, q]);
-  const state = o ? phase(o, now) : null;
+  const copy = o ? electionCopy(o, now) : null;
   const header = (
     <>
       <View ref={titleRef} onLayout={title.onTitleLayout}>
         <Text wordSafe variant="pageTitle" accessibilityRole="header">
-          {o?.title ?? c.title}
+          {copy?.title ?? c.title}
         </Text>
       </View>
       {offline && read.record ? (
@@ -174,7 +182,10 @@ export default function Hub() {
             </Block>
           ) : null}
           <View testID="vic-election-status">
-            {state === 'ahead' ? (
+            {copy &&
+            !copy.closed &&
+            copy.state !== 'election_day' &&
+            dayCount(o, now) > 0 ? (
               <FigureBlock
                 testID="vic-election-days"
                 value={String(dayCount(o, now))}
@@ -182,30 +193,20 @@ export default function Hub() {
                 label={c.until(dayCount(o, now), dateWords(o.election_day))}
                 accessibilityLabel={`${dayCount(o, now)} ${c.until(dayCount(o, now), dateWords(o.election_day))}`}
               />
-            ) : (
-              <Block title={state === 'today' ? c.today : c.closed}>
-                <Text wordSafe variant="body">
-                  {state === 'today'
-                    ? `${c.hours(timeWords(o.polls_open), timeWords(o.polls_close))}.`
-                    : c.closedBody(
-                        timeWords(o.polls_close),
-                        dateWords(o.election_day),
-                      )}
-                </Text>
-                <ExternalRow
-                  title={state === 'today' ? c.voting : c.vec}
-                  url={
-                    state === 'today' ? o.sources.voting : o.sources.election
-                  }
-                />
-              </Block>
-            )}
+            ) : null}
+            <ElectionStatus
+              context={o}
+              now={now}
+              electionURL={o.sources.election}
+              votingURL={o.sources.voting}
+            />
           </View>
           {saved ? (
             <Block title={c.yourDistrict} testID="vic-election-your-seat">
               <SeatRow district={saved} />
             </Block>
           ) : null}
+          <ElectionResults o={o} now={now} />
           <KeyDates o={o} now={now} />
         </Animated.View>
       ) : null}

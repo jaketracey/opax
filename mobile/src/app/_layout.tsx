@@ -32,6 +32,7 @@ import {
   holdSplashForWelcome,
 } from '../launch/splash';
 import { useStackChrome } from '../navigation/chrome';
+import { useLinkReadiness } from '../navigation/useLinkReadiness';
 import { KeyboardShortcuts } from '../navigation/KeyboardShortcuts';
 import { welcomeRoute } from '../navigation/routes';
 import { navigationTheme } from '../navigation/theme';
@@ -66,7 +67,12 @@ export default function Layout() {
   // The bars' light or dark follows the page's (navigation/theme.ts).
   const scheme = useColorScheme();
   const tour = useTourState();
-  const navigationReady = !!useRootNavigationState()?.key;
+  const rootState = useRootNavigationState();
+  const containerReady = useLinkReadiness(loaded || !!error);
+  // Android's root snapshot may still be partial after the container is
+  // ready. Its events are the live signal for links and the launch welcome.
+  const navigationReady =
+    Platform.OS === 'android' ? containerReady : !!rootState?.key;
   const [handedOver, setHandedOver] = useState(false);
   const endHandoff = useCallback(() => setHandedOver(true), []);
   const launch = useLaunchWelcome(tour);

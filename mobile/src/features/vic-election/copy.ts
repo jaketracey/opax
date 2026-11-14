@@ -1,4 +1,4 @@
-/** The election copy deck. API wording is printed verbatim by callers. */
+/** The election copy deck. Time-sensitive wording shares one state model. */
 export const vicCopy = {
   title: 'Victorian election 2026',
   bar: 'Victorian election',
@@ -20,15 +20,33 @@ export const vicCopy = {
   districts: (n: number) => `Lower house: ${n} districts`,
   regions: (n: number) => `Upper house: ${n} regions`,
   ahead: (d: string) => `Election day is ${d}`,
-  closedToday: (d: string) => `Election day was ${d}`,
   inDays: (n: number) => (n === 1 ? 'Tomorrow' : `In ${n} days`),
   today: 'Election day is today',
+  beforeVoting: 'Before voting',
+  early: 'Early voting',
+  earlyClosed: 'Early voting closed',
+  prePollBody:
+    'Victorians vote on Saturday 28 November. Early voting begins on Wednesday 18 November.',
+  earlyBody:
+    'Early voting runs 18–27 November, 9 am to 6 pm, except Sunday 22 November. Check locations and hours with the VEC.',
+  earlyClosedBody:
+    'Early voting has closed. Election day voting is Saturday 28 November, 8 am to 6 pm AEDT.',
+  votingLater: 'Voting runs from 8 am to 6 pm AEDT.',
+  votingOpen: 'Voting is open until 6 pm AEDT.',
+  votingClosed: 'Voting closed at 6 pm AEDT on Saturday 28 November.',
+  countingBody: 'The count is under way. Check the VEC for count updates.',
+  currentResults: 'Lower house results',
+  finalResults: 'Final lower house results',
+  resultsBody: 'Published lower house district results are available.',
+  finalResultsBody: 'Final lower house district results are available.',
+  awaitingDistrict:
+    'No result for this district has been published here yet. Check the VEC for count updates.',
+  resultsNote: (n: number, total: number) =>
+    `2026 election. ${n} of ${total} district results published here. Winning margins are in percentage points.`,
+  allResults: 'All VEC results, including the upper house',
   closed: 'Voting has closed',
-  hours: (a: string, b: string) => `Polls are open from ${a} to ${b}`,
   until: (n: number, d: string) =>
     `${n === 1 ? 'day' : 'days'} until election day, ${d}`,
-  closedBody: (t: string, d: string) =>
-    `Polls closed at ${t} on ${d}. OPAX shows results from 2022 and by-elections since. For 2026 results, go to the VEC.`,
   voting: 'Where and how to vote',
   vec: 'VEC election page',
   vecWebsite: 'Opens the VEC website.',
@@ -118,7 +136,7 @@ export const vicCopy = {
   openWeb: 'Open on opax.com.au',
   share: 'Share',
   copyLink: 'Copy link',
-  browseDetail: 'Find your district and who is standing',
+  browseDetail: 'Find your district and its candidates',
   searchTitle: (d: string) => `Victorian election 2026 · ${d}`,
   hubFailed: 'The election page couldn’t be loaded',
   seatFailed: 'This seat couldn’t be loaded',

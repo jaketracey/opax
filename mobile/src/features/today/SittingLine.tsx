@@ -11,18 +11,46 @@ import { presentSource } from '../../navigation/sheets';
 import { sittingLine, sittingSources } from './sitting';
 import { useTodayRead } from './TodayBlock';
 
+/** The sitting calendar's read: the saved or fetched file, or null for none. */
+export interface SittingRead {
+  record: Awaited<ReturnType<typeof catalogs.sittingDays>>;
+}
+
+/**
+ * Today's one read of the sitting calendar, shared by the line under the
+ * date and the page's closing line (sweep 3, item 7), so a launch asks once
+ * and a pull revalidates both together. Null until the read answers; a read
+ * that throws answers "no calendar", so the closing line still draws.
+ */
+export function useSittingRead(attempt: number): SittingRead | null {
+  return useTodayRead(
+    'sitting',
+    async (refresh): Promise<SittingRead> => {
+      try {
+        return { record: await catalogs.sittingDays(refresh) };
+      } catch {
+        return { record: null };
+      }
+    },
+    attempt,
+  );
+}
+
 /**
  * Today's sitting line (critique 13): one `secondary` line under the date,
  * by rule from the published sitting calendar, opening its source sheet.
  * Nothing is drawn while the calendar loads or when it cannot say.
  * `now` is Today's clock, so the line rolls over with the date line.
  */
-export function SittingLine({ now, attempt }: { now: Date; attempt: number }) {
-  const read = useTodayRead(
-    'sitting',
-    (refresh) => catalogs.sittingDays(refresh),
-    attempt,
-  );
+export function SittingLine({
+  now,
+  sitting,
+}: {
+  now: Date;
+  /** `useSittingRead`'s answer, null while it loads. */
+  sitting: SittingRead | null;
+}) {
+  const read = sitting?.record ?? null;
   const line = read ? sittingLine(read.data, now) : null;
   if (!read || !line) return null;
   return (

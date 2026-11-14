@@ -211,6 +211,16 @@ export function sharePath(entry: RecordEntry): string | null {
   }
 }
 
+/**
+ * Whether an entry has pane actions: a record's menu, a bill text's, or
+ * Share where the key gives a web path. A person or an electorate has none,
+ * so its pane draws no bar: an empty strip a full touch target tall sat over
+ * it (sweep 2, item 10).
+ */
+export function hasPaneActions(entry: RecordEntry): boolean {
+  return entry.kind === 'doc' || entry.kind === 'text' || !!sharePath(entry);
+}
+
 /** The Back label for an entry below the top of the pane. */
 export function entryLabel(entry: RecordEntry): string {
   if (entry.title) return entry.title;

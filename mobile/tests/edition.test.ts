@@ -16,6 +16,7 @@ import { assertAllowedPath, editionPath } from '../src/api/policy';
 import { responseBytes } from './fixture-bytes';
 import { bills, replaceAt } from './pinned';
 import { editionTitles } from '../src/api/selectors';
+import programJSON from '../scripts/fixtures/edition-program.json';
 
 // The production response pinned for the fixture (scripts/fixtures/).
 const bytes = responseBytes(snapshot, editionPath);
@@ -29,6 +30,23 @@ const without = (key: string) => {
   delete edition[key];
   return { ...input, edition };
 };
+
+test('a program keeps the party and election timing bars in published order', () => {
+  const facts = editionFor(decodeEdition(programJSON)).data!.facts;
+  expect(facts.barGroups?.map((group) => group.title)).toEqual([
+    'By the party holding the seat',
+    'Time to the next federal election',
+  ]);
+  expect(facts.order).toEqual([
+    { type: 'figure', index: 0 },
+    { type: 'bars', index: 0 },
+    { type: 'bars', index: 1 },
+  ]);
+  expect(facts.bars).toEqual(facts.barGroups![0]);
+  expect(facts.barGroups![1]!.items.map((item) => item.pct)).toEqual([
+    12, 20, 30, 25, 13,
+  ]);
+});
 
 describe('the edition decoder', () => {
   test('reads the pinned production response in full', () => {

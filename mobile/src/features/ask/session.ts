@@ -209,7 +209,7 @@ export function useAskScreenFocus() {
 
 export const inputCopy = {
   roster: 'Choose a person from the list in Options.',
-  offline: "People couldn't be checked. Try again when you're online.",
+  offline: "People couldn’t be checked. Try again when you're online.",
 } as const;
 /**
  * Every Ask send goes through here: the consent sheet first (once per

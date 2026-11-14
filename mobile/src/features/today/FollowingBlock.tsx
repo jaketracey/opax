@@ -118,7 +118,7 @@ export function FollowingBlock({
   const error = failed ? (
     <InlineError
       subject="Changes"
-      message="Changes couldn't be checked."
+      message="Changes couldn’t be checked."
       onRetry={onRetry}
       testID="today-following-error"
     />

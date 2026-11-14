@@ -16,12 +16,16 @@ import { addDays, type SydneyDate } from './rules';
  *   many days after the fixture edition's date (1, 7 or 30), so the tiers
  *   and the daily rules are pinned.
  * - `OPAXWelcomeDeclined`: `none` | `today` | `{n}d` (n days ago).
+ * - `OPAXPlateDraw`: `on` lets the bill plate's timeline draw (sweep 3,
+ *   item 8). Without it e2e builds show the finished timeline, so no
+ *   screenshot catches it half drawn; a motion clip passes it.
  */
 export interface TodayFixture {
   seat: 'none' | 'federal' | 'federal+state' | 'legacy-senate-nsw' | null;
   editionCache: 'none' | 'present' | null;
   editionAge: 'fresh' | 'recent' | 'old' | null;
   welcomeDeclined: string | null;
+  plateDraw: 'on' | null;
 }
 
 const none: TodayFixture = {
@@ -29,6 +33,7 @@ const none: TodayFixture = {
   editionCache: null,
   editionAge: null,
   welcomeDeclined: null,
+  plateDraw: null,
 };
 
 const arg = (key: string) => {
@@ -59,6 +64,7 @@ export function todayFixture(): TodayFixture {
     editionCache: oneOf(arg('OPAXEditionCache'), ['none', 'present']),
     editionAge: oneOf(arg('OPAXEditionAge'), ['fresh', 'recent', 'old']),
     welcomeDeclined: arg('OPAXWelcomeDeclined'),
+    plateDraw: oneOf(arg('OPAXPlateDraw'), ['on']),
   };
   return read;
 }

@@ -92,7 +92,7 @@ test('the year whose returns are not yet published is partial, and only that yea
   expect(partialYearFrom(graph({}, years), [2022, 2023])).toBeUndefined();
 });
 
-test('a compact money row reads one way, and says the full amount', () => {
+test('a compact money row reads one way, and says the visible rounding', () => {
   let r!: TestRenderer.ReactTestRenderer;
   act(() => {
     r = TestRenderer.create(
@@ -112,6 +112,6 @@ test('a compact money row reads one way, and says the full amount', () => {
     '$9,370,963',
   ]);
   expect(rows[2]!.props.accessibilityLabel).toBe(
-    'Grevillea Group, 9,370,963 dollars',
+    'Grevillea Group, 9.4 million dollars',
   );
 });

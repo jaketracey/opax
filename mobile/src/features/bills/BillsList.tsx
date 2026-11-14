@@ -300,7 +300,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         record.staleReason ? (
           <InlineError
             subject="the latest bills"
-            message={`The latest bills couldn't be loaded. Showing the copy saved on ${formatDate(record.savedAt, 'short').replace(/ \d{4}$/, '')}.`}
+            message={`The latest bills couldn’t be loaded. Showing the copy saved on ${formatDate(record.savedAt, 'short').replace(/ \d{4}$/, '')}.`}
             onRetry={refresh}
             testID="bills-stale"
           />
@@ -346,7 +346,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
     ) : error ? (
       <ContentUnavailable
         symbol="exclamationmark.triangle"
-        title="Bills couldn't be loaded"
+        title="Bills couldn’t be loaded"
         action={{
           label: copy.tryAgain,
           onPress: retry,
@@ -367,6 +367,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
       <ContentUnavailable
         symbol="magnifyingglass"
         title={`No results for "${query}"`}
+        announcement="No results"
         body={
           // The filters still apply to a search: say so, not "spelling".
           on > 0
@@ -434,7 +435,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
       state={record?.partial ? 'partial' : null}
       notes={[
         LIST_NOTE,
-        record?.partial ? "Some records couldn't be read." : null,
+        record?.partial ? 'Some records couldn’t be read.' : null,
       ]}
       testID="bills-as-at"
     />
@@ -559,7 +560,8 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         empty={
           <EmptyState
             size="pane"
-            message="No bill selected"
+            icon="doc.text"
+            title="Choose a bill"
             testID="bills-split-empty"
           />
         }

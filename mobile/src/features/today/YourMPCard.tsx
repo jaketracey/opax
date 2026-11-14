@@ -8,7 +8,7 @@ import { InsetGroup } from '../../design/layout';
 import { PersonRow } from '../../design/people';
 import { RowLink, type RowMenuAction } from '../../design/row-link';
 import { SourceLine, type SourceCitation } from '../../design/source';
-import { InlineError, Skeleton } from '../../design/states';
+import { InlineError, LoadingStatus, Skeleton } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
@@ -156,7 +156,7 @@ export function YourMPSkeleton() {
   return (
     // One element for VoiceOver, read once (today.md 5.4); the shapes inside
     // keep the card's layout.
-    <View
+    <LoadingStatus
       accessible
       accessibilityRole="progressbar"
       accessibilityLabel="Loading your MP"
@@ -173,7 +173,7 @@ export function YourMPSkeleton() {
         <Skeleton shape="rows" count={1} label="Loading your MP" />
         <Skeleton shape="text" count={1} label="Loading your MP" />
       </View>
-    </View>
+    </LoadingStatus>
   );
 }
 
@@ -248,7 +248,7 @@ export function YourMPCard({
       {view.status === 'error' ? (
         <InlineError
           subject="Your MP"
-          message="Your MP couldn't be loaded."
+          message="Your MP couldn’t be loaded."
           onRetry={onRetry}
           testID="today-your-mp-error"
         />

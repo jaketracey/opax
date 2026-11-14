@@ -295,6 +295,7 @@ export function MoneyMapPanel({
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={expanded ? 'Collapse details' : 'Expand details'}
+          accessibilityState={{ expanded }}
           onPress={toggle}
           style={styles.handleRow}
           testID="money-map-handle"
@@ -514,7 +515,8 @@ const styles = StyleSheet.create({
     minHeight: HANDLE,
     alignItems: 'center',
     justifyContent: 'center',
-    // A 44 pt target: the rows beneath are reachable past the strip.
+    // Preserve the strip's layout. The panel clips any target extension above
+    // it; a full target needs a design change (SCREEN_A11Y.md).
     paddingVertical: (minimumTarget - HANDLE) / 2,
     marginVertical: -((minimumTarget - HANDLE) / 2),
     zIndex: 1,

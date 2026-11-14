@@ -1,3 +1,4 @@
+import { LoadingStatus } from '../../design/states';
 import { RouteOptions } from '../../navigation/preview';
 import { SectionHeader } from '../../design/layout';
 import {
@@ -402,7 +403,7 @@ export default function BillTextReader({
             <RecordLoadError
               error={manifestState.error}
               slug=""
-              subject="This bill's text"
+              subject="This bill’s text"
               onRetry={manifestState.retry}
               testID="bill-text-error"
             />
@@ -538,7 +539,7 @@ export default function BillTextReader({
                 <View style={styles.block}>
                   <InlineError
                     subject="This version"
-                    message="This version couldn't be loaded."
+                    message="This version couldn’t be loaded."
                     onRetry={versionState.retry}
                     testID="bill-text-version-error"
                   />
@@ -653,7 +654,7 @@ function Passage({
 /** The text area while a newly chosen version loads. */
 function TextSkeleton() {
   return (
-    <View
+    <LoadingStatus
       accessible
       accessibilityRole="progressbar"
       accessibilityLabel="Loading this version"
@@ -670,7 +671,7 @@ function TextSkeleton() {
           ]}
         />
       ))}
-    </View>
+    </LoadingStatus>
   );
 }
 
@@ -680,7 +681,7 @@ function BillTextSkeleton() {
     <View key={key} style={[styles.bar, { width, height }]} />
   );
   return (
-    <View
+    <LoadingStatus
       accessible
       accessibilityRole="progressbar"
       accessibilityLabel="Loading the bill text"
@@ -712,7 +713,7 @@ function BillTextSkeleton() {
           )}
         </View>
       </View>
-    </View>
+    </LoadingStatus>
   );
 }
 

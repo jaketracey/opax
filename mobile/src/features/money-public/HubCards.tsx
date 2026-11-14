@@ -191,7 +191,7 @@ export function QuestionCard({
           ) : (
             <InlineError
               subject="Figures"
-              message="Figures couldn't be loaded."
+              message="Figures couldn’t be loaded."
               onRetry={state.retry}
               testID={`${testID}-error`}
             />

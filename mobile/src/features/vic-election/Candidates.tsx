@@ -2,11 +2,14 @@ import { Fragment } from 'react';
 import { View, useWindowDimensions } from 'react-native';
 import type { RecordResult } from '../../api/client';
 import { PartyLabel } from '../../design/people';
+import { isPartyLabel } from '../../design/party';
+import { router } from 'expo-router';
+import { partyRoute } from '../../navigation/routes/people';
 import { Text } from '../../design/text';
 import { minimumTarget, rhythm } from '../../design/tokens';
 import { vicCopy as c } from './copy';
 import type { Overview, SeatDetail } from './decoders';
-import { phase } from './model';
+import { phase, seatContext } from './model';
 import { Block, ElectionSource, ExternalRow, shortDate } from './shared';
 export function Candidates({
   record,
@@ -19,7 +22,11 @@ export function Candidates({
 }) {
   const candidates = record.data.candidates;
   const { fontScale } = useWindowDimensions();
-  if (!candidates && (!o || phase(o, now) === 'closed')) return null;
+  if (
+    !candidates &&
+    (!o || phase(seatContext(record.data, o), now) === 'closed')
+  )
+    return null;
   const numbered = record.data.kind === 'district';
   const grouped =
     !numbered &&
@@ -59,6 +66,24 @@ export function Candidates({
                 <View
                   accessible
                   accessibilityLabel={`${numbered ? `${i + 1}. ` : grouped ? `${heading}. ` : ''}${candidate.name}${party ? `, ${party}` : ''}.`}
+                  accessibilityActions={
+                    party && isPartyLabel(party)
+                      ? [
+                          {
+                            name: 'openParty',
+                            label: `Open ${party} party page`,
+                          },
+                        ]
+                      : undefined
+                  }
+                  onAccessibilityAction={(event) => {
+                    if (
+                      event.nativeEvent.actionName === 'openParty' &&
+                      party &&
+                      isPartyLabel(party)
+                    )
+                      router.push(partyRoute(party));
+                  }}
                   testID={`vic-seat-candidate-${i}`}
                   style={{
                     minHeight: minimumTarget,
@@ -88,7 +113,14 @@ export function Candidates({
                     <Text wordSafe variant="body">
                       {candidate.name}
                     </Text>
-                    {party ? <PartyLabel party={party} /> : null}
+                    {party ? (
+                      <View
+                        accessibilityElementsHidden
+                        importantForAccessibility="no-hide-descendants"
+                      >
+                        <PartyLabel party={party} />
+                      </View>
+                    ) : null}
                   </View>
                 </View>
               </Fragment>

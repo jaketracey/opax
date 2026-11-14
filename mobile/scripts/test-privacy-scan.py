@@ -270,7 +270,7 @@ class PatchReplayTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             for entry in entries:
-                package = root / 'node_modules' / entry['package']; package.mkdir(parents=True)
+                package = root / 'node_modules' / entry['package']; package.mkdir(parents=True, exist_ok=True)
                 (package / 'package.json').write_text(json.dumps({'version': entry['version']}))
                 for row in entry['files']:
                     dest = package / row['path']; dest.parent.mkdir(parents=True, exist_ok=True)

@@ -68,20 +68,25 @@ export const talkMachineNote = {
 export { SHEET_HEADER } from '../sheets/fitted';
 
 /**
- * `/talk/consent`, a form sheet sized to its content (7.7). The text scrolls
- * under the two buttons, which stay pinned at the foot, so at the largest
- * text sizes both are always on screen. Agree stores consent and asks the
- * Talk screen to start once the sheet has gone; Not now and a swipe down
- * leave everything as it was.
+ * `/talk/consent`, a form sheet sized to its content (7.7). Agree stores
+ * consent and asks the Talk screen to start once the sheet has gone; Not now
+ * and a swipe down leave everything as it was.
+ *
+ * Ask's shape (`features/ask/AskConsent.tsx`): the scroll view is the
+ * sheet's root, capped at the space the sheet can use, and the two buttons
+ * are the last things in its range. The old shape, a capped View holding the
+ * scroll view with the buttons pinned beneath it, drew a blank panel at Large
+ * with the words laid out under the buttons (sweep 2, item 1): a sheet's
+ * first nested scroll view can be set back to `automatic` insets by
+ * react-native-screens, which a pinned footer does not survive. Capped, the
+ * range ends at Not now at AX5; at Large everything fits and the cap does
+ * nothing.
  */
 export function ConsentSheet() {
   const insets = useSafeAreaInsets();
-  // Capped at the space the sheet can use, so at AX5 the text scrolls and
-  // the two buttons stay above the home indicator (7.7).
   const maxHeight = useFittedSheetHeight();
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
-  const [under, setUnder] = useState(false);
   const mounted = useRef(false);
   const saving = useRef(false);
   const closed = useRef(false);
@@ -99,11 +104,6 @@ export function ConsentSheet() {
     if (closed.current) return;
     closed.current = true;
     router.back();
-  };
-  const size = useRef({ view: 0, content: 0, y: 0 });
-  const measure = () => {
-    const { view, content, y } = size.current;
-    setUnder(content - y > view + 1);
   };
   const agree = async () => {
     if (saving.current || closed.current) return;
@@ -124,7 +124,8 @@ export function ConsentSheet() {
     dismiss();
   };
   return (
-    <View
+    <ScrollView
+      testID="talk-consent-sheet"
       style={[
         styles.sheet,
         {
@@ -133,59 +134,37 @@ export function ConsentSheet() {
           paddingRight: insets.right,
         },
       ]}
-      testID="talk-consent-sheet"
+      contentInsetAdjustmentBehavior="automatic"
+      contentContainerStyle={[
+        styles.body,
+        { paddingBottom: rhythm.block + insets.bottom },
+      ]}
     >
-      <ScrollView
-        style={styles.scroll}
-        contentInsetAdjustmentBehavior="never"
-        contentContainerStyle={styles.body}
-        onLayout={(event) => {
-          size.current.view = event.nativeEvent.layout.height;
-          measure();
-        }}
-        onContentSizeChange={(_, height) => {
-          size.current.content = height;
-          measure();
-        }}
-        onScroll={(event) => {
-          size.current.y = event.nativeEvent.contentOffset.y;
-          measure();
-        }}
-        scrollEventThrottle={32}
-      >
-        <View testID="talk-consent">
-          <MachinePill note={talkMachineNote} testID="talk-consent-machine" />
-        </View>
-        <VoiceConsentText />
-        <Text wordSafe variant="footnote" tone="inkSoft">
-          {talkCopy.consent.withdraw}
-        </Text>
-        <InsetGroup>
-          <LinkRow
-            title={talkCopy.consent.voicePrivacy}
-            external
-            accessibilityHint="Opens on opax.com.au"
-            testID="talk-consent-privacy"
-            onPress={() =>
-              void openOnWeb('/privacy', talkCopy.consent.voicePrivacy)
-            }
-          />
-        </InsetGroup>
-        {failed ? (
-          <ErrorState
-            message={failureCopy.unavailable}
-            testID="talk-consent-error"
-          />
-        ) : null}
-      </ScrollView>
-      <View
-        testID="talk-consent-footer"
-        style={[
-          styles.footer,
-          under ? styles.separated : null,
-          { paddingBottom: Math.max(insets.bottom, rhythm.block) },
-        ]}
-      >
+      <View testID="talk-consent">
+        <MachinePill note={talkMachineNote} testID="talk-consent-machine" />
+      </View>
+      <VoiceConsentText />
+      <Text wordSafe variant="footnote" tone="inkSoft">
+        {talkCopy.consent.withdraw}
+      </Text>
+      <InsetGroup>
+        <LinkRow
+          title={talkCopy.consent.voicePrivacy}
+          external
+          accessibilityHint="Opens on opax.com.au"
+          testID="talk-consent-privacy"
+          onPress={() =>
+            void openOnWeb('/privacy', talkCopy.consent.voicePrivacy)
+          }
+        />
+      </InsetGroup>
+      {failed ? (
+        <ErrorState
+          message={failureCopy.unavailable}
+          testID="talk-consent-error"
+        />
+      ) : null}
+      <View testID="talk-consent-actions" style={styles.consentActions}>
         <Button
           label={talkCopy.consent.agree}
           testID="talk-agree"
@@ -203,7 +182,7 @@ export function ConsentSheet() {
           onPress={dismiss}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -278,23 +257,12 @@ const styles = StyleSheet.create({
   centre: { textAlign: 'center' },
   paragraphs: { gap: rhythm.block },
   sheet: { backgroundColor: colors.paper },
-  scroll: { flexGrow: 0, flexShrink: 1 },
   body: {
     gap: rhythm.block,
     paddingHorizontal: layout.screenMargin,
     paddingTop: rhythm.block,
-    paddingBottom: rhythm.block,
   },
-  footer: {
-    gap: rhythm.tight,
-    paddingHorizontal: rhythm.block,
-    paddingTop: rhythm.block,
-    backgroundColor: colors.paper,
-  },
-  separated: {
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: colors.dividerDefault,
-  },
+  consentActions: { gap: rhythm.tight },
   panel: { gap: rhythm.tight },
   actions: { gap: rhythm.tight, marginTop: rhythm.tight },
 });

@@ -3,7 +3,9 @@ import { withNavigationOptions } from './navigation-options';
 // typing, at most one paid request per explicit action, scope switches and
 // Back from the session cache, paging only on tap, and superseded requests
 // still counted (an abandoned ARAG read may be charged).
+import { HeaderHeightContext } from 'expo-router/react-navigation';
 import { act } from 'react';
+import { ScrollView } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { searchFixture } from '../scripts/search-fixture';
 import { ScopeBar } from '../src/features/search/ScopeBar';
@@ -236,6 +238,52 @@ test('a superseded submit is still counted, and its late answer is never drawn',
   expect(paid()).toHaveLength(2);
   await act(async () => r.unmount());
 });
+
+test.each([
+  // Search's translucent root bar lies over a scroll view at the window's
+  // top: the rest is unchanged, a header above zero.
+  ['under its translucent root bar', 0, -116],
+  // With its large title off and a solid bar, the root bar is opaque and
+  // react-native-screens lays the page out below it: the rest is 0.
+  ['below a solid bar', 116, 0],
+] as const)(
+  'a submitted search starts at its resting top %s',
+  async (_case, top, y) => {
+    const measure = jest
+      .spyOn(
+        ScrollView.prototype as unknown as {
+          measureInWindow: (callback: (x: number, y: number) => void) => void;
+        },
+        'measureInWindow',
+      )
+      .mockImplementation((callback) => callback(0, top));
+    const scrollTo = jest
+      .spyOn(
+        ScrollView.prototype as unknown as { scrollTo: () => void },
+        'scrollTo',
+      )
+      .mockImplementation(() => undefined);
+    let r!: TestRenderer.ReactTestRenderer;
+    try {
+      await act(async () => {
+        r = TestRenderer.create(
+          <HeaderHeightContext.Provider value={116}>
+            {withNavigationOptions(<SearchScreen />, (options) => {
+              if (options.headerSearchBarOptions) mockBar.options = options;
+            })}
+          </HeaderHeightContext.Provider>,
+        );
+      });
+      scrollTo.mockClear();
+      await submit('housing');
+      expect(scrollTo).toHaveBeenLastCalledWith({ y, animated: false });
+    } finally {
+      await act(async () => r?.unmount());
+      measure.mockRestore();
+      scrollTo.mockRestore();
+    }
+  },
+);
 
 test('the fixture answers searches the way the cost guard expects', () => {
   const page = searchFixture(

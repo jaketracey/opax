@@ -77,19 +77,18 @@ import XCTest
             await rig.close(); await server.stop()
         }
     }
-    func testLoopbackAbnormalDropAndReconnectRefusedUntilStatusClears() async throws {
+    func testLoopbackAbnormalDropAndReconnectReplacesOpenSession() async throws {
         var timing = CallTiming(); timing.pollInterval = 0.05; timing.pollMaxInterval = 0.05
         let (server, rig) = try await fixture(.quiet, timing: timing)
         await rig.controller.start(); try await eventually { await rig.controller.state == .live }
         await rig.http.configure(status: signedStatus(active: "active")); await server.drop()
         try await eventually { await rig.controller.state == .failed }
         await rig.controller.start()
-        let state = await rig.controller.state; XCTAssertEqual(state, .unavailable)
-        let starts = await rig.http.count(.voiceStart); XCTAssertEqual(starts, 1)
-        let log = await server.snapshot(); XCTAssertEqual(log.peers.count, 1)
-        await rig.http.configure(status: signedStatus(remaining: 0)) // fixture expiry fully charges reservation
-        try await eventually { await rig.controller.latestStatus?.activeSession == nil }
-        let after = await rig.controller.latestStatus; XCTAssertEqual(after?.remainingSeconds, 0)
+        let state = await rig.controller.state; XCTAssertEqual(state, .connecting)
+        // One start for the original call and one explicit retry, even while status reports it open.
+        let starts = await rig.http.count(.voiceStart); XCTAssertEqual(starts, 2)
+        try await eventually { await rig.controller.state == .live }
+        let log = await server.snapshot(); XCTAssertEqual(log.peers.count, 2)
         await rig.close(); await server.stop()
     }
     func testNewCallAfterDropGetsFreshReservationAndSocket() async throws {
@@ -117,11 +116,15 @@ import XCTest
             try await eventually { await rig.controller.state == .reserving }
             await rig.http.configure(status: signedStatus(active: active)); await rig.http.resumeStart(); await task.value
             try await eventually { await rig.recorder.hasError(.unavailable) }
+            let starts = await rig.http.count(.voiceStart); XCTAssertEqual(starts, 1)
             let finish = await rig.http.count(.voiceFinish); XCTAssertEqual(finish, 1)
             let status = await rig.controller.latestStatus; XCTAssertEqual(status?.remainingSeconds, 600)
             if active != nil {
                 await rig.controller.start()
-                let count = await rig.http.count(.voiceStart); XCTAssertEqual(count, 1)
+                // One start per explicit attempt: the 503 itself never retries the reservation.
+                let count = await rig.http.count(.voiceStart); XCTAssertEqual(count, 2)
+                try await eventually { await rig.controller.state == .failed }
+                let retryFinish = await rig.http.count(.voiceFinish); XCTAssertEqual(retryFinish, 2)
                 let remaining = (active == "connecting" || active == "active") ? 0 : 600
                 await rig.http.configure(status: signedStatus(remaining: remaining))
                 try await eventually { await rig.controller.latestStatus?.activeSession == nil }

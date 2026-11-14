@@ -1559,8 +1559,12 @@ describe('party', () => {
     expect(tile('party-figure-members')).toContain(formatCount(members));
     // The sections draw the same figures.
     expect(tile('party-current-count')).toContain(formatCount(members));
+    const figure = host(r, 'party-receipts-total')
+      .findAllByType(Text)
+      .find((node) => node.props.variant === 'figure')!.props.children;
+    expect([formatMoney(total), formatMoneyCompact(total)]).toContain(figure);
     expect(tile('party-receipts-total')).toContain(
-      moneyAccessibilityLabel(total),
+      moneyAccessibilityLabel(total, figure !== formatMoney(total)),
     );
     // The total once, exact or (at accessibility sizes) compact: never also
     // as a tile above the section.
@@ -1975,7 +1979,7 @@ test.each(['ios', 'android'] as const)(
 );
 
 test.each(['ios', 'android'] as const)(
-  '%s unknown person centres its recovery and keeps a Done bar',
+  '%s unknown person centres its recovery with only the back button',
   async (platform) => {
     jest.replaceProperty(Platform, 'OS', platform);
     mockParams.slug = 'casey-missing';
@@ -1998,12 +2002,8 @@ test.each(['ios', 'android'] as const)(
       headerTitle: 'No profile',
       headerLargeTitleEnabled: false,
     });
-    if (platform === 'ios') {
-      const items = options.unstable_headerRightItems();
-      expect(items[0].label).toBe('Done');
-      act(() => items[0].onPress());
-      expect(router.back).toHaveBeenCalled();
-    }
+    // Sweep 2, item 2: no Done, which did nothing the back button does not.
+    expect(options.unstable_headerRightItems?.() ?? []).toEqual([]);
     act(() => unavailable.props.action.onPress());
     expect(router.navigate).toHaveBeenCalledWith(
       expect.objectContaining({

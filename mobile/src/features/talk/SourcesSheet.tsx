@@ -1,11 +1,9 @@
 import { router } from 'expo-router';
-import { Platform, StyleSheet } from 'react-native';
 import {
   EmptyState,
   InsetGroup,
-  LinkRow,
+  RecordRow,
   Screen,
-  Text,
 } from '../../design/primitives';
 import { trackSourceOpen } from '../../navigation/external';
 import type { VoiceSource } from '../../voice';
@@ -46,34 +44,14 @@ export function TalkSourcesScreen() {
             const meta = sourceMeta(source);
             const title = sourceHeading(source);
             const speaker = sourceSpeaker(source);
-            const metadata = (
-              <Text wordSafe variant="secondary" style={styles.meta}>
-                {meta}
-              </Text>
-            );
             return (
-              <LinkRow
+              <RecordRow
                 key={source.path}
+                meta={meta}
                 title={title}
-                {...(Platform.OS === 'android'
-                  ? { aboveTitle: metadata }
-                  : { leading: metadata })}
-                secondary={
-                  speaker ? (
-                    <Text
-                      wordSafe
-                      variant="secondary"
-                      testID={`talk-source-${index}-speaker`}
-                    >
-                      {speaker}
-                    </Text>
-                  ) : undefined
-                }
+                speaker={speaker ? { name: speaker, party: null } : null}
                 external={!native}
                 testID={`talk-source-${index}`}
-                accessibilityLabel={[meta, title, speaker]
-                  .filter(Boolean)
-                  .join(', ')}
                 accessibilityHint={
                   native
                     ? talk.active
@@ -102,5 +80,3 @@ export function TalkSourcesScreen() {
     </Screen>
   );
 }
-
-const styles = StyleSheet.create({ meta: { marginBottom: 2 } });

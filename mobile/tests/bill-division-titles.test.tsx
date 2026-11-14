@@ -279,22 +279,22 @@ describe('the bill page draws the exported title', () => {
           )
           .props.onPress(),
       );
-    // Limitation of debate is procedural: it waits in its own group.
-    press('bill-divisions-procedural');
+    // An amendment under the time limit stays in the main list and names
+    // the decision. Its full transcript still belongs in the disclosure.
     const id = r.root
       .findAll(
         (node) =>
           typeof node.type === 'string' &&
           /^bill-division-\d+-title$/.test(node.props.testID ?? '') &&
-          texts(node).join('') === 'Limitation of debate',
+          texts(node).join('') === 'Amendment',
       )[0]!
       .props.testID.replace(/-title$/, '');
     const item = byID(r.root, id)[0]!;
-    expect(texts(item)).toContain('Senate · 19 Aug 2026');
+    expect(texts(item)).toContain('Senate · 19 Aug 2026 · under a time limit');
     const more = byID(item, `${id}-more`)[0]!;
     expect(more.props.accessibilityState).toEqual({ expanded: false });
     expect(more.props.accessibilityLabel).toMatch(
-      /^Limitation of debate, Senate · 19 Aug 2026, Not agreed to, 11 ayes, 24 noes/,
+      /^Amendment, Senate · 19 Aug 2026 · under a time limit, Not agreed to, 11 ayes, 24 noes/,
     );
     expect(byID(item, `${id}-question`)).toHaveLength(0);
     press(`${id}-more`);

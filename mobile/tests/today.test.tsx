@@ -25,7 +25,10 @@ import { rhythm } from '../src/design/tokens';
 import { OfflineLine } from '../src/design/states';
 import Today from '../src/features/Today';
 import { WelcomePage } from '../src/features/welcome/Welcome';
-import { Masthead } from '../src/features/today/Masthead';
+import { AustraliaDots } from '../src/features/today/AustraliaDots';
+import { TodayEditionCard } from '../src/features/today/FeaturedPeopleCard';
+import { TodayFoot } from '../src/features/today/Foot';
+import { Masthead, mastheadDate } from '../src/features/today/Masthead';
 import { useOverview as useElectionOverview } from '../src/features/vic-election/reads';
 import { decodeOverview } from '../src/features/vic-election/decoders';
 import electionOverview from '../scripts/fixtures/vic-election/overview.json';
@@ -71,6 +74,8 @@ jest.mock('../src/api/runtime', () => ({
     bill: jest.fn(() => new Promise(() => {})),
     roster: jest.fn(() => new Promise(() => {})),
     slugs: jest.fn(() => new Promise(() => {})),
+    // No published calendar: no sitting line, the closing line's date alone.
+    sittingDays: jest.fn(async () => null),
   },
 }));
 jest.mock('../src/features/vic-election/reads', () => ({
@@ -915,6 +920,208 @@ describe('the invitation’s line', () => {
     expect(
       invitationBody(seat({ name: 'New South Wales', chamber: 'senate' })),
     ).toBe('Choose your current federal electorate.');
+  });
+});
+
+describe('the first second and the last line (sweep 3, lane A)', () => {
+  const restore: (() => void)[] = [];
+  afterEach(() => restore.splice(0).forEach((undo) => undo()));
+  const hosts = (r: TestRenderer.ReactTestRenderer, id: string) =>
+    r.root.findAll((n) => typeof n.type === 'string' && n.props.testID === id);
+  test('the dot map draws in the first frame, neutral, holding the date’s place; the seat then tints it', async () => {
+    setUp({ seat: true, cached: { date: addDays(today, -1) } });
+    // A compact phone: the map is not drawn on a regular-width phone.
+    const window = Dimensions.get('window');
+    const screen = Dimensions.get('screen');
+    Dimensions.set({
+      window: { width: 402, height: 874, scale: 3, fontScale: 1 },
+      screen: { width: 402, height: 874, scale: 3, fontScale: 1 },
+    });
+    restore.push(() => Dimensions.set({ window, screen }));
+    let answer!: (choice: Awaited<ReturnType<typeof loadChoice>>) => void;
+    jest.mocked(loadChoice).mockReturnValue(
+      new Promise((resolve) => {
+        answer = resolve;
+      }),
+    );
+    const r = await render(<Today />);
+    // The seat is still being read: the launch skeleton is up, and the map
+    // with its clearance already sits ahead of the date (crop-01: none, and
+    // the date dropped 16 pt when it came).
+    expect(hosts(r, 'today-launching')).toHaveLength(1);
+    const dots = r.root.findByType(AustraliaDots);
+    expect(dots.props).toMatchObject({ state: null, neutral: true });
+    const masthead = hosts(r, 'today-masthead')[0]!;
+    const order = masthead
+      .findAll(
+        (n) =>
+          typeof n.type === 'string' &&
+          ['today-australia-dots-clearance', 'today-screen-message'].includes(
+            n.props.testID,
+          ),
+      )
+      .map((n) => n.props.testID);
+    expect([...new Set(order)]).toEqual([
+      'today-australia-dots-clearance',
+      'today-screen-message',
+    ]);
+    await act(async () =>
+      answer({ version: 1, seatId: grayndler.electorate_id, stateSeatIds: [] }),
+    );
+    expect(r.root.findByType(AustraliaDots).props).toMatchObject({
+      state: 'nsw',
+      neutral: false,
+    });
+    expect(hosts(r, 'today-australia-dots-clearance')).toHaveLength(1);
+  });
+
+  test('the page ends on the day’s sentence, above the independence line', async () => {
+    setUp({ cached: { date: addDays(today, -1) } });
+    const r = await render(<Today />);
+    const foot = r.root.findByType(TodayFoot);
+    // The sitting line's own read, asked once for both lines.
+    expect(foot.props.ending).toMatchObject({ sitting: { record: null } });
+    expect(mock.sittingDays).toHaveBeenCalledTimes(1);
+    // The masthead's own date; no sitting calendar in this suite, so the
+    // date alone.
+    expect(strings(hosts(r, 'today-ending')[0]!)).toBe(
+      `That's the record for ${mastheadDate(r.root.findByType(Masthead).props.now)}.`,
+    );
+  });
+
+  test('the late slot’s edition card draws its plate finished; the top slot’s draws', async () => {
+    setUp({ cached: null, edition: editionAged(7) });
+    const late = await render(<Today />);
+    expect(blocks(late.root).indexOf('today-edition-card')).toBeGreaterThan(
+      blocks(late.root).indexOf('today-declarations'),
+    );
+    expect(late.root.findByType(TodayEditionCard).props.still).toBe(true);
+    setUp({ cached: { date: addDays(today, -1) } });
+    const top = await render(<Today />);
+    expect(blocks(top.root)[0]).toBe('today-edition-card');
+    expect(top.root.findByType(TodayEditionCard).props.still).toBe(false);
+  });
+
+  test('no ending while the masthead says it shows a saved copy', async () => {
+    setUp({ edition: { ...editionAged(1), savedAt: 1 } });
+    jest.mocked(useNetworkState).mockReturnValue({ isConnected: false });
+    try {
+      const r = await render(<Today />);
+      expect(r.root.findAllByType(OfflineLine)).toHaveLength(1);
+      expect(r.root.findByType(TodayFoot).props.ending).toBeUndefined();
+      expect(hosts(r, 'today-ending')).toHaveLength(0);
+    } finally {
+      jest.mocked(useNetworkState).mockReturnValue({});
+    }
+  });
+});
+
+describe('offline on a first install, nothing saved', () => {
+  const offlineError = {
+    status: 'error',
+    data: null,
+    asAt: null,
+    sources: [],
+    stale: false,
+    savedAt: null,
+    error: { code: 'offline', message: 'Failed.' },
+  } as never;
+  const hosts = (r: TestRenderer.ReactTestRenderer, id: string) =>
+    r.root.findAll((n) => typeof n.type === 'string' && n.props.testID === id);
+  const settle = async () => {
+    for (let i = 0; i < 10; i++)
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      });
+  };
+  function offlineFirstInstall() {
+    setUp({ cached: 'missing' });
+    jest.mocked(useNetworkState).mockReturnValue({ isConnected: false });
+    mock.todayEdition.mockResolvedValue(offlineError);
+    mock.todayBills.mockResolvedValue(offlineError);
+    mock.todayDeclarations.mockResolvedValue(offlineError);
+    mock.todayDeclarationsProfiled.mockResolvedValue(offlineError);
+  }
+  afterEach(() => jest.mocked(useNetworkState).mockReturnValue({}));
+
+  test('the page settles: Bills says so once, the blocks stay aside, the reads stop, and no closing line', async () => {
+    offlineFirstInstall();
+    const r = await render(<Today />);
+    await settle();
+    // Before the latch the blocks remounted on every report and read again
+    // (416 Bills reads before the page stopped settling).
+    expect(mock.todayBills.mock.calls.length).toBeLessThanOrEqual(2);
+    const reads = mock.todayBills.mock.calls.length;
+    await settle();
+    expect(mock.todayBills).toHaveBeenCalledTimes(reads);
+    expect(hosts(r, 'today-unavailable')).not.toHaveLength(0);
+    expect(blocks(r.root)).not.toContain('today-bills');
+    expect(blocks(r.root)).not.toContain('today-declarations');
+    expect(r.root.findByType(TodayFoot).props.ending).toBeUndefined();
+    expect(hosts(r, 'today-ending')).toHaveLength(0);
+  });
+
+  test('an edition that arrives with the background re-read ends the hold, with no pull', async () => {
+    offlineFirstInstall();
+    let late!: (block: c.Block<c.EditionView>) => void;
+    // The launch read fails offline; the background re-read answers later.
+    mock.todayEdition.mockResolvedValueOnce(offlineError).mockReturnValueOnce(
+      new Promise((resolve) => {
+        late = resolve;
+      }),
+    );
+    const r = await render(<Today />);
+    await settle();
+    expect(hosts(r, 'today-unavailable')).not.toHaveLength(0);
+    expect(blocks(r.root)).not.toContain('today-edition-card');
+    const bills = mock.todayBills.mock.calls.length;
+    await act(async () => late(editionAged(1)));
+    await settle();
+    // Drawn from the answer already in hand: no new attempt, no pull.
+    expect(blocks(r.root)).toContain('today-edition-card');
+    expect(hosts(r, 'today-unavailable')).toHaveLength(0);
+    expect(mock.todayEdition).toHaveBeenCalledTimes(2);
+    expect(mock.todayEdition.mock.calls.map(([refresh]) => refresh)).toEqual([
+      false,
+      'background',
+    ]);
+    // Bills comes back to say it could not load, once, and the page rests.
+    expect(mock.todayBills.mock.calls.length - bills).toBeLessThanOrEqual(2);
+    const settled = mock.todayBills.mock.calls.length;
+    await settle();
+    expect(mock.todayBills).toHaveBeenCalledTimes(settled);
+  });
+
+  test('coming back online retries once', async () => {
+    offlineFirstInstall();
+    const r = await render(<Today />);
+    await settle();
+    const edition = mock.todayEdition.mock.calls.length;
+    const bills = mock.todayBills.mock.calls.length;
+    // Still failing after the retry, so the page settles again.
+    jest.mocked(useNetworkState).mockReturnValue({ isConnected: true });
+    await act(async () => r.update(<Today />));
+    await settle();
+    // One new attempt: the edition is asked again once, with a refresh,
+    // and Bills reads once more.
+    expect(mock.todayEdition.mock.calls.slice(edition)).toEqual([[true]]);
+    expect(mock.todayBills.mock.calls.length - bills).toBe(1);
+    await settle();
+    expect(mock.todayEdition.mock.calls.length).toBe(edition + 1);
+    expect(hosts(r, 'today-unavailable')).not.toHaveLength(0);
+  });
+
+  test('a device that was never offline does not retry on its own', async () => {
+    offlineFirstInstall();
+    // Reads fail as offline while the device reports a connection.
+    jest.mocked(useNetworkState).mockReturnValue({ isConnected: true });
+    const r = await render(<Today />);
+    await settle();
+    const edition = mock.todayEdition.mock.calls.length;
+    await act(async () => r.update(<Today />));
+    await settle();
+    expect(mock.todayEdition).toHaveBeenCalledTimes(edition);
+    expect(hosts(r, 'today-unavailable')).not.toHaveLength(0);
   });
 });
 

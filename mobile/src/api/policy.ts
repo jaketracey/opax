@@ -20,6 +20,7 @@ import {
 import { allowsReportsPath } from './reports-policy';
 import { isOfficialReportPath } from './official-report-policy';
 import { isYearPicturePath } from './year-picture-policy';
+import { followFixturePath } from './follow-fixture-path';
 // Public GETs; paid search and briefs require an explicit action in the UI.
 // Adding a path requires a source/cost review and test.
 export const catalogKinds = ['person', 'interest', 'pay', 'expense'] as const;
@@ -125,6 +126,7 @@ function assertSearchParams(p: URLSearchParams, summary = false) {
 }
 
 export function assertAllowedPath(path: string): void {
+  if (followFixturePath !== null && path === followFixturePath) return;
   const [pathname, query] = path.split('?');
   if (
     !path.startsWith('/') ||
@@ -299,6 +301,14 @@ export function assertAskPostPath(path: string): void {
 export function allowedURL(origin: string, path: string): string {
   assertAllowedPath(path);
   const base = new URL(origin);
+  if (
+    path === followFixturePath &&
+    (base.protocol !== 'http:' ||
+      !['127.0.0.1', '10.0.2.2'].includes(base.hostname) ||
+      Number(base.port) < 8900 ||
+      Number(base.port) > 8999)
+  )
+    throw new Error('Follow fixtures require the local e2e origin');
   if (
     base.pathname !== '/' ||
     base.search ||

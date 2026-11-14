@@ -4,6 +4,7 @@ export const todayFixture = (): TodayFixture => ({
   editionCache: null,
   editionAge: null,
   welcomeDeclined: null,
+  plateDraw: null,
 });
 export const fixtureToday = () => null;
 export const fixtureDeclinedAt = () => null;

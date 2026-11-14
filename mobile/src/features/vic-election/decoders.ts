@@ -9,10 +9,13 @@ import {
   nullable,
   number,
   object,
+  optional,
   shape,
   text,
   type Decoded,
 } from '../../api/validation';
+import { decodeElectionState } from './state';
+import { ApiError } from '../../api/errors';
 
 const literal =
   <T extends string | number>(...values: T[]) =>
@@ -71,6 +74,38 @@ const contest = shape({
   against_share: percent,
   url: https,
 });
+// Current declared results are separate from the historical 2022/by-election
+// records. Keep the portal's date, source, preference and margin constraints.
+const currentContest = (v: unknown) => {
+  const r = contest(v);
+  const u = new URL(r.url);
+  if (
+    r.date < '2026-11-28' ||
+    !['general', 'supplementary'].includes(r.kind) ||
+    u.hostname !== 'www.vec.vic.gov.au' ||
+    !(
+      u.pathname.startsWith(
+        '/results/state-election-results/2026-state-election-results',
+      ) ||
+      (r.kind === 'supplementary' &&
+        u.pathname.startsWith(
+          '/results/state-election-results/state-by-elections-timeline/',
+        ))
+    ) ||
+    r.share <= 50 ||
+    Math.abs(r.share + r.against_share - 100) >= 0.05 ||
+    Math.abs(r.margin - (r.share - 50)) >= 0.011
+  )
+    invalid();
+  return r;
+};
+const currentResults = shape({
+  election_day: literal('2026-11-28'),
+  fetched: day,
+  status: literal('partial', 'final'),
+  url: https,
+  districts: array(shape({ name: nonempty, result: currentContest })),
+});
 export const decodeDistrictRow = shape({
   kind: literal('district'),
   slug,
@@ -116,8 +151,9 @@ const notice = (v: unknown) =>
         },
         link: nullable(link),
       })(v);
-export const decodeOverview = shape({
+const overview = shape({
   schema_version: version,
+  state: decodeElectionState,
   title: nonempty,
   web_url: https,
   updated: day,
@@ -149,6 +185,39 @@ export const decodeOverview = shape({
     response: nonempty,
   }),
 });
+export const decodeOverview = (v: unknown) => {
+  const o = overview(v);
+  // Current results are optional enrichment. Reject the whole results batch
+  // on any invalid row, without losing the overview's dates and records.
+  try {
+    const r = optional(currentResults)(object(v).current_results);
+    if (r) {
+      const u = new URL(r.url);
+      if (
+        r.election_day !== o.election_day ||
+        r.fetched < r.election_day ||
+        u.hostname !== 'www.vec.vic.gov.au' ||
+        !u.pathname.startsWith(
+          '/results/state-election-results/2026-state-election-results',
+        ) ||
+        r.districts.length > o.districts.length ||
+        (r.status === 'final' && r.districts.length !== o.districts.length) ||
+        new Set(r.districts.map((d) => d.name)).size !== r.districts.length ||
+        r.districts.some(
+          (d) =>
+            !o.districts.some((s) => s.name === d.name) ||
+            d.result.date > r.fetched,
+        )
+      )
+        invalid();
+    }
+    return { ...o, current_results: r };
+  } catch (error) {
+    if (!(error instanceof ApiError) || error.code !== 'invalid-data')
+      throw error;
+    return { ...o, current_results: undefined };
+  }
+};
 const memberRef = { ...named, slug, href: path };
 const member = shape({
   ...memberRef,
@@ -173,6 +242,7 @@ const member = shape({
 });
 const seat = shape({
   schema_version: version,
+  state: decodeElectionState,
   updated: day,
   kind: literal('district', 'region'),
   slug,
@@ -202,7 +272,17 @@ export const decodeSeat = (v: unknown) => {
   const s = seat(v);
   if (!s.members.length || (s.kind === 'region' && s.result !== null))
     invalid();
-  return s;
+  // Current results are optional enrichment, as on the overview. A bad
+  // result must not hide the seat's members and historical records.
+  try {
+    const current_result = optional(currentContest)(object(v).current_result);
+    if (s.kind === 'region' && current_result) invalid();
+    return { ...s, current_result };
+  } catch (error) {
+    if (!(error instanceof ApiError) || error.code !== 'invalid-data')
+      throw error;
+    return { ...s, current_result: undefined };
+  }
 };
 const findSeat = (v: unknown) => {
   const o = object(v);

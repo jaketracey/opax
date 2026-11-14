@@ -21,6 +21,7 @@ import {
 import TopicPage, { topicQuestion } from '../src/features/reports/TopicPage';
 import TopicsIndex from '../src/features/reports/TopicsIndex';
 import { ValueRow, LinkRow } from '../src/design/rows';
+import { Screen } from '../src/design/layout';
 import { partyRoute } from '../src/navigation/routes/people';
 import { topicRoute } from '../src/navigation/routes/search';
 
@@ -294,8 +295,15 @@ describe('Topic page', () => {
     mockParams = { slug: 'not-a-topic' };
     const page = await render(<TopicPage />);
     expect(host(page.root, 'topic-unknown')).toHaveLength(1);
-    expect(words(page)).toContain('Topic not found');
-    expect(words(page)).toContain("This topic isn't in OPAX.");
+    // The shared not-found pattern (sweep 2, item 2).
+    expect(words(page)).toContain('This topic isn’t in OPAX');
+    expect(words(page)).toContain('Topics come from the labels on speeches.');
+    expect(page.root.findByType(Screen).props.centred).toBe(true);
+    const browse = page.root.find(
+      (n) => n.props.testID === 'topic-unknown-browse' && !!n.props.onPress,
+    );
+    act(() => browse.props.onPress());
+    expect(router.navigate).toHaveBeenCalledWith({ pathname: '/topics' });
     for (const read of Object.values(reports))
       expect(jest.mocked(read)).not.toHaveBeenCalled();
   });

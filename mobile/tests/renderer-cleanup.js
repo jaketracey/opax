@@ -5,6 +5,7 @@
 // Track the actual module too, since some tests use jest.requireActual().
 const mounted = new Set();
 const instrumented = new WeakSet();
+const { auditTree, finishAudit } = require('./screen-a11y-runner');
 
 beforeEach(() => {
   const renderer = require('react-test-renderer');
@@ -13,10 +14,22 @@ beforeEach(() => {
   const create = renderer.create;
   renderer.create = (...args) => {
     const tree = create(...args);
+    let platform =
+      require.cache[require.resolve('react-native')]?.exports?.Platform?.OS ??
+      'ios';
+    const update = tree.update;
+    tree.update = (...args) => {
+      auditTree(tree, platform);
+      platform =
+        require.cache[require.resolve('react-native')]?.exports?.Platform?.OS ??
+        platform;
+      return update.apply(tree, args);
+    };
     const entry = { tree, act: renderer.act };
     mounted.add(entry);
     const unmount = tree.unmount;
     tree.unmount = () => {
+      auditTree(tree, platform);
       mounted.delete(entry);
       return unmount.call(tree);
     };
@@ -31,4 +44,5 @@ afterEach(async () => {
   for (const { tree, act } of [...mounted]) {
     await act(async () => tree.unmount());
   }
+  finishAudit();
 });

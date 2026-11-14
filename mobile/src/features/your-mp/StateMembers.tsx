@@ -83,7 +83,7 @@ export function StateMembers({
       {failed ? (
         <InlineError
           subject="Your state members"
-          message="Your state members couldn't be loaded."
+          message="Your state members couldn’t be loaded."
           onRetry={onRetry}
         />
       ) : !seats.length ? (

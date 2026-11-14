@@ -411,6 +411,7 @@ test('publishes title and first block while independent optional catalogs are pe
   let releaseMoney!: () => void;
   let releaseEntities!: () => void;
   let releaseVotes!: () => void;
+  let releasePast!: () => void;
   const money = new Promise<void>((resolve) => {
     releaseMoney = resolve;
   });
@@ -420,6 +421,9 @@ test('publishes title and first block while independent optional catalogs are pe
   const votes = new Promise<void>((resolve) => {
     releaseVotes = resolve;
   });
+  const past = new Promise<void>((resolve) => {
+    releasePast = resolve;
+  });
   const reads: { path: string; refresh: boolean }[] = [];
   const api = new Catalogs({
     get: async (path, decoder, refresh = false) => {
@@ -427,6 +431,7 @@ test('publishes title and first block while independent optional catalogs are pe
       if (path === '/graph/money.json') await money;
       if (path === '/graph/aec-extras.json') await entities;
       if (path === '/bills/index.json') await votes;
+      if (path === '/votes.json') await past;
       return get(path, decoder);
     },
   });
@@ -447,14 +452,20 @@ test('publishes title and first block while independent optional catalogs are pe
   await firstPublished;
   expect(updates[0]!.data?.label).toBe('Labor');
   expect(updates[0]!.data?.members.data).toEqual(members);
+  // Members publishes before the next task starts fetching/decoding votes.
+  expect(reads.some((r) => r.path === '/votes.json')).toBe(false);
+  expect(updates[0]!.data?.past?.status).toBe('loading');
   for (const block of ['receipts', 'associated', 'divisions'] as const)
     expect(updates[0]!.data?.[block].status).toBe('loading');
   releaseMoney();
   await receiptsPublished;
   expect(updates.at(-1)!.data?.associated.status).toBe('loading');
   expect(updates.at(-1)!.data?.divisions.status).toBe('loading');
+  expect(updates.at(-1)!.data?.past?.status).toBe('loading');
+  expect(updates.at(-1)!.data?.members.data).toEqual(members);
   releaseEntities();
   releaseVotes();
+  releasePast();
   const final = await pending;
   expect(final.data?.divisions.status).toBe('ready');
   expect(reads.every((r) => !r.refresh)).toBe(true);

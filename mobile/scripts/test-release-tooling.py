@@ -691,6 +691,26 @@ class SourceMapTests(unittest.TestCase):
 
 
 class BundleAttackTests(unittest.TestCase):
+    def test_pinned_posthog_plugin_metadata_is_exempt_only_with_its_pin(self):
+        with tempfile.TemporaryDirectory() as d:
+            routes = Path(d)
+            (routes / "_layout.tsx").write_text("shipping route")
+            pin = ["@posthog/react-native-plugin", "2.13.0"]
+            paths = sorted(verify.POSTHOG_PLUGIN_METADATA_PATHS)
+            entries = ["./_layout.tsx", *pin, *paths]
+            storage = "\0".join(entries).encode()
+            bundle = hermes_bundle(storage, [packed(storage, entry.encode()) for entry in entries])
+            self.assertEqual(verify.bundle_route_keys(bundle, routes), ["./_layout.tsx"])
+            for missing in pin:
+                kept = [entry for entry in entries if entry != missing]
+                body = "\0".join(kept).encode()
+                with self.subTest(missing=missing), self.assertRaises(ReleaseError):
+                    verify.bundle_route_keys(hermes_bundle(body, [packed(body, e.encode()) for e in kept]), routes)
+            plant = "./src/workbench.tsx"
+            body = storage + b"\0" + plant.encode()
+            with self.assertRaises(ReleaseError):
+                verify.bundle_route_keys(hermes_bundle(body, [packed(body, e.encode()) for e in [*entries, plant]]), routes)
+
     def test_pinned_reanimated_metadata_is_not_a_route_but_new_paths_are_refused(self):
         with tempfile.TemporaryDirectory() as d:
             routes = Path(d)
@@ -899,6 +919,15 @@ class BundleAttackTests(unittest.TestCase):
                     verify.verify_no_e2e_launch_flags(bundle)
         with self.assertRaises(ReleaseError):
             verify.verify_no_e2e_launch_flags(b"plain JS OPAXWelcomeTour")
+        # Today's capture fixture, including the plate's draw switch.
+        for flag in (b"OPAXSeat", b"OPAXEditionCache", b"OPAXEditionAge",
+                     b"OPAXWelcomeDeclined", b"OPAXPlateDraw", b"OPAXVicElection"):
+            with self.subTest(flag=flag):
+                bundle = hermes_bundle(flag, [packed(flag, flag)])
+                with self.assertRaisesRegex(ReleaseError, "no e2e launch arguments"):
+                    verify.verify_no_e2e_launch_flags(bundle)
+                with self.assertRaises(ReleaseError):
+                    verify.verify_no_e2e_launch_flags(b"plain JS " + flag)
         storage = b"shippingOPAXWelcomeTour"
         bundle = hermes_bundle(storage, [packed(storage, b"shipping")])
         self.assertEqual(verify.verify_no_e2e_launch_flags(bundle), 1)
@@ -1380,6 +1409,8 @@ class CrashSymbolKeyTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         calls = self.stub_calls()
         self.assertEqual([call["args"][:2] for call in calls], [["hermes", "upload"], ["dsym", "upload"]])
+        # Unchanged pod dSYMs keep their UUIDs between builds; an existing set is kept, not a failure.
+        self.assertIn("--skip-on-conflict", calls[1]["args"])
         for call in calls:
             self.assertEqual(call["project"], "507367")
             self.assertEqual(call["host"], host)

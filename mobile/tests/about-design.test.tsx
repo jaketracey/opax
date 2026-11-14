@@ -160,6 +160,13 @@ describe('with coverage', () => {
       'Example label: Machine-written',
     );
     expect(specimen.findAllByType(MachinePill)).toHaveLength(1);
+    expect(
+      specimen.findAll(
+        (node) =>
+          node.props.accessibilityElementsHidden &&
+          node.props.importantForAccessibility === 'no-hide-descendants',
+      ).length,
+    ).toBeGreaterThan(0);
     expect(texts()).not.toMatch(/[“"]Machine-written[”"]/);
   });
 

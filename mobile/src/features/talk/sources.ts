@@ -2,6 +2,7 @@ import { copy } from '../../design/copy';
 import { fromWebPath, electorateRoute } from '../../navigation/routes';
 import { webPageUrl } from '../../navigation/external';
 import type { VoiceSource } from '../../voice';
+import { isAskRecordPath } from '../../voice/source-path';
 import { sourceDate } from '../ask/source-present';
 
 export function recordDestination(path: string) {
@@ -29,7 +30,7 @@ export function recordDestination(path: string) {
  * opens (navigation/external refuses web Ask).
  */
 export function askDraftDestination(path: string) {
-  if (!/^\/ask\/?(?:[?#]|$)/.test(path)) return null;
+  if (!isAskRecordPath(path)) return null;
   const native = fromWebPath(path);
   return native?.pathname === '/ask' && native.params.question.trim()
     ? native

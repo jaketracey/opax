@@ -1,0 +1,22 @@
+--- a/node_modules/expo-router/build/global-state/routingQueue.js
++++ b/node_modules/expo-router/build/global-state/routingQueue.js
+@@ -15,14 +15,17 @@
+         return exports.routingQueue.queue;
+     },
+     add(action) {
+-        exports.routingQueue.queue.push(action);
++        // Publish an immutable snapshot for useSyncExternalStore.
++        exports.routingQueue.queue = [...exports.routingQueue.queue, action];
+         for (const callback of exports.routingQueue.subscribers) {
+             callback();
+         }
+     },
+     run(ref) {
++        // An empty flush must keep the snapshot stable.
++        if (exports.routingQueue.queue.length === 0) return;
+         // Reset the identity of the queue.
+-        const events = exports.routingQueue.queue;
++        const events = [...exports.routingQueue.queue];
+         exports.routingQueue.queue = [];
+         let action;
+         while ((action = events.shift())) {

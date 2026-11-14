@@ -360,6 +360,49 @@ function getAt(
 const notPublished = { error: 'edition_not_published', date: '2026-10-04' };
 
 test(
+  'the follow fixture is empty by default and opts into 50 distinct pinned canonical identities',
+  async () => {
+    expect(
+      JSON.parse((await request('/__fixture/follows')).body).follows,
+    ).toEqual([]);
+    const fixture = startFixture({ OPAX_FIXTURE_FOLLOWS: '50' });
+    try {
+      await fixture.ready;
+      const result = await getAt(fixture.port(), '/__fixture/follows');
+      const follows = JSON.parse(result.body).follows as {
+        id: string;
+        title: string;
+      }[];
+      const manifest = JSON.parse(
+        (await getAt(fixture.port(), '/electorates/manifest.json')).body,
+      );
+      const pinnedPeople = JSON.parse(
+        (await getAt(fixture.port(), manifest.people_url)).body,
+      );
+      expect(result.status).toBe(200);
+      expect(result.headers['cache-control']).toBe('no-store');
+      expect(follows).toHaveLength(50);
+      expect(new Set(follows.map((follow) => follow.id)).size).toBe(50);
+      for (const { id, title } of follows) {
+        expect(pinnedPeople.people).toContainEqual(
+          expect.objectContaining({ person_id: id, name: title }),
+        );
+      }
+      expect(
+        (
+          await getAt(fixture.port(), '/__fixture/follows', {
+            Host: 'opax.com.au',
+          })
+        ).status,
+      ).toBe(404);
+    } finally {
+      await fixture.stop();
+    }
+  },
+  fixtureHookTimeout,
+);
+
+test(
   'Android opts into only its emulator host alias and keeps the path boundary',
   async () => {
     const fixture = startEdition('pinned', {

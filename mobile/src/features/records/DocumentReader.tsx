@@ -1,3 +1,4 @@
+import { LoadingStatus } from '../../design/states';
 import { isAbortError } from '../../api/abort';
 import { RouteOptions } from '../../navigation/preview';
 import type { NativeStackHeaderItem } from 'expo-router';
@@ -85,7 +86,7 @@ import {
   type ReaderPart,
 } from './ReaderList';
 import { recordBarItems } from './RecordActions';
-import { RecordLoadError } from './RecordLoadError';
+import { RecordLoadError, isMissingRecord } from './RecordLoadError';
 import { FindControls } from './FindControls';
 import { records } from './runtime';
 import { recordCaveat, recordOriginal, recordSource } from './source';
@@ -437,6 +438,7 @@ export default function DocumentReader({
         jumpTo={find.jump}
         find={find.marks}
         onScroll={embedded ? undefined : title.onScroll}
+        centred={!!error && isMissingRecord(error, slug)}
         header={
           error ? (
             <RecordLoadError
@@ -537,7 +539,7 @@ function findItems(find: Find): NativeStackHeaderItem[] {
 /** Bars in the header's final shape, then lines of text (records.md 2.5). */
 function ReaderSkeleton() {
   return (
-    <View
+    <LoadingStatus
       accessible
       accessibilityRole="progressbar"
       accessibilityLabel="Loading the record"
@@ -569,7 +571,7 @@ function ReaderSkeleton() {
           ))}
         </View>
       </View>
-    </View>
+    </LoadingStatus>
   );
 }
 function Bar({ width, height }: { width: `${number}%`; height: number }) {
@@ -1033,7 +1035,7 @@ function Similar({ doc }: { doc: DocumentRecord }) {
           {error ? (
             <InlineError
               subject="Similar speeches"
-              message="Similar speeches couldn't be loaded."
+              message="Similar speeches couldn’t be loaded."
               onRetry={loadSimilar}
             />
           ) : null}

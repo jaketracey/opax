@@ -8,10 +8,12 @@ import { Text } from '../../design/text';
 import { minimumTarget, rhythm } from '../../design/tokens';
 import { vicSeatRoute } from '../../navigation/routes/vic-election';
 import { vicCopy as c } from './copy';
-import type { District, Region } from './decoders';
+import type { Contest, District, Region } from './decoders';
+import { openSource } from '../../navigation/external';
 import {
   contestName,
   decimal,
+  percentage,
   rowFigure,
   shareSpoken,
   shareText,
@@ -22,22 +24,32 @@ export function SeatRow({
   share = null,
   place = '',
   testID,
+  currentResult,
+  external = false,
 }: {
   district: District;
   share?: number | null;
   place?: string;
   testID?: string;
+  currentResult?: Contest;
+  external?: boolean;
 }) {
   const large = useAccessibilitySize();
-  const figure = share === null ? rowFigure(d) : shareText(share);
-  const caption =
-    share !== null
+  const figure = currentResult
+    ? c.by(currentResult.party, decimal(currentResult.margin))
+    : share === null
+      ? rowFigure(d)
+      : shareText(share);
+  const caption = currentResult
+    ? contestName(currentResult)
+    : share !== null
       ? c.residents
       : d.result && d.result.kind !== 'general'
         ? contestName(d.result)
         : null;
-  const ax =
-    share !== null
+  const ax = currentResult
+    ? `${d.name}. ${c.resultAX(currentResult.party, decimal(currentResult.margin), contestName(currentResult))} ${c.preferences(currentResult.party, c.perCent(decimal(currentResult.share)), currentResult.against, c.perCent(decimal(currentResult.against_share)))}`
+    : share !== null
       ? c.shareAX(
           d.name,
           shareSpoken(share),
@@ -83,11 +95,19 @@ export function SeatRow({
     </View>
   );
   return (
-    <RowLink href={vicSeatRoute(d.slug)}>
+    <RowLink
+      href={vicSeatRoute(d.slug)}
+      select={
+        external && currentResult
+          ? () => void openSource(currentResult.url)
+          : undefined
+      }
+    >
       <Pressable
         accessible
         accessibilityRole="link"
         accessibilityLabel={ax}
+        accessibilityHint={external ? c.vecWebsite : undefined}
         testID={testID ?? `vic-election-district-${d.slug}`}
         style={styles.row}
       >
@@ -103,14 +123,25 @@ export function SeatRow({
               <Text wordSafe variant="strong">
                 {d.name}
               </Text>
-              <View style={[styles.line, large ? styles.stacked : null]}>
+              {currentResult ? (
                 <Text wordSafe variant="secondary" tone="inkSoft">
-                  {d.member.name}
+                  {c.preferences(
+                    currentResult.party,
+                    percentage(currentResult.share),
+                    currentResult.against,
+                    percentage(currentResult.against_share),
+                  )}
                 </Text>
-                {d.member.party ? (
-                  <PartyLabel party={d.member.party} nested />
-                ) : null}
-              </View>
+              ) : (
+                <View style={[styles.line, large ? styles.stacked : null]}>
+                  <Text wordSafe variant="secondary" tone="inkSoft">
+                    {d.member.name}
+                  </Text>
+                  {d.member.party ? (
+                    <PartyLabel party={d.member.party} nested />
+                  ) : null}
+                </View>
+              )}
             </View>
             {!large ? figures : null}
           </View>

@@ -25,6 +25,7 @@ import {
   MachinePill,
 } from '../src/design/primitives';
 import { useReduceMotion } from '../src/design/accessibility';
+import Citations from '../src/features/records/CitationScreen';
 import DocumentReader from '../src/features/records/DocumentReader';
 import { FindControls } from '../src/features/records/FindControls';
 import { ReaderList } from '../src/features/records/ReaderList';
@@ -36,6 +37,7 @@ import { decodeDocument } from '../src/features/records/model';
 import { records } from '../src/features/records/runtime';
 import { citeRoute, moneyRecordRoute } from '../src/navigation/routes';
 import { sheetPayload } from '../src/navigation/sheets';
+import { rhythm } from '../src/design/tokens';
 import { index, manifest, people, roster, slugs } from './pinned';
 
 const responses: Record<string, unknown> = fixtures.responses;
@@ -83,7 +85,13 @@ jest.mock('expo-router', () => {
     createElement(name, props, props.children);
   return {
     useSegments: () => [],
-    router: { push: jest.fn(), setParams: jest.fn(), back: jest.fn() },
+    router: {
+      push: jest.fn(),
+      setParams: jest.fn(),
+      back: jest.fn(),
+      navigate: jest.fn(),
+      canGoBack: () => true,
+    },
     Link: Object.assign(part('Link'), {
       Trigger: part('LinkTrigger'),
       Preview: () => null,
@@ -152,6 +160,56 @@ beforeEach(() => {
   jest.mocked(catalogs.billFor).mockRejectedValue(new Error('none'));
   jest.mocked(records.document).mockResolvedValue(record(speech));
   jest.mocked(records.similar).mockResolvedValue(record([]) as never);
+});
+
+test.each(['ios', 'android'] as const)(
+  'Citation formats renders an accessible record on %s',
+  async (os) => {
+    const original = Platform.OS;
+    Platform.OS = os;
+    jest
+      .mocked(catalogs.corpus)
+      .mockResolvedValue(record({ version: 'fixture' }) as never);
+    jest.mocked(records.document).mockResolvedValue(
+      record({
+        slug: 'speech-1',
+        title: 'Synthetic speech about public records',
+        speaker: 'Alex Example',
+        url: 'https://example.com/record',
+        labels: { kind: 'speech', date: '2026-11-01' },
+        topics: [],
+        metadata: {},
+        summary: null,
+        text: 'A synthetic passage for testing.',
+      }),
+    );
+    try {
+      const view = await mount(<Citations />);
+      expect(
+        view.root
+          .findAllByProps({ testID: 'cite-title' })
+          .some((node) => node.props.accessibilityRole === 'header'),
+      ).toBe(true);
+      expect(
+        view.root.findAllByProps({ accessibilityLabel: 'Copy APA 7' }).length,
+      ).toBeGreaterThan(0);
+      await act(async () => view.unmount());
+    } finally {
+      Platform.OS = original;
+    }
+  },
+);
+
+test('Citation formats keeps an announced loading target while the record is pending', async () => {
+  jest
+    .mocked(catalogs.corpus)
+    .mockResolvedValue(record({ version: 'fixture' }) as never);
+  jest.mocked(records.document).mockReturnValue(new Promise(() => {}));
+  const view = await mount(<Citations />);
+  expect(
+    view.root.findAllByProps({ accessibilityLabel: 'Loading citations' })
+      .length,
+  ).toBeGreaterThan(0);
 });
 
 test.each(
@@ -406,12 +464,12 @@ test.each([
   [
     'not found',
     new ApiError('not-found', 'HTTP 404'),
-    /^This record isn't available$/,
+    /^This record isn’t in OPAX$/,
   ],
   [
     'unreadable',
     new ApiError('invalid-data', 'Decoder failed'),
-    /^This record couldn't be loaded$/,
+    /^This record couldn’t be loaded$/,
   ],
 ])('%s: the reader says so in plain words', async (_case, error, title) => {
   jest.mocked(records.document).mockRejectedValue(error);
@@ -424,15 +482,64 @@ test.each([
   await act(async () => view.unmount());
 });
 
+test('the citation sheet closes before a missing record leaves for Search', async () => {
+  // Review of sweep 2 lane A: Search opened under the sheet, which stayed
+  // up in this tab's stack.
+  mockParams = { slug: '../nope' };
+  jest
+    .mocked(records.document)
+    .mockRejectedValue(new ApiError('invalid-data', 'bad slug'));
+  jest.mocked(catalogs.corpus).mockRejectedValue(new Error('offline'));
+  const order: string[] = [];
+  jest.mocked(router.back).mockImplementation(() => {
+    order.push('back');
+  });
+  jest.mocked(router.navigate).mockImplementation((href) => {
+    order.push(`navigate ${String(href)}`);
+  });
+  try {
+    const view = await mount(<Citations />);
+    const state = view.root.findByType(ContentUnavailable);
+    expect(state.props.title).toBe('This record isn’t in OPAX');
+    expect(state.props.action.label).toBe('Search OPAX');
+    act(() => state.props.action.onPress());
+    expect(order).toEqual(['back', 'navigate /search']);
+    await act(async () => view.unmount());
+  } finally {
+    jest.mocked(router.back).mockReset();
+    jest.mocked(router.navigate).mockReset();
+  }
+});
+
 test('a link that names no record says so', async () => {
   mockParams = { slug: '../nope' };
   jest
     .mocked(records.document)
     .mockRejectedValue(new ApiError('invalid-data', 'bad slug'));
   const view = await mount(<DocumentReader />);
-  expect(view.root.findByType(ContentUnavailable).props.title).toBe(
-    "This link doesn't open a record",
-  );
+  // The shared not-found pattern (sweep 2, item 2): a title, a body and
+  // Search, centred on the page.
+  const state = view.root.findByType(ContentUnavailable);
+  expect(state.props.title).toBe('This record isn’t in OPAX');
+  expect(state.props.body).toBe('The link may be old.');
+  expect(state.props.action.label).toBe('Search OPAX');
+  // A page, not a sheet: Search opens from here with nothing to close.
+  jest.mocked(router.back).mockClear();
+  jest.mocked(router.navigate).mockClear();
+  act(() => state.props.action.onPress());
+  expect(router.back).not.toHaveBeenCalled();
+  expect(router.navigate).toHaveBeenCalledWith('/search');
+  expect(view.root.findByType(ReaderList).props.centred).toBe(true);
+  // Screen's foot, not the reader's double one: the block sat 18 pt above
+  // the other not-found pages on the device.
+  const list = view.root.findAll(
+    (node) =>
+      node.props.testID === 'doc-reader' && !!node.props.contentContainerStyle,
+  )[0]!;
+  const content = StyleSheet.flatten(list.props.contentContainerStyle);
+  expect(content.paddingTop).toBe(rhythm.block);
+  expect(content.paddingBottom).toBe(rhythm.section);
+  expect(content.justifyContent).toBe('center');
   await act(async () => view.unmount());
 });
 

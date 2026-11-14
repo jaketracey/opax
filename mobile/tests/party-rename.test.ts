@@ -125,6 +125,7 @@ test('past members under the former name come from the voting record', () => {
   const past = partyPastMembers('Libertarian Party', votes, slugs);
   expect(past).toEqual([
     {
+      personId: 'vote:10832',
       name: 'David Leyonhjelm',
       slug: null,
       jurisdiction: 'federal',
@@ -133,16 +134,15 @@ test('past members under the former name come from the voting record', () => {
       recordedAs: 'Liberal Democratic Party',
     },
     {
+      personId: 'vote:10916',
       name: 'Duncan Spender',
       slug: null,
       jurisdiction: 'federal',
       house: 'senate',
-      years: [2019, 2019],
+      years: [2019],
       recordedAs: 'Liberal Democratic Party',
     },
   ]);
-  // Only a renamed party lists past members.
-  expect(partyPastMembers('Labor', votes, slugs)).toEqual([]);
   // Someone the page already lists is not listed twice.
   expect(
     partyPastMembers('Libertarian Party', votes, slugs, [
@@ -179,9 +179,10 @@ test('the old slug opens one page: members under both names, history, past membe
       'Duncan Spender',
     ]);
   }
-  // Other parties read no voting record for their members.
+  // Past members are available for parties that have not been renamed too.
   const labor = await api.partyPage('Labor');
-  expect(labor.data?.past).toBeUndefined();
+  expect(labor.data?.past?.status).toBe('ready');
+  expect(labor.data?.past?.data?.length).toBeGreaterThan(0);
 });
 
 // An invented pair: no real party, no real people.

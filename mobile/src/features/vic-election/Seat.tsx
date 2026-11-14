@@ -9,7 +9,17 @@ import { vicSeatRoute } from '../../navigation/routes/vic-election';
 import { vicCopy as c } from './copy';
 import { useElectionNow } from './clock';
 import { ElectionUnavailable, useElectionSeat, useOverview } from './reads';
-import { contestName, decimal, percentage, phase } from './model';
+import {
+  contestName,
+  decimal,
+  electionState,
+  percentage,
+  phase,
+  seatContext,
+} from './model';
+import { VIC_ELECTION_INSTANTS } from './state';
+import { ElectionStatus } from './Status';
+import { ElectionResults } from './Results';
 import { Candidates } from './Candidates';
 import { KeyDates } from './KeyDates';
 import { MemberRecord, MemberRow, MemberSource } from './MemberRecord';
@@ -34,16 +44,19 @@ export default function Seat() {
   const now = useElectionNow(
     o
       ? [
+          ...VIC_ELECTION_INSTANTS,
           o.polls_close,
           ...o.key_dates.flatMap((d) => (d.passes_at ? [d.passes_at] : [])),
         ]
-      : [],
+      : VIC_ELECTION_INSTANTS,
   );
   const offline = useOffline();
   const title = s ? (s.kind === 'region' ? c.regionName(s.name) : s.name) : '';
   const contests = s?.result
     ? [...(s.result.since ? [s.result.since] : []), s.result.general]
     : [];
+  const context = s ? seatContext(s, o) : {};
+  const state = electionState(context, now);
   return (
     <>
       <RouteOptions options={pageOptions(title, s?.web_url)} />
@@ -95,9 +108,21 @@ export default function Seat() {
                 </Text>
               ) : null}
             </Block>
+            <ElectionStatus
+              context={context}
+              now={now}
+              electionURL={o?.sources.election}
+              votingURL={o?.sources.voting}
+              awaiting={
+                s.kind === 'district' &&
+                (state === 'results' || state === 'results_final') &&
+                !context.current_result
+              }
+            />
+            <ElectionResults o={o} seat={s} now={now} />
             {s.kind === 'district' ? (
               <Block title={c.lastResult} testID="vic-seat-result">
-                {o && phase(o, now) === 'closed' ? (
+                {phase(context, now) === 'closed' ? (
                   <Text wordSafe variant="footnote" tone="inkSoft">
                     {c.beforeResult}
                   </Text>
@@ -216,7 +241,7 @@ export default function Seat() {
                 </Block>
               </>
             )}
-            {o ? <KeyDates o={o} now={now} /> : null}
+            {o ? <KeyDates o={o} context={context} now={now} /> : null}
             <ExternalRow
               testID="vic-seat-map"
               title={s.kind === 'district' ? c.districtMap : c.regionMap}

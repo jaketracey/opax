@@ -12,7 +12,7 @@ import {
 } from '../src/api/cache';
 import { catalogs as runtime } from '../src/api/runtime';
 import BillDetail from '../src/features/bills/BillDetail';
-import BillsList from '../src/features/bills/BillsList';
+import BillsList, { PushedBillsList } from '../src/features/bills/BillsList';
 import { pinned, pinnedBytes, slugs } from './pinned';
 
 const mockParams: { key: string } = { key: 'au-federal-r7501' };
@@ -93,6 +93,7 @@ const pull = (root: ReactTestInstance) =>
 
 test.each([
   ['the Bills list', () => <BillsList />, 'bills', []],
+  ['the pushed Bills list', () => <PushedBillsList />, 'bills', []],
   ['a bill', () => <BillDetail />, 'billFor', ['au-federal-r7501']],
 ] as const)(
   '%s forces its loader on a refresh, and not on the first load',

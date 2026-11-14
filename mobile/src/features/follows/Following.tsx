@@ -29,7 +29,7 @@ import { headerItems, pageMenu } from '../../navigation/chrome';
 import { familyNameKey, useFaceURIs } from '../your-mp/FaceStackRow';
 import { useSavedMember } from '../your-mp/useIsMyMember';
 import { savedSeatDirectory, useSeat } from '../your-mp/useSeat';
-import { FollowRow } from './FollowRow';
+import { FollowRow, WITHDRAWN } from './FollowRow';
 import type { FollowState } from './markers';
 import { checkedText, sortChanges } from './changes';
 import { useFollowStates, markAllSeen } from './useFollowStates';
@@ -55,7 +55,7 @@ export const NOTHING_FOLLOWED_TITLE = 'Nothing followed yet';
 export const NOTHING_FOLLOWED =
   'Follow a person, bill, party or electorate to see what changes.';
 const SAVE_FAILED = () =>
-  phoneCopy("Your follows couldn't be saved on this iPhone.");
+  phoneCopy('Your follows couldn’t be saved on this iPhone.');
 
 export interface FollowEntry {
   follow: Follow;
@@ -63,8 +63,11 @@ export interface FollowEntry {
   title: string;
   ownMP: boolean;
 }
+export const WITHDRAWN_NOTE =
+  'These records were withdrawn or renamed. Search for them, or unfollow them.';
+export const CHECK_DOUBTED = 'Couldn’t check your list just now.';
 export interface FollowGroup {
-  key: 'changed' | FollowKind;
+  key: 'changed' | FollowKind | 'withdrawn';
   title: string;
   rows: FollowEntry[];
 }
@@ -80,10 +83,42 @@ const nameKey = (entry: FollowEntry) =>
     ? familyNameKey(entry.title)
     : entry.title.toLocaleLowerCase('en-AU');
 
+/** A follow whose record is gone. The reader's own MP keeps its pointer. */
+const withdrawn = (entry: FollowEntry) =>
+  !entry.ownMP && entry.state?.status === 'missing';
+/**
+ * The kinds whose check is not believed: two or more follows of one kind,
+ * every one reading as gone. One withdrawn record is news; a whole kind of
+ * them is that kind's catalogue arriving wrong or short (a reading is
+ * "missing" when the record is absent from a catalogue that did load).
+ * Catalogues fail a kind at a time, so the rule is per kind: a sound bill
+ * beside eleven "withdrawn" people does not vouch for the people. The page
+ * says the check failed and offers it again. A kind in `believed` has been
+ * checked again with the same answer, and is taken at its word.
+ */
+export function doubtedKinds(
+  entries: readonly FollowEntry[],
+  believed: readonly FollowKind[] = [],
+): Set<FollowKind> {
+  return new Set(
+    kindGroups
+      .map(([kind]) => kind)
+      .filter((kind) => {
+        const rows = entries.filter((e) => e.follow.kind === kind);
+        return (
+          !believed.includes(kind) &&
+          rows.length > 1 &&
+          rows.every((e) => e.state?.status === 'missing')
+        );
+      }),
+  );
+}
+
 /**
  * "Changed first, newest change first; then the rest by name, A to Z."
  * One Changed group, then People, Bills, Parties, Electorates for the
- * follows that did not change. Each follow appears once; empty groups go.
+ * follows that did not change, then the follows whose records are no longer
+ * in OPAX, together at the foot. Each follow appears once; empty groups go.
  */
 export function followGroups(entries: readonly FollowEntry[]): FollowGroup[] {
   const changed = entries
@@ -93,7 +128,7 @@ export function followGroups(entries: readonly FollowEntry[]): FollowGroup[] {
         (newestChange(b) ?? '').localeCompare(newestChange(a) ?? '') ||
         nameKey(a).localeCompare(nameKey(b)),
     );
-  const rest = entries.filter((e) => newestChange(e) === null);
+  const rest = entries.filter((e) => newestChange(e) === null && !withdrawn(e));
   return [
     { key: 'changed' as const, title: 'Changed', rows: changed },
     ...kindGroups.map(([kind, title]) => ({
@@ -103,6 +138,13 @@ export function followGroups(entries: readonly FollowEntry[]): FollowGroup[] {
         .filter((e) => e.follow.kind === kind)
         .sort((a, b) => nameKey(a).localeCompare(nameKey(b))),
     })),
+    {
+      key: 'withdrawn' as const,
+      title: WITHDRAWN,
+      rows: entries
+        .filter(withdrawn)
+        .sort((a, b) => nameKey(a).localeCompare(nameKey(b))),
+    },
   ].filter((g) => g.rows.length > 0);
 }
 
@@ -132,6 +174,13 @@ export default function Following() {
   const params = useLocalSearchParams<{ edit?: string }>();
   const [refresh, setRefresh] = useState(0);
   const { follows, states, sources, refreshing } = useFollowStates(refresh);
+  // Kinds whose wholly-withdrawn reading came back the same from a second,
+  // clean check; and the check now under way, with what it was asked about.
+  const [believed, setBelieved] = useState<readonly FollowKind[]>([]);
+  const [asked, setAsked] = useState<{
+    at: number;
+    kinds: readonly FollowKind[];
+  } | null>(null);
   const own = useOwnMemberIds();
   const member = useSavedMember();
   const reduceMotion = useReduceMotion();
@@ -147,7 +196,7 @@ export default function Following() {
     const timer = setTimeout(() => setLeaving([]), revealMotion.duration);
     return () => clearTimeout(timer);
   }, [leaving]);
-  const entries: FollowEntry[] = (follows ?? []).map((f) => {
+  const read: FollowEntry[] = (follows ?? []).map((f) => {
     const state = states.get(followKey(f));
     return {
       follow: f,
@@ -156,6 +205,27 @@ export default function Following() {
       ownMP: f.kind === 'person' && own.has(f.id),
     };
   });
+  // A kind that reads as wholly withdrawn is not believed: its rows keep
+  // their places, unchecked, under one sentence and a retry.
+  const doubted = doubtedKinds(read, believed);
+  // The retry (or a pull) has finished. A clean read that says the same
+  // again is the answer: those records are gone, and the page stops
+  // offering a retry that changes nothing.
+  if (asked && asked.at === refresh && !refreshing) {
+    const same = asked.kinds.filter((kind) => doubted.has(kind));
+    setAsked(null);
+    if (same.length && sources && !sources.error && !sources.stale)
+      setBelieved([...believed, ...same]);
+  }
+  const checkAgain = () => {
+    setAsked({ at: refresh + 1, kinds: [...doubted] });
+    setRefresh(refresh + 1);
+  };
+  const entries: FollowEntry[] = read.map((e) =>
+    doubted.has(e.follow.kind)
+      ? { ...e, state: { status: 'unavailable' as const } }
+      : e,
+  );
   const going = new Set(leaving.map((e) => followKey(e.follow)));
   const live = new Set(entries.map((e) => followKey(e.follow)));
   const groups = followGroups([
@@ -223,7 +293,7 @@ export default function Following() {
 
   // The quiet state reads as watched: when the record was last checked.
   const checked =
-    !inEdit && !failedAll && sources?.savedAt && !sources.error
+    !inEdit && !failedAll && !doubted.size && sources?.savedAt && !sources.error
       ? checkedText(sources.savedAt)
       : '';
 
@@ -233,10 +303,7 @@ export default function Following() {
       centred={follows !== null && count === 0}
       testID="follows-screen"
       refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={() => setRefresh((n) => n + 1)}
-        />
+        <RefreshControl refreshing={refreshing} onRefresh={checkAgain} />
       }
     >
       <RouteOptions
@@ -290,9 +357,16 @@ export default function Following() {
       ) : failedAll ? (
         <InlineError
           subject="changes"
-          message="Changes couldn't be checked."
-          onRetry={() => setRefresh((n) => n + 1)}
+          message="Changes couldn’t be checked."
+          onRetry={checkAgain}
           testID="follows-check-error"
+        />
+      ) : doubted.size ? (
+        <InlineError
+          subject="follows"
+          message={CHECK_DOUBTED}
+          onRetry={checkAgain}
+          testID="follows-check-doubted"
         />
       ) : null}
       {follows === null ? (
@@ -321,6 +395,7 @@ export default function Following() {
               <InsetGroup
                 key={group.key}
                 header={group.title}
+                footer={group.key === 'withdrawn' ? WITHDRAWN_NOTE : undefined}
                 testID={`follows-${group.key}`}
               >
                 {group.rows.map((entry) => {
@@ -336,6 +411,12 @@ export default function Following() {
                       ) : (
                         <ListRow
                           entry={entry}
+                          // The heading says it once for the withdrawn
+                          // group; a doubted check has nothing to say.
+                          hideStatus={
+                            group.key === 'withdrawn' ||
+                            doubted.has(entry.follow.kind)
+                          }
                           onUnfollow={() => remove(entry)}
                         />
                       )}
@@ -388,9 +469,11 @@ export default function Following() {
 
 function ListRow({
   entry,
+  hideStatus,
   onUnfollow,
 }: {
   entry: FollowEntry;
+  hideStatus: boolean;
   onUnfollow: () => void;
 }) {
   const [uri] = useFaceURIs(
@@ -403,6 +486,7 @@ function ListRow({
       state={entry.state}
       ownMP={entry.ownMP}
       portraitURI={uri ?? undefined}
+      hideStatus={hideStatus}
       onUnfollow={onUnfollow}
       testID={`follows-row-${entry.follow.kind}-${entry.follow.id}`}
     />

@@ -1,0 +1,405 @@
+{
+  "version": 1,
+  "follows": [
+    {
+      "kind": "person",
+      "id": "person_dbe8c51e0bd05a34b3bef5e5",
+      "title": "Steve Georganas",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_c61a67039bc05abcb23326b9",
+      "title": "Mary Doyle",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_14e8c3fae86b5c32877b09bf",
+      "title": "David Pocock",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_e5eee7d125a25395bf0e695f",
+      "title": "Katy Gallagher",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_6042218f3efc5c7fa59b634f",
+      "title": "Catherine King",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_4186a5a5b8f8572f9f2acf2e",
+      "title": "Zhi Soon",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_c552431aef785e73848573aa",
+      "title": "Tony Pasin",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_5e9f2d93eaba51d7b934835b",
+      "title": "Ash Ambihaipahar",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_ec848bc8241250de8108371a",
+      "title": "Jess Teesdale",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_c51ed4b24a345f3d8d050fd9",
+      "title": "Ged Kearney",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_54bfc313313e57559873c7df",
+      "title": "David Smith",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_43eb54af44de51c7a5c4786d",
+      "title": "Lisa Chesters",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_adcfbf46fbe85dcb9559e552",
+      "title": "Jerome Laxale",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_ebffbb260d1c5c799f614e7b",
+      "title": "Julian Leeser",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_31b49077b7a75b299edc387b",
+      "title": "Shayne Neumann",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_49229214b01f57f5a280f031",
+      "title": "Jason Clare",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_c3fd88c91a7e5903b75cbcd4",
+      "title": "Kara Cook",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_6713dd6fe3ee5dab9b554259",
+      "title": "Louise Miller-Frost",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_0b75447b02665a3e8e74afdf",
+      "title": "Henry Pike",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_8f56ea8d68d15c51b421e43f",
+      "title": "Anne Urquhart",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_2a4b205a5b715f5ea4f73826",
+      "title": "Nicolette Boele",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_1e17c17147a254418785d68b",
+      "title": "Madeleine King",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_bac3ff330d865925a85ab24b",
+      "title": "Madonna Jarrett",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_ace96349d45f52d1840e4d49",
+      "title": "Julian Hill",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_87a858c01edc5cb3afe73df9",
+      "title": "Trish Cook",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_fbbaf2b54f0a5fbfa90d193e",
+      "title": "Matt Keogh",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_1dfe9da0b87152d99379d683",
+      "title": "Andrew Gee",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_b6970d3f1e31578c848c2f79",
+      "title": "Basem Abdo",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_3080566952e25b438da9047e",
+      "title": "Alicia Payne",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_7ee7ad98a63f563da19da498",
+      "title": "Andrew Hastie",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_c47e0866fa255ca18b41698e",
+      "title": "Michelle Landry",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_080e1482566158aea5e170ed",
+      "title": "Aaron Violi",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_3cb36fbcf5ca5c8e931a5219",
+      "title": "Pat Conroy",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_b19df0f42a485ad39b643f33",
+      "title": "Ed Husic",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_76c302583e04501c9081dfc0",
+      "title": "Carina Garland",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_3d2d7d8ba48e53dda96b077f",
+      "title": "Andrew Wilkie",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_dcf37a90ab52557594370394",
+      "title": "Simon Kennedy",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_7d82d631e6dc5f4c8fe74378",
+      "title": "Libby Coker",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_b49fe15e00d851c58cef549b",
+      "title": "Sarah Henderson",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_2c84664fdb6a5ddcaef32d74",
+      "title": "Richard Marles",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_2f52d5373a6a5bc19a2988a0",
+      "title": "Anne Aly",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_f029098e2ac25e2b92606a63",
+      "title": "Pat Conaghan",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_505b3c2f79af502abbe897ce",
+      "title": "Alison Byrnes",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_e35fc94ba6ba56bcb77ede8a",
+      "title": "Kate Chaney",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_94e65769ea4752d38e2bf44e",
+      "title": "Andrew Willcox",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_73bff3d82ccb5db890e13d83",
+      "title": "Matt Gregg",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_cd64b692b0e45b7797f558a6",
+      "title": "Ali France",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_6b0137cc531455358b241b0e",
+      "title": "Emma McBride",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_c5fcbb90f8d15f3ca4ab1601",
+      "title": "Jodie Belyea",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    },
+    {
+      "kind": "person",
+      "id": "person_58100e00a0b8501db538fa4a",
+      "title": "Melissa Price",
+      "followedAt": 1791072000000,
+      "seen": null,
+      "seenAt": null
+    }
+  ]
+}

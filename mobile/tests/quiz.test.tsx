@@ -4,13 +4,19 @@ import { exploreScreens } from '../src/navigation/stack/explore';
 import { Picker, Slider } from '@expo/ui/swift-ui';
 import { router } from 'expo-router';
 import {
+  HeaderHeightContext,
   NavigationContext,
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { act } from 'react';
+import { AccessibilityInfo, ScrollView, StyleSheet } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import { useAccessibilitySize } from '../src/design/accessibility';
+import {
+  useAccessibilitySize,
+  useReduceMotionSetting,
+} from '../src/design/accessibility';
 import { Portrait } from '../src/design/people';
+import { colors } from '../src/design/tokens';
 import Quiz from '../src/features/explore/Quiz';
 import {
   formatGuess,
@@ -76,6 +82,8 @@ jest.mock('../src/navigation/share', () => ({
 jest.mock('../src/design/accessibility', () => ({
   ...jest.requireActual('../src/design/accessibility'),
   useAccessibilitySize: jest.fn(() => false),
+  // Not yet known, as before iOS answers: nothing moves unless a test says.
+  useReduceMotionSetting: jest.fn(() => null),
 }));
 
 let renderer: TestRenderer.ReactTestRenderer | null = null;
@@ -152,6 +160,7 @@ beforeEach(() => {
   mockRecord = null;
   jest.spyOn(Math, 'random').mockReturnValue(0);
   (useAccessibilitySize as jest.Mock).mockReturnValue(false);
+  (useReduceMotionSetting as jest.Mock).mockReturnValue(null);
 });
 afterEach(() => {
   if (renderer) act(() => renderer!.unmount());
@@ -361,6 +370,12 @@ test('the reveal keeps the reader’s own answer and marks the right one, by wor
     ).props.accessibilityLabel,
   ).toMatch(/Correct answer$/);
   expect(byID('quiz-grade').props.children).toBe('Not this time');
+  expect(
+    renderer!.root.find(
+      (node) =>
+        typeof node.type === 'string' && node.props.testID === 'quiz-grade',
+    ).props.accessibilityRole,
+  ).toBe('text');
   expect(byID('quiz-points').props.children).toBe('+0 points');
 });
 
@@ -478,6 +493,109 @@ test('at accessibility sizes the footer flows after the content and the typed gu
   expect(has('quiz-next')).toBe(true);
 });
 
+type MeasureInWindow = {
+  measureInWindow: (
+    callback: (x: number, y: number, width: number, height: number) => void,
+  ) => void;
+};
+type ScrollTo = {
+  scrollTo: (options: { y: number; animated: boolean }) => void;
+};
+
+test.each([
+  ['Large', false],
+  ['AX5', true],
+] as const)(
+  'at %s each new page starts at its resting top once drawn, and the action never covers an answer',
+  async (_size, large) => {
+    (useAccessibilitySize as jest.Mock).mockReturnValue(large);
+    // The quiz is pushed under the stack's opaque bar, which
+    // react-native-screens lays the page out below: build 63 measured the
+    // scroll view at [0,116] on an iPhone 17 Pro. Its resting top is 0.
+    const measure = jest
+      .spyOn(
+        ScrollView.prototype as unknown as MeasureInWindow,
+        'measureInWindow',
+      )
+      .mockImplementation((callback) => callback(0, 116, 402, 609));
+    const page = () =>
+      has('quiz-question')
+        ? (byID('quiz-question').props.accessibilityLabel as string)
+        : has('quiz-result')
+          ? 'result'
+          : has('quiz-start')
+            ? 'intro'
+            : 'none';
+    // Each reset, with the page drawn when it ran.
+    const resets: { page: string; y: number; animated: boolean }[] = [];
+    const scrollTo = jest
+      .spyOn(ScrollView.prototype as unknown as ScrollTo, 'scrollTo')
+      .mockImplementation(({ y, animated }) => {
+        resets.push({ page: page(), y, animated });
+      });
+    const top = (shown: string) => ({ page: shown, y: 0, animated: false });
+    // VoiceOver follows each reset: focus goes to the new question's prompt
+    // (promptRef), the element drawn when the page lands at its top.
+    const isPrompt = (target: unknown) =>
+      root()
+        .findAll((node) => node.props.testID === 'quiz-question')
+        .some((node) => node.instance === target);
+    // Each focus move, and whether it went to the prompt then on screen.
+    const focused: boolean[] = [];
+    const focus = jest
+      .spyOn(AccessibilityInfo, 'sendAccessibilityEvent')
+      .mockImplementation((target, type) => {
+        if (type === 'focus') focused.push(isPrompt(target));
+      });
+    const scroll = () =>
+      root().find(
+        (node) =>
+          node.type === ScrollView &&
+          node.props.testID === 'explore-quiz-screen',
+      );
+    // The prototype mocks are shared: restore them for the tests after.
+    try {
+      await mount(
+        <HeaderHeightContext.Provider value={116}>
+          <Quiz />
+        </HeaderHeightContext.Provider>,
+      );
+      expect(resets).toEqual([]);
+      await press('quiz-start');
+      const round = quizRounds.mixed[0]!;
+      // Not from the press, over the intro: once the question has drawn.
+      expect(resets).toEqual([top(round[0]!.prompt)]);
+      expect(focused).toEqual([true]);
+      for (const [i, q] of round.entries()) {
+        // Below AX1 the action is pinned under the scroll view, never over
+        // its content; at AX sizes it flows after the answers.
+        expect(
+          scroll().findAll((node) => node.props.testID === 'quiz-confirm')
+            .length > 0,
+        ).toBe(large);
+        expect(footer()).toHaveLength(large ? 0 : 1);
+        await answer(q);
+        await press('quiz-confirm');
+        // The reveal stays where the reader is.
+        expect(resets).toHaveLength(i + 1);
+        await press('quiz-next');
+        expect(resets.at(-1)).toEqual(
+          top(i < 7 ? round[i + 1]!.prompt : 'result'),
+        );
+        // One focus move per question; the result announces itself instead.
+        expect(focused).toEqual(Array(Math.min(i + 2, 8)).fill(true));
+      }
+      await press('quiz-decks');
+      expect(resets.at(-1)).toEqual(top('intro'));
+      expect(resets).toHaveLength(10);
+    } finally {
+      measure.mockRestore();
+      scrollTo.mockRestore();
+      focus.mockRestore();
+    }
+  },
+);
+
 test('a failed save says so, once, with a way to try again', async () => {
   (quizStore.save as jest.Mock).mockRejectedValueOnce(new Error('disk'));
   await mount(<Quiz />);
@@ -488,7 +606,7 @@ test('a failed save says so, once, with a way to try again', async () => {
     await press('quiz-next');
   }
   const failure = byID('quiz-save');
-  expect(failure.props.message).toBe("Your best streak couldn't be saved.");
+  expect(failure.props.message).toBe('Your best streak couldn’t be saved.');
   await act(async () => failure.props.onRetry());
   expect(has('quiz-save')).toBe(false);
 });
@@ -513,4 +631,164 @@ test('a portrait choice insets its text by the size the portrait draws', () => {
   expect(sizes.length).toBeGreaterThan(0);
   expect(new Set(sizes)).toEqual(new Set([choicePortrait.drawn]));
   act(() => renderer.unmount());
+});
+
+describe('sweep 3, item 6: a right answer lands', () => {
+  const round = quizRounds.mixed[0]!;
+  // The round's first single-choice question; the ones before it are
+  // answered right on the way, so it carries a streak.
+  const at = round.findIndex((q) =>
+    ['mc', 'tf', 'higher-lower'].includes(q.kind),
+  );
+  const q = round[at]!;
+  const right = q.options!.findIndex((o) => o.correct);
+  const wrong = q.options!.findIndex((o) => !o.correct);
+  const reach = async () => {
+    await mount(<Quiz />);
+    await press('quiz-start');
+    for (let i = 0; i < at; i++) {
+      await answer(round[i]!);
+      await press('quiz-confirm');
+      await press('quiz-next');
+    }
+  };
+  const host = (id: string) =>
+    root().findAll(
+      (node) => typeof node.type === 'string' && node.props.testID === id,
+    );
+  const segment = (i: number) =>
+    StyleSheet.flatten(host(`quiz-progress-segment-${i}`)[0]!.props.style);
+  const points = () => host('quiz-points')[0]!;
+  /** The grade's own line: the row that wraps, set on a shared baseline. */
+  const gradeLine = () =>
+    root().find(
+      (node) =>
+        typeof node.type === 'string' &&
+        StyleSheet.flatten(node.props.style)?.alignItems === 'baseline' &&
+        node.findAll((child) => child.props.testID === 'quiz-grade').length > 0,
+    );
+  const besideGrade = () =>
+    gradeLine().findAll((node) => node.props.testID === 'quiz-points').length >
+    0;
+  const multiplier = Math.min(at + 1, 4);
+  const line = `+${100 * multiplier} points${multiplier > 1 ? ` · streak ×${multiplier}` : ''}`;
+
+  test('still: the points sit beside the grade in ink, the segment is bronze, and VoiceOver hears them once', async () => {
+    const said = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
+    await reach();
+    expect(segment(at).backgroundColor).toBe(colors.ink);
+    said.mockClear();
+    await press(`quiz-answer-${right}`);
+    await press('quiz-confirm');
+    // Beside the grade, in ink with tabular figures; not the grey line.
+    expect(byID('quiz-points').props).toMatchObject({
+      variant: 'strong',
+      tabular: true,
+      children: line,
+      accessibilityLabel: line,
+    });
+    expect(besideGrade()).toBe(true);
+    expect(StyleSheet.flatten(gradeLine().props.style)).toMatchObject({
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    });
+    // Reduce Motion not yet known: the final state, nothing in flight.
+    expect(host(`quiz-answer-${right}-drawn`)).toHaveLength(0);
+    expect(host(`quiz-progress-segment-${at}-fill`)).toHaveLength(0);
+    expect(segment(at).backgroundColor).toBe(colors.bronzeInk);
+    expect(said).toHaveBeenCalledTimes(1);
+    expect(said).toHaveBeenCalledWith(
+      `${q.kind === 'order' ? 'Correct order' : 'Correct'}, plus ${100 * multiplier} points. ${q.fact}`,
+    );
+    // The segment keeps its bronze once the round moves on.
+    await press('quiz-next');
+    expect(segment(at).backgroundColor).toBe(colors.bronzeInk);
+    expect(segment(at + 1).backgroundColor).toBe(colors.ink);
+  });
+
+  test('a wrong answer stays quiet: the grey line under the grade, no bronze, no points spoken', async () => {
+    (useReduceMotionSetting as jest.Mock).mockReturnValue(false);
+    const said = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
+    await reach();
+    said.mockClear();
+    await press(`quiz-answer-${wrong}`);
+    await press('quiz-confirm');
+    expect(byID('quiz-points').props).toMatchObject({
+      variant: 'secondary',
+      children: '+0 points',
+    });
+    expect(besideGrade()).toBe(false);
+    expect(segment(at).backgroundColor).toBe(colors.ink);
+    expect(host(`quiz-progress-segment-${at}-fill`)).toHaveLength(0);
+    expect(
+      root().findAll((node) => /-drawn$/.test(String(node.props.testID))),
+    ).toHaveLength(0);
+    expect(said).toHaveBeenCalledTimes(1);
+    expect(said).toHaveBeenCalledWith(`Not this time. ${q.fact}`);
+    await press('quiz-next');
+    expect(segment(at).backgroundColor).toBe(colors.inkSoft);
+  });
+
+  test('with motion allowed the check draws, the points count up from nothing and the segment fills, once', async () => {
+    (useReduceMotionSetting as jest.Mock).mockReturnValue(false);
+    await reach();
+    jest.useFakeTimers();
+    try {
+      await press(`quiz-answer-${right}`);
+      await press('quiz-confirm');
+      // In flight: the stroke in place of the symbol, the count at its
+      // start (spoken as its end), the bronze sweeping over the ink.
+      expect(host(`quiz-answer-${right}-drawn`)).toHaveLength(1);
+      expect(String(points().props.children)).toMatch(/^\+0 points/);
+      expect(byID('quiz-points').props.accessibilityLabel).toBe(line);
+      // The final line holds the row's width, unseen and unspoken, with
+      // the counting figure laid over it: no wrap mid-count at large text.
+      expect(host('quiz-points-place')[0]!.props).toMatchObject({
+        children: line,
+        accessibilityElementsHidden: true,
+      });
+      expect(
+        StyleSheet.flatten(host('quiz-points-place')[0]!.props.style).opacity,
+      ).toBe(0);
+      expect(StyleSheet.flatten(points().props.style).position).toBe(
+        'absolute',
+      );
+      expect(host(`quiz-progress-segment-${at}-fill`)).toHaveLength(1);
+      expect(segment(at).backgroundColor).toBe(colors.ink);
+      await act(async () => {
+        jest.advanceTimersByTime(1000);
+      });
+      // Landed: the same final state as the still reveal.
+      expect(host(`quiz-answer-${right}-drawn`)).toHaveLength(0);
+      expect(byID('quiz-points').props.children).toBe(line);
+      expect(host(`quiz-progress-segment-${at}-fill`)).toHaveLength(0);
+      expect(segment(at).backgroundColor).toBe(colors.bronzeInk);
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  test('Reduce Motion: the final state at once, no movement', async () => {
+    (useReduceMotionSetting as jest.Mock).mockReturnValue(true);
+    await reach();
+    await press(`quiz-answer-${right}`);
+    await press('quiz-confirm');
+    expect(host(`quiz-answer-${right}-drawn`)).toHaveLength(0);
+    expect(byID('quiz-points').props.children).toBe(line);
+    expect(host(`quiz-progress-segment-${at}-fill`)).toHaveLength(0);
+    expect(segment(at).backgroundColor).toBe(colors.bronzeInk);
+  });
+
+  test('a round resumed on an answered question is still, with its bronze kept', async () => {
+    (useReduceMotionSetting as jest.Mock).mockReturnValue(false);
+    await reach();
+    await press(`quiz-answer-${right}`);
+    await press('quiz-confirm');
+    act(() => renderer!.unmount());
+    await mount(<Quiz resume />);
+    expect(host(`quiz-answer-${right}-drawn`)).toHaveLength(0);
+    expect(byID('quiz-points').props.children).toBe(line);
+    expect(host(`quiz-progress-segment-${at}-fill`)).toHaveLength(0);
+    expect(segment(at).backgroundColor).toBe(colors.bronzeInk);
+  });
 });

@@ -1,5 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import {
+  DOT_CYCLE,
+  DOT_NEUTRAL,
   cycleLevel,
   dotClockNeeded,
   dotLevel,
@@ -8,6 +10,7 @@ import {
   dotStates,
   electorateDotState,
   outlineDotState,
+  dotTarget,
   sampleDotRows,
   type DotHighlight,
 } from '../src/features/today/australia-dots-model';
@@ -43,6 +46,44 @@ test('the directory electorate supplies its state, including ACT with NSW', () =
   expect(outlineDotState('8')).toBe('nsw');
   expect(outlineDotState('1')).toBe('nsw');
   expect(outlineDotState('9')).toBeNull();
+});
+
+test('while the seat is read the map is neutral: no bronze, no walk, no clock (sweep 3, item 1)', () => {
+  expect(dotTarget('nsw', true)).toBe(DOT_NEUTRAL);
+  expect(dotTarget(null, true)).toBe(DOT_NEUTRAL);
+  expect(dotTarget(null)).toBe(DOT_CYCLE);
+  expect(dotTarget('vic')).toBe(dotStates.indexOf('vic'));
+  const neutral: DotHighlight = {
+    target: DOT_NEUTRAL,
+    from: [],
+    changedAt: -1,
+  };
+  for (const time of [0, 0.45, 2.4, 16.8, 200]) {
+    expect(levels(time, neutral)).toEqual([0, 0, 0, 0, 0, 0, 0]);
+    expect(levels(time, neutral, true)).toEqual([0, 0, 0, 0, 0, 0, 0]);
+    expect(dotClockNeeded(true, true, true, false, time, neutral)).toBe(false);
+  }
+  // The seat answers: its tint fades in over 0.9 s from nothing, the clock
+  // running only for the fade; with no seat, the walk fades in instead.
+  const start = 0;
+  const from = levels(start, neutral);
+  const tint = { ...held('nsw'), from, changedAt: start };
+  expect(levels(start, tint)).toEqual([0, 0, 0, 0, 0, 0, 0]);
+  expect(levels(start + 0.45, tint)[4]).toBeCloseTo(0.5);
+  expect(levels(start + 0.9, tint)).toEqual([0, 0, 0, 0, 1, 0, 0]);
+  expect(dotClockNeeded(true, true, true, false, start + 0.45, tint)).toBe(
+    true,
+  );
+  expect(dotClockNeeded(true, true, true, false, start + 0.9, tint)).toBe(
+    false,
+  );
+  // Reduce Motion: the tint at once.
+  expect(levels(start, tint, true)).toEqual([0, 0, 0, 0, 1, 0, 0]);
+  const walk = { ...cycling, from, changedAt: start };
+  expect(levels(start, walk)).toEqual([0, 0, 0, 0, 0, 0, 0]);
+  expect(levels(start + 0.9, walk)).toEqual(
+    dotStates.map((_, group) => cycleLevel(group, start + 0.9)),
+  );
 });
 
 test('2.4 seconds per state, west to east, with the approved smooth rise and fall', () => {

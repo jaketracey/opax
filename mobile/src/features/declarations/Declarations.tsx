@@ -238,7 +238,7 @@ export default function Declarations() {
       ) : (
         <ContentUnavailable
           symbol="exclamationmark.triangle"
-          title="Couldn't load declarations"
+          title="Couldn’t load declarations"
           body="Check your connection and try again."
           action={{
             label: copy.tryAgain,

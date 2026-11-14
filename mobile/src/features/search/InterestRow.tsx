@@ -37,7 +37,7 @@ export function InterestRow({
       {failed ? (
         <InlineError
           subject="This page"
-          message="This page couldn't be opened."
+          message="This page couldn’t be opened."
           onRetry={open}
         />
       ) : null}

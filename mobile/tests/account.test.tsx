@@ -39,7 +39,10 @@ import {
   DeleteCode,
   DeleteIntro,
 } from '../src/features/account/DeleteAccountFlow';
-import { DeleteCodeScreen } from '../src/features/account/DeleteAccountScreen';
+import {
+  DeleteAccountScreen,
+  DeleteCodeScreen,
+} from '../src/features/account/DeleteAccountScreen';
 import AccountEntry from '../src/features/account/entry';
 import { finishSignIn } from '../src/features/account/navigation';
 import { CodeStep, EmailStep } from '../src/features/account/SignInFlow';
@@ -1176,7 +1179,7 @@ describe('Delete account', () => {
     }
   });
   test('step 1 says what is deleted and kept, then emails a code', async () => {
-    const renderer = await render(<DeleteIntro />);
+    const renderer = await render(<DeleteAccountScreen />);
     for (const line of [
       accountCopy.deleteLede,
       accountCopy.deletedHeader,

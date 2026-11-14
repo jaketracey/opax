@@ -80,6 +80,16 @@ describe('counts and money (IOS-UX section 6)', () => {
       '10.0 million dollars, to an invented council',
     );
     expect(spokenFigures('-$448k')).toBe('minus 448 thousand dollars');
+    expect(spokenFigures('\u2212$448k')).toBe('minus 448 thousand dollars');
+    expect(spokenFigures('$1m-$2m')).toBe(
+      '1 million dollars-2 million dollars',
+    );
+    expect(spokenFigures('$1m\u2212$2m')).toBe(
+      '1 million dollars\u22122 million dollars',
+    );
+    expect(spokenFigures('Range: $1m to -$2m')).toBe(
+      'Range: 1 million dollars to minus 2 million dollars',
+    );
     for (const value of [1_100_000_000, 4_200_000, 507_000])
       expect(spokenFigures(formatMoneyCompact(value))).toBe(
         moneyAccessibilityLabel(value, true),

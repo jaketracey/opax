@@ -1,11 +1,23 @@
 import { useEffect, useState, type Ref } from 'react';
 import type { LayoutChangeEvent } from 'react-native';
 import { Image, Text as NativeText, StyleSheet, View } from 'react-native';
+import Animated, {
+  Easing,
+  cancelAnimation,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withTiming,
+  type SharedValue,
+} from 'react-native-reanimated';
 import { localImageURI } from '../../api/image-policy';
 import { portraits, yearPictures } from '../../api/runtime';
 import type { EditionView } from '../../api/selectors';
 import { yearPictureKey } from '../../api/year-picture-policy';
-import { useAccessibilitySize } from '../../design/accessibility';
+import {
+  useAccessibilitySize,
+  useReduceMotionSetting,
+} from '../../design/accessibility';
 import { VoteSplit } from '../../design/charts';
 import { formatDate, spokenFigures } from '../../design/format';
 import { Icon } from '../../design/icon';
@@ -14,6 +26,7 @@ import { Text } from '../../design/text';
 import {
   colors,
   interfaceFonts as fonts,
+  motion,
   radii,
   rhythm,
 } from '../../design/tokens';
@@ -25,6 +38,7 @@ import {
   plateLine,
   type EditionTier,
 } from './model';
+import { timelineKey, timelineMayDraw, timelineShown } from './timeline-draw';
 
 export function Plate({
   edition,
@@ -34,6 +48,7 @@ export function Plate({
   onTitleLayout,
   titleRef,
   shownBelow,
+  still = false,
   testID = 'today-edition',
 }: {
   edition: EditionView;
@@ -41,6 +56,12 @@ export function Plate({
   shownBelow?: readonly string[];
   tier?: EditionTier;
   story?: boolean;
+  /**
+   * The timeline drawn finished, with no motion, leaving the edition's one
+   * draw this launch untouched: an image of the plate, or a plate the
+   * reader would not see arrive (Today's late slot, accessibility sizes).
+   */
+  still?: boolean;
   photograph?: YearPicture;
   onTitleLayout?: (event: LayoutChangeEvent) => void;
   titleRef?: Ref<View>;
@@ -170,7 +191,12 @@ export function Plate({
           {detailLine}
         </Text>
       ) : null}
-      <PlateArt edition={edition} story={story} testID={`${testID}-art`} />
+      <PlateArt
+        edition={edition}
+        story={story}
+        still={still}
+        testID={`${testID}-art`}
+      />
       {photograph ? (
         <ArchivePhotograph
           photograph={photograph}
@@ -210,10 +236,13 @@ function EditionPortrait({ name }: { name: string }) {
 export function PlateArt({
   edition,
   story = false,
+  still = false,
   testID,
 }: {
   edition: EditionView;
   story?: boolean;
+  /** The timeline finished, with no motion (an image of the plate). */
+  still?: boolean;
   testID?: string;
 }) {
   const large = useAccessibilitySize();
@@ -241,12 +270,13 @@ export function PlateArt({
           importantForAccessibility="no-hide-descendants"
           style={styles.stageArt}
         >
-          <View style={styles.rail} />
-          <View style={styles.dots}>
-            {events.map((_, i) => (
-              <View key={i} style={styles.dot} />
-            ))}
-          </View>
+          <StageTimeline
+            key={timelineKey(edition)}
+            drawKey={timelineKey(edition)}
+            stops={events.length}
+            still={still}
+            testID={testID && `${testID}-timeline`}
+          />
           {large ? (
             <Text
               testID={testID && `${testID}-ends`}
@@ -341,6 +371,131 @@ export function PlateArt({
   );
 }
 
+/** The rail's draw, left to right; the last stop's swell follows it. */
+export const TIMELINE_DRAW_MS = 600;
+export const TIMELINE_SETTLE_MS = 240;
+/** The share of the rail over which a stop lands as the line reaches it. */
+const LANDING = 0.12;
+
+/**
+ * A stop's look while the rail draws: it lands (fades in, growing from 60
+ * per cent) as the line reaches it, `at` along the rail; the last stop then
+ * rises to 1.25 and settles back as `settle` runs 0 to 1. Both at 1 is the
+ * finished line: every stop whole, at its size.
+ */
+export function timelineStop(
+  progress: number,
+  settle: number,
+  at: number,
+  last: boolean,
+): { opacity: number; scale: number } {
+  'worklet';
+  const landed = Math.min(
+    1,
+    Math.max(0, (progress - at * (1 - LANDING)) / LANDING),
+  );
+  const swell = last && settle < 1 ? 1 + 0.25 * Math.sin(Math.PI * settle) : 1;
+  return { opacity: landed, scale: (0.6 + 0.4 * landed) * swell };
+}
+
+/**
+ * The bill plate's stage line (sweep 3, item 8). On the edition's first
+ * appearance this launch the rail draws left to right over 600 ms with the
+ * standard ease, each stop landing as the line reaches it, and the last stop
+ * swells slightly and settles. Every other time, under Reduce Motion (or
+ * before the setting is known), and for a still plate it is drawn finished
+ * from its first frame: never a partly drawn line in an image.
+ */
+function StageTimeline({
+  drawKey,
+  stops,
+  still,
+  testID,
+}: {
+  drawKey: string;
+  stops: number;
+  still: boolean;
+  testID?: string;
+}) {
+  const reduce = useReduceMotionSetting();
+  // Decided once, at mount: a re-render never restarts or skips the draw.
+  const [draws] = useState(
+    () => !still && reduce === false && timelineMayDraw(drawKey),
+  );
+  const progress = useSharedValue(draws ? 0 : 1);
+  const settle = useSharedValue(draws ? 0 : 1);
+  useEffect(() => {
+    // A still plate (an image, a card below the fold) is not the reader
+    // seeing the line arrive: the turn stays for the next appearance.
+    if (!still) timelineShown(drawKey);
+    if (!draws) return;
+    progress.set(
+      withTiming(1, {
+        duration: TIMELINE_DRAW_MS,
+        easing: Easing.bezier(...motion.easing.standard),
+      }),
+    );
+    settle.set(
+      withDelay(
+        TIMELINE_DRAW_MS,
+        withTiming(1, { duration: TIMELINE_SETTLE_MS }),
+      ),
+    );
+  }, [draws, drawKey, still, progress, settle]);
+  // Reduce Motion turned on mid-draw: the finished line at once.
+  useEffect(() => {
+    if (!draws || reduce !== true) return;
+    cancelAnimation(progress);
+    cancelAnimation(settle);
+    progress.set(1);
+    settle.set(1);
+  }, [draws, reduce, progress, settle]);
+  const rail = useAnimatedStyle(() => ({
+    transform: [{ scaleX: progress.value }],
+  }));
+  return (
+    <>
+      <Animated.View
+        testID={testID && `${testID}-rail`}
+        style={[styles.rail, rail]}
+      />
+      <View style={styles.dots}>
+        {Array.from({ length: stops }, (_, i) => (
+          <TimelineStop
+            key={i}
+            at={stops > 1 ? i / (stops - 1) : 0}
+            last={i === stops - 1}
+            progress={progress}
+            settle={settle}
+            testID={testID && `${testID}-stop-${i}`}
+          />
+        ))}
+      </View>
+    </>
+  );
+}
+
+function TimelineStop({
+  at,
+  last,
+  progress,
+  settle,
+  testID,
+}: {
+  /** Where the stop sits along the rail, 0 to 1. */
+  at: number;
+  last: boolean;
+  progress: SharedValue<number>;
+  settle: SharedValue<number>;
+  testID?: string;
+}) {
+  const style = useAnimatedStyle(() => {
+    const look = timelineStop(progress.value, settle.value, at, last);
+    return { opacity: look.opacity, transform: [{ scale: look.scale }] };
+  });
+  return <Animated.View testID={testID} style={[styles.dot, style]} />;
+}
+
 /** Shared with the archive card: cached local pixels and an unclamped credit. */
 export function ArchivePhotograph({
   photograph,
@@ -419,6 +574,8 @@ const styles = StyleSheet.create({
     right: 5,
     height: 2,
     backgroundColor: colors.onBandSoft,
+    // It draws from the first stop's centre.
+    transformOrigin: 'left',
   },
   dots: { flexDirection: 'row', justifyContent: 'space-between' },
   dot: {

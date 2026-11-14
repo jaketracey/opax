@@ -1,3 +1,4 @@
+import { LoadingStatus } from '../../design/states';
 import { RouteOptions } from '../../navigation/preview';
 import { useScreenReady } from '../../analytics/timing';
 import { Host, Menu, Button as SwiftButton } from '@expo/ui/swift-ui';
@@ -104,6 +105,7 @@ import {
   countWords,
   divisionQuestion,
   divisionTitle,
+  divisionMeta,
   orderDivisions,
   outcomeWord,
 } from './divisions';
@@ -420,8 +422,8 @@ export default function BillDetail({
             {notFound ? (
               <ContentUnavailable
                 symbol="doc.text.magnifyingglass"
-                title="Bill not found"
-                body="This link may be old."
+                title="This bill isn’t in OPAX"
+                body="The link may be old, or the bill may not be collected yet."
                 action={{
                   label: 'Search bills',
                   onPress: () =>
@@ -440,7 +442,7 @@ export default function BillDetail({
             ) : error && !record ? (
               <ContentUnavailable
                 symbol="exclamationmark.triangle"
-                title="This bill couldn't be loaded"
+                title="This bill couldn’t be loaded"
                 action={{
                   label: words.tryAgain,
                   onPress: retry,
@@ -674,7 +676,7 @@ function BillPage({
       ) : stale?.kind === 'failed' ? (
         <InlineError
           subject="the latest version of this bill"
-          message={`The latest version of this bill couldn't be loaded. Showing the copy saved on ${dayMonth(stale.at)}.`}
+          message={`The latest version of this bill couldn’t be loaded. Showing the copy saved on ${dayMonth(stale.at)}.`}
           onRetry={stale.retry}
           testID="bill-stale"
         />
@@ -747,13 +749,17 @@ function BillPage({
         anchor={speechesRef}
         fresh={follow.fresh}
       />
-      <Acts view={view} savedAt={savedAt} />
+      <Acts
+        view={view}
+        savedAt={savedAt}
+        pageSource={foot === 'acts' ? pageSource : null}
+      />
       <Related
         view={view}
         savedAt={savedAt}
         pageSource={foot === 'related' ? sharedSource : null}
       />
-      {sharedSource ? null : (
+      {sharedSource || foot === 'acts' ? null : (
         <SourceLine {...pageSource} testID="bill-source" />
       )}
     </>
@@ -1080,7 +1086,7 @@ function SeededHead({ row }: { row: IndexRow }) {
 /** Below a seeded header: one element, "Loading the bill". */
 function SeededBodySkeleton() {
   return (
-    <View
+    <LoadingStatus
       accessible
       accessibilityRole="progressbar"
       accessibilityLabel="Loading the bill"
@@ -1088,7 +1094,7 @@ function SeededBodySkeleton() {
       testID="bill-loading"
     >
       <BodySkeleton />
-    </View>
+    </LoadingStatus>
   );
 }
 
@@ -1773,7 +1779,10 @@ function BillVoteRow({
     if (focus) targets.scrollTo(anchor, true);
   }, [focus, targets]);
   const title = divisionTitle(division);
-  const meta = [chamberLabel(division.house), short(division.date)].join(' · ');
+  const meta = divisionMeta(
+    division,
+    [chamberLabel(division.house), short(division.date)].join(' · '),
+  );
   const outcome = outcomeWord(division.outcome, division);
   const parties = divisionParties(division.splits);
   const question = divisionQuestion(division.question, division.stage, {
@@ -2031,7 +2040,15 @@ function MachineNotePill() {
   );
 }
 
-function Acts({ view, savedAt }: { view: BillView; savedAt: number | null }) {
+function Acts({
+  view,
+  savedAt,
+  pageSource,
+}: {
+  view: BillView;
+  savedAt: number | null;
+  pageSource?: SourceDetails | null;
+}) {
   const acts = shownActs(view);
   if (!acts.length) return null;
   return (
@@ -2050,17 +2067,22 @@ function Acts({ view, savedAt }: { view: BillView; savedAt: number | null }) {
           />
         ))}
       </View>
-      <SourceLine
-        asOf={view.acts.asAt}
-        citation="Federal Register of Legislation"
-        savedAt={savedAt}
-        originals={acts.map((act) => ({
-          label: 'Federal Register of Legislation',
-          url: act.frl_uri,
-          record: act.title,
-        }))}
-        testID="bill-acts-source"
-      />
+      <View>
+        <SourceLine
+          asOf={view.acts.asAt}
+          citation="Federal Register of Legislation"
+          savedAt={savedAt}
+          originals={acts.map((act) => ({
+            label: 'Federal Register of Legislation',
+            url: act.frl_uri,
+            record: act.title,
+          }))}
+          testID="bill-acts-source"
+        />
+        {pageSource ? (
+          <SourceLine {...pageSource} testID="bill-source" />
+        ) : null}
+      </View>
     </Section>
   );
 }

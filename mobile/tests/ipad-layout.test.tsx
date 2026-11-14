@@ -23,7 +23,8 @@ import {
 } from '../src/design/keyboard';
 import { Section } from '../src/design/layout';
 import { phoneCopy } from '../src/design/phone-copy';
-import { SplitEmpty, SplitLayout, useSplitPane } from '../src/design/split';
+import { SplitLayout, useSplitPane } from '../src/design/split';
+import { EmptyState } from '../src/design/states';
 import { colors } from '../src/design/tokens';
 
 // SplitLayout decides between one pane and two from `useLayout()`; the test
@@ -167,7 +168,12 @@ function create(selected: Entry | null, onSelect: jest.Mock) {
       keys={['a', 'b', 'c']}
       entryForKey={(key) => ({ kind: 'item', key })}
       empty={
-        <SplitEmpty icon="doc.text" title="No item selected" testID="empty" />
+        <EmptyState
+          size="pane"
+          icon="doc.text"
+          title="Choose an item"
+          testID="empty"
+        />
       }
     />,
   );

@@ -9,7 +9,7 @@ import {
   recentReadingVotes,
   voteMeta,
 } from '../src/features/today/votes';
-import { countWords } from '../src/features/bills/divisions';
+import { countWords, divisionTitle } from '../src/features/bills/divisions';
 import { pinnedBytes, servedFiles } from './pinned';
 
 jest.mock('expo-router', () => {
@@ -111,6 +111,9 @@ test('How parliament voted says "N ayes, N noes", as the bill page does', async 
     const words = countWords(vote.ayes, vote.noes);
     expect(texts(row)).toContain(words);
     expect(row.props.meta).toBe(voteMeta(vote));
+    expect(
+      row.props.meta.startsWith(`${divisionTitle({ stage: vote.stage })} · `),
+    ).toBe(true);
     expect(row.props.meta).not.toMatch(/House of Representatives/);
     // VoiceOver hears plain spaces, never the layout's no-break ones.
     const pressable = row.find(

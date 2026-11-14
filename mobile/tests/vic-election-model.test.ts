@@ -22,6 +22,7 @@ for (const zone of ['Australia/Perth', 'UTC'])
     try {
       expect(phase(o, at('2026-11-27T23:59:00'))).toBe('ahead');
       expect(phase(o, at('2026-11-28T00:00:00'))).toBe('today');
+      expect(phase(o, at('2026-11-28T08:00:00'))).toBe('today');
       expect(phase(o, at('2026-11-28T17:59:00'))).toBe('today');
       expect(phase(o, at('2026-11-28T18:00:00'))).toBe('closed');
       expect(
@@ -66,17 +67,17 @@ test('windows include their last Melbourne day', () => {
   expect(searchWindow(at('2026-12-28T23:59:59'))).toBe(true);
   expect(searchWindow(at('2026-12-29T00:00:00'))).toBe(false);
 });
-test('Today copy derives dates and polling hours from the payload', () => {
+test('Today copy shares the election state and explicit AEDT polling hours', () => {
   expect(todayStatus(o, at('2026-11-20T10:00:00'))).toEqual([
-    'Election day is Saturday 28 November',
-    'In 8 days',
+    'Early voting',
+    'Early voting runs 18–27 November, 9 am to 6 pm, except Sunday 22 November. Check locations and hours with the VEC.',
   ]);
   expect(todayStatus(o, at('2026-11-28T10:00:00'))).toEqual([
     'Election day is today',
-    'Polls are open from 8 am to 6 pm',
+    'Voting is open until 6 pm AEDT.',
   ]);
   expect(todayStatus(o, at('2026-11-28T19:00:00'))).toEqual([
     'Voting has closed',
-    'Election day was Saturday 28 November',
+    'Voting closed at 6 pm AEDT on Saturday 28 November. The count is under way. Check the VEC for count updates.',
   ]);
 });

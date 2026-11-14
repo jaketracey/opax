@@ -25,7 +25,7 @@ import {
   moneyAccessibilityLabel,
 } from '../src/design/format';
 import { HeightReveal } from '../src/design/reveal';
-import { isProcedural } from '../src/features/bills/divisions';
+import { divisionMotion, isProcedural } from '../src/features/bills/divisions';
 import { PartyDebts } from '../src/features/people/PartyDepth';
 import { decodeFunding } from '../src/features/people/model';
 import { partyColors } from '../src/design/palette';
@@ -1312,11 +1312,11 @@ describe('the Libertarian Party, formerly the Liberal Democratic Party', () => {
     act(() => r.unmount());
   });
 
-  test('other parties draw no history line and no past members', async () => {
+  test('other parties draw past members without a rename history line', async () => {
     jest.mocked(runtime.partyPage).mockResolvedValue(view);
     const r = await render();
     expect(has(r, 'party-history')).toBe(false);
-    expect(has(r, 'party-past-toggle')).toBe(false);
+    expect(has(r, 'party-past-toggle')).toBe(true);
     act(() => r.unmount());
   });
 });
@@ -1398,7 +1398,8 @@ describe('VoiceOver and Dynamic Type on a party page', () => {
             .filter(
               (e) =>
                 /^party-past-/.test(e.testID ?? '') &&
-                e.testID !== 'party-past-toggle',
+                e.testID !== 'party-past-toggle' &&
+                e.testID !== 'party-past-source',
             )
             .map((e) => e.label),
         ).toEqual([
@@ -1443,6 +1444,70 @@ describe('sweep 2: a party page says each thing once', () => {
   const firstLines = (row: TestRenderer.ReactTestInstance) =>
     `${row.props.title}\n${row.props.meta}`;
 
+  test.each([1, 2.643, 3.571])(
+    'sweep 3: motion lines or chamber counts, never chair patter, at scale %s',
+    async (fontScale) => {
+      jest
+        .mocked(useWindowDimensions)
+        .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale });
+      const data = view.data!;
+      const base = data.divisions.data!.rows[0]!;
+      const questions = [
+        'Morgan Reed The question is that the amendment on sheet 1234 be agreed to. One-minute bells.',
+        'Morgan Reed The question is that the amendment on sheet 5678 be agreed to.',
+        'Morgan Reed I advise senators that there will be one-minute bells.',
+        'Morgan Reed Pursuant to order agreed yesterday, the time allotted has expired.',
+      ];
+      const rows = questions.map((question, i) => ({
+        ...base,
+        question: divisionMotion(question) ?? question, // also exercise an older cached excerpt
+        division: {
+          ...base.division,
+          key: `fixture-${i}`,
+          stage: 'Limitation of debate',
+          title: undefined,
+          question,
+          ayes: 20 + i,
+          noes: 30,
+        },
+      }));
+      jest.mocked(runtime.partyPage).mockResolvedValueOnce({
+        ...view,
+        data: {
+          ...data,
+          divisions: {
+            ...data.divisions,
+            data: { ...data.divisions.data!, rows },
+          },
+        },
+      });
+      const r = await render();
+      const main = rowsOf(r);
+      expect(main.map((row) => row.props.meta)).toEqual([
+        expect.stringMatching(
+          /^Amendment · .* · under a time limit\nThat the amendment on sheet 1234 be agreed to\.$/,
+        ),
+        expect.stringMatching(
+          /^Amendment · .* · under a time limit\nThat the amendment on sheet 5678 be agreed to\.$/,
+        ),
+      ]);
+      press(r, 'party-divisions-procedural');
+      const folded = rowsOf(r).slice(2);
+      expect(folded.map((row) => row.props.meta)).toEqual([
+        expect.stringMatching(/\nChamber: 22 for, 30 against$/),
+        expect.stringMatching(/\nChamber: 23 for, 30 against$/),
+      ]);
+      for (const row of rowsOf(r)) {
+        expect(row.props.meta).not.toMatch(
+          /Morgan Reed|bells|Pursuant|time allotted/,
+        );
+        const read = accessibilityElements(row);
+        expect(read.some((e) => e.label.includes(row.props.meta))).toBe(true);
+      }
+      act(() => r.unmount());
+    },
+  );
+
   test('Recent votes: procedural motions fold away, block votes have no bar and neighbours differ', async () => {
     const all = view.data!.divisions.data!.rows;
     const rule = (row: (typeof all)[number]) =>
@@ -1463,9 +1528,9 @@ describe('sweep 2: a party page says each thing once', () => {
         /limitation of debate/i.test(row.division.stage ?? '') && !rule(row),
     );
     expect(guillotined.length).toBeGreaterThan(0);
-    expect(
-      shown.some((row) => /Limitation of debate/.test(row.props.meta)),
-    ).toBe(true);
+    expect(shown.some((row) => /under a time limit/.test(row.props.meta))).toBe(
+      true,
+    );
     press(r, 'party-divisions-procedural');
     const folded = rowsOf(r).slice(shown.length);
     expect(folded).toHaveLength(procedural.length);
@@ -1563,9 +1628,9 @@ describe('sweep 2: a party page says each thing once', () => {
       expect(has(r, 'party-figure-receipts')).toBe(false);
       expect(text.split(exact).length - 1).toBe(compact ? 0 : 1);
       expect(text.split(short).length - 1).toBe(compact ? 1 : 0);
-      // VoiceOver hears the exact dollars at every size.
+      // VoiceOver uses the same rounding as the figure at every size.
       expect(host(r, 'party-receipts-total').props.accessibilityLabel).toMatch(
-        new RegExp(`^${moneyAccessibilityLabel(total)}, disclosed`),
+        new RegExp(`^${moneyAccessibilityLabel(total, compact)}, disclosed`),
       );
       act(() => r.unmount());
     },

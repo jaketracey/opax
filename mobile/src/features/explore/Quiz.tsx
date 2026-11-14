@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
   StyleSheet,
@@ -6,7 +6,6 @@ import {
   type ScrollView,
 } from 'react-native';
 import { useOffline } from '../../api/useOffline';
-import { useReduceMotion } from '../../design/accessibility';
 import { useLayout } from '../../design/adaptive';
 import { Button } from '../../design/controls';
 import { formatCount } from '../../design/format';
@@ -86,7 +85,6 @@ export default function Quiz({
   const headerBottom = useHeaderBottom();
   const promptRef = useRef<View>(null);
   const starting = useRef(false);
-  const reduceMotion = useReduceMotion();
   useEffect(() => {
     let live = true;
     void reading.then((saved) => {
@@ -113,9 +111,20 @@ export default function Quiz({
     const target = promptRef.current;
     if (target) AccessibilityInfo.sendAccessibilityEvent(target, 'focus');
   }, [mode, questionKey]);
-
-  const toTop = () =>
-    scrollToTop(scrollRef.current, headerBottom, !reduceMotion);
+  // A new page (the next question, a round, the result, the intro) starts at
+  // its resting top, below the header, once it has committed. Reset from the
+  // press, the scroll was still animating when the shorter page replaced the
+  // longer one, and it landed as far above the rest as the old page had been
+  // scrolled: a blank band over the question (build 63, flow 48). Not
+  // animated: the page it would scroll is gone, and an instant reset can't
+  // race a resize.
+  const page = `${mode}:${questionKey}`;
+  const shownPage = useRef(page);
+  useLayoutEffect(() => {
+    if (shownPage.current === page) return;
+    shownPage.current = page;
+    scrollToTop(scrollRef.current, headerBottom);
+  }, [page, headerBottom]);
   const start = async (choice: Deck) => {
     if (starting.current) return;
     starting.current = true;
@@ -128,7 +137,6 @@ export default function Quiz({
       setSummary(null);
       setSaveFailed(false);
       setMode('round');
-      toTop();
     } finally {
       starting.current = false;
     }
@@ -138,14 +146,13 @@ export default function Quiz({
     setDraft(undefined);
     setEditing(false);
     setMode('round');
-    toTop();
   };
   const check = () => {
     if (!q || response || !answerComplete(q, draft)) return;
     if (mode === 'single') {
       const scored = scoreAnswer(q, draft!, 0);
       setSingleResponse(scored.response);
-      announce(scored.response, q.fact);
+      announce(scored.response, q.fact, false);
       return;
     }
     const current = quizSession.current();
@@ -159,7 +166,7 @@ export default function Quiz({
       streak: scored.streak,
       best: Math.max(current.best, scored.streak),
     });
-    announce(scored.response, q.fact);
+    announce(scored.response, q.fact, true);
   };
   const persist = (done: QuizRound) => {
     const next: QuizRecord = {
@@ -183,7 +190,6 @@ export default function Quiz({
     setEditing(false);
     if (current.index + 1 < current.round.length) {
       quizSession.update({ ...current, index: current.index + 1 });
-      toTop();
       return;
     }
     const done = { ...current, index: current.round.length };
@@ -191,7 +197,6 @@ export default function Quiz({
     setSummary(done);
     setMode('result');
     persist(done);
-    toTop();
     AccessibilityInfo.announceForAccessibility(
       `You scored ${formatCount(done.points)} points, with ${done.correct} of ${done.round.length} right. Your rank: ${rankFor(done.correct, done.round.length).name}.`,
     );
@@ -280,6 +285,7 @@ export default function Quiz({
             index={round.index}
             total={round.round.length}
             points={round.points}
+            results={round.answers.map((given) => given.correct)}
           />
         ) : null}
         {(mode === 'round' || mode === 'single') && q ? (
@@ -302,7 +308,6 @@ export default function Quiz({
             onDecks={() => {
               setSummary(null);
               setMode('intro');
-              toTop();
             }}
           />
         ) : (
@@ -338,8 +343,19 @@ export default function Quiz({
   );
 }
 
-function announce(response: QuizResponse, fact: string) {
-  AccessibilityInfo.announceForAccessibility(`${response.grade}. ${fact}`);
+/**
+ * One announcement per answer. A right answer in a round says its points
+ * with the grade ("Correct, plus 100 points."), since the figure on screen
+ * is still counting; then the fact.
+ */
+function announce(response: QuizResponse, fact: string, scored: boolean) {
+  const points =
+    scored && response.correct
+      ? `, plus ${formatCount(response.gained)} points`
+      : '';
+  AccessibilityInfo.announceForAccessibility(
+    `${response.grade}${points}. ${fact}`,
+  );
 }
 
 /** Reports the content column's width, so the footer capsule lines up. */

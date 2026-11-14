@@ -1,0 +1,31 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'au.com.opax.links'
+version = '0.1.0'
+
+android {
+  namespace 'au.com.opax.links'
+  defaultConfig {
+    versionCode 1
+    versionName '0.1.0'
+  }
+  testOptions {
+    unitTests.includeAndroidResources = true
+    unitTests.all {
+      maxHeapSize = '1g'
+      testLogging {
+        events 'failed'
+        exceptionFormat 'full'
+      }
+    }
+  }
+}
+
+dependencies {
+  testImplementation 'junit:junit:4.13.2'
+  testImplementation 'androidx.test:core:1.7.0'
+  testImplementation 'org.robolectric:robolectric:4.16.1'
+}

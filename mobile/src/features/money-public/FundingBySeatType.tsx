@@ -163,7 +163,7 @@ export default function FundingBySeatType() {
           ) : (
             <ContentUnavailable
               symbol="exclamationmark.triangle"
-              title="The seat type table couldn't be loaded"
+              title="The seat type table couldn’t be loaded"
               action={{ label: copy.tryAgain, onPress: status.retry }}
               testID="seat-type-error"
             />

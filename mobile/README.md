@@ -92,6 +92,7 @@ invalid or older candidates. The selected version is saved in `java.log`.
 | `OPAX_BUILD_GATE`         | Executable shell script wrapping builds, invoked with lane name and command arguments | Run the command directly, with a notice             |
 | `OPAX_SIM_GATE`           | Shell script booting an allowed simulator, invoked with lane name and UDID            | Boot directly, with a notice                        |
 | `OPAX_PASTE_LOCK`         | Shared directory lock for Maestro input                                               | Skip locking, with a notice                         |
+| `OPAX_SIM_ADMIT_IGNORE`   | UDIDs another slot on a two-slot host owns; admission does not refuse them             | Refuse every other booted simulator                 |
 | `OPAX_CAPACITY_CMD`       | Trusted local shell command checking host capacity                                    | Skip capacity checks, with a notice                 |
 | `OPAX_ALLOWED_UDIDS`      | Space-separated simulator allow-list                                                  | Accept the requested simulator, with a warning      |
 | `OPAX_PASTE_WAIT_SECONDS` | Digit-only deadline for capacity and pasteboard lock waits                            | 7,200 seconds; invalid values also use this default |
@@ -243,6 +244,11 @@ The build prints its path, elapsed seconds and disk size. Once finished, prune
 from that DerivedData, keeping the app. `qa-static` evaluates both configs,
 checks the resolved dependency tree and scans source transport boundaries.
 The e2e build additionally checks the generated plist and embedded bundle.
+Expo Router 57.0.24 has a version and hash pinned navigation queue patch in
+`patches/privacy-patches.json`, replayed by postinstall and prebuild. Queued
+actions publish a new external-store snapshot, while an empty flush keeps the
+snapshot stable. `tests/android-navigation-queue.test.ts` checks this contract
+and the real router emitter's link and Back dispatch.
 `scripts/check-release-bundle.sh` exports iOS production JS through the build
 gate, prebuilds production and verifies native ATS, then scans the shipped JS for
 loopback/fixture origins and mandatory allow-list/origin/redirect guards. SDK 57's dormant Metro/SSR URL
@@ -688,6 +694,18 @@ then on both carry one synthetic change: Anthony Albanese's register count
 28 to 29, and the Ending Financial Abuse bill (`au-federal-r7549`) passed as at
 1 October 2026. Run it on its own, by path:
 `OPAX_FIXTURE_DATA=changed scripts/e2e.sh <udid> .maestro/26-follows.yaml`.
+
+For Android's limit check, start the local fixture with
+`OPAX_FIXTURE_FOLLOWS=50`. A fresh e2e install reads `/__fixture/follows`
+and saves 50 distinct canonical identities from the pinned people catalog. Existing saved follows
+take precedence, so clear app data before seeding; subsequent edits survive
+relaunch. The default fixture returns an empty list. Production bundles omit
+the seed reader and path, and the API policy restricts this path to the local
+fixture origins on ports 8900 to 8999.
+
+`OPAX_FIXTURE_EDITION_FILE=<local JSON path>` serves a decoded local edition
+for a device check. `scripts/fixtures/edition-program.json` is explicitly
+synthetic and includes both party and election timing shares.
 The `26` shorthand without the variable never sees the change and fails. To repin, fetch the route once and
 update the file, hash, size and fetch time together.
 

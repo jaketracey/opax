@@ -24,7 +24,7 @@ test('with a page behind it, the action goes back', () => {
   jest.mocked(router.canGoBack).mockReturnValue(true);
   const view = render();
   const state = view.root.findByType(ContentUnavailable);
-  expect(state.props.title).toBe("This page isn't in the app");
+  expect(state.props.title).toBe('This page isn’t in the app');
   expect(state.props.action.label).toBe('Go back');
   act(() => state.props.action.onPress());
   expect(router.back).toHaveBeenCalledTimes(1);

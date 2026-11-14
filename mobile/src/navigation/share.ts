@@ -83,7 +83,7 @@ export async function shareRecord({
   }
   if (!OpaxShare) return;
   await OpaxShare.share({ url, title, ...(text ? { text } : {}) }).catch(() =>
-    Alert.alert("Couldn't share this link"),
+    Alert.alert('Couldn’t share this link'),
   );
 }
 

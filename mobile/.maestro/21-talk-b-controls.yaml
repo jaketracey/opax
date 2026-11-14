@@ -12,20 +12,19 @@ name: 21b Talk sources, a source record, mute, end, consent withdrawn and declin
     file: support/talk-fixture-account.yaml
     env:
       TALK_EMAIL: happy@example.invalid
+# Talk's action is pinned at the foot of a screen that does not scroll (the
+# idle orb, 13 Nov), so these scrolls only wait for it. Centring it timed
+# out on the device whenever lines under it held it low (sweep 2 lane A).
 - scrollUntilVisible:
     timeout: 60000
     element:
       id: talk-start
-    centerElement: true
 - tapOn:
     id: talk-start
-# The consent sheet's buttons are pinned, in view at every size.
-- extendedWaitUntil:
-    visible:
-      id: talk-agree
-    timeout: 15000
-- tapOn:
-    id: talk-agree
+- runFlow:
+    file: support/talk-consent.yaml
+    env:
+      CONSENT_BUTTON: talk-agree
 - scrollUntilVisible:
     timeout: 60000
     element:
@@ -140,15 +139,12 @@ name: 21b Talk sources, a source record, mute, end, consent withdrawn and declin
     element:
       id: talk-start
     direction: UP
-    centerElement: true
 - tapOn:
     id: talk-start
-- extendedWaitUntil:
-    visible:
-      id: talk-not-now
-    timeout: 15000
-- tapOn:
-    id: talk-not-now
+- runFlow:
+    file: support/talk-consent.yaml
+    env:
+      CONSENT_BUTTON: talk-not-now
 - extendedWaitUntil:
     visible:
       id: talk-start

@@ -475,6 +475,61 @@ test('finder results start at the page top below the header, from a scrolled hub
   }
 });
 
+test('finder results start at the resting top of a list below the pushed opaque bar', async () => {
+  // The hub is pushed: react-native-screens lays it out below the stack's
+  // opaque bar, so its list starts at the header's bottom (91 in this
+  // harness) and rests at 0. The helper measures the list's native scroll
+  // view through its responder.
+  jest.useFakeTimers();
+  try {
+    let searchBar!: SearchBarProps;
+    const observe = (options: Record<string, unknown>) => {
+      searchBar = options.headerSearchBarOptions as SearchBarProps;
+      (searchBar.ref as { current: unknown }).current = { setText: jest.fn() };
+    };
+    mockVic.find.mockImplementation(async (q: string) => ({
+      data: decodeFind(q.startsWith('3350') ? postcode : finder),
+      stale: false,
+    }));
+    const r = renderVic(<Hub />, observe);
+    const list = () => r.root.findByType(SectionList);
+    const scrollTo = jest.fn();
+    const measureInWindow = jest.fn(
+      (callback: (x: number, y: number) => void) => callback(0, 47 + 44),
+    );
+    jest
+      .spyOn(list().instance as SectionList, 'getScrollResponder')
+      .mockReturnValue({
+        scrollTo,
+        getNativeScrollRef: () => ({ measureInWindow }),
+      } as never);
+    act(() =>
+      list().props.onScroll({ nativeEvent: { contentOffset: { y: 2400 } } }),
+    );
+    act(() => {
+      searchBar.onChangeText!({ nativeEvent: { text: '3350' } } as never);
+    });
+    await act(async () => jest.runOnlyPendingTimers());
+    expect(words(r)).toContain('Wendouree');
+    expect(measureInWindow).toHaveBeenCalled();
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+    expect(scrollTo).toHaveBeenLastCalledWith({ y: 0, animated: false });
+
+    // Back at that rest (0, not -91), a new query schedules no reset: the
+    // "already there" check reads the list's own rest.
+    act(() =>
+      list().props.onScroll({ nativeEvent: { contentOffset: { y: 0 } } }),
+    );
+    act(() => {
+      searchBar.onChangeText!({ nativeEvent: { text: 'St Kilda' } } as never);
+    });
+    await act(async () => jest.runOnlyPendingTimers());
+    expect(scrollTo).toHaveBeenCalledTimes(1);
+  } finally {
+    jest.useRealTimers();
+  }
+});
+
 test.each([
   ['android', true, 'Vic election'],
   ['android', false, 'Victorian election'],

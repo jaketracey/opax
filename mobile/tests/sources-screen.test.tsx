@@ -21,6 +21,7 @@ import DatasetsList from '../src/features/sources/DatasetsList';
 import { DatasetPage, originalsOf } from '../src/features/sources/DatasetPage';
 import PortraitsList from '../src/features/sources/PortraitsList';
 import FontsList from '../src/features/sources/FontsList';
+import LicencePath from '../src/features/sources/LicencePath';
 import { PhotoCreditsList } from '../src/features/explore/PhotoCredits';
 import { datasets, statement } from '../src/features/sources/datasets';
 import { resetSources } from '../src/features/sources/loader';
@@ -210,6 +211,22 @@ const texts = (renderer: TestRenderer.ReactTestRenderer) =>
     .flatMap((n) => n.props.children)
     .filter((v) => typeof v === 'string')
     .join('\n');
+
+test.each([
+  ['fonts', 'sources-fonts-screen'],
+  ['datasets', 'sources-datasets-screen'],
+  ['portraits', 'sources-portraits-screen'],
+  ['photos', 'explore-photo-credits'],
+  ['unknown', 'sources-screen'],
+])(
+  'the licence sheet renders and audits its %s destination',
+  async (path, testID) => {
+    mockSegments = ['licence', 'sources'];
+    mockParams = { path };
+    const view = await render(<LicencePath />);
+    expect(view.root.findAllByProps({ testID }).length).toBeGreaterThan(0);
+  },
+);
 const row = (renderer: TestRenderer.ReactTestRenderer, testID: string) =>
   renderer.root.findAllByType(LinkRow).find((n) => n.props.testID === testID)!;
 const empty = (renderer: TestRenderer.ReactTestRenderer) =>

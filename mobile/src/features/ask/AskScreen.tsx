@@ -1,5 +1,6 @@
 import { AndroidFocusBack } from '../../navigation/AndroidFocusBack';
 import { RouteOptions } from '../../navigation/preview';
+import { useRootBarUnderBar } from '../../navigation/useRootBarAppearance';
 import { useAndroidRootScroll } from '../../navigation/useAndroidRootScroll';
 import { useScreenReady } from '../../analytics/timing';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -52,7 +53,7 @@ import { AskRevealContext, announceAnswer } from './AnswerView';
 import { AskDock } from './AskDock';
 import { AskColumns } from './AskLayout';
 import { ReservedRegionArea } from '../../design/fold-area';
-import { AskIdle } from './AskIdle';
+import { AskEmptyState, AskIdle } from './AskIdle';
 import { AskThread } from './AskThread';
 import { useAskStageAnnouncement } from './AskStatus';
 import { askGround } from './ground';
@@ -158,6 +159,17 @@ export default function AskScreen() {
   const fullHeader = useHeaderBottom();
   const hiddenBand =
     Platform.OS === 'ios' ? Math.max(0, fullHeader - headerBottom) : 0;
+  // Match Screen's first-point-of-scroll report, including the expanded
+  // title while UIKit debounces its height. The thread's inset has already
+  // removed the hidden large-title band, so use its compact header there.
+  const scrollY = useRef<number | null>(null);
+  const [underBar, setUnderBar] = useState(false);
+  const checkUnderBar = useCallback(() => {
+    if (Platform.OS !== 'ios' || scrollY.current === null) return;
+    setUnderBar(scrollY.current + headerBottom > 1);
+  }, [headerBottom]);
+  useLayoutEffect(checkUnderBar, [checkUnderBar]);
+  useRootBarUnderBar(underBar);
   const column = useScreenColumn('readable');
   const { overlap: keyboard, visible: keyboardVisible } = useKeyboardOverlap(
     root,
@@ -306,6 +318,8 @@ export default function AskScreen() {
   }
   function newConversation() {
     if (askSession.newConversation()) {
+      scrollY.current = null;
+      setUnderBar(false);
       setInputError('');
       setTopRequest((n) => n + 1);
     }
@@ -348,14 +362,19 @@ export default function AskScreen() {
       keyboard={keyboard}
     />
   );
-  // At accessibility sizes the resting composer and the tab bar take about a
+  // An undocked iOS thread, including iPad in a narrow window, ends above
+  // the floating composer: its answer stamp must never
+  // peek through the gap below it when the tab bar minimises. At
+  // accessibility sizes the resting composer and the tab bar take about a
   // third of a short display (the folded Duo's 678 pt at AX5), and covered
   // Try asking: a starter seen through the band's clear edge focused the
   // composer instead. There the idle page ends at the composer's resting top,
   // so nothing sits under it. Typing, the band turns opaque and the page runs
   // under it again, with room for the composer and keyboard as before.
   const restInset =
-    idle && !docked && !keyboardVisible && accessibilitySize
+    !docked &&
+    !keyboardVisible &&
+    (idle ? accessibilitySize : Platform.OS === 'ios')
       ? composerClearance
       : 0;
   const content = (
@@ -383,6 +402,8 @@ export default function AskScreen() {
       onContentSizeChange={onContentSizeChange}
       onScroll={(event) => {
         atTop.current = event.nativeEvent.contentOffset.y <= 4;
+        scrollY.current = event.nativeEvent.contentOffset.y;
+        checkUnderBar();
         if (Platform.OS === 'android') androidRoot.onScroll(event);
         if (adaptive) anchor.onScroll(event.nativeEvent.contentOffset.y);
         if (docked) sources.onScroll();
@@ -487,6 +508,7 @@ export default function AskScreen() {
                       content={content}
                       dock={dock}
                       sources={docked ? sources.pane : null}
+                      empty={<AskEmptyState readFailed={readFailed} />}
                       keyboard={keyboard}
                       keyboardVisible={keyboardVisible}
                       ground={ground}

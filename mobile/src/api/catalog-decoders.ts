@@ -91,11 +91,26 @@ const electoratePerson = shape({
   electorates: array(seatObservation),
 });
 export type ElectoratePerson = Decoded<typeof electoratePerson>;
+// parliamentarians.json keeps undated labels in parties and dated service
+// in affiliations. Older exports omit affiliations entirely.
+const affiliation = shape({
+  party: nonempty,
+  start: maybeDate,
+  end: maybeDate,
+  jurisdiction: optional(nonempty),
+  chamber: optional(nonempty),
+  electorate: maybeText,
+  source_url: (v: unknown) => (v === '' ? undefined : optional(url)(v)),
+});
 const rosterPerson = shape({
   name: nonempty,
   pid: optional(rosterId),
   party: maybeText,
   parties: optional(strings),
+  affiliations: (v: unknown) =>
+    Array.isArray(v)
+      ? rows(affiliation, 'roster.affiliation', 'optional')(v)
+      : undefined,
   roster_only: optional(boolean),
   party_now: optional(text),
   current: optional(boolean),

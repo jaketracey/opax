@@ -115,6 +115,9 @@ name: 25 Native party members, pinned receipts, bill divisions and an unknown pa
     speed: 20
     timeout: 180000
 - takeScreenshot: ${EVIDENCE}/25-party-votes
+# Sweep 3: a distinguishing line names the question put, never the chair's
+# opening transcript sentence. Unknown questions fall back to chamber counts.
+- assertNotVisible: '(?s).*Sue Lines (Pursuant|I advise|I.ll now).*'
 - tapOn:
     id: party-bill-au-federal-r7501
 - extendedWaitUntil:

@@ -3,10 +3,9 @@ import { ContentUnavailable } from '../../design/states';
 import { rhythm } from '../../design/tokens';
 
 /**
- * An unknown person (people-20): the system's unavailable view, then Search
- * centred under its centred text. A hugging button aligns itself to the
- * leading edge, so a row centres it; at accessibility sizes it takes the
- * column's width, as every button does there.
+ * An unknown person (people-20): the shared not-found pattern (sweep 2,
+ * item 2), the system's unavailable view with Search centred under it at
+ * every size.
  */
 export function PersonNotFound({ onSearch }: { onSearch: () => void }) {
   return (
@@ -29,5 +28,4 @@ export function PersonNotFound({ onSearch }: { onSearch: () => void }) {
 
 const styles = StyleSheet.create({
   page: { gap: rhythm.heading },
-  centred: { flexDirection: 'row', justifyContent: 'center' },
 });

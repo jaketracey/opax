@@ -70,6 +70,18 @@ REANIMATED_METADATA_PATHS = {
     "./src/initializers.ts", "./lib/module/initializers.js",
     "./src/index.ts", "./lib/module/index.js",
 }
+# posthog-react-native 4.x reads the optional crash plugin's package.json for its
+# version (dist/optional/OptionalPlugin.js), so Metro includes the pinned 2.13.0
+# entry points. These exact dependency references are not Expo route keys either.
+POSTHOG_PLUGIN_METADATA_PATHS = {
+    "./src/index.tsx", "./lib/commonjs/index.js", "./lib/module/index.js",
+    "./lib/typescript/commonjs/src/index.d.ts", "./lib/typescript/module/src/index.d.ts",
+}
+# Each exemption applies only while its package name and pinned version ship.
+PINNED_METADATA = (
+    (("react-native-reanimated", "4.5.1"), REANIMATED_METADATA_PATHS),
+    (("@posthog/react-native-plugin", "2.13.0"), POSTHOG_PLUGIN_METADATA_PATHS),
+)
 PATH_TOKENS = re.compile(rb"[A-Za-z0-9_(),@%.\[\]/+~-]+")
 HERMES_MAGIC = 0x1F1903C103BC1FC6
 HERMES_HEADER_SIZE = 128
@@ -368,8 +380,19 @@ def verify_no_drawn_diagnostics(body):
     return count
 
 
-# Launch arguments only e2e builds read (src/onboarding/launch-flag.e2e.ts).
-E2E_LAUNCH_FLAGS = ("OPAXWelcomeTour",)
+# Launch arguments only e2e builds read: the welcome tour's
+# (src/onboarding/launch-flag.e2e.ts) and Today's capture fixture
+# (src/features/today/launch-fixture.ts; release bundles resolve
+# launch-fixture.production.ts, which names none of them).
+E2E_LAUNCH_FLAGS = (
+    "OPAXWelcomeTour",
+    "OPAXSeat",
+    "OPAXEditionCache",
+    "OPAXEditionAge",
+    "OPAXWelcomeDeclined",
+    "OPAXPlateDraw",
+    "OPAXVicElection",
+)
 
 
 def verify_no_e2e_launch_flags(body):
@@ -417,7 +440,7 @@ def bundle_route_keys(body, routes):
     missing = sorted(expected - strings)
     require(bool(expected) and not missing, "every shipping Expo route key is present in shipped JS" +
             (f" (missing {', '.join(missing)})" if missing else ""))
-    metadata = REANIMATED_METADATA_PATHS if {"react-native-reanimated", "4.5.1"} <= strings else set()
+    metadata = set().union(*(paths for pin, paths in PINNED_METADATA if set(pin) <= strings))
     unexpected = sorted(string for string in strings if ROUTE_KEY.fullmatch(string) and string not in expected
                         and not (string in metadata and not (routes / string).is_file()))
     development = sorted(key for key in expected if DEVELOPMENT_ROUTE.search(key))

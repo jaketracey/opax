@@ -185,7 +185,7 @@ test.each([null, new Error('Unavailable')])(
     });
     const r = await render(<DivisionHistory />);
     const failure = r.root.findByType(ContentUnavailable);
-    expect(failure.props.title).toBe("Votes couldn't be loaded");
+    expect(failure.props.title).toBe('Votes couldn’t be loaded');
     expect(r.root.findAllByType(Skeleton)).toHaveLength(0);
     expect(r.root.findAllByType(EmptyState)).toHaveLength(0);
     expect(words(r)).not.toContain('No division records match that search.');
@@ -209,7 +209,7 @@ test('a partial division failure keeps the coverage line and refresh button', as
     retry: jest.fn(),
   });
   const r = await render(<DivisionHistory />);
-  expect(words(r)).toContain("Votes from 1 of 2 bills. 1 couldn't be loaded.");
+  expect(words(r)).toContain('Votes from 1 of 2 bills. 1 couldn’t be loaded.');
   expect(r.root.findAllByType(Skeleton)).toHaveLength(0);
   expect(
     r.root.findAllByProps({ testID: 'division-history-error' }),

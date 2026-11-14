@@ -2,7 +2,9 @@ import { withNavigationOptions } from './navigation-options';
 import { useState } from 'react';
 import {
   HeaderHeightContext,
+  NavigationContext,
   NavigationContainerRefContext,
+  NavigationRouteContext,
 } from 'expo-router/react-navigation';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import {
@@ -38,7 +40,7 @@ import clarify from '../scripts/fixtures/ask-clarify.json';
 import { catalogs, client } from '../src/api/runtime';
 import { arriveInAsk, askSession } from '../src/features/ask/session';
 import { reconcileChats, syncSubmittedChat } from '../src/features/ask/sync';
-import { chatsSnapshot } from '../src/features/ask/store';
+import { chatsSnapshot, loadChats } from '../src/features/ask/store';
 import { openAskOptions } from '../src/features/ask/Options';
 import { AskFailure, type StreamHandlers } from '../src/features/ask/stream';
 import { colors, rhythm, textStyles } from '../src/design/tokens';
@@ -59,6 +61,8 @@ import { useOpenAsk } from '../src/features/ask/open';
 import { askReturnSnapshot, setAskReturn } from '../src/features/ask/return';
 import { fromWebPath } from '../src/navigation/external';
 import * as Duo from '../modules/opax-duo';
+import * as RootBar from '../modules/opax-root-bar';
+import * as BarAppearance from '../src/navigation/useRootBarAppearance';
 import {
   currentRule,
   resetAdaptiveDeviceForTests,
@@ -66,6 +70,9 @@ import {
 } from '../src/design/adaptive';
 import { ReservedRegionsProvider } from '../src/design/fold-area';
 import { AskColumns } from '../src/features/ask/AskLayout';
+import { idleCopy } from '../src/features/ask/AskIdle';
+import { EngravedMark } from '../src/design/engraving';
+import * as accessibility from '../src/design/accessibility';
 import { AskThread } from '../src/features/ask/AskThread';
 import { emptyReservedRegions } from '../src/design/fold';
 
@@ -1581,6 +1588,35 @@ test('Ask next rows send; New question is enabled once there is an answer', asyn
   reset.mockRestore();
 });
 
+test('New question still rests a header above zero where Ask measures under its root bar', async () => {
+  // Ask's scroll view starts at the window's top, under the translucent root
+  // bar: the measured reset is the same -headerBottom as before.
+  const measure = jest
+    .spyOn(
+      ScrollView.prototype as unknown as {
+        measureInWindow: (callback: (x: number, y: number) => void) => void;
+      },
+      'measureInWindow',
+    )
+    .mockImplementation((callback) => callback(0, 0));
+  try {
+    jest
+      .mocked(client.askPost)
+      .mockResolvedValueOnce(answer)
+      .mockResolvedValueOnce({ questions: [] });
+    await mount();
+    await type('A fixture question?');
+    await press('ask-submit');
+    scrollTo.mockClear();
+    measure.mockClear();
+    await act(async () => barButton('New question')!.onPress());
+    expect(measure).toHaveBeenCalled();
+    expect(scrollTo).toHaveBeenLastCalledWith({ y: -44, animated: false });
+  } finally {
+    measure.mockRestore();
+  }
+});
+
 test('a failed follow-up hides the previous Ask next and holds Try again while OPAX is busy', async () => {
   jest
     .mocked(client.askPost)
@@ -1622,7 +1658,7 @@ test.each(['401', '403', 'redirect'])(
       await mount();
       await type('A fixture question?');
       await press('ask-submit');
-      expect(texts()).toContain("This question couldn't be sent.");
+      expect(texts()).toContain('This question couldn’t be sent.');
       expect(byId('ask-retry')).toEqual([]);
       expect(byId('ask-blocked-reason')).toEqual([]);
       expect(texts().join(' ')).not.toContain('rewording');
@@ -2254,19 +2290,443 @@ describe('the idle page at accessibility sizes', () => {
     }
   });
 
-  test('a conversation keeps the full-height page with room for the composer', async () => {
-    const restore = await at(3.571);
+  test.each([
+    ['phone Large', 1, false],
+    ['phone AX3', 2.643, false],
+    ['phone AX5', 3.571, false],
+    ['undocked iPad Large', 1, true],
+    ['undocked iPad AX5', 3.571, true],
+  ] as const)(
+    'a resting conversation on %s ends above the composer, hiding the stamp below it',
+    async (_device, fontScale, pad) => {
+      const restore = await at(fontScale);
+      const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(pad);
+      const handlers = new Map<string, Set<(event: unknown) => void>>();
+      const listener = jest
+        .spyOn(Keyboard, 'addListener')
+        .mockImplementation((name, handler) => {
+          const callbacks = handlers.get(name) ?? new Set();
+          callbacks.add(handler as (event: unknown) => void);
+          handlers.set(name, callbacks);
+          return { remove: () => callbacks.delete(handler) };
+        });
+      const measure = jest
+        .spyOn(View.prototype, 'measureInWindow')
+        .mockImplementation((callback) => callback(0, 0, 402, COLUMN));
+      try {
+        jest.spyOn(askSession, 'snapshot').mockReturnValue({
+          ...askSession.snapshot(),
+          thread: oneChat.chats[0]!.thread,
+        });
+        await mount();
+        await layOut();
+        expect(view!.root.findByType(AskColumns).props.docked).toBe(false);
+        expect(scrollStyle().marginBottom).toBe(COLUMN - (AREA - COMPOSER));
+        expect(contentStyle().paddingBottom).toBe(rhythm.section);
+        act(() =>
+          handlers.get('keyboardWillChangeFrame')!.forEach((handler) =>
+            handler({
+              endCoordinates: {
+                screenY: 400,
+                width: 402,
+                height: Dimensions.get('screen').height - 400,
+              },
+            }),
+          ),
+        );
+        expect(scrollStyle().marginBottom ?? 0).toBe(0);
+        expect(view!.root.findByType(PhoneDock).props.keyboardVisible).toBe(
+          true,
+        );
+        expect(contentStyle().paddingBottom).toBeGreaterThan(rhythm.section);
+        act(() =>
+          handlers.get('keyboardWillHide')!.forEach((handler) => handler({})),
+        );
+        expect(scrollStyle().marginBottom).toBe(COLUMN - (AREA - COMPOSER));
+      } finally {
+        jest.mocked(askSession.snapshot).mockRestore();
+        listener.mockRestore();
+        measure.mockRestore();
+        idiom.mockRestore();
+        restore();
+      }
+    },
+  );
+});
+
+test.each([
+  ['phone', 'unspecified', 393, 852, false],
+  ['Duo outer', 'trailing', 402, 678, false],
+  ['vertical iPad bar', 'leading', 402, 678, true],
+] as const)(
+  'AX5 %s: Ask reports the first scroll point through its RouteOptions owner and returns soft at rest',
+  async (_device, edge, width, height, pad) => {
+    const window = Dimensions.get('window');
+    const barEdge = jest
+      .spyOn(RootBar, 'useVerticalBarEdge')
+      .mockReturnValue(edge);
+    act(() =>
+      Dimensions.set({
+        window: { ...window, width, height, fontScale: 3.571 },
+      }),
+    );
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+    const platform = jest.replaceProperty(Platform, 'OS', 'ios');
+    const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(pad);
+    const appearance = jest.spyOn(BarAppearance, 'useRootBarAppearance');
+    const route = { key: 'ask-root', name: 'ask' };
+    const navigation = {
+      setOptions: jest.fn((options) => {
+        mockBar.options = { ...mockBar.options, ...options };
+      }),
+      getState: () => ({
+        index: 0,
+        routes: [route],
+        routeNames: ['ask', 'bill/[key]', 'explore/[tool]'],
+      }),
+      isFocused: () => true,
+      addListener: () => () => {},
+    };
+    const edges = () =>
+      navigation.setOptions.mock.calls
+        .map(([options]) => options.scrollEdgeEffects?.top)
+        .filter(Boolean);
+    const page = (height: number) => (
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route}>
+          <HeaderHeightContext.Provider value={height}>
+            <AskScreen />
+          </HeaderHeightContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
+    );
+    const scrollTo = (y: number) =>
+      act(() =>
+        view!.root.findByType(ScrollView).props.onScroll({
+          nativeEvent: { contentOffset: { y } },
+        }),
+      );
     try {
-      jest.spyOn(askSession, 'snapshot').mockReturnValue({
-        ...askSession.snapshot(),
-        thread: oneChat.chats[0]!.thread,
-      });
-      await mount();
-      await layOut();
-      expect(scrollStyle().marginBottom).toBeUndefined();
+      await mount(page(120));
+      expect(appearance.mock.calls.length).toBeGreaterThan(0);
+      expect(
+        appearance.mock.calls.every(
+          ([, options]) => options?.owner === 'options',
+        ),
+      ).toBe(true);
+      expect(edges().at(-1)).toBe('soft');
+      navigation.setOptions.mockClear();
+      scrollTo(-120);
+      scrollTo(-121); // Pulling down is still at rest.
+      expect(edges()).toEqual([]);
+      scrollTo(-118); // Before UIKit reports a collapsed header.
+      expect(edges()).toEqual(['hard']);
+      scrollTo(0);
+      await act(async () =>
+        view!.update(
+          withNavigationOptions(page(68), (options) => {
+            mockBar.options = options;
+          }),
+        ),
+      );
+      scrollTo(400);
+      expect(edges()).toEqual(['hard']);
+      scrollTo(-68);
+      expect(edges()).toEqual(['hard', 'soft']);
+
+      openSavedConversation();
+      scrollTo(400);
+      expect(edges().at(-1)).toBe('hard');
+      await act(async () => barButton('New question')!.onPress());
+      // scrollToTop is mocked and emits no event. Idle must already be soft.
+      expect(byId('ask-idle').length).toBeGreaterThan(0);
+      expect(edges().at(-1)).toBe('soft');
+      await act(async () =>
+        view!.update(
+          withNavigationOptions(page(120), (options) => {
+            mockBar.options = options;
+          }),
+        ),
+      );
+      // A new header height must not re-read the previous thread's offset.
+      expect(edges().at(-1)).toBe('soft');
     } finally {
-      jest.mocked(askSession.snapshot).mockRestore();
-      restore();
+      await act(async () => {
+        view?.unmount();
+        view = null;
+      });
+      idiom.mockRestore();
+      appearance.mockRestore();
+      barEdge.mockRestore();
+      act(() => Dimensions.set({ window }));
+      platform.restore();
+      Object.defineProperty(Platform, 'Version', version);
+    }
+  },
+);
+
+// Sweep 3, item 5: docked with nothing asked and nothing saved, the
+// conversation column was one grey line over empty paper (iPad, build 63).
+describe('the docked conversation column with nothing asked', () => {
+  const hosts = (id: string) =>
+    view!.root.findAll(
+      (n) => typeof n.type === 'string' && n.props.testID === id,
+    );
+  const said = (id: string) => hosts(id).map((n) => String(n.props.children));
+  async function at(
+    width: number,
+    height: number,
+    traits: Parameters<typeof setWindowTraitsOverride>[0],
+    pad: boolean,
+    run: () => Promise<void>,
+  ) {
+    const window = Dimensions.get('window');
+    const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(pad);
+    act(() => {
+      Dimensions.set({ window: { ...window, width, height } });
+      setWindowTraitsOverride(traits);
+      resetAdaptiveDeviceForTests();
+    });
+    try {
+      await run();
+    } finally {
+      await act(async () => {
+        view?.unmount();
+        view = null;
+        Dimensions.set({ window });
+        setWindowTraitsOverride(undefined);
+        resetAdaptiveDeviceForTests();
+      });
+      idiom.mockRestore();
+    }
+  }
+  /**
+   * The column, the room the empty state is given above a composer band of
+   * `band` points (keyboard included), and the words' own measured height.
+   */
+  async function layOut(column: number, band: number, wordsHeight: number) {
+    const event = (height: number, y = 0) => ({
+      nativeEvent: { layout: { x: 0, y, width: 500, height } },
+    });
+    await act(async () => {
+      hosts('ask-conversation-column')[0]!.props.onLayout(event(column));
+      hosts('ask-composer-bounds')[0]!.props.onLayout(event(column));
+      hosts('ask-composer-position')[0]!.props.onLayout(
+        event(Math.min(band, 90), column - band),
+      );
+      hosts('ask-empty')[0]?.props.onLayout(event(column - band));
+      hosts('ask-empty-words')[0]?.props.onLayout(event(wordsHeight));
+    });
+  }
+  const pad = { horizontal: 'regular', vertical: 'regular' } as const;
+  const duo = { ...pad, foldable: true } as const;
+
+  test.each([
+    ['iPad, portrait', 834, 1194, pad, true],
+    ['iPad, landscape', 1194, 834, pad, true],
+    [
+      'unfolded Duo, landscape',
+      880,
+      669,
+      { ...duo, verticalBars: true },
+      false,
+    ],
+  ] as const)(
+    '%s: the mark, the line and one more sentence, centred between the bar and the composer',
+    async (_name, width, height, traits, isPad) => {
+      await at(width, height, traits, isPad, async () => {
+        await mount();
+        expect(view!.root.findByType(AskColumns).props.docked).toBe(true);
+        await layOut(height, 90, 60);
+        const empty = hosts('ask-empty');
+        expect(empty).toHaveLength(1);
+        // The mark as an engraving at 96 pt, decorative.
+        const mark = view!.root.findByType(EngravedMark);
+        expect(mark.props.size).toBe(96);
+        expect(hosts('ask-empty-mark')[0]!.props).toMatchObject({
+          accessible: false,
+          accessibilityElementsHidden: true,
+        });
+        // The existing line, once (not also top-left), then the sentence.
+        expect(said('ask-idle-line')).toEqual([idleCopy.line]);
+        expect(said('ask-empty-own')).toEqual([
+          'Ask in your own words. Every answer lists the records it used.',
+        ]);
+        expect(
+          hosts('ask-empty-words')[0]!.props.accessibilityElementsHidden,
+        ).toBe(false);
+        // No control, and no touches taken from the column under it.
+        expect(empty[0]!.props.pointerEvents).toBe('none');
+        expect(
+          empty[0]!.findAll((n) => typeof n.props.onPress === 'function'),
+        ).toHaveLength(0);
+        // Centred in the room AskColumns gives it: from the column's top
+        // (less the bar, its own top padding) to the composer band's top.
+        expect(
+          StyleSheet.flatten(hosts('ask-empty-area')[0]!.props.style),
+        ).toMatchObject({ position: 'absolute', top: 0, bottom: 90 });
+        const style = StyleSheet.flatten(empty[0]!.props.style);
+        expect(style).toMatchObject({
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+        });
+        expect(style.paddingTop).toBeGreaterThan(0);
+        // The scroll view is still the column's first child.
+        const first = hosts('ask-conversation-column')[0]!
+          .children[0] as ReactTestInstance;
+        expect(
+          first.findAllByType(ScrollView).length +
+            Number(first.type === ScrollView),
+        ).toBeGreaterThan(0);
+      });
+    },
+  );
+
+  // Review P2: at AX5, or with the keyboard up in iPad landscape, the mark
+  // (144 pt) and two sentences do not fit; they spilled under the bar and
+  // the composer.
+  test('AX5 with the keyboard up: the mark goes when it does not fit, and the whole state when the words do not', async () => {
+    const window = Dimensions.get('window');
+    try {
+      await at(1194, 834, pad, true, async () => {
+        act(() =>
+          Dimensions.set({
+            window: { ...Dimensions.get('window'), fontScale: 3.12 },
+          }),
+        );
+        await mount();
+        // Nothing measured yet: nothing drawn that could spill.
+        expect(hosts('ask-empty-mark')).toHaveLength(0);
+        expect(
+          StyleSheet.flatten(hosts('ask-empty-words')[0]!.props.style).opacity,
+        ).toBe(0);
+        // Keyboard down: 834 less the bar and a 90 pt composer. The words
+        // (300 pt at AX5) and the mark (144 + 24) both fit.
+        await layOut(834, 90, 300);
+        expect(hosts('ask-empty-mark')).toHaveLength(1);
+        // Keyboard up (the area shrinks): the words fit, the mark does not.
+        await layOut(834, 90 + 330, 300);
+        expect(hosts('ask-empty-mark')).toHaveLength(0);
+        expect(said('ask-idle-line')).toEqual([idleCopy.line]);
+        expect(
+          StyleSheet.flatten(hosts('ask-empty-words')[0]!.props.style).opacity,
+        ).not.toBe(0);
+        // Less room than the words need: the state draws nothing, VoiceOver
+        // skips it, and the line is back in the scrolling page, once.
+        await layOut(834, 90 + 420, 300);
+        expect(hosts('ask-empty-mark')).toHaveLength(0);
+        expect(
+          StyleSheet.flatten(hosts('ask-empty-words')[0]!.props.style).opacity,
+        ).toBe(0);
+        expect(hosts('ask-empty-words')[0]!.props).toMatchObject({
+          accessibilityElementsHidden: true,
+          importantForAccessibility: 'no-hide-descendants',
+        });
+        expect(said('ask-idle-line')).toEqual([idleCopy.line]);
+        expect(
+          hosts('ask-idle')[0]!.findAll(
+            (n) => n.props.testID === 'ask-idle-line',
+          ).length,
+        ).toBeGreaterThan(0);
+        // Room again: centred again, and still said once.
+        await layOut(834, 90, 300);
+        expect(hosts('ask-empty-mark')).toHaveLength(1);
+        expect(said('ask-idle-line')).toEqual([idleCopy.line]);
+        expect(
+          hosts('ask-idle')[0]!.findAll(
+            (n) => n.props.testID === 'ask-idle-line',
+          ),
+        ).toHaveLength(0);
+      });
+    } finally {
+      act(() => Dimensions.set({ window }));
+    }
+  });
+
+  test('saved conversations that could not be read: the error stands alone, with the line, and no centred state', async () => {
+    jest.mocked(loadChats).mockRejectedValueOnce(new Error('disk'));
+    await at(834, 1194, pad, true, async () => {
+      await mount();
+      expect(hosts('ask-conversations-failed').length).toBeGreaterThan(0);
+      expect(hosts('ask-empty')).toHaveLength(0);
+      expect(said('ask-idle-line')).toEqual([idleCopy.line]);
+    });
+  });
+
+  test('unfolded Duo, portrait (669 by 951) is one pane: the starters fill it and there is no empty state', async () => {
+    await at(669, 951, { ...duo, verticalBars: false }, false, async () => {
+      await mount();
+      expect(view!.root.findByType(AskColumns).props.docked).toBe(false);
+      expect(hosts('ask-empty')).toHaveLength(0);
+      expect(said('ask-idle-line')).toEqual([idleCopy.line]);
+      expect(hosts('ask-starters')).toHaveLength(1);
+    });
+  });
+
+  test('the phone is unchanged: the line over Try asking, no mark', async () => {
+    await mount();
+    expect(hosts('ask-empty')).toHaveLength(0);
+    expect(view!.root.findAllByType(EngravedMark)).toHaveLength(0);
+    expect(said('ask-idle-line')).toEqual([idleCopy.line]);
+    expect(hosts('ask-starters')).toHaveLength(1);
+  });
+
+  test('with a saved conversation the column has its list, and the line stays top-left', async () => {
+    jest.mocked(chatsSnapshot).mockImplementation(() => oneChat);
+    await at(834, 1194, pad, true, async () => {
+      await mount();
+      expect(hosts('ask-empty')).toHaveLength(0);
+      expect(said('ask-idle-line')).toEqual([idleCopy.line]);
+      expect(hosts('ask-conversations')).toHaveLength(1);
+    });
+  });
+
+  test.each([
+    ['fades out as the first question is sent', false],
+    ['goes at once under Reduce Motion', true],
+  ] as const)('it %s', async (_name, reduced) => {
+    const reduce = jest
+      .spyOn(accessibility, 'useReduceMotion')
+      .mockReturnValue(reduced);
+    const base = askSession.snapshot();
+    const snapshot = jest.spyOn(askSession, 'snapshot').mockReturnValue(base);
+    try {
+      await at(834, 1194, pad, true, async () => {
+        await mount();
+        expect(hosts('ask-empty')).toHaveLength(1);
+        jest.useFakeTimers();
+        try {
+          snapshot.mockReturnValue({ ...base, busy: true });
+          await act(async () => {
+            view!.update(
+              withNavigationOptions(<AskScreen />, (options) => {
+                mockBar.options = options;
+              }),
+            );
+          });
+          // Leaving, it is still drawn (fading) but no longer read out.
+          expect(hosts('ask-empty')).toHaveLength(reduced ? 0 : 1);
+          if (!reduced)
+            expect(hosts('ask-empty')[0]!.props).toMatchObject({
+              accessibilityElementsHidden: true,
+              importantForAccessibility: 'no-hide-descendants',
+            });
+          await act(async () => {
+            jest.advanceTimersByTime(1000);
+          });
+          expect(hosts('ask-empty')).toHaveLength(0);
+        } finally {
+          jest.useRealTimers();
+        }
+      });
+    } finally {
+      snapshot.mockRestore();
+      reduce.mockRestore();
     }
   });
 });

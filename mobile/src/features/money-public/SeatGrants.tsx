@@ -151,7 +151,7 @@ export function SeatGrants({
         ) : status.error ? (
           <InlineError
             subject="Grants"
-            message="Grants couldn't be loaded."
+            message="Grants couldn’t be loaded."
             onRetry={status.retry}
             testID="seat-grants-error"
           />

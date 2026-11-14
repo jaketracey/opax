@@ -7,7 +7,6 @@ import {
   LayoutRegion,
   SidebarSafe,
   SplitLayout,
-  isPad,
   useAdaptiveDevice,
   useLayout,
 } from '../design/primitives';
@@ -19,6 +18,7 @@ import {
   entryFromRoute,
   entryLabel,
   entryRoute,
+  hasPaneActions,
   type RecordEntry,
 } from './split/entry';
 import { SearchScreen } from './search/SearchScreen';
@@ -81,8 +81,9 @@ function SearchSplit() {
   return (
     <>
       {/* The list column keeps an inline title; large titles over two
-          panes would collapse with whichever scrolls first. */}
-      {isPad && split ? (
+          panes would collapse with whichever scrolls first. On every device
+          with a split, the Duo's inner display included (sweep 2, item 10). */}
+      {split ? (
         <RouteOptions options={{ headerLargeTitleEnabled: false }} />
       ) : null}
       <SplitLayout<RecordEntry>
@@ -101,7 +102,9 @@ function SearchSplit() {
           entries.find((entry) => encodeEntry(entry) === key)!
         }
         renderDetail={(entry) => <RecordDetail entry={entry} />}
-        detailActions={(entry) => <RecordShare entry={entry} />}
+        detailActions={(entry) =>
+          hasPaneActions(entry) ? <RecordShare entry={entry} /> : null
+        }
         empty={
           <EmptyState
             size="pane"

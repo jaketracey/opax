@@ -813,32 +813,43 @@ test('Android centred FollowButton keeps the button and its message on one centr
     expect(flat(message)).toMatchObject({ textAlign: 'center' });
   }));
 
-test("Android centred FollowButton keeps the limit's Edit Following on the centre line", () =>
-  asAndroid(async () => {
-    jest.mocked(useFollows).mockReturnValue([]);
-    jest
-      .mocked(followWithFeedback)
-      .mockResolvedValueOnce({ status: 'limit', showMessage: false });
-    const r = render(
-      <FollowButton
-        kind="bill"
-        id="b"
-        title="A bill"
-        testID="follow"
-        centred
-      />,
-    );
-    await act(async () => {
-      await press(r, 'follow-off').props.onPress();
-    });
-    const edit = r.root.findAll(
-      (node) =>
-        node.type === Button && node.props.testID === 'follow-edit-following',
-    )[0]!;
-    // Android buttons start-align: the group holding the message and Edit
-    // Following centres its children, so the button is not at the leading edge.
-    expect(flat(edit.parent!)).toMatchObject({ alignItems: 'center' });
-  }));
+test.each([1, 2])(
+  'Android centred FollowButton keeps Edit Following centred and opens editing at font scale %s',
+  (fontScale) =>
+    asAndroid(async () => {
+      size(fontScale);
+      jest.mocked(useFollows).mockReturnValue([]);
+      jest
+        .mocked(followWithFeedback)
+        .mockResolvedValueOnce({ status: 'limit', showMessage: false });
+      const r = render(
+        <FollowButton
+          kind="bill"
+          id="b"
+          title="A bill"
+          testID="follow"
+          centred
+        />,
+      );
+      await act(async () => {
+        await press(r, 'follow-off').props.onPress();
+      });
+      const edit = r.root.findAll(
+        (node) =>
+          node.type === Button && node.props.testID === 'follow-edit-following',
+      )[0]!;
+      // The button start-aligns itself, overriding the parent's alignItems.
+      // Its own wrapper must centre within the wider limit message.
+      expect(flat(edit.parent!)).toMatchObject({
+        alignSelf: 'center',
+        alignItems: 'center',
+      });
+      act(() => edit.props.onPress());
+      expect(require('expo-router').router.push).toHaveBeenCalledWith(
+        '/follows?edit=1',
+      );
+    }),
+);
 
 test('iOS FollowButton ignores centred: the tree is unchanged', () => {
   const os = RN.Platform.OS;
@@ -946,4 +957,42 @@ test('a wrapped primary button keeps its label centred at AX3 (sweep 1, 2.7)', (
   const quiet = label('quiet', 'See all');
   expect(quiet.text.textAlign).toBeUndefined();
   expect(quiet.button.alignItems).toBe('flex-start');
+});
+
+test('centredLabel keeps a wrapped label centred at AX3 (sweep 2 lane A)', () => {
+  // A not-found page's action hugs, centred under the title. At AX3
+  // "Search parliamentarians" wrapped to the column's width and read from
+  // the leading edge, so its label hung left of the centred text above.
+  size(2.643);
+  const label = (centredLabel: boolean) => {
+    const text = 'Search parliamentarians';
+    const r = render(
+      <Button
+        label={text}
+        variant="secondary"
+        hug
+        centredLabel={centredLabel}
+        onPress={noop}
+        testID={text}
+      />,
+    );
+    return {
+      text: flat(
+        r.root.findAll(
+          (node) => node.type === Text && node.props.children === text,
+        )[0]!,
+      ),
+      button: RN.StyleSheet.flatten(
+        press(r, text).props.style({ pressed: false }),
+      ),
+    };
+  };
+  const centred = label(true);
+  expect(centred.text).toMatchObject({ textAlign: 'center' });
+  expect(centred.button.alignItems).not.toBe('flex-start');
+  // Other hugging buttons (Follow, the money map's Legend) still read from
+  // the leading edge.
+  const hugging = label(false);
+  expect(hugging.text.textAlign).toBeUndefined();
+  expect(hugging.button.alignItems).toBe('flex-start');
 });

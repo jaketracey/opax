@@ -19,6 +19,7 @@ import {
   formatMoney,
   formatMoneyCompact,
   moneyAccessibilityLabel,
+  spokenFigures,
   recordTitleStage,
 } from './format';
 import { EXTERNAL_GLYPH, Icon, type SFSymbol } from './icon';
@@ -314,10 +315,12 @@ export function LinkRow({
 
 function ValueRowContent({
   label,
+  detail,
   value,
   accessibilitySize,
 }: {
   label: string;
+  detail?: string;
   value: string;
   accessibilitySize: boolean;
 }) {
@@ -342,13 +345,26 @@ function ValueRowContent({
       style={[styles.text, stacked ? styles.stacked : styles.inline]}
       onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
     >
-      <Text
-        wordSafe
-        variant="body"
-        style={stacked ? undefined : styles.valueLabel}
-      >
-        {label}
-      </Text>
+      {detail ? (
+        // The label with a quieter line under it; the value stays beside
+        // (or, stacked, under) the pair.
+        <View style={[styles.valueWords, stacked ? null : styles.valueLabel]}>
+          <Text wordSafe variant="body">
+            {label}
+          </Text>
+          <Text wordSafe variant="secondary">
+            {detail}
+          </Text>
+        </View>
+      ) : (
+        <Text
+          wordSafe
+          variant="body"
+          style={stacked ? undefined : styles.valueLabel}
+        >
+          {label}
+        </Text>
+      )}
       <Text
         wordSafe
         variant="strong"
@@ -376,11 +392,14 @@ function ValueRowContent({
 
 export function ValueRow({
   label,
+  detail,
   value,
   href,
   testID,
 }: {
   label: string;
+  /** A second, quieter line under the label: "6 for, 3 against". */
+  detail?: string;
   value: string;
   href?: Href;
   testID?: string;
@@ -393,6 +412,7 @@ export function ValueRow({
     <>
       <ValueRowContent
         label={label}
+        detail={detail}
         value={value}
         accessibilitySize={stacked}
       />
@@ -403,7 +423,9 @@ export function ValueRow({
   );
   const props = {
     accessible: true,
-    accessibilityLabel: `${label}, ${value}`,
+    accessibilityLabel: spokenFigures(
+      `${label}, ${value}${detail ? `. ${detail}` : ''}`,
+    ),
     testID,
   };
   return href ? (
@@ -751,9 +773,11 @@ export interface RecordRowProps {
   href?: Href;
   /** Selects a source or opens it in the reader's detail pane. */
   onPress?: () => void;
+  accessibilityHint?: string;
   selected?: boolean;
   leading?: { content: ReactNode; label: string };
-  external?: External;
+  /** A URL to open, or just the glyph when onPress owns deferred navigation. */
+  external?: External | boolean;
   menu?: 'record' | RowMenuAction[];
   testID?: string;
 }
@@ -796,6 +820,7 @@ export function RecordRow({
   speaker,
   href,
   onPress,
+  accessibilityHint,
   selected,
   leading,
   external,
@@ -851,7 +876,7 @@ export function RecordRow({
     onPress ??
     (href
       ? recordLink.open
-      : external
+      : typeof external === 'object'
         ? () => void openSource(external.url, external.label)
         : undefined);
   const Content = separateSpeaker ? Pressable : View;
@@ -863,6 +888,7 @@ export function RecordRow({
       }
       accessibilityState={selected === undefined ? undefined : { selected }}
       accessibilityLabel={separateSpeaker ? undefined : label}
+      accessibilityHint={separateSpeaker ? undefined : accessibilityHint}
       testID={separateSpeaker && testID ? `${testID}-container` : testID}
       onPress={separateSpeaker || external || onPress ? open : undefined}
       onLongPress={
@@ -887,6 +913,7 @@ export function RecordRow({
                 accessibilityRole:
                   href || external || onPress ? ('link' as const) : undefined,
                 accessibilityLabel: label,
+                accessibilityHint,
                 accessibilityState:
                   selected === undefined ? undefined : { selected },
                 testID,
@@ -1250,27 +1277,28 @@ export function MoneyRow({
   external?: External;
   /**
    * Every amount compact ("$9.4m"), for a ranked list that must read one
-   * way. The accessibility label keeps the full amount.
+   * way. The accessibility label uses the same rounding as the figure.
    */
   compact?: boolean;
   testID?: string;
 }) {
+  const rounded = compact || Math.abs(amount) >= 10_000_000;
   return (
     <LinkRow
       title={name}
       detail={detail}
       titleLines={nameLines}
       detailLines={2}
-      value={
-        compact || Math.abs(amount) >= 10_000_000
-          ? formatMoneyCompact(amount)
-          : formatMoney(amount)
-      }
+      value={rounded ? formatMoneyCompact(amount) : formatMoney(amount)}
       valueEmphasis
       href={href}
       external={external}
       accessory={href || external ? 'chevron' : 'none'}
-      accessibilityLabel={[name, detail, moneyAccessibilityLabel(amount)]
+      accessibilityLabel={[
+        name,
+        detail,
+        moneyAccessibilityLabel(amount, rounded),
+      ]
         .filter(Boolean)
         .join(', ')}
       testID={testID}
@@ -1426,6 +1454,7 @@ const styles = StyleSheet.create({
     flexBasis: 'auto',
     minWidth: '35%',
   },
+  valueWords: { gap: rhythm.line },
   value: { flexShrink: 0, textAlign: 'right' },
   stackedValue: { flexShrink: 0 },
   main: { flexGrow: 1, flexShrink: 1, gap: rhythm.line },

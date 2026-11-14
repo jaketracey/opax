@@ -1402,38 +1402,60 @@ test.each([undefined, 'Anne'])(
 );
 
 test.each([
-  [212_203_631_339, '$212.2bn', '212,203,631,339 dollars'],
-  [19_099_757_999, '$19.1bn', '19,099,757,999 dollars'],
-  [14_000_000_000, '$14bn', '14,000,000,000 dollars'],
+  [212_203_631_339, '$212.2bn', '212.2 billion dollars'],
+  [28_682_373_476, '$28.7bn', '28.7 billion dollars'],
+  [19_099_757_999, '$19.1bn', '19.1 billion dollars'],
+  [14_000_000_000, '$14bn', '14 billion dollars'],
   [7_516_486, '$7,516,486', '7,516,486 dollars'],
   [9_999_999, '$9,999,999', '9,999,999 dollars'],
-  [10_000_000, '$10m', '10,000,000 dollars'],
-])('MoneyRow formats %s and speaks full dollars', (value, display, spoken) => {
-  const root = render(
-    <MoneyRow
-      name="Sample recipient"
-      amount={value}
-      detail="A long program and its dates"
-      testID="row"
-    />,
-  ).root;
-  const amount = root
-    .findAllByType(Text)
-    .find((text) => text.props.children === display)!;
-  expect(amount.props).toMatchObject({ variant: 'strong', tabular: true });
-  expect(StyleSheet.flatten(amount.props.style).textAlign).toBe('right');
-  expect(row(root).props.accessibilityLabel).toContain(spoken);
-  const link = root.findByType(LinkRow);
-  expect(link.props).toMatchObject({ titleLines: undefined, detailLines: 2 });
-  const name = root
-    .findAllByType(Text)
-    .find((text) => text.props.children === 'Sample recipient')!;
-  expect(name.props.numberOfLines).toBeUndefined();
-  const detail = root
-    .findAllByType(Text)
-    .find((text) => text.props.children === 'A long program and its dates')!;
-  expect(detail.props.numberOfLines).toBe(2);
-});
+  [10_000_000, '$10m', '10 million dollars'],
+  [-28_682_373_476, '-$28.7bn', 'minus 28.7 billion dollars'],
+])(
+  'MoneyRow formats %s and speaks the visible rounding',
+  (value, display, spoken) => {
+    const root = render(
+      <MoneyRow
+        name="Sample recipient"
+        amount={value}
+        detail="A long program and its dates"
+        testID="row"
+      />,
+    ).root;
+    const amount = root
+      .findAllByType(Text)
+      .find((text) => text.props.children === display)!;
+    expect(amount.props).toMatchObject({ variant: 'strong', tabular: true });
+    expect(StyleSheet.flatten(amount.props.style).textAlign).toBe('right');
+    expect(row(root).props.accessibilityLabel).toContain(spoken);
+    const link = root.findByType(LinkRow);
+    expect(link.props).toMatchObject({ titleLines: undefined, detailLines: 2 });
+    const name = root
+      .findAllByType(Text)
+      .find((text) => text.props.children === 'Sample recipient')!;
+    expect(name.props.numberOfLines).toBeUndefined();
+    const detail = root
+      .findAllByType(Text)
+      .find((text) => text.props.children === 'A long program and its dates')!;
+    expect(detail.props.numberOfLines).toBe(2);
+  },
+);
+
+test.each([
+  [4_537_500, '$4.5m', '4.5 million dollars'],
+  [-507_123, '-$507k', 'minus 507 thousand dollars'],
+  [9_999, '$9,999', '9,999 dollars'],
+])(
+  'compact MoneyRow speaks the rounding drawn for %s',
+  (amount, display, spoken) => {
+    const root = render(
+      <MoneyRow name="Sample recipient" amount={amount} compact testID="row" />,
+    ).root;
+    expect(root.findByType(LinkRow).props.value).toBe(display);
+    expect(row(root).props.accessibilityLabel).toBe(
+      `Sample recipient, ${spoken}`,
+    );
+  },
+);
 
 describe('Today bill previews at accessibility sizes (sweep 1, 2.3)', () => {
   const portfolio =

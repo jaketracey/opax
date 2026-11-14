@@ -24,7 +24,7 @@ export function useSetAsMyElectorate(seat: Electorate): SetAsMyElectorate {
       await saved.choose(seat);
     } catch {
       Alert.alert(
-        `Your electorate couldn't be saved on this ${thisDevice()}.`,
+        `Your electorate couldn’t be saved on this ${thisDevice()}.`,
         undefined,
         [
           {

@@ -1,3 +1,4 @@
+import { LoadingStatus } from '../../design/states';
 import { isAbortError } from '../../api/abort';
 import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { NavigationContext } from 'expo-router/react-navigation';
@@ -144,7 +145,7 @@ export default function RecentRecords() {
     ) : (
       <ContentUnavailable
         symbol="exclamationmark.triangle"
-        title="New records couldn't be loaded"
+        title="New records couldn’t be loaded"
         action={{ label: copy.tryAgain, onPress: first.retry }}
         testID="recent-error"
       />
@@ -239,7 +240,7 @@ export default function RecentRecords() {
       {value && refreshError && !offline ? (
         <InlineError
           subject="New records"
-          message="New records couldn't be refreshed. Showing the saved copy."
+          message="New records couldn’t be refreshed. Showing the saved copy."
           onRetry={refresh}
           testID="recent-refresh-error"
         />
@@ -255,7 +256,7 @@ function RecentSkeleton() {
     <View style={[styles.bar, { width, height }]} />
   );
   return (
-    <View
+    <LoadingStatus
       accessible
       accessibilityRole="progressbar"
       accessibilityLabel="Loading new records"
@@ -276,7 +277,7 @@ function RecentSkeleton() {
           </View>
         ))}
       </View>
-    </View>
+    </LoadingStatus>
   );
 }
 

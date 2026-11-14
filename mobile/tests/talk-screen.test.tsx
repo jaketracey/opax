@@ -333,15 +333,20 @@ describe('back from a Talk sign-in', () => {
   });
 });
 
-// The consent sheet at AX5 (7.7): the root is capped at the space the sheet
-// can use, the text scrolls, and the two buttons sit outside the scroll view.
-test('the consent sheet keeps its buttons pinned under a capped root', () => {
+// Sweep 2, item 1: the consent sheet is on Ask's shape. With a capped View
+// root and the buttons pinned under a nested scroll view, the sheet drew a
+// blank panel at Large and laid the words out under the buttons. The scroll
+// view is now the root, capped at the space the sheet can use (7.7), so its
+// range ends at Not now at AX5; the words come first and the two buttons
+// are the last things in the range.
+test('the consent sheet is a capped scroll view root that ends at its buttons', () => {
   /* eslint-disable @typescript-eslint/no-require-imports */
   const {
     ConsentSheet,
     SHEET_HEADER,
   } = require('../src/features/talk/Consent');
   const { ScrollView, StyleSheet } = require('react-native');
+  const { rhythm } = require('../src/design/tokens');
   /* eslint-enable @typescript-eslint/no-require-imports */
   let renderer!: TestRenderer.ReactTestRenderer;
   act(() => {
@@ -357,30 +362,44 @@ test('the consent sheet keeps its buttons pinned under a capped root', () => {
     );
   });
   rendered.push(renderer);
-  const host = (testID: string) =>
-    renderer.root.find(
-      (node) => typeof node.type === 'string' && node.props.testID === testID,
-    );
-  const sheet = host('talk-consent-sheet');
+  // The sheet's root is the scroll view itself: nothing sits beside it.
+  const scroll = renderer.root.findByType(ScrollView);
+  expect(scroll.props.testID).toBe('talk-consent-sheet');
+  expect(renderer.root.findAllByType(ScrollView)).toHaveLength(1);
+  const sheet = renderer.root.findByType(ConsentSheet);
+  expect(sheet.children).toHaveLength(1);
+  expect((sheet.children[0] as TestRenderer.ReactTestInstance).type).toBe(
+    ScrollView,
+  );
   // The jest window is 750 pt tall unless a test sets one.
   const { height } = jest
     .requireActual('react-native')
     .Dimensions.get('window');
-  expect(StyleSheet.flatten(sheet.props.style).maxHeight).toBe(
+  expect(StyleSheet.flatten(scroll.props.style).maxHeight).toBe(
     height - 62 - SHEET_HEADER,
   );
-  const scroll = renderer.root.findByType(ScrollView);
-  const inScroll = (testID: string) =>
-    scroll.findAll((node) => node.props.testID === testID).length > 0;
-  expect(inScroll('talk-consent-privacy')).toBe(true);
-  expect(inScroll('talk-consent-footer')).toBe(false);
-  expect(inScroll('talk-agree')).toBe(false);
-  expect(inScroll('talk-not-now')).toBe(false);
-  const footer = host('talk-consent-footer');
-  for (const id of ['talk-agree', 'talk-not-now'])
-    expect(
-      footer.findAll((node) => node.props.testID === id).length,
-    ).toBeGreaterThan(0);
+  expect(scroll.props.contentInsetAdjustmentBehavior).toBe('automatic');
+  expect(
+    StyleSheet.flatten(scroll.props.contentContainerStyle).paddingBottom,
+  ).toBe(rhythm.block + 34);
+  const ids = scroll
+    .findAll(
+      (node) =>
+        typeof node.type === 'string' && typeof node.props.testID === 'string',
+    )
+    .map((node) => node.props.testID as string);
+  // The pill and the words lead; Agree then Not now end the range.
+  expect(ids.indexOf('talk-consent-machine')).toBeGreaterThan(-1);
+  expect(ids.indexOf('talk-consent-privacy')).toBeGreaterThan(
+    ids.indexOf('talk-consent-machine'),
+  );
+  const actions = ids.indexOf('talk-consent-actions');
+  expect(actions).toBeGreaterThan(ids.indexOf('talk-consent-privacy'));
+  expect(ids.indexOf('talk-agree')).toBeGreaterThan(actions);
+  expect(ids.indexOf('talk-not-now')).toBeGreaterThan(
+    ids.indexOf('talk-agree'),
+  );
+  expect(ids).not.toContain('talk-consent-footer');
 });
 
 test('each callOpen case shows its own line once no call is on screen', () => {

@@ -1,3 +1,4 @@
+import { LoadingStatus } from '../../design/states';
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
@@ -204,7 +205,7 @@ function YearPage({
               />
             ) : null
           ) : pictures.error ? null : (
-            <View
+            <LoadingStatus
               accessible
               accessibilityRole="progressbar"
               accessibilityLabel="Loading photographs"
@@ -220,7 +221,7 @@ function YearPage({
                 <View style={styles.photoFrame} />
                 <Skeleton shape="text" count={3} label="Loading photographs" />
               </View>
-            </View>
+            </LoadingStatus>
           )}
           {brief.record && meta ? (
             <>

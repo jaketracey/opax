@@ -68,7 +68,7 @@ const PATH = '/bills?view=divisions';
 const TITLE = 'Votes in parliament';
 const PAGE_SIZE = 16;
 const RULE =
-  'Every recorded vote on a bill, newest first, grouped by bill. With "Leave out procedural votes" on, votes recorded as limitation of debate, closure, suspension of standing orders or adjournment are hidden.';
+  'Every recorded vote on a bill, newest first, grouped by bill. With "Leave out procedural votes" on, procedural motions such as time limits, closure, suspension of standing orders and adjournment are hidden. Votes on a bill\'s passage, readings and amendments stay, including those taken under a time limit.';
 const NOTE =
   'A vote here is a division: a question decided by counting members. Most questions are decided on the voices, without a recorded vote.';
 
@@ -154,16 +154,20 @@ export function filterDivisions(
   });
 }
 
+const voteTitle = (item: Division) => item.voteTitle ?? item.stage ?? 'Vote';
 const divisionWhere = (item: Division) =>
   [
     chamberName(item.house, 'federal') ?? CHAMBER_NOT_RECORDED,
     formatDate(item.date, 'short'),
-  ].join(' · ');
+    item.voteQualifier,
+  ]
+    .filter(Boolean)
+    .join(' · ');
 
 /** How a vote row is spoken: stage, where and when, outcome, counts, bill. */
 export function divisionLabel(item: Division) {
   return [
-    item.stage ?? 'Vote',
+    voteTitle(item),
     divisionWhere(item),
     outcomeWord(item.outcome, item),
     countWords(item.ayes, item.noes, { spoken: true }),
@@ -188,7 +192,7 @@ const Vote = memo(function Vote({
   return (
     <View style={{ paddingLeft: inset }}>
       <DivisionRow
-        title={item.stage ?? 'Vote'}
+        title={voteTitle(item)}
         meta={divisionWhere(item)}
         outcome={outcomeWord(item.outcome, item)}
         ayes={item.ayes}
@@ -471,7 +475,7 @@ export default function DivisionHistory() {
       {record?.failed && record.loaded ? (
         <InlineError
           subject="some votes"
-          message={`Votes from ${formatCount(record.loaded)} of ${counted(record.total, 'bill', 'bills')}. ${formatCount(record.failed)} couldn't be loaded.`}
+          message={`Votes from ${formatCount(record.loaded)} of ${counted(record.total, 'bill', 'bills')}. ${formatCount(record.failed)} couldn’t be loaded.`}
           onRetry={refresh}
           testID="division-history-partial"
         />
@@ -490,7 +494,7 @@ export default function DivisionHistory() {
       (record && record.total > 0 && record.failed === record.total) ? (
       <ContentUnavailable
         symbol="exclamationmark.triangle"
-        title="Votes couldn't be loaded"
+        title="Votes couldn’t be loaded"
         action={{
           label: copy.tryAgain,
           onPress: error && !record ? retry : refresh,
@@ -509,6 +513,7 @@ export default function DivisionHistory() {
       <ContentUnavailable
         symbol="magnifyingglass"
         title={`No results for "${query}"`}
+        announcement="No results"
         body="Check the spelling or try a new search."
         testID="division-history-empty"
       />

@@ -59,7 +59,12 @@ import {
 } from '../navigation/routes';
 import type { PartySection } from '../navigation/routes/people';
 import { shareRecord } from '../navigation/share';
-import { isProcedural, stageTitle } from './bills/divisions';
+import {
+  divisionMeta,
+  divisionMotion,
+  divisionTitle,
+  isProcedural,
+} from './bills/divisions';
 import { chamberLabel } from './bills/filters';
 import { useCatalogRecord } from './bills/useCatalogRecord';
 import { CachedPortrait } from './CachedPortrait';
@@ -539,9 +544,7 @@ function PartyContent({
       about={() => ({
         title: 'Members',
         notes: [
-          view.past
-            ? 'Sitting members include federal, state and territory parliamentarians with a confirmed current party affiliation. The directory is updated periodically. Undated affiliations appear separately as recorded. Past members under a former name of the party are listed from their recorded votes, with the name they sat under.'
-            : 'Sitting members include federal, state and territory parliamentarians with a confirmed current party affiliation. The directory is updated periodically. Undated affiliations appear separately as recorded; former members are excluded.',
+          'Sitting members include federal, state and territory parliamentarians with a confirmed current party affiliation. The directory is updated periodically. Undated affiliations appear separately as recorded. Past members come from recorded votes and roster party service. Roster affiliations are past only when service ended or the person is no longer current.',
           view.rosterAsAt
             ? `Roster as at ${formatDate(view.rosterAsAt)}.`
             : null,
@@ -1037,7 +1040,7 @@ function PartyVotes({
 const sameMotion = (row: DivisionData, other: DivisionData | undefined) =>
   !!other &&
   other.billKey === row.billKey &&
-  (other.division.stage ?? '') === (row.division.stage ?? '') &&
+  divisionTitle(other.division) === divisionTitle(row.division) &&
   other.division.date === row.division.date &&
   other.division.house === row.division.house;
 
@@ -1052,8 +1055,12 @@ function which(
 ): string | null {
   const twins = neighbours.filter((other) => sameMotion(row, other));
   if (!twins.length) return null;
-  if (row.question && twins.every((other) => other!.question !== row.question))
-    return row.question;
+  const motion = divisionMotion(row.question);
+  if (
+    motion &&
+    twins.every((other) => divisionMotion(other!.question) !== motion)
+  )
+    return motion;
   return `Chamber: ${formatCount(row.division.ayes)} for, ${formatCount(row.division.noes)} against`;
 }
 
@@ -1083,13 +1090,16 @@ function PartyDivision({
 }) {
   const outcome =
     row.division.outcome === 'affirmative' ? 'Agreed to' : 'Not agreed to';
-  const stage = stageTitle(row.division.stage) || 'Division';
+  const stage = divisionTitle(row.division);
   const block = !(row.ayes && row.noes);
   return (
     <DivisionRow
       title={row.title}
       meta={[
-        `${stage} · ${chamberLabel(row.division.house)} · ${formatDate(row.division.date, 'short')}`,
+        divisionMeta(
+          row.division,
+          `${stage} · ${chamberLabel(row.division.house)} · ${formatDate(row.division.date, 'short')}`,
+        ),
         which,
       ]
         .filter(Boolean)
@@ -1135,13 +1145,13 @@ function ReceiptsTotal({
     .filter(Boolean)
     .join(', ');
   // At accessibility sizes the exact dollars would break inside the figure
-  // ("$1,120,198,70 / 4" at AX3): the compact sum is drawn, and VoiceOver
-  // still hears the exact amount.
+  // ("$1,120,198,70 / 4" at AX3). VoiceOver uses the same rounding as the
+  // compact sum drawn at these sizes.
   const compact = useAccessibilitySize() && Math.abs(node.total) >= 1e6;
   return (
     <View
       accessible
-      accessibilityLabel={`${moneyAccessibilityLabel(node.total)}, ${line}`}
+      accessibilityLabel={`${moneyAccessibilityLabel(node.total, compact)}, ${line}`}
       testID="party-receipts-total"
     >
       <Text wordSafe variant="figure" tone="moneyInk" tabular>
@@ -1198,8 +1208,8 @@ const yearsText = (years: readonly number[]) => {
   return first === last ? String(first) : `${first} to ${last}`;
 };
 
-/** Past members under a former name, from the voting record. */
-function PastMembers({
+/** Shared iOS and Android rows, with party service dates where recorded. */
+export function PastMembers({
   block,
   retry,
 }: {
@@ -1235,23 +1245,54 @@ function PastMembers({
         <View>
           {rows.map((member) => {
             const id = member.slug ?? partySlug(member.name);
+            const service = member.periods?.filter((p) => p.start || p.end);
+            const dates = (p: NonNullable<typeof service>[number]) =>
+              p.start && p.end
+                ? `${formatDate(p.start, 'short')} to ${formatDate(p.end, 'short')}`
+                : p.end
+                  ? `Until ${formatDate(p.end, 'short')}`
+                  : p.start
+                    ? `From ${formatDate(p.start, 'short')}`
+                    : '';
+            const oneHouse = service?.every(
+              (p) =>
+                p.jurisdiction === member.jurisdiction &&
+                p.chamber === member.house,
+            );
+            const place = service?.length
+              ? oneHouse
+                ? [
+                    chamberName(member.house, member.jurisdiction),
+                    service.map(dates).join('; '),
+                  ]
+                    .filter(Boolean)
+                    .join(', ')
+                : service
+                    .map((p) =>
+                      [
+                        chamberName(p.chamber ?? '', p.jurisdiction ?? ''),
+                        dates(p),
+                      ]
+                        .filter(Boolean)
+                        .join(', '),
+                    )
+                    .join('; ')
+              : [
+                  chamberName(member.house, member.jurisdiction),
+                  yearsText(member.years),
+                ]
+                  .filter(Boolean)
+                  .join(', ');
             return (
               <PersonRow
-                key={`${member.jurisdiction}|${member.house}|${member.name}`}
+                key={member.personId}
                 name={member.name}
                 portrait={
                   member.slug ? (
                     <CachedPortrait name={member.name} slug={member.slug} />
                   ) : null
                 }
-                place={
-                  [
-                    chamberName(member.house, member.jurisdiction),
-                    yearsText(member.years),
-                  ]
-                    .filter(Boolean)
-                    .join(', ') || undefined
-                }
+                place={place || undefined}
                 detail={recordedAs(member.recordedAs)}
                 href={
                   member.slug
@@ -1264,8 +1305,19 @@ function PastMembers({
             );
           })}
           <Text wordSafe variant="footnote">
-            Listed from their recorded votes, under the name they sat under.
+            Listed from recorded votes and party service, under the name they
+            sat under.
           </Text>
+          <SourceLine
+            title="Past members"
+            citation="Parliamentary roster and recorded votes"
+            asOf={block.asAt}
+            originals={block.sources}
+            state={
+              block.partial ? 'partial' : block.stale ? 'saved' : undefined
+            }
+            testID="party-past-source"
+          />
         </View>
       )}
     </Disclosure>

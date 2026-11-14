@@ -951,7 +951,9 @@ export interface EditionFacts {
   line: string | null;
   /** Each number slide's figure and label, in the run's order. */
   figures: { value: string; label: string }[];
-  /** The first bars slide: its title, rows (rounded shares) and note. */
+  /** All bars slides in published order. Older cached projections omit it. */
+  barGroups?: NonNullable<EditionFacts['bars']>[];
+  /** The first bars slide, also retained for older cached projections. */
   bars: {
     title: string;
     items: { label: string; pct: number }[];
@@ -982,7 +984,19 @@ export interface EditionFacts {
 function editionFacts(slides: AppEdition['edition']['slides']): EditionFacts {
   const all = slides ?? [];
   const cover = all.find((s) => s.type === 'cover');
-  const bars = all.find((s) => s.type === 'bars' && s.items?.length);
+  const bars = all.filter((s) => s.type === 'bars' && s.items?.length);
+  const barGroups = bars.flatMap<NonNullable<EditionFacts['bars']>>((s) =>
+    s.type === 'bars' && s.items
+      ? [
+          {
+            title: s.title.trim(),
+            items: s.items.map((i) => ({ label: i.label.trim(), pct: i.pct })),
+            note: s.note?.trim() || null,
+            ...(typeof s.whole === 'boolean' ? { whole: s.whole } : {}),
+          },
+        ]
+      : [],
+  );
   const timeline = all.find((s) => s.type === 'timeline' && s.events?.length);
   const division = all.find(
     (s) =>
@@ -999,7 +1013,8 @@ function editionFacts(slides: AppEdition['edition']['slides']): EditionFacts {
   const order = all.flatMap<NonNullable<EditionFacts['order']>[number]>((s) => {
     if (s.type === 'number' && s.value?.trim() && s.label?.trim())
       return [{ type: 'figure' as const, index: figureIndex++ }];
-    if (s === bars) return [{ type: 'bars' as const, index: 0 }];
+    const barIndex = bars.indexOf(s);
+    if (barIndex >= 0) return [{ type: 'bars' as const, index: barIndex }];
     if (s === timeline) return [{ type: 'events' as const, index: 0 }];
     if (s === division) return [{ type: 'division' as const, index: 0 }];
     return [];
@@ -1013,18 +1028,8 @@ function editionFacts(slides: AppEdition['edition']['slides']): EditionFacts {
         ? [{ value: s.value.trim(), label: s.label.trim() }]
         : [],
     ),
-    bars:
-      bars?.type === 'bars' && bars.items
-        ? {
-            title: bars.title.trim(),
-            items: bars.items.map((i) => ({
-              label: i.label.trim(),
-              pct: i.pct,
-            })),
-            note: bars.note?.trim() || null,
-            ...(typeof bars.whole === 'boolean' ? { whole: bars.whole } : {}),
-          }
-        : null,
+    bars: barGroups[0] ?? null,
+    ...(barGroups.length > 1 ? { barGroups } : {}),
     events:
       timeline?.type === 'timeline' && timeline.events
         ? timeline.events.map((e) => ({
@@ -1043,6 +1048,64 @@ function editionFacts(slides: AppEdition['edition']['slides']): EditionFacts {
         ? list.items.map((item) => item.trim()).filter(Boolean)
         : [],
     affects: affects?.title.trim() || null,
+  };
+}
+const firstClause = (text: string) =>
+  (text.split(/[;.]/)[0] ?? '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLocaleLowerCase('en-AU');
+/**
+ * The story's caveats, said once and where they apply (sweep 3, item 12).
+ * Takes the story's paragraphs and gives back those to print, with the
+ * figures to draw:
+ * - A paragraph that restates a chart's note ("Shares of labelled speeches;
+ *   labels overlap." above a chart noted "Shares of labelled speeches; a
+ *   speech can carry several labels.") is dropped; the note under the chart
+ *   stays. They match on their opening clause, and only a line with no
+ *   figure of its own can be dropped.
+ * - "Records: 2008–2026." joins the first figure's label, which it
+ *   qualifies: "speeches in the record, 2008 to 2026". With no figure card
+ *   to carry it, the line stays as prose.
+ * Nothing else is touched, and an edition with neither line is unchanged.
+ */
+export function editionStoryFold(
+  paragraphs: readonly string[],
+  facts: Pick<EditionFacts, 'figures' | 'bars' | 'barGroups' | 'order'>,
+): { paragraphs: string[]; figures: EditionFacts['figures'] } {
+  const notes = new Set(
+    (facts.barGroups ?? (facts.bars ? [facts.bars] : []))
+      .flatMap((bars) => (bars.note ? [firstClause(bars.note)] : []))
+      .filter(Boolean),
+  );
+  const figureDrawn =
+    facts.figures.length > 0 &&
+    (facts.order?.some((fact) => fact.type === 'figure' && fact.index === 0) ??
+      true);
+  let years: string | null = null;
+  const kept = paragraphs.filter((paragraph) => {
+    if (!/\d/.test(paragraph) && notes.has(firstClause(paragraph)))
+      return false;
+    const records = /^Records:\s*(\d{4})(?:\s*[–—-]\s*(\d{4}))?\.?$/i.exec(
+      paragraph.trim(),
+    );
+    if (!records || !figureDrawn || years !== null) return true;
+    years =
+      records[2] && records[2] !== records[1]
+        ? `${records[1]} to ${records[2]}`
+        : records[1]!;
+    return false;
+  });
+  return {
+    paragraphs: kept,
+    figures:
+      years === null
+        ? facts.figures
+        : facts.figures.map((figure, index) =>
+            index === 0
+              ? { ...figure, label: `${figure.label}, ${years}` }
+              : figure,
+          ),
   };
 }
 /**

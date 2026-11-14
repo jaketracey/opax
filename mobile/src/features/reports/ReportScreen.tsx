@@ -4,16 +4,11 @@ import { ScrollView, View, useWindowDimensions } from 'react-native';
 import { isReportSlug } from '../../api/official-report-policy';
 import type { OfficialReport } from '../../api/report-decoders';
 import { useRead } from '../../api/useRead';
-import {
-  ContentUnavailable,
-  Group,
-  Screen,
-  Skeleton,
-} from '../../design/primitives';
+import { Group, Screen, Skeleton } from '../../design/primitives';
 import { formatCount } from '../../design/format';
 import { rhythm } from '../../design/tokens';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
-import { RecordLoadError } from '../records/RecordLoadError';
+import { MissingRecord, RecordLoadError } from '../records/RecordLoadError';
 import { ReportProvenance } from './report-provenance';
 import { HearingTranscripts, transcriptTitle } from './report-transcripts';
 import { officialReports } from './official';
@@ -387,6 +382,7 @@ export default function ReportScreen({
   return (
     <Screen
       testID="report-screen"
+      centred={!isReportSlug(slug)}
       scrollRef={scrollRef}
       onScroll={(y) => {
         offset.current = y;
@@ -394,10 +390,7 @@ export default function ReportScreen({
       barTitle={embedded ? undefined : record?.data.title}
     >
       {!isReportSlug(slug) ? (
-        <ContentUnavailable
-          symbol="link"
-          title="This link doesn't open a record"
-        />
+        <MissingRecord testID="report-missing" />
       ) : error ? (
         <RecordLoadError
           slug=""

@@ -48,7 +48,7 @@ import {
 } from './today/launch-fixture';
 import { Masthead, useNow } from './today/Masthead';
 import { MoreToExplore } from './today/MoreToExplore';
-import { SittingLine } from './today/SittingLine';
+import { SittingLine, useSittingRead } from './today/SittingLine';
 import {
   editionInSlot,
   launchCase,
@@ -293,8 +293,56 @@ export default function Today() {
     edition.block?.status === 'ready' && edition.block.data
       ? editionTier(edition.block.data.date, today)
       : null;
-  const nothingSaved =
+  // Nothing saved and offline: Bills says so once and the blocks that
+  // cannot draw step aside. Unmounting them clears their reports, so the
+  // condition is held for this attempt; without it the blocks remounted,
+  // failed again and looped. A pull, or the device coming back online,
+  // starts the next attempt. The hold lasts only while the edition has
+  // failed: if its background re-read brings it back, the page draws at
+  // once (and cannot loop, since holding again needs the edition failed).
+  const nothingSavedNow =
     reports.nothingSaved && edition.block?.status === 'error';
+  const [nothingSavedAt, setNothingSavedAt] = useState<number | null>(null);
+  // Held while rendering (React's adjust-state-on-change pattern), so the
+  // commit that sets the blocks aside already holds it.
+  if (nothingSavedNow && nothingSavedAt !== attempt) setNothingSavedAt(attempt);
+  const nothingSaved =
+    nothingSavedNow ||
+    (nothingSavedAt === attempt && edition.block?.status === 'error');
+  const wasOffline = useRef(offline);
+  useEffect(() => {
+    const back = wasOffline.current && !offline;
+    wasOffline.current = offline;
+    if (back && nothingSavedAt === attempt) retry();
+  }, [offline, nothingSavedAt, attempt, retry]);
+  const sitting = useSittingRead(attempt);
+
+  const electionSavedAt =
+    election.record &&
+    todayWindow(electionNow) &&
+    todayEligible(
+      choice,
+      directory?.electorates.data.electorates ?? [],
+      Intl.DateTimeFormat().resolvedOptions().timeZone,
+    ) &&
+    offline
+      ? election.record.savedAt
+      : null;
+
+  const offlineAt = [
+    electionSavedAt,
+    reports.savedAt,
+    offline ? reports.cachedAt : null,
+    edition.block &&
+    (edition.block.stale || (offline && edition.block.status === 'ready'))
+      ? edition.block.savedAt
+      : null,
+    directory?.electorates.stale || (offline && !!home)
+      ? directory?.electorates.savedAt
+      : null,
+  ]
+    .filter((d): d is number => typeof d === 'number')
+    .sort((a, b) => a - b)[0];
 
   const slot = (name: TodaySlot): ReactNode => {
     if (!order) return null;
@@ -349,6 +397,9 @@ export default function Today() {
             edition={edition.block}
             tier={tier ?? undefined}
             today={today}
+            // The late slot sits below the fold: its plate is drawn
+            // finished and leaves the timeline's one draw for the story.
+            still={name === 'edition-late'}
           />
         );
       }
@@ -401,36 +452,19 @@ export default function Today() {
           </Fragment>
         );
       case 'foot':
-        return <TodayFoot key={name} />;
+        // The page ends on a sentence only when it shows today's record.
+        return (
+          <TodayFoot
+            key={name}
+            ending={
+              nothingSaved || offlineAt !== undefined
+                ? undefined
+                : { now, sitting }
+            }
+          />
+        );
     }
   };
-
-  const electionSavedAt =
-    election.record &&
-    todayWindow(electionNow) &&
-    todayEligible(
-      choice,
-      directory?.electorates.data.electorates ?? [],
-      Intl.DateTimeFormat().resolvedOptions().timeZone,
-    ) &&
-    offline
-      ? election.record.savedAt
-      : null;
-
-  const offlineAt = [
-    electionSavedAt,
-    reports.savedAt,
-    offline ? reports.cachedAt : null,
-    edition.block &&
-    (edition.block.stale || (offline && edition.block.status === 'ready'))
-      ? edition.block.savedAt
-      : null,
-    directory?.electorates.stale || (offline && !!home)
-      ? directory?.electorates.savedAt
-      : null,
-  ]
-    .filter((d): d is number => typeof d === 'number')
-    .sort((a, b) => a - b)[0];
 
   return (
     <Screen
@@ -447,15 +481,16 @@ export default function Today() {
       <Masthead
         now={now}
         offlineSavedAt={offlineAt ?? null}
-        sitting={<SittingLine now={now} attempt={attempt} />}
+        sitting={<SittingLine now={now} sitting={sitting} />}
+        // From the first frame, neutral until the seat read answers, so the
+        // map's clearance never moves the date (sweep 3, item 1).
         mark={
-          seat.status !== 'loading' ? (
-            <AustraliaDots
-              state={electorateDotState(home)}
-              scroll={dots.scroll}
-              expandedHeader={dots.expandedHeader}
-            />
-          ) : null
+          <AustraliaDots
+            state={electorateDotState(home)}
+            neutral={seat.status === 'loading'}
+            scroll={dots.scroll}
+            expandedHeader={dots.expandedHeader}
+          />
         }
       />
       <TodayReports value={reports}>

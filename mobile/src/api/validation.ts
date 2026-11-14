@@ -112,7 +112,7 @@ export function logDroppedRow(label: string, row: string | number) {
 }
 // Metadata stays outside the published data and is retained by decode memoization.
 const partialCatalogs = new WeakSet<object>();
-type LossPolicy = 'bounded' | 'counted';
+type LossPolicy = 'bounded' | 'counted' | 'optional';
 const losses = new WeakMap<
   object,
   { total: number; dropped: number; policy: LossPolicy }
@@ -133,7 +133,9 @@ function markFromChildren<T extends object>(value: T): T {
 /** At most 1% loss, with a one-row allowance for small catalogs. A nonempty
  * export may never become empty. Lists used for totals, latest facts or
  * attribution use array/dict instead, with no allowance. Discovery counts
- * and announces omitted signals, so its policy has no percentage cap. */
+ * and announces omitted signals, so its policy has no percentage cap.
+ * Optional enrichment can lose every item without invalidating its host or
+ * marking unrelated identity and membership data as partial. */
 function withLoss<T extends object>(
   out: T,
   total: number,
@@ -141,6 +143,7 @@ function withLoss<T extends object>(
   policy: LossPolicy = 'bounded',
 ): T {
   if (
+    policy !== 'optional' &&
     dropped &&
     (dropped === total ||
       (policy === 'bounded' && dropped > Math.max(1, Math.floor(total / 100))))
@@ -149,7 +152,8 @@ function withLoss<T extends object>(
   losses.set(out, { total, dropped, policy });
   return markPartial(
     out,
-    dropped > 0 || Object.values(out).some(isPartialCatalog),
+    policy !== 'optional' &&
+      (dropped > 0 || Object.values(out).some(isPartialCatalog)),
   );
 }
 /** Logical rejection (identity and duplicates) uses the same budget

@@ -1,5 +1,8 @@
 import { StyleSheet, View } from 'react-native';
-import { formatMoneyCompact } from '../../../design/format';
+import {
+  formatMoneyCompact,
+  moneyAccessibilityLabel,
+} from '../../../design/format';
 import { Text } from '../../../design/primitives';
 import { colors, rhythm } from '../../../design/tokens';
 import type { MapModel } from './model';
@@ -55,7 +58,7 @@ export function MoneyMapLegend({ model }: { model: MapModel }) {
         <View
           style={styles.samples}
           accessible
-          accessibilityLabel={`Reference discs: ${LEGEND_NODES.map((n) => formatMoneyCompact(n)).join(', ')}`}
+          accessibilityLabel={`Reference discs: ${LEGEND_NODES.map((n) => moneyAccessibilityLabel(n, true)).join(', ')}`}
         >
           {LEGEND_NODES.map((amount) => {
             const size = nodeRadius(amount) * 2 * discScale;
@@ -87,7 +90,7 @@ export function MoneyMapLegend({ model }: { model: MapModel }) {
         <View
           style={styles.samples}
           accessible
-          accessibilityLabel={`Reference lines: ${LEGEND_EDGES.map((n) => formatMoneyCompact(n)).join(', ')}`}
+          accessibilityLabel={`Reference lines: ${LEGEND_EDGES.map((n) => moneyAccessibilityLabel(n, true)).join(', ')}`}
         >
           {LEGEND_EDGES.map((amount) => (
             <View key={amount} style={styles.sample}>
@@ -119,7 +122,7 @@ export function MoneyMapLegend({ model }: { model: MapModel }) {
           <View
             style={styles.samples}
             accessible
-            accessibilityLabel={`Reference public money lines: ${LEGEND_PUBLIC_EDGES.map((n) => formatMoneyCompact(n)).join(', ')}`}
+            accessibilityLabel={`Reference public money lines: ${LEGEND_PUBLIC_EDGES.map((n) => moneyAccessibilityLabel(n, true)).join(', ')}`}
           >
             {LEGEND_PUBLIC_EDGES.map((amount) => (
               <View key={amount} style={styles.sample}>
