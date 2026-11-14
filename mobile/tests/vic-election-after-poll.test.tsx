@@ -344,6 +344,55 @@ test.each([
   },
 );
 
+test.each([
+  {},
+  [],
+  'unavailable',
+  { ...result, share: 49 },
+  { ...result, margin: 4 },
+  { ...result, against_share: 40 },
+  { ...result, date: '2026-11-27' },
+  { ...result, kind: 'by-election' },
+  { ...result, url: 'https://example.com/results' },
+  { ...result, url: 'not a URL' },
+])(
+  'a bad current seat result is discarded while the district page loads (%#)',
+  (current_result) => {
+    payload('2026-11-29T01:00:00Z', 'results');
+    const decoded = decodeSeat({ ...seat, state: 'results', current_result });
+    expect(decoded).toEqual({
+      ...decodeSeat({ ...seat, state: 'results' }),
+      current_result: undefined,
+    });
+    mockVic.seat.record!.data = decoded;
+    const page = renderVic(<Seat />);
+    expect(words(page)).toContain(seat.name);
+    expect(words(page)).toContain(seat.members[0]!.name);
+  },
+);
+
+test.each([undefined, null, result])(
+  'an optional valid current seat result is retained (%#)',
+  (current_result) => {
+    expect(decodeSeat({ ...seat, current_result }).current_result).toEqual(
+      current_result ?? undefined,
+    );
+  },
+);
+
+test('a district result on a region is discarded without losing its members', () => {
+  expect(decodeSeat({ ...region, current_result: result })).toEqual({
+    ...decodeSeat(region),
+    current_result: undefined,
+  });
+});
+
+test('bad required seat fields still fail when the current result is also bad', () => {
+  expect(() =>
+    decodeSeat({ ...seat, members: [], current_result: {} }),
+  ).toThrow();
+});
+
 test('published results override an ageing polls_closed state once voting is closed', () => {
   payload('2026-11-29T01:00:00Z', 'results');
   mockVic.overview.record!.data = decodeOverview({

@@ -101,7 +101,7 @@ export function latelySource(
     notes: [
       LATELY_RULE,
       ...(missing.length
-        ? [`Not shown: ${missing.join(' and ')} couldn't be loaded.`]
+        ? [`Not shown: ${missing.join(' and ')} couldn’t be loaded.`]
         : []),
     ],
   };

@@ -228,7 +228,7 @@ function PersonMatch({
             {failed ? (
               <InlineError
                 subject="This page"
-                message="This page couldn't be opened."
+                message="This page couldn’t be opened."
                 onRetry={failed.retry}
                 testID={`${rowID}-error`}
               />

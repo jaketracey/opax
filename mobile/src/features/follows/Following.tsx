@@ -55,7 +55,7 @@ export const NOTHING_FOLLOWED_TITLE = 'Nothing followed yet';
 export const NOTHING_FOLLOWED =
   'Follow a person, bill, party or electorate to see what changes.';
 const SAVE_FAILED = () =>
-  phoneCopy("Your follows couldn't be saved on this iPhone.");
+  phoneCopy('Your follows couldn’t be saved on this iPhone.');
 
 export interface FollowEntry {
   follow: Follow;
@@ -65,7 +65,7 @@ export interface FollowEntry {
 }
 export const WITHDRAWN_NOTE =
   'These records were withdrawn or renamed. Search for them, or unfollow them.';
-export const CHECK_DOUBTED = "Couldn't check your list just now.";
+export const CHECK_DOUBTED = 'Couldn’t check your list just now.';
 export interface FollowGroup {
   key: 'changed' | FollowKind | 'withdrawn';
   title: string;
@@ -357,7 +357,7 @@ export default function Following() {
       ) : failedAll ? (
         <InlineError
           subject="changes"
-          message="Changes couldn't be checked."
+          message="Changes couldn’t be checked."
           onRetry={checkAgain}
           testID="follows-check-error"
         />

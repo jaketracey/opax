@@ -40,10 +40,10 @@ export const copy = Object.freeze({
   reportCorrection: 'Report a correction',
   correctionsEmail: 'corrections@opax.com.au',
   copyAddress: 'Copy address',
-  someSectionsFailed: "Some sections couldn't be loaded.",
+  someSectionsFailed: 'Some sections couldn’t be loaded.',
   savedCopyNote: (date: DateInput) =>
-    `Showing the copy saved on ${dayMonth(date)}. The latest records couldn't be loaded.`,
-  partialNote: "Some records couldn't be read.",
+    `Showing the copy saved on ${dayMonth(date)}. The latest records couldn’t be loaded.`,
+  partialNote: 'Some records couldn’t be read.',
   machineWritten: 'Machine-written',
   independence:
     'OPAX is independent and non-partisan. It is not a government app.',
@@ -73,7 +73,7 @@ export const copy = Object.freeze({
   notSaved: phoneCopy('Not saved on this iPhone yet'),
   notSavedBody: "It will load when you're back online.",
   couldNotLoad: (subject: string) =>
-    `${subject.charAt(0).toLocaleUpperCase('en-AU')}${subject.slice(1)} couldn't be loaded.`,
+    `${subject.charAt(0).toLocaleUpperCase('en-AU')}${subject.slice(1)} couldn’t be loaded.`,
   resetFilters: 'Reset filters',
   partial: 'partial',
   dateNotPublished: 'Date not published',

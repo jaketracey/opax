@@ -1715,7 +1715,7 @@ describe('a lead’s page', () => {
       Object.assign(mockParams, href.params);
       const item = await render(<MoneyItem />);
       expect(texts(item.root).join('\n')).not.toMatch(
-        /This record isn't available any more|643745/,
+        /This record isn’t available any more|643745/,
       );
       const original = byTestID(item.root, 'money-item-original-0');
       expect(original.props.accessibilityLabel).toBe(label);

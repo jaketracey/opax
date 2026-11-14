@@ -21,8 +21,8 @@ test('shared copy keeps shell wording and the shorter website menu label', () =>
     reportCorrection: 'Report a correction',
     correctionsEmail: 'corrections@opax.com.au',
     copyAddress: 'Copy address',
-    someSectionsFailed: "Some sections couldn't be loaded.",
-    partialNote: "Some records couldn't be read.",
+    someSectionsFailed: 'Some sections couldn’t be loaded.',
+    partialNote: 'Some records couldn’t be read.',
     machineWritten: 'Machine-written',
     independence:
       'OPAX is independent and non-partisan. It is not a government app.',
@@ -35,13 +35,13 @@ test('shared copy keeps shell wording and the shorter website menu label', () =>
     dateNotPublished: 'Date not published',
   });
   expect(savedCopyNote('2026-11-08')).toBe(
-    "Showing the copy saved on 8 November. The latest records couldn't be loaded.",
+    'Showing the copy saved on 8 November. The latest records couldn’t be loaded.',
   );
   expect(offline('2026-11-08')).toBe(
     "You're offline. Showing what was saved on 8 Nov.",
   );
-  expect(couldNotLoad('Bills')).toBe("Bills couldn't be loaded.");
-  expect(couldNotLoad('the bill')).toBe("The bill couldn't be loaded.");
+  expect(couldNotLoad('Bills')).toBe('Bills couldn’t be loaded.');
+  expect(couldNotLoad('the bill')).toBe('The bill couldn’t be loaded.');
   expect(todayEnding('Saturday 14 November')).toBe(
     "That's the record for Saturday 14 November.",
   );

@@ -41,7 +41,7 @@ export async function loadRecipientGrant(
   );
   const recipient = index.data.recipients.find((row) => row.id === rid);
   if (!recipient)
-    throw new ApiError('not-found', "This record isn't available any more.");
+    throw new ApiError('not-found', 'This record isn’t available any more.');
   const record = await apiClient.get(
     `/grants/${jur}/shard-${String(recipient.shard).padStart(2, '0')}.json`,
     (raw) => {
@@ -51,7 +51,7 @@ export async function loadRecipientGrant(
       if (!entry)
         throw new ApiError(
           'not-found',
-          "This record isn't available any more.",
+          'This record isn’t available any more.',
         );
       const identity = publicRecipient(
         nonempty(entry.n),
@@ -65,7 +65,7 @@ export async function loadRecipientGrant(
       if (!grant)
         throw new ApiError(
           'not-found',
-          "This record isn't available any more.",
+          'This record isn’t available any more.',
         );
       const value = number(grant.v),
         id = nonempty(grant.id);

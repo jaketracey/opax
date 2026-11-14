@@ -96,7 +96,7 @@ export default function Members() {
       <Screen testID="members-screen">
         <ContentUnavailable
           symbol="exclamationmark.triangle"
-          title="These members couldn't be loaded."
+          title="These members couldn’t be loaded."
           action={{
             label: 'Try again',
             onPress: () => {
@@ -113,7 +113,7 @@ export default function Members() {
       <Screen testID="members-screen">
         <ContentUnavailable
           symbol="exclamationmark.triangle"
-          title="These members couldn't be found."
+          title="These members couldn’t be found."
           testID="members-missing"
         />
       </Screen>

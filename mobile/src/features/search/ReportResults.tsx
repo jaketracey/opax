@@ -109,7 +109,7 @@ export function ReportResults({
       ) : read.status === 'error' ? (
         <InlineError
           subject="Reports"
-          message="Reports couldn't be loaded."
+          message="Reports couldn’t be loaded."
           onRetry={() => void groupRequest('reports', q)}
           testID={`${prefix}-error`}
         />

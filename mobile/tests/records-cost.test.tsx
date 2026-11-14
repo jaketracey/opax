@@ -208,7 +208,7 @@ test('opening reader loads one record; similar loads only on tap and reopening t
       .findAllByType(Text)
       .some(
         (node) =>
-          node.props.children === "Similar speeches couldn't be loaded.",
+          node.props.children === 'Similar speeches couldn’t be loaded.',
       ),
   ).toBe(false);
   await act(async () => {

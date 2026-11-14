@@ -326,7 +326,7 @@ export default function YourMP() {
       ) : seat.status === 'error' ? (
         <InlineError
           subject="Your electorate"
-          message={`Your electorate couldn't be read on this ${thisDevice()}.`}
+          message={`Your electorate couldn’t be read on this ${thisDevice()}.`}
           // The seat store reads the directory once: Try again reads it again.
           onRetry={seat.retry}
           testID="your-mp-error"
@@ -342,7 +342,7 @@ export default function YourMP() {
           ) : view.status === 'error' ? (
             <InlineError
               subject="Your MP"
-              message="Your MP couldn't be loaded."
+              message="Your MP couldn’t be loaded."
               onRetry={retry}
               testID="your-mp-error"
             />
@@ -451,7 +451,7 @@ function Lately({
       ) : state.status === 'error' ? (
         <InlineError
           subject="Recent records"
-          message="Recent records couldn't be loaded."
+          message="Recent records couldn’t be loaded."
           onRetry={onRetry}
         />
       ) : (

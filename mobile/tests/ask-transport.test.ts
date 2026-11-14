@@ -220,7 +220,7 @@ test.each([
     expect(failure).toBeInstanceOf(AskFailure);
     if (!(failure instanceof AskFailure)) throw failure;
     expect(askErrorCopy(failure)).toEqual({
-      message: "This question couldn't be sent.",
+      message: 'This question couldn’t be sent.',
       retry: false,
     });
   },
@@ -435,7 +435,7 @@ test.each(['missing stream body', 'malformed JSON'] as const)(
       .catch((error: unknown) => error);
     expect(result).toMatchObject({ code: 'invalid' });
     expect(askErrorCopy(result as Parameters<typeof askErrorCopy>[0])).toEqual({
-      message: "The answer couldn't be read.",
+      message: 'The answer couldn’t be read.',
       retry: true,
     });
     expect(t).toHaveBeenCalledTimes(1);

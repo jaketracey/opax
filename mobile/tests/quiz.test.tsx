@@ -606,7 +606,7 @@ test('a failed save says so, once, with a way to try again', async () => {
     await press('quiz-next');
   }
   const failure = byID('quiz-save');
-  expect(failure.props.message).toBe("Your best streak couldn't be saved.");
+  expect(failure.props.message).toBe('Your best streak couldn’t be saved.');
   await act(async () => failure.props.onRetry());
   expect(has('quiz-save')).toBe(false);
 });

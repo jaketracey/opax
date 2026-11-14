@@ -50,7 +50,7 @@ export function VotesBlock({
       }}
       state={state}
       skeleton={<Skeleton shape="divisions" count={3} label="Loading votes" />}
-      error="Votes couldn't be loaded."
+      error="Votes couldn’t be loaded."
       onRetry={onRetry}
       report={reportOf(read)}
       line={

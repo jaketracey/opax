@@ -338,7 +338,7 @@ test('a failed read is a whole-screen state with the plain reason and Try again'
     );
   });
   const state = renderer.root.findByType(ContentUnavailable);
-  expect(state.props.title).toBe("Couldn't load parliamentarians");
+  expect(state.props.title).toBe('Couldn’t load parliamentarians');
   expect(state.props.body).toBe(
     'The people records are out of step. Try again shortly.',
   );

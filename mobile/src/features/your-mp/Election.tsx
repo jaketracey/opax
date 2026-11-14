@@ -82,7 +82,7 @@ export function ElectionScreen({
         <ContentUnavailable
           symbol={failed.offline ? 'wifi.slash' : 'exclamationmark.triangle'}
           title={
-            failed.offline ? copy.notSaved : "This election couldn't be loaded."
+            failed.offline ? copy.notSaved : 'This election couldn’t be loaded.'
           }
           body={failed.offline ? copy.notSavedBody : undefined}
           action={
@@ -100,7 +100,7 @@ export function ElectionScreen({
       ) : !record || !identity || !block ? (
         <ContentUnavailable
           symbol="exclamationmark.triangle"
-          title="This election couldn't be found."
+          title="This election couldn’t be found."
           testID="election-missing"
         />
       ) : (

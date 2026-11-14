@@ -343,7 +343,7 @@ export async function openSource(
   try {
     checked = sourceUrl(url);
   } catch {
-    Alert.alert("Couldn't open the original", 'Check your connection.');
+    Alert.alert('Couldn’t open the original', 'Check your connection.');
     return;
   }
   if (openNativePage(checked)) {
@@ -365,7 +365,7 @@ export async function openSource(
       readerMode: false,
     });
   } catch {
-    Alert.alert("Couldn't open the original", 'Check your connection.');
+    Alert.alert('Couldn’t open the original', 'Check your connection.');
   }
 }
 
@@ -395,7 +395,7 @@ export async function openOnWeb(
 ): Promise<void> {
   const url = webPageUrl(path);
   if (url === null) {
-    Alert.alert("Couldn't open the page", 'Check your connection.');
+    Alert.alert('Couldn’t open the page', 'Check your connection.');
     return;
   }
   if (options.preferNative !== false && openNativePage(url)) return;
@@ -409,7 +409,7 @@ export async function openOnWeb(
     dismissButtonStyle: 'done',
     presentationStyle: WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET,
   }).catch(() =>
-    Alert.alert("Couldn't open the page", 'Check your connection.'),
+    Alert.alert('Couldn’t open the page', 'Check your connection.'),
   );
 }
 

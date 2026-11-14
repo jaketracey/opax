@@ -319,7 +319,7 @@ export default function PhotoViewer() {
               >
                 {read.record
                   ? 'No photographs for this year'
-                  : "Photographs couldn't be loaded"}
+                  : 'Photographs couldn’t be loaded'}
               </Text>
               {read.record ? null : (
                 <Pressable

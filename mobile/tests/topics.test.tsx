@@ -295,7 +295,7 @@ describe('Topic page', () => {
     const page = await render(<TopicPage />);
     expect(host(page.root, 'topic-unknown')).toHaveLength(1);
     expect(words(page)).toContain('Topic not found');
-    expect(words(page)).toContain("This topic isn't in OPAX.");
+    expect(words(page)).toContain('This topic isn’t in OPAX.');
     for (const read of Object.values(reports))
       expect(jest.mocked(read)).not.toHaveBeenCalled();
   });

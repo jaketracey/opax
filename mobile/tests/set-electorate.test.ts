@@ -155,7 +155,7 @@ test('failed save alerts with Try again and Cancel, keeps the previous choice, a
     sheet.mock.calls[0]![1](0);
   });
   expect(alert).toHaveBeenCalledWith(
-    "Your electorate couldn't be saved on this iPhone.",
+    'Your electorate couldn’t be saved on this iPhone.',
     undefined,
     expect.arrayContaining([
       expect.objectContaining({ text: 'Try again' }),

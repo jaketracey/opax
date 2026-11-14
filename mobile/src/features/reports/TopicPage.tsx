@@ -93,7 +93,7 @@ function UnknownTopic() {
         <ContentUnavailable
           symbol={symbols.topic}
           title="Topic not found"
-          body="This topic isn't in OPAX."
+          body="This topic isn’t in OPAX."
           testID="topic-unknown"
         />
       </Screen>
@@ -342,7 +342,7 @@ function TopicContent({ slug, params }: { slug: string; params: Params }) {
           ) : (
             <ContentUnavailable
               symbol="exclamationmark.triangle"
-              title="This topic couldn't be loaded"
+              title="This topic couldn’t be loaded"
               body="OPAX didn't respond."
               action={{
                 label: 'Try again',

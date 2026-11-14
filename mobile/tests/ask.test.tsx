@@ -393,7 +393,7 @@ describe('Conversations', () => {
     jest.mocked(loadChats).mockRejectedValueOnce(new Error('unreadable'));
     const root = await render(<Conversations mode="sheet" />);
     const failed = byID(root, 'ask-history-read-failed')[0]!;
-    expect(failed.props.title).toBe("Conversations couldn't be read");
+    expect(failed.props.title).toBe('Conversations couldn’t be read');
     expect(failed.props.action.label).toBe('Try again');
   });
   test('a row restores its conversation and closes the sheet', async () => {

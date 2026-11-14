@@ -111,7 +111,7 @@ async function openAboveModal(url: string, citation: string) {
       readerMode: false,
     });
   } catch {
-    Alert.alert("Couldn't open the original", 'Check your connection.');
+    Alert.alert('Couldn’t open the original', 'Check your connection.');
   }
 }
 export function OriginalsGroup({

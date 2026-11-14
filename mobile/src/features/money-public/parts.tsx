@@ -137,7 +137,7 @@ export function recordSource(record: Saved) {
     state: record?.partial ? ('partial' as const) : null,
     stateNotes: [
       record?.stale
-        ? "The latest records couldn't be loaded. Showing the saved copy."
+        ? 'The latest records couldn’t be loaded. Showing the saved copy.'
         : null,
       record?.partial ? copy.partialNote : null,
     ],
@@ -401,7 +401,7 @@ export function MoneyStatus({
   return (
     <ContentUnavailable
       symbol="exclamationmark.triangle"
-      title={`${name} couldn't be loaded`}
+      title={`${name} couldn’t be loaded`}
       body="Check your connection and try again."
       action={{
         label: copy.tryAgain,

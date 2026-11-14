@@ -138,7 +138,7 @@ export function Picture({
           {Platform.OS === 'android' && ground === 'black' ? (
             <>
               <Text wordSafe style={styles.onBlack}>
-                {"Photo couldn't be loaded."}
+                {'Photo couldn’t be loaded.'}
               </Text>
               <Pressable
                 accessibilityRole="button"
@@ -153,7 +153,7 @@ export function Picture({
           ) : (
             <InlineError
               subject="Photo"
-              message="Photo couldn't be loaded."
+              message="Photo couldn’t be loaded."
               onRetry={() => setRetry((v) => v + 1)}
             />
           )}

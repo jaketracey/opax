@@ -47,7 +47,7 @@ export function RecordLoadError({
     return (
       <ContentUnavailable
         symbol="doc.text.magnifyingglass"
-        title={`${subject} isn't available`}
+        title={`${subject} isn’t available`}
         testID={testID}
       />
     );
@@ -69,7 +69,7 @@ export function RecordLoadError({
     <View style={{ gap: rhythm.tight }}>
       <ContentUnavailable
         symbol="exclamationmark.triangle"
-        title={`${subject} couldn't be loaded`}
+        title={`${subject} couldn’t be loaded`}
         action={{ label: copy.tryAgain, onPress: onRetry }}
         testID={testID}
       />

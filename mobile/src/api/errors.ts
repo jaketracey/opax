@@ -40,7 +40,7 @@ export function httpError(status: number): ApiError {
       ? 'This record is not available.'
       : code === 'rate-limited'
         ? 'Too many requests. Try again shortly.'
-        : "The public record couldn't be loaded.",
+        : 'The public record couldn’t be loaded.',
     status,
   );
 }

@@ -17,6 +17,7 @@ test.each([
   ['the bill now be passed.', 'Third reading'],
   ['the bills be read a third time.', 'Third reading'],
   ['the bills be now read a second time.', 'Second reading'],
+  ['these bills be now read a second time.', 'Second reading'],
   ['the remaining stages of the bill be agreed to.', 'Remaining stages'],
   ['the amendments on sheet 1234 be agreed to.', 'Amendments'],
   ['the amendment on sheet 1234 be agreed to.', 'Amendment'],
@@ -66,6 +67,22 @@ test.each([
     'Second reading',
   ],
   [
+    'the Treasury Laws Amendment Bills be now read a second time.',
+    'Second reading',
+  ],
+  [
+    'the Social Services Legislation Amendment (Other Measures) Bills 2026 be now read a third time.',
+    'Third reading',
+  ],
+  [
+    'the Public Governance Amendment (Supporting Small Businesses To Be Paid On Time) Bills 2026 be now read a second time.',
+    'Second reading',
+  ],
+  [
+    'the Environment (Consequential Amendments) Bills be now passed.',
+    'Third reading',
+  ],
+  [
     'the Public Governance, Performance and Accountability Amendment (Supporting Small Businesses To Be Paid On Time) Bill 2026 be now read a second time.',
     'Second reading',
   ],
@@ -89,6 +106,14 @@ test.each([
   [
     'the amendment to the Treasury Laws Amendment Bill be agreed to.',
     'Amendment',
+  ],
+  [
+    'the amendment to the Treasury Laws Amendment Bills be agreed to.',
+    'Amendment',
+  ],
+  [
+    'the amendments to the Environment (Consequential Amendments) Bills be agreed to.',
+    'Amendments',
   ],
   [
     'the amendment to the Treasury Laws Amendment and Other Measures Bill 2026 be agreed to.',

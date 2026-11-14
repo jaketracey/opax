@@ -130,7 +130,7 @@ export default function Connection() {
         {missing ? (
           <ContentUnavailable
             symbol="magnifyingglass"
-            title="This name isn't in the latest documents"
+            title="This name isn’t in the latest documents"
             action={{
               label: 'See all programs and places',
               onPress: () => router.push(connectionsRoute),
@@ -211,7 +211,7 @@ export default function Connection() {
               ) : excerpts.error ? (
                 <InlineError
                   subject="Excerpts"
-                  message="Excerpts couldn't be loaded."
+                  message="Excerpts couldn’t be loaded."
                   onRetry={excerpts.retry}
                   testID="connection-excerpts-error"
                 />

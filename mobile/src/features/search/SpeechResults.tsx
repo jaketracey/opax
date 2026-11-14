@@ -189,7 +189,7 @@ export function SpeechResults({
     return (
       <InlineError
         subject="Speeches"
-        message="Speeches couldn't load."
+        message="Speeches couldn’t load."
         onRetry={onRetrySources}
         testID="search-speeches-error"
       />

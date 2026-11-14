@@ -122,10 +122,10 @@ export async function loadElectorate(id: string): Promise<LoadedElectorate> {
     (s) => s.electorate_id === id || s.slug === id,
   );
   if (!seat)
-    throw new ApiError('not-found', "We couldn't find this electorate.");
+    throw new ApiError('not-found', 'We couldn’t find this electorate.');
   const result = await catalogs.electorateFor(seat.detail_url);
   if (result.data.identity.data?.id !== seat.electorate_id)
-    throw new ApiError('invalid-data', "This electorate couldn't be loaded.");
+    throw new ApiError('invalid-data', 'This electorate couldn’t be loaded.');
   return {
     directory,
     view: result.data,
@@ -215,7 +215,7 @@ function ElectorateContent({
           setFailure(
             error instanceof ApiError
               ? error
-              : new ApiError('http', "This electorate couldn't be loaded."),
+              : new ApiError('http', 'This electorate couldn’t be loaded.'),
           );
       })
       .finally(() => {
@@ -269,7 +269,7 @@ function ElectorateContent({
             failure.code === 'not-found' ? (
               <ContentUnavailable
                 symbol="map"
-                title="We couldn't find this electorate."
+                title="We couldn’t find this electorate."
                 body="Search for an electorate or its member."
                 action={{
                   label: 'Search',
@@ -283,7 +283,7 @@ function ElectorateContent({
                 title={
                   offline
                     ? copy.notSaved
-                    : "This electorate couldn't be loaded."
+                    : 'This electorate couldn’t be loaded.'
                 }
                 body={offline ? copy.notSavedBody : undefined}
                 action={

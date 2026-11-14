@@ -18,7 +18,7 @@ export default function NotFound() {
       <RouteOptions options={{ title: 'Page not found', headerShown: true }} />
       <ContentUnavailable
         symbol="link"
-        title="This page isn't in the app"
+        title="This page isn’t in the app"
         body="The link may be old, or the page may have moved."
         action={{
           label: router.canGoBack() ? 'Go back' : 'Go to Today',

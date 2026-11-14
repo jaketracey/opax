@@ -5,7 +5,7 @@ import { symbols } from './symbols';
 import { colors, rhythm } from './tokens';
 
 export const routeErrorCopy = {
-  title: "This page couldn't be shown",
+  title: 'This page couldn’t be shown',
   body: 'Something went wrong while drawing it.',
 } as const;
 

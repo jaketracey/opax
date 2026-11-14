@@ -214,7 +214,7 @@ export default function ReportSheet() {
           ) : (
             <ContentUnavailable
               symbol="exclamationmark.triangle"
-              title="This answer isn't available"
+              title="This answer isn’t available"
             />
           )}
         </ScrollView>

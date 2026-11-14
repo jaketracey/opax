@@ -272,7 +272,7 @@ describe('Following on Today', () => {
       }),
     );
     expect(host(r.root, 'today-following-error').length).toBeGreaterThan(0);
-    expect(strings(r.root)).toContain("Changes couldn't be checked.");
+    expect(strings(r.root)).toContain('Changes couldn’t be checked.');
   });
   test('FollowingSection is Today’s block under its old name', () => {
     jest.mocked(useFollowStates).mockReturnValue(hook({}));

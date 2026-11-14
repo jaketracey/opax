@@ -300,7 +300,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         record.staleReason ? (
           <InlineError
             subject="the latest bills"
-            message={`The latest bills couldn't be loaded. Showing the copy saved on ${formatDate(record.savedAt, 'short').replace(/ \d{4}$/, '')}.`}
+            message={`The latest bills couldn’t be loaded. Showing the copy saved on ${formatDate(record.savedAt, 'short').replace(/ \d{4}$/, '')}.`}
             onRetry={refresh}
             testID="bills-stale"
           />
@@ -346,7 +346,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
     ) : error ? (
       <ContentUnavailable
         symbol="exclamationmark.triangle"
-        title="Bills couldn't be loaded"
+        title="Bills couldn’t be loaded"
         action={{
           label: copy.tryAgain,
           onPress: retry,
@@ -435,7 +435,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
       state={record?.partial ? 'partial' : null}
       notes={[
         LIST_NOTE,
-        record?.partial ? "Some records couldn't be read." : null,
+        record?.partial ? 'Some records couldn’t be read.' : null,
       ]}
       testID="bills-as-at"
     />

@@ -119,7 +119,7 @@ export function failureRecovery(
               : scopeLabel(subject as Scope);
   if (subject === 'open')
     return {
-      sentence: "This page couldn't be opened.",
+      sentence: 'This page couldn’t be opened.',
       actions: [actions.retry, actions.web],
     };
   if (
@@ -138,8 +138,8 @@ export function failureRecovery(
   return {
     sentence:
       subject === 'summary'
-        ? "The summary couldn't be written."
-        : `${name} couldn't load.`,
+        ? 'The summary couldn’t be written.'
+        : `${name} couldn’t load.`,
     actions: [actions.retry],
   };
 }

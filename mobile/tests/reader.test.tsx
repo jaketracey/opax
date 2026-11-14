@@ -457,12 +457,12 @@ test.each([
   [
     'not found',
     new ApiError('not-found', 'HTTP 404'),
-    /^This record isn't available$/,
+    /^This record isn’t available$/,
   ],
   [
     'unreadable',
     new ApiError('invalid-data', 'Decoder failed'),
-    /^This record couldn't be loaded$/,
+    /^This record couldn’t be loaded$/,
   ],
 ])('%s: the reader says so in plain words', async (_case, error, title) => {
   jest.mocked(records.document).mockRejectedValue(error);

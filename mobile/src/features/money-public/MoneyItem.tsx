@@ -85,7 +85,7 @@ export interface MoneyItemView {
 }
 
 const gone = () =>
-  new ApiError('not-found', "This record isn't available any more.");
+  new ApiError('not-found', 'This record isn’t available any more.');
 const short = (d: string) => (d ? formatDate(d, 'short') : '');
 const facts = (rows: (Fact | false | null | undefined)[]) =>
   rows.filter((r): r is Fact => !!r && !!r.value);
@@ -768,7 +768,7 @@ function MoneyItemRecord({ raw }: { raw: Record<string, string> }) {
             status={status}
             name="This record"
             rows={5}
-            notFound={{ title: "This record isn't available any more" }}
+            notFound={{ title: 'This record isn’t available any more' }}
             testID="money-item"
           />
           {item ? (

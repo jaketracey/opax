@@ -1034,7 +1034,7 @@ function Similar({ doc }: { doc: DocumentRecord }) {
           {error ? (
             <InlineError
               subject="Similar speeches"
-              message="Similar speeches couldn't be loaded."
+              message="Similar speeches couldn’t be loaded."
               onRetry={loadSimilar}
             />
           ) : null}

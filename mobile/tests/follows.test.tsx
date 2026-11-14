@@ -1146,7 +1146,7 @@ describe('Following', () => {
     const error = r.root.find(
       (n) => n.props.testID === 'follows-check-error' && 'subject' in n.props,
     );
-    expect(error.props.message).toBe("Changes couldn't be checked.");
+    expect(error.props.message).toBe('Changes couldn’t be checked.');
     expect(row(r, `follows-row-bill-${BILL}`).props.detail).toBe(
       'Not checked yet',
     );
@@ -1251,7 +1251,7 @@ describe('Following', () => {
     await follow({ kind: 'electorate', id: GRAYNDLER, title: 'Grayndler' });
     await follow({ kind: 'electorate', id: GONE_SEAT, title: 'Batman' });
     const r = await render();
-    expect(doubted(r).props.message).toBe("Couldn't check your list just now.");
+    expect(doubted(r).props.message).toBe('Couldn’t check your list just now.');
     // The bills keep their group and their pages, with nothing under them.
     const bill = row(r, `follows-row-bill-${GONE_BILL}`).props;
     expect(bill.detail).toBeUndefined();

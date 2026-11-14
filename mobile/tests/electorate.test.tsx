@@ -899,7 +899,7 @@ test('not found and failure states', async () => {
   mockParams.id = 'el_000000000000000000000000';
   let r = await render(<Electorate />);
   expect(unavailable(r, 'electorate-error')).toBe(
-    "We couldn't find this electorate.",
+    'We couldn’t find this electorate.',
   );
   const missing = r.root
     .findAllByType(ContentUnavailable)
@@ -913,7 +913,7 @@ test('not found and failure states', async () => {
   mock.electorateFor.mockRejectedValue(new ApiError('http', 'nope'));
   r = await render(<Electorate />);
   expect(unavailable(r, 'electorate-error')).toBe(
-    "This electorate couldn't be loaded.",
+    'This electorate couldn’t be loaded.',
   );
   expect(has(r, 'electorate-retry')).toBe(true);
   await act(async () => r.unmount());
@@ -924,7 +924,7 @@ test('loading draws a skeleton, never empty copy', async () => {
   mock.directory.mockReturnValue(new Promise(() => undefined) as never);
   const r = await render(<Electorate />);
   expect(has(r, 'electorate-loading')).toBe(true);
-  expect(text(r)).not.toMatch(/No member|couldn't/);
+  expect(text(r)).not.toMatch(/No member|couldn’t/);
   await act(async () => r.unmount());
 });
 
@@ -946,7 +946,7 @@ test('the election screen orders candidates and marks the winner Elected', async
   mockParams.key = 'missing';
   const missing = await render(<Election />);
   expect(unavailable(missing, 'election-missing')).toBe(
-    "This election couldn't be found.",
+    'This election couldn’t be found.',
   );
   await act(async () => missing.unmount());
 });
@@ -1003,7 +1003,7 @@ test('a Members link to a seat not in the release says so, never loads for good'
   mockParams.seat = 'fixture-removed-seat';
   const r = await render(<Members />);
   expect(unavailable(r, 'members-missing')).toBe(
-    "These members couldn't be found.",
+    'These members couldn’t be found.',
   );
   await act(async () => r.unmount());
 });

@@ -430,7 +430,7 @@ function timeLimitedTitle(division: DivisionTitleRecord): string | null {
     .replace(
       // A bill's name can itself contain "Amendment". Keep "to" outside
       // these spans so an amendment TO a named bill remains an amendment.
-      /\b(?!That\b)(?![Tt][Oo]\b)\p{Lu}[\p{L}\p{N}'’./-]*(?:\s+(?:(?![Tt][Oo]\b)[\p{Lu}\p{N}][\p{L}\p{N}'’./-]*|and|or|of|the|for|in|on|with|under|a|an)|\s*\((?:[^()]|\([^()]*\))*\))*\s+Bill(?:\s+\d{4})?\b/gu,
+      /\b(?!That\b)(?![Tt][Oo]\b)\p{Lu}[\p{L}\p{N}'’./-]*(?:\s+(?:(?![Tt][Oo]\b)[\p{Lu}\p{N}][\p{L}\p{N}'’./-]*|and|or|of|the|for|in|on|with|under|a|an)|\s*\((?:[^()]|\([^()]*\))*\))*\s+Bills?(?:\s+\d{4})?\b/gu,
       (name) => (/\bamendments?\b/i.test(name) ? '' : name),
     )
     .split(/\s+be\s+/i, 1)[0]!;
