@@ -15,6 +15,7 @@ export type FundingSelection = {
   from:number|null; to:number|null; mode:'donors'|'parties'|'connections'
 }
 type Clarification = {money_question?:string; answer:string; answer_status:'needs_scope'; money_ranking:true; citations:Record<string,never>; sources:never[]}
+const normalName = (s:string) => s.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()
 const clarify = (answer:string):Clarification =>
   ({answer,answer_status:'needs_scope',money_ranking:true,citations:{},sources:[]})
 /** A resolved request plus the reading taken and the other readings to offer. */
@@ -43,13 +44,25 @@ export function fundingScopeQuestion(s:FundingSelection,jurisdiction:string):str
 /** A partial organisation name is read as the matching organisation with the
  * most disclosed receipts. Each choice replaces only the unresolved phrase and
  * validates the whole resulting request, including current controls; the
- * other matches come back as one-tap options. */
-export function fundingNameChoice(graph:ReceiptGraph,fragment:string,jurisdiction:string,questionFor:(label:string)=>string,filters:RecordQuestion,shown=fragment):ReadQuestion|null {
+ * other matches come back as one-tap options. A comparison, or a question that
+ * names several organisations, keeps its own wording with the name replaced,
+ * because the one-organisation ranking question cannot carry it. A second
+ * organisation counts only when the question lists it (`several`). Words in
+ * `pending` (another short name still to be read) may remain unresolved. */
+export function fundingNameChoice(graph:ReceiptGraph,fragment:string,jurisdiction:string,questionFor:(label:string)=>string,filters:RecordQuestion,shown=fragment,read:{keep?:boolean;pending?:string;several?:boolean}={}):ReadQuestion|null {
+  const pending=new Set((read.pending??'').toLowerCase().split(/\s+/).filter(Boolean))
   const choices=receiptDonorChoices(graph,fragment).flatMap(node=>{
     const question=questionFor(node.label)
     const result=receiptAnswer(graph,question,jurisdiction,'https://opax.com.au',filters)
-    if(!result || 'needs_scope' in result || result.selected_parties.length>1 || result.selected_industries.length>1 || result.selected_donors.length!==1 || unmatchedReceiptRankingScope(graph,receiptPeriodQuery(question).query,result,filters.party))return []
-    const canonical=fundingScopeQuestion({party:result.selected_parties[0],donor:result.selected_donors[0],...result.requested_years,mode:result.selected_parties.length?'donors':'parties'},jurisdiction)
+    if(!result || 'needs_scope' in result || result.selected_industries.length>1 || !result.selected_donors.includes(node.label))return []
+    if(result.selected_donors.length>1&&!read.several)return []
+    // Another selected name inside the chosen one is part of it, not a second organisation.
+    const label=normalName(node.label)
+    if(result.selected_donors.some(other=>other!==node.label&&` ${label} `.includes(` ${normalName(other)} `)))return []
+    const keep=read.keep||result.selected_donors.length>1||pending.size>0
+    if(!read.keep&&result.selected_parties.length>1)return []
+    if(unmatchedReceiptRankingScope(graph,receiptPeriodQuery(question).query,result,filters.party).split(' ').some(word=>word&&!pending.has(word)))return []
+    const canonical=keep?question:fundingScopeQuestion({party:result.selected_parties[0],donor:result.selected_donors[0],...result.requested_years,mode:result.selected_parties.length?'donors':'parties'},jurisdiction)
     return [{label:node.label.replace(/[\[\]\n\r*]/g,' ').replace(/\s+/g,' ').trim(),question:canonical,total:result.total_aud}]
   }).sort((a,b)=>b.total-a.total||a.label.localeCompare(b.label,'en-AU'))
   if(!choices.length)return null
