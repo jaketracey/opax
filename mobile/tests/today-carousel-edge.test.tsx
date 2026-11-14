@@ -4,7 +4,7 @@
  * unfolded in landscape, the next card's sliver read as a rendering fault).
  * The unfolded Duo is staged with window traits and a measured region.
  */
-import { act, type ReactElement, type ReactNode } from 'react';
+import React, { act, Profiler, type ReactElement, type ReactNode } from 'react';
 import {
   AccessibilityInfo,
   Pressable,
@@ -16,6 +16,7 @@ import TestRenderer, {
   type ReactTestInstance,
   type ReactTestRenderer,
 } from 'react-test-renderer';
+import * as Svg from 'react-native-svg';
 import { Stop, LinearGradient } from 'react-native-svg';
 import { decodeRoster, decodeSlugs } from '../src/api/catalog-decoders';
 import type { EditionView } from '../src/api/selectors';
@@ -26,6 +27,7 @@ import {
   setWindowTraitsOverride,
   type WindowTraits,
 } from '../src/design/adaptive';
+import { GroundFade } from '../src/design/ground-fade';
 import { paletteFor } from '../src/design/palette';
 import { SurfaceContext } from '../src/design/row-padding';
 import { colors } from '../src/design/tokens';
@@ -386,24 +388,100 @@ describe('the carousel’s edges', () => {
     expect(stops.map((stop) => stop.props.stopOpacity)).toEqual([1, 0]);
   });
 
-  test('Reduce Transparency draws a solid band of the ground, with no gradient', async () => {
+  test('Reduce Transparency draws solid bands of the ground over the bleed only, so the next card still peeks', async () => {
     jest
       .spyOn(AccessibilityInfo, 'isReduceTransparencyEnabled')
       .mockResolvedValue(true);
+    const width = 374;
     const root = await render(
       <SurfaceContext.Provider value="sunken">
         <FeaturedPeopleCarousel people={people} />
       </SurfaceContext.Provider>,
     );
-    await measure(root, 374);
+    await measure(root, width);
     await scrollTo(root, 100);
     for (const id of [LEADING, TRAILING]) {
       const [edge] = hosts(root, id);
       expect(edge!.findAllByType(Stop)).toHaveLength(0);
-      expect(flat(edge!).backgroundColor).toBe(colors.sunken);
       expect(edge!.props.pointerEvents).toBe('none');
     }
+    // The leading fade lies wholly in the bleed: all of it is solid.
+    expect(flat(hosts(root, LEADING)[0]!).backgroundColor).toBe(colors.sunken);
+    // The trailing one is solid only from the column's edge out, as the
+    // carousel was cut before it bled: the 16 pt peek stays in view.
+    const [trailing] = hosts(root, TRAILING);
+    expect(flat(trailing!).backgroundColor).toBeUndefined();
+    const bands = trailing!.findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        node !== trailing &&
+        flat(node)?.backgroundColor === colors.sunken,
+    );
+    expect(bands).toHaveLength(1);
+    expect(flat(bands[0]!)).toMatchObject({
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      right: 0,
+      width: BLEED,
+    });
+    const bandBegins = width + BLEED - flat(bands[0]!).width;
+    expect(bandBegins).toBe(width);
+    const peekBegins = width - PEEK;
+    expect(bandBegins - peekBegins).toBe(PEEK);
   });
+
+  test('a swipe re-renders the carousel only when a side starts or stops fading', async () => {
+    const commits = jest.fn();
+    const root = await render(
+      <Profiler id="carousel" onRender={commits}>
+        <FeaturedPeopleCarousel people={people} />
+      </Profiler>,
+    );
+    await measure(root, 374);
+    commits.mockClear();
+    // Eleven scroll frames part-way into the first swipe.
+    for (let x = 10; x <= 110; x += 10) await scrollTo(root, x);
+    // The first brings the leading fade in; the other ten change no side.
+    expect(commits).toHaveBeenCalledTimes(1);
+    expect(hosts(root, LEADING)).toHaveLength(1);
+    expect(hosts(root, TRAILING)).toHaveLength(1);
+  });
+
+  test.each([false, true])(
+    'on a cold start the setting is read as the module loads, so the first frame is right (Reduce Transparency %s)',
+    async (reduce) => {
+      const read = jest
+        .spyOn(AccessibilityInfo, 'isReduceTransparencyEnabled')
+        .mockResolvedValue(reduce);
+      // The preset's mock is the spy: forget the reads before this one.
+      read.mockClear();
+      // A fresh copy of the module, as at launch; React, the SVG components
+      // and the mocks already built stay the ones this file renders with.
+      let fresh!: typeof import('../src/design/ground-fade');
+      jest.isolateModules(() => {
+        jest.doMock('react', () => React);
+        jest.doMock('react-native-svg', () => Svg);
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        fresh = require('../src/design/ground-fade');
+      });
+      jest.dontMock('react');
+      jest.dontMock('react-native-svg');
+      expect(fresh.GroundFade).not.toBe(GroundFade);
+      expect(read).toHaveBeenCalledTimes(1);
+      await act(async () => {});
+      // The fade's own reading never lands: the first frame is the module's.
+      read.mockReturnValue(new Promise(() => {}));
+      const root = await render(
+        <fresh.GroundFade side="right" testID="edge" />,
+      );
+      expect(root.findAllByType(Stop)).toHaveLength(reduce ? 0 : 2);
+      // The fresh module has its own copy of the token: equal, not the same.
+      expect(flat(hosts(root, 'edge')[0]!)?.backgroundColor).toEqual(
+        reduce ? colors.paper : undefined,
+      );
+    },
+  );
 });
 
 describe('every Today layout the carousel sits in', () => {

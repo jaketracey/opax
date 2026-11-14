@@ -28,6 +28,41 @@ const VECTORS: Record<
 // The last answer read, so a fade mounted later (a carousel's leading edge,
 // part-way through a swipe) starts as it should, with no solid frame first.
 let known: boolean | undefined;
+// Asked once as the module loads, so on a cold start the answer is in before
+// the first fade mounts and a carousel's peek doesn't appear a moment late.
+// A fade's own reading or a change event, if either came first, stands.
+if (Platform.OS === 'ios') {
+  void AccessibilityInfo.isReduceTransparencyEnabled().then(
+    (value) => {
+      if (known === undefined) known = value;
+    },
+    () => undefined,
+  );
+}
+
+const BANDS: Record<GroundFadeSide, (span: number) => ViewStyle> = {
+  top: (span) => ({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: span,
+  }),
+  left: (span) => ({
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    width: span,
+  }),
+  right: (span) => ({
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    width: span,
+  }),
+};
 
 /**
  * Content running under a clipped edge fades into the ground behind it.
@@ -39,6 +74,7 @@ export function GroundFade({
   side,
   ground = 'paper',
   hold = 0,
+  solidSpan,
   testID,
   style,
 }: {
@@ -46,6 +82,12 @@ export function GroundFade({
   ground?: GroundFadeGround;
   /** The share of the fade, from the boundary, that stays opaque (0 to 1). */
   hold?: number;
+  /**
+   * Under Reduce Transparency, how far (pt) the solid band reaches in from
+   * the boundary. The whole fade when unset; less leaves the rest clear, so
+   * content the gradient only softened stays in view.
+   */
+  solidSpan?: number;
   testID?: string;
   style?: StyleProp<ViewStyle>;
 }) {
@@ -103,8 +145,16 @@ export function GroundFade({
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
       testID={testID}
-      style={[style, solid ? { backgroundColor: colors[ground] } : null]}
+      style={[
+        style,
+        solid && solidSpan == null ? { backgroundColor: colors[ground] } : null,
+      ]}
     >
+      {solid && solidSpan != null ? (
+        <View
+          style={[BANDS[side](solidSpan), { backgroundColor: colors[ground] }]}
+        />
+      ) : null}
       {!solid ? (
         <Svg width="100%" height="100%">
           <Defs>

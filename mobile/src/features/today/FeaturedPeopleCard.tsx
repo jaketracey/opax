@@ -125,8 +125,14 @@ export function FeaturedPeopleCarousel({
   const scroll = useRef<ScrollView>(null);
   const [width, setWidth] = useState(0);
   const [page, setPage] = useState(0);
-  // Which sides have a card running off them, followed through a swipe.
-  const [offset, setOffset] = useState(0);
+  // Which sides have a card running off them, followed through a swipe. Only
+  // a side that flips sets state, so scrolling doesn't re-render every frame
+  // (the ref also spares the bail-out render a same-value update can cost).
+  const [[before, after], setEdges] = useState<readonly [boolean, boolean]>([
+    false,
+    false,
+  ]);
+  const edges = useRef<readonly [boolean, boolean]>([false, false]);
   const ground = useContext(SurfaceContext);
   const reduced = useReduceMotionSetting() !== false;
   const dark = useColorScheme() === 'dark';
@@ -134,17 +140,22 @@ export function FeaturedPeopleCarousel({
   const trailing = multiple ? GAP + PEEK : 0;
   const cardWidth = Math.max(1, width - trailing);
   const interval = cardWidth + GAP;
-  const end = (people.length - 1) * interval;
-  const before = multiple && width > 0 && offset > 0.5;
-  const after = multiple && width > 0 && offset < end - 0.5;
+  const follow = (x: number, measured = width) => {
+    const end = (people.length - 1) * (Math.max(1, measured - trailing) + GAP);
+    const b = multiple && measured > 0 && x > 0.5;
+    const a = multiple && measured > 0 && x < end - 0.5;
+    if (edges.current[0] === b && edges.current[1] === a) return;
+    edges.current = [b, a];
+    setEdges(edges.current);
+  };
   const go = (index: number, animated = !reduced) => {
     const next = Math.max(0, Math.min(people.length - 1, index));
     setPage(next);
-    if (!animated) setOffset(next * interval);
+    if (!animated) follow(next * interval);
     scroll.current?.scrollTo({ x: next * interval, animated });
   };
   const settled = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    setOffset(event.nativeEvent.contentOffset.x);
+    follow(event.nativeEvent.contentOffset.x);
     setPage(
       Math.max(
         0,
@@ -165,7 +176,7 @@ export function FeaturedPeopleCarousel({
         setWidth(nextWidth);
         // Preserve the selected person through rotation or split-view resize.
         const x = page * (Math.max(1, nextWidth - trailing) + GAP);
-        setOffset(x);
+        follow(x, nextWidth);
         scroll.current?.scrollTo({ x, animated: false });
       }}
     >
@@ -185,7 +196,7 @@ export function FeaturedPeopleCarousel({
           scrollEnabled={multiple && width > 0}
           onMomentumScrollEnd={settled}
           onScrollEndDrag={settled}
-          onScroll={(event) => setOffset(event.nativeEvent.contentOffset.x)}
+          onScroll={(event) => follow(event.nativeEvent.contentOffset.x)}
           scrollEventThrottle={16}
           contentContainerStyle={{
             gap: GAP,
@@ -338,6 +349,9 @@ export function FeaturedPeopleCarousel({
           <GroundFade
             side="right"
             ground={ground}
+            // Under Reduce Transparency the band covers only the bleed, so
+            // the next card's peek stays, cut at the column's edge.
+            solidSpan={BLEED}
             testID="today-featured-edge-trailing"
             style={styles.after}
           />
