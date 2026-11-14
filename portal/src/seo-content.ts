@@ -14,7 +14,7 @@ import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../p
 import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import {chamberLabel, machineLabelHTML, partyLabelHTML} from '../public/party-page.js'
 import {heldBackTranscriptsHTML, chairRoleTranscriptsHTML, noHansardHeldHTML} from '../public/held-back-transcripts.js'
-import {divisionTableConfig, voteTableConfig, personVoteKeys, personVoteRecords, divisionRows, votingRows, voteTablePage, voteTableHTML, billDivisionsTablesHTML, voteScopeLine} from '../public/vote-tables.js'
+import {voteTableConfig, personVoteKeys, personVoteRecords, votingRows, voteTablePage, voteTableHTML, billDivisionTablesHTML, voteScopeLine} from '../public/vote-tables.js'
 import type {Query} from '../public/datatable.js'
 import {personVideos, videoSectionHTML, type VideoRow} from '../public/video-card.js'
 import {agencyTopRows, type AgencyTopRow} from '../public/agency-top-suppliers.js'
@@ -47,6 +47,7 @@ interface Bill {
   sources?: { kind: string; url: string }[];
   key_dates?: { stage: string; date: string; house: string | null; url: string; event_raw?: string; negatived?: boolean }[];
   divisions?: Division[];
+  division_titles?: Record<string,string>;
   summary?: { attribution?: string; sentences?: string[]; changes?: string[]; affected?: string; as_of?: string };
 }
 export interface Division {
@@ -426,7 +427,7 @@ export function billStageLines(rows: NonNullable<Bill['key_dates']>) {
     return [line]
   })
 }
-export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,string>, related: Bill[] = [], tableQuery: Query = {}): RenderedContent {
+export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,string>, related: Bill[] = [], tableQuery: Query = {}, proceduralQuery: Query = {}): RenderedContent {
   const title = b.short_title || b.title
   const sponsor = sponsorFor(b,people)
   // Only the party the export recorded for the sponsor on the day (bills-001):
@@ -452,10 +453,9 @@ export function renderBillAnswer(b: Bill, people: Person[], slugs: Map<string,st
   for(const [label,rows] of [['Other bills from this sponsor',sameSponsor],['Other bills in this portfolio',samePortfolio]] as const) {
     if (rows.length) body += `<h2>${label}</h2><ul>${rows.map(r=>`<li>${link(`/bill/${r.key}`,r.short_title || r.title)} — introduced ${escapeHtml(r.introduced || 'date not recorded')}, ${escapeHtml(human(r.status || 'status not recorded'))}</li>`).join('')}</ul>`
   }
-  body += `<p>Stage dates describe the parliamentary progress recorded by the source. They do not establish when provisions commence. A bill before parliament is a proposal; its text can change before passage. Division totals describe the recorded question on that date. A procedural division does not necessarily establish support for every provision of a bill. Check the official bill text and explanatory memorandum for the wording.</p><p>${link(`/bills/${b.key}.json`,'Bill data export')} · ${link('/bills','Browse bills')} · ${link('/ask','Ask about the parliamentary record')} · ${link('/methods','Sources and methods')}</p>`
+  body += `<p>Stage dates describe the parliamentary progress recorded by the source. They do not establish when provisions commence. A bill before parliament is a proposal; its text can change before passage. Division totals describe the recorded question on that date. A procedural vote does not establish support for the bill. Check the official bill text and explanatory memorandum for the wording.</p><p>${link(`/bills/${b.key}.json`,'Bill data export')} · ${link('/bills','Browse bills')} · ${link('/ask','Ask about the parliamentary record')} · ${link('/methods','Sources and methods')}</p>`
   body += `<h2>Sources</h2>${(b.sources || []).map(s=>`<p>${escapeHtml(human(s.kind))}</p>${original(s.url)}`).join('')}`
-  const rows = divisionRows(divisions,true)
-  const block = () => rows.length ? billDivisionsTablesHTML(rows,{bill:b.key,suffix:'-ssr',query:tableQuery}) : '<h2>Divisions</h2><p>No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed.</p>'
+  const block = () => divisions.length ? billDivisionTablesHTML(divisions,b.division_titles,tableQuery,'-ssr',proceduralQuery) : '<h2>Divisions</h2><p>No divisions recorded. Most questions are decided on the voices; this does not establish that a bill was unopposed.</p>'
   const output = () => answerBlock(title,description,body.replace(divisionSlot,block()))
   return {html:output()}
 }
@@ -481,9 +481,11 @@ function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>,
   // only record is undated and names another party, or a reviewed hold) says its labels are the source's.
   const senate=d.house==='senate' && (d.jurisdiction ?? 'federal')==='federal' && !d._meta?.party_dated
   const senateNote=' These are the division source’s labels and can show a senator’s later party rather than the one held on this date, because the dated Senate party records held do not cover this date.'
-  const origin=!fromRoster ? (senate ? `Party labels are those given in the division record.${senateNote}` : 'Party labels are those recorded for this division, rather than current affiliations.')
+  const house=d.house==='representatives' && (d.jurisdiction ?? 'federal')==='federal'
+  const houseNote=' Where dated service records cover a member, the affiliation shown is the one held on the division date. Other labels come from the division source and can show a member’s later party.'
+  const origin=!fromRoster ? (senate || house ? `Party labels are those given in the division record.${senate ? senateNote : houseNote}` : 'Party labels are those recorded for this division, rather than current affiliations.')
     : fromRoster>=labelled ? 'The division record gives no parties. Each label here is the one a dated parliamentary roster records for that member on this date.'
-    : `Party labels are those recorded for this division, except for ${plural(fromRoster)} the division record lists without a party: their labels are the ones a dated parliamentary roster records for them on this date.${senate ? senateNote.replace(' These are', ' The others are') : ''}`
+    : `Party labels are those recorded for this division, except for ${plural(fromRoster)} the division record lists without a party: their labels are the ones a dated parliamentary roster records for them on this date.${senate ? senateNote.replace(' These are', ' The others are') : house ? houseNote : ''}`
   const correctedNote=corrected ? ` For ${plural(corrected)}, the division record gives a party not held on this date; the label shown is the party dated service records give for this date.` : ''
   const heldNote=withheld ? ` For ${count(withheld)} of them, the division record gives a party that dated records leave unclear for this date, so it is not shown.` : ''
   let html=`<h3>How each party voted</h3><p>${origin}${correctedNote}${ayes!==d.ayes || noes!==d.noes ? ` The member list is partial: ${ayes} recorded ayes and ${noes} recorded noes; the official tally above remains the source total.` : ''}</p>`
@@ -495,7 +497,10 @@ function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>,
   // Said in words, never as a party line: an "Unknown" total would read as a party.
   if(missing && !minority) html+=`<p>${parties.length ? `No party is recorded for ${plural(missing)} on this date; they are not counted in any party line above.` : `No party is recorded for any of the ${plural(missing)} on this date.`}${heldNote}</p>`
   if(full) for(const side of [...new Set(members.map(m=>m.vote))]) {
-    html+=`<h3>${side==='aye' ? 'Ayes' : side==='no' ? 'Noes' : human(side)}</h3><ul>${members.filter(m=>m.vote===side).map(m=>`<li>${link(personUrl(m.name),m.name)}${m.party ? ` (${escapeHtml(m.party)})` : ''} — ${escapeHtml(side)}</li>`).join('')}</ul>`
+    const list=members.filter(m=>m.vote===side)
+    const tally=(side==='aye' ? d.ayes : side==='no' ? d.noes : list.length) ?? list.length
+    const count=list.length===tally ? list.length.toLocaleString('en-AU') : `${list.length.toLocaleString('en-AU')} named (tally ${tally.toLocaleString('en-AU')})`
+    html+=`<h3>${side==='aye' ? 'Ayes' : side==='no' ? 'Noes' : human(side)} ${count}</h3><ul>${list.map(m=>`<li>${link(personUrl(m.name),m.name)}${m.party ? ` (${escapeHtml(m.party)})` : ''} · ${escapeHtml(side)}</li>`).join('')}</ul>`
   }
   return html
 }

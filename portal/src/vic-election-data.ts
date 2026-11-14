@@ -1,7 +1,7 @@
 /** One validation contract for the offline build and the app reader. */
 import {validDate} from './app-http.ts'
 import {VIC_ELECTION_PATH} from '../public/vic-election.js'
-import type {Contest, Member, Seat, VicElection, VicPlaces} from './vic-election'
+import type {Contest, Member, Seat, VicElection, VicPlaces, VicResults} from './vic-election'
 
 const slug = (path: string) => path.split('/').at(-1)!
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
@@ -43,6 +43,29 @@ function validSeat(s: Seat): boolean {
         && (c.group_name == null || text(c.group_name))))
 }
 
+export function validateVicResults(value: unknown, electionDay: string, districts: string[]): VicResults {
+  const r = value as VicResults
+  const resultUrl = (url: unknown) => https(url) && new URL(url as string).hostname === 'www.vec.vic.gov.au'
+    && new URL(url as string).pathname.startsWith(`/results/state-election-results/${electionDay.slice(0,4)}-state-election-results`)
+  if (!object(r) || r.election_day !== electionDay || !validDate(r.fetched) || r.fetched < electionDay
+    || !['partial','final'].includes(r.status) || !resultUrl(r.url)
+    || !Array.isArray(r.districts) || !r.districts.length || r.districts.length > districts.length
+    || r.status === 'final' && r.districts.length !== districts.length
+    || new Set(r.districts.map(row=>row?.name)).size !== r.districts.length
+    || !r.districts.every(row=>object(row) && districts.includes(row.name) && validContest(row.result)
+      && ['general','supplementary'].includes(row.result.kind) && row.result.date >= electionDay && row.result.date <= r.fetched
+      && (resultUrl(row.result.url) || row.result.kind === 'supplementary' && https(row.result.url)
+        && new URL(row.result.url).hostname === 'www.vec.vic.gov.au'
+        && new URL(row.result.url).pathname.startsWith('/results/state-election-results/state-by-elections-timeline/'))
+      && row.result.party.trim() && row.result.against.trim()
+      && row.result.share > 50 && row.result.share <= 100 && row.result.against_share >= 0
+      && Math.abs(row.result.share + row.result.against_share - 100) < 0.05
+      && Math.abs(row.result.margin - (row.result.share - 50)) < 0.011)) {
+    throw new Error('Invalid current election results')
+  }
+  return r
+}
+
 export function validateVicElection(value: unknown): VicElection {
   const d = value as VicElection
   if (!object(d) || !fields(d,['updated','election_day','term_start','term_end','results_fetched','speech_updated','division_end'],validDate)
@@ -59,6 +82,7 @@ export function validateVicElection(value: unknown): VicElection {
       || /[<>\r\n]/.test(d.notice.text) || !(d.notice.link === null || fields(d.notice.link,['label'],text) && https(d.notice.link?.url)))) {
     throw new Error('Invalid election asset')
   }
+  if (d.current_results != null) validateVicResults(d.current_results,d.election_day,d.seats.filter(s=>s.kind === 'district').map(s=>s.name))
   return d
 }
 

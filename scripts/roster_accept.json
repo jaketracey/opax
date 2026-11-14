@@ -77,7 +77,118 @@
       "url": "scripts/roster_state_evidence.json",
       "reason": "Add a missing recorded party only within the reviewed current-term guard in roster_service.json, or an explicit first-term exception. Hold earlier speech years until dated party history exists. Victorian affiliations stay in the already-dated seat catalog. Recheck full name, chamber, source URL, date and canonical party against offline public evidence."
     },
-    "sa-council-service": {"kind": "identity", "rule": "official-list-service", "checked": "2026-11-13", "url": "https://www.wikidata.org/wiki/Q4354299", "reason": "A person the SA Legislative Council list links (sa-council-list) sits in that chamber now: current, the list's party as party_now, and dated service (affiliations) from a reviewed term start (Wikidata position held, P39) after their Senate service, whose dated party periods are the Parliamentary Handbook's (scripts/handbook_party_service.json). Rebuilt and verified by scripts/roster_source_profiles.py list_service; a moved list, start or Handbook record holds it."},
+    "sa-council-service-cory-bernardi": {
+      "kind": "identity",
+      "rule": "official-list-service",
+      "person": "Cory Bernardi",
+      "checked": "2026-11-14",
+      "url": "https://www.parliament.sa.gov.au/Search/Member?id=7377&type=member",
+      "reason": "Parliament of South Australia, Cory Bernardi member page (id 7377): Date Elected 21 March 2026; Electoral History 21 Mar 2026 - Current, Member, Legislative Council. Matches the held start 2026-03-21. Fetched 14 Nov 2026 Australia/Sydney; member-7377.html sha256 994cfebecdfc9c4f0d79ff44e89d2910780c89f16cd23fb2a98781f5e8e83686, archived outside the repo under ~/opax-work/evidence/im-sa-council-evidence/. Agreeing secondary source: https://www.wikidata.org/wiki/Q4354299, position held (P39), checked 2026-11-13. Earlier Senate party periods remain the reviewed Parliamentary Handbook records; list_service rebuilds the linked Council service.",
+      "secondary_sources": [
+        {
+          "start": "2026-03-21",
+          "url": "https://www.wikidata.org/wiki/Q4354299",
+          "checked": "2026-11-13",
+          "note": "Wikidata Q4354299, position held (P39) Member of the South Australian Legislative Council from 21 Mar 2026 (fetched 13 Nov 2026, one reference), the SA general election polling day in scripts/general_elections.json."
+        }
+      ]
+    },
+    "sa-council-service-hilton-gumbys": {
+      "kind": "identity",
+      "rule": "official-list-member",
+      "person": "Hilton Gumbys",
+      "checked": "2026-11-14",
+      "url": "https://www.parliament.sa.gov.au/Search/Member?id=7380&type=member",
+      "reason": "Parliament of South Australia, Hilton Gumbys member page (id 7380): Date Elected 21 March 2026; Electoral History 21 Mar 2026 - Current, Member, Legislative Council. Matches the held start 2026-03-21. Fetched 14 Nov 2026 Australia/Sydney; member-7380.html sha256 5f9b2ac2c07ddc76e2e3c129b1b6752eb81e5129eb0ee6295ba0307346ec1a43, archived outside the repo under ~/opax-work/evidence/im-sa-council-evidence/. Agreeing secondary source: https://www.wikidata.org/wiki/Q138755015, position held (P39), checked 2026-11-13. The reviewed sa-council-list snapshot supplies the sitting party and list-only profile; this member page supplies the term start.",
+      "secondary_sources": [
+        {
+          "start": "2026-03-21",
+          "url": "https://www.wikidata.org/wiki/Q138755015",
+          "checked": "2026-11-13",
+          "note": "Wikidata Q138755015, position held (P39) Member of the South Australian Legislative Council from 21 Mar 2026 (fetched 13 Nov 2026, one reference). 21 Mar 2026 is the SA general election polling day in scripts/general_elections.json."
+        }
+      ]
+    },
+    "sa-council-service-rebecca-hewett": {
+      "kind": "identity",
+      "rule": "official-list-member",
+      "person": "Rebecca Hewett",
+      "checked": "2026-11-14",
+      "url": "https://www.parliament.sa.gov.au/Search/Member?id=7376&type=member",
+      "reason": "Parliament of South Australia, Rebecca Hewett member page (id 7376): Date Elected 21 March 2026; Electoral History 21 Mar 2026 - Current, Member, Legislative Council. Matches the held start 2026-03-21. Fetched 14 Nov 2026 Australia/Sydney; member-7376.html sha256 8812c8192f5cdb04776ea0c37fcb5f4e94a2fecb8fd176828859573d451df78e, archived outside the repo under ~/opax-work/evidence/im-sa-council-evidence/. Agreeing secondary source: https://www.wikidata.org/wiki/Q54553273, position held (P39), checked 2026-11-13. The reviewed sa-council-list snapshot supplies the sitting party and list-only profile; this member page supplies the term start.",
+      "secondary_sources": [
+        {
+          "start": "2026-03-21",
+          "url": "https://www.wikidata.org/wiki/Q54553273",
+          "checked": "2026-11-13",
+          "note": "Wikidata Q54553273, position held (P39) Member of the South Australian Legislative Council from 21 Mar 2026 (fetched 13 Nov 2026, one reference). 21 Mar 2026 is the SA general election polling day in scripts/general_elections.json."
+        }
+      ]
+    },
+    "sa-council-service-carlos-quaremba": {
+      "kind": "identity",
+      "rule": "official-list-member",
+      "person": "Carlos Quaremba",
+      "checked": "2026-11-14",
+      "url": "https://www.parliament.sa.gov.au/Search/Member?id=7379&type=member",
+      "reason": "Parliament of South Australia, Carlos Quaremba member page (id 7379): Date Elected 21 March 2026; Electoral History 21 Mar 2026 - Current, Member, Legislative Council. Matches the held start 2026-03-21. Fetched 14 Nov 2026 Australia/Sydney; member-7379.html sha256 09d741a588c9e864f50ac8e6c62be78841f509dc513b8ade6623a521c718d357, archived outside the repo under ~/opax-work/evidence/im-sa-council-evidence/. Agreeing secondary source: https://www.wikidata.org/wiki/Q138755063, position held (P39), checked 2026-11-13. The reviewed sa-council-list snapshot supplies the sitting party and list-only profile; this member page supplies the term start.",
+      "secondary_sources": [
+        {
+          "start": "2026-03-21",
+          "url": "https://www.wikidata.org/wiki/Q138755063",
+          "checked": "2026-11-13",
+          "note": "Wikidata Q138755063, position held (P39) Member of the South Australian Legislative Council from 21 Mar 2026 (fetched 13 Nov 2026, one reference). 21 Mar 2026 is the SA general election polling day in scripts/general_elections.json."
+        }
+      ]
+    },
+    "sa-council-service-melanie-selwood": {
+      "kind": "identity",
+      "rule": "official-list-member",
+      "person": "Melanie Selwood",
+      "checked": "2026-11-14",
+      "url": "https://www.parliament.sa.gov.au/Search/Member?id=7378&type=member",
+      "reason": "Parliament of South Australia, Melanie Selwood member page (id 7378): Date Elected 21 March 2026; Electoral History 21 Mar 2026 - Current, Member, Legislative Council. Matches the held start 2026-03-21. Fetched 14 Nov 2026 Australia/Sydney; member-7378.html sha256 1dbfff97b57e832118fbc97ba54bb1d134317e2ffcb6a103cf3bdbc4691e857c, archived outside the repo under ~/opax-work/evidence/im-sa-council-evidence/. Agreeing secondary source: https://www.wikidata.org/wiki/Q138755057, position held (P39), checked 2026-11-13. The reviewed sa-council-list snapshot supplies the sitting party and list-only profile; this member page supplies the term start.",
+      "secondary_sources": [
+        {
+          "start": "2026-03-21",
+          "url": "https://www.wikidata.org/wiki/Q138755057",
+          "checked": "2026-11-13",
+          "note": "Wikidata Q138755057, position held (P39) Member of the South Australian Legislative Council from 21 Mar 2026 (fetched 13 Nov 2026, one reference). 21 Mar 2026 is the SA general election polling day in scripts/general_elections.json."
+        }
+      ]
+    },
+    "sa-council-service-mira-el-dannawi": {
+      "kind": "identity",
+      "rule": "official-list-member",
+      "person": "Mira El Dannawi",
+      "checked": "2026-11-14",
+      "url": "https://www.parliament.sa.gov.au/Search/Member?id=7122&type=member",
+      "reason": "Parliament of South Australia, Mira El Dannawi member page (id 7122): Date Elected 17 October 2023; Electoral History 17 Oct 2023 - Current, Member, Legislative Council. Matches the held start 2023-10-17. Fetched 14 Nov 2026 Australia/Sydney; member-7122.html sha256 6b512483fe658c989ead36e1dd2ebeaadcbe05951a21d5b11d32bc6b63d9c53b, archived outside the repo under ~/opax-work/evidence/im-sa-council-evidence/. Agreeing secondary source: https://www.wikidata.org/wiki/Q124048767, position held (P39), checked 2026-11-13. The reviewed sa-council-list snapshot supplies the sitting party and list-only profile; this member page supplies the term start.",
+      "secondary_sources": [
+        {
+          "start": "2023-10-17",
+          "url": "https://www.wikidata.org/wiki/Q124048767",
+          "checked": "2026-11-13",
+          "note": "Wikidata Q124048767, position held (P39) Member of the South Australian Legislative Council from 17 Oct 2023 (fetched 13 Nov 2026, one reference); no end. OPAX holds SA Council Hansard only to 17 May 2023, before this start, so no Hansard is held for her service."
+        }
+      ]
+    },
+    "sa-council-service-benjamin-hood": {
+      "kind": "identity",
+      "rule": "official-list-member",
+      "person": "Benjamin Hood",
+      "checked": "2026-11-14",
+      "url": "https://www.parliament.sa.gov.au/Search/Member?id=7056&type=member",
+      "reason": "SA Parliament member page id 7056: Date Elected 07 March 2023; Electoral History 07 Mar 2023 - Current, Member, Legislative Council. Replaces the 2026-11-13 first-seen list-date placeholder under orchestrator note 1. Archived member-7056.html SHA-256 207347d02bf44bb7552309ee0d233526397dacdaa1e8bfb781638e260e955bda. The earlier review of Wikidata Q116885607 agreed with 7 March 2023; retained as secondary without a new network request.",
+      "secondary_sources": [
+        {
+          "start": "2023-03-07",
+          "url": "https://www.wikidata.org/wiki/Q116885607",
+          "checked": "2026-11-13",
+          "note": "Previously reviewed position-held date in the accepted Benjamin Hood note; no new Wikidata request."
+        }
+      ]
+    },
     "sa-council-list": {
       "kind": "identity",
       "rule": "official-list-member",
@@ -587,7 +698,7 @@
     "Constable": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "house_committee", "representatives"], ["representatives"]], "last": [2026, 2013], "separated_witnesses": [null, {"name": "Constable", "speaker_type": "witness", "speeches": 50, "states": ["federal"], "chambers": ["house_committee", "senate_committee"], "first": 2025, "last": 2026}], "speeches": [52, 2], "transcript": [null, {"speeches": 52, "witness_rows": 50, "states": ["federal"], "chambers": ["representatives", "house_committee", "senate_committee"], "first": 2013, "last": 2026}], "witness_rows": [50, null]}}],
     "Cook": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "sa_ha", "joint_committee", "house_committee"], ["sa_ha"]], "last": [2026, 2021], "separated_witnesses": [null, {"name": "Cook", "speaker_type": "witness", "speeches": 513, "states": ["federal"], "chambers": ["senate_committee", "house_committee", "joint_committee"], "first": 2025, "last": 2026}], "speeches": [804, 291], "states": [["federal", "sa"], ["sa"]], "transcript": [null, {"speeches": 804, "witness_rows": 513, "states": ["sa", "federal"], "chambers": ["sa_ha", "senate_committee", "house_committee", "joint_committee"], "first": 2020, "last": 2026}], "witness_rows": [513, null]}}],
     "Cooke": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "nsw_la", "joint_committee"], ["nsw_la"]], "separated_witnesses": [null, {"name": "Cooke", "speaker_type": "witness", "speeches": 25, "states": ["federal"], "chambers": ["joint_committee", "senate_committee"], "first": 2026, "last": 2026}], "speeches": [29, 4], "states": [["federal", "nsw"], ["nsw"]], "transcript": [null, {"speeches": 29, "witness_rows": 25, "states": ["nsw", "federal"], "chambers": ["nsw_la", "joint_committee", "senate_committee"], "first": 2025, "last": 2026}], "witness_rows": [25, null]}}],
-    "Cory Bernardi": [{"evidence": "hansard-growth", "fields": {"last": [2013, 2019], "speeches": [193, 265]}}, {"evidence": "sa-council-list", "list": {"chamber": "sa_lc", "as_of": "2026-11-13", "sha256": "da90f57e347b85e0eb1ea0e0a1e03e143cfccaa1236628927dd2e6a5aff3c9d2"}, "list_name": "Cory Bernardi", "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members", "checked": "2026-11-13", "fields": {"states": [["federal"], ["federal", "sa"]], "chambers": [["senate"], ["senate", "sa_lc"]], "representation": [[{"jurisdiction": "federal", "chamber": "senate", "electorate": "South Australia", "state": "SA", "basis": "Recorded parliamentary roster; exact name and chamber match"}], [{"jurisdiction": "federal", "chamber": "senate", "electorate": "South Australia", "state": "SA", "basis": "Recorded parliamentary roster; exact name and chamber match"}, {"jurisdiction": "sa", "chamber": "sa_lc", "electorate": "South Australia", "state": "SA", "basis": "Official member list as at 2026-11-13; list-only service, no speech attribution"}]]}, "note": "Parliament of South Australia Legislative Council list, 56th Parliament (contact-details API LCMembersDetails, sha256 da90f57e..., fetched 2026-11-13): pmId 7377, Hon Cory Bernardi, Pauline Hanson's One Nation. The list gives no term start. Linked, not duplicated: the roster's only Cory Bernardi is pid 10038, Senator for South Australia (speeches 2006-2019 in the record); exact full name and the same state."}, {"evidence": "sa-council-service", "list": {"chamber": "sa_lc", "as_of": "2026-11-13", "sha256": "da90f57e347b85e0eb1ea0e0a1e03e143cfccaa1236628927dd2e6a5aff3c9d2"}, "list_name": "Cory Bernardi", "url": "https://www.wikidata.org/wiki/Q4354299", "checked": "2026-11-13", "term_start": {"start": "2026-03-21", "url": "https://www.wikidata.org/wiki/Q4354299", "checked": "2026-11-13", "note": "Wikidata Q4354299, position held (P39) Member of the South Australian Legislative Council from 21 Mar 2026 (fetched 13 Nov 2026, one reference), the SA general election polling day in scripts/general_elections.json."}, "fields": {"current": [null, true], "party_now": [null, "One Nation"], "affiliations": [null, [{"jurisdiction": "federal", "chamber": "senate", "electorate": "South Australia", "party": "Liberal", "start": "2006-05-04", "end": "2017-02-07", "source_url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'G0D' and ROSTypeID eq 11"}, {"jurisdiction": "federal", "chamber": "senate", "electorate": "South Australia", "party": "Australian Conservatives", "start": "2017-02-07", "end": "2019-06-25", "source_url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'G0D' and ROSTypeID eq 11"}, {"jurisdiction": "federal", "chamber": "senate", "electorate": "South Australia", "party": "Independent", "start": "2019-06-25", "end": "2020-01-20", "source_url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'G0D' and ROSTypeID eq 11"}, {"jurisdiction": "sa", "chamber": "sa_lc", "electorate": "South Australia", "party": "One Nation", "start": "2026-03-21", "end": null, "source_url": "https://www.wikidata.org/wiki/Q4354299"}]]}, "note": "A21/A48 review, 13 Nov 2026: he sits in the SA Legislative Council (56th Parliament list, pmId 7377, Pauline Hanson's One Nation) from 21 Mar 2026, after Senate service for South Australia that the Parliamentary Handbook dates from 4 May 2006 to 20 Jan 2020 (PHID G0D: Liberal to 7 Feb 2017, Australian Conservatives to 25 Jun 2019, then Independent). Rebuilt by scripts/roster_source_profiles.py list_service."}],
+    "Cory Bernardi": [{"evidence": "hansard-growth", "fields": {"last": [2013, 2019], "speeches": [193, 265]}}, {"evidence": "sa-council-list", "list": {"chamber": "sa_lc", "as_of": "2026-11-13", "sha256": "da90f57e347b85e0eb1ea0e0a1e03e143cfccaa1236628927dd2e6a5aff3c9d2"}, "list_name": "Cory Bernardi", "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members", "checked": "2026-11-13", "fields": {"states": [["federal"], ["federal", "sa"]], "chambers": [["senate"], ["senate", "sa_lc"]], "representation": [[{"jurisdiction": "federal", "chamber": "senate", "electorate": "South Australia", "state": "SA", "basis": "Recorded parliamentary roster; exact name and chamber match"}], [{"jurisdiction": "federal", "chamber": "senate", "electorate": "South Australia", "state": "SA", "basis": "Recorded parliamentary roster; exact name and chamber match"}, {"jurisdiction": "sa", "chamber": "sa_lc", "electorate": "South Australia", "state": "SA", "basis": "Official member list as at 2026-11-13; list-only service, no speech attribution"}]]}, "note": "Parliament of South Australia Legislative Council list, 56th Parliament (contact-details API LCMembersDetails, sha256 da90f57e..., fetched 2026-11-13): pmId 7377, Hon Cory Bernardi, Pauline Hanson's One Nation. The list gives no term start. Linked, not duplicated: the roster's only Cory Bernardi is pid 10038, Senator for South Australia (speeches 2006-2019 in the record); exact full name and the same state."}, {"evidence": "sa-council-service-cory-bernardi", "list": {"chamber": "sa_lc", "as_of": "2026-11-13", "sha256": "da90f57e347b85e0eb1ea0e0a1e03e143cfccaa1236628927dd2e6a5aff3c9d2"}, "list_name": "Cory Bernardi", "url": "https://www.parliament.sa.gov.au/Search/Member?id=7377&type=member", "checked": "2026-11-14", "term_start": {"start": "2026-03-21", "url": "https://www.parliament.sa.gov.au/Search/Member?id=7377&type=member", "checked": "2026-11-14", "note": "Parliament of South Australia, Cory Bernardi member page (id 7377): Date Elected 21 March 2026; Electoral History 21 Mar 2026 - Current, Member, Legislative Council. Matches the held start 2026-03-21. Fetched 14 Nov 2026 Australia/Sydney; member-7377.html sha256 994cfebecdfc9c4f0d79ff44e89d2910780c89f16cd23fb2a98781f5e8e83686, archived outside the repo under ~/opax-work/evidence/im-sa-council-evidence/. Agreeing secondary source: https://www.wikidata.org/wiki/Q4354299, position held (P39), checked 2026-11-13."}, "fields": {"current": [null, true], "party_now": [null, "One Nation"], "affiliations": [null, [{"jurisdiction": "federal", "chamber": "senate", "electorate": "South Australia", "party": "Liberal", "start": "2006-05-04", "end": "2017-02-07", "source_url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'G0D' and ROSTypeID eq 11"}, {"jurisdiction": "federal", "chamber": "senate", "electorate": "South Australia", "party": "Australian Conservatives", "start": "2017-02-07", "end": "2019-06-25", "source_url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'G0D' and ROSTypeID eq 11"}, {"jurisdiction": "federal", "chamber": "senate", "electorate": "South Australia", "party": "Independent", "start": "2019-06-25", "end": "2020-01-20", "source_url": "https://handbookapi.aph.gov.au/api/recordsofservice?$filter=PHID eq 'G0D' and ROSTypeID eq 11"}, {"jurisdiction": "sa", "chamber": "sa_lc", "electorate": "South Australia", "party": "One Nation", "start": "2026-03-21", "end": null, "source_url": "https://www.parliament.sa.gov.au/Search/Member?id=7377&type=member"}]]}, "note": "A21/A48 review, 13 Nov 2026: he sits in the SA Legislative Council (56th Parliament list, pmId 7377, Pauline Hanson's One Nation) from 21 Mar 2026, after Senate service for South Australia that the Parliamentary Handbook dates from 4 May 2006 to 20 Jan 2020 (PHID G0D: Liberal to 7 Feb 2017, Australian Conservatives to 25 Jun 2019, then Independent). Rebuilt by scripts/roster_source_profiles.py list_service."}],
     "Costello": [{"evidence": "witness-partition", "fields": {"chambers": [["senate_committee", "joint_committee", "representatives"], ["representatives"]], "last": [2026, 2005], "separated_witnesses": [null, {"name": "Costello", "speaker_type": "witness", "speeches": 36, "states": ["federal"], "chambers": ["joint_committee", "senate_committee"], "first": 2026, "last": 2026}], "speeches": [49, 13], "transcript": [null, {"speeches": 49, "witness_rows": 36, "states": ["federal"], "chambers": ["representatives", "joint_committee", "senate_committee"], "first": 2002, "last": 2026}], "witness_rows": [36, null]}}],
     "Courtney Houssos": [{"evidence": "hansard-growth", "fields": {"speeches": [794, 805]}}],
     "Cross": [{"evidence": "witness-partition", "fields": {"chambers": [["joint_committee", "nsw_la"], ["nsw_la"]], "separated_witnesses": [null, {"name": "Cross", "speaker_type": "witness", "speeches": 9, "states": ["federal"], "chambers": ["joint_committee"], "first": 2026, "last": 2026}], "speeches": [12, 4], "states": [["federal", "nsw"], ["nsw"]], "transcript": [null, {"speeches": 13, "witness_rows": 9, "states": ["nsw", "federal"], "chambers": ["nsw_la", "joint_committee"], "first": 2025, "last": 2026}], "witness_rows": [9, null]}}],
@@ -1279,9 +1390,9 @@
       }
     },
     "Mira El Dannawi": {
-      "evidence": "sa-council-list",
-      "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members",
-      "checked": "2026-11-13",
+      "evidence": "sa-council-service-mira-el-dannawi",
+      "url": "https://www.parliament.sa.gov.au/Search/Member?id=7122&type=member",
+      "checked": "2026-11-14",
       "list": {
         "chamber": "sa_lc",
         "as_of": "2026-11-13",
@@ -1296,9 +1407,9 @@
       },
       "term_start": {
         "start": "2023-10-17",
-        "url": "https://www.wikidata.org/wiki/Q124048767",
-        "checked": "2026-11-13",
-        "note": "Wikidata Q124048767, position held (P39) Member of the South Australian Legislative Council from 17 Oct 2023 (fetched 13 Nov 2026, one reference); no end. OPAX holds SA Council Hansard only to 17 May 2023, before this start, so no Hansard is held for her service."
+        "url": "https://www.parliament.sa.gov.au/Search/Member?id=7122&type=member",
+        "checked": "2026-11-14",
+        "note": "Parliament of South Australia, Mira El Dannawi member page (id 7122): Date Elected 17 October 2023; Electoral History 17 Oct 2023 - Current, Member, Legislative Council. Matches the held start 2023-10-17. Fetched 14 Nov 2026 Australia/Sydney; member-7122.html sha256 6b512483fe658c989ead36e1dd2ebeaadcbe05951a21d5b11d32bc6b63d9c53b, archived outside the repo under ~/opax-work/evidence/im-sa-council-evidence/. Agreeing secondary source: https://www.wikidata.org/wiki/Q124048767, position held (P39), checked 2026-11-13."
       },
       "row": {
         "name": "Mira El Dannawi",
@@ -1328,9 +1439,9 @@
       "note": "Parliament of South Australia Legislative Council list, 56th Parliament (contact-details API LCMembersDetails, sha256 da90f57e..., fetched 2026-11-13): pmId 7122, Hon Mira El Dannawi, ALP. The list gives no term start. No roster row, alias or electorate-catalog person has this name."
     },
     "Hilton Gumbys": {
-      "evidence": "sa-council-list",
-      "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members",
-      "checked": "2026-11-13",
+      "evidence": "sa-council-service-hilton-gumbys",
+      "url": "https://www.parliament.sa.gov.au/Search/Member?id=7380&type=member",
+      "checked": "2026-11-14",
       "list": {
         "chamber": "sa_lc",
         "as_of": "2026-11-13",
@@ -1345,9 +1456,9 @@
       },
       "term_start": {
         "start": "2026-03-21",
-        "url": "https://www.wikidata.org/wiki/Q138755015",
-        "checked": "2026-11-13",
-        "note": "Wikidata Q138755015, position held (P39) Member of the South Australian Legislative Council from 21 Mar 2026 (fetched 13 Nov 2026, one reference). 21 Mar 2026 is the SA general election polling day in scripts/general_elections.json."
+        "url": "https://www.parliament.sa.gov.au/Search/Member?id=7380&type=member",
+        "checked": "2026-11-14",
+        "note": "Parliament of South Australia, Hilton Gumbys member page (id 7380): Date Elected 21 March 2026; Electoral History 21 Mar 2026 - Current, Member, Legislative Council. Matches the held start 2026-03-21. Fetched 14 Nov 2026 Australia/Sydney; member-7380.html sha256 5f9b2ac2c07ddc76e2e3c129b1b6752eb81e5129eb0ee6295ba0307346ec1a43, archived outside the repo under ~/opax-work/evidence/im-sa-council-evidence/. Agreeing secondary source: https://www.wikidata.org/wiki/Q138755015, position held (P39), checked 2026-11-13."
       },
       "row": {
         "name": "Hilton Gumbys",
@@ -1380,9 +1491,9 @@
       "note": "Parliament of South Australia Legislative Council list, 56th Parliament (contact-details API LCMembersDetails, sha256 da90f57e..., fetched 2026-11-13): pmId 7380, Hon Hilton Jonas Gumbys, ALP. The list gives no term start. No roster row, alias or electorate-catalog person has this name."
     },
     "Rebecca Hewett": {
-      "evidence": "sa-council-list",
-      "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members",
-      "checked": "2026-11-13",
+      "evidence": "sa-council-service-rebecca-hewett",
+      "url": "https://www.parliament.sa.gov.au/Search/Member?id=7376&type=member",
+      "checked": "2026-11-14",
       "list": {
         "chamber": "sa_lc",
         "as_of": "2026-11-13",
@@ -1397,9 +1508,9 @@
       },
       "term_start": {
         "start": "2026-03-21",
-        "url": "https://www.wikidata.org/wiki/Q54553273",
-        "checked": "2026-11-13",
-        "note": "Wikidata Q54553273, position held (P39) Member of the South Australian Legislative Council from 21 Mar 2026 (fetched 13 Nov 2026, one reference). 21 Mar 2026 is the SA general election polling day in scripts/general_elections.json."
+        "url": "https://www.parliament.sa.gov.au/Search/Member?id=7376&type=member",
+        "checked": "2026-11-14",
+        "note": "Parliament of South Australia, Rebecca Hewett member page (id 7376): Date Elected 21 March 2026; Electoral History 21 Mar 2026 - Current, Member, Legislative Council. Matches the held start 2026-03-21. Fetched 14 Nov 2026 Australia/Sydney; member-7376.html sha256 8812c8192f5cdb04776ea0c37fcb5f4e94a2fecb8fd176828859573d451df78e, archived outside the repo under ~/opax-work/evidence/im-sa-council-evidence/. Agreeing secondary source: https://www.wikidata.org/wiki/Q54553273, position held (P39), checked 2026-11-13."
       },
       "row": {
         "name": "Rebecca Hewett",
@@ -1432,9 +1543,9 @@
       "note": "Parliament of South Australia Legislative Council list, 56th Parliament (contact-details API LCMembersDetails, sha256 da90f57e..., fetched 2026-11-13): pmId 7376, Hon Rebecca Jane Hewett, Pauline Hanson's One Nation. The list gives no term start. No roster row, alias or electorate-catalog person has this name."
     },
     "Benjamin Hood": {
-      "evidence": "sa-council-list",
-      "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members",
-      "checked": "2026-11-13",
+      "evidence": "sa-council-service-benjamin-hood",
+      "url": "https://www.parliament.sa.gov.au/Search/Member?id=7056&type=member",
+      "checked": "2026-11-14",
       "list": {
         "chamber": "sa_lc",
         "as_of": "2026-11-13",
@@ -1444,7 +1555,7 @@
       "service": {
         "jurisdiction": "sa",
         "chamber": "sa_lc",
-        "start": "2026-11-13",
+        "start": "2023-03-07",
         "end": null
       },
       "row": {
@@ -1456,7 +1567,7 @@
         "chambers": [
           "sa_lc"
         ],
-        "first": 2026,
+        "first": 2023,
         "last": 2026,
         "roster_only": true,
         "aliases": [
@@ -1475,12 +1586,18 @@
           }
         ]
       },
-      "note": "Parliament of South Australia Legislative Council list, 56th Parliament (contact-details API LCMembersDetails, sha256 da90f57e..., fetched 2026-11-13): pmId 7056, Hon Benjamin Robin Hood, Liberal. The list gives no term start. Not D.G.E. Hood (Dennis Garry Edward Hood, pmId 3126, also on the list) and not the surname print 'Hood' (no id; House of Assembly and committee rows). Term start left at the list date (13 Nov 2026 review, A48): Wikidata Q116885607 gives position held from 7 Mar 2023, but the OPAX corpus holds six SA Council speeches printed \"The Hon. B.R. HOOD\" (3 to 17 May 2023) filed under D.G.E. Hood's id, so a 2023 start would make this profile's \"No Hansard held\" line untrue until those speeches are reattributed."
+      "note": "SA Council official list (pmId 7056, Hon Benjamin Robin Hood, Liberal) establishes current membership; his own member page establishes service from 7 March 2023. Not Dennis Garry Edward Hood (pmId 3126) or the House surname print Hood. Six B.R. HOOD Council speeches (3 to 17 May 2023) are held under D.G.E. Hood's database id; this corrects the service date, while their attribution remains owed separately.",
+      "term_start": {
+        "start": "2023-03-07",
+        "url": "https://www.parliament.sa.gov.au/Search/Member?id=7056&type=member",
+        "checked": "2026-11-14",
+        "note": "SA Parliament member page id 7056: Date Elected 07 March 2023; Electoral History 07 Mar 2023 - Current, Member, Legislative Council. Replaces the 2026-11-13 first-seen list-date placeholder under orchestrator note 1. Archived member-7056.html SHA-256 207347d02bf44bb7552309ee0d233526397dacdaa1e8bfb781638e260e955bda. The earlier review of Wikidata Q116885607 agreed with 7 March 2023; retained as secondary without a new network request."
+      }
     },
     "Carlos Quaremba": {
-      "evidence": "sa-council-list",
-      "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members",
-      "checked": "2026-11-13",
+      "evidence": "sa-council-service-carlos-quaremba",
+      "url": "https://www.parliament.sa.gov.au/Search/Member?id=7379&type=member",
+      "checked": "2026-11-14",
       "list": {
         "chamber": "sa_lc",
         "as_of": "2026-11-13",
@@ -1495,9 +1612,9 @@
       },
       "term_start": {
         "start": "2026-03-21",
-        "url": "https://www.wikidata.org/wiki/Q138755063",
-        "checked": "2026-11-13",
-        "note": "Wikidata Q138755063, position held (P39) Member of the South Australian Legislative Council from 21 Mar 2026 (fetched 13 Nov 2026, one reference). 21 Mar 2026 is the SA general election polling day in scripts/general_elections.json."
+        "url": "https://www.parliament.sa.gov.au/Search/Member?id=7379&type=member",
+        "checked": "2026-11-14",
+        "note": "Parliament of South Australia, Carlos Quaremba member page (id 7379): Date Elected 21 March 2026; Electoral History 21 Mar 2026 - Current, Member, Legislative Council. Matches the held start 2026-03-21. Fetched 14 Nov 2026 Australia/Sydney; member-7379.html sha256 09d741a588c9e864f50ac8e6c62be78841f509dc513b8ade6623a521c718d357, archived outside the repo under ~/opax-work/evidence/im-sa-council-evidence/. Agreeing secondary source: https://www.wikidata.org/wiki/Q138755063, position held (P39), checked 2026-11-13."
       },
       "row": {
         "name": "Carlos Quaremba",
@@ -1530,9 +1647,9 @@
       "note": "Parliament of South Australia Legislative Council list, 56th Parliament (contact-details API LCMembersDetails, sha256 da90f57e..., fetched 2026-11-13): pmId 7379, Hon Carlos Leonel Quaremba, Pauline Hanson's One Nation. The list gives no term start. No roster row, alias or electorate-catalog person has this name."
     },
     "Melanie Selwood": {
-      "evidence": "sa-council-list",
-      "url": "https://www.parliament.sa.gov.au/en/Legislative-Council/Members",
-      "checked": "2026-11-13",
+      "evidence": "sa-council-service-melanie-selwood",
+      "url": "https://www.parliament.sa.gov.au/Search/Member?id=7378&type=member",
+      "checked": "2026-11-14",
       "list": {
         "chamber": "sa_lc",
         "as_of": "2026-11-13",
@@ -1547,9 +1664,9 @@
       },
       "term_start": {
         "start": "2026-03-21",
-        "url": "https://www.wikidata.org/wiki/Q138755057",
-        "checked": "2026-11-13",
-        "note": "Wikidata Q138755057, position held (P39) Member of the South Australian Legislative Council from 21 Mar 2026 (fetched 13 Nov 2026, one reference). 21 Mar 2026 is the SA general election polling day in scripts/general_elections.json."
+        "url": "https://www.parliament.sa.gov.au/Search/Member?id=7378&type=member",
+        "checked": "2026-11-14",
+        "note": "Parliament of South Australia, Melanie Selwood member page (id 7378): Date Elected 21 March 2026; Electoral History 21 Mar 2026 - Current, Member, Legislative Council. Matches the held start 2026-03-21. Fetched 14 Nov 2026 Australia/Sydney; member-7378.html sha256 1dbfff97b57e832118fbc97ba54bb1d134317e2ffcb6a103cf3bdbc4691e857c, archived outside the repo under ~/opax-work/evidence/im-sa-council-evidence/. Agreeing secondary source: https://www.wikidata.org/wiki/Q138755057, position held (P39), checked 2026-11-13."
       },
       "row": {
         "name": "Melanie Selwood",

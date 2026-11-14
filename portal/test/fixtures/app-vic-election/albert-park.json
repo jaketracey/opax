@@ -1,5 +1,7 @@
 {
   "schema_version": 1,
+  "state": "pre_poll",
+  "current_result": null,
   "updated": "2026-11-12",
   "kind": "district",
   "slug": "albert-park",

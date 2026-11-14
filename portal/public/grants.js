@@ -1,6 +1,6 @@
 import {hydrateRecordCore} from './record-core.js';
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=9fd35a7cb8';
-import {loadDonorViewIndex} from './donor-views.js?v=b667e66631';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=af7c0f0f03';
+import {loadDonorViewIndex} from './donor-views.js?v=a138263798';
 import {subjectUrl} from './canonical-urls.js?v=bcc9a57bab';
 import {programKey, resolveProgram, resolveProgramId} from './facts/grant-programs.js?v=5b8dddc342';
 import { kindLabel } from './record-core-content.js'
@@ -57,7 +57,7 @@ export {programKey, resolveProgram, resolveProgramId};
  */
 
 import { shortMoney as fmtMoney } from './format.js'
-import { sourceLineHTML } from './labels.js?v=6d2e2e9cd8'
+import { sourceLineHTML } from './labels.js?v=fcb2a1091c'
 
 /** Text into the source line's HTML fields (labels.js escapes only its own text fields). */
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) =>

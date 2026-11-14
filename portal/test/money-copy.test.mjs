@@ -42,12 +42,14 @@ for (const donor of donors) test(`off-map ${donor.jurisdiction} server and brows
   assert.equal(rendered.failed,false);
   const client=new JSDOM(rendered.html);
   const expected=donor.jurisdiction === 'federal' ? FEDERAL_NOTE : NOTE;
-  const browserNote=[...client.window.document.querySelectorAll('#donor-record p')].find(p => p.textContent===expected);
+  // A state-only donor has no figure block of its own (its figures sit once in the
+  // commission row), so its note stands alone; a federal donor's note is in the block.
+  const browserNote=[...client.window.document.querySelectorAll(donor.jurisdiction === 'federal' ? '#donor-record p' : 'p.donor-offmap-note')].find(p => p.textContent===expected);
   assert.ok(browserNote,client.window.document.body.textContent);
   const serverNote=[...server.window.document.querySelectorAll('#prerender p')].find(p => p.textContent.endsWith(expected));
   assert.ok(serverNote,server.window.document.querySelector('#prerender').textContent);
   assert.equal(serverNote.textContent,`${donor.label}: disclosed electoral returns. ${browserNote.textContent}`);
-  for (const text of [server.window.document.querySelector('#prerender').textContent,client.window.document.querySelector('#donor-record').textContent]) {
+  for (const text of [server.window.document.querySelector('#prerender').textContent,(donor.jurisdiction === 'federal' ? client.window.document.querySelector('#donor-record') : browserNote.parentElement).textContent]) {
     assert.equal(text.split('Receipts disclosed under this exact name').length-1,1);
     assert.doesNotMatch(text,/only the largest donors|\u2014/);
   }

@@ -1,4 +1,4 @@
-import { claimClauses, proseClaimKeys } from './research-claims'
+import { claimClauses, proseClaimKeys, standaloneClauseTail } from './research-claims'
 import { appendWrittenPoints, proseFallback, rawToolEcho, tokens, writingFacts, type WritingFact } from './research-writing'
 import { readableDate } from './tools/record-common'
 import { plainAnswerPayload, rewriteAnswerPayload, displayAnswerPayload } from './research-language'
@@ -461,7 +461,9 @@ export function normaliseWrittenPayload(payload: Record<string, unknown>,questio
     for(const clause of division?[{text,start:0,end:text.length}]:claimClauses(text)) {
       const connector=parts.length?/(?:,?\s+and\s+)$/.exec(text.slice(0,clause.start))?.[0]:undefined
       const sentence=(connector?'and ':'')+clause.text, scope=claimScope(clause.text,cp(base+clause.start),cp(base+clause.end)),identities=proseClaimKeys(clause.text).map(identity=>scope?identity+'|'+scope:identity),signature=key(clause.text)
-      if(seenText.has(signature)||identities.length>0&&identities.every(id=>seenClaims.has(id))) {changed=true;continue}
+      // The next clause may still refer to this opening's subject, even for an exact repeat.
+      const tail=/^\s*;\s*([\s\S]*)$/.exec(text.slice(clause.end))?.[1]
+      if((tail===undefined||standaloneClauseTail(tail))&&(seenText.has(signature)||identities.length>0&&identities.every(id=>seenClaims.has(id)))) {changed=true;continue}
       seenText.add(signature);identities.forEach(id=>seenClaims.add(id))
       parts.push({text:sentence,from:cp(base+clause.start-(connector?4:0)),until:cp(base+clause.end)})
     }

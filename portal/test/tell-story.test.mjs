@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import { JSDOM } from 'jsdom';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
-import {divisionKind, divisionIdentity, divisionRows, divisionGroupSentences, billDivisionsTablesHTML, voteScopeLine} from '../public/vote-tables.js';
+import {divisionKind, divisionIdentity, divisionRows, divisionGroupSentences, billDivisionTablesHTML, voteScopeLine} from '../public/vote-tables.js';
 import {interestShownNote} from '../public/register-tables.js';
 import {speechSpanLine, mentionTitleCase, mentionNamesPerson, mentionAliases} from '../public/held-back-transcripts.js';
 import {mostDividedLine} from '../public/home-data.js';
@@ -87,7 +87,7 @@ test('two divisions on one day with identical tallies are both shown and both co
 
 test('a bill page states the sentence above the divisions and folds the limitation rows apart from the rest', () => {
   const rows = divisionRows(gamblingDivisions, true);
-  const html = billDivisionsTablesHTML(rows, {bill:'au-federal-r7534'});
+  const html = billDivisionTablesHTML(gamblingDivisions);
   const group = html.indexOf('class="ui-disclosure division-group"');
   assert.ok(html.startsWith('<p class="division-story">') && group > html.indexOf('data-vote-table'), 'the sentence comes first, the folded group after the main table');
   assert.match(html, /<summary>11 votes under limitation of debate<\/summary>/);
@@ -99,12 +99,13 @@ test('a bill page states the sentence above the divisions and folds the limitati
   assert.doesNotMatch(textOf(html), /negatived/i);
   assert.match(textOf(html), /Not agreed/);
   // Folded with nothing else to show, the group is open.
-  const only = billDivisionsTablesHTML(rows.filter(r => r.kind === 'limitation'), {bill:'x'});
+  const only = billDivisionTablesHTML(gamblingDivisions.filter(d => divisionKind(d) === 'limitation'));
   assert.match(only, /division-group" data-kind="limitation" open>/);
-  // A bill with no folded votes keeps its one server-backed table and no sentence.
-  const plain = billDivisionsTablesHTML(rows.filter(r => r.kind === 'bill'), {bill:'au-federal-r7534'});
+  // Every bill table stays bounded to its own export, with one caption rule even without folds.
+  const plain = billDivisionTablesHTML(gamblingDivisions.filter(d => divisionKind(d) === 'bill'));
   assert.doesNotMatch(plain, /division-story|division-group/);
-  assert.match(plain, /"endpoint":"\/api\/table\/divisions"/);
+  assert.match(plain, /<caption>Divisions on the bill<\/caption>/);
+  assert.doesNotMatch(plain, /"endpoint":/);
 });
 
 test('the server-rendered bill page tells the same story, and its stages never say negatived', () => {
@@ -118,10 +119,41 @@ test('the server-rendered bill page tells the same story, and its stages never s
   assert.match(html, /id="division-table-ssr"|data-dt-id="division-table-ssr"|division-table-ssr/);
 });
 
+test('explicit procedural titles keep every stage narrative count and occupy one closed group', () => {
+  const divisions = [...gamblingDivisions,
+    {key:'closure', title:'That the question be now put', stage:'Limitation of debate', date:'2026-08-19', house:'senate', outcome:'affirmative'},
+    {key:'business', stage:'Business motion', date:'2026-08-19', house:'senate', outcome:'negative'},
+    {key:'suspension', title:'Suspend standing orders', stage:'Business motion', date:'2026-08-19', house:'senate', outcome:'affirmative'},
+  ];
+  const html = billDivisionTablesHTML(divisions);
+  const doc = new JSDOM(html).window.document;
+  assert.match(doc.querySelector('.division-story').textContent, /voted 12 times on this bill under a limitation of debate, a time limit set on the debate: 6 agreed, 6 not agreed\./);
+  assert.match(doc.querySelector('.division-story').textContent, /voted 2 times on procedure for this bill, such as business motions or suspending standing orders: 1 agreed, 1 not agreed\./);
+  assert.equal((doc.querySelector('.division-story').textContent.match(/1 of these is listed under Procedural votes\./g) || []).length, 2, 'Each stage count locates its moved procedural row.');
+  assert.equal(doc.querySelector('.bill-vote-summary').textContent, '13 substantive votes; 2 procedural votes.');
+  const configs = [...doc.querySelectorAll('[data-vote-config]')].map(el => JSON.parse(el.textContent));
+  assert.deepEqual(configs.map(c => [c.caption, c.rows.length]), [
+    ['Divisions on the bill', 1], ['Votes under limitation of debate', 11], ['Votes on procedure', 1], ['Procedural votes', 2],
+  ]);
+  assert.equal(new Set(configs.flatMap(c => c.rows.map(r => r.href))).size, divisions.length);
+  assert.ok(configs.every(c => !c.source));
+  assert.equal(doc.querySelector('details.procedural-votes').open, false);
+});
+
 test('the browser bill page uses the shared renderer and one outcome vocabulary', () => {
   const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
   assert.match(app, /const BILL_OUTCOMES = \{ affirmative: "Agreed", negative: "Not agreed" \};/);
-  assert.match(app.slice(app.indexOf('function billDivisionsHTML('), app.indexOf('const BILL_SPEECH_BRIEF_NOTE')), /voteTables\.billDivisionsTablesHTML\(rows, \{bill: bill\.key\}\)/);
+  const code = app.slice(app.indexOf('function billDivisionsHTML('), app.indexOf('const BILL_SPEECH_BRIEF_NOTE'));
+  const {billDivisionsHTML} = runInNewContext(code + ';({billDivisionsHTML})', {
+    voteTables:{divisionRows, billDivisionTablesHTML},
+    billDedupeDivisions:divisions => ({divisions, collapsed:0}),
+    growthModules:{moduleAttrs:() => ''}, sourceLineHTML:() => '', esc:String,
+  });
+  const html = billDivisionsHTML({divisions:gamblingDivisions});
+  assert.match(html, /On 19 Aug 2026 the Senate voted 11 times on this bill under a limitation of debate, a time limit set on the debate: 5 agreed, 6 not agreed\./);
+  assert.match(html, /<caption>Divisions on the bill<\/caption>/);
+  assert.match(html, /<summary>11 votes under limitation of debate<\/summary>/);
+  assert.doesNotMatch(textOf(html), /negatived/i);
   // Suggestions wrap instead of clipping under an ellipsis or a line clamp.
   const css = readFileSync(new URL('../public/style.css', import.meta.url), 'utf8');
   const rule = css.slice(css.indexOf('.growth-questions a {'), css.indexOf('}', css.indexOf('.growth-questions a {')));

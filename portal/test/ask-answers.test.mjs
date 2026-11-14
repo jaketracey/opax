@@ -144,7 +144,7 @@ test('the production refusal cannot be cached, and its question now can be',()=>
  assert.equal(api.cacheableRoutedAnswer(before,true),false)
  assert.equal(api.cacheableRoutedAnswer(api.groundAnswerPayload(api.proseFallback(moneyInput(gambling,'Labor')),gambling),true),true)
 })
-test('this change retires every earlier cached answer',()=>{assert.equal(api.ANSWER_WRITING_VERSION,'written-answer-28-dedupe')})
+test('this change retires every earlier cached answer',()=>{assert.equal(api.ANSWER_WRITING_VERSION,'written-answer-30-clause-who')})
 
 // Review of 36bf23f48, each finding on its exact input. A written limit is kept as written; typed decisions are left alone,
 // and a period the records may not cover is a note beside the answer.

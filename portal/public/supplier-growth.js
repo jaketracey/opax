@@ -1,7 +1,7 @@
-import {donorDisclosure,donorLabelHTML} from './donor-disclosure.js?v=9fd35a7cb8';
+import {donorDisclosure,donorLabelHTML} from './donor-disclosure.js?v=af7c0f0f03';
 /* Client-side agency records, from the same published exports as their pages. */
-import {sourceLineHTML} from './labels.js?v=6d2e2e9cd8';
-import {moduleAttrs, donationRegisterHTML, exactOrganisationDonors, growthSummaryPath, normalisedName, loadModuleDonors} from './growth-modules.js?v=5c6e0f9b50';
+import {sourceLineHTML} from './labels.js?v=fcb2a1091c';
+import {moduleAttrs, donationRegisterHTML, exactOrganisationDonors, growthSummaryPath, normalisedName, loadModuleDonors} from './growth-modules.js?v=66be83bbbf';
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money = n => Number(n).toLocaleString('en-AU',{style:'currency',currency:'AUD',maximumFractionDigits:0});
 async function json(url,signal) {const r=await fetch(url,{signal,cache:"no-cache"});if(!r.ok)throw new Error('Records unavailable');return r.json();}

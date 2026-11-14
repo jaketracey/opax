@@ -66,6 +66,52 @@ test('directory: every row links to its donor page, whatever the match evidence'
   }
 });
 
+test('directory: fills a missing commission figure on an existing donor row once', async () => {
+  const label = 'Banksia Commission Example Pty Ltd';
+  const state = {id: 'donor:fixture:qld', kind: 'donor', label, jurisdiction: 'qld',
+    total: 4500, count: 2, firstYear: 2023, lastYear: 2024, industry: 'other', group: 'other'};
+  const federal = {...state, id: 'donor:fixture:federal', jurisdiction: 'federal', total: 123400, count: 7,
+    firstYear: 2020, by_type: {donation_received: 100000, other_receipt: 23400}};
+  const duplicate = {...federal, id: 'donor:fixture:federal-alias', label: 'Banksia Commission Example Pty Limited', total: 999999};
+  const directory = await donorsDirectory({qld: {meta: {}, nodes: [state], edges: []}}, [federal, duplicate, {...state, total: 888888}]);
+  assert.equal(directory.items.length, 1, 'one name across two commissions and repeated spellings');
+  const item = directory.items[0];
+  assert.deepEqual([item.money.federal?.total, item.money.federal?.count], [123400, 7]);
+  assert.deepEqual([item.money.qld.total, item.money.qld.count], [4500, 2], 'the map figure is not overwritten by the index');
+  assert.equal(item.recordMeasure, false, 'typed federal receipts keep their receipt wording');
+  assert.deepEqual([item.first, item.last, item._total, item._count], [2020, 2024, 123400, 7]);
+  assert.ok(item.labels.has(duplicate.label), 'all source spellings remain searchable');
+  const row = JSDOM.fragment(directory.row(item));
+  assert.match(row.textContent, /\$123400AEC returns/);
+  assert.match(row.textContent, /\$4500ECQ/);
+  assert.doesNotMatch(row.textContent, /999999|888888|127900/);
+});
+
+test('directory: an existing federal commission figure is never replaced or added twice', async () => {
+  const label = 'Wattle Commission Example Pty Ltd';
+  const federal = {id: 'donor:fixture:federal', kind: 'donor', label, jurisdiction: 'federal',
+    total: 1200, count: 3, firstYear: 2020, lastYear: 2024, industry: 'other', group: 'other'};
+  const directory = await donorsDirectory({federal: {meta: {}, nodes: [federal], edges: []}}, [{...federal, total: 999999}]);
+  assert.equal(directory.items.length, 1);
+  assert.deepEqual([directory.items[0].money.federal.total, directory.items[0].money.federal.count], [1200, 3]);
+});
+
+test('directory: a federal declared-only row keeps its note alongside retained state receipts', async () => {
+  const label = 'Wattle State Receipts Example Pty Ltd';
+  const federal = {id: 'donor:fixture:federal', kind: 'donor', label, total: 999999, count: 9,
+    firstYear: 2020, lastYear: 2024, industry: 'other', group: 'other', by_type: {}, by_type_year: {}};
+  const state = {...federal, id: 'donor:fixture:qld', jurisdiction: 'qld', total: 4500, count: 2,
+    by_type: undefined, by_type_year: undefined};
+  const directory = await donorsDirectory({federal: {meta: {}, nodes: [federal], edges: []}}, [state]);
+  const item = directory.items[0];
+  assert.equal(item.money.federal, undefined);
+  assert.equal(item.money.qld?.total, 4500);
+  const row = JSDOM.fragment(directory.row(item));
+  assert.ok(row.textContent.includes(`AEC returns: ${DONOR_DECLARED_ONLY}`));
+  assert.match(row.textContent, /\$4500ECQ/);
+  assert.doesNotMatch(row.textContent, /999999|\$0/);
+});
+
 test('the party directory resolves each label once, including labels absent from the catalogue', async () => {
   const catalogue = await import('../public/party-page.js');
   const calls = new Map();
@@ -266,7 +312,7 @@ test('real Liberal and Greens page lists count each person once and agree with t
   const doc = new JSDOM(directory.html).window.document;
   // Council members from the dated official lists: Liberal +5 NSW (A17), +2 SA (A22); Greens +3 NSW (A17).
   // SA Council list-only profiles (A27): Liberal +1 (Benjamin Hood), Greens +1 (Melanie Selwood).
-  for (const [slug, expected] of [['liberal', 346], ['greens', 51]]) {
+  for (const [slug, expected] of [['liberal', 347], ['greens', 51]]) {
     const row = doc.querySelector(`a[href="/subject/party/${slug}"]`).closest('li');
     const figure = [...row.querySelectorAll('.dir-fig')].find(n => n.textContent.includes('parliamentarians in the record'));
     assert.equal(figure.querySelector('b').textContent, String(expected));

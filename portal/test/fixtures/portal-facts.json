@@ -764,12 +764,14 @@
     {
       "key": "au-federal-r7200",
       "raw": "monarchist",
-      "canonical": null
+      "canonical": "Liberal",
+      "source_canonical": null
     },
     {
       "key": "au-federal-s1415",
       "raw": "Liberal Party of Australia",
-      "canonical": "Liberal"
+      "canonical": "Independent",
+      "source_canonical": "Liberal"
     },
     {
       "key": "au-federal-s1414",
@@ -969,7 +971,8 @@
     {
       "key": "au-federal-r7006",
       "raw": "monarchist",
-      "canonical": null
+      "canonical": "Liberal",
+      "source_canonical": null
     },
     {
       "key": "au-federal-s1378",
@@ -1299,7 +1302,8 @@
     {
       "key": "au-federal-r6744",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "United Australia Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1320",
@@ -1319,7 +1323,8 @@
     {
       "key": "au-federal-r6770",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "United Australia Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1314",
@@ -1354,7 +1359,8 @@
     {
       "key": "au-federal-s1309",
       "raw": "Liberal Party of Australia",
-      "canonical": "Liberal"
+      "canonical": "Country Liberal Party",
+      "source_canonical": "Liberal"
     },
     {
       "key": "au-federal-s1228",
@@ -1924,7 +1930,8 @@
     {
       "key": "au-federal-s1159",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Australian Conservatives",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1156",
@@ -1934,7 +1941,8 @@
     {
       "key": "au-federal-s1153",
       "raw": "Katter&#39;s Australian Party",
-      "canonical": "Katter's Australian Party"
+      "canonical": "Independent",
+      "source_canonical": "Katter's Australian Party"
     },
     {
       "key": "au-federal-r6217",
@@ -1959,7 +1967,8 @@
     {
       "key": "au-federal-s1151",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "United Australia Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-r6212",
@@ -2009,7 +2018,8 @@
     {
       "key": "au-federal-s1145",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Australian Conservatives",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1144",
@@ -2159,7 +2169,8 @@
     {
       "key": "au-federal-s1124",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Australian Conservatives",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1123",
@@ -2169,7 +2180,8 @@
     {
       "key": "au-federal-s1122",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Australian Conservatives",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-r6027",
@@ -2189,7 +2201,8 @@
     {
       "key": "au-federal-s1098",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Australian Conservatives",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-r6002",
@@ -2229,17 +2242,20 @@
     {
       "key": "au-federal-s1087",
       "raw": "Independent Member",
-      "canonical": "Independent"
+      "canonical": "Nick Xenophon Team",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-r5967",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Katter's Australian Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-r5966",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Katter's Australian Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-r5965",
@@ -2264,7 +2280,8 @@
     {
       "key": "au-federal-r5928",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Katter's Australian Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-r5915",
@@ -2274,7 +2291,8 @@
     {
       "key": "au-federal-s1081",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Jacqui Lambie Network",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1080",
@@ -2289,7 +2307,8 @@
     {
       "key": "au-federal-r5937",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Katter's Australian Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1079",
@@ -2304,7 +2323,8 @@
     {
       "key": "au-federal-s1074",
       "raw": "Independent Member",
-      "canonical": "Independent"
+      "canonical": "Nick Xenophon Team",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1073",
@@ -2324,7 +2344,8 @@
     {
       "key": "au-federal-s1070",
       "raw": "Independent Member",
-      "canonical": "Independent"
+      "canonical": "Nick Xenophon Team",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1066",
@@ -2364,7 +2385,8 @@
     {
       "key": "au-federal-r5834",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Katter's Australian Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1062",
@@ -2414,12 +2436,14 @@
     {
       "key": "au-federal-s1055",
       "raw": "Independent Member",
-      "canonical": "Independent"
+      "canonical": "Nick Xenophon Team",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-r5810",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Katter's Australian Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-r5809",
@@ -2439,7 +2463,8 @@
     {
       "key": "au-federal-s1054",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Jacqui Lambie Network",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1052",
@@ -2519,12 +2544,14 @@
     {
       "key": "au-federal-r5710",
       "raw": "&#34;Independent Members&#34;",
-      "canonical": "Independent"
+      "canonical": "Katter's Australian Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-r5709",
       "raw": "&#34;Independent Members&#34;",
-      "canonical": "Independent"
+      "canonical": "Katter's Australian Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1045",
@@ -2609,37 +2636,44 @@
     {
       "key": "au-federal-r5622",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Katter's Australian Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-r5600",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Katter's Australian Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-r5576",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Katter's Australian Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1025",
       "raw": "Independent Member",
-      "canonical": "Independent"
+      "canonical": "Nick Xenophon Team",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-r5570",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Katter's Australian Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-r5569",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Katter's Australian Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1024",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Jacqui Lambie Network",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1001",
@@ -2689,7 +2723,8 @@
     {
       "key": "au-federal-r5521",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Katter's Australian Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1015",
@@ -2704,7 +2739,8 @@
     {
       "key": "au-federal-s1014",
       "raw": "Independent Member",
-      "canonical": "Independent"
+      "canonical": "Nick Xenophon Team",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1011",
@@ -2714,7 +2750,8 @@
     {
       "key": "au-federal-s1010",
       "raw": "Independent Member",
-      "canonical": "Independent"
+      "canonical": "Nick Xenophon Team",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s1009",
@@ -2734,7 +2771,8 @@
     {
       "key": "au-federal-r5471",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Katter's Australian Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-r5470",
@@ -2749,7 +2787,8 @@
     {
       "key": "au-federal-s1004",
       "raw": "Independent Member",
-      "canonical": "Independent"
+      "canonical": "Nick Xenophon Team",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-r5431",
@@ -2779,7 +2818,8 @@
     {
       "key": "au-federal-r5418",
       "raw": "Independent Members",
-      "canonical": "Independent"
+      "canonical": "Katter's Australian Party",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s995",
@@ -2814,7 +2854,8 @@
     {
       "key": "au-federal-s984",
       "raw": "Independent Member",
-      "canonical": "Independent"
+      "canonical": "Nick Xenophon Team",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-r5374",
@@ -2954,7 +2995,8 @@
     {
       "key": "au-federal-s954",
       "raw": "Independent Member",
-      "canonical": "Independent"
+      "canonical": "Nick Xenophon Team",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s953",
@@ -3004,7 +3046,8 @@
     {
       "key": "au-federal-s944",
       "raw": "Independent Member",
-      "canonical": "Independent"
+      "canonical": "Nick Xenophon Team",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s943",
@@ -3019,7 +3062,8 @@
     {
       "key": "au-federal-s942",
       "raw": "Independent Member",
-      "canonical": "Independent"
+      "canonical": "Nick Xenophon Team",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s941",
@@ -3039,12 +3083,14 @@
     {
       "key": "au-federal-s939",
       "raw": "Independent Member",
-      "canonical": "Independent"
+      "canonical": "Nick Xenophon Team",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s937",
       "raw": "Independent Member",
-      "canonical": "Independent"
+      "canonical": "Nick Xenophon Team",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s936",
@@ -3054,7 +3100,8 @@
     {
       "key": "au-federal-s934",
       "raw": "Independent Member",
-      "canonical": "Independent"
+      "canonical": "Nick Xenophon Team",
+      "source_canonical": "Independent"
     },
     {
       "key": "au-federal-s920",

@@ -40,13 +40,13 @@ const federal={id:'federal:fern',source_name:'FERN EXAMPLE PTY LTD',label:'FERN 
 const state={...federal,id:'qld:fern',jurisdiction:'qld',total:6700,count:2};
 test('N03: index-only federal profile names mixed disclosure records, preserving total and count',()=>{
  const html=api().donorRecordHTML(federal),doc=new JSDOM(html).window.document;
- assert.equal(doc.querySelector('.subject-section-title').textContent,'Source records');assert.match(doc.body.textContent,/7 records/);assert.match(doc.body.textContent,/\$14.3k/);
+ assert.equal(doc.querySelector('.subject-section-title').textContent,'Federal source records');assert.match(doc.body.textContent,/7 records/);assert.match(doc.body.textContent,/\$14.3k/);
  assert.equal(doc.querySelector('.entry-scope').textContent,receiptScopeLabel({typed:false}));assert.doesNotMatch(doc.body.textContent,/Disclosed gifts|7 gifts/);
 });
 test('typed off-map profiles keep the receipt figure, count and scope despite poisoned source totals',()=>{
  const record={...federal,total:999999,count:999,by_type:{donation_received:120,other_receipt:30},by_type_year:{'2024-25':{donation_received:[120,2],other_receipt:[30,1]}}};
  const doc=new JSDOM(api().donorRecordHTML(record)).window.document;
- assert.equal(doc.querySelector('.subject-section-title').textContent,'Disclosed receipts');
+ assert.equal(doc.querySelector('.subject-section-title').textContent,'Federal disclosed receipts');
  assert.match(doc.body.textContent,/\$150.*3 receipts/s);assert.doesNotMatch(doc.body.textContent,/999|gift can appear twice|both donor and party/);
  assert.equal(doc.querySelector('.entry-scope').textContent,receiptScopeLabel(receiptFigures(record))+'. '+receiptTypeLine(record)+'.');
  assert.match(doc.querySelector('aside').textContent,/Receipts disclosed under this exact name\. This donor is not drawn on the money map, which shows a bounded selection of donors/);
@@ -57,7 +57,7 @@ test('N04: both lookup orders retain the federal record and profile jurisdiction
   assert.equal(index.get('federal:'+key),federal);assert.equal(index.get('qld:'+key),state);assert.equal(index.get(key).records.length,2);
   const dom=new JSDOM('<main></main>'),sections=dom.window.document.querySelector('main');
   sections.innerHTML=api().donorRecordHTML(index.get('federal:'+key));
-  await api({document:dom.window.document,loadMoneyFile:async()=>({meta:{sourceShort:'ECQ',jurisdictionLabel:'Queensland'},nodes:[{...state,kind:'donor'}],edges:[]})}).renderDonorStateMoney(federal.label,sections,{only:true});
+  await api({document:dom.window.document,disclosedDonor:(name,jur)=>index.get((jur?jur+':':'')+name.toLowerCase()) || (jur?null:{label:name}),loadMoneyFile:async()=>({meta:{sourceShort:'ECQ',jurisdictionLabel:'Queensland'},nodes:[{...state,kind:'donor'}],edges:[]})}).renderDonorStateMoney(federal.label,sections,{only:true});
   assert.match(sections.querySelector('#donor-record').textContent,/\$14.3k.*7 records/s);
   assert.match(sections.querySelector('#state-money').textContent,/Queensland.*\$6.7k.*2 disclosed gifts/s);
   assert.doesNotMatch(sections.textContent,/\$21.0k/);

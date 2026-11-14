@@ -1,4 +1,5 @@
-import {test} from 'node:test';
+import './helpers/vic-election-clock.mjs';
+import {test, beforeEach} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile, writeFile, mkdir} from 'node:fs/promises';
 import {build} from 'esbuild';
@@ -6,10 +7,12 @@ import {JSDOM} from 'jsdom';
 import {join} from 'node:path';
 import {buildVicElection} from '../../scripts/build_vic_election.mjs';
 import {withVicElectionBuild} from './helpers/vic-election-build.mjs';
-import {APP_CACHE} from '../src/app-http.ts';
+import {VIC_ELECTION_CACHE as APP_CACHE} from '../public/vic-election.js';
 import {personNameKey} from '../public/canonical-urls.js';
 import {VIC_ELECTION_ASSET, VIC_ELECTION_PLACES, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_POLLS_OPEN, VIC_ELECTION_POLLS_CLOSE} from '../public/vic-election.js';
 
+// Freeze response pins independently of the Mac's real election-day clock.
+beforeEach(t=>t.mock.timers.enable({apis:['Date'],now:Date.parse('2026-11-12T10:00:00+11:00')}));
 const ROOT = '/api/app/v1/vic-election';
 const publicRoot = new URL('../public/',import.meta.url);
 const fixtures = new URL('./fixtures/app-vic-election/',import.meta.url);
@@ -95,7 +98,7 @@ test('overview projects 88 districts and 8 regions in hub order; every slug reso
 
 for(const date of ['2026-11-02T10:00:00+11:00','2026-11-12T10:00:00+11:00','2026-11-26T10:00:00+11:00']) {
   test('key date API wording and links equal rendered hub HTML at '+date,async()=>{
-    const d=await payload();const now=new Date(date);
+    const now=new Date(date);const response=await appVicElection(request(),environment(),now);const d=await response.json();
     const rows=[...JSDOM.fragment(renderVicElection(data,null,{},now).html).querySelectorAll('.vic-dates > div')];
     assert.equal(rows.length,6);
     d.key_dates.forEach((r,i)=>{
@@ -351,7 +354,7 @@ test('concurrent reads share pending parses and failed asset reads are retried w
 test('shape pin covers every response and nested contract type; internal fields cannot leak',async()=>{
   const keys=(value,expected)=>assert.deepEqual(Object.keys(value).sort(),expected.split(' ').sort());
   const overview=await payload();
-  keys(overview,'schema_version title web_url updated election_day polls_open polls_close term_start term_end key_dates notice candidates_published results_fetched roster_date districts regions sources about methods_url authorisation corrections');
+  keys(overview,'schema_version state title lede voting finder current_results web_url updated election_day polls_open polls_close term_start term_end key_dates notice candidates_published results_fetched roster_date districts regions sources about methods_url authorisation corrections');
   keys(overview.sources,'election voting enrolment address results licence');keys(overview.corrections,'email response');
   assert.deepEqual(overview.key_dates.map(r=>r.id),['enrolment','caretaker','nominations','postal','early','election_day']);
   for(const r of overview.key_dates){keys(r,'id label when passes_at passed_label passed_when link');if(r.link)keys(r.link,'label url');}
@@ -363,7 +366,7 @@ test('shape pin covers every response and nested contract type; internal fields 
   [...overview.districts,...overview.regions].forEach(row);
   for(const s of data.seats) {
     const detail=await payload('/seat/'+slug(s));
-    keys(detail,'schema_version updated kind slug name web_url source_url electorate_url roster_date formerly created boundary_note region districts result candidates members results_fetched speech_updated division_start division_end');
+    keys(detail,'schema_version state current_result updated kind slug name web_url source_url electorate_url roster_date formerly created boundary_note region districts result candidates members results_fetched speech_updated division_start division_end');
     detail.districts.forEach(row);
     if(detail.region){keys(detail.region,'slug name members');detail.region.members.forEach(m=>keys(m,'name party slug href'));}
     if(detail.result){keys(detail.result,'general since');for(const c of [detail.result.general,detail.result.since].filter(Boolean))keys(c,'date kind party share against against_share margin url');}
@@ -380,7 +383,7 @@ test('shape pin covers every response and nested contract type; internal fields 
   const notice=(await payload('',environment({...data,notice:{text:'Election update.',link:{label:'VEC',url:data.sources.election}}}))).notice;
   keys(notice,'text link');keys(notice.link,'label url');
   for(const q of ['3350','Bass','Metropolitan','allan']) {
-    const find=await payload('/find?q='+q);keys(find,'schema_version q places_searched hits split empty address_url attribution note');
+    const find=await payload('/find?q='+q);keys(find,'schema_version state q places_searched hits split empty address_url attribution note');
     for(const h of find.hits){keys(h,'name kind seats');for(const {share,...s} of h.seats){row(s);assert.ok(share===null||typeof share==='number');}}
   }
   const injected=structuredClone(data);const seat=injected.seats[0];
