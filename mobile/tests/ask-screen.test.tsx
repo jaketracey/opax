@@ -1621,6 +1621,92 @@ describe('streamed text and VoiceOver', () => {
     });
   });
 
+  describe('the thread follows the streaming text', () => {
+    const lay = async (id: string, layout: Record<string, number>) =>
+      act(async () => {
+        byId(id)
+          .find((n) => typeof n.props.onLayout === 'function')!
+          .props.onLayout({ nativeEvent: { layout } });
+      });
+    const scroller = () => view!.root.findByType(ScrollView);
+    const begin = async () => {
+      await mount();
+      await type('Who spoke on housing?');
+      await press('ask-submit');
+      await act(async () => {
+        scroller().props.onLayout({
+          nativeEvent: { layout: { x: 0, y: 0, width: 390, height: 800 } },
+        });
+      });
+      await lay('ask-turn', { y: 400 });
+      await stream();
+      scrollTo.mockClear();
+    };
+    // The turn's top plus the block's bottom edge, the gap, less the room.
+    const followed = (edge: number) => 400 + edge + rhythm.group - 800;
+
+    test('it follows the growing end, then leaves a dragged thread alone', async () => {
+      await begin();
+      // Still fits: the question and first line stay under the bar.
+      await lay('ask-progress', { y: 60, height: 200 });
+      expect(scrollTo).not.toHaveBeenCalled();
+      await lay('ask-progress', { y: 60, height: 600 });
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: followed(660),
+        animated: true,
+      });
+      await lay('ask-progress', { y: 60, height: 700 });
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: followed(760),
+        animated: true,
+      });
+      expect(scrollTo).toHaveBeenCalledTimes(2);
+      // The reader drags: this answer stays where they put it.
+      await act(async () => {
+        scroller().props.onScrollBeginDrag({ nativeEvent: {} });
+      });
+      await lay('ask-progress', { y: 60, height: 1200 });
+      expect(scrollTo).toHaveBeenCalledTimes(2);
+      await act(async () => {
+        finish(answer);
+      });
+    });
+
+    test('nothing moves when the answer lands', async () => {
+      await begin();
+      await lay('ask-progress', { y: 60, height: 600 });
+      expect(scrollTo).toHaveBeenCalledTimes(1);
+      await act(async () => {
+        finish(answer);
+      });
+      expect(byId('ask-progress')).toHaveLength(0);
+      // The finished turn lays out again, at a new height.
+      await lay('ask-turn', { y: 400 });
+      await wait(100);
+      expect(scrollTo).toHaveBeenCalledTimes(1);
+    });
+
+    test('Reduce Motion jumps', async () => {
+      const reduce = jest
+        .spyOn(accessibility, 'useReduceMotion')
+        .mockReturnValue(true);
+      try {
+        await begin();
+        await lay('ask-progress', { y: 60, height: 600 });
+        expect(scrollTo).toHaveBeenLastCalledWith({
+          y: followed(660),
+          animated: false,
+        });
+        await act(async () => {
+          finish(answer);
+        });
+        await act(async () => view!.unmount());
+      } finally {
+        reduce.mockRestore();
+      }
+    });
+  });
+
   test('the audit reaches the tail row, and its one finding is the recorded exception', async () => {
     await mount();
     await type('Who spoke on housing?');

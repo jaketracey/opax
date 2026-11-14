@@ -56,6 +56,7 @@ import { ReservedRegionArea } from '../../design/fold-area';
 import { AskEmptyState, AskIdle } from './AskIdle';
 import { AskThread } from './AskThread';
 import { streamStarted } from './AskProgress';
+import { useStreamFollow } from './stream-follow';
 import { useAskStageAnnouncer } from './AskStatus';
 import { askGround } from './ground';
 import type { Followup } from './model';
@@ -382,6 +383,16 @@ export default function AskScreen() {
     (idle ? accessibilitySize : Platform.OS === 'ios')
       ? composerClearance
       : 0;
+  // While an answer streams the thread follows its growing end, kept clear
+  // of whatever covers the scroll view's bottom, until the reader drags.
+  const follow = useStreamFollow(scroll, {
+    streaming: s.busy,
+    obscured: restInset ? 0 : dockHeight + (docked ? 0 : keyboard),
+    // Clear of the composer, with the page's own top padding to spare.
+    gap: rhythm.group,
+    animated: !reduceMotion,
+    rest: -headerBottom,
+  });
   const content = (
     <ScrollView
       ref={scroll}
@@ -403,11 +414,16 @@ export default function AskScreen() {
       maintainVisibleContentPosition={
         adaptive ? { minIndexForVisible: 0 } : undefined
       }
-      onLayout={column.onLayout}
+      onLayout={(event) => {
+        column.onLayout(event);
+        follow.onViewport(event.nativeEvent.layout.height);
+      }}
       onContentSizeChange={onContentSizeChange}
+      onScrollBeginDrag={follow.onDrag}
       onScroll={(event) => {
         atTop.current = event.nativeEvent.contentOffset.y <= 4;
         scrollY.current = event.nativeEvent.contentOffset.y;
+        follow.onScroll(event.nativeEvent.contentOffset.y);
         checkUnderBar();
         if (Platform.OS === 'android') androidRoot.onScroll(event);
         if (adaptive) anchor.onScroll(event.nativeEvent.contentOffset.y);
@@ -453,8 +469,10 @@ export default function AskScreen() {
             onAsk={(q, carry) => void ask(q, carry)}
             onRetry={retry}
             onAnchorLayout={adaptive ? anchor.onRowLayout : undefined}
+            onProgressBottom={follow.onProgress}
             onTurnLayout={(y) => {
               turnY.current = y;
+              follow.onTurn(y);
               if (adaptive) anchor.onLatestLayout(y);
               reveal();
             }}

@@ -54,6 +54,7 @@ let tree: ReactTestRenderer;
 let controller: AskController;
 let handlers: StreamHandlers;
 let fail: (error: Error) => void;
+let finish: (answer: unknown) => void;
 let request: Promise<void>;
 function Thread() {
   const s = useSyncExternalStore(controller.subscribe, controller.snapshot);
@@ -107,7 +108,8 @@ beforeEach(() => {
   controller = new AskController({
     post: (_path, _body, _signal, on) => {
       handlers = on!;
-      return new Promise((_resolve, reject) => {
+      return new Promise((resolve, reject) => {
+        finish = resolve;
         fail = reject;
       });
     },
@@ -215,7 +217,7 @@ test('a cached replay in several pieces builds up, each new piece fading over te
   ).toHaveLength(0);
 });
 
-test('a quiet tail row keeps the busy state, at a fixed height, and shows its spinner only after a second with no new piece', () => {
+test('a quiet tail row keeps the busy state, at a fixed height; its spinner waits a second, then stays until the answer lands', async () => {
   start();
   delta('Housing was debated twice. ');
   const tail = () => byId('ask-stream-tail')[0]!;
@@ -243,8 +245,24 @@ test('a quiet tail row keeps the busy state, at a fixed height, and shows its sp
     importantForAccessibility: 'no-hide-descendants',
   });
   expect(StyleSheet.flatten(tail().props.style).height).toBe(20);
-  // The next piece hides it again.
-  delta(' More.');
+  // It fades in once, on its own layer.
+  expect(byId('ask-stream-tail-indicator')).toHaveLength(1);
+  expect(opacity(byId('ask-stream-tail-indicator')[0]!)).toBe(0);
+  // Calm, not blinking: later pieces leave it where it is, under the tail.
+  for (const piece of [' More.', ' And more.', ' And the last of it.']) {
+    delta(piece);
+    expect(spinner()).toHaveLength(1);
+    tick(400);
+    expect(spinner()).toHaveLength(1);
+  }
+  expect(byId('ask-stream-tail-indicator')).toHaveLength(1);
+  expect(StyleSheet.flatten(tail().props.style).height).toBe(20);
+  // It goes with the tail when the answer lands.
+  await act(async () => {
+    finish({ answer: 'A synthetic answer.', sources: [], citations: {} });
+    await request;
+  });
+  expect(byId('ask-stream-tail')).toHaveLength(0);
   expect(spinner()).toHaveLength(0);
 });
 
@@ -410,9 +428,13 @@ test.each([true, null])(
       'Housing was debated twice. The bill passed in March.',
     );
     expect(fresh()).toHaveLength(0);
-    // The tail's indicator is three still dots, never a spinner.
+    // The tail's indicator is three still dots, never a spinner, shown
+    // with no fade and kept across later pieces.
     tick(STREAM_QUIET_MS);
     expect(byId('ask-stream-tail-spinner')).toHaveLength(0);
+    expect(byId('ask-stream-tail-indicator')).toHaveLength(0);
+    expect(byId('ask-stream-tail-dots')).toHaveLength(1);
+    delta(' More.');
     expect(byId('ask-stream-tail-dots')).toHaveLength(1);
   },
 );

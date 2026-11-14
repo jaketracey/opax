@@ -150,11 +150,13 @@ export const streamTailLabel = 'Writing the answer';
 /**
  * The quiet row under the streamed text: the turn's busy element once the
  * status line has given way. Its height is fixed and reserved from the first
- * text, so showing or hiding the indicator moves nothing. The indicator
- * waits for a second with no new piece, so a fast replay never flickers:
- * the small system spinner, or three still dots under Reduce Motion. Never
- * a live region: the stage was announced, and the answer is when it lands.
- * It sits outside the text's fade, so it is opaque when VoiceOver lands.
+ * text, so the indicator appearing moves nothing. The indicator waits for a
+ * second with no new piece, so a fast replay never shows one; once it has
+ * appeared it stays, under the last line, until the answer lands, so slow
+ * pieces never make it blink. It fades in once: the small system spinner, or
+ * three still dots with no fade under Reduce Motion. Never a live region:
+ * the stage was announced, and the answer is when it lands. It sits outside
+ * the text's fade, so it is opaque when VoiceOver lands.
  */
 function StreamTail({
   text,
@@ -174,16 +176,13 @@ function StreamTail({
     });
     return () => cancelAnimationFrame(frame);
   }, [claimFocus]);
-  const [quiet, setQuiet] = useState({ text, shown: false });
-  if (quiet.text !== text) setQuiet({ text, shown: false });
+  const [shown, setShown] = useState(false);
   useEffect(() => {
-    const timer = setTimeout(
-      () => setQuiet({ text, shown: true }),
-      STREAM_QUIET_MS,
-    );
+    if (shown) return;
+    // Each piece restarts the wait until the indicator first appears.
+    const timer = setTimeout(() => setShown(true), STREAM_QUIET_MS);
     return () => clearTimeout(timer);
-  }, [text]);
-  const shown = quiet.shown && quiet.text === text;
+  }, [text, shown]);
   return (
     <View
       ref={row}
@@ -207,13 +206,15 @@ function StreamTail({
           <View style={styles.dot} />
         </View>
       ) : (
-        <ActivityIndicator
-          size="small"
-          color={colors.inkSoft}
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-          testID="ask-stream-tail-spinner"
-        />
+        <FadeIn testID="ask-stream-tail-indicator">
+          <ActivityIndicator
+            size="small"
+            color={colors.inkSoft}
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+            testID="ask-stream-tail-spinner"
+          />
+        </FadeIn>
       )}
     </View>
   );
@@ -274,6 +275,7 @@ export function AskProgress({
   announcement = stage ?? 'Reading your question',
   streaming,
   onTailFocus,
+  onBottom,
 }: {
   stage: AskStage | null;
   steps?: readonly AskStep[];
@@ -281,6 +283,8 @@ export function AskProgress({
   streaming: string;
   /** VoiceOver moved to the tail row, which reads the stage itself. */
   onTailFocus?: () => void;
+  /** The block's bottom edge within its turn, as the answer grows. */
+  onBottom?: (edge: number) => void;
 }) {
   const blocks = streamedBlocks(streaming);
   const started = blocks.length > 0;
@@ -323,7 +327,15 @@ export function AskProgress({
   }, [leaving, status]);
   const fading = useAnimatedStyle(() => ({ opacity: status.value }));
   return (
-    <View style={styles.progress} testID="ask-progress">
+    <View
+      style={styles.progress}
+      onLayout={
+        onBottom
+          ? ({ nativeEvent: { layout } }) => onBottom(layout.y + layout.height)
+          : undefined
+      }
+      testID="ask-progress"
+    >
       {!started || leaving ? (
         <Animated.View
           // Out of flow as it goes: the text starts where the line was.

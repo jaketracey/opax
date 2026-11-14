@@ -215,6 +215,7 @@ export function AskThread({
   minHeight,
   statusAnnouncement,
   onTailFocus,
+  onProgressBottom,
 }: {
   s: AskState;
   chat: Pick<Chat, 'created' | 'updated'> | undefined;
@@ -230,6 +231,8 @@ export function AskThread({
   minHeight: number;
   statusAnnouncement?: string;
   onTailFocus?: () => void;
+  /** The streaming block's bottom edge within the current turn. */
+  onProgressBottom?: (edge: number) => void;
 }) {
   useAnswerArrival(s);
   const thread = s.thread;
@@ -316,6 +319,7 @@ export function AskThread({
             announcement={statusAnnouncement}
             streaming={s.streaming}
             onTailFocus={onTailFocus}
+            onBottom={onProgressBottom}
           />
         ) : null}
         {failure ? (
