@@ -79,6 +79,7 @@ const backSelector = { text: '^(Navigate up|Go back|Back|Back to .*)$' };
 // resource id also works once the hint has been replaced by entered text.
 const nativeSearchHints = new Set([
   'Electorate or member.s name',
+  'Electorate, member or state',
   'District, region or member.s name',
   'Bills, sponsors and portfolios',
   'Name or photographer',
@@ -89,6 +90,11 @@ const nativeSearchHints = new Set([
   'Datasets and publishers',
 ]);
 const nativeSearch = { id: '.*:id/search_src_text' };
+// Flows whose `tapOn: OK` closes the e2e source destination, with the source
+// sheet row that may remain beneath it on Android.
+const sourceDestinationSheets = {
+  '11-bill-detail.yaml': 'bill-divisions-source-sheet-original-0',
+};
 function selector(v) {
   if (v === 'Search bills')
     return { id: '.*:id/(search_src_text|search_button)' };
@@ -213,6 +219,68 @@ function command(v, relative) {
   if (out.tapOn) {
     const tap = out.tapOn;
     const text = typeof tap === 'string' ? tap : tap.text;
+    // e2e builds draw a source's destination as the Original page, which
+    // Android leaves with Back; then leave the Android Sources page if it
+    // remains (as android/03-mp-profile.yaml does).
+    if (text === 'OK' && sourceDestinationSheets[relative])
+      return {
+        runFlow: {
+          commands: [
+            { assertVisible: { id: 'source-destination-url' } },
+            'back',
+            {
+              runFlow: {
+                when: { visible: { id: sourceDestinationSheets[relative] } },
+                commands: ['back'],
+              },
+            },
+          ],
+        },
+      };
+    // Android has no inline calendar: the system date dialog takes the day
+    // and its OK; the sheet's row then shows the chosen date.
+    if (
+      text === '2|Tuesday, 2 January.*' &&
+      relative === '45-directory-history.yaml'
+    )
+      return {
+        runFlow: {
+          commands: [
+            { tapOn: { text: '(Tue(sday)?, )?0?2 January 2024|2' } },
+            { tapOn: { id: 'android:id/button1' } },
+            {
+              extendedWaitUntil: {
+                visible: {
+                  id: 'electorate-date-open',
+                  text: 'Date, 2 January 2024',
+                },
+                timeout: 15000,
+              },
+            },
+          ],
+        },
+      };
+    // The date sheet's Done is its leading close button (header-done) on
+    // Android; it applies the date. Any other Done in 45 closes by Back.
+    if (text === 'Done' && relative === '45-directory-history.yaml')
+      return {
+        runFlow: {
+          commands: [
+            {
+              runFlow: {
+                when: { notVisible: { id: 'electorate-date-sheet' } },
+                commands: ['back'],
+              },
+            },
+            {
+              runFlow: {
+                when: { visible: { id: 'electorate-date-sheet' } },
+                commands: [{ tapOn: { id: 'header-done' } }],
+              },
+            },
+          ],
+        },
+      };
     if (relative === 'support/search-scope.yaml' && text === '^${SCOPE}$')
       return { tapOn: { id: 'search-scope-${SCOPE.toLowerCase()}' } };
     if (
@@ -336,6 +404,20 @@ function command(v, relative) {
       }
     }
   }
+  if (out.assertVisible?.id === 'electorate-date-picker')
+    return {
+      runFlow: {
+        commands: [
+          { tapOn: { id: 'electorate-date-open' } },
+          {
+            extendedWaitUntil: {
+              visible: { id: 'android:id/button1' },
+              timeout: 15000,
+            },
+          },
+        ],
+      },
+    };
   if (
     out.assertVisible === 'Cancel' &&
     relative === '24-electorate-map-cancel.yaml'
