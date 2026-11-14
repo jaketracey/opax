@@ -15,6 +15,15 @@ class Watchdog(unittest.TestCase):
         problems, _, warnings = evaluate(self.corpus, self.status, self.now)
         self.assertEqual((problems, warnings), ([], []))
 
+    def test_current_delivery_still_alerts_on_empty_senate_years(self):
+        self.corpus['refresh']['federal_hansard_coverage'] = {
+            'empty_senate_years': [2014, 2018], 'unpublished_senate_years': [2014, 2015, 2018]}
+        problems, _, warnings = evaluate(self.corpus, self.status, self.now)
+        self.assertEqual(problems, [])
+        self.assertIn('Senate Hansard has zero stored rows for 2014', warnings)
+        self.assertIn('Senate Hansard has zero stored rows for 2018', warnings)
+        self.assertIn('Senate Hansard for 2015 is awaiting publication', warnings)
+
     def test_receipt_after_manifest_and_equivalent_timezones_are_current(self):
         self.corpus['refresh']['checked_at'] = '2026-10-19T11:00:00+11:00'
         for finished in ('2026-10-19T00:00:00Z', '2026-10-19T00:10:00Z'):

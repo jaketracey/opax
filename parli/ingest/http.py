@@ -24,6 +24,8 @@ from urllib.parse import urljoin, urlsplit
 import requests
 
 USER_AGENT = json.loads(Path(__file__).with_name("user-agent.json").read_text())["user_agent"]
+# Explicitly authorised identity for the bounded OpenAustralia repair lane.
+AUDIT_USER_AGENT = 'opax-improve-audit'
 PAUSED_HOSTS = {
     "www.aph.gov.au": "APH indexes, Senate interests and member list",
     "parlinfo.aph.gov.au": "ParlInfo committees, witnesses, bills and documents",
@@ -237,12 +239,14 @@ def post(url, **kwargs):
 
 
 class Request(urllib.request.Request):
-    def __init__(self, url, *args, **kwargs):
+    def __init__(self, url, *args, audit=False, **kwargs):
+        if audit and urlsplit(url).netloc != 'data.openaustralia.org.au':
+            raise ValueError('audit identity is limited to the OpenAustralia archive')
         super().__init__(url, *args, **kwargs)
         for key in list(self.headers) + list(self.unredirected_hdrs):
             if key.lower() == "user-agent":
                 self.remove_header(key)
-        self.add_header("User-Agent", USER_AGENT)
+        self.add_header("User-Agent", AUDIT_USER_AGENT if audit else USER_AGENT)
 
 
 class _Response(io.BytesIO):

@@ -77,6 +77,15 @@ def run(prev=None, live=None, log=None, bills=None, nsw="2026-09-20", **kw):
 
 
 class ParseLog(unittest.TestCase):
+    def test_federal_coverage_updates_without_a_kb_change_and_is_retained_without_evidence(self):
+        coverage = {'empty_senate_years': [2014, 2018], 'unpublished_senate_years': [2014, 2018]}
+        new, result = run(federal_coverage=coverage)
+        self.assertEqual(new['refresh']['federal_hansard_coverage'], coverage)
+        self.assertFalse(result['kb_changed'])
+        self.assertIn('federal_hansard_coverage', result['changed_fields'])
+        retained, _ = run(prev=new)
+        self.assertEqual(retained['refresh']['federal_hansard_coverage'], coverage)
+
     def test_takes_the_last_block_only(self):
         log = ucm.parse_daily_log(LOG)
         self.assertTrue(log["complete"])

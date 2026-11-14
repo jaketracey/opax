@@ -58,6 +58,12 @@ def evaluate(corpus, status, now, max_age=20):
         if receipt.get('status') == 'paused':
             warnings.append(f"source paused: {name} ({receipt.get('host', 'host unavailable')}); retained records are not a current source check")
     periodic = status.get('periodic_state', {})
+    coverage = corpus.get('refresh', {}).get('federal_hansard_coverage', {})
+    for year in coverage.get('empty_senate_years', []):
+        warnings.append(f'Senate Hansard has zero stored rows for {year}')
+    for year in coverage.get('unpublished_senate_years', []):
+        if year not in coverage.get('empty_senate_years', []):
+            warnings.append(f'Senate Hansard for {year} is awaiting publication')
     if periodic.get('error'):
         problems.append('periodic refresh state is unreadable; inspect the VM state file')
     for name, state in sorted(periodic.get('groups', {}).items()):

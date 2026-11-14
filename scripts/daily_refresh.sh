@@ -44,6 +44,8 @@
 #                       needs it: without it every row count is a full scan of 29 GB on network disk)
 #   OPAX_REPO           checkout to run in (default: the checkout this script is in)
 #   OPAX_FORCE_KB_SYNC  1 = ignore the MIGRATED_TO_VM marker (never needed; see the cutover rule below)
+#   OPAX_SENATE_BACKFILL_DAYS  zero-row Senate days per night (default 2, maximum 10)
+#   OPAX_SENATE_BACKFILL_BUDGET_SECONDS  local work plus reserved normal-sync publication (default/max 1200)
 #
 # Not installed in crontab by this script. Suggested line (local time, after
 # OpenAustralia has published the previous day's Hansard):
@@ -375,6 +377,16 @@ else
   run_step x_interests "" env PY="$PY" scripts/vm/export_step.sh dir portal/public/interests -- \
     "$PY" scripts/export_interests.py --out portal/public/interests
 fi
+
+if [[ " ${PAUSED_STEPS[*]} " == *" fed_download "* ]]; then
+  log "[senate_backfill] SKIP: federal source refused during normal refresh; coverage retained"
+elif [ "${OPAX_SENATE_BACKFILL:-1}" != 0 ]; then
+  STEP_TIMEOUT=21m run_step senate_backfill "" \
+    nice -n 10 "$PY" -m parli.ingest.senate_backfill --db "$DB" \
+    --stage "$PIPE/senate-backfill" --cache-dir "${OPAX_OA_STAGE:-$HOME/.cache/autoresearch/oa-feed}"
+fi
+run_step federal_coverage "" nice -n 10 "$PY" scripts/federal_hansard_coverage.py \
+  --db "$DB" --output "$PIPE/federal-hansard-coverage.json"
 
 log "Paused sources: ${PAUSED_STEPS[*]:-none}"
 log "===== daily refresh end ====="

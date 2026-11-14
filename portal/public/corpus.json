@@ -311,6 +311,38 @@
       "vic_hansard": "2026-09-24",
       "wragge_xml": "2005-12-08",
       "zenodo": "2022-09-08"
+    },
+    "federal_hansard_coverage": {
+      "expected_years": [
+        2014,
+        2015,
+        2016,
+        2017,
+        2018
+      ],
+      "empty_senate_years": [
+        2014,
+        2015,
+        2016,
+        2017,
+        2018
+      ],
+      "unpublished_senate_years": [
+        2014,
+        2015,
+        2016,
+        2017,
+        2018
+      ],
+      "checked_at": "2026-11-14",
+      "method": "Live Senate search checks supplied for the repair lane; the nightly replaces this with read-only year counts and its normal speech-sync checkpoint.",
+      "backfill_pending_days_by_year": {
+        "2014": 63,
+        "2015": 60,
+        "2016": 42,
+        "2017": 56,
+        "2018": 58
+      }
     }
   },
   "enrichment": {

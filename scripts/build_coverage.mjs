@@ -17,6 +17,21 @@ const search = kind => `/ask?view=search&kind=${kind}`;
 // publishing it: stamp_assets.mjs --files lists it, so the restamp commits it with the table.
 export const SEARCH_CATALOG_MANIFEST = 'search-catalog/manifest.json';
 
+export function senateGapNote(corpus) {
+  const coverage = corpus.refresh?.federal_hansard_coverage;
+  const pending = coverage?.backfill_pending_days_by_year;
+  const gap = (pending ? Object.entries(pending).filter(([, n]) => n > 0).map(([y]) => Number(y))
+    : coverage?.unpublished_senate_years || [])
+    .filter(year => year >= 2014 && year <= 2019).sort((a, b) => a - b);
+  const runs = [];
+  for (const year of new Set(gap)) {
+    const last = runs.at(-1);
+    if (last && last[1] + 1 === year) last[1] = year;
+    else runs.push([year, year]);
+  }
+  return runs.length ? `Senate Hansard for ${runs.map(([a, b]) => a === b ? a : `${a} to ${b}`).join(', ')} is being added.` : '';
+}
+
 /** Read published snapshots, never fetch publishers or open private build inputs.
  * Counts below name their units: corpus resources, catalogue rows and register
  * totals are different populations. Stamping regenerates this alongside Methods.
@@ -50,7 +65,7 @@ export function coverageCollections(read = path => JSON.parse(readFileSync(new U
   };
   corpus.sources.forEach((source, i) => {
     const [publisher, jurisdiction, reuse, href, refresh] = corpusNotes(source);
-    add(`corpus-${i}`, 'Search corpus', source.name, href, publisher, `${jurisdiction}; ${source.coverage}`, source.docs, 'source records', reuse, refresh, corpus.version, '/corpus.json');
+    add(`corpus-${i}`, 'Search corpus', source.name, href, publisher, `${jurisdiction}; ${source.coverage}`, source.docs, 'source records', reuse, refresh, corpus.version, '/corpus.json', /Senate.*openaustralia/i.test(source.name) ? senateGapNote(corpus) : '');
   });
 
   const bills = read('bills/index.json');

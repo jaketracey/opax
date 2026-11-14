@@ -238,7 +238,7 @@ def map_speech(row: sqlite3.Row) -> dict:
                 "word_count": row["word_count"],
                 "date": date,
                 **{k: _optional_column(row, k) for k in ('gid', 'oa_office_id', 'citation_anchor', 'talktype',
-                                                      'source_url', 'source_attribution')
+                                                      'source_url', 'source_attribution', 'source_party', 'party_basis')
                    if _optional_column(row, k) is not None},
                 **({"witness_position": witness_position} if witness_position else {}),
                 **({"witness_organisation": witness_organisation} if witness_organisation else {}),
