@@ -1,7 +1,7 @@
 // The federal run's total ceiling is independent of the existing daily guard.
 // Admission reserves a maximum first call. Each retry/escalation reserves again
 // BEFORE the model starts; uncertain calls keep their reservation indefinitely.
-import { priceFor } from './budget.ts'
+import { priceFor, REGEN_SPEND_PREFIX } from './budget.ts'
 import { requestBody } from './generate.ts'
 import { buildMessages, type PromptRecord } from './prompts.ts'
 import { clip, pickText, wordCount } from './text.ts'
@@ -102,17 +102,23 @@ export async function admitWaiting(db: D1Database, now: number): Promise<number>
   return added
 }
 
+/**
+ * Reserve one bounded-run call. Day caps (see budget.ts dayAllows): the Worker's own spend plus its open
+ * reservations plus `upper` must fit `liveCap`; the same plus the regen runner's `regen:` rows must fit `overallCap`.
+ */
 export async function reserveCall(db: D1Database, rid: string, budget: RunBudget, upper: number,
-                                  day: string, dailyCap: number): Promise<string|null> {
+                                  day: string, liveCap: number, overallCap: number): Promise<string|null> {
   const token=crypto.randomUUID()
   const result=await db.batch([
     db.prepare(`INSERT INTO enrichment_calls(token,run_id,rid,day,upper_neurons,credit_neurons)
       SELECT ?,u.run_id,u.rid,?,?,u.credit_neurons FROM enrichment_units u JOIN enrichment_runs r ON r.run_id=u.run_id
       WHERE u.rid=? AND u.run_id=? AND u.admitted=1 AND r.cap_neurons=?
       AND r.spent_neurons+r.reserved_neurons+?-u.credit_neurons<=r.cap_neurons
+      AND COALESCE((SELECT SUM(neurons) FROM spend WHERE day=? AND model NOT LIKE '${REGEN_SPEND_PREFIX}%'),0)
+        + COALESCE((SELECT SUM(upper_neurons) FROM enrichment_calls WHERE day=? AND state='reserved'),0)+?<=?
       AND COALESCE((SELECT SUM(neurons) FROM spend WHERE day=?),0)
         + COALESCE((SELECT SUM(upper_neurons) FROM enrichment_calls WHERE day=? AND state='reserved'),0)+?<=?`)
-      .bind(token,day,upper,rid,budget.run_id,Math.floor(budget.max_usd/USD_PER_NEURON),upper,day,day,upper,dailyCap),
+      .bind(token,day,upper,rid,budget.run_id,Math.floor(budget.max_usd/USD_PER_NEURON),upper,day,day,upper,liveCap,day,day,upper,overallCap),
     db.prepare(`UPDATE enrichment_units SET credit_neurons=0 WHERE rid=? AND EXISTS(SELECT 1 FROM enrichment_calls WHERE token=?)`).bind(rid,token),
     db.prepare(`UPDATE enrichment_runs SET reserved_neurons=${reservationTotal} WHERE run_id=?`).bind(budget.run_id),
   ])

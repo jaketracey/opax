@@ -5,7 +5,7 @@ import {mountContractsTable} from './contracts-table.js?v=eb22e78169';
 import { shortDate, shortMoney } from "./format.js";
 import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=e352e15c9f";
 import { sourceLineHTML } from "./labels.js?v=fcb2a1091c";
-import { partyUrl } from "./canonical-urls.js?v=bcc9a57bab";
+import { partyUrl } from "./canonical-urls.js?v=9ce13e7ba5";
 import { receiptGraph, receiptGraphScope } from "./donor-disclosure.js?v=af7c0f0f03";
 const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 const number = (value) => (Number(value) || 0).toLocaleString("en-AU");

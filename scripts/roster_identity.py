@@ -183,10 +183,15 @@ def _year(value):
 def federal_members(db):
     """pid -> member() for every federal member in the members table: what export_parliamentarians.py
     verifies a roster row's pid against, and export_bills.py a bill sponsor's."""
-    return {str(r[0]): member(r[0], [r[1], f"{r[2] or ''} {r[3] or ''}".strip()], r[4], _year(r[5]), _year(r[6]))
+    result = {str(r[0]): member(r[0], [r[1], f"{r[2] or ''} {r[3] or ''}".strip()], r[4], _year(r[5]), _year(r[6]))
             for r in db.execute(
                 "SELECT person_id, full_name, first_name, last_name, chamber, entered_house, left_house "
                 "FROM members WHERE chamber IN ('representatives', 'senate') AND person_id GLOB '[0-9]*'")}
+    from parli.ingest.speaker_identity import member_rows
+    for m in member_rows():
+        result[m['person_id']] = member(m['person_id'], [m['full_name']], m['chamber'],
+                                       _year(m['entered_house']), _year(m['left_house']))
+    return result
 
 
 def sole_member(name, members, chamber, year):
@@ -232,7 +237,8 @@ def verify(row, ids, members, same, now_year):
     key = name.strip().lower()
     if key in same:
         return same[key], "listed as the same person"
-    numeric = [(str(p), n) for p, n in Counter(ids).most_common() if str(p).isdigit()]
+    from parli.ingest.speaker_identity import BY_ID
+    numeric = [(str(p), n) for p, n in Counter(ids).most_common() if str(p).isdigit() or p in BY_ID]
     pid = next((p for p, _ in numeric if p in members and _agrees_member(name, members[p])), None)
     how = "speech id"
     if pid is None and not weak(name) and row.get("first") is not None:
@@ -301,6 +307,10 @@ def pinned_members(public=PUBLIC):
     for pid, ns in names.items():
         s, e = min(starts.get(pid) or [EARLY]), max(ends.get(pid) or [SITTING])
         out[pid] = member(pid, ns, chamber.get(pid), None if s == EARLY else s, None if e == SITTING else e)
+    from parli.ingest.speaker_identity import member_rows
+    for m in member_rows():
+        out[m['person_id']] = member(m['person_id'], [m['full_name']], m['chamber'],
+                                    _year(m['entered_house']), _year(m['left_house']))
     return out
 
 

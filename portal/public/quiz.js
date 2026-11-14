@@ -1,7 +1,7 @@
 import {industryName} from './money-scope.js';
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=af7c0f0f03';
 import {loadDonorViewIndex} from './donor-views.js?v=a138263798';
-import {subjectUrl} from './canonical-urls.js?v=bcc9a57bab';
+import {subjectUrl} from './canonical-urls.js?v=9ce13e7ba5';
 /*
  * The record quiz — a MindMaze-spirited quiz over OPAX's real data.
  *

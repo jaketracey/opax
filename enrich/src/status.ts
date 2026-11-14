@@ -1,6 +1,6 @@
 // GET /status: queue counts, spend, cursors, last tick, recent errors. Read-only.
 
-import { budgetView, effectiveBudget, utcDay } from './budget.ts'
+import { budgetView, effectiveBudget, REGEN_SPEND_PREFIX, utcDay } from './budget.ts'
 import { getStates, hasBackfill } from './db.ts'
 import type { Config } from './env.ts'
 
@@ -27,7 +27,11 @@ export async function buildStatus(db: D1Database, cfg: Config, now: number): Pro
   const [byStatus, byOutcome, spendToday, spendRecent, states, errors, quarantined, ready, held] = await Promise.all([
     db.prepare('SELECT task, status, COUNT(*) AS n FROM queue GROUP BY task, status').all<{ task: string; status: string; n: number }>(),
     db.prepare("SELECT task, outcome, COUNT(*) AS n FROM queue WHERE status = 'done' GROUP BY task, outcome").all<{ task: string; outcome: string | null; n: number }>(),
-    db.prepare('SELECT COALESCE(SUM(neurons), 0) AS neurons, COALESCE(SUM(calls), 0) AS calls FROM spend WHERE day = ?').bind(day).first<{ neurons: number; calls: number }>(),
+    db.prepare(`SELECT COALESCE(SUM(CASE WHEN model LIKE '${REGEN_SPEND_PREFIX}%' THEN 0 ELSE neurons END), 0) AS neurons,
+        COALESCE(SUM(CASE WHEN model LIKE '${REGEN_SPEND_PREFIX}%' THEN 0 ELSE calls END), 0) AS calls,
+        COALESCE(SUM(CASE WHEN model LIKE '${REGEN_SPEND_PREFIX}%' THEN neurons ELSE 0 END), 0) AS regen_neurons,
+        COALESCE(SUM(CASE WHEN model LIKE '${REGEN_SPEND_PREFIX}%' THEN calls ELSE 0 END), 0) AS regen_calls
+      FROM spend WHERE day = ?`).bind(day).first<{ neurons: number; calls: number; regen_neurons: number; regen_calls: number }>(),
     db.prepare('SELECT day, model, neurons, calls, in_tokens, out_tokens FROM spend ORDER BY day DESC, model LIMIT 20').all(),
     getStates(db, '%'),
     db.prepare('SELECT ts, rid, task, kind, message FROM errors ORDER BY id DESC LIMIT 10').all<{ ts: number; rid: string | null; task: string | null; kind: string; message: string }>(),
@@ -71,7 +75,12 @@ export async function buildStatus(db: D1Database, cfg: Config, now: number): Pro
     doneOutcomes: outcomes,
     readyToWrite: ready?.n ?? 0,
     budget: { mode: budgetMode, effective: budget, backfill: cfg.dailyBudget, steady: cfg.steadyBudget },
-    spendToday: { day, ...budgetView(spendToday?.neurons ?? 0, budget), calls: spendToday?.calls ?? 0 },
+    // The live budget counts the Worker's own spend; `overall` (DAILY_NEURON_BUDGET) also counts the regen runner's.
+    spendToday: {
+      day, ...budgetView(spendToday?.neurons ?? 0, budget), calls: spendToday?.calls ?? 0,
+      regen: { neurons: spendToday?.regen_neurons ?? 0, calls: spendToday?.regen_calls ?? 0 },
+      overall: budgetView((spendToday?.neurons ?? 0) + (spendToday?.regen_neurons ?? 0), cfg.dailyBudget),
+    },
     spendRecent: spendRecent.results,
     cursors,
     state: other,

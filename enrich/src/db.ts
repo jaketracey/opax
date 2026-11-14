@@ -2,6 +2,7 @@
 // Times are unix milliseconds. Every function takes the database so the tests can
 // run it against a node:sqlite shim.
 import { admit, ownedBudget, assertBudgetOwnership, type AdmissionBudget } from './run-budget.ts'
+import { REGEN_SPEND_PREFIX } from './budget.ts'
 
 export type TaskName = 'speech_summary' | 'speech_topics' | 'release_summary'
 export type RowStatus = 'pending' | 'claimed' | 'done' | 'quarantined'
@@ -291,9 +292,24 @@ export async function addSpend(
     .run()
 }
 
-export async function spentOnDay(db: D1Database, day: string): Promise<number> {
-  const row = await db.prepare('SELECT COALESCE(SUM(neurons), 0) AS n FROM spend WHERE day = ?').bind(day).first<{ n: number }>()
-  return row?.n ?? 0
+export interface DaySpend {
+  /** The Worker's own spend: every row except the regen runner's. */
+  live: number
+  /** The regen runner's `regen:` rows. */
+  regen: number
+}
+
+/** The day's spend in one read, split so that each row is counted exactly once: live or regen. */
+export async function spendOnDay(db: D1Database, day: string): Promise<DaySpend> {
+  const row = await db
+    .prepare(
+      `SELECT COALESCE(SUM(CASE WHEN model LIKE '${REGEN_SPEND_PREFIX}%' THEN 0 ELSE neurons END), 0) AS live,
+         COALESCE(SUM(CASE WHEN model LIKE '${REGEN_SPEND_PREFIX}%' THEN neurons ELSE 0 END), 0) AS regen
+       FROM spend WHERE day = ?`,
+    )
+    .bind(day)
+    .first<{ live: number; regen: number }>()
+  return { live: row?.live ?? 0, regen: row?.regen ?? 0 }
 }
 
 // ---------------------------------------------------------------- rejections and errors
