@@ -108,7 +108,7 @@ describe('opening a source link', () => {
     });
     await openSource('http://example.com/', citation);
     expect(alert).toHaveBeenCalledWith(
-      "Couldn't open the original",
+      'Couldn’t open the original',
       'Check your connection.',
     );
     expect(sourceDestination()).toBeNull();

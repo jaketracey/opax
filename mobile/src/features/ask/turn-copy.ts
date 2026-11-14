@@ -5,12 +5,12 @@ import type { AskFailure } from './stream';
  * error text is never shown: each failure maps by its code.
  */
 export const askErrors = {
-  offline: "OPAX couldn't be reached. Check your connection.",
+  offline: 'OPAX couldn’t be reached. Check your connection.',
   timeout: 'This answer took too long.',
   partial: 'This answer stopped partway.',
   'rate-limited': 'OPAX is busy right now.',
-  blocked: "This question couldn't be sent.",
-  invalid: "The answer couldn't be read.",
+  blocked: 'This question couldn’t be sent.',
+  invalid: 'The answer couldn’t be read.',
   empty: 'No written answer came back. The records found are listed below.',
   emptyNone: 'No written answer came back.',
 } as const;

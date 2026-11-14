@@ -264,7 +264,7 @@ export class AskController {
         if (mine === this.sequence)
           this.update({
             notice: phoneCopy(
-              "This conversation couldn't be saved on this iPhone.",
+              'This conversation couldn’t be saved on this iPhone.',
             ),
           });
       });
@@ -454,7 +454,7 @@ export class AskController {
     } catch {
       this.update({
         notice: phoneCopy(
-          "This conversation couldn't be saved on this iPhone.",
+          'This conversation couldn’t be saved on this iPhone.',
         ),
       });
     }

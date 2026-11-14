@@ -287,7 +287,7 @@ function ProgramRecord({ params }: { params: ProgramParams }) {
               status={status}
               name={name}
               notFound={{
-                title: "This program isn't in the latest grant records",
+                title: 'This program isn’t in the latest grant records',
                 action: {
                   label: `See all ${otherGrants}`,
                   onPress: () => router.push(grantsRoute({ jur })),

@@ -154,7 +154,7 @@ export function EditionStory() {
           <ContentUnavailable
             symbol={offline ? 'wifi.slash' : 'exclamationmark.triangle'}
             title={
-              offline ? copy.notSaved : "The daily edition couldn't be loaded."
+              offline ? copy.notSaved : 'The daily edition couldn’t be loaded.'
             }
             body={offline ? copy.notSavedBody : undefined}
             action={

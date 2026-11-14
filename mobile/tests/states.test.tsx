@@ -1017,7 +1017,7 @@ describe('shared state kit', () => {
     expect(style.borderRadius).toBeUndefined();
     expect(
       r.root.findAllByType(Text).map((node) => node.props.children),
-    ).toContain("Bills couldn't be loaded.");
+    ).toContain('Bills couldn’t be loaded.');
     act(() => r.update(page(true)));
     act(() => jest.runOnlyPendingTimers());
     expect(announce).toHaveBeenCalledTimes(1);
@@ -1134,7 +1134,7 @@ describe('shared state kit', () => {
     const r = mount(
       <ContentUnavailable
         symbol={symbols.error}
-        title="This person couldn't be loaded"
+        title="This person couldn’t be loaded"
         body="Check your connection."
         action={{ label: 'Try again', onPress: retry }}
         testID="missing"
@@ -1156,7 +1156,7 @@ describe('shared state kit', () => {
     expect(StyleSheet.flatten(host.props.style).height).toBeUndefined();
     expect(StyleSheet.flatten(host.props.style).maxHeight).toBeUndefined();
     expect(r.root.findByType(ContentUnavailableView).props).toMatchObject({
-      title: "This person couldn't be loaded",
+      title: 'This person couldn’t be loaded',
       description: 'Check your connection.',
     });
     act(() => r.root.findByType(Button).props.onPress());
@@ -1322,7 +1322,7 @@ describe('shared state kit', () => {
   );
   test('error sentences leave the retry invitation to the button', () => {
     expect(errorMessage(new Error())).toBe(
-      "The public record couldn't be loaded.",
+      'The public record couldn’t be loaded.',
     );
     expect(
       errorMessage(

@@ -179,7 +179,7 @@ test.each(['network', 'server', undefined] as const)(
         new AskFailure('blocked', 'Try rewording private server text', reason),
       ),
     ).toEqual({
-      message: "This question couldn't be sent.",
+      message: 'This question couldn’t be sent.',
       retry: false,
     });
   },

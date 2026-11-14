@@ -183,7 +183,7 @@ export function TopicSpeeches({
           ) : (
             <ContentUnavailable
               symbol="exclamationmark.triangle"
-              title="Speeches couldn't be loaded"
+              title="Speeches couldn’t be loaded"
               body="OPAX didn't respond."
               action={{
                 label: 'Try again',

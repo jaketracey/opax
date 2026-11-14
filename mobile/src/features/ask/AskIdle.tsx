@@ -35,7 +35,7 @@ export const idleCopy = {
   tryAsking: 'Try asking',
   conversations: 'Conversations',
   seeAll: 'See all conversations',
-  readFailed: "Saved conversations couldn't be read.",
+  readFailed: 'Saved conversations couldn’t be read.',
   edit: 'Edit before asking',
   copy: 'Copy',
 } as const;

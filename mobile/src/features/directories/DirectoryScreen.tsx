@@ -425,7 +425,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
       ) : (
         <ContentUnavailable
           symbol="exclamationmark.triangle"
-          title={`Couldn't load ${title.toLowerCase()}`}
+          title={`Couldn’t load ${title.toLowerCase()}`}
           body={
             error instanceof ApiError && error.code === 'invalid-data'
               ? error.message

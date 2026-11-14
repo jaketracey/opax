@@ -469,7 +469,7 @@ test.each([
   [
     'unreadable',
     new ApiError('invalid-data', 'Decoder failed'),
-    /^This record couldn't be loaded$/,
+    /^This record couldn’t be loaded$/,
   ],
 ])('%s: the reader says so in plain words', async (_case, error, title) => {
   jest.mocked(records.document).mockRejectedValue(error);

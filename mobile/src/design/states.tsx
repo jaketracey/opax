@@ -58,7 +58,7 @@ export const stateCopy = {
   offlineCached: phoneCopy(
     'Offline. Records saved on this iPhone stay readable.',
   ),
-  genericError: "The public record couldn't be loaded.",
+  genericError: 'The public record couldn’t be loaded.',
   searchBusy: 'Search is busy. Try again in a minute.',
   searchUnavailable: 'Search is temporarily unavailable.',
   retry: copy.tryAgain,

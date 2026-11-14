@@ -246,7 +246,7 @@ test('suggestions that could not load offer Try again, which reads them again', 
   const error = r.root
     .findAllByType(InlineError)
     .find((e) => e.props.testID === 'search-suggestions-error')!;
-  expect(error.props.message).toBe("Suggestions couldn't be loaded.");
+  expect(error.props.message).toBe('Suggestions couldn’t be loaded.');
   // The two fixed rows stay: the reader can still search or ask.
   expect(ids(r)).toContain('search-speeches-row');
   await act(async () => error.props.onRetry());
@@ -274,7 +274,7 @@ test('Try again repeats a failed person open at its row, without searching', asy
   await act(async () => row().props.onPress());
   expect(openSuggestedPerson).toHaveBeenCalledTimes(1);
   const error = r.root.findByType(InlineError);
-  expect(error.props.message).toBe("This page couldn't be opened.");
+  expect(error.props.message).toBe('This page couldn’t be opened.');
   await act(async () => error.props.onRetry());
   expect(openSuggestedPerson).toHaveBeenCalledTimes(2);
   expect(openSuggestedPerson).toHaveBeenLastCalledWith('Anthony Albanese');

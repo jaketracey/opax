@@ -403,7 +403,7 @@ export default function BillTextReader({
             <RecordLoadError
               error={manifestState.error}
               slug=""
-              subject="This bill's text"
+              subject="This bill’s text"
               onRetry={manifestState.retry}
               testID="bill-text-error"
             />
@@ -539,7 +539,7 @@ export default function BillTextReader({
                 <View style={styles.block}>
                   <InlineError
                     subject="This version"
-                    message="This version couldn't be loaded."
+                    message="This version couldn’t be loaded."
                     onRetry={versionState.retry}
                     testID="bill-text-version-error"
                   />

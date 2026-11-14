@@ -237,7 +237,7 @@ function CatalogRow({
       {failed ? (
         <InlineError
           subject="This page"
-          message="This page couldn't be opened."
+          message="This page couldn’t be opened."
           onRetry={open}
         />
       ) : null}
@@ -294,7 +294,7 @@ export function GroupResults({
       ) : list.next?.status === 'error' ? (
         <InlineError
           subject={`More ${noun}`}
-          message={`More ${noun} couldn't load.`}
+          message={`More ${noun} couldn’t load.`}
           onRetry={list.retry}
         />
       ) : list.more ? (

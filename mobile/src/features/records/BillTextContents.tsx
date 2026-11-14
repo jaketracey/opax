@@ -93,7 +93,7 @@ export default function BillTextContents() {
               <RecordLoadError
                 error={error}
                 slug=""
-                subject="This bill's text"
+                subject="This bill’s text"
                 onRetry={retry}
                 testID="bill-text-contents-error"
               />

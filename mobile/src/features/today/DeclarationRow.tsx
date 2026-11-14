@@ -369,7 +369,7 @@ export function DeclarationsBlock({
           testID="today-declarations-loading"
         />
       }
-      error="Declarations couldn't be loaded."
+      error="Declarations couldn’t be loaded."
       onRetry={onRetry}
       report={reportOf(block)}
       line={

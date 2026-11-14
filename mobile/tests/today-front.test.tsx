@@ -273,7 +273,7 @@ describe('the block shell', () => {
         state={state}
         skeleton={<Text testID="skeleton">…</Text>}
         empty="No bills introduced yet."
-        error="Bills couldn't be loaded."
+        error="Bills couldn’t be loaded."
         onRetry={() => {}}
         line={{ ...billsSources(recentBills), testID: 'today-bills-sources' }}
         testID="today-bills"

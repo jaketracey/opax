@@ -1658,7 +1658,7 @@ test.each(['401', '403', 'redirect'])(
       await mount();
       await type('A fixture question?');
       await press('ask-submit');
-      expect(texts()).toContain("This question couldn't be sent.");
+      expect(texts()).toContain('This question couldn’t be sent.');
       expect(byId('ask-retry')).toEqual([]);
       expect(byId('ask-blocked-reason')).toEqual([]);
       expect(texts().join(' ')).not.toContain('rewording');

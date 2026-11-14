@@ -174,7 +174,7 @@ test('the full viewer reads a local photo, keeps its frame and retries in place'
   expect(apiClient.getForAction).not.toHaveBeenCalled();
   const obsoleteError = image.props.onError;
   act(() => obsoleteError());
-  expect(texts(renderer)).toContain("Photo couldn't be loaded.");
+  expect(texts(renderer)).toContain('Photo couldn’t be loaded.');
   await act(async () =>
     renderer.root
       .findAllByType(Button)

@@ -793,7 +793,7 @@ describe('words per dollar', () => {
     expect(ids.indexOf('wd-speech-error')).toBeGreaterThan(
       ids.indexOf(lastRow),
     );
-    expect(uiTexts(r).join(' ')).toContain("Speech shares couldn't be loaded.");
+    expect(uiTexts(r).join(' ')).toContain('Speech shares couldn’t be loaded.');
     expect(sourceLabel(r)).toMatch(/partial$/);
     r.unmount();
   });

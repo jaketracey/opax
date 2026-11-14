@@ -442,7 +442,7 @@ export default function BillDetail({
             ) : error && !record ? (
               <ContentUnavailable
                 symbol="exclamationmark.triangle"
-                title="This bill couldn't be loaded"
+                title="This bill couldn’t be loaded"
                 action={{
                   label: words.tryAgain,
                   onPress: retry,
@@ -676,7 +676,7 @@ function BillPage({
       ) : stale?.kind === 'failed' ? (
         <InlineError
           subject="the latest version of this bill"
-          message={`The latest version of this bill couldn't be loaded. Showing the copy saved on ${dayMonth(stale.at)}.`}
+          message={`The latest version of this bill couldn’t be loaded. Showing the copy saved on ${dayMonth(stale.at)}.`}
           onRetry={stale.retry}
           testID="bill-stale"
         />

@@ -1,3 +1,4 @@
+/** @jest-environment ./tests/sydney-environment.cjs */
 import { act } from 'react';
 import { RefreshControl } from 'react-native';
 import TestRenderer from 'react-test-renderer';
@@ -148,29 +149,23 @@ test('a refresh answered from the saved copy says the list is saved', async () =
 });
 
 test('records are grouped by the reader’s own day added', async () => {
-  const zone = process.env.TZ;
-  process.env.TZ = 'Australia/Sydney';
-  try {
-    jest.mocked(records.recent).mockResolvedValueOnce({
-      ...record('Morning fixture'),
-      data: [
-        {
-          slug: 'speech-200',
-          title: 'Morning fixture',
-          indexed: '2026-11-10T20:00:00.000Z',
-        },
-      ],
-    });
-    let view!: TestRenderer.ReactTestRenderer;
-    await act(async () => {
-      view = TestRenderer.create(
-        withNavigationOptions(<RecentRecords />, () => {}),
-      );
-    });
-    expect(view.root.findByType(InsetGroup).props.header).toBe(
-      'Added 11 November 2026',
+  jest.mocked(records.recent).mockResolvedValueOnce({
+    ...record('Morning fixture'),
+    data: [
+      {
+        slug: 'speech-200',
+        title: 'Morning fixture',
+        indexed: '2026-11-10T20:00:00.000Z',
+      },
+    ],
+  });
+  let view!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    view = TestRenderer.create(
+      withNavigationOptions(<RecentRecords />, () => {}),
     );
-  } finally {
-    process.env.TZ = zone;
-  }
+  });
+  expect(view.root.findByType(InsetGroup).props.header).toBe(
+    'Added 11 November 2026',
+  );
 });

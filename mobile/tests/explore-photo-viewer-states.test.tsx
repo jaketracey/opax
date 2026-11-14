@@ -43,7 +43,7 @@ test('the photo viewer shows progress while the photographs load', () => {
 test('a failed photographs read offers Try again rather than a black page', () => {
   Object.assign(mockRead, { record: null, error: new Error('offline') });
   const view = draw();
-  expect(strings(view)).toContain("Photographs couldn't be loaded");
+  expect(strings(view)).toContain('Photographs couldn’t be loaded');
   act(() => byID(view, 'photo-viewer-retry')[0]!.props.onPress());
   expect(mockRead.retry).toHaveBeenCalled();
 });

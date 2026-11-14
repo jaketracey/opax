@@ -171,7 +171,7 @@ export function BillsBlock({
       empty={
         kind === 'new' ? 'No bills introduced yet.' : 'No bills passed yet.'
       }
-      error="Bills couldn't be loaded."
+      error="Bills couldn’t be loaded."
       onRetry={onRetry}
       report={reportOf(block)}
       line={

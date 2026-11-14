@@ -1540,7 +1540,7 @@ test('an undecodable download with no good cache still fails and writes nothing'
 });
 
 test('reader-facing error sentences leave Try again to the action', () => {
-  expect(httpError(500).message).toBe("The public record couldn't be loaded.");
+  expect(httpError(500).message).toBe('The public record couldn’t be loaded.');
   expect(
     new ApiError(
       'timeout',

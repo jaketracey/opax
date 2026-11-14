@@ -112,7 +112,7 @@ export function SourcesError({
   return (
     <InlineError
       subject={subject}
-      message={`${subject} couldn't load.`}
+      message={`${subject} couldn’t load.`}
       onRetry={onRetry}
       testID="search-sources-error"
     />

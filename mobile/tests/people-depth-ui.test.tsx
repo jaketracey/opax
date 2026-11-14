@@ -211,7 +211,7 @@ test('a failed Topics read draws its own Try again, which reads Topics again', a
     );
   const r = await render(<Topics name="Fixture Member" />);
   expect(ids(r)).toContain('person-topics-error');
-  expect(words(r)).toContain("Topics couldn't be loaded.");
+  expect(words(r)).toContain('Topics couldn’t be loaded.');
   await act(async () => {
     r.root
       .find((n) => n.props?.testID === 'person-topics-error')
@@ -304,7 +304,7 @@ test('the ministerial diary is drawn only for a member it covers', async () => {
     <PersonDiary identity={identity('Nobody Fixture', 'qld')} />,
   );
   expect(ids(failed)).toContain('person-diary-error');
-  expect(words(failed)).toContain("Ministerial diary couldn't be loaded.");
+  expect(words(failed)).toContain('Ministerial diary couldn’t be loaded.');
   await act(async () => failed.unmount());
 });
 

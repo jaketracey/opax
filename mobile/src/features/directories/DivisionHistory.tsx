@@ -475,7 +475,7 @@ export default function DivisionHistory() {
       {record?.failed && record.loaded ? (
         <InlineError
           subject="some votes"
-          message={`Votes from ${formatCount(record.loaded)} of ${counted(record.total, 'bill', 'bills')}. ${formatCount(record.failed)} couldn't be loaded.`}
+          message={`Votes from ${formatCount(record.loaded)} of ${counted(record.total, 'bill', 'bills')}. ${formatCount(record.failed)} couldn’t be loaded.`}
           onRetry={refresh}
           testID="division-history-partial"
         />
@@ -494,7 +494,7 @@ export default function DivisionHistory() {
       (record && record.total > 0 && record.failed === record.total) ? (
       <ContentUnavailable
         symbol="exclamationmark.triangle"
-        title="Votes couldn't be loaded"
+        title="Votes couldn’t be loaded"
         action={{
           label: copy.tryAgain,
           onPress: error && !record ? retry : refresh,

@@ -248,7 +248,7 @@ export function YourMPCard({
       {view.status === 'error' ? (
         <InlineError
           subject="Your MP"
-          message="Your MP couldn't be loaded."
+          message="Your MP couldn’t be loaded."
           onRetry={onRetry}
           testID="today-your-mp-error"
         />

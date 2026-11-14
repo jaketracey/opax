@@ -83,7 +83,7 @@ function initialise() {
     } catch {
       snapshot = {
         status: 'error',
-        message: `Your electorate couldn't be loaded on this ${thisDevice()}.`,
+        message: `Your electorate couldn’t be loaded on this ${thisDevice()}.`,
       };
       emit();
     }

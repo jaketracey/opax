@@ -145,7 +145,7 @@ export default function RecentRecords() {
     ) : (
       <ContentUnavailable
         symbol="exclamationmark.triangle"
-        title="New records couldn't be loaded"
+        title="New records couldn’t be loaded"
         action={{ label: copy.tryAgain, onPress: first.retry }}
         testID="recent-error"
       />
@@ -240,7 +240,7 @@ export default function RecentRecords() {
       {value && refreshError && !offline ? (
         <InlineError
           subject="New records"
-          message="New records couldn't be refreshed. Showing the saved copy."
+          message="New records couldn’t be refreshed. Showing the saved copy."
           onRetry={refresh}
           testID="recent-refresh-error"
         />

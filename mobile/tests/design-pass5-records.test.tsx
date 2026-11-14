@@ -893,7 +893,7 @@ test('Just added: a failed first read offers Try again', async () => {
   const view = await mount(<RecentRecords />);
   const failure = view.root.findByType(ContentUnavailable);
   expect(failure.props).toMatchObject({
-    title: "New records couldn't be loaded",
+    title: 'New records couldn’t be loaded',
     testID: 'recent-error',
   });
   await act(async () => failure.props.action.onPress());

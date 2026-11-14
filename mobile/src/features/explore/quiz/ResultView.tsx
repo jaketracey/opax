@@ -56,7 +56,7 @@ export function ResultView({
       {saveFailed ? (
         <InlineError
           subject="your best streak"
-          message="Your best streak couldn't be saved."
+          message="Your best streak couldn’t be saved."
           onRetry={onRetrySave}
           testID="quiz-save"
         />

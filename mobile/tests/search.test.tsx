@@ -308,7 +308,7 @@ describe('every empty and error state has a way on (3.9)', () => {
   test.each([
     [new ApiError('rate-limited', 'x'), 'Search is busy right now.'],
     [new ApiError('offline', 'x'), 'Speeches need a connection.'],
-    [new Error('boom'), "Speeches couldn't load."],
+    [new Error('boom'), 'Speeches couldn’t load.'],
   ])('a failure offers Try again: %s', (error, sentence) => {
     const r = failureRecovery(error, 'speeches');
     expect(r.sentence).toBe(sentence);

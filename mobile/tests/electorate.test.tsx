@@ -973,7 +973,7 @@ test('loading draws a skeleton, never empty copy', async () => {
   mock.directory.mockReturnValue(new Promise(() => undefined) as never);
   const r = await render(<Electorate />);
   expect(has(r, 'electorate-loading')).toBe(true);
-  expect(text(r)).not.toMatch(/No member|couldn't/);
+  expect(text(r)).not.toMatch(/No member|couldn’t/);
   await act(async () => r.unmount());
 });
 
@@ -995,7 +995,7 @@ test('the election screen orders candidates and marks the winner Elected', async
   mockParams.key = 'missing';
   const missing = await render(<Election />);
   expect(unavailable(missing, 'election-missing')).toBe(
-    "This election couldn't be found.",
+    'This election couldn’t be found.',
   );
   await act(async () => missing.unmount());
 });

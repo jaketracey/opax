@@ -676,7 +676,7 @@ test.each([
     const alert = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
     await openOnWeb(path, 'Open');
     expect(alert).toHaveBeenCalledWith(
-      "Couldn't open the page",
+      'Couldn’t open the page',
       'Check your connection.',
     );
     alert.mockRestore();
