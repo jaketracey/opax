@@ -1,0 +1,268 @@
+{
+  "reviewed": "2026-11-14",
+  "fixture_sha256": "b9552e67826df2336e19399596f1d8d666d72ac7dac26e2522297c344f7dd3cf",
+  "records": {
+    "Tony Smith": {
+      "fields": {
+        "first": [
+          1998,
+          2011
+        ],
+        "parties": [
+          [
+            "Liberal",
+            "Independent"
+          ],
+          [
+            "Liberal"
+          ]
+        ],
+        "speeches": [
+          456,
+          380
+        ]
+      },
+      "raw_after": {
+        "speeches": 380,
+        "first": 2011,
+        "last": 2022,
+        "states": [
+          "federal"
+        ],
+        "chambers": [
+          "representatives"
+        ],
+        "parties": null,
+        "witness_rows": null
+      }
+    },
+    "Martin": {
+      "fields": {
+        "chambers": [
+          [
+            "senate_committee",
+            "qld_la",
+            "house_committee",
+            "joint_committee",
+            "nsw_lc",
+            "representatives"
+          ],
+          [
+            "qld_la",
+            "nsw_lc"
+          ]
+        ],
+        "first": [
+          2002,
+          2024
+        ],
+        "separated_witnesses": [
+          null,
+          {
+            "name": "Martin",
+            "speaker_type": "witness",
+            "speeches": 148,
+            "states": [
+              "federal"
+            ],
+            "chambers": [
+              "house_committee",
+              "senate_committee",
+              "joint_committee"
+            ],
+            "first": 2025,
+            "last": 2026
+          }
+        ],
+        "speeches": [
+          211,
+          61
+        ],
+        "states": [
+          [
+            "federal",
+            "qld",
+            "nsw"
+          ],
+          [
+            "qld",
+            "nsw"
+          ]
+        ],
+        "transcript": [
+          null,
+          {
+            "speeches": 209,
+            "witness_rows": 148,
+            "states": [
+              "federal",
+              "nsw",
+              "qld"
+            ],
+            "chambers": [
+              "nsw_lc",
+              "qld_la",
+              "house_committee",
+              "senate_committee",
+              "joint_committee"
+            ],
+            "first": 2024,
+            "last": 2026
+          }
+        ],
+        "witness_rows": [
+          148,
+          null
+        ]
+      },
+      "raw_after": {
+        "speeches": 99,
+        "first": 2024,
+        "last": 2026,
+        "states": [
+          "qld",
+          "federal",
+          "nsw"
+        ],
+        "chambers": [
+          "qld_la",
+          "senate_committee",
+          "nsw_lc"
+        ],
+        "parties": null,
+        "witness_rows": 38
+      },
+      "prior": {
+        "name": "Martin",
+        "speeches": 63,
+        "states": [
+          "qld",
+          "nsw",
+          "federal"
+        ],
+        "chambers": [
+          "qld_la",
+          "nsw_lc",
+          "representatives"
+        ],
+        "first": 2002,
+        "last": 2026,
+        "representation": [],
+        "recorded_parties": [
+          "Labor"
+        ],
+        "separated_witnesses": {
+          "name": "Martin",
+          "speaker_type": "witness",
+          "speeches": 148,
+          "states": [
+            "federal"
+          ],
+          "chambers": [
+            "house_committee",
+            "senate_committee",
+            "joint_committee"
+          ],
+          "first": 2025,
+          "last": 2026
+        },
+        "transcript": {
+          "speeches": 211,
+          "witness_rows": 148,
+          "states": [
+            "federal",
+            "nsw",
+            "qld"
+          ],
+          "chambers": [
+            "representatives",
+            "nsw_lc",
+            "qld_la",
+            "house_committee",
+            "senate_committee",
+            "joint_committee"
+          ],
+          "first": 2002,
+          "last": 2026
+        }
+      }
+    },
+    "Stephen Martin": {
+      "fields": {
+        "aliases": [
+          null,
+          [
+            "Stephen Paul Martin"
+          ]
+        ],
+        "pid": [
+          null,
+          "person_9c02d321caef54b2ba21a1f8"
+        ],
+        "representation": [
+          [],
+          [
+            {
+              "jurisdiction": "federal",
+              "chamber": "representatives",
+              "electorate": "Cunningham",
+              "state": "NSW",
+              "basis": "OpenAustralia recorded House service 1996-04-30 to 2002-08-16"
+            }
+          ]
+        ],
+        "speeches": [
+          297,
+          299
+        ]
+      },
+      "raw_after": {
+        "speeches": 299,
+        "first": 1998,
+        "last": 2002,
+        "pid": "person_9c02d321caef54b2ba21a1f8",
+        "aliases": [
+          "Stephen Paul Martin"
+        ],
+        "representation": [
+          {
+            "jurisdiction": "federal",
+            "chamber": "representatives",
+            "electorate": "Cunningham",
+            "state": "NSW",
+            "basis": "OpenAustralia recorded House service 1996-04-30 to 2002-08-16"
+          }
+        ]
+      }
+    }
+  },
+  "new": {
+    "Anthony Charles Smith": {
+      "name": "Anthony Charles Smith",
+      "speeches": 76,
+      "party": "Independent",
+      "parties": [
+        "Independent",
+        "Liberal"
+      ],
+      "states": [
+        "federal"
+      ],
+      "chambers": [
+        "representatives"
+      ],
+      "first": 1998,
+      "last": 1998,
+      "pid": "person_efb744ffb3a25d578e592281",
+      "representation": [
+        {
+          "jurisdiction": "federal",
+          "chamber": "representatives",
+          "electorate": "Dickson",
+          "state": "QLD",
+          "basis": "OpenAustralia recorded House service 1996-03-02 to 1998-10-03"
+        }
+      ]
+    }
+  }
+}

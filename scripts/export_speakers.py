@@ -42,6 +42,7 @@ from collections import Counter
 from parli.ingest.speaker_names import normalize_speaker
 from parli.ingest.speaker_roles import chair_party_sql
 from parli.ingest.speaker_names import non_person_name
+from parli.ingest.speaker_identity import identity_for
 
 DB = os.environ.get("OPAX_DB") or os.path.expanduser("~/.cache/autoresearch/parli.db")
 MIN_SPEECHES = 5
@@ -80,15 +81,18 @@ def count_speakers(db: sqlite3.Connection, min_speeches: int = MIN_SPEECHES) -> 
     counts: Counter = Counter()
     seen: set = set()
     twins = 0
+    context_fields = ('person_id', 'state', 'chamber', 'source', 'electorate', 'speaker_type', 'witness_name')
+    context_sql = ', '.join(f'{c}' if c in cols else f'NULL AS {c}' for c in context_fields)
     cursor = db.execute(f"""
         SELECT speaker_name_clean, speaker_name, {hearing}, date,
-               CASE WHEN COALESCE({hearing}, '') != '' THEN text END
+               CASE WHEN COALESCE({hearing}, '') != '' THEN text END, {context_sql}
         FROM speeches
         WHERE {eligible_where(cols)}
         ORDER BY speech_id
     """)
-    for clean, raw, hearing_id, date, text in cursor:
-        name = speaker_label(clean, raw)
+    for clean, raw, hearing_id, date, text, *context in cursor:
+        person = identity_for(dict(zip(context_fields, context), speaker_name=raw, date=date))
+        name = person['name'] if person else speaker_label(clean, raw)
         if not name:
             continue
         if text is not None:

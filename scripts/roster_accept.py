@@ -337,6 +337,11 @@ def group_problem(name, group, evidence, row, curated, roster=True, root=ROOT):
         why = value_problem(f, a) or value_problem(f, b)
         if why:
             return "malformed value: " + why
+    if ev.get('rule') == 'dated-house-speaker-identity':
+        if roster and row is None:
+            return 'not a shipped record'
+        from scripts.speech_identity_review import group_problem as identity_problem
+        return identity_problem(name, group, row, root)
     try:
         if ev["kind"] == "corpus":
             why = corpus_reason(name, fields, ev)
@@ -446,6 +451,11 @@ def _new_row_problem(name, entry, evidence, shipped_names, root=ROOT):
             return why
     elif not (str(row.get("pid") or "").isdigit() or entry.get("phid")):
         return "a new row needs a pid or a Handbook id"
+    if ev.get('rule') == 'dated-house-speaker-identity':
+        from scripts.speech_identity_review import new_problem
+        why = new_problem(name, entry, root)
+        if why:
+            return why
     houses = [c for c in row["chambers"] if not _committee(c)]
     if not houses:
         return "a committee-only or chamberless row is not a parliamentary identity"
@@ -522,7 +532,8 @@ def judge(accept, shipped_people=None, root=ROOT, curated=False):
                       if not (why is None and f == "aliases" and set(g["fields"]) == {"aliases"}
                               and evidence.get(g["evidence"], {}).get("rule") == "catalog-aliases")
                       and not (why is None and f == "affiliations" and set(g["fields"]) == LIST_SERVICE_FIELDS
-                               and evidence.get(g["evidence"], {}).get("rule") == LIST_SERVICE)}
+                               and evidence.get(g["evidence"], {}).get("rule") == LIST_SERVICE)
+                      and not (why is None and evidence.get(g['evidence'], {}).get('rule') == 'dated-house-speaker-identity')}
         whole = ("two groups touch the same field, so every group on the record is held" if len(fields) != len(set(fields))
                  else "a group touches a protection field (" + ", ".join(sorted(protection & PROTECTION_FIELDS)) +
                  "), so every group on the record is held" if protection & PROTECTION_FIELDS else None)
@@ -593,11 +604,15 @@ def apply(shipped_people, fresh_people, accept, root=ROOT):
     fresh = {p["name"]: p for p in fresh_people if isinstance(p, dict) and isinstance(p.get("name"), str)}
     for name, i, g, why in groups:
         q = fresh.get(name)
+        identity_match = False
+        if not why and accept.get('evidence', {}).get(g.get('evidence'), {}).get('rule') == 'dated-house-speaker-identity':
+            from scripts.speech_identity_review import fresh_matches
+            identity_match = fresh_matches(name, q, root)
         if why:
             report["held"].append((name, why))
         elif state(shipped[name], g) == "applied":
             report["unchanged"] += 1
-        elif q is not None and all(_get(q, f) == b for f, (a, b) in g["fields"].items()):
+        elif identity_match or q is not None and all(_get(q, f) == b for f, (a, b) in g["fields"].items()):
             for f, (a, b) in g["fields"].items():
                 _put(by[name], f, b)
             report["applied"] += 1
