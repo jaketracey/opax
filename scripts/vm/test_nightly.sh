@@ -38,6 +38,7 @@ export OPAX_TODAY=2026-10-10
 # The Senate video step (nightly 3d) calls $OPAX_NODE, which here is the recording fake the
 # portal-test gate scenarios count; it is covered offline by portal/test/senate-video.test.mjs.
 export OPAX_SENATE_VIDEO=0
+export OPAX_NSW_BACKFILL=0
 BASE_TOTAL=$(python3 -c "import json; print(json.load(open('$SRC/portal/public/corpus.json'))['expected_resources'])")
 BASE_SPEECH=$(python3 -c "import json; print(json.load(open('$SRC/portal/public/corpus.json'))['collected_speeches'])")
 REAL_NODE="${OPAX_TEST_REAL_NODE:-$(command -v node || true)}"
@@ -63,7 +64,7 @@ new_sandbox() {
   # per-record periods in roster_accept.json among them) and an empty electorate release written below; the fixture DB
   # has no ext_state_roster, which is logged and skipped; scripts/corrections/divisions.json is left out because the
   # fixture DB has none of its records.
-  for f in scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/vm/periodic_state.py scripts/export_bills.py scripts/roster_identity.py scripts/roster_fold.py \
+  for f in scripts/vm/nsw_hansard_backfill.sh scripts/vm/nightly.sh scripts/vm/run-nightly.sh scripts/vm/poweroff-if-idle.sh scripts/vm/validate_data.py scripts/vm/data_groups.sh scripts/vm/periodic_state.py scripts/export_bills.py scripts/roster_identity.py scripts/roster_fold.py \
            scripts/vm/bills_refresh.sh scripts/vm/bills_guard.py scripts/vm/keep_if_unchanged.py \
            scripts/vm/divisions_refresh.sh scripts/vm/divisions_guard.py scripts/vm/mobile_votes_contract.py \
            scripts/hubs/sitting-2026.json \
@@ -76,7 +77,7 @@ new_sandbox() {
            parli/ingest/tvfy_refresh.py parli/ingest/honest_http.py parli/ingest/state_rosters.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
            scripts/coverage_watchdog.py \
-           parli/__init__.py parli/arag.py parli/ingest/http.py parli/ingest/user-agent.json parli/ingest/__init__.py parli/ingest/speaker_names.py \
+           parli/__init__.py parli/arag.py parli/ingest/backfill_guard.py parli/ingest/http.py parli/ingest/user-agent.json parli/ingest/__init__.py parli/ingest/speaker_names.py \
            portal/wrangler.jsonc portal/public/corpus.json; do
     mkdir -p "$seed/$(dirname "$f")"
     cp "$SRC/$f" "$seed/$f" || { bad "cannot copy fixture dependency: $f"; exit 1; }
@@ -225,7 +226,16 @@ open(f"{seed}/portal/public/audit/derived.json", "w").write('{"complete": true}\
 PYEOF
   (cd "$seed" && git init -q && git add -A && git commit -q -m seed && git remote add origin "$ORIGIN" && git push -q origin HEAD:main)
   REPO="$HOME/opax"; git clone -q "$ORIGIN" "$REPO"
-  mkdir -p "$REPO/.venv/bin"; ln -s "$(command -v python3)" "$REPO/.venv/bin/python"
+  mkdir -p "$REPO/.venv/bin"
+  # A symlink placed in another .venv loses the caller's pyvenv.cfg and
+  # dependencies. Execute the original interpreter at its own path instead.
+  printf '#!/usr/bin/env bash\nexec %q "$@"\n' "$(command -v python3)" > "$REPO/.venv/bin/python"
+  chmod +x "$REPO/.venv/bin/python"
+  cp "$REPO/.venv/bin/python" "$REPO/.venv/bin/python3"
+  if [ "$("$REPO/.venv/bin/python" -c 'import requests, sys; print(sys.prefix)')" != "$(python3 -c 'import sys; print(sys.prefix)')" ]; then
+    bad "sandbox interpreter lost the caller's virtual environment"
+    exit 1
+  fi
   # state the preflight looks for
   python3 "$SRC/tests/fixtures/evidence-nightly/inputs.py" "$HOME/.cache/autoresearch"
   python3 - "$HOME/.cache/autoresearch/parli.db" <<'PYEOF'
@@ -281,6 +291,9 @@ PYEOF
 # the way the real exporters do (every bill speech brief comes out null)
 PIPE="$HOME/.cache/autoresearch/pipeline"
 if [ -f .env ]; then set -a; . ./.env; set +a; fi   # like the real script
+# what the real script's senate_backfill step would see (the nightly's periodic-night skip)
+echo "OPAX_SENATE_BACKFILL=${OPAX_SENATE_BACKFILL-unset}" > "$HOME/daily.backfill-env"
+echo "${OPAX_BACKFILL_NOT_AFTER-unset}" > "$HOME/daily.backfill-not-after"
 sleep 1
 if [ "${FAKE_MODE:-ok}" = paused ]; then
   mkdir -p "$PIPE/source-access"
@@ -298,6 +311,7 @@ fi
   echo "$(date '+%F %T')   committee_senate   newest 2026-06-05  rows 10"
   echo "$(date '+%F %T') ===== daily refresh end ====="
   [ "${FAKE_MODE:-ok}" = partial ] && echo "$(date '+%F %T') Partial daily refresh: cut by its time limit, resumes from its checkpoint next run: arag_sync"
+  [ "${FAKE_MODE:-ok}" = backfill ] && echo "$(date '+%F %T') Backfill warnings: senate_backfill(rc=${FAKE_BACKFILL_RC:-1})"
 } >> "$PIPE/daily.log"
 echo "GET https://www.openaustralia.org.au/api/getDebates?key=$OPENAUSTRALIA_API_KEY&date=2026-09-28"
 python3 - <<'PYEOF'
@@ -869,6 +883,33 @@ PYSTUB
 }
 refresh() { (cd "$RS" && "$RS/repo/scripts/daily_refresh.sh" >"$RS/out.txt" 2>&1); RRC=$?; }
 
+echo "== Senate backfill: on by default; off/stop switches and failures preserve daily completion"
+new_refresh_sandbox senate-off
+OPAX_SENATE_BACKFILL=0 OPAX_ONLY=senate_backfill,federal_coverage refresh
+check "off skips acquisition but retains the coverage guard" bash -c "[ '$RRC' -eq 0 ] && ! grep -q parli.ingest.senate_backfill '$RS_CALLS' && grep -q scripts/federal_hansard_coverage.py '$RS_CALLS'"
+new_refresh_sandbox senate-on
+OPAX_ONLY=senate_backfill,federal_coverage refresh
+check "default on runs acquisition and the coverage guard" bash -c "[ '$RRC' -eq 0 ] && grep -q parli.ingest.senate_backfill '$RS_CALLS' && grep -q scripts/federal_hansard_coverage.py '$RS_CALLS'"
+new_refresh_sandbox senate-stop
+mkdir -p "$HOME/.cache/autoresearch/pipeline"
+touch "$HOME/.cache/autoresearch/pipeline/backfill.STOP"
+OPAX_ONLY=senate_backfill,federal_coverage refresh
+check "shared stop warns, skips acquisition and preserves coverage and daily completion" bash -c "[ '$RRC' -eq 0 ] && ! grep -q parli.ingest.senate_backfill '$RS_CALLS' && grep -q 'Backfill warnings: senate_backfill(shared-stop)' '$RS/out.txt' && grep -q scripts/federal_hansard_coverage.py '$RS_CALLS'"
+new_refresh_sandbox senate-cutoff
+OPAX_BACKFILL_NOT_AFTER=$(date +%s) OPAX_ONLY=senate_backfill,federal_coverage refresh
+check "inside 22 min of the nightly cutoff the Senate stage is skipped with a warning; coverage still runs" bash -c "[ '$RRC' -eq 0 ] && ! grep -q parli.ingest.senate_backfill '$RS_CALLS' && grep -q 'Backfill warnings: senate_backfill(cutoff)' '$RS/out.txt' && grep -q scripts/federal_hansard_coverage.py '$RS_CALLS'"
+: > "$RS_CALLS"
+OPAX_BACKFILL_NOT_AFTER=$(( $(date +%s) + 7200 )) OPAX_ONLY=senate_backfill,federal_coverage refresh
+check "well before the cutoff the Senate stage runs" bash -c "[ '$RRC' -eq 0 ] && grep -q parli.ingest.senate_backfill '$RS_CALLS'"
+for repair_rc in 1 124 137; do
+  new_refresh_sandbox "senate-warning-$repair_rc"
+  OPAX_SENATE_BACKFILL=1 OPAX_ONLY=senate_backfill,federal_coverage FAIL_STEPS=senate_backfill FAIL_RC=$repair_rc refresh
+  check "repair rc=$repair_rc is listed separately and daily exits 0" bash -c "[ '$RRC' -eq 0 ] && grep -q 'Backfill warnings: senate_backfill(rc=$repair_rc)' '$RS/out.txt' && ! grep -q 'Incomplete refresh: failed steps' '$RS/out.txt' && grep -q scripts/federal_hansard_coverage.py '$RS_CALLS'"
+done
+new_refresh_sandbox senate-coverage-warning
+OPAX_ONLY=federal_coverage FAIL_STEPS=federal_hansard_coverage.py refresh
+check "a failed coverage reader cannot create periodic refresh debt" bash -c "[ '$RRC' -eq 0 ] && grep -q 'Backfill warnings: federal_coverage(rc=1)' '$RS/out.txt'"
+
 echo "== 14. daily_refresh.sh: a failing sa step makes the run incomplete unless it is allowed"
 new_refresh_sandbox r9
 FAIL_STEPS=sa_hansard refresh
@@ -1115,9 +1156,51 @@ check "dir mode: a failing exporter exits with its status, restores the tree and
 rm -rf "$ES"; unset PY
 
 echo "== 24. nightly: which periodic groups run (Sydney date) and what happens when they run"
+for repair_rc in 1 124; do
+  new_sandbox "senate-periodic-$repair_rc"
+  OPAX_FORCE_GROUPS='weekly monthly frl' FAKE_MODE=backfill FAKE_BACKFILL_RC=$repair_rc FAKE_WEEKLY_MODE=ok nightly
+  check "backfill rc=$repair_rc remains a warning and all published periodic groups complete" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and not s[\"failures\"] and s[\"backfill_failures\"]==[\"senate_backfill(rc=$repair_rc)\"] and any(\"senate_backfill\" in w for w in s[\"warnings\"]), s; assert all(\"due\" not in s[\"periodic_state\"][\"groups\"][g] and s[\"periodic_state\"][\"groups\"][g][\"last_success\"]==\"2026-10-10\" for g in [\"weekly\",\"monthly\",\"frl\"]), s'"
+  OPAX_TODAY=2026-10-12 FAKE_MODE=backfill FAKE_BACKFILL_RC=$repair_rc FAKE_WEEKLY_MODE=ok nightly
+  check "persistent backfill rc=$repair_rc does not rerun completed monthly and FRL work" python3 -c "import json; s=json.load(open('$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json')); assert s['groups']['monthly']['last_attempt']=='2026-10-10' and s['groups']['frl']['last_attempt']=='2026-10-10', s"
+done
+new_sandbox senate-growth-stop
+mkdir -p "$HOME/.cache/autoresearch/pipeline"
+printf '{"reason":"cumulative KB growth exceeds 5.5 GB"}\n' > "$HOME/.cache/autoresearch/pipeline/backfill.STOP"
+printf '{"version":1,"bytes_added":5500000001,"resources_added":150000,"nights":{"2026-10-10":{"bytes_added":1,"resources_added":0}},"stages":{"senate":{"days_remaining":274,"cap":10}},"observations":[]}\n' > "$HOME/.cache/autoresearch/pipeline/backfill-ledger.json"
+OPAX_FORCE_GROUPS='weekly monthly frl' FAKE_WEEKLY_MODE=ok nightly
+check "growth stop alerts and publishes growth metrics while all periodic groups complete" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and not s[\"failures\"] and s[\"backfill_failures\"] and any(\"5.5 GB\" in w for w in s[\"warnings\"]), s; b=s[\"backfill\"]; assert b[\"cumulative_bytes_added\"]==5500000001 and b[\"cumulative_gb_added\"]==5.5 and b[\"gb_remaining\"]==0 and b[\"cumulative_resources_added\"]==150000 and b[\"days_remaining\"]==274 and b[\"projected_finish_date\"] is None, b; assert all(\"due\" not in s[\"periodic_state\"][\"groups\"][g] for g in [\"weekly\",\"monthly\",\"frl\"]), s'"
+OPAX_TODAY=2026-10-12 FAKE_WEEKLY_MODE=ok nightly
+check "persistent growth stop does not repeat completed monthly or FRL acquisition" python3 -c "import json; s=json.load(open('$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json')); assert s['groups']['monthly']['last_attempt']=='2026-10-10' and s['groups']['frl']['last_attempt']=='2026-10-10', s"
 new_sandbox s24
 OPAX_TODAY=2026-09-21 FAKE_WEEKLY_MODE=ok nightly
 check "a Monday (2026-09-21): the periodic refresh is not called" test ! -e "$HOME/weekly.args"
+echo "== 24a. nightly: no Senate or NSW backfill on weekly/monthly nights (the 6 h window)"
+new_sandbox s24-backfill-ordinary
+OPAX_TODAY=2026-09-22 FAKE_WEEKLY_MODE=ok nightly
+check "an ordinary Tuesday: the Senate backfill stays on and nothing is skipped" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(cat '$HOME/daily.backfill-env')\" = OPAX_SENATE_BACKFILL=unset ] && ! grep -q 'backfill stages skipped tonight' '$SB/nightly.out' && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; assert \"skipped_tonight\" not in json.load(sys.stdin)[\"backfill\"]'"
+for sunday in '2026-09-20 weekly' '2026-09-06 weekly monthly'; do
+  read -r day expect <<<"$sunday"
+  new_sandbox "s24-backfill-$day"
+  OPAX_TODAY=$day OPAX_NSW_BACKFILL=1 FAKE_WEEKLY_MODE=ok nightly
+  check "Sunday $day ($expect): both backfill stages are off for the night and the groups still run" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(cat '$HOME/daily.backfill-env')\" = OPAX_SENATE_BACKFILL=0 ] && grep -q 'backfill stages skipped tonight (periodic groups tonight: ' '$SB/nightly.out' && grep -q 'NSW Hansard repair off (skipped tonight: periodic groups tonight: ' '$SB/nightly.out' && [ \"\$(cat '$HOME/weekly.args')\" = '$expect' ]"
+  check "Sunday $day: status reports the skip, not a stop" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); b=s[\"backfill\"]; assert b[\"skipped_tonight\"].startswith(\"periodic groups tonight: \") and b[\"stopped\"] is False and not s[\"backfill_failures\"] and s[\"status\"]==\"ok\", s'"
+done
+new_sandbox s24-backfill-catchup
+OPAX_FORCE_GROUPS=weekly OPAX_NIGHTLY_SKIP_PERIODIC=1 FAKE_WEEKLY_MODE=ok nightly
+check "groups switched off tonight: the backfill still runs" bash -c "[ \"\$(cat '$HOME/daily.backfill-env')\" = OPAX_SENATE_BACKFILL=unset ]"
+OPAX_TODAY=2026-10-12 FAKE_WEEKLY_MODE=ok nightly
+check "a Monday catching up an owed weekly group also skips the backfill" bash -c "[ \"\$(cat '$HOME/weekly.args')\" = weekly ] && [ \"\$(cat '$HOME/daily.backfill-env')\" = OPAX_SENATE_BACKFILL=0 ]"
+new_sandbox s24-backfill-frl
+OPAX_TODAY=2026-10-15 FAKE_WEEKLY_MODE=none nightly
+check "the Thursday FRL night alone keeps the backfill on" bash -c "[ \"\$(cat '$HOME/weekly.args')\" = frl ] && [ \"\$(cat '$HOME/daily.backfill-env')\" = OPAX_SENATE_BACKFILL=unset ]"
+echo "== 24b. nightly: the backfill cutoff (6 h limit less the post-refresh and FRL reserves)"
+started=$(( $(date +%s) - 3600 ))   # both nights are already an hour in when the backfill would start
+new_sandbox s24-cutoff-frl
+OPAX_NIGHTLY_STARTED=$started OPAX_TODAY=2026-10-15 OPAX_NSW_BACKFILL=1 FAKE_WEEKLY_MODE=none nightly
+check "a Thursday FRL night that runs long skips the backfill, and the night and FRL still complete" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(cat '$HOME/daily.backfill-not-after')\" = $((started + 21600 - 7200 - 9900)) ] && grep -q 'NSW Hansard repair skipped: within 22 min of the nightly backfill cutoff' '$SB/nightly.out' && [ \"\$(cat '$HOME/weekly.args')\" = frl ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and not s[\"failures\"] and any(\"cutoff\" in f for f in s[\"backfill_failures\"]), s'"
+new_sandbox s24-cutoff-ordinary
+OPAX_NIGHTLY_STARTED=$started OPAX_TODAY=2026-09-22 FAKE_WEEKLY_MODE=ok nightly
+check "an ordinary night an hour in keeps the backfill: cutoff 4 h after the start, nothing skipped" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(cat '$HOME/daily.backfill-not-after')\" = $((started + 21600 - 7200)) ] && ! grep -q 'cutoff; ' '$SB/nightly.out' && [ \"\$(cat '$HOME/daily.backfill-env')\" = OPAX_SENATE_BACKFILL=unset ]"
 new_sandbox s24b
 OPAX_TODAY=2026-09-20 FAKE_WEEKLY_MODE=ok nightly
 check "Sunday 2026-09-20 (not the first): weekly only" bash -c "[ \"\$(cat '$HOME/weekly.args')\" = weekly ]"

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
-import {coverageCollections, coverageHTML, renderCoverage} from '../../scripts/build_coverage.mjs';
+import {coverageCollections, coverageHTML, renderCoverage, senateGapNote} from '../../scripts/build_coverage.mjs';
 import {buildMethods} from '../../scripts/build_methods.mjs';
 import {panelPrerender} from '../src/seo-content.ts';
 
@@ -10,6 +10,32 @@ const pub = new URL('../public/', import.meta.url);
 const read = path => JSON.parse(readFileSync(new URL(path, pub), 'utf8'));
 const html = readFileSync(new URL('index.html', pub), 'utf8');
 const rows = coverageCollections();
+
+test('Senate gap stays visible per empty year and clears as publication fills each year', () => {
+  const corpus = read('corpus.json');
+  corpus.refresh.federal_hansard_coverage = {unpublished_senate_years: [2014, 2015, 2016, 2017, 2018]};
+  delete corpus.refresh.senate_backfill_enabled;
+  assert.equal(senateGapNote(corpus), 'Senate Hansard for 2014 to 2018 is not yet held.');
+  corpus.refresh.senate_backfill_enabled = false;
+  assert.equal(senateGapNote(corpus), 'Senate Hansard for 2014 to 2018 is not yet held.');
+  const held = coverageCollections(path => path === 'corpus.json' ? corpus : read(path));
+  assert.ok(coverageHTML(held).includes('Senate Hansard for 2014 to 2018 is not yet held.'));
+  corpus.refresh.senate_backfill_enabled = true;
+  assert.equal(senateGapNote(corpus), 'Senate Hansard for 2014 to 2018 is not yet held.');
+  const gaps = coverageCollections(path => path === 'corpus.json' ? corpus : read(path));
+  assert.ok(coverageHTML(gaps).includes(senateGapNote(corpus)));
+  const coverage = corpus.refresh.federal_hansard_coverage;
+  coverage.unpublished_senate_years = [2014, 2016, 2017, 2018];
+  assert.equal(senateGapNote(corpus), 'Senate Hansard for 2014, 2016 to 2018 is not yet held.');
+  coverage.unpublished_senate_years = [];
+  assert.equal(senateGapNote(corpus), '');
+  coverage.backfill_pending_days_by_year = {'2014': 62};
+  assert.equal(senateGapNote(corpus), 'Senate Hansard for 2014 is not yet held.');
+  corpus.refresh.senate_backfill_enabled = false;
+  assert.equal(senateGapNote(corpus), 'Senate Hansard for 2014 is not yet held.');
+  coverage.backfill_pending_days_by_year = {'2014': 0};
+  assert.equal(senateGapNote(corpus), '');
+});
 
 test('published coverage counts follow each dataset, with distinct units and provenance', () => {
   const byId = new Map(rows.map(r => [r.id, r]));

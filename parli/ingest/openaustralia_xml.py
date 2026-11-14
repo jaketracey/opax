@@ -17,7 +17,7 @@ import re
 import sqlite3
 import xml.etree.ElementTree as ET
 
-from scripts.roster_identity import agrees, federal_members, member, verify
+from scripts.roster_identity import agrees, federal_members, member, same_person, verify
 from .honest_http import HonestHTTP, Refused, Unavailable
 from . import http as source_http
 from .cache_batch import CacheBatch
@@ -49,6 +49,7 @@ class People:
         self.by_office = {}
         self.names = {}
         self.members = federal_members(db)
+        self.identity_facts = same_person()
         for p in ET.fromstring(people):
             pid = p.attrib['id'].rsplit('/', 1)[-1]
             self.names[pid] = p.attrib.get('latestname', '')
@@ -92,7 +93,8 @@ class People:
         authority = member(pid, names, house, int(o['fromdate'][:4]), int(o['todate'][:4]))
         row = {'name': printed or display, 'states': ['federal'], 'chambers': [house],
                'first': int(day[:4]), 'last': int(day[:4])}
-        found, _ = verify(row, Counter({pid: 1}), {pid: authority}, {}, int(day[:4]))
+        facts = {name: owner for name, owner in self.identity_facts.items() if owner == pid}
+        found, _ = verify(row, Counter({pid: 1}), {pid: authority}, facts, int(day[:4]))
         if found != pid:
             raise ValueError(f'identity guard rejected office {office} on {day}')
         owner = next((n for n in (known['names'] if known else []) if agrees(display, n)), display)
@@ -385,7 +387,10 @@ def main():
     ap.add_argument('--tvfy-list-cache', default='~/.cache/autoresearch/tvfy/list')
     ap.add_argument('--load-divisions', action='store_true')
     ap.add_argument('--backfill-missing-days', action='store_true',
-                    help='bounded federal speech sweep (2019–2025); staging copy by default')
+                    help='bounded federal speech sweep (2014 to 2025); staging copy by default')
+    ap.add_argument('--chamber', action='append', choices=list(FOLDERS),
+                    help='chamber to backfill; repeat to select both')
+    ap.add_argument('--source-manifest', help='versioned source-day JSON manifest')
     ap.add_argument('--staging-db', help='new SQLite backup file for the speech dry run')
     ap.add_argument('--cache-dir', help='reuse an existing XML archive cache without changing it')
     ap.add_argument('--max-days', type=int, default=1000, help='maximum zero-row chamber-days per sweep')
@@ -401,7 +406,7 @@ def main():
     args = ap.parse_args()
     if args.backfill_missing_days:
         from .federal_backfill import run
-        args.start = args.start or '2019-01-01'
+        args.start = args.start or '2014-01-01'
         args.end = args.end or '2025-12-31'
         try:
             print(json.dumps(run(args), ensure_ascii=False))

@@ -372,14 +372,15 @@ warn() { echo "REPORT $*"; }
     def test_committed_repair_bounds_and_lanes_match_review(self):
         entries = wd.load_allowlist(ROOT / 'scripts/coverage_allowlist.json')
         holes = {e['chambers'][0]: e for e in entries if e['kind'] == 'known_being_filled'}
-        for ch, end, lane in [('senate', '2019-04-03', 'im/senate-backfill'),
-                              ('nsw_la', '2024-11-21', 'im/nsw-hansard-gap'),
-                              ('nsw_lc', '2025-02-10', 'im/nsw-hansard-gap')]:
+        # Review dates: projected publication finish (Sundays skipped) plus 14 days.
+        for ch, end, review_by, finish in [('senate', '2019-04-03', '2027-01-02', '19 December 2026'),
+                                           ('nsw_la', '2024-11-21', '2027-01-23', '9 January 2027'),
+                                           ('nsw_lc', '2025-02-10', '2027-01-23', '9 January 2027')]:
             self.assertEqual(holes[ch]['end'], end)
-            self.assertEqual(holes[ch]['lane'], lane)
-            self.assertEqual(holes[ch]['review_by'], '2026-12-14')
+            self.assertEqual(holes[ch]['lane'], 'im/backfill-joint')
+            self.assertEqual(holes[ch]['review_by'], review_by)
             self.assertEqual(holes[ch]['review_reason'],
-                             'backfill held for a spend decision; reset to ETA + 14 days when enabled')
+                             f'backfill enabled; projected publication finish {finish} (Sundays skipped) plus 14 days')
 
     def test_accepted_regression_allowlist_validation(self):
         path = self.root / 'allowlist.json'

@@ -319,7 +319,8 @@ def compute(prev: dict, kb: dict, log: dict, bills: dict, nsw_release: str | Non
             run_date: date, now: datetime, *, always_stamp: bool = False,
             allow_shrink: bool = False, stamp_after_hours: float | None = None,
             interests_status: dict | None = None, source_access: dict | None = None,
-            evidence_stats: dict | None = None, structured_stats: dict | None = None) -> tuple[dict, dict]:
+            evidence_stats: dict | None = None, structured_stats: dict | None = None,
+            federal_coverage: dict | None = None) -> tuple[dict, dict]:
     """Return (new manifest, result). Pure: no I/O."""
     new = copy.deepcopy(prev)
     refresh = new.setdefault("refresh", {})
@@ -444,6 +445,11 @@ def compute(prev: dict, kb: dict, log: dict, bills: dict, nsw_release: str | Non
         facts.update(structured_stats)
         put(refresh, 'structured_sources', facts, 'structured_sources')
 
+    if federal_coverage is not None:
+        put(refresh, 'federal_hansard_coverage', federal_coverage, 'federal_hansard_coverage')
+    put(refresh, 'senate_backfill_enabled', os.environ.get('OPAX_SENATE_BACKFILL', '1') != '0',
+        'senate_backfill_enabled')
+
     # Fields that can move without the box changing.
     for key in ("bills_registry", "current_parliament_bills", "latest_bill_introduced"):
         if bills.get(key) is not None:
@@ -521,6 +527,7 @@ def main(argv: list[str] | None = None) -> int:
                     help="last federal interests outcome (preservation/access-pause warnings)")
     ap.add_argument("--source-access-dir", default=os.path.expanduser("~/.cache/autoresearch/pipeline/source-access"),
                     help="per-source access receipts; named pauses are independent of index freshness")
+    ap.add_argument('--federal-coverage', default=os.path.expanduser('~/.cache/autoresearch/pipeline/federal-hansard-coverage.json'))
     ap.add_argument("--evidence-stats", default=str(REPO / "portal/public/evidence/stats.json"),
                     help="accepted public evidence coverage; incomplete stats leave the prior manifest untouched")
     ap.add_argument("--suppliers-index", default=str(REPO / "portal/public/suppliers.json"),
@@ -577,7 +584,9 @@ def main(argv: list[str] | None = None) -> int:
                               always_stamp=args.always_stamp, allow_shrink=args.allow_shrink,
                               stamp_after_hours=args.stamp_after_hours, interests_status=interests_status,
                               source_access=read_source_access(Path(args.source_access_dir)), evidence_stats=evidence_stats,
-                              structured_stats=structured_source_facts(args.db, Path(args.suppliers_index)))
+                              structured_stats=structured_source_facts(args.db, Path(args.suppliers_index)),
+                              federal_coverage=json.loads(Path(args.federal_coverage).read_text())
+                              if Path(args.federal_coverage).exists() else None)
     except Refused as e:
         print(f"REFUSED: {e}", file=sys.stderr)
         if args.result_json:
