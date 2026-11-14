@@ -12,7 +12,7 @@ import { isWitness, belongsToScope } from '../public/speech-attribution.js';
 const source=ts.createSourceFile('index.ts',readFileSync(new URL('../src/index.ts',import.meta.url),'utf8'),ts.ScriptTarget.Latest,true);
 const slugDeclarations=source.statements.filter(n=>ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>/^(?:SLUG_RE|BILL_TEXT_SLUG_RE|PRESS_SLUG_RE|RESEARCH_SLUG_RE|DIVISION_SLUG_RE|isPublicSlug)$/.test(d.name.getText(source)))).map(n=>n.getText(source)).join('\n');
 const isPublicSlug=runInNewContext(ts.transpile(slugDeclarations)+'; isPublicSlug');
-const handler=source.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='apiResource').getText(source);
+const handler=source.statements.filter(n=>ts.isFunctionDeclaration(n)&&/^(?:shortTurn|apiResource)$/.test(n.name?.text??'')||ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>d.name.getText(source)==='SHORT_TURN_WORDS')).map(n=>n.getText(source)).join('\n');
 async function readSource(texts,slug='research-cpi-mlci-2026',overrides={}) {
   const record={title:'Source record',data:{texts},usermetadata:{classifications:[{labelset:'kind',label:'research_report'}]},...overrides};
   const api=runInNewContext(ts.transpile(handler)+'; apiResource',{
@@ -43,7 +43,7 @@ test('mixed resource/native envelope preserves participants without a personal i
 });
 
 test('new corpus source pages show t-body text and keep machine summaries separate',async()=>{
-  const result=await readSource({'t-body':field('Invitations are not awarded grants.'),'da-summary-t-body':field('Machine summary')});
+  const result=await readSource({'t-body':field('Invitations are not awarded grants.'),'da-summary-t-body':field('Machine summary')},undefined,{extra:{metadata:{word_count:2400}}});
   assert.equal(result.text,'Invitations are not awarded grants.');
   assert.equal(result.summary,'Machine summary');
   assert.equal(result.labels.kind,'research_report');
