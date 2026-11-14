@@ -364,7 +364,7 @@ async function mountFunding(root, links, life, register = "") {
       slot.hidden = false;
       slot.innerHTML = '<p role="status">Opening the money map…</p>';
       try {
-        const { mountMoneyMap } = await import("/money-map.js?v=f0a9329cde");
+        const { mountMoneyMap } = await import("/money-map.js?v=cd9a5c325e");
         if (!life.alive()) return;
         slot.textContent = "";
         const handle = await mountMoneyMap(slot, "/graph/money.json", { focus: links[0].id, chrome: "mini", reveal: true, openCard: false });
