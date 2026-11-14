@@ -63,10 +63,10 @@ const pendingCap = 300;
 
 /**
  * The launch cover: the native splash's layers (the star and the "OPAX"
- * wordmark on navy). Existing phones draw them in the native position;
- * adaptive displays clear their safe area and reserved regions. See
- * navigation/DUO.md for the native launch-screen limit. Then one of two
- * sequences runs (timing.ts):
+ * wordmark on navy), drawn where the native storyboard draws them, centred
+ * on the window. Adaptive displays settle the name clear of their safe area
+ * and reserved regions, so the unfold carries it there (navigation/DUO.md).
+ * Then one of two sequences runs (timing.ts):
  *
  * - `short`: hold until `ready` (never past `handoff.latestFade` when
  *   `latest`), then crossfade out.
@@ -156,9 +156,9 @@ function LaunchCover({
     [t, exit],
   );
 
-  // Hide the native splash once the layers draw. Adaptive display placement
-  // can differ from the view-centred native storyboard. Declared before
-  // the effects below so `shownAt` is set when they first run.
+  // Hide the native splash once the layers draw, in the storyboard's place
+  // on every device. Declared before the effects below so `shownAt` is set
+  // when they first run.
   useEffect(() => {
     if (!shown || hidden.current) return;
     hidden.current = true;

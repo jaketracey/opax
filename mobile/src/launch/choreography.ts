@@ -15,16 +15,19 @@ import {
  * worklets only interpolate and tests can read the same positions.
  *
  * The start uses the native splash's 200 x 120 artwork, the star on its
- * 60pt square and the "OPAX" wordmark at 30pt. On adaptive displays the
- * lockup clears the safe area and local reserved regions (navigation/DUO.md
- * describes the native storyboard's placement limit). Each
- * letter's pen comes from geometry.generated.ts, where CoreText put it, so
- * four live glyphs drawn at those pens are the wordmark image.
+ * 60pt square and the "OPAX" wordmark at 30pt, centred on the whole window
+ * on every device, as the native storyboard centres it, so the handoff from
+ * the native splash has no seam. Each letter's pen comes from
+ * geometry.generated.ts, where CoreText put it, so four live glyphs drawn at
+ * those pens are the wordmark image.
  *
  * The end is the full name, one word a line, left-aligned as a block
- * centred in the safe content area, with the star settled above it. The letter of OPAX
- * in each word (the X of eXchange is its second glyph) is the travelling
- * glyph; the rest of the word fades in beside it.
+ * centred in the safe content area, with the star settled above it. On
+ * adaptive displays that area clears the safe area and local reserved
+ * regions, so the unfold carries the lockup from the window's centre to the
+ * content's (navigation/DUO.md, "Launch screen"). The letter of OPAX in each
+ * word (the X of eXchange is its second glyph) is the travelling glyph; the
+ * rest of the word fades in beside it.
  */
 export interface Frame {
   width: number;
@@ -128,16 +131,14 @@ export function splashLayout(frame: Frame): SplashLayout {
   }
   const size = nameFontSize({ ...frame, width: fitting.width });
   const lineHeight = Math.round(name.leading * size);
-  const placedCanvas = placeClear(
-    {
-      x: fitting.x + (fitting.width - geometry.canvas.width) / 2,
-      y: fitting.y + (fitting.height - geometry.canvas.height) / 2,
-      ...geometry.canvas,
-    },
-    regions,
-    safe,
-  );
-  const canvas = { x: placedCanvas.x, y: placedCanvas.y };
+  // The first frame is the native storyboard's: the lockup's centre X and Y
+  // are pinned to its container view, the whole window, with no safe area or
+  // reserved region it could know about. Placing it anywhere else is a jump
+  // at handoff (half a side rail on the closed iPhone Duo).
+  const canvas = {
+    x: (frame.width - geometry.canvas.width) / 2,
+    y: (frame.height - geometry.canvas.height) / 2,
+  };
   const starFrom = {
     x: canvas.x + geometry.mark.x,
     y: canvas.y + geometry.mark.y,
