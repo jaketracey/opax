@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {JSDOM} from 'jsdom';
 import {sponsoredBills} from '../../scripts/build_party_index.mjs';
+import {billSponsorProjection} from './helpers/bill-sponsor-projection.mjs';
 import {partyBills, partyBillsHTML, partyMembers, partyMembersHTML, PARTY_NO_MEMBERS} from '../public/party-page.js';
 
 const read = path => JSON.parse(readFileSync(new URL(`../public${path}`, import.meta.url), 'utf8'));
@@ -46,6 +47,31 @@ test('the shipped index preserves recorded members alongside dated sponsor bills
     'Rex Patrick Team': [4, 'Australian Federal Integrity Commission Bill 2021', 0],
   };
   for (const [label, [count, title, memberCount]] of Object.entries(expected)) {
+    const bills = partyBills(label, divisions);
+    assert.equal(bills.length, count, label);
+    assert.equal(bills[0].title, title, label);
+    const members = partyMembers(label, {roster:read('/parliamentarians.json'), divisions});
+    assert.equal(members.current.length + members.former.length, memberCount, label);
+    if (!memberCount) assert.ok(partyMembersHTML(label, members, h).includes(esc(PARTY_NO_MEMBERS)), label);
+  }
+  // Every listed bill has its own page file.
+  const index = new Set(read('/bills/index.json').bills.map(b => b.key));
+  for (const bills of Object.values(divisions.bills)) for (const b of bills) assert.ok(index.has(b.key), b.key);
+});
+
+test('the next dated export: recorded members and the two reviewed naming deltas and their newest bills', () => {
+  const published = read('/graph/party-members.json');
+  const accepted = read('/facts/sponsor-parties.json');
+  const current = {bills:sponsoredBills(read('/bills/index.json').bills, accepted)};
+  const divisions = {...published, bills:sponsoredBills(billSponsorProjection().bills, accepted)};
+  const expected = {
+    // 7 + 15 dated corrections - s1127's reviewed Centre Alliance rename.
+    'Nick Xenophon Team': [21, 'Banking Amendment (Rural Finance Reform) Bill 2018', 5],
+    'Palmer United Party': [3, 'Commonwealth Grants Commission Amendment (GST Distribution) Bill 2015', 4],
+    'Rex Patrick Team': [4, 'Australian Federal Integrity Commission Bill 2021', 0],
+  };
+  for (const [label, [count, title, memberCount]] of Object.entries(expected)) {
+    assert.deepEqual(partyBills(label, published), partyBills(label, current), label);
     const bills = partyBills(label, divisions);
     assert.equal(bills.length, count, label);
     assert.equal(bills[0].title, title, label);

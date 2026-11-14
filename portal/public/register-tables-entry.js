@@ -3,7 +3,7 @@
 const app = document.querySelector('script[src^="/app.js"]');
 const serverRegister = /^\/(?:instruments|audit|register\/(?:vic-gifts|state-bills|gov-advertising|government-finance|tax-expenditures))\/?$/.test(location.pathname);
 if (serverRegister || app && /^\/subject\/(?:person|party|donor)\//.test(location.pathname)) {
-  import('./register-tables.js?v=a1bf34a557').then(({hydrateRegisterTables}) => { if (serverRegister) hydrateRegisterTables(); });
+  import('./register-tables.js?v=4f061ca4cf').then(({hydrateRegisterTables}) => { if (serverRegister) hydrateRegisterTables(); });
 }
 // Sitting hubs keep their server-rendered vote table without the application.
 if (app ? /^\/(?:bill|subject)\//.test(location.pathname) : document.querySelector('[data-vote-table]')) {
