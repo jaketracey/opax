@@ -43,7 +43,7 @@ name: 28 Welcome on first launch, Continue to the seat step, a postcode answered
 # No location request until "Use my location" is tapped.
 - assertNotVisible: Allow Once
 - tapOn:
-    id: welcome-continue
+    id: welcome-know
 - extendedWaitUntil:
     visible:
       id: welcome-seat
@@ -119,7 +119,7 @@ name: 28 Welcome on first launch, Continue to the seat step, a postcode answered
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/28-replay
 - tapOn:
-    id: welcome-continue
+    id: welcome-know
 - extendedWaitUntil:
     visible:
       id: seat-saved-row

@@ -127,19 +127,34 @@ const saved = () => ({
 const reports = () => (track as jest.Mock).mock.calls;
 
 describe('skipping the electorate step', () => {
-  test('the step says why it asks, in the words of Today’s invitation', async () => {
+  test('the step says first what an electorate is, then how to find one without its name', async () => {
     const r = await render(<SeatChooser presentation="welcome" />);
-    expect(seatCopy.why).toBe(invitationBody(null));
+    // Newcomer build (README 4.3, 4.4): the step explains the electorate,
+    // Today's invitation explains the MP.
+    expect(seatCopy.why).toBe(
+      'Your electorate is the area you vote in. Find yours and OPAX will show you your MP: who they are, and how they vote.',
+    );
+    expect(seatCopy.whyHelp).toBe(
+      'Not sure of its name? Use your location and OPAX will find it.',
+    );
+    expect(invitationBody(null)).toBe(seatCopy.invitation);
     expect(words(r)).toContain(seatCopy.why);
+    expect(words(r)).toContain(seatCopy.whyHelp);
     // First in the list, before the location row.
     const ids = r.root
       .findAll(
         (n) =>
           typeof n.type !== 'string' &&
-          ['welcome-seat-why', 'use-my-location'].includes(n.props.testID),
+          ['welcome-seat-why', 'welcome-seat-help', 'use-my-location'].includes(
+            n.props.testID,
+          ),
       )
       .map((n) => n.props.testID as string);
-    expect(ids.indexOf('welcome-seat-why')).toBe(0);
+    expect([...new Set(ids)]).toEqual([
+      'welcome-seat-why',
+      'welcome-seat-help',
+      'use-my-location',
+    ]);
     await act(async () => r.unmount());
   });
   test('"Choose later" is a full button that says where to choose again, and lands in the app', async () => {
@@ -173,6 +188,7 @@ describe('skipping the electorate step', () => {
   test('the sheet has Cancel instead: no reason line, no "Choose later", nothing reported', async () => {
     const r = await render(<SeatChooser presentation="sheet" />);
     expect(byID(r, 'welcome-seat-why')).toHaveLength(0);
+    expect(byID(r, 'welcome-seat-help')).toHaveLength(0);
     expect(byID(r, 'seat-choose-later')).toHaveLength(0);
     const [cancel] = mockScreen.options.unstable_headerLeftItems();
     act(() => cancel.onPress());

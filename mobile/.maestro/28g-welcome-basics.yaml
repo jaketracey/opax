@@ -1,0 +1,94 @@
+appId: au.com.opax.app
+name: 28g Welcome asks once, Show me the basics, Parliament in a minute, the electorate step, then Home's plain lines
+---
+# Newcomer build, option C. "Show me the basics" turns Explain terms on and
+# opens Parliament in a minute; its last button goes on to the electorate
+# step. After Not now, Home draws the plain line under How parliament voted,
+# and a tap opens the term's answer sheet. The other answer, "I know how
+# Parliament works", is 28 and 28c (no plain lines). Quote "on": unquoted it
+# is a YAML boolean. Bar buttons have no test ids: they are reached by label.
+- launchApp:
+    clearState: true
+    permissions:
+      location: unset
+    arguments:
+      OPAXWelcomeTour: 'on'
+- extendedWaitUntil:
+    visible:
+      id: welcome-screen
+    timeout: 60000
+- extendedWaitUntil:
+    notVisible:
+      id: welcome-launch-cover
+    timeout: 10000
+- scrollUntilVisible:
+    element:
+      id: welcome-know
+    visibilityPercentage: 50
+    centerElement: true
+    timeout: 60000
+- assertVisible:
+    id: welcome-ask
+    below:
+      id: welcome-notice
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/28g-welcome-question
+- tapOn:
+    id: welcome-continue
+- extendedWaitUntil:
+    visible:
+      id: minute-title
+    timeout: 10000
+- assertVisible: Skip
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/28g-minute-top
+- scrollUntilVisible:
+    element:
+      id: minute-idea-houses-title
+    centerElement: true
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/28g-minute-houses
+- scrollUntilVisible:
+    element:
+      id: minute-idea-votes-title
+    centerElement: true
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/28g-minute-votes
+- scrollUntilVisible:
+    element:
+      id: minute-find
+    centerElement: true
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/28g-minute-end
+- tapOn:
+    id: minute-find
+- extendedWaitUntil:
+    visible:
+      id: welcome-seat
+    timeout: 10000
+- assertVisible:
+    id: welcome-seat-help
+- takeScreenshot: ${EVIDENCE}/28g-seat
+- tapOn: Not now
+- extendedWaitUntil:
+    visible:
+      id: today-screen
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: gloss-division
+    centerElement: true
+    timeout: 90000
+    speed: 20
+- waitForAnimationToEnd
+- takeScreenshot: ${EVIDENCE}/28g-home-plain-line
+- tapOn:
+    id: gloss-division
+- extendedWaitUntil:
+    visible:
+      id: term-division-sheet
+    timeout: 10000
+- takeScreenshot: ${EVIDENCE}/28g-term-sheet

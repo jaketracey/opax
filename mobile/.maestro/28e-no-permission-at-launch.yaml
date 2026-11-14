@@ -16,7 +16,7 @@ name: 28e No location request at launch, in the welcome or on Your MP until a ta
 - assertNotVisible: Allow Once
 - assertNotVisible: Allow While Using App
 - tapOn:
-    id: welcome-continue
+    id: welcome-know
 - extendedWaitUntil:
     visible:
       id: welcome-seat

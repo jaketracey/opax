@@ -1717,6 +1717,7 @@ function Votes({
     >
       <Section
         title="How parliament voted"
+        gloss="division"
         testID="bill-divisions"
         headingTestID="bill-divisions-title"
       >

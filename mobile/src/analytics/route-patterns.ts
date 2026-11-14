@@ -109,6 +109,7 @@ const routePatterns = new Set([
   '/topic/[slug]',
   '/topics',
   '/welcome',
+  '/welcome/minute',
   '/welcome/seat',
   '/welcome/seat/state/[code]',
   '/vic-election',

@@ -22,7 +22,7 @@ name: 13e Today's invitation to choose a seat, by name, by location, and after N
     speed: 20
 - assertVisible:
     id: today-invitation-body
-    text: Add your electorate to see your MP, how they vote and the grants in your area\.
+    text: Your MP is the one person elected to speak for your area in Parliament\. Find your electorate to meet them\.
 - takeScreenshot: ${EVIDENCE}/13e-invitation
 - scrollUntilVisible:
     element:

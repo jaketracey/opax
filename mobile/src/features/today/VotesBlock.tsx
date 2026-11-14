@@ -44,6 +44,7 @@ export function VotesBlock({
   return (
     <TodayBlock
       title="How parliament voted"
+      gloss="division"
       action={{
         accessibilityLabel: 'See all votes',
         href: divisionHistoryRoute,

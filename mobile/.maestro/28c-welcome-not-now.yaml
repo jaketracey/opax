@@ -21,7 +21,7 @@ name: 28c Welcome Not now lands on a finished Today, the invitation after Bills
     visibilityPercentage: 50
     timeout: 30000
 - tapOn:
-    id: welcome-continue
+    id: welcome-know
 - extendedWaitUntil:
     visible:
       id: welcome-seat

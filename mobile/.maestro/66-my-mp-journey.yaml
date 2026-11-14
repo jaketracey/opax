@@ -23,10 +23,10 @@ name: 66 My MP from first launch to the latest division and the official page
 # budget: first-launch-member
 - scrollUntilVisible:
     element:
-      id: welcome-continue
+      id: welcome-know
     timeout: 30000
 - tapOn:
-    id: welcome-continue
+    id: welcome-know
 - assertVisible:
     id: welcome-seat
 # Focus the native search field explicitly before typing.

@@ -620,9 +620,19 @@ export function SeatChooser({
           ) : (
             <>
               {asking ? (
-                <Text wordSafe variant="body" testID="welcome-seat-why">
-                  {seatCopy.why}
-                </Text>
+                <View style={styles.why}>
+                  <Text wordSafe variant="body" testID="welcome-seat-why">
+                    {seatCopy.why}
+                  </Text>
+                  <Text
+                    wordSafe
+                    variant="secondary"
+                    tone="inkSoft"
+                    testID="welcome-seat-help"
+                  >
+                    {seatCopy.whyHelp}
+                  </Text>
+                </View>
               ) : null}
               {saved && !vic ? (
                 <InsetGroup testID="seat-saved">
@@ -684,6 +694,7 @@ const styles = StyleSheet.create({
     columnGap: rhythm.tight,
   },
   miss: { gap: rhythm.line },
+  why: { gap: rhythm.line },
   later: { gap: rhythm.tight, alignItems: 'center' },
   centred: { textAlign: 'center' },
 });

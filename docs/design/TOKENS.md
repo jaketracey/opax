@@ -45,6 +45,10 @@ Navy is the single tint, including the new `link` text tone. Legacy `bronzeInk` 
 
 Host CoreText word-width fixtures for the ten dense screen types are in `text-fit.test.ts`, with Large and AX5 sizes and both heading faces. These are host measurements, not iOS simulator proof. The orchestrator supplies the D1 A/B captures and native margin/radius verification.
 
+## Chamber colours (newcomer build, 14 Nov 2026)
+
+`houseInk` (green) and `senateInk` (red) are the two chambers in their own colours, for a drawing or label that names a chamber: the seat arcs in the app's "Parliament in a minute". They are their own roles so that `moneyInk` keeps meaning money and `danger` keeps meaning an error. Both are promised as AA text on paper, raised and sunken in light, dark and both Increase Contrast themes (5.1:1 or more in light, 7:1 or more in dark). They are never a category ink, a status tone, a link or body text.
+
 ## Adding or changing a token
 
 1. Edit `design-tokens.json`. A new colour role needs a light and a dark value; add it to `contrast` if it is text or a boundary.
@@ -91,6 +95,8 @@ Host CoreText word-width fixtures for the ten dense screen types are in `text-fi
 | accent | `--interests-wash` | `interestsWash` | #EDE6E7 | #33232D |  | The interests tile and header wash. |
 | accent | `--bills-ink` | `billsInk` | #1F5F6B | #7FC4D0 | #205158 / #A6DAE3 | Bills: bills, stages, exposure drafts; also the machine-written label. |
 | accent | `--bills-wash` | `billsWash` | #E4EAE8 | #1B2D30 |  | The bills tile and header wash. |
+| chamber | `--house-ink` | `houseInk` | #3B6E58 | #93C4AE | #2F5A48 / #B3D8C7 | The House of Representatives: its green. |
+| chamber | `--senate-ink` | `senateInk` | #A2402E | #EE9B88 | #86321F / #F5BBAE | The Senate: its red. |
 | band | `--band-bills` | `bandBills` | #1F5F6B | #1E4A51 | #1E5E69 / #1E4A51 | Edition plate ground. |
 | band | `--band-money` | `bandMoney` | #2B6447 | #24472F | #2A6346 / #24472F | Edition plate ground. |
 | band | `--band-votes` | `bandVotes` | #3A4C96 | #2F3B70 | #3A4C96 / #2F3B70 | Edition plate ground. |
@@ -124,7 +130,7 @@ Heading face: `system`. iOS interface families are unset; Android uses Public Sa
 | `figure` | sans | 700 | 34 / 41 | largeTitle | ink | yes |
 | `tileFigure` | sans | 600 | 22 / 28 | title2 | ink | yes |
 
-38 colour roles in 7 groups; 6 categories, 4 status tones, 16 industry hues, 8 parties (dot + wash); 18 type roles over 7 sizes; 9 rhythm steps; 9 radii (container, tile, thumb, bar, capsule, round, sm, md, pill); 6 durations and 1 curve; 1 shadow.
+40 colour roles in 8 groups; 6 categories, 4 status tones, 16 industry hues, 8 parties (dot + wash); 18 type roles over 7 sizes; 9 rhythm steps; 9 radii (container, tile, thumb, bar, capsule, round, sm, md, pill); 6 durations and 1 curve; 1 shadow.
 
 ### Deprecated web names
 

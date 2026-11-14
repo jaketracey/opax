@@ -914,7 +914,7 @@ describe('the invitation’s line', () => {
   });
   test('the plain ask, an abolished seat, and a 1.0 choice set aside', () => {
     expect(invitationBody(null)).toBe(
-      'Add your electorate to see your MP, how they vote and the grants in your area.',
+      'Your MP is the one person elected to speak for your area in Parliament. Find your electorate to meet them.',
     );
     expect(invitationBody(seat({ name: 'Wills', status: 'historical' }))).toBe(
       'Wills is no longer an electorate.',

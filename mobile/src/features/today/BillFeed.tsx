@@ -137,6 +137,7 @@ export function BillsBlock({
   return (
     <TodayBlock
       title="Bills"
+      gloss="bill"
       action={{
         accessibilityLabel:
           kind === 'new' ? 'See all new bills' : 'See all passed bills',

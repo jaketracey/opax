@@ -35,7 +35,7 @@ qa_iphone_suite() {
   printf '%s\n' 01 02 03 04 05 06 07 08 09 10 11 12 13 14 20 21 22 23 24 25 27 \
     .maestro/28-welcome.yaml .maestro/28b-cold-launch.yaml .maestro/28c-welcome-not-now.yaml \
     .maestro/28d-first-launch-link.yaml .maestro/28e-no-permission-at-launch.yaml \
-    .maestro/28f-update-from-1-0.yaml \
+    .maestro/28f-update-from-1-0.yaml .maestro/28g-welcome-basics.yaml \
     .maestro/13d-today-seat.yaml .maestro/13e-today-invitation.yaml \
     .maestro/13f-today-edition-tiers.yaml .maestro/13h-today-state-seat.yaml \
     .maestro/13i-today-see-all.yaml 29 \

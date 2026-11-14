@@ -44,8 +44,15 @@ export const seatCopy = {
   noMatchNext:
     'Use your location, or check your address with the AEC to find your electorate’s name.',
   noMatchAec: 'Check your address with the AEC to find your electorate’s name.',
-  /** Why the welcome asks (the words of Today’s invitation). */
-  why: 'Add your electorate to see your MP, how they vote and the grants in your area.',
+  /**
+   * Why the welcome asks, saying first what an electorate is (newcomer
+   * build, README 4.3), then the way on for a reader who doesn't know theirs.
+   */
+  why: 'Your electorate is the area you vote in. Find yours and OPAX will show you your MP: who they are, and how they vote.',
+  whyHelp: 'Not sure of its name? Use your location and OPAX will find it.',
+  /** Today's invitation: what an MP is, in one sentence (README 4.4). */
+  invitation:
+    'Your MP is the one person elected to speak for your area in Parliament. Find your electorate to meet them.',
   /** The welcome’s way on without a seat, in the list itself. */
   later: 'Choose later',
   laterNote: 'You can add your electorate any time from Today or Your MP.',

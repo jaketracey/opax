@@ -43,7 +43,7 @@ name: 56 iPad welcome, full screen in a centred column in both orientations, Con
     id: welcome-continue
 - takeScreenshot: ${EVIDENCE}/56-welcome-portrait
 - tapOn:
-    id: welcome-continue
+    id: welcome-know
 - extendedWaitUntil:
     visible:
       id: welcome-seat
@@ -104,7 +104,7 @@ name: 56 iPad welcome, full screen in a centred column in both orientations, Con
       id: welcome-screen
     timeout: 30000
 - tapOn:
-    id: welcome-continue
+    id: welcome-know
 - extendedWaitUntil:
     visible:
       id: seat-saved-row

@@ -848,6 +848,7 @@ function ProfileContent({
     votes: () => (
       <ProfileBlock
         title="Voting record"
+        gloss="division"
         id="person-votes"
         block={b.votes}
         retry={retry}
@@ -909,6 +910,7 @@ function ProfileContent({
     interests: () => (
       <ProfileBlock
         title="Declared interests"
+        gloss="register-of-interests"
         id="person-interests"
         block={b.interests}
         retry={retry}

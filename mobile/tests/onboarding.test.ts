@@ -374,9 +374,9 @@ describe('welcome copy', () => {
   test('three features in the agreed order', () => {
     expect(welcomeCopy.title).toBe('Welcome to OPAX');
     expect(welcomeCopy.features.map((f) => f.title)).toEqual([
-      'Your MP',
+      'Who speaks for you',
       'Every figure is sourced',
-      'Ask the record',
+      'Ask in your own words',
     ]);
   });
   test('plain copy: no hype, no em dashes, no exclamation marks', () => {

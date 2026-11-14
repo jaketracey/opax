@@ -31,7 +31,6 @@ import {
 import GlossaryScreen, {
   glossaryLetters,
 } from '../src/features/learn/GlossaryScreen';
-import MinutePlaceholder from '../src/features/learn/MinutePlaceholder';
 import { openTerm } from '../src/features/learn/open-term';
 import {
   hideLearnCard,
@@ -459,12 +458,5 @@ describe('the glossary screen', () => {
       pathname: '/term',
       params: { id: 'pair' },
     });
-  });
-
-  test('the minute placeholder draws', () => {
-    const tree = render(<MinutePlaceholder />);
-    expect(byTestID(tree, 'learn-minute-placeholder').length).toBeGreaterThan(
-      0,
-    );
   });
 });

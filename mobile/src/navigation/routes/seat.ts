@@ -22,6 +22,8 @@ export const welcomeSeatRoute = (locate = false) => ({
   pathname: '/welcome/seat' as const,
   params: { ...(locate ? { locate: '1' } : {}) },
 });
+/** "Show me the basics": Parliament in a minute, before the electorate step. */
+export const welcomeMinuteRoute = { pathname: '/welcome/minute' as const };
 export const welcomeSeatStateRoute = (code: string) => ({
   pathname: '/welcome/seat/state/[code]' as const,
   params: { code },
