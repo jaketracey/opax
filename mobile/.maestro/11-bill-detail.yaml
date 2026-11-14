@@ -41,7 +41,6 @@ name: 11 Read a bill, its machine summary, votes and speeches
       - tapOn:
           id: bills-scope
       - tapOn: All
-- runFlow: support/bills-search-reveal.yaml
 - tapOn: Search bills
 - inputText: interactive gambling levy
 - pressKey: Enter
@@ -99,10 +98,8 @@ name: 11 Read a bill, its machine summary, votes and speeches
 # At AX5 the whole votes section is too tall to appear in the iOS
 # hierarchy; the first vote's container does. Third readings and other
 # substantive votes come first; procedural votes wait in their own group.
-# Readings and amendments taken under a time limit are substantive, so the
-# pinned bill lists Amendment, Second reading, then In committee (the two
-# identical 11-24 amendments fold into one), and only the limitation of
-# debate is procedural.
+# A substantive question put under a time limit is not procedural, so the
+# time-limited amendment leads and the committee vote is third.
 - assertVisible:
     id: bill-screen
 - scrollUntilVisible:
@@ -112,6 +109,18 @@ name: 11 Read a bill, its machine summary, votes and speeches
     visibilityPercentage: 1
     speed: 70
     timeout: 180000
+- scrollUntilVisible:
+    element:
+      id: bill-division-0-title
+    direction: DOWN
+    speed: 20
+    timeout: 60000
+- assertVisible:
+    id: bill-division-0-title
+    text: Amendment
+- assertVisible:
+    id: bill-division-0-more
+    text: 'Amendment, Senate · 19 Aug 2026 · under a time limit, Not agreed, 11 ayes, 24 noes'
 - scrollUntilVisible:
     element:
       id: bill-division-2-title
@@ -206,23 +215,33 @@ name: 11 Read a bill, its machine summary, votes and speeches
 - takeScreenshot: ${EVIDENCE}/11-division-sources
 - tapOn:
     id: bill-divisions-source-sheet-original-0
-- extendedWaitUntil:
-    visible:
-      id: source-destination-url
-      text: https://theyvoteforyou\.org\.au/divisions/senate/2026-08-19/.*
-    timeout: 15000
+- scrollUntilVisible:
+    element:
+      text: https://theyvoteforyou.org.au/divisions/senate/2026-08-19/.*
+    direction: DOWN
+    timeout: 30000
 - takeScreenshot: ${EVIDENCE}/11-division-source
-# Original is presented over Sources, as in 13: close both.
-- tapOn: Done
-- extendedWaitUntil:
-    visible:
-      id: bill-divisions-source-sheet-original-0
-    timeout: 15000
-- tapOn: Done
-- extendedWaitUntil:
-    notVisible:
-      id: bill-divisions-source-sheet-original-0
-    timeout: 15000
+# iOS presents Original over Sources, as in 13: Done closes each. Android
+# leaves both with Back, which its prepared copy makes of this OK.
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn: OK
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn: Done
+      - extendedWaitUntil:
+          visible:
+            id: bill-divisions-source-sheet-original-0
+          timeout: 15000
+      - tapOn: Done
+      - extendedWaitUntil:
+          notVisible:
+            id: bill-divisions-source-sheet-original-0
+          timeout: 15000
 # Near the end of the page an element cannot be centred: scroll to it only.
 - assertVisible:
     id: bill-screen
@@ -287,7 +306,6 @@ name: 11 Read a bill, its machine summary, votes and speeches
       - tapOn:
           id: bills-scope
       - tapOn: All
-- runFlow: support/bills-search-reveal.yaml
 - tapOn: Search bills
 - inputText: digital duty of care
 - pressKey: Enter
