@@ -57,7 +57,7 @@ test('related sponsor rows wait for visibility, never loading the bill index or 
  let observe,reads=0;
  const slot={isConnected:true,innerHTML:'',remove(){this.removed=true}};
  const {renderOtherSponsorBills}=runInNewContext(code+';({renderOtherSponsorBills})',{
-  growthModules,billView:'view',billTextGeneration:1,loadSponsorSummary:async()=>{reads++;return {person:{name:'Andrew Gee'},bills:[{key:'other',jurisdiction:'federal',title:'Other Bill'}]};},IntersectionObserver:class{constructor(fn){observe=fn}observe(){}disconnect(){}},addEventListener(){},sourceLineHTML:()=>'',billHash:k=>'/bill/'+k,billName:b=>b.title,fmtDate:()=>'',sentenceCase:()=>'',esc:String,
+  growthModules,billView:'view',billTextGeneration:1,loadSponsorSummary:async()=>{reads++;return {person:{name:'Andrew Gee'},bills:[{key:'other',jurisdiction:'federal',title:'Other Bill'}]};},IntersectionObserver:class{constructor(fn){observe=fn}observe(){}disconnect(){}},addEventListener(){},sourceLineHTML:()=>'',billHash:k=>'/bill/'+k,billName:b=>b.title,fmtDate:()=>'',sentenceCase:()=>'',billStatusWord:()=>'',esc:String,
  });
  renderOtherSponsorBills({key:'current',jurisdiction:'federal',sponsor:'GEE, Andrew, MP'},{querySelector:()=>slot},'view',1);
  assert.equal(reads,0);observe([{isIntersecting:true}]);await new Promise(resolve=>setImmediate(resolve));assert.equal(reads,1);assert.match(slot.innerHTML,/Other Bill/);

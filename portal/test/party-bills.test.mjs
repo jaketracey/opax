@@ -25,6 +25,16 @@ test('the index keeps accepted sponsor parties only, newest first, with the fiel
   ]});
 });
 
+test('a dead bill keeps its exact ending in the index and on the page', () => {
+  const bills = [{key: 'b1', title: 'Old Bill 2014', introduced: '2014-03-17', status: 'lapsed', ended: 'discharged', ended_label: 'Discharged from the Notice Paper', sponsor_party: 'Fixture Team'},
+    {key: 'b2', title: 'New Bill 2015', introduced: '2015-06-01', status: 'lapsed', sponsor_party: 'Fixture Team'}];
+  const rows = sponsoredBills(bills, ['Fixture Team'])['Fixture Team'];
+  assert.deepEqual(rows, [{key: 'b2', title: 'New Bill 2015', introduced: '2015-06-01', status: 'lapsed'},
+    {key: 'b1', title: 'Old Bill 2014', introduced: '2014-03-17', status: 'lapsed', ended_label: 'Discharged from the Notice Paper'}]);
+  const meta = [...new JSDOM(partyBillsHTML('Fixture Team', rows, h)).window.document.querySelectorAll('.result-meta')].map(m => m.textContent);
+  assert.deepEqual(meta, ['Introduced 1 Jun 2015 · Lapsed', 'Introduced 17 Mar 2014 · Discharged from the Notice Paper']);
+});
+
 test('"Bills sponsored" links each bill, says when it was introduced and its status, and names its source', () => {
   const bills = Array.from({length: 14}, (_, i) => ({key: `au-federal-s${100 + i}`, title: `Fixture Bill ${2000 + i}`, introduced: `${2000 + i}-02-03`, status: i ? 'lapsed' : 'before_parliament'}));
   const doc = new JSDOM(partyBillsHTML('Fixture Team', bills, h)).window.document;

@@ -736,3 +736,15 @@ test('server donor page: a donor no party return lists says so and what its own 
   assert.match(description,/disclosed political .*donor, \$[\d.]+m across [\d,]+ receipts/);
   assert.doesNotMatch(description,/No party return lists/);
 });
+
+test('a dead bill answer and its related rows state the exact ending, and older files keep the status',()=>{
+  const related=[{key:'au-federal-r2',title:'Other Bill 2018',sponsor:'BANDT, Adam, MP',introduced:'2018-02-12',status:'lapsed',ended:'discharged',ended_label:'Discharged from the Notice Paper'},
+    {key:'au-federal-r3',title:'Third Bill 2018',sponsor:'BANDT, Adam, MP',introduced:'2018-03-12',status:'lapsed'}];
+  const bill={title:'National Integrity Commission Bill 2017',key:'au-federal-r1',sponsor:'BANDT, Adam, MP',status:'lapsed',status_as_of:'2018-06-26',ended:'removed',ended_label:'Removed from the Notice Paper',divisions:[]};
+  const html=renderBillAnswer(bill,[],new Map(),related).html;
+  assert.match(html,/Removed from the Notice Paper, as at 2018-06-26\./);
+  assert.match(html,/Other Bill 2018<\/a> — introduced 2018-02-12, Discharged from the Notice Paper</);
+  assert.match(html,/Third Bill 2018<\/a> — introduced 2018-03-12, lapsed</);
+  const {ended,ended_label,...plain}=bill;
+  assert.match(renderBillAnswer(plain,[],new Map(),[]).html,/lapsed, as at 2018-06-26\./);
+});

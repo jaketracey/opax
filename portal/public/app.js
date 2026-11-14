@@ -5530,7 +5530,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=da12f467ea'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=c1d358ba11'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -8952,9 +8952,13 @@ function billOutcomeLabelHTML(outcome) {
   return statusLabelHTML(word, String(outcome || "").toLowerCase() === "affirmative" ? "done" : "ended");
 }
 
+/** The status word a reader meets: a dead bill's exact ending when the export
+ *  names one ("Removed from the Notice Paper", `ended_label`), else the status. */
+const billStatusWord = (b) => String(b?.ended_label || "").trim() || sentenceCase(b?.status);
+
 /** "Passed, as at 12 Feb 2022" — the status is never shown undated. */
 function billStatusLine(b) {
-  const status = sentenceCase(b?.status) || "Status not recorded";
+  const status = billStatusWord(b) || "Status not recorded";
   const as = b?.status_as_of ? `, status as at ${fmtDate(b.status_as_of)}` : "";
   return `${status}${as}`;
 }
@@ -9005,7 +9009,7 @@ function billRowHTML(b) {
   return `<li>
     <a class="source-title bill-row-title" ${entityHrefAttr(billHash(b.key))}>${esc(billName(b))}</a>
     <span class="result-meta bill-row-meta">${[
-      b.status ? statusLabelHTML(sentenceCase(b.status), billStatusTone(b.status)) : "",
+      b.status ? statusLabelHTML(billStatusWord(b), billStatusTone(b.status)) : "",
       year ? esc(year) : "",
       b.sponsor_party ? partyChipHTML(billParty(b.sponsor_party)) : "",
       sponsorLabel ? esc(sponsorLabel) : esc(billPortfolio(b)),
@@ -9705,7 +9709,7 @@ async function openBill(key, manageFocus) {
     billPortfolio(bill) ? esc(billPortfolio(bill)) : "",
   ].filter(Boolean);
   const billhome = safeUrl((bill.sources || []).find((s) => s.kind === "billhome")?.url);
-  const statusWord = sentenceCase(bill.status) || "Status not recorded";
+  const statusWord = billStatusWord(bill) || "Status not recorded";
   // Two drawn actions (principle 5): Ask, and ⋯ for the rest. The foot's
   // repeat of the same three buttons is gone.
   const actions = `<div class="page-actions bill-actions">
@@ -9756,7 +9760,7 @@ function renderOtherSponsorBills(bill, body, view, generation) {
     if (!summary?.person || !rows.length) { slot.remove(); return; }
     slot.innerHTML = `<section class="ui-section bill-section growth-records" data-records-ready="true" ${growthModules.moduleAttrs("sponsor_bills", "bill", 3)}>
       <h2 class="ui-section-title">Other bills from this sponsor</h2>
-      <ul class="ui-list bill-sponsor-list" role="list">${rows.map(b => `<li><p class="ui-row-title"><a href="${esc(billHash(b.key))}">${esc(billName(b))}</a></p><p class="ui-row-meta">${esc(fmtDate(b.introduced))} · ${esc(sentenceCase(b.status))}</p></li>`).join("")}</ul>
+      <ul class="ui-list bill-sponsor-list" role="list">${rows.map(b => `<li><p class="ui-row-title"><a href="${esc(billHash(b.key))}">${esc(billName(b))}</a></p><p class="ui-row-meta">${esc(fmtDate(b.introduced))} · ${esc(billStatusWord(b))}</p></li>`).join("")}</ul>
       ${sourceLineHTML({source: "Parliamentary bill register", updated: summary.generated || "", notes: ["Bills in the same jurisdiction, matched to the same roster person using the sponsor identity rules."]})}
     </section>`;
   };

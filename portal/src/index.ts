@@ -4094,6 +4094,9 @@ interface BillRow {
   introduced: string | null
   originating_house: string | null
   status: string | null
+  /** A dead bill's exact ending and its words ("removed", "Removed from the Notice Paper"); absent otherwise. */
+  ended?: string
+  ended_label?: string
   sponsor: string | null
   sponsor_party: string | null
   portfolio: string | null
@@ -4830,7 +4833,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
         const titles = bill.divisions?.length ? await read<Record<string,string>>(PROCEDURAL_TITLES_PATH).catch(() => ({})) : {}
         const proceduralConfig = {...divisionTableConfig(), urlKey:'pv'}
         const proceduralQuery = guardTableURL(proceduralConfig,url).query
-        meta.prerender=renderBillAnswer({...bill,division_titles:titles},people?.people || [],people?.slugOf || new Map(),related.bills,query,proceduralQuery).html;billIdentity={identifier:bill.key,status:bill.status}}
+        meta.prerender=renderBillAnswer({...bill,division_titles:titles},people?.people || [],people?.slugOf || new Map(),related.bills,query,proceduralQuery).html;billIdentity={identifier:bill.key,status:bill.status,statusLabel:bill.ended_label}}
     } else if(route.kind==='subject' && route.dir==='supplier') {
       const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read,url.searchParams,sharedAgencyTopSuppliers(env))
       if(content) meta.prerender=content.html
@@ -4954,7 +4957,8 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
   }
   const name = b.short_title || b.title || key
   const house = CHAMBER_NAMES[b.originating_house ?? ''] ?? null
-  const status = BILL_STATUS[b.status ?? ''] ?? ''
+  // A dead bill's exact ending when the export names one, else the status word.
+  const status = b.ended_label?.trim() || (BILL_STATUS[b.status ?? ''] ?? '')
   // "Passed. Introduced in the House of Representatives on 18 October 2006."
   const opening = [
     status ? `${status}.` : '',

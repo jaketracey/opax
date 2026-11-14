@@ -45,10 +45,12 @@ const BILL_STATUS = {
   before_parliament: ['Before parliament','active'], passed: ['Passed','done'],
   lapsed: ['Lapsed','ended'], exposure_draft: ['Exposure draft','draft'],
 };
-/** BillRow: status and date, the title, the portfolio. */
+/** BillRow: status and date, the title, the portfolio. A dead bill's exact
+ *  ending (`ended_label`, "Removed from the Notice Paper") stands in for its status word. */
 export function billRowHTML(b) {
   const raw = String(b.status || '').replaceAll('_',' ');
-  const [word, tone] = BILL_STATUS[b.status] || [raw.replace(/^./, c => c.toUpperCase()), 'ended'];
+  const [status, tone] = BILL_STATUS[b.status] || [raw.replace(/^./, c => c.toUpperCase()), 'ended'];
+  const word = String(b.ended_label || '').trim() || status;
   const when = `${b.status === 'exposure_draft' ? 'Released' : 'Introduced'} ${time(b.introduced)}${b.jurisdiction && b.jurisdiction !== 'federal' ? ` · ${esc(jur(b.jurisdiction))}` : ''}`;
   return `<li class="hp-row"><p class="hp-row-meta">${statusLabelHTML(word, tone)} <span>${when}</span></p>` +
     `<h3 class="hp-row-title"><a href="/bill/${encodeURIComponent(b.key)}">${esc(b.short_title || b.title)}</a></h3>` +

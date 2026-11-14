@@ -366,7 +366,7 @@ export function partyBillsHTML(label, bills, h, {updated = ''} = {}) {
   if (!bills?.length) return '';
   const row = b => {
     const raw = String(b.status || '').replace(/_/g, ' ');
-    const status = BILL_STATUS[b.status] || raw.replace(/^./, c => c.toUpperCase());
+    const status = String(b.ended_label || '').trim() || BILL_STATUS[b.status] || raw.replace(/^./, c => c.toUpperCase());
     const meta = [b.introduced ? `Introduced ${dayMonthYear(b.introduced)}` : '', status, recordedAsText(label, [b.party], 'Sponsor recorded as')].filter(Boolean).join(' · ');
     return `<li><a class="source-title" href="/bill/${encodeURIComponent(b.key)}">${h.esc(b.title || b.key)}</a>${meta ? `<span class="result-meta">${h.esc(meta)}</span>` : ''}</li>`;
   };

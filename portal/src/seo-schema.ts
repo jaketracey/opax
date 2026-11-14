@@ -12,6 +12,8 @@ export interface PersonSchemaIdentity {
 export interface BillSchemaInfo {
   identifier?: string | null
   status?: string | null
+  /** A dead bill's exact ending in words (the export's `ended_label`); shown in place of the status label. */
+  statusLabel?: string | null
   /** Supply only when the source establishes commencement, not just assent. */
   legalForce?: 'InForce' | 'NotInForce' | 'PartiallyInForce' | null
 }
@@ -90,7 +92,7 @@ export function legislationSchemaFields(bill: BillSchemaInfo): SchemaNode {
   const legalForce = explicitForce || (status && PROPOSED_STATUSES.has(status) ? 'NotInForce' : null)
   return {
     ...(bill.identifier?.trim() ? { legislationIdentifier: bill.identifier.trim() } : {}),
-    ...(status ? { creativeWorkStatus: STATUS_LABELS[status] || status.replace(/_/g, ' ') } : {}),
+    ...(status ? { creativeWorkStatus: bill.statusLabel?.trim() || STATUS_LABELS[status] || status.replace(/_/g, ' ') } : {}),
     ...(legalForce ? { legislationLegalForce: `https://schema.org/${legalForce}` } : {}),
   }
 }

@@ -43,6 +43,13 @@ The read is `mode=ro` with `PRAGMA query_only=ON` inside one transaction, and
 `sqlite3` is not installed on the box, so everything goes through Python's
 driver. A full legacy run takes about seven seconds.
 
+`--fill-endings DIR` adds only `ended` and `ended_label` (a dead bill's exact
+ending, docs/BILLS-CONTRACT.md) to an export already in DIR, from the registry
+on the box, without rebuilding anything else. A bill gets them only while both
+its published status and the registry's are dead, and each file keeps its own
+layout. It is how main's retained export first gained the pair (14 Nov 2026):
+1,076 files, nothing else changed. A full export writes them on every run.
+
 `--sample N` writes only N bill files while `index.json` still lists every bill.
 That is how the committed fixture was made: `--legacy --sample 200`.
 
