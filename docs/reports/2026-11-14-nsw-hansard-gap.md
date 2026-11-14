@@ -70,7 +70,7 @@ The shipped NSW Parliament coverage row now says:
 
 `portal/public/nsw-hansard-coverage.json` is the small, standalone watchdog input, also published at `/nsw-hansard-coverage.json`. Its chamber/year entries contain `expected_days`, `missing_dates` and `status: "known, being filled"`. It has schema 1, a successful-discovery marker, checked timestamp and reviewed bounds. It initially reflects the supplied live observation and the acquired source calendar. The nightly regenerates it from the owner DB and commits it with the corpus data group.
 
-The offline Python hook is **`parli.ingest.nsw_backfill.known_gaps(calendar, counts)`**, where `counts` maps `(chamber_code, ISO date)` to all-source row counts. **`guard_coverage`** rejects a receipt that omits a known chamber-year gap. The nightly logs a coverage guard warning while days remain. The page renderer independently rejects missing, failed or malformed receipts and automatically omits a chamber-year note only when its missing-date entry clears. No coverage-watchdog branch import is required.
+The offline Python hook is **`parli.ingest.nsw_backfill.known_gaps(calendar, counts)`**, where `counts` maps `(chamber_code, ISO date)` to all-source row counts. **`guard_coverage`** rejects a receipt that omits a known chamber-year gap. The nightly logs a coverage guard warning while days remain. The page renderer independently rejects missing, failed or malformed receipts and automatically omits a chamber-year note only when its missing-date entry clears. Coverage tests use fixed gap fixtures and compare the shipped page against the current receipt, so clearing a year does not break the nightly gate. No coverage-watchdog branch import is required.
 
 ## Senate coordination
 
@@ -84,6 +84,7 @@ Both branches append a source-specific note on the same line of `scripts/build_c
 - `bash -n` passed for all five changed/new shell files. The dedicated offline nightly integration test passed, checking ordering, environment forwarding, skip paths, guard warnings and refusal/error handling.
 - `cd portal && npx tsc --noEmit` passed after local Worker type generation.
 - Portal `npm test` at concurrency four: **4,949 passed, 11 skipped, zero failed** (4,960 total, 324.729 seconds), with `.venv/bin` on PATH. The temporary test-command override placed `--test-concurrency=4` before test paths and was restored afterwards.
+- A final focused coverage/About rerun passed **7 tests**, including every intermediate state as the four gap entries clear.
 - `node scripts/stamp_assets.mjs --check` and `git diff --check` passed.
 
 Supplementary source-HTTP testing found existing failures outside this change: the repository identity scan flags older acquisition receipts/browser QA scripts; the direct-fetch scan flags ten unchanged call sites; and one shared-transport test expects an injected challenge-platform script alone to count as a challenge, while unchanged main deliberately ignores that script without challenge UI. The baseline shared transport reproduces that result. These are not repaired by this NSW-only lane. The remaining transport and source-guard fixtures pass: **84 passed, three deselected**. No NSW path was added to a guard exemption.
