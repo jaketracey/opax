@@ -14,7 +14,7 @@ const line = { type: 'object', properties: { statement: { type: 'string' }, amou
 
 export const moneyReceipts: ToolDefinition = {
   name: 'money_receipts', title: 'Political receipts and donors', mcpOnly: true,
-  description: 'Money disclosed to federal political parties in AEC returns. Total receipts for a party or from a donor, a party\'s largest sources (view=top_donors), where a donor\'s money went (view=top_recipients), year-by-year totals (view=by_year) or totals by industry (view=by_industry), for one financial year, a range or all years. These are disclosed receipts, not donations: they cover every receipt type (other receipts and subscriptions as well as gifts, and may include loans, which the returns do not separate). Call a figure a donation only with measure=donations_only, which counts receipts the AEC types as Donation Received. Each item carries a statement with its amount, period and scope: repeat the figure with that scope and its label. Rankings cover OPAX\'s published donor selection (the largest donors), not every disclosed donor. A receipt is not a payment to a politician and does not establish influence. Names are as disclosed, including qualifiers such as "- Loan". For grants use grants; for contracts use contracts.',
+  description: 'Money disclosed to federal parties in AEC returns: a party\'s or donor\'s total, a party\'s largest sources (view top_donors), where a donor\'s money went (top_recipients), yearly totals (by_year) or industry totals (by_industry), for a year, a range or all years. These are receipts, not donations: they include other receipts and subscriptions and may include loans. measure=donations_only counts only what the AEC types as Donation Received. Quote each figure with the scope in its statement. Rankings cover the largest donors OPAX publishes, not every donor.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     party: { type: 'string', minLength: 2, maxLength: 200, description: 'Recipient party, e.g. Labor, Liberal, Nationals, Greens, One Nation.' },
     donor: { type: 'string', minLength: 2, maxLength: 200, description: 'Donor or source name as disclosed, e.g. "Mineralogy Pty Ltd".' },
@@ -23,6 +23,7 @@ export const moneyReceipts: ToolDefinition = {
     from_year: { type: 'integer', minimum: 1990, maximum: 2099, description: 'First financial year, by starting year (2019 means 2019-20).' },
     to_year: { type: 'integer', minimum: 1990, maximum: 2099, description: 'Last financial year, by starting year.' },
     measure: { type: 'string', enum: Object.keys(MEASURE_LABELS), description: 'all_receipts (default) or donations_only. Party totals always cover all receipt types.' },
+    lending: { type: 'boolean', description: 'With a party: also list the debts the party\'s own returns declare. No receipt is labelled a loan.' },
     detail: detailProp('the counting basis, coverage dates and receipts only the donor declared.'),
     limit: limitProp(25, 10), cursor: cursorProp,
   }, examples: [{ party: 'Labor', view: 'top_donors', financial_year: '2023-24' }, { donor: 'Mineralogy Pty Ltd', view: 'top_recipients' }, { party: 'Greens', view: 'by_year', from_year: 2019 }, { view: 'top_donors', financial_year: '2022-23', measure: 'donations_only' }] },
@@ -48,7 +49,7 @@ export const moneyReceipts: ToolDefinition = {
     const state = readCursor('money_receipts', args), offset = state ? Number(state.o) : 0
     if (!Number.isSafeInteger(offset) || offset < 0) throw badCursor('money_receipts')
     const size = Number(args.limit) || 10, view = String(args.view ?? 'total'), wanted = args.measure === 'donations_only' ? 'donations_only' : 'all_receipts'
-    const data = await moneyTotals.handler(env, { ...Object.fromEntries(['party', 'donor', 'financial_year', 'from_year', 'to_year'].filter(key => args[key] !== undefined).map(key => [key, args[key]])),
+    const data = await moneyTotals.handler(env, { ...Object.fromEntries(['party', 'donor', 'financial_year', 'from_year', 'to_year', 'lending'].filter(key => args[key] !== undefined).map(key => [key, args[key]])),
       ...(GROUPS[view] ? { group_by: GROUPS[view] } : {}), measure: wanted === 'donations_only' ? 'donations' : 'all_types', limit: offset + size })
     if (data.error) throw new Error(String(data.error))
     const rows = records(data.rows), cites = data.citations as ToolCitation[], coverage = object(data.coverage)

@@ -107,7 +107,7 @@ test('interests: ministers are the sitting ministers without shadows; several me
   assert.match(out.notes[0], /not evidence of a conflict/);
 });
 
-test('every record tool is on MCP with its registry schema, and bad input is -32602 before any read', async () => {
+test('every record tool is a register on MCP with its registry schema, and bad input is a tool error before any read', async () => {
   const token = 'opax_' + 'B'.repeat(43);
   const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token)))].map(v => v.toString(16).padStart(2, '0')).join('');
   let reads = 0;
@@ -117,14 +117,14 @@ test('every record tool is on MCP with its registry schema, and bad input is -32
   const send = async (method, params) => (await api.communityMcp(new Request('https://opax.com.au/mcp', { method: 'POST', headers: { authorization: 'Bearer ' + token, accept: 'application/json, text/event-stream', 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) }), mcpEnv, async () => { throw Error('no public reads'); })).json();
   const listed = (await send('tools/list', {})).result.tools;
   for (const name of ['find_records', 'parliamentary_pay', 'member_expenses', 'contracts', 'grants', 'declared_interests']) {
-    const entry = listed.find(t => t.name === name);
-    assert.ok(entry, name); assert.equal(entry.description, tool(name).description); assert.equal(entry.annotations.readOnlyHint, true);
+    const entry = listed.find(t => t.name === 'query_register');
+    assert.ok(entry.inputSchema.properties.register.enum.includes(name), name); assert.equal(entry.annotations.readOnlyHint, true);
     // The same tool, same schema, is on the Ask loop.
     assert.deepEqual(api.TOOL_SPECS.find(t => t.name === name).input, tool(name).inputSchema);
   }
   for (const [name, args] of [['contracts', { limit: 99 }], ['grants', { state: 'western australia' }], ['declared_interests', { category: 'yachts' }], ['parliamentary_pay', { person: 'x'.repeat(200) }], ['find_records', {}], ['grants', { from_year: 2025, to_year: 2020 }]]) {
     const rpc = await send('tools/call', { name, arguments: args });
-    assert.equal(rpc.error?.code, -32602, name + JSON.stringify(args));
+    assert.equal(rpc.result?.isError, true, name + JSON.stringify(args));
   }
   assert.equal(reads, 0);
   const expenses = await send('tools/call', {name:'member_expenses',arguments:{person:'Robin Example',year:2025}});

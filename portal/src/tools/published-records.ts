@@ -28,12 +28,12 @@ export function boundedValue(v: unknown, textLimit = 1000, depth = 0): unknown {
   return Object.fromEntries(Object.entries(v).slice(0, 50).map(([key, value]) => [key, boundedValue(value, textLimit, depth + 1)]))
 }
 
-/** Stay below Ask's 16 KiB tool-result cap, with room for its adapter. */
+/** Stay below Ask's 16 KiB tool-result cap, with room for its adapter and the page link added to every record set. */
 export function publishedResult(rows: RecordRow[], citations: ToolCitation[], meta: Omit<StructuredToolResult, 'rows' | 'citations'>): StructuredToolResult {
   const picked = rows.slice(), cites = citations.slice()
   const result = () => ({ ...meta, rows: picked, citations: cites, ...(picked.length < rows.length ? { truncated: true, next_offset: Number(meta.offset ?? 0) + picked.length } : {}) })
-  while (picked.length > 1 && new TextEncoder().encode(JSON.stringify(result())).length > 14_000) { picked.pop(); cites.pop() }
-  if (new TextEncoder().encode(JSON.stringify(result())).length > 14_000) {
+  while (picked.length > 1 && new TextEncoder().encode(JSON.stringify(result())).length > 13_700) { picked.pop(); cites.pop() }
+  if (new TextEncoder().encode(JSON.stringify(result())).length > 13_700) {
     const row = object(picked[0])
     return { rows: [], citations: [], notes: ['This record exceeds the tool payload limit. Open its full record.'], full_record_url: row.full_record_url ?? row.url ?? null, truncated: true }
   }

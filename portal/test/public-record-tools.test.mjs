@@ -221,8 +221,8 @@ test('shared data tools and moved Ask capabilities have identical schemas and pa
       ['person_quotes', { person: 'David Shoebridge', topic: 'housing' }], ['search', { query: 'housing' }], ['read_passage', { record_id: 'speech-1' }], ['person_overview', { person: 'David Shoebridge' }],
       ['paid_answer', { question: 'What is the federal parliamentary base salary in 2025?' }], ['ranked_money', { question: 'Which federal parties have the largest disclosed receipt totals in 2024-25?' }],
     ]) {
-      const definition = api.listTools().find(t => t.name === name), entry = listed.find(t => t.name === name);
-      assert.ok(entry, name); const { $schema, ...wireSchema } = entry.inputSchema; assert.deepEqual(wireSchema, definition.inputSchema);
+      // Core tools are listed by name; these answer by name whether they are a query_register register or an unlisted earlier tool.
+      assert.equal(listed.some(t => t.name === name), false, name);
       const rpc = await send('tools/call', { name, arguments: args });
       assert.equal(rpc.error, undefined, JSON.stringify(rpc));
       const ask = await api.askToolSpecs.find(t => t.name === name).run({ ...fixture.env, origin: 'https://opax.com.au' }, args);
@@ -231,7 +231,7 @@ test('shared data tools and moved Ask capabilities have identical schemas and pa
       assert.ok(Array.isArray(ask.data.rows));
       if (['legislation', 'public_finances', 'entity_profile', 'corpus_records'].includes(name)) cited(ask.data);
     }
-    for (const name of ['legislation', 'public_finances', 'entity_profile', 'corpus_records']) assert.equal((await send('tools/call', { name, arguments: { unexpected: true } })).error.code, -32602);
+    for (const name of ['legislation', 'public_finances', 'entity_profile', 'corpus_records']) assert.equal((await send('tools/call', { name, arguments: { unexpected: true } })).result.isError, true);
   } finally { globalThis.fetch = mockFetch; }
 });
 test('read-only KB adapter rejects arbitrary endpoints without a request', async () => {

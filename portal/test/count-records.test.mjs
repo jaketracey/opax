@@ -126,8 +126,9 @@ test('the authenticated MCP endpoint lists and calls count_records with the same
     assert.equal(response.status, 200);
     return response.json();
   }
-  const listed = (await rpc('tools/list')).result.tools.filter(tool => tool.name === 'count_records');
+  const listed = (await rpc('tools/list')).result.tools.filter(tool => tool.name === 'query_register');
   assert.equal(listed.length, 1);
+  assert.ok(listed[0].inputSchema.properties.register.enum.includes('count_records'));
   assert.equal(listed[0].annotations.readOnlyHint, true);
   assert.equal(f.reads.length, 0, 'listing tools reads no record assets');
   for (const args of [

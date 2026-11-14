@@ -19,7 +19,7 @@ const vote = { type: 'object', properties: { name: { type: 'string' }, party: nu
 
 export const divisionVotes: ToolDefinition = {
   name: 'division_votes', title: 'Division result and member votes', mcpOnly: true,
-  description: 'A recorded vote (division) in federal or state parliament: the result, ayes and noes, how each party voted, who voted against their party, and each member\'s vote. Give division_id for one division, or find divisions by title words, bill, date, chamber or period (newest first). Set member to read one person\'s vote in each division. detail=full lists every member\'s vote. For one member\'s votes across many divisions use member_voting_record; for counts of divisions or floor-crossing totals over a period use count_records or division. A division result does not establish that a bill became law: see bill_detail.',
+  description: 'A recorded vote (division) in federal or state parliament: the result, ayes and noes, how each party voted and who voted against their party. Give division_id, or find divisions by title words, bill, date, chamber or period, newest first. member adds one person\'s vote; detail=full lists every member\'s vote. A division result does not show that a bill became law: see bill_detail.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     division_id: { type: 'string', pattern: DIVISION_ID, maxLength: 160, description: 'From a previous result or an opax.com.au/doc/division-... address.' },
     title: { type: 'string', minLength: 2, maxLength: 300, description: 'Words from the division title, e.g. "housing affordability".' },
@@ -70,7 +70,7 @@ export const divisionVotes: ToolDefinition = {
 
 export const memberVotingRecord: ToolDefinition = {
   name: 'member_voting_record', title: 'Member voting record', mcpOnly: true,
-  description: 'How one member voted across recorded divisions, newest first, with whether each vote was against their party\'s majority. Filter by topic (words in the division or bill title), bill, chamber and dates. view=tally returns counts only (ayes, noes, absences, votes against party) without listing divisions. Long records are read in segments: follow next_cursor until it is null and add the tallies before stating a whole-period total. A division with no row for the member is unrecorded, not an absence. Resolve the name first with member_profile if unsure. For one division\'s full result use division_votes.',
+  description: 'How one member voted across recorded divisions, newest first, with whether each vote was against their party\'s majority. Filter by topic words, bill, chamber and dates. view=tally returns counts only. Long records come in segments: follow next_cursor to the end and add the tallies before giving a whole-period total. A division with no row for the member is unrecorded, not an absence.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     person: { type: 'string', minLength: 2, maxLength: 120, description: 'The member\'s full name, as member_profile returns it.' },
     topic: { type: 'string', minLength: 2, maxLength: 200, description: 'Words in the division title or linked bill titles, e.g. "climate".' },
@@ -127,7 +127,7 @@ const STATUSES = ['before_parliament', 'passed', 'lapsed', 'exposure_draft']
 const stageName = (stage: unknown) => String(stage).replaceAll('_', ' ')
 export const billSearch: ToolDefinition = {
   name: 'bill_search', title: 'Search federal bills', mcpOnly: true,
-  description: 'Find federal bills by title words, status, originating chamber, introduction dates or sponsor, newest first. Returns each bill\'s bill_id, status and OPAX page. Follow with bill_detail for the dated stage history, sponsors, Act number and linked divisions. Sponsor matches use recorded sponsor metadata, which is often missing for government bills, so a sponsor list can undercount. For ACT and Tasmanian bills or federal legislative instruments use legislation; for exact counts of bills by period or status use count_records.',
+  description: 'Find federal bills by title words, status, originating chamber, introduction dates or sponsor, newest first. Returns each bill\'s bill_id, status and OPAX page; follow with bill_detail for the dated stages. Sponsor metadata is often missing for government bills, so a sponsor list can undercount. State bills, federal instruments and bill counts are registers: legislation and count_records.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     query: { type: 'string', minLength: 2, maxLength: 200, description: 'Words from the bill title, or a bill_id.' },
     sponsor: { type: 'string', minLength: 2, maxLength: 120, description: 'A member\'s name: bills that record them as sponsor.' },
@@ -179,7 +179,7 @@ export const billSearch: ToolDefinition = {
 
 export const billDetail: ToolDefinition = {
   name: 'bill_detail', title: 'Bill detail and stage history', mcpOnly: true,
-  description: 'One federal bill: status, sponsors with their parties, portfolio, the dated stage history (introduction, readings in each house, passage, royal assent), Act number and links to the source record. items are the dated stage events in order. detail=full adds the divisions linked to the bill and the plain-language summary, which is written by a model from the explanatory memorandum and is not the record. Give bill_id from bill_search, or the full bill title. Passing a house, passing both houses, assent and commencement are different events: report the one the record shows. To read how members voted use division_votes with bill.',
+  description: 'One federal bill by bill_id or full title: status, sponsors with their parties, portfolio, Act number and the dated stage history (introduction, readings in each house, passage, royal assent) as items, with source links. detail=full adds linked divisions and a plain-language summary that is written by a model, not the record. Passing a house, passing both houses and assent are different events.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     bill_id: { type: 'string', pattern: '^au-federal-[a-z0-9-]{1,180}$', description: 'From bill_search, or an opax.com.au/bill/... address.' },
     title: { type: 'string', minLength: 4, maxLength: 300, description: 'The bill\'s full title, used when no bill_id is known.' },
@@ -236,7 +236,7 @@ export const billDetail: ToolDefinition = {
 const HANSARD_CHAMBERS = ['representatives', 'senate', 'nsw_la', 'nsw_lc', 'vic_la', 'vic_lc', 'qld_la', 'sa_ha', 'sa_lc', 'act_la']
 export const hansardSearch: ToolDefinition = {
   name: 'hansard_search', title: 'Search Hansard speeches', mcpOnly: true,
-  description: 'Find what was said in parliament: Hansard speeches by speaker, subject words, dates, chamber or party, with a verbatim excerpt, the speaker, date and links to the OPAX record and the original source. Give speaker for one member\'s own words, query for a subject, or both. Excerpts are checked against the original text and come from the member\'s own speaking turn. Give record_id to read more of one speech (up to 4,000 characters per page; next_cursor continues the text). Results are a ranked sample, not every speech: for how many speeches, or who spoke most, use count_speeches or speech_trend. venue=committee searches committee hearings, including witnesses. For press releases use corpus_records.',
+  description: 'What was said in parliament: Hansard speeches by speaker, subject words, dates, chamber or party, each with a verbatim excerpt, speaker, date and links to the OPAX record and the original. Give speaker for a member\'s own words, query for a subject, or both. record_id reads on through one speech. Results are a ranked sample, not a count: the count_speeches register counts them. venue=committee searches committee hearings.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     query: { type: 'string', minLength: 2, maxLength: 250, description: 'Subject words or a phrase, e.g. "negative gearing".' },
     speaker: { type: 'string', minLength: 2, maxLength: 120, description: 'A parliamentarian\'s name.' },

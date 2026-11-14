@@ -295,12 +295,9 @@ function mcpFixture() {
 test('money_totals shares its schema and aggregate JSON between Ask and the public MCP', async () => {
   const f = mcpFixture(), tool = api.getTool('money_totals');
   assert.ok(tool);
-  const entry = (await f.send('tools/list')).result.tools.find(row => row.name === 'money_totals');
-  assert.ok(entry);
-  assert.equal(entry.description, tool.description);
-  const { $schema, ...schema } = entry.inputSchema;
-  assert.deepEqual(schema, tool.inputSchema);
-  assert.equal(entry.annotations.readOnlyHint, true);
+  // money_receipts is the listed tool; money_totals, the calculator behind it, still answers by name.
+  const listed = (await f.send('tools/list')).result.tools.map(row => row.name);
+  assert.ok(listed.includes('money_receipts') && !listed.includes('money_totals'));
   assert.deepEqual(api.TOOL_SPECS.find(row => row.name === 'money_totals').input, tool.inputSchema);
   assert.equal(f.state.reads, 0);
   const args = { party: 'Labor', financial_year: '2017-18' };
@@ -312,7 +309,7 @@ test('money_totals shares its schema and aggregate JSON between Ask and the publ
   assert.deepEqual(JSON.parse(rpc.result.content[0].text), ask.data);
 });
 
-test('invalid FY arguments fail with -32602 before reading money data', async () => {
+test('invalid FY arguments fail as a tool error before reading money data', async () => {
   const f = mcpFixture();
   for (const args of [
     { financial_year: '2017' }, { financial_year: '2017-19' }, { financial_year: '2017-2019' },
@@ -324,7 +321,7 @@ test('invalid FY arguments fail with -32602 before reading money data', async ()
   ]) {
     assert.throws(() => api.parseToolArgs('money_totals', args), error => error.code === -32602, JSON.stringify(args));
     const rpc = await f.send('tools/call', { name: 'money_totals', arguments: args });
-    assert.equal(rpc.error?.code, -32602, JSON.stringify(args));
+    assert.equal(rpc.result?.isError, true, JSON.stringify(args));
   }
   assert.equal(f.state.reads, 0);
 });

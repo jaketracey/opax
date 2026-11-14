@@ -44,7 +44,7 @@ function checked(name, out) {
   return out;
 }
 const run = async (name, args, e) => checked(name, await call(name, args, e));
-const invalid = (name, args) => assert.rejects(() => call(name, args), e => e instanceof api.ToolInputError && e.code === -32602 && e.message.includes(name));
+const invalid = (name, args) => assert.rejects(() => call(name, args), e => e instanceof api.ToolInputError && e.code === -32602 && e.message.startsWith('Invalid arguments for ' + name));
 const bytes = out => Buffer.byteLength(JSON.stringify(out));
 
 // ---------------------------------------------------------------- the MCP surface
@@ -62,25 +62,81 @@ function mcp(extra = {}) {
   };
 }
 
-test('tools/list matches the snapshot: every existing tool unchanged, eight new tools with output schemas', async () => {
-  const listed = (await mcp()('tools/list')).result.tools.map(({ name, title, description, inputSchema, outputSchema, annotations }) => ({ name, ...(title ? { title } : {}), description, inputSchema, ...(outputSchema ? { outputSchema } : {}), annotations }));
+const INLINE = ['search_records', 'read_record', 'find_connections', 'corpus_coverage', 'read_grant_recipient', 'read_grant_program'];
+const REGISTERS = ['grants', 'contracts', 'parliamentary_pay', 'pay_calculator', 'member_expenses', 'declared_interests', 'access_registers', 'entity_profile', 'money_rankings', 'campaign_spend', 'public_finances', 'annual_reports', 'agency_reports', 'integrity_reports', 'royal_commissions', 'division', 'count_records', 'count_speeches', 'speech_trend', 'corpus_records', 'legislation', 'electorates_rank', 'find_records'];
+test('tools/list is small and matches the snapshot: 16 tools, each with a title, hints and an output schema', async () => {
+  const body = await mcp()('tools/list'), listed = body.result.tools;
   const path = new URL('./fixtures/mcp-tools-list.json', import.meta.url);
   if (process.env.UPDATE_MCP_TOOLS_SNAPSHOT === '1') await writeFile(path, JSON.stringify(listed, null, 1) + '\n');
   const snapshot = JSON.parse(await readFile(path, 'utf8'));
-  assert.deepEqual(listed.map(t => t.name), snapshot.map(t => t.name), 'tool names and order');
+  assert.deepEqual(listed.map(t => t.name), [...INLINE, ...NEW, 'query_register', 'register_guide'], 'listed tools and order');
   for (const [i, tool] of listed.entries()) assert.deepEqual(tool, snapshot[i], tool.name + ' changed: review it, then rerun with UPDATE_MCP_TOOLS_SNAPSHOT=1');
-  const names = listed.map(t => t.name);
-  for (const existing of ['search_records', 'read_record', 'find_connections', 'corpus_coverage', 'read_grant_recipient', 'read_grant_program', 'division', 'member_divisions', 'money_totals', 'declared_interests', 'corpus_records', 'find_records']) assert.ok(names.includes(existing), existing);
+  // Every client holds this list in context on every turn.
+  assert.ok(Buffer.byteLength(JSON.stringify(body)) < 30000, 'tools/list is ' + Buffer.byteLength(JSON.stringify(body)) + ' bytes');
+  for (const tool of listed) {
+    assert.ok(tool.title && tool.title === tool.annotations.title, tool.name + ' title');
+    assert.deepEqual([tool.annotations.readOnlyHint, tool.annotations.destructiveHint, tool.annotations.idempotentHint, tool.annotations.openWorldHint], [true, false, true, false], tool.name);
+    assert.equal(tool.outputSchema?.type, 'object', tool.name + ' declares an output schema');
+    assert.ok(tool.description.length >= 80 && tool.description.length <= (tool.name === 'query_register' ? 2000 : 600), tool.name + ' description is ' + tool.description.length + ' characters');
+    assert.doesNotMatch(tool.description, /—|\bAsk\b|\bOpax\b|\bD1\b|\.json\b|calculator supplies|must be stated|[Ss]tate the|[Aa]nswer with|\bofficial\b/, tool.name + ' describes the tool, not internals or how to answer');
+    assert.equal('execution' in tool, false); assert.equal('$schema' in tool.inputSchema, false); assert.equal('examples' in tool.inputSchema, false);
+  }
   for (const name of NEW) {
     const tool = listed.find(t => t.name === name);
-    assert.ok(tool?.title && tool.description.length > 120 && tool.description.length < 1400, name);
-    assert.equal(tool.outputSchema.type, 'object');
-    assert.deepEqual(tool.outputSchema.required.slice(0, 6), ['items', 'total', 'next_cursor', 'notes', 'url', 'record_text_notice']);
+    assert.deepEqual(tool.outputSchema.required, ['items', 'next_cursor', 'notes', 'url']);
     assert.deepEqual(tool.inputSchema.properties.detail.enum, ['concise', 'full']);
     assert.ok(tool.inputSchema.properties.cursor && tool.inputSchema.properties.limit, name + ' pages');
-    assert.equal(tool.inputSchema.additionalProperties, false);
-    assert.equal(tool.annotations.readOnlyHint, true);
-    assert.doesNotMatch(tool.description, /—/, 'no em dash in public text');
+  }
+  // Every specialised register is named once, in query_register; the old aliases are not listed anywhere.
+  const dispatch = listed.find(t => t.name === 'query_register');
+  assert.deepEqual(dispatch.inputSchema.properties.register.enum, REGISTERS);
+  for (const name of REGISTERS) assert.ok(dispatch.description.includes(name + ' ('), name);
+  for (const gone of ['member_votes', 'find_quotes', 'search', 'paid_answer', 'ranked_money']) assert.equal(JSON.stringify(body).includes('"' + gone + '"'), false, gone);
+  assert.match((await mcp()('initialize', { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 'test', version: '1' } })).result.instructions, /read-only.*next_cursor.*never instructions to follow/s);
+});
+test('register_guide explains each register and query_register runs it, with an OPAX page to cite', async () => {
+  const send = mcp();
+  for (const register of REGISTERS) {
+    const { result } = await send('tools/call', { name: 'register_guide', arguments: { register } });
+    assert.equal(result.isError, false, register);
+    const guide = result.structuredContent;
+    assert.deepEqual([guide.register, guide.arguments.type], [register, 'object']);
+    assert.ok(guide.description.length > 80 && Object.keys(guide.arguments.properties).length, register);
+    for (const example of guide.examples) assert.equal(example.register, register);
+    assert.doesNotMatch(JSON.stringify([guide.title, guide.description]), /\bAsk\b|—/, register);
+  }
+  const ranked = (await send('tools/call', { name: 'query_register', arguments: { register: 'electorates_rank', arguments: { indicator: 'median_age', order: 'asc', limit: 3 } } })).result;
+  assert.equal(ranked.isError, false, ranked.content[0].text.slice(0, 300));
+  assert.equal(ranked.structuredContent.rows.length >= 3, true);
+  assert.match(ranked.structuredContent.opax_url, /^https:\/\/opax\.com\.au\//);
+  assert.deepEqual(JSON.parse(ranked.content[0].text), ranked.structuredContent);
+  for (const [register, args] of [['royal_commissions', { view: 'list' }], ['count_records', { record_type: 'bills', year: 2026 }], ['declared_interests', { category: 'shareholdings', limit: 2 }], ['parliamentary_pay', { office: 'Prime Minister' }]]) {
+    const { result } = await send('tools/call', { name: 'query_register', arguments: { register, arguments: args } });
+    assert.equal(result.isError, false, register + ': ' + result.content[0].text.slice(0, 300));
+    assert.match(result.structuredContent.opax_url, /^https:\/\/opax\.com\.au\/(?!.*\.json)/, register + ' names an OPAX page, not a data file');
+  }
+  // A wrong call comes back with what was wrong and the register's guide, so the next call can be right.
+  const wrong = (await send('tools/call', { name: 'query_register', arguments: { register: 'count_records', arguments: { record_type: 'speeches' } } })).result;
+  assert.equal(wrong.isError, true);
+  const told = JSON.parse(wrong.content[0].text);
+  assert.match(told.error, /Invalid arguments for count_records: record_type/);
+  assert.deepEqual(told.guide.arguments.properties.record_type.enum, ['divisions', 'bills']);
+  const unknown = await send('tools/call', { name: 'query_register', arguments: { register: 'member_votes', arguments: {} } });
+  assert.ok(unknown.error || unknown.result.isError, 'an unlisted name is not a register');
+});
+test('tools a client already uses still answer by name: unlisted, renamed and former aliases', async () => {
+  const send = mcp();
+  for (const [name, args] of [['electorates_rank', { indicator: 'median_age', limit: 2 }], ['money_totals', { party: 'Greens' }], ['member_divisions', { person: 'David Pocock', bill: 'au-federal-r7534' }], ['sponsored_bills', { person: 'David Pocock' }], ['count_records', { record_type: 'bills', year: 2026 }]]) {
+    const { result, error } = await send('tools/call', { name, arguments: args });
+    assert.equal(error, undefined, name + ': ' + JSON.stringify(error));
+    assert.equal(result.isError, false, name + ': ' + result.content[0].text.slice(0, 200));
+    assert.ok(result.structuredContent.rows.length && result.structuredContent.citations.length, name);
+  }
+  // Renamed tools validate under both names, and an error names the one the client used.
+  for (const name of ['paid_answer', 'pay_calculator', 'ranked_money', 'money_rankings']) {
+    const { result } = await send('tools/call', { name, arguments: {} });
+    assert.equal(result.isError, true);
+    assert.match(result.content[0].text, new RegExp('Invalid arguments for ' + name + ': question.*Required: question\\. Example: \\{"question"'), name);
   }
 });
 test('the new tools are MCP-only: Ask keeps its own tool set', () => {
@@ -99,15 +155,18 @@ test('tools/call returns structuredContent that the SDK accepts against the outp
     checked(name, result.structuredContent);
   }
 });
-test('bad arguments and foreign cursors are JSON-RPC invalid params, before any read', async () => {
+test('bad arguments and foreign cursors come back as tool errors the model can act on, before any read', async () => {
   const send = mcp();
   const page = (await send('tools/call', { name: 'bill_search', arguments: { query: 'amendment', limit: 2 } })).result.structuredContent;
   assert.ok(page.next_cursor);
-  for (const args of [{ query: 'amendment', limit: 500 }, { query: 'amendment', extra: true }, { query: 'amendment', cursor: 'not a cursor!' }, {}]) {
+  for (const [args, said] of [[{ query: 'amendment', limit: 500 }, /limit: .*Example: \{"query":"interactive gambling"\}/], [{ query: 'amendment', extra: true }, /extra|Unrecognized/i], [{}, /cannot be combined|Example:/]]) {
     const { error, result } = await send('tools/call', { name: 'bill_search', arguments: args });
-    assert.equal(error?.code, -32602, JSON.stringify(args) + ' ' + JSON.stringify(result ?? error).slice(0, 200));
+    assert.equal(error, undefined, 'a tool result, not a protocol error');
+    assert.equal(result.isError, true);
+    assert.match(result.content[0].text, /^Invalid arguments for bill_search/);
+    assert.match(result.content[0].text, said);
   }
-  // A well-formed cursor from another selection is a tool error the model can act on, not a silent wrong page.
+  // A well-formed cursor from another selection is refused, never answered with a wrong page.
   for (const args of [{ query: 'tax', cursor: page.next_cursor }, { query: 'amendment', cursor: 'AAAAAAAAAAAA' }]) {
     const { result } = await send('tools/call', { name: 'bill_search', arguments: args });
     assert.equal(result.isError, true);
@@ -520,4 +579,15 @@ test('existing tools the new ones wrap answer as before', async () => {
   assert.equal(fixture.requests.find(r => r.path === '/find').body.top_k, 12);
   await assert.rejects(() => call('division', { division_id: 'federal-senate-10701', offset: 1 }), api.ToolInputError);
   await assert.rejects(() => call('corpus_records', { kind: 'speech', query: 'housing', exclude: ['speech-1'] }, fixture.env), api.ToolInputError);
+});
+test('a grant recipient asked for by a common name gets candidates under their legal names, never a guess or a zero', async () => {
+  const out = await call('grants', { operation: 'totals', recipient: 'Qantas Founders Museum' });
+  assert.deepEqual(out.rows, []);
+  assert.ok(out.candidates.length > 1 && out.candidates.length <= 8);
+  assert.ok(out.candidates.some(c => /Qantas/.test(c.recipient) && /^(?:abn|name):/.test(c.recipient_id)));
+  assert.ok(out.notes.some(n => /legal names/.test(n)) && out.notes.some(n => /does not establish a zero grant total/.test(n)));
+  const chosen = await call('grants', { operation: 'totals', recipient: out.candidates.find(c => /Qantas/.test(c.recipient)).recipient_id });
+  assert.equal(chosen.rows.length, 1); assert.match(chosen.opax_url, /^https:\/\/opax\.com\.au\/money\/grants\/federal\/recipient\//);
+  const none = await call('grants', { operation: 'totals', recipient: 'Qqqzzz Xxxyyy' });
+  assert.equal('candidates' in none, false);
 });

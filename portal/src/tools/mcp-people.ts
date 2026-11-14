@@ -72,7 +72,7 @@ async function postcodeItems(env: ToolEnv, postcode: string) {
 const seat = { type: 'object', properties: { jurisdiction: { type: ['string', 'null'] }, chamber: { type: ['string', 'null'] }, electorate: { type: ['string', 'null'] }, state: { type: ['string', 'null'] } } }
 export const memberProfile: ToolDefinition = {
   name: 'member_profile', title: 'Member profile and electorate lookup', mcpOnly: true,
-  description: 'Who a parliamentarian is, or who represents a place. Give exactly one of: name (typos, nicknames and titles are resolved), slug (from an opax.com.au/subject/person/ address), electorate (seat name, federal or state) or postcode (Victorian state districts only). Returns party, chamber, seat and the OPAX profile link; an electorate or postcode returns the seat with its current representatives. Start here to get the exact name the other member tools expect: member_voting_record, member_interests, hansard_search and bill_search. An ambiguous name returns candidates to choose from rather than a guess.',
+  description: 'Who a parliamentarian is, or who represents a place. Give exactly one of name, slug, electorate (seat name, federal or state) or postcode (Victorian state districts only). Returns party, chamber, seat and the OPAX profile link; an electorate or postcode returns the seat with its current representatives. An ambiguous name returns candidates rather than a guess. Use it first to get the exact name other member tools expect.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     name: { type: 'string', minLength: 2, maxLength: 120, description: 'A parliamentarian\'s name, e.g. "Penny Wong" or "Senator Wong".' },
     slug: { type: 'string', pattern: '^[a-z0-9][a-z0-9-]{1,119}$', description: 'Profile slug, e.g. "penny-wong".' },
@@ -130,7 +130,7 @@ export const memberProfile: ToolDefinition = {
 const CATEGORIES = ['shareholdings', 'real_estate', 'directorships', 'trusts', 'gifts', 'travel', 'liabilities', 'memberships', 'other']
 export const memberInterests: ToolDefinition = {
   name: 'member_interests', title: 'Member declared interests', mcpOnly: true,
-  description: 'One member\'s entries in the federal or Queensland register of interests: shareholdings, real estate, directorships, trusts, gifts, sponsored travel, liabilities and memberships. Filter by category, words in the declaration, or lodgement dates. Each entry links to the register source and the member\'s OPAX page. Dates are lodgement or alteration dates, or the register date, never the date a gift was received. A declaration is not evidence of a conflict of interest, and an entry is not necessarily a current holding. For interests across many members (for example all ministers holding shares) use declared_interests.',
+  description: 'One member\'s entries in the federal or Queensland register of interests: shareholdings, real estate, directorships, trusts, gifts, sponsored travel, liabilities and memberships, each with a link to the register. Filter by category, words or lodgement dates. Dates are lodgement or register dates, not when a gift was received. A declaration is not evidence of a conflict. To search across many members use the declared_interests register.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     person: { type: 'string', minLength: 2, maxLength: 120, description: 'The member\'s full name, as member_profile returns it.' },
     category: { type: 'string', enum: CATEGORIES, description: 'travel is sponsored travel or hospitality.' },
