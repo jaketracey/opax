@@ -924,7 +924,7 @@ function PartyContent({
           {votesSection}
         </>
       )}
-      <PartyAccess name={label} />
+      <PartyAccess name={label} afterFrame={afterFrame} />
       <MoreFromRecord
         subject={{ party: id, name: label }}
         kinds={['mentions']}

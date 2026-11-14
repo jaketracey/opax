@@ -257,9 +257,18 @@ export function FundingLoading() {
  * lobbying client they are. Each half collapses when empty, and the section
  * with them.
  */
-export function PartyAccess({ name }: { name: string }) {
+export function PartyAccess({
+  name,
+  afterFrame,
+}: {
+  name: string;
+  afterFrame?: (signal?: AbortSignal) => Promise<void>;
+}) {
   const { read, retry } = useRead(
-    (signal?: AbortSignal) => peopleDepth.access(signal),
+    (signal?: AbortSignal) =>
+      afterFrame
+        ? afterFrame(signal).then(() => peopleDepth.access(signal))
+        : peopleDepth.access(signal),
     'access',
   );
   if (read.status === 'loading')
