@@ -30,6 +30,19 @@ class Watchdog(unittest.TestCase):
         self.status['warnings'] = warnings
         self.assertEqual(evaluate(self.corpus, self.status, self.now)[2], warnings)
 
+    def test_backfill_stop_file_fails_the_watchdog_with_stage_and_reason(self):
+        import tempfile
+        from parli.ingest import backfill_guard as G
+        with tempfile.TemporaryDirectory() as folder:
+            guard = G.Guard(folder)
+            guard.stage = 'nsw'
+            with self.assertRaises(G.Stopped):
+                guard.response(503, 'Service Unavailable')
+            fields = G.nightly_fields(folder, '2026-11-14', [])
+        self.status.update(fields)
+        problems, _, _ = evaluate(self.corpus, self.status, self.now)
+        self.assertTrue(any('nsw stage' in p and 'HTTP 503' in p for p in problems), problems)
+
     def test_current_delivery_still_alerts_on_empty_senate_years(self):
         self.corpus['refresh']['federal_hansard_coverage'] = {
             'empty_senate_years': [2014, 2018], 'unpublished_senate_years': [2014, 2015, 2018]}

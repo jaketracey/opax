@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 import re
 import threading
+import time
 
 BYTE_CEILING = 5_500_000_000
 BYTES_PER_RESOURCE = 59_280  # 1.2 * 49.4 decimal KB, displayed as 59.3 KB
@@ -21,6 +22,7 @@ CHECK_DAYS = 10
 ORIGIN = 'backfill-2026-11'  # classification origin/backfill-2026-11
 ENRICHMENT_USD = 30
 HOLD = 'Backfill held: '
+TRANSIENT_BACKOFF = (30, 120, 600)  # seconds before each of up to 3 retries of a 5xx or network failure
 
 
 class Stopped(Exception):
@@ -166,6 +168,7 @@ class Guard:
         # Backfill resources created since the last counters check. The index
         # does not count them yet, so the ceiling projection adds them.
         self.unchecked = 0
+        self.stage = None
         self._count_lock = threading.Lock()
 
     def published(self, n):
@@ -206,33 +209,62 @@ class Guard:
         if (self.root / 'backfill.STOP').exists():
             raise Stopped('shared backfill.STOP exists; inspect the growth ledger before resuming')
 
+    def transient_wait(self, attempt):
+        """Seconds to wait before transient retry `attempt` + 1; never past the cutoff.
+
+        A wait that would end at or after OPAX_BACKFILL_NOT_AFTER stops cleanly
+        (no stop file: the night's work resumes tomorrow).
+        """
+        self.ensure_running()
+        wait = TRANSIENT_BACKOFF[attempt]
+        not_after = os.environ.get('OPAX_BACKFILL_NOT_AFTER')
+        if not_after is not None:
+            try:
+                left = int(not_after) - time.time()
+            except ValueError:
+                left = 0
+            if left <= wait:
+                self._stopped = 'transient Progress error; retry would pass the nightly backfill cutoff; resumes next night'
+                raise Stopped(self._stopped)
+        return wait
+
     def stop(self, reason):
         self._stopped = reason
         try:
             with self.locked():
                 if not (self.root / 'backfill.STOP').exists():
-                    _atomic(self.root / 'backfill.STOP', {'reason': reason, 'at': _now()})
+                    _atomic(self.root / 'backfill.STOP',
+                            {'reason': reason, 'stage': self.stage or 'unknown', 'at': _now()})
         except OSError:
             # Even a failed stop-file write must hold repairs rather than
             # turn a repair warning into an ordinary refresh failure.
             reason += '; shared stop file could not be written'
         raise Stopped(reason)
 
-    def response(self, status, detail, guarded=True):
+    def response(self, status, detail, guarded=True, final=True):
         # Called BEFORE the normal client's retry/backpressure handling. Every
         # guarded response, including a transient 429, is terminal for repairs.
         # A 200 can still carry a refusal: read every place an API puts one.
         # Ordinary refresh requests (guarded=False) stop the repairs only on
         # refusal wording, without changing their own failure policy.
-        error = detail if status >= 400 else refusal_text(detail)
+        # Status 0 is a network failure: its text ("Max retries exceeded") says
+        # nothing about quota. A 5xx or network failure is transient: only its
+        # last attempt (final=True, after the retries) stops the repairs, but
+        # refusal wording or 402/429 stops at once, at any attempt.
+        error = '' if status == 0 else detail if status >= 400 else refusal_text(detail)
         if status in (402, 429, 507) or REFUSAL.search(error or ''):
             self.stop(f'Progress HTTP {status}: rate, quota or billing refusal')
-        if guarded and status >= 400 and status not in GUARDED_PASS:
-            self.stop(f'Progress HTTP {status}: error inside a guarded backfill request')
+        if guarded and (status == 0 or status >= 400) and status not in GUARDED_PASS:
+            if status == 0 or status >= 500:
+                if final:
+                    self.stop('Progress ' + ('network error' if status == 0 else f'HTTP {status}')
+                              + f' persisted after {len(TRANSIENT_BACKOFF)} retries')
+            else:
+                self.stop(f'Progress HTTP {status}: error inside a guarded backfill request')
 
     def request_scope(self):
         from parli.arag import observe_responses
-        return observe_responses(self.response)
+        return observe_responses(self.response, self.transient_wait)
 
     def read(self):
         path = self.root / 'backfill-ledger.json'
@@ -245,6 +277,7 @@ class Guard:
         return data
 
     def check(self, kb, stage):
+        self.stage = stage
         self.ensure_running()
         try:
             with self.request_scope():
@@ -283,7 +316,7 @@ class Guard:
                               '(latest check interval, at least 500 resources)')
                 if reason:
                     data['stop_reason'] = reason
-                    _atomic(self.root / 'backfill.STOP', {'reason': reason, 'at': sample['at']})
+                    _atomic(self.root / 'backfill.STOP', {'reason': reason, 'stage': stage, 'at': sample['at']})
                 _atomic(self.root / 'backfill-ledger.json', data)
             with self._count_lock:
                 self.unchecked = 0
@@ -398,7 +431,7 @@ def status(root, night):
     if (root / 'backfill.STOP').exists():
         result['stopped'] = True
         try:
-            result['warning'] = json.loads((root / 'backfill.STOP').read_text())['reason']
+            result['warning'] = stop_line(root)
         except (OSError, ValueError, KeyError, TypeError):
             result['warning'] = 'shared backfill.STOP exists'
     # Jake's GO is in GB: every byte figure also in decimal GB, 2 places.
@@ -410,6 +443,15 @@ def status(root, night):
     result['projected_finish_date'] = (max(s['projected_finish_date'] for s in stages)
                                        if stages and all(s['projected_finish_date'] for s in stages) else None)
     return result
+
+
+def stop_line(root):
+    """One line for the log, manifest and watchdog: the stage and the reason."""
+    try:
+        record = json.loads((Path(root) / 'backfill.STOP').read_text())
+        return f"{record.get('stage') or 'unknown'} stage: {record['reason']}"
+    except (OSError, ValueError, KeyError, TypeError, AttributeError):
+        return 'shared backfill.STOP exists'
 
 
 def nightly_fields(root, night, warnings):
@@ -425,3 +467,8 @@ def nightly_fields(root, night, warnings):
         failures.append('growth guard: ' + backfill['warning'])
         warnings.append('Backfill growth guard: ' + backfill['warning'])
     return {'backfill': backfill, 'backfill_failures': list(dict.fromkeys(failures))}
+
+
+if __name__ == '__main__':  # nightly.sh: print the stop line, if any
+    if (state_dir() / 'backfill.STOP').exists():
+        print(stop_line(state_dir()))

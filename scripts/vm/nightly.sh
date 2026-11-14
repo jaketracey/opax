@@ -453,6 +453,11 @@ fi
 . "$REPO/scripts/vm/nsw_hansard_backfill.sh"
 nsw_hansard_backfill
 
+# A shared backfill.STOP reaches Jake through the status (backfill.stopped) and the daily watchdog; this is the one
+# line the orchestrator reads in the log and the manifest warnings (nightly_fields adds the same text).
+backfill_stop=$("$PY" -m parli.ingest.backfill_guard 2>/dev/null || true)
+[ -z "$backfill_stop" ] || log "BACKFILL STOP: $backfill_stop"
+
 # ---- 2b. the periodic groups: weekly (Sundays, Sydney), monthly (the first Sunday), frl (Thursdays) ----------
 # The FRL instrument crawl (~2.6 h of 10-second-spaced requests, 18 Oct 2026) has its own night: with the rest of the
 # weekly it left Sunday no time inside the 6 h unit limit to test and publish (scripts/weekly_refresh.sh).

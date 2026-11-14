@@ -101,8 +101,8 @@ def test_per_resource_bound_requires_500_and_uses_exact_decimal_bytes():
     (200, '{"success":false,"info":"account suspended"}'),
     # Re-review: any guarded status of 400 or more stops, whatever the wording.
     (403, 'Account suspended'), (403, 'Your trial has ended'), (403, 'spending cap reached'),
-    (401, 'subscription inactive'), (401, 'unauthorised'), (400, 'bad request'),
-    (500, 'internal error'), (503, 'unavailable')])
+    (401, 'subscription inactive'), (401, 'unauthorised'), (400, 'bad request')])
+# 5xx and network failures are transient: they retry first (tests below).
 @pytest.mark.parametrize('method', ['GET', 'POST'])
 def test_any_guarded_progress_refusal_stops_without_retry(monkeypatch, status, detail, method):
     calls = []
@@ -255,7 +255,7 @@ def test_real_nightly_status_exposes_shared_growth_and_drives_existing_alert_pat
     exec(compile(body,'nightly.write_status','exec'), {})
     status = json.loads(output.read_text())
     assert status['failures'] == [] and status['status'] == 'ok'
-    assert status['backfill_failures'] == ['growth guard: test: cumulative growth ceiling exceeded']
+    assert status['backfill_failures'] == ['growth guard: nsw stage: test: cumulative growth ceiling exceeded']
     assert any('growth guard' in warning for warning in status['warnings'])
     assert status['backfill']['bytes_added'] == 40_000_000
     assert status['backfill']['cumulative_resources_added'] == 1000
@@ -534,3 +534,131 @@ def test_publication_deadline_never_passes_the_nightly_cutoff(monkeypatch):
     publication = S.BackfillPublication(KB())
     publication.before('senate', ('senate', '2014-02-01'))
     assert publication.deadline - time.monotonic() > 1000
+
+
+@pytest.fixture
+def guard():
+    return G.Guard()
+
+
+# ---- transient errors retry; spend-guard refusals stop at once ---------------------------------------
+
+class _Resp:
+    def __init__(self, status, text=''):
+        self.status_code, self.text, self.content = status, text, text.encode()
+        self.ok = status < 400
+        self.headers = {}
+
+    def json(self):
+        return json.loads(self.text)
+
+
+def _scripted(monkeypatch, outcomes):
+    """requests.request returns/raises each outcome in turn; sleeps are recorded, not slept."""
+    import requests
+    from parli import arag
+    sleeps, calls = [], []
+    queue = list(outcomes)
+
+    def fake(*args, **kwargs):
+        calls.append(args)
+        item = queue.pop(0)
+        if isinstance(item, Exception):
+            raise item
+        return item
+    monkeypatch.setattr(arag.requests, 'request', fake)
+    monkeypatch.setattr(arag.time, 'sleep', sleeps.append)
+    return sleeps, calls
+
+
+def test_a_503_then_200_passes_with_no_stop(guard, monkeypatch):
+    sleeps, calls = _scripted(monkeypatch, [_Resp(503, 'unavailable'), _Resp(200, '{"ok": true}')])
+    with guard.request_scope():
+        assert arag._request('POST', 'https://example.test/r', {}) == {'ok': True}
+    assert sleeps == [30] and len(calls) == 2
+    assert not (guard.root / 'backfill.STOP').exists()
+
+
+def test_timeouts_and_resets_retry_then_pass(guard, monkeypatch):
+    import requests
+    sleeps, _ = _scripted(monkeypatch, [requests.Timeout('t'), requests.ConnectionError('reset'),
+                                        _Resp(502, 'bad gateway'), _Resp(200, '{}')])
+    with guard.request_scope():
+        arag._request('POST', 'https://example.test/r', {})
+    assert sleeps == [30, 120, 600]
+    assert not (guard.root / 'backfill.STOP').exists()
+
+
+def test_three_5xx_then_a_fourth_writes_stop_with_stage(guard, monkeypatch):
+    sleeps, calls = _scripted(monkeypatch, [_Resp(503, 'down')] * 4)
+    guard.stage = 'senate-sync'
+    with pytest.raises(G.Stopped), guard.request_scope():
+        arag._request('POST', 'https://example.test/r', {})
+    assert sleeps == [30, 120, 600] and len(calls) == 4
+    stop = json.loads((guard.root / 'backfill.STOP').read_text())
+    assert stop['stage'] == 'senate-sync' and 'HTTP 503 persisted' in stop['reason']
+
+
+def test_a_network_failure_that_persists_writes_stop(guard, monkeypatch):
+    import requests
+    err = requests.ConnectionError('Max retries exceeded with url')  # must not read as a quota refusal
+    sleeps, _ = _scripted(monkeypatch, [err] * 4)
+    with pytest.raises(G.Stopped), guard.request_scope():
+        arag._request('POST', 'https://example.test/r', {})
+    assert sleeps == [30, 120, 600]
+    assert 'network error persisted' in json.loads((guard.root / 'backfill.STOP').read_text())['reason']
+
+
+@pytest.mark.parametrize('status', [401, 402, 403, 429])
+def test_spend_and_auth_statuses_stop_at_once(guard, monkeypatch, status):
+    sleeps, calls = _scripted(monkeypatch, [_Resp(status, 'no'), _Resp(200, '{}')])
+    with pytest.raises(G.Stopped), guard.request_scope():
+        arag._request('POST', 'https://example.test/r', {})
+    assert sleeps == [] and len(calls) == 1
+    assert (guard.root / 'backfill.STOP').exists()
+
+
+def test_refusal_wording_in_a_5xx_or_200_stops_without_retry(guard, monkeypatch):
+    for response in (_Resp(503, '{"detail": "Quota exceeded"}'), _Resp(200, '{"nested": {"error": {"message": "trial expired"}}}')):
+        for name in ('backfill.STOP',):
+            (guard.root / name).unlink(missing_ok=True)
+        guard._stopped = None
+        sleeps, calls = _scripted(monkeypatch, [response, _Resp(200, '{}')])
+        with pytest.raises(G.Stopped), guard.request_scope():
+            arag._request('POST', 'https://example.test/r', {})
+        assert sleeps == [] and len(calls) == 1
+
+
+def test_404_and_409_behave_as_before(guard, monkeypatch):
+    sleeps, calls = _scripted(monkeypatch, [_Resp(404, 'missing'), _Resp(409, 'exists')])
+    for _ in range(2):
+        with pytest.raises(arag.AragError), guard.request_scope():
+            arag._request('POST', 'https://example.test/r', {})
+    assert sleeps == [] and not (guard.root / 'backfill.STOP').exists()
+
+
+def test_a_retry_that_would_cross_the_cutoff_stops_cleanly(guard, monkeypatch):
+    import time
+    monkeypatch.setenv('OPAX_BACKFILL_NOT_AFTER', str(int(time.time()) + 20))  # first wait is 30 s
+    sleeps, calls = _scripted(monkeypatch, [_Resp(503, 'down'), _Resp(200, '{}')])
+    with pytest.raises(G.Stopped) as stopped, guard.request_scope():
+        arag._request('POST', 'https://example.test/r', {})
+    assert 'cutoff' in str(stopped.value)
+    assert sleeps == [] and len(calls) == 1
+    assert not (guard.root / 'backfill.STOP').exists()  # clean: resumes next night
+    # a later wait too: 40 s left covers the 30 s wait but not the 120 s one
+    guard._stopped = None
+    monkeypatch.setenv('OPAX_BACKFILL_NOT_AFTER', str(int(time.time()) + 60))
+    sleeps, _ = _scripted(monkeypatch, [_Resp(503, 'down')] * 2)
+    with pytest.raises(G.Stopped), guard.request_scope():
+        arag._request('POST', 'https://example.test/r', {})
+    assert sleeps == [30]
+
+
+def test_stop_line_names_the_stage_and_reason(guard):
+    guard.stage = 'nsw'
+    with pytest.raises(G.Stopped):
+        guard.response(402, 'pay up')
+    status = G.status(guard.root, '2026-11-14')
+    assert status['stopped'] and status['warning'].startswith('nsw stage: ')
+    assert G.stop_line(guard.root) == status['warning']

@@ -354,7 +354,10 @@ def _push_one(kb: KbClient, body: dict, guard=None, deadline=None) -> tuple[str,
         if stage:
             # Also covers injected clients which raise without _request.
             try:
-                guard.response(e.status, e.detail)
+                # A real request has already retried and stopped on a persistent
+                # network failure (arag._request); an injected client's single
+                # network error holds the item until tomorrow instead.
+                guard.response(e.status, e.detail, final=e.status != 0)
             except growth.Stopped as exc:
                 return body['slug'], growth.HOLD + str(exc)
             return body['slug'], growth.HOLD + f'Progress HTTP {e.status}; retry next night'
