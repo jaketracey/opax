@@ -208,3 +208,107 @@ def test_publication_outage_backlog_never_exceeds_four_days_or_hides_pending_row
     assert sum(p['publication_pending'] for p in pub.progress(staged,receipt).values()) == 2
     assert sync.sync_nsw_backfill(kb,staged,receipt,100,False,sync.DEFAULT_SINCE) == 2
     assert sync.sync_nsw_backfill(kb,staged,receipt,100,False,sync.DEFAULT_SINCE) == 0
+
+
+# --- Joint Senate + NSW sync (the merged arag_sync.py) -----------------------
+
+def _hold_both(receipt):
+    from parli.ingest import backfill_guard as growth
+    receipt['tables']['speeches']['failed'] = {
+        'speech-1': growth.HOLD + 'normal-sync backfill time budget spent; resumes next night'}
+    return receipt
+
+
+def test_senate_held_loop_never_republishes_an_nsw_owned_id_untagged(staged, monkeypatch):
+    # NSW switched off: Senate's held-ID retry loop must not push speech-1 at all.
+    monkeypatch.setenv('OPAX_NSW_BACKFILL', '0')
+    kb = Mock()
+    kb.counters.return_value = {'index_size': 1_000_000, 'resources': 1000}
+    receipt = _hold_both(state(after=999))
+    sync.sync_table(kb, staged, 'speeches', sync.TABLES['speeches'], receipt, 100, False, sync.DEFAULT_SINCE)
+    assert 'speech-1' not in [c.args[0]['slug'] for c in kb.create_resource.call_args_list]
+    assert receipt['nsw_backfill']['failed']['1'].startswith('Backfill held: ')
+    # NSW on: speech-1 goes out once, through the NSW drain, tagged and guarded.
+    monkeypatch.delenv('OPAX_NSW_BACKFILL')
+    kb.reset_mock()
+    kb.counters.return_value = {'index_size': 1_000_000, 'resources': 1000}
+    sync.sync_table(kb, staged, 'speeches', sync.TABLES['speeches'], receipt, 100, False, sync.DEFAULT_SINCE)
+    bodies = [c.args[0] for c in kb.create_resource.call_args_list if c.args[0]['slug'] == 'speech-1']
+    assert len(bodies) == 1
+    assert bodies[0]['extra']['metadata']['backfill_stage'] == 'nsw'
+    assert kb.counters.call_count >= 1
+    assert receipt['nsw_backfill']['published'] == [1]
+    assert 'speech-1' not in receipt['tables']['speeches']['failed']
+
+
+def test_senate_and_nsw_share_one_time_budget_per_sync_run(staged, monkeypatch):
+    from parli.ingest import backfill_guard as growth
+    monkeypatch.setenv('OPAX_SENATE_BACKFILL_BUDGET_SECONDS', '100')
+    monkeypatch.setenv('OPAX_BACKFILL_NSW_BUDGET_S', '100')
+    clock = [1000.0]
+    monkeypatch.setattr(sync.time, 'monotonic', lambda: clock[0])
+    kb = Mock()
+    kb.counters.return_value = {'index_size': 1_000_000, 'resources': 1000}
+    # Each Senate publication takes 60 s: two spend the shared 100 s budget.
+    def create(body):
+        if body['extra']['metadata'].get('backfill_stage') == 'senate':
+            clock[0] += 60
+    kb.create_resource.side_effect = create
+    path = staged.execute('PRAGMA database_list').fetchone()[2]
+    with sqlite3.connect(path) as writer:
+        for sid in (3, 4):
+            writer.execute("INSERT INTO speeches(speech_id,person_id,speaker_name,chamber,date,text,word_count,source,state) "
+                           "VALUES (?,'nsw_hansard_1','A Senator','senate','2015-03-0' || ?,?,100,'openaustralia','federal')",
+                           (sid, sid, f'Senate held speech {sid}. ' * 30))
+    spec = dict(sync.TABLES['speeches'])
+    def senate_map(row):
+        body = sync.map_speech(row)
+        return growth.tag(body, 'senate') if row['chamber'] == 'senate' else body
+    spec['map'] = senate_map
+    receipt = state(after=999)
+    receipt['tables']['speeches']['failed'] = {f'speech-{sid}': growth.HOLD + 'senate held' for sid in (3, 4)}
+    sync.sync_table(kb, staged, 'speeches', spec, receipt, 100, False, sync.DEFAULT_SINCE)
+    slugs = [c.args[0]['slug'] for c in kb.create_resource.call_args_list]
+    assert slugs.count('speech-3') + slugs.count('speech-4') == 2
+    # A second, separate NSW budget would have published speech-1 here.
+    assert 'speech-1' not in slugs
+    assert receipt['nsw_backfill']['published'] == []
+    assert 'time budget spent' in receipt['nsw_backfill']['failed']['1']
+
+
+def test_one_publication_object_per_run(staged, monkeypatch):
+    made = []
+    real = sync.BackfillPublication
+    monkeypatch.setattr(sync, 'BackfillPublication', lambda kb: made.append(real(kb)) or made[-1])
+    kb = Mock()
+    kb.counters.return_value = {'index_size': 1_000_000, 'resources': 1000}
+    sync.sync_table(kb, staged, 'speeches', sync.TABLES['speeches'], _hold_both(state(after=999)),
+                    100, False, sync.DEFAULT_SINCE)
+    assert len(made) == 1
+    made.clear()
+    sync.retry_failed(kb, staged, _hold_both(state(after=999)))
+    assert len(made) == 1
+
+
+REFUSED_200 = ['{"message":"Quota exceeded"}', 'quota exceeded',
+               '{"errors":[{"message":"billing limit reached"}]}']
+
+
+@pytest.mark.parametrize('detail', REFUSED_200)
+def test_refused_create_in_a_200_is_never_recorded_as_published(staged, monkeypatch, detail):
+    from parli import arag
+    from parli.ingest import backfill_guard as growth
+    class Response:
+        ok, status_code, text, headers, content = True, 200, detail, {}, detail.encode()
+        def json(self):
+            return json.loads(detail)
+    monkeypatch.setattr(arag.requests, 'request', lambda *a, **kw: Response())
+    kb = Mock()
+    kb.counters.return_value = {'index_size': 1_000_000, 'resources': 1000}
+    kb.create_resource.side_effect = lambda body: arag._request('POST', 'https://example.test/resources', {}, body)
+    receipt = state(after=999)
+    sync.sync_nsw_backfill(kb, staged, receipt, 100, False, sync.DEFAULT_SINCE)
+    assert (growth.state_dir() / 'backfill.STOP').exists()
+    assert receipt['nsw_backfill']['published'] == []
+    assert receipt['nsw_backfill']['failed']['1'].startswith(growth.HOLD)
+    assert pub.read_state(sync.STATE_PATH)['nsw_backfill']['published'] == []

@@ -73,6 +73,53 @@ def _atomic(path, value):
     temporary.replace(path)
 
 
+# Quota, rate, billing and limit refusals, matched case-insensitively.
+REFUSAL = re.compile(
+    r'quota|rate.?limit|too many requests|throttl|billing|payment|credit|'
+    r'insufficient|exceed|limit.{0,20}reached|reached.{0,20}limit|'
+    r'(?:spend|subscription|usage|resource|storage|size|plan).?limit|upgrade.{0,20}plan',
+    re.I)
+REFUSAL_KEYS = ('error', 'errors', 'message', 'detail', 'details', 'msg')
+
+
+def refusal_text(detail):
+    """The text of a 2xx body where a refusal could sit.
+
+    JSON: top-level error, message and detail keys and errors[].message (any
+    nesting). A plain-text body is read whole. Other JSON fields (resource
+    titles, text) are ignored, so a speech about quotas is not a refusal.
+    """
+    if detail is None:
+        return ''
+    if isinstance(detail, bytes):
+        detail = detail.decode('utf-8', 'replace')
+    try:
+        payload = json.loads(detail)
+    except (ValueError, TypeError):
+        return str(detail)
+    found = []
+    def walk(value, keyed):
+        if isinstance(value, str):
+            if keyed:
+                found.append(value)
+        elif isinstance(value, dict):
+            for key, item in value.items():
+                walk(item, keyed or str(key).lower() in REFUSAL_KEYS)
+        elif isinstance(value, list):
+            for item in value:
+                walk(item, keyed)
+    if isinstance(payload, str):
+        return payload
+    for item in payload if isinstance(payload, list) else [payload]:
+        if isinstance(item, str) and isinstance(payload, list):
+            found.append(item)
+        elif isinstance(item, dict):
+            for key in REFUSAL_KEYS:
+                if key in item:
+                    walk(item[key], True)
+    return '\n'.join(found)
+
+
 class Guard:
     def __init__(self, root=None):
         self.root = Path(root) if root is not None else state_dir()
@@ -105,17 +152,9 @@ class Guard:
     def response(self, status, detail):
         # Called BEFORE the normal client's retry/backpressure handling. Every
         # guarded response, including a transient 429, is terminal for repairs.
-        error = detail
-        if status < 400:
-            try:
-                payload = json.loads(detail)
-                error = json.dumps(payload.get('error')) if isinstance(payload, dict) and payload.get('error') else ''
-            except (ValueError, TypeError):
-                error = ''
-        if status in (402, 429, 507) or re.search(
-                r'quota|billing|payment|credit|insufficient.?fund|insufficient.?balance|'
-                r'(?:spend|subscription|usage|resource|storage|size|plan).?limit|upgrade.{0,20}plan',
-                error, re.I):
+        # A 200 can still carry a refusal: read every place an API puts one.
+        error = detail if status >= 400 else refusal_text(detail)
+        if status in (402, 429, 507) or REFUSAL.search(error or ''):
             self.stop(f'Progress HTTP {status}: rate, quota or billing refusal')
 
     def request_scope(self):

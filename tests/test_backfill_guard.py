@@ -88,7 +88,13 @@ def test_per_resource_bound_requires_500_and_uses_exact_decimal_bytes():
     (403, '{"detail":"quota exceeded"}'), (402, 'payment required'),
     (503, '{"detail":"billing account suspended"}'), (400, 'insufficient credits'),
     (403, 'resource limit exceeded'), (403, 'usage limit reached'),
-    (507, 'Insufficient Storage'), (200, '{"error":"quota exceeded"}')])
+    (507, 'Insufficient Storage'), (200, '{"error":"quota exceeded"}'),
+    # Refusals inside a 200, wherever an API puts them (joint review P2).
+    (200, '{"message":"Quota exceeded"}'), (200, 'quota exceeded'),
+    (200, '{"errors":[{"message":"billing limit reached"}]}'),
+    (200, '{"detail":"Rate limit exceeded"}'), (200, '{"error":{"code":"insufficient_balance"}}'),
+    (200, 'Payment required'), (200, '"Monthly limit reached"'),
+    (200, '[{"message":"plan limit reached"}]')])
 @pytest.mark.parametrize('method', ['GET', 'POST'])
 def test_any_guarded_progress_refusal_stops_without_retry(monkeypatch, status, detail, method):
     calls = []
@@ -105,6 +111,26 @@ def test_any_guarded_progress_refusal_stops_without_retry(monkeypatch, status, d
     assert len(calls) == 1 and calls[0]['timeout'] == 20
     stop = (guard.root / 'backfill.STOP').read_text()
     assert 'Progress HTTP' in stop and 'secret' not in stop and detail not in stop
+
+
+@pytest.mark.parametrize('detail', [
+    '{"id":"r1","slug":"speech-1","status":"processing"}', '', 'OK',
+    '{"message":"Resource created","id":"r1"}',
+    # The body echoes resource text; a speech about quotas is not a refusal.
+    '{"id":"r1","title":"Quota exceeded in the fishery","texts":{"t":{"body":"billing limit reached"}}}',
+    '[{"slug":"speech-1","title":"Payment of members"}]',
+    '{"index_size":1000,"resources":10}'])
+def test_normal_200_still_passes(monkeypatch, detail):
+    class Response:
+        ok, status_code, text, headers = True, 200, detail, {}
+        content = detail.encode()
+        def json(self):
+            return json.loads(detail)
+    monkeypatch.setattr(arag.requests, 'request', lambda *a, **kw: Response())
+    guard = G.Guard()
+    with guard.request_scope():
+        arag._request('POST', 'https://example.test/resources', {})
+    assert not (guard.root / 'backfill.STOP').exists()
 
 
 def test_ordinary_progress_refusal_stops_repairs_without_reclassifying_ordinary_error(monkeypatch):
