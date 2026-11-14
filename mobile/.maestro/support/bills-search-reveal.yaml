@@ -1,0 +1,20 @@
+appId: au.com.opax.app
+name: Reveal the Bills list's native search field
+---
+# The Bills list sets hideWhenScrolling, and on iOS 26.3.1 and 27 its search
+# field starts tucked under the large title (14 Nov 2026): a short pull
+# reveals it. Callers then tap it by its placeholder (it has no test id).
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - repeat:
+          times: 3
+          while:
+            notVisible: Search bills
+          commands:
+            - swipe:
+                start: 50%, 35%
+                end: 50%, 55%
+                duration: 800
+            - waitForAnimationToEnd

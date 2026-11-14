@@ -53,7 +53,7 @@ name: 45 Electorates, dated representation, bill filters and Votes in parliament
 - tapOn: Done
 - scrollUntilVisible:
     element:
-      text: Representation on 2 January 2024
+      text: Members? on 2 January 2024
     visibilityPercentage: 10
     centerElement: true
     speed: 20
@@ -68,7 +68,7 @@ name: 45 Electorates, dated representation, bill filters and Votes in parliament
 - tapOn: OK
 - scrollUntilVisible:
     element:
-      text: Representation history
+      text: Past members
     visibilityPercentage: 10
     centerElement: true
     speed: 20
