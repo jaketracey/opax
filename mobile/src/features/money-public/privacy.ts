@@ -4,7 +4,7 @@
 // item's Notes (privateNote), not on every row (specs/money.md 1.2).
 export const unnamedRecipient = 'Individual recipient';
 export const unnamedSupplier = 'Individual supplier';
-export const privateNote = "OPAX doesn't name private individuals.";
+export const privateNote = 'OPAX doesn’t name private individuals.';
 const organisations = new Set([
   'company',
   'association',

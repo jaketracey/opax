@@ -22,7 +22,7 @@ import { formatMoney } from '../src/design/format';
 
 // Individuals are never named in a money list (journeys/money.md 12,
 // App Review 5.1.1): their records are counted in a footnote, their pages
-// say "Individual recipient" and carry "OPAX doesn't name private
+// say "Individual recipient" and carry "OPAX doesn’t name private
 // individuals.", and no route is addressed by a private name.
 const mockParams: Record<string, string> = {};
 jest.mock('expo-router', () => {
@@ -278,7 +278,7 @@ describe('a person’s record page', () => {
     expect(JSON.stringify(item)).not.toContain(PRIVATE);
   });
   test('the note is said in plain words', () => {
-    expect(privateNote).toBe("OPAX doesn't name private individuals.");
+    expect(privateNote).toBe('OPAX doesn’t name private individuals.');
   });
 });
 
