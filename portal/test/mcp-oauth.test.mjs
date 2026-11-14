@@ -16,7 +16,7 @@ await build({entryPoints:[src('community.ts'),src('community-mcp.ts'),src('commu
 const {communityRoute}=await import(pathToFileURL(join(folder,'community.js')));
 const {communityMcp}=await import(pathToFileURL(join(folder,'community-mcp.js')));
 const {oauthRoute,redirectMatches,registrableRedirect}=await import(pathToFileURL(join(folder,'community-oauth.js')));
-const {anonymousVolume,sharedAddress,networkKey,wideNetwork}=await import(pathToFileURL(join(folder,'mcp-access.js')));
+const {anonymousVolume,sharedAddress,networkKey,wideNetwork,limitKey}=await import(pathToFileURL(join(folder,'mcp-access.js')));
 
 const ORIGIN='https://opax.test';
 const sha=value=>createHash('sha256').update(value).digest('hex');
@@ -64,8 +64,8 @@ function fixture(vars={}){
  async function connect(session){const c=await consent(session);const response=await exchange(c.clientId,c.code);assert.equal(response.status,200);return {...c,tokens:await response.json()}}
  // The public search and record routes, as index.ts serves them: each makes Progress queries through the meter it is given.
  // By default one query a read; a test sets f.queries to make a search use its keyword retry too.
- const reads={queries:['/find']};
- const mcp=(headers={},{path='/mcp',method='POST',rpc={jsonrpc:'2.0',id:1,method:'tools/list',params:{}}}={})=>communityMcp(new Request(ORIGIN+path,{method,headers:{accept:'application/json, text/event-stream','content-type':'application/json','cf-connecting-ip':'203.0.113.7','user-agent':'test-client/1',...headers},body:method==='POST'?JSON.stringify(rpc):undefined}),env,async(path,meter)=>{for(const query of reads.queries)await meter(query==='hedge'?'/find':query,query==='hedge');return Response.json({results:[]})});
+ const reads={queries:['/find'],keys:[]};
+ const mcp=(headers={},{path='/mcp',method='POST',rpc={jsonrpc:'2.0',id:1,method:'tools/list',params:{}}}={})=>communityMcp(new Request(ORIGIN+path,{method,headers:{accept:'application/json, text/event-stream','content-type':'application/json','cf-connecting-ip':'203.0.113.7','user-agent':'test-client/1',...headers},body:method==='POST'?JSON.stringify(rpc):undefined}),env,async(path,meter,key)=>{reads.keys.push(key);for(const query of reads.queries)await meter(query==='hedge'?'/find':query,query==='hedge');return Response.json({results:[]})});
  const bearer=token=>({authorization:'Bearer '+token});
  return {db,env,outbox,account,login,oauth,form,register,authorizeQuery,consent,exchange,connect,mcp,bearer,reads};
 }
@@ -415,6 +415,29 @@ test('the daily cap on no-account requests: one network, then the pool',async()=
  await both.mcp();await both.mcp({'cf-connecting-ip':CLAUDE});
  assert.deepEqual(await anonymousVolume(both.env),{anonymous:false,volume:'normal',hours_over:0,paused_today:['shared:requests','direct:requests']});
  for(const x of [f,both])x.db.close();
+});
+
+test('the website search limit counts one person on a shared assistant address, and an ordinary address as before',async()=>{
+ const f=fixture({MCP_ANON_PER_CLIENT_MINUTE:'600',MCP_ANON_PER_IP_MINUTE:'5000',MCP_ANON_SHARED_IP_MINUTE:'5000'});
+ const anonymous={kind:'anonymous',member:null},at=(ip,headers={})=>new Request(ORIGIN+'/mcp',{headers:{'cf-connecting-ip':ip,...headers}});
+ assert.equal(limitKey(at('203.0.113.7',{'mcp-session-id':'session-aaaa'}),f.env,anonymous),'203.0.113.7'); // the website's key, unchanged
+ assert.equal(limitKey(at(CLAUDE,{'mcp-session-id':'session-aaaa'}),f.env,anonymous),'shared:session:session-aaaa');
+ assert.equal(limitKey(at(CLAUDE),f.env,anonymous),CLAUDE); // no session: the address, as before
+ assert.equal(limitKey(at('98.87.72.221',{'mcp-session-id':'session-bbbb'}),f.env,anonymous),'shared:session:session-bbbb'); // ChatGPT's list
+ assert.equal(limitKey(at(CLAUDE,{'mcp-session-id':'session-aaaa'}),f.env,{kind:'key',member:{key_id:'k1'}}),'shared:key:k1');
+ assert.equal(limitKey(at(CLAUDE),f.env,{kind:'oauth',member:{grant_id:'g1'}}),'shared:grant:g1');
+ // Through a search: the key reaches the search route, and a fake 120-a-minute limiter on it keeps sessions apart.
+ f.reads.queries=[];
+ const counts=new Map(),over=()=>[...counts.values()].some(n=>n>120);
+ const searchAs=async headers=>{const r=await search(f,headers);const key=f.reads.keys.at(-1);counts.set(key,(counts.get(key)??0)+1);return {status:r.status,key}};
+ for(let i=0;i<120;i++)assert.equal((await searchAs({'cf-connecting-ip':CLAUDE,'mcp-session-id':'conversation-one'})).key,'shared:session:conversation-one');
+ assert.equal(counts.get('shared:session:conversation-one'),120);
+ assert.equal((await searchAs({'cf-connecting-ip':CLAUDE,'mcp-session-id':'conversation-two'})).key,'shared:session:conversation-two');
+ assert.equal(counts.get('shared:session:conversation-two'),1,'another person behind the same address starts with a full allowance');
+ for(let i=0;i<3;i++)assert.equal((await searchAs({'cf-connecting-ip':'203.0.113.7','mcp-session-id':'session-'+i+'-ordinary'})).key,'203.0.113.7');
+ assert.equal(counts.get('203.0.113.7'),3,'an ordinary address is one key whatever sessions it sends');
+ assert.equal(over(),false);
+ f.db.close();
 });
 
 test('on staging each response reports its Progress queries, and a caller can lower its own budget',async()=>{

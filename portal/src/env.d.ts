@@ -86,6 +86,8 @@ interface Env {
   RESEARCH_EVAL?: import('./research-eval').ResearchEvalState
   /** Request-local: an MCP request's Progress meter (mcp-access.ts), called by kbFetch before each knowledge-base query. */
   KB_METER?: import('./mcp-access').KbMeter
+  /** Request-local: the key SEARCH_LIMITER counts an MCP request under (mcp-access.ts limitKey). Absent: the client IP. */
+  MCP_LIMIT_KEY?: string
   /** Provisioned by Jake; optional so missing configuration falls back. */
   OPENROUTER_API_KEY?: string
   /** Optional operator-configured token prices, USD per million, for monitoring. */

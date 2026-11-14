@@ -272,6 +272,20 @@ export async function spendAnonymous(req:Request,env:Env,method:unknown):Promise
  if(over==='network')throw new McpLimitError(networkMessage(env),untilMidnight())
  if(over==='pool')throw new CommunityError(401,pausedMessage(env))
 }
+/**
+ * The key a per-address limit elsewhere in the Worker counts an MCP request under (SEARCH_LIMITER, which
+ * search_records passes through in src/index.ts). An ordinary address is its own key, as on the website. On an
+ * address many people's assistants share, one person is the unit instead, chosen as the limits above choose
+ * it: their account (a member key or connected client), else their session. A caller there with neither is
+ * counted by the address, as before.
+ */
+export function limitKey(req:Request,env:Env,caller:McpCaller):string {
+ const ip=req.headers.get('cf-connecting-ip')||'local'
+ if(!sharedAddress(env,ip))return ip
+ const session=sessionOf(req)
+ const who=caller.kind==='oauth'?'grant:'+caller.member.grant_id:caller.kind==='key'?'key:'+caller.member.key_id:session?'session:'+session:null
+ return who?'shared:'+who:ip
+}
 /** A session id for a client, so its later requests are counted as its own. Nothing is stored for it. */
 export function withSession(response:Response,method:unknown):Response {
  if(method!=='initialize'||!response.ok||response.headers.has('mcp-session-id'))return response
