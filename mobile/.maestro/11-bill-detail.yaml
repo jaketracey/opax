@@ -41,6 +41,7 @@ name: 11 Read a bill, its machine summary, votes and speeches
       - tapOn:
           id: bills-scope
       - tapOn: All
+- runFlow: support/bills-search-reveal.yaml
 - tapOn: Search bills
 - inputText: interactive gambling levy
 - pressKey: Enter
@@ -98,6 +99,8 @@ name: 11 Read a bill, its machine summary, votes and speeches
 # At AX5 the whole votes section is too tall to appear in the iOS
 # hierarchy; the first vote's container does. Third readings and other
 # substantive votes come first; procedural votes wait in their own group.
+# A substantive question put under a time limit is not procedural, so the
+# time-limited amendment leads and the committee vote is third.
 - assertVisible:
     id: bill-screen
 - scrollUntilVisible:
@@ -115,35 +118,47 @@ name: 11 Read a bill, its machine summary, votes and speeches
     timeout: 60000
 - assertVisible:
     id: bill-division-0-title
-    text: In committee
+    text: Amendment
 - assertVisible:
     id: bill-division-0-more
+    text: 'Amendment, Senate · 19 Aug 2026 · under a time limit, Not agreed, 11 ayes, 24 noes'
+- scrollUntilVisible:
+    element:
+      id: bill-division-2-title
+    direction: DOWN
+    speed: 20
+    timeout: 60000
+- assertVisible:
+    id: bill-division-2-title
+    text: In committee
+- assertVisible:
+    id: bill-division-2-more
     text: 'In committee, Senate · 19 Aug 2026, Not agreed, 11 ayes, 29 noes'
 # A tap during scroll momentum only stops the scroll on iOS: settle first.
 - scrollUntilVisible:
     element:
-      id: bill-division-0-more
+      id: bill-division-2-more
     direction: DOWN
     centerElement: true
     speed: 20
     timeout: 60000
 - waitForAnimationToEnd
 - tapOn:
-    id: bill-division-0-more
+    id: bill-division-2-more
 # Expanded in place: Labor, then the Coalition, then the crossbench, each
 # party by label and count in words.
 - assertVisible:
     id: bill-screen
 - scrollUntilVisible:
     element:
-      id: bill-division-0-splits-labor
+      id: bill-division-2-splits-labor
     direction: DOWN
     speed: 20
     timeout: 60000
 - assertVisible: Labor, no ayes, 24 noes
 - scrollUntilVisible:
     element:
-      id: bill-division-0-splits-greens
+      id: bill-division-2-splits-greens
     direction: DOWN
     speed: 20
     timeout: 60000
@@ -158,18 +173,18 @@ name: 11 Read a bill, its machine summary, votes and speeches
     centerElement: true
     speed: 20
     timeout: 60000
-- assertVisible: Procedural votes \(10\)
+- assertVisible: Procedural votes \(1\)
 - waitForAnimationToEnd
 - tapOn:
     id: bill-divisions-procedural
 - scrollUntilVisible:
     element:
-      id: bill-division-1-title
+      id: bill-division-10-title
     direction: DOWN
     speed: 20
     timeout: 60000
 - assertVisible:
-    id: bill-division-1-title
+    id: bill-division-10-title
     text: Limitation of debate
 - takeScreenshot: ${EVIDENCE}/11-procedural
 # Every division's count is one tap from its source: the block's one source
@@ -207,7 +222,27 @@ name: 11 Read a bill, its machine summary, votes and speeches
     direction: DOWN
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/11-division-source
-- tapOn: OK
+# iOS presents Original over Sources, as in 13: Done closes each. Android
+# leaves both with Back, which its prepared copy makes of this OK.
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn: OK
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn: Done
+      - extendedWaitUntil:
+          visible:
+            id: bill-divisions-source-sheet-original-0
+          timeout: 15000
+      - tapOn: Done
+      - extendedWaitUntil:
+          notVisible:
+            id: bill-divisions-source-sheet-original-0
+          timeout: 15000
 # Near the end of the page an element cannot be centred: scroll to it only.
 - assertVisible:
     id: bill-screen
@@ -272,6 +307,7 @@ name: 11 Read a bill, its machine summary, votes and speeches
       - tapOn:
           id: bills-scope
       - tapOn: All
+- runFlow: support/bills-search-reveal.yaml
 - tapOn: Search bills
 - inputText: digital duty of care
 - pressKey: Enter

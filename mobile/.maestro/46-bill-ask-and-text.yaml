@@ -14,10 +14,25 @@ name: 46 From a bill in the Bills tab, Ask about this opens a draft; the bill te
     visible:
       id: bills-count
     timeout: 20000
+- runFlow: support/bills-search-reveal.yaml
 - tapOn:
     text: Search bills
 - inputText: interactive gambling levy
 - pressKey: Enter
+# The search keeps the tab's scope. The bill has passed, so under Before
+# parliament (the default; a clean install or another flow's choice) the
+# empty state offers Search all bills.
+- extendedWaitUntil:
+    visible:
+      id: bills-search-all|bill-row-au-federal-r7534
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: bills-search-all
+    commands:
+      - tapOn:
+          id: bills-search-all
 - scrollUntilVisible:
     element:
       id: bill-row-au-federal-r7534
@@ -78,8 +93,24 @@ name: 46 From a bill in the Bills tab, Ask about this opens a draft; the bill te
 - assertVisible:
     id: bill-text-summary-text
 - takeScreenshot: ${EVIDENCE}/46-bill-text
-# The text follows the summary; Ask about this bill and Share are the
-# bottom toolbar.
+# On iOS, Ask about this bill is a button after In short, above the text
+# (12 Nov 2026); Android keeps it in More.
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - scrollUntilVisible:
+          element:
+            id: bill-text-ask
+          direction: DOWN
+          visibilityPercentage: 50
+          speed: 20
+          timeout: 90000
+      - assertVisible:
+          id: bill-text-ask
+          text: 'Ask about this bill: .*'
+      - takeScreenshot: ${EVIDENCE}/46-bill-text-actions
+# The text follows the summary.
 - scrollUntilVisible:
     element:
       id: reader-text-0
@@ -87,5 +118,3 @@ name: 46 From a bill in the Bills tab, Ask about this opens a draft; the bill te
     visibilityPercentage: 10
     speed: 20
     timeout: 90000
-- assertVisible: Ask about this bill
-- takeScreenshot: ${EVIDENCE}/46-bill-text-actions

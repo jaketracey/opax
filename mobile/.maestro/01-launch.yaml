@@ -51,6 +51,16 @@ name: 01 Launch, reach every tab and the navigation-bar sheets
     id: tab-search
 - assertVisible:
     id: search-screen
+# iOS 26 folds the bar into the last tab's button beside the search field
+# while Search is selected (26.3.1, 14 Nov 2026); that button brings the
+# tabs back. iOS 18 and 27 keep every tab in view.
+- runFlow:
+    when:
+      notVisible:
+        id: tab-today
+    commands:
+      - tapOn: Bills
+      - waitForAnimationToEnd
 - tapOn:
     id: tab-today
 # Restore the full bar before leaving Today, which retains its position.

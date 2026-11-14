@@ -14,7 +14,17 @@ name: 24 Cancel closes the chooser without a choice, one Cancel at a time
       id: seat-sheet
     timeout: 30000
 - assertVisible: Your electorate
-- assertVisible: Cancel
+# The field is focused on arrival: iOS 26 and later show only its ✕ (Close).
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - assertVisible: Cancel
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - assertVisible: ^(Cancel|Close)$
 - takeScreenshot: ${EVIDENCE}/24-cancel-sheet
 # The field is focused on arrival: type straight away, keyboard up.
 - tapOn: Electorate or member.s name
@@ -24,7 +34,29 @@ name: 24 Cancel closes the chooser without a choice, one Cancel at a time
       id: seat-row-federal-representatives-nsw-grayndler
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/24-cancel-keyboard
-- tapOn: Cancel
+# iOS 26 and later draw the active search's Cancel as a round ✕ named
+# Close (iOS 27, 14 Nov 2026), and it is the one to use while it shows;
+# otherwise the sheet's Cancel. Android's prepared copy maps this Cancel.
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn: Cancel
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - runFlow:
+          when:
+            visible: ^Close$
+          commands:
+            - tapOn: ^Close$
+      - runFlow:
+          when:
+            notVisible: ^Close$
+            visible: ^Cancel$
+          commands:
+            - tapOn: ^Cancel$
 - extendedWaitUntil:
     notVisible:
       id: seat-sheet
@@ -39,7 +71,26 @@ name: 24 Cancel closes the chooser without a choice, one Cancel at a time
     visible:
       id: seat-sheet
     timeout: 30000
-- tapOn: Cancel
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn: Cancel
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - runFlow:
+          when:
+            visible: ^Close$
+          commands:
+            - tapOn: ^Close$
+      - runFlow:
+          when:
+            notVisible: ^Close$
+            visible: ^Cancel$
+          commands:
+            - tapOn: ^Cancel$
 - extendedWaitUntil:
     notVisible:
       id: seat-sheet

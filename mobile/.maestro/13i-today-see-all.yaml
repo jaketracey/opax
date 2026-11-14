@@ -35,8 +35,12 @@ name: 13i Today's Bills See all opens its own list, whose scope never leaks into
 - assertVisible:
     id: BackButton
     text: Today
+# The list is pushed inside Today. Scrolling Today down to its bills minimises
+# the bar, and the pushed page inherits that: Today's own button (no id) is
+# then the only tab shown. Either way Today is the selected tab.
 - assertVisible:
-    id: tab-today
+    text: Today
+    selected: true
 - takeScreenshot: ${EVIDENCE}/13i-see-all-passed
 # Change the pushed list's scope to All.
 - runFlow:
@@ -60,7 +64,13 @@ name: 13i Today's Bills See all opens its own list, whose scope never leaks into
     id: BackButton
 - assertVisible:
     id: today-screen
-# The Bills tab is still on Before parliament.
+# The Bills tab is still on Before parliament. Today kept its scroll, so its
+# bar is still minimised: bring it back first.
+- runFlow:
+    file: support/restore-tab-bar.yaml
+    env:
+      TOP_ID: today-screen-message
+      TAB_ID: tab-bills
 - tapOn:
     id: tab-bills
 - extendedWaitUntil:
@@ -126,6 +136,11 @@ name: 13i Today's Bills See all opens its own list, whose scope never leaks into
 - tapOn:
     id: BackButton
 # Back on the Bills tab, Passed is kept.
+- runFlow:
+    file: support/restore-tab-bar.yaml
+    env:
+      TOP_ID: today-screen-message
+      TAB_ID: tab-bills
 - tapOn:
     id: tab-bills
 - extendedWaitUntil:

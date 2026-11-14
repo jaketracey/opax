@@ -51,9 +51,11 @@ name: 45 Electorates, dated representation, bill filters and Votes in parliament
 - takeScreenshot: ${EVIDENCE}/45-native-date-picker
 - tapOn: '2|Tuesday, 2 January.*'
 - tapOn: Done
+# The members section is headed by the chosen date.
 - scrollUntilVisible:
     element:
-      text: Representation on 2 January 2024
+      id: electorate-members-heading
+      text: Members? on 2 January 2024
     visibilityPercentage: 10
     centerElement: true
     speed: 20
@@ -66,14 +68,22 @@ name: 45 Electorates, dated representation, bill filters and Votes in parliament
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/45-dated-share
 - tapOn: OK
+# The seat's history follows its members.
 - scrollUntilVisible:
     element:
-      text: Representation history
+      id: electorate-past-members
     visibilityPercentage: 10
     centerElement: true
     speed: 20
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/45-representation-history
+# The link pushed the electorate inside Today, and scrolling it minimised the
+# bar to Today's button and Search (iOS 26.3.1, 14 Nov 2026): bring it back.
+- runFlow:
+    file: support/restore-tab-bar.yaml
+    env:
+      TOP_ID: today-screen-message
+      TAB_ID: tab-bills
 - tapOn:
     id: tab-bills
 - extendedWaitUntil:
@@ -126,9 +136,12 @@ name: 45 Electorates, dated representation, bill filters and Votes in parliament
 - tapOn:
     id: filters-choice-divisions
 - tapOn: Done
-- extendedWaitUntil:
-    visible:
+# The sheet stands at half height over a live list, and the swipes that found
+# its rows also scrolled the list behind it: back up to the count line.
+- scrollUntilVisible:
+    element:
       id: bills-clear
+    direction: UP
     timeout: 30000
 - assertVisible:
     id: bills-count
@@ -152,7 +165,23 @@ name: 45 Electorates, dated representation, bill filters and Votes in parliament
     timeout: 600000
 - takeScreenshot: ${EVIDENCE}/45-division-history
 - assertVisible: '[\d,]+ votes'
-# Search is the native field in the bar, named by its placeholder.
+# Search is the native field in the bar, named by its placeholder. On iOS
+# 26.3.1 it starts tucked under the large title (14 Nov 2026): a short pull
+# reveals it, as on the Bills list.
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - repeat:
+          times: 3
+          while:
+            notVisible: Bill names
+          commands:
+            - swipe:
+                start: 50%, 35%
+                end: 50%, 55%
+                duration: 800
+            - waitForAnimationToEnd
 - tapOn: Bill names
 - inputText: Interactive Gambling
 - pressKey: Enter
