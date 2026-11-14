@@ -18,6 +18,7 @@ import {
 import { sheetPayload } from '../src/navigation/sheets';
 import BillDetail from '../src/features/bills/BillDetail';
 import { pinned, slugs } from './pinned';
+import { layoutRow } from './row-layout';
 
 const mockParams: { key: string; section?: string } = {
   key: 'au-federal-r7501',
@@ -83,11 +84,17 @@ const uncappable = (root: ReactTestInstance) =>
       if (/^bill-speech-\d+$/.test(n.props?.testID ?? '')) return false;
     return true;
   });
-async function render() {
+async function render(measure = true) {
   let renderer!: TestRenderer.ReactTestRenderer;
   await act(async () => {
     renderer = TestRenderer.create(<BillDetail />);
   });
+  if (measure)
+    act(() =>
+      host(renderer.root, 'bill-divisions-layout').props.onLayout({
+        nativeEvent: { layout: { x: 0, y: 0, width: 358, height: 900 } },
+      }),
+    );
   return renderer;
 }
 const host = (root: ReactTestInstance, testID: string) =>
@@ -110,6 +117,145 @@ const style = (node: ReactTestInstance) =>
       ? node.props.style({ pressed: false })
       : node.props.style,
   ) ?? {};
+
+test.each(
+  [1, 2.643, 3.571].flatMap((fontScale) =>
+    [277, 358].map((width) => [fontScale, width] as const),
+  ),
+)(
+  'cached votes fill the first frame at font scale %s and %spt without onLayout',
+  async (fontScale, width) => {
+    jest.mocked(useWindowDimensions).mockReturnValue({
+      width: 390,
+      height: 844,
+      scale: 3,
+      fontScale,
+    });
+    const record = await fixture.billFor(mockParams.key);
+    jest.mocked(runtime.billFor).mockResolvedValue({ ...record, stale: true });
+    let measured = 0;
+    const measure = jest
+      .spyOn(View.prototype, 'measure')
+      .mockImplementation(function (this: View, callback) {
+        if (
+          (this.props as { testID?: string }).testID === 'bill-divisions-layout'
+        ) {
+          measured++;
+          // Fabric supplies the committed width synchronously in a layout effect.
+          callback(0, 0, width, 900, 0, 0);
+        }
+      });
+    try {
+      const r = await render(false);
+      const rows = () =>
+        r.root.findAll(
+          (node) =>
+            typeof node.type === 'string' &&
+            /^bill-division-\d+-more$/.test(node.props.testID ?? ''),
+        );
+      expect(measured).toBe(1);
+      expect(rows().length).toBeGreaterThan(0);
+      for (const row of rows()) {
+        expect(style(row).width).toBe(width);
+        let opacity = 1;
+        for (
+          let parent: ReactTestInstance | null = row;
+          parent;
+          parent = parent.parent
+        ) {
+          const value = style(parent).opacity;
+          if (value !== undefined)
+            opacity *= typeof value === 'number' ? value : value.__getValue();
+        }
+        expect(opacity).toBe(1);
+      }
+      // Later layout events can resize the same mounted rows.
+      const first = rows()[0];
+      act(() =>
+        host(r.root, 'bill-divisions-layout').props.onLayout({
+          nativeEvent: { layout: { x: 0, y: 0, width: 614, height: 900 } },
+        }),
+      );
+      expect(rows()[0]).toBe(first);
+      expect(rows().every((row) => style(row).width === 614)).toBe(true);
+      expect(measured).toBe(1);
+      act(() => r.unmount());
+    } finally {
+      measure.mockRestore();
+    }
+  },
+);
+
+test.each([1, 2.643, 3.571])(
+  'vote triggers first mount with a constrained width at font scale %s',
+  async (fontScale) => {
+    jest.mocked(useWindowDimensions).mockReturnValue({
+      width: 390,
+      height: 844,
+      scale: 3,
+      fontScale,
+    });
+    const record = await fixture.billFor(mockParams.key);
+    const divisions = record.data.divisions;
+    jest.mocked(runtime.billFor).mockResolvedValue({
+      ...record,
+      data: {
+        ...record.data,
+        divisions: {
+          ...divisions,
+          data: {
+            ...divisions.data!,
+            rows: Array.from({ length: 10 }, (_, index) => ({
+              ...divisions.data!.rows[0]!,
+              key: `first-layout-${index}`,
+              stage: 'Consideration in detail',
+              title: 'Consideration of amendments',
+            })),
+          },
+        },
+      },
+    });
+    const r = await render(false);
+    const rows = () =>
+      r.root.findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          /^bill-division-\d+-more$/.test(node.props.testID ?? ''),
+      );
+    // A matchContents menu trigger caches its intrinsic first layout. There
+    // must be no unconstrained trigger before the list reports its width.
+    expect(rows()).toHaveLength(0);
+    for (const width of [0, 277, 358]) {
+      act(() =>
+        host(r.root, 'bill-divisions-layout').props.onLayout({
+          nativeEvent: { layout: { x: 0, y: 0, width, height: 900 } },
+        }),
+      );
+      if (!width) {
+        expect(rows()).toHaveLength(0);
+        continue;
+      }
+      expect(rows()).toHaveLength(5);
+      for (const row of rows()) {
+        expect(style(row).width).toBe(width);
+        const layout = layoutRow(row, width, {});
+        expect(layout.widths.reduce((sum, w) => sum + w, 0)).toBeLessThan(
+          width,
+        );
+        expect(
+          layout.runs.every((run) => run.width > 0 && run.width <= width),
+        ).toBe(true);
+        // Large keeps the existing row spacing, type and leading.
+        if (fontScale === 1) {
+          expect(style(row)).toMatchObject({ gap: 8, paddingVertical: 11 });
+          const title = row.findAllByType(NativeText)[0]!;
+          expect(style(title)).toMatchObject({ fontSize: 17 });
+        }
+      }
+    }
+    act(() => r.unmount());
+  },
+);
 
 test.each([1, 1.786, 3.571])(
   'the In short pill shares a wrapping, centred heading row at font scale %s',

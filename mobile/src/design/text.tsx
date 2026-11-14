@@ -266,6 +266,44 @@ const MEASURED_AT_TOLERANCE = 0.03;
 const WIDTH_EPSILON = 0.5;
 const FIT_MARGIN = 1;
 const compact = (text: string) => text.replace(/\s/g, '');
+
+type WordSafeLine = {
+  text: string;
+  width: number;
+  height: number;
+  y?: number;
+};
+/**
+ * TextKit may include trailing spaces outside a wrapped line's column.
+ * Allow at most one drawn em per space, as an upper bound on that overhang.
+ * The column still bounds the visible glyphs: clamping to it keeps the word
+ * estimate conservative, and genuine visible overflow keeps its raw width.
+ */
+function visibleLineWidth(
+  line: WordSafeLine,
+  column: number,
+  drawnPoints: number,
+): number {
+  if (!Number.isFinite(line.width)) return Infinity;
+  const trailing = /[ \t]+$/.exec(line.text)?.[0].length ?? 0;
+  return trailing &&
+    drawnPoints > 0 &&
+    line.width <= column + trailing * drawnPoints + WIDTH_EPSILON
+    ? Math.min(line.width, column)
+    : line.width;
+}
+/**
+ * iOS reports TextKit's used rect, rather than the paragraph's line advance.
+ * Measure the advance between line origins. Treating the rect's height as
+ * the advance rejected fresh serif layouts as stale scales before they could
+ * reach the word-safe floor. Older events without origins retain the
+ * height-based fallback.
+ */
+function wordSafeLineHeight(lines: readonly WordSafeLine[]): number {
+  const first = lines[0]!;
+  const advance = (lines[1]?.y ?? NaN) - (first.y ?? NaN);
+  return Number.isFinite(advance) && advance > 0 ? advance : first.height;
+}
 /** Full size again, as a new generation; the uncapped multiplier still holds. */
 const restart = (state: WordSafeState): WordSafeState => ({
   ...wordSafeStart(state.key, state.full, state.gen + 1),
@@ -300,11 +338,12 @@ function provenToFit(state: WordSafeState): WordSafeState {
 export function wordSafeOnLines(
   state: WordSafeState,
   at: WordSafeInstance,
-  lines: readonly { text: string; width: number; height: number }[],
+  lines: readonly WordSafeLine[],
   content: string,
   baseLineHeight: number,
   validateScale = true,
   floor = 1,
+  fontSize = 0,
 ): WordSafeState {
   if (at.key !== state.key || at.gen !== state.gen || !lines.length)
     return state;
@@ -312,8 +351,15 @@ export function wordSafeOnLines(
   if (!state.fullFrame) return state;
   if (compact(lines.map((line) => line.text).join('')) !== compact(content))
     return state;
-  const measuredAt = lineScale(lines[0]!.height, baseLineHeight);
+  const lineHeight = wordSafeLineHeight(lines);
+  const measuredAt = lineScale(lineHeight, baseLineHeight);
   if (!Number.isFinite(measuredAt)) return state;
+  const visibleWidth = (line: WordSafeLine) =>
+    visibleLineWidth(
+      line,
+      state.frame || state.fullFrame,
+      fontSize * measuredAt,
+    );
   // A full-size, whole-word layout that fits the current frame proves every
   // word fits, even if it arrives after a queued narrow-column break capped
   // us. This also recovers when both columns happen to have the same height.
@@ -322,7 +368,7 @@ export function wordSafeOnLines(
     state.frame &&
     Math.abs(measuredAt - state.full) <= MEASURED_AT_TOLERANCE &&
     !breaksMidWord(lines) &&
-    lines.every((line) => line.width <= state.frame + WIDTH_EPSILON)
+    lines.every((line) => visibleWidth(line) <= state.frame + WIDTH_EPSILON)
   )
     return restart(state);
   const drawnAt = state.cap || state.full;
@@ -333,7 +379,7 @@ export function wordSafeOnLines(
   )
     return state;
   if (breaksMidWord(lines)) {
-    const next = nextWordSafeCap(lines[0]!.height, baseLineHeight, floor);
+    const next = nextWordSafeCap(lineHeight, baseLineHeight, floor);
     if (next === null || (state.cap && next >= state.cap)) return state;
     return {
       ...state,
@@ -348,11 +394,7 @@ export function wordSafeOnLines(
   }
   if (!state.cap) return state;
   // No run breaks at this cap, so each lies within one line.
-  const widest = Math.max(
-    ...lines.map((line) =>
-      Number.isFinite(line.width) ? line.width : Infinity,
-    ),
-  );
+  const widest = Math.max(...lines.map(visibleWidth));
   const word = (widest * state.full) / measuredAt;
   return provenToFit(state.word === word ? state : { ...state, word });
 }
@@ -554,11 +596,22 @@ export function Text({
     // onTextLayout can precede onLayout. Buffer it until this identity/step
     // has a frame. A queued portrait break cannot fit a one-line landscape
     // frame, and a queued wider layout cannot fit a narrower column.
+    if (!frame || !lines?.length) return;
+    const hasOrigins = lines.every((line) => Number.isFinite(line.y));
+    const bottom = hasOrigins
+      ? Math.max(...lines.map((line) => line.y + line.height))
+      : lines.reduce((sum, line) => sum + line.height, 0);
+    const drawnPoints =
+      role.fontSize * lineScale(wordSafeLineHeight(lines), baseLineHeight);
     if (
-      !frame ||
-      !lines?.length ||
-      lines.reduce((sum, line) => sum + line.height, 0) > frame.height + 1 ||
-      lines.some((line) => line.width > frame.width + WIDTH_EPSILON)
+      bottom > frame.height + 1 ||
+      // A missing width cannot prove overflow; only a reported one can.
+      lines.some(
+        (line) =>
+          line.width > frame.width + WIDTH_EPSILON &&
+          visibleLineWidth(line, frame.width, drawnPoints) >
+            frame.width + WIDTH_EPSILON,
+      )
     )
       return;
     advance((state) =>
@@ -570,6 +623,7 @@ export function Text({
         role.lineHeight + LINE_HEIGHT_NUDGE,
         expectedFull !== undefined,
         wordSafeFloor(role.fontSize),
+        role.fontSize,
       ),
     );
   };

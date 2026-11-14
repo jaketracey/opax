@@ -266,6 +266,11 @@ describe('the bill page draws the exported title', () => {
     await act(async () => {
       r = TestRenderer.create(<BillDetail />);
     });
+    act(() =>
+      byID(r.root, 'bill-divisions-layout')[0]!.props.onLayout({
+        nativeEvent: { layout: { width: 358, height: 900 } },
+      }),
+    );
     const view = (await fixture.billFor(mockParams.key)).data;
     const row = view.divisions.data!.rows[0]!;
     expect(row.title).toBe('Limitation of debate');
