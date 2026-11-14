@@ -1409,6 +1409,8 @@ class CrashSymbolKeyTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         calls = self.stub_calls()
         self.assertEqual([call["args"][:2] for call in calls], [["hermes", "upload"], ["dsym", "upload"]])
+        # Unchanged pod dSYMs keep their UUIDs between builds; an existing set is kept, not a failure.
+        self.assertIn("--skip-on-conflict", calls[1]["args"])
         for call in calls:
             self.assertEqual(call["project"], "507367")
             self.assertEqual(call["host"], host)
