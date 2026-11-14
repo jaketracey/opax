@@ -1,8 +1,3 @@
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=29940d56a6';
-import {loadDonorViewIndex} from './donor-views.js?v=be03bb4447';
-let donorIndex=new Map();
-loadDonorViewIndex().then(index=>{donorIndex=index});
-import { personUrl, partyUrl } from './canonical-urls.js?v=bcc9a57bab';
 import { hydrateCollections, hydrateLatest, hydrateMostDivided, hydrateSitting, industryGroups, mapSourceHTML, refreshInfo } from '/home-data.js?v=385ff13d5f';
 
 // The homepage and research workspace have separate document lifecycles.
@@ -426,7 +421,7 @@ async function mount() {
     $("hp-map-source").innerHTML = mapSourceHTML(graph.meta, await refreshInfo());
     // The lede's span is the Worker's (seo-content.ts homeMapSpan): the receipt headline's years, not the file's coverage.
     const { mountMoneyMap } = await import(
-      "/money-map.js?v=716454ddbb"
+      "/money-map.js?v=f0a9329cde"
     );
     if (disposed) return;
     root.replaceChildren();
