@@ -4175,6 +4175,47 @@
     }
    ],
    "note": "The record does not say which stage this vote was, so the example names only the house, bill, date and count."
+  },
+  {
+   "id": "houses-vic",
+   "claim": "The Parliament of Victoria has two houses: the Legislative Assembly (88 members, lower house) and the Legislative Council (40 members, upper house).",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "vic-parliament-what-is",
+     "quote": "Legislative Assembly an elected group of 88 members Legislative Council an elected group of 40 members"
+    },
+    {
+     "source": "vic-parliament-what-is",
+     "quote": "Each member represents a district (Lower House) or region (Upper House) of Victoria."
+    }
+   ]
+  },
+  {
+   "id": "houses-sa",
+   "claim": "The Parliament of South Australia has two houses: the House of Assembly and the Legislative Council.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "sa-parliament-how-works",
+     "quote": "which divides the Parliament into two Houses - the House of Assembly and the Legislative Council."
+    }
+   ]
+  },
+  {
+   "id": "houses-tas",
+   "claim": "The Parliament of Tasmania has two houses: the House of Assembly and the Legislative Council.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "tas-parliament-structure",
+     "quote": "Parliament consists of three parts: the Crown, the Legislative Council and the House of Assembly."
+    },
+    {
+     "source": "tas-parliament-structure",
+     "quote": "The two Houses of the Parliament of Tasmania have almost equal powers."
+    }
+   ]
   }
  ]
 }

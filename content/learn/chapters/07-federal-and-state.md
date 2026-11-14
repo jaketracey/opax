@@ -95,6 +95,18 @@ The laws a state parliament makes apply within that state. [[f:state-laws-within
 
 ---screen---
 
+## One house or two
+
+Some state parliaments have two houses. [[f:houses-vic]]
+
+Victoria has two. The lower house is the Legislative Assembly. The upper house is the Legislative Council. [[f:houses-vic]]
+
+South Australia has two. One is the House of Assembly. The other is the Legislative Council. [[f:houses-sa]]
+
+Tasmania has two as well. They have the same names as in South Australia. [[f:houses-tas]]
+
+---screen---
+
 ## Territories
 
 The territories do not have their own constitutions. [[f:territories-no-constitution]]

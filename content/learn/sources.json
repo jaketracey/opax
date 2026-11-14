@@ -1517,7 +1517,7 @@
    "id": "opax-web-app",
    "publisher": "OPAX",
    "title": "Web app: division and bill views (portal/public/app.js)",
-   "url": "https://github.com/jaketracey/opax/blob/bcafa2452ad7334c256b880a8f43dd7bc114e420/portal/public/app.js",
+   "url": "https://github.com/jaketracey/opax/blob/adae6bff8d4d8163b2c4fb3a791f08ee0dd7fb5c/portal/public/app.js",
    "repo_path": "portal/public/app.js",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -1555,7 +1555,7 @@
    "id": "opax-vote-tables",
    "publisher": "OPAX",
    "title": "Web: division and vote table rules (portal/public/vote-tables.js)",
-   "url": "https://github.com/jaketracey/opax/blob/bcafa2452ad7334c256b880a8f43dd7bc114e420/portal/public/vote-tables.js",
+   "url": "https://github.com/jaketracey/opax/blob/adae6bff8d4d8163b2c4fb3a791f08ee0dd7fb5c/portal/public/vote-tables.js",
    "repo_path": "portal/public/vote-tables.js",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -1577,7 +1577,7 @@
    "id": "opax-seo-content",
    "publisher": "OPAX",
    "title": "Web: server-rendered bill and division pages (portal/src/seo-content.ts)",
-   "url": "https://github.com/jaketracey/opax/blob/bcafa2452ad7334c256b880a8f43dd7bc114e420/portal/src/seo-content.ts",
+   "url": "https://github.com/jaketracey/opax/blob/adae6bff8d4d8163b2c4fb3a791f08ee0dd7fb5c/portal/src/seo-content.ts",
    "repo_path": "portal/src/seo-content.ts",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -1611,7 +1611,7 @@
    "id": "opax-division-tool",
    "publisher": "OPAX",
    "title": "Ask division tool: floor-crossing rule (portal/src/tools/division.ts)",
-   "url": "https://github.com/jaketracey/opax/blob/bcafa2452ad7334c256b880a8f43dd7bc114e420/portal/src/tools/division.ts",
+   "url": "https://github.com/jaketracey/opax/blob/adae6bff8d4d8163b2c4fb3a791f08ee0dd7fb5c/portal/src/tools/division.ts",
    "repo_path": "portal/src/tools/division.ts",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -1845,7 +1845,7 @@
    "id": "opax-bills-export",
    "publisher": "OPAX",
    "title": "Federal bill export (portal/public/bills/au-federal-*.json)",
-   "url": "https://github.com/jaketracey/opax/blob/bcafa2452ad7334c256b880a8f43dd7bc114e420/portal/public/bills",
+   "url": "https://github.com/jaketracey/opax/blob/adae6bff8d4d8163b2c4fb3a791f08ee0dd7fb5c/portal/public/bills",
    "repo_path": "portal/public/bills",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -2975,6 +2975,59 @@
     {
      "fact": "ex-nsw-la-koala",
      "quote": "\"house\":\"nsw_la\""
+    }
+   ]
+  },
+  {
+   "id": "vic-parliament-what-is",
+   "publisher": "Parliament of Victoria",
+   "title": "What is Parliament?",
+   "url": "https://www.parliament.vic.gov.au/about/how-parliament-works/what-is-parliament/",
+   "retrieved": "2026-11-14",
+   "sha256": "59065afef7c72797ee02c44d439bfe6de33938f6e9d2d403340d794913c9abfd",
+   "snapshot": "raw/www_parliament_vic_gov_au_about_how_parliament_works_what_is_parliament.html",
+   "quotes": [
+    {
+     "fact": "houses-vic",
+     "quote": "Legislative Assembly an elected group of 88 members Legislative Council an elected group of 40 members"
+    },
+    {
+     "fact": "houses-vic",
+     "quote": "Each member represents a district (Lower House) or region (Upper House) of Victoria."
+    }
+   ]
+  },
+  {
+   "id": "sa-parliament-how-works",
+   "publisher": "Parliament of South Australia",
+   "title": "How Parliament Works",
+   "url": "https://www.parliament.sa.gov.au/en/About-Parliament/How-Parliament-Works",
+   "retrieved": "2026-11-14",
+   "sha256": "1177aa89fa32dbd6ec5f676f307c014951d320218d3324ebc5e00d1c8d63971c",
+   "snapshot": "raw/www_parliament_sa_gov_au_en_About_Parliament_How_Parliament_Works.html",
+   "quotes": [
+    {
+     "fact": "houses-sa",
+     "quote": "which divides the Parliament into two Houses - the House of Assembly and the Legislative Council."
+    }
+   ]
+  },
+  {
+   "id": "tas-parliament-structure",
+   "publisher": "Parliament of Tasmania",
+   "title": "Parliament: Structure and Privilege",
+   "url": "https://www.parliament.tas.gov.au/house-of-assembly/about-the-house-of-assembly/parliament-structure-and-privilege",
+   "retrieved": "2026-11-14",
+   "sha256": "bfa6e9f9063801d0b0cc6d95191dd025012e4bcc8a041d0f9ec3da36208b4506",
+   "snapshot": "raw/www_parliament_tas_gov_au_house_of_assembly_about_the_house_of_assembly_parliament_structure_and_privilege.html",
+   "quotes": [
+    {
+     "fact": "houses-tas",
+     "quote": "Parliament consists of three parts: the Crown, the Legislative Council and the House of Assembly."
+    },
+    {
+     "fact": "houses-tas",
+     "quote": "The two Houses of the Parliament of Tasmania have almost equal powers."
     }
    ]
   }
