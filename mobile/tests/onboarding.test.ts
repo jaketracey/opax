@@ -364,7 +364,10 @@ describe('launch handoff timing', () => {
   test('one 240 ms crossfade, and never longer than 1.2 seconds', () => {
     expect(handoff.fade).toBe(240);
     expect(longestHandoff(false)).toBeLessThanOrEqual(1200);
-    expect(longestHandoff(true)).toBe(handoff.latestFade);
+    // A Reduce Motion cut has no fade to cover a screen still settling, so
+    // it waits as long as the fade would have taken: the same longest launch.
+    expect(longestHandoff(true)).toBe(handoff.latestFade + handoff.fade);
+    expect(longestHandoff(true)).toBe(longestHandoff(false));
   });
   test('fades the moment the first screen is ready, with no minimum hold', () => {
     expect(fadeStart(0, false)).toBe(0);

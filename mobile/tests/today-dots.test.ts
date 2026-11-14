@@ -7,6 +7,7 @@ import {
   dotLevel,
   dotRowOpacity,
   dotScrollDistance,
+  expandedHeaderNow,
   dotStates,
   electorateDotState,
   outlineDotState,
@@ -233,4 +234,20 @@ test('the real ABS paths produce the same sampled field on repeated runs', () =>
   expect(
     Object.values(sampled.counts).reduce((sum, count) => sum + count, 0),
   ).toBeGreaterThan(500);
+});
+
+// Reduce Motion recaptures of the first install: the reported header came
+// later than the launch cover could wait, and with no fade to mask it the
+// date was seen 68 pt low. The scroll view's own rest offset has it sooner.
+test('until the large title is reported, the rest offset stands in for the header', () => {
+  // The inline estimate is all NativeStack has said; UIKit rests at -168.67.
+  expect(expandedHeaderNow(false, -168.67, 100.67)).toBe(168.67);
+  // No scroll event yet: the reported height is all there is.
+  expect(expandedHeaderNow(false, Number.NaN, 100.67)).toBe(100.67);
+  // The inset arrives in steps: never less than what is reported.
+  expect(expandedHeaderNow(false, 0, 100.67)).toBe(100.67);
+  // Once reported, it alone counts: a pull down is not a taller header.
+  expect(expandedHeaderNow(true, -240, 168.67)).toBe(168.67);
+  // And scrolling down the page changes nothing.
+  expect(expandedHeaderNow(true, 300, 168.67)).toBe(168.67);
 });

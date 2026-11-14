@@ -50,7 +50,7 @@ import {
   subscribeSplash,
   type LaunchSequence,
 } from './splash';
-import { fadeStart, handoff, lockup, splash } from './timing';
+import { fadeStart, handoff, latestStart, lockup, splash } from './timing';
 
 // Brand artwork: the launch field is navy in both appearances, like the icon
 // and the native launch screen it continues, so these are the light hexes
@@ -240,7 +240,7 @@ function LaunchCover({
     if (!latest) return;
     const timer = later(
       () => leave(fade),
-      Math.max(0, handoff.latestFade - elapsed),
+      Math.max(0, latestStart(reduced) - elapsed),
     );
     return () => clearTimeout(timer);
   }, [

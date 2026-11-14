@@ -753,10 +753,16 @@ describe('the page', () => {
       });
       return () => Dimensions.set({ window, screen });
     };
+    // An iPhone 17 Pro: 62 pt of safe area, so native-stack's inline
+    // estimate is about 100 pt and the large title stands at about 168.
     const page = (height: number) => (
-      <HeaderHeightContext.Provider value={height}>
-        <Today />
-      </HeaderHeightContext.Provider>
+      <SafeAreaInsetsContext.Provider
+        value={{ top: 62, bottom: 34, left: 0, right: 0 }}
+      >
+        <HeaderHeightContext.Provider value={height}>
+          <Today />
+        </HeaderHeightContext.Provider>
+      </SafeAreaInsetsContext.Provider>
     );
     const layOut = (renderer: TestRenderer.ReactTestRenderer) =>
       act(() =>
@@ -769,10 +775,28 @@ describe('the page', () => {
       const undo = phone();
       try {
         setUp({ cached: 'missing' });
-        const renderer = await render(page(106));
+        const renderer = await render(page(100.5));
         layOut(renderer);
         expect(releaseSplash).not.toHaveBeenCalled();
-        await act(async () => renderer.update(page(174)));
+        await act(async () => renderer.update(page(168.5)));
+        expect(releaseSplash).toHaveBeenCalledWith('today');
+      } finally {
+        undo();
+      }
+    });
+
+    // 8b8296b1e recapture, Reduce Motion: the hold compared the header with
+    // the first value this screen saw, so any earlier value (none, a
+    // parent's) changing to the estimate let the cover go 80 ms early.
+    test('a first value that is not yet the estimate does not count as the height', async () => {
+      const undo = phone();
+      try {
+        setUp({ cached: 'missing' });
+        const renderer = await render(page(0));
+        await act(async () => renderer.update(page(100.5)));
+        layOut(renderer);
+        expect(releaseSplash).not.toHaveBeenCalled();
+        await act(async () => renderer.update(page(168.5)));
         expect(releaseSplash).toHaveBeenCalledWith('today');
       } finally {
         undo();
@@ -783,8 +807,8 @@ describe('the page', () => {
       const undo = phone();
       try {
         setUp({ cached: 'missing' });
-        const renderer = await render(page(106));
-        await act(async () => renderer.update(page(174)));
+        const renderer = await render(page(100.5));
+        await act(async () => renderer.update(page(168.5)));
         expect(releaseSplash).not.toHaveBeenCalled();
         layOut(renderer);
         expect(releaseSplash).toHaveBeenCalledWith('today');
@@ -793,20 +817,31 @@ describe('the page', () => {
       }
     });
 
-    test('a height that never comes holds the cover no longer than the cap', async () => {
-      expect(HEADER_SETTLE_CAP_MS).toBe(200);
+    test('a height that never comes holds the cover no longer than the cap after the first layout', async () => {
+      expect(HEADER_SETTLE_CAP_MS).toBe(250);
       const undo = phone();
       try {
         setUp({ cached: 'missing' });
-        const renderer = await render(page(106));
-        layOut(renderer);
-        expect(releaseSplash).not.toHaveBeenCalled();
-        await act(async () => {
-          await new Promise((resolve) =>
-            setTimeout(resolve, HEADER_SETTLE_CAP_MS + 50),
-          );
-        });
-        expect(releaseSplash).toHaveBeenCalledWith('today');
+        const renderer = await render(page(100.5));
+        jest.useFakeTimers();
+        try {
+          // Time before the layout does not count: the height can only
+          // follow the native mount.
+          act(() => {
+            jest.advanceTimersByTime(HEADER_SETTLE_CAP_MS * 2);
+          });
+          layOut(renderer);
+          act(() => {
+            jest.advanceTimersByTime(HEADER_SETTLE_CAP_MS - 1);
+          });
+          expect(releaseSplash).not.toHaveBeenCalled();
+          act(() => {
+            jest.advanceTimersByTime(1);
+          });
+          expect(releaseSplash).toHaveBeenCalledWith('today');
+        } finally {
+          jest.useRealTimers();
+        }
       } finally {
         undo();
       }
@@ -827,37 +862,16 @@ describe('the page', () => {
       }
     });
 
-    test('a Today that mounts behind a linked page does not hold the cover', async () => {
-      const undo = phone();
-      try {
-        setUp({ cached: 'missing' });
-        const navigation = {
-          isFocused: () => false,
-          addListener: () => () => {},
-          setOptions: jest.fn(),
-        };
-        const renderer = await render(
-          <NavigationContext.Provider value={navigation as never}>
-            {page(106)}
-          </NavigationContext.Provider>,
-        );
-        layOut(renderer);
-        expect(releaseSplash).toHaveBeenCalledWith('today');
-      } finally {
-        undo();
-      }
-    });
-
     test('the release costs Today no render of its own', async () => {
       const undo = phone();
       try {
         setUp({ cached: 'missing' });
-        const renderer = await render(page(174));
-        const masthead = renderer.root.findByType(Masthead);
-        const before = masthead.props.mark;
+        const renderer = await render(page(168.5));
+        const before = renderer.root.findByType(Masthead).props.mark;
         layOut(renderer);
         // Today did not render again: its children are the same elements.
         expect(renderer.root.findByType(Masthead).props.mark).toBe(before);
+        expect(releaseSplash).toHaveBeenCalledWith('today');
       } finally {
         undo();
       }
@@ -867,7 +881,7 @@ describe('the page', () => {
       const undo = phone(3.12);
       try {
         setUp({ cached: 'missing' });
-        const renderer = await render(page(106));
+        const renderer = await render(page(100.5));
         layOut(renderer);
         expect(releaseSplash).toHaveBeenCalledWith('today');
       } finally {

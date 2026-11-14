@@ -8,7 +8,8 @@
  *
  * - `short` (later cold launches): the lockup holds until the first screen
  *   has laid out, never longer than `handoff.latestFade`, then one crossfade
- *   of `handoff.fade` (motion.launch). Reduce Motion: a cut.
+ *   of `handoff.fade` (motion.launch). Reduce Motion: a cut, no later than
+ *   the fade would have ended (`latestStart`).
  * - `full` (once per device, see played.ts): the four letters of OPAX
  *   unfold into the full name, hold while it is read, then the field fades
  *   to the app. Never longer than `splash.full` adds up to, plus any wait for
@@ -70,9 +71,21 @@ export function fadeStart(readyAt: number, reduced: boolean): number {
   return Math.max(0, reduced ? readyAt : Math.min(handoff.latestFade, readyAt));
 }
 
+/**
+ * When a short handoff stops waiting for the first screen and goes anyway,
+ * in ms after the cover is drawn. A fade starts at `latestFade` and covers
+ * whatever the screen still settles for its 240 ms. A Reduce Motion cut has
+ * no fade to cover it, so it waits that long too: cutting at `latestFade`
+ * showed Today's date 68 pt low for a few frames before the large title's
+ * height arrived (sweep 3 recapture, first install under Reduce Motion).
+ */
+export function latestStart(reduced: boolean): number {
+  return handoff.latestFade + (reduced ? handoff.fade : 0);
+}
+
 /** The longest a returning launch's short handoff can last. */
 export function longestHandoff(reduced: boolean): number {
-  return handoff.latestFade + (reduced ? handoff.reducedFade : handoff.fade);
+  return latestStart(reduced) + (reduced ? handoff.reducedFade : handoff.fade);
 }
 
 /**

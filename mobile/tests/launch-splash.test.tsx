@@ -500,6 +500,27 @@ describe('the launch cover', () => {
     advance(1 + handoff.fade + 1);
     expect(onDone).toHaveBeenCalledTimes(1);
   });
+  // Sweep 3 recapture, first install under Reduce Motion: a cut at
+  // latestFade showed Today's date 68 pt low for a few frames, with no fade
+  // to cover the large title's height arriving.
+  test('under Reduce Motion a slow app is cut to no sooner than a fade would have ended', () => {
+    jest.mocked(useReduceMotionSetting).mockReturnValue(true);
+    const { onDone } = draw({ sequence: 'short', ready: false, latest: true });
+    loaded();
+    advance(handoff.latestFade + 1);
+    expect(onDone).not.toHaveBeenCalled();
+    advance(handoff.fade - 2);
+    expect(onDone).not.toHaveBeenCalled();
+    advance(2);
+    expect(onDone).toHaveBeenCalledTimes(1);
+  });
+  test('under Reduce Motion a ready app is still cut to at once', () => {
+    jest.mocked(useReduceMotionSetting).mockReturnValue(true);
+    const { onDone } = draw({ sequence: 'short', ready: true, latest: true });
+    loaded();
+    advance(1);
+    expect(onDone).toHaveBeenCalledTimes(1);
+  });
   test('a pending decision falls back to the short sequence', () => {
     const { onDone } = draw({ sequence: 'pending', latest: true });
     loaded();

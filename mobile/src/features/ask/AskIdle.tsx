@@ -1,17 +1,12 @@
 import {
+  useEffect,
   useLayoutEffect,
   useMemo,
   useState,
   useSyncExternalStore,
 } from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
-import Animated, {
-  Easing,
-  cancelAnimation,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
 import { router } from 'expo-router';
 import { track } from '../../analytics';
 import { useReduceMotion } from '../../design/accessibility';
@@ -262,6 +257,12 @@ const MARK = 96;
 const MARK_SCALE = 1.5;
 /** How long the centred state takes to fade once a question is sent. */
 export const EMPTY_FADE_MS = 200;
+/** The fade itself: a transition Reanimated runs on the UI thread. */
+const emptyFade = {
+  transitionProperty: 'opacity',
+  transitionDuration: `${EMPTY_FADE_MS}ms`,
+  transitionTimingFunction: 'ease-out',
+} as const;
 
 /**
  * The docked conversation column with nothing asked and nothing saved
@@ -297,34 +298,24 @@ export function AskEmptyState({
   const top = useHeaderBottom();
   const margin = useScreenMargin();
   const { fontScale } = useWindowDimensions();
-  const opacity = useSharedValue(1);
   // Shown stays true while the state fades after a question is sent. A
   // saved conversation taking the column, or Reduce Motion, ends it at once.
   const [shown, setShown] = useState(empty);
   if (empty && !shown) setShown(true);
   if (shown && !empty && (idle || reduced)) setShown(false);
   const leaving = shown && !idle;
-  // The fade starts in the commit that sends the question and runs on the
-  // UI thread, whatever the conversation is doing to the JS thread as its
-  // first turn draws. The earlier Animated fade never showed on an iPad:
-  // the state stayed whole over the new question for about 0.3 s, then went
-  // in one frame (sweep 3 captures, D5).
-  useLayoutEffect(() => {
-    if (!leaving) {
-      cancelAnimation(opacity);
-      opacity.set(1);
-      return;
-    }
-    opacity.set(
-      withTiming(0, {
-        duration: EMPTY_FADE_MS,
-        easing: Easing.out(Easing.quad),
-      }),
-    );
+  // The fade is a transition on the view's own opacity, so it starts on the
+  // UI thread with the commit that draws the question. Both earlier fades
+  // were started from JS after that commit, and on an iPad the JS thread is
+  // busy with the first turn from then until the answer lands: the state
+  // stayed whole beside the question for 0.3 to 0.45 s, then went in one
+  // frame (sweep 3 captures, D5, and the 8b8296b1e recapture). The timer
+  // only unmounts a view that is already clear, so it may run late.
+  useEffect(() => {
+    if (!leaving) return;
     const gone = setTimeout(() => setShown(false), EMPTY_FADE_MS);
     return () => clearTimeout(gone);
-  }, [leaving, opacity]);
-  const fade = useAnimatedStyle(() => ({ opacity: opacity.value }));
+  }, [leaving]);
   // The room under the bar, and the words' own height at this text size.
   const [area, setArea] = useState<number | null>(null);
   const [words, setWords] = useState<number | null>(null);
@@ -347,7 +338,8 @@ export function AskEmptyState({
       style={[
         styles.empty,
         { paddingTop: top, paddingHorizontal: margin },
-        fade,
+        emptyFade,
+        { opacity: leaving ? 0 : 1 },
       ]}
       // Leaving, it is already not the page: VoiceOver skips it.
       accessibilityElementsHidden={leaving}

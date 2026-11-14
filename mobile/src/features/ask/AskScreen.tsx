@@ -261,22 +261,19 @@ export default function AskScreen() {
   }, [reveal]);
   // New question returns Ask to its idle rest. On iOS the page gets a fresh
   // scroll view (`restKey` below), which UIKit places at rest under the
-  // expanded large title, exactly as on first mount. Scrolling the old one
-  // to -headerBottom did not land there (sweep 3 captures, C4.1 at AX5):
-  // after a scrolled thread the header last reported was the collapsed
+  // expanded large title, as on first mount. Scrolling the old view to
+  // minus the header last reported did not land there (sweep 3 captures,
+  // C4.1 at AX5): after a scrolled thread that header was the collapsed
   // inline bar, so an iPhone stopped about 71 pt short with the large title
-  // half under the bar buttons, and nothing later reports the expanded
-  // height while the bar stays collapsed; on the Duo the reported header
-  // was about 58 pt more than the idle inset and left a blank band.
+  // half under the bar buttons; on the Duo, whose bar is a side rail, it
+  // left a band 58 pt deep. newConversation first takes a scrolled thread
+  // to its top, so the bar is never collapsed when the large title returns.
   // Android's toolbar sits outside the scroll view: its top is zero.
   useEffect(() => {
     if (!topRequest) return;
     pin.current = false;
-    if (Platform.OS === 'ios') {
-      atTop.current = true;
-      return;
-    }
-    scrollToTop(scroll.current, headerBottom);
+    if (Platform.OS === 'ios') atTop.current = true;
+    else scrollToTop(scroll.current, headerBottom);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topRequest]);
   const restKey = Platform.OS === 'ios' ? topRequest : 0;
@@ -331,13 +328,46 @@ export default function AskScreen() {
     pinTurn();
     void askSession.retry();
   }
+  const clearing = useRef<number | null>(null);
+  useEffect(
+    () => () => {
+      if (clearing.current !== null) cancelAnimationFrame(clearing.current);
+    },
+    [],
+  );
   function newConversation() {
-    if (askSession.newConversation()) {
-      scrollY.current = null;
-      setUnderBar(false);
-      setInputError('');
-      setTopRequest((n) => n + 1);
+    if (clearing.current !== null) return;
+    const clear = () => {
+      clearing.current = null;
+      if (askSession.newConversation()) {
+        scrollY.current = null;
+        setUnderBar(false);
+        setInputError('');
+        setTopRequest((n) => n + 1);
+      }
+    };
+    // iOS, a thread the reader has scrolled: its bar is collapsed, and a
+    // large title re-enabled on a collapsed bar does not come back as it
+    // first was. The fresh idle page then rested with the title collapsed
+    // on the Duo, or under a bar 58 pt too tall once pulled open, and under
+    // a hairline on an iPhone (8b8296b1e recaptures; an unscrolled thread
+    // was right on every device). So the thread goes to its top first, and
+    // is cleared two frames later, once UIKit has the bar at rest.
+    const scrolled =
+      Platform.OS === 'ios' &&
+      !idle &&
+      !s.busy &&
+      scrollY.current !== null &&
+      scrollY.current + headerBottom > 1;
+    if (!scrolled) {
+      clear();
+      return;
     }
+    pin.current = false;
+    scrollToTop(scroll.current, headerBottom);
+    clearing.current = requestAnimationFrame(() => {
+      clearing.current = requestAnimationFrame(clear);
+    });
   }
   useKeyCommand(
     'ask-reselect',

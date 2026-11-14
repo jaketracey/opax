@@ -128,6 +128,28 @@ export function dotScrollDistance(offset: number, topInset: number): number {
   return Number.isFinite(offset) ? Math.max(0, offset + topInset) : 0;
 }
 
+/**
+ * The header's expanded height as far as Today can tell now, in points.
+ *
+ * `reported` is the largest height NativeStack has delivered. On a cold
+ * launch that is an inline estimate until the large title's height arrives,
+ * 100 ms or more later (it is debounced, and a first launch's JS is busy).
+ * Until it is `known`, the scroll view's own rest offset says it sooner:
+ * UIKit reports minus the automatic inset as soon as it applies it, on the
+ * UI thread. Once known, the reported height alone counts, so a pull down
+ * (an offset past rest) never reads as a taller header.
+ */
+export function expandedHeaderNow(
+  known: boolean,
+  offset: number,
+  reported: number,
+): number {
+  'worklet';
+  return known || !Number.isFinite(offset)
+    ? reported
+    : Math.max(reported, -offset);
+}
+
 export function dotClockNeeded(
   visible: boolean,
   focused: boolean,

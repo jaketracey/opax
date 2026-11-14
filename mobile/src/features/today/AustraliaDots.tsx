@@ -1,5 +1,6 @@
 import { Group, Points, Skia } from '@shopify/react-native-skia';
 import {
+  getDefaultHeaderHeight,
   HeaderHeightContext,
   NavigationContext,
 } from 'expo-router/react-navigation';
@@ -20,6 +21,7 @@ import {
   useColorScheme,
   useWindowDimensions,
 } from 'react-native';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import Animated, {
   runOnJS,
   runOnUI,
@@ -51,6 +53,7 @@ import {
   androidDotScale,
   dotArrival,
   dotTarget,
+  expandedHeaderNow,
   outlineDotState,
   sampleDotRows,
   type DotHighlight,
@@ -101,18 +104,46 @@ export function useTodayDotsScroll() {
     // inset while UIKit collapses. Both bar appearances remain transparent.
     expandedHeader.value = Math.max(expandedHeader.value, header);
   }, [header, expandedHeader]);
-  const scroll = useDerivedValue(() =>
-    dotScrollDistance(raw.value, ios ? expandedHeader.value : 0),
+  // Whether that height is the large title's yet, and until it is, the
+  // scroll view's own rest offset stands in (expandedHeaderNow).
+  const wait = useHeaderWait();
+  const reportedKnown = !wait || header >= wait.atLeast;
+  const known = useSharedValue(reportedKnown);
+  useLayoutEffect(() => {
+    known.value = reportedKnown;
+  }, [reportedKnown, known]);
+  const expanded = useDerivedValue(() =>
+    expandedHeaderNow(known.value, raw.value, expandedHeader.value),
   );
-  const headerSettled = useHeaderSettled(header);
-  return { scrollRef, scroll, expandedHeader, headerSettled };
+  const scroll = useDerivedValue(() =>
+    dotScrollDistance(raw.value, ios ? expanded.value : 0),
+  );
+  // The cover may go as soon as either source has it: the offset is there
+  // within a frame of the native mount, well before the reported height.
+  const [offsetKnown, setOffsetKnown] = useState(false);
+  const atLeast = wait?.atLeast ?? 0;
+  useAnimatedReaction(
+    () => atLeast > 0 && Number.isFinite(raw.value) && -raw.value >= atLeast,
+    (reached, before) => {
+      if (reached && !before) runOnJS(setOffsetKnown)(true);
+    },
+  );
+  return {
+    scrollRef,
+    scroll,
+    expandedHeader: expanded,
+    headerKnown: reportedKnown || offsetKnown,
+  };
 }
 
 /**
- * The longest Today holds the launch cover for the large title's height:
- * native-stack's 100 ms debounce plus the render that delivers it.
+ * The longest Today holds the launch cover for the large title's height,
+ * from its first layout: native-stack's 100 ms debounce plus the render
+ * that delivers it, with room for a busy first launch.
  */
-export const HEADER_SETTLE_CAP_MS = 200;
+export const HEADER_SETTLE_CAP_MS = 250;
+/** A large title adds at least this much to the inline bar's estimate. */
+const LARGE_TITLE_MIN = 40;
 
 /** Whether the art is drawn at this text size and layout (iOS and Android). */
 export function dotsDrawn(fontScale: number, rule: string): boolean {
@@ -120,46 +151,46 @@ export function dotsDrawn(fontScale: number, rule: string): boolean {
 }
 
 /**
- * Whether Today's rest geometry is final, so the launch cover may go.
+ * What the header must reach to be the large title's, or null where there
+ * is nothing to wait for. Today's rest geometry is final, and the launch
+ * cover may go, once the header's expanded height is known.
  *
  * On an iPhone the art hangs from the large title and the date sits under
  * it, both placed from the header's expanded height. NativeStack starts
- * from an inline estimate and delivers the large-title height about 100 ms
- * later (it debounces it), so on a cold launch the date, the map and the
- * first card were drawn about 68 pt low and jumped up as the launch cover
- * faded (sweep 3 captures, A1: 282 pt to 214 pt). Today now keeps the cover
- * until the height first changes from that estimate, never longer than
- * HEADER_SETTLE_CAP_MS, so the move happens out of sight.
+ * from an inline estimate (getDefaultHeaderHeight) and delivers the
+ * large-title height about 100 ms later (it debounces it), so on a cold
+ * launch the date, the map and the first card were drawn about 68 pt low
+ * and jumped up as the launch cover faded (sweep 3 captures, A1: 282 pt to
+ * 214 pt). Today keeps the cover until the header stands a large title
+ * above that estimate, never longer than HEADER_SETTLE_CAP_MS after its
+ * first layout, so the move happens out of sight. On a slow first launch
+ * the reported height came later than that (Reduce Motion recaptures: the
+ * date 68 pt low for 80 ms after the cut), so the scroll view's own rest
+ * offset, which UIKit reports at once, both places the art meanwhile and
+ * lets the cover go (useTodayDotsScroll, expandedHeaderNow).
+ *
+ * The test is against the estimate itself, not the first value this screen
+ * saw: comparing with the first value let the cover go early, and under
+ * Reduce Motion, with no fade to mask it, the date was still seen 68 pt
+ * low for a few frames (8b8296b1e recapture).
  *
  * Where nothing is placed from the header, or its height will not change,
  * there is nothing to wait for: accessibility sizes and a regular-width
- * phone (no art), Android, iPad (its captures show no move), an iPhone in
- * landscape (no large title: the estimate is already the height), and a
- * Today that mounts behind another page (a launch from a link).
+ * phone (no art), Android, iPad (its captures show no move), and an iPhone
+ * in landscape (no large title: the estimate is already the height).
  */
-function useHeaderSettled(header: number): boolean {
+function useHeaderWait(): { atLeast: number } | null {
   const { fontScale, width, height } = useWindowDimensions();
   const { rule } = useLayout();
-  const navigation = useContext(NavigationContext);
-  // The estimate this screen mounted with, and whether it was in front.
-  const [first] = useState(() => ({
-    header,
-    focused: navigation?.isFocused() ?? true,
-  }));
+  const top = useContext(SafeAreaInsetsContext)?.top ?? 0;
   const waits =
     Platform.OS === 'ios' &&
     !Platform.isPad &&
     dotsDrawn(fontScale, rule) &&
-    height >= width &&
-    first.focused;
-  const [capped, setCapped] = useState(false);
-  const known = !waits || header !== first.header;
-  useEffect(() => {
-    if (known || capped) return;
-    const timer = setTimeout(() => setCapped(true), HEADER_SETTLE_CAP_MS);
-    return () => clearTimeout(timer);
-  }, [known, capped]);
-  return known || capped;
+    height >= width;
+  if (!waits) return null;
+  const estimate = getDefaultHeaderHeight({ width, height }, false, top);
+  return { atLeast: estimate + LARGE_TITLE_MIN };
 }
 
 /**

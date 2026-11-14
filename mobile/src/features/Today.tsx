@@ -29,7 +29,11 @@ import { EditionSkeleton } from './edition/EditionCard';
 import { TodayEditionCard } from './today/FeaturedPeopleCard';
 import { FollowingSection } from './follows/FollowingSection';
 import { AskBlock } from './today/AskBlock';
-import { AustraliaDots, useTodayDotsScroll } from './today/AustraliaDots';
+import {
+  AustraliaDots,
+  HEADER_SETTLE_CAP_MS,
+  useTodayDotsScroll,
+} from './today/AustraliaDots';
 import { electorateDotState } from './today/australia-dots-model';
 import { BillsBlock } from './today/BillFeed';
 import { DailyPair } from './today/DailyPair';
@@ -276,21 +280,40 @@ export default function Today() {
   const home = federal && house(federal) ? federal : null;
   // The launch cover goes once Today has laid out and its rest geometry is
   // final (useTodayDotsScroll: the large title's height on an iPhone), so
-  // nothing moves as the cover fades.
-  // Refs, not state: the release needs no render of its own.
-  const laidOut = useRef(false);
-  const headerSettled = useRef(dots.headerSettled);
+  // nothing moves as the cover fades. A height that does not come holds it
+  // no longer than the cap after that layout. Refs, not state: the release
+  // needs no render of its own.
+  const cover = useRef({
+    laidOut: false,
+    known: dots.headerKnown,
+    capped: false,
+    timer: null as ReturnType<typeof setTimeout> | null,
+  });
   const release = useCallback(() => {
-    if (laidOut.current && headerSettled.current) releaseSplash('today');
+    const held = cover.current;
+    if (held.laidOut && (held.known || held.capped)) releaseSplash('today');
   }, []);
   const onLayout = useCallback(() => {
-    laidOut.current = true;
+    const held = cover.current;
+    if (held.laidOut) return;
+    held.laidOut = true;
+    if (!held.known)
+      held.timer = setTimeout(() => {
+        held.capped = true;
+        release();
+      }, HEADER_SETTLE_CAP_MS);
     release();
   }, [release]);
   useEffect(() => {
-    headerSettled.current = dots.headerSettled;
+    cover.current.known = dots.headerKnown;
     release();
-  }, [dots.headerSettled, release]);
+  }, [dots.headerKnown, release]);
+  useEffect(() => {
+    const held = cover.current;
+    return () => {
+      if (held.timer) clearTimeout(held.timer);
+    };
+  }, []);
   const ready = !!launch && seat.status !== 'loading';
   useScreenReady('/', ready);
   // Once the body is drawn, the profile catalogs are read from their saved
