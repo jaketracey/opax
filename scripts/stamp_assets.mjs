@@ -312,6 +312,14 @@ const DEV_ONLY = /(?:^|\/)(?:[a-z]+-test\.html|ui-workbench\.[a-z]+|datatable-wo
 const walkFiles = (dir) => readdirSync(dir, { withFileTypes: true })
   .flatMap((e) => (e.isDirectory() ? walkFiles(join(dir, e.name)) : [join(dir, e.name)]))
 
+/** Reject unresolved merge placeholders anywhere in the published assets. */
+export function assertNoPlaceholderStamps(publicRoot = PUBLIC) {
+  const files = walkFiles(publicRoot)
+    .filter(file => readFileSync(file).includes('?v=HASH'))
+    .map(file => relative(publicRoot, file).split(sep).join('/'))
+  if (files.length) throw new Error(`stamp_assets: literal ?v=HASH remains in public/${files.join(', public/')}`)
+}
+
 /** Every reference to each top-level .js/.css file: [file, [{from, stamp}]]. */
 export function moduleReferences(publicRoot = PUBLIC, srcRoot = SRC) {
   const texts = [
@@ -446,6 +454,7 @@ export function stampFiles() {
 }
 
 function stamp({ check }) {
+  if (check) assertNoPlaceholderStamps()
   buildMethods({ check })
   buildSpaShell({ check })
   // Modules first: their stamps change app.js and home.js, which are hashed below.
@@ -481,6 +490,7 @@ function stamp({ check }) {
     process.exit(1)
   }
   if (!check && after !== before) writeFileSync(INDEX, after)
+  if (!check) assertNoPlaceholderStamps()
   // References are read from disk, so the immutable list follows the pages written above.
   const headersStale = stampHeaders({ check })
   if (check) {
