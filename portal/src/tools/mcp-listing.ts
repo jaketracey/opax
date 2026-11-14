@@ -98,36 +98,36 @@ export const MCP_REGISTERS: Readonly<Record<string, string>> = {
   find_records: 'which register holds a name or subject',
 }
 /**
- * The main arguments of each register, as named in its input schema (* required), so a client can
- * call query_register without a register_guide turn first. A test checks these against the schemas.
+ * The main arguments of each register, as named in its input schema (* required, values in brackets),
+ * so a client can call query_register without a register_guide turn first. A test checks these against the schemas.
  */
 export const REGISTER_ARGS: Readonly<Record<string, string>> = {
-  grants: 'recipient, program, group_by, financial_year, state',
-  contracts: 'supplier, agency, group_by, rank_by',
-  parliamentary_pay: 'person, office, as_of, chamber',
+  grants: 'recipient, program, group_by (recipient|program|year), financial_year, state',
+  contracts: 'supplier, agency, group_by (agency|contract), rank_by (value|count)',
+  parliamentary_pay: 'person, office, as_of, since, until, chamber',
   pay_calculator: 'question*, from, to, chamber',
   member_expenses: 'person*, year',
   declared_interests: 'person, chamber, category, query',
-  access_registers: 'register*, minister, organisation, lobbyist',
-  entity_profile: 'kind*, query, section',
+  access_registers: 'register* (meetings|lobbyists|fits), minister, organisation, lobbyist',
+  entity_profile: 'kind* (supplier|agency|connection|tax_charity), query, section',
   money_rankings: 'question*, from, to, state, party',
   campaign_spend: 'campaign*, entity, financial_year',
-  public_finances: 'dataset*, query, financial_year, entity',
-  annual_reports: 'view*, body, person, year',
-  agency_reports: 'view*, agency, year, metric',
-  integrity_reports: 'view*, body, query, subject',
-  royal_commissions: 'view*, commission, words',
+  public_finances: 'dataset* (federal_budget|sa_budget|tax_expenditures|government_finance|advertising|sa_grants|vic_gifts), query, financial_year, entity',
+  annual_reports: 'view* (remuneration|agency_heads|bands|profile|compare|suppliers|kmp_counts|top_by_year), body, person, year',
+  agency_reports: 'view* (coverage|documents|facts), agency, year, metric',
+  integrity_reports: 'view* (reports|report|findings|recommendations|bodies|transcripts), body, query, subject',
+  royal_commissions: 'view* (list|profile|recommendations|transcripts), commission, words',
   division: 'chamber, date, title, bill, person',
-  count_records: 'record_type* (divisions or bills), chamber, date, since, until, group_by',
-  count_speeches: 'topic, speaker, party, since, until, group_by',
-  speech_trend: 'topic, speaker, party, by, from_year, to_year',
-  corpus_records: 'kind*, query, record_id, speaker, since, until',
-  legislation: 'kind*, query, jurisdiction, status',
-  electorates_rank: 'indicator*, jurisdiction, chamber, order',
+  count_records: 'record_type* (divisions|bills), chamber, date, since, until, group_by (year|month)',
+  count_speeches: 'topic, speaker, party, since, until, group_by (speaker|party|none)',
+  speech_trend: 'topic, speaker, party, by (year|decade|term), from_year, to_year',
+  corpus_records: 'kind* (speech|press_release), query, record_id, speaker, since, until',
+  legislation: 'kind* (state_bill|instrument), query, jurisdiction, status',
+  electorates_rank: 'indicator* (median_income|median_age|unemployment_rate|rental_pct|population and others), jurisdiction, chamber, order (asc|desc)',
   find_records: 'query*, kind, jurisdiction, since, until',
 }
 /** query_register's register parameter: each register, what it holds and its main arguments (* required). */
-export const REGISTER_LIST = 'The register. Each one, with what it holds and its main arguments (* required): ' + Object.entries(MCP_REGISTERS).map(([name, line]) => `${name} (${line}; ${REGISTER_ARGS[name]})`).join('; ') + '.'
+export const REGISTER_LIST = 'The register. Each one, with what it holds and its main arguments (* required; allowed values in brackets): ' + Object.entries(MCP_REGISTERS).map(([name, line]) => `${name} (${line}; ${REGISTER_ARGS[name]})`).join('; ') + '.'
 export const DISPATCH_TEXT = {
   query_register: { title: 'Query a specialised register', description: 'Query one of OPAX\'s specialised registers: grants, contracts, parliamentary pay and expenses, declared interests, lobbying and access registers, annual, agency and integrity reports, royal commissions, record and speech counts, state legislation and electorate rankings. Give register and its arguments. The register parameter lists every register with its main arguments, so call it directly; a call with wrong arguments returns that register\'s full guide, and register_guide gives the guide without a call.' },
   register_guide: { title: 'Register guide', description: 'How to use one register with query_register: what it holds, its arguments and example calls.' },

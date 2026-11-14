@@ -101,6 +101,12 @@ test('query_register names each register\'s main arguments as its schema does, w
     const schema = api.getTool(registryName(register)).inputSchema, required = new Set(schema.required ?? []);
     const named = line.split(', ').map(arg => arg.replace(/ \(.*\)$/, ''));
     for (const arg of named) assert.ok(Object.hasOwn(schema.properties, arg.replace(/\*$/, '')), `${register}: ${arg}`);
+    // Values in brackets are the schema's own enum values; "and others" marks a partial list.
+    for (const [, arg, values] of line.matchAll(/(\w+)\*? \(([^)]+)\)/g)) {
+      const allowed = schema.properties[arg].enum, listed = values.replace(/ and others$/, '').split('|');
+      assert.ok(allowed && listed.every(v => allowed.includes(v)), `${register}: ${arg} values`);
+      assert.equal(values.endsWith(' and others'), listed.length < allowed.length, `${register}: ${arg} lists every value or says it does not`);
+    }
     assert.deepEqual(named.filter(arg => arg.endsWith('*')).map(arg => arg.slice(0, -1)).sort(), [...required].sort(), register);
   }
 });
