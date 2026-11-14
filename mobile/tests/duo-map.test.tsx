@@ -773,6 +773,12 @@ test('the electorate outline fits its local clear viewing region and retains its
 });
 
 test('seat field clearance follows regular phone layout and restores the phone field space on the outer display', () => {
+  // The bottom search field, and so its reserve, is iOS 26's (seat-chooser).
+  const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+  Object.defineProperty(Platform, 'Version', {
+    configurable: true,
+    value: '26.3',
+  });
   let rule: string | undefined;
   function Probe() {
     rule = useLayout().rule;
@@ -799,4 +805,5 @@ test('seat field clearance follows regular phone layout and restores the phone f
         tree.root.findByType(FieldClearance).findByType(View).props.style,
       ).paddingBottom,
     ).toBe(56);
+  Object.defineProperty(Platform, 'Version', version);
 });

@@ -20,6 +20,7 @@ import {
 import { openOnWeb } from './external';
 import { copy } from '../design/copy';
 import { designFlags } from '../design/flags';
+import { liquidGlass } from '../design/glass';
 import { Icon, type SFSymbol } from '../design/icon';
 import { menuTitle, plainMenuTitle } from '../design/menu-title';
 import { showMenu, type MenuAction } from '../design/menu';
@@ -49,8 +50,7 @@ import {
  * and system Dynamic Type. Buttons and named back buttons use the tint.
  */
 /** iOS 26 and later: the system glass bar and scroll edge effects. */
-export const glassBar = () =>
-  Platform.OS === 'ios' && parseInt(String(Platform.Version), 10) >= 26;
+export const glassBar = () => liquidGlass();
 
 /**
  * Protect the content edge where UIKit actually places the bar. A vertical
