@@ -1,16 +1,20 @@
-// b69 on Android: the A to Z glossary and the expense glossary showed "This
-// page couldn't be shown" ("Rendered more hooks than during the previous
-// render"). Both set `header` from the screen through RouteOptions, after the
-// stack's first render, and native-stack calls `header(props)` as a plain
-// function: a header component with its own hooks then added them to the
-// stack's render. Each screen now passes a header that renders the measured
-// header as an element. This draws both screens inside a real stack.
-import { act } from 'react';
+// b69 on Android: the A to Z glossary showed "This page couldn't be shown"
+// ("Rendered more hooks than during the previous render"). It sets `header`
+// from the screen through RouteOptions, after the stack's first render, and
+// native-stack calls `header(props)` as a plain function: a header with its
+// own hooks then added them to the stack's render. The expense glossary sets
+// the same header over its sheet's, so swapping in any other function would
+// drop those hooks instead. The exported header now has no hooks and draws the
+// measured header as an element. These draw both screens inside the app's own
+// stack registrations.
+import { act, isValidElement } from 'react';
 import { Stack } from 'expo-router';
 import { renderRouter, screen } from 'expo-router/testing-library';
 import GlossaryScreen from '../src/features/learn/GlossaryScreen';
 import ExpenseGlossary from '../src/features/people/ExpenseGlossary';
 import { AndroidReadingHeader } from '../src/navigation/AndroidReadingHeader';
+import { learnScreens } from '../src/navigation/stack/learn';
+import { peopleScreens } from '../src/navigation/stack/people';
 
 jest.mock('react-native', () => {
   const rn = jest.requireActual('react-native');
@@ -26,9 +30,16 @@ jest.mock('../src/api/runtime', () => ({
   catalogs: { expenseCategories: () => new Promise(() => {}) },
 }));
 
+// The two routes' own registrations: the expense glossary's carries the
+// sheet options, which already set the reading header on Android.
+const ROUTES = ['learn/glossary', 'expense-glossary'];
+const registered = [...learnScreens(), ...peopleScreens()].filter((s) =>
+  ROUTES.includes((s.props as { name?: string }).name ?? ''),
+);
+
 const app = {
-  _layout: () => <Stack />,
-  index: GlossaryScreen,
+  _layout: () => <Stack>{registered}</Stack>,
+  'learn/glossary': GlossaryScreen,
   'expense-glossary': ExpenseGlossary,
 };
 
@@ -39,39 +50,33 @@ afterEach(async () => {
 });
 
 test('the A to Z glossary draws on Android with its measured header', async () => {
-  rendered = renderRouter(app, { initialUrl: '/' });
+  expect(registered).toHaveLength(ROUTES.length);
+  rendered = renderRouter(app, { initialUrl: '/learn/glossary' });
   await act(async () => undefined);
   expect(screen.getByTestId('learn-glossary')).toBeTruthy();
   // The header the screen set is drawn (its title is the bar's text).
   expect(screen.getAllByText('A to Z glossary').length).toBeGreaterThan(0);
 });
 
-test('the expense glossary draws on Android with its measured header', async () => {
+test('the expense glossary draws on Android over its sheet header', async () => {
   rendered = renderRouter(app, { initialUrl: '/expense-glossary' });
   await act(async () => undefined);
   expect(screen.getByTestId('expense-glossary')).toBeTruthy();
   expect(screen.getAllByText('Expense categories').length).toBeGreaterThan(0);
 });
 
-test('a header set from a screen is never the bare hook component', () => {
-  // native-stack calls `header` as a function; only a component that is
-  // drawn as an element may use hooks. Guard the two screens' options.
-  const seen: unknown[] = [];
-  const spy = jest
-    .spyOn(jest.requireActual('../src/navigation/preview'), 'RouteOptions')
-    .mockImplementation((props: unknown) => {
-      seen.push((props as { options?: { header?: unknown } }).options?.header);
-      return null;
-    });
-  try {
-    renderRouter(app, { initialUrl: '/' }).unmount();
-    renderRouter(app, { initialUrl: '/expense-glossary' }).unmount();
-  } finally {
-    spy.mockRestore();
-  }
-  expect(seen.length).toBeGreaterThan(0);
-  for (const header of seen) {
-    expect(header).toBeDefined();
-    expect(header).not.toBe(AndroidReadingHeader);
-  }
+test('the reading header runs no hooks when called as a plain function', () => {
+  // native-stack calls `header(props)` outside any component of the header's
+  // own. A hook here throws outside a render, and in the stack's render it
+  // changes the hook count whenever a screen adds or swaps its header.
+  const props = {
+    navigation: { goBack: () => undefined },
+    options: { title: 'A to Z glossary' },
+    route: { key: 'glossary', name: 'learn/glossary' },
+  } as unknown as Parameters<typeof AndroidReadingHeader>[0];
+  let element: unknown;
+  expect(() => {
+    element = AndroidReadingHeader(props);
+  }).not.toThrow();
+  expect(isValidElement(element)).toBe(true);
 });

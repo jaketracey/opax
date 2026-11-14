@@ -606,6 +606,7 @@ test.each(['roster', 'people'] as const)(
     const full = new Set(members.current.map((m) => m.slug));
     const shown = view.members.data!.current.map((m) => m.slug);
     expect(shown.every((slug) => full.has(slug))).toBe(true);
+    expect(new Set(shown).size).toBeGreaterThanOrEqual(full.size - 1);
     expect(view.members.data!.currentCount).toBeGreaterThanOrEqual(
       members.currentCount - 1,
     );

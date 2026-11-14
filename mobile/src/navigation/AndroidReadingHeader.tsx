@@ -16,24 +16,37 @@ import { symbols } from '../design/symbols';
 import { colors, rhythm, textStyles } from '../design/tokens';
 import { androidHeaderBar } from './chrome';
 
-/**
- * A measured Android header: long reading titles wrap at the user's size.
- * It matches the native Android bar on the other screens: flat paper, the
- * Material back arrow, the title at the bar's size and a navy text action.
- */
-export function AndroidReadingHeader({
-  navigation,
-  options,
-  back,
-  windowInsets = false,
-}: NativeStackHeaderProps & {
+type ReadingHeaderProps = NativeStackHeaderProps & {
   /**
    * Pad from the window's insets rather than measuring natively. A full-screen
    * dialog in a tab stack (Ask's Options, the filters) has a native safe area
    * view that reads a zero top inset, so its bar drew under the status bar.
    */
   windowInsets?: boolean;
-}) {
+};
+
+/**
+ * A measured Android header: long reading titles wrap at the user's size.
+ * It matches the native Android bar on the other screens: flat paper, the
+ * Material back arrow, the title at the bar's size and a navy text action.
+ *
+ * native-stack calls a `header` option as a plain function inside its own
+ * render, so this has no hooks: it draws the measured header as an element,
+ * which keeps its hooks to itself. A screen may then set it from RouteOptions
+ * after the first render, or swap it with the stack's own, without changing
+ * the stack's hooks. With hooks here, the Android A to Z glossary failed in
+ * b69 ("Rendered more hooks than during the previous render").
+ */
+export function AndroidReadingHeader(props: ReadingHeaderProps) {
+  return <MeasuredReadingHeader {...props} />;
+}
+
+function MeasuredReadingHeader({
+  navigation,
+  options,
+  back,
+  windowInsets = false,
+}: ReadingHeaderProps) {
   const insets = useSafeAreaInsets();
   const largeText = useWindowDimensions().fontScale >= 2;
   const rootItems = !options.headerLeft
@@ -125,18 +138,6 @@ export function AndroidReadingHeader({
       {content}
     </SafeAreaView>
   );
-}
-
-/**
- * The measured header as a `header` option set from a screen (RouteOptions).
- * native-stack calls `header(props)` as a plain function, so a component with
- * hooks passed directly runs them in the stack's own render. Set after the
- * first render, that adds hooks and the screen fails ("Rendered more hooks
- * than during the previous render": the Android glossaries in b69). This
- * draws the header as an element, with hooks of its own.
- */
-export function readingHeader(props: NativeStackHeaderProps) {
-  return <AndroidReadingHeader {...props} />;
 }
 
 const styles = StyleSheet.create({
