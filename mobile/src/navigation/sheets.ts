@@ -47,9 +47,14 @@ let overModal = false;
 export function setSheetSegments(segments: readonly string[]) {
   const first = segments.find((segment) => !segment.startsWith('('));
   if (
-    ['source', 'citation', 'machine-note', 'rule', 'licences', 'plain-words'].includes(
-      first ?? '',
-    )
+    [
+      'source',
+      'citation',
+      'machine-note',
+      'rule',
+      'licences',
+      'plain-words',
+    ].includes(first ?? '')
   )
     return;
   overModal = first === 'account' || first === 'talk' || first === 'licence';

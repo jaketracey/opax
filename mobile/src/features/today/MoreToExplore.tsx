@@ -1,5 +1,4 @@
 import { router } from 'expo-router';
-import { welcomeBasicsRoute } from '../../navigation/routes';
 import { lessonCopy } from '../newcomer/lessons';
 import { newcomerOption } from '../newcomer/option';
 import { plainWordsRoute } from '../newcomer/TermTip';
@@ -15,6 +14,7 @@ import { symbols } from '../../design/symbols';
 import { rhythm } from '../../design/tokens';
 import {
   exploreRoute,
+  welcomeBasicsRoute,
   largestGrantsRoute,
   leadsRoute,
   publicMoneyRoute,

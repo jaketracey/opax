@@ -9,7 +9,10 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useAccessibilitySize, useReduceMotion } from '../../design/accessibility';
+import {
+  useAccessibilitySize,
+  useReduceMotion,
+} from '../../design/accessibility';
 import { useScreenMargin } from '../../design/adaptive';
 import { Button } from '../../design/controls';
 import { Text } from '../../design/text';
@@ -208,6 +211,7 @@ const styles = StyleSheet.create({
     width: 7,
     height: 7,
     borderRadius: 4,
+    borderCurve: 'continuous',
     backgroundColor: colors.dividerDefault,
   },
   dotOn: { width: 20, backgroundColor: colors.navy },

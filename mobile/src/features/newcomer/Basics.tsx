@@ -1,4 +1,9 @@
-import { ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useScreenMargin } from '../../design/adaptive';
@@ -19,7 +24,11 @@ import { LessonBlock } from './Tour';
  * stays in the app afterwards (Today's "More to explore", Account), where
  * `standalone` drops the electorate button.
  */
-export default function Basics({ standalone = false }: { standalone?: boolean }) {
+export default function Basics({
+  standalone = false,
+}: {
+  standalone?: boolean;
+}) {
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const margin = useScreenMargin();
@@ -115,6 +124,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
+    borderCurve: 'continuous',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.navyWash,

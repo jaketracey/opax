@@ -107,10 +107,7 @@ export function Gloss({ term }: { term: TermId | undefined }) {
       accessibilityHint={`Opens “${question}”`}
       onPress={() => explainTerm(term)}
       testID={`term-gloss-${term}`}
-      style={({ pressed }) => [
-        styles.gloss,
-        pressed ? { opacity: 0.6 } : null,
-      ]}
+      style={({ pressed }) => [styles.gloss, pressed ? { opacity: 0.6 } : null]}
     >
       <View style={styles.rule} />
       <Text wordSafe variant="secondary" tone="inkSoft" style={styles.grow}>
@@ -127,10 +124,16 @@ const styles = StyleSheet.create({
     height: minimumTarget,
     marginVertical: -8,
     borderRadius: minimumTarget / 2,
+    borderCurve: 'continuous',
     alignItems: 'center',
     justifyContent: 'center',
   },
   gloss: { flexDirection: 'row', gap: rhythm.tight, alignItems: 'stretch' },
-  rule: { width: 2, borderRadius: 1, backgroundColor: colors.bronze },
+  rule: {
+    width: 2,
+    borderRadius: 1,
+    borderCurve: 'continuous',
+    backgroundColor: colors.bronze,
+  },
   grow: { flex: 1 },
 });

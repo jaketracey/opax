@@ -647,9 +647,7 @@ export function SeatChooser({
             )
           ) : (
             <>
-              {asking ? (
-                <SeatWhy />
-              ) : null}
+              {asking ? <SeatWhy /> : null}
               {saved && !vic ? (
                 <InsetGroup testID="seat-saved">
                   <SeatRow

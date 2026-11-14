@@ -45,7 +45,12 @@ export function ElectorateArt({ height = 150 }: { height?: number }) {
               />
             </Group>
           ))}
-          <Circle cx={pin.x} cy={pin.y} r={20 / scale / 2.2} color={palette.bronzeWash} />
+          <Circle
+            cx={pin.x}
+            cy={pin.y}
+            r={20 / scale / 2.2}
+            color={palette.bronzeWash}
+          />
           <Circle
             cx={pin.x}
             cy={pin.y}
@@ -238,7 +243,11 @@ export function DivisionArt({ width = 280 }: { width?: number }) {
 export function RecordArt() {
   const rows = [
     { symbol: symbols.vote, ink: 'votes', label: 'How they voted' },
-    { symbol: symbols.interests, ink: 'interests', label: 'What they declared' },
+    {
+      symbol: symbols.interests,
+      ink: 'interests',
+      label: 'What they declared',
+    },
     { symbol: symbols.money, ink: 'money', label: 'What they’re paid' },
   ] as const;
   return (
@@ -288,6 +297,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     backgroundColor: colors.raised,
     borderRadius: 16,
+    borderCurve: 'continuous',
     paddingHorizontal: rhythm.block,
   },
   recordRow: {
@@ -296,5 +306,8 @@ const styles = StyleSheet.create({
     gap: rhythm.row,
     paddingVertical: rhythm.row,
   },
-  recordRule: { borderTopWidth: hairline, borderTopColor: colors.dividerSubtle },
+  recordRule: {
+    borderTopWidth: hairline,
+    borderTopColor: colors.dividerSubtle,
+  },
 });
