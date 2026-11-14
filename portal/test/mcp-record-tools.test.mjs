@@ -109,6 +109,9 @@ test('register_guide explains each register and query_register runs it, with an 
   assert.equal(ranked.isError, false, ranked.content[0].text.slice(0, 300));
   assert.equal(ranked.structuredContent.rows.length >= 3, true);
   assert.match(ranked.structuredContent.opax_url, /^https:\/\/opax\.com\.au\//);
+  const pay = (await send('tools/call', { name: 'query_register', arguments: { register: 'parliamentary_pay', arguments: { office: 'Prime Minister', as_of: '2005' } } })).result.structuredContent;
+  assert.equal(pay.opax_url, 'https://opax.com.au/subject/person/john-howard', 'a result about one person names their page');
+  assert.equal((await send('tools/call', { name: 'corpus_coverage', arguments: {} })).result.structuredContent.opax_url, 'https://opax.com.au/methods');
   assert.deepEqual(JSON.parse(ranked.content[0].text), ranked.structuredContent);
   for (const [register, args] of [['royal_commissions', { view: 'list' }], ['count_records', { record_type: 'bills', year: 2026 }], ['declared_interests', { category: 'shareholdings', limit: 2 }], ['parliamentary_pay', { office: 'Prime Minister' }]]) {
     const { result } = await send('tools/call', { name: 'query_register', arguments: { register, arguments: args } });
@@ -406,6 +409,7 @@ test('money_receipts calls receipts receipts: no all-receipts figure is worded a
   assert.match(total.measure_label, /Not all of this is donations/);
   const top = await run('money_receipts', { party: 'Labor', view: 'top_donors', financial_year: '2023-24' });
   assert.ok(top.items.length === 10 && top.total > 10 && top.next_cursor);
+  assert.equal(top.url, 'https://opax.com.au/money?jur=federal&type=receipts&party=party%3ALabor&from=2023&to=2023', 'the selection page carries the party and year');
   for (const row of top.items) {
     assert.equal(row.party, 'Labor'); assert.equal(row.period, '2023-24');
     assert.match(row.statement, /in federal disclosed receipts to Labor across [\d,]+ receipts? in financial years 2023-24 \(1 July 2023 to 30 June 2024\)/);

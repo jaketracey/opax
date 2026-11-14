@@ -65,7 +65,8 @@ export const moneyReceipts: ToolDefinition = {
     // Party aggregates have no type split, so they are never labelled donations.
     const measure = data.measure === 'donations' ? 'donations_only' : 'all_receipts'
     return result({ items, total: rows.length ? total : 0, next_cursor: window.length && end < total ? writeCursor('money_receipts', args, { o: end }) : null,
-      url: siteUrl(env, '/money?jur=federal&type=receipts'), measure, measure_label: MEASURE_LABELS[measure], period: typeof data.period === 'string' ? data.period : null, as_at: coverage.as_of ?? null,
+      // The money page for this selection: the party and years asked for, as the website links them.
+      url: siteUrl(env, '/money?' + new URLSearchParams({ jur: 'federal', type: 'receipts', ...(typeof data.party === 'string' ? { party: 'party:' + data.party } : {}), ...((args.financial_year || args.from_year !== undefined || args.to_year !== undefined) && Number.isInteger(object(data.query).from_year) ? { from: String(object(data.query).from_year), to: String(object(data.query).to_year) } : {}) })), measure, measure_label: MEASURE_LABELS[measure], period: typeof data.period === 'string' ? data.period : null, as_at: coverage.as_of ?? null,
       other_lines, ...(full(args) ? { coverage, ...(data.donor_declared ? { donor_declared: data.donor_declared } : {}) } : {}),
       notes: [...(wanted === 'donations_only' && measure !== 'donations_only' ? ['A donations-only figure is not available for this selection: the amounts are all receipt types.'] : []), ...data.notes as string[]] })
   },

@@ -32,9 +32,11 @@ import { ToolInputError, type ToolArgs, type ToolDefinition, type ToolEnv, type 
 import type { ToolDeps, ToolSpec, ToolResult } from '../agentic-tools'
 export * from './types'
 import { validToolIdentifier } from './identifiers'
+import { personUrl } from '../../public/party-page.js'
 import { MCP_PAGES, PAGED_OUTPUT_SCHEMA, RECORD_OUTPUT_SCHEMA } from './mcp-listing'
 export * from './identifiers'
 
+const PERSON_PAGES = new Set(['parliamentary_pay', 'member_expenses', 'declared_interests'])
 export const TOOL_REGISTRY_VERSION = 'structured-tools-19-transcript-counts'
 /** Add each new data-tool module here once; Ask and MCP both read this catalog. */
 export const tools: readonly ToolDefinition[] = Object.freeze([electorates, findRecords, parliamentaryPay, memberExpenses, contracts, grants, declaredInterests, division, countRecords, moneyTotals, campaignSpend, corpusRecords, legislation, publicFinances, entityProfile, accessRegisters, memberDivisions, sponsoredBills, ...speechDataTools, personQuotes, search, readPassage, personOverview, ...calculatedRecordTools, annualReports, integrityReports, royalCommissions, agencyReports,
@@ -113,7 +115,10 @@ export async function callTool(env: ToolEnv, name: string, args: unknown): Promi
     if (Array.isArray(data.rows) && typeof data.opax_url !== 'string') {
       const origin = new URL(env.origin ?? env.COMMUNITY_ORIGIN ?? 'https://opax.com.au').origin
       const own = [data.list, ...(Array.isArray(data.citations) ? data.citations.map(c => c?.url) : [])].find((url): url is string => typeof url === 'string' && url.startsWith(origin + '/') && !/\.json(?:$|[?#])/.test(url))
-      data.opax_url = own ?? origin + (MCP_PAGES[tool!.name] ?? '/methods')
+      // A result about one person names that person's page.
+      const row = data.rows[0] && typeof data.rows[0] === 'object' ? data.rows[0] as Record<string, unknown> : {}
+      const who = PERSON_PAGES.has(tool!.name) ? [row.person, row.name, row.member].find((name): name is string => typeof name === 'string' && personUrl(name) !== '/subject/person') : undefined
+      data.opax_url = own ?? origin + (who ? personUrl(who) : MCP_PAGES[tool!.name] ?? '/methods')
     }
     return data
   } catch (error) {

@@ -58,20 +58,20 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
   }
   const readOnly={readOnlyHint:true,destructiveHint:false,idempotentHint:true,openWorldHint:false}
   // Inline results are the published JSON with links added; each schema names the fields a client can rely on.
-  const detail=z.enum(['concise','full']).default('concise').describe('concise (default) lists the 25 largest grants; full lists as many as fit in one response.')
-  const grantOutput=z.looseObject({n:z.string().describe('Recipient or program name.'),grants:z.array(z.unknown()),grants_total:z.number(),grants_listed:z.number(),truncated:z.boolean().optional(),field_guide:z.record(z.string(),z.unknown()),coverage:z.record(z.string(),z.unknown()),opax_url:z.string()})
-  server.registerTool('search_records',{description:MCP_TEXT.search_records.description,outputSchema:z.looseObject({results:z.array(z.unknown()).describe('Ranked results, each with a title, an excerpt, a slug for read_record and an opax_url.')}),inputSchema:{query:z.string().min(2).max(300).describe('Words or a phrase.'),kind:z.enum(['all','speech','press_release','bill','bill_text','division','grant']).default('all').describe('Only this kind of record.'),page:z.number().int().min(1).max(20).default(1).describe('Results page, 10 a page.')},annotations:readOnly},async({query,kind,page})=>result('/api/search-all?'+new URLSearchParams({q:query,kind,per:'10',page:String(page)})))
-  server.registerTool('read_record',{description:MCP_TEXT.read_record.description,outputSchema:z.looseObject({opax_url:z.string().describe('The OPAX page for this record.')}),inputSchema:{slug:z.string().regex(/^(?:speech-\d+|legal-\d+|news-\d+|bill-text-au-federal-[a-z0-9-]{1,180}|division-[a-z0-9-]+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+|grantconnect-award-ga\d+(?:-v\d+)?|grant-site-evidence-(?:ga\d+|mlci-invitation-\d{3})|mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/,'Use a slug exactly as search_records returns it, for example speech-931754.').describe('The slug of a search_records result.')},annotations:readOnly},async({slug})=>result('/api/resource/'+encodeURIComponent(slug)))
-  server.registerTool('find_connections',{description:MCP_TEXT.find_connections.description,outputSchema:z.object({as_at:z.string().optional().describe('When the connections dataset was built.'),connections:z.array(z.object({id:z.string(),name:z.string(),kind:z.string(),records:z.number(),url:z.string()}))}),inputSchema:{query:z.string().min(2).max(120).describe('Part of a name.')},annotations:readOnly},async({query})=>{
+  const detail=z.enum(['concise','full']).default('concise').describe('full lists as many grants as fit; the default lists the 10 largest.')
+  const grantOutput=z.looseObject({n:z.string(),grants:z.array(z.unknown()),grants_total:z.number(),grants_listed:z.number(),opax_url:z.string()})
+  server.registerTool('search_records',{description:MCP_TEXT.search_records.description,outputSchema:z.looseObject({results:z.array(z.unknown())}),inputSchema:{query:z.string().min(2).max(300).describe('Words or a phrase.'),kind:z.enum(['all','speech','press_release','bill','bill_text','division','grant']).default('all').describe('Only this kind of record.'),page:z.number().int().min(1).max(20).default(1).describe('Results page, 10 a page.')},annotations:readOnly},async({query,kind,page})=>result('/api/search-all?'+new URLSearchParams({q:query,kind,per:'10',page:String(page)})))
+  server.registerTool('read_record',{description:MCP_TEXT.read_record.description,outputSchema:z.looseObject({opax_url:z.string()}),inputSchema:{slug:z.string().regex(/^(?:speech-\d+|legal-\d+|news-\d+|bill-text-au-federal-[a-z0-9-]{1,180}|division-[a-z0-9-]+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+|grantconnect-award-ga\d+(?:-v\d+)?|grant-site-evidence-(?:ga\d+|mlci-invitation-\d{3})|mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/,'Use a slug exactly as search_records returns it, for example speech-931754.').describe('The slug of a search_records result.')},annotations:readOnly},async({slug})=>result('/api/resource/'+encodeURIComponent(slug)))
+  server.registerTool('find_connections',{description:MCP_TEXT.find_connections.description,outputSchema:z.looseObject({connections:z.array(z.looseObject({name:z.string(),url:z.string()}))}),inputSchema:{query:z.string().min(2).max(120).describe('Part of a name.')},annotations:readOnly},async({query})=>{
    const response=await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+'/evidence/index.json'));if(!response.ok)return {content:[{type:'text' as const,text:JSON.stringify({error:'The connections dataset could not be read just now. Try again in a minute.'})}],isError:true}
    const data=await response.json() as {meta?:unknown,entities:{id:string,name:string,kind:string,records:number}[]};const asAt=evidenceAsAt(data.meta);const hits=data.entities.filter(e=>e.name.toLowerCase().includes(query.toLowerCase())).slice(0,20).map(e=>({...e,url:env.COMMUNITY_ORIGIN+'/connections?entity='+e.id}));const found={...(asAt?{as_at:asAt}:{}),connections:hits};return {content:[{type:'text' as const,text:JSON.stringify(found)}],structuredContent:found}
   })
-  server.registerTool('corpus_coverage',{description:MCP_TEXT.corpus_coverage.description,inputSchema:{},outputSchema:z.looseObject({version:z.string().describe('Date of this coverage statement.'),sources:z.array(z.unknown()).describe('Each source with its record count and years covered.')}),annotations:readOnly},async()=>{
+  server.registerTool('corpus_coverage',{description:MCP_TEXT.corpus_coverage.description,inputSchema:{},outputSchema:z.looseObject({version:z.string(),sources:z.array(z.unknown())}),annotations:readOnly},async()=>{
    const unavailable={content:[{type:'text' as const,text:JSON.stringify({error:'The coverage statement could not be read just now. Try again in a minute.'})}],isError:true}
    const r=await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+'/corpus.json'));if(!r.ok)return unavailable
    let data:Record<string,unknown>;try{data=await r.json() as Record<string,unknown>}catch{return unavailable}
    if(typeof data?.version!=='string'||!Array.isArray(data.sources))return unavailable
-   data.opax_url=env.COMMUNITY_ORIGIN+'/stats'
+   data.opax_url=env.COMMUNITY_ORIGIN+'/methods'
    return {content:[{type:'text' as const,text:JSON.stringify(data)}],structuredContent:data,isError:false}
   })
   type ProgramEntry={id:string,n:string,key:string}
@@ -91,7 +91,7 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
 
    const size=(text:string)=>new TextEncoder().encode(text).length
    // The files list grants largest first. A short list by default; detail=full sends as many as one response holds.
-   let listed=full?grants.length:Math.min(25,grants.length)
+   let listed=full?grants.length:Math.min(10,grants.length)
    const encode=()=>JSON.stringify({...file,grants:grants.slice(0,listed),grants_total:file.grants_total??file.c??grants.length,grants_listed:listed,...(file.truncated||Number(file.more)>0||listed<grants.length||Number(file.grants_total)>listed?{truncated:true}:{}),field_guide:{...fieldGuide,t:qld?'total expenditure value':'total published award value',c:qld?'expenditure row count, not distinct awards':'award record count'},coverage,dataset_source_url,opax_url})
    let payload=encode()
    if(size(payload)>MCP_OUTPUT_BYTES){
@@ -158,7 +158,7 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
   }
   const registerName=z.enum(Object.keys(MCP_REGISTERS) as [string,...string[]])
   server.registerTool('query_register',{...DISPATCH_TEXT.query_register,inputSchema:{register:registerName,arguments:z.record(z.string(),z.unknown()).describe('The arguments register_guide lists for this register.')},outputSchema:toolOutputSchema('find_records'),annotations:readOnly},async({register,arguments:args})=>run(getTool(registryName(register))!,register,args))
-  server.registerTool('register_guide',{...DISPATCH_TEXT.register_guide,inputSchema:{register:registerName},outputSchema:z.looseObject({register:z.string(),description:z.string(),arguments:z.record(z.string(),z.unknown()),examples:z.array(z.unknown())}),annotations:readOnly},async({register})=>{const found=guide(register);return {content:[{type:'text' as const,text:JSON.stringify(found)}],structuredContent:found,isError:false}})
+  server.registerTool('register_guide',{...DISPATCH_TEXT.register_guide,inputSchema:{register:z.string().describe('A register name from query_register.')},outputSchema:z.looseObject({register:z.string(),description:z.string(),arguments:z.record(z.string(),z.unknown()),examples:z.array(z.unknown())}),annotations:readOnly},async({register})=>{if(!Object.hasOwn(MCP_REGISTERS,register))return failed('There is no register named that. Registers: '+Object.keys(MCP_REGISTERS).join(', ')+'.');const found=guide(register);return {content:[{type:'text' as const,text:JSON.stringify(found)}],structuredContent:found,isError:false}})
   const transport=new WebStandardStreamableHTTPServerTransport({sessionIdGenerator:undefined,enableJsonResponse:true})
   await server.connect(transport)
   try{
@@ -166,7 +166,7 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
    if(parsed.method!=='tools/list'||!response.ok)return response
    // Every client holds this list in context: send each schema without examples, length bounds or SDK bookkeeping.
    const body=await response.json() as {result?:{tools?:Record<string,unknown>[]}}
-   if(Array.isArray(body.result?.tools))body.result.tools=body.result.tools.map(({execution:_execution,inputSchema,outputSchema,...tool})=>({...tool,inputSchema:listedSchema(inputSchema),...(outputSchema?{outputSchema:listedSchema(outputSchema)}:{})}))
+   if(Array.isArray(body.result?.tools))body.result.tools=body.result.tools.map(({execution:_execution,inputSchema,outputSchema,...tool})=>({...tool,inputSchema:listedSchema(inputSchema,'',true),...(outputSchema?{outputSchema:listedSchema(outputSchema)}:{})}))
    const headers=new Headers(response.headers);headers.delete('content-length')
    return new Response(JSON.stringify(body),{status:response.status,headers})
   }finally{await server.close()}

@@ -33,7 +33,6 @@
     },
     "page": {
      "default": 1,
-     "description": "Results page, 10 a page.",
      "type": "integer",
      "maximum": 20
     }
@@ -47,8 +46,7 @@
    "properties": {
     "results": {
      "type": "array",
-     "items": {},
-     "description": "Ranked results, each with a title, an excerpt, a slug for read_record and an opax_url."
+     "items": {}
     }
    },
    "required": [
@@ -71,8 +69,7 @@
    "type": "object",
    "properties": {
     "slug": {
-     "type": "string",
-     "description": "The slug of a search_records result."
+     "type": "string"
     }
    },
    "required": [
@@ -83,8 +80,7 @@
    "type": "object",
    "properties": {
     "opax_url": {
-     "type": "string",
-     "description": "The OPAX page for this record."
+     "type": "string"
     }
    },
    "required": [
@@ -118,36 +114,20 @@
   "outputSchema": {
    "type": "object",
    "properties": {
-    "as_at": {
-     "description": "When the connections dataset was built.",
-     "type": "string"
-    },
     "connections": {
      "type": "array",
      "items": {
       "type": "object",
       "properties": {
-       "id": {
-        "type": "string"
-       },
        "name": {
         "type": "string"
-       },
-       "kind": {
-        "type": "string"
-       },
-       "records": {
-        "type": "number"
        },
        "url": {
         "type": "string"
        }
       },
       "required": [
-       "id",
        "name",
-       "kind",
-       "records",
        "url"
       ]
      }
@@ -177,13 +157,11 @@
    "type": "object",
    "properties": {
     "version": {
-     "type": "string",
-     "description": "Date of this coverage statement."
+     "type": "string"
     },
     "sources": {
      "type": "array",
-     "items": {},
-     "description": "Each source with its record count and years covered."
+     "items": {}
     }
    },
    "required": [
@@ -195,7 +173,7 @@
  {
   "name": "read_grant_recipient",
   "title": "Read a grant recipient",
-  "description": "One recipient of federal or Queensland government grants, by the grant_recipient id from a search_records grant result: totals by financial year, agencies, programs and individual grants with source links. detail=full lists as many grants as fit; the default lists the 25 largest. grants_total, grants_listed and truncated say how complete the list is. Federal values are award values, not payments.",
+  "description": "One recipient of federal or Queensland government grants, by the grant_recipient id from a search_records grant result: totals by financial year, agencies, programs and individual grants with source links. detail=full lists as many grants as fit; the default lists the 10 largest. grants_total, grants_listed and truncated say how complete the list is. Federal values are award values, not payments.",
   "annotations": {
    "title": "Read a grant recipient",
    "readOnlyHint": true,
@@ -219,7 +197,7 @@
     },
     "detail": {
      "default": "concise",
-     "description": "concise (default) lists the 25 largest grants; full lists as many as fit in one response.",
+     "description": "full lists as many grants as fit; the default lists the 10 largest.",
      "type": "string",
      "enum": [
       "concise",
@@ -236,8 +214,7 @@
    "type": "object",
    "properties": {
     "n": {
-     "type": "string",
-     "description": "Recipient or program name."
+     "type": "string"
     },
     "grants": {
      "type": "array",
@@ -249,21 +226,6 @@
     "grants_listed": {
      "type": "number"
     },
-    "truncated": {
-     "type": "boolean"
-    },
-    "field_guide": {
-     "type": "object",
-     "propertyNames": {
-      "type": "string"
-     }
-    },
-    "coverage": {
-     "type": "object",
-     "propertyNames": {
-      "type": "string"
-     }
-    },
     "opax_url": {
      "type": "string"
     }
@@ -273,8 +235,6 @@
     "grants",
     "grants_total",
     "grants_listed",
-    "field_guide",
-    "coverage",
     "opax_url"
    ]
   }
@@ -282,7 +242,7 @@
  {
   "name": "read_grant_program",
   "title": "Read a grant program",
-  "description": "One federal or Queensland grant program, by the grant_program id from search_records or a program_lookup candidate: totals, agencies, selection processes, seat and margin splits, top recipients and individual grants with source links. detail=full lists as many grants as fit; the default lists the 25 largest, with truncated set when more exist.",
+  "description": "One federal or Queensland grant program, by the grant_program id from search_records or a program_lookup candidate: totals, agencies, selection processes, seat and margin splits, top recipients and individual grants with source links. detail=full lists as many grants as fit; the default lists the 10 largest, with truncated set when more exist.",
   "annotations": {
    "title": "Read a grant program",
    "readOnlyHint": true,
@@ -306,7 +266,7 @@
     },
     "detail": {
      "default": "concise",
-     "description": "concise (default) lists the 25 largest grants; full lists as many as fit in one response.",
+     "description": "full lists as many grants as fit; the default lists the 10 largest.",
      "type": "string",
      "enum": [
       "concise",
@@ -323,8 +283,7 @@
    "type": "object",
    "properties": {
     "n": {
-     "type": "string",
-     "description": "Recipient or program name."
+     "type": "string"
     },
     "grants": {
      "type": "array",
@@ -336,21 +295,6 @@
     "grants_listed": {
      "type": "number"
     },
-    "truncated": {
-     "type": "boolean"
-    },
-    "field_guide": {
-     "type": "object",
-     "propertyNames": {
-      "type": "string"
-     }
-    },
-    "coverage": {
-     "type": "object",
-     "propertyNames": {
-      "type": "string"
-     }
-    },
     "opax_url": {
      "type": "string"
     }
@@ -360,8 +304,6 @@
     "grants",
     "grants_total",
     "grants_listed",
-    "field_guide",
-    "coverage",
     "opax_url"
    ]
   }
@@ -385,8 +327,7 @@
      "description": "A parliamentarian's name, e.g. \"Penny Wong\" or \"Senator Wong\"."
     },
     "slug": {
-     "type": "string",
-     "description": "Profile slug, e.g. \"penny-wong\"."
+     "type": "string"
     },
     "electorate": {
      "type": "string",
@@ -421,12 +362,10 @@
     },
     "limit": {
      "type": "integer",
-     "maximum": 10,
-     "description": "Default 5."
+     "maximum": 10
     },
     "cursor": {
-     "type": "string",
-     "description": "next_cursor from the previous result, with the same arguments."
+     "type": "string"
     }
    }
   },
@@ -496,16 +435,13 @@
      "description": "Bill title or bill_id: only divisions linked to that bill."
     },
     "date": {
-     "type": "string",
-     "description": "Exact sitting date, YYYY-MM-DD."
+     "type": "string"
     },
     "since": {
-     "type": "string",
-     "description": "On or after this date, YYYY-MM-DD."
+     "type": "string"
     },
     "until": {
-     "type": "string",
-     "description": "On or before this date, YYYY-MM-DD."
+     "type": "string"
     },
     "chamber": {
      "type": "string"
@@ -538,12 +474,10 @@
     },
     "limit": {
      "type": "integer",
-     "maximum": 10,
-     "description": "Default 5."
+     "maximum": 10
     },
     "cursor": {
-     "type": "string",
-     "description": "next_cursor from the previous result, with the same arguments."
+     "type": "string"
     }
    }
   },
@@ -601,8 +535,7 @@
    "type": "object",
    "properties": {
     "person": {
-     "type": "string",
-     "description": "The member's full name, as member_profile returns it."
+     "type": "string"
     },
     "topic": {
      "type": "string",
@@ -613,12 +546,10 @@
      "description": "Bill title words, or a bill_id for exactly that bill's divisions."
     },
     "since": {
-     "type": "string",
-     "description": "On or after this date, YYYY-MM-DD."
+     "type": "string"
     },
     "until": {
-     "type": "string",
-     "description": "On or before this date, YYYY-MM-DD."
+     "type": "string"
     },
     "chamber": {
      "type": "string"
@@ -655,12 +586,10 @@
     },
     "limit": {
      "type": "integer",
-     "maximum": 20,
-     "description": "Default 8."
+     "maximum": 20
     },
     "cursor": {
-     "type": "string",
-     "description": "next_cursor from the previous result, with the same arguments."
+     "type": "string"
     }
    },
    "required": [
@@ -743,16 +672,13 @@
      "enum": [
       "representatives",
       "senate"
-     ],
-     "description": "Originating chamber."
+     ]
     },
     "since": {
-     "type": "string",
-     "description": "Introduced on or after, YYYY-MM-DD."
+     "type": "string"
     },
     "until": {
-     "type": "string",
-     "description": "Introduced on or before, YYYY-MM-DD."
+     "type": "string"
     },
     "detail": {
      "type": "string",
@@ -764,12 +690,10 @@
     },
     "limit": {
      "type": "integer",
-     "maximum": 20,
-     "description": "Default 10."
+     "maximum": 20
     },
     "cursor": {
-     "type": "string",
-     "description": "next_cursor from the previous result, with the same arguments."
+     "type": "string"
     }
    }
   },
@@ -844,12 +768,10 @@
     },
     "limit": {
      "type": "integer",
-     "maximum": 100,
-     "description": "Default 50."
+     "maximum": 100
     },
     "cursor": {
-     "type": "string",
-     "description": "next_cursor from the previous result, with the same arguments."
+     "type": "string"
     }
    }
   },
@@ -926,18 +848,15 @@
      "description": "total (default with a party or donor), top_donors, top_recipients, by_year or by_industry."
     },
     "financial_year": {
-     "type": "string",
-     "description": "One financial year, e.g. 2023-24."
+     "type": "string"
     },
     "from_year": {
      "type": "integer",
-     "maximum": 2099,
-     "description": "First financial year, by starting year (2019 means 2019-20)."
+     "maximum": 2099
     },
     "to_year": {
      "type": "integer",
-     "maximum": 2099,
-     "description": "Last financial year, by starting year."
+     "maximum": 2099
     },
     "measure": {
      "type": "string",
@@ -961,12 +880,10 @@
     },
     "limit": {
      "type": "integer",
-     "maximum": 25,
-     "description": "Default 10."
+     "maximum": 25
     },
     "cursor": {
-     "type": "string",
-     "description": "next_cursor from the previous result, with the same arguments."
+     "type": "string"
     }
    }
   },
@@ -1024,8 +941,7 @@
    "type": "object",
    "properties": {
     "person": {
-     "type": "string",
-     "description": "The member's full name, as member_profile returns it."
+     "type": "string"
     },
     "category": {
      "type": "string",
@@ -1047,12 +963,10 @@
      "description": "Words in the declaration, e.g. a company name."
     },
     "since": {
-     "type": "string",
-     "description": "Lodged or altered on or after, YYYY-MM-DD."
+     "type": "string"
     },
     "until": {
-     "type": "string",
-     "description": "Lodged or altered on or before, YYYY-MM-DD."
+     "type": "string"
     },
     "detail": {
      "type": "string",
@@ -1064,12 +978,10 @@
     },
     "limit": {
      "type": "integer",
-     "maximum": 50,
-     "description": "Default 20."
+     "maximum": 50
     },
     "cursor": {
-     "type": "string",
-     "description": "next_cursor from the previous result, with the same arguments."
+     "type": "string"
     }
    },
    "required": [
@@ -1134,16 +1046,13 @@
      "description": "Subject words or a phrase, e.g. \"negative gearing\"."
     },
     "speaker": {
-     "type": "string",
-     "description": "A parliamentarian's name."
+     "type": "string"
     },
     "since": {
-     "type": "string",
-     "description": "Spoken on or after, YYYY-MM-DD."
+     "type": "string"
     },
     "until": {
-     "type": "string",
-     "description": "Spoken on or before, YYYY-MM-DD."
+     "type": "string"
     },
     "jurisdiction": {
      "type": "string",
@@ -1186,12 +1095,10 @@
     },
     "limit": {
      "type": "integer",
-     "maximum": 5,
-     "description": "Default 3."
+     "maximum": 5
     },
     "cursor": {
-     "type": "string",
-     "description": "next_cursor from the previous result, with the same arguments."
+     "type": "string"
     }
    }
   },
@@ -1334,31 +1241,7 @@
    "properties": {
     "register": {
      "type": "string",
-     "enum": [
-      "grants",
-      "contracts",
-      "parliamentary_pay",
-      "pay_calculator",
-      "member_expenses",
-      "declared_interests",
-      "access_registers",
-      "entity_profile",
-      "money_rankings",
-      "campaign_spend",
-      "public_finances",
-      "annual_reports",
-      "agency_reports",
-      "integrity_reports",
-      "royal_commissions",
-      "division",
-      "count_records",
-      "count_speeches",
-      "speech_trend",
-      "corpus_records",
-      "legislation",
-      "electorates_rank",
-      "find_records"
-     ]
+     "description": "A register name from query_register."
     }
    },
    "required": [
