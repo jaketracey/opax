@@ -19,6 +19,20 @@ name: 46 From a bill in the Bills tab, Ask about this opens a draft; the bill te
     text: Search bills
 - inputText: interactive gambling levy
 - pressKey: Enter
+# The search keeps the tab's scope. The bill has passed, so under Before
+# parliament (the default; a clean install or another flow's choice) the
+# empty state offers Search all bills.
+- extendedWaitUntil:
+    visible:
+      id: bills-search-all|bill-row-au-federal-r7534
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: bills-search-all
+    commands:
+      - tapOn:
+          id: bills-search-all
 - scrollUntilVisible:
     element:
       id: bill-row-au-federal-r7534

@@ -93,7 +93,9 @@ name: 10 Filter and search the bill list, then open a bill
 # Let the cold skeleton crossfade finish before the first content check.
 - waitForAnimationToEnd
 - takeScreenshot: ${EVIDENCE}/10-bill
-# The status names its event, never the status word beside a bare date.
+# The status names its event, never the status word beside a bare date. An
+# introduction the meta line below already dates is not repeated, so this
+# bill's status stands alone.
 - scrollUntilVisible:
     element:
       id: bill-status
@@ -102,7 +104,7 @@ name: 10 Filter and search the bill list, then open a bill
     timeout: 180000
 - assertVisible:
     id: bill-status
-    text: 'Status: Before parliament\. Introduced, 17 September 2026'
+    text: 'Status: Before parliament'
 # One meta line: introduced date and chamber; the portfolio has its own line.
 - scrollUntilVisible:
     element:

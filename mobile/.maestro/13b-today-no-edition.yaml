@@ -34,11 +34,14 @@ name: 13b Today with no daily edition published
 - assertVisible:
     id: today-invitation
 - takeScreenshot: ${EVIDENCE}/13b-no-edition
+# The block (header, New and Passed, three bills) is about 600 pt tall:
+# full visibility while centring never settles, so half of it is enough.
 - scrollUntilVisible:
     element:
       id: today-bills
     direction: DOWN
     timeout: 90000
+    visibilityPercentage: 50
     centerElement: true
     speed: 20
 - assertVisible:

@@ -74,6 +74,13 @@ name: 45 Electorates, dated representation, bill filters and Votes in parliament
     speed: 20
     timeout: 300000
 - takeScreenshot: ${EVIDENCE}/45-representation-history
+# The link pushed the electorate inside Today, and scrolling it minimised the
+# bar to Today's button and Search (iOS 26.3.1, 14 Nov 2026): bring it back.
+- runFlow:
+    file: support/restore-tab-bar.yaml
+    env:
+      TOP_ID: today-screen-message
+      TAB_ID: tab-bills
 - tapOn:
     id: tab-bills
 - extendedWaitUntil:

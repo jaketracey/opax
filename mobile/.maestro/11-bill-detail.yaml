@@ -99,6 +99,10 @@ name: 11 Read a bill, its machine summary, votes and speeches
 # At AX5 the whole votes section is too tall to appear in the iOS
 # hierarchy; the first vote's container does. Third readings and other
 # substantive votes come first; procedural votes wait in their own group.
+# Readings and amendments taken under a time limit are substantive, so the
+# pinned bill lists Amendment, Second reading, then In committee (the two
+# identical 11-24 amendments fold into one), and only the limitation of
+# debate is procedural.
 - assertVisible:
     id: bill-screen
 - scrollUntilVisible:
@@ -110,41 +114,41 @@ name: 11 Read a bill, its machine summary, votes and speeches
     timeout: 180000
 - scrollUntilVisible:
     element:
-      id: bill-division-0-title
+      id: bill-division-2-title
     direction: DOWN
     speed: 20
     timeout: 60000
 - assertVisible:
-    id: bill-division-0-title
+    id: bill-division-2-title
     text: In committee
 - assertVisible:
-    id: bill-division-0-more
+    id: bill-division-2-more
     text: 'In committee, Senate · 19 Aug 2026, Not agreed, 11 ayes, 29 noes'
 # A tap during scroll momentum only stops the scroll on iOS: settle first.
 - scrollUntilVisible:
     element:
-      id: bill-division-0-more
+      id: bill-division-2-more
     direction: DOWN
     centerElement: true
     speed: 20
     timeout: 60000
 - waitForAnimationToEnd
 - tapOn:
-    id: bill-division-0-more
+    id: bill-division-2-more
 # Expanded in place: Labor, then the Coalition, then the crossbench, each
 # party by label and count in words.
 - assertVisible:
     id: bill-screen
 - scrollUntilVisible:
     element:
-      id: bill-division-0-splits-labor
+      id: bill-division-2-splits-labor
     direction: DOWN
     speed: 20
     timeout: 60000
 - assertVisible: Labor, no ayes, 24 noes
 - scrollUntilVisible:
     element:
-      id: bill-division-0-splits-greens
+      id: bill-division-2-splits-greens
     direction: DOWN
     speed: 20
     timeout: 60000
@@ -159,18 +163,18 @@ name: 11 Read a bill, its machine summary, votes and speeches
     centerElement: true
     speed: 20
     timeout: 60000
-- assertVisible: Procedural votes \(10\)
+- assertVisible: Procedural votes \(1\)
 - waitForAnimationToEnd
 - tapOn:
     id: bill-divisions-procedural
 - scrollUntilVisible:
     element:
-      id: bill-division-1-title
+      id: bill-division-10-title
     direction: DOWN
     speed: 20
     timeout: 60000
 - assertVisible:
-    id: bill-division-1-title
+    id: bill-division-10-title
     text: Limitation of debate
 - takeScreenshot: ${EVIDENCE}/11-procedural
 # Every division's count is one tap from its source: the block's one source
