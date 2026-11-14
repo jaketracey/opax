@@ -48,8 +48,11 @@ name: Equal Today, hero and profile affordances for one member
     file: my-mp-neutrality-menu.yaml
 - tapOn:
     point: 10%, 80%
+# Tap the name line: the party below it is its own link to the party page,
+# and a long party name ("One Nation") covers the row's centre.
 - tapOn:
     id: your-member-${SLUG}
+    point: 60%,15%
 - extendedWaitUntil:
     visible:
       id: person-screen-title
