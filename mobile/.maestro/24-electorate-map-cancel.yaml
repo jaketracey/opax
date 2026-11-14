@@ -14,7 +14,17 @@ name: 24 Cancel closes the chooser without a choice, one Cancel at a time
       id: seat-sheet
     timeout: 30000
 - assertVisible: Your electorate
-- assertVisible: Cancel
+# The field is focused on arrival: iOS 26 and later show only its ✕ (Close).
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - assertVisible: Cancel
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - assertVisible: ^(Cancel|Close)$
 - takeScreenshot: ${EVIDENCE}/24-cancel-sheet
 # The field is focused on arrival: type straight away, keyboard up.
 - tapOn: Electorate or member.s name
