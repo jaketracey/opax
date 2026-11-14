@@ -1,5 +1,6 @@
 import { throwIfAborted } from '../../api/abort';
 import type { ApiClient } from '../../api/client';
+import { briefRids } from '../../api/short-turn';
 import {
   decodeAccess,
   decodeBriefs,
@@ -102,13 +103,8 @@ export class PeopleDepth {
     rows: ReturnType<typeof decodeRecords>['results'],
     signal?: AbortSignal,
   ) {
-    const rids = [
-      ...new Set(
-        rows
-          .map((r) => r.resource)
-          .filter((r): r is string => !!r && /^[a-f0-9]{32}$/.test(r)),
-      ),
-    ];
+    // A known short speech turn shows its own passage, never a brief.
+    const rids = briefRids(rows);
     if (!rids.length) return {};
     try {
       return (

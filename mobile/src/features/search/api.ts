@@ -1,6 +1,7 @@
 import { ReadSession } from '../../api/read-session';
 import type { ApiClient, RecordResult } from '../../api/client';
 import { ApiError } from '../../api/errors';
+import { briefRids, type BriefCandidate } from '../../api/short-turn';
 import {
   isMoreKind,
   searchParams,
@@ -68,8 +69,12 @@ export class RecordSearch {
       signal,
     );
   }
-  briefs(resources: string[], signal?: AbortSignal) {
-    const ids = [...new Set(resources.filter((r) => /^[a-f0-9]{32}$/.test(r)))];
+  /** Briefs for these rows; known short speech turns are never asked about. */
+  briefs(
+    rows: readonly (BriefCandidate & { resource?: string })[],
+    signal?: AbortSignal,
+  ) {
+    const ids = briefRids(rows);
     if (!ids.length) return Promise.resolve(null);
     return this.read(
       '/api/brief?' + new URLSearchParams({ rids: ids.slice(0, 24).join(',') }),

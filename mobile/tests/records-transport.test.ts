@@ -79,8 +79,8 @@ test('session and in-flight reuse covers search, summary and briefs, with the pu
   expect(String(transport.mock.calls[1]![0])).toContain(
     '/api/search-summary?stream=1&q=housing&kind=speech&mode=hybrid&page=1&per=20&sort=relevance',
   );
-  await api.briefs(a.data.results.map((r) => r.resource));
-  await api.briefs(a.data.results.map((r) => r.resource));
+  await api.briefs(a.data.results);
+  await api.briefs(a.data.results);
   expect(transport).toHaveBeenCalledTimes(3);
   expect(transport.mock.calls[0]![1]).toMatchObject({
     method: 'GET',

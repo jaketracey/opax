@@ -50,6 +50,7 @@ export const decodeRecords = shape({
   results: array(
     shape({
       slug: nonempty,
+      kind: optional(text),
       resource: optional(text),
       title: optional(text),
       title_subject: optional(text),
@@ -59,6 +60,8 @@ export const decodeRecords = shape({
       chamber: optional(text),
       snippet: optional(text),
       speaker_type: optional(text),
+      // Words in the turn; absent or null (unknown) on servers before short-turn-v1.
+      word_count: optional(number),
     }),
   ),
   coverage: optional(text),
