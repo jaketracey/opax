@@ -64,7 +64,6 @@ const routePatterns = new Set([
   '/grants-allocation',
   '/largest-grants',
   '/lead/[id]',
-  '/learn/minute',
   '/leads',
   '/learn',
   '/learn/[chapter]',
