@@ -1,3 +1,4 @@
+import {standaloneClauseTail} from './research-claims'
 import {sentenceParts,quotationSpans} from './research-claim-audit.mjs'
 import {rewriteAnswerPayload} from './research-language'
 import {answerCitationStatus} from './research-evidence'
@@ -173,8 +174,7 @@ export function dedupeAnswer<T extends Record<string,unknown>>(payload:T):T {
     const quotes=quotationSpans(p.text)
     const boundary=[...p.text.matchAll(/;|\s+and\s+(?=[\p{Ll}]+ed\b)/gu)].find(m=>!quotes.some(q=>m.index!>=q.at&&m.index!<q.end))
     const end=boundary?.index??p.text.length,tail=boundary?p.text.slice(end+boundary[0].length).trimStart():''
-    const standalone=/^\p{Lu}/u.test(tail)&&! /^(?:it|its|they|their|he|his|she|her|this|these|that|those)\b/i.test(tail)
-    consider({...part(p.text.slice(0,end),p.at),clause:boundary?(boundary[0]===';'&&standalone?'independent':'dependent'):undefined})
+    consider({...part(p.text.slice(0,end),p.at),clause:boundary?(boundary[0]===';'&&standaloneClauseTail(tail)?'independent':'dependent'):undefined})
   }
   if(!removed.length)return payload
   const out=rewriteAnswerPayload({...payload,citations},replace=>{

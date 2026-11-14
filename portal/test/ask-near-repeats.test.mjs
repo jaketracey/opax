@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import {readFileSync} from 'node:fs'
 import {build} from 'esbuild'
+import {createHash} from 'node:crypto'
 
 const built=await build({stdin:{contents:"export {distinctSummary} from './src/research-writing';export {withAnswerLanguage} from './src/research-response';export {leadWithWho} from './src/research-who-lead';export {displayAnswerPayload} from './src/research-language'",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
 const api=await import('data:text/javascript;base64,'+Buffer.from(built.outputFiles[0].text).toString('base64'))
@@ -323,12 +324,14 @@ for(const pronoun of ['it','It','they','They','he','He','she','She','this','This
   }
 })
 
-for(const pronoun of ['it','It','they','They','he','He','she','She','this','This','these','These'])test('an identical opening keeps the subject of its pronoun tail: '+pronoun,()=>{
+for(const pronoun of ['it','It','they','They','he','He','she','She','this','This','these','These'])test('an identical opening keeps the subject of its pronoun tail: '+pronoun,async()=>{
   const opening='Labor voted no on 3 May 2023'
   const lines=[opening+'.',opening+`; ${pronoun} received 17 votes.`]
   const p=payload(lines),out=api.distinctSummary(p)
   assert.equal(out.answer,p.answer)
   assert.deepEqual(out.citations,p.citations);valid(out)
+  const boundary=await(await api.withAnswerLanguage(Response.json(p),'What happened in the vote?')).json()
+  assert.equal(boundary.answer,p.answer);assert.deepEqual(boundary.citations,p.citations);valid(boundary)
 })
 
 for(const tail of ['Kate Thwaites described 17 recommendations.','The department received 17 recommendations.'])test('a standalone name or noun phrase still permits an identical opening merge: '+tail,()=>{
@@ -365,7 +368,7 @@ test('a colon finding supports an existing sentence without being copied as a so
   assert.match(api.leadWithWho(omitted,question).answer,/^The cited sources do not name a person or office as responsible\./)
 })
 
-test('a commission finding leads ahead of a member assertion about a named minister',()=>{
+test('a commission finding leads ahead of a member assertion about a named minister',async()=>{
   const assertion='Minister Rowan Ellery failed every test of integrity in the recovery scheme.'
   const finding='The royal commission found that Cabinet approved the recovery scheme without legislative authority.'
   const p=payload([assertion,finding])
@@ -374,11 +377,13 @@ test('a commission finding leads ahead of a member assertion about a named minis
   assert.equal(out.answer,[finding,assertion].join('\n\n'))
   for(const id of Object.keys(p.citations))assert.deepEqual(cited(out,id),cited(p,id));valid(out)
   const only=payload([assertion]);Object.assign(only.sources[0],p.sources[0])
-  assert.equal(api.leadWithWho(only,question).answer,'The cited sources do not name a person or office as responsible.\n\n'+assertion)
+  assert.equal(api.leadWithWho(only,question).answer,assertion,'an existing supported statement stays eligible when there is no finding')
   // An unrelated record citation on the assertion cannot qualify its speech as a finding.
   p.citations['fact-1'].push([...p.citations['fact-0'][0]])
   const mixed=api.leadWithWho(p,question)
   assert.equal(mixed.answer.split('\n\n')[0],finding);valid(mixed)
+  const boundary=await(await api.withAnswerLanguage(Response.json(p),question)).json()
+  assert.equal(boundary.answer.split('\n\n')[0],finding);valid(boundary)
 })
 
 for(const negative of [
@@ -416,4 +421,88 @@ test('the no-subject fallback orders the actual finding before a member assertio
   const out=api.leadWithWho(p,question)
   assert.equal(out.answer,['The cited sources do not name a person or office as responsible.',lines[2],lines[0],lines[1]].join('\n\n'))
   for(const id of Object.keys(p.citations))assert.deepEqual(cited(out,id),cited(p,id));valid(out)
+})
+
+
+const boundaryAnswer=async(p,q=question)=>await(await api.withAnswerLanguage(Response.json(p),q)).json()
+
+test('ANAO McKenzie finding relayed in the House leads through the full answer boundary',async()=>{
+  const finding='Anthony Albanese told the House that the ANAO found that Bridget McKenzie approved grants.'
+  const p=payload(['The report described the grants programme.',finding])
+  Object.assign(p.sources[1],{kind:'speech',speaker:'Anthony Albanese',chamber:'representatives',title:'Grants debate'})
+  const out=await boundaryAnswer(p,'Who approved the grants?')
+  assert.equal(out.answer.split('\n\n')[0],finding)
+  assert.doesNotMatch(out.answer,/The cited sources do not name/)
+  for(const id of Object.keys(p.citations))assert.deepEqual(cited(out,id),cited(p,id));valid(out)
+})
+
+for(const body of ['Auditor-General','ANAO','Senate committee','NACC','ICAC','IBAC','CCC','CMC','NSW Independent Commission Against Corruption','South Australian Independent Commission Against Corruption','Northern Territory Independent Commissioner Against Corruption','Tasmanian Integrity Commission','ACT Integrity Commission','Corruption and Crime Commission','Crime and Corruption Commission'])test('a relayed finding stays eligible and can supply an omitted source lead: '+body,async()=>{
+  const finding=`Morgan Sample told the House that the ${body} found that Rowan Ellery approved the recovery grants.`
+  const p=payload(['The grants programme was examined in the inquiry.',finding])
+  Object.assign(p.sources[1],{kind:'speech',speaker:'Morgan Sample',chamber:'representatives',title:'Grants debate'})
+  const out=await boundaryAnswer(p,'Who approved the recovery grants?')
+  assert.equal(out.answer.split('\n\n')[0],finding)
+  assert.doesNotMatch(out.answer,/The cited sources do not name/);valid(out)
+  const omitted=payload(['The grants programme was examined in the inquiry.'])
+  const sourceFinding=`The ${body} found that Rowan Ellery approved the recovery grants.`
+  Object.assign(omitted.sources[0],{kind:'speech',speaker:'Morgan Sample',chamber:'representatives',title:'Grants debate',snippet:sourceFinding})
+  const recovered=await boundaryAnswer(omitted,'Who approved the recovery grants?')
+  assert.equal(recovered.answer.split('\n\n')[0],'Morgan Sample told the House of Representatives that '+sourceFinding.replace(/^The /,'the '))
+  assert.ok(recovered.answer.includes(omitted.answer));valid(recovered)
+})
+
+for(const statement of ['Morgan Sample told the House that Rowan Ellery approved the recovery grants.','Morgan Sample told the House that the ANAO found: Minister Rowan Ellery approved the recovery grants.'])test('an existing attributed member statement remains eligible: '+statement,async()=>{
+  const p=payload(['The grants programme was debated in the House.',statement])
+  Object.assign(p.sources[1],{kind:'speech',speaker:'Morgan Sample',chamber:'representatives',title:'Grants debate'})
+  const out=await boundaryAnswer(p,'Who approved the recovery grants?')
+  assert.equal(out.answer.split('\n\n')[0],statement)
+  assert.doesNotMatch(out.answer,/The cited sources do not name/)
+  for(const id of Object.keys(p.citations))assert.deepEqual(cited(out,id),cited(p,id));valid(out)
+})
+
+test('a supported surname sentence already in the answer moves first without a copied duplicate',async()=>{
+  const context='The member for Cook (Scott Morrison) was social services minister.'
+  const finding='Bill Shorten told the House that the commission found Mr Morrison allowed Cabinet to be misled.'
+  const p=payload([context,finding])
+  Object.assign(p.sources[1],{kind:'speech',speaker:'Bill Shorten',chamber:'representatives',title:'Robodebt debate',snippet:'The commission found Mr Morrison allowed Cabinet to be misled. The member for Cook was social services minister.'})
+  const out=await boundaryAnswer(p)
+  assert.equal(out.answer,[finding,context].join('\n\n'))
+  assert.equal(out.answer.split('allowed Cabinet to be misled').length-1,1)
+  assert.equal(Object.values(out.citations).flat().length,2)
+  for(const id of Object.keys(p.citations))assert.deepEqual(cited(out,id),cited(p,id));valid(out)
+  const again=await boundaryAnswer(out)
+  assert.equal(again.answer,out.answer);assert.deepEqual(again.citations,out.citations)
+})
+
+for(const negated of ['The commission found no evidence that Rowan Ellery approved the recovery scheme.','The commission rejected claims that Rowan Ellery approved the recovery scheme.','The commission rejected claims that Minister Rowan Ellery approved the recovery scheme.'])test('a rejected that-name claim is not promoted through the answer boundary: '+negated,async()=>{
+  const own='The royal commission found that Cabinet approved the recovery scheme without legislative authority.'
+  for(const lines of [[own,negated],[negated,own]]){
+    const p=payload(lines),out=await boundaryAnswer(p)
+    assert.equal(out.answer.split('\n\n')[0],own)
+    assert.ok(out.answer.includes(negated));valid(out)
+  }
+})
+
+test('a titled colon attack cannot supply a copied lead even beside a finding',async()=>{
+  const p=payload(['Morgan Sample told the House that the report described the recovery scheme.'])
+  Object.assign(p.sources[0],{kind:'speech',speaker:'Morgan Sample',chamber:'representatives',title:'Recovery debate',snippet:'The report found the scheme unlawful; I will say this plainly: Minister Rowan Ellery failed every test of integrity.'})
+  const out=await boundaryAnswer(p)
+  assert.equal(out.answer,'The cited sources do not name a person or office as responsible.\n\n'+p.answer)
+  assert.deepEqual(cited(out,'fact-0'),cited(p,'fact-0'));valid(out)
+})
+
+test('a lowercase semicolon tail keeps its opening through the answer boundary',async()=>{
+  const opening='Labor voted no on 3 May 2023'
+  const p=payload([opening+'.',opening+'; the bill received 17 votes.'])
+  assert.equal(api.distinctSummary(p).answer,p.answer)
+  const out=await boundaryAnswer(p,'What happened in the vote?')
+  assert.equal(out.answer,p.answer)
+  for(const id of Object.keys(p.citations))assert.deepEqual(cited(out,id),cited(p,id));valid(out)
+})
+
+test('review 3 leaves the live 182 answer byte-identical to 85e8822f7',async()=>{
+  const out=await boundaryAnswer(live182)
+  assert.equal(createHash('sha256').update(out.answer).digest('hex'),'9feab51ba9b760964b2cc6dd1829ee41e49c553cd6ede4d8e8ba868bddb775c3')
+  assert.deepEqual(Object.keys(out.citations),Object.keys(live182.citations))
+  assert.equal(Object.values(out.citations).flat().length,13);valid(out)
 })

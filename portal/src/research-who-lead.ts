@@ -23,16 +23,17 @@ const actorName=(value:string,context:string,evidence:string)=>{
   const role=new RegExp(String.raw`\b(member for [\p{L} '-]+)\s+\(${escape(held[0])}\)`,'iu').exec(context)?.[1]
   return role&&new RegExp('\\b'+escape(role)+'\\b','i').test(evidence)?held[0]:value
 }
-const negative=(before:string,after:string)=>/\b(?:cleared|exonerated|acquitted|no|not)\b[^.;]{0,65}$/i.test(before)||/^\s+(?:(?:was|were)\s+not|no)\b/i.test(after)
-const finding=(text:string)=>/\b(?:commission(?:er)?|court|inquiry|report|tribunal|ombudsman)\b[^.!?;]{0,200}\b(?:found|finds|findings|concluded|determined|ruled|criticised|rejected)\b/i.test(text)
+const negative=(before:string,after:string)=>/\b(?:cleared|exonerated|acquitted|no|not|(?:rejected|dismissed|denied) (?:claims?|allegations?))\b[^.;]{0,65}$/i.test(before)||/^\s+(?:(?:was|were)\s+not|no)\b/i.test(after)
+const finding=(text:string)=>/\b(?:commission(?:er)?|court|inquiry|report|tribunal|ombudsman|auditor[- ]general|anao|committees?|nacc|icac|ibac|ccc|cmc)\b[^.!?;]{0,200}\b(?:found|finds|findings|concluded|determined|ruled|criticised|rejected)\b/i.test(text)
 function actors(text:string,allowColon=false,context=''):string[] {
   // A speaker, commissioner or witness is not thereby the subject of a finding.
   if(!action.test(text))return []
   const match=namedRole.exec(text)
   const before=match?text.slice(0,match.index):'',after=match?text.slice(match.index+match[0].length):''
-  const role=match&&(action.test(after)||/\b(?:findings|conduct)\b[^.;]{0,60}\b(?:of|about|regarding|on|against)\s*$|\b(?:approved|authorised|authorized|ordered) by\s*$|\bcriticis(?:ed|es)\s*$/i.test(before))&&!negative(before,after)?match[1]:undefined
+  const role=match&&(allowColon||!/:\s*["“‘']?\s*$/.test(before))&&(action.test(after)||/\b(?:findings|conduct)\b[^.;]{0,60}\b(?:of|about|regarding|on|against)\s*$|\b(?:approved|authorised|authorized|ordered) by\s*$|\bcriticis(?:ed|es)\s*$/i.test(before))&&!negative(before,after)?match[1]:undefined
   // Colon quotations can corroborate an existing sentence, never nominate a copied lead.
-  const subject=new RegExp(String.raw`(?:^|${allowColon?':\\s*|':''}\b(?:that|found|concluded)\s+)(${name})\s+(?:approved|authorised|authorized|decided|ordered|allowed|misled|ignored|failed|breached)\b`,'u').exec(text)?.[1]
+  const subjectMatch=new RegExp(String.raw`(?:^|${allowColon?':\\s*|':''}\b(?:that|found|concluded)\s+)(${name})\s+(?:approved|authorised|authorized|decided|ordered|allowed|misled|ignored|failed|breached)\b`,'u').exec(text)
+  const subject=subjectMatch&&!negative(text.slice(0,subjectMatch.index),'')?subjectMatch[1]:undefined
   const conductMatch=new RegExp(String.raw`\b[Ff]indings (?:about|regarding|on|against) (?:the conduct of )?(${name}(?:\s+and\s+${name})?)`,'u').exec(text)
   const conduct=conductMatch&&!/\b(?:no|not|cleared|exonerated|acquitted)\b[^.;]{0,65}$/i.test(text.slice(0,conductMatch.index))&&!/^\s+(?:(?:was|were)\s+not|no)\b/i.test(text.slice(conductMatch.index+conductMatch[0].length))?conductMatch[1]:undefined
   const relativeMatch=new RegExp(String.raw`\((${name})\),\s+who\b[^.;]{0,300}?\b(?:approved|authorised|authorized|allowed|misled|ignored|failed|responsibility)\b`,'u').exec(text)
@@ -55,12 +56,12 @@ export function leadWithWho<T extends Record<string,unknown>>(payload:T,question
   const evidence=(s:Source)=>[s.snippet,s.title].filter(Boolean).join('\n')
   const support=(p:typeof parts[number])=>selected.filter(s=>Object.entries(citations).some(([id,r])=>(id===s.resource||id.startsWith(s.resource+'/'))&&r.some(([a,b])=>a<p.b&&b>p.a)))
   const candidates=parts.flatMap(p=>{
-    const named=actors(p.text),sources=support(p).filter(s=>s.kind==='record'||finding(p.text)&&finding(evidence(s)))
+    const named=actors(p.text,true).map(value=>actorName(value,answer,answer)),sources=support(p)
     const held=new Set(sources.flatMap(s=>actors(evidence(s),true,answer)))
     return named.length&&named.every(actor=>held.has(actor))?[{p,sources}]:[]
   })
-  // Prefer a named subject over an office, and the body's own record over a relayed finding.
-  const score=(text:string,ss:Source[])=>Number(actors(text).some(a=>a!=='Cabinet'))*2+Number(ss.some(s=>s.kind==='record'))
+  // Rank findings first without excluding an existing supported member statement.
+  const score=(text:string,ss:Source[])=>Number(finding(text))*4+Number(actors(text,true).some(a=>a!=='Cabinet'))*2+Number(ss.some(s=>s.kind==='record'))
   candidates.sort((a,b)=>score(b.p.text,b.sources)-score(a.p.text,a.sources))
   const candidate=candidates[0]
   if(candidate){
