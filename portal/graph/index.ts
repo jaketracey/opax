@@ -1205,7 +1205,14 @@ export async function mountMoneyMap(
   let visibleSceneIds = new Set<string>()
   let visibleSceneEdges: MapEdge[] = []
   const overviewScale = () => phoneStep && container.getBoundingClientRect().width <= 540 ? 1.3 : 1
-  const pushData = ({ keepFocus = false } = {}) => {
+  let preparingFirstData = true
+  let resizeDuringPreparation = false
+  let firstPushStarted = false
+  let pendingFirstPush = false
+  const pushData = async ({ keepFocus = false } = {}) => {
+    if (destroyed || opts.signal?.aborted || opts.isCurrent?.() === false) return
+    if (preparingFirstData && firstPushStarted) { pendingFirstPush = true; return }
+    firstPushStarted = true
     // A scrub step, a filter or a re-layout is the reader driving: the
     // choreography gives way rather than animating over the top of it.
     cancelReveal()
@@ -1265,7 +1272,10 @@ export async function mountMoneyMap(
     }
     visibleSceneIds = visibleIds
     visibleSceneEdges = visibleEdges
-    engine.setData(data)
+    if (preparingFirstData) {
+      const applied = await engine.setDataCooperatively(data, () => !pendingFirstPush && !destroyed && !opts.signal?.aborted && opts.isCurrent?.() !== false)
+      if (!applied || pendingFirstPush || destroyed || opts.signal?.aborted || opts.isCurrent?.() === false) return
+    } else engine.setData(data)
     syncUrlState()
     opts.onViewChange?.({ ...raw, nodes: windowNodes, edges: windowEdges }, { ...researchFilters, industry: activeGroup || '' }, { from: yearLo, to: yearHi, cpi: adjustForInflation })
     // The fit signature deliberately excludes the year window: refitting the
@@ -1315,11 +1325,18 @@ export async function mountMoneyMap(
 
   let lastBucket = aspectBucket()
   const resizeObserver = new ResizeObserver(() => {
+    if (destroyed || opts.signal?.aborted || opts.isCurrent?.() === false) return
     // A hidden host (display:none while an ask runs, or behind another panel)
     // measures 0x0; that is not a new aspect, and re-laying out for it would
     // scatter the graph twice per round trip. Keep the layout for its return.
     const rect = container.getBoundingClientRect()
     if (rect.width < 1 || rect.height < 1) return
+    if (preparingFirstData) {
+      reserveScrubRoom()
+      resizeDuringPreparation = true
+      if (aspectBucket() !== lastBucket) pendingFirstPush = true
+      return
+    }
     reserveScrubRoom()
     // The chrome reflows with the host (the legend becomes a top row on
     // narrow screens), so the free area is re-measured on every resize; a
@@ -2506,11 +2523,29 @@ export async function mountMoneyMap(
     engine.fit(!engine.reducedMotion)
   }
 
-  pushData()
+  // A resize or filter during warm-up replaces the pending layout. Complete
+  // the latest one before exposing the map handle or its first frame.
+  reserveScrubRoom()
+  lastBucket = aspectBucket()
+  for (;;) {
+    firstPushStarted = false
+    pendingFirstPush = false
+    await pushData()
+    if (destroyed || opts.signal?.aborted || opts.isCurrent?.() === false) break
+    const bucket = aspectBucket()
+    if (!pendingFirstPush && bucket === lastBucket) break
+    lastBucket = bucket
+  }
+  preparingFirstData = false
+  if (resizeDuringPreparation && !destroyed && !opts.signal?.aborted && opts.isCurrent?.() !== false) {
+    reserveScrubRoom()
+    engine.setInsets(measureInsets())
+    if (!engine.viewOwned) engine.fit(false, overviewScale())
+  }
 
   // The embed seed: mount already-selected with the camera on the node.
   // Deliberately silent - the host asked for it, so it is not an event.
-  if (opts.focus && byId.has(opts.focus)) {
+  if (!opts.signal?.aborted && opts.isCurrent?.() !== false && opts.focus && byId.has(opts.focus)) {
     setSelection(opts.focus)
     if (revealWanted) startReveal(opts.focus)
   }

@@ -13,6 +13,7 @@ export const webglAvailable = () => globalThis.__testMoneyMapWebgl !== false
 export const easeInOut = (t) => t
 const answers = { viewOwned: false, focusOwned: false, reducedMotion: true, viewAngles: { theta: 0, phi: 1 } }
 export class KnowledgeMapEngine {
+  async setDataCooperatively(_data, isCurrent = () => true) { return isCurrent() }
   constructor() {
     return new Proxy(this, { get: (target, key) => key in target ? target[key] : key in answers ? answers[key] : () => null })
   }

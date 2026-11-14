@@ -3,6 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import {runInNewContext} from 'node:vm';
 import { JSDOM } from 'jsdom';
 import { workerFetch } from './helpers/worker-fetch.mjs';
 import { CONTRACTS_COVERAGE } from '../public/contracts-table.js';
@@ -140,4 +141,13 @@ test('on a phone the open Money tab is centred in its strip, and a strip that fi
   nav.revealCurrentTab(fits);
   assert.equal(fits.scrollLeft, 0);
   nav.revealCurrentTab(null);
+});
+
+
+test('absent and detached Money strips do not read font readiness or layout',()=>{
+  const source=read('navigation.js'),start=source.indexOf('  function revealCurrentTab('),end=source.indexOf('\n  }',start)+4;
+  let reads=0;
+  const reveal=runInNewContext(source.slice(start,end)+';revealCurrentTab',{document:{get fonts(){reads++;return {ready:{then(){}}};}}});
+  reveal(null);reveal(undefined);reveal({isConnected:false,querySelector:()=>assert.fail('departed strip was measured')});
+  assert.equal(reads,0,'FontFaceSet.ready can force a full style/layout flush');
 });
