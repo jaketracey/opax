@@ -188,21 +188,13 @@ export const componentPairs: ColourPair[] = [
   pair('Composer send arrow', 'pressed', 'onNavy', 'navyRaised'),
   pair('Composer send arrow', 'disabled', 'inkSoft', 'sunken'),
 
-  // iPad split lists (LinkRow, PersonRow, BillRow): the selected row takes
-  // its category's wash and a 3pt mark in the category's ink.
-  ...(
-    [
-      ['navy', 'navyWash'],
-      ['billsInk', 'billsWash'],
-      ['moneyInk', 'moneyWash'],
-      ['votesInk', 'votesWash'],
-      ['interestsInk', 'interestsWash'],
-    ] as const
-  ).flatMap(([mark, wash]) => [
-    pair('Split row title', 'selected', 'ink', wash),
-    pair('Split row metadata', 'selected', 'inkSoft', wash),
-    pair('Split row selected mark', 'selected', mark, wash, 'non-text'),
-  ]),
+  // iPad split lists (LinkRow, PersonRow, BillRow, directory rows): the
+  // selected row is the rounded navy wash in a 1pt outline, in every list.
+  // The wash is under 3:1 against the page, so the outline carries the
+  // selected state (WCAG 1.4.11).
+  pair('Split row title', 'selected', 'ink', 'navyWash'),
+  pair('Split row metadata', 'selected', 'inkSoft', 'navyWash'),
+  pair('Split row outline', 'selected', 'lineControl', 'paper', 'non-text'),
   pair(
     'Party directory receipts, selected',
     'selected',

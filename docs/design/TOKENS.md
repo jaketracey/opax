@@ -71,8 +71,9 @@ Host CoreText word-width fixtures for the ten dense screen types are in `text-fi
 | text | `--link` | `link` | #142A43 | #9CB9DB |  | Semantic link tone, always the single navy tint. |
 | brand | `--navy` | `navy` | #142A43 | #9CB9DB |  | Structure and the one primary action per view. |
 | brand | `--navy-raised` | `navyRaised` | #1D3A5C | #B9CDE6 |  | Pressed and hover on navy. |
-| brand | `--navy-wash` | `navyWash` | #E4E6E7 | #25303D |  | Secondary button fill; the people accent's wash. |
+| brand | `--navy-wash` | `navyWash` | #E4E6E7 | #25303D | #D3D9DF / #2E3C4C | Secondary button fill; the people accent's wash; the selected row in a split list. |
 | brand | `--bronze` | `bronze` | #A0761B | #A87D2A |  | Brand artwork only: mark, icon and launch screen. |
+| brand | `--today-dot-bronze` | `todayDotBronze` | #C08F2C | #C08F2C |  | Today's decorative dot map highlight, at 76 percent opacity over a navy base at 23 percent. |
 | brand | `--bronze-ink` | `bronzeInk` | #8A5A12 | #D9A84A | #5C4318 / #EBC57F | Brand artwork only: mark, icon and launch screen. |
 | brand | `--bronze-wash` | `bronzeWash` | #ECE4D3 (web `rgba(160, 118, 27, 0.16)`) | #332A1B |  | Brand artwork only: mark, icon and launch screen. |
 | brand | `--bronze-rule` | none | rgba(160, 118, 27, 0.55) | rgba(217, 168, 74, 0.55) |  | Link underlines on the web: present, not heavy. |
@@ -123,7 +124,7 @@ Heading face: `system`. iOS interface families are unset; Android uses Public Sa
 | `figure` | sans | 700 | 34 / 41 | largeTitle | ink | yes |
 | `tileFigure` | sans | 600 | 22 / 28 | title2 | ink | yes |
 
-37 colour roles in 7 groups; 6 categories, 4 status tones, 16 industry hues, 8 parties (dot + wash); 18 type roles over 7 sizes; 9 rhythm steps; 9 radii (container, tile, thumb, bar, capsule, round, sm, md, pill); 6 durations and 1 curve; 1 shadow.
+38 colour roles in 7 groups; 6 categories, 4 status tones, 16 industry hues, 8 parties (dot + wash); 18 type roles over 7 sizes; 9 rhythm steps; 9 radii (container, tile, thumb, bar, capsule, round, sm, md, pill); 6 durations and 1 curve; 1 shadow.
 
 ### Deprecated web names
 

@@ -20,7 +20,6 @@ import { ApiError } from '../../api/errors';
 import {
   Button,
   ContentUnavailable,
-  Divider,
   EmptyState,
   LayoutRegion,
   OfflineLine,
@@ -35,6 +34,7 @@ import {
   useLayout,
   type SFSymbol,
 } from '../../design/primitives';
+import { useSplitSeparator } from '../../design/selection';
 import { useListSearchBar } from '../../design/search-bar';
 import type { SourceDetails } from '../../design/source';
 import { StatePageProvider } from '../../design/states';
@@ -138,7 +138,6 @@ function DirectoryRow({
     />
   );
 }
-const separator = () => <Divider variant="subtle" />;
 function SectionTitle({ section }: { section: SectionListData<Row, Section> }) {
   return section.title ? (
     <View style={styles.sectionHeader}>
@@ -320,6 +319,16 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
   const split = useLayout().split;
   const selected = decodeEntry(params.open);
   const selectedKey = selected ? encodeEntry(selected) : null;
+  const listed = useMemo(
+    () => sections.flatMap((section) => section.data),
+    [sections],
+  );
+  const separator = useSplitSeparator(
+    listed,
+    split && selectedKey
+      ? (row) => encodeEntry(entryFor(row)) === selectedKey
+      : null,
+  );
   const listRef = useRef<SectionList<Row, Section>>(null);
   const visible = useRef(new Set<string>());
   // SectionList needs one stable callback for its whole life.

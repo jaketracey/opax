@@ -110,11 +110,11 @@ const edition: EditionView = {
   cardTitle: 'Richard Marles',
   shortTitle: null,
   path: '/person/richard-marles',
-  paragraphs: ['Richard Marles: 793 speeches in the OPAX record.'],
+  paragraphs: ['MP for Corio, in Victoria. 793 speeches to read.'],
   machineWritten: null,
   sourceRows: [],
   facts: {
-    kicker: 'Parliamentarian · Corio, VIC',
+    kicker: 'Parliamentarian',
     line: 'Labor',
     figures: [],
     bars: null,
@@ -465,11 +465,11 @@ describe('neutral daily featured selection', () => {
     expect(
       selected.find((person) => person.slug === 'centre-member')!.edition
         .paragraphs,
-    ).toEqual(['Explore their parliamentary record.']);
+    ).toEqual(['MP for Example, in Victoria.']);
     expect(
       selected.find((person) => person.slug === 'nation-member')!.edition
         .paragraphs[0],
-    ).toContain('0 speeches');
+    ).toBe('MP for Example, in Victoria.');
     for (const person of people.slice(1)) {
       expect(person.source).toMatchObject({
         asOf: '2026-11-09',

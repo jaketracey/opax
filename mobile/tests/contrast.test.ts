@@ -13,6 +13,8 @@ import {
   partyColors,
   type Palette,
 } from '../src/design/palette';
+import { selectedWash } from '../src/design/selection';
+import { colors } from '../src/design/tokens';
 import { contrastRules } from '../src/design/tokens.generated';
 
 const ratio = (a: string, b: string) =>
@@ -157,5 +159,28 @@ describe.each(Object.entries(themes))(
             contrastRatio(palette[fg], palette[bg]),
           ).toBeGreaterThanOrEqual(7);
     });
+  },
+);
+// The selected split row (b66): its wash is under 3:1 against the page, so
+// the 1pt outline carries the selected state. Removing the outline's pair
+// from the table, or the outline from selectedWash, fails here.
+test.each(Object.entries(themes))(
+  'the selected split row’s outline is 3:1 against the page in %s',
+  (_, palette) => {
+    const outline = componentPairsFor(palette).find(
+      (pair) => pair.use === 'Split row outline',
+    );
+    expect(outline).toMatchObject({
+      foregroundRole: 'lineControl',
+      background: 'paper',
+      kind: 'non-text',
+      state: 'selected',
+    });
+    expect(selectedWash().borderColor).toBe(colors.lineControl);
+    expect(
+      contrastRatio(outline!.foreground, palette.paper),
+    ).toBeGreaterThanOrEqual(3);
+    // The wash alone could not carry it.
+    expect(contrastRatio(palette.navyWash, palette.paper)).toBeLessThan(3);
   },
 );

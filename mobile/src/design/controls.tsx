@@ -1918,12 +1918,15 @@ export function Composer({
 /**
  * Content rules. Default between major sections, subtle for rows and
  * subheadings, accent (bronze) only for intentional emphasis. Layouts own the
- * spacing around them.
+ * spacing around them. `clear` keeps the hairline's space but draws nothing:
+ * the rule beside a selected split row, as iOS hides a selected cell's.
  */
 export function Divider({
   variant = 'default',
+  clear = false,
 }: {
   variant?: 'default' | 'subtle' | 'accent';
+  clear?: boolean;
 }) {
   return (
     <View
@@ -1933,8 +1936,9 @@ export function Divider({
       style={{
         height: hairline,
         alignSelf: 'stretch',
-        backgroundColor:
-          variant === 'subtle'
+        backgroundColor: clear
+          ? 'transparent'
+          : variant === 'subtle'
             ? colors.dividerSubtle
             : variant === 'accent'
               ? colors.navy
