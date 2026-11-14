@@ -38,6 +38,17 @@ GATE_STUB = r'''build_command() {
   "$@"
 }
 '''.replace('TRACE', TRACE.replace('TOOL', '"gate"'))
+def plain_env():
+    """The caller's environment without its PostHog variables or locale, with a
+    locale every host has: a session that forwards one the host lacks (as ssh
+    from the Mac does to the desktop) makes each bash warn into the logs these
+    tests compare."""
+    env = {name: value for name, value in os.environ.items()
+           if not name.startswith(('POSTHOG_', 'LC_')) and name != 'LANG'}
+    env['LC_ALL'] = 'C'
+    return env
+
+
 SKIP = 'Crash symbols: not uploaded (OPAX_UPLOAD_SYMBOLS=0; only the release run sets 1). To upload them, run from mobile/: '
 
 
@@ -188,7 +199,7 @@ if os.environ.get('ATTACK')=='head': subprocess.run(['git','commit','--allow-emp
         git('init', '-q'); git('config', 'user.email', 'fixture@example.invalid'); git('config', 'user.name', 'Release fixture')
         git('add', '.'); git('commit', '-qm', 'fixture')
         home = root/'home'; home.mkdir()
-        env = {**{name: value for name, value in os.environ.items() if not name.startswith('POSTHOG_')},
+        env = {**plain_env(),
                'HOME':str(home), 'OPAX_TEST_TRACE':str(root/'trace.jsonl'),
                'JAVA_HOME':str(java.parent.parent), 'ANDROID_HOME':str(root/'sdk'),
                'OPAX_ANDROID_VERSION_CODE':'2026111001', 'OPAX_PRODUCTION_VOICE':'1',
@@ -357,10 +368,10 @@ if os.environ.get('ATTACK')=='head': subprocess.run(['git','commit','--allow-emp
             log = Path(d)/'log'
             started = time.monotonic()
             with self.assertRaisesRegex(ReleaseError, 'timed out after 1 seconds'):
-                run_logged(['bash', '-c', 'echo started; sleep 60 & wait'], log, timeout=1)
+                run_logged(['bash', '-c', 'echo started; sleep 60 & wait'], log, env=plain_env(), timeout=1)
             self.assertLess(time.monotonic() - started, 30)
             self.assertEqual(log.read_text().splitlines(), ['started', 'Timed out after 1 seconds; the command was stopped.'])
-            run_logged(['bash', '-c', 'echo quick'], log, timeout=30)
+            run_logged(['bash', '-c', 'echo quick'], log, env=plain_env(), timeout=30)
             self.assertEqual(log.read_text(), 'quick\n')
 
     def test_build_play_without_a_key_logs_the_skip_line_and_passes(self):
