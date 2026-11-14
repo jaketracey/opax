@@ -13,6 +13,7 @@ import { inferPeriod } from './ask-period'
 import { divisionVoteSource } from './research-record-answer'
 import {isEvidenceGap} from './ask-evidence'
 import {hearingEvidenceQuestion} from './transcript-answer'
+import { openingLineOf, withOpeningLine, withoutOpeningLine, OPENING_LINE_BREAK } from './research-opening-line'
 
 function plannerPayload(payload: Record<string, unknown>, previous?: ResearchPayload): Record<string, unknown> {
   if (payload.research) return payload
@@ -224,6 +225,13 @@ export async function withAnswerLanguage(response: Response,question?:string,ask
 
 /** The same public checks run on each research sentence prefix and on the final payload. */
 export function checkedAnswerPayload(payload:Record<string,unknown>,question?:string,partial=false,fixedPrefix=''):Record<string,unknown> {
+    // A shown opening line is not answer prose to check: the answer after it is checked as if it stood alone, against
+    // the released text after the line, and the line goes back in front unchanged.
+    const opening=openingLineOf(payload)
+    if(opening){
+      const lead=opening+OPENING_LINE_BREAK
+      return withOpeningLine(checkedAnswerPayload(withoutOpeningLine(payload),question,partial,fixedPrefix.startsWith(lead)?fixedPrefix.slice(lead.length):''),opening)
+    }
     const ensure=(value:Record<string,unknown>)=>partial?value:ensureAnswerText(value,question)
     payload=ensure(payload)
     if(!question||calculatedPayAnswer(payload))return displayAnswerPayload(ensure(plainAnswerPayload(payload)))
@@ -274,6 +282,9 @@ async function mapResearchResponse(response: Response, augment: (payload: Record
       }
       return ''
     }
+    // An error after released text can only follow an opening line: research that has shown an answer sentence ends
+    // on a checked done instead. The line is withdrawn first, as released text is on any retry.
+    if(validateBeforeText&&researchSentences&&released&&/^event: error$/m.test(value)){reset();return 'event: retry\ndata: '+JSON.stringify({reason:'opening_line'})+separator+value}
     if (!/^event: done$/m.test(value)) return value
     let unchanged=false,tail=''
     const done=value.replace(/^data: (.+)$/m, (_line, data: string) => {

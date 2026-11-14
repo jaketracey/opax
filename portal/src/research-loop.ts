@@ -17,7 +17,7 @@ import { TOOL_SPECS, validToolArgs, toolArgProblem, type ToolDeps, type ToolResu
 import { getAskTool } from './tools'
 import { searchPartyLabels } from './party-labels'
 import { rosterPerson } from './roster-person'
-import { classifyAgentic, factSheet, resolveArgs, type PlanStep } from './agentic-ask'
+import { classifyAgentic, factSheet, resolveArgs, stepEvent, type PlanStep } from './agentic-ask'
 import { firstSpeechTurn } from './position-evidence'
 import type { ResearchContext } from './research-types'
 import { originalContext } from './ask-evidence'
@@ -40,6 +40,7 @@ import { broadTopicOverview, overviewResearchHint, overviewContextOnly, overview
 import { modelProse, usableProse } from './research-text-answer'
 import { generateResearchText, answerEntryScanner, researchPreviewGuard } from './research-generation'
 import { interruptedResearchAnswer } from './research-sentence-stream'
+import { requestOpeningLine } from './research-opening-line'
 
 /** What each answer field holds, for the answer tool and for an answer written as reply text. */
 const ANSWER_FIELDS = 'facts: structured record fact ids whose figures answer the question, each selected once. points: 2 to 8 complete sentences in Australian English (4 to 8 for a broad topic overview), the first answering the question directly. Cite a point with the id of the passage that supports it, or "fact-N" for record fact N, and a phrase of 5 to 25 words copied exactly from it; a point of context or background from general knowledge carries no id. '
@@ -558,6 +559,21 @@ export function createResearch(options: ResearchOptions): Research {
       return {research:{who_basis:basis.who_basis}}
     }
     const pendingAnswers=new Map<string,{allowed:boolean;scanner:ReturnType<typeof answerEntryScanner>;points:unknown[]}>()
+    // The opening line (research-opening-line.ts) is asked for once, when round 1 has chosen its lookups, from the
+    // question and those lookups' fixed step labels. It runs beside research and nothing here waits for it.
+    let openingAsked=false
+    const askOpening=(content:unknown)=>{
+      const hook=context.progress.opening
+      if(openingAsked||!hook||!options.model||!Array.isArray(content))return
+      openingAsked=true
+      const lookups=content.map(object).filter(part=>part.type==='tool-call')
+      // A first turn that answers, finishes or declines has no research to frame.
+      if(!lookups.length||lookups.some(call=>['answer','finish','decline'].includes(String(call.toolName))))return
+      const reading=[...new Set(lookups.flatMap(call=>{try{const label=stepEvent({tool:String(call.toolName),args:object(call.input)},0).label;return label?[label]:[]}catch{return []}}))]
+      const work=requestOpeningLine({model:options.model,question,reading,hook,stats,dailyBudget:options.dailyBudget,inputPrice,outputPrice,signal:context.signal})
+      if(options.cleanup)options.cleanup(work)
+      else void work
+    }
     // Reply text held until it shows whether it opens as an answer object.
     const replyHeads=new Map<string,string>()
     tools.finish = tool({ description: 'Finish a numerical ranking or trend answer by selecting existing fact ids. The selected fact ids supply the final figures and answer text. Include each requested entity and metric.',
@@ -806,6 +822,7 @@ export function createResearch(options: ResearchOptions): Research {
         onLanguageModelCallEnd: event => {
           stats.usageUnknown = false
           heardProse(event.content)
+          if (round === 1) askOpening(event.content)
           stats.tokens.input += event.usage.inputTokens ?? reservedInput; stats.tokens.output += event.usage.outputTokens ?? reservedOutput
           const usage = object(object(event.providerMetadata?.openrouter).usage)
           const receipt = typeof usage.cost === 'number' && Number.isFinite(usage.cost) && usage.cost >= 0 ? usage.cost : undefined

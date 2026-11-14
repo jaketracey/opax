@@ -9,6 +9,7 @@
 // IDs or literal questions are accepted. --questions PATH selects a regression set.
 // --serve starts the server without Asks; --portal PATH selects a detached baseline checkout.
 // --check-assets builds the slim asset folder, prints its file count and skip list, and exits.
+// --no-opening-line turns the ASK_OPENING_LINE kill switch off for this server, to compare a stream without the line.
 // --stream asks over SSE (?stream=1) and prints the event timeline: first status, first delta, done, retries.
 // --start-only starts wrangler dev, waits for its health URL, reports the time and stops it
 // before any question (no model call); add --local-data to keep it off remote bindings too.
@@ -132,7 +133,7 @@ export default { ...worker, fetch(request, env, ctx) {
   // and stop here with a clear message if it would still be too large.
   const {files} = slimAssets();
   console.error(`Research asset folder: ${files} files.`);
-  cfg.vars = {...cfg.vars, INDEXNOW_ENABLED: 'false', INDEXNOW_DRY_RUN: 'true'};
+  cfg.vars = {...cfg.vars, INDEXNOW_ENABLED: 'false', INDEXNOW_DRY_RUN: 'true', ...(args.includes('--no-opening-line') ? {ASK_OPENING_LINE: 'off'} : {})};
   cfg.assets = {...cfg.assets, directory: './.research-assets'};
   // Lives in portal/ (gitignored) so relative paths and .dev.vars resolve as for the real config.
   const path = portal + 'research-local.wrangler.jsonc';

@@ -80,6 +80,8 @@ interface Env {
   /** Models operator eval requests may select with x-opax-research-model: a JSON map {slug: {provider?, reasoning?}} or a comma list. */
   RESEARCH_LOOP_MODEL_ALLOW?: string
   RESEARCH_LOOP_SHADOW_RATE?: string
+  /** Kill switch for the opening line of a streamed research answer: "on" shows it; unset or anything else does not. */
+  ASK_OPENING_LINE?: string
   /** Request-local shadow policy; not a deployed binding. */
   RESEARCH_SHADOW?: boolean
   /** Request-local policy, created only after operatorAuthorized passes. */
