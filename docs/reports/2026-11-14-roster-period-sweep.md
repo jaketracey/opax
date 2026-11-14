@@ -2,6 +2,8 @@
 
 Reviewed 14 November 2026, on top of `9412816c8196d5b0a057b57d2d8c7e8ce20adf27`. This supersedes the Benjamin Hood hold in [the initial evidence report](2026-11-14-sa-council-evidence.md).
 
+The cutoff, interval-match and raw-cache findings below describe the original sweep. Their follow-up dispositions are recorded in [the roster provenance report](2026-11-14-roster-provenance.md). The Fraser Anning windows remain held.
+
 ## Proven correction
 
 Benjamin Hood's accepted Council start is now **2023-03-07**, replacing **2026-11-13**, the date the official list first observed him. His published first recorded-service year is now **2023**. His [SA Parliament member record](https://www.parliament.sa.gov.au/Search/Member?id=7056&type=member) states “Date Elected 07 March 2023” and electoral history from 7 March 2023 to current, Member, Legislative Council. It names Benjamin (Ben) Robin Hood, distinct from Dennis Garry Edward Hood.

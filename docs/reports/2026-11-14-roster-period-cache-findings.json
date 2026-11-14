@@ -1,6 +1,6 @@
 {
   "reviewed": "2026-11-14",
-  "note": "Derived read-only audit findings, not corrected term facts. The primary fetched pages and raw database/log extracts remain outside the repo. These lists make every reported cache signal and owed metadata record reviewable with the commit.",
+  "note": "Derived read-only audit findings, not corrected term facts. The primary fetched pages and raw database/log extracts remain outside the repo. These lists make every reported cache signal and owed metadata record reviewable with the commit. Initial sweep evidence is retained here. Current-person cutoffs are now observation metadata in scripts/handbook_party_service.json. Interval and raw-row dispositions are in 2026-11-14-roster-provenance-findings.json.",
   "raw_member_signal_counts": {
     "members_with_signal": 2002,
     "counts": {

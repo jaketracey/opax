@@ -181,6 +181,20 @@ def names_of(ind: dict, member: dict | None) -> list[str]:
     return kept
 
 
+def service_metadata(ind: dict, fetched: str) -> dict:
+    """Current-person ServiceHistory_End is a synthesised observation cutoff.
+
+    The cached API gives the fetch day even for people still in Parliament.
+    Keep that day out of the service-end field, including on future rebuilds.
+    InCurrentParliament describes the person, not necessarily their Senate seat.
+    """
+    current = str(ind.get("InCurrentParliament")).lower() == "true"
+    if current:
+        return {"service_end": None, "observed_through": fetched,
+                "service_end_basis": "open-current-person; synthesised cutoff is observation only"}
+    return {"service_end": day(ind.get("ServiceHistory_End"))}
+
+
 def build(raw: dict, members: list[dict]) -> dict:
     fetched = str(raw["fetched"])[:10]
     by_phid: dict[str, list[dict]] = {}
@@ -217,7 +231,7 @@ def build(raw: dict, members: list[dict]) -> dict:
         people.append({"phid": str(ind["PHID"]), "pid": pid, "match": basis if pid else None,
                        "name": names_of(ind, member_by_pid.get(pid))[0] if names_of(ind, member_by_pid.get(pid)) else ind.get("DisplayName"),
                        "names": names_of(ind, member_by_pid.get(pid)), "current": current,
-                       "service_end": end, "periods": periods, "undated": sorted(set(undated))})
+                       **service_metadata(ind, fetched), "periods": periods, "undated": sorted(set(undated))})
     people.sort(key=lambda p: (p["name"], p["phid"]))
     return {"source": "Parliamentary Handbook API, records of service (ROSTypeID 11, parliamentary party)",
             "url": HANDBOOK + f"recordsofservice?$filter=ROSTypeID eq {PARTY_TYPE}",
@@ -227,7 +241,10 @@ def build(raw: dict, members: list[dict]) -> dict:
             "note": ("Party periods for every senator whose service reaches 2006 or later. `from` to `fetched` is the dated range: Senate divisions inside it are checked against these records. A period runs from start "
                      "to the day before end; an open period runs to `through` (the end of service, or the fetch "
                      "date while the senator still sits). A record with neither date gives no period (its party is listed in `undated`); one with only an end runs from the start of service. Built by "
-                     "scripts/build_handbook_parties.py; read by scripts/vote_parties.py."),
+                     "scripts/build_handbook_parties.py; read by scripts/vote_parties.py. Current-person "
+                     "ServiceHistory_End cutoffs are synthesised observations: service_end is null and "
+                     "observed_through holds the fetch day. Current means the person is in Parliament, "
+                     "not necessarily still in the Senate."),
             "people": people}, unmatched, sorted(unlabelled)
 
 

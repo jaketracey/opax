@@ -835,6 +835,31 @@ class HandbookBuild(unittest.TestCase):
         self.assertEqual(unlabelled, [])
         self.assertEqual(json.loads(H.dump(doc)), doc)
 
+    def test_current_person_cutoffs_cannot_be_exported_as_service_ends(self):
+        raw = self.raw()
+        # A later fetch must not reintroduce its day as a retirement either.
+        for fetched in ("2026-11-13", "2027-01-20"):
+            raw["fetched"] = fetched
+            raw["individuals"][0]["ServiceHistory_End"] = fetched
+            doc, _, _ = H.build(raw, [])
+            current, = [p for p in doc["people"] if p["current"]]
+            self.assertIsNone(current["service_end"])
+            self.assertEqual(current["observed_through"], fetched)
+            self.assertIn("observation only", current["service_end_basis"])
+            self.assertIsNone(current["periods"][-1]["end"])
+            self.assertEqual(current["periods"][-1]["through"], fetched)
+            retired, = [p for p in doc["people"] if not p["current"]]
+            self.assertEqual(retired["service_end"], "2025-06-30")
+
+    def test_committed_current_person_metadata_has_no_retirement_date(self):
+        doc = json.loads((ROOT / "scripts/handbook_party_service.json").read_text())
+        current = [p for p in doc["people"] if p["current"]]
+        self.assertEqual(len(current), 81)
+        for person in current:
+            self.assertIsNone(person["service_end"], person["name"])
+            self.assertEqual(person["observed_through"], doc["fetched"])
+            self.assertIn("observation only", person["service_end_basis"])
+
     def test_a_refused_or_rate_limited_request_stops_without_a_retry(self):
         calls = []
         def refuse(code):
