@@ -416,12 +416,14 @@ export function useTitleOnScroll(
     Platform.OS === 'ios' ? (backTitleOverride ?? namedBackTitle) : undefined;
   const headerHeight = useHeaderBottom();
   // The iPhone Duo's side rail (b67): the status bar, tabs and bar items sit
-  // on the vertical rail, but the back pill and title stay in a horizontal
-  // bar at the top (24-82 pt on the outer display, measured b65), and the
-  // native header height is that bar's bottom edge. So the title reveals as
-  // on iPhone: hidden while the heading is on screen, faded in once it has
-  // gone under the bar. With the items on the rail, the bar keeps no room
-  // for them.
+  // on the vertical rail, and the title in a band at the top (24-82 pt on
+  // the outer display, b65), whose bottom edge is the native header height.
+  // A plain string title there sat above the page's own heading at rest (the
+  // double title), so the rail takes the iPhone path: hidden while the
+  // heading is on screen, faded in once it has gone under the bar. On the
+  // outer display UIKit folds the band away as the page scrolls (before and
+  // after b67), so the page shows its heading alone. The band keeps no room
+  // for items, which are on the rail.
   const verticalBar = useVerticalBarEdge() !== 'unspecified';
   const barTrailingWidth = verticalBar ? 0 : trailingWidth;
   const [anchor, setAnchor] = useState<number | null>(null);

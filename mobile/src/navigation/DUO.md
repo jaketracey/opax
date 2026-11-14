@@ -20,14 +20,18 @@ titles. The custom horizontal backing is removed. The native backing also
 rejects a bar whose measured bounds are vertical before a JS event arrives.
 Normal horizontal bars retain their existing collapse behaviour.
 
-Pushed screens keep a horizontal bar at the top for the back pill and title
-(24 to 82 pt on the outer display, measured in b65); the status bar, tabs and
-bar items move to the rail. `HeaderHeightContext` is that bar's bottom edge
-(react-native-screens reports the bar's origin plus its height), so
-`useTitleOnScroll` reveals the bar title exactly as on iPhone: hidden while the
-page's heading is on screen, faded in once it has gone under the bar (b67).
-The title's width keeps no room for trailing items there, as they are on the
-rail. Screens without an in-content heading keep their stack title.
+On a pushed record page the status bar, tabs, back button and bar items move
+to the rail, and the title sits in a band at the top (24 to 82 pt on the outer
+display, measured in b65). `HeaderHeightContext` is that band's bottom edge
+(react-native-screens reports the bar's origin plus its height). A plain
+string title there drew a small title above the page's own heading at rest:
+the double title of b67. `useTitleOnScroll` now reveals the bar title exactly
+as on iPhone: hidden while the page's heading is on screen, faded in once it
+has gone under the bar. On the outer display UIKit folds the band away once the
+page scrolls (captured before and after b67), so there the page shows only its
+own heading. The title's width keeps no room for trailing items, as they are on
+the rail. Screens without an in-content heading (Ask, search results) keep
+their stack title, which UIKit draws in the band.
 
 Toolbar items use the native item API with both `label` and symbol. Expo's
 `useHeaderConfigProps.js` maps `label` to native `title`; an accessibility label
