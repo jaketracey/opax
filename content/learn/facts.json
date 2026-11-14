@@ -917,7 +917,7 @@
   },
   {
    "id": "opax-lapsed-status",
-   "claim": "OPAX shows each bill's status from Parliament's bill records, such as lapsed; none of the 1,076 lapsed bills has a royal assent date or an Act.",
+   "claim": "OPAX shows each bill's status from Parliament's bill records, such as lapsed. A bill marked lapsed did not become law; a bill with the same title can be brought in again, and some then pass.",
    "status": "sourced",
    "quotes": [
     {
@@ -929,7 +929,7 @@
      "quote": "\"status\": \"lapsed\""
     }
    ],
-   "derived": "1,076 bills in portal/public/bills/au-federal-*.json have status \"lapsed\"; none has a royal_assent stage or an entry in acts.",
+   "derived": "1,076 bills in portal/public/bills/au-federal-*.json have status \"lapsed\"; none has a royal_assent stage or an entry in acts. 69 share an exact title with a passed bill (71 after normalising apostrophes, spacing and case); in every case the passed bill was introduced later. Fact-check round 2 counted 70.",
    "note": "Reworded rather than defined: PEO never uses \"lapse\", and the export's parliament field is too unreliable to show each lapse falls at a prorogation."
   },
   {
@@ -1759,7 +1759,7 @@
   },
   {
    "id": "division-sides",
-   "claim": "Ayes move to the right of the chair and noes to the left.",
+   "claim": "Ayes sit to the Speaker's (or President's) right and noes to the left: the Presiding Officer's chair, not the member's own.",
    "status": "sourced",
    "quotes": [
     {

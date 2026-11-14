@@ -231,7 +231,7 @@ Some rules cannot be overruled. [[f:delegated-some-not]]
 
 Before an election, the session of Parliament is formally closed. [[f:prorogation-def]] Any bills still waiting then expire. They can be brought in again in the next Parliament. [[f:prorogued-bills-expire]]
 
-OPAX shows each bill's status from Parliament's bill records. One you will often see is {{lapsed}}. No bill marked lapsed on OPAX became law. [[f:opax-lapsed-status]]
+OPAX shows each bill's status from Parliament's bill records. One you will often see is {{lapsed}}. A bill marked lapsed did not become law. The same bill can be brought in again later, and some then pass. [[f:opax-lapsed-status]] [[f:prorogued-bills-expire]]
 
 Most bills take 2 to 3 months to pass, but some take years. About 200 bills come to Parliament each year. [[f:bill-time]] [[f:bills-per-year]]
 

@@ -1409,7 +1409,7 @@
    "id": "opax-web-app",
    "publisher": "OPAX",
    "title": "Web app: division and bill views (portal/public/app.js)",
-   "url": "https://github.com/jaketracey/opax/blob/5d5780c3aa8eb5ebc5f23451fc29e474130d4305/portal/public/app.js",
+   "url": "https://github.com/jaketracey/opax/blob/55055c0b24285e7f461296dda8b4294868edd552/portal/public/app.js",
    "repo_path": "portal/public/app.js",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -1447,7 +1447,7 @@
    "id": "opax-vote-tables",
    "publisher": "OPAX",
    "title": "Web: division and vote table rules (portal/public/vote-tables.js)",
-   "url": "https://github.com/jaketracey/opax/blob/5d5780c3aa8eb5ebc5f23451fc29e474130d4305/portal/public/vote-tables.js",
+   "url": "https://github.com/jaketracey/opax/blob/55055c0b24285e7f461296dda8b4294868edd552/portal/public/vote-tables.js",
    "repo_path": "portal/public/vote-tables.js",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -1469,7 +1469,7 @@
    "id": "opax-seo-content",
    "publisher": "OPAX",
    "title": "Web: server-rendered bill and division pages (portal/src/seo-content.ts)",
-   "url": "https://github.com/jaketracey/opax/blob/5d5780c3aa8eb5ebc5f23451fc29e474130d4305/portal/src/seo-content.ts",
+   "url": "https://github.com/jaketracey/opax/blob/55055c0b24285e7f461296dda8b4294868edd552/portal/src/seo-content.ts",
    "repo_path": "portal/src/seo-content.ts",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -1503,7 +1503,7 @@
    "id": "opax-division-tool",
    "publisher": "OPAX",
    "title": "Ask division tool: floor-crossing rule (portal/src/tools/division.ts)",
-   "url": "https://github.com/jaketracey/opax/blob/5d5780c3aa8eb5ebc5f23451fc29e474130d4305/portal/src/tools/division.ts",
+   "url": "https://github.com/jaketracey/opax/blob/55055c0b24285e7f461296dda8b4294868edd552/portal/src/tools/division.ts",
    "repo_path": "portal/src/tools/division.ts",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -1737,7 +1737,7 @@
    "id": "opax-bills-export",
    "publisher": "OPAX",
    "title": "Federal bill export (portal/public/bills/au-federal-*.json)",
-   "url": "https://github.com/jaketracey/opax/blob/5d5780c3aa8eb5ebc5f23451fc29e474130d4305/portal/public/bills",
+   "url": "https://github.com/jaketracey/opax/blob/55055c0b24285e7f461296dda8b4294868edd552/portal/public/bills",
    "repo_path": "portal/public/bills",
    "retrieved": "2026-11-14",
    "quotes": [

@@ -359,8 +359,8 @@
    "term": "lapsed",
    "slug": "lapsed",
    "chapter": "bill-to-act",
-   "short": "A status OPAX shows from Parliament's bill records. No bill marked lapsed on OPAX became law.",
-   "more": "Before an election, the session of Parliament is formally closed. Bills still waiting then expire, and can be brought in again in the next Parliament. OPAX copies each bill's status, such as lapsed, from Parliament's records.",
+   "short": "A status OPAX shows from Parliament's bill records. A bill marked lapsed did not become law.",
+   "more": "Before an election, the session of Parliament is formally closed. Bills still waiting then expire. The same bill can be brought in again later, and some then pass.",
    "facts": [
     "opax-lapsed-status",
     "prorogation-def",
@@ -830,7 +830,11 @@
    ],
    "sources": [
     "peo-crossing-floor"
-   ]
+   ],
+   "example": {
+    "url": "https://opax.com.au/doc/division-federal-representatives-7714",
+    "label": "Members of the same party voted on both sides"
+   }
   },
   {
    "term": "conscience vote",
@@ -838,10 +842,6 @@
    "chapter": "how-votes-work",
    "short": "A vote where a party lets its members vote by their own beliefs. Also called a free vote.",
    "more": "Each party decides when to allow one. From 1950 to 2021, only 43 votes were free votes.",
-   "example": {
-    "url": "https://opax.com.au/doc/division-federal-representatives-7714",
-    "label": "Members of the same party voted on both sides"
-   },
    "facts": [
     "free-vote-def",
     "free-vote-party-decides",
