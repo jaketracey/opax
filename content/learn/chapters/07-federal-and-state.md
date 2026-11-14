@@ -97,13 +97,13 @@ The laws a state parliament makes apply within that state. [[f:state-laws-within
 
 ## One house or two
 
-Some state parliaments have two houses. [[f:houses-vic]]
+Victoria, South Australia and Tasmania each have a parliament with two houses. [[f:houses-vic]] [[f:houses-sa]] [[f:houses-tas]]
 
-Victoria has two. The lower house is the Legislative Assembly. The upper house is the Legislative Council. [[f:houses-vic]]
+In Victoria, the lower house is the Legislative Assembly. The upper house is the Legislative Council. [[f:houses-vic]]
 
-South Australia has two. One is the House of Assembly. The other is the Legislative Council. [[f:houses-sa]]
+In South Australia and Tasmania, the two houses are the House of Assembly and the Legislative Council. [[f:houses-sa]] [[f:houses-tas]]
 
-Tasmania has two as well. They have the same names as in South Australia. [[f:houses-tas]]
+This guide does not yet say how the other parliaments are set up. To find out, check each parliament's own website.
 
 ---screen---
 
