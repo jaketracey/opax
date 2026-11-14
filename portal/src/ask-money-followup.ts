@@ -15,6 +15,7 @@ export type FundingSelection = {
   from:number|null; to:number|null; mode:'donors'|'parties'|'connections'
 }
 type Clarification = {money_question?:string; answer:string; answer_status:'needs_scope'; money_ranking:true; citations:Record<string,never>; sources:never[]}
+const normalName = (s:string) => s.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()
 const clarify = (answer:string):Clarification =>
   ({answer,answer_status:'needs_scope',money_ranking:true,citations:{},sources:[]})
 /** A resolved request plus the reading taken and the other readings to offer. */
@@ -55,6 +56,9 @@ export function fundingNameChoice(graph:ReceiptGraph,fragment:string,jurisdictio
     const result=receiptAnswer(graph,question,jurisdiction,'https://opax.com.au',filters)
     if(!result || 'needs_scope' in result || result.selected_industries.length>1 || !result.selected_donors.includes(node.label))return []
     if(result.selected_donors.length>1&&!read.several)return []
+    // Another selected name inside the chosen one is part of it, not a second organisation.
+    const label=normalName(node.label)
+    if(result.selected_donors.some(other=>other!==node.label&&` ${label} `.includes(` ${normalName(other)} `)))return []
     const keep=read.keep||result.selected_donors.length>1||pending.size>0
     if(!read.keep&&result.selected_parties.length>1)return []
     if(unmatchedReceiptRankingScope(graph,receiptPeriodQuery(question).query,result,filters.party).split(' ').some(word=>word&&!pending.has(word)))return []

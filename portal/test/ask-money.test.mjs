@@ -827,3 +827,24 @@ test('two short donor names in one question both resolve',async()=>{
  const qualifier=await ask('Who receives the most disclosed receipts from Pratt Holdings Mining?');
  assert.equal(qualifier.answer_status,'needs_scope');assert.doesNotMatch(qualifier.answer,/Mining and Energy Union|\$[\d,]+/);
 });
+test('separators inside one organisation name never split it into two',async()=>{
+ const ask1=name=>ask(`Who receives the most disclosed receipts from ${name}?`);
+ // A shorter organisation named inside the longer one is not added to it.
+ for(const name of ['Construction, Forestry, Maritime, Mining & Energy Union','Bendigo & Adelaide Bank']){
+  const result=await ask1(name);
+  assert.notEqual(result.answer_status,'calculated',name);assert.doesNotMatch(result.answer,/\$[\d,]+|leads parties/,name);
+ }
+ // "and" typed where the map writes "&" reads as the one organisation.
+ for(const [name,label] of [['Ernst and Young','Ernst & Young'],['McKinsey and Company','McKinsey & Company'],['Mitchell and Partners','Mitchell & Partners']]){
+  const result=await ask1(name);
+  assert.equal(result.answer_status,'calculated',name);assert.equal(result.money_reading,`Reading “${name}” as ${label}.`);
+  assert.equal(result.money_question,`Who receives the most disclosed receipts from ${label} in federal records?`);
+ }
+ assert.match((await ask1('Mitchell and Partners')).answer,/\*\*\$12,700\*\* in donations received .* from Mitchell & Partners/);
+ // A list splits only at the "and" between names; the commas and "&" inside a name stay in it.
+ const listed=await ask('Which party received the most donations from Rail, Tram & Bus and Pratt?');
+ assert.equal(listed.answer_status,'calculated');
+ assert.equal(listed.money_reading,'Reading “Rail, Tram & Bus” as Australian Rail, Tram and Bus Industry Union. Reading “Pratt” as Pratt Holdings Pty Ltd.');
+ const trailing=await ask1('Rail, Tram & Bus Zzzfoo');
+ assert.equal(trailing.answer_status,'needs_scope');assert.equal(trailing.money_reading,undefined);assert.doesNotMatch(trailing.answer,/\$[\d,]+|Reading/);
+});

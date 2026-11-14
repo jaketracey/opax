@@ -390,8 +390,10 @@ function readMoneyRanking(input:RecordQuestion,graph:ReceiptGraph,file:string,ju
   const nameChoice=(fragment:string):ReadPayload|null=>{
     if(choicesLeft<=0)return null
     const keep=comparisonQuestion(query)||yearComparisonQuestion(query)
+    // Words as written, allowing "and" where the map writes "&" ("Ernst and Young").
+    const pattern=(name:string)=>name.split(/\s+/).map(word=>word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('[^a-z0-9]+(?:and[^a-z0-9]+)?')
     const choose=(name:string,pending='')=>{
-      const escaped=name.split(/\s+/).map(word=>word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('[^a-z0-9]+')
+      const escaped=pattern(name)
       const written=new RegExp('\\b'+escaped+'\\b','i').exec(query)?.[0]??name
       // A second organisation counts only when the question lists it ("A and B", "A, B").
       const several=new RegExp('(?:,|&|\\band)\\s*'+escaped+'\\b|\\b'+escaped+'\\s*(?:,|&|and\\b)','i').test(query)
@@ -399,12 +401,17 @@ function readMoneyRanking(input:RecordQuestion,graph:ReceiptGraph,file:string,ju
     }
     let choice=choose(fragment)
     // Otherwise the longest run of words that begins a name in this map is read
-    // first; the rest of the fragment is read on the next pass.
+    // first; the rest of the fragment is read on the next pass. A run ends only
+    // where the question lists another name ("and", "&" or a comma), never
+    // inside one name ("Rail, Tram & Bus").
     const words=fragment.split(/\s+/).filter(Boolean)
+    const names=(text:string)=>receiptDonorChoices(graph,text).length>0
+    const splits=(at:number)=>new RegExp('\\b'+pattern(words[at-1])+'\\s*(?:,|&|\\band\\b)\\s*'+pattern(words[at])+'\\b','i').test(query)
+      && !Array.from({length:at},(_,from)=>from).some(from=>[' ',' and '].some(join=>names(words.slice(from,at).join(' ')+join+words.slice(at).join(' ').split(' ')[0])))
     for(let size=words.length-1;size>0&&!choice;size--)
       for(let at=0;at+size<=words.length&&!choice;at++){
         const name=words.slice(at,at+size).join(' ')
-        if(receiptDonorChoices(graph,name).length)choice=choose(name,[...words.slice(0,at),...words.slice(at+size)].join(' '))
+        if(names(name)&&(at===0||splits(at))&&(at+size===words.length||splits(at+size)))choice=choose(name,[...words.slice(0,at),...words.slice(at+size)].join(' '))
       }
     if(!choice)return null
     return readMoneyRanking({...input,question:choice.question},graph,file,jurisdiction,
