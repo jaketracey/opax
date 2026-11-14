@@ -19,7 +19,8 @@ def approved():
 
 
 def managed(db):
-    return db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='nsw_backfill_turns'").fetchone() is not None
+    # No database (a retry with nothing to read) owns no NSW rows.
+    return db is not None and db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='nsw_backfill_turns'").fetchone() is not None
 
 
 def owned(db, speech_id):
