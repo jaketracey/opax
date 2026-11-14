@@ -58,7 +58,7 @@ export const divisionVotes: ToolDefinition = {
       ...(member ? { member_votes: row.person_votes ?? [] } : {}), ...(full(args) ? { votes: row.members } : {}) }))
     const end = offset + items.length
     return result({ items, total: data.search_complete === false ? null : total, next_cursor: items.length && end < total ? writeCursor('division_votes', args, { o: end }) : null,
-      url: items.length === 1 ? String(items[0].url) : siteUrl(env, '/search?' + new URLSearchParams({ kind: 'division', q: String(args.title ?? args.bill ?? '') })),
+      url: items.length === 1 ? String(items[0].url) : await divisionsPage(env, args, object(data.bill).id),
       ...(data.bill ? { bill: data.bill } : {}),
       notes: [...(total ? [] : ['No recorded division matches. This does not establish that no vote was held: voice votes and unpublished divisions are not recorded.']),
         ...(items.some(item => (item.against_party as unknown[]).length) ? DIVISION_NOTES : DIVISION_NOTES.slice(1)),
@@ -66,6 +66,27 @@ export const divisionVotes: ToolDefinition = {
         ...(member && items.some(item => !(item.member_votes as unknown[]).length) ? [`Where member_votes is empty, ${clip(member, 80)} has no recorded row in that division. That is not an absence or an abstention.`] : []),
         ...(full(args) ? [] : ['Each member\'s vote is listed with detail=full.'])] })
   },
+}
+
+/**
+ * The page that lists several divisions: the bill's page, the federal sitting week holding the date,
+ * or a division search filtered to the chamber and dates. The search needs words, so it is never empty.
+ */
+async function divisionsPage(env: Parameters<ToolDefinition['handler']>[0], args: Record<string, unknown>, bill: unknown): Promise<string> {
+  if (typeof bill === 'string' && bill) return siteUrl(env, '/bill/' + bill)
+  const date = typeof args.date === 'string' ? args.date : null, federal = !args.jurisdiction || args.jurisdiction === 'federal'
+  const house = args.chamber === 'senate' || args.chamber === 'representatives' ? String(args.chamber) : null
+  if (date && federal) {
+    const calendar = object(await readToolAsset(env, '/hubs/index.json').catch(() => null))
+    const week = records(calendar.weeks).find(w => String(w.start) <= date && date <= String(w.end) && (!house || (Array.isArray(w.houses) && w.houses.includes(house))))
+    if (week) return siteUrl(env, '/sitting/' + String(week.start))
+  }
+  const params = new URLSearchParams({ kind: 'division', q: String(args.title ?? args.bill ?? 'division') })
+  if (house) params.set('chamber', house)
+  const since = date ?? args.since, until = date ?? args.until
+  if (typeof since === 'string') params.set('since', since)
+  if (typeof until === 'string') params.set('until', until)
+  return siteUrl(env, '/search?' + params)
 }
 
 export const memberVotingRecord: ToolDefinition = {

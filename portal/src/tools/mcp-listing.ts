@@ -97,8 +97,39 @@ export const MCP_REGISTERS: Readonly<Record<string, string>> = {
   electorates_rank: 'Census figures for electorates: rank, filter or look up',
   find_records: 'which register holds a name or subject',
 }
+/**
+ * The main arguments of each register, as named in its input schema (* required), so a client can
+ * call query_register without a register_guide turn first. A test checks these against the schemas.
+ */
+export const REGISTER_ARGS: Readonly<Record<string, string>> = {
+  grants: 'recipient, program, group_by, financial_year, state',
+  contracts: 'supplier, agency, group_by, rank_by',
+  parliamentary_pay: 'person, office, as_of, chamber',
+  pay_calculator: 'question*, from, to, chamber',
+  member_expenses: 'person*, year',
+  declared_interests: 'person, chamber, category, query',
+  access_registers: 'register*, minister, organisation, lobbyist',
+  entity_profile: 'kind*, query, section',
+  money_rankings: 'question*, from, to, state, party',
+  campaign_spend: 'campaign*, entity, financial_year',
+  public_finances: 'dataset*, query, financial_year, entity',
+  annual_reports: 'view*, body, person, year',
+  agency_reports: 'view*, agency, year, metric',
+  integrity_reports: 'view*, body, query, subject',
+  royal_commissions: 'view*, commission, words',
+  division: 'chamber, date, title, bill, person',
+  count_records: 'record_type* (divisions or bills), chamber, date, since, until, group_by',
+  count_speeches: 'topic, speaker, party, since, until, group_by',
+  speech_trend: 'topic, speaker, party, by, from_year, to_year',
+  corpus_records: 'kind*, query, record_id, speaker, since, until',
+  legislation: 'kind*, query, jurisdiction, status',
+  electorates_rank: 'indicator*, jurisdiction, chamber, order',
+  find_records: 'query*, kind, jurisdiction, since, until',
+}
+/** query_register's register parameter: each register, what it holds and its main arguments (* required). */
+export const REGISTER_LIST = 'The register. Each one, with what it holds and its main arguments (* required): ' + Object.entries(MCP_REGISTERS).map(([name, line]) => `${name} (${line}; ${REGISTER_ARGS[name]})`).join('; ') + '.'
 export const DISPATCH_TEXT = {
-  query_register: { title: 'Query a specialised register', description: 'Query one of OPAX\'s specialised registers. Give register and its arguments. Call register_guide first for that register\'s arguments; a wrong call also returns them. Registers: ' + Object.entries(MCP_REGISTERS).map(([name, line]) => `${name} (${line})`).join('; ') + '.' },
+  query_register: { title: 'Query a specialised register', description: 'Query one of OPAX\'s specialised registers: grants, contracts, parliamentary pay and expenses, declared interests, lobbying and access registers, annual, agency and integrity reports, royal commissions, record and speech counts, state legislation and electorate rankings. Give register and its arguments. The register parameter lists every register with its main arguments, so call it directly; a call with wrong arguments returns that register\'s full guide, and register_guide gives the guide without a call.' },
   register_guide: { title: 'Register guide', description: 'How to use one register with query_register: what it holds, its arguments and example calls.' },
 }
 /** The OPAX page a result belongs to when its own rows do not carry one. */

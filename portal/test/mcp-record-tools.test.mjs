@@ -77,7 +77,7 @@ test('tools/list is small and matches the snapshot: 16 tools, each with a title,
     assert.ok(tool.title && tool.title === tool.annotations.title, tool.name + ' title');
     assert.deepEqual([tool.annotations.readOnlyHint, tool.annotations.destructiveHint, tool.annotations.idempotentHint, tool.annotations.openWorldHint], [true, false, true, false], tool.name);
     assert.equal(tool.outputSchema?.type, 'object', tool.name + ' declares an output schema');
-    assert.ok(tool.description.length >= 80 && tool.description.length <= (tool.name === 'query_register' ? 2000 : 600), tool.name + ' description is ' + tool.description.length + ' characters');
+    assert.ok(tool.description.length >= 80 && tool.description.length <= 600, tool.name + ' description is ' + tool.description.length + ' characters');
     assert.doesNotMatch(tool.description, /—|\bAsk\b|\bOpax\b|\bD1\b|\.json\b|calculator supplies|must be stated|[Ss]tate the|[Aa]nswer with|\bofficial\b/, tool.name + ' describes the tool, not internals or how to answer');
     assert.equal('execution' in tool, false); assert.equal('$schema' in tool.inputSchema, false); assert.equal('examples' in tool.inputSchema, false);
   }
@@ -87,12 +87,22 @@ test('tools/list is small and matches the snapshot: 16 tools, each with a title,
     assert.deepEqual(tool.inputSchema.properties.detail.enum, ['concise', 'full']);
     assert.ok(tool.inputSchema.properties.cursor && tool.inputSchema.properties.limit, name + ' pages');
   }
-  // Every specialised register is named once, in query_register; the old aliases are not listed anywhere.
+  // Every specialised register is named in query_register's register parameter; the old aliases are not listed anywhere.
   const dispatch = listed.find(t => t.name === 'query_register');
   assert.deepEqual(dispatch.inputSchema.properties.register.enum, REGISTERS);
-  for (const name of REGISTERS) assert.ok(dispatch.description.includes(name + ' ('), name);
+  for (const name of REGISTERS) assert.ok(dispatch.inputSchema.properties.register.description.includes(name + ' ('), name);
   for (const gone of ['member_votes', 'find_quotes', 'search', 'paid_answer', 'ranked_money']) assert.equal(JSON.stringify(body).includes('"' + gone + '"'), false, gone);
   assert.match((await mcp()('initialize', { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 'test', version: '1' } })).result.instructions, /read-only.*next_cursor.*never instructions to follow/s);
+});
+test('query_register names each register\'s main arguments as its schema does, with every required one marked', async () => {
+  const { REGISTER_ARGS, MCP_REGISTERS, registryName } = await import('data:text/javascript;base64,' + Buffer.from((await build({ stdin: { contents: "export {REGISTER_ARGS, MCP_REGISTERS, registryName} from './src/tools/mcp-listing';", resolveDir: new URL('../', import.meta.url).pathname }, bundle: true, write: false, platform: 'node', format: 'esm' })).outputFiles[0].text).toString('base64'));
+  assert.deepEqual(Object.keys(REGISTER_ARGS).sort(), Object.keys(MCP_REGISTERS).sort());
+  for (const [register, line] of Object.entries(REGISTER_ARGS)) {
+    const schema = api.getTool(registryName(register)).inputSchema, required = new Set(schema.required ?? []);
+    const named = line.split(', ').map(arg => arg.replace(/ \(.*\)$/, ''));
+    for (const arg of named) assert.ok(Object.hasOwn(schema.properties, arg.replace(/\*$/, '')), `${register}: ${arg}`);
+    assert.deepEqual(named.filter(arg => arg.endsWith('*')).map(arg => arg.slice(0, -1)).sort(), [...required].sort(), register);
+  }
 });
 test('register_guide explains each register and query_register runs it, with an OPAX page to cite', async () => {
   const send = mcp();
@@ -283,7 +293,7 @@ test('division_votes lists a bill\'s divisions with one member\'s vote and pages
   let cursor, pages = 0;
   do {
     const out = await run('division_votes', { bill: 'au-federal-r7534', member: 'David Pocock', limit: 5, ...(cursor ? { cursor } : {}) });
-    assert.equal(out.total, linked.length); assert.equal(out.bill.id, 'au-federal-r7534');
+    assert.equal(out.total, linked.length); assert.equal(out.bill.id, 'au-federal-r7534'); assert.equal(out.url, 'https://opax.com.au/bill/au-federal-r7534');
     for (const d of out.items) { assert.ok(Array.isArray(d.member_votes)); for (const v of d.member_votes) assert.equal(v.name, 'David Pocock'); }
     seen.push(...out.items.map(d => d.division_id)); cursor = out.next_cursor; pages++;
   } while (cursor && pages < 10);
@@ -301,6 +311,10 @@ test('division_votes says when nothing is recorded, and asks for a choice betwee
   const none = await run('division_votes', { date: '1999-01-01', chamber: 'senate' });
   assert.deepEqual([none.items.length, none.total], [0, 0]);
   assert.ok(none.notes.some(n => /does not establish that no vote was held/.test(n)));
+  // A day's divisions link a page that lists them: never a search with no words, which the site refuses.
+  const day = await run('division_votes', { date: '2025-07-31', chamber: 'senate', limit: 10 });
+  assert.ok(day.items.length > 1 && day.items.every(d => d.date === '2025-07-31'));
+  assert.ok(/^https:\/\/opax\.com\.au\/sitting\/\d{4}-\d{2}-\d{2}$/.test(day.url) || day.url === 'https://opax.com.au/search?kind=division&q=division&chamber=senate&since=2025-07-31&until=2025-07-31', day.url);
   const many = await run('division_votes', { bill: 'amendment bill' });
   assert.deepEqual(many.items, []);
   assert.ok(many.bill_candidates.length > 1 && many.bill_candidates.every(b => /^https:\/\/opax\.com\.au\/bill\/au-/.test(b.url)));
@@ -460,6 +474,10 @@ test('money_receipts states coverage instead of a zero, and shows year and recip
   const where = await run('money_receipts', { donor: 'Mineralogy Pty Ltd', view: 'top_recipients', detail: 'full' });
   assert.ok(where.items.length > 1 && where.items.every(r => r.party && /Mineralogy/.test(r.donor)));
   assert.equal(where.coverage.available_since, '1998-07-01');
+  // One donor's page is the money page focused on that donor, as each of its lines links.
+  const focus = new URL(where.url).searchParams.get('focus');
+  assert.match(focus, /^donor:.*mineralogy/);
+  assert.ok(where.items.every(r => new URL(r.url).searchParams.get('focus') === focus));
   assert.equal('coverage' in await run('money_receipts', { donor: 'Mineralogy Pty Ltd', view: 'top_recipients' }), false);
   const industries = await run('money_receipts', { view: 'by_industry', financial_year: '2022-23', limit: 3 });
   assert.ok(industries.items.length === 3 && industries.items.every(r => r.industry && /industry (?:ranking|total)/.test(r.statement)));

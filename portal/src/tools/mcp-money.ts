@@ -64,9 +64,11 @@ export const moneyReceipts: ToolDefinition = {
     const other_lines = rows.length ? apart : data.coverage_only === true && !data.donor_declared ? [] : cites.map(cite => ({ statement: cite.text, amount_aud: typeof cite.value === 'number' ? cite.value : null, url: cite.url }))
     // Party aggregates have no type split, so they are never labelled donations.
     const measure = data.measure === 'donations' ? 'donations_only' : 'all_receipts'
+    // A donor query links the page focused on that donor, as its own lines do, when they name one donor.
+    const focused = args.donor ? [...new Set(cites.map(cite => new URL(cite.url, 'https://opax.com.au').searchParams.get('focus')).filter(Boolean))] : []
     return result({ items, total: rows.length ? total : 0, next_cursor: window.length && end < total ? writeCursor('money_receipts', args, { o: end }) : null,
       // The money page for this selection: the party and years asked for, as the website links them.
-      url: siteUrl(env, '/money?' + new URLSearchParams({ jur: 'federal', type: 'receipts', ...(typeof data.party === 'string' ? { party: 'party:' + data.party } : {}), ...((args.financial_year || args.from_year !== undefined || args.to_year !== undefined) && Number.isInteger(object(data.query).from_year) ? { from: String(object(data.query).from_year), to: String(object(data.query).to_year) } : {}) })), measure, measure_label: MEASURE_LABELS[measure], period: typeof data.period === 'string' ? data.period : null, as_at: coverage.as_of ?? null,
+      url: siteUrl(env, '/money?' + new URLSearchParams({ jur: 'federal', type: 'receipts', ...(typeof data.party === 'string' ? { party: 'party:' + data.party } : {}), ...(focused.length === 1 ? { focus: String(focused[0]) } : {}), ...((args.financial_year || args.from_year !== undefined || args.to_year !== undefined) && Number.isInteger(object(data.query).from_year) ? { from: String(object(data.query).from_year), to: String(object(data.query).to_year) } : {}) })), measure, measure_label: MEASURE_LABELS[measure], period: typeof data.period === 'string' ? data.period : null, as_at: coverage.as_of ?? null,
       other_lines, ...(full(args) ? { coverage, ...(data.donor_declared ? { donor_declared: data.donor_declared } : {}) } : {}),
       notes: [...(wanted === 'donations_only' && measure !== 'donations_only' ? ['A donations-only figure is not available for this selection: the amounts are all receipt types.'] : []), ...data.notes as string[]] })
   },

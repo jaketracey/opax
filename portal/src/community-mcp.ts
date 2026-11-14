@@ -4,7 +4,7 @@ import {z} from 'zod'
 import {body,CommunityError,digest,json,limit,now,type Member} from './community-core'
 import {tools,getTool,toolSchema,toolOutputSchema,validateToolArgs,callTool,ToolInputError} from './tools'
 import {RECORD_TEXT_NOTICE} from './tools/mcp-common'
-import {DISPATCH_TEXT,MCP_DIRECT,MCP_EXAMPLES,MCP_REPLACED,MCP_INSTRUCTIONS,MCP_OUTPUT_BYTES,MCP_REGISTERS,MCP_TEXT,listedSchema,mcpName,registryName} from './tools/mcp-listing'
+import {DISPATCH_TEXT,MCP_DIRECT,MCP_EXAMPLES,MCP_REPLACED,MCP_INSTRUCTIONS,MCP_OUTPUT_BYTES,MCP_REGISTERS,MCP_TEXT,REGISTER_LIST,listedSchema,mcpName,registryName} from './tools/mcp-listing'
 import {corpusKb} from './tools/corpus-records'
 import {evidenceAsAt} from '../public/evidence-date.js'
 import {mcpToolTitle} from './mcp-tool-titles'
@@ -162,8 +162,8 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
    const names=MCP_DIRECT.has(tool.name)?[tool.name]:called&&(called===tool.name||called===mcpName(tool.name))?[called]:[]
    for(const name of names)server.registerTool(name,{title:tool.title??MCP_TEXT[tool.name]?.title??mcpToolTitle(name),description:MCP_TEXT[tool.name]?.description??tool.description,inputSchema:toolSchema(tool.name),outputSchema:toolOutputSchema(tool.name),annotations:readOnly},async args=>run(tool,name,args))
   }
-  const registerName=z.enum(Object.keys(MCP_REGISTERS) as [string,...string[]])
-  server.registerTool('query_register',{...DISPATCH_TEXT.query_register,inputSchema:{register:registerName,arguments:z.record(z.string(),z.unknown()).describe('The arguments register_guide lists for this register.')},outputSchema:toolOutputSchema('find_records'),annotations:readOnly},async({register,arguments:args})=>run(getTool(registryName(register))!,register,args,true))
+  const registerName=z.enum(Object.keys(MCP_REGISTERS) as [string,...string[]]).describe(REGISTER_LIST)
+  server.registerTool('query_register',{...DISPATCH_TEXT.query_register,inputSchema:{register:registerName,arguments:z.record(z.string(),z.unknown()).describe('The register\'s arguments, by the names listed in the description.')},outputSchema:toolOutputSchema('find_records'),annotations:readOnly},async({register,arguments:args})=>run(getTool(registryName(register))!,register,args,true))
   server.registerTool('register_guide',{...DISPATCH_TEXT.register_guide,inputSchema:{register:z.string().describe('A register name from query_register.')},outputSchema:z.looseObject({register:z.string(),description:z.string(),arguments:z.record(z.string(),z.unknown()),examples:z.array(z.unknown())}),annotations:readOnly},async({register})=>{if(!Object.hasOwn(MCP_REGISTERS,register))return failed('There is no register named that. Registers: '+Object.keys(MCP_REGISTERS).join(', ')+'.');const found=guide(register);return {content:[{type:'text' as const,text:JSON.stringify(found)}],structuredContent:found,isError:false}})
   const transport=new WebStandardStreamableHTTPServerTransport({sessionIdGenerator:undefined,enableJsonResponse:true})
   await server.connect(transport)
