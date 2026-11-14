@@ -16,7 +16,8 @@ and wikidata_matches_new.json (this run's additions)."""
 import sys as _http_sys
 from pathlib import Path as _HttpPath
 _http_sys.path.insert(0, str(_HttpPath(__file__).resolve().parents[1]))
-from parli.ingest import http as source_http
+from scripts import portrait_http as source_http
+from scripts.portrait_candidates import candidate_problem, unique_portrait
 import json, requests, re, collections, time, os, sys
 W=os.path.dirname(os.path.dirname(os.path.abspath(__file__))); SCR=os.path.join(W, "scripts", "_photos_work")
 os.makedirs(SCR, exist_ok=True)
@@ -38,7 +39,7 @@ POS={"nsw_la":"Q19202748","nsw_lc":"Q18810377","vic_la":"Q18534408","vic_lc":"Q1
 UA={"User-Agent":source_http.USER_AGENT}
 def sparql(q):
     for i in range(3):
-        r=source_http.get("https://query.wikidata.org/sparql", params={"query":q,"format":"json"}, headers=UA, timeout=180)
+        r=source_http.get("https://query.wikidata.org/sparql", params={"query":q,"format":"json"}, headers=UA, timeout=180, expected_json=True)
         if r.status_code==200: return r.json()["results"]["bindings"]
         time.sleep(5)
     r.raise_for_status()
@@ -51,15 +52,17 @@ def split(name):
     return last, given, "".join(g[:1] for g in given)
 def yr(b,k):
     v=b.get(k,{}).get("value"); return int(v[:4]) if v else None
-matched={}; rejected=collections.Counter()
+matched={}; rejected=collections.Counter(); dated=collections.defaultdict(lambda: collections.defaultdict(list))
 for ch,q in POS.items():
     rows=sparql(f"""SELECT ?person ?personLabel ?img ?start ?end ?born WHERE {{ ?person p:P39 ?st . ?st ps:P39 wd:{q} .
       OPTIONAL {{ ?st pq:P580 ?start }} OPTIONAL {{ ?st pq:P582 ?end }} OPTIONAL {{ ?person wdt:P569 ?born }}
-      ?person wdt:P18 ?img . SERVICE wikibase:label {{ bd:serviceParam wikibase:language 'en'. }} }}""")
+      OPTIONAL {{ ?person wdt:P18 ?img }} SERVICE wikibase:label {{ bd:serviceParam wikibase:language 'en'. }} }}""")
+    json.dump(rows, open(f"{SCR}/holders_{ch}.json", "w"), ensure_ascii=False, indent=1)
     by=collections.defaultdict(dict)
     for b in rows:
         qid=b["person"]["value"].split("/")[-1]; lab=b["personLabel"]["value"]; last,given,ini=split(lab)
-        d=by[last].setdefault(qid, {"label":lab,"given":given,"ini":ini,"img":b["img"]["value"],"terms":[],"born":yr(b,"born")})
+        dated[qid][ch].append((yr(b,"start"),yr(b,"end")))
+        d=by[last].setdefault(qid, {"label":lab,"given":given,"ini":ini,"img":b.get("img",{}).get("value"),"terms":[],"born":yr(b,"born")})
         d["terms"].append((yr(b,"start"),yr(b,"end")))
     ours=[p for p in todo if ch in chambers(p) and p["name"] not in matched]
     hit=surn=0; amb=[]
@@ -68,7 +71,6 @@ for ch,q in POS.items():
         def era_ok(d):
             dated=[(s,e) for s,e in d["terms"] if s or e]
             if d["born"] is not None and d["born"]<1920: return False
-            if d["img"] in group_img: return False
             if dated and f: return any((s is None or s<=l+1) and (e is None or e>=f-1) for s,e in dated)
             return d["born"] is not None   # undated term: only if a modern birth year vouches for them
         cands={k:v for k,v in by.get(last,{}).items() if era_ok(v)}
@@ -83,17 +85,24 @@ for ch,q in POS.items():
             # surname-only: one candidate, and the roster entry must sit in one parliament
             ok=cands if len(cands)==1 and not multi else {}
             if ok: surn+=1
-        if len(ok)==1:
-            k,v=next(iter(ok.items())); hit+=1
-            matched[p["name"]]={"qid":k,"label":v["label"],"img":v["img"],"chamber":ch,"kind":"surname-only" if not given else "name","born":v["born"],"ours":(f,l),"pid":p.get("pid")}
+        if unique_portrait(ok):
+            k,v=unique_portrait(ok)
+            if v["img"] in group_img: continue
+            hit+=1
+            matched[p["name"]]={"qid":k,"label":v["label"],"img":v["img"],"chamber":ch,"kind":"surname-only" if not given else "name","born":v["born"],"ours":(f,l),"pid":p.get("pid"),"terms":v["terms"]}
         elif len(ok)>1: amb.append((p["name"],[v["label"] for v in ok.values()]))
         else: rejected[ch]+=1
     print(f"  {ch:16s} ours={len(ours):4d} matched={hit:4d} (surname-only {surn:3d}) ambiguous={len(amb):3d}", flush=True)
     if amb[:3]: print("     ambiguous e.g.", amb[:3])
     time.sleep(1)
+rows_by_name={p["name"]:p for p in people}
+held={n:why for n,m in matched.items() if (why:=candidate_problem(rows_by_name[n],m,dated[m["qid"]]))}
+json.dump(held, open(f"{SCR}/wikidata_candidates_held.json","w"), indent=1, ensure_ascii=False)
+matched={n:m for n,m in matched.items() if n not in held}
 new={n:m for n,m in matched.items() if n not in old or old[n]["img"]!=m["img"]}
+print("held by dated identity check:", len(held))
 print("total matched:", len(matched), "of", len(todo), "| new this run:", len(new))
-merged=dict(old); merged.update(matched)
+merged={n:m for n,m in old.items() if n not in held}; merged.update(matched)
 json.dump(merged, open(f"{SCR}/wikidata_matches.json","w"), indent=1, ensure_ascii=False)
 json.dump(new, open(f"{SCR}/wikidata_matches_new.json","w"), indent=1, ensure_ascii=False)
 print("no birth year known:", sum(1 for v in new.values() if v["born"] is None), "| born<1940:", [(k,v["label"],v["born"]) for k,v in new.items() if v["born"] and v["born"]<1940][:8])

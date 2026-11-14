@@ -10,11 +10,18 @@ import {personIndex, personSlug} from '../portal/src/person-slug.ts';
 import {personNameKey} from '../portal/public/canonical-urls.js';
 import {day, latest} from '../portal/public/hubs-data.js';
 import {divisionPlain} from '../portal/public/division-markdown.js';
-import {validateVicElection, validateVicPlaces} from '../portal/src/vic-election-data.ts';
+import {validateVicElection, validateVicPlaces, validateVicResults} from '../portal/src/vic-election-data.ts';
 import {VIC_ELECTION_PATH, VIC_ELECTION_PLACES, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_CORRECTIONS_EMAIL, VIC_ELECTION_CORRECTIONS_RESPONSE} from '../portal/public/vic-election.js';
 
 // Only the result fields the hub shows: no candidate names.
 const contest = r => r && {date:r.date,kind:r.kind || 'general',party:r.party,share:r.share,against:r.against,against_share:r.against_share,margin:r.margin,url:r.url};
+
+// Kept separate from historical margins and the roster. A 2022 file cannot be
+// mistaken for current results, and incomplete final bundles fail before writes.
+export function projectVicResults(source, electionDay, districtNames) {
+  return validateVicResults({election_day:source.election_day,fetched:source.fetched,status:source.status,url:source.index,
+    districts:Object.entries(source.districts ?? {}).map(([name,row])=>({name,result:contest(row.general)}))},electionDay,districtNames);
+}
 
 export async function buildVicElection(root, configPath = fileURLToPath(new URL('./hubs/vic-election-2026.json',import.meta.url))) {
   const read = async path => JSON.parse(await readFile(join(root,path.replace(/^\//,'')),'utf8'));
@@ -27,6 +34,7 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
   const index = await read(manifest.index_url);
   // Candidates exist only once the VEC publishes them after nominations close (noon 9 November).
   const nominated = await readFile(sibling('vic-candidates-2026.json'),'utf8').then(JSON.parse,e=>{if(e.code==='ENOENT')return null;throw e;});
+  const currentSource = await readFile(sibling('vic-results-2026.json'),'utf8').then(JSON.parse,e=>{if(e.code==='ENOENT')return undefined;throw e;});
   for (const name of Object.keys({...nominated?.districts,...nominated?.regions})) if (!config.districts.concat(config.regions).some(c=>c.name === name)) throw new Error(`Candidates for an unknown constituency: ${name}`);
   // Canonical people are exactly the already-published roster. The few roster-only
   // members use the existing person paths built by build:crawl, never a new join.
@@ -49,6 +57,7 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
   const constituencies = [...config.districts,...config.regions];
   if (config.districts.length !== 88 || config.regions.length !== 8 || new Set(constituencies.map(c=>c.name)).size !== 96) throw new Error('Incomplete VEC constituency list');
   const districtNames = config.districts.map(c=>c.name).sort();
+  const currentResults = currentSource === undefined ? null : projectVicResults(currentSource,config.election_day,districtNames);
   if (JSON.stringify(Object.keys(results.districts).sort()) !== JSON.stringify(districtNames)) throw new Error('VEC results do not cover the 88 districts');
   if (JSON.stringify(places.districts) !== JSON.stringify(districtNames)) throw new Error('ABS place splits do not use the 88 VEC districts');
   const seats = constituencies.map(c => {
@@ -89,12 +98,12 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
         ...c.kind === 'region' ? {group:x.group,group_name:x.group_name} : {}}))} : null,
       electorate_url:seat.url,roster_date:seat.representation_as_of,members};
   });
-  const updated = latest([config.updated,nominated?.published,roster.meta.generated,roster.meta.representation?.updated,day(corpus.version),...seats.map(s=>s.roster_date)]);
+  const updated = latest([config.updated,nominated?.published,currentResults?.fetched,roster.meta.generated,roster.meta.representation?.updated,day(corpus.version),...seats.map(s=>s.roster_date)]);
   const pages = [{path:VIC_ELECTION_PATH,lastmod:updated},...seats.map(s=>({path:s.path,lastmod:updated}))];
   const data = {authorisation:VIC_ELECTION_AUTHORISATION_LINE,
     corrections:{email:VIC_ELECTION_CORRECTIONS_EMAIL,response:VIC_ELECTION_CORRECTIONS_RESPONSE},
     updated,checked:config.updated,term_start:config.term_start,term_end:config.term_end,election_day:config.election_day,
-    notice:config.notice ?? null,
+    notice:config.notice ?? null,current_results:currentResults,
     nominations_close:config.nominations_close,enrolment_close:config.enrolment_close,postal_close:config.postal_close,
     results_fetched:results.fetched,sources:config.sources,licence:config.licence,boundaries:config.boundaries,
     speech_updated:roster.meta.generated,division_start:detailed.map(d=>day(d.date)).sort()[0] || null,

@@ -19,7 +19,7 @@ import {ServerTiming, timed, timedSync, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import { chamberLabel, PARTY_MAP } from '../public/party-page.js'
 import {partySpeechLabel, partyMembers, partyBills, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, PARTY_NO_MEMBERS, readPartyPages, resolvePartyPage, dayMonthYear, partyHistory, recordedAsText, type PartyPage, type PartyBill} from '../public/party-page.js'
-import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
+import {guardTableURL, divisionTableConfig, voteTableConfig, billDivisionGroups, PROCEDURAL_TITLES_PATH} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
@@ -61,8 +61,8 @@ import { estimatesPage, readEstimatesRecord, type EstimatesCommittee, type Estim
 import { sydneyDay } from '../public/hubs-data.js'
 import { senateVideoPage } from './video-archive'
 import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionFooterHTML } from '../public/vic-election.js'
-import { vicElectionPage, type VicElection } from './vic-election'
-import { vicElectionEnabled, vicElectionPublicationPath, vicElectionDiscovery, vicElectionLlms, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP } from '../public/vic-election.js'
+import { vicElectionPage, readVicElection, vicElectionState, type VicElection, type VicElectionState } from './vic-election'
+import { vicElectionEnabled, vicElectionPublicationPath, vicElectionDiscovery, vicElectionLlms, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP, VIC_ELECTION_CACHE } from '../public/vic-election.js'
 import { AUDIT_ID } from '../public/audit.js'
 import { runIndexNow, INDEXNOW_CRON } from './indexnow'
 import { type MoneyFacts, moneyOverviewPrompt, verifiedOverview } from './ask-money-overview'
@@ -3736,12 +3736,13 @@ const SITE_ORIGIN = 'https://opax.com.au'
 const OG_IMAGE = `${SITE_ORIGIN}/og-default.png`
 const OG_IMAGE_ALT = 'OPAX: ask what your politicians actually said'
 
-function ogImageFor(canonical: string): string {
+function ogImageFor(canonical: string, electionState?: VicElectionState): string {
   const u = new URL(canonical)
   const out = new URL(`${SITE_ORIGIN}/og${u.pathname}.png`)
   // The same list as CARD_QUERY, spelled out so this function stands alone (test/grant-social-card.test.mjs runs it in isolation).
   for (const k of ['award', 'jur', 'program', 'largest']) { const v = u.searchParams.get(k); if (v) out.searchParams.set(k, v) }
   out.searchParams.set('v', OG_VERSION)
+  if (electionState) out.searchParams.set('state', electionState)
   return out.toString()
 }
 /** Query parameters that name a page's subject, and so its card: an award, and on the grants page a program or a month. */
@@ -3901,6 +3902,7 @@ interface PageMeta {
   jsonLd: Record<string, unknown> | null
   prerender: string | null
   card?: CardSpec | null
+  electionState?: VicElectionState
   prev?: string
   next?: string
   /** Served with a noindex robots tag (an individual donor's page). */
@@ -4529,7 +4531,7 @@ async function buildRouteMeta(route: SeoRoute, url: URL, request: Request, env: 
       if (route.hub === 'vic-election') {
         // ?place= is the seat finder: a search result, never indexed; its canonical is the hub.
         const page = await vicElectionPage(route.id,<T>(path: string) => assetJson<T>(env,path),env,url.searchParams.get('place'))
-        return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status,card:'card' in page ? page.card : null,...('noindex' in page && page.noindex ? {noindex:true} : {})})
+        return base({title:page.title+' · OPAX',description:page.description,prerender:page.html,jsonLd:page.jsonLd,status:page.status,card:'card' in page ? page.card : null,electionState:'state' in page ? page.state : undefined,...('noindex' in page && page.noindex ? {noindex:true} : {})})
       }
       if (route.hub === 'video') {
         // ?kind= filters the one list; every filtered view's canonical is the bare page.
@@ -4766,7 +4768,7 @@ function sharedAssetJson<T>(env: Env, path: string): Promise<T> {
   if (path.startsWith('/growth/supplier-rows/')) return supplierBucket<T>(env, path)
   if (path === '/bills/index.json') return loadBills(env).then((bills) => bills.file as T)
   if (BILL_FILE_RE.test(path)) return keptAssetJson<T>(billFileMemo, 32, env, path)
-  if (SHARED_FILE_RE.test(path)) return keptAssetJson<T>(sharedFileMemo, 8, env, path)
+  if (SHARED_FILE_RE.test(path) || path === PROCEDURAL_TITLES_PATH) return keptAssetJson<T>(sharedFileMemo, 8, env, path)
   return assetJson<T>(env, path)
 }
 
@@ -4824,7 +4826,10 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if(bill){
         const related=await read<{bills:Parameters<typeof renderBillAnswer>[0][]}>('/bills/index.json')
           const query = guardTableURL(divisionTableConfig({bill:bill.key}),url).query
-        meta.prerender=renderBillAnswer(bill,people?.people || [],people?.slugOf || new Map(),related.bills,query).html;billIdentity={identifier:bill.key,status:bill.status}}
+        const titles = bill.divisions?.length ? await read<Record<string,string>>(PROCEDURAL_TITLES_PATH).catch(() => ({})) : {}
+        const proceduralConfig = {...divisionTableConfig(), urlKey:'pv'}
+        const proceduralQuery = guardTableURL(proceduralConfig,url).query
+        meta.prerender=renderBillAnswer({...bill,division_titles:titles},people?.people || [],people?.slugOf || new Map(),related.bills,query,proceduralQuery).html;billIdentity={identifier:bill.key,status:bill.status}}
     } else if(route.kind==='subject' && route.dir==='supplier') {
       const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read,url.searchParams,sharedAgencyTopSuppliers(env))
       if(content) meta.prerender=content.html
@@ -4957,13 +4962,20 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
       : `Introduced${house ? ` in the ${house}` : ''} on ${longDate(b.introduced)}.`) : '',
   ].filter(Boolean).join(' ')
   const counts: string[] = []
-  if (b.divisions) counts.push(`${num(b.divisions)} division${b.divisions === 1 ? '' : 's'}`)
+  const detail = b.has_summary || b.divisions ? await sharedAssetJson<{ summary?: { sentences?: string[] }; divisions?: object[] }>(env, `/bills/${encodeURIComponent(key)}.json`).catch(() => null) : null
+  if (detail?.divisions?.length) {
+    const titles = await sharedAssetJson<Record<string,string>>(env, PROCEDURAL_TITLES_PATH).catch(() => ({}))
+    const groups = billDivisionGroups(detail.divisions,titles)
+    const n = groups.substantive.length, p = groups.procedural.length
+    counts.push(`${num(n)} substantive vote${n === 1 ? '' : 's'}`)
+    if (p) counts.push(`${num(p)} procedural vote${p === 1 ? '' : 's'}`)
+  }
   if (b.speeches) counts.push(`${num(b.speeches)} speech${b.speeches === 1 ? '' : 'es'}`)
-  const detail = b.has_summary ? await sharedAssetJson<{ summary?: { sentences?: string[] } }>(env, `/bills/${encodeURIComponent(key)}.json`).catch(() => null) : null
   const summary = detail?.summary?.sentences?.[0]?.trim()
   // The share card keeps the short count line; the description says what the page holds.
   const recordLine = counts.length ? `${andList(counts)} in the record.` : 'The official record, on OPAX.'
-  const tail = counts.length ? `${andList(counts)}: who argued for and against it${b.divisions ? ', and how the parties voted' : ''}.`
+  // Divided bills keep both vote counts within the description's length budget.
+  const tail = counts.length ? (detail?.divisions?.length ? recordLine : `${andList(counts)}: who argued for and against it.`)
     : b.status === 'exposure_draft' ? 'The draft, its consultation and what it would change.'
     : 'Its progress, the bill text and every speech on it as the debate starts.'
   const portfolio = b.portfolio ? ` ${b.portfolio} portfolio.` : ''
@@ -6049,7 +6061,7 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   const ld = meta.jsonLd ? JSON.stringify(meta.jsonLd).replace(/</g, '\\u003c') : null
   // The share image is drawn per route (see "Share images" below); a page
   // with nothing to draw, or nothing to find, shares the home card.
-  const image = meta.card && meta.status < 400 ? ogImageFor(meta.canonical) : OG_IMAGE
+  const image = meta.card && meta.status < 400 ? ogImageFor(meta.canonical,meta.electionState) : OG_IMAGE
   const imageAlt = meta.card && meta.status < 400 ? clip(`${meta.card.title} on OPAX`, 120) : OG_IMAGE_ALT
   const gates = navGates(env)
   const rewriter = new HTMLRewriter()
@@ -6132,6 +6144,10 @@ async function renderSeoPage(route: SeoRoute, url: URL, request: Request, env: E
   headers.delete('content-length')
   headers.set('content-type', 'text/html; charset=utf-8')
   headers.set('x-robots-tag', noindex ? 'noindex' : 'all')
+  if (route.kind === 'hub' && route.hub === 'vic-election') {
+    headers.set('cache-control',meta.status === 200 ? VIC_ELECTION_CACHE : 'no-store')
+    if (meta.status === 503) headers.set('retry-after','60')
+  }
   if (meta.status === 200) {
     const etag = await htmlValidator([env.CF_VERSION_METADATA?.id ?? '', shell.headers.get('etag'), route.kind, noindex, image, imageAlt, meta])
     headers.set('etag', etag)
@@ -6304,13 +6320,22 @@ async function serveOgImage(url: URL, request: Request, env: Env, ctx: Execution
   for (const [k, v] of cardQuery) variants.set(k, v)
   // The portrait card carries its own drawing version, so redrawing it never moves a landscape card's key.
   if (portrait) { variants.set('format', format); variants.set('pv', PORTRAIT_VERSION) }
-  const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/sa-full-${saFullText(env.SA_HANSARD_FULL_TEXT)}/${OG_VERSION}/${m[2]}${pagePath}?${variants}`)
   const pageUrl = new URL(`${SITE_ORIGIN}${pagePath}`)
   for (const [k, v] of cardQuery) pageUrl.searchParams.set(k, v)
   let route: SeoRoute | null = null
   try { route = pagePath === '/home' ? null : matchSeoRoute(pageUrl) } catch { route = null }
   // Before the cache: a subject the page would not show gets no card, drawn or replayed.
   if (await cardRefused(route, pageUrl, request, env, ctx)) return jpeg ? new Response('No card available', { status: 404 }) : ogFallback(env, request)
+  if (route?.kind === 'hub' && route.hub === 'vic-election') {
+    const data = await readVicElection(<T>(path: string) => assetJson<T>(env,path)).catch(()=>null)
+    if (!data) return jpeg ? new Response('Card unavailable', {status:503}) : ogFallback(env,request)
+    // Ignore a supplied state: even an old image URL must use today's cache entry.
+    const state = vicElectionState(data)
+    variants.set('state',state)
+    // Fetched dates have day precision; content changes during the count need their own key.
+    if (state === 'results' || state === 'results_final') variants.set('results',await sha256Hex(JSON.stringify(data.current_results)))
+  }
+  const cacheKey = cacheRequest('og', `${encodeURIComponent(env.CACHE_EPOCH)}/sa-full-${saFullText(env.SA_HANSARD_FULL_TEXT)}/${OG_VERSION}/${m[2]}${pagePath}?${variants}`)
   if (!cacheBypass(request, url)) {
     const hit = await caches.default.match(cacheKey)
     if (hit) return withCacheStatus(request.method === 'HEAD' ? new Response(null, hit) : hit, 'HIT')

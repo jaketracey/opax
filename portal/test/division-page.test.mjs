@@ -8,6 +8,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import { personUrl } from '../public/canonical-urls.js';
+import { renderDivisionAnswer } from '../src/seo-content.ts';
 
 const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
 
@@ -51,6 +52,41 @@ const slug = 'division-federal-representatives-1080';
 /** A plain copy: the helpers run in their own realm, so compare by value. */
 const plain = (v) => JSON.parse(JSON.stringify(v));
 const text = (html) => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+
+test('the real 2006 Senate teller mismatch distinguishes names from the source tally in both renderers', async () => {
+  const d = JSON.parse(readFileSync(new URL('../public/divisions/division-federal-senate-1158.json', import.meta.url)));
+  assert.equal(d.date, '2006-11-07');
+  assert.equal(d.ayes, 5);
+  assert.equal(d.members.filter(m => m.vote === 'aye').length, 6);
+  const ctx = page({});
+  // Party chips are tested separately; this assertion concerns counts and names.
+  ctx.partyChipHTML = party => party;
+  const names = await ctx.loadDivisionNames(d.slug, d);
+  for (const html of [ctx.divisionMembersHTML(names, d), renderDivisionAnswer(d, [], new Map()).html]) {
+    assert.match(text(html), /Ayes 6 named \(tally 5\)/);
+    for (const name of ['Andrew Bartlett', 'Bob Brown', 'Kerry Nettle', 'Lyn Allison', 'Natasha Stott Despoja', 'Rachel Siewert']) {
+      assert.ok(html.includes(name), name);
+    }
+  }
+});
+
+test('both renderers describe partial lists and zero tallies without substituting the name count', () => {
+  const ctx = page({});
+  const names = {aye:[{name:'Fixture One'}], no:[], paired:[{name:'Fixture Pair'}]};
+  const d = {house:'nsw_lc', ayes:4, noes:0, members:[
+    {name:'Fixture One', vote:'aye'}, {name:'Fixture Pair', vote:'paired'},
+  ]};
+  for (const html of [ctx.divisionMembersHTML(names, d), renderDivisionAnswer(d, [], new Map()).html]) {
+    assert.match(text(html), /Ayes 1 named \(tally 4\)/);
+    assert.doesNotMatch(text(html), /Paired[^<]*tally/);
+  }
+  assert.match(text(ctx.divisionMembersHTML({...names, no:[{name:'Fixture Two'}]}, {ayes:1, noes:0})), /Noes 1 named \(tally 0\)/);
+  const equal = ctx.divisionMembersHTML(names, {ayes:1, noes:0});
+  assert.match(text(equal), /Ayes 1 Fixture One Noes 0 None named/);
+  assert.doesNotMatch(equal, /named \(tally/);
+  assert.match(text(ctx.divisionMembersHTML(names)), /Ayes 1 Fixture One/);
+  assert.doesNotMatch(ctx.divisionMembersHTML(names), /tally 0/);
+});
 
 test('an export with a member list is the source: no index read, names linked to their entries', async () => {
   const ctx = page({});

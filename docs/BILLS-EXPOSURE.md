@@ -116,7 +116,14 @@ coverage in `party_coverage`:
 `meta.party_basis_note`. A page showing a split should say what it rests on; a
 division whose coverage is mostly `member` is not dated evidence.
 
-The same timeline gives `sponsor_party`, read at the introduction date.
+Sponsors are checked at introduction against the bounded roster periods used by
+the dated division resolver (`scripts/vote_parties.py`). A dated substantive
+disagreement replaces the source label. A source Rex Patrick Team label against dated Independent is retained and returned as a hold without requiring a particular person id. Personal registered parties beat
+Independent in either direction, regional registered labels bridge their
+party-room variants, and reviewed dated renames apply. As on division pages, agreeing observations within one parliament can check an existing source label; they cannot fill a blank or cross a general election. Gaps retain the source
+label; a missing electorate release or Senate Handbook aborts fresh publication. A manual retained refresh loads Evidence explicitly, keeps its published labels and source stamp on an evidence outage, and exits zero. The exporter returns kept personal-party/Independent naming disagreements for review. The speech/member timeline above remains a fallback only
+for sponsors whose source gives no recognised party and whose roster period
+gives none. See the [sponsor audit](reports/2026-11-14-bill-sponsor-parties.md).
 
 ### Fields the contract does not name
 
@@ -279,8 +286,8 @@ One shape mismatch to settle with the registry agent: the contract calls
 listing extras (`listing_title`, `type`, `sponsor_aph_id`, `sponsor_party`,
 `summary`). The exporter reads either -- a list becomes the aliases, an object
 contributes its `aliases` list and its `listing_title` when that differs from
-the title, and its `sponsor_party` is preferred over anything derived here,
-because it is the party as the bill page printed it.
+the title. Its `sponsor_party` supplies the recognised source label, checked
+against the bounded roster periods at introduction as described above.
 
 ## 4. Rerunning when the registry and the summaries land
 
@@ -410,4 +417,3 @@ the file, never touches a registry row, and is idempotent.
 
 Summaries are written from the draft text (`basis: text`) because drafts usually
 ship without an explanatory memorandum; the attribution says so.
-

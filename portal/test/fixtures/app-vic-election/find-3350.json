@@ -1,5 +1,6 @@
 {
   "schema_version": 1,
+  "state": "pre_poll",
   "q": "3350",
   "places_searched": true,
   "hits": [

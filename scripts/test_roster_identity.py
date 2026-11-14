@@ -23,6 +23,12 @@ def row(name, first, last, chambers=("representatives",), states=("federal",), w
 
 
 class VerifyTests(unittest.TestCase):
+    def test_portrait_aliases_never_become_roster_person_ids(self):
+        same = ri.same_person()
+        for name in ["a. koutsantonis", "a. piccolo", "sophie panopoulos", "kathryn sullivan"]:
+            self.assertNotIn(name, same)
+        self.assertTrue(all(key.isdigit() for key in same.values()))
+
     def verify(self, r, ids, same=None):
         return ri.verify(r, Counter(ids), MEMBERS, same or {}, 2026)
 
