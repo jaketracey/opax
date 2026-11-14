@@ -429,9 +429,15 @@ native event that is not `$exception`. The three copies must stay in step:
 message rules' exact pattern texts, and `tests/native-scrub.test.ts` runs the
 Swift copy, cut from the patch by `scripts/check-native-scrub.sh`, on the
 invented inputs in `tests/fixtures/exception-scrub-cases.json` and expects what
-JS keeps (on a Mac a missing `swift` fails it; only Linux skips it). Kotlin
-is compiled only by the Android build, but Android's `java.util.regex` runs on
-ICU like NSRegularExpression, so the same pattern texts behave the same.
+JS keeps (on a Mac a missing `swift` fails it; only Linux skips it).
+`tests/native-scrub-kotlin.test.ts` does the same for the Kotlin copy, through
+`scripts/check-native-scrub-kotlin.sh` and the Kotlin compiler Gradle caches on
+the Android desktop (it skips where Java 17 is missing, as on the Mac), and
+checks everywhere that the Kotlin field lists match the JS ones. That run uses
+the JVM's `java.util.regex`; Android's runs on ICU like NSRegularExpression, so
+the Swift run covers the pattern texts, and the b71 logcat check in
+`mobile/docs/android-crash-plugin-checks.md` (item 4) confirms they load on a
+device.
 
 | Property | What it may hold |
 | --- | --- |
@@ -492,12 +498,19 @@ does for Android what `release-ios.sh` does for iOS: it builds with
 so Metro records `android.chunk-id` there, then copies in the composed map
 Gradle writes
 (`android/app/build/generated/sourcemaps/react/release/index.android.bundle.map`)
-and R8's `mapping.txt`, logs the chunk ID and runs the upload into
-`crash-symbols.log`. Without a key it logs the one skip line, and a failed
-upload never fails the build; rerun `scripts/upload-crash-symbols.sh android
-<version> <versionCode> <evidence folder> <evidence folder>/mapping.txt`
-later, from the Mac. A key the caller exported reaches only the upload, never
-Expo, Gradle or Metro. `verify-play.py` refuses an AAB whose evidence folder
+and R8's `mapping.txt`, and logs the chunk ID. It uploads them only when the
+release run sets `OPAX_UPLOAD_SYMBOLS=1` (`ANDROID-PLAY-1.0.md`, "Crash
+symbols"): the default, `0`, uploads nothing even where a key file and
+`posthog-cli` exist, and writes one line to `crash-symbols.log` with the
+command that uploads them, `scripts/upload-crash-symbols.sh android <version>
+<versionCode> <evidence folder> <evidence folder>/mapping.txt`; any other value
+stops the build before it starts. With `1` the upload runs into
+`crash-symbols.log`, logs the one skip line without a key, and is stopped after
+`OPAX_SYMBOL_UPLOAD_TIMEOUT` seconds (600 by default) so a hung CLI cannot hold
+the desktop native lock; a failed or stopped upload never fails the build.
+`build-play.sh` unsets every `POSTHOG_*` variable the caller exported before
+its first step, so no key reaches capacity checks, the build gate, Expo,
+Gradle, Metro or the upload, which loads its own key file. `verify-play.py` refuses an AAB whose evidence folder
 lacks the composed map, whose recorded chunk ID is not the one in the shipped
 `index.android.bundle`, or whose `mapping.txt` is not the R8 mapping the AAB
 gives Play (`BUNDLE-METADATA/com.android.tools.build.obfuscation/proguard.map`,

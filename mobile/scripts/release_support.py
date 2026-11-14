@@ -3,8 +3,10 @@ import json
 import os
 from pathlib import Path
 import re
+import signal
 import stat
 import subprocess
+import threading
 
 
 PRIVATE_NAMES = ("ASC_KEY_PATH", "ASC_KEY_ID", "ASC_ISSUER_ID", "APPLE_TEAM_ID")
@@ -69,7 +71,10 @@ def redact(text):
                   "[private key redacted]", text, flags=re.S)
 
 
-def run_logged(command, log, *, public_env=False, env=None):
+def run_logged(command, log, *, public_env=False, env=None, timeout=None):
+    """With `timeout` (seconds), the command runs in its own process group and
+    the whole group is stopped when the time runs out, so a hung child (a CLI
+    under a script) cannot hold a lock; the log then ends with one line."""
     env = (os.environ if env is None else env).copy()
     if public_env:
         for name in (*PRIVATE_NAMES, *UPLOAD_KEY_NAMES, "OPAX_BUNDLE_ID", "OPAX_INTERNAL_TESTER_EMAIL",
@@ -81,19 +86,39 @@ def run_logged(command, log, *, public_env=False, env=None):
                 env.pop(name)
     with Path(log).open("w") as stream:
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                   text=True, errors="replace", env=env)
+                                   text=True, errors="replace", env=env, start_new_session=timeout is not None)
+        timed_out = threading.Event()
+        timer = None
+        if timeout is not None:
+            def stop():
+                timed_out.set()
+                try:
+                    os.killpg(process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+            timer = threading.Timer(timeout, stop)
+            timer.daemon = True
+            timer.start()
         inside_key = False
-        for line in process.stdout:
-            if KEY_BEGIN in line:
-                inside_key = True
-                stream.write("[private key redacted]\n")
-            if inside_key:
-                if KEY_END in line:
-                    inside_key = False
-                continue
-            stream.write(redact(line))
+        try:
+            for line in process.stdout:
+                if KEY_BEGIN in line:
+                    inside_key = True
+                    stream.write("[private key redacted]\n")
+                if inside_key:
+                    if KEY_END in line:
+                        inside_key = False
+                    continue
+                stream.write(redact(line))
+        finally:
+            if timer:
+                timer.cancel()
         process.stdout.close()
         code = process.wait()
+        if timed_out.is_set():
+            stream.write(f"Timed out after {timeout} seconds; the command was stopped.\n")
+    if timed_out.is_set():
+        raise ReleaseError(f"Command timed out after {timeout} seconds; inspect the redacted log: {log}")
     if code:
         raise ReleaseError(f"Command failed (exit {code}); inspect the redacted log: {log}")
 

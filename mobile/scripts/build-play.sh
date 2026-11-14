@@ -1,9 +1,25 @@
 #!/usr/bin/env bash
-# Local upload-signed CNG bundle. Does not upload or contact Play Console.
+# Local upload-signed CNG bundle. Never uploads to or contacts Play Console.
+# Crash symbols go to PostHog only when the release run sets
+# OPAX_UPLOAD_SYMBOLS=1 (docs/ANDROID-PLAY-1.0.md, "Crash symbols").
 set +x
 set -euo pipefail
 umask 077
 cd "$(dirname "$0")/.."
+# Release-only opt-in: 0 (the default) keeps the symbols and uploads nothing,
+# even where a key file and posthog-cli exist; only the release run sets 1.
+OPAX_UPLOAD_SYMBOLS=${OPAX_UPLOAD_SYMBOLS-0}
+case "$OPAX_UPLOAD_SYMBOLS" in
+  0|1) export OPAX_UPLOAD_SYMBOLS ;;
+  *) echo 'OPAX_UPLOAD_SYMBOLS must be 0 (keep the symbols, the default) or 1 (upload them; the release run only).' >&2; exit 2 ;;
+esac
+# A hung upload must not hold the native lock: it is stopped after this many seconds.
+UPLOAD_TIMEOUT=${OPAX_SYMBOL_UPLOAD_TIMEOUT-600}
+[[ "$UPLOAD_TIMEOUT" =~ ^[1-9][0-9]{0,4}$ ]] || { echo 'OPAX_SYMBOL_UPLOAD_TIMEOUT must be whole seconds.' >&2; exit 2; }
+# No caller-exported PostHog variable reaches any step: not the input checks,
+# capacity.sh, the build gate, Expo, Gradle, Metro or the upload, which loads
+# its own key file (scripts/upload-crash-symbols.sh, docs/ANALYTICS.md).
+while read -r NAME; do unset "$NAME"; done < <(compgen -e | grep '^POSTHOG_' || true)
 EXPECTED_COMMIT= EXPECTED_VOICE_MODE= INSIDE_GATE=0
 CALLER_VOICE_MODE_SET=${OPAX_PRODUCTION_VOICE+x}
 CALLER_VOICE_MODE=${OPAX_PRODUCTION_VOICE-}
@@ -55,13 +71,6 @@ if [ "$INSIDE_GATE" != 1 ]; then
   exit
 fi
 if [ "$(uname -s)" = Linux ]; then qa_assert_native_lock; fi
-# A crash symbol upload key the caller exported (docs/ANALYTICS.md) reaches
-# only the upload at the end, never Expo, Gradle or Metro. Without one the
-# upload script loads its own key file, inside the upload only.
-UPLOAD_KEYS=()
-for NAME in POSTHOG_CLI_API_KEY POSTHOG_CLI_TOKEN; do
-  if [ -n "${!NAME+x}" ]; then UPLOAD_KEYS+=("$NAME=${!NAME}"); unset "$NAME"; fi
-done
 : "${JAVA_HOME:?Set JAVA_HOME to Java 21}"
 : "${ANDROID_HOME:?Set ANDROID_HOME to the Android SDK}"
 export OPAX_VARIANT=production OPAX_TARGET_PLATFORM=android OPAX_PLAY_BUILD=1
@@ -150,28 +159,33 @@ PY
 # Publish evidence only after the final HEAD/tree/voice check passes.
 check_inputs
 mv "$OUT/build-evidence.json.pending" "$OUT/build-evidence.json"
-# Upload the kept symbols to PostHog, as release-ios.sh does for iOS. The
-# script loads its key itself; without one it logs one skip line. A failed
-# upload never fails the build: rerun scripts/upload-crash-symbols.sh later
-# (from the Mac) against this evidence folder. The log is redacted.
+# Crash symbols: kept in the evidence folder; uploaded to PostHog only with
+# OPAX_UPLOAD_SYMBOLS=1, as release-ios.sh does for iOS. The upload script
+# loads its key itself; without one it logs one skip line. A failed or
+# timed-out upload never fails the build: rerun the printed command later,
+# where posthog-cli is installed, against this evidence folder. The log is
+# redacted.
 CHUNK_ID=$(cat "$OUT/android.chunk-id")
 VERSION=$(python3 -c 'import json, sys; print(json.load(open(sys.argv[1]))["version"])' "$OUT/build-evidence.json")
 MAPPING=()
 [ ! -f "$OUT/mapping.txt" ] || MAPPING=("$OUT/mapping.txt")
-for KEY in ${UPLOAD_KEYS[@]+"${UPLOAD_KEYS[@]}"}; do export "$KEY"; done
-if python3 - "$OUT/crash-symbols.log" "$VERSION" "$OPAX_BUILD_NUMBER" "$OUT" ${MAPPING[@]+"${MAPPING[@]}"} <<'PY'
+RERUN="scripts/upload-crash-symbols.sh android $VERSION $OPAX_BUILD_NUMBER $OUT${MAPPING[@]+ ${MAPPING[0]}}"
+if [ "$OPAX_UPLOAD_SYMBOLS" != 1 ]; then
+  echo "Crash symbols: not uploaded (OPAX_UPLOAD_SYMBOLS=0; only the release run sets 1). To upload them, run from mobile/: $RERUN" |
+    tee "$OUT/crash-symbols.log"
+elif python3 - "$OUT/crash-symbols.log" "$UPLOAD_TIMEOUT" "$VERSION" "$OPAX_BUILD_NUMBER" "$OUT" ${MAPPING[@]+"${MAPPING[@]}"} <<'PY'
 import sys
 sys.path.insert(0, 'scripts')
 from release_support import ReleaseError, run_logged
 try:
-    run_logged(['bash', 'scripts/upload-crash-symbols.sh', 'android', *sys.argv[2:]], sys.argv[1])
+    run_logged(['bash', 'scripts/upload-crash-symbols.sh', 'android', *sys.argv[3:]], sys.argv[1], timeout=int(sys.argv[2]))
 except (ReleaseError, OSError):
     sys.exit(1)
 PY
 then
   tail -n 1 "$OUT/crash-symbols.log"
 else
-  echo "Crash symbols not uploaded; see $OUT/crash-symbols.log and rerun scripts/upload-crash-symbols.sh." >&2
+  echo "Crash symbols not uploaded; see $OUT/crash-symbols.log, then rerun from mobile/: $RERUN" >&2
 fi
 echo "Crash symbols: chunk $CHUNK_ID; index.android.bundle.map${MAPPING[@]+ and mapping.txt} kept in $OUT"
 echo "PASS local upload-signed Android $OPAX_BUILD_NUMBER; evidence: $OUT"

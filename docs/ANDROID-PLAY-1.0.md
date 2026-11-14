@@ -25,6 +25,24 @@ The listing and Data safety text are in [ANDROID-STORE.md](ANDROID-STORE.md): th
 
 The Data safety source is `release/store-1.0:release/1.0/app-privacy.json` and `mobile/voice-production-policy.json`: email address, user ID, audio, other user content, product interaction, search history and other diagnostic data. All seven are linked, not used for tracking, and used for app functionality only. Location remains on-device only. Play has different field names and no Apple-style linked-to-user checkbox; the draft maps the seven types explicitly. Collection/sharing, optional/required, encryption and deletion answers must match the final binary and provider evidence. The seven-type declaration is accurate only for a candidate that links the Android voice module; [ANDROID-STORE.md](ANDROID-STORE.md) has the final table.
 
+## Crash symbols
+
+`mobile/scripts/build-play.sh` keeps each build's crash symbols in its evidence folder, `mobile/private/play/<versionCode>/`: `android.chunk-id`, the composed Hermes map `index.android.bundle.map` and R8's `mapping.txt` (docs/ANALYTICS.md, "Symbols"). It uploads them to PostHog only when the run sets `OPAX_UPLOAD_SYMBOLS=1`. The default, `0`, uploads nothing, even where the key file and `posthog-cli` exist, and prints one line with the command that uploads them later; any other value stops the build before it starts. Scratch, QA and candidate builds leave it unset. Only the release run, the one whose AAB goes to Play, sets it:
+
+```sh
+cd mobile
+OPAX_ANDROID_VERSION_CODE=<versionCode> OPAX_UPLOAD_SYMBOLS=1 \
+  scripts/build-play.sh --expected-commit <full SHA> --expected-voice-mode <0|1>
+```
+
+The upload runs after the AAB and its evidence are written and is stopped after `OPAX_SYMBOL_UPLOAD_TIMEOUT` seconds (600 by default), so a hung `posthog-cli` cannot hold the desktop native lock. A failed, skipped or stopped upload never fails the build: `crash-symbols.log` in the evidence folder says which, and the build log prints the command to rerun from `mobile/`:
+
+```sh
+scripts/upload-crash-symbols.sh android <versionName> <versionCode> private/play/<versionCode> private/play/<versionCode>/mapping.txt
+```
+
+The upload script loads its own key file; `build-play.sh` unsets any `POSTHOG_*` variable the caller exported before its first step. Before b71 goes to Play, run the logcat check in `mobile/docs/android-crash-plugin-checks.md` (item 4, "b71 pre-submit") on its AAB.
+
 ## Play Console sequence after account creation
 
 1. Complete Organization verification for Noice Pty Ltd: matching legal entity/address and D-U-N-S details, organization website and phone, authorized contact and verified public developer contacts. Account registration has a US$25 one-time fee. Keep the upload key and its credentials backed up privately. [Account setup](https://support.google.com/googleplay/android-developer/answer/6112435), [organization information](https://support.google.com/googleplay/android-developer/answer/13628312).

@@ -6,6 +6,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import tempfile
+import time
 import unittest
 import xml.etree.ElementTree as ET
 import zipfile
@@ -21,6 +22,23 @@ from release_support import ANALYTICS_CONFIG, ReleaseError
 CHUNK = '5f0c3a1e-7b0d-4f4e-9d0b-3f2a6c1d9e77'
 INVENTED_KEY = 'phx_INVENTED_ANDROID_UPLOAD_KEY_3c9e1b7a'
 COMPOSED_MAP = {'version': 3, 'sources': ['index.ts'], 'mappings': 'AAAA', 'x_hermes_function_offsets': {}}
+# Each traced step records the POSTHOG_ variable names it can see (never a value).
+TRACE = ('import json, os, sys; open(os.environ["OPAX_TEST_TRACE"], "a").write(json.dumps({"tool": TOOL, "args": sys.argv[1:], '
+         '"posthog": sorted(n for n in os.environ if n.startswith("POSTHOG_"))}) + "\\n")')
+# The fixture's upload script: records its arguments, can hang or fail, never uploads.
+UPLOAD_STUB = r'''#!/bin/bash
+python3 -c 'TRACE' "$@"
+sleep "${UPLOAD_SLEEP:-0}"
+echo "Crash symbols: stub for $1 $2 ($3)."
+exit "${UPLOAD_EXIT:-0}"
+'''.replace('TRACE', TRACE.replace('TOOL', '"upload"'))
+# The Mac path's build gate, which runs after the input checks and capacity.sh.
+GATE_STUB = r'''build_command() {
+  python3 -c 'TRACE'
+  "$@"
+}
+'''.replace('TRACE', TRACE.replace('TOOL', '"gate"'))
+SKIP = 'Crash symbols: not uploaded (OPAX_UPLOAD_SYMBOLS=0; only the release run sets 1). To upload them, run from mobile/: '
 
 
 class AndroidReleaseTests(unittest.TestCase):
@@ -117,13 +135,10 @@ class AndroidReleaseTests(unittest.TestCase):
             shutil.copyfile(Path(__file__).parent/name, scripts/name)
         upload = scripts/'upload-crash-symbols.sh'
         if upload_stub:
-            # Records its arguments and whether it saw a key; never uploads.
-            upload.write_text('#!/bin/bash\npython3 -c \'import json, os, sys; open(os.environ["OPAX_TEST_TRACE"], "a").write('
-                              'json.dumps({"tool": "upload", "args": sys.argv[1:], "key": "POSTHOG_CLI_API_KEY" in os.environ}) + "\\n")\' "$@"\n'
-                              'echo "Crash symbols: stub for $1 $2 ($3)."\nexit "${UPLOAD_EXIT:-0}"\n')
+            upload.write_text(UPLOAD_STUB)
         else:
             shutil.copyfile(Path(__file__).parent/'upload-crash-symbols.sh', upload)
-        (scripts/'qa-env.sh').write_text('build_command() { "$@"; }\n')
+        (scripts/'qa-env.sh').write_text(GATE_STUB)
         (scripts/'android-host.sh').write_text('')  # host guard has its own test; keep fixtures host-independent
         (root/'.gitignore').write_text('mobile/private/\nmobile/android/\nmobile/node_modules/\nnative.lock/\nhome/\ntrace.jsonl\n')
         (mobile/'app.config.ts').write_text("  version: '1.1.0',\n")
@@ -132,7 +147,7 @@ class AndroidReleaseTests(unittest.TestCase):
         expo.write_text('''#!/usr/bin/env python3
 import json, os, pathlib, sys
 p=pathlib.Path('android')
-with open(os.environ['OPAX_TEST_TRACE'], 'a') as trace: trace.write(json.dumps({'tool':'expo '+sys.argv[1], 'key':'POSTHOG_CLI_API_KEY' in os.environ})+'\\n')
+with open(os.environ['OPAX_TEST_TRACE'], 'a') as trace: trace.write(json.dumps({'tool':'expo '+sys.argv[1], 'posthog':sorted(n for n in os.environ if n.startswith('POSTHOG_'))})+'\\n')
 if sys.argv[1]=='config':
     voice=os.environ.get('OPAX_PRODUCTION_VOICE')=='1'
     if os.environ.get('ATTACK')=='voice' and (p/'built').exists(): voice=not voice
@@ -149,7 +164,7 @@ else:
         java.write_text('''#!/usr/bin/env python3
 import json, os, pathlib, subprocess, sys, zipfile
 pathlib.Path('gradle-args.json').write_text(json.dumps(sys.argv[1:]))
-with open(os.environ['OPAX_TEST_TRACE'], 'a') as trace: trace.write(json.dumps({'tool':'gradle', 'key':'POSTHOG_CLI_API_KEY' in os.environ})+'\\n')
+with open(os.environ['OPAX_TEST_TRACE'], 'a') as trace: trace.write(json.dumps({'tool':'gradle', 'posthog':sorted(n for n in os.environ if n.startswith('POSTHOG_'))})+'\\n')
 assert os.environ['OPAX_GRADLE_DAEMON'] == '0'
 p=pathlib.Path('app/build/outputs')
 extra={'variant':'production','productionVoiceEnabled':os.environ.get('OPAX_PRODUCTION_VOICE')=='1','analytics':ANALYTICS}
@@ -218,10 +233,11 @@ if os.environ.get('ATTACK')=='head': subprocess.run(['git','commit','--allow-emp
                     self.assertEqual(evidence['js_chunk_id'], CHUNK)
                     self.assertEqual((out/'android.chunk-id').read_text().strip(), CHUNK)
                     self.assertTrue((out/'index.android.bundle.map').is_file() and (out/'mapping.txt').is_file())
-                    uploads=[call for call in self.trace(d) if call['tool']=='upload']
-                    self.assertEqual([call['args'] for call in uploads],
-                                     [['android','1.1.0','2026111001',str(out.resolve()),str(out.resolve()/'mapping.txt')]])
-                    self.assertIn('Crash symbols: stub for android 1.1.0 (2026111001).', result.stdout)
+                    # The default keeps the symbols and uploads nothing.
+                    self.assertEqual([call for call in self.trace(d) if call['tool']=='upload'], [])
+                    skip = SKIP + self.rerun(out)
+                    self.assertIn(skip, result.stdout.splitlines())
+                    self.assertEqual((out/'crash-symbols.log').read_text().splitlines(), [skip])
                     self.assertIn(f'Crash symbols: chunk {CHUNK}; index.android.bundle.map and mapping.txt kept', result.stdout)
                 if attack == 'analytics':
                     # Refused from the recorded config, before Gradle runs.
@@ -233,35 +249,126 @@ if os.environ.get('ATTACK')=='head': subprocess.run(['git','commit','--allow-emp
         path = Path(directory)/'trace.jsonl'
         return [json.loads(line) for line in path.read_text().splitlines()] if path.exists() else []
 
+    @staticmethod
+    def rerun(out):
+        out = out.resolve()
+        return f'scripts/upload-crash-symbols.sh android 1.1.0 2026111001 {out} {out}/mapping.txt'
+
+    def build_play(self, mobile, commit, env, **extra):
+        return subprocess.run(['bash','scripts/build-play.sh','--expected-commit',commit,'--expected-voice-mode','1'],
+                              cwd=mobile, env={**env, **extra}, capture_output=True, text=True, timeout=300)
+
+    def test_build_play_uploads_only_when_the_release_run_opts_in(self):
+        with tempfile.TemporaryDirectory() as d:
+            mobile, commit, env = self.fixture(d)
+            result = self.build_play(mobile, commit, env, OPAX_UPLOAD_SYMBOLS='1')
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            out = (mobile/'private/play/2026111001').resolve()
+            self.assertEqual([call['args'] for call in self.trace(d) if call['tool']=='upload'],
+                             [['android','1.1.0','2026111001',str(out),str(out/'mapping.txt')]])
+            self.assertIn('Crash symbols: stub for android 1.1.0 (2026111001).', result.stdout)
+            self.assertNotIn(SKIP, result.stdout)
+
+    def test_build_play_refuses_an_invalid_upload_switch_or_timeout(self):
+        cases = [('OPAX_UPLOAD_SYMBOLS', value, 'OPAX_UPLOAD_SYMBOLS must be 0') for value in ('2', 'yes', 'true', ' 1', '1 ', '')]
+        cases += [('OPAX_SYMBOL_UPLOAD_TIMEOUT', value, 'OPAX_SYMBOL_UPLOAD_TIMEOUT must be whole seconds')
+                  for value in ('0', '10s', '-1', '')]
+        for name, value, message in cases:
+            with self.subTest(name=name, value=value), tempfile.TemporaryDirectory() as d:
+                mobile, commit, env = self.fixture(d)
+                result = self.build_play(mobile, commit, env, **{name: value})
+                self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+                self.assertIn(message, result.stderr)
+                self.assertFalse((mobile/'private').exists())
+                self.assertEqual(self.trace(d), [])
+
     def test_build_play_symbol_upload_never_fails_the_build(self):
         with tempfile.TemporaryDirectory() as d:
             mobile, commit, env = self.fixture(d)
-            result = subprocess.run(['bash','scripts/build-play.sh','--expected-commit',commit,'--expected-voice-mode','1'],
-                                    cwd=mobile, env={**env, 'UPLOAD_EXIT':'1'}, capture_output=True, text=True)
+            result = self.build_play(mobile, commit, env, OPAX_UPLOAD_SYMBOLS='1', UPLOAD_EXIT='1')
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            out = mobile/'private/play/2026111001'
             self.assertIn('Crash symbols not uploaded; see', result.stderr)
-            self.assertTrue((mobile/'private/play/2026111001/build-evidence.json').is_file())
+            self.assertIn('then rerun from mobile/: ' + self.rerun(out), result.stderr)
+            self.assertTrue((out/'build-evidence.json').is_file())
             self.assertIn(f'Crash symbols: chunk {CHUNK}', result.stdout)
 
-    def test_build_play_hands_the_upload_key_to_the_upload_only(self):
+    def test_build_play_stops_a_hung_upload_and_still_passes(self):
         with tempfile.TemporaryDirectory() as d:
             mobile, commit, env = self.fixture(d)
-            result = subprocess.run(['bash','scripts/build-play.sh','--expected-commit',commit,'--expected-voice-mode','1'],
-                                    cwd=mobile, env={**env, 'POSTHOG_CLI_API_KEY':INVENTED_KEY}, capture_output=True, text=True)
+            started = time.monotonic()
+            # The stub's `sleep` holds the log pipe as a hung CLI would: only
+            # stopping the whole process group lets the build finish early.
+            result = self.build_play(mobile, commit, env, OPAX_UPLOAD_SYMBOLS='1', UPLOAD_SLEEP='120',
+                                     OPAX_SYMBOL_UPLOAD_TIMEOUT='2')
+            self.assertLess(time.monotonic() - started, 90)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            log = (mobile/'private/play/2026111001/crash-symbols.log').read_text().splitlines()
+            self.assertEqual(log[-1], 'Timed out after 2 seconds; the command was stopped.')
+            self.assertIn('Crash symbols not uploaded; see', result.stderr)
+
+    def test_build_play_passes_no_posthog_variable_to_any_step(self):
+        with tempfile.TemporaryDirectory() as d:
+            mobile, commit, env = self.fixture(d)
+            result = self.build_play(mobile, commit, env, OPAX_UPLOAD_SYMBOLS='1', POSTHOG_CLI_API_KEY=INVENTED_KEY,
+                                     POSTHOG_CLI_TOKEN=INVENTED_KEY, POSTHOG_PROJECT_ID='999999',
+                                     POSTHOG_HOST='https://us.posthog.example')
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             calls = self.trace(d)
-            self.assertEqual({call['tool'] for call in calls}, {'expo config', 'expo prebuild', 'gradle', 'upload'})
-            self.assertEqual([call['tool'] for call in calls if call['key']], ['upload'])
+            expected = {'expo config', 'expo prebuild', 'gradle', 'upload'} | ({'gate'} if os.uname().sysname != 'Linux' else set())
+            self.assertEqual({call['tool'] for call in calls}, expected)
+            self.assertEqual([call for call in calls if call['posthog']], [])
             log = (mobile/'private/play/2026111001/crash-symbols.log').read_text()
             self.assertNotIn(INVENTED_KEY, result.stdout + result.stderr + log)
+            # They go before the input checks, capacity.sh and the gate, which run untraced.
+            script = (Path(__file__).parent/'build-play.sh').read_text()
+            self.assertLess(script.index("compgen -e | grep '^POSTHOG_'"), script.index('\ncheck_inputs\n'))
 
-    def test_build_play_without_a_key_logs_the_skip_line_and_passes(self):
-        # The real upload script, with no key in the environment and none in
-        # the temporary HOME: it stops at its one skip line, before any CLI.
+    def test_build_play_default_uploads_nothing_even_with_a_key_file_and_cli(self):
+        # The real upload script, an invented key file in the temporary HOME
+        # and a stub posthog-cli on PATH: only the opt-in reaches the CLI.
         with tempfile.TemporaryDirectory() as d:
             mobile, commit, env = self.fixture(d, upload_stub=False)
-            result = subprocess.run(['bash','scripts/build-play.sh','--expected-commit',commit,'--expected-voice-mode','1'],
-                                    cwd=mobile, env=env, capture_output=True, text=True)
+            key_file = Path(env['HOME'])/'.config/opax/posthog.env'
+            key_file.parent.mkdir(parents=True)
+            key_file.write_text(f'export POSTHOG_CLI_API_KEY={INVENTED_KEY}\nexport POSTHOG_PROJECT_ID=507367\n')
+            key_file.chmod(0o600)
+            cli = Path(env['HOME'])/'bin/posthog-cli'; cli.parent.mkdir()
+            cli.write_text('#!/bin/bash\n' + "python3 -c 'TRACE' \"$@\"\n".replace('TRACE', TRACE.replace('TOOL', '"cli"')))
+            cli.chmod(0o755)
+            env = {**env, 'PATH': f"{cli.parent}{os.pathsep}{env['PATH']}"}
+            result = self.build_play(mobile, commit, env)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertEqual([call for call in self.trace(d) if call['tool']=='cli'], [])
+            self.assertIn(SKIP + self.rerun(mobile/'private/play/2026111001'), result.stdout)
+            if not shutil.which('node'):
+                self.skipTest('the opted-in upload stages the source map with node')
+            (Path(d)/'trace.jsonl').unlink(missing_ok=True)
+            # build-play.sh never reuses an evidence folder; set the first one aside (HOME is ignored).
+            (mobile/'private/play/2026111001').rename(Path(env['HOME'])/'first-run')
+            result = self.build_play(mobile, commit, env, OPAX_UPLOAD_SYMBOLS='1')
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertEqual([call['args'][:2] for call in self.trace(d) if call['tool']=='cli'],
+                             [['hermes', 'upload'], ['proguard', 'upload']])
+
+    def test_run_logged_timeout_stops_the_whole_process_group(self):
+        from release_support import run_logged
+        with tempfile.TemporaryDirectory() as d:
+            log = Path(d)/'log'
+            started = time.monotonic()
+            with self.assertRaisesRegex(ReleaseError, 'timed out after 1 seconds'):
+                run_logged(['bash', '-c', 'echo started; sleep 60 & wait'], log, timeout=1)
+            self.assertLess(time.monotonic() - started, 30)
+            self.assertEqual(log.read_text().splitlines(), ['started', 'Timed out after 1 seconds; the command was stopped.'])
+            run_logged(['bash', '-c', 'echo quick'], log, timeout=30)
+            self.assertEqual(log.read_text(), 'quick\n')
+
+    def test_build_play_without_a_key_logs_the_skip_line_and_passes(self):
+        # The real upload script, opted in, with no key in the environment and
+        # none in the temporary HOME: it stops at its one skip line, before any CLI.
+        with tempfile.TemporaryDirectory() as d:
+            mobile, commit, env = self.fixture(d, upload_stub=False)
+            result = self.build_play(mobile, commit, env, OPAX_UPLOAD_SYMBOLS='1')
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             skip = 'Crash symbols: POSTHOG_CLI_API_KEY is not set; skipped the PostHog upload for android 1.1.0 (2026111001).'
             self.assertIn(skip, result.stdout)
