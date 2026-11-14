@@ -22,7 +22,9 @@ export function bottomFieldClearance(
   safeBottom: number,
   os: string = Platform.OS,
   regular: boolean = currentRule() !== 'phone',
-  glass: boolean = liquidGlass(os),
+  // The device's own version, and only when `os` is the device's: a
+  // version never pairs with another platform's name.
+  glass: boolean = os === Platform.OS && liquidGlass(),
 ): number {
   if (os !== 'ios' || regular || !glass) return 0;
   return safeBottom + BOTTOM_FIELD_HEIGHT + rhythm.tight;

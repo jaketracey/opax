@@ -303,23 +303,24 @@ export function WelcomePage({
           {pinned ? null : <View style={styles.unpinned}>{button}</View>}
         </View>
       </ScrollView>
-      {Platform.OS === 'ios' ? (
-        // The page has no bar (seat.tsx hides its top scroll edge), so the
-        // status bar had nothing behind it and text scrolled up under the
-        // clock at AX5 (28-ax5-notice). Opaque in the page ground, as the
-        // pinned foot and the opaque bars are: unseen at rest, where the
-        // content starts below it, and a backdrop once text scrolls under.
-        <View
-          pointerEvents="none"
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-          testID="welcome-status-backdrop"
-          style={[
-            styles.statusBackdrop,
-            { height: insets.top, backgroundColor: ground },
-          ]}
-        />
-      ) : null}
+      {/* The page has no bar (seat.tsx hides its top scroll edge), so the
+          status bar had nothing behind it and text scrolled up under the
+          clock at AX5 (28-ax5-notice). Android is edge-to-edge too, its
+          status bar see-through over the page (AndroidReadingHeader pads
+          its opaque bar under it the same way). Opaque in the page ground,
+          as the pinned foot and the opaque bars are: unseen at rest, where
+          the content starts below it, and a backdrop once text scrolls
+          under. */}
+      <View
+        pointerEvents="none"
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        testID="welcome-status-backdrop"
+        style={[
+          styles.statusBackdrop,
+          { height: insets.top, backgroundColor: ground },
+        ]}
+      />
       {pinned ? (
         <View
           style={[

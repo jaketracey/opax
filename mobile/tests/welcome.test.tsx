@@ -1,6 +1,6 @@
 import { router, Stack } from 'expo-router';
 import { act } from 'react';
-import { Dimensions, Text as NativeText } from 'react-native';
+import { Dimensions, Platform, Text as NativeText } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import WelcomeLayout from '../src/app/welcome/_layout';
 import { copy } from '../src/design/copy';
@@ -420,12 +420,21 @@ describe('the welcome stack', () => {
 // 28-ax5-notice (iOS 18.4 and 26.3): with no bar, the notice scrolled up
 // under the clock with nothing behind the status bar.
 describe('the status bar over the scrolled welcome', () => {
+  const os = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
+  afterEach(() => Object.defineProperty(Platform, 'OS', os));
+  // Android draws edge-to-edge, its status bar see-through over the page.
   test.each([
-    ['full', () => <Welcome />, 'welcome-screen'],
-    ['short', () => <ShortWelcome />, 'welcome-short'],
-  ])(
-    'the %s welcome draws the page ground behind the status bar, over the scroll',
-    async (_name, page, screen) => {
+    ['ios', 'full', () => <Welcome />, 'welcome-screen'],
+    ['ios', 'short', () => <ShortWelcome />, 'welcome-short'],
+    ['android', 'full', () => <Welcome />, 'welcome-screen'],
+    ['android', 'short', () => <ShortWelcome />, 'welcome-short'],
+  ] as const)(
+    '%s: the %s welcome draws the page ground behind the status bar, over the scroll',
+    async (platform, _name, page, screen) => {
+      Object.defineProperty(Platform, 'OS', {
+        configurable: true,
+        value: platform,
+      });
       setFontScale(3.12);
       const r = await render(page());
       const backdrop = host(r, 'welcome-status-backdrop');

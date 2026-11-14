@@ -22,6 +22,7 @@ import {
   BOTTOM_FIELD_HEIGHT,
 } from '../src/features/seat/FieldClearance';
 import { SeatStateList } from '../src/features/seat/SeatStateList';
+import { liquidGlass } from '../src/design/glass';
 import { forgetChoice } from '../src/features/your-mp/choice-store';
 import { closeWelcome, markWelcomeSeen } from '../src/onboarding/state';
 import { index, manifest, people, roster, slugs } from './pinned';
@@ -677,6 +678,20 @@ describe('the bottom search field', () => {
     setPlatform('android', 36);
     expect(bottomFieldClearance(24, 'android', false)).toBe(0);
     expect(bottomFieldClearance(24)).toBe(0);
+  });
+  test('an Android API level is never read as an iOS version', () => {
+    // API 36 with a caller's 'ios' once read as iOS 36: the field reserve.
+    setPlatform('android', 36);
+    expect(bottomFieldClearance(34, 'ios', false)).toBe(0);
+    expect(liquidGlass()).toBe(false);
+    expect(liquidGlass({ OS: 'android', Version: 36 })).toBe(false);
+    for (const [v, glass] of [
+      ['26.0.1', true],
+      [27, true],
+      ['18.10', false],
+      [undefined, false],
+    ] as const)
+      expect(liquidGlass({ OS: 'ios', Version: v })).toBe(glass);
   });
 
   const padded = (r: TestRenderer.ReactTestRenderer, bottom: number) =>
