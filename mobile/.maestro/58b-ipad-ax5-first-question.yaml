@@ -1,0 +1,58 @@
+appId: au.com.opax.app
+name: 58b iPad AX5 first question, scroll the consent sheet and Continue
+---
+# iPad only. The orchestrator sets AX5 before launching this flow:
+# OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large
+# Run in portrait, then repeat in landscape and a compact window. Do not
+# expand the sheet with its grabber: its own scroll range must reach both
+# whole buttons inside the presented form sheet.
+- launchApp:
+    clearState: true
+    permissions:
+      all: unset
+- openLink: opax://ask
+- tapOn:
+    text: Open
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: ask-question
+    timeout: 60000
+- tapOn:
+    id: ask-question
+- inputText: Who spoke on housing?
+- tapOn:
+    id: ask-submit
+    enabled: true
+- extendedWaitUntil:
+    visible:
+      id: ask-consent
+    timeout: 15000
+- assertVisible:
+    id: ask-consent-what
+- takeScreenshot: ${EVIDENCE}/58b-ipad-ax5-consent-shown
+- scrollUntilVisible:
+    element:
+      id: ask-consent-not-now
+    direction: DOWN
+    visibilityPercentage: 100
+    timeout: 60000
+- takeScreenshot: ${EVIDENCE}/58b-ipad-ax5-consent-bottom
+- scrollUntilVisible:
+    element:
+      id: ask-consent-continue
+    direction: UP
+    visibilityPercentage: 100
+    timeout: 60000
+- tapOn:
+    id: ask-consent-continue
+- extendedWaitUntil:
+    notVisible:
+      id: ask-consent
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: ask-user-question
+      text: Who spoke on housing\?
+    timeout: 30000
+- takeScreenshot: ${EVIDENCE}/58b-ipad-ax5-question-sent
