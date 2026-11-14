@@ -133,9 +133,12 @@ name: 45 Electorates, dated representation, bill filters and Votes in parliament
 - tapOn:
     id: filters-choice-divisions
 - tapOn: Done
-- extendedWaitUntil:
-    visible:
+# The sheet stands at half height over a live list, and the swipes that found
+# its rows also scrolled the list behind it: back up to the count line.
+- scrollUntilVisible:
+    element:
       id: bills-clear
+    direction: UP
     timeout: 30000
 - assertVisible:
     id: bills-count
