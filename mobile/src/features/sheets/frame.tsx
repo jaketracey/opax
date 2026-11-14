@@ -25,6 +25,8 @@ import {
   headerItems,
 } from '../../navigation/chrome';
 import { sheetOptions } from '../../navigation/stack/screen';
+import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
+import { useFittedSheetHeight } from './fitted';
 
 export function routeSheetOptions({
   short = false,
@@ -83,6 +85,11 @@ export function SheetFrame({
   const accessible = useAccessibilitySize();
   const margin = useScreenMargin();
   const insets = useSafeAreaInsets();
+  const maxHeight = useFittedSheetHeight();
+  // The closed Duo's outer display is 560 pt tall: a fitted sheet there is
+  // the screen's height at most. Elsewhere short sheets fit their content and
+  // never scroll (tests/sheets.test.tsx).
+  const railed = useVerticalBarEdge() !== 'unspecified';
   const done = closeSheetItem();
   useKeyCommand('list-escape', () => {
     if (done.type === 'button') done.onPress?.();
@@ -218,7 +225,26 @@ export function SheetFrame({
         }}
       />
       <SurfaceContext.Provider value="sunken">
-        {fitted ? (
+        {fitted && railed ? (
+          // UIKit fits the sheet to this content, but only up to the screen:
+          // on the Duo's outer display the fitted height is the screen's, and
+          // a plain View clipped what ran past it with nothing to scroll
+          // (glossary terms, b67). The cap is the sheet's own height, so a
+          // short term still fits exactly and a long one scrolls.
+          <ScrollView
+            testID={testID ? `${testID}-scroll` : undefined}
+            style={[styles.screen, styles.fittedScroll, { maxHeight }]}
+            contentInsetAdjustmentBehavior="automatic"
+          >
+            <View
+              collapsable={false}
+              testID={testID}
+              style={[styles.screen, contentStyle]}
+            >
+              {children}
+            </View>
+          </ScrollView>
+        ) : fitted ? (
           <View
             collapsable={false}
             testID={testID}
@@ -285,6 +311,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   screen: { backgroundColor: colors.sunken },
+  fittedScroll: { flexGrow: 0 },
   content: {
     paddingTop: rhythm.group,
     gap: rhythm.group,

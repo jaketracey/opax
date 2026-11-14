@@ -439,6 +439,29 @@ describe('compact outer surfaces', () => {
       maxHeight: 560,
     });
   });
+  test('a fitted sheet scrolls inside the outer display, so a long term is never clipped', () => {
+    const phone = render(
+      <SheetFrame title="Crossbench" short compact testID="outer-term">
+        <View />
+      </SheetFrame>,
+    );
+    // Off the rail a short sheet fits its content and does not scroll.
+    expect(
+      phone.root.findAll((n) => n.props.testID === 'outer-term-scroll'),
+    ).toHaveLength(0);
+    mockBarEdge = 'trailing';
+    const fitted = render(
+      <SheetFrame title="Crossbench" short compact testID="outer-term">
+        <View />
+      </SheetFrame>,
+    );
+    const scroll = host(fitted, 'outer-term-scroll');
+    expect(scroll).toBeTruthy();
+    const { maxHeight } = StyleSheet.flatten(scroll.props.style);
+    expect(maxHeight).toBeGreaterThan(0);
+    expect(maxHeight).toBeLessThanOrEqual(560);
+    expect(style(fitted, 'outer-term')).toMatchObject({ paddingRight: 76 });
+  });
   test.each([Screen, KeyboardStableScreen])(
     'scroll screens sit in a side safe area and report the usable column',
     (Component) => {
