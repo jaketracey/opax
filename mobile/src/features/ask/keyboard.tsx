@@ -52,48 +52,46 @@ function keyboardFloats(event: KeyboardEvent) {
 }
 
 /**
- * How far the keyboard overlaps the bottom of `ref` once it has arrived, for
- * layout that settles once (the conversation's bottom room, the composer's
- * height cap, the band behind the composer). The composer itself follows the
- * keyboard frame by frame through KeyboardLift.
+ * Settled keyboard overlap for the conversation's bottom room, the composer's
+ * height cap and its background band. Android reads the window bottom, which
+ * is independent of the hiding tab bar. iOS measures `ref`; its composer
+ * follows the keyboard frame by frame through KeyboardLift.
  */
-export function useKeyboardOverlap(
-  ref: RefObject<View | null>,
-  layoutKey = '',
-) {
+export function useKeyboardOverlap(ref: RefObject<View | null>) {
   const [overlap, setOverlap] = useState(0);
   const [visible, setVisible] = useState(false);
+  const [androidTop, setAndroidTop] = useState<number | null>(null);
   const { height: windowHeight } = useWindowDimensions();
   // Android resizes the native window with the IME. Measure the remaining
-  // overlap after that resize, so its height is never subtracted twice.
-  // Edge-to-edge can keep the window dimensions unchanged while hiding the
-  // tab bar grows this view after keyboardDidShow. Remeasure its layout too.
+  // overlap from the current window during render. Edge-to-edge can keep
+  // this bottom unchanged while the tab bar grows the container afterwards.
+  // Neither resize needs an asynchronous container measure or a layout key.
   useEffect(() => {
     if (Platform.OS !== 'android') return;
     let active = true;
-    const measure = (top: number) => {
-      ref.current?.measureInWindow((_x, y, _w, height) => {
-        if (!active || !Keyboard.isVisible()) return;
-        setVisible(Keyboard.isVisible());
-        setOverlap(Math.max(0, Math.round(y + height - top)));
-      });
+    const update = (top: number) => {
+      if (!active || !Keyboard.isVisible()) return;
+      setVisible(true);
+      // The tab bar hides after keyboardDidShow. Its container still has
+      // the old bottom for a few frames; the resized window is current now.
+      setAndroidTop(top);
     };
     const metrics = Keyboard.metrics();
-    if (metrics) measure(metrics.screenY);
+    if (metrics) update(metrics.screenY);
     const show = Keyboard.addListener('keyboardDidShow', (event) => {
       setVisible(true);
-      measure(event.endCoordinates.screenY);
+      update(event.endCoordinates.screenY);
     });
     const hide = Keyboard.addListener('keyboardDidHide', () => {
       setVisible(false);
-      setOverlap(0);
+      setAndroidTop(null);
     });
     return () => {
       active = false;
       show.remove();
       hide.remove();
     };
-  }, [ref, windowHeight, layoutKey]);
+  }, []);
   // iOS says where the keyboard is going before it moves.
   useEffect(() => {
     if (Platform.OS === 'android') return;
@@ -114,7 +112,12 @@ export function useKeyboardOverlap(
     };
   }, [ref]);
   return {
-    overlap,
+    overlap:
+      Platform.OS === 'android'
+        ? androidTop === null
+          ? 0
+          : Math.max(0, Math.round(windowHeight - androidTop))
+        : overlap,
     visible: Platform.OS === 'android' ? visible : overlap > 0,
   };
 }

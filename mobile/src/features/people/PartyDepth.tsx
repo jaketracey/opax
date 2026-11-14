@@ -27,9 +27,14 @@ export type Funding = Awaited<ReturnType<typeof peopleDepth.funding>>;
 const fy = (year: string) => formatFinancialYear(Number(year.slice(0, 4)));
 
 /** The AEC annual-returns read, shared by Each year's return and Debts. */
-export function usePartyFunding() {
+export function usePartyFunding(
+  afterFrame?: (signal?: AbortSignal) => Promise<void>,
+) {
   return useRead(
-    (signal?: AbortSignal) => peopleDepth.funding(signal),
+    (signal?: AbortSignal) =>
+      afterFrame
+        ? afterFrame(signal).then(() => peopleDepth.funding(signal))
+        : peopleDepth.funding(signal),
     'funding',
   );
 }
@@ -252,9 +257,18 @@ export function FundingLoading() {
  * lobbying client they are. Each half collapses when empty, and the section
  * with them.
  */
-export function PartyAccess({ name }: { name: string }) {
+export function PartyAccess({
+  name,
+  afterFrame,
+}: {
+  name: string;
+  afterFrame?: (signal?: AbortSignal) => Promise<void>;
+}) {
   const { read, retry } = useRead(
-    (signal?: AbortSignal) => peopleDepth.access(signal),
+    (signal?: AbortSignal) =>
+      afterFrame
+        ? afterFrame(signal).then(() => peopleDepth.access(signal))
+        : peopleDepth.access(signal),
     'access',
   );
   if (read.status === 'loading')

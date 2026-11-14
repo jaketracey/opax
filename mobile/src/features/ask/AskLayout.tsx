@@ -1,4 +1,12 @@
-import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  type ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { HeaderHeightContext } from 'expo-router/react-navigation';
 import {
   Platform,
   StyleSheet,
@@ -195,13 +203,20 @@ function ComposerPosition({
   const [height, setHeight] = useState(0);
   const area = useRef<View>(null);
   const tracked = keyboardTracked();
+  const headerBottom = useContext(HeaderHeightContext) ?? 0;
+  const areaHeight = measured?.height ?? region.height;
   const bounds: Rect = {
     x: 0,
     y: 0,
     width: measured?.width ?? region.width,
     height: Math.max(
       0,
-      (measured?.height ?? region.height) - (tracked ? 0 : keyboard),
+      Platform.OS === 'android' && keyboardVisible
+        ? // The tab bar's old height can survive for a few frames after
+          // DidShow. Anchor to the keyboard in window coordinates, keeping
+          // the same bottom as the area expands when the tab bar hides.
+          Math.min(areaHeight, region.window.height - headerBottom - keyboard)
+        : areaHeight - (tracked ? 0 : keyboard),
     ),
   };
   const fold = activeVerticalFold(reserved.divisions);

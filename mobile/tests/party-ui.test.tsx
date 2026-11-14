@@ -17,7 +17,7 @@ import {
 } from 'expo-router/react-navigation';
 import { Catalogs } from '../src/api/catalogs';
 import { combinedPartyNode } from '../src/api/party-page';
-import { apiClient, catalogs as runtime } from '../src/api/runtime';
+import { apiClient, catalogs as runtime, peopleDepth } from '../src/api/runtime';
 import {
   formatCount,
   formatMoney,
@@ -54,6 +54,7 @@ import {
   ProfileHeader,
 } from '../src/features/people/ProfileHeader';
 import { peopleScreens } from '../src/navigation/stack/people';
+import * as partyPresentation from '../src/features/people/party-presentation';
 import {
   moneyRecordRoute,
   partyRoute,
@@ -815,6 +816,61 @@ test('title and Members render before receipts, associations and splits settle',
   act(() => r.unmount());
   // Progress from an obsolete request must be ignored along with its completion.
   act(() => publish(view));
+});
+
+test('Android access decoding waits for the core presentation gate', async () => {
+  const original = Platform.OS;
+  Platform.OS = 'android';
+  let present!: () => void;
+  const presented = new Promise<void>((resolve) => {
+    present = resolve;
+  });
+  const presentation = jest
+    .spyOn(partyPresentation, 'createPartyPresentation')
+    .mockReturnValue({ didLayout: jest.fn(), afterFrame: () => presented });
+  const r = await render();
+  try {
+    expect(peopleDepth.access).not.toHaveBeenCalled();
+    expect(
+      r.root.findAll((n) => n.props.testID === 'party-access-loading').length,
+    ).toBeGreaterThan(0);
+    await act(async () => {
+      present();
+      await presented;
+    });
+    expect(peopleDepth.access).toHaveBeenCalledTimes(1);
+  } finally {
+    present();
+    act(() => r.unmount());
+    presentation.mockRestore();
+    Platform.OS = original;
+  }
+});
+
+test('Android pull during the first load completes without waiting for an unpublished title', async () => {
+  const original = Platform.OS;
+  Platform.OS = 'android';
+  jest
+    .mocked(runtime.partyPage)
+    .mockImplementationOnce(() => new Promise(() => {}))
+    .mockImplementation((...args) => api.partyPage(...args));
+  const r = await render();
+  try {
+    expect(r.root.findAllByType(ProfileHeader)).toHaveLength(0);
+    await act(async () => {
+      r.root
+        .findAll((n) => !!n.props.refreshControl)[0]!
+        .props.refreshControl.props.onRefresh();
+      await jest.mocked(runtime.partyPage).mock.results.at(-1)!.value;
+    });
+    expect(r.root.findAllByType(ProfileHeader)).toHaveLength(1);
+    expect(
+      r.root.findAll((n) => n.props.refreshControl?.props.refreshing === true),
+    ).toHaveLength(0);
+  } finally {
+    act(() => r.unmount());
+    Platform.OS = original;
+  }
 });
 
 test.each(['pull', 'foreground'] as const)(

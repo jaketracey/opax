@@ -70,10 +70,11 @@ import {
 } from '../src/design/adaptive';
 import { ReservedRegionsProvider } from '../src/design/fold-area';
 import { AskColumns } from '../src/features/ask/AskLayout';
-import { idleCopy } from '../src/features/ask/AskIdle';
+import { AskIdle, idleCopy } from '../src/features/ask/AskIdle';
 import { EngravedMark } from '../src/design/engraving';
 import * as accessibility from '../src/design/accessibility';
 import { AskThread } from '../src/features/ask/AskThread';
+import { SectionHeader } from '../src/design/layout';
 import { emptyReservedRegions } from '../src/design/fold';
 
 // The bar's items, as AskScreen sets them through Stack.Screen.
@@ -1904,6 +1905,7 @@ test('with the keyboard up the composer sits on a band of ground: nothing reads 
 
 test('Android observes IME show/hide and removes the bottom inset after native resize; iOS keeps will-change events', async () => {
   const original = Platform.OS;
+  const window = Dimensions.get('window');
   const measured: ((
     x: number,
     y: number,
@@ -1926,14 +1928,18 @@ test('Android observes IME show/hide and removes the bottom inset after native r
   try {
     Platform.OS = 'android';
     const screen = await mount();
+    act(() => Dimensions.set({ window: { ...window, height: 500 } }));
     expect(handlers.has('keyboardDidShow')).toBe(true);
     expect(handlers.has('keyboardWillChangeFrame')).toBe(false);
     act(() =>
       handlers.get('keyboardDidShow')!({ endCoordinates: { screenY: 500 } }),
     );
-    expect(measured.length).toBeGreaterThan(0);
     const phone = () => screen.root.findByType(PhoneDock);
     expect(phone().props).toMatchObject({ keyboard: 0, keyboardVisible: true });
+    // The old container bottom still excludes the tab bar at DidShow. Even
+    // when that asynchronous measure catches up, the inset stays at zero.
+    act(() => measured.forEach((callback) => callback(0, 0, 402, 450)));
+    expect(phone().props.keyboard).toBe(0);
     act(() => handlers.get('keyboardDidHide')!({}));
     // A native measure that arrives after IME Back must not lift the dock again.
     visible.mockReturnValue(false);
@@ -1954,9 +1960,47 @@ test('Android observes IME show/hide and removes the bottom inset after native r
     listener.mockRestore();
     visible.mockRestore();
     measure.mockRestore();
+    act(() => Dimensions.set({ window }));
     Platform.OS = original;
   }
 });
+
+test.each(
+  (['android', 'ios'] as const).flatMap((platform) =>
+    [1, 2].map((fontScale) => [platform, fontScale] as const),
+  ),
+)(
+  '%s font %s: Ask headings clear their groups with unchanged iOS spacing',
+  async (platform, fontScale) => {
+    const original = Platform.OS;
+    const window = Dimensions.get('window');
+    try {
+      Platform.OS = platform;
+      act(() => Dimensions.set({ window: { ...window, fontScale } }));
+      const screen = await mount();
+      const idle = screen.root.findByType(AskIdle);
+      const heading = idle.findAllByType(SectionHeader)[0];
+      const parent = heading.parent!;
+      const gap = StyleSheet.flatten(parent.props.style)?.gap ?? 0;
+      if (platform === 'android' && fontScale === 2) {
+        const header = heading.findByType(View);
+        const margin = StyleSheet.flatten(header.props.style).marginBottom ?? 0;
+        expect(Number(gap) + Number(margin)).toBeGreaterThanOrEqual(
+          rhythm.heading,
+        );
+      } else {
+        expect(parent.props.style).toBeUndefined();
+      }
+    } finally {
+      // Audit the mounted tree on its own platform before restoring dimensions
+      // can rerender its controls using the next platform's target sizes.
+      act(() => view?.unmount());
+      view = null;
+      Platform.OS = original;
+      act(() => Dimensions.set({ window }));
+    }
+  },
+);
 
 test('Android dock has a tonal raised surface and removable option chips; iOS keeps its options line', () => {
   const original = Platform.OS;

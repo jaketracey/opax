@@ -36,6 +36,28 @@ import {
 import { withSittingRule } from './sitting-rule';
 import type { PersonId } from '../src/api/ids';
 
+test.each([
+  ['SAM FICTIONAL', 'sam fictional'],
+  ['Sam Fíctional', 'SAM FICTIONAL'],
+  ['Sam O’Fictional', "sam o'fictional"],
+  ['Sam İ Example', 'sam i example'],
+  ['ΟΣ Example', 'ος example'],
+  ['Sam ẞ Example', 'sam ß example'],
+])(
+  'English identity casing retains the original join for %s',
+  (name, title) => {
+    const directory = { ...slugs, slugs: { 'sam-fictional': title } };
+    const rows = {
+      ...roster,
+      people: [{ name, party: 'Sample Party' }],
+    };
+    const release = { ...people, people: [] };
+    expect(
+      joinPerson('sam-fictional', directory, rows, release, manifest),
+    ).toEqual(before('sam-fictional', directory, rows, release, manifest));
+  },
+);
+
 // The oracle follows the unfiltered profile path; it never uses search guards.
 const nativeProfiles = new Map<PersonId, { slug: string; name: string }>();
 const nativeSlugs = new Set<string>();

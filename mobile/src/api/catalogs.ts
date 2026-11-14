@@ -166,6 +166,8 @@ export class Catalogs {
     refresh = false,
     publish?: (record: PartyPageRecord) => void,
     signal?: AbortSignal,
+    /** Screen-only scheduling; background readers keep the ordinary yield. */
+    afterCore?: () => Promise<void>,
   ): Promise<PartyPageRecord> {
     // Keep the complete shown record until a refresh replaces it atomically.
     const progress = refresh ? undefined : publish;
@@ -369,8 +371,10 @@ export class Catalogs {
     });
     throwIfAborted(signal);
     progress?.(result());
-    // Give React a turn to commit the title and Members before optional decode work.
-    await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    // The screen can wait for native frames, not only a JS timer turn.
+    await (afterCore?.() ??
+      new Promise<void>((resolve) => setTimeout(resolve, 0)));
+    throwIfAborted(signal);
     // Past affiliations can be absent from a person's voting-party label.
     const readPast = async () => {
       const block = await read(

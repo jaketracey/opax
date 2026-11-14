@@ -50,7 +50,7 @@ export const PARTY_NOT_RECORDED = 'Party not recorded';
 export function isPartyLabel(party: string | null | undefined): boolean {
   const name = party
     ?.trim()
-    .toLocaleLowerCase('en-AU')
+    .toLowerCase()
     .replace(/[‐‑‒–\u2014]/g, '-');
   return (
     !!name &&
@@ -74,8 +74,7 @@ export function presidingRole(
   }
 }
 
-const fold = (name: string) =>
-  name.trim().toLocaleLowerCase('en-AU').replace(/’/g, "'");
+const fold = (name: string) => name.trim().toLowerCase().replace(/’/g, "'");
 const knownParty = (name: string) => parties[fold(name)];
 
 // Every name, alias, slug and code of a renamed party, to its rename record.
@@ -241,7 +240,7 @@ export function partySlug(name: string) {
   // A declaration, not a const: the rename index above runs at load.
   return name
     .trim()
-    .toLocaleLowerCase('en-AU')
+    .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
 }

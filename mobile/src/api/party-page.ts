@@ -164,10 +164,13 @@ export function partyMembers(
       for (const source of p.sources) sources.set(source.source_id, source);
     }
   }
+  // Reuse one English collator across the cohort. Hermes otherwise builds
+  // ICU collation state for every comparison, blocking the first page frame.
+  const compare = new Intl.Collator('en-AU').compare;
   const order = (a: PartyMember, b: PartyMember) =>
-    `${a.jurisdiction}|${a.chamber}|${a.name}`.localeCompare(
+    compare(
+      `${a.jurisdiction}|${a.chamber}|${a.name}`,
       `${b.jurisdiction}|${b.chamber}|${b.name}`,
-      'en-AU',
     );
   return {
     current: current.sort(order),

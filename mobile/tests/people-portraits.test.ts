@@ -119,3 +119,28 @@ test('surname routes and name-only lookups never fall through to the canonical f
   expect(cache.get).not.toHaveBeenCalled();
   expect((await reader.get({ slug: 'jess-walsh' }))?.info.key).toBe('10956');
 });
+
+test('the shared portrait listing retains the original English name order', async () => {
+  const rows = await service().reader.list();
+  expect(rows.length).toBeGreaterThan(0);
+  expect(rows).toEqual(
+    [...rows].sort((a, b) => a.name.localeCompare(b.name, 'en-AU')),
+  );
+  expect(new Set(rows.map((row) => row.info.key)).size).toBe(rows.length);
+});
+
+test('portrait sorting sets up locale collation at most once per listing (4p)', async () => {
+  const collator = jest.spyOn(Intl, 'Collator');
+  const perComparison = jest.spyOn(String.prototype, 'localeCompare');
+  try {
+    const rows = await service().reader.list();
+    expect(rows.length).toBeGreaterThan(100);
+    // A deterministic work budget: Hermes must not initialise ICU for every
+    // pair in the sort. Avoid elapsed-time assertions on shared CI machines.
+    expect(collator.mock.calls.length).toBeLessThanOrEqual(1);
+    expect(perComparison).not.toHaveBeenCalled();
+  } finally {
+    collator.mockRestore();
+    perComparison.mockRestore();
+  }
+});

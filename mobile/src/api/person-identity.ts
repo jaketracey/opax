@@ -40,11 +40,13 @@ export interface PersonProfile {
   sources: Source[];
   asOf: string;
 }
+// English keys use Unicode casing. Locale setup per catalogue name blocks
+// Hermes while a whole membership cohort is first joined.
 const folded = (name: string) =>
   name
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
-    .toLocaleLowerCase('en-AU')
+    .toLowerCase()
     .replace(/[’‘ʼ`']/g, '');
 // Object identity is the immutable decoded catalog version (see ApiClient).
 // New bytes get new indexes; weak keys let evicted snapshots and joins go away.

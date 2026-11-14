@@ -7,6 +7,7 @@
  */
 import { act, useRef, type ReactNode } from 'react';
 import TestRenderer from 'react-test-renderer';
+import { HeaderHeightContext } from 'expo-router/react-navigation';
 import {
   Dimensions,
   Keyboard,
@@ -259,6 +260,76 @@ describe('the keyboard end frame', () => {
   });
 });
 
+test.each([1, 2])(
+  'Android font %s: overlap reads the resized window before the tab bar finishes hiding',
+  (fontScale) => {
+    Object.defineProperty(Platform, 'OS', {
+      value: 'android',
+      configurable: true,
+    });
+    let result!: ReturnType<typeof useKeyboardOverlap>;
+    const rendered: number[] = [];
+    function Probe() {
+      const ref = useRef<View>(null);
+      result = useKeyboardOverlap(ref);
+      rendered.push(result.overlap);
+      return <View ref={ref} testID="ask-composer-bounds" />;
+    }
+    const top = WINDOW.height - 336;
+    const visible = jest.spyOn(Keyboard, 'isVisible').mockReturnValue(true);
+    jest.spyOn(Keyboard, 'metrics').mockReturnValue({ screenY: top } as never);
+    act(() => Dimensions.set({ window: { ...WINDOW, fontScale } }));
+    render(() => <Probe />);
+    expect(result).toEqual({ overlap: 336, visible: true });
+    const measure = jest.mocked(View.prototype.measureInWindow);
+    measure.mockClear();
+    rendered.length = 0;
+    act(() =>
+      Dimensions.set({ window: { ...WINDOW, fontScale, height: top } }),
+    );
+    // The measured container is still a tab-bar height above the window.
+    windowAreaHeight = top - GAP;
+    emit('keyboardDidShow', docked(336));
+    expect(result).toEqual({ overlap: 0, visible: true });
+    expect(rendered.every((overlap) => overlap === 0)).toBe(true);
+    expect(measure).not.toHaveBeenCalled();
+    windowAreaHeight = top;
+    emit('keyboardDidShow', docked(336));
+    expect(result).toEqual({ overlap: 0, visible: true });
+    visible.mockReturnValue(false);
+    emit('keyboardDidHide');
+    expect(result).toEqual({ overlap: 0, visible: false });
+  },
+);
+
+test.each([1, 2])(
+  'Android font %s: the composer stays on the keyboard as the tab bar releases its space',
+  (fontScale) => {
+    Object.defineProperty(Platform, 'OS', {
+      value: 'android',
+      configurable: true,
+    });
+    act(() => Dimensions.set({ window: { ...WINDOW, fontScale } }));
+    const header = 80;
+    const keyboard = 336;
+    const element = columns({ keyboard });
+    const { tree, rerender } = render(() => (
+      <HeaderHeightContext.Provider value={header}>
+        {element()}
+      </HeaderHeightContext.Provider>
+    ));
+    const expected = WINDOW.height - keyboard - header - COMPOSER;
+    // DidShow arrives while the content still ends above the tab bar.
+    layOut(tree, { width: WINDOW.width, height: WINDOW.height - header - GAP });
+    rerender();
+    expect(composer(tree).top).toBe(expected);
+    // Hiding the tab bar expands the same content area on a later frame.
+    layOut(tree, { width: WINDOW.width, height: WINDOW.height - header });
+    rerender();
+    expect(composer(tree).top).toBe(expected);
+  },
+);
+
 describe('iOS: the composer rises with the keyboard', () => {
   test('frame by frame, its bottom edge sits on the keyboard’s top; its layout stays at rest', () => {
     const { tree, rerender } = render(columns());
@@ -501,46 +572,64 @@ test('Android: unchanged, laid out above the IME after the resize, with no keybo
   expect(mockKeyboard.calls).toBe(0);
 });
 
-test('Android remeasures after the tab bar hides, even when the edge-to-edge window does not resize', () => {
-  Object.defineProperty(Platform, 'OS', {
-    value: 'android',
-    configurable: true,
-  });
-  let bottom = AREA;
-  let layoutKey = `402x${bottom}`;
-  let result!: ReturnType<typeof useKeyboardOverlap>;
-  const event = docked(336);
-  const metrics = jest.spyOn(Keyboard, 'metrics').mockReturnValue(undefined);
-  jest.spyOn(Keyboard, 'isVisible').mockReturnValue(true);
-  jest
-    .mocked(View.prototype.measureInWindow)
-    .mockImplementation((callback) => callback(0, 0, WINDOW.width, bottom));
-  function Probe() {
-    const ref = useRef<View>(null);
-    result = useKeyboardOverlap(ref, layoutKey);
-    return <View ref={ref} />;
-  }
-  const { rerender } = render(() => <Probe />);
-  metrics.mockReturnValue(event.endCoordinates);
-  emit('keyboardDidShow', event);
-  expect(result).toEqual({ overlap: 253, visible: true });
-  // Hiding the tab bar grows Ask's area after keyboardDidShow. API 36
-  // keeps the same window dimensions, so they cannot trigger this measure.
-  bottom = WINDOW.height;
-  layoutKey = `402x${bottom}`;
-  rerender();
-  expect(Dimensions.get('window').height).toBe(WINDOW.height);
-  expect(result).toEqual({ overlap: 336, visible: true });
-  // A native adjustResize path already clears the IME: no second lift.
-  bottom = event.endCoordinates.screenY;
-  layoutKey = `402x${bottom}`;
-  rerender();
-  expect(result).toEqual({ overlap: 0, visible: true });
-  metrics.mockReturnValue(undefined);
-  emit('keyboardDidHide');
-  expect(result).toEqual({ overlap: 0, visible: false });
-  expect(mockKeyboard.calls).toBe(0);
-});
+// Retains 7ac5ed1b1's unchanged-window tab resize regression. The window
+// bottom is already correct at keyboardDidShow, before the tab bar resizes.
+test.each([1, 2])(
+  'Android font %s: tab resizes and keyboard changes keep the window overlap current',
+  (fontScale) => {
+    Object.defineProperty(Platform, 'OS', {
+      value: 'android',
+      configurable: true,
+    });
+    act(() => Dimensions.set({ window: { ...WINDOW, fontScale } }));
+    let bottom = AREA;
+    let result!: ReturnType<typeof useKeyboardOverlap>;
+    const event = docked(336);
+    const metrics = jest.spyOn(Keyboard, 'metrics').mockReturnValue(undefined);
+    jest.spyOn(Keyboard, 'isVisible').mockReturnValue(true);
+    const measure = jest
+      .mocked(View.prototype.measureInWindow)
+      .mockImplementation((callback) => callback(0, 0, WINDOW.width, bottom));
+    measure.mockClear();
+    function Probe() {
+      const ref = useRef<View>(null);
+      result = useKeyboardOverlap(ref);
+      return <View ref={ref} style={{ height: bottom }} />;
+    }
+    const { rerender } = render(() => <Probe />);
+    metrics.mockReturnValue(event.endCoordinates);
+    emit('keyboardDidShow', event);
+    expect(result).toEqual({ overlap: 336, visible: true });
+    // Hiding the tab bar grows Ask after keyboardDidShow, with the same
+    // edge-to-edge window. There must be no old tab-height inset first.
+    bottom = WINDOW.height;
+    rerender();
+    expect(Dimensions.get('window').height).toBe(WINDOW.height);
+    expect(result).toEqual({ overlap: 336, visible: true });
+    // Moving away and back can restore the tab reservation while the
+    // keyboard hides, then show a keyboard with a different height.
+    metrics.mockReturnValue(undefined);
+    emit('keyboardDidHide');
+    bottom = AREA;
+    rerender();
+    expect(result).toEqual({ overlap: 0, visible: false });
+    emit('keyboardDidShow', docked(280));
+    bottom = WINDOW.height;
+    rerender();
+    expect(result).toEqual({ overlap: 280, visible: true });
+    // A native adjustResize path already clears the IME: no second lift.
+    bottom = WINDOW.height - 280;
+    act(() =>
+      Dimensions.set({ window: { ...WINDOW, height: bottom, fontScale } }),
+    );
+    rerender();
+    expect(result).toEqual({ overlap: 0, visible: true });
+    expect(measure).not.toHaveBeenCalled();
+    emit('keyboardDidHide');
+    expect(result).toEqual({ overlap: 0, visible: false });
+    expect(mockKeyboard.calls).toBe(0);
+  },
+);
 
 test('keyboard frames come from one provider at the root, on iOS only, without preloading the keyboard', () => {
   const child = <View testID="fixture-app" />;

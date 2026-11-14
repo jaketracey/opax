@@ -4,10 +4,19 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react';
-import { Animated, StyleSheet, View, useWindowDimensions } from 'react-native';
+import {
+  Animated,
+  Platform,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { router } from 'expo-router';
 import { track } from '../../analytics';
-import { useReduceMotion } from '../../design/accessibility';
+import {
+  useAccessibilitySize,
+  useReduceMotion,
+} from '../../design/accessibility';
 import { useScreenMargin } from '../../design/adaptive';
 import { EngravedMark } from '../../design/engraving';
 import { haptic } from '../../design/haptics';
@@ -104,6 +113,11 @@ export function AskIdle({
   /** `ask-pane` in the iPad pane, so its rows keep their own IDs. */
   testPrefix?: string;
 }) {
+  const stacked = useAccessibilitySize();
+  // The stacked heading borrows space from its parent's gap. These bare
+  // groups have none; restore it on Android without moving the iOS layout.
+  const sectionStyle =
+    Platform.OS === 'android' && stacked ? styles.stackedSection : undefined;
   const saved = useSyncExternalStore(
     subscribeChats,
     chatsSnapshot,
@@ -150,7 +164,7 @@ export function AskIdle({
         </Text>
       ) : null}
       {showStarters ? (
-        <View>
+        <View style={sectionStyle}>
           <SectionHeader title={idleCopy.tryAsking} />
           <InsetGroup testID={`${testPrefix}-starters`}>
             {/* With a seat saved, the first row is about the reader's own
@@ -193,7 +207,7 @@ export function AskIdle({
           testID={`${testPrefix}-conversations-failed`}
         />
       ) : recent.length ? (
-        <View>
+        <View style={sectionStyle}>
           <SectionHeader
             title={idleCopy.conversations}
             action={{
@@ -388,4 +402,5 @@ const styles = StyleSheet.create({
   emptyWords: { gap: rhythm.line, maxWidth: 420 },
   unseen: { opacity: 0 },
   centredText: { textAlign: 'center' },
+  stackedSection: { gap: rhythm.block },
 });
