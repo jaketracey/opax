@@ -43,25 +43,25 @@ Official references:
 - [Expo NativeTabs](https://docs.expo.dev/versions/v57.0.0/sdk/router/native-tabs/)
 - [UIKit verticalBarEdge](https://developer.apple.com/documentation/uikit/uitraitcollection/verticalbaredge)
 
-## Launch screen limit
+## Launch screen
 
-The generated artwork contains only canvas and glyph coordinates, with no device
-geometry. `LaunchHandoff` takes its window bounds, safe area and local reserved
-regions at runtime. Adaptive displays centre both the lockup and the complete
-settled name in the safe content area, use the larger side of an active division
-and call `placeClear` for camera clearance. Existing phones retain their original
-view-centred native launch coordinates.
+Expo's `expo-splash-screen/plugin/src/withIosSplashScreenStoryboard.ts` pins
+the native lockup's centre X and centre Y to `EXPO-ContainerView`, the whole
+window, not its safe-area guide, and its fixed 200pt image cannot run OPAX code
+to find a reserved region. On the closed Duo's 380pt outer window with a 60pt
+trailing rail, the native centre is x=190 and the safe centre x=160.
 
-The native launch screen cannot guarantee the same placement on Duo with the
-current Expo splash configuration. Expo's
-`expo-splash-screen/plugin/src/withIosSplashScreenStoryboard.ts` constrains the
-image's centre X and centre Y to `EXPO-ContainerView`, not its safe-area guide.
-Its fixed 200pt image cannot run OPAX code to query active reserved regions or
-choose a clear side. On a 380pt window with left 0 and right 60, the native centre
-is x=190 and the safe centre is x=160. A camera or division may move the live
-lockup further. This is a real native-to-JS position change, not a seamless
-handoff, and is not hidden by fabricated native geometry. A native launch-screen
-design decision remains with the lead if this transition is unacceptable.
+`splashLayout` (`src/launch/choreography.ts`) therefore draws the cover's first
+frame where the storyboard does, centred on the window, on every device, so
+`hideNativeSplash` swaps like for like. Until b67 adaptive displays centred the
+first frame in the safe area instead, and the logo jumped half the rail's width
+to the left at handoff (Jake, b67). The settled name still centres in the safe
+content area, takes the larger side of an active division and calls
+`placeClear` for camera clearance: the unfold carries the lockup from the
+window's centre to the content's, and crossfades instead when that travel would
+cross a reserved region. The short sequence holds the lockup where the native
+splash had it until it fades, over a camera or fold if the native splash was
+over one.
 
 ## Findings for other lanes
 

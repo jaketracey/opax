@@ -210,11 +210,43 @@ afterEach(() => {
   });
 });
 
+/** The native storyboard's lockup: 200 x 120, centred on the whole window. */
+const storyboard = (width: number, height: number) => ({
+  x: (width - 200) / 2,
+  y: (height - 120) / 2,
+});
+
 describe('safe launch geometry', () => {
-  test('leading and trailing insets have different centres', () => {
+  test("the first frame is the storyboard's, centred on the whole window beside a vertical bar", () => {
+    // The closed Duo: the rail's inset is on one side only. The native
+    // splash cannot see it, so the cover's first frame must not either, or
+    // the logo jumps half the rail's width at handoff (b67).
+    for (const safeArea of [asymmetric, { ...zero, left: 60 }]) {
+      const layout = splashLayout({ ...outer, safeArea });
+      expect(layout.canvas).toEqual(storyboard(380, 560));
+      expect(layout.canvas.x + 100).toBe(190);
+      expect(layout.star.from).toEqual({
+        x: 190 - 30,
+        y: layout.canvas.y + 6,
+        size: 60,
+      });
+    }
+  });
+  test("an iPad's uneven top and bottom insets leave the first frame on the window centre", () => {
+    const layout = splashLayout({
+      width: 1024,
+      height: 1366,
+      fontScale: 1,
+      safeArea: { ...zero, top: 24, bottom: 20 },
+    });
+    expect(layout.canvas).toEqual(storyboard(1024, 1366));
+  });
+  test('leading and trailing insets settle the name in different places', () => {
     const trailing = splashLayout({ ...outer, safeArea: asymmetric });
     const leading = splashLayout({ ...outer, safeArea: { ...zero, left: 60 } });
-    expect(leading.canvas.x - trailing.canvas.x).toBe(60);
+    expect(leading.canvas).toEqual(trailing.canvas);
+    expect(leading.star.to.x - trailing.star.to.x).toBe(60);
+    expect(leading.block.left - trailing.block.left).toBe(60);
   });
   test('inactive regions leave the flat display unchanged', () => {
     const frame = {
@@ -256,23 +288,26 @@ describe('safe launch geometry', () => {
     [320, 560],
     [620, 820],
     [820, 620],
-  ])('%ix%i centres in each safe side independently', (width, height) => {
-    const layout = splashLayout({
-      width,
-      height,
-      fontScale: 1,
-      safeArea: asymmetric,
-    });
-    const centre = (width - asymmetric.right) / 2;
-    expect(layout.canvas.x + 100).toBe(centre);
-    expect(layout.star.to.x + layout.star.to.size / 2).toBeCloseTo(centre);
-    expect(layout.block.left).toBeGreaterThanOrEqual(0);
-    expect(layout.block.left + layout.block.width).toBeLessThanOrEqual(
-      width - asymmetric.right,
-    );
-    expect(layout.block.top + layout.block.height).toBeLessThan(height);
-    expect(layout.star.to.y).toBeGreaterThanOrEqual(0);
-  });
+  ])(
+    '%ix%i starts on the window and settles in the safe side',
+    (width, height) => {
+      const layout = splashLayout({
+        width,
+        height,
+        fontScale: 1,
+        safeArea: asymmetric,
+      });
+      const centre = (width - asymmetric.right) / 2;
+      expect(layout.canvas).toEqual(storyboard(width, height));
+      expect(layout.star.to.x + layout.star.to.size / 2).toBeCloseTo(centre);
+      expect(layout.block.left).toBeGreaterThanOrEqual(0);
+      expect(layout.block.left + layout.block.width).toBeLessThanOrEqual(
+        width - asymmetric.right,
+      );
+      expect(layout.block.top + layout.block.height).toBeLessThan(height);
+      expect(layout.star.to.y).toBeGreaterThanOrEqual(0);
+    },
+  );
   test.each([
     {
       divisions: [],
@@ -286,7 +321,7 @@ describe('safe launch geometry', () => {
       divisions: [{ x: 0, y: 300, width: 820, height: 20, active: true }],
       occlusions: [],
     },
-  ])('the mark and settled name clear active regions: %j', (regions) => {
+  ])('the settled mark and name clear active regions: %j', (regions) => {
     const layout = splashLayout({
       width: 820,
       height: 820,
@@ -300,23 +335,27 @@ describe('safe launch geometry', () => {
       width: layout.block.width,
       height: layout.block.height,
     };
+    expect(layout.canvas).toEqual(storyboard(820, 820));
     for (const obstacle of [...regions.divisions, ...regions.occlusions])
-      for (const rect of [mark(layout.star.from), mark(layout.star.to), name])
+      for (const rect of [mark(layout.star.to), name])
         expect(overlaps(rect, obstacle)).toBe(false);
   });
-  test('the outer camera displaces the whole native lockup and settled group', () => {
+  test('the outer camera displaces the settled group, not the native first frame', () => {
     const camera = { x: 130, y: 170, width: 60, height: 150, active: true };
     const layout = splashLayout({
       ...outer,
       safeArea: asymmetric,
       regions: { divisions: [], occlusions: [camera] },
     });
-    expect(overlaps(mark(layout.star.from), camera)).toBe(false);
+    // The native splash drew the lockup over the camera; so does frame one.
+    expect(layout.canvas).toEqual(storyboard(380, 560));
+    expect(overlaps(mark(layout.star.from), camera)).toBe(true);
     expect(overlaps(mark(layout.star.to), camera)).toBe(false);
-    expect(layout.star.from.y).toBeGreaterThanOrEqual(0);
     expect(layout.block.top + layout.block.height).toBeLessThanOrEqual(560);
+    // The unfold would pass through the camera, so it crossfades instead.
+    expect(layout.travelClear).toBe(false);
   });
-  test('the rendered cover consumes the local camera and asymmetric safe area', () => {
+  test('the rendered cover starts on the storyboard and settles clear of the camera and rail', () => {
     const camera = { x: 130, y: 170, width: 60, height: 150, active: true };
     const regions = { divisions: [], occlusions: [camera] };
     const tree = render(
@@ -325,10 +364,49 @@ describe('safe launch geometry', () => {
       regions,
     );
     const expected = splashLayout({ ...outer, safeArea: asymmetric, regions });
-    expect(style(tree, 'launch-handoff-star')).toMatchObject({
-      left: expected.star.from.x,
-      top: expected.star.from.y,
+    expect(style(tree, 'launch-handoff-wordmark')).toMatchObject({
+      left: 90,
+      top: 220,
+      width: 200,
+      height: 120,
     });
+    expect(style(tree, 'launch-handoff-star')).toMatchObject({
+      left: 160,
+      top: 226,
+      width: 60,
+      height: 60,
+    });
+    expect(style(tree, 'launch-handoff-star-settled')).toMatchObject({
+      left: expected.star.to.x,
+      top: expected.star.to.y,
+    });
+    expect(expected.star.to.x + expected.star.to.size).toBeLessThanOrEqual(
+      380 - asymmetric.right,
+    );
+  });
+  test('beside a rail with nothing in the way, the unfold glides from the window centre to the safe centre', () => {
+    mockReducedMotion = false;
+    const tree = render(<LaunchHandoff ready={false} onDone={jest.fn()} />);
+    const layout = splashLayout({ ...outer, safeArea: asymmetric });
+    expect(layout.travelClear).toBe(true);
+    // Frame one: the native lockup, centred on the 380pt window.
+    expect(style(tree, 'launch-handoff-wordmark')).toMatchObject({
+      left: 90,
+      top: 220,
+    });
+    expect(style(tree, 'launch-handoff-star')).toMatchObject({
+      left: 160,
+      top: 226,
+    });
+    // The star travels, not jumps, to the 320pt content area's centre.
+    expect(layout.star.to.x + layout.star.to.size / 2).toBe(160);
+    expect(
+      tree.root.findAll(
+        (node) =>
+          node.props.testID === 'launch-handoff-star-settled' &&
+          typeof node.type === 'string',
+      ),
+    ).toHaveLength(0);
   });
   test('an ordinary phone retains the native artwork and existing journey', () => {
     act(() => {
