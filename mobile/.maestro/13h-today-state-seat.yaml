@@ -16,7 +16,7 @@ name: 13h Today with a federal and a Victorian state seat saved
       id: today-your-mp
     timeout: 60000
 - assertVisible:
-    id: today-your-mp-seat
+    id: today-your-mp-member
 - scrollUntilVisible:
     element:
       id: today-your-mp-sources

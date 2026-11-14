@@ -13,7 +13,7 @@ it('keeps both My MP journeys within their marked tap budgets', () => {
     encoding: 'utf8',
   });
   expect(output).toContain('first-launch-member: 3/3');
-  expect(output).toContain('today-latest-vote: 1/1');
+  expect(output).toContain('today-member-profile: 1/1');
   expect(output).toContain('today-official-page: 2/2');
   expect(output).toContain('figure-original: 2/2');
 });

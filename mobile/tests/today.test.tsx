@@ -744,7 +744,7 @@ describe('the page', () => {
     expect(r.root.findByType(Screen).props.grouped).toBe(true);
     expect(blocks(r.root)).not.toContain('today-votes');
   });
-  test('Your MP: the seat header, the member, the senators and the line last', async () => {
+  test('Your MP: one tile for the member and its line; no records or senators on Home', async () => {
     setUp({ seat: true, cached: { date: addDays(today, -1) } });
     const r = await render(<Today />);
     const card = r.root.find(
@@ -753,11 +753,13 @@ describe('the page', () => {
     const ids = card
       .findAll((n) => typeof n.type === 'string' && !!n.props.testID)
       .map((n) => n.props.testID as string);
-    expect(ids).toContain('today-your-mp-seat');
     expect(ids).toContain('today-your-mp-member');
-    expect(ids).toContain('today-senators');
+    expect(ids).toContain('today-your-mp-hook');
     expect(ids.filter((id) => id === 'today-your-mp-sources').length).toBe(1);
+    for (const id of ids)
+      expect(id).not.toMatch(/latest|senators|declaration|your-mp-group/);
     expect(strings(card)).toContain('Grayndler');
+    expect(strings(card)).toContain('Represents you in federal parliament');
     expect(strings(card)).not.toMatch(/authoris/i);
   });
   test('no string says a retired or pipeline word, or an em dash', async () => {

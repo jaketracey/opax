@@ -17,10 +17,8 @@ name: Equal Today, hero and profile affordances for one member
 - extendedWaitUntil:
     visible:
       id: today-your-mp-member
-      text: ${MEMBER}.*
+      text: Your MP, ${MEMBER}.*
     timeout: 60000
-- assertVisible:
-    id: today-your-mp-seat
 - assertVisible:
     id: today-your-mp-sources
 - longPressOn:

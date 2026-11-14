@@ -1,61 +1,57 @@
 import { router } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
-import type { BillIndex, Electorate } from '../../api/catalogs';
+import type { Electorate } from '../../api/catalogs';
 import { catalogs } from '../../api/runtime';
+import { useAccessibilitySize } from '../../design/accessibility';
+import { Card } from '../../design/card';
 import { Icon } from '../../design/icon';
 import { InsetGroup } from '../../design/layout';
-import { PersonRow } from '../../design/people';
-import { RowLink, type RowMenuAction } from '../../design/row-link';
+import { partyText, type PartyContext } from '../../design/party';
+import {
+  PartyLabel,
+  PersonRow,
+  Portrait,
+  YourMPMark,
+} from '../../design/people';
+import {
+  RowLink,
+  rowMenus,
+  useRowFollow,
+  type RowMenuAction,
+} from '../../design/row-link';
 import { SourceLine, type SourceCitation } from '../../design/source';
 import { InlineError, LoadingStatus, Skeleton } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
-import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { colors, minimumTarget, rhythm, textStyles } from '../../design/tokens';
+import { openSource } from '../../navigation/external';
 import {
   electorateRoute,
-  membersRoute,
   personRoute,
   seatRoute,
 } from '../../navigation/routes';
 import { shareRecord } from '../../navigation/share';
 import { CachedPortrait } from '../CachedPortrait';
-import { byFamilyName, FaceStackRow } from '../your-mp/FaceStackRow';
-import { latelyFor } from '../your-mp/latest';
-import { LatestRows } from '../your-mp/LatestRows';
-import { MemberHeroRow, officialPageFor } from '../your-mp/MemberHeroRow';
+import { useFaceURIs } from '../your-mp/FaceStackRow';
+import { officialPageFor, type OfficialPage } from '../your-mp/MemberHeroRow';
 import {
   representativeProfile,
   type Directory,
-  type ElectorateView,
-  type ProfileView,
   type YourMPView,
 } from '../your-mp/model';
-import { senateSeatFor, tenureYear } from '../your-mp/RepresentativesGroup';
-import { RepresentativeRows } from '../your-mp/RepresentativeRows';
 import { stateInRunningCopy } from '../your-mp/state-names';
 import { isRegion } from '../your-mp/StateMembers';
 import type { SydneyDate } from './rules';
 import { oldestDate } from './sources';
-
-/** Today's card shows three Latest rows (the Your MP tab shows five). */
-export const CARD_LATEST = 3;
 
 type Load<T> =
   | { status: 'loading' }
   | { status: 'error' }
   | { status: 'ready'; data: T };
 
-interface CardBills {
-  data: BillIndex;
-  asOf: string | null;
-  stale?: boolean;
-  savedAt?: number | null;
-  partial?: boolean;
-}
-
 /**
- * One read for the card, keyed by what it reads, so a new seat never shows
+ * One read for the tile, keyed by what it reads, so a new seat never shows
  * the old seat's data; a pull to refresh keeps the drawn answer until the
  * next arrives.
  */
@@ -95,8 +91,8 @@ function useLoad<T>(
 }
 
 /**
- * The seat header (today.md 5.4): the seat's name and its state, one link
- * that pushes the electorate page inside Today. Touch and hold: Change
+ * The state seat's header: the seat's name and its state, one link that
+ * pushes the electorate page inside Today. Touch and hold: Change
  * electorate, Share.
  */
 function SeatHeader({
@@ -151,11 +147,11 @@ function SeatHeader({
   );
 }
 
-/** The card's skeleton in its final shape: member, three Latest rows, faces, line. */
+/** The tile's skeleton in its final shape: one person and the line. */
 export function YourMPSkeleton() {
   return (
-    // One element for VoiceOver, read once (today.md 5.4); the shapes inside
-    // keep the card's layout.
+    // One element for VoiceOver, read once; the shapes inside keep the
+    // tile's layout.
     <LoadingStatus
       accessible
       accessibilityRole="progressbar"
@@ -169,8 +165,6 @@ export function YourMPSkeleton() {
         style={styles.block}
       >
         <Skeleton shape="people" count={1} label="Loading your MP" />
-        <Skeleton shape="rows" count={CARD_LATEST} label="Loading your MP" />
-        <Skeleton shape="rows" count={1} label="Loading your MP" />
         <Skeleton shape="text" count={1} label="Loading your MP" />
       </View>
     </LoadingStatus>
@@ -178,11 +172,51 @@ export function YourMPSkeleton() {
 }
 
 /**
- * Your MP on Today (today.md 5.4): the seat header, then one inset group
- * (the member, the three newest records about them, the state's senators)
- * and its line, dated by the oldest of its four sources. Several links, so
- * an inset group, never one whole-card link. No money figure; the same
- * anatomy for every member.
+ * The tile's one plain line: what this person is to the reader, in words a
+ * newcomer knows. It comes from the saved seat alone (a federal House of
+ * Representatives electorate), so it is true of whoever holds the seat and
+ * needs no extra read. Any other kind of seat gets no line rather than a
+ * wrong one.
+ */
+export function yourMPHook(
+  seat: Pick<Electorate, 'jurisdiction' | 'chamber'>,
+): string | null {
+  return seat.jurisdiction === 'federal' && seat.chamber === 'representatives'
+    ? 'Represents you in federal parliament'
+    : null;
+}
+
+/**
+ * What VoiceOver says for the tile, built from the record: "Your MP, Jo
+ * Briskey, Labor, Maribyrnong. Represents you in federal parliament." The
+ * hint says what a tap opens.
+ */
+export function yourMPLabel({
+  name,
+  party,
+  electorate,
+  hook,
+}: {
+  name: string;
+  party: string | null;
+  electorate: string;
+  hook: string | null;
+}): string {
+  const identity = ['Your MP', name, party, electorate]
+    .filter(Boolean)
+    .join(', ');
+  return hook ? `${identity}. ${hook}.` : `${identity}.`;
+}
+
+/** The tile never grows past a card's reading width (iPad, one column). */
+export const TILE_MAX_WIDTH = 560;
+
+/**
+ * Your MP on Today: one compact tile a newcomer can read. The portrait, the
+ * name, the party and the electorate, then one plain line saying why this
+ * person matters to the reader. The whole tile opens the profile, where the
+ * votes, declared interests and bills live; none of them draw on Today.
+ * Touch and hold: Follow, Share, the electorate and Change electorate.
  */
 export function YourMPCard({
   seat,
@@ -203,48 +237,8 @@ export function YourMPCard({
     () => catalogs.yourMP(seat.electorate_id, [...stateSeatIds]),
     attempt,
   );
-  const electorate = useLoad<ElectorateView>(
-    seat.detail_url,
-    async () => (await catalogs.electorateFor(seat.detail_url)).data,
-    attempt,
-  );
-  const member =
-    view.status === 'ready' && view.data.members.data?.length === 1
-      ? view.data.members.data[0]!
-      : null;
-  const profile = useLoad<ProfileView>(
-    member ? member.person_id : null,
-    () =>
-      catalogs.profileFor(member!.person_id, {
-        includeInterests: true,
-      }) as Promise<ProfileView>,
-    attempt,
-  );
-  const bills = useLoad<CardBills>(
-    member ? 'bills' : null,
-    async () => {
-      const result = await catalogs.bills();
-      return {
-        data: result.data,
-        stale: result.stale,
-        savedAt: result.savedAt,
-        partial: result.partial,
-        asOf:
-          (result.data as { meta?: { generated?: string } }).meta?.generated ??
-          null,
-      };
-    },
-    attempt,
-  );
-  const state = stateInRunningCopy(seat.state_code);
   return (
-    <View testID="today-your-mp" style={styles.section}>
-      <SeatHeader
-        seat={seat}
-        subtitle={state}
-        label={`${seat.name}, ${state}`}
-        testID="today-your-mp-seat"
-      />
+    <View testID="today-your-mp" style={styles.tileColumn}>
       {view.status === 'error' ? (
         <InlineError
           subject="Your MP"
@@ -252,173 +246,299 @@ export function YourMPCard({
           onRetry={onRetry}
           testID="today-your-mp-error"
         />
-      ) : view.status === 'loading' || electorate.status === 'loading' ? (
-        // The member row draws once, at its final height, when both the
-        // roster and the electorate file have answered.
+      ) : view.status === 'loading' ? (
         <YourMPSkeleton />
       ) : (
-        <YourMPGroup
-          seat={seat}
-          directory={directory}
-          view={view.data}
-          electorate={electorate.status === 'ready' ? electorate.data : null}
-          profile={profile}
-          bills={bills.status === 'ready' ? bills.data : null}
-        />
+        <View style={styles.block}>
+          <YourMPTile seat={seat} directory={directory} view={view.data} />
+          <SourceLine
+            {...yourMPSources(view.data)}
+            testID="today-your-mp-sources"
+          />
+        </View>
       )}
     </View>
   );
 }
 
-function YourMPGroup({
+/** The seat's own actions, shared by every form of the tile. */
+function seatActions(seat: Electorate, linked: boolean): RowMenuAction[] {
+  return [
+    ...(linked
+      ? [
+          {
+            title: `Open ${seat.name}`,
+            symbol: symbols.electorate,
+            onPress: () =>
+              router.push(
+                electorateRoute(seat.electorate_id, undefined, seat.name),
+              ),
+          },
+        ]
+      : []),
+    {
+      title: 'Change electorate',
+      symbol: symbols.yourMP,
+      onPress: () => router.push(seatRoute()),
+    },
+  ];
+}
+
+function YourMPTile({
   seat,
   directory,
   view,
-  electorate,
-  profile,
-  bills,
 }: {
   seat: Electorate;
   directory: Directory;
   view: YourMPView;
-  electorate: ElectorateView | null;
-  profile: Load<ProfileView>;
-  bills: CardBills | null;
 }) {
   const member = view.members.data?.length === 1 ? view.members.data[0]! : null;
-  const identity = member
-    ? representativeProfile(member.person_id, directory)
-    : null;
-  const person = member
-    ? directory.people.data.people.find((p) => p.person_id === member.person_id)
-    : null;
-  const year = member ? tenureYear(member.person_id, electorate?.terms) : null;
-  const senate = senateSeatFor(seat, directory);
-  const senators = [...(senate?.representatives ?? [])].sort(
-    byFamilyName((r) => r.person.name),
+  if (!member) return <VacantTile seat={seat} />;
+  const identity = representativeProfile(member.person_id, directory);
+  const person = directory.people.data.people.find(
+    (p) => p.person_id === member.person_id,
   );
-  const lately =
-    profile.status === 'ready'
-      ? latelyFor(profile.data, bills?.data, { limit: CARD_LATEST })
-      : profile.status === 'error'
-        ? ({ status: 'error' } as const)
-        : ({ status: 'loading' } as const);
-  const source = yourMPSources(view, profile, bills);
   return (
-    <View style={styles.block}>
-      <InsetGroup testID="today-your-mp-group">
-        {member && identity ? (
-          <MemberHeroRow
-            size="card"
-            name={member.person.name}
-            slug={identity.slug}
-            personId={member.person_id}
-            party={identity.party ?? member.party}
-            partyStatus={identity.partyStatus ?? 'current'}
-            tenure={year ? `Member since ${year}` : null}
-            official={officialPageFor(person?.source_url, seat.jurisdiction)}
-            testID="today-your-mp-member"
-          />
-        ) : member ? (
-          <RepresentativeRows
-            rows={[member]}
-            directory={directory}
-            id="today-your-mp-member"
-            wrap={false}
-            detailFor={() => (year ? `Member since ${year}` : null)}
-          />
-        ) : (
-          <Text wordSafe testID="today-your-mp-none" style={styles.none}>
-            No member is recorded for this seat yet.
-          </Text>
-        )}
-        {member && lately.status === 'loading' ? (
-          <Skeleton
-            shape="rows"
-            count={CARD_LATEST}
-            label="Loading recent records"
-            testID="today-your-mp-latest-loading"
-          />
-        ) : null}
-        {lately.status === 'ready' ? (
-          <LatestRows
-            records={lately.records}
-            limit={CARD_LATEST}
-            testID="today-your-mp-latest"
-          />
-        ) : null}
-        {senate && senators.length ? (
-          <FaceStackRow
-            title={`${senators.length} senators for ${stateInRunningCopy(seat.state_code)}`}
-            people={senators.map((r) => ({
-              name: r.person.name,
-              slug: representativeProfile(r.person_id, directory)?.slug,
-            }))}
-            href={membersRoute(senate.electorate_id)}
-            testID="today-senators"
-          />
-        ) : null}
-      </InsetGroup>
-      <SourceLine {...source} testID="today-your-mp-sources" />
-    </View>
+    <MemberTile
+      seat={seat}
+      name={member.person.name}
+      personId={member.person_id}
+      slug={identity?.slug ?? null}
+      party={identity?.party ?? member.party ?? null}
+      partyStatus={identity?.partyStatus ?? 'current'}
+      official={officialPageFor(person?.source_url, seat.jurisdiction)}
+    />
   );
 }
 
 /**
- * The Your MP line (today.md 5.4, refinement 2): the roster first (it gives
- * the member's identity), then votes, registers and bills, each with its
- * own date in the sheet; the line's date is the oldest of them, so it never
- * overstates freshness. A source that failed is named in the notes.
+ * The member's tile. One element: the whole tile opens the profile (the
+ * electorate when the profile cannot be linked, so the tile always leads
+ * somewhere). The name is a link label, never a heading.
  */
-export function yourMPSources(
-  view: YourMPView,
-  profile: Load<ProfileView>,
-  bills: Omit<CardBills, 'data'> | null,
-) {
-  const roster = [view.members, ...view.senators];
-  const rosterAsOf = oldestDate(roster.map((b) => b.asAt));
-  const originals = roster
-    .flatMap((b) => b.sources.map((s) => ({ ...s, asOf: b.asAt })))
-    .filter(
-      (s, i, all) =>
-        all.findIndex((o) => o.url === s.url && o.asOf === s.asOf) === i,
-    );
-  const rosterName = originals[0]?.label ?? 'Parliament of Australia';
-  const citation: SourceCitation[] = [{ label: rosterName, asOf: rosterAsOf }];
-  const missing: string[] = [];
-  if (profile.status === 'ready') {
-    const { votes, interests } = profile.data.blocks;
-    if (votes.status === 'error') missing.push('votes');
-    else citation.push({ label: 'They Vote For You', asOf: votes.asAt });
-    if (interests.status === 'error') missing.push('registers of interests');
-    else
-      citation.push({ label: 'Registers of interests', asOf: interests.asAt });
-  } else if (profile.status === 'error')
-    missing.push('votes', 'registers of interests');
-  if (bills) citation.push({ label: 'ParlInfo', asOf: bills.asOf });
-  const checked = [
-    ...roster,
-    ...(profile.status === 'ready'
-      ? [profile.data.blocks.votes, profile.data.blocks.interests]
+function MemberTile({
+  seat,
+  name,
+  personId,
+  slug,
+  party,
+  partyStatus,
+  official,
+}: {
+  seat: Electorate;
+  name: string;
+  personId: string;
+  slug: string | null;
+  party: string | null;
+  partyStatus: PartyContext['status'];
+  official: OfficialPage | null;
+}) {
+  const stacked = useAccessibilitySize();
+  const follow = useRowFollow('person', personId, name);
+  const [face] = useFaceURIs([{ name, slug: slug ?? undefined }], 1);
+  const hook = yourMPHook(seat);
+  const context = party ? { party, status: partyStatus } : null;
+  const menu: RowMenuAction[] = [
+    ...(slug ? rowMenus.person({ slug, name, ...follow }) : []),
+    ...(official
+      ? [
+          {
+            title: official.label,
+            symbol: 'arrow.up.right.square' as const,
+            onPress: () => void openSource(official.url, official.label),
+          },
+        ]
       : []),
-    ...(bills ? [bills] : []),
+    ...seatActions(seat, !!slug),
   ];
-  const saved = checked.filter((b) => b.stale);
-  const savedTimes = saved.flatMap((b) =>
-    b.savedAt == null ? [] : [b.savedAt],
+  return (
+    <Card
+      href={
+        slug
+          ? personRoute(slug, name)
+          : electorateRoute(seat.electorate_id, undefined, seat.name)
+      }
+      zoom={!!slug}
+      menu={menu}
+      accessibilityLabel={yourMPLabel({
+        name,
+        party: context ? partyText(context).spoken : null,
+        electorate: seat.name,
+        hook,
+      })}
+      accessibilityHint={slug ? 'Opens the profile' : 'Opens the electorate'}
+      accessibilityActions={[
+        ...(slug
+          ? [
+              {
+                name: 'follow',
+                label: follow.following ? 'Unfollow' : 'Follow',
+                onAction: follow.onFollow,
+              },
+              {
+                name: 'electorate',
+                label: `Open ${seat.name}`,
+                onAction: () =>
+                  router.push(
+                    electorateRoute(seat.electorate_id, undefined, seat.name),
+                  ),
+              },
+            ]
+          : []),
+        {
+          name: 'change',
+          label: 'Change electorate',
+          onAction: () => router.push(seatRoute()),
+        },
+      ]}
+      testID="today-your-mp-member"
+    >
+      <View style={styles.tile}>
+        <View style={[styles.tileMain, stacked && styles.tileStacked]}>
+          <Portrait
+            size={56}
+            localURI={face ?? undefined}
+            name={name}
+            nameBeside
+            testID="today-your-mp-portrait"
+          />
+          <View style={[styles.tileWords, !stacked && styles.tileWordsInline]}>
+            <YourMPMark testID="today-your-mp-mark" />
+            <TileTitle testID="today-your-mp-name">{name}</TileTitle>
+            <View
+              style={[styles.tileIdentity, stacked && styles.tileIdentityStack]}
+            >
+              {context ? (
+                <PartyLabel
+                  {...context}
+                  linked={false}
+                  nested
+                  compact
+                  testID="today-your-mp-party"
+                />
+              ) : null}
+              <Text wordSafe variant="secondary" testID="today-your-mp-seat">
+                {context && !stacked ? `· ${seat.name}` : seat.name}
+              </Text>
+            </View>
+            {hook ? (
+              <Text
+                wordSafe
+                variant="secondary"
+                tone="ink"
+                style={styles.tileHook}
+                testID="today-your-mp-hook"
+              >
+                {hook}
+              </Text>
+            ) : null}
+          </View>
+        </View>
+      </View>
+    </Card>
   );
+}
+
+/**
+ * The tile's title and its chevron on one line (as design Tile does), so the
+ * lines under the name run the tile's full width and the plain line fits one
+ * line on a phone at Large. The chevron centres on the title's first line
+ * as drawn, at every text size.
+ */
+function TileTitle({ children, testID }: { children: string; testID: string }) {
+  const [firstLine, setFirstLine] = useState<number>();
+  return (
+    <View style={styles.tileTitle}>
+      <Text
+        wordSafe
+        variant="subsectionTitle"
+        accessibilityRole="text"
+        style={styles.tileHeading}
+        onTextLayout={(event) =>
+          setFirstLine(event.nativeEvent.lines[0]?.height)
+        }
+        testID={testID}
+      >
+        {children}
+      </Text>
+      <View
+        testID={`${testID}-chevron`}
+        style={[styles.tileChevron, firstLine ? { height: firstLine } : null]}
+      >
+        <Icon
+          name={symbols.chevron}
+          size={13}
+          maxScale={1.5}
+          tone="inkFaint"
+          weight="semibold"
+        />
+      </View>
+    </View>
+  );
+}
+
+/** A seat with no recorded member: the tile says so and opens the electorate. */
+function VacantTile({ seat }: { seat: Electorate }) {
+  const stacked = useAccessibilitySize();
+  const none = 'No member is recorded for this seat yet.';
+  return (
+    <Card
+      href={electorateRoute(seat.electorate_id, undefined, seat.name)}
+      menu={seatActions(seat, false)}
+      accessibilityLabel={`Your electorate, ${seat.name}. ${none}`}
+      accessibilityHint="Opens the electorate"
+      accessibilityActions={[
+        {
+          name: 'change',
+          label: 'Change electorate',
+          onAction: () => router.push(seatRoute()),
+        },
+      ]}
+      testID="today-your-mp-vacant"
+    >
+      <View style={styles.tile}>
+        <View style={[styles.tileMain, stacked && styles.tileStacked]}>
+          <Portrait size={56} nameBeside />
+          <View style={[styles.tileWords, !stacked && styles.tileWordsInline]}>
+            <Text wordSafe variant="footnote">
+              Your electorate
+            </Text>
+            <TileTitle testID="today-your-mp-seat">{seat.name}</TileTitle>
+            <Text wordSafe variant="secondary" testID="today-your-mp-none">
+              {none}
+            </Text>
+          </View>
+        </View>
+      </View>
+    </Card>
+  );
+}
+
+/**
+ * The tile's line: the parliament roster, which gives the member's name,
+ * party and seat. Nothing else draws on the tile, so nothing else is cited.
+ */
+export function yourMPSources(view: YourMPView) {
+  const roster = view.members;
+  const originals = roster.sources.map((s) => ({ ...s, asOf: roster.asAt }));
+  const citation: SourceCitation[] = [
+    {
+      label: originals[0]?.label ?? 'Parliament of Australia',
+      asOf: oldestDate([roster.asAt]),
+    },
+  ];
   return {
-    asOf: oldestDate(citation.map((c) => c.asOf as string | null)),
+    asOf: oldestDate([roster.asAt]),
     citation,
     originals,
     notes: [
-      'Your member and senators from the parliament roster; their newest dated votes, register changes and bills, newest first.',
-      missing.length ? `Not checked: ${missing.join(' and ')}.` : null,
+      'Your member, their party and their seat from the parliament roster.',
     ],
-    savedAt: savedTimes.length ? Math.min(...savedTimes) : null,
-    state: saved.length
+    savedAt: roster.stale ? (roster.savedAt ?? null) : null,
+    state: roster.stale
       ? ('saved' as const)
-      : checked.some((b) => b.partial)
+      : roster.partial
         ? ('partial' as const)
         : null,
   };
@@ -549,6 +669,46 @@ const styles = StyleSheet.create({
   section: { gap: rhythm.heading },
   // The group to its line: group (24).
   block: { gap: rhythm.group },
+  // Capped so one column never stretches the tile (iPad, a Duo at AX sizes).
+  tileColumn: { width: '100%', maxWidth: TILE_MAX_WIDTH },
+  tile: { flexDirection: 'row', alignItems: 'center' },
+  tileTitle: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: rhythm.tight,
+  },
+  tileHeading: { flex: 1 },
+  // The name's line height at Large; TileTitle sets the drawn line's height.
+  tileChevron: {
+    height: textStyles.subsectionTitle.lineHeight,
+    justifyContent: 'center',
+  },
+  tileMain: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.block,
+  },
+  tileStacked: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: rhythm.tight,
+  },
+  tileWords: { gap: rhythm.line, alignSelf: 'stretch' },
+  tileWordsInline: { flex: 1, alignSelf: 'center' },
+  tileIdentity: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    columnGap: rhythm.line,
+  },
+  tileIdentityStack: {
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    alignItems: 'flex-start',
+  },
+  // The hook sits a step under the identity, as the tile's own sentence.
+  tileHook: { marginTop: rhythm.line },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
