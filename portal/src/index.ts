@@ -6992,18 +6992,28 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
             else {
               const response = await routedFallback(run.research)
               if ((response.headers.get('content-type') ?? '').includes('text/event-stream')) {
+                if(releasedResearchPrefix){
+                  // Planner deltas remain held by the public checker. A failed fallback must complete
+                  // the checked loop checkpoint, rather than forward an error beside that text.
+                  const wire=await budget.run(()=>response.text())
+                  if(/^event: error\r?$/m.test(wire)||!/^event: done\r?$/m.test(wire))throw Error('Ask fallback stream failed')
+                  if(!gone)controller.enqueue(encoder.encode(wire))
+                  return
+                }
                 const reader = response.body!.getReader()
                 try { while (true) { const { value, done } = await budget.run(() => reader.read()); if (done || gone) break; controller.enqueue(value!) } }
                 finally { await reader.cancel().catch(() => {}); reader.releaseLock() }
               } else if (response.ok) await send('done', await budget.run(() => response.json()))
+              else if(releasedResearchPrefix)throw Error('Ask fallback failed')
               else await send('error', { error: 'The record is temporarily unavailable. Please try again.', final: true })
             }
           } catch {
             closeSentences()
             if (!gone && !request.signal.aborted){
-              if(budget.signal.aborted&&releasedResearchPrefix&&releasedResearchAnswer){
-                const partial=interruptedResearchAnswer(releasedResearchAnswer,releasedResearchPrefix)
+              if(releasedResearchPrefix&&releasedResearchAnswer){
+                const partial=interruptedResearchAnswer(releasedResearchAnswer,releasedResearchPrefix,budget.signal.aborted)
                 const done={...partial,followups:[],research:lastResearch??{mode:'loop',rounds:0,trail:[],sources:[]}}
+                console.log(JSON.stringify({kind:'research_loop_stream_cut_short',count:1,reason:budget.signal.aborted?'deadline':'fallback_error',preview_chars:releasedResearchPrefix.length}))
                 controller.enqueue(encoder.encode(`event: done\ndata: ${JSON.stringify(done)}\n\n`))
               }else controller.enqueue(encoder.encode('event: error\ndata: {"error":"The answer took too long. Please try again.","final":true}\n\n'))
             }

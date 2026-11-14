@@ -17,9 +17,9 @@ export function researchPrefix(payload:QualitativeAnswer,answer:string):Qualitat
   return {...payload,answer,citations,sources:payload.sources.map(s=>({...s,cited:Object.keys(citations).some(id=>id===s.resource||id.startsWith(s.resource+'/'))}))}
 }
 
-export function interruptedResearchAnswer(payload:QualitativeAnswer,answer:string) {
+export function interruptedResearchAnswer(payload:QualitativeAnswer,answer:string,deadline=true) {
   return {...researchPrefix(payload,answer),answered:true,answer_decision:'answer' as const,
-    answer:answer+'\n\nThe answer was cut short because it reached the time limit.'}
+    answer:answer+'\n\n'+(deadline?'The answer was cut short because it reached the time limit.':'The answer was cut short because it could not finish.')}
 }
 
 /** An incomplete/ambiguous boundary stays in the tail. In particular, the next token can turn a final full stop

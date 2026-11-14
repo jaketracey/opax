@@ -250,7 +250,7 @@ async function mapResearchResponse(response: Response, augment: (payload: Record
   let pending = ''
   const deltas:string[]=[]
   let deltaText='',replayable=true
-  let researchSentences=false, released='',completed=false,retries=0
+  let researchSentences=false, released='',releasedTotal=0,completed=false,retries=0
   const reset=()=>{released='';deltaText='';deltas.length=0;replayable=true;retries++}
   const frame = (value: string,separator='\n\n') => {
     if(completed)return ''
@@ -262,6 +262,7 @@ async function mapResearchResponse(response: Response, augment: (payload: Record
       const data=JSON.parse(/^data: (.+)$/m.exec(value)?.[1]??'')
       if(typeof data.text!=='string')throw Error('Invalid checked research sentence')
       released+=data.text
+      releasedTotal+=data.text.length
       return 'event: delta\ndata: '+JSON.stringify({text:data.text})
     }
     // Fallback and cache replay deltas have not passed the period check yet.
@@ -288,7 +289,7 @@ async function mapResearchResponse(response: Response, augment: (payload: Record
         if(text)tail+='event: delta\ndata: '+JSON.stringify({text})+separator
       }
       unchanged=typeof original.answer==='string'&&checked.answer===original.answer&&deltaText===checked.answer
-      if(validateBeforeText&&researchSentences)console.log(JSON.stringify({kind:'research_loop_stream_complete',count:1,retries,preview_chars:released.length,answer_chars:typeof checked.answer==='string'?checked.answer.length:0}))
+      if(validateBeforeText&&researchSentences)console.log(JSON.stringify({kind:'research_loop_stream_complete',count:1,retries,preview_chars:releasedTotal,answer_chars:typeof checked.answer==='string'?checked.answer.length:0}))
       return 'data: '+JSON.stringify(checked)
     })
     const safe=!researchSentences&&replayUnchangedDeltas&&replayable&&unchanged?deltas.join(''):''
@@ -481,12 +482,12 @@ export function normaliseWrittenPayload(payload: Record<string, unknown>,questio
     return records.join('|')+(counterparty?'|counterparty:'+key(counterparty):'')
   }
   const seenText=new Set<string>(), seenClaims=new Set<string>()
-  const kept: {text:string;from:number;until:number}[][]=[]
+  const kept: {text:string;from:number;until:number;separator:string}[][]=[]
   let changed=false
   for(const paragraph of original.matchAll(/\S[\s\S]*?(?=\n\s*\n|$)/g)) {
     const text=paragraph[0], base=paragraph.index!
     if (/^(?:#{1,6}\s*)?(?:what the records? say(?:s)?|answer|overview|sources|summary)\s*:?$/i.test(text.trim())) {changed=true;continue}
-    const parts:{text:string;from:number;until:number}[]=[]
+    const parts:{text:string;from:number;until:number;separator:string}[]=[]
     // Repeated procedural wording belongs to each complete cited division title.
     const division=divisionVoteSource({sources:sources as unknown as QualitativeAnswer['sources'],citations:(payload.citations??{}) as QualitativeAnswer['citations']},text,cp(base),cp(base+text.length))
     for(const clause of division?[{text,start:0,end:text.length}]:claimClauses(text)) {
@@ -494,7 +495,8 @@ export function normaliseWrittenPayload(payload: Record<string, unknown>,questio
       const sentence=(connector?'and ':'')+clause.text, scope=claimScope(clause.text,cp(base+clause.start),cp(base+clause.end)),identities=proseClaimKeys(clause.text).map(identity=>scope?identity+'|'+scope:identity),signature=key(clause.text)
       if(seenText.has(signature)||identities.length>0&&identities.every(id=>seenClaims.has(id))) {changed=true;continue}
       seenText.add(signature);identities.forEach(id=>seenClaims.add(id))
-      parts.push({text:sentence,from:cp(base+clause.start-(connector?4:0)),until:cp(base+clause.end)})
+      const separator=/\s*$/.exec(text.slice(0,clause.start))?.[0]??''
+      parts.push({text:sentence,from:cp(base+clause.start-(connector?4:0)),until:cp(base+clause.end),separator:separator||' '})
     }
     if(parts.length)kept.push(parts)
   }
@@ -504,7 +506,7 @@ export function normaliseWrittenPayload(payload: Record<string, unknown>,questio
   for(const paragraph of kept) {
     if(answer)answer+='\n\n'
     for(const [index,part] of paragraph.entries()) {
-      if(index)answer+=' '
+      if(index)answer+=part.separator
       const offset=Array.from(answer).length
       for(let i=part.from;i<part.until;i++)mapping.set(i,offset+i-part.from)
       answer+=part.text

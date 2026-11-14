@@ -142,18 +142,18 @@ test('a promoted on-topic finding streams while its earlier context stays in the
   assert.equal(deltas.join(''),finding,'only the settled lead is released before completion')
 })
 
-test('duplicate removal restores legacy line breaks, resetting any affected released prefix',async()=>{
+test('duplicate removal preserves line breaks without resetting the released prefix',async()=>{
   const first='The housing report found planning rules slowed approvals.',second='The report recommended simpler planning rules.',deltas=[]
   const stream=api.researchSentenceStream(question,async text=>deltas.push(text))
   await stream.preview(payload(first));await stream.preview(payload(first+'\n'+second))
   const full={...payload(first+'\n'+second+'\n'+second),research:{mode:'loop'}}
   const wire=frame('research_sentences',{})+deltas.map(text=>frame('research_sentence',{text})).join('')+frame('done',full)
   const events=decode(await(await api.withAnswerLanguage(new Response(wire,{headers:{'content-type':'text/event-stream'}}),question)).text())
-  assert.equal(events.filter(e=>e.event==='retry').length,1)
-  assert.equal(events.at(-2).data.text,events.at(-1).data.answer)
-  assert.equal(events.at(-1).data.answer,first+' '+second)
-  assert.equal(api.normaliseWrittenPayload(full,question).answer,first+' '+second,'legacy fallback normalisation keeps its previous formatting')
-  assert.equal((await(await api.withAnswerLanguage(Response.json(full),question)).json()).answer,first+' '+second,'fresh JSON uses the same legacy formatting')
+  assert.equal(events.some(e=>e.event==='retry'),false)
+  assert.equal(events.filter(e=>e.event==='delta').map(e=>e.data.text).join(''),events.at(-1).data.answer)
+  assert.equal(events.at(-1).data.answer,first+'\n'+second)
+  assert.equal(api.normaliseWrittenPayload(full,question).answer,first+'\n'+second)
+  assert.equal((await(await api.withAnswerLanguage(Response.json(full),question)).json()).answer,first+'\n'+second)
 })
 
 test('changed cached quotations still release only the final checked payload',async()=>{
@@ -259,7 +259,7 @@ test('a prefix mismatch logs a count and sends retry, full checked delta and don
   assert.deepEqual(events.map(e=>e.event),['delta','retry','delta','done'])
   assert.equal(events.at(-2).data.text,events.at(-1).data.answer)
   assert.equal(events.at(-1).data.answer,full)
-  assert.deepEqual(logs,[{kind:'research_loop_stream_reset',reason:'checked_prefix_changed',count:1,released_chars:first.length,answer_chars:full.length},{kind:'research_loop_stream_complete',count:1,retries:1,preview_chars:0,answer_chars:full.length}])
+  assert.deepEqual(logs,[{kind:'research_loop_stream_reset',reason:'checked_prefix_changed',count:1,released_chars:first.length,answer_chars:full.length},{kind:'research_loop_stream_complete',count:1,retries:1,preview_chars:first.length,answer_chars:full.length}])
   const deltas=[],stream=api.researchSentenceStream(question,async text=>deltas.push(text))
   stream.close();await stream.preview(payload(first));assert.deepEqual(deltas,[])
 })
@@ -421,5 +421,125 @@ test('planner retry clears the released prefix and held deltas before its checke
   assert.deepEqual(events.map(e=>e.event),['delta','retry','delta','done'])
   assert.equal(events.at(-2).data.text,final)
   assert.equal(events.at(-1).data.answer,final)
-  assert.deepEqual(logs,[{kind:'research_loop_stream_complete',count:1,retries:1,preview_chars:0,answer_chars:final.length}])
+  assert.deepEqual(logs,[{kind:'research_loop_stream_complete',count:1,retries:1,preview_chars:first.length,answer_chars:final.length}])
+})
+
+const previewSelection={inFlight:0,introductions:false,hearing:false,recordFacts:0,billSpeech:false,passageKinds:['speech','bill']}
+for(const [name,held] of [
+  ['non-speech/bill passages',{passageKinds:['speech','report']}],
+  ['lookups in flight',{inFlight:1}],
+  ['hearing selections',{hearing:true}],
+  ['bill-speech without a speech',{billSpeech:true,passageKinds:['bill']}],
+])test(`pre-acceptance selection gate holds ${name}`,()=>{
+  assert.equal(api.canPreviewResearchSelection(previewSelection),true)
+  assert.equal(api.canPreviewResearchSelection({...previewSelection,...held}),false)
+})
+
+async function loopPreviewRun(model,{options={},preview,question:q=question}={}){
+  const deltas=[],stream=api.researchSentenceStream(q,async text=>deltas.push(text)),progress=async()=>{}
+  if(preview!==false)progress.answer=async p=>{await stream.preview(p);await preview?.(p,stream.released)}
+  const research=Object.assign(api.createResearch({...budgetOptions(model),...options}),{write:undefined})
+  const run=await api.runAgentic(q,{asset:async()=>null,kb:async()=>({resources:{},fulltext:{total:0,facets:{}}}),generate:async()=>{throw Error('planner must not run')},research},progress,40_000,api.inferPeriod(q),{},emptyScope)
+  stream.close()
+  const full={...run.qualitative,research:{mode:'loop'}}
+  const events=decode(await(await api.withAnswerLanguage(new Response(frame('research_sentences',{})+deltas.map(text=>frame('research_sentence',{text})).join('')+frame('done',full),{headers:{'content-type':'text/event-stream'}}),q)).text())
+  assert.equal(events.some(e=>e.event==='retry'),false)
+  assert.equal(events.filter(e=>e.event==='delta').map(e=>e.data.text).join(''),events.at(-1).data.answer)
+  return {run,events,deltas}
+}
+const pointScript=points=>[{tool_calls:[call('search',{query:'housing report'},'s')]},{tool_calls:[call('answer',{points},'a')]}]
+
+test('per-point schema holds an invalid record before execution',async()=>{
+  const previews=[]
+  const points=threeSentences.map(claim=>({claim}));points[1].extra='not in the schema'
+  const model=scriptedResearchModel(pointScript(points))
+  await loopPreviewRun(model,{preview:p=>previews.push(p.answer)})
+  assert.equal(previews.length,2,'invalid records cannot enter the preview checker; the accepted full answer may publish')
+  assert.ok(previews[0].includes(threeSentences[0]));assert.ok(!previews[0].includes(threeSentences[1]))
+  assert.ok(previews[1].includes(threeSentences[2]))
+})
+
+test('preview checking restores the tally before usage reporting and the final selected points',async()=>{
+  const points=threeSentences.map(claim=>({claim})),script=pointScript(points)
+  const baseline=await loopPreviewRun(scriptedResearchModel(script),{preview:false})
+  const streamed=await loopPreviewRun(scriptedResearchModel(script))
+  assert.deepEqual(streamed.run.research.answer_stats,baseline.run.research.answer_stats)
+  assert.deepEqual(streamed.run.qualitative,baseline.run.qualitative)
+  assert.equal(streamed.run.research.answer_stats.points_in,3)
+  const observed=[]
+  await loopPreviewRun(interruptedLoopModel(),{options:{onUsage:stats=>observed.push(stats.answer&&structuredClone(stats.answer))}})
+  assert.deepEqual(observed.slice(0,2),[undefined,undefined],'preview tallies must not leak into call-completion telemetry')
+})
+
+// Leave two complete records followed by an incomplete third. No final tool-call event reaches execute.
+function interruptedLoopModel(wall=false){
+  const model=scriptedResearchModel(pointScript(threeSentences.map(claim=>({claim})))),original=model.doStream.bind(model)
+  model.doStream=async options=>{
+    if(model.calls.length!==1)return original(options)
+    model.calls.push(options)
+    const json=JSON.stringify({points:threeSentences.map(claim=>({claim}))}),cut=json.slice(0,json.indexOf(threeSentences[2])+12)
+    return {stream:new ReadableStream({start(c){
+      c.enqueue({type:'stream-start',warnings:[]});c.enqueue({type:'tool-input-start',id:'a',toolName:'answer'})
+      for(let i=0;i<cut.length;i+=4)c.enqueue({type:'tool-input-delta',id:'a',delta:cut.slice(i,i+4)})
+      if(wall){options.abortSignal.addEventListener('abort',()=>c.error(options.abortSignal.reason),{once:true});return}
+      c.enqueue({type:'finish',finishReason:{unified:'length',raw:'length'},usage:{inputTokens:{total:900,noCache:900,cacheRead:0,cacheWrite:0},outputTokens:{total:1800,text:1800,reasoning:0}}});c.close()
+    }})}
+  }
+  return model
+}
+for(const wall of [true,false])test(`${wall?'research wall':'output cap'} mid-answer salvages checked pending points without retry or another model call`,async t=>{
+  t.mock.method(console,'error',()=>{})
+  if(wall){const timer=setTimeout;t.mock.method(globalThis,'setTimeout',(fn,ms,...args)=>timer(fn,ms>15_000&&ms<=16_000?150:ms,...args))}
+  const model=interruptedLoopModel(wall),{run,deltas}=await loopPreviewRun(model,{options:{wallMs:20_000}})
+  assert.equal(model.calls.length,2)
+  assert.ok(deltas.length>0,'this regression requires a released prefix')
+  assert.equal(api.checkedAnswerPayload({...run.qualitative,research:{mode:'loop'}},question).answer,threeSentences.slice(0,2).join('\n'))
+  assert.equal(run.research.answer_stats.salvaged,wall?'timeout':'malformed_args')
+})
+
+test('an answer starting inside the last six seconds holds all points until acceptance',async()=>{
+  const counts=[]
+  await loopPreviewRun(scriptedResearchModel(pointScript(threeSentences.map(claim=>({claim})))),{options:{wallMs:10_000},preview:p=>counts.push(p.answer)})
+  assert.equal(counts.length,1)
+  assert.ok(counts[0].includes(threeSentences[2]))
+})
+
+test('only the first answer call in one step can preview',async()=>{
+  const script=pointScript(threeSentences.slice(0,2).map(claim=>({claim})))
+  script[1].tool_calls.push(call('answer',{points:threeSentences.map(claim=>({claim}))},'second'))
+  let previews=0,raw='',beforeSecondCompletes
+  const model=scriptedResearchModel(script,{tokensPerSecond:4000,onPiece:async(piece,last)=>{raw+=piece;if(last&&raw.includes('more staff')){await new Promise(r=>setTimeout(r,20));beforeSecondCompletes=previews}}})
+  await loopPreviewRun(model,{preview:()=>{previews++}})
+  assert.equal(beforeSecondCompletes,2,'the second call must not preview its third point')
+})
+
+test('case-variant duplicates preserve the first wording and merge every retrieved citation',async()=>{
+  const first='The housing report found planning rules slowed approvals.',later=first.replace('housing','Housing'),id='a/t/body/0',other='b/t/body/0'
+  const passage=(id,resource)=>({id,resource,slug:'',title:'Housing report',url:'https://example.org/'+resource,text:first,kind:'speech',speaker:'Robin Example',chamber:'senate'})
+  const passages=new Map([[id,passage(id,'a')],[other,passage(other,'b')]])
+  const out=api.verifyResearchPoints([{claim:first},{claim:later,id},{claim:later,id:other}],passages,question,emptyScope)
+  assert.equal(out.answer,'- '+first)
+  assert.deepEqual(Object.keys(out.citations).sort(),[id,other])
+  assert.deepEqual(out.citations[id],out.citations[other])
+  assert.equal(out.sources.length,2)
+  const stream=api.researchSentenceStream(question,async()=>{})
+  await stream.preview(payload(first))
+  assert.equal(api.checkedAnswerPayload({...out,research:{mode:'loop'}},question,false,stream.released).answer,first)
+})
+
+test('removing a later repeated figure retains earlier lines, citations and the released prefix',async()=>{
+  const points=[{claim:threeSentences[0]},{claim:'Housing had $1.7 billion in programme funding.'},{claim:threeSentences[1]},{claim:'Housing was found to have $1.7 billion in programme funding.'}]
+  const {events}=await loopPreviewRun(scriptedResearchModel(pointScript(points)))
+  assert.equal(events.at(-1).data.answer,points.slice(0,3).map(p=>p.claim).join('\n'))
+})
+
+test('deadline and disconnected-reader sends disable preview without logging a check error',async t=>{
+  const logs=[];t.mock.method(console,'log',v=>logs.push(JSON.parse(v)))
+  for(const name of ['AbortError','TimeoutError']){
+    const guard=api.researchPreviewGuard('loop');let calls=0
+    await guard(()=>{calls++;throw new DOMException('send stopped',name)})
+    await guard(()=>{calls++})
+    assert.equal(calls,1)
+  }
+  assert.deepEqual(logs,[])
 })

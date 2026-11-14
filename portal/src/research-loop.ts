@@ -54,6 +54,12 @@ export const RESEARCH_MAX_CALLS = ASK_MAX_TOOL_CALLS
 export const RESEARCH_RESULT_BYTES = ASK_RESULT_BYTES
 /** A repair turn needs about this much of the wall clock left; with less, the run ends on what it has. */
 export const REPAIR_MIN_MS = 6_000
+/** Selection rules whose outcome is known before any answer arguments arrive. */
+export function canPreviewResearchSelection(state:{inFlight:number;introductions:boolean;hearing:boolean;recordFacts:number;billSpeech:boolean;passageKinds:string[]}) {
+  return !state.inFlight&&!state.introductions&&!state.hearing&&!state.recordFacts&&
+    (!state.billSpeech||state.passageKinds.includes('speech'))&&
+    !state.passageKinds.some(kind=>!['speech','bill'].includes(kind))
+}
 const COUNT_ASKED = /\b(?:how (?:many|much|often)|number of|count|counts|most|least|fewest|frequen\w*|times)\b/i
 const boundedInt = (value: unknown, fallback: number, max: number) => Number.isFinite(Number(value)) && Number(value) > 0 ? Math.min(max, Math.max(1, Math.floor(Number(value)))) : fallback
 export const researchLimits = (options: { steps?: unknown; wallMs?: unknown; tokens?: unknown }) => ({
@@ -508,12 +514,13 @@ export function createResearch(options: ResearchOptions): Research {
     // These gates are decided before answer arguments arrive. Record selections and hearing/introduction answers
     // can still require another record or a writer, so their affected opening remains held. Content/schema checks
     // run on complete point records below; later provider, usage or settlement failures use stream retry recovery.
-    const canPreviewAnswer=()=>qualitativeRun&&steps.length>0&&!finished&&!failed&&!inFlight.size&&
-      !controller.signal.aborted&&!context.signal.aborted&&Date.now()-started<limits.wallMs&&
+    const canPreviewAnswer=()=>qualitativeRun&&steps.length>0&&!finished&&!failed&&
+      !controller.signal.aborted&&!context.signal.aborted&&limits.wallMs-(Date.now()-started)>=REPAIR_MIN_MS&&
       round>0&&round<=limits.rounds&&!credits.blocked()&&!!reservation&&
-      !constraints.listIntroductions&&!hearingEvidenceQuestion(question)&&!recordFacts().tools.size&&
-      (!isBillSpeechQuestion(question)||[...passages.values()].some(p=>p.kind==='speech'))&&
-      ![...passages.values()].some(p=>!['speech','bill'].includes(p.kind))
+      canPreviewResearchSelection({inFlight:inFlight.size,introductions:!!constraints.listIntroductions,
+        hearing:hearingEvidenceQuestion(question),recordFacts:recordFacts().tools.size,
+        billSpeech:isBillSpeechQuestion(question),passageKinds:[...passages.values()].map(p=>p.kind)})
+    let previewRound=0
     const pendingAnswers=new Map<string,{allowed:boolean;scanner:ReturnType<typeof answerEntryScanner>;points:unknown[]}>()
     tools.finish = tool({ description: 'Finish a numerical ranking or trend answer by selecting existing fact ids. The selected fact ids supply the final figures and answer text. Include each requested entity and metric.',
       inputSchema: jsonSchema<{ facts: number[] }>({ type: 'object', properties: { facts: { type: 'array', minItems: 1, maxItems: 30, uniqueItems: true, items: { type: 'integer', minimum: 1 } } }, required: ['facts'], additionalProperties: false }),
@@ -786,7 +793,8 @@ export function createResearch(options: ResearchOptions): Research {
       },context.progress.answer?async chunk=>{
         await previewCheck(async()=>{
           if(chunk.type==='tool-input-start'&&chunk.toolName==='answer'){
-            const allowed=canPreviewAnswer()
+            const allowed=previewRound!==round&&canPreviewAnswer()
+            previewRound=round
             pendingAnswers.set(chunk.id,{allowed,scanner:answerEntryScanner('points'),points:[]})
             if(allowed){draftRoster??=context.deps.asset('/parliamentarians.json');draftRoster.catch(()=>{})}
           }
@@ -809,7 +817,12 @@ export function createResearch(options: ResearchOptions): Research {
           let checked:QualitativeAnswer|null
           try{checked=draftAnswer({points:pending.points},roster,()=>{})}
           finally{stats.answer=tally;selectedPoints=points}
-          if(checked)await context.progress.answer?.({...checked,answer_scope:constraints})
+          if(checked){
+            // Retain only complete, checked records if the wall or output ceiling interrupts this call.
+            // Accepted answer arguments overwrite this snapshot in execute; never replace an earlier call.
+            draft={points:[...pending.points]}
+            await context.progress.answer?.({...checked,answer_scope:constraints})
+          }
         })
       }:undefined), stopped])
       check()

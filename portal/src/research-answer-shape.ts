@@ -185,13 +185,15 @@ type SpokenSource=SourceRow&{speaker?:string;date?:string;chamber?:string}
  * (a royal commission report, a committee report, a court record) stay the body's findings. A line already naming the
  * speaker, or resting on several speakers or on a passage with no recorded speaker, is left as written. Only the
  * opening words change; every citation keeps its text. */
-export function attributeSpokenFindings<T extends Record<string,unknown>>(payload:T):T {
+export function attributeSpokenFindings<T extends Record<string,unknown>>(payload:T,fixedPrefix=''):T {
   if(typeof payload.answer!=='string')return payload
   const answer=payload.answer,sources=(Array.isArray(payload.sources)?payload.sources:[]) as SpokenSource[]
   const entries=Object.entries(payload.citations??{}) as [string,unknown][]
   const sourceOf=(id:string)=>sources.find(s=>s.resource&&(id===s.resource||id.startsWith(s.resource+'/')))
   const edits:{at:number;word:string;replacement:string}[]=[]
   for(const m of answer.matchAll(/[^\n]+/g)){
+    // A later duplicate may upgrade an already checked background point's citations.
+    if(answer.startsWith(fixedPrefix)&&m.index!<fixedPrefix.length)continue
     const lead=/^[ \t]*(?:[-*•][ \t]+)?/.exec(m[0])![0],text=m[0].slice(lead.length).trimEnd()
     const found=FINDING.exec(text)
     if(!text||!found||SPEAKER_VERB.test(found[0]))continue

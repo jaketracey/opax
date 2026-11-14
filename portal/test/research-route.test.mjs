@@ -10,7 +10,9 @@ import {timingSafeEqual} from 'node:crypto';
 const restore=offline(),pending=[],logs=[],ctx={waitUntil:p=>pending.push(p),passThroughOnException(){}};
 const plugin={name:'fake-openrouter-only',setup(b){b.onResolve({filter:/^@openrouter\/ai-sdk-provider$/},()=>({path:'fake',namespace:'research-test'}));b.onLoad({filter:/.*/,namespace:'research-test'},()=>({contents:'export const createOpenRouter=()=>()=>globalThis.__researchModel;',loader:'js'}));}};
 const deadlinePlugin={name:'short-offline-deadline',setup(b){b.onLoad({filter:/\/ask-deadline\.ts$/},args=>({contents:readFileSync(args.path,'utf8').replace('this.timer = setTimeout(() => this.cancel(), ms)','this.timer = setTimeout(() => this.cancel(), (globalThis as typeof globalThis & {__askTestDeadlineMs?:number}).__askTestDeadlineMs ?? ms)'),loader:'ts'}))}};
-const h=await loadWorker(new URL('../src/index.ts',import.meta.url).pathname,new URL('../public',import.meta.url).pathname,ctx,{plugins:[plugin,deadlinePlugin]});
+// Simulate the rare research-to-planner transition after a checked loop checkpoint.
+const fallbackAfterPreviewPlugin={name:'offline-fallback-after-preview',setup(b){b.onLoad({filter:/\/index\.ts$/},args=>({contents:readFileSync(args.path,'utf8').replace('closeSentences()\n            if (gone', 'closeSentences()\n            if ((globalThis as typeof globalThis & {__askTestFallbackAfterPreview?:boolean}).__askTestFallbackAfterPreview) run.answered=false\n            if (gone'),loader:'ts'}))}};
+const h=await loadWorker(new URL('../src/index.ts',import.meta.url).pathname,new URL('../public',import.meta.url).pathname,ctx,{plugins:[plugin,deadlinePlugin,fallbackAfterPreviewPlugin]});
 const id='a'.repeat(32)+'/t/body/0-90',resource=id.split('/')[0],text='The committee called for stronger housing affordability safeguards.',countArgs={topic:'gambling',state:'nsw',group_by:'speaker'};
 const call=(toolName,args,toolCallId='fake')=>({type:'tool-call',toolName,toolCallId,input:JSON.stringify(args)});
 const reply=calls=>({content:calls,finishReason:{unified:'tool-calls',raw:'tool_calls'},usage:{inputTokens:{total:10,noCache:10,cacheRead:0,cacheWrite:0},outputTokens:{total:5,text:5,reasoning:0}},providerMetadata:{openrouter:{usage:{cost:(10*0.66+5*1.98)/1e6}}},warnings:[]});
@@ -347,11 +349,29 @@ for(const released of [true,false])test(`request deadline ${released?'after':'be
   if(released){
    assert.doesNotMatch(raw,/event: error/);
    const done=decodeStream(raw);assert.ok(done.answer.startsWith(first));assert.match(done.answer,/The answer was cut short because it reached the time limit\./);
+   assert.deepEqual(logs.findLast(r=>r.kind==='research_loop_stream_cut_short'),{kind:'research_loop_stream_cut_short',count:1,reason:'deadline',preview_chars:first.length});
+   assert.equal(logs.some(r=>r.kind==='research_loop_preview_error'),false);
    const events=raw.trim().split(/\n\n/).map(block=>({event:/^event: (.+)$/m.exec(block)?.[1],data:JSON.parse(/^data: (.+)$/m.exec(block)[1])}));
    assert.equal(events.filter(e=>e.event==='delta').map(e=>e.data.text).join(''),done.answer);
   }else{assert.match(raw,/event: error/);assert.doesNotMatch(raw,/event: done|event: delta/)}
   assert.equal(model.calls.length,2);
  }finally{open();globalThis.fetch=previousFetch;delete globalThis.__askTestDeadlineMs;await flush()}
+});
+
+test('a planner fallback failure after released loop text ends with a checked cut-short done',async t=>{
+ h.env.RESEARCH_LOOP='route';globalThis.__askTestFallbackAfterPreview=true;
+ const previousFetch=globalThis.fetch,first='The housing report found planning rules slowed approvals.';
+ globalThis.__researchModel=scriptedResearchModel([{tool_calls:[{name:'search',id:'s',args:{query:'housing report'}}]},{tool_calls:[{name:'answer',id:'a',args:{points:[{claim:first}]}}]}]);
+ globalThis.fetch=(input,init)=>new URL(input).pathname.endsWith('/ask')?Promise.resolve(new Response('fixture unavailable',{status:503})):previousFetch(input,init);
+ t.mock.method(console,'error',()=>{});
+ try{
+  const raw=await(await post('What did the housing report find?',true)).text(),done=decodeStream(raw);
+  assert.doesNotMatch(raw,/event: error|event: retry/);
+  assert.equal(done.answer,first+'\n\nThe answer was cut short because it could not finish.');
+  const deltas=[...raw.matchAll(/event: delta\ndata: (.+)/g)].map(m=>JSON.parse(m[1]).text).join('');
+  assert.equal(deltas,done.answer);
+  assert.deepEqual(logs.findLast(r=>r.kind==='research_loop_stream_cut_short'),{kind:'research_loop_stream_cut_short',count:1,reason:'fallback_error',preview_chars:first.length});
+ }finally{globalThis.fetch=previousFetch;delete globalThis.__askTestFallbackAfterPreview;await flush()}
 });
 
 test('402 override falls back at once, logs research_credit_exhausted, and short-circuits the next loop',async()=>{

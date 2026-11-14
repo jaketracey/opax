@@ -105,7 +105,7 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
   // A typed limitation, refusal or clarification (a lookup correction, a scope decline) keeps its own order.
   // An accountability question opens on a finding or an official record, not a member's claim in debate.
   // A body's finding cited only to one member's speech is that member's claim, and says so (ASK_ATTRIBUTION_RULE).
-  out=attributeSpokenFindings(out)
+  out=attributeSpokenFindings(out,fixedPrefix)
   out=distinctSummary(cleanAnswerShape(protectedDecision(out)?out:leadWithAuthority(leadWithFinding(leadWithFinding(out,undefined,fixedPrefix),question,fixedPrefix),question,fixedPrefix)))
   if(!deferOverview)out=completePersonOverview(payload,out,question)
   const research=out.research&&typeof out.research==='object'?out.research as Record<string,unknown>:undefined

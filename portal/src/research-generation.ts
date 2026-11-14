@@ -6,9 +6,10 @@ export function researchPreviewGuard(stage:'loop'|'writer'|'compose') {
   return async <T>(work:()=>T|Promise<T>):Promise<T|undefined>=>{
     if(disabled)return
     try{return await work()}
-    catch{
+    catch(error){
       disabled=true
-      console.log(JSON.stringify({kind:'research_loop_preview_error',stage,count:1}))
+      if(!(error instanceof DOMException&&['AbortError','TimeoutError'].includes(error.name)))
+        console.log(JSON.stringify({kind:'research_loop_preview_error',stage,count:1}))
     }
   }
 }
