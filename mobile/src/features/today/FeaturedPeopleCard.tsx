@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useContext, useMemo, useRef, useState } from 'react';
 import {
   Pressable,
   ScrollView,
@@ -12,8 +12,10 @@ import { catalogs } from '../../api/runtime';
 import { useReduceMotionSetting } from '../../design/accessibility';
 import { Card } from '../../design/card';
 import { copy } from '../../design/copy';
+import { GroundFade } from '../../design/ground-fade';
 import { formatDate } from '../../design/format';
 import { Icon } from '../../design/icon';
+import { SurfaceContext } from '../../design/row-padding';
 import { SourceLine } from '../../design/source';
 import { symbols } from '../../design/symbols';
 import { Text } from '../../design/text';
@@ -30,6 +32,12 @@ import { useTodayRead } from './TodayBlock';
 
 const GAP = 12;
 const PEEK = 16;
+/**
+ * The pages run this far past the column on both sides, into the page margin
+ * or the gutter between columns (never less than 16 pt), so a neighbouring
+ * card fades out there instead of stopping dead at the column's edge.
+ */
+const BLEED = 16;
 
 /** Today keeps the edition's existing loading, absence and freshness rules. */
 export function TodayEditionCard({
@@ -98,7 +106,11 @@ export function featuredLabel(
     .concat('.');
 }
 
-/** Native snapping, no auto-advance, and natural card heights at AX5. */
+/**
+ * Native snapping, no auto-advance, and natural card heights at AX5. A card
+ * that runs off either side fades into the page; the fades lie beyond the
+ * selected card, so they never cover it, the dots or a control.
+ */
 export function FeaturedPeopleCarousel({
   people,
   tier = 'fresh',
@@ -113,18 +125,37 @@ export function FeaturedPeopleCarousel({
   const scroll = useRef<ScrollView>(null);
   const [width, setWidth] = useState(0);
   const [page, setPage] = useState(0);
+  // Which sides have a card running off them, followed through a swipe. Only
+  // a side that flips sets state, so scrolling doesn't re-render every frame
+  // (the ref also spares the bail-out render a same-value update can cost).
+  const [[before, after], setEdges] = useState<readonly [boolean, boolean]>([
+    false,
+    false,
+  ]);
+  const edges = useRef<readonly [boolean, boolean]>([false, false]);
+  const ground = useContext(SurfaceContext);
   const reduced = useReduceMotionSetting() !== false;
   const dark = useColorScheme() === 'dark';
   const multiple = people.length > 1;
   const trailing = multiple ? GAP + PEEK : 0;
   const cardWidth = Math.max(1, width - trailing);
   const interval = cardWidth + GAP;
+  const follow = (x: number, measured = width) => {
+    const end = (people.length - 1) * (Math.max(1, measured - trailing) + GAP);
+    const b = multiple && measured > 0 && x > 0.5;
+    const a = multiple && measured > 0 && x < end - 0.5;
+    if (edges.current[0] === b && edges.current[1] === a) return;
+    edges.current = [b, a];
+    setEdges(edges.current);
+  };
   const go = (index: number, animated = !reduced) => {
     const next = Math.max(0, Math.min(people.length - 1, index));
     setPage(next);
+    if (!animated) follow(next * interval);
     scroll.current?.scrollTo({ x: next * interval, animated });
   };
   const settled = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    follow(event.nativeEvent.contentOffset.x);
     setPage(
       Math.max(
         0,
@@ -144,153 +175,188 @@ export function FeaturedPeopleCarousel({
         const nextWidth = event.nativeEvent.layout.width;
         setWidth(nextWidth);
         // Preserve the selected person through rotation or split-view resize.
-        scroll.current?.scrollTo({
-          x: page * (Math.max(1, nextWidth - trailing) + GAP),
-          animated: false,
-        });
+        const x = page * (Math.max(1, nextWidth - trailing) + GAP);
+        follow(x, nextWidth);
+        scroll.current?.scrollTo({ x, animated: false });
       }}
     >
-      <ScrollView
-        ref={scroll}
-        testID="today-featured-pages"
-        horizontal
-        accessible={false}
-        accessibilityRole="list"
-        accessibilityLabel="Featured parliamentarians"
-        showsHorizontalScrollIndicator={false}
-        snapToInterval={interval}
-        snapToAlignment="start"
-        decelerationRate="fast"
-        disableIntervalMomentum
-        scrollEnabled={multiple && width > 0}
-        onMomentumScrollEnd={settled}
-        onScrollEndDrag={settled}
-        contentContainerStyle={{ gap: GAP, paddingRight: trailing }}
-      >
-        {people.map((person, index) => {
-          const cardSavedAt = index === 0 ? savedAt : rosterSavedAt;
-          const source = {
-            ...person.source,
-            notes: [
-              ...(cardSavedAt != null ? [copy.savedCopyNote(cardSavedAt)] : []),
-              ...(person.source.notes ?? []),
-            ],
-            dateLabel:
-              cardSavedAt != null
-                ? `Saved ${formatDate(cardSavedAt, 'short')}`
-                : undefined,
-          };
-          return (
-            <View
-              key={person.slug}
-              style={width ? { width: cardWidth } : styles.unmeasured}
-            >
+      <View style={multiple ? styles.pages : undefined}>
+        <ScrollView
+          ref={scroll}
+          testID="today-featured-pages"
+          horizontal
+          accessible={false}
+          accessibilityRole="list"
+          accessibilityLabel="Featured parliamentarians"
+          showsHorizontalScrollIndicator={false}
+          snapToInterval={interval}
+          snapToAlignment="start"
+          decelerationRate="fast"
+          disableIntervalMomentum
+          scrollEnabled={multiple && width > 0}
+          onMomentumScrollEnd={settled}
+          onScrollEndDrag={settled}
+          onScroll={(event) => follow(event.nativeEvent.contentOffset.x)}
+          scrollEventThrottle={16}
+          contentContainerStyle={{
+            gap: GAP,
+            paddingLeft: multiple ? BLEED : 0,
+            paddingRight: multiple ? trailing + BLEED : 0,
+          }}
+        >
+          {people.map((person, index) => {
+            const cardSavedAt = index === 0 ? savedAt : rosterSavedAt;
+            const source = {
+              ...person.source,
+              notes: [
+                ...(cardSavedAt != null
+                  ? [copy.savedCopyNote(cardSavedAt)]
+                  : []),
+                ...(person.source.notes ?? []),
+              ],
+              dateLabel:
+                cardSavedAt != null
+                  ? `Saved ${formatDate(cardSavedAt, 'short')}`
+                  : undefined,
+            };
+            return (
               <View
-                style={[styles.card, !dark && styles.shadow]}
-                testID={index === 0 ? 'today-edition-card' : undefined}
+                key={person.slug}
+                style={width ? { width: cardWidth } : styles.unmeasured}
               >
-                <Card
-                  padded={false}
-                  href={personRoute(person.slug, person.edition.title)}
-                  testID={
-                    index === 0
-                      ? 'today-edition'
-                      : `today-featured-${person.slug}`
-                  }
-                  style={styles.link}
-                  menu={[
-                    ...(canShare
-                      ? [
-                          {
-                            title: 'Share',
-                            symbol: 'square.and.arrow.up' as const,
-                            onPress: () => void shareEdition(person.edition),
-                          },
-                        ]
-                      : []),
-                    ...editionMenu(person.edition).map((action) =>
-                      action.title === copy.howChosen
-                        ? {
-                            ...action,
-                            onPress: () =>
-                              presentSheet({
-                                kind: 'rule',
-                                title: copy.howChosen,
-                                rule: person.source.rule!,
-                              }),
-                          }
-                        : action,
-                    ),
-                  ]}
-                  accessibilityLabel={featuredLabel(
-                    person,
-                    index,
-                    people.length,
-                  )}
-                  accessibilityHint="Opens this person’s parliamentary record"
-                  accessibilityActions={[
-                    {
-                      name: 'Sources',
-                      label: 'Sources',
-                      onAction: () => presentSource(source),
-                    },
-                    ...(canShare
-                      ? [
-                          {
-                            name: 'Share',
-                            label: 'Share',
-                            onAction: () => void shareEdition(person.edition),
-                          },
-                        ]
-                      : []),
-                  ]}
+                <View
+                  style={[styles.card, !dark && styles.shadow]}
+                  testID={index === 0 ? 'today-edition-card' : undefined}
                 >
-                  <View
-                    accessibilityElementsHidden
-                    importantForAccessibility="no-hide-descendants"
-                  >
-                    <Plate
-                      edition={person.edition}
-                      tier={tier}
-                      shownBelow={person.edition.paragraphs.slice(0, 1)}
-                      testID={
-                        index === 0
-                          ? 'today-edition'
-                          : `today-featured-${person.slug}`
-                      }
-                    />
-                    <View style={styles.body}>
-                      {person.edition.machineWritten ? (
-                        <View style={styles.machine}>
-                          <Icon name={symbols.machine} size={12} tone="navy" />
-                          <Text wordSafe variant="capsule" tone="navy">
-                            Machine-written
-                          </Text>
-                        </View>
-                      ) : null}
-                      {person.edition.paragraphs[0] ? (
-                        <Text wordSafe variant="body">
-                          {person.edition.paragraphs[0]}
-                        </Text>
-                      ) : null}
-                    </View>
-                  </View>
-                </Card>
-                <View style={styles.source}>
-                  <SourceLine
-                    {...source}
+                  <Card
+                    padded={false}
+                    href={personRoute(person.slug, person.edition.title)}
                     testID={
                       index === 0
-                        ? 'today-edition-sources'
-                        : `today-featured-${person.slug}-sources`
+                        ? 'today-edition'
+                        : `today-featured-${person.slug}`
                     }
-                  />
+                    style={styles.link}
+                    menu={[
+                      ...(canShare
+                        ? [
+                            {
+                              title: 'Share',
+                              symbol: 'square.and.arrow.up' as const,
+                              onPress: () => void shareEdition(person.edition),
+                            },
+                          ]
+                        : []),
+                      ...editionMenu(person.edition).map((action) =>
+                        action.title === copy.howChosen
+                          ? {
+                              ...action,
+                              onPress: () =>
+                                presentSheet({
+                                  kind: 'rule',
+                                  title: copy.howChosen,
+                                  rule: person.source.rule!,
+                                }),
+                            }
+                          : action,
+                      ),
+                    ]}
+                    accessibilityLabel={featuredLabel(
+                      person,
+                      index,
+                      people.length,
+                    )}
+                    accessibilityHint="Opens this person’s parliamentary record"
+                    accessibilityActions={[
+                      {
+                        name: 'Sources',
+                        label: 'Sources',
+                        onAction: () => presentSource(source),
+                      },
+                      ...(canShare
+                        ? [
+                            {
+                              name: 'Share',
+                              label: 'Share',
+                              onAction: () => void shareEdition(person.edition),
+                            },
+                          ]
+                        : []),
+                    ]}
+                  >
+                    <View
+                      accessibilityElementsHidden
+                      importantForAccessibility="no-hide-descendants"
+                    >
+                      <Plate
+                        edition={person.edition}
+                        tier={tier}
+                        shownBelow={person.edition.paragraphs.slice(0, 1)}
+                        testID={
+                          index === 0
+                            ? 'today-edition'
+                            : `today-featured-${person.slug}`
+                        }
+                      />
+                      <View style={styles.body}>
+                        {person.edition.machineWritten ? (
+                          <View style={styles.machine}>
+                            <Icon
+                              name={symbols.machine}
+                              size={12}
+                              tone="navy"
+                            />
+                            <Text wordSafe variant="capsule" tone="navy">
+                              Machine-written
+                            </Text>
+                          </View>
+                        ) : null}
+                        {person.edition.paragraphs[0] ? (
+                          <Text wordSafe variant="body">
+                            {person.edition.paragraphs[0]}
+                          </Text>
+                        ) : null}
+                      </View>
+                    </View>
+                  </Card>
+                  <View style={styles.source}>
+                    <SourceLine
+                      {...source}
+                      testID={
+                        index === 0
+                          ? 'today-edition-sources'
+                          : `today-featured-${person.slug}-sources`
+                      }
+                    />
+                  </View>
                 </View>
               </View>
-            </View>
-          );
-        })}
-      </ScrollView>
+            );
+          })}
+        </ScrollView>
+        {before ? (
+          <GroundFade
+            side="left"
+            ground={ground}
+            // At rest the previous card ends a gap before the selected one:
+            // that last sliver is covered, so the fade shows only in a swipe.
+            hold={(BLEED - GAP) / BLEED}
+            testID="today-featured-edge-leading"
+            style={styles.before}
+          />
+        ) : null}
+        {after ? (
+          <GroundFade
+            side="right"
+            ground={ground}
+            // Under Reduce Transparency the band covers only the bleed, so
+            // the next card's peek stays, cut at the column's edge.
+            solidSpan={BLEED}
+            testID="today-featured-edge-trailing"
+            style={styles.after}
+          />
+        ) : null}
+      </View>
       {multiple ? (
         <View style={styles.dots} testID="today-featured-dots">
           {people.map((person, index) => (
@@ -316,6 +382,17 @@ export function FeaturedPeopleCarousel({
 
 const styles = StyleSheet.create({
   carousel: { gap: 4 },
+  pages: { marginHorizontal: -BLEED },
+  // Over the margin only: the selected card starts where this ends.
+  before: { position: 'absolute', top: 0, bottom: 0, left: 0, width: BLEED },
+  // From the next card's leading edge to where the pages are clipped.
+  after: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    width: PEEK + BLEED,
+  },
   unmeasured: { width: '100%' },
   card: {
     flexGrow: 1,
