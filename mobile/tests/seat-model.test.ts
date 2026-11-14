@@ -222,6 +222,8 @@ describe('a miss', () => {
       seatCopy.noMatchNext,
       seatCopy.noMatchAec,
       seatCopy.why,
+      seatCopy.whyHelp,
+      seatCopy.invitation,
       seatCopy.later,
       seatCopy.laterNote,
     ]) {

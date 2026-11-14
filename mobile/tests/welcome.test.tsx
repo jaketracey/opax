@@ -126,7 +126,7 @@ describe('the full welcome', () => {
     for (const id of ['your-mp', 'sourced', 'ask'])
       expect(has(r, `welcome-row-${id}`)).toBe(true);
     expect(host(r, 'welcome-row-your-mp').props.accessibilityLabel).toBe(
-      'Your MP. See who represents you, and what they have voted for, declared and been paid.',
+      'Who speaks for you. Find the person elected to represent your area, and see how they vote.',
     );
     expect(words(r)).toContain(copy.independence);
     expect(words(r)).toContain(copy.deceasedNotice);
@@ -147,13 +147,10 @@ describe('the full welcome', () => {
     expect(columns.length).toBeGreaterThan(0);
     await act(async () => r.unmount());
   });
-  test('Continue pushes the seat step and counts the welcome as seen, declining nothing', async () => {
+  test('"Show me the basics" pushes Parliament in a minute and counts the welcome as seen, declining nothing', async () => {
     const r = await render(<Welcome />);
     await act(async () => component(r, 'welcome-continue').props.onPress());
-    expect(router.push).toHaveBeenCalledWith({
-      pathname: '/welcome/seat',
-      params: {},
-    });
+    expect(router.push).toHaveBeenCalledWith({ pathname: '/welcome/minute' });
     // Seen from here: leaving the app on the electorate step never brings
     // this page back. No decline, so Today's invitation keeps its own slot.
     expect(markWelcomeSeen).toHaveBeenCalledTimes(1);

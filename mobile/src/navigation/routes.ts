@@ -6,6 +6,7 @@ export * from './routes/edition';
 export * from './routes/explore';
 export * from './routes/filters';
 export * from './routes/money-map';
+export * from './routes/newcomer';
 export * from './routes/people';
 export * from './routes/public-money';
 export * from './routes/records';

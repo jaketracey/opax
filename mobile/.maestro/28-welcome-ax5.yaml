@@ -33,7 +33,7 @@ name: 28 Welcome at AX5, the notice before Continue, the seat step without the k
 - takeScreenshot: ${EVIDENCE}/28-ax5-notice
 - scrollUntilVisible:
     element:
-      id: welcome-continue
+      id: welcome-know
     centerElement: true
     timeout: 120000
 - assertVisible:
@@ -42,7 +42,7 @@ name: 28 Welcome at AX5, the notice before Continue, the seat step without the k
       id: welcome-notice
 - takeScreenshot: ${EVIDENCE}/28-ax5-continue
 - tapOn:
-    id: welcome-continue
+    id: welcome-know
 - extendedWaitUntil:
     visible:
       id: welcome-seat

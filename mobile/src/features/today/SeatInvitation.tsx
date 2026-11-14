@@ -38,7 +38,7 @@ export function invitationBody(
   )
     return `${old.name} is no longer an electorate.`;
   if (old) return 'Choose your current federal electorate.';
-  return seatCopy.why;
+  return seatCopy.invitation;
 }
 
 /**

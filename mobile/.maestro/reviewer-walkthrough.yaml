@@ -12,11 +12,11 @@ name: Submission reviewer reading walkthrough
     id: welcome-screen
 - scrollUntilVisible:
     element:
-      id: welcome-continue
+      id: welcome-know
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/review-01-welcome
 - tapOn:
-    id: welcome-continue
+    id: welcome-know
 - assertVisible:
     id: welcome-seat
 - tapOn: Not now

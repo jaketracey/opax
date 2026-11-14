@@ -1,3 +1,4 @@
+import { minuteCopy } from '../../features/newcomer/copy';
 import { screen } from './screen';
 
 /**
@@ -21,6 +22,12 @@ export function welcomeScreens() {
     screen('index', 'Welcome', {
       headerShown: false,
       scrollEdgeEffects: { top: 'hidden', bottom: 'soft' },
+    }),
+    // "Show me the basics" (newcomer build): the page's own title collapses
+    // into the bar as it scrolls.
+    screen('minute', minuteCopy.title, {
+      headerShown: true,
+      headerBackButtonDisplayMode: 'minimal',
     }),
     screen('seat/index', 'Your electorate', {
       headerShown: true,

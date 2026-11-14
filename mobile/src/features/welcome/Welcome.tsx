@@ -25,9 +25,11 @@ import {
 import { useLayout, useScreenMargin } from '../../design/adaptive';
 import { LaunchHandoff } from '../../launch/LaunchHandoff';
 import { releaseSplash } from '../../launch/splash';
-import { welcomeSeatRoute } from '../../navigation/routes';
+import { welcomeMinuteRoute, welcomeSeatRoute } from '../../navigation/routes';
 import { firstRunSkipped } from '../../onboarding/measure';
 import { closeWelcome, markWelcomeSeen } from '../../onboarding/state';
+import { welcomeAsk } from '../newcomer/copy';
+import { setExplainTerms } from '../newcomer/foundation-stub';
 import { useSeat } from '../your-mp/useSeat';
 import { welcomeCopy } from './copy';
 
@@ -114,18 +116,24 @@ export function WelcomePage({
     if (declined) firstRunSkipped('welcome');
     closeWelcome(navigation as Parameters<typeof closeWelcome>[0]);
   };
-  const next = () => {
+  /**
+   * The full welcome asks once (option C): "Show me the basics" turns
+   * "Explain terms" on and opens Parliament in a minute; "I know how
+   * Parliament works" turns it off and goes straight to the electorate step.
+   * Either answer has shown the page and its notice, so the welcome counts
+   * as seen from here: a reader who leaves the app on a later step comes
+   * back to Today and its invitation, not to this page again. The short
+   * welcome asks nothing: Continue closes it.
+   */
+  const answer = (basics: boolean) => {
     if (leaving.current || advancing.current) return;
-    if (short) leave(false);
-    else {
-      advancing.current = true;
-      // Continue has shown the page and its notice, so the welcome counts as
-      // seen from here: a reader who leaves the app on the electorate step
-      // comes back to Today and its invitation, not to this page again.
-      void markWelcomeSeen().catch(() => undefined);
-      router.push(welcomeSeatRoute());
-    }
+    if (short) return leave(false);
+    advancing.current = true;
+    void setExplainTerms(basics).catch(() => undefined);
+    void markWelcomeSeen().catch(() => undefined);
+    router.push(basics ? welcomeMinuteRoute : welcomeSeatRoute());
   };
+  const next = () => answer(true);
   // Two-finger Z, Escape and Android back: "Not now" (today.md 3.2). A
   // replay with a seat saved changes nothing; the short welcome declines
   // nothing, so they act as its Continue. Only a saved seat makes it a
@@ -160,7 +168,7 @@ export function WelcomePage({
         id: 'welcome-continue',
         input: 'return',
         modifiers: [],
-        title: welcomeCopy.continue,
+        title: short ? welcomeCopy.continue : welcomeAsk.basics,
         priority: true,
         run: next,
       },
@@ -176,7 +184,7 @@ export function WelcomePage({
     focused,
   );
 
-  const button = (
+  const button = short ? (
     <Button
       label={welcomeCopy.continue}
       variant="primary"
@@ -185,6 +193,33 @@ export function WelcomePage({
       onPress={next}
       testID="welcome-continue"
     />
+  ) : (
+    <View style={styles.ask}>
+      <Text
+        wordSafe
+        variant="strong"
+        style={styles.centred}
+        testID="welcome-ask"
+      >
+        {welcomeAsk.question}
+      </Text>
+      <Button
+        label={welcomeAsk.basics}
+        variant="primary"
+        size="large"
+        fullWidth
+        onPress={next}
+        testID="welcome-continue"
+      />
+      <Button
+        label={welcomeAsk.know}
+        variant="plain"
+        fullWidth
+        centredLabel
+        onPress={() => answer(false)}
+        testID="welcome-know"
+      />
+    </View>
   );
   const markSize = accessible ? 44 : wide ? 72 : 64;
   return (
@@ -372,6 +407,7 @@ const styles = StyleSheet.create({
   fine: { marginTop: rhythm.section, gap: rhythm.tight },
   centred: { textAlign: 'center' },
   unpinned: { marginTop: rhythm.group },
+  ask: { gap: rhythm.tight },
   foot: { paddingTop: rhythm.block },
   statusBackdrop: { position: 'absolute', top: 0, left: 0, right: 0 },
 });

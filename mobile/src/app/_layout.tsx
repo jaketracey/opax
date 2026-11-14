@@ -25,6 +25,7 @@ import { hasSourcePreview } from '../design/environment';
 import { AndroidMenuHost } from '../design/menu';
 import { colors } from '../design/tokens';
 import { KeyboardFrames } from '../features/ask/keyboard';
+import { installGloss } from '../features/newcomer/gloss-source';
 import { RootLaunchCover } from '../launch/RootLaunchCover';
 import {
   decideLaunchSequence,
@@ -50,6 +51,8 @@ import {
   useTourState,
 } from '../onboarding/state';
 export const unstable_settings = rootSettings;
+// Plain lines under headings take the reader's setting and the guide's words.
+installGloss();
 // Last resort: a page that fails to draw shows Try again instead of closing.
 export { RouteErrorBoundary as ErrorBoundary } from '../navigation/RouteErrorBoundary';
 

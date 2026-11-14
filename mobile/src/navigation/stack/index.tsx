@@ -11,6 +11,7 @@ import { moneyMapScreens } from './money-map';
 import { publicMoneyScreens } from './public-money';
 import { exploreScreens } from './explore';
 import { filtersScreens } from './filters';
+import { newcomerScreens } from './newcomer';
 import { referenceSharedScreens } from './reference';
 import type { TabSegment } from '../chrome';
 
@@ -53,6 +54,7 @@ export function sharedScreens(segment: string, signedIn: boolean) {
     ...publicMoneyScreens(),
     ...exploreScreens(),
     ...filtersScreens(),
+    ...newcomerScreens(),
   ];
   const root = tabRootName(segment);
   return [
