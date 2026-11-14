@@ -1622,28 +1622,41 @@ describe('streamed text and VoiceOver', () => {
   });
 
   describe('the thread follows the streaming text', () => {
+    // One frame after the reports, the follow runs once.
     const lay = async (id: string, layout: Record<string, number>) =>
       act(async () => {
         byId(id)
           .find((n) => typeof n.props.onLayout === 'function')!
           .props.onLayout({ nativeEvent: { layout } });
+        await new Promise((resolve) => setTimeout(resolve, 40));
       });
     const scroller = () => view!.root.findByType(ScrollView);
-    const begin = async () => {
+    const scrolled = async (y: number) =>
+      act(async () => {
+        scroller().props.onScroll({ nativeEvent: { contentOffset: { y } } });
+        await new Promise((resolve) => setTimeout(resolve, 40));
+      });
+    const viewport = async (height: number) =>
+      act(async () => {
+        scroller().props.onLayout({
+          nativeEvent: { layout: { x: 0, y: 0, width: 390, height } },
+        });
+        await new Promise((resolve) => setTimeout(resolve, 40));
+      });
+    const begin = async (thread = 8) => {
       await mount();
       await type('Who spoke on housing?');
       await press('ask-submit');
-      await act(async () => {
-        scroller().props.onLayout({
-          nativeEvent: { layout: { x: 0, y: 0, width: 390, height: 800 } },
-        });
-      });
+      await viewport(800);
+      await lay('ask-thread', { y: thread });
       await lay('ask-turn', { y: 400 });
       await stream();
       scrollTo.mockClear();
     };
-    // The turn's top plus the block's bottom edge, the gap, less the room.
-    const followed = (edge: number) => 400 + edge + rhythm.group - 800;
+    // The thread's top, the turn's, the block's bottom edge and the gap,
+    // less the room above the composer.
+    const followed = (edge: number, thread = 8) =>
+      thread + 400 + edge + rhythm.block - 800;
 
     test('it follows the growing end, then leaves a dragged thread alone', async () => {
       await begin();
@@ -1655,6 +1668,9 @@ describe('streamed text and VoiceOver', () => {
         y: followed(660),
         animated: true,
       });
+      // Where it was before the thread's own place counted: 8 pt of padding
+      // and a 16 pt gap is the old 24 pt clearance.
+      expect(followed(660)).toBe(400 + 660 + rhythm.group - 800);
       await lay('ask-progress', { y: 60, height: 700 });
       expect(scrollTo).toHaveBeenLastCalledWith({
         y: followed(760),
@@ -1672,6 +1688,61 @@ describe('streamed text and VoiceOver', () => {
       });
     });
 
+    test('Android: under the in-content title at a large font the tail still clears the composer', async () => {
+      // The root title at font scale 2, the 36 dp gap and the 16 dp padding.
+      const thread = 162;
+      await begin(thread);
+      await lay('ask-progress', { y: 60, height: 600 });
+      const y = scrollTo.mock.calls.at(-1)![0].y;
+      expect(y).toBe(followed(660, thread));
+      // The tail's bottom edge on screen: the gap above the composer, not
+      // the thread's offset below it.
+      expect(thread + 400 + 660 - y).toBe(800 - rhythm.block);
+      // The thread reports its place from the scroll content itself: no
+      // view sits between them to measure from instead.
+      let node = byId('ask-thread').find(
+        (n) => typeof n.type === 'string',
+      )!.parent;
+      const between: string[] = [];
+      while (node && node.type !== ScrollView) {
+        // 'ask-screen' is the scroll view's own host.
+        if (
+          typeof node.type === 'string' &&
+          node.props.testID &&
+          node.props.testID !== 'ask-screen'
+        )
+          between.push(node.props.testID);
+        node = node.parent;
+      }
+      expect(node?.type).toBe(ScrollView);
+      expect(between).toEqual([]);
+      await act(async () => {
+        finish(answer);
+      });
+    });
+
+    test('a scroll that is not a drag (VoiceOver, a status-bar tap) stops it, and coming back resumes it', async () => {
+      await begin();
+      await lay('ask-progress', { y: 60, height: 600 });
+      await scrolled(followed(660));
+      expect(scrollTo).toHaveBeenCalledTimes(1);
+      // No drag began: the offset fell.
+      await scrolled(followed(660) - 250);
+      await lay('ask-progress', { y: 60, height: 800 });
+      await lay('ask-progress', { y: 60, height: 900 });
+      expect(scrollTo).toHaveBeenCalledTimes(1);
+      // Back within reach of the growing end.
+      await scrolled(followed(960) - 10);
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: followed(960),
+        animated: true,
+      });
+      expect(scrollTo).toHaveBeenCalledTimes(2);
+      await act(async () => {
+        finish(answer);
+      });
+    });
+
     test('nothing moves when the answer lands', async () => {
       await begin();
       await lay('ask-progress', { y: 60, height: 600 });
@@ -1680,9 +1751,12 @@ describe('streamed text and VoiceOver', () => {
         finish(answer);
       });
       expect(byId('ask-progress')).toHaveLength(0);
-      // The finished turn lays out again, at a new height.
-      await lay('ask-turn', { y: 400 });
-      await wait(100);
+      // The finished turn lays out again and the page gets shorter: the
+      // last streamed edge is still held, and still nothing follows it.
+      await lay('ask-turn', { y: 460 });
+      await lay('ask-thread', { y: 60 });
+      await viewport(500);
+      await scrolled(followed(660));
       expect(scrollTo).toHaveBeenCalledTimes(1);
     });
 

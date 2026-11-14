@@ -387,9 +387,10 @@ export default function AskScreen() {
   // of whatever covers the scroll view's bottom, until the reader drags.
   const follow = useStreamFollow(scroll, {
     streaming: s.busy,
+    started: streamStarted(s.streaming),
     obscured: restInset ? 0 : dockHeight + (docked ? 0 : keyboard),
-    // Clear of the composer, with the page's own top padding to spare.
-    gap: rhythm.group,
+    gap: rhythm.block,
+    near: rhythm.group,
     animated: !reduceMotion,
     rest: -headerBottom,
   });
@@ -420,6 +421,8 @@ export default function AskScreen() {
       }}
       onContentSizeChange={onContentSizeChange}
       onScrollBeginDrag={follow.onDrag}
+      onScrollEndDrag={follow.onDragEnd}
+      onMomentumScrollEnd={follow.onMomentumEnd}
       onScroll={(event) => {
         atTop.current = event.nativeEvent.contentOffset.y <= 4;
         scrollY.current = event.nativeEvent.contentOffset.y;
@@ -470,6 +473,7 @@ export default function AskScreen() {
             onRetry={retry}
             onAnchorLayout={adaptive ? anchor.onRowLayout : undefined}
             onProgressBottom={follow.onProgress}
+            onThreadLayout={follow.onThread}
             onTurnLayout={(y) => {
               turnY.current = y;
               follow.onTurn(y);

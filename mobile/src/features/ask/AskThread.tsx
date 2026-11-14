@@ -216,6 +216,7 @@ export function AskThread({
   statusAnnouncement,
   onTailFocus,
   onProgressBottom,
+  onThreadLayout,
 }: {
   s: AskState;
   chat: Pick<Chat, 'created' | 'updated'> | undefined;
@@ -233,6 +234,11 @@ export function AskThread({
   onTailFocus?: () => void;
   /** The streaming block's bottom edge within the current turn. */
   onProgressBottom?: (edge: number) => void;
+  /**
+   * The thread's own top in the scroll content: turn and progress edges are
+   * measured from it, below the page's padding and Android's in-content title.
+   */
+  onThreadLayout?: (y: number) => void;
 }) {
   useAnswerArrival(s);
   const thread = s.thread;
@@ -276,7 +282,15 @@ export function AskThread({
       render(turn, i)
     );
   return (
-    <View style={styles.thread} testID="ask-thread">
+    <View
+      style={styles.thread}
+      onLayout={
+        onThreadLayout
+          ? (event) => onThreadLayout(event.nativeEvent.layout.y)
+          : undefined
+      }
+      testID="ask-thread"
+    >
       {thread.slice(0, split).map((turn, i) => row(turn, i))}
       <View
         testID="ask-turn"
