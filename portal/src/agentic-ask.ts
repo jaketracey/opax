@@ -675,7 +675,8 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     // A source's snippet, fact texts and title are read alone and joined, as written sources join them.
     const bySource=new Map<string,typeof sheet>()
     for(const f of sheet)bySource.set(f.source.resource,[...(bySource.get(f.source.resource)??[]),f])
-    const who=ACCOUNTABILITY_QUESTION.test(question)?whoBasis([...bySource.values()].map(group=>({kind:group[0].source.kind,coverage:group.every(f=>f.coverage),texts:[group[0].source.snippet,...group.map(f=>f.text),group[0].source.title]}))
+    // Only a streamed answer previews, so only it reads the basis.
+    const who=!lookup&&progress.answer&&ACCOUNTABILITY_QUESTION.test(question)?whoBasis([...bySource.values()].map(group=>({kind:group[0].source.kind,coverage:group.every(f=>f.coverage),texts:[group[0].source.snippet,...group.map(f=>f.text),group[0].source.title]}))
       .concat((run.passage_answer?.sources??[]).map(s=>({kind:s.kind,coverage:!!s.coverage,texts:[s.snippet,s.title]})))):undefined
     const previewCheck=researchPreviewGuard('compose')
     const preview:import('./research-types').AnswerPreview|undefined=lookup||!progress.answer?undefined:async(written,accept)=>{
