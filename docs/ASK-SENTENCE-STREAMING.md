@@ -4,7 +4,7 @@ Fresh research SSE responses stream checked sentences from the answer tool and t
 
 The SDK streams JSON internally. A complete sentence record includes its text, fact or passage IDs and coverage flag, in either property order. Partial strings and incomplete records never become answer text. The boundary recognises titles and initials, `Mr.`, `No. 3`, `s. 12`, decimals and `$1.5m`. A quotation spanning several sentences stays together until it closes and has been checked.
 
-`Progress.answer` is an internal callback. Loop points start streaming during argument generation when the deterministic preconditions already pass at `tool-input-start`. Each complete point is checked against the same gathered evidence and roster as the final answer. Calls needing record selection or a subsequent writer stay held. Unknown later failures use retry recovery. The writer continues to release complete sentence records while generation runs. The callback passes verified cumulative records to the same language, grounding and presentation functions used at completion. Only that checker can produce the private sentence frames. `withAnswerLanguage` converts them to ordinary `delta {text}` frames, removes the private frames and releases the remaining checked tail immediately before `done`. The released lead is passed to final grounding and shaping as a fixed prefix. `leadWithFinding` and `leadWithAuthority` cannot reorder across that boundary. Tests assert exact equality between the concatenated deltas and `done.answer`. If another check still changes the prefix, the boundary sends `retry`, the full checked answer as one delta, then `done`. Both existing clients clear their streamed text on `retry`. A structured `research_loop_stream_reset` counter records the reason and character counts, never answer or source text. Every fresh research stream completion logs `research_loop_stream_complete {count:1,retries,preview_chars,answer_chars}`. Counting completions with retries against all completions supplies the production retry rate. Every emitted or passed-through retry clears the server prefix and held delta buffers, matching both clients. Frames after `done` are ignored, and the route and writer close their preview callbacks at completion.
+`Progress.answer` is an internal callback. Loop points start streaming during argument generation when the deterministic preconditions already pass at `tool-input-start`. Each complete point is checked against the same gathered evidence and roster as the final answer. Calls needing record selection or a subsequent writer stay held. Unknown later failures use retry recovery. The writer continues to release complete sentence records while generation runs. The callback passes verified cumulative records to the same language, grounding and presentation functions used at completion. Only that checker can produce the private sentence frames. `withAnswerLanguage` converts them to ordinary `delta {text}` frames, removes the private frames and releases the remaining checked tail immediately before `done`. Normal completions pass the released lead to final ordering as a fixed prefix. Attribution always runs, including when a later citation requires the speaker, chamber and date. Salvaged completions apply normal grounding and shaping with no fixed-prefix exemption; necessary corrections use retry. Tests assert exact equality between the concatenated deltas and `done.answer`. If another check still changes the prefix, the boundary sends `retry`, the full checked answer as one delta, then `done`. Both existing clients clear their streamed text on `retry`. A structured `research_loop_stream_reset` counter records the reason and character counts, never answer or source text. Every fresh research stream completion logs `research_loop_stream_complete {count:1,retries,preview_chars,answer_chars}`. Counting completions with retries against all completions supplies the production retry rate. Every emitted or passed-through retry clears the server prefix and held delta buffers, matching both clients. Frames after `done` are ignored, and the route and writer close their preview callbacks at completion.
 
 ## Check inventory after the 13 November minimum-checks change
 
@@ -16,13 +16,13 @@ The SDK streams JSON internally. A complete sentence record includes its text, f
 | Plain public language, headings, list markers, punctuation and empty paragraphs | Sentence; lead cleanup also needs the settled opening | Reuse the public boundary. Do not manufacture a fallback when a partial prefix becomes empty. |
 | Unsupported quotation marks | Sentence plus cited evidence | Reuse quote repair before emission. An unheld quotation is emitted as paraphrase, with no temporary quoted version. |
 | Dollar owner, donor and reporting-period attribution | Sentence plus cited money records | Reuse `moneySentenceEdits`. Correct from an unambiguous record or omit the sentence. A figure in a speech is still not treated as a money record. |
-| Official findings supported only by a member's speech | Sentence plus cited speaker, date and chamber | Reuse spoken-finding attribution before emission. |
+| Official findings supported only by a member's speech | Sentence plus cited speaker, date and chamber | Reuse spoken-finding attribution before emission and at completion, including late citation upgrades. A required correction to released text triggers retry. |
 | Repeated sentences, claim identities, figure sets and source-aware duplicates | Sentence plus preceding records | Reuse cumulative verification. Drop repeated lines and preserve the separators between surviving text in JSON, SSE, fallback and cache responses. Case-variant duplicates retain the first wording and merge citations, including citation upgrades after release. |
 | Incidental coverage notes | Sentence classification; relevance uses the gathered finding | Reuse coverage normalisation. Notes remain metadata; a limitation-only prefix stays held. |
 | Quantitative primary/headline promotion | Needs the selected primary and potentially a later sentence | Primary facts are known before writing. Hold the affected opening until the writer has included its required headline, requested owners/amounts and vote split. |
 | Required requested figures, recipients and aye/no split (`keepsAll`, `withRequired`) | Whole-answer presence test | Keep the existing test. Preview starts only once every requirement survives grounding. An incomplete draft cannot become a visible substitute. |
 | Unrecorded lending language in receipt answers (`saysLent`) | Whole writer draft | Hold that draft until the existing complete-draft decision. This can replace the entire draft with recorded facts, so its affected tail starts at the opening. |
-| Findings before debate claims or inquiry metadata (`leadWithFinding`, `leadWithAuthority`) | May need a later finding | Hold a mutable opening. Once the first on-topic official finding is settled, release that lead and retain the displaced context as the tail. Freeze every released lead during subsequent shaping, including when later cited speakers change the direct-lead predicate. An off-topic or relayed finding remains held when a later finding can still outrank it. |
+| Findings before debate claims or inquiry metadata (`leadWithFinding`, `leadWithAuthority`) | May need a later finding | Hold a mutable opening. Once the first on-topic official finding is settled, release that lead and retain the displaced context as the tail. Normal completions freeze released ordering. Attribution corrections and salvaged completions run normal checks and use retry when necessary, including when later cited speakers change the direct-lead predicate. An off-topic or relayed finding remains held when a later finding can still outrank it. |
 | Combining fixed passage points with record prose (`appendWrittenPoints`, `leadWithModelAnswer`) | Needs the known points and the writer's record opening | Preview the same composed payload as completion, after the writer's required-content checks. Retain mutable ordering tails. |
 | Person-overview excerpt completion (`completePersonOverview`) | Whole selected source list | Stream checked model points. Defer only the appended source excerpts until the complete source list is known; partial grounding never inserts provisional excerpts ahead of later model points. Final excerpts and citations remain unchanged. |
 | Protected decisions and ambiguous surnames | Decision plus known identity context | Retain refusal, clarification and limitation ordering. Exact lookup corrections stay held; the known alternative-name hint appends after the checked answer. |
@@ -42,7 +42,7 @@ No existing rejection, limiter or settlement rule is removed. Preview work resto
 | --- | --- | --- |
 | Missing model/key; exhausted research credits | Yes, before the call | Existing admission rejects before any provider stream. The preview gate also requires unblocked credits. |
 | Round ceiling; input/output token reservation; model limiter; question spend cap; daily budget refusal or unavailable database | Yes, in awaited `prepareStep` | Admission stays unchanged. Preview requires an admitted reservation and a round within the configured limit. It makes no second limiter, budget or model call. |
-| Parent cancellation, research wall time, an existing failed state or a finished terminal call | Current state is known; later expiry/failure is not | Gate on the known state at answer start, and hold new previews in the final six seconds of the research wall. A later request deadline completes the released checkpoint with a cut-short notice; other final divergence uses retry recovery. |
+| Parent cancellation, research wall time, an existing failed state or a finished terminal call | Current state is known; later expiry/failure is not | Gate on the known state at answer start. Recheck the remaining wall before every point preview and the accepted-answer preview; hold previews in the final six seconds while retaining checked snapshots for salvage. A later request deadline completes the released checkpoint with a cut-short notice; other final divergence uses retry recovery. |
 | A lookup must have run (`steps.length`) | Yes | Round-one answers without a completed lookup stay private. A failed/empty lookup still counts as a run, as before; recovery instructions are not a new semantic rejection. |
 | Numerical shape answered with `answer` instead of `finish` | Yes | Only qualitative `answer` calls preview. Numerical finish selections stay held. |
 | Required introduction list and focussed fact selection | Yes, from gathered records | Introduction-list answers stay held for their complete selection and record rendering. |
@@ -69,26 +69,26 @@ All 16 replay cases run through the actual Worker route, with a scripted SDK mod
 
 Paced runs use approximately 40 tokens/s, estimating four JSON characters per token. Pacing includes citation IDs and JSON syntax. The fixture emits on a fixed clock, so verification time does not silently reduce the provider's rate. First text is measured at arrival of the first parsed public `delta`, or at `done` when no delta is available. Timings include local routing and scripted research turns; deterministic pay and identity cases are included. These are offline measurements, not production latency claims.
 
-Measured at approximately 40 tokens/s on all 16 cases after the round-3 fixes. Before is `240a39b79`; both runs use the same scripted model and the same refusal of external requests. Early characters are deltas received at least 100 ms before `done`, divided by the final answer length. First-delta lead is the time from the first delta to `done` (zero for text delivered only in `done`). Retries count the events the clients actually consume.
+Measured at approximately 40 tokens/s on all 16 cases after the round-4 fixes. Before is `240a39b79`; both runs use the same scripted model and the same refusal of external requests. Early characters are deltas received at least 100 ms before `done`, divided by the final answer length. First-delta lead is the time from the first delta to `done` (zero for text delivered only in `done`). Retries count the events the clients actually consume.
 
 | Case | Path | Early chars before | Early chars after | First-delta lead before | First-delta lead after | Retries before / after |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| robodebt | loop points | 0% | 76% | 0.007 s | 2.613 s | 0 / 0 |
-| sports-rorts | loop points | 0% | 71% | 0.000 s | 2.934 s | 0 / 0 |
-| money-ranking | writer | 63% | 63% | 1.086 s | 1.088 s | 0 / 0 |
+| robodebt | loop points | 0% | 76% | 0.007 s | 2.633 s | 0 / 0 |
+| sports-rorts | loop points | 0% | 71% | 0.000 s | 2.936 s | 0 / 0 |
+| money-ranking | writer | 63% | 63% | 1.086 s | 1.094 s | 0 / 0 |
 | pay | fixed text | 0% | 0% | 0.000 s | 0.000 s | 0 / 0 |
 | identity | fixed text | 0% | 0% | 0.000 s | 0.000 s | 0 / 0 |
-| vote | record selection | 0% | 0% | 0.028 s | 0.028 s | 0 / 0 |
+| vote | record selection | 0% | 0% | 0.028 s | 0.027 s | 0 / 0 |
 | why | loop points | 0% | 77% | 0.000 s | 2.812 s | 0 / 0 |
-| what-happened | loop points | 0% | 64% | 0.000 s | 2.307 s | 0 / 0 |
-| ambiguous-surname | loop points | 0% | 52% | 0.000 s | 0.606 s | 0 / 0 |
+| what-happened | loop points | 0% | 64% | 0.000 s | 2.313 s | 0 / 0 |
+| ambiguous-surname | loop points | 0% | 52% | 0.000 s | 0.634 s | 0 / 0 |
 | off-topic | fixed text | 0% | 0% | 0.000 s | 0.000 s | 0 / 0 |
-| accountability-robodebt | loop points | 0% | 46% | 0.007 s | 1.808 s | 0 / 0 |
+| accountability-robodebt | loop points | 0% | 46% | 0.007 s | 1.811 s | 0 / 0 |
 | accountability-blame | loop points | 0% | 0% | 0.000 s | 0.000 s | 0 / 0 |
 | accountability-decided | loop points | 0% | 0% | 0.000 s | 0.000 s | 0 / 0 |
 | robodebt-live-r100 | record selection | 0% | 0% | 0.000 s | 0.000 s | 0 / 0 |
 | spoken-finding | loop points | 0% | 0% | 0.000 s | 0.000 s | 0 / 0 |
-| robodebt-report-cited | writer | 100% | 100% | 0.930 s | 0.928 s | 0 / 0 |
+| robodebt-report-cited | writer | 100% | 100% | 0.930 s | 0.942 s | 0 / 0 |
 
 Across all answer characters, early delivery increased from **8.0% to 34.4%**. Six of the eleven cases previously grouped as loop answers now deliver text early. The two record-selection cases render complete selected facts; they do not have a token-by-token prose writer. The three fixed-text cases still arrive at completion. The two writer cases retain progressive delivery.
 
@@ -96,13 +96,23 @@ Three point answers still hold their opening: `accountability-blame`, `accountab
 
 | Time to first answer text | Before | After |
 | --- | ---: | ---: |
-| p50 | 2.817 s | 2.090 s |
-| p95 | 5.064 s | 4.346 s |
+| p50 | 2.817 s | 2.102 s |
+| p95 | 5.064 s | 4.364 s |
 
 All **16/16** final answers are byte-identical to the original answer snapshots and to the before run. All sixteen retry counts are zero. Model-call counts, citations and API shapes remain pinned. The paced replay gate additionally requires at least 30% of all answer characters to arrive 100 ms before completion, so restoring the completion-wide loop hold fails the gate.
 
-Final gates passed: `cd portal && npx tsc --noEmit`, 262 focused checks, all 16 paced replay cases (17 assertions), then the full portal suite with **4,998 passing tests** at concurrency 4 through `jest-slot.sh`. Nine scratch-clone mutations each fail their targeted regression: non-speech/bill passage kinds, lookups in flight, hearing selection, bill-speech selection, per-point schema, tally restoration, checked pending-point salvage, the six-second hold and the second-answer gate. All seven round-3 reviewer harness cases finish with matching client/done text, two model calls and zero retries. Local generated search, crawl, hub and growth assets from the previous run remain excluded from the change.
+Final gates passed: `cd portal && npx tsc --noEmit`, 267 focused checks, all 16 paced replay cases (17 assertions), then the full portal suite with **5,003 passing tests** at concurrency 4 through `jest-slot.sh`, in a fresh clone after `npm run build:search`. Four new scratch-clone mutations each fail their targeted regression: the attribution bypass, salvage ordering exemption, per-point time latch and completion-preview exemption. The round-4 probes confirm normal attribution after salvage with one corrective retry, no invalid or partial record text, and only the early first preview after a call crosses into its final six seconds. Local generated assets remain excluded from the change.
 
+
+A fresh worktree needs the generated assets before the full suite. With dependencies available for the unchanged lockfile, run from the repository root:
+
+```sh
+cd portal
+npm run build:search
+/Users/jake/Projects/opax-ios/.ops/tools/jest-slot.sh npm test
+```
+
+`build:search` reads local snapshots and generates the search catalogue, hubs, crawl files, growth modules, report-source metadata, statute titles, indexes and table files. It also builds the Victorian election assets. The full-suite count is verified in a fresh clone after this exact build step; missing generated files cause unrelated rendering and catalogue failures. Tests also read `origin/main`; a scratch clone made from a local checkout must retain the real upstream ref rather than substituting its local `main` branch.
 
 To reproduce a paced run, from the repository root:
 
@@ -116,4 +126,6 @@ ASK_REPLAY_TOKENS_PER_SECOND=40 ASK_REPLAY_RESULTS=/tmp/ask-stream-timings.json 
 
 The transport uses the installed AI SDK 7 `streamText`/`fullStream` API and retains the existing generation lifecycle callbacks. See the [official SDK streaming reference](https://ai-sdk.dev/docs/reference/ai-sdk-core/stream-text) and [Workers streaming guidance](https://developers.cloudflare.com/workers/best-practices/workers-best-practices/).
 
-Review round 3 also covers checked pending-point salvage at the wall and output ceiling, the hold during the final six seconds, two answer calls in one step, per-point schema validation, tally restoration and each held-selection clause. Case-variant duplicates keep the first wording and merge citations. Later citation upgrades cannot rewrite a released opening. Removing a repeated figure preserves the earlier lines and separators. A failed planner fallback after released text ends with the checked prefix, a cut-short notice and `done`, including fallback SSE error frames. `research_loop_stream_cut_short` counts these completions by deadline or fallback failure. `research_loop_stream_complete.preview_chars` counts all preview characters released across retries, while the current prefix resets on each retry.
+Review round 3 also covers checked pending-point salvage at the wall and output ceiling, the hold during the final six seconds, two answer calls in one step, per-point schema validation, tally restoration and each held-selection clause. Deduplication retains the first claim wording and merges citations; normal speech attribution may then rewrite it and require retry. Salvaged answers run the same shape and attribution checks as normal answers. Removing a repeated figure preserves the earlier lines and separators. A failed planner fallback after released text ends with the checked prefix, a cut-short notice and `done`, including fallback SSE error frames. `research_loop_stream_cut_short` counts these completions by deadline or fallback failure. `research_loop_stream_complete.preview_chars` counts all preview characters released across retries, while the current prefix resets on each retry.
+
+Round-4 regressions cover complete and truncated late citation upgrades through the final response boundary, normal lead ordering for salvaged answers, and calls that cross into the final six seconds before completion or provider failure.

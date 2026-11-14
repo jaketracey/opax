@@ -4,7 +4,7 @@ import {build} from 'esbuild'
 import {scriptedResearchModel} from './fixtures/research-scripted-model.mjs'
 import {sentenceSpans} from '../src/sentence-bounds.mjs'
 
-const bundled=await build({stdin:{contents:"export * from './src/research-generation'; export * from './src/research-grounding'; export * from './src/research-sentences'; export * from './src/research-sentence-stream'; export * from './src/research-response'; export * from './src/research-writer'; export * from './src/research-evidence'; export * from './src/agentic-ask'; export * from './src/research-loop'; export {createResearchCreditCooldown} from './src/research-credit'; export {proseFallback} from './src/research-writing';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
+const bundled=await build({stdin:{contents:"export * from './src/research-generation'; export * from './src/research-grounding'; export * from './src/research-sentences'; export * from './src/research-sentence-stream'; export * from './src/research-response'; export * from './src/research-writer'; export * from './src/research-evidence'; export * from './src/agentic-ask'; export * from './src/research-loop'; export {agenticAskPayload} from './src/agentic-response'; export {createResearchCreditCooldown} from './src/research-credit'; export {proseFallback} from './src/research-writing';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
 const api=await import('data:text/javascript;base64,'+Buffer.from(bundled.outputFiles[0].text).toString('base64'))
 const deferred=()=>{let resolve;const promise=new Promise(r=>{resolve=r});return {promise,resolve}}
 const source=(resource,snippet,extra={})=>({resource,slug:'',title:'Housing report',href:'https://example.org/report',url:'https://example.org/report',snippet,cited:true,kind:'record',...extra})
@@ -179,7 +179,7 @@ test('incremental scanner visits each character once, including every JSON token
   assert.ok(scanner.scannedCharacters<=raw.length)
 })
 
-test('P1-1: a later cited speaker cannot move the released bill lead',async()=>{
+for(const salvaged of [false,true])test(salvaged?'salvaged bill answers run normal lead shaping even after release':'P1-1: a later cited speaker cannot move the released bill lead',async()=>{
   const q='What happened to the Example Bill 2024?'
   const passages=[{id:'bill-1',resource:'bill-1',slug:'',title:'Example Bill 2024',text:'The Example Bill 2024 passed the Senate on 3 March 2024 after a second reading debate.',url:'https://example.org/bill',kind:'bill'},
     {id:'sp-1',resource:'sp-1',slug:'',title:'Second reading speech',text:'Senator Jane Example said the bill would cut red tape for small business owners across the country.',url:'https://example.org/sp',kind:'speech',speaker:'Jane Example',chamber:'senate',date:'2024-02-01'}]
@@ -191,12 +191,16 @@ test('P1-1: a later cited speaker cannot move the released bill lead',async()=>{
   await stream.preview(one)
   assert.equal(deltas.join(''),points[0].claim)
   await stream.preview(full)
-  const done=api.groundAnswerPayload({...full,research:{mode:'loop'}},q,stream.released)
+  const final={...full,research:{mode:'loop',...(salvaged?{answer_stats:{salvaged:'malformed_args'}}:{})}}
+  const done=api.groundAnswerPayload(final,q,stream.released)
+  if(salvaged)assert.deepEqual(done,api.groundAnswerPayload(final,q),'salvage has no fixed-prefix shape exemption')
   const wire=frame('research_sentences',{})+deltas.map(text=>frame('research_sentence',{text})).join('')+frame('done',done)
   const events=decode(await(await api.withAnswerLanguage(new Response(wire,{headers:{'content-type':'text/event-stream'}}),q)).text())
-  assert.equal(events.some(e=>e.event==='retry'),false)
-  assert.equal(events.filter(e=>e.event==='delta').map(e=>e.data.text).join(''),events.at(-1).data.answer)
-  assert.ok(events.at(-1).data.answer.startsWith(points[0].claim))
+  assert.equal(events.some(e=>e.event==='retry'),salvaged)
+  let client=''
+  for(const e of events){if(e.event==='retry')client='';if(e.event==='delta')client+=e.data.text}
+  assert.equal(client,events.at(-1).data.answer)
+  assert.ok(events.at(-1).data.answer.startsWith(points[salvaged?1:0].claim))
 })
 
 const emptyScope={people:[],parties:[],bills:[],ambiguous:false,unresolved:false}
@@ -472,12 +476,12 @@ test('preview checking restores the tally before usage reporting and the final s
 })
 
 // Leave two complete records followed by an incomplete third. No final tool-call event reaches execute.
-function interruptedLoopModel(wall=false){
-  const model=scriptedResearchModel(pointScript(threeSentences.map(claim=>({claim})))),original=model.doStream.bind(model)
+function interruptedLoopModel(wall=false,points=threeSentences.map(claim=>({claim}))){
+  const model=scriptedResearchModel(pointScript(points)),original=model.doStream.bind(model)
   model.doStream=async options=>{
     if(model.calls.length!==1)return original(options)
     model.calls.push(options)
-    const json=JSON.stringify({points:threeSentences.map(claim=>({claim}))}),cut=json.slice(0,json.indexOf(threeSentences[2])+12)
+    const json=JSON.stringify({points}),cut=json.slice(0,json.indexOf(points.at(-1).claim)+12)
     return {stream:new ReadableStream({start(c){
       c.enqueue({type:'stream-start',warnings:[]});c.enqueue({type:'tool-input-start',id:'a',toolName:'answer'})
       for(let i=0;i<cut.length;i+=4)c.enqueue({type:'tool-input-delta',id:'a',delta:cut.slice(i,i+4)})
@@ -500,8 +504,7 @@ for(const wall of [true,false])test(`${wall?'research wall':'output cap'} mid-an
 test('an answer starting inside the last six seconds holds all points until acceptance',async()=>{
   const counts=[]
   await loopPreviewRun(scriptedResearchModel(pointScript(threeSentences.map(claim=>({claim})))),{options:{wallMs:10_000},preview:p=>counts.push(p.answer)})
-  assert.equal(counts.length,1)
-  assert.ok(counts[0].includes(threeSentences[2]))
+  assert.deepEqual(counts,[])
 })
 
 test('only the first answer call in one step can preview',async()=>{
@@ -524,7 +527,7 @@ test('case-variant duplicates preserve the first wording and merge every retriev
   assert.equal(out.sources.length,2)
   const stream=api.researchSentenceStream(question,async()=>{})
   await stream.preview(payload(first))
-  assert.equal(api.checkedAnswerPayload({...out,research:{mode:'loop'}},question,false,stream.released).answer,first)
+  assert.equal(api.checkedAnswerPayload({...out,research:{mode:'loop'}},question,false,stream.released).answer,'Robin Example told the Senate that the housing report found planning rules slowed approvals.')
 })
 
 test('removing a later repeated figure retains earlier lines, citations and the released prefix',async()=>{
@@ -542,4 +545,54 @@ test('deadline and disconnected-reader sends disable preview without logging a c
     assert.equal(calls,1)
   }
   assert.deepEqual(logs,[])
+})
+
+
+for(const truncated of [false,true])test(`a late speech citation upgrade ${truncated?'salvages':'completes'} with normal attribution and retry`,async t=>{
+  t.mock.method(console,'error',()=>{})
+  const first='The housing report found planning rules slowed approvals.',id='r1/t/body/0'
+  const evidence='Robin Example said the housing report found planning rules slowed approvals and recommended simpler rules.'
+  const points=[{claim:first},{claim:first.replace('housing','Housing'),id,quote:'housing report found planning rules slowed approvals'},{claim:'UNCHECKED SENTINEL must never escape.'}]
+  const model=truncated?interruptedLoopModel(false,points):scriptedResearchModel(pointScript(points.slice(0,2)))
+  const deltas=[],stream=api.researchSentenceStream(question,async text=>deltas.push(text)),progress=async()=>{}
+  progress.answer=stream.preview
+  const research=Object.assign(api.createResearch({...budgetOptions(model),readRecord:async()=>({text:evidence,speaker:'Robin Example',labels:{kind:'speech',chamber:'senate'},metadata:{date:'2024-02-01'}})}),{write:undefined})
+  const kb=async()=>({resources:{r1:{slug:'housing-debate',title:'Housing debate',origin:{created:'2024-02-01',collaborators:['Robin Example']},fields:{body:{paragraphs:{[id]:{text:evidence}}}}}},fulltext:{total:1,facets:{}}})
+  const run=await api.runAgentic(question,{asset:async()=>null,kb,generate:async()=>{throw Error('planner must not run')},research},progress,40_000,api.inferPeriod(question),{},emptyScope)
+  stream.close()
+  assert.equal(deltas[0],first,'the uncited sentence must have been released before its citation upgrade')
+  const payload=api.agenticAskPayload(run,question),normal=api.checkedAnswerPayload(payload,question)
+  const final=api.groundAnswerPayload(payload,question,stream.released)
+  const wire=frame('research_sentences',{})+deltas.map(text=>frame('research_sentence',{text})).join('')+frame('done',final)
+  const events=decode(await(await api.withAnswerLanguage(new Response(wire,{headers:{'content-type':'text/event-stream'}}),question)).text())
+  assert.deepEqual(events.map(e=>e.event),['delta','retry','delta','done'])
+  const done=events.at(-1).data
+  assert.equal(done.answer,'Robin Example told the Senate on 1 February 2024 that the housing report found planning rules slowed approvals.')
+  assert.equal(done.answer,normal.answer,'recovery must apply the normal shape and attribution checks')
+  assert.equal(events.at(-2).data.text,done.answer)
+  assert.doesNotMatch(done.answer,/UNCHECKED/)
+  assert.deepEqual(done.citations,normal.citations)
+  for(const ranges of Object.values(done.citations))for(const[a,b]of ranges)assert.ok(a>=0&&a<b&&b<=Array.from(done.answer).length)
+  assert.equal(model.calls.length,2)
+  assert.equal(run.research.answer_stats.salvaged,truncated?'malformed_args':undefined)
+})
+
+for(const truncated of [false,true])test(`a call crossing into its last six seconds holds later previews but ${truncated?'salvages':'completes'} checked points`,async t=>{
+  t.mock.method(console,'error',()=>{})
+  const now=Date.now;let advance=0,raw=''
+  t.mock.method(Date,'now',()=>now()+advance)
+  const previews=[],first=threeSentences[0],second=threeSentences[1],firstReleased=deferred()
+  const points=[{claim:first},{claim:second},...(truncated?[{claim:'UNCHECKED SENTINEL must never escape.'}]:[])]
+  const model=scriptedResearchModel(pointScript(points),{tokensPerSecond:4000,onPiece:async piece=>{
+    raw+=piece
+    if(raw.includes('recommended')){await firstReleased.promise;advance=11000}
+    if(truncated&&raw.includes('UNCHECKED'))throw Error('provider cut off mid-record')
+  }})
+  const out=await loopPreviewRun(model,{options:{wallMs:20_000},preview:(p,released)=>{previews.push({answer:p.answer,released});firstReleased.resolve()}})
+  assert.equal(previews.length,1,'only the early first point may enter preview')
+  assert.equal(previews[0].released,first)
+  assert.ok(out.events.at(-1).data.answer.includes(second),'the later checked snapshot is retained for completion or salvage')
+  assert.doesNotMatch(out.events.at(-1).data.answer,/UNCHECKED/)
+  assert.equal(model.calls.length,2)
+  assert.equal(out.run.research.answer_stats.salvaged,truncated?'error':undefined)
 })

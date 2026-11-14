@@ -511,11 +511,12 @@ export function createResearch(options: ResearchOptions): Research {
       return compose(speech ? [] : facts, points)
     }
     const previewCheck=researchPreviewGuard('loop')
+    const previewTimeLeft=()=>limits.wallMs-(Date.now()-started)>=REPAIR_MIN_MS
     // These gates are decided before answer arguments arrive. Record selections and hearing/introduction answers
     // can still require another record or a writer, so their affected opening remains held. Content/schema checks
     // run on complete point records below; later provider, usage or settlement failures use stream retry recovery.
     const canPreviewAnswer=()=>qualitativeRun&&steps.length>0&&!finished&&!failed&&
-      !controller.signal.aborted&&!context.signal.aborted&&limits.wallMs-(Date.now()-started)>=REPAIR_MIN_MS&&
+      !controller.signal.aborted&&!context.signal.aborted&&previewTimeLeft()&&
       round>0&&round<=limits.rounds&&!credits.blocked()&&!!reservation&&
       canPreviewResearchSelection({inFlight:inFlight.size,introductions:!!constraints.listIntroductions,
         hearing:hearingEvidenceQuestion(question),recordFacts:recordFacts().tools.size,
@@ -821,7 +822,7 @@ export function createResearch(options: ResearchOptions): Research {
             // Retain only complete, checked records if the wall or output ceiling interrupts this call.
             // Accepted answer arguments overwrite this snapshot in execute; never replace an earlier call.
             draft={points:[...pending.points]}
-            await context.progress.answer?.({...checked,answer_scope:constraints})
+            if(previewTimeLeft())await context.progress.answer?.({...checked,answer_scope:constraints})
           }
         })
       }:undefined), stopped])
@@ -829,7 +830,7 @@ export function createResearch(options: ResearchOptions): Research {
       if (!finished) fail(stats.rounds >= limits.rounds || calls >= RESEARCH_MAX_CALLS ? 'steps' : answerAttempts ? 'grounding' : 'no_finish')
       await Promise.race([settle(), stopped])
       // Legacy text/citation answers have no structured point boundary; publish them after acceptance.
-      if(qualitative&&qualitativeRun&&!recordFacts().tools.size&&![...passages.values()].some(p=>!['speech','bill'].includes(p.kind))&&!hearingEvidenceQuestion(question))await previewCheck(()=>context.progress.answer?.({...qualitative as QualitativeAnswer,answer_scope:constraints}))
+      if(qualitative&&qualitativeRun&&!recordFacts().tools.size&&![...passages.values()].some(p=>!['speech','bill'].includes(p.kind))&&!hearingEvidenceQuestion(question)&&previewTimeLeft())await previewCheck(()=>context.progress.answer?.({...qualitative as QualitativeAnswer,answer_scope:constraints}))
       return { constraints, steps, results, selected, ...stats, ...(qualitative ? { qualitative:{...(qualitative as QualitativeAnswer),answer_scope:constraints}, points:selectedPoints } : {}) }
     } catch (error) {
       if (!(error instanceof ResearchError) && isResearchCreditError(error)) {
