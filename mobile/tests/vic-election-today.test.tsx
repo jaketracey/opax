@@ -8,8 +8,8 @@ const seats = [
 ] as Electorate[];
 beforeEach(resetVic);
 for (const [instant, text] of [
-  ['2026-11-20T10:00:00+11:00', 'In 8 days'],
-  ['2026-11-28T10:00:00+11:00', 'Polls are open from 8 am to 6 pm'],
+  ['2026-11-20T10:00:00+11:00', 'Early voting runs 18–27 November'],
+  ['2026-11-28T10:00:00+11:00', 'Voting is open until 6 pm AEDT.'],
   ['2026-11-28T19:00:00+11:00', 'Voting has closed'],
 ])
   test(`Today ${text}`, () => {

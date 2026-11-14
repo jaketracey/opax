@@ -5,10 +5,18 @@ import { minimumTarget, rhythm } from '../../design/tokens';
 import { openSource } from '../../navigation/external';
 import { vicCopy as c } from './copy';
 import type { Overview } from './decoders';
-import { keyDateWords, phase } from './model';
+import { keyDateWords, phase, type ElectionContext } from './model';
 import { Block } from './shared';
-export function KeyDates({ o, now }: { o: Overview; now: Date }) {
-  if (phase(o, now) === 'closed') return null;
+export function KeyDates({
+  o,
+  now,
+  context = o,
+}: {
+  o: Overview;
+  now: Date;
+  context?: ElectionContext;
+}) {
+  if (phase(context, now) === 'closed') return null;
   return (
     <Block title={c.dates} testID="vic-election-dates">
       {o.key_dates.map((row) => {
