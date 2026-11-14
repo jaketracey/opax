@@ -4303,6 +4303,28 @@
      "quote": "The two Houses of the Parliament of Tasmania have almost equal powers."
     }
    ]
+  },
+  {
+   "id": "backbencher-def",
+   "claim": "A backbencher is a member of parliament who is not a minister or shadow minister, also called a private member or private senator.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "A member of parliament who is not a minister or shadow minister, also known as a private member or private senator."
+    }
+   ]
+  },
+  {
+   "id": "portfolio-def",
+   "claim": "A portfolio is an area of responsibility of a government minister.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "An area of responsibility of a government minister."
+    }
+   ]
   }
  ]
 }

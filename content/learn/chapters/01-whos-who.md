@@ -81,7 +81,7 @@ The job is not mentioned in the Constitution. [[f:pm-not-constitution]]
 
 The Prime Minister picks some government MPs and senators to be {{ministers|minister}}. [[f:pm-picks-ministers]]
 
-Each minister looks after an area, such as health or defence. That area is called a portfolio. [[f:minister-portfolio]]
+Each minister looks after an area, such as health or defence. That area is called a {{portfolio}}. [[f:minister-portfolio]]
 
 There are usually about 20 ministers in the House and 10 in the Senate. [[f:minister-numbers]]
 

@@ -1806,6 +1806,77 @@
     "peo-three-levels-responsibilities",
     "peo-three-levels-video"
    ]
+  },
+  {
+   "term": "portfolio",
+   "slug": "portfolio",
+   "chapter": "whos-who",
+   "short": "The area of government a minister is responsible for, such as health or defence.",
+   "more": "Each minister looks after one or more portfolios. Examples include health, environment, transport and defence. The Prime Minister decides who gets which portfolio.",
+   "facts": [
+    "portfolio-def",
+    "minister-portfolio",
+    "pm-picks-ministers"
+   ],
+   "see_also": [
+    "minister",
+    "cabinet",
+    "shadow-minister"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-ministers",
+    "peo-pm"
+   ]
+  },
+  {
+   "term": "backbencher",
+   "slug": "backbencher",
+   "chapter": "whos-who",
+   "short": "An MP or senator who is not a minister or shadow minister.",
+   "more": "Backbenchers are also called private members or private senators. Government backbenchers ask planned questions in Question Time, called Dorothy Dixers.",
+   "facts": [
+    "backbencher-def",
+    "dorothy-dixer"
+   ],
+   "see_also": [
+    "minister",
+    "shadow-minister",
+    "dorothy-dixer"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-question-time"
+   ]
+  },
+  {
+   "term": "sitting day",
+   "slug": "sitting-day",
+   "chapter": "watching-parliament",
+   "short": "A day when a house of Parliament meets.",
+   "more": "Parliament sits for about 18 to 20 weeks a year. Question Time is held at 2 pm on every sitting day, and each house publishes a Notice Paper. Delegated laws must be shown to Parliament within 6 sitting days.",
+   "facts": [
+    "sitting-def",
+    "sitting-weeks-18-20",
+    "qt-when",
+    "notice-paper-def",
+    "delegated-register-6-days"
+   ],
+   "see_also": [
+    "sitting-week",
+    "question-time",
+    "notice-paper"
+   ],
+   "example": {
+    "url": "https://opax.com.au/sitting",
+    "label": "Federal sitting weeks"
+   },
+   "sources": [
+    "peo-delegated-law",
+    "peo-glossary",
+    "peo-members",
+    "peo-question-time"
+   ]
   }
  ]
 }

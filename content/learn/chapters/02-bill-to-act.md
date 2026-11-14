@@ -219,7 +219,7 @@ Each one must go on a public register before it can take effect. Unless it says 
 
 ## Disallowance
 
-Parliament still keeps watch over these rules. A sitting day is a day a house meets. [[f:sitting-def]] Each rule must be shown to Parliament within 6 sitting days. [[f:delegated-register-6-days]]
+Parliament still keeps watch over these rules. A {{sitting day}} is a day a house meets. [[f:sitting-def]] Each rule must be shown to Parliament within 6 sitting days. [[f:delegated-register-6-days]]
 
 Within 15 sitting days, an MP or senator can ask their house to overrule it. This is {{disallowance}}. The house then has 15 sitting days to decide. If it does not decide, the rule is overruled. [[f:disallow-15-days]]
 
