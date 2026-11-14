@@ -2,7 +2,7 @@
   "database": "/home/jake/.cache/autoresearch/parli.db",
   "database_mtime": "2026-11-10T10:23:44.736218+00:00",
   "extracted_at": "2026-11-13T14:31:16.277573+00:00",
-  "note": "Published-roster corpus window starts 1993-03-13 (parliamentarians.meta.since). Excludes wragge_xml, chair, unknown and witness types, as the published pipeline does. No speech length or count floor. Grouped by source as well as printed/clean name, id and same house; exact sample id at the minimum date. Vote evidence includes aye/no/paired records. Raw all-loaded comparison remains in corpus-earliest-all-loaded.json.",
+  "note": "Published-roster corpus window starts 1993-03-13 (parliamentarians.meta.since). Excludes wragge_xml, chair, unknown and witness types, as the published pipeline does. No speech length or count floor. Grouped by source as well as printed/clean name, id and same house; exact sample id at the minimum date. Vote evidence includes aye/no/paired records. Raw all-loaded comparison remains in corpus-earliest-all-loaded.json. Speech rows stored under 10592, 10937, person_9c02d321caef54b2ba21a1f8, person_efb744ffb3a25d578e592281 are regrouped after parli.ingest.speaker_identity.resolve_attribution (row 179 reviewed dated House identities, 89 rows resolved); every other group is the held extract.",
   "unmatched_groups": [
     {
       "chamber": "nsw_la",
@@ -47,7 +47,7 @@
     {
       "chamber": "representatives",
       "reason": "conflicting-or-unverified-id",
-      "groups": 6
+      "groups": 7
     },
     {
       "chamber": "representatives",
@@ -589,7 +589,6 @@
     {"actor": "name:leonie short", "chamber": "representatives", "date": "2001-06-05", "kind": "speeches", "record_id": 62229, "printed_name": "Short, Leonie, MP", "source": "zenodo", "stored_person_id": "wragge_short"},
     {"actor": "name:lloyd", "chamber": "representatives", "date": "2002-02-19", "kind": "speeches", "record_id": 72009, "printed_name": "Mr LLOYD", "source": "zenodo", "stored_person_id": "10394"},
     {"actor": "name:lou lieberman", "chamber": "representatives", "date": "1998-03-02", "kind": "speeches", "record_id": 99, "printed_name": "Lieberman, Lou, MP", "source": "zenodo", "stored_person_id": "wragge_lieberman"},
-    {"actor": "name:martin", "chamber": "representatives", "date": "2020-03-04", "kind": "speeches", "record_id": 390197, "printed_name": "Dr Martin", "source": "zenodo", "stored_person_id": "10937"},
     {"actor": "name:mcclelland", "chamber": "representatives", "date": "2013-06-24", "kind": "speeches", "record_id": 277224, "printed_name": "The DEPUTY SPEAKER (Mr McClelland)", "source": "zenodo", "stored_person_id": "wragge_the_deputy_speaker"},
     {"actor": "name:mcdonald", "chamber": "representatives", "date": "2012-06-25", "kind": "speeches", "record_id": 259236, "printed_name": "Mr McDonald", "source": "zenodo", "stored_person_id": "10951"},
     {"actor": "name:mcleay", "chamber": "representatives", "date": "2000-03-08", "kind": "speeches", "record_id": 37834, "printed_name": "McLeay", "source": "zenodo", "stored_person_id": null},
@@ -621,7 +620,6 @@
     {"actor": "name:ricky johnston", "chamber": "representatives", "date": "1998-03-03", "kind": "speeches", "record_id": 540, "printed_name": "Johnston, Ricky, MP", "source": "zenodo", "stored_person_id": "10344"},
     {"actor": "name:sciacca", "chamber": "representatives", "date": "2002-06-27", "kind": "speeches", "record_id": 79858, "printed_name": "Mr SCIACCA,MP", "source": "zenodo", "stored_person_id": "wragge_sciacca"},
     {"actor": "name:st clair", "chamber": "representatives", "date": "2000-03-06", "kind": "speeches", "record_id": 37229, "printed_name": "ST CLAIR,MP", "source": "zenodo", "stored_person_id": "wragge_st_clair"},
-    {"actor": "name:stephen martin", "chamber": "representatives", "date": "1998-03-02", "kind": "speeches", "record_id": 91, "printed_name": "Martin, Stephen, MP", "source": "zenodo", "stored_person_id": "10905"},
     {"actor": "name:stuart st clair", "chamber": "representatives", "date": "1998-11-12", "kind": "speeches", "record_id": 14197, "printed_name": "St Clair, Stuart, MP", "source": "zenodo", "stored_person_id": "wragge_st_clair"},
     {"actor": "name:theophanous", "chamber": "representatives", "date": "2000-12-07", "kind": "speeches", "record_id": 55589, "printed_name": "Dr THEOPHANOUS,MP", "source": "zenodo", "stored_person_id": "wragge_theophanous"},
     {"actor": "name:thompson", "chamber": "representatives", "date": "2019-07-31", "kind": "speeches", "record_id": 379224, "printed_name": "Mr Thompson", "source": "zenodo", "stored_person_id": "10927"},
@@ -802,7 +800,7 @@
     {"actor": "pid:10583", "chamber": "representatives", "date": "1998-11-23", "kind": "speeches", "record_id": 14416, "printed_name": "Sidebottom, Peter, MP", "source": "zenodo", "stored_person_id": "10583"},
     {"actor": "pid:10588", "chamber": "representatives", "date": "2008-02-12", "kind": "ext_votes", "record_id": "federal-representatives-425", "printed_name": "Luke Simpkins", "source": "theyvoteforyou", "stored_person_id": "tvfy_10588"},
     {"actor": "pid:10590", "chamber": "representatives", "date": "1998-03-02", "kind": "speeches", "record_id": 62, "printed_name": "Slipper, Peter, MP", "source": "zenodo", "stored_person_id": "10590"},
-    {"actor": "pid:10592", "chamber": "representatives", "date": "1998-03-02", "kind": "speeches", "record_id": 5, "printed_name": "Smith, Tony, MP", "source": "zenodo", "stored_person_id": "10592"},
+    {"actor": "pid:10592", "chamber": "representatives", "date": "2006-02-09", "kind": "speeches", "record_id": 770517, "printed_name": "Tony Smith", "source": "openaustralia", "stored_person_id": "10592"},
     {"actor": "pid:10594", "chamber": "representatives", "date": "1998-03-04", "kind": "speeches", "record_id": 1077, "printed_name": "Smith, Stephen, MP", "source": "zenodo", "stored_person_id": "10594"},
     {"actor": "pid:10599", "chamber": "representatives", "date": "1998-11-11", "kind": "speeches", "record_id": 13992, "printed_name": "Snowdon, Warren, MP", "source": "zenodo", "stored_person_id": "10599"},
     {"actor": "pid:10600", "chamber": "representatives", "date": "1998-03-03", "kind": "speeches", "record_id": 687, "printed_name": "Somlyay, Alex, MP", "source": "zenodo", "stored_person_id": "10600"},
@@ -971,7 +969,7 @@
     {"actor": "pid:10934", "chamber": "representatives", "date": "2019-07-22", "kind": "speeches", "record_id": 377722, "printed_name": "Burns, Josh, MP", "source": "zenodo", "stored_person_id": "10934"},
     {"actor": "pid:10935", "chamber": "representatives", "date": "2019-07-22", "kind": "ext_votes", "record_id": "federal-representatives-5755", "printed_name": "Anne Webster", "source": "theyvoteforyou", "stored_person_id": "tvfy_10935"},
     {"actor": "pid:10936", "chamber": "representatives", "date": "2019-07-22", "kind": "ext_votes", "record_id": "federal-representatives-5755", "printed_name": "Angie Bell", "source": "theyvoteforyou", "stored_person_id": "tvfy_10936"},
-    {"actor": "pid:10937", "chamber": "representatives", "date": "2002-03-14", "kind": "speeches", "record_id": 73570, "printed_name": "Dr MARTIN,MP", "source": "zenodo", "stored_person_id": "10937"},
+    {"actor": "pid:10937", "chamber": "representatives", "date": "2019-07-22", "kind": "ext_votes", "record_id": "federal-representatives-5755", "printed_name": "Fiona Martin", "source": "theyvoteforyou", "stored_person_id": "tvfy_10937"},
     {"actor": "pid:10938", "chamber": "representatives", "date": "2019-07-22", "kind": "speeches", "record_id": 377720, "printed_name": "Simmonds, Julian, MP", "source": "zenodo", "stored_person_id": "10938"},
     {"actor": "pid:10939", "chamber": "representatives", "date": "2019-07-22", "kind": "ext_votes", "record_id": "federal-representatives-5755", "printed_name": "Vince Connelly", "source": "theyvoteforyou", "stored_person_id": "tvfy_10939"},
     {"actor": "pid:10940", "chamber": "representatives", "date": "2019-07-22", "kind": "ext_votes", "record_id": "federal-representatives-5755", "printed_name": "James Stevens", "source": "theyvoteforyou", "stored_person_id": "tvfy_10940"},
@@ -1050,6 +1048,8 @@
     {"actor": "pid:11052", "chamber": "representatives", "date": "2025-07-23", "kind": "ext_votes", "record_id": "federal-representatives-9632", "printed_name": "Rebecca White", "source": "theyvoteforyou", "stored_person_id": "tvfy_11052"},
     {"actor": "pid:11053", "chamber": "representatives", "date": "2025-07-23", "kind": "speeches", "record_id": 1195161, "printed_name": "Sarah Witty", "source": "openaustralia", "stored_person_id": "11053"},
     {"actor": "pid:11063", "chamber": "representatives", "date": "2026-06-02", "kind": "ext_votes", "record_id": "federal-representatives-10243", "printed_name": "David Farley", "source": "theyvoteforyou", "stored_person_id": "tvfy_11063"},
+    {"actor": "pid:person_9c02d321caef54b2ba21a1f8", "chamber": "representatives", "date": "2002-03-14", "kind": "speeches", "record_id": 73570, "printed_name": "Dr MARTIN,MP", "source": "zenodo", "stored_person_id": "person_9c02d321caef54b2ba21a1f8"},
+    {"actor": "pid:person_efb744ffb3a25d578e592281", "chamber": "representatives", "date": "1998-03-02", "kind": "speeches", "record_id": 5, "printed_name": "Smith, Tony, MP", "source": "zenodo", "stored_person_id": "person_efb744ffb3a25d578e592281"},
     {"actor": "name:a koutsantonis", "chamber": "sa_ha", "date": "2020-02-18", "kind": "speeches", "record_id": 978034, "printed_name": "The Hon. A. KOUTSANTONIS", "source": "sa_hansard", "stored_person_id": "sa_koutsantonis"},
     {"actor": "name:a michaels", "chamber": "sa_ha", "date": "2022-05-18", "kind": "speeches", "record_id": 1150225, "printed_name": "The Hon. A. MICHAELS", "source": "sa_hansard", "stored_person_id": "sa_michaels"},
     {"actor": "name:a piccolo", "chamber": "sa_ha", "date": "2020-02-05", "kind": "speeches", "record_id": 769100, "printed_name": "The Hon. A. PICCOLO", "source": "sa_hansard", "stored_person_id": "sa_piccolo"},

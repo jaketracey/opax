@@ -127,3 +127,11 @@ No network requests were needed for note 1: the saved SA Parliament page was reu
 - Load5 was checked before gates and was below 40 (about 8); no wait was required.
 - Full Python roster gate, `python3 -m pytest -q -p no:cacheprovider scripts/test_roster*.py tests/test_roster_profile_reconciliation.py tests/test_state_roster*.py`: **182 passed, 14,182 subtests passed**, no failures/skips, in **865.80 seconds**. Both frozen full-export replay scenarios passed. The additional explicit missing-bound assertions passed in the focused period-suite run as documented above.
 - `git diff --check` and `node scripts/stamp_assets.mjs --check`: passed.
+
+## Row 179 integration (14 November 2026)
+
+Row 179 (reviewed dated House identities) moved 85 Dickson records from id 10592 to Anthony Charles Smith and four Cunningham records from 10937 to Stephen Martin, and asked that this snapshot be rebuilt on integration. The held published extract (database mtime 2026-11-10) was regrouped with `parli.ingest.speaker_identity.resolve_attribution` applied to every row stored under those four ids, read again from the same database with `mode=ro`; exactly the 89 reviewed rows resolve and every other group is the held extract. `audit_roster_periods.py --corpus-raw` then gives Anthony Charles Smith his own bound (speech 5, 1998-03-02) and Stephen Martin his (73570, 2002-03-14). Tony Smith's earliest own-house record is now 2006-02-09 (770517) and Fiona Martin's a 2019 vote.
+
+The inventory now treats a catalogue term as the roster row's actor when that row carries the catalogue's own person id as its verified pid; before, the two new identities were each split into an id actor and a name actor and never matched. Main's snapshot is reproduced exactly with this change.
+
+The two `known-corpus-namesake` groups are retired: the Casey 2001 term and the Fiona Martin term no longer start after their first record, and Tony Smith's 2015 and 2021 terms are ordinary later periods inside his 2001 to 2015 term. Nine coverage-owed entries for the two resolved members are gone because their terms now have bounds. Stephen Martin's 1998 speeches stored under 10905 stay unmatched as a conflicting id, the source-id debt the row 179 report records.
