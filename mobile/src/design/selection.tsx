@@ -1,34 +1,35 @@
-import { StyleSheet, View } from 'react-native';
-import { accents, colors, radii, rhythm, type Accent } from './tokens';
+import { useCallback } from 'react';
+import { StyleSheet } from 'react-native';
+import { Divider } from './controls';
+import { accents, colors, radii, type Accent } from './tokens';
+
+// The pill's inner padding: the text keeps the list's leading edge and the
+// fill reaches this far into the 20pt margin, so it sits 8pt in from the
+// column's edges, as an iOS sidebar's selection does.
+const PILL_INSET = 12;
 
 /**
- * Rows in an iPad split list (Oct 2026): the row bleeds 12pt into the
- * margin so its selected wash has room around the text, and a 3pt mark
- * leads the selected row. No chevron: the detail pane is the destination.
- * Every split list selects alike, in navy, whatever the row's category: the
- * category's accent belongs to the detail pane (one accent per view). Rows
- * outside a split (every iPhone row) never use this.
+ * Rows in an iPad split list (Oct 2026): the row bleeds into the margin so
+ * its selected wash has room around the text. The rounded wash alone marks
+ * the selection, as an iOS sidebar draws it (no leading bar: a straight bar
+ * on a rounded pill read as clipped, b65), and the separators touching it
+ * clear (`useSplitSeparator`, `useRowSelected`). No chevron: the detail pane
+ * is the destination. Every split list selects alike, in navy, whatever the
+ * row's category: the category's accent belongs to the detail pane (one
+ * accent per view). Rows outside a split (every iPhone row) never use this.
  */
 export const splitRowStyles = StyleSheet.create({
   bleed: {
-    marginHorizontal: -rhythm.heading,
-    paddingHorizontal: rhythm.heading,
+    marginHorizontal: -PILL_INSET,
+    paddingHorizontal: PILL_INSET,
     borderRadius: radii.container,
-    borderCurve: 'continuous',
-  },
-  mark: {
-    position: 'absolute',
-    left: 0,
-    top: rhythm.heading,
-    bottom: rhythm.heading,
-    width: 3,
-    borderRadius: 1.5,
     borderCurve: 'continuous',
   },
 });
 
-// The one selection: the navy wash and ink (the `people` roles), which
-// `contrast.ts` checks for every text tone and under Increase Contrast.
+// The one selection: the navy wash (the `people` role), which `contrast.ts`
+// checks for every text tone, and which steps stronger under Increase
+// Contrast.
 const SELECTED = accents.people;
 
 /**
@@ -39,13 +40,29 @@ export function selectedWash(_accent?: Accent) {
   return { backgroundColor: colors[SELECTED.wash] };
 }
 
-/** The 3pt mark leading a selected split row; decorative (the state is said). */
-export function SelectedMark(_props: { accent?: Accent }) {
-  return (
-    <View
-      accessibilityElementsHidden
-      importantForAccessibility="no-hide-descendants"
-      style={[splitRowStyles.mark, { backgroundColor: colors[SELECTED.ink] }]}
-    />
+/**
+ * A FlatList or SectionList separator for a split list: the rule above and
+ * the rule below the selected row draw clear, keeping their hairline so no
+ * row moves when the selection does. `isSelected` is null outside a split,
+ * where every rule draws.
+ */
+export function useSplitSeparator<T>(
+  items: readonly T[],
+  isSelected: ((item: T) => boolean) | null,
+) {
+  const at = isSelected ? items.findIndex(isSelected) : -1;
+  const above = at > 0 ? items[at - 1] : undefined;
+  const selected = at >= 0 ? items[at] : undefined;
+  return useCallback(
+    ({ leadingItem }: { leadingItem?: T }) => (
+      <Divider
+        variant="subtle"
+        clear={
+          leadingItem !== undefined &&
+          (leadingItem === above || leadingItem === selected)
+        }
+      />
+    ),
+    [above, selected],
   );
 }

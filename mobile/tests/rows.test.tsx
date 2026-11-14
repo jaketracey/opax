@@ -7,6 +7,7 @@ import { act, useContext, type ReactElement, type ReactNode } from 'react';
 import {
   Animated,
   Dimensions,
+  FlatList,
   Text as NativeText,
   Platform,
   Pressable,
@@ -45,10 +46,11 @@ import { AUTHORISATION_LINE } from '../src/design/authorisation';
 import { Card, Tile, TileGrid } from '../src/design/card';
 import { ChoiceChip, MachinePill, StatusCapsule } from '../src/design/labels';
 import { FigureBlock, PageFoot, StatStrip } from '../src/design/record';
+import { Divider } from '../src/design/controls';
 import {
-  SelectedMark,
   selectedWash,
   splitRowStyles,
+  useSplitSeparator,
 } from '../src/design/selection';
 import { SourceLine } from '../src/design/source';
 import {
@@ -152,6 +154,19 @@ const strings = (root: ReactTestInstance) =>
     .filter((child): child is string => typeof child === 'string');
 const glyphs = (root: ReactTestInstance) =>
   root.findAllByType(Icon).map((node) => node.props.name);
+// A leading bar beside the selection (b65 removed it): any thin view pinned
+// to the row's leading edge.
+const leadingBars = (root: ReactTestInstance) =>
+  root.findAll((node) => {
+    if (typeof node.type !== 'string') return false;
+    const style = flat(node.props.style) ?? {};
+    return (
+      style.position === 'absolute' &&
+      style.left === 0 &&
+      typeof style.width === 'number' &&
+      style.width <= 4
+    );
+  });
 beforeEach(() => {
   size();
   jest.clearAllMocks();
@@ -463,7 +478,7 @@ test('LinkRow checkmark selection is explicit and independent of split selection
     ).root;
     expect(row(root).props.accessibilityState.selected).toBe(selected);
     expect(glyphs(root)).toEqual(selected ? ['checkmark'] : []);
-    expect(root.findAllByType(SelectedMark)).toHaveLength(0);
+    expect(leadingBars(root)).toHaveLength(0);
     expect(rowStyle(row(root)).backgroundColor).toBeUndefined();
   }
   expect(
@@ -501,12 +516,106 @@ for (const selected of [false, true]) {
     expect(rowStyle(row(root)).backgroundColor).toEqual(
       selected ? selectedWash().backgroundColor : undefined,
     );
-    expect(root.findAllByType(SelectedMark)).toHaveLength(selected ? 1 : 0);
+    // The rounded wash alone marks the selection: no leading bar.
+    expect(leadingBars(root)).toHaveLength(0);
     expect(glyphs(root)).not.toContain('chevron.right');
     expect(glyphs(root)).not.toContain('checkmark');
     expect(root.findByType(Hoverable).props).toHaveProperty('onHover');
   });
 }
+test('the selected pill is inset around the text, which keeps the list’s leading edge', () => {
+  const bleed = flat(splitRowStyles.bleed);
+  // The fill reaches into the margin by exactly the padding it adds, so a
+  // selected row's text sits where every unselected row's does.
+  expect(bleed.paddingHorizontal).toBe(-(bleed.marginHorizontal as number));
+  expect(bleed.paddingHorizontal).toBeGreaterThanOrEqual(12);
+  expect(bleed.paddingHorizontal).toBeLessThan(layout.screenMargin);
+  expect(bleed.borderRadius).toBe(radii.container);
+});
+describe('separators beside a selected split row', () => {
+  const ruleColours = (root: ReactTestInstance) =>
+    root
+      .findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID === 'inset-group-separator',
+      )
+      .map((node) => {
+        const style = flat(node.props.style);
+        expect(style.height).toBeGreaterThan(0);
+        return style.backgroundColor;
+      });
+  const group = (picked: string | null, accessory?: 'checkmark') => (
+    <InsetGroup>
+      {['a', 'b', 'c', 'd'].map((key) => (
+        <LinkRow
+          key={key}
+          title={key}
+          onPress={jest.fn()}
+          accessory={accessory}
+          selected={key === picked}
+        />
+      ))}
+    </InsetGroup>
+  );
+  const rule = colors.dividerSubtle;
+  test('an InsetGroup clears the rule above and below the selection, keeping its space', () => {
+    const view = render(group('b'));
+    expect(ruleColours(view.root)).toEqual([
+      'transparent',
+      'transparent',
+      rule,
+    ]);
+    act(() => view.update(group('d')));
+    expect(ruleColours(view.root)).toEqual([rule, rule, 'transparent']);
+    act(() => view.update(group('a')));
+    expect(ruleColours(view.root)).toEqual(['transparent', rule, rule]);
+    act(() => view.update(group(null)));
+    expect(ruleColours(view.root)).toEqual([rule, rule, rule]);
+  });
+  test('a checkmark row is a choice, not a split selection: its rules stay', () => {
+    expect(ruleColours(render(group('b', 'checkmark')).root)).toEqual([
+      rule,
+      rule,
+      rule,
+    ]);
+  });
+  test('a FlatList separator clears beside the selected item, and only in a split', () => {
+    const items = ['a', 'b', 'c', 'd'];
+    function List({ picked }: { picked: string | null }) {
+      const separator = useSplitSeparator(
+        items,
+        picked ? (item) => item === picked : null,
+      );
+      return (
+        <FlatList
+          data={items}
+          keyExtractor={(item) => item}
+          renderItem={({ item }) => (
+            <LinkRow
+              title={item}
+              onPress={jest.fn()}
+              selected={picked ? item === picked : undefined}
+            />
+          )}
+          ItemSeparatorComponent={separator}
+        />
+      );
+    }
+    const cleared = (root: ReactTestInstance) =>
+      root.findAllByType(Divider).map((node) => node.props.clear);
+    const view = render(<List picked="c" />);
+    expect(cleared(view.root)).toEqual([false, true, true]);
+    act(() => view.update(<List picked="a" />));
+    expect(cleared(view.root)).toEqual([true, false, false]);
+    act(() => view.update(<List picked={null} />));
+    expect(cleared(view.root)).toEqual([false, false, false]);
+    const hidden = view.root
+      .findAllByType(Divider)
+      .map((node) => node.findByType(View).props.style.backgroundColor);
+    expect(hidden).not.toContain('transparent');
+  });
+});
 test.each(['link', 'bill', 'person'])(
   '%s keyboard activation respects select, onPress and href',
   (kind) => {

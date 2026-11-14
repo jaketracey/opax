@@ -35,8 +35,9 @@ import {
   useRowCellStyle,
   useRowHighlight,
   useRowInset,
+  useRowSelected,
 } from './row-padding';
-import { SelectedMark, selectedWash, splitRowStyles } from './selection';
+import { selectedWash, splitRowStyles } from './selection';
 import { symbols } from './symbols';
 import { Text } from './text';
 import { nameProbeProps } from './text-probe';
@@ -498,6 +499,7 @@ export function PersonRow({
   const highlight = useRowHighlight();
   const cellStyle = useRowCellStyle();
   const split = selected !== undefined;
+  useRowSelected(!!selected);
   const [hovered, onHover] = useHover();
   const onActivate =
     select ?? onPress ?? (href ? () => router.push(href) : undefined);
@@ -665,7 +667,6 @@ export function PersonRow({
             : null,
       ]}
     >
-      {selected ? <SelectedMark /> : null}
       {body}
     </Pressable>
   );

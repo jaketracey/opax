@@ -37,7 +37,7 @@
     "brand": {
       "navy": {"$value": "#142A43", "dark": "#9CB9DB", "$description": "Structure and the one primary action per view."},
       "navyRaised": {"$value": "#1D3A5C", "dark": "#B9CDE6", "$description": "Pressed and hover on navy."},
-      "navyWash": {"$value": "#E4E6E7", "dark": "#25303D", "$description": "Secondary button fill; the people accent's wash."},
+      "navyWash": {"$value": "#E4E6E7", "dark": "#25303D", "highContrast": "#D3D9DF", "darkHighContrast": "#2E3C4C", "$description": "Secondary button fill; the people accent's wash; the selected row in a split list. Stronger under Increase Contrast (1.35:1 on paper, 1.58:1 dark) so a selection still reads beside the stronger rules."},
       "bronze": {"$value": "#A0761B", "dark": "#A87D2A", "$description": "Brand artwork only: mark, icon and launch screen. Never a link or text tint."},
       "todayDotBronze": {"$value": "#C08F2C", "dark": "#C08F2C", "$description": "Today's decorative dot map highlight, at 76 percent opacity over a navy base at 23 percent. Matches today-header-v2. Never a link or text tint."},
       "bronzeInk": {"$value": "#8A5A12", "dark": "#D9A84A", "highContrast": "#5C4318", "darkHighContrast": "#EBC57F", "$description": "Brand artwork only: mark, icon and launch screen. Never a link or text tint."},

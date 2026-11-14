@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect } from 'react';
+import { createContext, useContext, useEffect, useLayoutEffect } from 'react';
 import { colors } from './tokens';
 
 /** Marks a row component that draws its own vertical padding in a InsetGroup. */
@@ -38,6 +38,24 @@ export function useRowHighlight() {
     : surface === 'raised'
       ? colors.dividerSubtle
       : colors.sunken;
+}
+
+/**
+ * A row in an InsetGroup says while it is the selected split row, so the
+ * group clears the separators touching it (as iOS hides a selected cell's).
+ * Rows outside a group report to no one.
+ */
+export const RowSelectedContext = createContext<
+  ((selected: boolean) => void) | null
+>(null);
+export function useRowSelected(selected: boolean) {
+  const report = useContext(RowSelectedContext);
+  // Before paint, so a row selected on mount never shows its rules first.
+  useLayoutEffect(() => {
+    if (!report || !selected) return;
+    report(true);
+    return () => report(false);
+  }, [report, selected]);
 }
 
 // The group keeps its text inset; rows bleed their interactive surface to the cell edges.

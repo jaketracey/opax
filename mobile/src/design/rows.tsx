@@ -42,8 +42,9 @@ import {
   useRowCellStyle,
   useRowHighlight,
   useRowInset,
+  useRowSelected,
 } from './row-padding';
-import { SelectedMark, selectedWash, splitRowStyles } from './selection';
+import { selectedWash, splitRowStyles } from './selection';
 import { Skeleton } from './states';
 import { symbols } from './symbols';
 import { Text, textContent } from './text';
@@ -138,6 +139,7 @@ export function LinkRow({
   const highlight = useRowHighlight();
   const cellStyle = useRowCellStyle();
   const split = selected !== undefined && accessory !== 'checkmark';
+  useRowSelected(split && !!selected && !disabled);
   const [hovered, onHover] = useHover();
   const onActivate = select ?? onPress ?? (href ? recordLink.open : undefined);
   const plainTitle = typeof title === 'string' ? title : textContent(title);
@@ -181,7 +183,6 @@ export function LinkRow({
             : null,
       ]}
     >
-      {split && selected ? <SelectedMark /> : null}
       {leadingAccessory}
       {glyph ? (
         <Icon
@@ -597,6 +598,7 @@ export function BillRow({
   const cellStyle = useRowCellStyle();
   useRowInset();
   const split = selected !== undefined;
+  useRowSelected(!!selected);
   const [hovered, onHover] = useHover();
   const onActivate = select ?? onPress ?? (href ? recordLink.open : undefined);
   const formattedDate =
@@ -654,7 +656,6 @@ export function BillRow({
             : null,
       ]}
     >
-      {selected ? <SelectedMark /> : null}
       <View style={styles.main}>
         <View style={[styles.line, stacked ? styles.stacked : null]}>
           {showStatus ? (
@@ -842,6 +843,7 @@ export function RecordRow({
   const separateSpeaker =
     !!speaker?.href || (!!speaker?.linkedParty && isPartyLabel(speaker.party));
   useRowInset(leading && !stacked ? 46 : 16);
+  useRowSelected(!!selected);
   const clean = cleanRecordTitle(title);
   const stage = recordTitleStage(title);
   const datedKind =

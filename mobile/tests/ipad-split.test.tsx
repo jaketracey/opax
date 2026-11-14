@@ -5,7 +5,7 @@ import TestRenderer from 'react-test-renderer';
 import { dispatchKeyCommand, keyCommandSpecs } from '../src/design/keyboard';
 import { SplitLayout, usePaneBar, useSplitCursor } from '../src/design/split';
 import { LinkRow } from '../src/design/rows';
-import { SelectedMark, selectedWash } from '../src/design/selection';
+import { selectedWash, splitRowStyles } from '../src/design/selection';
 import { colors } from '../src/design/tokens';
 import {
   decodeEntry,
@@ -261,15 +261,8 @@ describe('split rows', () => {
   test('every split list selects alike, in navy: the accent is the detail pane’s', () => {
     expect(selectedWash('bills')).toEqual(selectedWash('people'));
     expect(selectedWash('money')).toEqual({ backgroundColor: colors.navyWash });
-    let tree!: TestRenderer.ReactTestRenderer;
-    act(() => {
-      tree = TestRenderer.create(<SelectedMark accent="bills" />);
-    });
-    mounted.push(tree);
-    const mark = tree.root.find((node) => typeof node.type === 'string');
-    expect(Object.assign({}, ...[mark.props.style].flat(3))).toMatchObject({
-      backgroundColor: colors.navy,
-    });
+    // The rounded wash alone: no leading mark style survives (b65).
+    expect(Object.keys(splitRowStyles)).toEqual(['bleed']);
   });
   test('a split row says selected and drops the chevron: the pane is the destination', () => {
     let tree!: TestRenderer.ReactTestRenderer;
