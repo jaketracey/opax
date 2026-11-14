@@ -140,6 +140,7 @@ export function renderMarkdown({ meta, server, summary, results }) {
   const out = [
     `# OPAX MCP eval: ${meta.label}`, '',
     `- Endpoint: ${meta.base}`, `- Access: ${meta.access ?? 'member token'}; at most ${meta.rate_per_second ?? '?'} requests a second${meta.server_requests ? ' (' + meta.server_requests + ' sent)' : ''}`, `- Deployed commit: ${meta.sha}`, `- Answering model: ${meta.model}; judge: ${meta.judge_model}`,
+    ...(meta.warning ? [`- **Warning:** ${meta.warning}`] : []),
     `- Question set: ${meta.question_set} (${results.length} questions)`, `- Run: ${meta.started} to ${meta.finished}`,
     ...(server ? [`- Server: ${server.serverInfo?.name ?? 'unknown'} ${server.serverInfo?.version ?? ''}, protocol ${server.protocolVersion}, ${server.tool_count} tools (${server.with_output_schema} with an output schema), tools/list ${server.tools_list_bytes} bytes`] : []),
     '', '## Scores', '',

@@ -19,7 +19,7 @@ const MAX_QUESTIONS = 40
 const SERVER = 'opax'
 
 function parseArgs(argv) {
-  const out = { base: 'https://staging.opax.com.au/mcp', model: 'claude-sonnet-5-5', judgeModel: 'claude-sonnet-5-5', questions: join(here, 'questions.json'), out: resolve('portal/private/mcp-evals'), concurrency: 4, label: 'run', sha: 'unknown', timeout: 300, limit: MAX_QUESTIONS, rate: 4, blocked: [] }
+  const out = { base: 'https://staging.opax.com.au/mcp', model: 'claude-sonnet-5-5', judgeModel: 'claude-sonnet-5-5', questions: join(here, 'questions.json'), out: resolve('portal/private/mcp-evals'), concurrency: 4, label: 'run', sha: 'unknown', timeout: 300, limit: MAX_QUESTIONS, rate: 0.9, blocked: [] }
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i], next = () => { const v = argv[++i]; if (v === undefined) throw new Error('Missing value for ' + a); return v }
     if (a === '--base') out.base = next()
@@ -35,7 +35,7 @@ function parseArgs(argv) {
     else if (a === '--category') out.category = next().split(',').map(s => s.trim()).filter(Boolean)
     else if (a === '--limit') out.limit = Math.max(1, Math.min(MAX_QUESTIONS, Number(next()) || MAX_QUESTIONS))
     else if (a === '--timeout') out.timeout = Number(next()) || 300
-    else if (a === '--rate') out.rate = Math.max(0.1, Math.min(20, Number(next()) || 4))
+    else if (a === '--rate') out.rate = Math.max(0.1, Math.min(20, Number(next()) || 0.9))
     else if (a === '--blocked') out.blocked = next().split(',').map(s => s.trim()).filter(Boolean)
     else if (a === '--resume') out.resume = resolve(next())
     else if (a === '--rejudge') out.rejudge = resolve(next())
@@ -59,7 +59,8 @@ const HELP = `Usage: node run.mjs [options]     (anonymous unless OPAX_MCP_TOKEN
   --questions <path>    question set (default questions.json beside this script)
   --out <dir>           output directory (default portal/private/mcp-evals, git-ignored)
   --timeout <seconds>   per-question limit (default 300)
-  --rate <n>            most requests a second sent to the server (default 4; use 1 for production)
+  --rate <n>            most requests a second sent to the server (default 0.9, which stays under
+                        the limit of 60 a minute for one member or client)
   --blocked a,b         data the environment lacks (e.g. hansard): questions that require it are run but
                         reported apart and left out of the scores
   --resume <jsonl>      carry on an interrupted run from its .partial.jsonl file (answers already
@@ -194,6 +195,9 @@ async function main() {
       return { ...row, ...(blocked.length ? { env_blocked: blocked } : {}), ...(question.inject ? { planted_text_in_answer: echoed } : {}), correct, cited: scoreCitation(question, row.answer), efficient: efficiency(question, row.calls) }
     })
     meta.finished = new Date().toISOString()
+    // A run that was rate-limited or could not connect measures the limit, not the tools.
+    const limited = results.filter(r => r.errors?.some(e => /MCP server status/.test(e)) || r.tool_calls?.some(c => /wait a little|429|rate limit/i.test(c.error ?? ''))).map(r => r.id)
+    if (limited.length) { meta.warning = `${limited.length} questions were rate-limited or failed to connect (${limited.join(', ')}). Lower --rate and run again (or --resume): these scores are not valid.`; console.error('WARNING: ' + meta.warning) }
     const summary = summarise(results)
     const report = { meta, server, summary, results }
     writeFileSync(outBase + '.json', JSON.stringify(report, null, 1))

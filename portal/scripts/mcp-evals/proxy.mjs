@@ -43,7 +43,9 @@ export function startProxy({ upstream, token, minIntervalMs = 0 }) {
       if (inject && response.ok) {
         try { const message = JSON.parse(body); if (message.result?.content && !message.result.isError && plant(message.result, inject)) body = JSON.stringify(message) } catch { /* leave the body as sent */ }
       }
-      res.writeHead(response.status, { 'content-type': response.headers.get('content-type') ?? 'application/json', ...(response.headers.get('www-authenticate') ? { 'www-authenticate': response.headers.get('www-authenticate') } : {}) })
+      const pass = {}
+      for (const name of ['www-authenticate', 'mcp-session-id', 'retry-after']) if (response.headers.get(name)) pass[name] = response.headers.get(name)
+      res.writeHead(response.status, { 'content-type': response.headers.get('content-type') ?? 'application/json', ...pass })
       res.end(body)
     } catch (error) { res.writeHead(502, { 'content-type': 'application/json' }); res.end(JSON.stringify({ error: 'proxy: ' + error.message })) }
   })

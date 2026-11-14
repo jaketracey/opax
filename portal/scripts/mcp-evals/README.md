@@ -27,7 +27,7 @@ OPAX_MCP_TOKEN=opax_... node portal/scripts/mcp-evals/run.mjs --base https://sta
 # or: --token-file <path>
 ```
 
-Useful options: `--only id,id`, `--category name`, `--limit n` (never more than 40), `--concurrency n`, `--rate n` (most requests a second; use `--rate 1` against production), `--blocked hansard` (see below), `--rejudge <results.json>` (re-score an earlier run without calling the server). `--help` lists them all.
+Useful options: `--only id,id`, `--category name`, `--limit n` (never more than 40), `--concurrency n`, `--rate n` (most requests a second, 0.9 by default: the server allows one member or client 60 a minute, and a run that goes over it is marked invalid), `--blocked hansard` (see below), `--rejudge <results.json>` (re-score an earlier run without calling the server). `--help` lists them all.
 
 Results go to `portal/private/mcp-evals/` (git-ignored): `<label>-<time>.json` with every answer and call, and `<label>-<time>.md` with the per-category table and each failure.
 
@@ -35,7 +35,7 @@ Results go to `portal/private/mcp-evals/` (git-ignored): `<label>-<time>.json` w
 
 - The token is read from the environment or a file. It is never written to the results, and `claude` never sees it: requests go through a local pass-through (`proxy.mjs`, 127.0.0.1 only) that adds it.
 - Record the commit deployed at the endpoint with `--sha`; a result without one cannot be compared.
-- Production: read-only tools only, `--rate 1`, and only with the operator's go-ahead.
+- Production: read-only tools only, at most one request a second, and only with the operator's go-ahead.
 - One full run at a time across lanes.
 
 ## Questions
@@ -67,3 +67,7 @@ No write path to the record exists in a test, so the pass-through plants the hos
 ## Interrupted runs
 
 Every answer is appended to `<label>-<time>.partial.jsonl` as it arrives. If a run is cut short, pass that file to `--resume` with the same options: recorded answers are kept and only the missing questions (and any that ended in a run error) are asked again.
+
+## Reading the scores
+
+On the 14 November 2026 baseline the same commit scored 37 of 37 correct on one run and 36 of 37 on the next, and 26 against 24 of 35 cited. Treat a move of one answer in correctness, or two in citations, as noise. Correctness is close to its ceiling on this set, so use it as a floor that must not drop; citations, tool calls, input tokens and the size of `tools/list` are where a change shows.
