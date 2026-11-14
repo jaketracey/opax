@@ -31,7 +31,7 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=dae0a96f78").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=50d61c68ca").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
@@ -9436,7 +9436,7 @@ function billDivisionsHTML(bill) {
         "A bill with no division here was not necessarily unopposed. This register does not establish whether a vote on the voices has occurred.",
         "No per-member or per-party vote is available without a formal division."]})}</section>`;
   }
-  const rows = voteTables.divisionRows(divs, true);
+  const rows = voteTables.divisionRows(divs, true, bill.division_titles);
   return `<section class="ui-section bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}>
     ${voteTables.billDivisionTablesHTML(divs, bill.division_titles)}
     ${sourceLineHTML({
@@ -9448,7 +9448,7 @@ function billDivisionsHTML(bill) {
         collapsed ? `The source records some divisions more than once; ${collapsed} repeated record${collapsed === 1 ? "" : "s"}
           of the same division ${collapsed === 1 ? "is" : "are"} shown here once.` : "",
         "A division's title is its recorded stage. Open a division for its count on They Vote For You and the question put, in the record's words.",
-        rows.some((r) => r.kind !== "bill") ? "Votes under limitation of debate and votes on procedure are grouped by the stage the record files them under, not by reading the question. A vote under limitation of debate can be on an amendment or a reading, put when the time set for the debate ran out." : "",
+        rows.some((r) => r.kind !== "bill" || r.procedural) ? "Votes under limitation of debate and votes on procedure retain their recorded stage. Procedural motions are listed under Procedural votes, including those recorded at another stage. A vote under limitation of debate can be on an amendment or a reading, put when the time set for the debate ran out." : "",
       ],
       licence: "Division records: They Vote For You, OpenAustralia Foundation, ODbL.",
     })}
@@ -13661,7 +13661,7 @@ async function loadDivisionNames(slug, d) {
 /** The "Who voted which way" block for loadDivisionNames' answer. Index names
  *  carry no person id, so they print as the record prints them, unlinked.
  *  Export names carry their party on the day: a dot and the short name. */
-function divisionMembersHTML(names, { ayes = 0, noes = 0 } = {}) {
+function divisionMembersHTML(names, { ayes, noes } = {}) {
   const open = `<section class="ui-section division-block division-members" id="division-members" aria-labelledby="division-members-head">
       <h2 class="ui-section-title" id="division-members-head">Who voted which way</h2>`;
   if (!names || names.failed) {
@@ -13672,7 +13672,7 @@ function divisionMembersHTML(names, { ayes = 0, noes = 0 } = {}) {
     ? `<a href="${personUrl(m.name)}">${esc(m.name)}</a>` : esc(m.name)}${m.party ? ` ${partyChipHTML(m.party)}` : ""}</li>`).join("");
   const sides = [["Ayes", names.aye, ayes], ["Noes", names.no, noes], ...(names.paired?.length ? [["Paired, not counted", names.paired, names.paired.length]] : [])];
   return `${open}<div class="division-sides">${sides.map(([label, list, count]) => `<div>
-        <h3 class="division-side">${label} <span>${Number(count || list.length).toLocaleString()}</span></h3>
+        <h3 class="division-side">${label} <span>${list.length === Number(count ?? list.length) ? list.length.toLocaleString() : `${list.length.toLocaleString()} named (tally ${Number(count).toLocaleString()})`}</span></h3>
         ${list.length ? `<ul class="division-names" role="list">${who(list)}</ul>` : `<p class="division-none">None named.</p>`}</div>`).join("")}</div>
       ${names.missingParts ? `<p class="division-none">Part of this list could not load just now.</p>` : ""}
     </section>`;

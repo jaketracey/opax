@@ -145,6 +145,24 @@ class RetainedDatedSponsorParties(unittest.TestCase):
         self.assertEqual(held, [{"key": "k", "sponsor": "SAMPLE, Sen Robin", "date": "2021-05-12",
                                  "source_party": "Rex Patrick Team", "dated_party": "Independent"}])
 
+    def test_registered_party_hold_survives_a_different_pid_record_surname(self):
+        for cosponsor in (False, True):
+            with self.subTest(cosponsor=cosponsor):
+                other = {"name": "OTHER, Sen Morgan", "person_id": "99992", "party": "Rex Patrick Team"}
+                b = {**bill("OTHER, Sen Morgan", introduced="2021-05-12", pid="99992"),
+                     "sponsor_party": "Rex Patrick Team", "sponsors": [dict(other)]}
+                if cosponsor:
+                    b.update(sponsor="FIXTURE, Avery, MP", sponsor_person_id="99991",
+                             sponsor_party="Nationals", originating_house="senate")
+                    b["sponsors"] = [{"name": b["sponsor"], "person_id": "99991", "party": "Nationals"}, dict(other)]
+                for records in (None, eb.SponsorPartyRecords(self.evidence())):
+                    held = eb.fill_sponsor_parties([b], **(
+                        {"evidence": self.evidence()} if records is None else {"records": records}))
+                    self.assertEqual(b["sponsors"][-1]["party"], "Rex Patrick Team")
+                    self.assertEqual(b["sponsor_party"], "Nationals" if cosponsor else "Rex Patrick Team")
+                    self.assertEqual(held, [{"key": "k", "sponsor": "OTHER, Sen Morgan", "date": "2021-05-12",
+                                             "source_party": "Rex Patrick Team", "dated_party": "Independent"}])
+
     def test_retained_refresh_updates_detail_and_index_without_changing_the_snapshot_date(self):
         with tempfile.TemporaryDirectory() as scratch:
             directory = Path(scratch)

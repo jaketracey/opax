@@ -29,7 +29,7 @@
     "build:voice": "node voice/build.mjs",
     "voice:agent": "node voice/agent-sync.mjs",
     "check:instruments-release": "python3 ../scripts/check_instruments_release.py",
-    "test": "node --test test/*.test.mjs",
+    "test": "node --test --test-concurrency=4 test/*.test.mjs",
     "test:directories": "node --test test/directory-render.test.mjs",
     "build:social": "node ../scripts/build_social_catalog.mjs",
     "insights": "node ../scripts/insights.mjs",
