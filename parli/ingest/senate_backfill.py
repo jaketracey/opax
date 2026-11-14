@@ -27,10 +27,15 @@ from .speaker_roles import chair_role
 
 MANIFEST = Path(__file__).resolve().parents[2] / 'data/manifests/senate-backfill-2014-2019.json'
 START, END = '2014-01-01', '2019-06-30'
+# Retain the spending default until Progress processing/overage is costed.
+# Time alone supports the existing ten-day maximum. See the report's spend check.
 DEFAULT_DAYS = 2
 DEFAULT_BUDGET = 1200
-# Conservative planning allowance, not a live throughput measurement.
-PUBLISH_DOCS_PER_SECOND = 2
+# Cached normal sync: 76,905 speech acknowledgements / 8,606 seconds at ten
+# workers, rounded down. Includes the time spent on 318 news acknowledgements.
+# docs/reports/2026-11-14-senate-sync-evidence.json retains the source receipts.
+PUBLISH_DOCS_PER_SECOND = 8.9
+PUBLISH_RATE_SOURCE = 'cached-normal-sync-2026-09-02'
 # Rounded above the entire 112.83-second scratch sync preparation measurement.
 SYNC_PREPARATION_SECONDS = 120
 
@@ -126,6 +131,8 @@ def _run(db_path, stage, max_days, budget, manifest, cache, offline, readiness, 
     report = {'max_days': max_days, 'budget_seconds': budget, 'days': [],
               'missing_days_before': None, 'occupied_days_held': None,
               'kb_writes': 0, 'd1_writes': 0, 'publish_allowance_seconds': 0,
+              'publish_docs_per_second': PUBLISH_DOCS_PER_SECOND,
+              'publish_rate_source': PUBLISH_RATE_SOURCE,
               'sync_preparation_allowance_seconds': 0,
               'stop': 'complete', 'manifest_sha256': hashlib.sha256(Path(manifest).read_bytes()).hexdigest()}
     try:

@@ -117,6 +117,39 @@ def test_budget_accounts_for_publication_and_stops_between_days(tmp_path, monkey
     assert report['sync_preparation_allowance_seconds'] == 120
 
 
+def test_publication_budget_uses_measured_normal_sync_rate(tmp_path, monkeypatch):
+    a, manifest = fixture(tmp_path, monkeypatch, ('2014-02-11',))
+    evidence = json.loads(Path('docs/reports/2026-11-14-senate-sync-evidence.json').read_text())
+    bulk = evidence['normal_sync_runs'][0]
+    assert bulk['workers'] == 10
+    assert B.PUBLISH_DOCS_PER_SECOND == int(bulk['speech_acknowledgements'] / bulk['sync_seconds'] * 10) / 10
+    report = run(a, manifest)
+    assert report['publish_docs_per_second'] == 8.9
+    assert report['publish_rate_source'] == bulk['id']
+    parsed = next((Path(a.stage) / 'modern').glob('*/*.jsonl'))
+    long_turns = sum(len(json.loads(line)['text']) >= 200 for line in parsed.read_text().splitlines())
+    assert report['publish_allowance_seconds'] == long_turns / 8.9
+
+
+def test_ten_day_cap_still_obeys_budget_and_resumes(tmp_path, monkeypatch):
+    days = tuple(f'2014-02-{day:02d}' for day in range(1, 12))
+    a, manifest = fixture(tmp_path, monkeypatch, days)
+    clock = [0]
+    monkeypatch.setattr(B.time, 'monotonic', lambda: clock[0])
+    load = B.load_modern_jsonl
+    def slow_load(*args, **kwargs):
+        result = load(*args, **kwargs)
+        clock[0] += 100
+        return result
+    monkeypatch.setattr(B, 'load_modern_jsonl', slow_load)
+    report = run(a, manifest, max_days=10, budget=450)
+    assert len(report['days']) == 3 and report['stop'] == 'time-budget'
+    assert report['days_left'] == 8
+    monkeypatch.setattr(B, 'load_modern_jsonl', load)
+    assert len(run(a, manifest, max_days=10)['days']) == 8
+    assert run(a, manifest, max_days=10)['added'] == 0
+
+
 def test_loader_budget_interrupt_rolls_back_and_preserves_publication_reserve(tmp_path, monkeypatch):
     a, manifest = fixture(tmp_path, monkeypatch)
     clock = [0]

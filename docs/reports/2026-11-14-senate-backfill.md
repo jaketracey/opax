@@ -19,15 +19,23 @@ The nightly rechecks the owner's database across all sources, so occupied
 The separate `senate_backfill` daily-refresh stage runs after normal refresh
 and KB sync. Defaults:
 
-* `OPAX_SENATE_BACKFILL_DAYS=2`, configurable from 1 to 10.
+* `OPAX_SENATE_BACKFILL_DAYS=2`, configurable from 1 to 10. The spending
+  default is retained under note-1 because ingestion has paid components.
+  Measured sync throughput supports 10 days on time alone. See the
+  [sync and spend review](2026-11-14-senate-sync.md) before raising it.
 * `OPAX_SENATE_BACKFILL_BUDGET_SECONDS=1200`, configurable downwards.
 * `OPAX_SENATE_BACKFILL=0` disables acquisition without disabling coverage.
 
 The budget covers discovery, membership setup, source acquisition, parsing,
 identity/party checks, insertion and durable local receipts. It also charges
-a conservative allowance of one second per two long XML turns for the next
-normal KB sync, including turns later excluded from publication. That rate
-is a planning allowance, not a new live KB throughput measurement. A further
+a reservation at **8.9 documents per second** for the next normal KB sync,
+including long XML turns later excluded from publication. This replaces the
+original unmeasured two-document allowance. The slower retained bulk normal
+sync acknowledged 76,905 speeches in 8,606 seconds at 10 workers; the newer
+retained non-empty nightly acknowledged 2,066 in 111 seconds. These are
+September receipts, not a measurement of November indexing completion.
+The [evidence receipt](2026-11-14-senate-sync-evidence.json) preserves counts,
+timings, worker-pool evidence and excluded recent runs. A further
 120 seconds per non-empty invocation reserves normal sync preparation,
 rounded above the complete measured 112.83-second preparation cost. A day
 starts only with a minute left for commit/receipts in addition to the
@@ -44,6 +52,8 @@ review receipt instead of occupying the first nightly slot indefinitely.
 A source refusal stops the stage immediately and leaves a persistent
 `refused.json`; later nights remain paused pending source-access review.
 
+Because paid enrichment and unquantified Progress processing/index overage
+trigger note-1's conservative-default condition, the cap remains two days.
 If merged on 14 November and the first catch-up night is 15 November 2026,
 `ceil(284 / 2) = 142` nights gives **5 April 2027** for local insertion and
 the following normal sync gives 6 April for publication. If the owner's
@@ -52,6 +62,12 @@ nights gives 3 April for insertion and 4 April for publication. These are
 capacity estimates assuming every night runs and every day fits its budget;
 refusals, identity holds, missed nights and slower publication extend them.
 The site makes no date promise.
+
+The time-only setting of 10 days would take `ceil(284 / 10) = 29` nights:
+13 December 2026 for insertion and 14 December for the following sync.
+For 279 days, those dates would be 12 and 13 December. This faster setting
+is supported by the timing evidence but is not the default pending the
+spend decision. No new spending approval or production action was inferred.
 
 ## Identity and citations
 
@@ -146,14 +162,18 @@ ParlInfo requests. Heavy commands ran with `nice -n 10`; when external
 work pushed load5 above 40, this lane's copy/build/tests were stopped and
 resumed only after load fell. The steady rehearsal ran with load5 below 32.
 
-The publication allowance averaged 132.05 seconds per day and peaked at
-307 seconds on the largest day. Two copies of that measured peak plus
-120 seconds for preparation reserve 734 seconds, leaving nearly eight
-minutes of the 1,200-second budget for local work and variance. This is a
-conservative approximately 12.3-minute planning cost for two large days,
-including fetch/local work. The budget can stop before the day cap if work
-is slower than this desktop measurement. This does not claim that the
-whole existing nightly, including connections, fits six hours.
+The original rehearsal's CSV retains its old two-document planning
+allowances as historical receipt fields. Repricing the same long-turn counts
+at the measured 8.9-document rate gives a mean of 29.67 seconds per day and
+a peak of 68.99 seconds. Combining the observed peak with a fresh fetch
+(1.184 seconds), peak local work (0.823 seconds), 120 seconds for preparation
+and 60 seconds for commits gives **322 seconds for two days** or
+**890 seconds for ten days**, about 5.4 or 14.8 minutes. Ten days matching
+the actual rehearsal mix model about 8.2 minutes. The 1,200-second budget
+remains the guard and the maximum remains ten days. The two-day default now
+reflects the user's spending condition, not a claimed timing limit. This
+does not certify that the whole existing nightly fits six hours or bound
+future KB backpressure.
 
 The real normal sync selection, dedupe preparation and payload mapping were
 rehearsed locally, producing **2,556 eligible documents**, 10,078,521 serialised
@@ -169,13 +189,19 @@ The [CSV timing receipt](2026-11-14-senate-backfill-days.csv) retains each
 day's costs, counts and XML hash. Full local receipts, parsed XML and the
 scratch database remain outside the public repository. No `.ops/` is committed.
 
-Validation: the ingest/identity/coverage gate passed **253 tests and 23
+Initial validation: the ingest/identity/coverage gate passed **253 tests and 23
 subtests**; **12 focused HTTP tests** passed. `cd portal && npx tsc --noEmit`
 passed after generating local Wrangler types, and
 `node scripts/stamp_assets.mjs --check` passed. `npm test -- --test-concurrency=4`
 passed **4,957 tests** with this worktree's `.venv/bin` on `PATH`, after the
 local `build:search` prerequisites were generated. `git diff --check` and
 shell syntax checks passed.
+
+The note-1 [sync and spend review](2026-11-14-senate-sync.md) reran the
+ingest/identity/coverage gate with its two additional regressions:
+**255 tests and 23 subtests** passed, along with the 12 HTTP checks,
+TypeScript, stamps, shell syntax and diff checks. Portal files are unchanged
+by that follow-up.
 
 An additional broad source-policy test run exposed three existing failures
 outside this lane: the repository source-access scan reports existing
