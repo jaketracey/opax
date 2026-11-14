@@ -92,11 +92,11 @@ const edition: EditionView = {
   cardTitle: 'Richard Marles',
   shortTitle: null,
   path: '/person/richard-marles',
-  paragraphs: ['Richard Marles: 793 speeches in the OPAX record.'],
+  paragraphs: ['MP for Corio, in Victoria. 793 speeches to read.'],
   machineWritten: null,
   sourceRows: [],
   facts: {
-    kicker: 'Parliamentarian · Corio, VIC',
+    kicker: 'Parliamentarian',
     line: 'Labor',
     figures: [],
     bars: null,
