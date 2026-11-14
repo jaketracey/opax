@@ -48,9 +48,9 @@ export const proceduralTagHTML = () => '<span class="ui-tag procedural-tag">Proc
 
 /** Older bill exports omit titles. The release lookup keeps only explicit procedural
  * titles, read from the published division files. A missing title stays substantive. */
+const divisionGroups = rows => ({substantive: rows.filter(row => !row.procedural), procedural: rows.filter(row => row.procedural)});
 export function billDivisionGroups(divisions = [], titles = {}) {
-  const rows = divisionRows(divisions, true, titles);
-  return {substantive: rows.filter(row => !row.procedural), procedural: rows.filter(row => row.procedural)};
+  return divisionGroups(divisionRows(divisions, true, titles));
 }
 export function billVoteSummary(groups) {
   const n = groups.substantive.length, p = groups.procedural.length;
@@ -194,9 +194,10 @@ const theChamber = chamber => !chamber || chamber === 'Not recorded' ? 'parliame
 const plural = (n, one, many) => `${n.toLocaleString('en-AU')} ${n === 1 ? one : many}`;
 
 /**
- * One sentence per chamber for a kind of folded division, counted from the rows the table shows, so
- * the sentence and the rows always agree: "On 19 Aug 2026 the Senate voted 11 times on this bill
- * under a limitation of debate, a time limit set on the debate: 5 agreed, 6 not agreed."
+ * One sentence per chamber for a recorded stage, in source order. Its count covers that stage's
+ * folded table plus any rows explicitly identified as being listed under Procedural votes.
+ * "On 19 Aug 2026 the Senate voted 11 times on this bill under a limitation of debate,
+ * a time limit set on the debate: 5 agreed, 6 not agreed."
  */
 export function divisionGroupSentences(rows = [], kind = 'limitation') {
   const group = DIVISION_GROUPS[kind];
@@ -213,8 +214,10 @@ export function divisionGroupSentences(rows = [], kind = 'limitation') {
     const head = `${when}${when ? who : who[0].toUpperCase() + who.slice(1)} voted ${list.length === 1 ? 'once' : `${list.length.toLocaleString('en-AU')} times`} ${group.phrase}`;
     const agreed = list.filter(row => row.outcome === 'Agreed').length, not = list.filter(row => row.outcome === 'Not agreed').length;
     const other = list.length - agreed - not;
-    if (list.length === 1) return `${head}, and the question was ${agreed ? 'agreed' : not ? 'not agreed' : 'given no recorded outcome'}.`;
-    return `${head}: ${[`${agreed.toLocaleString('en-AU')} agreed`, `${not.toLocaleString('en-AU')} not agreed`, other ? `${plural(other, 'with no recorded outcome', 'with no recorded outcome')}` : ''].filter(Boolean).join(', ')}.`;
+    const moved = list.filter(row => row.procedural).length;
+    const location = moved ? ` ${plural(moved, 'of these is listed', 'of these are listed')} under Procedural votes.` : '';
+    if (list.length === 1) return `${head}, and the question was ${agreed ? 'agreed' : not ? 'not agreed' : 'given no recorded outcome'}.${location}`;
+    return `${head}: ${[`${agreed.toLocaleString('en-AU')} agreed`, `${not.toLocaleString('en-AU')} not agreed`, other ? `${plural(other, 'with no recorded outcome', 'with no recorded outcome')}` : ''].filter(Boolean).join(', ')}.${location}`;
   });
 }
 
@@ -227,14 +230,14 @@ function localDivisionConfig(base, rows, overrides) {
 
 /**
  * One bill renderer for SSR and the browser. Stage-based sentences count every recorded row,
- * including explicit procedural motions, so moving a row never changes the reviewed narrative.
+ * including explicit procedural motions, and say how many are in the separate Procedural votes group.
  * Substantive limitation/procedure stages retain their folded tables. Explicit procedural titles
  * have their own closed group. Every table queries and exports its complete bounded bill rows.
  * The main substantive table always has the caption "Divisions on the bill".
  */
 export function billDivisionTablesHTML(divisions = [], titles = {}, query = {}, suffix = '', proceduralQuery = {}, headingLevel = 2) {
-  const groups = billDivisionGroups(divisions, titles);
-  const rows = [...groups.substantive, ...groups.procedural];
+  const rows = divisionRows(divisions, true, titles);
+  const groups = divisionGroups(rows);
   const base = divisionTableConfig({}, 'Divisions on the bill', 'bill');
   const main = groups.substantive.filter(row => !DIVISION_GROUPS[row.kind]);
   const folded = Object.keys(DIVISION_GROUPS).map(kind => ({kind, rows:groups.substantive.filter(row => row.kind === kind)})).filter(g => g.rows.length);

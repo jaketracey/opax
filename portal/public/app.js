@@ -31,7 +31,7 @@ const donorNameHTML = name => donorLabelHTML(disclosedDonor(name));
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=485985e9c1").then(module => { voteTables = module; });
+const voteTablesReady = import("/vote-tables.js?v=dae0a96f78").then(module => { voteTables = module; });
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
@@ -9416,7 +9416,7 @@ function billDivisionsHTML(bill) {
   }
   const rows = voteTables.divisionRows(divs, true);
   return `<section class="ui-section bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}>
-    ${voteTables.billDivisionTablesHTML(divs, bill.division_titles, {}, '', {}, 3)}
+    ${voteTables.billDivisionTablesHTML(divs, bill.division_titles)}
     ${sourceLineHTML({
       updated: bill.exportedAt || "", source: "They Vote For You",
       notes: [

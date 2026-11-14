@@ -136,7 +136,7 @@ for (const [key, substantive, procedural] of [['au-federal-r7447', 11, 1], ['au-
       assert.equal(proceduralConfig.rows.length, procedural);
       assert.ok(configs.every(c => !c.source), 'Hydration, filters, sorting and CSV use the same complete groups.');
       assert.equal(new Set(configs.flatMap(c => c.rows.map(r => r.href))).size, substantive + procedural, 'Every division appears in exactly one table.');
-      const stageRows = [...groups.substantive, ...groups.procedural];
+      const stageRows = tables.divisionRows(bill.divisions, true, titles);
       const sentences = ['limitation', 'procedure'].flatMap(kind => tables.divisionGroupSentences(stageRows, kind));
       assert.equal(doc.querySelector('.division-story')?.textContent || '', sentences.join(' '), 'Keep the reviewed stage, scope and outcome narrative.');
       const visibleLinks = [...doc.querySelector('table').querySelectorAll('tbody a')].map(a => a.getAttribute('href'));
@@ -145,6 +145,58 @@ for (const [key, substantive, procedural] of [['au-federal-r7447', 11, 1], ['au-
     }
   });
 }
+
+test('every published bill narrative counts its shown group plus the explicitly located procedural rows, in source chamber order', () => {
+  const bills = readdirSync(new URL('bills/', pub)).filter(f => /^au-.*\.json$/.test(f))
+    .map(f => read(`bills/${f}`)).filter(b => b.divisions?.length);
+  assert.ok(bills.length > 1000);
+  const phrases = {limitation:'on this bill under a limitation of debate, a time limit set on the debate',
+    procedure:'on procedure for this bill, such as business motions or suspending standing orders'};
+  const number = text => Number(text.replaceAll(',', ''));
+  for (const bill of bills) {
+    // Main's input order, before any substantive/procedural partition.
+    const sourceRows = tables.divisionRows(bill.divisions, true, titles);
+    const expected = Object.keys(phrases).flatMap(kind => {
+      const chambers = [...new Set(sourceRows.filter(r => r.kind === kind).map(r => r.chamber))];
+      return chambers.map(chamber => ({kind, chamber, rows:sourceRows.filter(r => r.kind === kind && r.chamber === chamber)}));
+    });
+    for (const html of [tables.billDivisionTablesHTML(bill.divisions, titles), renderBillAnswer({...bill, division_titles:titles}, [], new Map()).html]) {
+      const configs = [...html.matchAll(/<script type="application\/json" data-vote-config>([\s\S]*?)<\/script>/g)].map(m => JSON.parse(m[1]));
+      const story = html.match(/<p class="division-story">([^<]*)<\/p>/)?.[1] || '';
+      const sentences = story ? story.split(/(?<=\.)\s+/) : [];
+      let cursor = 0;
+      for (const {kind, chamber, rows} of expected) {
+        const sentence = sentences[cursor++];
+        assert.ok(sentence, `${bill.key}: ${kind}, ${chamber}`);
+        const count = sentence.match(/\bvoted (once|[\d,]+ times) /)?.[1];
+        assert.ok(count, `${bill.key}: ${sentence}`);
+        const total = count === 'once' ? 1 : number(count.replace(' times', ''));
+        assert.ok(sentence.includes(phrases[kind]), bill.key);
+        const who = chamber === 'Not recorded' ? 'parliament' : `the ${chamber}`;
+        assert.ok(sentence.split(' voted ')[0].toLowerCase().endsWith(who.toLowerCase()), `${bill.key}: retain source chamber order`);
+        const shown = (configs.find(c => c.urlKey === (kind === 'limitation' ? 'dl' : 'dp'))?.rows || []).filter(r => r.chamber === chamber);
+        const moved = (configs.find(c => c.urlKey === 'pv')?.rows || []).filter(r => r.kind === kind && r.chamber === chamber);
+        assert.equal(total, shown.length + moved.length, `${bill.key}: sentence equals the rows in its named locations`);
+        assert.equal(total, rows.length, `${bill.key}: retain the recorded stage total`);
+        assert.deepEqual([...shown, ...moved].map(r => r.href).sort(), rows.map(r => r.href).sort(), `${bill.key}: retain every identity`);
+        if (moved.length) {
+          const location = sentences[cursor++];
+          assert.match(location, /^[\d,]+ of these (?:is|are) listed under Procedural votes\.$/, bill.key);
+          assert.equal(number(location.split(' ')[0]), moved.length, bill.key);
+        }
+        const agreed = rows.filter(r => r.outcome === 'Agreed').length;
+        const not = rows.filter(r => r.outcome === 'Not agreed').length;
+        if (total === 1) assert.ok(sentence.endsWith(`the question was ${agreed ? 'agreed' : not ? 'not agreed' : 'given no recorded outcome'}.`), bill.key);
+        else {
+          const outcomes = sentence.match(/: ([\d,]+) agreed, ([\d,]+) not agreed(?:, ([\d,]+) with no recorded outcome)?\.$/);
+          assert.ok(outcomes, bill.key);
+          assert.deepEqual(outcomes.slice(1).map(n => number(n || '0')), [agreed, not, total - agreed - not], bill.key);
+        }
+      }
+      assert.equal(cursor, sentences.length, `${bill.key}: no extra or uncounted sentences`);
+    }
+  }
+});
 
 test('person rows tag procedure and never describe it as support for the bill', () => {
   const title = fixtures('procedural')[0].title;
@@ -162,8 +214,9 @@ const app = readFileSync(new URL('app.js', pub), 'utf8');
 const sourceFile = ts.createSourceFile('app.js', app, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
 const functionSource = name => sourceFile.statements.find(n => ts.isFunctionDeclaration(n) && n.name?.text === name).getText(sourceFile);
 
-test('a procedural-only bill keeps caller heading levels in the server and client', () => {
-  const bill = {...read('bills/au-federal-s1393.json'), division_titles:titles};
+test('a procedural-only bill has an h2 heading in the server and client', () => {
+ for (const key of ['au-federal-s1393', 'au-federal-r5675']) {
+  const bill = {...read(`bills/${key}.json`), division_titles:titles};
   assert.equal(tables.billDivisionGroups(bill.divisions, titles).substantive.length, 0);
   const server = new JSDOM(renderBillAnswer(bill, [], new Map()).html).window.document;
   assert.equal([...server.querySelectorAll('h2')].find(h => h.textContent === 'Divisions')?.tagName, 'H2');
@@ -171,8 +224,9 @@ test('a procedural-only bill keeps caller heading levels in the server and clien
     billDedupeDivisions:divisions => ({divisions, collapsed:0}), sourceLineHTML:() => ''};
   runInNewContext(functionSource('billDivisionsHTML') + '\nthis.render = billDivisionsHTML;', context);
   const client = new JSDOM(context.render(bill)).window.document;
-  assert.equal(client.querySelector('section h2'), null);
-  assert.equal(client.querySelector('section h3')?.textContent, 'Divisions');
+  assert.equal(client.querySelector('section h2')?.textContent, 'Divisions');
+  assert.equal(client.querySelector('section h3'), null);
+ }
 });
 
 test('the party vote section takes its place before the table module is ready', async () => {

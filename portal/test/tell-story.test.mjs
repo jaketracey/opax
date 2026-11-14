@@ -129,6 +129,7 @@ test('explicit procedural titles keep every stage narrative count and occupy one
   const doc = new JSDOM(html).window.document;
   assert.match(doc.querySelector('.division-story').textContent, /voted 12 times on this bill under a limitation of debate, a time limit set on the debate: 6 agreed, 6 not agreed\./);
   assert.match(doc.querySelector('.division-story').textContent, /voted 2 times on procedure for this bill, such as business motions or suspending standing orders: 1 agreed, 1 not agreed\./);
+  assert.equal((doc.querySelector('.division-story').textContent.match(/1 of these is listed under Procedural votes\./g) || []).length, 2, 'Each stage count locates its moved procedural row.');
   assert.equal(doc.querySelector('.bill-vote-summary').textContent, '13 substantive votes; 2 procedural votes.');
   const configs = [...doc.querySelectorAll('[data-vote-config]')].map(el => JSON.parse(el.textContent));
   assert.deepEqual(configs.map(c => [c.caption, c.rows.length]), [
