@@ -34,7 +34,6 @@ import { useRefreshCommand } from '../../design/keyboard';
 import {
   Button,
   ContentUnavailable,
-  Divider,
   EmptyState,
   IconButton,
   InlineError,
@@ -54,6 +53,7 @@ import {
   useLayout,
 } from '../../design/primitives';
 import { useListSearchBar } from '../../design/search-bar';
+import { useSplitSeparator } from '../../design/selection';
 import { StatePageProvider } from '../../design/states';
 import { colors, layout, rhythm } from '../../design/tokens';
 import {
@@ -220,6 +220,12 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         ? { kind: 'bill', key: selectedKey, title: titleFor(selectedKey) }
         : null,
     [selectedKey, titleFor],
+  );
+  // The bill the list marks: the pane's, or the first while the pane opens.
+  const markedKey = split ? (selected ?? firstEntry())?.key : undefined;
+  const separator = useSplitSeparator(
+    rows,
+    markedKey ? (bill) => bill.key === markedKey : null,
   );
   const listRef = useRef<FlatList<(typeof rows)[number]>>(null);
   const androidRoot = useAndroidRootScroll(listRef, colors.paper);
@@ -465,9 +471,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
           <BillIndexRow
             bill={item}
             showStatus={scope === 'all'}
-            selected={
-              split ? item.key === (selected ?? firstEntry())?.key : undefined
-            }
+            selected={split ? item.key === markedKey : undefined}
             onPress={
               split
                 ? () =>
@@ -488,7 +492,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
             animated: true,
           })
         }
-        ItemSeparatorComponent={() => <Divider variant="subtle" />}
+        ItemSeparatorComponent={separator}
         ListHeaderComponent={
           Platform.OS === 'android' ? (
             <>

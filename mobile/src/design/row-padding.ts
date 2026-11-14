@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect } from 'react';
-import { colors } from './tokens';
+import { createContext, useContext, useEffect, useLayoutEffect } from 'react';
+import { colors, layout } from './tokens';
 
 /** Marks a row component that draws its own vertical padding in a InsetGroup. */
 export const ROW_OWNS_PADDING = Symbol.for('opax.rowOwnsPadding');
@@ -39,6 +39,32 @@ export function useRowHighlight() {
       ? colors.dividerSubtle
       : colors.sunken;
 }
+
+/**
+ * A row in an InsetGroup says while it is the selected split row, so the
+ * group clears the separators touching it (as iOS hides a selected cell's).
+ * Rows outside a group report to no one.
+ */
+export const RowSelectedContext = createContext<
+  ((selected: boolean) => void) | null
+>(null);
+export function useRowSelected(selected: boolean) {
+  const report = useContext(RowSelectedContext);
+  // Before paint, so a row selected on mount never shows its rules first.
+  useLayoutEffect(() => {
+    if (!report || !selected) return;
+    report(true);
+    return () => report(false);
+  }, [report, selected]);
+}
+
+/**
+ * The horizontal margin of the column a row sits in, so a split row's
+ * selected fill keeps the same gap to the column's edges in every list:
+ * Screen's column (16pt in a pane narrower than 414pt, as Search's is) or a
+ * list's own `layout.screenMargin` (Bills, the directories), the default.
+ */
+export const ColumnMarginContext = createContext<number>(layout.screenMargin);
 
 // The group keeps its text inset; rows bleed their interactive surface to the cell edges.
 export const RowCellInsetContext = createContext(0);

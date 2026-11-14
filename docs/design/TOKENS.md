@@ -75,7 +75,7 @@ Host CoreText word-width fixtures for the ten dense screen types are in `text-fi
 | text | `--link` | `link` | #142A43 | #9CB9DB |  | Semantic link tone, always the single navy tint. |
 | brand | `--navy` | `navy` | #142A43 | #9CB9DB |  | Structure and the one primary action per view. |
 | brand | `--navy-raised` | `navyRaised` | #1D3A5C | #B9CDE6 |  | Pressed and hover on navy. |
-| brand | `--navy-wash` | `navyWash` | #E4E6E7 | #25303D |  | Secondary button fill; the people accent's wash. |
+| brand | `--navy-wash` | `navyWash` | #E4E6E7 | #25303D | #D3D9DF / #2E3C4C | Secondary button fill; the people accent's wash; the selected row in a split list. |
 | brand | `--bronze` | `bronze` | #A0761B | #A87D2A |  | Brand artwork only: mark, icon and launch screen. |
 | brand | `--today-dot-bronze` | `todayDotBronze` | #C08F2C | #C08F2C |  | Today's decorative dot map highlight, at 76 percent opacity over a navy base at 23 percent. |
 | brand | `--bronze-ink` | `bronzeInk` | #8A5A12 | #D9A84A | #5C4318 / #EBC57F | Brand artwork only: mark, icon and launch screen. |

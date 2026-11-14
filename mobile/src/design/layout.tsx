@@ -59,8 +59,10 @@ import { useRefreshCommand } from './keyboard';
 import { RowLink } from './row-link';
 import { SourceSection } from './source';
 import {
+  ColumnMarginContext,
   RowCellInsetContext,
   RowInsetContext,
+  RowSelectedContext,
   SurfaceContext,
 } from './row-padding';
 import { usePaneBar, useSplitPane } from './split';
@@ -523,7 +525,11 @@ export function Screen({
                           }
                         >
                           <ScreenGutterContext.Provider value={gutter}>
-                            {anchorHeadings(withOffline(children, offline))}
+                            <ColumnMarginContext.Provider
+                              value={content.paddingHorizontal}
+                            >
+                              {anchorHeadings(withOffline(children, offline))}
+                            </ColumnMarginContext.Provider>
                           </ScreenGutterContext.Provider>
                         </ScreenSectionGapContext.Provider>
                       </View>
@@ -667,7 +673,9 @@ export function KeyboardStableScreen({
         >
           <RegionProvider value={inner}>
             {bar}
-            {children}
+            <ColumnMarginContext.Provider value={content.paddingHorizontal}>
+              {children}
+            </ColumnMarginContext.Provider>
           </RegionProvider>
         </ScrollView>
       </SidebarSafe>
@@ -841,31 +849,46 @@ export function Section({
   );
 }
 const InGroup = createContext(false);
+type RowKey = string | number;
 function InsetRow({
+  id,
   children,
   separator,
+  clear,
   grouped,
+  onSelected,
 }: {
+  id: RowKey;
   children: ReactNode;
   separator: boolean;
+  /** The rule touches the selected split row: keep its space, draw nothing. */
+  clear: boolean;
   grouped: boolean;
+  onSelected: (id: RowKey, selected: boolean) => void;
 }) {
   const [inset, setInset] = useState(16);
+  const report = useCallback(
+    (selected: boolean) => onSelected(id, selected),
+    [id, onSelected],
+  );
   return (
     <View>
       {separator ? (
         <View
+          testID="inset-group-separator"
           style={{
             marginLeft: grouped ? inset : 0,
             height: hairline,
-            backgroundColor: colors.dividerSubtle,
+            backgroundColor: clear ? 'transparent' : colors.dividerSubtle,
           }}
         />
       ) : null}
       <View style={grouped ? { paddingHorizontal: 16 } : undefined}>
         <RowInsetContext.Provider value={setInset}>
           <RowCellInsetContext.Provider value={grouped ? 16 : 0}>
-            {children}
+            <RowSelectedContext.Provider value={report}>
+              {children}
+            </RowSelectedContext.Provider>
           </RowCellInsetContext.Provider>
         </RowInsetContext.Provider>
       </View>
@@ -888,6 +911,25 @@ export function InsetGroup({
   const inCard = useInCard();
   const surface = useContext(SurfaceContext);
   const rows = Children.toArray(children);
+  const keys = rows.map((row, index) =>
+    isValidElement(row) ? (row.key ?? index) : index,
+  );
+  // The selected split row's key (rows report it through useRowSelected):
+  // the rules above and below it clear, as iOS draws a selected cell.
+  const [selected, setSelected] = useState<ReadonlySet<RowKey>>(
+    () => new Set(),
+  );
+  const onSelected = useCallback(
+    (id: RowKey, on: boolean) =>
+      setSelected((current) => {
+        if (current.has(id) === on) return current;
+        const next = new Set(current);
+        if (on) next.add(id);
+        else next.delete(id);
+        return next;
+      }),
+    [],
+  );
   const grouped = surface === 'sunken' && designFlags.groupedSurfaces;
   if (__DEV__ && (nested || inCard))
     console.warn(
@@ -911,9 +953,15 @@ export function InsetGroup({
           <SurfaceContext.Provider value={grouped ? 'raised' : surface}>
             {rows.map((row, index) => (
               <InsetRow
-                key={isValidElement(row) ? (row.key ?? index) : index}
+                key={keys[index]}
+                id={keys[index]!}
                 separator={index > 0}
+                clear={
+                  selected.has(keys[index]!) ||
+                  (index > 0 && selected.has(keys[index - 1]!))
+                }
                 grouped={grouped}
+                onSelected={onSelected}
               >
                 {row}
               </InsetRow>

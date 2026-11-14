@@ -1,10 +1,10 @@
 import type { Roster, RosterPerson, Slugs } from '../../api/catalog-decoders';
 import type { EditionView } from '../../api/selectors';
-import { counted } from '../../design/format';
 import { partyIdentity } from '../../design/party';
 import type { SourceDetails } from '../../design/source';
 import { sponsorKey, sponsorSlug } from '../bills/sponsors';
 import { editionPerson, editionSources } from '../edition/model';
+import { featuredHook } from './featured-hook';
 import { daysBetween } from './rules';
 
 export const FEATURED_PEOPLE_RULE =
@@ -89,11 +89,13 @@ export function featuredPeople(
     const seat = person.representation!.find(
       (seat) => seat.jurisdiction === 'federal',
     )!;
-    const place = [seat.electorate, seat.state].filter(Boolean).join(', ');
     const paragraph =
-      person.speeches === undefined
-        ? 'Explore their parliamentary record.'
-        : `${person.name}: ${counted(person.speeches, 'speech', 'speeches')} in the OPAX record.`;
+      featuredHook({
+        chamber: seat.chamber,
+        electorate: seat.electorate,
+        state: seat.state,
+        speeches: person.speeches,
+      }) || 'Explore their parliamentary record.';
     result.push({
       slug,
       group,
@@ -107,7 +109,7 @@ export function featuredPeople(
         machineWritten: null,
         sourceRows: [],
         facts: {
-          kicker: ['Parliamentarian', place].filter(Boolean).join(' · '),
+          kicker: 'Parliamentarian',
           line: person.party_now?.trim() || person.party!.trim(),
           figures: [],
           bars: null,
