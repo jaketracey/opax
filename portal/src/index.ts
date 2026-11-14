@@ -129,6 +129,7 @@ import { recordResearchAnswer, recordResearchComparison, recordResearchFailure }
 import { cachedKbLookup } from './kb-cache'
 import { ANSWER_WRITING_VERSION } from './research-writing'
 import { cacheableAskAnswer, cacheableRoutedAnswer, calculatedPayAnswer, withAnswerLanguage, withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
+import { researchSentenceStream, interruptedResearchAnswer } from './research-sentence-stream'
 import { groundAnswerPayload } from './research-grounding'
 import { researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
 import { ResearchError, type ResearchPayload } from './research-types'
@@ -6968,10 +6969,12 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
         namedScope=await resolveNamedScope(question,agenticToolDeps(env,budget.signal),Math.min(4_000,budget.remaining),agenticFilters(input))
       }
     }
+    let releasedResearchPrefix=''
+    let releasedResearchAnswer:import('./research-types').QualitativeAnswer|undefined
     const finish = (run: AgenticPayload) => {
       const payload=agenticAskPayload(run, question)
       // Source rows are linked last: grounding reads the rows as evidence and re-derives which are cited.
-      const finalPayload=linkAskSources(withTranscriptNote(loopRoute&&!calculatedPayAnswer(payload)?groundAnswerPayload(payload,question):payload),run.source_links,SITE_ORIGIN)
+      const finalPayload=linkAskSources(withTranscriptNote(loopRoute&&!calculatedPayAnswer(payload)?groundAnswerPayload(payload,question,releasedResearchPrefix):payload),run.source_links,SITE_ORIGIN)
       const response = json(finalPayload)
       // An answer with no citation at all is not kept for a week, and a refusal or limitation not at all: the next ask may do better (as cacheableAnswer).
       if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && !shortenedCaller(caller) && run.qualitative?.answer_status !== 'uncited' && cacheableRoutedAnswer(finalPayload, loopRoute)) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
@@ -6995,25 +6998,52 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
           if (gone) throw new DOMException('Reader disconnected', 'AbortError')
           controller.enqueue(encoder.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`))
         }
+        let sentenceLane=false
+        let closeSentences=()=>{}
+        const enableSentences=async()=>{if(!sentenceLane){sentenceLane=true;await send('research_sentences',{})}}
+        if(loopRoute){
+          const sentences=researchSentenceStream(question,async(text,checked)=>{await enableSentences();await send('research_sentence',{text});releasedResearchPrefix+=text;releasedResearchAnswer=checked})
+          send.answer=sentences.preview
+          closeSentences=sentences.close
+        }
         ctx.waitUntil((async () => {
           try {
             await send('status', { phase: 'searching' })
             const run = await executeAgentic(input, env, ctx, send, budget.signal, budget.remaining, namedScope, trackRun)
+            closeSentences()
             if (gone || request.signal.aborted) return
+            if(releasedResearchPrefix)budget.signal.throwIfAborted()
             if (!loopRoute || run.answered && !run.over_budget) budget.signal.throwIfAborted()
-            if (electorateData || run.answered && !run.over_budget) { const response = finish(run); await send('done', await response.json()) }
+            if (electorateData || run.answered && !run.over_budget) { const response = finish(run); if(loopRoute)await enableSentences(); await send('done', await response.json()) }
             else {
               const response = await routedFallback(run.research)
               if ((response.headers.get('content-type') ?? '').includes('text/event-stream')) {
+                if(releasedResearchPrefix){
+                  // Planner deltas remain held by the public checker. A failed fallback must complete
+                  // the checked loop checkpoint, rather than forward an error beside that text.
+                  const wire=await budget.run(()=>response.text())
+                  if(/^event: error\r?$/m.test(wire)||!/^event: done\r?$/m.test(wire))throw Error('Ask fallback stream failed')
+                  if(!gone)controller.enqueue(encoder.encode(wire))
+                  return
+                }
                 const reader = response.body!.getReader()
                 try { while (true) { const { value, done } = await budget.run(() => reader.read()); if (done || gone) break; controller.enqueue(value!) } }
                 finally { await reader.cancel().catch(() => {}); reader.releaseLock() }
               } else if (response.ok) await send('done', await budget.run(() => response.json()))
+              else if(releasedResearchPrefix)throw Error('Ask fallback failed')
               else await send('error', { error: 'The record is temporarily unavailable. Please try again.', final: true })
             }
           } catch {
-            if (!gone && !request.signal.aborted) controller.enqueue(encoder.encode('event: error\ndata: {"error":"The answer took too long. Please try again.","final":true}\n\n'))
-          } finally { budget.cancel(); if (!gone) controller.close() }
+            closeSentences()
+            if (!gone && !request.signal.aborted){
+              if(releasedResearchPrefix&&releasedResearchAnswer){
+                const partial=interruptedResearchAnswer(releasedResearchAnswer,releasedResearchPrefix,budget.signal.aborted)
+                const done={...partial,followups:[],research:lastResearch??{mode:'loop',rounds:0,trail:[],sources:[]}}
+                console.log(JSON.stringify({kind:'research_loop_stream_cut_short',count:1,reason:budget.signal.aborted?'deadline':'fallback_error',preview_chars:releasedResearchPrefix.length}))
+                controller.enqueue(encoder.encode(`event: done\ndata: ${JSON.stringify(done)}\n\n`))
+              }else controller.enqueue(encoder.encode('event: error\ndata: {"error":"The answer took too long. Please try again.","final":true}\n\n'))
+            }
+          } finally { closeSentences(); budget.cancel(); if (!gone) controller.close() }
         })())
       },
       cancel() { gone = true; budget.cancel() },

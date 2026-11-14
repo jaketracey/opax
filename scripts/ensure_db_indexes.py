@@ -19,6 +19,9 @@ Each index below answers one family of them from the index alone:
                                               export_bills.py's PartyTimeline (every federal speech's
                                               person, date and party, grouped and ordered), answered
                                               in order from the index instead of a full scan and sort
+  idx_speeches_coverage     (chamber, date, hearing_type)
+                                              read-only coverage_watchdog.py plenary day counts; covering,
+                                              so no speech bodies are read during the nightly census
   (arag_sync's dedupe pass and the loaders also use idx_speeches_date; see parli/ingest/dedup.py)
 
 Building each is one full scan plus a sort (about 4 minutes each on gp3, once) and adds tens of MB. They
@@ -37,6 +40,7 @@ INDEXES = [
     ("speeches", "idx_speeches_date", "date", None),
     ("speeches", "idx_speeches_hearing_id", "hearing_id", "hearing_id IS NOT NULL"),
     ("speeches", "idx_speeches_party_timeline", "state, person_id, date, party_canonical", None),
+    ("speeches", "idx_speeches_coverage", "chamber, date, hearing_type", None),
 ]
 
 

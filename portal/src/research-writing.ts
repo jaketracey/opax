@@ -20,6 +20,7 @@ import {inferPeriod} from './ask-period'
 import { transcriptTurns, shortTranscriptQuote, TRANSCRIPT_LABEL, TRANSCRIPT_NOTE, type TranscriptTurn } from './transcript-answer'
 import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
+import {researchSentences} from './research-sentences'
 
 export const ANSWER_WRITING_VERSION = 'written-answer-30-clause-who'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
@@ -184,7 +185,7 @@ function assemble(lines: WrittenSentence[], input: WritingInput, preserveCoverag
   }
   return distinctSummary(plainAnswerPayload({ answer, answer_decision:lines.length&&lines.every(l=>l.coverage)?'limitation' as const:'answer' as const, ...(notes.length?{coverage:{note:notes.join(' ')}}:{}), ...(input.constraints?{answer_scope:input.constraints}:{}), citations, sources:[...sources.values()] }))
 }
-const finish = (s: string) => /[.!?]$/.test(s) ? s : s+'.'
+const finish = (s: string) => /[.!?]["”’')\]]*$/.test(s) ? s : s+'.'
 export const payRate = (s: string) => /^(.+?): (\$\d(?:[\d,]*\d)?(?:\.\d+)?) a year as (.+?), (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2});/.exec(s)
 const day = (s: string) => new Date(s+'T00:00:00Z').toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})
 function coverageApplies(text:string,input:WritingInput):boolean {
@@ -605,9 +606,9 @@ export function verifyWrittenAnswer(raw: unknown, input: WritingInput): Qualitat
     const metadata=(f:WritingFact)=>f.metadata||/^(?:Period|Financial years):/i.test(f.text)
     const isLimit=line.coverage===true || facts.length>0 && facts.every(f=>f.coverage&&!metadata(f))
     if (isLimit && coverage) continue
-    const text=isLimit?clean(line.text).split(/(?<=[.!?])\s+/)[0]:clean(line.text)
+    const text=isLimit?researchSentences(clean(line.text))[0]?.text??'':clean(line.text)
     if (isLimit) coverage=true
-    for (const sentence of text.split(/(?<=[.!?])\s+/)) {
+    for (const {text:sentence} of researchSentences(text)) {
       // A sentence repeating the same figures for the same owners as one already written adds nothing.
       const provenance=[...new Set(facts.map(f=>statementSource(f.source)))].sort().join('|')
       const k=provenance+'|'+key(sentence), identities=facts.flatMap(f=>(f.atoms??atomsFromText(f.text,f.evidenceId??f.source.resource,f.source)).filter(a=>tokens(sentence).includes(a.value)&&(!a.entity||sentence.includes(a.entity))).map(a=>provenance+'|'+writingClaimIdentity(a,f)))

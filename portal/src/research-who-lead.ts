@@ -45,6 +45,48 @@ function actors(text:string,allowColon=false,context=''):string[] {
   return office?[office]:[]
 }
 
+/** The lead a who-answer takes when no cited source names a person or office. */
+export const UNNAMED_WHO_LEAD='The cited sources do not name a person or office as responsible.'
+const evidenceOf=(s:Source)=>[s.snippet,s.title].filter(Boolean).join('\n')
+const honorific=/^(?:Mr|Ms|Mrs|Dr|Sir)\.?\s/
+
+/** What any answer drawn from these sources could cite for a who lead: whether no source names anyone, whether any
+ * source names a subject other than Cabinet, and whether a record is available. Each source is read as its texts alone
+ * and joined, as answer sources join a snippet, its facts and a title (leadWithWho reads them as one evidence string). */
+export type WhoBasis={unnamed:boolean;subjects:boolean;record:boolean}
+export function whoBasis(sources:{kind?:string;coverage?:boolean;texts:(string|undefined)[]}[]):WhoBasis {
+  let named=false,subjects=false,record=false
+  for(const source of sources){
+    if(source.kind==='record'&&!source.coverage)record=true
+    const texts=source.texts.filter((text):text is string=>!!text)
+    for(const text of new Set([...texts,texts.join('\n')])){
+      const found=[...actors(text,true),...actors(text),...sentenceParts(text).flatMap(p=>[...actors(p.text,true),...actors(p.text)])]
+      if(found.length)named=true
+      if(found.some(actor=>actor!=='Cabinet'))subjects=true
+    }
+  }
+  return {unnamed:!named,subjects,record}
+}
+
+/** A checked prefix whose first sentence leadWithWho will keep first, unchanged, however the answer continues: a
+ * supported subject at the highest rank any later sentence could reach from the available sources (a record before a
+ * speech, then finding language and a named subject other than Cabinet). Equal ranks keep their order. A short name
+ * with a title stays held, because later answer text can resolve it to a different member. */
+export function settledWhoLead(payload:Record<string,unknown>,question:string,basis:WhoBasis={unnamed:false,subjects:true,record:true}):boolean {
+  if(typeof payload.answer!=='string'||!ACCOUNTABILITY_QUESTION.test(question)||basis.unnamed)return false
+  const answer=payload.answer,citations=(payload.citations??{}) as Citations
+  const first=sentenceParts(answer)[0]
+  if(!first||first.at!==0)return false
+  const end=cp(first.text),sources=((Array.isArray(payload.sources)?payload.sources:[]) as Source[])
+    .filter(s=>!s.coverage&&Object.entries(citations).some(([id,r])=>(id===s.resource||id.startsWith(s.resource+'/'))&&r.some(([a,b])=>a<end&&b>0)))
+  const named=actors(first.text,true)
+  if(!named.length||named.some(actor=>honorific.test(actor)))return false
+  const held=new Set(sources.flatMap(s=>actors(evidenceOf(s),true,answer)))
+  if(!named.map(value=>actorName(value,answer,answer)).every(actor=>held.has(actor)))return false
+  if(basis.record&&!sources.some(s=>s.kind==='record')||!finding(first.text)||basis.subjects&&!named.some(actor=>actor!=='Cabinet'))return false
+  return leadWithWho(payload,question).answer===answer
+}
+
 /** A who-answer names the subjects of the cited finding, never just the person reporting it.
  * Use source language for new material; this is an ordering repair, not a liability inference. */
 export function leadWithWho<T extends Record<string,unknown>>(payload:T,question:string):T {
@@ -88,7 +130,7 @@ export function leadWithWho<T extends Record<string,unknown>>(payload:T,question
   }
   // Names in unsuitable source prose do not justify a claim that no source names anyone.
   if(selected.some(s=>actors(evidence(s),true,answer).length))return leadWithAuthority(payload,question)
-  const missing='The cited sources do not name a person or office as responsible.'
+  const missing=UNNAMED_WHO_LEAD
   const existing=parts.find(p=>p.text===missing)
   if(existing)return moveFirst(payload,existing.a,existing.b,missing)
   return prepend(leadWithAuthority(payload,question),missing,[])

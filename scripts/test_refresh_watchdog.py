@@ -11,6 +11,13 @@ class Watchdog(unittest.TestCase):
         self.corpus = {'version': '2026-10-19', 'refresh': {'checked_at': '2026-10-19T00:00:00Z'}}
         self.status = {'status': 'ok', 'finished': '2026-10-19T00:00:00Z', 'warnings': [], 'paused_sources': {}}
 
+    def test_coverage_alerts_page_while_the_refresh_status_stays_ok(self):
+        self.status['coverage_alerts'] = ['coverage: coverage regression: chamber-year senate/2026 rows 300 -> 0']
+        problems, _, _ = evaluate(self.corpus, self.status, self.now)
+        self.assertEqual(problems, self.status['coverage_alerts'])
+        self.status['coverage_alerts'] = 'not a list'
+        self.assertEqual(len(evaluate(self.corpus, self.status, self.now)[0]), 1)
+
     def test_current_delivery(self):
         problems, _, warnings = evaluate(self.corpus, self.status, self.now)
         self.assertEqual((problems, warnings), ([], []))

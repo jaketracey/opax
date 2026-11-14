@@ -106,21 +106,29 @@ export function verifyResearchPoints(points:unknown,passages:Map<string,Passage>
       isPlaceNameMention(claim,offset,offset+match.length) ? match : !before ? full : TITLE.test(before.trim()) ? full : match)
   }
 
- const seen=new Set<string>(),kept:AnswerPoint[]=[]
+ const seen=new Set<string>(),kept:AnswerPoint[]=[],references=new Map<string,Set<string>>()
  for(const point of points){
   if(typeof point?.claim!=='string')continue
   const passage=passages.get(point.id),evidence=passage?.text??''
   const claim=repairQuotes(fullName(point.claim,passage?.speaker),evidence,label=>{tally.repairs[label]=(tally.repairs[label]??0)+1})
   const key=normal(claim).toLowerCase()
-  // A repeated point keeps the copy whose passage was retrieved, so the answer keeps its citation.
-  if(seen.has(key)){const at=kept.findIndex(k=>normal(k.claim).toLowerCase()===key);if(passage&&at>=0&&!passages.get(kept[at].id??'')){kept[at]={...point,claim};tally.points_kept++;tally.points_uncited--}continue}
+  if(passage){const ids=references.get(key)??new Set<string>();ids.add(point.id);references.set(key,ids)}
+  // Citation upgrades preserve the first copy's wording, which may already be on screen.
+  if(seen.has(key)){const at=kept.findIndex(k=>normal(k.claim).toLowerCase()===key);if(passage&&at>=0&&!passages.get(kept[at].id??'')){kept[at]={...point,claim:kept[at].claim};tally.points_kept++;tally.points_uncited--}continue}
   seen.add(key)
   kept.push({...point,claim})
   if(passage)tally.points_kept++;else tally.points_uncited++
  }
  tally.points_in+=points.length;tally.mode=tally.points_kept?'points':'uncited'
  if(!kept.length)return null
- return {...verifyResearchAnswer(pointsDraft(kept),passages,question,named,positionQuery,roster,why),dropped:points.length-kept.length}
+ const draft=pointsDraft(kept)
+ let offset=0
+ for(const point of kept){
+  const start=offset+2,end=start+Array.from(point.claim).length
+  for(const id of references.get(normal(point.claim).toLowerCase())??[])if(id!==point.id)draft.citations.push({id,quote:'',start,end})
+  offset=end+1
+ }
+ return {...verifyResearchAnswer(draft,passages,question,named,positionQuery,roster,why),dropped:points.length-kept.length}
 }
 
 /** With no model call left (a time, token or spend stop), the passages research already holds answer in their own

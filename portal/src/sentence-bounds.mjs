@@ -8,7 +8,7 @@ const ABBREVIATION = /(?:^|[^\p{L}])(?:mr|mrs|ms|dr|prof|hon|sen|st|e\.g|i\.e|et
 const INITIAL = /(?:^|[^\p{L}])\p{Lu}(?:\.\p{Lu})*$/u
 
 /** True when the [.!?] at `i` ends a sentence. */
-export function sentenceEndAt(text, i) {
+export function sentenceEndAt(text, i, numericStart = false) {
   const c = text[i]
   if (c !== '.' && c !== '!' && c !== '?') return false
   // Closing quotes and brackets belong to the sentence they close.
@@ -16,14 +16,15 @@ export function sentenceEndAt(text, i) {
   while (j < text.length && /["”’')\]]/.test(text[j])) j++
   if (j < text.length && !/\s/.test(text[j])) return false
   while (j < text.length && /\s/.test(text[j])) j++
-  if (j < text.length && !/[\p{Lu}"“‘']/u.test(text[j])) return false
+  if (j < text.length && !/[\p{Lu}"“‘']/u.test(text[j]) && !(numericStart && /[$\d]/.test(text[j]))) return false
   if (c !== '.') return true
   const before = text.slice(Math.max(0, i - 12), i)
+  if (/\d/.test(text[j] ?? '') && /(?:^|[^\p{L}])(?:no|s|cl)$/iu.test(before)) return false
   return !ABBREVIATION.test(before) && !INITIAL.test(before)
 }
 
 /** Sentences of a text with their offsets; whitespace between sentences is dropped. */
-export function sentenceSpans(value) {
+export function sentenceSpans(value, numericStart = false) {
   const text = String(value ?? ''), out = []
   let start = 0
   const push = end => {
@@ -32,7 +33,7 @@ export function sentenceSpans(value) {
     start = end
   }
   for (let i = 0; i < text.length; i++) {
-    if (!sentenceEndAt(text, i)) continue
+    if (!sentenceEndAt(text, i, numericStart)) continue
     let end = i + 1
     while (end < text.length && /["”’')\]]/.test(text[end])) end++
     push(end)
