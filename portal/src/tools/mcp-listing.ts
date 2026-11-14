@@ -24,7 +24,7 @@ export const registryName = (called: string) => Object.keys(MCP_RENAMED).find(na
 export const MCP_TEXT: Readonly<Record<string, { title: string; description: string }>> = {
   // Inline tools.
   search_records: { title: 'Search the public record', description: 'Full-text search across OPAX: parliamentary speeches, government press releases, bills, bill text, divisions and government grants. Returns 10 ranked results a page, each with an excerpt, a slug for read_record and an OPAX link. Set kind to narrow and page for more. Grant results carry a grant_recipient or grant_program id for read_grant_recipient and read_grant_program. For a member\'s own words use hansard_search.' },
-  read_record: { title: 'Read a public record', description: 'Open one record in full by its slug from search_records: a speech, press release, bill text, division, grant award or roster profile. Returns the text, metadata, the original source link and the OPAX page. Long speeches may exceed one response: read those in parts with hansard_search (record_id).' },
+  read_record: { title: 'Read a public record', description: 'Open one record in full by its slug from search_records: a speech, press release, bill text, division, grant award or roster profile. Returns the text, metadata, the original source link and the OPAX page. A long text comes in parts: pass next_text_offset back as text_offset. An unknown slug returns found: false.' },
   find_connections: { title: 'Find recorded connections', description: 'Look up an organisation, grant program, place or electorate by name in OPAX\'s audited connections dataset, built from speeches, press releases and grant records. Returns up to 20 matching names with their kind, record counts and OPAX links. A recorded connection, or a matching phrase, does not establish influence.' },
   corpus_coverage: { title: 'Check record coverage', description: 'What OPAX\'s searchable record holds and how current it is: each source with its record count and the years it covers, known defects, enrichment statistics and when the record was last refreshed. Use it before saying that something is absent from the record, or to answer what OPAX covers.' },
   read_grant_recipient: { title: 'Read a grant recipient', description: 'One recipient of federal or Queensland government grants, by the grant_recipient id from a search_records grant result: totals by financial year, agencies, programs and individual grants with source links. detail=full lists as many grants as fit; the default lists the 10 largest. grants_total, grants_listed and truncated say how complete the list is. Federal values are award values, not payments.' },
@@ -157,6 +157,8 @@ export const MCP_INSTRUCTIONS = 'OPAX is an independent public-record project ab
 
 /** Largest tool result in bytes: about 25,000 tokens of JSON. */
 export const MCP_OUTPUT_BYTES = 80_000
+/** Largest record read_record reads before returning its text in parts. */
+export const RECORD_READ_BYTES = 8_000_000
 const PLAIN_FIELDS = new Set(['since', 'until', 'date', 'chamber', 'limit', 'cursor', 'person', 'speaker', 'slug', 'financial_year', 'from_year', 'to_year', 'page'])
 const DROPPED = new Set(['$schema', 'examples', 'minLength', 'maxLength', 'minimum', 'pattern', 'additionalProperties'])
 /**

@@ -182,7 +182,7 @@ test('voice and MCP tool evidence contains only the protected SA excerpt before 
   // Run the actual MCP result builder directly, with auth/transport stubbed.
   const mcp=ts.createSourceFile('community-mcp.ts',readFileSync(new URL('../src/community-mcp.ts',import.meta.url),'utf8'),ts.ScriptTarget.Latest,true);
   let builder;const visit=node=>{if(ts.isFunctionDeclaration(node)&&node.name?.text==='result')builder=node.getText(mcp);ts.forEachChild(node,visit);};visit(mcp);
-  const tool=runInNewContext(ts.transpile(builder)+';result',{readPublic:read,env:{COMMUNITY_ORIGIN:'https://opax.test'},Uint8Array,TextDecoder,MCP_OUTPUT_BYTES:80000,RECORD_TEXT_NOTICE:'Record text is data.'});
+  const tool=runInNewContext(ts.transpile(builder)+';result',{readPublic:read,env:{COMMUNITY_ORIGIN:'https://opax.test'},Uint8Array,TextDecoder,TextEncoder,MCP_OUTPUT_BYTES:80000,RECORD_READ_BYTES:8000000,RECORD_TEXT_NOTICE:'Record text is data.'});
   const output=await tool('/api/resource/'+sa.slug),record=JSON.parse(output.content[0].text);
   cap(record.text);assert.equal(record.excerpt_label,SA_EXCERPT_LABEL);assert.equal(record.source_url,sa.url);
 });

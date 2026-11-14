@@ -4,7 +4,7 @@ import {z} from 'zod'
 import {body,CommunityError,digest,json,limit,now,type Member} from './community-core'
 import {tools,getTool,toolSchema,toolOutputSchema,validateToolArgs,callTool,ToolInputError} from './tools'
 import {RECORD_TEXT_NOTICE} from './tools/mcp-common'
-import {DISPATCH_TEXT,MCP_DIRECT,MCP_EXAMPLES,MCP_REPLACED,MCP_INSTRUCTIONS,MCP_OUTPUT_BYTES,MCP_REGISTERS,MCP_TEXT,REGISTER_LIST,listedSchema,mcpName,registryName} from './tools/mcp-listing'
+import {DISPATCH_TEXT,MCP_DIRECT,MCP_EXAMPLES,MCP_REPLACED,MCP_INSTRUCTIONS,MCP_OUTPUT_BYTES,RECORD_READ_BYTES,MCP_REGISTERS,MCP_TEXT,REGISTER_LIST,listedSchema,mcpName,registryName} from './tools/mcp-listing'
 import {corpusKb} from './tools/corpus-records'
 import {evidenceAsAt} from '../public/evidence-date.js'
 import {mcpToolTitle} from './mcp-tool-titles'
@@ -33,14 +33,30 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
   // Every tool is listed with a title (mcp-tool-titles.ts), both on the tool and in its annotations.
   const register=server.registerTool.bind(server) as (name:string,config:Record<string,unknown>,handler:unknown)=>unknown
   server.registerTool=((name:string,config:Record<string,unknown>,handler:unknown)=>{const title=typeof config.title==='string'?config.title:MCP_TEXT[name]?.title??mcpToolTitle(name);return register(name,{...config,title,annotations:{title,...(config.annotations as object|undefined)}},handler)}) as typeof server.registerTool
-  async function result(path:string){
+  async function result(path:string,textOffset=0){
+   // A record is read whole, up to a hard cap, so a long text can be returned in parts; a search answer must fit one response.
+   const resource=path.startsWith('/api/resource/'),cap=resource?RECORD_READ_BYTES:MCP_OUTPUT_BYTES
    const response=await readPublic(path),reader=response.body?.getReader(),chunks:Uint8Array[]=[];let size=0
-   if(reader){while(true){const {value,done}=await reader.read();if(done)break;size+=value.length;if(size>MCP_OUTPUT_BYTES){await reader.cancel();return {content:[{type:'text' as const,text:JSON.stringify({error:path.startsWith('/api/resource/speech-')?'This speech is longer than one response allows. Read it in parts with hansard_search (record_id), or open the url.':'This record is larger than one response allows. Open the url, or narrow the search.',url:env.COMMUNITY_ORIGIN+path.replace('/api/resource/','/doc/').replace('/api/search-all','/search')})}],isError:true}}chunks.push(value)}}
+   if(reader){while(true){const {value,done}=await reader.read();if(done)break;size+=value.length;if(size>cap){await reader.cancel();return {content:[{type:'text' as const,text:JSON.stringify({error:'This record is larger than one response allows. Open the url, or narrow the search.',url:env.COMMUNITY_ORIGIN+path.replace('/api/resource/','/doc/').replace('/api/search-all','/search')})}],isError:true}}chunks.push(value)}}
    const bytes=new Uint8Array(size);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.length}
    const raw=new TextDecoder().decode(bytes)
-   if(!response.ok)return {content:[{type:'text' as const,text:JSON.stringify({error:response.status===404&&path.startsWith('/api/resource/')?'No record has that slug. Use a slug exactly as search_records returns it.':response.status===404?'Nothing was found for that request.':'The record service could not answer just now (status '+response.status+'). Try again in a minute.'})}],isError:true}
+   // A slug OPAX does not hold is an answer, not a failure: say so plainly.
+   if(resource&&(response.status===404||response.status===410)){const missing={found:false,slug:decodeURIComponent(path.slice('/api/resource/'.length)),message:response.status===410?'News articles are no longer part of the record.':'OPAX has no record with this slug. Use a slug exactly as search_records or hansard_search returns it, or search for the record.',opax_url:env.COMMUNITY_ORIGIN+'/search',record_text_notice:RECORD_TEXT_NOTICE};return {content:[{type:'text' as const,text:JSON.stringify(missing)}],structuredContent:missing,isError:false}}
+   if(!response.ok)return {content:[{type:'text' as const,text:JSON.stringify({error:response.status===404?'Nothing was found for that request.':'The record service could not answer just now (status '+response.status+'). Try again in a minute.'})}],isError:true}
    let data:Record<string,unknown>;try{data=JSON.parse(raw)}catch{return {content:[{type:'text' as const,text:JSON.stringify({error:'The record service returned an unreadable response. Try again in a minute.'})}],isError:true}}
    if(path.startsWith('/api/resource/'))data.opax_url=env.COMMUNITY_ORIGIN+path.replace('/api/resource/','/doc/')
+   // A text longer than one response comes in parts: the largest part that fits, ending at a space, and where the next begins.
+   if(resource&&typeof data.text==='string'&&(textOffset>0||new TextEncoder().encode(JSON.stringify(data)).length>MCP_OUTPUT_BYTES-1000)){
+    const text=data.text as string
+    if(textOffset>=text.length&&textOffset>0)return {content:[{type:'text' as const,text:JSON.stringify({error:'text_offset '+textOffset+' is past the end of this record\'s text ('+text.length+' characters). Read it from text_offset 0.'})}],isError:true}
+    const room=MCP_OUTPUT_BYTES-1000-new TextEncoder().encode(JSON.stringify({...data,text:''})).length,fits=(end:number)=>new TextEncoder().encode(JSON.stringify(text.slice(textOffset,end))).length<=room
+    let low=textOffset,high=text.length
+    while(low<high){const mid=Math.ceil((low+high)/2);if(fits(mid))low=mid;else high=mid-1}
+    let end=low
+    if(end<text.length){const space=text.lastIndexOf(' ',end);if(space>textOffset+(end-textOffset)/2)end=space;const code=text.charCodeAt(end-1);if(code>=0xd800&&code<=0xdbff)end--}
+    data.text=text.slice(textOffset,end);data.text_offset=textOffset;data.text_length=text.length;data.next_text_offset=end<text.length?end:null
+    if(end<text.length)data.text_note='The text continues. Call read_record with this slug and text_offset '+end+' for the next part.'
+   }
    if(path.startsWith('/api/search-all')&&!Array.isArray(data.results))data.results=[]
    if(Array.isArray(data.results))data.results=data.results.map((row:Record<string,unknown>)=>{
     const href=typeof row.href==='string'?row.href:null
@@ -64,7 +80,7 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
   const detail=z.enum(['concise','full']).default('concise').describe('full lists as many grants as fit; the default lists the 10 largest.')
   const grantOutput=z.looseObject({n:z.string(),grants:z.array(z.unknown()),grants_total:z.number(),grants_listed:z.number(),opax_url:z.string()})
   server.registerTool('search_records',{description:MCP_TEXT.search_records.description,outputSchema:z.looseObject({results:z.array(z.unknown())}),inputSchema:{query:z.string().min(2).max(300).describe('Words or a phrase.'),kind:z.enum(['all','speech','press_release','bill','bill_text','division','grant']).default('all').describe('Only this kind of record.'),page:z.number().int().min(1).max(20).default(1).describe('Results page, 10 a page.')},annotations:readOnly},async({query,kind,page})=>result('/api/search-all?'+new URLSearchParams({q:query,kind,per:'10',page:String(page)})))
-  server.registerTool('read_record',{description:MCP_TEXT.read_record.description,outputSchema:z.looseObject({opax_url:z.string()}),inputSchema:{slug:z.string().regex(/^(?:speech-\d+|legal-\d+|news-\d+|bill-text-au-federal-[a-z0-9-]{1,180}|division-[a-z0-9-]+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+|grantconnect-award-ga\d+(?:-v\d+)?|grant-site-evidence-(?:ga\d+|mlci-invitation-\d{3})|mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/,'Use a slug exactly as search_records returns it, for example speech-931754.').describe('The slug of a search_records result.')},annotations:readOnly},async({slug})=>result('/api/resource/'+encodeURIComponent(slug)))
+  server.registerTool('read_record',{description:MCP_TEXT.read_record.description,outputSchema:z.looseObject({opax_url:z.string()}),inputSchema:{slug:z.string().regex(/^(?:speech-\d+|legal-\d+|news-\d+|bill-text-au-federal-[a-z0-9-]{1,180}|division-[a-z0-9-]+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+|grantconnect-award-ga\d+(?:-v\d+)?|grant-site-evidence-(?:ga\d+|mlci-invitation-\d{3})|mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/,'Use a slug exactly as search_records returns it, for example speech-931754.').describe('The slug of a search_records result.'),text_offset:z.number().int().min(0).max(5_000_000).optional().describe('Where to start reading a long text: next_text_offset from the previous part.')},annotations:readOnly},async({slug,text_offset})=>result('/api/resource/'+encodeURIComponent(slug),text_offset??0))
   server.registerTool('find_connections',{description:MCP_TEXT.find_connections.description,outputSchema:z.looseObject({connections:z.array(z.looseObject({name:z.string(),url:z.string()}))}),inputSchema:{query:z.string().min(2).max(120).describe('Part of a name.')},annotations:readOnly},async({query})=>{
    const response=await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+'/evidence/index.json'));if(!response.ok)return {content:[{type:'text' as const,text:JSON.stringify({error:'The connections dataset could not be read just now. Try again in a minute.'})}],isError:true}
    const data=await response.json() as {meta?:unknown,entities:{id:string,name:string,kind:string,records:number}[]};const asAt=evidenceAsAt(data.meta);const hits=data.entities.filter(e=>e.name.toLowerCase().includes(query.toLowerCase())).slice(0,20).map(e=>({...e,url:env.COMMUNITY_ORIGIN+'/connections?entity='+e.id}));const found={...(asAt?{as_at:asAt}:{}),connections:hits,record_text_notice:RECORD_TEXT_NOTICE};return {content:[{type:'text' as const,text:JSON.stringify(found)}],structuredContent:found}
