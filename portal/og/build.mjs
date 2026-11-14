@@ -81,7 +81,7 @@ async function preview(outdir, formats) {
     person: {
       kicker: 'Parliamentarian', title: 'Anthony Albanese', dot: '#D93025',
       lines: ['Labor · House of Representatives', 'Collected records: 1998 to 2026'],
-      stat: { value: '5,408', label: 'speeches in the Opax record' },
+      stat: { value: '5,408', label: 'speeches in the OPAX record' },
       portrait: portraitUri('10007'),
     },
     'person-long': {
