@@ -300,24 +300,28 @@ test.each(['android', 'ios'] as const)(
           }[]
         ).find((item) => item.identifier === 'division-history-filters');
       expect(inList()).toHaveLength(0);
-      if (platform === 'ios') {
-        // Nothing changes on iOS here: the bar item and the native search
-        // options are as they were, and no pinned Filters is drawn.
-        expect(options().headerSearchBarOptions).not.toHaveProperty('onOpen');
-        expect(options().headerSearchBarOptions).not.toHaveProperty('onClose');
-        await act(async () =>
-          options().headerSearchBarOptions.onChangeText({
-            nativeEvent: { text: 'wildlife' },
-          }),
-        );
+      const search = () => options().headerSearchBarOptions;
+      const type = async (text: string) => {
+        await act(async () => search().onChangeText({ nativeEvent: { text } }));
         await act(async () => jest.advanceTimersByTime(150));
+      };
+      // The search takes the bar from its start: Android's open, iOS's focus.
+      const start = async () =>
+        act(async () =>
+          platform === 'android' ? search().onOpen() : search().onFocus(),
+        );
+      if (platform === 'ios') {
+        // iOS has no open or close events: Android's are not passed.
+        expect(search()).not.toHaveProperty('onOpen');
+        expect(search()).not.toHaveProperty('onClose');
+        // Focus and a blur with an empty field: the bar's Filters is back,
+        // so no second one stays drawn.
+        await start();
+        expect(inList()).toHaveLength(1);
+        await act(async () => search().onBlur());
         expect(inList()).toHaveLength(0);
-        expect(barFilters()).toBeDefined();
-        await act(async () => r.unmount());
-        return;
       }
-      // Android hides the bar's items from the search's open to its close.
-      await act(async () => options().headerSearchBarOptions.onOpen());
+      await start();
       expect(inList()).toHaveLength(1);
       // Pinned under the search field, outside the list that scrolls.
       expect(
@@ -327,12 +331,9 @@ test.each(['android', 'ios'] as const)(
             (node) => node.props.testID === 'division-history-search-filters',
           ),
       ).toHaveLength(0);
-      await act(async () =>
-        options().headerSearchBarOptions.onChangeText({
-          nativeEvent: { text: 'wildlife' },
-        }),
-      );
-      await act(async () => jest.advanceTimersByTime(150));
+      await type('wildlife');
+      // Search submitted: the keyboard goes, the search and its text stay.
+      if (platform === 'ios') await act(async () => search().onBlur());
       expect(countText(r)).toBe('20 votes');
       const button = inList()[0]!;
       expect(button.props).toMatchObject({
@@ -350,12 +351,14 @@ test.each(['android', 'ios'] as const)(
       // Search and filter combine.
       expect(visible(r)).toEqual(rows.slice(20, 36));
       expect(inList()[0]!.props.accessibilityLabel).toBe('Filters, 1 on');
-      await act(async () =>
-        options().headerSearchBarOptions.onChangeText({
-          nativeEvent: { text: '' },
-        }),
-      );
-      await act(async () => options().headerSearchBarOptions.onClose());
+      // Ending the search returns Filters to the bar alone.
+      if (platform === 'android') {
+        await type('');
+        await act(async () => search().onClose());
+      } else {
+        await act(async () => search().onCancelButtonPress());
+        await type('');
+      }
       expect(inList()).toHaveLength(0);
       await act(async () => r.unmount());
     } finally {

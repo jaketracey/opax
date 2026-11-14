@@ -292,10 +292,10 @@ export default function DivisionHistory() {
   const [inset, setInset] = useState(0);
   const [text, setText] = useState('');
   const [query, setQuery] = useState('');
-  // Android's search view takes the whole bar while it is open, and
-  // react-native-screens hides the bar's other items, Filters among them,
-  // from its open to its close. (iOS 26 and later also hide Filters while
-  // search is active; an iOS follow-up handles that.)
+  // An active search takes the bar, Filters with it. Android's search view
+  // fills the toolbar, and react-native-screens hides its other items from
+  // the view's open to its close. On iOS 26 and later the field and its
+  // close button fill the bar; before 26 the search hides the whole bar.
   const [searchOpen, setSearchOpen] = useState(false);
   useEffect(() => {
     const timer = setTimeout(() => setQuery(text.trim()), 150);
@@ -408,7 +408,10 @@ export default function DivisionHistory() {
       setText(value);
       Keyboard.dismiss();
     },
-    onCancelButtonPress: () => setText(''),
+    onCancelButtonPress: () => {
+      setText('');
+      setSearchOpen(false);
+    },
   });
   const filterState = {
     accessibilityLabel: on ? `Filters, ${on} on` : 'Filters',
@@ -418,10 +421,12 @@ export default function DivisionHistory() {
   };
   const clear = () => store.set(store.model.reset(store.get()));
   const filtersHref = filtersRoute('divisions', owner);
-  // So on Android, an open search pins Filters under the search field,
-  // where scrolling the results can't take it: search and filter combine.
-  const filtersUnderSearch =
-    Platform.OS === 'android' && (searchOpen || !!text);
+  // So an active search, or one that holds text, pins Filters under the
+  // search field, where scrolling the results can't take it: search and
+  // filter combine. iOS counts the field's focus as active (it has no open
+  // or close events), so an empty field left unfocused draws no second
+  // Filters once the bar's own is back.
+  const filtersUnderSearch = searchOpen || !!text;
 
   const searching = !!query;
   const countText = searching
@@ -562,7 +567,10 @@ export default function DivisionHistory() {
                   onOpen: () => setSearchOpen(true),
                   onClose: () => setSearchOpen(false),
                 }
-              : {}),
+              : {
+                  onFocus: () => setSearchOpen(true),
+                  onBlur: () => setSearchOpen(false),
+                }),
           },
           ...headerItems(() =>
             pageItems({
