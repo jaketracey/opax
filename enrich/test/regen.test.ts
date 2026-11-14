@@ -254,6 +254,21 @@ test('stops: billing wording in a 200 body; a STOP file halts before the next re
   assert.deepEqual([end.end, ai2.calls.length, regen(w2, 'a1').state], ['stopped', 0, 'pending'])
 })
 
+test('stops: a network error books the upper bound (it may have been billed); a stop raised before sending books nothing', async () => {
+  const w = world()
+  await seeded(w, ['a1'])
+  const net = runner(w, new ScriptAi(() => new Error('socket hang up')))
+  assert.equal((await net.r.loop()).end, 'stopped')
+  assert.ok(net.ledger.totals().neurons > 0)
+  assert.equal(net.ledger.totals().unsettled, 0)
+  assert.equal(regen(w, 'a1').state, 'interrupted')
+  const w2 = world()
+  await seeded(w2, ['a1'])
+  const pre = runner(w2, new ScriptAi(() => new StopRun('wrangler OAuth token missing or could not be refreshed')))
+  const end = await pre.r.loop()
+  assert.deepEqual([end.end, pre.ledger.totals().neurons, regen(w2, 'a1').state], ['stopped', 0, 'pending'])
+})
+
 test('stops: the run cap is checked against each call\'s upper bound before it goes out', async () => {
   const w = world()
   await seeded(w, ['a1'])

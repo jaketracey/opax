@@ -83,6 +83,8 @@ interface ItemCtx {
   stop: StopRun | null
   skip: SkipItem | null
   paused: string | null
+  /** A request went out and no answer came back: it may have been billed, so the row is never retried automatically. */
+  unanswered: boolean
 }
 
 const sameBrief = (a: string | null | undefined, b: string | null | undefined): boolean => (a ?? '').trim() === (b ?? '').trim()
@@ -145,8 +147,13 @@ export class Runner {
     try {
       ;({ status, raw } = await this.d.ai.post(model, body))
     } catch (err) {
+      if (err instanceof StopRun) {
+        settle(0, 0, 'none') // raised before the request went out (e.g. the OAuth token could not be refreshed)
+        throw (ctx.stop = this.stop = err)
+      }
       // Unknown whether it was billed: book the upper bound and stop.
       settle(0, res.upper, 'upper')
+      ctx.unanswered = true
       throw (ctx.stop = this.stop = new StopRun(`network error: ${String((err as Error)?.message ?? err).slice(0, 200)}`))
     }
     const v = classifyResponse(status, raw)
@@ -215,7 +222,7 @@ export class Runner {
       await store.transition(db, row.rid, 'generating', 'skipped', now(), { note: 'live brief differs from the snapshot', kb_brief: live })
       return
     }
-    const ctx: ItemCtx = { rid: row.rid, calls: 0, neurons: 0, model: null, reservation: null, stop: null, skip: null, paused: null }
+    const ctx: ItemCtx = { rid: row.rid, calls: 0, neurons: 0, model: null, reservation: null, stop: null, skip: null, paused: null, unanswered: false }
     const main = await this.generateOne(ctx, recordFor(resource, row.rid, row.variant))
     let alt: { value: string; model: string } | null = null
     const altVariant = row.variant === 'role' ? 'b' : null
@@ -231,6 +238,10 @@ export class Runner {
       if (!held && !(await store.queueNewBrief(db, row.rid, now()))) {
         await store.transition(db, row.rid, 'generated', 'skipped', now(), { note: 'queue row changed before the hand-off; new brief kept here only' })
       }
+      return
+    }
+    if (ctx.unanswered) {
+      await store.transition(db, row.rid, 'generating', 'interrupted', now(), { note: 'a request got no answer (may have been billed); not retried automatically', neurons: ctx.neurons, calls: ctx.calls })
       return
     }
     if (!ctx.skip && ctx.calls === 0 && (ctx.stop || ctx.paused || this.stop || this.paused)) {

@@ -62,6 +62,11 @@ The runner never writes the knowledge box. For each row it does these steps:
 - Each generated brief is fsynced to `results.jsonl` before D1 is updated.
 - At start-up, a row left `generating` reuses its stored result.
 - With no stored result the row becomes `interrupted` and is never retried automatically.
+- A request that got no answer (a network error) may have been billed. Its row also becomes
+  `interrupted`.
+- Workers AI uses wrangler's OAuth login, which wrangler refreshes only once it has expired. Within
+  2 minutes of expiry the runner waits it out, then refreshes through `wrangler whoami`. If the token
+  still can't be read, the run stops.
 
 ## Commands
 

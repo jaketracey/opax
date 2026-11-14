@@ -61,21 +61,27 @@ function kb(): Kb {
   return new Kb({ ARAG_ZONE: env.ARAG_ZONE, ARAG_KB_ID: env.ARAG_KB_ID, ARAG_KB_TOKEN: env.ARAG_KB_TOKEN })
 }
 
-/** wrangler's existing OAuth login (the deploy token has no Workers AI scope). Refreshed through wrangler before expiry. */
-function oauthToken(): string {
+/**
+ * wrangler's existing OAuth login (the deploy token has no Workers AI scope). wrangler refreshes only an
+ * EXPIRED token, so within 2 minutes of expiry: wait it out, then `wrangler whoami` refreshes it. A token that
+ * still cannot be read stops the run (never a request with a token about to lapse, never a 401 loop).
+ */
+async function oauthToken(): Promise<string> {
   const read = () => {
     const toml = readFileSync(WRANGLER_TOML, 'utf8')
     return { token: /oauth_token\s*=\s*"([^"]+)"/.exec(toml)?.[1] ?? '', expires: Date.parse(/expiration_time\s*=\s*"([^"]+)"/.exec(toml)?.[1] ?? '') }
   }
   let t = read()
-  if (!(t.expires - Date.now() > 10 * 60_000)) {
-    const env = { ...process.env }
-    delete env.CLOUDFLARE_API_TOKEN
-    delete env.CF_API_TOKEN
-    spawnSync(WRANGLER_BIN, ['whoami'], { env, stdio: 'ignore', timeout: 60_000 })
-    t = read()
-  }
+  if (t.token && t.expires - Date.now() > 2 * 60_000) return t.token
+  const wait = t.expires - Date.now() + 5_000
+  if (wait > 0 && wait < 3 * 60_000) await new Promise((r) => setTimeout(r, wait))
+  const env = { ...process.env }
+  delete env.CLOUDFLARE_API_TOKEN
+  delete env.CF_API_TOKEN
+  spawnSync(WRANGLER_BIN, ['whoami'], { env, stdio: 'ignore', timeout: 60_000 })
+  t = read()
   if (!t.token || !(t.expires - Date.now() > 2 * 60_000)) throw new StopRun('wrangler OAuth token missing or could not be refreshed (run `wrangler login`)')
+  log('wrangler OAuth token refreshed')
   return t.token
 }
 
@@ -85,7 +91,7 @@ function workersAi(): AiPost {
     async post(model, body) {
       const res = await fetch(`https://api.cloudflare.com/client/v4/accounts/${account}/ai/run/${model}`, {
         method: 'POST',
-        headers: { authorization: `Bearer ${oauthToken()}`, 'content-type': 'application/json' },
+        headers: { authorization: `Bearer ${await oauthToken()}`, 'content-type': 'application/json' },
         body: JSON.stringify(body),
         signal: AbortSignal.timeout(120_000),
       })
