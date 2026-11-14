@@ -110,9 +110,10 @@
  "assets": {},
  "expect": {
   "answered": true,
-  "lead": "^Casey Sample said on 30 September 2020 that the Auditor-General found the department",
+  "lead": "^The cited sources do not name a person or office as responsible\\.",
   "includes": [
-   "Taylor Sample"
+   "Taylor Sample",
+   "Casey Sample said on 30 September 2020 that the Auditor-General found the department"
   ],
   "citations": 1,
   "cited": [

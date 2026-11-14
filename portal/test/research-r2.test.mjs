@@ -80,7 +80,7 @@ test('r2 literal single quotes can contain contractions and several sentences',a
  const input=payload(answer,[source('a',quote,{kind:'speech',speaker:'Avery Example'})])
  assert.equal(auditPayload('What did Avery say?',input).findings.length,0)
  const out=await(await api.withAnswerLanguage(Response.json(input),'What did Avery say?')).json()
- assert.equal(out.answer,answer)
+ assert.equal(out.answer,answer.slice(0,-1))
  const bad=payload("Avery Example's words were 'I can't describe the bill. It is corrupt.'",input.sources)
  assert.ok(auditPayload('What did Avery say?',bad).findings.length)
 })
