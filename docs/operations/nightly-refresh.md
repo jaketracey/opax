@@ -22,7 +22,7 @@ The day cap can be raised for supervised catch-up; counters are checked
 every ten chamber-days regardless of that cap. The budget may be lowered
 but cannot exceed 1,200 seconds. Normal sync also bounds its backfill work
 to that budget. Its existing publisher releases held IDs below its normal
-checkpoint. Enrichment runs independently through the Worker catalog cursor.
+checkpoint. Enrichment runs independently through the Worker catalogue cursor.
 
 Set `OPAX_SENATE_BACKFILL=0` to stop both new acquisition and pending Senate
 publication. The shared guard recognises `OPAX_NSW_BACKFILL=0` for NSW.
