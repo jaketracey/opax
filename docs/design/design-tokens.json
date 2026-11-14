@@ -75,6 +75,11 @@
       "billsInk": {"$description": "Bills: bills, stages, exposure drafts; also the machine-written label.", "$value": "#1F5F6B", "dark": "#7FC4D0", "highContrast": "#205158", "darkHighContrast": "#A6DAE3"},
       "billsWash": {"$description": "The bills tile and header wash.", "$value": "#E4EAE8", "dark": "#1B2D30"}
     },
+    "chamber": {
+      "$description": "The two chambers in their own colours: the House of Representatives green, the Senate red. Only where a drawing or label names a chamber (Parliament in a minute's seat arcs). Never a category ink, status tone, link or body text: moneyInk and danger keep their meanings.",
+      "houseInk": {"$description": "The House of Representatives: its green.", "$value": "#3B6E58", "dark": "#93C4AE", "highContrast": "#2F5A48", "darkHighContrast": "#B3D8C7"},
+      "senateInk": {"$description": "The Senate: its red.", "$value": "#A2402E", "dark": "#EE9B88", "highContrast": "#86321F", "darkHighContrast": "#F5BBAE"}
+    },
     "band": {
       "bandBills": {"$value": "#1F5F6B", "dark": "#1E4A51", "highContrast": "#1E5E69", "darkHighContrast": "#1E4A51", "$description": "Edition plate ground. Uses onBand and onBandSoft, never a link tint."},
       "bandMoney": {"$value": "#2B6447", "dark": "#24472F", "highContrast": "#2A6346", "darkHighContrast": "#24472F", "$description": "Edition plate ground. Uses onBand and onBandSoft, never a link tint."},
@@ -334,6 +339,14 @@
       {
         "fg": "interestsInk",
         "on": ["paper", "raised", "sunken", "interestsWash"]
+      },
+      {
+        "fg": "houseInk",
+        "on": ["paper", "raised", "sunken"]
+      },
+      {
+        "fg": "senateInk",
+        "on": ["paper", "raised", "sunken"]
       },
       {
         "fg": "billsInk",

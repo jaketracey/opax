@@ -63,6 +63,10 @@ export const light = {
   billsInk: '#1F5F6B',
   /** The bills tile and header wash. */
   billsWash: '#E4EAE8',
+  /** The House of Representatives: its green. */
+  houseInk: '#3B6E58',
+  /** The Senate: its red. */
+  senateInk: '#A2402E',
   /** Edition plate ground. */
   bandBills: '#1F5F6B',
   /** Edition plate ground. */
@@ -124,6 +128,8 @@ export const dark: Record<Role, string> = {
   interestsWash: '#33232D',
   billsInk: '#7FC4D0',
   billsWash: '#1B2D30',
+  houseInk: '#93C4AE',
+  senateInk: '#EE9B88',
   bandBills: '#1E4A51',
   bandMoney: '#24472F',
   bandVotes: '#2F3B70',
@@ -148,6 +154,8 @@ export const lightHighContrast: Partial<Record<Role, string>> = {
   votesInk: '#374684',
   interestsInk: '#72385C',
   billsInk: '#205158',
+  houseInk: '#2F5A48',
+  senateInk: '#86321F',
   bandBills: '#1E5E69',
   bandMoney: '#2A6346',
   bandVotes: '#3A4C96',
@@ -167,6 +175,8 @@ export const darkHighContrast: Partial<Record<Role, string>> = {
   votesInk: '#C6CEF8',
   interestsInk: '#EFC3DF',
   billsInk: '#A6DAE3',
+  houseInk: '#B3D8C7',
+  senateInk: '#F5BBAE',
   bandBills: '#1E4A51',
   bandMoney: '#24472F',
   bandVotes: '#2F3B70',
@@ -587,6 +597,12 @@ export const contrastRules = {
     { fg: 'interestsInk', bg: 'raised' },
     { fg: 'interestsInk', bg: 'sunken' },
     { fg: 'interestsInk', bg: 'interestsWash' },
+    { fg: 'houseInk', bg: 'paper' },
+    { fg: 'houseInk', bg: 'raised' },
+    { fg: 'houseInk', bg: 'sunken' },
+    { fg: 'senateInk', bg: 'paper' },
+    { fg: 'senateInk', bg: 'raised' },
+    { fg: 'senateInk', bg: 'sunken' },
     { fg: 'billsInk', bg: 'paper' },
     { fg: 'billsInk', bg: 'raised' },
     { fg: 'billsInk', bg: 'sunken' },
