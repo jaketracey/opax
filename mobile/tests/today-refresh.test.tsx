@@ -1,5 +1,5 @@
 import { act, type ReactElement, type ReactNode } from 'react';
-import { RefreshControl } from 'react-native';
+import { RefreshControl, ScrollView } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import snapshot from '../scripts/fixture-snapshot.json';
 import * as c from '../src/api/catalogs';
@@ -247,4 +247,22 @@ test('a failed revalidation keeps the edition already drawn', async () => {
         typeof n.type === 'string' && n.props.testID === 'today-edition-card',
     ),
   ).toHaveLength(1);
+});
+
+// b67 (flow 66, iOS 26.3 and 27): after the welcome's seat search, Today
+// opened with its title collapsed and the Your MP tile under the bar. React
+// Native's keyboard handler hears every keyboard in the window and, through
+// a clamp that ignores UIKit's automatic inset, moved Today's rest offset
+// under the large title (-headerBottom) to 0. Today has no text field.
+test('a seat search over Today cannot move it: its scroll view takes no keyboard insets', async () => {
+  setUp();
+  const r = await render(<Today />);
+  const scroll = r.root.findAll(
+    (n) =>
+      n.type === ScrollView &&
+      n.props.testID === 'today-screen' &&
+      'automaticallyAdjustKeyboardInsets' in n.props,
+  );
+  expect(scroll.length).toBeGreaterThan(0);
+  expect(scroll[0]!.props.automaticallyAdjustKeyboardInsets).toBe(false);
 });
