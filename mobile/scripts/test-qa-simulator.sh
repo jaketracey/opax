@@ -25,5 +25,7 @@ QA_TEST_BOOTED="A" check "only the wanted device booted admits" ok A
 QA_TEST_BOOTED="B" check "another booted device refuses (default)" refused A
 QA_TEST_BOOTED="B" OPAX_SIM_ADMIT_IGNORE="B" check "another slot's device named in the ignore list admits" ok A
 QA_TEST_BOOTED="B C" OPAX_SIM_ADMIT_IGNORE="B" check "an unlisted third device still refuses" refused A
-QA_TEST_BOOTED="B" OPAX_SIM_ADMIT_IGNORE="A" check "naming only the wanted device ignores nothing" refused A
+lock="$tmp/slot-a.lock"; mkdir -p "$lock.opax"; echo K > "$lock.opax/kept-simulator"
+QA_TEST_BOOTED="K" OPAX_PASTE_LOCK="$lock" OPAX_SIM_ADMIT_IGNORE="K B" check "this slot's own kept device is never ignored" refused A
+QA_TEST_BOOTED="B" OPAX_PASTE_LOCK="$lock" OPAX_SIM_ADMIT_IGNORE="K B" check "the other slot's device is still ignored with a kept record" ok A
 [ "$fails" = 0 ] && echo "PASS test-qa-simulator ($fails failures)" || { echo "FAIL test-qa-simulator ($fails failures)"; exit 1; }
