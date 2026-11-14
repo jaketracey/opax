@@ -9,7 +9,7 @@ summary: When Parliament meets, what happens in Question Time and estimates, and
 
 Parliament does not meet all year. It meets in {{sitting weeks|sitting week}}. There are about 18 to 20 sitting weeks a year. [[f:sitting-weeks-18-20]]
 
-A sitting day is a day a house meets. [[f:sitting-def]]
+A {{sitting day}} is a day a house meets. [[f:sitting-def]]
 
 In a sitting week, members may start their day at 7 am and finish at 10 pm or later. When Parliament is not sitting, members spend much of their time in their electorates. [[f:sitting-hours]] [[f:not-sitting-electorate]]
 
@@ -39,7 +39,7 @@ It gives members a chance to hold the government to account. [[f:qt-purpose]]
 
 In Question Time, ministers do not know what the opposition or crossbench will ask. These spoken questions are called {{questions without notice|question without notice}}. [[f:qwon-def]]
 
-Government backbenchers also ask questions. These are planned before Question Time and are called {{Dorothy Dixers|Dorothy Dixer}}. [[f:dorothy-dixer]]
+Government {{backbenchers|backbencher}} also ask questions. These are planned before Question Time and are called {{Dorothy Dixers|Dorothy Dixer}}. [[f:dorothy-dixer]]
 
 A {{question on notice}} is written down. The minister answers it in writing. [[f:qon-def]] The minister is expected to answer within 30 days in the Senate, or 60 days in the House. [[f:qon-days]]
 

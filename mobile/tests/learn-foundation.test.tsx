@@ -148,11 +148,11 @@ describe('the guide content module', () => {
       ['scripts/build-learn-content.mjs', '--check'],
       { cwd: join(__dirname, '..'), stdio: 'pipe' },
     );
-    expect(learnSource.sha).toBe('39d9d33bc');
+    expect(learnSource.sha).toBe('08b657430');
   });
 
-  test('holds 87 terms, 7 chapters and 17 examples, every link resolved', () => {
-    expect(termIds).toHaveLength(87);
+  test('holds 90 terms, 7 chapters and 17 examples, every link resolved', () => {
+    expect(termIds).toHaveLength(90);
     expect(learnChapters.map((chapter) => chapter.order)).toEqual([
       1, 2, 3, 4, 5, 6, 7,
     ]);
@@ -452,7 +452,7 @@ describe('the glossary screen', () => {
     const ids = new Set(
       rows.map((row) => row.props.testID.replace('learn-glossary-term-', '')),
     );
-    expect(ids.size).toBe(87);
+    expect(ids.size).toBe(90);
     act(() => pressable(tree, 'learn-glossary-term-pair').props.onPress());
     expect(push).toHaveBeenCalledWith({
       pathname: '/term',

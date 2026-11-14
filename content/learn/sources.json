@@ -1050,6 +1050,14 @@
     {
      "fact": "federation-def",
      "quote": "A nation formed by the union of a number of states which give up some of their powers and responsibilities to a central government."
+    },
+    {
+     "fact": "backbencher-def",
+     "quote": "A member of parliament who is not a minister or shadow minister, also known as a private member or private senator."
+    },
+    {
+     "fact": "portfolio-def",
+     "quote": "An area of responsibility of a government minister."
     }
    ]
   },
