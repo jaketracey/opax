@@ -33,10 +33,13 @@ export class StreamingResearchModel extends MockLanguageModelV4 {
     }
   }
 }
-/** One script serves both SDK transports. Four characters approximate a token; pacing includes JSON and fact ids. */
-export function scriptedResearchModel(turns,{tokensPerSecond=0,onPiece=()=>{}}={}) {
+/** One script serves both SDK transports. Four characters approximate a token; pacing includes JSON and fact ids.
+ * replyAnswers serves a recorded answer tool call as reply text (its arguments as one JSON object) when the call does
+ * not offer the answer tool, as a live model answers a qualitative run. */
+export function scriptedResearchModel(turns,{tokensPerSecond=0,onPiece=()=>{},replyAnswers=false}={}) {
   const calls=[]
-  const next=options=>{calls.push(options);const turn=turns[calls.length-1];if(!turn)throw Error(`scripted model has no reply for call ${calls.length}`);if(turn.error)throw Error(turn.error);return turn}
+  const asReply=(turn,options)=>replyAnswers&&turn.tool_calls?.length===1&&turn.tool_calls[0].name==='answer'&&options.tools?.length&&!options.tools.some(t=>t.name==='answer')?{text:JSON.stringify(turn.tool_calls[0].args??{})}:turn
+  const next=options=>{calls.push(options);const turn=turns[calls.length-1];if(!turn)throw Error(`scripted model has no reply for call ${calls.length}`);if(turn.error)throw Error(turn.error);return asReply(turn,options)}
   const model=new MockLanguageModelV4({
     doGenerate:async options=>{
       const t=next(options),text=typeof t.text==='string'?t.text:JSON.stringify(t.text)

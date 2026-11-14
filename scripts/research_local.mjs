@@ -9,6 +9,7 @@
 // IDs or literal questions are accepted. --questions PATH selects a regression set.
 // --serve starts the server without Asks; --portal PATH selects a detached baseline checkout.
 // --check-assets builds the slim asset folder, prints its file count and skip list, and exits.
+// --stream asks over SSE (?stream=1) and prints the event timeline: first status, first delta, done, retries.
 // --start-only starts wrangler dev, waits for its health URL, reports the time and stops it
 // before any question (no model call); add --local-data to keep it off remote bindings too.
 // --local-data disables remote bindings and blocks outbound requests except the model provider.
@@ -46,6 +47,7 @@ const jsonOut = flag('--json', null);
 const traceOut = flag('--trace', null);
 const priorFile = flag('--prior-turn', null);
 const legacyContext = args.includes('--legacy-context');
+const streamed = args.includes('--stream');
 const traceEvents = [];
 let activeQuestion;
 const ids = args.filter((a, i) => !a.startsWith('--') && !['--model', '--port', '--json', '--portal', '--questions', '--trace', '--prior-turn'].includes(args[i - 1]));
@@ -219,10 +221,33 @@ async function ask(base, q, prior) {
   const request={...(prior?priorContext(prior,q.question):{}),...(q.request??{}),question:q.question};
   if (legacyContext && request.context) request.context = request.context.map(t => t.author === 'answer' ? {...t,sources:(t.sources??[]).map(s=>Object.fromEntries(['slug','kind','source','state','chamber'].filter(k=>s[k]).map(k=>[k,s[k]])))} : t);
   const t0 = Date.now();
-  const res = await fetch(base + '/api/ask', {method: 'POST', signal: AbortSignal.timeout(120_000),
-    headers: {'content-type': 'application/json', 'x-opax-research': 'loop', 'x-opax-research-model': model,
+  const res = await fetch(base + '/api/ask' + (streamed ? '?stream=1' : ''), {method: 'POST', signal: AbortSignal.timeout(120_000),
+    headers: {'content-type': 'application/json', ...(streamed ? {accept: 'text/event-stream'} : {}), 'x-opax-research': 'loop', 'x-opax-research-model': model,
       authorization: 'Bearer ' + vars.DAILY_POST_OPERATOR_SECRET},
     body: JSON.stringify(request)});
+  if (streamed && (res.headers.get('content-type') ?? '').includes('text/event-stream')) {
+    // Each event with its arrival time; a retry clears the text the reader had been shown.
+    const events = [], decoder = new TextDecoder();
+    let pending = '', d = {error: 'no done event'};
+    for await (const chunk of res.body) {
+      const at = Date.now() - t0;
+      pending += decoder.decode(chunk, {stream: true});
+      let i;
+      while ((i = pending.indexOf('\n\n')) >= 0) {
+        const block = pending.slice(0, i); pending = pending.slice(i + 2);
+        const event = /^event: (.+)$/m.exec(block)?.[1], raw = /^data: (.+)$/m.exec(block)?.[1];
+        let data; try { data = JSON.parse(raw ?? 'null'); } catch { data = raw; }
+        events.push({at, event, ...(event === 'status' ? {phase: data?.phase} : event === 'delta' ? {chars: data?.text?.length ?? 0, text: data?.text} : event === 'retry' ? {reason: data?.reason} : {})});
+        if (event === 'done') d = data;
+      }
+    }
+    const first = name => events.find(e => e.event === name)?.at;
+    const done = first('done'), firstDelta = first('delta'), firstStatus = first('status');
+    const shown = events.findIndex(e => e.event === 'delta'), reset = events.some((e, i) => e.event === 'retry' && shown >= 0 && i > shown);
+    const stream = {first_status_ms: firstStatus, first_delta_ms: firstDelta, done_ms: done, delta_after_status_ms: firstDelta == null ? null : firstDelta - (firstStatus ?? 0),
+      delta_to_done_ms: firstDelta == null || done == null ? null : done - firstDelta, retries: events.filter(e => e.event === 'retry').length, reset_after_text: reset, events};
+    return {status: res.status, ms: Date.now() - t0, d, request, stream, telemetry: localTelemetry.get(questionHash(q.question))};
+  }
   const text = await res.text();
   let d; try { d = JSON.parse(text); } catch { d = {error: text.slice(0, 200)}; }
   return {status: res.status, ms: Date.now() - t0, d, request, telemetry: localTelemetry.get(questionHash(q.question))};
@@ -237,7 +262,7 @@ try {
   for (const q of questions) {
     const prior=q.followup_of?dump.find(r=>r.q.id===q.followup_of):priorFile?JSON.parse(readFileSync(priorFile,'utf8')):undefined;
     if(q.followup_of&&!prior)throw new Error('Missing prior turn: '+q.followup_of);
-    const {status, ms, d, request, telemetry} = await ask(base, q, prior);
+    const {status, ms, d, request, stream, telemetry} = await ask(base, q, prior);
     const r = {...(d.research || {})}, c = checks(d);
     if (telemetry) {
       r.cost_usd ??= telemetry.cost_usd;
@@ -256,9 +281,10 @@ try {
     if (r.rejections) console.log(`  rejected: ${r.rejections.join(" | ")}`);
     const a = r.answer_stats;
     if (a) console.log(`  points: ${a.points_kept}/${a.points_in} kept (${a.mode ?? 'points'})  repairs ${JSON.stringify(a.repairs)}  drops ${JSON.stringify(a.drops)}`);
+    if (stream) console.log(`  stream: status ${stream.first_status_ms} ms, first delta ${stream.first_delta_ms ?? '-'} ms (+${stream.delta_after_status_ms ?? '-'}), done ${stream.done_ms} ms, delta to done ${stream.delta_to_done_ms ?? '-'} ms, retries ${stream.retries}${stream.reset_after_text ? ' RESET AFTER TEXT' : ''}\n  events: ${stream.events.map(e => `${(e.at / 1000).toFixed(1)}:${e.event}${e.phase ? '/' + e.phase : e.chars ? '/' + e.chars : e.reason ? '/' + e.reason : ''}`).join(' ')}`);
     console.log(`  checks: loop=${c.loop} quotes=${c.quotes} verbatim=${c.verbatim} unbound-markers=${c.unbound} placeholder=${c.placeholder}`);
     rows.push({id: q.id, kind: q.kind, s: (ms / 1000).toFixed(1), mode: r.mode ?? '-', failure: r.failure ?? '', cost: r.cost_usd ?? null, kept: r.answer_stats ? `${r.answer_stats.points_kept}/${r.answer_stats.points_in}` : '-', ...c});
-    dump.push({q, request, status, ms, payload: d, ...(telemetry ? {local_telemetry: telemetry} : {})});
+    dump.push({q, request, status, ms, payload: d, ...(stream ? {stream} : {}), ...(telemetry ? {local_telemetry: telemetry} : {})});
     if (jsonOut) writeFileSync(jsonOut, JSON.stringify(dump, null, 1));
   }
 } finally {

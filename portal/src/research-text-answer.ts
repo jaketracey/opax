@@ -8,8 +8,9 @@ export function modelProse(content: unknown): string {
     .map(part => (part as { text: string }).text).join('').trim()
 }
 
-// Tool calls written out as text (DeepSeek's DSML markers, XML-style tags, a JSON call) are not an answer.
-const TOOL_MARKUP = /<\/?(?:tool_calls?|function_calls?|invoke|parameter|tool)\b|<｜|<\|(?:tool|im_|start|end)|\bfunction_call\b|"(?:name|arguments|tool_calls?|tool|parameters)"\s*:|```/i
+// Tool calls written out as text (DeepSeek's DSML markers, XML-style tags, a JSON call) are not an answer, nor is an
+// answer object written as reply text (its points are read and checked as the answer instead).
+const TOOL_MARKUP = /<\/?(?:tool_calls?|function_calls?|invoke|parameter|tool)\b|<｜|<\|(?:tool|im_|start|end)|\bfunction_call\b|"(?:name|arguments|tool_calls?|tool|parameters|points|facts|claim)"\s*:|```/i
 // A plan for the next step ("Let me search the record first.") is not an answer either.
 const PLAN = /^(?:i(?:'ll|’ll| will| shall| need to| should| must| am going to|'m going to|’m going to| am (?:searching|looking|checking)|'m (?:searching|looking|checking)|’m (?:searching|looking|checking))\b|let me\b|let['’]s\b|first,? (?:i|let)\b|to answer (?:this|that|the question),? i\b|searching\b|looking (?:up|into)\b|now,? i\b|next,? i\b|okay\b|ok[,.]|sure\b|alright\b)/i
 // Nor a refusal or a line that only says the record could not answer.

@@ -679,7 +679,9 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const who=!lookup&&progress.answer&&ACCOUNTABILITY_QUESTION.test(question)?whoBasis([...bySource.values()].map(group=>({kind:group[0].source.kind,coverage:group.every(f=>f.coverage),texts:[group[0].source.snippet,...group.map(f=>f.text),group[0].source.title]}))
       .concat((run.passage_answer?.sources??[]).map(s=>({kind:s.kind,coverage:!!s.coverage,texts:[s.snippet,s.title]})))):undefined
     const previewCheck=researchPreviewGuard('compose')
-    const preview:import('./research-types').AnswerPreview|undefined=lookup||!progress.answer?undefined:async(written,accept)=>{
+    // Beside the model's own passage points the composed order (leadWithModelAnswer) depends on the complete written
+    // answer, so a released prefix could later move: that answer is shown whole at completion instead.
+    const preview:import('./research-types').AnswerPreview|undefined=lookup||!progress.answer||run.passage_answer?undefined:async(written,accept)=>{
       if(!active)return
       return previewCheck(async()=>{
         const combined=combine(written)

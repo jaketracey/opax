@@ -276,7 +276,7 @@ test('incremental scanner visits each character once, including every JSON token
   assert.ok(scanner.scannedCharacters<=raw.length)
 })
 
-for(const salvaged of [false,true])test(salvaged?'salvaged bill answers run normal lead shaping even after release':'P1-1: a later cited speaker cannot move the released bill lead',async()=>{
+for(const salvaged of [false,true])test(salvaged?'a salvaged bill answer keeps the model\'s order too, so its released lead needs no retry':'P1-1: a later cited speaker cannot move the released bill lead',async()=>{
   const q='What happened to the Example Bill 2024?'
   const passages=[{id:'bill-1',resource:'bill-1',slug:'',title:'Example Bill 2024',text:'The Example Bill 2024 passed the Senate on 3 March 2024 after a second reading debate.',url:'https://example.org/bill',kind:'bill'},
     {id:'sp-1',resource:'sp-1',slug:'',title:'Second reading speech',text:'Senator Jane Example said the bill would cut red tape for small business owners across the country.',url:'https://example.org/sp',kind:'speech',speaker:'Jane Example',chamber:'senate',date:'2024-02-01'}]
@@ -293,11 +293,13 @@ for(const salvaged of [false,true])test(salvaged?'salvaged bill answers run norm
   if(salvaged)assert.deepEqual(done,api.groundAnswerPayload(final,q),'salvage has no fixed-prefix shape exemption')
   const wire=frame('research_sentences',{})+deltas.map(text=>frame('research_sentence',{text})).join('')+frame('done',done)
   const events=decode(await(await api.withAnswerLanguage(new Response(wire,{headers:{'content-type':'text/event-stream'}}),q)).text())
-  assert.equal(events.some(e=>e.event==='retry'),salvaged)
+  // A loop answer is never reordered (the planner's answers still lead with a promoted finding), so there is no retry.
+  assert.equal(events.some(e=>e.event==='retry'),false)
   let client=''
   for(const e of events){if(e.event==='retry')client='';if(e.event==='delta')client+=e.data.text}
   assert.equal(client,events.at(-1).data.answer)
-  assert.ok(events.at(-1).data.answer.startsWith(points[salvaged?1:0].claim))
+  assert.ok(events.at(-1).data.answer.startsWith(points[0].claim))
+  assert.ok(api.groundAnswerPayload({...final,research:{mode:'planner'}},q).answer.startsWith(points[1].claim),'the planner path still promotes the cited speaker')
 })
 
 const emptyScope={people:[],parties:[],bills:[],ambiguous:false,unresolved:false}
@@ -741,7 +743,9 @@ for(const truncated of [false,true])test(`a late speech citation upgrade ${trunc
   assert.deepEqual(done.citations,normal.citations)
   for(const ranges of Object.values(done.citations))for(const[a,b]of ranges)assert.ok(a>=0&&a<b&&b<=Array.from(done.answer).length)
   assert.equal(model.calls.length,2)
-  assert.equal(run.research.answer_stats.salvaged,truncated?'malformed_args':undefined)
+  // With a passage held the model may reply in text, so an answer call cut off by the output cap ends the turn without a
+  // tool call (no_finish) rather than violating a required tool choice; the salvage is the same.
+  assert.equal(run.research.answer_stats.salvaged,truncated?'no_finish':undefined)
 })
 
 for(const truncated of [false,true])test(`a call crossing into its last six seconds holds later previews but ${truncated?'salvages':'completes'} checked points`,async t=>{
@@ -774,4 +778,100 @@ test('who lead: a cited source naming only a title and surname keeps a moved lea
   assert.equal(api.settledWhoLead(p,who,{unnamed:false,subjects:true,record:false}),false)
   const plain=payload(lead,[full],cite('bill-b1',lead))
   assert.equal(api.settledWhoLead(plain,who,{unnamed:false,subjects:true,record:false}),true,'without the short name the lead is settled')
+})
+
+// Reply text (REPLY_ANSWER_RULE): the provider streams reply text token by token but delivers tool arguments in one piece,
+// so a passage answer written as reply text is what reaches the reader early.
+const replyResearch=(model,options={})=>{
+  const id='r1/t/body/0',evidence='Robin Example said the housing report found planning rules slowed approvals and recommended simpler rules.'
+  const research=Object.assign(api.createResearch({...budgetOptions(model),...options,readRecord:async()=>({text:evidence,speaker:'Robin Example',labels:{kind:'speech',chamber:'senate'},metadata:{date:'2024-02-01'}})}),{write:undefined})
+  const kb=async()=>({resources:{r1:{slug:'housing-debate',title:'Housing debate',origin:{created:'2024-02-01',collaborators:['Robin Example']},fields:{body:{paragraphs:{[id]:{text:evidence}}}}}},fulltext:{total:1,facets:{}}})
+  return {research,kb}
+}
+const choiceOf=c=>c.toolChoice?.type==='tool'?c.toolChoice.toolName:c.toolChoice?.type
+for(const [forced,preface] of [[false,false],[true,false],[false,true]])test(`reply text: an answer object written as ${forced?'the forced last turn':preface?'reply text after a line about the research':'reply text'} streams its first checked point before the reply ends and passes the answer check`,async()=>{
+  const first='The housing report found planning rules slowed approvals.',second='The report recommended simpler planning rules.'
+  const gate=deferred(),heard=deferred(),deltas=[]
+  let raw=''
+  const object=JSON.stringify({points:[{claim:first},{claim:second}]})
+  const text=preface?'I have enough verified passages from the debate.\n'+object:'```json\n'+object+'\n```'
+  const model=scriptedResearchModel([{tool_calls:[call('search',{query:'housing report'},'s')]},{text}],{onPiece:async piece=>{raw+=piece;if(raw.includes('recommended'))await gate.promise}})
+  const progress=async()=>{},stream=api.researchSentenceStream(question,async t=>{deltas.push(t);heard.resolve()})
+  progress.answer=stream.preview
+  // Two rounds make the second turn the last one, which is forced to answer.
+  const {research,kb}=replyResearch(model,forced?{steps:2}:{})
+  const running=api.runAgentic(question,{asset:async()=>null,kb,generate:async()=>{throw Error('planner must not run')},research},progress,40_000,api.inferPeriod(question),{},emptyScope)
+  try{
+    await Promise.race([heard.promise,new Promise((_,reject)=>setTimeout(()=>reject(Error('reply-text points stayed held until the reply ended')),1000))])
+    assert.equal(deltas.join(''),first)
+  }finally{gate.resolve()}
+  const run=await running
+  stream.close()
+  assert.equal(model.calls.length,2,'no extra model turn')
+  // A forced last turn can only reply; otherwise, with a passage held, the model may reply or call a tool.
+  assert.deepEqual(model.calls.map(choiceOf),['required',forced?'none':'auto'])
+  // The run never offers the answer tool, so the model writes the object as reply text; one tool list on every turn.
+  const offered=c=>JSON.stringify((c.tools??[]).map(t=>t.name))
+  assert.ok(!offered(model.calls[1]).includes('"answer"')&&offered(model.calls[1]).includes('"search"'))
+  assert.equal(offered(model.calls[1]),offered(model.calls[0]))
+  assert.equal(run.answered,true)
+  assert.deepEqual(run.research.trail.map(s=>[s.tool,s.ok]),[['search',true],['answer',true]])
+  assert.equal(run.research.answer_stats.salvaged,undefined)
+  const done=api.checkedAnswerPayload({...api.agenticAskPayload(run,question)},question,false,stream.released)
+  assert.ok(done.answer.startsWith(deltas.join('')),'the released point is the start of the checked answer')
+  assert.ok(done.answer.includes(second))
+})
+
+test('reply text: a rejected answer object gets the answer tool\'s feedback in the same conversation, and the repaired reply answers',async()=>{
+  const first='The housing report found planning rules slowed approvals.'
+  const model=scriptedResearchModel([{tool_calls:[call('search',{query:'housing report'},'s')]},{text:JSON.stringify({facts:[99]})},{text:JSON.stringify({points:[{claim:first}]})}])
+  const {research,kb}=replyResearch(model)
+  const run=await api.runAgentic(question,{asset:async()=>null,kb,generate:async()=>{throw Error('planner must not run')},research},async()=>{},40_000,api.inferPeriod(question),{},emptyScope)
+  assert.equal(model.calls.length,3)
+  assert.equal(run.answered,true)
+  assert.equal(run.answer.replace(/^- /,''),first,'the raw loop answer is a point list')
+  assert.equal(run.research.rounds,3)
+  assert.deepEqual(run.research.trail.map(s=>[s.tool,s.ok]),[['search',true],['answer',false],['answer',true]])
+  // The repair turn continues the conversation: the earlier turns unchanged, then the rejected reply and its feedback.
+  const [,second,third]=model.calls
+  assert.deepEqual(third.prompt.slice(0,second.prompt.length),second.prompt)
+  assert.match(JSON.stringify(third.prompt.at(-1)),/the answer was empty/)
+  assert.deepEqual(model.calls.map(choiceOf),['required','auto','auto'])
+})
+
+test('reply text: an answer tool call, though the tool is not offered, is still checked and answers',async()=>{
+  const first='The housing report found planning rules slowed approvals.'
+  const model=scriptedResearchModel([{tool_calls:[call('search',{query:'housing report'},'s')]},{tool_calls:[call('answer',{points:[{claim:first}]},'a')]}])
+  const {research,kb}=replyResearch(model)
+  const run=await api.runAgentic(question,{asset:async()=>null,kb,generate:async()=>{throw Error('planner must not run')},research},async()=>{},40_000,api.inferPeriod(question),{},emptyScope)
+  assert.ok(!(model.calls[1].tools??[]).some(t=>t.name==='answer'))
+  assert.equal(model.calls.length,2)
+  assert.equal(run.answered,true)
+  assert.equal(run.answer.replace(/^- /,''),first)
+  assert.deepEqual(run.research.trail.map(s=>[s.tool,s.ok]),[['search',true],['answer',true]])
+})
+
+test('replyAnswer reads the answer object alone, fenced or after a line about the research, and nothing else',()=>{
+  const object={points:[{claim:'A finding.'}],facts:[1]}
+  for(const text of [JSON.stringify(object),'```json\n'+JSON.stringify(object)+'\n```','I have enough passages.\n'+JSON.stringify(object),'Done: '+JSON.stringify(object,null,1)])
+    assert.deepEqual(api.replyAnswer(text),object,text)
+  for(const text of ['The report found planning rules slowed approvals.','I will search again.','{"points":[{"claim":"cut off','{"query":"housing"}','[1,2]',''])
+    assert.equal(api.replyAnswer(text),null,text)
+})
+
+test('a loop answer whose first point fails the old direct-lead test streams it at once, and done keeps that order',async()=>{
+  const q='What happened to the Example Bill 2024?'
+  const passages=[{id:'bill-1',resource:'bill-1',slug:'',title:'Example Bill 2024',text:'The Example Bill 2024 passed the Senate on 3 March 2024 after a second reading debate.',url:'https://example.org/bill',kind:'bill'},
+    {id:'sp-1',resource:'sp-1',slug:'',title:'Second reading speech',text:'Senator Jane Example said the bill would cut red tape for small business owners across the country.',url:'https://example.org/sp',kind:'speech',speaker:'Jane Example',chamber:'senate',date:'2024-02-01'}]
+  const points=[{claim:'The Example Bill 2024 passed the Senate on 3 March 2024.',id:'bill-1',quote:'passed the Senate on 3 March 2024 after a second reading debate'},
+    {claim:'Jane Example told the Senate the bill would cut red tape for small business.',id:'sp-1',quote:'the bill would cut red tape for small business owners across the country'}]
+  const full=api.verifyResearchPoints(points,new Map(passages.map(p=>[p.id,p])),q,{people:[],parties:[],bills:[],ambiguous:false,unresolved:false})
+  const checked=api.checkedAnswerPayload({...full,research:{mode:'loop'}},q,true)
+  assert.equal(api.stableResearchLead(checked,q),false,'the hold this answer used to wait on')
+  const deltas=[],stream=api.researchSentenceStream(q,async text=>deltas.push(text))
+  await stream.preview(full)
+  assert.equal(deltas.join(''),checked.answer)
+  const events=decode(await(await api.withAnswerLanguage(new Response(frame('research_sentences',{})+deltas.map(text=>frame('research_sentence',{text})).join('')+frame('done',{...full,research:{mode:'loop'}}),{headers:{'content-type':'text/event-stream'}}),q)).text())
+  assert.equal(events.some(e=>e.event==='retry'),false)
+  assert.ok(events.at(-1).data.answer.startsWith(points[0].claim))
 })

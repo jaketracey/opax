@@ -1,7 +1,8 @@
 // Ask offline replay (backlog 10): stored research payloads replayed through the current /api/ask pipeline.
 // Each fixture in fixtures/ask-replay holds one question with what research saw when it was recorded: the model's
 // turns (tool calls and text, in order), the knowledge-box and record-service responses, and the static assets the
-// answer reads. Nothing reaches a model or the network. A replay fails when the answer comes back empty, as a
+// answer reads. A recorded answer tool call is served as reply text when the turn does not offer that tool, as a live
+// model now answers a qualitative run (REPLY_ANSWER_RULE). Nothing reaches a model or the network. A replay fails when the answer comes back empty, as a
 // limitation line alone, without the citations it had, or in a different API shape; the off-topic fixture must
 // still decline. Private people and donors in the fixtures are invented; passages are attributed to invented members.
 // Assets are trimmed copies of public/ data (scripts/ask_replay_assets.py), so a data refresh on main never moves a
@@ -73,7 +74,7 @@ const limitationOnly=answer=>{const ls=lines(answer);return !ls.length||ls.every
 
 const ask=async(fixture,stream)=>{
   world={fixture,unserved:[]}
-  globalThis.__researchModel=scriptedResearchModel(fixture.model,{tokensPerSecond:stream?Number(process.env.ASK_REPLAY_TOKENS_PER_SECOND??0):0})
+  globalThis.__researchModel=scriptedResearchModel(fixture.model,{tokensPerSecond:stream?Number(process.env.ASK_REPLAY_TOKENS_PER_SECOND??0):0,replyAnswers:true})
   const logs=[];console.log=v=>logs.push(v);console.warn=console.error=()=>{}
   try{
     const started=performance.now()

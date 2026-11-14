@@ -164,7 +164,8 @@ test('the answer target stays soft with a missing detail after 35 seconds', asyn
     const run = await api.runAgentic(question, { asset: local, kb: async () => ({}), origin: 'https://opax.test', research }, undefined, api.ASK_HARD_WALL_MS, api.inferPeriod(question), {}, emptyScope);
     assert.equal(run.answered, true, JSON.stringify(run.research));
     assert.equal(model.doGenerateCalls.length, 3);
-    assert.equal(model.doGenerateCalls[1].toolChoice.type, 'required');
+    // Not forced to answer: with a record held the model may research again or answer in its reply text.
+    assert.equal(model.doGenerateCalls[1].toolChoice.type, 'auto');
     assert.match(JSON.stringify(model.doGenerateCalls[1].prompt), /"answer_target_reached":true/);
   } finally { Date.now = now; }
 });

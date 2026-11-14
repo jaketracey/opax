@@ -260,7 +260,7 @@ test('boundary: an empty answer is written from the records it lists, else their
 
 test('prose is used only when it reads as an answer',()=>{
   assert.equal(api.usableProse(said),said)
-  for(const text of ['Let me search the record for robodebt.','I will look at the report.','<tool_call>{"name":"search"}</tool_call>','{"points":[]}','```json\n{"facts":[1]}\n```','Sorry, I cannot answer that.','The records do not establish who was responsible.','Robodebt.',''])
+  for(const text of ['Let me search the record for robodebt.','I will look at the report.','<tool_call>{"name":"search"}</tool_call>','{"points":[]}','```json\n{"facts":[1]}\n```','I have enough verified passages from different speeches and dates. {"points":[{"claim":"Robodebt was unlawful.","id":"r1"','Sorry, I cannot answer that.','The records do not establish who was responsible.','Robodebt.',''])
     assert.equal(api.usableProse(text),null,text)
   assert.equal(api.usableProse('<think>plan the search</think>'+said),said)
   assert.equal(api.modelProse([{type:'reasoning',text:'hidden'},{type:'text',text:'A '},{type:'text',text:'B'}]),'A B')
