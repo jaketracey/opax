@@ -633,6 +633,7 @@ describe('Account sheet', () => {
       'account-methods',
       'account-coverage',
       'account-privacy',
+      'account-terms',
       'account-support',
       'account-correction',
       'account-replay-tour',
@@ -649,6 +650,26 @@ describe('Account sheet', () => {
         typeof node.props.title === 'string',
     );
     expect(ask.props.title).toBe('Ask settings');
+  });
+  test('Terms of use sits beside Privacy and opens on the web the same way', async () => {
+    const renderer = await render(<AccountEntry />);
+    for (const [id, path, title] of [
+      ['account-privacy', '/privacy', 'Privacy policy'],
+      ['account-terms', '/terms', 'Terms of use'],
+    ] as const) {
+      const row = renderer.root.find(
+        (node) =>
+          node.props.testID === id && typeof node.props.onPress === 'function',
+      );
+      expect([id, row.props.title, row.props.external]).toEqual([
+        id,
+        title,
+        true,
+      ]);
+      expect(row.props.accessibilityHint).toBe('Opens on opax.com.au');
+      act(() => row.props.onPress());
+      expect(openOnWeb).toHaveBeenLastCalledWith(path, title);
+    }
   });
   test('no primary capsule and no repeated title: signing in is a row', async () => {
     const renderer = await render(<AccountEntry />);

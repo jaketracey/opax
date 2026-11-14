@@ -9,7 +9,7 @@ import { replayWelcome } from '../welcome/replay';
 import { SettingsRow, closeSheetThen, linksCopy } from './parts';
 
 /**
- * Groups 4 to 6 of the Account sheet (2.2): about OPAX, privacy, support and
+ * Groups 4 to 6 of the Account sheet (2.2): about OPAX, privacy, terms, support and
  * corrections, then the welcome. Every row has a tile and no second line.
  * The design workbench and Community join in development and e2e builds.
  */
@@ -71,6 +71,14 @@ export function AccountLinks({
           accessibilityHint={linksCopy.opensOnWeb}
           onPress={() => void openOnWeb('/privacy', linksCopy.privacy)}
           testID="account-privacy"
+        />
+        <SettingsRow
+          title={linksCopy.terms}
+          tile={symbols.terms}
+          external
+          accessibilityHint={linksCopy.opensOnWeb}
+          onPress={() => void openOnWeb('/terms', linksCopy.terms)}
+          testID="account-terms"
         />
         <SettingsRow
           title={linksCopy.support}
