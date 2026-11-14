@@ -55,7 +55,7 @@ test('the person page ends on a closing row: all speeches, and a question about 
 
 test('the voting block opens with its heading, above the figures', () => {
   const votes = source.slice(source.indexOf('async function renderPersonVotes'), source.indexOf('async function renderPersonTopics'));
-  assert.ok(votes.indexOf('Voting record</h3>') < votes.indexOf('votes-tiles'));
+  assert.ok(votes.indexOf('Voting record</h2>') < votes.indexOf('votes-tiles'));
   const css = readFileSync(new URL('../public/style.css', import.meta.url), 'utf8');
   assert.match(css, /\.subject-person #subject-votes \.dt caption \{ position: absolute;/);
 });
@@ -77,6 +77,6 @@ test('party and donor headers say the years of their returns, not "Active"', () 
 test('the transcript notes sit with the speeches, not in the head', () => {
   const from = source.indexOf('const speechNotes =');
   const person = source.slice(from, source.indexOf('renderPersonFirstSpeech(name', from));
-  assert.match(person, /renderPersonSpeeches\(speechSpeaker, speeches, chambers, sections, \{ scope: speechScope, notes: speechNotes \}\)/);
+  assert.match(person, /renderPersonSpeeches\(speechSpeaker, speeches, chambers, sections, \{ scope: speechScope, notes: speechNotes, current: roster\?\.current === true \}\)/);
   assert.doesNotMatch(source, /head\.insertAdjacentHTML\('beforeend', heldBackHelpers/);
 });

@@ -5,12 +5,57 @@
    (/graph/party-members.json, scripts/build_party_index.mjs).
    Pure functions; app.js passes in its helpers. */
 
-import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=6d2e2e9cd8';
+import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=fcb2a1091c';
 import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=bcc9a57bab';
+// sponsor-party-aliases:begin
+// Generated from scripts/export_bills.py SPONSOR_PARTY_TOKENS.
+const SPONSOR_PARTY_ALIASES = {
+  "alp": "Labor",
+  "australia's voice": "Australia's Voice",
+  "australian conservatives": "Australian Conservatives",
+  "australian democrats": "Australian Democrats",
+  "australian greens": "Greens",
+  "australian labor party": "Labor",
+  "australian motoring enthusiast party": "Australian Motoring Enthusiast Party",
+  "centre alliance": "Centre Alliance",
+  "country liberal party": "Country Liberal Party",
+  "country liberals (northern territory": "Country Liberal Party",
+  "democratic labor party": "DLP",
+  "democratic labor party (dlp": "DLP",
+  "democratic labour party (dlp": "DLP",
+  "derryn hinch's justice party": "Derryn Hinch's Justice Party",
+  "family first": "Family First",
+  "gerard rennick people first": "Gerard Rennick People First",
+  "greens": "Greens",
+  "independent": "Independent",
+  "independent member": "Independent",
+  "independent members": "Independent",
+  "jacqui lambie network": "Jacqui Lambie Network",
+  "katter's australian party": "Katter's Australian Party",
+  "labor": "Labor",
+  "liberal": "Liberal",
+  "liberal democratic party": "Liberal Democratic Party",
+  "liberal national party of queensland": "LNP",
+  "liberal party of australia": "Liberal",
+  "lnp": "LNP",
+  "national party of australia": "Nationals",
+  "nationals": "Nationals",
+  "nick xenophon team": "Nick Xenophon Team",
+  "one nation": "One Nation",
+  "palmer united party": "Palmer United Party",
+  "pauline hanson's one nation": "One Nation",
+  "pauline hansons one nation": "One Nation",
+  "queensland greens": "Greens",
+  "rex patrick team": "Rex Patrick Team",
+  "the nationals": "Nationals",
+  "united australia party": "United Australia Party",
+  "united australia party (clive palmer": "United Australia Party"
+};
+// sponsor-party-aliases:end
 
 // Server consumers use these re-exports too, keeping the stamped browser
 // dependencies and their identity tables to one copy in the Worker bundle.
-export * from './labels.js?v=6d2e2e9cd8';
+export * from './labels.js?v=fcb2a1091c';
 export * from './canonical-urls.js?v=bcc9a57bab';
 
 const fold = value => String(value ?? '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
@@ -209,7 +254,7 @@ export const PARTY_NO_MEMBERS = "No members recorded in OPAX's roster for this p
 export function partyMembersHTML(label, members, h, {speechesHref = '', speechSummary = '', directoryHref = '', updated = ''} = {}) {
   const independent = isIndependent(label);
   const total = members.current.length + members.former.length;
-  if (!total) return `<section class="party-members" id="party-members"><h3 class="subject-section-title">Members</h3><p>${h.esc(PARTY_NO_MEMBERS)}</p></section>`;
+  if (!total) return `<section class="party-members" id="party-members"><h2 class="subject-section-title">Members</h2><p>${h.esc(PARTY_NO_MEMBERS)}</p></section>`;
   // Seat-roster members after a later election: not known to sit, not known to have left.
   const rostered = members.former.filter(m => m.seat_roster?.stale);
   const former = members.former.filter(m => !m.seat_roster?.stale);
@@ -246,7 +291,7 @@ export function partyMembersHTML(label, members, h, {speechesHref = '', speechSu
     if (datedGroup && !/as at/.test(title)) title = `${title}, as at ${dayMonthYear([...dates][0])}`;
     const shown = list.slice(0, SHOWN), rest = list.slice(SHOWN);
     // With nobody sitting, the block's own heading says it all: no subheading.
-    return `${title ? `<h4 class="entry-subhead">${h.esc(title)} (${list.length.toLocaleString()})</h4>` : ''}
+    return `${title ? `<h3 class="entry-subhead">${h.esc(title)} (${list.length.toLocaleString()})</h3>` : ''}
       <ul class="subject-list dir-list party-member-list" role="list">${shown.map(row).join('')}</ul>
       ${rest.length ? `<details class="party-members-more"><summary>${rest.length.toLocaleString()} more ${h.esc((title || 'members').toLowerCase())}</summary>
         <ul class="subject-list dir-list party-member-list" role="list">${rest.map(row).join('')}</ul></details>` : ''}`;
@@ -254,7 +299,7 @@ export function partyMembersHTML(label, members, h, {speechesHref = '', speechSu
   const rosteredGroups = [...new Set(rostered.map(m => m.seat_roster.as_of))].sort().reverse()
     .map(day => group(`On the parliamentary roster as at ${dayMonthYear(day)}`, rostered.filter(m => m.seat_roster.as_of === day))).join('');
   return `<section class="party-members" id="party-members">
-    <div class="entry-section-head"><h3 class="subject-section-title">${independent ? 'Parliamentarians' : 'Members'}</h3>${speechesHref ? `<a href="${h.esc(speechesHref)}">Their speeches</a>` : ''}</div>
+    <div class="entry-section-head"><h2 class="subject-section-title">${independent ? 'Parliamentarians' : 'Members'}</h2>${speechesHref ? `<a href="${h.esc(speechesHref)}">Their speeches</a>` : ''}</div>
     ${speechSummary ? `<p class="ui-section-note">${h.esc(speechSummary)}</p>` : ''}
     ${members.current.length || rostered.length
       ? group(independent ? 'Sitting parliamentarians' : 'Sitting members', members.current) + rosteredGroups + group(independent ? 'Former parliamentarians' : 'Former members', former)
@@ -296,7 +341,7 @@ export function partyStateMoneyHTML(label, files, h) {
   const commissions = [...new Set(hits.map(x => x.meta.commission).filter(Boolean))];
   const total = hits.reduce((a, x) => Math.max(a, x.node.total || 0), 0);
   return `<section class="state-money party-state-money" id="party-state-money" data-accent="money" data-rail-figure="${h.esc(h.fmtMoney(total))}">
-    <h3 class="subject-section-title">Disclosed to state commissions</h3>
+    <h2 class="subject-section-title">Disclosed to state commissions</h2>
     <ul class="subject-list" role="list">${items}</ul>
     ${h.sourceLineHTML({source: commissions.join('; ') || 'State electoral commissions', state: 'totals are a floor',
       notes: ["Gifts under each state's disclosure threshold are not reported, so these totals are a floor, not a ceiling.", h.esc(h.notSummed)]})}
@@ -327,7 +372,7 @@ export function partyBillsHTML(label, bills, h, {updated = ''} = {}) {
   };
   const shown = bills.slice(0, SHOWN), rest = bills.slice(SHOWN);
   return `<section class="party-sponsored-bills" id="party-sponsored-bills">
-    <h3 class="subject-section-title">Bills sponsored (${bills.length.toLocaleString()})</h3>
+    <h2 class="subject-section-title">Bills sponsored (${bills.length.toLocaleString()})</h2>
     <ul class="subject-list" role="list">${shown.map(row).join('')}</ul>
     ${rest.length ? `<details class="party-members-more"><summary>${rest.length.toLocaleString()} more bills</summary>
       <ul class="subject-list" role="list">${rest.map(row).join('')}</ul></details>` : ''}
@@ -412,6 +457,21 @@ export function partyReturns(label, parties, same = (a, b) => identity(a) === id
   const note = lodged.length > 1 ? `Returns lodged as ${lodged.map(l => `${l.name} (${l.from === l.to ? l.from : `${l.from} to ${l.to}`})`).join(' and as ')}, combined here.` : '';
   return {rows: [...byYear.values()], names: lodged.map(l => l.name), note, entry: names.length === 1 ? parties[names[0]] : null};
 }
+/**
+ * The header's money line, from the party's newest annual return with a receipts figure: "On its
+ * 2024–25 annual return: $161.8m in receipts, 9 branches summed." The scope is the return, never the
+ * money map's named donors. `rows` are partyReturns' [year, receipts, ..., branches] tuples; null when
+ * no year carries receipts. Annual returns cover completed financial years, so this is the latest
+ * complete year, never a year to date.
+ */
+export function latestReturnLine(rows, money = n => `$${Math.round(n).toLocaleString('en-AU')}`) {
+  const latest = (rows || []).map(r => ({year: String(r?.[0] || ''), receipts: Number(r?.[1]) || 0, branches: Number(r?.[4]) || 0}))
+    .filter(r => /^\d{4}-\d{2}$/.test(r.year) && r.receipts > 0).sort((a, b) => b.year.localeCompare(a.year))[0];
+  if (!latest) return null;
+  const year = latest.year.replace('-', '–');
+  return {year: latest.year, receipts: latest.receipts,
+    text: `On its ${year} annual return: ${money(latest.receipts)} in receipts${latest.branches > 1 ? `, ${latest.branches} branches summed` : ''}.`};
+}
 export const isIndependent = label => identity(label) === 'IND';
 export const INDEPENDENTS_DESCRIPTION = 'Parliamentarians who sat without a party. Not a party organisation.';
 export const PARTY_MEMBER_SCOPE = 'Parliamentarian counts include current and former people recorded under the affiliation in the roster, a verified electorate roster or the divisions. Each person is counted once per affiliation, using their person ID where held.';
@@ -466,22 +526,6 @@ export async function readPartyPages(read) {
   ]);
   return canonicalPartyPages({ money, roster, divisions });
 }
-
-// Recognised sponsor labels removed by scripts/export_bills.py normalisation.
-// Keep them as route aliases without making extra party pages or changing labels.
-const SPONSOR_PARTY_ALIASES = {
-  'alp': 'Labor',
-  'liberal party of australia': 'Liberal',
-  'national party of australia': 'Nationals',
-  'liberal national party of queensland': 'LNP',
-  'queensland greens': 'Greens',
-  'independent member': 'Independent',
-  'independent members': 'Independent',
-  'united australia party (clive palmer': 'United Australia Party',
-  'country liberals (northern territory': 'Country Liberal Party',
-  'democratic labor party (dlp': 'DLP',
-  'democratic labor party': 'DLP',
-};
 
 /** Accept source spellings and recognised label aliases, but return one page. */
 export function resolvePartyPage(segment, pages) {

@@ -37,7 +37,7 @@ test('an incomplete section array falls back to the entire uncut text', () => {
 });
 
 test('version labels distinguish incomplete and unavailable source versions', () => {
-  assert.equal(billTextVersionLabel({stage_label:'As introduced in the House',date:'2026-08-20',status:'complete'}),'As introduced in the House · 2026-08-20');
+  assert.equal(billTextVersionLabel({stage_label:'As introduced in the House',date:'2026-08-20',status:'complete'}),'As introduced in the House · 20 Aug 2026');
   assert.match(billTextVersionLabel({stage_label:'As passed',status:'incomplete'}),/incomplete text/);
   assert.match(billTextVersionLabel({source_version:'first_reps',status:'unavailable'}),/text unavailable/);
 });

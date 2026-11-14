@@ -74,5 +74,5 @@ test('the slot stays hidden when the file cannot be read, and fills when it can'
 
 test('the home page carries the slot above its title, hidden until the calendar answers', () => {
   const html = readFileSync(new URL('../public/home.html', import.meta.url), 'utf8');
-  assert.match(html, /<p id="hp-sitting" class="hp-sitting" hidden><\/p>\s*<h1 id="hp-title">/);
+  assert.match(html, /<p id="hp-sitting" class="hp-sitting" hidden><\/p>\s*<p id="hp-most-divided" class="hp-sitting hp-most-divided" hidden><\/p>\s*<h1 id="hp-title">/);
 });

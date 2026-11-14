@@ -63,13 +63,13 @@ for (const records of [[federal, qld], [qld, federal]]) {
     const dom = new JSDOM(result.html), doc = dom.window.document;
     const own = doc.querySelector('#donor-record');
     assert.ok(own, 'the federal block survives hydration');
-    assert.match(own.querySelector('h3').textContent, /Federal/);
+    assert.match(own.querySelector('h2').textContent, /Federal/);
     assert.ok(own.textContent.includes(shortMoney(federal.total)));
     assert.equal(own.querySelectorAll('.tile b')[1].textContent, '7');
     assert.equal(own.querySelectorAll('.tile span')[1].textContent, 'receipts');
     assert.match(own.textContent, /Other Receipt/);
     const state = doc.querySelector('#state-money');
-    assert.equal(state.querySelector('h3').textContent, 'Also disclosed to state commissions');
+    assert.equal(state.querySelector('h2').textContent, 'Also disclosed to state commissions');
     assert.match(state.textContent, /Queensland/);
     assert.ok(state.textContent.includes(`${shortMoney(qld.total)} across 2 disclosed gifts`));
     assert.equal(state.querySelectorAll('li').length, 1);
@@ -85,7 +85,7 @@ test('a state-only profile labels each commission and never repeats its figure',
   const dom = new JSDOM(result.html), text = dom.window.document.body.textContent;
   assert.match(text, /Queensland/);
   assert.match(text, /Victoria/);
-  assert.equal(dom.window.document.querySelector('#state-money h3').textContent, 'Disclosed to state commissions');
+  assert.equal(dom.window.document.querySelector('#state-money h2').textContent, 'Disclosed to state commissions');
   assert.equal(text.split(shortMoney(qld.total)).length - 1, 1);
   assert.equal(text.split(shortMoney(6700)).length - 1, 1);
   dom.window.close();
