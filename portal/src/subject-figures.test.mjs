@@ -8,7 +8,7 @@ import {donorRecordsHTML} from './subject-figures.ts';
 import {loadDonorRecordsIndex,donorRecordsForName} from './donor-index.ts';
 import {foldDonorName} from '../public/donor-entity.js';
 import {shortMoney} from '../public/format.js';
-import {receiptScopeLabel} from '../public/donor-disclosure.js';
+import {receiptScopeLabel,offMapDonorNote} from '../public/donor-disclosure.js';
 import {fy} from '../public/money-scope.js';
 
 const app = readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
@@ -111,7 +111,7 @@ test('off-map server HTML retains each jurisdiction and matches hydrated figures
   // Evaluate the browser renderer on each retained source record, as the
   // directory does; the N04 scope tests also pin collision lookup order.
   const browser = runInNewContext(`${functionSource('donorRecordHTML')};donorRecordHTML`,{
-    fmtMoney,yearSpan,receiptScopeLabel,esc:value=>String(value),safeUrl:value=>value,
+    fmtMoney,yearSpan,receiptScopeLabel,offMapDonorNote,esc:value=>String(value),safeUrl:value=>value,
     tile:(figure,label)=>`<p>${figure} ${label}</p>`,sourceLineHTML:()=>'',
     MONEY_JURISDICTIONS:{qld:{label:'Queensland'}},AEC_NOTE:'',AEC_LICENCE:'',
   });

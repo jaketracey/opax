@@ -236,6 +236,12 @@ export function receiptScopeLabel(figures, measure = 'all_types') {
   return `${measure === 'donation_only' ? 'Donations only' : 'All receipt types'}${span}, as the parties reported them in federal returns`;
 }
 
+/** The same explanation on server and browser pages for a donor outside the map. */
+export function offMapDonorNote(record) {
+  return 'Receipts disclosed under this exact name. This donor is not drawn on the money map, which shows a bounded selection of donors. Recipient parties are listed in the source returns.'
+    + (record?.jurisdiction === 'federal' ? ' State disclosures are shown separately and are not added to these figures.' : '');
+}
+
 /** Name every included receipt type, so an all-receipt total is never called donations. */
 export function receiptTypeLine(record) {
   const figures = receiptFigures(record);

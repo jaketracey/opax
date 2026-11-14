@@ -13,6 +13,7 @@ export interface ReceiptCells {total?:number;count?:number;firstYear?:number|nul
 export interface ReceiptFigures {total:number;count:number;firstYear:number|null;lastYear:number|null;byYear:Record<string,number>;cells:Record<string,[number,number]>;undated:[number,number];byType:Record<string,number>|null;typed:boolean;typeCells:Record<string,Record<string,[number,number]>>|null;typeCounts:Record<string,number>|null;publicFunding:[number,number];publicFundingCells:Record<string,[number,number]>}
 export function receiptFigures(x: ReceiptCells | null | undefined): ReceiptFigures;
 export function receiptScopeLabel(figures: Pick<ReceiptFigures,'typed'|'firstYear'|'lastYear'>, measure?: 'all_types' | 'donation_only'): string;
+export function offMapDonorNote(record: Pick<DonorDisclosureRecord,'jurisdiction'>): string;
 /** Whether the parties' own returns list any receipt for a donor or flow; true for a record without typed cells. */
 export function receiptTypeLine(record: ReceiptCells | null | undefined): string;
 export function hasPartyReceipts(x: ReceiptCells | null | undefined): boolean;

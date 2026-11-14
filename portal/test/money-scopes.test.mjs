@@ -6,7 +6,7 @@ import {runInNewContext} from 'node:vm';
 import {JSDOM} from 'jsdom';
 import ts from 'typescript';
 import {fy, financialYear, moneyScope, industryName} from '../public/money-scope.js';
-import {donorLookup, receiptFigures, receiptScopeLabel, receiptTypeLine, hasPartyReceipts, notListedLine, donorLabelHTML} from '../public/donor-disclosure.js';
+import {donorLookup, receiptFigures, receiptScopeLabel, offMapDonorNote, receiptTypeLine, hasPartyReceipts, notListedLine, donorLabelHTML} from '../public/donor-disclosure.js';
 import {shortMoney} from '../public/format.js';
 import {formatCell, dataTableHTML, applyQuery, toCSV} from '../public/datatable.js';
 import {partyMoneyTableConfig} from '../public/register-tables.js';
@@ -17,7 +17,7 @@ const app=ts.createSourceFile('app.js',readFileSync(new URL('../public/app.js',i
 const names=['donorRecordHTML','renderDonorStateMoney','partyReceiptsHTML','partyLatestYear','personPartyFigure','fillDatedMentionParties','metaHTML','renderPartyMembers'];
 const code=app.statements.filter(n=>ts.isFunctionDeclaration(n)&&names.includes(n.name?.text)).map(n=>n.getText(app)).join('\n');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const helpers={esc,fy,moneyScope,receiptFigures,receiptScopeLabel,receiptTypeLine,hasPartyReceipts,notListedLine,fmtMoney:shortMoney,fmtDollars:n=>'$'+n.toLocaleString('en-AU'),safeUrl:s=>s,
+const helpers={esc,fy,moneyScope,receiptFigures,receiptScopeLabel, offMapDonorNote,receiptTypeLine,hasPartyReceipts,notListedLine,fmtMoney:shortMoney,fmtDollars:n=>'$'+n.toLocaleString('en-AU'),safeUrl:s=>s,
   tile:(n,label)=>`<div><b>${esc(n)}</b> ${esc(label)}</div>`,yearSpan:(a,b)=>a===b?String(a):`${a}–${b}`,
   sourceLineHTML:opts=>`<aside>${esc(opts.source)} ${opts.notes.map(esc).join(' ')}</aside>`,AEC_NOTE:'Check the original records.',AEC_LICENCE:'AEC licence',
   MONEY_JURISDICTIONS:{federal:{label:'Federal'},qld:{label:'Queensland'}},STATE_NOT_SUMMED:'Jurisdictions are not added together.',

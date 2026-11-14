@@ -347,7 +347,7 @@ test('donors directory: Pratt Holdings at $19.6m across 120 receipts, Liberal an
 test('app.js keeps one projected graph beside moneyData, from donor-views.js', async () => {
   const source = await readFile(new URL('../public/app.js', import.meta.url), 'utf8');
   assert.ok(source.includes('moneyReceipts = module.receiptGraph(d);'));
-  assert.ok(source.includes('({displayName:sourceDisplayName,fy,moneyScope,industryName:sharedIndustryName,donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,receiptTypeLine,receiptFigures,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);'));
+  assert.ok(source.includes('({displayName:sourceDisplayName,fy,moneyScope,industryName:sharedIndustryName,donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,offMapDonorNote,receiptTypeLine,receiptFigures,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);'));
 });
 
 // ---- Games: the ledger, the quiz's donor and industry questions, words per dollar ----

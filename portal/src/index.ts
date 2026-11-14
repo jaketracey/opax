@@ -8,7 +8,7 @@ import {partyMoneyResponse} from './party-money-table'
 import {interestRegisterResponse} from './interest-register'
 import {loadDonorIndex,loadDonorRecordsIndex,donorRecordsForName} from './donor-index'
 import {campaignerReturnsHTML,donorRecordsHTML,type CampaignerYear} from './subject-figures'
-import {donorDisclosure,donorLabelHTML,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
+import {offMapDonorNote,donorDisclosure,donorLabelHTML,hasPartyReceipts,publicFundingOnly,PUBLIC_FUNDING_ONLY,type DonorDisclosureRecord} from '../public/donor-disclosure.js'
 import sourceIdentity from '../../parli/ingest/user-agent.json'
 import { SA_EXCERPT_LABEL, isSaHansard, saFullText, saOfficialUrl } from '../public/sa-hansard.js'
 import { saPublicResponse, saEventPayload } from './sa-hansard'
@@ -49,7 +49,7 @@ import { governmentFinancePage, governmentFinanceReader } from './government-fin
 import { govAdvertisingPage, govAdvertisingReader, govAdvertisingReady } from './gov-advertising'
 import { taxExpendituresPage, taxExpendituresReader, taxExpendituresReady } from './tax-expenditures'
 import {parseQuery,serializeQuery,type Page} from '../public/datatable.js'
-import {partyMoneyData,partyMoneyTableConfig,partyReturnFigures,partyReturnScopeLabel,receiptFigures,registerTableHTML} from '../public/register-tables.js'
+import {partyMoneyData,partyMapScope,partyMoneyTableConfig,partyReturnFigures,partyReturnScopeLabel,receiptFigures,registerTableHTML} from '../public/register-tables.js'
 import {grantsHTML} from './grants-table'
 import {saGrantsPage,saGrantsReader} from './sa-grants'
 import {actInvoicesPage} from './act-invoices'
@@ -5672,7 +5672,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
         ...(associated ? [`${associated.charAt(0).toUpperCase()}${associated.slice(1)}`] : [])],
     }
   } else {
-    facts = disclosureRecord?.kind==='reference' ? `${display}: source reference; no matching electoral donation established.` : `${display}: disclosed electoral returns. Not drawn on the money map, which shows only the largest donors.`
+    facts = disclosureRecord?.kind==='reference' ? `${display}: source reference; no matching electoral donation established.` : `${display}: disclosed electoral returns. ${offMapDonorNote(disclosureRecord ?? {})}`
     card = {kicker:disclosureRecord?.kind==='reference'?'Source reference':'Donor',title:display,lines:[facts]}
   }
   // A renamed party's name history (labels.js PARTY_RENAMES): the line under its heading, with the notices.
@@ -5690,7 +5690,7 @@ async function moneySubjectMeta(dir: 'party' | 'donor', name: string, url: URL, 
       const {rows,scope} = partyMoneyData(graph,party.id)
       const config = partyMoneyTableConfig(rows,undefined,undefined,undefined,{party:party.label,jurisdiction:'federal'})
       config.id = 'ssr-party-money-table'
-      table = `<section class="wrap"><h2>Where it came from</h2>${scope ? `<p class="entry-scope">${escHtml(scope)}</p>` : ''}${registerTableHTML(config,undefined,url)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
+      table = `<section class="wrap"><h2>Where it came from</h2>${scope ? `<p class="entry-scope">${escHtml(partyMapScope(scope))}</p>` : ''}${registerTableHTML(config,undefined,url)}<p>Party transfers and grants are excluded. Source: <a href="https://transparency.aec.gov.au/">AEC Transparency Register</a>.</p></section>`
     }
   }
   return {
