@@ -29,7 +29,7 @@ import { welcomeMinuteRoute, welcomeSeatRoute } from '../../navigation/routes';
 import { firstRunSkipped } from '../../onboarding/measure';
 import { closeWelcome, markWelcomeSeen } from '../../onboarding/state';
 import { welcomeAsk } from '../newcomer/copy';
-import { setExplainTerms } from '../newcomer/foundation-stub';
+import { setExplainTerms } from '../learn/settings';
 import { useSeat } from '../your-mp/useSeat';
 import { welcomeCopy } from './copy';
 

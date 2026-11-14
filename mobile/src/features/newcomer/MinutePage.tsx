@@ -13,7 +13,7 @@ import { welcomeSeatRoute } from '../../navigation/routes';
 import { useSeat } from '../your-mp/useSeat';
 import { ChambersArt, DivisionArt, ElectorateArt, RecordArt } from './art';
 import { minuteCopy, minuteIdeas, type MinuteIdea } from './copy';
-import { openTerm } from './foundation-stub';
+import { openTerm } from '../learn/open-term';
 
 /** The widest the drawings grow: the welcome's column. */
 const ART_COLUMN = 540;

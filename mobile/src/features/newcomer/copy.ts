@@ -1,3 +1,5 @@
+import type { TermId } from '../learn/glossary';
+
 /**
  * The newcomer build's words (option C, Jake 14 Nov; design pass README
  * sections 4.1 to 4.4). Plain Australian English: the plain thing first,
@@ -76,7 +78,7 @@ export const minuteCopy = Object.freeze({
   further: [
     { term: 'government', label: 'Who is the government?' },
     { term: 'crossbench', label: 'What’s the crossbench?' },
-  ],
+  ] as const satisfies readonly { term: TermId; label: string }[],
   /** The drawings' captions (the chamber arcs and the counted vote). */
   house: 'House · 150 MPs',
   senate: 'Senate · 76 senators',

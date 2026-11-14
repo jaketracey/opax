@@ -25,18 +25,19 @@ import {
   minuteIdeas,
   welcomeAsk,
 } from '../src/features/newcomer/copy';
+import { isTermId } from '../src/features/learn/glossary';
+import { openTerm } from '../src/features/learn/open-term';
+import { minuteRoute } from '../src/features/learn/routes';
 import {
-  openTerm,
-  resetExplainTermsForTests,
+  resetLearnSettingsForTests,
   setExplainTerms,
-  stubGlossary,
   useExplainTerms,
-} from '../src/features/newcomer/foundation-stub';
+} from '../src/features/learn/settings';
 import { installGloss } from '../src/features/newcomer/gloss-source';
 import ShortWelcome from '../src/features/welcome/ShortWelcome';
 import Welcome from '../src/features/welcome/Welcome';
 import { firstLaunchTour, markWelcomeSeen } from '../src/onboarding/state';
-import { learnMinuteRoute, welcomeMinuteRoute } from '../src/navigation/routes';
+import { welcomeMinuteRoute } from '../src/navigation/routes';
 
 const mockSetOptions = jest.fn();
 jest.mock('expo-router', () => {
@@ -78,10 +79,7 @@ jest.mock('../src/launch/splash', () => ({ releaseSplash: jest.fn() }));
 jest.mock('../src/launch/LaunchHandoff', () => ({
   LaunchHandoff: () => null,
 }));
-jest.mock('../src/features/newcomer/foundation-stub', () => ({
-  ...jest.requireActual('../src/features/newcomer/foundation-stub'),
-  openTerm: jest.fn(),
-}));
+jest.mock('../src/features/learn/open-term', () => ({ openTerm: jest.fn() }));
 const mockSeat: { current: { status: string } } = {
   current: { status: 'none' },
 };
@@ -160,7 +158,8 @@ beforeEach(() => {
   jest.clearAllMocks();
   mockSeat.current = { status: 'none' };
   setFontScale(1);
-  resetExplainTermsForTests();
+  // A read settings file with nothing set: the defaults (Explain terms off).
+  resetLearnSettingsForTests({});
   resetGlossForTests();
 });
 
@@ -365,7 +364,7 @@ describe('plain lines under headings', () => {
       new Set(['division', 'bill', 'register-of-interests']),
     );
     for (const id of [...ids, ...minuteCopy.further.map((f) => f.term)])
-      expect(Object.keys(stubGlossary)).toContain(id);
+      expect(isTermId(id)).toBe(true);
   });
 });
 
@@ -431,7 +430,7 @@ describe('Parliament in a minute', () => {
     await act(async () => r.unmount());
   });
   test('as an ordinary page (/learn/minute): no Skip and no electorate button', async () => {
-    expect(learnMinuteRoute).toEqual({ pathname: '/learn/minute' });
+    expect(minuteRoute).toEqual({ pathname: '/learn/minute' });
     const r = await render(
       <InStack>
         <LearnMinute />

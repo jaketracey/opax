@@ -10,8 +10,8 @@ import { askScreens } from './ask';
 import { moneyMapScreens } from './money-map';
 import { publicMoneyScreens } from './public-money';
 import { exploreScreens } from './explore';
+import { learnScreens } from './learn';
 import { filtersScreens } from './filters';
-import { newcomerScreens } from './newcomer';
 import { referenceSharedScreens } from './reference';
 import type { TabSegment } from '../chrome';
 
@@ -53,8 +53,8 @@ export function sharedScreens(segment: string, signedIn: boolean) {
     ...moneyMapScreens(),
     ...publicMoneyScreens(),
     ...exploreScreens(),
+    ...learnScreens(),
     ...filtersScreens(),
-    ...newcomerScreens(),
   ];
   const root = tabRootName(segment);
   return [
