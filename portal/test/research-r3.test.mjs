@@ -31,8 +31,8 @@ for(const answer of ['Avery Example said Labor received $100,000.','Avery Exampl
  const input=payload(answer,[speech])
  assert.equal(auditPayload('What did Avery say?',input).findings.length,0)
  const {out}=await boundary(input,'What did Avery say?',{stream:true,cache:true})
- // Quote tidying re-spans a verified quotation to the passage words, dropping the doubled full stop inside it.
- assert.equal(out.answer,answer);assert.deepEqual(Object.keys(out.citations),Object.keys(input.citations))
+ // The quotation stays verbatim; the surplus full stop outside its closing mark goes.
+ assert.equal(out.answer,answer.replace(/(?<=”)[.]$/,''));assert.deepEqual(Object.keys(out.citations),Object.keys(input.citations))
 })
 test('r3 a reported recipient must still match the amount in the speech',()=>{
  const input=payload('Avery Example said Blake Sample received $100,000.',[speech,source('blake','Blake Sample: $200,000.')])
