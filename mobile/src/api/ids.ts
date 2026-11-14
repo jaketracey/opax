@@ -18,7 +18,10 @@ const branded =
   <K extends string>(pattern: RegExp): Decoder<ID<K>> =>
   (v) =>
     matching(pattern)(v) as ID<K>;
-export const personId = branded<'canonical-person'>(/^person_[a-f0-9]{24}$/);
+const PERSON_ID = /^person_[a-f0-9]{24}$/;
+export const personId = branded<'canonical-person'>(PERSON_ID);
+export const isPersonId = (v: unknown): v is PersonId =>
+  typeof v === 'string' && PERSON_ID.test(v);
 export const legacyPersonId = branded<'legacy-numeric-person'>(/^\d+$/);
 export const rosterId = branded<'roster-person'>(
   /^(?:\d+|(?:nsw|vic|qld|sa|wa|tas|act|nt|wragge|zenodo|aph)_[a-z0-9_]+)$/,

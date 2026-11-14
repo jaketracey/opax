@@ -205,6 +205,9 @@ function* partyMemberProfiles(
           resource: '',
         },
         { roster, people, slugs, manifest },
+        // A row that could not be read drops only that member; the block
+        // says it is partial (catalogs.ts partyPage).
+        { partial: 'allow' },
       )
     )
       continue;

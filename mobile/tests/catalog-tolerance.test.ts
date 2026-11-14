@@ -1,6 +1,11 @@
 import * as d from '../src/api/catalog-decoders';
 import { ApiError } from '../src/api/errors';
-import { rows, records, setCatalogDiagnostics } from '../src/api/validation';
+import {
+  isPartialCatalog,
+  rows,
+  records,
+  setCatalogDiagnostics,
+} from '../src/api/validation';
 import { pinned, manifest, slugs, replaceAt } from './pinned';
 
 const optionalCases: [string, (v: unknown) => unknown, (string | number)[]][] =
@@ -88,6 +93,31 @@ test('one malformed roster row keeps all other rows in their original order', ()
   expect(console.warn).toHaveBeenCalledWith(
     'Dropped malformed catalog row: rosterPerson [1]',
   );
+});
+test('a canonical person id in a roster pid keeps the row, read as no pid', () => {
+  // 14 Nov: the export wrote person_<hex> ids into pid for two former
+  // members; the roster rule dropped both rows and marked the file partial.
+  const input = pinned('/parliamentarians.json') as {
+    meta: unknown;
+    people: Record<string, unknown>[];
+  };
+  const canonical = 'person_9c02d321caef54b2ba21a1f8';
+  const raw = {
+    ...input,
+    people: [{ ...input.people[0], pid: canonical }, ...input.people.slice(1)],
+  };
+  const decoded = d.decodeRoster(raw);
+  expect(isPartialCatalog(decoded)).toBe(false);
+  expect(decoded.people).toHaveLength(input.people.length);
+  expect(decoded.people[0]!.name).toBe(input.people[0]!.name);
+  expect(decoded.people[0]!.pid).toBeUndefined();
+  // Any other id that breaks the rule still drops only its own row.
+  const bad = d.decodeRoster({
+    ...input,
+    people: [{ ...input.people[0], pid: 'Not An Id' }, ...input.people.slice(1)],
+  });
+  expect(isPartialCatalog(bad)).toBe(true);
+  expect(bad.people).toHaveLength(input.people.length - 1);
 });
 test.each(['meta', 'people'])(
   'roster missing required %s fails the file',

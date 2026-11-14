@@ -42,14 +42,22 @@ const directories = new WeakMap<
     >
   >
 >();
-function memberDirectory(catalogs: MemberCatalogs) {
+/** `partial: 'allow'` is for a party's Members only, which marks itself
+ * partial: a row that could not be read then drops only that person. Search
+ * keeps refusing partial catalogs. */
+type DirectoryOptions = { partial?: 'allow' };
+function memberDirectory(
+  catalogs: MemberCatalogs,
+  options: DirectoryOptions = {},
+) {
   const { roster, slugs, people, manifest } = catalogs;
   if (
     !roster ||
     !slugs ||
     !people ||
     !manifest ||
-    [roster, slugs, people, manifest].some(isPartialCatalog) ||
+    (options.partial !== 'allow' &&
+      [roster, slugs, people, manifest].some(isPartialCatalog)) ||
     people.meta.release_id !== manifest.release_id
   )
     return new Map<string, Member>();
@@ -123,9 +131,13 @@ const identityName = (name: string) =>
     .toLowerCase()
     .replace(/[’‘ʼ`']/g, '');
 /** Keep exactly one native identity established by the profile resolver. */
-export function memberSlugFor(row: CatalogRecord, catalogs: MemberCatalogs) {
+export function memberSlugFor(
+  row: CatalogRecord,
+  catalogs: MemberCatalogs,
+  options: DirectoryOptions = {},
+) {
   if (!catalogs.slugs) return undefined;
-  const members = memberDirectory(catalogs);
+  const members = memberDirectory(catalogs, options);
   const href = personSlugForResult(row, catalogs.slugs);
   const title = personSlugForResult(personRow(row.title), catalogs.slugs);
   const fromHref = href && members.get(href);

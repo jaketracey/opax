@@ -255,22 +255,20 @@ export class Catalogs {
         this.manifest(refresh, signal),
       ]);
       const people = await this.people(manifest.data, refresh, signal);
-      // Membership counts and money ranks require a complete cohort.
-      if (
-        [roster, slugs, manifest, people].some(
-          (r) => r.partial || isPartialCatalog(r.data),
-        )
-      )
-        throw new ApiError(
-          'invalid-data',
-          'Some membership rows could not be read.',
-        );
+      // A row that cannot be read drops only that row: Members draws the rest
+      // and says it is partial. (b69 refused the whole block on any partial
+      // cohort, so two bad roster ids took Members down on every party.)
       return { roster, slugs, manifest, people };
     })();
     const coreRead = read(
       corePending.then((data) => ({
         data,
-        ...recordFlags([data.roster, data.slugs, data.manifest, data.people]),
+        ...recordFlags(
+          [data.roster, data.slugs, data.manifest, data.people].map((r) => ({
+            staleReason: r.staleReason,
+            partial: r.partial || isPartialCatalog(r.data),
+          })),
+        ),
         stale: [data.roster, data.slugs, data.manifest, data.people].some(
           (r) => r.stale,
         ),

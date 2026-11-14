@@ -5,6 +5,7 @@ import {
   billKey,
   electorateId,
   interestKey,
+  isPersonId,
   legacyPersonId,
   payId,
   personId,
@@ -102,9 +103,15 @@ const affiliation = shape({
   electorate: maybeText,
   source_url: (v: unknown) => (v === '' ? undefined : optional(url)(v)),
 });
+// A canonical person id is not a roster id. On 14 Nov the export wrote two
+// into `pid`; the rule dropped both rows and every party's Members block
+// failed. Read one as no pid, the shape the export now writes (the canonical
+// id moved to `person_id`, which the app does not read).
+const rosterPid = (v: unknown) =>
+  isPersonId(v) ? undefined : optional(rosterId)(v);
 const rosterPerson = shape({
   name: nonempty,
-  pid: optional(rosterId),
+  pid: rosterPid,
   party: maybeText,
   parties: optional(strings),
   affiliations: (v: unknown) =>

@@ -578,15 +578,21 @@ test.each(['receipts', 'associated', 'divisions'] as const)(
 );
 
 test.each(['roster', 'people'] as const)(
-  'a partial %s refuses membership counts while optional party blocks still load',
+  'a bad %s row drops only that row: Members still draws, marked partial',
   async (source) => {
+    // b69 refused the whole Members block on any partial cohort, so on
+    // 14 Nov two roster rows took Members down on every party page.
     const path =
       source === 'roster' ? '/parliamentarians.json' : manifest.people_url;
+    // Break a sitting Labor member's own row.
+    const raw = pinned(path) as { people: { name: string }[] };
+    const at = raw.people.findIndex((p) => p.name === 'Anthony Albanese');
+    expect(at).toBeGreaterThanOrEqual(0);
     const api = new Catalogs({
       get: async (requested, decoder) => {
         if (requested !== path) return get(requested, decoder);
         return {
-          data: decoder(replaceAt(pinned(path), ['people', 0, 'name'], 7)),
+          data: decoder(replaceAt(pinned(path), ['people', at, 'name'], 7)),
           stale: false,
           savedAt: 1000,
           asOf: null,
@@ -594,11 +600,16 @@ test.each(['roster', 'people'] as const)(
       },
     });
     const view = (await api.partyPage('Labor')).data!;
-    expect(view.members.status).toBe('error');
-    expect(view.members.error?.message).toBe(
-      'Some membership rows could not be read.',
+    expect(view.members.status).toBe('ready');
+    expect(view.members.partial).toBe(true);
+    // Only the unreadable row's person may go; nobody else changes.
+    const full = new Set(members.current.map((m) => m.slug));
+    const shown = view.members.data!.current.map((m) => m.slug);
+    expect(shown.every((slug) => full.has(slug))).toBe(true);
+    expect(view.members.data!.currentCount).toBeGreaterThanOrEqual(
+      members.currentCount - 1,
     );
-    expect(view.members.data).toBeNull();
+    expect(shown).toContain('penny-wong');
     expect(view.receipts.status).toBe('ready');
     expect(view.receipts.data?.node.total).toBe(graph.nodes[0]!.total);
     expect(view.associated.status).toBe('ready');
@@ -606,6 +617,31 @@ test.each(['roster', 'people'] as const)(
     expect(view.divisions.data?.scanned).toBe(32);
   },
 );
+
+test('a canonical person id in a roster pid leaves Members whole and not partial', async () => {
+  const path = '/parliamentarians.json';
+  const api = new Catalogs({
+    get: async (requested, decoder) => {
+      if (requested !== path) return get(requested, decoder);
+      return {
+        data: decoder(
+          replaceAt(
+            pinned(path),
+            ['people', 0, 'pid'],
+            'person_9c02d321caef54b2ba21a1f8',
+          ),
+        ),
+        stale: false,
+        savedAt: 1000,
+        asOf: null,
+      };
+    },
+  });
+  const view = (await api.partyPage('Labor')).data!;
+  expect(view.members.status).toBe('ready');
+  expect(view.members.partial).toBeFalsy();
+  expect(view.members.data?.currentCount).toBe(members.currentCount);
+});
 
 test('the screen can present the core before any optional catalogue work starts', async () => {
   const reads: string[] = [];
