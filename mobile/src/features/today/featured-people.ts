@@ -53,11 +53,36 @@ export function featuredPeople(
   const firstParty = first?.party_now?.trim() || first?.party?.trim();
   // Keep the existing card when identity or affiliation cannot be verified.
   if (!firstSlug || !firstParty) return [];
+  const firstSeat = first?.representation?.find(
+    (seat) => seat.jurisdiction === 'federal',
+  );
+  // The edition's own line reads "Name: 414 speeches in the Opax record.",
+  // which repeats the title. Cards share one hook line; with no federal seat
+  // the name prefix is dropped and the brand is written OPAX.
+  const firstHook = firstSeat
+    ? featuredHook({
+        chamber: firstSeat.chamber,
+        electorate: firstSeat.electorate,
+        state: firstSeat.state,
+        speeches: first?.speeches,
+      })
+    : '';
+  const own = edition.paragraphs[0]
+    ?.replace(
+      new RegExp(
+        `^${edition.title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}:\\s*`,
+      ),
+      '',
+    )
+    .replace(/\bOpax\b/g, 'OPAX');
+  const lead = firstHook || own;
   const result: FeaturedPerson[] = [
     {
       slug: firstSlug,
       group: featuredGroup(editionPerson(edition).party ?? firstParty),
-      edition,
+      edition: lead
+        ? { ...edition, paragraphs: [lead, ...edition.paragraphs.slice(1)] }
+        : edition,
       source: { ...editionSources(edition), rule: FEATURED_PEOPLE_RULE },
     },
   ];

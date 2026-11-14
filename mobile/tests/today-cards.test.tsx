@@ -34,6 +34,8 @@ import {
 import { frontPageSkip } from '../src/features/today/archive-review';
 import { rules } from '../src/features/today/sources';
 import {
+  FEATURED_CONTEXT,
+  FEATURED_HEADING,
   FeaturedPeopleCarousel,
   featuredLabel,
   TodayEditionCard,
@@ -402,7 +404,7 @@ describe('neutral daily featured selection', () => {
     for (let day = 0; day < 30; day++) {
       const next = { ...edition, date: addDays(today, day) };
       const selected = featuredPeople(next, roster, slugs);
-      expect(selected[0]!.edition).toBe(next);
+      expect(selected[0]!.edition.title).toBe(next.title);
       expect(selected).toHaveLength(5);
       expect(new Set(selected.map((person) => person.group)).size).toBe(
         selected.length,
@@ -483,6 +485,46 @@ describe('neutral daily featured selection', () => {
 });
 
 describe('featured carousel', () => {
+  test('a heading and one neutral line say what the cards are', async () => {
+    const { root } = await render(<FeaturedPeopleCarousel people={people} />);
+    const title = host(root, 'today-featured-title');
+    expect(title.props.accessibilityRole).toBe('header');
+    expect(JSON.stringify(title.props.children)).toContain(
+      'Featured parliamentarians',
+    );
+    expect(FEATURED_HEADING).toBe('Featured parliamentarians');
+    expect(FEATURED_CONTEXT).toBe(
+      'Today’s featured member, then one from each party. It changes daily.',
+    );
+    expect(FEATURED_CONTEXT).not.toMatch(/top|most|best|leading|—/i);
+    expect(
+      JSON.stringify(host(root, 'today-featured-context').props.children),
+    ).toContain(FEATURED_CONTEXT);
+  });
+  test('card 1 uses the shared hook, never repeats the name, and writes OPAX', () => {
+    const first = people[0]!.edition.paragraphs[0]!;
+    expect(first).not.toContain(`${people[0]!.edition.title}:`);
+    expect(first).not.toMatch(/Opax/);
+    expect(first).toMatch(/^(MP for|Senator)/);
+    const bare = featuredPeople(
+      {
+        ...edition,
+        paragraphs: [`${edition.title}: 414 speeches in the Opax record.`],
+      },
+      {
+        ...roster,
+        people: roster.people.map((person) =>
+          person.name === edition.title
+            ? { ...person, representation: [] }
+            : person,
+        ),
+      },
+      slugs,
+    );
+    expect(bare[0]!.edition.paragraphs[0]).toBe(
+      '414 speeches in the OPAX record.',
+    );
+  });
   test('the VoiceOver label says Machine-written and skips empty parts', () => {
     const person = people[0]!;
     const machine = {
