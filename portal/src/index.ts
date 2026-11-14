@@ -18,6 +18,7 @@ import { identityAnswer, identityResponse } from './ask-identity'
 import { repairQuotes } from './research-evidence'
 import {ServerTiming, timed, timedSync, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
+import { votedAgainstParty } from '../public/division-against-party.js'
 import { chamberLabel, PARTY_MAP } from '../public/party-page.js'
 import {partySpeechLabel, partyMembers, partyBills, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, PARTY_NO_MEMBERS, readPartyPages, resolvePartyPage, dayMonthYear, partyHistory, recordedAsText, type PartyPage, type PartyBill} from '../public/party-page.js'
 import {guardTableURL, divisionTableConfig, voteTableConfig, billDivisionGroups, PROCEDURAL_TITLES_PATH} from '../public/vote-tables.js'
@@ -2843,6 +2844,9 @@ async function apiResource(request: Request, url: URL, slug: string, env: Env, c
         return json({slug,title:d.name || d.question,speaker:null,speaker_attribution:null,url:d.source_url,
           labels:{kind:'division',state:d.jurisdiction,chamber:d.house,result:d.result},topics:[],summary:null,
           metadata:{date:d.date,division_id:d.key,ayes_count:d.ayes,noes_count:d.noes,ayes:names('aye'),noes:names('no'),paired:names('paired')},
+          // Who voted against the rest of their party (public/division-against-party.js), outside text and
+          // metadata so Ask's record reads are unchanged; null when nobody did.
+          voted_against_party:votedAgainstParty(d),
           text:`${d.question || d.name || ''}\n${d.date}, ${d.house}. Ayes ${d.ayes}: ${names('aye').join(', ')}. Noes ${d.noes}: ${names('no').join(', ')}.`})
       }
     }

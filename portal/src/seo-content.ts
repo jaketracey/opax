@@ -10,6 +10,7 @@ import sponsorParties from '../public/facts/sponsor-parties.json' with {type:'js
 import {rosterSeatParty, rosterListParty, type RosterSeatParty, type RosterListObservation} from '../public/roster-party.js'
 import {currentSittingPath, sydneyDay} from '../public/hubs-data.js'
 import {renderDivisionMarkdown, divisionPlain, billNoteRepair, billStripTitle, billStripStage} from '../public/division-markdown.js'
+import {votedAgainstParty, votedAgainstPartyHTML} from '../public/division-against-party.js'
 import {guardTableURL,parseQuery,serializeQuery,type DataTableConfig} from '../public/datatable.js'
 import {interestTableData,interestTableConfig,partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js'
 import {chamberLabel, machineLabelHTML, partyLabelHTML} from '../public/party-page.js'
@@ -500,6 +501,9 @@ function divisionVotes(d: Division, people: Person[], slugs: Map<string,string>,
   if(!parties.length && !missing) html+='<p>Party affiliation on the division date is not recorded in the member export.</p>'
   // Said in words, never as a party line: an "Unknown" total would read as a party.
   if(missing && !minority) html+=`<p>${parties.length ? `No party is recorded for ${plural(missing)} on this date; they are not counted in any party line above.` : `No party is recorded for any of the ${plural(missing)} on this date.`}${heldNote}</p>`
+  // The same rule and words as Ask and the browser page (public/division-against-party.js); nothing when nobody did.
+  const against=votedAgainstParty(d)
+  if(against) html+=`<h3>${escapeHtml(against.title)}</h3>${votedAgainstPartyHTML(against,personUrl)}`
   if(full) for(const side of [...new Set(members.map(m=>m.vote))]) {
     const list=members.filter(m=>m.vote===side)
     const tally=(side==='aye' ? d.ayes : side==='no' ? d.noes : list.length) ?? list.length
