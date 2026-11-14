@@ -1,8 +1,9 @@
+import {standaloneClauseTail} from './research-claims'
 import {sentenceParts,quotationSpans} from './research-claim-audit.mjs'
 import {rewriteAnswerPayload} from './research-language'
 import {answerCitationStatus} from './research-evidence'
 
-type Source = {resource:string;url?:string;href?:string;speaker?:string;date?:string;kind?:string;coverage?:boolean}
+type Source = {resource:string;url?:string;href?:string;speaker?:string;date?:string;kind?:string;coverage?:boolean;snippet?:string}
 const normal = (text:string) => text.normalize('NFKC').toLowerCase().replace(/[’‘]/g,"'").replace(/[^\p{L}\p{N}]+/gu,' ').trim()
 const stop = new Set('a an and are as at be been by for from had has have in into is it its of on that the their this to was were which with also'.split(' '))
 const words = (text:string) => new Set(normal(text).split(' ').filter(w=>!stop.has(w)))
@@ -34,12 +35,24 @@ function names(text:string,context=text,offices=true):string {
   return found.sort((a,b)=>a.at-b.at).map(n=>n.value).join('|')
 }
 const dates=(text:string)=>(normal(text).match(/\b(?:january|february|march|april|may|june|july|august|september|october|november|december)\b/g)??[]).join('|')
+/** Appositions and a named scheme's short reference do not change the repeated claim. */
+function claimText(text:string,context:string):string {
+  text=expandNames(text,context)
+    .replace(/\((?:Royal )?Commissioner ([^()]+)\)/g,', commissioner $1,')
+    .replace(/, whose (?:Royal )?Commissioner was ([^,]+),/g,', commissioner $1,')
+    .replace(/\b(?:examined|investigated)\b/g,'examined')
+  const scheme=/Royal Commission into the ([\p{L} -]+?) Scheme\b/u.exec(context)?.[1]
+  if(scheme)text=text.replace(new RegExp('\\bfor '+scheme.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b','gi'),'for the scheme')
+  return text
+}
 function claimWords(text:string,context:string):Set<string> {
   return new Set([...words(expandNames(text,context))].filter(w=>! /^(?:royal|found|concluded|described|report|words|own|both|further|thus|that|said|had|its|his|which)$/.test(w)).map(stem))
 }
 const sameOrder=(a:Set<string>,b:Set<string>)=>[...a].filter(w=>b.has(w)).join('|')===[...b].filter(w=>a.has(w)).join('|')
 /** Require containment as well as overlap. High overlap alone merges changed categories in long templates. */
 function nearStatement(a:string,b:string):boolean {
+  const context=a+' '+b
+  a=claimText(a,context);b=claimText(b,context)
   if(figures(a)!==figures(b)||dates(a)!==dates(b)||qualifications(a)!==qualifications(b)||names(a,a+' '+b)!==names(b,a+' '+b))return false
   const left=claimWords(a,a+' '+b),right=claimWords(b,a+' '+b),shared=[...left].filter(w=>right.has(w)).length
   const shorter=Math.min(left.size,right.size),union=left.size+right.size-shared
@@ -96,7 +109,7 @@ export function dedupeAnswer<T extends Record<string,unknown>>(payload:T):T {
   if(typeof payload.answer!=='string')return payload
   const answer=payload.answer,chars=Array.from(answer),sources=(payload.sources??[]) as Source[]
   const citations=structuredClone((payload.citations??{}) as Record<string,[number,number][]>)
-  type Part={at:number;text:string;start:number;end:number;ids:string[]}
+  type Part={at:number;text:string;start:number;end:number;ids:string[];clause?:'independent'|'dependent'}
   const part=(text:string,at:number):Part=>{
     const start=Array.from(answer.slice(0,at)).length,end=start+Array.from(text).length
     const ids=Object.entries(citations).filter(([,ranges])=>ranges.some(([a,b])=>chars.slice(Math.max(a,start),Math.min(b,end)).some(c=>/[\p{L}\p{N}]/u.test(c)))).map(([id])=>id)
@@ -113,12 +126,19 @@ export function dedupeAnswer<T extends Record<string,unknown>>(payload:T):T {
   const recordsOnly=(p:Part)=>p.ids.length>0&&p.ids.every(id=>sources.some(s=>(id===s.resource||id.startsWith(s.resource+'/'))&&s.kind==='record'&&!s.speaker&&!s.coverage))
   const removed:Part[]=[],kept:Part[]=[]
   const transfers=(from:Part,to:Part)=>{
+    // Removing this opening would leave its tail without a standalone subject.
+    if(from.clause==='dependent')return null
     const ranges:{id:string;start:number;end:number}[]=[]
     const shared=repeatedQuote(from.text,to.text)??sharedCitationSpan(from.text,to.text)
     for(const id of from.ids)for(const [a,b] of citations[id]){
       const start=Math.max(a,from.start),end=Math.min(b,from.end)
       if(start>=end)continue
-      if(start===from.start&&end===from.end){if(!shared)return null;ranges.push({id,start:to.start+shared.start,end:to.start+shared.end});continue}
+      if(start===from.start&&end===from.end){
+        const source=sources.find(s=>id===s.resource||id.startsWith(s.resource+'/'))
+        const anchor=from.clause&&source?.snippet?sharedCitationSpan(source.snippet,to.text)??shared:shared
+        if(!anchor)return null
+        ranges.push({id,start:to.start+anchor.start,end:to.start+anchor.end});continue
+      }
       // A partial citation must stay partial. If its exact text cannot be located in the earlier wording,
       // retain both sentences rather than widening the citation to the whole sentence.
       const text=chars.slice(start,end).join(''),at=to.text.indexOf(text)
@@ -132,7 +152,7 @@ export function dedupeAnswer<T extends Record<string,unknown>>(payload:T):T {
     if(removed.some(r=>p.start>=r.start&&p.end<=r.end))return
     const prior=kept.find(k=>{
       const exact=normal(k.text)===normal(p.text)
-      if(!exact&&!sameSource(k,p)&&!(recordsOnly(k)&&recordsOnly(p)))return false
+      if(!exact&&!sameSource(k,p)&&!(recordsOnly(k)&&recordsOnly(p))&&!(k.clause&&p.clause))return false
       return sameStatement(k.text,p.text)||nearStatement(k.text,p.text)||repeatedQuote(k.text,p.text)||repeatedQuote(p.text,k.text)
     })
     if(!prior){kept.push(p);return}
@@ -147,12 +167,22 @@ export function dedupeAnswer<T extends Record<string,unknown>>(payload:T):T {
   for(const m of answer.matchAll(/[^\n]+/g))consider(part(m[0],m.index!))
   kept.length=0
   for(const p of sentenceParts(answer))consider(part(p.text,p.at))
+  // Match shared opening clauses too, leaving the distinct attribution or later event in place.
+  // Quotes protect their own semicolons and conjunctions from becoming clause boundaries.
+  kept.length=0
+  for(const p of sentenceParts(answer)){
+    const quotes=quotationSpans(p.text)
+    const boundary=[...p.text.matchAll(/;|\s+and\s+(?=[\p{Ll}]+ed\b)/gu)].find(m=>!quotes.some(q=>m.index!>=q.at&&m.index!<q.end))
+    const end=boundary?.index??p.text.length,tail=boundary?p.text.slice(end+boundary[0].length).trimStart():''
+    consider({...part(p.text.slice(0,end),p.at),clause:boundary?(boundary[0]===';'&&standaloneClauseTail(tail)?'independent':'dependent'):undefined})
+  }
   if(!removed.length)return payload
   const out=rewriteAnswerPayload({...payload,citations},replace=>{
     for(const p of removed.sort((a,b)=>b.at-a.at)){
       const line=answer.lastIndexOf('\n',p.at-1)+1,prefix=answer.slice(line,p.at)
       const at=/^\s*[-*]?\s*$/.test(prefix)?line:p.at
-      replace(new RegExp(`(?<=^[\\s\\S]{${at}})[\\s\\S]{${p.at+p.text.length-at}}`,'g'),'')
+      const after=answer.slice(p.at+p.text.length),separator=/^;\s*/.exec(after)?.[0].length??0
+      replace(new RegExp(`(?<=^[\\s\\S]{${at}})[\\s\\S]{${p.at+p.text.length+separator-at}}`,'g'),'')
     }
     replace(/[ \t]{2,}/g,' ')
     replace(/\n{3,}/g,'\n\n')
