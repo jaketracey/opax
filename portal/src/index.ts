@@ -5850,7 +5850,7 @@ async function docMeta(slug: string, url: URL, request: Request, env: Env, ctx: 
     const ayes = r.metadata.ayes_count, noes = r.metadata.noes_count
     const bill = typeof r.metadata.bill_ref === 'string' ? r.metadata.bill_ref : ''
     // One wording for a division's result (division-outcome.js): Agreed or Not agreed, never the record's token.
-    const outcome = divisionOutcome(r.labels.result, {ayes, noes})
+    const outcome = divisionOutcome(r.labels.result, {ayes, noes, chamber: r.labels.chamber})
     const description = clip(
       `${chamber ?? 'Parliamentary'} division${date ? `, ${longDate(date)}` : ''}${bill ? `: ${bill}` : ''}. ` +
       `${[outcome, typeof ayes === 'number' && typeof noes === 'number' ? `${ayes} votes to ${noes}` : ''].filter(Boolean).join(', ')}. Who voted which way, on OPAX.`,

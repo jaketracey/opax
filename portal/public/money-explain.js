@@ -508,7 +508,7 @@ export function partyOnBill(bill, partyLabel, firstYear, lastYear) {
     deciding: { date: deciding.date, stage: deciding.stage || '', ayes: Number(split.ayes) || 0, noes: Number(split.noes) || 0,
       outcome: deciding.outcome,
       // The division's own totals, when recorded, word a result the record does not name.
-      ...(Number.isFinite(deciding.ayes) && Number.isFinite(deciding.noes) ? { counts: { ayes: deciding.ayes, noes: deciding.noes } } : {}),
+      ...(Number.isFinite(deciding.ayes) && Number.isFinite(deciding.noes) ? { counts: { ayes: deciding.ayes, noes: deciding.noes, house: deciding.house } } : {}),
       url: /^https:\/\/theyvoteforyou\.org\.au\//.test(deciding.url || '') ? deciding.url : '' },
     speeches,
   };
