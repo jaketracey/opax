@@ -6,7 +6,7 @@
    Pure functions; app.js passes in its helpers. */
 
 import { PARTY_MAP, PARTY_NAMES, PARTY_RENAMES } from './labels.js?v=fcb2a1091c';
-import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=bcc9a57bab';
+import { partyUrl, personUrl, PERSON_PATHS } from './canonical-urls.js?v=9ce13e7ba5';
 // sponsor-party-aliases:begin
 // Generated from scripts/export_bills.py SPONSOR_PARTY_TOKENS.
 const SPONSOR_PARTY_ALIASES = {
@@ -56,7 +56,7 @@ const SPONSOR_PARTY_ALIASES = {
 // Server consumers use these re-exports too, keeping the stamped browser
 // dependencies and their identity tables to one copy in the Worker bundle.
 export * from './labels.js?v=fcb2a1091c';
-export * from './canonical-urls.js?v=bcc9a57bab';
+export * from './canonical-urls.js?v=9ce13e7ba5';
 
 const fold = value => String(value ?? '').normalize('NFKC').replace(/[‘’ʼ`]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase();
 /** The party URL's last segment; the same spelling as canonical-urls.js entitySlug. */
