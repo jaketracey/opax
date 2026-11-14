@@ -11,7 +11,12 @@ import Welcome, {
   continuePinned,
   overflows,
   WELCOME_COLUMN,
+  WELCOME_DISMISS_MS,
 } from '../src/features/welcome/Welcome';
+import {
+  launchSettled,
+  resetLaunchSettledForTests,
+} from '../src/launch/settled';
 import { releaseSplash } from '../src/launch/splash';
 import { track } from '../src/analytics';
 import { closeWelcome, markWelcomeSeen } from '../src/onboarding/state';
@@ -333,6 +338,32 @@ describe('the full welcome', () => {
       expect(g.props.type).toBeUndefined();
     }
     await act(async () => r.unmount());
+  });
+});
+
+// Sweep 3 captures, A8: motion held for the launch (the bill plate's draw)
+// starts once the reader can see Today. Under a first launch's welcome that
+// is when the welcome has closed and slid away.
+describe('closing the welcome settles the launch', () => {
+  beforeEach(() => resetLaunchSettledForTests());
+  test('not while it is up; once its modal has slid away', async () => {
+    const r = await render(<Welcome launch />);
+    expect(launchSettled()).toBe(false);
+    jest.useFakeTimers();
+    try {
+      await act(async () => r.unmount());
+      expect(launchSettled()).toBe(false);
+      act(() => {
+        jest.advanceTimersByTime(WELCOME_DISMISS_MS - 1);
+      });
+      expect(launchSettled()).toBe(false);
+      act(() => {
+        jest.advanceTimersByTime(1);
+      });
+      expect(launchSettled()).toBe(true);
+    } finally {
+      jest.useRealTimers();
+    }
   });
 });
 

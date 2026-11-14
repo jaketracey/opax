@@ -27,7 +27,14 @@ import {
   EditionSkeleton,
 } from '../src/features/edition/EditionCard';
 import { Plate, timelineStop } from '../src/features/edition/Plate';
-import { resetTimelineDrawForTests } from '../src/features/edition/timeline-draw';
+import {
+  resetTimelineDrawForTests,
+  timelineDecision,
+} from '../src/features/edition/timeline-draw';
+import {
+  resetLaunchSettledForTests,
+  settleLaunch,
+} from '../src/launch/settled';
 import { TodayFoot } from '../src/features/today/Foot';
 import { SittingLine, useSittingRead } from '../src/features/today/SittingLine';
 import { decodeSittingDays, nextSitting } from '../src/features/today/sitting';
@@ -121,6 +128,9 @@ beforeEach(() => {
   jest.clearAllMocks();
   mockReduced = false;
   resetTimelineDrawForTests();
+  // The launch cover has gone, as for every plate but a cold launch's.
+  resetLaunchSettledForTests();
+  settleLaunch();
   fixture('on');
 });
 afterEach(() => {
@@ -452,6 +462,84 @@ describe('item 8: the bill plate’s timeline draws once per launch', () => {
       atScale(1);
       const story = await plate({ story: true, testID: 'today-edition' });
       expect(rail(story.root).transform).toEqual([{ scaleX: 0 }]);
+    });
+  });
+
+  // Sweep 3 captures, A8: on a cold launch the plate mounts under the
+  // launch cover, often before iOS has answered Reduce Motion. The draw was
+  // decided at mount, so the rail was already complete in the first frame
+  // seen through the launch fade.
+  describe('a cold launch: the plate mounts under the launch cover', () => {
+    const drawsStarted = (timing: jest.SpyInstance) =>
+      timing.mock.calls.filter(
+        ([to, config]) => to === 1 && config?.duration === 600,
+      );
+    beforeEach(() => resetLaunchSettledForTests());
+
+    test('the rule: wait for the launch to settle, never draw on a guess', () => {
+      expect(timelineDecision(false, false)).toBe('wait');
+      expect(timelineDecision(null, false)).toBe('wait');
+      expect(timelineDecision(false, true)).toBe('draw');
+      expect(timelineDecision(true, false)).toBe('finished');
+      expect(timelineDecision(true, true)).toBe('finished');
+      expect(timelineDecision(null, true)).toBe('finished');
+    });
+
+    test.each([
+      ['Reduce Motion already answered off', false],
+      ['Reduce Motion not yet known', null],
+    ] as const)(
+      '%s: undrawn and still under the cover, then the draw once it has gone',
+      async (_case, atMount) => {
+        mockReduced = atMount;
+        const timing = jest.spyOn(Reanimated, 'withTiming');
+        const r = await plate();
+        expect(rail(r.root).transform).toEqual([{ scaleX: 0 }]);
+        for (const stop of stops(r.root)) expect(stop.opacity).toBe(0);
+        expect(drawsStarted(timing)).toHaveLength(0);
+        // iOS answers while the cover is still up: nothing starts yet.
+        mockReduced = false;
+        await act(async () => r.update(<Plate edition={edition} />));
+        expect(drawsStarted(timing)).toHaveLength(0);
+        // The cover has faded: the draw starts from the undrawn line.
+        await act(async () => settleLaunch());
+        expect(rail(r.root).transform).toEqual([{ scaleX: 0 }]);
+        expect(drawsStarted(timing)).toHaveLength(1);
+        // Once, whatever re-renders follow.
+        await act(async () => r.update(<Plate edition={edition} />));
+        expect(drawsStarted(timing)).toHaveLength(1);
+      },
+    );
+
+    test('Reduce Motion answers on under the cover: finished before anything is seen, and no draw after', async () => {
+      mockReduced = null;
+      const timing = jest.spyOn(Reanimated, 'withTiming');
+      const r = await plate();
+      mockReduced = true;
+      await act(async () => r.update(<Plate edition={edition} />));
+      finished(r.root);
+      await act(async () => settleLaunch());
+      finished(r.root);
+      expect(timing).not.toHaveBeenCalled();
+    });
+
+    test('Reduce Motion known on at mount: finished from the first frame', async () => {
+      mockReduced = true;
+      const timing = jest.spyOn(Reanimated, 'withTiming');
+      const r = await plate();
+      finished(r.root);
+      await act(async () => settleLaunch());
+      finished(r.root);
+      expect(timing).not.toHaveBeenCalled();
+    });
+
+    test('a line still waiting under the cover has not used the edition’s turn', async () => {
+      await plate();
+      act(() => mounted.splice(0).forEach((r) => r.unmount()));
+      await act(async () => settleLaunch());
+      const timing = jest.spyOn(Reanimated, 'withTiming');
+      await plate();
+      expect(drawsStarted(timing)).toHaveLength(1);
     });
   });
 

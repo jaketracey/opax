@@ -25,7 +25,10 @@ import { rhythm } from '../src/design/tokens';
 import { OfflineLine } from '../src/design/states';
 import Today from '../src/features/Today';
 import { WelcomePage } from '../src/features/welcome/Welcome';
-import { AustraliaDots } from '../src/features/today/AustraliaDots';
+import {
+  AustraliaDots,
+  HEADER_SETTLE_CAP_MS,
+} from '../src/features/today/AustraliaDots';
 import { TodayEditionCard } from '../src/features/today/FeaturedPeopleCard';
 import { TodayFoot } from '../src/features/today/Foot';
 import { Masthead, mastheadDate } from '../src/features/today/Masthead';
@@ -734,6 +737,92 @@ describe('the page', () => {
       }),
     );
     expect(releaseSplash).toHaveBeenCalledWith('today');
+  });
+  // Sweep 3 captures, A1: on a first install at Large the date was drawn at
+  // 282 pt and jumped to 214 pt, with the map and the first card, as the
+  // launch cover faded. The art and the date are placed from the header's
+  // expanded height, which native-stack delivers about 100 ms after its
+  // inline estimate. The cover now stays until that height arrives.
+  describe('the launch cover waits for the large title’s height on an iPhone', () => {
+    const phone = (fontScale = 1) => {
+      const window = Dimensions.get('window');
+      const screen = Dimensions.get('screen');
+      Dimensions.set({
+        window: { width: 402, height: 874, scale: 3, fontScale },
+        screen: { width: 402, height: 874, scale: 3, fontScale },
+      });
+      return () => Dimensions.set({ window, screen });
+    };
+    const page = (height: number) => (
+      <HeaderHeightContext.Provider value={height}>
+        <Today />
+      </HeaderHeightContext.Provider>
+    );
+    const layOut = (renderer: TestRenderer.ReactTestRenderer) =>
+      act(() =>
+        renderer.root.findByType(Screen).props.onLayout({
+          nativeEvent: { layout: { x: 0, y: 0, width: 402, height: 874 } },
+        }),
+      );
+
+    test('laid out with the inline estimate, it holds; the expanded height releases it', async () => {
+      const undo = phone();
+      try {
+        setUp({ cached: 'missing' });
+        const renderer = await render(page(106));
+        layOut(renderer);
+        expect(releaseSplash).not.toHaveBeenCalled();
+        await act(async () => renderer.update(page(174)));
+        expect(releaseSplash).toHaveBeenCalledWith('today');
+      } finally {
+        undo();
+      }
+    });
+
+    test('the height arriving before the first layout releases at that layout', async () => {
+      const undo = phone();
+      try {
+        setUp({ cached: 'missing' });
+        const renderer = await render(page(106));
+        await act(async () => renderer.update(page(174)));
+        expect(releaseSplash).not.toHaveBeenCalled();
+        layOut(renderer);
+        expect(releaseSplash).toHaveBeenCalledWith('today');
+      } finally {
+        undo();
+      }
+    });
+
+    test('a height that never comes holds the cover no longer than the cap', async () => {
+      expect(HEADER_SETTLE_CAP_MS).toBe(200);
+      const undo = phone();
+      try {
+        setUp({ cached: 'missing' });
+        const renderer = await render(page(106));
+        layOut(renderer);
+        expect(releaseSplash).not.toHaveBeenCalled();
+        await act(async () => {
+          await new Promise((resolve) =>
+            setTimeout(resolve, HEADER_SETTLE_CAP_MS + 50),
+          );
+        });
+        expect(releaseSplash).toHaveBeenCalledWith('today');
+      } finally {
+        undo();
+      }
+    });
+
+    test('nothing is placed from the header at accessibility sizes: no wait', async () => {
+      const undo = phone(3.12);
+      try {
+        setUp({ cached: 'missing' });
+        const renderer = await render(page(106));
+        layOut(renderer);
+        expect(releaseSplash).toHaveBeenCalledWith('today');
+      } finally {
+        undo();
+      }
+    });
   });
   test('a grouped screen; How parliament voted is absent until its file exists', async () => {
     setUp({ seat: true, cached: { date: addDays(today, -1) } });

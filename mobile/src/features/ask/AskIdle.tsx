@@ -4,7 +4,14 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react';
-import { Animated, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import Animated, {
+  Easing,
+  cancelAnimation,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import { router } from 'expo-router';
 import { track } from '../../analytics';
 import { useReduceMotion } from '../../design/accessibility';
@@ -16,7 +23,7 @@ import { InsetGroup, SectionHeader } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
 import { InlineError } from '../../design/states';
 import { Text } from '../../design/text';
-import { motion, rhythm } from '../../design/tokens';
+import { rhythm } from '../../design/tokens';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { conversationsRoute } from '../../navigation/routes/ask';
 import { copyText } from '../records/actions';
@@ -253,6 +260,8 @@ const centredWords = (() => {
 
 const MARK = 96;
 const MARK_SCALE = 1.5;
+/** How long the centred state takes to fade once a question is sent. */
+export const EMPTY_FADE_MS = 200;
 
 /**
  * The docked conversation column with nothing asked and nothing saved
@@ -288,28 +297,34 @@ export function AskEmptyState({
   const top = useHeaderBottom();
   const margin = useScreenMargin();
   const { fontScale } = useWindowDimensions();
-  const [opacity] = useState(() => new Animated.Value(1));
+  const opacity = useSharedValue(1);
   // Shown stays true while the state fades after a question is sent. A
   // saved conversation taking the column, or Reduce Motion, ends it at once.
   const [shown, setShown] = useState(empty);
   if (empty && !shown) setShown(true);
   if (shown && !empty && (idle || reduced)) setShown(false);
   const leaving = shown && !idle;
+  // The fade starts in the commit that sends the question and runs on the
+  // UI thread, whatever the conversation is doing to the JS thread as its
+  // first turn draws. The earlier Animated fade never showed on an iPad:
+  // the state stayed whole over the new question for about 0.3 s, then went
+  // in one frame (sweep 3 captures, D5).
   useLayoutEffect(() => {
     if (!leaving) {
-      opacity.setValue(1);
+      cancelAnimation(opacity);
+      opacity.set(1);
       return;
     }
-    const fade = Animated.timing(opacity, {
-      toValue: 0,
-      duration: motion.duration.standard,
-      useNativeDriver: true,
-    });
-    fade.start(({ finished }) => {
-      if (finished) setShown(false);
-    });
-    return () => fade.stop();
+    opacity.set(
+      withTiming(0, {
+        duration: EMPTY_FADE_MS,
+        easing: Easing.out(Easing.quad),
+      }),
+    );
+    const gone = setTimeout(() => setShown(false), EMPTY_FADE_MS);
+    return () => clearTimeout(gone);
   }, [leaving, opacity]);
+  const fade = useAnimatedStyle(() => ({ opacity: opacity.value }));
   // The room under the bar, and the words' own height at this text size.
   const [area, setArea] = useState<number | null>(null);
   const [words, setWords] = useState<number | null>(null);
@@ -331,7 +346,8 @@ export function AskEmptyState({
       onLayout={(event) => setArea(event.nativeEvent.layout.height)}
       style={[
         styles.empty,
-        { paddingTop: top, paddingHorizontal: margin, opacity },
+        { paddingTop: top, paddingHorizontal: margin },
+        fade,
       ]}
       // Leaving, it is already not the page: VoiceOver skips it.
       accessibilityElementsHidden={leaving}

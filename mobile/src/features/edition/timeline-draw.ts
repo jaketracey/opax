@@ -26,6 +26,22 @@ export function timelineMayDraw(key: string): boolean {
   return !isE2E || todayFixture().plateDraw === 'on';
 }
 
+/**
+ * What a timeline with its turn still to use does now. Under Reduce Motion
+ * it is finished at once. Otherwise it waits, undrawn, until the launch has
+ * settled (the cover has faded and any welcome has closed, launch/settled),
+ * so the draw is seen; then it draws. If the setting is still unknown by
+ * then, it is shown finished: no motion starts on a guess.
+ */
+export function timelineDecision(
+  reduceMotion: boolean | null,
+  launchSettled: boolean,
+): 'wait' | 'draw' | 'finished' {
+  if (reduceMotion === true) return 'finished';
+  if (!launchSettled) return 'wait';
+  return reduceMotion === false ? 'draw' : 'finished';
+}
+
 /** Its turn is used, drawn or shown finished. */
 export function timelineShown(key: string) {
   seen.add(key);

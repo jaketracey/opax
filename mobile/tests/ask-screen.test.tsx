@@ -14,6 +14,7 @@ import {
   type ReactTestRenderer,
 } from 'react-test-renderer';
 import type { NativeStackHeaderItem } from 'expo-router';
+import type * as ReanimatedTypes from 'react-native-reanimated';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
   AccessibilityInfo,
@@ -70,7 +71,7 @@ import {
 } from '../src/design/adaptive';
 import { ReservedRegionsProvider } from '../src/design/fold-area';
 import { AskColumns } from '../src/features/ask/AskLayout';
-import { idleCopy } from '../src/features/ask/AskIdle';
+import { EMPTY_FADE_MS, idleCopy } from '../src/features/ask/AskIdle';
 import { EngravedMark } from '../src/design/engraving';
 import * as accessibility from '../src/design/accessibility';
 import { AskThread } from '../src/features/ask/AskThread';
@@ -78,6 +79,10 @@ import { emptyReservedRegions } from '../src/design/fold';
 
 // The bar's items, as AskScreen sets them through Stack.Screen.
 const mockBar: { options: Record<string, unknown> } = { options: {} };
+const Reanimated = jest.requireMock(
+  'react-native-reanimated',
+) as typeof ReanimatedTypes;
+
 jest.mock('../src/analytics/timing', () => ({ useScreenReady: jest.fn() }));
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
@@ -1344,10 +1349,11 @@ test.each(['before', 'after'] as const)(
         .mockResolvedValueOnce({ questions: [] });
       await type('Another fixture question?');
       await press('ask-submit');
-      await act(async () => barButton('New question')!.onPress());
-      expect(scrollTo).toHaveBeenLastCalledWith({ y: -44, animated: false });
-      expect(reset).toHaveBeenCalledTimes(1);
       scrollTo.mockClear();
+      await act(async () => barButton('New question')!.onPress());
+      // iOS: a fresh scroll view at rest, with no reset scroll.
+      expect(reset).not.toHaveBeenCalled();
+      expect(scrollTo).not.toHaveBeenCalled();
       await fallback();
       expect(scrollTo).not.toHaveBeenCalled();
     } finally {
@@ -1580,40 +1586,95 @@ test('Ask next rows send; New question is enabled once there is an answer', asyn
     question: 'A grounded fixture follow-up?',
   });
   const reset = jest.spyOn(ScrollTop, 'scrollToTop');
+  scrollTo.mockClear();
   await act(async () => barButton('New question')!.onPress());
   expect(askSession.snapshot().thread).toEqual([]);
   expect(byId('ask-idle-line')).not.toEqual([]);
-  expect(reset).toHaveBeenCalledWith(expect.anything(), 44);
-  expect(scrollTo).toHaveBeenLastCalledWith({ y: -44, animated: false });
+  // iOS returns to rest with a fresh scroll view (the test below).
+  expect(reset).not.toHaveBeenCalled();
+  expect(scrollTo).not.toHaveBeenCalled();
   reset.mockRestore();
 });
 
-test('New question still rests a header above zero where Ask measures under its root bar', async () => {
-  // Ask's scroll view starts at the window's top, under the translucent root
-  // bar: the measured reset is the same -headerBottom as before.
-  const measure = jest
-    .spyOn(
-      ScrollView.prototype as unknown as {
-        measureInWindow: (callback: (x: number, y: number) => void) => void;
-      },
-      'measureInWindow',
-    )
-    .mockImplementation((callback) => callback(0, 0));
-  try {
+// Sweep 3 captures, C4.1 at AX5: after a scrolled answer, New question
+// scrolled the old scroll view to minus the header last reported. That was
+// the collapsed inline bar on an iPhone (the page stopped about 71 pt short,
+// the large title half under the bar buttons) and about 58 pt too much on
+// the Duo (a blank band under the title). A fresh scroll view is placed at
+// rest by UIKit, as on first mount, whatever the header last reported.
+test.each([
+  ['an iPhone whose header last reported the collapsed inline bar', 106],
+  ['a header reported taller than the idle inset (Duo)', 232],
+] as const)(
+  'New question on iOS gives Ask a fresh scroll view at rest: %s',
+  async (_name, reported) => {
+    const header = { set: (_height: number) => {} };
+    function HeaderFrame() {
+      const [height, setHeight] = useState(174);
+      header.set = setHeight;
+      return (
+        <HeaderHeightContext.Provider value={height}>
+          <AskScreen />
+        </HeaderHeightContext.Provider>
+      );
+    }
     jest
       .mocked(client.askPost)
       .mockResolvedValueOnce(answer)
       .mockResolvedValueOnce({ questions: [] });
+    const reset = jest.spyOn(ScrollTop, 'scrollToTop');
+    try {
+      await mount(<HeaderFrame />);
+      const idleScroll = view!.root.findByType(ScrollView).instance;
+      await type('A fixture question?');
+      await press('ask-submit');
+      // Sending keeps the scroll view: the turn is revealed in it.
+      expect(view!.root.findByType(ScrollView).instance).toBe(idleScroll);
+      // The reader scrolls the answer; UIKit reports another header.
+      await act(async () => {
+        view!.root.findByType(ScrollView).props.onScroll({
+          nativeEvent: { contentOffset: { y: 400 } },
+        });
+        header.set(reported);
+      });
+      scrollTo.mockClear();
+      await act(async () => barButton('New question')!.onPress());
+      expect(byId('ask-idle')).not.toHaveLength(0);
+      const fresh = view!.root.findByType(ScrollView);
+      expect(fresh.instance).not.toBe(idleScroll);
+      // Nothing scrolls it by a header that may be stale.
+      expect(reset).not.toHaveBeenCalled();
+      expect(scrollTo).not.toHaveBeenCalled();
+      // It is the same idle page: automatic insets, no thread inset.
+      expect(fresh.props.contentInsetAdjustmentBehavior).toBe('automatic');
+      expect(fresh.props.contentInset).toBeUndefined();
+      expect(mockBar.options.headerLargeTitleEnabled).toBe(true);
+      // Idle again: nothing more to clear.
+      expect(barButton('New question')?.disabled).toBe(true);
+    } finally {
+      reset.mockRestore();
+    }
+  },
+);
+
+test('New question on Android keeps its scroll view and resets it to zero', async () => {
+  const platform = jest.replaceProperty(Platform, 'OS', 'android');
+  jest
+    .mocked(client.askPost)
+    .mockResolvedValueOnce(answer)
+    .mockResolvedValueOnce({ questions: [] });
+  try {
     await mount();
     await type('A fixture question?');
     await press('ask-submit');
+    const scroll = view!.root.findByType(ScrollView).instance;
     scrollTo.mockClear();
-    measure.mockClear();
     await act(async () => barButton('New question')!.onPress());
-    expect(measure).toHaveBeenCalled();
-    expect(scrollTo).toHaveBeenLastCalledWith({ y: -44, animated: false });
+    expect(byId('ask-idle')).not.toHaveLength(0);
+    expect(view!.root.findByType(ScrollView).instance).toBe(scroll);
+    expect(scrollTo).toHaveBeenLastCalledWith({ y: 0, animated: false });
   } finally {
-    measure.mockRestore();
+    platform.restore();
   }
 });
 
@@ -2686,10 +2747,13 @@ describe('the docked conversation column with nothing asked', () => {
       .mockReturnValue(reduced);
     const base = askSession.snapshot();
     const snapshot = jest.spyOn(askSession, 'snapshot').mockReturnValue(base);
+    const timing = jest.spyOn(Reanimated, 'withTiming');
     try {
       await at(834, 1194, pad, true, async () => {
         await mount();
         expect(hosts('ask-empty')).toHaveLength(1);
+        expect(EMPTY_FADE_MS).toBe(200);
+        timing.mockClear();
         jest.useFakeTimers();
         try {
           snapshot.mockReturnValue({ ...base, busy: true });
@@ -2702,11 +2766,30 @@ describe('the docked conversation column with nothing asked', () => {
           });
           // Leaving, it is still drawn (fading) but no longer read out.
           expect(hosts('ask-empty')).toHaveLength(reduced ? 0 : 1);
+          // Sweep 3 captures, D5: the fade starts in the commit that sends
+          // the question, on the UI thread, over 200 ms; none under Reduce
+          // Motion.
+          expect(
+            timing.mock.calls.filter(
+              ([to, config]) => to === 0 && config?.duration === 200,
+            ),
+          ).toHaveLength(reduced ? 0 : 1);
           if (!reduced)
             expect(hosts('ask-empty')[0]!.props).toMatchObject({
               accessibilityElementsHidden: true,
               importantForAccessibility: 'no-hide-descendants',
             });
+          if (!reduced) {
+            // Still there just before the fade ends, gone when it does.
+            await act(async () => {
+              jest.advanceTimersByTime(EMPTY_FADE_MS - 1);
+            });
+            expect(hosts('ask-empty')).toHaveLength(1);
+            await act(async () => {
+              jest.advanceTimersByTime(1);
+            });
+            expect(hosts('ask-empty')).toHaveLength(0);
+          }
           await act(async () => {
             jest.advanceTimersByTime(1000);
           });
@@ -2716,6 +2799,7 @@ describe('the docked conversation column with nothing asked', () => {
         }
       });
     } finally {
+      timing.mockRestore();
       snapshot.mockRestore();
       reduce.mockRestore();
     }

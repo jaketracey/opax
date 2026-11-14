@@ -1,4 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
+import {
+  launchCoverGone,
+  launchSettled,
+  resetLaunchSettledForTests,
+  settleLaunch,
+  subscribeLaunchSettled,
+} from '../src/launch/settled';
 import * as SplashScreen from 'expo-splash-screen';
 import { AccessibilityInfo, Dimensions, StyleSheet } from 'react-native';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
@@ -512,5 +519,33 @@ describe('the launch cover', () => {
     advance(5000);
     expect(SplashScreen.hide).not.toHaveBeenCalled();
     expect(onDone).not.toHaveBeenCalled();
+  });
+});
+
+// Sweep 3 captures, A8: motion meant to be seen arriving waits for the
+// launch to settle (launch/settled.ts).
+describe('the launch settles when the reader can see Today', () => {
+  beforeEach(() => resetLaunchSettledForTests());
+  test('a plain launch: when the cover has gone', () => {
+    expect(launchSettled()).toBe(false);
+    launchCoverGone('plain');
+    expect(launchSettled()).toBe(true);
+  });
+  test('a cover released by the failsafe before the decision still settles', () => {
+    launchCoverGone('pending');
+    expect(launchSettled()).toBe(true);
+  });
+  test('under a first launch’s welcome the cover going is not enough', () => {
+    launchCoverGone('welcome');
+    expect(launchSettled()).toBe(false);
+  });
+  test('listeners hear it once, and it stays settled', () => {
+    const heard = jest.fn();
+    const stop = subscribeLaunchSettled(heard);
+    settleLaunch();
+    settleLaunch();
+    expect(heard).toHaveBeenCalledTimes(1);
+    expect(launchSettled()).toBe(true);
+    stop();
   });
 });

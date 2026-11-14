@@ -30,7 +30,9 @@ import {
   decideLaunchSequence,
   decideSplashPlain,
   holdSplashForWelcome,
+  splashPhase,
 } from '../launch/splash';
+import { launchCoverGone } from '../launch/settled';
 import { useStackChrome } from '../navigation/chrome';
 import { useLinkReadiness } from '../navigation/useLinkReadiness';
 import { KeyboardShortcuts } from '../navigation/KeyboardShortcuts';
@@ -74,7 +76,11 @@ export default function Layout() {
   const navigationReady =
     Platform.OS === 'android' ? containerReady : !!rootState?.key;
   const [handedOver, setHandedOver] = useState(false);
-  const endHandoff = useCallback(() => setHandedOver(true), []);
+  const endHandoff = useCallback(() => {
+    setHandedOver(true);
+    // Motion held for the launch may start (launch/settled.ts).
+    launchCoverGone(splashPhase());
+  }, []);
   const launch = useLaunchWelcome(tour);
   useScreenTracking();
   useNavigationTiming();

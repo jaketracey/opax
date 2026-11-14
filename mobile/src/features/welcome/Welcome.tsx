@@ -24,6 +24,7 @@ import {
 } from '../../design/tokens';
 import { useLayout, useScreenMargin } from '../../design/adaptive';
 import { LaunchHandoff } from '../../launch/LaunchHandoff';
+import { settleLaunch } from '../../launch/settled';
 import { releaseSplash } from '../../launch/splash';
 import { welcomeSeatRoute } from '../../navigation/routes';
 import { firstRunSkipped } from '../../onboarding/measure';
@@ -33,6 +34,9 @@ import { welcomeCopy } from './copy';
 
 /** The welcome's content column on a wide screen (today.md 3.3). */
 export const WELCOME_COLUMN = 540;
+
+/** About how long the welcome's modal takes to slide away, in ms. */
+export const WELCOME_DISMISS_MS = 450;
 
 /**
  * Accessibility sizes from AX3 up push the fine print below the fold, so
@@ -101,6 +105,15 @@ export function WelcomePage({
   useEffect(() => {
     if (scrolls && !covered) scroll.current?.flashScrollIndicators();
   }, [scrolls, covered]);
+  // The welcome closing is when a first launch's reader first sees Today:
+  // motion held for the launch (the bill plate's draw) starts once the
+  // modal has slid away, not under it.
+  useEffect(
+    () => () => {
+      setTimeout(settleLaunch, WELCOME_DISMISS_MS);
+    },
+    [],
+  );
   const wide = layout.regular;
   // The short welcome is the same page with Continue only (first-launch
   // 4.5 D2): the same ground.

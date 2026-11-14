@@ -1,4 +1,4 @@
-import { useEffect, useState, type Ref } from 'react';
+import { useEffect, useRef, useState, type Ref } from 'react';
 import type { LayoutChangeEvent } from 'react-native';
 import { Image, Text as NativeText, StyleSheet, View } from 'react-native';
 import Animated, {
@@ -38,7 +38,13 @@ import {
   plateLine,
   type EditionTier,
 } from './model';
-import { timelineKey, timelineMayDraw, timelineShown } from './timeline-draw';
+import { useLaunchSettled } from '../../launch/settled';
+import {
+  timelineDecision,
+  timelineKey,
+  timelineMayDraw,
+  timelineShown,
+} from './timeline-draw';
 
 export function Plate({
   edition,
@@ -402,9 +408,16 @@ export function timelineStop(
  * The bill plate's stage line (sweep 3, item 8). On the edition's first
  * appearance this launch the rail draws left to right over 600 ms with the
  * standard ease, each stop landing as the line reaches it, and the last stop
- * swells slightly and settles. Every other time, under Reduce Motion (or
- * before the setting is known), and for a still plate it is drawn finished
- * from its first frame: never a partly drawn line in an image.
+ * swells slightly and settles. Every other time, under Reduce Motion, and
+ * for a still plate it is drawn finished from its first frame: never a
+ * partly drawn line in an image.
+ *
+ * On a cold launch the plate mounts under the launch cover, often before
+ * iOS has answered Reduce Motion. Deciding at mount drew the line finished
+ * (setting unknown) or played the draw out under the cover, so it was never
+ * seen (sweep 3 captures, A8). The decision now waits (timelineDecision):
+ * undrawn until the launch has settled, then the draw; finished as soon as
+ * Reduce Motion answers on, which is before the cover shows anything.
  */
 function StageTimeline({
   drawKey,
@@ -418,17 +431,46 @@ function StageTimeline({
   testID?: string;
 }) {
   const reduce = useReduceMotionSetting();
-  // Decided once, at mount: a re-render never restarts or skips the draw.
-  const [draws] = useState(
-    () => !still && reduce === false && timelineMayDraw(drawKey),
+  const settled = useLaunchSettled();
+  // Whether this mount has the edition's turn: read once, so a re-render
+  // never restarts or skips the draw.
+  const [eligible] = useState(() => !still && timelineMayDraw(drawKey));
+  const [decided, setDecided] = useState<'draw' | 'finished' | null>(
+    eligible ? null : 'finished',
   );
-  const progress = useSharedValue(draws ? 0 : 1);
-  const settle = useSharedValue(draws ? 0 : 1);
+  const phase = decided ?? timelineDecision(reduce, settled);
+  // Held once made (React's adjust-state-on-change pattern): Reduce Motion
+  // turned on mid-draw finishes the line below, it does not decide again.
+  if (decided === null && phase !== 'wait') setDecided(phase);
   useEffect(() => {
     // A still plate (an image, a card below the fold) is not the reader
-    // seeing the line arrive: the turn stays for the next appearance.
-    if (!still) timelineShown(drawKey);
-    if (!draws) return;
+    // seeing the line arrive, and neither is a line waiting under the launch
+    // cover: the turn stays for the next appearance.
+    if (!still && phase !== 'wait') timelineShown(drawKey);
+  }, [still, phase, drawKey]);
+  return (
+    // Keyed by phase: each starts from its own first frame.
+    <TimelineLine key={phase} phase={phase} stops={stops} testID={testID} />
+  );
+}
+
+function TimelineLine({
+  phase,
+  stops,
+  testID,
+}: {
+  phase: 'wait' | 'draw' | 'finished';
+  stops: number;
+  testID?: string;
+}) {
+  const reduce = useReduceMotionSetting();
+  const draws = phase === 'draw';
+  const progress = useSharedValue(phase === 'finished' ? 1 : 0);
+  const settle = useSharedValue(phase === 'finished' ? 1 : 0);
+  const started = useRef(false);
+  useEffect(() => {
+    if (!draws || started.current) return;
+    started.current = true;
     progress.set(
       withTiming(1, {
         duration: TIMELINE_DRAW_MS,
@@ -441,7 +483,7 @@ function StageTimeline({
         withTiming(1, { duration: TIMELINE_SETTLE_MS }),
       ),
     );
-  }, [draws, drawKey, still, progress, settle]);
+  }, [draws, progress, settle]);
   // Reduce Motion turned on mid-draw: the finished line at once.
   useEffect(() => {
     if (!draws || reduce !== true) return;

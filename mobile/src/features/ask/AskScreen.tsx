@@ -259,12 +259,27 @@ export default function AskScreen() {
   useLayoutEffect(() => {
     latestReveal.current = reveal;
   }, [reveal]);
+  // New question returns Ask to its idle rest. On iOS the page gets a fresh
+  // scroll view (`restKey` below), which UIKit places at rest under the
+  // expanded large title, exactly as on first mount. Scrolling the old one
+  // to -headerBottom did not land there (sweep 3 captures, C4.1 at AX5):
+  // after a scrolled thread the header last reported was the collapsed
+  // inline bar, so an iPhone stopped about 71 pt short with the large title
+  // half under the bar buttons, and nothing later reports the expanded
+  // height while the bar stays collapsed; on the Duo the reported header
+  // was about 58 pt more than the idle inset and left a blank band.
+  // Android's toolbar sits outside the scroll view: its top is zero.
   useEffect(() => {
     if (!topRequest) return;
     pin.current = false;
+    if (Platform.OS === 'ios') {
+      atTop.current = true;
+      return;
+    }
     scrollToTop(scroll.current, headerBottom);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topRequest]);
+  const restKey = Platform.OS === 'ios' ? topRequest : 0;
   const pinTurn = () => {
     pin.current = true;
     // These frames may beat layout and still have the previous turn's y.
@@ -379,6 +394,7 @@ export default function AskScreen() {
       : 0;
   const content = (
     <ScrollView
+      key={restKey}
       ref={scroll}
       testID="ask-screen"
       style={[

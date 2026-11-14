@@ -9,6 +9,7 @@ import {
   useEffect,
   useLayoutEffect,
   useMemo,
+  useState,
   type ReactNode,
 } from 'react';
 import {
@@ -103,7 +104,52 @@ export function useTodayDotsScroll() {
   const scroll = useDerivedValue(() =>
     dotScrollDistance(raw.value, ios ? expandedHeader.value : 0),
   );
-  return { scrollRef, scroll, expandedHeader };
+  const headerSettled = useHeaderSettled(header);
+  return { scrollRef, scroll, expandedHeader, headerSettled };
+}
+
+/**
+ * The longest Today holds the launch cover for the large title's height:
+ * native-stack's 100 ms debounce plus the render that delivers it.
+ */
+export const HEADER_SETTLE_CAP_MS = 200;
+
+/** Whether the art is drawn at this text size and layout (iOS and Android). */
+export function dotsDrawn(fontScale: number, rule: string): boolean {
+  return !isAccessibilityCategory(fontScale) && rule !== 'phone-regular';
+}
+
+/**
+ * Whether Today's rest geometry is final, so the launch cover may go.
+ *
+ * On an iPhone the art hangs from the large title and the date sits under
+ * it, both placed from the header's expanded height. NativeStack starts
+ * from an inline estimate and delivers the large-title height about 100 ms
+ * later (it debounces it), so on a cold launch the date, the map and the
+ * first card were drawn about 68 pt low and jumped up as the launch cover
+ * faded (sweep 3 captures, A1: 282 pt to 214 pt). Today now keeps the cover
+ * until the height first changes from that estimate, never longer than
+ * HEADER_SETTLE_CAP_MS, so the move happens out of sight.
+ *
+ * Where nothing is placed from the header there is nothing to wait for:
+ * accessibility sizes and a regular-width phone (no art), Android, and
+ * iPad, whose captures show no move.
+ */
+function useHeaderSettled(header: number): boolean {
+  const { fontScale } = useWindowDimensions();
+  const { rule } = useLayout();
+  const waits =
+    Platform.OS === 'ios' && !Platform.isPad && dotsDrawn(fontScale, rule);
+  // The estimate this screen mounted with.
+  const [first] = useState(header);
+  const [capped, setCapped] = useState(false);
+  const known = !waits || header !== first;
+  useEffect(() => {
+    if (known || capped) return;
+    const timer = setTimeout(() => setCapped(true), HEADER_SETTLE_CAP_MS);
+    return () => clearTimeout(timer);
+  }, [known, capped]);
+  return known || capped;
 }
 
 /**
@@ -124,8 +170,7 @@ export function AustraliaDots(props: {
 }) {
   const { fontScale } = useWindowDimensions();
   const { rule } = useLayout();
-  if (isAccessibilityCategory(fontScale) || rule === 'phone-regular')
-    return null;
+  if (!dotsDrawn(fontScale, rule)) return null;
   return <DotField {...props} />;
 }
 

@@ -274,6 +274,14 @@ export default function Today() {
         ) ?? null)
       : null;
   const home = federal && house(federal) ? federal : null;
+  // The launch cover goes once Today has laid out and its rest geometry is
+  // final (useTodayDotsScroll: the large title's height on an iPhone), so
+  // nothing moves as the cover fades.
+  const [laidOut, setLaidOut] = useState(false);
+  const onLayout = useCallback(() => setLaidOut(true), []);
+  useEffect(() => {
+    if (laidOut && dots.headerSettled) releaseSplash('today');
+  }, [laidOut, dots.headerSettled]);
   const ready = !!launch && seat.status !== 'loading';
   useScreenReady('/', ready);
   // Once the body is drawn, the profile catalogs are read from their saved
@@ -469,7 +477,7 @@ export default function Today() {
   return (
     <Screen
       testID="today-screen"
-      onLayout={() => releaseSplash('today')}
+      onLayout={onLayout}
       column="wide"
       grouped
       clampScrollOnContentChange
