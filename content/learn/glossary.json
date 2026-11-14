@@ -1,0 +1,1811 @@
+{
+ "_about": "Glossary for popovers, /glossary and Ask. Each entry lists the fact ids behind its wording; sources are derived from those facts.",
+ "terms": [
+  {
+   "term": "bill",
+   "slug": "bill",
+   "chapter": "bill-to-act",
+   "short": "A written plan for a new law, or for a change to a law we already have.",
+   "more": "A bill is not a law yet. Both houses of Parliament must agree to exactly the same words. Then the Governor-General signs it and it becomes an Act.",
+   "example": {
+    "url": "https://opax.com.au/bill/au-federal-r7548",
+    "label": "A bill before Parliament"
+   },
+   "facts": [
+    "bill-definition",
+    "bill-identical-both-houses",
+    "royal-assent-final-step"
+   ],
+   "see_also": [
+    "act",
+    "first-reading",
+    "royal-assent"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-law-making"
+   ]
+  },
+  {
+   "term": "Act",
+   "slug": "act",
+   "chapter": "bill-to-act",
+   "short": "A law made by Parliament. A bill becomes an Act once the Governor-General signs it.",
+   "more": "An Act is also called an Act of Parliament. It starts on the date written in it, or 28 days after it is signed if no date is given.",
+   "facts": [
+    "becomes-act",
+    "commencement-28-days"
+   ],
+   "see_also": [
+    "bill",
+    "royal-assent",
+    "commencement"
+   ],
+   "sources": [
+    "peo-law-making",
+    "peo-qon-gg-assent"
+   ]
+  },
+  {
+   "term": "first reading",
+   "slug": "first-reading",
+   "chapter": "bill-to-act",
+   "short": "The first step for a bill in each house. The bill is brought in and its title is read out.",
+   "more": "The Clerk, the top official of each house, reads the title of a bill three times in each house. Each reading means the bill has passed another stage. On OPAX, a bill's list of stages usually starts with \"Introduced\".",
+   "facts": [
+    "first-reading",
+    "clerk-def",
+    "three-readings",
+    "opax-recorded-stages"
+   ],
+   "see_also": [
+    "second-reading",
+    "third-reading"
+   ],
+   "sources": [
+    "opax-bill-r7076",
+    "opax-bill-r7548",
+    "opax-seo-content",
+    "peo-glossary",
+    "peo-qon-second-reading"
+   ]
+  },
+  {
+   "term": "second reading",
+   "slug": "second-reading",
+   "chapter": "bill-to-act",
+   "short": "The stage where members debate the main idea of a bill and then vote on it.",
+   "more": "It starts when the minister asks that the bill \"now be read a second time\". If the vote passes, the house agrees with the main idea. The bill can then move on to the next stages.",
+   "example": {
+    "url": "https://opax.com.au/bill/au-federal-r7548",
+    "label": "A bill at second reading"
+   },
+   "facts": [
+    "second-reading-motion",
+    "second-reading-debate",
+    "second-reading-vote"
+   ],
+   "see_also": [
+    "first-reading",
+    "consideration-in-detail",
+    "third-reading"
+   ],
+   "sources": [
+    "peo-qon-second-reading"
+   ]
+  },
+  {
+   "term": "consideration in detail",
+   "slug": "consideration-in-detail",
+   "chapter": "bill-to-act",
+   "short": "The stage where members go through a bill part by part and vote on changes.",
+   "more": "In the Senate, this stage is called committee of the whole. It is not one of the small committees: it is a stage where senators discuss the bill in detail. It is optional. Most amendments are dealt with here.",
+   "facts": [
+    "consideration-in-detail",
+    "cid-optional",
+    "amendments-when"
+   ],
+   "see_also": [
+    "amendment",
+    "second-reading",
+    "third-reading"
+   ],
+   "sources": [
+    "peo-amendments",
+    "peo-glossary",
+    "peo-usual-path"
+   ]
+  },
+  {
+   "term": "third reading",
+   "slug": "third-reading",
+   "chapter": "bill-to-act",
+   "short": "The vote on a bill in its final form. If it passes, that house has passed the bill.",
+   "more": "If the House passes a bill at the third reading, it sends the bill to the Senate with a formal message. The Senate then follows similar steps. If the Senate changes the bill, the House votes again on those changes.",
+   "facts": [
+    "third-reading",
+    "house-message-to-senate",
+    "senate-stages",
+    "amendment-shuttle"
+   ],
+   "see_also": [
+    "second-reading",
+    "royal-assent"
+   ],
+   "sources": [
+    "constitution",
+    "opax-div-reps-8545",
+    "peo-amendments",
+    "peo-glossary",
+    "peo-making-a-law",
+    "peo-qon-after-house",
+    "peo-usual-path"
+   ]
+  },
+  {
+   "term": "amendment",
+   "slug": "amendment",
+   "chapter": "bill-to-act",
+   "short": "A change to a bill that an MP or senator suggests, debates and votes on.",
+   "more": "Any member can move an amendment. It must be given in writing to the Clerk, the top official of the house. Changes made in one house must also be agreed to by the other house.",
+   "example": {
+    "url": "https://opax.com.au/doc/division-federal-representatives-8545",
+    "label": "The House agrees to Senate amendments"
+   },
+   "facts": [
+    "amend-anyone",
+    "amend-written",
+    "clerk-def",
+    "amendments-both-houses"
+   ],
+   "see_also": [
+    "consideration-in-detail",
+    "bill"
+   ],
+   "sources": [
+    "peo-amendments",
+    "peo-glossary"
+   ]
+  },
+  {
+   "term": "committee",
+   "slug": "committee",
+   "chapter": "bill-to-act",
+   "short": "A small group of MPs or senators who look closely at a bill or an issue.",
+   "more": "Most committees have 6 to 10 members. They ask people and groups for their views, hold hearings and write a report. The report may suggest changes to a bill.",
+   "facts": [
+    "committee-size",
+    "committee-submissions-hearings",
+    "committee-report"
+   ],
+   "see_also": [
+    "senate-inquiry"
+   ],
+   "sources": [
+    "peo-committees",
+    "peo-making-a-law"
+   ]
+  },
+  {
+   "term": "Senate inquiry",
+   "slug": "senate-inquiry",
+   "chapter": "bill-to-act",
+   "short": "When the Senate asks one of its committees to look closely at a bill or an issue.",
+   "more": "The Senate can send a bill to a committee for inquiry, even while the bill is still in the House. The committee reports back to the Senate.",
+   "example": {
+    "url": "https://opax.com.au/doc/division-federal-senate-10811",
+    "label": "A Senate vote to start an inquiry"
+   },
+   "facts": [
+    "senate-referral-early",
+    "committee-issues-and-bills",
+    "committee-report"
+   ],
+   "see_also": [
+    "committee",
+    "senate"
+   ],
+   "sources": [
+    "peo-committees",
+    "peo-making-a-law",
+    "peo-usual-path"
+   ]
+  },
+  {
+   "term": "Federation Chamber",
+   "slug": "federation-chamber",
+   "chapter": "bill-to-act",
+   "short": "The House of Representatives' second room for debate. It can meet at the same time as the House.",
+   "more": "It is used for bills that most members are expected to agree on. No divisions can be held there. Its decisions must be confirmed by the House.",
+   "facts": [
+    "fed-chamber-what",
+    "fed-chamber-use",
+    "fed-chamber-no-divisions",
+    "fed-chamber-confirm"
+   ],
+   "see_also": [
+    "house-of-representatives",
+    "division"
+   ],
+   "sources": [
+    "peo-qon-federation-chamber"
+   ]
+  },
+  {
+   "term": "royal assent",
+   "slug": "royal-assent",
+   "chapter": "bill-to-act",
+   "short": "When the Governor-General signs a bill that both houses have passed. It is the final step.",
+   "more": "After royal assent, the bill becomes an Act. The Governor-General can send a bill back with suggested changes. No Governor-General has ever refused to sign one.",
+   "facts": [
+    "royal-assent-final-step",
+    "becomes-act",
+    "gg-return-bill",
+    "gg-never-refused"
+   ],
+   "see_also": [
+    "governor-general",
+    "act"
+   ],
+   "sources": [
+    "constitution",
+    "peo-gg",
+    "peo-glossary",
+    "peo-qon-gg-assent"
+   ]
+  },
+  {
+   "term": "commencement",
+   "slug": "commencement",
+   "chapter": "bill-to-act",
+   "short": "The day an Act starts to work.",
+   "more": "An Act starts on the date written in it. If no date is given, it starts 28 days after royal assent. OPAX stage dates do not show when a law starts.",
+   "facts": [
+    "commencement-28-days",
+    "opax-stage-dates-not-commencement"
+   ],
+   "see_also": [
+    "act",
+    "royal-assent"
+   ],
+   "sources": [
+    "opax-seo-content",
+    "peo-law-making"
+   ]
+  },
+  {
+   "term": "private member's bill",
+   "slug": "private-members-bill",
+   "chapter": "bill-to-act",
+   "short": "A bill brought in by an MP or senator who is not a minister.",
+   "more": "In the Senate it is called a private senator's bill. Since 1901, only about 30 private bills have passed. Most bills are government bills, brought in by ministers.",
+   "facts": [
+    "private-bills",
+    "private-bills-30",
+    "most-bills-ministers"
+   ],
+   "see_also": [
+    "bill",
+    "minister"
+   ],
+   "sources": [
+    "peo-law-making",
+    "peo-qon-private-bills"
+   ]
+  },
+  {
+   "term": "money bill",
+   "slug": "money-bill",
+   "chapter": "bill-to-act",
+   "short": "A bill that sets a tax or spends public money.",
+   "more": "Bills that tax or spend public money must start in the House. The Senate cannot change a tax bill or the bill for the government's ordinary yearly services. It can ask the House to make changes.",
+   "facts": [
+    "money-bill-def",
+    "money-bills-start-house",
+    "s53-no-amend",
+    "s53-request"
+   ],
+   "see_also": [
+    "bill",
+    "senate"
+   ],
+   "sources": [
+    "constitution",
+    "peo-glossary",
+    "peo-qon-which-house"
+   ]
+  },
+  {
+   "term": "delegated legislation",
+   "slug": "delegated-legislation",
+   "chapter": "bill-to-act",
+   "short": "Detailed rules, such as regulations, made by a minister or agency under power given by an Act.",
+   "more": "It has the same force as a law made by Parliament. It can be made without a debate and vote in Parliament. Parliament can still overrule it.",
+   "facts": [
+    "delegated-what",
+    "delegated-same-force",
+    "delegated-no-debate"
+   ],
+   "see_also": [
+    "disallowance",
+    "act"
+   ],
+   "sources": [
+    "peo-delegated-law",
+    "peo-glossary"
+   ]
+  },
+  {
+   "term": "disallowance",
+   "slug": "disallowance",
+   "chapter": "bill-to-act",
+   "short": "When the Senate or House overrules a piece of delegated legislation.",
+   "more": "A sitting day is a day a house meets. An MP or senator has 15 sitting days to ask their house to overrule the rule. The house then has 15 sitting days to decide. If it does not decide, the rule is overruled.",
+   "facts": [
+    "sitting-def",
+    "disallow-15-days",
+    "delegated-register-6-days",
+    "delegated-some-not"
+   ],
+   "see_also": [
+    "delegated-legislation"
+   ],
+   "sources": [
+    "peo-delegated-law",
+    "peo-glossary"
+   ]
+  },
+  {
+   "term": "lapsed",
+   "slug": "lapsed",
+   "chapter": "bill-to-act",
+   "short": "A status OPAX shows from Parliament's bill records. A bill marked lapsed did not become law.",
+   "more": "Before an election, the session of Parliament is formally closed. Bills still waiting then expire. The same bill can be brought in again later, and some then pass.",
+   "facts": [
+    "opax-lapsed-status",
+    "prorogation-def",
+    "prorogued-bills-expire"
+   ],
+   "see_also": [
+    "bill"
+   ],
+   "sources": [
+    "opax-app-bill-detail",
+    "opax-bills-export",
+    "peo-glossary",
+    "peo-qon-prorogued"
+   ]
+  },
+  {
+   "term": "double dissolution",
+   "slug": "double-dissolution",
+   "chapter": "bill-to-act",
+   "short": "When both houses close at once so every seat goes to an election, to break a deadlock over a bill.",
+   "more": "It can happen when the Senate blocks a House bill twice, three months apart. Every seat in both houses then goes to an election. It has happened 7 times.",
+   "facts": [
+    "double-dissolution-steps",
+    "double-dissolution-election",
+    "double-dissolution-7"
+   ],
+   "see_also": [
+    "senate",
+    "house-of-representatives"
+   ],
+   "sources": [
+    "constitution",
+    "peo-double-dissolution",
+    "peo-qon-not-passed"
+   ]
+  },
+  {
+   "term": "House of Representatives",
+   "slug": "house-of-representatives",
+   "chapter": "whos-who",
+   "short": "The house of Parliament where each member represents one electorate. Government is formed here.",
+   "more": "It has 150 members (as at 28 May 2026), and the AEC says it will still have 150 at the next election. Most bills start here. Its meetings are run by the Speaker.",
+   "facts": [
+    "house-150",
+    "government-def",
+    "most-bills-start-house",
+    "presiding-officers"
+   ],
+   "see_also": [
+    "senate",
+    "member-of-parliament",
+    "electorate",
+    "speaker"
+   ],
+   "sources": [
+    "aec-media-2026-07-23",
+    "aec-media-2026-10-08",
+    "peo-glossary",
+    "peo-house-numbers",
+    "peo-members",
+    "peo-qon-which-house"
+   ]
+  },
+  {
+   "term": "Senate",
+   "slug": "senate",
+   "chapter": "whos-who",
+   "short": "The house of Parliament where senators represent a whole state or territory.",
+   "more": "It has 76 senators (as at 15 May 2026): 12 for each state and 2 each for the NT and the ACT. Its meetings are run by the President of the Senate.",
+   "facts": [
+    "senate-76",
+    "senator-represents-state",
+    "presiding-officers"
+   ],
+   "see_also": [
+    "house-of-representatives",
+    "senator",
+    "president-of-the-senate"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-senate-numbers",
+    "peo-senators"
+   ]
+  },
+  {
+   "term": "member of parliament",
+   "slug": "member-of-parliament",
+   "chapter": "whos-who",
+   "short": "A person elected to the House of Representatives. Also called an MP.",
+   "more": "Each member represents one electorate. Members are elected at least every 3 years. A person elected to the Senate is called a senator.",
+   "facts": [
+    "member-mp",
+    "house-term",
+    "house-150",
+    "senate-76"
+   ],
+   "see_also": [
+    "electorate",
+    "senator"
+   ],
+   "sources": [
+    "aec-media-2026-07-23",
+    "aec-media-2026-10-08",
+    "peo-glossary",
+    "peo-house-numbers",
+    "peo-members",
+    "peo-senate-numbers",
+    "peo-senators"
+   ]
+  },
+  {
+   "term": "senator",
+   "slug": "senator",
+   "chapter": "whos-who",
+   "short": "A person elected to the Senate to represent a state or territory.",
+   "more": "There are 76 senators. State senators serve 6-year terms, and half of them face election every 3 years. Territory senators serve 3-year terms.",
+   "facts": [
+    "senate-76",
+    "senate-terms",
+    "senator-represents-state"
+   ],
+   "see_also": [
+    "senate",
+    "member-of-parliament"
+   ],
+   "sources": [
+    "peo-senate-numbers",
+    "peo-senators"
+   ]
+  },
+  {
+   "term": "electorate",
+   "slug": "electorate",
+   "chapter": "whos-who",
+   "short": "The area an MP represents in the House. Also called a seat.",
+   "more": "Within each state, electorates have about the same number of voters. The Australian Electoral Commission calls electorates \"electoral divisions\". In Parliament, a division is a vote, not a place.",
+   "facts": [
+    "electorate-def",
+    "electorate-equal-voters",
+    "aec-electoral-division"
+   ],
+   "see_also": [
+    "member-of-parliament",
+    "division"
+   ],
+   "sources": [
+    "aec-electorates",
+    "aec-redistribution-faq",
+    "peo-glossary",
+    "peo-house-video"
+   ]
+  },
+  {
+   "term": "government",
+   "slug": "government",
+   "chapter": "whos-who",
+   "short": "The party, or group of parties, with the support of most members of the House.",
+   "more": "The government is led by the Prime Minister. It has members in the Senate too, but it may not have most of the seats there.",
+   "facts": [
+    "government-def",
+    "pm-leads",
+    "gov-senate-maybe"
+   ],
+   "see_also": [
+    "opposition",
+    "prime-minister",
+    "crossbench"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-government",
+    "peo-pm"
+   ]
+  },
+  {
+   "term": "opposition",
+   "slug": "opposition",
+   "chapter": "whos-who",
+   "short": "The largest party, or group of parties, that is not in government.",
+   "more": "It is sometimes called the alternative government. It checks the government's work and offers other policies. Its leader picks shadow ministers.",
+   "facts": [
+    "opposition-def",
+    "opposition-alternative",
+    "opposition-role",
+    "shadow-ministers"
+   ],
+   "see_also": [
+    "government",
+    "shadow-minister"
+   ],
+   "sources": [
+    "peo-ministers",
+    "peo-opposition"
+   ]
+  },
+  {
+   "term": "crossbench",
+   "slug": "crossbench",
+   "chapter": "whos-who",
+   "short": "MPs and senators from minor parties, and independents who belong to no party.",
+   "more": "When the government does not have most of the Senate seats, crossbench senators can decide if a bill passes. This is called the balance of power.",
+   "example": {
+    "url": "https://opax.com.au/doc/division-federal-representatives-10611",
+    "label": "Independents vote together on a House bill"
+   },
+   "facts": [
+    "crossbench-def",
+    "independent-def",
+    "balance-of-power"
+   ],
+   "see_also": [
+    "government",
+    "opposition"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-independents",
+    "peo-minor-parties"
+   ]
+  },
+  {
+   "term": "Prime Minister",
+   "slug": "prime-minister",
+   "chapter": "whos-who",
+   "short": "The leader of the government.",
+   "more": "Australians do not vote for the Prime Minister directly. The party in government chooses its leader. By tradition, the Prime Minister sits in the House.",
+   "facts": [
+    "pm-leads",
+    "pm-chosen",
+    "pm-house"
+   ],
+   "see_also": [
+    "government",
+    "minister",
+    "cabinet"
+   ],
+   "sources": [
+    "peo-pm"
+   ]
+  },
+  {
+   "term": "minister",
+   "slug": "minister",
+   "chapter": "whos-who",
+   "short": "A member of the government put in charge of an area, such as health or defence.",
+   "more": "That area is called a portfolio. Ministers are picked by the Prime Minister. A minister must be, or soon become, an MP or senator.",
+   "facts": [
+    "minister-portfolio",
+    "pm-picks-ministers",
+    "s64-ministers-in-parliament"
+   ],
+   "see_also": [
+    "cabinet",
+    "shadow-minister",
+    "prime-minister"
+   ],
+   "sources": [
+    "constitution",
+    "peo-ministers",
+    "peo-pm"
+   ]
+  },
+  {
+   "term": "Cabinet",
+   "slug": "cabinet",
+   "chapter": "whos-who",
+   "short": "The Prime Minister and the most senior ministers, who make the government's main decisions.",
+   "more": "It includes the Prime Minister and about 20 ministers. It often meets each week. Once Cabinet decides, all its members are expected to support the decision in public.",
+   "facts": [
+    "cabinet-def",
+    "cabinet-meets",
+    "cabinet-solidarity"
+   ],
+   "see_also": [
+    "minister",
+    "prime-minister"
+   ],
+   "sources": [
+    "peo-cabinet"
+   ]
+  },
+  {
+   "term": "shadow minister",
+   "slug": "shadow-minister",
+   "chapter": "whos-who",
+   "short": "A member of the opposition who follows the work of one minister.",
+   "more": "Shadow ministers are chosen by the Leader of the Opposition. They speak for the opposition on their area.",
+   "facts": [
+    "shadow-ministers"
+   ],
+   "see_also": [
+    "opposition",
+    "minister"
+   ],
+   "sources": [
+    "peo-ministers"
+   ]
+  },
+  {
+   "term": "Speaker",
+   "slug": "speaker",
+   "chapter": "whos-who",
+   "short": "The member who runs meetings of the House of Representatives.",
+   "more": "Members choose the Speaker after each election. The Speaker only votes if there is a tie.",
+   "facts": [
+    "po-chosen",
+    "presiding-officers",
+    "speaker-casting"
+   ],
+   "see_also": [
+    "president-of-the-senate",
+    "house-of-representatives"
+   ],
+   "sources": [
+    "constitution",
+    "peo-glossary",
+    "peo-president",
+    "peo-speaker",
+    "peo-voting"
+   ]
+  },
+  {
+   "term": "President of the Senate",
+   "slug": "president-of-the-senate",
+   "chapter": "whos-who",
+   "short": "The senator who runs meetings of the Senate.",
+   "more": "Senators elect the President. Unlike the Speaker, the President can always vote. If a Senate vote is tied, the proposal fails.",
+   "facts": [
+    "po-chosen",
+    "president-votes",
+    "senate-tie"
+   ],
+   "see_also": [
+    "speaker",
+    "senate"
+   ],
+   "sources": [
+    "constitution",
+    "peo-president",
+    "peo-speaker",
+    "peo-voting"
+   ]
+  },
+  {
+   "term": "whip",
+   "slug": "whip",
+   "chapter": "whos-who",
+   "short": "A member chosen by their party to help it work as a team in Parliament.",
+   "more": "Whips make sure members turn up and vote together. They count votes in a division and arrange pairs. Major parties usually have a chief whip and 2 deputy whips.",
+   "facts": [
+    "whip-def",
+    "whip-duties",
+    "whip-numbers"
+   ],
+   "see_also": [
+    "pair",
+    "party-line"
+   ],
+   "sources": [
+    "peo-whip"
+   ]
+  },
+  {
+   "term": "Governor-General",
+   "slug": "governor-general",
+   "chapter": "whos-who",
+   "short": "The King's representative in Australia.",
+   "more": "The King appoints the Governor-General on the Prime Minister's advice. By tradition, the Governor-General acts on the government's advice. One key job is giving royal assent to bills.",
+   "facts": [
+    "gg-represents-king",
+    "gg-appointed",
+    "gg-advice",
+    "royal-assent-gg"
+   ],
+   "see_also": [
+    "royal-assent"
+   ],
+   "sources": [
+    "peo-gg"
+   ]
+  },
+  {
+   "term": "division",
+   "slug": "division",
+   "chapter": "how-votes-work",
+   "short": "A formal vote in Parliament where each member's name and vote is recorded.",
+   "more": "A division is held when more than one member challenges a vote on the voices. Members who vote aye sit to the Speaker's or President's right, and those voting no sit to their left. On OPAX, each division has its own page.",
+   "example": {
+    "url": "https://opax.com.au/doc/division-federal-representatives-10611",
+    "label": "A House division"
+   },
+   "facts": [
+    "division-def",
+    "division-challenge",
+    "division-sides",
+    "opax-division-page"
+   ],
+   "see_also": [
+    "on-the-voices",
+    "pair",
+    "crossing-the-floor"
+   ],
+   "sources": [
+    "opax-vote-tables",
+    "peo-qon-votes-needed",
+    "peo-voting"
+   ]
+  },
+  {
+   "term": "on the voices",
+   "slug": "on-the-voices",
+   "chapter": "how-votes-work",
+   "short": "A quick vote where members call out \"aye\" or \"no\" and no names are recorded.",
+   "more": "Most decisions in Parliament are made this way. The Speaker or President decides which side has more support. If more than one member challenges the result, a division is held.",
+   "facts": [
+    "voices-most",
+    "voices-how",
+    "division-challenge",
+    "opax-voices-no-record"
+   ],
+   "see_also": [
+    "division"
+   ],
+   "sources": [
+    "opax-app-bill-detail",
+    "peo-qon-votes-needed",
+    "peo-voting"
+   ]
+  },
+  {
+   "term": "pair",
+   "slug": "pair",
+   "chapter": "how-votes-work",
+   "short": "An agreement where a member does not vote, to balance out an absent member on the other side.",
+   "more": "Party whips arrange pairs. On the OPAX website, paired members are listed as \"Paired, not counted\".",
+   "facts": [
+    "pair-def",
+    "whip-duties",
+    "opax-paired"
+   ],
+   "see_also": [
+    "whip",
+    "division"
+   ],
+   "sources": [
+    "opax-web-app",
+    "peo-glossary",
+    "peo-whip"
+   ]
+  },
+  {
+   "term": "party line",
+   "slug": "party-line",
+   "chapter": "how-votes-work",
+   "short": "When all members of a party vote the same way, as a team.",
+   "more": "Members of a party usually vote together. Parties often have rules about it, and whips make sure members know how to vote.",
+   "facts": [
+    "party-team",
+    "party-rules",
+    "whip-how-to-vote"
+   ],
+   "see_also": [
+    "crossing-the-floor",
+    "conscience-vote",
+    "whip"
+   ],
+   "sources": [
+    "peo-crossing-floor"
+   ],
+   "example": {
+    "url": "https://opax.com.au/doc/division-federal-representatives-7714",
+    "label": "Members of the same party voted on both sides"
+   }
+  },
+  {
+   "term": "conscience vote",
+   "slug": "conscience-vote",
+   "chapter": "how-votes-work",
+   "short": "A vote where a party lets its members vote by their own beliefs. Also called a free vote.",
+   "more": "Each party decides when to allow one. From 1950 to 2021, only 43 votes were free votes.",
+   "facts": [
+    "free-vote-def",
+    "free-vote-party-decides",
+    "free-vote-43"
+   ],
+   "see_also": [
+    "party-line",
+    "crossing-the-floor"
+   ],
+   "sources": [
+    "peo-crossing-floor"
+   ]
+  },
+  {
+   "term": "crossing the floor",
+   "slug": "crossing-the-floor",
+   "chapter": "how-votes-work",
+   "short": "When a member votes against the rest of their party in a division.",
+   "more": "It is rare and can cost a member support in their party. If you ask OPAX who crossed the floor, it checks each vote against most of the member's party. Party labels can be out of date, so treat that as a guide.",
+   "example": {
+    "url": "https://opax.com.au/doc/division-federal-senate-9535",
+    "label": "One Liberal senator voted no while the other 8 voted aye"
+   },
+   "facts": [
+    "crossing-def",
+    "crossing-rare",
+    "crossing-cost",
+    "opax-crossing-rule",
+    "opax-crossing-caveat"
+   ],
+   "see_also": [
+    "party-line",
+    "conscience-vote",
+    "division"
+   ],
+   "sources": [
+    "opax-division-tool",
+    "peo-crossing-floor"
+   ]
+  },
+  {
+   "term": "sitting week",
+   "slug": "sitting-week",
+   "chapter": "watching-parliament",
+   "short": "A week when Parliament meets.",
+   "more": "There are about 18 to 20 sitting weeks a year. A sitting day is a day a house meets. When Parliament is not sitting, members spend much of their time in their electorates.",
+   "facts": [
+    "sitting-weeks-18-20",
+    "sitting-def",
+    "not-sitting-electorate"
+   ],
+   "see_also": [
+    "question-time"
+   ],
+   "example": {
+    "url": "https://opax.com.au/sitting",
+    "label": "Federal sitting weeks"
+   },
+   "sources": [
+    "peo-glossary",
+    "peo-members"
+   ]
+  },
+  {
+   "term": "Question Time",
+   "slug": "question-time",
+   "chapter": "watching-parliament",
+   "short": "The time each sitting day when members ask ministers questions.",
+   "more": "It starts at 2 pm in both houses and usually lasts about an hour. The first question always comes from the opposition. It can be watched live.",
+   "facts": [
+    "qt-what",
+    "qt-when",
+    "qt-order",
+    "qt-watch"
+   ],
+   "see_also": [
+    "question-without-notice",
+    "question-on-notice",
+    "dorothy-dixer"
+   ],
+   "example": {
+    "url": "https://opax.com.au/video/senate",
+    "label": "Senate Question Time videos"
+   },
+   "sources": [
+    "peo-question-time"
+   ]
+  },
+  {
+   "term": "question without notice",
+   "slug": "question-without-notice",
+   "chapter": "watching-parliament",
+   "short": "A spoken question in Question Time that the minister has not seen before.",
+   "more": "The opposition and crossbench ask these questions. The minister must answer straight away.",
+   "facts": [
+    "qwon-def",
+    "qt-what"
+   ],
+   "see_also": [
+    "question-time",
+    "question-on-notice"
+   ],
+   "sources": [
+    "peo-question-time"
+   ]
+  },
+  {
+   "term": "question on notice",
+   "slug": "question-on-notice",
+   "chapter": "watching-parliament",
+   "short": "A written question to a minister, answered in writing later.",
+   "more": "The minister is expected to answer within 30 days in the Senate, or 60 days in the House. Unanswered Question Time questions can also become questions on notice.",
+   "facts": [
+    "qon-def",
+    "qon-days"
+   ],
+   "see_also": [
+    "question-time",
+    "question-without-notice"
+   ],
+   "sources": [
+    "peo-question-time"
+   ]
+  },
+  {
+   "term": "Dorothy Dixer",
+   "slug": "dorothy-dixer",
+   "chapter": "watching-parliament",
+   "short": "A question a government backbencher asks a minister, planned before Question Time.",
+   "more": "These questions help the government talk about its policies and achievements. The questions and answers are prepared in advance.",
+   "facts": [
+    "dorothy-dixer"
+   ],
+   "see_also": [
+    "question-time"
+   ],
+   "sources": [
+    "peo-question-time"
+   ]
+  },
+  {
+   "term": "Hansard",
+   "slug": "hansard",
+   "chapter": "watching-parliament",
+   "short": "The official written record of what is said in Parliament.",
+   "more": "It covers both houses, the Federation Chamber and committee hearings, and it is online. A first draft is up within 3 hours, and the official version about 2 weeks after each sitting week. Editors cannot change the meaning of what was said.",
+   "facts": [
+    "hansard-def",
+    "hansard-covers",
+    "hansard-proof-3h",
+    "hansard-official-2w",
+    "hansard-edits",
+    "hansard-online"
+   ],
+   "see_also": [
+    "votes-and-proceedings",
+    "senate-estimates"
+   ],
+   "sources": [
+    "peo-hansard"
+   ]
+  },
+  {
+   "term": "Votes and Proceedings",
+   "slug": "votes-and-proceedings",
+   "chapter": "watching-parliament",
+   "short": "The official record of what the House of Representatives does, rather than what is said.",
+   "more": "In the Senate, the same record is called the Journals of the Senate. These records list the bills brought in, every vote held and how each member voted.",
+   "facts": [
+    "records-journals-vp",
+    "records-contents"
+   ],
+   "see_also": [
+    "hansard"
+   ],
+   "sources": [
+    "peo-records"
+   ]
+  },
+  {
+   "term": "standing orders",
+   "slug": "standing-orders",
+   "chapter": "watching-parliament",
+   "short": "The rules each house uses to run its work.",
+   "more": "The Speaker and the President make sure the standing orders are followed. Question Time is also run under them.",
+   "facts": [
+    "standing-orders-def",
+    "presiding-officers"
+   ],
+   "see_also": [
+    "notice-paper",
+    "speaker",
+    "president-of-the-senate"
+   ],
+   "sources": [
+    "peo-glossary"
+   ]
+  },
+  {
+   "term": "Notice Paper",
+   "slug": "notice-paper",
+   "chapter": "watching-parliament",
+   "short": "A list, published each sitting day, of all the business waiting in a house.",
+   "more": "Questions on notice are placed on it. Each house has its own Notice Paper.",
+   "facts": [
+    "notice-paper-def",
+    "qon-def"
+   ],
+   "see_also": [
+    "standing-orders",
+    "question-on-notice"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-question-time"
+   ]
+  },
+  {
+   "term": "Senate estimates",
+   "slug": "senate-estimates",
+   "chapter": "watching-parliament",
+   "short": "Hearings where senators question ministers and public servants about how public money is used.",
+   "more": "They are held after the Budget in May, with extra hearings in October and February. They are open to the public and can be watched online. Hansard records everything said.",
+   "facts": [
+    "estimates-def",
+    "estimates-timing",
+    "estimates-open",
+    "estimates-hansard"
+   ],
+   "see_also": [
+    "committee",
+    "hansard"
+   ],
+   "example": {
+    "url": "https://opax.com.au/estimates",
+    "label": "Senate estimates rounds and transcripts"
+   },
+   "sources": [
+    "peo-senate-estimates"
+   ]
+  },
+  {
+   "term": "petition",
+   "slug": "petition",
+   "chapter": "watching-parliament",
+   "short": "A request from a group of people for Parliament to act on a problem.",
+   "more": "Petitions are one way to have your say. The text of petitions is included in Hansard.",
+   "facts": [
+    "petition-def",
+    "hansard-covers"
+   ],
+   "see_also": [
+    "hansard"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-hansard"
+   ]
+  },
+  {
+   "term": "press gallery",
+   "slug": "press-gallery",
+   "chapter": "watching-parliament",
+   "short": "The media who work inside Parliament House and report on it.",
+   "more": "The press gallery is always at Question Time to report on what is said. It also describes the part of Parliament House where they work.",
+   "facts": [
+    "press-gallery-def",
+    "qt-press"
+   ],
+   "see_also": [
+    "question-time"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-question-time"
+   ]
+  },
+  {
+   "term": "annual return",
+   "slug": "annual-return",
+   "chapter": "money-and-interests",
+   "short": "A yearly form telling the AEC about money a party, MP or other group received or spent.",
+   "more": "Until the end of 2026, parties, significant third parties and associated entities lodge by 20 October, and the AEC publishes returns each February. From 2027, returns cover a calendar year and are due 8 weeks after it ends. The AEC then publishes them within 10 weeks of the year's end.",
+   "facts": [
+    "aec-annual-returners",
+    "annual-return-20-oct",
+    "returns-published-feb",
+    "reform-annual-due-8w",
+    "reform-publish-10w"
+   ],
+   "see_also": [
+    "disclosure-threshold",
+    "transparency-register"
+   ],
+   "sources": [
+    "aec-disclosure",
+    "aec-transparency-register",
+    "aec-whats-changing"
+   ]
+  },
+  {
+   "term": "disclosure threshold",
+   "slug": "disclosure-threshold",
+   "chapter": "money-and-interests",
+   "short": "The amount below which money does not have to be disclosed.",
+   "more": "From 1 July 2026 to 31 December 2026 it is more than $17,300. Under the current rules, it rises each 1 July. From 1 January 2027, the AEC says it will be above $5,000.",
+   "facts": [
+    "threshold-def",
+    "threshold-2026",
+    "threshold-indexed",
+    "reform-threshold"
+   ],
+   "see_also": [
+    "annual-return",
+    "gift"
+   ],
+   "sources": [
+    "aec-threshold",
+    "aec-whats-changing"
+   ]
+  },
+  {
+   "term": "receipts",
+   "slug": "receipts",
+   "chapter": "money-and-interests",
+   "short": "Money a party or group has received, as listed on its return. It may or may not be a gift.",
+   "more": "A return's total receipts include loans as well as gifts. That is why OPAX calls this money receipts, not donations.",
+   "facts": [
+    "loans-in-receipts",
+    "donation-is-gift",
+    "opax-receipts-language"
+   ],
+   "see_also": [
+    "gift",
+    "annual-return"
+   ],
+   "example": {
+    "url": "https://opax.com.au/money/receipts",
+    "label": "Political receipts"
+   },
+   "sources": [
+    "aec-disclosure-faq",
+    "opax-money-receipts"
+   ]
+  },
+  {
+   "term": "gift",
+   "slug": "gift",
+   "chapter": "money-and-interests",
+   "short": "Money or property given for nothing, or for much less than it is worth.",
+   "more": "In election law, a donation means the same as a gift. Gifts above the disclosure threshold must be disclosed.",
+   "facts": [
+    "donation-is-gift",
+    "threshold-def"
+   ],
+   "see_also": [
+    "receipts",
+    "gift-cap"
+   ],
+   "sources": [
+    "aec-disclosure-faq",
+    "aec-threshold"
+   ]
+  },
+  {
+   "term": "Transparency Register",
+   "slug": "transparency-register",
+   "chapter": "money-and-interests",
+   "short": "The AEC's public website of disclosure returns, registered groups and election funding.",
+   "more": "Until the end of 2026, annual returns are published there on the first working day in February. From 2027, the AEC must publish annual return details within 10 weeks of the end of the year, and donation details sooner.",
+   "facts": [
+    "transparency-register-def",
+    "returns-published-feb",
+    "reform-publish-10w",
+    "reform-publish-24h"
+   ],
+   "see_also": [
+    "annual-return"
+   ],
+   "sources": [
+    "aec-disclosure",
+    "aec-transparency-register",
+    "aec-whats-changing"
+   ]
+  },
+  {
+   "term": "associated entity",
+   "slug": "associated-entity",
+   "chapter": "money-and-interests",
+   "short": "A group linked to one or more political parties that must register with the AEC.",
+   "more": "Associated entities lodge annual returns. From 2027, the AEC says one must operate wholly, or to a significant extent, for the benefit of registered parties.",
+   "facts": [
+    "registered-entities",
+    "aec-annual-returners",
+    "associated-entity-new-def"
+   ],
+   "see_also": [
+    "significant-third-party",
+    "annual-return"
+   ],
+   "sources": [
+    "aec-disclosure",
+    "aec-whats-changing",
+    "aec-who-register"
+   ]
+  },
+  {
+   "term": "significant third party",
+   "slug": "significant-third-party",
+   "chapter": "money-and-interests",
+   "short": "A group, other than a party, that must register with the AEC and lodge annual returns.",
+   "more": "Significant third parties must register with the AEC. Until the end of 2026, they lodge their annual return by 20 October, like parties and associated entities.",
+   "facts": [
+    "registered-entities",
+    "aec-annual-returners",
+    "annual-return-20-oct"
+   ],
+   "see_also": [
+    "associated-entity",
+    "annual-return"
+   ],
+   "sources": [
+    "aec-disclosure",
+    "aec-whats-changing",
+    "aec-who-register"
+   ]
+  },
+  {
+   "term": "election funding",
+   "slug": "election-funding",
+   "chapter": "money-and-interests",
+   "short": "Money the AEC pays after an election to help cover what eligible parties and candidates spent.",
+   "more": "A candidate or group needs at least four per cent of the first preference votes to get it. It is paid after each federal election or by-election.",
+   "facts": [
+    "election-funding-what",
+    "election-funding-4pc"
+   ],
+   "see_also": [
+    "preferential-voting"
+   ],
+   "sources": [
+    "aec-election-funding"
+   ]
+  },
+  {
+   "term": "gift cap",
+   "slug": "gift-cap",
+   "chapter": "money-and-interests",
+   "short": "From 2027, a limit on how much one person or group can give.",
+   "more": "The rules start on 1 January 2027. The AEC says the cap is $50,000 in a calendar year to one recipient for a federal purpose. Across all recipients, the limit is $1.6 million in a calendar year.",
+   "facts": [
+    "reform-start",
+    "reform-gift-caps",
+    "reform-gift-cap-amounts"
+   ],
+   "see_also": [
+    "gift",
+    "electoral-expenditure"
+   ],
+   "sources": [
+    "aec-fad-reform",
+    "aec-whats-changing"
+   ]
+  },
+  {
+   "term": "electoral expenditure",
+   "slug": "electoral-expenditure",
+   "chapter": "money-and-interests",
+   "short": "Money spent in relation to an election.",
+   "more": "From 2027 there are limits on electoral expenditure. Their size depends on the type of group.",
+   "facts": [
+    "electoral-expenditure-def",
+    "reform-expenditure-caps"
+   ],
+   "see_also": [
+    "gift-cap",
+    "election-funding"
+   ],
+   "sources": [
+    "aec-whats-changing"
+   ]
+  },
+  {
+   "term": "register of interests",
+   "slug": "register-of-interests",
+   "chapter": "money-and-interests",
+   "short": "A list where MPs and senators record their interests.",
+   "more": "OPAX shows the newest things added to and taken off these registers, grouped by week. Each entry links to its source.",
+   "facts": [
+    "opax-declared"
+   ],
+   "see_also": [
+    "annual-return"
+   ],
+   "example": {
+    "url": "https://opax.com.au/declared",
+    "label": "Declared interests"
+   },
+   "sources": [
+    "opax-declared"
+   ]
+  },
+  {
+   "term": "enrol",
+   "slug": "enrol",
+   "chapter": "elections",
+   "short": "To put your name on the electoral roll so you can vote.",
+   "more": "It is compulsory for eligible citizens to enrol and vote. You can enrol at 16 or 17 so you are ready to vote at 18.",
+   "facts": [
+    "compulsory-enrol-vote",
+    "enrol-16-17"
+   ],
+   "see_also": [
+    "electoral-roll",
+    "federal-election"
+   ],
+   "sources": [
+    "aec-enrol"
+   ]
+  },
+  {
+   "term": "electoral roll",
+   "slug": "electoral-roll",
+   "chapter": "elections",
+   "short": "The list of everyone who can vote.",
+   "more": "Australia has one national roll, run by the AEC. At the end of 2024, around 98% of eligible Australians were on it.",
+   "facts": [
+    "electoral-roll-def",
+    "single-roll",
+    "enrolment-98"
+   ],
+   "see_also": [
+    "enrol"
+   ],
+   "sources": [
+    "aec-australian-elections",
+    "peo-glossary"
+   ]
+  },
+  {
+   "term": "federal election",
+   "slug": "federal-election",
+   "chapter": "elections",
+   "short": "An election for the House of Representatives, and usually half the Senate.",
+   "more": "A full federal election is held about every three years. The Governor-General sets the date when the government asks.",
+   "facts": [
+    "election-every-3"
+   ],
+   "see_also": [
+    "writ",
+    "half-senate-election",
+    "by-election"
+   ],
+   "sources": [
+    "aec-election-timetable"
+   ]
+  },
+  {
+   "term": "writ",
+   "slug": "writ",
+   "chapter": "elections",
+   "short": "A formal order to hold an election, with its key dates.",
+   "more": "Writs are issued within 10 days of the House being dissolved. The roll closes seven days after the writ is issued.",
+   "facts": [
+    "writ-def",
+    "writ-10-days",
+    "roll-closes"
+   ],
+   "see_also": [
+    "federal-election",
+    "by-election"
+   ],
+   "sources": [
+    "aec-election-timetable"
+   ]
+  },
+  {
+   "term": "ballot paper",
+   "slug": "ballot-paper",
+   "chapter": "elections",
+   "short": "The paper on which you mark your vote.",
+   "more": "At most federal elections there are two. The green one is for the House and the white one is for the Senate.",
+   "facts": [
+    "two-ballots",
+    "ballot-colours"
+   ],
+   "see_also": [
+    "preferential-voting",
+    "informal-vote"
+   ],
+   "sources": [
+    "aec-election-timetable",
+    "aec-preferential"
+   ]
+  },
+  {
+   "term": "preferential voting",
+   "slug": "preferential-voting",
+   "chapter": "elections",
+   "short": "A way of voting where you number candidates in the order you like them.",
+   "more": "On the green House paper you must number every box. A House candidate needs more than half of the formal votes to win.",
+   "facts": [
+    "preferential-def",
+    "house-number-every-box",
+    "house-50pc"
+   ],
+   "see_also": [
+    "quota",
+    "ballot-paper"
+   ],
+   "sources": [
+    "aec-formation",
+    "aec-preferential",
+    "peo-glossary"
+   ]
+  },
+  {
+   "term": "informal vote",
+   "slug": "informal-vote",
+   "chapter": "elections",
+   "short": "A ballot paper that is not counted because it was not filled in correctly.",
+   "more": "To count, a House ballot paper must have every box numbered. A Senate ballot paper must have at least 6 boxes above the line or 12 below.",
+   "facts": [
+    "informal-def",
+    "house-number-every-box",
+    "atl-6",
+    "btl-12"
+   ],
+   "see_also": [
+    "ballot-paper"
+   ],
+   "sources": [
+    "aec-preferential",
+    "peo-federal-elections",
+    "peo-glossary"
+   ]
+  },
+  {
+   "term": "above the line",
+   "slug": "above-the-line",
+   "chapter": "elections",
+   "short": "Voting for parties or groups on the Senate paper, numbering at least 6 boxes.",
+   "more": "You number at least 6 boxes for parties or groups. Your preferences then go to their candidates in the order each one lists them.",
+   "facts": [
+    "atl-6"
+   ],
+   "see_also": [
+    "below-the-line",
+    "quota"
+   ],
+   "sources": [
+    "peo-federal-elections"
+   ]
+  },
+  {
+   "term": "below the line",
+   "slug": "below-the-line",
+   "chapter": "elections",
+   "short": "Voting for single Senate candidates, numbering at least 12 boxes.",
+   "more": "You number at least 12 boxes for single candidates. This lets you choose the order of candidates yourself.",
+   "facts": [
+    "btl-12",
+    "atl-6"
+   ],
+   "see_also": [
+    "above-the-line",
+    "quota"
+   ],
+   "sources": [
+    "peo-federal-elections"
+   ]
+  },
+  {
+   "term": "quota",
+   "slug": "quota",
+   "chapter": "elections",
+   "short": "The number of votes needed to win a Senate seat.",
+   "more": "Each Senate contest elects more than one senator. Votes are passed on by the voters' preferences until enough candidates reach a quota.",
+   "facts": [
+    "quota-def",
+    "senate-multiple",
+    "preference-transfer"
+   ],
+   "see_also": [
+    "above-the-line",
+    "preferential-voting"
+   ],
+   "sources": [
+    "aec-preferential",
+    "peo-glossary",
+    "peo-preferential-video"
+   ]
+  },
+  {
+   "term": "half-Senate election",
+   "slug": "half-senate-election",
+   "chapter": "elections",
+   "short": "An election for half of the Senate seats in each state.",
+   "more": "State senators serve 6-year terms, so half face each normal election. All senators face election together only after a double dissolution.",
+   "facts": [
+    "half-senate-def",
+    "senate-terms",
+    "dd-all-senators"
+   ],
+   "see_also": [
+    "double-dissolution",
+    "senate"
+   ],
+   "sources": [
+    "peo-double-dissolution",
+    "peo-glossary",
+    "peo-senators"
+   ]
+  },
+  {
+   "term": "by-election",
+   "slug": "by-election",
+   "chapter": "elections",
+   "short": "An election to fill one House seat between federal elections.",
+   "more": "It is held if a member resigns, dies or is found to be ineligible. The Speaker issues the writ, and polling is on a Saturday.",
+   "facts": [
+    "by-election-def",
+    "by-election-speaker"
+   ],
+   "see_also": [
+    "casual-vacancy",
+    "writ"
+   ],
+   "sources": [
+    "aec-by-elections",
+    "peo-federal-elections"
+   ]
+  },
+  {
+   "term": "casual vacancy",
+   "slug": "casual-vacancy",
+   "chapter": "elections",
+   "short": "An empty Senate seat, when a senator leaves before their term ends.",
+   "more": "The parliament of that state or territory chooses who fills it. If the senator was elected for a party, the new senator must come from the same party.",
+   "facts": [
+    "casual-vacancy-def",
+    "casual-vacancy-fill"
+   ],
+   "see_also": [
+    "by-election",
+    "senator"
+   ],
+   "sources": [
+    "constitution",
+    "peo-federal-elections"
+   ]
+  },
+  {
+   "term": "redistribution",
+   "slug": "redistribution",
+   "chapter": "elections",
+   "short": "Redrawing electorate lines so each has a similar number of voters.",
+   "more": "A redistribution can start when a state's number of seats changes, or seven years after the last one. Electorate names can only change during one.",
+   "facts": [
+    "redistribution-def",
+    "redistribution-triggers",
+    "electorate-names"
+   ],
+   "see_also": [
+    "electorate"
+   ],
+   "sources": [
+    "aec-redistribution-faq",
+    "peo-glossary"
+   ]
+  },
+  {
+   "term": "three levels of government",
+   "slug": "three-levels-of-government",
+   "chapter": "federal-and-state",
+   "short": "Federal, state and territory, and local government.",
+   "more": "Each level looks after different things, and sometimes their jobs overlap. There are more than 500 local councils.",
+   "facts": [
+    "three-levels",
+    "levels-overlap",
+    "councils-550"
+   ],
+   "see_also": [
+    "federation",
+    "state-parliament"
+   ],
+   "sources": [
+    "peo-three-levels-responsibilities"
+   ]
+  },
+  {
+   "term": "federation",
+   "slug": "federation",
+   "chapter": "federal-and-state",
+   "short": "States joining to form one nation and giving some of their powers to a central government.",
+   "more": "Australia federated in 1901. The colonies became states and kept their own constitutions and parliaments.",
+   "facts": [
+    "federation-def",
+    "federation-1901"
+   ],
+   "see_also": [
+    "three-levels-of-government",
+    "exclusive-powers"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-qon-state-territory"
+   ]
+  },
+  {
+   "term": "exclusive powers",
+   "slug": "exclusive-powers",
+   "chapter": "federal-and-state",
+   "short": "Law-making powers only the federal Parliament can use.",
+   "more": "Section 52 of the Constitution lists some, such as laws about the federal public service. Customs duties are another example.",
+   "facts": [
+    "exclusive-def",
+    "s52-example",
+    "customs-s90"
+   ],
+   "see_also": [
+    "concurrent-powers",
+    "residual-powers"
+   ],
+   "sources": [
+    "peo-qon-powers",
+    "peo-qon-s52"
+   ]
+  },
+  {
+   "term": "concurrent powers",
+   "slug": "concurrent-powers",
+   "chapter": "federal-and-state",
+   "short": "Law-making powers both the federal Parliament and the states can use.",
+   "more": "Examples include the environment, marriage and tax. If a state law clashes with a federal law, the federal law wins.",
+   "facts": [
+    "concurrent-def",
+    "concurrent-examples",
+    "s109-plain"
+   ],
+   "see_also": [
+    "exclusive-powers",
+    "section-109"
+   ],
+   "sources": [
+    "peo-qon-powers",
+    "peo-qon-state-change-federal"
+   ]
+  },
+  {
+   "term": "residual powers",
+   "slug": "residual-powers",
+   "chapter": "federal-and-state",
+   "short": "Powers the Constitution did not give the federal Parliament, so they stay with the states.",
+   "more": "Section 107 says the states keep the powers they had as colonies, unless the Constitution says otherwise. Schools and hospitals are examples.",
+   "facts": [
+    "residual-def",
+    "s107",
+    "state-areas"
+   ],
+   "see_also": [
+    "concurrent-powers",
+    "state-parliament"
+   ],
+   "sources": [
+    "peo-qon-powers",
+    "peo-qon-s52"
+   ]
+  },
+  {
+   "term": "section 109",
+   "slug": "section-109",
+   "chapter": "federal-and-state",
+   "short": "The part of the Constitution that says federal law wins when a state law clashes with it.",
+   "more": "The state law has no effect, but only for the part that clashes. The High Court decides disputes about who can make a law.",
+   "facts": [
+    "s109-text",
+    "s109-plain",
+    "high-court-decides"
+   ],
+   "see_also": [
+    "concurrent-powers",
+    "high-court"
+   ],
+   "sources": [
+    "constitution",
+    "peo-qon-state-change-federal"
+   ]
+  },
+  {
+   "term": "High Court",
+   "slug": "high-court",
+   "chapter": "federal-and-state",
+   "short": "The court that decides which parliament has the power to make a disputed law.",
+   "more": "If a law is challenged, the High Court decides whether the Constitution gave the state or federal parliament the power. That decides which law applies.",
+   "facts": [
+    "high-court-decides"
+   ],
+   "see_also": [
+    "section-109"
+   ],
+   "sources": [
+    "peo-qon-state-change-federal"
+   ]
+  },
+  {
+   "term": "state parliament",
+   "slug": "state-parliament",
+   "chapter": "federal-and-state",
+   "short": "The elected parliament that makes laws for one state.",
+   "more": "Each state has its own constitution, which sets out its parliament's powers. State laws apply within that state.",
+   "facts": [
+    "state-constitution",
+    "state-laws-within",
+    "state-parliaments-count"
+   ],
+   "see_also": [
+    "legislative-assembly",
+    "residual-powers"
+   ],
+   "example": {
+    "url": "https://opax.com.au/doc/division-nsw-la-2026-10-21-1",
+    "label": "A vote in the NSW Legislative Assembly"
+   },
+   "sources": [
+    "peo-qon-state-territory",
+    "peo-three-levels-video"
+   ]
+  },
+  {
+   "term": "legislative assembly",
+   "slug": "legislative-assembly",
+   "chapter": "federal-and-state",
+   "short": "The name of the parliament of each territory, set up by federal law.",
+   "more": "The federal Parliament created the NT and ACT legislative assemblies using section 122. It can override their laws, but rarely does.",
+   "facts": [
+    "s122-territories",
+    "territory-override"
+   ],
+   "see_also": [
+    "state-parliament"
+   ],
+   "sources": [
+    "peo-qon-state-territory"
+   ]
+  },
+  {
+   "term": "local council",
+   "slug": "local-council",
+   "chapter": "federal-and-state",
+   "short": "The local level of government, which looks after things like local roads, parks and rubbish.",
+   "more": "States and territories make laws to set up councils. The ACT has no councils; its Legislative Assembly does their job.",
+   "facts": [
+    "councils-created",
+    "council-jobs",
+    "act-no-councils"
+   ],
+   "see_also": [
+    "three-levels-of-government"
+   ],
+   "sources": [
+    "peo-three-levels-responsibilities",
+    "peo-three-levels-video"
+   ]
+  }
+ ]
+}

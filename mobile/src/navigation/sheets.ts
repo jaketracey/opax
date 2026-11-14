@@ -42,17 +42,32 @@ const payloads = new Map<string, Entry>();
 const registryId = Math.random().toString(36).slice(2);
 let serial = 0;
 let overModal = false;
+let aboveTabs = false;
 
 /** Root layout supplies segments once, including sheets presented over a modal. */
 export function setSheetSegments(segments: readonly string[]) {
   const first = segments.find((segment) => !segment.startsWith('('));
   if (
-    ['source', 'citation', 'machine-note', 'rule', 'licences'].includes(
-      first ?? '',
-    )
+    [
+      'source',
+      'citation',
+      'machine-note',
+      'rule',
+      'licences',
+      'term',
+      'term-tip',
+    ].includes(first ?? '')
   )
     return;
   overModal = first === 'account' || first === 'talk' || first === 'licence';
+  aboveTabs = overModal || first === 'welcome' || first === 'seat';
+}
+/**
+ * True while a full-screen or modal stack (Account, Talk, the welcome, the
+ * electorate step) is on top: a sheet opened there can't push a tab page.
+ */
+export function sheetAboveTabs(): boolean {
+  return aboveTabs;
 }
 export function sheetPayload<K extends SheetPayload['kind']>(
   key: string | undefined,

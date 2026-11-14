@@ -43,6 +43,13 @@ export function rootScreens(chrome: NativeStackNavigationOptions = {}) {
             : 'default',
       })}
     />,
+    // A glossary term's popover at the word (features/learn/TermTip.tsx).
+    screen('term-tip', 'How Parliament works', {
+      presentation: 'transparentModal',
+      animation: 'fade',
+      headerShown: false,
+      contentStyle: { backgroundColor: 'transparent' },
+    }),
     screen('talk', 'Talk to OPAX', modal, !voiceLinked),
     screen('account', 'Account', modal),
     screen('licence', 'Licence', { ...sheetOptions, headerShown: false }),
@@ -52,6 +59,8 @@ export function rootScreens(chrome: NativeStackNavigationOptions = {}) {
       ['citation', 'Citation'],
       ['rule', 'How this is chosen'],
       ['licences', 'Sources and licences'],
+      // A glossary term's answer (features/learn/TermSheet.tsx).
+      ['term', 'How Parliament works'],
     ].map(([name, title]) => (
       <Stack.Screen
         key={name}
@@ -59,7 +68,8 @@ export function rootScreens(chrome: NativeStackNavigationOptions = {}) {
         options={({ route }) => ({
           ...chrome,
           ...routeSheetOptions({
-            short: name === 'machine-note' || name === 'rule',
+            short:
+              name === 'machine-note' || name === 'rule' || name === 'term',
             table:
               (route.params as { variant?: string } | undefined)?.variant ===
               'table',

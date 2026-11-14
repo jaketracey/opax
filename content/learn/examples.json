@@ -1,0 +1,278 @@
+{
+ "_about": "Real OPAX pages used in \"See it in OPAX\". Each was fetched once with a read-only GET; status is the HTTP result.",
+ "examples": [
+  {
+   "id": "bill-at-second-reading",
+   "chapter": "bill-to-act",
+   "url": "https://opax.com.au/bill/au-federal-r7548",
+   "label": "Sport Legislation Amendment (World Anti-Doping Code Implementation) Bill 2026",
+   "look_at": "The stages recorded so far: introduced and second reading moved in the House on 17 Sep 2026; before parliament as at that date.",
+   "facts": [
+    "ex-r7548-stages"
+   ],
+   "checked": {
+    "at": "2026-11-14T16:28:07+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "senate-inquiry",
+   "chapter": "bill-to-act",
+   "url": "https://opax.com.au/doc/division-federal-senate-10811",
+   "label": "Senate refers veterans' health treatment limits to a committee (17 Sep 2026)",
+   "look_at": "An inquiry into an issue, not a bill. The question names the matter, the committee and the 8 March 2027 reporting date. Agreed 34 to 21.",
+   "facts": [
+    "ex-senate-10811-inquiry"
+   ],
+   "checked": {
+    "at": "2026-11-14T16:28:08+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "bill-with-senate-amendments",
+   "chapter": "bill-to-act",
+   "url": "https://opax.com.au/bill/au-federal-r7076",
+   "label": "Water Amendment (Restoring Our Rivers) Bill 2023",
+   "look_at": "Senate committee-stage divisions, then the House agreeing to the Senate amendments on 30 Nov 2023, then royal assent on 7 Dec 2023.",
+   "facts": [
+    "ex-r7076-senate-amendments"
+   ],
+   "checked": {
+    "at": "2026-11-14T16:28:10+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "house-agrees-senate-amendments",
+   "chapter": "bill-to-act",
+   "url": "https://opax.com.au/doc/division-federal-representatives-8545",
+   "label": "House agrees to the Senate amendments (30 Nov 2023)",
+   "look_at": "Agreed 86 to 53; the question explains the bill can now become law.",
+   "facts": [
+    "ex-r7076-senate-amendments"
+   ],
+   "checked": {
+    "at": "2026-11-14T16:28:11+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "house-parties-and-crossbench",
+   "chapter": "whos-who",
+   "url": "https://opax.com.au/doc/division-federal-representatives-10611",
+   "label": "Interactive Gambling Amendment (Gambling Reform) Bill 2026, third reading (18 Aug 2026)",
+   "look_at": "How each party voted: Labor and Liberals aye; the 10 independents no.",
+   "facts": [
+    "ex-reps-10611-parties"
+   ],
+   "checked": {
+    "at": "2026-11-14T16:28:12+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "one-against-party",
+   "chapter": "how-votes-work",
+   "url": "https://opax.com.au/doc/division-federal-senate-9535",
+   "label": "Criminal Code Amendment (Hate Crimes) Bill 2024, Senate third reading (6 Feb 2025)",
+   "look_at": "Passed 41 to 6. One Liberal senator voted no while the other 8 voted aye.",
+   "facts": [
+    "ex-senate-9535-crossing"
+   ],
+   "checked": {
+    "at": "2026-11-14T16:28:13+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "same-party-both-sides",
+   "chapter": "how-votes-work",
+   "url": "https://opax.com.au/doc/division-federal-representatives-7714",
+   "label": "Restoring Territory Rights Bill 2022, House third reading (3 Aug 2022)",
+   "look_at": "Passed 99 to 38 (\"affirmative\" means the bill passed). Liberal 13 aye, 17 no; Labor 69 aye, 5 no; Nationals 5 aye, 8 no.",
+   "facts": [
+    "ex-reps-7714-split"
+   ],
+   "checked": {
+    "at": "2026-11-14T16:46:48+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "sitting-weeks",
+   "chapter": "watching-parliament",
+   "url": "https://opax.com.au/sitting",
+   "label": "Federal sitting weeks",
+   "look_at": "Which house sat each week, and the bills and divisions from that week.",
+   "facts": [
+    "opax-sitting-page"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:00:00+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "senate-video",
+   "chapter": "watching-parliament",
+   "url": "https://opax.com.au/video/senate",
+   "label": "Senate video",
+   "look_at": "The Senate's own videos of Question Time and first speeches.",
+   "facts": [
+    "opax-senate-video"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:00:03+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "senate-estimates",
+   "chapter": "watching-parliament",
+   "url": "https://opax.com.au/estimates",
+   "label": "Senate estimates",
+   "look_at": "Each round of hearings, with transcripts by committee and day.",
+   "facts": [
+    "opax-estimates-page"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:00:01+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "political-receipts",
+   "chapter": "money-and-interests",
+   "url": "https://opax.com.au/money/receipts",
+   "label": "Political receipts",
+   "look_at": "Disclosed receipts by source, party, industry and year.",
+   "facts": [
+    "opax-receipts-page"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:00:05+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "receipt-sources",
+   "chapter": "money-and-interests",
+   "url": "https://opax.com.au/subject/donor",
+   "label": "Receipt sources",
+   "look_at": "People and groups named in published returns, federal and state kept apart.",
+   "facts": [
+    "opax-receipt-sources"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:02:44+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "declared-interests",
+   "chapter": "money-and-interests",
+   "url": "https://opax.com.au/declared",
+   "label": "Declared interests",
+   "look_at": "The newest additions to and deletions from registers of interests.",
+   "facts": [
+    "opax-declared"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:00:04+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "electorates",
+   "chapter": "elections",
+   "url": "https://opax.com.au/subject/electorate",
+   "label": "Electorates",
+   "look_at": "Electorates, federal and state, with recorded representation and dated sources.",
+   "facts": [
+    "opax-electorates"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:00:11+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "coverage",
+   "chapter": "elections",
+   "url": "https://opax.com.au/stats",
+   "label": "Sources and coverage",
+   "look_at": "Which records OPAX holds, with years for each parliament.",
+   "facts": [
+    "opax-state-speeches",
+    "opax-notional"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:00:07+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "state-bills",
+   "chapter": "federal-and-state",
+   "url": "https://opax.com.au/register/state-bills",
+   "label": "State bills",
+   "look_at": "Bill registry entries from the Tasmanian and ACT parliaments.",
+   "facts": [
+    "opax-state-bills"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:00:08+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "nsw-division",
+   "chapter": "federal-and-state",
+   "url": "https://opax.com.au/doc/division-nsw-la-2026-10-21-1",
+   "label": "National Park Estate (Great Koala National Park Reservations) Bill 2026, NSW Legislative Assembly (21 Oct 2026)",
+   "look_at": "The house name at the top; 71 ayes to 13 noes.",
+   "facts": [
+    "ex-nsw-la-koala"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:02:41+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  }
+ ]
+}
