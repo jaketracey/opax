@@ -1,0 +1,428 @@
+"""Bounded NSW repair orchestration. All acquisition stays in nsw_hansard.
+
+One day means one chamber on one sitting date. Fragment checkpoints and source
+turns live in the selected SQLite, never in the legacy global progress file.
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import math
+import os
+import re
+import sqlite3
+import time
+import xml.etree.ElementTree as ET
+from collections import Counter
+from datetime import date, datetime, timezone
+from pathlib import Path
+
+from parli.ingest import nsw_hansard as adapter, nsw_publication as publication
+from parli.ingest import backfill_guard as growth
+from parli.ingest.speaker_names import normalize_speaker
+
+START = date(2023, 1, 1)
+END = date(2025, 2, 28)
+DEFAULT_CAP = 4
+DEFAULT_BUDGET_S = 1200
+# Conservative allowances, shared convention with the Senate lane. Actual
+# publication stays in normal refresh; this stage only reads KB counters.
+PUBLISH_DOCS_PER_SECOND = 2
+SYNC_PREPARATION_S = 120
+PARSER_VERSION = publication.PARSER_VERSION
+RESOLVER_VERSION = "personal-source-id-v2"
+CHAMBERS = {"nsw_la": "NSW Assembly", "nsw_lc": "NSW Council"}
+DDL = """
+CREATE TABLE IF NOT EXISTS nsw_backfill_days (
+ toc_id TEXT PRIMARY KEY, date TEXT NOT NULL, chamber TEXT NOT NULL,
+ status TEXT NOT NULL, uids TEXT NOT NULL, seconds REAL NOT NULL DEFAULT 0,
+ inserted INTEGER NOT NULL DEFAULT 0, held INTEGER NOT NULL DEFAULT 0, error TEXT
+);
+CREATE TABLE IF NOT EXISTS nsw_backfill_fragments (
+ toc_id TEXT NOT NULL, uid TEXT NOT NULL, xml BLOB NOT NULL, sha256 TEXT NOT NULL,
+ PRIMARY KEY(toc_id,uid)
+);
+CREATE TABLE IF NOT EXISTS nsw_backfill_identity (
+ source_member_id TEXT PRIMARY KEY, person_id TEXT NOT NULL, source_name TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS nsw_backfill_turns (
+ toc_id TEXT NOT NULL, uid TEXT NOT NULL, turn INTEGER NOT NULL,
+ source_member_id TEXT NOT NULL, source_name TEXT NOT NULL, speech_id INTEGER,
+ status TEXT NOT NULL, reason TEXT, body_hash TEXT NOT NULL,
+ PRIMARY KEY(toc_id,uid,turn)
+);
+CREATE TABLE IF NOT EXISTS nsw_backfill_state (key TEXT PRIMARY KEY, value TEXT NOT NULL);
+CREATE TABLE IF NOT EXISTS nsw_backfill_errors (
+ error_id INTEGER PRIMARY KEY, toc_id TEXT, kind TEXT NOT NULL,
+ detail TEXT NOT NULL, occurred_at TEXT NOT NULL
+);
+"""
+
+
+def bounds(start, end):
+    if not START <= start <= end <= END:
+        raise ValueError(f"NSW backfill bounds must be inside {START} to {END}")
+
+
+def check_load():
+    if os.getloadavg()[1] >= 40:
+        raise adapter.BudgetSpent("load5 at or above 40; NSW repair deferred")
+    adapter.check_budget()
+
+
+def day_counts(db, start=START, end=END):
+    """All-source occupancy; only repair-owned held turns may be appended."""
+    bounds(start, end)
+    return {(ch, day): n for ch, day, n in db.execute(
+        "SELECT chamber,date,COUNT(*) FROM speeches WHERE chamber IN ('nsw_la','nsw_lc') "
+        "AND date BETWEEN ? AND ? GROUP BY chamber,date", (str(start), str(end)))}
+
+
+def known_gaps(calendar, counts, progress=None):
+    """Watchdog hook: missing or incomplete sittings, grouped by chamber/year.
+
+    Pure and offline. Pass publication.progress(db, state) to retain held turns
+    and unacknowledged publication. Never substitute [] for discovery failure.
+    """
+    groups = {}
+    for sitting in calendar:
+        chamber, day = sitting["chamber_code"], sitting["date"]
+        key = (chamber, day[:4])
+        group = groups.setdefault(key, {"source": "nsw_hansard", "chamber": chamber,
+            "year": int(key[1]), "expected_days": 0, "missing_dates": [], "incomplete_dates": [],
+            "held_turns": 0, "publication_pending": 0, "publication_failed": 0, "stage_errors": 0,
+            "status": "known, incomplete"})
+        group["expected_days"] += 1
+        missing = counts.get((chamber, day), 0) == 0
+        if missing:
+            group["missing_dates"].append(day)
+        details = (progress or {}).get((chamber, day), {})
+        for field in ("held_turns", "publication_pending", "publication_failed", "stage_errors"):
+            group[field] += details.get(field, 0)
+        if missing or any(details.values()):
+            group["incomplete_dates"].append(day)
+    return [group for _, group in sorted(groups.items()) if group["incomplete_dates"]]
+
+
+def coverage_receipt(calendar, counts, progress=None):
+    return {"schema": 1, "source": "nsw_hansard", "discovery": "complete",
+            "checked_at": datetime.now(timezone.utc).isoformat(),
+            "acquisition_enabled": publication.approved(),
+            "publication_enabled": publication.approved(),
+            "start": str(START), "end": str(END), "gaps": known_gaps(calendar, counts, progress)}
+
+
+def guard_coverage(calendar, counts, receipt, progress=None):
+    """Occupancy cannot hide held turns or unacknowledged publication."""
+    if (receipt.get("discovery") != "complete" or receipt.get("schema") != 1
+            or receipt.get("source") != "nsw_hansard"
+            or receipt.get("gaps") != known_gaps(calendar, counts, progress)):
+        raise ValueError("NSW coverage guard: chamber-year gaps disagree with source sitting days")
+
+
+def initialise(db):
+    db.executescript(DDL)
+    columns = {row[1] for row in db.execute('PRAGMA table_info(nsw_backfill_days)')}
+    for name, definition in [('parser_version', 'INTEGER NOT NULL DEFAULT 0'),
+                             ('resolver_revision', "TEXT NOT NULL DEFAULT ''")]:
+        if name not in columns:
+            db.execute(f'ALTER TABLE nsw_backfill_days ADD COLUMN {name} {definition}')
+    db.commit()
+
+
+def resolver_revision(db):
+    evidence = list(db.execute("SELECT person_id,full_name,chamber,entered_house,left_house FROM members "
+                              "WHERE chamber IN ('nsw_la','nsw_lc') AND person_id NOT LIKE 'nsw_hansard_%' ORDER BY person_id"))
+    version = [PARSER_VERSION, RESOLVER_VERSION, os.environ.get('OPAX_BACKFILL_NSW_RESOLVER_REVISION', '')]
+    return hashlib.sha256(json.dumps([version, [list(row) for row in evidence]]).encode()).hexdigest()
+
+
+def write_json(path, data):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(json.dumps(data, indent=2) + "\n")
+    tmp.replace(path)
+
+
+def resolve_member(db, speech, chamber, day):
+    """Use the source's personal member ID and named byline, never a surname guess.
+
+    The source ID defines a NSW identity even when no canonical member is held.
+    Reuse an existing member only on a unique full-name, chamber and dated match.
+    No historical party is inferred from a member's present affiliation.
+    """
+    sid, raw = speech["speaker_id"], speech["speaker_name"]
+    name = normalize_speaker(raw.rstrip(": "))
+    if (not re.fullmatch(r"[0-9]+", sid) or not name or len(name.split()) < 2
+            or len(name.split()[0].strip(".")) < 2
+            or re.search(r"\b(speaker|president|clerk|chair|members)\b", raw, re.I)):
+        return None, "source personal member ID or full byline unavailable"
+    existing = db.execute("SELECT person_id,source_name FROM nsw_backfill_identity WHERE source_member_id=?", (sid,)).fetchone()
+    if existing:
+        if existing[1].casefold() != name.casefold():
+            return None, "source member ID has conflicting names"
+        return existing[0], None
+    candidates = [r[0] for r in db.execute(
+        "SELECT person_id,full_name FROM members WHERE chamber=? AND entered_house<=? "
+        "AND (left_house IS NULL OR ?<left_house)", (chamber, day, day))
+        if (normalize_speaker(r[1] or "") or "").casefold() == name.casefold()]
+    if len(candidates) > 1:
+        return None, "ambiguous existing canonical members"
+    pid = candidates[0] if candidates else f"nsw_hansard_{sid}"
+    member = db.execute("SELECT full_name FROM members WHERE person_id=?", (pid,)).fetchone()
+    if member and (normalize_speaker(member[0] or "") or "").casefold() != name.casefold():
+        return None, "source identity conflicts with stored member"
+    if not member:
+        db.execute("INSERT INTO members(person_id,full_name,chamber,state) VALUES (?,?,?,'nsw')", (pid, name, chamber))
+    db.execute("INSERT INTO nsw_backfill_identity VALUES (?,?,?)", (sid, pid, name))
+    return pid, None
+
+
+def stage_day(db, sitting, revision=None):
+    """Commit one complete assembly, or retry only held turns in an owned day."""
+    toc, day, chamber = sitting["toc_doc_id"], sitting["date"], sitting["chamber_code"]
+    if not str(START) <= day <= str(END):
+        raise ValueError("NSW sitting outside approved repair bounds")
+    revision = revision or resolver_revision(db)
+    record = db.execute("SELECT uids,parser_version FROM nsw_backfill_days WHERE toc_id=?", (toc,)).fetchone()
+    if record:
+        uids = json.loads(record[0])
+        if record[1] != PARSER_VERSION and db.execute('SELECT 1 FROM nsw_backfill_turns WHERE toc_id=? LIMIT 1', (toc,)).fetchone():
+            raise ValueError('Older NSW parser output is quarantined; replay its retained fragments in an isolated stage')
+    else:
+        check_load()
+        uids = list(dict.fromkeys(adapter.get_fragment_uids(toc)))
+        if not uids:
+            raise ValueError(f"Empty NSW TOC: {toc}")
+        db.execute("INSERT INTO nsw_backfill_days(toc_id,date,chamber,status,uids) VALUES (?,?,?,'pending',?)",
+                   (toc, day, chamber, json.dumps(uids)))
+        db.commit()
+    for uid in uids:
+        if db.execute("SELECT 1 FROM nsw_backfill_fragments WHERE toc_id=? AND uid=?", (toc, uid)).fetchone():
+            continue
+        check_load()
+        body = adapter._api_get(f"{adapter.API_BASE}/daily/fragment/{uid}", accept="application/xml")
+        root = ET.fromstring(body)
+        if (root.findtext(".//hansard.header/date", "")[:10] != day
+                or adapter.CHAMBER_MAP.get(root.findtext(".//hansard.header/chamber")) != chamber
+                or root.find(".//fragment.text") is None):
+            raise ValueError(f"NSW fragment date/chamber/body mismatch: {uid}")
+        db.execute("INSERT INTO nsw_backfill_fragments VALUES (?,?,?,?)",
+                   (toc, uid, body, hashlib.sha256(body).hexdigest()))
+        db.commit()
+    check_load()
+    inserted = held = eligible = publishable = 0
+    try:
+        db.execute("BEGIN IMMEDIATE")
+        # An independently occupied day remains outside repair ownership.
+        if db.execute("SELECT 1 FROM speeches WHERE chamber=? AND date=? AND speech_id NOT IN "
+                      "(SELECT speech_id FROM nsw_backfill_turns WHERE toc_id=? AND speech_id IS NOT NULL) LIMIT 1",
+                      (chamber, day, toc)).fetchone():
+            db.execute("UPDATE nsw_backfill_days SET status='occupied' WHERE toc_id=?", (toc,))
+            db.commit()
+            return {"inserted": 0, "held": 0, "eligible": 0, "status": "occupied"}
+        seen = set()
+        for uid in uids:
+            check_load()
+            body = db.execute("SELECT xml FROM nsw_backfill_fragments WHERE toc_id=? AND uid=?", (toc, uid)).fetchone()[0]
+            for turn, speech in enumerate(adapter.extract_speeches_from_fragment(ET.fromstring(body))):
+                check_load()
+                digest = adapter.text_hash(speech["text"])
+                key = (speech["speaker_id"], speech["speaker_name"], digest)
+                eligible += 1
+                previous = db.execute('SELECT speech_id,status,body_hash FROM nsw_backfill_turns WHERE toc_id=? AND uid=? AND turn=?',
+                                      (toc, uid, turn)).fetchone()
+                if previous and previous[2] != digest:
+                    raise ValueError('NSW source turn changed; explicit reconciliation required')
+                if previous and previous[0] is not None and db.execute('SELECT 1 FROM speeches WHERE speech_id=?', (previous[0],)).fetchone():
+                    seen.add(key)
+                    continue
+                pid, reason = resolve_member(db, speech, chamber, day)
+                speech_id, status = None, "held"
+                if not pid:
+                    held += 1
+                elif key in seen:
+                    status = "duplicate"
+                else:
+                    seen.add(key)
+                    cursor = db.execute(
+                        "INSERT INTO speeches(person_id,speaker_name,party,electorate,chamber,date,topic,text,word_count,source,state) "
+                        "VALUES (?,?,NULL,?,?,?,?,?,?,'nsw_hansard','nsw')",
+                        (pid, speech["speaker_name"], speech["electorate"], chamber, day,
+                         speech["topic"], speech["text"], len(speech["text"].split())))
+                    speech_id, status = cursor.lastrowid, "inserted"
+                    inserted += 1
+                    publishable += int(len(speech["text"]) >= 200)
+                db.execute("INSERT OR REPLACE INTO nsw_backfill_turns VALUES (?,?,?,?,?,?,?,?,?)",
+                           (toc, uid, turn, speech["speaker_id"], speech["speaker_name"], speech_id, status, reason, digest))
+        if not eligible:
+            raise ValueError(f"NSW day yielded no eligible turns: {toc}")
+        allowance = publishable / PUBLISH_DOCS_PER_SECOND
+        adapter.check_budget(allowance + 5)
+        status = "incomplete" if held else "loaded"
+        total = db.execute("SELECT COUNT(*) FROM nsw_backfill_turns WHERE toc_id=? AND status='inserted'", (toc,)).fetchone()[0]
+        db.execute("UPDATE nsw_backfill_days SET status=?,inserted=?,held=?,error=NULL,parser_version=?,resolver_revision=? WHERE toc_id=?",
+                   (status, total, held, PARSER_VERSION, revision, toc))
+        db.commit()
+        if adapter.REQUEST_DEADLINE is not None:
+            adapter.REQUEST_DEADLINE -= allowance
+    except BaseException:
+        db.rollback()
+        raise
+    return {"inserted": inserted, "held": held, "eligible": eligible, "status": status,
+            "publishable_rows": publishable, "publish_allowance_s": allowance}
+
+
+def run(db, *, start=START, end=END, cap=DEFAULT_CAP, budget_s=DEFAULT_BUDGET_S,
+        coverage_path=None, receipt_path=None, publication_state_path=None, guard=None, kb=None):
+    bounds(start, end)
+    if not 0 <= cap <= DEFAULT_CAP or not math.isfinite(budget_s) or not 0 < budget_s <= DEFAULT_BUDGET_S:
+        raise ValueError("NSW cap must be 0..4 and budget must be positive and at most 1200 seconds")
+    # A standalone rehearsal omits the remote guard. The nightly CLI supplies
+    # it before opening its writable DB, then this loop checks each checkpoint.
+    if guard:
+        guard.ensure_running()
+    began = time.monotonic()
+    previous_deadline = adapter.REQUEST_DEADLINE
+    adapter.REQUEST_DEADLINE = began + budget_s
+    result = {"source": "nsw_hansard", "cap": cap, "budget_s": budget_s,
+              "days": [], "inserted": 0, "stop": "cap", "missing_before": None, "missing_left": None,
+              "publish_allowance_s": 0, "sync_preparation_allowance_s": 0}
+    initialise(db)
+    # SQLite's scan is included in the wall budget. Do not leave its handler set.
+    current = None
+    todo = None
+    try:
+        check_load()
+        refused = db.execute("SELECT value FROM nsw_backfill_state WHERE key='refused'").fetchone()
+        if refused:
+            raise adapter.source_http.SourceRefused(adapter.API_BASE, "NSW repair remains paused: " + refused[0])
+        calendar = adapter.get_sitting_days(start, end)
+        # Every expected sitting day of the repaired years, for the coverage watchdog.
+        if (start, end) == (START, END):
+            growth.write_sitting_manifest('nsw', [(s['chamber_code'], s['date']) for s in calendar],
+                                          'NSW Parliament Hansard API sitting-day calendar')
+        db.set_progress_handler(lambda: int(time.monotonic() >= adapter.REQUEST_DEADLINE), 10000)
+        try:
+            counts = day_counts(db, start, end)
+        finally:
+            db.set_progress_handler(None, 0)
+        missing = [s for s in calendar if counts.get((s["chamber_code"], s["date"]), 0) == 0]
+        result["missing_before"] = result["missing_left"] = len(missing)
+        publication_state = publication.read_state(publication_state_path)
+        revision = resolver_revision(db)
+        records = {row[0]: row[1:] for row in db.execute(
+            "SELECT toc_id,held,resolver_revision,parser_version,inserted,error FROM nsw_backfill_days")}
+        # Retry owned holds when resolver code or dated member evidence improves.
+        # Unchanged office holds do not consume the cap every night indefinitely.
+        todo = [s for s in calendar if
+                (counts.get((s['chamber_code'], s['date']), 0) == 0 and s['toc_doc_id'] not in records)
+                or (s['toc_doc_id'] in records and (
+                    records[s['toc_doc_id']][2] != PARSER_VERSION
+                    or bool(records[s['toc_doc_id']][4])
+                    or (records[s['toc_doc_id']][0] > 0 and records[s['toc_doc_id']][1] != revision)
+                    or (counts.get((s['chamber_code'], s['date']), 0) == 0 and (records[s['toc_doc_id']][0] == 0 or records[s['toc_doc_id']][3] > 0))))]
+        result['held_days'] = sum(row[0] > 0 for row in records.values())
+        if todo and cap:
+            result["sync_preparation_allowance_s"] = SYNC_PREPARATION_S
+            adapter.REQUEST_DEADLINE -= SYNC_PREPARATION_S
+        for sitting in todo[:cap]:
+            if guard:
+                guard.ensure_running()
+            check_load()
+            current = sitting
+            started = time.monotonic()
+            try:
+                day_result = stage_day(db, sitting, revision)
+            finally:
+                db.execute("UPDATE nsw_backfill_days SET seconds=seconds+? WHERE toc_id=?",
+                           (time.monotonic() - started, sitting["toc_doc_id"]))
+                db.commit()
+            result["days"].append({"date": sitting["date"], "chamber": sitting["chamber_code"],
+                                   "toc_id": sitting["toc_doc_id"], "seconds": round(time.monotonic()-started, 3), **day_result})
+            result["inserted"] += day_result["inserted"]
+            if guard and len(result['days']) % growth.CHECK_DAYS == 0:
+                guard.check(kb, 'nsw')
+            result["publish_allowance_s"] += day_result.get("publish_allowance_s", 0)
+            key = (sitting['chamber_code'], sitting['date'])
+            if day_result['inserted'] and not counts.get(key, 0):
+                result['missing_left'] -= 1
+            counts[key] = counts.get(key, 0) + day_result['inserted']
+            print(json.dumps(result["days"][-1]), flush=True)
+        progress = publication.progress(db, publication_state)
+        result['coverage_gaps'] = known_gaps(calendar, counts, progress)
+        result['incomplete_left'] = sum(len(g['incomplete_dates']) for g in result['coverage_gaps'])
+        result['held_turns'] = sum(g['held_turns'] for g in result['coverage_gaps'])
+        result['publication_pending'] = sum(g['publication_pending'] for g in result['coverage_gaps'])
+        result['publication_failed'] = sum(g['publication_failed'] for g in result['coverage_gaps'])
+        for gap in result['coverage_gaps']:
+            print(f"NSW coverage guard: {CHAMBERS[gap['chamber']]} {gap['year']}: "
+                  f"{len(gap['incomplete_dates'])} sitting days incomplete; {gap['status']}", flush=True)
+        if coverage_path:
+            if (start, end) != (START, END):
+                raise ValueError('Coverage requires the whole reviewed NSW interval')
+            coverage = coverage_receipt(calendar, counts, progress)
+            guard_coverage(calendar, counts, coverage, progress)
+            write_json(coverage_path, coverage)
+        if len(todo) <= cap:
+            result['stop'] = 'complete' if not result['incomplete_left'] else 'incomplete'
+        nights = math.ceil(len(todo) / cap) if cap else None
+        result["estimated_nights_before"] = nights
+        # Sundays (weekly/monthly nights) run no backfill; see growth.run_night.
+        result["estimated_completion_if_next_night"] = growth.run_night(date.today(), nights).isoformat() if nights else None
+    except adapter.BudgetSpent as error:
+        result["stop"], result["reason"] = "budget", str(error)
+    except sqlite3.OperationalError:
+        if time.monotonic() < adapter.REQUEST_DEADLINE:
+            raise
+        result["stop"] = "budget"
+    except growth.Stopped as error:
+        result['stop'], result['reason'] = 'growth-guard', str(error)
+        raise
+    except BaseException as error:
+        detail = getattr(error, "reason", None) or str(error)
+        result["stop"], result["error"] = "error", detail
+        db.execute("INSERT INTO nsw_backfill_errors(toc_id,kind,detail,occurred_at) VALUES (?,?,?,?)",
+                   (current["toc_doc_id"] if current else None, type(error).__name__, detail,
+                    datetime.now(timezone.utc).isoformat()))
+        db.commit()
+        if isinstance(error, adapter.source_http.SourceRefused):
+            result["stop"] = "source-refused"
+            # Next nightly run stays offline until the refusal has been reviewed.
+            if not db.execute("SELECT 1 FROM nsw_backfill_state WHERE key='refused'").fetchone():
+                db.execute("INSERT INTO nsw_backfill_state VALUES ('refused',?)", (detail,))
+                db.commit()
+        if current:
+            db.execute("UPDATE nsw_backfill_days SET error=? WHERE toc_id=?", (detail, current["toc_doc_id"]))
+            db.commit()
+        raise
+    finally:
+        db.set_progress_handler(None, 0)
+        adapter.REQUEST_DEADLINE = previous_deadline
+        # Budget/refusal exits still retain held turns and publication debt.
+        # Reuse the completed occupancy scan; never make an unknown scan zero.
+        if result['missing_before'] is not None and 'incomplete_left' not in result:
+            progress = publication.progress(db, publication.read_state(publication_state_path))
+            gaps = result['coverage_gaps'] = known_gaps(calendar, counts, progress)
+            result['incomplete_left'] = sum(len(g['incomplete_dates']) for g in gaps)
+            for field in ('held_turns', 'publication_pending', 'publication_failed'):
+                result[field] = sum(g[field] for g in gaps)
+        result['acquisition_days_remaining'] = (max(0, len(todo) - len(result['days']))
+                                                if todo is not None else result['missing_left'])
+        if (result['acquisition_days_remaining'] == 0 and result.get('held_turns', 0) > 0
+                and result['stop'] in ('complete', 'incomplete', 'cap', 'budget')):
+            result['stop'] = 'identity-holds'
+        result["seconds"] = round(time.monotonic() - began, 3)
+        if guard:
+            # Include held turns and publication backlog, not only occupancy.
+            guard.progress('nsw', remaining=result.get('incomplete_left', result['missing_left']),
+                           cap=cap, stop=result['stop'], done=len(result['days']),
+                           acquisition_days_remaining=result['acquisition_days_remaining'],
+                           held_turns=result.get('held_turns'),
+                           publication_pending=result.get('publication_pending'),
+                           publication_failed=result.get('publication_failed'))
+        if receipt_path:
+            write_json(receipt_path, result)
+        print("NSW backfill " + json.dumps(result), flush=True)
+    return result

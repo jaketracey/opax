@@ -83,6 +83,7 @@ if [ -f "$ENV_FILE" ]; then set -a; . "$ENV_FILE"; set +a; fi
 BRANCH="${OPAX_BRANCH:-main}"
 STATUS_BRANCH="${OPAX_STATUS_BRANCH:-nightly-status}"
 PIPE="$HOME/.cache/autoresearch/pipeline"
+export OPAX_BACKFILL_STATE_DIR="${OPAX_BACKFILL_STATE_DIR:-$PIPE}"
 TODAY=$(TZ=Australia/Sydney date +%F)
 STARTED_AT=$(date -u +%FT%TZ)
 LOGFILE="$PIPE/nightly-$TODAY.log"
@@ -103,6 +104,7 @@ log() { echo "$(ts) [nightly] $*" | tee -a "$LOGFILE"; }
 run() { "$@" 2>&1 | tee -a "$LOGFILE"; return "${PIPESTATUS[0]}"; }
 
 FAILURES=()
+BACKFILL_FAILURES=()
 COVERAGE_FAILURES=()
 WARNINGS=()
 STAMPED_FILES=()
@@ -112,6 +114,7 @@ RESULT_SUMMARY=""
 fail() { FAILURES+=("$*"); log "FAIL: $*"; }
 coverage_fail() { COVERAGE_FAILURES+=("$*"); log "COVERAGE ALERT: $*"; }
 warn() { WARNINGS+=("$*"); log "WARN: $*"; }
+backfill_warn() { BACKFILL_FAILURES+=("$*"); warn "Backfill did not complete: $*"; }
 
 # Coverage findings fail soft: an alert (a regression, a stale or missing check, a crashed
 # reader) goes to COVERAGE_FAILURES, which status.json publishes as coverage_alerts for
@@ -185,6 +188,8 @@ warnings, failures, coverage_alerts = rest[:nwarn], rest[nwarn:nwarn + nfail], r
 from pathlib import Path
 from datetime import date
 from scripts.vm.periodic_state import snapshot
+from parli.ingest.backfill_guard import state_dir, nightly_fields
+backfill_fields = nightly_fields(state_dir(), day, warnings)
 try:
     periodic_state = snapshot(Path(path).parent / 'periodic-refresh-v1.json', date.fromisoformat(day))
 except (OSError, ValueError, KeyError, TypeError):
@@ -197,6 +202,7 @@ for receipt in [Path(path).parent / 'source-access.json', *(Path(path).parent / 
 json.dump({"date": day, "run": run, "status": status, "started": started,
            "finished": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
            "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures, "coverage_alerts": coverage_alerts, "warnings": warnings,
+           **backfill_fields,
            "paused_sources": paused_sources, "periodic_state": periodic_state},
           open(path, "w"), indent=1)
 PYEOF
@@ -356,6 +362,61 @@ revert() {
 revert_group() { local g=$1; local paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; revert "${paths[@]}"; }
 group_changed() { local g=$1; local paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; [ -n "$(git status --porcelain -- "${paths[@]}")" ]; }
 
+# ---- 1z. the backfill window: no Senate or NSW backfill on weekly/monthly nights ---------------
+# Both backfill stages (about 22 min each) on top of a Sunday's weekly and monthly groups come to
+# about 6 h 26 min against the unit's 6 h limit (joint review, 14 Nov 2026). On any night that will
+# run the weekly or monthly group, catch-up included, both stages are switched off for the whole
+# night, acquisition and normal-sync publication alike; they resume on the next ordinary night. The
+# pace (Senate 10 sitting days, NSW 4 chamber-days) is per night they run. An unreadable plan skips
+# them too; the periodic step below then reports the plan itself.
+BACKFILL_SKIP_REASON=""
+if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_NIGHTLY_SKIP_PERIODIC:-0}" != 1 ]; then
+  if planned=$("$PY" scripts/vm/periodic_state.py preview --state "$PIPE/periodic-refresh-v1.json" \
+      --date "${OPAX_TODAY:-$(TZ=Australia/Sydney date +%F)}" --frl-dow "${OPAX_FRL_DOW:-4}" \
+      --force "${OPAX_FORCE_GROUPS:-}" 2>/dev/null); then
+    case " $planned " in
+      *" weekly "*|*" monthly "*) BACKFILL_SKIP_REASON="periodic groups tonight: $planned" ;;
+    esac
+  else
+    BACKFILL_SKIP_REASON="periodic plan unreadable"
+  fi
+fi
+if [ -n "$BACKFILL_SKIP_REASON" ]; then
+  export OPAX_SENATE_BACKFILL=0 OPAX_NSW_BACKFILL=0 OPAX_BACKFILL_SKIPPED_TONIGHT="$BACKFILL_SKIP_REASON"
+  log "backfill stages skipped tonight ($BACKFILL_SKIP_REASON); Senate and NSW resume on the next ordinary night"
+  # Sunday skips are planned for; an owed group on another night (catch-up) is not, so say so. The status
+  # projection is withheld on such a night (backfill_guard.status), and a group that stays owed shows here nightly.
+  if [ "$(date -d "${OPAX_TODAY:-$(TZ=Australia/Sydney date +%F)}" +%u 2>/dev/null)" != 7 ]; then
+    warn "Backfill skipped on a non-Sunday for an owed periodic group ($BACKFILL_SKIP_REASON); finish dates slip a night"
+  fi
+fi
+
+# The backfill cutoff. run-nightly.sh's limit (OPAX_NIGHTLY_LIMIT, 6 h) kills the whole night, publish included, so
+# the backfill must leave room for what follows it. OPAX_BACKFILL_NOT_AFTER (epoch seconds) is the latest a
+# backfill stage may still be running: started + limit - reserve. The reserve is the work after the NSW stage:
+#   every night  2 h  (OPAX_BACKFILL_POST_RESERVE_S=7200): evidence export up to 21 min, the pre-commit gate up to
+#                     its 75 min budget, corpus manifest, commit, push and deploy about 15 min (111 min, rounded up);
+#   FRL nights   +2 h 45 min (OPAX_BACKFILL_FRL_RESERVE_S=9900): the FRL crawl, 9,208 s measured on 18 Oct 2026.
+# A stage starts only if now + 22 min (its 20 min budget, outer timeout and kill grace) is inside the cutoff
+# (refresh_lib.sh for Senate, nsw_hansard_backfill.sh for NSW), and normal-sync publication of backfill rows stops
+# at the cutoff (arag_sync.BackfillPublication). On a Thursday the stages therefore run only if the daily refresh
+# was done within about 53 minutes of the start.
+limit_seconds() {
+  case "$1" in
+    *h) echo $(( ${1%h} * 3600 )) ;; *m) echo $(( ${1%m} * 60 )) ;; *s) echo "${1%s}" ;; *) echo "$1" ;;
+  esac
+}
+backfill_reserve=${OPAX_BACKFILL_POST_RESERVE_S:-7200}
+case " ${planned:-} " in *" frl "*) backfill_reserve=$((backfill_reserve + ${OPAX_BACKFILL_FRL_RESERVE_S:-9900})) ;; esac
+started=${OPAX_NIGHTLY_STARTED:-$(date +%s)}
+limit=$(limit_seconds "${OPAX_NIGHTLY_LIMIT:-6h}" 2>/dev/null)
+if [[ "$started" =~ ^[0-9]+$ ]] && [[ "$limit" =~ ^[0-9]+$ ]]; then
+  export OPAX_BACKFILL_NOT_AFTER=$((started + limit - backfill_reserve))
+else
+  export OPAX_BACKFILL_NOT_AFTER=0   # unreadable start or limit: no backfill tonight
+fi
+log "backfill cutoff $(date -d "@$OPAX_BACKFILL_NOT_AFTER" '+%F %T' 2>/dev/null) (limit ${OPAX_NIGHTLY_LIMIT:-6h} less ${backfill_reserve}s reserve)"
+
 # ---- 2. the refresh -------------------------------------------------------------------------
 if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" = 1 ] || [ "${OPAX_NIGHTLY_SKIP_DAILY:-0}" = 1 ]; then
   log "OPAX_NIGHTLY_SKIP_REFRESH/SKIP_DAILY=1: not running daily_refresh.sh"
@@ -383,7 +444,19 @@ else
   # Reuse nightly-status/status.json (coverage_alerts, warnings) -> refresh_watchdog.py ->
   # the existing scheduled GitHub workflow email, with no new alert channel.
   coverage_status
+  backfill=$(last_run_line "$DAILY_LOG" 'Backfill warnings:' | sed 's/.*Backfill warnings: //')
+  for repair in $backfill; do backfill_warn "$repair"; done
 fi
+
+# NSW repair has its own cap and wall budget, including source-calendar discovery.
+# shellcheck source=scripts/vm/nsw_hansard_backfill.sh
+. "$REPO/scripts/vm/nsw_hansard_backfill.sh"
+nsw_hansard_backfill
+
+# A shared backfill.STOP reaches Jake through the status (backfill.stopped) and the daily watchdog; this is the one
+# line the orchestrator reads in the log and the manifest warnings (nightly_fields adds the same text).
+backfill_stop=$("$PY" -m parli.ingest.backfill_guard 2>/dev/null || true)
+[ -z "$backfill_stop" ] || log "BACKFILL STOP: $backfill_stop"
 
 # ---- 2b. the periodic groups: weekly (Sundays, Sydney), monthly (the first Sunday), frl (Thursdays) ----------
 # The FRL instrument crawl (~2.6 h of 10-second-spaced requests, 18 Oct 2026) has its own night: with the rest of the
@@ -400,6 +473,7 @@ periodic_refresh_complete() {
   # publication, NO_PUSH rehearsal or refused push leaves durable debt intact.
   # COVERAGE_FAILURES alert separately and must not cause successful groups to
   # repeat their acquisition every night while an old coverage hold persists.
+  # Backfill warnings are independent of publication and never keep groups due.
   [ "$PERIODIC_ACCEPTED" = 1 ] && [ "${#FAILURES[@]}" -eq 0 ] \
     && [ "${OPAX_NIGHTLY_NO_PUSH:-0}" != 1 ] || return 0
   "$PY" scripts/vm/periodic_state.py complete --state "$PERIODIC_STATE" --date "$PERIODIC_DATE" \

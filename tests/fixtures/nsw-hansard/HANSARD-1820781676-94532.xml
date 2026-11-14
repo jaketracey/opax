@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='utf-8'?>
+<hansard xmlns:html="http://www.w3.org/1999/xhtml">
+  <!--Abridged from cached HANSARD-1820781676-94532. Byline markup and metadata retained; debate text replaced with synthetic test markers.--><hansard.header>
+    <date>2024-02-06T12:30:00+11:00</date>
+    <parliament.number>58</parliament.number>
+    <session.number>1</session.number>
+    <parliament.session.name>Fifty-Eighth Parliament, First Session (58-1)</parliament.session.name>
+    <chamber>Legislative Council</chamber>
+    <draft>false</draft>
+  </hansard.header>
+  <chamber.xscript>
+    <fragment.data>
+      <proceeding>
+        <proceedinginfo>
+          <text>Questions Without Notice</text>
+        </proceedinginfo>
+        <topic>
+          <topicinfo>
+            <text>Road Tolls</text>
+          </topicinfo>
+          <question>
+            <talk.start>
+              <talker>
+                <talk.time />
+                <id>2295</id>
+                <name>The Hon. BOB NANVA</name>
+                <electorate />
+                <portfolios />
+                <question.number />
+                <question.date />
+              </talker>
+            </talk.start>
+          </question>
+          <answer>
+            <talk.start>
+              <talker>
+                <talk.time />
+                <id>2224</id>
+                <name>The Hon. JOHN GRAHAM</name>
+                <electorate />
+                <portfolios>
+                  <portfolio>Minister of State</portfolio>
+                  <portfolio>Minister for Roads</portfolio>
+                  <portfolio>Minister for the Arts</portfolio>
+                  <portfolio>Minister for Music and the Night-time Economy</portfolio>
+                  <portfolio>Minister for Jobs and Tourism</portfolio>
+                </portfolios>
+                <question.number />
+                <question.date />
+              </talker>
+            </talk.start>
+          </answer>
+        </topic>
+      </proceeding>
+    </fragment.data>
+    <fragment.text>
+      <body>
+        <html:p class="SubDebate-H" style="&#10;        text-align:">Continuation of the preceding answer, with no new speaker byline.<html:span /></html:p><html:p class="Normal-P" style="direction:ltr;unicode-bidi:normal;"><html:span class="Normal-H"><html:span class="MemberQuestion-H" data-mode="member" data-type="article" data-value="2295" data-article="question">The Hon. BOB NANVA</html:span> Question only: Bob Nanva asks the Minister about the weekly toll cap.<html:span class="GeneralBold-H" /><html:span class="Time-H" /><html:span class="HiddenTime-H" /><html:span class="GeneralBold-H" /></html:span></html:p><html:a name="member" data-mode="member" data-value="54" />
+        <html:p class="Normal-P" style="direction:ltr;unicode-bidi:normal;"><html:span class="Normal-H"><html:span class="MemberLower-H">The Hon. Robert Borsak:</html:span> Short.</html:span></html:p><html:a name="member" data-mode="member" data-value="2295" />
+        <html:p class="Normal-P" style="direction:ltr;unicode-bidi:normal;"><html:span class="Normal-H"><html:span class="MemberUpper-H">The Hon. BOB NANVA:</html:span> Question only: Bob Nanva asks the Minister about the weekly toll cap.</html:span></html:p><html:p class="Normal-P" style="direction:ltr;unicode-bidi:normal;"><html:span class="Normal-H"><html:span class="MemberAnswer-H" data-mode="member" data-type="article" data-value="2224" data-article="answer">The Hon. JOHN GRAHAM</html:span> Answer only: John Graham explains the toll cap to the Council.<html:span class="MinisterialTitles-H" /><html:span class="GeneralBold-H" /><html:span class="Time-H" /><html:span class="HiddenTime-H" /><html:span class="GeneralBold-H" /><html:span class="NormalItalicsChar-H" /></html:span></html:p><html:p class="Normal-P" style="direction:ltr;unicode-bidi:normal;"><html:span class="Normal-H"><html:span class="OfficeUpper-H">The PRESIDENT:</html:span> Office-only interruption is separate from the question and answer.</html:span></html:p><html:a name="member" data-mode="member" data-value="2224" />
+        <html:p class="Normal-P" style="direction:ltr;unicode-bidi:normal;"><html:span class="Normal-H"><html:span class="MemberUpper-H">The Hon. JOHN GRAHAM:</html:span> Answer only: John Graham explains the toll cap to the Council.</html:span></html:p><html:p class="Normal-P" style="direction:ltr;unicode-bidi:normal;">Continuation of the preceding answer, with no new speaker byline.<html:span class="Normal-H"><html:span class="NormalItalicsChar-H" /></html:span></html:p></body>
+    </fragment.text>
+  </chamber.xscript>
+</hansard>

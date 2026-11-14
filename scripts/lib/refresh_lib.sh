@@ -12,6 +12,8 @@
 #                 not a failure (docs/operations/periodic-refresh.md, exit codes and section 6).
 #   PARTIAL_OK    ",step,step," -- steps that resume from their own checkpoint (the KB push): a timeout there is
 #                 logged PARTIAL, listed in PARTIAL_STEPS, and is a warning, not a failure.
+#   BACKFILL_STEPS ",step,step," -- repair/check failures are warnings in BACKFILL_FAILURES;
+#                 they must not prevent successful periodic groups recording completion.
 # It defines log, count, run_step and the FAILED_STEPS / STEP_DELTA it fills in.
 #
 # Count SQL is read-only against ~/.cache/autoresearch/parli.db. A step's log goes to $PIPE/<name>.log.
@@ -22,6 +24,7 @@ FAILED_STEPS=()
 STALE_STEPS=()
 PARTIAL_STEPS=()
 PAUSED_STEPS=()
+BACKFILL_FAILURES=()
 mkdir -p "$PIPE"
 
 ts() { date '+%F %T'; }
@@ -44,6 +47,21 @@ run_step() {
   if [ -n "${ONLY:-}" ] && ! printf ',%s,' "$ONLY" | grep -q ",$name,"; then
     return 0
   fi
+  case "$name" in
+    senate_backfill|nsw_backfill|nsw_hansard_backfill)
+      if [ -f "${OPAX_BACKFILL_STATE_DIR:-$PIPE}/backfill.STOP" ]; then
+        BACKFILL_FAILURES+=("$name(shared-stop)")
+        log "[$name] WARNING: shared backfill.STOP exists; acquisition held"
+        return 3
+      fi
+      # The nightly's cutoff (nightly.sh section 1z): skip a stage that could still be running past it.
+      if [ -n "${OPAX_BACKFILL_NOT_AFTER:-}" ] && { ! [[ "$OPAX_BACKFILL_NOT_AFTER" =~ ^[0-9]+$ ]] \
+          || [ $(( $(date +%s) + 1320 )) -gt "$OPAX_BACKFILL_NOT_AFTER" ]; }; then
+        BACKFILL_FAILURES+=("$name(cutoff)")
+        log "[$name] WARNING: within 22 min of the nightly backfill cutoff; acquisition skipped tonight"
+        return 3
+      fi ;;
+  esac
   local before after rc t0 dur delta status
   before=$(count "$sql")
   t0=$(date +%s)
@@ -71,7 +89,10 @@ run_step() {
     *)   status="FAIL(rc=$rc)" ;;
   esac
   if [ "$rc" -ne 0 ] && [ "$rc" -ne 4 ]; then
-    if { [ "$rc" -eq 124 ] || [ "$rc" -eq 137 ]; } && [[ ",${PARTIAL_OK:-}," == *",$name,"* ]]; then
+    if [[ ",${BACKFILL_STEPS:-}," == *",$name,"* ]]; then
+      status="WARNING(rc=$rc: repair incomplete)"
+      BACKFILL_FAILURES+=("$name(rc=$rc)")
+    elif { [ "$rc" -eq 124 ] || [ "$rc" -eq 137 ]; } && [[ ",${PARTIAL_OK:-}," == *",$name,"* ]]; then
       status="PARTIAL(timeout ${STEP_TIMEOUT:-3h}: resumes from its checkpoint next run)"
       PARTIAL_STEPS+=("$name")
     elif [ "$rc" -eq 3 ] && [[ ",${STALE_OK:-}," == *",$name,"* ]]; then

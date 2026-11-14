@@ -11,6 +11,152 @@ replaces the hand-run procedure (WSL desktop, then a laptop worktree, then a man
 Enrichment (topic labels, speech summaries) is **not** part of this: a Cloudflare Worker does that.
 The nightly only brings new records in and publishes them.
 
+## Senate 2014 to 2018 repair: approved bounded catch-up
+
+Jake approved the bounded spend on 14 November 2026 at 13:10. The stage
+defaults **on** once this branch, including the note-2 failure isolation,
+is merged. No refresh-owner setting or deployment was changed from the
+desktop. Defaults are `OPAX_SENATE_BACKFILL_DAYS=10` and
+`OPAX_SENATE_BACKFILL_BUDGET_SECONDS=1200`, with a 21-minute outer timeout.
+The day cap can be raised for supervised catch-up; counters are checked
+every ten chamber-days regardless of that cap. The budget may be lowered
+but cannot exceed 1,200 seconds. Normal sync also bounds its backfill work
+to that budget. Its existing publisher releases held IDs below its normal
+checkpoint. Enrichment runs independently through the Worker catalogue cursor.
+
+**No backfill on weekly or monthly nights.** Before the refresh, the nightly
+reads the periodic plan without writing it (`periodic_state.py preview`). On any
+night that will run the weekly or monthly group, catch-up nights included, it
+exports `OPAX_SENATE_BACKFILL=0` and `OPAX_NSW_BACKFILL=0` for that night only:
+neither stage acquires and normal sync publishes no backfill resource (they wait
+in the retry outbox). Both resume on the next ordinary night. The pace (Senate
+10 sitting days, NSW 4 chamber-days) is per night the stages run, so in practice
+six nights a week. An unreadable plan skips them too. `status.json.backfill`
+then carries `skipped_tonight` with the reason; a skip is not a stop and keeps
+the projection. A skip on any night other than Sunday means a periodic group is
+still owed (catch-up): the nightly warns, and status withholds the finish dates
+until the group clears, since every night skips while it stays owed. Thursday's
+FRL night does not skip them; the cutoff below keeps it safe.
+
+**The backfill cutoff.** `run-nightly.sh`'s 6 h limit kills the whole night,
+publish included, so the nightly exports `OPAX_BACKFILL_NOT_AFTER` (epoch
+seconds): the start (`OPAX_NIGHTLY_STARTED`, set by `run-nightly.sh`) plus the
+limit, less a reserve for what follows the NSW stage:
+
+| Reserve | Seconds | Covers |
+| --- | ---: | --- |
+| Every night (`OPAX_BACKFILL_POST_RESERVE_S`) | 7,200 | evidence export up to 21 min, the pre-commit gate up to its 75 min budget, corpus manifest, commit, push and deploy about 15 min (111 min, rounded up) |
+| FRL nights, added (`OPAX_BACKFILL_FRL_RESERVE_S`) | 9,900 | the FRL crawl, 9,208 s measured on 18 Oct 2026 |
+
+So the cutoff is 4 h after the start on an ordinary night and 1 h 15 min on a
+Thursday. Each stage starts only if now + 22 min (its budget, outer timeout and
+kill grace) is inside the cutoff, otherwise it warns (`senate_backfill(cutoff)`,
+"NSW Hansard repair skipped") and resumes the next night. Normal-sync
+publication of backfill rows stops at the cutoff too. On a Thursday the stages
+run only if the daily refresh finished within about 53 minutes.
+
+**Projected finish, first possible night Sunday 15 November 2026 (skipped):**
+
+| Stage | Days | Nights | Last acquisition | Publication |
+| --- | ---: | ---: | --- | --- |
+| Senate, all manifest days | 284 | 29 | Fri 18 Dec 2026 | Sat 19 Dec 2026 |
+| Senate, if the five early-2019 days are already held | 279 | 28 | Thu 17 Dec 2026 | Fri 18 Dec 2026 |
+| NSW, live-confirmed scope | 161 | 41 | Fri 1 Jan 2027 | Sat 2 Jan 2027 |
+| NSW, older local snapshot scope | 188 | 47 | Fri 8 Jan 2027 | Sat 9 Jan 2027 |
+
+Without the Sunday skip these were 13/14 December (Senate) and 25 December
+(NSW). Merge timing, missed nights, identity holds, budget stops and a growth
+stop move them. Status recalculates every night from the cap and the days left,
+counting only non-Sunday nights.
+
+Set `OPAX_SENATE_BACKFILL=0` to stop both new acquisition and pending Senate
+publication. The shared guard recognises `OPAX_NSW_BACKFILL=0` for NSW.
+Ordinary publication and coverage checks continue. Removing the override
+enables the stage again, subject to the shared stop file.
+
+Both lanes must use `parli.ingest.backfill_guard.Guard` and the same
+`OPAX_BACKFILL_STATE_DIR`, defaulting to
+`~/.cache/autoresearch/pipeline`. `backfill-ledger.json` is locked and
+atomically replaced. A baseline and every observation retain `index_size`
+and `resources`. Whole-KB positive growth counts against both repairs;
+ordinary additions count too and index shrinkage never refunds headroom.
+Counters are read before acquisition, before queued backfill publication,
+after every ten chamber-days, and at the end of shorter groups.
+
+The shared implementation starts from NSW's `d92c41831` guard and tests.
+The [alignment report](../reports/2026-11-14-senate-shared-guard.md) records
+the common additions and identical-file hand-off. Receipt writers use
+`nightly_fields()` for `backfill`, `backfill_failures` and growth warnings;
+these fields never enter periodic-group failures. Senate supplies its
+publication-aware coverage count through `progress(**details)`, keeping
+Senate-specific coverage discovery outside the shared guard.
+
+`backfill.STOP` holds both repairs and their queued publication. The guard
+writes it if growth exceeds **5,500,000,000 bytes**, average growth exceeds
+**59,280 bytes/resource** over at least **500 added resources**, either all-time
+or over the latest check interval (widened back to 500 resources), or Progress
+returns a 429, quota or billing error. Before each publication batch it also
+projects the ledger, plus resources created since the last counters check, plus
+the batch, at the current per-resource rate, and stops before a batch that
+could cross 5.5 GB. Inside a guarded backfill request, any HTTP status of 400
+or more stops both stages, except 409 (the slug exists, counted as done) and
+404 (no account or spend signal): a 5xx stops them too, until the stop file is
+reviewed and removed. A refusal in a 200 body counts: anything under an
+error-like key (`error`, `message`, `reason`, `detail`, `msg` and similar) at
+any depth, every string in an object whose `status` is "error" or whose
+`success`/`ok` is false, or a plain-text body, that mentions quota, rate limit,
+billing, payment, insufficient, exceeded, a reached limit, suspended, trial,
+cap or subscription. A refused create is held, never recorded as published.
+Ordinary refresh requests stop the repairs only on that wording.
+
+Each stage also writes the coverage watchdog's sitting-day inventory,
+`coverage-sitting-days/senate.json` (Senate 2014 to 2019, from the source-day
+manifest) and `coverage-sitting-days/nsw.json` (both NSW chambers 2023 to 2025,
+from the NSW calendar, on full-scope runs), in `OPAX_BACKFILL_STATE_DIR`. The
+`lane` values are the ones the watchdog's reader expects. An unreadable ledger or unavailable
+counters also holds repairs closed. Requests use the existing KB service
+token, never log it, have a 20-second socket timeout and do not retry a
+guarded refusal. Up to ten requests already in flight may finish. A stop
+does not roll back committed days. Review the ledger and actual KB usage
+before explicitly removing the stop file; deleting it does not reset the
+baseline or cumulative totals.
+
+The NSW lane can share the guard without a second publisher: call
+`check(kb, 'nsw')` before its capped four-day acquisition, `ensure_running()`
+between days, `check` every ten days and on completion, and
+`progress('nsw', remaining=..., cap=4, stop=..., done=...)` for status.
+Its existing `metadata.nsw_backfill` marker is recognised by normal sync.
+Its stage wrapper must keep guard exceptions in its warning path. The NSW
+acquisition code is maintained on its own branch and is not imported here.
+
+All Senate repair resources, and NSW resources marked `nsw_backfill`, carry
+the classification **`origin/backfill-2026-11`** (`labelset=origin`,
+`label=backfill-2026-11`). They share Worker metadata
+`enrichment_budget={run_id: "backfill-2026-11", max_usd: 30}`. The existing
+Worker reserves model costs before calls, retries and escalations; the
+US$30 ceiling applies to both cohorts together. This differs from the
+unchanged local insertion ownership registry, whose original US$40 value
+is retained for resumption compatibility and does not set the published
+Worker budget. There is no enrichment-readiness wait in this stage.
+
+Nightly `status.json.backfill` reports this night's and cumulative bytes
+and resources (bytes, plus `gb_added`, `cumulative_gb_added`, `gb_ceiling` and
+`gb_remaining` in decimal GB to 2 places), remaining bytes against the ceiling, average bytes per
+resource, per-stage and total days remaining, and a projected publication
+finish date. A stop or disabled stage suppresses its projection. A projection
+assumes the configured cap is achieved each night; holds, budget stops and
+missed nights extend it. The public coverage line always says
+**"Senate Hansard for 2014 to 2018 is not yet held."** Each year disappears
+only when every manifest day fills and its eligible rows are published.
+
+Repair and coverage-check errors or outer timeouts are listed in
+`BACKFILL_FAILURES`, published in `status.json` as `backfill_failures` and
+warnings, and repeated by the refresh watchdog. They do not enter fatal
+`FAILURES`, so successful weekly, monthly and FRL publication still records
+completion. Genuine acquisition/publication failures retain their existing
+retry rules. See the [approved guard report](../reports/2026-11-14-senate-backfill-approved.md)
+and [retained spend estimate](../reports/2026-11-14-senate-sync.md).
+
 ## What happens each night
 
 ```
@@ -142,8 +288,8 @@ Positive days below 10% of the whole chamber's median are report-only.
 Expected dates come from the committed federal calendar, optional local
 `hansard/hansard-xml/all-sitting-days.csv`, cached `votes_state/nsw/year_*.json`,
 optional `--expected-days chamber-date.csv` inputs, and filling-lane manifests
-under `$PIPE/coverage-sitting-days/`. `im/senate-backfill` writes `senate.json`
-(2014-2019); `im/nsw-hansard-gap` writes `nsw.json` (both chambers, 2023-2025).
+under `$PIPE/coverage-sitting-days/`. The backfill stages (`im/backfill-joint`) write `senate.json`
+(2014-2019) and `nsw.json` (both chambers, 2023-2025).
 The daily check explicitly reads that directory when files are present.
 No calendar is acquired by the watchdog. Missing denominators are null, not
 100% coverage. The bounded
@@ -155,12 +301,12 @@ Known holes through 3 April 2019 (Senate), 21 November 2024 (NSW Assembly) and
 affected chamber-year are held. If any year
 has no expected evidence, completion remains unverified and the warning stays.
 Resolution is recorded automatically; subsequent loss of those dates pages.
-Each known hole currently has a 14 December 2026 review deadline while held for
-a spend decision. Both backfill stages merge switched off until Jake approves
-enabling them. Its owner lane then sets each hole's review date to its completion
-ETA plus 14 days in the enabling change. Known scheduled fills remain report-only
-through their review dates; overdue unresolved holes page. The lane tags identify
-`im/senate-backfill` and `im/nsw-hansard-gap`.
+Jake approved the backfill spend and both stages default on. Each known hole's
+review date is its projected publication finish plus 14 days: Senate 2 January
+2027 (finish 19 December 2026), both NSW chambers 23 January 2027 (finish
+9 January 2027), with Sundays skipped. Known scheduled fills remain report-only
+through their review dates; overdue unresolved holes page. The lane tag is
+`im/backfill-joint`.
 The [repair manifest and acknowledgement contract](coverage-watchdog.md) defines
 the file format and accepted-regression fields. It recommends that the hub build
 the covering index by hand on the box before merging, about four minutes once.
@@ -1054,6 +1200,9 @@ publication, run the builder alone with `--keep-audited-candidate` (see "Buildin
 | Sunday: weekly | loaders 30 min (lobbyists 22 min, `frl_acts` 3 min, ABN-linked `contract_suppliers` 7 min, ACNC/ATO 1 min once loaded) + exports 8 min (`x_speakers` and `x_people` a speeches scan each, ~3 min) | ~40 min |
 | First Sunday: monthly, on top | `qld_contracts` 7 min, `diaries_qld` 10-13 min, IPEA 2 min, `speaker_hygiene` 11 min (a full `speeches` read), `grant_recipients` 4 min, exports 5 min | ~40 min |
 | Thursday: frl | `frl_instruments` (in-force instrument crawl, ≥10 s between requests) + `x_instruments` 12 s | 9,208 s measured on the box, 18 Oct 2026 (~2.6 h) |
+| Ordinary nights only: Senate backfill | 10 sitting days, local work plus reserved normal-sync publication; one publication budget shared with NSW per sync run | at most 20 min plus 60 s outer timeout and 60 s kill grace (~22 min) |
+| Ordinary nights only: NSW backfill | 4 chamber-days after the daily refresh | at most 20 min plus 60 s outer timeout and 60 s kill grace (~22 min) |
+| Weekly, monthly or catch-up nights | both backfill stages skipped | 0 |
 | Pre-commit test gate | search catalog build + stamps + the suite | ~15 min a full run on the box (18 Oct 2026); a red gate's blame search is capped by `OPAX_GATE_BUDGET` (75 min from the first run; the suite took 23 min on 10 Nov 2026) |
 
 A first-Sunday night conservatively budgets about 20 + 40 + 40 + 5 min plus a push of up to 2 h,
@@ -1074,6 +1223,11 @@ Evidence adds at most another 21 minutes per attempted run: the two new timeout 
 bring the conservative ~5-hour budget to ~5 h 42 min. This leaves limited headroom under
 the 6-hour unit limit; source/audit disk contention and repeated portal attribution runs
 remain risks. An evidence timeout holds only evidence and lets the nightly continue.
+
+The Senate and NSW backfill stages add about 22 + 22 minutes. On a first Sunday that would
+have been about 6 h 26 min, over the limit, so they never run on a weekly, monthly or catch-up
+night (see "Senate 2014 to 2018 repair" above): the first-Sunday budget stays at ~5 h 42 min.
+An ordinary night drops the weekly and monthly 80 minutes and adds the 44, about 5 h 6 min.
 
 ## Why the refresh is written for a small, slow disk
 
@@ -1294,3 +1448,75 @@ publishes authorised units separately. With the current document-level
 rights holds, the KB JSONL is empty. Full body publication requires clearance
 of those specific report terms first; the website's CC BY 4.0 policy alone
 does not clear them.
+
+## NSW historical Hansard repair and shared growth guard
+
+The owner approved the bounded repair spend on 14 November 2026 at 13:10 Sydney time.
+Merge the NSW attribution and periodic-completion fixes with this runner before
+activation. The default is on; `OPAX_NSW_BACKFILL=0` stops acquisition and every
+publication/retry entry. The former separate acquisition/publication switches
+are superseded. No desktop rehearsal publishes to the KB.
+
+NSW runs after normal refresh through `parli.ingest.nsw_hansard`, with
+`OPAX_BACKFILL_NSW_CAP=4` (hard maximum four chamber-days) and
+`OPAX_BACKFILL_NSW_BUDGET_S=1200` (may be lowered, hard maximum 1,200 seconds).
+Publication recovery also releases at most four chamber-days per run, leaving
+the rest pending. The shell adds an outer `timeout` of budget plus 60 seconds and a 60-second kill
+grace. Each fully processed day commits independently; fragments checkpoint
+before parsing. Acquisition is limited to 2023-01-01 through 2025-02-28 and only
+zero-row owner-DB days or tracked unresolved/error days are eligible. A resolver
+revision retries held turns, including wholly held days, without guessing IDs.
+
+Both lanes use `parli.ingest.backfill_guard.Guard`, default state directory
+`~/.cache/autoresearch/pipeline`, configurable as `OPAX_BACKFILL_STATE_DIR`.
+The single `backfill-ledger.json` uses atomic replacement under a file lock;
+`backfill.STOP` blocks both stages and their publication queues. Each stage
+checks counters before acquisition; publication checks before its first write,
+after every ten chamber-days and at the end, including short runs. NSW's hard
+four-day acquisition cap cannot reach a ten-day interval. The shared interface
+is `Guard.check(kb, stage)`, `ensure_running()`, `request_scope()` and
+`progress(stage, remaining=..., cap=..., stop=..., done=...)`. The Senate lane
+uses the same interface and ledger, without importing NSW code.
+
+The final shared `nightly_fields()` writer emits `backfill`,
+`backfill_failures` and repair warnings outside fatal `failures`. NSW supplies
+`acquisition_days_remaining` separately from queued publication. Unresolved-only
+work uses `identity-holds` and leaves the finish date unknown. The canonical
+guard holds requests in memory if stop-file persistence fails, and recognises
+quota error envelopes in successful HTTP responses too. Exact shared-file
+checksums are retained in `docs/reports/2026-11-14-nsw-shared-files.sha256`.
+
+Counters use read-only `GET /counters` with normal sync's existing KB service
+account. The first observation establishes the baseline; positive changes in
+`index_size` and `resources` accumulate across both sources and Sydney nights.
+Index shrinkage does not refund headroom. Whole-KB background growth is counted
+conservatively. Stop conditions are more than 5,500,000,000 bytes, or more than
+59,280 bytes per added resource once at least 500 resources have been observed
+(1.2 times 49.4 decimal KB, displayed as 59.3 KB). A Progress 429, quota or
+billing refusal writes the stop file before retry/backpressure handling can
+hide it. Unavailable counters or a corrupt ledger also hold repairs closed.
+No service token or response body is retained in receipts.
+
+Inspect the ledger and stop reason before removing `backfill.STOP`; removing it
+does not reset accumulated growth or bypass a threshold. Do not delete/reset
+the ledger to restore headroom. Repair failures and unreadable receipts use
+nightly warnings, outside `FAILURES`, so periodic completion is independent.
+Nightly `status.json.backfill` includes tonight's and cumulative bytes/resources,
+the ceiling and remaining headroom, each source's remaining days, held/publication
+counts and a cap-based projected finish date including one publication night.
+The estimate is conditional on budgets, identity holds and stops. A stop also
+reaches the existing refresh watchdog's alert path while periodic groups can
+complete normally.
+
+Every backfilled document carries classification **`origin/backfill-2026-11`**
+and `extra.metadata.backfill_stage` (`nsw` or `senate`). Its shared enrichment
+metadata is `{run_id: "backfill-2026-11", max_usd: 30}`. Sync does not wait for
+or start enrichment tasks. The opax-enrich Worker discovers resources by its
+catalog cursor and applies its own Workers AI budget.
+
+NSW's public coverage receipt is `/nsw-hansard-coverage.json`. The independent
+watchdog can read `portal/public/nsw-hansard-coverage.json`, or call the offline
+`nsw_backfill.known_gaps(calendar, counts, nsw_publication.progress(db, state))`.
+Each chamber-year retains hole/incomplete wording until missing days, held
+turns, publication acknowledgements and failures all clear. Enabling a repair
+makes no promise in coverage copy that days are being added.

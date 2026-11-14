@@ -25,8 +25,8 @@ CHAMBERS = ('representatives', 'senate', 'federation', 'nsw_la', 'nsw_lc',
             'wa_la', 'wa_lc', 'tas_ha', 'tas_lc', 'nt_la')
 INDEX = 'idx_speeches_coverage'
 REPAIR_MANIFESTS = {
-    'senate.json': ('im/senate-backfill', {'senate': range(2014, 2020)}),
-    'nsw.json': ('im/nsw-hansard-gap', {'nsw_la': range(2023, 2026), 'nsw_lc': range(2023, 2026)}),
+    'senate.json': ('im/backfill-joint', {'senate': range(2014, 2020)}),
+    'nsw.json': ('im/backfill-joint', {'nsw_la': range(2023, 2026), 'nsw_lc': range(2023, 2026)}),
 }
 SQL = f"""SELECT chamber, date, COUNT(*) FROM speeches INDEXED BY {INDEX}
 WHERE chamber IN ({','.join('?' for _ in CHAMBERS)})
