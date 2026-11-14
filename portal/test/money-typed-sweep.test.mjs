@@ -546,7 +546,10 @@ test('donors directory: no row at $0; declared-only donors carry the labelled li
   for (const [d, row] of publicOnly) assert.ok(row.includes(`AEC returns: ${PUBLIC_FUNDING_ONLY}`), d.label);
   for (const [d, row] of declared) {
     assert.ok(row.includes(`AEC returns: ${DONOR_DECLARED_ONLY}`), d.label);
-    assert.doesNotMatch(row, /class="dir-fig"/, d.label);
+    assert.equal(d.money.federal, undefined, d.label + ' has no recipient-side federal figure');
+    const stateFigures = Object.values(d.money);
+    if (!stateFigures.length) assert.doesNotMatch(row, /class="dir-fig"/, d.label);
+    for (const figure of stateFigures) assert.ok(row.includes(`<b>${dollars(figure.total)}</b>`), d.label + ' keeps its state figure');
   }
   assert.ok(directory.filters.find(f => f.key === 'jur').test(declared[0][0], 'federal'), 'still listed as disclosed to the AEC');
   const offMap = html.filter(([d]) => d.recordMeasure && d.money.federal);
