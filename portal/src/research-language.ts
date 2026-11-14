@@ -90,5 +90,11 @@ export function displayAnswerPayload<T extends Record<string,unknown>>(payload:T
     for(const q of quotes.filter(q=>q.value.includes('—')).reverse())replace(new RegExp(`(?<=^[\\s\\S]{${q.at}})[\\s\\S]{${q.end-q.at}}`,'g'),q.value)
     replace(/^[ \t]*[-*•—–]+[ \t]+/gm,'')
     replace(/\s*—\s*/g,', ')
+    replace(/([.!?])(["”’'])\.(?:\2\.?)*/g,m=>m.slice(0,2))
   })
+}
+
+/** Remove only surplus punctuation outside a quotation, leaving the quotation verbatim. */
+export function quotePunctuation<T extends Record<string,unknown>>(payload:T):T {
+  return rewriteAnswerPayload(payload,replace=>replace(/([.!?])(["”’'])\.(?:\2\.?)*/g,m=>m.slice(0,2)))
 }

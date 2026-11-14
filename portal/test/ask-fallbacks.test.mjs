@@ -98,7 +98,7 @@ test('a research turn that answers in plain text is the answer, with the passage
     const run=await ask(robodebt,[calls(search),prose(said)],{stream})
     assert.equal(run.status,200)
     answered(run.body,'prose after search')
-    assert.ok(run.body.answer.startsWith(said),run.body.answer)
+    assert.ok(run.body.answer.startsWith('The cited sources do not name a person or office as responsible.\n\n'+said),run.body.answer)
     assert.match(run.body.answer,/Jordan Sample said “The royal commission found the robodebt scheme was a crude and cruel mechanism/)
     cited(run.body,rid,'prose after search')
     assert.equal(run.model.doGenerateCalls.length,2,'no extra model turn')
@@ -110,7 +110,7 @@ test('plain text before any lookup is answered from general knowledge, never lef
   const text='Robodebt was the Online Compliance Intervention. The royal commission found that the ministers who approved and defended it, and senior public servants, were responsible.'
   const run=await ask(robodebt,[prose(text)])
   assert.equal(run.status,200);answered(run.body,'prose first')
-  assert.equal(run.body.answer,text)
+  assert.equal(run.body.answer,'The cited sources do not name a person or office as responsible.\n\n'+text)
   assert.match(run.body.coverage?.note??'',/not reached/)
   assert.equal(run.model.doGenerateCalls.length,1)
 })
@@ -119,7 +119,7 @@ test('malformed arguments and a plan in prose: the one forced answer call writes
   const run=await ask(robodebt,[calls(search),calls(['answer','{"points": [{"claim": "unfinished']),prose('Let me check the report again.'),
     calls(['answer',{points:[{claim:said},{claim:'Jordan Sample told the Senate the commission found the scheme was "a crude and cruel mechanism, neither fair nor legal".',id:pid,quote:'a crude and cruel mechanism, neither fair nor legal'}]}])])
   assert.equal(run.status,200);answered(run.body,'forced answer')
-  assert.ok(run.body.answer.startsWith(said),run.body.answer)
+  assert.ok(run.body.answer.startsWith('The cited sources do not name a person or office as responsible.\n\n'+said),run.body.answer)
   cited(run.body,rid,'forced answer')
   const last=run.model.doGenerateCalls.at(-1)
   assert.deepEqual(last.toolChoice,{type:'tool',toolName:'answer'},'the re-ask requires the answer tool')
@@ -129,13 +129,13 @@ test('malformed arguments and a plan in prose: the one forced answer call writes
 test('when the forced answer call also replies in prose, that prose is the answer',async()=>{
   const run=await ask(robodebt,[calls(search),prose('I will look at the commission report first.'),prose(said)])
   assert.equal(run.status,200);answered(run.body,'prose re-ask')
-  assert.ok(run.body.answer.startsWith(said),run.body.answer);cited(run.body,rid,'prose re-ask')
+  assert.ok(run.body.answer.startsWith('The cited sources do not name a person or office as responsible.\n\n'+said),run.body.answer);cited(run.body,rid,'prose re-ask')
 })
 
 test('with no usable prose and no answer call, the passages research holds answer in their own words',async()=>{
   const run=await ask(robodebt,[calls(search),calls(['answer','not json']),prose('Let me search again.'),prose('<tool_call>{"name": "search"}</tool_call>')])
   assert.equal(run.status,200);answered(run.body,'passages only')
-  assert.match(run.body.answer,/^On 10 July 2023, Jordan Sample said “The royal commission found/)
+  assert.match(run.body.answer,/^The cited sources do not name a person or office as responsible\.\n\nOn 10 July 2023, Jordan Sample said “The royal commission found/)
   cited(run.body,rid,'passages only')
 })
 

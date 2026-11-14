@@ -1,4 +1,5 @@
-import {test} from 'node:test';
+import './helpers/vic-election-clock.mjs';
+import {test, beforeEach} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile,writeFile,mkdir,mkdtemp,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
@@ -10,6 +11,7 @@ import {partyLabelHTML} from '../public/labels.js';
 import {vicElectionEnabled,vicElectionDiscovery,vicElectionMaterial,VIC_ELECTION_ASSET,VIC_ELECTION_PLACES,VIC_ELECTION_AUTHORISATION_LINE,VIC_ELECTION_CORRECTIONS_EMAIL,VIC_ELECTION_CORRECTIONS_RESPONSE} from '../public/vic-election.js';
 import {buildVicElection} from '../../scripts/build_vic_election.mjs';
 import {sitemapFiles} from '../../scripts/build_crawl_catalog.mjs';
+beforeEach(t=>t.mock.timers.enable({apis:['Date'],now:Date.parse('2026-11-12T10:00:00+11:00')}));
 const EXACT_AUTHORISATION = 'Authorised by Jake Tracey, Noice Pty Ltd, Level 6, 608/343 Little Collins Street, Melbourne VIC 3000.';
 const root = new URL('../public/',import.meta.url);
 const json = async path => JSON.parse(await readFile(new URL(path,root),'utf8'));
@@ -105,6 +107,32 @@ test('enabled crawl discovery has a separate sitemap type; trailing-slash aliase
   const built=sitemapFiles(vicElectionDiscovery(data,true));assert.equal(built.counts['vic-election'],97);
   assert.match(await (await fetchPage('/llms.txt','true')).text(),/https:\/\/opax.com.au\/vic-election-2026/);
   for(const p of data.pages){const r=await fetchPage(p.path+'/','true');assert.equal(r.status,301);assert.equal(r.headers.get('location'),'https://opax.com.au'+p.path);}
+});
+test('election HTML revalidates and changes its validator at the AEDT close of polls',async t=>{
+  for(const path of ['/vic-election-2026','/vic-election-2026/albert-park','/vic-election-2026/southern-metropolitan']) {
+    t.mock.timers.setTime(Date.parse('2026-11-28T06:59:59Z'));
+    const before=await fetchPage(path,'true');
+    assert.equal(before.headers.get('cache-control'),'public, max-age=0, must-revalidate');
+    const tag=before.headers.get('etag');assert.ok(tag);
+    t.mock.timers.setTime(Date.parse('2026-11-28T07:00:00Z'));
+    const after=await fetchPage(path,'true',{}, {headers:{'if-none-match':tag}});
+    assert.equal(after.status,200);assert.notEqual(after.headers.get('etag'),tag);
+    assert.equal(after.headers.get('cache-control'),'public, max-age=0, must-revalidate');
+    const head=await fetchPage(path,'true',{}, {method:'HEAD'});
+    assert.equal(head.headers.get('cache-control'),'public, max-age=0, must-revalidate');
+  }
+});
+test('unavailable election HTML tells GET and HEAD clients to retry after 60 seconds',async()=>{
+  const ASSETS={fetch:req=>new URL(req.url).pathname===VIC_ELECTION_ASSET
+    ? Promise.resolve(new Response(JSON.stringify({...data,election_day:'invalid'}),{headers:{'content-type':'application/json'}})) : env.ASSETS.fetch(req)};
+  for(const path of ['/vic-election-2026','/vic-election-2026/albert-park','/vic-election-2026/southern-metropolitan'])for(const method of ['GET','HEAD']) {
+    const response=await fetchPage(path,'true',{ASSETS},{method});
+    assert.equal(response.status,503);assert.equal(response.headers.get('retry-after'),'60');
+    assert.equal(response.headers.get('cache-control'),'no-store');assert.equal(response.headers.get('x-robots-tag'),'noindex');
+    if(method==='HEAD')assert.equal(await response.text(),'');
+  }
+  const healthy=await fetchPage('/vic-election-2026','true');
+  assert.equal(healthy.status,200);assert.equal(healthy.headers.get('retry-after'),null);
 });
 test('every election page and download carries Jake’s exact 13 October authorisation and corrections contact',()=>{
   assert.equal(VIC_ELECTION_AUTHORISATION_LINE,EXACT_AUTHORISATION);

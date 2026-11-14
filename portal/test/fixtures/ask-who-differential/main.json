@@ -1,0 +1,1720 @@
+{
+  "revision": "ca800951eb3d906bd0e8d9bbdb8bd3d36918ea12",
+  "cases": {
+    "r1-source-names": {
+      "answer": "The report made findings about the conduct of former ministers Rowan Ellery and Avery Quinlan.\n\nThe commission examined the recovery scheme.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            94
+          ],
+          [
+            96,
+            140
+          ]
+        ]
+      }
+    },
+    "r1-no-subject": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe commission, chaired by Morgan Sample, reported in July.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            125
+          ]
+        ]
+      }
+    },
+    "r1-unicode-move": {
+      "answer": "The report made findings about the conduct of former ministers Rowan Ellery and Avery Quinlan.\n\nThe 🏠 commission reported in 2023.",
+      "citations": {
+        "fact-0": [
+          [
+            96,
+            130
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            94
+          ]
+        ]
+      }
+    },
+    "r1-partial-name-support": {
+      "answer": "The report made findings about the conduct of former ministers Rowan Ellery.\n\nThe report made findings about the conduct of former ministers Rowan Ellery and Avery Quinlan.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            76
+          ],
+          [
+            78,
+            172
+          ]
+        ]
+      }
+    },
+    "r1-negative-role-0": {
+      "answer": "The royal commission found that Cabinet approved the recovery scheme without legislative authority.\n\nThe commission made no adverse findings against Minister Avery Quinlan.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            99
+          ]
+        ],
+        "fact-1": [
+          [
+            101,
+            172
+          ]
+        ]
+      }
+    },
+    "r1-negative-role-1": {
+      "answer": "The royal commission found that Cabinet approved the recovery scheme without legislative authority.\n\nThe commission found Minister Avery Quinlan was not responsible for the recovery scheme.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            99
+          ]
+        ],
+        "fact-1": [
+          [
+            101,
+            189
+          ]
+        ]
+      }
+    },
+    "r1-negative-role-2": {
+      "answer": "The royal commission found that Cabinet approved the recovery scheme without legislative authority.\n\nThe commission found Ministers Avery Quinlan and Rowan Ellery were not responsible for the recovery scheme.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            99
+          ]
+        ],
+        "fact-1": [
+          [
+            101,
+            208
+          ]
+        ]
+      }
+    },
+    "r1-negative-role-3": {
+      "answer": "The royal commission found that Cabinet approved the recovery scheme without legislative authority.\n\nThe commission found Minister Avery Quinlan no longer responsible for the recovery scheme.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            99
+          ]
+        ],
+        "fact-1": [
+          [
+            101,
+            191
+          ]
+        ]
+      }
+    },
+    "r1-negative-role-4": {
+      "answer": "The royal commission found that Cabinet approved the recovery scheme without legislative authority.\n\nThe commission did not make findings against Minister Avery Quinlan.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            99
+          ]
+        ],
+        "fact-1": [
+          [
+            101,
+            169
+          ]
+        ]
+      }
+    },
+    "r1-speech-recovery": {
+      "answer": "Morgan Sample told the House of Representatives that the report made findings about the conduct of former ministers Rowan Ellery and Avery Quinlan.\n\nThe commission examined the recovery scheme.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            147
+          ],
+          [
+            149,
+            193
+          ]
+        ]
+      }
+    },
+    "r2-colon-attack-0": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nMorgan Sample told the House that the report described the recovery scheme.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            141
+          ]
+        ]
+      }
+    },
+    "r2-colon-attack-1": {
+      "answer": "Morgan Sample told the House of Representatives that Minister Rowan Ellery failed every test of integrity in the recovery scheme.\n\nMorgan Sample told the House that the report described the recovery scheme.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            129
+          ],
+          [
+            131,
+            206
+          ]
+        ]
+      }
+    },
+    "r2-parenthetical-0": {
+      "answer": "The royal commission found that Cabinet approved the recovery scheme without legislative authority.\n\nThe commission discussed the member for Sample (Avery Quinlan), who was prime minister, was not the minister whose department failed the recovery scheme.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            99
+          ]
+        ],
+        "fact-1": [
+          [
+            101,
+            254
+          ]
+        ]
+      }
+    },
+    "r2-parenthetical-source-0": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe report examined the recovery scheme.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            106
+          ]
+        ]
+      }
+    },
+    "r2-parenthetical-1": {
+      "answer": "The royal commission found that Cabinet approved the recovery scheme without legislative authority.\n\nThe commission discussed the member for Sample (Avery Quinlan), who was prime minister, was cleared of responsibility for the recovery scheme.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            99
+          ]
+        ],
+        "fact-1": [
+          [
+            101,
+            243
+          ]
+        ]
+      }
+    },
+    "r2-parenthetical-source-1": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe report examined the recovery scheme.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            106
+          ]
+        ]
+      }
+    },
+    "r2-parenthetical-2": {
+      "answer": "The royal commission found that Cabinet approved the recovery scheme without legislative authority.\n\nThe commission discussed the member for Sample (Avery Quinlan), who had no responsibility for the recovery scheme.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            99
+          ]
+        ],
+        "fact-1": [
+          [
+            101,
+            215
+          ]
+        ]
+      }
+    },
+    "r2-parenthetical-source-2": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe report examined the recovery scheme.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            106
+          ]
+        ]
+      }
+    },
+    "r2-parenthetical-3": {
+      "answer": "The royal commission found that Cabinet approved the recovery scheme without legislative authority.\n\nThe commission cleared the member for Sample (Avery Quinlan), who had responsibility for the recovery scheme.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            99
+          ]
+        ],
+        "fact-1": [
+          [
+            101,
+            210
+          ]
+        ]
+      }
+    },
+    "r2-parenthetical-source-3": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe report examined the recovery scheme.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            106
+          ]
+        ]
+      }
+    },
+    "r2-shared-Fadden": {
+      "answer": "The royal commission found that Cabinet approved the recovery scheme without legislative authority.\n\nMorgan Sample told the House that the commission found that the member for Fadden (Stuart Robert), who failed to ensure the recovery scheme was lawful, ignored repeated warnings.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            99
+          ]
+        ],
+        "fact-1": [
+          [
+            101,
+            279
+          ]
+        ]
+      }
+    },
+    "r2-shared-Bennelong": {
+      "answer": "The royal commission found that Cabinet approved the recovery scheme without legislative authority.\n\nMorgan Sample told the House that the commission found that the member for Bennelong (John Howard), who failed to ensure the recovery scheme was lawful, ignored repeated warnings.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            99
+          ]
+        ],
+        "fact-1": [
+          [
+            101,
+            280
+          ]
+        ]
+      }
+    },
+    "r2-authority-fallback": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe commission concluded the recovery scheme was unlawful.\n\nMorgan Sample said the scheme was a political disaster.\n\nThe commission delivered its report in July.",
+      "citations": {
+        "fact-2": [
+          [
+            66,
+            124
+          ]
+        ],
+        "fact-0": [
+          [
+            126,
+            181
+          ]
+        ],
+        "fact-1": [
+          [
+            183,
+            227
+          ]
+        ]
+      }
+    },
+    "r2-near-tail-it": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe Royal Commission into the Recovery Scheme (Commissioner Rowan Ellery) examined who was responsible for the scheme; it referred six people to the NACC.\n\nThe Royal Commission into the Recovery Scheme, whose Royal Commissioner was Rowan Ellery, investigated who was responsible for the recovery scheme and delivered its final report on 7 July 2023.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            220
+          ]
+        ],
+        "fact-1": [
+          [
+            222,
+            415
+          ]
+        ]
+      }
+    },
+    "r3-exact-tail-it": {
+      "answer": "Labor voted no on 3 May 2023.\n\nit received 17 votes.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            29
+          ]
+        ],
+        "fact-1": [
+          [
+            31,
+            52
+          ]
+        ]
+      }
+    },
+    "r2-near-tail-It": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe Royal Commission into the Recovery Scheme (Commissioner Rowan Ellery) examined who was responsible for the scheme; It referred six people to the NACC.\n\nThe Royal Commission into the Recovery Scheme, whose Royal Commissioner was Rowan Ellery, investigated who was responsible for the recovery scheme and delivered its final report on 7 July 2023.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            220
+          ]
+        ],
+        "fact-1": [
+          [
+            222,
+            415
+          ]
+        ]
+      }
+    },
+    "r3-exact-tail-It": {
+      "answer": "Labor voted no on 3 May 2023.\n\nIt received 17 votes.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            29
+          ]
+        ],
+        "fact-1": [
+          [
+            30,
+            52
+          ]
+        ]
+      }
+    },
+    "r2-near-tail-they": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe Royal Commission into the Recovery Scheme (Commissioner Rowan Ellery) examined who was responsible for the scheme; they referred six people to the NACC.\n\nThe Royal Commission into the Recovery Scheme, whose Royal Commissioner was Rowan Ellery, investigated who was responsible for the recovery scheme and delivered its final report on 7 July 2023.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            222
+          ]
+        ],
+        "fact-1": [
+          [
+            224,
+            417
+          ]
+        ]
+      }
+    },
+    "r3-exact-tail-they": {
+      "answer": "Labor voted no on 3 May 2023.\n\nthey received 17 votes.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            29
+          ]
+        ],
+        "fact-1": [
+          [
+            31,
+            54
+          ]
+        ]
+      }
+    },
+    "r2-near-tail-They": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe Royal Commission into the Recovery Scheme (Commissioner Rowan Ellery) examined who was responsible for the scheme; They referred six people to the NACC.\n\nThe Royal Commission into the Recovery Scheme, whose Royal Commissioner was Rowan Ellery, investigated who was responsible for the recovery scheme and delivered its final report on 7 July 2023.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            222
+          ]
+        ],
+        "fact-1": [
+          [
+            224,
+            417
+          ]
+        ]
+      }
+    },
+    "r3-exact-tail-They": {
+      "answer": "Labor voted no on 3 May 2023.\n\nThey received 17 votes.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            29
+          ]
+        ],
+        "fact-1": [
+          [
+            30,
+            54
+          ]
+        ]
+      }
+    },
+    "r2-near-tail-he": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe Royal Commission into the Recovery Scheme (Commissioner Rowan Ellery) examined who was responsible for the scheme; he referred six people to the NACC.\n\nThe Royal Commission into the Recovery Scheme, whose Royal Commissioner was Rowan Ellery, investigated who was responsible for the recovery scheme and delivered its final report on 7 July 2023.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            220
+          ]
+        ],
+        "fact-1": [
+          [
+            222,
+            415
+          ]
+        ]
+      }
+    },
+    "r3-exact-tail-he": {
+      "answer": "Labor voted no on 3 May 2023.\n\nhe received 17 votes.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            29
+          ]
+        ],
+        "fact-1": [
+          [
+            31,
+            52
+          ]
+        ]
+      }
+    },
+    "r2-near-tail-He": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe Royal Commission into the Recovery Scheme (Commissioner Rowan Ellery) examined who was responsible for the scheme; He referred six people to the NACC.\n\nThe Royal Commission into the Recovery Scheme, whose Royal Commissioner was Rowan Ellery, investigated who was responsible for the recovery scheme and delivered its final report on 7 July 2023.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            220
+          ]
+        ],
+        "fact-1": [
+          [
+            222,
+            415
+          ]
+        ]
+      }
+    },
+    "r3-exact-tail-He": {
+      "answer": "Labor voted no on 3 May 2023.\n\nHe received 17 votes.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            29
+          ]
+        ],
+        "fact-1": [
+          [
+            30,
+            52
+          ]
+        ]
+      }
+    },
+    "r2-near-tail-she": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe Royal Commission into the Recovery Scheme (Commissioner Rowan Ellery) examined who was responsible for the scheme; she referred six people to the NACC.\n\nThe Royal Commission into the Recovery Scheme, whose Royal Commissioner was Rowan Ellery, investigated who was responsible for the recovery scheme and delivered its final report on 7 July 2023.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            221
+          ]
+        ],
+        "fact-1": [
+          [
+            223,
+            416
+          ]
+        ]
+      }
+    },
+    "r3-exact-tail-she": {
+      "answer": "Labor voted no on 3 May 2023.\n\nshe received 17 votes.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            29
+          ]
+        ],
+        "fact-1": [
+          [
+            31,
+            53
+          ]
+        ]
+      }
+    },
+    "r2-near-tail-She": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe Royal Commission into the Recovery Scheme (Commissioner Rowan Ellery) examined who was responsible for the scheme; She referred six people to the NACC.\n\nThe Royal Commission into the Recovery Scheme, whose Royal Commissioner was Rowan Ellery, investigated who was responsible for the recovery scheme and delivered its final report on 7 July 2023.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            221
+          ]
+        ],
+        "fact-1": [
+          [
+            223,
+            416
+          ]
+        ]
+      }
+    },
+    "r3-exact-tail-She": {
+      "answer": "Labor voted no on 3 May 2023.\n\nShe received 17 votes.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            29
+          ]
+        ],
+        "fact-1": [
+          [
+            30,
+            53
+          ]
+        ]
+      }
+    },
+    "r2-near-tail-this": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe Royal Commission into the Recovery Scheme (Commissioner Rowan Ellery) examined who was responsible for the scheme; this referred six people to the NACC.\n\nThe Royal Commission into the Recovery Scheme, whose Royal Commissioner was Rowan Ellery, investigated who was responsible for the recovery scheme and delivered its final report on 7 July 2023.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            222
+          ]
+        ],
+        "fact-1": [
+          [
+            224,
+            417
+          ]
+        ]
+      }
+    },
+    "r3-exact-tail-this": {
+      "answer": "Labor voted no on 3 May 2023.\n\nthis received 17 votes.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            29
+          ]
+        ],
+        "fact-1": [
+          [
+            31,
+            54
+          ]
+        ]
+      }
+    },
+    "r2-near-tail-This": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe Royal Commission into the Recovery Scheme (Commissioner Rowan Ellery) examined who was responsible for the scheme; This referred six people to the NACC.\n\nThe Royal Commission into the Recovery Scheme, whose Royal Commissioner was Rowan Ellery, investigated who was responsible for the recovery scheme and delivered its final report on 7 July 2023.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            222
+          ]
+        ],
+        "fact-1": [
+          [
+            224,
+            417
+          ]
+        ]
+      }
+    },
+    "r3-exact-tail-This": {
+      "answer": "Labor voted no on 3 May 2023.\n\nThis received 17 votes.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            29
+          ]
+        ],
+        "fact-1": [
+          [
+            30,
+            54
+          ]
+        ]
+      }
+    },
+    "r2-near-tail-these": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe Royal Commission into the Recovery Scheme (Commissioner Rowan Ellery) examined who was responsible for the scheme; these referred six people to the NACC.\n\nThe Royal Commission into the Recovery Scheme, whose Royal Commissioner was Rowan Ellery, investigated who was responsible for the recovery scheme and delivered its final report on 7 July 2023.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            223
+          ]
+        ],
+        "fact-1": [
+          [
+            225,
+            418
+          ]
+        ]
+      }
+    },
+    "r3-exact-tail-these": {
+      "answer": "Labor voted no on 3 May 2023.\n\nthese received 17 votes.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            29
+          ]
+        ],
+        "fact-1": [
+          [
+            31,
+            55
+          ]
+        ]
+      }
+    },
+    "r2-near-tail-These": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe Royal Commission into the Recovery Scheme (Commissioner Rowan Ellery) examined who was responsible for the scheme; These referred six people to the NACC.\n\nThe Royal Commission into the Recovery Scheme, whose Royal Commissioner was Rowan Ellery, investigated who was responsible for the recovery scheme and delivered its final report on 7 July 2023.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            223
+          ]
+        ],
+        "fact-1": [
+          [
+            225,
+            418
+          ]
+        ]
+      }
+    },
+    "r3-exact-tail-These": {
+      "answer": "Labor voted no on 3 May 2023.\n\nThese received 17 votes.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            29
+          ]
+        ],
+        "fact-1": [
+          [
+            30,
+            55
+          ]
+        ]
+      }
+    },
+    "r3-mckenzie-anao": {
+      "answer": "Anthony Albanese told the House that the ANAO found that Bridget McKenzie approved grants.\n\nThe report described the grants programme.",
+      "citations": {
+        "fact-0": [
+          [
+            92,
+            134
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            90
+          ]
+        ]
+      }
+    },
+    "r3-body-0": {
+      "answer": "Morgan Sample told the House that the Auditor-General found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            109,
+            158
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            107
+          ]
+        ]
+      }
+    },
+    "r3-body-source-0": {
+      "answer": "Morgan Sample told the House of Representatives that the Auditor-General found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            126
+          ],
+          [
+            128,
+            177
+          ]
+        ]
+      }
+    },
+    "r3-body-1": {
+      "answer": "Morgan Sample told the House that the ANAO found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            98,
+            147
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            96
+          ]
+        ]
+      }
+    },
+    "r3-body-source-1": {
+      "answer": "Morgan Sample told the House of Representatives that the ANAO found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            115
+          ],
+          [
+            117,
+            166
+          ]
+        ]
+      }
+    },
+    "r3-body-2": {
+      "answer": "Morgan Sample told the House that the Senate committee found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            110,
+            159
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            108
+          ]
+        ]
+      }
+    },
+    "r3-body-source-2": {
+      "answer": "Morgan Sample told the House of Representatives that the Senate committee found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            127
+          ],
+          [
+            129,
+            178
+          ]
+        ]
+      }
+    },
+    "r3-body-3": {
+      "answer": "Morgan Sample told the House that the NACC found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            98,
+            147
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            96
+          ]
+        ]
+      }
+    },
+    "r3-body-source-3": {
+      "answer": "Morgan Sample told the House of Representatives that the NACC found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            115
+          ],
+          [
+            117,
+            166
+          ]
+        ]
+      }
+    },
+    "r3-body-4": {
+      "answer": "Morgan Sample told the House that the ICAC found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            98,
+            147
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            96
+          ]
+        ]
+      }
+    },
+    "r3-body-source-4": {
+      "answer": "Morgan Sample told the House of Representatives that the ICAC found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            115
+          ],
+          [
+            117,
+            166
+          ]
+        ]
+      }
+    },
+    "r3-body-5": {
+      "answer": "Morgan Sample told the House that the IBAC found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            98,
+            147
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            96
+          ]
+        ]
+      }
+    },
+    "r3-body-source-5": {
+      "answer": "Morgan Sample told the House of Representatives that the IBAC found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            115
+          ],
+          [
+            117,
+            166
+          ]
+        ]
+      }
+    },
+    "r3-body-6": {
+      "answer": "Morgan Sample told the House that the CCC found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            97,
+            146
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            95
+          ]
+        ]
+      }
+    },
+    "r3-body-source-6": {
+      "answer": "Morgan Sample told the House of Representatives that the CCC found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            114
+          ],
+          [
+            116,
+            165
+          ]
+        ]
+      }
+    },
+    "r3-body-7": {
+      "answer": "Morgan Sample told the House that the CMC found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            97,
+            146
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            95
+          ]
+        ]
+      }
+    },
+    "r3-body-source-7": {
+      "answer": "Morgan Sample told the House of Representatives that the CMC found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            114
+          ],
+          [
+            116,
+            165
+          ]
+        ]
+      }
+    },
+    "r3-body-8": {
+      "answer": "Morgan Sample told the House that the NSW Independent Commission Against Corruption found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            139,
+            188
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            137
+          ]
+        ]
+      }
+    },
+    "r3-body-source-8": {
+      "answer": "Morgan Sample told the House of Representatives that the NSW Independent Commission Against Corruption found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            156
+          ],
+          [
+            158,
+            207
+          ]
+        ]
+      }
+    },
+    "r3-body-9": {
+      "answer": "Morgan Sample told the House that the South Australian Independent Commission Against Corruption found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            152,
+            201
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            150
+          ]
+        ]
+      }
+    },
+    "r3-body-source-9": {
+      "answer": "Morgan Sample told the House of Representatives that the South Australian Independent Commission Against Corruption found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            169
+          ],
+          [
+            171,
+            220
+          ]
+        ]
+      }
+    },
+    "r3-body-10": {
+      "answer": "Morgan Sample told the House that the Northern Territory Independent Commissioner Against Corruption found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            156,
+            205
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            154
+          ]
+        ]
+      }
+    },
+    "r3-body-source-10": {
+      "answer": "Morgan Sample told the House of Representatives that the Northern Territory Independent Commissioner Against Corruption found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            173
+          ],
+          [
+            175,
+            224
+          ]
+        ]
+      }
+    },
+    "r3-body-11": {
+      "answer": "Morgan Sample told the House that the Tasmanian Integrity Commission found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            124,
+            173
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            122
+          ]
+        ]
+      }
+    },
+    "r3-body-source-11": {
+      "answer": "Morgan Sample told the House of Representatives that the Tasmanian Integrity Commission found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            141
+          ],
+          [
+            143,
+            192
+          ]
+        ]
+      }
+    },
+    "r3-body-12": {
+      "answer": "Morgan Sample told the House that the ACT Integrity Commission found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            118,
+            167
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            116
+          ]
+        ]
+      }
+    },
+    "r3-body-source-12": {
+      "answer": "Morgan Sample told the House of Representatives that the ACT Integrity Commission found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            135
+          ],
+          [
+            137,
+            186
+          ]
+        ]
+      }
+    },
+    "r3-body-13": {
+      "answer": "Morgan Sample told the House that the Corruption and Crime Commission found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            125,
+            174
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            123
+          ]
+        ]
+      }
+    },
+    "r3-body-source-13": {
+      "answer": "Morgan Sample told the House of Representatives that the Corruption and Crime Commission found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            142
+          ],
+          [
+            144,
+            193
+          ]
+        ]
+      }
+    },
+    "r3-body-14": {
+      "answer": "Morgan Sample told the House that the Crime and Corruption Commission found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            125,
+            174
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            123
+          ]
+        ]
+      }
+    },
+    "r3-body-source-14": {
+      "answer": "Morgan Sample told the House of Representatives that the Crime and Corruption Commission found that Rowan Ellery approved the recovery grants.\n\nThe grants programme was examined in the inquiry.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            142
+          ],
+          [
+            144,
+            193
+          ]
+        ]
+      }
+    },
+    "r3-existing-statement-0": {
+      "answer": "Morgan Sample told the House that Rowan Ellery approved the recovery grants.\n\nThe grants programme was debated in the House.",
+      "citations": {
+        "fact-0": [
+          [
+            78,
+            124
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            76
+          ]
+        ]
+      }
+    },
+    "r3-existing-statement-1": {
+      "answer": "Morgan Sample told the House that the ANAO found: Minister Rowan Ellery approved the recovery grants.\n\nThe grants programme was debated in the House.",
+      "citations": {
+        "fact-0": [
+          [
+            103,
+            149
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            101
+          ]
+        ]
+      }
+    },
+    "r3-surname-duplicate": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe member for Cook (Scott Morrison) was social services minister.\n\nBill Shorten told the House that the commission found Mr Morrison allowed Cabinet to be misled.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            132
+          ]
+        ],
+        "fact-1": [
+          [
+            134,
+            229
+          ]
+        ]
+      }
+    },
+    "r3-that-negation-0": {
+      "answer": "The commission found no evidence that Rowan Ellery approved the recovery scheme.\n\nThe royal commission found that Cabinet approved the recovery scheme without legislative authority.",
+      "citations": {
+        "fact-0": [
+          [
+            82,
+            181
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            80
+          ]
+        ]
+      }
+    },
+    "r3-that-negation-1": {
+      "answer": "The commission rejected claims that Rowan Ellery approved the recovery scheme.\n\nThe royal commission found that Cabinet approved the recovery scheme without legislative authority.",
+      "citations": {
+        "fact-0": [
+          [
+            80,
+            179
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            78
+          ]
+        ]
+      }
+    },
+    "r3-that-negation-2": {
+      "answer": "The commission rejected claims that Minister Rowan Ellery approved the recovery scheme.\n\nThe royal commission found that Cabinet approved the recovery scheme without legislative authority.",
+      "citations": {
+        "fact-0": [
+          [
+            89,
+            188
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            87
+          ]
+        ]
+      }
+    },
+    "r3-titled-colon": {
+      "answer": "Morgan Sample told the House of Representatives that the report found the scheme unlawful; I will say this plainly: Minister Rowan Ellery failed every test of integrity.\n\nMorgan Sample told the House that the report described the recovery scheme.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            169
+          ],
+          [
+            171,
+            246
+          ]
+        ]
+      }
+    },
+    "r3-lowercase-tail": {
+      "answer": "Labor voted no on 3 May 2023.\n\nthe bill received 17 votes.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            29
+          ]
+        ],
+        "fact-1": [
+          [
+            31,
+            58
+          ]
+        ]
+      }
+    },
+    "r4-positive-0": {
+      "answer": "The commission found not only that Rowan Ellery approved the recovery grants but also that Avery Quinlan ignored legal advice.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            126
+          ]
+        ]
+      }
+    },
+    "r4-positive-1": {
+      "answer": "The commission denied claims from critics, then found that Rowan Ellery approved the recovery grants.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            101
+          ]
+        ]
+      }
+    },
+    "r4-positive-2": {
+      "answer": "The commission denied claims from critics, then found that Minister Rowan Ellery approved the recovery grants.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            110
+          ]
+        ]
+      }
+    },
+    "r4-positive-3": {
+      "answer": "The cited sources do not name a person or office as responsible.\n\nThe commission found that the member for Sample (Rowan Ellery), who not only approved the recovery grants but also ignored legal advice, failed his responsibilities.",
+      "citations": {
+        "fact-0": [
+          [
+            66,
+            231
+          ]
+        ]
+      }
+    },
+    "r4-criticism-false": {
+      "answer": "Morgan Sample told the House that the ANAO's findings were flawed and Minister Rowan Ellery failed every test of integrity.\n\nThe royal commission found that Cabinet approved the recovery scheme without legislative authority.",
+      "citations": {
+        "fact-0": [
+          [
+            125,
+            224
+          ]
+        ],
+        "fact-1": [
+          [
+            0,
+            123
+          ]
+        ]
+      }
+    },
+    "r4-criticism-true": {
+      "answer": "Morgan Sample told the House that the ANAO's findings were flawed and Minister Rowan Ellery failed every test of integrity.\n\nThe royal commission found that Cabinet approved the recovery scheme without legislative authority.",
+      "citations": {
+        "fact-1": [
+          [
+            125,
+            224
+          ]
+        ],
+        "fact-0": [
+          [
+            0,
+            123
+          ]
+        ]
+      }
+    },
+    "robodebt-original": {
+      "answer": "Cabinet approved the scheme, which proceeded without the legislative change the Department of Social Services had said was needed to support income averaging; the Royal Commission into the Robodebt Scheme found it was a costly failure of public administration.\n\nBill Shorten moved in the House of Representatives on 10 August 2023 that the House accept the royal commission's findings regarding the former ministers involved in the design and implementation of the scheme, and apologise to victims and frontline Centrelink staff.\n\nIn its report, the commission concluded that the Ombudsman was deliberately misled, which gave the government further opportunity to resist scrutiny by using his report as a shield.\n\nThe Royal Commission's report made 57 recommendations, of which 56 were numbered; the Australian Government's response referred to 56 recommendations, and no government response or implementation document is held.\n\nThe Royal Commission into the Robodebt Scheme was established by Letters Patent on 18 August 2022, with Catherine Holmes AC SC as Royal Commissioner, and reported on 7 July 2023.\n\nZali Steggall told the House on 11 March 2026 that the National Anti-Corruption Commission's investigation into the robodebt referrals found two public officials engaged in serious corrupt conduct and cleared four others, including former prime minister Scott Morrison.\n\nMary Doyle told the House on 1 August 2023 that the royal commission led by Commissioner Catherine Holmes had delivered answers for the more than 500,000 victims of the former Liberal government's unlawful robodebt scheme.",
+      "citations": {
+        "fact-28/t/body/0": [
+          [
+            0,
+            260
+          ]
+        ],
+        "speech-1554704/t/body/0-647": [
+          [
+            262,
+            529
+          ]
+        ],
+        "fact-31/t/body/0": [
+          [
+            979,
+            1106
+          ]
+        ],
+        "fact-32/t/body/0": [
+          [
+            979,
+            1106
+          ]
+        ],
+        "fact-29/t/body/0": [
+          [
+            531,
+            712
+          ]
+        ],
+        "fact-3/t/body/0": [
+          [
+            714,
+            927
+          ]
+        ],
+        "fact-30/t/body/0": [
+          [
+            714,
+            927
+          ]
+        ],
+        "fact-27/t/body/0": [
+          [
+            218,
+            259
+          ]
+        ],
+        "fact-31": [
+          [
+            929,
+            1107
+          ]
+        ],
+        "fact-28": [
+          [
+            220,
+            259
+          ]
+        ],
+        "fact-29": [
+          [
+            550,
+            679
+          ]
+        ],
+        "speech-1201173/t/body/0-643": [
+          [
+            1109,
+            1378
+          ]
+        ],
+        "speech-1551807/t/body/0-643": [
+          [
+            1380,
+            1602
+          ]
+        ]
+      }
+    },
+    "robodebt-182": {
+      "answer": "The commission found the Scheme was approved by Cabinet and proceeded without the legislative change to support income averaging that DSS had said was needed.\n\nThe commission concluded robodebt was a costly failure of public administration in human and economic terms.\n\nThe Royal Commission into the Robodebt Scheme (Commissioner Catherine Holmes AC SC) examined who was responsible for the scheme; Kate Thwaites told the House of Representatives on 7 August 2023 that the final report examined 'the establishment of the scheme and who was responsible for it'.\n\nThe Royal Commission into the Robodebt Scheme, whose Royal Commissioner was Catherine Holmes AC SC, investigated who was responsible for robodebt and delivered its final report on 7 July 2023.\n\nIts final report makes 57 recommendations, and 47 hearing transcripts are held as evidence rather than findings.\n\nThe commission found the Ombudsman was deliberately misled, letting the Government resist scrutiny by using his report as a shield.\n\nBill Shorten told the House on 31 July 2023 that the commission went to the role of the member for Cook (Scott Morrison), who as social services minister first took robodebt to cabinet in 2015, and that Commissioner Holmes found he 'allowed Cabinet to be misled' and 'failed to meet his ministerial responsibility to ensure that Cabinet was properly informed'.\n\nBill Shorten told the House on 10 August 2023 that Commissioner Holmes said the affair showed what 'can go wrong through venality, incompetence and cowardice', and said she reached findings against individuals only with 'a high degree of satisfaction about the evidence' after a fair hearing; Shorten then moved the resolution accepting the findings regarding the former ministers involved in the scheme's design and implementation.\n\nGraham Perrett described the notices to the House on 20 November 2024 as 'these Turnbull-Morrison debt notices', reflecting the scheme's operation under successive Coalition ministers.\n\nCommissioner Holmes stated that the scheme 'made many people feel like criminals', as quoted by Mark Dreyfus in the House on 10 October 2024.",
+      "citations": {
+        "fact-9/t/body/0": [
+          [
+            160,
+            268
+          ]
+        ],
+        "speech-1553201/t/body/0-646": [
+          [
+            270,
+            560
+          ]
+        ],
+        "fact-10/t/body/0": [
+          [
+            0,
+            158
+          ]
+        ],
+        "fact-14/t/body/0": [
+          [
+            562,
+            754
+          ]
+        ],
+        "fact-15/t/body/0": [
+          [
+            562,
+            754
+          ]
+        ],
+        "fact-8/t/body/0": [
+          [
+            756,
+            868
+          ]
+        ],
+        "fact-11/t/body/0": [
+          [
+            885,
+            1000
+          ]
+        ],
+        "fact-11": [
+          [
+            870,
+            1001
+          ]
+        ],
+        "speech-1551171/t/body/649-2457": [
+          [
+            1003,
+            1363
+          ]
+        ],
+        "speech-1554704/t/body/648-4645": [
+          [
+            1365,
+            1797
+          ]
+        ],
+        "speech-1596748/t/body/0-642": [
+          [
+            1799,
+            1983
+          ]
+        ],
+        "speech-1594111/t/body/0-648": [
+          [
+            1985,
+            2126
+          ]
+        ]
+      }
+    },
+    "ordinary-date": {
+      "answer": "The report was released on 7 July 2023.\n\nThe commission delivered the report to the Governor-General.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            39
+          ]
+        ],
+        "fact-1": [
+          [
+            41,
+            101
+          ]
+        ]
+      }
+    },
+    "ordinary-count": {
+      "answer": "The report made 57 recommendations.\n\nThe inquiry considered the recovery scheme.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            35
+          ]
+        ],
+        "fact-1": [
+          [
+            37,
+            80
+          ]
+        ]
+      }
+    },
+    "ordinary-cost": {
+      "answer": "The programme cost $17 million in 2022.\n\nThe report described the expenditure.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            39
+          ]
+        ],
+        "fact-1": [
+          [
+            41,
+            78
+          ]
+        ]
+      }
+    },
+    "ordinary-committee": {
+      "answer": "The committee considered housing policy.\n\nIts report discussed the availability of rentals.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            40
+          ]
+        ],
+        "fact-1": [
+          [
+            42,
+            91
+          ]
+        ]
+      }
+    },
+    "ordinary-division": {
+      "answer": "The House passed the bill on 3 May 2023.\n\nThe division recorded 17 votes in favour.",
+      "citations": {
+        "fact-0": [
+          [
+            0,
+            40
+          ]
+        ],
+        "fact-1": [
+          [
+            42,
+            83
+          ]
+        ]
+      }
+    }
+  }
+}

@@ -128,7 +128,7 @@
  "assets": {},
  "expect": {
   "answered": true,
-  "lead": "^Avery Quinlan told the House on 11 March 2026 that the National Anti-Corruption Commission found two Harbourline officials",
+  "lead": "^The cited sources do not name a person or office as responsible\\.",
   "excludes": [
    "^The National Anti-Corruption Commission found"
   ],
@@ -149,6 +149,9 @@
   ],
   "tool_errors": [
    "no passage id given; pass id exactly as shown in data.passages \\(for example \"eeee"
+  ],
+  "includes": [
+   "Avery Quinlan told the House on 11 March 2026 that the National Anti-Corruption Commission found two Harbourline officials"
   ]
  }
 }
