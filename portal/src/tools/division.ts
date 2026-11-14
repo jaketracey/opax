@@ -1,7 +1,8 @@
 /** Recorded divisions, using the same published index, detail files and table as the division pages. */
 import { tokens, normalize } from '../catalog-query.mjs'
 import { clip, fold, siteUrl, tableRows } from './record-common'
-import { aggregateDivisions, isDivisionParty, resolveDivisionParty, type DivisionSummary } from './division-aggregates'
+import { aggregateDivisions, resolveDivisionParty, type DivisionSummary } from './division-aggregates'
+import { againstPartyMembers, partyMajorities } from '../../public/division-against-party.js'
 import { readToolAsset, type ToolArgs, type ToolDefinition, type ToolEnv, type ToolCitation } from './types'
 import { policyVotes } from './division-policy'
 
@@ -19,7 +20,6 @@ const keyOf = (id: string) => id.replace(/^division-/, '')
 const CHAMBERS: Record<string, string> = { senate: 'Senate', representatives: 'House of Representatives', nsw_la: 'NSW Legislative Assembly', nsw_lc: 'NSW Legislative Council', vic_la: 'Victorian Legislative Assembly', vic_lc: 'Victorian Legislative Council', qld_la: 'Queensland Legislative Assembly', sa_ha: 'South Australian House of Assembly', sa_lc: 'South Australian Legislative Council', act_la: 'ACT Legislative Assembly', nt_la: 'Northern Territory Legislative Assembly', wa_la: 'Western Australian Legislative Assembly', wa_lc: 'Western Australian Legislative Council', tas_ha: 'Tasmanian House of Assembly', tas_lc: 'Tasmanian Legislative Council' }
 const chamberOf = (row: { key: string; house?: string }) => row.house ?? (row.key.startsWith('federal-') ? row.key.split('-')[1] : row.key.split('-').slice(0, 2).join('_'))
 const chamberName = (chamber: string) => CHAMBERS[chamber] ?? chamber
-const majority = (ayes: number, noes: number) => ayes === noes ? null : ayes > noes ? 'aye' as const : 'no' as const
 const partyKey = (value: string) => fold(resolveDivisionParty(value, []))
 const titleMatches = (name: string, query: string) => {
   const held = tokens(name)
@@ -35,21 +35,13 @@ const inScope = (row: { key: string; date?: string; house?: string }, args: Tool
 const notes = [
   'Crossing the floor means an aye or no against a strict party majority, for parties with at least five recorded aye/no votes. Independents, unknown parties, ties, paired and absent votes are excluded.',
   'Party affiliations are the published labels and may reflect a later affiliation rather than the affiliation on the division date. Calculated dissent is not independently verified historical floor crossing.',
+  'crossed_floor lists members who voted differently from most of their party; the record does not show whether the party allowed a free vote, so do not call them floor crossers unless a source says so.',
 ]
 
 function detailRow(env: ToolEnv, division: DivisionFile, args: ToolArgs) {
   const members = (division.members ?? []).map(m => ({ name: m.name, party: m.party || null, vote: m.vote }))
-  const parties = [...new Set(members.flatMap(m => m.party ? [m.party] : []))].sort()
-  const party_majorities = parties.map(party => {
-    const votes = members.filter(m => m.party === party)
-    const ayes = votes.filter(m => m.vote === 'aye').length, noes = votes.filter(m => m.vote === 'no').length
-    return { party, ayes, noes, majority: isDivisionParty(party) ? majority(ayes, noes) : null }
-  })
-  const crossed_floor = members.flatMap(m => {
-    const party = party_majorities.find(p => p.party === m.party)
-    return party && party.ayes + party.noes >= 5 && party.majority && ['aye', 'no'].includes(m.vote) && m.vote !== party.majority
-      ? [{ ...m, party_vote: party.majority }] : []
-  }).sort((a, b) => a.name.localeCompare(b.name))
+  const party_majorities = partyMajorities(members)
+  const crossed_floor = againstPartyMembers(members, party_majorities)
   const ayes = count(division.ayes), noes = count(division.noes)
   const outcome = division.result === 'affirmative' ? 'passed' : division.result === 'negative' ? 'defeated' : ayes !== null && noes !== null ? ayes > noes ? 'passed' : 'defeated' : null
   const unknown_party_members = members.filter(m => !m.party).length
@@ -83,7 +75,7 @@ function citation(row: Row, args: ToolArgs): ToolCitation {
 
 export const tool: ToolDefinition = {
   name: 'division',
-  description: 'Look up a specific recorded federal or state division by exact date and chamber, title words, bill name/key or division_id. Use this for how a person or party voted in one division, its passed/defeated outcome, ayes/noes, party majorities and named floor crossers; use the division lookup for the single recorded vote. Returns full member lists with published party labels and source URLs. For outcomes, state the result and ayes/noes first. For who crossed the floor, use lookup and answer with the named members against their party majority, or state that none were recorded, retaining partial-list qualifications. Mention floor crossing only when asked. total is the number of matching divisions before row/byte limits, not the number or names of dissenters; a division outcome does not establish that the bill became law. operation floor_crossing counts member-votes against party majorities over date/since/until; party_agreement compares party and other_party over that period. Aggregates default to federal divisions unless a state chamber/jurisdiction is specified. Both aggregates use the published index, not a retrieved sample.',
+  description: 'Look up a specific recorded federal or state division by exact date and chamber, title words, bill name/key or division_id. Use this for how a person or party voted in one division, its passed/defeated outcome, ayes/noes, party majorities and named members who voted differently from most of their party; use the division lookup for the single recorded vote. Returns full member lists with published party labels and source URLs. For outcomes, state the result and ayes/noes first. For who crossed the floor, use lookup and answer with the named members against their party majority, or state that none were recorded, retaining partial-list qualifications. Mention floor crossing only when asked. total is the number of matching divisions before row/byte limits, not the number or names of dissenters; a division outcome does not establish that the bill became law. operation floor_crossing counts member-votes against party majorities over date/since/until; party_agreement compares party and other_party over that period. Aggregates default to federal divisions unless a state chamber/jurisdiction is specified. Both aggregates use the published index, not a retrieved sample.',
   inputSchema: { type: 'object', additionalProperties: false, properties: {
     operation: { type: 'string', enum: ['lookup', 'floor_crossing', 'party_agreement', 'policy_votes'], description: 'policy_votes aggregates a named party across every matching topic-title division, including linked bills and motions. Pass party and title (core policy words), not a single member or bill.' },
     chamber: { type: 'string', enum: Object.keys(CHAMBERS), description: 'Exact chamber, e.g. senate, representatives, nsw_lc, vic_la or qld_la.' },

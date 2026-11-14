@@ -50,6 +50,10 @@ let voteTables;
 const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=872590ff14").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
+// Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
+// Hand-stamped: bump ?v= when it changes (a content stamp would need a 101st _headers rule).
+let divisionAgainst;
+const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?v=2").then(module => { divisionAgainst = module; }));
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
 const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=75fab98de7").then(module => { growthModules = module; }));
@@ -13740,6 +13744,8 @@ async function loadDivisionDoc(slug) {
   const res = await fetch(`/divisions/${encodeURIComponent(slug)}.json`);
   if (!res.ok) return null;
   const d = await res.json();
+  // Without the shared module the page still draws; only the against-party section is left out.
+  await divisionAgainstReady.then(null, () => {});
   const bills = Array.isArray(d.bills) ? d.bills : [];
   let entry = null;
   for (const b of bills) {
@@ -13841,6 +13847,17 @@ function divisionBillsHTML(bills) {
   return `<div class="division-bills">On the ${link(bills[0])}${rest.length ? ` <details class="division-bills-more"><summary>and ${rest.length} related ${rest.length === 1 ? "bill" : "bills"}</summary><ul class="ui-list" role="list">${rest.map((b) => `<li>${link(b)}</li>`).join("")}</ul></details>` : ""}</div>`;
 }
 
+/** "Voted differently from most of their party", by the shared rule (division-against-party.js), in the
+ *  Worker page's words; empty when nobody did or the module could not load. */
+function divisionAgainstHTML(d) {
+  const view = divisionAgainst?.votedAgainstParty(d);
+  if (!view) return "";
+  return `<section class="ui-section division-block division-against" aria-labelledby="division-against-head">
+      <h2 class="ui-section-title" id="division-against-head">${esc(view.title)}</h2>
+      ${divisionAgainst.votedAgainstPartyHTML(view, personUrl)}
+    </section>`;
+}
+
 function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
   currentDoc = { slug, kind: "division", title: d.name || d.question || "", url: d.source_url, labels: { kind: "division" } };
   setStatus($("doc-status"), "");
@@ -13894,6 +13911,7 @@ function renderDivisionDoc({ d, entry, bills }, slug, manageFocus) {
       <h2 class="ui-section-title" id="division-split-head">How the parties voted</h2>
       ${BILL_SPLIT_LEGEND}${split.drawn}${split.restCount ? `<details class="ui-disclosure bill-division-more"><summary>${split.restCount} more ${split.restCount === 1 ? "party" : "parties"}</summary><div class="ui-disclosure-body">${split.rest}</div></details>` : ""}${split.notes}
     </section>` : ""}
+    ${divisionAgainstHTML(d)}
     <section class="ui-section division-block division-members" id="division-members" aria-labelledby="division-members-head" aria-busy="true">
       <h2 class="ui-section-title" id="division-members-head">Who voted which way</h2>
       <p class="ui-status-line">Reading the member list…</p>
