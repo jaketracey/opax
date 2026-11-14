@@ -23,7 +23,7 @@ const actorName=(value:string,context:string,evidence:string)=>{
   const role=new RegExp(String.raw`\b(member for [\p{L} '-]+)\s+\(${escape(held[0])}\)`,'iu').exec(context)?.[1]
   return role&&new RegExp('\\b'+escape(role)+'\\b','i').test(evidence)?held[0]:value
 }
-const negative=(before:string,after:string)=>/\b(?:cleared|exonerated|acquitted|no|not|(?:rejected|dismissed|denied) (?:claims?|allegations?))\b[^.;]{0,65}$/i.test(before)||/^\s+(?:(?:was|were)\s+not|no)\b/i.test(after)
+const negative=(before:string,after:string)=>/\b(?:cleared|exonerated|acquitted|no|not)\b[^.;]{0,65}$/i.test(before)||/^\s+(?:(?:was|were)\s+not|no)\b/i.test(after)
 const finding=(text:string)=>/\b(?:commission(?:er)?|court|inquiry|report|tribunal|ombudsman|auditor[- ]general|anao|committees?|nacc|icac|ibac|ccc|cmc)\b[^.!?;]{0,200}\b(?:found|finds|findings|concluded|determined|ruled|criticised|rejected)\b/i.test(text)
 function actors(text:string,allowColon=false,context=''):string[] {
   // A speaker, commissioner or witness is not thereby the subject of a finding.
@@ -32,12 +32,13 @@ function actors(text:string,allowColon=false,context=''):string[] {
   const before=match?text.slice(0,match.index):'',after=match?text.slice(match.index+match[0].length):''
   const role=match&&(allowColon||!/:\s*["“‘']?\s*$/.test(before))&&(action.test(after)||/\b(?:findings|conduct)\b[^.;]{0,60}\b(?:of|about|regarding|on|against)\s*$|\b(?:approved|authorised|authorized|ordered) by\s*$|\bcriticis(?:ed|es)\s*$/i.test(before))&&!negative(before,after)?match[1]:undefined
   // Colon quotations can corroborate an existing sentence, never nominate a copied lead.
-  const subjectMatch=new RegExp(String.raw`(?:^|${allowColon?':\\s*|':''}\b(?:that|found|concluded)\s+)(${name})\s+(?:approved|authorised|authorized|decided|ordered|allowed|misled|ignored|failed|breached)\b`,'u').exec(text)
-  const subject=subjectMatch&&!negative(text.slice(0,subjectMatch.index),'')?subjectMatch[1]:undefined
+  const subject=new RegExp(String.raw`(?:^|${allowColon?':\\s*|':''}\b(?:that|found|concluded)\s+)(${name})\s+(?:approved|authorised|authorized|decided|ordered|allowed|misled|ignored|failed|breached)\b`,'u').exec(text)?.[1]
   const conductMatch=new RegExp(String.raw`\b[Ff]indings (?:about|regarding|on|against) (?:the conduct of )?(${name}(?:\s+and\s+${name})?)`,'u').exec(text)
   const conduct=conductMatch&&!/\b(?:no|not|cleared|exonerated|acquitted)\b[^.;]{0,65}$/i.test(text.slice(0,conductMatch.index))&&!/^\s+(?:(?:was|were)\s+not|no)\b/i.test(text.slice(conductMatch.index+conductMatch[0].length))?conductMatch[1]:undefined
   const relativeMatch=new RegExp(String.raw`\((${name})\),\s+who\b[^.;]{0,300}?\b(?:approved|authorised|authorized|allowed|misled|ignored|failed|responsibility)\b`,'u').exec(text)
-  const relative=relativeMatch&&!negative(text.slice(0,relativeMatch.index),'')&&!/\b(?:no|not|cleared|exonerated|acquitted)\b/i.test(relativeMatch[0].slice(relativeMatch[1].length+2))?relativeMatch[1]:undefined
+  // Only negation of this person's proposition applies, never an unrelated earlier clause.
+  const cleared=relativeMatch&&/\b(?:cleared|exonerated|acquitted) (?:the )?member for \p{Lu}[\p{L}’'-]*(?: \p{Lu}[\p{L}’'-]*)*\s*$/u.test(text.slice(0,relativeMatch.index))
+  const relative=relativeMatch&&!cleared&&!/\b(?:(?:was|were|had|has) (?:not(?! only\b)|no)|cleared|exonerated|acquitted)\b/i.test(relativeMatch[0])?relativeMatch[1]:undefined
   if(role||subject||conduct||relative)return (role??subject??conduct??relative!).split(/\s+and\s+/).map(value=>actorName(value,context,text))
   if(/\b(?:approved|authorised|authorized) by Cabinet\b|\bCabinet (?:approved|authorised|authorized)\b/.test(text))return ['Cabinet']
   const office=/\b(?:the )?((?:(?:Department|Ministry) of|(?:Minister|Secretary) for) [A-Z][\p{L} ]+?(?:['’]s office)?) (?:(?:had |has )?(?:approved|authorised|ignored|failed|ran)|was responsible)\b/u.exec(text)?.[1]
@@ -60,9 +61,10 @@ export function leadWithWho<T extends Record<string,unknown>>(payload:T,question
     const held=new Set(sources.flatMap(s=>actors(evidence(s),true,answer)))
     return named.length&&named.every(actor=>held.has(actor))?[{p,sources}]:[]
   })
-  // Rank findings first without excluding an existing supported member statement.
-  const score=(text:string,ss:Source[])=>Number(finding(text))*4+Number(actors(text,true).some(a=>a!=='Cabinet'))*2+Number(ss.some(s=>s.kind==='record'))
-  candidates.sort((a,b)=>score(b.p.text,b.sources)-score(a.p.text,a.sources))
+  // Source kind comes first. Finding language only orders candidates within the same kind.
+  const recordFirst=(a:Source[],b:Source[])=>Number(b.some(s=>s.kind==='record'))-Number(a.some(s=>s.kind==='record'))
+  const score=(text:string)=>Number(finding(text))*2+Number(actors(text,true).some(a=>a!=='Cabinet'))
+  candidates.sort((a,b)=>recordFirst(a.sources,b.sources)||score(b.p.text)-score(a.p.text))
   const candidate=candidates[0]
   if(candidate){
     const {p}=candidate
@@ -74,7 +76,7 @@ export function leadWithWho<T extends Record<string,unknown>>(payload:T,question
   // The writer can omit names that are present in a cited passage. Recover only a complete source sentence
   // explicitly relating those names to the finding or decision, with the original speaker attribution.
   const held=selected.flatMap(s=>sentenceParts(evidence(s)).filter(p=>actors(p.text,false,answer).length&&(s.kind==='record'||finding(p.text))).map(p=>({s,text:p.text})))
-    .sort((a,b)=>score(b.text,[b.s])-score(a.text,[a.s]))[0]
+    .sort((a,b)=>recordFirst([a.s],[b.s])||score(b.text)-score(a.text))[0]
   if(held){
     let text=held.text.replace(/,\s*the member said[.!]?$/i,'.')
     if(held.s.kind==='speech'){
@@ -84,6 +86,8 @@ export function leadWithWho<T extends Record<string,unknown>>(payload:T,question
     }
     return prepend(payload,text,ids.filter(id=>id===held.s.resource||id.startsWith(held.s.resource+'/')))
   }
+  // Names in unsuitable source prose do not justify a claim that no source names anyone.
+  if(selected.some(s=>actors(evidence(s),true,answer).length))return leadWithAuthority(payload,question)
   const missing='The cited sources do not name a person or office as responsible.'
   const existing=parts.find(p=>p.text===missing)
   if(existing)return moveFirst(payload,existing.a,existing.b,missing)

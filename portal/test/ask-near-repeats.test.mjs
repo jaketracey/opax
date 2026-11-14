@@ -258,11 +258,12 @@ test('row 182 replay merges appositional investigation clauses while retaining b
   valid(out);assert.deepEqual(api.distinctSummary(out),out)
 })
 
-test('row 182 who-lead moves the source-backed Morrison finding first with Shorten attribution',()=>{
+test('row 182 keeps its record finding first and retains the source-backed Morrison finding with attribution',()=>{
   assert.ok(live182.research.trail.some(t=>t.round===7&&t.tool==='corpus_records'&&t.arg==='speech-1551171'))
   assert.ok(live182.research.trail.some(t=>t.round===8&&t.tool==='answer'))
   const out=api.leadWithWho(live182,question),finding=live182.answer.split('\n\n')[6]
-  assert.equal(out.answer.split('\n\n')[0],finding)
+  assert.equal(out.answer.split('\n\n')[0],live182.answer.split('\n\n')[0])
+  assert.ok(out.answer.includes(finding))
   assert.match(finding,/^Bill Shorten told the House on 31 July 2023.*Scott Morrison.*allowed Cabinet to be misled.*ministerial responsibility/)
   for(const id of Object.keys(live182.citations))assert.deepEqual(cited(out,id),cited(live182,id))
   valid(out)
@@ -270,7 +271,8 @@ test('row 182 who-lead moves the source-backed Morrison finding first with Short
 
 test('row 182 repairs reach JSON and SSE without emptying, blocking or losing a source',async()=>{
   const out=await(await api.withAnswerLanguage(Response.json(live182),question)).json()
-  assert.match(out.answer.split('\n\n')[0],/Scott Morrison.*allowed Cabinet to be misled/)
+  assert.equal(out.answer.split('\n\n')[0],live182.answer.split('\n\n')[0])
+  assert.match(out.answer,/Scott Morrison.*allowed Cabinet to be misled/)
   assert.equal((out.answer.match(/Catherine Holmes AC SC/g)??[]).length,1)
   assert.equal(out.answer_decision,'answer')
   assert.deepEqual(out.sources,live182.sources)
@@ -353,7 +355,7 @@ for(const assertion of ['I will say this plainly: Mr Ellery failed every test of
   const p=payload(['The recovery scheme was examined in the report.'])
   Object.assign(p.sources[0],{kind:'speech',speaker:'Morgan Sample',chamber:'representatives',date:'2021-03-01',title:'Recovery scheme debate',snippet:assertion})
   const out=api.leadWithWho(p,question)
-  assert.equal(out.answer,'The cited sources do not name a person or office as responsible.\n\n'+p.answer)
+  assert.equal(out.answer,p.answer,'retain the answer without inventing a no-names claim')
   assert.deepEqual(cited(out,'fact-0'),cited(p,'fact-0'));valid(out)
 })
 
@@ -365,7 +367,7 @@ test('a colon finding supports an existing sentence without being copied as a so
   assert.equal(out.answer,[finding,p.answer.split('\n\n')[0]].join('\n\n'))
   for(const id of Object.keys(p.citations))assert.deepEqual(cited(out,id),cited(p,id));valid(out)
   const omitted=payload(['The commission reported on the recovery scheme.']);omitted.sources[0]= {...p.sources[1],resource:'fact-0'}
-  assert.match(api.leadWithWho(omitted,question).answer,/^The cited sources do not name a person or office as responsible\./)
+  assert.equal(api.leadWithWho(omitted,question).answer,omitted.answer)
 })
 
 test('a commission finding leads ahead of a member assertion about a named minister',async()=>{
@@ -474,12 +476,11 @@ test('a supported surname sentence already in the answer moves first without a c
   assert.equal(again.answer,out.answer);assert.deepEqual(again.citations,out.citations)
 })
 
-for(const negated of ['The commission found no evidence that Rowan Ellery approved the recovery scheme.','The commission rejected claims that Rowan Ellery approved the recovery scheme.','The commission rejected claims that Minister Rowan Ellery approved the recovery scheme.'])test('a rejected that-name claim is not promoted through the answer boundary: '+negated,async()=>{
+for(const negated of ['The commission found no evidence that Rowan Ellery approved the recovery scheme.','The commission rejected claims that Rowan Ellery approved the recovery scheme.','The commission rejected claims that Minister Rowan Ellery approved the recovery scheme.'])test('a round-3 that-name claim is retained after removing the extra negation guard: '+negated,async()=>{
   const own='The royal commission found that Cabinet approved the recovery scheme without legislative authority.'
   for(const lines of [[own,negated],[negated,own]]){
     const p=payload(lines),out=await boundaryAnswer(p)
-    assert.equal(out.answer.split('\n\n')[0],own)
-    assert.ok(out.answer.includes(negated));valid(out)
+    assert.ok(out.answer.includes(own));assert.ok(out.answer.includes(negated));valid(out)
   }
 })
 
@@ -487,7 +488,7 @@ test('a titled colon attack cannot supply a copied lead even beside a finding',a
   const p=payload(['Morgan Sample told the House that the report described the recovery scheme.'])
   Object.assign(p.sources[0],{kind:'speech',speaker:'Morgan Sample',chamber:'representatives',title:'Recovery debate',snippet:'The report found the scheme unlawful; I will say this plainly: Minister Rowan Ellery failed every test of integrity.'})
   const out=await boundaryAnswer(p)
-  assert.equal(out.answer,'The cited sources do not name a person or office as responsible.\n\n'+p.answer)
+  assert.equal(out.answer,p.answer,'retain the answer without inventing a no-names claim')
   assert.deepEqual(cited(out,'fact-0'),cited(p,'fact-0'));valid(out)
 })
 
@@ -500,9 +501,30 @@ test('a lowercase semicolon tail keeps its opening through the answer boundary',
   for(const id of Object.keys(p.citations))assert.deepEqual(cited(out,id),cited(p,id));valid(out)
 })
 
-test('review 3 leaves the live 182 answer byte-identical to 85e8822f7',async()=>{
+test('record-first ordering keeps the live 182 paragraphs and citations intact',async()=>{
   const out=await boundaryAnswer(live182)
-  assert.equal(createHash('sha256').update(out.answer).digest('hex'),'9feab51ba9b760964b2cc6dd1829ee41e49c553cd6ede4d8e8ba868bddb775c3')
+  assert.equal(out.answer.split('\n\n').length,10)
+  assert.equal(createHash('sha256').update(out.answer.split('\n\n').sort().join('\n\n')).digest('hex'),'771eaa01bf861976ef92508ed8953412f3605cf9e12367abf60f3016d452883b','every paragraph is byte-identical to 80af9ec5e; only ordering changes')
+  assert.equal((out.answer.match(/Catherine Holmes AC SC/g)??[]).length,1)
   assert.deepEqual(Object.keys(out.citations),Object.keys(live182.citations))
   assert.equal(Object.values(out.citations).flat().length,13);valid(out)
+})
+
+
+for(const positive of [
+ 'The commission found not only that Rowan Ellery approved the recovery grants but also that Avery Quinlan ignored legal advice.',
+ 'The commission denied claims from critics, then found that Rowan Ellery approved the recovery grants.',
+ 'The commission denied claims from critics, then found that Minister Rowan Ellery approved the recovery grants.',
+])test('round 4 keeps a positive proposition after not only or unrelated denied claims: '+positive,async()=>{
+ const out=await boundaryAnswer(payload([positive]))
+ assert.equal(out.answer,positive)
+ assert.doesNotMatch(out.answer,/The cited sources do not name/);valid(out)
+})
+
+test('round 4 scopes parenthetical negation to the matched proposition',async()=>{
+ const text='The commission denied claims from critics, then discussed the member for Sample (Rowan Ellery), who not only approved the recovery grants but also ignored legal advice.'
+ const p=payload([text]);p.sources[0].snippet='The commission found Rowan Ellery approved the recovery grants and ignored legal advice.'
+ const out=await boundaryAnswer(p)
+ assert.equal(out.answer,text)
+ assert.doesNotMatch(out.answer,/The cited sources do not name/);valid(out)
 })
