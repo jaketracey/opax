@@ -74,3 +74,40 @@ test('a question that asks about lending still gets the lending answer, loan-wor
     assert.match(direct.answer, LENT, query)
   }
 })
+
+// Review note 1: a period in the question must not reach the digits inside the expanded name.
+test('the ranking route reads a year, a financial year and a range beside a "No. 2092 ... - Loan" name', async () => {
+  const ranked = question => api.rankedMoneyAnswer({question, kind: 'all'}, assets)
+  for (const [question, lead] of [
+    ['Which party got the most money from Comscrv in 2001-02?', `**Nationals** is the only party receiving **$110,000** in donations received (AEC receipt type: Donation Received), 2001–02 from ${COMSCRV}`],
+    ['Which party got the most money from Comscrv from 2001 to 2010?', `**Nationals** leads parties receiving money from ${COMSCRV}: **$489,000** in donations received (AEC receipt type: Donation Received), 2001–02 to 2008–09.`],
+  ]) {
+    const out = await ranked(question)
+    assert.equal(out.answer_status, 'calculated', question)
+    assert.ok(out.answer.startsWith(lead), `${question}\n${out.answer.slice(0, 300)}`)
+  }
+  // A year with no record keeps the held-period answer every donor gets, never the lending one.
+  const year = await ranked('Which party got the most money from Comscrv in 2019?')
+  assert.equal(year.answer_status, 'calculated')
+  assert.doesNotMatch(year.answer, LENT)
+  assert.match(year.answer, new RegExp(`^Held-period figures: \\*\\*Nationals\\*\\* leads parties receiving money from ${COMSCRV.replace(/[().]/g, '\\$&')}: \\*\\*\\${donated[COMSCRV]}\\*\\*`))
+  assert.doesNotMatch(year.answer, /from 2019 to 2092|2092–93/)
+})
+
+// Review note 2: the asker types the full disclosed name; its digits and "Loan" are not the question's.
+test('the full disclosed name typed by the asker gets its figure, with or without a period', async () => {
+  const lifetime = await askMoney(`How much has ${COMSCRV} donated to the Nationals?`)
+  assert.equal(lifetime.answer_status, 'calculated')
+  assert.ok(lifetime.answer.startsWith(`**${COMSCRV}** has **${donated[COMSCRV]}** recorded in donations received (AEC receipt type: Donation Received) to Nationals, 2001–02 to 2015–16.`), lifetime.answer.slice(0, 200))
+  const year = await askMoney(`How much did ${COMSCRV} give to the Nationals in 2001-02?`)
+  assert.equal(year.answer_status, 'calculated')
+  assert.ok(year.answer.startsWith(`**${COMSCRV}** has **$110,000** recorded in donations received (AEC receipt type: Donation Received) to Nationals, 2001–02.`), year.answer.slice(0, 200))
+})
+
+// Review note 3: one financial year is said once.
+test('a donor total for one financial year names that year once', async () => {
+  const out = await askMoney('How much did Comscrv give to the Nationals in 2019?')
+  assert.equal(out.answer_status, 'calculated')
+  assert.ok(out.answer.startsWith(`**${COMSCRV}** has **$0** recorded in donations received (AEC receipt type: Donation Received) to Nationals, in 2019–20.`), out.answer.slice(0, 200))
+  assert.doesNotMatch(out.answer, /2019–20 to 2019–20/)
+})

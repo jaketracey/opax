@@ -95,7 +95,8 @@ function exactReceiptDonors(graph:ReceiptGraph, query:string) {
 /** The question's own words, with each recognised donor name held aside. A word inside a
  * disclosed name ("Comscrv (No. 2092) Pty Ltd - Loan", "Aussie Home Loans") is the donor's
  * name, not the question's lending word or period, whether the asker or a router wrote it. */
-function asideDonorNames(graph:ReceiptGraph, query:string) {
+export function asideDonorNames(graph:ReceiptGraph, query:string):{text:string;restore:(s:string)=>string} {
+  if(!Array.isArray(graph?.nodes))return {text:query,restore:s=>s}
   const named=exactReceiptDonors(graph,normal(query)),held:string[]=[]
   let text=query
   for(const phrase of [...named.phrases??[]].sort((a,b)=>b.length-a.length)) {
@@ -218,7 +219,7 @@ function receiptTotalTo(graph:ReceiptGraph,partyId:string) {
 
 /** Sum only donor-to-party receipt edges; node totals and public-money flows never enter the sum. */
 export function receiptAnswer(graph:ReceiptGraph, query:string, jurisdiction:string, origin:string, filters: {party?:string; from?:string; to?:string; compareYears?:boolean; measure?:ReceiptMeasure} = {}) {
-  const own=Array.isArray(graph.nodes)?asideDonorNames(graph,query):{text:query,restore:(s:string)=>s}
+  const own=asideDonorNames(graph,query)
   if(lendingQuestion(own.text))return {needs_scope:true,answer:jurisdiction==='federal'?'The published records cannot establish how much was lent. Federal debt records report balances owed at 30 June, not new lending, and name only the latest year’s largest creditors. Mixed receipt totals cannot establish loan amounts.':'The receipt records cannot establish how much was lent; a separate record identifying loans and their basis is needed.',sources:jurisdiction==='federal'?[{title:'AEC debt records: balance owed at 30 June; latest year only',url:origin+'/graph/aec-extras.json'}]:[],jurisdiction}
   if(!Array.isArray(graph.nodes)||!Array.isArray(graph.edges)) return null
   // The question's own period is read into an explicit financial-year window;
