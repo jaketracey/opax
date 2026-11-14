@@ -57,7 +57,7 @@
  {
   "name": "read_record",
   "title": "Read a public record",
-  "description": "Open one record in full by its slug from search_records: a speech, press release, bill text, division, grant award or roster profile. Returns the text, metadata, the original source link and the OPAX page. Long speeches may exceed one response: read those in parts with hansard_search (record_id).",
+  "description": "Open one record in full by its slug from search_records: a speech, press release, bill text, division, grant award or roster profile. Returns the text, metadata, the original source link and the OPAX page. A long text comes in parts: pass next_text_offset back as text_offset. An unknown slug returns found: false.",
   "annotations": {
    "title": "Read a public record",
    "readOnlyHint": true,
@@ -70,6 +70,11 @@
    "properties": {
     "slug": {
      "type": "string"
+    },
+    "text_offset": {
+     "description": "Where to start reading a long text: next_text_offset from the previous part.",
+     "type": "integer",
+     "maximum": 5000000
     }
    },
    "required": [

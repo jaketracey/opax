@@ -58,7 +58,6 @@ const created = (since?: string | null, until?: string | null) => ({
 })
 const U_O = '/u/o' // origin collaborators; the public alias /origin.collaborators facets nothing
 const PARTY = '/classification.labels/party'
-const DECADE = '/classification.labels/decade'
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 
 export interface SpeechFilter {
@@ -267,12 +266,13 @@ export async function speechTrend(deps: ToolDeps, input: TrendInput): Promise<To
   const labelled = { ...f, topic: null }
   let rows: { period: string; count: number; labelled: number; share: number }[]
   if (by === 'decade' && !windowed(f)) {
-    const [c, l] = await Promise.all([
-      catalog(deps, clauses(f), [DECADE]),
-      catalog(deps, [...clauses(labelled), { prop: 'label', labelset: 'topic' }], [DECADE]),
-    ])
-    rows = buckets.map((b) => {
-      const n = c.facets[DECADE]?.[`${DECADE}/${b.period}`] ?? 0, d = l.facets[DECADE]?.[`${DECADE}/${b.period}`] ?? 0
+    // One catalog read per decade and measure. A catalog read whose filter matches much more than half a
+    // million resources never answers (the topic-page note in index.ts), and every topic-labelled speech
+    // together is past that; one decade of them stays under it, as the site's own decade reads do.
+    const reads = buckets.flatMap((b) => [[...clauses(f), label('decade', b.period)], [...clauses(labelled), { prop: 'label', labelset: 'topic' }, label('decade', b.period)]])
+    const totals = await pool(reads, 4, async (c) => (await catalog(deps, c)).total)
+    rows = buckets.map((b, i) => {
+      const n = totals[2 * i], d = totals[2 * i + 1]
       return { period: b.period, count: n, labelled: d, share: d ? +(n / d).toFixed(4) : 0 }
     })
   } else {

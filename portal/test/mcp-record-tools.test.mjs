@@ -50,13 +50,13 @@ const bytes = out => Buffer.byteLength(JSON.stringify(out));
 // ---------------------------------------------------------------- the MCP surface
 const token = 'opax_' + 'A'.repeat(43);
 const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token)))].map(v => v.toString(16).padStart(2, '0')).join('');
-function mcp(extra = {}) {
+function mcp(extra = {}, readPublic = async () => { throw Error('Record tools must not read the search API'); }) {
   const worker = { COMMUNITY_ENABLED: 'true', COMMUNITY_ORIGIN: 'https://opax.com.au', VIC_ELECTION_HUB_ENABLED: 'true', TABLE_DB: {}, ASSETS, ...extra,
     COMMUNITY_DB: { prepare(sql) { let args; return { bind(...values) { args = values; return this; },
       async first() { if (sql.startsWith('SELECT m.')) return args[0] === hash ? { id: 'fixture-member', key_id: 'fixture-key' } : null; if (sql.startsWith('INSERT INTO community_limits')) return { hits: 1 }; throw Error('Unexpected SQL'); },
       async run() { return { success: true }; } }; } } };
   return async (method, params = {}) => {
-    const response = await api.communityMcp(new Request('https://opax.com.au/mcp', { method: 'POST', headers: { authorization: 'Bearer ' + token, accept: 'application/json, text/event-stream', 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) }), worker, async () => { throw Error('Record tools must not read the search API'); });
+    const response = await api.communityMcp(new Request('https://opax.com.au/mcp', { method: 'POST', headers: { authorization: 'Bearer ' + token, accept: 'application/json, text/event-stream', 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method, params }) }), worker, readPublic);
     assert.equal(response.status, 200);
     return response.json();
   };
@@ -714,4 +714,71 @@ test('every result says record text is data; a former name says what to call ins
   // Ask's copy of the same call carries neither field.
   const ask = await call('money_totals', { party: 'Greens' });
   assert.equal('record_text_notice' in ask, false); assert.equal('deprecated' in ask, false);
+});
+
+test('speech_trend by decade reads each decade on its own, never one catalog read over every labelled speech', async () => {
+  const reads = [];
+  const kb = async (path, body) => { reads.push({ path, body }); assert.equal(path, '/catalog');
+    const and = body.filter_expression.resource.and, decade = and.find(c => c.labelset === 'decade')?.label, labelled = and.some(c => c.labelset === 'topic' && !c.label);
+    return { fulltext: { total: { '1990s': 100, '2000s': 200, '2010s': 300, '2020s': 150 }[decade] * (labelled ? 10 : 1) } }; };
+  const out = await api.callTool({ ASSETS, COMMUNITY_ORIGIN: 'https://opax.com.au', origin: 'https://opax.com.au', kb }, 'speech_trend', { topic: 'immigration', by: 'decade' });
+  assert.deepEqual(out.rows.map(r => [r.period, r.count, r.labelled, r.share]), [['1990s', 100, 1000, 0.1], ['2000s', 200, 2000, 0.1], ['2010s', 300, 3000, 0.1], ['2020s', 150, 1500, 0.1]]);
+  assert.equal(reads.length, 8);
+  for (const { body } of reads) {
+    assert.equal(body.faceted, undefined, 'no facet over the whole corpus');
+    assert.equal(body.filter_expression.resource.and.filter(c => c.labelset === 'decade' && c.label).length, 1, 'every read is anchored on one decade');
+  }
+});
+test('read_record says plainly when OPAX has no record with a slug, and reads a long text in parts', async () => {
+  const missing = (await mcp({}, async () => Response.json({ error: 'not found' }, { status: 404 }))('tools/call', { name: 'read_record', arguments: { slug: 'speech-788159' } })).result;
+  assert.equal(missing.isError, false);
+  assert.deepEqual([missing.structuredContent.found, missing.structuredContent.slug], [false, 'speech-788159']);
+  assert.match(missing.structuredContent.message, /OPAX has no record with this slug/);
+  const words = Array.from({ length: 40000 }, (_, i) => 'word' + i + (i % 50 ? '' : ' é')).join(' ');
+  const record = { slug: 'speech-788159', title: 'A long debate', speaker: 'Example Member', url: '', labels: { kind: 'speech' }, text: words };
+  const send = mcp({}, async path => { assert.equal(path, '/api/resource/speech-788159'); return Response.json(record); });
+  let offset = 0, text = '', parts = 0;
+  while (offset !== null && parts < 10) {
+    const part = (await send('tools/call', { name: 'read_record', arguments: { slug: 'speech-788159', ...(offset ? { text_offset: offset } : {}) } })).result;
+    assert.equal(part.isError, false);
+    assert.ok(Buffer.byteLength(part.content[0].text) <= 80000, 'each part fits one response');
+    const data = part.structuredContent;
+    assert.deepEqual([data.text_offset, data.text_length, data.opax_url], [offset, words.length, 'https://opax.com.au/doc/speech-788159']);
+    text += data.text; offset = data.next_text_offset; parts++;
+    if (offset !== null) assert.match(data.text_note, new RegExp('text_offset ' + offset));
+  }
+  assert.ok(parts > 1);
+  assert.equal(text, words, 'the parts join to the whole text');
+  const past = (await send('tools/call', { name: 'read_record', arguments: { slug: 'speech-788159', text_offset: words.length + 5 } })).result;
+  assert.equal(past.isError, true);
+  assert.match(past.content[0].text, /past the end/);
+  // A short record is unchanged: no paging fields.
+  const short = (await mcp({}, async () => Response.json({ ...record, text: 'A short speech.' }))('tools/call', { name: 'read_record', arguments: { slug: 'speech-788159' } })).result.structuredContent;
+  assert.equal(short.text, 'A short speech.'); assert.equal('next_text_offset' in short, false);
+});
+
+test('read_record keeps a 5xx an error, a non-resource 404 an error, and text paging always moves forward', async () => {
+  const call = (readPublic, name, args) => mcp({}, readPublic)('tools/call', { name, arguments: args }).then(r => r.result);
+  const down = await call(async () => Response.json({ error: 'boom' }, { status: 500 }), 'read_record', { slug: 'speech-788159' });
+  assert.equal(down.isError, true);
+  assert.match(down.content[0].text, /could not answer just now \(status 500\)/);
+  assert.equal(down.structuredContent?.found, undefined);
+  const none = await call(async () => Response.json({ error: 'nope' }, { status: 404 }), 'search_records', { query: 'housing' });
+  assert.equal(none.isError, true);
+  assert.match(none.content[0].text, /Nothing was found for that request/);
+  // Astral characters: parts never split a surrogate pair, and join to the whole text.
+  const emoji = '\u{1F600}'.repeat(60000), base = { slug: 'speech-788159', title: 't', url: '', labels: {} };
+  let offset = 0, joined = '', parts = 0;
+  while (offset !== null && parts < 20) {
+    const r = await call(async () => Response.json({ ...base, text: emoji }), 'read_record', { slug: 'speech-788159', ...(offset ? { text_offset: offset } : {}) });
+    assert.equal(r.isError, false); const d = r.structuredContent;
+    assert.ok(!/[\ud800-\udbff]$/.test(d.text) && !/^[\udc00-\udfff]/.test(d.text), 'no split pair');
+    if (d.next_text_offset !== null) assert.ok(d.next_text_offset > offset, 'progress');
+    joined += d.text; offset = d.next_text_offset; parts++;
+  }
+  assert.equal(joined, emoji);
+  // No room beside the other fields: an error, never the same offset again.
+  const crowded = await call(async () => Response.json({ ...base, title: 'x'.repeat(90000), text: 'some words here' }), 'read_record', { slug: 'speech-788159' });
+  assert.equal(crowded.isError, true);
+  assert.match(crowded.content[0].text, /no room/);
 });
