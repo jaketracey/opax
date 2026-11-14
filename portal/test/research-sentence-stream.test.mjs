@@ -178,25 +178,64 @@ test('who lead: a speech-cited subject stays held until the record finding about
   assert.ok(done.answer.startsWith(supported))
 })
 
-test('who lead: with no source naming anyone, the "do not name" line and the settled on-topic finding stream, and earlier context stays held',async()=>{
+test('who lead: with no source naming anyone, the "do not name" line is held until done, since a later point may still name someone',async()=>{
   const q='Who was responsible for robodebt?',deltas=[],stream=api.researchSentenceStream(q,async text=>deltas.push(text))
   const context='Robin Example said the government ignored warnings.',unrelated='The NACC found officials mishandled a referral.',finding='The Royal Commission into Robodebt found the scheme was unlawful.',later='The report recommended changes.'
   const unnamed=answer=>({...payload(answer),research:{who_basis:api.whoBasis([])}})
-  await stream.preview(unnamed(context))
-  await stream.preview(unnamed(context+'\n'+unrelated))
-  assert.deepEqual(deltas,[],'an off-topic finding cannot settle the authority order')
-  await stream.preview(unnamed(context+'\n'+unrelated+'\n'+finding))
-  assert.equal(deltas.join(''),api.UNNAMED_WHO_LEAD+'\n\n'+finding)
-  await stream.preview(unnamed(context+'\n'+unrelated+'\n'+finding+'\n'+later))
-  assert.equal(deltas.join(''),api.UNNAMED_WHO_LEAD+'\n\n'+finding,'only the settled lead is released before completion')
+  for(const answer of [context,context+'\n'+unrelated,context+'\n'+unrelated+'\n'+finding,context+'\n'+unrelated+'\n'+finding+'\n'+later])await stream.preview(unnamed(answer))
+  assert.deepEqual(deltas,[],'the line leads only if no sentence of the whole answer names anyone')
   const {events,done,plain,client}=await whoFinish(q,deltas,payload(context+'\n'+unrelated+'\n'+finding+'\n'+later))
   assert.equal(events.some(e=>e.event==='retry'),false)
   assert.equal(client,done.answer)
   assert.equal(done.answer,plain.answer)
+  assert.ok(done.answer.startsWith(api.UNNAMED_WHO_LEAD+'\n\n'+finding),'a genuinely unnamed answer still opens on the line, then the finding')
+})
+
+test('who lead: once a point names someone the line cannot lead, so the settled on-topic finding streams and earlier context stays held',async()=>{
+  const q='Who was responsible for robodebt?',deltas=[],stream=api.researchSentenceStream(q,async text=>deltas.push(text))
+  const context='Robin Example said the government ignored warnings.',named='Scott Morrison took the proposal to Cabinet in 2015.',unrelated='The NACC found officials mishandled a referral.',finding='The Royal Commission into Robodebt found the scheme was unlawful.'
+  const unnamed=answer=>({...payload(answer),research:{who_basis:api.whoBasis([])}})
+  await stream.preview(unnamed(context))
+  await stream.preview(unnamed(context+'\n'+named))
+  await stream.preview(unnamed(context+'\n'+named+'\n'+unrelated))
+  assert.deepEqual(deltas,[],'an off-topic finding cannot settle the authority order')
+  await stream.preview(unnamed(context+'\n'+named+'\n'+unrelated+'\n'+finding))
+  assert.equal(deltas.join(''),finding,'only the settled lead is released before completion, with no "do not name" line')
+  const {events,done,plain,client}=await whoFinish(q,deltas,payload(context+'\n'+named+'\n'+unrelated+'\n'+finding))
+  assert.equal(events.some(e=>e.event==='retry'),false)
+  assert.equal(client,done.answer)
+  assert.equal(done.answer,plain.answer)
+  assert.ok(!done.answer.includes(api.UNNAMED_WHO_LEAD))
   // Without a summary of the sources still available, a later point could name someone: nothing is released.
   const held=[],blind=api.researchSentenceStream(q,async text=>held.push(text))
-  await blind.preview(payload(context+'\n'+unrelated+'\n'+finding))
+  await blind.preview(payload(context+'\n'+named+'\n'+unrelated+'\n'+finding))
   assert.deepEqual(held,[])
+})
+
+test('who lead: an opening that shaping changed (a speech-cited finding attributed, an off-topic finding promoted) waits for the on-topic finding',async()=>{
+  // Review case A1: the raw first point is a finding, so it raises no hold, but it is cited only to a member's speech.
+  const q='Who was responsible for robodebt?'
+  const spoken=whoSource('speech-a1','The Royal Commission found the scheme was unlawful.','speech',{speaker:'Avery Quinlan',chamber:'senate',date:'2024-02-01'})
+  const ferry=whoSource('bill-a1','The NACC found Scott Morrison was told of corrupt conduct in the ferry contracts.','bill',{title:'Ferry contracts bill'})
+  const robodebt=whoSource('bill-a1c','The Royal Commission found robodebt was a crude and cruel mechanism.','bill',{title:'Robodebt bill'})
+  const sources=[spoken,ferry,robodebt],lines=[spoken.snippet,ferry.snippet,robodebt.snippet]
+  const draft=k=>{
+    const answer=lines.slice(0,k).join('\n'),citations={}
+    let at=0
+    for(let i=0;i<k;i++){Object.assign(citations,cite(sources[i].resource,lines[i],at));at+=lines[i].length+1}
+    return payload(answer,sources.slice(0,k),citations)
+  }
+  const deltas=[],stream=api.researchSentenceStream(q,async text=>deltas.push(text))
+  await stream.preview(withBasis(draft(1),sources))
+  await stream.preview(withBasis(draft(2),sources))
+  assert.deepEqual(deltas,[],'the promoted ferry finding is off topic and a later on-topic finding would replace it')
+  await stream.preview(withBasis(draft(3),sources))
+  assert.equal(deltas.join(''),robodebt.snippet)
+  const {events,done,plain,client}=await whoFinish(q,deltas,draft(3))
+  assert.equal(events.some(e=>e.event==='retry'),false)
+  assert.equal(client,done.answer)
+  assert.equal(done.answer,plain.answer)
+  assert.ok(done.answer.startsWith(robodebt.snippet))
 })
 
 test('duplicate removal preserves line breaks without resetting the released prefix',async()=>{
@@ -453,8 +492,8 @@ test('eligible loop points stream before the answer arguments finish, with no ex
   assert.equal(api.checkedAnswerPayload({...run.qualitative,research:{mode:'loop'}},question,false,stream.released).answer,deltas.join(''))
 })
 
-test('who loop points stream the decided "do not name" lead before the answer arguments finish',async()=>{
-  const q='Who was responsible for the housing delays?',first='The housing report found planning rules slowed approvals.',second='The report recommended simpler planning rules.'
+test('who loop points naming someone stream their settled finding, with no "do not name" line, before the answer arguments finish',async()=>{
+  const q='Who was responsible for the housing delays?',first='The housing report found Scott Morrison was told planning rules slowed approvals.',second='The report recommended simpler planning rules.'
   const gate=deferred(),heard=deferred(),deltas=[]
   let raw=''
   const model=scriptedResearchModel([{tool_calls:[call('search',{query:'housing report'},'search')]},{tool_calls:[call('answer',{points:[{claim:first},{claim:second}]},'answer')]}],{
@@ -466,7 +505,7 @@ test('who loop points stream the decided "do not name" lead before the answer ar
   const running=api.runAgentic(q,{asset:async()=>null,kb:async()=>({resources:{},fulltext:{total:0,facets:{}}}),generate:async()=>{throw Error('planner must not run')},research},progress,40_000,api.inferPeriod(q),{},emptyScope)
   try{
     await Promise.race([heard.promise,new Promise((_,reject)=>setTimeout(()=>reject(Error('the who lead stayed held without the loop source summary')),1000))])
-    assert.equal(deltas.join(''),api.UNNAMED_WHO_LEAD+'\n\n'+first)
+    assert.equal(deltas.join(''),first)
   }finally{gate.resolve()}
   const run=await running
   assert.equal(model.calls.length,2)
@@ -722,4 +761,16 @@ for(const truncated of [false,true])test(`a call crossing into its last six seco
   assert.doesNotMatch(out.events.at(-1).data.answer,/UNCHECKED/)
   assert.equal(model.calls.length,2)
   assert.equal(out.run.research.answer_stats.salvaged,truncated?'error':undefined)
+})
+
+test('who lead: a cited source naming only a title and surname keeps a moved lead held, since later text can resolve that name',()=>{
+  // Review case B1: a later sentence giving "member for Kooyong (Josh Frydenberg)" makes the earlier sentence a
+  // supported candidate at the same rank, and it would then outrank the released lead.
+  const short=whoSource('bill-b0','The Example Inquiry found Mr Frydenberg approved the Example scheme. The member for Kooyong was treasurer.','bill')
+  const full=whoSource('bill-b1','The Example Inquiry found Minister Jane Example approved the Example scheme.','bill')
+  const lead='The Example Inquiry found Minister Jane Example approved the Example scheme.',earlier='The Example Inquiry found Josh Frydenberg approved the Example scheme.'
+  const p=payload(lead+'\n'+earlier,[short,full],{...cite('bill-b1',lead),...cite('bill-b0',earlier,lead.length+1)})
+  assert.equal(api.settledWhoLead(p,who,{unnamed:false,subjects:true,record:false}),false)
+  const plain=payload(lead,[full],cite('bill-b1',lead))
+  assert.equal(api.settledWhoLead(plain,who,{unnamed:false,subjects:true,record:false}),true,'without the short name the lead is settled')
 })

@@ -47,6 +47,27 @@ function actors(text:string,allowColon=false,context=''):string[] {
 
 /** The lead a who-answer takes when no cited source names a person or office. */
 export const UNNAMED_WHO_LEAD='The cited sources do not name a person or office as responsible.'
+// A name followed by its speech verb, possibly after a bracket or an apposition, attributes words; it names no subject.
+const speaking=/^\s*(?:\([^)]*\)\s*)?(?:,[^,.]{1,80},\s*)?(?:told|said|says|claimed|argued|alleged|accused|asked|stated|noted|warned|described|called|moved)\b/
+let roster:{full:Set<string>;surnames:Set<string>}|undefined
+/** Whether a sentence names a person or office other than as a speaker: a subject actors() reads, an office ("the
+ * Department of …", "the Minister for …"), a role with a name, a member's full name, or a title with a member's surname. */
+export function namesSomeone(text:string):boolean {
+  const named=(at:number,length:number)=>!speaking.test(text.slice(at+length))
+  if(actors(text,true).length)return true
+  for(const m of text.matchAll(/\b(?:(?:Department|Ministry) of|(?:Minister|Secretary) for) \p{Lu}[\p{L}’'-]*(?:['’]s office)?/gu))if(named(m.index!,m[0].length))return true
+  roster??={full:new Set(publicNames),surnames:new Set(publicNames.map(n=>n.split(/\s+/).at(-1)!))}
+  for(const m of text.matchAll(new RegExp(namedRole.source,'gu')))if(named(m.index!,m[0].length))return true
+  for(const m of text.matchAll(new RegExp(name,'gu'))){
+    const words=m[0].split(/\s+/)
+    for(let i=0;i<words.length;i++)for(let j=i+2;j<=words.length;j++){
+      const full=words.slice(i,j).join(' '),owner=full.replace(/['’]s$/,'')
+      if((roster.full.has(full)||roster.full.has(owner))&&named(m.index!+m[0].indexOf(full),full.length))return true
+    }
+  }
+  for(const m of text.matchAll(/\b(?:Mr|Ms|Mrs|Dr|Sir|Senator)\.?\s+(\p{Lu}[\p{L}’'-]+)/gu))if(roster.surnames.has(m[1].replace(/['’]s$/,''))&&named(m.index!,m[0].length))return true
+  return false
+}
 const evidenceOf=(s:Source)=>[s.snippet,s.title].filter(Boolean).join('\n')
 const honorific=/^(?:Mr|Ms|Mrs|Dr|Sir)\.?\s/
 
@@ -84,6 +105,10 @@ export function settledWhoLead(payload:Record<string,unknown>,question:string,ba
   const held=new Set(sources.flatMap(s=>actors(evidenceOf(s),true,answer)))
   if(!named.map(value=>actorName(value,answer,answer)).every(actor=>held.has(actor)))return false
   if(basis.record&&!sources.some(s=>s.kind==='record')||!finding(first.text)||basis.subjects&&!named.some(actor=>actor!=='Cabinet'))return false
+  // A cited source naming a title and surname can still resolve to a member once later text gives the full name, and
+  // that earlier sentence then outranks this lead at the same rank.
+  const cited=((Array.isArray(payload.sources)?payload.sources:[]) as Source[]).filter(s=>!s.coverage&&Object.keys(citations).some(id=>id===s.resource||id.startsWith(s.resource+'/')))
+  if(cited.some(s=>actors(evidenceOf(s),true,answer).some(actor=>honorific.test(actor))))return false
   return leadWithWho(payload,question).answer===answer
 }
 
@@ -133,6 +158,8 @@ export function leadWithWho<T extends Record<string,unknown>>(payload:T,question
   const missing=UNNAMED_WHO_LEAD
   const existing=parts.find(p=>p.text===missing)
   if(existing)return moveFirst(payload,existing.a,existing.b,missing)
+  // An answer that itself names someone would contradict the line, cited or not.
+  if(parts.some(p=>namesSomeone(p.text)))return leadWithAuthority(payload,question)
   return prepend(leadWithAuthority(payload,question),missing,[])
 }
 
