@@ -19,7 +19,7 @@ try {
   }
   // The graph and the renderer are independent downloads. Start both together.
   const [{ mountMoneyMap }, data] = await Promise.all([
-    import('/money-map.js?v=7df361d5b7'),
+    import('/money-map.js?v=d9bb28774d'),
     fetch(state ? state[0] : '/graph/money.json', {cache: 'no-cache'}).then(response => {
       if (!response.ok) throw new Error('Map data unavailable')
       return response.json()
