@@ -150,7 +150,7 @@ def complete(state: dict, day: date, selected: str, commit: str) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=("plan", "attempt", "complete", "pending"))
+    parser.add_argument("action", choices=("plan", "preview", "attempt", "complete", "pending"))
     parser.add_argument("--state", type=Path, required=True)
     parser.add_argument("--date", type=date.fromisoformat, default=sydney_day())
     parser.add_argument("--force", default="")
@@ -164,6 +164,10 @@ def main() -> int:
             selected = plan(state, args.date, args.force, args.frl_dow)
             write_state(args.state, state)
             print(" ".join(selected))
+        elif args.action == "preview":
+            # The same selection as plan, without writing the state file: the
+            # nightly reads it before the refresh to decide the backfill skip.
+            print(" ".join(plan(state, args.date, args.force, args.frl_dow)))
         elif args.action in ("attempt", "complete"):
             if args.action == "attempt":
                 attempt(state, args.date, args.groups)

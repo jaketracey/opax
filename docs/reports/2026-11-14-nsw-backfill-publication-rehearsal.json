@@ -1,0 +1,10 @@
+{
+  "mode": "offline mocked publication, no KB network calls",
+  "documents": 528,
+  "repeat_documents": 0,
+  "counters_gets": 2,
+  "held_turns": 249,
+  "held_days": 4,
+  "tag": "origin/backfill-2026-11",
+  "simulated_bytes_added": 21120000
+}

@@ -1,0 +1,1430 @@
+{
+  "version": 1,
+  "source": "https://data.openaustralia.org.au/scrapedxml/senate_debates/",
+  "index_sha256": "9042647881c6d569401bda85b1767f55ae902d1a9aa6974812c7d9d9701c6faa",
+  "index_cached_at": "2026-10-10",
+  "start": "2014-01-01",
+  "end": "2019-06-30",
+  "days": [
+    {
+      "chamber": "senate",
+      "date": "2014-02-11",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-02-11.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-02-12",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-02-12.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-02-13",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-02-13.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-03-03",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-03-03.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-03-04",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-03-04.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-03-05",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-03-05.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-03-06",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-03-06.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-03-17",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-03-17.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-03-18",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-03-18.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-03-19",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-03-19.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-03-20",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-03-20.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-03-24",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-03-24.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-03-25",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-03-25.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-03-26",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-03-26.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-03-27",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-03-27.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-05-13",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-05-13.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-05-14",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-05-14.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-05-15",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-05-15.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-06-16",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-06-16.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-06-17",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-06-17.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-06-18",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-06-18.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-06-19",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-06-19.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-06-23",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-06-23.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-06-24",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-06-24.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-06-25",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-06-25.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-06-26",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-06-26.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-07-07",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-07-07.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-07-08",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-07-08.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-07-09",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-07-09.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-07-10",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-07-10.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-07-14",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-07-14.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-07-15",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-07-15.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-07-16",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-07-16.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-07-17",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-07-17.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-08-26",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-08-26.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-08-27",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-08-27.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-08-28",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-08-28.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-09-01",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-09-01.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-09-02",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-09-02.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-09-03",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-09-03.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-09-04",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-09-04.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-09-22",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-09-22.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-09-23",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-09-23.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-09-24",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-09-24.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-09-25",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-09-25.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-09-30",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-09-30.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-10-01",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-10-01.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-10-02",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-10-02.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-10-27",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-10-27.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-10-28",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-10-28.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-10-29",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-10-29.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-10-30",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-10-30.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-11-17",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-11-17.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-11-18",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-11-18.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-11-19",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-11-19.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-11-24",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-11-24.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-11-25",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-11-25.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-11-26",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-11-26.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-11-27",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-11-27.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-12-01",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-12-01.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-12-02",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-12-02.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-12-03",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-12-03.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2014-12-04",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2014-12-04.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-02-09",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-02-09.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-02-10",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-02-10.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-02-11",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-02-11.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-02-12",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-02-12.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-03-02",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-03-02.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-03-03",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-03-03.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-03-04",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-03-04.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-03-05",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-03-05.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-03-16",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-03-16.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-03-17",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-03-17.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-03-18",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-03-18.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-03-19",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-03-19.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-03-23",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-03-23.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-03-24",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-03-24.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-03-25",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-03-25.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-03-26",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-03-26.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-05-11",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-05-11.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-05-12",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-05-12.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-05-13",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-05-13.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-05-14",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-05-14.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-06-15",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-06-15.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-06-16",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-06-16.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-06-17",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-06-17.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-06-18",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-06-18.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-06-22",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-06-22.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-06-23",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-06-23.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-06-24",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-06-24.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-06-25",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-06-25.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-08-10",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-08-10.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-08-11",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-08-11.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-08-12",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-08-12.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-08-13",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-08-13.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-08-17",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-08-17.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-08-18",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-08-18.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-08-19",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-08-19.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-08-20",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-08-20.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-09-07",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-09-07.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-09-08",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-09-08.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-09-09",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-09-09.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-09-10",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-09-10.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-09-14",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-09-14.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-09-15",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-09-15.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-09-16",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-09-16.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-09-17",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-09-17.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-10-12",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-10-12.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-10-13",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-10-13.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-10-14",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-10-14.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-10-15",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-10-15.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-11-09",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-11-09.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-11-10",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-11-10.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-11-11",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-11-11.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-11-12",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-11-12.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-11-23",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-11-23.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-11-24",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-11-24.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-11-25",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-11-25.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-11-26",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-11-26.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-11-30",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-11-30.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-12-01",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-12-01.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-12-02",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-12-02.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2015-12-03",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2015-12-03.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-02-02",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-02-02.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-02-03",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-02-03.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-02-04",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-02-04.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-02-22",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-02-22.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-02-23",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-02-23.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-02-24",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-02-24.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-02-25",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-02-25.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-02-29",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-02-29.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-03-01",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-03-01.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-03-02",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-03-02.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-03-03",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-03-03.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-03-15",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-03-15.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-03-16",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-03-16.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-03-17",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-03-17.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-04-18",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-04-18.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-04-19",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-04-19.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-05-02",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-05-02.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-05-03",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-05-03.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-05-04",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-05-04.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-08-30",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-08-30.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-08-31",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-08-31.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-09-01",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-09-01.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-09-12",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-09-12.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-09-13",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-09-13.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-09-14",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-09-14.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-09-15",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-09-15.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-10-10",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-10-10.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-10-11",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-10-11.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-10-12",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-10-12.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-10-13",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-10-13.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-11-07",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-11-07.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-11-08",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-11-08.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-11-09",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-11-09.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-11-10",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-11-10.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-11-21",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-11-21.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-11-22",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-11-22.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-11-23",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-11-23.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-11-24",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-11-24.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-11-28",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-11-28.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-11-29",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-11-29.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-11-30",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-11-30.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2016-12-01",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2016-12-01.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-02-07",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-02-07.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-02-08",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-02-08.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-02-09",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-02-09.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-02-13",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-02-13.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-02-14",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-02-14.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-02-15",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-02-15.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-02-16",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-02-16.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-03-20",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-03-20.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-03-21",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-03-21.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-03-22",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-03-22.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-03-23",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-03-23.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-03-27",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-03-27.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-03-28",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-03-28.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-03-29",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-03-29.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-03-30",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-03-30.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-05-09",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-05-09.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-05-10",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-05-10.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-05-11",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-05-11.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-06-13",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-06-13.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-06-14",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-06-14.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-06-15",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-06-15.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-06-19",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-06-19.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-06-20",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-06-20.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-06-21",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-06-21.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-06-22",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-06-22.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-08-08",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-08-08.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-08-09",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-08-09.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-08-10",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-08-10.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-08-14",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-08-14.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-08-15",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-08-15.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-08-16",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-08-16.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-08-17",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-08-17.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-09-04",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-09-04.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-09-05",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-09-05.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-09-06",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-09-06.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-09-07",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-09-07.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-09-11",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-09-11.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-09-12",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-09-12.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-09-13",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-09-13.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-09-14",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-09-14.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-10-16",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-10-16.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-10-17",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-10-17.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-10-18",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-10-18.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-10-19",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-10-19.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-11-13",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-11-13.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-11-14",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-11-14.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-11-15",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-11-15.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-11-16",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-11-16.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-11-27",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-11-27.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-11-28",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-11-28.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-11-29",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-11-29.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-11-30",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-11-30.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-12-04",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-12-04.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-12-05",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-12-05.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-12-06",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-12-06.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2017-12-07",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2017-12-07.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-02-05",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-02-05.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-02-06",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-02-06.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-02-07",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-02-07.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-02-08",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-02-08.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-02-12",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-02-12.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-02-13",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-02-13.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-02-14",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-02-14.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-02-15",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-02-15.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-03-19",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-03-19.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-03-20",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-03-20.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-03-21",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-03-21.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-03-22",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-03-22.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-03-26",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-03-26.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-03-27",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-03-27.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-03-28",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-03-28.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-05-08",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-05-08.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-05-09",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-05-09.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-05-10",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-05-10.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-06-18",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-06-18.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-06-19",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-06-19.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-06-20",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-06-20.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-06-21",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-06-21.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-06-25",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-06-25.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-06-26",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-06-26.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-06-27",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-06-27.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-06-28",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-06-28.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-08-13",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-08-13.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-08-14",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-08-14.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-08-15",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-08-15.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-08-16",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-08-16.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-08-20",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-08-20.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-08-21",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-08-21.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-08-22",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-08-22.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-08-23",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-08-23.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-09-10",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-09-10.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-09-11",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-09-11.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-09-12",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-09-12.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-09-13",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-09-13.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-09-17",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-09-17.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-09-18",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-09-18.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-09-19",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-09-19.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-09-20",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-09-20.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-10-15",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-10-15.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-10-16",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-10-16.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-10-17",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-10-17.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-10-18",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-10-18.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-11-12",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-11-12.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-11-13",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-11-13.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-11-14",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-11-14.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-11-15",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-11-15.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-11-26",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-11-26.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-11-27",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-11-27.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-11-28",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-11-28.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-11-29",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-11-29.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-12-03",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-12-03.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-12-04",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-12-04.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-12-05",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-12-05.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2018-12-06",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2018-12-06.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2019-02-12",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2019-02-12.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2019-02-13",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2019-02-13.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2019-02-14",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2019-02-14.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2019-04-02",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2019-04-02.xml"
+    },
+    {
+      "chamber": "senate",
+      "date": "2019-04-03",
+      "url": "https://data.openaustralia.org.au/scrapedxml/senate_debates/2019-04-03.xml"
+    }
+  ]
+}

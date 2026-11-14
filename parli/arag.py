@@ -24,6 +24,8 @@ which scripts/arag_provision.py gates behind cost approval.
 """
 
 import json
+from contextlib import contextmanager
+from contextvars import ContextVar
 import os
 import time
 from dataclasses import dataclass
@@ -37,6 +39,26 @@ DEFAULT_ZONE = "aws-ap-southeast-2-1"
 # Transient statuses worth retrying (backpressure 429 is handled separately).
 _RETRY_STATUSES = {500, 502, 503, 504}
 _MAX_RETRIES = 6
+_TRANSIENT_RETRIES = 3  # repair requests: backoff 30 s, 2 min, 10 min (backfill_guard)
+_RESPONSE_OBSERVER = ContextVar('progress_response_observer', default=None)
+_RETRY_WAIT = ContextVar('progress_transient_wait', default=None)
+
+
+@contextmanager
+def observe_responses(callback, transient_wait=None):
+    """Bounded, fail-closed repair requests; normal requests keep their policy.
+
+    `transient_wait(n)` gives the seconds to wait before transient retry n+1
+    (a 5xx, timeout or connection reset) and raises to stop cleanly when the
+    wait would pass the backfill cutoff. Without it nothing is retried.
+    """
+    token = _RESPONSE_OBSERVER.set(callback)
+    waiter = _RETRY_WAIT.set(transient_wait)
+    try:
+        yield
+    finally:
+        _RETRY_WAIT.reset(waiter)
+        _RESPONSE_OBSERVER.reset(token)
 
 
 def rag_base(zone: str) -> str:
@@ -94,6 +116,11 @@ def _request(
     told (capped 15 min/cycle, 24 h total per request) instead of failing."""
     attempt = 0
     bp_waited = 0.0
+    observer = _RESPONSE_OBSERVER.get()
+    waiter = _RETRY_WAIT.get() if observer else None
+    transient = 0
+    if observer:
+        timeout, max_retries = min(timeout, 20), 0
     while True:
         try:
             res = requests.request(
@@ -102,12 +129,34 @@ def _request(
                 timeout=timeout,
             )
         except requests.RequestException as e:
+            if waiter:
+                if transient < _TRANSIENT_RETRIES:
+                    time.sleep(waiter(transient))
+                    transient += 1
+                    continue
+                observer(0, "network error", final=True)
             if attempt >= max_retries:
                 raise AragError(0, url, f"network error: {e}") from e
             time.sleep(min(2 ** attempt, 60))
             attempt += 1
             continue
 
+        if observer:
+            if waiter and res.status_code >= 500 and transient < _TRANSIENT_RETRIES:
+                # Refusal wording still stops at once; only the status waits.
+                observer(res.status_code, res.text, final=False)
+                time.sleep(waiter(transient))
+                transient += 1
+                continue
+            observer(res.status_code, res.text)
+        elif not res.ok and os.environ.get('OPAX_BACKFILL_STATE_DIR'):
+            # Ordinary refresh requests also close the shared repair gate on
+            # quota/billing refusal, without changing their own failure policy.
+            from parli.ingest.backfill_guard import Guard, Stopped
+            try:
+                Guard().response(res.status_code, res.text, guarded=False)
+            except Stopped:
+                pass
         if res.ok:
             if res.status_code == 204 or not res.content:
                 return None
