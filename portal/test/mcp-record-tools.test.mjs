@@ -726,3 +726,29 @@ test('read_record says plainly when OPAX has no record with a slug, and reads a 
   const short = (await mcp({}, async () => Response.json({ ...record, text: 'A short speech.' }))('tools/call', { name: 'read_record', arguments: { slug: 'speech-788159' } })).result.structuredContent;
   assert.equal(short.text, 'A short speech.'); assert.equal('next_text_offset' in short, false);
 });
+
+test('read_record keeps a 5xx an error, a non-resource 404 an error, and text paging always moves forward', async () => {
+  const call = (readPublic, name, args) => mcp({}, readPublic)('tools/call', { name, arguments: args }).then(r => r.result);
+  const down = await call(async () => Response.json({ error: 'boom' }, { status: 500 }), 'read_record', { slug: 'speech-788159' });
+  assert.equal(down.isError, true);
+  assert.match(down.content[0].text, /could not answer just now \(status 500\)/);
+  assert.equal(down.structuredContent?.found, undefined);
+  const none = await call(async () => Response.json({ error: 'nope' }, { status: 404 }), 'search_records', { query: 'housing' });
+  assert.equal(none.isError, true);
+  assert.match(none.content[0].text, /Nothing was found for that request/);
+  // Astral characters: parts never split a surrogate pair, and join to the whole text.
+  const emoji = '\u{1F600}'.repeat(60000), base = { slug: 'speech-788159', title: 't', url: '', labels: {} };
+  let offset = 0, joined = '', parts = 0;
+  while (offset !== null && parts < 20) {
+    const r = await call(async () => Response.json({ ...base, text: emoji }), 'read_record', { slug: 'speech-788159', ...(offset ? { text_offset: offset } : {}) });
+    assert.equal(r.isError, false); const d = r.structuredContent;
+    assert.ok(!/[\ud800-\udbff]$/.test(d.text) && !/^[\udc00-\udfff]/.test(d.text), 'no split pair');
+    if (d.next_text_offset !== null) assert.ok(d.next_text_offset > offset, 'progress');
+    joined += d.text; offset = d.next_text_offset; parts++;
+  }
+  assert.equal(joined, emoji);
+  // No room beside the other fields: an error, never the same offset again.
+  const crowded = await call(async () => Response.json({ ...base, title: 'x'.repeat(90000), text: 'some words here' }), 'read_record', { slug: 'speech-788159' });
+  assert.equal(crowded.isError, true);
+  assert.match(crowded.content[0].text, /no room/);
+});

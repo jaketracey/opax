@@ -54,6 +54,8 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
     while(low<high){const mid=Math.ceil((low+high)/2);if(fits(mid))low=mid;else high=mid-1}
     let end=low
     if(end<text.length){const space=text.lastIndexOf(' ',end);if(space>textOffset+(end-textOffset)/2)end=space;const code=text.charCodeAt(end-1);if(code>=0xd800&&code<=0xdbff)end--}
+    // A part must always move forward: if nothing fits beside the record's other fields, say so rather than return the same offset.
+    if(end<=textOffset)return {content:[{type:'text' as const,text:JSON.stringify({error:'This record\'s other fields leave no room for its text in one response. Open the url.',url:data.opax_url})}],isError:true}
     data.text=text.slice(textOffset,end);data.text_offset=textOffset;data.text_length=text.length;data.next_text_offset=end<text.length?end:null
     if(end<text.length)data.text_note='The text continues. Call read_record with this slug and text_offset '+end+' for the next part.'
    }
