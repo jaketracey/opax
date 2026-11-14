@@ -1,7 +1,8 @@
 /** Recorded divisions, using the same published index, detail files and table as the division pages. */
 import { tokens, normalize } from '../catalog-query.mjs'
 import { clip, fold, siteUrl, tableRows } from './record-common'
-import { aggregateDivisions, isDivisionParty, resolveDivisionParty, type DivisionSummary } from './division-aggregates'
+import { aggregateDivisions, resolveDivisionParty, type DivisionSummary } from './division-aggregates'
+import { againstPartyMembers, partyMajorities } from '../../public/division-against-party.js'
 import { readToolAsset, type ToolArgs, type ToolDefinition, type ToolEnv, type ToolCitation } from './types'
 import { policyVotes } from './division-policy'
 
@@ -19,7 +20,6 @@ const keyOf = (id: string) => id.replace(/^division-/, '')
 const CHAMBERS: Record<string, string> = { senate: 'Senate', representatives: 'House of Representatives', nsw_la: 'NSW Legislative Assembly', nsw_lc: 'NSW Legislative Council', vic_la: 'Victorian Legislative Assembly', vic_lc: 'Victorian Legislative Council', qld_la: 'Queensland Legislative Assembly', sa_ha: 'South Australian House of Assembly', sa_lc: 'South Australian Legislative Council', act_la: 'ACT Legislative Assembly', nt_la: 'Northern Territory Legislative Assembly', wa_la: 'Western Australian Legislative Assembly', wa_lc: 'Western Australian Legislative Council', tas_ha: 'Tasmanian House of Assembly', tas_lc: 'Tasmanian Legislative Council' }
 const chamberOf = (row: { key: string; house?: string }) => row.house ?? (row.key.startsWith('federal-') ? row.key.split('-')[1] : row.key.split('-').slice(0, 2).join('_'))
 const chamberName = (chamber: string) => CHAMBERS[chamber] ?? chamber
-const majority = (ayes: number, noes: number) => ayes === noes ? null : ayes > noes ? 'aye' as const : 'no' as const
 const partyKey = (value: string) => fold(resolveDivisionParty(value, []))
 const titleMatches = (name: string, query: string) => {
   const held = tokens(name)
@@ -39,17 +39,8 @@ const notes = [
 
 function detailRow(env: ToolEnv, division: DivisionFile, args: ToolArgs) {
   const members = (division.members ?? []).map(m => ({ name: m.name, party: m.party || null, vote: m.vote }))
-  const parties = [...new Set(members.flatMap(m => m.party ? [m.party] : []))].sort()
-  const party_majorities = parties.map(party => {
-    const votes = members.filter(m => m.party === party)
-    const ayes = votes.filter(m => m.vote === 'aye').length, noes = votes.filter(m => m.vote === 'no').length
-    return { party, ayes, noes, majority: isDivisionParty(party) ? majority(ayes, noes) : null }
-  })
-  const crossed_floor = members.flatMap(m => {
-    const party = party_majorities.find(p => p.party === m.party)
-    return party && party.ayes + party.noes >= 5 && party.majority && ['aye', 'no'].includes(m.vote) && m.vote !== party.majority
-      ? [{ ...m, party_vote: party.majority }] : []
-  }).sort((a, b) => a.name.localeCompare(b.name))
+  const party_majorities = partyMajorities(members)
+  const crossed_floor = againstPartyMembers(members, party_majorities)
   const ayes = count(division.ayes), noes = count(division.noes)
   const outcome = division.result === 'affirmative' ? 'passed' : division.result === 'negative' ? 'defeated' : ayes !== null && noes !== null ? ayes > noes ? 'passed' : 'defeated' : null
   const unknown_party_members = members.filter(m => !m.party).length

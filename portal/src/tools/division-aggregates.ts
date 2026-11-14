@@ -18,11 +18,9 @@ export interface DivisionSummary {
 type PartyTally = DivisionSummary['party_tallies'][number]
 type Direction = 'aye' | 'no'
 
-/** Independents and presiding-officer labels do not describe a coherent party. The export no longer
- * publishes office codes as parties (scripts/division_rules.py); this still refuses them. */
-export function isDivisionParty(party: string): boolean {
-  return !!party.trim() && !/^(independents?|unknown(?: party)?|unaffiliated|none|n\/a|[adt]?spk|sdspk|[adt]?pres|[adt]?cwm|speaker|president|deputy president|acting president|(?:second |acting )?deputy speaker|acting speaker|(?:deputy )?chair(?:man)? of committees|(?:deputy )?chairman of ways and means)$/i.test(party.trim())
-}
+// One rule for party labels, shared with the division pages (public/division-against-party.js).
+export { isDivisionParty } from '../../public/division-against-party.js'
+import { isDivisionParty } from '../../public/division-against-party.js'
 
 function count(value: unknown): number {
   return typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : 0
