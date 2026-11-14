@@ -173,3 +173,43 @@ def test_offline_rebuild_counts_all_prior_ids_but_does_not_export_wragge_to_the_
     docs = [json.loads(line) for line in (tmp_path / 'speech-documents.jsonl').read_text().splitlines()]
     main_ids = {r['speech_id'] for r in report['speeches'] if r['source'] != 'wragge_xml'}
     assert {d['slug'] for d in docs} == {f'speech-{sid}' for sid in main_ids}
+
+
+def test_corpus_bounds_resolve_individual_seats_before_aggregation_and_share_catalogue_actors():
+    from copy import deepcopy
+    from tests.test_federal_speaker_identities import repair_db, ROWS as PRIOR
+    from scripts.audit_roster_periods import resolve_speech_cohort, corpus_bounds, inventory
+    db = repair_db()
+    fields = list(ROWS[0])
+    db.executemany('INSERT INTO speeches (' + ','.join(fields) + ') VALUES ('
+                   + ','.join('?' for _ in fields) + ')', [[r[k] for k in fields] for r in ROWS])
+    original = [*PRIOR, *ROWS]
+    raw = dict(groups=dict(speeches=[dict(r, records=1, record_id=r['speech_id']) for r in original
+                                    if r['source'] != 'wragge_xml'], votes=[]))
+    before = deepcopy(raw)
+    resolved = resolve_speech_cohort(raw, db)
+    assert raw == before
+    assert resolved['groups']['votes'] == raw['groups']['votes']
+    assert resolved['identity_resolution']['cohort_rows'] == 435
+    bounds, _ = corpus_bounds(resolved, inventory()['identities'])
+    assert {(b['actor'], b['record_id']) for b in bounds} == {
+        ('pid:person_9c02d321caef54b2ba21a1f8', 91),
+        ('pid:person_efb744ffb3a25d578e592281', 5),
+    }
+    assert resolve_speech_cohort(resolved, db) == resolved
+    db.execute('DELETE FROM speeches WHERE speech_id=91')
+    with pytest.raises(ValueError, match='does not reproduce'):
+        resolve_speech_cohort(raw, db)
+
+
+def test_completed_namesakes_have_own_bounds_and_no_stale_namesake_allowance():
+    root = Path(__file__).resolve().parents[1]
+    bounds = json.loads((root / 'scripts/roster_corpus_bounds.json').read_text())['bounds']
+    by = {b['actor']: b for b in bounds if b['chamber'] == 'representatives'}
+    assert by['pid:10592']['date'] == '2006-02-09'
+    assert by['pid:10937']['date'] == '2019-07-22'
+    assert by['pid:person_9c02d321caef54b2ba21a1f8']['record_id'] == 91
+    assert by['pid:person_efb744ffb3a25d578e592281']['record_id'] == 5
+    review = json.loads((root / 'scripts/roster_period_exceptions.json').read_text())
+    assert not [e for e in review['exceptions'] if e['actor'] in ('pid:10592', 'pid:10937')
+                and e['reason'] == 'known-corpus-namesake']

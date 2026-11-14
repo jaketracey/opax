@@ -12,8 +12,12 @@ from collections import Counter, defaultdict
 import json
 from pathlib import Path
 import re
+import sqlite3
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from parli.ingest.speaker_identity import BY_ID, RULES, identity_for, resolve_attribution  # noqa: E402
 HOUSES = ('representatives', 'senate', 'act_la', 'nsw_la', 'nsw_lc', 'nt_la',
           'qld_la', 'sa_ha', 'sa_lc', 'tas_ha', 'tas_lc', 'vic_la', 'vic_lc', 'wa_la', 'wa_lc')
 
@@ -49,10 +53,13 @@ def inventory(root=ROOT):
 
     # Source aliases and verified ids establish which exact prints may join a corpus record.
     by_name = {}
+    published_ids = set()
     for p in roster['people']:
         for house in p.get('chambers', []):
             actor = identity(p['name'], house, p.get('pid'), [p.get('full'), *p.get('aliases', []), *p.get('prints', [])])
             by_name[(name_key(p['name']), house)] = actor
+            if p.get('pid'):
+                published_ids.add((p['pid'], house))
 
     def add(name, row, kind, key, *, actor=None, url=None, **extra):
         house = row['chamber']
@@ -85,7 +92,9 @@ def inventory(root=ROOT):
                 actor=actor, url=handbook['url'], observed_through=row.get('through'))
     for term in bundle['terms']:
         p, seat = catalog_people[term['person_id']], seats[term['electorate_id']]
-        actor = identity(p['name'], seat['chamber'], p.get('legacy_person_id'), p.get('aliases', []))
+        pid = (p['person_id'] if (p['person_id'], seat['chamber']) in published_ids
+               else p.get('legacy_person_id'))
+        actor = identity(p['name'], seat['chamber'], pid, p.get('aliases', []))
         url = next((sources[s]['url'] for s in term.get('sources', []) if s in sources), None)
         row = dict(term, chamber=seat['chamber'])
         add(p['name'], row, 'catalog-term', 'catalog/' + term['representation_id'], actor=actor, url=url)
@@ -104,6 +113,48 @@ def inventory(root=ROOT):
                 identities=[dict(v, names=sorted(v['names'])) for v in identities.values()])
 
 
+def resolve_speech_cohort(raw, db):
+    """Reaggregate only the reviewed ids, resolving each seat/date before grouping.
+
+    The held aggregate has no seat and cannot itself support a dated repair.
+    Other speech groups and every vote group are retained verbatim. Refuse a
+    database that cannot reproduce the complete original cohort's row count.
+    """
+    ids = sorted({pid for _, rule in RULES for pid in rule['old_person_ids']} | set(BY_ID))
+    selected = lambda r: r.get('chamber') == 'representatives' and r.get('person_id') in ids
+    old = [r for r in raw['groups']['speeches'] if selected(r)]
+    columns = {r[1] for r in db.execute('PRAGMA table_info(speeches)')}
+    fields = [f for f in ('speech_id', 'state', 'chamber', 'speaker_name', 'speaker_name_clean',
+                          'person_id', 'date', 'source', 'electorate', 'speaker_type', 'witness_name') if f in columns]
+    rows = db.execute('SELECT ' + ','.join(fields) + ' FROM speeches WHERE person_id IN ('
+                      + ','.join('?' for _ in ids) + ") AND chamber='representatives' "
+                      "AND source!='wragge_xml' AND date>='1993-03-13' AND length(date)=10 "
+                      "AND COALESCE(speaker_type,'') NOT IN ('chair','unknown','witness') ORDER BY speech_id", ids)
+    groups = {}
+    checked = 0
+    for original in rows:
+        row = dict(zip(fields, original))
+        verified = identity_for(row)
+        row = resolve_attribution(row)
+        keys = ('state', 'chamber', 'speaker_name', 'speaker_name_clean', 'person_id', 'source')
+        key = tuple(row.get(k) for k in keys) + (bool(verified),)
+        group = groups.setdefault(key, dict({k: row.get(k) for k in keys}, date=row['date'],
+                                            record_id=row['speech_id'], records=0))
+        group['records'] += 1
+        checked += 1
+        if (row['date'], row['speech_id']) < (group['date'], group['record_id']):
+            group.update(date=row['date'], record_id=row['speech_id'])
+        if verified:
+            group['resolved_person_id'] = row['person_id']
+    if checked != sum(r['records'] for r in old):
+        raise ValueError('Identity database does not reproduce the held speech cohort')
+    result = dict(raw, groups=dict(raw['groups']))
+    result['groups']['speeches'] = [r for r in raw['groups']['speeches'] if not selected(r)] + list(groups.values())
+    result['identity_resolution'] = dict(method='Shared dated resolver before speech aggregation',
+                                       cohort_rows=checked, person_ids=ids)
+    return result
+
+
 def corpus_bounds(raw, identities):
     """Join full source names and reviewed prints in the same house; never trust a bare corpus id."""
     names = defaultdict(set)
@@ -116,7 +167,10 @@ def corpus_bounds(raw, identities):
     for kind, rows in raw['groups'].items():
         for row in rows:
             house = row['chamber']
-            candidates = names.get((house, name_key(row.get('speaker_name'))), set())
+            reviewed = row.get('resolved_person_id')
+            candidates = ({'pid:' + reviewed} if kind == 'speeches' and reviewed in BY_ID
+                          and reviewed == row.get('person_id') else
+                          names.get((house, name_key(row.get('speaker_name'))), set()))
             if not candidates:
                 candidates = names.get((house, name_key(row.get('speaker_name_clean'))), set())
             if len(candidates) != 1:
@@ -128,7 +182,7 @@ def corpus_bounds(raw, identities):
                 # A surname can also be an earlier namesake. It needs the same verified id;
                 # a conflicting numeric id also defeats a full-name/clean-name match.
                 weak = len(name_key(row.get('speaker_name')).split()) < 2
-                if ((printed_id.isdigit() and printed_id != actor[4:])
+                if (((printed_id.isdigit() or printed_id.startswith('person_')) and printed_id != actor[4:])
                         or (weak and printed_id != actor[4:])):
                     unmatched[(house, 'conflicting-or-unverified-id')] += 1
                     continue
@@ -152,14 +206,19 @@ def late_starts(periods, bounds):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--corpus-raw', type=Path, help='read-only local corpus aggregate to resolve into own-house bounds')
+    parser.add_argument('--identity-db', type=Path, help='read-only speech metadata to reaggregate the reviewed identity cohort')
     args = parser.parse_args()
     data = inventory()
     if args.corpus_raw:
         raw = json.loads(args.corpus_raw.read_text())
+        if args.identity_db:
+            db = sqlite3.connect(f'file:{args.identity_db}?mode=ro', uri=True)
+            raw = resolve_speech_cohort(raw, db)
         bounds, unmatched = corpus_bounds(raw, data['identities'])
         print(json.dumps(dict(database=raw['database'], database_mtime=raw['database_mtime'],
                               extracted_at=raw['extracted_at'], note=raw['note'],
-                              bounds=bounds, unmatched_groups=unmatched), indent=2))
+                              bounds=bounds, unmatched_groups=unmatched,
+                              **({'identity_resolution': raw['identity_resolution']} if 'identity_resolution' in raw else {})), indent=2))
     else:
         bounds = read(ROOT, 'scripts/roster_corpus_bounds.json')['bounds']
         print(json.dumps(dict(counts={h: sum(p['chamber'] == h for p in data['periods']) for h in HOUSES},
