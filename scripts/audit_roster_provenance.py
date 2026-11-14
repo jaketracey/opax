@@ -2,16 +2,19 @@
 """Offline follow-up to the 14 November roster sweep. No network access.
 
 Checks each previously unmatched interval against individual speech/vote dates.
-Raw member corrections require one day-precision, sourced catalogue term, an
-exact person id, and an agreeing full name. Reads the source database only;
+Raw member corrections require a complete single-seat career, agreeing source
+endpoints normalised to recorded service events, an exact person id and an
+agreeing full name. Reads the source database only;
 corrections can be applied to a separate scratch copy.
 """
 from __future__ import annotations
 
 import argparse
 from collections import Counter, defaultdict
+import csv
 from datetime import datetime, timezone
 import hashlib
+import io
 import json
 from pathlib import Path
 import sqlite3
@@ -21,6 +24,99 @@ import time
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from scripts.audit_roster_periods import inventory, name_key, read  # noqa: E402
+from parli.electorates import stable_id  # noqa: E402
+from scripts.oa_people_ids import rows as oa_people_rows  # noqa: E402
+
+
+def service_evidence(root=ROOT):
+    """Read byte-pinned, offline sources, including careers before the corpus window."""
+    evidence = read(root, 'scripts/roster_provenance_sources.json')
+    bodies = {}
+    for name, receipt in evidence['files'].items():
+        body = (Path(root) / receipt['path']).read_bytes()
+        if hashlib.sha256(body).hexdigest() != receipt['sha256']:
+            raise ValueError(f'Unreviewed service source: {name}')
+        bodies[name] = body.decode('utf-8-sig')
+    text = bodies['representatives.csv']
+    careers, by_term = defaultdict(list), {}
+    for row in csv.DictReader(io.StringIO(text[text.index('member count,'):])):
+        if not str(row.get('member count') or '').isdigit() or not row.get('name'):
+            continue
+        def day(value):
+            return datetime.strptime(value.strip(), '%d.%m.%Y').date().isoformat() if value else None
+        term = dict(source_key=row['member count'], name=row['name'], seat=row['Division'],
+                    state=row['State/Territory'], start=day(row['Date of election']),
+                    end=day(row['Date ceased to be a Member']),
+                    start_reason=row['Type of election'] or 'election', end_reason=row['reason'])
+        careers[name_key(row['name'])].append(term)
+        by_term[stable_id('term', 'oa:' + row['member count'])] = term
+    oa_ids = {str(10000 + int(count)): dict(phid=phid, names=names)
+              for count, phid, names in oa_people_rows(bodies['people.csv'])}
+    return dict(evidence, careers=careers, by_term=by_term, oa_ids=oa_ids)
+
+
+def handbook_person(person, evidence):
+    """Follow the explicit OA id -> PHID crosswalk; otherwise exact full names only.
+
+    This is a source-to-source identity join, never a corpus speaker matcher.
+    Do not manufacture aliases by dropping middle names or matching surnames.
+    """
+    names = {name_key(n) for n in [person['name'], *person.get('aliases', [])]}
+    crosswalk = evidence['oa_ids'].get(str(person['legacy_person_id']))
+    individuals = evidence['handbook']['individuals']
+    if crosswalk:
+        if not names & {name_key(n) for n in crosswalk['names']}:
+            return None
+        hits = [r for r in individuals if r['PHID'] == crosswalk['phid']]
+    else:
+        def full_names(row):
+            legal = ' '.join(row.get(k) or '' for k in ('GivenName', 'MiddleNames', 'FamilyName'))
+            preferred = str(row.get('PreferredName') or '').strip('() ')
+            return {name_key(legal), name_key(preferred + ' ' + row['FamilyName'])} if preferred else {name_key(legal)}
+        hits = [r for r in individuals if names & full_names(r)]
+    return hits[0] if len(hits) == 1 else None
+
+
+def endpoint_review(term, primary, evidence):
+    """Normalise events, not elapsed days. Unexplained disagreement holds the row."""
+    convention = evidence['house_convention']
+    reviews = {}
+    scoped = primary and primary['MPorSenator'] == ['Member']
+    for field, raw_field in [('start', 'entered_house'), ('end', 'left_house')]:
+        events = ('election', 'by_election', 'appointment') if field == 'start' else ('retired', 'defeated', 'resigned', 'died')
+        value = term.get(field)
+        if not value or term.get(field + '_precision') != 'day' or term.get(field + '_reason') not in events:
+            continue
+        current = primary and str(primary.get('InCurrentParliament')).lower() == 'true'
+        other = primary.get('ServiceHistory_' + field.title()) if primary and not (field == 'end' and current) else None
+        a, b, rule = value, other, 'agreed'
+        event = term[field + '_reason']
+        if field == 'start' and event == 'by_election':
+            for pair in convention['by_elections']:
+                if primary and primary['PHID'] == pair['phid'] and value == pair['source_date'] and other == pair['poll']:
+                    a, rule = pair['poll'], 'normalised-polling-start'
+        elif field == 'end' and event in ('retired', 'defeated'):
+            for pair in convention['general_elections']:
+                if a in (pair['poll'], pair['dissolution']):
+                    a = pair['dissolution' if event == 'retired' else 'poll']
+                if b in (pair['poll'], pair['dissolution']):
+                    b = pair['dissolution' if event == 'retired' else 'poll']
+            if a != value or b != other:
+                rule = 'normalised-retirement-dissolution' if event == 'retired' else 'normalised-defeat-polling'
+        if other is None:
+            decision, accepted = 'held-no-scoped-primary-endpoint', None
+        elif not scoped:
+            decision = 'held-no-scoped-primary-endpoint'
+            accepted = a if a == b else None  # Candidate value only; the row remains held.
+        elif a != b:
+            decision, accepted = 'held-unresolved-source-conflict', None
+        else:
+            decision, accepted = rule, a
+        reviews[raw_field] = dict(source_a=value, source_b=other,
+                                 phid=primary['PHID'] if primary else None,
+                                 source_b_house_scoped=bool(scoped),
+                                 event=event, convention_value=accepted, decision=decision)
+    return reviews
 
 
 def wait_for_load():
@@ -144,14 +240,17 @@ def interval_matches(db, periods, identities, speech_groups=None):
 def raw_member_corrections(signals, members, root=ROOT):
     """Conservative endpoint corrections, never inferred from attached speeches.
 
-    Multiple seats/terms and non-day endpoints are held. Open catalogue ends
-    cannot clear a raw end: that would silently assert current membership.
+    The published catalogue is corpus-windowed, so a single catalogue term is
+    insufficient. Check the unfiltered source career and Handbook parliament
+    history too. Multiple seats/terms and whole rows with unresolved source
+    conflicts are held. Open ends cannot silently assert current membership.
     """
     manifest = read(root, 'portal/public/electorates/manifest.json')
     bundle = read(root, 'portal/public' + manifest['reference_url'])
     people = {p['person_id']: p for p in bundle['people']}
     seats = {s['electorate_id']: s for s in bundle['electorates']}
     sources = {s['source_id']: s for s in bundle['sources']}
+    evidence = service_evidence(root)
     by_id = defaultdict(list)
     for term in bundle['terms']:
         person = people[term['person_id']]
@@ -161,7 +260,8 @@ def raw_member_corrections(signals, members, root=ROOT):
     for signal in signals:
         member = members[signal['person_id']]
         terms = by_id.get((signal['person_id'], signal['house']), [])
-        changes, term_key = {}, None
+        changes, term_key, dated_source = {}, None, []
+        career, primary, reviews = [], None, {}
         reason = 'no-exact-id-catalogue-term'
         if len(terms) > 1:
             reason = 'multiple-catalogue-terms-or-seats'
@@ -175,15 +275,38 @@ def raw_member_corrections(signals, members, root=ROOT):
             elif not dated_source:
                 reason = 'no-reviewed-dated-service-source'
             else:
-                reason = 'sourced-endpoints-already-agree-or-open'
-                for field, raw_field in [('start', 'entered_house'), ('end', 'left_house')]:
-                    value = term.get(field)
-                    events = ('election', 'by_election', 'appointment') if field == 'start' else ('retired', 'defeated', 'resigned', 'died')
-                    if (value and term.get(field + '_precision') == 'day'
-                            and term.get(field + '_reason') in events and member[raw_field] != value):
-                        changes[raw_field] = dict(before=member[raw_field], after=value)
-                if changes:
-                    reason = 'corrected-from-single-sourced-term'
+                anchor = evidence['by_term'].get(term_key)
+                # Keep the source row key as well as its exact reviewed name.
+                # A same-name collision is a hold, never a merged career.
+                career = [r for n in names for r in evidence['careers'].get(n, [])]
+                career = sorted(career, key=lambda r: (r['start'] or '', r['source_key']))
+                primary = handbook_person(person, evidence)
+                reviews = endpoint_review(term, primary, evidence)
+                parliaments = sorted(set(primary.get('RepresentedParliaments', []))) if primary else []
+                gaps = any(b > a + 1 for a, b in zip(parliaments, parliaments[1:]))
+                source_hash = evidence['files']['representatives.csv']['sha256']
+                if not anchor or anchor not in career or any(s['sha256'] != source_hash for s in dated_source):
+                    reason = 'held-unverified-complete-career-source'
+                elif any(anchor[k] != term.get(k) for k in ('start', 'end', 'start_reason', 'end_reason')):
+                    reason = 'held-catalogue-source-disagreement'
+                elif len(career) != 1 or gaps:
+                    reason = 'held-multiple-complete-career-rows'
+                elif any(r['decision'].startswith('held-') for r in reviews.values()):
+                    reason = 'held-unresolved-service-source'
+                else:
+                    reason = 'sourced-endpoints-already-agree-or-open'
+                    for raw_field, review in reviews.items():
+                        value = review['convention_value']
+                        if member[raw_field] != value:
+                            changes[raw_field] = dict(before=member[raw_field], after=value)
+                    if changes:
+                        reason = 'corrected-from-complete-sourced-career'
+                if reason.startswith('held-'):
+                    # Holding a row also withdraws any otherwise agreeing start
+                    # or end. A conflict cannot leave a partial accepted career.
+                    for review in reviews.values():
+                        review['endpoint_decision'] = review['decision']
+                        review['decision'] = reason
         after_start = changes.get('entered_house', {}).get('after', signal.get('start'))
         after_end = changes.get('left_house', {}).get('after', signal.get('end'))
         after_reasons = []
@@ -198,9 +321,14 @@ def raw_member_corrections(signals, members, root=ROOT):
                 after_reasons.append('end-equals-last-stored-record')
             elif after_end and after_end != 'unknown' and after_end < last:
                 after_reasons.append('end-before-last-stored-record')
-        out.append(dict(signal, disposition=reason, catalogue_term=term_key, corrections=changes,
-                        after_reasons=after_reasons,
-                        sources=dated_source if terms and len(terms) == 1 and changes else []))
+        row = dict(signal, disposition=reason, catalogue_term=term_key, corrections=changes,
+                   after_reasons=after_reasons, sources=dated_source)
+        if reviews or career:
+            row.update(complete_source_career=career, endpoint_review=reviews,
+                       handbook_career={k: primary[k] for k in ('PHID', 'MPorSenator', 'InCurrentParliament',
+                           'ServiceHistory_Start', 'ServiceHistory_End', 'RepresentedParliaments')} if primary else None,
+                       service_convention=evidence['house_convention']['name'])
+        out.append(row)
     return out
 
 
@@ -226,9 +354,40 @@ def apply_raw_corrections(db, rows):
     return dict(corrected_rows=corrected, corrected_fields=fields)
 
 
+def raw_summary(raw):
+    buckets = Counter(tuple(p['reasons']) for p in raw)
+    conflicts, additional = [], []
+    for row in raw:
+        for field, review in row.get('endpoint_review', {}).items():
+            a, b = review['source_a'], review['source_b']
+            original = row['start' if field == 'entered_house' else 'end']
+            if b is None or a == b or a == original:
+                continue
+            if field == 'entered_house' and not review['source_b_house_scoped']:
+                continue  # The original 60 compared starts only for House-only summaries.
+            item = dict(person_id=row['person_id'], name=row['name'], field=field,
+                        source_a=dict(value=a, label='OpenAustralia parliamentary service records',
+                                      term=row['catalogue_term'], sha256=row['sources'][0]['sha256']),
+                        source_b=dict(value=b, label='Parliamentary Handbook cached individual', phid=review['phid']),
+                        event=review['event'], convention_value=review['convention_value'],
+                        decision=review['decision'])
+            # Retain the independent review's exact numeric-id, House-only
+            # conflict cohort. Other full-name source conflicts are listed too.
+            (conflicts if row['person_id'].isdigit() else additional).append(item)
+    return dict(raw_reason_counts=dict(Counter(r for p in raw for r in p['reasons'])),
+                raw_after_reason_counts=dict(Counter(r for p in raw for r in p['after_reasons'])),
+                raw_after_flagged_rows=sum(bool(p['after_reasons']) for p in raw),
+                raw_buckets=[dict(reasons=list(k), rows=n, corrected=sum(bool(p['corrections']) for p in raw if tuple(p['reasons']) == k)) for k, n in sorted(buckets.items())],
+                raw_dispositions=dict(Counter(p['disposition'] for p in raw)),
+                raw_corrected_rows=sum(bool(p['corrections']) for p in raw),
+                raw_corrected_fields=sum(len(p['corrections']) for p in raw),
+                primary_endpoint_conflict_counts=dict(Counter(p['decision'] for p in conflicts)),
+                primary_endpoint_conflicts=conflicts, additional_endpoint_conflicts=additional)
+
+
 def dump(report):
     """Keep individual review records on individual lines."""
-    compact = {'intervals', 'raw_members'}
+    compact = {'intervals', 'raw_members', 'primary_endpoint_conflicts', 'additional_endpoint_conflicts'}
     parts = []
     for key, value in report.items():
         if key in compact:
@@ -278,19 +437,15 @@ def main():
         rows = [p for p in outcomes if p['chamber'] == house]
         counts[house] = dict(before=len(rows), matched=sum(p['status'] == 'matched' for p in rows),
                              unmatched=sum(p['status'] != 'matched' for p in rows))
-    buckets = Counter(tuple(p['reasons']) for p in raw)
     report = dict(reviewed='2026-11-14', database=str(args.db),
                   database_mtime=database_mtime,
                   database_size=args.db.stat().st_size,
                   speech_group_prefilter=str(args.speech_groups) if args.speech_groups else None,
                   speech_group_sha256=hashlib.sha256(args.speech_groups.read_bytes()).hexdigest() if args.speech_groups else None,
-                  note='Read-only snapshot. Corpus bounds are evidence of participation, not service endpoints. Raw corrections are a review overlay from the pinned catalogue; source database and published files are unchanged. First/last stored records in raw member rows are unverified id coverage and can include namesakes. The initial unmatched cohort is retained in roster_period_exceptions.json; this file records its current disposition.',
+                  note='Read-only snapshot. Corpus bounds are evidence of participation, not service endpoints. Raw corrections are a review overlay from complete pinned service careers and cached primary endpoints, normalised to recorded service events; source database and published files are unchanged. Multiple-term and unresolved source-conflict rows are held in full. First/last stored records in raw member rows are unverified id coverage and can include namesakes. The initial unmatched cohort is retained in roster_period_exceptions.json; this file records its current disposition.',
+                  service_source_evidence='scripts/roster_provenance_sources.json',
                   interval_counts=counts, scanned_records=scanned, intervals=outcomes,
-                  raw_reason_counts=dict(Counter(r for p in raw for r in p['reasons'])),
-                  raw_after_reason_counts=dict(Counter(r for p in raw for r in p['after_reasons'])),
-                  raw_after_flagged_rows=sum(bool(p['after_reasons']) for p in raw),
-                  raw_buckets=[dict(reasons=list(k), rows=n, corrected=sum(bool(p['corrections']) for p in raw if tuple(p['reasons']) == k)) for k, n in sorted(buckets.items())],
-                  raw_dispositions=dict(Counter(p['disposition'] for p in raw)), raw_members=raw,
+                  **raw_summary(raw), raw_members=raw,
                   fraser_anning_holds=read(ROOT, 'scripts/roster_accept.json')['vote_party_periods']['holds'])
     db.close()
     if datetime.fromtimestamp(args.db.stat().st_mtime, timezone.utc).isoformat() != database_mtime:

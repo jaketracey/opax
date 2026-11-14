@@ -1,14 +1,66 @@
 """Provenance checks cannot turn coverage, ambiguous names or fetches into tenure."""
 from collections import Counter
+import csv
+import hashlib
+import io
 import json
 from pathlib import Path
 import sqlite3
 import pytest
 
-from scripts.audit_roster_provenance import StrictMatcher, apply_raw_corrections, interval_matches, raw_member_corrections
+from scripts.audit_roster_provenance import StrictMatcher, apply_raw_corrections, interval_matches, raw_member_corrections, raw_summary
 from scripts.audit_roster_periods import inventory
+from parli.electorates import stable_id
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def write_service_evidence(root, bundle, career=None, primary=None):
+    """Invented source records. The complete CSV deliberately has no date filter."""
+    term = bundle['terms'][0]
+    career = career if career is not None else [dict(term, source_key='1', name='Quinn Harrowgate', seat='Fixture', state='NSW')]
+    fields = ['member count', 'person count', 'name', 'Division', 'State/Territory', 'Date of election',
+              'Type of election', 'Date ceased to be a Member', 'reason', 'Most recent party']
+    body = io.StringIO()
+    writer = csv.writer(body)
+    writer.writerow(fields)
+    def day(s):
+        return '.'.join(reversed(s.split('-'))) if s else ''
+    for row in career:
+        writer.writerow([row['source_key'], '', row['name'], row['seat'], row['state'], day(row['start']),
+                         row['start_reason'], day(row['end']), row['end_reason'], 'IND'])
+    scripts = root / 'scripts'
+    scripts.mkdir(exist_ok=True)
+    files = {}
+    for name, value in [('representatives.csv', body.getvalue()),
+                        ('people.csv', 'person count,aph id,name,birthday,alt name\n89500,FIXTURE,Quinn Harrowgate,,\n')]:
+        path = scripts / name
+        path.write_text(value)
+        files[name] = dict(path=str(path.relative_to(root)), sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+    bundle['sources'][0]['sha256'] = files['representatives.csv']['sha256']
+    primary = primary if primary is not None else dict(PHID='FIXTURE', GivenName='Quinn', MiddleNames='',
+        FamilyName='Harrowgate', PreferredName='', MPorSenator=['Member'], InCurrentParliament='False',
+        ServiceHistory_Start=term['start'], ServiceHistory_End=term['end'], RepresentedParliaments=[40, 41])
+    evidence = dict(files=files, handbook=dict(individuals=[primary]),
+                    house_convention=dict(name='fixture-events', general_elections=[dict(poll='2019-05-18', dissolution='2019-04-11')],
+                                          by_elections=[dict(source_date='2018-11-05', poll='2018-10-20', phid='FIXTURE')]))
+    (scripts / 'roster_provenance_sources.json').write_text(json.dumps(evidence))
+    return career, primary
+
+
+def source_fixture(root):
+    public = root / 'portal/public'
+    (public / 'electorates').mkdir(parents=True)
+    (public / 'electorates/manifest.json').write_text(json.dumps(dict(reference_url='/reference.json')))
+    term = dict(person_id='p', electorate_id='e', representation_id=stable_id('term', 'oa:1'),
+                start='1996-03-02', end=None, start_precision='day', end_precision='open',
+                start_reason='election', end_reason='still_in_office', sources=['source'])
+    bundle = dict(people=[dict(person_id='p', legacy_person_id='99500', name='Quinn Harrowgate')],
+                  electorates=[dict(electorate_id='e', chamber='representatives')], terms=[term],
+                  sources=[dict(source_id='source', label='OpenAustralia parliamentary service records', url='https://example.test/service')])
+    signals = [dict(person_id='99500', house='representatives', reasons=['start-equals-first-stored-record'])]
+    member = dict(person_id='99500', full_name='Quinn Harrowgate', entered_house='1998-03-02', left_house='2001-01-01')
+    return public / 'reference.json', bundle, signals, member
 
 
 def test_id_disambiguates_only_when_an_exact_reviewed_name_also_agrees():
@@ -63,20 +115,10 @@ def test_every_interval_uses_participation_inside_its_own_dates():
 
 
 def test_raw_corrections_require_a_single_dated_source_and_agreeing_id_and_full_name(tmp_path):
-    public = tmp_path / 'portal/public'
-    public.mkdir(parents=True)
-    (public / 'electorates').mkdir()
-    (public / 'electorates/manifest.json').write_text(json.dumps(dict(reference_url='/reference.json')))
-    term = dict(person_id='p', electorate_id='e', representation_id='term', start='1996-03-02', end=None,
-                start_precision='day', end_precision='open', start_reason='election', end_reason='still_in_office', sources=['source'])
-    bundle = dict(people=[dict(person_id='p', legacy_person_id='99500', name='Quinn Harrowgate')],
-                  electorates=[dict(electorate_id='e', chamber='representatives')], terms=[term],
-                  sources=[dict(source_id='source', label='OpenAustralia parliamentary service records', url='https://example.test/service')])
-    path = public / 'reference.json'
-    path.write_text(json.dumps(bundle))
-    signals = [dict(person_id='99500', house='representatives', reasons=['start-equals-first-stored-record'])]
-    member = dict(person_id='99500', full_name='Quinn Harrowgate', entered_house='1998-03-02', left_house='2001-01-01')
+    path, bundle, signals, member = source_fixture(tmp_path)
+    term = bundle['terms'][0]
     def review():
+        write_service_evidence(tmp_path, bundle)
         path.write_text(json.dumps(bundle))
         return raw_member_corrections(signals, {'99500': member}, tmp_path)[0]
     assert review()['corrections'] == {'entered_house': dict(before='1998-03-02', after='1996-03-02')}
@@ -99,6 +141,67 @@ def test_raw_corrections_require_a_single_dated_source_and_agreeing_id_and_full_
     assert not review()['corrections']
 
 
+def test_pre_1993_stint_cannot_disappear_from_a_single_catalogue_term(tmp_path):
+    path, bundle, signals, member = source_fixture(tmp_path)
+    term = bundle['terms'][0]
+    term.update(start='1984-12-01', end='2007-10-17', end_precision='day', end_reason='retired')
+    later, primary = write_service_evidence(tmp_path, bundle)
+    earlier = dict(later[0], source_key='2', seat='Earlier fixture seat', start='1975-12-13', end='1983-03-05', end_reason='defeated')
+    primary.update(ServiceHistory_Start='1975-12-13')
+    write_service_evidence(tmp_path, bundle, [earlier, *later], primary)
+    path.write_text(json.dumps(bundle))
+    row = raw_member_corrections(signals, {'99500': member}, tmp_path)[0]
+    assert row['disposition'] == 'held-multiple-complete-career-rows'
+    assert not row['corrections']
+    assert [r['start'] for r in row['complete_source_career']] == ['1975-12-13', '1984-12-01']
+    assert row['endpoint_review']['entered_house']['source_a'] == '1984-12-01'
+    assert row['endpoint_review']['entered_house']['source_b'] == '1975-12-13'
+
+
+@pytest.mark.parametrize(('event', 'a', 'b', 'expected'), [
+    ('retired', '2019-05-18', '2019-04-11', '2019-04-11'),
+    ('defeated', '2019-04-11', '2019-05-18', '2019-05-18'),
+    ('resigned', '2019-05-18', '2019-04-11', None),
+    ('retired', '2019-05-18', '2019-04-10', None),
+])
+def test_event_convention_and_unexplained_disagreements_hold_the_whole_row(tmp_path, event, a, b, expected):
+    path, bundle, signals, member = source_fixture(tmp_path)
+    term = bundle['terms'][0]
+    term.update(end=a, end_precision='day', end_reason=event)
+    _, primary = write_service_evidence(tmp_path, bundle)
+    primary['ServiceHistory_End'] = b
+    write_service_evidence(tmp_path, bundle, primary=primary)
+    path.write_text(json.dumps(bundle))
+    row = raw_member_corrections(signals, {'99500': member}, tmp_path)[0]
+    review = row['endpoint_review']['left_house']
+    assert (review['source_a'], review['source_b'], review['convention_value']) == (a, b, expected)
+    if expected:
+        assert row['corrections']['left_house']['after'] == expected
+    else:
+        assert row['disposition'] == 'held-unresolved-service-source'
+        assert not row['corrections']  # Also withhold the otherwise agreeing start.
+
+
+def test_by_election_polling_day_and_missing_or_current_primary_endpoints(tmp_path):
+    path, bundle, signals, member = source_fixture(tmp_path)
+    term = bundle['terms'][0]
+    term.update(start='2018-11-05', start_reason='by_election')
+    _, primary = write_service_evidence(tmp_path, bundle)
+    primary['ServiceHistory_Start'] = '2018-10-20'
+    write_service_evidence(tmp_path, bundle, primary=primary)
+    path.write_text(json.dumps(bundle))
+    row = raw_member_corrections(signals, {'99500': member}, tmp_path)[0]
+    assert row['corrections']['entered_house']['after'] == '2018-10-20'
+    for changes in [dict(InCurrentParliament='True'), dict(MPorSenator=['Member', 'Senator'])]:
+        term.update(end='2019-05-18', end_precision='day', end_reason='defeated')
+        write_service_evidence(tmp_path, bundle, primary=dict(primary, ServiceHistory_End='2019-05-18', **changes))
+        path.write_text(json.dumps(bundle))
+        assert not raw_member_corrections(signals, {'99500': member}, tmp_path)[0]['corrections']
+    (tmp_path / 'scripts/representatives.csv').write_text('unreviewed refresh')
+    with pytest.raises(ValueError, match='Unreviewed service source'):
+        raw_member_corrections(signals, {'99500': member}, tmp_path)
+
+
 def test_committed_review_accounts_for_every_original_signal_and_interval():
     path = ROOT / 'docs/reports/2026-11-14-roster-provenance-findings.json'
     report = json.loads(path.read_text())
@@ -111,7 +214,34 @@ def test_committed_review_accounts_for_every_original_signal_and_interval():
     members = {p['person_id']: dict(full_name=p['name'], entered_house=p['start'], left_house=p['end'])
                for p in findings['raw_member_signals']}
     assert raw_member_corrections(findings['raw_member_signals'], members) == report['raw_members']
+    assert all(report[k] == v for k, v in raw_summary(report['raw_members']).items())
+    assert len(report['primary_endpoint_conflicts']) == 60
+    assert report['primary_endpoint_conflict_counts'] == {
+        'normalised-polling-start': 2, 'normalised-retirement-dissolution': 54,
+        'normalised-defeat-polling': 1, 'held-unresolved-service-source': 1,
+        'held-multiple-complete-career-rows': 2,
+    }
+    by_id = {r['person_id']: r for r in report['raw_members']}
+    assert by_id['10913']['corrections']['entered_house']['after'] == '2018-10-20'
+    assert by_id['10858']['corrections']['left_house']['after'] == '2025-03-28'
+    assert not by_id['10351']['corrections']
+    assert [t['start'] for t in by_id['10351']['complete_source_career']] == ['1975-12-13', '1984-12-01']
+    assert not by_id['10869']['corrections']
+    for row in report['raw_members']:
+        if row['disposition'].startswith('held-'):
+            assert not row['corrections']
+        if row['corrections']:
+            assert len(row['complete_source_career']) == 1
+            assert row['handbook_career']['MPorSenator'] == ['Member']
+            for field, change in row['corrections'].items():
+                review = row['endpoint_review'][field]
+                assert not review['decision'].startswith('held-')
+                assert change['after'] == review['convention_value']
     data = inventory()
+    # There are no additional accepted/reviewed/shipped service or affiliation
+    # intervals for this accepted raw cohort. New ones require career review.
+    corrected = {'pid:' + r['person_id'] for r in report['raw_members'] if r['corrections']}
+    assert not [p for p in data['periods'] if p['actor'] in corrected and not p['kind'].startswith('catalog-')]
     matcher = StrictMatcher(data['identities'])
     periods = {p['key']: p for p in data['periods']}
     for period in report['intervals']:

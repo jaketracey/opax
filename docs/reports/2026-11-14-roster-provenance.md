@@ -1,12 +1,12 @@
 # Roster provenance follow-up
 
-R17 / BACKLOG 3z. Reviewed 14 November 2026 on `2ccd62bd1`, following the [period sweep](2026-11-14-roster-period-sweep.md). The complete [machine-readable findings](2026-11-14-roster-provenance-findings.json) retain every original interval and flagged member row, with exact corpus receipts or the remaining hold reason.
+R17 / BACKLOG 3z. Reviewed 14 November 2026 on `2ccd62bd1`, following the [period sweep](2026-11-14-roster-period-sweep.md). Updated after the independent review of `2a3d20b43`; the [note review](2026-11-14-roster-provenance-note-review.md) lists all 60 source conflicts, the service-event convention and the complete-career holds. The complete [machine-readable findings](2026-11-14-roster-provenance-findings.json) retain every original interval and flagged member row, with exact corpus receipts or the remaining hold reason.
 
 | Item | Before | After | How |
 | --- | --- | --- | --- |
 | Handbook fetch-date cutoffs | 81 current-person `service_end` values equal 2026-11-13 | All 81 have `service_end: null`, `observed_through: 2026-11-13` and an explicit observation classification | Reviewed the saved API response; changed the builder and committed metadata; added rebuild and committed-file guards |
 | Intervals lacking a corpus match | 327 intervals | 48 gain an in-interval corpus bound; 279 remain unmatched | Exact person ID with agreeing reviewed name first, then the existing strict name safeguards; checked speeches and actual vote participation |
-| Flagged raw member rows | 2,002 rows | 327 rows receive 549 sourced endpoint corrections in the review overlay and scratch copy; 1,675 have no provable correction; 1,754 still carry raw-id signals after correction | Exact ID, agreeing full name and a single dated catalogue term; retain residual identity/coverage flags |
+| Flagged raw member rows | 2,002 rows | 319 rows receive 535 sourced endpoint corrections in the review overlay and scratch copy; 1,683 remain held; 1,759 still carry raw-id signals after correction | Exact ID, agreeing full name, a complete single career and convention-normalised source agreement; retain residual identity/coverage flags |
 | Fraser Anning holds | Two held vote-label windows | Both remain held | Senate Journals remain owed; APH and ParlInfo were not fetched |
 
 ## Current-person cutoff classification
@@ -38,42 +38,40 @@ The initial unmatched list remains in `roster_period_exceptions.json` as the fix
 
 ## Raw member rows
 
-The original signals are overlapping comparisons against unverified raw-ID speech coverage. Equality with the first or last speech is a signal, not proof of how an ingestion date was created. A record before an apparent service start can also be another person's speech.
+The initial 327-row, 549-field proposal was superseded after independent review. The current overlay checks complete source careers, including pre-1993 rows, and normalises every proposed endpoint to the recorded House service-event convention: polling starts; dissolution for election retirement; polling day for defeat; actual dated resignation/death. Conflicts beyond that convention hold the whole row. See the [60-conflict table and corrected samples](2026-11-14-roster-provenance-note-review.md).
+
+The original signals compare against unverified raw-ID speech coverage. Equality with a first or last speech is a signal, not tenure evidence. A record before a service start can belong to another person.
 
 | Flag reason | Before | After sourced corrections |
 | --- | ---: | ---: |
-| Start equals first stored record | 1,833 | 1,523 |
-| Start after first stored record | 141 | 206 |
-| End equals last stored record | 1,165 | 994 |
+| Start equals first stored record | 1,833 | 1,530 |
+| Start after first stored record | 141 | 204 |
+| End equals last stored record | 1,165 | 998 |
 | End before last stored record | 104 | 98 |
-| Distinct flagged rows | 2,002 | 1,754 |
+| Distinct flagged rows | 2,002 | 1,759 |
 
-These eight combinations partition the original 2,002 rows. “Corrected” means at least one endpoint changed from a dated source; it does not imply every identity/coverage signal disappeared.
-
-| Original flag combination | Rows | Corrected | No provable correction |
+| Original flag combination | Rows | Corrected | Held |
 | --- | ---: | ---: | ---: |
 | End before last | 3 | 1 | 2 |
-| End equals last | 25 | 4 | 21 |
+| End equals last | 25 | 3 | 22 |
 | Start after first | 65 | 6 | 59 |
-| Start after first; end before last | 19 | 1 | 18 |
-| Start after first; end equals last | 57 | 5 | 52 |
-| Start equals first | 668 | 142 | 526 |
-| Start equals first; end before last | 82 | 5 | 77 |
-| Start equals first; end equals last | 1,083 | 163 | 920 |
-| Total | 2,002 | 327 | 1,675 |
+| Start after first; End before last | 19 | 1 | 18 |
+| Start after first; End equals last | 57 | 5 | 52 |
+| Start equals first | 668 | 139 | 529 |
+| Start equals first; End before last | 82 | 5 | 77 |
+| Start equals first; End equals last | 1,083 | 159 | 924 |
+| Total | 2,002 | 319 | 1,683 |
 
-All 327 corrected rows are House of Representatives members. Each has an exact catalogue legacy ID, an agreeing full name or explicit alias, and exactly one catalogue term in that house, sourced to the pinned OpenAustralia parliamentary service records. Only day-precision dated endpoints can replace raw endpoints: 327 starts and 222 ends. Every change retains its old/new values, catalogue term key, source URL and source SHA-256 in the findings. Only election, by-election or appointment starts and retirement, defeat, resignation or death ends can replace raw dates. Open catalogue ends never clear raw ends or silently assert current membership. Michael Johnson's end is labelled changed_party in the catalogue, so that endpoint remains held even though his election start is corrected.
+All 319 corrected rows are House members. The 535 changes comprise 319 starts and 216 ends. Each retains its original raw value, normalised value, full source career, catalogue term key, source receipts, Handbook summary and endpoint decision. Open source ends never clear raw ends or assert current membership. Michael Johnson's `changed_party` end still cannot establish a departure.
 
-For example, Anthony Albanese's raw 1998-03-02 start becomes the sourced 1996-03-02 election date. Julie Collins's raw 1929-02-27 start becomes the sourced 2007-11-24 date. The latter still has an earlier attached raw-ID record; the date correction cannot repair that attribution. Overall, 79 corrected rows retain signals, so the remaining flagged-row count is 1,675 + 79 = 1,754. The increase in “start after first” exposes these earlier attached records rather than legitimising them.
+| Hold reason | Rows |
+| --- | ---: |
+| No exact-ID catalogue term | 1,613 |
+| Multiple catalogue terms or seats | 62 |
+| Additional complete-career rows or disjoint parliaments | 4 |
+| Unresolved conflict or unscoped primary summary | 4 |
 
-The remaining correction holds are:
-
-| Hold reason | Rows | Evidence still needed |
-| --- | ---: | --- |
-| No exact-ID catalogue term | 1,613 | Primary tenure provenance and/or reviewed identity linkage; no surname or approximate-name joining |
-| Multiple catalogue terms or seats | 62 | Reviewed career/seat scope before selecting endpoints; no arbitrary earliest/latest collapse |
-
-The 236 literal `unknown` end sentinels identified in the original sweep are outside the 2,002-row signal cohort. They remain unknown, without conversion to a dated retirement or to null/current status.
+The 236 literal `unknown` end sentinels remain outside the 2,002-row signal cohort. They are not converted into a retirement or null/current status.
 
 ## Fraser Anning
 
@@ -89,7 +87,7 @@ The held Senate vote-label windows remain 2017-11-10 to 2018-01-15 and 2018-10-0
 | `scripts/handbook_party_service.json` | 81 person-metadata classifications and the explanatory note; all party periods unchanged |
 | Service dates, vote labels and accepted roster records | None |
 
-The raw corrections are committed review metadata and applied only to a scratch copy. An exact comparison of all 2,699 member rows confirms that only the reviewed 327 rows and 549 fields changed, with all other member values preserved. The original `/home/jake/.cache/autoresearch/parli.db` was opened using SQLite `mode=ro` and `query_only=ON`. Its mtime remains 2026-11-10T10:23:44.736218+00:00. Findings describe this older local snapshot, without claims about production coverage.
+The raw corrections are committed review metadata and applied only to a scratch copy. An exact comparison of all 2,699 member rows confirms that only the reviewed 319 rows and 535 fields changed, with all other member values preserved. The original `/home/jake/.cache/autoresearch/parli.db` was opened using SQLite `mode=ro` and `query_only=ON`. Its mtime remains 2026-11-10T10:23:44.736218+00:00. Findings describe this older local snapshot, without claims about production coverage.
 
 Local evidence, the scratch database and gate logs are under `/home/jake/opax-work/evidence/im-roster-provenance/`, outside the public repository. Search, crawl, hubs and Victorian election test prerequisites were built offline, with table SQL preparation disabled. The unrelated regenerated agency-supplier ordering drift was archived and excluded from the patch. No production, KB or remote D1 writes, deployment or SSH occurred. Network use was limited to Git transport with user agent `opax-improve-audit`; no source pages were requested. Heavy processes ran at nice 10 and paused when the five-minute load exceeded 40.
 
@@ -97,9 +95,4 @@ Reproduce the review using `nice -n 10 python3 scripts/audit_roster_provenance.p
 
 ## Gates
 
-- Full Python roster/state/profile gate, plus `tests/test_vote_parties.py`: **244 passed, 14,181 subtests passed; one replay subtest timed out at its 300-second subprocess limit** during mandatory load pauses. The isolated rerun of the unchanged replay assertions passed **both scenarios A and B**, in 915.37 seconds, with a 1,200-second local subprocess allowance. The repository test limit remains at 300 seconds. The original full gate's timing failure remains recorded.
-- Final focused provenance, period and vote-party guards: **67 passed**.
-- Full portal `npm test -- --test-concurrency=4`, after offline `OPAX_TABLE_METADATA_ONLY=1 npm run build:search`: **4,966 passed, 11 skipped, two failed**, in 486.32 seconds. Both failures were `directory-render.test.mjs` shell timeouts at 15 seconds. The isolated rerun of that entire file at concurrency 4 passed **11/11**, without changing test code or limits. The full-run timing failures remain recorded, not reported as a clean full gate.
-- Roster accept list: **842 groups applied, 25 new rows, 7 dropped rows, zero problems**.
-- Scratch replay: **327 rows, 549 fields**, with an exact comparison preserving every other member value across all 2,699 rows and an unchanged source mtime.
-- Offline search/crawl/hub/Victorian election builds, `git diff --check` and `node scripts/stamp_assets.mjs --check`: **passed**.
+The current complete-run results are recorded in the [note review](2026-11-14-roster-provenance-note-review.md#gates). The original gate receipts and timing failures remain archived outside the repository.
