@@ -29,6 +29,8 @@ import {
   View,
 } from 'react-native';
 import { announceAnswer } from '../src/features/ask/AnswerView';
+import { auditAccessibility } from './screen-a11y';
+import a11yExceptions from './screen-a11y-exceptions.cjs';
 import AskScreen, { PhoneDock } from '../src/features/ask/AskScreen';
 import { useScreenReady } from '../src/analytics/timing';
 import {
@@ -1472,71 +1474,147 @@ test('a stream that stops partway keeps its text under one pill, read as Markdow
   expect(byId('ask-retry')).not.toEqual([]);
 });
 
-test('streamed pieces are never announced, VoiceOver moves to the tail row at handover, and the answer is announced once', async () => {
-  const announce = jest
-    .spyOn(AccessibilityInfo, 'announceForAccessibilityWithOptions')
-    .mockImplementation(() => undefined);
-  jest.mocked(announceAnswer).mockClear();
-  const move = jest.mocked(moveAccessibilityFocus);
-  move.mockClear();
-  let on: StreamHandlers | undefined,
-    finish: (value: unknown) => void = () => {};
-  jest.mocked(client.askPost).mockImplementationOnce(
-    (_path, _body, _signal, handlers) =>
-      new Promise((resolve) => {
-        on = handlers;
-        finish = resolve;
-      }),
-  );
-  await mount();
-  await type('Who spoke on housing?');
-  await press('ask-submit');
-  expect(byId('ask-stream-tail')).toHaveLength(0);
+describe('streamed text and VoiceOver', () => {
   const pieces = ['Housing was debated. ', 'The bill passed. ', 'Two opposed.'];
-  const spoken = () =>
-    announce.mock.calls.filter(([said]) =>
-      pieces.some((piece) => String(said).includes(piece.trim())),
-    );
-  for (const piece of pieces)
-    await act(async () => {
-      on!.delta(piece);
-      await new Promise((resolve) => setTimeout(resolve, 40));
+  const wait = (ms: number) =>
+    act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, ms));
     });
-  // Focus went to the tail row once, at the first text, and stayed.
-  expect(move).toHaveBeenCalledTimes(1);
-  expect(
-    (move.mock.calls[0]![0] as unknown as { props: { testID: string } }).props
-      .testID,
-  ).toBe('ask-stream-tail');
-  const tail = byId('ask-stream-tail').at(-1)!;
-  expect(tail.props).toMatchObject({
-    accessible: true,
-    accessibilityLabel: 'Writing the answer',
-    accessibilityState: { busy: true },
-    accessibilityLiveRegion: 'none',
+  const move = jest.mocked(moveAccessibilityFocus);
+  const tails = () =>
+    move.mock.calls.filter(
+      ([node]) =>
+        (node as unknown as { props: { testID?: string } } | null)?.props
+          .testID === 'ask-stream-tail',
+    );
+  let announce: jest.SpyInstance;
+  let on: StreamHandlers | undefined;
+  let finish: (value: unknown) => void;
+  const said = () => announce.mock.calls.map(([text]) => String(text));
+  beforeEach(() => {
+    takeFocusRequest('ask-status');
+    move.mockClear();
+    jest.mocked(announceAnswer).mockClear();
+    announce = jest
+      .spyOn(AccessibilityInfo, 'announceForAccessibilityWithOptions')
+      .mockImplementation(() => undefined);
+    // An earlier test's spy on the same method is this one: start clean.
+    announce.mockClear();
+    jest.mocked(client.askPost).mockImplementationOnce(
+      (_path, _body, _signal, handlers) =>
+        new Promise((resolve) => {
+          on = handlers;
+          finish = resolve;
+        }),
+    );
   });
-  // Once the status line has faded, nothing in the live turn is a live
-  // region: no piece is read as it lands.
-  await act(async () => {
-    await new Promise((resolve) => setTimeout(resolve, 200));
+  afterEach(() => {
+    takeFocusRequest('ask-status');
   });
-  expect(byId('ask-status-row')).toHaveLength(0);
-  const regions = byId('ask-progress')
-    .at(-1)!
-    .findAll((n) => typeof n.props.accessibilityLiveRegion === 'string')
-    .map((n) => n.props.accessibilityLiveRegion);
-  expect(regions.length).toBeGreaterThan(0);
-  expect(regions.every((region) => region === 'none')).toBe(true);
-  expect(spoken()).toHaveLength(0);
-  expect(jest.mocked(announceAnswer)).not.toHaveBeenCalled();
-  await act(async () => {
-    finish(answer);
+  const stream = async () => {
+    // "Reading your question" is spoken first, so the stage the first text
+    // sets waits out the two-second spacing.
+    await wait(50);
+    for (const piece of pieces)
+      await act(async () => {
+        on!.delta(piece);
+        await new Promise((resolve) => setTimeout(resolve, 40));
+      });
+    // The status line has faded out.
+    await wait(200);
+  };
+
+  test('a composer send: no piece is announced, focus stays put, the answer is announced once and no stage follows it', async () => {
+    await mount();
+    await type('Who spoke on housing?');
+    await press('ask-submit');
+    expect(byId('ask-stream-tail')).toHaveLength(0);
+    await stream();
+    expect(byId('ask-status-row')).toHaveLength(0);
+    // The tail is the busy element, and nothing in the turn is a live region.
+    expect(byId('ask-stream-tail').at(-1)!.props).toMatchObject({
+      accessible: true,
+      accessibilityLabel: 'Writing the answer',
+      accessibilityState: { busy: true },
+      accessibilityLiveRegion: 'none',
+    });
+    const regions = byId('ask-progress')
+      .at(-1)!
+      .findAll((n) => typeof n.props.accessibilityLiveRegion === 'string')
+      .map((n) => n.props.accessibilityLiveRegion);
+    expect(regions.length).toBeGreaterThan(0);
+    expect(regions.every((region) => region === 'none')).toBe(true);
+    // The send asked for no status focus, so the tail takes none.
+    expect(tails()).toHaveLength(0);
+    expect(jest.mocked(announceAnswer)).not.toHaveBeenCalled();
+    await act(async () => {
+      finish(answer);
+    });
+    expect(jest.mocked(announceAnswer)).toHaveBeenCalledTimes(1);
+    expect(byId('ask-progress')).toHaveLength(0);
+    expect(byId('ask-stream-tail')).toHaveLength(0);
+    // "Writing the answer" was still waiting out its spacing: it is dropped,
+    // never spoken after the answer.
+    await wait(2200);
+    expect(said().filter((text) => text !== 'Reading your question')).toEqual(
+      [],
+    );
+    expect(tails()).toHaveLength(0);
   });
-  expect(jest.mocked(announceAnswer)).toHaveBeenCalledTimes(1);
-  expect(byId('ask-progress')).toHaveLength(0);
-  expect(byId('ask-stream-tail')).toHaveLength(0);
-  expect(spoken()).toHaveLength(0);
-  expect(move).toHaveBeenCalledTimes(1);
+
+  test('a send that put VoiceOver on the status line: focus moves to the tail once, which reads the stage itself', async () => {
+    await mount();
+    await type('Who spoke on housing?');
+    requestFocus('ask-status');
+    await press('ask-submit');
+    await stream();
+    expect(tails()).toHaveLength(1);
+    // The waiting "Writing the answer" is dropped: the tail's label says it.
+    await wait(2200);
+    expect(said().filter((text) => text !== 'Reading your question')).toEqual(
+      [],
+    );
+    // A server retry hands over again without moving focus again.
+    await act(async () => {
+      on!.retry();
+    });
+    expect(byId('ask-status-row').length).toBeGreaterThan(0);
+    await stream();
+    expect(tails()).toHaveLength(1);
+    await act(async () => {
+      finish(answer);
+    });
+    expect(jest.mocked(announceAnswer)).toHaveBeenCalledTimes(1);
+    expect(
+      said().some((text) => pieces.some((p) => text.includes(p.trim()))),
+    ).toBe(false);
+  });
+
+  test('the audit reaches the tail row, and its one finding is the recorded exception', async () => {
+    await mount();
+    await type('Who spoke on housing?');
+    await press('ask-submit');
+    await stream();
+    const findings = auditAccessibility(view!.root, { platform: 'ios' }).filter(
+      (finding) => finding.rule === 'live-region',
+    );
+    expect(findings.map(({ element }) => element)).toEqual(['ask-stream-tail']);
+    const recorded = a11yExceptions.filter(
+      (entry) =>
+        entry.screens.includes('src/features/ask/AskScreen.tsx') &&
+        entry.rule === 'live-region',
+    );
+    expect(recorded).toHaveLength(1);
+    expect(recorded[0]).toMatchObject({
+      screens: ['src/features/ask/AskScreen.tsx'],
+      element: findings[0]!.element,
+      detail: findings[0]!.detail,
+    });
+    expect(recorded[0]!.reason).toMatch(/second time/);
+    await act(async () => {
+      finish(answer);
+    });
+  });
 });
 
 test('Stop puts the question back in an empty composer and says so', async () => {

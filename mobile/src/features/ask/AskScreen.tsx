@@ -55,7 +55,8 @@ import { AskColumns } from './AskLayout';
 import { ReservedRegionArea } from '../../design/fold-area';
 import { AskEmptyState, AskIdle } from './AskIdle';
 import { AskThread } from './AskThread';
-import { useAskStageAnnouncement } from './AskStatus';
+import { streamStarted } from './AskProgress';
+import { useAskStageAnnouncer } from './AskStatus';
 import { askGround } from './ground';
 import type { Followup } from './model';
 import { useReturnFromAsk } from './open';
@@ -208,10 +209,11 @@ export default function AskScreen() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.entry]);
-  const statusAnnouncement = useAskStageAnnouncement(
-    s.stage,
-    s.stage !== null && !s.streaming.trim(),
-  );
+  const { announcement: statusAnnouncement, drop: dropStageAnnouncement } =
+    useAskStageAnnouncer(
+      s.stage,
+      s.stage !== null && !streamStarted(s.streaming),
+    );
   async function loadNames() {
     if (loadingNames.current || names.length) return;
     loadingNames.current = true;
@@ -442,6 +444,7 @@ export default function AskScreen() {
           <AskThread
             s={s}
             statusAnnouncement={statusAnnouncement}
+            onTailFocus={dropStageAnnouncement}
             chat={chat}
             profiles={profiles}
             names={names}

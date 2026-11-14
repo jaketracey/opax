@@ -6,6 +6,7 @@ import { motion } from '../src/design/tokens';
 import {
   AskStatus,
   useAskStageAnnouncement,
+  useAskStageAnnouncer,
 } from '../src/features/ask/AskStatus';
 import { AskController } from '../src/features/ask/controller';
 import {
@@ -278,7 +279,6 @@ test('polite stage announcements coalesce to two seconds from actual speech, inc
   advance(100);
   act(() => view.update(<StageProbe stage="Searching again" />));
   act(() => view.update(<StageProbe stage="Writing the answer" />));
-  act(() => view.update(<StageProbe stage={null} />));
   advance(1899);
   expect(announce).toHaveBeenCalledTimes(1);
   advance(1);
@@ -287,6 +287,51 @@ test('polite stage announcements coalesce to two seconds from actual speech, inc
     'Writing the answer',
   ]);
   expect(Platform.OS).toBe('ios');
+});
+
+test('a stage still waiting when the answer ends is dropped, never spoken after "Answer ready"', () => {
+  act(() => {
+    view = create(<StageProbe stage="Reading your question" />);
+  });
+  advance(0);
+  act(() => view.update(<StageProbe stage="Writing the answer" />));
+  advance(500);
+  act(() => view.update(<StageProbe stage={null} />));
+  advance(10_000);
+  expect(announce.mock.calls.map(([label]) => label)).toEqual([
+    'Reading your question',
+  ]);
+});
+
+test('dropping a waiting stage (the tail row took focus and reads it) keeps it unspoken and the label current', () => {
+  function DropProbe({ stage }: { stage: AskStage | null }) {
+    const announcer = useAskStageAnnouncer(stage);
+    return (
+      <View
+        accessibilityLabel={announcer.announcement}
+        onAccessibilityTap={announcer.drop}
+      />
+    );
+  }
+  const probe = () => view.root.findByType(View).props;
+  const label = () => probe().accessibilityLabel;
+  const drop = () => probe().onAccessibilityTap();
+  act(() => {
+    view = create(<DropProbe stage="Reading your question" />);
+  });
+  advance(0);
+  act(() => view.update(<DropProbe stage="Writing the answer" />));
+  advance(500);
+  expect(label()).toBe('Reading your question');
+  act(() => drop());
+  expect(label()).toBe('Writing the answer');
+  advance(10_000);
+  expect(announce.mock.calls.map(([said]) => said)).toEqual([
+    'Reading your question',
+  ]);
+  // Nothing waiting: a second drop changes nothing.
+  act(() => drop());
+  expect(label()).toBe('Writing the answer');
 });
 
 function RowProbe({ stage, row }: { stage: AskStage | null; row: boolean }) {

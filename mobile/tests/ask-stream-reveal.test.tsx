@@ -1,13 +1,19 @@
 import { useSyncExternalStore } from 'react';
+import { NavigationContext } from 'expo-router/react-navigation';
 import { act, create, type ReactTestRenderer } from 'react-test-renderer';
 import { AccessibilityInfo, StyleSheet } from 'react-native';
 import { useReduceMotionSetting } from '../src/design/accessibility';
-import { moveAccessibilityFocus } from '../src/design/keyboard';
+import {
+  moveAccessibilityFocus,
+  requestFocus,
+  takeFocusRequest,
+} from '../src/design/keyboard';
 import { Skeleton } from '../src/design/states';
 import {
   AskProgress,
   STREAM_FADE_MS,
   STREAM_QUIET_MS,
+  streamStarted,
 } from '../src/features/ask/AskProgress';
 import { AskThread } from '../src/features/ask/AskThread';
 import { AnswerBody } from '../src/features/ask/AnswerBody';
@@ -242,27 +248,152 @@ test('a quiet tail row keeps the busy state, at a fixed height, and shows its sp
   expect(spinner()).toHaveLength(0);
 });
 
-test('VoiceOver focus follows the handover from the status line to the tail row, once', () => {
+describe('VoiceOver focus at the handover', () => {
   const move = jest.mocked(moveAccessibilityFocus);
-  move.mockClear();
+  const tails = () =>
+    move.mock.calls.filter(
+      ([node]) =>
+        (node as unknown as { props: { testID?: string } } | null)?.props
+          .testID === 'ask-stream-tail',
+    );
+  beforeEach(() => {
+    move.mockClear();
+    takeFocusRequest('ask-status');
+  });
+  afterEach(() => {
+    takeFocusRequest('ask-status');
+  });
+
+  test('a send that put VoiceOver on the status line moves it to the tail row, once, and a server retry does not move it again', () => {
+    requestFocus('ask-status');
+    start();
+    act(() => handlers.stage('Writing the answer'));
+    tick(100);
+    expect(tails()).toHaveLength(0);
+    delta('Housing was debated twice. ');
+    tick(20);
+    expect(tails()).toHaveLength(1);
+    // Outside the fade, so it is opaque when VoiceOver lands on it.
+    let node = byId('ask-stream-tail')[0]!.parent;
+    while (node) {
+      expect(node.props.testID).not.toBe('ask-streamed');
+      node = node.parent;
+    }
+    delta('The bill passed in March.');
+    tick(5000);
+    expect(tails()).toHaveLength(1);
+    // The server withdraws the text and writes again: the line comes back
+    // and hands over a second time, and focus stays where the reader is.
+    act(() => handlers.retry());
+    expect(byId('ask-status-row')).toHaveLength(1);
+    delta('Housing was debated three times.');
+    tick(5000);
+    expect(byId('ask-stream-tail')).toHaveLength(1);
+    expect(tails()).toHaveLength(1);
+  });
+
+  test('a composer send, a follow-up or a retry asks for no status focus: the tail never pulls VoiceOver away', () => {
+    start();
+    act(() => handlers.stage('Writing the answer'));
+    delta('Housing was debated twice. ');
+    tick(5000);
+    expect(byId('ask-stream-tail')).toHaveLength(1);
+    expect(move).not.toHaveBeenCalled();
+  });
+
+  test('Ask mounted in a second tab stack: one view took the request, so focus moves once', () => {
+    let second: ReactTestRenderer;
+    act(() => {
+      second = create(<Thread />);
+    });
+    try {
+      requestFocus('ask-status');
+      start();
+      delta('Housing was debated twice. ');
+      tick(5000);
+      const count = (root: ReactTestRenderer) =>
+        root.root.findAll(
+          (n) =>
+            typeof n.type === 'string' && n.props.testID === 'ask-stream-tail',
+        ).length;
+      expect(count(tree) + count(second!)).toBe(2);
+      expect(tails()).toHaveLength(1);
+    } finally {
+      act(() => second.unmount());
+    }
+  });
+
+  test('a screen without navigation focus never moves it', () => {
+    const blurred = { isFocused: () => false } as never;
+    act(() =>
+      tree.update(
+        <NavigationContext.Provider value={blurred}>
+          <Thread />
+        </NavigationContext.Provider>,
+      ),
+    );
+    requestFocus('ask-status');
+    start();
+    delta('Housing was debated twice. ');
+    tick(5000);
+    expect(byId('ask-stream-tail')).toHaveLength(1);
+    expect(tails()).toHaveLength(0);
+  });
+
+  test('a view that mounts mid-answer took no handover and takes no focus', () => {
+    requestFocus('ask-status');
+    start();
+    delta('Housing was debated twice. ');
+    tick(20);
+    expect(tails()).toHaveLength(1);
+    act(() => tree.update(<></>));
+    act(() => tree.update(<Thread />));
+    tick(5000);
+    expect(tails()).toHaveLength(1);
+  });
+
+  test('the tail taking focus tells the screen, so the waiting stage is not read twice', () => {
+    const onTailFocus = jest.fn();
+    requestFocus('ask-status');
+    act(() =>
+      tree.update(
+        <AskProgress
+          stage="Writing the answer"
+          streaming=""
+          onTailFocus={onTailFocus}
+        />,
+      ),
+    );
+    tick(100);
+    act(() =>
+      tree.update(
+        <AskProgress
+          stage="Writing the answer"
+          streaming="Housing was debated twice."
+          onTailFocus={onTailFocus}
+        />,
+      ),
+    );
+    tick(20);
+    expect(tails()).toHaveLength(1);
+    expect(onTailFocus).toHaveBeenCalledTimes(1);
+  });
+});
+
+test('text that is not blank but draws nothing yet keeps the status line: one signal for the row leaving', () => {
   start();
-  act(() => handlers.stage('Writing the answer'));
-  expect(move).not.toHaveBeenCalled();
-  delta('Housing was debated twice. ');
-  tick(20);
-  expect(move).toHaveBeenCalledTimes(1);
-  expect(
-    (move.mock.calls[0]![0] as unknown as { props: { testID: string } }).props
-      .testID,
-  ).toBe('ask-stream-tail');
-  delta('The bill passed in March.');
-  tick(5000);
-  expect(move).toHaveBeenCalledTimes(1);
-  // A view that mounts mid-answer took no handover and takes no focus.
-  act(() => tree.update(<></>));
-  act(() => tree.update(<Thread />));
-  tick(5000);
-  expect(move).toHaveBeenCalledTimes(1);
+  for (const partial of ['**', '## ', '[1]']) {
+    act(() => handlers.retry());
+    delta(partial);
+    if (streamStarted(partial)) continue;
+    expect(byId('ask-status-row')).toHaveLength(1);
+    expect(byId('ask-stream-tail')).toHaveLength(0);
+  }
+  expect(['**', '## ', '[1]'].some((partial) => !streamStarted(partial))).toBe(
+    true,
+  );
+  expect(streamStarted('Housing.')).toBe(true);
+  expect(streamStarted('')).toBe(false);
 });
 
 test.each([true, null])(

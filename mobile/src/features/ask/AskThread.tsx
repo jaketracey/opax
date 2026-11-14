@@ -214,6 +214,7 @@ export function AskThread({
   onAnchorLayout,
   minHeight,
   statusAnnouncement,
+  onTailFocus,
 }: {
   s: AskState;
   chat: Pick<Chat, 'created' | 'updated'> | undefined;
@@ -228,6 +229,7 @@ export function AskThread({
   onAnchorLayout?: (index: number, y: number, latest: boolean) => void;
   minHeight: number;
   statusAnnouncement?: string;
+  onTailFocus?: () => void;
 }) {
   useAnswerArrival(s);
   const thread = s.thread;
@@ -313,6 +315,7 @@ export function AskThread({
             steps={s.steps}
             announcement={statusAnnouncement}
             streaming={s.streaming}
+            onTailFocus={onTailFocus}
           />
         ) : null}
         {failure ? (

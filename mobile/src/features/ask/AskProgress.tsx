@@ -1,4 +1,13 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
+import { NavigationContext } from 'expo-router/react-navigation';
 import {
   ActivityIndicator,
   StyleSheet,
@@ -145,27 +154,26 @@ export const streamTailLabel = 'Writing the answer';
  * waits for a second with no new piece, so a fast replay never flickers:
  * the small system spinner, or three still dots under Reduce Motion. Never
  * a live region: the stage was announced, and the answer is when it lands.
+ * It sits outside the text's fade, so it is opaque when VoiceOver lands.
  */
 function StreamTail({
   text,
-  takeFocus,
+  claimFocus,
   still,
 }: {
   text: string;
-  /** The status line handed over in this view: VoiceOver follows it here. */
-  takeFocus: boolean;
+  /** True, once, when VoiceOver should follow the status line here. */
+  claimFocus: () => boolean;
   still: boolean;
 }) {
   const row = useRef<View>(null);
-  const [focus] = useState(takeFocus);
   useEffect(() => {
-    if (!focus) return;
     // After the commit is on screen, so the row exists for VoiceOver.
-    const frame = requestAnimationFrame(() =>
-      moveAccessibilityFocus(row.current),
-    );
+    const frame = requestAnimationFrame(() => {
+      if (claimFocus()) moveAccessibilityFocus(row.current);
+    });
     return () => cancelAnimationFrame(frame);
-  }, [focus]);
+  }, [claimFocus]);
   const [quiet, setQuiet] = useState({ text, shown: false });
   if (quiet.text !== text) setQuiet({ text, shown: false });
   useEffect(() => {
@@ -211,8 +219,22 @@ function StreamTail({
   );
 }
 
-const parse = (text: string) =>
-  text ? parseAnswer(text, { streaming: true }) : [];
+let parsed: { text: string; blocks: Block[] } = { text: '', blocks: [] };
+/** The streamed text's blocks; the latest text is parsed once for all views. */
+function streamedBlocks(text: string): Block[] {
+  if (parsed.text !== text)
+    parsed = {
+      text,
+      blocks: text ? parseAnswer(text, { streaming: true }) : [],
+    };
+  return parsed.blocks;
+}
+/**
+ * True once streamed text draws something and the status row has given way
+ * to it. Text that is not blank can still parse to nothing ("**", "## ", a
+ * table's first row), so this, not the raw text, is the one signal.
+ */
+export const streamStarted = (text: string) => streamedBlocks(text).length > 0;
 
 /**
  * Streamed text under its one pill, through the same reader as the final
@@ -228,7 +250,7 @@ export function StreamedAnswer({
   pillTestID?: string;
   testID?: string;
 }) {
-  const blocks = useMemo(() => parse(text), [text]);
+  const blocks = streamedBlocks(text);
   if (!blocks.length) return null;
   return (
     <View style={styles.block}>
@@ -251,13 +273,16 @@ export function AskProgress({
   steps = [],
   announcement = stage ?? 'Reading your question',
   streaming,
+  onTailFocus,
 }: {
   stage: AskStage | null;
   steps?: readonly AskStep[];
   announcement?: string;
   streaming: string;
+  /** VoiceOver moved to the tail row, which reads the stage itself. */
+  onTailFocus?: () => void;
 }) {
-  const blocks = useMemo(() => parse(streaming), [streaming]);
+  const blocks = streamedBlocks(streaming);
   const started = blocks.length > 0;
   const motionOn = useReduceMotionSetting() === false;
   // Set while rendering, so the line never drops out for a frame before its
@@ -265,12 +290,28 @@ export function AskProgress({
   // nothing.
   const [was, setWas] = useState(started);
   const [leaving, setLeaving] = useState(false);
-  const [handed, setHanded] = useState(false);
   if (was !== started) {
     setWas(started);
     setLeaving(started && motionOn);
-    setHanded(started);
   }
+  // VoiceOver follows the status line to the tail row only where it was put
+  // on the line: this view's row took the send's focus request (a composer
+  // send, a follow-up and a retry make none, and of several mounted Ask
+  // stacks one takes it), this screen has navigation focus, and it has not
+  // already moved for this answer (a server retry brings the line back and
+  // hands over again).
+  const navigation = useContext(NavigationContext);
+  const focus = useRef({ owned: false, moved: false });
+  const tookFocus = useCallback(() => {
+    focus.current = { owned: true, moved: false };
+  }, []);
+  const claimFocus = useCallback(() => {
+    const { owned, moved } = focus.current;
+    if (!owned || moved || !(navigation?.isFocused() ?? true)) return false;
+    focus.current.moved = true;
+    onTailFocus?.();
+    return true;
+  }, [navigation, onTailFocus]);
   useEffect(() => {
     if (!leaving) return;
     const timer = setTimeout(() => setLeaving(false), STREAM_FADE_MS);
@@ -292,15 +333,26 @@ export function AskProgress({
           style={[leaving ? styles.leaving : null, fading]}
           testID="ask-status-slot"
         >
-          <AskStatus stage={stage} steps={steps} announcement={announcement} />
+          <AskStatus
+            stage={stage}
+            steps={steps}
+            announcement={announcement}
+            onTookFocus={tookFocus}
+          />
         </Animated.View>
       ) : null}
       {started ? (
-        <FadeIn animate={leaving} style={styles.block} testID="ask-streamed">
-          <MachinePill note={machineNote} />
-          <StreamedBlocks blocks={blocks} reveal testID="ask-streaming" />
-          <StreamTail text={streaming} takeFocus={handed} still={!motionOn} />
-        </FadeIn>
+        <View style={styles.block}>
+          <FadeIn animate={leaving} style={styles.block} testID="ask-streamed">
+            <MachinePill note={machineNote} />
+            <StreamedBlocks blocks={blocks} reveal testID="ask-streaming" />
+          </FadeIn>
+          <StreamTail
+            text={streaming}
+            claimFocus={claimFocus}
+            still={!motionOn}
+          />
+        </View>
       ) : null}
     </View>
   );

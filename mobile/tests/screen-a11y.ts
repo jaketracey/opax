@@ -30,9 +30,6 @@ type Options = {
   linkTrigger?: unknown;
 };
 const host = (node: ReactTestInstance) => typeof node.type === 'string';
-// Busy rows that take over from a row whose status was already spoken: a
-// live region there would read it a second time.
-const spokenBefore = new Set<unknown>(['ask-stream-tail']);
 const hidden = (node: ReactTestInstance) =>
   node.props.accessibilityElementsHidden ||
   node.props.importantForAccessibility === 'no-hide-descendants' ||
@@ -320,11 +317,7 @@ export function auditAccessibility(
       }
       if (r === 'progressbar' || (p.accessibilityState?.busy && !target)) {
         pending = true;
-        if (
-          !isLive &&
-          !options.announcements?.includes(label) &&
-          !spokenBefore.has(p.testID)
-        )
+        if (!isLive && !options.announcements?.includes(label))
           add(
             'live-region',
             node,
