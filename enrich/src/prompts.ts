@@ -25,7 +25,16 @@ export interface PromptRecord {
   historic?: boolean
   /** Not sent to the model; used only for name provenance. */
   nameText?: string
+  /**
+   * The speaker_type label, set only by the 5b-cheap regeneration runner (scripts/regen). The Worker
+   * never sets it, so its prompts stay byte-identical. 'witness' adds the field and one role line.
+   */
+  speaker_role?: string | null
 }
+
+/** 5b audit: committee witnesses were written up as askers ("Asked ...") or movers. */
+export const WITNESS_ROLE_LINE =
+  "SPEAKER ROLE\nspeaker_role is witness: the speaker is giving evidence to a committee. Say what they told the committee; never start with 'Asked' or 'Moved'."
 
 const INTRO =
   'You enrich Australian public records for OPAX. The record you are given identifies its kind; it may be a parliamentary speech or an official government transcript or release.'
@@ -69,6 +78,7 @@ export function buildRecordMessage(record: PromptRecord): string {
     state: record.state ?? null,
     party: record.party ?? null,
     words: record.words,
+    ...(record.speaker_role === 'witness' ? { speaker_role: 'witness' } : {}),
     text: record.text,
   })}`
 }
@@ -76,6 +86,7 @@ export function buildRecordMessage(record: PromptRecord): string {
 /** The user message: the record, plus (on a retry) the validator's complaints. */
 export function buildUserPrompt(record: PromptRecord, complaints: readonly string[] = [], offendingTerms: readonly string[] = []): string {
   let prompt = buildRecordMessage(record)
+  if (record.speaker_role === 'witness') prompt += '\n\n' + WITNESS_ROLE_LINE
   if (complaints.length) {
     // codex_enrichment_loop.main(): the validator's complaints go back with the retry.
     prompt +=
