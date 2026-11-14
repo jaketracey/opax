@@ -66,6 +66,8 @@
     // Route since 14 Oct (Jake: "deploy it to prod ... and I will test"); the old engine answers when the loop fails or times out.
     // OPENROUTER_API_KEY is provisioned by the hub, never by local tooling.
     "RESEARCH_LOOP": "route",
+    // The framing line shown once research has chosen its first lookups. "off" serves the stream as before it existed.
+    "ASK_OPENING_LINE": "on",
     // Research ceilings default to src/ask-budgets.ts; operator overrides may lower them.
     "RESEARCH_LOOP_DAILY_USD": "10",
     "RESEARCH_LOOP_MODEL_ID": "deepseek/deepseek-v4.1-flash",

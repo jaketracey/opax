@@ -24,7 +24,11 @@ import {researchSentences} from './research-sentences'
 
 export const ANSWER_WRITING_VERSION = 'written-answer-30-clause-who'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
-export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
+export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope']
+  /** The opening line the reader has already been shown (research-opening-line.ts); absent when none was. */
+  opening?: string }
+/** Added to the writer's contract only when a line was shown: the answer follows it as the next paragraph. */
+export const OPENING_LINE_WRITING_RULE = ' The reader has already been shown the line in "opening", which says what OPAX is looking up; your answer follows it as the next paragraph. Start with the finding itself, in words of its own.'
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
 const clean = (s: string) => s.replace(/\*\*/g, '').replace(/\s+/g, ' ').trim()
 const key = (s: string) => clean(s).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
@@ -640,7 +644,7 @@ export function writingPrompt(input: WritingInput): string {
     'Receipt aggregates use their stated financial-year coverage once in the lead. Annual-return references are example sources within that coverage. Describe uncertainty and the measure in plain language. Give supported figures first, then one necessary scope sentence flagged coverage:true. A record limitation goes in one short coverage sentence after the answer, never in its place. ' +
     'Hearing excerpts name the recorded speaker and hearing day/date, with a short literal quotation and fact id. A question by counsel or a commissioner is a question; identify each witness answer explicitly. Use recorded names and roles. Identify the material once as hearing evidence; licence details belong in the source card. ' +
     'For division outcomes, state whether the motion passed or was defeated and its ayes/noes first, then the requested person or party vote. For floor crossers lead with the recorded names. Retain party labels and partial member-list qualifications. Bill passage uses its separately documented lifecycle result. ' +
-    'State each fact once across the answer and selected points. Each figure has one supporting fact id. Keep salary components for questions asking for them. Quote literal source text. Relevant coverage belongs once in coverage.note after the answer. Return a JSON object with answer_decision answer and sentences: {"answer_decision":"answer","sentences":[{"text":"One complete sentence.","facts":[1],"coverage":false}]}. A sentence of context from general knowledge may use an empty facts list. Use plain sentence text, under 180 words unless a requested annual or monthly series needs more.' })
+    'State each fact once across the answer and selected points. Each figure has one supporting fact id. Keep salary components for questions asking for them. Quote literal source text. Relevant coverage belongs once in coverage.note after the answer. Return a JSON object with answer_decision answer and sentences: {"answer_decision":"answer","sentences":[{"text":"One complete sentence.","facts":[1],"coverage":false}]}. A sentence of context from general knowledge may use an empty facts list. Use plain sentence text, under 180 words unless a requested annual or monthly series needs more.' + (input.opening ? OPENING_LINE_WRITING_RULE : ''), ...(input.opening ? { opening: input.opening } : {}) })
 }
 
 /** Keep already checked passage points (including loose uncited survivors) beside the written record answer. */

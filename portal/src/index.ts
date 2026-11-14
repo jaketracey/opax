@@ -122,7 +122,8 @@ import { SEARCH_SORTS, compareSearchResults } from './search-sort'
 import { runAgentic, classifyAgentic, agenticCacheKey, resolveNamedScope, type NamedScope, inferPeriod, bounded, AGENTIC_BUDGET_MS, type AgenticDeps, type AgenticPayload, type Progress } from './agentic-ask'
 import { agenticAskPayload } from './agentic-response'
 import { linkAskSources } from './ask-source-links'
-import { recordAgenticRun } from './agentic-monitor'
+import { recordAgenticRun, recordAskCallCost } from './agentic-monitor'
+import { openingLineEnabled, openingLineHook, withOpeningLine, OPENING_LINE_LABEL, type OpeningLineHook } from './research-opening-line'
 import { AGENTIC_TOOLS_VERSION } from './agentic-tools'
 import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 import { createResearch, researchLimits } from './research-loop'
@@ -7022,6 +7023,8 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
     }
     let releasedResearchPrefix=''
     let releasedResearchAnswer:import('./research-types').QualitativeAnswer|undefined
+    // Set only for a fresh research stream with ASK_OPENING_LINE on; with it unset every path below is as it was.
+    let opening:OpeningLineHook|undefined
     const finish = (run: AgenticPayload) => {
       const payload=agenticAskPayload(run, question)
       // Source rows are linked last: grounding reads the rows as evidence and re-derives which are cited.
@@ -7029,7 +7032,8 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
       const response = json(finalPayload)
       // An answer with no citation at all is not kept for a week, and a refusal or limitation not at all: the next ask may do better (as cacheableAnswer).
       if (!env.RESEARCH_EVAL && !run.steps.some(s => ['paid_answer', 'ranked_money', 'parliamentary_pay'].includes(s.tool)) && key && run.answered && (run.qualitative?.sources.length ?? run.facts.length) > 0 && !run.over_budget && !privateTurn && !shortenedCaller(caller) && run.qualitative?.answer_status !== 'uncited' && cacheableRoutedAnswer(finalPayload, loopRoute)) storeGenerationCache(env, ctx, key, response.clone(), ASK_CACHE_TTL)
-      return response
+      // A shown opening line leads this stream's answer. The stored answer is kept without it: a cached answer has no wait to frame.
+      return opening?.text ? json(withOpeningLine(finalPayload, opening.text, opening.call)) : response
     }
     if (!streaming) {
       try {
@@ -7053,9 +7057,20 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
         let closeSentences=()=>{}
         const enableSentences=async()=>{if(!sentenceLane){sentenceLane=true;await send('research_sentences',{})}}
         if(loopRoute){
-          const sentences=researchSentenceStream(question,async(text,checked)=>{await enableSentences();await send('research_sentence',{text});releasedResearchPrefix+=text;releasedResearchAnswer=checked})
+          const sentences=researchSentenceStream(question,async(text,checked)=>{opening?.close();await enableSentences();await send('research_sentence',{text});releasedResearchPrefix+=text;releasedResearchAnswer=checked})
           send.answer=sentences.preview
           closeSentences=sentences.close
+          if(openingLineEnabled(env.ASK_OPENING_LINE)){
+            // The line travels the checked sentence lane, so a client reads it as the answer's first text. Once answer
+            // text is out (above) or the run has ended (below) no line is shown, so it can only ever be earlier text.
+            opening=openingLineHook(async text=>{await enableSentences();await send('research_sentence',{text})},call=>{
+              if(env.RESEARCH_EVAL)return
+              ctx.waitUntil(recordAskCallCost(env.COMMUNITY_DB,question,OPENING_LINE_LABEL,call.ms,call.cost_usd).catch(()=>console.warn('Ask monitoring write unavailable')))
+            })
+            send.opening=opening
+            const endSentences=closeSentences
+            closeSentences=()=>{opening?.close();endSentences()}
+          }
         }
         ctx.waitUntil((async () => {
           try {
@@ -7089,7 +7104,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
             if (!gone && !request.signal.aborted){
               if(releasedResearchPrefix&&releasedResearchAnswer){
                 const partial=interruptedResearchAnswer(releasedResearchAnswer,releasedResearchPrefix,budget.signal.aborted)
-                const done={...partial,followups:[],research:lastResearch??{mode:'loop',rounds:0,trail:[],sources:[]}}
+                const done=withOpeningLine({...partial,followups:[],research:lastResearch??{mode:'loop',rounds:0,trail:[],sources:[]}},opening?.text??'')
                 console.log(JSON.stringify({kind:'research_loop_stream_cut_short',count:1,reason:budget.signal.aborted?'deadline':'fallback_error',preview_chars:releasedResearchPrefix.length}))
                 controller.enqueue(encoder.encode(`event: done\ndata: ${JSON.stringify(done)}\n\n`))
               }else controller.enqueue(encoder.encode('event: error\ndata: {"error":"The answer took too long. Please try again.","final":true}\n\n'))
