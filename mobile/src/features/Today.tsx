@@ -297,14 +297,18 @@ export default function Today() {
   // cannot draw step aside. Unmounting them clears their reports, so the
   // condition is held for this attempt; without it the blocks remounted,
   // failed again and looped. A pull, or the device coming back online,
-  // starts the next attempt.
+  // starts the next attempt. The hold lasts only while the edition has
+  // failed: if its background re-read brings it back, the page draws at
+  // once (and cannot loop, since holding again needs the edition failed).
   const nothingSavedNow =
     reports.nothingSaved && edition.block?.status === 'error';
   const [nothingSavedAt, setNothingSavedAt] = useState<number | null>(null);
   // Held while rendering (React's adjust-state-on-change pattern), so the
   // commit that sets the blocks aside already holds it.
   if (nothingSavedNow && nothingSavedAt !== attempt) setNothingSavedAt(attempt);
-  const nothingSaved = nothingSavedNow || nothingSavedAt === attempt;
+  const nothingSaved =
+    nothingSavedNow ||
+    (nothingSavedAt === attempt && edition.block?.status === 'error');
   const wasOffline = useRef(offline);
   useEffect(() => {
     const back = wasOffline.current && !offline;

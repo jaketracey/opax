@@ -1058,6 +1058,37 @@ describe('offline on a first install, nothing saved', () => {
     expect(hosts(r, 'today-ending')).toHaveLength(0);
   });
 
+  test('an edition that arrives with the background re-read ends the hold, with no pull', async () => {
+    offlineFirstInstall();
+    let late!: (block: c.Block<c.EditionView>) => void;
+    // The launch read fails offline; the background re-read answers later.
+    mock.todayEdition.mockResolvedValueOnce(offlineError).mockReturnValueOnce(
+      new Promise((resolve) => {
+        late = resolve;
+      }),
+    );
+    const r = await render(<Today />);
+    await settle();
+    expect(hosts(r, 'today-unavailable')).not.toHaveLength(0);
+    expect(blocks(r.root)).not.toContain('today-edition-card');
+    const bills = mock.todayBills.mock.calls.length;
+    await act(async () => late(editionAged(1)));
+    await settle();
+    // Drawn from the answer already in hand: no new attempt, no pull.
+    expect(blocks(r.root)).toContain('today-edition-card');
+    expect(hosts(r, 'today-unavailable')).toHaveLength(0);
+    expect(mock.todayEdition).toHaveBeenCalledTimes(2);
+    expect(mock.todayEdition.mock.calls.map(([refresh]) => refresh)).toEqual([
+      false,
+      'background',
+    ]);
+    // Bills comes back to say it could not load, once, and the page rests.
+    expect(mock.todayBills.mock.calls.length - bills).toBeLessThanOrEqual(2);
+    const settled = mock.todayBills.mock.calls.length;
+    await settle();
+    expect(mock.todayBills).toHaveBeenCalledTimes(settled);
+  });
+
   test('coming back online retries once', async () => {
     offlineFirstInstall();
     const r = await render(<Today />);
