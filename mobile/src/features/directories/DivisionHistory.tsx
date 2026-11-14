@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { RouteOptions } from '../../navigation/preview';
 import {
   createContext,
@@ -15,6 +16,7 @@ import {
   AccessibilityInfo,
   ActivityIndicator,
   Keyboard,
+  Platform,
   RefreshControl,
   SectionList,
   StyleSheet,
@@ -290,6 +292,11 @@ export default function DivisionHistory() {
   const [inset, setInset] = useState(0);
   const [text, setText] = useState('');
   const [query, setQuery] = useState('');
+  // Android's search view takes the whole bar while it is open, and
+  // react-native-screens hides the bar's other items, Filters among them,
+  // from its open to its close. (iOS 26 and later also hide Filters while
+  // search is active; an iOS follow-up handles that.)
+  const [searchOpen, setSearchOpen] = useState(false);
   useEffect(() => {
     const timer = setTimeout(() => setQuery(text.trim()), 150);
     return () => clearTimeout(timer);
@@ -410,6 +417,11 @@ export default function DivisionHistory() {
     identifier: 'division-history-filters',
   };
   const clear = () => store.set(store.model.reset(store.get()));
+  const filtersHref = filtersRoute('divisions', owner);
+  // So on Android, an open search pins Filters under the search field,
+  // where scrolling the results can't take it: search and filter combine.
+  const filtersUnderSearch =
+    Platform.OS === 'android' && (searchOpen || !!text);
 
   const searching = !!query;
   const countText = searching
@@ -542,14 +554,20 @@ export default function DivisionHistory() {
           title: TITLE,
           headerTitleAlign: 'center',
           headerLargeTitleEnabled: false,
-          headerSearchBarOptions: { ...searchBar, hideWhenScrolling: true },
+          headerSearchBarOptions: {
+            ...searchBar,
+            hideWhenScrolling: true,
+            ...(Platform.OS === 'android'
+              ? {
+                  onOpen: () => setSearchOpen(true),
+                  onClose: () => setSearchOpen(false),
+                }
+              : {}),
+          },
           ...headerItems(() =>
             pageItems({
               name: TITLE,
-              filters: {
-                active: on > 0,
-                href: filtersRoute('divisions', owner),
-              },
+              filters: { active: on > 0, href: filtersHref },
               menu: [
                 {
                   title: 'Copy link',
@@ -579,6 +597,24 @@ export default function DivisionHistory() {
       {/* The iPad sidebar floats over a bare list; this keeps rows clear of
           it, and on regular width the rows keep the readable column. */}
       <SidebarSafe style={styles.screen}>
+        {filtersUnderSearch ? (
+          <View style={styles.searchFilters}>
+            <Button
+              label="Filters"
+              variant="outlined"
+              symbol={
+                on
+                  ? 'line.3.horizontal.decrease.circle.fill'
+                  : 'line.3.horizontal.decrease.circle'
+              }
+              accessibilityLabel={filterState.accessibilityLabel}
+              accessibilityHint={filterState.accessibilityHint}
+              disabled={filterState.disabled}
+              onPress={() => router.push(filtersHref)}
+              testID="division-history-search-filters"
+            />
+          </View>
+        ) : null}
         <ReportInset.Provider value={setInset}>
           <VoteInset.Provider value={inset}>
             <StatePageProvider refreshing={refreshing}>
@@ -664,6 +700,12 @@ function Separator() {
 }
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.paper },
+  searchFilters: {
+    flexDirection: 'row',
+    paddingHorizontal: layout.screenMargin,
+    paddingVertical: rhythm.tight,
+    backgroundColor: colors.paper,
+  },
   content: {
     paddingHorizontal: layout.screenMargin,
     paddingTop: rhythm.block,
