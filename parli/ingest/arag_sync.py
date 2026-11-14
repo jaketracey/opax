@@ -35,10 +35,10 @@ from pathlib import Path
 from typing import Any, Iterator, Optional
 
 from parli.arag import AragConfig, AragError, KbClient, load_dotenv
+from parli.ingest import nsw_publication, backfill_guard as growth
+from itertools import groupby
 from parli.ingest.speaker_roles import chair_role, chair_party_sql
 from parli.ingest import senate_backfill_policy as senate_policy
-from parli.ingest import backfill_guard as growth
-from itertools import groupby
 from parli.ingest.speech_hygiene import (
     clean_party,
     clean_speaker_name,
@@ -118,7 +118,9 @@ def prepare_dedupe(db: sqlite3.Connection, since: str, after: int | None = None)
     the desktop's NVMe, a night's worth of temp-file I/O on a network disk. Leave `after` unset (the
     repair path, --full) for every date."""
     t0 = time.time()
-    only_new_dates = (f"date IN (SELECT DISTINCT date FROM speeches WHERE speech_id > {int(after)}) AND "
+    owned_dates = (" OR speech_id IN (SELECT speech_id FROM nsw_backfill_turns WHERE speech_id IS NOT NULL)"
+                   if nsw_publication.managed(db) else "")
+    only_new_dates = (f"date IN (SELECT DISTINCT date FROM speeches WHERE speech_id > {int(after)}{owned_dates}) AND "
                       if after else "")
     db.execute("CREATE TEMP TABLE IF NOT EXISTS zenodo_dates AS "
                "SELECT DISTINCT date FROM speeches WHERE source='zenodo'")
@@ -358,10 +360,11 @@ def _push_one(kb: KbClient, body: dict, guard=None, deadline=None) -> tuple[str,
             return body['slug'], growth.HOLD + f'Progress HTTP {e.status}; retry next night'
         return body["slug"], f"{e.status}: {e.detail[:200]}"
 
-
 def _batches(db: sqlite3.Connection, spec: dict, after: int, remaining: int,
              since: str, batch_size: int = 200) -> Iterator[list[sqlite3.Row]]:
     select = spec["select"].format(since=since)
+    if spec['pk'] == 'speech_id':
+        select = select.replace('ORDER BY speech_id LIMIT ?', nsw_publication.exclude_sql(db) + ' ORDER BY speech_id LIMIT ?')
     while remaining > 0:
         rows = db.execute(select, (after, min(batch_size, remaining))).fetchall()
         if not rows:
@@ -369,6 +372,9 @@ def _batches(db: sqlite3.Connection, spec: dict, after: int, remaining: int,
         yield rows
         after = rows[-1][0] if spec["pk"] == "rowid" else rows[-1][spec["pk"]]
         remaining -= len(rows)
+
+
+BUDGET_ENVS = ('OPAX_SENATE_BACKFILL_BUDGET_SECONDS', 'OPAX_BACKFILL_NSW_BUDGET_S')
 
 
 class BackfillPublication:
@@ -387,14 +393,16 @@ class BackfillPublication:
             return
         self.guard.ensure_running()
         if self.deadline is None:
-            budget_env = ('OPAX_BACKFILL_NSW_BUDGET_S' if stage == 'nsw'
-                          else 'OPAX_SENATE_BACKFILL_BUDGET_SECONDS')
+            # One budget for the whole sync run, shared by Senate and NSW: the
+            # clock starts at the first backfill publication of either stage
+            # and the tighter of the two configured budgets applies.
             try:
-                seconds = float(os.environ.get(budget_env, '1200'))
+                budgets = [float(os.environ.get(env, '1200')) for env in BUDGET_ENVS]
             except ValueError:
-                seconds = 0
-            if not 0 < seconds <= 1200:
+                budgets = [0.0]
+            if not all(0 < seconds <= 1200 for seconds in budgets):
                 raise growth.Stopped('invalid backfill publication budget; must be 1..1200 seconds')
+            seconds = min(budgets)
             self.deadline = time.monotonic() + seconds
         if time.monotonic() >= self.deadline:
             raise growth.Stopped('normal-sync backfill time budget spent; resumes next night')
@@ -448,20 +456,120 @@ def _push_batch(kb, bodies, tstate, publication=None):
         _push_pool(kb, group, tstate, publication.guard, publication.deadline)
 
 
+def sync_nsw_backfill(kb, db, state, limit, dry_run, since, publication=None):
+    """Drain repair-owned IDs independently of normal sync's high-water mark.
+
+    The single switch and shared stop apply to retries and checkpointed rows.
+    The normal read-only DB stays read-only; ack/failure receipts use sync's JSON.
+    """
+    if not nsw_publication.managed(db) or not nsw_publication.approved() or limit <= 0:
+        return 0
+    try:
+        day_cap = int(os.environ.get('OPAX_BACKFILL_NSW_CAP', '4'))
+        if not 0 <= day_cap <= 4:
+            raise ValueError('NSW publication cap must be 0..4')
+    except ValueError:
+        print(growth.HOLD + 'invalid NSW publication day cap; maximum four', file=sys.stderr)
+        return 0
+    if day_cap == 0:
+        return 0
+    pub = nsw_publication.ledger(state)
+    done = set(map(int, pub['published'])) | set(map(int, pub['excluded']))
+    db.execute('CREATE TEMP TABLE IF NOT EXISTS nsw_publication_done (speech_id INTEGER PRIMARY KEY)')
+    db.execute('DELETE FROM temp.nsw_publication_done')
+    db.executemany('INSERT INTO temp.nsw_publication_done VALUES (?)', [(sid,) for sid in done])
+    predicate = (f' AND speech_id IN ({nsw_publication.ready_ids_sql(db)}) '
+                 'AND speech_id NOT IN (SELECT speech_id FROM temp.nsw_publication_done) ')
+    select = TABLES['speeches']['select'].format(since=since).replace('ORDER BY speech_id LIMIT ?', predicate + ' ORDER BY speech_id LIMIT ?')
+    # Apply exactly normal sync's eligibility rules. Excluded short/procedural
+    # or duplicate texts are distinct from an acknowledged publication.
+    eligible = {r[0] for r in db.execute(select.replace('SELECT *', 'SELECT speech_id', 1), (0, 10**12))}
+    controlled = {r[0] for r in db.execute('SELECT speech_id FROM speeches WHERE length(text)>=200 AND speech_id IN ('
+                                        + nsw_publication.ready_ids_sql(db) + ')')}
+    if not dry_run:
+        pub['excluded'] = sorted(set(pub['excluded']) | (controlled - eligible - done))
+    # Recovery from a publication outage must respect the same four-day ceiling
+    # as acquisition. Leave later days pending, distinct from normal exclusions.
+    days = db.execute('SELECT chamber,date FROM (' + select +
+                      ') GROUP BY chamber,date ORDER BY MIN(speech_id) LIMIT ?',
+                      (0, 10**12, day_cap)).fetchall()
+    db.execute('CREATE TEMP TABLE IF NOT EXISTS nsw_publication_days (chamber TEXT,date TEXT,PRIMARY KEY(chamber,date))')
+    db.execute('DELETE FROM temp.nsw_publication_days')
+    db.executemany('INSERT INTO temp.nsw_publication_days VALUES (?,?)', [(r[0],r[1]) for r in days])
+    select = select.replace('ORDER BY speech_id LIMIT ?',
+                            ' AND (chamber,date) IN (SELECT chamber,date FROM temp.nsw_publication_days) ORDER BY speech_id LIMIT ?')
+    after = attempted = 0
+    own_publication = publication is None
+    try:
+        if own_publication:
+            publication = BackfillPublication(kb) if not dry_run and eligible else None
+    except OSError:
+        print(growth.HOLD + 'shared state directory unavailable; NSW publication deferred', file=sys.stderr)
+        return 0
+    while attempted < limit:
+        rows = db.execute(select, (after, min(200, limit-attempted))).fetchall()
+        if not rows:
+            break
+        if dry_run:
+            print(f'[NSW backfill] {len(rows)} approved candidates; dry run, no publication')
+            return len(rows)
+        bodies = []
+        for row in rows:
+            body = map_speech(row)
+            body['extra']['metadata']['nsw_backfill'] = True
+            growth.tag(body, 'nsw')
+            bodies.append(body)
+        outcome = {'failed': {}, 'pushed': 0}
+        _push_batch(kb, bodies, outcome, publication)
+        for row, body in zip(rows, bodies):
+            sid, slug = row['speech_id'], body['slug']
+            if slug in outcome['failed']:
+                pub['failed'][str(sid)] = outcome['failed'][slug]
+            else:
+                pub['published'].append(sid)
+                pub['failed'].pop(str(sid), None)
+                state.get('tables', {}).get('speeches', {}).get('failed', {}).pop(slug, None)
+        pub['published'] = sorted(set(pub['published']))
+        save_state(state)
+        after = rows[-1]['speech_id']
+        attempted += len(rows)
+        if (growth.state_dir() / 'backfill.STOP').exists() or (
+                publication.deadline and time.monotonic() >= publication.deadline):
+            break
+    if publication and own_publication:
+        publication.finish()
+    if not dry_run:
+        save_state(state)
+    return attempted
+
+
 def sync_table(kb: KbClient, db: sqlite3.Connection, table: str, spec: dict,
-               state: dict, limit: int, dry_run: bool, since: str) -> None:
+               state: dict, limit: int, dry_run: bool, since: str, publication=None) -> None:
     tstate = state["tables"].setdefault(table, {"after": 0, "pushed": 0, "failed": {}})
     after = tstate["after"]
-    publication = BackfillPublication(kb) if not dry_run else None
+    own_publication = publication is None
+    if own_publication and not dry_run:
+        publication = BackfillPublication(kb)
     print(f"[{table}] resuming after {spec['pk']}={after}, "
           f"{tstate['pushed']:,} already pushed, {len(tstate['failed'])} failed")
 
+    examined = 0
     # The normal checkpoint may pass held Senate IDs while ordinary speeches
     # continue. Keep those IDs in the existing retry outbox, and release only
     # spending holds through this same worker pool when explicitly enabled.
+    # NSW-owned IDs never go through this loop: they are republished only by
+    # sync_nsw_backfill, which tags them and charges the shared guard.
     if table == 'speeches' and not dry_run:
-        held = [slug for slug, error in tstate['failed'].items()
-                if error == senate_policy.SPEND_HOLD or error.startswith(growth.HOLD)][:limit]
+        held = []
+        for slug, error in list(tstate['failed'].items()):
+            if not (error == senate_policy.SPEND_HOLD or error.startswith(growth.HOLD)):
+                continue
+            sid = int(slug.removeprefix('speech-'))
+            if nsw_publication.owned(db, sid):
+                nsw_publication.ledger(state)['failed'].setdefault(str(sid), error)
+                continue
+            held.append(slug)
+        held = held[:limit]
         for offset in range(0, len(held), 200):
             bodies = []
             for slug in held[offset:offset + 200]:
@@ -476,6 +584,7 @@ def sync_table(kb: KbClient, db: sqlite3.Connection, table: str, spec: dict,
         limit -= len(held)
 
     for rows in _batches(db, spec, after, limit, since):
+        examined += len(rows)
         bodies = [spec["map"](r) for r in rows]
         if dry_run:
             # Never advance or persist the checkpoint on a dry run.
@@ -492,14 +601,20 @@ def sync_table(kb: KbClient, db: sqlite3.Connection, table: str, spec: dict,
         if done and done % 1000 < len(rows):
             print(f"[{table}] {done:,} pushed (checkpoint {spec['pk']}={tstate['after']})")
 
-    if publication:
+    if table == 'speeches':
+        # Same publication object, so Senate and NSW share one time budget.
+        sync_nsw_backfill(kb, db, state, max(0, limit-examined), dry_run, since, publication)
+    if dry_run:
+        return
+    if publication and own_publication:
         publication.finish()
     save_state(state)
     print(f"[{table}] done: {tstate['pushed']:,} pushed, {len(tstate['failed'])} failed")
 
 
-def retry_failed(kb: KbClient, db: sqlite3.Connection, state: dict) -> None:
-    publication = BackfillPublication(kb)
+def retry_failed(kb: KbClient, db: sqlite3.Connection, state: dict, publication=None) -> None:
+    own_publication = publication is None
+    publication = publication or BackfillPublication(kb)
     for table, spec in TABLES.items():
         tstate = state["tables"].get(table)
         if not tstate or not tstate["failed"]:
@@ -519,6 +634,9 @@ def retry_failed(kb: KbClient, db: sqlite3.Connection, state: dict) -> None:
             if row is None:
                 tstate["failed"].pop(slug)
                 continue
+            if table == 'speeches' and nsw_publication.owned(db, pk_val):
+                nsw_publication.ledger(state)['failed'].setdefault(str(pk_val), tstate['failed'][slug])
+                continue
             body = spec['map'](row)
             stage = growth.stage_for(body)
             meta = body.get('extra', {}).get('metadata', {})
@@ -535,7 +653,10 @@ def retry_failed(kb: KbClient, db: sqlite3.Connection, state: dict) -> None:
             else:
                 tstate["failed"][slug] = err
         save_state(state)
-    publication.finish()
+    # One publication object, so retries and NSW drain share one time budget.
+    sync_nsw_backfill(kb, db, state, SAFETY_LIMIT, False, DEFAULT_SINCE, publication)
+    if own_publication:
+        publication.finish()
 
 
 # ---------------------------------------------------------------------------
@@ -665,6 +786,8 @@ def repair_speech_texts(
             if row is None or row["text_clean"] is None:
                 state["failed"].pop(slug, None)
                 continue
+            if nsw_publication.owned(db, speech_id):
+                continue
             result = _patch_speech_text(kb, row, capture_sample=False)
             status = result["status"]
             run[status] = run.get(status, 0) + 1
@@ -684,7 +807,7 @@ def repair_speech_texts(
             "SELECT * FROM speeches WHERE speech_id > ? AND text_clean IS NOT NULL "
             f"AND ({condition}) AND date >= {since!r} AND LENGTH(text) >= {MIN_SPEECH_CHARS} "
             f"{JUNK_PREDICATES} {DEDUPE_PREDICATES} "
-            "ORDER BY speech_id LIMIT ?"
+            f"{nsw_publication.exclude_sql(db)} ORDER BY speech_id LIMIT ?"
         )
         rows = db.execute(sql, (state["after"], batch_size)).fetchall()
         if not rows:
@@ -843,8 +966,13 @@ def main() -> None:
 
     state = load_state()
 
+    # One publication per run: Senate and NSW backfill share a single time
+    # budget and one growth guard across every table and the NSW drain.
+    publication = None if args.dry_run else BackfillPublication(kb)
+
     if args.retry_failed:
-        retry_failed(kb, db, state)
+        retry_failed(kb, db, state, publication)
+        publication.finish()
         return
 
     t0 = time.time()
@@ -852,7 +980,9 @@ def main() -> None:
         table = table.strip()
         if table not in TABLES:
             sys.exit(f"Unknown table {table!r} (choose from {', '.join(TABLES)})")
-        sync_table(kb, db, table, TABLES[table], state, limit, args.dry_run, args.since)
+        sync_table(kb, db, table, TABLES[table], state, limit, args.dry_run, args.since, publication)
+    if publication:
+        publication.finish()
     print(f"Elapsed {time.time() - t0:.0f}s. State: {STATE_PATH}")
 
 

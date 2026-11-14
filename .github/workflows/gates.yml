@@ -159,6 +159,12 @@ jobs:
           mapfile -t suites < <(ls scripts/test_*.py scripts/vm/test_*.py \
             | grep -v -x -e scripts/vm/test_fixture_imports.py -e scripts/vm/test_build_evidence_bundle.py)
           uv run --frozen --with pytest pytest -q -p no:cacheprovider -rs "${suites[@]}"
+      - name: Test bounded NSW repair and shared growth guard
+        run: |
+          uv run --frozen --with pytest pytest -q tests/test_nsw_backfill.py tests/test_nsw_publication.py tests/test_backfill_guard.py
+          bash -n scripts/vm/nightly.sh scripts/vm/nsw_hansard_backfill.sh
+          uv run --frozen bash scripts/vm/test_nsw_hansard_backfill.sh
+
   senate-refresh:
     runs-on: ubuntu-latest
     timeout-minutes: 30

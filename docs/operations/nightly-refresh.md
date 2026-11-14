@@ -1310,3 +1310,75 @@ publishes authorised units separately. With the current document-level
 rights holds, the KB JSONL is empty. Full body publication requires clearance
 of those specific report terms first; the website's CC BY 4.0 policy alone
 does not clear them.
+
+## NSW historical Hansard repair and shared growth guard
+
+The owner approved the bounded repair spend on 14 November 2026 at 13:10 Sydney time.
+Merge the NSW attribution and periodic-completion fixes with this runner before
+activation. The default is on; `OPAX_NSW_BACKFILL=0` stops acquisition and every
+publication/retry entry. The former separate acquisition/publication switches
+are superseded. No desktop rehearsal publishes to the KB.
+
+NSW runs after normal refresh through `parli.ingest.nsw_hansard`, with
+`OPAX_BACKFILL_NSW_CAP=4` (hard maximum four chamber-days) and
+`OPAX_BACKFILL_NSW_BUDGET_S=1200` (may be lowered, hard maximum 1,200 seconds).
+Publication recovery also releases at most four chamber-days per run, leaving
+the rest pending. The shell adds an outer `timeout` of budget plus 60 seconds and a 60-second kill
+grace. Each fully processed day commits independently; fragments checkpoint
+before parsing. Acquisition is limited to 2023-01-01 through 2025-02-28 and only
+zero-row owner-DB days or tracked unresolved/error days are eligible. A resolver
+revision retries held turns, including wholly held days, without guessing IDs.
+
+Both lanes use `parli.ingest.backfill_guard.Guard`, default state directory
+`~/.cache/autoresearch/pipeline`, configurable as `OPAX_BACKFILL_STATE_DIR`.
+The single `backfill-ledger.json` uses atomic replacement under a file lock;
+`backfill.STOP` blocks both stages and their publication queues. Each stage
+checks counters before acquisition; publication checks before its first write,
+after every ten chamber-days and at the end, including short runs. NSW's hard
+four-day acquisition cap cannot reach a ten-day interval. The shared interface
+is `Guard.check(kb, stage)`, `ensure_running()`, `request_scope()` and
+`progress(stage, remaining=..., cap=..., stop=..., done=...)`. The Senate lane
+uses the same interface and ledger, without importing NSW code.
+
+The final shared `nightly_fields()` writer emits `backfill`,
+`backfill_failures` and repair warnings outside fatal `failures`. NSW supplies
+`acquisition_days_remaining` separately from queued publication. Unresolved-only
+work uses `identity-holds` and leaves the finish date unknown. The canonical
+guard holds requests in memory if stop-file persistence fails, and recognises
+quota error envelopes in successful HTTP responses too. Exact shared-file
+checksums are retained in `docs/reports/2026-11-14-nsw-shared-files.sha256`.
+
+Counters use read-only `GET /counters` with normal sync's existing KB service
+account. The first observation establishes the baseline; positive changes in
+`index_size` and `resources` accumulate across both sources and Sydney nights.
+Index shrinkage does not refund headroom. Whole-KB background growth is counted
+conservatively. Stop conditions are more than 5,500,000,000 bytes, or more than
+59,280 bytes per added resource once at least 500 resources have been observed
+(1.2 times 49.4 decimal KB, displayed as 59.3 KB). A Progress 429, quota or
+billing refusal writes the stop file before retry/backpressure handling can
+hide it. Unavailable counters or a corrupt ledger also hold repairs closed.
+No service token or response body is retained in receipts.
+
+Inspect the ledger and stop reason before removing `backfill.STOP`; removing it
+does not reset accumulated growth or bypass a threshold. Do not delete/reset
+the ledger to restore headroom. Repair failures and unreadable receipts use
+nightly warnings, outside `FAILURES`, so periodic completion is independent.
+Nightly `status.json.backfill` includes tonight's and cumulative bytes/resources,
+the ceiling and remaining headroom, each source's remaining days, held/publication
+counts and a cap-based projected finish date including one publication night.
+The estimate is conditional on budgets, identity holds and stops. A stop also
+reaches the existing refresh watchdog's alert path while periodic groups can
+complete normally.
+
+Every backfilled document carries classification **`origin/backfill-2026-11`**
+and `extra.metadata.backfill_stage` (`nsw` or `senate`). Its shared enrichment
+metadata is `{run_id: "backfill-2026-11", max_usd: 30}`. Sync does not wait for
+or start enrichment tasks. The opax-enrich Worker discovers resources by its
+catalog cursor and applies its own Workers AI budget.
+
+NSW's public coverage receipt is `/nsw-hansard-coverage.json`. The independent
+watchdog can read `portal/public/nsw-hansard-coverage.json`, or call the offline
+`nsw_backfill.known_gaps(calendar, counts, nsw_publication.progress(db, state))`.
+Each chamber-year retains hole/incomplete wording until missing days, held
+turns, publication acknowledgements and failures all clear. Enabling a repair
+makes no promise in coverage copy that days are being added.

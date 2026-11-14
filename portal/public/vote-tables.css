@@ -15,3 +15,5 @@
 .division-group { margin-top: var(--space-block); }
 .division-group > summary { font: var(--type-strong); }
 .votes-scope { margin: var(--space-tight) 0 0; font: var(--type-metadata); color: var(--ink-soft); }
+.vote-table .procedural-tag { margin-inline-start: .5rem; }
+.procedural-votes { margin-block-start: var(--sp-16); }

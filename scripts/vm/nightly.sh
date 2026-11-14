@@ -367,6 +367,11 @@ else
   for repair in $backfill; do backfill_warn "$repair"; done
 fi
 
+# NSW repair has its own cap and wall budget, including source-calendar discovery.
+# shellcheck source=scripts/vm/nsw_hansard_backfill.sh
+. "$REPO/scripts/vm/nsw_hansard_backfill.sh"
+nsw_hansard_backfill
+
 # ---- 2b. the periodic groups: weekly (Sundays, Sydney), monthly (the first Sunday), frl (Thursdays) ----------
 # The FRL instrument crawl (~2.6 h of 10-second-spaced requests, 18 Oct 2026) has its own night: with the rest of the
 # weekly it left Sunday no time inside the 6 h unit limit to test and publish (scripts/weekly_refresh.sh).

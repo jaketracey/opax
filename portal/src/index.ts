@@ -19,7 +19,7 @@ import {ServerTiming, timed, timedSync, withTiming} from './server-timing'
 import { divisionPlain } from '../public/division-markdown.js'
 import { chamberLabel, PARTY_MAP } from '../public/party-page.js'
 import {partySpeechLabel, partyMembers, partyBills, partyDisplayName, isIndependent, INDEPENDENTS_DESCRIPTION, PARTY_MEMBER_SCOPE, PARTY_NO_MEMBERS, readPartyPages, resolvePartyPage, dayMonthYear, partyHistory, recordedAsText, type PartyPage, type PartyBill} from '../public/party-page.js'
-import {guardTableURL, divisionTableConfig, voteTableConfig} from '../public/vote-tables.js'
+import {guardTableURL, divisionTableConfig, voteTableConfig, billDivisionGroups, PROCEDURAL_TITLES_PATH} from '../public/vote-tables.js'
 import { tableApi } from './table-api'
 import { pageCacheKey, pageForStorage, pageFromStorage } from './page-cache'
 import { runSocialPublication, socialStatus, socialEngagement, publicationCopy, previewPublication, todayRedirect, CHANNELS, type Channel } from './social-publication'
@@ -4768,7 +4768,7 @@ function sharedAssetJson<T>(env: Env, path: string): Promise<T> {
   if (path.startsWith('/growth/supplier-rows/')) return supplierBucket<T>(env, path)
   if (path === '/bills/index.json') return loadBills(env).then((bills) => bills.file as T)
   if (BILL_FILE_RE.test(path)) return keptAssetJson<T>(billFileMemo, 32, env, path)
-  if (SHARED_FILE_RE.test(path)) return keptAssetJson<T>(sharedFileMemo, 8, env, path)
+  if (SHARED_FILE_RE.test(path) || path === PROCEDURAL_TITLES_PATH) return keptAssetJson<T>(sharedFileMemo, 8, env, path)
   return assetJson<T>(env, path)
 }
 
@@ -4826,7 +4826,10 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
       if(bill){
         const related=await read<{bills:Parameters<typeof renderBillAnswer>[0][]}>('/bills/index.json')
           const query = guardTableURL(divisionTableConfig({bill:bill.key}),url).query
-        meta.prerender=renderBillAnswer(bill,people?.people || [],people?.slugOf || new Map(),related.bills,query).html;billIdentity={identifier:bill.key,status:bill.status}}
+        const titles = bill.divisions?.length ? await read<Record<string,string>>(PROCEDURAL_TITLES_PATH).catch(() => ({})) : {}
+        const proceduralConfig = {...divisionTableConfig(), urlKey:'pv'}
+        const proceduralQuery = guardTableURL(proceduralConfig,url).query
+        meta.prerender=renderBillAnswer({...bill,division_titles:titles},people?.people || [],people?.slugOf || new Map(),related.bills,query,proceduralQuery).html;billIdentity={identifier:bill.key,status:bill.status}}
     } else if(route.kind==='subject' && route.dir==='supplier') {
       const content=await renderSupplierAnswer(meta.canonical.split('/').at(-1)!,read,url.searchParams,sharedAgencyTopSuppliers(env))
       if(content) meta.prerender=content.html
@@ -4959,13 +4962,20 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
       : `Introduced${house ? ` in the ${house}` : ''} on ${longDate(b.introduced)}.`) : '',
   ].filter(Boolean).join(' ')
   const counts: string[] = []
-  if (b.divisions) counts.push(`${num(b.divisions)} division${b.divisions === 1 ? '' : 's'}`)
+  const detail = b.has_summary || b.divisions ? await sharedAssetJson<{ summary?: { sentences?: string[] }; divisions?: object[] }>(env, `/bills/${encodeURIComponent(key)}.json`).catch(() => null) : null
+  if (detail?.divisions?.length) {
+    const titles = await sharedAssetJson<Record<string,string>>(env, PROCEDURAL_TITLES_PATH).catch(() => ({}))
+    const groups = billDivisionGroups(detail.divisions,titles)
+    const n = groups.substantive.length, p = groups.procedural.length
+    counts.push(`${num(n)} substantive vote${n === 1 ? '' : 's'}`)
+    if (p) counts.push(`${num(p)} procedural vote${p === 1 ? '' : 's'}`)
+  }
   if (b.speeches) counts.push(`${num(b.speeches)} speech${b.speeches === 1 ? '' : 'es'}`)
-  const detail = b.has_summary ? await sharedAssetJson<{ summary?: { sentences?: string[] } }>(env, `/bills/${encodeURIComponent(key)}.json`).catch(() => null) : null
   const summary = detail?.summary?.sentences?.[0]?.trim()
   // The share card keeps the short count line; the description says what the page holds.
   const recordLine = counts.length ? `${andList(counts)} in the record.` : 'The official record, on OPAX.'
-  const tail = counts.length ? `${andList(counts)}: who argued for and against it${b.divisions ? ', and how the parties voted' : ''}.`
+  // Divided bills keep both vote counts within the description's length budget.
+  const tail = counts.length ? (detail?.divisions?.length ? recordLine : `${andList(counts)}: who argued for and against it.`)
     : b.status === 'exposure_draft' ? 'The draft, its consultation and what it would change.'
     : 'Its progress, the bill text and every speech on it as the debate starts.'
   const portfolio = b.portfolio ? ` ${b.portfolio} portfolio.` : ''

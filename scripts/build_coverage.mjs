@@ -1,4 +1,5 @@
 import {readFileSync} from 'node:fs';
+import {nswHansardCoverageNote} from './nsw_hansard_coverage.mjs';
 
 const publicRoot = new URL('../portal/public/', import.meta.url);
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
@@ -45,6 +46,7 @@ export function coverageCollections(read = path => JSON.parse(readFileSync(new U
   const manual = 'Reviewed snapshot; updated by manual intake or promotion.';
   const weekly = 'Weekly checks; last good snapshot kept when acquisition is held.';
   const corpus = read('corpus.json');
+  const nswGapNote = nswHansardCoverageNote(read('nsw-hansard-coverage.json'));
   const corpusNotes = source => {
     const name = source.name;
     if (/AEC donations/.test(name)) return ['Australian Electoral Commission', 'Commonwealth', 'CC BY 4.0. Classified corpus records; current map rows are counted separately.', '/money', 'Reviewed AEC export; amended source rows await reconciliation.'];
@@ -65,7 +67,7 @@ export function coverageCollections(read = path => JSON.parse(readFileSync(new U
   };
   corpus.sources.forEach((source, i) => {
     const [publisher, jurisdiction, reuse, href, refresh] = corpusNotes(source);
-    add(`corpus-${i}`, 'Search corpus', source.name, href, publisher, `${jurisdiction}; ${source.coverage}`, source.docs, 'source records', reuse, refresh, corpus.version, '/corpus.json', /Senate.*openaustralia/i.test(source.name) ? senateGapNote(corpus) : '');
+    add(`corpus-${i}`, 'Search corpus', source.name, href, publisher, `${jurisdiction}; ${source.coverage}`, source.docs, 'source records', reuse, refresh, corpus.version, '/corpus.json', /Senate.*openaustralia/i.test(source.name) ? senateGapNote(corpus) : /NSW.*Hansard|NSW Parliament/.test(source.name) ? nswGapNote : '');
   });
 
   const bills = read('bills/index.json');
