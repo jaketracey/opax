@@ -25,7 +25,7 @@ Bells ring all through Parliament House, usually for 4 minutes. Then the doors a
 
 ## Ayes and noes
 
-In a division, members who vote yes move to the right of the chair. Members who vote no move to the left. [[f:division-sides]]
+In a division, members who vote yes sit to the Speaker's right. Members who vote no sit to the Speaker's left. In the Senate, it is the President's right and left. [[f:division-sides]]
 
 The votes are counted and the names are written down. Then the result is announced. [[f:division-recorded-announced]]
 
@@ -57,7 +57,7 @@ Only a division leaves a record of each member's vote. [[f:opax-voices-no-record
 
 OPAX shows whether the proposal was agreed to or not. [[f:opax-outcome-words]]
 
-On the website it says "Agreed" or "Not agreed". In the app it says "Agreed to" or "Negatived", which means it failed. Some pages use the record's own words, "affirmative" and "negative". [[f:opax-outcome-words]]
+On the website it says "Agreed" or "Not agreed". In the app it says "Agreed to" or "Negatived", which means it failed. Some pages use the record's own words: "affirmative" means agreed, and "negative" means not agreed. [[f:opax-outcome-words]]
 
 All of these say the same thing: did more members vote aye or no?
 
@@ -145,5 +145,5 @@ But a clue is not proof. A split can also mean some members crossed the floor. R
 
 ## See it in OPAX
 
-- [A vote where a senator crossed the floor](https://opax.com.au/doc/division-federal-senate-9535): the Senate passed a hate crimes bill 41 to 6. Look at the Liberals: 8 voted aye and 1 voted no. [[f:ex-senate-9535-crossing]]
-- [A conscience vote on Maeve's Law](https://opax.com.au/doc/division-federal-representatives-7544): Labor, Liberal and Nationals members voted on both sides. The question notes call it a free vote. [[f:ex-reps-7544-free-vote]]
+- [A Senate vote on a hate crimes bill](https://opax.com.au/doc/division-federal-senate-9535): the Senate passed it 41 to 6. One Liberal senator voted no while the other 8 voted aye. [[f:ex-senate-9535-crossing]]
+- [Members of the same party voted on both sides](https://opax.com.au/doc/division-federal-representatives-7714): the House passed the Restoring Territory Rights Bill 2022, 99 to 38. Liberal, Labor and Nationals members voted both aye and no. [[f:ex-reps-7714-split]]

@@ -51,9 +51,10 @@
    "slug": "first-reading",
    "chapter": "bill-to-act",
    "short": "The first step for a bill in each house. The bill is brought in and its title is read out.",
-   "more": "The Clerk reads the title of a bill three times in each house. Each reading means the bill has passed another stage. On OPAX, this step shows as \"Introduced\".",
+   "more": "The Clerk, the top official of each house, reads the title of a bill three times in each house. Each reading means the bill has passed another stage. On OPAX, a bill's list of stages usually starts with \"Introduced\".",
    "facts": [
     "first-reading",
+    "clerk-def",
     "three-readings",
     "opax-recorded-stages"
    ],
@@ -62,6 +63,7 @@
     "third-reading"
    ],
    "sources": [
+    "opax-bill-r7076",
     "opax-bill-r7548",
     "opax-seo-content",
     "peo-glossary",
@@ -97,7 +99,7 @@
    "slug": "consideration-in-detail",
    "chapter": "bill-to-act",
    "short": "The stage where members go through a bill part by part and vote on changes.",
-   "more": "In the Senate, this stage is called committee of the whole. It is optional. Most amendments are dealt with here.",
+   "more": "In the Senate, this stage is called committee of the whole. It is not one of the small committees: it is a stage where senators discuss the bill in detail. It is optional. Most amendments are dealt with here.",
    "facts": [
     "consideration-in-detail",
     "cid-optional",
@@ -118,18 +120,22 @@
    "term": "third reading",
    "slug": "third-reading",
    "chapter": "bill-to-act",
-   "short": "The last vote on a bill in each house. Members vote on the bill in its final form.",
-   "more": "If the House passes a bill at the third reading, it sends the bill to the Senate with a formal message. The Senate then follows similar steps.",
+   "short": "The vote on a bill in its final form. If it passes, that house has passed the bill.",
+   "more": "If the House passes a bill at the third reading, it sends the bill to the Senate with a formal message. The Senate then follows similar steps. If the Senate changes the bill, the House votes again on those changes.",
    "facts": [
     "third-reading",
     "house-message-to-senate",
-    "senate-stages"
+    "senate-stages",
+    "amendment-shuttle"
    ],
    "see_also": [
     "second-reading",
     "royal-assent"
    ],
    "sources": [
+    "constitution",
+    "opax-div-reps-8545",
+    "peo-amendments",
     "peo-glossary",
     "peo-making-a-law",
     "peo-qon-after-house",
@@ -141,7 +147,7 @@
    "slug": "amendment",
    "chapter": "bill-to-act",
    "short": "A change to a bill that an MP or senator suggests, debates and votes on.",
-   "more": "Any member can move an amendment. It must be given to the Clerk in writing. Changes made in one house must also be agreed to by the other house.",
+   "more": "Any member can move an amendment. It must be given in writing to the Clerk, the top official of the house. Changes made in one house must also be agreed to by the other house.",
    "example": {
     "url": "https://opax.com.au/doc/division-federal-representatives-8545",
     "label": "The House agrees to Senate amendments"
@@ -149,6 +155,7 @@
    "facts": [
     "amend-anyone",
     "amend-written",
+    "clerk-def",
     "amendments-both-houses"
    ],
    "see_also": [
@@ -156,7 +163,8 @@
     "bill"
    ],
    "sources": [
-    "peo-amendments"
+    "peo-amendments",
+    "peo-glossary"
    ]
   },
   {
@@ -332,8 +340,9 @@
    "slug": "disallowance",
    "chapter": "bill-to-act",
    "short": "When the Senate or House overrules a piece of delegated legislation.",
-   "more": "An MP or senator has 15 sitting days to ask their house to overrule the rule. The house then has 15 sitting days to decide. If it does not decide, the rule is overruled.",
+   "more": "A sitting day is a day a house meets. An MP or senator has 15 sitting days to ask their house to overrule the rule. The house then has 15 sitting days to decide. If it does not decide, the rule is overruled.",
    "facts": [
+    "sitting-def",
     "disallow-15-days",
     "delegated-register-6-days",
     "delegated-some-not"
@@ -342,24 +351,28 @@
     "delegated-legislation"
    ],
    "sources": [
-    "peo-delegated-law"
+    "peo-delegated-law",
+    "peo-glossary"
    ]
   },
   {
    "term": "lapsed",
    "slug": "lapsed",
    "chapter": "bill-to-act",
-   "short": "A bill that ran out of time because Parliament closed for an election before it passed.",
-   "more": "When Parliament is closed for an election, bills still waiting expire. They can be brought in again in the next Parliament. OPAX shows these bills as lapsed.",
+   "short": "A status OPAX shows from Parliament's bill records. No bill marked lapsed on OPAX became law.",
+   "more": "Before an election, the session of Parliament is formally closed. Bills still waiting then expire, and can be brought in again in the next Parliament. OPAX copies each bill's status, such as lapsed, from Parliament's records.",
    "facts": [
-    "prorogued-bills-expire",
-    "opax-lapsed-status"
+    "opax-lapsed-status",
+    "prorogation-def",
+    "prorogued-bills-expire"
    ],
    "see_also": [
     "bill"
    ],
    "sources": [
+    "opax-app-bill-detail",
     "opax-bills-export",
+    "peo-glossary",
     "peo-qon-prorogued"
    ]
   },
@@ -367,7 +380,7 @@
    "term": "double dissolution",
    "slug": "double-dissolution",
    "chapter": "bill-to-act",
-   "short": "When both houses are ended at once for an election, to break a deadlock over a bill.",
+   "short": "When both houses close at once so every seat goes to an election, to break a deadlock over a bill.",
    "more": "It can happen when the Senate blocks a House bill twice, three months apart. Every seat in both houses then goes to an election. It has happened 7 times.",
    "facts": [
     "double-dissolution-steps",
@@ -389,7 +402,7 @@
    "slug": "house-of-representatives",
    "chapter": "whos-who",
    "short": "The house of Parliament where each member represents one electorate. Government is formed here.",
-   "more": "It has 150 members (as at 28 May 2026). Most bills start here. Its meetings are run by the Speaker.",
+   "more": "It has 150 members (as at 28 May 2026), and the AEC says it will still have 150 at the next election. Most bills start here. Its meetings are run by the Speaker.",
    "facts": [
     "house-150",
     "government-def",
@@ -403,6 +416,8 @@
     "speaker"
    ],
    "sources": [
+    "aec-media-2026-07-23",
+    "aec-media-2026-10-08",
     "peo-glossary",
     "peo-house-numbers",
     "peo-members",
@@ -448,9 +463,13 @@
     "senator"
    ],
    "sources": [
+    "aec-media-2026-07-23",
+    "aec-media-2026-10-08",
     "peo-glossary",
     "peo-house-numbers",
-    "peo-members"
+    "peo-members",
+    "peo-senate-numbers",
+    "peo-senators"
    ]
   },
   {
@@ -478,7 +497,7 @@
    "slug": "electorate",
    "chapter": "whos-who",
    "short": "The area an MP represents in the House. Also called a seat.",
-   "more": "Each electorate has about the same number of voters. The Australian Electoral Commission calls electorates \"electoral divisions\". In Parliament, a division is a vote, not a place.",
+   "more": "Within each state, electorates have about the same number of voters. The Australian Electoral Commission calls electorates \"electoral divisions\". In Parliament, a division is a vote, not a place.",
    "facts": [
     "electorate-def",
     "electorate-equal-voters",
@@ -490,6 +509,7 @@
    ],
    "sources": [
     "aec-electorates",
+    "aec-redistribution-faq",
     "peo-glossary",
     "peo-house-video"
    ]
@@ -728,7 +748,7 @@
    "slug": "division",
    "chapter": "how-votes-work",
    "short": "A formal vote in Parliament where each member's name and vote is recorded.",
-   "more": "A division is held when more than one member challenges a vote on the voices. Members who vote aye move to the right of the chair, and those voting no move to the left. On OPAX, each division has its own page.",
+   "more": "A division is held when more than one member challenges a vote on the voices. Members who vote aye sit to the Speaker's or President's right, and those voting no sit to their left. On OPAX, each division has its own page.",
    "example": {
     "url": "https://opax.com.au/doc/division-federal-representatives-10611",
     "label": "A House division"
@@ -819,8 +839,8 @@
    "short": "A vote where a party lets its members vote by their own beliefs. Also called a free vote.",
    "more": "Each party decides when to allow one. From 1950 to 2021, only 43 votes were free votes.",
    "example": {
-    "url": "https://opax.com.au/doc/division-federal-representatives-7544",
-    "label": "A free vote on Maeve's Law"
+    "url": "https://opax.com.au/doc/division-federal-representatives-7714",
+    "label": "Members of the same party voted on both sides"
    },
    "facts": [
     "free-vote-def",
@@ -843,7 +863,7 @@
    "more": "It is rare and can cost a member support in their party. If you ask OPAX who crossed the floor, it checks each vote against most of the member's party. Party labels can be out of date, so treat that as a guide.",
    "example": {
     "url": "https://opax.com.au/doc/division-federal-senate-9535",
-    "label": "A Senate vote where a senator crossed the floor"
+    "label": "One Liberal senator voted no while the other 8 voted aye"
    },
    "facts": [
     "crossing-def",

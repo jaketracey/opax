@@ -6,7 +6,7 @@
    "chapter": "bill-to-act",
    "url": "https://opax.com.au/bill/au-federal-r7548",
    "label": "Sport Legislation Amendment (World Anti-Doping Code Implementation) Bill 2026",
-   "look_at": "Recorded stages: introduced and second reading moved in the House on 17 Sep 2026; before parliament as at that date.",
+   "look_at": "The stages recorded so far: introduced and second reading moved in the House on 17 Sep 2026; before parliament as at that date.",
    "facts": [
     "ex-r7548-stages"
    ],
@@ -22,7 +22,7 @@
    "chapter": "bill-to-act",
    "url": "https://opax.com.au/doc/division-federal-senate-10811",
    "label": "Senate refers veterans' health treatment limits to a committee (17 Sep 2026)",
-   "look_at": "The question: the matter, the committee and the 8 March 2027 reporting date. Agreed 34 to 21.",
+   "look_at": "An inquiry into an issue, not a bill. The question names the matter, the committee and the 8 March 2027 reporting date. Agreed 34 to 21.",
    "facts": [
     "ex-senate-10811-inquiry"
    ],
@@ -82,11 +82,11 @@
    }
   },
   {
-   "id": "crossed-the-floor",
+   "id": "one-against-party",
    "chapter": "how-votes-work",
    "url": "https://opax.com.au/doc/division-federal-senate-9535",
    "label": "Criminal Code Amendment (Hate Crimes) Bill 2024, Senate third reading (6 Feb 2025)",
-   "look_at": "Passed 41 to 6. Liberal senators: 8 aye, 1 no.",
+   "look_at": "Passed 41 to 6. One Liberal senator voted no while the other 8 voted aye.",
    "facts": [
     "ex-senate-9535-crossing"
    ],
@@ -98,16 +98,16 @@
    }
   },
   {
-   "id": "conscience-vote",
+   "id": "same-party-both-sides",
    "chapter": "how-votes-work",
-   "url": "https://opax.com.au/doc/division-federal-representatives-7544",
-   "label": "Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, consideration in detail (1 Dec 2021)",
-   "look_at": "Labor 49 to 5, Liberal 27 to 16, Nationals 8 to 5. The question notes call it a free vote.",
+   "url": "https://opax.com.au/doc/division-federal-representatives-7714",
+   "label": "Restoring Territory Rights Bill 2022, House third reading (3 Aug 2022)",
+   "look_at": "Passed 99 to 38 (\"affirmative\" means the bill passed). Liberal 13 aye, 17 no; Labor 69 aye, 5 no; Nationals 5 aye, 8 no.",
    "facts": [
-    "ex-reps-7544-free-vote"
+    "ex-reps-7714-split"
    ],
    "checked": {
-    "at": "2026-11-14T16:28:15+1100",
+    "at": "2026-11-14T16:46:48+1100",
     "status": 200,
     "user_agent": "opax-improve-audit",
     "method": "GET"

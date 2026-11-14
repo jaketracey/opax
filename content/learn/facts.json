@@ -185,7 +185,7 @@
   },
   {
    "id": "opax-recorded-stages",
-   "claim": "OPAX bill pages list the stages a bill has passed (web heading \"Recorded stages\"); the first is \"Introduced\".",
+   "claim": "OPAX bill pages list each stage recorded for the bill with its date; a stage can appear once per debate day, and the list usually starts with \"Introduced\".",
    "status": "sourced",
    "quotes": [
     {
@@ -195,8 +195,13 @@
     {
      "source": "opax-bill-r7548",
      "quote": "\"stage\": \"introduced\""
+    },
+    {
+     "source": "opax-bill-r7076",
+     "quote": "\"stage\": \"second_reading\""
     }
-   ]
+   ],
+   "derived": "r7076 lists \"second_reading\" in the House on 6 dates (2023-09-06 to 2023-10-18). Of 2,989 federal bills, 2,985 start with \"introduced\"; 3 start with \"second_reading\" and 1 with an exposure draft, so \"usually\"."
   },
   {
    "id": "second-reading-motion",
@@ -463,12 +468,16 @@
   },
   {
    "id": "third-reading",
-   "claim": "At the third reading members vote on the bill in its final form.",
+   "claim": "At the third reading members vote on the bill in its final form; if it passes, that house has passed the bill.",
    "status": "sourced",
    "quotes": [
     {
      "source": "peo-glossary",
      "quote": "in which members of parliament vote on the bill in its final form."
+    },
+    {
+     "source": "peo-usual-path",
+     "quote": "3rd reading – members vote on the bill in its final form the bill is passed in the House of Representatives and sent to the Senate."
     }
    ]
   },
@@ -522,19 +531,22 @@
   },
   {
    "id": "amendment-shuttle",
-   "claim": "When the second house amends a bill, it returns to the first house to accept or reject the amendments, and this can repeat.",
-   "status": "needs_aph_source",
+   "claim": "When the second house changes a bill, the first house must agree to those changes too.",
+   "status": "sourced",
    "quotes": [
     {
      "source": "constitution",
      "quote": "or passes it with amendments to which the House of Representatives will not agree"
     },
     {
+     "source": "peo-amendments",
+     "quote": "Amendments can be introduced in either the Senate or the House of Representatives, and must be agreed to by both."
+    },
+    {
      "source": "opax-div-reps-8545",
      "quote": "Consideration of Senate Message - Agree with Senate amendments and so pass bill"
     }
-   ],
-   "note": "The return of an amended bill to the first house by message, and repeated exchanges, are implied by s 57 and shown in OPAX records but not stated step by step in PEO, AEC or Constitution text."
+   ]
   },
   {
    "id": "not-passed-not-law",
@@ -796,16 +808,65 @@
   },
   {
    "id": "delegated-register-6-days",
-   "claim": "Delegated law is registered, becomes law that day, and must be presented to Parliament within 6 sitting days.",
+   "claim": "Delegated law must go on a public register, and must be presented to Parliament within 6 sitting days.",
    "status": "sourced",
    "quotes": [
     {
      "source": "peo-delegated-law",
-     "quote": "Each delegated law must be listed on a public register. It becomes law on the day it is registered."
+     "quote": "Each delegated law must be listed on a public register."
     },
     {
      "source": "peo-delegated-law",
      "quote": "Then it must be presented to Parliament within 6 sitting days."
+    }
+   ]
+  },
+  {
+   "id": "delegated-commence-s12",
+   "claim": "Unless it says otherwise, a legislative instrument starts at the start of the day after it is registered (Legislation Act 2003 s 12).",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "legislation-act",
+     "quote": "A legislative instrument or a notifiable instrument commences:"
+    },
+    {
+     "source": "legislation-act",
+     "quote": "at the start of the day after the day the instrument is registered; or"
+    }
+   ],
+   "note": "PEO says delegated law \"becomes law on the day it is registered\"; s 12 sets the default as the next day. Copy follows s 12."
+  },
+  {
+   "id": "sitting-def",
+   "claim": "A sitting is a meeting of a house of parliament.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "A meeting of a house of parliament."
+    }
+   ]
+  },
+  {
+   "id": "clerk-def",
+   "claim": "The Clerk is the top parliamentary officer of each house.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "The top-level parliamentary officer in the Senate or the House of Representatives."
+    }
+   ]
+  },
+  {
+   "id": "prorogation-def",
+   "claim": "Prorogation formally closes a session of Parliament before an election.",
+   "status": "sourced",
+   "quotes": [
+    {
+     "source": "peo-glossary",
+     "quote": "A special proclamation to formally close a session of the Parliament, used before a dissolution of the House of Representatives"
     }
    ]
   },
@@ -856,15 +917,20 @@
   },
   {
    "id": "opax-lapsed-status",
-   "claim": "OPAX shows bills that expired this way with the status \"lapsed\".",
-   "status": "needs_aph_source",
+   "claim": "OPAX shows each bill's status from Parliament's bill records, such as lapsed; none of the 1,076 lapsed bills has a royal assent date or an Act.",
+   "status": "sourced",
    "quotes": [
+    {
+     "source": "opax-app-bill-detail",
+     "quote": "Bills, their dates and their divisions come from the parliamentary record"
+    },
     {
      "source": "opax-bills-export",
      "quote": "\"status\": \"lapsed\""
     }
    ],
-   "note": "OPAX carries the register status \"lapsed\" on 1,076 federal bills. That \"lapsed\" means a bill that expired at prorogation or dissolution is the register's meaning and needs an official source (APH bill status definitions)."
+   "derived": "1,076 bills in portal/public/bills/au-federal-*.json have status \"lapsed\"; none has a royal_assent stage or an entry in acts.",
+   "note": "Reworded rather than defined: PEO never uses \"lapse\", and the export's parliament field is too unreliable to show each lapse falls at a prorogation."
   },
   {
    "id": "bill-time",
@@ -912,7 +978,7 @@
   },
   {
    "id": "house-150",
-   "claim": "The House of Representatives has 150 members.",
+   "claim": "The House of Representatives has 150 members, and will still have 150 at the next election.",
    "status": "sourced",
    "quotes": [
     {
@@ -922,9 +988,22 @@
     {
      "source": "peo-house-numbers",
      "quote": "As at 28 May 2026"
+    },
+    {
+     "source": "aec-media-2026-07-23",
+     "quote": "the number of seats in the House of Representatives will remain unchanged – at 150 – for Australia’s next federal election."
+    },
+    {
+     "source": "aec-media-2026-07-23",
+     "quote": "the total number of House of Representatives seats for each state and territory will remain unchanged"
+    },
+    {
+     "source": "aec-media-2026-10-08",
+     "quote": "MPs will continue to represent their existing electorates until a federal election is called."
     }
    ],
-   "as_at": "2026-05-28"
+   "as_at": "2026-05-28",
+   "note": "AEC entitlement determination of 23 Jul 2026 keeps 150 and every state's count. The SA, Tasmania and ACT redistributions determined on 8 Oct 2026 redraw boundaries within those counts; MPs keep their existing electorates until the election."
   },
   {
    "id": "electorate-def",
@@ -939,14 +1018,19 @@
   },
   {
    "id": "electorate-equal-voters",
-   "claim": "Each electorate has about the same number of voters.",
+   "claim": "Within each state or territory, electorates have about the same number of voters.",
    "status": "sourced",
    "quotes": [
+    {
+     "source": "aec-redistribution-faq",
+     "quote": "projected enrolment in each electorate should not vary from the projected state or territory average by more than 3.5 per cent."
+    },
     {
      "source": "peo-house-video",
      "quote": "there is approximately the same number of voters living in each electorate."
     }
-   ]
+   ],
+   "note": "PEO says \"approximately the same\" without the state qualifier; the AEC rule is per state or territory, which the copy follows."
   },
   {
    "id": "member-mp",
@@ -1834,7 +1918,7 @@
      "quote": "\"result\":\"affirmative\""
     }
    ],
-   "note": "Three wordings for one outcome across web, app and server-rendered pages; worth unifying."
+   "note": "affirmative maps to Agreed / Agreed to and negative to Not agreed / Negatived (BILL_OUTCOMES, selectors.ts). Three wordings for one outcome across web, app and server-rendered pages; worth unifying."
   },
   {
    "id": "opax-procedural",
@@ -2098,7 +2182,7 @@
   },
   {
    "id": "ex-r7548-stages",
-   "claim": "The Sport Legislation Amendment (World Anti-Doping Code Implementation) Bill 2026 was introduced and had its second reading moved in the House on 17 Sep 2026; OPAX shows it before parliament as at that date.",
+   "claim": "The Sport Legislation Amendment (World Anti-Doping Code Implementation) Bill 2026 was introduced and had its second reading moved (not passed) in the House on 17 Sep 2026; OPAX shows it before parliament as at that date.",
    "status": "sourced",
    "quotes": [
     {
@@ -2117,7 +2201,7 @@
   },
   {
    "id": "ex-senate-10811-inquiry",
-   "claim": "On 17 Sep 2026 the Senate voted 34 to 21 to refer veterans' health treatment limits to the Foreign Affairs, Defence and Trade References Committee, reporting by 8 March 2027.",
+   "claim": "On 17 Sep 2026 the Senate voted 34 to 21 to refer an issue (not a bill), veterans' health treatment limits, to the Foreign Affairs, Defence and Trade References Committee, reporting by 8 March 2027.",
    "status": "sourced",
    "quotes": [
     {
@@ -2171,7 +2255,7 @@
   },
   {
    "id": "ex-senate-9535-crossing",
-   "claim": "Senate third reading of the Criminal Code Amendment (Hate Crimes) Bill 2024, 6 Feb 2025: passed 41 to 6; Liberal senators 8 aye and 1 no.",
+   "claim": "Senate third reading of the Criminal Code Amendment (Hate Crimes) Bill 2024, 6 Feb 2025: passed 41 to 6; one Liberal senator voted no while the other 8 voted aye. Not called crossing the floor: no official source says so.",
    "status": "sourced",
    "quotes": [
     {
@@ -2190,17 +2274,29 @@
    "derived": "Counted from members[]: Liberal aye 8, no 1. OPAX's rule (opax-crossing-rule) flags the 1 Liberal no vote."
   },
   {
-   "id": "ex-reps-7544-free-vote",
-   "claim": "House division on Maeve's Law, 1 Dec 2021: Labor 49-5, Liberal 27-16, Nationals 8-5; the question notes call it a free vote.",
-   "status": "needs_aph_source",
+   "id": "ex-reps-7714-split",
+   "claim": "House third reading of the Restoring Territory Rights Bill 2022, 3 Aug 2022: passed 99 to 38 (result \"affirmative\"); Liberal 13 aye 17 no, Labor 69 aye 5 no, Nationals 5 aye 8 no.",
+   "status": "sourced",
    "quotes": [
     {
-     "source": "opax-div-reps-7544",
-     "quote": "(also known as a conscience vote), which means our MPs voted according to their own beliefs"
+     "source": "opax-div-reps-7714",
+     "quote": "Restoring Territory Rights Bill 2022 - Third Reading - Pass the bill"
+    },
+    {
+     "source": "opax-div-reps-7714",
+     "quote": "\"ayes\":99"
+    },
+    {
+     "source": "opax-div-reps-7714",
+     "quote": "\"noes\":38"
+    },
+    {
+     "source": "opax-div-reps-7714",
+     "quote": "\"result\":\"affirmative\""
     }
    ],
-   "derived": "Party splits counted from members[] (92 of 93 ayes named).",
-   "note": "That this was a free vote rests on They Vote For You's note carried in OPAX's record, not an official source. Needs Hansard (APH) confirmation."
+   "derived": "Party counts from members[] (136 of 137 named) and the live page, which shows Liberal no 17 aye 13, Labor aye 69 no 5, Nationals aye 5 no 8.",
+   "note": "Replaces the Maeve's Law amendment division, whose \"affirmative\" result meant an amendment failed. No claim that this was a free vote."
   }
  ]
 }

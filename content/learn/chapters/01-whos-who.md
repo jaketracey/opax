@@ -19,7 +19,7 @@ A proposed law must pass both houses before it can become law. [[f:bill-identica
 
 The House of Representatives has 150 members. [[f:house-150]]
 
-Each member represents an area called an {{electorate}}. People also call it a seat. [[f:electorate-def]] Each electorate has about the same number of voters. [[f:electorate-equal-voters]]
+Each member represents an area called an {{electorate}}. People also call it a seat. [[f:electorate-def]] Within each state, electorates have about the same number of voters. [[f:electorate-equal-voters]]
 
 A person elected to the House is called a {{member of parliament}}, or MP. [[f:member-mp]]
 
@@ -53,7 +53,7 @@ As at 28 May 2026, the House had 150 members. The government had 94. The opposit
 
 As at 15 May 2026, the Senate had 76 senators. The government had 30. The opposition had 27. Minor parties and independents had 19. [[f:senate-numbers-2026]]
 
-These numbers can change, so always check the date.
+The AEC has said the House will still have 150 seats at the next election. [[f:house-150]] The other numbers can change, so always check the date.
 
 ---screen---
 

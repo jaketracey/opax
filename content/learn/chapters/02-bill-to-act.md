@@ -49,9 +49,9 @@ Some bills must start in the House. A bill that sets a tax, or spends public mon
 
 The first step is the {{first reading}}. The bill is brought into the house and its title is read out for the first time. [[f:first-reading]]
 
-The Clerk reads the title three times as the bill moves through each house. Each reading means the bill has passed another stage. [[f:three-readings]]
+The Clerk is the top official of each house. [[f:clerk-def]] The Clerk reads the title three times as the bill moves through each house. Each reading means the bill has passed another stage. [[f:three-readings]]
 
-On OPAX, a bill page lists the stages the bill has passed. The first one is "Introduced". [[f:opax-recorded-stages]]
+On OPAX, a bill page lists each stage recorded for the bill, with its date. A stage can appear once for each day it was debated. The list usually starts with "Introduced". [[f:opax-recorded-stages]]
 
 ---screen---
 
@@ -101,7 +101,7 @@ Members can use the report to decide how to vote on a bill, or to write changes 
 
 After the second reading, members can go through the bill part by part. [[f:cid-optional]]
 
-In the House, this is called {{consideration in detail}}. In the Senate, it is called committee of the whole. [[f:consideration-in-detail]]
+In the House, this is called {{consideration in detail}}. In the Senate, it is called committee of the whole. It is not one of the small committees. It is a stage where senators discuss the bill in detail. [[f:consideration-in-detail]]
 
 This is where most changes, called {{amendments|amendment}}, are dealt with. Members can speak about each amendment and vote for or against it. [[f:amendments-when]]
 
@@ -123,7 +123,7 @@ Opposition and crossbench members suggest changes most often. That is because mo
 
 ## Third reading
 
-The {{third reading}} is the last vote on the bill in that house. Members vote on the bill in its final form. [[f:third-reading]]
+At the {{third reading}}, members vote on the bill in its final form. If it passes, that house has passed the bill. [[f:third-reading]]
 
 When the House passes a bill, the Speaker sends a formal note to the Senate. It is called a message. It asks the Senate to agree to the bill. [[f:house-message-to-senate]]
 
@@ -141,7 +141,7 @@ When a bill arrives, the Senate can debate it straight away. It can send it to a
 
 What if the second house changes the bill? Both houses must agree to every change. [[f:amendments-both-houses]]
 
-So the changed bill goes back to the first house. That house decides whether to accept the changes. This can happen more than once. [[f:amendment-shuttle]]
+Then the first house must agree to those changes too. [[f:amendment-shuttle]] You can see this in the last example at the end of this chapter.
 
 The bill can only go on when both houses agree to the same words. [[f:bill-identical-both-houses]]
 
@@ -161,7 +161,7 @@ For a bill that started in the House, there is one more path. It is set out in t
 
 Say the House passes a bill and the Senate blocks it. After three months, the House passes it again, and the Senate blocks it again. [[f:double-dissolution-steps]]
 
-Then the Prime Minister can ask the Governor-General to end both houses at once. This is a {{double dissolution}}. It leads to an election for every seat. [[f:double-dissolution-election]]
+Then the Prime Minister can ask the Governor-General to close both houses at once, so every seat goes to an election. This is a {{double dissolution}}. [[f:double-dissolution-election]]
 
 It has happened 7 times. [[f:double-dissolution-7]]
 
@@ -213,11 +213,13 @@ These rules are called {{delegated legislation}}. Regulations are one kind. [[f:
 
 They have the same force as a law made by Parliament. But they can be made or changed without a debate and vote in Parliament. [[f:delegated-same-force]] [[f:delegated-no-debate]]
 
+Each one must go on a public register before it can take effect. Unless it says otherwise, it starts the day after it is registered. [[f:delegated-register-6-days]] [[f:delegated-commence-s12]]
+
 ---screen---
 
 ## Disallowance
 
-Parliament still keeps watch over these rules. Each one goes on a public register and becomes law that day. It must be shown to Parliament within 6 sitting days. [[f:delegated-register-6-days]]
+Parliament still keeps watch over these rules. A sitting day is a day a house meets. [[f:sitting-def]] Each rule must be shown to Parliament within 6 sitting days. [[f:delegated-register-6-days]]
 
 Within 15 sitting days, an MP or senator can ask their house to overrule it. This is {{disallowance}}. The house then has 15 sitting days to decide. If it does not decide, the rule is overruled. [[f:disallow-15-days]]
 
@@ -227,9 +229,9 @@ Some rules cannot be overruled. [[f:delegated-some-not]]
 
 ## Bills that run out of time
 
-Before an election, Parliament is closed. Any bills still waiting then expire. They can be brought in again in the next Parliament. [[f:prorogued-bills-expire]]
+Before an election, the session of Parliament is formally closed. [[f:prorogation-def]] Any bills still waiting then expire. They can be brought in again in the next Parliament. [[f:prorogued-bills-expire]]
 
-On OPAX, a bill that ran out of time is shown as {{lapsed}}. [[f:opax-lapsed-status]]
+OPAX shows each bill's status from Parliament's bill records. One you will often see is {{lapsed}}. No bill marked lapsed on OPAX became law. [[f:opax-lapsed-status]]
 
 Most bills take 2 to 3 months to pass, but some take years. About 200 bills come to Parliament each year. [[f:bill-time]] [[f:bills-per-year]]
 
@@ -237,6 +239,6 @@ Most bills take 2 to 3 months to pass, but some take years. About 200 bills come
 
 ## See it in OPAX
 
-- [Sport Legislation Amendment (World Anti-Doping Code Implementation) Bill 2026](https://opax.com.au/bill/au-federal-r7548): a bill at second reading. Look at the stages it has passed. [[f:ex-r7548-stages]]
-- [A Senate vote to start an inquiry](https://opax.com.au/doc/division-federal-senate-10811): read the question to see what the committee must look into. [[f:ex-senate-10811-inquiry]]
+- [Sport Legislation Amendment (World Anti-Doping Code Implementation) Bill 2026](https://opax.com.au/bill/au-federal-r7548): a bill at second reading. Look at the stages recorded so far. [[f:ex-r7548-stages]]
+- [A Senate vote to start an inquiry](https://opax.com.au/doc/division-federal-senate-10811): this inquiry is into an issue, not a bill. Read the question to see what the committee must look into. [[f:ex-senate-10811-inquiry]]
 - [Water Amendment (Restoring Our Rivers) Bill 2023](https://opax.com.au/bill/au-federal-r7076): the Senate changed this bill. [The House then agreed to the changes](https://opax.com.au/doc/division-federal-representatives-8545). [[f:ex-r7076-senate-amendments]]

@@ -105,6 +105,10 @@
      "quote": "Consideration in detail (optional stage) – members discuss the bill in detail, including any changes to the bill"
     },
     {
+     "fact": "third-reading",
+     "quote": "3rd reading – members vote on the bill in its final form the bill is passed in the House of Representatives and sent to the Senate."
+    },
+    {
      "fact": "senate-stages",
      "quote": "In the Senate a bill goes through the following stages:"
     }
@@ -142,6 +146,10 @@
     {
      "fact": "amendments-both-houses",
      "quote": "Amendments can be introduced in either the Senate or the House of Representatives, and must be agreed to by both."
+    },
+    {
+     "fact": "amendment-shuttle",
+     "quote": "Amendments can be introduced in either the Senate or the House of Representatives, and must be agreed to by both."
     }
    ]
   },
@@ -176,7 +184,7 @@
     },
     {
      "fact": "delegated-register-6-days",
-     "quote": "Each delegated law must be listed on a public register. It becomes law on the day it is registered."
+     "quote": "Each delegated law must be listed on a public register."
     },
     {
      "fact": "delegated-register-6-days",
@@ -932,6 +940,18 @@
      "quote": "Rules or regulations made by a government minister, executive office-holder or government department using power that is given to them by the Parliament."
     },
     {
+     "fact": "sitting-def",
+     "quote": "A meeting of a house of parliament."
+    },
+    {
+     "fact": "clerk-def",
+     "quote": "The top-level parliamentary officer in the Senate or the House of Representatives."
+    },
+    {
+     "fact": "prorogation-def",
+     "quote": "A special proclamation to formally close a session of the Parliament, used before a dissolution of the House of Representatives"
+    },
+    {
      "fact": "electorate-def",
      "quote": "A geographical area represented by a member of parliament, also referred to as a seat."
     },
@@ -1231,8 +1251,8 @@
    "fetched_from": "https://api.prod.legislation.gov.au/v1/documents(titleid='C2004Q00685',start=1977-07-29,retrospectivestart=1977-07-29,rectificationversionnumber=1,type='Primary',uniqueTypeNumber=0,volumeNumber=0,format='Word')",
    "snapshot_text": "text/constitution_C2013Q00005_r1.txt",
    "retrieved": "2026-11-14",
-   "sha256": "5faa3dbbc348e67cd9635d1b97243238e6d4541ac833301adeab3f5375f66d15",
-   "snapshot": "raw/www_legislation_gov_au_C2004Q00685_latest_text.html",
+   "sha256": "be3d450c8644f203b9c22c50772d87a57cc715a42e53f731b37e8610987abd32",
+   "snapshot": "raw/constitution_C2013Q00005_r1.docx",
    "quotes": [
     {
      "fact": "money-bills-start-house",
@@ -1289,6 +1309,61 @@
    ]
   },
   {
+   "id": "legislation-act",
+   "publisher": "Federal Register of Legislation",
+   "title": "Legislation Act 2003 (C2004A01224, compilation C2019C00084)",
+   "url": "https://www.legislation.gov.au/C2004A01224/latest/text",
+   "fetched_from": "https://api.prod.legislation.gov.au/v1/documents(titleid='C2004A01224',start=2019-02-24,retrospectivestart=2019-02-24,rectificationversionnumber=0,type='Primary',uniqueTypeNumber=0,volumeNumber=0,format='Word')",
+   "snapshot_text": "text/legislation_act_2003_C2019C00084.txt",
+   "retrieved": "2026-11-14",
+   "sha256": "6f449c4421acbf9a2df7dda1bd1a7ff8e1999efb278eed8916eeec025630d705",
+   "snapshot": "raw/legislation_act_2003_C2019C00084.docx",
+   "quotes": [
+    {
+     "fact": "delegated-commence-s12",
+     "quote": "A legislative instrument or a notifiable instrument commences:"
+    },
+    {
+     "fact": "delegated-commence-s12",
+     "quote": "at the start of the day after the day the instrument is registered; or"
+    }
+   ]
+  },
+  {
+   "id": "aec-media-2026-07-23",
+   "publisher": "Australian Electoral Commission",
+   "title": "House of Representatives composition unchanged for next federal election (23 Jul 2026)",
+   "url": "https://www.aec.gov.au/media/2026/07-23.htm",
+   "retrieved": "2026-11-14",
+   "sha256": "f6e113f41dc4e0f2a4f9ae7d615e5e8c64a6d259f5b6fffd163c0528796796b0",
+   "snapshot": "raw/www_aec_gov_au_media_2026_07_23_htm.html",
+   "quotes": [
+    {
+     "fact": "house-150",
+     "quote": "the number of seats in the House of Representatives will remain unchanged – at 150 – for Australia’s next federal election."
+    },
+    {
+     "fact": "house-150",
+     "quote": "the total number of House of Representatives seats for each state and territory will remain unchanged"
+    }
+   ]
+  },
+  {
+   "id": "aec-media-2026-10-08",
+   "publisher": "Australian Electoral Commission",
+   "title": "Federal redistributions formally determined for South Australia, Tasmania and the ACT (8 Oct 2026)",
+   "url": "https://www.aec.gov.au/media/2026/10-08.htm",
+   "retrieved": "2026-11-14",
+   "sha256": "e01e075d3d2b7edf8cb86c5ba559fcc6384136addbe61705e24eed74bae99af4",
+   "snapshot": "raw/www_aec_gov_au_media_2026_10_08_htm.html",
+   "quotes": [
+    {
+     "fact": "house-150",
+     "quote": "MPs will continue to represent their existing electorates until a federal election is called."
+    }
+   ]
+  },
+  {
    "id": "aec-electorates",
    "publisher": "Australian Electoral Commission",
    "title": "Electorates",
@@ -1317,6 +1392,10 @@
    "snapshot": "raw/www_aec_gov_au_FAQs_Redistributions_htm.html",
    "quotes": [
     {
+     "fact": "electorate-equal-voters",
+     "quote": "projected enrolment in each electorate should not vary from the projected state or territory average by more than 3.5 per cent."
+    },
+    {
      "fact": "aec-redistribution-aim",
      "quote": "the last redistribution for that state or territory was determined seven years ago"
     },
@@ -1330,7 +1409,7 @@
    "id": "opax-web-app",
    "publisher": "OPAX",
    "title": "Web app: division and bill views (portal/public/app.js)",
-   "url": "https://github.com/jaketracey/opax/blob/5c5034e043329a348a46ea81e821bcecee2bae40/portal/public/app.js",
+   "url": "https://github.com/jaketracey/opax/blob/5d5780c3aa8eb5ebc5f23451fc29e474130d4305/portal/public/app.js",
    "repo_path": "portal/public/app.js",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -1368,7 +1447,7 @@
    "id": "opax-vote-tables",
    "publisher": "OPAX",
    "title": "Web: division and vote table rules (portal/public/vote-tables.js)",
-   "url": "https://github.com/jaketracey/opax/blob/5c5034e043329a348a46ea81e821bcecee2bae40/portal/public/vote-tables.js",
+   "url": "https://github.com/jaketracey/opax/blob/5d5780c3aa8eb5ebc5f23451fc29e474130d4305/portal/public/vote-tables.js",
    "repo_path": "portal/public/vote-tables.js",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -1390,7 +1469,7 @@
    "id": "opax-seo-content",
    "publisher": "OPAX",
    "title": "Web: server-rendered bill and division pages (portal/src/seo-content.ts)",
-   "url": "https://github.com/jaketracey/opax/blob/5c5034e043329a348a46ea81e821bcecee2bae40/portal/src/seo-content.ts",
+   "url": "https://github.com/jaketracey/opax/blob/5d5780c3aa8eb5ebc5f23451fc29e474130d4305/portal/src/seo-content.ts",
    "repo_path": "portal/src/seo-content.ts",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -1424,7 +1503,7 @@
    "id": "opax-division-tool",
    "publisher": "OPAX",
    "title": "Ask division tool: floor-crossing rule (portal/src/tools/division.ts)",
-   "url": "https://github.com/jaketracey/opax/blob/5c5034e043329a348a46ea81e821bcecee2bae40/portal/src/tools/division.ts",
+   "url": "https://github.com/jaketracey/opax/blob/5d5780c3aa8eb5ebc5f23451fc29e474130d4305/portal/src/tools/division.ts",
    "repo_path": "portal/src/tools/division.ts",
    "retrieved": "2026-11-14",
    "quotes": [
@@ -1472,6 +1551,10 @@
    "snapshot_text": "text/opax-app/BillDetail.tsx.txt",
    "retrieved": "2026-11-14",
    "quotes": [
+    {
+     "fact": "opax-lapsed-status",
+     "quote": "Bills, their dates and their divisions come from the parliamentary record"
+    },
     {
      "fact": "opax-voices-no-record",
      "quote": "Only formal divisions leave a per-member record."
@@ -1527,6 +1610,22 @@
     {
      "fact": "ex-senate-10811-inquiry",
      "quote": "\"noes\":21"
+    }
+   ]
+  },
+  {
+   "id": "opax-bill-r7076",
+   "publisher": "OPAX",
+   "title": "Water Amendment (Restoring Our Rivers) Bill 2023",
+   "url": "https://opax.com.au/bill/au-federal-r7076",
+   "repo_path": "portal/public/bills/au-federal-r7076.json",
+   "retrieved": "2026-11-14",
+   "sha256": "857191ec65a3b1d86f165ac840b8436ae289380e2c52be735cd65d5a41421580",
+   "snapshot": "raw/opax_com_au_bill_au_federal_r7076.html",
+   "quotes": [
+    {
+     "fact": "opax-recorded-stages",
+     "quote": "\"stage\": \"second_reading\""
     }
    ]
   },
@@ -1607,18 +1706,30 @@
    ]
   },
   {
-   "id": "opax-div-reps-7544",
+   "id": "opax-div-reps-7714",
    "publisher": "OPAX",
-   "title": "House division, 1 Dec 2021: Mitochondrial Donation Law Reform (Maeve's Law) Bill 2021, consideration in detail",
-   "url": "https://opax.com.au/doc/division-federal-representatives-7544",
-   "repo_path": "portal/public/divisions/division-federal-representatives-7544.json",
+   "title": "House division, 3 Aug 2022: Restoring Territory Rights Bill 2022, third reading",
+   "url": "https://opax.com.au/doc/division-federal-representatives-7714",
+   "repo_path": "portal/public/divisions/division-federal-representatives-7714.json",
    "retrieved": "2026-11-14",
-   "sha256": "131a3bd96b220e42fa8039035dd7d4a6b9a6cba60d1fa267099ecc5e542a68c4",
-   "snapshot": "raw/opax_com_au_doc_division_federal_representatives_7544.html",
+   "sha256": "97669922d48b7f8e021205a6f0295c9a342987facfdb7cffe5490d276bc69f33",
+   "snapshot": "raw/opax_com_au_doc_division_federal_representatives_7714.html",
    "quotes": [
     {
-     "fact": "ex-reps-7544-free-vote",
-     "quote": "(also known as a conscience vote), which means our MPs voted according to their own beliefs"
+     "fact": "ex-reps-7714-split",
+     "quote": "Restoring Territory Rights Bill 2022 - Third Reading - Pass the bill"
+    },
+    {
+     "fact": "ex-reps-7714-split",
+     "quote": "\"ayes\":99"
+    },
+    {
+     "fact": "ex-reps-7714-split",
+     "quote": "\"noes\":38"
+    },
+    {
+     "fact": "ex-reps-7714-split",
+     "quote": "\"result\":\"affirmative\""
     }
    ]
   },
@@ -1626,7 +1737,7 @@
    "id": "opax-bills-export",
    "publisher": "OPAX",
    "title": "Federal bill export (portal/public/bills/au-federal-*.json)",
-   "url": "https://github.com/jaketracey/opax/blob/5c5034e043329a348a46ea81e821bcecee2bae40/portal/public/bills",
+   "url": "https://github.com/jaketracey/opax/blob/5d5780c3aa8eb5ebc5f23451fc29e474130d4305/portal/public/bills",
    "repo_path": "portal/public/bills",
    "retrieved": "2026-11-14",
    "quotes": [
