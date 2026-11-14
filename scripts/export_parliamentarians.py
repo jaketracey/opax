@@ -94,6 +94,9 @@ HELD = 3
 # Letters (any script), spaces, hyphens, apostrophes, dots; 2-5 tokens; not a
 # sentence. "Shoebridge" (one token) passes: surname-only Hansard prints are
 # real collaborator values with entry pages of their own.
+# The apps' roster id rule (mobile/src/api/ids.ts rosterId). A pid outside it
+# makes the apps drop the row and mark the whole roster partial.
+ROSTER_ID_RE = re.compile(r"^(?:\d+|(?:nsw|vic|qld|sa|wa|tas|act|nt|wragge|zenodo|aph)_[a-z0-9_]+)$")
 NAME_RE = re.compile(r"^[^\W\d_][\w'’.\-]*(?: [^\W\d_][\w'’.\-]*){0,4}$", re.UNICODE)
 
 # speeches.party_canonical spells two parties out where the sync's canonical
@@ -358,8 +361,12 @@ def main(argv=()) -> None:
             rec["party"] = ranked[0]
             if len(ranked) > 1:
                 rec["parties"] = ranked
-        if pid:
+        if pid and ROSTER_ID_RE.match(pid):
             rec["pid"] = pid
+        elif pid:
+            # A canonical id (person_<hex>) is not a roster id: the apps reject
+            # it in pid and would drop the row. Keep it for server-side joins.
+            rec["person_id"] = pid
         if pid in current:
             rec["current"] = True
             if current[pid][0]:

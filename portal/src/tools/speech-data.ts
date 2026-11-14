@@ -292,7 +292,7 @@ export async function speechTrend(deps: ToolDeps, input: TrendInput): Promise<To
 }
 
 // ---------------------------------------------------------------- find_people
-interface Person { name: string; speeches: number | null; roster_only?: boolean; party?: string; party_now?: string; states?: string[]; chambers?: string[]; first?: number; last?: number; pid?: string; current?: boolean; representation?: { electorate: string; jurisdiction: string; chamber: string; state?: string | null }[] }
+interface Person { name: string; speeches: number | null; roster_only?: boolean; party?: string; party_now?: string; states?: string[]; chambers?: string[]; first?: number; last?: number; pid?: string; person_id?: string; current?: boolean; representation?: { electorate: string; jurisdiction: string; chamber: string; state?: string | null }[] }
 const fold = (s: string) => s.normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[‘’ʼ`]/g, "'").toLowerCase().replace(/\s+/g, ' ').trim()
 export async function findPeople(deps: ToolDeps, input: { name: string; limit?: number }): Promise<ToolResult> {
   const origin = deps.origin ?? 'https://opax.com.au'

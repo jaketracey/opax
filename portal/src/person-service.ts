@@ -21,7 +21,7 @@ const fold = (name: string) => name.normalize('NFKD').replace(/[̀-ͯ]/g, '').to
 const date = (value: unknown): value is string => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)
 
 /** Enrich resolved names only. Speech years and roster observation dates are never service dates. */
-export async function personService(deps: ToolDeps, people: { name: string; pid?: string; chambers?: string[] }[]): Promise<ServicePeriod[][]> {
+export async function personService(deps: ToolDeps, people: { name: string; pid?: string; person_id?: string; chambers?: string[] }[]): Promise<ServicePeriod[][]> {
   if (!people.length) return []
   const [electorates, pay] = await Promise.allSettled([
     (async () => {
@@ -35,7 +35,7 @@ export async function personService(deps: ToolDeps, people: { name: string; pid?
   const servicePeople = electorates.status === 'fulfilled' ? electorates.value?.people ?? [] : []
   const payData = pay.status === 'fulfilled' ? pay.value : null
   return people.map(person => {
-    const matches = servicePeople.filter(p => person.pid && (p.legacy_person_id === person.pid || p.person_id === person.pid) || fold(p.name) === fold(person.name))
+    const matches = servicePeople.filter(p => person.pid && (p.legacy_person_id === person.pid || p.person_id === person.pid) || person.person_id && p.person_id === person.person_id || fold(p.name) === fold(person.name))
     const seats = matches.length === 1 ? matches[0].electorates ?? [] : []
     const periods: ServicePeriod[] = seats.flatMap(seat => (seat.periods ?? []).filter(p => date(p.start) && (p.end == null || date(p.end))).map(p => ({
       jurisdiction: seat.jurisdiction, chamber: seat.chamber, electorate: seat.name,
