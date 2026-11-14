@@ -32,6 +32,20 @@ const extras = decodeAecExtras(pinned('/graph/aec-extras.json'));
 const labels = partyLabels(roster, people, graph);
 const members = partyMembers('Labor', roster, people, slugs, manifest);
 
+test('membership sorting sets up locale collation at most once per cohort (4p)', () => {
+  const collator = jest.spyOn(Intl, 'Collator');
+  const perComparison = jest.spyOn(String.prototype, 'localeCompare');
+  try {
+    const cohort = partyMembers('Labor', roster, people, slugs, manifest);
+    expect(cohort.current.length + cohort.recorded.length).toBeGreaterThan(100);
+    expect(collator.mock.calls.length).toBeLessThanOrEqual(1);
+    expect(perComparison).not.toHaveBeenCalled();
+  } finally {
+    collator.mockRestore();
+    perComparison.mockRestore();
+  }
+});
+
 test('party resolution uses only recorded identities and derived slugs, never prefix matches', () => {
   for (const name of ['Labor', 'ALP', 'Australian Labor Party', 'labor'])
     expect(resolveParty(name, labels)).toBe('Labor');

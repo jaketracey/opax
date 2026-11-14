@@ -1993,6 +1993,10 @@ test.each(
         expect(parent.props.style).toBeUndefined();
       }
     } finally {
+      // Audit the mounted tree on its own platform before restoring dimensions
+      // can rerender its controls using the next platform's target sizes.
+      act(() => view?.unmount());
+      view = null;
       Platform.OS = original;
       act(() => Dimensions.set({ window }));
     }

@@ -590,6 +590,7 @@ test.each([1, 2])(
     const measure = jest
       .mocked(View.prototype.measureInWindow)
       .mockImplementation((callback) => callback(0, 0, WINDOW.width, bottom));
+    measure.mockClear();
     function Probe() {
       const ref = useRef<View>(null);
       result = useKeyboardOverlap(ref);
@@ -618,7 +619,9 @@ test.each([1, 2])(
     expect(result).toEqual({ overlap: 280, visible: true });
     // A native adjustResize path already clears the IME: no second lift.
     bottom = WINDOW.height - 280;
-    act(() => Dimensions.set({ window: { ...WINDOW, height: bottom, fontScale } }));
+    act(() =>
+      Dimensions.set({ window: { ...WINDOW, height: bottom, fontScale } }),
+    );
     rerender();
     expect(result).toEqual({ overlap: 0, visible: true });
     expect(measure).not.toHaveBeenCalled();

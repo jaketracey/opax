@@ -4,14 +4,22 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react';
-import { Animated, Platform, StyleSheet, View, useWindowDimensions } from 'react-native';
+import {
+  Animated,
+  Platform,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { router } from 'expo-router';
 import { track } from '../../analytics';
-import { useReduceMotion } from '../../design/accessibility';
+import {
+  useAccessibilitySize,
+  useReduceMotion,
+} from '../../design/accessibility';
 import { useScreenMargin } from '../../design/adaptive';
 import { EngravedMark } from '../../design/engraving';
 import { haptic } from '../../design/haptics';
-import { useAccessibilitySize } from '../../design/accessibility';
 import { requestFocus } from '../../design/keyboard';
 import { InsetGroup, SectionHeader } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
