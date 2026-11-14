@@ -791,3 +791,39 @@ test('the context line starts its measure label with a capital',async()=>{
  const clp=await ask('How did receipts to Country Liberal Party change from 2003 to 2004?');
  assert.match(clp.answer,/Federal \(AEC\)\. All receipt types \(no type breakdown in the AEC data OPAX holds\); nominal/);
 });
+test('a short donor name in a comparison keeps the comparison',async()=>{
+ const full=await ask('How did donations from Mowburn Nominees to Nationals change from 2012 to 2015?');
+ const short=await ask('How did donations from Mowburn to Nationals change from 2012 to 2015?');
+ assert.equal(short.answer_status,'calculated');assert.match(short.money_reading,/Reading “Mowburn” as Mowburn Nominees\./);
+ assert.match(short.answer,/^\*\*Nationals has the same disclosed total from Mowburn Nominees in 2012–13 and 2015–16\*\*/);
+ assert.equal(short.answer.replace('\n\nReading “Mowburn” as Mowburn Nominees.',''),full.answer);
+ // Without a recipient party the year comparison asks for one, as it does for the full name; no leader answer.
+ const open=await ask('How did donations from Mowburn change from 2019 to 2023?');
+ assert.equal(open.answer_status,'needs_scope');assert.match(open.answer,/^Choose one recipient party/);assert.doesNotMatch(open.answer,/leads parties/);
+ const pair=await ask('Who gets more donations from Mowburn, Nationals or LNP?');
+ assert.equal(pair.answer_status,'calculated');assert.match(pair.answer,/^\*\*Nationals received \$462,700 more from Mowburn Nominees than LNP\*\*/);
+ assert.equal(pair.money_question,(await ask('Who gets more donations from Mowburn Nominees, Nationals or LNP?')).money_question);
+});
+test('two short donor names in one question both resolve',async()=>{
+ const full=await ask('Which party received the most donations from Pratt Holdings Pty Ltd and Woodside Energy in 2019?');
+ for(const question of ['Which party received the most donations from Pratt and Woodside in 2019?','Who gets the most money from Pratt and Woodside in 2019?']){
+  const result=await ask(question);
+  assert.equal(result.answer_status,'calculated',question);assert.match(result.money_reading,/Reading “Pratt” as Pratt Holdings Pty Ltd\./);
+  assert.match(result.answer,/^\*\*Liberal\*\* leads parties receiving money from Pratt Holdings Pty Ltd, Woodside Energy: \*\*\$1,300,000\*\*/);
+  assert.doesNotMatch(result.answer,/is not one of them/);
+  assert.equal(result.money_question,full.money_question);
+ }
+ // The follow-up question names both organisations and gives the same figures.
+ assert.equal(full.money_question,'Who receives the most disclosed receipts from Pratt Holdings Pty Ltd and Woodside Energy in federal records in 2019?');
+ assert.match((await ask(full.money_question)).answer,/the selection totals \$1,550,000/);
+ const three=await ask('Which party received the most donations from Pratt, Mowburn and Woodside?');
+ assert.equal(three.answer_status,'calculated');assert.match(three.money_reading,/Reading “Pratt” as Pratt Holdings Pty Ltd\. Reading “Mowburn” as Mowburn Nominees\./);
+ assert.match(three.answer,/from Pratt Holdings Pty Ltd, (?:Woodside Energy, Mowburn Nominees|Mowburn Nominees, Woodside Energy)/);
+ // A name the map does not hold is named plainly with the reading already taken; nothing is summed and no option drops it.
+ const missing=await ask('Which party received the most donations from Pratt and Zzzfoo in 2019?');
+ assert.equal(missing.answer_status,'needs_scope');assert.match(missing.answer,/\*\*zzzfoo\*\* is not one of them/);assert.match(missing.answer,/Reading “Pratt” as Pratt Holdings Pty Ltd\./);
+ assert.doesNotMatch(missing.answer,/\*\*pratt\*\*|\$[\d,]+|\/ask\?q=/);
+ // A word after a full name is a qualifier, not a second organisation.
+ const qualifier=await ask('Who receives the most disclosed receipts from Pratt Holdings Mining?');
+ assert.equal(qualifier.answer_status,'needs_scope');assert.doesNotMatch(qualifier.answer,/Mining and Energy Union|\$[\d,]+/);
+});
