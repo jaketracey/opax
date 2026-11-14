@@ -99,7 +99,7 @@
    // provides additional padding to account for possible header, and in the case when screen is
 --- a/node_modules/react-native-screens/ios/RNSSearchBar.mm
 +++ b/node_modules/react-native-screens/ios/RNSSearchBar.mm
-@@ -14,9 +14,114 @@
+@@ -14,9 +14,115 @@
 
  namespace react = facebook::react;
 
@@ -169,10 +169,11 @@
 +  }
 +  UIFont *preferred = [UIFont preferredFontForTextStyle:UIFontTextStyleBody
 +                        compatibleWithTraitCollection:field.traitCollection];
-+  // UIKit owns the icon/cancel-button insets. Fit both dimensions: width
-+  // fitting alone still clips AX glyphs vertically in the native bar.
-+  CGRect rect = CGRectIntersection(field.bounds, [field placeholderRectForBounds:field.bounds]);
-+  CGSize available = CGRectInset(rect, 1, 1).size;
++  // UIKit owns the leading inset, but its placeholder rect can hug the
++  // current text. Use field bounds so a fit cannot shrink on re-layout.
++  CGRect rect = [field placeholderRectForBounds:field.bounds];
++  CGSize available = CGSizeMake(
++      CGRectGetMaxX(field.bounds) - CGRectGetMinX(rect) - 2, CGRectGetHeight(field.bounds) - 2);
 +  if (available.width <= 0 || available.height <= 0) {
 +    return;
 +  }
@@ -214,7 +215,7 @@
 
    // We use those booleans to log a warning if user attempts to restore
    // default behavior after setting explicit value for the prop.
-@@ -46,6 +151,11 @@
+@@ -46,6 +152,11 @@
  #endif
 
    _controller.searchBar.delegate = self;
@@ -226,7 +227,7 @@
 
    _isObscureBackgroundSet = NO;
    _isHideNavigationBarSet = NO;
-@@ -152,6 +262,9 @@
+@@ -152,6 +263,9 @@
  - (void)setPlaceholder:(NSString *)placeholder
  {
    [_controller.searchBar setPlaceholder:placeholder];

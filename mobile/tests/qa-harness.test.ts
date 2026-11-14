@@ -93,11 +93,11 @@ test('screens 4.26.0 patch applies cleanly to menus and the native search placeh
       name: 'RNSSearchBar.mm',
       before:
         '24e5319a0c5bf94b9ef45c96f561c2cfe239655b6495fa69ac9a34f710f6b50c',
-      after: 'c760c33b9c75fcbd6021f16629b4cc51c80483bcec0217098199656acf2fa5af',
+      after: '464ae20aa8042e15813414a0808873b06ad413cf15f8bf640b36b15628d74218',
     },
   ];
   expect(digest(readFileSync(patch, 'utf8'))).toBe(
-    '840fec9bf28e1cd3ce4d3329b83f8cd105cd8a99ce966b8819cc1d43e62fd1ea',
+    'b1be1be8d59326ea055d8eac51f4dd963f297032299ef49ba87f014adb1f8a33',
   );
   const root = mkdtempSync(join(tmpdir(), 'screens-patch-'));
   const directory = join(root, 'node_modules/react-native-screens/ios');

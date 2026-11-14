@@ -69,7 +69,12 @@ private enum OpaxSearchGeometryProbe {
       return text.attribute(.font, at: 0, effectiveRange: nil) as? UIFont
     }
     let placeholderSize = field.flatMap { f in placeholderFont.map { ((f.placeholder ?? "") as NSString).size(withAttributes: [.font: $0]) } }
-    let placeholderRect = field.map { $0.placeholderRect(forBounds: $0.bounds).intersection($0.bounds).insetBy(dx: 1, dy: 1) }
+    // UIKit can size the drawing rect to the current placeholder. Measure
+    // free space from its leading edge and the field's own bounds instead.
+    let placeholderAvailable = field.map { f in
+      let rect = f.placeholderRect(forBounds: f.bounds)
+      return CGSize(width: f.bounds.maxX - rect.minX - 2, height: f.bounds.height - 2)
+    }
     // In a conversation Ask uses an inline title. UIKit can retain the full
     // 106 pt bar frame with its hidden large-title band; the visible controls
     // end at the compact content view instead. Keep nav/largeTitle for diagnosis.
@@ -98,8 +103,8 @@ private enum OpaxSearchGeometryProbe {
       "placeholderPointSize": placeholderFont?.pointSize ?? 0,
       "placeholderWidth": placeholderSize?.width ?? 0,
       "placeholderLineHeight": placeholderFont?.lineHeight ?? 0,
-      "placeholderAvailableWidth": placeholderRect?.width ?? 0,
-      "placeholderAvailableHeight": placeholderRect?.height ?? 0,
+      "placeholderAvailableWidth": placeholderAvailable?.width ?? 0,
+      "placeholderAvailableHeight": placeholderAvailable?.height ?? 0,
       "askViewport": rect(scroll, window),
       "askComposer": rect(all.first { $0.accessibilityIdentifier == "ask-phone-dock" }, window),
       "askQuestion": rect(askQuestion, window), "askProgress": rect(askProgress, window), "askError": rect(askError, window),

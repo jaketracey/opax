@@ -1545,6 +1545,47 @@ test.each([
     }),
 );
 
+test.each(
+  tabCases
+    .filter(([, name]) => name !== 'index')
+    .flatMap(([segment, name]) =>
+      (
+        [
+          ['AX3', 2.643],
+          ['AX5', 3.571],
+        ] as const
+      ).map(([size, fontScale]) => [segment, name, size, fontScale] as const),
+    ),
+)(
+  '%s %s at %s keeps its glass header across layout',
+  (segment, name, _size, fontScale) =>
+    withGlass(() => {
+      const window = Dimensions.get('window');
+      const { navigation, page, ground } = fadePage(name, segment);
+      const renderer = tree(page(120));
+      try {
+        act(() => Dimensions.set({ window: { ...window, fontScale } }));
+        for (const height of [68, 120, 144]) {
+          act(() => renderer.update(page(height)));
+          const appearance = navigation.setOptions.mock.calls
+            .map(([options]) => options)
+            .filter((options) => 'headerTransparent' in options)
+            .at(-1);
+          expect(appearance).toEqual(
+            expect.objectContaining({
+              ...largeTitleBar(ground),
+              headerLargeTitleEnabled: true,
+            }),
+          );
+          expect(RootBar!.setSolid).not.toHaveBeenCalled();
+        }
+      } finally {
+        act(() => renderer.unmount());
+        act(() => Dimensions.set({ window }));
+      }
+    }),
+);
+
 test.each(['leading', 'trailing'] as const)(
   'Today on the %s Duo rail keeps its glass chrome at AX3 and AX5',
   (edge) =>
