@@ -99,13 +99,13 @@ describe('the edition, in the words of the app plate',()=>{
 describe('the vote, as the first row of How parliament voted',()=>{
   test('the pinned file: the newest reading vote, procedure and amendments out, one per bill per day',()=>{
     assert.deepEqual(W.widgetVote(fixture('recent-divisions.json')),{date:'2026-11-12',chamber:'Senate',stage:'Third reading',
-      title:'Example Tax Bill 2026',outcome:'Agreed to',ayes:37,noes:30,path:'/bill/au-federal-r9001?division=senate-2026-11-12-10'});
+      title:'Example Tax Bill 2026',outcome:'Agreed',ayes:37,noes:30,path:'/bill/au-federal-r9001?division=senate-2026-11-12-10'});
     // The app's three rows for the same file.
     const rows=W.recentReadingVotes(W.readDivisions(fixture('recent-divisions.json')).divisions,3);
     assert.deepEqual(rows.map(r=>[r.division_key,W.outcomeWord(r.outcome,r),W.stageWords(r.stage),W.chamberWord(r.chamber),r.short_title?.trim()||r.title]),[
-      ['senate-2026-11-12-10','Agreed to','Third reading','Senate','Example Tax Bill 2026'],
-      ['house-2026-11-11-1','Agreed to','Third reading','House of Representatives','Example Housing Bill 2026'],
-      ['house-2026-11-10-2','Not agreed to','Second reading','House of Representatives','Example Schools Bill 2026'],
+      ['senate-2026-11-12-10','Agreed','Third reading','Senate','Example Tax Bill 2026'],
+      ['house-2026-11-11-1','Agreed','Third reading','House of Representatives','Example Housing Bill 2026'],
+      ['house-2026-11-10-2','Not agreed','Second reading','House of Representatives','Example Schools Bill 2026'],
     ]);
   });
   test('a bill appears once per day with its latest reading division (app divisions-fixture.test.ts)',()=>{
@@ -115,11 +115,12 @@ describe('the vote, as the first row of How parliament voted',()=>{
       {...row,bill_key:'au-federal-r2',title:'Another Bill 2026',division_key:'house-101'},{...row,date:'2026-11-08',division_key:'house-98'}]});
     assert.deepEqual(W.recentReadingVotes(file.divisions,4).map(v=>v.division_key),['house-101','house-100','house-98']);
   });
-  test('outcomes are "Agreed to" or "Not agreed to" (app bills.test.tsx)',()=>{
-    assert.equal(W.outcomeWord('affirmative'),'Agreed to');
-    assert.equal(W.outcomeWord('negative'),'Not agreed to');
-    assert.equal(W.outcomeWord('',{ayes:30,noes:10}),'Agreed to');
-    assert.equal(W.outcomeWord('',{ayes:10,noes:10}),'Not agreed to');
+  test('outcomes are "Agreed" or "Not agreed", the site\'s one wording (app bills.test.tsx)',()=>{
+    assert.equal(W.outcomeWord('affirmative'),'Agreed');
+    assert.equal(W.outcomeWord('negative'),'Not agreed');
+    assert.equal(W.outcomeWord('',{ayes:30,noes:10}),'Agreed');
+    assert.equal(W.outcomeWord('',{ayes:10,noes:10}),'Not agreed');
+    assert.equal(W.outcomeWord('negatived',{ayes:30,noes:10}),'Not agreed');
   });
   test('no reading vote, or a file the app would refuse, is null',()=>{
     const file=fixture('recent-divisions.json');
@@ -227,7 +228,7 @@ describe('the body stays under 4 KB',()=>{
     const days=Array.from({length:60},(_,i)=>({date:W.addDays(TODAY,i),house:true,senate:true})).filter(d=>![0,6].includes(new Date(d.date).getUTCDay()));
     const body={version:1,generated:'2026-11-12T20:00:00Z',
       edition:{date:TODAY,kind:'grant',kind_short:'Grant program',card_title:'A'.repeat(80)+'…',line:long(10).trim(),path:'/money/grants/federal/recipient/abn%3A00000000000?award=GA000000'},
-      vote:{date:TODAY,chamber:'House of Representatives',stage:'Second reading',title:long(14).trim(),outcome:'Not agreed to',ayes:150,noes:150,path:'/bill/au-federal-r9999?division=house-2026-11-13-99'},
+      vote:{date:TODAY,chamber:'House of Representatives',stage:'Second reading',title:long(14).trim(),outcome:'Not agreed',ayes:150,noes:150,path:'/bill/au-federal-r9999?division=house-2026-11-13-99'},
       sitting:{until:W.addDays(TODAY,59),until_reason:'window',calendars:[{year:2026,source:'Parliament of Australia',as_at:'2026-09-14'},{year:2027,source:'Parliament of Australia',as_at:'2026-12-10'}],next_year:{year:2028,status:'not_published'},days}};
     assert.ok(new TextEncoder().encode(JSON.stringify(body)).length<=W.WIDGET_MAX_BYTES);
     assert.equal(W.fitBody(body),body);
@@ -235,7 +236,7 @@ describe('the body stays under 4 KB',()=>{
   test('past 4 KB the far end of the sitting list goes first and until follows it',()=>{
     const days=Array.from({length:60},(_,i)=>({date:W.addDays(TODAY,i),house:true,senate:true}));
     const body={version:1,generated:null,edition:{date:TODAY,kind:'bill',kind_short:'Bill',card_title:'A'.repeat(81),line:long(20),path:'/bill/x'},
-      vote:{date:TODAY,chamber:'Senate',stage:'Third reading',title:long(20),outcome:'Agreed to',ayes:1,noes:0,path:'/bill/x?division=1'},
+      vote:{date:TODAY,chamber:'Senate',stage:'Third reading',title:long(20),outcome:'Agreed',ayes:1,noes:0,path:'/bill/x?division=1'},
       sitting:{until:W.addDays(TODAY,59),until_reason:'coverage_end',calendars:[{year:2026,source:'s',as_at:null},{year:2027,source:'s',as_at:null}],next_year:null,days}};
     const fitted=W.fitBody(body);
     assert.ok(new TextEncoder().encode(JSON.stringify(fitted)).length<=W.WIDGET_MAX_BYTES);
@@ -287,7 +288,7 @@ describe('GET /api/app/v1/widget/today',()=>{
     assert.ok(size(text)<4096,`${size(text)} bytes`);
     assert.deepEqual(JSON.parse(text),{version:1,generated:'2026-11-12T20:00:00Z',
       edition:{date:'2026-10-04',kind:'bill',kind_short:'Bill',card_title:'Wage Justice for Early Childhood Education and Care Workers…',line:'Education portfolio',path:'/bill/au-federal-r7529'},
-      vote:{date:'2026-11-12',chamber:'Senate',stage:'Third reading',title:'Example Tax Bill 2026',outcome:'Agreed to',ayes:37,noes:30,path:'/bill/au-federal-r9001?division=senate-2026-11-12-10'},
+      vote:{date:'2026-11-12',chamber:'Senate',stage:'Third reading',title:'Example Tax Bill 2026',outcome:'Agreed',ayes:37,noes:30,path:'/bill/au-federal-r9001?division=senate-2026-11-12-10'},
       sitting:{until:'2026-12-31',until_reason:'coverage_end',calendars:[{year:2026,source:'Parliament of Australia',as_at:'2026-09-14'}],next_year:{year:2027,status:'not_published'},
         days:[{date:'2026-11-16',house:false,senate:true},{date:'2026-11-17',house:false,senate:true},{date:'2026-11-18',house:false,senate:true},{date:'2026-11-19',house:false,senate:true},
           {date:'2026-11-23',house:true,senate:true},{date:'2026-11-24',house:true,senate:true},{date:'2026-11-25',house:true,senate:true},{date:'2026-11-26',house:true,senate:true}]}});
@@ -402,9 +403,9 @@ describe('GET /api/app/v1/widget/today',()=>{
   });
 });
 
-test('the module stays pure: only the journal, app-http and app-edition, and no outbound fetch',async()=>{
+test('the module stays pure: only the journal, app-http, app-edition and the outcome wording, and no outbound fetch',async()=>{
   const built=await build({entryPoints:[new URL('../src/app-widget.ts',import.meta.url).pathname],bundle:true,write:false,metafile:true,platform:'browser',format:'esm',external:['node:crypto']});
-  assert.deepEqual(Object.keys(built.metafile.inputs).map(p=>p.split('/').at(-1)).sort(),['app-edition.ts','app-http.ts','app-widget.ts']);
+  assert.deepEqual(Object.keys(built.metafile.inputs).map(p=>p.split('/').at(-1)).sort(),['app-edition.ts','app-http.ts','app-widget.ts','division-outcome.js']);
   const source=readFileSync(new URL('../src/app-widget.ts',import.meta.url),'utf8');
   assert.deepEqual(source.match(/\bfetch\s*\(/g),['fetch('],'one fetch call');
   assert.match(source,/env\.ASSETS\.fetch\(new Request\('https:\/\/app-assets\.invalid' \+ path\)\)/);

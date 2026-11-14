@@ -1,3 +1,4 @@
+export * from './division-outcome.js';
 export function tagHTML(label: string, href?: string): string;
 export function statusLabelHTML(word: string, tone?: string): string;
 export function partyLabelHTML(party: string, options?: { full?: boolean }): string;

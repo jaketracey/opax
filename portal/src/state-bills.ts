@@ -1,6 +1,6 @@
 import {applyQuery,guardTableURL,type Row} from '../public/datatable.js'
 import {registerTableHTML,stateBillsTableConfig,stateBillsTableQuery} from '../public/register-tables.js'
-import {PERSON_PATHS} from '../public/party-page.js'
+import {PERSON_PATHS, NOT_AGREED} from '../public/party-page.js'
 const esc=(v:unknown)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!))
 type Receipt={source_url:string;snapshot:string;sha256:string}
 type Licence={status:string;name:string;policy_url:string;policy_receipt:Receipt;text_allowed:boolean;hold_reason:string}
@@ -13,7 +13,7 @@ export type StateBillsHub={schema:number;jurisdiction:'tas'|'act';generated_at:s
 export type StateBillsRead=(jurisdiction:'tas'|'act')=>Promise<StateBillsHub>
 const origins={tas:'https://www.parliament.tas.gov.au',act:'https://www.parliament.act.gov.au'}
 const names={tas:'Tasmania',act:'ACT'}
-const statuses:Record<string,string>={before_parliament:'Before Parliament',passed:'Passed',assented:'Royal assent',lapsed:'Lapsed',withdrawn:'Discharged / withdrawn',negatived:'Negatived',unknown:'Status not established'}
+const statuses:Record<string,string>={before_parliament:'Before Parliament',passed:'Passed',assented:'Royal assent',lapsed:'Lapsed',withdrawn:'Discharged / withdrawn',negatived:NOT_AGREED,unknown:'Status not established'}
 const sha=(v:string)=>/^[a-f0-9]{64}$/.test(v)
 const source=(r:Receipt,j:'tas'|'act')=>typeof r?.source_url==='string' && r.source_url.startsWith(origins[j]+'/') && sha(r.sha256) && Boolean(r.snapshot)
 const normal=(s:string)=>s.trim().replace(/\s+/g,' ').toLowerCase()

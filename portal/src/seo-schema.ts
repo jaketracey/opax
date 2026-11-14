@@ -1,4 +1,5 @@
 /** Schema.org V30.1 shapes; no network or Worker bindings are needed here. */
+import { NOT_AGREED } from '../public/division-outcome.js'
 export type SchemaNode = Record<string, unknown>
 
 export interface PersonSchemaIdentity {
@@ -36,7 +37,7 @@ export interface SchemaGraphOptions {
 const STATUS_LABELS: Record<string, string> = {
   introduced: 'Introduced', before_house: 'Before the house', before_parliament: 'Before parliament',
   passed_one_house: 'Passed one house', passed_both: 'Passed both houses', passed: 'Passed',
-  assented: 'Assented', rejected: 'Rejected', withdrawn: 'Withdrawn', lapsed: 'Lapsed', negatived: 'Negatived',
+  assented: 'Assented', rejected: 'Rejected', withdrawn: 'Withdrawn', lapsed: 'Lapsed', negatived: NOT_AGREED,
   exposure_draft: 'Exposure draft', in_force: 'In force', partially_in_force: 'Partially in force',
   repealed: 'Repealed',
 }
