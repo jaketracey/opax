@@ -27,7 +27,7 @@ const moneyMap =
   /^\/(money|money-record|money-node|money-item|public-money|grants|grant-program|programs|agencies|agency|allocation|connections|largest|leads|lead)(?:\/|$)/;
 // Root-stack routes: never inside a tab.
 const outsideTabs =
-  /^\/(account|community|talk|licence|licences|citation|machine-note|rule|seat|source|source-destination|welcome)(?:\/|$)/;
+  /^\/(account|community|talk|licence|licences|citation|machine-note|rule|seat|source|source-destination|term|term-tip|welcome)(?:\/|$)/;
 const tabSegments = new Set<string>([
   '(today)',
   '(your-mp)',
