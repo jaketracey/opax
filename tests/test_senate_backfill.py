@@ -419,7 +419,7 @@ def test_coverage_supplies_queued_days_without_senate_logic_in_shared_guard():
     report = G.status(guard.root, '2026-11-14')
     assert report['stages']['senate']['days_remaining'] == 10
     assert report['stages']['senate']['acquisition_days_remaining'] == 0
-    assert report['stages']['senate']['projected_finish_date'] == '2026-11-15'
+    assert report['stages']['senate']['projected_finish_date'] == '2026-11-16'  # Sunday skipped
     assert report['stages']['nsw']['days_remaining'] == 4
     update_backfill_progress({'backfill_pending_days_by_year': {}})
     assert G.status(guard.root, '2026-11-15')['stages']['senate']['projected_finish_date'] == '2026-11-15'

@@ -120,10 +120,68 @@ def refusal_text(detail):
     return '\n'.join(found)
 
 
+def recent_rate(observations):
+    """Bytes per resource over the latest check interval(s), or None.
+
+    Walk back from the newest sample until the window holds at least
+    MIN_RESOURCES added resources, so one small batch cannot trip the bound.
+    Per-step growth is clamped at zero, as in the all-time totals.
+    """
+    size = count = 0
+    for newer, older in zip(reversed(observations), list(reversed(observations))[1:]):
+        size += max(0, newer['index_size'] - older['index_size'])
+        count += max(0, newer['resources'] - older['resources'])
+        if count >= MIN_RESOURCES:
+            return size / count
+    return None
+
+
+def growth_rate(data):
+    """The current per-resource rate: the higher of all-time and recent.
+
+    Before MIN_RESOURCES resources have been added, the 59.3 KB bound itself.
+    """
+    rates = [recent_rate(data.get('observations', []))]
+    if data.get('resources_added', 0) >= MIN_RESOURCES:
+        rates.append(data['bytes_added'] / data['resources_added'])
+    rates = [r for r in rates if r is not None]
+    return max(rates) if rates else BYTES_PER_RESOURCE
+
+
 class Guard:
     def __init__(self, root=None):
         self.root = Path(root) if root is not None else state_dir()
         self.root.mkdir(parents=True, exist_ok=True)
+        # Backfill resources created since the last counters check. The index
+        # does not count them yet, so the ceiling projection adds them.
+        self.unchecked = 0
+        self._count_lock = threading.Lock()
+
+    def published(self, n):
+        with self._count_lock:
+            self.unchecked += n
+
+    def before_batch(self, n):
+        """Stop before a batch of n resources that could cross 5.5 GB.
+
+        Projects the ledger's bytes, plus resources created since the last
+        check, plus this batch, at the current per-resource rate.
+        """
+        self.ensure_running()
+        try:
+            with self.locked():
+                data = self.read()
+        except Exception:
+            self.stop('growth ledger unreadable before a batch; repair held closed')
+        projected = data['bytes_added'] + (self.unchecked + n) * growth_rate(data)
+        if projected > BYTE_CEILING:
+            reason = (f'next batch of {n} could cross 5.5 GB at '
+                      f'{growth_rate(data) / 1000:.1f} KB per resource; stopped before it')
+            with self.locked():
+                data = self.read()
+                data['stop_reason'] = reason
+                _atomic(self.root / 'backfill-ledger.json', data)
+            self.stop(reason)
 
     @contextmanager
     def locked(self):
@@ -197,15 +255,23 @@ class Guard:
                 totals['bytes_added'] += added['index_size']
                 totals['resources_added'] += added['resources']
                 data['observations'].append(sample)
+                recent = recent_rate(data['observations'])
                 if data['bytes_added'] > BYTE_CEILING:
                     reason = 'cumulative KB growth exceeds 5.5 GB'
                 elif (data['resources_added'] >= MIN_RESOURCES and
                       data['bytes_added'] > data['resources_added'] * BYTES_PER_RESOURCE):
                     reason = 'KB growth exceeds 59.3 KB per added resource (at least 500 resources)'
+                elif recent is not None and recent > BYTES_PER_RESOURCE:
+                    # A sustained rise late in the run, which the all-time
+                    # average would absorb (joint review P3).
+                    reason = ('recent KB growth exceeds 59.3 KB per added resource '
+                              '(latest check interval, at least 500 resources)')
                 if reason:
                     data['stop_reason'] = reason
                     _atomic(self.root / 'backfill.STOP', {'reason': reason, 'at': sample['at']})
                 _atomic(self.root / 'backfill-ledger.json', data)
+            with self._count_lock:
+                self.unchecked = 0
             if reason:
                 raise Stopped(reason)
             return data
@@ -220,6 +286,20 @@ class Guard:
             data['stages'][stage] = {'days_remaining': remaining, 'days_done': done,
                                      'cap': cap, 'stop': stop, 'updated': _now(), **details}
             _atomic(self.root / 'backfill-ledger.json', data)
+
+
+def run_night(night, after):
+    """The date of the `after`-th backfill night following `night`.
+
+    The nightly skips both backfill stages on weekly/monthly nights, which are
+    Sundays (Sydney), so a projection counts only the other six nights.
+    """
+    day = date.fromisoformat(night) if isinstance(night, str) else night
+    while after > 0:
+        day += timedelta(days=1)
+        if day.weekday() != 6:
+            after -= 1
+    return day
 
 
 def status(root, night):
@@ -245,24 +325,33 @@ def status(root, night):
             acquisition = current.get('acquisition_days_remaining', remaining)
             cap_env = 'OPAX_BACKFILL_NSW_CAP' if stage == 'nsw' else f'OPAX_{stage.upper()}_BACKFILL_DAYS'
             cap = int(os.environ.get(cap_env, current['cap']))
-            stopped = (not enabled(stage) or (root / 'backfill.STOP').exists()
+            # A scheduled periodic-night skip switches the stage off for one
+            # night only; it is not a stop and the projection still stands.
+            skipped = bool(os.environ.get('OPAX_BACKFILL_SKIPPED_TONIGHT'))
+            stopped = ((not enabled(stage) and not skipped) or (root / 'backfill.STOP').exists()
                        or current.get('stop') in ('source-refused', 'error', 'growth-guard', 'identity-holds'))
             # This night's acquisition has finished. Remaining days start next
             # night; normal-sync publication follows acquisition by one night.
-            current['projected_finish_date'] = ((date.fromisoformat(night) + timedelta(
-                days=math.ceil(acquisition / cap) + int(remaining > 0))).isoformat()
+            # Sundays (weekly/monthly nights) run no backfill and are not counted.
+            current['projected_finish_date'] = (run_night(night, math.ceil(acquisition / cap)
+                                                          + int(remaining > 0)).isoformat()
                 if remaining is not None and cap > 0 and not stopped else None)
             result['stages'][stage] = current
     except FileNotFoundError:
         pass
     except (OSError, ValueError, KeyError, TypeError):
         result['warning'] = 'backfill growth ledger unreadable'
+    if os.environ.get('OPAX_BACKFILL_SKIPPED_TONIGHT'):
+        result['skipped_tonight'] = os.environ['OPAX_BACKFILL_SKIPPED_TONIGHT']
     if (root / 'backfill.STOP').exists():
         result['stopped'] = True
         try:
             result['warning'] = json.loads((root / 'backfill.STOP').read_text())['reason']
         except (OSError, ValueError, KeyError, TypeError):
             result['warning'] = 'shared backfill.STOP exists'
+    # Jake's GO is in GB: every byte figure also in decimal GB, 2 places.
+    for key in ('byte_ceiling', 'bytes_added', 'cumulative_bytes_added', 'bytes_remaining'):
+        result[key.replace('bytes', 'gb').replace('byte_', 'gb_')] = round(result[key] / 1e9, 2)
     stages = list(result['stages'].values())
     result['days_remaining'] = (sum(s['days_remaining'] for s in stages)
                                 if stages and all(s['days_remaining'] is not None for s in stages) else None)

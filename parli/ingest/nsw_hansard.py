@@ -183,6 +183,8 @@ def extract_text_from_body(body_elem: ET.Element) -> str:
     return clean_html(raw)
 
 
+IN_REPLY_RE = re.compile(r"\(?\s*In reply to\b", re.I)
+
 SPEAKER_HEADINGS = frozenset({
     "MemberSpeech-H", "MemberUpper-H", "MemberLower-H", "MemberQuestion-H", "MemberAnswer-H",
     "OfficeSpeech-H", "OfficeUpper-H", "OfficeLower-H",
@@ -233,6 +235,14 @@ def extract_speeches_from_fragment(xml_root: ET.Element) -> list[dict]:
             current = {**empty, "id": pending_id}
         elif tag == "p":
             if element.get("class", "") in ("SubDebate-H", "SubSubDebate-H"):
+                continue
+            # "In reply to <asker> (date)." heads a deferred answer. Its byline
+            # names the asker, not a speaker, so it is not a turn. Close the
+            # previous turn and start the next one with no speaker, so nothing
+            # after the header is credited to the asker.
+            if IN_REPLY_RE.match(clean_html(" ".join(element.itertext()))):
+                flush()
+                current, pending_id = dict(empty), None
                 continue
             unknown = {e.get('class') for e in element.iter()
                        if e.get('class', '').startswith(('Member', 'Office'))

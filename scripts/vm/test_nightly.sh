@@ -275,6 +275,8 @@ PYEOF
 # the way the real exporters do (every bill speech brief comes out null)
 PIPE="$HOME/.cache/autoresearch/pipeline"
 if [ -f .env ]; then set -a; . ./.env; set +a; fi   # like the real script
+# what the real script's senate_backfill step would see (the nightly's periodic-night skip)
+echo "OPAX_SENATE_BACKFILL=${OPAX_SENATE_BACKFILL-unset}" > "$HOME/daily.backfill-env"
 sleep 1
 if [ "${FAKE_MODE:-ok}" = paused ]; then
   mkdir -p "$PIPE/source-access"
@@ -1069,12 +1071,31 @@ mkdir -p "$HOME/.cache/autoresearch/pipeline"
 printf '{"reason":"cumulative KB growth exceeds 5.5 GB"}\n' > "$HOME/.cache/autoresearch/pipeline/backfill.STOP"
 printf '{"version":1,"bytes_added":5500000001,"resources_added":150000,"nights":{"2026-10-10":{"bytes_added":1,"resources_added":0}},"stages":{"senate":{"days_remaining":274,"cap":10}},"observations":[]}\n' > "$HOME/.cache/autoresearch/pipeline/backfill-ledger.json"
 OPAX_FORCE_GROUPS='weekly monthly frl' FAKE_WEEKLY_MODE=ok nightly
-check "growth stop alerts and publishes growth metrics while all periodic groups complete" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and not s[\"failures\"] and s[\"backfill_failures\"] and any(\"5.5 GB\" in w for w in s[\"warnings\"]), s; b=s[\"backfill\"]; assert b[\"cumulative_bytes_added\"]==5500000001 and b[\"cumulative_resources_added\"]==150000 and b[\"days_remaining\"]==274 and b[\"projected_finish_date\"] is None, b; assert all(\"due\" not in s[\"periodic_state\"][\"groups\"][g] for g in [\"weekly\",\"monthly\",\"frl\"]), s'"
+check "growth stop alerts and publishes growth metrics while all periodic groups complete" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and not s[\"failures\"] and s[\"backfill_failures\"] and any(\"5.5 GB\" in w for w in s[\"warnings\"]), s; b=s[\"backfill\"]; assert b[\"cumulative_bytes_added\"]==5500000001 and b[\"cumulative_gb_added\"]==5.5 and b[\"gb_remaining\"]==0 and b[\"cumulative_resources_added\"]==150000 and b[\"days_remaining\"]==274 and b[\"projected_finish_date\"] is None, b; assert all(\"due\" not in s[\"periodic_state\"][\"groups\"][g] for g in [\"weekly\",\"monthly\",\"frl\"]), s'"
 OPAX_TODAY=2026-10-12 FAKE_WEEKLY_MODE=ok nightly
 check "persistent growth stop does not repeat completed monthly or FRL acquisition" python3 -c "import json; s=json.load(open('$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json')); assert s['groups']['monthly']['last_attempt']=='2026-10-10' and s['groups']['frl']['last_attempt']=='2026-10-10', s"
 new_sandbox s24
 OPAX_TODAY=2026-09-21 FAKE_WEEKLY_MODE=ok nightly
 check "a Monday (2026-09-21): the periodic refresh is not called" test ! -e "$HOME/weekly.args"
+echo "== 24a. nightly: no Senate or NSW backfill on weekly/monthly nights (the 6 h window)"
+new_sandbox s24-backfill-ordinary
+OPAX_TODAY=2026-09-22 FAKE_WEEKLY_MODE=ok nightly
+check "an ordinary Tuesday: the Senate backfill stays on and nothing is skipped" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(cat '$HOME/daily.backfill-env')\" = OPAX_SENATE_BACKFILL=unset ] && ! grep -q 'backfill stages skipped tonight' '$SB/nightly.out' && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; assert \"skipped_tonight\" not in json.load(sys.stdin)[\"backfill\"]'"
+for sunday in '2026-09-20 weekly' '2026-09-06 weekly monthly'; do
+  read -r day expect <<<"$sunday"
+  new_sandbox "s24-backfill-$day"
+  OPAX_TODAY=$day OPAX_NSW_BACKFILL=1 FAKE_WEEKLY_MODE=ok nightly
+  check "Sunday $day ($expect): both backfill stages are off for the night and the groups still run" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(cat '$HOME/daily.backfill-env')\" = OPAX_SENATE_BACKFILL=0 ] && grep -q 'backfill stages skipped tonight (periodic groups tonight: ' '$SB/nightly.out' && grep -q 'NSW Hansard repair off (skipped tonight: periodic groups tonight: ' '$SB/nightly.out' && [ \"\$(cat '$HOME/weekly.args')\" = '$expect' ]"
+  check "Sunday $day: status reports the skip, not a stop" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); b=s[\"backfill\"]; assert b[\"skipped_tonight\"].startswith(\"periodic groups tonight: \") and b[\"stopped\"] is False and not s[\"backfill_failures\"] and s[\"status\"]==\"ok\", s'"
+done
+new_sandbox s24-backfill-catchup
+OPAX_FORCE_GROUPS=weekly OPAX_NIGHTLY_SKIP_PERIODIC=1 FAKE_WEEKLY_MODE=ok nightly
+check "groups switched off tonight: the backfill still runs" bash -c "[ \"\$(cat '$HOME/daily.backfill-env')\" = OPAX_SENATE_BACKFILL=unset ]"
+OPAX_TODAY=2026-10-12 FAKE_WEEKLY_MODE=ok nightly
+check "a Monday catching up an owed weekly group also skips the backfill" bash -c "[ \"\$(cat '$HOME/weekly.args')\" = weekly ] && [ \"\$(cat '$HOME/daily.backfill-env')\" = OPAX_SENATE_BACKFILL=0 ]"
+new_sandbox s24-backfill-frl
+OPAX_TODAY=2026-10-15 FAKE_WEEKLY_MODE=none nightly
+check "the Thursday FRL night alone keeps the backfill on" bash -c "[ \"\$(cat '$HOME/weekly.args')\" = frl ] && [ \"\$(cat '$HOME/daily.backfill-env')\" = OPAX_SENATE_BACKFILL=unset ]"
 new_sandbox s24b
 OPAX_TODAY=2026-09-20 FAKE_WEEKLY_MODE=ok nightly
 check "Sunday 2026-09-20 (not the first): weekly only" bash -c "[ \"\$(cat '$HOME/weekly.args')\" = weekly ]"

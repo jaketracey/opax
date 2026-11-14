@@ -3,7 +3,7 @@
 # shellcheck shell=bash
 nsw_hansard_backfill() {
   if [ "${OPAX_NSW_BACKFILL:-1}" = 0 ] || [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" = 1 ] || [ "${OPAX_NIGHTLY_SKIP_DAILY:-0}" = 1 ]; then
-    log "NSW Hansard repair off; coverage holes retained"
+    log "NSW Hansard repair off${OPAX_BACKFILL_SKIPPED_TONIGHT:+ (skipped tonight: $OPAX_BACKFILL_SKIPPED_TONIGHT)}; coverage holes retained"
     return 0
   fi
   export OPAX_BACKFILL_STATE_DIR="${OPAX_BACKFILL_STATE_DIR:-$PIPE}"

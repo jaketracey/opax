@@ -14,7 +14,7 @@ import sqlite3
 import time
 import xml.etree.ElementTree as ET
 from collections import Counter
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 from parli.ingest import nsw_hansard as adapter, nsw_publication as publication
@@ -365,7 +365,8 @@ def run(db, *, start=START, end=END, cap=DEFAULT_CAP, budget_s=DEFAULT_BUDGET_S,
             result['stop'] = 'complete' if not result['incomplete_left'] else 'incomplete'
         nights = math.ceil(len(todo) / cap) if cap else None
         result["estimated_nights_before"] = nights
-        result["estimated_completion_if_next_night"] = str(date.today() + timedelta(days=nights)) if nights else None
+        # Sundays (weekly/monthly nights) run no backfill; see growth.run_night.
+        result["estimated_completion_if_next_night"] = growth.run_night(date.today(), nights).isoformat() if nights else None
     except adapter.BudgetSpent as error:
         result["stop"], result["reason"] = "budget", str(error)
     except sqlite3.OperationalError:

@@ -461,7 +461,7 @@ def test_shared_projection_separates_acquisition_from_incomplete_held_days(db, t
     assert result['incomplete_left'] == 6 and result['held_turns'] == 1
     report = growth.status(tmp_path,'2026-11-14')['stages']['nsw']
     assert report['days_remaining'] == 6 and report['acquisition_days_remaining'] == 5
-    assert report['projected_finish_date'] == '2026-11-20'
+    assert report['projected_finish_date'] == '2026-11-21'  # Sunday skipped
 
 
 def test_shared_projection_stays_unknown_when_only_identity_holds_remain(db, tmp_path):
@@ -487,7 +487,7 @@ def test_shared_projection_keeps_publication_only_debt_until_next_refresh(db, tm
     result = b.run(db,guard=guard)
     assert result['held_turns'] == 0 and result['publication_pending'] == 1
     assert result['acquisition_days_remaining'] == 0 and result['incomplete_left'] == 1
-    assert growth.status(tmp_path,'2026-11-14')['projected_finish_date'] == '2026-11-15'
+    assert growth.status(tmp_path,'2026-11-14')['projected_finish_date'] == '2026-11-16'  # Sunday skipped
     assert b.run(db,guard=guard)['inserted'] == 0
     assert n._api_get.call_count == 1
 
@@ -504,3 +504,31 @@ def test_shared_growth_stop_has_its_own_receipt_state_and_keeps_periodic_failure
     assert growth.status(tmp_path,'2026-11-14')['projected_finish_date'] is None
     assert db.execute('SELECT COUNT(*) FROM nsw_backfill_errors').fetchone()[0] == 0
     n.get_fragment_uids.assert_not_called()
+
+
+DEFERRED_ANSWER = '''<hansard><hansard.header><chamber>Legislative Council</chamber></hansard.header>
+<fragment.data><proceeding><topic><topicinfo><text>State Infrastructure</text></topicinfo>
+<question><talk.start><talker><id>115</id><name>The Hon. DAMIEN TUDEHOPE</name><electorate/></talker></talk.start></question>
+<answer><talk.start><talker><id>28</id><name>The Hon. PENNY SHARPE</name><electorate/></talker></talk.start></answer>
+</topic></proceeding></fragment.data>
+<fragment.text><body xmlns="http://www.w3.org/1999/xhtml">
+<p class="SubDebate-H"><span>State Infrastructure</span></p>
+<p class="Normal-P"><span class="Normal-H">{reply} <span class="MemberQuestion-H" data-mode="member" data-value="115">The Hon. DAMIEN TUDEHOPE</span> (<span class="REPDate-H">21 November 2023</span>).</span></p>
+{answer}
+<p class="SmallAt1-P"><span class="SmallAt1-H">The New South Wales Government's first budget included a record pipeline of infrastructure investment across the state.</span></p>
+</body></fragment.text></hansard>'''
+BYLINE = ('<p class="Normal-P"><span class="Normal-H"><span class="MemberAnswer-H" data-mode="member" '
+          'data-value="28">The Hon. PENNY SHARPE</span>—The Minister provided the following response:</span></p>')
+
+
+@pytest.mark.parametrize('reply', ['In reply to', 'in reply to', '(In reply to'])
+def test_in_reply_to_header_is_not_stored_as_the_askers_speech(reply, monkeypatch):
+    import xml.etree.ElementTree as E
+    monkeypatch.setattr(n, 'MIN_SPEECH_LEN', 1)
+    speeches = n.extract_speeches_from_fragment(E.fromstring(DEFERRED_ANSWER.format(reply=reply, answer=BYLINE)))
+    assert [s['speaker_id'] for s in speeches] == ['28']
+    assert not any('reply to' in s['text'].lower() for s in speeches)
+    assert speeches[0]['text'].startswith('The Hon. PENNY SHARPE')
+    # With no answer byline, the text after the header is never credited to the asker.
+    speeches = n.extract_speeches_from_fragment(E.fromstring(DEFERRED_ANSWER.format(reply=reply, answer='')))
+    assert all(s['speaker_id'] != '115' and 'TUDEHOPE' not in s['speaker_name'] for s in speeches)

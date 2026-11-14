@@ -212,7 +212,12 @@ def test_nightly_metrics_include_growth_days_and_publication_projection():
     assert report['bytes_added'] == report['cumulative_bytes_added'] == 40_000_000
     assert report['resources_added'] == report['cumulative_resources_added'] == 1000
     assert report['byte_ceiling'] == 5_500_000_000 and report['days_remaining'] == 274
-    assert (datetime.fromisoformat(report['projected_finish_date']) - datetime.fromisoformat(night)).days == 29
+    # GB next to bytes, 2 decimals (the GO is stated in GB).
+    assert report['gb_added'] == report['cumulative_gb_added'] == 0.04
+    assert report['gb_ceiling'] == 5.5 and report['gb_remaining'] == 5.46
+    # 28 acquisition nights plus one publication night, Sundays not counted.
+    assert report['projected_finish_date'] == G.run_night(night, 29).isoformat()
+    assert 29 + 4 <= (datetime.fromisoformat(report['projected_finish_date']) - datetime.fromisoformat(night)).days <= 29 + 5
     (guard.root / 'backfill.STOP').touch()
     report = G.status(guard.root, night)
     assert report['stopped'] and report['warning'] and report['projected_finish_date'] is None
@@ -320,7 +325,8 @@ def test_queued_publication_days_and_unresolved_holds_have_honest_projection(sta
     guard.progress(stage, remaining=10, acquisition_days_remaining=0, cap=10, stop='complete', done=10)
     report = G.status(guard.root, '2026-11-14')
     assert report['days_remaining'] == 10
-    assert report['projected_finish_date'] == '2026-11-15'
+    # Saturday 14 Nov: publication night is Monday 16; Sunday runs no backfill.
+    assert report['projected_finish_date'] == '2026-11-16'
     guard.progress(stage, remaining=0, acquisition_days_remaining=0, cap=10, stop='complete', done=0)
     assert G.status(guard.root, '2026-11-15')['projected_finish_date'] == '2026-11-15'
     guard.progress(stage, remaining=1, cap=10, stop='identity-holds', done=0)
@@ -331,7 +337,7 @@ def test_nsw_projection_uses_its_canonical_cap_setting(monkeypatch):
     guard = G.Guard()
     guard.progress('nsw', remaining=8, cap=4, stop='cap', done=4)
     monkeypatch.setenv('OPAX_BACKFILL_NSW_CAP', '2')
-    assert G.status(guard.root, '2026-11-14')['projected_finish_date'] == '2026-11-19'
+    assert G.status(guard.root, '2026-11-14')['projected_finish_date'] == '2026-11-20'
 
 
 @pytest.mark.parametrize('stage', ['senate_backfill', 'nsw_hansard_backfill'])
@@ -352,3 +358,97 @@ def test_canonical_nsw_wrapper_warnings_use_the_same_receipt_fields(warning):
     fields = G.nightly_fields(G.state_dir(), '2026-11-14', warnings)
     assert fields['backfill_failures'] == [warning]
     assert len(warnings) == 2 and 'failures' not in fields
+
+
+def test_projection_skips_sunday_backfill_nights():
+    # 2026-11-14 is a Saturday; weekly/monthly Sundays run no backfill.
+    assert G.run_night('2026-11-14', 0) == G.date(2026, 11, 14)
+    assert G.run_night('2026-11-14', 1) == G.date(2026, 11, 16)
+    assert G.run_night('2026-11-14', 7) == G.date(2026, 11, 22 + 1)
+    assert G.run_night('2026-11-15', 6) == G.date(2026, 11, 21)
+
+
+def test_periodic_night_skip_is_reported_but_is_not_a_stop(monkeypatch):
+    guard = G.Guard()
+    guard.progress('senate', remaining=20, cap=10, stop='day-cap', done=10)
+    monkeypatch.setenv('OPAX_SENATE_BACKFILL', '0')
+    assert G.status(guard.root, '2026-11-14')['projected_finish_date'] is None
+    monkeypatch.setenv('OPAX_BACKFILL_SKIPPED_TONIGHT', 'periodic groups tonight: weekly')
+    report = G.status(guard.root, '2026-11-15')
+    assert report['skipped_tonight'] == 'periodic groups tonight: weekly'
+    assert report['stopped'] is False
+    assert report['projected_finish_date'] == '2026-11-18'
+
+
+def test_recent_interval_rate_catches_a_sustained_rise_the_average_absorbs():
+    # Joint review P3: 50k resources at 49.4 KB, then 10k at 100 KB (1 GB).
+    kb, guard = KB(), G.Guard()
+    guard.check(kb, 'senate')
+    kb.size += 50_000 * 49_400
+    kb.resources += 50_000
+    guard.check(kb, 'senate')
+    kb.size += 10_000 * 100_000
+    kb.resources += 10_000
+    data = guard.read()
+    all_time = (data['bytes_added'] + 1_000_000_000) / (data['resources_added'] + 10_000)
+    assert all_time < G.BYTES_PER_RESOURCE  # the all-time check alone passes
+    with pytest.raises(G.Stopped, match='recent KB growth exceeds 59.3 KB'):
+        guard.check(kb, 'senate')
+    assert (guard.root / 'backfill.STOP').exists()
+
+
+def test_recent_interval_needs_a_minimum_sample():
+    kb, guard = KB(), G.Guard()
+    guard.check(kb, 'nsw')
+    # One small batch far above the rate does not stop on its own...
+    kb.size += 100 * 100_000
+    kb.resources += 100
+    guard.check(kb, 'nsw')
+    # ...and after a long ordinary history the window reaches back to 500.
+    kb.size += 5_000 * 40_000
+    kb.resources += 5_000
+    guard.check(kb, 'nsw')
+    kb.size += 100 * 100_000
+    kb.resources += 100
+    guard.check(kb, 'nsw')
+    assert not (guard.root / 'backfill.STOP').exists()
+    # Exactly the bound over at least 500 resources passes; one byte more stops.
+    kb.size += 500 * G.BYTES_PER_RESOURCE
+    kb.resources += 500
+    assert G.recent_rate(guard.check(kb, 'nsw')['observations']) == G.BYTES_PER_RESOURCE
+    kb.size += 1
+    kb.resources += 0
+    with pytest.raises(G.Stopped, match='recent'):
+        guard.check(kb, 'nsw')
+
+
+@pytest.mark.parametrize('stage', ['senate', 'nsw'])
+def test_ceiling_projection_stops_before_a_batch_that_could_cross(stage):
+    kb, guard = KB(), G.Guard()
+    guard.check(kb, stage)
+    # 5.495 GB added at 49.4 KB per resource.
+    kb.resources += 111_235
+    kb.size += 111_235 * 49_400
+    data = guard.check(kb, stage)
+    assert data['bytes_added'] < G.BYTE_CEILING
+    publication = S.BackfillPublication(kb)
+    publication.guard = guard
+    publication.stages.add(stage)
+    publication.day = (stage, ('senate', '2014-02-01'))
+    state = {'failed': {}, 'pushed': 0}
+    # 50 more fit (2.5 MB of 5.1 MB headroom); 200 would not (9.9 MB).
+    S._push_batch(kb, [body(stage, 1)] * 50, state, publication)
+    assert state['pushed'] == 50 and guard.unchecked == 50
+    S._push_batch(kb, [body(stage, 1)] * 200, state, publication)
+    assert state['pushed'] == 50 and len(kb.created) == 50
+    assert 'could cross 5.5 GB' in state['failed'][f'{stage}-1']
+    assert (guard.root / 'backfill.STOP').exists()
+    assert 'could cross 5.5 GB' in guard.read()['stop_reason']
+
+
+def test_ceiling_projection_counts_unchecked_creations():
+    guard = G.Guard()
+    guard.check(KB(), 'senate')
+    guard.published(int(G.BYTE_CEILING / G.BYTES_PER_RESOURCE))
+    with pytest.raises(G.Stopped, match='could cross 5.5 GB'):
+        guard.before_batch(1)

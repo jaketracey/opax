@@ -388,7 +388,7 @@ class BackfillPublication:
         self.stages, self.day, self.days = set(), None, 0
         self.deadline = None
 
-    def before(self, stage, day):
+    def before(self, stage, day, batch=1):
         if not stage or not growth.enabled(stage):
             return
         self.guard.ensure_running()
@@ -414,6 +414,8 @@ class BackfillPublication:
         if key != self.day:
             self.days += 1
             self.day = key
+        # Stop before, not after, a batch that could cross the 5.5 GB ceiling.
+        self.guard.before_batch(batch)
 
     def finish(self):
         if self.stages:
@@ -448,12 +450,15 @@ def _push_batch(kb, bodies, tstate, publication=None):
     for (stage, day), group in groupby(bodies, cohort):
         group = list(group)
         try:
-            publication.before(stage, day)
+            publication.before(stage, day, len(group))
         except growth.Stopped as exc:
             for body in group:
                 tstate['failed'][body['slug']] = growth.HOLD + str(exc)
             continue
+        pushed = tstate['pushed']
         _push_pool(kb, group, tstate, publication.guard, publication.deadline)
+        if stage:
+            publication.guard.published(tstate['pushed'] - pushed)
 
 
 def sync_nsw_backfill(kb, db, state, limit, dry_run, since, publication=None):
@@ -645,6 +650,8 @@ def retry_failed(kb: KbClient, db: sqlite3.Connection, state: dict, publication=
             try:
                 publication.before(stage, (chamber, meta.get('date')))
                 _, err = _push_one(kb, body, publication.guard, publication.deadline)
+                if stage and err is None:
+                    publication.guard.published(1)
             except growth.Stopped as exc:
                 err = growth.HOLD + str(exc)
             if err is None:

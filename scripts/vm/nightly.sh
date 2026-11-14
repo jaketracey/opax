@@ -340,6 +340,30 @@ revert() {
 revert_group() { local g=$1; local paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; revert "${paths[@]}"; }
 group_changed() { local g=$1; local paths; read -ra paths <<<"${GROUP_PATHS[$g]}"; [ -n "$(git status --porcelain -- "${paths[@]}")" ]; }
 
+# ---- 1z. the backfill window: no Senate or NSW backfill on weekly/monthly nights ---------------
+# Both backfill stages (about 22 min each) on top of a Sunday's weekly and monthly groups come to
+# about 6 h 26 min against the unit's 6 h limit (joint review, 14 Nov 2026). On any night that will
+# run the weekly or monthly group, catch-up included, both stages are switched off for the whole
+# night, acquisition and normal-sync publication alike; they resume on the next ordinary night. The
+# pace (Senate 10 sitting days, NSW 4 chamber-days) is per night they run. An unreadable plan skips
+# them too; the periodic step below then reports the plan itself.
+BACKFILL_SKIP_REASON=""
+if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_NIGHTLY_SKIP_PERIODIC:-0}" != 1 ]; then
+  if planned=$("$PY" scripts/vm/periodic_state.py preview --state "$PIPE/periodic-refresh-v1.json" \
+      --date "${OPAX_TODAY:-$(TZ=Australia/Sydney date +%F)}" --frl-dow "${OPAX_FRL_DOW:-4}" \
+      --force "${OPAX_FORCE_GROUPS:-}" 2>/dev/null); then
+    case " $planned " in
+      *" weekly "*|*" monthly "*) BACKFILL_SKIP_REASON="periodic groups tonight: $planned" ;;
+    esac
+  else
+    BACKFILL_SKIP_REASON="periodic plan unreadable"
+  fi
+fi
+if [ -n "$BACKFILL_SKIP_REASON" ]; then
+  export OPAX_SENATE_BACKFILL=0 OPAX_NSW_BACKFILL=0 OPAX_BACKFILL_SKIPPED_TONIGHT="$BACKFILL_SKIP_REASON"
+  log "backfill stages skipped tonight ($BACKFILL_SKIP_REASON); Senate and NSW resume on the next ordinary night"
+fi
+
 # ---- 2. the refresh -------------------------------------------------------------------------
 if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" = 1 ] || [ "${OPAX_NIGHTLY_SKIP_DAILY:-0}" = 1 ]; then
   log "OPAX_NIGHTLY_SKIP_REFRESH/SKIP_DAILY=1: not running daily_refresh.sh"
