@@ -35,11 +35,7 @@ import TalkScreen from '../src/features/talk/TalkScreen';
 import Welcome from '../src/features/welcome/Welcome';
 import { splashLayout } from '../src/launch/choreography';
 import { LaunchHandoff } from '../src/launch/LaunchHandoff';
-import {
-  BarTitle,
-  barTitleWidth,
-  useTitleOnScroll,
-} from '../src/navigation/useTitleOnScroll';
+import { BarTitle, barTitleWidth } from '../src/navigation/useTitleOnScroll';
 import { useRootBarAppearance } from '../src/navigation/useRootBarAppearance';
 import { barScrollEdges } from '../src/navigation/chrome';
 
@@ -515,9 +511,10 @@ describe('system navigation on both displays', () => {
   );
   test('a vertical root bar uses system appearance and a system title', () => {
     mockBarEdge = 'trailing';
+    // A tab root keeps the route title UIKit draws. Pushed pages reveal
+    // their bar title on scroll, as on iPhone (duo-single-title, b67).
     function Probe() {
       useRootBarAppearance(mockSetOptions);
-      useTitleOnScroll(null, 'Bills');
       return null;
     }
     render(
@@ -530,9 +527,8 @@ describe('system navigation on both displays', () => {
       </NavigationContext.Provider>,
     );
     expect(RootBar?.setSolid).not.toHaveBeenCalled();
-    expect(mockSetOptions).toHaveBeenCalledWith(
-      expect.objectContaining({ headerTitle: 'Bills' }),
-    );
+    for (const [options] of mockSetOptions.mock.calls)
+      expect(options).not.toHaveProperty('headerTitle');
     expect(mockSetOptions).toHaveBeenCalledWith(
       expect.objectContaining({
         headerStyle: {},

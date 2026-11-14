@@ -16,11 +16,20 @@ also checks the runtime version. The getter reads a locked snapshot and never
 waits synchronously for the main thread.
 
 When a vertical bar is preferred, root screens use UIKit's appearance and
-titles. The custom horizontal backing is removed, and title reveal does not
-treat `HeaderHeightContext` as a horizontal bar measurement. The native backing
-also rejects a bar whose measured bounds are vertical before a JS event arrives.
-Normal horizontal bars retain their existing collapse behaviour. Toolbar items
-use the native item API with both `label` and symbol. Expo's
+titles. The custom horizontal backing is removed. The native backing also
+rejects a bar whose measured bounds are vertical before a JS event arrives.
+Normal horizontal bars retain their existing collapse behaviour.
+
+Pushed screens keep a horizontal bar at the top for the back pill and title
+(24 to 82 pt on the outer display, measured in b65); the status bar, tabs and
+bar items move to the rail. `HeaderHeightContext` is that bar's bottom edge
+(react-native-screens reports the bar's origin plus its height), so
+`useTitleOnScroll` reveals the bar title exactly as on iPhone: hidden while the
+page's heading is on screen, faded in once it has gone under the bar (b67).
+The title's width keeps no room for trailing items there, as they are on the
+rail. Screens without an in-content heading keep their stack title.
+
+Toolbar items use the native item API with both `label` and symbol. Expo's
 `useHeaderConfigProps.js` maps `label` to native `title`; an accessibility label
 alone does not supply that title. Talk's End call action uses this API on the
 vertical rail; the existing horizontal action stays unchanged.
