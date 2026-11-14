@@ -35,7 +35,8 @@ name: 24 Cancel closes the chooser without a choice, one Cancel at a time
     timeout: 30000
 - takeScreenshot: ${EVIDENCE}/24-cancel-keyboard
 # iOS 26 and later draw the active search's Cancel as a round ✕ named
-# Close (iOS 27, 14 Nov 2026); Android's prepared copy maps this Cancel.
+# Close (iOS 27, 14 Nov 2026), and it is the one to use while it shows;
+# otherwise the sheet's Cancel. Android's prepared copy maps this Cancel.
 - runFlow:
     when:
       platform: Android
@@ -45,7 +46,17 @@ name: 24 Cancel closes the chooser without a choice, one Cancel at a time
     when:
       platform: iOS
     commands:
-      - tapOn: ^(Cancel|Close)$
+      - runFlow:
+          when:
+            visible: ^Close$
+          commands:
+            - tapOn: ^Close$
+      - runFlow:
+          when:
+            notVisible: ^Close$
+            visible: ^Cancel$
+          commands:
+            - tapOn: ^Cancel$
 - extendedWaitUntil:
     notVisible:
       id: seat-sheet
@@ -69,7 +80,17 @@ name: 24 Cancel closes the chooser without a choice, one Cancel at a time
     when:
       platform: iOS
     commands:
-      - tapOn: ^(Cancel|Close)$
+      - runFlow:
+          when:
+            visible: ^Close$
+          commands:
+            - tapOn: ^Close$
+      - runFlow:
+          when:
+            notVisible: ^Close$
+            visible: ^Cancel$
+          commands:
+            - tapOn: ^Cancel$
 - extendedWaitUntil:
     notVisible:
       id: seat-sheet
