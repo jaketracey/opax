@@ -6,7 +6,7 @@
 // It never sends email. SESSION is the value of a member's __Host-opax_session cookie, made for a test
 // member directly in that environment's community database; this script plays the part of that member's
 // browser on the consent page. Without SESSION only the no-account checks run. Nothing secret is printed.
-// LIMIT=1 also sends requests until the no-account limit answers 429 (about 60 requests).
+// LIMIT=1 also sends requests until the no-account limit answers 429 (30 to 60 requests).
 import {Client} from '@modelcontextprotocol/sdk/client/index.js'
 import {StreamableHTTPClientTransport} from '@modelcontextprotocol/sdk/client/streamableHttp.js'
 import {UnauthorizedError} from '@modelcontextprotocol/sdk/client/auth.js'
@@ -47,10 +47,10 @@ const toolCall={jsonrpc:'2.0',id:7,method:'tools/call',params:{name:'corpus_cove
  check('a browser opening /mcp gets the setup page',page.status===200&&(await page.text()).includes('Use OPAX in your AI tool'))
  if(process.env.LIMIT==='1'&&status.anonymous){
   let limited=null,sent=0
-  // One client (one session id): the 61st tool call inside a minute is refused.
+  // One client (one session id): 60 a minute with 30 at once, so a fast run is refused soon after the thirtieth.
   for(;sent<70&&!limited;sent++){const response=await rpc('/mcp',toolCall,{'mcp-session-id':'e2e-limit-'+process.pid});if(response.status===429)limited=response;else await response.arrayBuffer()}
   const body=limited?await limited.json():null
-  check('no account: the client limit answers 429 with retry-after and a clear message',!!limited&&limited.headers.get('retry-after')==='60'&&body?.jsonrpc==='2.0'&&/a minute for one client/.test(body?.error?.message||''),limited?`after ${sent-1} accepted: HTTP 429 retry-after=${limited.headers.get('retry-after')} ${JSON.stringify(body)}`:'no 429 in '+sent)
+  check('no account: the client limit answers 429 with retry-after and a clear message',!!limited&&Number(limited.headers.get('retry-after'))>=1&&body?.jsonrpc==='2.0'&&/a minute for one client/.test(body?.error?.message||''),limited?`after ${sent-1} accepted: HTTP 429 retry-after=${limited.headers.get('retry-after')} ${JSON.stringify(body)}`:'no 429 in '+sent)
   const other=await rpc('/mcp',toolCall,{'mcp-session-id':'e2e-other-'+process.pid})
   check('no account: another session at the same address is still served',other.status===200)
  }

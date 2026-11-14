@@ -2,7 +2,7 @@ import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js'
 import {WebStandardStreamableHTTPServerTransport} from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js'
 import {z} from 'zod'
 import {body,CommunityError,json} from './community-core'
-import {challenge,mcpCaller,spendAnonymous,spendMember,withAnonymousSession,withCors} from './mcp-access'
+import {challenge,mcpCaller,McpLimitError,spendAnonymous,spendMember,withSession,withCors} from './mcp-access'
 import {tools,getTool,toolSchema,validateToolArgs,callTool,ToolInputError} from './tools'
 import {corpusKb} from './tools/corpus-records'
 import {evidenceAsAt} from '../public/evidence-date.js'
@@ -15,7 +15,7 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
   if(req.method!=='POST')return withCors(json({error:'This endpoint accepts MCP requests over HTTP POST.'},405,{'allow':'POST'}))
   const parsed=await body(req,16384)
   if(['string','number'].includes(typeof parsed.id))rpcId=parsed.id as string|number
-  if(caller.kind==='anonymous')await spendAnonymous(req,env,parsed.method);else await spendMember(caller,env,parsed.method)
+  if(caller.kind==='anonymous')await spendAnonymous(req,env,parsed.method);else await spendMember(caller,req,env,parsed.method)
   // The SDK wraps validation failures as isError tool results. Registry tools
   // expose the required JSON-RPC InvalidParams error before SDK dispatch.
   const params=parsed.params as {name?:unknown,arguments?:unknown}|undefined
@@ -127,10 +127,10 @@ export async function communityMcp(req:Request,env:Env,readPublic:(path:string)=
   }
   const transport=new WebStandardStreamableHTTPServerTransport({sessionIdGenerator:undefined,enableJsonResponse:true})
   await server.connect(transport)
-  try{const response=await transport.handleRequest(req,{parsedBody:parsed});return withCors(caller.kind==='anonymous'?withAnonymousSession(response,parsed.method):response)}finally{await server.close()}
+  try{const response=await transport.handleRequest(req,{parsedBody:parsed});return withCors(withSession(response,parsed.method))}finally{await server.close()}
  }catch(e){
   // A limit is answered as a JSON-RPC error with Retry-After, so a client can tell the model and back off.
-  if(e instanceof CommunityError&&e.status===429)return withCors(json({jsonrpc:'2.0',id:rpcId,error:{code:-32029,message:e.message,data:{retry_after_seconds:60}}},429,{'retry-after':'60'}))
+  if(e instanceof CommunityError&&e.status===429){const wait=e instanceof McpLimitError?e.retryAfter:60;return withCors(json({jsonrpc:'2.0',id:rpcId,error:{code:-32029,message:e.message,data:{retry_after_seconds:wait}}},429,{'retry-after':String(wait)}))}
   if(e instanceof CommunityError)return withCors(json({error:e.message},e.status,e.status===401?{'www-authenticate':challenge(env,new URL(req.url).pathname)}:{}))
   return withCors(json({error:'Opax tools are temporarily unavailable.'},503))
  }

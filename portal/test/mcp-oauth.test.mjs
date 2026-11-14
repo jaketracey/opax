@@ -117,26 +117,28 @@ test('a presented token is never downgraded to the no-account tier',async()=>{
 });
 
 const call=(name='corpus_coverage')=>({rpc:{jsonrpc:'2.0',id:1,method:'tools/call',params:{name,arguments:{}}}});
+const seconds=response=>Number(response.headers.get('retry-after'));
 test('no-account limits: one client, then a ceiling for the address and for everyone, each with a clear 429',async()=>{
  const f=fixture({MCP_ANON_PER_CLIENT_MINUTE:'3',MCP_ANON_PER_IP_MINUTE:'8',MCP_ANON_GLOBAL_MINUTE:'12'});
- for(let i=0;i<3;i++)assert.equal((await f.mcp({},call())).status,200);
+ // Three a minute with two at once: a burst of two passes, the third must wait for the bucket.
+ for(let i=0;i<2;i++)assert.equal((await f.mcp({},call())).status,200);
  const limited=await f.mcp({},call());
  assert.equal(limited.status,429);
- assert.equal(limited.headers.get('retry-after'),'60');
+ assert.equal(seconds(limited),20); // the exact wait, not a blanket minute
  assert.equal(limited.headers.get('access-control-allow-origin'),'*');
  const limitBody=await limited.json(),message=limitBody.error.message;
- assert.equal(limitBody.jsonrpc,'2.0');assert.equal(limitBody.id,1);assert.equal(limitBody.error.code,-32029);
- assert.match(message,/3 a minute for one client/);
+ assert.equal(limitBody.jsonrpc,'2.0');assert.equal(limitBody.id,1);assert.equal(limitBody.error.code,-32029);assert.equal(limitBody.error.data.retry_after_seconds,20);
+ assert.match(message,/3 a minute for one client, with up to 2 at once/);
  assert.match(message,/free OPAX account/);
  // Connecting and listing tools do not use a client's allowance.
  assert.equal((await f.mcp()).status,200);
  // Another program, or another session, at the same address has its own allowance.
  assert.equal((await f.mcp({'user-agent':'other/2'},call())).status,200);
- assert.equal((await f.mcp({'mcp-session-id':'session-one'},call())).status,200);
- assert.equal((await f.mcp({'mcp-session-id':'session-two'},call())).status,200);
+ for(const session of ['session-one','session-two','session-three'])assert.equal((await f.mcp({'mcp-session-id':session},call())).status,200);
  // The address ceiling is the backstop: the ninth request from it is refused whoever sends it.
- const ceiling=await f.mcp({'mcp-session-id':'session-three'},call());
+ const ceiling=await f.mcp({'mcp-session-id':'session-four'},call());
  assert.equal(ceiling.status,429);
+ assert.ok(seconds(ceiling)>=1&&seconds(ceiling)<=60);
  assert.match((await ceiling.json()).error.message,/8 a minute for one network address/);
  // Refused requests used none of the overall ceiling (12): seven were counted, so five more addresses still get through.
  for(let i=0;i<5;i++)assert.equal((await f.mcp({},call())).status,429);
@@ -183,15 +185,37 @@ test('limit rows a day past their window are cleared by the first no-account req
  f.db.close();
 });
 
-test('a member key keeps 60 tool calls a minute; connecting is counted apart; a connected client has its own count',async()=>{
+test('the bucket for one client refills: after the wait it reports, the next request passes',async()=>{
+ const f=fixture({MCP_ANON_PER_CLIENT_MINUTE:'600',MCP_ANON_PER_IP_MINUTE:'5000',MCP_ANON_GLOBAL_MINUTE:'5000'}); // one every 100 ms, 300 at once
+ const original=Date.now;let clock=original();Date.now=()=>clock;
+ try{
+  for(let i=0;i<300;i++)assert.equal((await f.mcp({'mcp-session-id':'steady-session'},call())).status,200);
+  const limited=await f.mcp({'mcp-session-id':'steady-session'},call());
+  assert.equal(limited.status,429);assert.equal(seconds(limited),1);
+  clock+=1000; // ten more have refilled
+  for(let i=0;i<10;i++)assert.equal((await f.mcp({'mcp-session-id':'steady-session'},call())).status,200);
+  assert.equal((await f.mcp({'mcp-session-id':'steady-session'},call())).status,429);
+  // A refused request costs the client nothing more: hammering does not push the wait out.
+  for(let i=0;i<20;i++)await f.mcp({'mcp-session-id':'steady-session'},call());
+  clock+=100;
+  assert.equal((await f.mcp({'mcp-session-id':'steady-session'},call())).status,200);
+ }finally{Date.now=original}
+ f.db.close();
+});
+
+test('a member session takes a burst of parallel tool calls; sessions, connecting and connected clients are counted apart',async()=>{
  const f=fixture(),session=await f.login();
  const key=(await (await f.account('keys','POST',{name:'Laptop'},session.cookie)).json()).token,live=await f.connect(session);
  for(let i=0;i<70;i++)assert.equal((await f.mcp(f.bearer(key))).status,200); // tools/list: seventy short sessions connect
- for(let i=0;i<60;i++)assert.equal((await f.mcp(f.bearer(key),call())).status,200);
- const limited=await f.mcp(f.bearer(key),call());
- assert.equal(limited.status,429);assert.equal(limited.headers.get('retry-after'),'60');
+ // Thirty at once from one session (an assistant firing tool calls in parallel) all pass.
+ const burst=await Promise.all(Array.from({length:30},()=>f.mcp({...f.bearer(key),'mcp-session-id':'conversation-a'},call())));
+ assert.ok(burst.every(response=>response.status===200));
+ const limited=await f.mcp({...f.bearer(key),'mcp-session-id':'conversation-a'},call());
+ assert.equal(limited.status,429);assert.equal(seconds(limited),1);
  const body=await limited.json();
- assert.equal(body.error.code,-32029);assert.match(body.error.message,/60 tool calls a minute/);
+ assert.equal(body.error.code,-32029);assert.match(body.error.message,/60 tool calls a minute for one session, with up to 30 at once/);
+ // Another session on the same key is not held up by it.
+ assert.equal((await f.mcp({...f.bearer(key),'mcp-session-id':'conversation-b'},call())).status,200);
  assert.ok(f.db.prepare('SELECT last_used_at FROM mcp_keys').get().last_used_at>0);
  // The connected client is not locked out by the key's use, nor the key by the client's.
  assert.equal((await f.mcp(f.bearer(live.tokens.access_token),call())).status,200);
@@ -209,9 +233,9 @@ test('addresses that Claude and ChatGPT share are not treated as one person',asy
  assert.equal(sharedAddress(f.env,'2001:db8::1'),false);
  const claude={'cf-connecting-ip':'160.79.104.10','user-agent':'Claude-User'};
  // Many people behind one address and one User-Agent: no per-client allowance applies without a session...
- for(let i=0;i<5;i++)assert.equal((await f.mcp(claude,call())).status,200);
- // ...a session still gets its own allowance...
- for(let i=0;i<2;i++)assert.equal((await f.mcp({...claude,'mcp-session-id':'conversation-1'},call())).status,200);
+ for(let i=0;i<6;i++)assert.equal((await f.mcp(claude,call())).status,200);
+ // ...a session still gets its own allowance (two a minute, one at once, here)...
+ assert.equal((await f.mcp({...claude,'mcp-session-id':'conversation-1'},call())).status,200);
  assert.equal((await f.mcp({...claude,'mcp-session-id':'conversation-1'},call())).status,429);
  assert.equal((await f.mcp({...claude,'mcp-session-id':'conversation-2'},call())).status,200);
  // ...and the shared ceiling (9 here) is far above an ordinary address's (4), but it is still a ceiling.
@@ -235,16 +259,16 @@ test('a no-account client is given a session id at initialize, and nothing is st
  assert.equal(JSON.stringify(f.db.prepare('SELECT key FROM community_limits').all()).includes(first.headers.get('mcp-session-id')),false);
  // A made-up session id is only a counting key: it is never looked up, so it cannot be "wrong".
  assert.equal((await f.mcp({'mcp-session-id':'anything-at-all'},call())).status,200);
- // Members are not given one.
+ // Members are given one too: their sessions are counted apart.
  const session=await f.login(),key=(await (await f.account('keys','POST',{name:'Laptop'},session.cookie)).json()).token;
- assert.equal((await f.mcp(f.bearer(key),init)).headers.get('mcp-session-id'),null);
+ assert.match((await f.mcp(f.bearer(key),init)).headers.get('mcp-session-id'),/^[0-9a-f-]{36}$/);
  f.db.close();
 });
 
 test('the Workers limiter refuses a flood before any database write, and fails open when it errors',async()=>{
  const refused=fixture({MCP_ANON_LIMITER:{async limit({key}){assert.equal(key,'203.0.113.7');return {success:false}}}});
  const response=await refused.mcp();
- assert.equal(response.status,429);assert.equal(response.headers.get('retry-after'),'60');
+ assert.equal(response.status,429);assert.ok(seconds(response)>=1&&seconds(response)<=60);
  assert.match((await response.json()).error.message,/300 a minute for one network address/);
  assert.equal(refused.db.prepare('SELECT count(*) n FROM community_limits').get().n,0);
  const broken=fixture({MCP_ANON_LIMITER:{async limit(){throw new Error('limiter down')}}});

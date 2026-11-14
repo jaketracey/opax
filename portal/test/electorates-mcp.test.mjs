@@ -168,7 +168,8 @@ test('registry calls retain MCP auth, origin, rate and body-size protections', a
   assert.equal((await f.send('tools/call', params)).status, 401);
   f.state.authorized = true;
   assert.equal((await f.send('tools/call', params, { payload: JSON.stringify({ padding: 'x'.repeat(17000) }) })).status, 413);
-  f.state.hits = 60;
+  // The account ceiling (300 tool calls a minute across a member's sessions); the per-session bucket is in mcp-oauth.test.mjs.
+  f.state.hits = 300;
   assert.equal((await f.send('tools/call', params)).status, 429);
   assert.equal(f.state.reads, 0);
 });
