@@ -41,7 +41,7 @@ export async function readServerCSV(first, fetchPage, signal) {
     if (trailers[0]===CSV_TRUNCATION) {finalMarker=true;trailers.shift();}
     const notes=response.headers.get('x-table-csv-notes');
     if(notes){
-      if(current.pathname!=='/api/table/act-invoices'||notes.length>12000||notesHeader!=null&&notesHeader!==notes)throw new Error('Invalid CSV notes');
+      if(!['/api/table/act-invoices','/api/table/party-money'].includes(current.pathname)||notes.length>12000||notesHeader!=null&&notesHeader!==notes)throw new Error('Invalid CSV notes');
       const values=JSON.parse(decodeURIComponent(notes));
       if(!Array.isArray(values)||values.length>8||values.some(v=>typeof v!=='string'||v.length>2000))throw new Error('Invalid CSV notes');
       const columns=csvRecords(header+'\n')[0].split(',').length;

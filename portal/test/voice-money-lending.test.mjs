@@ -7,7 +7,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import {readFileSync} from 'node:fs'
 import {build} from 'esbuild'
-import {typedMoney, MONEY_PATH} from './money-graph-data.mjs'
+import {typedMoney, MONEY_PATH, RECEIPTS_PATH} from './money-graph-data.mjs'
 import {localApi} from './ask-lobby-money-harness.mjs'
 
 const root = new URL('../', import.meta.url).pathname
@@ -31,7 +31,8 @@ for (const [from, to] of [['Mowburn Nominees', COMSCRV], ['Pratt Holdings Pty Lt
 }
 const assets = {fetch: async request => {
   const path = new URL(request.url).pathname
-  if (path === MONEY_PATH) return Response.json(graph)
+  // Federal answers read the uncapped receipts file; both paths serve this hermetic graph.
+  if (path === MONEY_PATH || path === RECEIPTS_PATH) return Response.json(graph)
   try { return Response.json(JSON.parse(readFileSync(root + 'public' + path, 'utf8'))) } catch { return new Response('', {status: 404}) }
 }}
 const env = {COMMUNITY_ORIGIN: 'https://opax.test', ASSETS: assets}

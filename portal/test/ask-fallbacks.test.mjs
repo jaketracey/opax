@@ -41,7 +41,7 @@ h.env.ASSETS={fetch:async req=>{
   const path=new URL(req.url).pathname
   if(path==='/parliamentarians.json')return Response.json(roster)
   if(path==='/bills/index.json')return Response.json({bills:[]})
-  if(path==='/graph/money.json')return Response.json(money)
+  if(path==='/graph/money-receipts.json')return Response.json(money)
   if(['/pay.json','/pay-offices.json'].includes(path))return realAssets.fetch(req)
   return new Response('Missing',{status:404})
 }}

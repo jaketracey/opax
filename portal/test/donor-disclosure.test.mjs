@@ -61,12 +61,12 @@ for(const confident of [false,true]){
  });
  test(label+': SSR person receipt block names the donor without guessing an entity or showing the return',async()=>{
   const person={name:'Fixture Member',full:'Fixture Member',pid:'fixture-person',party:'Labor',party_now:'Labor',states:['federal'],chambers:['representatives'],representation:[],speeches:0};
-  const read=async path=>{if(path==='/graph/money.json')return data;if(path.startsWith('/graph/money.'))return {nodes:[],edges:[],meta:{}};if(path==='/votes.json')return {};if(path==='/interests/index.json')return {people:{},_by_name:{}};if(path==='/bills/index.json')return {bills:[]};if(path==='/seo-links.json')return {sponsored:{}};throw Error('Missing optional fixture')};
+  const read=async path=>{if(path==='/graph/money.json'||path==='/graph/money-receipts.json')return data;if(path.startsWith('/graph/money.'))return {nodes:[],edges:[],meta:{}};if(path==='/votes.json')return {};if(path==='/interests/index.json')return {people:{},_by_name:{}};if(path==='/bills/index.json')return {bills:[]};if(path==='/seo-links.json')return {sponsored:{}};throw Error('Missing optional fixture')};
   nameIn((await renderPersonAnswer(person,read,new Map())).html,record,href,'Example, Alex');
  });
  test(label+': Ask money answers, receipt JSON and MCP money tools preserve the source facts',async()=>{
   const question='Who are the largest donors to Labor in the 2024-25 financial year?';
-  const assets={fetch:async request=>Response.json(new URL(request.url).pathname==='/graph/money.json'?data:{nodes:[],edges:[],meta:{}})};
+  const assets={fetch:async request=>Response.json(new URL(request.url).pathname==='/graph/money-receipts.json'?data:{nodes:[],edges:[],meta:{}})};
   const result=receiptAnswer(data,question,'federal','https://opax.test');assert.equal(result.by_donor[0].name,record.source_name);assert.equal(result.by_donor[0].href,href);assert.match(result.by_donor[0].return_reference,/RETURN-FIXTURE-7/);
   const ask=await rankedMoneyAnswer({question},assets);assert.doesNotMatch(ask.answer,INLINE_REFERENCE);assert.ok(ask.answer.includes(']('+new URL(href,'https://opax.com.au').href+')'));
   const tool=await partyDonations({asset:async()=>data,origin:'https://opax.test'},{party:'Labor',from_year:2024,to_year:2024});const row=tool.data.rows[0];assert.equal(row.donor,record.source_name);assert.equal(row.href,href);assert.match(row.return_reference,/RETURN-FIXTURE-7/);assert.ok(tool.cite.some(c=>c.url.includes('/subject/donor/')));assert.match(factSheet([tool]).facts[0].text,/RETURN-FIXTURE-7/);
@@ -97,7 +97,7 @@ test('donor pages and OG cards publish the disclosure spelling without inline re
  try{
   const worker=await loadWorker(new URL('../src/index.ts',import.meta.url).pathname,new URL('../public/',import.meta.url).pathname);
   const asset=worker.env.ASSETS.fetch;
-  worker.env.ASSETS.fetch=async req=>{const p=new URL(req.url).pathname;if(p==='/graph/donor-index.json')return Response.json({donors:[outside]});return /^\/graph\/money(?:\.(qld|vic|tas))?\.json$/.test(p)?Response.json(p==='/graph/money.json'?data:{nodes:[],edges:[],meta:{}}):asset(req)};
+  worker.env.ASSETS.fetch=async req=>{const p=new URL(req.url).pathname;if(p==='/graph/donor-index.json')return Response.json({donors:[outside]});return /^\/graph\/money(?:-receipts)?(?:\.(qld|vic|tas))?\.json$/.test(p)?Response.json((p==='/graph/money.json'||p==='/graph/money-receipts.json')?data:{nodes:[],edges:[],meta:{}}):asset(req)};
   for(const [record,linked,shown] of [[uncertain,false,'Fixture, Blair'],[confident,true,'Example, Alex'],[outside,false,'Outside, Casey']]){
    const path='/subject/donor/'+encodeURIComponent(record.lookup_names[0]);
    const response=await worker.fetch(path);assert.equal(response.status,200);const html=await response.text();nameIn(html,record,pageHref(record,linked),shown);assert.equal(new JSDOM(html).window.document.querySelector('#prerender h1').textContent,record.source_name);
@@ -154,7 +154,7 @@ test('the actual donor directory finds extra source names and links every row, w
  const fn=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='buildDonorsDirectory');assert.ok(fn);
  const record={id:'donor:outside-reference',kind:'reference',label:'SOURCE, GRAHAM',source_name:'SOURCE, GRAHAM',jurisdiction:'federal',match:{confidence:0,method:'unresolved',href:null},returnReferences:[{return_type:'GrantConnect source record',year:'2024-25',transaction_id:'GA-FIXTURE-7',url:'https://example.test/grant/7'}]};
  const index=donorLookup([record]);
- const context={donorViewReady:Promise.resolve(),donorViewIndex:index,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine,loadMoneyFile:async()=>({nodes:[],edges:[],meta:{commission:'Fixture commission'}}),loadAccess:async()=>({donors:{}}),loadFits:async()=>({}),normName:v=>String(v).toLowerCase(),byNumDesc:()=>()=>0,byName:()=>0,moneyFor:()=>0,STATE_NOT_SUMMED:'Separate jurisdictions',AEC_NOTE:'',esc:v=>String(v),donorNameHTML:name=>donorLabelHTML(index.get(name.toLowerCase()))};
+ const context={donorViewReady:Promise.resolve(),donorViewIndex:index,receiptGraph,receiptGraphScope,receiptScopeLabel,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine,loadMoneyData:async()=>({nodes:[],edges:[],meta:{}}),loadMoneyFile:async()=>({nodes:[],edges:[],meta:{commission:'Fixture commission'}}),loadAccess:async()=>({donors:{}}),loadFits:async()=>({}),normName:v=>String(v).toLowerCase(),byNumDesc:()=>()=>0,byName:()=>0,moneyFor:()=>0,STATE_NOT_SUMMED:'Separate jurisdictions',AEC_NOTE:'',esc:v=>String(v),donorNameHTML:name=>donorLabelHTML(index.get(name.toLowerCase()))};
  runInNewContext(source.slice(fn.getStart(ast),fn.end)+'\nthis.build=buildDonorsDirectory;',context);
  const directory=await context.build();assert.equal(directory.items.length,1);assert.ok(directory.text(directory.items[0]).includes(record.label));
  const html=directory.row(directory.items[0]);const doc=new JSDOM(html).window.document;assert.ok(doc.body.textContent.includes(displayName(record.label)));assert.ok(!doc.body.textContent.includes('GA-FIXTURE-7'));assert.deepEqual([...doc.querySelectorAll('a')].map(a=>a.getAttribute('href')),['/subject/donor/SOURCE%2C%20GRAHAM']);assert.doesNotMatch(doc.body.textContent,/\$0|0 donations/);

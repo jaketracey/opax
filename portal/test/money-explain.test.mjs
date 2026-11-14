@@ -255,10 +255,11 @@ const served = Object.fromEntries(['', '.qld', '.vic', '.tas'].map((s) => [s ? s
 const servedIndex = new Map();
 const servedAec = JSON.parse(readFileSync(new URL('../public/graph/aec-extras.json', import.meta.url)));
 
-// Exact pins follow main's alias-aware recipient receipt export.
+// Exact pins follow the receipt identity decision shared with the uncapped export:
+// Hawker Britton's separately registered QLD and Victoria companies stay off its map record.
 for (const [group, cases] of [
   ['media & tech', [['media', 'Media', 17745788], ['telecom', 'Telecom', 5592395], ['media & tech', 'Media & tech', 27176074]]],
-  ['legal & lobbying', [['legal', 'Legal', 4249905], ['lobbying', 'Lobbying', 1469301], ['legal & lobbying', 'Legal & lobbying', 5719206]]],
+  ['legal & lobbying', [['legal', 'Legal', 4249905], ['lobbying', 'Lobbying', 1463051], ['legal & lobbying', 'Legal & lobbying', 5712956]]],
   ['mining & energy', [['mining', 'Mining', 79098025], ['fossil_fuels', 'Fossil fuels', 6629947], ['mining & energy', 'Mining & energy', 85727972]]],
 ]) test(`served files: ${group} pages name the exact narrow or combined sum`, () => {
   for (const [industry, label, total] of cases) {

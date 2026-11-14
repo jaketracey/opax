@@ -110,7 +110,7 @@ export const tool: ToolDefinition = {
           source_scope: sourceUrl(e.source_url) ? 'original source' : 'OPAX evidence; original URL not recorded', full_record_url }))
         else if (section === 'receipts') {
           // Each flow read through its typed cells (each receipt once, from the party's own return), as on the donor page.
-          const graph = object(receiptGraph(object(await readToolAsset(env, '/graph/money.json')) as { edges: unknown[] }))
+          const graph = object(receiptGraph(object(await readToolAsset(env, '/graph/money-receipts.json')) as { edges: unknown[] }))
           if (!Array.isArray(graph.nodes) || !Array.isArray(graph.edges)) throw new Error('Funding graph unavailable')
           const nodes = new Map(records(graph.nodes).map(n => [String(n.id), n])), linked = new Set(records(data.donor_links).map(n => String(n.id)))
           // The receipt branch of the published graph grammar. Awards and grants cannot enter it.

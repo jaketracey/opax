@@ -306,7 +306,7 @@ test('loop follow-ups search the standalone question, expose asked_as and pre-wr
 test('three receipt follow-ups use fresh tool fields with the iOS author/text conversation shape in JSON and SSE',async()=>{
  const donor='Mining and Energy Union',originalAssets=h.env.ASSETS,originalFetch=globalThis.fetch
  const graph=JSON.parse(readFileSync(new URL('../public/graph/money.json',import.meta.url)))
- h.env.ASSETS={fetch:req=>new URL(req.url).pathname==='/graph/money.json'?Response.json(graph):originalAssets.fetch(req)}
+ h.env.ASSETS={fetch:req=>new URL(req.url).pathname==='/graph/money-receipts.json'?Response.json(graph):originalAssets.fetch(req)}
  h.env.RESEARCH_LOOP='route'
  globalThis.fetch=(url,init)=>{
   const body=JSON.parse(init?.body??'{}')

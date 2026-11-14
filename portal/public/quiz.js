@@ -1,6 +1,7 @@
+import {donationGraph} from './money-receipts.js';
 import {industryName} from './money-scope.js';
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=af7c0f0f03';
-import {loadDonorViewIndex} from './donor-views.js?v=a138263798';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=d28448a137';
+import {loadDonorViewIndex} from './donor-views.js?v=75f497c532';
 import {subjectUrl} from './canonical-urls.js?v=9ce13e7ba5';
 /*
  * The record quiz — a MindMaze-spirited quiz over OPAX's real data.
@@ -97,13 +98,15 @@ export function makeQuizContext(data) {
   // Donor and industry questions read each donor and flow through its typed cells
   // (receiptGraph): each receipt once, from the party's own return, as on the donor
   // page. Party nodes, and so the party questions, keep their own received totals.
-  const money = receiptGraph(data.money || { nodes: [], edges: [], meta: {} });
+  const raw = data.money || { nodes: [], edges: [], meta: {} };
+  const money = receiptGraph(raw);
+  const industryMoney = donationGraph(raw);
   const donors = money.nodes.filter(n=>n.kind === 'donor');
   const donorsById = new Map(donors.map((d) => [d.id, d]));
-  const parties = money.nodes.filter((n) => n.kind === "party");
+  const parties = (raw.meta?.uncapped ? industryMoney : money).nodes.filter((n) => n.kind === "party");
 
   const industries = new Map(); // key -> {total,count,first,last}
-  for (const d of donors) {
+  for (const d of industryMoney.nodes.filter(n => n.kind === 'donor')) {
     if (!d.industry || d.industry === "other") continue;
     let s = industries.get(d.industry);
     if (!s) industries.set(d.industry, (s = { total: 0, count: 0, first: 9999, last: 0 }));
@@ -123,7 +126,7 @@ export function makeQuizContext(data) {
   const years = Object.values(data.years || {}).filter((y) => y && y.year && y.voices);
 
   return {
-    money, donors, donorsById, parties, industries, reports, photos, years,
+    money, industryMoney, donors, donorsById, parties, industries, reports, photos, years,
     corpus: data.corpus || null,
     // What the donor and industry figures count (the party page's line), for the answer reveal.
     receiptScope: receiptGraphScope(money),
@@ -180,7 +183,7 @@ const TEMPLATES = [
         const options = trio.map(([k], i) => ({ label: industryLabel(k), correct: i === 0 }));
         return {
           template: this.id, deck: this.deck, kind: "mc",
-          prompt: "Which of these industries is the source of the largest disclosed political receipts?",
+          prompt: "Which of these industries is the source of the largest disclosed political donations?",
           options: shuffled(options, rng),
           fact: factLine(industryLabel(top[0]), fmtMoney(top[1].total)),
           explanation:
@@ -188,7 +191,7 @@ const TEMPLATES = [
             industryLabel(s2[0]) + " (" + fmtMoney(s2[1].total) + ") and " +
             industryLabel(s3[0]) + " (" + fmtMoney(s3[1].total) + ") trail it.",
           source: "AEC disclosures via OPAX's money data",
-          ...(ctx.receiptScope ? { scope: ctx.receiptScope } : {}),
+          scope: 'Uncapped recipient returns; donations only (AEC Donation Received). Public funding and loans are not donations.',
           link: moneyLink(top[0]),
         };
       }
@@ -216,15 +219,15 @@ const TEMPLATES = [
       return {
         template: this.id, deck: this.deck, kind: "mc",
         prompt:
-          "Roughly how much did parties report in receipts from " + industrySource(key) +
+          "Roughly how much did parties report in donations from " + industrySource(key) +
           " between " + s.first + " and " + s.last + "?",
         options,
         fact: factLine(industryLabel(key), fmtMoney(s.total)),
         explanation:
-          fmtCount(s.count) + " disclosed receipts from the industry's largest receipt sources make up that total; " +
+          fmtCount(s.count) + " disclosed donations from the industry's receipt sources make up that uncapped total; " +
           "amounts below the threshold are not visible.",
         source: "AEC disclosures via OPAX's money data",
-        ...(ctx.receiptScope ? { scope: ctx.receiptScope } : {}),
+        scope: 'Uncapped recipient returns; donations only (AEC Donation Received). Public funding and loans are not donations.',
         link: moneyLink(key),
       };
     },
@@ -269,7 +272,7 @@ const TEMPLATES = [
       const candidates = shuffled(Object.keys(SOURCE_PHRASES), rng);
       for (const ind of candidates) {
         const byParty = new Map();
-        for (const e of ctx.money.edges || []) {
+        for (const e of ctx.industryMoney.edges || []) {
           const d = ctx.donorsById.get(e.source);
           if (!d || d.industry !== ind) continue;
           const p = String(e.target).replace(/^party:/, "");
@@ -286,14 +289,14 @@ const TEMPLATES = [
         ], rng);
         return {
           template: this.id, deck: this.deck, kind: "mc",
-          prompt: "Which party has reported the most receipts from " + SOURCE_PHRASES[ind] + "?",
+          prompt: "Which party has reported the most donations from " + SOURCE_PHRASES[ind] + "?",
           options,
           fact: factLine(sorted[0][0], fmtMoney(sorted[0][1])),
           explanation:
-            "That is the largest total in receipts from " + SOURCE_PHRASES[ind] + "; " +
+            "That is the largest total in donations from " + SOURCE_PHRASES[ind] + "; " +
             sorted[1][0] + " follows on " + fmtMoney(sorted[1][1]) + ".",
           source: "AEC disclosures via OPAX's money data",
-          ...(ctx.receiptScope ? { scope: ctx.receiptScope } : {}),
+          scope: 'Uncapped recipient returns; donations only (AEC Donation Received). Public funding and loans are not donations.',
           link: moneyLink(ind),
         };
       }
@@ -564,11 +567,12 @@ const TEMPLATES = [
         const peak = rows.reduce((a, b) => b[1] > a[1] ? b : a);
         return {
           template: this.id, deck: this.deck, kind: "year",
-          prompt: "In which year did " + party.label + " receive its largest disclosed total?",
+          prompt: "In which year did " + party.label + " receive its largest disclosed donation total?",
           answer: peak[0], min: rows[0][0], max: rows[rows.length - 1][0], scale: "linear", format: "year",
           fact: factLine(String(peak[0]), fmtMoney(peak[1])),
-          explanation: "That is the party's highest annual figure in the complete years shown on the federal money map.",
+          explanation: "That is the party's highest annual donation figure in the uncapped recipient returns for complete financial years.",
           source: "AEC disclosures via OPAX's money data",
+          ...(ctx.money.meta?.uncapped ? {scope: "Uncapped recipient returns; donations only (AEC Donation Received)."} : {}),
           link: subjectLink("party", party.label),
         };
       }
@@ -809,7 +813,7 @@ async function fetchJson(url, signal, init) {
 
 async function loadData(signal) {
   const [money, index, corpus, photos, yearIndex] = await Promise.all([
-    fetchJson("/graph/money.json", signal, {cache:"no-cache"}),
+    fetchJson("/graph/money-receipts.json", signal, {cache:"no-cache"}),
     fetchJson("/reports/index.json", signal),
     fetchJson("/corpus.json", signal).catch(() => null),
     fetchJson("/photos/people.json", signal, { cache: "no-cache" }).catch(() => null),  // whose face: revalidated

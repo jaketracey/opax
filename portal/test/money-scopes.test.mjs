@@ -33,6 +33,7 @@ test('scope helper distinguishes the map slice and whole return without changing
 test('party return and person row keep their separate figures and state their scope',()=>{
  const f=api(),node={by_type_year:{'2024-25':{donation_received:[120,2],other_receipt:[30,1]}}};
  const row=f.personPartyFigure(node);assert.equal(row.total,150);assert.equal(row.scope,'from named donors on the map, all receipt types from AEC federal returns, 2024–25');
+ assert.equal(f.personPartyFigure(node,{uncapped:true}).scope,'from the uncapped selected recipient receipts, all receipt types from AEC federal returns, 2024–25');
  const text=new JSDOM(f.partyReceiptsHTML([['2024-25',900,0,0,3,200,100]],'https://fixture.test')).window.document.body.textContent;
  assert.match(text,/total receipts on the 2024–25 AEC federal return, all receipt types, 3 branches summed/);assert.match(text,/\$900/);assert.doesNotMatch(text,/2024-25/);
 });

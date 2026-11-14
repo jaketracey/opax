@@ -110,3 +110,17 @@ class DonorsLeavingTheMap(unittest.TestCase):
         self.assertEqual((donor["jurisdiction"], donor["total"], donor["count"], donor["firstYear"], donor["lastYear"]), ("federal", 671000, 2, 2014, 2015))
         self.assertEqual(donor["returnReferences"][0]["return_type"], "AEC annual return")
         self.assertEqual(catalog["references"], [])
+
+
+    def test_canonical_entity_is_not_overwritten_by_a_separately_resolved_case_variant(self):
+        from scripts.export_donor_disclosures import attach_selected_federal_receipts
+        db = DonorDisclosures.database(self)
+        db.execute("INSERT INTO ext_donor_entities VALUES ('other','Example Union.','union')")
+        db.executemany("INSERT INTO ext_donor_aliases VALUES (?,?,1,'curated')", [('Example Union','fixture'),('Example Union.','other')])
+        # The resolver's exact tier deliberately leaves this uppercase spelling
+        # ambiguous. It must not overwrite the canonical entity by dictionary order.
+        recipient_fixture(db, [('Example Union','Labor',500,'2024-25','Donation Received'),
+                               ('EXAMPLE UNION','Labor',100,'2024-25','Donation Received')])
+        node = {'label':'Example Union','match':{'entity_id':'fixture'}}
+        attach_selected_federal_receipts(db,[node])
+        self.assertEqual((node['total'],node['count']),(500,1))

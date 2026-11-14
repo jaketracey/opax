@@ -9,7 +9,7 @@ export function donorPageHref(record: DonorDisclosureRecord | null | undefined, 
 export function donorLabelHTML(record: DonorDisclosureRecord | string, fallback?: DonorReturn & {returnReferences?: DonorReturn[]}): string;
 export function donorDisplayText(record: DonorDisclosureRecord | string, fallback?: DonorReturn & {returnReferences?: DonorReturn[]}): string;
 export function donorLookup(records: DonorDisclosureRecord[]): Map<string, DonorDisclosureRecord>;
-export interface ReceiptCells {total?:number;count?:number;firstYear?:number|null;lastYear?:number|null;byYear?:Record<string,unknown>;undated?:[number,number];by_type?:Record<string,number>;by_type_year?:Record<string,Record<string,[number,number]>>}
+export interface ReceiptCells {total?:number;count?:number;firstYear?:number|null;lastYear?:number|null;byYear?:Record<string,unknown>;undated?:[number,number];by_type?:Record<string,number>;by_type_year?:Record<string,Record<string,[number,number]>>;donation_exclusions?:ReceiptCells}
 export interface ReceiptFigures {total:number;count:number;firstYear:number|null;lastYear:number|null;byYear:Record<string,number>;cells:Record<string,[number,number]>;undated:[number,number];byType:Record<string,number>|null;typed:boolean;typeCells:Record<string,Record<string,[number,number]>>|null;typeCounts:Record<string,number>|null;publicFunding:[number,number];publicFundingCells:Record<string,[number,number]>}
 export function receiptFigures(x: ReceiptCells | null | undefined): ReceiptFigures;
 export function receiptScopeLabel(figures: Pick<ReceiptFigures,'typed'|'firstYear'|'lastYear'>, measure?: 'all_types' | 'donation_only'): string;
@@ -23,7 +23,7 @@ export function notListedLine(x: ReceiptCells | null | undefined): string;
 export const DONATION_TYPE: 'donation_received';
 export const PUBLIC_FUNDING_TYPE: 'public_funding';
 /** [dollars, receipts] for each part of a typed flow in a financial-year window. */
-export interface ReceiptSplit {donations:[number,number];other:[number,number];subscriptions:[number,number];untyped:[number,number];all:[number,number];publicFunding:[number,number];otherYears:[number|null,number|null]}
+export interface ReceiptSplit {donations:[number,number];other:[number,number];subscriptions:[number,number];untyped:[number,number];all:[number,number];publicFunding:[number,number];returned?:[number,number];otherYears:[number|null,number|null]}
 /** A typed flow split by AEC receipt type in a window of FY starting years; null without typed cells. */
 export function receiptSplit(x: (ReceiptCells & {typeCells?: ReceiptFigures['typeCells']}) | null | undefined, from?: number | null, to?: number | null): ReceiptSplit | null;
 /** The labelled line for a source's receipts the AEC does not class as donations; empty when there are none. */
