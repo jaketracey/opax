@@ -1,12 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { runCheck, fkGrade, syllables, screenText, GRADE_TARGET } from '../../scripts/learn/check.mjs';
+import { runCheck, fkGrade, syllables, screenText, GRADE_TARGET, GLOSSARY_TERMS } from '../../scripts/learn/check.mjs';
 
 test('the Learn guide passes its content check', () => {
   const { errors, report, counts } = runCheck();
   assert.deepEqual(errors, []);
-  assert.equal(counts.glossary, 40);
-  assert.deepEqual(report.map((r) => r.chapter), ['whos-who', 'bill-to-act', 'how-votes-work']);
+  assert.ok(counts.glossary >= GLOSSARY_TERMS[0] && counts.glossary <= GLOSSARY_TERMS[1]);
+  assert.deepEqual(report.map((r) => r.chapter), ['whos-who', 'bill-to-act', 'how-votes-work', 'watching-parliament', 'money-and-interests', 'elections', 'federal-and-state']);
   for (const r of report) {
     for (const s of r.overTarget) assert.ok(s.reason, `${r.file} screen ${s.screen} is over grade ${GRADE_TARGET} with no reason`);
   }

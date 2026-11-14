@@ -17,6 +17,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
 export const GRADE_TARGET = 8;
 export const SCREEN_WORDS = [40, 90];
+export const GLOSSARY_TERMS = [80, 120];
 const QUOTE_WORDS = 25, SHORT_WORDS = 20;
 const EM_DASH = /\u2014/;
 // US spellings this guide should not use. "Labor" is a party name, so it is not here.
@@ -114,7 +115,8 @@ export function runCheck({ root = ROOT, snapshots = null } = {}) {
   const used = new Set();
 
   if (factById.size !== facts.length) errors.push('facts.json: duplicate fact ids');
-  if (glossary.length !== 40) errors.push(`glossary.json: ${glossary.length} terms, expected 40`);
+  if (glossary.length < GLOSSARY_TERMS[0] || glossary.length > GLOSSARY_TERMS[1]) errors.push(`glossary.json: ${glossary.length} terms, expected ${GLOSSARY_TERMS[0]} to ${GLOSSARY_TERMS[1]}`);
+  if (new Set(glossary.map((g) => g.slug)).size !== glossary.length) errors.push('glossary.json: duplicate slugs');
 
   // Facts: a source, a short quote, and the same quote filed under the source.
   const filed = new Set(sources.flatMap((s) => (s.quotes || []).map((q) => `${q.fact}\u0000${norm(q.quote)}`)));

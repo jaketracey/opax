@@ -881,6 +881,926 @@
     "opax-division-tool",
     "peo-crossing-floor"
    ]
+  },
+  {
+   "term": "sitting week",
+   "slug": "sitting-week",
+   "chapter": "watching-parliament",
+   "short": "A week when Parliament meets.",
+   "more": "There are about 18 to 20 sitting weeks a year. A sitting day is a day a house meets. When Parliament is not sitting, members spend much of their time in their electorates.",
+   "facts": [
+    "sitting-weeks-18-20",
+    "sitting-def",
+    "not-sitting-electorate"
+   ],
+   "see_also": [
+    "question-time"
+   ],
+   "example": {
+    "url": "https://opax.com.au/sitting",
+    "label": "Federal sitting weeks"
+   },
+   "sources": [
+    "peo-glossary",
+    "peo-members"
+   ]
+  },
+  {
+   "term": "Question Time",
+   "slug": "question-time",
+   "chapter": "watching-parliament",
+   "short": "The time each sitting day when members ask ministers questions.",
+   "more": "It starts at 2 pm in both houses and usually lasts about an hour. The first question always comes from the opposition. It can be watched live.",
+   "facts": [
+    "qt-what",
+    "qt-when",
+    "qt-order",
+    "qt-watch"
+   ],
+   "see_also": [
+    "question-without-notice",
+    "question-on-notice",
+    "dorothy-dixer"
+   ],
+   "example": {
+    "url": "https://opax.com.au/video/senate",
+    "label": "Senate Question Time videos"
+   },
+   "sources": [
+    "peo-question-time"
+   ]
+  },
+  {
+   "term": "question without notice",
+   "slug": "question-without-notice",
+   "chapter": "watching-parliament",
+   "short": "A spoken question in Question Time that the minister has not seen before.",
+   "more": "The opposition and crossbench ask these questions. The minister must answer straight away.",
+   "facts": [
+    "qwon-def",
+    "qt-what"
+   ],
+   "see_also": [
+    "question-time",
+    "question-on-notice"
+   ],
+   "sources": [
+    "peo-question-time"
+   ]
+  },
+  {
+   "term": "question on notice",
+   "slug": "question-on-notice",
+   "chapter": "watching-parliament",
+   "short": "A written question to a minister, answered in writing later.",
+   "more": "The minister is expected to answer within 30 days in the Senate, or 60 days in the House. Unanswered Question Time questions can also become questions on notice.",
+   "facts": [
+    "qon-def",
+    "qon-days"
+   ],
+   "see_also": [
+    "question-time",
+    "question-without-notice"
+   ],
+   "sources": [
+    "peo-question-time"
+   ]
+  },
+  {
+   "term": "Dorothy Dixer",
+   "slug": "dorothy-dixer",
+   "chapter": "watching-parliament",
+   "short": "A question a government backbencher asks a minister, planned before Question Time.",
+   "more": "These questions help the government talk about its policies and achievements. The questions and answers are prepared in advance.",
+   "facts": [
+    "dorothy-dixer"
+   ],
+   "see_also": [
+    "question-time"
+   ],
+   "sources": [
+    "peo-question-time"
+   ]
+  },
+  {
+   "term": "Hansard",
+   "slug": "hansard",
+   "chapter": "watching-parliament",
+   "short": "The official written record of what is said in Parliament.",
+   "more": "It covers both houses, the Federation Chamber and committee hearings, and it is online. A first draft is up within 3 hours, and the official version about 2 weeks after each sitting week. Editors cannot change the meaning of what was said.",
+   "facts": [
+    "hansard-def",
+    "hansard-covers",
+    "hansard-proof-3h",
+    "hansard-official-2w",
+    "hansard-edits",
+    "hansard-online"
+   ],
+   "see_also": [
+    "votes-and-proceedings",
+    "senate-estimates"
+   ],
+   "sources": [
+    "peo-hansard"
+   ]
+  },
+  {
+   "term": "Votes and Proceedings",
+   "slug": "votes-and-proceedings",
+   "chapter": "watching-parliament",
+   "short": "The official record of what the House of Representatives does, rather than what is said.",
+   "more": "In the Senate, the same record is called the Journals of the Senate. These records list the bills brought in, every vote held and how each member voted.",
+   "facts": [
+    "records-journals-vp",
+    "records-contents"
+   ],
+   "see_also": [
+    "hansard"
+   ],
+   "sources": [
+    "peo-records"
+   ]
+  },
+  {
+   "term": "standing orders",
+   "slug": "standing-orders",
+   "chapter": "watching-parliament",
+   "short": "The rules each house uses to run its work.",
+   "more": "The Speaker and the President make sure the standing orders are followed. Question Time is also run under them.",
+   "facts": [
+    "standing-orders-def",
+    "presiding-officers"
+   ],
+   "see_also": [
+    "notice-paper",
+    "speaker",
+    "president-of-the-senate"
+   ],
+   "sources": [
+    "peo-glossary"
+   ]
+  },
+  {
+   "term": "Notice Paper",
+   "slug": "notice-paper",
+   "chapter": "watching-parliament",
+   "short": "A list, published each sitting day, of all the business waiting in a house.",
+   "more": "Questions on notice are placed on it. Each house has its own Notice Paper.",
+   "facts": [
+    "notice-paper-def",
+    "qon-def"
+   ],
+   "see_also": [
+    "standing-orders",
+    "question-on-notice"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-question-time"
+   ]
+  },
+  {
+   "term": "Senate estimates",
+   "slug": "senate-estimates",
+   "chapter": "watching-parliament",
+   "short": "Hearings where senators question ministers and public servants about how public money is used.",
+   "more": "They are held after the Budget in May, with extra hearings in October and February. They are open to the public and can be watched online. Hansard records everything said.",
+   "facts": [
+    "estimates-def",
+    "estimates-timing",
+    "estimates-open",
+    "estimates-hansard"
+   ],
+   "see_also": [
+    "committee",
+    "hansard"
+   ],
+   "example": {
+    "url": "https://opax.com.au/estimates",
+    "label": "Senate estimates rounds and transcripts"
+   },
+   "sources": [
+    "peo-senate-estimates"
+   ]
+  },
+  {
+   "term": "petition",
+   "slug": "petition",
+   "chapter": "watching-parliament",
+   "short": "A request from a group of people for Parliament to act on a problem.",
+   "more": "Petitions are one way to have your say. The text of petitions is included in Hansard.",
+   "facts": [
+    "petition-def",
+    "hansard-covers"
+   ],
+   "see_also": [
+    "hansard"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-hansard"
+   ]
+  },
+  {
+   "term": "press gallery",
+   "slug": "press-gallery",
+   "chapter": "watching-parliament",
+   "short": "The media who work inside Parliament House and report on it.",
+   "more": "The press gallery is always at Question Time to report on what is said. It also describes the part of Parliament House where they work.",
+   "facts": [
+    "press-gallery-def",
+    "qt-press"
+   ],
+   "see_also": [
+    "question-time"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-question-time"
+   ]
+  },
+  {
+   "term": "annual return",
+   "slug": "annual-return",
+   "chapter": "money-and-interests",
+   "short": "A yearly form telling the AEC about money a party, MP or other group received or spent.",
+   "more": "Parties, significant third parties and associated entities lodge by 20 October. MPs and senators who receive gifts lodge by 17 November. The AEC publishes them on the first working day in February.",
+   "facts": [
+    "aec-annual-returners",
+    "annual-return-20-oct",
+    "annual-return-17-nov",
+    "returns-published-feb"
+   ],
+   "see_also": [
+    "disclosure-threshold",
+    "transparency-register"
+   ],
+   "sources": [
+    "aec-disclosure",
+    "aec-transparency-register",
+    "aec-whats-changing"
+   ]
+  },
+  {
+   "term": "disclosure threshold",
+   "slug": "disclosure-threshold",
+   "chapter": "money-and-interests",
+   "short": "The amount below which money does not have to be disclosed.",
+   "more": "From 1 July 2026 to 31 December 2026 it is more than $17,300. From 1 January 2027, the AEC says it will be above $5,000.",
+   "facts": [
+    "threshold-def",
+    "threshold-2026",
+    "reform-threshold"
+   ],
+   "see_also": [
+    "annual-return",
+    "gift"
+   ],
+   "sources": [
+    "aec-threshold",
+    "aec-whats-changing"
+   ]
+  },
+  {
+   "term": "receipts",
+   "slug": "receipts",
+   "chapter": "money-and-interests",
+   "short": "Money a party or group has received, as listed on its return. It may or may not be a gift.",
+   "more": "A return's total receipts include loans as well as gifts. That is why OPAX calls this money receipts, not donations.",
+   "facts": [
+    "loans-in-receipts",
+    "donation-is-gift",
+    "opax-receipts-language"
+   ],
+   "see_also": [
+    "gift",
+    "annual-return"
+   ],
+   "example": {
+    "url": "https://opax.com.au/money/receipts",
+    "label": "Political receipts"
+   },
+   "sources": [
+    "aec-disclosure-faq",
+    "opax-money-receipts"
+   ]
+  },
+  {
+   "term": "gift",
+   "slug": "gift",
+   "chapter": "money-and-interests",
+   "short": "Money or property given for nothing, or for much less than it is worth.",
+   "more": "In election law, a donation means the same as a gift. Gifts above the disclosure threshold must be disclosed.",
+   "facts": [
+    "donation-is-gift",
+    "threshold-def"
+   ],
+   "see_also": [
+    "receipts",
+    "gift-cap"
+   ],
+   "sources": [
+    "aec-disclosure-faq",
+    "aec-threshold"
+   ]
+  },
+  {
+   "term": "Transparency Register",
+   "slug": "transparency-register",
+   "chapter": "money-and-interests",
+   "short": "The AEC's public website of disclosure returns, registered groups and election funding.",
+   "more": "Annual returns are published there on the first working day in February. Returns for each federal election are published after the election.",
+   "facts": [
+    "transparency-register-def",
+    "returns-published-feb",
+    "election-returns-published"
+   ],
+   "see_also": [
+    "annual-return"
+   ],
+   "sources": [
+    "aec-disclosure",
+    "aec-transparency-register",
+    "aec-whats-changing"
+   ]
+  },
+  {
+   "term": "associated entity",
+   "slug": "associated-entity",
+   "chapter": "money-and-interests",
+   "short": "A group linked to one or more political parties that must register with the AEC.",
+   "more": "Associated entities lodge annual returns. From 2027, the AEC says one must operate wholly, or to a significant extent, for the benefit of registered parties.",
+   "facts": [
+    "aec-annual-returners",
+    "registered-entities",
+    "associated-entity-new-def"
+   ],
+   "see_also": [
+    "significant-third-party",
+    "annual-return"
+   ],
+   "sources": [
+    "aec-disclosure",
+    "aec-transparency-register",
+    "aec-whats-changing"
+   ]
+  },
+  {
+   "term": "significant third party",
+   "slug": "significant-third-party",
+   "chapter": "money-and-interests",
+   "short": "A group, other than a party, that must register with the AEC and lodge annual returns.",
+   "more": "Significant third parties must register with the AEC. They lodge their annual return by 20 October each year, like parties and associated entities.",
+   "facts": [
+    "aec-annual-returners",
+    "registered-entities",
+    "annual-return-20-oct"
+   ],
+   "see_also": [
+    "associated-entity",
+    "annual-return"
+   ],
+   "sources": [
+    "aec-disclosure",
+    "aec-transparency-register",
+    "aec-whats-changing"
+   ]
+  },
+  {
+   "term": "election funding",
+   "slug": "election-funding",
+   "chapter": "money-and-interests",
+   "short": "Money the AEC pays after an election to help cover what eligible parties and candidates spent.",
+   "more": "A candidate or group needs at least four per cent of the first preference votes to get it. It is paid after each federal election or by-election.",
+   "facts": [
+    "election-funding-what",
+    "election-funding-4pc"
+   ],
+   "see_also": [
+    "preferential-voting"
+   ],
+   "sources": [
+    "aec-election-funding"
+   ]
+  },
+  {
+   "term": "gift cap",
+   "slug": "gift-cap",
+   "chapter": "money-and-interests",
+   "short": "From 2027, a limit on how much one person or group can give.",
+   "more": "The rules start on 1 January 2027. The AEC says the cap is $50,000 a calendar year to one recipient for a federal purpose, and $1.6 million in total.",
+   "facts": [
+    "reform-start",
+    "reform-gift-caps",
+    "reform-gift-cap-amounts"
+   ],
+   "see_also": [
+    "gift",
+    "electoral-expenditure"
+   ],
+   "sources": [
+    "aec-fad-reform",
+    "aec-whats-changing"
+   ]
+  },
+  {
+   "term": "electoral expenditure",
+   "slug": "electoral-expenditure",
+   "chapter": "money-and-interests",
+   "short": "Money spent in relation to an election.",
+   "more": "From 2027 there are limits on electoral expenditure. Their size depends on the type of group.",
+   "facts": [
+    "electoral-expenditure-def",
+    "reform-expenditure-caps"
+   ],
+   "see_also": [
+    "gift-cap",
+    "election-funding"
+   ],
+   "sources": [
+    "aec-whats-changing"
+   ]
+  },
+  {
+   "term": "register of interests",
+   "slug": "register-of-interests",
+   "chapter": "money-and-interests",
+   "short": "A list where MPs and senators record their interests.",
+   "more": "OPAX shows the newest things added to and taken off these registers, grouped by week. Each entry links to its source.",
+   "facts": [
+    "opax-declared"
+   ],
+   "see_also": [
+    "annual-return"
+   ],
+   "example": {
+    "url": "https://opax.com.au/declared",
+    "label": "Declared interests"
+   },
+   "sources": [
+    "opax-declared"
+   ]
+  },
+  {
+   "term": "enrol",
+   "slug": "enrol",
+   "chapter": "elections",
+   "short": "To put your name on the electoral roll so you can vote.",
+   "more": "It is compulsory for eligible citizens to enrol and vote. You can enrol at 16 or 17 so you are ready to vote at 18.",
+   "facts": [
+    "compulsory-enrol-vote",
+    "enrol-16-17"
+   ],
+   "see_also": [
+    "electoral-roll",
+    "federal-election"
+   ],
+   "sources": [
+    "aec-enrol"
+   ]
+  },
+  {
+   "term": "electoral roll",
+   "slug": "electoral-roll",
+   "chapter": "elections",
+   "short": "The list of everyone who can vote.",
+   "more": "Australia has one national roll, run by the AEC. At the end of 2024, around 98% of eligible Australians were on it.",
+   "facts": [
+    "electoral-roll-def",
+    "single-roll",
+    "enrolment-98"
+   ],
+   "see_also": [
+    "enrol"
+   ],
+   "sources": [
+    "aec-australian-elections",
+    "peo-glossary"
+   ]
+  },
+  {
+   "term": "federal election",
+   "slug": "federal-election",
+   "chapter": "elections",
+   "short": "An election for the House of Representatives, and usually half the Senate.",
+   "more": "A full federal election is held about every three years. The Governor-General sets the date when the government asks.",
+   "facts": [
+    "election-every-3"
+   ],
+   "see_also": [
+    "writ",
+    "half-senate-election",
+    "by-election"
+   ],
+   "sources": [
+    "aec-election-timetable"
+   ]
+  },
+  {
+   "term": "writ",
+   "slug": "writ",
+   "chapter": "elections",
+   "short": "A formal order to hold an election, with its key dates.",
+   "more": "Writs are issued within 10 days of Parliament being dissolved. The roll closes seven days after the writ is issued.",
+   "facts": [
+    "writ-def",
+    "writ-10-days",
+    "roll-closes"
+   ],
+   "see_also": [
+    "federal-election",
+    "by-election"
+   ],
+   "sources": [
+    "aec-election-timetable"
+   ]
+  },
+  {
+   "term": "ballot paper",
+   "slug": "ballot-paper",
+   "chapter": "elections",
+   "short": "The paper on which you mark your vote.",
+   "more": "At most federal elections there are two. The green one is for the House and the white one is for the Senate.",
+   "facts": [
+    "two-ballots",
+    "ballot-colours"
+   ],
+   "see_also": [
+    "preferential-voting",
+    "informal-vote"
+   ],
+   "sources": [
+    "aec-election-timetable",
+    "aec-preferential"
+   ]
+  },
+  {
+   "term": "preferential voting",
+   "slug": "preferential-voting",
+   "chapter": "elections",
+   "short": "A way of voting where you number candidates in the order you like them.",
+   "more": "On the green House paper you must number every box. A House candidate needs more than half of the formal votes to win.",
+   "facts": [
+    "preferential-def",
+    "house-number-every-box",
+    "house-50pc"
+   ],
+   "see_also": [
+    "quota",
+    "ballot-paper"
+   ],
+   "sources": [
+    "aec-formation",
+    "aec-preferential",
+    "peo-glossary"
+   ]
+  },
+  {
+   "term": "informal vote",
+   "slug": "informal-vote",
+   "chapter": "elections",
+   "short": "A ballot paper that is not counted because it was not filled in correctly.",
+   "more": "To count, a House ballot paper must have every box numbered. A Senate ballot paper must have at least 6 boxes above the line or 12 below.",
+   "facts": [
+    "informal-def",
+    "house-number-every-box",
+    "atl-6",
+    "btl-12"
+   ],
+   "see_also": [
+    "ballot-paper"
+   ],
+   "sources": [
+    "aec-preferential",
+    "peo-federal-elections",
+    "peo-glossary"
+   ]
+  },
+  {
+   "term": "above the line",
+   "slug": "above-the-line",
+   "chapter": "elections",
+   "short": "Voting for parties or groups on the Senate paper, numbering at least 6 boxes.",
+   "more": "You number at least 6 boxes for parties or groups. Your preferences then go to their candidates in the order each one lists them.",
+   "facts": [
+    "atl-6"
+   ],
+   "see_also": [
+    "below-the-line",
+    "quota"
+   ],
+   "sources": [
+    "peo-federal-elections"
+   ]
+  },
+  {
+   "term": "below the line",
+   "slug": "below-the-line",
+   "chapter": "elections",
+   "short": "Voting for single Senate candidates, numbering at least 12 boxes.",
+   "more": "You number at least 12 boxes for single candidates. This lets you choose the order of candidates yourself.",
+   "facts": [
+    "btl-12",
+    "atl-6"
+   ],
+   "see_also": [
+    "above-the-line",
+    "quota"
+   ],
+   "sources": [
+    "peo-federal-elections"
+   ]
+  },
+  {
+   "term": "quota",
+   "slug": "quota",
+   "chapter": "elections",
+   "short": "The number of votes needed to win a Senate seat.",
+   "more": "Each Senate contest elects more than one senator. Votes are passed on by the voters' preferences until enough candidates reach a quota.",
+   "facts": [
+    "quota-def",
+    "senate-multiple",
+    "preference-transfer"
+   ],
+   "see_also": [
+    "above-the-line",
+    "preferential-voting"
+   ],
+   "sources": [
+    "aec-preferential",
+    "peo-glossary"
+   ]
+  },
+  {
+   "term": "half-Senate election",
+   "slug": "half-senate-election",
+   "chapter": "elections",
+   "short": "An election for half of the Senate seats in each state.",
+   "more": "State senators serve 6-year terms, so half face each normal election. All senators face election together only after a double dissolution.",
+   "facts": [
+    "half-senate-def",
+    "senate-terms",
+    "dd-all-senators"
+   ],
+   "see_also": [
+    "double-dissolution",
+    "senate"
+   ],
+   "sources": [
+    "peo-double-dissolution",
+    "peo-glossary",
+    "peo-senators"
+   ]
+  },
+  {
+   "term": "by-election",
+   "slug": "by-election",
+   "chapter": "elections",
+   "short": "An election to fill one House seat between federal elections.",
+   "more": "It is held if a member resigns, dies or is found to be ineligible. The Speaker issues the writ, and polling is on a Saturday.",
+   "facts": [
+    "by-election-def",
+    "by-election-speaker"
+   ],
+   "see_also": [
+    "casual-vacancy",
+    "writ"
+   ],
+   "sources": [
+    "aec-by-elections",
+    "peo-federal-elections"
+   ]
+  },
+  {
+   "term": "casual vacancy",
+   "slug": "casual-vacancy",
+   "chapter": "elections",
+   "short": "An empty Senate seat, when a senator leaves before their term ends.",
+   "more": "It is filled by someone from the same party. The parliament of that state or territory chooses them.",
+   "facts": [
+    "casual-vacancy-def",
+    "casual-vacancy-fill"
+   ],
+   "see_also": [
+    "by-election",
+    "senator"
+   ],
+   "sources": [
+    "peo-federal-elections"
+   ]
+  },
+  {
+   "term": "redistribution",
+   "slug": "redistribution",
+   "chapter": "elections",
+   "short": "Redrawing electorate lines so each has a similar number of voters.",
+   "more": "A redistribution can start when a state's number of seats changes, or seven years after the last one. Electorate names can only change during one.",
+   "facts": [
+    "redistribution-def",
+    "redistribution-triggers",
+    "electorate-names"
+   ],
+   "see_also": [
+    "electorate"
+   ],
+   "sources": [
+    "aec-redistribution-faq",
+    "peo-glossary"
+   ]
+  },
+  {
+   "term": "three levels of government",
+   "slug": "three-levels-of-government",
+   "chapter": "federal-and-state",
+   "short": "Federal, state and territory, and local government.",
+   "more": "Each level looks after different things, and sometimes their jobs overlap. There are over 550 local councils.",
+   "facts": [
+    "three-levels",
+    "levels-overlap",
+    "councils-550"
+   ],
+   "see_also": [
+    "federation",
+    "state-parliament"
+   ],
+   "sources": [
+    "peo-three-levels-responsibilities"
+   ]
+  },
+  {
+   "term": "federation",
+   "slug": "federation",
+   "chapter": "federal-and-state",
+   "short": "States joining to form one nation and giving some of their powers to a central government.",
+   "more": "Australia federated in 1901. The colonies became states and kept their own constitutions and parliaments.",
+   "facts": [
+    "federation-def",
+    "federation-1901"
+   ],
+   "see_also": [
+    "three-levels-of-government",
+    "exclusive-powers"
+   ],
+   "sources": [
+    "peo-glossary",
+    "peo-qon-state-territory"
+   ]
+  },
+  {
+   "term": "exclusive powers",
+   "slug": "exclusive-powers",
+   "chapter": "federal-and-state",
+   "short": "Law-making powers only the federal Parliament can use.",
+   "more": "Section 52 of the Constitution lists some, such as laws about the federal public service. Customs duties are another example.",
+   "facts": [
+    "exclusive-def",
+    "s52-example",
+    "customs-s90"
+   ],
+   "see_also": [
+    "concurrent-powers",
+    "residual-powers"
+   ],
+   "sources": [
+    "peo-qon-powers",
+    "peo-qon-s52"
+   ]
+  },
+  {
+   "term": "concurrent powers",
+   "slug": "concurrent-powers",
+   "chapter": "federal-and-state",
+   "short": "Law-making powers both the federal Parliament and the states can use.",
+   "more": "Examples include the environment, marriage and tax. If a state law clashes with a federal law, the federal law wins.",
+   "facts": [
+    "concurrent-def",
+    "concurrent-examples",
+    "s109-plain"
+   ],
+   "see_also": [
+    "exclusive-powers",
+    "section-109"
+   ],
+   "sources": [
+    "peo-qon-powers",
+    "peo-qon-state-change-federal"
+   ]
+  },
+  {
+   "term": "residual powers",
+   "slug": "residual-powers",
+   "chapter": "federal-and-state",
+   "short": "Powers the Constitution did not give the federal Parliament, so they stay with the states.",
+   "more": "Section 107 says the states keep the powers they had as colonies, unless the Constitution says otherwise. Schools and hospitals are examples.",
+   "facts": [
+    "residual-def",
+    "s107",
+    "state-areas"
+   ],
+   "see_also": [
+    "concurrent-powers",
+    "state-parliament"
+   ],
+   "sources": [
+    "peo-qon-powers",
+    "peo-qon-s52"
+   ]
+  },
+  {
+   "term": "section 109",
+   "slug": "section-109",
+   "chapter": "federal-and-state",
+   "short": "The part of the Constitution that says federal law wins when a state law clashes with it.",
+   "more": "The state law has no effect, but only for the part that clashes. The High Court decides disputes about who can make a law.",
+   "facts": [
+    "s109-text",
+    "s109-plain",
+    "high-court-decides"
+   ],
+   "see_also": [
+    "concurrent-powers",
+    "high-court"
+   ],
+   "sources": [
+    "constitution",
+    "peo-qon-state-change-federal"
+   ]
+  },
+  {
+   "term": "High Court",
+   "slug": "high-court",
+   "chapter": "federal-and-state",
+   "short": "The court that decides which parliament has the power to make a disputed law.",
+   "more": "If a law is challenged, the High Court decides whether the Constitution gave the state or federal parliament the power. That decides which law applies.",
+   "facts": [
+    "high-court-decides"
+   ],
+   "see_also": [
+    "section-109"
+   ],
+   "sources": [
+    "peo-qon-state-change-federal"
+   ]
+  },
+  {
+   "term": "state parliament",
+   "slug": "state-parliament",
+   "chapter": "federal-and-state",
+   "short": "The elected parliament that makes laws for one state.",
+   "more": "Each state has its own constitution, which sets out its parliament's powers. State laws apply within that state.",
+   "facts": [
+    "state-constitution",
+    "state-laws-within",
+    "state-parliaments-count"
+   ],
+   "see_also": [
+    "legislative-assembly",
+    "residual-powers"
+   ],
+   "example": {
+    "url": "https://opax.com.au/doc/division-nsw-la-2026-10-21-1",
+    "label": "A vote in the NSW Legislative Assembly"
+   },
+   "sources": [
+    "peo-qon-state-territory",
+    "peo-three-levels-video"
+   ]
+  },
+  {
+   "term": "legislative assembly",
+   "slug": "legislative-assembly",
+   "chapter": "federal-and-state",
+   "short": "The name of the parliament of each territory, set up by federal law.",
+   "more": "The federal Parliament created the NT and ACT legislative assemblies using section 122. It can override their laws, but rarely does.",
+   "facts": [
+    "s122-territories",
+    "territory-override"
+   ],
+   "see_also": [
+    "state-parliament"
+   ],
+   "sources": [
+    "peo-qon-state-territory"
+   ]
+  },
+  {
+   "term": "local council",
+   "slug": "local-council",
+   "chapter": "federal-and-state",
+   "short": "The local level of government, which looks after things like local roads, parks and rubbish.",
+   "more": "States and territories make laws to set up councils. The ACT has no councils; its Legislative Assembly does their job.",
+   "facts": [
+    "councils-created",
+    "council-jobs",
+    "act-no-councils"
+   ],
+   "see_also": [
+    "three-levels-of-government"
+   ],
+   "sources": [
+    "peo-three-levels-responsibilities",
+    "peo-three-levels-video"
+   ]
   }
  ]
 }

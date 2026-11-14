@@ -112,6 +112,167 @@
     "user_agent": "opax-improve-audit",
     "method": "GET"
    }
+  },
+  {
+   "id": "sitting-weeks",
+   "chapter": "watching-parliament",
+   "url": "https://opax.com.au/sitting",
+   "label": "Federal sitting weeks",
+   "look_at": "Which house sat each week, and the bills and divisions from that week.",
+   "facts": [
+    "opax-sitting-page"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:00:00+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "senate-video",
+   "chapter": "watching-parliament",
+   "url": "https://opax.com.au/video/senate",
+   "label": "Senate video",
+   "look_at": "The Senate's own videos of Question Time and first speeches.",
+   "facts": [
+    "opax-senate-video"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:00:03+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "senate-estimates",
+   "chapter": "watching-parliament",
+   "url": "https://opax.com.au/estimates",
+   "label": "Senate estimates",
+   "look_at": "Each round of hearings, with transcripts by committee and day.",
+   "facts": [
+    "opax-estimates-page"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:00:01+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "political-receipts",
+   "chapter": "money-and-interests",
+   "url": "https://opax.com.au/money/receipts",
+   "label": "Political receipts",
+   "look_at": "Disclosed receipts by source, party, industry and year.",
+   "facts": [
+    "opax-receipts-page"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:00:05+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "receipt-sources",
+   "chapter": "money-and-interests",
+   "url": "https://opax.com.au/subject/donor",
+   "label": "Receipt sources",
+   "look_at": "People and groups named in published returns, federal and state kept apart.",
+   "facts": [
+    "opax-receipt-sources"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:02:44+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "declared-interests",
+   "chapter": "money-and-interests",
+   "url": "https://opax.com.au/declared",
+   "label": "Declared interests",
+   "look_at": "The newest additions to and deletions from registers of interests.",
+   "facts": [
+    "opax-declared"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:00:04+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "electorates",
+   "chapter": "elections",
+   "url": "https://opax.com.au/subject/electorate",
+   "label": "Electorates",
+   "look_at": "Electorates, federal and state, with recorded representation and dated sources.",
+   "facts": [
+    "opax-electorates"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:00:11+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "coverage",
+   "chapter": "elections",
+   "url": "https://opax.com.au/stats",
+   "label": "Sources and coverage",
+   "look_at": "Which records OPAX holds, with years for each parliament.",
+   "facts": [
+    "opax-state-speeches",
+    "opax-notional"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:00:07+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "state-bills",
+   "chapter": "federal-and-state",
+   "url": "https://opax.com.au/register/state-bills",
+   "label": "State bills",
+   "look_at": "Bill registry entries from the Tasmanian and ACT parliaments.",
+   "facts": [
+    "opax-state-bills"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:00:08+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
+  },
+  {
+   "id": "nsw-division",
+   "chapter": "federal-and-state",
+   "url": "https://opax.com.au/doc/division-nsw-la-2026-10-21-1",
+   "label": "National Park Estate (Great Koala National Park Reservations) Bill 2026, NSW Legislative Assembly (21 Oct 2026)",
+   "look_at": "The house name at the top; 71 ayes to 13 noes.",
+   "facts": [
+    "ex-nsw-la-koala"
+   ],
+   "checked": {
+    "at": "2026-11-14T17:02:41+1100",
+    "status": 200,
+    "user_agent": "opax-improve-audit",
+    "method": "GET"
+   }
   }
  ]
 }
