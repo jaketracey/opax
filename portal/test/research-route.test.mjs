@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {StreamingResearchModel as MockLanguageModelV4} from './fixtures/research-scripted-model.mjs';
+import {scriptedResearchModel,StreamingResearchModel as MockLanguageModelV4} from './fixtures/research-scripted-model.mjs';
 import {loadWorker,offline} from './worker-harness.mjs';
 import {decodeAnswer,AskStream} from './fixtures/research-app-decoders.mjs';
 import {budgetDatabase} from './fixtures/research-budget.mjs';
@@ -9,7 +9,8 @@ import {answerStyleChecks} from '../../scripts/research_eval_grade.mjs';
 import {timingSafeEqual} from 'node:crypto';
 const restore=offline(),pending=[],logs=[],ctx={waitUntil:p=>pending.push(p),passThroughOnException(){}};
 const plugin={name:'fake-openrouter-only',setup(b){b.onResolve({filter:/^@openrouter\/ai-sdk-provider$/},()=>({path:'fake',namespace:'research-test'}));b.onLoad({filter:/.*/,namespace:'research-test'},()=>({contents:'export const createOpenRouter=()=>()=>globalThis.__researchModel;',loader:'js'}));}};
-const h=await loadWorker(new URL('../src/index.ts',import.meta.url).pathname,new URL('../public',import.meta.url).pathname,ctx,{plugins:[plugin]});
+const deadlinePlugin={name:'short-offline-deadline',setup(b){b.onLoad({filter:/\/ask-deadline\.ts$/},args=>({contents:readFileSync(args.path,'utf8').replace('this.timer = setTimeout(() => this.cancel(), ms)','this.timer = setTimeout(() => this.cancel(), (globalThis as typeof globalThis & {__askTestDeadlineMs?:number}).__askTestDeadlineMs ?? ms)'),loader:'ts'}))}};
+const h=await loadWorker(new URL('../src/index.ts',import.meta.url).pathname,new URL('../public',import.meta.url).pathname,ctx,{plugins:[plugin,deadlinePlugin]});
 const id='a'.repeat(32)+'/t/body/0-90',resource=id.split('/')[0],text='The committee called for stronger housing affordability safeguards.',countArgs={topic:'gambling',state:'nsw',group_by:'speaker'};
 const call=(toolName,args,toolCallId='fake')=>({type:'tool-call',toolName,toolCallId,input:JSON.stringify(args)});
 const reply=calls=>({content:calls,finishReason:{unified:'tool-calls',raw:'tool_calls'},usage:{inputTokens:{total:10,noCache:10,cacheRead:0,cacheWrite:0},outputTokens:{total:5,text:5,reasoning:0}},providerMetadata:{openrouter:{usage:{cost:(10*0.66+5*1.98)/1e6}}},warnings:[]});
@@ -331,6 +332,27 @@ test('three receipt follow-ups use fresh tool fields with the iOS author/text co
   }
  }}finally{h.env.ASSETS=originalAssets;globalThis.fetch=originalFetch}
 })
+
+for(const released of [true,false])test(`request deadline ${released?'after':'before'} released text ${released?'completes the checked prefix':'retains the terminal error'}`,async t=>{
+ h.env.RESEARCH_LOOP='route';globalThis.__askTestDeadlineMs=200;
+ const previousFetch=globalThis.fetch;
+ if(!released)globalThis.fetch=(input,init)=>new URL(input).pathname.endsWith('/ask')?new Promise((_,reject)=>{const stop=()=>reject(init.signal.reason);init.signal.addEventListener('abort',stop,{once:true});if(init.signal.aborted)stop()}):previousFetch(input,init);
+ t.mock.method(console,'error',()=>{});
+ let open;const gate=new Promise(r=>open=r);let rawModel='';
+ const first='The housing report found planning rules slowed approvals.',second='The housing report recommended simpler planning rules.';
+ const model=scriptedResearchModel([{tool_calls:[{name:'search',id:'lookup',args:{query:'housing report'}}]},{tool_calls:[{name:'answer',id:'answer',args:{points:[{claim:first},{claim:second}]}}]}],{onPiece:async piece=>{rawModel+=piece;if(rawModel.includes(released?'recommended':'points'))await gate}});
+ globalThis.__researchModel=model;
+ try{
+  const response=await post('What did the housing report find?',true),raw=await response.text();
+  if(released){
+   assert.doesNotMatch(raw,/event: error/);
+   const done=decodeStream(raw);assert.ok(done.answer.startsWith(first));assert.match(done.answer,/The answer was cut short because it reached the time limit\./);
+   const events=raw.trim().split(/\n\n/).map(block=>({event:/^event: (.+)$/m.exec(block)?.[1],data:JSON.parse(/^data: (.+)$/m.exec(block)[1])}));
+   assert.equal(events.filter(e=>e.event==='delta').map(e=>e.data.text).join(''),done.answer);
+  }else{assert.match(raw,/event: error/);assert.doesNotMatch(raw,/event: done|event: delta/)}
+  assert.equal(model.calls.length,2);
+ }finally{open();globalThis.fetch=previousFetch;delete globalThis.__askTestDeadlineMs;await flush()}
+});
 
 test('402 override falls back at once, logs research_credit_exhausted, and short-circuits the next loop',async()=>{
  const fake=new MockLanguageModelV4({doGenerate:()=>{throw Object.assign(Error('private provider credit error'),{statusCode:402})}});globalThis.__researchModel=fake;

@@ -228,7 +228,7 @@ export function checkedAnswerPayload(payload:Record<string,unknown>,question?:st
     payload=ensure(payload)
     if(!question||calculatedPayAnswer(payload))return displayAnswerPayload(ensure(plainAnswerPayload(payload)))
     const prepared=protectedDecision(payload)?payload:normaliseWrittenPayload(payload,question)
-    return displayAnswerPayload(ensure(normaliseCoveragePayload(groundAnswerPayload(prepared,question,fixedPrefix),question)))
+    return displayAnswerPayload(ensure(normaliseCoveragePayload(groundAnswerPayload(prepared,question,fixedPrefix,partial),question)))
 }
 
 export async function withResearchEval(response: Response, usage: () => ReturnType<typeof researchEvalUsage> & { model?: string }): Promise<Response> {
@@ -250,9 +250,11 @@ async function mapResearchResponse(response: Response, augment: (payload: Record
   let pending = ''
   const deltas:string[]=[]
   let deltaText='',replayable=true
-  let researchSentences=false, released='',completed=false
+  let researchSentences=false, released='',completed=false,retries=0
+  const reset=()=>{released='';deltaText='';deltas.length=0;replayable=true;retries++}
   const frame = (value: string,separator='\n\n') => {
     if(completed)return ''
+    if(/^event: retry$/m.test(value)){reset();return value}
     // These private events are produced only by the research sentence checker. They never reach a client.
     if(validateBeforeText&&/^event: research_sentences$/m.test(value)){researchSentences=true;return ''}
     if(validateBeforeText&&/^event: research_sentence$/m.test(value)){
@@ -278,13 +280,15 @@ async function mapResearchResponse(response: Response, augment: (payload: Record
       if(researchSentences){
         const mismatch=typeof checked.answer!=='string'||!checked.answer.startsWith(released)
         if(mismatch){
-          console.log(JSON.stringify({kind:'research_loop_stream_reset',reason:'checked_prefix_changed',released_chars:released.length,answer_chars:typeof checked.answer==='string'?checked.answer.length:0}))
+          console.log(JSON.stringify({kind:'research_loop_stream_reset',reason:'checked_prefix_changed',count:1,released_chars:released.length,answer_chars:typeof checked.answer==='string'?checked.answer.length:0}))
           tail='event: retry\ndata: '+JSON.stringify({reason:'checked_prefix_changed'})+separator
+          reset()
         }
         const text=typeof checked.answer==='string'?checked.answer.slice(mismatch?0:released.length):''
         if(text)tail+='event: delta\ndata: '+JSON.stringify({text})+separator
       }
       unchanged=typeof original.answer==='string'&&checked.answer===original.answer&&deltaText===checked.answer
+      if(validateBeforeText&&researchSentences)console.log(JSON.stringify({kind:'research_loop_stream_complete',count:1,retries,preview_chars:released.length,answer_chars:typeof checked.answer==='string'?checked.answer.length:0}))
       return 'data: '+JSON.stringify(checked)
     })
     const safe=!researchSentences&&replayUnchangedDeltas&&replayable&&unchanged?deltas.join(''):''

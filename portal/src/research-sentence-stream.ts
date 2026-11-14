@@ -6,6 +6,22 @@ import { ACCOUNTABILITY_QUESTION, authorityLeadMayMove, settledAuthorityFinding,
 import type { QualitativeAnswer } from './research-types'
 import { protectedDecision } from './research-coherence.mjs'
 
+/** A checkpoint contains only text already checked, with citation ranges clipped to that prefix. */
+export function researchPrefix(payload:QualitativeAnswer,answer:string):QualitativeAnswer {
+  if(answer===payload.answer)return payload
+  const end=Array.from(answer).length
+  const citations:QualitativeAnswer['citations']=Object.fromEntries(Object.entries(payload.citations).flatMap(([id,ranges])=>{
+    const kept=ranges.flatMap(([a,b]):[number,number][]=>a<end?[[a,Math.min(b,end)]]:[])
+    return kept.length?[[id,kept]]:[]
+  }))
+  return {...payload,answer,citations,sources:payload.sources.map(s=>({...s,cited:Object.keys(citations).some(id=>id===s.resource||id.startsWith(s.resource+'/'))}))}
+}
+
+export function interruptedResearchAnswer(payload:QualitativeAnswer,answer:string) {
+  return {...researchPrefix(payload,answer),answered:true,answer_decision:'answer' as const,
+    answer:answer+'\n\nThe answer was cut short because it reached the time limit.'}
+}
+
 /** An incomplete/ambiguous boundary stays in the tail. In particular, the next token can turn a final full stop
  * into a decimal, initial or abbreviation. A complete structured sentence record supplies that lookahead. */
 export function completeSentences(text: string): boolean {
@@ -25,15 +41,14 @@ export function stableResearchLead(payload: Record<string, unknown>, question: s
 }
 
 /** All state belongs to this response. The wire sees only checked text, never draft JSON or provider tokens. */
-export function researchSentenceStream(question: string, send: (text: string) => Promise<void>) {
+export function researchSentenceStream(question: string, send: (text: string,checked:QualitativeAnswer) => Promise<void>) {
   let released = ''
   let closed = false
   return {
     async preview(payload: QualitativeAnswer, accept?: (checked:QualitativeAnswer)=>boolean) {
       if (closed || !payload.answer.trim() || !completeSentences(payload.answer) || protectedDecision(payload)) return
       const movingOpening=ACCOUNTABILITY_QUESTION.test(question)&&authorityLeadMayMove(payload)
-      // Overview completion can add excerpts from source cards that the last point has not selected yet.
-      if(payload.answer_scope?.people?.length===1&&/^what\b.*\b(?:said|say|spoken)\b/i.test(question))return
+      // Overview excerpts are append-only and stay in the final tail; partial grounding checks the model points.
       // One grounding pass per new sentence record. Once released, the lead is fixed for later shaping.
       const checked = checkedAnswerPayload({ ...payload, research: { ...(payload as unknown as {research?:object}).research, mode: 'loop' } }, question,true,released)
       if (!String(checked.answer??'').trim() || !released&&!stableResearchLead(checked, question)) return
@@ -42,15 +57,7 @@ export function researchSentenceStream(question: string, send: (text: string) =>
       const answer = movingOpening?researchSentences(String(checked.answer??''))[0].text:String(checked.answer ?? '')
       if (!answer.startsWith(released)) return // retain the affected tail until the whole-answer decision is made
       const {research:_internal,...emitted}=checked
-      const result={...emitted,answer} as unknown as QualitativeAnswer
-      if(answer!==checked.answer){
-        const end=Array.from(answer).length
-        result.citations=Object.fromEntries(Object.entries(result.citations).flatMap(([id,ranges])=>{
-          const kept=ranges.flatMap(([a,b]):[number,number][]=>a<end?[[a,Math.min(b,end)]]:[])
-          return kept.length?[[id,kept]]:[]
-        }))
-        result.sources=result.sources.map(s=>({...s,cited:Object.keys(result.citations).some(id=>id===s.resource||id.startsWith(s.resource+'/'))}))
-      }
+      const result=researchPrefix(emitted as unknown as QualitativeAnswer,answer)
       if(accept&&!accept(result))return
       const next = answer.slice(released.length)
       if (next) {
@@ -58,7 +65,7 @@ export function researchSentenceStream(question: string, send: (text: string) =>
         for(const part of researchSentences(next)){
           if(closed)return
           const end=part.at+part.text.length
-          await send(next.slice(cursor,end));cursor=end
+          await send(next.slice(cursor,end),researchPrefix(result,answer.slice(0,released.length+end)));cursor=end
         }
         released = answer
         return result

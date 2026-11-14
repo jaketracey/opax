@@ -33,6 +33,7 @@ import { ResearchError, researchSources, type Research, type ResearchPayload, ty
 
 import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION } from './research-writing'
 import { leadWithModelAnswer } from './research-answer-shape'
+import { researchPreviewGuard } from './research-generation'
 
 export const AGENTIC_PROMPT_VERSION = `agentic-ask-11-topic-scope/${ANSWER_WRITING_VERSION}`
 export const AGENTIC_BUDGET_MS = ASK_HARD_WALL_MS
@@ -669,11 +670,14 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const input={question,period,facts:sheet,constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined}}
     const combine=(written:QualitativeAnswer)=>run.passage_answer?leadWithModelAnswer(appendWrittenPoints(written,run.passage_answer) as unknown as Record<string,unknown>,run.passage_answer,question) as unknown as QualitativeAnswer:written
     let active=true,checkedPartial:QualitativeAnswer|undefined
+    const previewCheck=researchPreviewGuard('compose')
     const preview:import('./research-types').AnswerPreview|undefined=lookup||!progress.answer?undefined:async(written,accept)=>{
       if(!active)return
-      const checked=await progress.answer!(combine(written),accept)
-      if(checked)checkedPartial=checked
-      return checked
+      return previewCheck(async()=>{
+        const checked=await progress.answer!(combine(written),accept)
+        if(checked)checkedPartial=checked
+        return checked
+      })
     }
     const writingMs=Math.max(0,Math.min(8000,Math.min(budgetMs, deps.research.writingWallMs ?? budgetMs)-(Date.now()-started)))
     const written = await bounded(signal=>deps.research!.write!(input,stats,signal,writingMs,preview),writingMs,deps.signal).catch(()=>checkedPartial??proseFallback(input)).finally(()=>{active=false})

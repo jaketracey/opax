@@ -259,7 +259,7 @@ test('a prefix mismatch logs a count and sends retry, full checked delta and don
   assert.deepEqual(events.map(e=>e.event),['delta','retry','delta','done'])
   assert.equal(events.at(-2).data.text,events.at(-1).data.answer)
   assert.equal(events.at(-1).data.answer,full)
-  assert.deepEqual(logs,[{kind:'research_loop_stream_reset',reason:'checked_prefix_changed',released_chars:first.length,answer_chars:full.length}])
+  assert.deepEqual(logs,[{kind:'research_loop_stream_reset',reason:'checked_prefix_changed',count:1,released_chars:first.length,answer_chars:full.length},{kind:'research_loop_stream_complete',count:1,retries:1,preview_chars:0,answer_chars:full.length}])
   const deltas=[],stream=api.researchSentenceStream(question,async text=>deltas.push(text))
   stream.close();await stream.preview(payload(first));assert.deepEqual(deltas,[])
 })
@@ -273,14 +273,21 @@ test('authority on-topic hold keeps an unrelated finding private until the reque
   assert.equal(deltas.join(''),finding)
 })
 
-test('person overview stays held until its complete source list can supply excerpts',async()=>{
+test('person overview streams its checked points while only appended source excerpts stay held',async()=>{
   const deltas=[],q='What has Jane Example said about housing?',stream=api.researchSentenceStream(q,async text=>deltas.push(text))
-  const text='Jane Example called for simpler housing approvals.'
-  await stream.preview({...payload(text),answer_scope:{people:['Jane Example']}})
-  assert.deepEqual(deltas,[])
-  const control=api.researchSentenceStream(q,async text=>deltas.push(text))
-  await control.preview(payload(text))
-  assert.equal(deltas.join(''),text,'the person-scope guard is the reason this otherwise stable sentence stayed held')
+  const first='Jane Example called for simpler housing approvals.',second='Jane Example also called for more public housing.'
+  const sources=[source('one',first,{kind:'speech',speaker:'Jane Example',slug:'speech-1',date:'2024-02-01'}),source('two','Jane Example said housing approvals need better planning.',{kind:'speech',speaker:'Jane Example',slug:'speech-2',date:'2024-03-01',cited:false})]
+  const one={...payload(first,sources,{'one/t/body/0':[[0,first.length]]}),answer_scope:{people:['Jane Example']}}
+  await stream.preview(one)
+  assert.equal(deltas.join(''),first)
+  const full={...one,answer:first+'\n'+second,research:{mode:'loop'}}
+  await stream.preview(full)
+  assert.equal(deltas.join(''),full.answer,'source excerpts must not be inserted before the remaining model points')
+  const wire=frame('research_sentences',{})+deltas.map(text=>frame('research_sentence',{text})).join('')+frame('done',full)
+  const events=decode(await(await api.withAnswerLanguage(new Response(wire,{headers:{'content-type':'text/event-stream'}}),q)).text())
+  assert.equal(events.some(e=>e.event==='retry'),false)
+  assert.equal(events.filter(e=>e.event==='delta').map(e=>e.data.text).join(''),events.at(-1).data.answer)
+  assert.ok(events.at(-1).data.answer.includes('On 1 March 2024, Jane Example said'))
 })
 
 test('receipt and required-headline drafts stay held, and provider failure retains the old facts fallback',async()=>{
@@ -326,4 +333,93 @@ test('P1-3: the outer writer deadline retains its checked prefix and blocks deta
   assert.equal(run.answer,first)
   await late()
   assert.deepEqual(deltas,[first])
+})
+
+test('eligible loop points stream before the answer arguments finish, with no extra model turn',async()=>{
+  const first='The housing report found planning rules slowed approvals.',second='The report recommended simpler planning rules.'
+  const gate=deferred(),heard=deferred(),deltas=[]
+  let raw=''
+  const model=scriptedResearchModel([{tool_calls:[call('search',{query:'housing report'},'search')]},{tool_calls:[call('answer',{points:[{claim:first},{claim:second}]},'answer')]}],{
+    onPiece:async piece=>{raw+=piece;if(raw.includes('recommended'))await gate.promise},
+  })
+  const progress=async()=>{},stream=api.researchSentenceStream(question,async text=>{deltas.push(text);heard.resolve()})
+  progress.answer=stream.preview
+  const research=Object.assign(api.createResearch(budgetOptions(model)),{write:undefined})
+  const running=api.runAgentic(question,{asset:async()=>null,kb:async()=>({resources:{},fulltext:{total:0,facets:{}}}),generate:async()=>{throw Error('planner must not run')},research},progress,40_000,api.inferPeriod(question),{},emptyScope)
+  try{
+    await Promise.race([heard.promise,new Promise((_,reject)=>setTimeout(()=>reject(Error('loop points stayed held until acceptance')),1000))])
+    assert.equal(deltas.join(''),first)
+  }finally{gate.resolve()}
+  const run=await running
+  assert.equal(model.calls.length,2)
+  assert.equal(api.checkedAnswerPayload({...run.qualitative,research:{mode:'loop'}},question,false,stream.released).answer,deltas.join(''))
+})
+
+const threeSentences=['The housing report found planning rules slowed approvals.','The report recommended simpler planning rules.','The report also said councils needed more staff to process applications.']
+test('writer check exceptions on the first or second preview stop previews, while all three sentences finish',async t=>{
+  const logs=[];t.mock.method(console,'log',v=>logs.push(JSON.parse(v)))
+  const input={question,period:{kind:'all',label:''},facts:[{id:1,text:threeSentences.join(' '),source:source('housing',threeSentences.join(' '))}]}
+  const script=[{text:{answer_decision:'answer',sentences:threeSentences.map(text=>({text,facts:[1]}))}}]
+  const baseline=await api.createAnswerWriter(budgetOptions(scriptedResearchModel(script)))(input,{rounds:1,tokens:{input:0,output:0}},undefined,8000)
+  for(const throwAt of [1,2]){
+    let checks=0
+    const model=scriptedResearchModel(script),stream=api.researchSentenceStream(question,async()=>{})
+    const preview=async(p,accept)=>{if(++checks===throwAt)throw TypeError('partial check failed');return stream.preview(p,accept)}
+    const out=await api.createAnswerWriter(budgetOptions(model))(input,{rounds:1,tokens:{input:0,output:0}},undefined,8000,preview)
+    assert.equal(out.answer,baseline.answer)
+    assert.equal(out.coherence?.fallback,undefined)
+    assert.equal(checks,throwAt)
+    assert.equal(model.calls.length,1)
+  }
+  assert.deepEqual(logs,[1,2].map(()=>({kind:'research_loop_preview_error',stage:'writer',count:1})))
+})
+
+test('loop check exceptions on the first or second preview cannot reject the answer or pay the planner',async t=>{
+  const logs=[];t.mock.method(console,'log',v=>logs.push(JSON.parse(v)))
+  for(const throwAt of [1,2]){
+    let checks=0,plans=0
+    const model=scriptedResearchModel([{tool_calls:[call('search',{query:'housing report'},'search')]},{tool_calls:[call('answer',{points:threeSentences.map(claim=>({claim}))},'answer')]}],{tokensPerSecond:400})
+    const stream=api.researchSentenceStream(question,async()=>{}),progress=async()=>{}
+    progress.answer=async p=>{if(++checks===throwAt)throw TypeError('partial check failed');return stream.preview(p)}
+    const research=Object.assign(api.createResearch(budgetOptions(model)),{write:undefined})
+    const run=await api.runAgentic(question,{asset:async()=>null,kb:async()=>({resources:{},fulltext:{total:0,facets:{}}}),generate:async()=>{plans++;throw Error('planner must not run')},research},progress,40_000,api.inferPeriod(question),{},emptyScope)
+    assert.equal(checks,throwAt)
+    assert.equal(plans,0)
+    assert.equal(model.calls.length,2)
+    assert.equal(run.research.mode,'loop')
+    assert.equal(run.research_failure,undefined)
+    for(const sentence of threeSentences)assert.ok(run.answer.includes(sentence))
+  }
+  assert.deepEqual(logs,[1,2].map(()=>({kind:'research_loop_preview_error',stage:'loop',count:1})))
+})
+
+test('composed writer preview exceptions cannot interrupt writeRun or change its completed answer',async t=>{
+  const logs=[];t.mock.method(console,'log',v=>logs.push(JSON.parse(v)))
+  const full=payload(threeSentences.join('\n\n'),[source('housing',threeSentences.join(' '))])
+  for(const throwAt of [1,2]){
+    let checks=0
+    const progress=async()=>{}
+    progress.answer=async p=>{if(++checks===throwAt)throw TypeError('partial check failed');return p}
+    const research=Object.assign(async()=>({rounds:1,steps:[],results:[],selected:[],tokens:{input:0,output:0},qualitative:full}),{
+      writingWallMs:8000,write:async(_input,_stats,_signal,_ms,preview)=>{
+        for(let i=1;i<=3;i++)await preview({...full,answer:threeSentences.slice(0,i).join('\n\n')})
+        return full
+      },
+    })
+    const run=await api.runAgentic(question,{asset:async()=>null,kb:async()=>({}),generate:async()=>{throw Error('planner must not run')},research},progress,40_000,api.inferPeriod(question),{},emptyScope)
+    assert.equal(checks,throwAt)
+    assert.equal(run.answer,full.answer)
+  }
+  assert.deepEqual(logs,[1,2].map(()=>({kind:'research_loop_preview_error',stage:'compose',count:1})))
+})
+
+test('planner retry clears the released prefix and held deltas before its checked completion',async t=>{
+  const logs=[];t.mock.method(console,'log',v=>logs.push(JSON.parse(v)))
+  const first='The housing report found planning rules slowed approvals.',final='The housing report recommended simpler planning rules.'
+  const wire=frame('research_sentences',{})+frame('research_sentence',{text:first})+frame('delta',{text:'Discarded planner attempt.'})+frame('retry',{reason:'slow'})+frame('delta',{text:final})+frame('done',payload(final))
+  const events=decode(await(await api.withAnswerLanguage(new Response(wire,{headers:{'content-type':'text/event-stream'}}),question)).text())
+  assert.deepEqual(events.map(e=>e.event),['delta','retry','delta','done'])
+  assert.equal(events.at(-2).data.text,final)
+  assert.equal(events.at(-1).data.answer,final)
+  assert.deepEqual(logs,[{kind:'research_loop_stream_complete',count:1,retries:1,preview_chars:0,answer_chars:final.length}])
 })

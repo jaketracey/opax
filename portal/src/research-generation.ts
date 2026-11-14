@@ -1,5 +1,18 @@
 import { generateText, streamText, type TextStreamPart, type ToolSet } from 'ai'
 
+/** Preview is optional work. A broken check disables this answer's previews, never its generation or accounting. */
+export function researchPreviewGuard(stage:'loop'|'writer'|'compose') {
+  let disabled=false
+  return async <T>(work:()=>T|Promise<T>):Promise<T|undefined>=>{
+    if(disabled)return
+    try{return await work()}
+    catch{
+      disabled=true
+      console.log(JSON.stringify({kind:'research_loop_preview_error',stage,count:1}))
+    }
+  }
+}
+
 /** Keep the same SDK orchestration, admission and accounting on JSON and SSE requests. */
 export async function generateResearchText(options: Parameters<typeof generateText>[0], observe?: (chunk: TextStreamPart<ToolSet>) => Promise<void>) {
   if (!observe) return generateText(options)

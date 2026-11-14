@@ -79,10 +79,10 @@ const ask=async(fixture,stream)=>{
     const started=performance.now()
     const response=await h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json','x-opax-nocache':'1'},body:JSON.stringify({question:fixture.question,...fixture.input})})
     let raw='',firstTextMs
-    const deltas=[]
+    const deltas=[],dlog=[]
     let resets=0
     if(stream){
-      const decoder=new TextDecoder(),parser=new AskStream({stage(){},retry(){deltas.length=0;resets++},delta(text){deltas.push(text);firstTextMs??=performance.now()-started}})
+      const decoder=new TextDecoder(),parser=new AskStream({stage(){},retry(){deltas.length=0;dlog.length=0;resets++},delta(text){const at=performance.now()-started;deltas.push(text);dlog.push({t:at,n:text.length});firstTextMs??=at}})
       for await(const chunk of response.body){const text=decoder.decode(chunk,{stream:true});raw+=text;parser.push(text)}
       const tail=decoder.decode();raw+=tail;parser.push(tail,true)
       const done=parser.result()
@@ -90,7 +90,13 @@ const ask=async(fixture,stream)=>{
       if(done.answer)firstTextMs??=doneMs
       if(!process.env.ASK_REPLAY_ENTRY&&!done.pay_answer && !response.headers.has('x-opax-identity-route'))assert.equal(deltas.join(''),done.answer,'done.answer equals the concatenated checked deltas byte for byte')
       assert.equal(resets,0,'the stored replay answers never need stream recovery')
-      measurements.push({id:fixture.id,resets,first_text_ms:Math.round(firstTextMs??0),done_ms:Math.round(doneMs),deltas:deltas.length,answer:done.answer})
+      if(!process.env.ASK_REPLAY_ENTRY&&!done.pay_answer&&!response.headers.has('x-opax-identity-route')){
+        const completed=logs.map(v=>JSON.parse(v)).filter(v=>v.kind==='research_loop_stream_complete')
+        assert.equal(completed.length,1,'one stream completion counter supplies the retry-rate denominator')
+        assert.equal(completed[0].retries,resets,'telemetry counts the retries the client actually saw')
+      }
+      const earlyChars=dlog.filter(d=>d.t<=doneMs-100).reduce((n,d)=>n+d.n,0)
+      measurements.push({id:fixture.id,resets,early_chars:earlyChars,early_fraction:earlyChars/done.answer.length,first_to_done_ms:Math.round(doneMs-(firstTextMs??doneMs)),dlog,first_text_ms:Math.round(firstTextMs??0),done_ms:Math.round(doneMs),deltas:deltas.length,answer:done.answer})
     }else raw=await response.text()
     while(pending.length)await Promise.all(pending.splice(0))
     return {response,raw,logs,model:globalThis.__researchModel,unserved:world.unserved}
@@ -100,6 +106,10 @@ const decodeStream=raw=>{const parser=new AskStream({stage(){},delta(){},retry()
 
 test.after(()=>{
   restore();daily.close()
+  if(!process.env.ASK_REPLAY_ENTRY&&Number(process.env.ASK_REPLAY_TOKENS_PER_SECOND)===40&&measurements.length===16){
+    const streamed=measurements.reduce((n,m)=>n+m.early_chars,0),total=measurements.reduce((n,m)=>n+m.answer.length,0)
+    assert.ok(streamed/total>=.3,'at least 30% of replay answer characters arrive 100 ms before done')
+  }
   if(process.env.ASK_REPLAY_RESULTS)writeFileSync(process.env.ASK_REPLAY_RESULTS,JSON.stringify(measurements,null,2)+'\n')
   if(process.env.ASK_REPLAY_TOKENS_PER_SECOND){const sorted=measurements.map(m=>m.first_text_ms).sort((a,b)=>a-b);realLog(JSON.stringify({cases:sorted.length,p50_ms:sorted[Math.ceil(sorted.length*.5)-1],p95_ms:sorted[Math.ceil(sorted.length*.95)-1]}))}
 })

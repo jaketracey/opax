@@ -1,4 +1,4 @@
-import { generateResearchText, answerEntryScanner } from './research-generation'
+import { generateResearchText, answerEntryScanner, researchPreviewGuard } from './research-generation'
 import {researchTrace} from './research-trace'
 import { reserveQuestionTurn, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS } from './ask-budgets'
 import { proseFallback, verifyWrittenAnswer, writingPrompt, draftWrittenAnswer, dedupeWritingFacts, type WritingInput } from './research-writing'
@@ -21,6 +21,7 @@ export function createAnswerWriter(options: ResearchOptions) {
     input=moneyWritingInput({...input,facts:dedupeWritingFacts(input.facts)})
     // Every check sees all the facts handed in, not just those a draft happened to cite.
     let releasedDraft:QualitativeAnswer|undefined
+    const previewCheck=researchPreviewGuard('writer')
     const found=input.facts.map(f=>({...f.source,snippet:f.text,...(f.coverage?{coverage:true}:{})}))
     // A chamber named for a cited speaker is the one their source records (ask-chamber-phrases.ts).
     const ground=(payload:QualitativeAnswer)=>{const {research:_found,...checked}=groundAnswerPayload({...withRecordedChambers(payload),research:{pre_writer_sources:found}},input.question,releasedDraft?.answer);return checked as unknown as QualitativeAnswer}
@@ -95,15 +96,17 @@ export function createAnswerWriter(options: ResearchOptions) {
         let observing=true
         const result=await Promise.race([generateResearchText({model:options.model,prompt:currentPrompt,maxRetries:0,maxOutputTokens:outputReserve,abortSignal:controller.signal},preview?async chunk=>{
           if(!observing||controller.signal.aborted||chunk.type!=='text-delta')return
-          const added=scanner.push(chunk.text)
-          if(!added.length)return
-          sentences.push(...added)
-          const checked=verifyWrittenAnswer({sentences},activeInput)
-          // A receipt's lending check and the required headline/vote split can replace the complete draft.
-          // Retain that affected tail until its decision is known; no weaker per-sentence variant is substituted.
-          if(!checked||input.facts.some(f=>f.source.receipt))return
-          const released=await preview({...withRecordedChambers(checked),research:{pre_writer_sources:found}} as QualitativeAnswer,keepsAll)
-          if(released)releasedDraft=released
+          await previewCheck(async()=>{
+            const added=scanner.push(chunk.text)
+            if(!added.length)return
+            sentences.push(...added)
+            const checked=verifyWrittenAnswer({sentences},activeInput)
+            // A receipt's lending check and the required headline/vote split can replace the complete draft.
+            // Retain that affected tail until its decision is known; no weaker per-sentence variant is substituted.
+            if(!checked||input.facts.some(f=>f.source.receipt))return
+            const released=await preview({...withRecordedChambers(checked),research:{pre_writer_sources:found}} as QualitativeAnswer,keepsAll)
+            if(released)releasedDraft=released
+          })
         }:undefined),stopped]).finally(()=>{observing=false})
         stats.usageUnknown=false
         const inputTokens=result.usage.inputTokens ?? inputReserve, outputTokens=result.usage.outputTokens ?? outputReserve

@@ -128,7 +128,7 @@ import { recordResearchAnswer, recordResearchComparison, recordResearchFailure }
 import { cachedKbLookup } from './kb-cache'
 import { ANSWER_WRITING_VERSION } from './research-writing'
 import { cacheableAskAnswer, cacheableRoutedAnswer, calculatedPayAnswer, withAnswerLanguage, withFallbackPeriod, withPlannerResearch, withResearchEval } from './research-response'
-import { researchSentenceStream } from './research-sentence-stream'
+import { researchSentenceStream, interruptedResearchAnswer } from './research-sentence-stream'
 import { groundAnswerPayload } from './research-grounding'
 import { researchDailyBudget, researchReservationUsd, unmeteredResearchBudget } from './research-budget'
 import { ResearchError, type ResearchPayload } from './research-types'
@@ -6944,6 +6944,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
       }
     }
     let releasedResearchPrefix=''
+    let releasedResearchAnswer:import('./research-types').QualitativeAnswer|undefined
     const finish = (run: AgenticPayload) => {
       const payload=agenticAskPayload(run, question)
       // Source rows are linked last: grounding reads the rows as evidence and re-derives which are cited.
@@ -6975,7 +6976,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
         let closeSentences=()=>{}
         const enableSentences=async()=>{if(!sentenceLane){sentenceLane=true;await send('research_sentences',{})}}
         if(loopRoute){
-          const sentences=researchSentenceStream(question,async text=>{await enableSentences();await send('research_sentence',{text});releasedResearchPrefix+=text})
+          const sentences=researchSentenceStream(question,async(text,checked)=>{await enableSentences();await send('research_sentence',{text});releasedResearchPrefix+=text;releasedResearchAnswer=checked})
           send.answer=sentences.preview
           closeSentences=sentences.close
         }
@@ -6985,6 +6986,7 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
             const run = await executeAgentic(input, env, ctx, send, budget.signal, budget.remaining, namedScope, trackRun)
             closeSentences()
             if (gone || request.signal.aborted) return
+            if(releasedResearchPrefix)budget.signal.throwIfAborted()
             if (!loopRoute || run.answered && !run.over_budget) budget.signal.throwIfAborted()
             if (electorateData || run.answered && !run.over_budget) { const response = finish(run); if(loopRoute)await enableSentences(); await send('done', await response.json()) }
             else {
@@ -6997,7 +6999,14 @@ async function apiAskRoutedCore(request: Request, url: URL, input: Record<string
               else await send('error', { error: 'The record is temporarily unavailable. Please try again.', final: true })
             }
           } catch {
-            if (!gone && !request.signal.aborted) controller.enqueue(encoder.encode('event: error\ndata: {"error":"The answer took too long. Please try again.","final":true}\n\n'))
+            closeSentences()
+            if (!gone && !request.signal.aborted){
+              if(budget.signal.aborted&&releasedResearchPrefix&&releasedResearchAnswer){
+                const partial=interruptedResearchAnswer(releasedResearchAnswer,releasedResearchPrefix)
+                const done={...partial,followups:[],research:lastResearch??{mode:'loop',rounds:0,trail:[],sources:[]}}
+                controller.enqueue(encoder.encode(`event: done\ndata: ${JSON.stringify(done)}\n\n`))
+              }else controller.enqueue(encoder.encode('event: error\ndata: {"error":"The answer took too long. Please try again.","final":true}\n\n'))
+            }
           } finally { closeSentences(); budget.cancel(); if (!gone) controller.close() }
         })())
       },
