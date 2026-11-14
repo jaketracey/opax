@@ -1,0 +1,484 @@
+{
+  "audit_commit": "7a93ad1d0",
+  "offline_input": "committed audit speech-days.csv and expected-days.csv; not the live database",
+  "through": "2026-11-13",
+  "query": "government, keyword, top_k=5; total is a bounded retrieval count, never a corpus census",
+  "known_hole_reports": [
+    "known, being filled: senate 2014-01-01 to 2018-12-31; lane im/hansard-gaps (repair plan A); Known, being filled: missing Senate historical acquisition. Keep visible without paging while the repair lane reconciles source days.",
+    "known, being filled: nsw_la,nsw_lc 2023-01-01 to 2024-10-31; lane im/hansard-gaps (repair plan N); Known, being filled: NSW 2023 to October 2024 acquisition hole. The expected state calendar is incomplete, so completion needs cached date evidence."
+  ],
+  "rows": [
+    {
+      "chamber": "representatives",
+      "year": 2014,
+      "module": {
+        "rows": 22201,
+        "speech_days": 76,
+        "expected_days": 76,
+        "expected_basis": [
+          "audit_cached_evidence_lower_bound"
+        ],
+        "known_holes": [],
+        "longest_zero_run": 0
+      },
+      "url": "https://opax.com.au/api/search?chamber=representatives&from=2014&to=2014&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:01.520968+00:00",
+      "http_status": 200,
+      "search_total": 5,
+      "search_truncated": true,
+      "dates": [
+        "2014-11-24",
+        "2014-11-24",
+        "2014-10-28",
+        "2014-12-04",
+        "2014-12-02"
+      ]
+    },
+    {
+      "chamber": "representatives",
+      "year": 2018,
+      "module": {
+        "rows": 16685,
+        "speech_days": 65,
+        "expected_days": 65,
+        "expected_basis": [
+          "audit_cached_evidence_lower_bound"
+        ],
+        "known_holes": [],
+        "longest_zero_run": 0
+      },
+      "url": "https://opax.com.au/api/search?chamber=representatives&from=2018&to=2018&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:04.214083+00:00",
+      "http_status": 200,
+      "search_total": 5,
+      "search_truncated": true,
+      "dates": [
+        "2018-10-25",
+        "2018-12-05",
+        "2018-02-13",
+        "2018-10-25",
+        "2018-10-24"
+      ]
+    },
+    {
+      "chamber": "representatives",
+      "year": 2024,
+      "module": {
+        "rows": 82,
+        "speech_days": 1,
+        "expected_days": 55,
+        "expected_basis": [
+          "audit_cached_evidence_lower_bound"
+        ],
+        "known_holes": [],
+        "longest_zero_run": 54
+      },
+      "url": "https://opax.com.au/api/search?chamber=representatives&from=2024&to=2024&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:06.013814+00:00",
+      "http_status": 200,
+      "search_total": 5,
+      "search_truncated": true,
+      "dates": [
+        "2024-05-30",
+        "2024-06-24",
+        "2024-07-04",
+        "2024-08-22",
+        "2024-09-10"
+      ]
+    },
+    {
+      "chamber": "representatives",
+      "year": 2026,
+      "module": {
+        "rows": 5028,
+        "speech_days": 56,
+        "expected_days": 64,
+        "expected_basis": [
+          "audit_cached_evidence_lower_bound"
+        ],
+        "known_holes": [],
+        "longest_zero_run": 8
+      },
+      "url": "https://opax.com.au/api/search?chamber=representatives&from=2026&to=2026&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:08.562987+00:00",
+      "http_status": 200,
+      "search_total": 5,
+      "search_truncated": true,
+      "dates": [
+        "2026-09-17",
+        "2026-09-16",
+        "2026-09-17",
+        "2026-09-14",
+        "2026-09-16"
+      ]
+    },
+    {
+      "chamber": "senate",
+      "year": 2013,
+      "module": {
+        "rows": 2323,
+        "speech_days": 37,
+        "expected_days": 37,
+        "expected_basis": [
+          "audit_cached_evidence_lower_bound"
+        ],
+        "known_holes": [],
+        "longest_zero_run": 0
+      },
+      "url": "https://opax.com.au/api/search?chamber=senate&from=2013&to=2013&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:11.221289+00:00",
+      "http_status": 200,
+      "search_total": 5,
+      "search_truncated": true,
+      "dates": [
+        "2013-03-14",
+        "2013-06-20",
+        "2013-03-20",
+        "2013-03-21",
+        "2013-02-06"
+      ]
+    },
+    {
+      "chamber": "senate",
+      "year": 2014,
+      "module": {
+        "rows": 0,
+        "speech_days": 0,
+        "expected_days": 57,
+        "expected_basis": [
+          "audit_cached_evidence_lower_bound"
+        ],
+        "known_holes": [
+          "senate-2014-2018"
+        ],
+        "longest_zero_run": 57
+      },
+      "url": "https://opax.com.au/api/search?chamber=senate&from=2014&to=2014&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:13.959585+00:00",
+      "http_status": 200,
+      "search_total": 0,
+      "search_truncated": false,
+      "dates": []
+    },
+    {
+      "chamber": "senate",
+      "year": 2015,
+      "module": {
+        "rows": 0,
+        "speech_days": 0,
+        "expected_days": 58,
+        "expected_basis": [
+          "audit_cached_evidence_lower_bound"
+        ],
+        "known_holes": [
+          "senate-2014-2018"
+        ],
+        "longest_zero_run": 58
+      },
+      "url": "https://opax.com.au/api/search?chamber=senate&from=2015&to=2015&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:15.156205+00:00",
+      "http_status": 200,
+      "search_total": 0,
+      "search_truncated": false,
+      "dates": []
+    },
+    {
+      "chamber": "senate",
+      "year": 2016,
+      "module": {
+        "rows": 0,
+        "speech_days": 0,
+        "expected_days": 39,
+        "expected_basis": [
+          "audit_cached_evidence_lower_bound"
+        ],
+        "known_holes": [
+          "senate-2014-2018"
+        ],
+        "longest_zero_run": 39
+      },
+      "url": "https://opax.com.au/api/search?chamber=senate&from=2016&to=2016&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:16.344306+00:00",
+      "http_status": 200,
+      "search_total": 0,
+      "search_truncated": false,
+      "dates": []
+    },
+    {
+      "chamber": "senate",
+      "year": 2017,
+      "module": {
+        "rows": 0,
+        "speech_days": 0,
+        "expected_days": 55,
+        "expected_basis": [
+          "audit_cached_evidence_lower_bound"
+        ],
+        "known_holes": [
+          "senate-2014-2018"
+        ],
+        "longest_zero_run": 55
+      },
+      "url": "https://opax.com.au/api/search?chamber=senate&from=2017&to=2017&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:17.523017+00:00",
+      "http_status": 200,
+      "search_total": 0,
+      "search_truncated": false,
+      "dates": []
+    },
+    {
+      "chamber": "senate",
+      "year": 2018,
+      "module": {
+        "rows": 0,
+        "speech_days": 0,
+        "expected_days": 55,
+        "expected_basis": [
+          "audit_cached_evidence_lower_bound"
+        ],
+        "known_holes": [
+          "senate-2014-2018"
+        ],
+        "longest_zero_run": 55
+      },
+      "url": "https://opax.com.au/api/search?chamber=senate&from=2018&to=2018&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:18.693928+00:00",
+      "http_status": 200,
+      "search_total": 0,
+      "search_truncated": false,
+      "dates": []
+    },
+    {
+      "chamber": "senate",
+      "year": 2026,
+      "module": {
+        "rows": 2961,
+        "speech_days": 45,
+        "expected_days": 49,
+        "expected_basis": [
+          "audit_cached_evidence_lower_bound"
+        ],
+        "known_holes": [],
+        "longest_zero_run": 4
+      },
+      "url": "https://opax.com.au/api/search?chamber=senate&from=2026&to=2026&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:19.827187+00:00",
+      "http_status": 200,
+      "search_total": 1,
+      "search_truncated": true,
+      "dates": [
+        "2026-09-15"
+      ]
+    },
+    {
+      "chamber": "nsw_la",
+      "year": 2022,
+      "module": {
+        "rows": 7885,
+        "speech_days": 36,
+        "expected_days": 36,
+        "expected_basis": [
+          "audit_cached_evidence_lower_bound"
+        ],
+        "known_holes": [],
+        "longest_zero_run": 0
+      },
+      "url": "https://opax.com.au/api/search?chamber=nsw_la&from=2022&to=2022&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:21.587242+00:00",
+      "http_status": 200,
+      "search_total": 5,
+      "search_truncated": true,
+      "dates": [
+        "2022-11-16",
+        "2022-02-15",
+        "2022-02-17",
+        "2022-06-22",
+        "2022-03-31"
+      ]
+    },
+    {
+      "chamber": "nsw_la",
+      "year": 2023,
+      "module": {
+        "rows": 0,
+        "speech_days": 0,
+        "expected_days": null,
+        "expected_basis": [],
+        "known_holes": [
+          "nsw-2023-oct2024"
+        ],
+        "longest_zero_run": null
+      },
+      "url": "https://opax.com.au/api/search?chamber=nsw_la&from=2023&to=2023&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:23.315308+00:00",
+      "http_status": 200,
+      "search_total": 0,
+      "search_truncated": false,
+      "dates": []
+    },
+    {
+      "chamber": "nsw_la",
+      "year": 2024,
+      "module": {
+        "rows": 174,
+        "speech_days": 1,
+        "expected_days": 1,
+        "expected_basis": [
+          "audit_cached_evidence_lower_bound"
+        ],
+        "known_holes": [
+          "nsw-2023-oct2024"
+        ],
+        "longest_zero_run": 0
+      },
+      "url": "https://opax.com.au/api/search?chamber=nsw_la&from=2024&to=2024&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:24.510838+00:00",
+      "http_status": 200,
+      "search_total": 5,
+      "search_truncated": true,
+      "dates": [
+        "2024-11-22",
+        "2024-11-22",
+        "2024-11-22",
+        "2024-11-22",
+        "2024-11-22"
+      ]
+    },
+    {
+      "chamber": "nsw_la",
+      "year": 2026,
+      "module": {
+        "rows": 10019,
+        "speech_days": 36,
+        "expected_days": 36,
+        "expected_basis": [
+          "audit_cached_evidence_lower_bound"
+        ],
+        "known_holes": [],
+        "longest_zero_run": 0
+      },
+      "url": "https://opax.com.au/api/search?chamber=nsw_la&from=2026&to=2026&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:26.340727+00:00",
+      "http_status": 200,
+      "search_total": 5,
+      "search_truncated": true,
+      "dates": [
+        "2026-05-05",
+        "2026-09-22",
+        "2026-02-05",
+        "2026-02-04",
+        "2026-02-03"
+      ]
+    },
+    {
+      "chamber": "nsw_lc",
+      "year": 2022,
+      "module": {
+        "rows": 4549,
+        "speech_days": 33,
+        "expected_days": 33,
+        "expected_basis": [
+          "audit_cached_evidence_lower_bound"
+        ],
+        "known_holes": [],
+        "longest_zero_run": 0
+      },
+      "url": "https://opax.com.au/api/search?chamber=nsw_lc&from=2022&to=2022&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:27.777963+00:00",
+      "http_status": 200,
+      "search_total": 5,
+      "search_truncated": true,
+      "dates": [
+        "2022-06-08",
+        "2022-06-08",
+        "2022-05-11",
+        "2022-06-22",
+        "2022-05-11"
+      ]
+    },
+    {
+      "chamber": "nsw_lc",
+      "year": 2023,
+      "module": {
+        "rows": 0,
+        "speech_days": 0,
+        "expected_days": null,
+        "expected_basis": [],
+        "known_holes": [
+          "nsw-2023-oct2024"
+        ],
+        "longest_zero_run": null
+      },
+      "url": "https://opax.com.au/api/search?chamber=nsw_lc&from=2023&to=2023&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:29.514757+00:00",
+      "http_status": 200,
+      "search_total": 0,
+      "search_truncated": false,
+      "dates": []
+    },
+    {
+      "chamber": "nsw_lc",
+      "year": 2024,
+      "module": {
+        "rows": 0,
+        "speech_days": 0,
+        "expected_days": null,
+        "expected_basis": [],
+        "known_holes": [
+          "nsw-2023-oct2024"
+        ],
+        "longest_zero_run": null
+      },
+      "url": "https://opax.com.au/api/search?chamber=nsw_lc&from=2024&to=2024&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:30.700650+00:00",
+      "http_status": 200,
+      "search_total": 0,
+      "search_truncated": false,
+      "dates": []
+    },
+    {
+      "chamber": "nsw_lc",
+      "year": 2026,
+      "module": {
+        "rows": 5408,
+        "speech_days": 33,
+        "expected_days": 33,
+        "expected_basis": [
+          "audit_cached_evidence_lower_bound"
+        ],
+        "known_holes": [],
+        "longest_zero_run": 0
+      },
+      "url": "https://opax.com.au/api/search?chamber=nsw_lc&from=2026&to=2026&q=government&mode=keyword&top_k=5",
+      "checked_at": "2026-11-14T00:18:31.886626+00:00",
+      "http_status": 200,
+      "search_total": 5,
+      "search_truncated": true,
+      "dates": [
+        "2026-02-03",
+        "2026-09-24",
+        "2026-06-02",
+        "2026-09-24",
+        "2026-09-24"
+      ]
+    }
+  ],
+  "nsw_assembly_2024_january_october": {
+    "url": "https://opax.com.au/api/search?chamber=nsw_la&from=2024&to=2024&since=2024-01-01&until=2024-10-31&q=government&mode=keyword&top_k=5",
+    "http_status": 200,
+    "search_total": 0,
+    "search_truncated": false,
+    "dates": []
+  },
+  "request_policy": {
+    "user_agent": "opax-improve-audit",
+    "method": "GET",
+    "host": "opax.com.au",
+    "interval_seconds": 1.05,
+    "redirects": false,
+    "retries": false,
+    "recorded_unique_requests": 20,
+    "total_requests": 21,
+    "extra_request": "Initial Senate 2018 probe repeated by the serial table run; HTTP 200, total 0."
+  }
+}
