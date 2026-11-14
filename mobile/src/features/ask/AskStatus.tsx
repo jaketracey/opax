@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   AccessibilityInfo,
   ActivityIndicator,
@@ -61,57 +61,92 @@ export function useHeldLine(text: string, interval: number) {
   return line;
 }
 
-/** Kept at screen scope so a pending final writing announcement survives
- * the answer arriving. A null stage never replaces the latest pending stage. */
-export function useAskStageAnnouncement(stage: AskStage | null) {
+/**
+ * The stage spoken at most every two seconds, kept at screen scope. A pending
+ * stage is dropped, never spoken late, when the answer ends (the answer's
+ * own announcement follows) and when `drop` is called: the tail row under
+ * the streamed text has taken VoiceOver's focus and reads the same words.
+ */
+export function useAskStageAnnouncer(
+  stage: AskStage | null,
+  /** False once streamed text has replaced the status row. */
+  rowShown = stage !== null,
+) {
   const [announced, setAnnounced] = useState<AskStage>('Reading your question');
-  const active = useRef(false);
+  const row = useRef(false);
+  useEffect(() => {
+    row.current = rowShown;
+  }, [rowShown]);
   const last = useRef<string | null>(null);
   const at = useRef(-Infinity);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => {
-    active.current = stage !== null;
-    if (!stage) return;
+  const waiting = useRef<AskStage | null>(null);
+  const cancel = useCallback(() => {
     if (timer.current !== null) clearTimeout(timer.current);
-    if (stage === last.current) return;
+    timer.current = null;
+    const stage = waiting.current;
+    waiting.current = null;
+    return stage;
+  }, []);
+  useEffect(() => {
+    cancel();
+    if (!stage || stage === last.current) return;
+    waiting.current = stage;
     timer.current = setTimeout(
       () => {
+        timer.current = null;
+        waiting.current = null;
         last.current = stage;
         at.current = Date.now();
         setAnnounced(stage);
-        // Android uses the row's live region while it exists. If the answer
-        // has already landed, deliver the pending final stage explicitly.
-        if (Platform.OS === 'ios' || !active.current)
+        // Android uses the row's live region while the row is there. Once
+        // the answer's first text has taken its place, the pending stage is
+        // spoken explicitly, as on iOS.
+        if (Platform.OS === 'ios' || !row.current)
           AccessibilityInfo.announceForAccessibilityWithOptions(stage, {
             queue: true,
           });
       },
       Math.max(0, STAGE_ANNOUNCEMENT_MS - (Date.now() - at.current)),
     );
-  }, [stage]);
+  }, [stage, cancel]);
   useEffect(
     () => () => {
-      if (timer.current !== null) clearTimeout(timer.current);
+      cancel();
     },
-    [],
+    [cancel],
   );
-  return announced;
+  /** Counts the pending stage as said, so the row's label stays current. */
+  const drop = useCallback(() => {
+    const stage = cancel();
+    if (!stage) return;
+    last.current = stage;
+    setAnnounced(stage);
+  }, [cancel]);
+  return { announcement: announced, drop };
 }
+export const useAskStageAnnouncement = (
+  stage: AskStage | null,
+  rowShown?: boolean,
+) => useAskStageAnnouncer(stage, rowShown).announcement;
 
 export function AskStatus({
   stage,
   steps,
   announcement,
+  onTookFocus,
 }: {
   stage: AskStage | null;
   steps: readonly AskStep[];
   announcement: string;
+  /** This row took the send's request for VoiceOver focus. */
+  onTookFocus?: () => void;
 }) {
   const stacked = useAccessibilitySize();
   const reduceMotion = useReduceMotionSetting() !== false;
   // A tapped question that asks at once (`askNow`) lands here, not on the
   // composer.
-  const focusView = useAccessibilityFocusRequest('ask-status');
+  const focusView = useAccessibilityFocusRequest('ask-status', onTookFocus);
   const { current, previous, version } = useHeldLine(
     askStatusText(stage, steps),
     STATUS_HOLD_MS,
@@ -147,6 +182,7 @@ export function AskStatus({
       ref={focusView}
       accessible
       accessibilityLabel={announcement}
+      accessibilityState={{ busy: true }}
       accessibilityLanguage="en-AU"
       accessibilityLiveRegion="polite"
       testID="ask-status-row"

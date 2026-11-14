@@ -278,11 +278,12 @@ export function takeFocusRequest(target: FocusTarget): boolean {
  */
 export function useFocusRequest(
   target: FocusTarget,
-  ref: RefObject<{ focus(): void } | null>,
+  ref: RefObject<{ focus(): void; taken?(): void } | null>,
 ) {
   useEffect(() => {
     const focus = () => {
       if (!takeFocusRequest(target)) return;
+      ref.current?.taken?.();
       void InteractionManager.runAfterInteractions(() => {
         requestAnimationFrame(() => ref.current?.focus());
       });
@@ -297,23 +298,34 @@ export function useFocusRequest(
   }, [target, ref]);
 }
 
+/** Moves VoiceOver or TalkBack to `node` (setAccessibilityFocus is iOS-only). */
+export function moveAccessibilityFocus(node: View | null) {
+  if (!node) return;
+  if (Platform.OS === 'android')
+    AccessibilityInfo.sendAccessibilityEvent(node, 'focus');
+  else {
+    const handle = findNodeHandle(node);
+    if (handle) AccessibilityInfo.setAccessibilityFocus(handle);
+  }
+}
+
 /**
  * Moves VoiceOver or TalkBack to the returned view when a request for
- * `target` arrives (setAccessibilityFocus is iOS-only).
+ * `target` arrives. `onTaken` runs as this view takes the request, before
+ * the focus moves: only one mounted view takes each request.
  */
-export function useAccessibilityFocusRequest(target: FocusTarget) {
+export function useAccessibilityFocusRequest(
+  target: FocusTarget,
+  onTaken?: () => void,
+) {
   const view = useRef<View>(null);
+  const taken = useRef(onTaken);
+  useEffect(() => {
+    taken.current = onTaken;
+  }, [onTaken]);
   const focusable = useRef({
-    focus: () => {
-      const node = view.current;
-      if (!node) return;
-      if (Platform.OS === 'android')
-        AccessibilityInfo.sendAccessibilityEvent(node, 'focus');
-      else {
-        const handle = findNodeHandle(node);
-        if (handle) AccessibilityInfo.setAccessibilityFocus(handle);
-      }
-    },
+    focus: () => moveAccessibilityFocus(view.current),
+    taken: () => taken.current?.(),
   });
   useFocusRequest(target, focusable);
   return view;

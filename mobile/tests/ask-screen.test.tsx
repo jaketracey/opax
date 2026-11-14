@@ -28,6 +28,9 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { announceAnswer } from '../src/features/ask/AnswerView';
+import { auditAccessibility } from './screen-a11y';
+import a11yExceptions from './screen-a11y-exceptions.cjs';
 import AskScreen, { PhoneDock } from '../src/features/ask/AskScreen';
 import { useScreenReady } from '../src/analytics/timing';
 import {
@@ -56,6 +59,7 @@ import {
   dispatchKeyCommand,
   requestFocus,
   takeFocusRequest,
+  moveAccessibilityFocus,
 } from '../src/design/keyboard';
 import { useOpenAsk } from '../src/features/ask/open';
 import { askReturnSnapshot, setAskReturn } from '../src/features/ask/return';
@@ -79,6 +83,10 @@ import { emptyReservedRegions } from '../src/design/fold';
 
 // The bar's items, as AskScreen sets them through Stack.Screen.
 const mockBar: { options: Record<string, unknown> } = { options: {} };
+jest.mock('../src/design/keyboard', () => ({
+  ...jest.requireActual('../src/design/keyboard'),
+  moveAccessibilityFocus: jest.fn(),
+}));
 jest.mock('../src/analytics/timing', () => ({ useScreenReady: jest.fn() }));
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
@@ -1549,6 +1557,370 @@ test('a stream that stops partway keeps its text under one pill, read as Markdow
   ).toHaveLength(1);
   expect(drawn).toContain('This answer stopped partway.');
   expect(byId('ask-retry')).not.toEqual([]);
+});
+
+describe('streamed text and VoiceOver', () => {
+  const pieces = ['Housing was debated. ', 'The bill passed. ', 'Two opposed.'];
+  const wait = (ms: number) =>
+    act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, ms));
+    });
+  const move = jest.mocked(moveAccessibilityFocus);
+  const tails = () =>
+    move.mock.calls.filter(
+      ([node]) =>
+        (node as unknown as { props: { testID?: string } } | null)?.props
+          .testID === 'ask-stream-tail',
+    );
+  let announce: jest.SpyInstance;
+  let on: StreamHandlers | undefined;
+  let finish: (value: unknown) => void;
+  const said = () => announce.mock.calls.map(([text]) => String(text));
+  beforeEach(() => {
+    takeFocusRequest('ask-status');
+    move.mockClear();
+    jest.mocked(announceAnswer).mockClear();
+    announce = jest
+      .spyOn(AccessibilityInfo, 'announceForAccessibilityWithOptions')
+      .mockImplementation(() => undefined);
+    // An earlier test's spy on the same method is this one: start clean.
+    announce.mockClear();
+    jest.mocked(client.askPost).mockImplementationOnce(
+      (_path, _body, _signal, handlers) =>
+        new Promise((resolve) => {
+          on = handlers;
+          finish = resolve;
+        }),
+    );
+  });
+  afterEach(() => {
+    takeFocusRequest('ask-status');
+  });
+  const stream = async () => {
+    // "Reading your question" is spoken first, so the stage the first text
+    // sets waits out the two-second spacing.
+    await wait(50);
+    for (const piece of pieces)
+      await act(async () => {
+        on!.delta(piece);
+        await new Promise((resolve) => setTimeout(resolve, 40));
+      });
+    // The status line has faded out.
+    await wait(200);
+  };
+
+  test('a composer send: no piece is announced, focus stays put, the answer is announced once and no stage follows it', async () => {
+    await mount();
+    await type('Who spoke on housing?');
+    await press('ask-submit');
+    expect(byId('ask-stream-tail')).toHaveLength(0);
+    await stream();
+    expect(byId('ask-status-row')).toHaveLength(0);
+    // The tail is the busy element, and nothing in the turn is a live region.
+    expect(byId('ask-stream-tail').at(-1)!.props).toMatchObject({
+      accessible: true,
+      accessibilityLabel: 'Writing the answer',
+      accessibilityState: { busy: true },
+      accessibilityLiveRegion: 'none',
+    });
+    const regions = byId('ask-progress')
+      .at(-1)!
+      .findAll((n) => typeof n.props.accessibilityLiveRegion === 'string')
+      .map((n) => n.props.accessibilityLiveRegion);
+    expect(regions.length).toBeGreaterThan(0);
+    expect(regions.every((region) => region === 'none')).toBe(true);
+    // The send asked for no status focus, so the tail takes none.
+    expect(tails()).toHaveLength(0);
+    expect(jest.mocked(announceAnswer)).not.toHaveBeenCalled();
+    await act(async () => {
+      finish(answer);
+    });
+    expect(jest.mocked(announceAnswer)).toHaveBeenCalledTimes(1);
+    expect(byId('ask-progress')).toHaveLength(0);
+    expect(byId('ask-stream-tail')).toHaveLength(0);
+    // "Writing the answer" was still waiting out its spacing: it is dropped,
+    // never spoken after the answer.
+    await wait(2200);
+    expect(said().filter((text) => text !== 'Reading your question')).toEqual(
+      [],
+    );
+    expect(tails()).toHaveLength(0);
+  });
+
+  test('a send that put VoiceOver on the status line: focus moves to the tail once, which reads the stage itself', async () => {
+    await mount();
+    await type('Who spoke on housing?');
+    requestFocus('ask-status');
+    await press('ask-submit');
+    await stream();
+    expect(tails()).toHaveLength(1);
+    // The waiting "Writing the answer" is dropped: the tail's label says it.
+    await wait(2200);
+    expect(said().filter((text) => text !== 'Reading your question')).toEqual(
+      [],
+    );
+    // A server retry hands over again without moving focus again.
+    await act(async () => {
+      on!.retry();
+    });
+    expect(byId('ask-status-row').length).toBeGreaterThan(0);
+    await stream();
+    expect(tails()).toHaveLength(1);
+    await act(async () => {
+      finish(answer);
+    });
+    expect(jest.mocked(announceAnswer)).toHaveBeenCalledTimes(1);
+    expect(
+      said().some((text) => pieces.some((p) => text.includes(p.trim()))),
+    ).toBe(false);
+  });
+
+  test('Android: text that draws nothing yet leaves the status row and its live region to speak the stage', async () => {
+    await mount();
+    await type('Who spoke on housing?');
+    await press('ask-submit');
+    await wait(50);
+    // Not blank, but no block yet: the row has not left.
+    await act(async () => {
+      on!.delta('**');
+    });
+    announce.mockClear();
+    // Android only while the stage comes due (the screen audit is per
+    // platform, and this screen was drawn for iOS).
+    const platform = jest.replaceProperty(Platform, 'OS', 'android');
+    try {
+      await wait(2200);
+    } finally {
+      platform.restore();
+    }
+    const row = byId('ask-status-row').at(-1)!;
+    expect(row.props).toMatchObject({
+      accessibilityLiveRegion: 'polite',
+      accessibilityLabel: 'Writing the answer',
+    });
+    expect(byId('ask-stream-tail')).toHaveLength(0);
+    // The live region speaks the label: an announcement would say it twice.
+    expect(said()).toEqual([]);
+    await act(async () => {
+      finish(answer);
+    });
+  });
+
+  describe('the thread follows the streaming text', () => {
+    // One frame after the reports, the follow runs once.
+    const lay = async (id: string, layout: Record<string, number>) =>
+      act(async () => {
+        byId(id)
+          .find((n) => typeof n.props.onLayout === 'function')!
+          .props.onLayout({ nativeEvent: { layout } });
+        await new Promise((resolve) => setTimeout(resolve, 40));
+      });
+    const scroller = () => view!.root.findByType(ScrollView);
+    const scrolled = async (y: number) =>
+      act(async () => {
+        scroller().props.onScroll({ nativeEvent: { contentOffset: { y } } });
+        await new Promise((resolve) => setTimeout(resolve, 40));
+      });
+    const viewport = async (height: number) =>
+      act(async () => {
+        scroller().props.onLayout({
+          nativeEvent: { layout: { x: 0, y: 0, width: 390, height } },
+        });
+        await new Promise((resolve) => setTimeout(resolve, 40));
+      });
+    const begin = async (thread = 8) => {
+      await mount();
+      await type('Who spoke on housing?');
+      await press('ask-submit');
+      await viewport(800);
+      await lay('ask-thread', { y: thread });
+      await lay('ask-turn', { y: 400 });
+      await stream();
+      scrollTo.mockClear();
+    };
+    // The thread's top, the turn's, the block's bottom edge and the gap,
+    // less the room above the composer.
+    const followed = (edge: number, thread = 8) =>
+      thread + 400 + edge + rhythm.block - 800;
+
+    test('it follows the growing end, then leaves a dragged thread alone', async () => {
+      await begin();
+      // Still fits: the question and first line stay under the bar.
+      await lay('ask-progress', { y: 60, height: 200 });
+      expect(scrollTo).not.toHaveBeenCalled();
+      await lay('ask-progress', { y: 60, height: 600 });
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: followed(660),
+        animated: true,
+      });
+      // Where it was before the thread's own place counted: 8 pt of padding
+      // and a 16 pt gap is the old 24 pt clearance.
+      expect(followed(660)).toBe(400 + 660 + rhythm.group - 800);
+      await lay('ask-progress', { y: 60, height: 700 });
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: followed(760),
+        animated: true,
+      });
+      expect(scrollTo).toHaveBeenCalledTimes(2);
+      // The reader drags: this answer stays where they put it.
+      await act(async () => {
+        scroller().props.onScrollBeginDrag({ nativeEvent: {} });
+      });
+      await lay('ask-progress', { y: 60, height: 1200 });
+      expect(scrollTo).toHaveBeenCalledTimes(2);
+      await act(async () => {
+        finish(answer);
+      });
+    });
+
+    test('Android: under the in-content title at a large font the tail still clears the composer', async () => {
+      // The root title at font scale 2, the 36 dp gap and the 16 dp padding.
+      const thread = 162;
+      await begin(thread);
+      await lay('ask-progress', { y: 60, height: 600 });
+      const y = scrollTo.mock.calls.at(-1)![0].y;
+      expect(y).toBe(followed(660, thread));
+      // The tail's bottom edge on screen: the gap above the composer, not
+      // the thread's offset below it.
+      expect(thread + 400 + 660 - y).toBe(800 - rhythm.block);
+      // The thread reports its place from the scroll content itself: no
+      // view sits between them to measure from instead.
+      let node = byId('ask-thread').find(
+        (n) => typeof n.type === 'string',
+      )!.parent;
+      const between: string[] = [];
+      while (node && node.type !== ScrollView) {
+        // 'ask-screen' is the scroll view's own host.
+        if (
+          typeof node.type === 'string' &&
+          node.props.testID &&
+          node.props.testID !== 'ask-screen'
+        )
+          between.push(node.props.testID);
+        node = node.parent;
+      }
+      expect(node?.type).toBe(ScrollView);
+      expect(between).toEqual([]);
+      await act(async () => {
+        finish(answer);
+      });
+    });
+
+    test('a scroll that is not a drag (VoiceOver, a status-bar tap) stops it, and coming back resumes it', async () => {
+      await begin();
+      await lay('ask-progress', { y: 60, height: 600 });
+      await scrolled(followed(660));
+      expect(scrollTo).toHaveBeenCalledTimes(1);
+      // No drag began: the offset fell.
+      await scrolled(followed(660) - 250);
+      await lay('ask-progress', { y: 60, height: 800 });
+      await lay('ask-progress', { y: 60, height: 900 });
+      expect(scrollTo).toHaveBeenCalledTimes(1);
+      // Back within reach of the growing end.
+      await scrolled(followed(960) - 10);
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: followed(960),
+        animated: true,
+      });
+      expect(scrollTo).toHaveBeenCalledTimes(2);
+      await act(async () => {
+        finish(answer);
+      });
+    });
+
+    test('a flick is left its momentum; the follow resumes when it stops near the end', async () => {
+      await begin();
+      await lay('ask-progress', { y: 60, height: 600 });
+      await scrolled(followed(660));
+      scrollTo.mockClear();
+      await act(async () => {
+        scroller().props.onScrollBeginDrag({ nativeEvent: {} });
+      });
+      await scrolled(followed(660) - 12);
+      await act(async () => {
+        scroller().props.onScrollEndDrag({
+          nativeEvent: { velocity: { x: 0, y: -1.2 } },
+        });
+        scroller().props.onMomentumScrollBegin({ nativeEvent: {} });
+      });
+      await lay('ask-progress', { y: 60, height: 608 });
+      expect(scrollTo).not.toHaveBeenCalled();
+      await act(async () => {
+        scroller().props.onMomentumScrollEnd({ nativeEvent: {} });
+        await new Promise((resolve) => setTimeout(resolve, 40));
+      });
+      expect(scrollTo).toHaveBeenLastCalledWith({
+        y: followed(668),
+        animated: true,
+      });
+      await act(async () => {
+        finish(answer);
+      });
+    });
+
+    test('nothing moves when the answer lands', async () => {
+      await begin();
+      await lay('ask-progress', { y: 60, height: 600 });
+      expect(scrollTo).toHaveBeenCalledTimes(1);
+      await act(async () => {
+        finish(answer);
+      });
+      expect(byId('ask-progress')).toHaveLength(0);
+      // The finished turn lays out again and the page gets shorter: the
+      // last streamed edge is still held, and still nothing follows it.
+      await lay('ask-turn', { y: 460 });
+      await lay('ask-thread', { y: 60 });
+      await viewport(500);
+      await scrolled(followed(660));
+      expect(scrollTo).toHaveBeenCalledTimes(1);
+    });
+
+    test('Reduce Motion jumps', async () => {
+      const reduce = jest
+        .spyOn(accessibility, 'useReduceMotion')
+        .mockReturnValue(true);
+      try {
+        await begin();
+        await lay('ask-progress', { y: 60, height: 600 });
+        expect(scrollTo).toHaveBeenLastCalledWith({
+          y: followed(660),
+          animated: false,
+        });
+        await act(async () => {
+          finish(answer);
+        });
+        await act(async () => view!.unmount());
+      } finally {
+        reduce.mockRestore();
+      }
+    });
+  });
+
+  test('the audit reaches the tail row, and its one finding is the recorded exception', async () => {
+    await mount();
+    await type('Who spoke on housing?');
+    await press('ask-submit');
+    await stream();
+    const findings = auditAccessibility(view!.root, { platform: 'ios' }).filter(
+      (finding) => finding.rule === 'live-region',
+    );
+    expect(findings.map(({ element }) => element)).toEqual(['ask-stream-tail']);
+    const recorded = a11yExceptions.filter(
+      (entry) =>
+        entry.screens.includes('src/features/ask/AskScreen.tsx') &&
+        entry.rule === 'live-region',
+    );
+    expect(recorded).toHaveLength(1);
+    expect(recorded[0]).toMatchObject({
+      screens: ['src/features/ask/AskScreen.tsx'],
+      element: findings[0]!.element,
+      detail: findings[0]!.detail,
+    });
+    expect(recorded[0]!.reason).toMatch(/second time/);
+    await act(async () => {
+      finish(answer);
+    });
+  });
 });
 
 test('Stop puts the question back in an empty composer and says so', async () => {

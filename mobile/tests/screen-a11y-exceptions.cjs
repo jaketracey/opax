@@ -3,6 +3,14 @@
 // hitSlop cannot extend beyond that parent. Keep the exception precise.
 module.exports = [
   {
+    screens: ['src/features/ask/AskScreen.tsx'],
+    rule: 'live-region',
+    element: 'ask-stream-tail',
+    detail: 'Loading status needs a live region or announcement',
+    reason:
+      'The tail row under streamed text takes over the busy state from the status line, whose stage was already spoken. A live region there would read "Writing the answer" a second time; the answer is announced once when it lands.',
+  },
+  {
     screens: [
       'src/features/Search.tsx',
       'src/features/bills/BillsList.tsx',
