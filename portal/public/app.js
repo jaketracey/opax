@@ -8897,6 +8897,8 @@ function ordinal(n) {
    "Not agreed" (division-outcome.js, through labels.js); an unnamed result
    reads from the counts, and the record's own token is never shown. */
 const billOutcome = (o, counts) => uiLabels.divisionOutcome(o, counts);
+/** A bill status in the same wording: "negatived" reads "Not agreed" (division-outcome.js). */
+const billStatusWord = (s) => uiLabels.billStatusWord(s);
 /** The short title when the register carries one, else the title itself. */
 const billName = (b) => b?.short_title || b?.title || b?.key || "";
 
@@ -8955,7 +8957,7 @@ function billOutcomeLabelHTML(outcome, counts) {
 
 /** "Passed, as at 12 Feb 2022" — the status is never shown undated. */
 function billStatusLine(b) {
-  const status = sentenceCase(b?.status) || "Status not recorded";
+  const status = billStatusWord(b?.status) || "Status not recorded";
   const as = b?.status_as_of ? `, status as at ${fmtDate(b.status_as_of)}` : "";
   return `${status}${as}`;
 }
@@ -9006,7 +9008,7 @@ function billRowHTML(b) {
   return `<li>
     <a class="source-title bill-row-title" ${entityHrefAttr(billHash(b.key))}>${esc(billName(b))}</a>
     <span class="result-meta bill-row-meta">${[
-      b.status ? statusLabelHTML(sentenceCase(b.status), billStatusTone(b.status)) : "",
+      b.status ? statusLabelHTML(billStatusWord(b.status), billStatusTone(b.status)) : "",
       year ? esc(year) : "",
       b.sponsor_party ? partyChipHTML(billParty(b.sponsor_party)) : "",
       sponsorLabel ? esc(sponsorLabel) : esc(billPortfolio(b)),
@@ -9102,13 +9104,13 @@ async function openBillsIndex(params, manageFocus) {
     name: billName,
     text: (b) => [b.title, b.short_title, b.sponsor, b.portfolio, b.status, b._year].filter(Boolean).join(" "),
     href: (b) => billHash(b.key),
-    hint: (b) => sentenceCase(b.status),
+    hint: (b) => billStatusWord(b.status),
     filters: [
       { key: "parliament", label: "Parliament",
         options: parliaments.map((p) => countOpt(String(p), `${ordinal(p)} parliament`, countBy((b) => b.parliament, p))),
         test: (b, v) => String(b.parliament) === v },
       { key: "status", label: "Status",
-        options: statuses.map((s) => countOpt(s, sentenceCase(s), countBy((b) => b.status, s))),
+        options: statuses.map((s) => countOpt(s, billStatusWord(s), countBy((b) => b.status, s))),
         test: (b, v) => b.status === v },
       { key: "year", label: "Year",
         options: years.map((y) => countOpt(y, y, countBy((b) => b._year, y))),
@@ -9706,7 +9708,7 @@ async function openBill(key, manageFocus) {
     billPortfolio(bill) ? esc(billPortfolio(bill)) : "",
   ].filter(Boolean);
   const billhome = safeUrl((bill.sources || []).find((s) => s.kind === "billhome")?.url);
-  const statusWord = sentenceCase(bill.status) || "Status not recorded";
+  const statusWord = billStatusWord(bill.status) || "Status not recorded";
   // Two drawn actions (principle 5): Ask, and ⋯ for the rest. The foot's
   // repeat of the same three buttons is gone.
   const actions = `<div class="page-actions bill-actions">
@@ -9757,7 +9759,7 @@ function renderOtherSponsorBills(bill, body, view, generation) {
     if (!summary?.person || !rows.length) { slot.remove(); return; }
     slot.innerHTML = `<section class="ui-section bill-section growth-records" data-records-ready="true" ${growthModules.moduleAttrs("sponsor_bills", "bill", 3)}>
       <h2 class="ui-section-title">Other bills from this sponsor</h2>
-      <ul class="ui-list bill-sponsor-list" role="list">${rows.map(b => `<li><p class="ui-row-title"><a href="${esc(billHash(b.key))}">${esc(billName(b))}</a></p><p class="ui-row-meta">${esc(fmtDate(b.introduced))} · ${esc(sentenceCase(b.status))}</p></li>`).join("")}</ul>
+      <ul class="ui-list bill-sponsor-list" role="list">${rows.map(b => `<li><p class="ui-row-title"><a href="${esc(billHash(b.key))}">${esc(billName(b))}</a></p><p class="ui-row-meta">${esc(fmtDate(b.introduced))} · ${esc(billStatusWord(b.status))}</p></li>`).join("")}</ul>
       ${sourceLineHTML({source: "Parliamentary bill register", updated: summary.generated || "", notes: ["Bills in the same jurisdiction, matched to the same roster person using the sponsor identity rules."]})}
     </section>`;
   };
