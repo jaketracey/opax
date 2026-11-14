@@ -37,8 +37,9 @@ function outer(handler: LayoutHandler | undefined) {
  * sheet can stop at 640 pt inside a 1366 pt window. A window-only cap leaves
  * the buttons below the sheet with no scroll range to reach them.
  *
- * Only regular iPad windows have a sheet size independent of its content.
- * Phones, Duo and compact iPad windows must keep the window cap: feeding
+ * Only regular/regular windows (iPad, Duo inner) have a sheet size
+ * independent of its content. Phones, the Duo outer screen and compact iPad
+ * windows must keep the window cap: feeding
  * their content-sized sheet height back into maxHeight prevents regrowth
  * after rotation, or shrinks it on every layout when the bar is vertical.
  * The native modal includes its bar, but not the window's top safe area.
@@ -47,12 +48,14 @@ export function useFittedSheetHeight(): number {
   const insets = useSafeAreaInsets();
   const { width, height: window } = useWindowDimensions();
   const traits = useWindowTraits();
+  // UIKit picks fixed form-sheet sizing by size class, not by device, so the
+  // regular/regular Duo inner screen counts too. Width is only an iPad
+  // fallback when the traits bridge is unavailable.
   const fixed =
     Platform.OS === 'ios' &&
-    Platform.isPad &&
     (traits
       ? traits.horizontal === 'regular' && traits.vertical === 'regular'
-      : width >= 768);
+      : Platform.isPad && width >= 768);
   const header = useContext(HeaderHeightContext) || SHEET_HEADER;
   const verticalBar = useVerticalBarEdge() !== 'unspecified';
   const barHeight = verticalBar ? 0 : header;

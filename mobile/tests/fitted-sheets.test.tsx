@@ -187,22 +187,29 @@ function render(component: ReactElement, pose: Pose) {
 
 describe.each(sheets)('$name fitted sheet', ({ component, actions }) => {
   test.each([
-    ['form sheet portrait', 1024, 1366, 640],
-    ['form sheet landscape', 1366, 1024, 540],
-    ['page sheet portrait', 1024, 1366, 900],
-    ['page sheet landscape', 1366, 1024, 700],
-  ])(
-    'iPad %s at AX5 keeps overflowing content and its last action in the scroll range',
-    (_name, width, height, sheetHeight) => {
+    ['iPad form sheet portrait', 1024, 1366, 640, true, 'unspecified'],
+    ['iPad form sheet landscape', 1366, 1024, 540, true, 'unspecified'],
+    ['iPad page sheet portrait', 1024, 1366, 900, true, 'unspecified'],
+    ['iPad page sheet landscape', 1366, 1024, 700, true, 'unspecified'],
+    // The Duo inner screen is regular/regular, so UIKit fixes its form sheet.
+    ['Duo inner portrait', 669, 951, 640, false, 'unspecified'],
+    ['Duo inner landscape', 951, 669, 540, false, 'trailing'],
+  ] as const)(
+    '%s at AX5 keeps overflowing content and its last action in the scroll range',
+    (_name, width, height, sheetHeight, isPad, bar) => {
+      mockVerticalBar = bar;
       const sheet = render(component, {
         width,
         height,
-        isPad: true,
+        isPad,
         traits: regular,
       });
       sheet.layout(sheetHeight);
       const viewport = sheet.cap();
-      expect(viewport).toBe(sheetHeight - SHEET_HEADER);
+      // The viewport is the measured sheet minus its own bar, never the window.
+      const barHeight = bar === 'unspecified' ? SHEET_HEADER : 0;
+      expect(viewport).toBe(sheetHeight - barHeight);
+      expect(viewport).toBeLessThan(height - 24 - barHeight);
       // Synthetic native AX5 layout. Actions end inside the content container,
       // after the privacy row, with the existing 36 pt of bottom padding.
       const content = {
@@ -253,11 +260,11 @@ describe.each(sheets)('$name fitted sheet', ({ component, actions }) => {
   });
 
   test.each([
-    ['phone', false, null, 'unspecified'],
+    ['phone', false, compact, 'unspecified'],
     ['compact iPad', true, compact, 'unspecified'],
     ['Duo outer trailing', false, compact, 'trailing'],
     ['Duo outer leading', false, compact, 'leading'],
-    ['Duo inner', false, regular, 'unspecified'],
+    ['phone without traits', false, null, 'unspecified'],
   ] as const)(
     '%s regrows in one portrait/landscape/portrait cycle',
     (_name, isPad, traits, bar) => {
@@ -321,6 +328,23 @@ describe.each(sheets)('$name fitted sheet', ({ component, actions }) => {
           'automatic',
         );
       }
+    },
+  );
+
+  test.each([
+    ['iPad without traits', true, 640 - SHEET_HEADER],
+    ['wide non-iPad without traits', false, 1366 - 24 - SHEET_HEADER],
+  ] as const)(
+    'the width fallback is for iPad only: %s',
+    (_name, isPad, expected) => {
+      const sheet = render(component, {
+        width: 1024,
+        height: 1366,
+        isPad,
+        traits: null,
+      });
+      sheet.layout(640);
+      expect(sheet.cap()).toBe(expected);
     },
   );
 
