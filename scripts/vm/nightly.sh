@@ -103,13 +103,29 @@ log() { echo "$(ts) [nightly] $*" | tee -a "$LOGFILE"; }
 run() { "$@" 2>&1 | tee -a "$LOGFILE"; return "${PIPESTATUS[0]}"; }
 
 FAILURES=()
+COVERAGE_FAILURES=()
 WARNINGS=()
 STAMPED_FILES=()
 COMMIT_SHA=""
 DEPLOY="not pushed"
 RESULT_SUMMARY=""
 fail() { FAILURES+=("$*"); log "FAIL: $*"; }
+coverage_fail() { COVERAGE_FAILURES+=("$*"); log "COVERAGE FAIL: $*"; }
 warn() { WARNINGS+=("$*"); log "WARN: $*"; }
+
+coverage_status() {
+  local messages
+  if messages=$("$PY" scripts/coverage_watchdog.py --state-dir "$PIPE" --status-only); then
+    while IFS=$'\t' read -r severity finding; do
+      case "$severity" in
+        alert) coverage_fail "$finding" ;;
+        report) warn "$finding" ;;
+      esac
+    done <<< "$messages"
+  else
+    coverage_fail "coverage status reader failed; inspect $PIPE/coverage-report-v1.json"
+  fi
+}
 
 # ---- lock ------------------------------------------------------------------------
 exec 8>"$LOCKFILE"
@@ -157,7 +173,7 @@ publish_status() {
 
 write_status() {
   local status=$1
-  "$PY" - "$LASTFILE" "$status" "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" <<'PYEOF' 2>/dev/null || true
+  "$PY" - "$LASTFILE" "$status" "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" "${COVERAGE_FAILURES[@]+"${COVERAGE_FAILURES[@]}"}" <<'PYEOF' 2>/dev/null || true
 import json, sys, datetime
 path, status, day, run, started, sha, deploy, summary, nwarn, *rest = sys.argv[1:]
 warnings, failures = rest[:int(nwarn)], rest[int(nwarn):]
@@ -202,9 +218,9 @@ finish() {
   if declare -F evidence_abort >/dev/null; then evidence_abort; fi
   rm -f "$MARK"
   local rc=0
-  if [ "${#FAILURES[@]}" -gt 0 ]; then
+  if [ "$(( ${#FAILURES[@]} + ${#COVERAGE_FAILURES[@]} ))" -gt 0 ]; then
     rc=1
-    log "===== nightly end: FAILED (${#FAILURES[@]} problem(s)) ====="
+    log "===== nightly end: FAILED ($(( ${#FAILURES[@]} + ${#COVERAGE_FAILURES[@]} )) problem(s)) ====="
     write_status failed
     publish_status
   else
@@ -217,7 +233,7 @@ finish() {
 nightly_exit() {
   local rc=$?
   if declare -F evidence_abort >/dev/null; then evidence_abort; fi
-  if [ "$rc" -ne 0 ] && [ "${#FAILURES[@]}" -eq 0 ]; then
+  if [ "$rc" -ne 0 ] && [ "$(( ${#FAILURES[@]} + ${#COVERAGE_FAILURES[@]} ))" -eq 0 ]; then
     fail "nightly.sh died unexpectedly (see the log)"
     finish
   fi
@@ -360,12 +376,7 @@ else
   # Coverage failure must alert but must not stop exports or publication. Reuse
   # failures/warnings -> nightly-status/status.json -> refresh_watchdog.py ->
   # the existing scheduled GitHub workflow email, with no new alert channel.
-  while IFS=$'\t' read -r severity finding; do
-    case "$severity" in
-      alert) fail "$finding" ;;
-      report) warn "$finding" ;;
-    esac
-  done < <("$PY" scripts/coverage_watchdog.py --state-dir "$PIPE" --status-only)
+  coverage_status
 fi
 
 # ---- 2b. the periodic groups: weekly (Sundays, Sydney), monthly (the first Sunday), frl (Thursdays) ----------
@@ -380,7 +391,9 @@ select_groups() {
 }
 periodic_refresh_complete() {
   # A successful loader is not publication. Any held group or failed final
-  # nightly, NO_PUSH rehearsal or refused push leaves the durable debt intact.
+  # publication, NO_PUSH rehearsal or refused push leaves durable debt intact.
+  # COVERAGE_FAILURES alert separately and must not cause successful groups to
+  # repeat their acquisition every night while an old coverage hold persists.
   [ "$PERIODIC_ACCEPTED" = 1 ] && [ "${#FAILURES[@]}" -eq 0 ] \
     && [ "${OPAX_NIGHTLY_NO_PUSH:-0}" != 1 ] || return 0
   "$PY" scripts/vm/periodic_state.py complete --state "$PERIODIC_STATE" --date "$PERIODIC_DATE" \

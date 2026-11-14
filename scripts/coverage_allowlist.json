@@ -48,23 +48,36 @@
       "evidence": "origin/im/hansard-gaps 7a93ad1d0 Chamber coverage"
     },
     {
-      "id": "senate-2014-2018",
+      "id": "senate-2014-apr2019",
       "kind": "known_being_filled",
       "chambers": ["senate"],
       "start": "2014-01-01",
-      "end": "2018-12-31",
-      "lane": "im/hansard-gaps (repair plan A)",
+      "end": "2019-04-03",
+      "review_by": "2026-12-14",
+      "lane": "im/senate-backfill",
       "reason": "Known, being filled: missing Senate historical acquisition. Keep visible without paging while the repair lane reconciles source days.",
       "evidence": "origin/im/hansard-gaps 7a93ad1d0 repair plan A"
     },
     {
-      "id": "nsw-2023-oct2024",
+      "id": "nsw-assembly-2023-nov2024",
       "kind": "known_being_filled",
-      "chambers": ["nsw_la", "nsw_lc"],
+      "chambers": ["nsw_la"],
       "start": "2023-01-01",
-      "end": "2024-10-31",
-      "lane": "im/hansard-gaps (repair plan N)",
-      "reason": "Known, being filled: NSW 2023 to October 2024 acquisition hole. The expected state calendar is incomplete, so completion needs cached date evidence.",
+      "end": "2024-11-21",
+      "review_by": "2026-12-14",
+      "lane": "im/nsw-hansard-gap",
+      "reason": "Known, being filled: NSW Assembly acquisition hole before 22 November 2024. Completion needs the filling lane's sitting-day manifest.",
+      "evidence": "origin/im/hansard-gaps 7a93ad1d0 repair plan N"
+    },
+    {
+      "id": "nsw-council-2023-2025",
+      "kind": "known_being_filled",
+      "chambers": ["nsw_lc"],
+      "start": "2023-01-01",
+      "end": "2025-02-10",
+      "review_by": "2026-12-14",
+      "lane": "im/nsw-hansard-gap",
+      "reason": "Known, being filled: NSW Council acquisition hole before 11 February 2025. Completion needs the filling lane's sitting-day manifest.",
       "evidence": "origin/im/hansard-gaps 7a93ad1d0 repair plan N"
     }
   ]

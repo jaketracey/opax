@@ -112,11 +112,13 @@ data. Normal `OPAX_ENSURE_INDEXES=1` housekeeping provisions that index once;
 the watchdog refuses an unindexed table scan. Its SQLite budget is 40 seconds,
 with an outer 50-second timeout and two-second kill grace.
 
-`nightly.sh` reads the coverage receipt into its existing `FAILURES` and
-`WARNINGS`. Publication continues, then failures reach `nightly-status/status.json`
+`nightly.sh` reads the coverage receipt into separate `COVERAGE_FAILURES` and
+the existing `WARNINGS`. Coverage holds do not block periodic completion or
+cause weekly, monthly and FRL acquisition to repeat nightly. Final status
+combines operational and coverage failures in `nightly-status/status.json`
 and the scheduled `refresh-watchdog.yml` run, whose failure sends the existing
-GitHub email. Missing, stale, malformed or timed-out coverage checks also fail
-that alert path. Known repair holes and thin occupied days appear as warnings
+GitHub email. Missing, stale, malformed or timed-out checks and a crashed status
+reader also fail that alert path. Known repair holes and thin occupied days appear as warnings
 in the existing annotations and job summary. A standalone daily run only logs
 and writes its receipt, as it has no status publisher of its own.
 
@@ -125,23 +127,33 @@ compare chamber and chamber-year rows and held speech-days with the previous
 successful snapshot. A loss to zero or by more than 50% pages, even inside a
 known repair interval. Same-day retries retain the prior-night comparison;
 missing intervening snapshots are reported. A regression stays open until its
-metric reaches the recorded recovery floor, so a stable empty year does not
-clear the alarm the next night. Completed dates use Australia/Sydney, not the
-host's UTC day. Five consecutive zero expected dates page; positive days below
-10% of the whole chamber's median are report-only.
+metric reaches the recorded recovery floor or a bounded, reviewed accepted
+regression acknowledges that specific removal. Later drops cannot reuse the
+acknowledgement. Completed dates use Australia/Sydney, not the host's UTC day.
+New or longer runs of five zero expected dates page; unchanged runs are reported.
+Positive days below 10% of the whole chamber's median are report-only.
 
 Expected dates come from the committed federal calendar, optional local
 `hansard/hansard-xml/all-sitting-days.csv`, cached `votes_state/nsw/year_*.json`,
-and optional `--expected-days chamber-date.csv` inputs. No calendar is acquired
-by the watchdog. Missing denominators are null, not 100% coverage. The bounded
+optional `--expected-days chamber-date.csv` inputs, and filling-lane manifests
+under `$PIPE/coverage-sitting-days/`. `im/senate-backfill` writes `senate.json`
+(2014-2019); `im/nsw-hansard-gap` writes `nsw.json` (both chambers, 2023-2025).
+The daily check explicitly reads that directory when files are present.
+No calendar is acquired by the watchdog. Missing denominators are null, not
+100% coverage. The bounded
 reviewed exceptions, their reasons, end dates and repair lane tags are in
 `scripts/coverage_allowlist.json`. Recesses remove expected dates; the WA,
 Tasmanian and NT corpus boundaries page for review after 31 January 2027.
-Known Senate 2014-2018 and NSW January 2023 to October 2024 holes remain visible
-until all evidenced dates in every affected chamber-year are held. If any year
+Known holes through 3 April 2019 (Senate), 21 November 2024 (NSW Assembly) and
+10 February 2025 (NSW Council) remain visible until all evidenced dates in every
+affected chamber-year are held. If any year
 has no expected evidence, completion remains unverified and the warning stays.
 Resolution is recorded automatically; subsequent loss of those dates pages.
-The lane tags identify the audit's repair plans, not proof of a running backfill.
+Each known hole has a 14 December 2026 review deadline; overdue unresolved holes
+page. The lane tags identify `im/senate-backfill` and `im/nsw-hansard-gap`.
+The [repair manifest and acknowledgement contract](coverage-watchdog.md) defines
+the file format and accepted-regression fields. It recommends that the hub build
+the covering index by hand on the box before merging, about four minutes once.
 
 Offline reproduction, live sanity checks and index/runtime evidence are in
 [`2026-11-14-coverage-watchdog.md`](../reports/2026-11-14-coverage-watchdog.md).

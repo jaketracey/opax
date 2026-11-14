@@ -6,6 +6,7 @@ from datetime import date, datetime, timedelta, timezone
 import io
 import json
 from pathlib import Path
+import re
 import sqlite3
 import subprocess
 import sys
@@ -14,8 +15,15 @@ import unittest
 
 from scripts import coverage_watchdog as wd
 from scripts.refresh_watchdog import evaluate
+from scripts.vm import periodic_state
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def shell_function(name):
+    source = (ROOT / 'scripts/vm/nightly.sh').read_text()
+    one_line = re.search(r'^' + name + r'\(\) \{[^\n]*\}\n', source, re.M)
+    return (one_line or re.search(r'^' + name + r'\(\) \{\n.*?^\}\n', source, re.M | re.S))[0]
 
 
 class CoverageTests(unittest.TestCase):
@@ -42,7 +50,8 @@ class CoverageTests(unittest.TestCase):
 
     def entry(self, kind='non_sitting', **extra):
         return dict(id='fixture', kind=kind, chambers=['senate'], start='2026-02-01', end='2026-02-28',
-                    reason='Fixture reviewed exception', lane='im/fixture', evidence='fixture', **extra)
+                    reason='Fixture reviewed exception', lane='im/fixture', evidence='fixture',
+                    review_by='2026-02-28', **extra)
 
     def test_zero_year_and_chamber_regression_alert_and_recovery(self):
         previous, _ = self.analyse()
@@ -76,8 +85,8 @@ class CoverageTests(unittest.TestCase):
         self.assertTrue(any('speech_days' in a for a in self.analyse(previous=previous)[1]['alerts']))
 
     def test_five_expected_days_cross_weekend_and_recess_breaks_run(self):
-        self.expected['senate'] = {'2026-02-05', '2026-02-06', '2026-02-09', '2026-02-10', '2026-02-11'}
         previous, _ = self.analyse()
+        self.expected['senate'] = {'2026-02-05', '2026-02-06', '2026-02-09', '2026-02-10', '2026-02-11'}
         self.assertEqual(len(self.analyse(previous=previous)[1]['alerts']), 1)
         self.assertFalse(self.analyse(previous=previous, entries=[self.entry()])[1]['alerts'])
         self.expected['senate'].remove('2026-02-11')
@@ -104,10 +113,10 @@ class CoverageTests(unittest.TestCase):
         self.assertTrue(self.analyse(previous=filled, entries=[known])[1]['alerts'])
 
     def test_known_hole_does_not_hide_new_dates_outside_its_bounds(self):
+        previous, _ = self.analyse()
         self.expected['senate'] = {f'2026-02-{i:02}' for i in range(5, 16)}
         known = self.entry('known_being_filled')
         known['end'] = '2026-02-09'
-        previous, _ = self.analyse()
         _, result = self.analyse(previous=previous, entries=[known])
         self.assertEqual(len(result['alerts']), 1)
         self.assertIn('2026-02-10 to 2026-02-15 (6 days)', result['alerts'][0])
@@ -185,7 +194,7 @@ class CoverageTests(unittest.TestCase):
         now = datetime(2026, 11, 14, 0, tzinfo=timezone.utc)
         path = self.root / 'coverage-report-v1.json'
         path.write_text(json.dumps({'through': '2026-11-13', 'alerts': ['lost senate/2018'],
-                                    'reports': ['known, being filled: NSW; lane im/hansard-gaps']}))
+                                    'reports': ['known, being filled: NSW; lane im/nsw-hansard-gap']}))
         messages = wd.status_messages(self.root, now)
         status = {'finished': now.isoformat(), 'status': 'failed',
                   'failures': [m for s, m in messages if s == 'alert'],
@@ -218,7 +227,7 @@ class CoverageTests(unittest.TestCase):
 
     def test_committed_allowlist_is_bounded_and_expired_not_held_pages(self):
         entries = wd.load_allowlist(ROOT / 'scripts/coverage_allowlist.json')
-        self.assertEqual(len(entries), 7)
+        self.assertEqual(len(entries), 8)
         self.expected['wa_la'] = {f'2026-02-{i:02}' for i in range(5, 11)}
         previous, _ = self.analyse(entries=entries)
         self.assertFalse(self.analyse(previous=previous, entries=entries)[1]['alerts'])
@@ -250,7 +259,7 @@ class CoverageTests(unittest.TestCase):
         block = daily.split('# Read-only coverage after the normal refresh.')[1].split('log "Paused sources:')[0]
         self.assertIn('--db "$DB" --state-dir "$PIPE"', block)
         self.assertNotIn('FAILED_STEPS+=', block)
-        self.assertIn('alert) fail "$finding"', nightly)
+        self.assertIn('alert) coverage_fail "$finding"', nightly)
         self.assertIn('report) warn "$finding"', nightly)
         for script in ('scripts/daily_refresh.sh', 'scripts/vm/nightly.sh'):
             subprocess.run(['bash', '-n', str(ROOT / script)], check=True)
@@ -265,10 +274,11 @@ class CoverageTests(unittest.TestCase):
         daily = (ROOT / 'scripts/daily_refresh.sh').read_text()
         block = daily.split('# Read-only coverage after the normal refresh.')[1].split('log "Paused sources:')[0]
         nightly = (ROOT / 'scripts/vm/nightly.sh').read_text()
-        consume = '  while IFS=' + nightly.split('  while IFS=', 1)[1].split('\nfi\n', 1)[0]
+        consume = ''.join(shell_function(name) for name in ('coverage_fail', 'coverage_status')) + '\ncoverage_status\n'
         driver = '''
 set -euo pipefail
 PY=$1; REPO=$2; PIPE=$3; DB=$4
+COVERAGE_FAILURES=()
 cd "$REPO"
 step_selected() { return 0; }
 log() { echo "$*"; }
@@ -281,7 +291,231 @@ warn() { echo "REPORT $*"; }
                                  '_', sys.executable, str(ROOT), str(self.root), str(self.db)],
                                 text=True, capture_output=True, check=True)
         self.assertIn('REFRESH_COMPLETED', result.stdout)
-        self.assertIn('ALERT coverage: coverage regression: chamber-year senate/2026 rows 300 -> 0', result.stdout)
+        self.assertIn('COVERAGE FAIL: coverage: coverage regression: chamber-year senate/2026 rows 300 -> 0', result.stdout)
+
+    def test_same_day_retry_uses_prior_night_counts_without_a_recovery_floor(self):
+        args = self.args()
+        path = self.root / 'coverage-snapshot-v1.json'
+        with redirect_stdout(io.StringIO()):
+            wd.run(args)
+            args.through = '2026-02-05'
+            with closing(sqlite3.connect(self.db)) as db, db:
+                db.execute("DELETE FROM speeches WHERE date='2026-02-04'")
+            wd.run(args)  # First run today is healthy and has no persistent floors.
+            self.assertEqual(json.loads(path.read_text())['current']['annual']['senate/2026']['rows'], 200)
+            self.assertFalse(json.loads(path.read_text())['current']['regression_floors'])
+            with closing(sqlite3.connect(self.db)) as db, db:
+                db.execute('DELETE FROM speeches WHERE rowid NOT IN (SELECT rowid FROM speeches LIMIT 120)')
+            self.assertEqual(wd.run(args), 1)
+        report = json.loads((self.root / 'coverage-report-v1.json').read_text())
+        self.assertTrue(any('senate/2026 rows 300 -> 120' in a for a in report['alerts']))
+        self.assertEqual(json.loads(path.read_text())['previous']['annual']['senate/2026']['rows'], 300)
+
+    def test_zero_runs_only_page_when_new_or_longer(self):
+        previous, _ = self.analyse()
+        self.expected['senate'] = {f'2026-02-{i:02}' for i in range(5, 10)}
+        seen, result = self.analyse(previous=previous)
+        self.assertTrue(any('zero expected-day run' in a for a in result['alerts']))
+        same, result = self.analyse(previous=seen)
+        self.assertFalse(result['alerts'])
+        self.assertTrue(any('zero expected-day run' in r for r in result['reports']))
+        self.expected['senate'].add('2026-02-10')
+        longer, result = self.analyse(previous=same)
+        self.assertTrue(any('(6 days)' in a for a in result['alerts']))
+        self.assertFalse(self.analyse(previous=longer)[1]['alerts'])
+
+    def test_known_hole_review_deadline_pages_until_filled(self):
+        known = self.entry('known_being_filled')
+        known['review_by'] = '2026-02-27'
+        self.expected['senate'] = {'2026-02-05'}
+        previous, _ = self.analyse(entries=[known])
+        _, result = self.analyse(previous=previous, entries=[known])
+        self.assertTrue(any('review by 2026-02-27' in a for a in result['alerts']))
+        self.counts['senate']['2026-02-05'] = 100
+        _, result = self.analyse(previous=previous, entries=[known])
+        self.assertFalse(result['alerts'])
+
+    def test_resolved_old_hole_ids_do_not_hide_extended_intervals(self):
+        previous, _ = self.analyse()
+        previous['resolved_known'] = ['senate-2014-2018', 'nsw-2023-oct2024']
+        entries = wd.load_allowlist(ROOT / 'scripts/coverage_allowlist.json')
+        _, report = self.analyse(previous=previous, entries=entries)
+        self.assertEqual(len([r for r in report['reports'] if r.startswith('known, being filled')]), 3)
+
+    def test_committed_repair_bounds_and_lanes_match_review(self):
+        entries = wd.load_allowlist(ROOT / 'scripts/coverage_allowlist.json')
+        holes = {e['chambers'][0]: e for e in entries if e['kind'] == 'known_being_filled'}
+        for ch, end, lane in [('senate', '2019-04-03', 'im/senate-backfill'),
+                              ('nsw_la', '2024-11-21', 'im/nsw-hansard-gap'),
+                              ('nsw_lc', '2025-02-10', 'im/nsw-hansard-gap')]:
+            self.assertEqual(holes[ch]['end'], end)
+            self.assertEqual(holes[ch]['lane'], lane)
+            self.assertEqual(holes[ch]['review_by'], '2026-12-14')
+
+    def test_accepted_regression_allowlist_validation(self):
+        path = self.root / 'allowlist.json'
+        entry = self.accepted_entry()
+        path.write_text(json.dumps({'schema_version': 1, 'entries': [entry]}))
+        self.assertEqual(wd.load_allowlist(path)[0]['year'], 2026)
+        for field in ('year', 'counts', 'reason', 'lane', 'end'):
+            invalid = {k: v for k, v in entry.items() if k != field}
+            path.write_text(json.dumps({'schema_version': 1, 'entries': [invalid]}))
+            with self.assertRaises((ValueError, KeyError)):
+                wd.load_allowlist(path)
+
+    def accepted_entry(self, **changes):
+        entry = self.entry('accepted_regression', year=2026, counts={'rows': 100, 'speech_days': 1})
+        entry.update(changes)
+        return entry
+
+    def test_accepted_regression_clears_only_approved_loss_and_cannot_be_reused(self):
+        previous, _ = self.analyse()
+        self.counts['senate'] = Counter({'2026-02-02': 100})
+        dropped, _ = self.analyse(previous=previous)
+        ack = self.accepted_entry()
+        accepted, result = self.analyse(previous=dropped, entries=[ack])
+        self.assertFalse(result['alerts'])
+        self.assertFalse(accepted['regression_floors'])
+        self.assertTrue(any('accepted regression:' in r for r in result['reports']))
+        # Even while the entry is active, consumption cannot cover a later drop.
+        self.through += timedelta(days=1)
+        ack['end'] = '2026-03-10'
+        self.counts['senate']['2026-02-02'] = 40
+        self.assertTrue(self.analyse(previous=accepted, entries=[ack])[1]['alerts'])
+
+    def test_consumed_acceptance_cannot_acknowledge_the_same_counts_after_recovery(self):
+        previous, _ = self.analyse()
+        self.counts['senate'] = Counter({'2026-02-02': 100})
+        ack = self.accepted_entry(end='2026-03-10')
+        accepted, result = self.analyse(previous=previous, entries=[ack])
+        self.assertFalse(result['alerts'])
+        self.through += timedelta(days=1)
+        self.counts['senate'] = Counter({f'2026-02-{d:02}': 100 for d in (2, 3, 4)})
+        recovered, _ = self.analyse(previous=accepted, entries=[ack])
+        self.through += timedelta(days=1)
+        self.counts['senate'] = Counter({'2026-02-02': 100})
+        self.assertTrue(self.analyse(previous=recovered, entries=[ack])[1]['alerts'])
+
+    def test_expired_or_mismatched_acknowledgement_does_not_hide_drop(self):
+        previous, _ = self.analyse()
+        self.counts['senate'] = Counter({'2026-02-02': 40})
+        self.assertTrue(self.analyse(previous=previous, entries=[self.accepted_entry()])[1]['alerts'])
+        self.counts['senate']['2026-02-02'] = 100
+        ack = self.accepted_entry(end='2026-02-27')
+        self.assertTrue(self.analyse(previous=previous, entries=[ack])[1]['alerts'])
+
+    def test_acceptance_does_not_hide_another_year_and_survives_same_day_retry(self):
+        self.counts['senate']['2025-02-02'] = 300
+        previous, _ = self.analyse()
+        self.counts['senate'] = Counter({'2026-02-02': 100})
+        ack = self.accepted_entry()
+        accepted, result = self.analyse(previous=previous, entries=[ack])
+        self.assertTrue(any('senate/2025' in a for a in result['alerts']))
+        self.assertFalse(any('senate/2026' in a for a in result['alerts']))
+        _, retried = wd.analyse(self.counts, self.expected, self.bases, [ack], self.through,
+                                previous, history=accepted)
+        self.assertEqual(result['alerts'], retried['alerts'])
+
+    def manifest(self, name):
+        lane, chambers = wd.REPAIR_MANIFESTS[name]
+        return {'schema_version': 1, 'lane': lane, 'generated_at': '2026-11-14T00:00:00Z',
+                'evidence': 'fixture source-day discovery inventory, including dates not yet loaded',
+                'chambers': {ch: {str(y): [f'{y}-02-02'] for y in years} for ch, years in chambers.items()}}
+
+    def test_nightly_manifest_input_retires_known_holes_when_all_days_fill(self):
+        args = self.args()
+        args.through = '2026-11-13'
+        manifests = self.root / 'coverage-sitting-days'
+        manifests.mkdir()
+        records = []
+        for name in wd.REPAIR_MANIFESTS:
+            manifest = self.manifest(name)
+            (manifests / name).write_text(json.dumps(manifest))
+            for ch, years in manifest['chambers'].items():
+                for days in years.values():
+                    records.extend((ch, day, None, 'fixture') for day in days)
+        with redirect_stdout(io.StringIO()):
+            wd.run(args)
+            report = json.loads((self.root / 'coverage-report-v1.json').read_text())
+            self.assertEqual(len([r for r in report['reports'] if r.startswith('known, being filled')]), 3)
+            with closing(sqlite3.connect(self.db)) as db, db:
+                db.executemany('INSERT INTO speeches VALUES(?,?,?,?)', records)
+            wd.run(args)
+        report = json.loads((self.root / 'coverage-report-v1.json').read_text())
+        self.assertFalse(any('known, being filled' in r for r in report['reports']))
+        self.assertIn('repair_sitting_manifest', report['annual']['senate/2014']['expected_basis'])
+        state = json.loads((self.root / 'coverage-snapshot-v1.json').read_text())
+        self.assertEqual(len(state['current']['resolved_known']), 3)
+
+    def test_malformed_or_incomplete_repair_manifest_alerts_and_keeps_baseline(self):
+        args = self.args()
+        manifests = self.root / 'coverage-sitting-days'
+        manifests.mkdir()
+        manifest = self.manifest('senate.json')
+        path = manifests / 'senate.json'
+        with redirect_stdout(io.StringIO()):
+            wd.run(args)
+            state_path = self.root / 'coverage-snapshot-v1.json'
+            baseline = state_path.read_bytes()
+            manifest['chambers']['senate'].pop('2019')
+            path.write_text(json.dumps(manifest))
+            self.assertEqual(wd.run(args), 1)
+            self.assertEqual(state_path.read_bytes(), baseline)
+
+    def test_coverage_alerts_do_not_leave_periodic_groups_due_but_still_fail_final_status(self):
+        today = wd.completed_day(datetime.now(timezone.utc)) + timedelta(days=1)
+        functions = ''.join(shell_function(name) for name in (
+            'fail', 'coverage_fail', 'warn', 'coverage_status', 'periodic_refresh_complete',
+            'write_status', 'finish', 'nightly_exit'))
+        for ordinary_failure in (False, True):
+            state_path = self.root / 'periodic-refresh-v1.json'
+            state = periodic_state.read_state(state_path, today)
+            periodic_state.plan(state, today, 'weekly monthly frl')
+            periodic_state.attempt(state, today, 'weekly monthly frl')
+            periodic_state.write_state(state_path, state)
+            report = {'through': (today - timedelta(days=1)).isoformat(),
+                      'alerts': ['lasting coverage hold'], 'reports': []}
+            (self.root / 'coverage-report-v1.json').write_text(json.dumps(report))
+            driver = '''
+set -uo pipefail
+PY=$1; REPO=$2; PIPE=$3; TODAY=$4
+cd "$REPO"
+FAILURES=(); COVERAGE_FAILURES=(); WARNINGS=()
+log() { echo "$*"; }
+publish_status() { echo STATUS_PUBLISHED; }
+MARK="$PIPE/mark"; LASTFILE="$PIPE/nightly-last.json"
+STARTED_AT=2026-11-14T00:00:00Z; COMMIT_SHA=abcdef0123456789
+DEPLOY=published; RESULT_SUMMARY=""
+PERIODIC_ACCEPTED=1; PERIODIC_DATE=$TODAY
+PERIODIC_STATE="$PIPE/periodic-refresh-v1.json"; groups="weekly monthly frl"
+'''
+            driver += functions + '\ntrap nightly_exit EXIT\ncoverage_status\n'
+            driver += 'fail "export failed"\n' if ordinary_failure else ''
+            driver += 'periodic_refresh_complete\nfinish\n'
+            result = subprocess.run(['bash', '-c', driver, '_', sys.executable, str(ROOT),
+                                     str(self.root), today.isoformat()], text=True, capture_output=True)
+            self.assertEqual(result.returncode, 1, result.stderr)
+            pending = periodic_state.read_state(state_path, today)
+            self.assertEqual(any('due' in r for r in pending['groups'].values()), ordinary_failure)
+            if not ordinary_failure:
+                self.assertTrue(all('last_success' in r for r in pending['groups'].values()))
+            published = json.loads((self.root / 'nightly-last.json').read_text())
+            self.assertEqual(published['status'], 'failed')
+            self.assertIn('coverage: lasting coverage hold', published['failures'])
+            self.assertFalse(any('died unexpectedly' in r for r in published['failures']))
+            self.assertIn('STATUS_PUBLISHED', result.stdout)
+
+    def test_status_reader_crash_becomes_a_coverage_failure(self):
+        functions = shell_function('coverage_fail') + shell_function('coverage_status')
+        for reader in ('exit 9', 'echo "partial output"; exit 9'):
+            fake = self.root / 'crash-reader'
+            fake.write_text('#!/bin/bash\n' + reader + '\n')
+            fake.chmod(0o755)
+            driver = 'set -euo pipefail\nPY=$1; PIPE=$2; COVERAGE_FAILURES=()\nlog() { echo "$*"; }\n'
+            driver += functions + '\ncoverage_status\ntest "${#COVERAGE_FAILURES[@]}" -eq 1\n'
+            result = subprocess.run(['bash', '-c', driver, '_', str(fake), str(self.root)],
+                                     text=True, capture_output=True, check=True)
+            self.assertIn('coverage status reader failed', result.stdout)
 
 
 if __name__ == '__main__':

@@ -24,6 +24,10 @@ CHAMBERS = ('representatives', 'senate', 'federation', 'nsw_la', 'nsw_lc',
             'vic_la', 'vic_lc', 'sa_ha', 'sa_lc', 'qld_la', 'act_la',
             'wa_la', 'wa_lc', 'tas_ha', 'tas_lc', 'nt_la')
 INDEX = 'idx_speeches_coverage'
+REPAIR_MANIFESTS = {
+    'senate.json': ('im/senate-backfill', {'senate': range(2014, 2020)}),
+    'nsw.json': ('im/nsw-hansard-gap', {'nsw_la': range(2023, 2026), 'nsw_lc': range(2023, 2026)}),
+}
 SQL = f"""SELECT chamber, date, COUNT(*) FROM speeches INDEXED BY {INDEX}
 WHERE chamber IN ({','.join('?' for _ in CHAMBERS)})
 AND (hearing_type IS NULL OR hearing_type='') AND date < ?
@@ -60,18 +64,28 @@ def load_allowlist(path):
         raise ValueError('unsupported allowlist version')
     seen = set()
     for entry in data['entries']:
-        if entry['id'] in seen or entry['kind'] not in {'non_sitting', 'not_held', 'known_being_filled'}:
+        if entry['id'] in seen or entry['kind'] not in {
+                'non_sitting', 'not_held', 'known_being_filled', 'accepted_regression'}:
             raise ValueError('duplicate or invalid allowlist entry')
         seen.add(entry['id'])
         if (date.fromisoformat(entry['start']) > date.fromisoformat(entry['end'])
                 or not set(entry['chambers']) <= set(CHAMBERS) or not entry['reason'] or not entry['evidence']):
             raise ValueError('invalid allowlist bounds, chamber or reason')
-        if entry['kind'] == 'known_being_filled' and not entry['lane']:
-            raise ValueError('known hole needs its repair lane')
+        if entry['kind'] in {'known_being_filled', 'accepted_regression'} and not entry['lane']:
+            raise ValueError('coverage exception needs its repair lane')
+        if entry['kind'] == 'known_being_filled':
+            date.fromisoformat(entry['review_by'])
+        if entry['kind'] == 'accepted_regression':
+            if (len(entry['chambers']) != 1 or type(entry['year']) is not int
+                    or not 1901 <= entry['year'] <= 9999
+                    or set(entry['counts']) != {'rows', 'speech_days'}
+                    or any(type(n) is not int or n < 0 for n in entry['counts'].values())
+                    or (entry['counts']['rows'] == 0) != (entry['counts']['speech_days'] == 0)):
+                raise ValueError('accepted regression needs one chamber, year and post-removal counts')
     return data['entries']
 
 
-def expected_days(calendar, cache_root, extra, through):
+def expected_days(calendar, cache_root, extra, through, manifest_dir=None):
     expected = defaultdict(set)
     bases = defaultdict(set)
     notes = []
@@ -108,6 +122,30 @@ def expected_days(calendar, cache_root, extra, through):
             for event in row.get('Events', []):
                 ch = {'Legislative Assembly': 'nsw_la', 'Legislative Council': 'nsw_lc'}[event['Chamber']]
                 add(ch, row['date'], 'cached_calendar')
+    if manifest_dir is not None:
+        for name, (lane, chambers) in REPAIR_MANIFESTS.items():
+            path = Path(manifest_dir) / name
+            if not path.exists():
+                notes.append(f'repair sitting-day manifest absent: {lane}; expected {path.name}')
+                continue
+            if path.stat().st_size > 1_048_576:
+                raise ValueError(f'repair sitting-day manifest too large: {name}')
+            data = json.loads(path.read_text())
+            generated = datetime.fromisoformat(data['generated_at'].replace('Z', '+00:00'))
+            if (data['schema_version'] != 1 or data['lane'] != lane or generated.tzinfo is None
+                    or not data['evidence'] or set(data['chambers']) != set(chambers)):
+                raise ValueError(f'invalid repair sitting-day manifest: {name}')
+            for ch, years in chambers.items():
+                inventory = data['chambers'][ch]
+                if set(inventory) != {str(year) for year in years}:
+                    raise ValueError(f'incomplete repair manifest years: {name}/{ch}')
+                for year, days in inventory.items():
+                    if not isinstance(days, list) or len(days) != len(set(days)) or len(days) > 366:
+                        raise ValueError(f'invalid repair dates: {name}/{ch}/{year}')
+                    for day in days:
+                        if date.fromisoformat(day).isoformat() != day or not day.startswith(year + '-'):
+                            raise ValueError(f'invalid repair date: {name}/{ch}/{year}')
+                        add(ch, day, 'repair_sitting_manifest')
     return expected, bases, notes
 
 
@@ -125,11 +163,13 @@ def zero_runs(days, held):
         yield run
 
 
-def analyse(counts, expected, bases, entries, through, previous=None, drop_fraction=0.5):
+def analyse(counts, expected, bases, entries, through, previous=None, drop_fraction=0.5, history=None):
     stamp = through.isoformat()
     alerts, reports = [], []
-    resolved = set((previous or {}).get('resolved_known', []))
+    history = history if history is not None else previous or {}
+    resolved = set(history.get('resolved_known', []))
     annual, chambers, floors = {}, {}, {}
+    seen_runs = {}
 
     def applies(e, ch, day):
         return ch in e['chambers'] and e['start'] <= day <= e['end']
@@ -148,8 +188,9 @@ def analyse(counts, expected, bases, entries, through, previous=None, drop_fract
         if complete:
             resolved.add(e['id'])
         else:
-            reports.append(f"known, being filled: {','.join(e['chambers'])} {e['start']} to {e['end']}; "
-                           f"lane {e['lane']}; {e['reason']}")
+            message = (f"known, being filled: {','.join(e['chambers'])} {e['start']} to {e['end']}; "
+                       f"lane {e['lane']}; review by {e['review_by']}; {e['reason']}")
+            (alerts if stamp > e['review_by'] else reports).append(message)
 
     non_sitting = [e for e in entries if e['kind'] == 'non_sitting']
     known = [e for e in entries if e['kind'] == 'known_being_filled' and e['id'] not in resolved]
@@ -189,11 +230,49 @@ def analyse(counts, expected, bases, entries, through, previous=None, drop_fract
         paging_days = {d: (held.get(d, 0) or int(any(applies(e, ch, d) for e in exceptions))) for d in days}
         for run in zero_runs(days, paging_days):
             if len(run) >= 5:
-                alerts.append(f"zero expected-day run: {ch} {run[0]} to {run[-1]} ({len(run)} days)")
+                # Compare actual date sets: shifted/merged runs with new missing
+                # dates page, unchanged or shortened runs remain report-only.
+                prior_runs = history.get('zero_runs', {}).get(ch, [])
+                unchanged = any(set(run) <= set(old) for old in prior_runs)
+                message = f"zero expected-day run: {ch} {run[0]} to {run[-1]} ({len(run)} days)"
+                (reports if unchanged else alerts).append(message)
+                seen_runs.setdefault(ch, []).append(run)
         for e in entries:
             if e['kind'] == 'not_held' and ch in e['chambers'] and not held:
                 message = f"not held: {ch}; review by {e['end']}; {e['reason']}"
                 (alerts if stamp > e['end'] else reports).append(message)
+
+    # Acknowledgements approve one explicit transition, never a whole date
+    # window. Persist consumption so the same entry cannot hide a later drop.
+    accepted = dict(history.get('accepted_regressions', {}))
+    acknowledgements = []
+    for e in entries:
+        if e['kind'] != 'accepted_regression' or previous is None:
+            continue
+        record = accepted.get(e['id'])
+        if record is None:
+            if not e['start'] <= stamp <= e['end']:
+                reports.append(f"accepted regression inactive: {e['id']}; expires {e['end']}")
+                continue
+            key = f"{e['chambers'][0]}/{e['year']}"
+            if any(annual.get(key, {}).get(m) != n for m, n in e['counts'].items()):
+                reports.append(f"accepted regression counts do not match: {e['id']}; lane {e['lane']}")
+                continue
+            loss = {}
+            for metric, after in e['counts'].items():
+                floor = previous.get('regression_floors', {}).get(f'chamber-year:{key}:{metric}', 0)
+                before = previous['annual'].get(key, {}).get(metric, 0)
+                loss[metric] = max(0, max(before, floor / (1 - drop_fraction)) - after)
+            if not any(loss.values()):
+                continue
+            record = {'through': stamp, 'baseline': previous['through'], 'key': key,
+                      'counts': e['counts'], 'loss': loss}
+            accepted[e['id']] = record
+        # Same-day retries must still compare the approved transition with the
+        # prior night, but use the approved counts as that transition's baseline.
+        if record['through'] == stamp and record['baseline'] == previous['through']:
+            acknowledgements.append(record)
+            reports.append(f"accepted regression: {e['id']}; {e['reason']}; lane {e['lane']}; expires {e['end']}")
 
     # Never let a recess or known backfill hide loss of already held data.
     if previous is not None:
@@ -214,6 +293,15 @@ def analyse(counts, expected, bases, entries, through, previous=None, drop_fract
                 after = current.get(key, {}).get(metric, 0)
                 floor_key = f'{scope}:{key}:{metric}'
                 floor = (previous or {}).get('regression_floors', {}).get(floor_key, 0)
+                for ack in acknowledgements:
+                    if scope == 'chamber-year' and ack['key'] == key:
+                        before = min(before, ack['counts'][metric])
+                        floor = 0
+                    elif scope == 'chamber' and ack['key'].split('/')[0] == key:
+                        immediate_loss = max(0, previous['annual'].get(ack['key'], {}).get(metric, 0)
+                                             - ack['counts'][metric])
+                        before = max(0, before - immediate_loss)
+                        floor = max(0, floor - ack['loss'][metric] * (1 - drop_fraction))
                 if before > 0 and (after == 0 or after < before * (1 - drop_fraction)):
                     floor = max(floor, before * (1 - drop_fraction))
                 if floor and after < floor:
@@ -222,7 +310,8 @@ def analyse(counts, expected, bases, entries, through, previous=None, drop_fract
     snapshot = {'schema_version': 1, 'through': stamp, 'annual': annual,
                 'chambers': {ch: {k: v for k, v in values.items() if k != 'thin_days'}
                              for ch, values in chambers.items()},
-                'resolved_known': sorted(resolved), 'regression_floors': floors}
+                'resolved_known': sorted(resolved), 'regression_floors': floors,
+                'zero_runs': seen_runs, 'accepted_regressions': accepted}
     return snapshot, {'through': stamp, 'baseline_only': previous is None,
                       'alerts': alerts if previous is not None else [], 'reports': reports,
                       'annual': annual, 'chambers': chambers}
@@ -253,9 +342,11 @@ def run(args, now=None):
             # A same-day retry compares with the prior night, never with itself.
             previous = state['previous'] if latest['through'] == through.isoformat() else latest
         counts, timing = census(args.db, through)
-        expected, bases, notes = expected_days(args.calendar, args.cache_root, args.expected_days, through)
+        expected, bases, notes = expected_days(args.calendar, args.cache_root, args.expected_days, through,
+                                             getattr(args, 'sitting_day_manifest_dir', None)
+                                             or Path(args.state_dir) / 'coverage-sitting-days')
         entries = load_allowlist(args.allowlist)
-        snapshot, report = analyse(counts, expected, bases, entries, through, previous, args.drop_fraction)
+        snapshot, report = analyse(counts, expected, bases, entries, through, previous, args.drop_fraction, latest)
         if previous is None:
             report['reports'].append('coverage baseline recorded; comparisons start on the next night')
         elif previous['through'] != (through - timedelta(days=1)).isoformat():
@@ -301,6 +392,8 @@ def main():
     ap.add_argument('--calendar', default=str(ROOT / 'portal/public/parliament/sitting-days.json'))
     ap.add_argument('--allowlist', default=str(ROOT / 'scripts/coverage_allowlist.json'))
     ap.add_argument('--expected-days', type=Path, action='append', default=[], help='additional cached chamber,date CSV')
+    ap.add_argument('--sitting-day-manifest-dir', type=Path,
+                    help='repair lane JSON inventories; default STATE_DIR/coverage-sitting-days')
     ap.add_argument('--through', help='completed Sydney date override for offline replays')
     ap.add_argument('--drop-fraction', type=float, default=0.5)
     ap.add_argument('--status-only', action='store_true', help='emit receipt to nightly fail/warn arrays; no DB access')
