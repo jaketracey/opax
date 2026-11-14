@@ -74,27 +74,34 @@ The values are checked too:
   the response's `usage` at the published rates.
 - Missing usage is booked at the upper bound.
 - A reservation with no settlement (a crash mid-call) counts at its upper bound.
-- Each settlement is also booked into the Worker's D1 `spend` table as `regen:<model>`. The Worker's own
-  daily guard sums that table, so it sees our spend. The runner's read of the Worker's spend leaves out
-  `regen:` rows.
+- Each settlement is also booked into the Worker's D1 `spend` table as `regen:<model>`.
+  - The Worker counts those rows against its overall cap (`DAILY_NEURON_BUDGET`, 1.5M) only, never against
+    its live budget (`src/budget.ts` `dayAllows`, `src/db.ts` `spendOnDay`).
+  - The runner's read of the Worker's spend leaves them out: its ledger already has them. So each row is
+    counted once on both sides.
 - If that D1 write fails, the run stops. The brief already paid for is kept and handed off.
 
 **Caps:** checked before every request. Any input that is not a finite number refuses the call.
 - **Run cap:** the run stops at `--cap-usd`, at most US$30 actual. The check is "spent + this call's upper
   bound ≤ cap"; anything else (including NaN) refuses.
-- **Daily share:** "ours today + upper ≤ 1,500,000 − max(Worker spend so far today, Worker
-  headroom)", where the headroom is 1.2 × the Worker's peak day over the last 30 days (its D1 `spend`
-  table, without `regen:` rows).
+- **Daily share:** "ours today + upper ≤ 1,500,000 − max(Worker spend so far today, live reserve)".
+  - That is: (overall used today + upper) ≤ 1.5M − the live reserve still unspent today.
+  - The live reserve (`liveReserve`) is the larger of the Worker's steady budget (150k) and 1.2 × its peak day
+    over the last 30 days (its D1 `spend` table, without `regen:` rows). It is 380,140 on 14 Nov.
+  - So however much the runner spends, a steady day keeps its whole 150k, and a backfill keeps its pace.
 - When the share is used up, the run pauses to the next UTC day (`--wait`) or exits.
 - The Senate and NSW backfills are not paused.
-- **No backfill, no admits.** The Worker's budget is 1.5M only while low-priority backfill rows remain
-  (its own `hasBackfill()`). Otherwise it is `STEADY_NEURON_BUDGET` (150k), and its guard sums every
-  `spend` row, ours included.
-  - So the runner admits nothing while the Worker has no backfill. Without this, our spend would use up the
-    150k and stop live enrichment, and the flush of our own briefs (`tick.ts` `mayContinue`).
-  - With `--wait`, it checks again every 10 minutes; without, it exits `paused`.
-  - The check is cached for a minute.
-  - `headroom` shows whether backfill rows exist now.
+- **An older Worker: no backfill, no admits.** A Worker without the split counts our rows against its live
+  budget, and with no backfill rows that budget is `STEADY_NEURON_BUDGET` (150k). Our spend would use it up
+  and stop live enrichment, and the flush of our own briefs (`tick.ts` `mayContinue`).
+  - The runner knows which Worker is deployed from its last tick (D1 state `last_tick`, every minute).
+    Only a Worker with the split reports `neuronsRegen`. A tick more than 15 minutes old counts as no split.
+  - With the split, `hasBackfill()` is never read. Without it (not yet deployed, or rolled back), the runner
+    admits only while the Worker has backfill rows, as before.
+  - Only a read of `true` admits. Anything else (undefined, a truthy non-true value, a failed read) pauses.
+  - With `--wait`, a pause that is not today's share is rechecked every 10 minutes; without, the run exits
+    `paused`. Both checks are cached for a minute.
+  - `headroom` shows which Worker is deployed, and (for an older one) whether backfill rows exist now.
 
 **Order of checks for each request:**
 1. stop, pause and the STOP file;
@@ -117,6 +124,8 @@ STOP file set during either wait sends nothing.
 - a network error (booked at the upper bound, in the ledger and in D1);
 - `success: false`;
 - a model with no published price;
+- a qwen3.8 reply cut off at `max_tokens` (`finish_reason: 'length'`), the way the ignored thinking switch
+  showed in the pilot. The call is booked, and its row ends `failed` (never re-run).
 - the `STOP` file, checked before every request and again just before it is sent.
 
 **One runner at a time:**

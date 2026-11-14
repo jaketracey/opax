@@ -13,14 +13,18 @@
 //   skipped      the queue row or the live KB brief no longer matched the snapshot; nothing generated
 //   interrupted  found 'generating' at start-up with no stored result: never retried automatically
 //   rolled-back  old brief handed back to the Worker the same way (force reset once the Worker has written it)
+import { REGEN_SPEND_PREFIX } from '../../src/budget.ts'
 import type { MiniD1 } from './d1rest.ts'
 import { SEQ_BAND, seqBase, SLICES, type SliceName } from './slices.ts'
 
 export const TABLE = 'regen_5b_cheap'
 export const PROMPT_VERSION = '5b-cheap-1'
 export const TASK = 'speech_summary'
-/** The runner's own rows in the Worker's D1 `spend` table: the Worker's guard counts them, the runner's read of the Worker's spend does not. */
-export const SPEND_PREFIX = 'regen:'
+/**
+ * The runner's own rows in the Worker's D1 `spend` table. The Worker counts them against its overall cap only
+ * (src/budget.ts dayAllows); the runner's read of the Worker's spend leaves them out (its ledger has them).
+ */
+export const SPEND_PREFIX = REGEN_SPEND_PREFIX
 
 export const DDL = [
   `CREATE TABLE IF NOT EXISTS ${TABLE} (
@@ -213,6 +217,26 @@ export async function counts(db: MiniD1, runId: string): Promise<Array<{ slice: 
 export async function workerSpendToday(db: MiniD1, day: string): Promise<number> {
   const r = await db.prepare(`SELECT COALESCE(SUM(neurons), 0) AS n FROM spend WHERE day = ?1 AND model NOT LIKE '${SPEND_PREFIX}%'`).bind(day).first<{ n: number }>()
   return Number(r?.n ?? 0)
+}
+
+/** A Worker tick at most this old describes the Worker that is deployed now. */
+export const LAST_TICK_FRESH_MS = 15 * 60_000
+
+/**
+ * Whether the deployed Worker keeps `regen:` rows out of its live budget: its last tick (D1 state `last_tick`,
+ * written every minute) is fresh and reports `neuronsRegen`, which only a Worker with the split writes. An
+ * older Worker, one rolled back, a stale or unreadable last tick: false.
+ */
+export async function workerSplitsRegen(db: MiniD1, now: number): Promise<boolean> {
+  const r = await db.prepare(`SELECT value FROM state WHERE key = 'last_tick'`).first<{ value: string }>()
+  let last: any
+  try {
+    last = JSON.parse(r?.value ?? '')
+  } catch {
+    return false
+  }
+  const at = Date.parse(last?.at)
+  return typeof last?.neuronsRegen === 'number' && Number.isFinite(at) && at <= now + 60_000 && now - at <= LAST_TICK_FRESH_MS
 }
 
 /** The Worker's daily totals since a UTC day, without the runner's `regen:` rows, for the headroom. */

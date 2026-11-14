@@ -8,6 +8,7 @@ import { generate } from '../../src/generate.ts'
 import { isHistoricSpeech } from '../../src/historic.ts'
 import { KbBackpressure, type KbApi, type KbResource } from '../../src/kb.ts'
 import type { PromptRecord } from '../../src/prompts.ts'
+import { readModelReply } from '../../src/extract.ts'
 import { clip, existingSummary, pickText, wordCount } from '../../src/text.ts'
 import { admit, appendDurable, classifyResponse, MAX_SKIPS_IN_A_ROW, meter, SkipItem, StopRun, stopRequested, upperFor, USD_PER_NEURON, utcDayOf, type Caps, type Ledger } from './guard.ts'
 import type { MiniD1 } from './d1rest.ts'
@@ -42,9 +43,16 @@ export interface RunDeps {
   /** The Worker's spend so far today (UTC), without the runner's own `regen:` rows; may be cached briefly by the caller. */
   workerSpendToday: (day: string) => Promise<number>
   /**
-   * Whether the Worker is on its backfill budget (DAILY_NEURON_BUDGET, 1.5M): any low-priority row still to do
-   * (the Worker's own hasBackfill). Without one it is on STEADY_NEURON_BUDGET (150k), our booked spend would
-   * use that up and stop live enrichment, so the runner admits nothing. May be cached briefly by the caller.
+   * Whether the deployed Worker keeps our `regen:` rows out of its live budget (store.workerSplitsRegen: its
+   * last tick reports `neuronsRegen`). Then our spend counts only against its overall 1.5M cap, and the daily
+   * share (guard.ts admit) keeps the live budget's remainder free. Only `true` counts. May be cached briefly.
+   */
+  workerSplitsRegen: () => Promise<boolean>
+  /**
+   * Only read while the Worker does NOT split our spend out (an older Worker, or one rolled back): whether it
+   * is on its backfill budget (any low-priority row still to do, its own hasBackfill). Without backfill that
+   * Worker is on STEADY_NEURON_BUDGET (150k) and counts our rows against it, so the runner admits nothing.
+   * Only `true` counts; anything else, or a failed read, pauses. May be cached briefly by the caller.
    */
   backfillActive: () => Promise<boolean>
   /** Book a settled call into the Worker's D1 `spend` table (as `regen:<model>`) so the Worker's own guard sees it. */
@@ -66,16 +74,17 @@ export interface RunOptions {
   compare?: boolean
   /**
    * When paused, wait and continue (else return 'paused'): to the next UTC day when today's share is used up,
-   * or STEADY_RECHECK_MS at a time while the Worker has no backfill.
+   * or STEADY_RECHECK_MS at a time for the other pauses (an older Worker with no backfill, a failed read).
    */
   waitForNextDay?: boolean
 }
 
 export type RunEnd = { end: 'done' | 'limit' | 'paused' } | { end: 'stopped'; reason: string }
 
-/** While the Worker has no backfill, look again this often. */
+/** A pause that is not today's share (an older Worker with no backfill, a failed read): look again this often. */
 export const STEADY_RECHECK_MS = 10 * 60_000
-export const NO_BACKFILL = 'the Worker has no backfill rows, so it is on its steady budget (150k) and would count our spend against it: paused so live enrichment is never starved'
+export const NO_BACKFILL = 'the deployed Worker still counts our spend against its live budget (its last tick has no neuronsRegen) and has no backfill rows, so it is on its steady budget (150k): paused so live enrichment is never starved'
+export const READ_FAILED = 'could not read the Worker\'s spend or state: paused, nothing sent'
 
 /** The Worker's prompt record (tick.ts processRid), plus speaker_role for the 'role' variant. */
 export function recordFor(resource: KbResource, rid: string, variant: 'b' | 'role'): PromptRecord {
@@ -115,8 +124,8 @@ const sameBrief = (a: string | null | undefined, b: string | null | undefined): 
 export class Runner {
   private stop: StopRun | null = null
   private paused: string | null = null
-  /** Why the run is paused: today's share ('daily', resumes next UTC day) or no backfill ('steady', rechecked). */
-  private pauseKind: 'daily' | 'steady' = 'daily'
+  /** Why the run is paused: today's share ('daily', resumes next UTC day), or anything else ('recheck'). */
+  private pauseKind: 'daily' | 'recheck' = 'daily'
   private kbFailures = 0
   private skipsInARow = 0
   private lastSettle = -Infinity
@@ -160,12 +169,23 @@ export class Runner {
     } else body.max_tokens = ESCALATION_MAX_TOKENS
     if (this.blocked(ctx)) return false
     const day = utcDayOf(this.d.now())
-    const worker = await this.d.workerSpendToday(day)
-    const backfill = await this.d.backfillActive()
+    let worker: number
+    let admits: boolean
+    try {
+      worker = await this.d.workerSpendToday(day)
+      // A Worker that splits our rows out never starves live enrichment (the daily share below keeps its
+      // budget free). An older one does on a steady day, so for it: no backfill, no admits.
+      admits = (await this.d.workerSplitsRegen()) === true || (await this.d.backfillActive()) === true
+    } catch (err) {
+      if (this.blocked(ctx)) return false
+      ctx.paused = this.paused = `${READ_FAILED} (${String((err as Error)?.message ?? err).slice(0, 200)})`
+      this.pauseKind = 'recheck'
+      return false
+    }
     if (this.blocked(ctx)) return false // set while the D1 reads were in flight
-    if (backfill !== true) {
+    if (!admits) {
       ctx.paused = this.paused = NO_BACKFILL
-      this.pauseKind = 'steady'
+      this.pauseKind = 'recheck'
       return false
     }
     this.d.ledger.sync()
@@ -248,6 +268,11 @@ export class Runner {
     ctx.calls += 1
     ctx.neurons += m.neurons
     ctx.model = model
+    // A qwen reply cut off at max_tokens: how the ignored thinking switch showed (pilot, 14 Nov). Paid for and
+    // booked above; the row ends failed (never re-run) and nothing more is admitted.
+    if (model === PRIMARY_MODEL && readModelReply(v.json.result, false).finishReason === 'length') {
+      throw (ctx.stop = this.stop = new StopRun(`${model} reply cut off at max_tokens ${body.max_tokens} (finish_reason 'length') on ${ctx.rid}: thinking may be on again`))
+    }
     return v.json.result
   }
 
@@ -403,7 +428,7 @@ export class Runner {
       if (paused) {
         if (!this.o.waitForNextDay) return { end: 'paused' }
         this.d.log(`paused: ${paused}`)
-        if (this.pauseKind === 'steady') await this.sleepFor(STEADY_RECHECK_MS)
+        if (this.pauseKind === 'recheck') await this.sleepFor(STEADY_RECHECK_MS)
         else await this.sleepToNextDay()
         this.paused = null
       }

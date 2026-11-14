@@ -9,9 +9,9 @@ import { buildMessages, WITNESS_ROLE_LINE, type PromptRecord } from '../src/prom
 import { runTick } from '../src/tick.ts'
 import { validateSummary, WITNESS_OPENER_PROBLEM } from '../src/validate.ts'
 import { parseArgs } from '../scripts/regen/args.ts'
-import { acquireLock, admit, classifyResponse, headroomFrom, Ledger, meter, StopRun, usdToNeurons, type Caps } from '../scripts/regen/guard.ts'
-import { NO_BACKFILL, release, Runner, PRIMARY_MODEL, STEADY_RECHECK_MS, type AiPost } from '../scripts/regen/runner.ts'
-import { hasBackfill } from '../src/db.ts'
+import { acquireLock, admit, classifyResponse, headroomFrom, Ledger, liveReserve, meter, StopRun, usdToNeurons, WORKER_DAILY_BUDGET, WORKER_STEADY_BUDGET, type Caps } from '../scripts/regen/guard.ts'
+import { NO_BACKFILL, READ_FAILED, release, Runner, PRIMARY_MODEL, STEADY_RECHECK_MS, type AiPost } from '../scripts/regen/runner.ts'
+import { hasBackfill, spendOnDay } from '../src/db.ts'
 import { SEQ_BAND, witnessHit } from '../scripts/regen/slices.ts'
 import * as store from '../scripts/regen/store.ts'
 import { FakeAi, FakeKb, makeD1, makeDeps, rows, speechText } from './helpers.ts'
@@ -74,17 +74,18 @@ function world(opts: { rids?: Record<string, Spec> } = {}) {
 
 const CAPS: Caps = { runNeurons: usdToNeurons(30), dailyBudget: 1_500_000, workerHeadroom: 756_167 }
 
-function runner(w: ReturnType<typeof world>, ai: AiPost, o: { caps?: Caps; worker?: number; compare?: boolean; limit?: number; runId?: string; concurrency?: number; onWorkerRead?: () => void; spendFails?: boolean; backfill?: () => Promise<boolean>; wait?: boolean } = {}) {
+function runner(w: ReturnType<typeof world>, ai: AiPost, o: { caps?: Caps; worker?: number; compare?: boolean; limit?: number; runId?: string; concurrency?: number; onWorkerRead?: () => void; spendFails?: boolean; backfill?: () => Promise<boolean>; split?: () => Promise<boolean>; workerFromD1?: boolean; wait?: boolean } = {}) {
   const ledger = new Ledger(join(w.dir, 'ledger.jsonl'))
   const logs: string[] = []
   let t = T0
   const slept = { ms: 0 }
   const r = new Runner({
     db: w.d1.d1 as any, kb: w.kb, ai, ledger, resultsPath: join(w.dir, 'results.jsonl'), stopFile: join(w.dir, 'STOP'), caps: o.caps ?? CAPS,
-    workerSpendToday: async () => {
+    workerSpendToday: async (day) => {
       o.onWorkerRead?.()
-      return o.worker ?? 0
+      return o.workerFromD1 ? store.workerSpendToday(w.d1.d1 as any, day) : (o.worker ?? 0)
     },
+    workerSplitsRegen: o.split ?? (async () => false), // an older Worker unless a test says otherwise
     backfillActive: o.backfill ?? (async () => true),
     recordSpend: async (s) => {
       if (o.spendFails) throw new Error('D1 HTTP 503')
@@ -536,7 +537,7 @@ test('daily share used up (the Worker\'s headroom kept): the run pauses without 
   assert.deepEqual([end.end, ai.calls.length, regen(w, 'a1').state], ['paused', 0, 'pending'])
 })
 
-test('no backfill in the Worker queue (steady budget): the run pauses before any call; a backfill row lets it go', async () => {
+test('an older Worker (its last tick has no neuronsRegen) with no backfill rows: the run pauses before any call; a backfill row lets it go', async () => {
   const w = world()
   await seeded(w, ['a1'])
   const ai = new ScriptAi(() => ok(NEW))
@@ -562,6 +563,135 @@ test('with --wait, a no-backfill pause is rechecked every 10 minutes (not slept 
   assert.ok(slept.ms > 0 && slept.ms <= STEADY_RECHECK_MS, `slept ${slept.ms} ms: one recheck interval, not until the next day`)
   assert.deepEqual([ai.calls.length, regen(w, 'a1').state], [1, 'queued'])
   assert.ok(logs.some((l) => l === `paused: ${NO_BACKFILL}`))
+})
+
+test('the live reserve: at least the Worker\'s steady budget, else 1.2 x its peak day; the runner refuses once its share of the overall cap is used', () => {
+  assert.equal(liveReserve([{ day: 'a', n: 100_000 }]), WORKER_STEADY_BUDGET) // 1.2 x 100k = 120k is below the steady 150k
+  assert.equal(liveReserve([]), WORKER_STEADY_BUDGET)
+  assert.equal(liveReserve([{ day: 'a', n: 316_783 }, { day: 'b', n: 4000 }]), 380_140)
+  const caps: Caps = { runNeurons: usdToNeurons(30), dailyBudget: WORKER_DAILY_BUDGET, workerHeadroom: liveReserve([{ day: 'a', n: 100_000 }]) }
+  const t = (today: number) => ({ neurons: today, usd: 0, calls: 0, byDay: { '2026-11-14': today }, unsettled: 0, stops: 0 })
+  const kind = (r: ReturnType<typeof admit>) => (r.ok ? 'ok' : r.kind)
+  // (overall used + upper) <= 1.5M - the steady 150k still unspent: our share is 1.35M
+  assert.equal(kind(admit(caps, t(1_350_000 - 800), '2026-11-14', 0, 800)), 'ok')
+  assert.equal(kind(admit(caps, t(1_350_000 - 800), '2026-11-14', 0, 801)), 'daily')
+  // the Worker has spent 40k of its 150k: the other 110k stays reserved, so the share is unchanged
+  assert.equal(kind(admit(caps, t(1_350_000 - 800), '2026-11-14', 40_000, 800)), 'ok')
+  assert.equal(kind(admit(caps, t(1_350_000 - 800), '2026-11-14', 40_000, 801)), 'daily')
+  // past its reserve, every neuron the Worker spends comes off our share
+  assert.equal(kind(admit(caps, t(1_000_000), '2026-11-14', 499_000, 1000)), 'ok')
+  assert.equal(kind(admit(caps, t(1_000_000), '2026-11-14', 499_000, 1001)), 'daily')
+})
+
+test('the runner\'s copy of the Worker\'s budgets matches wrangler.jsonc', () => {
+  const cfg = readFileSync(join(import.meta.dirname, '../wrangler.jsonc'), 'utf8')
+  assert.equal(Number(/"DAILY_NEURON_BUDGET":\s*"(\d+)"/.exec(cfg)?.[1]), WORKER_DAILY_BUDGET)
+  assert.equal(Number(/"STEADY_NEURON_BUDGET":\s*"(\d+)"/.exec(cfg)?.[1]), WORKER_STEADY_BUDGET)
+})
+
+test('workerSplitsRegen: only a fresh last tick that reports neuronsRegen counts; an older or rolled-back Worker, a stale or unreadable tick does not', async () => {
+  const { d1, raw } = makeD1()
+  const put = (v: string) => raw.prepare("INSERT INTO state (key, value, updated_at) VALUES ('last_tick', ?, 1) ON CONFLICT(key) DO UPDATE SET value = excluded.value").run(v)
+  const at = new Date(T0).toISOString()
+  assert.equal(await store.workerSplitsRegen(d1 as any, T0), false) // no tick yet
+  put(JSON.stringify({ at, evt: 'tick', neuronsToday: 5, budget: 150_000, budgetMode: 'steady' })) // a tick from the Worker before the split
+  assert.equal(await store.workerSplitsRegen(d1 as any, T0 + 60_000), false)
+  put(JSON.stringify({ at, evt: 'tick', neuronsToday: 5, neuronsRegen: 0 }))
+  assert.equal(await store.workerSplitsRegen(d1 as any, T0 + 60_000), true)
+  assert.equal(await store.workerSplitsRegen(d1 as any, T0 + store.LAST_TICK_FRESH_MS + 1), false) // the Worker stopped ticking
+  put(JSON.stringify({ at, neuronsRegen: '0' }))
+  assert.equal(await store.workerSplitsRegen(d1 as any, T0 + 60_000), false)
+  put('not json')
+  assert.equal(await store.workerSplitsRegen(d1 as any, T0 + 60_000), false)
+})
+
+test('a Worker that splits regen spend out: the runner admits with no backfill rows, and the Worker, the runner and the ledger count each row once', async () => {
+  const w = world({ rids: { a1: {}, b2: {} } })
+  await seeded(w, ['a1', 'b2'])
+  assert.equal(await hasBackfill(w.d1.d1), false) // steady: an older Worker would pause the runner here
+  await tickOf(w)() // the Worker as it is in this commit: its last tick reports neuronsRegen
+  const split = () => store.workerSplitsRegen(w.d1.d1 as any, T0 + 60_000)
+  assert.equal(await split(), true)
+  w.d1.raw.prepare("INSERT INTO spend (day, model, neurons, calls) VALUES ('2026-11-14', '@cf/qwen/qwen3-30b-a3b-fp8', 500, 7)").run()
+  const ai = new ScriptAi(() => ok(NEW))
+  const { r, ledger } = runner(w, ai, { split, backfill: () => hasBackfill(w.d1.d1), workerFromD1: true })
+  assert.deepEqual([(await r.loop()).end, ai.calls.length, regen(w, 'a1').state, regen(w, 'b2').state], ['done', 2, 'queued', 'queued'])
+  const day = '2026-11-14'
+  const ours = ledger.totals().byDay[day]
+  assert.ok(ours > 0)
+  const all = rows(w.d1.raw, 'SELECT SUM(neurons) AS n FROM spend WHERE day = ?', day)[0].n
+  const s = await spendOnDay(w.d1.d1, day)
+  assert.equal(s.live, 500) // the Worker's live budget sees only its own row
+  assert.equal(await store.workerSpendToday(w.d1.d1 as any, day), 500) // so does the runner's read of the Worker
+  assert.ok(Math.abs(s.regen - ours) < 1e-9, 'the regen: rows are the ledger, booked once')
+  assert.ok(Math.abs(s.live + s.regen - all) < 1e-9)
+  assert.ok(Math.abs(500 + ours - all) < 1e-9, 'the runner\'s overall used (Worker rows + ledger) is the day\'s total, not a double count')
+})
+
+test('fail closed: only a split read of true or (for an older Worker) a backfill read of true admits; undefined, truthy non-true or a failed read pauses', async () => {
+  const no = async () => false
+  const cases: Array<[string, () => Promise<any>, () => Promise<any>]> = [
+    ['backfill undefined', no, async () => undefined],
+    ['backfill "yes"', no, async () => 'yes'],
+    ['backfill read fails', no, async () => { throw new Error('D1 7429 overloaded') }],
+    ['split undefined', async () => undefined, no],
+    ['split 1', async () => 1, no],
+    ['split read fails', async () => { throw new Error('D1 HTTP 503') }, async () => true],
+  ]
+  for (const [label, split, backfill] of cases) {
+    const w = world()
+    await seeded(w, ['a1'])
+    const ai = new ScriptAi(() => ok(NEW))
+    const { r, logs } = runner(w, ai, { split, backfill })
+    assert.deepEqual([(await r.loop()).end, ai.calls.length, regen(w, 'a1').state], ['paused', 0, 'pending'], label)
+    assert.ok(!logs.some((l) => l.includes('STOPPED')), label)
+    assert.equal(existsSync(join(w.dir, 'ledger.jsonl')), false, `${label}: not even a reservation`)
+  }
+  const w = world()
+  await seeded(w, ['a1'])
+  // a split Worker never needs the backfill read: it is not even made
+  const ai = new ScriptAi(() => ok(NEW))
+  const end = await runner(w, ai, { split: async () => true, backfill: async () => { throw new Error('must not be read') } }).r.loop()
+  assert.deepEqual([end.end, ai.calls.length, regen(w, 'a1').state], ['done', 1, 'queued'])
+})
+
+test('a failed read pauses with its reason, and with --wait is rechecked like the other pauses', async () => {
+  const w = world()
+  await seeded(w, ['a1'])
+  const ai = new ScriptAi(() => ok(NEW))
+  let reads = 0
+  const { r, logs, slept } = runner(w, ai, { wait: true, split: async () => { if (++reads === 1) throw new Error('D1 HTTP 503'); return true } })
+  assert.equal((await r.loop()).end, 'done')
+  assert.ok(slept.ms > 0 && slept.ms <= STEADY_RECHECK_MS, `slept ${slept.ms} ms`)
+  assert.ok(logs.some((l) => l.startsWith(`paused: ${READ_FAILED}`) && l.includes('D1 HTTP 503')))
+  assert.deepEqual([ai.calls.length, regen(w, 'a1').state], [1, 'queued'])
+})
+
+test('a qwen reply cut off at max_tokens (finish_reason length) stops the run: booked, the row failed and never re-run, nothing more admitted', async () => {
+  const cut = (summary: string) => {
+    const j = JSON.parse(ok(summary).raw)
+    j.result.choices[0].finish_reason = 'length'
+    return { status: 200, raw: JSON.stringify(j) }
+  }
+  const w = world({ rids: { a1: {}, b2: {} } })
+  await seeded(w, ['a1', 'b2'])
+  const ai = new ScriptAi(() => cut(NEW)) // the content even parses as a valid brief: the cut-off alone stops the run
+  const { r, ledger } = runner(w, ai, { concurrency: 1 })
+  const end = await r.loop()
+  assert.equal(end.end, 'stopped')
+  assert.match((end as any).reason, /finish_reason 'length'/)
+  assert.equal(ai.calls.length, 1)
+  const [failed, other] = ['a1', 'b2'].map((x) => regen(w, x)).sort((a, b) => (a.state === 'failed' ? -1 : 1))
+  assert.deepEqual([failed.state, other.state], ['failed', 'pending'])
+  assert.ok(failed.neurons > 0 && failed.calls === 1, 'the paid call is recorded on the row')
+  assert.equal(ledger.totals().calls, 1)
+  assert.equal(rows(w.d1.raw, `SELECT SUM(calls) AS n FROM spend WHERE model LIKE 'regen:%'`)[0].n, 1, 'booked into D1 once')
+  // the next run never re-runs the failed row: it goes straight to the other one
+  const ai2 = new ScriptAi(() => ok(NEW))
+  assert.equal((await runner(w, ai2, { concurrency: 1 }).r.loop()).end, 'done')
+  assert.equal(ai2.calls.length, 1)
+  assert.ok(ai2.calls[0].body.messages[1].content.includes(other.rid))
+  assert.equal(regen(w, failed.rid).state, 'failed')
 })
 
 test('a per-item 400 (code 5006) skips and logs that row only; the run continues', async () => {

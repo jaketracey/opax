@@ -48,6 +48,12 @@ export const NEURON_PRICES: Record<string, Price> = {
 /** Unknown model: price it like the dearest listed tier rather than as free. */
 export const FALLBACK_PRICE: Price = { input: 127273, output: 400000 }
 
+/**
+ * `spend` rows the 5b brief-regeneration runner books (`regen:<model>`, scripts/regen). They count against
+ * the overall daily cap only, never against the live-enrichment budget.
+ */
+export const REGEN_SPEND_PREFIX = 'regen:'
+
 export const DEFAULT_DAILY_BUDGET = 400_000
 /** The ceiling once the backfill is drained: about $1.65 a day; real steady-state use is far lower. */
 export const DEFAULT_STEADY_BUDGET = 150_000
@@ -95,6 +101,17 @@ export interface BudgetView {
   budget: number
   remaining: number
   exhausted: boolean
+}
+
+/**
+ * Whether the day still allows starting work. Two caps:
+ * - the live budget (`effectiveBudget`: DAILY with backfill, STEADY without) counts only the Worker's own spend;
+ * - the overall cap (DAILY_NEURON_BUDGET) counts every row, the regen runner's `regen:` rows included.
+ * The runner admits only while its spend leaves the live budget's remainder free under the overall cap, so a
+ * steady day still gets its full STEADY_NEURON_BUDGET however much the runner has spent.
+ */
+export function dayAllows(live: number, regen: number, budget: number, overall: number): boolean {
+  return live < budget && live + regen < overall
 }
 
 /** Whether the day's budget still allows starting work. */

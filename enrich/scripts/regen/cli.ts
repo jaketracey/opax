@@ -8,7 +8,7 @@ import { hasBackfill } from '../../src/db.ts'
 import { Kb } from '../../src/kb.ts'
 import { COMMANDS, parseArgs, REQUIRED } from './args.ts'
 import { d1Rest, type MiniD1 } from './d1rest.ts'
-import { acquireLock, headroomFrom, Ledger, StopRun, usdToNeurons, USD_PER_NEURON, utcDayOf, type Caps } from './guard.ts'
+import { acquireLock, Ledger, liveReserve, StopRun, usdToNeurons, USD_PER_NEURON, utcDayOf, WORKER_DAILY_BUDGET, WORKER_STEADY_BUDGET, type Caps } from './guard.ts'
 import { release, Runner, type AiPost } from './runner.ts'
 import type { SliceName } from './slices.ts'
 import * as store from './store.ts'
@@ -27,7 +27,6 @@ const D1_TOKEN_FILE = join(HOME, '.cache/opax/cf-deploy.token')
 const KB_ENV_FILE = join(HOME, '.cache/opax/kb.env')
 const WRANGLER_TOML = process.env.WRANGLER_CONFIG ?? join(HOME, 'Library/Preferences/.wrangler/config/default.toml')
 const WRANGLER_BIN = process.env.WRANGLER_BIN ?? join(import.meta.dirname, '../../node_modules/.bin/wrangler')
-const DAILY_BUDGET = 1_500_000
 
 /** Commands that only read: everything else takes the single-runner lock. */
 const READ_ONLY = new Set(['help', 'headroom', 'status'])
@@ -106,15 +105,17 @@ function workersAi(): AiPost {
 async function headroom(db: MiniD1): Promise<number> {
   const since = utcDayOf(Date.now() - 30 * 86_400_000)
   const days = await store.workerDays(db, since)
-  const workerHeadroom = headroomFrom(days)
-  const backfill = await hasBackfill(db as any)
-  log(`headroom: Worker peak day since ${since} = ${Math.round(Math.max(0, ...days.map((d) => Number(d.n))))} neurons; kept for it ${workerHeadroom}; ours at most ${DAILY_BUDGET - workerHeadroom} a day while the Worker has backfill rows (now: ${backfill ? 'yes' : 'NO, so the runner pauses'})`)
+  const workerHeadroom = liveReserve(days)
+  const split = await store.workerSplitsRegen(db, Date.now())
+  const backfill = split ? null : await hasBackfill(db as any)
+  log(`headroom: Worker peak day since ${since} = ${Math.round(Math.max(0, ...days.map((d) => Number(d.n))))} neurons; kept for it ${workerHeadroom} (at least its steady budget ${WORKER_STEADY_BUDGET}); ours at most ${WORKER_DAILY_BUDGET - workerHeadroom} a day. `
+    + (split ? 'The Worker leaves our regen: rows out of its live budget.' : `The Worker does NOT yet leave our regen: rows out of its live budget (its last tick has no neuronsRegen): the runner admits only while it has backfill rows (now: ${backfill ? 'yes' : 'NO, so the runner pauses'})`))
   return workerHeadroom
 }
 
 async function caps(db: MiniD1, capUsd: number): Promise<Caps> {
   const runNeurons = usdToNeurons(capUsd) // throws unless 0 < cap <= 30
-  return { runNeurons, dailyBudget: DAILY_BUDGET, workerHeadroom: await headroom(db) }
+  return { runNeurons, dailyBudget: WORKER_DAILY_BUDGET, workerHeadroom: await headroom(db) }
 }
 
 function rids(file: string): string[] {
@@ -175,11 +176,16 @@ async function main(): Promise<void> {
     const c = await caps(db, flags.get('cap-usd') as number)
     let cache = { day: '', at: 0, n: 0 }
     let backfill = { at: 0, on: false }
+    let split = { at: 0, on: false }
     const runner = new Runner({
       db, kb: kb(), ai: workersAi(), ledger, resultsPath: PATHS.results, stopFile: PATHS.stop, caps: c,
       workerSpendToday: async (day) => {
         if (cache.day !== day || Date.now() - cache.at > 5 * 60_000) cache = { day, at: Date.now(), n: await store.workerSpendToday(db, day) }
         return cache.n
+      },
+      workerSplitsRegen: async () => {
+        if (Date.now() - split.at > 60_000) split = { at: Date.now(), on: await store.workerSplitsRegen(db, Date.now()) }
+        return split.on
       },
       backfillActive: async () => {
         if (Date.now() - backfill.at > 60_000) backfill = { at: Date.now(), on: await hasBackfill(db as any) }

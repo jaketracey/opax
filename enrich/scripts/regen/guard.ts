@@ -220,18 +220,29 @@ export function appendDurable(path: string, value: unknown): void {
 
 // ------------------------------------------------------------------ caps
 
+/** The Worker's DAILY_NEURON_BUDGET (wrangler.jsonc): its overall cap, which counts our `regen:` rows too. */
+export const WORKER_DAILY_BUDGET = 1_500_000
+/** The Worker's STEADY_NEURON_BUDGET (wrangler.jsonc): its live budget with no backfill rows. */
+export const WORKER_STEADY_BUDGET = 150_000
+
 export interface Caps {
   /** Hard cap on actual spend for the whole run (US$30 -> 2,727,272 neurons). */
   runNeurons: number
-  /** The account-wide daily budget the Worker also uses (DAILY_NEURON_BUDGET). */
+  /** The Worker's overall daily cap (DAILY_NEURON_BUDGET), which counts both its spend and ours. */
   dailyBudget: number
-  /** Room kept for the Worker (live enrich plus the Senate and NSW backfills): 1.2 x its peak day of the last 30. */
+  /**
+   * The live reservation: the day's room kept for the Worker (live enrichment plus the Senate and NSW
+   * backfills). liveReserve(): the larger of its steady budget and 1.2 x its peak day of the last 30.
+   */
   workerHeadroom: number
 }
 
 /**
- * May a call with this upper bound go out now? Run cap first, then today's share of the daily budget:
+ * May a call with this upper bound go out now? Run cap first, then today's share of the overall cap:
  * ours + upper <= dailyBudget - max(worker spend so far today, worker headroom).
+ * That is: (overall used today + upper) <= dailyBudget - the live reservation still unspent today, where
+ * overall used = worker (the D1 rows without `regen:`) + ours (this ledger, which the `regen:` rows copy),
+ * so no row is counted twice.
  */
 export function admit(caps: Caps, totals: Totals, today: string, workerToday: number, upper: number):
   { ok: true } | { ok: false; kind: 'run-cap' | 'daily' | 'invalid'; reason: string } {
@@ -249,6 +260,14 @@ export function admit(caps: Caps, totals: Totals, today: string, workerToday: nu
     return { ok: false, kind: 'daily', reason: `daily share: ours ${Math.round(ours)} + ${upper} > ${allowance} (budget ${caps.dailyBudget} - max(worker today ${Math.round(workerToday)}, headroom ${caps.workerHeadroom}))` }
   }
   return { ok: true }
+}
+
+/**
+ * The day's room kept for the Worker: at least its whole steady budget (so a steady day always gets its full
+ * STEADY_NEURON_BUDGET under the overall cap), and at least 1.2 x its peak day (so a backfill keeps its pace).
+ */
+export function liveReserve(days: Array<{ day: string; n: number }>, steady = WORKER_STEADY_BUDGET): number {
+  return Math.max(steady, headroomFrom(days))
 }
 
 /** 1.2 x the Worker's highest daily spend over the window, from the D1 spend table rows. */

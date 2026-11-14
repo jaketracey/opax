@@ -76,6 +76,18 @@ test('waiting ownership still admits and reserves normally if headroom returns a
   assert.equal(rows(raw,'SELECT neurons FROM spend')[0].neurons,5)
 })
 
+test('a bounded run call on a steady day: the regen runner\'s rows count against the overall cap the tick passes, not the live one',async()=>{
+  const {deps,raw,ai,cap}=await exhaustedRun()
+  const initial=rows(raw,"SELECT initial_neurons FROM enrichment_units WHERE rid='waiting'")[0].initial_neurons
+  raw.prepare('UPDATE enrichment_runs SET spent_neurons=?').run(cap-initial)
+  // More than the steady 150k live budget, well inside the overall cap (DAILY, 400k by default).
+  raw.prepare("INSERT INTO spend(day,model,neurons,calls) VALUES ('2026-09-28','regen:@cf/qwen/qwen3.8-27b',200000,1)").run()
+  const stats=await runTick(deps)
+  assert.deepEqual([stats.budgetMode,stats.budget,stats.overallBudget],['steady',150_000,400_000])
+  assert.equal(ai.calls.length,1)
+  assert.equal(rows(raw,"SELECT COUNT(*) n FROM enrichment_calls WHERE state='settled'")[0].n,1)
+})
+
 test('admission atomically reserves the run ceiling; unadmitted units are not queued',async()=>{
   const {d1,raw}=makeD1();const b=budget(100)
   const added=await Promise.all(['a','b','c','d'].map(r=>admit(d1,work(r),b,1)))
@@ -90,16 +102,16 @@ test('admission atomically reserves the run ceiling; unadmitted units are not qu
 test('every call reserves under run and daily caps; concurrent calls cannot overspend',async()=>{
   const {d1,raw}=makeD1();const b=budget(100)
   await admit(d1,work('a'),b,1);await admit(d1,work('b'),b,1)
-  const tokens=await Promise.all(['a','b'].map(r=>reserveCall(d1,r,b,60,'2026-10-13',100)))
+  const tokens=await Promise.all(['a','b'].map(r=>reserveCall(d1,r,b,60,'2026-10-13',100,100)))
   assert.equal(tokens.filter(Boolean).length,1)
   const rid=tokens[0]?'a':'b',other=rid==='a'?'b':'a'
   await settleCall(d1,tokens.find(Boolean)!,'fixture',35,10,10)
-  const token=await reserveCall(d1,other,b,60,'2026-10-13',100)
+  const token=await reserveCall(d1,other,b,60,'2026-10-13',100,100)
   assert.ok(token)
   assert.equal(rows(raw,'SELECT spent_neurons FROM enrichment_runs')[0].spent_neurons,35)
   assert.equal(rows(raw,'SELECT neurons FROM spend')[0].neurons,35)
   await settleCall(d1,token!,'fixture',50,10,10)
-  assert.equal(await reserveCall(d1,rid,b,20,'2026-10-14',100),null)
+  assert.equal(await reserveCall(d1,rid,b,20,'2026-10-14',100,100),null)
   assert.equal(await admit(d1,work('new-day'),b,2),0)
   assert.equal(rows(raw,'SELECT spent_neurons FROM enrichment_runs')[0].spent_neurons,85)
 })
@@ -108,16 +120,29 @@ test('existing daily spend blocks a run call even while its total cap has room',
   const {d1,raw}=makeD1();const b=budget(1000)
   await admit(d1,work('a'),b,1)
   raw.exec("INSERT INTO spend(day,model,neurons) VALUES ('2026-10-13','fixture',80)")
-  assert.equal(await reserveCall(d1,'a',b,40,'2026-10-13',100),null)
-  assert.ok(await reserveCall(d1,'a',b,40,'2026-10-14',100))
+  assert.equal(await reserveCall(d1,'a',b,40,'2026-10-13',100,100),null)
+  assert.ok(await reserveCall(d1,'a',b,40,'2026-10-14',100,100))
+})
+
+test('a run call: the Worker\'s own spend counts against the live cap, the regen runner\'s rows only against the overall cap',async()=>{
+  const {d1,raw}=makeD1();const b=budget(1000)
+  await admit(d1,work('a'),b,1)
+  raw.exec("INSERT INTO spend(day,model,neurons) VALUES ('2026-10-13','regen:@cf/qwen/qwen3.8-27b',900)")
+  // live 0 + 60 <= 200; overall 900 + 60 <= 1000
+  const token=await reserveCall(d1,'a',b,60,'2026-10-13',200,1000)
+  assert.ok(token)
+  await settleCall(d1,token!,'fixture',30,10,10)
+  // live 30 + 80 <= 200 still, but overall 930 + 80 > 1000
+  assert.equal(await reserveCall(d1,'a',b,80,'2026-10-13',200,1000),null)
+  assert.ok(await reserveCall(d1,'a',b,70,'2026-10-13',200,1000)) // overall exactly 1000
 })
 
 test('a failed or interrupted model call keeps its full reservation across restarts/days',async()=>{
   const {d1,raw}=makeD1();const b=budget(100,80)
   await admit(d1,work('a'),b,1)
-  assert.ok(await reserveCall(d1,'a',b,80,'2026-10-13',1000))
+  assert.ok(await reserveCall(d1,'a',b,80,'2026-10-13',1000,1000))
   // No settlement: timeout/crash leaves billing uncertain.
-  assert.equal(await reserveCall(d1,'a',b,30,'2026-10-14',1000),null)
+  assert.equal(await reserveCall(d1,'a',b,30,'2026-10-14',1000,1000),null)
   assert.equal(await admit(d1,work('b'),b,2),0)
   assert.equal(rows(raw,'SELECT reserved_neurons FROM enrichment_runs')[0].reserved_neurons,80)
 })
@@ -125,7 +150,7 @@ test('a failed or interrupted model call keeps its full reservation across resta
 test('settlement frees headroom, waiting admission resumes without a catalog rewind',async()=>{
   const {d1,raw}=makeD1();const b=budget(100,80)
   await admit(d1,work('a'),b,1);await admit(d1,work('b'),b,1)
-  const token=await reserveCall(d1,'a',b,80,'2026-10-13',1000)
+  const token=await reserveCall(d1,'a',b,80,'2026-10-13',1000,1000)
   await settleCall(d1,token!,'fixture',5,10,10)
   assert.equal(await admitWaiting(d1,2),2)
   assert.equal(rows(raw,"SELECT COUNT(*) n FROM queue WHERE rid='b'")[0].n,2)
