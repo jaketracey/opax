@@ -21,7 +21,7 @@ import { transcriptTurns, shortTranscriptQuote, TRANSCRIPT_LABEL, TRANSCRIPT_NOT
 import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-29-near-repeats-who'
+export const ANSWER_WRITING_VERSION = 'written-answer-30-clause-who'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }

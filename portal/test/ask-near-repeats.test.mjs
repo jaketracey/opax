@@ -240,3 +240,75 @@ test('a recovered speech finding removes trailing member attribution before its 
   assert.equal(out.answer.split('\n\n')[0],'Morgan Sample told the Senate on 10 July 2023 that the report made findings about the conduct of former minister Avery Quinlan.')
   assert.doesNotMatch(out.answer,/the member said/);valid(out)
 })
+
+const live182=JSON.parse(readFileSync(new URL('./fixtures/ask-dedupe/03-robodebt-live-182.json',import.meta.url),'utf8'))
+test('row 182 replay merges appositional investigation clauses while retaining both dated tails and every citation',()=>{
+  const out=api.distinctSummary(live182)
+  assert.equal((out.answer.match(/Catherine Holmes AC SC/g)??[]).length,1)
+  assert.doesNotMatch(out.answer,/examined who was responsible for the scheme;/)
+  assert.match(out.answer,/whose Royal Commissioner was Catherine Holmes AC SC, investigated who was responsible for robodebt and delivered its final report on 7 July 2023/)
+  assert.match(out.answer,/Kate Thwaites told the House of Representatives on 7 August 2023/)
+  assert.match(out.answer,/'the establishment of the scheme and who was responsible for it'/)
+  assert.deepEqual(Object.keys(out.citations),Object.keys(live182.citations))
+  assert.deepEqual(out.sources,live182.sources)
+  const speech='speech-1553201/t/body/0-646',record='fact-14/t/body/0'
+  assert.ok(out.citations[speech].some(([a,b])=>out.citations[record].some(([x,y])=>a<y&&b>x)),'the merged clause keeps the union of its sources')
+  assert.ok(cited(out,speech).some(s=>/^(?:The )?Royal Commission into the Robodebt Scheme$/.test(s)),'the speech citation stays on words its source holds')
+  valid(out);assert.deepEqual(api.distinctSummary(out),out)
+})
+
+test('row 182 who-lead moves the source-backed Morrison finding first with Shorten attribution',()=>{
+  assert.ok(live182.research.trail.some(t=>t.round===7&&t.tool==='corpus_records'&&t.arg==='speech-1551171'))
+  assert.ok(live182.research.trail.some(t=>t.round===8&&t.tool==='answer'))
+  const out=api.leadWithWho(live182,question),finding=live182.answer.split('\n\n')[6]
+  assert.equal(out.answer.split('\n\n')[0],finding)
+  assert.match(finding,/^Bill Shorten told the House on 31 July 2023.*Scott Morrison.*allowed Cabinet to be misled.*ministerial responsibility/)
+  for(const id of Object.keys(live182.citations))assert.deepEqual(cited(out,id),cited(live182,id))
+  valid(out)
+})
+
+test('row 182 repairs reach JSON and SSE without emptying, blocking or losing a source',async()=>{
+  const out=await(await api.withAnswerLanguage(Response.json(live182),question)).json()
+  assert.match(out.answer.split('\n\n')[0],/Scott Morrison.*allowed Cabinet to be misled/)
+  assert.equal((out.answer.match(/Catherine Holmes AC SC/g)??[]).length,1)
+  assert.equal(out.answer_decision,'answer')
+  assert.deepEqual(out.sources,live182.sources)
+  assert.deepEqual(Object.keys(out.citations),Object.keys(live182.citations));valid(out)
+  const stream=new Response('event: done\ndata: '+JSON.stringify(live182)+'\n\n',{headers:{'content-type':'text/event-stream'}})
+  const raw=await(await api.withAnswerLanguage(stream,question)).text()
+  const frame=JSON.parse(raw.split('\n').find(l=>l.startsWith('data: ')).slice(6))
+  assert.equal(frame.answer,out.answer);assert.deepEqual(frame.citations,out.citations)
+  const again=await(await api.withAnswerLanguage(Response.json(out),question)).json()
+  assert.equal(again.answer,out.answer);assert.deepEqual(again.citations,out.citations)
+})
+
+test('a parenthetical person needs support from the cited finding before moving first',()=>{
+  const p=structuredClone(live182),s=p.sources.find(s=>s.resource==='speech-1551171')
+  s.snippet=s.snippet.replaceAll('Mr Morrison','Mr Howard')
+  const out=api.leadWithWho(p,question)
+  assert.doesNotMatch(out.answer.split('\n\n')[0],/Scott Morrison/)
+  assert.equal(out.answer_decision,'answer');assert.ok(out.answer.includes(p.answer.split('\n\n')[6]))
+})
+
+for(const reverse of [false,true])test('shared investigation clauses preserve independent and inherited-subject tails in either order: '+reverse,()=>{
+  const first=live182.answer.split('\n\n')[2],second=live182.answer.split('\n\n')[3]
+  const lines=reverse?[second,first]:[first,second],p=payload(lines),out=api.distinctSummary(p)
+  assert.equal((out.answer.match(/Catherine Holmes AC SC/g)??[]).length,1)
+  assert.match(out.answer,/Kate Thwaites told/);assert.match(out.answer,/and delivered its final report on 7 July 2023/)
+  assert.doesNotMatch(out.answer,/(?:^|\n)\s*(?:;|and delivered)/);valid(out)
+})
+
+for(const changed of ['19 claims','18 July 2022','Avery Quinlan'])test('clause matching retains a changed number, date or commissioner: '+changed,()=>{
+  const first='The Royal Commission into the Recovery Scheme (Commissioner Rowan Ellery) examined 17 claims on 18 August 2022; Morgan Sample reported the findings.'
+  let second='The Royal Commission into the Recovery Scheme, whose Royal Commissioner was Rowan Ellery, investigated 17 claims on 18 August 2022 and delivered its final report.'
+  second=second.replace(changed==='19 claims'?'17 claims':changed==='18 July 2022'?'18 August 2022':'Rowan Ellery',changed)
+  const p=payload([first,second]),out=api.distinctSummary(p)
+  assert.equal(out.answer,p.answer);assert.deepEqual(out.citations,p.citations)
+})
+
+test('a fuller independent opening retains its details when removing the other opening would orphan its tail',()=>{
+  const first=live182.answer.split('\n\n')[2].replace('examined who','carefully and systematically examined in considerable detail who')
+  const second=live182.answer.split('\n\n')[3]
+  const p=payload([first,second]),out=api.distinctSummary(p)
+  assert.equal(out.answer,p.answer);assert.deepEqual(out.citations,p.citations)
+})

@@ -1,5 +1,6 @@
+import {PERSON_PATHS} from '../public/party-page.js'
 import {sharedCitationSpan} from './research-dedupe'
-import {ACCOUNTABILITY_QUESTION} from './research-answer-shape'
+import {ACCOUNTABILITY_QUESTION,leadWithAuthority} from './research-answer-shape'
 import {sentenceParts} from './research-claim-audit.mjs'
 import {recordedChamber} from './ask-chamber-phrases'
 import {readableDate} from './tools/record-common'
@@ -10,16 +11,25 @@ const cp=(text:string)=>Array.from(text).length
 const name=String.raw`\p{Lu}[\p{L}’'-]+(?:\s+\p{Lu}[\p{L}’'-]+)+`
 const namedRole=new RegExp(String.raw`\b(?:[Ff]ormer\s+)?(?:[Pp]rime [Mm]inister|[Mm]inisters?|[Ss]ecretar(?:y|ies)|[Oo]fficials?|[Dd]irectors?|[Cc]hief [Ee]xecutives?)\s+(${name}(?:\s+and\s+${name})?)`,'u')
 const action=/\b(?:approv\w*|authoris\w*|authoriz\w*|decid\w*|order\w*|signed off|responsib\w*|accountab\w*|conduct|misled|ignored|failed|breached|criticis\w*|criticiz\w*|findings)\b/i
+// Hansard's honorific and surname can identify a public figure named in full by the writer.
+const publicNames=Object.keys(PERSON_PATHS.exact)
+const actorName=(value:string)=>{
+  const short=value.replace(/^(?:Mr|Ms|Mrs|Dr|Sir)\.?\s+/,'')
+  if(short===value)return value
+  const held=publicNames.filter(n=>n.endsWith(' '+short))
+  return held.length===1?held[0]:value
+}
 function actors(text:string):string[] {
   // A speaker, commissioner or witness is not thereby the subject of a finding.
   if(!action.test(text))return []
   const match=namedRole.exec(text)
   const before=match?text.slice(0,match.index):'',after=match?text.slice(match.index+match[0].length):''
   const role=match&&(action.test(after)||/\b(?:findings|conduct)\b[^.;]{0,60}\b(?:of|about|regarding|on|against)\s*$|\b(?:approved|authorised|authorized|ordered) by\s*$|\bcriticis(?:ed|es)\s*$/i.test(before))&&!/\b(?:cleared|exonerated|acquitted|no|not)\b[^.;]{0,65}$/i.test(before)&&!/^\s+(?:(?:was|were)\s+not|no)\b/i.test(after)?match[1]:undefined
-  const subject=new RegExp(String.raw`(?:^|\b(?:that|found|concluded)\s+)(${name})\s+(?:approved|authorised|authorized|decided|ordered|misled|ignored|failed|breached)\b`,'u').exec(text)?.[1]
+  const subject=new RegExp(String.raw`(?:^|:\s*|\b(?:that|found|concluded)\s+)(${name})\s+(?:approved|authorised|authorized|decided|ordered|allowed|misled|ignored|failed|breached)\b`,'u').exec(text)?.[1]
   const conductMatch=new RegExp(String.raw`\b[Ff]indings (?:about|regarding|on|against) (?:the conduct of )?(${name}(?:\s+and\s+${name})?)`,'u').exec(text)
   const conduct=conductMatch&&!/\b(?:no|not|cleared|exonerated|acquitted)\b[^.;]{0,65}$/i.test(text.slice(0,conductMatch.index))&&!/^\s+(?:(?:was|were)\s+not|no)\b/i.test(text.slice(conductMatch.index+conductMatch[0].length))?conductMatch[1]:undefined
-  if(role||subject||conduct)return (role??subject??conduct!).split(/\s+and\s+/)
+  const relative=new RegExp(String.raw`\((${name})\),\s+who\b[^.;]{0,300}\b(?:approved|authorised|authorized|allowed|misled|ignored|failed|responsibility)\b`,'u').exec(text)?.[1]
+  if(role||subject||conduct||relative)return (role??subject??conduct??relative!).split(/\s+and\s+/).map(actorName)
   if(/\b(?:approved|authorised|authorized) by Cabinet\b|\bCabinet (?:approved|authorised|authorized)\b/.test(text))return ['Cabinet']
   const office=/\b(?:the )?((?:(?:Department|Ministry) of|(?:Minister|Secretary) for) [A-Z][\p{L} ]+?(?:['’]s office)?) (?:(?:had |has )?(?:approved|authorised|ignored|failed|ran)|was responsible)\b/u.exec(text)?.[1]
   return office?[office]:[]
@@ -67,7 +77,7 @@ export function leadWithWho<T extends Record<string,unknown>>(payload:T,question
   const missing='The cited sources do not name a person or office as responsible.'
   const existing=parts.find(p=>p.text===missing)
   if(existing)return moveFirst(payload,existing.a,existing.b,missing)
-  return prepend(payload,missing,[])
+  return prepend(leadWithAuthority(payload,question),missing,[])
 }
 
 function prepend<T extends Record<string,unknown>>(payload:T,text:string,ids:string[]):T {
