@@ -6,7 +6,7 @@ import {JSDOM} from 'jsdom';
 import {resolveFlow,flowScope,pageHTML,comparableFlows} from '../public/money-explain.js';
 import {donationGraph} from '../public/money-receipts.js';
 import {hasPartyReceipts} from '../public/donor-disclosure.js';
-import {partyMoneyData,partyMoneyTableConfig,registerTableHTML} from '../public/register-tables.js';
+import {partyMoneyData,partyMoneyTableConfig,partyTableScope,registerTableHTML} from '../public/register-tables.js';
 import {partyMoneyResponse} from '../src/party-money-table.ts';
 import {build} from 'esbuild';
 import {tableApi} from '../src/table-api.ts';
@@ -114,7 +114,7 @@ test('Liberal and Labor agree across browser, SSR, register API and the actual C
       }
       const response=await workerFetch(partyUrl(party),{}, {},{assets:{'/graph/money.json':{meta:{},nodes:[],edges:[]}}});
       assert.equal(response.status,200);
-      const html=await response.text();assert.ok(html.includes(data.scope));
+      const html=await response.text();assert.ok(html.includes(partyTableScope(data.scope,full.meta)));
       assert.deepEqual(numericRows(configFrom(html).rows),expected,'SSR '+party);
       const api=await partyMoneyResponse(new Request('https://opax.test/api/register/party-money?partyId='+encodeURIComponent('party:'+party)),{fetch:async request=>{
         assert.equal(new URL(request.url).pathname,'/graph/money-receipts.json');return Response.json(full);

@@ -1,9 +1,9 @@
 // Division and voting-record rollout using the shared server-mode core.
-import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=4533f522af';
+import {dataTableHTML, mountDataTable, applyQuery, guardTableURL} from './datatable.js?v=d86685a921';
 // Guard and render must share the core module's rejection-state registry.
 export {guardTableURL};
 import {shortDate} from './format.js';
-import {statusLabelHTML} from './labels.js?v=6d2e2e9cd8';
+import {statusLabelHTML} from './labels.js?v=fcb2a1091c';
 import {divisionPlain} from './division-markdown.js?v=5991511166';
 
 const sentence = value => { const text = String(value || '').replace(/_/g, ' ').trim(); return text ? text[0].toUpperCase() + text.slice(1).toLowerCase() : ''; };
@@ -21,6 +21,41 @@ export function headingTitle(value) {
   return /^(?:BILLS|Bills)$/.test(heading[1]) ? heading[2] : `${sentence(heading[1])} - ${heading[2]}`;
 }
 const divisionLink = value => /^[a-z0-9][a-z0-9-]*$/.test(String(value || '')) ? `/doc/${String(value).startsWith('division-') ? value : `division-${value}`}` : null;
+
+/** Classify the recorded title, never the stage, tally or a speech in the question text.
+ * Limitation of debate can also be the stage of a content amendment or final passage.
+ * Only explicit motions about running the debate belong in the procedural group. */
+export function isProceduralDivision(title) {
+  const text = divisionPlain(title).toLowerCase().replace(/[‘’ʼ`]/g, "'").replace(/[–—]/g, '-').replace(/\s+/g, ' ').trim();
+  return /\b(?:suspend(?:ing)?|suspension of) (?:the |so much of the )?(?:standing(?: and sessional)?|sessional) orders?\b/.test(text)
+    || /\bsuspend (?:the )?(?:usual )?(?:procedural |procedual )?(?:rules|orders)(?=\s*(?:$|[\[(])|\s+(?:to|so|for a motion)\b)/.test(text)
+    || /(?:^|\s)(?:that the question be (?:now )?put|put the question|speed things along)(?=\s*(?:$|[\[(]))/.test(text)
+    || /(?:^|\s)put the motion$/.test(text)
+    || /(?:^|\s)(?:closure of (?:the )?debate|allotment of time)\b/.test(text)
+    || /(?:^|[-;:]\s+)end debate\b/.test(text)
+    || /(?:^|[-;:]\s+)don't let (?:a )?vote happen(?=\s*(?:$|[\[(]))/.test(text)
+    || /(?:^|[-;:]\s+)(?:closure|guillotine)\s*(?:$|[-;:(])/.test(text)
+    || /\b(?:member|senator) be no (?:longer|further) heard\b/.test(text)
+    || /(?:^|[-;:]\s+)(?:(?:do not|don't) )?(?:stop|stopping)\b[^.;:]*\b(?:speaking|speeaking|spearking|talking)\b/.test(text)
+    || /\b(?:member|mp|senator)\b[^.;:]*\sstop speaking\b/.test(text)
+    || /\bstop debating (?:the )?bill until\b/.test(text)
+    || /\b(?:adjourn(?:ment of)? (?:the )?debate|debate be (?:now )?adjourned)\b/.test(text)
+    || /(?:^|[-;:])\s*(?:leave (?:be granted|to (?:introduce|move|proceed|withdraw))|(?:grant|refuse) leave|order of business|rearrangement of (?:the )?business|business - rearrangement)\b/.test(text);
+}
+export const PROCEDURAL_TITLES_PATH = '/procedural-division-titles.json';
+export const PROCEDURAL_VOTES_NOTE = 'Votes on how the debate ran, such as closing debate or suspending standing orders. They are not votes on the bill itself.';
+export const proceduralTagHTML = () => '<span class="ui-tag procedural-tag">Procedural</span>';
+
+/** Older bill exports omit titles. The release lookup keeps only explicit procedural
+ * titles, read from the published division files. A missing title stays substantive. */
+const divisionGroups = rows => ({substantive: rows.filter(row => !row.procedural), procedural: rows.filter(row => row.procedural)});
+export function billDivisionGroups(divisions = [], titles = {}) {
+  return divisionGroups(divisionRows(divisions, true, titles));
+}
+export function billVoteSummary(groups) {
+  const n = groups.substantive.length, p = groups.procedural.length;
+  return `${n} substantive vote${n === 1 ? '' : 's'}${p ? `; ${p} procedural vote${p === 1 ? '' : 's'}` : ''}`;
+}
 
 export const divisionColumns = [
   {key:'title', label:'Title', type:'text', primary:true},
@@ -93,7 +128,7 @@ export function personVoteRecords(keys = [], votes = {}, recentData = null) {
       recorded = true;
       return recent.recent;
     }
-    return [...(record.for || []).map(row => ({...row, vote:'For the bill'})), ...(record.against || []).map(row => ({...row, vote:'Against the bill'}))];
+    return [...(record.for || []).map(row => ({...row, vote:isProceduralDivision(row.title || row.name) ? 'aye' : 'For the bill'})), ...(record.against || []).map(row => ({...row, vote:isProceduralDivision(row.title || row.name) ? 'no' : 'Against the bill'}))];
   });
   return {rows, recorded};
 }
@@ -112,7 +147,7 @@ export function divisionIdentity(division) {
   const own = String(division?.slug || division?.key || '').replace(/^division-/, '');
   return own ? `key:${own}` : '';
 }
-export function divisionRows(divisions = [], deduplicate = false) {
+export function divisionRows(divisions = [], deduplicate = false, titles = {}) {
   const unique = new Map();
   for (const division of divisions) {
     const stage = (division.stage ? sentence(division.stage) : headingTitle(division.title)) || 'Division';
@@ -125,7 +160,8 @@ export function divisionRows(divisions = [], deduplicate = false) {
     const outcome = ({affirmative:'Agreed', negative:'Not agreed'}[division.outcome || division.result]) || sentence(division.outcome || division.result) || 'Not recorded';
     unique.set(key, {title:[stage, date ? shortDate(date) : ''].filter(Boolean).join(', '), date, kind:divisionKind(division),
       chamber:chambers[division.house] || sentence(division.house) || 'Not recorded', outcome,
-      ayes:count(division.ayes), noes:count(division.noes),
+      // The lookup identifies explicit procedure without changing the exported stage/heading kinds.
+      ayes:count(division.ayes), noes:count(division.noes), procedural:isProceduralDivision(division.title || division.name || titles[division.key]),
       href:divisionLink(division.slug || division.key) || safeLink(division.source_url || division.url)});
   }
   return [...unique.values()];
@@ -158,9 +194,10 @@ const theChamber = chamber => !chamber || chamber === 'Not recorded' ? 'parliame
 const plural = (n, one, many) => `${n.toLocaleString('en-AU')} ${n === 1 ? one : many}`;
 
 /**
- * One sentence per chamber for a kind of folded division, counted from the rows the table shows, so
- * the sentence and the rows always agree: "On 19 Aug 2026 the Senate voted 11 times on this bill
- * under a limitation of debate, a time limit set on the debate: 5 agreed, 6 not agreed."
+ * One sentence per chamber for a recorded stage, in source order. Its count covers that stage's
+ * folded table plus any rows explicitly identified as being listed under Procedural votes.
+ * "On 19 Aug 2026 the Senate voted 11 times on this bill under a limitation of debate,
+ * a time limit set on the debate: 5 agreed, 6 not agreed."
  */
 export function divisionGroupSentences(rows = [], kind = 'limitation') {
   const group = DIVISION_GROUPS[kind];
@@ -177,8 +214,11 @@ export function divisionGroupSentences(rows = [], kind = 'limitation') {
     const head = `${when}${when ? who : who[0].toUpperCase() + who.slice(1)} voted ${list.length === 1 ? 'once' : `${list.length.toLocaleString('en-AU')} times`} ${group.phrase}`;
     const agreed = list.filter(row => row.outcome === 'Agreed').length, not = list.filter(row => row.outcome === 'Not agreed').length;
     const other = list.length - agreed - not;
-    if (list.length === 1) return `${head}, and the question was ${agreed ? 'agreed' : not ? 'not agreed' : 'given no recorded outcome'}.`;
-    return `${head}: ${[`${agreed.toLocaleString('en-AU')} agreed`, `${not.toLocaleString('en-AU')} not agreed`, other ? `${plural(other, 'with no recorded outcome', 'with no recorded outcome')}` : ''].filter(Boolean).join(', ')}.`;
+    const moved = list.filter(row => row.procedural).length;
+    const location = moved ? (list.length === 1 ? ' It is listed under Procedural votes.'
+      : ` ${plural(moved, 'of these is listed', 'of these are listed')} under Procedural votes.`) : '';
+    if (list.length === 1) return `${head}, and the question was ${agreed ? 'agreed' : not ? 'not agreed' : 'given no recorded outcome'}.${location}`;
+    return `${head}: ${[`${agreed.toLocaleString('en-AU')} agreed`, `${not.toLocaleString('en-AU')} not agreed`, other ? `${plural(other, 'with no recorded outcome', 'with no recorded outcome')}` : ''].filter(Boolean).join(', ')}.${location}`;
   });
 }
 
@@ -190,30 +230,37 @@ function localDivisionConfig(base, rows, overrides) {
 }
 
 /**
- * A bill's divisions, told: one sentence per folded kind above the table, the divisions on the bill
- * itself in the main table, and the limitation-of-debate and procedural votes each folded into their
- * own table under one disclosure. A bill with no folded votes keeps the one server-backed table.
+ * One bill renderer for SSR and the browser. Stage-based sentences count every recorded row,
+ * including explicit procedural motions, and say how many are in the separate Procedural votes group.
+ * Substantive limitation/procedure stages retain their folded tables. Explicit procedural titles
+ * have their own closed group. Every table queries and exports its complete bounded bill rows.
+ * The main substantive table always has the caption "Divisions on the bill".
  */
-export function billDivisionsTablesHTML(rows = [], {bill = '', suffix = '', query = {}} = {}) {
-  const base = divisionTableConfig({bill}, 'Divisions', 'bill');
-  if (suffix) base.id += suffix;
-  const main = rows.filter(row => !DIVISION_GROUPS[row.kind]);
-  const folded = Object.keys(DIVISION_GROUPS).map(kind => ({kind, rows:rows.filter(row => row.kind === kind)})).filter(g => g.rows.length);
-  if (!folded.length) return voteTableHTML(base, voteTablePage(rows, base, query));
-  const sentences = folded.flatMap(g => divisionGroupSentences(g.rows, g.kind));
-  const story = `<p class="division-story">${sentences.map(escText).join(' ')}</p>`;
-  const mainHTML = main.length ? (() => {
-    const config = localDivisionConfig(base, main, {caption:'Divisions on the bill'});
-    return voteTableHTML(config, voteTablePage(main, config, query));
-  })() : '';
-  const groups = folded.map(({kind, rows: list}) => {
+export function billDivisionTablesHTML(divisions = [], titles = {}, query = {}, suffix = '', proceduralQuery = {}, headingLevel = 2) {
+  const rows = divisionRows(divisions, true, titles);
+  const groups = divisionGroups(rows);
+  const base = divisionTableConfig({}, 'Divisions on the bill', 'bill');
+  const main = groups.substantive.filter(row => !DIVISION_GROUPS[row.kind]);
+  const folded = Object.keys(DIVISION_GROUPS).map(kind => ({kind, rows:groups.substantive.filter(row => row.kind === kind)})).filter(g => g.rows.length);
+  const sentences = Object.keys(DIVISION_GROUPS).flatMap(kind => divisionGroupSentences(rows, kind));
+  const story = sentences.length ? `<p class="division-story">${sentences.map(escText).join(' ')}</p>` : '';
+  const table = (list, overrides = {}, tableQuery = {}) => {
+    const config = localDivisionConfig(base, list, {id:base.id + suffix, ...overrides});
+    return voteTableHTML(config, voteTablePage(list, config, tableQuery));
+  };
+  const heading = headingLevel === 3 ? 'h3' : 'h2';
+  const mainHTML = main.length ? table(main, {}, query) : groups.substantive.length ? ''
+    : `<${heading}>Divisions</${heading}><p>No substantive divisions recorded.</p>`;
+  const foldedHTML = folded.map(({kind, rows: list}) => {
     const group = DIVISION_GROUPS[kind];
-    const config = localDivisionConfig(base, list, {id:group.id + suffix, urlKey:group.urlKey, caption:group.caption,
+    const html = table(list, {id:group.id + suffix, urlKey:group.urlKey, caption:group.caption,
       export:{filename:`divisions-${kind}.csv`}});
-    // With nothing else to show, the folded votes are the table and stay open.
-    return `<details class="ui-disclosure division-group" data-kind="${kind}"${main.length ? '' : ' open'}><summary>${escText(group.summary(list.length))}</summary><div class="ui-disclosure-body">${voteTableHTML(config, voteTablePage(list, config))}</div></details>`;
+    // With no main substantive rows, retain the reviewed open stage groups.
+    return `<details class="ui-disclosure division-group" data-kind="${kind}"${main.length ? '' : ' open'}><summary>${escText(group.summary(list.length))}</summary><div class="ui-disclosure-body">${html}</div></details>`;
   }).join('');
-  return story + mainHTML + groups;
+  const proceduralHTML = groups.procedural.length
+    ? `<details class="ui-disclosure procedural-votes"><summary>Procedural votes (${groups.procedural.length})</summary><div class="ui-disclosure-body"><p>${PROCEDURAL_VOTES_NOTE}</p>${table(groups.procedural, {id:base.id + '-procedural' + suffix, urlKey:'pv', caption:'Procedural votes', export:{filename:'procedural-votes.csv'}}, proceduralQuery)}</div></details>` : '';
+  return story + `<p class="bill-vote-summary">${billVoteSummary(groups)}.</p>` + mainHTML + foldedHTML + proceduralHTML;
 }
 
 const billIndexes = new WeakMap();
@@ -234,8 +281,10 @@ export function votingRows(votes = [], bills = []) {
     const title = headingTitle(v.title || v.name || 'Division');
     const matches = (index.get(titleKey(v.title || v.name)) || []).filter(b=>!v.jur || b.jurisdiction===v.jur);
     const billKey = v.bill_key || (matches.length===1 ? matches[0].key : '');
-    return {title, date:String(v.date || ''),
-    vote:({aye:'Aye', no:'No', paired:'Paired', absent:'Absent'}[v.vote]) || sentence(v.vote) || 'Not recorded',
+    const procedural = isProceduralDivision(v.title || v.name);
+    const vote = procedural ? ({'For the bill':'aye', 'Against the bill':'no'}[v.vote] || v.vote) : v.vote;
+    return {title, date:String(v.date || ''), procedural,
+    vote:({aye:'Aye', no:'No', paired:'Paired', absent:'Absent'}[vote]) || sentence(vote) || 'Not recorded',
     // Only a position explicitly supplied by this vote's source is shown.
     party_position:sentence(v.party_position) || 'Not recorded',
     href:divisionLink(v.division_slug) || (/^au-[a-z0-9-]+$/.test(billKey) ? `/bill/${billKey}` : safeLink(v.source_url)) || `/ask?view=search&q=${encodeURIComponent(title)}`};
@@ -258,6 +307,11 @@ function outcomeCell(html) {
 }
 export function voteTableHTML(config, page) {
   let html = dataTableHTML(config, page);
+  let row = 0;
+  html = html.replace(/(<td\b[^>]*data-primary[^>]*>)([\s\S]*?)(<\/td>)/g, (_, start, cell, end) => {
+    const record = page.rows[row++];
+    return start + cell + (record?.procedural ? proceduralTagHTML() : '') + end;
+  });
   const json = JSON.stringify(config).replace(/</g, '\\u003c').replace(/&/g, '\\u0026');
   return `<div class="vote-table" data-vote-table>${outcomeCell(html)}<script type="application/json" data-vote-config>${json}</script></div>`;
 }
@@ -274,6 +328,14 @@ export function mountVoteTables(root = document) {
     config.primaryLink = row => safeLink(row.href);
     const table = el.querySelector('[data-datatable]');
     const decorate = () => {
+      for (const cell of el.querySelectorAll('td[data-label="Bill or division"]')) {
+        const title = cell.querySelector('.dt-value')?.textContent || '';
+        if (isProceduralDivision(title)) {
+          if (!cell.querySelector('.procedural-tag')) cell.insertAdjacentHTML('beforeend', proceduralTagHTML());
+          const value = cell.closest('tr')?.querySelector('td[data-label="Vote"] .dt-value');
+          if (value && /^(?:For|Against) the bill$/i.test(value.textContent.trim())) value.textContent = /^For/i.test(value.textContent.trim()) ? 'Aye' : 'No';
+        }
+      }
       for (const cell of el.querySelectorAll('td[data-label="Outcome"]')) {
         if (cell.querySelector('.ui-status')) continue;
         const value = cell.querySelector('.dt-value') || cell;

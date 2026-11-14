@@ -1,6 +1,6 @@
-import {donorDisclosure} from './donor-disclosure.js?v=6f4ae1756c';
+import {donorDisclosure} from './donor-disclosure.js?v=d28448a137';
 import {subjectUrl} from './canonical-urls.js?v=bcc9a57bab';
-import {moneyFlowType, filterMoneyEdges, readMoneyFilters} from './money-records.js';
+import {moneyFlowType, filterMoneyEdges, readMoneyFilters} from './money-records.js?v=ia-ux-20260908-2';
 
 const labels={receipts:'Political receipts',contracts:'Contract values',grants:'Grant awards'};
 export function filterMoneyConnectionView(graph,params) {
@@ -9,7 +9,7 @@ export function filterMoneyConnectionView(graph,params) {
 }
 
 /** Source names and amounts are preserved; only confident donor matches link.
- * @returns {import('./datatable.js?v=4533f522af').DataTableConfig} */
+ * @returns {import('./datatable.js?v=d86685a921').DataTableConfig} */
 export function moneyConnectionsConfig(graph) {
   const nodes=new Map(graph.nodes.map(n=>[n.id,n]));
   const rows=[],types=new Set();
@@ -35,8 +35,8 @@ export function moneyConnectionsConfig(graph) {
     rows,pageSize:50,defaultSort:{key:types.size>1?(types.has('contracts')?'contracts':[...types][0]):'value',dir:'desc'},density:'comfortable',
     columns:[
       {key:'type',label:'Type',type:'category',facet:'chips',hideWhenConstant:true},
-      {key:'from',label:'From',type:'category',facet:'multi',hideWhenConstant:false,href:row=>row.from_href},
-      {key:'to',label:'To',type:'text',facet:'multi',hideWhenConstant:false,primary:true},
+      {key:'from',label:'From',sourceName:true,type:'category',facet:'multi',hideWhenConstant:false,href:row=>row.from_href},
+      {key:'to',label:'To',sourceName:true,type:'text',facet:'multi',hideWhenConstant:false,primary:true},
       ...values,
       {key:'records',label:'Records',type:'count',facet:'range'},
       {key:'years',label:'Years',type:'text'},

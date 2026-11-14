@@ -1,3 +1,4 @@
+import {displayName} from '../public/display-name.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
@@ -99,9 +100,9 @@ for(const confident of [false,true])test((confident?'confident':'uncertain')+': 
  const config=partyMoneyTableConfig(rows);
  const verify=doc=>{
   const shown=doc.body.cloneNode(true);shown.querySelectorAll('script,template').forEach(n=>n.remove());
-  assert.ok(shown.textContent.includes(donor.source_name));assert.doesNotMatch(shown.textContent,/AEC annual return|RETURN-7|Return reference/);assert.equal(doc.querySelectorAll('[data-column="return_reference"]').length,0);
+  assert.ok(shown.textContent.includes(displayName(donor.source_name)));assert.doesNotMatch(shown.textContent,/AEC annual return|RETURN-7|Return reference/);assert.equal(doc.querySelectorAll('[data-column="return_reference"]').length,0);
   // Every donor name links (16 Oct): the confident match's page, or the page for its own spelling.
-  const links=[...doc.querySelectorAll('a')].filter(a=>a.textContent===donor.source_name);assert.equal(links.length,1);assert.equal(links[0].getAttribute('href'),confident?donor.match.href:'/subject/donor/EXAMPLE%2C%20ALEX');
+  const links=[...doc.querySelectorAll('a')].filter(a=>a.textContent===displayName(donor.source_name));assert.equal(links.length,1);assert.equal(links[0].getAttribute('href'),confident?donor.match.href:'/subject/donor/EXAMPLE%2C%20ALEX');
  };
  const html=registerTableHTML(config),dom=new JSDOM(html,{url:'https://opax.test/subject/party/fixture'});verify(dom.window.document);
  let requests=0;dom.window.fetch=async()=>{requests++;throw Error('unexpected request');};

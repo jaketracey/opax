@@ -94,14 +94,14 @@ test('published counts remain a positive integer map keyed by person ID', () => 
   assert.ok(Object.entries(counts).every(([id, count]) => /^\d+$/.test(id) && Number.isSafeInteger(count) && count > 0));
 });
 
-test('a list-only profile says no Hansard is held, in the browser and server alike; a linked person with speeches does not', async () => {
+test('a list-only profile describes attribution, in the browser and server alike; a linked person with speeches does not', async () => {
   const roster = JSON.parse(readFileSync(new URL('../public/parliamentarians.json', import.meta.url), 'utf8')).people;
   const by = new Map(roster.map(p => [p.name, p]));
-  // The SA Council members on the official list dated 2026-11-13 that OPAX's SA Hansard (to 2023) never prints.
+  // Source-only profiles have no attributed total, including Hood whose B.R. Hood print is still unresolved.
   for (const name of ['Mira El Dannawi', 'Hilton Gumbys', 'Rebecca Hewett', 'Benjamin Hood', 'Carlos Quaremba', 'Melanie Selwood']) {
     const p = by.get(name);
     assert.ok(p?.roster_only && p.speeches === 0, name);
-    assert.match(noHansardHeldHTML(p), /^<p class="person-no-hansard fineprint">No Hansard held for this period\. /);
+    assert.equal(noHansardHeldHTML(p), '<p class="person-no-hansard fineprint">No speeches are attributed to this profile yet. This profile comes from the parliament’s member list.</p>');
     const {html} = await renderPersonAnswer(p, readCounts({}, {}), new Map());
     assert.ok(html.includes(noHansardHeldHTML(p)), name);
     assert.doesNotMatch(html, /0 speeches/);
@@ -113,5 +113,14 @@ test('a list-only profile says no Hansard is held, in the browser and server ali
   assert.doesNotMatch((await renderPersonAnswer(cory, readCounts({}, {}), new Map())).html, /No Hansard held/);
   assert.equal(noHansardHeldHTML(person), '');
   assert.equal(noHansardHeldHTML(null), '');
-  assert.equal(NO_HANSARD_HELD, 'No Hansard held for this period.');
+  assert.equal(NO_HANSARD_HELD, 'No speeches are attributed to this profile yet.');
+});
+
+test('Hood has recorded service from 2023 without claiming that his held Hansard is absent', async () => {
+  const {people} = JSON.parse(readFileSync(new URL('../public/parliamentarians.json', import.meta.url), 'utf8'));
+  const hood = people.find(p => p.name === 'Benjamin Hood');
+  assert.equal(hood.first, 2023);
+  const {html} = await renderPersonAnswer(hood, readCounts({}, {}), new Map());
+  assert.match(html, /No speeches are attributed to this profile yet\./);
+  assert.doesNotMatch(html, /No Hansard held|0 speeches/);
 });

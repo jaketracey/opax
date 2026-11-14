@@ -17,7 +17,7 @@ import {partyMoneyResponse} from '../src/party-money-table.ts';
 import {partyMoneyBucketFiles} from '../../scripts/build_growth_modules.mjs';
 
 const graph = JSON.parse(readFileSync(new URL('../public/graph/money.json', import.meta.url), 'utf8'));
-const SCOPE = 'All receipt types, 1998-99 to 2024-25, as the parties reported them in federal returns';
+const SCOPE = 'All receipt types, 1998–99 to 2024–25, as the parties reported them in federal returns';
 const PRATT = 'Pratt Holdings Pty Ltd', WESTPAC = 'Westpac Banking Corporation';
 const id = label => graph.nodes.find(n => n.kind === 'donor' && n.label === label).id;
 const legacyTotal = (label, party) => graph.edges.find(e => e.source === id(label) && e.target === party).total;
@@ -181,7 +181,7 @@ test('the D1 party-money and money-connections rows carry the page\'s figures an
 const HEADLINES = {Labor: 726752702, Liberal: 476294163, Nationals: 69579462, Greens: 31529186, 'Country Liberal Party': 8416214,
   'United Australia Party': 255773752};
 // What the headline counts and leaves out, the same words on the party page, the server page and the map card.
-const PARTY_SCOPE = 'Itemised receipts in the party\'s own federal returns, 1998-99 to 2024-25, each counted once. '
+const PARTY_SCOPE = 'Itemised receipts in the party\'s own federal returns, 1998–99 to 2024–25, each counted once. '
   + 'Public funding, tax refunds and other government payments, transfers between the party\'s own branches and amounts under the disclosure threshold are not included.';
 
 test('a party\'s headline is its own return, each line once, with the scope line; an older file keeps the record total', () => {
@@ -194,8 +194,8 @@ test('a party\'s headline is its own return, each line once, with the scope line
     if (label === 'Country Liberal Party' || label === 'United Australia Party') assert.ok(own.total > node.total, label);
     else assert.ok(own.total < node.total, `${label}: below the legacy all-record total`);
     assert.ok(own.total > Object.values(node.by_type).reduce((a, b) => a + b, 0), `${label}: above the donors drawn on the map`);
-    const fy = y => `${y}-${String((y + 1) % 100).padStart(2, '0')}`;
-    assert.equal(partyReturnScopeLabel(own), PARTY_SCOPE.replace('1998-99 to 2024-25', `${fy(own.firstYear)} to ${fy(own.lastYear)}`));
+    const fy = y => `${y}–${String((y + 1) % 100).padStart(2, '0')}`;
+    assert.equal(partyReturnScopeLabel(own), PARTY_SCOPE.replace('1998–99 to 2024–25', `${fy(own.firstYear)} to ${fy(own.lastYear)}`));
     if (label !== 'United Australia Party') assert.deepEqual([own.firstYear, own.lastYear], [1998, 2024], label);
     const lines = Object.values(node.return_by_type_year).flatMap(types => Object.values(types)).reduce((n, [, c]) => n + c, 0);
     assert.equal(own.count, lines);

@@ -8,7 +8,8 @@ import {donorRecordsHTML} from '../src/subject-figures.ts';
 import {loadDonorRecordsIndex,donorRecordsForName} from '../src/donor-index.ts';
 import {foldDonorName} from '../public/donor-entity.js';
 import {shortMoney} from '../public/format.js';
-import {receiptScopeLabel} from '../public/donor-disclosure.js';
+import {receiptScopeLabel,offMapDonorNote} from '../public/donor-disclosure.js';
+import {fy} from '../public/money-scope.js';
 
 const app = readFileSync(new URL('../public/app.js',import.meta.url),'utf8');
 // Evaluate the actual browser functions, with network-free rendering helpers.
@@ -91,12 +92,13 @@ test('campaigner server HTML contains every annual row with the browser words an
   const start = app.indexOf('const yearRows = (e.years || [])');
   const end = app.indexOf('\n  const register =',start);
   const browserHTML = runInNewContext(`${app.slice(start,end)};yearRows`,{
-    e:campaigner,fmtMoney,esc:value=>String(value),
+    e:campaigner,fmtMoney,fy,esc:value=>String(value),
     CAMPAIGNER_COLUMNS:campaignerColumns,
   });
   const browserDOM = new JSDOM(`<ul>${browserHTML}</ul>`);
   const expected = [...browserDOM.window.document.querySelectorAll('li')].map(li=>li.textContent.replace(/\s+/g,' ').trim());
   assert.deepEqual(rows.map(row=>`${row.cells[0].textContent} ${row.cells[1].textContent}`),expected);
+  assert.deepEqual(rows.map(row=>row.cells[0].textContent),['2023–24','2022–23','2021–22','2020–21']);
   assert.equal(rows[0].cells[1].textContent,'receipts $0 · payments $0 · debts $0 · electoral expenditure $0 · gifts received $0');
   assert.equal(rows[1].cells[1].textContent,'nothing itemised on the return');
   assert.doesNotMatch(rows[2].cells[1].textContent,/receipts|gifts received/);
@@ -106,10 +108,10 @@ test('campaigner server HTML contains every annual row with the browser words an
 });
 
 test('off-map server HTML retains each jurisdiction and matches hydrated figures without summing them',async()=>{
-  // The browser currently loses this unscoped collision. Evaluate its numeric
-  // renderer on each retained source record, as the directory does.
+  // Compare the numeric renderer on each retained source record with the server;
+  // the N04 scope tests also pin collision lookup order.
   const browser = runInNewContext(`${functionSource('donorRecordHTML')};donorRecordHTML`,{
-    fmtMoney,yearSpan,esc:value=>String(value),safeUrl:value=>value,
+    fmtMoney,yearSpan,receiptScopeLabel,offMapDonorNote,esc:value=>String(value),safeUrl:value=>value,
     tile:(figure,label)=>`<p>${figure} ${label}</p>`,sourceLineHTML:()=>'',
     MONEY_JURISDICTIONS:{qld:{label:'Queensland'}},AEC_NOTE:'',AEC_LICENCE:'',
   });

@@ -1,6 +1,7 @@
 import {donationGraph} from './money-receipts.js';
-import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=6f4ae1756c';
-import {loadDonorViewIndex} from './donor-views.js?v=c61afb12d9';
+import {industryName} from './money-scope.js';
+import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=d28448a137';
+import {loadDonorViewIndex} from './donor-views.js?v=75f497c532';
 import {subjectUrl} from './canonical-urls.js?v=bcc9a57bab';
 /*
  * The record quiz — a MindMaze-spirited quiz over OPAX's real data.
@@ -72,17 +73,7 @@ export function approxCount(n) {
 
 function fmtCount(n) { return n.toLocaleString("en-AU"); }
 
-const INDUSTRY_LABELS = {
-  mining: "Mining", finance: "Finance & banking", unions: "Unions",
-  property: "Property & construction", media: "Media", gambling: "Gambling",
-  fossil_fuels: "Fossil fuels", pharmacy: "Pharmacies & medicines",
-  hospitality: "Hospitality (pubs & clubs)", agriculture: "Farming & agriculture",
-  retail: "Retail", tobacco: "Tobacco", alcohol: "Alcohol", tech: "Technology",
-  telecom: "Telecommunications", legal: "Legal services", health: "Health",
-  defence: "Defence", transport: "Transport", security: "Security",
-  waste_management: "Waste management", lobbying: "Lobbying",
-  individual: "Individuals",
-};
+
 
 // Every donor and industry figure in the quiz is what the parties reported
 // receiving, all receipt types (receiptGraph), the donor record's headline. So
@@ -98,7 +89,7 @@ const industrySource = (key) =>
   SOURCE_PHRASES[key] || "the " + industryLabel(key).toLowerCase() + " industry";
 
 function industryLabel(key) {
-  return INDUSTRY_LABELS[key] || (key.charAt(0).toUpperCase() + key.slice(1)).replace(/_/g, " ");
+  return industryName(key);
 }
 
 /* ----- shared context computed once per round ----- */

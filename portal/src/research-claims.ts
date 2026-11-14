@@ -83,6 +83,11 @@ export function atomsFromText(text: string, evidenceId: string, source: {speaker
   }
   return out
 }
+/** An opening may be removed only when its semicolon tail has a standalone subject. */
+export function standaloneClauseTail(text:string):boolean {
+  const tail=text.trimStart()
+  return /^\p{Lu}/u.test(tail)&&!/^(?:it|its|they|their|he|his|she|her|this|these|that|those)\b/i.test(tail)
+}
 /** Independent clauses retain their original offsets for Unicode citation rebasing. */
 export function claimClauses(text: string): {text:string;start:number;end:number}[] {
   const out:{text:string;start:number;end:number}[]=[]

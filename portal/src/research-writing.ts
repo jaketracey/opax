@@ -6,7 +6,7 @@ import { atomsFromText, claimIdentity, claimClauses, normalClaim, numberValue, m
 import { withoutSaPlaceholder } from '../public/sa-hansard.js'
 import { partyReturns } from '../public/donor-disclosure.js'
 import type { QualitativeAnswer, ReceiptFact } from './research-types'
-import { plainAnswerPayload, rewriteAnswerPayload } from './research-language'
+import { plainAnswerPayload, rewriteAnswerPayload, quotePunctuation } from './research-language'
 import { repairDonorRanking,selectedDonorFacts,answerDecision,donorRankingAsked } from './research-coherence.mjs'
 import {auditPayload,sentenceParts} from './research-claim-audit.mjs'
 import {rankingCoverageMatches,rankingScopeGaps,partyNamed,sourceMetadata,resolvedRankingScope,jurisdictionNames} from './research-ranking-scope.mjs'
@@ -21,7 +21,7 @@ import { transcriptTurns, shortTranscriptQuote, TRANSCRIPT_LABEL, TRANSCRIPT_NOT
 import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-28-dedupe'
+export const ANSWER_WRITING_VERSION = 'written-answer-30-clause-who'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
@@ -31,7 +31,7 @@ const signedKey = (s: string) => clean(s).toLowerCase().replace(/[^\p{L}\p{N}−
 /** Remove repeated sentences at composition and public boundaries, preserving
  * original code-point citation ranges through every deletion. */
 export function distinctSummary<T extends Record<string, unknown>>(payload:T):T {
-  return rewriteAnswerPayload(dedupeAnswer(payload),replace=>{
+  return rewriteAnswerPayload(dedupeAnswer(quotePunctuation(payload)),replace=>{
     // Some register exports list a company once by name and again with its
     // business details. Keep the fuller item without repeating the name.
     replace(/:\s*[^:\n]+;[^\n]+/g,list=>{

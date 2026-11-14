@@ -36,7 +36,7 @@
         ] },
         { heading: 'Places', links: [
           page('/subject/electorate', 'Electorates', 'Representatives, election timelines and Census context.'),
-          page('/vic-election-2026', 'Victorian election 2026', '88 districts and 8 regions, voting 28 November.', { gate: 'vic-election' }),
+          page('/vic-election-2026', 'Victorian election 2026', '88 districts and 8 regions, election records.', { gate: 'vic-election' }),
         ] },
       ] },
     { id: 'money', label: 'Money', href: '/money', sub: 'Receipts, contracts and grants',
@@ -205,6 +205,7 @@
    *  strip. Runs again once the web fonts have loaded, since they change the
    *  tabs' widths. Never scrolls the page itself. */
   function revealCurrentTab(nav) {
+    if (!nav?.isConnected) return;
     const centre = () => {
       const tab = nav?.querySelector('[aria-current]');
       if (!tab || !nav.isConnected || nav.scrollWidth <= nav.clientWidth) return;
@@ -277,7 +278,7 @@
         ? `<a class="nav-feature" href="${esc(week.href)}"><span class="nav-feature-kicker">${week.now ? 'Sitting now' : 'Next sitting'}</span><span class="nav-feature-title">${esc(week.range)}</span><span class="nav-feature-meta">${esc(week.houses)}</span><span class="nav-feature-more">Bills and divisions${ARROW}</span></a>`
         : `<a class="nav-feature" href="/sitting"><span class="nav-feature-kicker">The calendar</span><span class="nav-feature-title">Sitting weeks</span><span class="nav-feature-meta">Every federal sitting week, past and upcoming.</span><span class="nav-feature-more">See the calendar${ARROW}</span></a>`;
     }
-    if (group.feature === 'vic') return gates['vic-election'] ? `<a class="nav-feature" href="/vic-election-2026"><span class="nav-feature-kicker">Votes on 28 November</span><span class="nav-feature-title">Victorian election 2026</span><span class="nav-feature-meta">Every district and region, its sitting member and their record.</span><span class="nav-feature-more">See the seats${ARROW}</span></a>` : '';
+    if (group.feature === 'vic') return gates['vic-election'] ? `<a class="nav-feature" href="/vic-election-2026"><span class="nav-feature-kicker">28 November 2026</span><span class="nav-feature-title">Victorian election 2026</span><span class="nav-feature-meta">Every district and region, published members and their records.</span><span class="nav-feature-more">See the seats${ARROW}</span></a>` : '';
     if (group.feature === 'money') return `<a class="nav-feature" href="/money"><span class="nav-feature-kicker">Explore</span><span class="nav-feature-title">The money map</span><span class="nav-feature-meta">Receipt sources, parties and public money as one territory you can turn.</span><span class="nav-feature-more">Open the map${ARROW}</span></a>`;
     return '';
   }

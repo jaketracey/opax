@@ -1,0 +1,254 @@
+{
+  "answer": "The commission found the Scheme was approved by Cabinet and proceeded without the legislative change to support income averaging that DSS had said was needed.\n\nThe commission concluded robodebt was a costly failure of public administration in human and economic terms.\n\nThe Royal Commission into the Robodebt Scheme (Commissioner Catherine Holmes AC SC) examined who was responsible for the scheme; Kate Thwaites told the House of Representatives on 7 August 2023 that the final report examined 'the establishment of the scheme and who was responsible for it'.\n\nThe Royal Commission into the Robodebt Scheme, whose Royal Commissioner was Catherine Holmes AC SC, investigated who was responsible for robodebt and delivered its final report on 7 July 2023.\n\nIts final report makes 57 recommendations, and 47 hearing transcripts are held as evidence rather than findings.\n\nThe commission found the Ombudsman was deliberately misled, letting the Government resist scrutiny by using his report as a shield.\n\nBill Shorten told the House on 31 July 2023 that the commission went to the role of the member for Cook (Scott Morrison), who as social services minister first took robodebt to cabinet in 2015, and that Commissioner Holmes found he 'allowed Cabinet to be misled' and 'failed to meet his ministerial responsibility to ensure that Cabinet was properly informed'.\n\nBill Shorten told the House on 10 August 2023 that Commissioner Holmes said the affair showed what 'can go wrong through venality, incompetence and cowardice', and said she reached findings against individuals only with 'a high degree of satisfaction about the evidence' after a fair hearing; Shorten then moved the resolution accepting the findings regarding the former ministers involved in the scheme's design and implementation.\n\nGraham Perrett described the notices to the House on 20 November 2024 as 'these Turnbull-Morrison debt notices', reflecting the scheme's operation under successive Coalition ministers.\n\nCommissioner Holmes stated that the scheme 'made many people feel like criminals', as quoted by Mark Dreyfus in the House on 10 October 2024.",
+  "answer_decision": "answer",
+  "answer_scope": {
+    "period": {
+      "kind": "all",
+      "label": "Counting speeches across the whole record."
+    },
+    "dated": false,
+    "people": [],
+    "stateGovernment": false,
+    "actUnfiltered": true,
+    "trend": false
+  },
+  "citations": {
+    "fact-9/t/body/0": [
+      [
+        160,
+        268
+      ]
+    ],
+    "speech-1553201/t/body/0-646": [
+      [
+        270,
+        560
+      ]
+    ],
+    "fact-10/t/body/0": [
+      [
+        0,
+        158
+      ]
+    ],
+    "fact-14/t/body/0": [
+      [
+        562,
+        754
+      ]
+    ],
+    "fact-15/t/body/0": [
+      [
+        562,
+        754
+      ]
+    ],
+    "fact-8/t/body/0": [
+      [
+        756,
+        868
+      ]
+    ],
+    "fact-11/t/body/0": [
+      [
+        885,
+        1000
+      ]
+    ],
+    "fact-11": [
+      [
+        870,
+        1001
+      ]
+    ],
+    "speech-1551171/t/body/649-2457": [
+      [
+        1003,
+        1363
+      ]
+    ],
+    "speech-1554704/t/body/648-4645": [
+      [
+        1365,
+        1797
+      ]
+    ],
+    "speech-1596748/t/body/0-642": [
+      [
+        1799,
+        1983
+      ]
+    ],
+    "speech-1594111/t/body/0-648": [
+      [
+        1985,
+        2126
+      ]
+    ]
+  },
+  "sources": [
+    {
+      "resource": "fact-14",
+      "title": "Royal Commission into the Robodebt Scheme commissioners as Report of the Royal Commission into the Robodebt Scheme names them: Catherine Holmes AC SC (Royal Commissioner).",
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "snippet": "Royal Commission into the Robodebt Scheme commissioners as Report of the Royal Commission into the Robodebt Scheme names them: Catherine Holmes AC SC (Royal Commissioner).",
+      "cited": true,
+      "kind": "record"
+    },
+    {
+      "resource": "fact-15",
+      "title": "Report of the Royal Commission into the Robodebt Scheme (dated 7 July 2023).",
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF",
+      "snippet": "Report of the Royal Commission into the Robodebt Scheme (dated 7 July 2023).",
+      "cited": true,
+      "kind": "record"
+    },
+    {
+      "resource": "fact-10",
+      "title": "Royal Commission into the Robodebt Scheme, Report of the Royal Commission into the Robodebt Scheme, page 31 [finding], in the commission's own words: \"The Scheme was approved by Cabinet and proceeded without the legislative change to support averaging which DSS had said was needed.\"",
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF#page=31",
+      "snippet": "Royal Commission into the Robodebt Scheme, Report of the Royal Commission into the Robodebt Scheme, page 31 [finding], in the commission's own words: \"The Scheme was approved by Cabinet and proceeded without the legislative change to support averaging which DSS had said was needed.\"\nThe commission found the Scheme was approved by Cabinet and proceeded without the legislative change to support income averaging that DSS had said was needed.",
+      "cited": true,
+      "kind": "record"
+    },
+    {
+      "resource": "fact-11",
+      "title": "Royal Commission into the Robodebt Scheme, Report of the Royal Commission into the Robodebt Scheme, page 702 [conclusion], in the commission's own words: \"The Ombudsman was deliberately misled, thus providing further opportunity for the Government to resist scrutiny by using his report as a shield.\"",
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF#page=702",
+      "snippet": "Royal Commission into the Robodebt Scheme, Report of the Royal Commission into the Robodebt Scheme, page 702 [conclusion], in the commission's own words: \"The Ombudsman was deliberately misled, thus providing further opportunity for the Government to resist scrutiny by using his report as a shield.\"\nThe commission found the Ombudsman was deliberately misled, letting the Government resist scrutiny by using his report as a shield.",
+      "cited": true,
+      "kind": "record"
+    },
+    {
+      "resource": "fact-9",
+      "title": "Royal Commission into the Robodebt Scheme, Report of the Royal Commission into the Robodebt Scheme, page 35 [conclusion], in the commission's own words: \"It was a costly failure of public administration, in both human and economic terms.\"",
+      "url": "https://www.royalcommission.gov.au/system/files/2023-09/robodebt-accessible-full-report.PDF#page=35",
+      "snippet": "Royal Commission into the Robodebt Scheme, Report of the Royal Commission into the Robodebt Scheme, page 35 [conclusion], in the commission's own words: \"It was a costly failure of public administration, in both human and economic terms.\"\nThe commission concluded robodebt was a costly failure of public administration in human and economic terms.",
+      "cited": true,
+      "kind": "record"
+    },
+    {
+      "resource": "fact-8",
+      "title": "Royal Commission into the Robodebt Scheme (royal commission, Commonwealth): established 18 August 2022, final report 7 July 2023. Its reports make 57 recommendations; no government response or implementation document is held; 47 hearing transcripts are held (evidence, not findings).",
+      "url": "https://opax.com.au/royal-commissions/commission-cth-robodebt.json",
+      "snippet": "Royal Commission into the Robodebt Scheme (royal commission, Commonwealth): established 18 August 2022, final report 7 July 2023. Its reports make 57 recommendations; no government response or implementation document is held; 47 hearing transcripts are held (evidence, not findings).",
+      "cited": true,
+      "kind": "record"
+    },
+    {
+      "resource": "speech-1553201",
+      "title": "Kate Thwaites — PRIVATE MEMBERS' BUSINESS — 2023-08-07",
+      "url": "https://opax.com.au/doc/speech-1553201",
+      "snippet": "I move: That this House: (1) acknowledges the release of the report of the Royal Commission into the Robodebt Scheme, a 990-page report that examined the establishment of the scheme and who was responsible for it, and made 57 recommendations; (2) recognises that the Robodebt Scheme, which was put forward as a budget measure in 2015 and was found to be unlawful by the Federal Court in late 2019, caused great harm to vulnerable members of the Australian community; (3) notes that despite the mounting warnings and criticism of the scheme, in the words of the report the Government of the time 'continued to illegally raise debts against some of",
+      "cited": true,
+      "kind": "speech",
+      "speaker": "Kate Thwaites",
+      "date": "2023-08-07",
+      "chamber": "representatives"
+    },
+    {
+      "resource": "speech-1551171",
+      "title": "Bill Shorten — QUESTIONS WITHOUT NOTICE — 2023-07-31",
+      "url": "https://opax.com.au/doc/speech-1551171",
+      "snippet": "victimising vulnerable Australians. The royal commission goes to the role of the member for Cook, who was social services minister and who first took robodebt to cabinet in 2015. The member for Cook, in a press release on 21 May 2015, said we'll put a 'strong welfare cop on the beat to track down suspected welfare fraud.' Under oath at the royal commission in December 2022, the member for Cook's evidence was that income averaging, the process underpinning the unlawful robodebt scheme, was a 'foundational way' the then Department of Human Services worked. However, Commissioner Holmes found in the final report at page 102: The Commission rejects as untrue Mr Morrison's evidence that he was told that income averaging as contemplated in the Executive Minute was an established practice and a \"foundational way\" … She goes on to say at page 106: Mr Morrison knew that the use of income averaging was the primary basis of the \"new approach\" described in the Executive Minute and that DSS had advised DHS that legislative change was required to implement the DHS proposal … She continues: The NPP represented a complete reversal of the legal position without explanation. Mr Morrison was not entitled without further question to rely upon the contradictory content of the NPP on the question of the DSS legal position … The royal commission went on to say: Mr Morrison allowed Cabinet to be misled because he did not make that obvious inquiry. She continues: He failed to meet his ministerial responsibility to ensure that Cabinet was properly informed about what the proposal actually entailed and to ensure that it was lawful. I note that Mr Morrison has disputed the royal commission findings. He may have convinced himself, but he failed to convince the royal commission and, indeed, most Australians.",
+      "cited": true,
+      "kind": "speech",
+      "speaker": "Bill Shorten",
+      "date": "2023-07-31",
+      "chamber": "representatives"
+    },
+    {
+      "resource": "speech-1554704",
+      "title": "Bill Shorten — MOTIONS — 2023-08-10",
+      "url": "https://opax.com.au/doc/speech-1554704",
+      "snippet": "went wrong. It was Justice Murphy of the Federal Court in the resolution of the class action who described robodebt as a shameful chapter in the social security laws of Australia and a massive failure in public administration. The royal commissioner, Catherine Holmes, said, 'It's remarkable how little interest there seems to have been in ensuring the scheme's legality, how rushed its implementation was, how little thought was given to how it would affect the welfare recipients by ministers and public servants on a quest for savings.' She also said, importantly: Where I have made findings against individuals that were liable to cause real damage to reputation … I have not reached those conclusions without a high degree of satisfaction about the evidence. I'll come back to that point in this resolution. The Royal Commission into the Robodebt Scheme was established on 25 August 2022. The final report was delivered on 7 July 2023. There were 46 days of public hearings and more than 100 witnesses. I also state importantly at the outset that the commission applied rules of procedural fairness. Individuals liable to be affected by a finding were given a fair and impartial hearing before any such decision was made—indeed, they got legal aid support. In her conclusion, Commissioner Holmes said the royal commission illustrated what: … can go wrong through venality, incompetence and cowardice. I thank the royal commission for doing their duty.",
+      "cited": true,
+      "kind": "speech",
+      "speaker": "Bill Shorten",
+      "date": "2023-08-10",
+      "chamber": "representatives"
+    },
+    {
+      "resource": "speech-1596748",
+      "title": "Graham Perrett — BILLS — 2024-11-20",
+      "url": "https://opax.com.au/doc/speech-1596748",
+      "snippet": "Between 2016 and 2019, over 443,000 Australians received notices of debt from Services Australia—443,000. The bare facts of this debt collection process, which became known as robodebt, were the following. Firstly, these notices were false. Secondly, they were generated by a process called income averaging, which failed to produce an accurate debt figure. Finally, the process did not comply with the Social Security Act 1991 or the law. Put simply, this means these Turnbull-Morrison debt notices were unlawful. Those are the facts. However, what these empirical facts fail to illustrate is the damaging impact these notices of debt had on",
+      "cited": true,
+      "kind": "speech",
+      "speaker": "Graham Perrett",
+      "date": "2024-11-20",
+      "chamber": "representatives"
+    },
+    {
+      "resource": "speech-1594111",
+      "title": "Mark Dreyfus — QUESTIONS WITHOUT NOTICE — 2024-10-10",
+      "url": "https://opax.com.au/doc/speech-1594111",
+      "snippet": "I thank the member for Lalor for her question. The robodebt royal commission concluded that the former Liberal government's robodebt scheme was a 'crude and cruel mechanism, neither fair nor legal'. This illegal scheme resulted in hundreds of thousands of Australians being served with wrongful debt notices. The royal commissioner, Catherine Holmes AC SC, stated: … made many people feel like criminals. In essence, people were traumatised on the off-chance they might owe money. It was a costly failure of public administration, in both human and economic terms. And with those words, the royal commission summed up the human tragedy that was the",
+      "cited": true,
+      "kind": "speech",
+      "speaker": "Mark Dreyfus",
+      "date": "2024-10-10",
+      "chamber": "representatives"
+    }
+  ],
+  "research": {
+    "mode": "loop",
+    "rounds": 8,
+    "trail": [
+      {
+        "tool": "royal_commissions",
+        "round": 1,
+        "arg": "robodebt"
+      },
+      {
+        "tool": "royal_commissions",
+        "round": 1,
+        "arg": "robodebt"
+      },
+      {
+        "tool": "royal_commissions",
+        "round": 2,
+        "arg": "robodebt"
+      },
+      {
+        "tool": "find_records",
+        "round": 2,
+        "arg": "robodebt"
+      },
+      {
+        "tool": "royal_commissions",
+        "round": 4,
+        "arg": "accountability"
+      },
+      {
+        "tool": "corpus_records",
+        "round": 4,
+        "arg": "robodebt royal commission responsibility"
+      },
+      {
+        "tool": "corpus_records",
+        "round": 5,
+        "arg": "robodebt royal commission findings who…"
+      },
+      {
+        "tool": "corpus_records",
+        "round": 5,
+        "arg": "Morrison robodebt royal commission find…"
+      },
+      {
+        "tool": "corpus_records",
+        "round": 7,
+        "arg": "speech-1551171"
+      },
+      {
+        "tool": "corpus_records",
+        "round": 7,
+        "arg": "speech-1554704"
+      },
+      {
+        "tool": "answer",
+        "round": 8
+      }
+    ]
+  }
+}

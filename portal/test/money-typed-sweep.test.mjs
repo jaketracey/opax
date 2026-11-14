@@ -1,4 +1,6 @@
 import {donationGraph} from '../public/money-receipts.js';
+import {industryName as sharedIndustryName} from '../public/money-scope.js';
+import {displayName as sourceDisplayName} from '../public/display-name.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
@@ -16,7 +18,7 @@ const root = new URL('../', import.meta.url).pathname;
 const published = JSON.parse(await readFile(new URL('../public/graph/money.json', import.meta.url), 'utf8'));
 const PRATT = 'donor:pratt', WESTPAC = 'donor:westpac banking corporation';
 const PRATT_LIBERAL = 10454400, WESTPAC_LABOR = 47331887;
-const SCOPE = 'All receipt types, 1998-99 to 2024-25, as the parties reported them in federal returns';
+const SCOPE = 'All receipt types, 1998–99 to 2024–25, as the parties reported them in federal returns';
 const edge = (graph, source, target) => graph.edges.find(e => e.source === source && e.target === target && !e.flow && !e.grant);
 
 const built = await build({
@@ -118,7 +120,7 @@ test('Ask entity_profile receipts: a supplier\'s linked flows carry the typed fi
   const labor = out.rows.find(r => r.party === 'Labor');
   assert.equal(Math.round(labor.amount_aud), WESTPAC_LABOR);
   assert.equal(labor.records, 201);
-  assert.match(labor.summary, /All receipt types, 1998-99 to 2024-25/);
+  assert.match(labor.summary, /All receipt types, 1998–99 to 2024–25/);
 });
 
 // ---- Pages readers see -------------------------------------------------------
@@ -158,7 +160,7 @@ test('no-JavaScript Connections table: Pratt to Liberal and Westpac to Labor at 
   assert.deepEqual([Math.round(westpac.value), westpac.records], [WESTPAC_LABOR, 201]);
   // Windowed to 2020-21: the typed year cell, and the scope names that year.
   const year = await page('jur=federal&from=2020&to=2020&c.q=Pratt');
-  assert.ok(year.html.includes('Receipts: All receipt types, 2020-21, as the parties reported them in federal returns.'));
+  assert.ok(year.html.includes('Receipts: All receipt types, 2020–21, as the parties reported them in federal returns.'));
   const typed2020 = Object.values(edge(published, PRATT, 'party:Liberal').by_type_year['2020-21']).reduce((sum, c) => sum + c[0], 0);
   assert.equal(year.rows.find(r => r.from === 'Pratt Holdings Pty Ltd' && r.to === 'Liberal').value, typed2020);
   assert.doesNotMatch((await page('jur=qld')).html, /Receipts: All receipt types/, 'a state graph has no typed scope');
@@ -279,6 +281,7 @@ async function appFunctions(names) {
   }).join('\n');
 }
 const appContext = extra => ({
+  sharedIndustryName, sourceDisplayName,
   esc: v => String(v ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;'), fmtMoney: v => `$${Math.round(v)}`,
   donorRows: (rows, _index, limit = Infinity) => [...rows].sort((a, b) => b[1] - a[1]).slice(0, limit), donorViewIndex: new Map(),
   subjectHash: (kind, name) => `#/${kind}/${name}`, partyDotHTML: () => '', explainBtn: () => '', AEC_NOTE: 'AEC note.',
@@ -350,7 +353,7 @@ test('donors directory: Pratt Holdings at $19.6m across 120 receipts, Liberal an
 test('app.js keeps one projected graph beside moneyData, from donor-views.js', async () => {
   const source = await readFile(new URL('../public/app.js', import.meta.url), 'utf8');
   assert.ok(source.includes('moneyReceipts = module.receiptGraph(d);'));
-  assert.ok(source.includes('({donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,receiptTypeLine,receiptFigures,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);'));
+  assert.ok(source.includes('({displayName:sourceDisplayName,fy,moneyScope,industryName:sharedIndustryName,donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,offMapDonorNote,receiptTypeLine,receiptFigures,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);'));
 });
 
 // ---- Games: the ledger, the quiz's donor and industry questions, words per dollar ----
@@ -402,8 +405,8 @@ import {researchReceiptScope} from '../public/map-research.js';
 import {TEMPLATES, createRng} from '../public/quiz.js';
 
 test('the shared scope label names the map\'s Donation-only measure, and register-tables keeps financialYear in scope', async () => {
-  assert.equal(receiptScopeLabel({typed: true, firstYear: 2020, lastYear: 2022}), 'All receipt types, 2020-21 to 2022-23, as the parties reported them in federal returns');
-  assert.equal(receiptScopeLabel({typed: true, firstYear: 2020, lastYear: 2022}, 'donation_only'), 'Donations only, 2020-21 to 2022-23, as the parties reported them in federal returns');
+  assert.equal(receiptScopeLabel({typed: true, firstYear: 2020, lastYear: 2022}), 'All receipt types, 2020–21 to 2022–23, as the parties reported them in federal returns');
+  assert.equal(receiptScopeLabel({typed: true, firstYear: 2020, lastYear: 2022}, 'donation_only'), 'Donations only, 2020–21 to 2022–23, as the parties reported them in federal returns');
   const source = await readFile(new URL('../public/register-tables.js', import.meta.url), 'utf8');
   assert.match(source, /^import \{donorDisclosure, financialYear, receiptFigures, receiptScopeLabel\} from '\.\/donor-disclosure\.js\?v=/m);
 });
@@ -432,8 +435,8 @@ test('map research: the records table says what its receipt figures count, for t
   // The map's own reading of the file (graph/index.ts receiptGraphView): typed edges keep
   // by_type, and their years are the selected window's.
   const view = {nodes: published.nodes, edges: published.edges.filter(e => e.source === PRATT).map(e => e.flow || e.grant ? e : {...e, firstYear: 2019, lastYear: 2022})};
-  assert.equal(researchReceiptScope(view, 'https://opax.com.au/money?from=2019&to=2022'), 'Receipts: All receipt types, 2019-20 to 2022-23, as the parties reported them in federal returns.');
-  assert.equal(researchReceiptScope(view, 'https://opax.com.au/money?receipt=donations'), 'Receipts: Donations only, 2019-20 to 2022-23, as the parties reported them in federal returns.');
+  assert.equal(researchReceiptScope(view, 'https://opax.com.au/money?from=2019&to=2022'), 'Receipts: All receipt types, 2019–20 to 2022–23, as the parties reported them in federal returns.');
+  assert.equal(researchReceiptScope(view, 'https://opax.com.au/money?receipt=donations'), 'Receipts: Donations only, 2019–20 to 2022–23, as the parties reported them in federal returns.');
   assert.equal(researchReceiptScope({nodes: [], edges: [{source: 'donor:x', target: 'party:y', total: 5, count: 1, byYear: {2020: [5, 1]}}]}, 'https://opax.com.au/money'), '', 'a state graph has no typed cells');
 });
 
@@ -553,7 +556,10 @@ test('donors directory: no row at $0; declared-only donors carry the labelled li
   for (const [d, row] of publicOnly) assert.ok(row.includes(`AEC returns: ${PUBLIC_FUNDING_ONLY}`), d.label);
   for (const [d, row] of declared) {
     assert.ok(row.includes(`AEC returns: ${DONOR_DECLARED_ONLY}`), d.label);
-    assert.doesNotMatch(row, /class="dir-fig"/, d.label);
+    assert.equal(d.money.federal, undefined, d.label + ' has no recipient-side federal figure');
+    const stateFigures = Object.values(d.money);
+    if (!stateFigures.length) assert.doesNotMatch(row, /class="dir-fig"/, d.label);
+    for (const figure of stateFigures) assert.ok(row.includes(`<b>${dollars(figure.total)}</b>`), d.label + ' keeps its state figure');
   }
   assert.ok(directory.filters.find(f => f.key === 'jur').test(declared[0][0], 'federal'), 'still listed as disclosed to the AEC');
   const offMap = html.filter(([d]) => d.recordMeasure && d.money.federal);

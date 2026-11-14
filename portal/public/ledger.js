@@ -1,7 +1,8 @@
-import {donorDisclosure,donorLookup,donorDisplayText,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=6f4ae1756c';
+import {industryName} from './money-scope.js';
+import {donorDisclosure,donorLookup,donorDisplayText,receiptGraph,receiptGraphScope} from './donor-disclosure.js?v=d28448a137';
 import {subjectUrl} from './canonical-urls.js?v=bcc9a57bab';
 import { filterMoneyEdges } from "./money-records.js?v=ia-ux-20260908-2";
-import { sourceLineHTML } from './labels.js?v=6d2e2e9cd8';
+import { sourceLineHTML } from './labels.js?v=fcb2a1091c';
 /**
  * OPAX Ledger — an analyst-grade table over the donor→party money flows.
  *
@@ -54,8 +55,9 @@ const AUD = new Intl.NumberFormat('en-AU', {
 })
 const NUM = new Intl.NumberFormat('en-AU')
 
-/** 'fossil_fuels' → 'Fossil fuels' */
-export function industryLabel (industry) {
+// Exports retain the source vocabulary; on screen every view uses the shared label map.
+export const industryLabel = industryName;
+function sourceIndustryLabel (industry) {
   const s = String(industry || 'other').replace(/_/g, ' ')
   return s.charAt(0).toUpperCase() + s.slice(1)
 }
@@ -321,7 +323,7 @@ export function buildCSV (view, rows, commentLines) {
       'First year', 'Last year', 'Return reference'].join(','))
     for (const r of rows) {
       lines.push([
-        csvCell(r.donor), csvCell(industryLabel(r.industry)), csvCell(r.party),
+        csvCell(r.donor), csvCell(sourceIndustryLabel(r.industry)), csvCell(r.party),
         r.total, r.count, r.firstYear, r.lastYear, csvCell(r.return_reference || ''),
       ].join(','))
     }
@@ -331,7 +333,7 @@ export function buildCSV (view, rows, commentLines) {
       'Top recipient share (%)', 'Return reference'].join(','))
     for (const r of rows) {
       lines.push([
-        csvCell(r.donor), csvCell(industryLabel(r.industry)),
+        csvCell(r.donor), csvCell(sourceIndustryLabel(r.industry)),
         r.total, r.parties, r.count, r.firstYear, r.lastYear,
         csvCell(r.topParty), Math.round(r.topShare * 100), csvCell(r.return_reference || ''),
       ].join(','))

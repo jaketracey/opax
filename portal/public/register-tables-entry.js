@@ -1,3 +1,11 @@
-import {hydrateRegisterTables} from './register-tables.js?v=ca8042922d';
-// Person and party pages are hydrated by their existing application renderers.
-if (/^\/(?:instruments|audit|register\/(?:vic-gifts|state-bills|gov-advertising|government-finance|tax-expenditures))\/?$/.test(location.pathname)) hydrateRegisterTables();
+// Start needed table downloads alongside the main app, rather than after it.
+// Person and party pages still hydrate through their application renderers.
+const app = document.querySelector('script[src^="/app.js"]');
+const serverRegister = /^\/(?:instruments|audit|register\/(?:vic-gifts|state-bills|gov-advertising|government-finance|tax-expenditures))\/?$/.test(location.pathname);
+if (serverRegister || app && /^\/subject\/(?:person|party|donor)\//.test(location.pathname)) {
+  import('./register-tables.js?v=8d37f58e79').then(({hydrateRegisterTables}) => { if (serverRegister) hydrateRegisterTables(); });
+}
+// Sitting hubs keep their server-rendered vote table without the application.
+if (app ? /^\/(?:bill|subject)\//.test(location.pathname) : document.querySelector('[data-vote-table]')) {
+  import('./vote-tables.js?v=872590ff14');
+}

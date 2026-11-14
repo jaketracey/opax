@@ -1,0 +1,489 @@
+{
+  "audit": "portal-audit-2026-11-13, N02",
+  "rows": [
+    {
+      "key": "au-federal-r7202",
+      "introduced": "2024-06-03",
+      "source_party": "Nationals",
+      "dated_party": "Independent",
+      "published_party": "Independent",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-s1415",
+      "introduced": "2024-05-15",
+      "source_party": "Liberal",
+      "dated_party": "Independent",
+      "published_party": "Independent",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-r7147",
+      "introduced": "2024-02-12",
+      "source_party": "Nationals",
+      "dated_party": "Independent",
+      "published_party": "Independent",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-s1321",
+      "introduced": "2021-10-20",
+      "source_party": "Rex Patrick Team",
+      "dated_party": "Independent",
+      "published_party": "Rex Patrick Team",
+      "decision": "held-for-review",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-r6744",
+      "introduced": "2021-10-18",
+      "source_party": "Independent",
+      "dated_party": "United Australia Party",
+      "published_party": "United Australia Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-s1316",
+      "introduced": "2021-09-01",
+      "source_party": "Rex Patrick Team",
+      "dated_party": "Independent",
+      "published_party": "Rex Patrick Team",
+      "decision": "held-for-review",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-r6770",
+      "introduced": "2021-08-30",
+      "source_party": "Independent",
+      "dated_party": "United Australia Party",
+      "published_party": "United Australia Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-s1309",
+      "introduced": "2021-08-04",
+      "source_party": "Liberal",
+      "dated_party": "Nationals",
+      "published_party": "Nationals",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s1307",
+      "introduced": "2021-06-24",
+      "source_party": "Rex Patrick Team",
+      "dated_party": "Independent",
+      "published_party": "Rex Patrick Team",
+      "decision": "held-for-review",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s1297",
+      "introduced": "2021-05-12",
+      "source_party": "Rex Patrick Team",
+      "dated_party": "Independent",
+      "published_party": "Rex Patrick Team",
+      "decision": "held-for-review",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s1159",
+      "introduced": "2018-11-28",
+      "source_party": "Independent",
+      "dated_party": "Australian Conservatives",
+      "published_party": "Australian Conservatives",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s1153",
+      "introduced": "2018-11-26",
+      "source_party": "Katter's Australian Party",
+      "dated_party": "Independent",
+      "published_party": "Independent",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s1151",
+      "introduced": "2018-11-14",
+      "source_party": "Independent",
+      "dated_party": "United Australia Party",
+      "published_party": "United Australia Party",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s1145",
+      "introduced": "2018-09-11",
+      "source_party": "Independent",
+      "dated_party": "Australian Conservatives",
+      "published_party": "Australian Conservatives",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s1124",
+      "introduced": "2018-02-15",
+      "source_party": "Independent",
+      "dated_party": "Australian Conservatives",
+      "published_party": "Australian Conservatives",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s1122",
+      "introduced": "2018-02-06",
+      "source_party": "Independent",
+      "dated_party": "Australian Conservatives",
+      "published_party": "Australian Conservatives",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s1098",
+      "introduced": "2017-11-14",
+      "source_party": "Independent",
+      "dated_party": "Australian Conservatives",
+      "published_party": "Australian Conservatives",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s1087",
+      "introduced": "2017-09-11",
+      "source_party": "Independent",
+      "dated_party": "Nick Xenophon Team",
+      "published_party": "Nick Xenophon Team",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-r5967",
+      "introduced": "2017-09-11",
+      "source_party": "Independent",
+      "dated_party": "Katter's Australian Party",
+      "published_party": "Katter's Australian Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-r5966",
+      "introduced": "2017-09-11",
+      "source_party": "Independent",
+      "dated_party": "Katter's Australian Party",
+      "published_party": "Katter's Australian Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-r5928",
+      "introduced": "2017-09-04",
+      "source_party": "Independent",
+      "dated_party": "Katter's Australian Party",
+      "published_party": "Katter's Australian Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-s1081",
+      "introduced": "2017-08-16",
+      "source_party": "Independent",
+      "dated_party": "Jacqui Lambie Network",
+      "published_party": "Jacqui Lambie Network",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-r5937",
+      "introduced": "2017-08-14",
+      "source_party": "Independent",
+      "dated_party": "Katter's Australian Party",
+      "published_party": "Katter's Australian Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-s1074",
+      "introduced": "2017-06-21",
+      "source_party": "Independent",
+      "dated_party": "Nick Xenophon Team",
+      "published_party": "Nick Xenophon Team",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s1070",
+      "introduced": "2017-06-15",
+      "source_party": "Independent",
+      "dated_party": "Nick Xenophon Team",
+      "published_party": "Nick Xenophon Team",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-r5834",
+      "introduced": "2017-03-27",
+      "source_party": "Independent",
+      "dated_party": "Katter's Australian Party",
+      "published_party": "Katter's Australian Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-s1055",
+      "introduced": "2017-02-13",
+      "source_party": "Independent",
+      "dated_party": "Nick Xenophon Team",
+      "published_party": "Nick Xenophon Team",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-r5810",
+      "introduced": "2017-02-13",
+      "source_party": "Independent",
+      "dated_party": "Katter's Australian Party",
+      "published_party": "Katter's Australian Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-s1054",
+      "introduced": "2017-02-08",
+      "source_party": "Independent",
+      "dated_party": "Jacqui Lambie Network",
+      "published_party": "Jacqui Lambie Network",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-r5710",
+      "introduced": "2016-10-10",
+      "source_party": "Independent",
+      "dated_party": "Katter's Australian Party",
+      "published_party": "Katter's Australian Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-r5709",
+      "introduced": "2016-10-10",
+      "source_party": "Independent",
+      "dated_party": "Katter's Australian Party",
+      "published_party": "Katter's Australian Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-r5622",
+      "introduced": "2016-02-22",
+      "source_party": "Independent",
+      "dated_party": "Katter's Australian Party",
+      "published_party": "Katter's Australian Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-r5600",
+      "introduced": "2016-02-08",
+      "source_party": "Independent",
+      "dated_party": "Katter's Australian Party",
+      "published_party": "Katter's Australian Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-r5576",
+      "introduced": "2015-11-30",
+      "source_party": "Independent",
+      "dated_party": "Katter's Australian Party",
+      "published_party": "Katter's Australian Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-s1025",
+      "introduced": "2015-11-24",
+      "source_party": "Independent",
+      "dated_party": "Nick Xenophon Team",
+      "published_party": "Nick Xenophon Team",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-r5570",
+      "introduced": "2015-11-23",
+      "source_party": "Independent",
+      "dated_party": "Katter's Australian Party",
+      "published_party": "Katter's Australian Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-r5569",
+      "introduced": "2015-11-23",
+      "source_party": "Independent",
+      "dated_party": "Katter's Australian Party",
+      "published_party": "Katter's Australian Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-s1024",
+      "introduced": "2015-11-11",
+      "source_party": "Independent",
+      "dated_party": "Jacqui Lambie Network",
+      "published_party": "Jacqui Lambie Network",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-r5521",
+      "introduced": "2015-09-14",
+      "source_party": "Independent",
+      "dated_party": "Katter's Australian Party",
+      "published_party": "Katter's Australian Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-s1014",
+      "introduced": "2015-08-13",
+      "source_party": "Independent",
+      "dated_party": "Nick Xenophon Team",
+      "published_party": "Nick Xenophon Team",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s1010",
+      "introduced": "2015-06-24",
+      "source_party": "Independent",
+      "dated_party": "Nick Xenophon Team",
+      "published_party": "Nick Xenophon Team",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-r5471",
+      "introduced": "2015-06-01",
+      "source_party": "Independent",
+      "dated_party": "Katter's Australian Party",
+      "published_party": "Katter's Australian Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-s1004",
+      "introduced": "2015-03-26",
+      "source_party": "Independent",
+      "dated_party": "Nick Xenophon Team",
+      "published_party": "Nick Xenophon Team",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-r5418",
+      "introduced": "2015-03-02",
+      "source_party": "Independent",
+      "dated_party": "Katter's Australian Party",
+      "published_party": "Katter's Australian Party",
+      "decision": "corrected",
+      "basis": "release-term"
+    },
+    {
+      "key": "au-federal-s989",
+      "introduced": "2014-12-02",
+      "source_party": "Palmer United Party",
+      "dated_party": "Independent",
+      "published_party": "Independent",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s984",
+      "introduced": "2014-11-27",
+      "source_party": "Independent",
+      "dated_party": "Nick Xenophon Team",
+      "published_party": "Nick Xenophon Team",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s954",
+      "introduced": "2014-03-06",
+      "source_party": "Independent",
+      "dated_party": "Nick Xenophon Team",
+      "published_party": "Nick Xenophon Team",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s944",
+      "introduced": "2013-12-12",
+      "source_party": "Independent",
+      "dated_party": "Nick Xenophon Team",
+      "published_party": "Nick Xenophon Team",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s942",
+      "introduced": "2013-12-11",
+      "source_party": "Independent",
+      "dated_party": "Nick Xenophon Team",
+      "published_party": "Nick Xenophon Team",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s939",
+      "introduced": "2013-12-05",
+      "source_party": "Independent",
+      "dated_party": "Nick Xenophon Team",
+      "published_party": "Nick Xenophon Team",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s937",
+      "introduced": "2013-11-13",
+      "source_party": "Independent",
+      "dated_party": "Nick Xenophon Team",
+      "published_party": "Nick Xenophon Team",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    },
+    {
+      "key": "au-federal-s934",
+      "introduced": "2013-11-13",
+      "source_party": "Independent",
+      "dated_party": "Nick Xenophon Team",
+      "published_party": "Nick Xenophon Team",
+      "decision": "corrected",
+      "basis": "handbook-term"
+    }
+  ],
+  "fills": [
+    {
+      "key": "au-federal-r7006",
+      "introduced": "2023-05-22",
+      "source_party": null,
+      "published_party": "Liberal",
+      "decision": "filled"
+    },
+    {
+      "key": "au-federal-r7200",
+      "introduced": "2024-06-03",
+      "source_party": null,
+      "published_party": "Liberal",
+      "decision": "filled"
+    }
+  ]
+}

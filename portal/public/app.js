@@ -1,17 +1,33 @@
+// Promise consumers keep their existing readiness gates, but an unused helper
+// does not download or run until a route needs it. Concurrent consumers share it.
+function lazyReady(load) {
+  let promise;
+  return { then(resolve, reject) { return (promise ??= load()).then(resolve, reject); } };
+}
+
+function yieldMainThread() {
+  return globalThis.scheduler?.yield ? globalThis.scheduler.yield() : new Promise(resolve => setTimeout(resolve, 0));
+}
+
 let donorRows = (rows,_index,limit=Infinity) => [...(rows || [])].sort((a,b)=>b[1]-a[1]).slice(0,limit);
 let donorViewIndex = new Map();
 let donorDisclosure = record => ({name:typeof record==='string'?record:record?.label || '',href:null,reference:''});
 let donorLabelHTML = record => esc(typeof record==='string'?record:record?.label || '');
-let receiptGraph = graph => graph, receiptGraphScope = () => '', receiptScopeLabel = () => '', receiptTypeLine = () => '', receiptFigures = x => x;
+let sourceDisplayName = value => String(value ?? "");
+let fy = value => String(value ?? '').replace(/(\d{4})-(\d{2})(?![\d-])/g, '$1–$2'), moneyScope = () => '', sharedIndustryName = value => String(value ?? '').replace(/_/g, ' ');
+let receiptGraph = graph => graph, receiptGraphScope = () => '', receiptScopeLabel = () => '', offMapDonorNote = () => '', receiptTypeLine = () => '', receiptFigures = x => x;
 // Until donor-views.js loads: a donor with no figure at all is left out, as hasPartyReceipts leaves out
 // a donor the parties' returns list nothing from (donor-disclosure.js).
 let hasPartyReceipts = (x) => Boolean(x?.total || x?.count), DONOR_DECLARED_ONLY = '', notListedLine = () => DONOR_DECLARED_ONLY;
-const donorViewReady = import('/donor-views.js?v=c61afb12d9').then(module => {
-  ({donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,receiptTypeLine,receiptFigures,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);
-  return module.loadDonorViewIndex();
-}).then(index => (donorViewIndex=index));
+const donorHelpersReady = import('/donor-views.js?v=75f497c532').then(module => {
+  ({displayName:sourceDisplayName,fy,moneyScope,industryName:sharedIndustryName,donorRows,donorDisclosure,donorLabelHTML,receiptGraph,receiptGraphScope,receiptScopeLabel,offMapDonorNote,receiptTypeLine,receiptFigures,hasPartyReceipts,DONOR_DECLARED_ONLY,notListedLine}=module);
+  return module;
+});
+// The disclosure helpers remain available everywhere; only consumers of the
+// identity index pay for downloading, parsing and indexing its records.
+const donorViewReady = lazyReady(() => donorHelpersReady.then(module => module.loadDonorViewIndex()).then(index => (donorViewIndex=index)));
 const donorViewKey = name => String(name).normalize('NFKC').replace(/[‘’ʼ`]/g,"'").replace(/\s+/g,' ').trim().toLowerCase();
-const disclosedDonor = name => donorViewIndex.get(donorViewKey(name)) || {label:name};
+const disclosedDonor = (name, jurisdiction) => donorViewIndex.get((jurisdiction ? jurisdiction + ':' : '') + donorViewKey(name)) || (jurisdiction ? null : {label:name});
 // The one not-found block (not-found.js), for an in-app link that lands on an empty address.
 let notFoundModule;
 const notFoundReady = () => notFoundModule ??= import('/not-found.js');
@@ -31,18 +47,18 @@ const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(
 
 "use strict";
 let voteTables;
-const voteTablesReady = import("/vote-tables.js?v=1c4bd6b43e").then(module => { voteTables = module; });
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=872590ff14").then(module => { voteTables = module; }));
 let divisionMarkdown;
 const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
-const growthModulesReady = import("/growth-modules.js?v=a1ed85f14d").then(module => { growthModules = module; });
+const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=75fab98de7").then(module => { growthModules = module; }));
 let registerTables;
-const registerTablesReady = import('/register-tables.js?v=ca8042922d').then(module => { registerTables = module; });
+const registerTablesReady = lazyReady(() => import('/register-tables.js?v=8d37f58e79').then(module => { registerTables = module; }));
 let askPerson;
-const askPersonReady = import('/ask-person.js?v=a83f09ee1b').then(module => { askPerson = module; });
+const askPersonReady = lazyReady(() => import('/ask-person.js?v=e628525cf3').then(module => { askPerson = module; }));
 let uiLabels;
-const uiLabelsReady = import('/labels.js?v=6d2e2e9cd8').then(module => { uiLabels = module; });
+const uiLabelsReady = import('/labels.js?v=fcb2a1091c').then(module => { uiLabels = module; });
 // ⋯, the page-actions menu: its markup for the renderers, and its behaviour
 // for every ⋯ on the page, the toolbars' static ones included.
 let pageMenus;
@@ -61,14 +77,14 @@ const splitSpeakers = person => attributionHelpers?.splitSpeakers(person) || [];
 const personScope = person => attributionHelpers?.personScope(person) || person?.speech_scope || null;
 const datedAffiliationParty = (row, person) => attributionHelpers?.datedAffiliationParty(row, person) || null;
 let heldBackHelpers;
-const heldBackReady = import('/held-back-transcripts.js?v=268cb1ecac').then(module => { heldBackHelpers = module; });
+const heldBackReady = lazyReady(() => import('/held-back-transcripts.js?v=1ac63b9250').then(module => { heldBackHelpers = module; }));
 
 let saDisplayHelpers;
 let saFullTextFlag = 'false';
-const saDisplayReady = Promise.all([
+const saDisplayReady = lazyReady(() => Promise.all([
   import('/sa-hansard.js?v=001257cb4a').then(module => { saDisplayHelpers = module; }),
-  fetch('/api/display-policy').then(response => response.json()).then(policy => { saFullTextFlag = policy.SA_HANSARD_FULL_TEXT === 'true' ? 'true' : 'false'; }).catch(() => {}),
-]);
+  fetch('/api/display-policy').then(response => response.json()).then(policy => { saFullTextFlag = saDisplayHelpers?.saDisplayPayload !== cappedChatPayload && policy.SA_HANSARD_FULL_TEXT === 'true' ? 'true' : 'false'; }).catch(() => {}),
+]));
 
 const $ = (id) => document.getElementById(id);
 
@@ -457,10 +473,11 @@ const TOPIC_REPORT = Object.fromEntries(
   Object.entries(REPORT_TOPIC).map(([report, topic]) => [topic, report]));
 
 function metaHTML(item, { linkSpeaker = false, linkParty = false, portrait = false, hideSpeaker = false } = {}) {
+  if (item.speakerNotNamed) item = {...item, speaker: "Speaker not named", party: null};
   const bits = [];
   // The portrait slot sits outside the dot-separated run, so a speaker with
   // no photo leaves no stray separator. Filled by decorateMetaPortraits.
-  const slot = portrait && item.speaker && !isUnattributed(item)
+  const slot = portrait && item.speaker && !item.speakerNotNamed && !isUnattributed(item)
     ? `<span class="meta-portrait" data-speaker="${esc(item.speaker)}"></span>` : "";
   if (item.party && !isUnattributed(item)) {
     bits.push(linkParty
@@ -468,7 +485,7 @@ function metaHTML(item, { linkSpeaker = false, linkParty = false, portrait = fal
       : partyChipHTML(item.party));
   }
   if (item.speaker && !hideSpeaker && !isMultiSpeaker(item)) {
-    bits.push(linkSpeaker
+    bits.push(linkSpeaker && !item.speakerNotNamed
       ? `<a class="meta-speaker" ${entityHrefAttr(speakerHref(item, subjectHash("person", item.speaker)))}>${esc(item.speaker)}</a>`
       : esc(item.speaker));
   }
@@ -497,7 +514,7 @@ function participantLinksHTML(row) {
 function speechIdentityHTML(row) {
   const label = speakerLabel(row);
   if (isMultiSpeaker(row)) return `<span class="speech-identity">${groupAvatarHTML()}<span>Several speakers</span></span>${participantLinksHTML(row)}`;
-  const name = row.speaker ? `<a ${entityHrefAttr(speakerHref(row, subjectHash('person', row.speaker)))}>${esc(label)}</a>` : esc(label);
+  const name = row.speaker && !row.speakerNotNamed ? `<a ${entityHrefAttr(speakerHref(row, subjectHash('person', row.speaker)))}>${esc(label)}</a>` : esc(label);
   return name + (isWitness(row) ? ' <span class="topic-arc-witness">witness</span>' : '');
 }
 
@@ -1342,7 +1359,7 @@ async function mountDiscoveryMap(signal) {
     if (!current()) return;
     const donor = data?.nodes?.find((node) => node.kind === "donor" && node.label.trim().toLocaleLowerCase() === signal.entity.trim().toLocaleLowerCase());
     if (!donor) { root.innerHTML = '<p class="status">This organisation isn’t in the money map’s selected donor set. You can still search its name in the record.</p>'; return; }
-    const { mountMoneyMap } = await import("/money-map.js?v=3f185c0ece");
+    const { mountMoneyMap } = await import("/money-map.js?v=ed508ae425");
     if (!current()) return;
     root.textContent = "";
     const handle = await mountMoneyMap(root, "/graph/money.json", { focus: donor.id, chrome: "mini", reveal: true, openCard: false,
@@ -1401,7 +1418,7 @@ async function renderDiscoveryPage(params, manageFocus) {
   slot.innerHTML = '<p role="status">Loading contracts…</p>';
   const seedNode = document.querySelector('#prerender [data-contracts-seed]');
   const seed = seedNode ? JSON.parse(seedNode.textContent) : null;
-  import('/contracts-table.js?v=61c44a11ff').then(async ({mountContractsTable}) => {
+  import('/contracts-table.js?v=9ce0addeb6').then(async ({mountContractsTable}) => {
     if (tableGeneration !== contractsTableGeneration) return;
     const handle = await mountContractsTable(slot, {seed: seed?.supplierId === null ? seed : undefined, signal: tableController.signal});
     if (tableGeneration === contractsTableGeneration) contractsTableHandle = handle; else handle.destroy();
@@ -1535,7 +1552,7 @@ function moneyFineprintHTML(jur, meta) {
     state: "totals are a floor",
     originals: [{ label: "Download the data (JSON)", href: cfg.file },
       { label: meta?.jurisdiction ? meta.commission : "AEC Transparency Register", href: meta?.jurisdiction ? (safeUrl(meta.source_url) || "/methods") : "https://transparency.aec.gov.au/" }],
-    notes: parts.filter(Boolean).map((t) => esc(t)),
+    notes: parts.filter(Boolean).map((t) => esc(fy(t))),
   });
 }
 
@@ -1556,7 +1573,7 @@ async function openMoneyRecords(kind, params) {
   const body = $('money-records-body'); body.innerHTML = '<p class="status">Loading the records…</p>';
   try {
     if (grants && !params.has('program') && !params.has('open') && !params.has('largest')) {
-      const mod = await import('/grants-table.js?v=f599c77dbf');
+      const mod = await import('/grants-table.js?v=df96077281');
       if (generation !== moneyRecordsGeneration) return;
       const controller = new AbortController();
       moneyRecordsHandle = {destroy() {controller.abort();}};
@@ -1565,7 +1582,7 @@ async function openMoneyRecords(kind, params) {
       moneyRecordsHandle = handle;
       return;
     }
-    const mod = await import(grants ? '/grants.js?v=93b9777b2f' : '/ledger.js?v=cc4729ae88');
+    const mod = await import(grants ? '/grants.js?v=74f7986fb7' : '/ledger.js?v=3f001fa997');
     if (generation !== moneyRecordsGeneration) return;
     body.replaceChildren();
     // Both modules report their shareable state (open file, filters) so the
@@ -1596,7 +1613,7 @@ async function openMoneyExplain(params, manageFocus) {
   $('money-records-head').hidden = true;
   const body = $('money-records-body');
   try {
-    const mod = await import('/money-explain.js?v=fe37183fea');
+    const mod = await import('/money-explain.js?v=a24bdc4882');
     if (generation !== moneyRecordsGeneration) return;
     const current = () => generation === moneyRecordsGeneration && location.pathname === '/money/explain';
     moneyRecordsHandle = mod.mountMoneyExplain(body, {
@@ -1615,7 +1632,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=31f3fef7ca');
+    const mod = await import('/grant-recipient.js?v=e409e23662');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1724,9 +1741,8 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
   const root = $("money-map-root");
   root.classList.remove("show-key");
   root.innerHTML = MAP_DRAWING_HTML;
-  const cfg = MONEY_JURISDICTIONS[jur];
   try {
-    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=3f185c0ece"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=c2501de258"), import("/money-records.js?v=ia-ux-20260908-2")]);
+    const [{ mountMoneyMap }, data, journeysModule, researchModule, recordsModule] = await Promise.all([import("/money-map.js?v=ed508ae425"), loadMoneyFile(jur), import("/money-journeys.js?v=receipt-scope-20261113"), import("/map-research.js?v=6dc6e3894f"), import("/money-records.js?v=ia-ux-20260908-2")]);
     if (moneyMapLoading !== jur || generation !== moneyMapGeneration) return; // switched again while loading
     const fine = $("money-fineprint");
     if (fine) fine.innerHTML = moneyFineprintHTML(jur, data?.meta);
@@ -1740,7 +1756,7 @@ async function mountMoney(jurParam, industry, params = new URLSearchParams()) {
     });
     if (!isCurrent()) { research?.destroy(); return; }
     moneyResearch = research;
-    const handle = await mountMoneyMap(root, cfg.file, {
+    const handle = await mountMoneyMap(root, data, {
       signal: setup.signal, isCurrent,
       filters: recordsModule.readMoneyFilters(new URLSearchParams(location.search)),
       focus: params.get('journey') ? undefined : params.get('focus') || undefined,
@@ -1869,7 +1885,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=d333c24ebe");
+    const module = await import("/suppliers.js?v=925eb09a62");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -2047,11 +2063,23 @@ function routePrerequisites(segs) {
     ...(view === 'chat' ? [saDisplayReady] : []),
   ];
 }
+function warmRouteHelpers(segs) {
+  const [view, kind] = segs;
+  const helpers = [];
+  if (['subject', 'bill', 'bills', 'declared'].includes(view)) helpers.push(growthModulesReady);
+  if (view === 'subject' || view === 'bill') helpers.push(voteTablesReady);
+  if (view === 'subject' && kind === 'person') helpers.push(heldBackReady);
+  if (view === 'declared' || view === 'subject' && ['person', 'party', 'donor'].includes(kind)) helpers.push(registerTablesReady);
+  // Overlap the required route downloads with the identity gate without
+  // holding the first panel on an optional renderer. Its own await still owns errors.
+  for (const helper of helpers) Promise.resolve(helper).catch(() => {});
+}
 async function route() {
   const frag = rawFragment();
   if (frag && !frag.startsWith("/") && !firstRoute) return; // native anchors still need their page rendered on first load
   const { segs, params } = parseHash();
   const requested = ++routeRequest;
+  warmRouteHelpers(segs);
   await Promise.allSettled(routePrerequisites(segs));
   if (requested !== routeRequest) return;
   if (!segs.length) { location.replace('/' + location.search + location.hash); return; }
@@ -2225,6 +2253,7 @@ async function route() {
     if (target && $("panel-methods").contains(target)) requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
   } else if (view === "stats") {
     showPanel("stats");
+    loadLiveStats();
     renderEvidenceStats();
     document.title = TITLES.stats;
     setCrumbs(crumbsFor("/stats"));
@@ -2376,8 +2405,13 @@ for (const id of ["ask-input", "search-input"]) {
     width = entry.contentRect.width;
     requestAnimationFrame(fit);
   }).observe(field);
-  document.fonts.ready.then(fit);
-  fit();
+  // FontFaceSet.ready and field measurements can force style and layout.
+  // Let the boot task finish before fitting, still before the next paint.
+  requestAnimationFrame(() => {
+    if (!field.isConnected) return;
+    document.fonts.ready.then(fit);
+    fit();
+  });
 }
 
 // The ask box after an answer. The answered question stays in the box (the
@@ -3662,12 +3696,15 @@ let moneyReceiptScope = "";
 let moneyDataPromise = null;
 function loadMoneyData() {
   // Factual profiles and Ask share the uncapped parse. Map mounts load their capped file separately.
-  moneyDataPromise ??= import('/donor-views.js?v=c61afb12d9').then((module) => module.loadMoneyGraph("/graph/money-receipts.json").then(async (d) => {
+  moneyDataPromise ??= import('/donor-views.js?v=75f497c532').then((module) => Promise.all([module.loadMoneyGraph("/graph/money-receipts.json"), donorViewReady]).then(async ([d]) => {
     const {donationGraph} = await import("/money-receipts.js");
     moneyDonationReceipts = donationGraph(d);
     moneyDonationScope = module.receiptGraphScope(moneyDonationReceipts).replace(/^All receipt types/, "Donations only");
     moneyReceipts = module.receiptGraph(d);
     moneyReceiptScope = module.receiptGraphScope(moneyReceipts);
+    // Do not combine receipt projection and the dependent view's DOM work
+    // into one microtask. The same cached graph is published after yielding.
+    await yieldMainThread();
     return d;
   }))
     .then((d) => (moneyData = d)).catch(() => null)
@@ -3706,7 +3743,7 @@ function detectMoneyIndustry(q) {
 }
 
 function industryLabel(ind) {
-  return ind.replace(/_/g, " ");
+  return sharedIndustryName(ind);
 }
 
 function renderMoneyPanel(ind) {
@@ -4628,7 +4665,7 @@ async function mountSubjectMap(nodeId, label = "") {
   el.hidden = false;
   $("subject-map-hint").hidden = false;
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=3f185c0ece");
+    const { mountMoneyMap } = await import("/money-map.js?v=ed508ae425");
     if (currentSubjectKey !== key) return; // navigated away while loading
     destroySubjectMap();
     const handle = await mountMoneyMap(el, "/graph/money.json", {
@@ -4748,9 +4785,9 @@ function fillDatedMentionParties(results, roster) {
   const people = roster?.people || [];
   const byName = new Map(people.map(person => [person.name.toLowerCase(), person]));
   for (const row of results) {
-    if (row.party || !row.speaker) continue;
-    const person = byName.get(String(row.speaker).toLowerCase()) || splitPerson(people, row.speaker);
-    row.party = datedAffiliationParty(row, person);
+    const person = byName.get(String(row.speaker || "").toLowerCase()) || splitPerson(people, row.speaker);
+    row.speakerNotNamed = String(row.speaker || "").replace(/[^a-z]/gi, "").length < 4 || !person;
+    if (!row.party && row.speaker) row.party = datedAffiliationParty(row, person);
   }
 }
 
@@ -4782,8 +4819,10 @@ function donorRecordHTML(record, meta) {
   }
   const records = record.jurisdiction === "federal" && !record.by_type;
   const source = meta?.sourceShort || (record.jurisdiction === "federal" ? "AEC annual returns" : MONEY_JURISDICTIONS[record.jurisdiction]?.label || "Disclosure returns");
+  const scope = records ? receiptScopeLabel({typed:false}) : "";
   return `<section class="donor-record" id="donor-record" data-accent="money" data-rail-figure="${esc(fmtMoney(record.total))}">
-    <h2 class="subject-section-title">${records ? "Source records" : "Disclosed receipts"}</h2>
+    <h2 class="subject-section-title">${records ? "Federal source records" : record.jurisdiction === "federal" ? "Federal disclosed receipts" : "Disclosed receipts"}</h2>
+    ${scope ? `<p class="entry-scope">${esc(scope)}</p>` : ""}
     <div class="tiles tiles-compact">
       ${tile(fmtMoney(record.total), "disclosed")}
       ${tile((record.count || 0).toLocaleString(), `${records ? "record" : "receipt"}${record.count === 1 ? "" : "s"}`)}
@@ -4791,7 +4830,7 @@ function donorRecordHTML(record, meta) {
     </div>
     ${record.by_type ? `<p class="entry-scope">${esc(receiptScopeLabel({typed:true,firstYear:record.firstYear,lastYear:record.lastYear}))}. ${esc(receiptTypeLine(record))}.</p>` : ""}
     ${sourceLineHTML({ source, state: "totals are a floor", originals,
-      notes: [`Receipts disclosed under this exact name${meta?.commission ? ` to the ${esc(meta.commission)}` : ""}. This donor is not drawn on the money map, which shows only the largest donors, so the recipients are listed in the source returns.`, esc(AEC_NOTE)],
+      notes: [esc(offMapDonorNote(record)), esc(AEC_NOTE)],
       licence: record.jurisdiction === "federal" ? AEC_LICENCE : "" })}
   </section>`;
 }
@@ -4809,13 +4848,15 @@ async function renderDonorStateMoney(name, sections, { only = false } = {}) {
   const hits = [];
   jurs.forEach((jur, i) => {
     const data = files[i];
-    if (!data?.nodes || !nn) return;
-    const node = data.nodes.find((n) => n.kind === "donor" && normName(n.label) === nn);
-    if (!node) return;
-    const parties = (data.edges || []).filter((e) => e.source === node.id)
+    if (!nn) return;
+    const node = data?.nodes?.find((n) => n.kind === "donor" && normName(n.label) === nn);
+    const retained = disclosedDonor(name, jur);
+    const figures = Number.isFinite(retained?.total) ? retained : node;
+    if (!figures) return;
+    const parties = (data?.edges || []).filter((e) => e.source === node?.id)
       .sort((a, b) => (b.total || 0) - (a.total || 0))
       .map((e) => String(e.target).replace(/^party:/, ""));
-    hits.push({ jur, node, meta: data.meta || {}, parties });
+    hits.push({ jur, node: figures, meta: data?.meta || {}, parties });
   });
   if (!hits.length) { slot.remove(); return; }
   const items = hits.map(({ jur, node, meta, parties }) => {
@@ -5501,7 +5542,7 @@ function loadPartySpeeches() {
   return partySpeechesPromise;
 }
 let partyPagePromise = null;
-const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=ecc6ec7a1c'));
+const loadPartyPage = () => (partyPagePromise ??= import('/party-page.js?v=8f2ed8aff9'));
 
 let aecExtrasPromise = null;
 function loadAecExtras() {
@@ -5542,7 +5583,7 @@ function partyReceiptsHTML(rows, registerURL, updated = "", returnsTo = "") {
     const otherPct = r.receipts ? (r.other / r.receipts) * 100 : 0;
     const missingPct = r.receipts ? (r.notItemised / r.receipts) * 100 : 0;
     return `<div class="receipts-row${index >= 10 ? " receipts-older" : ""}" aria-hidden="true">
-      <span class="receipts-year">${esc(r.year)}</span>
+      <span class="receipts-year">${esc(fy(r.year))}</span>
       <span class="receipts-track"><span class="receipts-bar" style="width:${((r.receipts / max) * 100).toFixed(1)}%">
         <i class="receipts-donations" style="flex-basis:${donationPct.toFixed(1)}%"></i>
         <i class="receipts-other" style="flex-basis:${otherPct.toFixed(1)}%"></i>
@@ -5554,11 +5595,11 @@ function partyReceiptsHTML(rows, registerURL, updated = "", returnsTo = "") {
   }).join("");
   const table = `<div class="visually-hidden"><table><caption>Receipts on the return</caption>
     <thead><tr><th scope="col">Year</th><th scope="col">Receipts</th><th scope="col">Itemised donations</th><th scope="col">Itemised other receipts</th><th scope="col">Not itemised</th></tr></thead>
-    <tbody>${series.map((r) => `<tr><th scope="row">${esc(r.year)}</th>${[r.receipts, r.donations, r.other, r.notItemised].map((v) => `<td>${esc(fmtDollars(v))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    <tbody>${series.map((r) => `<tr><th scope="row">${esc(fy(r.year))}</th>${[r.receipts, r.donations, r.other, r.notItemised].map((v) => `<td>${esc(fmtDollars(v))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
   return `<section class="party-receipts" id="party-receipts" data-accent="money" data-rail-figure="${esc(fmtMoney(latest.receipts))}" aria-labelledby="party-receipts-heading">
     <h2 class="subject-section-title" id="party-receipts-heading">Receipts on the return</h2>
     <div class="tiles receipts-tiles">
-      ${tile(fmtMoney(latest.receipts), `receipts on the ${latest.year} return${latest.branches > 1 ? `, ${latest.branches} branches summed` : ""}`)}
+      ${tile(fmtMoney(latest.receipts), moneyScope("return", latest))}
       ${tile(fmtMoney(latest.donations), "itemised as donations")}
       ${tile(`${pct(latest.notItemised, latest.receipts)}%`, "of receipts not itemised")}
     </div>
@@ -5614,7 +5655,7 @@ async function renderPartyDebts(label, sections) {
     head.querySelector(".subject-tag")?.insertAdjacentHTML("afterend",
       `<p class="party-return-line"><a href="#party-receipts">${esc(returnLine.text)}</a></p>`);
   }
-  if (html && lodged.note) html = html.replace(/<\/section>\s*$/, `<p class="party-lodged-as">${esc(lodged.note)}</p></section>`);
+  if (html && lodged.note) html = html.replace(/<\/section>\s*$/, `<p class="party-lodged-as">${esc(fy(lodged.note))}</p></section>`);
   if (d || b) {
     const lenders = (d?.top || []).map((l) => [l.type === "Financial" ? `${l.name} (financial institution)` : l.name, l.amount || 0]);
     const top = (b?.top || []).slice(0, 3).map((t) => `${t.name} ${fmtMoney(t.amount || 0)}`).join(", ");
@@ -5625,12 +5666,12 @@ async function renderPartyDebts(label, sections) {
         ${tile(fmtMoney(d.financial_total || 0), "of it to banks and other financial institutions")}
         ${tile(String(d.lenders || 0), d.lenders === 1 ? "creditor listed" : "creditors listed")}
       </div>
-      ${lenders.length ? barList(lenders, { fmt: fmtMoney, heading: `Largest creditors, ${d.year}` }) : ""}
-      ${d.by_year?.length > 1 ? columnChart(d.by_year.map(([y, t]) => [y, t || 0]), {
+      ${lenders.length ? barList(lenders, { sourceNames: true, fmt: fmtMoney, heading: `Largest creditors, ${fy(d.year)}` }) : ""}
+      ${d.by_year?.length > 1 ? columnChart(d.by_year.map(([y, t]) => [fy(y), t || 0]), {
         fmt: fmtMoney, heading: "Owed at each 30 June",
         note: "Year-end balances, not new borrowing; a year with no debt itemised shows nothing.",
       }) : ""}` : ""}
-      ${b ? `<p class="party-benefits"><b>${esc(fmtMoney(b.total || 0))}</b> in discretionary benefits in ${esc(b.year)}${top ? `: ${esc(top)}` : ""}.
+      ${b ? `<p class="party-benefits"><b>${esc(fmtMoney(b.total || 0))}</b> in discretionary benefits in ${esc(fy(b.year))}${top ? `: ${esc(top)}` : ""}.
         These are government payments other than public election funding, as listed on the return.</p>` : ""}
       ${sourceLineHTML({
         updated, source: `AEC annual returns${returnsTo}`, originals,
@@ -5646,7 +5687,7 @@ async function renderPartyDebts(label, sections) {
       <h2 class="subject-section-title">Associated entities</h2>
       <ul class="subject-list" role="list">${shown.map((e) => `
       <li><a class="source-title" ${entityHrefAttr(subjectHash("campaigner", e.name))}>${esc(e.name)}</a>
-        <span class="result-meta">${esc([e.year, e.receipts != null ? `receipts ${fmtMoney(e.receipts)}` : "",
+        <span class="result-meta">${esc([fy(e.year), e.receipts != null ? `receipts ${fmtMoney(e.receipts)}` : "",
           e.payments != null ? `payments ${fmtMoney(e.payments)}` : "", e.debts ? `debts ${fmtMoney(e.debts)}` : ""].filter(Boolean).join(" · "))}</span></li>`).join("")}</ul>
       ${sourceLineHTML({
         updated, source: "AEC associated-entity returns", originals,
@@ -5685,12 +5726,10 @@ async function renderPartyMembers(label, body, key) {
   }
   const directoryParty = data.people.flatMap((person) => [person.party, ...(person.parties || [])])
     .find((party) => party && samePartyLabel(party, label)) || label;
-  const independent = partyPage.isIndependent(label);
-  const noun = independent ? (sitting.size === 1 ? "parliamentarian" : "parliamentarians") : (sitting.size === 1 ? "member" : "members");
   if (sitting.size) body.querySelector(".subject-tag .entry-active")?.insertAdjacentHTML("beforebegin",
-    `<a href="${esc(directoryHash("person", { party: directoryParty }))}">${sitting.size.toLocaleString()} sitting ${noun}</a> · `);
+    `<a href="${esc(directoryHash("person", { party: directoryParty }))}">${sitting.size.toLocaleString()} marked current in the directory</a> · `);
   body.querySelector("#entry-flows .ui-sheet-facts")?.insertAdjacentHTML("beforeend",
-    `<div><dt>Members</dt><dd>${esc(`${sitting.size.toLocaleString()} sitting; ${speakers.size.toLocaleString()} recorded ${speakers.size === 1 ? "speaker" : "speakers"} since ${String(data.meta?.since || "1993").slice(0, 4)}, with at least ${Number(data.meta?.floor) || 5} speeches`)}${
+    `<div><dt>Members</dt><dd>${esc(`${sitting.size.toLocaleString()} marked current in the directory; ${speakers.size.toLocaleString()} recorded ${speakers.size === 1 ? "speaker" : "speakers"} since ${String(data.meta?.since || "1993").slice(0, 4)}, with at least ${Number(data.meta?.floor) || 5} speeches`)}${
       data.meta?.generated ? ` (directory, ${esc(fmtDate(data.meta.generated))})` : ""}. Sitting members use their current party; member IDs counted once.</dd></div>`);
 }
 
@@ -5907,7 +5946,7 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   const jurName = (j) => STATE_NAMES[j] || String(j || "").toUpperCase();
   const all = recs.flatMap(r => ["for", "against"].flatMap(field => (r[field] || []).map(d => ({...d, jur: d.jur || r.jurisdiction, vote: field === "for" ? "For the bill" : "Against the bill"}))));
   if (currentSubjectKey !== key) return;
-  const latestBills = growthModules.latestBillVotes(all);
+  const latestBills = growthModules.latestBillVotes(all.filter(v => !voteTables.isProceduralDivision(v.title || v.name)));
   const billIndex = await loadBillTitles().catch(() => null);
   if (currentSubjectKey !== key || !slot.isConnected) return;
   onRecord({votes: latestBills, bills: billIndex?.bills || []});
@@ -6135,6 +6174,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   body.innerHTML = subjectSkeleton(SUBJECT_LABELS[kind] || "Receipt source", kind === "electorate" ? "" : name,
     `<span class="answer-skeleton subject-skel tag-skel" aria-hidden="true"><i></i></span>`,
     kind === "person" && params.get('attribution') !== 'unattributed');
+  // Reserve the map in the skeleton's first frame, before a lazy helper yields.
+  if (kind === "donor" || kind === "party") reserveSubjectMap(true);
   // A person's aside is the "On this page" rail, not a Quick facts card.
   if (kind === "person") $("subject-infobox")?.classList.add("entry-rail");
   // An electorate's address is a reference slug ("vic-vic-la-vic-berwick"), not
@@ -6162,7 +6203,6 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   if (kind === "campaigner") { await renderCampaignerEntry(name, key); return; }
 
   if (kind === "donor" || kind === "party") {
-    reserveSubjectMap(true);
     const [, fits] = await Promise.all([loadMoneyData(), loadFits()]);
     if (currentSubjectKey !== key) return;
     const node = findMoneyNode(kind, name);
@@ -6204,9 +6244,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       // A donor outside the money map's bounded selection: its own returns,
       // the state commissions' files and the record, under its exact spelling.
       reserveSubjectMap(false); // no map for this one: give the space back
-      const record = disclosedDonor(name);
+      const record = disclosedDonor(name, "federal") || disclosedDonor(name);
       const display = donorDisclosure(record).name || name;
-      $("subject-title").textContent = display;
+      $("subject-title").textContent = sourceDisplayName(display).replace(/\bLTD\b/g, "Ltd");
+      $("subject-title").title = display;
       name = display;
       const reference = record?.kind === "reference";
       const ownFile = record?.jurisdiction ? await loadMoneyFile(record.jurisdiction) : null;
@@ -6215,14 +6256,21 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         `<span>${esc(sentenceCase(industryLabel(record?.industry || "")) || "Receipt source")}</span>`,
         record?.firstYear ? `<span class="entry-active">${esc(returnsSpan(record.firstYear, record.lastYear))}</span>` : "",
       ].filter(Boolean).join(" · ");
-      sections.innerHTML = donorRecordHTML(record, ownFile?.meta);
+      // State figures appear once in their labelled commission rows below; the
+      // page keeps the same off-map note as the server page, without figures.
+      sections.innerHTML = record?.jurisdiction === "federal" || reference ? donorRecordHTML(record, ownFile?.meta)
+        : record?.jurisdiction ? `<p class="donor-offmap-note">${esc(offMapDonorNote(record))}</p>` : "";
       box.innerHTML = infoboxHTML(
         [["Type", reference ? "Source reference" : "Disclosed donor"], fitsInfoRow(fits, "by_entity", name)], "",
         [actionBtn("search",searchHash(`"${name}"`,{}),"Search the record for them",{primary:true}),actionBtn("map","/money","Open the money map")]);
-      renderDonorStateMoney(name, sections, { only: true });
+      renderDonorStateMoney(name, sections, { only: record?.jurisdiction !== "federal" });
       renderDonorTaxCharity(name, sections);
       subjectMentions(name, sections, "In parliament");
       return;
+    }
+    if (kind === "donor") {
+      $("subject-title").textContent = sourceDisplayName(node.label).replace(/\bLTD\b/g, "Ltd");
+      $("subject-title").title = node.label;
     }
     // Factual ranks use every eligible recipient receipt, independently of map admission.
     await donorViewReady;
@@ -6259,8 +6307,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     const reported = isParty || hasPartyReceipts(node);
     const declaredOnlyLine = notListedLine(node) || "The parties' returns list no receipt from it";
     const donorScope = isParty ? "" : ownScope;
-    const rankTotal = (n) => (isParty ? partyReturnFigures(n) : receiptFigures(n)).total || 0;
-    const rank = donors.sort((a, b) => rankTotal(b) - rankTotal(a)).findIndex((n) => n.id === node.id) + 1;
+    // Receipt projections walk every year/type cell. Compute each once per
+    // ranking, rather than again for every sort comparison. Keep ties stable.
+    const rankTotals = new Map(donors.map(n => [n, (isParty ? partyReturnFigures(n) : receiptFigures(n)).total || 0]));
+    const rank = donors.sort((a, b) => rankTotals.get(b) - rankTotals.get(a)).findIndex((n) => n.id === node.id) + 1;
     // The party's table counts each receipt once, as the donor page does, and says so (partyMoneyData's scope).
     const partyMoney=isParty ? registerTables.partyMoneyData(moneyData,node.id) : null;
     // While the map draws no donor to a party (its donor side held, export rule 10), the section says so, never an empty table.
@@ -6338,7 +6388,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     box.innerHTML = entryRailHTML();
     const rail = isParty ? PARTY_RAIL : DONOR_RAIL;
     sections.insertAdjacentHTML("beforeend", `<section id="entry-flows" data-accent="money" data-rail-figure="${reported ? esc(fmtMoney((own ? own.total : node.total) || 0)) : ""}">
-      ${isParty ? `<h2 class="subject-section-title">Where it came from</h2>${partyMoney?.scope ? `<p class="entry-scope">${esc(partyMoney.scope)}</p>` : ""}${partyTable}`
+      ${isParty ? `<h2 class="subject-section-title">Where it came from</h2>${partyMoney?.scope ? `<p class="entry-scope">${esc(registerTables.partyTableScope(partyMoney.scope, moneyData?.meta))}</p>` : ""}${partyTable}`
         : !reported ? `<figure class="chart donor-flow-bars"><figcaption>Where the money went</figcaption><p class="entry-scope">${esc(declaredOnlyLine)}.</p></figure>` : barList(flowRows, {
         fmt: fmtMoney,
         heading: isParty ? "Where it came from" : "Where the money went",
@@ -6433,6 +6483,16 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
       `<img class="subject-portrait" src="${esc(url)}" alt="${official ? "Official portrait" : "Portrait"} of ${esc(name)}" width="112" height="112">`;
     else portrait?.classList.replace("subject-portrait-pending", "subject-portrait-blank");
   });
+  // Static profile reads do not depend on the speech search. A verified roster
+  // entry needs them, so start them together and retain the same head gate below.
+  const loadElectorateReference = () => loadElectorateModule().then(async (module) => {
+    const [data, people] = await Promise.all([module.loadIndex(), module.loadPeople().catch(() => ({ people: [] }))]);
+    return { module, data, person: module.findPerson(people.people, name) };
+  }).catch(() => null);
+  const earlyFits = roster ? loadFits() : null;
+  const earlyElectorate = roster ? loadElectorateReference() : null;
+  const earlyMoney = roster && (roster.party || roster.representation?.length || /\S\s+\S/.test(String(roster.name || '')))
+    ? loadMoneyData().catch(() => null) : null;
   let speeches = [], speechesFailed = false;
   try {
     const data = await api(`/api/search?${new URLSearchParams({ q: speechScope ? '*' : speechSpeaker, speaker: speechSpeaker, top_k: "20", ...(speechScope ? { mode: 'keyword' } : {}), ...(unattributed ? { attribution: 'unattributed' } : {}) })}`);
@@ -6520,16 +6580,13 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   }
   const q = encodeURIComponent(name);
   const [fits, electorateReference, rosterData, , rosterLists] = await Promise.all([
-    loadFits(),
-    loadElectorateModule().then(async (module) => {
-      const [data, people] = await Promise.all([module.loadIndex(), module.loadPeople().catch(() => ({ people: [] }))]);
-      return { module, data, person: module.findPerson(people.people, name) };
-    }).catch(() => null),
+    earlyFits || loadFits(),
+    earlyElectorate || loadElectorateReference(),
     loadParliamentarians(),
     // The party receipts row below only points at the party's map entry when
     // the money data has one; an independent's would land on "Not among the
     // top 250 disclosed donors", so they get the map itself instead.
-    party || rosterFallback || listFallback ? loadMoneyData().catch(() => null) : null,
+    party || rosterFallback || listFallback ? earlyMoney || loadMoneyData().catch(() => null) : null,
     listFallback ? fetch("/data/roster-list-parties.json").then((r) => (r.ok ? r.json() : null)).catch(() => null) : null,
   ]);
   if (currentSubjectKey !== key) return;
@@ -6642,10 +6699,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // person sit side by side carries the association line, once.
   if (party) {
     const money = sections.querySelector("#person-expenses") || sections.querySelector("#person-pay");
-    const latest = partyOnMap ? partyLatestYear(findMoneyNode("party", party)) : null;
+    const latest = partyOnMap ? personPartyFigure(findMoneyNode("party", party), moneyData?.meta) : null;
     money?.insertAdjacentHTML("afterend", `<div class="person-party-money"><a href="${partyOnMap ? esc(subjectHash("party", party)) : '/money'}">${
       partyOnMap ? `${esc(party)} party receipts` : 'Party receipts on the money map'}</a>${latest
-        ? `<p class="person-party-figure"><b>${esc(fmtMoney(latest.total))}</b> in ${esc(latest.label)}, all receipt types</p>` : ""}
+        ? `<p class="person-party-figure"><b>${esc(fmtMoney(latest.total))}</b> ${esc(latest.scope)}</p>` : ""}
       <p>Party disclosures, not this person’s finances.</p>${growthModules.associationHTML()}</div>`);
   }
   sections.insertAdjacentHTML("beforeend", growthModules.correctionHTML());
@@ -6698,7 +6755,12 @@ function wireGrowthAsk(root) {
       form.requestSubmit();
     }
   });
-  const observer = new ResizeObserver(() => requestAnimationFrame(fit));
+  let width = -1;
+  const observer = new ResizeObserver(([entry]) => {
+    if (entry.contentRect.width === width) return;
+    width = entry.contentRect.width;
+    requestAnimationFrame(() => { if (form.isConnected) fit(); });
+  });
   observer.observe(field);
   const cleanup = () => {
     if (form.isConnected) return;
@@ -6706,8 +6768,13 @@ function wireGrowthAsk(root) {
     removeEventListener("opax:route", cleanup);
   };
   addEventListener("opax:route", cleanup);
-  document.fonts.ready.then(fit);
-  fit();
+  // Keep the page's DOM construction and its first field measurement in
+  // separate tasks. A height change must not feed back into another fit.
+  requestAnimationFrame(() => {
+    if (!form.isConnected) return;
+    document.fonts.ready.then(() => { if (form.isConnected) fit(); });
+    fit();
+  });
   form?.addEventListener("submit", event => {
     event.preventDefault();
     const question = form.querySelector('[name="q"]').value.trim();
@@ -7593,7 +7660,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=6d19f08fad").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=c07cfc6fc9").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -7647,10 +7714,17 @@ function partyLatestYear(node) {
   const total = Object.values(node.by_type_year[fy]).reduce((sum, cell) => sum + (Number(cell?.[0]) || 0), 0);
   return total > 0 ? { label: fy.replace("-", "–"), total } : null;
 }
+/** The person row keeps the party's selected-receipt figure until the return-total call is made;
+ *  its scope names the file it came from (the uncapped receipts, or a capped map file). */
+function personPartyFigure(node, meta) {
+  const latest = partyLatestYear(node);
+  return latest ? {...latest, scope: moneyScope(meta?.uncapped ? 'receipts' : 'map', {year: latest.label})} : null;
+}
 /** The years a name's disclosure returns cover, as a meta line says them: "Returns 1998 to 2024". */
 function returnsSpan(first, last) {
   if (!first && !last) return "";
-  return first === last || !last || !first ? `Returns in ${first || last}` : `Returns ${first} to ${last}`;
+  const year = value => fy(`${value}-${String((Number(value) + 1) % 100).padStart(2, '0')}`);
+  return first === last || !last || !first ? `Returns in ${year(first || last)}` : `Returns ${year(first)} to ${year(last)}`;
 }
 
 /** Party dot for a label the party map may not know (state-only parties): the money file's colour stands in. */
@@ -8208,12 +8282,31 @@ async function buildDonorsDirectory() {
   for(const n of new Set(donorViewIndex.values())){
     if(!n.id)continue;
     const k=normName(n.label) || String(n.label).toLowerCase();
-    if(donors.has(k))continue;
     // A map donor's index entry carries no figure (its graph has it): never a $0 row if that graph failed to load.
     if(n.kind!=='reference' && !(Number(n.total) > 0))continue;
-    const money=n.kind==='reference' ? {} : {[n.jurisdiction || 'federal']:{total:n.total || 0,count:n.count || 0,first:n.firstYear,last:n.lastYear}};
-    // Off the map, a federal figure is the record total (donor and party returns together),
-    // not the map's each-gift-once measure: its row says so (recordMeasure).
+    const jur=n.jurisdiction || 'federal';
+    const figure={total:n.total || 0,count:n.count || 0,first:n.firstYear,last:n.lastYear};
+    const existing=donors.get(k);
+    if(existing){
+      for(const label of [n.label,...n.aliases || [],...n.lookup_names || []])existing.labels.add(label);
+      // A row from another commission must not hide this figure. Its own
+      // commission's map or first retained figure stays authoritative.
+      if(n.kind==='reference' || existing.money[jur])continue;
+      existing.money[jur]=figure;
+      existing.referenceOnly=false;
+      existing.first=Math.min(existing.first,n.firstYear || 9999);
+      existing.last=Math.max(existing.last,n.lastYear || 0);
+      if(jur==='federal'){
+        existing.label=n.label;
+        existing.industry=n.industry || existing.industry;
+        existing.group=n.group || existing.group;
+        existing.recordMeasure=!n.by_type;
+      }
+      continue;
+    }
+    const money=n.kind==='reference' ? {} : {[jur]:figure};
+    // Retained federal figures without typed cells use source-record totals;
+    // their rows say so (recordMeasure).
     donors.set(k,{label:n.label,labels:new Set([n.label,...n.aliases || [],...n.lookup_names || []]),industry:n.industry || 'other',group:'other',money,parties:new Map(),first:n.firstYear || 9999,last:n.lastYear || 0,referenceOnly:n.kind==='reference',
       recordMeasure:n.kind!=='reference' && !n.by_type && (n.jurisdiction || 'federal')==='federal'});
   }
@@ -8628,7 +8721,7 @@ async function renderCampaignerEntry(name, key) {
     const figs = CAMPAIGNER_COLUMNS
       .map(([noun], i) => (r[i + 1] == null ? "" : `${noun} ${fmtMoney(Number(r[i + 1]))}`))
       .filter(Boolean).join(" · ");
-    return `<li><b>${esc(String(r[0] || ""))}</b>
+    return `<li><b>${esc(fy(r[0] || ""))}</b>
       <span class="result-meta">${esc(figs || "nothing itemised on the return")}</span></li>`;
   }).join("");
   const register = safeUrl(data?.meta?.register_url);
@@ -8664,6 +8757,13 @@ async function renderCampaignerEntry(name, key) {
 let billsIndexPromise = null;
 let billsTitleIndex = null;
 const billFiles = new Map();
+let proceduralTitlesPromise = null;
+function loadProceduralTitles() {
+  proceduralTitlesPromise ??= fetch('/procedural-division-titles.json', {cache:'no-cache'})
+    .then(r => {if (!r.ok) throw new Error('division titles unavailable'); return r.json();});
+  proceduralTitlesPromise.catch(() => {proceduralTitlesPromise = null;});
+  return proceduralTitlesPromise;
+}
 // "bill:<key>" or "index": what #bill-body is currently holding.
 let billView = null;
 let billTextHandle = null;
@@ -8746,8 +8846,11 @@ function loadBillsDate() {
  *  failure rejects and is not kept, so the bill page can say so and a retry fetches again. */
 function fetchBill(key) {
   if (!billFiles.has(key)) {
-    const request = fetch(`/bills/${encodeURIComponent(key)}.json`, { cache: "no-cache" })
-      .then((r) => { if (r.ok) return r.json(); if (r.status === 404) return null; throw new Error(`bill ${r.status}`); });
+    const request = Promise.all([
+      fetch(`/bills/${encodeURIComponent(key)}.json`, { cache: "no-cache" })
+        .then((r) => { if (r.ok) return r.json(); if (r.status === 404) return null; throw new Error(`bill ${r.status}`); }),
+      loadProceduralTitles().catch(() => ({})),
+    ]).then(([bill, titles]) => bill && (bill.divisions || []).length ? {...bill, division_titles:titles} : bill);
     request.catch(() => { if (billFiles.get(key) === request) billFiles.delete(key); });
     billFiles.set(key, request);
   }
@@ -9411,9 +9514,9 @@ function billDivisionsHTML(bill) {
         "A bill with no division here was not necessarily unopposed. This register does not establish whether a vote on the voices has occurred.",
         "No per-member or per-party vote is available without a formal division."]})}</section>`;
   }
-  const rows = voteTables.divisionRows(divs, true);
+  const rows = voteTables.divisionRows(divs, true, bill.division_titles);
   return `<section class="ui-section bill-section" data-accent="votes" ${growthModules.moduleAttrs("party_votes", "bill", 2)}>
-    ${voteTables.billDivisionsTablesHTML(rows, {bill: bill.key})}
+    ${voteTables.billDivisionTablesHTML(divs, bill.division_titles)}
     ${sourceLineHTML({
       updated: bill.exportedAt || "", source: "They Vote For You",
       notes: [
@@ -9423,7 +9526,7 @@ function billDivisionsHTML(bill) {
         collapsed ? `The source records some divisions more than once; ${collapsed} repeated record${collapsed === 1 ? "" : "s"}
           of the same division ${collapsed === 1 ? "is" : "are"} shown here once.` : "",
         "A division's title is its recorded stage. Open a division for its count on They Vote For You and the question put, in the record's words.",
-        rows.some((r) => r.kind !== "bill") ? "Votes under limitation of debate and votes on procedure are grouped by the stage the record files them under, not by reading the question. A vote under limitation of debate can be on an amendment or a reading, put when the time set for the debate ran out." : "",
+        rows.some((r) => r.kind !== "bill" || r.procedural) ? "Votes under limitation of debate and votes on procedure retain their recorded stage. Procedural motions are listed under Procedural votes, including those recorded at another stage. A vote under limitation of debate can be on an amendment or a reading, put when the time set for the debate ran out." : "",
       ],
       licence: "Division records: They Vote For You, OpenAustralia Foundation, ODbL.",
     })}
@@ -9773,6 +9876,8 @@ async function renderPartyBillDivisions(label, sections, key) {
   slot.innerHTML = `<h2 class="subject-section-title">Bills they divided on</h2>
     <p class="status">Reading the divisions…</p>`;
   sections.appendChild(slot);
+  await voteTablesReady;
+  if (currentSubjectKey !== key || !slot.isConnected) return;
   const idx = await loadDivisionBills();
   if (currentSubjectKey !== key || !slot.isConnected) return;
   if (!idx?.bills?.length) { slot.remove(); return; }
@@ -9823,6 +9928,7 @@ async function renderPartyBillDivisions(label, sections, key) {
     <span class="result-meta">${[
       r.d.title ? esc(r.d.title) : r.d.stage ? esc(billStage(r.d.stage)) : "", r.d.date ? esc(fmtDate(r.d.date)) : "",
       r.d.outcome ? `<b>${esc(billOutcome(r.d.outcome))}</b>` : "",
+      voteTables.isProceduralDivision(r.d.title || r.d.name || r.bill.division_titles?.[r.d.key]) ? voteTables.proceduralTagHTML() : "",
       // A renamed party's division keeps the name it voted under (party-page.js recordedAsText).
       partyPage?.recordedAsText(label, [r.party]) ? esc(partyPage.recordedAsText(label, [r.party])) : "",
     ].filter(Boolean).join("&nbsp;· ")}</span>
@@ -9851,13 +9957,14 @@ async function renderPartyBillDivisions(label, sections, key) {
       esc(`${runs.length} ${stage ? `${stage.toLowerCase()} ` : ""}divisions`),
       first.d.date ? esc(fmtDate(first.d.date)) : "", outcomes ? `<b>${esc(outcomes)}</b>` : "",
       esc(`${label} ${sides}`),
+      voteTables.isProceduralDivision(first.d.title || first.d.name || first.bill.division_titles?.[first.d.key]) ? voteTables.proceduralTagHTML() : "",
     ].filter(Boolean).join("&nbsp;· ")}</span>
   </li>`;
   };
   const runsOf = (rows) => {
     const runs = new Map();
     for (const r of rows) {
-      const k = `${stageOf(r)}|${r.d.date || ""}`;
+      const k = `${stageOf(r)}|${r.d.date || ""}|${voteTables.isProceduralDivision(r.d.title || r.d.name || r.bill.division_titles?.[r.d.key])}`;
       if (!runs.has(k)) runs.set(k, []);
       runs.get(k).push(r);
     }
@@ -9967,8 +10074,8 @@ async function openExplain(detail) {
   if (!detail || !["industry", "donor", "party"].includes(detail.kind)) return;
   const jur = MONEY_JURISDICTIONS[detail.jurisdiction] ? detail.jurisdiction : "federal";
   try {
-    const [mod, graph] = await Promise.all([import("/money-explain.js?v=fe37183fea"), loadMoneyFile(jur)]);
-    const { loadDonorViewIndex } = await import("/donor-views.js?v=c61afb12d9");
+    const [mod, graph] = await Promise.all([import("/money-explain.js?v=a24bdc4882"), loadMoneyFile(jur)]);
+    const { loadDonorViewIndex } = await import("/donor-views.js?v=75f497c532");
     goRoute(mod.explainHrefFor({ ...detail, jurisdiction: jur }, graph, await loadDonorViewIndex()) || "/money/explain");
   } catch { goRoute("/money/explain"); }
 }
@@ -9983,14 +10090,14 @@ document.addEventListener("click", (e) => {
 document.addEventListener("opax:explain", (e) => openExplain(e.detail));
 
 const GAMES = {
-  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=137d9b70e8", mount: "mountTimeMachine" },
+  tm: { name: "Time machine", dialog: "dialog-tm", body: "explore-tm", module: "/timemachine.js?v=e291622b79", mount: "mountTimeMachine" },
   tide: { name: "The tide", dialog: "dialog-tide", body: "explore-tide", module: "/tide.js", mount: "mountTide" },
-  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=b38cba0362", mount: "mountQuiz" },
-  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=cc4729ae88", mount: "mountLedger" },
-  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=93b9777b2f", mount: "mountGrants" },
+  quiz: { name: "The record quiz", dialog: "dialog-quiz", body: "explore-quiz", module: "/quiz.js?v=d34b30b6e3", mount: "mountQuiz" },
+  ledger: { name: "The ledger", dialog: "dialog-ledger", body: "explore-ledger", module: "/ledger.js?v=3f001fa997", mount: "mountLedger" },
+  grants: { name: "Who gets the grants", dialog: "dialog-grants", body: "explore-grants", module: "/grants.js?v=74f7986fb7", mount: "mountGrants" },
   matrix: { name: "Who owns which debate", dialog: "dialog-matrix", body: "explore-matrix", module: "/matrix.js?v=56987af450", mount: "mountMatrix" },
-  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=a891297d1a", mount: "mountWordsDollars" },
-  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=e0fe3734aa", mount: "mountThenVsNow" },
+  wd: { name: "Words per dollar", dialog: "dialog-wd", body: "explore-wd", module: "/wordsdollars.js?v=73ab26c144", mount: "mountWordsDollars" },
+  tvn: { name: "Then vs now", dialog: "dialog-tvn", body: "explore-tvn", module: "/thenvsnow.js?v=23905e63c4", mount: "mountThenVsNow" },
 };
 
 async function openGame(which, params = null) {
@@ -11073,6 +11180,7 @@ function prefetchAskFollowups(ask) {
 // conversation's `updated` clock: the newer write wins.
 
 let chatThread = []; // {role: 'user'|'answer', text, sources?, next?, askedAs?}
+let chatRestoreRequest = 0;
 let chatKind = "all";
 // A conversation may be held with ONE speaker's record rather than the whole
 // corpus: a person page's "Ask about their speeches" opens one, and the name
@@ -11197,7 +11305,41 @@ function savedSpeaker(chat) {
   return typeof chat?.speaker === "string" ? chat.speaker.trim() : "";
 }
 
-function openSavedChat(id) {
+// A pending policy load must not restore a departed page or a closed dock.
+function chatRestoreCurrent() {
+  const route = routeRequest, surface = document.documentElement.dataset.chat;
+  return () => route === routeRequest && surface === document.documentElement.dataset.chat && !$("panel-chat").hidden;
+}
+// An unavailable policy module must still leave a readable answer. Without its
+// source classification, conservatively bound all prose, including source views.
+function cappedChatPayload(value) {
+  if (typeof value === 'string') {
+    const words = value.match(/\S+/gu) || [];
+    return words.length > 120 ? words.slice(0, 120).join(' ') + '…' : value;
+  }
+  if (Array.isArray(value)) return value.map(cappedChatPayload);
+  if (!value || typeof value !== 'object') return value;
+  const prose = ['answer', 'text', 'text_clean', 'body', 'snippet', 'passage', 'quote', 'quotes', 'evidence'];
+  const passage = prose.map(key => value[key]).find(v => typeof v === 'string' || Array.isArray(v) && v.every(item => typeof item === 'string'));
+  // Parallel fields and quote arrays are views of one bounded passage.
+  const excerpt = cappedChatPayload(Array.isArray(passage) ? passage.join(' ') : passage || '');
+  return Object.fromEntries(Object.entries(value).map(([key, val]) => [key,
+    key === 'citations' ? {} : ['answer_ranges', 'answerRanges'].includes(key) ? [] :
+    key === 'full_text_available' ? false :
+    prose.includes(key) && (typeof val === 'string' || Array.isArray(val) && val.every(item => typeof item === 'string'))
+      ? Array.isArray(val) ? [excerpt].filter(Boolean) : excerpt : cappedChatPayload(val)]));
+}
+async function chatPolicyReady(current = chatRestoreCurrent()) {
+  try { await saDisplayReady; } catch {
+    saFullTextFlag = 'false';
+    saDisplayHelpers = { saDisplayPayload: cappedChatPayload };
+  }
+  return current();
+}
+
+async function openSavedChat(id) {
+  const requested = ++chatRestoreRequest;
+  if (!await chatPolicyReady() || requested !== chatRestoreRequest) return;
   const store = chatStoreRead();
   const chat = store.chats.find((c) => c.id === id);
   if (!chat || chatBusy) return;
@@ -11318,6 +11460,7 @@ async function chatSyncPush() {
 // On opening the chat: pull the account's conversations and push any this
 // browser has that the account lacks or holds older. Last write wins.
 async function chatSyncPull() {
+  const current = chatRestoreCurrent();
   if (!(await chatAccount())) { renderChatHistory(); return; }
   let remote;
   try { remote = (await api("/api/community/chats")).chats || []; } catch { return; }
@@ -11342,8 +11485,10 @@ async function chatSyncPull() {
   }
   if (changed) {
     chatStoreWrite();
-    const active = activeChat(false);
-    if (active && active.thread !== chatThread && !chatBusy) { chatThread = active.thread; chatKind = active.kind; chatSpeaker = savedSpeaker(active); renderChatThread(); requestChatFollowups(); }
+    if (await chatPolicyReady(current)) {
+      const active = activeChat(false);
+      if (active && active.thread !== chatThread && !chatBusy) { chatThread = active.thread; chatKind = active.kind; chatSpeaker = savedSpeaker(active); renderChatThread(); requestChatFollowups(); }
+    }
   }
   renderChatHistory();
 }
@@ -11354,6 +11499,7 @@ async function chatSyncPull() {
 // conversation would be taking away the thing the dock exists to avoid. On
 // /chat the empty Ask box IS the fresh start, so that view still goes there.
 function startNewConversation() {
+  chatRestoreRequest++;
   chatAbort?.abort();
   chatFollowAbort?.abort();
   const store = chatStoreRead();
@@ -11378,7 +11524,10 @@ function startNewConversation() {
 $("chat-new")?.addEventListener("click", startNewConversation);
 $("dock-new")?.addEventListener("click", startNewConversation);
 
-function initChat(manageFocus) {
+async function initChat(manageFocus) {
+  const requested = ++chatRestoreRequest;
+  const current = chatRestoreCurrent();
+  if (!await chatPolicyReady(current) || requested !== chatRestoreRequest) return;
   if (!chatThread.length) loadChatSession();
   // The waiting state's pieces, warmed now so a question's first frame does
   // not wait on a module fetch.
@@ -11429,6 +11578,7 @@ function initChat(manageFocus) {
   // scroll the document to its end instead. Double-rAF so route()'s
   // scroll-to-top settles first.
   requestAnimationFrame(() => requestAnimationFrame(() => {
+    if (!current() || requested !== chatRestoreRequest) return;
     scrollChatToEnd();
     if (manageFocus) $("chat-input").focus({ preventScroll: true });
   }));
@@ -11915,6 +12065,10 @@ async function sendChat(question, carry) {
   const myAbort = new AbortController();
   chatAbort = myAbort;
   chatBusy = true;
+  if (!await chatPolicyReady() || chatAbort !== myAbort || myAbort.signal.aborted) {
+    if (chatAbort === myAbort) chatBusy = false;
+    return;
+  }
   // Everything before this question travels as context for the retrieval.
   // A user turn travels as the question the record was actually asked: the
   // money path's resolved question, or the Worker's standalone rewrite of a
@@ -12043,6 +12197,8 @@ async function sendChat(question, carry) {
       },
       delta(text) {
         if (!alive()) return;
+        // Without the policy helper, show only the bounded complete answer.
+        if (saDisplayHelpers?.saDisplayPayload === cappedChatPayload) return;
         if (!live) {
           liveWrap = document.createElement("div");
           liveWrap.className = "chat-turn chat-turn-answer answer-in";
@@ -12240,6 +12396,7 @@ function openDock() {
 
 function closeDock({ restoreFocus = true } = {}) {
   if (!dockOpen) return;
+  chatRestoreRequest++;
   dockOpen = false;
   document.documentElement.dataset.chat = "";
   if (!chatIsPage()) $("panel-chat").hidden = true;
@@ -13632,7 +13789,7 @@ async function loadDivisionNames(slug, d) {
 /** The "Who voted which way" block for loadDivisionNames' answer. Index names
  *  carry no person id, so they print as the record prints them, unlinked.
  *  Export names carry their party on the day: a dot and the short name. */
-function divisionMembersHTML(names, { ayes = 0, noes = 0 } = {}) {
+function divisionMembersHTML(names, { ayes, noes } = {}) {
   const open = `<section class="ui-section division-block division-members" id="division-members" aria-labelledby="division-members-head">
       <h2 class="ui-section-title" id="division-members-head">Who voted which way</h2>`;
   if (!names || names.failed) {
@@ -13643,7 +13800,7 @@ function divisionMembersHTML(names, { ayes = 0, noes = 0 } = {}) {
     ? `<a href="${personUrl(m.name)}">${esc(m.name)}</a>` : esc(m.name)}${m.party ? ` ${partyChipHTML(m.party)}` : ""}</li>`).join("");
   const sides = [["Ayes", names.aye, ayes], ["Noes", names.no, noes], ...(names.paired?.length ? [["Paired, not counted", names.paired, names.paired.length]] : [])];
   return `${open}<div class="division-sides">${sides.map(([label, list, count]) => `<div>
-        <h3 class="division-side">${label} <span>${Number(count || list.length).toLocaleString()}</span></h3>
+        <h3 class="division-side">${label} <span>${list.length === Number(count ?? list.length) ? list.length.toLocaleString() : `${list.length.toLocaleString()} named (tally ${Number(count).toLocaleString()})`}</span></h3>
         ${list.length ? `<ul class="division-names" role="list">${who(list)}</ul>` : `<p class="division-none">None named.</p>`}</div>`).join("")}</div>
       ${names.missingParts ? `<p class="division-none">Part of this list could not load just now.</p>` : ""}
     </section>`;
@@ -14252,7 +14409,7 @@ function columnChart(pairs, { fmt = String, heading, note, noteHTML, linkTo }) {
  *  reads as the category. Only used where nothing else claims the label. */
 function barList(rows, {
   fmt = String, heading, linkTo, partyDots = false, term = null, detail = null,
-  className = "", maxValue = null, marker = null, scope = "",
+  className = "", maxValue = null, marker = null, scope = "", sourceNames = false,
 }) {
   const max = maxValue ?? Math.max(...rows.map(([, v]) => v), 1);
   const items = rows.map((row) => {
@@ -14260,7 +14417,7 @@ function barList(rows, {
     const target=linkTo?.(name,v,row);
     const canLink=Boolean(target);
     const key = canLink ? null : term?.(name);
-    const label = `${partyDots ? partyDotHTML(name) : ''}${esc(name)}`;
+    const label = `${partyDots ? partyDotHTML(name) : ''}${esc(sourceNames || String(target || "").startsWith("/subject/donor/") ? sourceDisplayName(name).replace(/\bLTD\b/g, "Ltd") : name)}`;
     const sub = detail?.(name, v, row);
     const marked = marker?.(name, v, row);
     const markerValue = Number(typeof marked === "object" ? marked?.value : marked);
@@ -14283,7 +14440,7 @@ function barList(rows, {
   return `<figure class="chart${className ? ` ${esc(className)}` : ""}"><figcaption>${esc(heading)}</figcaption>${scope ? `<p class="entry-scope">${esc(scope)}</p>` : ""}${items}</figure>`;
 }
 
-const fmtIndustries = (list) => list.map((i) => i.replace(/_/g, " ")).join(", ");
+const fmtIndustries = (list) => list.map(industryLabel).join(", ");
 
 
 const AEC_NOTE =
@@ -15228,7 +15385,7 @@ document.addEventListener("close", (e) => {
 /** Words per dollar for the report's own industry: money beside the debate share, party by party. */
 async function mountReportWords(el, cfg, slug) {
   try {
-    const { mountWordsDollars } = await import("/wordsdollars.js?v=a891297d1a");
+    const { mountWordsDollars } = await import("/wordsdollars.js?v=73ab26c144");
     if (currentReportSlug !== slug || !el.isConnected) return;
     reportWordsHandle = mountWordsDollars(el, { only: [cfg.topic] });
   } catch {
@@ -15238,7 +15395,7 @@ async function mountReportWords(el, cfg, slug) {
 
 async function mountReportMap(el, cfg, slug) {
   try {
-    const { mountMoneyMap } = await import("/money-map.js?v=3f185c0ece");
+    const { mountMoneyMap } = await import("/money-map.js?v=ed508ae425");
     if (currentReportSlug !== slug || !el.isConnected) return; // moved on while loading
     const handle = await mountMoneyMap(el, "/graph/money.json", {
       chrome: "mini",
@@ -15794,7 +15951,10 @@ fetch("/suggestions.json").then((r) => r.json()).then((s) => {
 // failed) is asked for again a minute later, under a fresh query so the
 // browser does not answer from its own copy. The tables say "Counting…" in
 // the meantime rather than "unavailable".
+let liveStatsStarted = false;
 function loadLiveStats(attempt = 0) {
+  if (!attempt && liveStatsStarted) return;
+  liveStatsStarted = true;
   aggregateApi(attempt ? `/api/stats?retry=${attempt}` : "/api/stats")
     .then((s) => {
       liveStats = s;
@@ -15819,7 +15979,6 @@ function loadLiveStats(attempt = 0) {
       else renderStatsLiveTables();
     });
 }
-loadLiveStats();
 
 // Legacy entry contract: /?ask=<question> (used by standalone map pages).
 {

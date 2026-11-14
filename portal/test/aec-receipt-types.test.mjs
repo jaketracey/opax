@@ -34,7 +34,7 @@ test('published typed receipts load through Ask, map and the party money API',as
   const row=(data,label)=>data.rows.find(r=>r.label===label);
   assert.equal(row(typed,'Pratt Holdings Pty Ltd').total,8473476);
   assert.equal(row(untyped,'Pratt Holdings Pty Ltd').total,14885966);
-  assert.equal(typed.scope,'All receipt types, 1998-99 to 2024-25, as the parties reported them in federal returns');
+  assert.equal(typed.scope,'All receipt types, 1998–99 to 2024–25, as the parties reported them in federal returns');
   assert.equal(untyped.scope,undefined);
   assert.deepEqual(Object.keys(typed).sort(),['rows','scope']);
   assert.deepEqual(Object.keys(typed.rows[0]),Object.keys(untyped.rows[0]),'each row keeps its fields');

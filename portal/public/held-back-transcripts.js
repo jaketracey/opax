@@ -17,12 +17,12 @@ export function chairRoleTranscriptsHTML(personId, counts) {
   return `<p class="person-chair-role fineprint"><a href="/methods#speaker-attribution">${text}</a></p>`;
 }
 
-/** A list-only profile (roster_only: a member on a parliament's official list whose time in that chamber
- *  OPAX holds no Hansard for) says so where the speeches would be, instead of showing nothing or a zero. */
-export const NO_HANSARD_HELD = 'No Hansard held for this period.';
+/** A list-only profile has no attributed speech total. Transcripts may already be held under an
+ *  unresolved print or another id (Benjamin Hood); an empty attribution is not proof of absent Hansard. */
+export const NO_HANSARD_HELD = 'No speeches are attributed to this profile yet.';
 export function noHansardHeldHTML(person) {
   if (!person?.roster_only) return '';
-  return `<p class="person-no-hansard fineprint">${NO_HANSARD_HELD} This profile comes from the parliament’s member list; no speeches in the record are attributed to them.</p>`;
+  return `<p class="person-no-hansard fineprint">${NO_HANSARD_HELD} This profile comes from the parliament’s member list.</p>`;
 }
 
 /** Where a person's speeches in the record stop, said plainly above the list: "Speeches in the record

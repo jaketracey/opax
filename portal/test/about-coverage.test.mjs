@@ -101,3 +101,11 @@ test('About and Methods describe the new records and their evidence limits', () 
   for (const href of ['/official-reports/royal-commissions','/official-reports/integrity','/official-reports/annual-reports','/official-reports/agency-reports']) assert.ok(coverageHTML(rows).includes(`href="${href}"`), href);
   for (const href of ['/video/senate','/register/state-bills','/register/act-invoices','/register/gov-advertising','/register/tax-expenditures','/register/government-finance','/audit']) assert.ok(about.includes(`href="${href}"`), href);
 });
+
+
+test('coverage displays en-dash financial years while preserving source scope and ISO dates',()=>{
+ const row=rows.find(r=>r.id==='receipts-federal');
+ assert.match(row.scope,/1998-99/);
+ const text=new JSDOM(coverageHTML([row])).window.document.body.textContent;
+ assert.match(text,/1998–99/);assert.doesNotMatch(text,/1998-99/);
+});

@@ -1,5 +1,5 @@
 // Donation-only view of the uncapped export. Other Receipt is never a loan or a gift.
-import {receiptGraph,receiptFigures} from './donor-disclosure.js?v=6f4ae1756c';
+import {receiptGraph,receiptFigures} from './donor-disclosure.js?v=d28448a137';
 export function donationGraph(graph) {
   const only = row => !row.by_type ? row : ({...row, donation_exclusions: undefined,
     by_type: {donation_received: (row.by_type.donation_received || 0) - (row.donation_exclusions?.by_type?.donation_received || 0)},

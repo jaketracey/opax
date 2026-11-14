@@ -97,7 +97,7 @@ type TopicProfile = {
 
 | Method and path | Parameters and response | Source / cost class | Auth; cache B/E; limits; blocks |
 | --- | --- | --- | --- |
-| GET/HEAD `/api/app/v1/vic-election` | Schema 1 overview: election and polling dates, six key dates, 88 districts, eight regions, optional notice, sources and authorisation. No query. | Offline hub assets; cheap read. | Public; exact `VIC_ELECTION_HUB_ENABLED=true` required; 300/none, ETag/304, noindex; disabled 404 `not_published`, no-store; `N`. |
+| GET/HEAD `/api/app/v1/vic-election` | Schema 1 overview: election state, title and lede, voting and finder wording, election and polling dates, six resolved key dates, optional current results, 88 districts, eight regions, optional notice, sources and authorisation. No query. | Offline hub assets; cheap read. | Public; exact `VIC_ELECTION_HUB_ENABLED=true` required; 0/none, must-revalidate, ETag/304, noindex; disabled 404 `not_published`, no-store; `N`. |
 | GET/HEAD `/api/app/v1/vic-election/seat/<slug>` | Schema 1 district or region: results, candidates in ballot order, members and up to three titled recent votes each. Candidate `name` is a string and `party` is a string or null. Region candidates also include `group` (one uppercase letter A to Z or null) and `group_name` (string or null); blank group names become null. District candidates omit both group fields. No query; unknown or invalid slug is 404 `not_found`. | Offline hub assets; cheap read. | Public; same election flag, cache and headers; `N`. |
 | GET/HEAD `/api/app/v1/vic-election/find?q=<text>` | Schema 1 finder: exactly one non-blank `q`, trimmed and cut to 60 characters; up to eight ordered place, seat or member hits with resident shares. Places failure retains seat/member matches with `places_searched:false`. | Offline hub and ABS places assets; cheap read. | Public; same election flag, cache and headers; `N`. All three routes reject other methods with 405, invalid queries with 400, and unavailable/malformed hub data with 503 and `Retry-After: 60`. |
 | GET `/api/search` | Search parameters; `SearchPage & {mode:string} & SearchRetrieval`. Public slug filtering, a bounded retrieval window and reranking. | ARAG `/find`, including keyword mode and reranker. Model-backed retrieval; hybrid/semantic also use semantic retrieval. No answer writer here. | Public; normal results: 600/600 page, 3600 retrieval-window cache, epoch; fallback results: no-store browser/page, 60-second server window; `S120` on retrieval misses; `N`. |
@@ -769,3 +769,35 @@ V1 public reading plus signed-in voice is decided. Community UI, follows sync an
 The only intended committed change is this document. A CommonMark renderer with table support generated scratch HTML; all 17 tables' source/rendered column counts, relative links, fences and absence of em dashes were checked. The companion IOS-VOICE.md link targets the voice branch inspected above and becomes local when the discovery documents are integrated; that cross-branch target was verified with Git. The source route ledger reconciles direct literals plus the dispatch regexes and static/directory lists described above. All 16 sampled live JSON exports with corresponding local files matched the baseline as parsed JSON. `git diff --check` passed. These are research gates; there are no product tests or device results to report. The final lane report records the actual commit and diff gates. Product source, tracked assets and pipelines remain unchanged. Wrangler was never started, so no development server needs stopping.
 
 Unverified: authenticated/community/voice/MCP runtime, ARAG/model results and their payload totals, operator publication behavior, live feature configuration and full deployment parity, current postcode-table freshness and redistribution licence, a validated offline geometry pack, complete generated search-index bytes, native performance, exact cookie-prefix/persistence/WSS integration and isolation from React Native networking, deployed audio format/provider retention, signing, physical-device deep links/audio/background and App Store outcome. Verification was withheld where it would cross this lane's read-only/cost boundary or where no app/dataset exists yet.
+
+## Victorian election clock and results amendment, 14 November 2026
+
+All three election routes add `state`: `pre_poll`, `early_voting`,
+`election_day`, `polls_closed`, `results` or `results_final`. Times compare explicit
+AEDT instants, including polls closing at `2026-11-28T07:00:00Z` (6 pm AEDT).
+No date alone makes results final. `results_final` requires a validated bundle
+marked `final` with all 88 completed lower house district results. Upper house
+results remain linked to the VEC.
+
+The overview adds `lede`, `voting: {title,text,links:[{label,url}]}`,
+`finder: {title,button}` and nullable `current_results`. `title` follows the state.
+Each key date's `label` and `when` are resolved on the server using the same clock
+as HTML; the existing deadline metadata remains for compatible readers. The
+early-voting link disappears after polls close. The seat endpoint adds nullable
+`current_result` for a district. Existing `result`, member and roster fields
+remain historical records and are never replaced by election winners.
+
+`current_results`, when present after polls close, has `election_day`, `fetched`,
+`status` (`partial` or `final`), VEC `url`, and `districts: [{name,result}]`. Each
+`result` has the same date/kind/party/share/against/against_share/margin/url fields
+as an existing contest. Partial means a subset of completed district counts,
+not an unfinished count or a forecast. Empty or malformed bundles fail validation.
+No source file means null results and no results section. Before polls close,
+even a loaded bundle stays hidden.
+
+Election HTML and all three JSON endpoints use
+`public, max-age=0, must-revalidate`. Conditional requests re-evaluate the clock
+and change ETags at state boundaries, even with unchanged asset bytes. The
+frozen app fixtures use 12 November 2026, 10 am AEDT; separate state tests inject
+the election-day and later clocks. See
+[the after-poll audit and loading commands](reports/2026-11-14-vic-after-poll.md).
