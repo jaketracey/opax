@@ -1,5 +1,6 @@
 {
   "schema_version": 1,
+  "state": "pre_poll",
   "q": "Bass",
   "places_searched": true,
   "hits": [
