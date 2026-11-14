@@ -14,6 +14,7 @@ import type { SeatChoice } from '../your-mp/model';
 import { savedSeatDirectory, useSeat } from '../your-mp/useSeat';
 import { vicCopy as c } from './copy';
 import { useElectionNow } from './clock';
+import { VIC_ELECTION_INSTANTS } from './state';
 import {
   todayEligible,
   todayStatus,
@@ -42,7 +43,7 @@ export function TodayBlock({
     );
   const read = useOverview(eligible, attempt);
   const o = read.record?.data;
-  const now = useElectionNow(o ? [o.polls_close] : []);
+  const now = useElectionNow(VIC_ELECTION_INSTANTS);
   if (!eligible || !todayWindow(now) || (!o && (read.error || !read.loading)))
     return null;
   if (!o || !read.record)

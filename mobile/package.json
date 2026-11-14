@@ -12,6 +12,7 @@
     "format": "prettier --write src scripts tests plugins app.config.ts *.js *.json .maestro README.md",
     "qa-advisories": "tsx scripts/qa-advisories.ts",
     "qa-static": "tsx scripts/qa-static.ts",
+    "qa:static": "npm run qa-static",
     "fixture": "tsx scripts/fixture-server.ts",
     "qa": "bash scripts/qa.sh",
     "tokens": "node scripts/build-design-tokens.mjs",

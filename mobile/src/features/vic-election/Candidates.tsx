@@ -9,7 +9,7 @@ import { Text } from '../../design/text';
 import { minimumTarget, rhythm } from '../../design/tokens';
 import { vicCopy as c } from './copy';
 import type { Overview, SeatDetail } from './decoders';
-import { phase } from './model';
+import { phase, seatContext } from './model';
 import { Block, ElectionSource, ExternalRow, shortDate } from './shared';
 export function Candidates({
   record,
@@ -22,7 +22,11 @@ export function Candidates({
 }) {
   const candidates = record.data.candidates;
   const { fontScale } = useWindowDimensions();
-  if (!candidates && (!o || phase(o, now) === 'closed')) return null;
+  if (
+    !candidates &&
+    (!o || phase(seatContext(record.data, o), now) === 'closed')
+  )
+    return null;
   const numbered = record.data.kind === 'district';
   const grouped =
     !numbered &&
