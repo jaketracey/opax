@@ -4,8 +4,10 @@ import { act } from 'react';
 import {
   Dimensions,
   Linking,
+  Platform,
   StyleSheet,
   Text as NativeText,
+  View,
 } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import TestRenderer from 'react-test-renderer';
@@ -20,6 +22,7 @@ import {
   BOTTOM_FIELD_HEIGHT,
 } from '../src/features/seat/FieldClearance';
 import { SeatStateList } from '../src/features/seat/SeatStateList';
+import { liquidGlass } from '../src/design/glass';
 import { forgetChoice } from '../src/features/your-mp/choice-store';
 import { closeWelcome, markWelcomeSeen } from '../src/onboarding/state';
 import { index, manifest, people, roster, slugs } from './pinned';
@@ -637,36 +640,106 @@ describe('the Victorian scope', () => {
 });
 
 describe('the bottom search field', () => {
-  test('iPhone leaves the safe area, field height and a gap at every text size', () => {
-    expect(bottomFieldClearance(34, 'ios', false)).toBe(
-      34 + BOTTOM_FIELD_HEIGHT + 8,
-    );
-    // iPad keeps search in the bar; Android has no bottom field.
-    expect(bottomFieldClearance(20, 'ios', true)).toBe(0);
-    expect(bottomFieldClearance(0, 'android', false)).toBe(0);
+  const os = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
+  const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+  function setPlatform(name: 'ios' | 'android', v: number | string) {
+    Object.defineProperty(Platform, 'OS', { configurable: true, value: name });
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: v,
+    });
+  }
+  afterEach(() => {
+    Object.defineProperty(Platform, 'OS', os);
+    Object.defineProperty(Platform, 'Version', version);
   });
-  test.each([1, 3.12])(
-    'at scale %s the AEC row scrolls inside a viewport inset above the field',
-    async (fontScale) => {
-      setFontScale(fontScale);
-      const r = await render(
-        <SafeAreaInsetsContext.Provider
-          value={{ top: 0, left: 0, right: 0, bottom: 34 }}
-        >
-          <SeatChooser presentation="sheet" />
-        </SafeAreaInsetsContext.Provider>,
-      );
-      const clearance = r.root.findByType(FieldClearance);
-      const viewport = clearance.findAll(
+  const reserve = (safeBottom: number) => safeBottom + BOTTOM_FIELD_HEIGHT + 8;
+
+  test('iOS 26 iPhone leaves the safe area, field height and a gap', () => {
+    expect(bottomFieldClearance(34, 'ios', false, true)).toBe(reserve(34));
+    setPlatform('ios', '26.3');
+    expect(bottomFieldClearance(34, 'ios', false)).toBe(reserve(34));
+    setPlatform('ios', 27);
+    expect(bottomFieldClearance(34, 'ios', false)).toBe(reserve(34));
+  });
+  test('iOS 18 iPhone keeps search in the bar, so no field reserve', () => {
+    // 34 + 48 + 8 = 90 pt sat empty above the home indicator (18.4, 18.6).
+    expect(bottomFieldClearance(34, 'ios', false, false)).toBe(0);
+    setPlatform('ios', '18.6');
+    expect(bottomFieldClearance(34, 'ios', false)).toBe(0);
+    setPlatform('ios', '18.4');
+    expect(bottomFieldClearance(34)).toBe(0);
+  });
+  test('iPad and Android are unchanged at 0 on every version', () => {
+    for (const v of ['18.6', '26.3']) {
+      setPlatform('ios', v);
+      expect(bottomFieldClearance(20, 'ios', true)).toBe(0);
+    }
+    setPlatform('android', 36);
+    expect(bottomFieldClearance(24, 'android', false)).toBe(0);
+    expect(bottomFieldClearance(24)).toBe(0);
+  });
+  test('an Android API level is never read as an iOS version', () => {
+    // API 36 with a caller's 'ios' once read as iOS 36: the field reserve.
+    setPlatform('android', 36);
+    expect(bottomFieldClearance(34, 'ios', false)).toBe(0);
+    expect(liquidGlass()).toBe(false);
+    expect(liquidGlass({ OS: 'android', Version: 36 })).toBe(false);
+    for (const [v, glass] of [
+      ['26.0.1', true],
+      [27, true],
+      ['18.10', false],
+      [undefined, false],
+    ] as const)
+      expect(liquidGlass({ OS: 'ios', Version: v })).toBe(glass);
+  });
+
+  const padded = (r: TestRenderer.ReactTestRenderer, bottom: number) =>
+    r.root
+      .findByType(FieldClearance)
+      .findAll(
         (n) =>
           typeof n.type === 'string' &&
-          StyleSheet.flatten(n.props.style)?.paddingBottom ===
-            34 + BOTTOM_FIELD_HEIGHT + 8,
-      )[0]!;
+          StyleSheet.flatten(n.props.style)?.paddingBottom === bottom,
+      );
+  const inset = (children: React.ReactNode) => (
+    <SafeAreaInsetsContext.Provider
+      value={{ top: 0, left: 0, right: 0, bottom: 34 }}
+    >
+      {children}
+    </SafeAreaInsetsContext.Provider>
+  );
+
+  test.each([1, 3.12])(
+    'iOS 26: at scale %s the AEC row scrolls inside a viewport inset above the field',
+    async (fontScale) => {
+      setPlatform('ios', '26.3');
+      setFontScale(fontScale);
+      const r = await render(inset(<SeatChooser presentation="sheet" />));
+      const viewport = padded(r, reserve(34))[0]!;
       expect(viewport).toBeDefined();
       expect(
         viewport.findAll((n) => n.props.testID === 'seat-aec'),
       ).not.toHaveLength(0);
+      await act(async () => r.unmount());
+    },
+  );
+  test.each([
+    ['sheet', <SeatChooser key="s" presentation="sheet" />],
+    ['welcome', <SeatChooser key="w" presentation="welcome" />],
+  ])(
+    'iOS 18: the %s chooser runs to the bottom edge with no padded band',
+    async (_name, chooser) => {
+      setPlatform('ios', '18.6');
+      setFontScale(3.12);
+      const r = await render(inset(chooser));
+      expect(padded(r, reserve(34))).toHaveLength(0);
+      expect(
+        StyleSheet.flatten(
+          r.root.findByType(FieldClearance).findByType(View).props.style,
+        ).paddingBottom,
+      ).toBeUndefined();
+      expect(byID(r, 'seat-aec')).not.toHaveLength(0);
       await act(async () => r.unmount());
     },
   );

@@ -217,6 +217,7 @@ beforeEach(() => {
     savedAt: 1,
   }));
 });
+const platformVersion = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
 afterEach(() => {
   act(() => {
     trees.forEach((tree) => tree.unmount());
@@ -224,6 +225,8 @@ afterEach(() => {
   });
   trees = [];
   jest.useRealTimers();
+  // A test that sets an iOS version must not leak it, pass or fail.
+  Object.defineProperty(Platform, 'Version', platformVersion);
 });
 
 test.each([
@@ -773,6 +776,11 @@ test('the electorate outline fits its local clear viewing region and retains its
 });
 
 test('seat field clearance follows regular phone layout and restores the phone field space on the outer display', () => {
+  // The bottom search field, and so its reserve, is iOS 26's (seat-chooser).
+  Object.defineProperty(Platform, 'Version', {
+    configurable: true,
+    value: '26.3',
+  });
   let rule: string | undefined;
   function Probe() {
     rule = useLayout().rule;
