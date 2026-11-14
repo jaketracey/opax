@@ -10,6 +10,7 @@ import { CatalogCache } from './cache';
 import { DiskStore } from './disk-store';
 import { PeopleDepth } from '../features/people/data';
 import { Catalogs } from './catalogs';
+import { reportReadFailure } from '../analytics/sections';
 import { setCatalogDiagnostics } from './validation';
 import { ReportsRepository } from '../features/reports/repository';
 import { RecordSearch } from '../features/search/api';
@@ -53,6 +54,7 @@ export const apiClient = new ApiClient({
   version: extra.appVersion,
   build: extra.appBuild,
   cache: new CatalogCache(new DiskStore(), 24 * 1024 * 1024, 220),
+  onFailure: reportReadFailure,
 });
 // Ask and records search share the same configured client.
 export const client = apiClient;
@@ -67,6 +69,7 @@ export const recordClient = new ApiClient({
   version: extra.appVersion,
   build: extra.appBuild,
   retries: 0,
+  onFailure: reportReadFailure,
   cache: new CatalogCache({
     readIndex: async () => [],
     writeIndex: async () => {},

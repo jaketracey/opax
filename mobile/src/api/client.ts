@@ -36,7 +36,21 @@ export interface RecordResult<T> {
   asOf: string | null;
 }
 type Decoder<T> = (value: unknown) => T;
+interface GetOptions {
+  absence?: boolean;
+  background?: boolean;
+  signal?: AbortSignal;
+  retries?: number;
+  timeoutMs?: number;
+  summaryStream?: boolean;
+}
 interface ClientOptions {
+  /**
+   * Told of each `get` that failed: the error it threw, the error a saved
+   * copy was served in place of, or 'partial' when rows were dropped.
+   * Diagnostics only (analytics/sections.ts).
+   */
+  onFailure?: (path: string, failure: unknown) => void;
   origin: string;
   version: string;
   build: string;
@@ -257,6 +271,29 @@ export class ApiClient {
     path: string,
     decode: Decoder<T>,
     force = false,
+    options: GetOptions = {},
+  ): Promise<RecordResult<T>> {
+    try {
+      const record = await this.read(path, decode, force, options);
+      // A read that dropped rows: the reader may see nothing wrong.
+      if (record.partial) this.failed(path, 'partial');
+      return record;
+    } catch (error) {
+      this.failed(path, error);
+      throw error;
+    }
+  }
+  private failed(path: string, failure: unknown) {
+    try {
+      this.options.onFailure?.(path, failure);
+    } catch {
+      /* A listener never changes a read's outcome. */
+    }
+  }
+  private async read<T>(
+    path: string,
+    decode: Decoder<T>,
+    force = false,
     {
       absence = false,
       background = false,
@@ -264,14 +301,7 @@ export class ApiClient {
       retries = this.options.retries ?? 2,
       timeoutMs = this.options.timeoutMs ?? 8000,
       summaryStream = false,
-    }: {
-      absence?: boolean;
-      background?: boolean;
-      signal?: AbortSignal;
-      retries?: number;
-      timeoutMs?: number;
-      summaryStream?: boolean;
-    } = {},
+    }: GetOptions = {},
   ): Promise<RecordResult<T>> {
     if (path.startsWith('/api/community/'))
       throw new ApiError(
@@ -566,7 +596,11 @@ export class ApiClient {
         // body this reader cannot use.
       }
     }
-    if (cached)
+    if (cached) {
+      // The read failed and the saved copy stands in for it. The reader sees
+      // the record, so this is the only sign of the failure: an outage on a
+      // file most phones have saved would otherwise never be reported.
+      this.failed(path, lastError);
       return {
         ...result(cached, true),
         ...(lastError.code === 'invalid-data'
@@ -575,6 +609,7 @@ export class ApiClient {
             ? {}
             : { staleReason: 'unavailable' as const }),
       };
+    }
     throw lastError;
   }
   /** Explicit submission only. Bounded Ask recovery, never a disk cache. */

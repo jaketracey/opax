@@ -144,6 +144,7 @@ native SDK builds without passing through JS, do not carry them.
 | `opax_map_action` | `action` (`open`, `filter`, `zoom`, `open_record` or `search`), `filter_count` (0 to 20) |
 | `opax_edition` | `action` (`open`, `story_open` or `reached_end`) |
 | `opax_first_run` | `step` (`welcome`, `seat` or `state`), `outcome` (`chosen` or `skipped`), and for a choice `method` (`search`, `location` or `browse`) |
+| `opax_section_failed` | `section`: which data block, from a fixed list (`page`, a catalog file family such as `read_roster`, or a page block such as `block_members`); `kind`: `network`, `4xx`, `5xx`, `decode` or `partial`; `route_pattern`: a fixed route-file pattern such as `/party/[slug]` |
 | `opax_route_error` | `error_class`: fixed constructor-name category; `route_pattern`: a fixed route-file pattern such as `/person/[slug]`; optional `error_message`: an exact, content-free diagnostic from a fixed allowlist, at most 80 characters |
 | `opax_app_start` | `duration_ms`: JS entry to the first committed Today render, only when Today is the first focused route of a cold JS runtime |
 | `opax_screen_ready` | `route_pattern`: one of `/`, `/person/[slug]`, `/bill/[key]`, `/your-mp`, `/search`, `/ask`; `duration_ms`: navigation to the first content commit, at most once per sampled visit |
@@ -297,6 +298,47 @@ this event still compare: `/welcome`, `/welcome/seat`,
 screen, shown before a reader's first question; it is not part of first run
 and the app has no analytics consent step.
 
+`opax_section_failed` reports a data block that failed to load, or that loaded
+with rows dropped: a party page's Members, the roster, a catalog file. It
+exists because a block can fail on every phone for hours while the page around
+it still draws, and no other event would show it. It carries three values and
+the standard context, nothing else:
+
+- `section`, one key from the fixed list `failedSections`
+  (`mobile/src/analytics/events.ts`). `read_*` is a catalog file family
+  (`read_roster`, `read_people`, `read_money`, `read_bills` and so on). The
+  request path is matched against fixed prefixes to choose the family and is
+  never sent, so a person, bill, seat or search phrase in a path stays on the
+  phone. `block_*` is a block of a loaded page (`block_members`,
+  `block_receipts`, `block_divisions` and so on), chosen from the block's
+  property name; an unlisted block is `block_other`. `page` is a page's whole
+  read.
+- `kind`: `network` (no connection or a timeout), `4xx` or `5xx` (the HTTP
+  status class, never the status), `decode` (the body could not be read) or
+  `partial` (the read succeeded with rows dropped).
+- `route_pattern`: the route template the reader was on, from the same fixed
+  list as `opax_route_error`; anything else is `/other`.
+
+No id, name, title, URL, status code, error message or stack is read into it.
+Two shared places send it, so no screen reports for itself
+(`mobile/src/analytics/sections.ts`): the API client tells it of every catalog
+read that failed (`onFailure`, wired in `mobile/src/api/runtime.ts`), and the
+record hooks (`useCatalogRecord`, `useRead`) tell it of each block in a loaded
+record that is in its error state or marked partial, and of a whole read that
+failed. A cancelled request and a path the app refused to request are not
+failures.
+
+It is sent at most once per section, kind and route for each launch, and at
+most 12 times per kind per launch, so a retry loop, a re-render or an outage
+across every file cannot flood, and a launch with no connection cannot use up
+the room for a `decode` or `5xx`. A read that fails while the phone shows its
+saved copy is reported the same way: the reader sees the record, so the report
+is the only sign of the failure. It uses `track`, the same build-config gate
+(`extra.analytics`) and both scrubbers as every other event; a build without
+the analytics configuration sends nothing. A phone that is offline reports
+`network` once per section and route when it is next online, like any queued
+event.
+
 `opax_route_error` reports once for each error caught by the reporting route
 boundary, including a new failure after Try again. It uses `track`, the same
 build-config gate (`extra.analytics`) and both privacy scrubbers; there is no
@@ -388,6 +430,20 @@ captures nothing automatically.
   off in the options and in Info.plist
   (`com.posthog.posthog.CAPTURE_PUSH_NOTIFICATION_OPENED`).
 
+- **Test error report.** A hidden control that proves, on a real release
+  build, that error reports arrive and are symbolicated: tap the version line
+  at the foot of Account seven times within four seconds, then confirm Send
+  (`mobile/src/analytics/test-report.ts`). It sends one handled JS exception
+  through the ordinary path (the build gate, `before_send`, the queue) with
+  `captureException`, so it arrives whether or not the project's exception
+  autocapture is on. It is marked as a test three ways, so dashboards can
+  leave it out: the property `opax_test: true`, the type `OpaxTestReport` and
+  the fixed message "OPAX test error report". It holds nothing else beyond
+  what every report holds. A build that sends nothing (development, e2e, or
+  no analytics configuration) says "Test reports are off in this build" and
+  sends nothing. There is no deliberate native crash: neither native SDK nor
+  the plugin exposes one, so it would need new native code.
+
 The native SDK never sees the app's other PostHog settings: posthog-react-native
 passes it only its own options, with feature flag preloading on whenever native
 crash capture is. The plugin patch fixes them after that: no feature flag
@@ -427,6 +483,7 @@ ICU like NSRegularExpression, so the same pattern texts behave the same.
 | Stack frames | `platform`, `function`, `filename`, `abs_path`, `module`, `package` (paths cut at the first `?` or `#`), `lineno`, `colno`, `in_app`, `instruction_addr`, `image_addr`, `symbol_addr`, `chunk_id`, `map_id`, `method_synthetic`, `client_resolved`. Source context, local variables and any other field are dropped |
 | `$debug_images` | Up to 500 binary images native frames point into: `type`, `debug_id`, `code_id`, `code_file`, `image_addr`, `image_vmaddr`, `image_size`, `arch` |
 | `$exception_level`, `$exception_source`, `$exception_fingerprint` | A fixed level word and short tokens |
+| `opax_test` | `true` on a test error report (JS only), otherwise absent |
 | Common | `$lib`, `$lib_version`, `$session_id`, `$os_name`, `$device_type`, `$app_name`, `$app_namespace` (`au.com.opax.app`), `$app_version`, `$app_build`, `$screen_name` (the route template), `platform`, `app`, `app_version`, `app_build`, `environment`, `$process_person_profile` false, `$is_identified` false, `$geoip_disable` true; on JS reports also `layout` and `foldable` |
 
 Messages keep their shape but lose anything that could be user text, in this
