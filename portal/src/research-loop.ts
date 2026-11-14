@@ -4,7 +4,8 @@ import { researchPhaseWallMs } from './research-time'
 import { ASK_MAX_MODEL_USD, ASK_HARD_WALL_MS, ASK_ANSWER_TARGET_MS, ASK_MAX_TOOL_CALLS, ASK_MAX_ROUNDS, ASK_DEFAULT_TOKENS, ASK_MAX_TOKENS, ASK_TURN_OUTPUT_TOKENS, ASK_RESULT_BYTES, reserveQuestionTurn } from './ask-budgets'
 export { researchPhaseWallMs, WRITING_RESERVE_MS } from './research-time'
 import { createAnswerWriter } from './research-writer'
-import { leadWithModelAnswer } from './research-answer-shape'
+import { leadWithModelAnswer, ACCOUNTABILITY_QUESTION } from './research-answer-shape'
+import { whoBasis, type WhoBasis } from './research-who-lead'
 import { electoratePlan } from './tools/electorates'
 import { divisionModelRows } from './tools/division'
 import { loadStatuteTitles } from './ask-statute-titles.mjs'
@@ -522,6 +523,14 @@ export function createResearch(options: ResearchOptions): Research {
         hearing:hearingEvidenceQuestion(question),recordFacts:recordFacts().tools.size,
         billSpeech:isBillSpeechQuestion(question),passageKinds:[...passages.values()].map(p=>p.kind)})
     let previewRound=0
+    // The passages are fixed while an answer call streams (no lookup is in flight), so a who lead can be decided early.
+    // Each answer source is one passage's text and title (research-evidence sourcesOf), read as leadWithWho reads it.
+    let basis:{size:number;who_basis:WhoBasis}|undefined
+    const previewSources=()=>{
+      if(!ACCOUNTABILITY_QUESTION.test(question))return {}
+      if(basis?.size!==passages.size)basis={size:passages.size,who_basis:whoBasis([...passages.values()].map(p=>({kind:p.kind,texts:[p.text,p.title]})))}
+      return {research:{who_basis:basis.who_basis}}
+    }
     const pendingAnswers=new Map<string,{allowed:boolean;scanner:ReturnType<typeof answerEntryScanner>;points:unknown[]}>()
     tools.finish = tool({ description: 'Finish a numerical ranking or trend answer by selecting existing fact ids. The selected fact ids supply the final figures and answer text. Include each requested entity and metric.',
       inputSchema: jsonSchema<{ facts: number[] }>({ type: 'object', properties: { facts: { type: 'array', minItems: 1, maxItems: 30, uniqueItems: true, items: { type: 'integer', minimum: 1 } } }, required: ['facts'], additionalProperties: false }),
@@ -822,7 +831,7 @@ export function createResearch(options: ResearchOptions): Research {
             // Retain only complete, checked records if the wall or output ceiling interrupts this call.
             // Accepted answer arguments overwrite this snapshot in execute; never replace an earlier call.
             draft={points:[...pending.points]}
-            if(previewTimeLeft())await context.progress.answer?.({...checked,answer_scope:constraints})
+            if(previewTimeLeft())await context.progress.answer?.({...checked,answer_scope:constraints,...previewSources()} as QualitativeAnswer)
           }
         })
       }:undefined), stopped])
@@ -830,7 +839,7 @@ export function createResearch(options: ResearchOptions): Research {
       if (!finished) fail(stats.rounds >= limits.rounds || calls >= RESEARCH_MAX_CALLS ? 'steps' : answerAttempts ? 'grounding' : 'no_finish')
       await Promise.race([settle(), stopped])
       // Legacy text/citation answers have no structured point boundary; publish them after acceptance.
-      if(qualitative&&qualitativeRun&&!recordFacts().tools.size&&![...passages.values()].some(p=>!['speech','bill'].includes(p.kind))&&!hearingEvidenceQuestion(question)&&previewTimeLeft())await previewCheck(()=>context.progress.answer?.({...qualitative as QualitativeAnswer,answer_scope:constraints}))
+      if(qualitative&&qualitativeRun&&!recordFacts().tools.size&&![...passages.values()].some(p=>!['speech','bill'].includes(p.kind))&&!hearingEvidenceQuestion(question)&&previewTimeLeft())await previewCheck(()=>context.progress.answer?.({...qualitative as QualitativeAnswer,answer_scope:constraints,...previewSources()} as QualitativeAnswer))
       return { constraints, steps, results, selected, ...stats, ...(qualitative ? { qualitative:{...(qualitative as QualitativeAnswer),answer_scope:constraints}, points:selectedPoints } : {}) }
     } catch (error) {
       if (!(error instanceof ResearchError) && isResearchCreditError(error)) {

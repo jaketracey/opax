@@ -3,6 +3,7 @@ import { unclosedQuoteOffset } from './research-claim-audit.mjs'
 import { checkedAnswerPayload } from './research-response'
 import { answerStyleChecks } from './research-answer-style.mjs'
 import { ACCOUNTABILITY_QUESTION, authorityLeadMayMove, settledAuthorityFinding, authorityFindingLead } from './research-answer-shape'
+import { UNNAMED_WHO_LEAD, settledWhoLead, type WhoBasis } from './research-who-lead'
 import type { QualitativeAnswer } from './research-types'
 import { protectedDecision } from './research-coherence.mjs'
 
@@ -30,7 +31,8 @@ export function completeSentences(text: string): boolean {
   return !!parts.length && parts.every(part => /[.!?]["”’')\]]*$/.test(part.text))
 }
 
-/** Ordering can inspect the tail, so release only once the lead cannot be displaced by another finding. */
+/** Ordering can inspect the tail, so release only once the lead cannot be displaced by another finding. An
+ * accountability question reaches this only for the body after the decided "do not name" line (see preview). */
 export function stableResearchLead(payload: Record<string, unknown>, question: string): boolean {
   const answer = String(payload.answer ?? '')
   const first = researchSentences(answer)[0]?.text ?? ''
@@ -40,6 +42,19 @@ export function stableResearchLead(payload: Record<string, unknown>, question: s
   return ACCOUNTABILITY_QUESTION.test(question)&&authorityFindingLead(payload) || answerStyleChecks(question, first, payload).direct_first_sentence === 'pass'
 }
 
+/** The checked answer after a lead line and its blank line, with citations rebased onto what remains. */
+function afterLead(payload: Record<string, unknown>, lead: string): Record<string, unknown> {
+  const answer = String(payload.answer ?? ''), shift = Array.from(lead).length
+  const citations = Object.fromEntries(Object.entries((payload.citations ?? {}) as Record<string, [number, number][]>).flatMap(([id, ranges]) => {
+    const kept = ranges.flatMap(([a, b]): [number, number][] => b > shift ? [[Math.max(0, a - shift), b - shift]] : [])
+    return kept.length ? [[id, kept]] : []
+  }))
+  return { ...payload, answer: answer.slice(lead.length), citations }
+}
+
+/** The sources an answer could still cite, summarised by the loop or writer that holds them (whoBasis). */
+const whoBasisOf = (payload: QualitativeAnswer): WhoBasis | undefined => (payload as unknown as { research?: { who_basis?: WhoBasis } }).research?.who_basis
+
 /** All state belongs to this response. The wire sees only checked text, never draft JSON or provider tokens. */
 export function researchSentenceStream(question: string, send: (text: string,checked:QualitativeAnswer) => Promise<void>) {
   let released = ''
@@ -47,14 +62,29 @@ export function researchSentenceStream(question: string, send: (text: string,che
   return {
     async preview(payload: QualitativeAnswer, accept?: (checked:QualitativeAnswer)=>boolean) {
       if (closed || !payload.answer.trim() || !completeSentences(payload.answer) || protectedDecision(payload)) return
-      const movingOpening=ACCOUNTABILITY_QUESTION.test(question)&&authorityLeadMayMove(payload)
+      // A who question's lead (leadWithWho) reads the whole answer. Release only when it is already decided: either no
+      // available source names anyone, so the "do not name" line leads and the authority order follows it, or the first
+      // sentence is a supported subject no later sentence can outrank. Otherwise the answer is held until done.
+      const accountability=ACCOUNTABILITY_QUESTION.test(question),basis=accountability?whoBasisOf(payload):undefined
+      const unnamed=!!basis?.unnamed,lead=unnamed?UNNAMED_WHO_LEAD+'\n\n':''
+      const movingOpening=unnamed&&authorityLeadMayMove(payload)
       // Overview excerpts are append-only and stay in the final tail; partial grounding checks the model points.
       // One grounding pass per new sentence record. Once released, the lead is fixed for later shaping.
       const checked = checkedAnswerPayload({ ...payload, research: { ...(payload as unknown as {research?:object}).research, mode: 'loop' } }, question,true,released)
-      if (!String(checked.answer??'').trim() || !released&&!stableResearchLead(checked, question)) return
-      if(movingOpening&&!settledAuthorityFinding(checked,question))return
-      // The promoted on-topic finding is settled. Its earlier context remains an affected tail until completion.
-      const answer = movingOpening?researchSentences(String(checked.answer??''))[0].text:String(checked.answer ?? '')
+      const text=String(checked.answer??'')
+      if (!text.trim()) return
+      let answer=text
+      if(unnamed){
+        if(!text.startsWith(lead))return
+        const body=afterLead(checked,lead)
+        if (!released && !stableResearchLead(body, question)) return
+        if(movingOpening&&!settledAuthorityFinding(body,question))return
+        // The promoted on-topic finding is settled. Its earlier context remains an affected tail until completion.
+        answer=lead+(movingOpening?researchSentences(String(body.answer??''))[0].text:String(body.answer??''))
+      }else if(accountability){
+        // A kept or moved sentence at the top rank stays first; recovered or rewritten text can still give way.
+        if(!(checked.research as {who_lead_written?:boolean}|undefined)?.who_lead_written||!settledWhoLead(checked,question,basis))return
+      }else if(!released&&!stableResearchLead(checked, question))return
       if (!answer.startsWith(released)) return // retain the affected tail until the whole-answer decision is made
       const {research:_internal,...emitted}=checked
       const result=researchPrefix(emitted as unknown as QualitativeAnswer,answer)

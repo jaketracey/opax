@@ -32,7 +32,8 @@ import type { AnswerTally } from './research-evidence'
 import { ResearchError, researchSources, type Research, type ResearchPayload, type QualitativeAnswer, type ReceiptFact, type ResearchResult } from './research-types'
 
 import { writingFacts, appendWrittenPoints, proseFallback, ANSWER_WRITING_VERSION } from './research-writing'
-import { leadWithModelAnswer } from './research-answer-shape'
+import { leadWithModelAnswer, ACCOUNTABILITY_QUESTION } from './research-answer-shape'
+import { whoBasis } from './research-who-lead'
 import { researchPreviewGuard } from './research-generation'
 
 export const AGENTIC_PROMPT_VERSION = `agentic-ask-11-topic-scope/${ANSWER_WRITING_VERSION}`
@@ -670,11 +671,18 @@ export async function runAgentic(question: string, deps: AgenticDeps, progress: 
     const input={question,period,facts:sheet,constraints:run.qualitative?.answer_scope??run.answer_scope??{period,jurisdiction:typeof filters.state==='string'?filters.state:undefined,chamber:typeof filters.chamber==='string'?filters.chamber:undefined,party:typeof filters.party==='string'?filters.party:undefined}}
     const combine=(written:QualitativeAnswer)=>run.passage_answer?leadWithModelAnswer(appendWrittenPoints(written,run.passage_answer) as unknown as Record<string,unknown>,run.passage_answer,question) as unknown as QualitativeAnswer:written
     let active=true,checkedPartial:QualitativeAnswer|undefined
+    // Everything this answer can cite: the writer's facts with their sources, and any model passage answer it extends.
+    // A source's snippet, fact texts and title are read alone and joined, as written sources join them.
+    const bySource=new Map<string,typeof sheet>()
+    for(const f of sheet)bySource.set(f.source.resource,[...(bySource.get(f.source.resource)??[]),f])
+    const who=ACCOUNTABILITY_QUESTION.test(question)?whoBasis([...bySource.values()].map(group=>({kind:group[0].source.kind,coverage:group.every(f=>f.coverage),texts:[group[0].source.snippet,...group.map(f=>f.text),group[0].source.title]}))
+      .concat((run.passage_answer?.sources??[]).map(s=>({kind:s.kind,coverage:!!s.coverage,texts:[s.snippet,s.title]})))):undefined
     const previewCheck=researchPreviewGuard('compose')
     const preview:import('./research-types').AnswerPreview|undefined=lookup||!progress.answer?undefined:async(written,accept)=>{
       if(!active)return
       return previewCheck(async()=>{
-        const checked=await progress.answer!(combine(written),accept)
+        const combined=combine(written)
+        const checked=await progress.answer!(who?{...combined,research:{...(combined as {research?:object}).research,who_basis:who}} as QualitativeAnswer:combined,accept)
         if(checked)checkedPartial=checked
         return checked
       })

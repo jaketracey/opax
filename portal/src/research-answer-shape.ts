@@ -220,9 +220,8 @@ export function attributeSpokenFindings<T extends Record<string,unknown>>(payloa
  * found …") first, else a member reporting the body's finding ("X told the House the royal commission concluded …").
  * With no finding held, a member's claim gives way to an official record or a release, as before, and a metadata
  * line stays. Every other line keeps its place; nothing is removed or reworded, and any other lead stays. */
-export function leadWithAuthority<T extends Record<string,unknown>>(payload:T,question='',fixedPrefix=''):T {
+export function leadWithAuthority<T extends Record<string,unknown>>(payload:T,question=''):T {
   if(typeof payload.answer!=='string'||!ACCOUNTABILITY_QUESTION.test(question))return payload
-  if(fixedPrefix&&payload.answer.startsWith(fixedPrefix))return payload
   const sources=(Array.isArray(payload.sources)?payload.sources:[]) as SourceRow[]
   const entries=Object.entries(payload.citations??{}) as [string,unknown][]
   const sourceOf=(id:string)=>sources.find(s=>s.resource&&(id===s.resource||id.startsWith(s.resource+'/')))

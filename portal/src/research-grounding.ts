@@ -92,7 +92,7 @@ function completePersonOverview(original:Record<string,unknown>,result:Record<st
 /** The final boundary tidies; it never replaces the answer. The claim audit is log output only. Two rules touch text:
  * quotation marks come off words no cited source holds (the sentence stays as paraphrase), and a dollar figure given
  * to the wrong party or period in its cited money record is corrected from that record, or else that sentence goes. */
-export function groundAnswerPayload(payload:Record<string,unknown>,question:string,fixedPrefix='',deferOverview=false):Record<string,unknown> {
+export function groundAnswerPayload(payload:Record<string,unknown>,question:string,fixedPrefix='',partial=false):Record<string,unknown> {
   // Recovery runs every normal shape check. A necessary correction uses retry, never a prefix exemption.
   if((payload.research as {answer_stats?:{salvaged?:unknown}}|undefined)?.answer_stats?.salvaged)fixedPrefix=''
   let out=plainAnswerPayload(payload)
@@ -110,8 +110,17 @@ export function groundAnswerPayload(payload:Record<string,unknown>,question:stri
   // A body's finding cited only to one member's speech is that member's claim, and says so (ASK_ATTRIBUTION_RULE).
   out=attributeSpokenFindings(out)
   out=distinctSummary(cleanAnswerShape(protectedDecision(out)?out:ACCOUNTABILITY_QUESTION.test(question)?out:leadWithFinding(leadWithFinding(out,undefined,fixedPrefix),question,fixedPrefix)))
-  if(!protectedDecision(out))out=leadWithWho(out,question)
-  if(!deferOverview)out=completePersonOverview(payload,out,question)
+  // The who lead has no released-prefix exemption: the stream releases a who answer only once this lead is decided
+  // (research-sentence-stream.ts), and a final order that would still move released text takes the response's retry
+  // path rather than keeping a lead this order would not choose. A checked prefix records whether its lead is a sentence
+  // the answer already holds (kept or moved) or new text (a recovered source sentence, a rewrite or the "do not name"
+  // line), which a later point can still change.
+  if(!protectedDecision(out)){
+    const written=partial&&ACCOUNTABILITY_QUESTION.test(question)?sentenceParts(String(out.answer??'')).map(p=>p.text):undefined
+    out=leadWithWho(out,question)
+    if(written){const lead=sentenceParts(String(out.answer??''))[0]?.text;out={...out,research:{...(out.research as object|undefined),who_lead_written:!!lead&&written.includes(lead)}}}
+  }
+  if(!partial)out=completePersonOverview(payload,out,question)
   const research=out.research&&typeof out.research==='object'?out.research as Record<string,unknown>:undefined
   return {...out,...(research?{research:{...research,claim_audit:audit.counts}}:{})}
 }

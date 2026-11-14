@@ -1,6 +1,6 @@
 # Checked sentence streaming for Ask
 
-Fresh research SSE responses stream checked sentences from the answer tool and the record writer. Their model, prompts, tool selection, token ceilings, spend reservations and final payload fields stay the same. JSON requests continue to use the non-streaming SDK transport. The answer baseline is commit `9fc487882701b3745c1e209836c75416f95fe770`; the before/after performance comparison below uses the safe, completion-held implementation at `240a39b79c67cb44defda1e97c2c245514745294`. The final answer is pinned to the 16 pre-change offline replay answers in `portal/test/fixtures/ask-replay/answers.json`.
+Fresh research SSE responses stream checked sentences from the answer tool and the record writer. Their model, prompts, tool selection, token ceilings, spend reservations and final payload fields stay the same. JSON requests continue to use the non-streaming SDK transport. The answer baseline is commit `9fc487882701b3745c1e209836c75416f95fe770`; the before/after performance comparison below uses the safe, completion-held implementation at `240a39b79c67cb44defda1e97c2c245514745294`. The final answer is pinned to the 16 non-streaming offline replay answers in `portal/test/fixtures/ask-replay/answers.json`. After merging main (row 182, #372) and row 210 (`c5386b9d4`), the six accountability answers were regenerated from a non-streaming build of that merged source (`git merge-tree origin/main origin/im/ask-near-repeats-2`, no streaming code); the other ten answers did not change.
 
 The SDK streams JSON internally. A complete sentence record includes its text, fact or passage IDs and coverage flag, in either property order. Partial strings and incomplete records never become answer text. The boundary recognises titles and initials, `Mr.`, `No. 3`, `s. 12`, decimals and `$1.5m`. A quotation spanning several sentences stays together until it closes and has been checked.
 
@@ -22,7 +22,8 @@ The SDK streams JSON internally. A complete sentence record includes its text, f
 | Quantitative primary/headline promotion | Needs the selected primary and potentially a later sentence | Primary facts are known before writing. Hold the affected opening until the writer has included its required headline, requested owners/amounts and vote split. |
 | Required requested figures, recipients and aye/no split (`keepsAll`, `withRequired`) | Whole-answer presence test | Keep the existing test. Preview starts only once every requirement survives grounding. An incomplete draft cannot become a visible substitute. |
 | Unrecorded lending language in receipt answers (`saysLent`) | Whole writer draft | Hold that draft until the existing complete-draft decision. This can replace the entire draft with recorded facts, so its affected tail starts at the opening. |
-| Findings before debate claims or inquiry metadata (`leadWithFinding`, `leadWithAuthority`) | May need a later finding | Hold a mutable opening. Once the first on-topic official finding is settled, release that lead and retain the displaced context as the tail. Normal completions freeze released ordering. Attribution corrections and salvaged completions run normal checks and use retry when necessary, including when later cited speakers change the direct-lead predicate. An off-topic or relayed finding remains held when a later finding can still outrank it. |
+| Findings before debate claims or inquiry metadata (`leadWithFinding`) | May need a later finding | Hold a mutable opening until the direct-lead predicate settles it. Normal completions freeze released ordering. Attribution corrections and salvaged completions run normal checks and use retry when necessary, including when later cited speakers change the direct-lead predicate. |
+| Who and accountability lead (`leadWithWho`, rows 182 and 210, with `leadWithAuthority` as its fallback) | Whole answer: any later sentence can outrank the opening, and the "do not name" line depends on every cited source | Release only once the lead is decided (see below); otherwise hold the whole answer until `done`. No fixed-prefix exemption: if the final who order would still change released text, the boundary sends `retry`. |
 | Combining fixed passage points with record prose (`appendWrittenPoints`, `leadWithModelAnswer`) | Needs the known points and the writer's record opening | Preview the same composed payload as completion, after the writer's required-content checks. Retain mutable ordering tails. |
 | Person-overview excerpt completion (`completePersonOverview`) | Whole selected source list | Stream checked model points. Defer only the appended source excerpts until the complete source list is known; partial grounding never inserts provisional excerpts ahead of later model points. Final excerpts and citations remain unchanged. |
 | Protected decisions and ambiguous surnames | Decision plus known identity context | Retain refusal, clarification and limitation ordering. Exact lookup corrections stay held; the known alternative-name hint appends after the checked answer. |
@@ -33,6 +34,26 @@ The SDK streams JSON internally. A complete sentence record includes its text, f
 The fallback period comment still applies. Fallback and cached text has not passed the shared writing/language and period boundary. A period mismatch now adds coverage metadata rather than replacing prose, but quote repair, money attribution and legacy normalisation can still change the text. Those paths continue to hold their original deltas. Unchanged cached answers replay the same frames after validation; changed cached answers release only their checked `done` payload.
 
 Neither `mobile/src/features/ask/stream.ts` nor `portal/public/app.js` handles a `replace` SSE event. Normal delivery therefore uses option (a), holding the affected tail. The existing `retry` event is used only for unexpected prefix changes. Mobile `controller.ts` clears `streaming` and web `app.js` calls its reset handler on retry. No client change is required.
+
+## Who and accountability questions
+
+Rows 182 and 210 order an accountability answer ("Who was responsible for ...", "Who decided ...") with `leadWithWho`. It moves the best supported subject to the front: a sentence citing the body's own record before one citing a speech, then finding language, then a named subject other than Cabinet. With no such sentence, it recovers a source sentence that names someone, falls back to the authority order, or opens on "The cited sources do not name a person or office as responsible." Every one of these choices reads the whole answer, so a checked prefix is released only when the final choice is already known:
+
+1. **Settled subject.** The first checked sentence is a supported subject that leadWithWho kept or moved there, at the highest rank any later sentence could reach. The loop summarises its gathered passages, and the composed writer its facts, as `whoBasis`: whether a record is available and whether any source names someone other than Cabinet. A Cabinet lead is therefore settled when no source names anyone else. Without a summary, only a record-cited finding naming a person or office is settled. A recovered source sentence, a rewritten passive approval and a title-and-surname subject ("Mr Example") stay held, because later text can still replace or re-resolve them.
+2. **No one named.** When no available source names anyone, the "do not name" line is decided. It streams first, and the authority order after it keeps the previous on-topic finding hold: a debate claim or inquiry fact stays held until the requested finding is settled.
+3. **Otherwise held** until `done`. Holding beats streaming and then retrying.
+
+`leadWithWho` runs on each checked prefix and on the final answer, with no released-prefix exemption. A final order that would still move released text takes the `retry` path (retry, the full checked answer, `done`), never a silently different lead. Ordinary questions keep the round-1 `leadWithFinding` freeze unchanged.
+
+Measured on a 13-case harness: invented who cases (settled record subject, speech then record, no one named, promoted finding, recovered source sentence, Cabinet only, Cabinet then minister, title and surname, blame and decided wording), two ordinary controls and the 14 November robodebt answer from row 182, released sentence by sentence. Same inputs on each tree.
+
+| Tree | Retries | Characters released before `done` | Final differs from the non-streaming answer |
+| --- | ---: | ---: | --- |
+| Round 4, before the merge (`5c80a1ab3`) | 0 | 3,081 of 3,956 | 5 cases: old fixed-prefix freezes kept a who or authority lead the non-streaming order would move, plus the ordinary bill control |
+| Merge with no who hold | 2 (Cabinet then minister; robodebt row 182) | 1,368 of 4,225 | 1: the ordinary bill control (round-1 freeze) |
+| This resolution | **0** | 1,031 of 4,225 | 1: the ordinary bill control (round-1 freeze) |
+
+The robodebt row 182 answer opens on a Cabinet record finding while its speeches name a minister, so it is held to `done` (it took a retry after 560 characters with no hold). Both ordinary controls stream identically on all three trees. Every reviewer harness from rounds 1 to 4 gives the same output before and after this merge, including its documented retries for citation upgrades and salvage reordering.
 
 ## Loop rejection and settlement inventory
 
@@ -99,10 +120,42 @@ Three point answers still hold their opening: `accountability-blame`, `accountab
 | p50 | 2.817 s | 2.102 s |
 | p95 | 5.064 s | 4.364 s |
 
+### After merging rows 182 and 210
+
+Same 16 cases, pacing and measurement, after the merge. Six accountability answers now carry row 210's order (most open on the "do not name" line), so their bytes differ from the round-4 column; each is byte-identical to the non-streaming merged build. The merge without a who hold streamed `accountability-decided` and then retried it.
+
+| Case | Question kind | Early chars, round 4 | Early chars, this resolution | Retries, round 4 / now |
+| --- | --- | ---: | ---: | ---: |
+| robodebt | who (210 answer) | 76% | 79% | 0 / 0 |
+| sports-rorts | who (210 answer) | 71% | 74% | 0 / 0 |
+| money-ranking | ordinary | 63% | 63% | 0 / 0 |
+| pay | ordinary | 0% | 0% | 0 / 0 |
+| identity | ordinary | 0% | 0% | 0 / 0 |
+| vote | ordinary | 0% | 0% | 0 / 0 |
+| why | ordinary | 77% | 77% | 0 / 0 |
+| what-happened | ordinary | 64% | 64% | 0 / 0 |
+| ambiguous-surname | ordinary | 52% | 52% | 0 / 0 |
+| off-topic | ordinary | 0% | 0% | 0 / 0 |
+| accountability-robodebt | who (210 answer) | 46% | 54% | 0 / 0 |
+| accountability-blame | who (210 answer) | 0% | 0% | 0 / 0 |
+| accountability-decided | who (210 answer) | 0% | 0% | 0 / 0 |
+| robodebt-live-r100 | who | 0% | 78% | 0 / 0 |
+| spoken-finding | who (210 answer) | 0% | 0% | 0 / 0 |
+| robodebt-report-cited | who | 100% | 100% | 0 / 0 |
+
+Across all answer characters, early delivery is **41.1%** (round 4: 34.4%), with **zero retries** in all 16 cases. Ordinary questions are unchanged. `robodebt-live-r100` (a record selection written by the writer) now streams because its Cabinet record finding is the highest-ranked lead its sources allow. `accountability-blame`, `accountability-decided` and `spoken-finding` still hold their opening until `done`, as in round 4.
+
+| Time to first answer text | Round 4 | This resolution |
+| --- | ---: | ---: |
+| p50 | 2.102 s | 2.096 s |
+| p95 | 4.364 s | 4.265 s |
+
 All **16/16** final answers are byte-identical to the original answer snapshots and to the before run. All sixteen retry counts are zero. Model-call counts, citations and API shapes remain pinned. The paced replay gate additionally requires at least 30% of all answer characters to arrive 100 ms before completion, so restoring the completion-wide loop hold fails the gate.
 
 Final gates passed: `cd portal && npx tsc --noEmit`, 267 focused checks, all 16 paced replay cases (17 assertions), then the full portal suite with **5,003 passing tests** at concurrency 4 through `jest-slot.sh`, in a fresh clone after `npm run build:search`. Four new scratch-clone mutations each fail their targeted regression: the attribution bypass, salvage ordering exemption, per-point time latch and completion-preview exemption. The round-4 probes confirm normal attribution after salvage with one corrective retry, no invalid or partial record text, and only the early first preview after a call crosses into its final six seconds. Local generated assets remain excluded from the change.
 
+
+Merge with rows 182 and 210: `npx tsc --noEmit`; all 96 Ask and research suites (2,149 tests); the 16 paced replays (zero retries, 41.1% early, byte-identical to the non-streaming merged build); then the full portal suite with **5,322 passing tests** at concurrency 4 through `jest-slot.sh`, after `npm run build:search`. Twelve scratch-tree mutations each fail a targeted regression: removing the who hold, the "do not name" path, the kept-or-moved check, each of the four rank conditions (record, finding language, a subject other than Cabinet, a title and surname), the leadWithWho no-change check, running leadWithWho on checked prefixes, the loop and writer source summaries, and adding a released-prefix exemption to leadWithWho.
 
 A fresh worktree needs the generated assets before the full suite. With dependencies available for the unchanged lockfile, run from the repository root:
 

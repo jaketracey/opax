@@ -4,7 +4,7 @@ import {build} from 'esbuild'
 import {scriptedResearchModel} from './fixtures/research-scripted-model.mjs'
 import {sentenceSpans} from '../src/sentence-bounds.mjs'
 
-const bundled=await build({stdin:{contents:"export * from './src/research-generation'; export * from './src/research-grounding'; export * from './src/research-sentences'; export * from './src/research-sentence-stream'; export * from './src/research-response'; export * from './src/research-writer'; export * from './src/research-evidence'; export * from './src/agentic-ask'; export * from './src/research-loop'; export {agenticAskPayload} from './src/agentic-response'; export {createResearchCreditCooldown} from './src/research-credit'; export {proseFallback} from './src/research-writing';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
+const bundled=await build({stdin:{contents:"export * from './src/research-generation'; export * from './src/research-grounding'; export * from './src/research-sentences'; export * from './src/research-sentence-stream'; export * from './src/research-response'; export * from './src/research-writer'; export * from './src/research-evidence'; export * from './src/agentic-ask'; export * from './src/research-loop'; export {agenticAskPayload} from './src/agentic-response'; export {createResearchCreditCooldown} from './src/research-credit'; export {proseFallback} from './src/research-writing'; export * from './src/research-who-lead';",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']})
 const api=await import('data:text/javascript;base64,'+Buffer.from(bundled.outputFiles[0].text).toString('base64'))
 const deferred=()=>{let resolve;const promise=new Promise(r=>{resolve=r});return {promise,resolve}}
 const source=(resource,snippet,extra={})=>({resource,slug:'',title:'Housing report',href:'https://example.org/report',url:'https://example.org/report',snippet,cited:true,kind:'record',...extra})
@@ -130,16 +130,73 @@ test('unchanged cache deltas stay held until validation, then replay with the ex
   assert.equal(events.at(-1).data.answer,text)
 })
 
-test('a promoted on-topic finding streams while its earlier context stays in the affected tail',async()=>{
-  const q='Who was responsible for robodebt?',deltas=[]
-  const stream=api.researchSentenceStream(q,async text=>deltas.push(text))
-  const context='Robin Example said the government ignored warnings.',finding='The Royal Commission into Robodebt found the scheme was unlawful.'
-  await stream.preview(payload(context))
-  assert.deepEqual(deltas,[])
-  await stream.preview(payload(context+'\n'+finding))
-  assert.equal(deltas.join(''),finding)
-  await stream.preview(payload(context+'\n'+finding+'\nThe report recommended changes.'))
-  assert.equal(deltas.join(''),finding,'only the settled lead is released before completion')
+// Who questions (210): leadWithWho reads the whole answer, so a prefix is released only when its lead is decided.
+const who='Who was responsible for the Example scheme?'
+const whoSource=(resource,snippet,kind='record',extra={})=>source(resource,snippet,{title:'Example Inquiry report',kind,...extra})
+const spokenSource=(resource,snippet)=>whoSource(resource,snippet,'speech',{speaker:'Robin Example',chamber:'senate',date:'2024-02-01'})
+const cite=(resource,text,from=0)=>({[resource+'/t/body/0']:[[from,from+text.length]]})
+const withBasis=(p,sources)=>({...p,research:{who_basis:api.whoBasis(sources.map(s=>({kind:s.kind,texts:[s.snippet,s.title]})))}})
+/** The route's finish() and public boundary after these releases, beside the same answer with nothing streamed. */
+async function whoFinish(q,deltas,full){
+  const finished=api.groundAnswerPayload({answered:true,...full,research:{mode:'loop'}},q,deltas.join(''))
+  const wire=frame('research_sentences',{})+deltas.map(text=>frame('research_sentence',{text})).join('')+frame('done',finished)
+  const events=decode(await(await api.withAnswerLanguage(new Response(wire,{headers:{'content-type':'text/event-stream'}}),q)).text())
+  const plain=await(await api.withAnswerLanguage(Response.json(api.groundAnswerPayload({answered:true,...full,research:{mode:'loop'}},q)),q)).json()
+  let client='';for(const e of events){if(e.event==='retry')client='';if(e.event==='delta')client+=e.data.text}
+  return {events,done:events.at(-1).data,plain,client}
+}
+const supported='The Example Inquiry found Minister Jane Example approved the Example scheme without legal advice.'
+const relayedSubject='Robin Example told the Senate the Example Inquiry found Minister Jane Example approved the Example scheme.'
+
+test('who lead: a top-ranked record subject streams at once, and done keeps the non-streaming who order',async()=>{
+  const claim='Robin Example said the scheme hurt thousands of people.'
+  const record=whoSource('inquiry',supported),speech=spokenSource('debate','The scheme hurt thousands of people in my electorate.')
+  const deltas=[],stream=api.researchSentenceStream(who,async text=>deltas.push(text))
+  await stream.preview(withBasis(payload(supported,[record],cite('inquiry',supported)),[record,speech]))
+  assert.equal(deltas.join(''),supported)
+  const full=payload(supported+'\n\n'+claim,[record,speech],{...cite('inquiry',supported),...cite('debate',claim,supported.length+2)})
+  await stream.preview(withBasis(full,[record,speech]))
+  const {events,done,plain,client}=await whoFinish(who,deltas,full)
+  assert.equal(events.some(e=>e.event==='retry'),false)
+  assert.equal(deltas.join(''),done.answer,'the whole answer streamed before done')
+  assert.equal(client,done.answer)
+  assert.equal(done.answer,plain.answer)
+})
+
+test('who lead: a speech-cited subject stays held until the record finding about the same person moves first',async()=>{
+  const speech=spokenSource('debate','The Example Inquiry found Minister Jane Example approved the Example scheme.'),record=whoSource('inquiry',supported)
+  const deltas=[],stream=api.researchSentenceStream(who,async text=>deltas.push(text))
+  await stream.preview(withBasis(payload(relayedSubject,[speech],cite('debate',relayedSubject)),[speech,record]))
+  assert.deepEqual(deltas,[],'an available record can still outrank the speech')
+  const full=payload(relayedSubject+'\n\n'+supported,[speech,record],{...cite('debate',relayedSubject),...cite('inquiry',supported,relayedSubject.length+2)})
+  await stream.preview(withBasis(full,[speech,record]))
+  assert.ok(deltas.join('').startsWith(supported))
+  const {events,done,plain,client}=await whoFinish(who,deltas,full)
+  assert.equal(events.some(e=>e.event==='retry'),false)
+  assert.equal(client,done.answer)
+  assert.equal(done.answer,plain.answer)
+  assert.ok(done.answer.startsWith(supported))
+})
+
+test('who lead: with no source naming anyone, the "do not name" line and the settled on-topic finding stream, and earlier context stays held',async()=>{
+  const q='Who was responsible for robodebt?',deltas=[],stream=api.researchSentenceStream(q,async text=>deltas.push(text))
+  const context='Robin Example said the government ignored warnings.',unrelated='The NACC found officials mishandled a referral.',finding='The Royal Commission into Robodebt found the scheme was unlawful.',later='The report recommended changes.'
+  const unnamed=answer=>({...payload(answer),research:{who_basis:api.whoBasis([])}})
+  await stream.preview(unnamed(context))
+  await stream.preview(unnamed(context+'\n'+unrelated))
+  assert.deepEqual(deltas,[],'an off-topic finding cannot settle the authority order')
+  await stream.preview(unnamed(context+'\n'+unrelated+'\n'+finding))
+  assert.equal(deltas.join(''),api.UNNAMED_WHO_LEAD+'\n\n'+finding)
+  await stream.preview(unnamed(context+'\n'+unrelated+'\n'+finding+'\n'+later))
+  assert.equal(deltas.join(''),api.UNNAMED_WHO_LEAD+'\n\n'+finding,'only the settled lead is released before completion')
+  const {events,done,plain,client}=await whoFinish(q,deltas,payload(context+'\n'+unrelated+'\n'+finding+'\n'+later))
+  assert.equal(events.some(e=>e.event==='retry'),false)
+  assert.equal(client,done.answer)
+  assert.equal(done.answer,plain.answer)
+  // Without a summary of the sources still available, a later point could name someone: nothing is released.
+  const held=[],blind=api.researchSentenceStream(q,async text=>held.push(text))
+  await blind.preview(payload(context+'\n'+unrelated+'\n'+finding))
+  assert.deepEqual(held,[])
 })
 
 test('duplicate removal preserves line breaks without resetting the released prefix',async()=>{
@@ -268,13 +325,50 @@ test('a prefix mismatch logs a count and sends retry, full checked delta and don
   stream.close();await stream.preview(payload(first));assert.deepEqual(deltas,[])
 })
 
-test('authority on-topic hold keeps an unrelated finding private until the requested finding arrives',async()=>{
-  const q='Who was responsible for robodebt?',deltas=[],stream=api.researchSentenceStream(q,async text=>deltas.push(text))
-  const context='Robin Example said the government ignored warnings.',unrelated='The NACC found officials mishandled a referral.',finding='The Royal Commission into Robodebt found the scheme was unlawful.'
-  await stream.preview(payload(context+'\n'+unrelated))
-  assert.deepEqual(deltas,[])
-  await stream.preview(payload(context+'\n'+unrelated+'\n'+finding))
-  assert.equal(deltas.join(''),finding)
+test('who lead: a recovered source sentence, a title and surname, or Cabinet while a named subject is available stay held',async()=>{
+  const cabinet='The Example Inquiry found the Example scheme was approved by Cabinet.',minister='The Example Inquiry found Minister Jane Example misled Cabinet about the Example scheme.'
+  const surname='The Example Inquiry found Mr Example approved the Example scheme.',spoke='Robin Example spoke about the Example scheme in the Senate.'
+  const relayed=spokenSource('debate','The Example Inquiry found Minister Jane Example approved the Example scheme.')
+  const cases=[
+    {name:'recovered source sentence',first:spoke,sources:[relayed],resource:'debate'},
+    {name:'title and surname',first:surname,sources:[whoSource('inquiry',surname)],resource:'inquiry'},
+    {name:'Cabinet with a minister available',first:cabinet,sources:[whoSource('inquiry',cabinet),whoSource('chapter',minister)],resource:'inquiry'},
+    {name:'a subject without finding language',first:'Minister Jane Example approved the Example scheme in 2015.',sources:[whoSource('inquiry','Minister Jane Example approved the Example scheme in 2015.')],resource:'inquiry'},
+  ]
+  for(const c of cases){
+    const deltas=[],stream=api.researchSentenceStream(who,async text=>deltas.push(text))
+    const opening=payload(c.first,c.sources.slice(0,1),cite(c.resource,c.first))
+    await stream.preview(withBasis(opening,c.sources))
+    assert.deepEqual(deltas,[],c.name)
+    const full=payload(c.first+'\n\nThe Example scheme ended in 2020.',c.sources.slice(0,1),cite(c.resource,c.first))
+    await stream.preview(withBasis(full,c.sources))
+    assert.deepEqual(deltas,[],c.name)
+    const {events,done,plain,client}=await whoFinish(who,deltas,full)
+    assert.equal(events.some(e=>e.event==='retry'),false,c.name)
+    assert.equal(client,done.answer,c.name)
+    assert.equal(done.answer,plain.answer,c.name)
+  }
+  // Cabinet leads once no source names anyone else.
+  const deltas=[],stream=api.researchSentenceStream(who,async text=>deltas.push(text)),record=whoSource('inquiry',cabinet)
+  await stream.preview(withBasis(payload(cabinet,[record],cite('inquiry',cabinet)),[record]))
+  assert.equal(deltas.join(''),cabinet)
+  // A top-ranked opening that the who lead would still rewrite (a passive approval) is not settled as written.
+  const passive='The Example Inquiry found that the scheme was unlawful, approved by Cabinet and continued for years.',source=whoSource('inquiry',passive)
+  const basis=api.whoBasis([{kind:'record',texts:[passive,source.title]}]),written=payload(passive,[source],cite('inquiry',passive))
+  assert.notEqual(api.leadWithWho(written,who).answer,passive)
+  assert.equal(api.settledWhoLead(written,who,basis),false)
+  assert.equal(api.settledWhoLead(api.leadWithWho(written,who),who,basis),true)
+})
+
+test('who lead has no released-prefix exemption: a released lead the who order replaces takes retry, then the full answer and done',async()=>{
+  const speech=spokenSource('debate','The Example Inquiry found Minister Jane Example approved the Example scheme.'),record=whoSource('inquiry',supported)
+  const full=payload(relayedSubject+'\n\n'+supported,[speech,record],{...cite('debate',relayedSubject),...cite('inquiry',supported,relayedSubject.length+2)})
+  assert.ok(api.groundAnswerPayload({...full,research:{mode:'loop'}},who,relayedSubject).answer.startsWith(supported),'grounding keeps the who order after release')
+  const {events,done,plain,client}=await whoFinish(who,[relayedSubject],full)
+  assert.deepEqual(events.map(e=>e.event),['delta','retry','delta','done'])
+  assert.equal(client,done.answer)
+  assert.equal(done.answer,plain.answer)
+  assert.ok(done.answer.startsWith(supported))
 })
 
 test('person overview streams its checked points while only appended source excerpts stay held',async()=>{
@@ -357,6 +451,39 @@ test('eligible loop points stream before the answer arguments finish, with no ex
   const run=await running
   assert.equal(model.calls.length,2)
   assert.equal(api.checkedAnswerPayload({...run.qualitative,research:{mode:'loop'}},question,false,stream.released).answer,deltas.join(''))
+})
+
+test('who loop points stream the decided "do not name" lead before the answer arguments finish',async()=>{
+  const q='Who was responsible for the housing delays?',first='The housing report found planning rules slowed approvals.',second='The report recommended simpler planning rules.'
+  const gate=deferred(),heard=deferred(),deltas=[]
+  let raw=''
+  const model=scriptedResearchModel([{tool_calls:[call('search',{query:'housing report'},'search')]},{tool_calls:[call('answer',{points:[{claim:first},{claim:second}]},'answer')]}],{
+    onPiece:async piece=>{raw+=piece;if(raw.includes('recommended'))await gate.promise},
+  })
+  const progress=async()=>{},stream=api.researchSentenceStream(q,async text=>{deltas.push(text);heard.resolve()})
+  progress.answer=stream.preview
+  const research=Object.assign(api.createResearch(budgetOptions(model)),{write:undefined})
+  const running=api.runAgentic(q,{asset:async()=>null,kb:async()=>({resources:{},fulltext:{total:0,facets:{}}}),generate:async()=>{throw Error('planner must not run')},research},progress,40_000,api.inferPeriod(q),{},emptyScope)
+  try{
+    await Promise.race([heard.promise,new Promise((_,reject)=>setTimeout(()=>reject(Error('the who lead stayed held without the loop source summary')),1000))])
+    assert.equal(deltas.join(''),api.UNNAMED_WHO_LEAD+'\n\n'+first)
+  }finally{gate.resolve()}
+  const run=await running
+  assert.equal(model.calls.length,2)
+  assert.equal(api.checkedAnswerPayload({...run.qualitative,research:{mode:'loop'}},q,false,stream.released).answer,deltas.join(''))
+})
+
+test('the composed writer passes its facts to the who lead, so a Cabinet record lead streams when no one else is named',async()=>{
+  const lead='The Example Inquiry found the Example scheme was approved by Cabinet.',later='The Example scheme ended in 2020.'
+  const record=whoSource('inquiry',lead+' '+later),full=payload(lead+'\n\n'+later,[record],{...cite('inquiry',lead),...cite('inquiry',later,lead.length+2)})
+  const deltas=[],progress=async()=>{},stream=api.researchSentenceStream(who,async text=>deltas.push(text))
+  progress.answer=stream.preview
+  const research=Object.assign(async()=>({rounds:1,steps:[],results:[],selected:[],tokens:{input:0,output:0},qualitative:full}),{
+    writingWallMs:8000,write:async(_input,_stats,_signal,_ms,preview)=>{await preview({...full,answer:lead,citations:cite('inquiry',lead)});return full},
+  })
+  const run=await api.runAgentic(who,{asset:async()=>null,kb:async()=>({}),generate:async()=>{throw Error('planner must not run')},research},progress,40_000,api.inferPeriod(who),{},emptyScope)
+  assert.equal(deltas.join(''),lead)
+  assert.ok(run.answer.startsWith(lead))
 })
 
 const threeSentences=['The housing report found planning rules slowed approvals.','The report recommended simpler planning rules.','The report also said councils needed more staff to process applications.']
