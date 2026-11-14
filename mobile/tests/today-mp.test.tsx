@@ -199,24 +199,31 @@ describe('Today\u2019s Your MP tile', () => {
     const renderer = await tile();
     // The seat is its own unit, drawn whole: no separator in front of it.
     expect(text(renderer, 'today-your-mp-seat')).toBe(seat.name);
+    expect(text(renderer, 'today-your-mp-separator')).toBe('·');
     // The separator ends the party's unit, so a wrap breaks after it.
-    const host = (id: string) =>
-      renderer.root.find(
-        (n) => typeof n.type === 'string' && n.props.testID === id,
-      );
-    const separator = renderer.root
-      .findAllByType(NativeText)
-      .find((n) => n.props.testID === 'today-your-mp-separator')!;
-    const unit = separator.parent!.parent!;
-    const line = host('today-your-mp-seat').parent!;
-    expect(unit.parent).toBe(line);
-    expect(
-      unit.findAll((n) => n.props.testID === 'today-your-mp-party'),
-    ).not.toHaveLength(0);
+    const holds = (node: TestRenderer.ReactTestInstance, id: string) =>
+      node.findAll((n) => n.props.testID === id).length > 0;
+    /** The innermost host view holding all of `inside` and none of `outside`. */
+    const innermost = (inside: string[], outside: string[] = []) =>
+      renderer.root
+        .findAll(
+          (n) =>
+            n.type === 'View' &&
+            inside.every((id) => holds(n, id)) &&
+            !outside.some((id) => holds(n, id)),
+        )
+        .at(-1)!;
+    const unit = innermost(
+      ['today-your-mp-party', 'today-your-mp-separator'],
+      ['today-your-mp-seat'],
+    );
+    expect(unit).toBeDefined();
     expect(StyleSheet.flatten(unit.props.style)).toMatchObject({
       flexDirection: 'row',
     });
     expect(StyleSheet.flatten(unit.props.style).flexWrap).toBeUndefined();
+    // The line that wraps holds the party's unit and the seat as siblings.
+    const line = innermost(['today-your-mp-separator', 'today-your-mp-seat']);
     expect(StyleSheet.flatten(line.props.style)).toMatchObject({
       flexDirection: 'row',
       flexWrap: 'wrap',
