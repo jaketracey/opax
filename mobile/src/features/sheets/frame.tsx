@@ -10,6 +10,7 @@ import {
   ToastAndroid,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { useScreenMargin } from '../../design/adaptive';
 import { useKeyCommand } from '../../design/keyboard';
@@ -80,7 +81,16 @@ export function SheetFrame({
   children: ReactNode;
   options?: NativeStackNavigationOptions;
 }) {
-  const accessible = useAccessibilitySize();
+  // A sheet that must scroll rather than fit its content: accessibility sizes,
+  // and the closed Duo's outer display. There UIKit fits a short sheet to its
+  // content as measured at the first layout, before the rail's inset narrows
+  // the column, so the text wrapped taller than the sheet and the plain fitted
+  // View clipped it with nothing to scroll (glossary terms, b67).
+  // Only short (fitted) sheets clip; citation, source and table sheets keep
+  // their detents. Read from the live bar edge, so a fold or rotation follows.
+  const barEdge = useVerticalBarEdge();
+  const railed = short && barEdge !== 'unspecified';
+  const accessible = useAccessibilitySize() || railed;
   const margin = useScreenMargin();
   const insets = useSafeAreaInsets();
   const done = closeSheetItem();
@@ -197,9 +207,10 @@ export function SheetFrame({
     styles.content,
     {
       paddingHorizontal: margin,
-      // A fitted View has no scroll view to apply UIKit's horizontal insets.
-      paddingLeft: margin + (fitted ? insets.left : 0),
-      paddingRight: margin + (fitted ? insets.right : 0),
+      // A fitted View has no scroll view to apply UIKit's horizontal insets,
+      // and UIKit's automatic adjustment is vertical only beside a rail.
+      paddingLeft: margin + (fitted || railed ? insets.left : 0),
+      paddingRight: margin + (fitted || railed ? insets.right : 0),
       paddingTop: fitted && compact ? rhythm.tight : rhythm.group,
       paddingBottom: fitted
         ? compact && Platform.OS === 'ios'
