@@ -43,7 +43,7 @@ describe('the edition, in the words of the app plate',()=>{
       line:'Liberal · Wattle, NSW',path:'/subject/person/Jordan%20Avery'});
     // The app's plateLine for the same record (Plate.tsx shows the person line instead).
     const cover=personEdition().slides[0];
-    assert.equal(W.plateLine(cover.line,['Jordan Avery: 768 speeches in the Opax record.']),'Liberal · House of Representatives · records 2008 to 2026');
+    assert.equal(W.plateLine(cover.line,['Jordan Avery: 768 speeches in the OPAX record.']),'Liberal · House of Representatives · records 2008 to 2026');
     assert.deepEqual(W.editionPerson({kicker:cover.kicker,line:cover.line}),{party:'Liberal',place:'Wattle, NSW'});
   });
   test('card title uses the published clause or word boundary (app edition.test.ts)',()=>{

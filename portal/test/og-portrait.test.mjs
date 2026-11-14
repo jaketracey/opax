@@ -10,7 +10,7 @@ const built = await build({ entryPoints: [new URL('../src/og.ts', import.meta.ur
 const { portraitTree, cardTree, ogLayout, ogFormat, homeCard, PORTRAIT_WIDTH, PORTRAIT_HEIGHT, OG_WIDTH, OG_HEIGHT, OG_VERSION, PORTRAIT_VERSION } = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
 
 const PHOTO = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wAALCAABAAEBAREA/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/2gAIAQEAAD8AN//Z';
-const politician = { kicker: 'Parliamentarian', title: 'Anthony Albanese', lines: ['Labor · House of Representatives', 'Collected records: 1998 to 2026'], stat: { value: '5,408', label: 'speeches in the Opax record' }, dot: '#D93025', portrait: PHOTO, credit: 'Photo: Commonwealth of Australia, CC BY 3.0 AU, via Wikimedia Commons' };
+const politician = { kicker: 'Parliamentarian', title: 'Anthony Albanese', lines: ['Labor · House of Representatives', 'Collected records: 1998 to 2026'], stat: { value: '5,408', label: 'speeches in the OPAX record' }, dot: '#D93025', portrait: PHOTO, credit: 'Photo: Commonwealth of Australia, CC BY 3.0 AU, via Wikimedia Commons' };
 const bill = { kicker: 'Bill · Introduced 1 September 2026', title: 'Public Records Bill 2026', lines: ['Not yet introduced: an exposure draft released for consultation.', 'Read the text, the explanatory memorandum and every speech on it.'] };
 const award = { kicker: 'GA576236 · Starts 2026-07-31', title: 'City of Greater Geelong', lines: ['The project will deliver two competition-compliant courts with lighting, run-off areas and line marking. It will also construct a dedicated warm-up and shooting area and redevelop the ageing amenities building.', 'Award value, not payments received.'], stat: { value: '$5.5M', label: 'published grant award' } };
 
@@ -60,7 +60,7 @@ test('a politician card stands the portrait large and centred over a big name an
   assert.ok(title.props.style.fontSize >= 96);
   const value = textNode(tree, '5,408');
   assert.equal(value.props.style.fontFamily, 'Public Sans'); assert.equal(value.props.style.fontWeight, 700); assert.ok(value.props.style.fontSize >= 96, 'the statistic is prominent');
-  assert.ok(textNode(tree, 'speeches in the Opax record'));
+  assert.ok(textNode(tree, 'speeches in the OPAX record'));
   assert.ok(walk(tree).some(n => n.props?.style?.background === '#D93025'), 'the party dot');
   assert.ok(walk(tree).some(n => typeof n.props?.children === 'string' && n.props.children.startsWith('Photo: Commonwealth')), 'the Commons credit');
   assert.equal(engraving(tree), undefined, 'a portrait leaves no room for the engraving');
