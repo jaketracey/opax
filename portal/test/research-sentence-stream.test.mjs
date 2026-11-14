@@ -302,6 +302,33 @@ for(const salvaged of [false,true])test(salvaged?'a salvaged bill answer keeps t
   assert.ok(api.groundAnswerPayload({...final,research:{mode:'planner'}},q).answer.startsWith(points[1].claim),'the planner path still promotes the cited speaker')
 })
 
+// Revert checks (review, 14 November 2026). The bill answer's first point fails the direct-lead test, and leadWithFinding
+// would promote the cited speaker ahead of it.
+const billLead=()=>{
+  const q='What happened to the Example Bill 2024?'
+  const passages=[{id:'bill-1',resource:'bill-1',slug:'',title:'Example Bill 2024',text:'The Example Bill 2024 passed the Senate on 3 March 2024 after a second reading debate.',url:'https://example.org/bill',kind:'bill'},
+    {id:'sp-1',resource:'sp-1',slug:'',title:'Second reading speech',text:'Senator Jane Example said the bill would cut red tape for small business owners across the country.',url:'https://example.org/sp',kind:'speech',speaker:'Jane Example',chamber:'senate',date:'2024-03-01'}]
+  const points=[{claim:'The Example Bill 2024 passed the Senate on 3 March 2024.',id:'bill-1',quote:'passed the Senate on 3 March 2024 after a second reading debate'},
+    {claim:'Jane Example told the Senate the bill would cut red tape for small business.',id:'sp-1',quote:'the bill would cut red tape for small business owners across the country'}]
+  const map=new Map(passages.map(p=>[p.id,p])),named={people:[],parties:[],bills:[],ambiguous:false,unresolved:false}
+  return {q,points,one:api.verifyResearchPoints(points.slice(0,1),map,q,named),full:api.verifyResearchPoints(points,map,q,named)}
+}
+test('revert check, grounding: a loop point answer keeps the model\'s first point; a written record or planner answer still leads with the cited speaker',()=>{
+  const {q,points,full}=billLead()
+  assert.ok(api.groundAnswerPayload({...full,research:{mode:'loop'}},q).answer.startsWith(points[0].claim),'loop points keep the model order')
+  assert.ok(api.groundAnswerPayload({...full,research:{mode:'loop',pre_writer_sources:[]}},q).answer.startsWith(points[1].claim),'a written record answer keeps its lead shaping')
+  assert.ok(api.groundAnswerPayload({...full,research:{mode:'planner'}},q).answer.startsWith(points[1].claim),'the planner keeps its lead shaping')
+})
+// A written record answer keeps the stable-lead hold; the money-ranking replay stream resets without it (ask-replay).
+test('revert check, stream gate: a loop answer whose lead fails the direct-lead test is released at once, in the model order',async()=>{
+  const {q,points,full}=billLead()
+  const checked=api.checkedAnswerPayload({...full,research:{mode:'loop'}},q,true)
+  assert.equal(api.stableResearchLead(checked,q),false,'the lead fails the direct-lead test')
+  const loop=[],loopStream=api.researchSentenceStream(q,async text=>loop.push(text))
+  await loopStream.preview(full)
+  assert.ok(loop.length&&loop.join('')===checked.answer&&checked.answer.startsWith(points[0].claim),'the loop answer streams in the model order')
+})
+
 const emptyScope={people:[],parties:[],bills:[],ambiguous:false,unresolved:false}
 const budgetOptions=model=>({model,inputPrice:0.1,outputPrice:0.3,modelBudgetSpent:async()=>false,dailyBudget:{reserve:async()=>({settle:async()=>{}})},creditCooldown:api.createResearchCreditCooldown()})
 const call=(name,args,id)=>({name,args,id})

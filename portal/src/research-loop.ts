@@ -39,6 +39,7 @@ import { broadAbsenceQuestion, verifiedAbsenceCount, absenceClaim } from './rese
 import { broadTopicOverview, overviewResearchHint, overviewContextOnly, overviewSearchPlan, personOverviewHint } from './ask-answer-grain'
 import { modelProse, usableProse } from './research-text-answer'
 import { generateResearchText, answerEntryScanner, researchPreviewGuard } from './research-generation'
+import { interruptedResearchAnswer } from './research-sentence-stream'
 
 /** What each answer field holds, for the answer tool and for an answer written as reply text. */
 const ANSWER_FIELDS = 'facts: structured record fact ids whose figures answer the question, each selected once. points: 2 to 8 complete sentences in Australian English (4 to 8 for a broad topic overview), the first answering the question directly. Cite a point with the id of the passage that supports it, or "fact-N" for record fact N, and a phrase of 5 to 25 words copied exactly from it; a point of context or background from general knowledge carries no id. '
@@ -627,7 +628,8 @@ export function createResearch(options: ResearchOptions): Research {
       // Hansard passages cannot replace already retrieved evidence before the commission.
       if (hearingEvidenceQuestion(question)) return draftAnswer(draft ?? {}, null, () => {})
       // A run that stops after the model drafted its answer (the spend cap, the wall clock, a failed turn) returns that draft.
-      if (draft) { const answer = draftAnswer(draft, null, () => {}); if (answer) return answer }
+      // A provider failure can cut the answer off after its first points were shown: that answer says it was cut short.
+      if (draft) { const answer = draftAnswer(draft, null, () => {}); if (answer) return reason === 'error' ? interruptedResearchAnswer(answer, answer.answer, false) : answer }
       // A model that answered in prose instead of calling a tool has answered: its prose leads, with what research holds.
       const said = proseAnswer()
       if (said) return said
