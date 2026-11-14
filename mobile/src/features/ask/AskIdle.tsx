@@ -37,6 +37,7 @@ import { defaultOptions } from './model';
 import { askSession } from './session';
 import { seatStarter, startersFor, sydneyDayIndex } from './starters';
 import { chatsSnapshot, subscribeChats } from './store';
+import { starterTerm } from '../learn/term-map';
 
 export const idleCopy = {
   line: 'Answers come from parliamentary records and are machine-written.',
@@ -183,6 +184,7 @@ export function AskIdle({
                 question={question}
                 variant="send"
                 offline={offline}
+                term={starterTerm(question)}
                 onPress={() => {
                   if (
                     seatFill &&

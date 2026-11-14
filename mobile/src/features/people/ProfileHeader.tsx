@@ -17,6 +17,8 @@ import { partyDotSize } from '../../design/people';
 import { partyDot } from '../../design/party';
 import { colors, hairline, rhythm } from '../../design/tokens';
 import type { FollowKind } from '../follows/store';
+import { TermText } from '../../design/term';
+import { roleTerm } from '../learn/term-map';
 
 /** One row under the header: the party, a seat, the official page. */
 export interface IdentityRow {
@@ -184,16 +186,18 @@ export function ProfileHeader({
           </Heading>
         </View>
         {role ? (
-          <Text
+          <TermText
             wordSafe
             variant="secondary"
             style={centred ? styles.centredText : null}
+            term={roleTerm(role)?.term}
+            phrase={roleTerm(role)?.phrase}
             testID={
               role.startsWith('Former ') ? `${testID}-former` : `${testID}-role`
             }
           >
             {role}
-          </Text>
+          </TermText>
         ) : null}
         {yourMP ? (
           <View

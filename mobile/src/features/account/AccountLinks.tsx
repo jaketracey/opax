@@ -5,6 +5,7 @@ import { InsetGroup } from '../../design/primitives';
 import { symbols } from '../../design/symbols';
 import { rhythm } from '../../design/tokens';
 import { openCorrection, openOnWeb } from '../../navigation/external';
+import { AccountGuideRow, AccountTermsRow } from '../learn/AccountLearn';
 import { replayWelcome } from '../welcome/replay';
 import { SettingsRow, closeSheetThen, linksCopy } from './parts';
 
@@ -89,6 +90,8 @@ export function AccountLinks({
         />
       </InsetGroup>
       <InsetGroup>
+        <AccountGuideRow />
+        <AccountTermsRow />
         <SettingsRow
           title={linksCopy.replayWelcome}
           tile={symbols.welcome}

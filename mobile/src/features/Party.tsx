@@ -507,6 +507,7 @@ function PartyContent({
     tiles.push({
       value: formatMoneyCompact(receipts.node.total),
       label: 'disclosed receipts',
+      term: 'receipts',
       onPress: () => jump('receipts'),
       testID: 'party-figure-receipts',
     });

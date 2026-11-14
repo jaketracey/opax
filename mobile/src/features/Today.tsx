@@ -47,6 +47,7 @@ import {
   todayFixture,
 } from './today/launch-fixture';
 import { Masthead, useNow } from './today/Masthead';
+import { LearnCard, WithLearnCard } from './learn/LearnCard';
 import { MoreToExplore } from './today/MoreToExplore';
 import { SittingLine, useSittingRead } from './today/SittingLine';
 import {
@@ -370,10 +371,15 @@ export default function Today() {
                 />
               ) : null}
             </SurfaceGrid>
+            <LearnCard />
           </View>
         );
       case 'invitation':
-        return <SeatInvitation key={name} />;
+        return (
+          <WithLearnCard key={name}>
+            <SeatInvitation />
+          </WithLearnCard>
+        );
       case 'edition':
       case 'edition-late': {
         if (nothingSaved) return null;
