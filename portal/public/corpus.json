@@ -1,9 +1,9 @@
 {
-  "version": "2026-11-14",
-  "expected_resources": 1003325,
+  "version": "2026-11-15",
+  "expected_resources": 1003326,
   "expected_resources_breakdown": {
-    "live_index_before_refresh": 1003306,
-    "new_press_release_resources": 19
+    "live_index_before_refresh": 1003325,
+    "new_press_release_resources": 1
   },
   "collected_speeches": 964517,
   "sources": [
@@ -64,7 +64,7 @@
     },
     {
       "name": "Prime Minister transcripts and releases (PM&C)",
-      "docs": 726,
+      "docs": 727,
       "coverage": "2025–2026"
     },
     {
@@ -152,7 +152,7 @@
     "SA Hansard stops at November 2024: hansardsearch.parliament.sa.gov.au now sits behind a WAF that challenges every non-browser request, so the source cannot be fetched."
   ],
   "refresh": {
-    "checked_at": "2026-11-13T19:09:13+00:00",
+    "checked_at": "2026-11-14T20:51:23+00:00",
     "news_resources": 0,
     "bills_registry": 2988,
     "current_parliament_bills": 295,
@@ -197,7 +197,7 @@
       "grant_award": 8354,
       "grant_invitation": 227,
       "parliamentary_profile": 995,
-      "press_release": 7062,
+      "press_release": 7063,
       "research_report": 35,
       "speech": 964517
     },
@@ -207,16 +207,16 @@
       "vic_speeches": 0,
       "act_speeches": 0,
       "nsw_releases": 0,
-      "austender_contracts": 2
+      "austender_contracts": 0
     },
     "structured_sources": {
       "grantconnect_awards": 369742,
-      "austender_latest_contracts": 876130,
+      "austender_latest_contracts": 876132,
       "published_supplier_contracts": 108607,
-      "lobbyist_firms": 1966,
-      "lobbyist_client_links": 15177,
-      "lobbyist_people": 6040,
-      "lobbyist_contact_disclosures": 8375
+      "lobbyist_firms": 1967,
+      "lobbyist_client_links": 15181,
+      "lobbyist_people": 6046,
+      "lobbyist_contact_disclosures": 8378
     },
     "enrichment_queued": {
       "new_speech_resources": 2016,
@@ -241,61 +241,61 @@
       "bills": {
         "status": "paused",
         "host": "parlinfo.aph.gov.au",
-        "checked_at": "2026-11-13T18:15:17.662056+00:00",
+        "checked_at": "2026-11-14T19:56:50.293787+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "committees": {
         "status": "paused",
         "host": "parlinfo.aph.gov.au",
-        "checked_at": "2026-11-13T16:19:17.345625+00:00",
+        "checked_at": "2026-11-14T16:20:21.677224+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "grants_fetch": {
         "status": "paused",
         "host": "www.grants.gov.au",
-        "checked_at": "2026-11-13T16:32:05.452268+00:00",
+        "checked_at": "2026-11-14T16:32:48.484496+00:00",
         "reason": "HTTP 403"
       },
       "integrity_nsw_icac": {
         "status": "paused",
         "host": "www.icac.nsw.gov.au",
-        "checked_at": "2026-11-12T16:54:53.827035+00:00",
+        "checked_at": "2026-11-14T16:50:53.484462+00:00",
         "reason": "HTTP 403"
       },
       "integrity_nt_icac": {
         "status": "paused",
         "host": "icac.nt.gov.au",
-        "checked_at": "2026-11-12T18:11:32.597611+00:00",
+        "checked_at": "2026-11-14T17:29:51.012184+00:00",
         "reason": "HTTP 403"
       },
       "integrity_tas_ic": {
         "status": "paused",
         "host": "www.integrity.tas.gov.au",
-        "checked_at": "2026-11-12T18:06:33.611486+00:00",
+        "checked_at": "2026-11-14T17:29:22.652091+00:00",
         "reason": "HTTP 403"
       },
       "interests_federal": {
         "status": "paused",
         "host": "www.aph.gov.au",
-        "checked_at": "2026-11-13T16:43:59.223038+00:00",
+        "checked_at": "2026-11-14T16:44:42.924466+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "qld": {
         "status": "paused",
         "host": "data.parliament.qld.gov.au",
-        "checked_at": "2026-11-13T16:19:13.319883+00:00",
+        "checked_at": "2026-11-14T16:20:19.584898+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       },
       "qld_contracts": {
         "status": "paused",
         "host": "www.data.qld.gov.au",
-        "checked_at": "2026-11-12T19:54:43.349295+00:00",
+        "checked_at": "2026-11-14T19:12:29.481960+00:00",
         "reason": "redirect refused: destination robots policy is unavailable"
       },
       "sa": {
         "status": "paused",
         "host": "hansardsearch.parliament.sa.gov.au",
-        "checked_at": "2026-11-13T16:19:23.683882+00:00",
+        "checked_at": "2026-11-14T16:20:24.448705+00:00",
         "reason": "HTTP 403 verified 2026-10-10; permission requested"
       }
     },
@@ -315,13 +315,134 @@
     "senate_backfill_enabled": true,
     "federal_hansard_coverage": {
       "expected_years": [
+        1993,
+        1994,
+        1995,
+        1996,
+        1997,
+        1998,
+        1999,
+        2000,
+        2001,
+        2002,
+        2003,
+        2004,
+        2005,
+        2006,
+        2007,
+        2008,
+        2009,
+        2010,
+        2011,
+        2012,
+        2013,
         2014,
         2015,
         2016,
         2017,
-        2018
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026
       ],
+      "senate_rows": {
+        "1993": 0,
+        "1994": 0,
+        "1995": 0,
+        "1996": 0,
+        "1997": 0,
+        "1998": 0,
+        "1999": 0,
+        "2000": 0,
+        "2001": 0,
+        "2002": 0,
+        "2003": 0,
+        "2004": 0,
+        "2005": 0,
+        "2006": 3098,
+        "2007": 2287,
+        "2008": 2805,
+        "2009": 2744,
+        "2010": 2415,
+        "2011": 3652,
+        "2012": 3540,
+        "2013": 2323,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 10602,
+        "2020": 12310,
+        "2021": 13503,
+        "2022": 9220,
+        "2023": 16037,
+        "2024": 14558,
+        "2025": 2984,
+        "2026": 4110
+      },
+      "senate_published_rows": {
+        "1993": 0,
+        "1994": 0,
+        "1995": 0,
+        "1996": 0,
+        "1997": 0,
+        "1998": 0,
+        "1999": 0,
+        "2000": 0,
+        "2001": 0,
+        "2002": 0,
+        "2003": 0,
+        "2004": 0,
+        "2005": 0,
+        "2006": 3098,
+        "2007": 2287,
+        "2008": 2805,
+        "2009": 2744,
+        "2010": 2415,
+        "2011": 3652,
+        "2012": 3540,
+        "2013": 2323,
+        "2014": 0,
+        "2015": 0,
+        "2016": 0,
+        "2017": 0,
+        "2018": 0,
+        "2019": 10602,
+        "2020": 12310,
+        "2021": 13503,
+        "2022": 9220,
+        "2023": 16037,
+        "2024": 14558,
+        "2025": 2984,
+        "2026": 4110
+      },
+      "backfill_pending_days_by_year": {
+        "2014": 63,
+        "2015": 60,
+        "2016": 42,
+        "2017": 56,
+        "2018": 58
+      },
       "empty_senate_years": [
+        1993,
+        1994,
+        1995,
+        1996,
+        1997,
+        1998,
+        1999,
+        2000,
+        2001,
+        2002,
+        2003,
+        2004,
+        2005,
         2014,
         2015,
         2016,
@@ -329,21 +450,26 @@
         2018
       ],
       "unpublished_senate_years": [
+        1993,
+        1994,
+        1995,
+        1996,
+        1997,
+        1998,
+        1999,
+        2000,
+        2001,
+        2002,
+        2003,
+        2004,
+        2005,
         2014,
         2015,
         2016,
         2017,
         2018
       ],
-      "checked_at": "2026-11-14",
-      "method": "Live Senate search checks supplied for the repair lane; the nightly replaces this with read-only year counts and its normal speech-sync checkpoint.",
-      "backfill_pending_days_by_year": {
-        "2014": 63,
-        "2015": 60,
-        "2016": 42,
-        "2017": 56,
-        "2018": 58
-      }
+      "checked_at": "2026-11-14T16:44:44.997812+00:00"
     }
   },
   "enrichment": {
