@@ -13,6 +13,18 @@ import {
 import { type Centre3D, clusterCentres3D, ForceSim3D, type SimNode3D } from './force3d.ts'
 import { ACCENT, CLUSTER_COLOURS, SURFACE } from './palette.ts'
 
+/** The same layout ticks, with opportunities to yield between short batches. */
+export function* settleTicks(sim: Pick<ForceSim3D, 'tick'>, ticks = 300, now = () => performance.now()): Generator<void, void, unknown> {
+  let started = now()
+  for (let i = 0; i < ticks; i++) {
+    sim.tick(1)
+    if (i + 1 < ticks && now() - started >= 8) {
+      yield
+      started = now()
+    }
+  }
+}
+
 // ---------------------------------------------------------------------------
 // The money map's 3D engine - ported from corpuskit's map3d-engine.ts.
 //
@@ -645,6 +657,8 @@ export class KnowledgeMapEngine {
   private paused = false
   private resizeObserver: ResizeObserver
   private disposed = false
+  private dataGeneration = 0
+  private preparingData = false
   private width = 1
   private height = 1
 
@@ -900,6 +914,31 @@ export class KnowledgeMapEngine {
   // -------------------------------------------------------------------
 
   setData(data: EngineData) {
+    this.dataGeneration++
+    this.preparingData = false
+    const steps = this.setDataSteps(data)
+    while (!steps.next().done) { /* Interactive updates retain their synchronous contract. */ }
+  }
+
+  /** First layout yields to input and painting, without showing an unsettled scene. */
+  async setDataCooperatively(data: EngineData, isCurrent = () => true): Promise<boolean> {
+    const generation = ++this.dataGeneration
+    this.preparingData = true
+    const steps = this.setDataSteps(data)
+    try {
+      for (;;) {
+        if (this.disposed || generation !== this.dataGeneration || !isCurrent()) return false
+        if (steps.next().done) return true
+        const scheduler = (globalThis as unknown as {scheduler?: {yield?: () => Promise<void>}}).scheduler
+        await (scheduler?.yield ? scheduler.yield() : new Promise<void>(resolve => setTimeout(resolve, 0)))
+      }
+    } finally {
+      steps.return(undefined)
+      if (generation === this.dataGeneration) this.preparingData = false
+    }
+  }
+
+  private *setDataSteps(data: EngineData): Generator<void, void, unknown> {
     this.data = data
     const previous = new Map<string, { x: number; y: number; z: number }>()
     for (const [id, visual] of this.nodeVisuals) {
@@ -962,9 +1001,9 @@ export class KnowledgeMapEngine {
       layout: data.layout,
       centres,
     })
-    // Settle synchronously, like the 2D map - instant, and immune to
-    // background-tab rAF throttling. Live physics then only animates drags.
-    this.sim.tick(300)
+    // Keep the exact 300 ticks and final pose. The initial mount consumes the
+    // batches asynchronously; later filters consume them synchronously.
+    yield* settleTicks(this.sim)
 
     this.clearScene()
 
@@ -2900,6 +2939,7 @@ export class KnowledgeMapEngine {
     if (this.disposed || this.paused) return
     this.frameHandle = requestAnimationFrame(this.frame)
     if (this.contextLost) return
+    if (this.preparingData) { this.lastFrame = now; return }
     const dt = Math.min(64, now - this.lastFrame)
     this.lastFrame = now
     this.frameCount += 1

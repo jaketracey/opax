@@ -251,7 +251,7 @@ def test_real_nightly_status_exposes_shared_growth_and_drives_existing_alert_pat
     body = re.search(r'write_status\(\).*?<<\'PYEOF\'.*?\n(.*?)\nPYEOF',shell,re.S)[1]
     output = tmp_path / 'status.json'
     monkeypatch.setattr(sys, 'argv', ['-',str(output),'ok',night,'nightly',
-                                    datetime.now(timezone.utc).isoformat(),'sha','published','', '0'])
+                                    datetime.now(timezone.utc).isoformat(),'sha','published','', '0', '0'])  # nwarn, nfail
     exec(compile(body,'nightly.write_status','exec'), {})
     status = json.loads(output.read_text())
     assert status['failures'] == [] and status['status'] == 'ok'

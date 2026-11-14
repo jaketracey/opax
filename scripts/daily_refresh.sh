@@ -392,6 +392,17 @@ else
 fi
 run_step federal_coverage "" nice -n 10 "$PY" scripts/federal_hansard_coverage.py \
   --db "$DB" --output "$PIPE/federal-hansard-coverage.json"
+# Read-only coverage after the normal refresh. Keep its exit separate from
+# FAILED_STEPS so publication still completes. nightly.sh consumes the receipt
+# into the existing status-branch alerts, including a missing/timeout receipt.
+if step_selected coverage_watchdog; then
+  rm -f "$PIPE/coverage-report-v1.json"
+  coverage_rc=0
+  timeout --kill-after=2s 50s "$PY" scripts/coverage_watchdog.py \
+    --db "$DB" --state-dir "$PIPE" --sitting-day-manifest-dir "$PIPE/coverage-sitting-days" \
+    >"$PIPE/coverage_watchdog.log" 2>&1 || coverage_rc=$?
+  log "[coverage_watchdog] rc=$coverage_rc; findings in $PIPE/coverage-report-v1.json; log $PIPE/coverage_watchdog.log"
+fi
 
 log "Paused sources: ${PAUSED_STEPS[*]:-none}"
 log "===== daily refresh end ====="

@@ -562,7 +562,7 @@ def test_full_scope_run_writes_the_watchdog_sitting_day_inventory(tmp_path):
             ('nsw_la', '2022-12-01'), ('vic', '2023-05-09')]
     path = growth.write_sitting_manifest('nsw', days, 'calendar', root=tmp_path)
     data = json.loads(path.read_text())
-    assert path.name == 'nsw.json' and data['schema_version'] == 1 and data['lane'] == 'im/nsw-hansard-gap'
+    assert path.name == 'nsw.json' and data['schema_version'] == 1 and data['lane'] == 'im/backfill-joint'
     assert data['evidence'] and data['generated_at'].endswith('+00:00')
     assert data['chambers'] == {'nsw_la': {'2023': ['2023-05-09'], '2024': [], '2025': []},
                                 'nsw_lc': {'2023': [], '2024': ['2024-02-06'], '2025': ['2025-02-11']}}

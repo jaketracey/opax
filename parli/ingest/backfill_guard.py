@@ -307,8 +307,8 @@ class Guard:
 # STATE_DIR/coverage-sitting-days, listing every expected sitting day of the
 # repaired years, held or not. The lane names are the ones the watchdog reads.
 SITTING_MANIFESTS = {
-    'senate': ('senate.json', 'im/senate-backfill', {'senate': range(2014, 2020)}),
-    'nsw': ('nsw.json', 'im/nsw-hansard-gap', {'nsw_la': range(2023, 2026), 'nsw_lc': range(2023, 2026)}),
+    'senate': ('senate.json', 'im/backfill-joint', {'senate': range(2014, 2020)}),
+    'nsw': ('nsw.json', 'im/backfill-joint', {'nsw_la': range(2023, 2026), 'nsw_lc': range(2023, 2026)}),
 }
 
 

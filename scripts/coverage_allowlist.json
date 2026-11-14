@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "reviewed": "2026-11-14",
+  "review_policy": "Each hole owns its review_by. When Jake approves enabling a backfill stage, its lane must update each affected entry's review_by to that hole's completion ETA plus 14 calendar days, and record the ETA and review reason in the same reviewed change. Keep known scheduled fills report-only through that date; alert only when overdue.",
+  "stage_policy": "Jake approved the bounded spend on 14 November 2026. Both backfill stages default on (im/backfill-joint): Senate 10 sitting days and NSW 4 chamber-days a night, skipped on weekly and monthly nights and inside the nightly backfill cutoff, under the shared 5.5 GB growth guard. OPAX_SENATE_BACKFILL=0 or OPAX_NSW_BACKFILL=0 switches a stage off.",
+  "entries": [
+    {
+      "id": "federal-2025-election",
+      "kind": "non_sitting",
+      "chambers": ["representatives", "senate"],
+      "start": "2025-03-28",
+      "end": "2025-07-21",
+      "reason": "Prorogation and election recess before the 48th Parliament first sat on 22 July 2025.",
+      "evidence": "scripts/test_export_drafts.py (lapse on 28 March); scripts/bills_registry/bills_common.py PARL_STARTS"
+    },
+    {
+      "id": "nsw-2019-election-recess",
+      "kind": "non_sitting",
+      "chambers": ["nsw_la", "nsw_lc"],
+      "start": "2018-11-23",
+      "end": "2019-05-06",
+      "reason": "Election recess between the November 2018 sittings and the May 2019 return. This interval is not a missing-sitting claim.",
+      "evidence": "origin/im/hansard-gaps 7a93ad1d0 report, State intervals and calendar-unknown discussion"
+    },
+    {
+      "id": "wa-not-held",
+      "kind": "not_held",
+      "chambers": ["wa_la", "wa_lc"],
+      "start": "1901-01-01",
+      "end": "2027-01-31",
+      "reason": "No WA plenary speech series is held. Review at expiry; this is a corpus boundary, not a non-sitting claim.",
+      "evidence": "origin/im/hansard-gaps 7a93ad1d0 Chamber coverage"
+    },
+    {
+      "id": "tas-not-held",
+      "kind": "not_held",
+      "chambers": ["tas_ha", "tas_lc"],
+      "start": "1901-01-01",
+      "end": "2027-01-31",
+      "reason": "No Tasmanian plenary speech series is held. Review at expiry; this is a corpus boundary, not a non-sitting claim.",
+      "evidence": "origin/im/hansard-gaps 7a93ad1d0 Chamber coverage"
+    },
+    {
+      "id": "nt-not-held",
+      "kind": "not_held",
+      "chambers": ["nt_la"],
+      "start": "1974-01-01",
+      "end": "2027-01-31",
+      "reason": "No NT plenary speech series is held. Review at expiry; this is a corpus boundary, not a non-sitting claim.",
+      "evidence": "origin/im/hansard-gaps 7a93ad1d0 Chamber coverage"
+    },
+    {
+      "id": "senate-2014-apr2019",
+      "kind": "known_being_filled",
+      "chambers": ["senate"],
+      "start": "2014-01-01",
+      "end": "2019-04-03",
+      "review_by": "2027-01-02",
+      "review_reason": "backfill enabled; projected publication finish 19 December 2026 (Sundays skipped) plus 14 days",
+      "lane": "im/backfill-joint",
+      "reason": "Known, being filled: missing Senate historical acquisition. Keep visible without paging while the repair lane reconciles source days.",
+      "evidence": "origin/im/hansard-gaps 7a93ad1d0 repair plan A"
+    },
+    {
+      "id": "nsw-assembly-2023-nov2024",
+      "kind": "known_being_filled",
+      "chambers": ["nsw_la"],
+      "start": "2023-01-01",
+      "end": "2024-11-21",
+      "review_by": "2027-01-23",
+      "review_reason": "backfill enabled; projected publication finish 9 January 2027 (Sundays skipped) plus 14 days",
+      "lane": "im/backfill-joint",
+      "reason": "Known, being filled: NSW Assembly acquisition hole before 22 November 2024. Completion needs the filling lane's sitting-day manifest.",
+      "evidence": "origin/im/hansard-gaps 7a93ad1d0 repair plan N"
+    },
+    {
+      "id": "nsw-council-2023-2025",
+      "kind": "known_being_filled",
+      "chambers": ["nsw_lc"],
+      "start": "2023-01-01",
+      "end": "2025-02-10",
+      "review_by": "2027-01-23",
+      "review_reason": "backfill enabled; projected publication finish 9 January 2027 (Sundays skipped) plus 14 days",
+      "lane": "im/backfill-joint",
+      "reason": "Known, being filled: NSW Council acquisition hole before 11 February 2025. Completion needs the filling lane's sitting-day manifest.",
+      "evidence": "origin/im/hansard-gaps 7a93ad1d0 repair plan N"
+    }
+  ]
+}

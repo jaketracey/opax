@@ -51,6 +51,11 @@ def evaluate(corpus, status, now, max_age=20):
     notes.append(f"nightly status: {status.get('status')} for {status.get('date')}; commit {status.get('commit')}")
     if status.get('status') != 'ok':
         problems.extend(f"last nightly run: {item}" for item in status.get('failures') or ['no failure detail'])
+    # Coverage alerts page without marking the refresh itself failed (nightly.sh).
+    coverage_alerts = status.get('coverage_alerts') or []
+    if not isinstance(coverage_alerts, list):
+        coverage_alerts = ['coverage alerts field is malformed; inspect the nightly status']
+    problems.extend(str(item) for item in coverage_alerts)
     warnings.extend(str(item) for item in status.get('warnings', []))
     warnings.extend(f'Backfill did not complete: {item}' for item in status.get('backfill_failures', []))
     if status.get('backfill', {}).get('stopped'):

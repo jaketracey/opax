@@ -7,6 +7,7 @@
 # (scripts/vm/export_people.sh reads the members table with the sqlite3 CLI; without it the weekly
 # scenarios fail.)
 # OPAX_TEST_FOCUS=evidence-alerts runs only the enabled-build alert/deferral scenarios.
+# OPAX_TEST_FOCUS=coverage runs only the coverage watchdog scenarios.
 # OPAX_TEST_FOCUS=python-environment requires Node and tests its Python child environment.
 #
 # Nothing here touches the network, the real knowledge box, GitHub or the real repo:
@@ -75,6 +76,7 @@ new_sandbox() {
            scripts/handbook_party_service.json scripts/roster_accept.json \
            parli/ingest/tvfy_refresh.py parli/ingest/honest_http.py parli/ingest/state_rosters.py \
            scripts/verify_bill_briefs.py scripts/update_corpus_manifest.py scripts/bump_cache_epoch.py \
+           scripts/coverage_watchdog.py \
            parli/__init__.py parli/arag.py parli/ingest/backfill_guard.py parli/ingest/http.py parli/ingest/user-agent.json parli/ingest/__init__.py parli/ingest/speaker_names.py \
            portal/wrangler.jsonc portal/public/corpus.json; do
     mkdir -p "$seed/$(dirname "$f")"
@@ -248,7 +250,21 @@ with sqlite3.connect(sys.argv[1]) as db:
      'senate','federal',1,0,'affirmative','https://example.test/division');
     INSERT INTO ext_votes VALUES ('federal-senate-1','0','Member 0','Member 0','aye','federal',NULL);
     ''')
+    # The coverage census reads (chamber, date, hearing_type) through its covering index. The
+    # fixture's one speech stays one row (the evidence readiness check counts it): a Senate
+    # sitting day that the fixture calendar below expects.
+    db.executescript('''
+    ALTER TABLE speeches ADD COLUMN chamber TEXT; ALTER TABLE speeches ADD COLUMN date TEXT;
+    ALTER TABLE speeches ADD COLUMN hearing_type TEXT;
+    UPDATE speeches SET chamber='senate', date='2025-09-01';
+    CREATE INDEX idx_speeches_coverage ON speeches(chamber, date, hearing_type);
+    ''')
 PYEOF
+  # The coverage watchdog's fixture inputs: a calendar expecting that one day, and an empty
+  # allowlist (the committed one carries review dates that would page on a later clock).
+  printf '{"expires": "2099-12-31", "days": [{"date": "2025-09-01", "house": false, "senate": true}]}\n' > "$SB/coverage-calendar.json"
+  printf '{"schema_version": 1, "entries": []}\n' > "$SB/coverage-allowlist.json"
+  export OPAX_TEST_COVERAGE_CALENDAR="$SB/coverage-calendar.json" OPAX_TEST_COVERAGE_ALLOWLIST="$SB/coverage-allowlist.json"
   echo '{"tables":{"speeches":{"after":1323635,"pushed":600482,"failed":{}}}}' > "$HOME/.cache/autoresearch/arag_sync_state.json"
   printf 'ARAG_ZONE=aws-ap-southeast-2-1\nARAG_KB_ID=kb-test\nARAG_KB_TOKEN=tokentokentoken\nOPENAUSTRALIA_API_KEY=SECRETVALUE123456\n' > "$REPO/.env"
   printf 'OPAX_MIN_FREE_GB=0\nOPAX_SETTLE_SECONDS=0\n' > "$HOME/.config/opax/nightly.env"
@@ -317,6 +333,15 @@ v.setdefault('9999', {'name': 'New Member', 'party': None, 'jurisdiction': 'fede
 v['_names']['new member'] = ['9999']
 open("portal/public/votes.json", "w").write(json.dumps(v) + "\n")
 PYEOF
+# the real coverage watchdog, run as daily_refresh.sh runs it after the normal refresh
+case "${FAKE_COVERAGE:-run}" in
+  run)
+    rm -f "$PIPE/coverage-report-v1.json"
+    python3 scripts/coverage_watchdog.py --db "$HOME/.cache/autoresearch/parli.db" --state-dir "$PIPE" \
+      --calendar "$OPAX_TEST_COVERAGE_CALENDAR" --allowlist "$OPAX_TEST_COVERAGE_ALLOWLIST" \
+      --cache-root "$HOME/.cache/autoresearch" >"$PIPE/coverage_watchdog.log" 2>&1 || true ;;
+  none) rm -f "$PIPE/coverage-report-v1.json" ;;   # the check never ran, or its timeout killed it
+esac
 if [ "${FAKE_MODE:-ok}" = race ]; then   # someone else pushes to origin while we run
   other=$(mktemp -d); git clone -q "$ORIGIN" "$other"; echo hi > "$other/HUMAN.txt"
   (cd "$other" && git add -A && git commit -q -m "a human commit" && git push -q origin HEAD:main)
@@ -517,6 +542,70 @@ NODEPYEOF
   check "weekly export survives the gate and publication clears its retry debt" bash -c "git --git-dir='$ORIGIN' show main:portal/public/speakers.json | python3 -c 'import json,sys; assert len(json.load(sys.stdin))==101' && python3 -c 'import json; s=json.load(open(\"$HOME/.cache/autoresearch/pipeline/periodic-refresh-v1.json\")); assert \"due\" not in s[\"groups\"][\"weekly\"] and s[\"groups\"][\"weekly\"][\"last_success\"], s'"
 }
 
+# The coverage watchdog fails soft: its findings never mark the refresh failed. An alert
+# goes to status.json's coverage_alerts, which the refresh watchdog pages on; a report is a
+# warning. These run the real scripts/coverage_watchdog.py against the fixture DB.
+cov_status() { # cov_status PYTHON-ASSERTION over s (the published status.json)
+  status_json | python3 -c "import json,sys; s=json.load(sys.stdin); assert $1, s"
+}
+cov_pages() { # cov_pages TEXT: the refresh watchdog turns the published status into a problem naming TEXT
+  status_json | (cd "$SRC" && python3 -c "
+import json, sys
+from datetime import datetime, timezone
+from scripts.refresh_watchdog import evaluate
+s = json.load(sys.stdin)
+problems = evaluate({'refresh': {'checked_at': s['finished']}}, s, datetime.now(timezone.utc))[0]
+assert any(sys.argv[1] in p for p in problems), problems" "$1")
+}
+cov_baseline() { # record last night's census (one day earlier than tonight's) from the fixture DB
+  local before; before=$(python3 -c "from datetime import datetime, timedelta; from zoneinfo import ZoneInfo; print(datetime.now(ZoneInfo('Australia/Sydney')).date() - timedelta(days=2))")
+  (cd "$REPO" && python3 scripts/coverage_watchdog.py --db "$HOME/.cache/autoresearch/parli.db" \
+    --state-dir "$HOME/.cache/autoresearch/pipeline" --calendar "$OPAX_TEST_COVERAGE_CALENDAR" \
+    --allowlist "$OPAX_TEST_COVERAGE_ALLOWLIST" --cache-root "$HOME/.cache/autoresearch" --through "$before") >/dev/null 2>&1
+}
+coverage_scenarios() {
+  echo "== coverage watchdog: alerts page, but never fail the refresh"
+  new_sandbox cov-first
+  FAKE_COVERAGE=none nightly
+  check "first night, no receipt and no baseline: exit 0 and status ok, the refresh published" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q '^Nightly refresh '"
+  check "first night, no receipt: recorded as a warning, no coverage alert" cov_status "s['status']=='ok' and s['coverage_alerts']==[] and any('no receipt or baseline yet' in w for w in s['warnings'])"
+
+  new_sandbox cov-baseline
+  nightly
+  check "first check: exit 0, status ok, no coverage alert" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and s[\"coverage_alerts\"]==[], s'"
+  check "first check: records the baseline only" cov_status "any('coverage baseline recorded' in w for w in s['warnings'])"
+  check "first check: the baseline snapshot is in the state dir" test -s "$HOME/.cache/autoresearch/pipeline/coverage-snapshot-v1.json"
+
+  new_sandbox cov-crash
+  printf 'print("alert\\tpartial output")\nraise SystemExit(3)\n' > "$SB/crash_reader.py"
+  OPAX_COVERAGE_READER="$SB/crash_reader.py" nightly
+  check "reader crash: exit 0, status ok with no refresh failure, the refresh published" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q '^Nightly refresh '"
+  check "reader crash: status ok, one coverage alert names the crashed reader" cov_status "s['status']=='ok' and s['failures']==[] and len(s['coverage_alerts'])==1 and 'coverage status reader failed' in s['coverage_alerts'][0]"
+  check "reader crash: the refresh watchdog pages on it" cov_pages 'coverage status reader failed'
+
+  new_sandbox cov-missing
+  cov_baseline
+  FAKE_COVERAGE=none nightly
+  check "a baseline but no receipt tonight (killed by its timeout): exit 0" test "$NRC" -eq 0
+  check "a baseline but no receipt tonight: status ok, a coverage alert" cov_status "s['status']=='ok' and any('coverage receipt unavailable' in a for a in s['coverage_alerts'])"
+
+  new_sandbox cov-regression
+  cov_baseline
+  # tonight the Senate's one plenary row is gone from the census (it became a committee row)
+  python3 -c "import sqlite3,sys; c=sqlite3.connect(sys.argv[1]); c.execute(\"UPDATE speeches SET hearing_type='committee'\"); c.commit()" "$HOME/.cache/autoresearch/parli.db"
+  nightly
+  check "regression: exit 0 and the refresh still published" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q '^Nightly refresh '"
+  check "regression: status ok, the drop to zero is a coverage alert" cov_status "s['status']=='ok' and s['failures']==[] and any('senate/2025 rows 1 -> 0' in a for a in s['coverage_alerts'])"
+  check "regression: the refresh watchdog pages on it" cov_pages 'senate/2025 rows 1 -> 0'
+}
+
+if [ "${OPAX_TEST_FOCUS:-}" = coverage ]; then
+  coverage_scenarios
+  echo "passed $PASS, failed $FAILN"
+  [ "$FAILN" -eq 0 ]
+  exit $?
+fi
+
 if [ "${OPAX_TEST_FOCUS:-}" = python-environment ]; then
   python_environment_scenario
   echo "passed $PASS, failed $FAILN"
@@ -549,6 +638,7 @@ check "status branch published, says ok" status_is ok
 check "status says the deploy is started by the push" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q 'started by the push'"
 check "status branch is a single parentless commit holding only status.json" bash -c "[ \$(git --git-dir='$ORIGIN' rev-list --count nightly-status) -eq 1 ] && [ \"\$(git --git-dir='$ORIGIN' ls-tree --name-only nightly-status)\" = status.json ]"
 check "local status file says ok" grep -q '"status": "ok"' "$HOME/.cache/autoresearch/pipeline/nightly-last.json"
+check "the real coverage check ran in the refresh and raised no coverage alert" bash -c "test -s '$HOME/.cache/autoresearch/pipeline/coverage-report-v1.json' && git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"coverage_alerts\"]==[], s'"
 check "log file written" test -s "$HOME/.cache/autoresearch/pipeline/nightly-$TODAY.log"
 
 echo "== 2. rerun straight away: checked_at is fresh and nothing else moved, so nothing is committed"
@@ -1398,7 +1488,7 @@ new_sandbox evidence_mismatch
 python3 - "$HOME/.cache/autoresearch/parli.db" <<'PYEOF'
 import sqlite3, sys
 with sqlite3.connect(sys.argv[1]) as db:
-    db.execute('INSERT INTO speeches VALUES(2)')
+    db.execute('INSERT INTO speeches(speech_id) VALUES(2)')
 PYEOF
 OPAX_TODAY=2026-10-10 nightly
 check "mismatched coverage keeps the night green without export" bash -c "[ '$NRC' -eq 0 ] && [ ! -f '$HOME/evidence.calls' ] && [ -f '$HOME/.cache/autoresearch/pipeline/evidence-refresh-v1.pending' ] && [ \$(grep -c 'WARN: evidence:' '$SB/nightly.out') -eq 1 ]"
@@ -1610,6 +1700,7 @@ FAKE_MODE=paused FAKE_BILLS_MODE=paused nightly
 check "nightly pauses exit 0 and status contains both paused sources" bash -c "[ '$NRC' -eq 0 ] && python3 -c 'import json; d=json.load(open(\"$HOME/.cache/autoresearch/pipeline/nightly-last.json\")); assert d[\"status\"]==\"ok\" and {\"bills\",\"interests_federal\"} <= set(d[\"paused_sources\"]) and \"Paused sources:\" in d[\"summary\"]'"
 check "a refused bill source retains the published bill while votes refresh" bash -c "git --git-dir='$ORIGIN' show main:portal/public/bills/au-federal-t1.json | python3 -c 'import json,sys; assert json.load(sys.stdin)[\"status_as_of\"]==\"2026-09-01\"' && git --git-dir='$ORIGIN' show main:portal/public/votes.json | python3 -c 'import json,sys; assert \"9999\" in json.load(sys.stdin)'"
 
+coverage_scenarios
 evidence_alert_scenarios
 python_environment_scenario
 

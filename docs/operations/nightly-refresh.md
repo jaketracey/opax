@@ -249,6 +249,71 @@ The refresh watchdog separates a current delivery chain from incomplete source c
 source pauses, retained-data warnings and pending periodic retries appear in its annotations
 and job summary. It fails for broken delivery or an unreadable periodic state.
 
+The daily refresh also runs `scripts/coverage_watchdog.py` after its normal work.
+It opens the corpus read-only, counts plenary rows by chamber and date using the
+covering `idx_speeches_coverage(chamber,date,hearing_type)` index, and writes
+`coverage-snapshot-v1.json` and `coverage-report-v1.json` under
+`~/.cache/autoresearch/pipeline/`. These files are runtime state, never repository
+data. Normal `OPAX_ENSURE_INDEXES=1` housekeeping provisions that index once;
+the watchdog refuses an unindexed table scan. Its SQLite budget is 40 seconds,
+with an outer 50-second timeout and two-second kill grace.
+
+`nightly.sh` reads the coverage receipt into separate `COVERAGE_FAILURES` and
+the existing `WARNINGS`. Coverage fails soft: it never marks the refresh failed
+or changes the nightly exit code, and coverage holds do not block periodic
+completion or cause weekly, monthly and FRL acquisition to repeat nightly.
+`nightly-status/status.json` keeps `status` and `failures` for the refresh and
+publishes coverage alerts in their own `coverage_alerts` list. The scheduled
+`refresh-watchdog.yml` run treats each coverage alert as a problem, so its
+failure sends the existing GitHub email. Regressions, a missing receipt once a
+baseline exists (the check failed or its timeout killed it), stale or malformed
+receipts and a crashed status reader all take that alert path. The first night,
+with neither a receipt nor a baseline, is a warning only. Known repair holes and
+thin occupied days appear as warnings in the existing annotations and job
+summary. A standalone daily run only logs and writes its receipt, as it has no
+status publisher of its own. `scripts/vm/test_nightly.sh` runs the real check in
+its fake refresh (`OPAX_TEST_FOCUS=coverage` runs only those scenarios).
+
+The first successful night records a baseline without paging. Later nights
+compare chamber and chamber-year rows and held speech-days with the previous
+successful snapshot. A loss to zero or by more than 50% pages, even inside a
+known repair interval. Same-day retries retain the prior-night comparison;
+missing intervening snapshots are reported. A regression stays open until its
+metric reaches the recorded recovery floor or a bounded, reviewed accepted
+regression acknowledges that specific removal. Later drops cannot reuse the
+acknowledgement. Completed dates use Australia/Sydney, not the host's UTC day.
+New or longer runs of five zero expected dates page; unchanged runs are reported.
+Positive days below 10% of the whole chamber's median are report-only.
+
+Expected dates come from the committed federal calendar, optional local
+`hansard/hansard-xml/all-sitting-days.csv`, cached `votes_state/nsw/year_*.json`,
+optional `--expected-days chamber-date.csv` inputs, and filling-lane manifests
+under `$PIPE/coverage-sitting-days/`. The backfill stages (`im/backfill-joint`) write `senate.json`
+(2014-2019) and `nsw.json` (both chambers, 2023-2025).
+The daily check explicitly reads that directory when files are present.
+No calendar is acquired by the watchdog. Missing denominators are null, not
+100% coverage. The bounded
+reviewed exceptions, their reasons, end dates and repair lane tags are in
+`scripts/coverage_allowlist.json`. Recesses remove expected dates; the WA,
+Tasmanian and NT corpus boundaries page for review after 31 January 2027.
+Known holes through 3 April 2019 (Senate), 21 November 2024 (NSW Assembly) and
+10 February 2025 (NSW Council) remain visible until all evidenced dates in every
+affected chamber-year are held. If any year
+has no expected evidence, completion remains unverified and the warning stays.
+Resolution is recorded automatically; subsequent loss of those dates pages.
+Jake approved the backfill spend and both stages default on. Each known hole's
+review date is its projected publication finish plus 14 days: Senate 2 January
+2027 (finish 19 December 2026), both NSW chambers 23 January 2027 (finish
+9 January 2027), with Sundays skipped. Known scheduled fills remain report-only
+through their review dates; overdue unresolved holes page. The lane tag is
+`im/backfill-joint`.
+The [repair manifest and acknowledgement contract](coverage-watchdog.md) defines
+the file format and accepted-regression fields. It recommends that the hub build
+the covering index by hand on the box before merging, about four minutes once.
+
+Offline reproduction, live sanity checks and index/runtime evidence are in
+[`2026-11-14-coverage-watchdog.md`](../reports/2026-11-14-coverage-watchdog.md).
+
 The `divisions` and `seovotes` groups have independent validation, rollback and staging.
 Both exporters use a read-only database transaction. `divisions/index.json` has schema 2
 and explicit `coverage.retained_count`, `retained_by_reason`, member coverage and source counts.
