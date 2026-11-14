@@ -5,9 +5,13 @@ name: Go back one screen
 # gives it none: it reads as the previous screen's title, or "Back" when that
 # does not fit. BACK names that title (escaped here for the regex). The tap is
 # kept above the tab bar, so a missing back button fails here rather than
-# tapping a tab of the same name, which would pop to the root and pass. On
-# iPad (tab bar at the top) or a screen with no tab bar, the iOS 18 tap fails
-# outright; iOS 26 taps BackButton and is unaffected. (A swipe from the left
+# tapping a tab of the same name, which would pop to the root and pass.
+# `index: 0` is the topmost match: Maestro 2.10 sorts the matches by y, then
+# x, before it applies an index (Filters.INDEX_COMPARATOR), whatever order
+# `above` returns them in. So the bar's button wins over a row or heading
+# lower down with the same text. On iPad (tab bar at the top) or a screen
+# with no tab bar, the iOS 18 tap fails outright; iOS 26 taps BackButton and
+# is unaffected. (A swipe from the left
 # edge did not go back on iOS 18.6: Maestro's drag never starts the edge
 # gesture.) Maestro skips a ${...} whose body holds a "$", so the escape list
 # writes it as \x24.

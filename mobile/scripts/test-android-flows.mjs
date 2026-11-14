@@ -188,6 +188,14 @@ test('Android copies replace iOS back actions and UIKit probes without changing 
   ]);
 });
 
+test('Android support/back.yaml is the back key, not the iOS back button tap', () => {
+  // Flows call support/back.yaml; the iOS copy taps BackButton or the bar's
+  // title, which Android does not have.
+  const [header, steps] = read('support/back.yaml').map((d) => d.toJS());
+  assert.equal(header.name, 'Android go back one screen with the back key');
+  assert.deepEqual(steps, ['back']);
+});
+
 test('prepared launch values retain string semantics in Maestro YAML 1.1', () => {
   for (const name of [
     '66-my-mp-journey.yaml',
