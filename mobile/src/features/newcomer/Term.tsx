@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     paddingTop: rhythm.row,
     paddingBottom: rhythm.line,
     gap: rhythm.line,
-    shadowColor: '#000',
+    shadowColor: colors.ink,
     shadowOpacity: 0.16,
     shadowRadius: 24,
     shadowOffset: { width: 0, height: 8 },

@@ -51,6 +51,13 @@ const routePatterns = new Set([
   '/expense-glossary',
   '/explore',
   '/explore/[tool]',
+  // Newcomer design pass (prototype routes; not for merge as they stand).
+  '/learn',
+  '/learn/[chapter]',
+  '/learn/tracker',
+  '/plain-words',
+  '/welcome/tour',
+  '/welcome/basics',
   '/explore/photo',
   '/explore/tide-table',
   '/explore/years',
