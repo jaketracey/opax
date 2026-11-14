@@ -1203,7 +1203,7 @@
       <h2 id="about-who">Who makes it</h2>
       <p>OPAX is an independent, non-partisan project of Jake Tracey, of
       <a href="https://noice.net.au" rel="noopener">Noice</a>. Noice Pty Ltd publishes OPAX,
-      including the iPhone and iPad app. The speech retrieval uses
+      including the iPhone, iPad and Android app. The speech retrieval uses
       <a href="https://www.progress.com/agentic-rag" rel="noopener">Progress Agentic RAG</a>;
       the portal shares work with <a href="https://corpuskit.org" rel="noopener">CorpusKit</a>.</p>
 
@@ -1515,7 +1515,8 @@
         anonymous error reports when a page goes wrong. They receive your IP address and details
         of your browser, but never the words you type or the answers you get. The app sends
         PostHog counts of how it is used and reports of crashes and errors, which are not linked
-        to you.</li>
+        to you. It sends no advertising identifier and never reads your device's own identifier;
+        it uses a random install ID that isn't linked to you.</li>
         <li>Questions, searches of the record's documents and search summaries go to the services
         that search the record and write answers. OPAX adds no account details to them.</li>
         <li>An account holds your email address and whatever you choose to write or save. Your
@@ -1669,7 +1670,8 @@
 
       <h2 id="privacy-app">In the iPhone, iPad and Android app</h2>
       <p>The OPAX app for iPhone, iPad and Android needs no account to read, search or ask. It has no
-      advertising and no tracking, and sends no device or advertising identifier. Through PostHog,
+      advertising and no tracking. It sends no advertising identifier and never reads your device's
+      own identifier; it uses a random install ID that isn't linked to you. Through PostHog,
       it counts which screens and features are used and sends a report when the app crashes or
       hits an error. These go through opax.com.au, which passes your IP address on to PostHog in
       the United States, as it does for the website. They carry no account details or anything
@@ -1778,7 +1780,9 @@
         setting, the records kept for offline reading, and your conversations with OPAX until you
         sign in. None of these is sent anywhere.</li>
         <li><strong>Nothing else:</strong> no messages, contacts, photos, health, financial or
-        purchase details or device identifiers. Source links open in a Safari view on iPhone
+        purchase details. The app sends no advertising identifier and never reads your device's
+        own identifier; it uses a random install ID that isn't linked to you. Source links open
+        in a Safari view on iPhone
         and iPad, or in a Custom Tab of your browser on Android, which the app cannot read, so it
         records no browsing history.</li>
       </ul>
@@ -2010,7 +2014,7 @@
     <section id="panel-support" class="panel policy-page" hidden aria-labelledby="support-title">
       <div class="ui-page-head">
       <h1 id="support-title">Help with OPAX</h1>
-      <p class="ui-lede">Help with the OPAX website and the OPAX app for iPhone and iPad: how to reach
+      <p class="ui-lede">Help with the OPAX website and the OPAX app for iPhone, iPad and Android: how to reach
       us, how to report a correction, signing in, and deleting your account.</p>
       <p class="ui-lede">The Open Parliamentary Accountability Exchange brings together Australian parliamentary
       speeches, votes, political funding and public disclosures, and links each record to its
@@ -2326,7 +2330,7 @@
 <!-- defer: never block the parser (Lighthouse counted this as render-blocking).
      Deferred scripts still run before DOMContentLoaded, so nothing changes for
      app.js's boot. ?v= is content-hash stamped by scripts/stamp_assets.mjs. -->
-<script src="/spa-shell.js?v=e9ca278cdd" defer></script>
+<script src="/spa-shell.js?v=ccc9827061" defer></script>
 <script src="/navigation.js?v=ef10977b21" defer></script>
 <script src="/quick-search.js?v=1009512e8a" defer></script>
 <script src="/ui-source.js?v=d594622c13" defer></script>

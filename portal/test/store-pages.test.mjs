@@ -24,15 +24,15 @@ test('the privacy page lists exactly the nine App Store and Google Play label ty
   const body = text(panel('privacy'));
   for (const fact of ['None of it is used to track you',
     'In the iPhone, iPad and Android app', 'The OPAX app for iPhone, iPad and Android needs no account',
-    'It has no advertising and no tracking, and sends no device or advertising identifier. Through PostHog, it counts which screens and features are used and sends a report when the app crashes or hits an error. These go through opax.com.au, which passes your IP address on to PostHog in the United States, as it does for the website. They carry no account details or anything you type, are not linked to you, and cannot be turned off in the app.',
-    'The app sends PostHog counts of how it is used and reports of crashes and errors, which are not linked to you.',
+    'It has no advertising and no tracking. It sends no advertising identifier and never reads your device\'s own identifier; it uses a random install ID that isn\'t linked to you. Through PostHog, it counts which screens and features are used and sends a report when the app crashes or hits an error. These go through opax.com.au, which passes your IP address on to PostHog in the United States, as it does for the website. They carry no account details or anything you type, are not linked to you, and cannot be turned off in the app.',
+    'The app sends PostHog counts of how it is used and reports of crashes and errors, which are not linked to you. It sends no advertising identifier and never reads your device\'s own identifier; it uses a random install ID that isn\'t linked to you.',
     'The app\'s App Store privacy label and its Google Play Data safety section list nine kinds of data.',
     'App Store privacy label and Google Play Data safety',
     'The App Store label counts seven kinds as connected to your identity, and Device ID and Crash Data as not linked to you.',
     'Every kind below is collected, and none is shared',
     'deleting your account does not delete them',
     'your device asks for your permission',
-    'no messages, contacts, photos, health, financial or purchase details or device identifiers.',
+    'no messages, contacts, photos, health, financial or purchase details. The app sends no advertising identifier and never reads your device\'s own identifier; it uses a random install ID that isn\'t linked to you. Source links',
     'Source links open in a Safari view on iPhone and iPad, or in a Custom Tab of your browser on Android, which the app cannot read',
     'in the Keychain on an iPhone or iPad, and encrypted with a key kept in the Android Keystore on Android',
     'then your device asks for microphone permission the first time you start a call (on Android, after the app explains why it needs it).',
@@ -42,13 +42,15 @@ test('the privacy page lists exactly the nine App Store and Google Play label ty
     'Community is on the website only', 'Before your first question is sent, Ask asks your permission',
     'nothing is sent until you agree', 'After an answer, Report this answer opens the support page'])
     assert.ok(body.includes(fact), fact);
+  // Jake's Device ID wording (15 Nov), the same in all three places.
+  assert.equal(body.split("sends no advertising identifier and never reads your device's own identifier; it uses a random install ID that isn't linked to you.").length - 1, 3);
   // The app sends PostHog analytics (since 1.1.0) and crash and error reports (1.1.4), on
   // iPhone, iPad and Android; the page covers both stores.
   for (const stale of ['no analytics, no advertising', 'crash-reporting', 'crash reports or device identifiers',
     'The app has no analytics', 'lists seven kinds', 'the seven kinds', 'counts every kind as connected',
     'In the iPhone and iPad app', 'app for iPhone and iPad', 'iOS asks', "device's Keychain",
     'on the website only, in the United States', 'ElevenLabs, Progress Agentic RAG', 'Last updated 13 November 2026',
-    'it counts which screens are used and', 'carry no account details or anything you type, and are not linked to you.'])
+    'it counts which screens are used and', 'sends no device or advertising identifier', 'or device identifiers', 'carry no account details or anything you type, and are not linked to you.'])
     assert.ok(!body.includes(stale), stale);
 });
 
@@ -60,6 +62,10 @@ test('the policy pages name the live contact addresses and the publisher, not an
   }
   assert.match(panel('privacy'), /mailto:privacy@opax\.com\.au/);
   assert.match(text(panel('privacy')), /Noice Pty Ltd publishes it, including the app on the App Store and Google Play, and is responsible for this policy/);
+  // About and the /support lede name all three platforms.
+  assert.ok(text(html).includes('Noice Pty Ltd publishes OPAX, including the iPhone, iPad and Android app.'));
+  assert.ok(text(panel('support')).includes('Help with the OPAX website and the OPAX app for iPhone, iPad and Android: how to reach'));
+  assert.doesNotMatch(text(html), /iPhone and iPad app|app for iPhone and iPad/);
 });
 
 test('support gives help, corrections, answers and the in-app deletion path', () => {
