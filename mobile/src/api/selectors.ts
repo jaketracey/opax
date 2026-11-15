@@ -1442,7 +1442,7 @@ export function billFor(bill: BillDetail, index: BillIndex) {
 }
 /**
  * The sources a seat's members rest on: the ones its rosters, its service
- * terms and its members' identities cite. The seat's whole source list also
+ * terms and its present and past members' identities cite. The seat's whole source list also
  * holds its boundary, election and relation files; an Assembly district with
  * no member recorded (Badgerys Creek, NSW) named the statewide Legislative
  * Council's source under "No member is recorded", cited only by the seat's
@@ -1453,6 +1453,9 @@ function memberSources(seat: ElectorateDetail): Provenance[] {
     ...seat.rosters.flatMap((roster) => roster.sources),
     ...seat.terms.flatMap((term) => term.sources),
     ...seat.representatives.flatMap((member) => member.person.sources),
+    // Past members too: `people` holds only the seat's own members, and an
+    // abolished seat has no present member to cite their identities.
+    ...Object.values(seat.people).flatMap((person) => person.sources),
   ]);
   return Object.entries(seat.sources)
     .filter(([id]) => cited.has(id))

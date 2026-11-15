@@ -1115,6 +1115,7 @@ describe('a seat with no member recorded', () => {
       rosters: unknown[];
       terms: unknown[];
       representatives: unknown[];
+      people: Record<string, unknown>;
       representation_status: string;
       representation_as_of: string | null;
       relations: { sources: string[] }[];
@@ -1132,6 +1133,7 @@ describe('a seat with no member recorded', () => {
     raw.rosters = [];
     raw.terms = [];
     raw.representatives = [];
+    raw.people = {};
     raw.representation_status = 'unknown';
     raw.representation_as_of = null;
     return c.electorateFor(c.decodeElectorate(raw));
@@ -1142,24 +1144,28 @@ describe('a seat with no member recorded', () => {
     expect(empty.representatives.sources).toEqual([]);
     // The seat's own list still holds every file, the Council's included.
     expect(empty.identity.sources.map((s) => s.label)).toContain(council);
-    // A seat with members cites what its rosters, terms and members cite.
-    const detail = c.decodeElectorate(pinned(seat('Grayndler').detail_url));
-    const cited = new Set([
-      ...detail.rosters.flatMap((roster) => roster.sources),
-      ...detail.terms.flatMap((term) => term.sources),
-      ...detail.representatives.flatMap((member) => member.person.sources),
+    // A seat with members cites its service records, roster and identities,
+    // and none of its boundary, election or Census files.
+    const labels = (name: string) =>
+      c
+        .electorateFor(c.decodeElectorate(pinned(seat(name).detail_url)))
+        .representatives.sources.map((s) => s.label)
+        .sort();
+    expect(labels('Grayndler')).toEqual([
+      'OPAX existing parliamentary person identifiers',
+      'OPAX federal roster reconciled against APH, 2026-09-04',
+      'OpenAustralia parliamentary service records',
     ]);
-    const labels = c
-      .electorateFor(detail)
-      .representatives.sources.map((s) => s.label);
-    expect(labels.length).toBeGreaterThan(0);
-    expect(labels.sort()).toEqual(
-      Object.entries(detail.sources)
-        .filter(([id]) => cited.has(id))
-        .map(([, s]) => s.label)
-        .sort(),
-    );
-    expect(labels.some((label) => /boundar/i.test(label))).toBe(false);
+  });
+
+  test('an abolished seat keeps its past members’ identity source', () => {
+    // Higgins has no present member and no roster: only its past members'
+    // identities cite the identifiers file.
+    const detail = c.decodeElectorate(pinned(seat('Higgins').detail_url));
+    expect(detail.representatives).toEqual([]);
+    expect(
+      c.electorateFor(detail).representatives.sources.map((s) => s.label),
+    ).toContain('OPAX existing parliamentary person identifiers');
   });
 
   test('the page says so and draws no source line under it', async () => {
@@ -1184,6 +1190,10 @@ describe('a seat with no member recorded', () => {
       .join(' ');
     expect(words).toContain('No member is recorded for this seat yet.');
     expect(words).not.toContain('Legislative Council');
+    // The caveat the hidden source line carried is said in place.
+    expect(words).toContain(
+      'A date with no recorded member does not establish a vacancy.',
+    );
     await act(async () => r.unmount());
   });
 });

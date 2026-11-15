@@ -483,6 +483,7 @@ export function Screen({
   const clearRail = useClearRailBar();
   const onRail = useRailBar() !== null;
   const wasBacked = useRef(false);
+  const wasOnRail = useRef(false);
   useLayoutEffect(() => {
     // A detail pane must not recolour its parent route's navigation bar.
     if (inPane || nativeRoot) return;
@@ -502,9 +503,15 @@ export function Screen({
       // one), so a paper page there had a darker strip above its paper bar
       // (Methods, Datasets, Portraits, Photo credits). A sheet cannot take
       // the backing view, so the container takes the page's ground instead.
-      ...(onRail ? { contentStyle: { backgroundColor: colors[ground] } } : {}),
+      // Opened out, the stack's own container ground comes back.
+      ...(onRail
+        ? { contentStyle: { backgroundColor: colors[ground] } }
+        : wasOnRail.current
+          ? { contentStyle: undefined }
+          : {}),
     });
     wasBacked.current = backed;
+    wasOnRail.current = onRail;
   }, [setOptions, ground, inPane, nativeRoot, backed, clearRail, onRail]);
   const rest = useClearBarRest();
   const pinnedHere = Platform.OS === 'ios' && !!pinned;

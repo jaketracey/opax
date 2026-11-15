@@ -373,6 +373,9 @@ function ElectorateBar({
   );
 }
 
+const NO_MEMBER_NOTE =
+  'A date with no recorded member does not establish a vacancy.';
+
 /** The menu hook cannot offer to save a seat until its identity is known. */
 const pendingSeat = {
   electorate_id: '',
@@ -852,19 +855,29 @@ function MembersSection({
         directory={directory}
         header={!abolished || !!asof}
       />
-      {/* With no member source there is nothing to cite, and no line. */}
+      {/* With no member source there is nothing to cite, and no line; the
+          caveat that matters most on such a seat is said in place. */}
       {block.sources.length ? (
         <BlockSource
           block={block}
           title="About the members"
           notes={[
             'Election winners and present-day representation can differ.',
-            'A date with no recorded member does not establish a vacancy.',
+            NO_MEMBER_NOTE,
             'Gaps in the history mean the records do not cover that time.',
           ]}
           testID="electorate-representatives-source"
         />
-      ) : null}
+      ) : (
+        <Text
+          wordSafe
+          variant="footnote"
+          tone="inkSoft"
+          testID="electorate-no-member-note"
+        >
+          {NO_MEMBER_NOTE}
+        </Text>
+      )}
     </View>
   );
 }
