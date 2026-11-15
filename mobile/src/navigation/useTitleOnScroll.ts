@@ -130,7 +130,8 @@ export function barTitleShift({
   trailingWidth?: number;
   growth?: number;
 }): number {
-  if (!active || !text) return 0;
+  if (!active || !text || (trailing <= 0 && trailingWidth === undefined))
+    return 0;
   const items =
     trailingWidth ??
     44 + 60 * Math.max(0, trailing - 1) + growth * Math.max(0, trailing);
@@ -409,6 +410,7 @@ export function BarTitle({
       Number.parseInt(String(Platform.Version), 10) >= 26 &&
       minimal &&
       !fallback &&
+      trailing > 0 &&
       trailingWidth !== 0 &&
       safeWidth < 600,
     width: safeWidth,

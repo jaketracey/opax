@@ -1129,6 +1129,61 @@ describe('a title beside the collapsed back button is moved onto the bar’s cen
     t.done();
   });
 
+  test('a long back label that cannot fit beside the title collapses it, and the title stays inside the span', () => {
+    const original = Dimensions.get('window');
+    act(() =>
+      Dimensions.set({ window: { ...original, width: 402, fontScale: 1 } }),
+    );
+    const spy = jest
+      .spyOn(Platform, 'Version', 'get')
+      .mockReturnValue('26.3' as never);
+    const setOptions = jest.fn();
+    act(() => {
+      view = TestRenderer.create(
+        <NavigationContext.Provider value={{ setOptions } as never}>
+          <BarTitle title="A to Z glossary" backTitle="How Parliament works" />
+        </NavigationContext.Provider>,
+      );
+    });
+    act(() =>
+      view!.update(
+        <NavigationContext.Provider value={{ setOptions } as never}>
+          <BarTitle
+            title="A to Z glossary"
+            backTitle="How Parliament works"
+            shown
+          />
+        </NavigationContext.Provider>,
+      ),
+    );
+    // The back label (230 pt) leaves no room beside the title (100 pt).
+    measureBarTitle(view!, {
+      'A to Z glossary': 100,
+      'How Parliament works': 230,
+    });
+    const text = view!.root.findByType(Animated.Text);
+    const box = text.parent!.props as { style: object };
+    const x = StyleSheet.flatten(box.style).transform?.[0]?.translateX as
+      | number
+      | undefined;
+    // It retreats to the collapsed back button, and what is left moves onto
+    // the centre line with its edge well inside Share's reserve (274).
+    expect(setOptions).toHaveBeenLastCalledWith({
+      headerBackButtonDisplayMode: 'minimal',
+    });
+    expect(x).toBe(30);
+    expect(171 + 50 + (x ?? 0)).toBeLessThanOrEqual(274);
+    act(() => view!.unmount());
+    spy.mockRestore();
+    act(() => Dimensions.set({ window: original }));
+  });
+
+  test('a screen with no items on the bar (the glossary) gets no shift', () => {
+    expect(
+      barTitleShift({ active: true, width: 402, text: 100, trailing: 0 }),
+    ).toBe(0);
+  });
+
   test('larger text: the items grow, and the shift follows the same figures', () => {
     // Share and More grow by 6 pt each: reserve 116, span 68 to 262.
     expect(
