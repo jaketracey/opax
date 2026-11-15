@@ -212,6 +212,12 @@ const electorateFields = {
   // Local follows compare these to notice a new election result without
   // reading each seat's detail file.
   latest_election: optional(nullable(date)),
+  // A state lower house dissolved for an election: the election day while
+  // it is dissolved, null once the post-result roster is loaded, and absent
+  // from an index that predates the field (features/today/dissolution).
+  dissolved_for: (v: unknown) =>
+    // Null and absent are different answers here, so both are kept.
+    v === undefined ? undefined : v === null ? null : date(v),
   election_count: optional(count),
 };
 const electorate = shape(electorateFields);

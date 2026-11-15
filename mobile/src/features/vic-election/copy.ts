@@ -17,7 +17,9 @@ export const vicCopy = {
    */
   placeholderShort: 'Suburb or postcode',
   yourDistrict: 'Your district',
-  stateDistrict: 'Your state district',
+  contestIn: (district: string) => `The contest in ${district}`,
+  contestDetail: 'Candidates and the last result',
+  contestDetailEarly: 'The last result in your district',
   findDistrict: 'Find your district',
   findDetail: 'By suburb, postcode or district name',
   dates: 'Key dates',

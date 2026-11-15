@@ -36,8 +36,15 @@ test('names the matched district, and marks a saved copy', () => {
       ]}
     />,
   );
-  expect(words(r)).toContain(d.name);
-  expect(words(r)).toContain('Your state district');
+  // The row is the district's contest, never a second "your state
+  // district" row beside Your representatives.
+  expect(words(r)).toContain(`The contest in ${d.name}`);
+  expect(words(r)).toContain(
+    mockVic.overview.record!.data.candidates_published
+      ? 'Candidates and the last result'
+      : 'The last result in your district',
+  );
+  expect(words(r)).not.toContain('Your state district');
   expect(words(r)).toContain('Saved 12 Nov 2026');
 });
 for (const error of [

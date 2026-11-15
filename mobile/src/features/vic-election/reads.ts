@@ -69,8 +69,9 @@ export class ElectionReads {
     path: string,
     decode: (v: unknown) => T,
     signal?: AbortSignal,
+    force = true,
   ): Promise<RecordResult<T>> {
-    const record = await this.client.get(path, withAbsence(decode), true, {
+    const record = await this.client.get(path, withAbsence(decode), force, {
       absence: true,
       signal,
     });
@@ -94,7 +95,18 @@ export class ElectionReads {
     }
     return record as RecordResult<T>;
   }
-  loadOverview = (): Promise<void> => {
+  loadOverview = (): Promise<void> => this.load(true);
+  /**
+   * A read that adds no request where one is not needed (Today's state
+   * row): it joins a read already in flight, keeps a record already at
+   * hand, and otherwise asks through the catalog cache, where a fresh
+   * saved copy answers and a stale one is revalidated with If-None-Match.
+   * It never forces the network.
+   */
+  loadOverviewShared = (): Promise<void> =>
+    this.pending ??
+    (this.overview.record ? Promise.resolve() : this.load(false));
+  private load(force: boolean): Promise<void> {
     if (this.pending) return this.pending;
     this.pending = (async () => {
       if (!this.overview.record) {
@@ -105,7 +117,12 @@ export class ElectionReads {
       }
       try {
         this.show({
-          record: await this.read(overviewPath, decodeOverview),
+          record: await this.read(
+            overviewPath,
+            decodeOverview,
+            undefined,
+            force,
+          ),
           error: null,
           loading: false,
         });
@@ -133,7 +150,7 @@ export class ElectionReads {
       this.pending = null;
     });
     return this.pending;
-  };
+  }
   seat = (slug: string, signal?: AbortSignal) =>
     this.read(`${overviewPath}/seat/${slug}`, decodeSeat, signal);
   savedSeat = (slug: string) =>
