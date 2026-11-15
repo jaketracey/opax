@@ -1,4 +1,5 @@
 import type { Roster, Slugs } from '../../api/catalog-decoders';
+import { recordedFederalOnly } from '../../api/party-transforms';
 import { rosterPeople, type Answer } from './model';
 
 export type AskPerson = {
@@ -19,7 +20,17 @@ const states: Record<string, string> = {
 };
 const stateName = (raw: string | null | undefined) =>
   raw ? (states[raw.trim().toLowerCase()] ?? raw.trim()) : '';
-/** "Member for Clark, Tasmania" / "Senator for Tasmania", from the roster. */
+/**
+ * "Member for Clark, Tasmania" / "Senator for Tasmania", from the roster.
+ * Ask holds only the roster, whose `current` flag is set for some people
+ * and absent for the rest. "Member for" is said only where it is true,
+ * "Former member for" only where it is false; where it is absent the line
+ * names the seat alone ("Watson, New South Wales", "Senate, Tasmania") and
+ * claims nothing about service. A former federal member who now sits in a
+ * state parliament is flagged current for that seat: Ask has no dated seats
+ * to tell the two apart, so it names the federal seat alone for anyone the
+ * roster also records in a state parliament.
+ */
 export function placeLine(person: Roster['people'][number]): string | null {
   const seats = (person.representation ?? []).filter(
     (r) => r.jurisdiction === 'federal',
@@ -27,13 +38,23 @@ export function placeLine(person: Roster['people'][number]): string | null {
   const seat = seats.at(-1);
   if (!seat) return null;
   const state = stateName(seat.state ?? person.states?.at(-1));
-  const former = person.current === false ? 'Former ' : '';
+  // The roster's `current` means sitting in any parliament it covers. For
+  // someone it also records in a state parliament, true may be the state
+  // seat, so it claims no federal one: the seat is named alone.
+  const sits = person.current === true && recordedFederalOnly(person);
+  const said = (claim: string, former: string, plain: string) =>
+    sits ? claim : person.current === false ? former : plain;
   if (/senate/i.test(seat.chamber))
     return state
-      ? `${former ? 'Former senator' : 'Senator'} for ${state}`
+      ? said(
+          `Senator for ${state}`,
+          `Former senator for ${state}`,
+          `Senate, ${state}`,
+        )
       : null;
   if (!seat.electorate) return null;
-  return `${former ? 'Former member' : 'Member'} for ${seat.electorate}${state ? `, ${state}` : ''}`;
+  const where = `${seat.electorate}${state ? `, ${state}` : ''}`;
+  return said(`Member for ${where}`, `Former member for ${where}`, where);
 }
 /** Roster name → the person row's data; the only names People lists. */
 export function rosterProfiles(roster: Roster, slugs: Slugs) {

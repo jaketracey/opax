@@ -6,7 +6,12 @@ import { topicRoute } from '../../navigation/routes/search';
 import { suggestionList, type Match } from '../search/ranking';
 import type { RecentSearch } from '../search/recent';
 import type { GroupRow } from '../search/requests';
-import { matchRoute, placeLine, type RowSources } from '../search/rows';
+import {
+  matchRoute,
+  placeLine,
+  serviceStatus,
+  type RowSources,
+} from '../search/rows';
 import { scopeLabel, type Scope } from '../search/scopes';
 import type { SearchSources } from '../search/sources';
 
@@ -85,7 +90,9 @@ export function matchItem(match: Match, sources: RowSources): QuickItem {
   let secondary: string | undefined;
   if (match.kind === 'people')
     // Identity guard, as in Search: no place line before the join.
-    secondary = route ? (placeLine(match.item) ?? undefined) : undefined;
+    secondary = route
+      ? (placeLine(match.item, serviceStatus(match.item, sources)) ?? undefined)
+      : undefined;
   else if (match.kind === 'bills')
     secondary = billStatusLabel(match.item.status, billEnding(match.item));
   else if (match.kind === 'electorates')
