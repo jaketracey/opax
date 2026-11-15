@@ -871,6 +871,15 @@ export function pendingHeaderItems(
 }
 
 /**
+ * Bar options for a page that has loaded and has no items of its own. On
+ * the rail that clears the stand-in buttons; elsewhere it changes nothing,
+ * and the invisible spacing stays as it was.
+ */
+export function noHeaderItems() {
+  return railItems() ? headerItems(() => []) : {};
+}
+
+/**
  * Whether bar items sit on a vertical rail right now. Read from the native
  * module's cached snapshot, since the stack's first options are built
  * outside any component.

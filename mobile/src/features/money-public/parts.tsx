@@ -38,7 +38,7 @@ import {
   StatePageProvider,
 } from '../../design/states';
 import { colors, hairline, layout, rhythm } from '../../design/tokens';
-import { headerItems, pageItems } from '../../navigation/chrome';
+import { headerItems, noHeaderItems, pageItems } from '../../navigation/chrome';
 import { openOnWeb } from '../../navigation/external';
 import { canShare, copyRecordLink, shareRecord } from '../../navigation/share';
 import { useFloatingBarFoot } from '../../navigation/floating-bar';
@@ -203,17 +203,21 @@ export function moneyBar(options: {
         ]
       : []),
   ];
+  if (!menu.length && !filters)
+    // Nothing to share, open or filter, and nothing is on its way.
+    return { ...headerItems(undefined), ...noHeaderItems() };
   return headerItems(
-    menu.length || filters
-      ? pageItems({
-          name,
-          share: shareable && !filters ? share : undefined,
-          filters,
-          menu,
-        })
-      : undefined,
+    pageItems({
+      name,
+      share: shareable && !filters ? share : undefined,
+      filters,
+      menu,
+    }),
   );
 }
+
+/** A loaded money page with no path: nothing to share, open or filter. */
+export const noMoneyBar = noHeaderItems;
 
 /** "What has parliament said about {name}?" (journeys/ask.md 14). */
 export const askAbout = (name: string) =>

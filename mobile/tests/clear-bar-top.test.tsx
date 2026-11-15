@@ -518,6 +518,8 @@ describe('no bar colour or hairline under the clear rail bar', () => {
       expect(seen.length).toBeGreaterThan(0);
       for (const colour of seen) expect(grounds).toContain(colour);
       for (const ground of grounds) expect(seen).toContain(ground);
+      // Beside the rail the page's own bar is set last, so it wins.
+      if (edge !== 'unspecified') expect(seen.at(-1)).toBe(grounds[0]);
       for (const call of styled) expect(call.headerShadowVisible).toBe(true);
     },
   );
@@ -600,6 +602,11 @@ test('a page’s own bar colour is backed in that colour under the solid rail ba
           (call.headerStyle as { backgroundColor: unknown }).backgroundColor,
       ),
     ).toEqual(expect.arrayContaining([colors.paper, colors.sunken]));
+    // The page's own paper bar is set last, backed in paper.
+    expect(
+      (coloured.at(-1)!.headerStyle as { backgroundColor: unknown })
+        .backgroundColor,
+    ).toBe(colors.paper);
   } finally {
     act(() => renderer.unmount());
     solid.mockRestore();
