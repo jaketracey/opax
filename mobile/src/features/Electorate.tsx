@@ -21,7 +21,8 @@ import {
 import type { Electorate as Seat } from '../api/catalogs';
 import { ApiError } from '../api/errors';
 import { catalogs } from '../api/runtime';
-import { formatDate } from '../design/format';
+import { useAccessibilitySize } from '../design/accessibility';
+import { formatDate, titleWith, unbroken } from '../design/format';
 import { useHeaderBottom } from '../design/useHeaderBottom';
 import { Icon } from '../design/icon';
 import { confirmAction } from '../design/menu';
@@ -912,8 +913,12 @@ function ElectionRow({
     ? personRoute(profile.slug, winner!.name)
     : undefined;
   const href = electionRoute(seatId, summary.key);
-  // The date joins the title's line and never breaks inside itself.
-  const date = formatDate(summary.date, 'short').replace(/ /g, '\u00a0');
+  // The date joins the title's line and never breaks inside itself. Its
+  // dot goes with it, so a wrap never leaves the dot at a line's end. At
+  // accessibility sizes the title always wraps: the date has its own line
+  // there, with no dot.
+  const stacked = useAccessibilitySize();
+  const date = formatDate(summary.date, 'short');
   const result = winnerResult(record);
   const label = [
     summary.title,
@@ -968,8 +973,17 @@ function ElectionRow({
             accessibilityRole="text"
             testID={`${testID}-title`}
           >
-            {date ? `${summary.title} · ${date}` : summary.title}
+            {date && !stacked ? titleWith(summary.title, date) : summary.title}
           </Text>
+          {date && stacked ? (
+            <Text
+              variant="subsectionTitle"
+              accessibilityRole="text"
+              testID={`${testID}-date`}
+            >
+              {unbroken(date)}
+            </Text>
+          ) : null}
           {summary.winner ? (
             <>
               <RecordNameLink

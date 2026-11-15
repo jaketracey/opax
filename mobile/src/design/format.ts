@@ -199,6 +199,16 @@ export function unbroken(text: string): string {
   return text.replace(/ /g, '\u00a0');
 }
 
+/**
+ * A title with a part after it ("2025 federal election · 3 May 2025"). The
+ * dot goes with the part after it, and that part never breaks inside
+ * itself, so a wrap takes "· 3 May 2025" down whole: a separator never ends
+ * a line. For drawn text only; say the plain words to VoiceOver.
+ */
+export function titleWith(title: string, part: string): string {
+  return `${title} ·\u00a0${unbroken(part)}`;
+}
+
 /** Financial year with an en dash: 2024 → "2024–25". */
 export function formatFinancialYear(startYear: number): string {
   return `${startYear}–${String((startYear + 1) % 100).padStart(2, '0')}`;
