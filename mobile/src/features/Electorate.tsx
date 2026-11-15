@@ -977,9 +977,11 @@ function ElectionRow({
                 href={winnerHref}
                 testID={`${testID}-winner`}
               />
-              {/* The compact party link's touch area reaches below its
-                  text. The result line gives it that room; only a row with
-                  no result reserves it, or the room is an empty band. */}
+              {/* The compact party link's touch area reaches 24 pt below
+                  its text, to 44 pt in all. A row with no result reserves
+                  that room. A row with a result has the result line there
+                  instead of an empty band, and the line takes no touches
+                  (below), so the band under the link is still the link's. */}
               <View style={result ? undefined : styles.party}>
                 <PartyLabel
                   party={summary.winner.party}
@@ -992,9 +994,14 @@ function ElectionRow({
             </>
           ) : null}
           {result ? (
-            <Text wordSafe variant="secondary" testID={`${testID}-result`}>
-              {result}
-            </Text>
+            // A later sibling wins a touch over the party link's reach, so
+            // the result line stands aside: a touch on it lands on the
+            // link where the link reaches, and on the row everywhere else.
+            <View pointerEvents="none" testID={`${testID}-result-frame`}>
+              <Text wordSafe variant="secondary" testID={`${testID}-result`}>
+                {result}
+              </Text>
+            </View>
           ) : null}
         </View>
         <Icon name={symbols.chevron} size={13} maxScale={1.5} tone="inkSoft" />

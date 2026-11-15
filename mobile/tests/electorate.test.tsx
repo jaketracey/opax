@@ -36,6 +36,7 @@ import {
   buttonCapsule,
   controlHeight,
   minimumTarget,
+  textStyles,
 } from '../src/design/tokens';
 import {
   RepresentativeRows,
@@ -414,6 +415,32 @@ test('election rows push the election screen, newest first', async () => {
   for (const row of reserved)
     if (row.minHeight !== 'no party')
       expect(row.minHeight).toBe(row.result ? undefined : minimumTarget);
+  // The link's reach is 24 pt below its text, where the result line is.
+  // Jest cannot hit-test, so this checks what guarantees the touch: the
+  // link asks for that reach, and the result line, a later sibling that
+  // would otherwise win the touch there, takes no touches at all.
+  const reach = firstRow
+    .findAll((n) => typeof n.props.hitSlop === 'object' && !!n.props.onPress)
+    .map((n) => n.props.hitSlop.bottom);
+  expect(reach.length).toBeGreaterThan(0);
+  expect(new Set(reach)).toEqual(
+    new Set([minimumTarget - textStyles.secondary.lineHeight]),
+  );
+  for (const row of electionRows) {
+    const result = row.findAll(
+      (n) =>
+        typeof n.type === 'string' &&
+        n.props.testID === `${row.props.testID}-result`,
+    )[0];
+    if (!result) continue;
+    let frame = result.parent!;
+    while (typeof frame.type !== 'string') frame = frame.parent!;
+    expect(frame.props.testID).toBe(`${row.props.testID}-result-frame`);
+    expect(frame.props.pointerEvents).toBe('none');
+    // Still read: the line is hidden from touches, not from VoiceOver.
+    expect(frame.props.accessibilityElementsHidden).toBeUndefined();
+    expect(frame.props.importantForAccessibility).toBeUndefined();
+  }
   // VoiceOver hears the party's name, as drawn, never the file's code.
   expect(firstRow.props.accessibilityLabel).toMatch(/, Labor\./);
   expect(firstRow.props.accessibilityLabel).not.toMatch(/\bALP\b/);
