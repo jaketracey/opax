@@ -1227,8 +1227,11 @@ describe('a title beside the collapsed back button is moved onto the bar’s cen
       headerBackButtonDisplayMode: 'minimal',
     });
     expect(x).toBeUndefined();
-    // Centred by UIKit, its edge is well inside Share's reserve (274).
-    expect(201 + 100 / 2).toBeLessThanOrEqual(274);
+    // The same answer from the figures alone, and with one item too.
+    expect(barTitleShift({ active: true, width: 402, text: 100 })).toBe(0);
+    expect(
+      barTitleShift({ active: true, width: 402, text: 100, trailing: 1 }),
+    ).toBe(0);
     act(() => view!.unmount());
     spy.mockRestore();
     act(() => Dimensions.set({ window: original }));
@@ -1240,27 +1243,31 @@ describe('a title beside the collapsed back button is moved onto the bar’s cen
     // "Grayndler", 80 pt, beside Share and More: centred, its edge at 241,
     // 41 pt short of the items (282). Not moved.
     expect(shift(80)).toBe(0);
-    // Moved as it was before, its edge would be at 241 + 89, under Share.
-    expect(402 / 2 + 80 / 2 + 89).toBeGreaterThan(402 - 16 - 104);
-    // Up to the gap UIKit keeps: 138 pt is the widest it centres here.
-    expect(shift(138)).toBe(0);
-    expect(shift(139)).toBeGreaterThan(0);
-    // A 143 pt name is set at the leading end (device capture) and moves
-    // onto the centre line, as before.
+    // The line is the largest gap known to be at the leading end, 12 pt:
+    // a 137 pt title has 12.5 pt and is left alone, a 138 pt one has 12
+    // and moves, as the 143 pt name (9.5 pt, device capture) does.
+    expect(shift(137)).toBe(0);
+    expect(shift(138)).toBe(60);
     expect(shift(143)).toBe(55);
     // One item on the bar leaves more room: a 137 pt title is centred.
     expect(shift(137, { trailing: 1 })).toBe(0);
-    // Larger items (above Large) leave less: an 85 pt name drawn at 115 pt
-    // is still at the leading end, and moves.
-    expect(shift(115, { growth: 6 })).toBeGreaterThan(0);
-    expect(shift(114, { growth: 6 })).toBe(0);
-    // Whatever it does, a title never ends past the items' reserve,
-    // wherever UIKit set it: at the leading end (72) when it is moved.
+    // Larger items (above Large) leave less. At AX3 an 85 pt name is drawn
+    // at 114 pt, 12 pt short of them: at the leading end, so it moves, onto
+    // the centre line exactly (72 + 57 + 72 = 201).
+    expect(shift(114, { growth: 6 })).toBe(72);
+    expect(shift(113, { growth: 6 })).toBe(0);
+    // A title that is moved starts at the leading end (72) and never ends
+    // past the items' reserve (274); its centre never passes the bar's.
+    let moved = 0;
     for (let text = 60; text <= 220; text += 1) {
       const by = shift(text);
-      if (by > 0) expect(72 + text + by).toBeLessThanOrEqual(274);
-      else if (text <= 138) expect(201 + text / 2).toBeLessThanOrEqual(274);
+      if (!by) continue;
+      moved += 1;
+      expect(72 + text + by).toBeLessThanOrEqual(274);
+      expect(72 + text / 2 + by).toBeLessThanOrEqual(201);
     }
+    // Every width from 138 to the one that fills the span moves: 138..197.
+    expect(moved).toBe(60);
   });
 
   test('a screen with no items on the bar (the glossary) gets no shift', () => {
