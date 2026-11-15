@@ -6,6 +6,7 @@ import {
   Keyboard,
   Linking,
   Platform,
+  ScrollView,
   StyleSheet,
   Text as NativeText,
   View,
@@ -753,6 +754,15 @@ describe('the bottom search field', () => {
         endCoordinates: { height, screenY, screenX: 0, width: 402 },
       });
       expect(padded(r, reserve(34)).length).toBeGreaterThan(0);
+      // The clearance ends the list above the keyboard, so the scroll view
+      // takes no keyboard inset of its own: both together left a blank
+      // band as tall as the keyboard at the end of the list.
+      expect(
+        r.root
+          .findByType(FieldClearance)
+          .findAllByType(ScrollView)
+          .map((list) => list.props.automaticallyAdjustKeyboardInsets),
+      ).toEqual([false]);
       await act(async () =>
         handlers.get('keyboardWillShow')!(frame(336, screen - 336)),
       );
@@ -797,6 +807,13 @@ describe('the bottom search field', () => {
           r.root.findByType(FieldClearance).findByType(View).props.style,
         ).paddingBottom,
       ).toBeUndefined();
+      // No bottom field: the scroll view's own keyboard inset applies.
+      expect(
+        r.root
+          .findByType(FieldClearance)
+          .findAllByType(ScrollView)
+          .map((list) => list.props.automaticallyAdjustKeyboardInsets),
+      ).toEqual([true]);
       expect(byID(r, 'seat-aec')).not.toHaveLength(0);
       await act(async () => r.unmount());
     },

@@ -85,15 +85,34 @@ function useKeyboardHeight(on: boolean): number {
   return on ? height : 0;
 }
 
-/** The chooser's list, ended above the bottom search field (see above). */
-export function FieldClearance({ children }: { children: ReactNode }) {
+/** The space left for the bottom field with the keyboard down, or 0. */
+function useRestingClearance(): number {
   const safeBottom = useContext(SafeAreaInsetsContext)?.bottom ?? 0;
   const { regular, rule } = useLayout();
-  const resting = bottomFieldClearance(
+  return bottomFieldClearance(
     safeBottom,
     Platform.OS,
     rule === 'pad' || regular,
   );
+}
+
+/**
+ * Whether `FieldClearance` ends the list above the keyboard itself. Then
+ * the list inside it must not take the scroll view's own keyboard inset as
+ * well (`<Screen keyboardInsets={!useFieldClearsKeyboard()}>`): that inset
+ * is worked out once, from the list's frame before it was shortened, and
+ * is not worked out again, so the two together left a blank band as tall
+ * as the keyboard at the end of the list. With no bottom field (iPad,
+ * Android, before iOS 26) nothing here moves for the keyboard, and the
+ * scroll view's own inset is the one that applies.
+ */
+export function useFieldClearsKeyboard(): boolean {
+  return useRestingClearance() > 0;
+}
+
+/** The chooser's list, ended above the bottom search field (see above). */
+export function FieldClearance({ children }: { children: ReactNode }) {
+  const resting = useRestingClearance();
   const keyboard = useKeyboardHeight(resting > 0);
   const clearance = fieldClearanceAboveKeyboard(resting, keyboard);
   const ground = designFlags.groupedSurfaces ? colors.sunken : colors.paper;

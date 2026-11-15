@@ -30,7 +30,7 @@ import {
 import { closeWelcome, markWelcomeSeen } from '../../onboarding/state';
 import type { Directory } from '../your-mp/model';
 import { migratedSeat, useSeat } from '../your-mp/useSeat';
-import { FieldClearance } from './FieldClearance';
+import { FieldClearance, useFieldClearsKeyboard } from './FieldClearance';
 import { LocationRow } from './LocationRow';
 import {
   abolishedLine,
@@ -329,6 +329,9 @@ export function SeatChooser({
     setQuery(text);
     if (text.trim()) setStopKey((n) => n + 1);
   };
+  // The clearance ends the list above the keyboard where there is a bottom
+  // field; there the scroll view must not add its own keyboard inset too.
+  const fieldClearsKeyboard = useFieldClearsKeyboard();
   const search = useListSearchBar({
     placeholder: vic ? vicCopy.placeholder : seatCopy.placeholder,
     onChangeText: typed,
@@ -525,6 +528,7 @@ export function SeatChooser({
       <FieldClearance>
         <Screen
           grouped
+          keyboardInsets={!fieldClearsKeyboard}
           testID={welcome ? 'welcome-seat' : 'seat-sheet'}
           offline={offlineOf(state)}
         >
