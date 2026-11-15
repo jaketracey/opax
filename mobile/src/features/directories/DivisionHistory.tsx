@@ -20,7 +20,9 @@ import {
   RefreshControl,
   SectionList,
   StyleSheet,
+  useWindowDimensions,
   View,
+  type DimensionValue,
 } from 'react-native';
 import { billFoldText } from '../../api/bill-transforms';
 import { ApiError } from '../../api/errors';
@@ -36,17 +38,24 @@ import {
   LinkRow,
   OfflineLine,
   SidebarSafe,
-  Skeleton,
   SourceLine,
   Text,
   useScreenColumn,
 } from '../../design/primitives';
 import { rowMenus, useRowFollow } from '../../design/row-link';
 import { useListSearchBar } from '../../design/search-bar';
-import { StatePageProvider } from '../../design/states';
+import { LoadingStatus, StatePageProvider } from '../../design/states';
 import { symbols } from '../../design/symbols';
 import { Heading } from '../../design/text';
-import { colors, layout, rhythm } from '../../design/tokens';
+import {
+  colors,
+  layout,
+  minimumTarget,
+  radii,
+  rhythm,
+  textStyles,
+  type TextVariant,
+} from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
 import { canonicalUrl, openOnWeb } from '../../navigation/external';
 import { trackShare } from '../../navigation/share';
@@ -219,6 +228,92 @@ export const voteInset = (textColumn: number, width: number) =>
   Math.max(0, Math.min(textColumn, width / 3));
 const VoteInset = createContext(0);
 const ReportInset = createContext<((inset: number) => void) | null>(null);
+/** The bill header's symbol, as `Icon` sizes it. */
+const symbolSize = (fontScale: number) =>
+  Math.round(20 * Math.min(Math.max(fontScale, 1), 1.5));
+/**
+ * The inset before any header has been measured: the symbol and the row's
+ * gap, which is what the measurement returns. The votes are drawn inset from
+ * their first frame (they were drawn at 0, then moved in once measured).
+ */
+export const estimatedVoteInset = (fontScale: number) =>
+  symbolSize(fontScale) + rhythm.tight;
+/** The last measured inset, for the next open. */
+let measuredInset: { inset: number; fontScale: number } | null = null;
+
+/** Bills and votes drawn while the list loads. */
+const BONE_SECTIONS = [3, 2];
+/**
+ * The list while it loads, in the loaded list's own shape, so the first
+ * bill lands where its placeholder stood: a bill header (symbol, a two-line
+ * title, its vote count) and its votes inset under it (stage, where and
+ * when, outcome, the vote bar, the counts) with their separators. Heights
+ * come from the same text styles and row tokens as `LinkRow` and
+ * `DivisionRow`, at the reader's text size.
+ */
+function HistoryBones({ inset }: { inset: number }) {
+  const { fontScale } = useWindowDimensions();
+  const line = (variant: TextVariant) =>
+    textStyles[variant].lineHeight * fontScale;
+  const bone = (width: DimensionValue, height: number, round = false) => (
+    <View
+      style={[styles.bone, { width, height }, round ? styles.boneRound : null]}
+    />
+  );
+  const symbol = symbolSize(fontScale);
+  return (
+    <LoadingStatus
+      accessible
+      accessibilityLabel="Loading votes"
+      testID="division-history-loading"
+    >
+      <View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+      >
+        {BONE_SECTIONS.map((count, section) => (
+          <View key={section}>
+            <View
+              style={[styles.billHeader, styles.boneRow]}
+              testID={`division-history-loading-bill-${section}`}
+            >
+              {bone(symbol, symbol)}
+              <View style={styles.boneBillWords}>
+                {bone('92%', line('body'))}
+                {bone('64%', line('body'))}
+                {bone(56, line('secondary'))}
+              </View>
+            </View>
+            {Array.from({ length: count }, (_, index) => (
+              <View key={index}>
+                {index ? (
+                  <View style={[styles.separator, { marginLeft: inset }]} />
+                ) : null}
+                <View
+                  style={[styles.boneRow, { paddingLeft: inset }]}
+                  testID={`division-history-loading-vote-${section}-${index}`}
+                >
+                  <View style={styles.boneVoteWords}>
+                    {bone('46%', line('rowRecord'))}
+                    {bone('78%', line('secondary'))}
+                    {bone(
+                      76,
+                      Math.max(22, line('capsule') + rhythm.line * 2),
+                      true,
+                    )}
+                    {bone('100%', 8, true)}
+                    {bone('40%', line('secondary'))}
+                  </View>
+                  {bone(8, 13)}
+                </View>
+              </View>
+            ))}
+          </View>
+        ))}
+      </View>
+    </LoadingStatus>
+  );
+}
 
 /** The bill a run of votes belongs to. */
 const BillHeader = memo(function BillHeader({
@@ -289,7 +384,19 @@ export default function DivisionHistory() {
   const list = useRef<SectionList<Division, HistorySection>>(null);
   const column = useScreenColumn();
   const foot = useFloatingBarFoot();
-  const [inset, setInset] = useState(0);
+  const { fontScale } = useWindowDimensions();
+  const [inset, setInset] = useState(() =>
+    measuredInset?.fontScale === fontScale
+      ? measuredInset.inset
+      : estimatedVoteInset(fontScale),
+  );
+  const reportInset = useCallback(
+    (next: number) => {
+      measuredInset = { inset: next, fontScale };
+      setInset(next);
+    },
+    [fontScale],
+  );
   const [text, setText] = useState('');
   const [query, setQuery] = useState('');
   // Android's search view takes the whole bar while it is open, and
@@ -450,6 +557,12 @@ export default function DivisionHistory() {
     />
   ) : null;
 
+  const unavailable =
+    (offline && !record) ||
+    (!!error && !record) ||
+    (!!record && record.total > 0 && record.failed === record.total);
+  // Still loading: the count line's place is held and the rows are bones.
+  const waiting = !loaded && !unavailable;
   const titleRef = useRef<View>(null);
   const scrollTitle = useTitleOnScroll(titleRef, TITLE);
   const header = (
@@ -483,6 +596,22 @@ export default function DivisionHistory() {
             />
           ) : null}
         </View>
+      ) : waiting ? (
+        // The count line's own height, held from the first frame: it was
+        // inserted when the votes arrived and pushed every row down a line.
+        <View
+          style={styles.count}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          testID="division-history-count-pending"
+        >
+          <View>
+            <Text variant="secondary" tabular style={styles.unseen}>
+              {votes(0)}
+            </Text>
+            <View style={[StyleSheet.absoluteFill, styles.bone]} />
+          </View>
+        </View>
       ) : null}
       {record?.failed && record.loaded ? (
         <InlineError
@@ -515,12 +644,7 @@ export default function DivisionHistory() {
         testID="division-history-error"
       />
     ) : !loaded ? (
-      <Skeleton
-        shape="rows"
-        count={6}
-        label="Loading votes"
-        testID="division-history-loading"
-      />
+      <HistoryBones inset={inset} />
     ) : searching ? (
       <ContentUnavailable
         symbol="magnifyingglass"
@@ -615,7 +739,7 @@ export default function DivisionHistory() {
             />
           </View>
         ) : null}
-        <ReportInset.Provider value={setInset}>
+        <ReportInset.Provider value={reportInset}>
           <VoteInset.Provider value={inset}>
             <StatePageProvider refreshing={refreshing}>
               <SectionList
@@ -726,4 +850,22 @@ const styles = StyleSheet.create({
     backgroundColor: colors.dividerSubtle,
   },
   footer: { paddingTop: rhythm.heading, gap: rhythm.block },
+  unseen: { opacity: 0 },
+  bone: {
+    backgroundColor: colors.sunken,
+    borderRadius: radii.bar,
+    borderCurve: 'continuous',
+  },
+  boneRound: { borderRadius: radii.capsule, borderCurve: 'continuous' },
+  // `LinkRow` and `DivisionRow`'s own row: target height, padding and gap.
+  boneRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rhythm.tight,
+    minHeight: minimumTarget,
+    paddingVertical: rhythm.row,
+  },
+  // The header's title starts a gap in from its text column (the probe).
+  boneBillWords: { flex: 1, gap: rhythm.line, paddingLeft: rhythm.tight },
+  boneVoteWords: { flex: 1, gap: rhythm.line },
 });

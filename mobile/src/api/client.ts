@@ -43,6 +43,15 @@ interface GetOptions {
   retries?: number;
   timeoutMs?: number;
   summaryStream?: boolean;
+  /**
+   * False for one screen's bulk read of many files (Votes in parliament
+   * reads every bill with a counted vote, about a thousand): the answer
+   * is used and a saved copy still serves it, but it is not written to
+   * the bounded offline cache. Each write is serialised behind the last
+   * (two file writes a record), and a thousand of them both held the
+   * screen for seconds and evicted every other saved catalog.
+   */
+  persist?: boolean;
 }
 interface ClientOptions {
   /**
@@ -301,6 +310,7 @@ export class ApiClient {
       retries = this.options.retries ?? 2,
       timeoutMs = this.options.timeoutMs ?? 8000,
       summaryStream = false,
+      persist = true,
     }: GetOptions = {},
   ): Promise<RecordResult<T>> {
     if (path.startsWith('/api/community/'))
@@ -527,6 +537,7 @@ export class ApiClient {
             (response.status === 304 ? cached?.etag : undefined),
         };
         cancelled();
+        if (!persist) return result(entry, false);
         // Persistence failure must not turn a successful network read into an error.
         const retained = await this.options.cache
           .put(entry, {

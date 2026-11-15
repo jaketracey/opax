@@ -15,8 +15,25 @@ export interface DivisionRecord {
   savedAt: number;
   partial: boolean;
 }
-// Bounded transport concurrency; retain only the small division projection in
-// memory for back-navigation. No launch work, document/ARAG route or per-row call.
+/** Bill files in flight at once. */
+const CONCURRENCY = 8;
+/**
+ * Every bill with a counted vote, read once and published once.
+ *
+ * The bills index names about a thousand such bills and no single file
+ * carries their votes, so this is a thousand small reads. Two things keep
+ * that short:
+ * - a rolling pool, so one slow file holds one slot, not the seven reads
+ *   queued behind its batch;
+ * - no offline copy of each file (`persist: false`). The cache writes one
+ *   record at a time, two file writes each, and that queue, not the network,
+ *   held the list for 8 s on a local server. A thousand records also pushed
+ *   every other saved catalog out of the 220-record cache. A bill opened on
+ *   its own page is still saved as before.
+ *
+ * Only the small division projection stays in memory for back-navigation.
+ * No launch work, document/ARAG route or per-row call.
+ */
 export async function readDivisionHistory(
   source: Pick<Catalogs, 'bills' | 'bill'>,
   refresh = false,
@@ -42,42 +59,50 @@ export async function readDivisionHistory(
     partial: !!index.partial,
   };
   throwIfAborted(signal);
-  // Bill status dates do not bound their division dates. No batch is a final
+  // Bill status dates do not bound their division dates. No part is a final
   // chronological prefix until every candidate has settled, so publish once.
-  for (let i = 0; i < candidates.length; i += 8) {
-    const batch = await Promise.allSettled(
-      candidates
-        .slice(i, i + 8)
-        .map((b) => source.bill(b.key, refresh, signal)),
-    );
-    throwIfAborted(signal);
-    const files: BillDetail[] = [];
-    for (let j = 0; j < batch.length; j++) {
-      const result = batch[j]!;
-      if (
-        result.status === 'rejected' ||
-        result.value.data.key !== candidates[i + j]!.key
-      ) {
+  const files: (BillDetail | undefined)[] = new Array(candidates.length);
+  let next = 0;
+  let settled = 0;
+  let offline: unknown;
+  const worker = async () => {
+    for (let i = next++; i < candidates.length; i = next++) {
+      try {
+        const result = await source.bill(candidates[i]!.key, refresh, signal, {
+          persist: false,
+        });
+        throwIfAborted(signal);
+        if (result.data.key !== candidates[i]!.key) view.failed++;
+        else {
+          view.loaded++;
+          view.stale ||= result.stale;
+          view.partial ||= !!result.partial;
+          view.savedAt = Math.min(view.savedAt, result.savedAt);
+          files[i] = result.data;
+        }
+      } catch (error) {
+        throwIfAborted(signal);
+        if (error instanceof ApiError && error.code === 'offline')
+          offline ??= error;
         view.failed++;
-        continue;
       }
-      view.loaded++;
-      view.stale ||= result.value.stale;
-      view.partial ||= !!result.value.partial;
-      view.savedAt = Math.min(view.savedAt, result.value.savedAt);
-      files.push(result.value.data);
+      // Saved copies answer without a network turn: let the screen draw.
+      if (++settled % CONCURRENCY === 0)
+        await new Promise<void>((resolve) => setTimeout(resolve, 0));
+      throwIfAborted(signal);
     }
-    view.rows.push(...divisionRows(files));
-    await new Promise<void>((resolve) => setTimeout(resolve, 0));
-  }
-  if (candidates.length && !view.loaded)
-    throw new ApiError('http', 'Bill division records could not be loaded.');
-  throwIfAborted(signal);
-  // view.rows is this function's own accumulator, never a cached catalog.
-  // eslint-disable-next-line no-restricted-syntax
-  view.rows.sort(
-    (a, b) => b.date.localeCompare(a.date) || a.key.localeCompare(b.key),
+  };
+  await Promise.all(
+    Array.from({ length: Math.min(CONCURRENCY, candidates.length) }, worker),
   );
+  if (candidates.length && !view.loaded) {
+    // Nothing saved and no connection reads as that, not as a failed record.
+    if (offline) throw offline;
+    throw new ApiError('http', 'Bill division records could not be loaded.');
+  }
+  throwIfAborted(signal);
+  // Candidate order in, so the rows are the same whichever read lands first.
+  view.rows = divisionRows(files.filter((file) => file !== undefined));
   publish?.(view);
   return view;
 }
