@@ -1,4 +1,4 @@
-import { router, type Href } from 'expo-router';
+import { router, type Href, type NativeStackHeaderItem } from 'expo-router';
 import { NavigationContext } from 'expo-router/react-navigation';
 import {
   useCallback,
@@ -18,7 +18,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import { useLayout } from '../../design/adaptive';
+import { isPad, sizeClassFor, useLayout } from '../../design/adaptive';
 import { Icon } from '../../design/icon';
 import {
   requestFocus,
@@ -37,6 +37,9 @@ import {
   textStyles,
 } from '../../design/tokens';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { headerItems, rootHeaderItems } from '../../navigation/chrome';
+import { RouteOptions } from '../../navigation/preview';
+import { useAccount } from '../account/store';
 import { useAskNow, useOpenAsk } from '../ask/open';
 import { openSuggestedPerson } from '../search/navigation';
 import { useRecentSearches } from '../search/recent';
@@ -53,21 +56,46 @@ import {
   type QuickItem,
   type QuickSection,
 } from './items';
+import { quickSearch, useQuickSearch } from './store';
 
 export const WIDE_SEARCH_PLACEHOLDER = 'Search people, bills, topics';
 const FIELD_WIDTH = 340;
+const BAR_FIELD_WIDTH = 300;
+const BAR_FIELD_MIN = 180;
 const PANEL_WIDTH = 420;
 const PANEL_GAP = 6;
 
 /**
- * Today on regular width (iPad, the unfolded iPhone Duo): a search field at
- * the masthead's top trailing corner, directly under the large title's band,
- * its trailing edge on the content column. Compact windows draw nothing: a
- * phone's Today is unchanged.
+ * The width of the field as a bar item, or 0 when the bar has no room for
+ * it. iPad only: the bar row is shared with the floating tab bar (about
+ * 420 pt, centred) and the account button, so each side of the tabs has
+ * `(window - 420) / 2`, less the button and its margins. A 13-inch iPad in
+ * portrait has about 206 pt; an 11-inch in portrait about 107 pt, too
+ * little, and Today keeps the masthead field. An iPhone, the unfolded Duo
+ * included, never draws the bar item: beside its vertical bar the items
+ * sit on the rail.
+ */
+export function barSearchWidth(width: number, pad = isPad): number {
+  if (!pad || sizeClassFor(width, 'pad') !== 'regular') return 0;
+  const room = Math.floor((width - 420) / 2 - 100);
+  return room >= BAR_FIELD_MIN ? Math.min(BAR_FIELD_WIDTH, room) : 0;
+}
+export function useBarSearchWidth(): number {
+  return barSearchWidth(useWindowDimensions().width);
+}
+
+/**
+ * Today on regular width (iPad, the unfolded iPhone Duo) carries a search
+ * field. Where the bar has room it is Today's own bar item
+ * (`todayBarSearchItem`, with `WideSearchBar` on the page for its dropdown).
+ * Otherwise it is this: the masthead's top trailing corner, directly under
+ * the large title's band, its trailing edge on the content column. Compact
+ * windows draw nothing: a phone's Today is unchanged.
  *
- * It is not level with the title itself: the native navigation bar takes
- * every touch in the large title's band (iPadOS 26.3, measured 15 Nov with
- * a pressable drawn there), so a field there shows but cannot be tapped.
+ * The masthead field is not level with the title itself: the native
+ * navigation bar takes every touch in the large title's band (iPadOS 26.3,
+ * measured 15 Nov with a pressable drawn there), so a field there shows but
+ * cannot be tapped.
  *
  * The field is absolute and of a fixed size, so it is in its place on the
  * first frame and nothing on Today moves for it. Its dropdown is an overlay
@@ -76,8 +104,9 @@ const PANEL_GAP = 6;
  */
 export function WideSearch() {
   const layout = useLayout();
-  if (!layout.regular) return null;
-  return <WideSearchField columnWidth={layout.width} />;
+  const bar = useBarSearchWidth();
+  if (!layout.regular || bar) return null;
+  return <MastheadSearch columnWidth={layout.width} />;
 }
 
 function useScreenFocused() {
@@ -97,18 +126,62 @@ function useScreenFocused() {
   return useSyncExternalStore(subscribe, () => navigation?.isFocused() ?? true);
 }
 
-function WideSearchField({ columnWidth }: { columnWidth: number }) {
+const closePanel = () => {
+  quickSearch.set({ dismissed: true });
+  quickSearch.input.current?.blur();
+};
+
+const holdAnchor = (node: View | null) => {
+  quickSearch.anchor.current = node;
+};
+const holdInput = (node: TextInput | null) => {
+  quickSearch.input.current = node;
+};
+
+/** The capsule and its text field, bound to the shared state. */
+function SearchInput({ width }: { width: number }) {
+  const { text, focused, armed, dismissed } = useQuickSearch();
+  const open = focused && !dismissed && armed;
+  return (
+    <View ref={holdAnchor} style={{ width }} collapsable={false}>
+      <View style={styles.field}>
+        <Icon name={symbols.search} size={18} tone="inkSoft" maxScale={1.3} />
+        <TextInput
+          ref={holdInput}
+          value={text}
+          onChangeText={(next) =>
+            quickSearch.set({ text: next, dismissed: false })
+          }
+          onFocus={() =>
+            quickSearch.set({ armed: true, focused: true, dismissed: false })
+          }
+          onBlur={() => quickSearch.set({ focused: false })}
+          onSubmitEditing={() => quickSearch.submit.current()}
+          accessibilityLabel="Search"
+          accessibilityHint="Suggestions appear below as you type"
+          accessibilityState={{ expanded: open }}
+          placeholder={WIDE_SEARCH_PLACEHOLDER}
+          placeholderTextColor={colors.inkSoft}
+          returnKeyType="search"
+          submitBehavior="submit"
+          autoCapitalize="none"
+          autoCorrect={false}
+          clearButtonMode="while-editing"
+          maxLength={100}
+          maxFontSizeMultiplier={1.5}
+          style={styles.input}
+          testID="today-wide-search-input"
+        />
+      </View>
+    </View>
+  );
+}
+
+function MastheadSearch({ columnWidth }: { columnWidth: number }) {
   const window = useWindowDimensions();
-  const input = useRef<TextInput>(null);
-  const anchor = useRef<View>(null);
-  const [text, setText] = useState('');
-  const [focused, setFocused] = useState(false);
-  // Nothing is read for the dropdown before the field is first used.
-  const [armed, setArmed] = useState(false);
-  // Escape or a tap outside closes the panel; typing opens it again.
-  const [dismissed, setDismissed] = useState(false);
+  const headerBottom = useHeaderBottom();
+  const { armed } = useQuickSearch();
   const screenFocused = useScreenFocused();
-  const submitRef = useRef<() => void>(() => undefined);
   const width = Math.min(FIELD_WIDTH, Math.round(columnWidth * 0.42));
 
   // Cmd-F: this field, when it is on screen; scrolled away, Search as before.
@@ -116,7 +189,7 @@ function WideSearchField({ columnWidth }: { columnWidth: number }) {
     'find',
     () => {
       const seen: { y?: number; height?: number } = {};
-      anchor.current?.measureInWindow?.((_x, y, _w, height) => {
+      quickSearch.anchor.current?.measureInWindow?.((_x, y, _w, height) => {
         seen.y = y;
         seen.height = height;
       });
@@ -127,73 +200,147 @@ function WideSearchField({ columnWidth }: { columnWidth: number }) {
       if (hidden) {
         requestFocus('search');
         router.navigate('/search' as Href);
-      } else input.current?.focus();
+      } else quickSearch.input.current?.focus();
     },
     screenFocused,
   );
-  const close = () => {
-    setDismissed(true);
-    input.current?.blur();
-  };
-  const reset = () => {
-    setText('');
-    setDismissed(false);
-    input.current?.blur();
-    Keyboard.dismiss();
-  };
-  const open = focused && !dismissed && armed;
   return (
     <View
       style={styles.place}
       pointerEvents="box-none"
       testID="today-wide-search"
     >
-      <View ref={anchor} style={{ width }} collapsable={false}>
-        <View style={styles.field}>
-          <Icon name={symbols.search} size={18} tone="inkSoft" maxScale={1.3} />
-          <TextInput
-            ref={input}
-            value={text}
-            onChangeText={(next) => {
-              setText(next);
-              setDismissed(false);
-            }}
-            onFocus={() => {
-              setArmed(true);
-              setFocused(true);
-              setDismissed(false);
-            }}
-            onBlur={() => setFocused(false)}
-            onSubmitEditing={() => submitRef.current()}
-            accessibilityLabel="Search"
-            accessibilityHint="Suggestions appear below as you type"
-            accessibilityState={{ expanded: open }}
-            placeholder={WIDE_SEARCH_PLACEHOLDER}
-            placeholderTextColor={colors.inkSoft}
-            returnKeyType="search"
-            submitBehavior="submit"
-            autoCapitalize="none"
-            autoCorrect={false}
-            clearButtonMode="while-editing"
-            maxLength={100}
-            maxFontSizeMultiplier={1.5}
-            style={styles.input}
-            testID="today-wide-search-input"
-          />
-        </View>
+      <View>
+        <SearchInput width={width} />
         {armed ? (
           <WideSearchPanel
-            q={text}
-            open={open}
-            fieldFocused={focused}
             width={Math.max(width, Math.min(PANEL_WIDTH, columnWidth))}
-            submitRef={submitRef}
-            onClose={close}
-            onEscape={() => setDismissed(true)}
-            onGo={reset}
+            top={headerBottom + rhythm.block + minimumTarget + PANEL_GAP}
           />
         ) : null}
       </View>
+    </View>
+  );
+}
+
+/**
+ * The field as Today's own bar item, for `unstable_headerRightItems`, or
+ * nothing when the bar has no room (`barSearchWidth`).
+ */
+export function todayBarSearchItem(
+  width: number,
+): NativeStackHeaderItem | undefined {
+  return width
+    ? {
+        type: 'custom',
+        element: <BarSearchField width={width} />,
+        hidesSharedBackground: true,
+      }
+    : undefined;
+}
+function BarSearchField({ width }: { width: number }) {
+  return (
+    <View testID="today-bar-search">
+      <SearchInput width={width} />
+    </View>
+  );
+}
+
+/**
+ * In Today's masthead slot, beside `WideSearch`: on iPad it sets Today's
+ * bar items (the field, when the bar has room, then the root's own), and
+ * holds the bar field's dropdown and its Cmd-F. Draws nothing itself; the
+ * dropdown is an overlay placed under the field's measured place.
+ */
+export function WideSearchBar() {
+  return isPad ? <PadBar /> : null;
+}
+function PadBar() {
+  const width = useBarSearchWidth();
+  const signedIn = !!useAccount().status?.signedIn;
+  const item = useMemo(() => todayBarSearchItem(width), [width]);
+  // Today's own bar items: the field, when there is room, then the root's.
+  const options = useMemo(
+    () =>
+      headerItems(() => [
+        ...(item ? [item] : []),
+        ...rootHeaderItems({ segment: '(today)', signedIn }),
+      ]),
+    [item, signedIn],
+  );
+  return (
+    <>
+      <RouteOptions options={options} />
+      {width ? <BarPanelHost fieldWidth={width} /> : null}
+    </>
+  );
+}
+function BarPanelHost({ fieldWidth }: { fieldWidth: number }) {
+  const window = useWindowDimensions();
+  const { armed } = useQuickSearch();
+  const screenFocused = useScreenFocused();
+  const host = useRef<View>(null);
+  const width = Math.max(fieldWidth, Math.min(PANEL_WIDTH, window.width - 32));
+  // Until the field is measured (and where it cannot be): the masthead's
+  // trailing corner, under the bar.
+  const column = useLayout().width;
+  const [measured, setPlace] = useState<{
+    top: number;
+    left: number;
+    windowTop: number;
+  } | null>(null);
+  const place = measured ?? { top: 0, left: column - width, windowTop: 80 };
+  useKeyCommand(
+    'find',
+    () => quickSearch.input.current?.focus(),
+    screenFocused,
+  );
+  // The field is in the bar and this host in the page's scroll content, so
+  // the panel's place is the difference of the two, read as the field takes
+  // focus. A drag on the page puts the keyboard away and closes the panel
+  // (Screen's keyboardDismissMode), so the place never goes stale.
+  useEffect(() => {
+    let was = quickSearch.snapshot().focused;
+    return quickSearch.subscribe(() => {
+      const now = quickSearch.snapshot().focused;
+      if (now === was) return;
+      was = now;
+      if (!now) return;
+      const field: { x?: number; y?: number; w?: number; h?: number } = {};
+      quickSearch.anchor.current?.measureInWindow?.((x, y, w, h) => {
+        Object.assign(field, { x, y, w, h });
+      });
+      const page: { x?: number; y?: number } = {};
+      host.current?.measureInWindow?.((x, y) => {
+        Object.assign(page, { x, y });
+      });
+      const values = [field.x, field.y, field.w, field.h, page.x, page.y];
+      if (!values.every((v) => typeof v === 'number' && Number.isFinite(v)))
+        return;
+      if (!field.w || !field.h) return;
+      const windowTop = field.y! + field.h + PANEL_GAP;
+      setPlace({
+        top: windowTop - page.y!,
+        left: field.x! + field.w - width - page.x!,
+        windowTop,
+      });
+    });
+  }, [width]);
+  return (
+    <View
+      ref={host}
+      style={styles.host}
+      pointerEvents="box-none"
+      collapsable={false}
+      testID="today-bar-search-host"
+    >
+      {armed ? (
+        <WideSearchPanel
+          width={width}
+          top={place.windowTop}
+          fixed={{ top: place.top, left: place.left, right: undefined }}
+        />
+      ) : null}
     </View>
   );
 }
@@ -204,28 +351,27 @@ function WideSearchField({ columnWidth }: { columnWidth: number }) {
  * no room in Today's flow.
  */
 function WideSearchPanel({
-  q,
-  open,
-  fieldFocused,
   width,
-  submitRef,
-  onClose,
-  onEscape,
-  onGo,
+  top,
+  fixed,
 }: {
-  q: string;
-  open: boolean;
-  fieldFocused: boolean;
   width: number;
-  /** The field's Return key runs this: the selection, else the words. */
-  submitRef: { current: () => void };
-  onClose: () => void;
-  onEscape: () => void;
-  /** A destination was chosen: clear the field and put the keyboard away. */
-  onGo: () => void;
+  /** The panel's top edge in the window, for the room above the keyboard. */
+  top: number;
+  /** At this place from the host's corner, instead of under the field. */
+  fixed?: { top: number; left: number; right: undefined };
 }) {
+  const { text: q, focused: fieldFocused, armed, dismissed } = useQuickSearch();
+  const open = fieldFocused && !dismissed && armed;
+  const onClose = closePanel;
+  const onEscape = () => quickSearch.set({ dismissed: true });
+  // A destination was chosen: clear the field and put the keyboard away.
+  const onGo = () => {
+    quickSearch.set({ text: '', dismissed: false });
+    quickSearch.input.current?.blur();
+    Keyboard.dismiss();
+  };
   const window = useWindowDimensions();
-  const headerBottom = useHeaderBottom();
   const ax3 = scopeMenuAt(window.fontScale);
   const { sources } = useSearchSources();
   const recent = useRecentSearches();
@@ -291,7 +437,7 @@ function WideSearchPanel({
     }
   };
   useEffect(() => {
-    submitRef.current = () => {
+    quickSearch.submit.current = () => {
       if (shown && active) run(active.action);
       else if (q.trim()) run({ kind: 'search', q: q.trim(), scope: 'all' });
     };
@@ -365,11 +511,7 @@ function WideSearchPanel({
 
   if (!shown) return null;
   // From the panel's top edge to the keyboard (or the window's foot).
-  const room =
-    window.height -
-    keyboard -
-    (headerBottom + rhythm.block + minimumTarget + PANEL_GAP) -
-    rhythm.block;
+  const room = window.height - keyboard - top - rhythm.block;
   return (
     <>
       {/* a11y-ok(pressable-role): the tap-outside scrim. VoiceOver closes
@@ -384,7 +526,7 @@ function WideSearchPanel({
         testID="today-wide-search-backdrop"
       />
       <View
-        style={[styles.panel, { width }]}
+        style={[styles.panel, { width }, fixed]}
         onAccessibilityEscape={onClose}
         testID="today-wide-search-panel"
       >
@@ -511,6 +653,8 @@ function PanelRow({
 }
 
 const styles = StyleSheet.create({
+  // The bar field's dropdown hangs from this point: the masthead's corner.
+  host: { position: 'absolute', top: 0, left: 0, width: 0, height: 0 },
   // On the masthead's top edge, its trailing edge on the content column.
   place: { position: 'absolute', top: 0, right: 0 },
   field: {

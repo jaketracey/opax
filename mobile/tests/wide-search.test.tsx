@@ -16,7 +16,12 @@ import {
   quickSections,
   suggestionAnnouncement,
 } from '../src/features/quick-search/items';
-import { WideSearch } from '../src/features/quick-search/WideSearch';
+import {
+  WideSearch,
+  WideSearchBar,
+  barSearchWidth,
+} from '../src/features/quick-search/WideSearch';
+import { quickSearch } from '../src/features/quick-search/store';
 import { openSuggestedPerson } from '../src/features/search/navigation';
 import {
   allTopics,
@@ -28,7 +33,9 @@ import { MatchRow } from '../src/features/search/rows';
 import { Masthead } from '../src/features/today/Masthead';
 import { bills, index, manifest, people, roster, slugs } from './pinned';
 
-let mockWidth = 1032;
+// An 11-inch iPad in portrait: regular width, and no room in the bar row,
+// so the field is the masthead's. 1032 (13-inch) has room for the bar item.
+let mockWidth = 834;
 let mockFontScale = 1;
 jest.mock('react-native', () => {
   const actual = jest.requireActual('react-native');
@@ -78,6 +85,17 @@ jest.mock('expo-router', () => {
     useFocusEffect: (effect: () => void) => React.useEffect(effect, [effect]),
   };
 });
+let mockBarOptions: { unstable_headerRightItems?: () => any[] } | undefined;
+jest.mock('../src/navigation/preview', () => ({
+  RouteOptions: ({ options }: { options: typeof mockBarOptions }) => {
+    mockBarOptions = options;
+    return null;
+  },
+}));
+jest.mock('../src/features/account/store', () => ({
+  useAccount: () => ({ status: { signedIn: false } }),
+  accountSnapshot: () => ({ status: { signedIn: false } }),
+}));
 const mockOpenAsk = jest.fn();
 const mockAskNow = jest.fn();
 jest.mock('../src/features/ask/open', () => ({
@@ -107,8 +125,10 @@ const sources = {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockWidth = 1032;
+  mockWidth = 834;
   mockFontScale = 1;
+  mockBarOptions = undefined;
+  quickSearch.reset();
   mockReports = null;
   recentSearches.clear();
   jest
@@ -444,6 +464,102 @@ describe('hardware keyboard', () => {
     await act(async () => backdrop.props.onPress());
     expect(ids(renderer)).not.toContain('today-wide-search-panel');
     await act(async () => renderer.unmount());
+  });
+});
+
+describe("the field as Today's bar item (iPad, where the bar has room)", () => {
+  test('room: 13-inch in both orientations and 11-inch landscape; never 11-inch portrait, a narrow window or an iPhone', () => {
+    expect(barSearchWidth(1032, true)).toBe(206);
+    expect(barSearchWidth(1376, true)).toBe(300);
+    expect(barSearchWidth(1194, true)).toBe(287);
+    expect(barSearchWidth(834, true)).toBe(0);
+    expect(barSearchWidth(600, true)).toBe(0);
+    // The unfolded Duo is an iPhone: its bar items sit on the rail.
+    expect(barSearchWidth(951, false)).toBe(0);
+  });
+
+  async function mountBar() {
+    let page!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      page = TestRenderer.create(
+        <>
+          <WideSearch />
+          <WideSearchBar />
+        </>,
+      );
+    });
+    const items = mockBarOptions!.unstable_headerRightItems!();
+    let bar!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      bar = TestRenderer.create(items[0].element);
+    });
+    return { page, bar, items };
+  }
+
+  test('with room the field is the first bar item, before Account, and the masthead draws none', async () => {
+    mockWidth = 1032;
+    const { page, bar, items } = await mountBar();
+    expect(items[0]).toMatchObject({
+      type: 'custom',
+      hidesSharedBackground: true,
+    });
+    expect(items.at(-1)).toMatchObject({ label: 'Account' });
+    expect(ids(bar)).toContain('today-wide-search-input');
+    expect(ids(page)).not.toContain('today-wide-search');
+    expect(ids(page)).not.toContain('today-wide-search-input');
+    expect(catalogs.suggestionSourcesOnFocus).not.toHaveBeenCalled();
+    await act(async () => {
+      bar.unmount();
+      page.unmount();
+    });
+  });
+
+  test('without room Today keeps its root items and the masthead field', async () => {
+    let page!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      page = TestRenderer.create(
+        <>
+          <WideSearch />
+          <WideSearchBar />
+        </>,
+      );
+    });
+    const items = mockBarOptions!.unstable_headerRightItems!();
+    expect(items.map((item) => item.type)).not.toContain('custom');
+    expect(items.at(-1)).toMatchObject({ label: 'Account' });
+    expect(ids(page)).toContain('today-wide-search-input');
+    await act(async () => page.unmount());
+  });
+
+  test('the dropdown opens over the page for the bar field: rows, arrows, Return and Cmd-F', async () => {
+    mockWidth = 1032;
+    const focusField = jest
+      .spyOn(TextInput.prototype, 'focus')
+      .mockImplementation(() => undefined);
+    const { page, bar } = await mountBar();
+    await act(async () => void dispatchKeyCommand('find'));
+    expect(focusField).toHaveBeenCalledTimes(1);
+    await focus(bar);
+    await type(bar, 'grayndler');
+    // The panel is on the page, not in the bar.
+    expect(ids(bar)).not.toContain('today-wide-search-panel');
+    expect(ids(page)).toContain('today-wide-search-panel');
+    const expected = quickSections({ q: 'grayndler', sources, recents: [] });
+    expect(rows(page).map((node) => node.props.testID)).toEqual(
+      flatItems(expected).map((item) => `today-wide-search-row-${item.key}`),
+    );
+    await act(async () => void dispatchKeyCommand('list-down'));
+    await act(async () => input(bar).props.onSubmitEditing());
+    const top = matchItem(suggestionList('grayndler', sources).top!, sources);
+    expect(router.push).toHaveBeenCalledWith(
+      (top.action as { route: unknown }).route,
+    );
+    expect(input(bar).props.value).toBe('');
+    focusField.mockRestore();
+    await act(async () => {
+      bar.unmount();
+      page.unmount();
+    });
   });
 });
 
