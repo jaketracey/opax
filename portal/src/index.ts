@@ -2,6 +2,8 @@ import {industryName, fy} from '../public/money-scope.js'
 import {ASK_EVIDENCE_RULES} from './ask-writing-rules'
 import {federalPartyMoneyAnswer,federalPartyMoneyResponse} from './ask-money-routing'
 import { withAppBanner } from './app-banner'
+import { newsletterCardOn, TURNSTILE_ORIGIN, withNewsletterCard } from './newsletter-card'
+import { newsletterRoute, purgeNewsletter } from './newsletter'
 import {CONTRACTS_COVERAGE,contractsHubHTML} from '../public/contracts-table.js'
 import {suppliersTableHTML} from '../public/suppliers-table.js'
 import {partyMoneyResponse} from './party-money-table'
@@ -6582,7 +6584,8 @@ const GA = 'https://*.google-analytics.com https://*.analytics.google.com'
 // The Senate's own videos play in YouTube's privacy-enhanced player, framed only after a press
 // (public/video-card.js). The one host, not youtube.com or any wildcard.
 const YOUTUBE_EMBED = 'https://www.youtube-nocookie.com'
-const CSP_PAGE = [
+/** `extra` is one more origin a page may run script from and frame (Turnstile, while the newsletter card is on). */
+const pageCsp = (extra = '') => [
   "default-src 'self'",
   `script-src 'self' 'wasm-unsafe-eval' ${GTM}`,
   "style-src 'self' 'unsafe-inline'",
@@ -6596,7 +6599,13 @@ const CSP_PAGE = [
   "base-uri 'none'",
   "form-action 'self'",
   "frame-ancestors 'none'",
-].join('; ')
+].map(directive => /^(?:script|frame)-src /.test(directive) ? directive + extra : directive).join('; ')
+const CSP_PAGE = pageCsp()
+// While the newsletter card is on (src/newsletter-card.ts), a page may also load
+// Turnstile's script and frame its challenge. One named host, added to nothing else.
+const CSP_PAGE_NEWSLETTER = pageCsp(' ' + TURNSTILE_ORIGIN)
+/** The Turnstile site key while the newsletter card is on, else ''. Read from the deployment's vars on each request; a deployment's vars never change, so every request sets the same value. */
+let newsletterSiteKey = ''
 
 // A JSON or SSE body is never a document, so it needs to load nothing at all.
 const CSP_API = "default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
@@ -6614,18 +6623,20 @@ const NO_STORE_PATHS = new Set(['/api/search-summary', '/api/journey-story', '/a
 
 function withSecurityHeaders(res: Response, url: URL): Response {
   res = withAppBanner(res, url)
+  if (newsletterSiteKey) res = withNewsletterCard(res, url, newsletterSiteKey)
   const isApi = url.pathname.startsWith('/api/')
   // Responses from the ASSETS binding are immutable; re-wrap to edit headers.
   // res.body is passed through unread, so SSE keeps streaming.
   const out = new Response(NULL_BODY_STATUS.has(res.status) ? null : res.body, { status: res.status, statusText: res.statusText, headers: res.headers, ...(res.webSocket ? { webSocket: res.webSocket } : {}) })
   for (const [k, v] of Object.entries(BASE_SECURITY_HEADERS)) out.headers.set(k, v)
-  const isUnsubscribePage = url.pathname === '/api/community/email/unsubscribe' && res.headers.get('content-type')?.startsWith('text/html')
+  // The newsletter's confirm and unsubscribe pages are the same kind of script-free form (src/newsletter.ts).
+  const isUnsubscribePage = (url.pathname === '/api/community/email/unsubscribe' || url.pathname === '/api/newsletter/confirm' || url.pathname === '/api/newsletter/unsubscribe') && res.headers.get('content-type')?.startsWith('text/html')
   // The consent page is script-free and names its own form target (community-oauth.ts); every other sign-in address is data.
   const isOauth = url.pathname.startsWith('/oauth/') || url.pathname.startsWith('/.well-known/oauth-')
   const ownCsp = url.pathname === '/oauth/authorize' ? res.headers.get('content-security-policy') : null
   const isMcpData = (url.pathname === '/mcp' && !res.headers.get('content-type')?.startsWith('text/html')) || url.pathname === '/mcp/member'
-  out.headers.set('content-security-policy', isUnsubscribePage ? CSP_UNSUBSCRIBE : ownCsp ? ownCsp : isApi || isOauth || isMcpData ? CSP_API : CSP_PAGE)
-  if (url.pathname.startsWith('/api/community/') || url.pathname.startsWith('/api/voice/') || isMcpData || url.pathname.startsWith('/oauth/')) { out.headers.set('cache-control', 'no-store'); out.headers.set('referrer-policy', ownCsp ? 'same-origin' : 'no-referrer') }
+  out.headers.set('content-security-policy', isUnsubscribePage ? CSP_UNSUBSCRIBE : ownCsp ? ownCsp : isApi || isOauth || isMcpData ? CSP_API : newsletterSiteKey ? CSP_PAGE_NEWSLETTER : CSP_PAGE)
+  if (url.pathname.startsWith('/api/community/') || url.pathname.startsWith('/api/newsletter/') || url.pathname.startsWith('/api/voice/') || isMcpData || url.pathname.startsWith('/oauth/')) { out.headers.set('cache-control', 'no-store'); out.headers.set('referrer-policy', ownCsp ? 'same-origin' : 'no-referrer') }
   if (url.pathname === '/community' || url.pathname === '/community.html') out.headers.set('referrer-policy', 'no-referrer')
   if (NO_STORE_PATHS.has(url.pathname) && !out.headers.has('cache-control')) {
     out.headers.set('cache-control', 'no-store')
@@ -7450,6 +7461,7 @@ function personTopicsFor(name: string, env: Env, ctx: ExecutionContext): Promise
 export default {
   async fetch(request, env, ctx): Promise<Response> {
     const url = new URL(request.url)
+    newsletterSiteKey = newsletterCardOn(env) ? env.NEWSLETTER_TURNSTILE_SITE_KEY! : ''
     if (url.pathname === '/gov-advertising/ready.json') return withSecurityHeaders(await govAdvertisingReady(request,govAdvertisingReader(env.ASSETS)),url)
     if (url.pathname === '/tax-expenditures/ready.json') return withSecurityHeaders(await taxExpendituresReady(request,taxExpendituresReader(env.ASSETS)),url)
     if (url.pathname === '/api/register/party-money') return withSecurityHeaders(await partyMoneyResponse(request,env.ASSETS),url)
@@ -7581,6 +7593,7 @@ export default {
       return communityResponse(entry)
     }
     if (url.pathname.startsWith('/api/community/')) return communityResponse(await communityRoute(request, env, ctx))
+    if (url.pathname.startsWith('/api/newsletter/')) return communityResponse(await newsletterRoute(request, env, ctx))
     if (url.pathname.startsWith('/api/voice/')) return communityResponse(await voiceRoute(request, env, ctx, async path => {
       const target = new URL(path, env.COMMUNITY_ORIGIN)
       const local = new Request(target, { headers: { 'cf-connecting-ip': 'voice-tools' } })
@@ -7664,6 +7677,8 @@ export default {
       // Expiry and provider-ID cleanup also run while voice/community are paused.
       try {await expireVoiceSessions(env)} catch {console.error(JSON.stringify({event:'voice_housekeeping_failed'}))}
       try {console.log('community-reply-emails', JSON.stringify(await deliverReplyEmails(env)))} catch {console.error(JSON.stringify({event:'community_reply_email_dispatch_failed'}))}
+      // Newsletter retention (docs/NEWSLETTER.md); does nothing while the flag is off.
+      try {await purgeNewsletter(env)} catch {console.error(JSON.stringify({event:'newsletter_purge_failed'}))}
       await warmCatalog(env, _ctx)
       return
     }

@@ -15,6 +15,8 @@ const fields = {
   opax_source_open: ['from_section', 'placement'],
   opax_share: ['kind', 'record_type'],
   opax_press: ['action'],
+  // The newsletter card: which step, on what kind of page. Never the address (docs/NEWSLETTER.md).
+  opax_newsletter: ['action', 'page_type'],
   opax_ask_started: ['from_section', 'page_type'],
   opax_module_click: ['module', 'page_type', 'position'],
   opax_ask_completed: ['from_section', 'duration_ms', 'source_count', 'has_answer', 'is_overview_intent'],
@@ -33,6 +35,7 @@ const CHOICES = {
   opax_source_open: { placement: ['inline', 'sources_pane', 'talk_sources', 'other'] },
   opax_share: { kind: ['record', 'question', 'answer', 'copy_link'], record_type: ['person', 'party', 'bill', 'electorate', 'doc', 'money', 'other'] },
   opax_press: { action: ['asset_download', 'boilerplate_copy'] },
+  opax_newsletter: { action: ['shown', 'submitted', 'dismissed'], page_type: ['home', 'person', 'bill', 'electorate', 'party', 'topic', 'ask', 'search', 'money', 'doc', 'other'] },
 };
 // Pages with no record in their address are counted by name, and only as
 // themselves: any extra segment ("/ask/<words>") is a typed or shared address,

@@ -36,7 +36,8 @@ import { askPageType } from '../public/growth-modules.js';
       ? {...detail.properties, page_type: detail.properties?.page_type || askPageType(location.href)}
       : detail?.properties);
     if (!properties) return;
-    if (!detail.event.startsWith('table_')) {
+    // Newsletter steps are counted by page type alone, with no path.
+    if (!detail.event.startsWith('table_') && detail.event !== 'opax_newsletter') {
       properties.page_path ??= safePath(location.href);
       properties.page_section = sectionOf(properties.page_path);
     }

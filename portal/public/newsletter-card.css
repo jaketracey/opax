@@ -1,0 +1,70 @@
+/* The newsletter sign-up card: an in-flow block above the page footer. It is
+   never fixed or floating, so it covers nothing. */
+.opax-newsletter {
+  flex: none;
+  background: var(--paper-sunken);
+  color: var(--ink);
+  box-shadow: inset 0 var(--border-hairline, 1px) 0 var(--divider-subtle);
+  font: var(--type-metadata);
+}
+.opax-newsletter-inner {
+  box-sizing: border-box;
+  max-width: var(--layout-column-web-max, 1440px);
+  margin-inline: auto;
+  padding: var(--space-group, 1.5rem) clamp(1.25rem, 4vw, 5rem);
+}
+.opax-newsletter-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-tight, 0.5rem); }
+.opax-newsletter h2 { margin: 0; padding-block: 0.5rem; font: var(--type-subheading); }
+.opax-newsletter p { margin: 0 0 0.75rem; max-width: 44rem; }
+.opax-newsletter-form { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.75rem 1rem; margin-bottom: 0.75rem; }
+.opax-newsletter-field { display: flex; flex-direction: column; gap: 0.25rem; flex: 1 1 14rem; max-width: 22rem; }
+.opax-newsletter label { font: var(--type-label); }
+.opax-newsletter input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: var(--size-target, 44px);
+  padding: 0.5rem 0.75rem;
+  border: var(--border-hairline, 1px) solid var(--line-control);
+  border-radius: var(--radius-sm, 4px);
+  background: var(--paper-raised);
+  color: inherit;
+  /* The body role is 16px or more: iOS does not zoom the page on focus. */
+  font: var(--type-body);
+}
+.opax-newsletter-submit {
+  min-height: var(--size-target, 44px);
+  padding: 0.5rem 1.25rem;
+  border: 0;
+  border-radius: var(--radius-sm, 4px);
+  background: var(--navy);
+  color: var(--on-navy);
+  font: var(--type-control);
+  cursor: pointer;
+}
+.opax-newsletter-submit:disabled { opacity: 0.6; cursor: default; }
+.opax-newsletter-check { flex-basis: 100%; }
+.opax-newsletter-check:empty { display: none; }
+.opax-newsletter-status:empty { display: none; }
+.opax-newsletter-status { font: var(--type-strong); }
+.opax-newsletter-error { color: var(--danger); }
+.opax-newsletter-fine { color: var(--ink-soft); }
+.opax-newsletter a { color: var(--bronze-ink); text-decoration: underline; text-underline-offset: 0.15em; }
+.opax-newsletter-dismiss {
+  box-sizing: border-box;
+  display: inline-flex;
+  flex: 0 0 var(--size-target, 44px);
+  align-items: center;
+  justify-content: center;
+  min-width: var(--size-target, 44px);
+  min-height: var(--size-target, 44px);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm, 4px);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.opax-newsletter-dismiss:hover { background: var(--navy-wash); }
+.opax-newsletter-dismiss svg { width: var(--size-icon-md, 20px); height: var(--size-icon-md, 20px); fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+.opax-newsletter :focus-visible { outline: var(--border-focus, 2px) solid var(--bronze-ink); outline-offset: 2px; }
+@media (forced-colors: active) { .opax-newsletter :focus-visible { outline-color: Highlight; } }
