@@ -67,6 +67,7 @@ import { TodayBody } from './today/TodayBody';
 import { VotesBlock } from './today/VotesBlock';
 import { StateSeatCard, stateSeatFor, YourMPCard } from './today/YourMPCard';
 import { useProfilePreload } from './people/profile-preload';
+import { keepCatalog } from '../api/kept-catalogs';
 import { saveChoice } from './your-mp/choice-store';
 import { savedSeatDirectory, useSeat } from './your-mp/useSeat';
 
@@ -279,7 +280,7 @@ export default function Today() {
   useScreenReady('/', ready);
   // Once the body is drawn, the profile catalogs are read from their saved
   // copies in idle time while Today has focus (PF2).
-  useProfilePreload(apiClient, ready, useScreenFocus);
+  useProfilePreload(apiClient, ready, useScreenFocus, keepCatalog);
 
   const order = launch
     ? todayOrder({

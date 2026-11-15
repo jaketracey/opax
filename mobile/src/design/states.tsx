@@ -259,10 +259,17 @@ export interface ProfileBones {
     kind: 'party' | 'seat' | 'official';
     title: string;
     detail?: string;
+    /** False for a row that opens nothing: it has no chevron. */
+    link?: boolean;
   }[];
-  /** Figures under the rows: three tiles, one full-width row, or none. */
-  tiles?: 0 | 1 | 3;
+  /** The figures under the rows: tiles, one alone as a full-width row. */
+  tiles?: readonly (keyof typeof tileBones)[];
 }
+const tileBones = {
+  votes: ['0,000', 'divisions'],
+  interests: ['00', 'interests'],
+  pay: ['$000,000', 'a year in pay'],
+} as const;
 /** A sitting federal member: the party, one seat and the official page. */
 const sittingMemberBones: Required<ProfileBones> = {
   name: 'Member of Parliament',
@@ -274,13 +281,8 @@ const sittingMemberBones: Required<ProfileBones> = {
     { kind: 'seat', title: 'Member for a seat', detail: 'State, since 2020' },
     { kind: 'official', title: 'Parliament of Australia page' },
   ],
-  tiles: 3,
+  tiles: ['votes', 'interests', 'pay'],
 };
-const tileBones = [
-  ['0,000', 'divisions'],
-  ['00', 'interests'],
-  ['$000,000', 'a year in pay'],
-] as const;
 
 /** Detail placeholders follow the same type, row and spacing tokens as content. */
 function DetailSkeleton({
@@ -414,6 +416,8 @@ function DetailSkeleton({
       />
     </View>
   );
+  // A row's chevron: 13 pt, growing with the text to one and a half times.
+  const chevron = <View style={{ width: 13 * Math.min(1.5, fontScale) }} />;
   const centred = large ? undefined : ({ textAlign: 'center' } as const);
   const content = person ? (
     <>
@@ -499,6 +503,9 @@ function DetailSkeleton({
                         paddingVertical: rhythm.row,
                       }}
                     >
+                      {row.kind === 'party' ? (
+                        <View style={{ width: Math.min(16, 10 * fontScale) }} />
+                      ) : null}
                       <View style={{ flex: 1, gap: rhythm.line }}>
                         {ghost(
                           name,
@@ -517,7 +524,7 @@ function DetailSkeleton({
                             )
                           : null}
                       </View>
-                      <View style={{ width: 13 }} />
+                      {row.link === false ? null : chevron}
                     </View>
                   </View>
                 );
@@ -526,7 +533,7 @@ function DetailSkeleton({
             </View>
           ) : null}
         </View>
-        {header.tiles === 1 ? (
+        {header.tiles.length === 1 ? (
           <View
             testID={part('stat-row')}
             style={{
@@ -546,9 +553,9 @@ function DetailSkeleton({
                 '65%',
               )}
             </View>
-            <View style={{ width: 13 }} />
+            {chevron}
           </View>
-        ) : header.tiles ? (
+        ) : header.tiles.length ? (
           <View
             testID={part('stat-strip')}
             style={{
@@ -556,9 +563,9 @@ function DetailSkeleton({
               gap: rhythm.block,
             }}
           >
-            {tileBones.map(([value, label], index) => (
+            {header.tiles.map((tile, index) => (
               <View
-                key={label}
+                key={tile}
                 testID={part(`stat-tile-${index}`)}
                 style={large ? undefined : { flex: 1 }}
               >
@@ -588,14 +595,14 @@ function DetailSkeleton({
                   {ghost(
                     `stat-value-${index}`,
                     <Text wordSafe variant="tileFigure">
-                      {value}
+                      {tileBones[tile][0]}
                     </Text>,
                     '85%',
                   )}
                   {ghost(
                     `stat-label-${index}`,
                     <Text wordSafe variant="footnote">
-                      {label}
+                      {tileBones[tile][1]}
                       {'\u00a0'}
                       <Icon
                         name={symbols.chevron}
