@@ -307,6 +307,9 @@ function SearchContent({
         // leave the content beneath the bar with the large title collapsed.
         key={tabReset}
         testID="search-screen"
+        // With the field active the bar is gone (iOS 26), and rows would
+        // scroll up through the status bar, above the pinned scope control.
+        clipAboveSafeTop={phase !== 'idle'}
         grouped={phase === 'idle'}
         scrollRef={scroll}
         scrollToOverflowEnabled

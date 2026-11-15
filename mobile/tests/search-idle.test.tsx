@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 import TestRenderer from 'react-test-renderer';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import Search from '../src/features/Search';
 import { catalogs } from '../src/api/runtime';
 import { memberSuggestionRoster } from '../src/api/catalog-search';
@@ -284,6 +285,61 @@ describe('Search scroll region on iOS', () => {
       renderer.root.findByType(ScrollView).props.refreshControl.props
         .refreshing,
     ).toBe(true);
+  });
+
+  test('with the field active nothing scrolls above the safe area: a clip, never a fill, and the same scroll view', async () => {
+    let renderer!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      renderer = TestRenderer.create(
+        <SafeAreaInsetsContext.Provider
+          value={{ top: 62, bottom: 34, left: 0, right: 0 }}
+        >
+          {withNavigationOptions(<Search />, (options) => {
+            if (options.headerSearchBarOptions) mockBar.options = options;
+          })}
+        </SafeAreaInsetsContext.Provider>,
+      );
+    });
+    const clip = () =>
+      StyleSheet.flatten(
+        renderer.root.find(
+          (n) =>
+            typeof n.type === 'string' &&
+            n.props.testID === 'screen-safe-top-clip',
+        ).props.style,
+      );
+    const scrollTop = () =>
+      StyleSheet.flatten(renderer.root.findByType(ScrollView).props.style)
+        .marginTop ?? 0;
+    // Browse, under the large title: the bar is there, nothing is cut.
+    const scroll = renderer.root.findByType(ScrollView);
+    expect(clip()).toMatchObject({ marginTop: 0, overflow: 'hidden' });
+    expect(scrollTop()).toBe(0);
+    // Typing: the bar is gone (iOS 26). The page is cut at the status bar's
+    // lower edge, and the scroll view backs up by the same amount, so its
+    // frame and its content do not move.
+    await type('hous');
+    expect(clip()).toMatchObject({ marginTop: 62, overflow: 'hidden' });
+    expect(scrollTop()).toBe(-62);
+    // It cuts; it paints nothing over the content or under a clear bar.
+    expect(Object.keys(clip())).not.toContain('backgroundColor');
+    // The same scroll view: turning the clip on did not remount the page.
+    expect(renderer.root.findByType(ScrollView)).toBe(scroll);
+    // Results (the scope control pinned): still cut.
+    await act(async () =>
+      renderer.root.findByType(SearchSuggestions).props.onSeeAll('people'),
+    );
+    expect(clip().marginTop).toBe(62);
+    expect(scrollTop()).toBe(-62);
+    expect(renderer.root.findByType(ScrollView)).toBe(scroll);
+    // Back to Browse: the bar returns and the cut goes.
+    await type('');
+    await act(async () =>
+      mockBar.options!.headerSearchBarOptions.onCancelButtonPress(),
+    );
+    expect(clip().marginTop).toBe(0);
+    expect(scrollTop()).toBe(0);
+    act(() => renderer.unmount());
   });
 
   test('typing, short results and returning to Browse keep the same unobscured scroll region', async () => {
