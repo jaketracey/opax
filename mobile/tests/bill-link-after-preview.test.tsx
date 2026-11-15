@@ -1,6 +1,7 @@
 import { act, useEffect } from 'react';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import {
+  StackActions,
   getActionFromState,
   getStateFromPath,
 } from 'expo-router/react-navigation';
@@ -8,6 +9,7 @@ import { store } from 'expo-router/build/global-state/router-store';
 import { renderRouter } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { redirectSystemPath } from '../src/app/+native-intent';
+import { dropStalePreviews } from '../src/navigation/stale-previews';
 import { useLinkReadiness } from '../src/navigation/useLinkReadiness';
 
 jest.mock('../src/analytics', () => ({ track: jest.fn() }));
@@ -73,6 +75,7 @@ async function openWarmLink(url: string) {
 function billsStack() {
   let state = store.navigationRef.current!.getRootState() as {
     index: number;
+    key: string;
     routes: { name: string; key: string; state?: unknown }[];
     preloadedRoutes?: unknown[];
   };
@@ -131,5 +134,99 @@ it('a bill link from another tab still opens the bill over the Bills list', asyn
   expect(rendered.getPathname()).toBe('/bill/au-federal-r7534');
   await act(async () => router.back());
   expect(rendered.getPathname()).toBe('/bills');
+  rendered.unmount();
+});
+
+/**
+ * Follow-up (rv-duo-fix7 P3 1): inside the app, `router.replace` and
+ * `router.dismissTo` (and a `Redirect`) reuse a leftover preload with the
+ * peeked record's own params, so they opened the peeked bill. The preload
+ * goes when its peek closes (`usePeekCleanup`, wired in RowLink and tested
+ * in row-link-accessibility); here that cleanup is run as the closed peek
+ * runs it.
+ */
+const peeked = '/(tabs)/(bills)/bill/au-federal-r7105';
+const asked = '/(tabs)/(bills)/bill/au-federal-r7534';
+it.each([
+  ['replace', () => router.replace(asked)],
+  ['dismissTo', () => router.dismissTo(asked)],
+  ['navigate', () => router.navigate(asked)],
+  ['push', () => router.push(asked)],
+] as const)(
+  'router.%s to a bill opens that bill after a closed peek of another',
+  async (_name, go) => {
+    const rendered = renderRouter(app, {
+      initialUrl: '/(tabs)/(bills)/bills',
+    });
+    await act(async () => router.prefetch(peeked));
+    // The peek closes without being opened.
+    await act(async () => {
+      dropStalePreviews();
+    });
+    expect(billsStack().preloadedRoutes).toHaveLength(0);
+    await act(async () => go());
+    expect(rendered.getPathname()).toBe('/bill/au-federal-r7534');
+    expect(rendered.getByTestId('bill-screen').props.children).toBe(
+      'au-federal-r7534',
+    );
+    rendered.unmount();
+  },
+);
+
+/**
+ * Follow-up (P3 2): the reset is built from the state at dispatch time, so
+ * a navigation made just before it is kept, whether it was dispatched (the
+ * state already holds it) or queued through `router` (applied afterwards).
+ */
+it.each([
+  [
+    'dispatched',
+    () =>
+      store.navigationRef.current!.dispatch({
+        ...StackActions.push('bill/[key]', { key: 'au-federal-r7534' }),
+        target: billsStack().key,
+      }),
+  ],
+  ['queued', () => router.push(asked)],
+] as const)(
+  'dropping preloads keeps a navigation %s in the same turn',
+  async (_name, go) => {
+    const rendered = renderRouter(app, {
+      initialUrl: '/(tabs)/(bills)/bills',
+    });
+    const listKey = billsStack().routes[0]!.key;
+    await act(async () => router.prefetch(peeked));
+    await act(async () => {
+      go();
+      // A dispatched push has already taken the preload for its own route.
+      dropStalePreviews();
+    });
+    expect(rendered.getPathname()).toBe('/bill/au-federal-r7534');
+    expect(billsStack().routes.map((route) => route.name)).toEqual([
+      'bills',
+      'bill/[key]',
+    ]);
+    expect(billsStack().routes[0]!.key).toBe(listKey);
+    expect(billsStack().preloadedRoutes).toHaveLength(0);
+    rendered.unmount();
+  },
+);
+
+it('clears preloads in every stack, each from the current state', async () => {
+  const rendered = renderRouter(app, { initialUrl: '/(tabs)/(bills)/bills' });
+  await act(async () => router.prefetch(peeked));
+  await act(async () => router.navigate('/(tabs)/(today)'));
+  await act(async () => router.prefetch('/(tabs)/(bills)/bills'));
+  const preloads = () =>
+    JSON.stringify(store.navigationRef.current!.getRootState()).match(
+      /"preloadedRoutes":\[[^\]]/g,
+    ) ?? [];
+  expect(preloads().length).toBeGreaterThan(0);
+  await act(async () => {
+    expect(dropStalePreviews()).toBe(true);
+  });
+  expect(preloads()).toHaveLength(0);
+  expect(rendered.getPathname()).toBe('/');
+  expect(dropStalePreviews()).toBe(false);
   rendered.unmount();
 });

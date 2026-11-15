@@ -8,6 +8,7 @@ import { Tile } from '../src/design/card';
 import { RowLink } from '../src/design/row-link';
 import { PartyLabel, PersonRow } from '../src/design/people';
 import { partyRoute, personRoute } from '../src/navigation/routes/people';
+import { setLinkContainer } from '../src/navigation/stale-previews';
 
 jest.mock('../src/features/follows/store', () => ({
   useFollows: () => [],
@@ -516,4 +517,76 @@ test('a row link holds its pressed look once it has opened its page, and a selec
   act(() => pressable(chosen).props.onPress());
   expect(select).toHaveBeenCalledTimes(1);
   expect(lit(chosen)).toBe('white');
+});
+
+describe('a row peek', () => {
+  // A stack holding one route a peek preloaded, as the container reports it.
+  let state: { preloadedRoutes: object[] };
+  const dispatch = jest.fn(() => {
+    state = { ...state, preloadedRoutes: [] };
+  });
+  const boundary = (root: ReactTestInstance) =>
+    hosts(root).find((node) => node.props.nativeID === 'preview-boundary')!;
+  beforeEach(() => {
+    Platform.OS = 'ios';
+    jest.useFakeTimers();
+    dispatch.mockClear();
+    state = {
+      ...{ type: 'stack', key: 'stack-bills' },
+      ...{ routes: [{ name: 'bills', key: 'bills-1' }] },
+      preloadedRoutes: [{ name: 'bill/[key]', key: 'bill-peeked' }],
+    };
+    setLinkContainer({
+      isReady: () => true,
+      getRootState: () => state,
+      dispatch,
+    });
+  });
+  afterEach(() => {
+    setLinkContainer(null);
+    jest.useRealTimers();
+  });
+  const row = (
+    <RowLink href="/bill/au-federal-r7105">
+      <Pressable testID="record">
+        <Text>A bill</Text>
+      </Pressable>
+    </RowLink>
+  );
+
+  it('drops what it preloaded once it closes without being opened', () => {
+    const root = render(row);
+    act(() => boundary(root).props.onWillPreviewOpen());
+    act(() => jest.runOnlyPendingTimers());
+    // Open: the preload is the peek's own and stays.
+    expect(dispatch).not.toHaveBeenCalled();
+    act(() => boundary(root).props.onPreviewWillClose());
+    act(() => jest.runOnlyPendingTimers());
+    expect(dispatch).toHaveBeenCalledTimes(1);
+    expect(dispatch.mock.calls[0]).toEqual([
+      expect.objectContaining({
+        type: 'RESET',
+        target: 'stack-bills',
+        payload: expect.objectContaining({
+          preloadedRoutes: [],
+          routes: [{ name: 'bills', key: 'bills-1' }],
+        }),
+      }),
+    ]);
+  });
+
+  it('drops it when the row goes while its peek is open', () => {
+    const root = render(row);
+    act(() => boundary(root).props.onWillPreviewOpen());
+    act(() => mounted.splice(0).forEach((tree) => tree.unmount()));
+    act(() => jest.runOnlyPendingTimers());
+    expect(dispatch).toHaveBeenCalledTimes(1);
+  });
+
+  it('touches nothing for a row that was never peeked', () => {
+    render(row);
+    act(() => mounted.splice(0).forEach((tree) => tree.unmount()));
+    act(() => jest.runOnlyPendingTimers());
+    expect(dispatch).not.toHaveBeenCalled();
+  });
 });
