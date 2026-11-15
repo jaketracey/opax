@@ -13,6 +13,13 @@ export type AskPerson = {
   slug: string;
   party: string | null;
   place: string | null;
+  /**
+   * Every line `place` can be for this person, in a fixed order (the seat
+   * alone, the sitting form, the former form). The row lays all of them out
+   * and shows one, so it is as tall as the tallest from the first frame and
+   * does not move when the dated record sharpens the line.
+   */
+  placeForms?: readonly string[];
 };
 const states: Record<string, string> = {
   nsw: 'New South Wales',
@@ -37,6 +44,32 @@ const stateName = (raw: string | null | undefined) =>
  * to tell the two apart, so it names the federal seat alone for anyone the
  * roster also records in a state parliament.
  */
+/** The three things a person's place line can say, or null with no seat. */
+export function placeForms(
+  person: Roster['people'][number],
+): { current: string; former: string; plain: string } | null {
+  const seats = (person.representation ?? []).filter(
+    (r) => r.jurisdiction === 'federal',
+  );
+  const seat = seats.at(-1);
+  if (!seat) return null;
+  const state = stateName(seat.state ?? person.states?.at(-1));
+  if (/senate/i.test(seat.chamber))
+    return state
+      ? {
+          current: `Senator for ${state}`,
+          former: `Former senator for ${state}`,
+          plain: `Senate, ${state}`,
+        }
+      : null;
+  if (!seat.electorate) return null;
+  const where = `${seat.electorate}${state ? `, ${state}` : ''}`;
+  return {
+    current: `Member for ${where}`,
+    former: `Former member for ${where}`,
+    plain: where,
+  };
+}
 export function placeLine(
   person: Roster['people'][number],
   /**
@@ -46,12 +79,8 @@ export function placeLine(
    */
   status?: PartyStatus,
 ): string | null {
-  const seats = (person.representation ?? []).filter(
-    (r) => r.jurisdiction === 'federal',
-  );
-  const seat = seats.at(-1);
-  if (!seat) return null;
-  const state = stateName(seat.state ?? person.states?.at(-1));
+  const forms = placeForms(person);
+  if (!forms) return null;
   // The roster's `current` means sitting in any parliament it covers. For
   // someone it also records in a state parliament, true may be the state
   // seat, so alone it claims no federal one: the seat is named alone.
@@ -59,19 +88,11 @@ export function placeLine(
   const known: PartyStatus =
     status ??
     (sits ? 'current' : person.current === false ? 'former' : 'unknown');
-  const said = (claim: string, former: string, plain: string) =>
-    known === 'current' ? claim : known === 'former' ? former : plain;
-  if (/senate/i.test(seat.chamber))
-    return state
-      ? said(
-          `Senator for ${state}`,
-          `Former senator for ${state}`,
-          `Senate, ${state}`,
-        )
-      : null;
-  if (!seat.electorate) return null;
-  const where = `${seat.electorate}${state ? `, ${state}` : ''}`;
-  return said(`Member for ${where}`, `Former member for ${where}`, where);
+  return known === 'current'
+    ? forms.current
+    : known === 'former'
+      ? forms.former
+      : forms.plain;
 }
 /**
  * The people catalogue for Ask's place lines: the manifest, then the people
@@ -87,6 +108,25 @@ export async function askPeopleCatalog(
   } catch {
     return null;
   }
+}
+/**
+ * Ask's people rows, in two steps. The rows are shown at once from the
+ * roster (as before the people catalogue was read at all), so a slow
+ * network never holds them back. The people read, started beside the
+ * roster's, then sharpens the place lines in place: the same people in the
+ * same order, each row the same height (`placeForms`). If it fails, the
+ * first rows stand.
+ */
+export async function loadAskProfiles(
+  source: Pick<Catalogs, 'roster' | 'slugs' | 'manifest' | 'people'>,
+  show: (profiles: Map<string, AskPerson>, names: string[]) => void,
+): Promise<void> {
+  const dated = askPeopleCatalog(source);
+  const [roster, slugs] = await Promise.all([source.roster(), source.slugs()]);
+  const names = roster.data.people.map((p) => p.name);
+  show(rosterProfiles(roster.data, slugs.data), names);
+  const people = await dated;
+  if (people) show(rosterProfiles(roster.data, slugs.data, people), names);
 }
 /** Roster name → the person row's data; the only names People lists. */
 /**
@@ -107,6 +147,7 @@ export function rosterProfiles(
   for (const p of roster.people) {
     const slug = known.get(p.name);
     if (!slug) continue;
+    const forms = placeForms(p);
     out.set(p.name, {
       name: p.name,
       slug,
@@ -121,6 +162,9 @@ export function rosterProfiles(
             )
           : undefined,
       ),
+      ...(forms
+        ? { placeForms: [forms.plain, forms.current, forms.former] }
+        : {}),
     });
   }
   return out;

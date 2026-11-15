@@ -646,6 +646,7 @@ function AnswerPerson({
       name={person.name}
       party={person.party}
       place={person.place}
+      placeForms={person.placeForms}
       yourMP={yourMP}
       portrait={
         <CachedPortrait
