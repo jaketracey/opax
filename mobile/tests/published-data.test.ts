@@ -8,6 +8,7 @@
 // data must decode under the strictest build still on readers' phones.
 import {
   buildLabel,
+  buildReads,
   checkFamily,
   decodersRoot,
   families,
@@ -60,6 +61,31 @@ describe(`published data under ${publishedRoot()}, read by ${build} (${decodersR
       expect(counts[name]).toBeGreaterThanOrEqual(least[name] ?? 1);
     },
   );
+
+  // A family this build has no decoder for is named, never silently left
+  // out. If the build's own allow-list lets it read the family's path, the
+  // decoder is missing here by mistake (a renamed export, a moved file):
+  // that fails. Otherwise the build never reads the family, and says so.
+  const unchecked = families.filter((family) => !family.decode);
+  const missing = unchecked.filter(
+    (family) => buildReads(family.path) !== false,
+  );
+  const unread = unchecked.filter(
+    (family) => buildReads(family.path) === false,
+  );
+  if (unread.length)
+    test.skip.each(unread.map((family) => [family.name, family.path]))(
+      `%s: not read by ${build} (its allow-list refuses %s, and it has no decoder)`,
+      () => undefined,
+    );
+  test('every family this build may read has its decoder here', () => {
+    expect(
+      missing.map(
+        (family) =>
+          `${family.name}: ${build} may read ${family.path}, but its decoder was not found`,
+      ),
+    ).toEqual([]);
+  });
 
   test('this build reads the bills: a tree with no decoders must not pass', () => {
     const names = checked.map((family) => family.name);
