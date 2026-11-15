@@ -24,7 +24,6 @@ import { YearBrief } from './YearBrief';
 import { YearGallery } from './YearGallery';
 import { YearHeader, YearPager } from './YearHeader';
 import { FIRST_YEAR, LAST_YEAR } from './YearMenu';
-import { voiceIdentities } from './voice-identity';
 import { YearVoices, type RosterLookup } from './YearVoices';
 
 /** The latest complete year: 2025 in November 2026. */
@@ -46,26 +45,15 @@ export function linkedYear(value: string | string[] | undefined) {
 }
 const loadBills = (signal?: AbortSignal) => catalogs.bills(undefined, signal);
 const loadRoster = async (signal?: AbortSignal) => {
-  const [roster, slugs, dated] = await Promise.all([
+  const [roster, slugs] = await Promise.all([
     catalogs.roster(undefined, signal),
     catalogs.slugs(undefined, signal),
-    // Dated seats are a refinement: without them the roster still answers.
-    catalogs
-      .manifest(undefined, signal)
-      .then(async (manifest) => {
-        const people = await catalogs.people(manifest.data, undefined, signal);
-        return people.data.meta.release_id === manifest.data.release_id
-          ? { manifest: manifest.data, people: people.data }
-          : null;
-      })
-      .catch(() => null),
   ]);
   return {
     ...roster,
     data: {
       people: roster.data.people,
       slugs: slugs.data.slugs,
-      identity: voiceIdentities(roster.data, slugs.data, dated),
     } satisfies RosterLookup,
   };
 };

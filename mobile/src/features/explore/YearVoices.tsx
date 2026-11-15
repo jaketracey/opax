@@ -17,7 +17,7 @@ import {
   voiceParty,
   voicesDebates,
   voicesNote,
-  type VoiceIdentity,
+  type VoiceRosterRow,
   type Year,
 } from './model';
 import { yearSource, type YearMeta } from './YearBrief';
@@ -30,13 +30,8 @@ export function yearVoices(data: Year) {
     .slice(0, 6);
 }
 export interface RosterLookup {
-  people: readonly { name: string }[];
+  people: readonly ({ name: string } & VoiceRosterRow)[];
   slugs: Readonly<Record<string, string>>;
-  /**
-   * The identity the directory, search and profiles show for a slug. A voice
-   * whose speeches carry no party label takes its party from here.
-   */
-  identity?: (slug: string) => VoiceIdentity | null;
 }
 
 /**
@@ -71,7 +66,12 @@ export function YearVoices({
           const party = voiceParty(
             voice,
             data.year,
-            slug ? (roster?.identity?.(slug) ?? null) : null,
+            // rosterMatch has proved the name is one roster row.
+            slug
+              ? (roster?.people.find(
+                  (p) => p.name.trim() === voice.name.trim(),
+                ) ?? null)
+              : null,
           );
           return slug ? (
             <PersonRow
