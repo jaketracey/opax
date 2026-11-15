@@ -294,6 +294,14 @@ describe('the count line', () => {
     expect(
       StyleSheet.flatten(host(renderer, 'search-count').props.style),
     ).toMatchObject({ position: 'absolute', height: 224, overflow: 'hidden' });
+    // The text's row has no height of its own (a fixed height would make the
+    // device measure the text "at most" that tall and hide the lines that do
+    // not fit), only a minimum, and the box clips what overflows.
+    const inner = StyleSheet.flatten(
+      host(renderer, 'search-count-inner').props.style,
+    );
+    expect(inner).toMatchObject({ position: 'absolute', minHeight: 224 });
+    expect(Object.keys(inner)).not.toContain('height');
     // The box is the stand-in's latest layout: it shrinks as well as grows.
     layStandIn(renderer, 44, 2);
     expect(

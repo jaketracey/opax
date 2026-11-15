@@ -124,7 +124,11 @@ function CountLine({
   box: number;
 }) {
   // Out of the flow and exactly the stand-in's box, so it adds no height.
-  const over = [styles.line, styles.over, box > 0 ? { height: box } : null];
+  const over = [styles.over, box > 0 ? { height: box } : null];
+  // The text sits in a row with no height of its own: a row of fixed height
+  // would measure its text "at most" that tall, and the device would never
+  // report the lines that do not fit. The box clips what overflows.
+  const inner = [styles.inner, { minHeight: box > 0 ? box : minimumTarget }];
   const { width, fontScale } = useWindowDimensions();
   const parts = details ? sourceLineParts(details) : null;
   const lead = [count, parts?.date].filter(Boolean).join(' · ');
@@ -147,7 +151,7 @@ function CountLine({
     .join('. ')
     .replace(/\u00a0/g, ' ');
   const line = (
-    <>
+    <View style={inner} testID="search-count-inner">
       {details ? (
         <View style={styles.glyph}>
           <Icon name={symbols.source} size={13} maxScale={1.5} tone="inkSoft" />
@@ -175,7 +179,7 @@ function CountLine({
         ) : null}
         {tail}
       </Text>
-    </>
+    </View>
   );
   if (!details)
     return (
@@ -218,6 +222,15 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
     overflow: 'hidden',
+  },
+  inner: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    left: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
   glyph: { alignSelf: 'center' },
   text: { flexShrink: 1 },
