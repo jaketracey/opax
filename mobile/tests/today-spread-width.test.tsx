@@ -8,6 +8,7 @@ import { act, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import {
+  ColumnWidth,
   Grid,
   RegionProvider,
   resetAdaptiveDeviceForTests,
@@ -151,6 +152,36 @@ test('a grid inside a grid’s cell starts from the cell’s width', () => {
   // the two it would draw for the whole page.
   expect(cellWidths(host(tree.root, 'outer'))).toEqual([476, 476]);
   expect(cellWidths(host(tree.root, 'inner'))).toEqual([null, null]);
+});
+
+test('a measured region inside a column outranks the column', () => {
+  // A 374 pt column holding a region measured at 900 pt (a pane, a screen):
+  // the grid inside starts from the region, two 444 pt cells, not from the
+  // column, where it would draw one.
+  const tree = render(
+    <ColumnWidth width={374}>
+      <Grid testID="in-column" gap={12}>
+        <View />
+        <View />
+      </Grid>
+      <RegionProvider value={{ width: 900, height: 700 }}>
+        <Grid testID="in-region" gap={12}>
+          <View />
+          <View />
+        </Grid>
+      </RegionProvider>
+      {/* No measure yet: the column still stands. */}
+      <RegionProvider value={null}>
+        <Grid testID="unmeasured" gap={12}>
+          <View />
+          <View />
+        </Grid>
+      </RegionProvider>
+    </ColumnWidth>,
+  );
+  expect(cellWidths(host(tree.root, 'in-column'))).toEqual([null, null]);
+  expect(cellWidths(host(tree.root, 'in-region'))).toEqual([444, 444]);
+  expect(cellWidths(host(tree.root, 'unmeasured'))).toEqual([null, null]);
 });
 
 test('outside any column a grid still starts from its region, as before', () => {

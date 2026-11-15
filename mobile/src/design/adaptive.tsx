@@ -386,10 +386,20 @@ export function RegionProvider({
   children: ReactNode;
 }) {
   const parent = useContext(RegionContext);
-  return (
+  const region = (
     <RegionContext.Provider value={value ?? parent}>
       {children}
     </RegionContext.Provider>
+  );
+  // A measured region is nearer than any column around it: what it holds
+  // starts from the region's own width, not a width handed down from
+  // outside (ColumnWidth). With no measure yet, the column still stands.
+  return value ? (
+    <ColumnWidthContext.Provider value={null}>
+      {region}
+    </ColumnWidthContext.Provider>
+  ) : (
+    region
   );
 }
 
@@ -489,6 +499,11 @@ export function ReadableColumn({
  * frame for the full screen column, then again once it had measured
  * itself: on a 13-inch iPad, Today's daily pair sized two 478 pt cards in
  * a 374 pt column, and their text was measured a line short.
+ *
+ * A measured region inside a column (`RegionProvider` with a value) clears
+ * it for its own subtree. It covers a grid's first frame only: after a
+ * rotation, a split or a fold change a grid measures itself again as
+ * before, and text that re-flows then still leans on the text floor.
  */
 const ColumnWidthContext = createContext<number | null>(null);
 export function ColumnWidth({
