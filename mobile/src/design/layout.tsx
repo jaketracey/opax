@@ -469,8 +469,7 @@ export function Screen({
    * pinned band. The scroll view itself starts at that edge and clips to
    * its own frame; nothing is painted over the content. UIKit then gives it
    * no top inset, so the content rests where it did, and a pinned band
-   * holds at the scroll view's own top (BarStickyHeader, told so: React
-   * Native's own sticky header lays the band out 0 pt tall here).
+   * holds at the scroll view's own top (BarStickyHeader is told so).
    */
   clipAboveSafeTop?: boolean;
   refreshControl?: ReactElement<RefreshControlProps>;
@@ -629,8 +628,11 @@ export function Screen({
               style={[
                 styles.screen,
                 { backgroundColor: colors[ground] },
-                // Starts at the safe area's top edge and clips to its frame.
-                clipTop ? { marginTop: clipTop, overflow: 'hidden' } : null,
+                // Starts at the safe area's top edge. A scroll view clips to its
+                // frame by itself; `overflow: 'hidden'` here would replace its
+                // `overflow: 'scroll'` in layout, and its children would be laid
+                // out as in a box of fixed height (the pinned band 0 pt tall).
+                clipTop ? { marginTop: clipTop } : null,
               ]}
               contentInsetAdjustmentBehavior={contentInsetAdjustmentBehavior}
               scrollToOverflowEnabled={scrollToOverflowEnabled}

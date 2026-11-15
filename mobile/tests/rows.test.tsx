@@ -1883,12 +1883,12 @@ describe('Screen pins a band under the bar (sweep 1, item 1)', () => {
     // Asked for: no row can be drawn above the status bar's lower edge,
     // because the scroll view starts there and clips to its own frame.
     const scroll = page(true);
-    expect(flat(scroll.props.style)).toMatchObject({
-      marginTop: 62,
-      overflow: 'hidden',
-    });
-    // The band keeps the app's own sticky header (React Native's lays it out
-    // 0 pt tall here, with no background and the content over it).
+    expect(flat(scroll.props.style).marginTop).toBe(62);
+    // It keeps the scroll view's own overflow: `hidden` would lay its
+    // children out as in a box of fixed height, and the pinned band 0 pt
+    // tall, with no background and the content over it (iOS 26.3).
+    expect(flat(scroll.props.style).overflow).not.toBe('hidden');
+    // The band keeps the app's own sticky header.
     const Sticky = scroll.props.StickyHeaderComponent;
     expect(Sticky).toBeDefined();
     // With no bar over the scroll view and no inset, the page rests at 0

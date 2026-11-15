@@ -309,7 +309,8 @@ describe('Search scroll region on iOS', () => {
     // bar's lower edge and clips to its own frame, so no row is drawn above
     // it whatever the bar's background is.
     await type('hous');
-    expect(frame()).toMatchObject({ marginTop: 62, overflow: 'hidden' });
+    expect(frame().marginTop).toBe(62);
+    expect(frame().overflow).not.toBe('hidden');
     // The same scroll view: the page was not remounted, and nothing is laid
     // over it to hide the rows.
     expect(renderer.root.findByType(ScrollView)).toBe(scroll);
@@ -318,7 +319,8 @@ describe('Search scroll region on iOS', () => {
     await act(async () =>
       renderer.root.findByType(SearchSuggestions).props.onSeeAll('people'),
     );
-    expect(frame()).toMatchObject({ marginTop: 62, overflow: 'hidden' });
+    expect(frame().marginTop).toBe(62);
+    expect(frame().overflow).not.toBe('hidden');
     const results = renderer.root.findByType(ScrollView);
     expect(results).toBe(scroll);
     expect(results.props.stickyHeaderIndices).toEqual([0]);
