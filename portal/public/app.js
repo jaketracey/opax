@@ -57,6 +57,10 @@ const divisionAgainstReady = lazyReady(() => import("/division-against-party.js?
 // The labels and source lines (labels.js); the first render waits for them.
 let growthModules;
 const growthModulesReady = lazyReady(() => import("/growth-modules.js?v=07eea0e196").then(module => { growthModules = module; }));
+// "Next in the record" (next-steps.js): requested once, alongside whatever the page is already
+// waiting on, never ahead of it. A failed load leaves the page whole, without the block.
+let nextSteps = null;
+const nextStepsReady = lazyReady(() => import("/next-steps.js").then(module => { nextSteps = module; }, () => {}));
 let registerTables;
 const registerTablesReady = lazyReady(() => import('/register-tables.js?v=8d37f58e79').then(module => { registerTables = module; }));
 let askPerson;
@@ -1656,7 +1660,7 @@ async function openGrantRecipient(jurisdiction, id, manageFocus) {
   const body = $('money-records-body');
   body.innerHTML = '<div class="grant-recipient-page" aria-busy="true"><p class="visually-hidden" role="status">Loading recipient records</p><div class="answer-skeleton grant-recipient-skeleton" aria-hidden="true"><i style="width:62%;height:2.75rem"></i><i style="width:38%"></i><i style="width:100%;height:6rem"></i><i style="width:84%"></i><i style="width:96%"></i><i style="width:74%"></i></div></div>';
   try {
-    const mod = await import('/grant-recipient.js?v=43775fa359');
+    const mod = await import('/grant-recipient.js?v=75af96af86');
     if (generation !== moneyRecordsGeneration) return;
     moneyRecordsHandle = mod.mountGrantRecipient(body, { jurisdiction, id, manageFocus,
       onTitle(name) {
@@ -1909,7 +1913,7 @@ async function openSupplierPage(name, params, manageFocus) {
   body.classList.remove("subject-person", "subject-party");
   body.innerHTML = '<p role="status">Loading suppliers…</p>';
   try {
-    const module = await import("/suppliers.js?v=164cd28997");
+    const module = await import("/suppliers.js?v=959b972a5e");
     if (generation !== supplierPageGeneration) return;
     const helpers = {
       params,
@@ -6037,6 +6041,7 @@ async function renderPersonVotes(name, personId, sections, onRecord = () => {}) 
   if (currentSubjectKey !== key || !slot.isConnected) return;
   const recent = voteTables.personVoteRecords(keys, votes, recentData);
   const rows = voteTables.votingRows(recent.rows, billIndex?.bills || []);
+  nextSteps?.fillNextSteps($("person-next"), nextSteps.memberVoteSteps(rows), "No votes on bills in the record for this member.");
   const config = voteTables.voteTableConfig(keys, recent.recorded ? "Recorded votes" : "Latest bill votes");
   const total = sum("divisions_total");
   const ayes = sum("ayes");
@@ -6267,7 +6272,7 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // it is.
   if (kind === "electorate" || kind === "party") $("subject-title").innerHTML = `<span class="visually-hidden">Loading ${kind === "party" ? "party" : "electorate"}</span><span class="answer-skeleton subject-skel title-skel" aria-hidden="true"><i></i></span>`;
   if (manageFocus) $("subject-title")?.focus();
-  await Promise.allSettled([growthModulesReady,voteTablesReady]);
+  await Promise.allSettled([growthModulesReady,voteTablesReady,nextStepsReady]);
   if (currentSubjectKey !== key) return;
 
   if (kind === "electorate") {
@@ -6748,6 +6753,14 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const promptName = roster?.full || name;
   if (currentSubjectKey !== key) return;
   head.insertAdjacentHTML("afterend", growthModules.askBlockHTML({name: promptName, pageType: "person", seed: `What has ${promptName} said in parliament?`}));
+  // Where this member's record leads: the seat and the party are known now; two rows are held
+  // for their newest recorded votes, which renderPersonVotes fills (the block's height is set here).
+  const seatSteps = ((electorateReference?.person?.electorates || []).filter((e) => e.current).length
+    ? electorateReference.person.electorates.filter((e) => e.current) : electorateReference?.person?.electorates || [])
+    .map((e) => ({ name: e.name, href: e.url, chamber: electorateReference.module.CHAMBERS?.[e.chamber] || "" }));
+  body.querySelector(".growth-ask")?.insertAdjacentHTML("afterend", nextSteps?.nextStepsHTML(nextSteps.memberNextSteps({
+    seats: seatSteps, party: party ? { name: party, href: subjectHash("party", party) || "" } : null,
+  }), { pageType: "person", id: "person-next", reserve: 2 }) || "");
   const askRecord = {name: promptName};
   const updateQuestions = (record) => {
     if (currentSubjectKey !== key) return;
@@ -6769,6 +6782,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   const topicQuestions = renderPersonTopics(name, sections, updateQuestions, { first: roster?.first, last: roster?.last }).then(() => refreshEntryRail(sections));
   // Records by the roster's verified pid (none for a print that holds more than one person).
   const voteQuestions = renderPersonVotes(name, roster?.pid ?? null, sections, updateQuestions).then(() => refreshEntryRail(sections));
+  // Every way the votes can end (none held, a failed read) settles the two rows held for them.
+  voteQuestions.catch(() => {}).then(() => { if (currentSubjectKey === key) nextSteps?.fillNextSteps($("person-next"), [], "No votes on bills in the record for this member."); });
   const interestQuestions = renderPersonInterests(name, roster?.pid ?? null, sections, updateQuestions).then(() => refreshEntryRail(sections));
   renderPersonVicGifts(name, sections, roster).then(() => refreshEntryRail(sections));
   Promise.allSettled([topicQuestions, voteQuestions, interestQuestions]).then(() => {
@@ -7791,7 +7806,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=4533ad7591").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=f24cadf4b1").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 
@@ -9803,7 +9818,7 @@ async function openBill(key, manageFocus) {
   // index carries it; the release build copies it to a small file (loadBillsDate),
   // fetched alongside the bill itself.
   // The ask block's privacy file is keyed by the bill, so it is read with it, not after it.
-  await Promise.all([growthModulesReady,voteTablesReady]);
+  await Promise.all([growthModulesReady,voteTablesReady,nextStepsReady]);
   if (generation !== billTextGeneration) return;
   let bill, billsDate;
   try {
@@ -9886,6 +9901,10 @@ async function openBill(key, manageFocus) {
       ${actions}
     </div>
     ${growthModules.askBlockHTML({bill, pageType: "bill", questions: growthModules.billQuestions(bill,[]),})}
+    ${nextSteps?.nextStepsHTML(nextSteps.billNextSteps(bill, {
+      divisions: voteTables.divisionRows(bill.divisions || [], true).filter((d) => !d.procedural),
+      sponsor: !bill.sponsor && members?.length === 1 ? { name: members[0].name, href: subjectHash("person", members[0].name) || "" } : null,
+    }), { pageType: "bill", id: "bill-next" }) || ""}
     ${billSummaryHTML(bill)}
     <div id="bill-text-slot"><div class="answer-skeleton bill-text-skeleton" aria-hidden="true"><i style="width:65%"></i><i style="width:95%"></i><i style="width:78%"></i></div><p class="visually-hidden" role="status">Checking published bill text</p></div>
     ${billTimelineHTML(bill)}
@@ -14141,6 +14160,8 @@ async function openDocPage(slug, manageFocus) {
   $("doc-similar-panel").replaceChildren();
   $("doc-similar-panel").removeAttribute("aria-busy");
   $("doc-similar").setAttribute("aria-expanded", "false");
+  $("doc-next").hidden = true;
+  $("doc-next").replaceChildren();
   setStatus($("doc-status"), "Fetching the document…");
   // A division reads from the published exports, as the Worker's own page does.
   if (/^division-[a-z0-9-]+$/.test(slug)) {
@@ -14149,7 +14170,8 @@ async function openDocPage(slug, manageFocus) {
     if (division) { renderDivisionDoc(division, slug, manageFocus); return; }
   }
   try {
-    const doc = await api(`/api/resource/${encodeURIComponent(slug)}`);
+    // The next-steps module rides the document's own request: it adds no wait of its own.
+    const [doc] = await Promise.all([api(`/api/resource/${encodeURIComponent(slug)}`), nextStepsReady]);
     // Older browser-cached resources can outlive the corpus text repair.
     if (typeof doc.text === "string") doc.text = doc.text.replace(/[ \t]*View the PC OA website[ \t]*$/gm, "").trimEnd();
     if (currentDocSlug !== slug) return; // user navigated away while fetching
@@ -14243,6 +14265,15 @@ async function openDocPage(slug, manageFocus) {
       ].join(" · ");
       speakerLinks.hidden = false;
     }
+    // Drawn in the same pass as the headline and byline, from the document just read.
+    const nextHTML = (doc.labels?.kind || doc.kind) === "division" ? "" : nextSteps?.nextStepsHTML(nextSteps.docNextSteps(doc, {
+      personHref: (speaker) => subjectHash("person", speaker) || "",
+      searchHref: (q, filters, sort) => searchHash(q, filters, 1, sort),
+      subject: doc.metadata?.topic || doc.metadata?.debate || titleSubject(doc),
+      attributed: !isMultiSpeaker(doc) && !docWitness && doc.speaker_attribution !== "unattributed" && !isBillText,
+    }), { pageType: "doc", id: "doc-next-steps" }) || "";
+    $("doc-next").innerHTML = nextHTML;
+    $("doc-next").hidden = !nextHTML;
     if (doc.summary) {
       $("doc-brief-text").textContent = doc.summary;
       $("doc-brief").hidden = false;

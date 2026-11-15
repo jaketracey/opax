@@ -1,8 +1,11 @@
-import { vicElectionFooterHTML } from './vic-election.js?v=a2838bb3ae';
+import { vicElectionFooterHTML, VIC_ELECTION_POLLS_CLOSE } from './vic-election.js?v=a2838bb3ae';
 import { personUrl, partyUrl } from './canonical-urls.js?v=9ce13e7ba5';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
 import { renderNotFound } from './not-found.js';
+// "Next in the record" (next-steps.js) is optional: asked for as the page loads, and the page is whole without it.
+let nextSteps = null;
+export const nextStepsReady = import('./next-steps.js').then((module) => { nextSteps = module; }, () => {});
 import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=fcb2a1091c';
 import { pageMenuHTML as moreMenuHTML } from './page-actions-menu.js?v=8640c3d1ca';
 // The person page reads its verified-roster and dated official-list party fallbacks through this module (roster-party.js).
@@ -199,6 +202,25 @@ export function heldSinceLine(detail) {
   if (!/^\d{4}$/.test(year)) return null;
   return { party, year, text: `Held by ${party} since ${definite ? '' : 'at least '}${year}` };
 }
+/**
+ * The members the next-steps block may name as this seat's own, of today (see profileHTML).
+ * None at a past date or for a dissolved house. A Victorian seat, in either house, needs evidence that only
+ * the parliament elected on 28 November 2026 can give, member by member: a reviewed `seated_on`, or an open
+ * day-dated service term, after polling day. The roster's `as_of` is the day the parliament's member list was
+ * fetched, not a term date: a list refetched in December can still return the outgoing members, so it proves
+ * nothing. A member whose recorded service began on or before polling day is never named, whatever the fetch date.
+ */
+export function nextStepsMembers(detail, on = '', members = []) {
+  if (on || detail.dissolved_for) return [];
+  if (detail.jurisdiction !== 'vic') return members;
+  if (detail.status !== 'current' || detail.representation_status !== 'verified') return [];
+  const pollDay = VIC_ELECTION_POLLS_CLOSE.slice(0, 10);
+  return members.filter((m) => {
+    const began = [m.seated_on, ...(detail.terms || []).filter((t) => t.person_id === m.person_id && !t.end && t.start_precision === 'day').map((t) => t.start)]
+      .filter((value) => value != null && value !== '');
+    return began.length > 0 && began.every((day) => validDate(day) && day > pollDay);
+  });
+}
 /* One title and one meta line (no kicker), ⋯ on the title's row; then
    sections (ui-section), each ending in one source line that opens its
    originals, dates, notes and licences. Who holds the seat and its boundary sit
@@ -221,6 +243,11 @@ export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) 
   const census = sourcesOf(detail, ['demographics']);
   const line = (list, opts) => sourceLineHTML({ updated: retrieved(list), dateLabel: 'As at', originals: originalsOf(list), licence: licences(list), ...opts });
   const heldSince = on ? null : heldSinceLine(detail);
+  // The next-steps block names a member, or says a seat "represents you", only where the page can say so of today:
+  // not at a past date and not for a dissolved house, and on a Victorian page only members whose own service is
+  // recorded as beginning after the 2026 poll (nextStepsMembers). With nobody to name, no seat "represents you" either.
+  const named = nextStepsMembers(detail, on, selected.status === 'conflicting' ? [] : selected.members);
+  const sitting = named.length > 0 || (!on && !detail.dissolved_for && detail.jurisdiction !== 'vic');
   return `<div class="ui-page-head el-head"><h1 id="subject-title" tabindex="-1">${esc(detail.name)}</h1>${heldSince ? `<p class="ui-page-meta el-held-since">${esc(heldSince.text)}</p>` : ''}<p class="ui-page-meta">${esc(CHAMBERS[detail.chamber] || detail.chamber)} · ${esc(detail.state_code.toUpperCase())}${detail.capacity > 1 ? ` · ${detail.capacity} seats` : ''}${detail.status === 'historical' ? ' · Historical electorate' : ''}</p>
     <div class="page-actions">${moreMenuHTML([
       { href: detail.detail_url, label: 'Download this electorate', detail: 'JSON, every record on this page with its sources' },
@@ -234,6 +261,7 @@ export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) 
         notes: [selected.status === 'historical' ? 'From dated service records; coverage may be incomplete.' : selected.status === 'partial' ? 'Partial roster; other members may be missing.' : 'Election winners and present-day representation can differ.',
           'Representation is shown only as the dated records give it.'] })}</section>
     ${boundary ? `<section class="ui-section el-outline-block"><h2 class="ui-section-title">Boundary</h2>${outlineHTML(boundary, detail.name)}${line(outline, { source: `${boundary.geometry_kind === 'official' ? 'AEC election boundary' : 'ABS statistical outline'}, ${boundary.vintage}`, notes: [esc(boundary.note), 'Simplified for display.', on ? 'This outline is not a reconstruction of the selected date.' : ''] })}</section>` : ''}</div>
+    ${nextSteps ? nextSteps.nextStepsHTML(nextSteps.electorateNextSteps(detail, { members: named, personHref: personURL, displayName, sitting }), { pageType: 'electorate', id: 'el-next' }) : ''}
     ${detail.elections.length ? `<section id="el-elections" class="ui-section el-section"><h2 class="ui-section-title">Election timeline</h2><ol class="ui-list el-timeline">${detail.elections.map((c) => electionHTML(c, people)).join('')}</ol>
       ${line(contests, { source: 'AEC results', notes: [`${detail.elections.length} ${detail.elections.length === 1 ? 'contest' : 'contests'} recorded; any gaps are missing records.`, 'Percentages use each count’s recorded denominator. “—” means no result for that candidate in that count. TCP and TPP are distinct counts.'] })}</section>` : ''}
     <section id="el-history" class="ui-section el-section"><div class="ui-section-head"><h2>Representation history</h2>
@@ -259,7 +287,7 @@ export async function renderProfile({ body, slug, on, isActive, setCrumbs, goRou
       return;
     }
     // Portraits for the bylines: the photo map in parallel, never blocking the page on it.
-    const [detail, photoUrlFor] = await Promise.all([json(entry.detail_url), loadPhotos ? loadPhotos().catch(() => null) : null]);
+    const [detail, photoUrlFor] = await Promise.all([json(entry.detail_url), loadPhotos ? loadPhotos().catch(() => null) : null, nextStepsReady]);
     if (!isActive()) return;
     if (on && !validDate(on)) { body.innerHTML = `<h1 id="subject-title" tabindex="-1">Invalid date</h1><p><a href="${esc(entry.url)}">Return to ${esc(entry.name)}</a></p>`; return; }
     document.title = `${entry.name} · Electorate · OPAX`;
