@@ -127,6 +127,19 @@ test('a grant recipient leads to a program only where one catalogue program answ
   assert.equal(rows[2].meta, '$1200 in 3 records');
 });
 
+test('a recipient page carries the block in the server record core, above its awards list, and not on a program page', async () => {
+  const { grantCoreBody } = await import('../public/record-core-content.js');
+  const detail = { id: 'abn:12345678901', n: 'Example Institute', k: 'company', t: 900, c: 2, programs: [['Medical Research Future Fund', 400]], agencies: [['Department of Health', 900]],
+    grants: [{ id: 'GA1', v: 500, n: 'First', pr: 'Medical Research Future Fund' }, { id: 'GA2', v: 400, n: 'Second' }] };
+  const html = grantCoreBody(detail, 'federal', 'https://opax.com.au/money/grants/federal/recipient/abn%3A12345678901', false, undefined, undefined, [{ key: 'c', id: 'go3', n: 'Medical Research Future Fund' }]);
+  const nav = dom(html).getElementById('recipient-next');
+  assert.deepEqual([...nav.querySelectorAll('.next-steps-kind')].map((k) => k.textContent), ['Program', 'Agency', 'All grants']);
+  assert.ok(html.indexOf('id="recipient-next"') > html.indexOf('record-core-figures') && html.indexOf('id="recipient-next"') < html.indexOf('<table'));
+  assert.doesNotMatch(grantCoreBody({ ...detail, r: 3 }, 'federal', 'https://opax.com.au/money/grants?jur=federal&program=go3', true), /next-steps/);
+  // The page's own script leaves the server's block alone and draws its own only without a record core.
+  assert.match(read('../public/grant-recipient.js'), /if \(!coreActive\) root\.insertAdjacentHTML\('beforeend', nextStepsHTML\(recipientNextSteps/);
+});
+
 test('a bill leads to its newest divisions, a known sponsor and the bills the register relates to it', () => {
   const divisions = [{ title: 'Second reading, 1 Oct 2026', date: '2026-10-01', chamber: 'Senate', ayes: '30', noes: '20', outcome: 'Agreed', href: '/doc/division-a' },
     { title: 'Third reading, 3 Oct 2026', date: '2026-10-03', chamber: 'Senate', ayes: '31', noes: '19', outcome: 'Agreed', href: '/doc/division-b' },

@@ -151,7 +151,8 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     for (const [label, anchor] of [['Records', 'recipient-records'], ['Breakdown', 'recipient-breakdown'], ['Identity', 'recipient-identity'], ['Donor registers', 'recipient-donations'], ['Sources', 'recipient-sources']]) jump.append(link('#' + anchor, label));
     root.append(jump);
     // Where this record leads, from the bundle already read: its programs, its agencies, its other jurisdiction.
-    root.insertAdjacentHTML('beforeend', nextStepsHTML(recipientNextSteps(data, { jurisdiction, programs: index.programs || [], money: compactMoney,
+    // The server's record core carries the same block above its list; an in-app visit has no core, so it is drawn here.
+    if (!coreActive) root.insertAdjacentHTML('beforeend', nextStepsHTML(recipientNextSteps(data, { jurisdiction, programs: index.programs || [],
       otherHref: jur => JURISDICTIONS[jur] ? grantRecipientUrl(jur, id) : '', jurisdictionName: jur => JURISDICTIONS[jur] }), { pageType: 'recipient', id: 'recipient-next' }));
     const layout = node('div', null, 'grant-recipient-layout'), main = node('div'), aside = node('aside');
     if (!coreActive) {

@@ -5,6 +5,7 @@ const safeHref = value => {
   try { const url = new URL(value); return /^https?:$/.test(url.protocol) ? url.href : null; } catch { return null; }
 };
 import { isOrganisationRecipient } from "./recipient-privacy.js";
+import { nextStepsHTML, recipientNextSteps } from "./next-steps.js";
 const number = (n) => n.toLocaleString("en-AU");
 const amount = new Intl.NumberFormat("en-AU", { style: "currency", currency: "AUD", maximumFractionDigits: 2 });
 const dollars = (n) => typeof n === "number" && Number.isFinite(n) ? amount.format(n) : "Value not recorded";
@@ -68,7 +69,7 @@ export function recipientMetaLine(jur, k) {
 }
 const figures = (rows) => `<dl class="record-core-figures">${rows.map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("")}</dl>`;
 const grantSource = (jur, grant) => jur === "qld" ? "https://www.data.qld.gov.au/dataset/b102c881-2c7f-484a-a8b6-b056fe318964" : grant?.guid ? `https://www.grants.gov.au/Ga/Show/${encodeURIComponent(grant.guid)}` : grant ? `https://www.grants.gov.au/Ga/ListResult?Type=Ga&AgencyStatus=-1&GaId=${encodeURIComponent(grant.id)}` : "https://www.grants.gov.au/";
-function grantCoreBody(detail, jur, canonical, program = false, dataPath, recipientIds) {
+function grantCoreBody(detail, jur, canonical, program = false, dataPath, recipientIds, programs = []) {
   const rows = (detail.grants || []).slice(0, 20);
   const countLabel = jur === "qld" ? "Expenditure rows" : "Award records";
   let body = figures([
@@ -77,6 +78,11 @@ function grantCoreBody(detail, jur, canonical, program = false, dataPath, recipi
     ...detail.r != null ? [["Recipients", number(detail.r)]] : []
   ]);
   if (detail.ag) body += `<p>Agency: ${esc(detail.ag)}</p>`;
+  // A recipient's record leads on from here, above its long list of awards (next-steps.js): its
+  // programs (matched against the catalogue's `programs`), its agencies, its other jurisdiction.
+  if (!program) body += nextStepsHTML(recipientNextSteps(detail, { jurisdiction: jur, programs,
+    otherHref: (other) => `/money/grants/${encodeURIComponent(other)}/recipient/${encodeURIComponent(detail.id)}`,
+    jurisdictionName: (other) => ({ federal: "Commonwealth", qld: "Queensland" })[other] || other }), { pageType: "recipient", id: "recipient-next" });
   body += table(program ? 'program' : 'recipient',detail.id,jur === 'qld' ? 'Recorded expenditure' : 'Grant awards',['Record',program ? 'Recipient' : 'Program','Value','Date / financial year','Agency','Source'],grantRows(rows,detail,jur,program,recipientIds));
   const listed = detail.grants?.length || 0;
   body += `<p>${number(listed)} listed records; ${number(detail.c)} ${countLabel.toLowerCase()} in the total. ${link(localPath(canonical) + "#" + (program ? "program-records" : "recipient-records"), "Explore the full list")}.</p>`;
