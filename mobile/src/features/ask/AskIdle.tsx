@@ -4,13 +4,7 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react';
-import {
-  Animated,
-  Platform,
-  StyleSheet,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import { Animated, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { router } from 'expo-router';
 import { track } from '../../analytics';
 import {
@@ -154,10 +148,11 @@ export function AskIdle({
   testPrefix?: string;
 }) {
   const stacked = useAccessibilitySize();
-  // The stacked heading borrows space from its parent's gap. These bare
-  // groups have none; restore it on Android without moving the iOS layout.
-  const sectionStyle =
-    Platform.OS === 'android' && stacked ? styles.stackedSection : undefined;
+  // At accessibility sizes the stacked heading takes back part of its
+  // parent's gap (a negative margin under it). These bare groups have no
+  // gap, so the card was drawn over the foot of "Try asking", cutting its
+  // descenders (build 78 sweep, AX3). The gap is given on both platforms.
+  const sectionStyle = stacked ? styles.stackedSection : undefined;
   const saved = useSyncExternalStore(
     subscribeChats,
     chatsSnapshot,

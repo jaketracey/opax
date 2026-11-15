@@ -2698,7 +2698,7 @@ test.each(
     [1, 2].map((fontScale) => [platform, fontScale] as const),
   ),
 )(
-  '%s font %s: Ask headings clear their groups with unchanged iOS spacing',
+  '%s font %s: Ask headings clear their groups at large text sizes, on both platforms',
   async (platform, fontScale) => {
     const original = Platform.OS;
     const window = Dimensions.get('window');
@@ -2710,7 +2710,11 @@ test.each(
       const heading = idle.findAllByType(SectionHeader)[0];
       const parent = heading.parent!;
       const gap = StyleSheet.flatten(parent.props.style)?.gap ?? 0;
-      if (platform === 'android' && fontScale === 2) {
+      // At accessibility sizes the stacked heading takes back part of its
+      // parent's gap. With no gap the card covers the foot of "Try asking"
+      // (seen on iOS at AX3, build 78 sweep), so both platforms give it.
+      if (fontScale === 2) {
+        expect(gap).toBe(rhythm.block);
         const header = heading.findByType(View);
         const margin = StyleSheet.flatten(header.props.style).marginBottom ?? 0;
         expect(Number(gap) + Number(margin)).toBeGreaterThanOrEqual(
