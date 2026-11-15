@@ -77,7 +77,9 @@ const dataBucket = {
   async get(name, options = {}) {
     if (name !== 'expenses/v1/11029/2026.json') return null
     // like R2: a matched If-None-Match returns the object without a body
-    return options.onlyIf?.get?.('if-none-match') === '"j1"' ? { size: json.length, httpEtag: '"j1"' } : { size: json.length, httpEtag: '"j1"', body: json }
+    const h = name => options.onlyIf?.get?.(name)
+    const failed = h('if-none-match') === '"j1"' || (h('if-match') && h('if-match') !== '"j1"') || h('if-unmodified-since') === 'Thu, 01 Jan 1970 00:00:00 GMT'
+    return failed ? { size: json.length, httpEtag: '"j1"' } : { size: json.length, httpEtag: '"j1"', body: json }
   },
 }
 const getData = (path, headers = {}, method = 'GET', store = dataBucket) => serveMedia(new Request('https://opax.com.au' + path, { method, headers }), store, path)
@@ -109,4 +111,15 @@ test('/media refuses expense paths outside the fixed pattern, other methods, and
   assert.equal((await getData('/media/expenses/v1/11029/2026.json', {}, 'POST')).status, 405)
   const broken = { async head() { throw new Error('down') }, async get() { throw new Error('down') } }
   assert.equal((await getData('/media/expenses/v1/11029/2026.json', {}, 'GET', broken)).status, 503)
+})
+
+test('/media answers a failed If-Match or If-Unmodified-Since for expenses with 412, and a passing If-Match with the file', async () => {
+  for (const headers of [{ 'if-match': '"other"' }, { 'if-unmodified-since': 'Thu, 01 Jan 1970 00:00:00 GMT' }]) {
+    const r = await getData('/media/expenses/v1/11029/2026.json', headers)
+    assert.equal(r.status, 412, JSON.stringify(headers))
+    assert.equal(await r.text(), '')
+  }
+  const ok = await getData('/media/expenses/v1/11029/2026.json', { 'if-match': '"j1"' })
+  assert.equal(ok.status, 200)
+  assert.equal((await ok.json()).meta.name, 'Jane Example')
 })

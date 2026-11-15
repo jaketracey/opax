@@ -208,13 +208,41 @@ test('a long itemised list is paged within the Ask result size, with the offset 
 });
 
 test('itemised answers say what is held when the lines or the category are absent, and never invent a figure',async()=>{
-  const none=await ask({year:2026,detail:'itemised'},{});
-  assert.equal(none.rows.length,0);
-  assert.match(none.citations[0].text,/^OPAX holds Jane Example's IPEA expense totals by year; the itemised lines for calendar year 2026 are not loaded yet\.$/);
+  // a total is held for 2026 but its lines are not loaded: the answer leads with the total
+  const pending=await ask({year:2026,detail:'itemised'},{});
+  assert.equal(pending.rows.length,0);
+  assert.equal(pending.citations[0].text,"Jane Example's IPEA-reported expenses for calendar year 2026 total $6,598; the itemised lines for that year are not loaded yet.");
+  assert.equal(pending.citations[0].value,6598);
+  // no total and no file: IPEA reported nothing for that year (before the member's time, or before IPEA's coverage)
+  for(const year of [2019,'2018-19']){
+    const none=await ask({year,detail:'itemised'});
+    assert.equal(none.rows.length,0);
+    assert.match(none.citations[0].text,/^OPAX has no reported IPEA expense lines for Jane Example for (calendar|financial) year 2018?-?19\. This does not mean expenditure was zero\.$|^OPAX has no reported IPEA expense lines for Jane Example for calendar year 2019\. This does not mean expenditure was zero\.$/);
+    assert.doesNotMatch(none.citations[0].text,/not loaded/);
+    assert.equal(none.citations[0].value,undefined);
+  }
   const empty=await ask({year:2025,detail:'itemised',category:'overseas'});
   assert.equal(empty.rows.length,0);
-  assert.match(empty.citations[0].text,/hold 2 lines in other categories and none under overseas travel/);
-  assert.ok([...none.citations,...empty.citations].every(c=>c.value===undefined));
+  assert.equal(empty.citations[0].text,"Jane Example's IPEA-published lines, 1 July 2025 to 31 December 2025: 2 in other categories and none under overseas travel.");
+  const blank=structuredClone(files);
+  blank['expenses/v1/P1/2025.json'].lines=[];
+  const nothing=await ask({year:2025,detail:'itemised'},blank);
+  assert.equal(nothing.citations[0].text,'IPEA published no expense lines for Jane Example, 1 July 2025 to 31 December 2025.');
+  assert.ok([...empty.citations,...nothing.citations].every(c=>c.value===undefined));
+});
+
+test('who travelled is only ever one of the roles: any other value in the file reads as another traveller',async()=>{
+  const odd=structuredClone(files);
+  const at=COLUMNS.indexOf('traveller');
+  odd['expenses/v1/P1/2026.json'].lines[0][at]='Zebedee Quillfeather';
+  odd['expenses/v1/P1/2026.json'].lines[1][at]='STAFF';
+  odd['expenses/v1/P1/2026.json'].lines[2][at]=null;
+  const result=await ask({year:2026,detail:'itemised'},odd);
+  const lines=result.citations.slice(1+result.rows[0].groups.length).map(c=>c.text);
+  assert.match(lines[0],/; another traveller: \$246\.81$/);
+  assert.match(lines[1],/; staff: \$644\.00$/);
+  assert.doesNotMatch(lines[2],/traveller|staff|member/i);
+  assert.doesNotMatch(JSON.stringify(result),/Zebedee|Quillfeather/);
 });
 
 test('itemised arguments belong to Ask: the public schema rejects them, and no traveller is named',async()=>{

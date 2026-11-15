@@ -23,8 +23,16 @@ async function serveData(request: Request, bucket: R2Bucket, name: string): Prom
   if (!object) return new Response('Not found', { status: 404 })
   const headers = new Headers({ 'content-type': 'application/json; charset=utf-8', etag: object.httpEtag, 'cache-control': DATA_CACHE, 'x-content-type-options': 'nosniff' })
   if (request.method === 'HEAD') { headers.set('content-length', String(object.size)); return new Response(null, { headers }) }
-  // R2 returns the object without a body when If-None-Match matched.
-  if (!('body' in object)) return new Response(null, { status: 304, headers })
+  // R2 returns the object without a body when a precondition failed. A failed If-Match or If-Unmodified-Since is
+  // 412; a matched If-None-Match (or an unmodified If-Modified-Since) is 304.
+  if (!('body' in object)) {
+    const given = (name: string) => request.headers.get(name)
+    const tags = (value: string) => value.split(',').map(tag => tag.trim().replace(/^W\//, ''))
+    const noneMatch = given('if-none-match'), match = given('if-match')
+    const unchanged = noneMatch !== null && (noneMatch.trim() === '*' || tags(noneMatch).includes(object.httpEtag))
+    const failed = match !== null ? !(match.trim() === '*' || tags(match).includes(object.httpEtag)) : given('if-unmodified-since') !== null
+    return failed && !unchanged ? new Response(null, { status: 412, headers }) : new Response(null, { status: 304, headers })
+  }
   return new Response((object as R2ObjectBody).body, { headers })
 }
 

@@ -88,6 +88,10 @@ function readLines(file: Itemised | null): Line[] {
       nightly_rate: num(raw[col.rate]), amount, reason: text(raw[col.reason]), notes: text(raw[col.notes]), traveller: text(raw[col.traveller]) }]
   })
 }
+/** Who travelled, as a role only. The export writes Member, Family member or Staff; any other value is never
+ *  repeated (it could be a name) and reads as another traveller. The member's own lines say nothing. */
+const TRAVELLER_ROLES: Record<string, string> = { member: '', 'family member': 'family member', staff: 'staff' }
+const travellerRole = (value: string | null) => value === null ? '' : TRAVELLER_ROLES[value.trim().toLowerCase()] ?? 'another traveller'
 /** One line as IPEA published it, in a sentence a reader can follow. */
 function lineText(line: Line, quarterLabel: string): string {
   const kind = [line.category_major ?? line.category_high, line.category_minor].filter(Boolean).join(', ')
@@ -99,10 +103,11 @@ function lineText(line: Line, quarterLabel: string): string {
   if (line.nights) parts.push(`${line.nights} night${Math.abs(line.nights) === 1 ? '' : 's'}${line.nightly_rate ? ' at ' + cents(line.nightly_rate) : ''}`)
   if (line.reason) parts.push(clip(line.reason, 80))
   if (line.notes) parts.push(clip(line.notes, 60))
-  if (line.traveller && line.traveller !== 'Member') parts.push(line.traveller.toLowerCase())
+  const role = travellerRole(line.traveller)
+  if (role) parts.push(role)
   return `${quarterLabel}, ${kind || 'expense'}: ${parts.filter(Boolean).join('; ')}: ${cents(line.amount)}`
 }
-async function itemised(env: ToolEnv, args: ToolArgs, requested: Period, person: { name: string }, pid: string, href: string, attribution?: string) {
+async function itemised(env: ToolEnv, args: ToolArgs, requested: Period, person: { name: string }, pid: string, href: string, yearTotal: number | undefined, attribution?: string) {
   const category = String(args.category ?? 'travel'), offset = Number(args.offset ?? 0)
   const years = [...new Set(requested.quarters.map(id => id.slice(0, 4)))]
   const files = await Promise.all(years.map(year => readToolMedia(env, `expenses/v1/${pid}/${year}.json`) as Promise<Itemised | null>))
@@ -117,8 +122,16 @@ async function itemised(env: ToolEnv, args: ToolArgs, requested: Period, person:
   const notes = ['Each line is as IPEA published it, grouped by IPEA\'s reporting quarter, which can differ from the date of travel. Negative lines are IPEA adjustments and repayments. Who travelled is given as a role: member, family member or staff.']
   if (attribution) notes.push(attribution)
   const span = readableRange(first?.since, last?.until), label = CATEGORY_LABEL(category)
-  if (!files.some(Boolean)) return { rows: [], coverage, citations: [{ kind: 'record' as const, url: href, text: `OPAX holds ${person.name}'s IPEA expense totals by year; the itemised lines for ${requested.label} are not loaded yet.` }], notes }
-  if (!lines.length) return { rows: [], coverage, citations: [{ kind: 'record' as const, url: href, text: `IPEA's published lines for ${person.name}${span ? ', ' + span : ''}, hold ${all.length} lines in other categories and none under ${label}.` }], notes }
+  const only = (text: string, value?: number) => ({ rows: [], coverage, citations: [{ kind: 'record' as const, url: href, text, ...(value === undefined ? {} : { value }) }], notes })
+  if (!files.some(Boolean)) {
+    // No file for the year: either IPEA reported nothing for this person then (no total either), or the total is held and its lines are yet to be loaded.
+    return yearTotal === undefined
+      ? only(`OPAX has no reported IPEA expense lines for ${person.name} for ${requested.label}. This does not mean expenditure was zero.`)
+      : only(`${person.name}'s IPEA-reported expenses for ${requested.label} total ${aud(yearTotal)}; the itemised lines for that year are not loaded yet.`, yearTotal)
+  }
+  if (!lines.length) return only(all.length
+    ? `${person.name}'s IPEA-published lines${span ? ', ' + span : ''}: ${all.length} in other categories and none under ${label}.`
+    : `IPEA published no expense lines for ${person.name}${span ? ', ' + span : ` in ${requested.label}`}.`)
   const sum = (rows: Line[]) => Math.round(rows.reduce((n, r) => n + r.amount, 0) * 100) / 100
   const total = sum(lines)
   const groups = GROUPS.map(group => ({ group, rows: lines.filter(line => expenseGroup(line.category_high, line.category_major) === group) })).filter(g => g.rows.length)
@@ -180,8 +193,11 @@ export const tool: ToolDefinition = {
     const href = person ? siteUrl(env, `${personUrl(person.name)}#person-expenses`) : 'https://data.gov.au/data/organization/ipea'
     const unavailable = (text: string) => ({ rows: [], coverage, citations: [{ kind: 'record' as const, url: href, text }], notes })
     if (!person) return unavailable(candidates.length > 1 ? `The name "${clip(args.person, 60)}" matches several IPEA expense records. Please give the full name.` : `OPAX has no IPEA expense record for "${clip(args.person, 60)}".`)
-    if (args.detail === 'itemised') return itemised(env, args, requested, person, candidates[0], href, expenses.meta.attribution)
     const amounts = requested.financial ? person.by_financial_year : person.by_year
+    if (args.detail === 'itemised') {
+      const held = amounts?.find(([year]) => year === requested.key)?.[1]
+      return itemised(env, args, requested, person, candidates[0], href, typeof held === 'number' && Number.isFinite(held) ? held : undefined, expenses.meta.attribution)
+    }
     if (!amounts) return unavailable(requested.financial
       ? `OPAX's expense export does not hold financial-year totals for ${person.name}. The IPEA ingest retains reporting quarters in ext_expenses; export sums of the July to June reporting quarters to answer ${requested.label}. Calendar-year or career totals cannot establish this amount.`
       : `OPAX's expense export does not hold calendar-year totals for ${person.name}. Export sums by reporting quarter's calendar year from ext_expenses; a career total cannot establish ${requested.label}.`)
