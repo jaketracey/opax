@@ -6706,8 +6706,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // sheet under this line.
   subjectTag(body).innerHTML = tagLineHTML([
     party ? partyChipHTML(party, { full: true }) : "",
-    // A roster party is dated beside the chip, as the server's person answer dates it.
-    seatParty ? `<span>parliamentary roster as at ${esc(fmtDate(seatParty.as_of))}</span>` : "",
+    // A roster party names its source beside the chip. The roster's date stays in the data and is not shown.
+    seatParty ? `<span>parliamentary roster</span>` : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
     electorateLinks ? `<span>${seatWord}${electorateLinks}</span>` : "",
     // Each house with its parliament as one part, so the pair wraps together; a former
@@ -6720,13 +6720,11 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     ? electorateReference.module.personRepresentationRows(electorateReference.person, representation.representations, electorateReference.data.electorates)
     : representation.representations.length ? [["Recorded representation", representation.representations.map((r) =>
       `${esc(r.electorate)}${r.state && r.chamber !== 'senate' ? `, ${esc(r.state)}` : ''}`).join('<br>') + '<small class="representation-note">Roster affiliation; may include past seats.</small>']] : [];
-  const verified = (electorateReference?.person?.electorates || []).find((e) => e.current)?.as_of;
   // Who they are, dated: the identity block's one source line. Its sheet holds
   // what Quick facts held beyond the meta line, so every fact stays one tap away.
-  const rosterChecked = verified || rosterData?.meta?.representation?.updated || rosterData?.meta?.generated || "";
+  // The line names the source only. The date the roster was last checked stays in the data and
+  // is not shown, on the line or in its sheet: it read as the page's own age.
   head.insertAdjacentHTML("beforeend", sourceLineHTML({
-    updated: rosterChecked,
-    dateLabel: "As at",
     source: "Parliamentary roster",
     originals: [
       roster?.states?.includes('federal') && { label: "Parliamentary profile", href: `https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}` },
@@ -6734,15 +6732,14 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     ].filter(Boolean),
     facts: [
       ["Status", esc(roster?.current ? "Sitting parliamentarian" : "Parliamentarian")],
-      // A roster party is said of the roster's date, not of the whole career.
-      seatParty && ["Party", esc(`${seatParty.party} (parliamentary roster as at ${fmtDate(seatParty.as_of)})`)],
+      // A roster party is said of the roster, not of the whole career.
+      seatParty && ["Party", esc(`${seatParty.party} (parliamentary roster)`)],
       ...electorateRows,
       ...profileAffiliations(roster).map((r) => ["Parliamentary service",
         `${esc(r.jurisdictionLabel)} · ${esc(r.chamberLabel)} · ${esc(r.electorate)} · ${esc(r.party || 'Party not recorded')}, ` +
         `${esc(r.start)} – ${esc(r.end || 'ongoing at the review date')}`]),
       dates.length && ["Speeches in the record", `${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}`],
     ],
-    notes: [rosterChecked ? `Checked ${esc(fmtDate(rosterChecked))}.` : ""],
   }));
   head.insertAdjacentHTML("beforeend", `<div class="page-actions person-actions">
       ${moreMenuHTML([
@@ -7806,7 +7803,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=f24cadf4b1").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=8a43fafa0d").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 

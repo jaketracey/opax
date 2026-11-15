@@ -42,8 +42,8 @@ test('published state affiliation reaches the profile without inventing speech-d
 test('a state member with no party takes the verified roster party, dated and linked', async () => {
   assert.deepEqual(rosterSeatParty(person(), [seat()]), {party: 'Example Party', as_of: '2026-09-09', electorate: 'Fixtureton',
     url: '/subject/electorate/vic-vic-la-vic-fixtureton', source_url: 'https://www.parliament.vic.gov.au/members/alex-example/'});
-  assert.equal(await descriptionOf(person(), [seat()]), 'Alex Example. Example Party (parliamentary roster as at 9 Sep 2026). Fixtureton, Legislative Assembly (Victoria).');
-  assert.equal(await partyItemOf(person(), [seat()]), '<a href="/subject/party/example-party">Example Party (parliamentary roster as at 9 Sep 2026)</a>');
+  assert.equal(await descriptionOf(person(), [seat()]), 'Alex Example. Example Party (parliamentary roster). Fixtureton, Legislative Assembly (Victoria).');
+  assert.equal(await partyItemOf(person(), [seat()]), '<a href="/subject/party/example-party">Example Party (parliamentary roster)</a>');
   // Name variants fold: case, spacing and curly apostrophes.
   assert.equal(rosterSeatParty(person({name: 'alex  EXAMPLE'}), [seat()])?.party, 'Example Party');
   // The person ID decides where both carry one.
@@ -100,7 +100,7 @@ test('a party the person record already carries is unchanged by the roster', asy
 test('the person directory uses the same fallback', async () => {
   const url = new URL('https://opax.com.au/subject/person');
   const {html} = await renderDirectory('person', url, reader([seat()]), [person(), person({name: 'Jo Former'})], new Map(), {});
-  assert.match(html, /Alex Example<\/a>: Example Party \(parliamentary roster as at 9 Sep 2026\)/);
+  assert.match(html, /Alex Example<\/a>: Example Party \(parliamentary roster\)/);
   assert.match(html, /Jo Former<\/a>: Party not recorded/);
 });
 
@@ -114,9 +114,10 @@ test('the person page reads the same fallback, only for a record with no party o
   // The dated official-list fallback: a full name only, never a single-name print, dated on the page.
   assert.match(app, /const listFallback = !partyNow && !roster\?\.party && \/\\S\\s\+\\S\/\.test\(String\(roster\?\.name \|\| ""\)\);/);
   assert.match(app, /electorateReference\.module\.rosterListParty\?\.\(roster, rosterLists\.observations\)/);
-  // The chip in the meta line is dated too, not only the source-details panel.
-  assert.match(app, /seatParty \? `<span>parliamentary roster as at \$\{esc\(fmtDate\(seatParty\.as_of\)\)\}<\/span>` : "",/);
-  assert.match(app, /\["Party", esc\(`\$\{seatParty\.party\} \(parliamentary roster as at \$\{fmtDate\(seatParty\.as_of\)\}\)`\)\]/);
+  // The chip in the meta line names the roster as its source, as the source-details panel does; neither shows its date.
+  assert.match(app, /seatParty \? `<span>parliamentary roster<\/span>` : "",/);
+  assert.match(app, /\["Party", esc\(`\$\{seatParty\.party\} \(parliamentary roster\)`\)\]/);
+  assert.doesNotMatch(app, /roster as at/);
 });
 
 
@@ -140,8 +141,8 @@ test('Moira Deeming retains the date on the pinned Victorian roster affiliation'
  const index=JSON.parse(readFileSync(new URL('../public'+manifest.index_url,import.meta.url),'utf8'));
  const member=roster.people.find(p=>p.name==='Moira Deeming');
  assert.equal(member.party,undefined);
- assert.equal(partyLine(member,index.electorates),'Independent (parliamentary roster as at 9 Sep 2026)');
- assert.match(await partyItemOf(member,index.electorates),/Independent \(parliamentary roster as at 9 Sep 2026\)/);
+ assert.equal(partyLine(member,index.electorates),'Independent (parliamentary roster)');
+ assert.match(await partyItemOf(member,index.electorates),/Independent \(parliamentary roster\)/);
 });
 
 // Dated official chamber lists (public/data/roster-list-parties.json) for full-name
@@ -162,10 +163,10 @@ test('a full-name profile matched in a dated official list gets that party, date
   // The latest dated observation decides: a later list after a change of party.
   assert.equal(rosterListParty(councillor(), [listed({party: 'Earlier Party', as_of: '2023-04-01'}), listed()])?.party, 'Example Party');
   const {html, description} = await renderPersonAnswer(councillor(), listReader([listed()]), new Map());
-  assert.equal(description, 'Morgan Fixture. Example Party (parliamentary roster as at 25 Sep 2026). Legislative Council (New South Wales).');
-  assert.match(html, /<li><a href="\/subject\/party\/example-party">Example Party \(parliamentary roster as at 25 Sep 2026\)<\/a><\/li>/);
+  assert.equal(description, 'Morgan Fixture. Example Party (parliamentary roster). Legislative Council (New South Wales).');
+  assert.match(html, /<li><a href="\/subject\/party\/example-party">Example Party \(parliamentary roster\)<\/a><\/li>/);
   const directory = await renderDirectory('person', new URL('https://opax.com.au/subject/person'), listReader([listed()]), [councillor()], new Map(), {});
-  assert.match(directory.html, /Morgan Fixture<\/a>: Example Party \(parliamentary roster as at 25 Sep 2026\)/);
+  assert.match(directory.html, /Morgan Fixture<\/a>: Example Party \(parliamentary roster\)/);
   // A verified seat party still comes first; the person's own party before both.
   assert.equal(partyLine(councillor({party: 'Own Party'}), null, [listed()]), 'Own Party (recorded affiliation)');
 });

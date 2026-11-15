@@ -5171,7 +5171,7 @@ async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMet
     status: data ? 404 : 503, jsonLd: null, prerender: null,
   }
   const representation = e.representatives.length
-    ? `${e.representatives.map((m) => `${m.person.name}${m.party ? ` (${m.party})` : ''}`).join(', ')}. Verified ${e.representation_as_of}.`
+    ? `${e.representatives.map((m) => `${m.person.name}${m.party ? ` (${m.party})` : ''}`).join(', ')}. From the verified seat roster.`
     : 'No verified representative for this electorate yet.'
   const house = chamberLabel(e.chamber)
   const facts = `${e.name}, ${e.jurisdiction === 'federal' ? `Federal ${house || 'Parliament'}` : house || `${STATE_NAMES[e.jurisdiction] ?? 'State parliament'}`}. ${representation} ${e.election_count} election ${e.election_count === 1 ? 'contest' : 'contests'} on record.`
@@ -5391,7 +5391,7 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const represented = [...new Set((p.representation ?? []).map(r => r.electorate))].join(', ')
   const who = [p.party, where, represented ? `recorded representation: ${represented}` : ''].filter(Boolean).join(', ')
   if (p.rosterOnly) {
-    const description = clip(`${display}, representative for ${p.rosterOnly.seats.join(', ')}${p.party ? ` (${p.party})` : ''}. Verified ${p.rosterOnly.asOf || 'in the parliamentary roster'}. No speech count for them yet.`)
+    const description = clip(`${display}, representative for ${p.rosterOnly.seats.join(', ')}${p.party ? ` (${p.party})` : ''}. Verified in the parliamentary roster. No speech count for them yet.`)
     return { title, description, canonical, ogType: 'profile', status: 200,
       jsonLd: { '@context': 'https://schema.org', '@type': 'Person', name: display, url: canonical, jobTitle: 'Parliamentarian' },
       prerender: prerenderBlock(display, description),

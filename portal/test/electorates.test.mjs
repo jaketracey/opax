@@ -33,7 +33,8 @@ test('profile facts keep current and historical seats linked without duplicating
   assert.equal(rows.length, 1);
   assert.equal(rows[0][0], 'Electorate');
   assert.ok(rows[0][1].includes(pocock.electorates[0].url));
-  assert.match(rows[0][1], /Verified/);
+  assert.match(rows[0][1], /Verified seat roster/);
+  assert.doesNotMatch(rows[0][1], /\d{4}/);
   assert.ok(personElectorateLinksHTML(pocock).includes(pocock.electorates[0].url));
   const morrison = findPerson(people, 'Scott Morrison');
   assert.match(personElectorateLinksHTML(morrison), />Cook<\/a>/);
