@@ -5050,7 +5050,7 @@ function quarterEnd(code) {
  *  Silent when the person has no IPEA entry (state MPs, pre-2017 members). */
 async function renderPersonExpenses(name, personId, sections) {
   const key = currentSubjectKey;
-  await Promise.all([loadExpenses(), loadExpenseDefs()]);
+  const [, , coverage] = await Promise.all([loadExpenses(), loadExpenseDefs(), import("/expense-coverage.js?v=1").catch(() => null)]);
   if (currentSubjectKey !== key || !expensesData?.people) return;
   const nameKey = String(name || "").trim().toLowerCase();
   // The roster's verified pid, then IPEA's own name index; only a candidate with an expense
@@ -5077,6 +5077,12 @@ async function renderPersonExpenses(name, personId, sections) {
     ? `<a href="${esc(src)}" rel="noopener" target="_blank" aria-label="${esc(label)}"><b>${esc(fmtMoney(value))}</b></a>`
     : `<b>${esc(fmtMoney(value))}</b>`;
   const lineCount = `${lines.toLocaleString()} published line${lines === 1 ? "" : "s"}`;
+  // A year IPEA has not finished publishing says what its figure covers, from the quarters the export holds
+  // (never from today's date); a finished year says nothing. The same words as Ask (expense-coverage.js).
+  const partialYears = netOnly || !coverage || !Array.isArray(expensesData.meta?.reporting_periods) ? ""
+    : (e.by_year || []).map(([year]) => [year, coverage.yearCoverage(expensesData.meta.reporting_periods, year)])
+      .filter(([, c]) => !c.complete && c.quarters.length)
+      .map(([year, c]) => `The ${year} figure covers ${c.text}.`).join(" ");
   const lead = netOnly
     ? `IPEA publishes only adjustments and repayments for this person ${esc(span)}, across ${lineCount}, netting to ${sourceAmount(e.total, `${fmtMoney(e.total)} net adjustments and repayments, IPEA source`)}.`
     : `${sourceAmount(e.total, `${fmtMoney(e.total)} claimed expenses, IPEA source`)} claimed, ${esc(span)},
@@ -5086,15 +5092,16 @@ async function renderPersonExpenses(name, personId, sections) {
     <p class="expense-lead">${lead}</p>
     ${benchmark ? expenseComparisonHTML(e, benchmark) : ""}
     ${!netOnly && e.by_year?.length > 1 ? columnChart(e.by_year, {
-      fmt: fmtMoney, heading: "Claimed per year",
-    }) : ""}
+      fmt: fmtMoney, heading: "Claimed per year", note: partialYears,
+    }) : partialYears ? `<p class="chart-note">${esc(partialYears)}</p>` : ""}
     ${sourceLineHTML({
       updated: expensesData.meta?.generated || "",
       source: `IPEA quarterly reports${expensesData.meta?.to ? ` to ${quarterEnd(expensesData.meta.to)}` : ""}`,
       originals: [src && { label: benchmark ? "IPEA quarterly expenditure reports" : "Latest quarter on data.gov.au", href: src },
         { label: "What the categories mean", href: "/expenses" }].filter(Boolean),
       notes: [
-        "Summed by reporting quarter. IPEA data starts in April 2017 and runs to the latest published quarter, so the first and last years can be partial.",
+        partialYears ? "Summed by reporting quarter. IPEA data starts in April 2017 and runs to the latest published quarter."
+          : "Summed by reporting quarter. IPEA data starts in April 2017 and runs to the latest published quarter, so the first and last years can be partial.",
         !netOnly && netAdjustments < 0 ? `The total includes ${esc(fmtMoney(netAdjustments))} of IPEA adjustments and repayments in categories that net below zero; those categories are not drawn as bars.` : "",
         benchmark ? `Bronze is this member's average year; the ink tick is the median year of ${benchmark.count.toLocaleString()} parliamentarians claiming in ${esc(benchmark.latestYear)} who have claimed since ${esc(benchmark.fromCutoff)} or earlier. Office costs follow electorate size and travel follows portfolio, so a bar past its tick is a fact, not a finding. Per-year figures divide each total by the ${years} calendar ${years === 1 ? "year" : "years"} claimed; the first and last are partial. IPEA corrects prior quarters, so treat totals as indicative.` : esc(IPEA_NOTE),
       ],

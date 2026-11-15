@@ -8,6 +8,8 @@ export type ToolEnv = Partial<Pick<Env, 'ASSETS' | 'TABLE_DB' | 'MEDIA' | 'COMMU
   origin?: string
   signal?: AbortSignal
   asset?: (path: string) => Promise<unknown>
+  /** True when Ask is the caller (callTool's ask flag): wording that the public MCP output does not carry yet. */
+  ask?: boolean
   /** Read-only reader of one published JSON object in the media bucket, by key; null when it is not there. */
   media?: (key: string) => Promise<unknown>
   /** Read-only KB adapter; credentials remain outside tool handlers. */

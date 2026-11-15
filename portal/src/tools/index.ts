@@ -114,7 +114,7 @@ export async function callTool(env: ToolEnv, name: string, args: unknown, ask = 
   try {
     const parsed = await validateToolArgs(env, name, args, ask)
     // Canonical wire JSON is identical in Ask and MCP, including optional metadata.
-    const data = JSON.parse(JSON.stringify(await tool!.handler(env, parsed))) as StructuredToolResult
+    const data = JSON.parse(JSON.stringify(await tool!.handler(ask ? { ...env, ask: true } : env, parsed))) as StructuredToolResult
     // Every record set names an OPAX page to cite: its own listing or record page where it has one, else the register's page.
     if (Array.isArray(data.rows) && typeof data.opax_url !== 'string') {
       const origin = new URL(env.origin ?? env.COMMUNITY_ORIGIN ?? 'https://opax.com.au').origin

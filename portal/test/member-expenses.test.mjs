@@ -158,9 +158,9 @@ test('itemised travel leads with what is held, then subtotals, then each publish
   assert.equal(row.amount_aud,6542.75);
   assert.deepEqual(row.reporting_quarters,['2026Q01','2026Q02']);
   assert.deepEqual(row.groups.map(g=>[g.group,g.lines,g.amount_aud]),[['fares',2,0],['allowance',1,644],['car',1,88.5],['overseas',1,4000],['family',1,310],['staff',1,1500.25]]);
-  assert.equal(result.citations[0].text,"Jane Example's IPEA-reported travel lines, 1 January 2026 to 30 June 2026: 7 lines totalling $6,542.75 (reporting quarters held: 2026Q01, 2026Q02).");
+  assert.equal(result.citations[0].text,"Jane Example's IPEA-reported travel lines, January to June 2026 (two quarters published): 7 lines totalling $6,542.75, a partial subtotal of calendar year 2026.");
   assert.match(result.citations[0].url,/#person-expenses$/);
-  assert.equal(result.citations[2].text,'Jane Example, travel allowance, 1 January 2026 to 30 June 2026: 1 lines, $644.00, 2 nights.');
+  assert.equal(result.citations[2].text,'Jane Example, travel allowance, January to June 2026 (two quarters published): 1 lines, $644.00, 2 nights.');
   const lines=result.citations.slice(1+row.groups.length);
   assert.equal(lines.length,7);
   assert.equal(lines[0].text,'Jan-Mar 2026, Fares: Canberra to Sydney 13 Feb 26: $246.81');
@@ -189,7 +189,7 @@ test('itemised categories narrow the lines, and a financial year reads both cale
   assert.deepEqual(reads.sort(),['expenses/v1/P1/2025.json','expenses/v1/P1/2026.json']);
   assert.equal(fy.rows[0].lines,8);
   assert.equal(fy.coverage.matched,true);
-  assert.match(fy.citations[0].text,/1 July 2025 to 30 June 2026: 8 lines totalling \$7,155\.15\.$/);
+  assert.match(fy.citations[0].text,/travel lines, financial year 2025-26: 8 lines totalling \$7,155\.15\.$/);
   assert.equal(fy.citations.at(-8).text,'Jul-Sep 2025, Fares: Canberra to Perth 4 Aug 25: $612.40');
 });
 
@@ -211,7 +211,7 @@ test('itemised answers say what is held when the lines or the category are absen
   // a total is held for 2026 but its lines are not loaded: the answer leads with the total
   const pending=await ask({year:2026,detail:'itemised'},{});
   assert.equal(pending.rows.length,0);
-  assert.equal(pending.citations[0].text,"Jane Example's IPEA-reported expenses for calendar year 2026 total $6,598; the itemised lines for that year are not loaded yet.");
+  assert.equal(pending.citations[0].text,"Jane Example's IPEA-reported expenses for January to June 2026 (two quarters published) total $6,598, a partial subtotal of calendar year 2026; the itemised lines for that year are not loaded yet.");
   assert.equal(pending.citations[0].value,6598);
   // no total and no file: IPEA reported nothing for that year (before the member's time, or before IPEA's coverage)
   for(const year of [2019,'2018-19']){
@@ -223,11 +223,11 @@ test('itemised answers say what is held when the lines or the category are absen
   }
   const empty=await ask({year:2025,detail:'itemised',category:'overseas'});
   assert.equal(empty.rows.length,0);
-  assert.equal(empty.citations[0].text,"Jane Example's IPEA-published lines, 1 July 2025 to 31 December 2025: 2 in other categories and none under overseas travel.");
+  assert.equal(empty.citations[0].text,"Jane Example's IPEA-published lines, July to December 2025 (two quarters published): 2 in other categories and none under overseas travel.");
   const blank=structuredClone(files);
   blank['expenses/v1/P1/2025.json'].lines=[];
   const nothing=await ask({year:2025,detail:'itemised'},blank);
-  assert.equal(nothing.citations[0].text,'IPEA published no expense lines for Jane Example, 1 July 2025 to 31 December 2025.');
+  assert.equal(nothing.citations[0].text,'IPEA published no expense lines for Jane Example, July to December 2025 (two quarters published).');
   assert.ok([...empty.citations,...nothing.citations].every(c=>c.value===undefined));
 });
 
