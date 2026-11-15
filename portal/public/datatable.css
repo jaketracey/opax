@@ -52,10 +52,12 @@
 @media (width < 1024px) { .dt :is(th, td):first-child:not([colspan]) { box-shadow: inset calc(-1 * var(--border-hairline)) 0 0 var(--divider-default); } }
 .dt-value { position: relative; }
 .dt [data-primary] { font: var(--type-strong); }
-/* A table link takes the table's accent, visited or not. A table whose accent
-   would read as a visited colour (the interests registers' plum) sets
-   --dt-link to the site's ordinary link ink instead (register-tables.css). */
-.dt a, .dt a:visited { color: var(--dt-link, var(--money-ink)); text-decoration-thickness: var(--border-hairline); text-underline-offset: var(--space-line); }
+/* A table link takes the table's accent. No rule here or elsewhere names
+   the visited state, so a visited link is drawn as an unvisited one and keeps the same
+   hover. A table whose accent would read as a visited colour (the interests
+   registers' plum) sets --dt-link to the site's ordinary link ink instead
+   (register-tables.css). */
+.dt a { color: var(--dt-link, var(--money-ink)); text-decoration-thickness: var(--border-hairline); text-underline-offset: var(--space-line); }
 .dt-bar-track { display: block; height: var(--space-line); background: var(--money-wash); margin-top: var(--space-tight); border-radius: var(--radius-pill); overflow: hidden; }
 .dt-bar { display: block; width: var(--dt-bar); height: 100%; background: var(--money-ink); }
 .dt-scale { display: block; color: var(--ink-soft); font: var(--type-fine); margin-top: var(--space-line); }

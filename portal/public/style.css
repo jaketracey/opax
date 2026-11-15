@@ -5250,12 +5250,13 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 .growth-ask-form .ui-button { flex-shrink: 0; }
 /* Suggested questions are a wrapping row of quiet pills: one line each, cut
    with an ellipsis at a capped width so a long bill title cannot make one
-   giant pill. The link's title and its href both carry the whole question. */
+   giant pill. The cap is on the list item, so the item is as wide as its pill
+   and the gap to the next one stays the list's own. The link's title and its href both carry the whole question. */
 .growth-questions { display: flex; flex-wrap: wrap; gap: var(--space-tight); list-style: none; margin: var(--space-row) 0 0; padding: 0; }
 .growth-questions:empty { display: none; }
-.growth-questions li { min-width: 0; max-width: 100%; }
+.growth-questions li { min-width: 0; max-width: min(100%, 26rem); }
 .growth-questions a {
-  display: block; box-sizing: border-box; max-width: min(100%, 26rem);
+  display: block; box-sizing: border-box; max-width: 100%;
   padding: var(--space-tight) var(--space-heading);
   border: var(--border-hairline) solid var(--divider-default); border-radius: var(--radius-pill);
   background: var(--paper-raised); color: var(--ink); font: var(--type-fine); text-decoration: none;

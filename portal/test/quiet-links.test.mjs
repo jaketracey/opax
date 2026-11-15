@@ -29,7 +29,9 @@ test('a question asked from lower on the Ask page is brought into view by one sh
   assert.match(index, /<h2 id="ask-question" class="visually-hidden" tabindex="-1" hidden><\/h2>\s*<div id="ask-status"/, 'the question heading sits above the waiting state and the answer');
   const body = (name) => { const at = app.indexOf(`function ${name}(`); assert.ok(at > 0, name); return app.slice(at, app.indexOf('\n}', at)); };
   const helper = body('bringAskIntoView');
-  assert.match(helper, /prefers-reduced-motion: reduce\)"\)\.matches \? "instant" : "smooth"/, 'smooth unless the reader asked for less motion');
+  // "auto", as revealAskResult uses: an older Safari can reject "instant" and throw before focus moves.
+  assert.match(helper, /prefers-reduced-motion: no-preference\)"\)\.matches \? "smooth" : "auto"/, 'smooth unless the reader asked for less motion');
+  assert.doesNotMatch(helper, /"instant"/);
   assert.match(helper, /heading\.focus\(\{ preventScroll: true \}\)/, 'focus goes to the question heading');
   assert.match(body('runAsk'), /setAskQuestion\(question\)/, 'every ask names the heading');
   // The callers: a suggestion (under an answer or under the box), the builder,
@@ -76,12 +78,13 @@ test('an interests register table has ink links; a money table keeps its green, 
   }
   // Money tables keep their green.
   for (const id of ['party-money', 'grant', 'plain']) assert.equal(linkColour(id), GREEN, `#${id}: a money table link keeps the money green`);
-  // Visited or not: the one shared rule names both states, in the shared
-  // component, and the interests scope only sets its variables.
+  // Visited or not: no stylesheet names :visited at all, so a visited link is
+  // drawn as an unvisited one and keeps its hover (a .dt a:visited rule would
+  // outrank a:hover). The interests scope only sets the shared rule's variables.
   const datatable = read('datatable.css'), registers = read('register-tables.css');
-  assert.match(datatable, /\n\.dt a, \.dt a:visited \{ color: var\(--dt-link, var\(--money-ink\)\);/);
+  assert.match(datatable, /\n\.dt a \{ color: var\(--dt-link, var\(--money-ink\)\);/);
+  for (const name of ['style.css', 'ui-controls.css', 'datatable.css', 'register-tables.css', 'grants-table.css', 'vote-tables.css']) assert.doesNotMatch(read(name), /:visited/, `${name}: no visited rule`);
   assert.match(registers, /#subject-interests \[data-register-table\],\s*\[data-register-table="ssr-interests-table"\] \{\s*--dt-link: var\(--ink\);\s*--dt-link-rule: var\(--bronze-rule\);/);
-  for (const name of ['style.css', 'datatable.css', 'register-tables.css', 'grants-table.css']) assert.doesNotMatch(read(name).replace('.dt a, .dt a:visited {', ''), /\.dt[^{},]*a:visited/, `${name}: no other visited rule for table links`);
   // Focus keeps the section accent's ring, as before.
   assert.match(datatable, /\.dt-root :is\(button, summary, input, select, a\):focus-visible \{ outline: var\(--border-focus\) solid var\(--money-ink\)/);
 });
@@ -121,7 +124,10 @@ test('the Ask-about questions are one-line pills in a wrapping list, and the blo
   assert.equal(pill.whiteSpace, 'nowrap');
   assert.equal(pill.overflow, 'hidden');
   assert.equal(pill.textOverflow, 'ellipsis');
-  assert.match(pill.maxWidth, /^min\(100%, \d+(rem|px)\)$/, 'a capped width, so a long bill title cannot make one giant pill');
+  // The cap is on the list item and the pill fills it: capped on the pill alone,
+  // the item kept the full text's width and left a blank before the next pill.
+  assert.match(styleOf(dom, '.growth-questions li').maxWidth, /^min\(100%, \d+(rem|px)\)$/, 'a capped width, so a long bill title cannot make one giant pill');
+  assert.equal(pill.maxWidth, '100%', 'the pill is as wide as its item, no wider');
   assert.equal(pill.textDecoration, 'none', 'no underline');
   assert.equal(pill.color, 'var(--ink)');
   assert.equal(pill.background, 'var(--paper-raised)');

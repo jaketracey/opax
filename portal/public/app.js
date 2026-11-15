@@ -10536,7 +10536,7 @@ function bringAskIntoView() {
   // The page is about to move on its own; that is not the reader scrolling.
   holdPeopleRail(1000);
   form.scrollIntoView({
-    behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth",
+    behavior: matchMedia("(prefers-reduced-motion: no-preference)").matches ? "smooth" : "auto",
     block: "start",
   });
   heading.focus({ preventScroll: true });
