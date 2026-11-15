@@ -93,3 +93,28 @@ existing mislinked federal rows, including `sa_harvey`, `nsw_david_shoebridge`,
 current federal members still carry their former state IDs. Relink actual
 members to their federal identities while keeping committee witnesses separate,
 then re-export the directory with its normal representation enrichment.
+
+## First speech and first division in the record (2026-11-15)
+
+`portal/public/people/firsts.json` is a side file to the roster, written by
+`scripts/export_people_firsts.py` (read-only on `parli.db`; it reads the
+shipped roster and never rewrites it). For each roster person it holds the
+date and document of the first speech the corpus holds for them, and the date
+and source address of the first division in which they are recorded voting aye
+or no. The script's docstring is the contract: what counts, how a speech or a
+division is matched to one roster row, and when nothing is published (a name
+two rows answer to, a scoped namesake, a division with no source address).
+
+The dates say when the record starts for a person, not when their service
+did: speeches are held from `meta.speeches_since` and divisions from the dates
+in `meta.divisions_since`. Readers therefore say "First speech in the record"
+and "First division in the record", and never rank or compare people.
+
+A roster row with a `pid` is under `by_pid`; a row without one is under
+`by_name` by its exact roster name. Fields are only ever added.
+`portal/test/people-firsts.test.mjs` holds the shape the apps decode, on a
+sample built from a synthetic database (`scripts/test_export_people_firsts.py`).
+
+The file is not yet in a nightly group: `scripts/vm/data_groups.sh` needs a
+path that exists in HEAD, so the first export is a reviewed manual commit and
+the group (with its `validate_data.py` check) follows it.
