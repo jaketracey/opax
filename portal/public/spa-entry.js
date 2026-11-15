@@ -1,8 +1,8 @@
 // A module that will not load is nearly always a release that replaced the
 // files this page was built against ("Importing a module script failed" in
-// Safari). The page is loaded again, once: the build that failed is kept for
-// the tab (sessionStorage), so a module that still fails after the reload, or
-// with no network, leaves the page as it is and never loops.
+// Safari). The page is loaded again, once a build: the builds that failed are
+// kept for the tab (sessionStorage), so a module that still fails after the
+// reload, or with no network, leaves the page as it is and never loops.
 (() => {
   const STALE = /Importing a module script failed|Failed to fetch dynamically imported module|error loading dynamically imported module/i;
   const KEY = 'opax-module-reload';
@@ -12,8 +12,15 @@
     if (!STALE.test(String(message ?? '')) || navigator.onLine === false) return;
     try {
       const id = build();
-      if (sessionStorage.getItem(KEY) === id) return;
-      sessionStorage.setItem(KEY, id);
+      // Every build this tab has reloaded for, one a line: a release still
+      // rolling out can serve the old page and the new one in turn, and each
+      // is reloaded for once, not once each time it comes back.
+      const tried = () => (sessionStorage.getItem(KEY) || '').split('\n').filter(Boolean);
+      const before = tried();
+      if (before.includes(id)) return;
+      sessionStorage.setItem(KEY, [...before, id].join('\n'));
+      // A store that takes the write and does not keep it is no guard.
+      if (!tried().includes(id)) return;
     } catch { return; } // nowhere to keep the guard, so no reload
     location.reload();
   };
