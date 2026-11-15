@@ -4,7 +4,7 @@
 // is unchanged. The dropdown is the Search tab's own sources, ranking,
 // routes and recents: nothing new is read, ranked, stored or sent.
 import { act } from 'react';
-import { AccessibilityInfo, StyleSheet, TextInput } from 'react-native';
+import { AccessibilityInfo, StyleSheet, TextInput, View } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { memberSuggestionRoster } from '../src/api/catalog-search';
 import { catalogs } from '../src/api/runtime';
@@ -556,6 +556,115 @@ describe("the field as Today's bar item (iPad, where the bar has room)", () => {
     );
     expect(input(bar).props.value).toBe('');
     focusField.mockRestore();
+    await act(async () => {
+      bar.unmount();
+      page.unmount();
+    });
+  });
+});
+
+describe('the placement switches while Today is open (review of 9dc926978)', () => {
+  // A new element each time: the same object would not render again.
+  const both = () => (
+    <>
+      <WideSearch />
+      <WideSearchBar />
+    </>
+  );
+  async function mountBarPage() {
+    mockWidth = 1032;
+    let page!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      page = TestRenderer.create(both());
+    });
+    let bar!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      bar = TestRenderer.create(
+        mockBarOptions!.unstable_headerRightItems!()[0].element,
+      );
+    });
+    return { page, bar };
+  }
+
+  test('bar field to masthead field: the masthead field is the live one, unfocused, and Cmd-F reaches it', async () => {
+    const focusField = jest
+      .spyOn(TextInput.prototype, 'focus')
+      .mockImplementation(() => undefined);
+    const { page, bar } = await mountBarPage();
+    await focus(bar);
+    await type(bar, 'grayndler');
+    expect(ids(page)).toContain('today-wide-search-panel');
+    // The window narrows: the masthead field mounts, then the navigator
+    // drops the bar item.
+    mockWidth = 834;
+    await act(async () => page.update(both()));
+    await act(async () => bar.unmount());
+    expect(ids(page)).toContain('today-wide-search-input');
+    // No field has focus, so no dropdown is drawn under the new one.
+    expect(quickSearch.snapshot().focused).toBe(false);
+    expect(ids(page)).not.toContain('today-wide-search-panel');
+    expect(quickSearch.input.current).not.toBeNull();
+    await act(async () => void dispatchKeyCommand('find'));
+    expect(focusField).toHaveBeenCalledTimes(1);
+    // The masthead field works on: focus, the words kept, a row opens.
+    await focus(page);
+    expect(ids(page)).toContain('today-wide-search-panel');
+    const top = matchItem(suggestionList('grayndler', sources).top!, sources);
+    await act(async () => row(page, top.key).props.onPress());
+    expect(router.push).toHaveBeenCalledWith(
+      (top.action as { route: unknown }).route,
+    );
+    focusField.mockRestore();
+    await act(async () => page.unmount());
+  });
+
+  test('a rotation with the bar dropdown open closes it; the next focus measures its place again', async () => {
+    let fieldAt = { x: 800, y: 30, w: 206, h: 44 };
+    const measure = jest
+      .spyOn(View.prototype, 'measureInWindow')
+      .mockImplementation(function (this: View, callback) {
+        const props = (this as unknown as { props: { testID?: string } }).props;
+        if (props.testID === 'today-bar-search-host') callback(32, 142, 968, 1);
+        else callback(fieldAt.x, fieldAt.y, fieldAt.w, fieldAt.h);
+      });
+    const blur = jest
+      .spyOn(TextInput.prototype, 'blur')
+      .mockImplementation(() => undefined);
+    const { page, bar } = await mountBarPage();
+    const panelStyle = () =>
+      StyleSheet.flatten(
+        page.root.findAll(
+          (node) =>
+            typeof node.type === 'string' &&
+            node.props.testID === 'today-wide-search-panel',
+        )[0]!.props.style,
+      );
+    await focus(bar);
+    await type(bar, 'grayndler');
+    // Under the field: its bottom edge plus the gap, once; trailing edges
+    // together.
+    expect(panelStyle()).toMatchObject({
+      top: 30 + 44 + 6 - 142,
+      left: 800 + 206 - 420 - 32,
+      marginTop: 0,
+    });
+    // Landscape: the field is elsewhere in a wider bar.
+    mockWidth = 1376;
+    fieldAt = { x: 1010, y: 30, w: 300, h: 44 };
+    await act(async () => page.update(both()));
+    await act(async () =>
+      bar.update(mockBarOptions!.unstable_headerRightItems!()[0].element),
+    );
+    expect(ids(page)).not.toContain('today-wide-search-panel');
+    expect(blur).toHaveBeenCalled();
+    await act(async () => input(bar).props.onBlur());
+    await focus(bar);
+    expect(panelStyle()).toMatchObject({
+      top: 30 + 44 + 6 - 142,
+      left: 1010 + 300 - 420 - 32,
+    });
+    measure.mockRestore();
+    blur.mockRestore();
     await act(async () => {
       bar.unmount();
       page.unmount();

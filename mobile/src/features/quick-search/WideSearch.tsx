@@ -131,23 +131,34 @@ const closePanel = () => {
   quickSearch.input.current?.blur();
 };
 
-const holdAnchor = (node: View | null) => {
-  quickSearch.anchor.current = node;
-};
-const holdInput = (node: TextInput | null) => {
-  quickSearch.input.current = node;
-};
-
 /** The capsule and its text field, bound to the shared state. */
 function SearchInput({ width }: { width: number }) {
   const { text, focused, armed, dismissed } = useQuickSearch();
   const open = focused && !dismissed && armed;
+  const input = useRef<TextInput>(null);
+  const anchor = useRef<View>(null);
+  // The drawn field is the store's. When the placement switches (the bar
+  // item to the masthead on a rotation or a window resize) the new field
+  // mounts before the old one goes, so a field leaving clears only itself,
+  // and whichever leaves, no field is focused any more.
+  useEffect(() => {
+    const mine = { input: input.current, anchor: anchor.current };
+    quickSearch.input.current = mine.input;
+    quickSearch.anchor.current = mine.anchor;
+    return () => {
+      if (quickSearch.input.current === mine.input)
+        quickSearch.input.current = null;
+      if (quickSearch.anchor.current === mine.anchor)
+        quickSearch.anchor.current = null;
+      if (quickSearch.snapshot().focused) quickSearch.set({ focused: false });
+    };
+  }, []);
   return (
-    <View ref={holdAnchor} style={{ width }} collapsable={false}>
+    <View ref={anchor} style={{ width }} collapsable={false}>
       <View style={styles.field}>
         <Icon name={symbols.search} size={18} tone="inkSoft" maxScale={1.3} />
         <TextInput
-          ref={holdInput}
+          ref={input}
           value={text}
           onChangeText={(next) =>
             quickSearch.set({ text: next, dismissed: false })
@@ -288,8 +299,23 @@ function BarPanelHost({ fieldWidth }: { fieldWidth: number }) {
     top: number;
     left: number;
     windowTop: number;
+    /** The window it was measured in: a place is good for that size only. */
+    window: string;
   } | null>(null);
-  const place = measured ?? { top: 0, left: column - width, windowTop: 80 };
+  const size = `${window.width}x${window.height}`;
+  const place =
+    measured?.window === size
+      ? measured
+      : { top: 0, left: column - width, windowTop: 80 };
+  // A rotation or a window resize moves the bar field: the open dropdown
+  // closes rather than stay where the field was, and the next focus
+  // measures its place again.
+  const lastSize = useRef(size);
+  useEffect(() => {
+    if (lastSize.current === size) return;
+    lastSize.current = size;
+    if (quickSearch.snapshot().focused) closePanel();
+  }, [size]);
   useKeyCommand(
     'find',
     () => quickSearch.input.current?.focus(),
@@ -323,9 +349,10 @@ function BarPanelHost({ fieldWidth }: { fieldWidth: number }) {
         top: windowTop - page.y!,
         left: field.x! + field.w - width - page.x!,
         windowTop,
+        window: size,
       });
     });
-  }, [width]);
+  }, [width, size]);
   return (
     <View
       ref={host}
@@ -338,7 +365,13 @@ function BarPanelHost({ fieldWidth }: { fieldWidth: number }) {
         <WideSearchPanel
           width={width}
           top={place.windowTop}
-          fixed={{ top: place.top, left: place.left, right: undefined }}
+          fixed={{
+            top: place.top,
+            left: place.left,
+            right: undefined,
+            // The measured top already includes the gap under the field.
+            marginTop: 0,
+          }}
         />
       ) : null}
     </View>
@@ -359,7 +392,7 @@ function WideSearchPanel({
   /** The panel's top edge in the window, for the room above the keyboard. */
   top: number;
   /** At this place from the host's corner, instead of under the field. */
-  fixed?: { top: number; left: number; right: undefined };
+  fixed?: { top: number; left: number; right: undefined; marginTop: 0 };
 }) {
   const { text: q, focused: fieldFocused, armed, dismissed } = useQuickSearch();
   const open = fieldFocused && !dismissed && armed;
