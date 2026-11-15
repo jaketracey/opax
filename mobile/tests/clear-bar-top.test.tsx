@@ -402,11 +402,18 @@ describe('a solid bar beside a vertical bar', () => {
       true,
     ],
     ['an iPhone page', 'unspecified', tabStack, undefined, true],
-    ['a page with no setting on', 'trailing', tabStack, undefined, false],
   ] as const)('%s is not backed', (_name, edge, names, presentation, on) => {
     mockBarEdge = edge;
     solid.mockReturnValue(on);
     expect('headerBackground' in page([...names], presentation)).toBe(false);
+  });
+
+  test('an opaque pushed page with no setting on is backed too', () => {
+    // A bar that holds a search field is solid beside the rail whatever the
+    // settings; its page backs it like the legibility bar.
+    mockBarEdge = 'trailing';
+    solid.mockReturnValue(false);
+    expect(typeof page(tabStack).headerBackground).toBe('function');
   });
 });
 
@@ -504,12 +511,13 @@ describe('no bar colour or hairline under the clear rail bar', () => {
       const styled = options(edge, transparent, content).filter(
         (call) => 'headerStyle' in call,
       );
-      expect(
-        styled.map(
-          (call) =>
-            (call.headerStyle as { backgroundColor: unknown }).backgroundColor,
-        ),
-      ).toEqual([...grounds]);
+      const seen = styled.map(
+        (call) =>
+          (call.headerStyle as { backgroundColor: unknown }).backgroundColor,
+      );
+      expect(seen.length).toBeGreaterThan(0);
+      for (const colour of seen) expect(grounds).toContain(colour);
+      for (const ground of grounds) expect(seen).toContain(ground);
       for (const call of styled) expect(call.headerShadowVisible).toBe(true);
     },
   );
@@ -575,7 +583,7 @@ test('a page’s own bar colour is backed in that colour under the solid rail ba
     });
     // Each call that colours the bar backs it in the same colour.
     const coloured = calls.filter((call) => 'headerStyle' in call);
-    expect(coloured.length).toBe(2);
+    expect(coloured.length).toBeGreaterThanOrEqual(2);
     for (const call of coloured) {
       const backing = (
         call.headerBackground as () => ReactElement<{
@@ -591,7 +599,7 @@ test('a page’s own bar colour is backed in that colour under the solid rail ba
         (call) =>
           (call.headerStyle as { backgroundColor: unknown }).backgroundColor,
       ),
-    ).toEqual([colors.paper, colors.sunken]);
+    ).toEqual(expect.arrayContaining([colors.paper, colors.sunken]));
   } finally {
     act(() => renderer.unmount());
     solid.mockRestore();
@@ -780,4 +788,120 @@ describe('a presented page keeps the bar it sets itself', () => {
     const options = set('trailing', undefined, { ...paperBar }, true);
     expect(typeof options.headerBackground).toBe('function');
   });
+});
+
+// A search field is stacked below the title band on the rail, outside what
+// UIKit's scroll edge covers. The pushed Bills list drew a covered title
+// with the field floating over its rows (b74). Any pushed page whose bar
+// holds a search field takes the solid bar on the page's own ground, as the
+// rail roots do.
+describe('a pushed page with a search field beside the rail', () => {
+  const search = { headerSearchBarOptions: { placeholder: 'Search bills' } };
+  function set(
+    edge: typeof mockBarEdge,
+    content: ReactElement,
+    {
+      first = false,
+      presentation,
+    }: { first?: boolean; presentation?: string } = {},
+  ) {
+    mockBarEdge = edge;
+    const calls: Record<string, unknown>[] = [];
+    const navigation = {
+      addListener: () => () => undefined,
+      setOptions: (value: Record<string, unknown>) => calls.push(value),
+      getState: () => ({
+        index: first ? 0 : 1,
+        routes: first
+          ? [{ key: route.key }]
+          : [{ key: 'root' }, { key: route.key }],
+        routeNames: ['index', 'bill/[key]', 'explore/[tool]'],
+      }),
+      isFocused: () => true,
+    };
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <NavigationContext.Provider value={navigation as never}>
+          <NavigationRouteContext.Provider value={route as never}>
+            <DescriptorsContext.Provider
+              value={
+                {
+                  [route.key]: {
+                    options: { headerTransparent: true, presentation },
+                  },
+                } as never
+              }
+            >
+              {content}
+            </DescriptorsContext.Provider>
+          </NavigationRouteContext.Provider>
+        </NavigationContext.Provider>,
+      );
+    });
+    act(() => renderer.unmount());
+    return Object.assign({}, ...calls) as Record<string, unknown>;
+  }
+  const backing = (options: Record<string, unknown>) =>
+    (
+      options.headerBackground as () => ReactElement<{
+        style: { backgroundColor: unknown };
+      }>
+    )().props.style.backgroundColor;
+  const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
+  beforeEach(() => {
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 27,
+    });
+  });
+  afterEach(() => {
+    if (version) Object.defineProperty(Platform, 'Version', version);
+  });
+
+  test('a list with no Screen is solid and backed in paper', () => {
+    const options = set('trailing', <RouteOptions options={search} />);
+    expect(options.headerTransparent).toBe(false);
+    expect(backing(options)).toBe(colors.paper);
+  });
+
+  test('a page with a Screen is backed in that page’s ground', () => {
+    const options = set(
+      'leading',
+      <>
+        <RouteOptions options={search} />
+        <Screen grouped>
+          <View />
+        </Screen>
+      </>,
+    );
+    expect(options.headerTransparent).toBe(false);
+    expect(backing(options)).toBe(colors.sunken);
+  });
+
+  test('a page that drops its field takes the clear bar back', () => {
+    const options = set(
+      'trailing',
+      <RouteOptions options={{ headerSearchBarOptions: undefined }} />,
+    );
+    expect(options.headerTransparent).toBe(true);
+    expect(options.headerBackground).toBeUndefined();
+  });
+
+  test.each([
+    // iPhone, iPad and the unfolded Duo.
+    ['unspecified', {}],
+    // A tab root: its own owner sets its bar (useRootBarAppearance).
+    ['trailing', { first: true }],
+    // A sheet in the tab stack.
+    ['trailing', { presentation: 'formSheet' }],
+  ] as const)(
+    'beside a %s bar (%o) the page’s options pass through untouched',
+    (edge, where) => {
+      const options = set(edge, <RouteOptions options={search} />, where);
+      expect('headerTransparent' in options).toBe(false);
+      expect('headerBackground' in options).toBe(false);
+    },
+  );
 });

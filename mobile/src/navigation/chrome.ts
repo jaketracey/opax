@@ -45,6 +45,7 @@ import { askReturnSnapshot } from '../features/ask/return';
 import { voiceLinked } from '../voice/linked';
 import { canShare } from './share';
 import {
+  RootBar,
   useVerticalBarEdge,
   type VerticalBarEdge,
 } from '../../modules/opax-root-bar';
@@ -825,8 +826,60 @@ export function pendingHeaderItems(
   ].includes(name ?? '');
   if (!alwaysTwo && !moreOnly && !shareAndMore) return undefined;
   const count = alwaysTwo || (shareAndMore && canShare) ? 2 : 1;
+  // Beside a vertical bar the items sit on the rail, where a spacing item
+  // takes no room and is no bar content: the page was first laid out with
+  // no title band, 58 pt higher, and dropped when the real buttons arrived
+  // (every pushed page on the closed Duo, b74). The stand-ins there are the
+  // buttons themselves, disabled until the page supplies its own, so the
+  // bar holds the same items from the first frame.
+  if (railItems()) {
+    const more: TestableHeaderItem = {
+      type: 'button',
+      label: 'More',
+      identifier: 'header-more',
+      accessibilityLabel: 'More',
+      icon: { type: 'sfSymbol', name: 'ellipsis.circle' },
+      disabled: true,
+      onPress: () => undefined,
+    };
+    if (count === 1) return [more];
+    const first: TestableHeaderItem = alwaysTwo
+      ? {
+          type: 'button',
+          label: 'Filters',
+          identifier: 'header-filters',
+          accessibilityLabel: 'Filters',
+          icon: {
+            type: 'sfSymbol',
+            name: 'line.3.horizontal.decrease.circle',
+          },
+          disabled: true,
+          onPress: () => undefined,
+        }
+      : {
+          type: 'button',
+          label: 'Share',
+          accessibilityLabel: 'Share',
+          icon: { type: 'sfSymbol', name: 'square.and.arrow.up' },
+          disabled: true,
+          onPress: () => undefined,
+        };
+    return [first, more];
+  }
   // Match the 44 pt items and 16 pt group gap used by barTitleWidth.
   return [{ type: 'spacing', spacing: 44 + 60 * (count - 1) }];
+}
+
+/**
+ * Whether bar items sit on a vertical rail right now. Read from the native
+ * module's cached snapshot, since the stack's first options are built
+ * outside any component.
+ */
+function railItems(): boolean {
+  return (
+    glassBar() &&
+    (RootBar?.getVerticalBarEdge?.() ?? 'unspecified') !== 'unspecified'
+  );
 }
 
 export function pendingHeaderOptions(name: string, params?: object) {

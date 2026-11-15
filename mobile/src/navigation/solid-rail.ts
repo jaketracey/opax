@@ -8,18 +8,35 @@ import { useRailBar } from './chrome';
 import { isTabStack } from './floating-bar';
 
 /**
- * A pushed page in a tab's stack beside a vertical bar, with Reduce
- * Transparency or Increase Contrast on: it keeps the solid bar, and that bar
- * needs its own colour behind it (`barBacking`), or the top 14 pt shows what
- * is behind the bar: the system's grey, or the page under a bar of another
- * colour. Not a sheet: a backing view reserved a band in sheets.
+ * The rail bar of a page pushed in a tab's stack: `clear`, or `solid` with a
+ * legibility setting on. Null for a tab root (its own owner sets its bar), a
+ * sheet or modal, another stack, and every layout without a vertical bar.
  */
-export function useSolidRailBacking(): boolean {
+export function usePushedRailBar(): 'clear' | 'solid' | null {
   const rail = useRailBar();
   const route = useContext(NavigationRouteContext);
   const navigation = useContext(NavigationContext);
-  if (rail !== 'solid' || !route || !isTabStack(navigation?.getState()))
-    return false;
+  if (!rail || !route) return null;
+  const state = navigation?.getState();
+  if (!isTabStack(state) || state?.routes?.[0]?.key === route.key) return null;
   const presentation = use(DescriptorsContext)[route.key]?.options.presentation;
-  return !presentation || presentation === 'card';
+  return !presentation || presentation === 'card' ? rail : null;
+}
+
+/**
+ * A pushed page in a tab's stack whose bar is solid beside a vertical bar:
+ * with Reduce Transparency or Increase Contrast on, or because the bar
+ * holds a search field. That bar needs its own colour behind it
+ * (`barBacking`), or the top 14 pt shows what is behind the bar: the
+ * system's grey, or the page under a bar of another colour. Not a sheet: a
+ * backing view reserved a band in sheets.
+ */
+export function useSolidRailBacking(): boolean {
+  const rail = usePushedRailBar();
+  const route = useContext(NavigationRouteContext);
+  if (!rail || !route) return false;
+  return (
+    rail === 'solid' ||
+    use(DescriptorsContext)[route.key]?.options.headerTransparent === false
+  );
 }
