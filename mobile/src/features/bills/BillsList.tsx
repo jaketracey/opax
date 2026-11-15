@@ -1,5 +1,7 @@
 import { animatedScroll, useSolidBar } from '../../design/accessibility';
+import { ClearBarFade, useBarFadeScroll } from '../../design/bar-fade';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
 import { useRootBarUnderBar } from '../../navigation/useRootBarAppearance';
 import { RouteOptions } from '../../navigation/preview';
 import { useAndroidRootScroll } from '../../navigation/useAndroidRootScroll';
@@ -24,6 +26,8 @@ import {
   RefreshControl,
   StyleSheet,
   View,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
   type TextLayoutEvent,
   type ViewToken,
 } from 'react-native';
@@ -60,7 +64,9 @@ import { useSplitSeparator } from '../../design/selection';
 import { StatePageProvider } from '../../design/states';
 import { colors, layout, rhythm } from '../../design/tokens';
 import {
+  clearBars,
   filtersItem,
+  glassBar,
   headerItems,
   rootHeaderItems,
 } from '../../navigation/chrome';
@@ -255,16 +261,38 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   );
   const listRef = useRef<FlatList<(typeof rows)[number]>>(null);
   const androidRoot = useAndroidRootScroll(listRef, colors.paper);
-  // With Reduce Transparency or Increase Contrast on, the tab's bar takes a
-  // solid ground only once the list has scrolled under it: at rest that
-  // ground covered the large title. This list is not a Screen, so it says
-  // when it has left rest, from the first point of scroll, as Screen does.
-  // With neither setting on nothing is attached and nothing is reported.
+  // The tab root's clear bar: the list fades into the page's ground behind
+  // the title and the bar buttons once rows are under them (the inline
+  // title printed over bill names, iOS 27). A pushed list sits below an
+  // opaque bar, the Duo's rail root under a solid one, and a split pane
+  // keeps its own bar.
+  const headerBottom = useHeaderBottom();
+  const onRail = useVerticalBarEdge() !== 'unspecified';
+  const fades =
+    clearBars &&
+    Platform.OS === 'ios' &&
+    glassBar() &&
+    !pushed &&
+    !adaptive &&
+    !onRail;
+  const fadeScroll = useBarFadeScroll(fades);
+  // With Reduce Transparency or Increase Contrast on the bar is solid, not
+  // clear, and takes its solid ground only once the list has scrolled under
+  // it: at rest that ground covered the large title. This list is not a
+  // Screen, so it says when it has left rest, from the first point of
+  // scroll, as Screen does. With neither setting on nothing is reported:
+  // the fade above follows the scroll on the UI thread alone.
   const solidBar = useSolidBar();
   const reportsBar = Platform.OS === 'ios' && solidBar && !pushed;
-  const barBottom = useHeaderBottom();
   const [underBar, setUnderBar] = useState(false);
   useRootBarUnderBar(underBar, reportsBar);
+  // One scroll handler feeds both: the fade binds itself to the list's
+  // scroll on its first event, and the solid bar hears each side of rest.
+  const onListScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    fadeScroll.onScroll(event);
+    if (reportsBar)
+      setUnderBar(event.nativeEvent.contentOffset.y + headerBottom > 1);
+  };
   const visible = useRef(new Set<string>());
   const [onViewable] = useState(
     () =>
@@ -582,16 +610,8 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         }
         {...(Platform.OS === 'android'
           ? { onScroll: androidRoot.onScroll, scrollEventThrottle: 16 }
-          : reportsBar
-            ? {
-                onScroll: (event: {
-                  nativeEvent: { contentOffset: { y: number } };
-                }) =>
-                  setUnderBar(
-                    event.nativeEvent.contentOffset.y + barBottom > 1,
-                  ),
-                scrollEventThrottle: 16,
-              }
+          : fades || reportsBar
+            ? { onScroll: onListScroll, scrollEventThrottle: 16 }
             : {})}
         ListHeaderComponentStyle={styles.header}
         ListFooterComponent={rows.length ? footer : null}
@@ -612,6 +632,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
       <>
         <RouteOptions options={options} />
         {listView}
+        {fades ? <ClearBarFade y={fadeScroll.y} bottom={headerBottom} /> : null}
       </>
     );
   return (

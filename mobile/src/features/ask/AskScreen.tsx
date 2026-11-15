@@ -1,6 +1,9 @@
 import { AndroidFocusBack } from '../../navigation/AndroidFocusBack';
 import { RouteOptions } from '../../navigation/preview';
-import { useRootBarUnderBar } from '../../navigation/useRootBarAppearance';
+import {
+  useRootBarUnderBar,
+  useTabRootRoute,
+} from '../../navigation/useRootBarAppearance';
 import { useAndroidRootScroll } from '../../navigation/useAndroidRootScroll';
 import { useScreenReady } from '../../analytics/timing';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -43,7 +46,8 @@ import { SurfaceContext } from '../../design/row-padding';
 import { colors, rhythm } from '../../design/tokens';
 import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { scrollToTop } from '../../design/scroll-to-top';
-import { askHeaderItems } from '../../navigation/chrome';
+import { askHeaderItems, clearBars, glassBar } from '../../navigation/chrome';
+import { ClearBarFade, useBarFadeScroll } from '../../design/bar-fade';
 import { talkSignInRoute } from '../../navigation/routes/account';
 import { conversationsRoute } from '../../navigation/routes/ask';
 import { voiceLinked } from '../../voice/linked';
@@ -172,6 +176,15 @@ export default function AskScreen() {
   }, [headerBottom]);
   useLayoutEffect(checkUnderBar, [checkUnderBar]);
   useRootBarUnderBar(underBar);
+  // Under the clear bar the page fades into its ground behind the title and
+  // the bar buttons, from the first point of scroll (at accessibility sizes
+  // the starters showed through, blurred). A solid bar covers its own.
+  // Only the Ask tab's root: pushed elsewhere (a link, a keyboard shortcut)
+  // Ask sits below an opaque bar with its content at 0, and the fade would
+  // cover the top of the page.
+  const tabRoot = useTabRootRoute();
+  const barFade = clearBars && tabRoot && Platform.OS === 'ios' && glassBar();
+  const fadeScroll = useBarFadeScroll(barFade);
   const column = useScreenColumn('readable');
   const { overlap: keyboard, visible: keyboardVisible } =
     useKeyboardOverlap(root);
@@ -425,6 +438,7 @@ export default function AskScreen() {
       onMomentumScrollBegin={follow.onMomentumBegin}
       onMomentumScrollEnd={follow.onMomentumEnd}
       onScroll={(event) => {
+        fadeScroll.onScroll(event);
         atTop.current = event.nativeEvent.contentOffset.y <= 4;
         scrollY.current = event.nativeEvent.contentOffset.y;
         follow.onScroll(event.nativeEvent.contentOffset.y);
@@ -547,6 +561,15 @@ export default function AskScreen() {
                 </ReservedRegionArea>
               </RegionProvider>
             </View>
+            {/* After the scroll's chain, so UIKit still finds it first. */}
+            {barFade ? (
+              <ClearBarFade
+                y={fadeScroll.y}
+                bottom={headerBottom}
+                hidden={hiddenBand}
+                ground={ground}
+              />
+            ) : null}
           </SidebarSafe>
         </AskRevealContext.Provider>
       </View>

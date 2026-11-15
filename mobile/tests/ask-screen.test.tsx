@@ -31,6 +31,7 @@ import {
 import { announceAnswer } from '../src/features/ask/AnswerView';
 import { auditAccessibility } from './screen-a11y';
 import a11yExceptions from './screen-a11y-exceptions.cjs';
+import { BarFade } from '../src/design/bar-fade';
 import AskScreen, { PhoneDock } from '../src/features/ask/AskScreen';
 import { useScreenReady } from '../src/analytics/timing';
 import {
@@ -3419,7 +3420,7 @@ test.each([
   ['Duo outer', 'trailing', 402, 678, false],
   ['vertical iPad bar', 'leading', 402, 678, true],
 ] as const)(
-  'AX5 %s: Ask reports the first scroll point through its RouteOptions owner and returns soft at rest',
+  'AX5 %s: Ask keeps the soft edge and fades into its ground from the first scroll point, clear again at rest',
   async (_device, edge, width, height, pad) => {
     const window = Dimensions.get('window');
     const barEdge = jest
@@ -3444,13 +3445,16 @@ test.each([
         mockBar.options = { ...mockBar.options, ...options };
       }),
       getState: () => ({
-        index: 0,
-        routes: [route],
+        index: pushedAsk ? 1 : 0,
+        routes: pushedAsk
+          ? [{ key: 'today-root', name: 'index' }, route]
+          : [route],
         routeNames: ['ask', 'bill/[key]', 'explore/[tool]'],
       }),
       isFocused: () => true,
       addListener: () => () => {},
     };
+    let pushedAsk = false;
     const edges = () =>
       navigation.setOptions.mock.calls
         .map(([options]) => options.scrollEdgeEffects?.top)
@@ -3483,8 +3487,14 @@ test.each([
       scrollTo(-120);
       scrollTo(-121); // Pulling down is still at rest.
       expect(edges()).toEqual([]);
+      // One fade layer under the clear bar, mounted with the page; its
+      // opacity follows the scroll on the UI thread.
+      expect(byId('bar-fade').length).toBeGreaterThan(0);
       scrollTo(-118); // Before UIKit reports a collapsed header.
-      expect(edges()).toEqual(['hard']);
+      // No panel: the edge never turns hard. The page fades into its own
+      // ground behind the title and the bar buttons instead.
+      expect(edges()).not.toContain('hard');
+      expect(byId('bar-fade').length).toBeGreaterThan(0);
       scrollTo(0);
       await act(async () =>
         view!.update(
@@ -3494,17 +3504,39 @@ test.each([
         ),
       );
       scrollTo(400);
-      expect(edges()).toEqual(['hard']);
+      expect(edges()).not.toContain('hard');
+      expect(byId('bar-fade').length).toBeGreaterThan(0);
       scrollTo(-68);
-      expect(edges()).toEqual(['hard', 'soft']);
+      expect(byId('bar-fade').length).toBeGreaterThan(0);
 
       openSavedConversation();
       scrollTo(400);
-      expect(edges().at(-1)).toBe('hard');
+      expect(edges()).not.toContain('hard');
+      expect(byId('bar-fade').length).toBeGreaterThan(0);
+      // An open thread on an iPhone: UIKit still reports the large-title
+      // band in the bar's height. Ask tells the fade how much of it is
+      // hidden, so the fade ends at the bar on screen (it covered the
+      // question at rest). No band beside a vertical bar or on iPad.
+      await act(async () =>
+        view!.update(
+          withNavigationOptions(page(200), (options) => {
+            mockBar.options = options;
+          }),
+        ),
+      );
+      const hidden = view!.root.findByType(BarFade).props.hidden as number;
+      expect(hidden > 0).toBe(edge === 'unspecified' && !pad);
+      await act(async () =>
+        view!.update(
+          withNavigationOptions(page(68), (options) => {
+            mockBar.options = options;
+          }),
+        ),
+      );
       await act(async () => barButton('New question')!.onPress());
       // scrollToTop is mocked and emits no event. Idle must already be soft.
       expect(byId('ask-idle').length).toBeGreaterThan(0);
-      expect(edges().at(-1)).toBe('soft');
+      expect(edges()).not.toContain('hard');
       await act(async () =>
         view!.update(
           withNavigationOptions(page(120), (options) => {
@@ -3513,7 +3545,15 @@ test.each([
         ),
       );
       // A new header height must not re-read the previous thread's offset.
-      expect(edges().at(-1)).toBe('soft');
+      expect(edges()).not.toContain('hard');
+
+      // Ask pushed in another tab (a link, a keyboard shortcut) sits below
+      // an opaque bar with its content at 0: no fade over the page's top.
+      expect(byId('bar-fade').length).toBeGreaterThan(0);
+      pushedAsk = true;
+      scrollTo(0);
+      scrollTo(400);
+      expect(byId('bar-fade')).toHaveLength(0);
     } finally {
       await act(async () => {
         view?.unmount();

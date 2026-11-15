@@ -313,6 +313,10 @@ test.each([
     'src/features/sheets/fitted.ts',
     `import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context'`,
   ],
+  [
+    'src/design/bar-fade.tsx',
+    `import { AnimatedHeaderHeightContext } from 'expo-router/build/react-navigation/native-stack/utils/useAnimatedHeaderHeight'`,
+  ],
   ['src/icon.tsx', `import Icons from '@expo/vector-icons'`],
   [
     shareModule,

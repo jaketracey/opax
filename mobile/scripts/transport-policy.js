@@ -24,6 +24,8 @@ const reviewedExpoSubpaths = new Set([
   'expo-router/react-navigation',
   // Pure React context of this screen's options, used to merge native props.
   'expo-router/build/fork/native-stack/descriptors-context',
+  // Pure React context of the bar's height as an Animated node: no I/O.
+  'expo-router/build/react-navigation/native-stack/utils/useAnimatedHeaderHeight',
   // SwiftUI views and modifiers rendered in a Host: no I/O.
   '@expo/ui/swift-ui',
   '@expo/ui/swift-ui/modifiers',

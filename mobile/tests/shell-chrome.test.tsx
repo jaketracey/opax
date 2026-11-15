@@ -5,7 +5,7 @@ import {
   NavigationContext,
   NavigationRouteContext,
 } from 'expo-router/react-navigation';
-import React, { act } from 'react';
+import React, { Profiler, act } from 'react';
 import * as Native from 'react-native';
 import {
   Animated,
@@ -1787,14 +1787,15 @@ const edgeCalls = (navigation: { setOptions: jest.Mock }) =>
     .map(([options]) => options.scrollEdgeEffects?.top)
     .filter(Boolean);
 test.each([
+  ['(today)', 'index'],
   ['(search)', 'search'],
   ['(today)', 'leads'],
   ['(ask)', 'ask'],
 ] as const)(
-  '%s %s turns the top edge hard once text runs under the bar, soft again at rest',
+  '%s %s keeps the soft edge and fades into its ground once text runs under the bar',
   (segment, name) =>
     withGlass(() => {
-      const { navigation, ground, page } = fadePage(
+      const { navigation, page } = fadePage(
         name,
         segment,
         name === 'leads',
@@ -1807,29 +1808,53 @@ test.each([
         // At rest UIKit insets the content to the bar's bottom edge.
         scrollTo(renderer, -expanded);
         expect(edgeCalls(navigation)).toEqual([]);
-        // Under the expanded bar, before the collapse height arrives.
+        const fades = () =>
+          renderer.root.findAll(
+            (node) =>
+              node.props?.testID === 'bar-fade' &&
+              typeof node.type === 'string',
+          );
+        // One layer under the clear bar, mounted with the page and clear at
+        // rest. Its opacity and its foot are Animated nodes, moved by the
+        // scroll view and the bar on the UI thread, never by a render.
+        expect(fades()).toHaveLength(1);
+        expect(StyleSheet.flatten(fades()[0]!.props.style)).toMatchObject({
+          position: 'absolute',
+          top: 0,
+          opacity: 0,
+        });
+        // Under the expanded bar, before the collapse height arrives: no
+        // panel, and the edge never turns hard.
         scrollTo(renderer, -expanded + 2);
-        expect(navigation.setOptions).toHaveBeenLastCalledWith(
-          expect.objectContaining({
-            ...largeTitleBar(
-              name === 'leads' ? colors.paper : ground,
-              false,
-              true,
-            ),
-            headerLargeTitleEnabled: true,
-          }),
-        );
-        expect(edgeCalls(navigation)).toEqual(['hard']);
-        // Collapsed: text keeps running under the compact bar, no repeats.
+        expect(edgeCalls(navigation)).not.toContain('hard');
+        expect(fades()).toHaveLength(1);
+        // Collapsed: text keeps running under the compact bar.
         act(() => renderer.update(page(68)));
         scrollTo(renderer, 0);
         scrollTo(renderer, 400);
-        expect(edgeCalls(navigation)).toEqual(['hard']);
-        // Back to the top: the bar expands over clean ground.
+        expect(fades()).toHaveLength(1);
+        // Scrolling on under the bar commits nothing: no render per frame.
+        let commits = 0;
+        act(() =>
+          renderer.update(
+            <Profiler id="page" onRender={() => commits++}>
+              {page(68)}
+            </Profiler>,
+          ),
+        );
+        // The profiler remounts the page: bring it back under the bar.
+        scrollTo(renderer, 0);
+        scrollTo(renderer, 400);
+        commits = 0;
+        for (let y = 401; y < 460; y += 3) scrollTo(renderer, y);
+        expect(commits).toBe(0);
+        act(() => renderer.update(page(68)));
+        // Back to the top.
         scrollTo(renderer, -68);
         act(() => renderer.update(page(expanded)));
         scrollTo(renderer, -expanded);
-        expect(edgeCalls(navigation)).toEqual(['hard', 'soft']);
+        expect(fades()).toHaveLength(1);
+        expect(edgeCalls(navigation)).not.toContain('hard');
         expect(RootBar!.setSolid).not.toHaveBeenCalled();
       } finally {
         act(() => renderer.unmount());
@@ -2908,7 +2933,7 @@ describe('scroll edges on every bar shape', () => {
         }
       }),
   );
-  test('the Search root on the folded rail sets a hard top edge under its search field', () =>
+  test('the Search root on the folded rail keeps the soft top edge under scrolled content', () =>
     withGlass(() => {
       mockBarEdge = 'trailing';
       const { page, navigation } = searchOwnerPage(false);
@@ -2924,7 +2949,7 @@ describe('scroll edges on every bar shape', () => {
         });
         expect(resolved.headerLargeTitleEnabled).not.toBe(true);
         scrollTo(renderer, -68 + 2);
-        expect(edgeCalls(navigation).at(-1)).toBe('hard');
+        expect(edgeCalls(navigation)).not.toContain('hard');
       } finally {
         act(() => renderer.unmount());
       }

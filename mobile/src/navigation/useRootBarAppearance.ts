@@ -16,6 +16,7 @@ import { RootBar, useVerticalBarEdge } from '../../modules/opax-root-bar';
 import { colors } from '../design/tokens';
 import {
   barBacking,
+  clearBars,
   glassBar,
   largeTitleBar,
   scrollBar,
@@ -25,13 +26,11 @@ import { isTabStack } from './floating-bar';
 
 const roots = ['index', 'your-mp', 'bills', 'search', 'ask'];
 /**
- * Pages whose scrolling view turns the top edge hard under scrolled text.
- * Today is not one: its bar has no panel at all, at rest or scrolled. The
- * page fades out under UIKit's soft edge and the large title collapses to
- * the inline one (the frosted paper panel with its hairline, b76).
+ * Pages whose scrolling view turned the top edge hard under scrolled text,
+ * while `clearBars` was off. With it on, no root's bar has a panel: the page
+ * fades into its ground under the bar instead (`BarFade`).
  */
-const hardEdgeRoots = ['search', 'ask', 'leads'];
-const clearRoot = 'index';
+const hardEdgeRoots = ['index', 'search', 'ask', 'leads'];
 
 const searches = new WeakMap<
   object,
@@ -174,7 +173,7 @@ export function useRootBarAppearance(
   const name = root?.name ?? '';
   // Reduce Transparency and Increase Contrast alone ask for a solid ground.
   // Today's tall AX title band had one too, and it drew over the large
-  // title at rest (26.3, AX3): the soft edge serves every text size.
+  // title at rest (26.3, AX3): the page's own fade serves every text size.
   const solid = solidSetting;
   // RouteOptions owns the bar of a large-title list (Leads) but knows no
   // ground; the page's Screen does, and shares it. Beside a vertical bar the
@@ -228,7 +227,7 @@ export function useRootBarAppearance(
   const hardEdge =
     !!contentUnderBar &&
     Platform.OS === 'ios' &&
-    name !== clearRoot &&
+    !clearBars &&
     (verticalBar || (!Platform.isPad && hardEdgeRoots.includes(name)));
 
   useLayoutEffect(() => {
@@ -368,6 +367,18 @@ export function useScreenGround(): ColorValue | undefined {
     () => (navigation ? searchState(navigation).value.ground : undefined),
     () => undefined,
   );
+}
+
+/**
+ * The route is the first page of a tab's stack, the one a clear root bar
+ * belongs to. The same page pushed elsewhere (Ask from a link or a keyboard
+ * shortcut, the Bills list in another tab) sits below an opaque bar.
+ */
+export function useTabRootRoute(): boolean {
+  const navigation = useContext(NavigationContext);
+  const route = useContext(NavigationRouteContext);
+  const state = route ? navigation?.getState() : undefined;
+  return isTabStack(state) && route?.key === state?.routes[0]?.key;
 }
 
 /**
