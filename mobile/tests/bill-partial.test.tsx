@@ -62,6 +62,7 @@ type Raw = Record<string, unknown> & {
 function votedDown(): Raw {
   const bill = structuredClone(pinned(`/bills/${KEY}.json`)) as Raw;
   bill.status = 'lapsed';
+  bill.status_as_of = '2026-03-04';
   delete bill.ended;
   delete bill.ended_label;
   bill.acts = [];
@@ -213,29 +214,61 @@ describe('the bill page', () => {
     expect(pill(root)).toBe('Voted down');
   });
 
-  test('a bill that lost a division says partial on its source lines, with the standard note, and its pill claims no more than its status', async () => {
+  const hostTexts = (root: ReactTestInstance, id: string) =>
+    root
+      .findAll(
+        (node) => typeof node.type === 'string' && node.props.testID === id,
+      )
+      .flatMap(texts);
+
+  test('the lapsed bill with one division dropped: the pill, its date and the stages all rest on the bill’s own status', async () => {
     const bill = votedDown();
     bill.divisions.push({ ...bill.divisions[0]!, key: 'x', ayes: 'many' });
     const root = await open(bill);
-    const drawn = lines(root);
-    const votes = drawn.find((line) => line.id === 'bill-divisions-source')!;
-    expect(votes.state).toBe('partial');
-    expect(votes.notes).toContain(partialNote);
-    // The page's own line, wherever this bill draws it.
-    const page = drawn.filter((line) =>
-      ['bill-source', 'bill-dates-source', 'bill-related-source'].includes(
-        line.id,
-      ),
+    const own = billStatusLabel('lapsed', billEnding(decodeBill(votedDown())));
+    // "[Lapsed] Voted down 4 Mar 2026" was the disagreement: the pill gated,
+    // its date still read from the incomplete record.
+    const status = hostTexts(root, 'bill-status').join(' ');
+    expect(pill(root)).toBe(own);
+    expect(status).not.toMatch(/Voted down/);
+    expect(status).toMatch(/Status\sas\sat/);
+    // The tracker, which would stop on "voted down", steps aside for the
+    // plain dated stages; nothing on the page says the bill was voted down.
+    expect(hostTexts(root, 'bill-tracker')).toEqual([]);
+    expect(texts(root).join(' ')).not.toMatch(/voted down/i);
+    // The stages that were read are still listed.
+    expect(hostTexts(root, 'bill-key-dates').join(' ')).toMatch(
+      /Second reading/,
     );
-    expect(page.length).toBeGreaterThan(0);
-    for (const line of page) {
-      expect(line.state).toBe('partial');
-      expect(line.notes.filter((note) => note === partialNote)).toHaveLength(1);
-    }
-    expect(pill(root)).toBe(
-      billStatusLabel('lapsed', billEnding(decodeBill(votedDown()))),
-    );
-    expect(pill(root)).not.toBe('Voted down');
+  });
+
+  test('the whole lapsed bill does say it, in all three places', async () => {
+    const root = await open(votedDown());
+    const status = hostTexts(root, 'bill-status').join(' ');
+    expect(pill(root)).toBe('Voted down');
+    expect(status).not.toMatch(/Status\sas\sat/);
+    expect(hostTexts(root, 'bill-tracker').join(' ')).toMatch(/voted down/i);
+  });
+
+  const partialLines = (root: ReactTestInstance) =>
+    lines(root)
+      .filter((line) => line.state === 'partial')
+      .map((line) => line.id);
+  const noted = (root: ReactTestInstance) =>
+    lines(root)
+      .filter((line) => line.notes.includes(partialNote))
+      .map((line) => line.id);
+
+  test('a dropped division marks the votes line alone, with the standard note once', async () => {
+    const bill = votedDown();
+    bill.divisions.push({ ...bill.divisions[0]!, key: 'x', ayes: 'many' });
+    const root = await open(bill);
+    expect(partialLines(root)).toEqual(['bill-divisions-source']);
+    expect(noted(root)).toEqual(['bill-divisions-source']);
+    const votes = lines(root).find(
+      (line) => line.id === 'bill-divisions-source',
+    )!;
+    expect(votes.notes.filter((note) => note === partialNote)).toHaveLength(1);
     // The good division is still on the page: its original is cited.
     const cited = root
       .findAllByType(SourceLine)
@@ -244,5 +277,25 @@ describe('the bill page', () => {
     expect(cited.map((original) => original.url)).toEqual([
       bill.divisions[0]!.url,
     ]);
+  });
+
+  test('a dropped stage marks the stages line alone', async () => {
+    const bill = votedDown();
+    bill.key_dates.push({ stage: '', date: 'never' });
+    const root = await open(bill);
+    const marked = partialLines(root);
+    expect(marked).toHaveLength(1);
+    expect(marked).toEqual(noted(root));
+    // The stages line, or the page's line when it carries the stages' sheet.
+    expect(['bill-dates-source', 'bill-source']).toContain(marked[0]);
+    expect(marked).not.toContain('bill-divisions-source');
+  });
+
+  test('a dropped speech marks the speeches line alone, and changes nothing else', async () => {
+    const bill = votedDown();
+    (bill.speeches as unknown[]).push({ slug: '' });
+    const root = await open(bill);
+    expect(partialLines(root)).toEqual(['bill-speeches-source']);
+    expect(pill(root)).toBe('Voted down');
   });
 });
