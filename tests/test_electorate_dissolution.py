@@ -371,3 +371,24 @@ def test_a_reminder_that_crashes_warns_and_the_night_goes_on(tmp_path):
     crashed = night("echo 'Traceback' >&2; exit 1")
     assert crashed[0] == "warnings=1 failures=0" and "reminder could not run" in crashed[1]
     assert "Traceback" in (tmp_path / "log").read_text()
+
+
+def test_overdue_reads_a_release_that_has_no_bundle_or_id_of_its_own(tmp_path):
+    """The nightly test's bare release: a manifest with only its index pointer. Nothing to report, and no crash."""
+    out = tmp_path / "electorates"
+    (out / "releases/fixture").mkdir(parents=True)
+    (out / "manifest.json").write_text(json.dumps({"index_url": "/electorates/releases/fixture/index.json"}))
+    (out / "releases/fixture/index.json").write_text(json.dumps({"electorates": []}))
+    assert overdue_dissolutions(out, "2027-06-01") == []
+    assert republish(out, [RECORD], "2027-06-01") is None
+
+
+def test_the_nightly_tests_seed_carries_everything_the_republish_step_runs():
+    """test_nightly.sh builds its repository from an allowlist; the step's script and inputs must be on it."""
+    seed = (ROOT / "scripts/vm/test_nightly.sh").read_text()
+    for needed in ("scripts/export_electorates.py", "parli/electorates.py",
+                   "scripts/hubs/electorate-dissolutions.json", "scripts/hubs/vic-election-2026.json"):
+        assert needed in seed, needed
+    # Every election file a reviewed record names is on it too.
+    for row in json.loads(DISSOLUTIONS.read_text())["dissolutions"]:
+        assert f"scripts/hubs/{row['election']}" in seed

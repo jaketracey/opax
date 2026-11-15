@@ -77,7 +77,10 @@ def overdue_dissolutions(out_dir: Path, as_of: str, days: int = OVERDUE_DAYS) ->
     manifest = json.loads((out_dir / "manifest.json").read_text())
     # The index is read by the pointer every release carries, so a release with no bundle of its own
     # (republish leaves those alone too) is read the same way: it has no dissolved rows to report.
-    rows = json.loads((out_dir.parent / manifest["index_url"].lstrip("/")).read_text())["electorates"]
+    # index_url is a site path (/electorates/releases/<id>/index.json); its part from "releases/" on is
+    # the file under out_dir, whatever out_dir is called.
+    index = out_dir / "releases" / manifest["index_url"].split("/releases/", 1)[1]
+    rows = json.loads(index.read_text())["electorates"]
     today = date.fromisoformat(as_of)
     lines = []
     for day in sorted({row["dissolved_for"] for row in rows if row.get("dissolved_for")}):
