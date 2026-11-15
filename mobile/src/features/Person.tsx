@@ -509,10 +509,15 @@ export function profileBones(
     }
   }
   const federal = sittingFederal(identity);
+  // A surname stub's parliament is only in the roster row's `states`.
   const parliaments = new Set(
-    [...identity.seats, ...(identity.rosterRow?.representation ?? [])].map(
-      (seat) => seat.jurisdiction,
-    ),
+    [
+      ...identity.seats.map((seat) => seat.jurisdiction),
+      ...(identity.rosterRow?.representation ?? []).map(
+        (seat) => seat.jurisdiction,
+      ),
+      ...(identity.rosterRow?.states ?? []),
+    ].map((parliament) => parliament.toLowerCase()),
   );
   const tiles: ('votes' | 'interests' | 'pay')[] = [];
   // Divisions are held for the federal, NSW, Victorian and Queensland

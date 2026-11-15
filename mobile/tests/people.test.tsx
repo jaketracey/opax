@@ -1240,6 +1240,31 @@ describe('profile', () => {
     });
     if (!state) throw new Error('fixture: no sitting NSW member');
     expect(profileBones(state, directory).tiles).toEqual(['votes']);
+    // A surname stub: no seats and no representation, its parliament only
+    // in the roster row's `states`.
+    const row = c.joinPerson(state, slugs, roster, people, manifest).rosterRow!;
+    const stubbed = {
+      ...directory,
+      roster: result({
+        ...roster,
+        people: roster.people.map((p) =>
+          p === row ? { ...p, representation: [], states: ['nsw'] } : p,
+        ),
+      }),
+    };
+    const stub = c.joinPerson(
+      state,
+      slugs,
+      stubbed.roster.data,
+      people,
+      manifest,
+    );
+    expect(
+      [...stub.seats, ...(stub.rosterRow?.representation ?? [])].some(
+        (s) => s.jurisdiction === 'nsw',
+      ),
+    ).toBe(false);
+    expect(profileBones(state, stubbed).tiles).toEqual(['votes']);
   });
 
   test.each(['votes', 'interests', 'pay'] as const)(
