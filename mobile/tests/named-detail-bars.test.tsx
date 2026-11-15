@@ -1045,11 +1045,21 @@ describe('a title beside the collapsed back button is moved onto the bar’s cen
       version = '26.3',
       shown = true,
       trailingWidth,
-    }: { version?: string; shown?: boolean; trailingWidth?: number } = {},
+      fontScale = 1,
+      back = 'Today',
+      backWidth,
+    }: {
+      version?: string;
+      shown?: boolean;
+      trailingWidth?: number;
+      fontScale?: number;
+      back?: string;
+      backWidth?: number;
+    } = {},
   ) => {
     const original = Dimensions.get('window');
     act(() =>
-      Dimensions.set({ window: { ...original, width: 402, fontScale: 1 } }),
+      Dimensions.set({ window: { ...original, width: 402, fontScale } }),
     );
     version$ = jest
       .spyOn(Platform, 'Version', 'get')
@@ -1060,7 +1070,7 @@ describe('a title beside the collapsed back button is moved onto the bar’s cen
           title="Anthony Albanese"
           person
           shown={visible}
-          backTitle="Today"
+          backTitle={back}
           trailingWidth={trailingWidth}
         />
       </NavigationContext.Provider>
@@ -1068,7 +1078,10 @@ describe('a title beside the collapsed back button is moved onto the bar’s cen
     act(() => {
       view = TestRenderer.create(element(shown));
     });
-    measureBarTitle(view!, { 'Anthony Albanese': text });
+    measureBarTitle(view!, {
+      'Anthony Albanese': text,
+      ...(backWidth ? { [back]: backWidth } : {}),
+    });
     const box = () =>
       view!.root.findByType(Animated.Text).parent!.props as {
         pointerEvents?: string;
@@ -1092,20 +1105,59 @@ describe('a title beside the collapsed back button is moved onto the bar’s cen
 
   test('a title just too wide to sit beside the back name moves onto the centre line', () => {
     const t = render(144);
-    // 201 - (72 + 144 / 2) = 57, and its edge (72 + 144 + 57) stays inside 274.
-    expect(t.shift()).toBe(57);
+    // 201 - (72 + 144 / 2) = 57 would centre it; 4 pt are kept spare before
+    // Share's reserve (274), so its edge stops at 270.
+    expect(t.shift()).toBe(54);
     t.done();
   });
 
   test('a title never moves under Share', () => {
     // A wide one moves only as far as keeps its edge at 274.
     const wide = render(170);
-    expect(wide.shift()).toBe(32);
+    expect(wide.shift()).toBe(28);
     wide.done();
     // One that fills the span has nowhere to go.
     const full = render(206);
     expect(full.shift()).toBeUndefined();
     full.done();
+  });
+
+  // Above Large the view hugs the text as drawn, wider than the Large-size
+  // probes measure it. The shift must use the drawn width.
+  test('xxxLarge: a 120 pt title drawn wider stays clear of Share', () => {
+    const t = render(120, {
+      fontScale: 1.353,
+      back: 'Votes in parliament',
+      backWidth: 160,
+    });
+    const drawn = Math.min(
+      StyleSheet.flatten(t.box().style).maxWidth as number,
+      120 * 1.353,
+    );
+    const shift = t.shift() ?? 0;
+    expect(shift).toBeGreaterThan(0);
+    // Share's reserve begins at 274: the drawn text ends 4 pt short of it.
+    expect(72 + drawn + shift).toBeLessThanOrEqual(270);
+    t.done();
+  });
+
+  test('AX3: an 85 pt name drawn wider is centred, not pushed right of centre', () => {
+    const t = render(85, {
+      fontScale: 2.353,
+      back: 'Votes in parliament',
+      backWidth: 160,
+    });
+    const drawn = Math.min(
+      StyleSheet.flatten(t.box().style).maxWidth as number,
+      85 * (23 / 17),
+    );
+    const shift = t.shift() ?? 0;
+    expect(shift).toBeGreaterThan(0);
+    // Its centre is not right of the bar's (201), and its edge is short of
+    // the larger items' reserve (402 - 16 - 116 - 8 = 262) by the spare.
+    expect(72 + drawn / 2 + shift).toBeLessThanOrEqual(201);
+    expect(72 + drawn + shift).toBeLessThanOrEqual(258);
+    t.done();
   });
 
   test('18.4 centres a fitting title itself: no shift', () => {
@@ -1187,7 +1239,7 @@ describe('a title beside the collapsed back button is moved onto the bar’s cen
     // Share and More grow by 6 pt each: reserve 116, the span ends at 262.
     expect(
       barTitleShift({ active: true, width: 402, text: 143, growth: 6 }),
-    ).toBe(47);
+    ).toBe(43);
     expect(barTitleShift({ active: false, width: 402, text: 143 })).toBe(0);
     expect(barTitleShift({ active: true, width: 402, text: undefined })).toBe(
       0,

@@ -116,6 +116,16 @@ export function barTitleWidth(
  * edge meets the trailing group's reserve (16 pt in, the items, 8 pt gap),
  * so a wide title moves less, and one that fills the span not at all.
  */
+export const barTitleShiftSpare = 4;
+/** A title's drawn width above Large: its Large width scaled, within its room. */
+export function drawnTextWidth(
+  large: number | undefined,
+  fontScale: number,
+  room: number,
+): number | undefined {
+  if (large === undefined) return undefined;
+  return Math.min(room, large * Math.min(fontScale, inlineTitleScaleCap));
+}
 export function barTitleShift({
   active,
   width,
@@ -137,7 +147,9 @@ export function barTitleShift({
     trailingWidth ??
     44 + 60 * Math.max(0, trailing - 1) + growth * Math.max(0, trailing);
   const start = 16 + 44 + 12;
-  const end = width - (16 + items + 8);
+  // The 72 pt start is from a 402 pt phone; a wider one may set its bar
+  // margins a few points wider, so keep that much spare before the reserve.
+  const end = width - (16 + items + 8) - barTitleShiftSpare;
   const toCentre = width / 2 - (start + text / 2);
   const room = end - (start + text);
   return Math.floor(Math.max(0, Math.min(toCentre, room)));
@@ -413,7 +425,11 @@ export function BarTitle({
       trailingWidth !== 0 &&
       safeWidth < 600,
     width: safeWidth,
-    text: measured(drawn),
+    // The view hugs the text as it is drawn: above Large that is wider than
+    // the probes measure it (they stay at the Large size), up to drawnRoom.
+    text: shrink
+      ? drawnTextWidth(measured(drawn), fontScale, drawnRoom)
+      : measured(drawn),
     trailing,
     trailingWidth,
     growth,
