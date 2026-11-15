@@ -343,7 +343,11 @@ test.each([
       // Soft, as a tab root at rest: a hard edge paints a strip of its own
       // above the title band.
       expect(pushed.scrollEdgeEffects.top).toBe(underBar ? 'soft' : 'hard');
-      expect(pushed.scrollEdgeEffects.bottom).toBe('soft');
+      // Soft under a tab bar at the bottom; beside the page there is
+      // nothing at the bottom to soften.
+      expect(pushed.scrollEdgeEffects.bottom).toBe(
+        edge === 'unspecified' ? 'soft' : 'hidden',
+      );
       // Under the clear bar the stack itself sets no bar colour or hairline:
       // a page with no Screen and no bar style of its own (Voting record)
       // kept the hairline, and a paper strip once the band folded.
@@ -2720,7 +2724,8 @@ describe('scroll edges on every bar shape', () => {
       for (const active of ['hard', 'soft'] as const) {
         const edges = barScrollEdges(edge, active);
         expect(edges.top).toBe(active);
-        expect(edges.bottom).toBe('soft');
+        // The tab bar is on the rail: no soft edge veils the page's end.
+        expect(edges.bottom).toBe('hidden');
         expect(edges[rail]).toBe(active);
         expect(edges[far]).toBe('soft');
       }
@@ -2784,7 +2789,7 @@ describe('scroll edges on every bar shape', () => {
       try {
         expect(chrome.scrollEdgeEffects).toMatchObject({
           top: 'hard',
-          bottom: 'soft',
+          bottom: 'hidden',
         });
       } finally {
         act(() => renderer.unmount());
@@ -2989,7 +2994,7 @@ describe('scroll edges on every bar shape', () => {
         );
         expect(resolved).toMatchObject({
           headerTransparent: true,
-          scrollEdgeEffects: { top: 'soft', bottom: 'soft', right: 'soft' },
+          scrollEdgeEffects: { top: 'soft', bottom: 'hidden', right: 'soft' },
         });
         expect(resolved.headerLargeTitleEnabled).not.toBe(true);
         scrollTo(renderer, -68 + 2);
