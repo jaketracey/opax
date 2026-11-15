@@ -653,8 +653,10 @@ function PanelRow({
 }
 
 const styles = StyleSheet.create({
-  // The bar field's dropdown hangs from this point: the masthead's corner.
-  host: { position: 'absolute', top: 0, left: 0, width: 0, height: 0 },
+  // The bar field's dropdown hangs from this line's leading end: the
+  // masthead's top edge. It has a size: the accessibility tree drops what
+  // is under a view of none (the panel was drawn but not found, 15 Nov).
+  host: { position: 'absolute', top: 0, left: 0, right: 0, height: 1 },
   // On the masthead's top edge, its trailing edge on the content column.
   place: { position: 'absolute', top: 0, right: 0 },
   field: {
