@@ -1,5 +1,7 @@
-/* Each register uses its section's existing accent, supplied by design tokens.
-   Links keep the shared table link colour (datatable.css). */
+/* Each register uses its section's existing accent, supplied by design tokens. */
+[data-register-table] .dt a {
+  text-decoration-color: var(--dt-link-rule, var(--money-ink));
+}
 .instrument-content [data-register-table],
 .audit-content [data-register-table] {
   --money-ink: var(--bronze-ink);
@@ -9,4 +11,12 @@
 [data-register-table="ssr-interests-table"] {
   --money-ink: var(--interests-ink);
   --money-wash: var(--interests-wash);
+}
+/* An interests register keeps its plum on bars, filters and the focus ring,
+   but not on link text: plum links read as visited ones. They are the site's
+   ordinary link, ink on the bronze rule. */
+#subject-interests [data-register-table],
+[data-register-table="ssr-interests-table"] {
+  --dt-link: var(--ink);
+  --dt-link-rule: var(--bronze-rule);
 }

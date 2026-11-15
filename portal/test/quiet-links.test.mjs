@@ -1,8 +1,8 @@
 // Five small reading fixes (15 Nov 2026), each checked where it lives:
 // 1. a question asked from lower on the Ask page comes into view at once
 //    (the browser proof is test/ask-scroll-browser.mjs; this holds the wiring);
-// 2. links in data tables keep the site's link colour, never a section accent
-//    that reads as a visited colour;
+// 2. links in an interests register table are the site's ink link, not the
+//    plum accent that read as a visited colour; money tables keep their green;
 // 3. no Senate caption line over a member's First speech card;
 // 4. the "Ask about" questions are one-line pills and the block has one rule;
 // 5. a search result's title is underlined on hover and keyboard focus only.
@@ -40,32 +40,50 @@ test('a question asked from lower on the Ask page is brought into view by one sh
   assert.equal(app.split('bringAskIntoView()').length - 1, 4, 'one helper, three callers');
 });
 
-test('data table links keep the ordinary link colour in every records table', () => {
-  const dom = new JSDOM(`<!doctype html><html><head>${sheets('style.css', 'datatable.css', 'register-tables.css', 'grants-table.css', 'vic-gifts.css')}</head><body>
+test('an interests register table has ink links; a money table keeps its green, visited or not', () => {
+  const dom = new JSDOM(`<!doctype html><html><head>${sheets('style.css', 'datatable.css', 'register-tables.css', 'grants-table.css')}</head><body>
     <section id="subject-interests"><div data-register-table="interests-table" class="dt-root"><table class="dt"><tbody><tr><td data-primary><a id="interest" href="https://example.org/register">An entry</a></td></tr></tbody></table></div></section>
     <div data-register-table="ssr-interests-table" class="dt-root"><table class="dt"><tbody><tr><td><a id="ssr" href="https://example.org/register">An entry</a></td></tr></tbody></table></div>
-    <div class="audit-content"><div data-register-table="audit" class="dt-root"><table class="dt"><tbody><tr><td><a id="audit" href="/a">A report</a></td></tr></tbody></table></div></div>
+    <section id="person-party-money"><div data-register-table="party-money-table" class="dt-root"><table class="dt"><tbody><tr><td><a id="party-money" href="/m">A source</a></td></tr></tbody></table></div></section>
     <div data-grants-table class="dt-root"><table class="dt"><tbody><tr><td><a id="grant" href="/g">A grant</a></td></tr></tbody></table></div>
-    <div class="vic-gifts-content"><div class="dt-root"><table class="dt"><tbody><tr><td><a id="gift" href="/v">A gift</a></td></tr></tbody></table></div></div>
     <div class="dt-root"><table class="dt"><tbody><tr><td><a id="plain" href="/p">A row</a></td></tr></tbody></table></div>
     <p><a id="prose" href="/x">A link in prose</a></p>
   </body></html>`);
-  const prose = styleOf(dom, '#prose');
-  assert.equal(prose.color, 'var(--ink)', 'the site link colour is ink');
-  for (const id of ['interest', 'ssr', 'audit', 'grant', 'gift', 'plain']) {
-    const link = styleOf(dom, `#${id}`);
-    assert.equal(link.color, prose.color, `#${id}: the table link is the site link colour, not a section accent`);
-    assert.equal(link.textDecorationColor, prose.textDecorationColor, `#${id}: and keeps the site underline colour`);
-    assert.equal(link.textDecoration, 'underline', `#${id}: it is still underlined`);
+  const { document } = dom.window;
+  // jsdom hands a var() back as written, so a custom property is followed by
+  // hand: the element's own chain of declarations, nearest ancestor first.
+  const custom = (el, name) => { for (let n = el; n && n.nodeType === 1; n = n.parentElement) { const v = dom.window.getComputedStyle(n).getPropertyValue(name).trim(); if (v) return v; } return ''; };
+  const resolve = (el, value) => {
+    let out = value;
+    for (let i = 0; i < 6 && /^var\(/.test(out); i++) {
+      const [, name, fallback] = /^var\((--[\w-]+)(?:,\s*(.+))?\)$/.exec(out);
+      out = custom(el, name) || fallback || name;
+      if (out === name) return name;
+    }
+    return out;
+  };
+  const linkColour = (id) => { const el = document.getElementById(id); return resolve(el, dom.window.getComputedStyle(el).color); };
+  const ruleColour = (id) => { const el = document.getElementById(id); return resolve(el, dom.window.getComputedStyle(el).textDecorationColor); };
+  const token = (name) => resolve(document.documentElement, `var(${name})`);
+  const INK = token('--ink'), GREEN = token('--money-ink'), PLUM = token('--interests-ink');
+  assert.ok(INK && GREEN && PLUM && new Set([INK, GREEN, PLUM]).size === 3, 'three different tokens');
+  assert.equal(linkColour('prose'), INK, 'the site link colour is ink');
+  // The interests registers: ink on the bronze rule, the site's ordinary link.
+  for (const id of ['interest', 'ssr']) {
+    assert.equal(linkColour(id), INK, `#${id}: an interests register link is ink, not the plum accent`);
+    assert.equal(ruleColour(id), token('--bronze-rule'), `#${id}: on the site's underline colour`);
+    assert.equal(dom.window.getComputedStyle(document.getElementById(id)).textDecoration, 'underline', `#${id}: still underlined`);
   }
-  // Visited or not: the shared rule names the visited state, and no table
-  // stylesheet gives a table link a colour of its own.
-  assert.match(read('datatable.css'), /\n\.dt a, \.dt a:visited \{ color: var\(--ink\);/);
-  for (const name of ['register-tables.css', 'grants-table.css', 'vic-gifts.css', 'vote-tables.css', 'procurement.css', 'state-bills.css']) {
-    assert.doesNotMatch(read(name), /\.dt a\b[^{]*\{[^}]*(?<![-\w])color:/, `${name} sets no table link colour`);
-  }
+  // Money tables keep their green.
+  for (const id of ['party-money', 'grant', 'plain']) assert.equal(linkColour(id), GREEN, `#${id}: a money table link keeps the money green`);
+  // Visited or not: the one shared rule names both states, in the shared
+  // component, and the interests scope only sets its variables.
+  const datatable = read('datatable.css'), registers = read('register-tables.css');
+  assert.match(datatable, /\n\.dt a, \.dt a:visited \{ color: var\(--dt-link, var\(--money-ink\)\);/);
+  assert.match(registers, /#subject-interests \[data-register-table\],\s*\[data-register-table="ssr-interests-table"\] \{\s*--dt-link: var\(--ink\);\s*--dt-link-rule: var\(--bronze-rule\);/);
+  for (const name of ['style.css', 'datatable.css', 'register-tables.css', 'grants-table.css']) assert.doesNotMatch(read(name).replace('.dt a, .dt a:visited {', ''), /\.dt[^{},]*a:visited/, `${name}: no other visited rule for table links`);
   // Focus keeps the section accent's ring, as before.
-  assert.match(read('datatable.css'), /\.dt-root :is\(button, summary, input, select, a\):focus-visible \{ outline: var\(--border-focus\) solid var\(--money-ink\)/);
+  assert.match(datatable, /\.dt-root :is\(button, summary, input, select, a\):focus-visible \{ outline: var\(--border-focus\) solid var\(--money-ink\)/);
 });
 
 test('a member page draws no Senate caption over the First speech card', () => {
