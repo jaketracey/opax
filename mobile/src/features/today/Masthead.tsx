@@ -80,6 +80,7 @@ export function Masthead({
   offlineSavedAt,
   mark,
   sitting,
+  since,
 }: {
   now: Date;
   /** Set when offline: the oldest saved date among the drawn blocks. */
@@ -88,6 +89,8 @@ export function Masthead({
   mark?: ReactNode;
   /** The sitting line under the date (`SittingLine`); draws nothing when unknown. */
   sitting?: ReactNode;
+  /** "Since your last visit" (`SinceLine`); draws nothing unless held. */
+  since?: ReactNode;
 }) {
   const { fontScale } = useWindowDimensions();
   const androidArt =
@@ -116,6 +119,7 @@ export function Masthead({
         </>
       )}
       {sitting}
+      {since}
       {offlineSavedAt !== undefined && offlineSavedAt !== null ? (
         <OfflineLine savedAt={offlineSavedAt} testID="today-offline" />
       ) : null}
