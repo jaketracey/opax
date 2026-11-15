@@ -35,10 +35,12 @@ const decodeGrantIndex = (raw: unknown) => {
 /**
  * One award's decoder, the same function each time for the same recipient
  * and award (they are what it looks for in the shard), so two reads of one
- * award at once share the shard's request.
+ * award at once share the shard's request. The key is the pair as JSON, which
+ * no id can be mistaken for: joined with a newline, an award id that held
+ * one was cut short and opened another award.
  */
 const awardDecoder = decoderPerKey((key: string) => {
-  const [rid, award] = key.split('\n') as [string, string];
+  const [rid, award] = JSON.parse(key) as [string, string];
   return (raw: unknown) => {
     const entry = Object.values(object(raw))
       .map(object)
@@ -99,7 +101,7 @@ export async function loadRecipientGrant(
     throw new ApiError('not-found', 'This record isn’t available any more.');
   const record = await apiClient.get(
     `/grants/${jur}/shard-${String(recipient.shard).padStart(2, '0')}.json`,
-    awardDecoder(`${rid}\n${award}`),
+    awardDecoder(JSON.stringify([rid, award])),
     refresh,
     { signal },
   );

@@ -49,6 +49,18 @@ test('an unknown award never substitutes a recipient total or another award', as
   ).rejects.toMatchObject({ code: 'not-found' });
 });
 
+test('an award id with a newline in it is its own award: not found, never the award before the newline', async () => {
+  const grant = recipient.grants[0];
+  // As a link's encoded newline arrives (`award-1%0Aextra`).
+  await expect(
+    loadRecipientGrant('federal', recipient.id, `${grant.id}\nextra`, false),
+  ).rejects.toMatchObject({ code: 'not-found' });
+  // The award itself still opens.
+  await expect(
+    loadRecipientGrant('federal', recipient.id, grant.id, false),
+  ).resolves.toMatchObject({ data: { amount: grant.v } });
+});
+
 test('a recipient award retains the oldest saved date and partial state from both catalogues', async () => {
   jest.mocked(apiClient.get).mockImplementation(async (path, decode) => ({
     data: decode(path.startsWith('/graph/') ? index : shard),
