@@ -117,6 +117,7 @@ import { appJson } from './app-http'
 import { proxyPostHog } from './posthog'
 import { networkBlock, CRAWLER_UA } from './network-block'
 import { openaiAppsChallenge, OPENAI_APPS_CHALLENGE_PATH } from './openai-apps-challenge'
+import { appSiteAssociationResponse, APP_SITE_ASSOCIATION_PATH } from './app-site-association'
 import { handleBillText } from './bill-text'
 import { TOPIC_NAMES } from './topic-names.mjs'
 import { melbourneDate, DAILY_POST_KINDS, type DailyPostKind } from './daily-post'
@@ -7451,6 +7452,8 @@ export default {
   async fetch(request, env, ctx): Promise<Response> {
     setAppStoreProvider(env.APP_STORE_PROVIDER)
     const url = new URL(request.url)
+    // Universal links (src/app-site-association.ts): answered first, as Apple's fetcher follows no redirect.
+    if (url.pathname === APP_SITE_ASSOCIATION_PATH) return withSecurityHeaders(appSiteAssociationResponse(request, env.APPLE_TEAM_ID), url)
     if (url.pathname === '/gov-advertising/ready.json') return withSecurityHeaders(await govAdvertisingReady(request,govAdvertisingReader(env.ASSETS)),url)
     if (url.pathname === '/tax-expenditures/ready.json') return withSecurityHeaders(await taxExpendituresReady(request,taxExpendituresReader(env.ASSETS)),url)
     if (url.pathname === '/api/register/party-money') return withSecurityHeaders(await partyMoneyResponse(request,env.ASSETS),url)
