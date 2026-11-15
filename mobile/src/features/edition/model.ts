@@ -78,7 +78,10 @@ const sentences = (text: string) =>
  * The plate's detail line, less any sentence already shown below it. The
  * cover line often restates the first paragraph. A bill with a stage rail
  * uses its published portfolio instead; other lines keep only what the
- * paragraphs lack. Detail lines have no trailing full stop.
+ * paragraphs lack: a whole sentence shown below goes, and so does a piece
+ * that opens as a piece below does, whichever of the two was cut short.
+ * So a summary is printed once, in the body under its own label, never on
+ * the plate as well. Detail lines have no trailing full stop.
  */
 export function plateLine(
   line: string | null,
@@ -97,9 +100,36 @@ export function plateLine(
   }
   if (!line?.trim()) return null;
   const below = new Set((shownBelow ?? []).flatMap(sentences));
-  const rest = sentences(line).filter((sentence) => !below.has(sentence));
+  const belowStems = (shownBelow ?? []).flatMap(pieces).map(stem);
+  // The cover line and the text below are each the summary's first
+  // sentence, cut to their own lengths ("… spending caps and reviews…" on
+  // the cover, "… spending caps and…" below; or the sentence whole on the
+  // cover and cut below). Either way one opens with the other, and that
+  // piece is the text below again: it goes, and what follows it stays.
+  const repeated = (piece: string) => {
+    const own = stem(piece);
+    return belowStems.some(
+      (other) =>
+        Math.min(own.length, other.length) >= REPEAT_STEM &&
+        (own.startsWith(other) || other.startsWith(own)),
+    );
+  };
+  const rest = pieces(line).filter(
+    (piece) => !below.has(piece) && !repeated(piece),
+  );
   return rest.length ? rest.join(' ').replace(/\.$/, '') : null;
 }
+/** A line's sentences, and the pieces a "…" cut leaves before the next. */
+const pieces = (text: string) => text.split(/(?<=…)\s+/).flatMap(sentences);
+/** A piece without its ending ("…", a full stop), spacing and case. */
+const stem = (piece: string) => folded(piece.trim().replace(/[….]+$/, ''));
+/**
+ * Two pieces this long, one opening with the other, are the same sentence.
+ * The edition cuts its summary at 145 and 150 characters and never below
+ * 60% of that, so a real cut is far longer; a shorter shared opening ("The
+ * bill would") is not a repeat.
+ */
+const REPEAT_STEM = 60;
 
 const folded = (text: string) =>
   text.replace(/\s+/g, ' ').trim().toLocaleLowerCase('en-AU');
