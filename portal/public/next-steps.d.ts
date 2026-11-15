@@ -12,5 +12,5 @@ export function billNextSteps(bill: unknown, helpers?: { divisions?: readonly un
 export function memberNextSteps(record?: { seats?: readonly { name: string; href: string; chamber?: string }[]; party?: { name: string; href: string } | null }): NextStep[];
 export function memberVoteSteps(votes?: readonly unknown[]): NextStep[];
 export function electorateNextSteps(detail: unknown, helpers?: { members?: readonly unknown[]; personHref?: (person: any) => string; displayName?: (name: string) => string; sitting?: boolean }): NextStep[];
-export function vicDistrictNextSteps(seat: unknown, region: unknown, options?: { closed?: boolean }): NextStep[];
+export function vicDistrictNextSteps(seat: unknown, region: unknown, options?: { closed?: boolean; pollDay?: string }): NextStep[];
 export function seriesNextSteps(steps?: { newer?: Partial<NextStep> | null; older?: Partial<NextStep> | null; index?: Partial<NextStep> | null }): NextStep[];

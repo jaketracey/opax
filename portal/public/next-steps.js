@@ -7,8 +7,9 @@
 
    Text wraps; nothing is cut. A page that learns a row later (a member's latest
    votes) reserves its place with `reserve` and fills it with fillNextSteps: a held
-   row keeps room for a label, two lines of link text and a line of detail, so a
-   title of up to two lines moves nothing below the block. */
+   row keeps room for a label, two lines of link text and a line of detail, and its
+   link is drawn on at most two lines (the whole title stays the link's text and its
+   title attribute), so filling it moves nothing below the block. */
 import { shortDate, shortMoney } from './format.js';
 
 const esc = (value) => String(value ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -75,7 +76,8 @@ export function fillNextSteps(root, items = [], empty = '') {
     slot.classList.add('next-steps-spare');
     if (!rows.length && index === 0 && empty) {
       slot.removeAttribute('aria-hidden');
-      slot.querySelector('.next-steps-meta').textContent = empty;
+      // In the link's place, where two lines are held: the sentence can wrap without moving the page.
+      slot.querySelector('.next-steps-link').textContent = empty;
     }
   });
   root.removeAttribute('aria-busy');
@@ -207,17 +209,19 @@ export function electorateNextSteps(detail, { members = [], personHref = () => '
 /**
  * A Victorian election district page. Until polls close this block names no person, party or vote
  * and counts no members: only the seat's previous result at the VEC, how to vote, its region and the
- * seat finder. After polls close it adds the seat's standing electorate record and the region's member
- * count. It never names the roster member: how members and candidates are shown is the page's own business.
+ * seat finder. After polls close it adds the seat's standing electorate record. The region's members are
+ * counted only from a roster dated after the poll (`pollDay`, YYYY-MM-DD): the new parliament's.
+ * It never names the roster member: how members and candidates are shown is the page's own business.
  */
-export function vicDistrictNextSteps(seat, region, { closed = false } = {}) {
+export function vicDistrictNextSteps(seat, region, { closed = false, pollDay = '' } = {}) {
+  const newRoster = closed && /^\d{4}-\d{2}-\d{2}$/.test(pollDay) && /^\d{4}-\d{2}-\d{2}/.test(String(region?.roster_date || '')) && String(region.roster_date).slice(0, 10) > pollDay;
   const rows = [];
   const general = seat?.result?.general;
   if (general?.url && /^\d{4}/.test(String(general.date || ''))) rows.push({ kind: 'Previous result', href: general.url, text: `${seat.name}: ${String(general.date).slice(0, 4)} election result`, meta: 'Victorian Electoral Commission' });
   if (!closed) rows.push({ kind: 'Voting', href: '#voting', text: 'How and where to vote', meta: 'Voting times and the VEC’s locations' });
   if (closed && seat?.electorate_url) rows.push({ kind: 'Electorate record', href: seat.electorate_url, text: `${seat.name}: electorate record`, meta: 'Election timeline and Census context' });
   if (region?.path) rows.push({ kind: 'Upper house region', href: region.path, text: `${region.name} Region`,
-    meta: closed ? `${plural(region.members?.length, 'member')} and ${plural(region.districts?.length, 'district')}` : plural(region.districts?.length, 'district') });
+    meta: newRoster ? `${plural(region.members?.length, 'member')} and ${plural(region.districts?.length, 'district')}` : plural(region.districts?.length, 'district') });
   rows.push({ kind: 'Districts', href: '/vic-election-2026#districts', text: 'All 88 lower house districts', meta: 'Listed by name' });
   rows.push({ kind: 'Another seat', href: '/vic-election-2026#find', text: 'Search by suburb, postcode or district', meta: '88 districts and 8 regions' });
   return rows;

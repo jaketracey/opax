@@ -5269,10 +5269,11 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
   .growth-questions a { min-height: var(--size-target); padding-block: calc((var(--size-target) - 1.45em) / 2 - var(--border-hairline)); }
 }
 /* "Next in the record" (next-steps.js): a short list of the pages this record leads to.
-   Every line wraps and nothing is cut, at any text size. A row held for a fact still
-   loading (.next-steps-held: a member's newest votes) keeps room for a label, two lines
-   of link and a line of detail, before and after it is filled, so a title of up to two
-   lines moves nothing under the block. */
+   Lines wrap and nothing is cut, at any text size, with one exception. A row held for a
+   fact still loading (.next-steps-held: a member's newest votes) keeps room for a label,
+   two lines of link and a line of detail, and its link is drawn on at most two lines, so
+   filling it moves nothing under the block. The whole title is still the link's text for
+   assistive technology, and its title attribute. */
 .next-steps { margin: var(--space-group) 0; padding: var(--space-block) 0 0; border-top: var(--border-hairline) solid var(--divider-default); }
 .next-steps-title { margin: 0 0 var(--space-heading); font: var(--type-subheading); }
 .next-steps-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); gap: var(--space-row) var(--space-group); align-items: start; list-style: none; margin: 0; padding: 0; }
@@ -5281,13 +5282,14 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 .next-steps-kind { font: var(--type-label); color: var(--ink-soft); }
 .next-steps-link { font: var(--type-body); font-weight: var(--weight-strong); }
 .next-steps-meta { font: var(--type-fine); color: var(--ink-soft); }
-.next-steps-held .next-steps-kind, .next-steps-held .next-steps-meta { min-height: 1.45em; }
-.next-steps-held .next-steps-link { min-height: 3.1em; }
+.next-steps-held .next-steps-kind, .next-steps-held .next-steps-meta { height: 1.45em; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.next-steps-held .next-steps-link { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; height: 3.1em; }
+.next-steps-spare .next-steps-link { font: var(--type-fine); color: var(--ink-soft); }
 .next-steps a:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: 2px; }
 /* Touch: the link is at least the 44 px target. */
 @media (max-width: 1000px), (pointer: coarse) {
   .next-steps-link { display: flex; align-items: center; min-height: var(--size-target); }
-  .next-steps-held .next-steps-link { min-height: max(var(--size-target), 3.1em); }
+  .next-steps-held .next-steps-link { display: -webkit-box; min-height: 0; }
 }
 @media print { .next-steps { display: none; } }
 .growth-ask :is(input, textarea, button), .growth-records summary { min-height: var(--size-target); }

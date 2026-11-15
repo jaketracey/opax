@@ -1,7 +1,7 @@
 // "Next in the record" (public/next-steps.js): every row is a fact the page's record holds and
 // a real address; rows keep one height so a reserved row never moves the page; no row is model
 // text or a ranking; and each template that draws the block draws it from its own record.
-import test from 'node:test';
+import test, { mock } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
@@ -10,13 +10,15 @@ import {
   NEXT_STEPS_TITLE, NEXT_STEPS_MAX, nextStepRows, nextStepsHTML, fillNextSteps, docNextSteps, supplierNextSteps,
   recipientNextSteps, billNextSteps, memberNextSteps, memberVoteSteps, electorateNextSteps, vicDistrictNextSteps, seriesNextSteps,
 } from '../public/next-steps.js';
-import { profileHTML, nextStepsReady } from '../public/electorates.js';
+import { profileHTML, nextStepsReady, nextStepsNameMembers } from '../public/electorates.js';
 await nextStepsReady;
 import { safePath } from '../analytics/privacy.mjs';
 
 const read = (path) => readFileSync(new URL(path, import.meta.url), 'utf8');
 const json = (path) => JSON.parse(read(path));
 const dom = (html) => new JSDOM(`<main>${html}</main>`).window.document;
+const blockKinds = (html) => [...dom(html).querySelectorAll('#el-next .next-steps-kind')].map((k) => k.textContent);
+const blockPeople = (html) => [...dom(html).querySelectorAll('#el-next a')].filter((a) => a.getAttribute('href').startsWith('/subject/person/')).length;
 const compile = async (entry) => {
   const r = await build({ entryPoints: [new URL(entry, import.meta.url).pathname], bundle: true, platform: 'browser', format: 'esm', write: false, external: ['node:*'], logLevel: 'error' });
   return import('data:text/javascript;base64,' + Buffer.from(r.outputFiles[0].text).toString('base64'));
@@ -71,6 +73,8 @@ test('reserved rows hold the place of facts still loading, and filling them neve
     for (const li of nav.querySelectorAll('li')) assert.equal(li.children.length, 3, 'every row has its three lines');
     for (const li of [...nav.querySelectorAll('li')].slice(2)) assert.ok(li.classList.contains('next-steps-held'), 'a held row keeps its reserved room once filled');
     if (!votes.length) assert.match(nav.textContent, /No votes on bills in the record for this member\./);
+    if (!votes.length) assert.equal(nav.querySelector('.next-steps-spare .next-steps-link').textContent, 'No votes on bills in the record for this member.', 'the sentence sits where two lines are held');
+    for (const a of nav.querySelectorAll('.next-steps-held a')) assert.equal(a.getAttribute('title'), a.textContent, 'a title drawn on two lines keeps its whole text');
     // A second settle (the votes section's own exit) changes nothing.
     const settled = nav.innerHTML;
     fillNextSteps(nav, [], 'No votes on bills in the record for this member.');
@@ -83,14 +87,17 @@ test('reserved rows hold the place of facts still loading, and filling them neve
   assert.equal(steps[0].meta, 'No · 2 Nov 2026');
 });
 
-test('the stylesheet wraps every line and cuts none; a held row keeps room for two lines of link', () => {
+test('the stylesheet wraps every line; only a held row is fixed, with its link on at most two lines', () => {
   const css = read('../public/style.css');
   const rules = css.slice(css.indexOf('/* "Next in the record"'), css.indexOf('.growth-ask :is(input, textarea, button)'));
   assert.ok(rules.length > 500);
-  assert.doesNotMatch(rules, /nowrap|text-overflow|line-clamp|overflow: hidden/);
-  assert.doesNotMatch(rules, /[^-]height: [\d.]+em/, 'no fixed heights: text at 200% still fits');
+  const open = rules.split('\n').filter((line) => /^\.next-steps/.test(line) && !/next-steps-held|next-steps-spare/.test(line)).join('\n');
+  assert.doesNotMatch(open, /nowrap|text-overflow|line-clamp|overflow: hidden|[^-]height: [\d.]+em/, 'ordinary rows wrap and are never cut');
   assert.match(rules, /\.next-steps-row > \* \{[^}]*overflow-wrap: anywhere/);
-  assert.match(rules, /\.next-steps-held \.next-steps-link \{ min-height: 3\.1em; \}/);
+  // A held row has one fixed height before and after it is filled: 1.45em + 3.1em + 1.45em.
+  assert.match(rules, /\.next-steps-held \.next-steps-kind, \.next-steps-held \.next-steps-meta \{ height: 1\.45em; overflow: hidden;/);
+  assert.match(rules, /\.next-steps-held \.next-steps-link \{[^}]*-webkit-line-clamp: 2;[^}]*overflow: hidden; height: 3\.1em; \}/);
+  assert.doesNotMatch(rules, /\.next-steps-held[^{]*\{[^}]*min-height: (?!0)/, 'no held line can grow');
 });
 
 test('a document leads to its speaker, their speeches and the same debate on the same day; never to an unattributed name', () => {
@@ -176,28 +183,47 @@ test('an electorate leads to its member and to a way of finding another seat; po
   assert.deepEqual(idle.map((r) => r.kind), ['Related electorate', 'Find your own MP']);
 });
 
-test('the electorate profile names a member only of today: not at a past date, a dissolved house, or a Victorian seat before polls close', () => {
+test('the electorate profile names a member only of today: not at a past date or for a dissolved house', () => {
   const manifest = json('../public/electorates/manifest.json');
   const index = json(`../public${manifest.index_url}`);
-  const kinds = (html) => [...dom(html).querySelectorAll('#el-next .next-steps-kind')].map((k) => k.textContent);
-  const people = (html) => [...dom(html).querySelectorAll('#el-next a')].filter((a) => a.getAttribute('href').startsWith('/subject/person/')).length;
   const federal = json(`../public${index.electorates.find((e) => e.jurisdiction === 'federal' && e.chamber === 'representatives' && e.representatives?.length === 1 && e.status !== 'historical').detail_url}`);
-  assert.equal(people(profileHTML(federal)), 1);
-  assert.ok(kinds(profileHTML(federal)).includes('Member'));
-  assert.equal(people(profileHTML(federal, '2026-09-04')), 0, 'a past date names nobody in the block');
-  assert.ok(!kinds(profileHTML(federal, '2026-09-04')).some((k) => /Member|represents/.test(k)));
-  assert.equal(people(profileHTML({ ...federal, dissolved_for: '2027-05-01' })), 0, 'a dissolved house names nobody');
-  const before = new Date('2026-11-28T17:59:59+11:00'), after = new Date('2026-11-28T18:00:00+11:00');
+  assert.equal(blockPeople(profileHTML(federal)), 1);
+  assert.ok(blockKinds(profileHTML(federal)).includes('Member'));
+  assert.equal(blockPeople(profileHTML(federal, '2026-09-04')), 0, 'a past date names nobody in the block');
+  assert.ok(!blockKinds(profileHTML(federal, '2026-09-04')).some((k) => /Member|represents/.test(k)));
+  assert.equal(blockPeople(profileHTML({ ...federal, dissolved_for: '2027-05-01' })), 0, 'a dissolved house names nobody');
+  assert.equal(nextStepsNameMembers(federal), true);
+});
+
+test('a Victorian electorate names a member only from a verified roster dated after the 2026 poll, in either house', () => {
+  const manifest = json('../public/electorates/manifest.json');
+  const index = json(`../public${manifest.index_url}`);
+  const silent = (html, why) => {
+    assert.equal(blockPeople(html), 0, why);
+    assert.ok(!blockKinds(html).some((k) => /Member|represents/.test(k)), why);
+    assert.ok(blockKinds(html).includes('Find your own MP'), why);
+  };
   for (const chamber of ['vic_la', 'vic_lc']) {
     const row = index.electorates.find((e) => e.chamber === chamber && e.representatives?.length);
     const detail = json(`../public${row.detail_url}`);
-    const early = profileHTML(detail, '', { now: before });
-    assert.equal(people(early), 0, `${chamber} before polls close`);
-    assert.ok(!kinds(early).some((k) => /Member|represents/.test(k)), chamber);
-    assert.ok(kinds(early).includes('Find your own MP'));
-    // After the close a house still published as dissolved stays silent; one that is not names its roster again.
-    assert.equal(people(profileHTML(detail, '', { now: after })) > 0, !detail.dissolved_for, `${chamber} after polls close`);
-    assert.equal(people(profileHTML({ ...detail, dissolved_for: null }, '', { now: after })) > 0, true);
+    assert.ok(detail.representation_as_of < '2026-11-28', 'the published roster is the old parliament\'s');
+    // The old roster, as published today (the Council carries no dissolved_for at all).
+    silent(profileHTML(detail), `${chamber}: old roster`);
+    // The rule reads the record, not the clock: the same old roster is silent before and after 6 pm on 28 November.
+    for (const now of ['2026-11-28T17:59:59+11:00', '2026-11-28T18:00:00+11:00', '2026-12-20T09:00:00+11:00']) {
+      mock.timers.enable({ apis: ['Date'], now: Date.parse(now) });
+      try { silent(profileHTML(detail), `${chamber}: old roster at ${now}`); silent(profileHTML({ ...detail, dissolved_for: null }), `${chamber}: dissolved_for cleared, old roster, at ${now}`); }
+      finally { mock.timers.reset(); }
+    }
+    // A roster dated on polling day itself is still the old parliament's; unverified or historical records never name anyone.
+    silent(profileHTML({ ...detail, dissolved_for: null, representation_as_of: '2026-11-28' }), `${chamber}: dated on polling day`);
+    silent(profileHTML({ ...detail, dissolved_for: null, representation_as_of: '2026-12-15', representation_status: 'partial' }), `${chamber}: unverified`);
+    silent(profileHTML({ ...detail, dissolved_for: null, representation_as_of: '2026-12-15', status: 'historical' }), `${chamber}: historical`);
+    silent(profileHTML({ ...detail, dissolved_for: '2026-11-28', representation_as_of: '2026-12-15' }), `${chamber}: still published as dissolved`);
+    // The new parliament's roster: verified, current, dated after the poll, and not dissolved.
+    const fresh = profileHTML({ ...detail, dissolved_for: null, representation_as_of: '2026-12-15' });
+    assert.equal(blockPeople(fresh), Math.min(3, detail.representatives.length), `${chamber}: new roster`);
+    assert.ok(blockKinds(fresh).includes('Member'));
   }
 });
 
@@ -239,11 +265,21 @@ test('a Victorian district page names no person, party or vote in the block unti
   const early = block(seat, BEFORE), late = block(seat, AFTER);
   const hrefs = (nav) => [...nav.querySelectorAll('a')].map((a) => a.getAttribute('href'));
   assert.deepEqual(hrefs(early), [seat.result.general.url, '#voting', region.path, '/vic-election-2026#districts', '/vic-election-2026#find']);
-  // After the close: the standing electorate record and the region's member count; still no roster member by name.
+  // After the close: the standing electorate record; still no roster member by name, and no count of the old roster's members.
   assert.deepEqual([...late.querySelectorAll('.next-steps-kind')].map((k) => k.textContent), ['Previous result', 'Electorate record', 'Upper house region', 'Districts', 'Another seat']);
   assert.ok(hrefs(late).includes(seat.electorate_url) && !hrefs(late).includes('#voting') && !hrefs(late).includes(seat.members[0].href));
-  assert.match(late.textContent, /5 members and 11 districts/);
   assert.ok(!late.textContent.includes(seat.members[0].name));
+  assert.ok(region.roster_date < '2026-11-28', 'the published roster is the old parliament\'s');
+  for (const nav of [late, block(seat, '2026-12-20T09:00:00+11:00')]) {
+    assert.doesNotMatch(nav.textContent, /\bmembers?\b/i, 'the old roster is not counted after the close');
+    assert.match(nav.textContent, /11 districts/);
+  }
+  // Only the new parliament's roster (dated after polling day) is counted, and only once polls have closed.
+  const meta = (r, options) => vicDistrictNextSteps(seat, r, options).find((row) => row.kind === 'Upper house region').meta;
+  assert.equal(meta({ ...region, roster_date: '2026-12-15' }, { closed: true, pollDay: '2026-11-28' }), '5 members and 11 districts');
+  assert.equal(meta({ ...region, roster_date: '2026-11-28' }, { closed: true, pollDay: '2026-11-28' }), '11 districts');
+  assert.equal(meta({ ...region, roster_date: '2026-12-15' }, { closed: false, pollDay: '2026-11-28' }), '11 districts');
+  assert.equal(meta({ ...region, roster_date: '2026-12-15' }, { closed: true }), '11 districts');
   assert.deepEqual(vicDistrictNextSteps(seat, region).map((r) => r.kind), vicDistrictNextSteps(seat, region, { closed: false }).map((r) => r.kind), 'the neutral block is the default');
   const page = renderVicElection(data, seat, {}, new Date(BEFORE));
   assert.ok(page.html.indexOf('id="vic-next"') > page.html.indexOf('class="vic-facts"'));

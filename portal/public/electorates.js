@@ -200,13 +200,20 @@ export function heldSinceLine(detail) {
   if (!/^\d{4}$/.test(year)) return null;
   return { party, year, text: `Held by ${party} since ${definite ? '' : 'at least '}${year}` };
 }
+/** Whether the next-steps block may name this seat's members (see profileHTML). */
+export function nextStepsNameMembers(detail, on = '') {
+  if (on || detail.dissolved_for) return false;
+  if (detail.jurisdiction !== 'vic') return true;
+  return detail.status === 'current' && detail.representation_status === 'verified'
+    && validDate(detail.representation_as_of || '') && detail.representation_as_of > VIC_ELECTION_POLLS_CLOSE.slice(0, 10);
+}
 /* One title and one meta line (no kicker), ⋯ on the title's row; then
    sections (ui-section), each ending in one source line that opens its
    originals, dates, notes and licences. Who holds the seat and its boundary sit
    side by side; the date control lives in Representation history, a list of
    bylines; the census is one figure and a key/value list; the downloads and
    reference ID sit under ⋯ and in the representation sheet. */
-export function profileHTML(detail, on = '', { photoUrlFor = () => null, now = new Date() } = {}) {
+export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) {
   const selected = on ? representationAt(detail, on) : { status: detail.representation_status, members: detail.representatives, as_of: detail.representation_as_of };
   const plural = Math.max(detail.capacity || 1, selected.members.length) > 1;
   const title = on ? `Representation on ${date(on)}` : `${detail.status === 'historical' ? 'Last recorded member' : 'Current member'}${plural ? 's' : ''}`;
@@ -223,9 +230,10 @@ export function profileHTML(detail, on = '', { photoUrlFor = () => null, now = n
   const line = (list, opts) => sourceLineHTML({ updated: retrieved(list), dateLabel: 'As at', originals: originalsOf(list), licence: licences(list), ...opts });
   const heldSince = on ? null : heldSinceLine(detail);
   // The next-steps block names a member, or says a seat "represents you", only where the page can say so of today:
-  // not at a past date, not for a dissolved house (dissolved_for), and not for a Victorian seat before the 2026 polls
-  // close (the Council's rows carry no dissolution field, and its term ended with the Assembly's).
-  const sitting = !on && !detail.dissolved_for && !(detail.jurisdiction === 'vic' && now.getTime() < Date.parse(VIC_ELECTION_POLLS_CLOSE));
+  // not at a past date and not for a dissolved house (dissolved_for). A Victorian seat, in either house, needs more:
+  // a verified roster dated after the 2026 polls closed, which is the new parliament's. The Council's rows carry no
+  // dissolution field, and a district's can clear before the new roster is read, so the roster's own date decides.
+  const sitting = nextStepsNameMembers(detail, on);
   return `<div class="ui-page-head el-head"><h1 id="subject-title" tabindex="-1">${esc(detail.name)}</h1>${heldSince ? `<p class="ui-page-meta el-held-since">${esc(heldSince.text)}</p>` : ''}<p class="ui-page-meta">${esc(CHAMBERS[detail.chamber] || detail.chamber)} · ${esc(detail.state_code.toUpperCase())}${detail.capacity > 1 ? ` · ${detail.capacity} seats` : ''}${detail.status === 'historical' ? ' · Historical electorate' : ''}</p>
     <div class="page-actions">${moreMenuHTML([
       { href: detail.detail_url, label: 'Download this electorate', detail: 'JSON, every record on this page with its sources' },
