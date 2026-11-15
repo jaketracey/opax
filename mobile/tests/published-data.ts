@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'fs';
-import { join, relative, resolve } from 'path';
+import { dirname, join, relative, resolve } from 'path';
 
 /**
  * The data guard's engine: an app build's own decoders run over the
@@ -44,18 +44,41 @@ export const buildLabel = () => process.env.OPAX_DECODERS_LABEL ?? '';
 const prefix = () => (buildLabel() ? `[${buildLabel()}] ` : '');
 
 type Module = Record<string, unknown>;
+/** Each module loaded, by its path in the source tree: the file it was. */
+const loadedFrom = new Map<string, string>();
 /** A module of the build's source, or nothing when that build has none. */
 function load(path: string): Module {
   const file = join(decodersRoot(), path);
   if (!['.ts', '.tsx'].some((ext) => existsSync(file + ext))) return {};
+  // Where the module system finds it: the very file required below, kept
+  // so the run can say which folder its decoders came from.
+  const found = require.resolve(file);
+  loadedFrom.set(path, found);
   // The build's source is chosen at run time, so it cannot be imported.
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  return require(file) as Module;
+  return require(found) as Module;
 }
 const decoder = (module: Module, name: string) =>
   typeof module[name] === 'function' ? (module[name] as Decode) : undefined;
 
 const d = load('api/catalog-decoders');
+/**
+ * The folder the decoders were in fact loaded from: where the module
+ * system found the decoder module `load` required, not the variable's value.
+ * A label alone proves nothing (a helper that ignored OPAX_DECODERS_SRC
+ * would print the pinned build's name over this tree's decoders), so the
+ * CI script checks this line for every build it runs.
+ */
+export const decodersLoadedFrom = (): string => {
+  const at = loadedFrom.get('api/catalog-decoders');
+  return at ? dirname(dirname(at)) : '(no decoders found)';
+};
+/** `decoders: 1.1.4 (73) /path/to/src`, as the CI script reads it. */
+export const decodersLine = () =>
+  `decoders: ${buildLabel() || 'this tree'} ${decodersLoadedFrom()}`;
+// Once a run, straight to the stream: Jest shows test titles only in
+// verbose runs and wraps console.log, so neither can be relied on.
+process.stderr.write(`${decodersLine()}\n`);
 const validation = load('api/validation');
 const errors = load('api/errors');
 

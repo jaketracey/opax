@@ -6,12 +6,14 @@
 // The decoders: this tree's, or a pinned build's `mobile/src`
 // (OPAX_DECODERS_SRC, named by OPAX_DECODERS_LABEL), because published
 // data must decode under the strictest build still on readers' phones.
-import { readFileSync } from 'fs';
+import { readFileSync, realpathSync } from 'fs';
 import { join } from 'path';
 import {
   buildLabel,
   buildReads,
   checkFamily,
+  decodersLine,
+  decodersLoadedFrom,
   decodersRoot,
   decodeFirstsWhole,
   families,
@@ -282,6 +284,14 @@ describe(`what the guard catches in ${build}`, () => {
     expect(problemsIn(data, decodeBill)).toEqual([
       'key: The catalog response could not be read. (file refused)',
     ]);
+  });
+
+  test('the run names the folder its decoders were loaded from', () => {
+    // Where the module system found them, which is the folder asked for.
+    expect(decodersLoadedFrom()).toBe(realpathSync(decodersRoot()));
+    expect(decodersLine()).toBe(
+      `decoders: ${build} ${realpathSync(decodersRoot())}`,
+    );
   });
 
   // The exact words of this tree's own decoders. A pinned build is
