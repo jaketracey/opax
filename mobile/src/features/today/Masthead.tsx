@@ -6,6 +6,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import { useLayout } from '../../design/adaptive';
 import type { DateInput } from '../../design/format';
 import { OfflineLine } from '../../design/states';
 import { Text } from '../../design/text';
@@ -68,6 +69,18 @@ export function useNow(): Date {
 }
 
 /**
+ * Where the art sits. On a phone and on iPad it hangs behind the large
+ * title at the leading edge, with the date cleared below it. On a regular
+ * phone (the open iPhone Duo) there is room beside the date, and the art
+ * under the title covered it, so it sits at the masthead's trailing end
+ * instead (the masthead below lays the date and the art in a row there).
+ */
+export function useDotsTrailing(): boolean {
+  const { rule } = useLayout();
+  return Platform.OS === 'ios' && rule === 'phone-regular';
+}
+
+/**
  * Slot 0 under the large title: the date line ("Sunday 8 November", plain
  * text, not a header), the sitting line when the published calendar can
  * say it, then, only when the last revalidation failed for network
@@ -92,6 +105,8 @@ export function Masthead({
   const { fontScale } = useWindowDimensions();
   const androidArt =
     Platform.OS === 'android' && !!mark && !isAccessibilityCategory(fontScale);
+  const trailing = useDotsTrailing();
+  const trailingArt = trailing && !!mark && !isAccessibilityCategory(fontScale);
   const date = (
     <Text
       wordSafe
@@ -102,6 +117,24 @@ export function Masthead({
       {mastheadDate(now)}
     </Text>
   );
+  const offline =
+    offlineSavedAt !== undefined && offlineSavedAt !== null ? (
+      <OfflineLine savedAt={offlineSavedAt} testID="today-offline" />
+    ) : null;
+  if (trailingArt)
+    // The open Duo: the date and its lines on the leading side, the map at
+    // the trailing end in the room beside them. The map keeps its own width
+    // and height, so no line runs under it and the first card clears it.
+    return (
+      <View testID="today-masthead" style={styles.wide}>
+        <View testID="today-masthead-lines" style={styles.lines}>
+          {date}
+          {sitting}
+          {offline}
+        </View>
+        {mark}
+      </View>
+    );
   return (
     <View testID="today-masthead" style={styles.masthead}>
       {androidArt ? (
@@ -116,15 +149,15 @@ export function Masthead({
         </>
       )}
       {sitting}
-      {offlineSavedAt !== undefined && offlineSavedAt !== null ? (
-        <OfflineLine savedAt={offlineSavedAt} testID="today-offline" />
-      ) : null}
+      {offline}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   masthead: { gap: rhythm.tight },
+  wide: { flexDirection: 'row', alignItems: 'flex-start', gap: rhythm.block },
+  lines: { flex: 1, gap: rhythm.tight },
   androidDate: {
     minHeight: dotHeight * androidDotScale,
     paddingRight: dotWidth * androidDotScale + rhythm.tight,

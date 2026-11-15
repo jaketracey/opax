@@ -1,4 +1,5 @@
 import { act } from 'react';
+import { StyleSheet } from 'react-native';
 import {
   setWindowTraitsOverride,
   type WindowTraits,
@@ -9,6 +10,7 @@ import {
   dotFadeDistance,
   nextRestInset,
   restInsetShown,
+  dotWidth,
 } from '../src/features/today/australia-dots-model';
 import {
   advance,
@@ -302,7 +304,10 @@ describe('Today map in a window narrower than the screen', () => {
     // The column's inset is 16 pt (under 414 pt): the art starts at -8.
     expect(view.art().left).toBe(-8 - 16);
 
-    // Unfolded: a regular phone window, where the art is not drawn.
+    // Unfolded: a regular phone window. The art was left out there, since
+    // under the title it covered the date; the open Duo showed an empty
+    // band beside the title instead (build 76). It is drawn at the
+    // masthead's trailing end, in its own box beside the date's lines.
     act(() => {
       windowOf({ width: 951, height: 669 });
       setWindowTraitsOverride({
@@ -313,7 +318,41 @@ describe('Today map in a window narrower than the screen', () => {
       });
     });
     view.layOut(871, 669);
-    expect(view.drawn()).toBe(false);
+    view.header(96);
+    view.rest(96);
+    expect(view.drawn()).toBe(true);
+    // In its box, not hanging 8 pt past the leading edge under the title.
+    expect(view.art().left).toBe(0);
+    const box = StyleSheet.flatten(
+      view.tree.root.find(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.testID === 'today-australia-dots-clearance',
+      ).props.style,
+    );
+    // As wide as the art and as tall as it reaches, so no line runs under
+    // it and the first card starts clear of it.
+    expect(box.width).toBe(dotWidth);
+    expect(box.height).toBeCloseTo(view.art().top + view.art().height + 8, 3);
+    // The date and its lines keep the leading side of a row.
+    const masthead = view.tree.root.find(
+      (node) =>
+        typeof node.type === 'string' && node.props.testID === 'today-masthead',
+    );
+    expect(StyleSheet.flatten(masthead.props.style).flexDirection).toBe('row');
+    const lines = view.tree.root.find(
+      (node) =>
+        typeof node.type === 'string' &&
+        node.props.testID === 'today-masthead-lines',
+    );
+    expect(StyleSheet.flatten(lines.props.style).flex).toBe(1);
+    expect(
+      lines.findAll((node) => node.props.testID === 'today-screen-message')
+        .length,
+    ).toBeGreaterThan(0);
+    expect(
+      lines.findAll((node) => node.props.testID === 'today-australia-dots'),
+    ).toHaveLength(0);
 
     // Folded again: drawn, whole, at the edge.
     advance(5000);
@@ -326,6 +365,12 @@ describe('Today map in a window narrower than the screen', () => {
     view.rest(150);
     expectAtRest(view, 150);
     expect(view.art().left).toBe(-8 - 16);
+    // The folded masthead is the column it was: no row, no lines box.
+    expect(
+      view.tree.root.findAll(
+        (node) => node.props.testID === 'today-masthead-lines',
+      ),
+    ).toHaveLength(0);
     act(() => view.tree.unmount());
   });
 });

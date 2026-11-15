@@ -35,6 +35,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useReduceMotionSetting } from '../../design/accessibility';
 import { useLayout } from '../../design/adaptive';
+import { useDotsTrailing } from './Masthead';
 import { SizedCanvas } from '../../design/canvas';
 import { ScreenGutterContext } from '../../design/layout';
 import { paletteFor } from '../../design/palette';
@@ -135,9 +136,8 @@ export function useTodayDotsScroll() {
 }
 
 /**
- * Decorative only. Hidden at AX sizes so the title and first card have room,
- * and on a regular phone (iPhone Duo): there the art fell under the large
- * title and the date, and text is never drawn over it.
+ * Decorative only. Hidden at AX sizes so the title and first card have room.
+ * Text is never drawn over it: see `useDotsTrailing` for the open Duo.
  *
  * Today draws it from the first frame, `neutral` while the seat is read, so
  * its clearance holds the date where it will stay (sweep 3, item 1: the date
@@ -151,9 +151,7 @@ export function AustraliaDots(props: {
   expandedHeader: SharedValue<number>;
 }) {
   const { fontScale } = useWindowDimensions();
-  const { rule } = useLayout();
-  if (isAccessibilityCategory(fontScale) || rule === 'phone-regular')
-    return null;
+  if (isAccessibilityCategory(fontScale)) return null;
   return <DotField {...props} />;
 }
 
@@ -202,6 +200,7 @@ function DotField({
   // takes a side of the window, and the art slid under it.
   const gutter = useContext(ScreenGutterContext);
   const inset = gutter ?? Math.max(0, (window.width - layout.width) / 2);
+  const trailing = useDotsTrailing();
   const rows = useMemo(() => dotRows(), []);
   const time = useSharedValue(0);
   const highlight = useSharedValue<DotHighlight>({
@@ -319,7 +318,10 @@ function DotField({
         styles.art,
         android
           ? { left: layout.width - dotWidth, transformOrigin: 'top right' }
-          : { left: -8 - inset },
+          : trailing
+            ? // In its own box at the masthead's trailing end.
+              { left: 0 }
+            : { left: -8 - inset },
         position,
       ]}
     >
@@ -340,7 +342,11 @@ function DotField({
     </Animated.View>
   );
   if (android) return art;
-  return <DateClearance expandedHeader={expandedHeader}>{art}</DateClearance>;
+  return (
+    <DateClearance expandedHeader={expandedHeader} trailing={trailing}>
+      {art}
+    </DateClearance>
+  );
 }
 
 /** The gap kept between the art's lower edge (Tasmania) and the date line. */
@@ -357,9 +363,12 @@ export const DATE_CLEARANCE = 8;
  */
 function DateClearance({
   expandedHeader,
+  trailing,
   children,
 }: {
   expandedHeader: SharedValue<number>;
+  /** Beside the date, as wide as the art, not ahead of it in the flow. */
+  trailing: boolean;
   children: ReactNode;
 }) {
   const clearance = useAnimatedStyle(() => ({
@@ -371,7 +380,7 @@ function DateClearance({
       accessible={false}
       importantForAccessibility="no-hide-descendants"
       pointerEvents="none"
-      style={[styles.clearance, clearance]}
+      style={[trailing ? styles.trailing : styles.clearance, clearance]}
     >
       {children}
     </Animated.View>
@@ -480,4 +489,7 @@ function StateDots({
 const styles = StyleSheet.create({
   art: { position: 'absolute', width: dotWidth, height },
   clearance: { marginBottom: -rhythm.tight },
+  // The open Duo: the box holds the art's width beside the date, and is as
+  // tall as the art reaches, so the first card starts clear of it.
+  trailing: { width: dotWidth },
 });
