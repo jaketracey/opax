@@ -3,9 +3,15 @@
  * it was pushed into the corner, half the text's inset from the side and
  * foot, with a wide gap above), and still takes a 44 pt touch.
  */
-import { render } from '@testing-library/react-native';
+import { act, render } from '@testing-library/react-native';
 import { Platform, Pressable, StyleSheet } from 'react-native';
-import { minimumTarget, rhythm, textStyles } from '../src/design/tokens';
+import {
+  border,
+  colors,
+  minimumTarget,
+  rhythm,
+  textStyles,
+} from '../src/design/tokens';
 import { learnCopy } from '../src/features/learn/copy';
 import { termIds } from '../src/features/learn/glossary';
 import TermTip, { MORE_SLOP, TIP_INSET } from '../src/features/learn/TermTip';
@@ -84,17 +90,21 @@ test('the touch still reaches 44 pt, and never past the popover', () => {
   Platform.OS = 'ios';
   const { more } = tip();
   expect(more.props.hitSlop).toEqual(MORE_SLOP);
+  // 44 pt tall at the default size and at iOS's smallest text size, where
+  // the label's line is about 0.8 of the default.
   const line = textStyles.strong.lineHeight;
-  expect(line + MORE_SLOP.top + MORE_SLOP.bottom).toBeGreaterThanOrEqual(
-    minimumTarget,
-  );
-  // "More" is narrower than 44 pt at small sizes: the reach makes it up.
-  expect(MORE_SLOP.left + MORE_SLOP.right).toBeGreaterThanOrEqual(
-    minimumTarget,
-  );
-  // A touch outside the popover closes it, so the reach stays inside it.
+  for (const scale of [1, 0.8])
+    expect(
+      line * scale + MORE_SLOP.top + MORE_SLOP.bottom,
+    ).toBeGreaterThanOrEqual(minimumTarget);
+  // The same reach on both sides, never past the popover's edge: in a
+  // right-to-left layout "More" is on the other side, and a touch on the
+  // backdrop must close the popover, not open the sheet.
+  const style = StyleSheet.flatten(more.props.style({ pressed: false }));
+  expect(MORE_SLOP.left).toBe(MORE_SLOP.right);
+  for (const side of [MORE_SLOP.left, MORE_SLOP.right])
+    expect(side + style.paddingHorizontal).toBeLessThanOrEqual(TIP_INSET);
   expect(MORE_SLOP.bottom).toBeLessThanOrEqual(TIP_INSET);
-  expect(MORE_SLOP.right + rhythm.tight).toBeLessThanOrEqual(TIP_INSET);
   more.props.onPress();
   expect(mockReplace).toHaveBeenCalledWith({
     pathname: '/term',
@@ -103,4 +113,29 @@ test('the touch still reaches 44 pt, and never past the popover', () => {
   expect(more.props.accessibilityLabel).toMatch(
     new RegExp(`^${learnCopy.more} about `),
   );
+});
+
+test('a keyboard\'s focus shows the app\'s ring on "More", and leaves with it', () => {
+  Platform.OS = 'ios';
+  const { r, more } = tip();
+  const outline = () => {
+    const node = r.UNSAFE_root.find(
+      (n) =>
+        n.type === (Pressable as unknown as { type: unknown }).type &&
+        n.props.testID === `term-tip-${id}-more`,
+    );
+    const style = node.props.style;
+    return StyleSheet.flatten(
+      typeof style === 'function' ? style({ pressed: false }) : style,
+    );
+  };
+  expect(outline().outlineWidth).toBeUndefined();
+  act(() => more.props.onFocus({ nativeEvent: {} }));
+  expect(outline()).toMatchObject({
+    outlineColor: colors.navy,
+    outlineWidth: border.focus,
+    outlineStyle: 'solid',
+  });
+  act(() => more.props.onBlur({ nativeEvent: {} }));
+  expect(outline().outlineWidth).toBeUndefined();
 });
