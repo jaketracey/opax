@@ -5,7 +5,15 @@ import { routeSheetOptions } from '../../features/sheets/frame';
 import { isAccessibilityCategory } from '../../design/tokens';
 import { PixelRatio, Platform } from 'react-native';
 import { AndroidReadingHeader } from '../AndroidReadingHeader';
-import { noteRootRoutes } from '../sheet-status-bar';
+import {
+  detentFullHeight,
+  forgetSheet,
+  noteSheetClosing,
+  noteSheetDetent,
+  noteStackSheets,
+  pageSheetNames,
+  sheetFullHeight,
+} from '../sheet-status-bar';
 import { setSheetSegments } from '../sheets';
 import { hasSourcePreview, isProduction } from '../../design/environment';
 import { communityHome } from '../../features/community/entry';
@@ -13,6 +21,38 @@ import { voiceLinked } from '../../voice/linked';
 import { screen, sheetOptions } from './screen';
 
 export const rootSettings = { anchor: '(tabs)' };
+
+/** The root's route sheets: Sources, a citation, a rule, a glossary term. */
+const ROUTE_SHEETS: ReadonlySet<string> = new Set([
+  'source',
+  'machine-note',
+  'citation',
+  'rule',
+  'licences',
+  'term',
+]);
+/** A route sheet's detents, for its options and for the status bar. */
+function routeSheet(name: string, route: { params?: object }) {
+  return routeSheetOptions({
+    short: name === 'machine-note' || name === 'rule' || name === 'term',
+    table:
+      (route.params as { variant?: string } | undefined)?.variant === 'table',
+    citation: name === 'citation',
+    accessible: isAccessibilityCategory(PixelRatio.getFontScale()),
+  });
+}
+/**
+ * Whether a root route is a sheet at full height as it opens: a page sheet
+ * (Account, Talk, the electorate chooser), or a route sheet whose opening
+ * detent is the whole height, as at accessibility text sizes.
+ */
+export function rootSheetFull(route: { name: string; params?: object }) {
+  return (
+    pageSheetNames.has(route.name) ||
+    (ROUTE_SHEETS.has(route.name) &&
+      sheetFullHeight(routeSheet(route.name, route)))
+  );
+}
 
 export function rootScreens(chrome: NativeStackNavigationOptions = {}) {
   const modal = {
@@ -68,15 +108,7 @@ export function rootScreens(chrome: NativeStackNavigationOptions = {}) {
         name={name}
         options={({ route }) => ({
           ...chrome,
-          ...routeSheetOptions({
-            short:
-              name === 'machine-note' || name === 'rule' || name === 'term',
-            table:
-              (route.params as { variant?: string } | undefined)?.variant ===
-              'table',
-            citation: name === 'citation',
-            accessible: isAccessibilityCategory(PixelRatio.getFontScale()),
-          }),
+          ...routeSheet(name!, route),
           ...(name === 'licences'
             ? {
                 presentation: 'modal' as const,
@@ -128,16 +160,50 @@ export function rootScreens(chrome: NativeStackNavigationOptions = {}) {
       // the modal beneath a route sheet without subscribing in every caller.
       listeners: ({
         navigation,
+        route: own,
       }: {
         navigation: { getState: () => NavigationState };
+        route?: { key: string; name: string; params?: object };
       }) => {
         const update = () => {
           const state = navigation.getState();
           const route = state.routes[state.index];
           if (route) setSheetSegments([route.name]);
-          noteRootRoutes(state.routes);
+          // The status bar's style follows every sheet in the stack: its
+          // height as it opens here, then its detent and its dismissal
+          // from the screen's own events below.
+          noteStackSheets(
+            'root',
+            state.routes.map((r, index) => ({
+              key: r.key ?? `${r.name}:${index}`,
+              full: rootSheetFull(r),
+            })),
+          );
         };
-        return { focus: update, state: update };
+        if (!own) return { focus: update, state: update };
+        type SheetEvent = { data?: { closing?: boolean; index?: number } };
+        return {
+          focus: update,
+          state: update,
+          transitionStart: (event: SheetEvent) => {
+            if (event.data?.closing) noteSheetClosing(own.key, true);
+            else update();
+          },
+          gestureCancel: () => noteSheetClosing(own.key, false),
+          transitionEnd: (event: SheetEvent) => {
+            if (event.data?.closing) forgetSheet(own.key);
+          },
+          sheetDetentChange: (event: SheetEvent) => {
+            if (ROUTE_SHEETS.has(own.name))
+              noteSheetDetent(
+                own.key,
+                detentFullHeight(
+                  routeSheet(own.name, own),
+                  event.data?.index ?? 0,
+                ),
+              );
+          },
+        };
       },
     }),
   );

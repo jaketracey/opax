@@ -15,6 +15,7 @@ import {
   type TabSegment,
 } from '../chrome';
 import { sheetListOptions, sheetListRoutes } from '../sheet-lists';
+import { isSheet, sheetStatusListeners } from '../sheet-status-bar';
 import { emptyBarTitle } from '../useTitleOnScroll';
 
 /**
@@ -218,6 +219,11 @@ export function screen(
       key={name}
       name={name}
       redirect={redirect}
+      // A sheet in any stack (Ask's Conversations, the tide table) tells
+      // the status bar its height as it opens, moves and leaves.
+      listeners={
+        isSheet(options) ? sheetStatusListeners(() => options) : undefined
+      }
       options={({ route, navigation }) =>
         sheetListOptions(
           {
