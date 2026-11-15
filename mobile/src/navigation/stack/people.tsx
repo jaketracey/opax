@@ -1,9 +1,20 @@
 import { Stack } from 'expo-router';
 import { detailBackOptions, screen, sheetOptions, untitled } from './screen';
-import { closeSheetItem, headerItems, pendingHeaderOptions } from '../chrome';
+import {
+  closeSheetItem,
+  headerItems,
+  pendingHeaderOptions,
+  solidRailBar,
+} from '../chrome';
 import { sheetListOptions } from '../sheet-lists';
 
-export function peopleScreens() {
+/**
+ * `underBar`: the tab stack's pushed pages run under a clear bar (the closed
+ * Duo). The directory and Just declared keep a solid one there: a search
+ * field holds their title band open, and React Native pins their sticky
+ * section headers at the scroll view's top edge, which a clear bar covers.
+ */
+export function peopleScreens(underBar = false) {
   return [
     screen('person/[slug]', '', untitled),
     screen('person/[slug]/votes', 'Voting record'),
@@ -11,7 +22,7 @@ export function peopleScreens() {
     screen('person/[slug]/interests', 'Declared interests'),
     screen('party/[slug]', '', untitled),
     screen('party-sources', 'Largest sources by year'),
-    screen('declarations', 'Just declared'),
+    screen('declarations', 'Just declared', solidRailBar(underBar)),
     screen('expense-glossary', 'Expense categories', sheetOptions),
     <Stack.Screen
       key="directory"
@@ -34,6 +45,7 @@ export function peopleScreens() {
             headerLargeTitleEnabled: false,
             ...detailBackOptions(navigation, route.key, 'directory'),
             ...pendingHeaderOptions('directory'),
+            ...solidRailBar(underBar),
             ...(navigation?.getState?.()?.index === 0
               ? headerItems(() => [closeSheetItem()])
               : {}),

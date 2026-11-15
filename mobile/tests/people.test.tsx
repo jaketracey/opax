@@ -18,7 +18,7 @@ import {
   formatMoneyCompact,
   moneyAccessibilityLabel,
 } from '../src/design/format';
-import { Screen, Section } from '../src/design/layout';
+import { FixedPage, Screen, Section } from '../src/design/layout';
 import { PaneHost } from '../src/design/split';
 import { useReduceMotion } from '../src/design/accessibility';
 import { SegmentedPicker } from '../src/design/controls';
@@ -1928,6 +1928,10 @@ describe('record list', () => {
     expect(state.props.body).toBeUndefined();
     expect(state.props.action).toBeUndefined();
     expect(has(r, 'record-list-error')).toBe(false);
+    // The state clears a clear bar beside a vertical bar (FixedPage).
+    expect(r.root.findByType(FixedPage).props.testID).toBe(
+      'record-list-screen',
+    );
     await act(async () => r.unmount());
   });
 
@@ -1943,6 +1947,10 @@ describe('record list', () => {
     );
     expect(error.props.action?.label).toBe('Try again');
     expect(has(r, 'record-list-unavailable')).toBe(false);
+    // The state clears a clear bar beside a vertical bar (FixedPage).
+    expect(r.root.findByType(FixedPage).props.testID).toBe(
+      'record-list-screen',
+    );
     await act(async () => r.unmount());
   });
 });

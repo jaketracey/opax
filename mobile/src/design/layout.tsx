@@ -1,5 +1,6 @@
 import { Pressable } from './pressable';
 import { type Href } from 'expo-router';
+import { NavigationContext } from 'expo-router/react-navigation';
 import {
   Children,
   cloneElement,
@@ -30,12 +31,21 @@ import {
   type RefreshControlProps,
   type ViewProps,
 } from 'react-native';
-import { opaqueBar } from '../navigation/chrome';
+import {
+  barBacking,
+  clearBarStyle,
+  opaqueBar,
+  useClearRailBar,
+} from '../navigation/chrome';
 import { useAndroidRootScroll } from '../navigation/useAndroidRootScroll';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { useSafeSetOptions } from '../navigation/preview';
+import { useSolidRailBacking } from '../navigation/solid-rail';
 import { useFloatingBarClearance } from '../navigation/floating-bar';
-import { useRootBarAppearance } from '../navigation/useRootBarAppearance';
+import {
+  useRootBarAppearance,
+  useRailSolidRoot,
+} from '../navigation/useRootBarAppearance';
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
 import { useAccessibilitySize } from './accessibility';
 import {
@@ -237,6 +247,137 @@ function BarStickyHeader(props: {
 const stickyDebounce = 64;
 
 /**
+ * The top padding a page's fixed state needs under a clear bar beside a
+ * vertical bar (the closed iPhone Duo), where a tab stack's pushed pages run
+ * under the bar. UIKit insets a scroll view below the title band; a skeleton
+ * or a whole-page message in a plain View starts at the window's top edge,
+ * under the band and its title. Zero under an opaque bar (iPhone, iPad, the
+ * unfolded Duo, and the same page opened in a sheet).
+ */
+export function useClearBarTop(): number {
+  const bottom = useHeaderBottom();
+  return useClearRailBar() ? bottom : 0;
+}
+
+/** When a late scroll view is looked at after mount (ms). */
+const restChecks = [400, 900, 1500];
+/** After this long from mount the page has settled, and is the reader's. */
+const restWindow = 2500;
+
+/**
+ * A scroll view that mounts after its page is already on screen (a skeleton
+ * swapped for the loaded page, a message for a list) under a clear bar beside
+ * a vertical bar. UIKit insets a scroll view that is there when the page
+ * arrives and leaves it at rest. One that arrives later starts at offset 0,
+ * under the title band, and UIKit's two inset steps (the 24 pt safe area,
+ * then the band) are a race with the push: it has been left 24 pt past rest,
+ * its heading under the band's edge (party page, b71 review).
+ * This watches the offset and, while it settles (the first seconds from
+ * mount) and until the reader drags, puts a view found between rest and 0
+ * back at rest. `contentOffset` is the command: the prop
+ * sets the native offset unclamped, where `scrollTo` needs overflow enabled.
+ * Spread `props` on the scroll view; inert under an opaque bar.
+ */
+export function useClearBarRest() {
+  const top = useClearBarTop();
+  const navigation = useContext(NavigationContext);
+  const y = useRef<number | null>(null);
+  // The check is over once the reader drags or the settling time has passed.
+  // Nothing after that is this hook's business: a VoiceOver scroll (which
+  // begins no drag) once the page has settled, and a return from another
+  // page, are left alone.
+  const done = useRef(false);
+  const [offset, setOffset] = useState<{ x: number; y: number } | undefined>();
+  const check = useCallback(() => {
+    if (!top || done.current || y.current === null) return;
+    if (y.current > -top + underBarSlack && y.current <= 0)
+      // The prop only acts when it changes, and UIKit can carry the view off
+      // again after a correction: a hundredth of a point makes each one new.
+      setOffset((now) => ({ x: 0, y: now?.y === -top ? -top - 0.01 : -top }));
+  }, [top]);
+  useEffect(() => {
+    if (!top) return;
+    const timers = restChecks.map((ms) => setTimeout(check, ms));
+    timers.push(
+      setTimeout(() => {
+        check();
+        done.current = true;
+      }, restWindow),
+    );
+    // The view is carried off as the push ends, which under load is later
+    // than any fixed time from mount (3 of 10 opens were missed without
+    // this); look then, and once more when that has had time to land.
+    const end = (
+      navigation as
+        | {
+            addListener?: (name: string, listener: () => void) => () => void;
+          }
+        | undefined
+    )?.addListener?.('transitionEnd', () => {
+      check();
+      timers.push(setTimeout(check, 250));
+    });
+    return () => {
+      timers.forEach(clearTimeout);
+      end?.();
+    };
+  }, [top, check, navigation]);
+  const track = useCallback((offsetY: number) => {
+    // Being seen at rest ends nothing: in the race the view is at rest
+    // first and is carried 24 pt past it afterwards (6 of 10 opens were
+    // left there when rest ended the check).
+    if (!done.current) y.current = offsetY;
+  }, []);
+  const drag = useCallback(() => {
+    done.current = true;
+  }, []);
+  const list = useMemo(
+    () =>
+      top
+        ? {
+            contentOffset: offset,
+            scrollEventThrottle: 16,
+            onScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) =>
+              track(event.nativeEvent.contentOffset.y),
+            onScrollBeginDrag: drag,
+          }
+        : null,
+    [top, offset, track, drag],
+  );
+  return {
+    track,
+    drag,
+    contentOffset: top ? offset : undefined,
+    /** For a list with no scroll handlers of its own. */
+    list,
+  };
+}
+
+/**
+ * `useClearBarRest` for a page's own list, which it wraps. The hook reads the
+ * stack's descriptors, which change on every `setOptions`; a page that sets
+ * options as it renders (`RouteOptions` with inline options) and read them
+ * itself re-rendered without end ("Maximum update depth exceeded", the people
+ * lists in the b71 review). Only this child subscribes, and only beside a
+ * vertical bar. It adds its props to the list element the page made, so the
+ * page's row functions keep their identity and no row is rebuilt.
+ */
+export function ClearBarRest({ children }: { children: ReactElement<object> }) {
+  const { list } = useClearBarRest();
+  return list ? cloneElement(children, list) : children;
+}
+
+/**
+ * A pushed page's whole-screen state that does not scroll: a skeleton or a
+ * message in a plain View. It clears the bar where the page runs under one
+ * (`useClearBarTop`); elsewhere it is the View it replaces.
+ */
+export function FixedPage({ style, ...props }: ViewProps) {
+  const top = useClearBarTop();
+  return <View {...props} style={top ? [style, { paddingTop: top }] : style} />;
+}
+
+/**
  * A scrolling screen on paper, under the native navigation bar. It is the
  * first scroll view in the screen, so the large title collapses and the
  * content clears the bars. Root screens take their title from the stack.
@@ -337,11 +478,29 @@ export function Screen({
     disabled: inPane,
     underBar,
   });
+  const backed = useSolidRailBacking();
+  const clearRail = useClearRailBar();
+  const wasBacked = useRef(false);
   useLayoutEffect(() => {
     // A detail pane must not recolour its parent route's navigation bar.
-    if (!inPane && !nativeRoot) setOptions(opaqueBar(colors[ground]));
-  }, [setOptions, ground, inPane, nativeRoot]);
+    if (inPane || nativeRoot) return;
+    setOptions({
+      // Under the clear rail bar the page is the ground: no colour, no line.
+      ...(clearRail
+        ? clearBarStyle(opaqueBar(colors[ground]))
+        : opaqueBar(colors[ground])),
+      ...(backed
+        ? barBacking(colors[ground])
+        : wasBacked.current
+          ? { headerBackground: undefined }
+          : {}),
+    });
+    wasBacked.current = backed;
+  }, [setOptions, ground, inPane, nativeRoot, backed, clearRail]);
+  const rest = useClearBarRest();
   const pinnedHere = Platform.OS === 'ios' && !!pinned;
+  const railSolidRoot = useRailSolidRoot();
+  const belowBar = nativeRoot && railSolidRoot;
   const [pinnedRest, setPinnedRest] = useState<number | null>(null);
   // A new band (Search submitted again) learns its rest offset again.
   if (!pinnedHere && pinnedRest !== null) setPinnedRest(null);
@@ -397,6 +556,7 @@ export function Screen({
             style={[styles.screen, { backgroundColor: colors[ground] }]}
             contentInsetAdjustmentBehavior={contentInsetAdjustmentBehavior}
             scrollToOverflowEnabled={scrollToOverflowEnabled}
+            contentOffset={nativeRoot ? undefined : rest.contentOffset}
             alwaysBounceVertical={Platform.OS === 'ios'}
             keyboardShouldPersistTaps="handled"
             automaticallyAdjustKeyboardInsets={keyboardInsets}
@@ -426,6 +586,7 @@ export function Screen({
               if (clampScrollOnContentChange) bounds.onScroll(event);
               const y = event.nativeEvent.contentOffset.y;
               scrollY.current = y;
+              rest.track(y);
               checkUnderBar();
               if (Platform.OS === 'android') androidRoot.onScroll(y);
               if (titleScroll.current) titleScroll.current(y, anchorBottom);
@@ -435,6 +596,7 @@ export function Screen({
             onScrollBeginDrag={
               pinnedHere
                 ? (event) => {
+                    rest.drag();
                     const y = event.nativeEvent.contentOffset.y;
                     // At rest UIKit's inset makes the offset negative; a drag
                     // that starts further down says nothing about the bar.
@@ -443,7 +605,7 @@ export function Screen({
                         rest === null ? y : Math.min(rest, y),
                       );
                   }
-                : undefined
+                : rest.drag
             }
             onScrollEndDrag={
               clampScrollOnContentChange ? bounds.onScroll : undefined
@@ -453,7 +615,11 @@ export function Screen({
             }
             scrollEventThrottle={16}
             stickyHeaderIndices={pinnedHere ? stickyFirst : undefined}
-            StickyHeaderComponent={pinnedHere ? BarStickyHeader : undefined}
+            // Under a solid bar the scroll view starts below the bar, and
+            // React Native's own sticky header holds at the right place.
+            StickyHeaderComponent={
+              pinnedHere && !belowBar ? BarStickyHeader : undefined
+            }
           >
             {pinnedHere ? (
               <View

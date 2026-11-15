@@ -186,6 +186,24 @@ export function screenInStack(rootTitle: string) {
   ) => screen(name, title, options, redirect, doneWhenRoot, rootTitle);
 }
 
+/**
+ * A sheet or modal registered in a stack takes none of the stack's bar
+ * backing. Beside a vertical bar with Reduce Transparency or Increase
+ * Contrast on, a tab's stack backs its pushed pages' solid bar in paper
+ * (`useStackChrome`). In a sheet that view reserves an extra header-height
+ * band (`opaqueBar`), and in the photo viewer it would be a paper strip
+ * behind the white title and Done. Every presented route passes through
+ * `screen`, so this is the one place; a route's own backing is kept.
+ */
+export function presentedBar(
+  options: NativeStackNavigationOptions,
+): NativeStackNavigationOptions {
+  const presented = !!options.presentation && options.presentation !== 'card';
+  return presented && !('headerBackground' in options)
+    ? { headerBackground: undefined }
+    : {};
+}
+
 /** Non-empty route titles also supply the next screen's named Back button. */
 export function screen(
   name: string,
@@ -216,6 +234,7 @@ export function screen(
               ? doneItems
               : {}),
             ...options,
+            ...presentedBar(options),
             ...(Platform.OS === 'android' ? { headerTitleAlign: 'left' } : {}),
           },
           name,
@@ -230,6 +249,9 @@ export const sheetOptions: NativeStackNavigationOptions = {
   ...shortSheet,
   headerTitleAlign: 'center',
   ...opaqueBar(colors.paper),
+  // No backing from the stack (see presentedBar): a sheet that sets these
+  // options itself, as money-item does, does not pass through `screen`.
+  headerBackground: undefined,
   ...headerItems(() => [closeSheetItem()]),
   ...(Platform.OS === 'android'
     ? { header: AndroidReadingHeader, headerRight: () => null }

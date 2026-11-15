@@ -33,6 +33,73 @@ own heading. The title's width keeps no room for trailing items, as they are on
 the rail. Screens without an in-content heading (Ask, search results) keep
 their stack title, which UIKit draws in the band.
 
+Once that band folds away, UIKit keeps the top safe area (24 pt) as bar. Under
+an opaque bar the page was laid out below it, so its heading scrolled under a
+24 pt strip and was cut off, and at rest the top 14 pt showed the system's grey
+(UIKit's bar background stops 10 pt above the band). Today, under a clear bar,
+ran to the top edge (b69, captured on the outer display). Pages pushed in a
+tab's stack now run under a clear bar beside a vertical bar
+(`useStackChrome({ tabStack: true })`), with a soft top edge: UIKit insets the
+scroll view below the band at rest (adjusted top 82, then 24). Reduce Transparency and
+Increase Contrast keep the solid bar, as on the tab roots (`useRailBar`), and
+that bar is backed with the page's ground on pushed pages and tab roots alike,
+so the grey strip does not return. The 24 pt strip over scrolled content does:
+it is what a solid bar is.
+
+Pages that keep a solid, backed bar on the rail (`solidRailBar`, `barBacking`):
+the directory and Just declared, whose search field holds the band open and
+whose sticky section headers React Native pins at the scroll view's top edge,
+under a clear bar; and the money map, which does not scroll. Sheets and modal
+stacks (Account, Talk) keep the opaque bar too: their bar items sit over the
+sheet's trailing edge, and under a clear bar the text ran beneath them. A page
+pushed in a tab's stack that does not scroll, or pins a header under a band
+that stays, must set `headerTransparent: false` itself.
+
+A scroll view that mounts after its page is on screen (the party page swaps a
+skeleton `Screen` for the loaded one) is a race with the push under the clear
+bar: about one open in six from a scrolled page it was left 24 pt past rest,
+its heading under the band's edge. `useClearBarRest` (in `Screen`, and the
+people lists through `ClearBarRest`) puts such a view back at rest, once,
+while it settles (under a second from mount) and before the reader moves it.
+Only a page beside a vertical bar reads the stack's options for this
+(`use(DescriptorsContext)` after the bar check): on iPhone and iPad a page
+neither subscribes to them nor re-renders when another page sets options. A fixed
+state in a plain View uses `FixedPage`, which clears the band.
+
+A tab root whose bar holds a search field (Bills, Search, the large-title
+lists such as Leads) is solid on the rail too (`useRootBarAppearance`,
+`railSolid`). The field is stacked below the title band there, and UIKit's
+scroll edge, soft or hard, covers the band alone: rows ran through the glass
+field under a covered title (Bills, b73). The band does not fold away while
+it holds a field, so a solid bar on the page's ground brings no strip back:
+the title and the field are one surface and the list ends at the field.
+Screen's pinned band (Search's scope row) uses React Native's own sticky
+header under that bar (`useRailSolidRoot`), since the scroll view then starts
+below it. Pushed pages need nothing: once their band folds the field sits in
+the bar, which covers it. iPhone and iPad are unchanged, and so is Android,
+whose toolbar is opaque with the field inside it.
+
+The solid bar and its backing take the page's own ground. A large-title list
+on the darker grouped ground (Leads) has its bar owned by `RouteOptions`,
+which knows no ground, so its Screen shares the ground with the owner; in
+paper it was a strip over the darker page at rest.
+
+Under the clear rail bar the page is the ground, so no page colours that bar
+or draws its hairline (`clearBarStyle`, applied by `Screen` and by
+`RouteOptions`). UIKit paints a coloured bar from 14 pt down to the band's
+foot: the glossary's paper bar was a paper band over the darker page at rest,
+and the bar's hairline crossed the electorate map at 24 pt once the band had
+folded (b73, where the hard scroll edge also drew a lighter band above it).
+The lighter patch at the rail end of that line is the top of the rail's own
+glass, which is the system's.
+
+Known, not fixed: the reference pages in the Account sheet (Methods, Datasets,
+Portraits, Photo credits) keep their opaque paper bar, and scrolled content
+shows in the 16 pt above it. A sheet cannot take the backing view.
+
+Known, not fixed: Search opened by a link from a page in another tab draws
+its title over the field on the rail (captured before and after this change).
+
 Toolbar items use the native item API with both `label` and symbol. Expo's
 `useHeaderConfigProps.js` maps `label` to native `title`; an accessibility label
 alone does not supply that title. Talk's End call action uses this API on the

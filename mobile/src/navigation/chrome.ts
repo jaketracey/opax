@@ -1,11 +1,14 @@
 import {
   router,
   type Href,
+  type NativeStackNavigationOptions,
   type NativeStackHeaderItem,
   type NativeStackHeaderItemMenuAction,
   type NativeStackHeaderItemMenuSubmenu,
 } from 'expo-router';
-import { createElement } from 'react';
+import { NavigationRouteContext } from 'expo-router/react-navigation';
+import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
+import { createElement, use, useContext } from 'react';
 import {
   Dimensions,
   Platform,
@@ -18,6 +21,7 @@ import {
   type ColorValue,
 } from 'react-native';
 import { openOnWeb } from './external';
+import { useSolidBar } from '../design/accessibility';
 import { copy } from '../design/copy';
 import { designFlags } from '../design/flags';
 import { liquidGlass } from '../design/glass';
@@ -165,11 +169,119 @@ export const androidBar = {
   action: textStyles.secondary.fontSize,
 } as const;
 
-export function useStackChrome() {
+/**
+ * A solid ground behind an opaque bar, for a page that keeps one beside a
+ * vertical bar (the map). UIKit's own bar background stops 10 pt above the
+ * title band there, and the strip above it showed the system's grey.
+ */
+export const barBacking = (ground: ColorValue = colors.paper) => ({
+  headerBackground: () =>
+    createElement(View, {
+      pointerEvents: 'none',
+      accessibilityElementsHidden: true,
+      importantForAccessibility: 'no-hide-descendants',
+      style: { flex: 1, backgroundColor: ground },
+    }),
+});
+
+/**
+ * Whether a tab stack's pushed pages run under a clear bar: beside a vertical
+ * bar on iOS 26 and later, unless Reduce Transparency or Increase Contrast
+ * asks for a solid bar, as it does of the tab roots.
+ */
+export function useUnderRailBar(): boolean {
+  return useRailBar() === 'clear';
+}
+
+/**
+ * The bar of a tab stack's pushed pages beside a vertical bar (iOS 26 and
+ * later): `clear`, or `solid` when Reduce Transparency or Increase Contrast
+ * asks for a solid bar. A solid bar there needs its own ground (`barBacking`):
+ * UIKit's bar background stops short of the top edge. Null everywhere else.
+ */
+export function useRailBar(): 'clear' | 'solid' | null {
+  const edge = useVerticalBarEdge();
+  const solid = useSolidBar();
+  if (edge === 'unspecified' || !glassBar()) return null;
+  return solid ? 'solid' : 'clear';
+}
+
+/**
+ * A page that keeps a solid bar where its stack's pages run under a clear
+ * one: its title band never folds away (a search field in the bar, a map
+ * that does not scroll), so content must end at the band, and a sticky
+ * section header must hold below it. `underBar` is the stack's answer
+ * (`useUnderRailBar`); elsewhere this adds nothing to the route.
+ */
+export const solidRailBar = (
+  underBar: boolean,
+  ground: ColorValue = colors.paper,
+) =>
+  underBar
+    ? { headerTransparent: false, ...opaqueBar(ground), ...barBacking(ground) }
+    : {};
+
+/**
+ * Whether this route's bar is clear beside a vertical bar: a tab stack's
+ * pushed page on the closed Duo (see `useStackChrome`). The stack's
+ * descriptors are read only beside a vertical bar, so on iPhone and iPad the
+ * caller neither subscribes to them nor re-renders when a page sets options.
+ */
+export function useClearRailBar(): boolean {
+  const route = useContext(NavigationRouteContext);
+  const verticalBar = useVerticalBarEdge() !== 'unspecified';
+  if (!verticalBar || !route) return false;
+  return use(DescriptorsContext)[route.key]?.options.headerTransparent === true;
+}
+
+/**
+ * Bar options for a page under the clear rail bar: no colour and no hairline.
+ * UIKit paints a coloured bar from 14 pt down to the band's foot, so a paper
+ * bar over the darker grouped ground was a paper band with a strip of the
+ * page above it at rest (the glossary), and the bar's hairline crossed the
+ * page at 24 pt once the band had folded (the electorate map, b73). The page
+ * itself is the ground under a clear bar. Other keys pass through.
+ */
+export function clearBarStyle<T extends NativeStackNavigationOptions>(
+  options: T,
+): T {
+  if (
+    !('headerStyle' in options) &&
+    !('headerLargeStyle' in options) &&
+    !('headerShadowVisible' in options)
+  )
+    return options;
+  return {
+    ...options,
+    ...('headerStyle' in options ? { headerStyle: {} } : {}),
+    ...('headerLargeStyle' in options ? { headerLargeStyle: {} } : {}),
+    headerShadowVisible: false,
+  };
+}
+
+/**
+ * `tabStack`: the pages pushed in a tab's stack. Beside a vertical bar (the
+ * closed iPhone Duo) UIKit folds a pushed page's title band away once the
+ * page scrolls, and keeps the top safe area (24 pt) as bar. An opaque bar
+ * lays the page out below that strip, so the page's own heading scrolled
+ * under it and was cut off, while Today, whose bar is clear, ran to the top
+ * edge (b69). There these pages run under a clear bar as the tab roots do:
+ * UIKit insets the scroll view below the band at rest, and the page reaches
+ * the top edge once the band has gone. The top edge is soft, since a hard one
+ * paints a strip of its own above the band at rest.
+ * Sheets and modal stacks keep the opaque bar: a sheet's bar items sit over
+ * its trailing edge, and only an opaque bar keeps the content beside them.
+ * Phones, the unfolded Duo and iPad report 'unspecified' and are unchanged.
+ */
+export function useStackChrome({
+  tabStack = false,
+}: { tabStack?: boolean } = {}) {
   const { fontScale } = useWindowDimensions();
   // Bar titles resolve in the app's appearance, not the bar's (11b-3).
   const titleInk = schemeColour('ink', useColorScheme());
   const barEdge = useVerticalBarEdge();
+  const railBar = useRailBar();
+  const rail = tabStack && railBar === 'clear';
   const category = contentSizeCategory(fontScale);
   const sizes = {
     largeTitle: largeTitleSizes[category],
@@ -182,8 +294,12 @@ export function useStackChrome() {
       : {}),
     // Pushed, inline and sheet layouts reserve space for a solid native bar.
     // Tab roots and explicit large-title lists opt into translucency separately.
-    headerTransparent: false,
+    // Beside a vertical bar a tab stack's pushed pages run under the bar.
+    headerTransparent: rail,
     ...opaqueBar(),
+    // A legibility setting keeps the solid bar on the rail too. Pages with
+    // their own ground (Screen) replace this backing with one in that colour.
+    ...(tabStack && railBar === 'solid' ? barBacking() : {}),
     headerTitleStyle: {
       fontFamily: textStyles.inlineTitle.fontFamily,
       fontWeight: textStyles.inlineTitle.fontWeight,
@@ -210,7 +326,10 @@ export function useStackChrome() {
     // hard edge and matching opaque ground on record and inline screens.
     // Tab roots and sans large-title lists use the soft edge.
     // The bottom stays soft at the minimising tab bar.
-    scrollEdgeEffects: barScrollEdges(barEdge),
+    scrollEdgeEffects: {
+      ...barScrollEdges(barEdge),
+      top: rail ? ('soft' as const) : ('hard' as const),
+    },
     headerLargeTitleEnabled: false,
     headerLargeTitleShadowVisible: false,
     headerBackButtonDisplayMode: 'default' as const,

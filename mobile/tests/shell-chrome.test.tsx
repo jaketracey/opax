@@ -18,6 +18,7 @@ import {
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import TestRenderer from 'react-test-renderer';
 import TalkStack from '../src/app/talk/_layout';
+import TabStack from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/_layout';
 import AskRoute from '../src/app/(tabs)/(today,your-mp,bills,search,ask)/ask';
 import { designFlags } from '../src/design/flags';
 import { Screen } from '../src/design/layout';
@@ -273,6 +274,169 @@ test('inline and sheet bars cover content and roots keep a native scroll edge', 
   expect(shortSheet.sheetExpandsWhenScrolledToEdge).toBe(true);
   act(() => view.unmount());
 });
+
+// The closed Duo, b69: UIKit folds a pushed page's title band away on scroll
+// and leaves the top safe area (24 pt) as bar. An opaque bar lays the page out
+// below that strip, so the page's own heading was cut off under it.
+test.each([
+  ['trailing', 26, true],
+  ['leading', 27, true],
+  ['unspecified', 26, false],
+  ['unspecified', 27, false],
+  // Before iOS 26 there is no glass bar, whatever the trait reports.
+  ['trailing', 18, false],
+] as const)(
+  'a tab stack page beside a %s bar on iOS %s runs under the bar: %s',
+  (edge, version, underBar) => {
+    const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version');
+    jest.replaceProperty(Platform, 'OS', 'ios');
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: version,
+    });
+    mockBarEdge = edge;
+    let pushed!: ReturnType<typeof useStackChrome>;
+    let sheet!: ReturnType<typeof useStackChrome>;
+    function Harness() {
+      pushed = useStackChrome({ tabStack: true });
+      sheet = useStackChrome();
+      return null;
+    }
+    let view: TestRenderer.ReactTestRenderer | undefined;
+    try {
+      view = tree(<Harness />);
+      expect(pushed.headerTransparent).toBe(underBar);
+      // Soft, as a tab root at rest: a hard edge paints a strip of its own
+      // above the title band.
+      expect(pushed.scrollEdgeEffects.top).toBe(underBar ? 'soft' : 'hard');
+      expect(pushed.scrollEdgeEffects.bottom).toBe('soft');
+      // Away from a vertical bar the two stacks are the same, option for
+      // option: iPhone, the unfolded Duo and iPad are unchanged.
+      if (!underBar) expect(pushed).toEqual(sheet);
+      // A sheet's bar items sit over its content's trailing edge, so sheets
+      // and modal stacks keep the opaque bar beside any bar.
+      expect(sheet.headerTransparent).toBe(false);
+      expect(sheet.scrollEdgeEffects.top).toBe('hard');
+      expect(shortSheet.headerTransparent).toBe(false);
+      // The edition backs its opaque bar; under a clear bar it has neither.
+      const edition = editionScreens(
+        pushed.headerTransparent,
+      )[0]!.props.options({
+        route: { key: 'edition', name: 'edition', params: {} },
+        navigation: { getState: () => ({ index: 1, routes: [] }) },
+      });
+      expect('headerBackground' in edition).toBe(!underBar && version >= 26);
+      expect(edition.headerTransparent).toBe(underBar ? undefined : false);
+      expect(edition.scrollEdgeEffects).toEqual(
+        underBar ? undefined : { top: 'hard', bottom: 'soft' },
+      );
+      // The wiring: a tab's stack asks for it, and hands the edition the
+      // same answer; Talk's modal stack does not.
+      act(() => view!.unmount());
+      view = tree(<TabStack segment="(today)" />);
+      const tabs = view.root.findByType(Stack).props;
+      expect(tabs.screenOptions.headerTransparent).toBe(underBar);
+      expect(tabs.screenOptions.scrollEdgeEffects.top).toBe(
+        underBar ? 'soft' : 'hard',
+      );
+      const tabEdition = (
+        tabs.children as React.ReactElement<{
+          name: string;
+          options: (props: object) => Record<string, unknown>;
+        }>[]
+      )
+        .find((entry) => entry.props.name === 'edition')!
+        .props.options({
+          route: { key: 'edition', name: 'edition', params: {} },
+          navigation: { getState: () => ({ index: 1, routes: [] }) },
+        });
+      expect('headerTransparent' in tabEdition).toBe(!underBar);
+      // The directory and Just declared hold their band open with a search
+      // field and pin sticky section headers: a solid, backed bar there.
+      for (const name of ['directory', 'declarations']) {
+        const list = (
+          tabs.children as React.ReactElement<{
+            name: string;
+            options: (props: object) => Record<string, unknown>;
+          }>[]
+        )
+          .find((entry) => entry.props.name === name)!
+          .props.options({
+            route: { key: name, name, params: {} },
+            navigation: { getState: () => ({ index: 1, routes: [] }) },
+          });
+        expect(list.headerTransparent).toBe(underBar ? false : undefined);
+        expect('headerBackground' in list).toBe(underBar);
+      }
+      // Reduce Transparency or Increase Contrast: the solid bar, as the tab
+      // roots have.
+      mockSolidBar = true;
+      act(() => view!.unmount());
+      view = tree(<TabStack segment="(today)" />);
+      const solid = view.root.findByType(Stack).props.screenOptions;
+      expect(solid.headerTransparent).toBe(false);
+      expect(solid.scrollEdgeEffects.top).toBe('hard');
+      // On the rail that solid bar is backed (UIKit's own background stops
+      // short of the top edge); elsewhere it is the b70 bar, untouched.
+      expect('headerBackground' in solid).toBe(
+        edge !== 'unspecified' && version >= 26,
+      );
+      // The backing is for pushed pages. Every sheet and the photo viewer
+      // in the stack clear it: in a sheet it reserves an extra header-height
+      // band, and the viewer's white title and Done would sit on paper.
+      const solidScreens = view.root.findByType(Stack).props
+        .children as React.ReactElement<{
+        name: string;
+        options: (props: object) => Record<string, unknown>;
+      }>[];
+      const presented = [
+        'expense-glossary',
+        'consent',
+        'ask-report',
+        'conversations',
+        'bill-text-contents/[key]',
+        'explore/tide-table',
+        'explore/years',
+        'explore/photo',
+        'filters',
+        'money-item',
+      ];
+      for (const name of presented) {
+        const entry = solidScreens.find((item) => item.props.name === name);
+        expect([name, !!entry]).toEqual([name, true]);
+        const own = entry!.props.options({
+          route: { key: name, name, params: { sheet: '1' } },
+          navigation: { getState: () => ({ index: 1, routes: [] }) },
+        });
+        expect([name, { ...solid, ...own }.headerBackground]).toEqual([
+          name,
+          undefined,
+        ]);
+      }
+      // A pushed page keeps the stack's backing.
+      const pushedBill = solidScreens
+        .find((item) => item.props.name === 'bill/[key]')!
+        .props.options({
+          route: { key: 'bill', name: 'bill/[key]', params: {} },
+          navigation: { getState: () => ({ index: 1, routes: [] }) },
+        });
+      expect('headerBackground' in { ...solid, ...pushedBill }).toBe(
+        edge !== 'unspecified' && version >= 26,
+      );
+      mockSolidBar = false;
+      act(() => view!.unmount());
+      view = tree(<TalkStack />);
+      expect(
+        view.root.findByType(Stack).props.screenOptions.headerTransparent,
+      ).toBe(false);
+    } finally {
+      if (view) act(() => view!.unmount());
+      mockSolidBar = false;
+      mockBarEdge = 'unspecified';
+      if (descriptor) Object.defineProperty(Platform, 'Version', descriptor);
+    }
+  },
+);
 
 test.each([
   ['system', 1, 34],
@@ -2314,6 +2478,192 @@ describe('scroll edges on every bar shape', () => {
         act(() => renderer.unmount());
       }
     },
+  );
+  // Beside the rail a search field is stacked below the title band, and
+  // UIKit's scroll edge covers the band alone: rows ran through the field
+  // under a covered title (Bills, b73). The band does not fold away while it
+  // holds a field, so that root's bar is solid on the page's own ground.
+  test.each([
+    ['bills', '(bills)', 'trailing'],
+    ['bills', '(bills)', 'leading'],
+    ['search', '(search)', 'trailing'],
+  ] as const)(
+    '%s in %s with a search field beside a %s rail has one solid ground for title and field',
+    (name, segment, edge) =>
+      withGlass(() => {
+        mockBarEdge = edge;
+        const { page, navigation, ground } = fadePage(
+          name,
+          segment,
+          false,
+          false,
+          true,
+        );
+        const renderer = tree(page(82));
+        try {
+          const resolved = Object.assign(
+            {},
+            ...navigation.setOptions.mock.calls.map(([options]) => options),
+          );
+          expect(resolved).toMatchObject({
+            ...opaqueBar(ground),
+            headerTransparent: false,
+          });
+          expect(resolved.scrollEdgeEffects.top).toBe('hidden');
+          // UIKit's own bar background stops short of the top edge there.
+          const backing = resolved.headerBackground() as React.ReactElement<{
+            style: { backgroundColor: unknown };
+          }>;
+          expect(backing.props.style.backgroundColor).toBe(ground);
+          // The native solid sibling is the horizontal bar's, not the rail's.
+          expect(RootBar!.setSolid).not.toHaveBeenCalled();
+        } finally {
+          act(() => renderer.unmount());
+        }
+      }),
+  );
+  test.each([
+    // No field: the root stays clear, and Today runs to the top edge.
+    ['index', '(today)', 'trailing', false],
+    // iPhone, iPad and the unfolded Duo: a field changes nothing.
+    ['bills', '(bills)', 'unspecified', true],
+    ['search', '(search)', 'unspecified', true],
+  ] as const)(
+    '%s in %s beside a %s bar (search field: %s) keeps its clear bar',
+    (name, segment, edge, field) =>
+      withGlass(() => {
+        mockBarEdge = edge;
+        const { page, navigation } = fadePage(
+          name,
+          segment,
+          false,
+          false,
+          field,
+        );
+        const renderer = tree(page(82));
+        try {
+          const resolved = Object.assign(
+            {},
+            ...navigation.setOptions.mock.calls.map(([options]) => options),
+          );
+          expect(resolved.headerTransparent).toBe(true);
+          expect(resolved.headerStyle).toEqual({});
+          expect(resolved.headerBackground).toBeUndefined();
+          if (edge === 'unspecified')
+            expect('headerBackground' in resolved).toBe(false);
+        } finally {
+          act(() => renderer.unmount());
+        }
+      }),
+  );
+  // Leads is a large-title list on the darker grouped ground. RouteOptions
+  // owns its bar and knows no ground, so the solid rail bar was backed in
+  // paper: a paper strip over the darker page at rest. The page's Screen
+  // shares its ground with the bar's owner.
+  test.each(['leading', 'trailing'] as const)(
+    'Leads beside a %s rail backs its solid bar in the page ground, not paper',
+    (edge) =>
+      withGlass(() => {
+        mockBarEdge = edge;
+        const { page, navigation, ground } = fadePage(
+          'leads',
+          '(today)',
+          true,
+          true,
+          true,
+        );
+        expect(ground).toBe(colors.sunken);
+        const renderer = tree(page(82));
+        try {
+          const resolved = Object.assign(
+            {},
+            ...navigation.setOptions.mock.calls.map(([options]) => options),
+          );
+          expect(resolved).toMatchObject({
+            ...opaqueBar(colors.sunken),
+            headerTransparent: false,
+          });
+          const backing = resolved.headerBackground() as React.ReactElement<{
+            style: { backgroundColor: unknown };
+          }>;
+          expect(backing.props.style.backgroundColor).toBe(colors.sunken);
+        } finally {
+          act(() => renderer.unmount());
+        }
+      }),
+  );
+  test('Leads on an iPhone keeps its clear large-title bar, option for option', () =>
+    withGlass(() => {
+      mockBarEdge = 'unspecified';
+      const { page, navigation } = fadePage(
+        'leads',
+        '(today)',
+        true,
+        true,
+        true,
+      );
+      const renderer = tree(page(116));
+      try {
+        const calls = navigation.setOptions.mock.calls.map(
+          ([options]) => options,
+        );
+        const resolved = Object.assign({}, ...calls);
+        expect(resolved.headerTransparent).toBe(true);
+        expect('headerBackground' in resolved).toBe(false);
+        // The shared ground is for the rail alone: the owner's own options
+        // are the ones it set before (paper, under a clear bar).
+        const owned = calls.filter(
+          (options) => options.headerLargeTitleEnabled === true,
+        );
+        expect(owned.length).toBeGreaterThan(0);
+        for (const options of owned)
+          expect(options).toEqual({
+            ...largeTitleBar(colors.paper),
+            headerLargeTitleEnabled: true,
+            unstable_nativeProps: { testID: 'opax-root-bar-leads-root' },
+          });
+      } finally {
+        act(() => renderer.unmount());
+      }
+    }));
+  // Screen's pinned band (Search's scope row) holds below a bar the page
+  // runs under. Under the solid rail bar the scroll view starts below the
+  // bar, so React Native's own sticky header is already in the right place;
+  // the offset header never stuck there and the row scrolled away.
+  test.each([
+    ['trailing', false],
+    ['unspecified', true],
+  ] as const)(
+    'beside a %s bar the Search scope row uses the offset sticky header: %s',
+    (edge, offset) =>
+      withGlass(() => {
+        mockBarEdge = edge;
+        const { navigation } = fadePage('search', '(search)');
+        const route = { key: 'search-root', name: 'search' };
+        const renderer = tree(
+          <NavigationContext.Provider value={navigation as never}>
+            <NavigationRouteContext.Provider value={route}>
+              <HeaderHeightContext.Provider value={82}>
+                <RouteOptions
+                  options={{
+                    headerSearchBarOptions: { hideWhenScrolling: false },
+                  }}
+                />
+                <Screen grouped pinned={<View testID="scopes" />}>
+                  <View />
+                </Screen>
+              </HeaderHeightContext.Provider>
+            </NavigationRouteContext.Provider>
+          </NavigationContext.Provider>,
+        );
+        try {
+          const scroll = renderer.root.findByType(Native.ScrollView).props;
+          expect(scroll.stickyHeaderIndices).toEqual([0]);
+          expect(!!scroll.StickyHeaderComponent).toBe(offset);
+        } finally {
+          act(() => renderer.unmount());
+        }
+      }),
   );
   test('the Search root on the folded rail sets a hard top edge under its search field', () =>
     withGlass(() => {

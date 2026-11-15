@@ -4,8 +4,19 @@ import { colors } from '../../design/tokens';
 import { designFlags } from '../../design/flags';
 import { glassBar, opaqueBar } from '../chrome';
 
-export function editionScreens() {
+export function editionScreens(underBar = false) {
   const ground = designFlags.groupedSurfaces ? colors.sunken : colors.paper;
+  // Beside a vertical bar the edition runs under a clear bar like every other
+  // pushed page: its own ground is then behind the bar, so there is no band
+  // for the glass edge to sample Today through, and nothing to back.
+  if (underBar)
+    return [
+      screen('edition', 'Daily edition', {
+        ...untitled,
+        ...opaqueBar(ground),
+        contentStyle: { backgroundColor: ground },
+      }),
+    ];
   return [
     screen('edition', 'Daily edition', {
       ...untitled,

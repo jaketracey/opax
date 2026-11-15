@@ -14,7 +14,13 @@ import { Platform, useWindowDimensions, type ColorValue } from 'react-native';
 import { useSolidBar } from '../design/accessibility';
 import { RootBar, useVerticalBarEdge } from '../../modules/opax-root-bar';
 import { colors, isAccessibilityCategory } from '../design/tokens';
-import { glassBar, largeTitleBar, scrollBar, tabRootGround } from './chrome';
+import {
+  barBacking,
+  glassBar,
+  largeTitleBar,
+  scrollBar,
+  tabRootGround,
+} from './chrome';
 import { isTabStack } from './floating-bar';
 
 const roots = ['index', 'your-mp', 'bills', 'search', 'ask'];
@@ -24,7 +30,13 @@ const hardEdgeRoots = ['index', 'search', 'ask', 'leads'];
 const searches = new WeakMap<
   object,
   {
-    value: { largeTitle?: boolean; underBar?: boolean };
+    value: {
+      largeTitle?: boolean;
+      underBar?: boolean;
+      search?: boolean;
+      /** The page's own ground, from its Screen. */
+      ground?: ColorValue;
+    };
     listeners: Set<() => void>;
   }
 >();
@@ -74,7 +86,15 @@ export function useRootBarSearchOptions(
     if ('headerLargeTitleEnabled' in options || 'headerLargeTitle' in options)
       value.largeTitle =
         options.headerLargeTitleEnabled ?? options.headerLargeTitle;
-    if (state.value.largeTitle === value.largeTitle) return;
+    // A search field in the bar: beside a vertical bar it sits below the
+    // title band, outside the cover UIKit's hard top edge draws.
+    if ('headerSearchBarOptions' in options)
+      value.search = !!options.headerSearchBarOptions;
+    if (
+      state.value.largeTitle === value.largeTitle &&
+      state.value.search === value.search
+    )
+      return;
     state.value = value;
     state.listeners.forEach((listener) => listener());
   }, [navigation, options]);
@@ -156,8 +176,15 @@ export function useRootBarAppearance(
       largeTitleEnabled &&
       name === 'index' &&
       isAccessibilityCategory(fontScale));
+  // RouteOptions owns the bar of a large-title list (Leads) but knows no
+  // ground; the page's Screen does, and shares it. Beside a vertical bar the
+  // bar can be solid and backed, and in paper over the darker grouped page
+  // it was a strip at the top at rest. Other layouts keep the colour they
+  // had: there the bar is clear and the page shows through.
   const colour =
-    ground ?? (roots.includes(name) ? tabRootGround(name) : colors.paper);
+    ground ??
+    (verticalBar ? rootOptions.ground : undefined) ??
+    (roots.includes(name) ? tabRootGround(name) : colors.paper);
   const ownsBar =
     owner === 'options' ||
     rootOptions.largeTitle === undefined ||
@@ -165,7 +192,22 @@ export function useRootBarAppearance(
   const rootKey = root?.key;
   const identifier = rootKey ? `opax-root-bar-${rootKey}` : undefined;
   useRootBarUnderBar(underBar, !!rootKey && owner === 'screen');
+  useLayoutEffect(() => {
+    if (!navigation || !rootKey || owner !== 'screen' || !ground) return;
+    const state = searchState(navigation);
+    if (state.value.ground === ground) return;
+    state.value = { ...state.value, ground };
+    state.listeners.forEach((listener) => listener());
+  }, [navigation, rootKey, owner, ground]);
   const contentUnderBar = owner === 'screen' ? underBar : rootOptions.underBar;
+  // Beside a vertical bar a search field is stacked below the title band,
+  // and UIKit's scroll edge (soft or hard) covers the band alone: the field
+  // had no ground, and rows ran through it under a covered title (Bills,
+  // b73). The band does not fold away while it holds a field, so such a bar
+  // is solid on the page's ground, like the legibility bar: the title and
+  // the field are one surface, and the list ends at the field.
+  const railSearch = verticalBar && !!rootOptions.search;
+  const railSolid = solid || railSearch;
   const hardEdge =
     !!contentUnderBar &&
     Platform.OS === 'ios' &&
@@ -186,12 +228,21 @@ export function useRootBarAppearance(
             headerLargeTitleEnabled: true,
             unstable_nativeProps: { testID: identifier },
           }
-        : scrollBar(
-            colour,
-            solid,
-            barEdge,
-            contentUnderBar === undefined ? undefined : hardEdge,
-          ),
+        : {
+            ...scrollBar(
+              colour,
+              verticalBar ? railSolid : solid,
+              barEdge,
+              contentUnderBar === undefined ? undefined : hardEdge,
+            ),
+            // Beside a vertical bar UIKit's bar background stops short of
+            // the top edge, so a solid bar there gets the page's ground.
+            ...(verticalBar
+              ? railSolid
+                ? barBacking(colour)
+                : { headerBackground: undefined }
+              : {}),
+          },
     );
   }, [
     rootKey,
@@ -206,6 +257,7 @@ export function useRootBarAppearance(
     barEdge,
     hardEdge,
     contentUnderBar,
+    railSolid,
   ]);
   // A coloured UIKit appearance hides large titles on iOS 26. The legibility
   // fallback and Today's AX band use this native sibling. Header-height updates
@@ -276,4 +328,38 @@ export function useRootBarAppearance(
   return !!root;
 }
 
-const emptyOptions: { largeTitle?: boolean; underBar?: boolean } = {};
+/**
+ * Whether a root's bar is solid beside a vertical bar: it holds a search
+ * field, or a legibility setting is on (the `railSolid` rule above). Its
+ * scroll view then starts below the bar instead of running under it, which
+ * Screen's pinned band needs to know. False on every other layout.
+ */
+export function useRailSolidRoot(): boolean {
+  const navigation = useContext(NavigationContext);
+  const subscribe = useCallback(
+    (listener: () => void) => {
+      if (!navigation) return () => {};
+      const state = searchState(navigation);
+      state.listeners.add(listener);
+      return () => {
+        state.listeners.delete(listener);
+      };
+    },
+    [navigation],
+  );
+  const search = useSyncExternalStore(
+    subscribe,
+    () => (navigation ? !!searchState(navigation).value.search : false),
+    () => false,
+  );
+  const verticalBar = useVerticalBarEdge() !== 'unspecified';
+  const solid = useSolidBar();
+  return verticalBar && glassBar() && (solid || search);
+}
+
+const emptyOptions: {
+  largeTitle?: boolean;
+  underBar?: boolean;
+  search?: boolean;
+  ground?: ColorValue;
+} = {};

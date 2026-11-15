@@ -63,7 +63,13 @@ import {
   radii,
   rhythm,
 } from '../../design/tokens';
-import { headerItems, opaqueBar, pageItems } from '../../navigation/chrome';
+import {
+  barBacking,
+  headerItems,
+  opaqueBar,
+  pageItems,
+  useRailBar,
+} from '../../navigation/chrome';
 import { moneyDonorsRoute } from '../../navigation/routes/public-money';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import {
@@ -495,13 +501,19 @@ function MapMode({
   // title survived the switch to the map, which then had no title at all
   // (sweep 2 item 5.5). The map always names itself.
   const barTitle = typeof options.title === 'string' ? options.title : '';
+  // The map does not scroll, so it keeps a solid bar and sits below it even
+  // beside a vertical bar (the closed Duo), where the other pushed pages run
+  // under a clear one. That bar needs its own ground there; the list sets the
+  // stack's bar again when the map hands over to it (ListMode).
+  const rail = useRailBar() !== null;
   useLayoutEffect(() => {
     setOptions({
       ...opaqueBar(colors.paper),
       headerTransparent: false,
       headerTitle: barTitle,
+      ...(rail ? barBacking(colors.paper) : {}),
     });
-  }, [setOptions, barTitle]);
+  }, [setOptions, barTitle, rail]);
   const navigation = useNavigation();
   const router = useRouter();
   const { regular } = useLayout();
@@ -1055,6 +1067,20 @@ function ListMode({
   // button keeps its label (money-03), and truncates inside the bar items.
   const barTitleRef = useRef<View>(null);
   const barTitle = useTitleOnScroll(barTitleRef, title || undefined);
+  // The map set a solid, backed bar on this route. The list takes the tab
+  // stack's bar again, from the same check, so a fold or unfold after the
+  // map still follows the other pushed pages.
+  const rail = useRailBar();
+  const setOptions = useSafeSetOptions();
+  useLayoutEffect(() => {
+    setOptions({
+      headerTransparent: rail === 'clear',
+      // Screen below sets the solid bar's ground; this runs after it.
+      ...(rail === 'solid'
+        ? barBacking(colors.paper)
+        : { headerBackground: undefined }),
+    });
+  }, [setOptions, rail]);
   return (
     <GestureHandlerRootView style={styles.root}>
       <RouteOptions options={options} />
