@@ -126,13 +126,24 @@ test('the committed mapping is what the matcher finds in the current VEC lists a
     const rows = vecRows.filter(r=>(r.surname ?? r.given).split(' ').includes(surname) && !linkedRows.has(`${r.seat}|${r.row}`));
     assert.equal(rows.length > 0,Boolean(m.reviewed_on),m.member);
     if (m.reviewed_on) assert.ok(m.sources?.length >= 1,m.member);
-    for (const source of m.sources ?? []) {
-      assert.ok(new URL(source.url).protocol === 'https:' && source.publisher && source.read_on === '2026-11-16',m.member);
-      // The quoted words name the member and say they are leaving.
-      assert.ok(source.quote.includes(m.member),`${m.member}: not named in the quote`);
-      assert.match(`${source.context ?? ''} ${source.quote}`,/retire|retiring|vacated|not seeking|not running|bowing out|follow suit/i,m.member);
-    }
+    for (const source of m.sources ?? []) assert.ok(new URL(source.url).protocol === 'https:' && source.publisher && (source.quote || source.finding),m.member);
+    // The quoted words name the member and say they are leaving.
+    const quoted = (m.sources ?? []).flatMap(source=>source.quote ?? []);
+    if (m.sources) assert.ok(quoted.some(q=>q.includes(m.member)) && /retire|retiring|vacated|not seeking|not running|bowing out|follow suit/i.test(quoted.join(' ')),m.member);
   }
+  // Evidence quotes are text as it appears on the page: no bracketed inserts, no joined fragments; a table row says so.
+  for (const entry of [...file.reviewed,...file.not_candidate]) for (const source of entry.sources ?? []) {
+    assert.doesNotMatch(source.quote ?? '',/[\[\]]| \/ |\.\.\.|…/,entry.member);
+    assert.equal(source.url.endsWith('/guide/candidates'),/^ABC candidate table row: [^|]+( \| [^|]+){2,3}$/.test(source.quote ?? ''),entry.member);
+    assert.equal(source.context,undefined);
+  }
+  // Where published pages differ in tone, the closed VEC lists are cited first and the difference is recorded.
+  const cheeseman = file.not_candidate.find(m=>m.member === 'Darren Cheeseman');
+  assert.deepEqual(cheeseman.sources.map(x=>[new URL(x.url).hostname,Boolean(x.finding),Boolean(x.quote)]),[['www.vec.vic.gov.au',true,false],['www.tallyroom.com.au',false,true]]);
+  assert.match(cheeseman.review_evidence,/intentions for this election are currently unclear/);
+  const tierney = file.not_candidate.find(m=>m.member === 'Gayle Tierney');
+  assert.deepEqual(tierney.sources.map(x=>[x.url,x.section,x.quote]),[['https://www.abc.net.au/news/elections/vic/2026/guide/lc-preview','Western Victoria','Sitting Labor MLC Gayle Tierney is retiring after 20 years in the upper house']]);
+  assert.ok(file.reviewed.find(r=>r.member === 'Ryan Batchelor').sources[0].quote.endsWith('its second-elected MLC Ryan Batchelor has switched districts and is contesting North-Eastern Metropolitan this election.'));
   const allan = file.not_candidate.find(m=>m.member === 'Jacinta Allan');
   assert.deepEqual(allan.sources.map(x=>[x.url,x.quote]),[['https://www.pollbludger.net/vic2026/LA.htm?s=BendigoEast','Bendigo East will be vacated at the election with the retirement of Jacinta Allan']]);
   // No stored quote or note gives anyone a current office.
@@ -239,6 +250,8 @@ test('the build publishes only what the committed file and a fresh match both su
     [{...ruleOnly,reviewed:[{...pair,...review,sources:[]}]},/Unverified candidate link: district:geelong/],
     [{...ruleOnly,reviewed:[{...pair,...review,sources:[{...sources[0],url:'http://example.org/'}]}]},/Unverified candidate link: district:geelong/],
     [{...ruleOnly,reviewed:[{...pair,...review,sources:[{...sources[0],quote:''}]}]},/Unverified candidate link: district:geelong/],
+    // Our own reading of a list is not a quotation, and never stands alone.
+    [{...ruleOnly,reviewed:[{...pair,...review,sources:[{url:sources[0].url,finding:'Not on the list.'}]}]},/Unverified candidate link: district:geelong/],
     [{...ruleOnly,reviewed:[{...file.verified[1],...review,sources,candidate_id:'district:lowan:nobody'}]},/Unverified candidate link: district:lowan:nobody/],
     // A member the rule leaves open needs a person's dated check and a source.
     [{...ruleOnly,not_candidate:[...ruleOnly.not_candidate,out]},/Unconfirmed "not a candidate": Michael O'Brien/],

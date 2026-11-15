@@ -221,7 +221,9 @@ Three committed source files sit beside the VEC config in `scripts/hubs/`:
   another roster member is set aside. Where a same-surname candidate remains,
   the mark also needs a person's dated check (`reviewed_on`,
   `review_evidence`) and a public source that the member is not standing, kept
-  in `sources` with the words quoted. Seven members are marked that way:
+  in `sources` with the words quoted. A `quote` is text as it appears on the
+  page, with no inserts; a table row is labelled as one. A `finding` is our own
+  reading of a list (the VEC candidate lists) and never stands alone. Seven members are marked that way:
   Jackson Taylor, Maree Edwards, Tim Bull, Mary-Anne Thomas, Michael O'Brien,
   Darren Cheeseman and Joe McCracken.
 

@@ -121,8 +121,11 @@ export function matchVicCandidates(nominated, members) {
 const reviewed = entry => /^\d{4}-\d{2}-\d{2}$/.test(entry?.reviewed_on ?? '') && typeof entry.review_evidence === 'string' && entry.review_evidence.trim().length > 0;
 const https = url => { try { return new URL(url).protocol === 'https:'; } catch { return false; } };
 // A public source, with the words relied on.
-const sourced = entry => Array.isArray(entry?.sources) && entry.sources.length > 0
-  && entry.sources.every(s=>https(s?.url) && typeof s.quote === 'string' && s.quote.trim().length > 0);
+// "quote" is text as it appears on the page (a table row is labelled as one); "finding" is our own
+// reading of a list, such as the VEC candidate lists, and never stands alone.
+const words = value => typeof value === 'string' && value.trim().length > 0;
+const sourced = entry => Array.isArray(entry?.sources) && entry.sources.some(s=>words(s?.quote))
+  && entry.sources.every(s=>https(s?.url) && (words(s.quote) || words(s.finding)));
 // A promoted link also needs a source that names the person and the seat.
 const reviewedLink = entry => reviewed(entry) && sourced(entry);
 const pairKey = e => `${e.candidate_id} ${e.person_id}`;
