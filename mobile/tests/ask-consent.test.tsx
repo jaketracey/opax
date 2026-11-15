@@ -263,7 +263,8 @@ test('a starter goes through the same gate, and Not now leaves it in the compose
   expect(client.askPost).not.toHaveBeenCalled();
   await leave('ask-consent-not-now');
   expect(pressable(view, 'ask-question').props.value).toBe(starter);
-  await press(view, 'ask-starter-1');
+  // Try asking has one starter: the same row is the second ask.
+  await press(view, 'ask-starter-0');
   await openSheetIfPushed();
   const second = askSession.snapshot().pending!.question;
   await leave('ask-consent-continue');
