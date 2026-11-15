@@ -68,7 +68,6 @@ import {
 } from '../navigation/routes';
 import { copyRecordLink, shareRecord } from '../navigation/share';
 import { presentSource } from '../navigation/sheets';
-import { emptyBarTitle } from '../navigation/useTitleOnScroll';
 import { useOpenAsk } from './ask/open';
 import { onElectorateDate } from './directories/ElectorateDateSheet';
 import {
@@ -288,6 +287,8 @@ function ElectorateContent({
         grouped
         column="readable"
         testID="electorate-screen"
+        // The seat's name joins the bar once its heading has scrolled away.
+        barTitle={loaded?.seat.name}
         scrollRef={scroll}
         offline={loaded?.stale ? { savedAt: loaded.savedAt } : null}
         refreshControl={
@@ -363,7 +364,6 @@ function ElectorateBar({
       options={{
         // Route metadata names subsequent Back buttons without drawing a title.
         title: loaded?.seat.name ?? '',
-        headerTitle: emptyBarTitle,
         ...headerItems(
           loaded
             ? pageItems({ name: loaded.seat.name, share, menu })
