@@ -137,6 +137,12 @@ A roster row with a `pid` is under `by_pid`; a row without one is under
 `portal/test/people-firsts.test.mjs` holds the shape the apps decode, on a
 sample built from a synthetic database (`scripts/test_export_people_firsts.py`).
 
-The file is not yet in a nightly group: `scripts/vm/data_groups.sh` needs a
-path that exists in HEAD, so the first export is a reviewed manual commit and
-the group (with its `validate_data.py` check) follows it.
+The `firsts` data group owns the file (`scripts/vm/data_groups.sh`), validated
+right after `people` by `validate_data.py firsts`: the shape, people that are
+in the roster on disk, no fewer people than HEAD's by more than a tenth, and no
+fact marked first without an entry date inside its chamber's record. The
+weekly refresh writes it in step `x_firsts`, after `x_people`, and logs the
+coverage the export printed. The nightly publishes only paths HEAD already
+has, so the committed file starts as an empty seed (no people, and a note
+saying so); the first gated weekly run replaces it. It is never exported by
+hand.

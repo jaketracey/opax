@@ -44,6 +44,7 @@ way and every file that `git status` shows as changed or added must parse.
   fits       fits.json: meta, by_entity, people; in a new export an inverted from/to carries date_note
   speakers   speakers.json: a non-empty array
   people     parliamentarians.json: meta, people
+  firsts     people/firsts.json: schema, people in the roster, no fact marked first without an entry date in the record
   pay        pay.json: meta, base, offices, current, names, people
   discovery  discovery.json: signals, coverage, methodology, generated_at
   taxcharity entities/tax-charity: index.json (meta.counts, sources, caveats; the ABN counts held), names.json
@@ -84,6 +85,7 @@ INTERESTS_MIN_RATIO = 0.90     # people in the index, and files in interests/
 FITS_MIN_RATIO = 0.80          # by_entity, people
 SPEAKERS_MIN_RATIO = 0.95      # speakers
 PEOPLE_MIN_RATIO = 0.95        # people in parliamentarians.json
+FIRSTS_MIN_RATIO = 0.90        # people in people/firsts.json
 PAY_MIN_RATIO = 0.80           # base, offices, current, names, people
 DISCOVERY_MIN_RATIO = 0.80     # signals, methodology
 TAXCHARITY_MIN_RATIO = 0.90    # ABNs written, charity/AIS/ATO matches, by_name keys, and the shard files
@@ -835,6 +837,68 @@ def check_people() -> list[str]:
     return errs
 
 
+def check_firsts() -> list[str]:
+    """people/firsts.json (scripts/export_people_firsts.py): the shape the apps decode, people that are in the
+    roster on disk, no fewer people than HEAD's by FIRSTS_MIN_RATIO, and no fact marked first without an entry
+    date inside its chamber's record. A file that is neither on disk nor in HEAD is not an error."""
+    rel = f"{PUBLIC}/people/firsts.json"
+    if not (ROOT / rel).exists() and head_bytes(rel) is None:
+        return []
+    doc, err = _load_json(rel)
+    if err:
+        return [err]
+    meta, by_pid, by_name = doc.get("meta"), doc.get("by_pid"), doc.get("by_name")
+    if not (isinstance(meta, dict) and isinstance(by_pid, dict) and isinstance(by_name, dict)):
+        return [f"{rel}: meta, by_pid and by_name must be objects"]
+    errs = []
+    if meta.get("schema") != 1:
+        errs.append(f"{rel}: meta.schema is {meta.get('schema')!r}, not 1")
+    total = len(by_pid) + len(by_name)
+    if meta.get("people") != total:
+        errs.append(f"{rel}: meta.people is {meta.get('people')!r} but the file holds {total}")
+    head = _head_doc(rel)
+    before = (len(head.get("by_pid") or {}) + len(head.get("by_name") or {})) if isinstance(head, dict) else 0
+    if total < FIRSTS_MIN_RATIO * before:
+        errs.append(f"{rel}: {total} people, under {FIRSTS_MIN_RATIO:.0%} of HEAD's {before}")
+    coverage = meta.get("coverage") if isinstance(meta.get("coverage"), dict) else {}
+    sources = ((meta.get("sources") or {}).get("divisions") or {}) if isinstance(meta.get("sources"), dict) else {}
+    roster, _ = _load_json(f"{PUBLIC}/parliamentarians.json")
+    people = roster.get("people", []) if isinstance(roster, dict) else []
+    pids = {p.get("pid") for p in people if isinstance(p, dict) and p.get("pid")}
+    unnamed = {p.get("name") for p in people if isinstance(p, dict) and not p.get("pid")}
+    strangers = [k for k in by_pid if k not in pids] + [k for k in by_name if k not in unnamed]
+    if strangers:
+        errs.append(f"{rel}: {len(strangers)} people are not in the roster on disk, e.g. {sorted(strangers)[:3]}")
+    unproven = []
+    for key, entry in [*by_pid.items(), *by_name.items()]:
+        if not isinstance(entry, dict) or not (entry.get("first_speech") or entry.get("first_division")):
+            errs.append(f"{rel}: {key!r} holds neither fact")
+            continue
+        for fact, kind in (("first_speech", "speeches"), ("first_division", "divisions")):
+            held = entry.get(fact)
+            if held is None:
+                continue
+            if not (isinstance(held, dict) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(held.get("date")))
+                    and isinstance(held.get("chamber"), str)):
+                errs.append(f"{rel}: {key!r} {fact} has no date or chamber")
+                continue
+            if fact == "first_speech" and not re.fullmatch(r"speech-\d+", str(held.get("slug"))):
+                errs.append(f"{rel}: {key!r} first_speech has no speech document")
+            if fact == "first_division" and not (str(held.get("url")).startswith("https://")
+                                                 and held.get("source") in sources):
+                errs.append(f"{rel}: {key!r} first_division has no named source and https address")
+            if "first" in held:
+                start = (coverage.get(kind) or {}).get(held["chamber"])
+                entered = entry.get("service_from")
+                if not (held["first"] is True and isinstance(start, str) and isinstance(entered, str)
+                        and start <= entered <= held["date"]):
+                    unproven.append(key)
+    if unproven:
+        errs.append(f"{rel}: {len(unproven)} facts are marked first without an entry date inside the chamber's "
+                    f"record, e.g. {sorted(unproven)[:3]}")
+    return errs
+
+
 def check_pay() -> list[str]:
     errs = _check_json(f"{PUBLIC}/pay.json", ("meta", "base", "offices", "current", "names", "people"),
                        ("base", "offices", "current", "names", "people"), PAY_MIN_RATIO)
@@ -1214,7 +1278,7 @@ CHECKS = {"bills": check_bills, "instruments": check_instruments, "audit": check
           "corpus": check_corpus, "wrangler": check_wrangler,
           "money": check_money, "grants": check_grants, "suppliers": check_suppliers, "access": check_access,
           "expenses": check_expenses, "interests": check_interests, "fits": check_fits, "speakers": check_speakers,
-          "people": check_people, "pay": check_pay, "discovery": check_discovery, "taxcharity": check_taxcharity,
+          "people": check_people, "firsts": check_firsts, "pay": check_pay, "discovery": check_discovery, "taxcharity": check_taxcharity,
           "video": check_video}
 # Checks for data no nightly group carries: the electorate release is exported by
 # hand (scripts/export_electorates.py), so it is checked on request, never by default.

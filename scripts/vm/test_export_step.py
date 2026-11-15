@@ -129,6 +129,25 @@ class PeriodicExportsAreOwned(unittest.TestCase):
             self.assertIn(path, money)
             self.assertTrue((ROOT / path).is_file(), f"{path} must exist in HEAD to be a group path")
 
+    def test_the_firsts_group_owns_the_firsts_file_and_the_weekly_export_writes_only_it(self):
+        text = (VM / "data_groups.sh").read_text()
+        path = "portal/public/people/firsts.json"
+        self.assertEqual(re.search(r'^\s*\[firsts\]="([^"]+)"', text, re.M).group(1).split(), [path])
+        # no other group claims it, or the directory it is in
+        claimed = [g for g, paths in re.findall(r'^\s*\[([a-z-]+)\]="([^"]+)"', text, re.M)
+                   if any(p == path or path.startswith(p + "/") for p in paths.split())]
+        self.assertEqual(claimed, ["firsts"])
+        groups = re.search(r"^DATA_GROUPS=\(([^)]+)\)", text, re.M).group(1).split()
+        # validated after the roster it is keyed to
+        self.assertEqual(groups.index("firsts"), groups.index("people") + 1)
+        # the nightly publishes only paths HEAD already has (tracked_data_paths): the seed makes the first export publishable
+        self.assertTrue((ROOT / path).is_file(), f"{path} must exist in HEAD to be a group path")
+        weekly = (ROOT / "scripts/weekly_refresh.sh").read_text()
+        step = f'run_step x_firsts "" "$EXPORT" json {path} "$PY" scripts/export_people_firsts.py'
+        self.assertIn(step, weekly)
+        self.assertLess(weekly.index("run_step x_people "), weekly.index(step), "the export reads the roster x_people left")
+        self.assertIn(path, self.named("scripts/weekly_refresh.sh"))
+
     def test_the_money_export_writes_its_companions_to_scratch(self):
         weekly = (ROOT / "scripts/weekly_refresh.sh").read_text()
         # a directory export (dir mode) writes its tree in place and is restored whole; a single file never is

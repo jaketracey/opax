@@ -142,6 +142,7 @@ DIVISIONS = [
     (507, "representatives", "A bill", "2006-02-07", 1, "federal"),
     (508, "representatives", "A bill", "2010-09-28", 1, "federal"),
     (509, "representatives", "A stray early division", "2004-03-01", 1, "federal"),
+    (511, "senate", "A division with no number", "2012-03-01", None, "federal"),
 ]
 DIVISIONS += [(600 + n, house, "A bill", f"2006-02-{n + 7:02d}", 1, "federal")
               for n in range(10) for house in ("representatives",)]
@@ -154,6 +155,7 @@ VOTES = [
     (506, "90002", "abstention"),
     (504, "90099", "aye"),            # nobody in the roster
     (508, "90011", "aye"),            # five weeks after entering: a first, though the speech is not
+    (511, "90008", "aye"),            # the only aye or no this senator has, in a division with no number
 ]
 EXT_DIVISIONS = [
     ("nsw-la-2019-05-08-1", "nsw", "nsw_la", "2019-05-08", 1, "A bill", "nsw_hansard_api",
@@ -352,7 +354,10 @@ class FirstsTests(unittest.TestCase):
         self.assertNotEqual(export.coverage_start(set(year) | {"1993-05-04"})[0], "1993-05-04")
 
     def test_a_federal_division_with_no_number_is_not_published(self):
-        # Division 506 has no number: its address would be the sitting day's page.
+        # Harper Silent's only aye or no is in division 511, which has no number: its address would be the whole
+        # sitting day's page, so nothing is published for them (they have no speech either).
+        self.assertIn((511, "90008", "aye"), VOTES)
+        self.assertNotIn("90008", self.doc["by_pid"])
         for person in self.doc["by_pid"].values():
             if "first_division" in person:
                 self.assertRegex(person["first_division"]["url"], r"/\d{4}-\d{2}-\d{2}/\d+$")

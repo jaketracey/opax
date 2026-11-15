@@ -57,6 +57,11 @@ What counts
     - the fact is on or after the service start, and within FIRST_WINDOW_DAYS of it. A first speech or division
       long after the start means the record was thin when they arrived, and it cannot say this was their first.
 
+  Two limits, for whoever reviews an export. The coverage floor is per calendar year: it does not prove the
+  record has no gap inside one person's first FIRST_WINDOW_DAYS, so a first can still be a speech the record
+  happens to hold after one it lost. And the rule rests on the Handbook's service history start being the
+  first-ever entry; check that against returning members in the first real export.
+
   The Handbook table holds people who sat in recent parliaments only, so earlier members, and every state
   member, are never marked. Anything not marked is published without `first`: readers call it the earliest
   speech or division in the OPAX record and say from when (meta.coverage for the fact's chamber), or leave it
@@ -130,6 +135,7 @@ NOTES = [
     "Any other fact is the earliest the record holds, not a first; coverage gives the date each record starts.",
     "Speeches are those made in a chamber; committee hearings and witness testimony are not counted.",
     "A division counts when the person is recorded voting aye or no.",
+    "A record's start is the first day of its first year with enough days of rows; gaps after that are not checked.",
 ]
 
 

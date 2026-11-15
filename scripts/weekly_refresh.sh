@@ -216,6 +216,11 @@ if [ "$want_weekly" = 1 ]; then
   # what the export said that the shipped roster kept or held back (scripts/roster_overlay.py)
   overlay=$(grep -m1 '^ROSTER OVERLAY:' "$PIPE/x_people.log" 2>/dev/null || true)
   [ -z "$overlay" ] || log "Roster overlay: ${overlay#ROSTER OVERLAY: }"
+  # each roster person's first speech and first division in the record (scripts/export_people_firsts.py): reads the
+  # roster x_people just left on disk and parli.db read-only; the firsts group owns the file (scripts/vm/data_groups.sh)
+  run_step x_firsts "" "$EXPORT" json portal/public/people/firsts.json "$PY" scripts/export_people_firsts.py
+  coverage=$(grep -c '^\[firsts\] coverage ' "$PIPE/x_firsts.log" 2>/dev/null || true)
+  [ "${coverage:-0}" -eq 0 ] || log "Firsts: $(grep -m1 '^\[firsts\] .* roster people' "$PIPE/x_firsts.log" | cut -c10-)"
   # nightly.sh calls this periodic path. Offline provenance rebuild preserves
   # classifications, reviewed exclusions and legacy totals on every re-import.
   if run_step aec_receipt_types "SELECT COUNT(*) FROM aec_receipt_records" \
