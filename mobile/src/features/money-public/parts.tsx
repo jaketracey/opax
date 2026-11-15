@@ -48,7 +48,7 @@ import {
   headerItems,
   noHeaderItems,
   pageItems,
-  useClearRailBar,
+  usePushedClearFade,
 } from '../../navigation/chrome';
 import { useListUnderBar } from '../../navigation/useListUnderBar';
 import { openOnWeb } from '../../navigation/external';
@@ -486,7 +486,7 @@ export function MoneyList<T>({
   const headerBottom = useHeaderBottom();
   const onRail = useVerticalBarEdge() !== 'unspecified';
   // A pushed money list under the stack's clear bar fades the same way.
-  const clearPushed = useClearRailBar();
+  const clearPushed = usePushedClearFade();
   const fades =
     (largeTitle || clearPushed) &&
     clearBars &&

@@ -313,11 +313,30 @@ export const solidRailBar = (
  * sets options.
  */
 export function useClearRailBar(): boolean {
+  return useClearBar(false);
+}
+
+/**
+ * `useClearRailBar` for a page that draws its own fade under the clear bar
+ * of a layout without a vertical bar, and sets its own bar options (the
+ * Bills list, the money lists). Beside a vertical bar there is no such
+ * fade, and the answer is false without reading the stack's descriptors.
+ * That matters: a page that sets options and also subscribes to the
+ * descriptors re-renders on its own options, builds them again and sets
+ * them again, without end ("Maximum update depth exceeded": the Bills tab
+ * on the closed Duo showed the error page, build 84). Only a child that
+ * sets no options may subscribe there (`RouteOptions`, `ClearBarRest`).
+ */
+export function usePushedClearFade(): boolean {
+  return useClearBar(true);
+}
+
+function useClearBar(offRailOnly: boolean): boolean {
   const route = useContext(NavigationRouteContext);
   const verticalBar = useVerticalBarEdge() !== 'unspecified';
   const navigation = useContext(NavigationContext);
   const solid = useSolidBar();
-  if (!route) return false;
+  if (!route || (offRailOnly && verticalBar)) return false;
   if (!verticalBar) {
     // Every other iOS 26 layout: a pushed page under the stack's clear bar
     // (`usePushedBar`). A root has its own owner, and a legibility setting

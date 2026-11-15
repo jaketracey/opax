@@ -74,7 +74,7 @@ import {
   glassBar,
   headerItems,
   rootHeaderItems,
-  useClearRailBar,
+  usePushedClearFade,
 } from '../../navigation/chrome';
 import { billRoute } from '../../navigation/routes';
 import { frameOf } from '../money/map/measure';
@@ -277,7 +277,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   const onRail = useVerticalBarEdge() !== 'unspecified';
   // The pushed list is under the stack's clear bar off the rail, and
   // fades as the root does; beside the rail its bar is solid.
-  const clearPushed = useClearRailBar();
+  const clearPushed = usePushedClearFade();
   const fades =
     clearBars &&
     Platform.OS === 'ios' &&
