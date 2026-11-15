@@ -317,7 +317,7 @@ describe('every drawn state is in the contrast table and passes', () => {
       expectListed(pressed);
     }
   });
-  test('only follow confirmation and the cold skeleton crossfade fade; controls keep contrast', () => {
+  test('only follow confirmation, the cold skeleton crossfade and the bar fade layer fade; controls keep contrast', () => {
     const dir = resolve(__dirname, '../src/design');
     for (const file of readdirSync(dir).filter((f) => f.endsWith('.tsx'))) {
       const source = readFileSync(resolve(dir, file), 'utf8');
@@ -328,12 +328,17 @@ describe('every drawn state is in the contrast table and passes', () => {
       expect({ file, values: values.filter((v) => v !== '0') }).toEqual({
         file,
         // The follow confirmation and the shared cold skeleton are the two timed fades.
+        // The bar fade is neither content nor a control: a layer of the
+        // page's own ground over what scrolls under a clear bar, its
+        // opacity tied to the scroll position.
         values:
           file === 'controls.tsx'
             ? ['confirmation ? opacity : 1']
             : file === 'states.tsx'
               ? ['loading']
-              : [],
+              : file === 'bar-fade.tsx'
+                ? ['Animated.add(y']
+                : [],
       });
     }
   });
