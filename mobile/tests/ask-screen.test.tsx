@@ -74,7 +74,7 @@ import {
 } from '../src/design/adaptive';
 import { ReservedRegionsProvider } from '../src/design/fold-area';
 import { AskColumns } from '../src/features/ask/AskLayout';
-import { AskIdle, idleCopy } from '../src/features/ask/AskIdle';
+import { AskIdle, idleCopy, LONGEST_MEMBER } from '../src/features/ask/AskIdle';
 import { EngravedMark } from '../src/design/engraving';
 import * as accessibility from '../src/design/accessibility';
 import { AskThread } from '../src/features/ask/AskThread';
@@ -1041,7 +1041,7 @@ test('starters follow Sydney’s day: 9:30 am on 10 Nov is 10 Nov, not UTC’s 9
     expect(shown).not.toEqual(startersFor(Date.UTC(2026, 10, 9, 2), 1));
     expect(byId('ask-starter-1').length).toBe(0);
     expect(byId('ask-starter-seat').length).toBe(0);
-    expect(byId('ask-starter-pending').length).toBe(0);
+    expect(byId('ask-starter-held').length).toBe(0);
   } finally {
     now.mockRestore();
   }
@@ -1374,7 +1374,7 @@ test('a starter asks at once; the seat starter only fills the composer', async (
   });
   // No general starter beside the member's, and no held place.
   expect(byId('ask-starter-0').length).toBe(0);
-  expect(byId('ask-starter-pending').length).toBe(0);
+  expect(byId('ask-starter-held').length).toBe(0);
 });
 
 test('with no seat saved, the one starter is general and asks at once', async () => {
@@ -1392,36 +1392,134 @@ test('with no seat saved, the one starter is general and asks at once', async ()
   });
 });
 
-test('while the saved seat is being read, the one row’s place is held and nothing is drawn or spoken there', async () => {
-  jest.mocked(useSeat).mockReturnValue({ status: 'loading' } as never);
-  const renderer = await mount();
-  const held = renderer.root.find(
-    (n) =>
-      typeof n.type === 'string' && n.props.testID === 'ask-starter-pending',
-  );
-  expect(held.props).toMatchObject({
-    pointerEvents: 'none',
-    accessibilityElementsHidden: true,
-    importantForAccessibility: 'no-hide-descendants',
-  });
-  // The held row has the general starter's own shape, unseen.
-  const unseen = held.findAll(
-    (n) =>
-      typeof n.type === 'string' &&
-      StyleSheet.flatten(n.props.style)?.opacity === 0,
-  );
-  expect(unseen.length).toBeGreaterThan(0);
-  expect(byId('ask-starter-0').length).toBe(0);
-  expect(byId('ask-starter-seat').length).toBe(0);
-  // The seat answers "none": the general starter takes the held place.
-  jest.mocked(useSeat).mockReturnValue({ status: 'none' } as never);
-  await act(async () => {
-    askSession.setDraft('x');
-  });
-  await act(async () => {
-    askSession.setDraft('');
-  });
-  expect(byId('ask-starter-pending').length).toBe(0);
+test.each([
+  ['the default text size', 1],
+  ['AX5', 3.12],
+] as const)(
+  'a seat still being read holds the one row’s box, and the box is the same when the seat resolves, at %s',
+  async (_size, fontScale) => {
+    const original = Dimensions.get('window');
+    Dimensions.set({
+      window: { ...original, width: 402, height: 874, fontScale },
+    });
+    try {
+      jest.mocked(useSeat).mockReturnValue({ status: 'loading' } as never);
+      const renderer = await mount();
+      const hostOf = (id: string) =>
+        renderer.root.find(
+          (n) => typeof n.type === 'string' && n.props.testID === id,
+        );
+      // What sizes the box: every unseen candidate's words and styles.
+      const place = () => {
+        const node = hostOf('ask-starter-place');
+        return JSON.stringify({
+          style: StyleSheet.flatten(node.props.style),
+          parts: node
+            .findAll((n) => typeof n.type === 'string')
+            .map((n) => [
+              n.type,
+              StyleSheet.flatten(n.props.style),
+              n.props.maxFontSizeMultiplier,
+              typeof n.props.children === 'string' ? n.props.children : null,
+            ]),
+        });
+      };
+      const held = hostOf('ask-starter-place');
+      expect(held.props).toMatchObject({
+        pointerEvents: 'none',
+        accessibilityElementsHidden: true,
+        importantForAccessibility: 'no-hide-descendants',
+      });
+      expect(StyleSheet.flatten(held.props.style)).toMatchObject({
+        opacity: 0,
+        flexDirection: 'row',
+        overflow: 'hidden',
+      });
+      // Both candidates are laid out, each the box's full width: the
+      // general starter, and the member's question at its longest.
+      const labels = held
+        .findAll((n) => typeof n.props.accessibilityLabel === 'string')
+        .map((n) => n.props.accessibilityLabel as string)
+        .filter((label, i, all) => all.indexOf(label) === i);
+      expect(labels).toEqual([
+        startersFor(Date.now(), 1)[0],
+        `What has ${LONGEST_MEMBER} said in parliament this year?`,
+      ]);
+      expect(
+        held.children.map(
+          (child) =>
+            StyleSheet.flatten((child as typeof held).props.style).width,
+        ),
+      ).toEqual(['100%', '100%']);
+      // Nothing is drawn or pressable while the seat is unknown.
+      expect(byId('ask-starter-0').length).toBe(0);
+      expect(byId('ask-starter-seat').length).toBe(0);
+      const before = place();
+      const redraw = async () => {
+        await act(async () => {
+          askSession.setDraft('x');
+        });
+        await act(async () => {
+          askSession.setDraft('');
+        });
+      };
+      // The seat answers with a member: their row is drawn over the box.
+      jest.mocked(useSeat).mockReturnValue({
+        status: 'chosen',
+        choice: { version: 1, seatId: 'el_fixture', stateSeatIds: [] },
+      } as never);
+      mockDirectory.current = {
+        electorates: {
+          data: {
+            electorates: [
+              {
+                electorate_id: 'el_fixture',
+                status: 'current',
+                jurisdiction: 'federal',
+                chamber: 'representatives',
+                representation_status: 'verified',
+                representatives: [{ person_id: 'fixture-person' }],
+              },
+            ],
+          },
+        },
+      };
+      await redraw();
+      expect(place()).toBe(before);
+      const over = hostOf('ask-starter-held').children[1] as typeof held;
+      expect(StyleSheet.flatten(over.props.style)).toMatchObject({
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+      });
+      expect(
+        over.findAll((n) => n.props.testID === 'ask-starter-seat').length,
+      ).toBeGreaterThan(0);
+      expect(a11y('ask-starter-seat', 'accessibilityLabel')).toBe(
+        'What has Sam Placeholder said in parliament this year?',
+      );
+      // And with no seat after all: the general starter, in the same box.
+      jest.mocked(useSeat).mockReturnValue({ status: 'none' } as never);
+      await redraw();
+      expect(place()).toBe(before);
+      expect(byId('ask-starter-seat').length).toBe(0);
+      expect(
+        (hostOf('ask-starter-held').children[1] as typeof held).findAll(
+          (n) => n.props.testID === 'ask-starter-0',
+        ).length,
+      ).toBeGreaterThan(0);
+    } finally {
+      Dimensions.set({ window: original });
+    }
+  },
+);
+
+test('a seat already known when Try asking is first drawn needs no held box', async () => {
+  await mount();
+  expect(byId('ask-starter-held').length).toBe(0);
+  expect(byId('ask-starter-place').length).toBe(0);
   expect(byId('ask-starter-0').length).toBeGreaterThan(0);
 });
 

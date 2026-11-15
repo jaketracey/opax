@@ -79,6 +79,13 @@ export function useSeatMember(): string | null {
 function useSeatPending(): boolean {
   return useSeat().status === 'loading';
 }
+/**
+ * A member's name as long as any the roster holds, never seen: with the
+ * general starter it sizes the held box, so the question about the reader's
+ * own member fits whatever their name is.
+ */
+export const LONGEST_MEMBER = 'Maximilian Featherstonehaugh-Montgomery';
+const noop = () => {};
 // The member the seat starter put in Person, so a starter tapped next does
 // not inherit it.
 let seatFill: string | null = null;
@@ -154,6 +161,36 @@ export function AskIdle({
         void copyText(question).then((ok) => ok && haptic('success')),
     },
   ];
+  // Decided once, as Try asking is first drawn: a seat still being read
+  // then means the row's box is held for the life of the page.
+  const [held] = useState(pending);
+  const row = member ? (
+    <AskSuggestionRow
+      question={seatStarter(member)}
+      variant="fill"
+      onPress={() => fillComposer(seatStarter(member), member)}
+      testID={`${testPrefix}-starter-seat`}
+    />
+  ) : (
+    starters.map((question, i) => (
+      <AskSuggestionRow
+        key={question}
+        question={question}
+        variant="send"
+        offline={offline}
+        term={starterTerm(question)}
+        onPress={() => {
+          if (seatFill && askSession.composerOptions().speaker === seatFill)
+            askSession.options({ ...defaultOptions });
+          seatFill = null;
+          track('opax_chip', { chip_kind: 'ask', placement: 'ask' });
+          onAsk(question);
+        }}
+        menu={menu(question)}
+        testID={`${testPrefix}-starter-${i}`}
+      />
+    ))
+  );
   // Docked with nothing saved, the column's centred empty state carries the
   // line (AskEmptyState, drawn by AskColumns), so it is not said twice.
   // When that state has no room for its words (very large text, a
@@ -177,54 +214,35 @@ export function AskIdle({
         <View style={sectionStyle}>
           <SectionHeader title={idleCopy.tryAsking} />
           <InsetGroup testID={`${testPrefix}-starters`}>
-            {/* One row. With a seat saved it is about the reader's own
-              member; while the saved seat is still being read its place is
-              held, so nothing under it moves when the member is known. */}
-            {!member && pending ? (
-              <View
-                pointerEvents="none"
-                accessibilityElementsHidden
-                importantForAccessibility="no-hide-descendants"
-                testID={`${testPrefix}-starter-pending`}
-              >
-                <View style={styles.unseen}>
-                  <AskSuggestionRow
-                    question={general}
-                    variant="send"
-                    onPress={() => {}}
-                  />
+            {held ? (
+              // The seat was still being read when Try asking was first
+              // drawn. The box is as tall as its tallest candidate, both
+              // laid out unseen in the row's own type and width, and the
+              // row that is chosen is drawn over it: the box never changes
+              // size, so nothing under it moves when the member is known.
+              <View testID={`${testPrefix}-starter-held`}>
+                <View
+                  pointerEvents="none"
+                  accessibilityElementsHidden
+                  importantForAccessibility="no-hide-descendants"
+                  style={styles.candidates}
+                  testID={`${testPrefix}-starter-place`}
+                >
+                  {[general, seatStarter(LONGEST_MEMBER)].map((question) => (
+                    <View key={question} style={styles.candidate}>
+                      <AskSuggestionRow
+                        question={question}
+                        variant="fill"
+                        onPress={noop}
+                      />
+                    </View>
+                  ))}
                 </View>
+                <View style={styles.over}>{row}</View>
               </View>
-            ) : null}
-            {member ? (
-              <AskSuggestionRow
-                question={seatStarter(member)}
-                variant="fill"
-                onPress={() => fillComposer(seatStarter(member), member)}
-                testID={`${testPrefix}-starter-seat`}
-              />
-            ) : null}
-            {starters.map((question, i) => (
-              <AskSuggestionRow
-                key={question}
-                question={question}
-                variant="send"
-                offline={offline}
-                term={starterTerm(question)}
-                onPress={() => {
-                  if (
-                    seatFill &&
-                    askSession.composerOptions().speaker === seatFill
-                  )
-                    askSession.options({ ...defaultOptions });
-                  seatFill = null;
-                  track('opax_chip', { chip_kind: 'ask', placement: 'ask' });
-                  onAsk(question);
-                }}
-                menu={menu(question)}
-                testID={`${testPrefix}-starter-${i}`}
-              />
-            ))}
+            ) : (
+              row
+            )}
           </InsetGroup>
         </View>
       ) : null}
@@ -429,6 +447,19 @@ const styles = StyleSheet.create({
   },
   emptyWords: { gap: rhythm.line, maxWidth: 420 },
   unseen: { opacity: 0 },
+  // The held box's candidates: side by side, each the box's full width, so
+  // the row is as tall as the taller one; laid out, never seen.
+  candidates: { flexDirection: 'row', overflow: 'hidden', opacity: 0 },
+  candidate: { width: '100%', flexShrink: 0 },
+  // The chosen row, over the held box, centred in it.
+  over: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    justifyContent: 'center',
+  },
   centredText: { textAlign: 'center' },
   stackedSection: { gap: rhythm.block },
 });
