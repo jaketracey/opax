@@ -40,7 +40,17 @@ function probe(
 ) {
   const ref = { current: view };
   const state = { focused };
-  const navigation = { isFocused: () => state.focused };
+  const listeners = new Map<string, Set<(event?: object) => void>>();
+  const navigation = {
+    isFocused: () => state.focused,
+    addListener: (name: string, listener: (event?: object) => void) => {
+      const set = listeners.get(name) ?? new Set();
+      listeners.set(name, set.add(listener));
+      return () => set.delete(listener);
+    },
+  };
+  const emit = (name: string, event?: object) =>
+    act(() => listeners.get(name)?.forEach((listener) => listener(event)));
   let id = '';
   function Harness() {
     id = useOutlineProbe(ref as never, 'M0 0L1 1Z');
@@ -56,6 +66,9 @@ function probe(
   });
   return {
     state,
+    emit,
+    listening: () =>
+      [...listeners.values()].reduce((count, set) => count + set.size, 0),
     id: () => id,
     run: (ms: number) => act(() => jest.advanceTimersByTime(ms)),
     unmount: () => act(() => renderer.unmount()),
@@ -91,6 +104,8 @@ test('a map whose page has another page over it is never snapshotted, and is rea
   page.run(5_000);
   expect(view.makeImageSnapshot).not.toHaveBeenCalled();
   page.state.focused = true;
+  page.emit('focus');
+  page.emit('transitionEnd', { data: { closing: false } });
   page.run(250);
   expect(view.makeImageSnapshot).toHaveBeenCalledTimes(1);
   expect(page.id()).toBe('electorate-outline-drawn-pixels-64');
@@ -109,6 +124,37 @@ test('with the app in the background nothing is snapshotted', () => {
   expect(view.makeImageSnapshot).not.toHaveBeenCalled();
   if (before) Object.defineProperty(AppState, 'currentState', before);
   else delete (AppState as { currentState?: unknown }).currentState;
+  page.unmount();
+});
+
+// rv-duo-probe: on a pop the route is focused before UIKit has the view
+// back in the window. Focus alone is a frame early.
+test('after a focus change nothing is snapshotted until the transition has ended', () => {
+  const view = canvas([16, 300, 370, 200]);
+  view.image.readPixels.mockImplementation(() => new Uint8Array(64 * 4));
+  const page = probe(view);
+  // In front and settled at mount: read, and nothing drawn yet.
+  page.run(250);
+  expect(view.makeImageSnapshot).toHaveBeenCalledTimes(1);
+  // A profile is pushed over it, then popped: focused again, mid-transition.
+  page.state.focused = false;
+  page.emit('blur');
+  page.run(1_000);
+  page.state.focused = true;
+  page.emit('focus');
+  page.run(1_000);
+  expect(view.makeImageSnapshot).toHaveBeenCalledTimes(1);
+  // The end of its way out is not the end of its way back in.
+  page.emit('transitionEnd', { data: { closing: true } });
+  page.run(500);
+  expect(view.makeImageSnapshot).toHaveBeenCalledTimes(1);
+  view.image.readPixels.mockImplementation(dark);
+  page.emit('transitionEnd', { data: { closing: false } });
+  page.run(250);
+  expect(view.makeImageSnapshot).toHaveBeenCalledTimes(2);
+  expect(page.id()).toBe('electorate-outline-drawn-pixels-64');
+  // Done: it listens to nothing more.
+  expect(page.listening()).toBe(0);
   page.unmount();
 });
 

@@ -48,6 +48,10 @@ export function readableFrame(
  * in front, the app is active, and the view is laid out with a real size
  * and is on screen. Only then is it snapshotted. The probe stops for good
  * once it has its count.
+ *
+ * Coming back to the page (a pop) the route is focused before UIKit has
+ * the view back in the window, so focus alone is a frame early. After a
+ * focus change the probe waits for the stack's `transitionEnd` as well.
  */
 export function useOutlineProbe(
   ref: ReturnType<typeof useCanvasRef>,
@@ -61,9 +65,32 @@ export function useOutlineProbe(
     let active = true,
       tries = 0,
       looks = 0;
+    // Settled: no transition is carrying the page on or off screen. A page
+    // that mounts in front is taken as settled, as before; after it loses
+    // or regains focus only the end of that transition settles it again.
+    let settled = true;
+    type Listen = (
+      name: string,
+      listener: (event?: { data?: { closing?: boolean } }) => void,
+    ) => (() => void) | undefined;
+    const listen = (
+      navigation as { addListener?: Listen } | undefined
+    )?.addListener?.bind(navigation);
+    const unsettle = () => {
+      settled = false;
+    };
+    const subscriptions = [
+      listen?.('focus', unsettle),
+      listen?.('blur', unsettle),
+      listen?.('transitionEnd', (event) => {
+        // The end of this page's own way in, not of its way out.
+        if (!event?.data?.closing) settled = true;
+      }),
+    ];
     const stop = () => {
       active = false;
       clearInterval(timer);
+      subscriptions.forEach((remove) => remove?.());
     };
     const snapshot = () => {
       // Probe the native canvas's actual raster, not JS geometry or an AX label.
@@ -94,7 +121,7 @@ export function useOutlineProbe(
       if (++looks > MAX_LOOKS) return stop();
       const view = ref.current;
       // Another page is in front, or the app is not: nothing to read.
-      if (!view || navigation?.isFocused?.() === false) return;
+      if (!view || !settled || navigation?.isFocused?.() === false) return;
       if (
         AppState.currentState === 'background' ||
         AppState.currentState === 'inactive'
@@ -102,7 +129,7 @@ export function useOutlineProbe(
         return;
       if (typeof view.measureInWindow !== 'function') return;
       view.measureInWindow((x, y, width, height) => {
-        if (!active || navigation?.isFocused?.() === false) return;
+        if (!active || !settled || navigation?.isFocused?.() === false) return;
         if (readableFrame({ x, y, width, height }, Dimensions.get('window')))
           snapshot();
       });
