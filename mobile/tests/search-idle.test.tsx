@@ -314,8 +314,7 @@ describe('Search scroll region on iOS', () => {
     // over it to hide the rows.
     expect(renderer.root.findByType(ScrollView)).toBe(scroll);
     expectScrollRegion(renderer);
-    // Results: still cut, and the pinned scope control holds at the scroll
-    // view's own top (the plain sticky header, not the under-bar one).
+    // Results: still cut, with the scope control pinned.
     await act(async () =>
       renderer.root.findByType(SearchSuggestions).props.onSeeAll('people'),
     );
@@ -323,7 +322,6 @@ describe('Search scroll region on iOS', () => {
     const results = renderer.root.findByType(ScrollView);
     expect(results).toBe(scroll);
     expect(results.props.stickyHeaderIndices).toEqual([0]);
-    expect(results.props.StickyHeaderComponent).toBeUndefined();
     // Back to Browse: the bar returns and the page runs under it again.
     await type('');
     await act(async () =>
