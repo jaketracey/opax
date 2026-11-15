@@ -223,18 +223,21 @@
    },
    {
     "name": "Nick Sherry",
-    "party": null,
-    "speeches": 6
+    "party": "Labor",
+    "speeches": 6,
+    "party_basis": "roster"
    },
    {
     "name": "Helen Coonan",
-    "party": null,
-    "speeches": 5
+    "party": "Liberal",
+    "speeches": 5,
+    "party_basis": "roster"
    },
    {
     "name": "Chris Evans",
-    "party": null,
-    "speeches": 4
+    "party": "Labor",
+    "speeches": 4,
+    "party_basis": "roster"
    },
    {
     "name": "Christine Milne",

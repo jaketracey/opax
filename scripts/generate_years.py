@@ -28,6 +28,13 @@ Cost discipline: a year that already has a brief is NEVER asked again unless
   python3 scripts/generate_years.py --voices-only   # re-tally voices, no asks
   python3 scripts/generate_years.py --force 2001    # re-ask (costs money)
   python3 scripts/generate_years.py --dry-run       # print the plan, do nothing
+  python3 scripts/generate_years.py --fill-parties  # name unlabelled voices' parties
+                                                    # from the roster; no network
+
+A voice's party is the label on its retrieved speeches. Most Senate rows and
+ministers' speeches carry none, so a ranked voice with no label takes the
+roster's party, and only where that is certain for the year (roster_party).
+Such a row is marked "party_basis": "roster".
 
 Uses ARAG_* from .env for the ask. Voices go through https://opax.com.au so
 the tally is byte-for-byte the endpoint the dialog itself calls.
@@ -60,6 +67,7 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT_DIR = ROOT / "portal" / "public" / "years"
 TM_JS = ROOT / "portal" / "public" / "timemachine.js"
 SEARCH_BASE = "https://opax.com.au/api/search"
+ROSTER = ROOT / "portal" / "public" / "parliamentarians.json"
 
 YEAR_MIN = 1998
 YEAR_MAX = 2026
@@ -302,6 +310,71 @@ def voices_for(year: int, probes: list[dict]) -> dict:
     }
 
 
+def roster_party(name: str, year: int, people: list[dict]) -> str | None:
+    """The party the roster proves `name` sat for in `year`, or None.
+
+    The roster's `party` is the party most of a person's speeches carry, with
+    no dates, and `party_now` is today's. Neither is the party at the time for
+    someone who changed party, so a person with more than one recorded party
+    (in `party`, `party_now`, `parties`, `recorded_parties` or the dated
+    `affiliations`) is left as the speeches recorded them. One exact roster
+    name, speaking in that year, with a single recorded party: that party was
+    theirs then.
+    """
+    rows = [p for p in people if (p.get("name") or "").strip() == name.strip()]
+    if len(rows) != 1:
+        return None
+    row = rows[0]
+    if not (row.get("first") or year) <= year <= (row.get("last") or year):
+        return None
+    recorded = {
+        str(x).strip()
+        for x in [
+            row.get("party"),
+            row.get("party_now"),
+            *(row.get("parties") or []),
+            *(row.get("recorded_parties") or []),
+            *[a.get("party") for a in row.get("affiliations") or []],
+        ]
+        if x and str(x).strip()
+    }
+    return recorded.pop() if len(recorded) == 1 else None
+
+
+def fill_parties(voices: dict, year: int, people: list[dict]) -> int:
+    """Name the party of each ranked voice whose speeches carry no label."""
+    filled = 0
+    for speaker in voices.get("speakers") or []:
+        if speaker.get("party"):
+            continue
+        party = roster_party(speaker.get("name") or "", year, people)
+        if party:
+            speaker["party"] = party
+            speaker["party_basis"] = "roster"
+            filled += 1
+    return filled
+
+
+def roster_people() -> list[dict]:
+    return json.loads(ROSTER.read_text()).get("people") or []
+
+
+def fill_existing(years: list[int]) -> None:
+    """--fill-parties: rewrite only the year files a roster party changes."""
+    people = roster_people()
+    for y in years:
+        path = OUT_DIR / f"{y}.json"
+        if not path.exists():
+            continue
+        record = json.loads(path.read_text())
+        speakers = (record.get("voices") or {}).get("speakers") or []
+        before = sum(1 for s in speakers if not s.get("party"))
+        filled = fill_parties(record.get("voices") or {}, y, people)
+        if filled:
+            path.write_text(json.dumps(record, indent=1, ensure_ascii=False))
+        print(f"  {y}: {before} unlabelled voice(s), {filled} filled, {before - filled} left")
+
+
 def write_index() -> None:
     years = {}
     for path in sorted(OUT_DIR.glob("*.json")):
@@ -335,8 +408,12 @@ def main() -> None:
     brief_only = "--brief-only" in args
     picked = [int(a) for a in args if re.fullmatch(r"\d{4}", a)]
     years = picked or list(range(YEAR_MIN, YEAR_MAX + 1))
+    if "--fill-parties" in args:
+        fill_existing(years)
+        return
     topics = year_topics()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
+    people = roster_people()
 
     plan = []
     for y in years:
@@ -381,6 +458,7 @@ def main() -> None:
         if do_voices:
             record["voices"] = voices_for(y, topics.get(y, []))
             v = record["voices"]
+            fill_parties(v, y, people)
             print(f"  voices: {v['unique_speeches']} speeches, top {[s['name'] for s in v['speakers'][:3]]}")
         record["generated_at"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
         if counters:

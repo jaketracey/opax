@@ -205,8 +205,9 @@
    },
    {
     "name": "Jane Hume",
-    "party": null,
-    "speeches": 3
+    "party": "Liberal",
+    "speeches": 3,
+    "party_basis": "roster"
    },
    {
     "name": "Fatima Payman",
@@ -215,8 +216,9 @@
    },
    {
     "name": "James McGrath",
-    "party": null,
-    "speeches": 3
+    "party": "LNP",
+    "speeches": 3,
+    "party_basis": "roster"
    },
    {
     "name": "Zoe McKenzie",

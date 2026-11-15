@@ -238,8 +238,9 @@
    },
    {
     "name": "Andrew Bragg",
-    "party": null,
-    "speeches": 2
+    "party": "Liberal",
+    "speeches": 2,
+    "party_basis": "roster"
    },
    {
     "name": "Marielle Smith",

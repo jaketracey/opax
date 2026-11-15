@@ -174,8 +174,9 @@
   "speakers": [
    {
     "name": "Stephen Conroy",
-    "party": null,
-    "speeches": 10
+    "party": "Labor",
+    "speeches": 10,
+    "party_basis": "roster"
    },
    {
     "name": "Malcolm Turnbull",
@@ -184,8 +185,9 @@
    },
    {
     "name": "Penny Wong",
-    "party": null,
-    "speeches": 8
+    "party": "Labor",
+    "speeches": 8,
+    "party_basis": "roster"
    },
    {
     "name": "Rachel Siewert",
@@ -209,8 +211,9 @@
    },
    {
     "name": "Eric Abetz",
-    "party": null,
-    "speeches": 3
+    "party": "Liberal",
+    "speeches": 3,
+    "party_basis": "roster"
    }
   ],
   "parties": [

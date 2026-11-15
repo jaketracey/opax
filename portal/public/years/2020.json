@@ -237,8 +237,9 @@
    },
    {
     "name": "S.G. Wade",
-    "party": null,
-    "speeches": 6
+    "party": "Liberal",
+    "speeches": 6,
+    "party_basis": "roster"
    },
    {
     "name": "Anthony Albanese",
@@ -257,8 +258,9 @@
    },
    {
     "name": "V.A. Chapman",
-    "party": null,
-    "speeches": 3
+    "party": "Liberal",
+    "speeches": 3,
+    "party_basis": "roster"
    },
    {
     "name": "Mike Freelander",

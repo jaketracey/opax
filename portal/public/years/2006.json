@@ -243,18 +243,21 @@
    },
    {
     "name": "Kerry O'Brien",
-    "party": null,
-    "speeches": 5
+    "party": "Labor",
+    "speeches": 5,
+    "party_basis": "roster"
    },
    {
     "name": "Ursula Stephens",
-    "party": null,
-    "speeches": 5
+    "party": "Labor",
+    "speeches": 5,
+    "party_basis": "roster"
    },
    {
     "name": "Stephen Conroy",
-    "party": null,
-    "speeches": 4
+    "party": "Labor",
+    "speeches": 4,
+    "party_basis": "roster"
    }
   ],
   "parties": [
