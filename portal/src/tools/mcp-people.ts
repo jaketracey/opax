@@ -1,4 +1,5 @@
 /** Public MCP: member profiles, electorate lookup and declared interests, read from the same exports as the member pages. */
+import { vicSeatEnded, vicMembersAtExpiry, vicSeatVacantAtExpiry, vicTermEndDay, type VicTermRow } from '../../public/vic-term.js'
 import { personUrl } from '../../public/party-page.js'
 import { VIC_ELECTION_ASSET, VIC_ELECTION_PATH, VIC_ELECTION_PLACES, vicElectionEnabled } from '../../public/vic-election.js'
 import { findSeats, type VicPlaces } from '../vic-election'
@@ -40,19 +41,22 @@ async function electorateItems(env: ToolEnv, name: string, jurisdiction: unknown
   if (!/^[a-f0-9]+$/.test(release) || manifest.index_url !== `/electorates/releases/${release}/index.json`) throw new Error('Electorate release unavailable')
   const index = object(await readToolAsset(env, String(manifest.index_url)))
   if (!Array.isArray(index.electorates)) throw new Error('Electorate index unavailable')
+  const rows = index.electorates as VicTermRow[]
   const want = fold(name), seats = records(index.electorates).filter((seat): seat is SeatRow => typeof seat.name === 'string' && typeof seat.slug === 'string' && /^\/subject\/electorate\/[a-z0-9-]+$/.test(String(seat.url)))
     .filter(seat => !jurisdiction || seat.jurisdiction === jurisdiction)
   const exact = seats.filter(seat => fold(seat.name) === want || seat.slug === name || seat.electorate_id === name)
   // An exact name wins outright; otherwise every seat whose name starts with the words given.
   const matches = (exact.length ? exact : seats.filter(seat => fold(seat.name).startsWith(want)))
     .sort((a, b) => Number(b.status === 'current') - Number(a.status === 'current') || Number(b.jurisdiction === 'federal') - Number(a.jurisdiction === 'federal') || a.name.localeCompare(b.name) || a.slug.localeCompare(b.slug))
-  return matches.map(seat => ({ type: 'electorate', name: seat.name, slug: seat.slug, url: siteUrl(env, seat.url), jurisdiction: seat.jurisdiction, chamber: seat.chamber, state: seat.state_code ?? null,
+  return { vicEnded: matches.some(seat => vicSeatEnded(seat as VicTermRow, rows)), items: matches.map(seat => ({ type: 'electorate', name: seat.name, slug: seat.slug, url: siteUrl(env, seat.url), jurisdiction: seat.jurisdiction, chamber: seat.chamber, state: seat.state_code ?? null,
     status: seat.status ?? null, seats: seat.capacity ?? null, representation_status: seat.representation_status ?? 'unknown', representation_as_of: seat.representation_as_of ?? null,
-    representatives: records(seat.representatives).flatMap(rep => {
+    // A Victorian seat whose house has expired lists its members when the term ended: none where it was vacant.
+    representatives: records(vicSeatEnded(seat as VicTermRow, rows) ? vicMembersAtExpiry(seat as VicTermRow, rows) : seat.representatives).flatMap(rep => {
       const known = text(object(rep.person).name)
       return known ? [{ name: known, party: rep.party ?? null, slug: slugOf(known), url: personLink(env, known) }] : []
-    }) }))
+    }) })) }
 }
+const VIC_TERM_NOTE = `The Victorian Parliament's term ended on ${vicTermEndDay().long} (the Legislative Assembly expired and the Legislative Council with it), and every seat is contested on 28 November 2026. Until the new parliament's roster is loaded, the representatives of a Victorian seat are its members when the term ended, not current members; a seat with none was vacant then.`
 const POSTCODE_SCOPE = 'OPAX publishes postcode matches for Victorian state districts only (ABS postal areas against VEC boundaries). Federal seats and other states cannot be looked up by postcode here: give the electorate name, or use the AEC electorate finder at https://electorate.aec.gov.au/.'
 async function postcodeItems(env: ToolEnv, postcode: string) {
   if (!vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED)) return { items: [], notes: [POSTCODE_SCOPE, 'The Victorian district lookup is not published in this environment.'] }
@@ -61,12 +65,13 @@ async function postcodeItems(env: ToolEnv, postcode: string) {
   try { places = validateVicPlaces(await readToolAsset(env, VIC_ELECTION_PLACES), election) } catch { env.signal?.throwIfAborted(); throw new Error('Place index unavailable') }
   const hit = findSeats(postcode, election, places).find(h => h.kind === 'Postcode')
   if (!hit) return { items: [], notes: [`No Victorian postal area matches ${postcode}. PO box postcodes have no residents and are not included.`, POSTCODE_SCOPE] }
+  const ended = (seat: (typeof hit.seats)[number]['seat']) => seat.roster_date < election.election_day
   const items = hit.seats.map(({ seat, share }) => ({ type: 'electorate', name: seat.name, slug: seat.path.replace(/^.*\//, ''), url: siteUrl(env, seat.path), jurisdiction: 'vic', chamber: seat.kind === 'district' ? 'vic_la' : 'vic_lc', state: 'vic',
     status: 'current', seats: seat.members.length || null, representation_status: 'verified', representation_as_of: seat.roster_date,
-    postcode_share_percent: share, representatives: seat.members.map(m => ({ name: m.name, party: m.party ?? null, slug: slugOf(m.name), url: personLink(env, m.name) })) }))
+    postcode_share_percent: share, representatives: (ended(seat) && vicSeatVacantAtExpiry({ jurisdiction: 'vic', chamber: 'vic_la', name: seat.name }) ? [] : seat.members).map(m => ({ name: m.name, party: m.party ?? null, slug: slugOf(m.name), url: personLink(env, m.name) })) }))
   return { items, notes: [
     ...(items.length > 1 ? [`Postcode ${postcode} is split across ${items.length} districts. postcode_share_percent is the share of the postal area's usual residents in each district, not a probability for one address. Ask for the suburb or district before naming one member.`] : []),
-    'These are Victorian state districts (Legislative Assembly), not federal seats.', POSTCODE_SCOPE, places.attribution, places.note] }
+    'These are Victorian state districts (Legislative Assembly), not federal seats.', ...(hit.seats.some(x => ended(x.seat)) ? [VIC_TERM_NOTE] : []), POSTCODE_SCOPE, places.attribution, places.note] }
 }
 
 const seat = { type: 'object', properties: { jurisdiction: { type: ['string', 'null'] }, chamber: { type: ['string', 'null'] }, electorate: { type: ['string', 'null'] }, state: { type: ['string', 'null'] } } }
@@ -104,11 +109,12 @@ export const memberProfile: ToolDefinition = {
       return result({ ...page('member_profile', args, items, 5), notes, match: items.length ? 'matched' : 'no_match', url: siteUrl(env, items.length ? VIC_ELECTION_PATH : '/subject/electorate') })
     }
     if (args.electorate) {
-      const items = await electorateItems(env, String(args.electorate), args.jurisdiction), paged = page('member_profile', args, items, 5)
+      const { items, vicEnded } = await electorateItems(env, String(args.electorate), args.jurisdiction), paged = page('member_profile', args, items, 5)
       return result({ ...paged, match: items.length ? 'matched' : 'no_match', url: items.length === 1 ? items[0].url : siteUrl(env, '/subject/electorate'), notes: [
         ...(items.length ? [] : [`No published electorate is named "${clip(args.electorate, 80)}"${args.jurisdiction ? ' in that parliament' : ''}. Unknown names are not matched to a nearby seat.`]),
         ...(items.length > 1 ? ['Several seats share this name. Use jurisdiction, or the seat slug, to choose one.'] : []),
         ...(paged.items.some(item => item.representation_status !== 'verified') ? ['Where representation_status is unknown, OPAX holds no dated roster for that seat: an empty representatives list does not mean the seat is vacant.'] : []),
+        ...(vicEnded ? [VIC_TERM_NOTE] : []),
         ...(paged.items.some(item => item.representation_as_of) ? ['Representatives are a dated roster observation (representation_as_of), not a live membership check.'] : [])] })
     }
     let name = text(args.name)

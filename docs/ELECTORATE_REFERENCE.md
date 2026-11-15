@@ -115,11 +115,13 @@ npm --prefix portal run check
 
 Browser checks exercised directory search, navigation, historical-date changes and back navigation, a five-member Council constituency, reciprocal person links, unknown-seat handling and a 390px viewport without overflow. Worker checks verified metadata/canonical URLs, 404 responses and sitemap coverage. Browser API requests were stubbed for the unrelated speech/search services because this checkout has no live search credentials.
 
-## Dissolved houses: `dissolved_for`
+## Houses whose term has ended: `dissolved_for`
 
-A lower house dissolved for an election has no members until the result is declared, though the roster still lists who held each seat. Readers must not call those people members, so the index and each detail file say so.
+The field and file names say "dissolved" for every way a house ends before an election. The Victorian Legislative Assembly was not dissolved: its term **expired** on 3 November 2026 under the Constitution Act 1975 s 38(1), and reader-facing text says "until the Assembly expired on 3 November". The Legislative Council ended with it (s 28(2)); it has no record of its own, and pages read its state from the Assembly's rows ("until the Council expired on 3 November"). The names stay because shipped app builds decode them.
 
-- **Contract.** A row of a house that a reviewed dissolution record names (today: every `vic_la` row) always carries the key. `dissolved_for: "YYYY-MM-DD"` is the election day while the house is dissolved; `dissolved_for: null` means not dissolved. A row with no key is one the pipeline cannot speak for, or a release from before the field: readers decide from their own election record.
+A lower house whose term has ended for an election has no members until the result is declared, though the roster still lists who held each seat. Readers must not call those people members, so the index and each detail file say so.
+
+- **Contract.** A row of a house that a reviewed dissolution record names (today: every `vic_la` row) always carries the key. `dissolved_for: "YYYY-MM-DD"` is the election day while the house has ended and its new members are not yet loaded; `dissolved_for: null` means the house is sitting. A row with no key is one the pipeline cannot speak for, or a release from before the field: readers decide from their own election record.
 - **Written** from `scripts/hubs/electorate-dissolutions.json` (reviewed: jurisdiction, chamber, `dissolved_on`). The election day and the source link are read from the election file it names, so each is stated once. The value is the election day from `dissolved_on` onwards.
 - **Cleared** only by the post-result roster reload, shown to the pipeline in one of two ways.
   - **The reviewed record (how a state house clears).** The bundle has no state contests or terms, so it cannot see a state result itself. After the declaration, a person sets `seated_on` on the dissolution record (the day from which the parliament's own member list is the new house) and runs the hand export of the reloaded roster. The field becomes null on the first export whose roster for the seat is complete and dated `seated_on` or later. `seated_on` alone, or a roster refetched before that day, keeps the field.

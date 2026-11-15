@@ -2,6 +2,7 @@ import { findPeople, type ToolDeps } from './agentic-tools'
 import { identityRequest } from './ask-identity-intent'
 import type { RecordQuestion } from './ask-records'
 
+import { vicTermEnd, vicExpiredPhrase, vicMemberRole, vicTermEndDay, type VicTermRow } from '../public/vic-term.js'
 interface Representation { electorate: string; jurisdiction: string; chamber: string; state?: string | null }
 interface IdentityPerson {
   name: string; party: string | null; current: boolean | null; chambers: string[]
@@ -81,7 +82,7 @@ export async function identityAnswer(input: RecordQuestion, deps: ToolDeps): Pro
   }
   if (request.fields.some(f => f === 'service' || f === 'current')) {
     // Published service periods are distinct from find_people's indexed speech years.
-    const manifest = await deps.asset('/electorates/manifest.json') as { people_url?: string } | null
+    const manifest = await deps.asset('/electorates/manifest.json') as { people_url?: string; index_url?: string } | null
     const service = manifest?.people_url && /^\/electorates\/releases\/[a-z0-9]+\/people\.json$/.test(manifest.people_url)
       ? await deps.asset(manifest.people_url) as { people?: ServicePerson[] } | null : null
     const chamber = input.chamber ?? (/\b(?:senate|senator)\b/i.test(question) ? 'senate' : /\bhouse of representatives\b/i.test(question) ? 'representatives' : undefined)
@@ -91,23 +92,30 @@ export async function identityAnswer(input: RecordQuestion, deps: ToolDeps): Pro
     const namedSeats = seats.filter(s => fold(question).includes(fold(s.name)))
     const selected = namedSeats.length ? namedSeats : seats
     const periods = selected.flatMap(s => (s.periods ?? []).map(p => ({ ...p, seat: s }))).sort((a, b) => a.start.localeCompare(b.start))
-    let current: boolean | null = best.current
-    if (current !== true && selected.length) current = selected.some(s => s.current)
+    // The Victorian Parliament's term ended on 3 November 2026. The roster's `current` flags predate that, so
+    // a Victorian member is never answered as current from them: the seat rows decide (public/vic-term.js).
+    const victorian = selected.some(s => s.jurisdiction === 'vic') || (best.representation ?? []).some(r => r.jurisdiction === 'vic')
+    const index = victorian && manifest?.index_url && /^\/electorates\/releases\/[a-z0-9]+\/index\.json$/.test(manifest.index_url)
+      ? await deps.asset(manifest.index_url) as { electorates?: VicTermRow[] } | null : null
+    const term = vicTermEnd(best, index?.electorates)
+    const endedSeat = (s: ServiceSeat) => s.jurisdiction === 'vic' && !!term
+    let current: boolean | null = term ? false : best.current
+    if (!term && current !== true && selected.length) current = selected.some(s => s.current)
     let pay: PayData | null = null
     let paid: PayPerson | undefined
     if (!periods.length || current === null) {
       pay = await deps.asset('/pay.json') as PayData | null
       paid = Object.values(pay?.people ?? {}).find(p => fold(p.name) === fold(best.name) && (!chamber || chamber === p.chamber) && (!input.state || input.state === 'federal'))
-      if (current === null && paid) current = paid.sitting
+      if (current === null && paid && !term) current = paid.sitting
     }
     if (request.fields.includes('service')) {
-      if (periods.length) for (const p of periods) add(`${best.name} represented ${p.seat.name} from ${date(p.start)}${p.end ? ` to ${date(p.end)}` : p.seat.current ? ' and is recorded as a current representative' : '; no end date is recorded'}.`, p.seat.url ? new URL(p.seat.url, origin).href : profile)
+      if (periods.length) for (const p of periods) add(`${best.name} represented ${p.seat.name} from ${date(p.start)}${p.end ? ` to ${date(p.end)}` : p.seat.current && !endedSeat(p.seat) ? ' and is recorded as a current representative' : '; no end date is recorded'}.`, p.seat.url ? new URL(p.seat.url, origin).href : profile)
       // The pay export's chamber is the latest chamber, even for old spells.
       // It cannot date entry into a house when the person changed chambers.
       else if (paid && (!chamber || !allSeats.some(s => s.chamber !== chamber) && !(best.representation ?? []).some(r => r.chamber !== chamber))) for (const p of payPeriods(paid)) add(`${best.name}'s parliamentary service ${p.start === pay?.meta?.from ? 'is covered by the published pay record from' : 'is recorded from'} ${date(p.start)}${p.end ? ` to ${date(p.end)}` : paid.sitting ? ' and they are recorded as still serving' : '; no end date is recorded'}.`, `${origin}/pay`)
       else add(`${best.name}'s dates of parliamentary service are not available in these records; indexed speech years do not establish service dates.`)
     }
-    if (request.fields.includes('current')) add(current === true ? `${best.name} is recorded as a current member of parliament${periodLimit}.` : current === false ? `${best.name} is recorded as no longer serving in parliament${periodLimit}.` : `${best.name}'s current membership of parliament is not established by the roster.`)
+    if (request.fields.includes('current')) add(term?.row ? `${best.name} was ${vicMemberRole(term.row)} ${vicExpiredPhrase(term.row)} ${vicTermEndDay().long.slice(-4)}. The Victorian Parliament's term has ended, so they are not recorded as a current member of parliament${periodLimit}.` : current === true ? `${best.name} is recorded as a current member of parliament${periodLimit}.` : current === false ? `${best.name} is recorded as no longer serving in parliament${periodLimit}.` : `${best.name}'s current membership of parliament is not established by the roster.`)
   }
   return out.answer ? out : null
 }

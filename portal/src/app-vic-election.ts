@@ -7,7 +7,7 @@ import {validateVicElection, validateVicPlaces, VIC_ELECTION_SOURCE_KEYS as SOUR
 type ElectionEnv = Pick<Env, 'ASSETS' | 'VIC_ELECTION_HUB_ENABLED' | 'VIC_ELECTION_APP_ENABLED'>
 
 // The app endpoint's own publication gate. The app's Today reads this endpoint to know the Legislative
-// Assembly is dissolved, and a new install has nothing else to decide it from, so the endpoint must be
+// Assembly has expired, and a new install has nothing else to decide it from, so the endpoint must be
 // able to stay up after the web hub is switched off. Only the exact value "true" publishes it and any
 // other set value withdraws it; unset, it follows the hub's flag, as it did before it had its own.
 export const vicElectionAppEnabled = (env: Pick<ElectionEnv, 'VIC_ELECTION_HUB_ENABLED' | 'VIC_ELECTION_APP_ENABLED'>) =>

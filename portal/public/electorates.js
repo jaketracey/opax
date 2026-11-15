@@ -1,4 +1,4 @@
-import { vicElectionFooterHTML, VIC_ELECTION_POLLS_CLOSE } from './vic-election.js?v=a2838bb3ae';
+import { vicElectionFooterHTML, VIC_ELECTION_POLLS_CLOSE, vicAssemblyEnded, vicAssemblyExpiredPhrase, vicCouncilEnded, vicCouncilExpiredPhrase } from './vic-election.js?v=a412e65c49';
 import { personUrl, partyUrl } from './canonical-urls.js?v=9ce13e7ba5';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
@@ -10,6 +10,7 @@ import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=e
 import { pageMenuHTML as moreMenuHTML } from './page-actions-menu.js?v=8640c3d1ca';
 // The person page reads its verified-roster and dated official-list party fallbacks through this module (roster-party.js).
 export { rosterSeatParty, rosterListParty } from './roster-party.js';
+import { vicSeatVacantAtExpiry, vicVacantSentence } from './vic-term.js';
 export const JURISDICTIONS = { federal: 'Federal', nsw: 'New South Wales', vic: 'Victoria', qld: 'Queensland', sa: 'South Australia', wa: 'Western Australia', tas: 'Tasmania', nt: 'Northern Territory', act: 'Australian Capital Territory' };
 export const CHAMBERS = { representatives: 'House of Representatives', senate: 'Senate', nsw_la: 'NSW Legislative Assembly', nsw_lc: 'NSW Legislative Council', vic_la: 'Victorian Legislative Assembly', vic_lc: 'Victorian Legislative Council', qld_la: 'Queensland Legislative Assembly', sa_ha: 'SA House of Assembly', sa_lc: 'SA Legislative Council', wa_la: 'WA Legislative Assembly', wa_lc: 'WA Legislative Council', tas_ha: 'Tasmanian House of Assembly', tas_lc: 'Tasmanian Legislative Council', nt_la: 'NT Legislative Assembly', act_la: 'ACT Legislative Assembly' };
 export const escapeHTML = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -227,10 +228,14 @@ export function nextStepsMembers(detail, on = '', members = []) {
    side by side; the date control lives in Representation history, a list of
    bylines; the census is one figure and a key/value list; the downloads and
    reference ID sit under ⋯ and in the representation sheet. */
-export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) {
+export function profileHTML(detail, on = '', { photoUrlFor = () => null, councilEnded = false } = {}) {
   const selected = on ? representationAt(detail, on) : { status: detail.representation_status, members: detail.representatives, as_of: detail.representation_as_of };
   const plural = Math.max(detail.capacity || 1, selected.members.length) > 1;
-  const title = on ? `Representation on ${date(on)}` : `${detail.status === 'historical' ? 'Last recorded member' : 'Current member'}${plural ? 's' : ''}`;
+  // A Victorian Assembly seat whose house has expired has no current member: the roster names who was
+  // the member until then. dissolved_for clears when the new parliament's roster is exported.
+  // A Council region has no record of its own: its caller says whether the index still holds the Assembly ended.
+  const ended = !on && vicAssemblyEnded(detail), regionEnded = !on && detail.chamber === 'vic_lc' && councilEnded;
+  const title = on ? `Representation on ${date(on)}` : ended && vicSeatVacantAtExpiry(detail) ? 'Member' : ended ? `Member ${vicAssemblyExpiredPhrase()}` : regionEnded ? `Members ${vicCouncilExpiredPhrase()}` : `${detail.status === 'historical' ? 'Last recorded member' : 'Current member'}${plural ? 's' : ''}`;
   // The upper house a seat sits within represents its people too; any other relation is named as such.
   const upperOnly = detail.relations.every((r) => r.kind === 'within_upper_house');
   const boundary = [...detail.boundaries].filter((b) => b.geometry).sort((a, b) => Number(b.geometry_kind === 'official') - Number(a.geometry_kind === 'official') || String(b.applicable_election_date || b.effective_from || b.vintage || '').localeCompare(String(a.applicable_election_date || a.effective_from || a.vintage || '')))[0];
@@ -242,7 +247,7 @@ export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) 
   const service = sourcesOf(detail, ['terms']);
   const census = sourcesOf(detail, ['demographics']);
   const line = (list, opts) => sourceLineHTML({ updated: retrieved(list), dateLabel: 'As at', originals: originalsOf(list), licence: licences(list), ...opts });
-  const heldSince = on ? null : heldSinceLine(detail);
+  const heldSince = on || ended || regionEnded ? null : heldSinceLine(detail);
   // The next-steps block names a member, or says a seat "represents you", only where the page can say so of today:
   // not at a past date and not for a dissolved house, and on a Victorian page only members whose own service is
   // recorded as beginning after the 2026 poll (nextStepsMembers). With nobody to name, no seat "represents you" either.
@@ -253,7 +258,7 @@ export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) 
       { href: detail.detail_url, label: 'Download this electorate', detail: 'JSON, every record on this page with its sources' },
       { href: '/subject/electorate', label: 'All electorates' },
     ], 'More about this electorate')}</div></div>
-    <div class="el-intro"><section id="el-held" class="ui-section"><h2 class="ui-section-title">${esc(title)}</h2>${selected.status === 'conflicting' ? '<p class="ui-empty">The service records for this date conflict.</p>' : selected.members.length ? `<ul class="ui-list el-members" data-rule="none">${selected.members.map((m) => memberHTML(m, people, photoUrlFor)).join('')}</ul>` : `<p class="ui-empty">${selected.status === 'verified' ? 'Vacant at this observation.' : 'No confirmed representative for this date.'}</p>`}${on ? `<p class="el-latest"><a href="${esc(detail.url)}">Latest check</a></p>` : ''}
+    <div class="el-intro"><section id="el-held" class="ui-section"><h2 class="ui-section-title">${esc(title)}</h2>${ended && vicSeatVacantAtExpiry(detail) ? `<p class="ui-empty">${esc(vicVacantSentence(detail))}</p>` : selected.status === 'conflicting' ? '<p class="ui-empty">The service records for this date conflict.</p>' : selected.members.length ? `<ul class="ui-list el-members" data-rule="none">${selected.members.map((m) => memberHTML(m, people, photoUrlFor)).join('')}</ul>` : `<p class="ui-empty">${selected.status === 'verified' ? 'Vacant at this observation.' : 'No confirmed representative for this date.'}</p>`}${on ? `<p class="el-latest"><a href="${esc(detail.url)}">Latest check</a></p>` : ''}
       ${sourceLineHTML({ updated: selected.as_of || '', dateLabel: 'As at', source: 'Electoral and parliamentary records',
         state: selected.status === 'partial' ? 'partial' : '',
         originals: originalsOf(held), licence: licences(held),
@@ -292,7 +297,7 @@ export async function renderProfile({ body, slug, on, isActive, setCrumbs, goRou
     if (on && !validDate(on)) { body.innerHTML = `<h1 id="subject-title" tabindex="-1">Invalid date</h1><p><a href="${esc(entry.url)}">Return to ${esc(entry.name)}</a></p>`; return; }
     document.title = `${entry.name} · Electorate · OPAX`;
     setCrumbs([{ label: 'Electorates', href: '/subject/electorate' }, { label: entry.name }]);
-    body.innerHTML = profileHTML(detail, on, photoUrlFor ? { photoUrlFor } : {});
+    body.innerHTML = profileHTML(detail, on, { ...(photoUrlFor ? { photoUrlFor } : {}), councilEnded: vicCouncilEnded(data.electorates) });
     body.querySelector('#el-asof-form').addEventListener('submit', (event) => { event.preventDefault(); const value = body.querySelector('#el-asof').value; if (validDate(value)) goRoute(`${entry.url}?asof=${value}`); });
     if (manageFocus) body.querySelector('#subject-title')?.focus();
   } catch {
