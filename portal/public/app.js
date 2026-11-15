@@ -10648,7 +10648,14 @@ function bringAskIntoView() {
   heading.focus({ preventScroll: true });
 }
 
+/** Every way of asking (the box, the builder, a suggested question, a changed
+ * filter, a question in the address, Try again) comes through runAsk, which
+ * says so: "start" before anything is written and "end" when the answer is
+ * complete, has failed or was cancelled. The app banner leaves on "start". */
+const announceAsk = (state) => dispatchEvent(new CustomEvent("opax:ask", { detail: { state } }));
+
 async function runAsk(question) {
+  announceAsk("start");
   renderRegisterNote(question);
   setAskQuestion(question);
   if (askAbort) askAbort.abort();
@@ -10893,6 +10900,7 @@ async function runAsk(question) {
       btn.disabled = false;
       btn.removeAttribute("aria-busy");
       btn.textContent = "Ask the record";
+      announceAsk("end");
     }
   }
 }

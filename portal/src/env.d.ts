@@ -48,6 +48,8 @@ interface Env {
   /** Bluesky (AT Protocol): the account handle, an app password (secret), the PDS (default https://bsky.social). */
   BLUESKY_POST_ENABLED?: string
   BSKY_HANDLE?: string
+  /** App Store Connect provider token (pt) for the app banner's campaign links; unset = no pt in the links. */
+  APP_STORE_PROVIDER?: string
   /** The account's DID, served at /.well-known/atproto-did so the domain can be the handle. */
   BSKY_DID?: string
   BSKY_APP_PASSWORD?: string
@@ -143,6 +145,7 @@ declare namespace Cloudflare {
     META_API_VERSION?: string
     BLUESKY_POST_ENABLED?: string
     BSKY_HANDLE?: string
+    APP_STORE_PROVIDER?: string
     BSKY_DID?: string
     BSKY_APP_PASSWORD?: string
     BSKY_SERVICE?: string
