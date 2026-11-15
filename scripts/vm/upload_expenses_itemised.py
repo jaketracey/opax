@@ -21,8 +21,8 @@ data sends nothing. It reads and writes nowhere but BUCKET/PREFIX: both are cons
 A request that fails with 429, a 5xx or a connection error is tried three times with a pause.
 
 Credentials are an R2 API token scoped to that one bucket (object read and write), in the environment
-or the --env file: OPAX_R2_ACCOUNT_ID, OPAX_R2_ACCESS_KEY_ID, OPAX_R2_SECRET_ACCESS_KEY. They are never
-printed.
+(on the box, ~/.config/opax/nightly.env, which nightly.sh exports) or the --env file: OPAX_R2_ACCOUNT_ID,
+OPAX_R2_ACCESS_KEY_ID, OPAX_R2_SECRET_ACCESS_KEY. They are never printed.
 
 Exit codes: 0 in step, or nothing to do (held, or no credentials with --skip-without-credentials);
 2 usage, no credentials or no tree; 3 refused: the tree has under MIN_RATIO of the files already

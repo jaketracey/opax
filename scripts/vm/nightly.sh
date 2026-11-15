@@ -71,6 +71,7 @@
 #                         groups not cleared by then are held, the ones proven green are published
 #   OPAX_FRL_DOW          ISO weekday of the FRL instrument night (default 4, Thursday)
 #   OPAX_UV_SYNC_TIMEOUT  time limit of the `uv sync --frozen` that starts the night (default 15m)
+#   OPAX_EXPENSES_R2_SYNC 1 = the itemised expenses sync after the push really writes to R2; otherwise it is a dry run that logs counts
 #   OPAX_R2_SYNC_TIMEOUT  time limit of the itemised expenses sync to R2 after the push (default 30m)
 #   OPAX_BOT_NAME / OPAX_BOT_EMAIL   commit identity
 
@@ -264,8 +265,11 @@ sync_expenses_itemised() {
   local tree="$PIPE/expenses-itemised" script="$REPO/scripts/vm/upload_expenses_itemised.py" rc=0
   [ "${OPAX_NIGHTLY_NO_PUSH:-0}" != 1 ] || return 0
   [ -d "$tree" ] && [ -f "$script" ] || return 0
+  # Until OPAX_EXPENSES_R2_SYNC=1 is set (nightly.env) this is a dry run: it lists, compares and logs the counts it
+  # would send and delete, and changes nothing in the bucket.
+  local mode=(--dry-run); [ "${OPAX_EXPENSES_R2_SYNC:-0}" != 1 ] || mode=()
   run timeout --kill-after=60 "${OPAX_R2_SYNC_TIMEOUT:-30m}" "$PY" "$script" --tree "$tree" --repo "$REPO" \
-    --env "$REPO/.env" --skip-without-credentials || rc=$?
+    --env "$REPO/.env" --skip-without-credentials "${mode[@]}" || rc=$?
   case $rc in
     0) ;;
     3) warn "itemised expenses: the tree is smaller than what R2 holds, so nothing was sent and the stored files are kept" ;;

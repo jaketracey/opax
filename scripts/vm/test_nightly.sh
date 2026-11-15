@@ -619,13 +619,14 @@ itemised_sync_scenarios() {
   echo "== itemised expenses: R2 is synced after the push, with the publish check and the box's credentials file"
   new_sandbox r2-push
   fake_itemised_upload
-  FAKE_MODE=ok nightly
+  OPAX_EXPENSES_R2_SYNC=1 FAKE_MODE=ok nightly
   check "exit 0 and the nightly commit reached origin" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' log --format=%s main | head -1 | grep -q '^Nightly refresh'"
   check "the sync ran once, after the push (HEAD was already on origin)" bash -c "[ \"\$(wc -l < '$HOME/r2-sync.calls')\" -eq 1 ] && grep -q '^published ' '$HOME/r2-sync.calls'"
-  check "it is told to check HEAD's expenses.json and to read the credentials file" bash -c "grep -q -- '--tree $HOME/.cache/autoresearch/pipeline/expenses-itemised --repo $REPO --env $REPO/.env --skip-without-credentials' '$HOME/r2-sync.calls'"
+  check "it is told to check HEAD's expenses.json and to read the credentials file" bash -c "grep -q -- '--tree $HOME/.cache/autoresearch/pipeline/expenses-itemised --repo $REPO --env $REPO/.env --skip-without-credentials\$' '$HOME/r2-sync.calls'"
   check "the push is logged before the sync starts" bash -c "awk '/pushed [0-9a-f]+ to origin/{p=NR} /upload_expenses_itemised|r2-sync/{u=NR} END{exit !(p>0)}' '$SB/nightly.out'"
   FAKE_MODE=ok nightly
   check "the next night syncs again, with or without a new commit (a held or failed sync is made up)" bash -c "[ '$NRC' -eq 0 ] && [ \"\$(wc -l < '$HOME/r2-sync.calls')\" -eq 2 ] && ! grep -q UNPUBLISHED '$HOME/r2-sync.calls'"
+  check "without OPAX_EXPENSES_R2_SYNC=1 the nightly only asks for a dry run" bash -c "tail -1 '$HOME/r2-sync.calls' | grep -q -- '--skip-without-credentials --dry-run\$' && [ \"\$(grep -c -- '--dry-run' '$HOME/r2-sync.calls')\" -eq 1 ]"
 
   echo "== itemised expenses: NO_PUSH never syncs"
   new_sandbox r2-nopush
