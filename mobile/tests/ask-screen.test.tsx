@@ -49,6 +49,7 @@ import {
   placeholderEms,
   placeholderFits,
   composerLines,
+  composerTextCap,
   prefilledCaret,
 } from '../src/features/ask/AskDock';
 import clarify from '../scripts/fixtures/ask-clarify.json';
@@ -1337,12 +1338,12 @@ test('the composer sets its question in body text; the options line is a 44 pt t
     fontSize: textStyles.body.fontSize,
     lineHeight: textStyles.body.lineHeight,
   });
-  // With room to spare and no keyboard, the lines rule alone sets the cap.
+  // With room to spare and no keyboard, the lines rule alone sets the cap:
+  // on iOS the text view is those lines, its padding the field's.
   expect(input.maxHeight).toBe(
     textStyles.body.lineHeight *
       Math.max(1, fontScale) *
-      composerLines(fontScale) +
-      22,
+      composerLines(fontScale),
   );
   const hit = (id: string) =>
     byId(id).find((n) => n.props.hitSlop !== undefined)!.props;
@@ -3278,27 +3279,26 @@ describe('the composer at AX5 (ask.md 2.11)', () => {
           string,
           number | undefined
         >;
-      // Room for one line. A draft that fits is that line and its paddings.
-      expect(flat(fieldOf(r)).maxHeight).toBe(line + 22);
-      expect(wrapperOf(r).props.style).not.toEqual(
-        expect.arrayContaining([expect.objectContaining({ minHeight: 44 })]),
-      );
-      // Three lines: the text view is one line and its top padding, never
-      // lifted to 44 pt, where 11 pt of the second line showed.
-      report(r, 3 * line + 22);
-      expect(flat(fieldOf(r)).maxHeight).toBe(line + COMPOSER_FIELD_PADDING);
-      expect(flat(fieldOf(r)).minHeight).toBe(line + COMPOSER_FIELD_PADDING);
-      // The field around it is still a 44 pt target, and a tap in the rest
-      // of it reaches the text view.
-      expect(flat(wrapperOf(r)).minHeight).toBe(44);
-      expect(fieldOf(r).props.hitSlop).toEqual({
-        bottom: 44 - (line + COMPOSER_FIELD_PADDING),
+      // Room for one line: the text view is that line and nothing else.
+      // The padding and the 44 pt floor are the field's, around it.
+      expect(flat(fieldOf(r)).maxHeight).toBe(line);
+      expect(flat(fieldOf(r)).minHeight).toBeUndefined();
+      expect(flat(fieldOf(r)).paddingTop).toBe(0);
+      expect(flat(fieldOf(r)).paddingBottom).toBe(0);
+      expect(flat(wrapperOf(r))).toMatchObject({
+        minHeight: 44,
+        paddingVertical: COMPOSER_FIELD_PADDING,
       });
-      // Back to a draft that fits: the usual 44 pt text view, no wrapper floor.
-      report(r, line + 22);
-      expect(flat(fieldOf(r)).maxHeight).toBe(line + 22);
-      expect(flat(fieldOf(r)).minHeight).toBe(44);
-      expect(fieldOf(r).props.hitSlop).toBeUndefined();
+      // A tap in the field's padding still reaches the text view.
+      expect(fieldOf(r).props.hitSlop).toEqual({
+        top: COMPOSER_FIELD_PADDING,
+        bottom: 44,
+      });
+      // Three lines: nothing changes. One whole line shows, wherever the
+      // caret puts the text.
+      report(r, 3 * line);
+      expect(flat(fieldOf(r)).maxHeight).toBe(line);
+      expect(flat(wrapperOf(r)).minHeight).toBe(44);
       act(() => r.unmount());
     });
 
@@ -3383,57 +3383,100 @@ describe('the composer at AX5 (ask.md 2.11)', () => {
       },
     );
 
+    // Build 82 sweep, AX3: the padding scrolled with the text, and UIKit
+    // keeps the caret's line on the text view's bottom edge with no padding
+    // under it, so typing past the cap showed three lines under an 11 pt
+    // slice of the line above. The text view is now whole lines tall over
+    // content that is whole lines: every place the caret can put it is a
+    // line's edge.
     test.each([
       ['the default size', 1],
       ['AX3', 2.643],
+      ['AX5', 3.571],
     ])(
-      '%s: a draft taller than the cap is held to whole lines; one that fits keeps both paddings',
+      '%s (iOS): the text view is whole lines and nothing else, grows by whole lines to its cap and stays there past it; the padding is outside what scrolls',
       (_name, fontScale) => {
         act(() =>
           Dimensions.set({
             window: { ...original, width: 402, height: 874, fontScale },
           }),
         );
-        const { r, field } = dock(336);
+        const { r } = dock(336);
         const line = textStyles.body.lineHeight * fontScale;
-        const height = () =>
-          Number(
-            StyleSheet.flatten(
-              r.root.find(
+        const flat = (id: string, host = false) =>
+          StyleSheet.flatten(
+            r.root.find(
+              (n) =>
+                n.props.testID === id &&
+                n.props.style !== undefined &&
+                (!host || typeof n.type === 'string'),
+            ).props.style,
+          ) as Record<string, number | undefined>;
+        const input = () => flat('ask-question');
+        const report = (lines: number) =>
+          act(() =>
+            r.root
+              .find(
                 (n) =>
                   n.props.testID === 'ask-question' &&
                   n.props.style !== undefined,
-              ).props.style,
-            ).maxHeight,
-          );
-        const report = (lines: number) =>
-          act(() =>
-            field.props.onContentSizeChange({
-              nativeEvent: {
-                contentSize: {
-                  width: 300,
-                  height: lines * line + 2 * COMPOSER_FIELD_PADDING,
+              )
+              .props.onContentSizeChange({
+                // The text view has no padding: its content is its lines.
+                nativeEvent: {
+                  contentSize: { width: 300, height: lines * line },
                 },
-              },
-            }),
+              }),
           );
-        const fits = height();
-        const held = (fits - 2 * COMPOSER_FIELD_PADDING) / line;
+        // No padding inside the text view, and no floor that could lift
+        // it off a whole number of lines: it grows with its lines.
+        expect(input().paddingTop).toBe(0);
+        expect(input().paddingBottom).toBe(0);
+        expect(input().minHeight).toBeUndefined();
+        expect(input().height).toBeUndefined();
+        // The cap is whole lines: as many as the lines rule and the room
+        // allow, never fewer than one.
+        const cap = input().maxHeight!;
+        const held = cap / line;
         expect(held).toBeCloseTo(Math.round(held), 6);
-        // As many lines as the cap holds: unchanged.
-        report(Math.round(held));
-        expect(height()).toBe(fits);
-        // One more: whole lines from the top padding down, no part line.
-        report(Math.round(held) + 1);
-        expect(height()).toBeCloseTo(fits - COMPOSER_FIELD_PADDING, 6);
-        expect((height() - COMPOSER_FIELD_PADDING) / line).toBeCloseTo(
-          Math.round(held),
-          6,
-        );
-        // Deleted back to what fits: both paddings again.
-        report(2);
-        expect(height()).toBe(fits);
+        expect(Math.round(held)).toBeGreaterThanOrEqual(1);
+        expect(Math.round(held)).toBeLessThanOrEqual(composerLines(fontScale));
+        // The padding is the field's own, around the text view, with the
+        // touch floor: it never scrolls.
+        expect(flat('ask-field', true)).toMatchObject({
+          paddingVertical: COMPOSER_FIELD_PADDING,
+          minHeight: 44,
+        });
+        // Line by line up to the cap, and past it: the cap never moves, so
+        // the field ends on a line at the top, at the end and in between.
+        for (const lines of [1, Math.round(held), Math.round(held) + 1, 12]) {
+          report(lines);
+          expect(input().maxHeight).toBe(cap);
+          expect(input().paddingTop).toBe(0);
+          expect(flat('ask-field', true).paddingVertical).toBe(
+            COMPOSER_FIELD_PADDING,
+          );
+        }
         act(() => r.unmount());
+      },
+    );
+
+    test.each([
+      ['AX3', 2.643],
+      ['AX5', 3.571],
+    ])(
+      '%s: the text cap is the field cap’s lines, less its paddings, in every room',
+      (_name, fontScale) => {
+        const line = textStyles.body.lineHeight * fontScale;
+        for (const room of rooms) {
+          const text = composerTextCap({ fontScale, ...room });
+          expect(text / line).toBeCloseTo(Math.round(text / line), 6);
+          expect(text).toBeCloseTo(
+            composerFieldCap({ fontScale, ...room, overflowing: true }) -
+              COMPOSER_FIELD_PADDING,
+            6,
+          );
+        }
       },
     );
   });
@@ -3648,7 +3691,16 @@ test('Android dock has a tonal raised surface and removable option chips; iOS ke
     expect(
       dock.root.findAllByProps({ testID: 'ask-option-remove-topic' }),
     ).toHaveLength(0);
-    expect(inputStyle().minHeight).toBe(44);
+    // iOS: the 44 pt floor is the padded field's, around a bare text view.
+    expect(inputStyle().minHeight).toBeUndefined();
+    expect(inputStyle().paddingTop).toBe(0);
+    expect(
+      StyleSheet.flatten(
+        dock.root.find(
+          (n) => typeof n.type === 'string' && n.props.testID === 'ask-field',
+        ).props.style,
+      ),
+    ).toMatchObject({ minHeight: 44, paddingVertical: 11 });
     expect(inputStyle().textAlignVertical).toBeUndefined();
     expect(
       dock.root.findAllByProps({ testID: 'ask-options-line' }).length,

@@ -53,14 +53,15 @@ function houseName(chamber: string): string {
 }
 /**
  * "Victoria · Legislative Assembly": the row's first line. The dot is bound
- * to the house's first word with a no-break space, so it never ends a line
- * (at AX3 the line broke after "Victoria ·"); the house's own words still
- * break at their spaces.
+ * on both sides with no-break spaces, so it never ends a line or starts one
+ * (at AX3 the line broke after "Victoria ·", then before "· Legislative").
+ * The house's own words still break at their spaces: the line is whole, or
+ * "Victoria · Legislative" over "Assembly".
  */
 export function houseLine(
   seat: Pick<Electorate, 'chamber' | 'state_code'>,
 ): string {
-  return `${jurisdictionName(seat.state_code) ?? seat.state_code.toUpperCase()} ·\u00a0${houseName(seat.chamber)}`;
+  return `${jurisdictionName(seat.state_code) ?? seat.state_code.toUpperCase()}\u00a0·\u00a0${houseName(seat.chamber)}`;
 }
 
 type Person = {
@@ -205,13 +206,13 @@ export function neutralLines(
  * never shorter than the row that lands on it. Never drawn or spoken.
  */
 export const DISSOLVED_STAND_IN: readonly string[] = [
-  'Victoria ·\u00a0Legislative Assembly',
+  'Victoria\u00a0·\u00a0Legislative Assembly',
   'Narre Warren North',
   'Assembly dissolved for the 00 September election',
   'Last member: Kathleen Matthews-Ward, Independent',
 ];
 export const NEUTRAL_STAND_IN: readonly string[] = [
-  'Victoria ·\u00a0Legislative Assembly',
+  'Victoria\u00a0·\u00a0Legislative Assembly',
   'Narre Warren North',
   'On the roster at 00 Sep 0000: Kathleen Matthews-Ward, Independent',
 ];

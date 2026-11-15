@@ -1125,6 +1125,9 @@ describe('the first frame has the loaded page’s layout', () => {
         answer: () => act(async () => directoryRead.answer(directory)),
       };
     };
+    // The row's lines as they are kept. This suite draws at an accessibility
+    // size, where the house line stacks its two parts with no dot
+    // (drawnHouseLine): read back here as the line it was drawn from.
     const lines = (r: TestRenderer.ReactTestRenderer) =>
       r.root
         .findAll(
@@ -1132,7 +1135,7 @@ describe('the first frame has the loaded page’s layout', () => {
             n.type === 'Text' &&
             /^today-rep-state-line-/.test(n.props.testID ?? ''),
         )
-        .map((n) => n.props.children);
+        .map((n) => String(n.props.children).replace('\n', '\u00a0·\u00a0'));
     const shared = jest.spyOn(electionReads, 'loadOverviewShared');
     beforeEach(() => {
       shared.mockReset();
@@ -1213,7 +1216,7 @@ describe('the first frame has the loaded page’s layout', () => {
       expect(hosts(first.r, 'today-rep-state')).toHaveLength(0);
       const drawn = lines(first.r);
       expect(drawn.slice(0, 3)).toEqual([
-        'Victoria ·\u00a0Legislative Assembly',
+        'Victoria\u00a0·\u00a0Legislative Assembly',
         'Essendon',
         'Assembly dissolved for the 28 November election',
       ]);
