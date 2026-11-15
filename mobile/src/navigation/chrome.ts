@@ -231,7 +231,14 @@ export function useClearRailBar(): boolean {
   const route = useContext(NavigationRouteContext);
   const verticalBar = useVerticalBarEdge() !== 'unspecified';
   if (!verticalBar || !route) return false;
-  return use(DescriptorsContext)[route.key]?.options.headerTransparent === true;
+  const options = use(DescriptorsContext)[route.key]?.options;
+  // A pushed page only. A presented one owns its bar: the photo viewer is a
+  // full-screen modal in the tab stack with a clear bar of its own and a
+  // dark scrim under its white title, which must stay.
+  return (
+    options?.headerTransparent === true &&
+    (!options.presentation || options.presentation === 'card')
+  );
 }
 
 /**
@@ -296,7 +303,11 @@ export function useStackChrome({
     // Tab roots and explicit large-title lists opt into translucency separately.
     // Beside a vertical bar a tab stack's pushed pages run under the bar.
     headerTransparent: rail,
-    ...opaqueBar(),
+    // Under the clear rail bar the stack sets no bar colour or hairline
+    // either: a page with no Screen and no bar style of its own (Voting
+    // record, Declared interests, Largest sources, the record lists) kept
+    // the hairline, and a paper strip once the band folded.
+    ...(rail ? clearBarStyle(opaqueBar()) : opaqueBar()),
     // A legibility setting keeps the solid bar on the rail too. Pages with
     // their own ground (Screen) replace this backing with one in that colour.
     ...(tabStack && railBar === 'solid' ? barBacking() : {}),
