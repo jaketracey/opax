@@ -15,7 +15,6 @@ import {
 } from 'react';
 import {
   PanResponder,
-  Platform,
   StyleSheet,
   View,
   type AccessibilityActionEvent,
@@ -35,8 +34,6 @@ import { activeVerticalFold, sidesOf } from './fold';
 import { ReservedRegionArea, useReservedRegions } from './fold-area';
 import { Icon } from './icon';
 import { useKeyCommand } from './keyboard';
-import { useHeaderBottom } from './useHeaderBottom';
-import { glassBar } from '../navigation/chrome';
 import { symbols } from './symbols';
 import { Text } from './text';
 import { colors, hairline, minimumTarget, radii, rhythm } from './tokens';
@@ -493,7 +490,6 @@ function SplitContent<T>({
             </CursorContext.Provider>
           </ListPaneContext.Provider>
         </RegionProvider>
-        {twoPane ? <ListPaneFade /> : null}
       </View>
       {twoPane ? (
         <Divider width={width} onResize={resize} paused={!!fold} gap={gap} />
@@ -588,45 +584,6 @@ function PaneBack({ label, onPress }: { label: string; onPress: () => void }) {
 }
 
 const STEP = 40;
-/** How far below the bar's foot the list pane's fade ends (pt). */
-const LIST_FADE_TAIL = 16;
-/** How far above the foot its ground stops being whole (pt). */
-const LIST_FADE_LEAD = 12;
-
-/**
- * The top of a split's list pane. The pane has no bar of its own: its list
- * runs under the window's clear bar and the status bar, and nothing covered
- * it there, so scrolled rows showed behind the clock (the iPad's Bills
- * list, iOS 27.2, build 87). The pane's ground is whole from the top edge
- * to the bar's foot and fades out just below it, as a page fades under a
- * clear bar. It does not follow the scroll: the list rests below the foot,
- * so nothing is under it at rest, and nothing renders as the list moves.
- * With Reduce Transparency on the fade is a solid band (`GroundFade`).
- */
-export function ListPaneFade() {
-  const foot = useHeaderBottom();
-  if (Platform.OS !== 'ios' || !glassBar() || !foot) return null;
-  const height = foot + LIST_FADE_TAIL;
-  // Loaded on first use: the module reads a setting as it loads.
-  const { GroundFade } =
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    require('./ground-fade') as typeof import('./ground-fade');
-  return (
-    <View
-      pointerEvents="none"
-      testID="split-list-fade"
-      style={[styles.listFade, { height }]}
-    >
-      <GroundFade
-        side="top"
-        ground="paper"
-        hold={(foot - LIST_FADE_LEAD) / height}
-        style={StyleSheet.absoluteFill}
-      />
-    </View>
-  );
-}
-
 /** The hairline between the panes; drag (or adjust) to resize the list. */
 function Divider({
   width,
@@ -716,7 +673,6 @@ function Divider({
 const styles = StyleSheet.create({
   split: { flex: 1, flexDirection: 'row', backgroundColor: colors.paper },
   listPane: { height: '100%' },
-  listFade: { position: 'absolute', top: 0, left: 0, right: 0 },
   detailPane: { flex: 1, height: '100%' },
   grow: { flex: 1 },
   shrink: { flexShrink: 1 },
