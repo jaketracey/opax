@@ -158,3 +158,61 @@ it('a peek closed without a tap on iPad still drops its preload', () => {
   expect(events).toEqual(['drop']);
   expect(state.preloadedRoutes).toEqual([]);
 });
+
+/**
+ * rv-duo-fix7 P3 on 517352ab4: each closed peek set its own timer, never
+ * cleared, and a drop takes every preloaded route. A second peek opened
+ * within the wait lost its preload to the first peek's timer, so tapping it
+ * loaded its page afresh.
+ */
+it('a peek opened soon after another closed keeps its preload for its tap', () => {
+  const second = { name: 'bill/[key]', key: 'bill-second' };
+  let peekB!: ReactTestInstance['props'];
+  let treeB!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    treeB = TestRenderer.create(
+      <RowLink href="/bill/au-federal-r7534">
+        <Pressable testID="record-b">
+          <Text>Another bill</Text>
+        </Pressable>
+      </RowLink>,
+    );
+  });
+  peekB = treeB.root.find(
+    (node) =>
+      typeof node.type === 'string' &&
+      node.props.nativeID === 'preview-boundary',
+  ).props;
+  // Opening the second peek takes its own preload into the stack.
+  mockNavigate.mockReset().mockImplementation(() => {
+    const kept = state.preloadedRoutes.includes(second);
+    events.push(kept ? 'open preloaded' : 'open afresh');
+    state = {
+      ...state,
+      routes: [...state.routes, kept ? second : { name: 'bill/[key]' }],
+      preloadedRoutes: state.preloadedRoutes.filter((r) => r !== second),
+    };
+  });
+  // Peek A closes without a tap.
+  act(() => peek.onWillPreviewOpen());
+  act(() => peek.onPreviewWillClose());
+  act(() => peek.onPreviewDidClose());
+  act(() => jest.advanceTimersByTime(400));
+  // Peek B opens within the wait and preloads its own page.
+  act(() => peekB.onWillPreviewOpen());
+  state = { ...state, preloadedRoutes: [second, ...state.preloadedRoutes] };
+  // Past the moment peek A's wait would have ended.
+  act(() => jest.advanceTimersByTime(padPeekCloseMs));
+  expect(events).toEqual([]);
+  act(() => peekB.onPreviewTapped());
+  act(() => peekB.onPreviewWillClose());
+  act(() => jest.advanceTimersByTime(400));
+  act(() => peekB.onPreviewDidClose());
+  expect(events).toEqual(['open preloaded']);
+  expect(state.routes.at(-1)).toBe(second);
+  // Peek A's leftover goes with peek B's close.
+  act(() => jest.advanceTimersByTime(padPeekCloseMs));
+  expect(events).toEqual(['open preloaded', 'drop']);
+  expect(state.preloadedRoutes).toEqual([]);
+  act(() => treeB.unmount());
+});
