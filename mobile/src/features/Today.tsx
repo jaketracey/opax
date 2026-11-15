@@ -62,14 +62,8 @@ import {
   shapeKey,
   type TodayShape,
 } from './today/shape-store';
-import {
-  readSavedCollection,
-  SinceLine,
-  useSinceLastVisit,
-  type Collection,
-} from './today/SinceLastVisit';
+import { SinceLine, useSinceLastVisit } from './today/SinceLastVisit';
 import { SittingLine, useSitting } from './today/SittingLine';
-import { readVisit, type Visit } from './today/visit-store';
 import {
   editionInSlot,
   launchCase,
@@ -130,10 +124,6 @@ interface Launch {
   shape: TodayShape | null;
   /** The saved edition is a featured parliamentarian's (edition-store). */
   featured: boolean;
-  /** The last visit kept on the device; null on the first ever launch. */
-  visit: Visit | null;
-  /** The collection record saved on the device, or null with none. */
-  collection: Collection | null;
 }
 
 /**
@@ -174,11 +164,9 @@ function useLaunch(day: SydneyDate): Launch | null {
         overrideInvitationDates({ welcomeDeclinedAt: declined });
       // The guide card's setting is read with the dates, so the card is in
       // the page's first frame and is not inserted above the edition later.
-      const [invitation, shape, visit, collection] = await Promise.all([
+      const [invitation, shape] = await Promise.all([
         readInvitationDates(),
         readTodayShape(),
-        readVisit(),
-        readSavedCollection(),
         loadLearnSettings().catch(() => undefined),
       ]);
       if (active)
@@ -189,8 +177,6 @@ function useLaunch(day: SydneyDate): Launch | null {
           shape,
           featured:
             !!cached && cached !== 'missing' && cached.kind === 'politician',
-          visit,
-          collection,
         });
     })().catch(() => {
       if (active)
@@ -200,8 +186,6 @@ function useLaunch(day: SydneyDate): Launch | null {
           invitation: { hiddenUntil: null, welcomeDeclinedAt: null },
           shape: null,
           featured: false,
-          visit: null,
-          collection: null,
         });
     });
     return () => {
@@ -626,19 +610,16 @@ export default function Today() {
   // (another page over it, another tab), where nothing is seen to move.
   const [visit, setVisit] = useState(0);
   useScreenFocus(useCallback(() => () => setVisit((n) => n + 1), []));
-  // "Since your last visit": held from the first frame or not at all, and
-  // once drawn it stays for the life of the screen.
-  const since = useSinceLastVisit(
-    launch ? launch.visit : undefined,
-    launch?.collection ?? null,
-    now,
-  );
   // The cover lifts on the page in its order, not on an empty body, and
   // with the saved sitting line (or its held place) already under the date.
   const shaped = order !== null && calendar.settled;
   useEffect(() => {
     if (laidOut && shaped) releaseSplash('today');
   }, [laidOut, shaped]);
+  // "Since your last visit": drawn only if its answer is in hand for the
+  // first frame the cover lifts on; the cover never waits for it, and the
+  // line is never inserted afterwards.
+  const since = useSinceLastVisit(laidOut && shaped);
   const today = launch?.today ?? day;
   const tier =
     edition.block?.status === 'ready' && edition.block.data

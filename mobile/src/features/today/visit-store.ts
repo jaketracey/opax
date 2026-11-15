@@ -1,22 +1,22 @@
 import { TwoSlotStore } from '../../storage/two-slot';
 
 /**
- * The reader's last visit, for Today's "since your last visit" line: when
- * the app was last opened, and the size of the collection then, as its own
- * record stated it (`/corpus.json`: `expected_resources` and
- * `refresh.checked_at`).
+ * Where Today's records line counts from: the copy of the collection
+ * record the reader was last told of, as its total and its own check date
+ * (`/corpus.json`: `expected_resources` and `refresh.checked_at`).
  *
- * Device-only. The last-open time is never sent anywhere: it is not an
- * analytics property, it rides on no request and it is not a new data type.
- * The line is worked out on the device from this file and the public
- * collection record.
+ * Device-only: it is not an analytics property, it rides on no request and
+ * it is not a new data type. The line is worked out on the device from
+ * this file and the public collection record.
+ *
+ * No time of a visit is kept. Builds 77 to 82 saved one (`openedAt`) with
+ * each record; nothing reads it now, so it is no longer written, and a
+ * record that still has one reads as its total and date alone.
  */
 export interface Visit {
-  /** When the app was last opened, in ms. Never leaves the device. */
-  openedAt: number;
-  /** The collection's total records at that visit. */
+  /** The collection's total records in that copy. */
   total: number;
-  /** The collection record's own check date at that visit. */
+  /** That copy's own check date. */
   checkedAt: string;
 }
 interface VisitFile extends Visit {
@@ -27,50 +27,46 @@ const store = new TwoSlotStore<VisitFile>(
   ['opax-today-visit-v1.json', 'opax-today-visit-v1.b.json'],
   (raw) => {
     if (!raw || typeof raw !== 'object') return null;
-    const { version, openedAt, total, checkedAt } = raw as Record<
-      string,
-      unknown
-    >;
+    // An older record's `openedAt` is not read and not carried on.
+    const { version, total, checkedAt } = raw as Record<string, unknown>;
     return version === 1 &&
-      typeof openedAt === 'number' &&
-      Number.isFinite(openedAt) &&
       typeof total === 'number' &&
       Number.isSafeInteger(total) &&
       total >= 0 &&
       typeof checkedAt === 'string'
-      ? { version: 1, openedAt, total, checkedAt }
+      ? { version: 1, total, checkedAt }
       : null;
   },
   (value) => value,
 );
 
-/** The last visit kept, or null on the first ever launch. */
+/** The copy last kept, or null on the first ever launch. */
 export async function readVisit(): Promise<Visit | null> {
   const file = await store.read().catch(() => null);
-  return file
-    ? { openedAt: file.openedAt, total: file.total, checkedAt: file.checkedAt }
-    : null;
+  return file ? { total: file.total, checkedAt: file.checkedAt } : null;
 }
 
-/** Keeps this visit for the next launch; a failed save changes nothing. */
+/** Keeps this copy for the next launch; a failed save changes nothing. */
 export async function rememberVisit(visit: Visit): Promise<void> {
-  await store.save({ version: 1, ...visit }).catch(() => undefined);
+  // Only the total and its date: nothing else a caller holds is written.
+  await store
+    .save({ version: 1, total: visit.total, checkedAt: visit.checkedAt })
+    .catch(() => undefined);
 }
 
 /**
- * The collection is refreshed once a night. A copy checked this long ago
- * has very likely been replaced, so a line is worth holding a place for.
+ * How old the collection record's own check date may be for the line to
+ * cite it: 14 days. The record is stamped every night, so an older one
+ * means the refresh has stopped, and a count dated weeks ago is not news.
+ * Past the limit the line is not shown at all.
  */
-export const REFRESH_AFTER_MS = 20 * 60 * 60 * 1000;
+export const SOURCE_LIMIT_DAYS = 14;
+const SOURCE_LIMIT_MS = SOURCE_LIMIT_DAYS * 24 * 60 * 60 * 1000;
 
-/**
- * Whether a newer collection record has likely been published since the
- * last visit: decided from the disk alone, before any request, so Today
- * knows on its first frame whether to hold the line's place.
- */
-export function refreshLikely(visit: Visit, now: number): boolean {
-  const checked = Date.parse(visit.checkedAt);
-  return Number.isFinite(checked) && now - checked >= REFRESH_AFTER_MS;
+/** Whether a record checked at `checkedAt` was within the limit at `at`. */
+export function sourceCurrent(checkedAt: string, at: number): boolean {
+  const checked = Date.parse(checkedAt);
+  return Number.isFinite(checked) && at - checked <= SOURCE_LIMIT_MS;
 }
 
 /**

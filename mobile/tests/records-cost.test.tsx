@@ -448,32 +448,36 @@ test('real request client sends one GET per action, shares in-flight and session
   expect(transport).toHaveBeenCalledTimes(8);
 });
 
-test('Today with a last visit holds and draws its since-your-last-visit line from the free collection record, with no paid read', async () => {
+test('Today with a last visit draws its since-your-last-visit line from the free collection record, with no paid read', async () => {
   const checkedAt = new Date(Date.now() - 2 * 86_400_000).toISOString();
   const collection = (total: number, checked: string) =>
     record({
       expected_resources: total,
       refresh: { checked_at: checked },
     }) as never;
-  jest
-    .mocked(readVisit)
-    .mockResolvedValue({ openedAt: 1, total: 1000, checkedAt });
+  jest.mocked(readVisit).mockResolvedValue({ total: 1000, checkedAt });
   jest
     .mocked(catalogs.corpusSaved)
     .mockResolvedValue(collection(1000, checkedAt));
   jest
     .mocked(catalogs.corpus)
-    .mockResolvedValue(collection(1012, '2026-11-15T03:00:00+00:00'));
+    .mockResolvedValue(collection(1012, new Date().toISOString()));
   const today = await mount(<Today />);
   await act(async () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
   });
-  // The held path ran: the line is drawn, from one catalogue read.
+  // The answer is in hand for the first frame: the page is laid out.
+  act(() =>
+    today.root.findByProps({ testID: 'today-screen' }).props.onLayout?.({
+      nativeEvent: { layout: { x: 0, y: 0, width: 390, height: 844 } },
+    }),
+  );
+  // The line is drawn, from one catalogue read.
   const line = today.root.findAll(
-    (n) => typeof n.type === 'string' && n.props.testID === 'today-since',
+    (n) => typeof n.type === 'string' && n.props.testID === 'today-since-count',
   );
   expect(line.at(-1)!.props.accessibilityLabel).toMatch(
-    /^12 more records in OPAX since your last visit\./,
+    /^12 more records in OPAX since \d{1,2} [A-Z][a-z]{2}( \d{4})?$/,
   );
   expect(catalogs.corpus).toHaveBeenCalledTimes(1);
   expect(rememberVisit).toHaveBeenCalledTimes(1);

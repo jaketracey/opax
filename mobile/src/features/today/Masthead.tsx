@@ -90,7 +90,7 @@ export function Masthead({
   mark?: ReactNode;
   /** The sitting line under the date (`SittingLine`); draws nothing when unknown. */
   sitting?: ReactNode;
-  /** "Since your last visit" (`SinceLine`); draws nothing unless held. */
+  /** "Since your last visit" (`SinceLine`); draws nothing with no line. */
   since?: ReactNode;
   /**
    * Regular width only: the search field (`WideSearch`). It places itself,
