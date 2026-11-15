@@ -274,6 +274,81 @@ test('seat finder: suburbs, postcodes and council areas from ABS splits, exact n
   const r=await fetchPage('/vic-election-2026?place=3350','true');assert.equal(r.status,200);assert.equal(r.headers.get('x-robots-tag'),'noindex');
   assert.equal((await fetchPage('/vic-election-2026','true')).headers.get('x-robots-tag'),'all');
 });
+test('finder matches candidate names from the VEC list: one rule for every candidate, each with their own seat',async()=>{
+  const on={VIC_ELECTION_HUB_ENABLED:'true'},now=new Date('2026-11-16T10:00:00+11:00');
+  const cand=hits=>hits.filter(h=>h.kind==='Candidate').map(h=>`${h.name} @ ${h.seats[0].seat.name}`);
+  // The published list: every candidate is found by their name as published and in natural order, at their own seat.
+  const standing=data.seats.flatMap(s=>(s.candidates?.list??[]).map(c=>({c,s})));assert.ok(standing.length>900);
+  for(const {c,s} of standing) {
+    const [surname,given]=c.name.split(', ');
+    for(const q of [c.name,given?`${given} ${surname}`:c.name]) {
+      const hits=findSeats(q,data,null,{candidates:true});
+      assert.ok(cand(hits).includes(`${c.name} @ ${s.name}`),q);
+      assert.ok(hits.filter(h=>h.kind==='Candidate').every(h=>h.seats.length===1&&h.seats[0].share===null));
+    }
+    // Callers that do not ask (the app API and the postcode tool) get exactly what they got before.
+    assert.ok(findSeats(c.name,data,null).every(h=>h.kind!=='Candidate'),c.name);
+  }
+  // Invented names from here on.
+  const lowan=data.seats.find(s=>s.name==='Lowan'),upper=data.seats.find(s=>s.kind==='region'&&s.name===lowan.region);
+  const list=(...names)=>({published:'2026-11-11',url:'https://www.vec.vic.gov.au/candidates',list:names.map(name=>({name,party:''}))});
+  const invented={...data,seats:data.seats.map(s=>s===lowan?{...s,candidates:{...list('QUILL, Victoria','KETCH-O’DEA, Rowan J.','QUILL, Avery'),list:[{name:'QUILL, Victoria',party:'Independent'},{name:'KETCH-O’DEA, Rowan J.',party:'Liberal'},{name:'QUILL, Avery',party:''}]}}
+    :s===upper?{...s,candidates:{...list(),list:[{name:'QUILL, Avery',party:'',group:'A',group_name:''}]}}:{...s,candidates:null})};
+  const find=q=>findSeats(q,invented,places,{candidates:true});
+  // Whole words in any order; alphabetical by surname, then given name, then seat. No party, roster or closeness order.
+  assert.deepEqual(cand(find('quill')),['QUILL, Avery @ Lowan',`QUILL, Avery @ ${upper.name}`,'QUILL, Victoria @ Lowan']);
+  assert.deepEqual(cand(find('Avery Quill')),cand(find('QUILL, Avery')));assert.equal(cand(find('avery quill')).length,2);
+  assert.deepEqual(cand(find('Victoria Quill')),['QUILL, Victoria @ Lowan']);assert.deepEqual(cand(find('quill victoria')),['QUILL, Victoria @ Lowan']);
+  for(const q of ['ketch-o’dea','Ketch O\'Dea','rowan ketch','Rowan J. Ketch-O’Dea','ODEA','rowan j'])assert.deepEqual(cand(find(q)),['KETCH-O’DEA, Rowan J. @ Lowan'],q);
+  for(const q of ['qui','j','avery ketch','quill 3350','zzqx'])assert.deepEqual(cand(find(q)),[],q);
+  // A full-name match does not jump the queue: "ABBOT, Avery Quill" still precedes "QUILL, Avery".
+  const order={...invented,seats:invented.seats.map(s=>s.name==='Bass'?{...s,candidates:list('QUILL-ABBOT, Avery','ABBOT, Avery Quill','QUILL, Aaron Avery','de QUILL, Avery')}:s)};
+  assert.deepEqual(cand(findSeats('avery quill',order,null,{candidates:true})),['ABBOT, Avery Quill @ Bass','de QUILL, Avery @ Bass','QUILL, Aaron Avery @ Bass','QUILL, Avery @ Lowan',`QUILL, Avery @ ${upper.name}`,'QUILL-ABBOT, Avery @ Bass']);
+  // Once a list is published the web finder matches people as candidates only: no roster "Member" block with a party and margin.
+  const member=lowan.members[0].name;
+  assert.deepEqual(findSeats(member,data,null).map(h=>h.kind),['Member']);
+  for(const d of [data,invented])assert.ok(findSeats(member,d,places,{candidates:true}).every(h=>h.kind!=='Member'));
+  const sitting={...invented,seats:invented.seats.map(s=>s===lowan?s:s.name==='Lowan'?{...s,candidates:list(member.split(' ').at(-1).toUpperCase()+', '+member.split(' ').slice(0,-1).join(' '))}:s)};
+  const own=(await vicElectionPage(null,async path=>path===VIC_ELECTION_ASSET?sitting:read(path),on,member,now)).html.match(/<div class="vic-hits">[\s\S]*?<\/section>/)[0];
+  assert.equal(own.match(/<div class="vic-hit">/g).length,1);assert.match(own,/<span>Candidate<\/span>/);assert.doesNotMatch(own,/<span>Member<\/span>|vic-seat-figure/);
+  // Before any list is published, member names still find their seat.
+  const unlisted={...data,seats:data.seats.map(s=>({...s,candidates:null}))};
+  assert.deepEqual(findSeats(member,unlisted,null,{candidates:true}),findSeats(member,unlisted,null));
+  // Place and seat matches are as they were and come first.
+  assert.deepEqual(find('3350').map(h=>h.kind),['Postcode']);assert.deepEqual(find('bass'),findSeats('bass',invented,places));
+  const both={...invented,seats:invented.seats.map(s=>s.name==='Bass'?{...s,candidates:list('BASS, Wren')}:s)};
+  assert.deepEqual(findSeats('bass',both,places,{candidates:true}).map(h=>`${h.kind}:${h.name}`),['District:Bass','Candidate:BASS, Wren']);
+  // The page: the candidate's name, the word Candidate, and one plain row for their seat.
+  const read2=async path=>path===VIC_ELECTION_ASSET?invented:read(path);
+  const page=await vicElectionPage(null,read2,on,'quill',now);assert.equal(page.status,200);assert.equal(page.noindex,true);
+  const blocks=page.html.match(/<div class="vic-hit">[\s\S]*?<\/ul><\/div>/g);assert.equal(blocks.length,3);
+  assert.equal(blocks[0],`<div class="vic-hit"><p class="vic-hit-place"><strong>QUILL, Avery</strong> <span>Candidate</span></p><ul class="vic-seats" aria-label="QUILL, Avery"><li><a class="vic-seat" href="/vic-election-2026/lowan#candidates"><span class="vic-seat-name">Lowan</span><span class="vic-seat-held">Lower house district, 3 candidates</span></a></li></ul></div>`);
+  assert.match(blocks[1],new RegExp(`href="${upper.path}#candidates"><span class="vic-seat-name">${upper.name} Region</span><span class="vic-seat-held">Upper house region, 1 candidate</span>`));
+  // Every candidate's block has the same shape: no party, member, margin, portrait or profile link.
+  const shape=b=>b.replace(/<strong>[^<]*<\/strong>/,'').replace(/aria-label="[^"]*"/,'').replace(/href="[^"]*"/,'').replace(/vic-seat-name">[^<]*</,'').replace(/vic-seat-held">[^<]*</,'');
+  assert.equal(new Set(blocks.map(shape)).size,1);
+  for(const b of blocks){assert.doesNotMatch(b,/party-|vic-seat-figure|subject\/person|<img/);for(const m of [...lowan.members,...upper.members])assert.ok(!b.includes(m.name));}
+  assert.match(page.html,/<label for="vic-place">Suburb, postcode, district or candidate<\/label>/);
+  // The order is stated where there is an order to state, and the field no longer asks browsers for a suburb.
+  assert.match(page.html,/<\/ul><\/div><p class="hub-meta">Candidates are listed alphabetically by surname, then given name\.<\/p>/);
+  assert.doesNotMatch((await vicElectionPage(null,read2,on,'victoria quill',now)).html,/listed alphabetically/);
+  assert.doesNotMatch(page.html,/autocomplete=/);
+  assert.match((await vicElectionPage(null,read2,on,'zzqx',now)).html,/No suburb, postcode, district or candidate matches “zzqx”\. Try a nearby suburb/);
+  // Before a list is published the finder's wording is unchanged.
+  const none={...data,seats:data.seats.map(s=>({...s,candidates:null}))};
+  const bare=renderVicElection(none,null,{},now,{place:'zzqx',hits:findSeats('zzqx',none,places,{candidates:true})}).html;
+  assert.match(bare,/<label for="vic-place">Suburb, postcode or district<\/label>/);assert.match(bare,/No suburb, postcode or district matches “zzqx”/);
+  // A published name is text, never markup.
+  const odd={...invented,seats:invented.seats.map(s=>s.name==='Lowan'?{...s,candidates:list('<b>QUILL</b>, Avery')}:s)};
+  const escaped=renderVicElection(odd,null,{},now,{place:'quill',hits:findSeats('quill',odd,null,{candidates:true})}).html;
+  assert.match(escaped,/<strong>&lt;b&gt;QUILL&lt;\/b&gt;, Avery<\/strong>/);assert.doesNotMatch(escaped,/<b>QUILL/);
+  // Too many to list in full: a count, not a cut-off list that would show some candidates and not others.
+  const crowd={...invented,seats:invented.seats.map(s=>s.name==='Lowan'?{...s,candidates:list(...Array.from({length:25},(_,i)=>`ZED, Person${i}`))}:s)};
+  const many=renderVicElection(crowd,null,{},now,{place:'zed',hits:findSeats('zed',crowd,null,{candidates:true})}).html;
+  assert.match(many,/25 candidates match “zed”\. Add another part of the name to see them\./);assert.doesNotMatch(many,/<span>Candidate<\/span>/);
+  const fewer={...crowd,seats:crowd.seats.map(s=>s.name==='Lowan'?{...s,candidates:{...s.candidates,list:s.candidates.list.slice(1)}}:s)};
+  assert.equal(renderVicElection(fewer,null,{},now,{place:'zed',hits:findSeats('zed',fewer,null,{candidates:true})}).html.match(/<span>Candidate<\/span>/g).length,24);
+});
 test('key dates follow the VEC timeline and say when a deadline has passed',()=>{
   const before=renderVicElection(data,null,{},new Date('2026-10-13T00:00:00+11:00')).html;
   assert.match(before,/Enrol or update your details by 8 pm on Tuesday 3 November\. <a href="https:\/\/www\.vec\.vic\.gov\.au\/enrolment\/check-my-enrolment">Check your enrolment/);
