@@ -1377,6 +1377,46 @@ describe('the bill page', () => {
 });
 
 test.each(['ios', 'android'] as const)(
+  '%s: the bill ⋯ menu never repeats Ask; the page button is there whenever the menu has items',
+  async (platform) => {
+    jest.replaceProperty(Platform, 'OS', platform);
+    mockParams.key = 'au-federal-r7534';
+    let arrive!: () => void;
+    jest.mocked(runtime.billFor).mockImplementation(
+      (key, refresh) =>
+        new Promise((resolve) => {
+          arrive = () => resolve(fixture.billFor(key, refresh));
+        }),
+    );
+    const root = await render();
+    const more = () => {
+      const options = root.findAllByType(RouteOptions).at(-1)!.props
+        .options as {
+        unstable_headerRightItems: () => {
+          label: string;
+          disabled?: boolean;
+          menu?: { items: unknown[] };
+        }[];
+      };
+      return options.unstable_headerRightItems().at(-1)!;
+    };
+    // Loading: ⋯ is drawn but disabled and empty, so nothing is lost there.
+    expect(more()).toMatchObject({ label: 'More', disabled: true });
+    expect(JSON.stringify(more().menu)).not.toContain('Ask');
+    expect(host(root, 'bill-ask')).toHaveLength(0);
+    await act(async () => {
+      arrive();
+    });
+    // Loaded: the menu works, and Ask is the page's one button.
+    expect(more().disabled).toBe(false);
+    expect(more().menu!.items.length).toBeGreaterThan(0);
+    expect(JSON.stringify(more().menu)).toContain('Copy link');
+    expect(JSON.stringify(more().menu)).not.toContain('Ask about this bill');
+    expect(host(root, 'bill-ask')).toHaveLength(1);
+  },
+);
+
+test.each(['ios', 'android'] as const)(
   '%s missing bill has a centred symbol, title, body and Search bills capsule',
   async (platform) => {
     jest.replaceProperty(Platform, 'OS', platform);

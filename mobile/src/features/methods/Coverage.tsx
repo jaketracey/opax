@@ -22,6 +22,7 @@ import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { coverageCopy as text } from './copy';
 import { useRead, useShareItem, type Read } from './read';
 import {
+  coverageRow,
   coverageSources,
   kindRows,
   parliamentRows,
@@ -128,8 +129,7 @@ function BySource({ read }: { read: Read<Corpus> }) {
           <LinkRow
             key={source.name}
             title={source.name}
-            detail={source.detail}
-            value={source.window}
+            {...coverageRow(source)}
             valueEmphasis
             accessory="none"
           />

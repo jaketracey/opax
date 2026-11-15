@@ -9,13 +9,27 @@ import { PEOPLE_FIRSTS_PATH, type PeopleFirsts } from './people-firsts';
  * first division only when they are known as it opens.
  */
 const kept: { votes?: Votes; pay?: Pay; firsts?: PeopleFirsts } = {};
+const listeners = new Set<() => void>();
 
 /** A catalog as it is read or decoded from the device; other paths pass. */
 export function keepCatalog(path: string, data: unknown) {
   if (path === '/votes.json') kept.votes = data as Votes;
   else if (path === '/pay.json') kept.pay = data as Pay;
   else if (path === PEOPLE_FIRSTS_PATH) kept.firsts = data as PeopleFirsts;
+  else return;
+  for (const listener of [...listeners]) listener();
 }
+/** Hear each catalog as it is kept (a profile's placeholder waits on pay). */
+export function subscribeKept(listener: () => void) {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+/** The pay catalog if it has been read this session. */
+export const keptPay = () => kept.pay;
+/** The votes catalog if it has been read this session. */
+export const keptVotes = () => kept.votes;
 /** What has been read this session: never a read. */
 export function keptCatalogs(): Readonly<typeof kept> {
   return kept;

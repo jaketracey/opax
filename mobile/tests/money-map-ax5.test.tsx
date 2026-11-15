@@ -17,8 +17,10 @@ import {
   largeTextLimits,
   mapControlLayout,
   type ChromeState,
+  phoneSceneFloor,
 } from '../src/features/money/map/regions';
 import { emptyReservedRegions } from '../src/design/fold';
+import { reportBand } from './money-band';
 import { withNavigationOptions } from './navigation-options';
 import { pinned } from './pinned';
 
@@ -304,13 +306,7 @@ function settle(
       );
     const panel = root.findByType(MoneyMapPanel);
     const shown = Math.min(natural.peek, panel.props.maxHeight ?? Infinity);
-    act(() =>
-      panel.parent!.props.onLayout({
-        nativeEvent: {
-          layout: { y: device.stage - device.bottom - shown, height: shown },
-        },
-      }),
-    );
+    act(() => reportBand(root, panel, device.stage, device.bottom, shown));
   }
 }
 
@@ -424,6 +420,25 @@ test('expanding the panel holds the card still; the search card takes the bandâ€
     1,
   );
 });
+
+test.each(['Android phone at 200%', 'small Android phone at 200%'])(
+  'the map keeps a floor under a row of controls: %s',
+  async (name) => {
+    const device = devices.find((d) => d.name === name)!;
+    const natural = { card: 1500, peek: 1100 };
+    const root = await mount(device);
+    settle(root, device, natural);
+    expect(controlsOf(root)!.props.horizontal).toBe(true);
+    const visible = device.stage - device.bottom;
+    const cap = flat(topOf(root)).maxHeight as number;
+    const panel = root.findByType(MoneyMapPanel).props.maxHeight as number;
+    // Between the card and the panel: the row and the map behind and
+    // under it. A row alone left 80 pt.
+    expect(visible - cap - panel).toBeGreaterThanOrEqual(
+      phoneSceneFloor(visible),
+    );
+  },
+);
 
 test('a capped card reporting its height does not change the panelâ€™s share', async () => {
   const device = devices.find((d) => d.name === 'iPhone 17 Pro at AX3')!;

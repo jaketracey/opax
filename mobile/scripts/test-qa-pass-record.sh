@@ -47,11 +47,12 @@ write(seed/'.gitignore', 'node_modules/\n.qa.local.env\n')
 (seed/'mobile/scripts').mkdir(parents=True, exist_ok=True)
 for name in ('qa.sh', 'qa-env.sh', 'qa-pass-record.sh', 'lint.sh',
              'eslint-file.config.cjs', 'eslint-hermes.config.cjs', 'eslint-uncached-rules.cjs', 'jest-changed.sh',
-             'sim-health.sh', 'qa-simulator.sh', 'android-gradle.sh', 'build-play.sh', 'release-ios.sh'):
+             'sim-health.sh', 'qa-simulator.sh', 'android-gradle.sh', 'build-play.sh', 'release-ios.sh',
+             'tf-lenient.sh'):
     shutil.copyfile(scripts/name, seed/'mobile/scripts'/name)
 for name in ('test-release-tooling.py', 'test-privacy-scan.py', 'test-android-harness.py', 'test-android-results.py'):
     write(seed/'mobile/scripts'/name, 'import os\nfrom pathlib import Path\nwith Path(os.environ["QA_TEST_TRACE"]).open("a") as f: f.write(Path(__file__).name+"\\n")\n')
-for name in ('test-qa-lock.sh', 'test-android-host.sh', 'test-e2e.sh', 'test-qa-simulator.sh', 'test-jest-retry.sh', 'test-qa-pass-record.sh', 'check-release-bundle.sh'):
+for name in ('test-qa-lock.sh', 'test-android-host.sh', 'test-e2e.sh', 'test-qa-simulator.sh', 'test-jest-retry.sh', 'test-qa-pass-record.sh', 'test-tf-lenient.sh', 'check-release-bundle.sh'):
     executable(seed/'mobile/scripts'/name, 'echo "$(basename "$0") $*" >> "$QA_TEST_TRACE"\n')
 executable(seed/'mobile/scripts/jest-retry.sh', 'printf "%s\\n" "$@" > "$QA_TEST_JEST_ARGS"\n')
 write(seed/'mobile/src/client.ts', 'export const value = 1;\n')

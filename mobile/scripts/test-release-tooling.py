@@ -233,6 +233,27 @@ class SafetyTests(unittest.TestCase):
             run_logged(show, log)
             self.assertEqual(log.read_text(), "[POSTHOG_CLI_API_KEY redacted]\n")
 
+    def test_layout_probe_switch_reaches_the_archive_and_must_match_the_app(self):
+        # The archive step drops every EXPO_PUBLIC_ variable, so the switch
+        # carries no such prefix and the verifier holds the app to it.
+        with tempfile.TemporaryDirectory() as d, \
+             patch.dict(os.environ, {"OPAX_LAYOUT_PROBE": "1", "EXPO_PUBLIC_OPAX_LAYOUT_PROBE": "1"}):
+            log = Path(d) / "log"
+            run_logged([sys.executable, "-c", "import os; print(os.environ.get('OPAX_LAYOUT_PROBE'), "
+                        "os.environ.get('EXPO_PUBLIC_OPAX_LAYOUT_PROBE'))"], log, public_env=True)
+            self.assertEqual(log.read_text(), "1 None\n")
+            self.assertTrue(verify.layout_probe_enabled())
+        with patch.dict(os.environ, {}, clear=True):
+            self.assertFalse(verify.layout_probe_enabled())
+        for value in ("", "true", "2"):
+            with self.assertRaises(ReleaseError): verify.layout_probe_enabled(value)
+        on, off = {"extra": {"layoutProbe": True}}, {"extra": {}}
+        self.assertTrue(verify.layout_probe_matches(on, True))
+        self.assertTrue(verify.layout_probe_matches(off, False))
+        self.assertFalse(verify.layout_probe_matches(on, False))
+        self.assertFalse(verify.layout_probe_matches(off, True))
+        self.assertFalse(verify.layout_probe_matches({"extra": {"layoutProbe": False}}, False))
+
     def test_only_macho_signature_range_excluded(self):
         header = struct.pack("<8I", 0xfeedfacf, 0, 0, 0, 1, 16, 0, 0)
         command = struct.pack("<4I", 0x1d, 16, 56, 8)

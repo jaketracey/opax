@@ -56,12 +56,14 @@ import {
   placeCamera,
   reservedViewport,
   resizeCamera,
+  returnCamera,
   publicEdgeOpacity,
   smallNodeOpacity,
   thinEdgeOpacity,
   translationRange,
   zoomAbout,
   type Camera,
+  type CameraRest,
   type Insets,
   type Viewport,
 } from './camera';
@@ -284,6 +286,7 @@ export function MoneyMap({
   const placed = useRef(false);
   const previousViewport = useRef<Viewport | null>(null);
   const resizedCamera = useRef(false);
+  const rest = useRef<{ bounds: Bounds; rest: CameraRest } | null>(null);
   const pendingFly = useRef<{ id: string; at: number } | null>(null);
   const viewport: Viewport = useMemo(
     () =>
@@ -336,6 +339,18 @@ export function MoneyMap({
         );
     resizedCamera.current = !!resized;
     if (resized) pendingFly.current = null;
+    // A viewport that changes and comes back leaves the view as it was
+    // (camera.ts returnCamera). A new box is a new map: nothing to go back to.
+    if (placed.current && previous && previous !== viewport) {
+      const back = returnCamera(
+        rest.current?.bounds === bounds ? rest.current.rest : null,
+        { previous, current },
+        viewport,
+        next.camera,
+      );
+      next.camera = back.camera;
+      rest.current = back.rest ? { bounds, rest: back.rest } : null;
+    }
     placed.current = next.placed;
     previousViewport.current = viewport;
     // A set cuts a fly short: move only where the fit or the limits say to.

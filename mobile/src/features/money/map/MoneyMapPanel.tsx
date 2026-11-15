@@ -8,6 +8,7 @@ import type { Href } from 'expo-router';
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -59,6 +60,7 @@ import { useRecordLink } from '../../../navigation/record-link';
 import { RowOpenListener } from '../../../design/row-link';
 import { moneyMapEntityRoute } from '../record-routes';
 import { moneyYears } from '../records';
+import { frameOf } from './measure';
 import {
   clusterLabel,
   type MapEdge,
@@ -251,9 +253,21 @@ export function MoneyMapPanel({
         }),
     [set],
   );
-  useEffect(() => {
+  // Before the frame is painted, so the stage's first frame has the map's
+  // bottom inset and the panel's cap from the panel's real height.
+  useLayoutEffect(() => {
     if (peek) onPeekHeight(peek);
   }, [peek, onPeekHeight]);
+  const restRef = useRef<View>(null);
+  // Every commit, on purpose: the content's height can change without a
+  // dependency changing. It sets state only on a difference.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useLayoutEffect(() => {
+    const frame = frameOf(restRef);
+    if (!frame || frame.height <= 0) return;
+    const next = Math.ceil(frame.height) + HANDLE + rhythm.block;
+    setPeek((previous) => (previous === next ? previous : next));
+  });
   const { fontScale } = useWindowDimensions();
   const figureBasis = FIGURE_BASIS * Math.max(1, fontScale);
   const figure = (
@@ -371,6 +385,7 @@ export function MoneyMapPanel({
         keyboardShouldPersistTaps="handled"
       >
         <View
+          ref={restRef}
           onLayout={(event) => {
             const h =
               Math.ceil(event.nativeEvent.layout.height) +

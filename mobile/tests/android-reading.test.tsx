@@ -37,10 +37,13 @@ test.each(['android', 'ios'] as const)(
             nativeEvent: { layout: { width: 300, height: 24 } },
           }),
         );
-        expect(
-          StyleSheet.flatten(text.root.findByType(NativeText).props.style)
-            .minHeight,
-        ).toBe(25);
+        // iOS listens for the frame, and takes no floor from it: its slack
+        // is in its measured height (pixelSlack).
+        const drawn = StyleSheet.flatten(
+          text.root.findByType(NativeText).props.style,
+        );
+        expect(drawn.minHeight).toBeUndefined();
+        expect(drawn.paddingBottom).toBeGreaterThan(0);
       }
       const list = reader.root.findByType(FlatList);
       expect(list.props.initialNumToRender).toBe(

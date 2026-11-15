@@ -147,6 +147,26 @@ export class ApiClient {
       return null;
     }
   }
+  /**
+   * The paths with a copy saved on this device, newest validation first.
+   * Lists the cache's own index (no body read, no network, nothing
+   * written); `saved` then reads and validates one of them.
+   */
+  async savedPaths(): Promise<
+    readonly { path: string; validatedAt: number }[]
+  > {
+    const origin = new URL(this.options.origin).origin;
+    return (await this.options.cache.saved()).flatMap((entry) =>
+      entry.url.startsWith(`${origin}/`)
+        ? [
+            {
+              path: entry.url.slice(origin.length),
+              validatedAt: entry.validatedAt,
+            },
+          ]
+        : [],
+    );
+  }
   forget(path: string): Promise<void> {
     return this.options.cache.remove(allowedURL(this.options.origin, path));
   }

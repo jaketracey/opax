@@ -1,0 +1,525 @@
+// Lane ad-wide-search (15 Nov): Today on regular width (iPad, the unfolded
+// iPhone Duo) carries a search field at the masthead's top trailing corner,
+// under the large title, with the website's quick-search dropdown under it. A phone's Today
+// is unchanged. The dropdown is the Search tab's own sources, ranking,
+// routes and recents: nothing new is read, ranked, stored or sent.
+import { act } from 'react';
+import { AccessibilityInfo, StyleSheet, TextInput } from 'react-native';
+import TestRenderer from 'react-test-renderer';
+import { memberSuggestionRoster } from '../src/api/catalog-search';
+import { catalogs } from '../src/api/runtime';
+import { sizeClassFor } from '../src/design/adaptive';
+import { dispatchKeyCommand } from '../src/design/keyboard';
+import {
+  flatItems,
+  matchItem,
+  quickSections,
+  suggestionAnnouncement,
+} from '../src/features/quick-search/items';
+import { WideSearch } from '../src/features/quick-search/WideSearch';
+import { openSuggestedPerson } from '../src/features/search/navigation';
+import {
+  allTopics,
+  suggestionList,
+  type Match,
+} from '../src/features/search/ranking';
+import { recentSearches } from '../src/features/search/recent';
+import { MatchRow } from '../src/features/search/rows';
+import { Masthead } from '../src/features/today/Masthead';
+import { bills, index, manifest, people, roster, slugs } from './pinned';
+
+let mockWidth = 1032;
+let mockFontScale = 1;
+jest.mock('react-native', () => {
+  const actual = jest.requireActual('react-native');
+  return Object.defineProperties(Object.create(actual), {
+    Platform: { value: { ...actual.Platform, OS: 'ios', isPad: true } },
+    useWindowDimensions: {
+      value: () => ({
+        width: mockWidth,
+        height: 1376,
+        scale: 2,
+        fontScale: mockFontScale,
+      }),
+    },
+  });
+});
+jest.mock('../modules/opax-duo', () => ({
+  OpaxDuo: null,
+  ReservedRegionView: null,
+}));
+jest.mock('../src/api/runtime', () => ({
+  recordSearch: { search: jest.fn(), summary: jest.fn() },
+  catalogs: {
+    search: jest.fn(),
+    suggestionSources: jest.fn(),
+    suggestionSourcesOnFocus: jest.fn(),
+  },
+}));
+jest.mock('../src/features/your-mp/useSetAsMyElectorate', () => ({
+  useSetAsMyElectorate: () => ({ visible: false, label: '', run: jest.fn() }),
+}));
+jest.mock('expo-router', () => {
+  const React = jest.requireActual('react');
+  const Link = Object.assign(
+    ({ children }: { children: unknown }) => children,
+    {
+      Trigger: ({ children }: { children: unknown }) => children,
+      Preview: () => null,
+      Menu: () => null,
+      MenuAction: () => null,
+    },
+  );
+  return {
+    Link,
+    router: { push: jest.fn(), navigate: jest.fn() },
+    useSegments: () => [],
+    useLocalSearchParams: () => ({}),
+    useFocusEffect: (effect: () => void) => React.useEffect(effect, [effect]),
+  };
+});
+const mockOpenAsk = jest.fn();
+const mockAskNow = jest.fn();
+jest.mock('../src/features/ask/open', () => ({
+  useOpenAsk: () => mockOpenAsk,
+  useAskNow: () => mockAskNow,
+}));
+let mockReports: unknown = null;
+jest.mock('../src/features/search/ReportResults', () => ({
+  useReportSearch: () => mockReports,
+}));
+jest.mock('../src/features/search/navigation', () => ({
+  ...jest.requireActual('../src/features/search/navigation'),
+  openSuggestedPerson: jest.fn(async () => undefined),
+}));
+
+const { router } = jest.requireMock('expo-router') as {
+  router: { push: jest.Mock; navigate: jest.Mock };
+};
+const sources = {
+  roster: memberSuggestionRoster(roster, { roster, manifest, slugs, people }),
+  electorates: index,
+  bills,
+  people,
+  topics: allTopics,
+  provenance: {} as never,
+};
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockWidth = 1032;
+  mockFontScale = 1;
+  mockReports = null;
+  recentSearches.clear();
+  jest
+    .mocked(catalogs.suggestionSourcesOnFocus)
+    .mockResolvedValue({ ...sources, manifest, slugs } as never);
+});
+
+const ids = (renderer: TestRenderer.ReactTestRenderer) =>
+  renderer.root
+    .findAll((node) => typeof node.props.testID === 'string')
+    .map((node) => node.props.testID as string);
+const input = (renderer: TestRenderer.ReactTestRenderer) =>
+  renderer.root.findByType(TextInput);
+// A pressable is several nested components with the same props: the
+// outermost of each row, in drawn order.
+const rows = (renderer: TestRenderer.ReactTestRenderer) => {
+  const seen = new Set<string>();
+  return renderer.root
+    .findAll(
+      (node) =>
+        typeof node.type !== 'string' &&
+        typeof node.props.testID === 'string' &&
+        node.props.testID.startsWith('today-wide-search-row-') &&
+        typeof node.props.onPress === 'function' &&
+        node.props.accessibilityRole === 'button',
+    )
+    .filter((node) => {
+      if (seen.has(node.props.testID)) return false;
+      seen.add(node.props.testID);
+      return true;
+    });
+};
+const row = (renderer: TestRenderer.ReactTestRenderer, key: string) =>
+  rows(renderer).find(
+    (node) => node.props.testID === `today-wide-search-row-${key}`,
+  )!;
+const selected = (renderer: TestRenderer.ReactTestRenderer) =>
+  rows(renderer)
+    .filter((node) => node.props.accessibilityState?.selected)
+    .map((node) => node.props.testID as string);
+
+async function mount() {
+  let renderer!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    renderer = TestRenderer.create(<WideSearch />);
+  });
+  return renderer;
+}
+async function focus(renderer: TestRenderer.ReactTestRenderer) {
+  await act(async () => input(renderer).props.onFocus());
+}
+async function type(renderer: TestRenderer.ReactTestRenderer, text: string) {
+  await act(async () => input(renderer).props.onChangeText(text));
+}
+
+describe('where the field is drawn', () => {
+  test('a compact window draws nothing, and reads nothing', async () => {
+    mockWidth = 600;
+    const renderer = await mount();
+    expect(renderer.toJSON()).toBeNull();
+    expect(catalogs.suggestionSourcesOnFocus).not.toHaveBeenCalled();
+    // A phone is compact at any width: the rule, not the window, decides.
+    expect(sizeClassFor(1032, 'phone')).toBe('compact');
+    await act(async () => renderer.unmount());
+  });
+
+  test('regular width draws it on the masthead top edge, on the column trailing edge, before anything is read', async () => {
+    const renderer = await mount();
+    const place = renderer.root.findByProps({ testID: 'today-wide-search' });
+    // Absolute: it takes no room in the masthead's flow. Not above the
+    // masthead: the navigation bar takes every touch in the title's band.
+    expect(StyleSheet.flatten(place.props.style)).toEqual({
+      position: 'absolute',
+      top: 0,
+      right: 0,
+    });
+    expect(input(renderer).props.accessibilityLabel).toBe('Search');
+    // An overlay of fixed size: no panel, no read, until it is used.
+    expect(ids(renderer)).not.toContain('today-wide-search-panel');
+    expect(catalogs.suggestionSourcesOnFocus).not.toHaveBeenCalled();
+    await act(async () => renderer.unmount());
+  });
+
+  test('the masthead lays out its lines the same with the field in its slot', async () => {
+    const now = new Date('2026-11-15T01:00:00Z');
+    const lines = (renderer: TestRenderer.ReactTestRenderer) =>
+      ids(renderer).filter((id) => !id.startsWith('today-wide-search'));
+    let plain!: TestRenderer.ReactTestRenderer;
+    let wide!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      plain = TestRenderer.create(<Masthead now={now} />);
+      wide = TestRenderer.create(
+        <Masthead now={now} search={<WideSearch />} />,
+      );
+    });
+    expect(ids(wide)).toContain('today-wide-search-input');
+    expect(lines(wide)).toEqual(lines(plain));
+    mockWidth = 600;
+    await act(async () =>
+      wide.update(<Masthead now={now} search={<WideSearch />} />),
+    );
+    expect(ids(wide)).not.toContain('today-wide-search-input');
+    await act(async () => {
+      plain.unmount();
+      wide.unmount();
+    });
+  });
+});
+
+describe('the dropdown mirrors the website groups from the Search tab data', () => {
+  test('typing: a Search row leads, then groups, then Ask; each row names its type', async () => {
+    const renderer = await mount();
+    await focus(renderer);
+    expect(catalogs.suggestionSourcesOnFocus).toHaveBeenCalledTimes(1);
+    // Focused and empty with no recents: nothing to show, no panel.
+    expect(ids(renderer)).not.toContain('today-wide-search-panel');
+    await type(renderer, 'grayndler');
+    const expected = quickSections({ q: 'grayndler', sources, recents: [] });
+    expect(rows(renderer).map((node) => node.props.testID)).toEqual(
+      flatItems(expected).map((item) => `today-wide-search-row-${item.key}`),
+    );
+    const labels = rows(renderer).map(
+      (node) => node.props.accessibilityLabel as string,
+    );
+    expect(labels[0]).toMatch(/^Grayndler, .*Electorate$/);
+    expect(labels[1]).toBe('Search for “grayndler”, Search');
+    expect(labels.at(-1)).toBe('Ask OPAX about “grayndler”, Ask');
+    await act(async () => renderer.unmount());
+  });
+
+  test('reports join once the Search tab report typeahead has answered', () => {
+    const sections = quickSections({
+      q: 'audit',
+      sources,
+      recents: [],
+      reports: [{ slug: 'r-1', title: 'Audit of grants' }] as never,
+    });
+    const reports = sections.find((section) => section.key === 'reports');
+    expect(reports?.items[0]).toMatchObject({
+      title: 'Audit of grants',
+      type: 'Report',
+      action: {
+        kind: 'route',
+        route: {
+          pathname: '/report/[slug]',
+          params: { slug: 'r-1', name: 'Audit of grants' },
+        },
+      },
+    });
+    expect(sections.at(-1)?.key).toBe('ask');
+  });
+
+  test('at AX3 and above a group shows one row, as in the Search tab', async () => {
+    mockFontScale = 2.643;
+    const renderer = await mount();
+    await focus(renderer);
+    await type(renderer, 'smith');
+    const people = renderer.root.findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        node.props.testID === 'today-wide-search-group-people',
+    );
+    expect(people).toHaveLength(1);
+    expect(
+      rows(renderer).filter((node) =>
+        (node.props.accessibilityLabel as string).endsWith(', Person'),
+      ).length,
+    ).toBeLessThanOrEqual(2);
+    await act(async () => renderer.unmount());
+  });
+});
+
+describe('route parity with the Search tab', () => {
+  const tabRoute = (match: Match) => {
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <MatchRow match={match} q="x" sources={sources} variant="suggestion" />,
+      );
+    });
+    // The tab's row component (SuggestionRow or PersonRow) takes `href`.
+    const found = renderer.root.findAll(
+      (node) => typeof node.type !== 'string' && 'href' in node.props,
+    )[0]!;
+    const href = found.props.href;
+    act(() => renderer.unmount());
+    return href;
+  };
+  test.each(['albanese', 'grayndler', 'qantas', 'housing', 'liberal', 'smith'])(
+    'every row for "%s" pushes the route the Search tab row pushes',
+    (q) => {
+      const list = suggestionList(q, sources);
+      const matches = [
+        ...(list.top ? [list.top] : []),
+        ...list.groups.flatMap((group) => group.rows),
+      ];
+      expect(matches.length).toBeGreaterThan(0);
+      for (const match of matches) {
+        const href = tabRoute(match);
+        const { action } = matchItem(match, sources);
+        if (href) expect(action).toEqual({ kind: 'route', route: href });
+        // No route on the tab's row: a person it resolves on press.
+        else expect(action.kind).toBe('person');
+      }
+    },
+  );
+
+  test('choosing a row pushes its route, clears the field and closes the panel', async () => {
+    const renderer = await mount();
+    await focus(renderer);
+    await type(renderer, 'grayndler');
+    const top = suggestionList('grayndler', sources).top!;
+    const item = matchItem(top, sources);
+    await act(async () => row(renderer, item.key).props.onPress());
+    expect(router.push).toHaveBeenCalledWith(
+      (item.action as { route: unknown }).route,
+    );
+    expect(input(renderer).props.value).toBe('');
+    await act(async () => input(renderer).props.onBlur());
+    expect(ids(renderer)).not.toContain('today-wide-search-panel');
+    await act(async () => renderer.unmount());
+  });
+
+  test('a person the catalogue has not joined goes through the Search resolver', async () => {
+    const renderer = await mount();
+    await focus(renderer);
+    await type(renderer, 'smith');
+    const items = flatItems(
+      quickSections({ q: 'smith', sources, recents: [] }),
+    );
+    const unresolved = items.find((item) => item.action.kind === 'person');
+    if (unresolved) {
+      await act(async () => row(renderer, unresolved.key).props.onPress());
+      expect(openSuggestedPerson).toHaveBeenCalledWith(unresolved.title);
+    }
+    await act(async () => renderer.unmount());
+  });
+
+  test('free text opens the Search tab with the words submitted as typed; a question goes to Ask', async () => {
+    const renderer = await mount();
+    await focus(renderer);
+    await type(renderer, '  water buybacks ');
+    await act(async () => input(renderer).props.onSubmitEditing());
+    expect(router.navigate).toHaveBeenCalledWith({
+      pathname: '/search',
+      params: { q: 'water buybacks', scope: 'all', typed: '1' },
+    });
+    await focus(renderer);
+    await type(renderer, 'water');
+    await act(async () => row(renderer, 'ask').props.onPress());
+    expect(mockOpenAsk).toHaveBeenCalledWith({
+      question: 'What has parliament said about water?',
+    });
+    await focus(renderer);
+    await type(renderer, 'Who funds the major parties?');
+    await act(async () => row(renderer, 'ask').props.onPress());
+    expect(mockAskNow).toHaveBeenCalledWith({
+      question: 'Who funds the major parties?',
+    });
+    await act(async () => renderer.unmount());
+  });
+});
+
+describe('hardware keyboard', () => {
+  test('arrows move through every row and wrap, Return opens the selection, Escape closes', async () => {
+    const renderer = await mount();
+    await focus(renderer);
+    await type(renderer, 'grayndler');
+    const keys = rows(renderer).map((node) => node.props.testID as string);
+    expect(selected(renderer)).toEqual([]);
+    await act(async () => void dispatchKeyCommand('list-down'));
+    expect(selected(renderer)).toEqual([keys[0]]);
+    await act(async () => void dispatchKeyCommand('list-down'));
+    expect(selected(renderer)).toEqual([keys[1]]);
+    await act(async () => void dispatchKeyCommand('list-up'));
+    await act(async () => void dispatchKeyCommand('list-up'));
+    expect(selected(renderer)).toEqual([keys.at(-1)]);
+    await act(async () => void dispatchKeyCommand('list-down'));
+    expect(selected(renderer)).toEqual([keys[0]]);
+    // Return on the selection, not the typed words.
+    await act(async () => input(renderer).props.onSubmitEditing());
+    const top = matchItem(suggestionList('grayndler', sources).top!, sources);
+    expect(router.push).toHaveBeenCalledWith(
+      (top.action as { route: unknown }).route,
+    );
+    expect(router.navigate).not.toHaveBeenCalled();
+
+    await focus(renderer);
+    await type(renderer, 'housing');
+    expect(ids(renderer)).toContain('today-wide-search-panel');
+    await act(async () => void dispatchKeyCommand('list-escape'));
+    expect(ids(renderer)).not.toContain('today-wide-search-panel');
+    // The words stay; typing opens the suggestions again.
+    expect(input(renderer).props.value).toBe('housing');
+    await type(renderer, 'housing a');
+    expect(ids(renderer)).toContain('today-wide-search-panel');
+    await act(async () => renderer.unmount());
+  });
+
+  test('the arrows are left to the app while the panel is closed', async () => {
+    const renderer = await mount();
+    await focus(renderer);
+    // No panel: no handler of the field's takes an arrow.
+    expect(dispatchKeyCommand('list-down')).toBe(false);
+    await act(async () => renderer.unmount());
+  });
+
+  test('Cmd-F focuses the field while Today is on screen', async () => {
+    const focusField = jest
+      .spyOn(TextInput.prototype, 'focus')
+      .mockImplementation(() => undefined);
+    const renderer = await mount();
+    let handled = false;
+    await act(async () => {
+      handled = dispatchKeyCommand('find');
+    });
+    expect(handled).toBe(true);
+    expect(focusField).toHaveBeenCalledTimes(1);
+    expect(router.navigate).not.toHaveBeenCalled();
+    await act(async () => renderer.unmount());
+    // Off Today nothing of the field's is left listening.
+    expect(dispatchKeyCommand('find')).toBe(false);
+    focusField.mockRestore();
+  });
+
+  test('a tap outside closes the panel', async () => {
+    const renderer = await mount();
+    await focus(renderer);
+    await type(renderer, 'housing');
+    const backdrop = renderer.root
+      .findAllByProps({ testID: 'today-wide-search-backdrop' })
+      .find((node) => typeof node.props.onPress === 'function')!;
+    await act(async () => backdrop.props.onPress());
+    expect(ids(renderer)).not.toContain('today-wide-search-panel');
+    await act(async () => renderer.unmount());
+  });
+});
+
+describe('VoiceOver', () => {
+  test('the count and the groups are announced; groups are headers; the field says whether it is expanded', async () => {
+    const announce = jest
+      .spyOn(AccessibilityInfo, 'announceForAccessibility')
+      .mockImplementation(() => undefined);
+    const renderer = await mount();
+    expect(input(renderer).props.accessibilityState).toEqual({
+      expanded: false,
+    });
+    await focus(renderer);
+    await type(renderer, 'smith');
+    const sections = quickSections({ q: 'smith', sources, recents: [] });
+    const said = suggestionAnnouncement(sections);
+    expect(said).toMatch(/^\d+ suggestions: .*People/);
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 450));
+    });
+    expect(announce).toHaveBeenCalledWith(said);
+    expect(input(renderer).props.accessibilityState).toEqual({
+      expanded: true,
+    });
+    const headers = renderer.root
+      .findAll(
+        (node) =>
+          typeof node.type === 'string' &&
+          node.props.accessibilityRole === 'header',
+      )
+      .map((node) => node.props.children);
+    expect(headers.flat().join(' ')).toContain('People');
+    for (const node of rows(renderer))
+      expect(node.props.accessibilityLabel).toMatch(
+        /, (Person|Electorate|Bill|Topic|Party|Report|Search|Ask)$/,
+      );
+    expect(suggestionAnnouncement([])).toBe('No suggestions');
+    announce.mockRestore();
+    await act(async () => renderer.unmount());
+  });
+});
+
+describe('recent searches stay on the device', () => {
+  test('the existing store answers; the field writes nothing to it and asks the network for nothing', async () => {
+    await act(async () => {
+      recentSearches.add('water', 'all');
+      recentSearches.add('housing', 'speeches');
+    });
+    const add = jest.spyOn(recentSearches, 'add');
+    const setScope = jest.spyOn(recentSearches, 'setScope');
+    const remove = jest.spyOn(recentSearches, 'remove');
+    const clear = jest.spyOn(recentSearches, 'clear');
+    const fetched = jest.fn();
+    const realFetch = globalThis.fetch;
+    globalThis.fetch = fetched as never;
+    const renderer = await mount();
+    await focus(renderer);
+    const labels = rows(renderer).map(
+      (node) => node.props.accessibilityLabel as string,
+    );
+    expect(labels).toEqual(['housing, Speeches, Recent', 'water, Recent']);
+    // A recent runs again in the Search tab, in the scope it was saved with.
+    await act(async () => row(renderer, 'recent:housing').props.onPress());
+    expect(router.navigate).toHaveBeenCalledWith({
+      pathname: '/search',
+      params: { q: 'housing', scope: 'speeches', typed: '1' },
+    });
+    await focus(renderer);
+    await type(renderer, 'grayndler');
+    await act(async () => input(renderer).props.onSubmitEditing());
+    for (const spy of [add, setScope, remove, clear])
+      expect(spy).not.toHaveBeenCalled();
+    expect(fetched).not.toHaveBeenCalled();
+    expect(jest.mocked(catalogs.search)).not.toHaveBeenCalled();
+    globalThis.fetch = realFetch;
+    for (const spy of [add, setScope, remove, clear]) spy.mockRestore();
+    await act(async () => renderer.unmount());
+  });
+});

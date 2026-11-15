@@ -181,7 +181,9 @@ export default function Hub() {
               ) : null}
             </Block>
           ) : null}
-          <View testID="vic-election-status">
+          {/* The countdown is its own block: without the gap the status
+              heading ("Before voting") sat flush under its date line. */}
+          <View testID="vic-election-status" style={{ gap: rhythm.block }}>
             {copy &&
             !copy.closed &&
             copy.state !== 'election_day' &&

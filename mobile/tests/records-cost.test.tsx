@@ -10,6 +10,7 @@ import { billFor, decodeBill } from '../src/api/catalogs';
 import { ApiClient } from '../src/api/client';
 import { catalogs } from '../src/api/runtime';
 import Today from '../src/features/Today';
+import { readVisit, rememberVisit } from '../src/features/today/visit-store';
 import BillDetail from '../src/features/bills/BillDetail';
 import BillTextReader from '../src/features/records/BillTextReader';
 import DocumentReader from '../src/features/records/DocumentReader';
@@ -77,7 +78,14 @@ jest.mock('../src/api/runtime', () => ({
     directory: jest.fn(),
     bills: jest.fn(),
     corpus: jest.fn(),
+    corpusSaved: jest.fn(async () => null),
   },
+}));
+// The last visit is set per test; nothing is written from this suite.
+jest.mock('../src/features/today/visit-store', () => ({
+  ...jest.requireActual('../src/features/today/visit-store'),
+  readVisit: jest.fn(async () => null),
+  rememberVisit: jest.fn(async () => undefined),
 }));
 jest.mock('../src/features/follows/FollowingSection', () => ({
   FollowingSection: () => null,
@@ -438,6 +446,42 @@ test('real request client sends one GET per action, shares in-flight and session
   expect(transport).toHaveBeenCalledTimes(7);
   await expect(repository.document('speech-1')).rejects.toThrow();
   expect(transport).toHaveBeenCalledTimes(8);
+});
+
+test('Today with a last visit holds and draws its since-your-last-visit line from the free collection record, with no paid read', async () => {
+  const checkedAt = new Date(Date.now() - 2 * 86_400_000).toISOString();
+  const collection = (total: number, checked: string) =>
+    record({
+      expected_resources: total,
+      refresh: { checked_at: checked },
+    }) as never;
+  jest
+    .mocked(readVisit)
+    .mockResolvedValue({ openedAt: 1, total: 1000, checkedAt });
+  jest
+    .mocked(catalogs.corpusSaved)
+    .mockResolvedValue(collection(1000, checkedAt));
+  jest
+    .mocked(catalogs.corpus)
+    .mockResolvedValue(collection(1012, '2026-11-15T03:00:00+00:00'));
+  const today = await mount(<Today />);
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  });
+  // The held path ran: the line is drawn, from one catalogue read.
+  const line = today.root.findAll(
+    (n) => typeof n.type === 'string' && n.props.testID === 'today-since',
+  );
+  expect(line.at(-1)!.props.accessibilityLabel).toMatch(
+    /^12 more records in OPAX since your last visit\./,
+  );
+  expect(catalogs.corpus).toHaveBeenCalledTimes(1);
+  expect(rememberVisit).toHaveBeenCalledTimes(1);
+  for (const method of Object.values(records))
+    if (typeof method === 'function') expect(method).not.toHaveBeenCalled();
+  await act(async () => today.unmount());
+  jest.mocked(readVisit).mockResolvedValue(null);
+  jest.mocked(catalogs.corpusSaved).mockResolvedValue(null);
 });
 
 test('launch/Today and Bill mount have no paid reads; bar actions are built without loading a record', async () => {

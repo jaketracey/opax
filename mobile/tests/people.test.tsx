@@ -852,6 +852,8 @@ describe('profile', () => {
         'savedSeatDirectory',
       )
       .mockReturnValue(null);
+    // The pay catalog is in memory, so the bones need not wait for it.
+    keepCatalog('/pay.json', catalogs.pay);
     mock.person.mockReturnValue(new Promise(() => {}));
     let r!: TestRenderer.ReactTestRenderer;
     await act(async () => {
@@ -1109,12 +1111,12 @@ describe('profile', () => {
   ] as const)(
     'the bones hold the loaded header’s parts, words and text styles: %s',
     async (_, options) => {
+      keepCatalog('/pay.json', catalogs.pay);
       const { pending, loaded, bones, page } = await pair(
         held(true, false),
         options,
       );
-      // A paid post comes with the pay record: the one line not known yet.
-      expect(bones).toEqual(page.filter((part) => part !== 'role'));
+      expect(bones).toEqual(page);
       expect(bones).toContain('official');
       expect(bones.includes('your-mp')).toBe(!!options.yourMP);
       expect(has(pending, 'person-loading-source')).toBe(false);
@@ -1164,6 +1166,102 @@ describe('profile', () => {
       });
     },
   );
+
+  // One screen from its bones to its page, the read answered on request.
+  const cold = async () => {
+    jest
+      .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
+      .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
+    const release = held(true, false);
+    jest
+      .spyOn(
+        jest.requireActual('../src/features/your-mp/useSeat'),
+        'savedSeatDirectory',
+      )
+      .mockReturnValue(release);
+    mock.directory.mockResolvedValue(release as never);
+    mockParams.slug = 'penny-wong';
+    const person = c.joinPerson(
+      'penny-wong',
+      release.slugs.data,
+      release.roster.data,
+      release.people.data,
+      manifest,
+    );
+    const profile = c.profileFor(person.canonicalPersonId!, {
+      ...catalogs,
+      interest: c.decodeInterest(pinned('/interests/10678.json')),
+    });
+    let answer!: () => void;
+    mock.person.mockReturnValue(
+      new Promise((resolve) => {
+        answer = () => resolve(result(person));
+      }),
+    );
+    mock.profileFor.mockResolvedValue({
+      ...profile,
+      blocks: {
+        ...profile.blocks,
+        identity: { ...profile.blocks.identity, data: person },
+      },
+    });
+    let r!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      r = TestRenderer.create(<Person />);
+    });
+    return {
+      r,
+      bones: () =>
+        order(
+          r,
+          (id) => parts.find(([bone]) => id === `person-loading-${bone}`)?.[0],
+        ),
+      page: () =>
+        order(r, (id) => parts.find(([, re]) => re.test(id))?.[0]).filter(
+          (part, _, all) => part !== 'stat-row' || !all.includes('stat-strip'),
+        ),
+      load: () =>
+        act(async () => {
+          answer();
+        }),
+    };
+  };
+
+  test('with no pay catalog in memory the bones stop at the name, then draw the paid post’s line when it is read', async () => {
+    const { r, bones, page, load } = await cold();
+    // Nothing is drawn where a line not yet known could move it.
+    expect(bones()).toEqual(['name']);
+    expect(has(r, 'person-loading-portrait')).toBe(true);
+    await act(async () => {
+      keepCatalog('/pay.json', catalogs.pay);
+    });
+    const drawn = bones();
+    expect(drawn).toContain('role');
+    await load();
+    expect(page()).toEqual(drawn);
+    await act(async () => r.unmount());
+  });
+
+  test('when the wait for pay runs out the bones are drawn without the paid post’s line, and the page never gains it', async () => {
+    const { POST_HOLD_MS } = jest.requireActual('../src/features/Person');
+    const { r, bones, page, load } = await cold();
+    expect(bones()).toEqual(['name']);
+    await act(async () => {
+      await new Promise((done) => setTimeout(done, POST_HOLD_MS + 50));
+    });
+    const drawn = bones();
+    expect(drawn).toContain('party');
+    expect(drawn).not.toContain('role');
+    // The catalog arriving late changes nothing in this view.
+    await act(async () => {
+      keepCatalog('/pay.json', catalogs.pay);
+    });
+    expect(bones()).toEqual(drawn);
+    await load();
+    expect(has(r, 'person-role')).toBe(false);
+    expect(page()).toEqual(drawn);
+    await act(async () => r.unmount());
+  });
 
   test('with the pay catalog in memory the bones hold the paid post’s line too', async () => {
     keepCatalog('/pay.json', catalogs.pay);
@@ -1254,13 +1352,14 @@ describe('profile', () => {
   };
 
   test('with the firsts file in memory the bones hold the first speech and first division rows the page draws', async () => {
+    keepCatalog('/pay.json', catalogs.pay);
     keepCatalog(PEOPLE_FIRSTS_PATH, wongFirsts());
     const { pending, loaded, bones, page } = await pair(held(true, false));
     expect(page.filter((part) => part.startsWith('first-'))).toEqual([
       'first-speech',
       'first-division',
     ]);
-    expect(bones).toEqual(page.filter((part) => part !== 'role'));
+    expect(bones).toEqual(page);
     for (const kind of ['first-speech', 'first-division']) {
       const drawn = words(loaded, `person-${kind}`);
       expect(words(pending, `person-loading-${kind}`)).toMatchObject({
@@ -1336,13 +1435,18 @@ describe('profile', () => {
         identity: { ...profile.blocks.identity, data: person },
       },
     });
+    keepCatalog('/pay.json', catalogs.pay);
     let page!: TestRenderer.ReactTestRenderer;
     await act(async () => {
       page = TestRenderer.create(<Person />);
     });
+    expect(has(page, 'person-loading-official')).toBe(true);
     expect(has(page, 'person-loading-first-speech')).toBe(false);
-    // The read finishes while the placeholder is up.
-    keepCatalog(PEOPLE_FIRSTS_PATH, wongFirsts());
+    // The read finishes while the placeholder is up: its bones gain no row.
+    await act(async () => {
+      keepCatalog(PEOPLE_FIRSTS_PATH, wongFirsts());
+    });
+    expect(has(page, 'person-loading-first-speech')).toBe(false);
     await act(async () => {
       arrive(result(person));
     });
@@ -1362,7 +1466,64 @@ describe('profile', () => {
     });
   });
 
+  test('when the directory in memory cannot place the person, the bones hold no firsts rows and the page draws none', async () => {
+    const release = held(true, false);
+    // A saved directory that does not hold this slug: the bones fall back
+    // to their default and cannot know the person's rows.
+    jest
+      .spyOn(
+        jest.requireActual('../src/features/your-mp/useSeat'),
+        'savedSeatDirectory',
+      )
+      .mockReturnValue({
+        ...release,
+        slugs: result({ ...release.slugs.data, slugs: {} }),
+      });
+    const { profileBones } = jest.requireActual('../src/features/Person');
+    expect(
+      profileBones('penny-wong', {
+        ...release,
+        slugs: result({ ...release.slugs.data, slugs: {} }),
+      }),
+    ).toBeNull();
+    mock.directory.mockResolvedValue(release as never);
+    mockParams.slug = 'penny-wong';
+    const person = c.joinPerson(
+      'penny-wong',
+      release.slugs.data,
+      release.roster.data,
+      release.people.data,
+      manifest,
+    );
+    const profile = c.profileFor(person.canonicalPersonId!, {
+      ...catalogs,
+      interest: c.decodeInterest(pinned('/interests/10678.json')),
+    });
+    mock.person.mockResolvedValue(result(person));
+    mock.profileFor.mockResolvedValue({
+      ...profile,
+      blocks: {
+        ...profile.blocks,
+        identity: { ...profile.blocks.identity, data: person },
+      },
+    });
+    keepCatalog('/pay.json', catalogs.pay);
+    keepCatalog(PEOPLE_FIRSTS_PATH, wongFirsts());
+    let page!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      page = TestRenderer.create(<Person />);
+    });
+    // The page loaded with the person's own roster row, and still adds none.
+    expect(has(page, 'person-official')).toBe(true);
+    expect(has(page, 'person-first-speech')).toBe(false);
+    expect(has(page, 'person-first-division')).toBe(false);
+    await act(async () => {
+      page.unmount();
+    });
+  });
+
   test('a member the firsts file does not hold has no firsts row, in the bones or on the page', async () => {
+    keepCatalog('/pay.json', catalogs.pay);
     keepCatalog(PEOPLE_FIRSTS_PATH, {
       ...wongFirsts(),
       by_pid: {},

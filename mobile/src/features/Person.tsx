@@ -1,7 +1,15 @@
 import { RouteOptions } from '../navigation/preview';
 import { useScreenReady } from '../analytics/timing';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useCallback,
+  useSyncExternalStore,
+  type ReactNode,
+} from 'react';
 import {
   AccessibilityInfo,
   Platform,
@@ -12,7 +20,7 @@ import {
   type ScrollView,
 } from 'react-native';
 import { profileFor, rosterProfileFor, type Electorate } from '../api/catalogs';
-import { keptCatalogs } from '../api/kept-catalogs';
+import { keptCatalogs, keptPay, subscribeKept } from '../api/kept-catalogs';
 import { memberFirsts, type PeopleFirsts } from '../api/people-firsts';
 import { joinPerson, type PersonProfile } from '../api/person-identity';
 import { catalogs } from '../api/runtime';
@@ -260,15 +268,22 @@ export function ProfileScreen({
   useScreenReady('/person/[slug]', load.status !== 'loading', !embedded);
   // The firsts file as this page opened: read once, so the placeholder and
   // the page draw the same rows and a read that lands later moves nothing.
-  // Without the directory the placeholder cannot know the person's rows, so
-  // this visit shows none.
+  // When the placeholder cannot place the person (no directory in memory,
+  // or one that does not hold them), it cannot hold their rows, so this
+  // visit shows none.
   const [firsts] = useState<PeopleFirsts | undefined>(() =>
-    rememberedProfile(slug) || savedSeatDirectory()
+    rememberedProfile(slug) || profileBones(slug, savedSeatDirectory()) !== null
       ? keptCatalogs().firsts
       : undefined,
   );
   const [attempt, setAttempt] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  // A paid post's line ("Prime Minister") is only in the pay catalog. The
+  // bones wait for it; if their wait ran out they were drawn without the
+  // line, and this view then never draws it, so the page lands where the
+  // bones stood. The next open has the catalog in memory.
+  const [postWithheld, setPostWithheld] = useState(false);
+  const withholdPost = useCallback(() => setPostWithheld(true), []);
   useEffect(() => {
     let active = true;
     loadProfile(slug)
@@ -380,7 +395,12 @@ export function ProfileScreen({
               <RefreshControl refreshing={refreshing} onRefresh={refresh} />
             }
           >
-            <PersonSkeleton slug={slug} name={routeName} firsts={firsts} />
+            <PersonSkeleton
+              slug={slug}
+              name={routeName}
+              firsts={firsts}
+              onPostWithheld={withholdPost}
+            />
           </Screen>
         }
       >
@@ -429,7 +449,12 @@ export function ProfileScreen({
                 />
               )
             ) : (
-              <PersonSkeleton slug={slug} name={routeName} firsts={firsts} />
+              <PersonSkeleton
+                slug={slug}
+                name={routeName}
+                firsts={firsts}
+                onPostWithheld={withholdPost}
+              />
             )}
           </Screen>
         ) : load.status !== 'ready' || !identity ? null : (
@@ -444,6 +469,7 @@ export function ProfileScreen({
             refresh={refresh}
             retry={retry}
             attempt={attempt}
+            postWithheld={postWithheld}
           />
         )}
       </SkeletonCrossfade>
@@ -482,7 +508,7 @@ export function profileBones(
   slug: string,
   directory: Directory | null,
   kept: Kept = {},
-): Omit<ProfileBones, 'yourMP'> | null {
+): (Omit<ProfileBones, 'yourMP'> & { postUnknown: boolean }) | null {
   if (!directory) return null;
   let joined: PersonProfile;
   try {
@@ -580,30 +606,67 @@ export function profileBones(
       ),
     ],
     tiles,
+    // A sitting federal member may hold a paid post; only pay says so.
+    postUnknown: !former && federal && !kept.pay,
   };
 }
+
+/**
+ * How long a profile's bones stop at the name while the pay catalog is
+ * read, for a member who may hold a paid post. Past it they are drawn
+ * without the post's line, and that view never gains it.
+ */
+export const POST_HOLD_MS = 1200;
 
 function PersonSkeleton({
   slug,
   name,
   firsts,
+  onPostWithheld,
 }: {
   slug: string;
   name?: string;
   /** The firsts file as the page opened, never a later read. */
   firsts?: PeopleFirsts;
+  /** The wait for the pay catalog ran out: the page omits a paid post too. */
+  onPostWithheld: () => void;
 }) {
   const yourMP = useIsMyMember(slug);
   const directory = savedSeatDirectory();
-  const { votes, pay } = keptCatalogs();
-  const bones = useMemo(
-    () => profileBones(slug, directory, { votes, pay, firsts }),
-    [slug, directory, votes, pay, firsts],
+  const { votes } = keptCatalogs();
+  // Only the bones hear the catalog arrive: a drawn page is not redrawn.
+  const pay = useSyncExternalStore(subscribeKept, keptPay);
+  const [postWithheld, setPostWithheld] = useState(false);
+  const known = useMemo(
+    () =>
+      profileBones(slug, directory, {
+        votes,
+        pay: postWithheld ? undefined : pay,
+        firsts,
+      }),
+    [slug, directory, votes, pay, postWithheld, firsts],
   );
+  const { postUnknown = !pay, ...bones } = known ?? {};
+  // Where the rows stand depends on a line only pay can give: draw down to
+  // the name until it is read, or the wait runs out.
+  const waiting = postUnknown && !postWithheld;
+  useEffect(() => {
+    if (!waiting) return;
+    const timer = setTimeout(() => {
+      setPostWithheld(true);
+      onPostWithheld();
+    }, POST_HOLD_MS);
+    return () => clearTimeout(timer);
+  }, [waiting, onPostWithheld]);
   return (
     <Skeleton
       shape="person-profile"
-      profile={{ ...(name ? { name } : null), ...bones, yourMP }}
+      profile={{
+        ...(name ? { name } : null),
+        ...bones,
+        yourMP,
+        nameOnly: waiting,
+      }}
       label="Loading the profile"
       testID="person-loading"
     />
@@ -635,6 +698,7 @@ function ProfileContent({
   refresh,
   retry,
   attempt,
+  postWithheld,
 }: {
   slug: string;
   loaded: Loaded;
@@ -647,6 +711,8 @@ function ProfileContent({
   refresh: () => void;
   retry: () => void;
   attempt: number;
+  /** The bones stood without a paid post's line: neither does this view. */
+  postWithheld: boolean;
 }) {
   const { profile } = loaded;
   const b = profile.blocks;
@@ -1196,7 +1262,10 @@ function ProfileContent({
                 retryKey={attempt}
               />
             }
-            role={formerLine ?? roleLine(profile, former)}
+            role={
+              formerLine ??
+              (postWithheld && !former ? null : roleLine(profile, former))
+            }
             yourMP={yourMP}
             identityRows={identityRows}
             follow={

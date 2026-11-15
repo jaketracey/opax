@@ -7,6 +7,7 @@ import {
 } from 'expo-router/react-navigation';
 import {
   ActionSheetIOS,
+  AppState,
   Dimensions,
   Platform,
   RefreshControl,
@@ -21,7 +22,23 @@ import * as c from '../src/api/catalogs';
 import { editionPath } from '../src/api/policy';
 import { catalogs as runtime } from '../src/api/runtime';
 import { Screen } from '../src/design/layout';
-import { rhythm } from '../src/design/tokens';
+import { formatDate } from '../src/design/format';
+import { minimumTarget, rhythm, textStyles } from '../src/design/tokens';
+import {
+  LONGEST_LINE,
+  WIDEST_DATE,
+  sinceSourceWords,
+  sinceWords,
+} from '../src/features/today/SinceLastVisit';
+import * as sheets from '../src/navigation/sheets';
+import { router } from 'expo-router';
+import { recentRecordsRoute } from '../src/navigation/routes';
+import {
+  readVisit,
+  refreshLikely,
+  rememberVisit,
+  REFRESH_AFTER_MS,
+} from '../src/features/today/visit-store';
 import { Text } from '../src/design/text';
 import * as learnSettings from '../src/features/learn/settings';
 import { OfflineLine } from '../src/design/states';
@@ -86,6 +103,9 @@ jest.mock('../src/api/runtime', () => ({
     // Nothing saved unless a test says so.
     sittingDaysSaved: jest.fn(async () => null),
     todayEditionSaved: jest.fn(async () => null),
+    // The collection record: unreadable unless a test publishes one.
+    corpus: jest.fn(),
+    corpusSaved: jest.fn(async () => null),
   },
 }));
 jest.mock('../src/features/vic-election/reads', () => ({
@@ -306,6 +326,8 @@ function setUp({
     .mockResolvedValue({ hiddenUntil, welcomeDeclinedAt });
   mock.todayEdition.mockResolvedValue(edition);
   mock.todayEditionSaved.mockResolvedValue(null);
+  mock.corpus.mockRejectedValue(new Error('offline'));
+  mock.corpusSaved.mockResolvedValue(null);
   mock.sittingDaysSaved.mockResolvedValue(null);
   mock.todayBills.mockImplementation(async (limit = 3, kind = 'new') =>
     c.recentBillsFor(bills, limit, kind),
@@ -1085,6 +1107,395 @@ describe('the first frame has the loaded page’s layout', () => {
     } finally {
       load.mockRestore();
     }
+  });
+});
+
+/**
+ * "Since your last visit" (Jake's conditions): the last-open time stays on
+ * the device, the line states only how many more records the collection
+ * holds, with its source, and links to Just added; no paid read; and the
+ * line is held from the first frame or never drawn that visit.
+ */
+describe('since your last visit', () => {
+  const hosts = (r: TestRenderer.ReactTestRenderer, id: string) =>
+    r.root.findAll((n) => typeof n.type === 'string' && n.props.testID === id);
+  const flat = (n: ReactTestInstance) =>
+    (StyleSheet.flatten(
+      typeof n.props.style === 'function'
+        ? n.props.style({ pressed: false })
+        : n.props.style,
+    ) ?? {}) as Record<string, unknown>;
+  const corpus = (total: number, checkedAt: string) =>
+    ({
+      data: { expected_resources: total, refresh: { checked_at: checkedAt } },
+      stale: false,
+      savedAt: 1,
+    }) as never;
+  const longAgo = () =>
+    new Date(Date.now() - REFRESH_AFTER_MS - 60_000).toISOString();
+  const pendingRead = () => {
+    let answer!: (value: unknown) => void;
+    const promise = new Promise((resolve) => {
+      answer = resolve;
+    });
+    return { promise, answer };
+  };
+  /** A last visit, and the collection record saved then. */
+  const visited = async (total = 1000, checkedAt = longAgo()) => {
+    await rememberVisit({ openedAt: 1, total, checkedAt });
+    setUp({ cached: { date: addDays(today, -1) } });
+    mock.corpusSaved.mockResolvedValue(corpus(total, checkedAt));
+    return checkedAt;
+  };
+  const leaveAndReturn = async () => {
+    const blur = mockFocusEffects
+      .map((effect) => effect() as unknown)
+      .filter((left): left is () => void => typeof left === 'function');
+    await act(async () => blur.forEach((leave) => leave()));
+  };
+
+  test('the first ever launch draws no line and holds no place; it keeps the visit on the device', async () => {
+    setUp({ cached: { date: addDays(today, -1) } });
+    mock.corpus.mockResolvedValue(corpus(1000, '2026-11-15T03:00:00+00:00'));
+    const r = await render(<Today />);
+    expect(hosts(r, 'today-since')).toHaveLength(0);
+    expect(hosts(r, 'today-since-reserved')).toHaveLength(0);
+    const kept = await readVisit();
+    expect(kept).toMatchObject({
+      total: 1000,
+      checkedAt: '2026-11-15T03:00:00+00:00',
+    });
+    expect(Math.abs(kept!.openedAt - Date.now())).toBeLessThan(60_000);
+  });
+
+  test('a later visit: the place is held from the first frame, then states the count with its source and opens Just added', async () => {
+    await visited();
+    const read = pendingRead();
+    mock.corpus.mockReturnValue(read.promise as never);
+    const r = await render(<Today />);
+    // The record is still out: the line's place is already under the date,
+    // unseen, unread and not a button yet.
+    const held = hosts(r, 'today-since-reserved');
+    expect(held).not.toHaveLength(0);
+    const place = held.at(-1)!;
+    expect(place.props.accessible).toBe(false);
+    expect(place.props.importantForAccessibility).toBe('no-hide-descendants');
+    expect(
+      hosts(r, 'today-masthead')[0]!.findAll((n) => n === place),
+    ).toHaveLength(1);
+    expect(hosts(r, 'today-since-words')).toHaveLength(0);
+    const box = flat(place);
+    await act(async () =>
+      read.answer(corpus(1412, '2026-11-15T03:00:00+00:00')),
+    );
+    expect(hosts(r, 'today-since-reserved')).toHaveLength(0);
+    const line = hosts(r, 'today-since').at(-1)!;
+    // The same box, before and after: nothing under it moves.
+    expect(flat(line)).toEqual(box);
+    expect(line.props.accessibilityRole).toBe('link');
+    expect(line.props.accessibilityLabel).toBe(
+      '412 more records in OPAX since your last visit. As at 15 Nov 2026, OPAX collection coverage record.',
+    );
+    expect(line.props.accessibilityLabel).not.toMatch(/—|–/);
+    expect(line.props.accessibilityHint).toBe('Opens Just added');
+    // It opens Just added; touch and hold, or its action, opens the sources.
+    jest.mocked(router.push).mockClear();
+    const owner = r.root.findAll(
+      (n) => n.props.testID === 'today-since' && !!n.props.onPress,
+    )[0]!;
+    act(() => owner.props.onPress());
+    expect(router.push).toHaveBeenCalledWith(recentRecordsRoute);
+    const present = jest
+      .spyOn(sheets, 'presentSource')
+      .mockImplementation(() => undefined);
+    try {
+      act(() => owner.props.onLongPress());
+      expect(present).toHaveBeenCalledTimes(1);
+      expect(present.mock.calls[0]![0]).toMatchObject({
+        asOf: '2026-11-15T03:00:00+00:00',
+        citation: 'OPAX collection coverage record',
+        originals: [{ url: '/corpus.json' }],
+      });
+      expect(line.props.accessibilityActions).toEqual([
+        { name: 'sources', label: 'Sources' },
+      ]);
+      act(() =>
+        owner.props.onAccessibilityAction({
+          nativeEvent: { actionName: 'sources' },
+        }),
+      );
+      expect(present).toHaveBeenCalledTimes(2);
+    } finally {
+      present.mockRestore();
+    }
+    // The visit kept for next time is this one.
+    await expect(readVisit()).resolves.toMatchObject({ total: 1412 });
+  });
+
+  test('the place is as tall as the longest line can be: the unseen longest copy sets its size and the line is drawn over it', async () => {
+    await visited();
+    mock.corpus.mockResolvedValue(corpus(1001, '2026-11-15T03:00:00+00:00'));
+    const r = await render(<Today />);
+    // The size comes from the longest copy, in the line's own type, inside
+    // the line's own box (its padding and hug), never from the line drawn.
+    const size = hosts(r, 'today-since-place').at(-1)!;
+    const sizer = r.root.findAll(
+      (n) => n.type === Text && n.props.testID === 'today-since-place',
+    )[0]!;
+    expect(sizer.props.children).toBe(LONGEST_LINE);
+    expect(sizer.props.variant).toBe('secondary');
+    expect(StyleSheet.flatten(size.props.style)).toMatchObject({ opacity: 0 });
+    const source = sinceSourceWords('2026-09-28');
+    for (const words of [
+      sinceWords(0),
+      sinceWords(1),
+      sinceWords(1234),
+      sinceWords(8_888_888),
+    ])
+      expect(LONGEST_LINE.length).toBeGreaterThanOrEqual(
+        `${words}. ${source}`.length,
+      );
+    // The drawn line takes no space of its own: it sits over the place, at
+    // the place's width, so a shorter line leaves the box as it was.
+    const drawnText = r.root.findAll(
+      (n) => n.type === Text && n.props.testID === 'today-since-words',
+    )[0]!;
+    expect(drawnText.props.variant).toBe(sizer.props.variant);
+    expect(drawnText.props.maxFontSizeMultiplier).toBe(
+      sizer.props.maxFontSizeMultiplier,
+    );
+    expect(StyleSheet.flatten(drawnText.props.style)).toMatchObject({
+      position: 'absolute',
+      left: rhythm.tight,
+      right: rhythm.tight,
+    });
+    expect(flat(hosts(r, 'today-since').at(-1)!)).toMatchObject({
+      paddingHorizontal: rhythm.tight,
+      marginHorizontal: -rhythm.tight,
+    });
+  });
+
+  test('the place is held by the widest date, not a real one of the same length', () => {
+    // "28 Sep 2026" is as long as any short date but not as wide: a
+    // no-growth line dated in May or March 2028 ran a line past the place
+    // (AX sizes at 402 pt, the default size at 320 pt) and over the next row.
+    expect(LONGEST_LINE.endsWith(sinceSourceWords('2026-09-28'))).toBe(false);
+    expect(
+      LONGEST_LINE.endsWith(
+        sinceSourceWords('2026-05-28').replace('28 May 2026', WIDEST_DATE),
+      ),
+    ).toBe(true);
+    // Glyph advances per 1000 units of a plain sans face: enough to rank
+    // the month names, and "8" is no narrower than any other digit.
+    const advance: Record<string, number> = {
+      A: 667,
+      D: 722,
+      F: 611,
+      J: 500,
+      M: 833,
+      N: 722,
+      O: 778,
+      S: 667,
+      a: 556,
+      b: 556,
+      c: 500,
+      e: 556,
+      g: 556,
+      l: 222,
+      n: 556,
+      o: 556,
+      p: 556,
+      r: 333,
+      t: 278,
+      u: 556,
+      v: 500,
+      y: 500,
+    };
+    const width = (word: string) =>
+      [...word].reduce((sum, letter) => sum + advance[letter]!, 0);
+    const [day, month, year] = WIDEST_DATE.split(' ') as [
+      string,
+      string,
+      string,
+    ];
+    expect(`${day}${year}`).toMatch(/^8{6}$/);
+    for (let m = 1; m <= 12; m += 1)
+      for (const d of [1, 28]) {
+        const date = formatDate(
+          `2028-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`,
+          'short',
+        );
+        const [dd, mmm, yyyy] = date.split(' ') as [string, string, string];
+        expect(dd.length).toBeLessThanOrEqual(day.length);
+        expect(yyyy.length).toBe(year.length);
+        expect(width(mmm)).toBeGreaterThan(0);
+        expect(width(mmm)).toBeLessThanOrEqual(width(month));
+      }
+  });
+
+  test('the empty place cannot be pressed; it becomes a link when the line arrives', async () => {
+    await visited();
+    const read = pendingRead();
+    mock.corpus.mockReturnValue(read.promise as never);
+    const r = await render(<Today />);
+    const owner = (id: string) =>
+      r.root.findAll((n) => n.props.testID === id && !!n.props.onPress)[0]!;
+    // Nothing is drawn yet: a touch on the blank place must not open Just
+    // added, and a switch or keyboard must not stop on it.
+    expect(owner('today-since-reserved').props.disabled).toBe(true);
+    expect(
+      hosts(r, 'today-since-reserved').at(-1)!.props.accessibilityState,
+    ).toMatchObject({ disabled: true });
+    await act(async () =>
+      read.answer(corpus(1412, '2026-11-15T03:00:00+00:00')),
+    );
+    expect(owner('today-since').props.disabled).toBe(false);
+    expect(
+      hosts(r, 'today-since').at(-1)!.props.accessibilityState?.disabled,
+    ).not.toBe(true);
+  });
+
+  test('the drawn line starts where the unseen one does, under the touch band', async () => {
+    await visited();
+    mock.corpus.mockResolvedValue(corpus(1001, '2026-11-15T03:00:00+00:00'));
+    const r = await render(<Today />);
+    const drawnTop = () =>
+      StyleSheet.flatten(
+        r.root.findAll(
+          (n) => n.type === Text && n.props.testID === 'today-since-words',
+        )[0]!.props.style,
+      ).top;
+    const box = () => flat(hosts(r, 'today-since').at(-1)!);
+    // One line of secondary text is shorter than a touch target: the box
+    // pads the unseen line down by the band, and the drawn line, which is
+    // absolute, must start that far down too or it sits above its place.
+    const band = (minimumTarget - textStyles.secondary.lineHeight) / 2;
+    expect(band).toBeGreaterThan(0);
+    expect(box().paddingVertical).toBe(band);
+    expect(drawnTop()).toBe(band);
+    // Wrapped past the touch target's height: no band, and the line starts
+    // at the top of the box.
+    const sizer = r.root.findAll(
+      (n) => n.type === Text && n.props.testID === 'today-since-place',
+    )[0]!;
+    const line = { height: minimumTarget };
+    act(() =>
+      sizer.props.onTextLayout({ nativeEvent: { lines: [line, line] } }),
+    );
+    expect(box().paddingVertical).toBe(0);
+    expect(drawnTop()).toBe(0);
+    // Two lines shorter than the target keep half the difference each side.
+    const short = { height: (minimumTarget - 8) / 2 };
+    act(() =>
+      sizer.props.onTextLayout({ nativeEvent: { lines: [short, short] } }),
+    );
+    expect(box().paddingVertical).toBe(4);
+    expect(drawnTop()).toBe(4);
+  });
+
+  test('a held place is never left blank: a total that did not grow says so, with the same source and link', async () => {
+    await visited();
+    // The total fell: never a negative or a "fewer" line.
+    mock.corpus.mockResolvedValue(corpus(990, '2026-11-15T03:00:00+00:00'));
+    const r = await render(<Today />);
+    expect(hosts(r, 'today-since-reserved')).toHaveLength(0);
+    const line = hosts(r, 'today-since').at(-1)!;
+    expect(line.props.accessibilityLabel).toBe(
+      'The OPAX record count hasn’t grown since your last visit. As at 15 Nov 2026, OPAX collection coverage record.',
+    );
+    expect(line.props.accessibilityRole).toBe('link');
+    expect(line.props.accessibilityHint).toBe('Opens Just added');
+  });
+
+  test('a record that cannot be reached: the saved copy answers with its own date, so a held place always ends in a line', async () => {
+    const checked = await visited(1000, '2026-11-13T03:00:00+00:00');
+    // setUp leaves the collection record unreachable.
+    const r = await render(<Today />);
+    expect(hosts(r, 'today-since-reserved')).toHaveLength(0);
+    expect(hosts(r, 'today-since').at(-1)!.props.accessibilityLabel).toBe(
+      'The OPAX record count hasn’t grown since your last visit. As at 13 Nov 2026, OPAX collection coverage record.',
+    );
+    await expect(readVisit()).resolves.toMatchObject({
+      total: 1000,
+      checkedAt: checked,
+    });
+  });
+
+  test('nothing saved on the device holds no place, and a count that arrives is never inserted', async () => {
+    await rememberVisit({ openedAt: 1, total: 1000, checkedAt: longAgo() });
+    setUp({ cached: { date: addDays(today, -1) } });
+    mock.corpus.mockResolvedValue(corpus(1412, '2026-11-15T03:00:00+00:00'));
+    const r = await render(<Today />);
+    expect(hosts(r, 'today-since')).toHaveLength(0);
+    expect(hosts(r, 'today-since-reserved')).toHaveLength(0);
+  });
+
+  test('a visit soon after the last holds no place, and a count that arrives is never inserted', async () => {
+    await visited(1000, new Date().toISOString());
+    mock.corpus.mockResolvedValue(corpus(1412, new Date().toISOString()));
+    const r = await render(<Today />);
+    expect(hosts(r, 'today-since')).toHaveLength(0);
+    expect(hosts(r, 'today-since-reserved')).toHaveLength(0);
+  });
+
+  test('a drawn line stays for the life of the screen: leaving Today and coming back removes nothing', async () => {
+    await visited();
+    mock.corpus.mockResolvedValue(corpus(1412, '2026-11-15T03:00:00+00:00'));
+    const r = await render(<Today />);
+    const before = hosts(r, 'today-since').at(-1)!.props.accessibilityLabel;
+    await leaveAndReturn();
+    expect(hosts(r, 'today-since').at(-1)!.props.accessibilityLabel).toBe(
+      before,
+    );
+    // Nor does the app leaving the screen (it used to give the line back,
+    // and the page moved on return).
+    await visited();
+    mock.corpus.mockResolvedValue(corpus(1412, '2026-11-15T03:00:00+00:00'));
+    const again = await render(<Today />);
+    const listeners = (
+      AppState.addEventListener as unknown as {
+        mock?: { calls: [string, (state: string) => void][] };
+      }
+    ).mock;
+    await act(async () =>
+      (listeners?.calls ?? [])
+        .filter(([type]) => type === 'change')
+        .forEach(([, handler]) => handler('background')),
+    );
+    expect(hosts(again, 'today-since')).not.toHaveLength(0);
+  });
+
+  test('the count is the collection record’s, free to read: no paid read, and nothing but the catalogue is asked', async () => {
+    await visited();
+    mock.corpus.mockResolvedValue(corpus(1001, '2026-11-15T03:00:00+00:00'));
+    const r = await render(<Today />);
+    expect(mock.corpus).toHaveBeenCalledTimes(1);
+    // No argument carries the last-open time anywhere.
+    expect(mock.corpus.mock.calls[0]).toEqual([]);
+    expect(mock.corpusSaved.mock.calls[0]).toEqual([]);
+    expect(hosts(r, 'today-since').at(-1)!.props.accessibilityLabel).toMatch(
+      /^1 more record in OPAX since your last visit\./,
+    );
+  });
+
+  test('the wording and the hold rule', () => {
+    expect(sinceWords(12)).toBe(
+      '12 more records in OPAX since your last visit',
+    );
+    expect(sinceWords(1234)).toBe(
+      '1,234 more records in OPAX since your last visit',
+    );
+    const visit = {
+      openedAt: 0,
+      total: 1,
+      checkedAt: '2026-11-14T03:00:00+00:00',
+    };
+    const checked = Date.parse(visit.checkedAt);
+    expect(refreshLikely(visit, checked + REFRESH_AFTER_MS - 1)).toBe(false);
+    expect(refreshLikely(visit, checked + REFRESH_AFTER_MS)).toBe(true);
+    expect(refreshLikely({ ...visit, checkedAt: 'unknown' }, checked)).toBe(
+      false,
+    );
   });
 });
 

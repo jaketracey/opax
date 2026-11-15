@@ -34,7 +34,7 @@ const sample = () => JSON.parse(text) as Record<string, any>;
 
 test('the sample is the portal export’s own, byte for byte', () => {
   expect(createHash('sha256').update(text).digest('hex')).toBe(
-    '015a85b9b1677e83ddf75c5caf5aa31560f966f7d8386a49576b52b7c89bc795',
+    '711c22d258b08847feb980a4859c183321c3d346323abcc3df9e610330ff2306',
   );
 });
 
@@ -76,10 +76,28 @@ test('a member from before the record starts has an earliest speech and division
     division: expect.objectContaining({ first: true }),
   });
   // No roster id: never a first.
+  // No roster id: never a first. The NSW Assembly's speeches have a start
+  // in the sample; its divisions have none, so that row is left out.
   expect(memberFirsts(firsts, { name: 'Casey Specimen' })).toEqual({
     speech: expect.objectContaining({ first: false, recordFrom: 2019 }),
-    division: expect.objectContaining({ first: false, recordFrom: 2019 }),
   });
+  // A member who returned after service from before the record, and one
+  // who moved chamber: the export marks neither, so neither is a first.
+  expect(memberFirsts(firsts, { name: 'Noel Returner', pid: '90014' })).toEqual(
+    {
+      speech: expect.objectContaining({
+        date: '1998-11-10',
+        first: false,
+        recordFrom: 1995,
+      }),
+    },
+  );
+  expect(memberFirsts(firsts, { name: 'Oakley Both', pid: '90015' })).toEqual({
+    speech: expect.objectContaining({ first: false, recordFrom: 2011 }),
+  });
+  // A chamber with no dense year has no start: nothing to say from when.
+  expect(memberFirsts(firsts, { name: 'Drew Twin' })).toBeNull();
+  expect(memberFirsts(firsts, { name: 'Emery Twin' })).toBeNull();
 });
 
 test('"first" is only ever the export’s flag, and an earliest fact with no coverage year is left out', () => {
@@ -100,9 +118,7 @@ test('"first" is only ever the export’s flag, and an earliest fact with no cov
     speech: expect.objectContaining({ first: false }),
   });
   expect(memberFirsts(firsts, { name: 'B', pid: '90002' })).toBeNull();
-  expect(memberFirsts(firsts, { name: 'Casey Specimen' })).toEqual({
-    division: expect.objectContaining({ first: false, recordFrom: 2019 }),
-  });
+  expect(memberFirsts(firsts, { name: 'Casey Specimen' })).toBeNull();
   // A file with no coverage at all (never exported so): only flagged firsts.
   const bare = sample();
   delete bare.meta.coverage;
@@ -130,8 +146,8 @@ test('a row with a roster id is found by it and never by its name; a row without
     memberFirsts(undefined, { name: 'Avery Example', pid: '90001' }),
   ).toBeNull();
   // Only one fact held: only that one.
-  expect(memberFirsts(firsts, { name: 'Drew Twin' })).toEqual({
-    speech: expect.objectContaining({ slug: 'speech-41' }),
+  expect(memberFirsts(firsts, { name: 'L', pid: '90012' })).toEqual({
+    speech: expect.objectContaining({ slug: 'speech-91' }),
   });
 });
 
@@ -245,9 +261,9 @@ test('the rows say First only for a first, Earliest in the OPAX record with its 
     if (/Earliest/.test(row.title)) expect(words).not.toMatch(/first/i);
   }
   expect(firstRows(null)).toEqual([]);
-  expect(firstRows(memberFirsts(firsts, { name: 'Drew Twin' }))).toHaveLength(
-    1,
-  );
+  expect(
+    firstRows(memberFirsts(firsts, { name: 'L', pid: '90012' })),
+  ).toHaveLength(1);
 });
 
 test('the file is a public static read, kept in memory, and read ahead by Today after the profile’s four', () => {

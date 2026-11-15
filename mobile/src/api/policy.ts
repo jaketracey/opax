@@ -77,6 +77,10 @@ const releasePath =
   /^\/electorates\/releases\/[a-f0-9]{16}\/(?:index|people|el_[a-f0-9]{24})\.json$/;
 const billPath =
   /^\/bills\/au-federal-(?:[rs]\d+|alrc-\d+|ed-[a-z0-9]+(?:-[a-z0-9]+)*)\.json$/;
+// On this day: one small dated index a calendar date, the divisions and
+// speeches recorded on that month and day (docs/DATA-ON-THIS-DAY.md).
+export const onThisDayPathPattern =
+  /^\/parliament\/on-this-day\/(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])\.json$/;
 const interestPath =
   /^\/interests\/(?:\d+|aph_\d+|n-[a-z0-9]+(?:-[a-z0-9]+)*)\.json$/;
 
@@ -280,6 +284,7 @@ export function assertAllowedPath(path: string): void {
     staticPaths.has(pathname!) ||
     releasePath.test(pathname!) ||
     billPath.test(pathname!) ||
+    onThisDayPathPattern.test(pathname!) ||
     interestPath.test(pathname!) ||
     // Static per-seat grant slices, including numbered continuation files.
     /^\/grants\/federal\/seats\/[a-z0-9]+(?:-[a-z0-9]+)*\.json$/.test(

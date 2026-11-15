@@ -224,6 +224,9 @@ cat > "$MOBILE/node_modules/.bin/tsx" <<'EOF'
 #!/usr/bin/env bash
 set -eu
 case "$1" in
+  scripts/qa-static.ts)
+    # The static check evaluates app.config.ts, which reads OPAX_APPEARANCE.
+    echo "${OPAX_APPEARANCE-unset}" > "$SCRATCH/$MOCK_LANE.config-appearance" ;;
   scripts/fixture-server.ts)
     trap 'echo "$MOCK_LANE fixture-stop lock=$([ -f "$OPAX_PASTE_LOCK/owner" ] && echo held || echo free)" >> "$SCRATCH/trace"; exit 0' TERM
     echo OPAX_FIXTURE_READY
@@ -272,6 +275,42 @@ grep -qx -- '--driver-host-port' "$SCRATCH/success.online.maestro-args" && grep 
 grep -q 'Simulator looks healthy' "$MOBILE/private/qa/success/sim-health.log" || fail 'preflight did not check a clean device'
 grep -q '^success spawn launchctl disable system/com.apple.PosterBoard lock=held gate=1' "$SCRATCH/trace" || fail 'PosterBoard not disabled under the lock'
 pass 'boot/install/Maestro/restore/shutdown inside lock and gate; teardown after release; timings saved'
+
+# The simulator's appearance is the harness's own switch. app.config.ts reads
+# OPAX_APPEARANCE (light or automatic) and rejects dark, so dark never reaches
+# the static check, and a build's light or automatic passes through untouched.
+[ "$(cat "$SCRATCH/success.config-appearance")" = unset ] || fail 'default run set the app config appearance'
+grep -q '^success ui appearance light ' "$SCRATCH/trace" || fail 'default run did not set a light simulator'
+sets_dark_only() {
+  [ "$(grep -c "^$1 ui appearance dark " "$SCRATCH/trace")" = 2 ] && ! grep -q "^$1 ui appearance light " "$SCRATCH/trace"
+}
+export OPAX_E2E_APPEARANCE=dark
+run_lane e2e-dark 01
+check_rc e2e-dark 0
+unset OPAX_E2E_APPEARANCE
+sets_dark_only e2e-dark || fail 'OPAX_E2E_APPEARANCE=dark did not set a dark simulator'
+[ "$(cat "$SCRATCH/e2e-dark.config-appearance")" = unset ] || fail 'OPAX_E2E_APPEARANCE reached the app config'
+export OPAX_APPEARANCE=dark
+run_lane legacy-dark 01
+check_rc legacy-dark 0
+sets_dark_only legacy-dark || fail 'OPAX_APPEARANCE=dark no longer sets a dark simulator'
+[ "$(cat "$SCRATCH/legacy-dark.config-appearance")" = unset ] || fail 'OPAX_APPEARANCE=dark reached the app config'
+export OPAX_E2E_APPEARANCE=light
+run_lane legacy-overridden 01
+check_rc legacy-overridden 0
+unset OPAX_E2E_APPEARANCE
+grep -q '^legacy-overridden ui appearance light ' "$SCRATCH/trace" || fail 'OPAX_E2E_APPEARANCE did not win over the earlier spelling'
+[ "$(cat "$SCRATCH/legacy-overridden.config-appearance")" = unset ] || fail 'the earlier spelling reached the app config'
+export OPAX_APPEARANCE=automatic OPAX_E2E_APPEARANCE=dark
+run_lane automatic-build 01
+check_rc automatic-build 0
+unset OPAX_E2E_APPEARANCE OPAX_APPEARANCE
+sets_dark_only automatic-build || fail 'a dark simulator was not set beside an automatic build'
+[ "$(cat "$SCRATCH/automatic-build.config-appearance")" = automatic ] || fail 'the build appearance was not passed through untouched'
+rc=0
+OPAX_E2E_APPEARANCE=sepia MOCK_LANE=bad-appearance OPAX_QA_RUN=bad-appearance bash "$MOBILE/scripts/e2e.sh" lane-a 01 > "$SCRATCH/bad-appearance.log" 2>&1 || rc=$?
+[ "$rc" = 1 ] && grep -q 'OPAX_E2E_APPEARANCE must be light or dark' "$SCRATCH/bad-appearance.log" && [ ! -e "$SCRATCH/bad-appearance.boot" ] && [ ! -e "$MOBILE/private/qa/bad-appearance" ] || fail 'an unknown appearance was not refused before the run'
+pass 'OPAX_E2E_APPEARANCE sets the simulator alone; OPAX_APPEARANCE=dark still does and never reaches the app config; light and automatic pass through'
 
 # Kept devices persist in the shared lock state after release. A different
 # lane must refuse before it claims, boots, restores or shuts down a device.

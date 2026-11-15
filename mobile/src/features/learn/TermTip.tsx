@@ -1,13 +1,49 @@
 import { router, useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
-import { Button } from '../../design/controls';
 import { useKeyCommand } from '../../design/keyboard';
 import { Text } from '../../design/text';
-import { colors, hairline, radii, rhythm } from '../../design/tokens';
+import {
+  border,
+  colors,
+  hairline,
+  minimumTarget,
+  radii,
+  rhythm,
+  textStyles,
+} from '../../design/tokens';
 import { learnCopy } from './copy';
 import { glossaryTerm, isTermId, termTitle } from './glossary';
 import { termRoute } from './routes';
+
+/** The popover's inset: its text and its action share it. */
+export const TIP_INSET = rhythm.block;
+/**
+ * The smallest text size iOS offers draws body text at about 0.8 of the
+ * default, and the label's line with it: the reach is worked out there, so
+ * the target is 44 pt tall at every size, not only at the default.
+ */
+const SMALLEST_TEXT = 0.8;
+const reach = Math.ceil(
+  (minimumTarget - textStyles.strong.lineHeight * SMALLEST_TEXT) / 2,
+);
+/** The label's own padding each side: the pressed wash's air. */
+const MORE_PADDING = rhythm.tight;
+/**
+ * How far the touch reaches past the "More" label, so the target is at
+ * least the minimum (44 pt) while the label keeps the text's insets. Never
+ * past the popover's own edge, on either side: a touch outside it closes
+ * the popover, and in a right-to-left layout "More" sits on the other
+ * side, so the two sides are the same. The label with its padding is
+ * already wider than the minimum.
+ */
+export const MORE_SLOP = {
+  top: reach,
+  bottom: Math.min(reach, TIP_INSET),
+  left: TIP_INSET - MORE_PADDING,
+  right: TIP_INSET - MORE_PADDING,
+} as const;
 
 const close = () => {
   if (router.canGoBack()) router.back();
@@ -27,6 +63,8 @@ export default function TermTip() {
     over?: string;
   }>();
   const window = useWindowDimensions();
+  // A keyboard's focus shows as the app's ring, as on the shared Pressable.
+  const [focused, setFocused] = useState(false);
   useKeyCommand('list-escape', close);
   if (!isTermId(id)) return null;
   const term = glossaryTerm(id);
@@ -68,21 +106,36 @@ export default function TermTip() {
         <Text wordSafe variant="body">
           {term.short}
         </Text>
-        <View style={styles.more}>
-          <Button
-            label={learnCopy.more}
-            variant="plain"
-            accessibilityLabel={`${learnCopy.more} about ${term.word}`}
-            onPress={() => router.replace(termRoute(id, over === '1'))}
-            testID={`term-tip-${id}-more`}
-          />
-        </View>
+        <Pressable
+          feedback="wash"
+          accessibilityRole="button"
+          accessibilityLabel={`${learnCopy.more} about ${term.word}`}
+          onPress={() => router.replace(termRoute(id, over === '1'))}
+          // The label sits on the text's own insets; the touch reaches past
+          // it to the 44 pt target.
+          hitSlop={MORE_SLOP}
+          android_ripple={{ color: colors.sunken }}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          style={focused ? [styles.more, styles.focused] : styles.more}
+          testID={`term-tip-${id}-more`}
+        >
+          <Text variant="strong" tone="navy">
+            {learnCopy.more}
+          </Text>
+        </Pressable>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  focused: {
+    outlineColor: colors.navy,
+    outlineWidth: border.focus,
+    outlineOffset: border.focus,
+    outlineStyle: 'solid',
+  },
   fill: StyleSheet.absoluteFill,
   bubble: {
     position: 'absolute',
@@ -91,9 +144,11 @@ const styles = StyleSheet.create({
     borderCurve: 'continuous',
     borderWidth: hairline,
     borderColor: colors.dividerSubtle,
-    paddingHorizontal: rhythm.block,
+    // One inset on every side the action touches: "More" ends on the text's
+    // trailing edge and sits as far from the foot as from the side.
+    paddingHorizontal: TIP_INSET,
     paddingTop: rhythm.row,
-    paddingBottom: rhythm.line,
+    paddingBottom: TIP_INSET,
     gap: rhythm.line,
     shadowColor: colors.ink,
     shadowOpacity: 0.16,
@@ -101,5 +156,15 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 8 },
     elevation: 8,
   },
-  more: { alignSelf: 'flex-end', marginRight: -rhythm.tight },
+  // On the text's trailing edge, a line's gap closer than a new block. The
+  // pressed wash bleeds a little past the label on each side, as a quiet
+  // button's does, without moving the label off that edge.
+  more: {
+    alignSelf: 'flex-end',
+    marginTop: rhythm.line,
+    paddingHorizontal: MORE_PADDING,
+    marginHorizontal: -MORE_PADDING,
+    borderRadius: radii.thumb,
+    borderCurve: 'continuous',
+  },
 });

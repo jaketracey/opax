@@ -2,7 +2,12 @@ import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 import { router } from 'expo-router';
 import { act, type ReactElement } from 'react';
-import { Text as NativeText } from 'react-native';
+import {
+  AccessibilityInfo,
+  Platform,
+  StyleSheet,
+  Text as NativeText,
+} from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { Text } from '../src/design/text';
 import {
@@ -40,7 +45,8 @@ import {
   setExplainTerms,
   setUnderlineTerms,
 } from '../src/features/learn/settings';
-import TermSheet from '../src/features/learn/TermSheet';
+import TermSheet, { TIPS_HIDDEN_HOLD } from '../src/features/learn/TermSheet';
+import { minimumTarget } from '../src/design/tokens';
 import TermTip from '../src/features/learn/TermTip';
 import { setSheetSegments } from '../src/navigation/sheets';
 
@@ -458,5 +464,299 @@ describe('the glossary screen', () => {
       pathname: '/term',
       params: { id: 'pair' },
     });
+  });
+});
+
+describe('Hide tips on the answer sheet (build 76)', () => {
+  const inline = (tree: TestRenderer.ReactTestRenderer, id: string) =>
+    byTestID(tree, `term-inline-${id}`);
+  beforeEach(async () => {
+    resetLearnSettingsForTests(null);
+    mockTourSeen = true;
+    await act(async () => {
+      await loadLearnSettings();
+    });
+    jest.useFakeTimers();
+  });
+  afterEach(() => jest.useRealTimers());
+
+  test('one tap turns the tips off everywhere, says so in the button’s place, then closes the sheet', async () => {
+    const announce = jest
+      .spyOn(AccessibilityInfo, 'announceForAccessibility')
+      .mockImplementation(() => undefined);
+    announce.mockClear();
+    const page = render(
+      <Text>
+        A <Term id="division" /> was called.
+      </Text>,
+    );
+    // On: the term is a marked link.
+    expect(inline(page, 'division')).toHaveLength(1);
+    expect(inline(page, 'division')[0]!.props.accessibilityRole).toBe('link');
+    mockParams = { id: 'division' };
+    const sheet = render(<TermSheet />);
+    const button = pressable(sheet, 'term-division-hide-tips');
+    expect(button.props.accessibilityLabel ?? 'Hide tips').toBe('Hide tips');
+    // A plain, quiet button with a 44 pt target; its row keeps that height.
+    const row = sheet.root.findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        StyleSheet.flatten(node.props.style)?.minHeight === minimumTarget &&
+        StyleSheet.flatten(node.props.style)?.alignItems === 'center',
+    );
+    expect(row.length).toBeGreaterThan(0);
+    back.mockClear();
+    await act(async () => {
+      button.props.onPress();
+    });
+    // The setting is off, on this device only.
+    expect(learnSettingsSnapshot().underline).toBe(false);
+    // The page's term is plain text: no link, no underline, same words.
+    expect(inline(page, 'division')).toHaveLength(0);
+    expect(textOf(page.root)).toContain('A division was called.');
+    // The notice is where the button was, and VoiceOver hears it.
+    expect(byTestID(sheet, 'term-division-hide-tips')).toHaveLength(0);
+    const notice = byTestID(sheet, 'term-division-tips-hidden')[0]!;
+    expect(textOf(notice)).toBe(
+      'Tips hidden. Turn them back on in Account, under Glossary terms.',
+    );
+    expect(announce).toHaveBeenCalledWith(textOf(notice));
+    // The sheet stays for the reader to read it, then closes itself.
+    expect(back).not.toHaveBeenCalled();
+    act(() => {
+      jest.advanceTimersByTime(TIPS_HIDDEN_HOLD);
+    });
+    expect(back).toHaveBeenCalledTimes(1);
+    announce.mockRestore();
+  });
+
+  test('it survives a relaunch, and the Account switch brings the tips back', async () => {
+    mockParams = { id: 'division' };
+    const sheet = render(<TermSheet />);
+    await act(async () => {
+      pressable(sheet, 'term-division-hide-tips').props.onPress();
+    });
+    await act(async () => {
+      jest.advanceTimersByTime(TIPS_HIDDEN_HOLD);
+      await Promise.resolve();
+    });
+    // A new launch reads the file.
+    resetLearnSettingsForTests(null);
+    let settings!: Awaited<ReturnType<typeof loadLearnSettings>>;
+    await act(async () => {
+      settings = await loadLearnSettings();
+    });
+    expect(settings.underline).toBe(false);
+    const page = render(
+      <Text>
+        A <Term id="division" /> was called.
+      </Text>,
+    );
+    expect(inline(page, 'division')).toHaveLength(0);
+    // Account › Glossary terms › Glossary tips.
+    const account = render(<AccountTerms />);
+    const tips = byTestID(account, 'account-underline-terms')[0]!;
+    expect(tips.props.accessibilityLabel).toMatch(/^Glossary tips/);
+    expect(tips.props.accessibilityState.checked).toBe(false);
+    await act(async () => {
+      pressable(account, 'account-underline-terms').props.onPress();
+    });
+    expect(learnSettingsSnapshot().underline).toBe(true);
+    // The underline returns on the same text.
+    expect(inline(page, 'division')).toHaveLength(1);
+    expect(
+      StyleSheet.flatten(inline(page, 'division')[0]!.props.style)
+        .textDecorationLine,
+    ).toBe('underline');
+  });
+
+  test('with a screen reader running the sheet does not close itself: the notice is read, Done closes it', async () => {
+    const announce = jest
+      .spyOn(AccessibilityInfo, 'announceForAccessibility')
+      .mockImplementation(() => undefined);
+    announce.mockClear();
+    const running = jest
+      .spyOn(AccessibilityInfo, 'isScreenReaderEnabled')
+      .mockResolvedValue(true);
+    mockParams = { id: 'division' };
+    let sheet!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      sheet = render(<TermSheet />);
+    });
+    back.mockClear();
+    await act(async () => {
+      pressable(sheet, 'term-division-hide-tips').props.onPress();
+    });
+    expect(learnSettingsSnapshot().underline).toBe(false);
+    expect(announce).toHaveBeenCalledWith(
+      'Tips hidden. Turn them back on in Account, under Glossary terms.',
+    );
+    // iOS is told once; the live region is TalkBack's (next test).
+    expect(
+      announce.mock.calls.filter(([said]) => /^Tips hidden/.test(said)),
+    ).toHaveLength(1);
+    expect(
+      byTestID(sheet, 'term-division-tips-hidden')[0]!.props
+        .accessibilityLiveRegion,
+    ).toBe('none');
+    // Never closed, however long the reader takes.
+    act(() => {
+      jest.advanceTimersByTime(TIPS_HIDDEN_HOLD * 10);
+    });
+    expect(back).not.toHaveBeenCalled();
+    running.mockResolvedValue(false);
+    announce.mockRestore();
+  });
+
+  test('a screen reader turned on while the notice shows cancels the close; leaving the sheet clears the timer', async () => {
+    let change!: (running: boolean) => void;
+    const listen = jest
+      .spyOn(AccessibilityInfo, 'addEventListener')
+      .mockImplementation(((name: string, listener: unknown) => {
+        if (name === 'screenReaderChanged')
+          change = listener as (running: boolean) => void;
+        return { remove: jest.fn() };
+      }) as never);
+    const running = jest
+      .spyOn(AccessibilityInfo, 'isScreenReaderEnabled')
+      .mockResolvedValue(false);
+    mockParams = { id: 'division' };
+    let sheet!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      sheet = render(<TermSheet />);
+    });
+    back.mockClear();
+    await act(async () => {
+      pressable(sheet, 'term-division-hide-tips').props.onPress();
+    });
+    // No screen reader: the close is timed. One turned on meanwhile
+    // cancels it.
+    const timed = jest.getTimerCount();
+    act(() => change(true));
+    expect(jest.getTimerCount()).toBe(timed - 1);
+    act(() => {
+      jest.advanceTimersByTime(TIPS_HIDDEN_HOLD * 2);
+    });
+    expect(back).not.toHaveBeenCalled();
+    // Off again: timed again; then the reader leaves with Done first, and
+    // the timer goes with the sheet.
+    act(() => change(false));
+    const again = jest.getTimerCount();
+    act(() => {
+      mounted.splice(mounted.indexOf(sheet), 1);
+      sheet.unmount();
+    });
+    expect(jest.getTimerCount()).toBe(again - 1);
+    act(() => {
+      jest.advanceTimersByTime(TIPS_HIDDEN_HOLD * 2);
+    });
+    expect(back).not.toHaveBeenCalled();
+    listen.mockRestore();
+    running.mockResolvedValue(false);
+  });
+
+  test('Android: the notice is a live region for TalkBack and is not announced as well', async () => {
+    const os = Platform.OS;
+    Platform.OS = 'android';
+    const announce = jest
+      .spyOn(AccessibilityInfo, 'announceForAccessibility')
+      .mockImplementation(() => undefined);
+    announce.mockClear();
+    try {
+      mockParams = { id: 'division' };
+      let sheet!: TestRenderer.ReactTestRenderer;
+      await act(async () => {
+        sheet = render(<TermSheet />);
+      });
+      await act(async () => {
+        pressable(sheet, 'term-division-hide-tips').props.onPress();
+      });
+      expect(
+        byTestID(sheet, 'term-division-tips-hidden')[0]!.props
+          .accessibilityLiveRegion,
+      ).toBe('polite');
+      // One reading, not two.
+      expect(
+        announce.mock.calls.filter(([said]) => /^Tips hidden/.test(said)),
+      ).toHaveLength(0);
+    } finally {
+      Platform.OS = os;
+      announce.mockRestore();
+    }
+  });
+
+  test('the notice holds its place from the start, so nothing in the sheet grows; and it stays four seconds', async () => {
+    mockParams = { id: 'division' };
+    let sheet!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      sheet = render(<TermSheet />);
+    });
+    // Before the tap: the notice's words are laid out, unseen and unread.
+    const reserved = byTestID(sheet, 'term-division-tips-reserved')[0]!;
+    expect(textOf(reserved)).toBe(
+      'Tips hidden. Turn them back on in Account, under Glossary terms.',
+    );
+    expect(StyleSheet.flatten(reserved.props.style).opacity).toBe(0);
+    expect(reserved.props.accessibilityElementsHidden).toBe(true);
+    expect(reserved.props.importantForAccessibility).toBe(
+      'no-hide-descendants',
+    );
+    expect(byTestID(sheet, 'term-division-tips-hidden')).toHaveLength(0);
+    // The button lies over that place, taking no room of its own.
+    const over = sheet.root.findAll(
+      (node) =>
+        typeof node.type === 'string' &&
+        StyleSheet.flatten(node.props.style)?.position === 'absolute' &&
+        node.findAll((n) => n.props.testID === 'term-division-hide-tips')
+          .length > 0,
+    );
+    expect(over.length).toBeGreaterThan(0);
+    back.mockClear();
+    await act(async () => {
+      pressable(sheet, 'term-division-hide-tips').props.onPress();
+    });
+    // The same text, now drawn and read; no second element took its place.
+    const shown = byTestID(sheet, 'term-division-tips-hidden')[0]!;
+    expect(StyleSheet.flatten(shown.props.style)?.opacity).toBeUndefined();
+    expect(shown.props.accessibilityElementsHidden).toBe(false);
+    expect(byTestID(sheet, 'term-division-tips-reserved')).toHaveLength(0);
+    // Long enough to read: not closed at 3.9 s, closed at 4 s.
+    expect(TIPS_HIDDEN_HOLD).toBeGreaterThanOrEqual(4000);
+    act(() => {
+      jest.advanceTimersByTime(3900);
+    });
+    expect(back).not.toHaveBeenCalled();
+    act(() => {
+      jest.advanceTimersByTime(TIPS_HIDDEN_HOLD - 3900);
+    });
+    expect(back).toHaveBeenCalledTimes(1);
+  });
+
+  test('the button is there only while the tips are on; the glossary row stays either way', async () => {
+    mockParams = { id: 'division' };
+    let sheet!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      sheet = render(<TermSheet />);
+    });
+    // On: offered.
+    expect(pressable(sheet, 'term-division-hide-tips')).toBeTruthy();
+    // Turned off elsewhere (Account): nothing left to hide, and no notice
+    // or reserved place either.
+    await act(async () => {
+      await setUnderlineTerms(false);
+    });
+    expect(
+      sheet.root.findAll(
+        (node) => node.props.testID === 'term-division-hide-tips',
+      ),
+    ).toHaveLength(0);
+    expect(byTestID(sheet, 'term-division-tips-reserved')).toHaveLength(0);
+    expect(byTestID(sheet, 'term-division-tips-hidden')).toHaveLength(0);
+    expect(pressable(sheet, 'term-division-glossary')).toBeTruthy();
+    // And back on: offered again.
+    await act(async () => {
+      await setUnderlineTerms(true);
+    });
+    expect(pressable(sheet, 'term-division-hide-tips')).toBeTruthy();
   });
 });

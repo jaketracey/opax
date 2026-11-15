@@ -5,7 +5,7 @@ import { withNavigationOptions } from './navigation-options';
 // still counted (an abandoned ARAG read may be charged).
 import { HeaderHeightContext } from 'expo-router/react-navigation';
 import { act } from 'react';
-import { ScrollView } from 'react-native';
+import { Platform, ScrollView } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { searchFixture } from '../scripts/search-fixture';
 import { ScopeBar } from '../src/features/search/ScopeBar';
@@ -239,16 +239,37 @@ test('a superseded submit is still counted, and its late answer is never drawn',
   await act(async () => r.unmount());
 });
 
+/**
+ * The iOS version for one test, put back afterwards. The measured rest
+ * (design/scroll-to-top.ts) is iOS 26 and later; before iOS 26 the bars are
+ * opaque and the rest is 0 without measuring.
+ */
+function iosVersion(version: string | number) {
+  const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version');
+  Object.defineProperty(Platform, 'Version', {
+    configurable: true,
+    value: version,
+  });
+  return () => {
+    if (descriptor) Object.defineProperty(Platform, 'Version', descriptor);
+  };
+}
 test.each([
-  // Search's translucent root bar lies over a scroll view at the window's
-  // top: the rest is unchanged, a header above zero.
-  ['under its translucent root bar', 0, -116],
+  // iOS 26: Search's translucent root bar lies over a scroll view at the
+  // window's top: the rest is unchanged, a header above zero.
+  ['under its translucent root bar on iOS 26', 26, 0, -116, true],
   // With its large title off and a solid bar, the root bar is opaque and
   // react-native-screens lays the page out below it: the rest is 0.
-  ['below a solid bar', 116, 0],
+  ['below a solid bar on iOS 26', 26, 116, 0, true],
+  // Before iOS 26 the root bar is opaque and the page starts below it,
+  // though under a large title it reads as starting at the window's top.
+  // The rest is 0 without measuring: -116 left a blank band the bar's
+  // height above the results (iOS 18.4).
+  ['below its opaque root bar before iOS 26', '18.4', 0, 0, false],
 ] as const)(
   'a submitted search starts at its resting top %s',
-  async (_case, top, y) => {
+  async (_case, version, top, y, measured) => {
+    const restore = iosVersion(version);
     const measure = jest
       .spyOn(
         ScrollView.prototype as unknown as {
@@ -275,12 +296,15 @@ test.each([
         );
       });
       scrollTo.mockClear();
+      measure.mockClear();
       await submit('housing');
       expect(scrollTo).toHaveBeenLastCalledWith({ y, animated: false });
+      expect(measure.mock.calls.length > 0).toBe(measured);
     } finally {
       await act(async () => r?.unmount());
       measure.mockRestore();
       scrollTo.mockRestore();
+      restore();
     }
   },
 );
