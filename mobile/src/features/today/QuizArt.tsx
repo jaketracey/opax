@@ -1,5 +1,9 @@
 import { StyleSheet, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
+import {
+  useHighTextContrast,
+  useIncreaseContrast,
+} from '../../design/accessibility';
 import { useDrawnColour } from '../../design/engraving';
 import { colors } from '../../design/tokens';
 
@@ -66,6 +70,10 @@ export function quizArtPaths(): { field: string; lit: string; count: number } {
 let drawn: ReturnType<typeof quizArtPaths> | undefined;
 const artPaths = () => (drawn ??= quizArtPaths());
 
+/** How strongly the field's dots are drawn, and under Increase Contrast. */
+export const FIELD_OPACITY = 0.22;
+export const HIGH_FIELD_OPACITY = 0.45;
+
 /** The frame's width over its height: the archive photograph's. */
 export const QUIZ_ART_RATIO = 4 / 3;
 
@@ -77,7 +85,17 @@ export function QuizArt({
   // Hex for the drawing, following the appearance and Increase Contrast as
   // `colors` does natively; the ground is a view, so it takes the role.
   const navy = useDrawnColour('navy');
-  const bronze = useDrawnColour('todayDotBronze');
+  const dotBronze = useDrawnColour('todayDotBronze');
+  // Increase Contrast: the map's bronze has no stronger form, and the wash
+  // under it darkens, so the mark would lose contrast (2.05:1 in light).
+  // The mark takes the brand artwork's bronze ink, which is tuned for it
+  // (6.5:1 on the stronger wash in light, 6.9:1 in dark), and the field's
+  // dots are drawn firmer.
+  const artInk = useDrawnColour('bronzeInk');
+  const contrast = useIncreaseContrast();
+  const highText = useHighTextContrast();
+  const high = contrast || highText;
+  const bronze = high ? artInk : dotBronze;
   const paths = artPaths();
   return (
     <View
@@ -94,7 +112,11 @@ export function QuizArt({
         viewBox={`0 0 ${QUIZ_ART.width} ${QUIZ_ART.height}`}
         preserveAspectRatio="xMidYMid slice"
       >
-        <Path d={paths.field} fill={navy} fillOpacity={0.22} />
+        <Path
+          d={paths.field}
+          fill={navy}
+          fillOpacity={high ? HIGH_FIELD_OPACITY : FIELD_OPACITY}
+        />
         <Path d={paths.lit} fill={bronze} />
       </Svg>
     </View>
