@@ -24,7 +24,11 @@ import {researchSentences} from './research-sentences'
 
 export const ANSWER_WRITING_VERSION = 'written-answer-30-clause-who'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
-export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
+export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope']
+  /** Sentences the answer already holds: the model's own checked points, which follow the written sentences. */
+  said?: string[] }
+/** Added to the writer's contract only when the answer already holds points of its own. */
+export const EACH_FACT_ONCE_RULE = ' The answer already contains the sentences in "said", which follow yours. Each fact appears once across both: write the facts those sentences leave out, and leave to them what they already say.'
 export interface WrittenSentence { text: string; facts: number[]; coverage?: boolean }
 const clean = (s: string) => s.replace(/\*\*/g, '').replace(/\s+/g, ' ').trim()
 const key = (s: string) => clean(s).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
@@ -652,7 +656,7 @@ export function writingPrompt(input: WritingInput): string {
     'Receipt aggregates use their stated financial-year coverage once in the lead. Annual-return references are example sources within that coverage. Describe uncertainty and the measure in plain language. Give supported figures first, then one necessary scope sentence flagged coverage:true. A record limitation goes in one short coverage sentence after the answer, never in its place. ' +
     'Hearing excerpts name the recorded speaker and hearing day/date, with a short literal quotation and fact id. A question by counsel or a commissioner is a question; identify each witness answer explicitly. Use recorded names and roles. Identify the material once as hearing evidence; licence details belong in the source card. ' +
     'For division outcomes, state whether the motion passed or was defeated and its ayes/noes first, then the requested person or party vote. For floor crossers lead with the recorded names. Retain party labels and partial member-list qualifications. Bill passage uses its separately documented lifecycle result. ' +
-    'State each fact once across the answer and selected points. Each figure has one supporting fact id. Keep salary components for questions asking for them. Quote literal source text. Relevant coverage belongs once in coverage.note after the answer. Return a JSON object with answer_decision answer and sentences: {"answer_decision":"answer","sentences":[{"text":"One complete sentence.","facts":[1],"coverage":false}]}. A sentence of context from general knowledge may use an empty facts list. Use plain sentence text, under 180 words unless a requested annual or monthly series needs more.' })
+    'State each fact once across the answer and selected points. Each figure has one supporting fact id. Keep salary components for questions asking for them. Quote literal source text. Relevant coverage belongs once in coverage.note after the answer. Return a JSON object with answer_decision answer and sentences: {"answer_decision":"answer","sentences":[{"text":"One complete sentence.","facts":[1],"coverage":false}]}. A sentence of context from general knowledge may use an empty facts list. Use plain sentence text, under 180 words unless a requested annual or monthly series needs more.' + (input.said?.length ? EACH_FACT_ONCE_RULE : ''), ...(input.said?.length ? { said: input.said } : {}) })
 }
 
 /** Keep already checked passage points (including loose uncited survivors) beside the written record answer. */
@@ -700,10 +704,13 @@ export function appendWrittenPoints(written: QualitativeAnswer, points: Qualitat
   for(const part of points.answer.matchAll(/[^\n]+/g)) {
     const from=Array.from(points.answer.slice(0,part.index)).length,until=from+Array.from(part[0]).length,division=divisionLine(points,part[0],from,until)
     if(division){if(!seen.has(division)){seen.add(division);append(part[0],from,until)}continue}
-    // Each fact appears once: a point resting only on single-statement records the written answer already cites is
-    // that same fact in the model's words, so the written sentence stands for it (same fact, same source).
+    // Each fact appears once: a point that is the record's own statement again, resting only on single-statement
+    // records the written answer already cites, is the same record and the same statement, so the written sentence
+    // stands for it. A point that says anything else from that record is a different claim and is always kept; the
+    // writer is told what the points say (WritingInput.said) so its own sentences leave those facts to them.
     const rests=Object.entries(points.citations).filter(([,ranges])=>ranges.some(([a,b])=>a<until&&b>from)).map(([id])=>points.sources.find(s=>id===s.resource||id.startsWith(s.resource+'/')))
-    if(rests.length&&rests.every(s=>s&&singleStatement(s)&&writtenIds.some(id=>id===s.resource||id.startsWith(s.resource+'/'))))continue
+    const restated=(s:typeof rests[number])=>{const statement=s&&singleStatement(s);return !!statement&&writtenIds.some(id=>id===s.resource||id.startsWith(s.resource+'/'))&&(signedKey(statement)===signedKey(part[0].replace(/^[-*•]\s*/,''))||sameStatement(statement,part[0]))}
+    if(rests.length&&rests.every(restated))continue
     const line=part[0],base=part.index!,all=claimClauses(line),kept:typeof all=[]
     for(const clause of all){
       const from=Array.from(points.answer.slice(0,base+clause.start)).length,until=from+Array.from(clause.text).length
