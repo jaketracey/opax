@@ -384,16 +384,36 @@ export function BarTitle({
         if (!Number.isFinite(x) || !Number.isFinite(boxWidth) || boxWidth <= 0)
           return;
         // Where UIKit put it, before any move of ours.
-        const centre = x - applied.current + boxWidth / 2;
-        const free = Math.max(0, (room - boxWidth) / 2);
+        const left = x - applied.current;
+        const centre = left + boxWidth / 2;
+        // The span ends where the trailing group's reserve begins (as in
+        // barTitleWidth): never move past it, so never under Share.
+        const items =
+          trailingWidth ??
+          44 + 60 * Math.max(0, trailing - 1) + growth * Math.max(0, trailing);
+        const limit = width - (16 + items + 8);
         const next = Math.round(
-          Math.min(free, Math.max(0, width / 2 - centre)),
+          Math.min(
+            Math.max(0, limit - (left + boxWidth)),
+            Math.max(0, width / 2 - centre),
+          ),
         );
         setMoved((now) => (Math.abs(now - next) < 1 ? now : next));
       });
     }, 0);
     return () => clearTimeout(timer);
-  }, [box, place, textWidth, room, width, drawn, fontScale, laidOut]);
+  }, [
+    box,
+    place,
+    textWidth,
+    width,
+    drawn,
+    fontScale,
+    laidOut,
+    trailing,
+    trailingWidth,
+    growth,
+  ]);
   return createElement(
     NativeView,
     {

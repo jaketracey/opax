@@ -1066,22 +1066,26 @@ describe('a title beside the collapsed back button is centred on the bar by meas
     act(() => Dimensions.set({ window: original }));
     return { shift, right: (x(text) ?? 0) + (shift ?? 0) + text };
   };
-  // 26.3: UIKit centres the view in the span between the groups (60 to 282).
-  const betweenGroups = (width: number) => 171 - width / 2;
+  // 26.3 (measured on the device): UIKit places the view at the leading end
+  // of the span, 72 pt from the edge, not centred in it. The span runs to
+  // 274, where Share's reserve begins.
+  const betweenGroups = () => 72;
   // 18.4: UIKit centres a fitting view on the bar.
   const onBar = (width: number) => 201 - width / 2;
 
   test('26.3: a title just too wide to sit beside the back name moves onto the bar’s centre line', async () => {
     const { shift } = await place(144, betweenGroups);
-    expect(shift).toBe(30);
+    // 201 - (72 + 144 / 2): the title's centre lands on the bar's.
+    expect(shift).toBe(57);
   });
 
   test('26.3: a title that fills the span never moves under Share', async () => {
-    const full = await place(206, betweenGroups);
+    // One that fills the span has nowhere to go.
+    const full = await place(206, () => 68);
     expect(full.shift).toBeUndefined();
     // A wide one moves only as far as the span allows.
     const wide = await place(170, betweenGroups);
-    expect(wide.shift).toBe(18);
+    expect(wide.shift).toBe(32);
     expect(wide.right).toBeLessThanOrEqual(274);
   });
 
