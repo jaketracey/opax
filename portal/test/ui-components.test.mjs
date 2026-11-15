@@ -162,7 +162,9 @@ test('SourceLine: a bare line still names itself; the fine-print adapter keeps t
 test('SourceLine: the date says what it is, and facts are one key/value list', () => {
   const { sourceLineHTML } = helpers;
   assert.equal(text(sourceLineHTML({ updated: '2026-10-03', dateLabel: 'Written', source: 'Explanatory memorandum' }).split('</summary>')[0]), 'Written 3 Oct 2026 · Explanatory memorandum');
-  assert.equal(text(sourceLineHTML({ updated: '2026-09-04', dateLabel: 'As at', source: 'Parliamentary roster' }).split('</summary>')[0]), 'As at 4 Sep 2026 · Parliamentary roster');
+  assert.equal(text(sourceLineHTML({ updated: '2026-09-04', dateLabel: 'As at', source: 'Electoral and parliamentary records' }).split('</summary>')[0]), 'As at 4 Sep 2026 · Electoral and parliamentary records');
+  // A person's identity line names its source and carries no date.
+  assert.equal(text(sourceLineHTML({ source: 'Parliamentary roster', notes: ['Checked 4 Sep 2026.'] }).split('</summary>')[0]), 'Parliamentary roster');
   const html = sourceLineHTML({ source: 'Parliamentary roster', facts: [['Status', 'Sitting parliamentarian'], false, ['Electorate', '<a href="/subject/electorate/x">Grayndler</a>'], ['Empty', '']], notes: ['Dated public records.'] });
   const sheet = html.slice(html.indexOf('<div class="ui-sheet">'));
   assert.match(sheet, /<dl class="ui-sheet-facts"><div><dt>Status<\/dt><dd>Sitting parliamentarian<\/dd><\/div><div><dt>Electorate<\/dt><dd><a href="\/subject\/electorate\/x">Grayndler<\/a><\/dd><\/div><\/dl>/);

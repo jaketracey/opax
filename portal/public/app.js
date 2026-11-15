@@ -6703,9 +6703,9 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // Who they are, dated: the identity block's one source line. Its sheet holds
   // what Quick facts held beyond the meta line, so every fact stays one tap away.
   const rosterChecked = verified || rosterData?.meta?.representation?.updated || rosterData?.meta?.generated || "";
+  // The line names the source only. The date the roster was last checked stays in the data and
+  // in the sheet's note: on the line it read as the page's own age.
   head.insertAdjacentHTML("beforeend", sourceLineHTML({
-    updated: rosterChecked,
-    dateLabel: "As at",
     source: "Parliamentary roster",
     originals: [
       roster?.states?.includes('federal') && { label: "Parliamentary profile", href: `https://www.aph.gov.au/Senators_and_Members/Parliamentarian_Search_Results?q=${q}` },

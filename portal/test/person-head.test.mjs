@@ -20,6 +20,21 @@ function visit(node) {
 }
 visit(app);
 assert.ok(seatWord, 'browser header role expression exists');
+
+test('the person header source line names the Parliamentary roster and shows no date', () => {
+  const lines = [];
+  (function find(node) {
+    if (ts.isCallExpression(node) && node.expression.getText(app) === 'sourceLineHTML' && ts.isObjectLiteralExpression(node.arguments[0])) {
+      const props = Object.fromEntries(node.arguments[0].properties.filter(p => p.name).map(p => [p.name.getText(app), p]));
+      if (props.source?.initializer?.getText(app) === '"Parliamentary roster"') lines.push(props);
+    }
+    ts.forEachChild(node, find);
+  })(app);
+  assert.equal(lines.length, 1, 'one roster source line in the person header');
+  assert.deepEqual(['updated', 'dateLabel', 'asAt'].filter(key => key in lines[0]), []);
+  // The check date stays in the sheet's note, read from the data.
+  assert.match(lines[0].notes.getText(app), /rosterChecked/);
+});
 const browserRole = person => {
   const representation = profileJurisdictions(person);
   return runInNewContext(seatWord, {roster: person,
