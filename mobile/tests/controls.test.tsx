@@ -750,6 +750,45 @@ test('a titled PopUpButton row places its value from the row layout in the first
   expect(frame.maxWidth).toBeGreaterThanOrEqual(2000);
 });
 
+/**
+ * rv-duo-fix7 P2 on a77863ad9: the wrap estimate was fixed at the default
+ * text size. At xxxLarge "Before parliament" needs about 231 pt; in the
+ * Duo's 281 pt list the estimate (174 pt) still fitted beside "Showing", so
+ * the value was cut off in the 190 pt left to it instead of moving under.
+ */
+test.each([
+  ['default', 1, 150, 190],
+  ['xxLarge', 1.235, 212, 281],
+  ['xxxLarge', 1.353, 231, 281],
+])(
+  'a menu row at %s asks for the width its value needs at that text size',
+  (_name, scale, least, most) => {
+    size(scale);
+    const r = render(
+      <PopUpButton
+        row
+        label="Showing"
+        value="before"
+        options={[
+          { value: 'before', label: 'Before parliament' },
+          { value: 'passed', label: 'Passed' },
+          { value: 'all', label: 'All' },
+        ]}
+        onChange={noop}
+        testID="scope"
+      />,
+    );
+    const host = r.root.findByType(Host);
+    // Still the row form laid out by the row, not the AX stacked one.
+    expect(host.props.matchContents.horizontal).toBe(false);
+    const basis = RN.StyleSheet.flatten(
+      host.parent!.parent!.props.style,
+    ).flexBasis;
+    expect(basis).toBeGreaterThanOrEqual(least);
+    expect(basis).toBeLessThanOrEqual(most);
+  },
+);
+
 test('a bare PopUpButton still hugs its value', () => {
   size(1);
   const r = render(

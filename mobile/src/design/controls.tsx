@@ -606,6 +606,7 @@ function MenuPicker<T extends string>({
   const current =
     (large ? selected?.shortLabel : undefined) ?? selected?.label ?? value;
   const layout = useLayout();
+  const { fontScale } = useWindowDimensions();
   const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
   const fallbackWidth = columnWidth(layout);
   const spoken =
@@ -663,7 +664,10 @@ function MenuPicker<T extends string>({
       testID={fill ? undefined : testID}
       style={[
         fill
-          ? [styles.menuRowFill, { flexBasis: menuValueWidth(current) }]
+          ? [
+              styles.menuRowFill,
+              { flexBasis: menuValueWidth(current, fontScale) },
+            ]
           : wide
             ? styles.full
             : styles.hug,
@@ -779,13 +783,20 @@ export const popUpLabelInset = 6;
 /** Any width past the widest row: SwiftUI clamps the frame to its host. */
 const menuRowFrameMax = 10000;
 /**
- * About what a menu row's value needs: its label at the body size, the
- * indicator and the button's own padding. Only the row's wrap decision
+ * About what a menu row's value needs at the reader's text size: its label
+ * at the body size, the indicator and the button's own padding. Only the row's wrap decision
  * reads it (a value too long to sit beside the title goes under it); the
  * value itself is drawn by SwiftUI at its real width.
  */
-function menuValueWidth(label: string) {
-  return Math.ceil(estimatedLabelWidth(label, 17)) + 20 + 2 * popUpLabelInset;
+function menuValueWidth(label: string, fontScale = 1) {
+  // The value, its indicator and padding all grow with the reader's text
+  // size (as segmentsFit's labels do): at xxxLarge "Before parliament"
+  // needs about 231 pt, and an estimate at the default size kept it beside
+  // "Showing" in a 281 pt list, cut off, instead of under it.
+  const scale = Math.max(1, fontScale);
+  return Math.ceil(
+    estimatedLabelWidth(label, 17 * scale) + (20 + 2 * popUpLabelInset) * scale,
+  );
 }
 
 export function PopUpButton<T extends string>(props: {
