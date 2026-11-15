@@ -22,6 +22,14 @@ import { editionPath } from '../src/api/policy';
 import { catalogs as runtime } from '../src/api/runtime';
 import { Screen } from '../src/design/layout';
 import { rhythm } from '../src/design/tokens';
+import { sinceWords } from '../src/features/today/SinceLastVisit';
+import { recentRecordsRoute } from '../src/navigation/routes';
+import {
+  readVisit,
+  refreshLikely,
+  rememberVisit,
+  REFRESH_AFTER_MS,
+} from '../src/features/today/visit-store';
 import { Text } from '../src/design/text';
 import * as learnSettings from '../src/features/learn/settings';
 import { OfflineLine } from '../src/design/states';
@@ -86,6 +94,8 @@ jest.mock('../src/api/runtime', () => ({
     // Nothing saved unless a test says so.
     sittingDaysSaved: jest.fn(async () => null),
     todayEditionSaved: jest.fn(async () => null),
+    // The collection record: unreadable unless a test publishes one.
+    corpus: jest.fn(),
   },
 }));
 jest.mock('../src/features/vic-election/reads', () => ({
@@ -306,6 +316,7 @@ function setUp({
     .mockResolvedValue({ hiddenUntil, welcomeDeclinedAt });
   mock.todayEdition.mockResolvedValue(edition);
   mock.todayEditionSaved.mockResolvedValue(null);
+  mock.corpus.mockRejectedValue(new Error('offline'));
   mock.sittingDaysSaved.mockResolvedValue(null);
   mock.todayBills.mockImplementation(async (limit = 3, kind = 'new') =>
     c.recentBillsFor(bills, limit, kind),
@@ -1085,6 +1096,155 @@ describe('the first frame has the loaded page’s layout', () => {
     } finally {
       load.mockRestore();
     }
+  });
+});
+
+/**
+ * "Since your last visit" (Jake's conditions): the last-open time stays on
+ * the device, the line states only how many more records the collection
+ * holds, with its source, and links to Just added; no paid read; and the
+ * line is held from the first frame or never drawn that visit.
+ */
+describe('since your last visit', () => {
+  const hosts = (r: TestRenderer.ReactTestRenderer, id: string) =>
+    r.root.findAll((n) => typeof n.type === 'string' && n.props.testID === id);
+  const corpus = (total: number, checkedAt: string) =>
+    ({
+      data: { expected_resources: total, refresh: { checked_at: checkedAt } },
+      stale: false,
+      savedAt: 1,
+    }) as never;
+  const longAgo = () =>
+    new Date(Date.now() - REFRESH_AFTER_MS - 60_000).toISOString();
+  const pendingRead = () => {
+    let answer!: (value: unknown) => void;
+    const promise = new Promise((resolve) => {
+      answer = resolve;
+    });
+    return { promise, answer };
+  };
+
+  test('the first ever launch draws no line and holds no place; it keeps the visit on the device', async () => {
+    setUp({ cached: { date: addDays(today, -1) } });
+    mock.corpus.mockResolvedValue(corpus(1000, '2026-11-15T03:00:00+00:00'));
+    const r = await render(<Today />);
+    expect(hosts(r, 'today-since')).toHaveLength(0);
+    expect(hosts(r, 'today-since-reserved')).toHaveLength(0);
+    const kept = await readVisit();
+    expect(kept).toMatchObject({
+      total: 1000,
+      checkedAt: '2026-11-15T03:00:00+00:00',
+    });
+    expect(Math.abs(kept!.openedAt - Date.now())).toBeLessThan(60_000);
+  });
+
+  test('a later visit: the place is held from the first frame, then states the count with its source and opens Just added', async () => {
+    const checked = longAgo();
+    await rememberVisit({ openedAt: 1, total: 1000, checkedAt: checked });
+    setUp({ cached: { date: addDays(today, -1) } });
+    const read = pendingRead();
+    mock.corpus.mockReturnValue(read.promise as never);
+    const r = await render(<Today />);
+    // The record is still out: the line's place is already under the date.
+    const held = hosts(r, 'today-since-reserved');
+    expect(held).toHaveLength(1);
+    expect(held[0]!.props.accessible).toBe(false);
+    expect(StyleSheet.flatten(held[0]!.props.style)).toMatchObject({
+      opacity: 0,
+    });
+    expect(
+      hosts(r, 'today-masthead')[0]!.findAll((n) => n === held[0]),
+    ).toHaveLength(1);
+    await act(async () =>
+      read.answer(corpus(1412, '2026-11-15T03:00:00+00:00')),
+    );
+    expect(hosts(r, 'today-since-reserved')).toHaveLength(0);
+    const line = hosts(r, 'today-since')[0]!;
+    expect(line.props.accessibilityRole).toBe('link');
+    expect(line.props.accessibilityLabel).toBe(
+      '412 more records in OPAX since your last visit. As at 15 Nov 2026, OPAX collection coverage record.',
+    );
+    expect(line.props.accessibilityLabel).not.toMatch(/—|–/);
+    expect(line.props.accessibilityHint).toBe('Opens Just added');
+    // It opens Just added, and the sources on touch and hold.
+    let owner: ReactTestInstance | null = line;
+    while (owner && owner.props.href === undefined) owner = owner.parent;
+    expect(owner!.props.href).toBe(recentRecordsRoute);
+    expect(owner!.props.menu.map((m: { title: string }) => m.title)).toEqual([
+      'Sources',
+    ]);
+    // The visit kept for next time is this one.
+    await expect(readVisit()).resolves.toMatchObject({ total: 1412 });
+  });
+
+  test('a total that did not grow draws no line; its held place stays until Today is out of view', async () => {
+    await rememberVisit({ openedAt: 1, total: 1000, checkedAt: longAgo() });
+    setUp({ cached: { date: addDays(today, -1) } });
+    // The total fell: never a negative or a "fewer" line.
+    mock.corpus.mockResolvedValue(corpus(990, '2026-11-15T03:00:00+00:00'));
+    const r = await render(<Today />);
+    expect(hosts(r, 'today-since')).toHaveLength(0);
+    expect(hosts(r, 'today-since-reserved')).toHaveLength(1);
+    const blur = mockFocusEffects
+      .map((effect) => effect() as unknown)
+      .filter((left): left is () => void => typeof left === 'function');
+    await act(async () => blur.forEach((leave) => leave()));
+    expect(hosts(r, 'today-since-reserved')).toHaveLength(0);
+  });
+
+  test('a visit soon after the last holds no place, and a count that arrives is never inserted', async () => {
+    await rememberVisit({
+      openedAt: 1,
+      total: 1000,
+      checkedAt: new Date().toISOString(),
+    });
+    setUp({ cached: { date: addDays(today, -1) } });
+    mock.corpus.mockResolvedValue(corpus(1412, new Date().toISOString()));
+    const r = await render(<Today />);
+    expect(hosts(r, 'today-since')).toHaveLength(0);
+    expect(hosts(r, 'today-since-reserved')).toHaveLength(0);
+  });
+
+  test('a collection record that cannot be read draws no line and keeps the last visit', async () => {
+    const last = { openedAt: 1, total: 1000, checkedAt: longAgo() };
+    await rememberVisit(last);
+    setUp({ cached: { date: addDays(today, -1) } });
+    const r = await render(<Today />);
+    expect(hosts(r, 'today-since')).toHaveLength(0);
+    await expect(readVisit()).resolves.toEqual(last);
+  });
+
+  test('the count is the collection record’s, free to read: no paid read, and nothing but the catalogue is asked', async () => {
+    await rememberVisit({ openedAt: 1, total: 1000, checkedAt: longAgo() });
+    setUp({ cached: { date: addDays(today, -1) } });
+    mock.corpus.mockResolvedValue(corpus(1001, '2026-11-15T03:00:00+00:00'));
+    const r = await render(<Today />);
+    expect(mock.corpus).toHaveBeenCalledTimes(1);
+    // No argument carries the last-open time anywhere.
+    expect(mock.corpus.mock.calls[0]).toEqual([]);
+    expect(hosts(r, 'today-since')[0]!.props.accessibilityLabel).toMatch(
+      /^1 more record in OPAX since your last visit\./,
+    );
+  });
+
+  test('the wording and the hold rule', () => {
+    expect(sinceWords(12)).toBe(
+      '12 more records in OPAX since your last visit',
+    );
+    expect(sinceWords(1234)).toBe(
+      '1,234 more records in OPAX since your last visit',
+    );
+    const visit = {
+      openedAt: 0,
+      total: 1,
+      checkedAt: '2026-11-14T03:00:00+00:00',
+    };
+    const checked = Date.parse(visit.checkedAt);
+    expect(refreshLikely(visit, checked + REFRESH_AFTER_MS - 1)).toBe(false);
+    expect(refreshLikely(visit, checked + REFRESH_AFTER_MS)).toBe(true);
+    expect(refreshLikely({ ...visit, checkedAt: 'unknown' }, checked)).toBe(
+      false,
+    );
   });
 });
 
