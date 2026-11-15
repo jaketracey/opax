@@ -685,13 +685,27 @@ push_nightly_change() { # FILE SED_EXPRESSION
   (cd "$other" && git add -A && git commit -q -m "a nightly fix" && git push -q origin HEAD:main)
 }
 new_sandbox s2c
-push_nightly_change scripts/vm/nightly.sh 's|^log "checkout at |log "NEWCOPY the pulled nightly.sh is running"\n&|'
+# the new copy starts 5 s late, so a start time taken again by the restarted run shows
+push_nightly_change scripts/vm/nightly.sh 's|^set -uo pipefail$|&\nsleep 5|; s|^log "checkout at |log "NEWCOPY the pulled nightly.sh is running"\n&|'
+T0=$(date +%s)
 FAKE_MODE=ok nightly
 check "exit 0 and the night published" bash -c "[ '$NRC' -eq 0 ] && git --git-dir='$ORIGIN' log --format=%s main | grep -q '^Nightly refresh'"
 check "it restarted exactly once" bash -c "[ \$(grep -c 'restarting once with the new copy' '$SB/nightly.out') -eq 1 ] && [ \$(grep -c '===== nightly start' '$SB/nightly.out') -eq 2 ]"
 check "the new copy ran, and only after the restart" bash -c "[ \$(grep -c 'NEWCOPY' '$SB/nightly.out') -eq 1 ] && [ \$(grep -n 'NEWCOPY' '$SB/nightly.out' | cut -d: -f1) -gt \$(grep -n 'restarting once' '$SB/nightly.out' | cut -d: -f1) ]"
-check "status ok, and one status commit" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and not s[\"failures\"], s' && [ \$(git --git-dir='$ORIGIN' rev-list --count nightly-status) -eq 1 ]"
+check "status ok" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys; s=json.load(sys.stdin); assert s[\"status\"]==\"ok\" and not s[\"failures\"], s'"
+check "one status is published, by the new copy: the copy it replaced publishes none" bash -c "[ \$(grep -c 'published status to origin/' '$SB/nightly.out') -eq 1 ] && [ \$(grep -n 'published status to origin/' '$SB/nightly.out' | cut -d: -f1) -gt \$(grep -n 'NEWCOPY' '$SB/nightly.out' | cut -d: -f1) ] && [ \$(grep -c '===== nightly end' '$SB/nightly.out') -eq 1 ]"
+check "the status keeps the first copy's start time, not the restart's" bash -c "git --git-dir='$ORIGIN' show nightly-status:status.json | python3 -c 'import json,sys,datetime; s=json.load(sys.stdin); t=datetime.datetime.strptime(s[\"started\"],\"%Y-%m-%dT%H:%M:%SZ\").replace(tzinfo=datetime.timezone.utc).timestamp(); assert $T0-1 <= t <= $T0+3, (t, $T0)'"
+check "the backfill cutoff counts from the first copy's start too" bash -c "c=\$(cat '$HOME/daily.backfill-not-after'); [ \$((c - 21600 + 7200)) -ge $((T0 - 1)) ] && [ \$((c - 21600 + 7200)) -le $((T0 + 3)) ]"
 check "the lock was taken again by the new copy, not left held" bash -c "! grep -q 'another nightly run holds' '$SB/nightly.out'"
+new_sandbox s2c1
+# git fetch starts a detached `git gc --auto` when the repository wants one (git 2.43), and it keeps every descriptor
+# the nightly had open, the lock among them. Stand-in: a git that leaves such a child behind on fetch.
+mkdir -p "$HOME/.local/bin"
+printf '#!/usr/bin/env bash\nif [ "${1:-}" = fetch ]; then (sleep 60 </dev/null >/dev/null 2>&1 &); fi\nexec %s "$@"\n' "$(command -v git)" > "$HOME/.local/bin/git"
+chmod +x "$HOME/.local/bin/git"
+push_nightly_change scripts/vm/nightly.sh 's|^log "checkout at |log "NEWCOPY the pulled nightly.sh is running"\n&|'
+FAKE_MODE=ok nightly
+check "a child of the first copy still holding the lock does not shut the restarted run out: it runs and publishes" bash -c "[ '$NRC' -eq 0 ] && ! grep -q 'another nightly run holds' '$SB/nightly.out' && grep -q NEWCOPY '$SB/nightly.out' && git --git-dir='$ORIGIN' log --format=%s main | grep -q '^Nightly refresh' && git --git-dir='$ORIGIN' show nightly-status:status.json | grep -q '\"status\": *\"ok\"'"
 new_sandbox s2c2
 push_nightly_change scripts/vm/data_groups.sh '$a # a new group path would go here'
 FAKE_MODE=ok nightly

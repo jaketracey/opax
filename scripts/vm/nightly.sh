@@ -85,8 +85,10 @@ STATUS_BRANCH="${OPAX_STATUS_BRANCH:-nightly-status}"
 PIPE="$HOME/.cache/autoresearch/pipeline"
 export OPAX_BACKFILL_STATE_DIR="${OPAX_BACKFILL_STATE_DIR:-$PIPE}"
 TODAY=$(TZ=Australia/Sydney date +%F)
-# a run restarted with the copy of this script its own sync pulled (section 1) keeps the first start time
+# a run restarted with the copy of this script its own sync pulled (section 1) keeps the first start time, for the
+# status (STARTED_AT) and for the backfill cutoff, which counts back from the unit's limit (START_EPOCH, section 1z)
 STARTED_AT=${OPAX_NIGHTLY_STARTED_AT:-$(date -u +%FT%TZ)}
+START_EPOCH=$(date +%s)
 LOGFILE="$PIPE/nightly-$TODAY.log"
 LASTFILE="$PIPE/nightly-last.json"
 LOCKFILE="$PIPE/nightly.lock"
@@ -136,7 +138,11 @@ coverage_status() {
 }
 
 # ---- lock ------------------------------------------------------------------------
-exec 8>"$LOCKFILE"
+# A restarted run (section 1) still holds the lock on the descriptor it inherited, and so may a child the first copy
+# left behind: git fetch starts a detached `git gc --auto` that keeps descriptor 8. Opening the file again would make
+# a second open file description, the child's lock would refuse it, and the night would end here in silence with
+# nothing published. So a restarted run keeps descriptor 8 when it is the lock file; flock on it then succeeds.
+if [ "${OPAX_NIGHTLY_REEXEC:-0}" != 1 ] || ! [ /proc/self/fd/8 -ef "$LOCKFILE" ]; then exec 8>"$LOCKFILE"; fi
 if ! flock -n 8; then
   echo "$(ts) [nightly] another nightly run holds $LOCKFILE; exiting" | tee -a "$LOGFILE"
   exit 0
@@ -307,18 +313,19 @@ if ! sync_repo; then fail "could not sync the checkout with origin/$BRANCH"; fin
 # Bash had read this script, and sourced data_groups.sh, before the sync pulled main: a fix to either merged
 # today would otherwise first run tomorrow night (15 Nov 2026: the hold list and the money group's new files
 # took two nights to apply). So when the sync changed either file, start again once with the new copy. The
-# guard variable allows exactly one restart; the start time, the lock (reopened by the new copy) and the
-# unit's time limit (same process) carry over. Everything read after this point is read fresh anyway.
+# guard variable allows exactly one restart. What carries over: the process (so the unit's time limit), the lock
+# (the same descriptor), both start times, and the whole environment the first copy exported (PATH, the git
+# identity and GIT_SSH_COMMAND, anything nightly.env set): a pulled change to the default of an exported variable
+# therefore applies from the next night, everything else in the new copy applies now. The exit traps stay set: bash
+# runs none on a successful exec, and if the exec itself fails the shell exits through them, so the failure is
+# published like any other death. Everything read after this point is read fresh anyway.
 if [ "${OPAX_NIGHTLY_REEXEC:-0}" != 1 ] && [ -n "$PRE_SYNC_HEAD" ] \
    && ! git diff --quiet "$PRE_SYNC_HEAD" HEAD -- scripts/vm/nightly.sh scripts/vm/data_groups.sh 2>/dev/null; then
   # a pulled copy that does not even parse must not take the night down with it: say so and go on with this one
   if bash -n "$REPO/scripts/vm/nightly.sh" 2>>"$LOGFILE" && bash -n "$REPO/scripts/vm/data_groups.sh" 2>>"$LOGFILE"; then
     log "the sync changed nightly.sh or data_groups.sh ($(git rev-parse --short "$PRE_SYNC_HEAD") -> $(git rev-parse --short HEAD)): restarting once with the new copy"
-    trap - EXIT TERM INT
-    rm -f "$MARK"
-    export OPAX_NIGHTLY_REEXEC=1 OPAX_NIGHTLY_STARTED_AT="$STARTED_AT"
+    export OPAX_NIGHTLY_REEXEC=1 OPAX_NIGHTLY_STARTED_AT="$STARTED_AT" OPAX_NIGHTLY_STARTED="${OPAX_NIGHTLY_STARTED:-$START_EPOCH}"
     exec bash "$REPO/scripts/vm/nightly.sh" "$@"
-    fail "could not restart with the new nightly.sh; continuing with the copy already loaded"
   else
     fail "the nightly.sh or data_groups.sh pulled from origin/$BRANCH does not parse (bash -n): not restarted, tonight runs with the copy already loaded"
   fi

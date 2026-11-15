@@ -805,7 +805,10 @@ the behaviour). Remove a line in the reviewed change that fixes its cause.
 **A merged nightly fix applies the same night.** Bash has read `nightly.sh`, and sourced `data_groups.sh`, before the
 run's own sync pulls `main`, so until 15 Nov 2026 a fix to either first ran on the second night after its merge. Now,
 when the sync changed either file, the run starts again once with the new copy (`OPAX_NIGHTLY_REEXEC=1` marks the
-restarted run, which never restarts again; the start time, the lock and the unit's time limit carry over). A pulled copy
+restarted run, which never restarts again). The process, and so the unit's time limit, the lock (the same descriptor,
+which a detached `git gc` left by the fetch may also hold), the start time in the status and the backfill cutoff's start
+all carry over, and so does the environment the first copy exported (`PATH`, the git identity and `GIT_SSH_COMMAND`,
+anything `nightly.env` set): a pulled change to the default of an exported variable applies from the next night. A pulled copy
 that fails `bash -n` is not started: the night goes on with the loaded copy and the status says so. Every other
 script and `gate_hold.txt` are read after the sync and need no restart. `test_nightly.sh` section 2c covers it.
 
