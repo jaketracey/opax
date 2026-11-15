@@ -80,6 +80,17 @@ export function barScrollEdges(
 }
 
 /**
+ * The one setting for what a tab root's bar does over scrolled content.
+ * On: no blur panel, no fill and no hairline, on any root (the frosted paper
+ * panel with its hard edge, b76). UIKit keeps its soft scroll edge and the
+ * large title collapses to the inline one; the page itself fades into its
+ * own ground under the bar (`BarFade`), because the soft edge alone left the
+ * title printed over barely softened text (iOS 27). Off: the hard edge.
+ * Reduce Transparency and Increase Contrast keep the solid bar either way.
+ */
+export const clearBars = true;
+
+/**
  * Colour UIKit's standard and scroll-edge appearances, without inserting a
  * React headerBackground view. That view covered native large titles and back
  * indicators, and reserved an extra header-height band in sheets (wave 7).
@@ -104,7 +115,8 @@ export const opaqueBar = (ground: ColorValue = colors.paper) => ({
  * UIKit's hard edge, which switches without animation. It turns on from the
  * first point of scroll, the large-title collapse included (Screen compares
  * with the bar height last reported, which holds the expanded title until
- * the collapse settles), and the edge is soft again back at rest. For
+ * the collapse settles), and the edge is soft again back at rest. With
+ * `clearBars` no root asks for it. For
  * accessibility only, useRootBarAppearance supplies a solid native sibling
  * below the bar, preserving the large title and automatic insets.
  */

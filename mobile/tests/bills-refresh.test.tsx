@@ -1,5 +1,5 @@
 import { act } from 'react';
-import { useWindowDimensions } from 'react-native';
+import { Animated, Platform, useWindowDimensions } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { createHash } from 'node:crypto';
 import { Catalogs } from '../src/api/catalogs';
@@ -188,5 +188,59 @@ test.each([
     for (const path of paths)
       expect(reads.filter((p) => p === path)).toHaveLength(2);
     act(() => renderer.unmount());
+  },
+);
+
+// The Bills tab's clear bar: the list fades into the page's ground behind
+// the title once rows are under it (the inline title printed over bill
+// names, iOS 27). The pushed list sits below an opaque bar and has no fade.
+test.each([
+  ['the Bills tab root', () => <BillsList />, true],
+  ['the pushed Bills list', () => <PushedBillsList />, false],
+] as const)(
+  '%s under a glass bar: fade layer %s, its scroll bound on the native side',
+  async (_name, screen, fades) => {
+    const version = Object.getOwnPropertyDescriptor(Platform, 'Version')!;
+    Object.defineProperty(Platform, 'Version', {
+      configurable: true,
+      value: 26,
+    });
+    const attach = jest
+      .spyOn(
+        Animated as unknown as {
+          attachNativeEvent: (...args: unknown[]) => unknown;
+        },
+        'attachNativeEvent',
+      )
+      .mockReturnValue({ detach: jest.fn() });
+    const renderer = await render(screen());
+    try {
+      const layers = renderer.root.findAll(
+        (node) =>
+          node.props.testID === 'bar-fade' && typeof node.type === 'string',
+      );
+      expect(layers).toHaveLength(fades ? 1 : 0);
+      const list = renderer.root.findAll(
+        (node) => node.props.testID === 'bills-screen' && !!node.props.data,
+      )[0]!;
+      if (!fades) {
+        expect(list.props.onScroll).toBeUndefined();
+        return;
+      }
+      const view = { tag: 3 };
+      for (const y of [-140, -100, 0, 300])
+        act(() =>
+          list.props.onScroll({
+            currentTarget: view,
+            nativeEvent: { contentOffset: { y } },
+          }),
+        );
+      expect(attach).toHaveBeenCalledTimes(1);
+      expect(attach.mock.calls[0]!.slice(0, 2)).toEqual([view, 'onScroll']);
+    } finally {
+      act(() => renderer.unmount());
+      attach.mockRestore();
+      Object.defineProperty(Platform, 'Version', version);
+    }
   },
 );

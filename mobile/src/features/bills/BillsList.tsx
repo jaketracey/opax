@@ -1,4 +1,7 @@
 import { animatedScroll } from '../../design/accessibility';
+import { ClearBarFade, useBarFadeScroll } from '../../design/bar-fade';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { useVerticalBarEdge } from '../../../modules/opax-root-bar';
 import { RouteOptions } from '../../navigation/preview';
 import { useAndroidRootScroll } from '../../navigation/useAndroidRootScroll';
 import {
@@ -58,7 +61,9 @@ import { useSplitSeparator } from '../../design/selection';
 import { StatePageProvider } from '../../design/states';
 import { colors, layout, rhythm } from '../../design/tokens';
 import {
+  clearBars,
   filtersItem,
+  glassBar,
   headerItems,
   rootHeaderItems,
 } from '../../navigation/chrome';
@@ -253,6 +258,21 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   );
   const listRef = useRef<FlatList<(typeof rows)[number]>>(null);
   const androidRoot = useAndroidRootScroll(listRef, colors.paper);
+  // The tab root's clear bar: the list fades into the page's ground behind
+  // the title and the bar buttons once rows are under them (the inline
+  // title printed over bill names, iOS 27). A pushed list sits below an
+  // opaque bar, the Duo's rail root under a solid one, and a split pane
+  // keeps its own bar.
+  const headerBottom = useHeaderBottom();
+  const onRail = useVerticalBarEdge() !== 'unspecified';
+  const fades =
+    clearBars &&
+    Platform.OS === 'ios' &&
+    glassBar() &&
+    !pushed &&
+    !adaptive &&
+    !onRail;
+  const fadeScroll = useBarFadeScroll(fades);
   const visible = useRef(new Set<string>());
   const [onViewable] = useState(
     () =>
@@ -570,7 +590,9 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         }
         {...(Platform.OS === 'android'
           ? { onScroll: androidRoot.onScroll, scrollEventThrottle: 16 }
-          : {})}
+          : fades
+            ? { onScroll: fadeScroll.onScroll, scrollEventThrottle: 16 }
+            : {})}
         ListHeaderComponentStyle={styles.header}
         ListFooterComponent={rows.length ? footer : null}
         ListFooterComponentStyle={styles.footer}
@@ -590,6 +612,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
       <>
         <RouteOptions options={options} />
         {listView}
+        {fades ? <ClearBarFade y={fadeScroll.y} bottom={headerBottom} /> : null}
       </>
     );
   return (

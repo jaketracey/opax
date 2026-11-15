@@ -33,6 +33,7 @@ import {
 } from 'react-native';
 import {
   barBacking,
+  clearBars,
   clearBarStyle,
   glassBar,
   opaqueBar,
@@ -50,6 +51,7 @@ import {
 } from '../navigation/useRootBarAppearance';
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
 import { useAccessibilitySize, useReduceMotion } from './accessibility';
+import { ClearBarFade, useBarFadeScroll } from './bar-fade';
 import {
   columnBreakout,
   columns,
@@ -571,6 +573,17 @@ export function Screen({
   const safeTop = useContext(SafeAreaInsetsContext)?.top ?? 0;
   const pinnedHere = Platform.OS === 'ios' && !!pinned;
   const railSolidRoot = useRailSolidRoot();
+  // Under a clear root bar the page fades into its own ground behind the
+  // bar as content goes under it, on the UI thread. A solid bar (the
+  // legibility settings, read by the fade itself; a rail root's search
+  // field) covers its own content.
+  const barFade =
+    clearBars &&
+    nativeRoot &&
+    Platform.OS === 'ios' &&
+    glassBar() &&
+    !railSolidRoot;
+  const fadeScroll = useBarFadeScroll(barFade);
   // Before iOS 26 every bar a pinned band sits under is opaque, and UIKit
   // lays the scroll view out below it: React Native's own sticky header
   // holds at the right place. BarStickyHeader subtracts the bar's height
@@ -753,6 +766,7 @@ export function Screen({
               }}
               onScroll={(event) => {
                 if (clampScrollOnContentChange) bounds.onScroll(event);
+                fadeScroll.onScroll(event);
                 const y = event.nativeEvent.contentOffset.y;
                 scrollY.current = y;
                 if (lastClipTop.current > 0 || settle.current) {
@@ -909,6 +923,14 @@ export function Screen({
                 </SurfaceContext.Provider>
               </RegionProvider>
             </ScrollView>
+            {barFade ? (
+              <ClearBarFade
+                y={fadeScroll.y}
+                bottom={headerBottom}
+                ground={ground}
+                tail={pinnedHere ? 0 : undefined}
+              />
+            ) : null}
           </PinnedAtTopContext.Provider>
         </PinnedRestContext.Provider>
       </SidebarSafe>
