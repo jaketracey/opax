@@ -187,3 +187,26 @@ test('every seat page: each candidate\'s party label is unchanged and links to i
   }
   assert.deepEqual([seats, links, plain], [96, 925, 112]);
 });
+
+// The shipped apps (to 1.1.5) derive a party from its printed name with their own table, which holds none of
+// the registered names, so most of these open the app's "This party isn't in OPAX's records yet" screen. Its
+// one action opens /subject/party/<the printed name, percent-encoded> on the website. That address must reach
+// the party's page for every name on a candidate row, the same for every party.
+test('the address the shipped apps open for a printed party name reaches that party\'s page, for every party', async () => {
+  const {loadWorker, offline} = await import('./worker-harness.mjs');
+  offline();
+  const worker = await loadWorker(new URL('../src/index.ts', import.meta.url).pathname, new URL('../public/', import.meta.url).pathname);
+  const printed = [...new Set(rows.filter(hasParty).map(c => c.party))];
+  assert.equal(printed.length, 23);
+  for (const name of printed) {
+    const page = resolvePartyPage(name, pages);
+    const first = await worker.fetch(`/subject/party/${encodeURIComponent(name)}`);
+    assert.ok([301, 308].includes(first.status), `${name}: ${first.status}`);
+    assert.equal(new URL(first.headers.get('location'), 'https://opax.com.au').pathname, page.href, name);
+    const landed = await worker.fetch(page.href);
+    assert.equal(landed.status, 200, name);
+    const html = await landed.text();
+    assert.ok(html.includes('Registered with the Victorian Electoral Commission as'), name);
+    assert.doesNotMatch(html, /<title>(?:Party not found|Page not found)/, name);
+  }
+});
