@@ -203,16 +203,17 @@ export function moneyBar(options: {
         ]
       : []),
   ];
-  if (!menu.length && !filters)
-    // Nothing to share, open or filter, and nothing is on its way.
-    return { ...headerItems(undefined), ...noHeaderItems() };
+  // An empty menu is also what a page passes while it loads (no path yet),
+  // so it clears nothing: a loaded page with no path calls noMoneyBar.
   return headerItems(
-    pageItems({
-      name,
-      share: shareable && !filters ? share : undefined,
-      filters,
-      menu,
-    }),
+    menu.length || filters
+      ? pageItems({
+          name,
+          share: shareable && !filters ? share : undefined,
+          filters,
+          menu,
+        })
+      : undefined,
   );
 }
 

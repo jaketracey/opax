@@ -14,8 +14,10 @@ import { ContentUnavailable } from '../src/design/states';
 import {
   headerItems,
   noHeaderItems,
+  pageItems,
   pendingHeaderItems,
 } from '../src/navigation/chrome';
+import { moneyBar } from '../src/features/money-public/parts';
 import { RouteOptions } from '../src/navigation/preview';
 
 let mockBarEdge: 'unspecified' | 'leading' | 'trailing' = 'unspecified';
@@ -166,6 +168,75 @@ describe('a page that will have no items of its own', () => {
     at('unspecified', 27);
     expect(items(bar)).toEqual(['spacing']);
     expect(items(failed)).toEqual(['spacing']);
+  });
+
+  test('a money page still loading keeps the stand-ins', () => {
+    // Agency and Grant program pass no path until their data arrives; an
+    // empty menu must not read as "no items", or the page jumps again.
+    at('trailing', 27);
+    const loading = moneyBar({ name: 'Agency', path: null });
+    expect(loading.unstable_headerRightItems).toBeUndefined();
+    expect(items(<RouteOptions stableItems options={loading} />)).toEqual([
+      'Share',
+      'More',
+    ]);
+  });
+
+  test('a failed load that recovers gets its real items', () => {
+    at('trailing', 27);
+    const calls: Record<string, unknown>[] = [];
+    const navigation = {
+      addListener: () => () => undefined,
+      setOptions: (value: Record<string, unknown>) => calls.push(value),
+      getState: () => ({
+        index: 1,
+        routes: [{ key: 'root' }, { key: route.key }],
+        routeNames: ['index', 'bill/[key]', 'explore/[tool]'],
+      }),
+      isFocused: () => true,
+    };
+    const page = (content: ReactElement) => (
+      <NavigationContext.Provider value={navigation as never}>
+        <NavigationRouteContext.Provider value={route as never}>
+          {content}
+        </NavigationRouteContext.Provider>
+      </NavigationContext.Provider>
+    );
+    const now = () =>
+      (
+        Object.assign({}, ...calls) as {
+          unstable_headerRightItems?: (props: object) => { type: string }[];
+        }
+      )
+        .unstable_headerRightItems?.({})
+        .map((item) =>
+          'label' in item ? (item as { label: string }).label : item.type,
+        );
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(page(failed));
+    });
+    expect(now()).toEqual([]);
+    // Try again succeeds: the page installs its own Share and More.
+    const real = headerItems(
+      pageItems({ name: 'Fixture Member', share: () => undefined, menu: [] }),
+    );
+    act(() =>
+      renderer.update(page(<RouteOptions stableItems options={real} />)),
+    );
+    expect(now()).toEqual(['Share', 'More']);
+    expect(
+      (
+        Object.assign({}, ...calls) as {
+          unstable_headerRightItems: (
+            props: object,
+          ) => { disabled?: boolean }[];
+        }
+      )
+        .unstable_headerRightItems({})
+        .some((item) => item.disabled),
+    ).toBe(false);
+    act(() => renderer.unmount());
   });
 
   test('a loaded page with nothing to share clears them on the rail only', () => {
