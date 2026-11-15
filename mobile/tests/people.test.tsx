@@ -1854,7 +1854,8 @@ describe('party', () => {
     await act(async () => resolve(views.Labor!));
     expect(has(r, 'party-loading')).toBe(false);
     expect(has(r, 'party-end')).toBe(true);
-    expect(scrollView().instance).toBe(loading);
+    // Compared by identity: printing a host instance on failure is not safe.
+    expect(scrollView().instance === loading).toBe(true);
     await act(async () => r.unmount());
   });
 

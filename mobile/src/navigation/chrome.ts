@@ -871,16 +871,36 @@ export function pendingHeaderItems(
 }
 
 /**
+ * Bar options for a page that has loaded and has no items of its own. On
+ * the rail that clears the stand-in buttons; elsewhere it changes nothing,
+ * and the invisible spacing stays as it was.
+ */
+export function noHeaderItems() {
+  return railItems() ? headerItems(() => []) : {};
+}
+
+/**
  * Whether bar items sit on a vertical rail right now. Read from the native
  * module's cached snapshot, since the stack's first options are built
  * outside any component.
  */
 function railItems(): boolean {
   return (
+    RAIL_STAND_IN_BUTTONS &&
     glassBar() &&
     (RootBar?.getVerticalBarEdge?.() ?? 'unspecified') !== 'unspecified'
   );
 }
+
+/**
+ * Off. On the Duo simulator the stand-in buttons made a remembered profile
+ * draw 38 pt high and drop when its own items replaced them (2 of 2 warm
+ * opens), where the spacing item showed no shift. The simulator never
+ * showed the 58 pt drop reported from the phone, so neither stand-in is
+ * proven there; until that is measured on a device the rail keeps the
+ * spacing item it had.
+ */
+export const RAIL_STAND_IN_BUTTONS: boolean = false;
 
 export function pendingHeaderOptions(name: string, params?: object) {
   const items = pendingHeaderItems(name, params);

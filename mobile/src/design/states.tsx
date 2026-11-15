@@ -1,6 +1,7 @@
 import { ContentUnavailableView, Host } from '@expo/ui/swift-ui';
 import { accessibilityIdentifier } from '@expo/ui/swift-ui/modifiers';
 import { NavigationContext } from 'expo-router/react-navigation';
+import { useMarkPageUnavailable } from '../navigation/page-unavailable';
 import {
   createContext,
   useContext,
@@ -1110,6 +1111,8 @@ export function ContentUnavailable({
   };
   testID?: string;
 }) {
+  // A whole-page state: the page will have no bar items of its own.
+  useMarkPageUnavailable(!inline);
   useStatusAnnouncement(
     announcement ??
       [phoneCopy(title), body ? phoneCopy(body) : null]

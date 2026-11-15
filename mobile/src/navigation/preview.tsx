@@ -6,6 +6,7 @@ import {
 import { useCallback, useContext, useLayoutEffect, useMemo } from 'react';
 import type { ColorValue } from 'react-native';
 import { sheetListOptions } from './sheet-lists';
+import { usePageUnavailable } from './page-unavailable';
 import { usePushedRailBar, useSolidRailBacking } from './solid-rail';
 import { useDetailRouteOptions } from './useDetailRouteOptions';
 import {
@@ -88,15 +89,25 @@ export function RouteOptions({
   // A pushed page beside the rail, unless a root-style owner has its bar.
   const pushedRail = usePushedRailBar();
   const screenGround = useScreenGround();
+  // Beside a vertical bar the stand-ins are dimmed buttons (chrome.ts). A
+  // page showing a whole-page unavailable state will never replace them,
+  // so they are cleared: only Back stays on the rail.
+  const unavailable = usePageUnavailable();
+  const clearStandIns =
+    unavailable && !!pending?.some((item) => item.type !== 'spacing');
   const resolvedOptions = useMemo(() => {
     const resolved =
-      options &&
-      pending &&
-      'unstable_headerRightItems' in options &&
-      !options.unstable_headerRightItems &&
-      !options.headerRight
-        ? { ...options, ...headerItems(() => pending) }
-        : options;
+      clearStandIns &&
+      !options?.unstable_headerRightItems &&
+      !options?.headerRight
+        ? { ...options, ...headerItems(() => []) }
+        : options &&
+            pending &&
+            'unstable_headerRightItems' in options &&
+            !options.unstable_headerRightItems &&
+            !options.headerRight
+          ? { ...options, ...headerItems(() => pending) }
+          : options;
     if (!resolved) return resolved;
     const own = (
       resolved.headerStyle as { backgroundColor?: ColorValue } | undefined
@@ -121,7 +132,16 @@ export function RouteOptions({
     // Under the solid rail bar a page's own bar colour is backed in that
     // colour: the glossary's paper bar had 14 pt of the darker page above it.
     return solidRail && own ? { ...resolved, ...barBacking(own) } : resolved;
-  }, [options, pending, clearRail, solidRail, pushedRail, root, screenGround]);
+  }, [
+    options,
+    pending,
+    clearStandIns,
+    clearRail,
+    solidRail,
+    pushedRail,
+    root,
+    screenGround,
+  ]);
   const keepItems = stableItems || !!pending;
   useDetailRouteOptions(setOptions, keepItems ? resolvedOptions : undefined);
   // Stack.Screen installs options in its own effect, outside our guard.
