@@ -1,6 +1,5 @@
 import { isAbortError } from '../../api/abort';
-import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
-import { AccessibilityInfo } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
 import { apiClient } from '../../api/runtime';
 import type { RecordResult } from '../../api/client';
 import {
@@ -74,71 +73,8 @@ export function useMoneyRecord(jurisdiction: MoneyJurisdiction) {
   };
 }
 
-/**
- * VoiceOver, asked once when the first money screen subscribes and shared
- * by every screen after it, so a later map's first paint already knows
- * which view to draw (map 3.11).
- */
-const reader = (() => {
-  let known: boolean | null = null;
-  const listeners = new Set<() => void>();
-  const set = (value: boolean) => {
-    if (known === value) return;
-    known = value;
-    listeners.forEach((listener) => listener());
-  };
-  let primed = false;
-  let subscription: { remove: () => void } | null = null;
-  const prime = () => {
-    if (primed) return;
-    primed = true;
-    try {
-      subscription = AccessibilityInfo.addEventListener(
-        'screenReaderChanged',
-        set,
-      );
-      void AccessibilityInfo.isScreenReaderEnabled().then(
-        (value) => {
-          if (known === null) set(value);
-        },
-        () => undefined,
-      );
-    } catch {
-      // No accessibility bridge (a test or a headless run): unknown.
-    }
-  };
-  return {
-    prime,
-    forget: () => {
-      subscription?.remove();
-      subscription = null;
-      primed = false;
-      known = null;
-    },
-    get: () => known,
-    subscribe: (listener: () => void) => {
-      prime();
-      listeners.add(listener);
-      return () => {
-        listeners.delete(listener);
-      };
-    },
-  };
-})();
-
-/** Tests start each case with VoiceOver not yet known. */
-export function forgetScreenReader() {
-  reader.forget();
-}
-/** VoiceOver's state; null until known. */
-export function useMoneyScreenReader() {
-  return useSyncExternalStore(reader.subscribe, reader.get, reader.get);
-}
-/** The first known value, kept: the view never flips once it is known. */
-export function useFirstScreenReader() {
-  const value = useMoneyScreenReader();
-  const [first, setFirst] = useState(value);
-  // Unknown at first paint: take the first known value, then hold it.
-  if (first === null && value !== null) setFirst(value);
-  return first === null ? value : first;
-}
+export {
+  forgetScreenReader,
+  useFirstScreenReader,
+  useMoneyScreenReader,
+} from './screen-reader';

@@ -4,7 +4,8 @@ import type { useCanvasRef } from '@shopify/react-native-skia';
 import type { MoneyGraph } from './data';
 
 export interface MoneyTestHookProps {
-  graph: MoneyGraph;
+  /** None while the graph loads: the hooks keep their place. */
+  graph: MoneyGraph | null;
   onYear: (year: number) => void;
   onFocus: (id: string) => void;
 }

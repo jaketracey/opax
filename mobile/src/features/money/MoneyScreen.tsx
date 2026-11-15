@@ -79,7 +79,7 @@ import {
   type MoneyNode,
 } from './data';
 import { useFirstScreenReader, useMoneyRecord } from './hooks';
-import { partyNodeFor } from './lookup';
+import { loadedMoneyGraph, partyNodeFor } from './lookup';
 import { MoneyMap, type MapCommand, type MapRequest } from './map/MoneyMap';
 import { MoneyMapControls } from './map/MoneyMapControls';
 import { MoneyMapLegend } from './map/MoneyMapLegend';
@@ -97,6 +97,7 @@ import { moneyPageMenu } from './menu';
 import { MoneyTestHooks } from './money-probe';
 import { useMoneyFilters } from './MoneyFilters';
 import { moneyPartyGroups, PartyMoneyRow } from './parts';
+import { moneyMode, type MoneyMode } from './screen-reader';
 import {
   donationsCaveat,
   donorDetails,
@@ -131,7 +132,7 @@ import {
 import { track } from '../../analytics';
 
 const TOP_DONORS = 20;
-type Mode = 'list' | 'map';
+type Mode = MoneyMode;
 
 /** "Money to parties, 1998–99 to 2025–26, and public money to donors on the map". */
 export function moneySummary(graph: MoneyGraph, filters: MoneyFilters) {
@@ -147,6 +148,25 @@ export function moneySummary(graph: MoneyGraph, filters: MoneyFilters) {
           Math.max(...parties.map((n) => n.lastYear!)),
         ]
       : [filters.from, filters.to];
+  return summaryWords(
+    partiesFigureWords(graph).title,
+    from,
+    to,
+    filters,
+    !isAllYears(graph, filters),
+  );
+}
+
+function summaryWords(
+  title: string,
+  from: number,
+  to: number,
+  filters: Pick<
+    MoneyFilters,
+    'donations' | 'grants' | 'contracts' | 'industry' | 'min'
+  >,
+  narrowedYears: boolean,
+) {
   const window =
     from === to ? ` in ${moneyYears(from, to)}` : `, ${moneyYears(from, to)}`;
   const industry = filters.industry
@@ -157,14 +177,55 @@ export function moneySummary(graph: MoneyGraph, filters: MoneyFilters) {
       ? `, flows of ${formatMoneyCompact(filters.min)} and over`
       : '';
   const publicMoney = filters.grants || filters.contracts;
-  const narrowed =
-    !isAllYears(graph, filters) || !!filters.industry || filters.min > 0;
+  const narrowed = narrowedYears || !!filters.industry || filters.min > 0;
   if (!filters.donations)
     return `Public money to donors on the map${window}${industry}${minimum}`;
-  const { title } = partiesFigureWords(graph);
   return narrowed || !publicMoney
     ? `${title}${window}${industry}${minimum}`
     : `${title}${window}, and public money to donors on the map`;
+}
+
+/** The layers a link asks for, known before the graph is in. */
+function linkedLayers(params: MoneyParams) {
+  const layers = param(params.layers)?.split(',');
+  return {
+    donations: layers ? layers.includes('donations') : true,
+    grants: layers ? layers.includes('grants') : true,
+    contracts: layers ? layers.includes('contracts') : true,
+  };
+}
+
+/**
+ * Words of the summary's length, for the space it is kept before the graph
+ * is in: the summary itself from a graph already read this session, else
+ * the same sentence from the link's filters over a stand-in span of years.
+ * It is never shown; it wraps as the summary will, so nothing under it moves
+ * when the summary arrives.
+ */
+export function moneySummaryStandIn(
+  jurisdiction: MoneyJurisdiction,
+  params: MoneyParams,
+) {
+  const known = loadedMoneyGraph(jurisdiction);
+  if (known) return moneySummary(known, filtersFromParams(known, params));
+  const year = (key: string) => {
+    const value = Number(param(params[key]));
+    return param(params[key]) && Number.isInteger(value) ? value : null;
+  };
+  const from = year('from'),
+    to = year('to');
+  const min = Number(param(params.min));
+  return summaryWords(
+    partiesFigureWords({ meta: { jurisdiction } }).title,
+    Math.min(from ?? 1998, to ?? 2025),
+    Math.max(from ?? 1998, to ?? 2025),
+    {
+      ...linkedLayers(params),
+      industry: param(params.industry) || null,
+      min: Number.isFinite(min) && min > 0 ? Math.floor(min) : 0,
+    },
+    from !== null || to !== null,
+  );
 }
 
 /**
@@ -261,14 +322,10 @@ export default function MoneyScreen() {
     [graph, params],
   );
   const reader = useFirstScreenReader();
-  // The reader's choice, else the link's view, else List while VoiceOver
-  // is on or not yet known (the map draws once it is known to be off).
+  // Null until VoiceOver is known: neither view is drawn before then, so
+  // the List is never drawn and then swapped for the Map (screen-reader.ts).
   const [chosen, setMode] = useState<Mode | null>(null);
-  const linked = param(params.view);
-  const mode: Mode =
-    chosen ??
-    (linked === 'list' ? 'list' : linked === 'map' ? 'map' : null) ??
-    (reader === false ? 'map' : 'list');
+  const mode = moneyMode(chosen, param(params.view), reader);
   const select = useCallback(
     (id: string, name?: string) => {
       if (filters)
@@ -315,7 +372,7 @@ export default function MoneyScreen() {
         { value: 'list', label: 'List', testID: 'money-mode-list' },
         { value: 'map', label: 'Map', testID: 'money-mode-map' },
       ]}
-      value={mode}
+      value={mode ?? 'list'}
       onChange={(next: Mode) => setMode(next)}
       accessibilityLabel="View"
       testID="money-view-toggle"
@@ -341,12 +398,25 @@ export default function MoneyScreen() {
       testID="money-jurisdiction"
     />
   );
+  // The line's height is kept until its words arrive, in the words it is
+  // expected to say, so the picker and the map's controls start in place.
   const summary =
     graph && filters ? (
       <Text wordSafe variant="secondary" testID="money-view-summary">
         {moneySummary(graph, filters)}
       </Text>
-    ) : null;
+    ) : (
+      <View
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        style={styles.unseen}
+        testID="money-view-summary-space"
+      >
+        <Text wordSafe variant="secondary">
+          {moneySummaryStandIn(jurisdiction, params)}
+        </Text>
+      </View>
+    );
   const reset = () =>
     write({
       from: undefined,
@@ -356,7 +426,8 @@ export default function MoneyScreen() {
       inflation: undefined,
       min: undefined,
     });
-  const body =
+  // An error, or filters that match nothing: said in the view's own frame.
+  const unavailable =
     error && !record ? (
       missingState ? (
         <ContentUnavailable
@@ -385,9 +456,7 @@ export default function MoneyScreen() {
           testID="money-error"
         />
       )
-    ) : !record || !graph || !filters || !view ? (
-      <MoneySkeleton mode={mode} />
-    ) : !view.nodes.length ? (
+    ) : record && graph && filters && view && !view.nodes.length ? (
       <ContentUnavailable
         symbol="line.3.horizontal.decrease.circle"
         title="Nothing matches these filters"
@@ -399,24 +468,29 @@ export default function MoneyScreen() {
         testID="money-empty"
       />
     ) : null;
-  const hooks =
-    graph && view && filters ? (
-      <MoneyTestHooks
-        graph={view}
-        onYear={(year) => write({ from: String(year), to: String(year) })}
-        onFocus={(id) =>
-          select(id, graph.nodes.find((n) => n.id === id)?.label)
-        }
-      />
+  // Journey hooks keep their place in e2e builds before the graph is in.
+  const hooks = error ? null : (
+    <MoneyTestHooks
+      graph={view}
+      onYear={(year) => write({ from: String(year), to: String(year) })}
+      onFocus={(id) => select(id, graph?.nodes.find((n) => n.id === id)?.label)}
+    />
+  );
+  const offlineLine =
+    record?.stale && !record.staleReason ? (
+      <OfflineLine savedAt={record.savedAt} testID="money-offline" />
     ) : null;
-  if (mode === 'map' && record && graph && filters && view && !body)
+  if (mode === null) return <PendingMode options={options} />;
+  if (mode === 'map')
     return (
       <ReservedRegionArea style={styles.root}>
         <MapMode
-          record={record}
-          graph={graph}
-          view={view}
-          filters={filters}
+          data={
+            record && graph && filters && view && !unavailable
+              ? { record, graph, view, filters }
+              : null
+          }
+          unavailable={unavailable}
           jurisdiction={jurisdiction}
           params={params}
           write={write}
@@ -429,11 +503,7 @@ export default function MoneyScreen() {
               {hooks}
             </>
           }
-          offline={
-            record.stale && !record.staleReason ? (
-              <OfflineLine savedAt={record.savedAt} testID="money-offline" />
-            ) : null
-          }
+          offline={offlineLine}
         />
       </ReservedRegionArea>
     );
@@ -449,14 +519,10 @@ export default function MoneyScreen() {
           {summary}
         </>
       }
-      offline={
-        record?.stale && !record.staleReason ? (
-          <OfflineLine savedAt={record.savedAt} testID="money-offline" />
-        ) : null
-      }
+      offline={offlineLine}
       picker={picker}
       body={
-        body ??
+        unavailable ??
         (record && graph && filters && view ? (
           <ListBody
             record={record}
@@ -464,20 +530,46 @@ export default function MoneyScreen() {
             view={view}
             jurisdiction={jurisdiction}
           />
-        ) : null)
+        ) : (
+          <MoneySkeleton />
+        ))
       }
       hooks={hooks}
     />
   );
 }
 
+/**
+ * VoiceOver not yet known and no view chosen or linked: the page's ground
+ * and its bar items only. The app asks as it starts, so this is at most the
+ * first frames of a cold start straight onto this page.
+ */
+function PendingMode({ options }: { options: Record<string, unknown> }) {
+  return (
+    <View style={styles.root} testID="money-pending">
+      <RouteOptions options={options} />
+    </View>
+  );
+}
+
 // ------------------------------------------------------------------ map
 
+/** What the map draws from: absent while it loads or is unavailable. */
+type MapData = {
+  record: RecordResult<MoneyGraph>;
+  graph: MoneyGraph;
+  view: MoneyGraph;
+  filters: MoneyFilters;
+};
+
+/**
+ * The map's frame is the same loading and loaded: the solid bar with its
+ * title, the card, the controls and the panel hold their final places from
+ * the first frame, and the map and the figures arrive inside them.
+ */
 function MapMode({
-  record,
-  graph,
-  view,
-  filters,
+  data,
+  unavailable,
   jurisdiction,
   params,
   write,
@@ -485,10 +577,9 @@ function MapMode({
   controls,
   offline,
 }: {
-  record: RecordResult<MoneyGraph>;
-  graph: MoneyGraph;
-  view: MoneyGraph;
-  filters: MoneyFilters;
+  data: MapData | null;
+  /** An error or an empty result, shown under the card in the map's place. */
+  unavailable: React.ReactNode;
   jurisdiction: MoneyJurisdiction;
   params: MoneyParams;
   write: (next: Record<string, string | undefined>) => void;
@@ -531,16 +622,23 @@ function MapMode({
       })),
     [],
   );
-  const model = useMemo(() => buildModel(view), [view]);
+  const view = data?.view ?? null;
+  const filters = data?.filters ?? null;
+  const model = useMemo(() => (view ? buildModel(view) : null), [view]);
   // Map analytics: the action and how many filters are set, never which
   // filters, records or search text.
-  const filterCount = moneyFilterCount(graph, filters);
+  const filterCount = data ? moneyFilterCount(data.graph, data.filters) : 0;
   const mapAction = (
     action: 'open' | 'filter' | 'zoom' | 'open_record' | 'search',
   ) => track('opax_map_action', { action, filter_count: filterCount });
   const shown = useRef(false);
-  const filterKey = JSON.stringify(filters);
+  const filterKey = filters ? JSON.stringify(filters) : null;
   useEffect(() => {
+    // Nothing is counted until a map is drawn; the next one drawn is `open`.
+    if (filterKey === null) {
+      shown.current = false;
+      return;
+    }
     // `open` once as the map is shown; `filter` on each change after that.
     mapAction(shown.current ? 'filter' : 'open');
     shown.current = true;
@@ -548,7 +646,8 @@ function MapMode({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterKey]);
   const focus = param(params.select) ?? null;
-  const focusIndex = focus === null ? null : (model.byId.get(focus) ?? null);
+  const focusIndex =
+    focus === null || !model ? null : (model.byId.get(focus) ?? null);
   // The trail Next has walked, as node ids, so Previous retraces it.
   const [trail, setTrail] = useState<string[]>([]);
   const setFocus = useCallback(
@@ -560,6 +659,19 @@ function MapMode({
   );
   const [searchOpen, setSearchOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  // The frame outlives its map (another jurisdiction, a retry): what was
+  // asked of the old map is not asked of the next.
+  const loaded = data !== null;
+  const [wasLoaded, setWasLoaded] = useState(loaded);
+  if (wasLoaded !== loaded) {
+    setWasLoaded(loaded);
+    if (!loaded) {
+      setCommand(null);
+      setTrail([]);
+      setSearchOpen(false);
+      setExpanded(false);
+    }
+  }
   const [stage, setStage] = useState({ width: 0, height: 0 });
   const [topHeight, setTopHeight] = useState(0);
   const [peek, setPeek] = useState(0);
@@ -733,6 +845,7 @@ function MapMode({
   // so the new subject is said aloud in the panel title's words, after the
   // button's own reply.
   const step = (index: number, nextTrail: string[]) => {
+    if (!model) return;
     const node = model.nodes[index]!;
     go(node.id, nextTrail);
     AccessibilityInfo.announceForAccessibilityWithOptions(
@@ -747,11 +860,12 @@ function MapMode({
   };
   const record_ = useCallback(
     (id: string, name?: string) =>
-      moneyFocusRoute(id, jurisdiction, filters, name, 'map'),
+      // Only a drawn map has records to open.
+      moneyFocusRoute(id, jurisdiction, filters!, name, 'map'),
     [jurisdiction, filters],
   );
   const panelFocus: PanelFocus | null = (() => {
-    if (focusIndex === null) return null;
+    if (focusIndex === null || !model) return null;
     const node = model.nodes[focusIndex]!;
     const trailIndices = trail
       .map((id) => model.byId.get(id))
@@ -819,29 +933,34 @@ function MapMode({
         },
       ]
     : [];
-  const totals = {
-    donations: model.totals.donations,
-    publicMoney:
-      filters.grants || filters.contracts
-        ? model.totals.grants + model.totals.contracts
-        : null,
-  };
-  const shortSource = moneyShortSource(graph);
-  const sourceLine = (
+  const totals =
+    data && model
+      ? {
+          donations: model.totals.donations,
+          publicMoney:
+            data.filters.grants || data.filters.contracts
+              ? model.totals.grants + model.totals.contracts
+              : null,
+        }
+      : null;
+  const layers = linkedLayers(params);
+  const sourceLine = data ? (
     <SourceLine
-      {...moneySourceDetails(record, {
+      {...moneySourceDetails(data.record, {
         citation: [
-          shortSource,
+          moneyShortSource(data.graph),
           ...(['grants', 'contracts'] as const)
-            .filter((kind) => filters[kind] && graph.meta[`${kind}_source`])
-            .map((kind) => publicMoneySource(graph, kind).label),
+            .filter(
+              (kind) => data.filters[kind] && data.graph.meta[`${kind}_source`],
+            )
+            .map((kind) => publicMoneySource(data.graph, kind).label),
         ],
-        originals: moneyOriginals(graph),
-        notes: [...moneyNotes(graph), donationsCaveat, publicMoneyCaveat],
+        originals: moneyOriginals(data.graph),
+        notes: [...moneyNotes(data.graph), donationsCaveat, publicMoneyCaveat],
         testID: 'money-source',
       })}
     />
-  );
+  ) : null;
   const cardWidth = regular ? { maxWidth: 420 } : null;
   // A capped card says it scrolls: the system indicator flashes once when
   // its content first runs past the cap (item 5.3).
@@ -853,26 +972,27 @@ function MapMode({
     flashed.current = true;
     topScroll.current?.flashScrollIndicators();
   };
-  const topContent = searchOpen ? (
-    <MoneyMapSearch
-      model={model}
-      // The search card closes either way, taking VoiceOver's place with it:
-      // a result moves it to the panel's new subject, Close back to Search.
-      onChoose={(id) => {
-        requestFocus('money-map-focus');
-        chooseSearchResult(id);
-      }}
-      onClose={() => {
-        requestFocus('money-map-search');
-        setSearchOpen(false);
-      }}
-    />
-  ) : (
-    <View style={styles.card} testID="money-map-card">
-      {controls}
-      {offline}
-    </View>
-  );
+  const topContent =
+    searchOpen && model ? (
+      <MoneyMapSearch
+        model={model}
+        // The search card closes either way, taking VoiceOver's place with it:
+        // a result moves it to the panel's new subject, Close back to Search.
+        onChoose={(id) => {
+          requestFocus('money-map-focus');
+          chooseSearchResult(id);
+        }}
+        onClose={() => {
+          requestFocus('money-map-search');
+          setSearchOpen(false);
+        }}
+      />
+    ) : (
+      <View style={styles.card} testID="money-map-card">
+        {controls}
+        {offline}
+      </View>
+    );
   return (
     <GestureHandlerRootView style={styles.root}>
       <RouteOptions options={options} />
@@ -888,40 +1008,43 @@ function MapMode({
           );
         }}
       >
-        <MoneyMap
-          command={command}
-          graph={graph}
-          model={model}
-          focus={focus}
-          onFocus={(id) => setFocus(id)}
-          insets={insets}
-          clip={clip}
-          cacheKey={jurisdiction}
-          accessibilityLabel={moneyMapLabel(model, focus)}
-          actions={actions}
-          overview={
-            large ||
-            searchOpen ||
-            expanded ||
-            (managed && pose.controls.width < MINI_WIDTH + rhythm.block * 2) ||
-            (managed &&
-              pose.controls.height - topHeight - controlsHeight - peek <
-                MINI_HEIGHT + rhythm.block * 2)
-              ? null
-              : {
-                  left:
-                    (managed ? pose.controls.x : (safe?.left ?? 0)) +
-                    rhythm.block,
-                  bottom: managed
-                    ? (stage.height || window.height) -
-                      pose.controls.y -
-                      pose.controls.height +
-                      Math.min(peek, panelMaxHeight ?? peek) +
-                      rhythm.block
-                    : band + peek + rhythm.block,
-                }
-          }
-        />
+        {data && model ? (
+          <MoneyMap
+            command={command}
+            graph={data.graph}
+            model={model}
+            focus={focus}
+            onFocus={(id) => setFocus(id)}
+            insets={insets}
+            clip={clip}
+            cacheKey={jurisdiction}
+            accessibilityLabel={moneyMapLabel(model, focus)}
+            actions={actions}
+            overview={
+              large ||
+              searchOpen ||
+              expanded ||
+              (managed &&
+                pose.controls.width < MINI_WIDTH + rhythm.block * 2) ||
+              (managed &&
+                pose.controls.height - topHeight - controlsHeight - peek <
+                  MINI_HEIGHT + rhythm.block * 2)
+                ? null
+                : {
+                    left:
+                      (managed ? pose.controls.x : (safe?.left ?? 0)) +
+                      rhythm.block,
+                    bottom: managed
+                      ? (stage.height || window.height) -
+                        pose.controls.y -
+                        pose.controls.height +
+                        Math.min(peek, panelMaxHeight ?? peek) +
+                        rhythm.block
+                      : band + peek + rhythm.block,
+                  }
+            }
+          />
+        ) : null}
         <SafeAreaView
           // The stack's opaque bar already sits above the stage: a top
           // edge here would count the status bar twice and push the card
@@ -970,70 +1093,93 @@ function MapMode({
               topContent
             )}
           </View>
-          {searchOpen || expanded ? null : (
+          {/* The controls hang from the card's foot by layout, not from its
+              measured height, so they are in place on the first frame. */}
+          <View style={styles.grow} pointerEvents="box-none">
+            {unavailable ? (
+              <ScrollView contentContainerStyle={styles.unavailable}>
+                {unavailable}
+              </ScrollView>
+            ) : searchOpen || expanded ? null : (
+              <View
+                style={[
+                  styles.controls,
+                  horizontalControls
+                    ? { left: rhythm.block, right: undefined }
+                    : null,
+                ]}
+                pointerEvents="box-none"
+                onLayout={(event) => {
+                  const next = Math.ceil(event.nativeEvent.layout.height);
+                  setControlsHeight(next);
+                  if (!horizontalControls) setStackHeight(next);
+                }}
+              >
+                <MoneyMapControls
+                  horizontal={horizontalControls}
+                  onSearch={() => {
+                    if (model) setSearchOpen(true);
+                  }}
+                  onZoomIn={() => {
+                    if (!model) return;
+                    mapAction('zoom');
+                    dispatch({ type: 'zoom', direction: 1 });
+                  }}
+                  onZoomOut={() => {
+                    if (!model) return;
+                    mapAction('zoom');
+                    dispatch({ type: 'zoom', direction: -1 });
+                  }}
+                  onFit={() => {
+                    if (!model) return;
+                    mapAction('zoom');
+                    dispatch({ type: 'fit' });
+                  }}
+                />
+              </View>
+            )}
+          </View>
+          {unavailable ? null : (
             <View
-              style={[
-                styles.controls,
-                { top: topHeight + rhythm.block },
-                horizontalControls
-                  ? { left: rhythm.block, right: undefined }
-                  : null,
-              ]}
+              style={[styles.panelHost, regular ? styles.panelRegular : null]}
               pointerEvents="box-none"
               onLayout={(event) => {
-                const next = Math.ceil(event.nativeEvent.layout.height);
-                setControlsHeight(next);
-                if (!horizontalControls) setStackHeight(next);
+                if (managed) return;
+                const { y, height } = event.nativeEvent.layout;
+                const gap = Math.max(
+                  0,
+                  Math.round(stage.height - (y + height)),
+                );
+                setBelow((previous) => (previous === gap ? previous : gap));
               }}
             >
-              <MoneyMapControls
-                horizontal={horizontalControls}
-                onSearch={() => setSearchOpen(true)}
-                onZoomIn={() => {
-                  mapAction('zoom');
-                  dispatch({ type: 'zoom', direction: 1 });
+              <MoneyMapPanel
+                focus={panelFocus}
+                totals={totals}
+                publicMoneyExpected={layers.grants || layers.contracts}
+                caption={
+                  model
+                    ? `${formatCount(model.nodes.length)} discs · ${formatCount(model.edges.length)} recorded flows · ${formatMoneyCompact(model.totals.donations)} in donations`
+                    : ''
+                }
+                legend={model ? <MoneyMapLegend model={model} /> : null}
+                sourceLine={sourceLine}
+                stageHeight={stage.height || window.height}
+                maxHeight={panelMaxHeight}
+                expanded={expanded}
+                onExpanded={(next) => {
+                  if (model) setExpanded(next);
                 }}
-                onZoomOut={() => {
-                  mapAction('zoom');
-                  dispatch({ type: 'zoom', direction: -1 });
+                // Clearing ends the subject: the next focus starts at the peek.
+                onClear={() => {
+                  setFocus(null);
+                  setExpanded(false);
                 }}
-                onFit={() => {
-                  mapAction('zoom');
-                  dispatch({ type: 'fit' });
-                }}
+                onOpenRecord={() => mapAction('open_record')}
+                onPeekHeight={setPeek}
               />
             </View>
           )}
-          <View style={styles.grow} pointerEvents="box-none" />
-          <View
-            style={[styles.panelHost, regular ? styles.panelRegular : null]}
-            pointerEvents="box-none"
-            onLayout={(event) => {
-              if (managed) return;
-              const { y, height } = event.nativeEvent.layout;
-              const gap = Math.max(0, Math.round(stage.height - (y + height)));
-              setBelow((previous) => (previous === gap ? previous : gap));
-            }}
-          >
-            <MoneyMapPanel
-              focus={panelFocus}
-              totals={totals}
-              caption={`${formatCount(model.nodes.length)} discs · ${formatCount(model.edges.length)} recorded flows · ${formatMoneyCompact(model.totals.donations)} in donations`}
-              legend={<MoneyMapLegend model={model} />}
-              sourceLine={sourceLine}
-              stageHeight={stage.height || window.height}
-              maxHeight={panelMaxHeight}
-              expanded={expanded}
-              onExpanded={setExpanded}
-              // Clearing ends the subject: the next focus starts at the peek.
-              onClear={() => {
-                setFocus(null);
-                setExpanded(false);
-              }}
-              onOpenRecord={() => mapAction('open_record')}
-              onPeekHeight={setPeek}
-            />
-          </View>
         </SafeAreaView>
       </View>
     </GestureHandlerRootView>
@@ -1117,28 +1263,17 @@ function ListMode({
   );
 }
 
-function MoneySkeleton({ mode }: { mode: Mode }) {
-  const { width } = useWindowDimensions();
-  const { regular } = useLayout();
+/** The List view's placeholder; the Map keeps its own frame (MapMode). */
+function MoneySkeleton() {
   return (
     <Group>
-      {mode === 'map' ? (
-        <View
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-          style={{
-            height: regular ? 560 : Math.min(Math.round(width), 440),
-            backgroundColor: colors.sunken,
-          }}
-        />
-      ) : null}
       <Skeleton
         shape="figure"
-        count={mode === 'map' ? 2 : 1}
+        count={1}
         label="Loading the money map"
         testID="money-loading"
       />
-      {mode === 'list' ? <Skeleton shape="rows" count={5} /> : null}
+      <Skeleton shape="rows" count={5} />
     </Group>
   );
 }
@@ -1363,9 +1498,13 @@ const styles = StyleSheet.create({
     padding: rhythm.block,
     gap: rhythm.tight,
   },
-  // Floating under the card (its `top` is the card's measured height), out
-  // of the column so the expanded panel keeps its share of the stage.
-  controls: { position: 'absolute', right: rhythm.block },
+  // Floating under the card, at the head of the room between it and the
+  // panel, out of the column so the expanded panel keeps its share of the
+  // stage.
+  controls: { position: 'absolute', top: rhythm.block, right: rhythm.block },
+  unavailable: { flexGrow: 1, justifyContent: 'center', padding: rhythm.block },
+  // Laid out, never seen or read: it keeps the place of words still to come.
+  unseen: { opacity: 0 },
   grow: { flex: 1 },
   panelHost: { width: '100%' },
   panelRegular: { maxWidth: 480 },
