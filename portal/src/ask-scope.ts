@@ -35,6 +35,8 @@ function cohort(question: string): { party: string; kind?: string } | undefined 
 export interface AskScope {
   party?: string; speaker?: string; kind?: string
   state?: string; chamber?: string; from?: string; to?: string
+  /** Set only by a bill-scoped ask (ask-bill-scope.ts): the bill whose records answered. */
+  bill?: string
 }
 
 // Match a grammatical subject, not a name mentioned as the object of debate.

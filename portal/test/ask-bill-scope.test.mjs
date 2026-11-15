@@ -1,0 +1,187 @@
+// An Ask limited to one bill (`bill` on the /api/ask body, the key in /bill/<key>). The app's "Ask about this bill"
+// opens Ask scoped to that bill, so every source and citation must be one of the bill's records: its text, its
+// record with the summary, and the speeches and divisions the bill file lists. Driven through the real /api/ask
+// route, offline, over the real bill files. The knowledge box here applies the request's filter to a pool holding
+// the bill's records and records from outside it, as the platform does, so a missing or wrong filter shows up as
+// an outside source. The research model fails the test if it is ever called. Speech text is invented.
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import {readFileSync} from 'node:fs'
+import {StreamingResearchModel as MockLanguageModelV4} from './fixtures/research-scripted-model.mjs'
+import {build} from 'esbuild'
+import {importBundle} from './fixtures/import-bundle.mjs'
+import {loadWorker,offline} from './worker-harness.mjs'
+import {budgetDatabase} from './fixtures/research-budget.mjs'
+import {AskStream} from './fixtures/research-app-decoders.mjs'
+
+const restore=offline(),pending=[],ctx={waitUntil:p=>pending.push(p),passThroughOnException(){}}
+const plugin={name:'scripted-model',setup(b){b.onResolve({filter:/^@openrouter\/ai-sdk-provider$/},()=>({path:'scripted',namespace:'ask-bill'}));b.onLoad({filter:/.*/,namespace:'ask-bill'},()=>({contents:'export const createOpenRouter=()=>()=>globalThis.__researchModel;',loader:'js'}))}}
+const publicDir=new URL('../public',import.meta.url).pathname
+const h=await loadWorker(new URL('../src/index.ts',import.meta.url).pathname,publicDir,ctx,{plugins:[plugin]})
+const {askBillKey,billScope,billScopeClause,billScopedBody,inBillScope}=await importBundle((await build({entryPoints:[new URL('../src/ask-bill-scope.ts',import.meta.url).pathname],bundle:true,format:'esm',write:false})).outputFiles[0].text,'ask-bill-scope')
+const daily=budgetDatabase()
+Object.assign(h.env,{OPENROUTER_API_KEY:'test-only-placeholder',AGENTIC_ASK_MODE:'route',RESEARCH_LOOP:'route',AGENTIC_INPUT_USD_PER_MILLION:'0.66',AGENTIC_OUTPUT_USD_PER_MILLION:'1.98',
+  COMMUNITY_DB:daily.db,ASK_LIMITER:{limit:async()=>({success:true})},MODEL_LIMITER:{limit:async()=>({success:true})}})
+const stored=[]
+globalThis.caches={default:{match:async()=>undefined,put:async key=>{stored.push(String(key.url??key))}}}
+h.env.GENERATION_CACHE={get:async()=>null,put:async key=>{stored.push(String(key))}}
+
+// The bill in the report: in the Senate at second reading, with no speeches or divisions yet. And an older bill
+// whose file lists speeches and divisions, so those kinds are checked too.
+const VETERANS='au-federal-s1515',SIBLING='au-federal-s1518',DEBATED='au-federal-r5626'
+const file=key=>JSON.parse(readFileSync(`${publicDir}/bills/${key}.json`,'utf8'))
+const veterans=file(VETERANS),debated=file(DEBATED)
+
+let n=0
+const record=(slug,kind,labels,text)=>{
+  const id=(++n).toString(16).padStart(32,'0')
+  return [id,{id,slug,title:`Fixture ${slug}`,origin:{created:'2026-09-15T00:00:00Z',collaborators:[]},
+    usermetadata:{classifications:[{labelset:'kind',label:kind},...Object.entries(labels).map(([labelset,label])=>({labelset,label}))]},
+    extra:{metadata:{date:'2026-09-15',...(labels.bill_key?{bill_key:labels.bill_key,version_id:'first-senate'}:{})}},
+    fields:{body:{paragraphs:{[`${id}/t/body/0-${text.length}`]:{text,score:0.9,score_type:'RERANKER'}}}}}]
+}
+const passage=subject=>`The ${subject} sets out who is affected and what would change. It gives the commencement and the limits that apply.`
+const pool=Object.fromEntries([
+  record(`bill-text-${VETERANS}-first-senate`,'bill_text',{bill_key:VETERANS,state:'federal'},passage('veterans allied health bill text')),
+  record(`bill-${VETERANS}`,'bill',{state:'federal'},passage('veterans allied health bill record and summary')),
+  record(`bill-text-${SIBLING}-first-senate`,'bill_text',{bill_key:SIBLING,state:'federal'},passage('other veterans bill text')),
+  record(`bill-${SIBLING}`,'bill',{state:'federal'},passage('other veterans bill record')),
+  record('speech-990001','speech',{state:'federal',chamber:'senate'},passage('unrelated veterans speech')),
+  record('division-federal-senate-990002','division',{state:'federal',chamber:'senate'},passage('unrelated division')),
+  record(`bill-text-${DEBATED}-first-reps`,'bill_text',{bill_key:DEBATED,state:'federal'},passage('debated bill text')),
+  record(`bill-${DEBATED}`,'bill',{state:'federal'},passage('debated bill record')),
+  ...debated.speeches.slice(0,3).map(s=>record(s.slug,'speech',{state:'federal',chamber:'representatives'},passage(`speech ${s.slug} on the debated bill`))),
+  ...debated.divisions.slice(0,3).map(d=>record(`division-${d.key}`,'division',{state:'federal',chamber:d.house},passage(`division ${d.key} on the debated bill`))),
+])
+// The platform's filter, for the clauses Ask sends. An unknown clause fails the test rather than matching.
+const matches=(e,r)=>{
+  if(e.and)return e.and.every(x=>matches(x,r))
+  if(e.or)return e.or.some(x=>matches(x,r))
+  if(e.not)return !matches(e.not,r)
+  if(e.prop==='label')return r.usermetadata.classifications.some(c=>c.labelset===e.labelset&&c.label===e.label)
+  if(e.prop==='resource')return e.slug?e.slug===r.slug:e.id===r.id
+  if(e.prop==='created')return true
+  if(e.prop==='field')return false // generated fields; the fixtures have none
+  throw new Error('unexpected filter clause '+JSON.stringify(e))
+}
+const kbAsks=[]
+const kbErrors=[]
+globalThis.fetch=async(input,init)=>{try{return await kb(input,init)}catch(error){kbErrors.push(error);throw error}}
+const kb=async(input,init)=>{
+  const url=new URL(String(input)),headers=new Headers(init?.headers)
+  assert.ok(url.hostname.startsWith('offline.'),`no network: ${url.href}`)
+  if(!url.pathname.endsWith('/ask'))return Response.json({resources:{},fulltext:{total:0,facets:{}}})
+  const body=JSON.parse(String(init.body));kbAsks.push(body)
+  const field=body.filter_expression?.field
+  const found=Object.fromEntries(Object.entries(pool).filter(([,r])=>!field||matches(field,r)).slice(0,body.top_k??20))
+  const ids=Object.values(found).flatMap(r=>Object.keys(r.fields.body.paragraphs))
+  const answer=ids.length?ids.map((_,i)=>`Point ${i+1} from the record.[^${i+1}]`).join(' ')+'\n\n'+ids.map((_,i)=>`[^${i+1}]: block-${i+1}`).join('\n'):''
+  const notes=Object.fromEntries(ids.map((id,i)=>[`block-${i+1}`,id]))
+  if(headers.get('x-synchronous')==='true')return Response.json({answer,citation_footnote_to_context:notes,retrieval_results:{resources:found}})
+  const items=[{type:'retrieval',results:{resources:found}},...(answer?[{type:'answer',text:answer},{type:'footnote_citations',footnote_to_context:notes}]:[]),{type:'status',code:'0'}]
+  return new Response(items.map(item=>JSON.stringify({item})).join('\n')+'\n',{headers:{'content-type':'application/x-ndjson'}})
+}
+// A research model with nothing to say: the research route, when it runs, fails over to ordinary retrieval.
+const modelCalls=()=>globalThis.__researchModel.doStreamCalls.length+globalThis.__researchModel.doGenerateCalls.length
+const ask=async(input,stream=false)=>{
+  kbAsks.length=0;kbErrors.length=0
+  globalThis.__researchModel=new MockLanguageModelV4({doGenerate:[]})
+  const realWarn=console.warn,realLog=console.log,realError=console.error;console.warn=console.log=console.error=()=>{}
+  try{
+    const response=await h.fetch('/api/ask'+(stream?'?stream=1':''),{method:'POST',headers:{'content-type':'application/json','x-opax-nocache':'1'},body:JSON.stringify(input)})
+    const raw=await response.text()
+    while(pending.length)await Promise.all(pending.splice(0))
+    if(!stream)return {status:response.status,body:JSON.parse(raw)}
+    const parser=new AskStream({stage(){},delta(){},retry(){}});parser.push(raw,true)
+    return {status:response.status,body:parser.result()}
+  }finally{console.warn=realWarn;console.log=realLog;console.error=realError;daily.sqlite.exec('DELETE FROM research_daily_spend')}
+}
+const billClause=key=>JSON.stringify({prop:'label',labelset:'bill_key',label:key})
+/** An answer whose every source and citation is one of the bill's records, with the scope echoed. */
+function onlyTheBill({status,body},key,billFile,label){
+  const scope=billScope(key,billFile)
+  assert.deepEqual(kbErrors.map(String),[],label)
+  assert.equal(status,200,label+' '+JSON.stringify(body).slice(0,300))
+  assert.ok(String(body.answer??'').trim(),`${label}: an answer`)
+  assert.ok(body.sources?.length>0,`${label}: sources listed`)
+  for(const s of body.sources)assert.ok(inBillScope(s,scope),`${label}: source ${s.slug} (${s.href}) is one of the bill's records`)
+  const inside=new Set(body.sources.map(s=>s.resource))
+  assert.ok(Object.keys(body.citations??{}).length>0,`${label}: cited`)
+  for(const id of Object.keys(body.citations))assert.ok(inside.has(id.split('/')[0]),`${label}: citation ${id} is to a listed bill record`)
+  assert.equal(body.scope?.bill,key,`${label}: the scope names the bill`)
+  assert.ok(kbAsks.length>0,`${label}: retrieval ran`)
+  for(const sent of kbAsks){
+    assert.ok(JSON.stringify(sent.filter_expression).includes(billClause(key)),`${label}: every retrieval carries the bill filter`)
+    assert.ok(!(sent.rag_strategies??[]).some(s=>s.name==='prequeries'),`${label}: no pinned pass outside the filter`)
+  }
+  assert.equal(modelCalls(),0,`${label}: the research tools, which search the whole record, never ran`)
+}
+test.after(()=>{restore();daily.close()})
+
+test('the report\'s bill (Veterans\' Allied Health Care, au-federal-s1515): every source and citation belongs to the bill, on JSON and on the stream',async()=>{
+  assert.match(veterans.title,/^Military Rehabilitation and Compensation Amendment \(Veterans’ Allied Health Care\) Bill 2026$/)
+  for(const stream of [false,true]){
+    const run=await ask({question:'What would this bill change for veterans?',bill:VETERANS},stream)
+    onlyTheBill(run,VETERANS,veterans,stream?'stream':'json')
+    assert.deepEqual(run.body.sources.map(s=>s.slug).sort(),[`bill-${VETERANS}`,`bill-text-${VETERANS}-first-senate`],'its text and its record, and not the other veterans bill of the same week')
+  }
+})
+
+test('a debated bill: the speeches and divisions its file lists are in scope, and nothing else is',async()=>{
+  const run=await ask({question:'What did members say about this bill and how did they vote?',bill:DEBATED})
+  onlyTheBill(run,DEBATED,debated,'debated')
+  const slugs=run.body.sources.map(s=>s.slug)
+  for(const s of debated.speeches.slice(0,3))assert.ok(slugs.includes(s.slug),`speech ${s.slug}`)
+  for(const d of debated.divisions.slice(0,3))assert.ok(slugs.includes(`division-${d.key}`),`division ${d.key}`)
+  assert.ok(slugs.includes(`bill-text-${DEBATED}-first-reps`)&&slugs.includes(`bill-${DEBATED}`))
+})
+
+test('questions that other routes answer from outside the bill still go to the bill\'s records',async()=>{
+  for(const question of ['How much is a senator paid?','Who donated the most to Labor?','Who is the Prime Minister?','What has Jacqui Lambie said in parliament this year?','What did Jacqui Lambie say about veterans?'])
+    onlyTheBill(await ask({question,bill:VETERANS}),VETERANS,veterans,question)
+})
+
+test('a follow-up in a bill conversation stays in the bill and pins no earlier record',async()=>{
+  const outside=Object.keys(pool).find(id=>pool[id].slug==='speech-990001')
+  const run=await ask({question:'When would it start?',bill:VETERANS,prior_resources:[outside],context:[]})
+  onlyTheBill(run,VETERANS,veterans,'follow-up')
+})
+
+test('the request\'s other filters join the bill filter',async()=>{
+  const run=await ask({question:'What did members say about this bill?',bill:DEBATED,kind:'speech'})
+  onlyTheBill(run,DEBATED,debated,'speeches')
+  assert.deepEqual(run.body.sources.map(s=>s.slug).sort(),debated.speeches.slice(0,3).map(s=>s.slug).sort())
+})
+
+test('a bill with no readable file still scopes to its text and record',async()=>{
+  const run=await ask({question:'What does this bill do?',bill:'au-federal-zz-no-such-bill'})
+  assert.equal(run.status,200);assert.ok(String(run.body.answer??'').trim(),'an answer, never blank')
+  assert.equal(run.body.sources?.length??0,0,'nothing from outside the bill')
+  for(const sent of kbAsks)assert.ok(JSON.stringify(sent.filter_expression).includes(billClause('au-federal-zz-no-such-bill')))
+})
+
+test('without a bill, or with a value that is not a bill key, Ask is as it was',async()=>{
+  for(const input of [{question:'What would this bill change for veterans?'},{question:'What would this bill change for veterans?',bill:'Not A Key!'},{question:'What would this bill change for veterans?',bill:42}]){
+    const run=await ask(input)
+    assert.equal(run.status,200,JSON.stringify(run.body).slice(0,300)+kbErrors.map(String).join())
+    assert.ok(modelCalls()>0,'the research route is tried as before')
+    assert.equal(run.body.scope?.bill,undefined)
+    for(const sent of kbAsks)assert.ok(!JSON.stringify(sent.filter_expression??{}).includes('bill_key'),'no bill filter')
+    assert.ok(run.body.sources.some(s=>s.slug==='speech-990001'),'the whole record is searched')
+  }
+})
+
+test('the key, the clause and the body',()=>{
+  assert.equal(askBillKey(' au-federal-s1515 '),VETERANS)
+  for(const bad of [undefined,null,'',42,'S1515','au federal','../bills/index','a'.repeat(200),['au-federal-s1515']])assert.equal(askBillKey(bad),null,String(bad))
+  const scope=billScope(DEBATED,debated)
+  assert.equal(scope.slugs.length,1+debated.speeches.length+debated.divisions.length)
+  assert.deepEqual(billScopeClause(billScope(VETERANS,veterans)),{or:[{prop:'label',labelset:'bill_key',label:VETERANS},{prop:'resource',slug:`bill-${VETERANS}`}]})
+  const news={not:{prop:'label',labelset:'kind',label:'news'}}
+  const body=billScopedBody({query:'q',filter_expression:{field:{and:[news]}},rag_strategies:[{name:'neighbouring_paragraphs'},{name:'prequeries'}],prompt:{system:'s',user:'u'}},billScope(VETERANS,veterans))
+  assert.deepEqual(body.filter_expression.field.and[0],{and:[news]},'the request\'s own filter is kept')
+  assert.deepEqual(body.rag_strategies,[{name:'neighbouring_paragraphs'}])
+  assert.ok(body.prompt.user.startsWith('Every passage belongs to one bill, the Military Rehabilitation and Compensation Amendment (Veterans’ Allied Health Care) Bill 2026'))
+  assert.ok(body.prompt.user.endsWith('u'))
+  assert.equal(inBillScope({slug:`bill-text-${SIBLING}-first-senate`,href:`/bill/${SIBLING}?text-version=first-senate#bill-full-text`},billScope(VETERANS,veterans)),false)
+})

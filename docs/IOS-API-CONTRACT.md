@@ -141,7 +141,7 @@ All rows below have no-store browser responses, or `no-cache, no-transform` for 
 type AskPayload = {
   answer: string; citations: Record<string, unknown>; sources: unknown[];
   scope?: {party?:string,speaker?:string,kind?:string,state?:string,
-    chamber?:string,from?:string,to?:string}; answer_status?: string;
+    chamber?:string,from?:string,to?:string,bill?:string}; answer_status?: string;
   evidence_excerpts?: {resource:string,text:string}[];
   evidence_kind?: 'original_position_proposal';
 }; // sources contain source identity, links, cited flags and optional answer ranges
@@ -153,6 +153,8 @@ type SummaryPayload = {
   reviewed_count?: number; partial?: boolean;
 };
 ```
+
+Bill scope (November 2026): the `/api/ask` body accepts an optional `bill`, the key in `/bill/<key>` (for example `au-federal-s1515`). The ask is then answered by retrieval filtered to that bill's records: every version of its text (label `bill_key`), the bill record `bill-<key>` with its summary written from the explanatory memorandum, and the speeches and divisions listed in `/bills/<key>.json`. Other request filters join it. The calculators, identity answers and research tools do not run for a bill-scoped ask, since they read records outside the bill, and `prior_resources` is not used. The response's `scope.bill` echoes the key when the scope applied. A value that is not a bill key is ignored and the ask runs unscoped, with no `scope.bill`. Explanatory memoranda and Bills Digests are not separate resources. MCP tools are unchanged.
 
 | Method and path | Input and output | Source / cost class | Auth; internal cache; limits; blocks |
 | --- | --- | --- | --- |
