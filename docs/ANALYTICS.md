@@ -135,7 +135,8 @@ capped at 200 characters.
 `/estimates/[id]`, `/vic-election-2026/[id]`, `/audit/[id]`, `/instrument/[id]`,
 `/report/[slug]`, `/official-reports/royal-commissions` (one name per fixed collection), `/reports/[slug]`,
 `/reports/[slug]/s/[n]` and the money patterns (`/money/receipts/[id]`,
-`/money/grants/[jurisdiction]/recipient/[id]`). Pages with fixed addresses are
+`/money/grants/[jurisdiction]/recipient/[id]`). The money section's second segment is one of its four
+views (`receipts`, `grants`, `contracts`, `explain`); any other word there is a typed address and is `/other`. Pages with fixed addresses are
 named as they are (`/ask`, `/terms`, `/register/vic-gifts`, `/video/senate`).
 A bare page (`/ask`, `/search`, `/about`) matches only itself: any text after
 it, in the address or a hash link, is `/other`, so a typed or shared link never
@@ -212,6 +213,12 @@ accepted from the URL. The question and URL parameters are never sent.
 not a pixel coordinate or the clicked row: person Ask/bills/interests/speeches
 are 1/2/3/4; bill Ask/votes/sponsor bills are 1/2/3; supplier other
 suppliers/grants/donations register are 1/2/3. Missing records leave gaps.
+
+`next` is the “Next in the record” block (`portal/public/next-steps.js`): a short list
+of the pages a record leads to, drawn from the record the page has already loaded.
+Its `position` is always 1 and its `page_type` is the template word only (`doc`,
+`supplier`, `recipient`, `vic-election`, `person`, `electorate`, `bill`, `sitting`),
+never which record was open or which row was clicked.
 
 The shared click listener emits once for every link within a module, including
 seeded questions, originals in its SourceLine, and modified clicks. Middle-button openings use `auxclick` with button 1;

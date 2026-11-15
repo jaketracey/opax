@@ -5268,6 +5268,25 @@ html[data-panel="search"] .research-app main.compact .hero-intro { display: bloc
 @media (max-width: 1000px), (pointer: coarse) {
   .growth-questions a { min-height: var(--size-target); padding-block: calc((var(--size-target) - 1.45em) / 2 - var(--border-hairline)); }
 }
+/* "Next in the record" (next-steps.js): a short list of the pages this record leads to.
+   Every row is the same height whatever it says (a label, one line of link, one line of
+   detail, each cut with an ellipsis), so a row reserved for a fact still loading holds
+   exactly the space the fact will take and nothing under the block moves. */
+.next-steps { margin: var(--space-group) 0; padding: var(--space-block) 0 0; border-top: var(--border-hairline) solid var(--divider-default); overflow-wrap: normal; word-break: normal; }
+.next-steps-title { margin: 0 0 var(--space-heading); font: var(--type-subheading); }
+.next-steps-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); gap: var(--space-row) var(--space-group); list-style: none; margin: 0; padding: 0; }
+.next-steps-row { display: block; min-width: 0; margin: 0; }
+.next-steps-row > * { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.next-steps-kind { height: 1.45em; font: var(--type-label); color: var(--ink-soft); }
+.next-steps-link { height: 1.55em; font: var(--type-body); font-weight: var(--weight-strong); }
+.next-steps-meta { height: 1.45em; font: var(--type-fine); color: var(--ink-soft); }
+.next-steps-pending .next-steps-link { width: 70%; border-radius: var(--radius-pill); background: var(--divider-default); opacity: .5; }
+.next-steps a:focus-visible { outline: var(--border-focus) solid var(--bronze-ink); outline-offset: -2px; }
+/* Touch: the link line is the 44 px target; the row's height is still fixed. */
+@media (max-width: 1000px), (pointer: coarse) {
+  .next-steps-link { height: var(--size-target); line-height: var(--size-target); }
+}
+@media print { .next-steps { display: none; } }
 .growth-ask :is(input, textarea, button), .growth-records summary { min-height: var(--size-target); }
 .growth-records .subject-list > li > a, .growth-donor a { display: inline-flex; align-items: center; min-height: var(--size-target); }
 .growth-records .result-meta { display: block; }

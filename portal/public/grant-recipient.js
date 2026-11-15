@@ -4,6 +4,7 @@ import {renderNotFound} from './not-found.js';
 import {donorDisclosure,donorLookup,donorDisplayText,donorLabelHTML} from './donor-disclosure.js?v=d28448a137';
 import {loadDonorViewIndex} from './donor-views.js?v=75f497c532';
 import {partyUrl} from './canonical-urls.js?v=9ce13e7ba5';
+import {nextStepsHTML, recipientNextSteps} from './next-steps.js';
 import { fileKey, formatABN, kindLabel, grantRecipientUrl, donorBlocs, govShare } from './grants.js?v=9eb86ce57b';
 
 const MONEY = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 2 });
@@ -149,6 +150,9 @@ export function mountGrantRecipient(container, { jurisdiction, id, onTitle = () 
     const jump = node('nav', null, 'grant-recipient-jump'); jump.setAttribute('aria-label', 'On this recipient page');
     for (const [label, anchor] of [['Records', 'recipient-records'], ['Breakdown', 'recipient-breakdown'], ['Identity', 'recipient-identity'], ['Donor registers', 'recipient-donations'], ['Sources', 'recipient-sources']]) jump.append(link('#' + anchor, label));
     root.append(jump);
+    // Where this record leads, from the bundle already read: its programs, its agencies, its other jurisdiction.
+    root.insertAdjacentHTML('beforeend', nextStepsHTML(recipientNextSteps(data, { jurisdiction, programs: index.programs || [], money: compactMoney,
+      otherHref: jur => JURISDICTIONS[jur] ? grantRecipientUrl(jur, id) : '', jurisdictionName: jur => JURISDICTIONS[jur] }), { pageType: 'recipient', id: 'recipient-next' }));
     const layout = node('div', null, 'grant-recipient-layout'), main = node('div'), aside = node('aside');
     if (!coreActive) {
     const records = section(qld ? 'Expenditure records' : 'Grant awards', 'recipient-records');

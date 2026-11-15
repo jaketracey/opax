@@ -3,6 +3,7 @@ import { personUrl, partyUrl } from './canonical-urls.js?v=9ce13e7ba5';
 /* Electorate reference pages. Independently loadable; no funding-data dependency. */
 import { shortDate } from './format.js';
 import { renderNotFound } from './not-found.js';
+import { nextStepsHTML, electorateNextSteps } from './next-steps.js';
 import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=fcb2a1091c';
 import { pageMenuHTML as moreMenuHTML } from './page-actions-menu.js?v=8640c3d1ca';
 // The person page reads its verified-roster and dated official-list party fallbacks through this module (roster-party.js).
@@ -232,6 +233,7 @@ export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) 
         notes: [selected.status === 'historical' ? 'From dated service records; coverage may be incomplete.' : selected.status === 'partial' ? 'Partial roster; other members may be missing.' : 'Election winners and present-day representation can differ.',
           'Representation is shown only as the dated records give it.'] })}</section>
     ${boundary ? `<section class="ui-section el-outline-block"><h2 class="ui-section-title">Boundary</h2>${outlineHTML(boundary, detail.name)}${line(outline, { source: `${boundary.geometry_kind === 'official' ? 'AEC election boundary' : 'ABS statistical outline'}, ${boundary.vintage}`, notes: [esc(boundary.note), 'Simplified for display.', on ? 'This outline is not a reconstruction of the selected date.' : ''] })}</section>` : ''}</div>
+    ${nextStepsHTML(electorateNextSteps(detail, { members: selected.status === 'conflicting' ? [] : selected.members, personHref: personURL, displayName }), { pageType: 'electorate', id: 'el-next' })}
     ${detail.elections.length ? `<section id="el-elections" class="ui-section el-section"><h2 class="ui-section-title">Election timeline</h2><ol class="ui-list el-timeline">${detail.elections.map((c) => electionHTML(c, people)).join('')}</ol>
       ${line(contests, { source: 'AEC results', notes: [`${detail.elections.length} ${detail.elections.length === 1 ? 'contest' : 'contests'} recorded; any gaps are missing records.`, 'Percentages use each count’s recorded denominator. “—” means no result for that candidate in that count. TCP and TPP are distinct counts.'] })}</section>` : ''}
     <section id="el-history" class="ui-section el-section"><div class="ui-section-head"><h2>Representation history</h2>

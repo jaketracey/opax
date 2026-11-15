@@ -58,7 +58,9 @@ export function safePath(value) {
 // against a browser's cookie ID, so a full path is a history of who someone
 // looked up. The app does the same with $screen_name ("/person/[slug]").
 const SUBJECT_KINDS = new Set(['person', 'party', 'donor', 'supplier', 'agency', 'campaigner', 'electorate', 'topic', 'recipient']);
-const MONEY_VIEW = /^[a-z][a-z-]{0,23}$/;
+// The money section's own views (the Worker's /money/<view> pages and the app's money router). Any other
+// second segment is a typed address: it was sent as written ("/money/<word>"), so it is /other now.
+const MONEY_VIEWS = new Set(['receipts', 'grants', 'contracts', 'explain']);
 function recordTemplate(path) {
   const [first, second, third, fourth] = path.split('/').filter(Boolean);
   if (first === 'subject') {
@@ -70,7 +72,7 @@ function recordTemplate(path) {
   if (first === 'doc') return second === undefined ? '/doc' : '/doc/[slug]';
   if (first === 'money') {
     if (second === undefined) return '/money';
-    if (!MONEY_VIEW.test(second)) return '/other';
+    if (!MONEY_VIEWS.has(second)) return '/other';
     if (third === undefined) return `/money/${second}`;
     if (second === 'grants' && fourth === 'recipient') return '/money/grants/[jurisdiction]/recipient/[id]';
     return `/money/${second}/[id]`;
