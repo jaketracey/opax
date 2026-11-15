@@ -127,13 +127,15 @@ A group under it may write `party_now` on a folded person, and only when:
 * the evidence names the person, their OpenAustralia id, and the party before and after, and the
   group's values are exactly those;
 * the shipped row is current, federal, and carries that id;
-* the evidence cites at least two dated sources on two different sites, none on aph.gov.au;
+* the evidence cites at least two sources that name the person, on two different sites (two hosts
+  of one organisation are one site), none on aph.gov.au, each dated with a real day no later than
+  the day the evidence was checked;
 * nothing else is written, except that where the evidence says the person keeps the old label (a
   party room), `parties` gains that one label and loses nothing.
 
 Every other protection still holds such a group: a pinned witness split, a party pinned in
 `scripts/roster_service.json`, a dated party, a reviewed alias. `scripts/test_roster_sitting_party.py`
-covers the rule (7 tests). Chris Gatenby's row is not folded and passes as an ordinary identity group.
+covers the rule (10 tests). Chris Gatenby's row is not folded and passes as an ordinary identity group.
 
 The groups were installed by `roster_accept.apply()` against a copy of the shipped rows carrying the
 accepted values, so the judge passed each one; nothing was typed into the roster. A later export that
@@ -149,23 +151,111 @@ still shows the old party leaves them installed (the shipped value is the accept
 | Dot on its own (rows that print the party nearby) | **No dot**: that helper draws one only for a party in the map | Fixed by the same entry |
 | Party page `/subject/party/community-strong-australia` | Built automatically from `party_now`: 2 sitting members, no divisions, no money | Nothing |
 | Party directory | Listed automatically | Nothing |
-| "2 marked current in the directory" link on the party page | **Opened an empty list**: the people directory filtered on `party` and `parties` only, and offered no option for the party | The filter now matches `party_now` too, and a party that is only ever a party now is offered as an option. Counts of the existing options are unchanged. This also fixes the same empty link for Australia's Voice (Fatima Payman) |
+| "2 marked current in the directory" link on the party page | **Opened an empty list**: the people directory filtered on `party` and `parties` only, and offered no option for the party | A party that is only ever someone's party now is offered as an option and lists those people. `party_now` adds nobody to a party that speech rows already carry. Each option's count is now the length of its list (below). This also fixes the same empty link for Australia's Voice (Fatima Payman) |
 | Person pages | "Community Strong Australia · formerly Independent" | Nothing |
 | Independents page | Both still listed, under other members, each marked "now Community Strong Australia"; its sitting count falls from 13 to 11 | Nothing |
 | Votes | Division rows keep the party printed on the day (Independent). No "voted against party" output reads the roster | Nothing |
-| Apps | Decode an unknown party (no party enum; neutral colour, full name) | Nothing; see the limit below |
+| Apps | Decode an unknown party (no party enum; neutral colour, full name) | Nothing in the app. Its member rows read the electorate release, rebuilt here (below) |
+
+### The people directory's party filter, before and after
+
+On main an option's count was the people whose `party` is that party, while its list also took
+anyone with the party in `parties`, so the two disagreed. Now one rule gives both. Lists are
+unchanged except where this review changed the data:
+
+| Party | main count | main list | now count | now list | List gained | List lost |
+|---|---:|---:|---:|---:|---|---|
+| Labor | 413 | 416 | 416 | 416 | none | none |
+| Liberal | 307 | 313 | 313 | 313 | none | none |
+| LNP | 65 | 82 | 82 | 82 | none | none |
+| Nationals | 54 | 56 | 57 | 57 | Matthew Canavan | none |
+| Independent | 43 | 53 | 53 | 53 | none | none |
+| Greens | 39 | 41 | 41 | 41 | none | none |
+| One Nation | 8 | 11 | 11 | 11 | none | none |
+| Katter's Australian Party | 3 | 4 | 4 | 4 | none | none |
+| Centre Alliance | 2 | 3 | 3 | 3 | none | none |
+| United Australia Party | 2 | 3 | 3 | 3 | none | none |
+| JLN | 1 | 2 | 2 | 2 | none | none |
+| Community Strong Australia | no option | | 2 | 2 | Zali Steggall, Allegra Spender | none |
+| Australia's Voice | no option | | 1 | 1 | Fatima Payman | none |
+
+The other five parties are unchanged in count and list. Cory Bernardi (party now One Nation, in a
+state house) is not on One Nation's list, as on main.
 
 No new colour was invented: the design tokens have eight party colours and minor parties share the
 neutral one. `portal/test/party-new-label.test.mjs` renders each of these in the real shell.
 
-## Limits, and what is left for the box
+## Which published files carried the old party, and what this change does about each
 
-* **The electorate release still says Independent and Nationals.** The seat pages for Warringah,
-  Wentworth and the Queensland Senate, and the apps' member rows (which prefer the seat's party over
-  `party_now`), read the electorate release, built on the box from the members table. Until that
-  table is corrected and a release rebuilt, a person page and their seat page will disagree. The
-  same rebuild carries Vanessa Bleyer's id (see the re-verification report).
-* **`pay.json`** takes `party_now` at the next weekly refresh, so Steggall and Spender move out of
-  the Independent figures there, and out of Ask's answers about independents' pay.
-* **The members table on the box** should get the same three party corrections, so a later raw
-  export agrees with the roster instead of being held against it.
+Every tracked file under `portal/public` that attaches a current party to these four people:
+
+| File | Read by | Old value | In this change |
+|---|---|---|---|
+| `parliamentarians.json` | Web person and party pages, the app's party pages | Independent, Nationals | Changed, through the accept list |
+| `electorates/releases/<id>/` (`index.json`, `people.json`, three seat files, `reference.json`) | Web seat pages and electorate directory, the app's member rows | Independent (Warringah, Wentworth), Nationals (Canavan, Queensland Senate) | **Rebuilt here, without the box**: release `449ad8b79adf8b91` |
+| `pay.json` | Pay page rows, Ask's pay answers | Independent (Steggall, Spender) | Needs the box (below) |
+| `votes.json` | Voting-record summaries on web and app | Independent (Steggall, Spender), Nationals (Canavan) | Needs the box (below) |
+
+Speech and vote records (division pages, reports, yearly summaries) keep the party printed on the
+day and are not touched. Chris Gatenby's seat party was already Liberal everywhere.
+
+### The electorate release, rebuilt from the repo
+
+`scripts/export_electorates.py --republish` builds a release from the bundle the published release
+carries, with no database or network. It now also applies reviewed roster corrections,
+`scripts/corrections/electorate-rosters.json` (the repo's corrections format, one member's party on
+one dated roster, each with its source): three entries, for Steggall, Spender and Canavan. The new
+release differs from `db4a3cd54d53c143` in those three parties and the generated date, and in nothing
+else (629 files compared). `validate_data.py electorates` passes.
+
+A correction the bundle already carries is skipped, so the nightly republish after this changes
+nothing. One for a roster the bundle no longer holds is reported on a log line and never fails the
+nightly. One whose member is gone or whose party is neither value stops the export.
+
+So on merge the web's person, party and seat pages agree, and so do the app's party pages and member
+rows.
+
+## Runbook: what still needs the data box
+
+Not run by this change (no ssh, no start of the box). In order:
+
+1. **Correct the members table** (`~/.cache/autoresearch/parli.db` on the box), so later exports
+   agree with the roster. Check first, then write:
+
+   ```sh
+   sqlite3 ~/.cache/autoresearch/parli.db "SELECT person_id, full_name, party, party_canonical FROM members WHERE person_id IN ('10941','11001','10827');"
+   sqlite3 ~/.cache/autoresearch/parli.db "UPDATE members SET party_canonical='Community Strong Australia' WHERE person_id IN ('10941','11001') AND party_canonical='Independent'; UPDATE members SET party_canonical='LNP' WHERE person_id='10827' AND party_canonical='Nationals';"
+   ```
+
+   Expect three rows changed. Seconds.
+2. **`votes.json`**: the nightly's vote export reads the party from the members table, so the next
+   nightly carries it. By hand, from the repo on the box:
+   `.venv/bin/python scripts/export_votes.py > /tmp/votes.json`, then install it the way the nightly
+   does (`scripts/vm/export_step.sh`). Minutes.
+3. **`pay.json`**: `.venv/bin/python scripts/build_pay.py --out portal/public/pay.json` (the box's
+   cached Handbook snapshot, no fetch; the weekly refresh runs the same script with `--refresh`).
+   It takes `party_now` from the roster, so Steggall and Spender become Community Strong Australia.
+   Canavan stays Nationals there by that script's own rule (it keeps the party room for LNP
+   members, as it does for David Littleproud). About a minute.
+4. **Validate and publish**: `python3 scripts/vm/validate_data.py votes pay`, then the nightly's
+   normal gate and publish, or wait for the next nightly.
+5. **Later, when the federal roster is next reconciled and a fresh electorate release is exported
+   from a members snapshot**: delete the entries in `scripts/corrections/electorate-rosters.json`
+   (the new roster has new ids and the corrected parties) in the same reviewed change. That export
+   also carries Vanessa Bleyer's id (`scripts/corrections/member-ids.json`), which a republish
+   cannot: the published bundle still holds her as `aph_25813`.
+
+The runtimes are estimates; none of these was timed here.
+
+**Served stale until steps 1 to 4 land:**
+
+| What | Where | For whom |
+|---|---|---|
+| Party in voting-record summaries (`votes.json`) | Web and app | Steggall and Spender (Independent), Canavan (Nationals) |
+| Party on pay rows and in Ask's pay answers (`pay.json`) | Web and app | Steggall and Spender (Independent) |
+
+**Rollback.** The members table: the two updates in step 1, reversed
+(`party_canonical='Independent'` for 10941 and 11001, `'Nationals'` for 10827). The published files:
+revert the publishing commit; `votes.json` and `pay.json` come back from git. This change itself:
+revert the merge commit, which restores the roster, the accept list, and `electorates/manifest.json`
+pointing at release `db4a3cd54d53c143` (its files are still in the tree).

@@ -3,13 +3,14 @@
     python3 -m unittest scripts.test_roster_sitting_party
 """
 import copy
+import datetime
 import unittest
 
 from scripts import roster_accept
-from scripts.roster_sitting_party import group_problem, source_problem
+from scripts.roster_sitting_party import group_problem, site, source_problem
 
 SOURCES = [{"url": "https://www.example.org/news/new-party", "date": "2026-06-25", "says": "Sam Fixture formed the Test Party"},
-           {"url": "https://register.example.net/parties", "date": "2026-10-02", "says": "Test Party registered"}]
+           {"url": "https://register.example.net/parties", "date": "2026-10-02", "says": "Test Party registered, founded by Sam Fixture"}]
 
 
 def row(**extra):
@@ -104,16 +105,66 @@ class SittingParty(unittest.TestCase):
         self.assertIn("a pinned witness split", held(accept(), [split])[0])
 
     def test_two_dated_sources_on_two_sites_and_never_parliaments_own_site(self):
-        self.assertIsNone(source_problem(SOURCES))
+        ok = lambda sources, name="Sam Fixture", checked="2026-11-16": source_problem(sources, name, checked)
+        self.assertIsNone(ok(SOURCES))
         one_site = [SOURCES[0], {**SOURCES[1], "url": "https://example.org/other"}]
         barred = [SOURCES[0], {**SOURCES[1], "url": "https://www.aph.gov.au/Senators_and_Members"}]
         parlinfo = [SOURCES[0], {**SOURCES[1], "url": "https://parlinfo.aph.gov.au/x"}]
         undated = [SOURCES[0], {**SOURCES[1], "date": "October 2026"}]
         unsaid = [SOURCES[0], {k: v for k, v in SOURCES[1].items() if k != "says"}]
         for bad in (None, [], SOURCES[:1], one_site, barred, parlinfo, undated, unsaid, [SOURCES[0], "https://x.example"],
-                    [SOURCES[0], {**SOURCES[1], "url": "ftp://register.example.net/parties"}]):
-            self.assertTrue(source_problem(bad), bad)
+                    [SOURCES[0], {**SOURCES[1], "url": "ftp://register.example.net/parties"}],
+                    [SOURCES[0], {**SOURCES[1], "url": "https://localhost/parties"}]):
+            self.assertTrue(ok(bad), bad)
             self.assertTrue(held(accept(sources=bad), [row()]), bad)
+
+    def test_a_source_date_is_a_real_day_no_later_than_the_check(self):
+        dated = lambda day: [SOURCES[0], {**SOURCES[1], "date": day}]
+        for day in ("2099-99-99", "2026-02-30", "2026-13-01", "0000-00-00", "2026-11-17", "2099-01-01", "26-10-02", "2026-10-2"):
+            self.assertTrue(source_problem(dated(day), "Sam Fixture", "2026-11-16"), day)
+            self.assertTrue(held(accept(sources=dated(day)), [row()]), day)
+        self.assertIsNone(source_problem(dated("2026-11-16"), "Sam Fixture", "2026-11-16"))
+        # the check date itself is a real day, and not ahead of today
+        today = datetime.date(2026, 11, 16)
+        for checked in ("2099-99-99", "2026-11-17", None, "yesterday"):
+            self.assertTrue(source_problem(SOURCES, "Sam Fixture", checked, today), checked)
+        future = accept()
+        future["evidence"]["moved"]["checked"] = "2099-01-01"
+        self.assertTrue(held(future, [row()]))
+
+    def test_two_hosts_of_one_site_are_one_source(self):
+        self.assertEqual(site("https://www.abc.net.au/news/x"), "abc.net.au")
+        self.assertEqual(site("https://live.abc.net.au/x"), "abc.net.au")
+        self.assertEqual(site("https://data.openaustralia.org.au/members/senators.xml"), "openaustralia.org.au")
+        self.assertEqual(site("https://news.example.com/a"), "example.com")
+        self.assertEqual(site("https://theconversation.com/a"), "theconversation.com")
+        self.assertEqual(site("https://www.bbc.co.uk/a"), "bbc.co.uk")
+        subdomains = [{**SOURCES[0], "url": "https://news.example.org/a"}, {**SOURCES[1], "url": "https://blog.example.org/b"}]
+        au = [{**SOURCES[0], "url": "https://www.abc.net.au/news/a"}, {**SOURCES[1], "url": "https://live.abc.net.au/b"}]
+        for bad in (subdomains, au):
+            self.assertEqual(source_problem(bad, "Sam Fixture", "2026-11-16"), "fewer than two sites have a source that names the person")
+            self.assertTrue(held(accept(sources=bad), [row()]), bad)
+        apart = [{**SOURCES[0], "url": "https://www.abc.net.au/news/a"}, {**SOURCES[1], "url": "https://www.sbs.com.au/b"}]
+        self.assertIsNone(source_problem(apart, "Sam Fixture", "2026-11-16"))
+
+    def test_the_sources_must_name_the_person_so_one_members_sources_cannot_stand_for_anothers(self):
+        self.assertIsNone(source_problem(SOURCES, "Sam Fixture", "2026-11-16"))
+        self.assertTrue(source_problem(SOURCES, "Alex Example", "2026-11-16"))
+        # Sam Fixture's evidence, copied whole to another sitting member, is held
+        acc = accept()
+        acc["evidence"]["moved"]["people"]["Alex Example"] = {**acc["evidence"]["moved"]["people"]["Sam Fixture"], "pid": "90002"}
+        acc["records"]["Alex Example"] = copy.deepcopy(acc["records"]["Sam Fixture"])
+        other = row(name="Alex Example", pid="90002", prints=["Example"])
+        problems = held(acc, [row(), other])
+        self.assertEqual(len(problems), 1)
+        self.assertIn("Alex Example: fewer than two sites have a source that names the person", problems[0])
+        # a source that does not name the person supports the change but is not one of the two
+        register = {"url": "https://register.example.net/parties", "date": "2026-10-02", "says": "Test Party registered"}
+        named = {"url": "https://news.example.com/a", "date": "2026-06-26", "says": "Fixture joins the Test Party"}
+        self.assertTrue(source_problem([SOURCES[0], register], "Sam Fixture", "2026-11-16"))
+        self.assertIsNone(source_problem([SOURCES[0], register, named], "Sam Fixture", "2026-11-16"))
+        # a surname inside another word is not the person
+        self.assertTrue(source_problem([SOURCES[0], {**named, "says": "Fixtures and fittings join the Test Party"}], "Sam Fixture", "2026-11-16"))
 
     def test_an_office_or_an_unchanged_party_is_not_a_change_of_party(self):
         group = {"fields": {"party_now": ["Independent", "SPK"]}}

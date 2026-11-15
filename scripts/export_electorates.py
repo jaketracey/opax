@@ -13,6 +13,15 @@ the bundle: parli.electorates.dissolved_for then writes dissolved_for on each ro
 row's dissolved_for or the records themselves changed; otherwise it leaves every file alone. The
 nightly runs it (scripts/vm/nightly.sh), so the field appears on the day a house is dissolved and
 clears on the night the post-result roster reload is in the published bundle, with no hand export.
+
+Every export also applies the reviewed roster corrections (scripts/corrections/electorate-rosters.json,
+read scripts/corrections/README.md): one member's party on one dated roster, each with its source.
+A correction the bundle already carries is left alone, so a republish applies each one once and the
+nightly after it changes nothing. One for a roster this bundle does not hold (a fresh roster export
+has new roster ids) is not applied and is reported on a line of its own, never fatal to the nightly.
+One whose roster is here but whose member is gone, or whose party is neither the reviewed `from` nor
+`to`, stops the export. They exist for a party the members table has not caught up with: when the
+database is corrected and a fresh roster exported, delete the entries.
 """
 from __future__ import annotations
 import argparse
@@ -27,6 +36,9 @@ import sys as _donor_sys
 from pathlib import Path as _DonorPath
 _donor_sys.path.insert(0, str(_DonorPath(__file__).resolve().parents[1]))
 from parli.electorates import covered_by_dissolution, dissolved_for, export_bundle, import_bundle, read_bundle
+from scripts.corrections import apply as corrections
+
+ROSTER_CORRECTIONS = "electorate-rosters"
 
 DISSOLUTIONS = Path(__file__).resolve().parent / "hubs" / "electorate-dissolutions.json"
 # The Ask gold cases quote the release they were computed from (scripts/agentic_ask_electorates_gold.mjs);
@@ -65,6 +77,29 @@ def expected_dissolved_for(bundle: dict, on: str) -> dict[str, str | None]:
     return out
 
 
+def correct_rosters(bundle: dict, entries: list[dict] | None = None) -> tuple[list[dict], list[dict]]:
+    """Apply the reviewed roster corrections to the bundle's rosters: (entries applied, entries with no roster here).
+
+    An entry whose field already holds `to` is done (a republish reads a bundle that carries it) and is
+    skipped. An entry for a roster the bundle does not hold is returned apart, unapplied. Every other
+    entry goes through scripts/corrections/apply.py, all or none: a member that is gone, or a party
+    that is neither `from` nor `to`, raises CorrectionError."""
+    entries = corrections.load(ROSTER_CORRECTIONS) if entries is None else entries
+    rosters = {r["roster_id"]: r for r in bundle.get("rosters", [])}
+    absent = [e for e in entries if e["id"] not in rosters]
+    pending = [e for e in entries if e["id"] in rosters and corrections._get(rosters[e["id"]], e["field"]) != e["to"]]
+    applied = corrections.apply(ROSTER_CORRECTIONS, rosters, entries=pending) if pending else []
+    return applied, absent
+
+
+def report_corrections(applied: list[dict], absent: list[dict]) -> None:
+    for entry in applied:
+        print(f"Roster correction applied: {entry['id']} {entry['field']} ({entry['finding']})")
+    for entry in absent:
+        print(f"Roster correction not applied, its roster is not in this bundle: {entry['id']} ({entry['finding']}); "
+              f"review scripts/corrections/{ROSTER_CORRECTIONS}.json")
+
+
 OVERDUE_DAYS = 28
 
 
@@ -96,7 +131,8 @@ def overdue_dissolutions(out_dir: Path, as_of: str, days: int = OVERDUE_DAYS) ->
 
 
 def republish(out_dir: Path, dissolutions: list[dict], as_of: str, gold: Path | None = None) -> dict | None:
-    """Publish a new release from the published bundle when the dissolution state changed; None when it did not."""
+    """Publish a new release from the published bundle when the dissolution state changed or a reviewed
+    roster correction applies; None when neither did."""
     manifest = json.loads((out_dir / "manifest.json").read_text())
     if not manifest.get("reference_url"):
         return None  # a release with no bundle to republish from
@@ -107,7 +143,9 @@ def republish(out_dir: Path, dissolutions: list[dict], as_of: str, gold: Path | 
     current = {**bundle, "dissolutions": dissolutions}
     if not dissolutions:
         current.pop("dissolutions")
-    if bundle.get("dissolutions", []) == dissolutions and published == expected_dissolved_for(current, as_of):
+    corrected, absent = correct_rosters(current)
+    report_corrections(corrected, absent)
+    if not corrected and bundle.get("dissolutions", []) == dissolutions and published == expected_dissolved_for(current, as_of):
         return None
     new = export_bundle(current, out_dir, generated=as_of)
     if gold and gold.is_file():
@@ -137,7 +175,7 @@ def main():
             p.error("--republish reads the published release; it takes no --bundle or --db")
         manifest = republish(args.out_dir, dissolutions, args.as_of, GOLD)
         print(f"Republished electorate references: {manifest['release_id']}" if manifest
-              else "Electorate references unchanged: no dissolution began or cleared")
+              else "Electorate references unchanged: no dissolution began or cleared, no roster correction to apply")
         return
     if not args.bundle and not args.db:
         p.error("--bundle, --db or --republish is required")
@@ -151,6 +189,7 @@ def main():
             bundle = read_bundle(db)
             if dissolutions:
                 bundle["dissolutions"] = dissolutions
+    report_corrections(*correct_rosters(bundle))
     manifest = export_bundle(bundle, args.out_dir, generated=args.as_of)
     print(f"Published {len(bundle['electorates'])} electorate references: {manifest['release_id']}")
 

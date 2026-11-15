@@ -14,10 +14,15 @@ for a person the evidence names, and only when all of this holds (group_problem)
     only by adding that one label to the list the row has (or to its `party`, when it has no list). Nothing is
     removed from the list, so the party's page still lists the person, as it does the other LNP members;
   - the shipped row is current, federal, and carries the OpenAustralia id the evidence gives for that name;
-  - the evidence cites at least two sources for the change, each with an http(s) address and the date it was
-    published or last updated (the day it was read, for a page that carries no date, said so in `says`), from at
-    least two different sites; none of them is www.aph.gov.au or ParlInfo
-    (the standing source rule, docs/SOURCES-ACCESS.md);
+  - the evidence cites sources for the change, each with an http(s) address, what it says, and the date it was
+    published or last updated (the day it was read, for a page that carries no date, said so in `says`). The
+    date is a real calendar date, no later than the day the evidence was checked, which is no later than today;
+  - at least two of the sources name the person (their surname is in `says`), and those two are on different
+    sites. A site is the registrable domain: two hosts of one organisation (news.example.com and
+    www.example.com, or two abc.net.au hosts) are one site. A source that does not name the person (a party
+    register) may support the change but does not count towards the two, so one member's sources cannot stand
+    for another's;
+  - none of them is www.aph.gov.au or ParlInfo (the standing source rule, docs/SOURCES-ACCESS.md);
   - the new party is the name the sources use, written out: not an office (SPK, PRES), not empty.
 
 It lifts the folded-person pin for those fields only. Every other protection still holds the group: a pinned
@@ -32,6 +37,7 @@ here, so the page leads with the new party and still says what the person was re
     "records": {"Zali Steggall": [{"evidence": "sitting-party-2026-11-16",
         "fields": {"party_now": ["Independent", "Community Strong Australia"]}}]}
 """
+import datetime
 import re
 from urllib.parse import urlsplit
 
@@ -41,6 +47,8 @@ KEPT_FIELDS = {"party_now", "parties"}
 BARRED_HOSTS = ("aph.gov.au",)
 OFFICES = {"SPK", "PRES", "DPRES", "CWM"}
 DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+# Second-level names under which organisations register (example.com.au, example.co.uk): the site is one label more.
+PUBLIC_SECOND_LEVELS = {"com", "net", "org", "gov", "edu", "asn", "id", "co", "ac"}
 
 
 def _text(value):
@@ -52,24 +60,57 @@ def _host(url):
     return host.removeprefix("www.")
 
 
-def source_problem(sources):
-    """None when `sources` are at least two dated public sources on two sites, else why not."""
+def _day(value):
+    """The calendar date a YYYY-MM-DD text names, or None when it names none."""
+    if not (isinstance(value, str) and DATE.match(value)):
+        return None
+    try:
+        return datetime.date.fromisoformat(value)
+    except ValueError:
+        return None
+
+
+def site(url):
+    """The registrable domain of an address: the organisation's site, whatever host under it serves the page."""
+    labels = _host(url).split(".")
+    if len(labels) <= 2:
+        return ".".join(labels)
+    country = len(labels[-1]) == 2 and labels[-2] in PUBLIC_SECOND_LEVELS
+    return ".".join(labels[-3:] if country else labels[-2:])
+
+
+def names(source, name):
+    """True when what the source says names the person: their surname, as a word."""
+    surname = str(name).split()[-1] if str(name).split() else ""
+    return bool(surname) and re.search(rf"(?<![A-Za-z]){re.escape(surname)}(?![A-Za-z])", str(source.get("says") or ""), re.IGNORECASE) is not None
+
+
+def source_problem(sources, name, checked, today=None):
+    """None when `sources` hold at least two dated public sources that name the person, on two sites, else why not."""
+    known = _day(checked)
+    if known is None or known > (today or datetime.date.today()):
+        return "the evidence needs the day it was checked (YYYY-MM-DD), not in the future"
     if not isinstance(sources, list) or len(sources) < 2:
         return "a change of party needs at least two sources"
-    hosts = set()
+    sites = set()
     for s in sources:
-        if not (isinstance(s, dict) and _text(s.get("url")) and _text(s.get("says"))
-                and isinstance(s.get("date"), str) and DATE.match(s["date"])):
+        if not (isinstance(s, dict) and _text(s.get("url")) and _text(s.get("says")) and isinstance(s.get("date"), str)):
             return "each source needs a url, a date (YYYY-MM-DD) and what it says"
+        day = _day(s["date"])
+        if day is None:
+            return "a source's date is not a calendar date (YYYY-MM-DD)"
+        if day > known:
+            return "a source is dated after the evidence was checked"
         parts = urlsplit(s["url"])
         host = _host(s["url"])
-        if parts.scheme not in ("http", "https") or not host:
+        if parts.scheme not in ("http", "https") or not host or "." not in host:
             return "each source needs an http(s) address"
         if any(host == barred or host.endswith("." + barred) for barred in BARRED_HOSTS):
             return "a source is on aph.gov.au, which the source rule bars"
-        hosts.add(host)
-    if len(hosts) < 2:
-        return "the sources are all on one site"
+        if names(s, name):
+            sites.add(site(s["url"]))
+    if len(sites) < 2:
+        return "fewer than two sites have a source that names the person"
     return None
 
 
@@ -91,7 +132,7 @@ def group_problem(name, group, row, evidence):
         return "the group's parties are not the evidence's"
     if new.strip() != new or new in OFFICES:
         return "the new party is not a party name"
-    why = source_problem(person.get("sources"))
+    why = source_problem(person.get("sources"), name, evidence.get("checked"))
     if why:
         return why
     if keeps is not None:

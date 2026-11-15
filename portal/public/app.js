@@ -8193,6 +8193,21 @@ const byName = (a, b) => a._sortName.localeCompare(b._sortName);
 /** A select option carrying its count: ["Labor", "Labor (383)"]. */
 const countOpt = (value, label, n) => [value, `${label} (${Number(n || 0).toLocaleString()})`];
 
+/** The people directory's party filter: who each party lists, and how many, from one rule, so an
+ *  option's count is the length of its list.
+ *  A person is listed under the party their speeches carry (`party`) and any other they are recorded
+ *  under (`parties`). A party that no speech row carries yet, and is only someone's party now
+ *  (`party_now`), is offered too and lists those people: a new party's page links here. `party_now`
+ *  never adds a person to a party that speech rows already carry. */
+function directoryParties(items) {
+  const spoken = new Set(items.map((p) => p.party).filter(Boolean));
+  const nowOnly = new Set(items.map((p) => p.party_now).filter((party) => party && !spoken.has(party)));
+  const member = (p, party) => p.party === party || (p.parties || []).includes(party) || (nowOnly.has(party) && p.party_now === party);
+  const counts = new Map();
+  for (const party of [...spoken, ...nowOnly]) counts.set(party, items.filter((p) => member(p, party)).length);
+  return { counts, member };
+}
+
 /** Parliamentarians: parliamentarians.json joined to portraits and votes by lowercased name. */
 async function buildPeopleDirectory() {
   const [data] = await Promise.all([loadParliamentarians(), loadPhotoMap(), loadVotes()]);
@@ -8205,21 +8220,15 @@ async function buildPeopleDirectory() {
     p._divisions = keys.reduce((a, k) => a + (Number(votesData?.[k]?.divisions_total) || 0), 0);
     p._sortName = `${lname.split(" ").pop()} ${lname}`;
   }
-  const partyCounts = new Map();
   const chamberCounts = new Map();
   const stateCounts = new Map();
   for (const p of items) {
-    if (p.party) partyCounts.set(p.party, (partyCounts.get(p.party) || 0) + 1);
     for (const c of p.chambers || []) chamberCounts.set(c, (chamberCounts.get(c) || 0) + 1);
     for (const s of p.states || []) stateCounts.set(s, (stateCounts.get(s) || 0) + 1);
   }
-  // A party that is only ever someone's party now (no speech row carries it yet) is still a party to
-  // filter by: a new party's page links here. Counts of the parties above are unchanged.
-  const partyNowOnly = new Map();
-  for (const p of items) {
-    if (p.party_now && !partyCounts.has(p.party_now)) partyNowOnly.set(p.party_now, (partyNowOnly.get(p.party_now) || 0) + 1);
-  }
-  const partyOptions = [...partyCounts.entries(), ...partyNowOnly.entries()].sort((a, b) => b[1] - a[1])
+  // The parties to filter by, each with the number of people its filter lists (directoryParties).
+  const parties = directoryParties(items);
+  const partyOptions = [...parties.counts.entries()].sort((a, b) => b[1] - a[1])
     .map(([party, n]) => countOpt(party, party, n));
   partyOptions.push(countOpt("none", "No party recorded", items.filter((p) => !p.party).length));
   const speeches = items.reduce((a, p) => a + (p.speeches || 0), 0);
@@ -8258,9 +8267,7 @@ async function buildPeopleDirectory() {
     text: (p) => `${p.name} ${p.full || ""} ${p.party || ""} ${(p.states || []).map((s) => STATE_NAMES[s] || s).join(" ")}`,
     filters: [
       { key: "party", label: "Party", options: partyOptions,
-        // A sitting member's party now is theirs too: a party page links here by it (two members whose
-        // speeches all carry an earlier label would otherwise open an empty list).
-        test: (p, v) => v === "none" ? !p.party : (p.party === v || p.party_now === v || (p.parties || []).includes(v)) },
+        test: (p, v) => v === "none" ? !p.party : parties.member(p, v) },
       { key: "state", label: "Parliament",
         options: Object.keys(STATE_NAMES).filter((s) => stateCounts.has(s)).map((s) => countOpt(s, STATE_NAMES[s], stateCounts.get(s))),
         test: (p, v) => (p.states || []).includes(v) },

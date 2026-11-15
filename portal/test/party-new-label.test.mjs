@@ -5,10 +5,17 @@ import test, {after} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {Worker} from 'node:worker_threads';
+import {runInNewContext} from 'node:vm';
 import {JSDOM} from 'jsdom';
 import {PARTY_MAP, PARTY_NAMES, partyLabelHTML, partyNames, partyShortName} from '../public/labels.js';
 import {partyMembers, readPartyPages} from '../public/party-page.js';
 import {loadWorker, offline} from './worker-harness.mjs';
+
+// The people directory's party rule, as the browser ships it.
+const appSource = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
+const ruleStart = appSource.indexOf('function directoryParties(items)');
+assert.ok(ruleStart > 0, 'the directory party rule exists');
+const directoryParties = runInNewContext(`(${appSource.slice(ruleStart, appSource.indexOf('\n}\n', ruleStart) + 3).replace('function directoryParties', 'function')})`);
 
 const PARTY = 'Community Strong Australia';
 const SLUG = '/subject/party/community-strong-australia';
@@ -50,7 +57,7 @@ test('the label has a dot and the full name, under one code for the name and the
   assert.equal(partyNames(PARTY)[1], PARTY);
   const html = partyLabelHTML(PARTY, {full: true});
   assert.match(html, /class="[^"]*party-oth/);
-  assert.equal(html.replace(/<[^>]+>/g, '').trim(), PARTY);
+  assert.equal(new JSDOM(html).window.document.body.textContent.trim(), PARTY);
 });
 
 test('the party has a canonical page with its two sitting members, and is in the party directory', {timeout: 40000}, async () => {
@@ -84,8 +91,42 @@ test('the people directory filters by a party that is only a party now, so the p
   // the option exists, and the parties counted from speech rows keep their counts
   const options = [...new JSDOM(result.html).window.document.querySelectorAll('select[data-filter="party"] option')].map(o => o.textContent);
   assert.ok(options.includes(`${PARTY} (2)`), options.slice(0, 12).join(' | '));
-  const independents = roster.people.filter(p => p.party === 'Independent').length;
-  assert.ok(options.includes(`Independent (${independents.toLocaleString()})`));
+  assert.ok(options.includes(`Independent (${directoryParties(roster.people).counts.get('Independent')})`));
+});
+
+test('each party option counts exactly the people its filter lists, and a party now adds nobody to a party speeches already carry', () => {
+  const {counts, member} = directoryParties(roster.people);
+  for (const [party, count] of counts) {
+    const listed = roster.people.filter(p => member(p, party));
+    assert.equal(listed.length, count, party);
+    // the list is the people recorded under the party; party now counts only for a party no speech row carries
+    const spoken = roster.people.some(p => p.party === party);
+    for (const p of listed) assert.ok(p.party === party || (p.parties || []).includes(party) || (!spoken && p.party_now === party), `${p.name} under ${party}`);
+  }
+  // Cory Bernardi sits for One Nation in a state house now; his speeches are Liberal, Conservatives and Independent.
+  const bernardi = roster.people.find(p => p.name === 'Cory Bernardi');
+  assert.equal(bernardi.party_now, 'One Nation');
+  assert.equal(member(bernardi, 'One Nation'), false);
+  assert.equal(member(bernardi, 'Liberal'), true);
+  assert.deepEqual(roster.people.filter(p => member(p, PARTY)).map(p => p.name).sort(), members);
+  assert.deepEqual(roster.people.filter(p => member(p, "Australia's Voice")).map(p => p.name), ['Fatima Payman']);
+  // Matthew Canavan keeps the Nationals as a recorded party, so their list has him; the LNP's does too.
+  const canavan = roster.people.find(p => p.name === 'Matthew Canavan');
+  assert.ok(member(canavan, 'Nationals') && member(canavan, 'LNP'));
+});
+
+test('the seat each of them holds says the same party as their own record, so a seat page and a person page agree', () => {
+  const manifest = read('/electorates/manifest.json');
+  const service = read(manifest.people_url).people;
+  const index = read(manifest.index_url).electorates;
+  for (const [name, party] of [['Zali Steggall', PARTY], ['Allegra Spender', PARTY], ['Matthew Canavan', 'LNP'], ['Chris Gatenby', 'Liberal']]) {
+    const person = roster.people.find(p => (p.full || p.name) === name);
+    assert.equal(person.party_now, party, name);
+    const seats = service.find(p => p.name === name).electorates.filter(e => e.current);
+    assert.deepEqual(seats.map(e => e.party), [party], `${name}: the electorate release`);
+    const row = index.find(e => e.url === seats[0].url);
+    assert.equal(row.representatives.find(m => m.person.name === name).party, party, `${name}: the seat index`);
+  }
 });
 
 const restore = offline();
