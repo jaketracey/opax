@@ -87,7 +87,7 @@ import { isWitness, isUnattributed, belongsToScope, scopeFilter, speakerHref, sp
  */
 
 import { ASK_PIPELINE_VERSION, EVIDENCE_GAP_ANSWER, isEvidenceGap, isPositionBody, FOOTNOTE_INSTRUCTIONS, legacyCitationsAsk, quoteRecoveryAsk, evidenceExcerpt, stripListingBoilerplate, FootnoteStream, normaliseFootnotes, originalContext, unsupportedQuotes, type AugmentedContext } from './ask-evidence'
-import { askBillKey, billScope, billScopedBody, BILL_LABEL_ONLY, type BillLabelOnly, type BillScope, type BillScopeFile } from './ask-bill-scope'
+import { askBillKey, billScope, billScopedBody, divisionParts, returnedBillDivisions, BILL_LABEL_ONLY, type DivisionFile, type BillLabelOnly, type BillScope, type BillScopeFile } from './ask-bill-scope'
 import { resolveAskScope, needsAskPeople, askRetrievalQuery, isNamedPositionQuestion, POSITION_GROUNDING, type AskScope } from './ask-scope'
 import { communityRoute } from './community'
 import { reviewerLoginEnabled } from './community-auth'
@@ -1573,6 +1573,42 @@ async function askBill(value: string, env: Env): Promise<BillScope | null> {
   const key = askBillKey(value)
   return key ? billScope(key, await keptAssetJson<BillScopeFile>(billFileMemo, 32, env, `/bills/${key}.json`).catch(() => null)) : null
 }
+// The split divisions whose other parts one bill-scoped ask may carry: each part is up to 1,800 characters of names.
+const BILL_DIVISION_PARTS_MAX = 6
+/**
+ * The other parts of the split divisions a bill-scoped retrieval returns (ask-bill-scope.ts divisionParts). The same
+ * scoped body is run with generation off to see which of the bill's divisions come back; each one's full-member file
+ * is then read by its key. Nothing here can cost the reader the answer: a rejected or failed lookup, or a missing
+ * file, leaves the ask as it was, logged by bill key, division and status only.
+ */
+async function billDivisionParts(body: Record<string, unknown>, bill: BillScope, env: Env, signal?: AbortSignal): Promise<AskRecords['records']> {
+  if (!bill.slugs.some(slug => slug.startsWith('division-'))) return []
+  const skipped = (status: number | string, division?: string) => console.warn(JSON.stringify({ event: 'ask_bill_division_parts_skipped', bill: bill.key, ...(division ? { division } : {}), status }))
+  try {
+    const within = AbortSignal.any([AbortSignal.timeout(8_000), ...(signal ? [signal] : [])])
+    const res = await kbFetch(env, '/ask', { body: { ...body, generate_answer: false }, headers: { 'x-synchronous': 'true' }, signal: within })
+    if (!res.ok) {
+      await res.body?.cancel().catch(() => {})
+      // A rejected bill filter is the label-only case: the answer's own request logs it, and no division is returned.
+      if (![400, 404, 412, 422].includes(res.status)) skipped(res.status)
+      return []
+    }
+    const found = await res.json() as AskAnswer
+    const divisions = returnedBillDivisions(bill, Object.values(found.retrieval_results?.resources ?? {}).map(r => r.slug)).slice(0, BILL_DIVISION_PARTS_MAX * 2)
+    const parts = await Promise.all(divisions.map(async slug => {
+      try {
+        const file = await env.ASSETS.fetch(new Request(`${SITE_ORIGIN}/divisions/${encodeURIComponent(slug)}.json`, { signal: within }))
+        if (!file.ok) { await file.body?.cancel().catch(() => {}); skipped(file.status, slug); return [] }
+        return divisionParts(slug, await file.json() as DivisionFile)
+      } catch { skipped('unavailable', slug); return [] }
+    }))
+    return parts.filter(list => list.length).slice(0, BILL_DIVISION_PARTS_MAX).flat()
+  } catch {
+    if (signal?.aborted) throw signal.reason
+    skipped('unavailable')
+    return []
+  }
+}
 async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepared?: AskInput, firstBudget?: AskDeadline, quotaTaken = false, selectedToolsOnly = false): Promise<Response> {
   const rawInput = saConversationInput((prepared || ((await request.json().catch(() => ({}))) ?? {})) as Record<string,unknown>, env.SA_HANSARD_FULL_TEXT) as AskInput
   // One bill's records only: no calculator, identity or person route answers in its place, since each
@@ -1735,7 +1771,13 @@ async function apiAsk(request: Request, env: Env, ctx: ExecutionContext, prepare
       'Use only the supplied verified speech records for this answer. ' + FOOTNOTE_INSTRUCTIONS)
   }
   await scopeSpeakerBody(body, env, input.speaker)
-  if (bill) body = billScopedBody(body, bill)
+  if (bill) {
+    body = billScopedBody(body, bill)
+    // A division split for the platform's 100-name limit keeps its noes in a later part: when retrieval returns
+    // the division, the model gets every part, so no member who voted is read as not voting.
+    const parts = await billDivisionParts(body, bill, env, firstBudget?.signal ?? request.signal)
+    if (parts.length) { records = { records: parts, coverage: '', total: parts.length }; body.extra_context = recordContext(parts) }
+  }
   // Shared by every retry body: set once the platform rejected the full bill filter and the label alone answered.
   const billLabelOnly = bill ? (body as { [BILL_LABEL_ONLY]?: BillLabelOnly })[BILL_LABEL_ONLY] : undefined
   firstBudget?.signal.throwIfAborted()

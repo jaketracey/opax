@@ -18,7 +18,7 @@ const restore=offline(),pending=[],ctx={waitUntil:p=>pending.push(p),passThrough
 const plugin={name:'scripted-model',setup(b){b.onResolve({filter:/^@openrouter\/ai-sdk-provider$/},()=>({path:'scripted',namespace:'ask-bill'}));b.onLoad({filter:/.*/,namespace:'ask-bill'},()=>({contents:'export const createOpenRouter=()=>()=>globalThis.__researchModel;',loader:'js'}))}}
 const publicDir=new URL('../public',import.meta.url).pathname
 const h=await loadWorker(new URL('../src/index.ts',import.meta.url).pathname,publicDir,ctx,{plugins:[plugin]})
-const {askBillKey,billScope,billScopeClause,billScopedBody,inBillScope,BILL_LABEL_ONLY}=await importBundle((await build({entryPoints:[new URL('../src/ask-bill-scope.ts',import.meta.url).pathname],bundle:true,format:'esm',write:false})).outputFiles[0].text,'ask-bill-scope')
+const {askBillKey,billScope,billScopeClause,billScopedBody,inBillScope,divisionParts,BILL_LABEL_ONLY}=await importBundle((await build({entryPoints:[new URL('../src/ask-bill-scope.ts',import.meta.url).pathname],bundle:true,format:'esm',write:false})).outputFiles[0].text,'ask-bill-scope')
 const daily=budgetDatabase()
 Object.assign(h.env,{OPENROUTER_API_KEY:'test-only-placeholder',AGENTIC_ASK_MODE:'route',RESEARCH_LOOP:'route',AGENTIC_INPUT_USD_PER_MILLION:'0.66',AGENTIC_OUTPUT_USD_PER_MILLION:'1.98',
   COMMUNITY_DB:daily.db,ASK_LIMITER:{limit:async()=>({success:true})},MODEL_LIMITER:{limit:async()=>({success:true})}})
@@ -66,7 +66,7 @@ const matches=(e,r)=>{
 }
 // As NucliaDB's parser does (parse_expression: "Cannot find slug"), a resource clause naming a slug that is not in
 // the box rejects the whole request. `absent` takes records out of the box for one test.
-const absent=new Set();let rejectStatus=412
+const absent=new Set();let rejectStatus=412,lookupStatus=200
 const inBox=()=>Object.fromEntries(Object.entries(pool).filter(([,r])=>!absent.has(r.slug)))
 const unknownSlug=e=>e.and?e.and.map(unknownSlug).find(Boolean):e.or?e.or.map(unknownSlug).find(Boolean):e.not?unknownSlug(e.not):e.prop==='resource'&&e.slug&&!Object.values(inBox()).some(r=>r.slug===e.slug)?e.slug:undefined
 const kbAsks=[],rejected=[]
@@ -81,6 +81,9 @@ const kb=async(input,init)=>{
   const unknown=field&&unknownSlug(field)
   if(unknown){rejected.push(unknown);return Response.json({detail:`Cannot find slug ${unknown}`},{status:rejectStatus})}
   const found=Object.fromEntries(Object.entries(inBox()).filter(([,r])=>!field||matches(field,r)))
+  // Generation off: the retrieval alone. The Worker's own lookup, to see which of the bill's divisions come back,
+  // is the one without `debug` (the South Australian safeguard's retrieval-first call in sa-evidence.ts sets it).
+  if(body.generate_answer===false)return body.debug||lookupStatus===200?Response.json({retrieval_results:{resources:found}}):Response.json({detail:'unavailable'},{status:lookupStatus})
   const ids=Object.values(found).flatMap(r=>Object.keys(r.fields.body.paragraphs))
   const answer=ids.length?ids.map((_,i)=>`Point ${i+1} from the record.[^${i+1}]`).join(' ')+'\n\n'+ids.map((_,i)=>`[^${i+1}]: block-${i+1}`).join('\n'):''
   const notes=Object.fromEntries(ids.map((id,i)=>[`block-${i+1}`,id]))
@@ -140,7 +143,7 @@ test('a debated bill: the speeches and divisions its file lists are in scope, an
   onlyTheBill(run,DEBATED,debated,'debated')
   const slugs=run.body.sources.map(s=>s.slug)
   assert.equal(rejected.length,0,'every listed record is in the box')
-  for(const slug of slugs)assert.ok(slug===`bill-${DEBATED}`||slug===`bill-text-${DEBATED}-first-reps`||debated.speeches.some(s=>s.slug===slug)||debated.divisions.some(d=>`division-${d.key}`===slug),slug)
+  for(const slug of slugs)assert.ok(slug===`bill-${DEBATED}`||slug===`bill-text-${DEBATED}-first-reps`||debated.speeches.some(s=>s.slug===slug)||debated.divisions.some(d=>`division-${d.key}`===slug.replace(/-p\d+$/,'')),slug)
   assert.ok(slugs.some(slug=>slug.startsWith('speech-'))&&slugs.some(slug=>slug.startsWith('division-')),'speeches and divisions are retrieved')
 })
 
@@ -180,6 +183,87 @@ for(const stream of [false,true])for(const [name,slug] of [['a listed speech',de
       assert.equal(modelCalls(),0)
     }finally{absent.clear()}
   })
+
+// A House division with more than 100 named voters is published in parts: part 1 (division-<key>) names the ayes
+// and the noes are in division-<key>-p2, which the bill file does not list. Read alone, part 1 makes a member who
+// voted no look like one who did not vote. Division 4077 on this bill: 80 ayes, 52 noes, 132 named.
+const SPLIT=`division-${debated.divisions[0].key}`,WHOLE=`division-${debated.divisions[3].key}`
+const splitFile=JSON.parse(readFileSync(`${publicDir}/divisions/${SPLIT}.json`,'utf8'))
+const noVoter=splitFile.members.filter(m=>m.vote==='no').map(m=>m.name).sort().at(-1)
+const generating=()=>kbAsks.filter(sent=>sent.generate_answer!==false)
+const context=sent=>(sent.extra_context??[]).map(text=>JSON.parse(text))
+for(const stream of [false,true])
+  test(`a member who voted no in part 2 of a split division: the answer's records include part 2 and the model's context carries that no (${stream?'stream':'json'})`,async()=>{
+    assert.equal(splitFile.members.length,132);assert.ok(noVoter)
+    assert.ok(!JSON.stringify(Object.values(pool).find(r=>r.slug===SPLIT)).includes(noVoter),'part 1 in the box does not name the member')
+    const run=await ask({question:`How did ${noVoter} vote on this bill?`,bill:DEBATED},stream)
+    onlyTheBill(run,DEBATED,debated,'split division')
+    const part=run.body.sources.find(s=>s.slug===`${SPLIT}-p2`)
+    assert.ok(part,'part 2 is one of the answer\'s records')
+    assert.equal(part.href,`/doc/${SPLIT}`);assert.match(part.title,/\(part 2 of 2\)$/)
+    assert.ok(generating().length>0)
+    for(const sent of generating()){
+      const record=context(sent).find(r=>r.record_id===`${SPLIT}-p2`)
+      assert.ok(record,'every generating request carries part 2')
+      assert.match(record.record,/Noes 52, 52 named in this part: /)
+      assert.ok(record.record.includes(noVoter),`the model reads ${noVoter} among the noes`)
+      assert.ok(record.record.length<=1800,'whole, not cut')
+      assert.ok(!context(sent).some(r=>String(r.record_id).startsWith(WHOLE)),'a division that is one record gets no parts')
+      assert.ok(context(sent).length<=6,'bounded')
+    }
+  })
+
+test('a split division\'s parts never block or empty the answer: a missing division file, or a failed lookup, leaves the ask as it was',async()=>{
+  const question='How did my neighbour Zebedee Quillfeather vote on this bill?'
+  const real=h.env.ASSETS
+  for(const stream of [false,true]){
+    h.env.ASSETS={fetch:req=>new URL(req.url).pathname===`/divisions/${SPLIT}.json`?new Response('Missing',{status:404}):real.fetch(req)}
+    try{
+      const run=await ask({question,bill:DEBATED},stream)
+      onlyTheBill(run,DEBATED,debated,'missing file')
+      assert.ok(!run.body.sources.some(s=>s.slug===`${SPLIT}-p2`),'no part for the missing file')
+      assert.ok(run.body.sources.some(s=>s.slug===SPLIT),'part 1 is still a record')
+      assert.ok(run.body.sources.some(s=>/-p2$/.test(s.slug)),'the other split divisions keep their parts')
+      assert.deepEqual(warned.filter(line=>line.includes('ask_bill_division_parts_skipped')).map(line=>JSON.parse(line)),[{event:'ask_bill_division_parts_skipped',bill:DEBATED,division:SPLIT,status:404}])
+    }finally{h.env.ASSETS=real}
+    lookupStatus=500
+    try{
+      const run=await ask({question,bill:DEBATED},stream)
+      onlyTheBill(run,DEBATED,debated,'failed lookup')
+      assert.ok(!run.body.sources.some(s=>/-p\d+$/.test(s.slug)),'no parts')
+      assert.ok(run.body.sources.some(s=>s.slug===SPLIT),'the answer is as it was')
+      assert.deepEqual(warned.filter(line=>line.includes('ask_bill_division_parts_skipped')).map(line=>JSON.parse(line)),[{event:'ask_bill_division_parts_skipped',bill:DEBATED,status:500}])
+    }finally{lookupStatus=200}
+    assert.ok(!warned.some(line=>/Zebedee|Quillfeather|neighbour/.test(line)),'no question text in any log line')
+  }
+})
+
+test('a bill with no divisions makes no extra retrieval',async()=>{
+  await ask({question:'What would this bill change for veterans?',bill:VETERANS})
+  assert.equal(kbAsks.filter(sent=>sent.generate_answer===false&&!sent.debug).length,0)
+  await ask({question:'How did members vote on this bill?',bill:DEBATED})
+  assert.equal(kbAsks.filter(sent=>sent.generate_answer===false&&!sent.debug).length,1,'one lookup for a bill with divisions')
+})
+
+test('division parts: every named voter after part 1 is in exactly one part, as the ingest splits them',()=>{
+  const parts=divisionParts(SPLIT,splitFile)
+  assert.deepEqual(parts.map(p=>p.slug),[`${SPLIT}-p2`])
+  for(const m of splitFile.members.filter(m=>m.vote==='no'))assert.ok(parts[0].snippet.includes(m.name),m.name)
+  assert.deepEqual(divisionParts(WHOLE,JSON.parse(readFileSync(`${publicDir}/divisions/${WHOLE}.json`,'utf8'))),[],'100 named voters or fewer: one record, no parts')
+  assert.deepEqual(divisionParts(SPLIT,null),[])
+  // 150 ayes and 120 noes: two groups a side, part 1 the first ayes group.
+  const big={name:'Fixture',date:'2020-01-01',house:'representatives',ayes:150,noes:120,members:[...Array(270)].map((_,i)=>({name:`Member ${String(i).padStart(3,'0')} Placeholder-Surname`,vote:i<150?'aye':'no'}))}
+  const many=divisionParts('division-fixture-1',big)
+  const listed=many.flatMap(p=>p.snippet.split('named in this part: ')[1].replace(/\.$/,'').split(', '))
+  assert.equal(new Set(listed).size,listed.length)
+  // Part 1 in the box names the first 75 ayes. The parts here start no later than that, so nobody is left out.
+  const left=big.members.map(m=>m.name).filter(name=>!listed.includes(name))
+  assert.ok(left.length>0&&left.length<=75,String(left.length));assert.deepEqual(left,big.members.slice(0,left.length).map(m=>m.name),'only a leading run of the ayes, all inside part 1')
+  for(const p of many)assert.ok(p.snippet.length<=1800,`${p.slug} fits the record text`)
+  assert.deepEqual(many.map(p=>p.slug),many.map((_,i)=>`division-fixture-1-p${i+2}`))
+  assert.equal(inBillScope({slug:`${SPLIT}-p2`},billScope(DEBATED,debated)),true)
+  assert.equal(inBillScope({slug:'division-federal-senate-990002-p2'},billScope(DEBATED,debated)),false)
+})
 
 test('the label-only retry is logged with the bill key and the upstream status, and never the question; 404 is retried too',async()=>{
   const question='What does this bill change for my neighbour Zebedee Quillfeather?'

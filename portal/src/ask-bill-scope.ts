@@ -17,9 +17,14 @@
  * That answer has lost the bill record and every speech and division, so it is logged (key and
  * upstream status only) and not kept in the answer cache.
  *
- * Not reached: the later parts of a division split for the platform's 100-name limit
- * (`division-<key>-p2`, votes_ingest.py), which the bill file does not record, and speeches past
- * the 24 a bill file lists.
+ * A division with more than 100 named voters is published in parts for the platform's 100-name
+ * limit (votes_ingest.py division_documents): part 1 is in scope by its slug and names the ayes;
+ * the noes are in `division-<key>-p2`, which the bill file does not record and which could not be
+ * named safely if it did. When retrieval returns such a division the other parts are rebuilt from
+ * the Worker's own full-member file for that division (`/divisions/<slug>.json`) and given to the
+ * model as records, so an answer about how a member voted has every vote (`divisionParts`).
+ *
+ * Not reached: speeches past the 24 a bill file lists.
  */
 export interface BillScopeFile {
   title?: string
@@ -76,5 +81,66 @@ export function billScopedBody(body: Record<string, unknown>, scope: BillScope):
 /** True when a returned source is one of the bill's records (tests and callers that check a payload). */
 export function inBillScope(source: { slug?: string | null; href?: string | null }, scope: BillScope): boolean {
   const slug = String(source.slug ?? '')
-  return scope.slugs.includes(slug) || slug.startsWith(`bill-text-${scope.key}-`) || String(source.href ?? '').split(/[?#]/)[0] === `/bill/${scope.key}`
+  const part = /^(division-.+)-p\d+$/.exec(slug)
+  return scope.slugs.includes(slug) || !!part && scope.slugs.includes(part[1]) || slug.startsWith(`bill-text-${scope.key}-`) || String(source.href ?? '').split(/[?#]/)[0] === `/bill/${scope.key}`
 }
+
+/** A division's full-member file (/divisions/<slug>.json), as scripts export it and /api/resource reads it. */
+export interface DivisionFile {
+  key?: string; name?: string; question?: string; date?: string; house?: string; jurisdiction?: string
+  ayes?: number; noes?: number; source_url?: string
+  members?: { name?: string; vote?: string }[]
+}
+export interface DivisionPart {
+  kind: 'division'; title: string; href: string; snippet: string; slug: string; resource: string
+  state?: string; chamber?: string; date?: string; source: string; url?: string; record_id: string
+}
+
+// votes_ingest.py: MAX_COLLABORATORS and _chunk_side. A record's text reaches the model cut at 1,800
+// characters (ask-records.ts recordContext), so a part's names are also kept under that.
+const PART_NAMES = 100
+const PART_CHARS = 1700
+const chunkSide = (names: string[]): string[][] => {
+  if (!names.length) return []
+  const sorted = [...names].sort()
+  const size = Math.ceil(sorted.length / Math.ceil(sorted.length / PART_NAMES))
+  const groups: string[][] = []
+  for (let i = 0; i < sorted.length; i += size) groups.push(sorted.slice(i, i + size))
+  return groups.flatMap(fitPart)
+}
+/** Halved until the names fit the record text the model reads. */
+function fitPart(group: string[]): string[][] {
+  if (group.join(', ').length <= PART_CHARS - 400 || group.length < 2) return [group]
+  const half = Math.ceil(group.length / 2)
+  return [...fitPart(group.slice(0, half)), ...fitPart(group.slice(half))]
+}
+
+/**
+ * The parts of a split division after the first, as the ingest splits them: the ayes (with pairs)
+ * then the noes, each side in alphabetical groups. Empty for a division that is one record (100
+ * named voters or fewer), whose single resource already names everyone.
+ */
+export function divisionParts(slug: string, file: DivisionFile | null | undefined): DivisionPart[] {
+  const named = (file?.members ?? []).filter(m => typeof m?.name === 'string' && m.name.trim())
+  if (new Set(named.map(m => m.name)).size <= PART_NAMES) return []
+  const side = (...votes: string[]) => named.filter(m => votes.includes(String(m.vote))).map(m => m.name!.trim())
+  const groups = [
+    ...chunkSide(side('aye', 'paired')).map(names => ({ label: 'Ayes', total: file?.ayes, names })),
+    ...chunkSide(side('no')).map(names => ({ label: 'Noes', total: file?.noes, names })),
+  ]
+  const title = String(file?.name || file?.question || 'Division').replace(/\s+/g, ' ').trim().slice(0, 180)
+  return groups.slice(1).map((group, i) => {
+    const part = i + 2
+    return {
+      kind: 'division' as const, slug: `${slug}-p${part}`, resource: '', href: `/doc/${slug}`,
+      title: `${title} (part ${part} of ${groups.length})`,
+      snippet: `Division${file?.date ? ` on ${file.date}` : ''}${file?.house ? `, ${file.house}` : ''}: ${title}. Part ${part} of ${groups.length} of this division's record; the other parts list the other voters. ` +
+        `${group.label}${typeof group.total === 'number' ? ` ${group.total}` : ''}, ${group.names.length} named in this part: ${group.names.join(', ')}.`,
+      ...(file?.jurisdiction ? { state: file.jurisdiction } : {}), ...(file?.house ? { chamber: file.house } : {}), ...(file?.date ? { date: file.date } : {}),
+      source: 'Division record', ...(file?.source_url ? { url: file.source_url } : {}), record_id: `${slug}-p${part}`,
+    }
+  })
+}
+/** The scope's own division slugs among those a retrieval returned: the only divisions whose parts are added. */
+export const returnedBillDivisions = (scope: BillScope, slugs: (string | null | undefined)[]): string[] =>
+  [...new Set(slugs.filter((slug): slug is string => typeof slug === 'string' && slug.startsWith('division-') && scope.slugs.includes(slug)))]
