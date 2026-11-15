@@ -92,7 +92,12 @@ const byID = (root: ReactTestInstance, testID: string) =>
   root.findAll((n) => typeof n.type === 'string' && n.props.testID === testID);
 const pressables = (root: ReactTestInstance) =>
   root.findAll(
-    (n) => typeof n.type !== 'string' && typeof n.props.onPress === 'function',
+    (n) =>
+      typeof n.type !== 'string' &&
+      // A touch surface, not the router link that carries the row's press
+      // on (it holds the row's highlight through the push).
+      n.props.href === undefined &&
+      typeof n.props.onPress === 'function',
   );
 const press = (root: ReactTestInstance, testID: string) =>
   act(async () =>
