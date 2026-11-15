@@ -334,7 +334,13 @@ function frames(
     : device.stage - device.bottom;
   const controls = controlsOf(root)!;
   const host = flat(controls.parent!);
-  const controlsTop = chromeTop + (host.top as number);
+  // The controls hang from the card's foot: their host starts where the
+  // card, clamped to its cap, ends.
+  const card = Math.min(
+    natural.card,
+    (flat(topOf(root)).maxHeight as number | undefined) ?? Infinity,
+  );
+  const controlsTop = chromeTop + card + (host.top as number);
   const controlsBottom =
     controlsTop +
     (controls.props.horizontal ? rowHeight(device.os) : stackHeight(device.os));

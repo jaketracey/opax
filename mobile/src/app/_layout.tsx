@@ -26,6 +26,7 @@ import { AndroidMenuHost } from '../design/menu';
 import { colors } from '../design/tokens';
 import { KeyboardFrames } from '../features/ask/keyboard';
 import { installGloss } from '../features/newcomer/gloss-source';
+import { primeScreenReader } from '../features/money/screen-reader';
 import { RootLaunchCover } from '../launch/RootLaunchCover';
 import {
   decideLaunchSequence,
@@ -53,6 +54,8 @@ import {
 export const unstable_settings = rootSettings;
 // Plain lines under headings take the reader's setting and the guide's words.
 installGloss();
+// VoiceOver's state is in before the money map's first paint picks its view.
+primeScreenReader();
 // Last resort: a page that fails to draw shows Try again instead of closing.
 export { RouteErrorBoundary as ErrorBoundary } from '../navigation/RouteErrorBoundary';
 

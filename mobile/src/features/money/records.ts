@@ -188,7 +188,9 @@ const thresholdCaveat =
  * section calls "Money received"; a state graph's is its register's
  * donations or gifts, and keeps its words.
  */
-export function partiesFigureWords(graph: MoneyGraph) {
+export function partiesFigureWords(graph: {
+  meta: Pick<MoneyGraph['meta'], 'jurisdiction'>;
+}) {
   const federal =
     !graph.meta.jurisdiction || graph.meta.jurisdiction === 'federal';
   return federal

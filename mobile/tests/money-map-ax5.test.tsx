@@ -328,7 +328,13 @@ function frames(
     : device.stage - device.bottom;
   const controls = controlsOf(root)!;
   const host = flat(controls.parent!);
-  const controlsTop = chromeTop + (host.top as number);
+  // The controls hang from the card's foot: their host starts where the
+  // card, clamped to its cap, ends.
+  const card = Math.min(
+    natural.card,
+    (flat(topOf(root)).maxHeight as number | undefined) ?? Infinity,
+  );
+  const controlsTop = chromeTop + card + (host.top as number);
   const controlsBottom =
     controlsTop +
     (controls.props.horizontal ? rowHeight(device.os) : stackHeight(device.os));
@@ -417,6 +423,25 @@ test('expanding the panel holds the card still; the search card takes the bandâ€
   expect(top.findByType(ScrollView).findAllByType(MoneyMapSearch)).toHaveLength(
     1,
   );
+});
+
+test('a capped card reporting its height does not change the panelâ€™s share', async () => {
+  const device = devices.find((d) => d.name === 'iPhone 17 Pro at AX3')!;
+  const root = await mount(device);
+  act(() =>
+    root.findByProps({ testID: 'money-screen' }).props.onLayout({
+      nativeEvent: { layout: { width: device.width, height: device.stage } },
+    }),
+  );
+  // Before the card reports, it is taken to fill its cap, as it does at
+  // this size: the panel's share is already the one it keeps.
+  const share = () => root.findByType(MoneyMapPanel).props.maxHeight;
+  const first = share();
+  const top = topOf(root);
+  const cap = flat(top).maxHeight as number;
+  expect(first).toBeGreaterThan(0);
+  act(() => top.props.onLayout({ nativeEvent: { layout: { height: cap } } }));
+  expect(share()).toBe(first);
 });
 
 test('a regular layout at AX5 keeps its own caps, which leave the band room', async () => {
