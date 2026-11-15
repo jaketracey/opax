@@ -36,8 +36,12 @@ import { useScreenReady } from '../src/analytics/timing';
 import {
   AskDock,
   COMPOSER_HEIGHT_SHARE,
+  caretAfterContent,
+  caretAfterSelection,
+  caretSelection,
   composerFieldCap,
   composerLines,
+  prefilledCaret,
 } from '../src/features/ask/AskDock';
 import clarify from '../scripts/fixtures/ask-clarify.json';
 import { catalogs, client } from '../src/api/runtime';
@@ -2443,6 +2447,144 @@ test('an arrival while an answer runs waits in the composer and sends a new conv
   expect(askSession.snapshot().options).toMatchObject({
     speaker: 'Sam Placeholder',
     kind: 'speech',
+  });
+});
+
+describe('a prefilled draft is shown from its start (J76-ask3)', () => {
+  const long =
+    'What has parliament said about the cost of housing for renters in regional towns and the changes to rental assistance since the last election?';
+  const mount = () => {
+    let r!: ReactTestRenderer;
+    act(() => {
+      r = create(
+        <AskDock
+          onSend={() => {}}
+          onStop={() => {}}
+          onOptions={() => {}}
+          offline={false}
+          keyboard={336}
+        />,
+      );
+    });
+    const field = () =>
+      r.root.find(
+        (n) => n.props.testID === 'ask-question' && n.props.style !== undefined,
+      );
+    const cap = () => StyleSheet.flatten(field().props.style).maxHeight;
+    const content = (height: number) =>
+      act(() =>
+        field().props.onContentSizeChange({
+          nativeEvent: { contentSize: { width: 300, height } },
+        }),
+      );
+    const selected = (start: number, end = start) =>
+      act(() =>
+        field().props.onSelectionChange({
+          nativeEvent: { selection: { start, end } },
+        }),
+      );
+    return { r, field, cap, content, selected };
+  };
+  afterEach(() => act(() => askSession.start()));
+
+  test('an arrival puts the caret at the start, so UIKit shows the first line', () => {
+    const { r, field } = mount();
+    expect(field().props.selection).toBeUndefined();
+    act(() => arriveInAsk({ question: long }, 'prefill-1'));
+    expect(field().props.value).toBe(long);
+    expect(field().props.selection).toEqual({ start: 0, end: 0 });
+    act(() => r.unmount());
+  });
+
+  test('taller than the field: the caret stays at the start, then is handed back', () => {
+    const { r, field, cap, content, selected } = mount();
+    act(() => arriveInAsk({ question: long }, 'prefill-2'));
+    content(cap() + 60);
+    expect(field().props.selection).toEqual({ start: 0, end: 0 });
+    // UIKit reports the selection it now has: held no longer, or every tap
+    // the reader makes would be put back.
+    selected(0);
+    expect(field().props.selection).toBeUndefined();
+    // A later content size (the reader's own edits) changes nothing.
+    content(cap() - 20);
+    expect(field().props.selection).toBeUndefined();
+    act(() => r.unmount());
+  });
+
+  test('a draft that fits moves the caret to its end, where typing continues it', () => {
+    const { r, field, cap, content, selected } = mount();
+    act(() => arriveInAsk({ question: long }, 'prefill-3'));
+    selected(0);
+    content(cap() - 20);
+    expect(field().props.selection).toEqual({
+      start: long.length,
+      end: long.length,
+    });
+    selected(long.length);
+    expect(field().props.selection).toBeUndefined();
+    act(() => r.unmount());
+  });
+
+  test('a selection that is not the one held does not let go early', () => {
+    const { r, field, selected } = mount();
+    act(() => arriveInAsk({ question: long }, 'prefill-4'));
+    // The value's own arrival reports the caret at the end first.
+    selected(long.length);
+    expect(field().props.selection).toEqual({ start: 0, end: 0 });
+    act(() => r.unmount());
+  });
+
+  test('what the reader types is never moved', () => {
+    const { r, field, content } = mount();
+    act(() => field().props.onChangeText('What about'));
+    expect(askSession.snapshot().draft).toBe('What about');
+    expect(field().props.selection).toBeUndefined();
+    content(400);
+    expect(field().props.selection).toBeUndefined();
+    // Typing over a prefill ends its hold at once.
+    act(() => arriveInAsk({ question: long }, 'prefill-5'));
+    expect(field().props.selection).toEqual({ start: 0, end: 0 });
+    act(() => field().props.onChangeText(`${long} And`));
+    expect(field().props.selection).toBeUndefined();
+    act(() => r.unmount());
+  });
+
+  test('a draft already waiting when the composer mounts counts as a prefill', () => {
+    act(() => arriveInAsk({ question: long }, 'prefill-6'));
+    const { r, field } = mount();
+    expect(field().props.selection).toEqual({ start: 0, end: 0 });
+    act(() => r.unmount());
+  });
+
+  test('the rule, by itself', () => {
+    const start = prefilledCaret(long)!;
+    expect(prefilledCaret('')).toBeNull();
+    expect(caretSelection(start, long)).toEqual({ start: 0, end: 0 });
+    expect(caretSelection(start, 'another draft')).toBeUndefined();
+    expect(caretSelection(null, long)).toBeUndefined();
+    // Fits, to within a point of the cap.
+    expect(caretAfterContent(start, long, 131, 130)).toMatchObject({
+      at: 'end',
+      done: false,
+    });
+    expect(caretAfterContent(start, long, 132, 130)).toEqual({
+      ...start,
+      sized: true,
+    });
+    expect(caretAfterContent(start, 'another draft', 10, 130)).toBe(start);
+    const done = caretAfterSelection(start, long, { start: 0, end: 0 })!;
+    expect(done.done).toBe(true);
+    expect(caretSelection(done, long)).toBeUndefined();
+    expect(caretAfterSelection(start, long, { start: 3, end: 3 })).toBe(start);
+    // The selection is often reported before the content's height: a draft
+    // that fits still gets its caret at the end, whichever comes first.
+    expect(caretAfterContent(done, long, 50, 130)).toMatchObject({
+      at: 'end',
+      done: false,
+    });
+    // Judged once: a later height moves nothing.
+    const tall = caretAfterContent(start, long, 400, 130);
+    expect(caretAfterContent(tall, long, 50, 130)).toBe(tall);
   });
 });
 

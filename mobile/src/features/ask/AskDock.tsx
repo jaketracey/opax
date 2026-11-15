@@ -86,6 +86,61 @@ export function composerFieldCap({
   return Math.max(minimumTarget, Math.min(byLines, byHeight));
 }
 /**
+ * Where the caret goes in a draft the reader did not type (an arrival's
+ * prefilled question). UIKit keeps the caret in view, and a new value puts
+ * it at the end: a draft taller than the field was shown from its last
+ * lines, its start scrolled out of sight (on a short window, with the
+ * keyboard up, only the last line). So the caret starts at the top, which
+ * shows the question from its first word. Once the field reports its
+ * content: a draft that fits moves the caret to the end, where typing
+ * continues it, and nothing on screen moves; a taller one stays at the top.
+ * `done` hands the caret back to the reader: a selection held any longer is
+ * re-applied over every tap.
+ */
+export interface DraftCaret {
+  draft: string;
+  at: 'start' | 'end';
+  /** The field has the selection: the reader's taps are their own again. */
+  done: boolean;
+  /** The content's height has been judged, once. */
+  sized: boolean;
+}
+export const prefilledCaret = (draft: string): DraftCaret | null =>
+  draft ? { draft, at: 'start', done: false, sized: false } : null;
+/** The selection to hold for this draft, or none (the reader has the caret). */
+export function caretSelection(caret: DraftCaret | null, draft: string) {
+  if (!caret || caret.done || caret.draft !== draft) return undefined;
+  const at = caret.at === 'start' ? 0 : draft.length;
+  return { start: at, end: at };
+}
+/** The field reported its content's height: a draft that fits edits from its end. */
+export function caretAfterContent(
+  caret: DraftCaret | null,
+  draft: string,
+  contentHeight: number,
+  fieldCap: number,
+): DraftCaret | null {
+  if (!caret || caret.draft !== draft || caret.sized) return caret;
+  // Judged once: a later size (a rotation, a wider window) moves nothing.
+  return contentHeight <= fieldCap + 1
+    ? { draft, at: 'end', done: false, sized: true }
+    : { ...caret, sized: true };
+}
+/** The field reported a selection: once it is the one held, let go. */
+export function caretAfterSelection(
+  caret: DraftCaret | null,
+  draft: string,
+  selection: { start: number; end: number },
+): DraftCaret | null {
+  const held = caretSelection(caret, draft);
+  return caret &&
+    held &&
+    selection.start === held.start &&
+    selection.end === held.end
+    ? { ...caret, done: true }
+    : caret;
+}
+/**
  * Ask's composer, docked above the tab bar (DIRECTION 4.24). Leading,
  * Options; the field; trailing, one button: Stop while an answer is
  * written, Talk while the field is empty (D5 on), else
@@ -132,6 +187,16 @@ export function AskDock({
   const options = askSession.composerOptions();
   const tags = chips(options, (slug) => topics[slug] ?? slug);
   const empty = !s.draft.trim();
+  // The draft as the reader last typed it. Any other draft is a prefill, as
+  // is one already waiting when the composer mounts (prefilledCaret).
+  const [typed, setTyped] = useState(s.draft);
+  const [caret, setCaret] = useState(() =>
+    Platform.OS === 'ios' ? prefilledCaret(s.draft) : null,
+  );
+  if (s.draft !== typed) {
+    setTyped(s.draft);
+    setCaret(Platform.OS === 'ios' ? prefilledCaret(s.draft) : null);
+  }
   // iOS: an empty composer is one capped line, its symbols scaling with it.
   const drawn = empty && Platform.OS === 'ios';
   const symbolScale = Platform.OS === 'ios' ? chromeTextScaleCap : 1;
@@ -338,7 +403,21 @@ export function AskDock({
           <TextInput
             ref={inputRef}
             value={s.draft}
-            onChangeText={(text) => askSession.setDraft(text)}
+            onChangeText={(text) => {
+              setTyped(text);
+              askSession.setDraft(text);
+            }}
+            selection={caretSelection(caret, s.draft)}
+            onContentSizeChange={(e) => {
+              const { height } = e.nativeEvent.contentSize;
+              setCaret((old) =>
+                caretAfterContent(old, s.draft, height, maxHeight),
+              );
+            }}
+            onSelectionChange={(e) => {
+              const { selection } = e.nativeEvent;
+              setCaret((old) => caretAfterSelection(old, s.draft, selection));
+            }}
             // iOS draws the placeholder below on one capped line; UIKit's
             // multiline placeholder scales without a cap and wraps, so at
             // AX3 the empty composer took three lines (sweep 1, 2.1).
