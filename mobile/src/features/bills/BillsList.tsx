@@ -190,7 +190,14 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
       // by then (give or take a moment) and is never added after it.
       const more = refresh || pushed ? null : readOnThisDay(firstDay, signal);
       const bills = await catalogs.bills(refresh, signal);
-      return { ...bills, onThisDay: more ? await onThisDayInTime(more) : null };
+      const onThisDay = more ? await onThisDayInTime(more) : null;
+      // An index that missed the first frame is still wanted: the hook holds
+      // its answer for the next time the list is out of sight.
+      return {
+        ...bills,
+        onThisDay,
+        onThisDayLate: more && !onThisDay ? more : null,
+      };
     },
     [firstDay, pushed],
   );
@@ -316,6 +323,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   } = useOnThisDay(index?.bills, {
     day: firstDay,
     index: record ? record.onThisDay : undefined,
+    late: record?.onThisDayLate,
   });
   const clear = () => list.store.set(list.store.model.reset(list.state));
   const stacked = useAccessibilitySize();
