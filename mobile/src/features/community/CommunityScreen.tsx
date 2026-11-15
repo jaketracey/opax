@@ -48,6 +48,7 @@ import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { canonicalUrl, openSource } from '../../navigation/external';
 import { fromWebPath } from '../../navigation/routes';
 import { shareRecord } from '../../navigation/share';
+import { emptyBarTitle } from '../../navigation/useTitleOnScroll';
 import { useAccount } from '../account/store';
 import { AndroidCommunityScreen } from './AndroidCommunityScreen';
 import { count, flag, guidelines, object, rows, text, type Row } from './model';
@@ -1582,9 +1583,14 @@ function CommunityPage() {
     <>
       <RouteOptions
         options={
-          // The bar keeps the view's name for Back ("‹ Discussion").
+          // The bar keeps the view's name for Back ("‹ Discussion"). On iOS
+          // the empty title, not '': beside the Duo's rail it holds the
+          // title band open, so the page does not move when the name shows.
           heading
-            ? { title: titles[view], headerTitle: '' }
+            ? {
+                title: titles[view],
+                headerTitle: Platform.OS === 'ios' ? emptyBarTitle : '',
+              }
             : { title: titles[view] }
         }
       />

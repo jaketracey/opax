@@ -1,6 +1,7 @@
 import { act } from 'react';
 import { Platform, StyleSheet, Text, useWindowDimensions } from 'react-native';
 import TestRenderer from 'react-test-renderer';
+import { yourMpScreens } from '../src/navigation/stack/your-mp';
 import { BarTitle, emptyBarTitle } from '../src/navigation/useTitleOnScroll';
 
 // Build 82, the closed iPhone Duo: a profile opened a title band's height
@@ -89,3 +90,23 @@ describe('a page that opens before its title is known', () => {
     expect(lineBox(emptyBarTitle(), 'bar-title-empty')).toBeUndefined();
   });
 });
+
+// Members and Election name their bar once loaded, as a profile does.
+test.each(['members', 'election'])(
+  '%s opens with the empty title, which holds the band beside the rail',
+  (name) => {
+    const screen = yourMpScreens().find((s) => s.props.name === name)!;
+    const routes = [
+      { key: 'root', name: 'your-mp' },
+      { key: 'page', name },
+    ];
+    const navigation = { getState: () => ({ index: 1, routes }) };
+    const options =
+      typeof screen.props.options === 'function'
+        ? screen.props.options({ route: routes[1], navigation })
+        : screen.props.options;
+    expect(options.headerTitle).toBe(emptyBarTitle);
+    mockBarEdge = 'trailing';
+    expect(lineBox(options.headerTitle(), 'bar-title-empty')).toBeDefined();
+  },
+);
