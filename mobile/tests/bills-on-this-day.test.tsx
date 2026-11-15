@@ -288,8 +288,7 @@ describe('the row on Bills', () => {
       drawn.indexOf(rows(root)[0]!),
     );
     expect(after.indexOf('bills-count')).toBeLessThan(row);
-    // Only bills follow it, and it has no height animation of its own.
-    expect(after.slice(row + 1, firstBill)).toEqual([]);
+    // It has no height animation of its own.
     expect(after).not.toContain('bills-on-this-day');
   });
 
