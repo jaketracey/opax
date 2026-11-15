@@ -54,7 +54,7 @@ import { designFlags } from '../src/design/flags';
 import * as ScrollTop from '../src/design/scroll-to-top';
 import { askRoute, conversationsRoute } from '../src/navigation/routes/ask';
 import { useSavedChoice, useSeat } from '../src/features/your-mp/useSeat';
-import { startersFor } from '../src/features/ask/starters';
+import { seatStarter, startersFor } from '../src/features/ask/starters';
 import {
   dispatchKeyCommand,
   requestFocus,
@@ -74,7 +74,7 @@ import {
 } from '../src/design/adaptive';
 import { ReservedRegionsProvider } from '../src/design/fold-area';
 import { AskColumns } from '../src/features/ask/AskLayout';
-import { AskIdle, idleCopy, LONGEST_MEMBER } from '../src/features/ask/AskIdle';
+import { AskIdle, idleCopy, SIZING_MEMBERS } from '../src/features/ask/AskIdle';
 import { EngravedMark } from '../src/design/engraving';
 import * as accessibility from '../src/design/accessibility';
 import { AskThread } from '../src/features/ask/AskThread';
@@ -1394,11 +1394,25 @@ test('with no seat saved, the one starter is general and asks at once', async ()
   });
 });
 
-test('the sizing stand-in is the roster’s longest name plus a small margin, with no word a large text size would break', () => {
-  expect(LONGEST_MEMBER.length).toBeGreaterThanOrEqual(22);
-  expect(LONGEST_MEMBER.length).toBeLessThanOrEqual(26);
-  for (const word of LONGEST_MEMBER.split(/[\s-]+/))
-    expect(word.length).toBeLessThanOrEqual(14);
+test('the sizing stand-ins cover both kinds of name: one with long words, one with none longer than the question’s own', () => {
+  const longestWord = (text: string) =>
+    Math.max(...text.split(/[^A-Za-z]+/).map((word) => word.length));
+  // The question's own longest word, which every real question carries.
+  const template = longestWord(seatStarter(''));
+  expect(template).toBe('parliament'.length);
+  const [long, short] = SIZING_MEMBERS;
+  expect(SIZING_MEMBERS.length).toBe(2);
+  // Each is the roster's longest name (22 characters) plus a small margin.
+  for (const name of SIZING_MEMBERS) {
+    expect(name.length).toBeGreaterThanOrEqual(24);
+    expect(name.length).toBeLessThanOrEqual(26);
+  }
+  // A name with a long word: its question is stepped down at large sizes.
+  expect(longestWord(long)).toBeGreaterThan(template);
+  // A name of short words only: its question is never stepped down further
+  // than a real one, so at large sizes it is the taller candidate.
+  expect(longestWord(short)).toBeLessThanOrEqual(template);
+  expect(longestWord(seatStarter(short))).toBe(template);
 });
 
 test.each([
@@ -1452,14 +1466,13 @@ test.each([
           )
           .map((n) => n.props.testID as string);
       // One row, clipped at its edge, as tall as its tallest child.
-      expect(flat(held())).toMatchObject({
-        flexDirection: 'row',
-        overflow: 'hidden',
-      });
+      expect(flat(held())).toMatchObject({ flexDirection: 'row' });
+      // It clips nothing: the starter's highlight reaches the group's edges.
+      expect(flat(held()).overflow).toBeUndefined();
       expect(flat(held()).height).toBeUndefined();
       // Both candidates are laid out unseen, each the box's full width: the
       // general starter, and the member's question at its longest.
-      expect(hostsOf('ask-starter-place').length).toBe(2);
+      expect(hostsOf('ask-starter-place').length).toBe(3);
       for (const place of hostsOf('ask-starter-place')) {
         expect(place.props).toMatchObject({
           pointerEvents: 'none',
@@ -1480,7 +1493,9 @@ test.each([
       );
       expect(labels).toEqual([
         startersFor(Date.now(), 1)[0],
-        `What has ${LONGEST_MEMBER} said in parliament this year?`,
+        ...SIZING_MEMBERS.map(
+          (name) => `What has ${name} said in parliament this year?`,
+        ),
       ]);
       // Nothing is drawn or pressable while the seat is unknown.
       expect(hostsOf('ask-starter-chosen').length).toBe(0);
@@ -1503,6 +1518,7 @@ test.each([
         expect(hostAbove(chosen[0]!) === held()).toBe(true);
         expect(members()).toEqual([
           'ask-starter-chosen',
+          'ask-starter-place',
           'ask-starter-place',
           'ask-starter-place',
         ]);
@@ -1564,6 +1580,51 @@ test('with no seat saved on the device, a seat read still under way holds nothin
   await mount();
   expect(byId('ask-starter-held').length).toBe(0);
   expect(byId('ask-starter-place').length).toBe(0);
+  expect(byId('ask-starter-0').length).toBeGreaterThan(0);
+});
+
+test('a later read of the seat keeps the starter that is drawn: Try asking is never left empty', async () => {
+  const chosen = {
+    status: 'chosen',
+    choice: { version: 1, seatId: 'el_fixture', stateSeatIds: [] },
+  };
+  jest.mocked(useSeat).mockReturnValue(chosen as never);
+  mockDirectory.current = {
+    electorates: {
+      data: {
+        electorates: [
+          {
+            electorate_id: 'el_fixture',
+            status: 'current',
+            jurisdiction: 'federal',
+            chamber: 'representatives',
+            representation_status: 'verified',
+            representatives: [{ person_id: 'fixture-person' }],
+          },
+        ],
+      },
+    },
+  };
+  await mount();
+  const redraw = async () => {
+    await act(async () => {
+      askSession.setDraft('x');
+    });
+    await act(async () => {
+      askSession.setDraft('');
+    });
+  };
+  expect(byId('ask-starter-held').length).toBe(0);
+  expect(byId('ask-starter-seat').length).toBeGreaterThan(0);
+  // A retry: the seat is being read again.
+  jest.mocked(useSeat).mockReturnValue({ status: 'loading' } as never);
+  await redraw();
+  expect(byId('ask-starter-seat').length).toBeGreaterThan(0);
+  expect(byId('ask-starter-0').length).toBe(0);
+  // It answers that there is no member: the general starter replaces it.
+  jest.mocked(useSeat).mockReturnValue({ status: 'none' } as never);
+  await redraw();
+  expect(byId('ask-starter-seat').length).toBe(0);
   expect(byId('ask-starter-0').length).toBeGreaterThan(0);
 });
 

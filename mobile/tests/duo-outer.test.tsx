@@ -98,6 +98,7 @@ jest.mock('../src/design/useHeaderBottom', () => ({
 }));
 jest.mock('../src/features/your-mp/useSeat', () => ({
   useSeat: () => ({ status: 'none' }),
+  useSavedChoice: () => null,
 }));
 jest.mock('../src/onboarding/state', () => ({
   closeWelcome: jest.fn(),

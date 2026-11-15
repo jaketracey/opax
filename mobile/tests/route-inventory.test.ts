@@ -55,6 +55,7 @@ const mockNavigationRef = {
 // Root chrome tests keep saved-seat reads local and independent of build services.
 jest.mock('../src/features/your-mp/useSeat', () => ({
   useSeat: () => ({ status: 'none' }),
+  useSavedChoice: () => null,
   savedSeatDirectory: () => null,
 }));
 jest.mock('../src/features/money/MoneyRecord', () => () => null);

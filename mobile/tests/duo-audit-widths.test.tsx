@@ -59,6 +59,7 @@ jest.mock('expo-router', () => {
 });
 jest.mock('../src/features/your-mp/useSeat', () => ({
   useSeat: () => ({ status: 'none' }),
+  useSavedChoice: () => null,
   savedSeatDirectory: () => null,
 }));
 // The cards' figures are covered by money-public-screens; here only their row.
