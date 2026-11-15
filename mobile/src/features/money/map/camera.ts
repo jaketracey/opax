@@ -218,13 +218,21 @@ const sameViewport = (a: Viewport, b: Viewport) =>
 const sameCamera = (a: Camera, b: Camera) =>
   near(a.k, b.k, 1e-6) && near(a.tx, b.tx, 1e-3) && near(a.ty, b.ty, 1e-3);
 
-/** The view a passing change of viewport started from, to go back to. */
-export interface CameraRest {
+/** A viewport the map has been in and the camera it had there. */
+export interface CameraPair {
   viewport: Viewport;
   camera: Camera;
+}
+
+/** The views since the reader last moved the map, to go back to. */
+export interface CameraRest {
+  pairs: CameraPair[];
   /** The camera the stage last set, to tell a reader's move from its own. */
   set: Camera;
 }
+
+/** Enough for a few changes in a row; a long chain drops its oldest. */
+const REST_PAIRS = 8;
 
 /**
  * A viewport that changes and then comes back (the map's Search, a
@@ -232,9 +240,13 @@ export interface CameraRest {
  * the view as it was. Each change clamps the camera to limits worked out
  * from the viewport of the moment, and the clamped camera was kept when
  * the viewport returned: the map was left zoomed in and half under the
- * panel after its Search. The view at the first change is remembered and
- * put back when the viewport is that one again, unless the reader has
- * moved the map since.
+ * panel after its Search.
+ *
+ * Every (viewport, camera) pair since the reader last moved the map is
+ * kept, and the camera is put back on any match: a change that never comes
+ * back (a focus cleared, a turn) must not stop a later Search from
+ * restoring. A move by the reader ends the chain; the next change starts a
+ * new one from where the reader left the map.
  */
 export function returnCamera(
   rest: CameraRest | null,
@@ -242,13 +254,24 @@ export function returnCamera(
   viewport: Viewport,
   next: Camera,
 ): { camera: Camera; rest: CameraRest | null } {
-  const from =
-    rest && sameCamera(change.current, rest.set)
-      ? rest
-      : { viewport: change.previous, camera: change.current, set: next };
-  if (sameViewport(viewport, from.viewport))
-    return { camera: from.camera, rest: null };
-  return { camera: next, rest: { ...from, set: next } };
+  const chain = rest && sameCamera(change.current, rest.set);
+  // The camera at the viewport it was in is the one the stage set there.
+  const pairs: CameraPair[] = chain
+    ? rest.pairs
+    : [{ viewport: change.previous, camera: change.current }];
+  const match = pairs.find((pair) => sameViewport(pair.viewport, viewport));
+  if (match && chain)
+    return { camera: match.camera, rest: { pairs, set: match.camera } };
+  // A new chain that lands where it started has changed nothing but the
+  // limits (the bounds, say): the clamp of the moment stands.
+  if (match) return { camera: next, rest: null };
+  return {
+    camera: next,
+    rest: {
+      pairs: [...pairs, { viewport, camera: next }].slice(-REST_PAIRS),
+      set: next,
+    },
+  };
 }
 
 /** The camera centred on a world point at scale `k` (the current one by default). */
