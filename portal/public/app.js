@@ -6701,8 +6701,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
   // sheet under this line.
   subjectTag(body).innerHTML = tagLineHTML([
     party ? partyChipHTML(party, { full: true }) : "",
-    // A roster party is dated beside the chip, as the server's person answer dates it.
-    seatParty ? `<span>parliamentary roster as at ${esc(fmtDate(seatParty.as_of))}</span>` : "",
+    // A roster party names its source beside the chip. The roster's date stays in the data and is not shown.
+    seatParty ? `<span>parliamentary roster</span>` : "",
     formerly ? `<span>formerly ${esc(formerly)}</span>` : "",
     electorateLinks ? `<span>${seatWord}${electorateLinks}</span>` : "",
     // Each house with its parliament as one part, so the pair wraps together; a former
@@ -6727,8 +6727,8 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     ].filter(Boolean),
     facts: [
       ["Status", esc(roster?.current ? "Sitting parliamentarian" : "Parliamentarian")],
-      // A roster party is said of the roster's date, not of the whole career.
-      seatParty && ["Party", esc(`${seatParty.party} (parliamentary roster as at ${fmtDate(seatParty.as_of)})`)],
+      // A roster party is said of the roster, not of the whole career.
+      seatParty && ["Party", esc(`${seatParty.party} (parliamentary roster)`)],
       ...electorateRows,
       ...profileAffiliations(roster).map((r) => ["Parliamentary service",
         `${esc(r.jurisdictionLabel)} · ${esc(r.chamberLabel)} · ${esc(r.electorate)} · ${esc(r.party || 'Party not recorded')}, ` +
@@ -7788,7 +7788,7 @@ const DIRECTORY_KINDS = {
 };
 let electorateModulePromise;
 function loadElectorateModule() {
-  return electorateModulePromise ??= import("./electorates.js?v=4533ad7591").catch((e) => { electorateModulePromise = null; throw e; });
+  return electorateModulePromise ??= import("./electorates.js?v=610bfacdec").catch((e) => { electorateModulePromise = null; throw e; });
 }
 const DIR_CHUNK = 60;
 

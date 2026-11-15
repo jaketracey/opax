@@ -79,8 +79,8 @@ export function rosterSeatParty(person, electorates) {
  * Only a full name matches (exact, folded, or a listed alias), never a
  * single-name print, and only in a chamber the profile sat in. The latest
  * dated observation decides; two parties or two seats at that date give null.
- * The result is dated, so a reader sees "Labor (parliamentary roster as at
- * 25 Sep 2026)", never an undated affiliation.
+ * The result carries the observation's date, and readers name its source
+ * ("Labor (parliamentary roster)"); the date itself is not displayed.
  *
  * @param {{name: string, chambers?: string[]}} person
  * @param {{name: string, aliases?: string[], chamber: string, electorate?: string, party: string, as_of: string, source_url?: string}[]} observations

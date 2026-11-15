@@ -79,7 +79,7 @@ export function personRepresentationRows(person, representations = [], electorat
   const recorded = representations.filter((r) => !seats.some((e) => e.url === recordedElectorate(r, electorates)?.url));
   return [
     current.length && [current.length === 1 ? 'Electorate' : 'Electorates', current.map((e) =>
-      `${link(e)}<small class="representation-note">Verified ${esc(date(e.as_of))}</small>`).join('<br>')],
+      `${link(e)}<small class="representation-note">Verified seat roster</small>`).join('<br>')],
     historical.length && ['Representation history', historical.map(link).join('<br>') + '<small class="representation-note">Historical service records</small>'],
     recorded.length && ['Recorded representation', recorded.map((r) => recordedRepresentationHTML(r, electorates)).join('<br>') + '<small class="representation-note">Roster affiliation; may include past seats.</small>'],
   ].filter(Boolean);
@@ -105,7 +105,7 @@ export async function directorySpec({ photoUrlFor = () => null, partyChipHTML = 
       const holders = e.representatives || [];
       const src = holders[0]?.person?.name ? photoUrlFor(holders[0].person.name) : null;
       const face = src ? `<span class="el-face"><img src="${esc(src)}" alt="" loading="lazy" width="36" height="36"></span>` : '<span class="el-face el-face-blank" aria-hidden="true"></span>';
-      return `<li class="el-directory-row">${face}<div class="el-seat"><a class="el-name" href="${esc(e.url)}">${esc(e.name)}</a><span class="el-meta">${esc(JURISDICTIONS[e.jurisdiction])} · ${esc(CHAMBERS[e.chamber] || e.chamber)}${e.jurisdiction === 'federal' ? ` · ${esc(e.state_code.toUpperCase())}` : ''}${e.status === 'historical' ? ' · Historical' : ''}</span></div><div class="el-holders">${holders.length ? holders.map((m) => `<a href="${esc(personURL(m.person))}">${esc(m.person.name)}</a>${m.party ? ` · <a class="el-party" href="${partyUrl(m.party)}">${partyChipHTML(m.party)}</a>` : ''}`).join('<br>') : 'Representation not yet verified'}${e.representation_as_of ? `<small>Verified ${esc(date(e.representation_as_of))}</small>` : ''}</div><span class="el-meta">${e.election_count ? `${e.election_count} election${e.election_count === 1 ? '' : 's'} recorded` : 'No election results yet'}</span></li>`;
+      return `<li class="el-directory-row">${face}<div class="el-seat"><a class="el-name" href="${esc(e.url)}">${esc(e.name)}</a><span class="el-meta">${esc(JURISDICTIONS[e.jurisdiction])} · ${esc(CHAMBERS[e.chamber] || e.chamber)}${e.jurisdiction === 'federal' ? ` · ${esc(e.state_code.toUpperCase())}` : ''}${e.status === 'historical' ? ' · Historical' : ''}</span></div><div class="el-holders">${holders.length ? holders.map((m) => `<a href="${esc(personURL(m.person))}">${esc(m.person.name)}</a>${m.party ? ` · <a class="el-party" href="${partyUrl(m.party)}">${partyChipHTML(m.party)}</a>` : ''}`).join('<br>') : 'Representation not yet verified'}${e.representation_as_of ? '<small>Verified seat roster</small>' : ''}</div><span class="el-meta">${e.election_count ? `${e.election_count} election${e.election_count === 1 ? '' : 's'} recorded` : 'No election results yet'}</span></li>`;
     },
     fineprint: `Coverage varies by parliament. A missing representative or result means the records do not confirm one yet. ABS state outlines use 2025 statistical geography. <a href="/electorates/manifest.json">Sources and reference downloads</a>.`,
   };
@@ -149,7 +149,10 @@ function sourcesOf(detail, keys) {
   for (const k of keys) walk(detail[k]);
   return [...ids].map((id) => detail.sources[id]).filter(Boolean);
 }
-const originalsOf = (list) => list.map((s) => ({ label: s.label, href: sourceURL(s.url) }));
+// A roster source is cited by its name. The date in its label (", 2026-09-04") is when it was last
+// reconciled: it stays in the release and is not shown.
+const sourceLabel = (label) => String(label || '').replace(/^(.*\broster\b.*?),\s*\d{4}-\d{2}-\d{2}$/i, '$1');
+const originalsOf = (list) => list.map((s) => ({ label: sourceLabel(s.label), href: sourceURL(s.url) }));
 /** The newest retrieval among a block's sources: the date its line carries. */
 const retrieved = (list) => list.map((s) => String(s.fetched_at || '').slice(0, 10)).filter(Boolean).sort().pop() || '';
 const licences = (list) => [...new Set(list.map((s) => s.licence).filter(Boolean))].map(esc).join('; ');
@@ -227,7 +230,7 @@ export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) 
       { href: '/subject/electorate', label: 'All electorates' },
     ], 'More about this electorate')}</div></div>
     <div class="el-intro"><section id="el-held" class="ui-section"><h2 class="ui-section-title">${esc(title)}</h2>${selected.status === 'conflicting' ? '<p class="ui-empty">The service records for this date conflict.</p>' : selected.members.length ? `<ul class="ui-list el-members" data-rule="none">${selected.members.map((m) => memberHTML(m, people, photoUrlFor)).join('')}</ul>` : `<p class="ui-empty">${selected.status === 'verified' ? 'Vacant at this observation.' : 'No confirmed representative for this date.'}</p>`}${on ? `<p class="el-latest"><a href="${esc(detail.url)}">Latest check</a></p>` : ''}
-      ${sourceLineHTML({ updated: selected.as_of || '', dateLabel: 'As at', source: 'Electoral and parliamentary records',
+      ${sourceLineHTML({ source: 'Electoral and parliamentary records',
         state: selected.status === 'partial' ? 'partial' : '',
         originals: originalsOf(held), licence: licences(held),
         facts: [['Reference ID', `<code class="el-id">${esc(detail.electorate_id)}</code>`]],

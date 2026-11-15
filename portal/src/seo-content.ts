@@ -192,9 +192,9 @@ export function partyLine(p: Person, seats?: readonly Seat[] | null, lists?: Ros
   // Preserve the roster's tri-state: false is former; missing is not evidence of retirement.
   const party = p.party_now || p.party
   if (!party) {
-    // Said of the roster on its date, not of the person's career.
+    // Said of the roster, not of the person's career. The roster's date stays in the data and is not shown.
     const roster = rosterParty(p, seats, lists)
-    return roster ? `${roster.party} (parliamentary roster as at ${shortDate(roster.as_of)})` : 'Party not recorded'
+    return roster ? `${roster.party} (parliamentary roster)` : 'Party not recorded'
   }
   if (p.current === false) return `Formerly ${party}`
   const former = p.party_now && p.party && fold(p.party_now) !== fold(p.party) ? `; formerly ${p.party}` : ''
