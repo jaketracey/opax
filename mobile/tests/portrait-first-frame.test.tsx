@@ -12,6 +12,7 @@ import { PeoplePortraits } from '../src/api/people-portraits';
 import { PortraitCache, type SavedPortrait } from '../src/api/portrait-cache';
 import { portraitFor } from '../src/api/selectors';
 import { CachedPortrait } from '../src/features/CachedPortrait';
+import { SpeakerPortrait } from '../src/features/records/speaker';
 import { catalogs } from './pinned';
 
 const mockPortraitGet = jest.fn();
@@ -200,6 +201,51 @@ test('the lookup answering "no portrait" clears a face drawn from memory', async
   await act(async () => {
     renderer = TestRenderer.create(
       <CachedPortrait name="Anthony Albanese" slug="anthony-albanese" />,
+    );
+  });
+  expect(renderer.root.findAllByType(Image)).toHaveLength(0);
+  act(() => renderer.unmount());
+});
+
+test("a speech row's speaker is in the first frame too, and the lookup still decides", async () => {
+  const info = portraitFor(
+    ['Anthony Albanese'],
+    { 'anthony albanese': '10007' } as never,
+    {},
+  )!;
+  mockPortraitPeek.mockReturnValue({
+    info,
+    localURI: 'file:///cache/10007.webp',
+  });
+  let answer!: (value: unknown) => void;
+  mockPortraitGet.mockReturnValue(
+    new Promise((resolve) => {
+      answer = resolve;
+    }),
+  );
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(
+      <SpeakerPortrait name="Anthony Albanese" slug="anthony-albanese" />,
+    );
+  });
+  expect(mockPortraitPeek).toHaveBeenLastCalledWith({
+    name: 'Anthony Albanese',
+    slug: 'anthony-albanese',
+  });
+  expect(renderer.root.findByType(Image).props.source).toEqual({
+    uri: 'file:///cache/10007.webp',
+  });
+  // The lookup says there is no portrait now: the face goes.
+  await act(async () => answer(null));
+  expect(renderer.root.findAllByType(Image)).toHaveLength(0);
+  act(() => renderer.unmount());
+  // Nothing known: nothing drawn until the lookup answers.
+  mockPortraitPeek.mockReturnValue(null);
+  mockPortraitGet.mockReturnValue(new Promise(() => undefined));
+  act(() => {
+    renderer = TestRenderer.create(
+      <SpeakerPortrait name="Penny Wong" slug="penny-wong" />,
     );
   });
   expect(renderer.root.findAllByType(Image)).toHaveLength(0);

@@ -103,11 +103,22 @@ const stateCode = (code: string | null | undefined) => {
   const id = code?.trim().toLowerCase();
   return id && id !== 'federal' && jurisdictionName(id) ? id : null;
 };
-export function peopleRows(
+/** How long the row building runs before it lets the app take a turn (ms). */
+export const PEOPLE_ROWS_SLICE = 8;
+/**
+ * The people directory's rows, built in slices. Building them in one go
+ * held the JS thread for about a third of a second as Members opened (iOS
+ * 27 simulator, 15 Nov 2026): no touch, highlight or bar change was
+ * answered in that time. Each `yield` is a place the caller may let the app
+ * take a turn, by elapsed work as the portrait index does; the rows are the
+ * same either way.
+ */
+function* peopleRowSteps(
   d: Directory,
   votes: Votes,
   portraits: ReturnType<typeof buildPortraitIndex>,
-): PeopleRow[] {
+): Generator<undefined, PeopleRow[]> {
+  let sliceStart = Date.now();
   const sitting = new Map(
     sittingPartyMembers(
       d.roster.data,
@@ -133,7 +144,14 @@ export function peopleRows(
   // follow Search/party membership: a full-name native identity, once per
   // canonical person (or the roster identity when no dated ID exists).
   const identities = new Map<string, [string, PersonProfile][]>();
+  // The joins above are one piece of work: a turn before the people.
+  yield;
+  sliceStart = Date.now();
   for (const entry of portraits.identities) {
+    if (Date.now() - sliceStart >= PEOPLE_ROWS_SLICE) {
+      yield;
+      sliceStart = Date.now();
+    }
     const [key, profile] = entry;
     if (!profile.name.trim().includes(' ')) continue;
     if (!hasParliamentaryMembership(profile, d)) continue;
@@ -159,6 +177,10 @@ export function peopleRows(
     identities.set(id, group);
   }
   for (const [key, profile] of [...identities.values()].flat()) {
+    if (Date.now() - sliceStart >= PEOPLE_ROWS_SLICE) {
+      yield;
+      sliceStart = Date.now();
+    }
     const candidates = named.get(nameKey(profile.name)) ?? [];
     const row =
       profile.rosterRow ??
@@ -293,6 +315,33 @@ export function peopleRows(
     });
   }
   return out;
+}
+/** The rows in one go: for callers with nothing on screen to keep live. */
+export function peopleRows(
+  d: Directory,
+  votes: Votes,
+  portraits: ReturnType<typeof buildPortraitIndex>,
+): PeopleRow[] {
+  const steps = peopleRowSteps(d, votes, portraits);
+  let step = steps.next();
+  while (!step.done) step = steps.next();
+  return step.value;
+}
+/** The same rows, letting the app take a turn between slices. */
+export async function peopleRowsAsync(
+  d: Directory,
+  votes: Votes,
+  portraits: ReturnType<typeof buildPortraitIndex>,
+  turn: () => Promise<void> = () =>
+    new Promise<void>((resolve) => setTimeout(resolve, 0)),
+): Promise<PeopleRow[]> {
+  const steps = peopleRowSteps(d, votes, portraits);
+  let step = steps.next();
+  while (!step.done) {
+    await turn();
+    step = steps.next();
+  }
+  return step.value;
 }
 
 /**

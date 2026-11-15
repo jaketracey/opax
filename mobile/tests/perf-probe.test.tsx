@@ -132,3 +132,31 @@ test('the release stub has no imports and records nothing', () => {
   jest.advanceTimersByTime(10_000);
   expect(mockWrites).toHaveLength(0);
 });
+
+test('a second with a late JS frame leaves one js-frames mark; smooth seconds leave none', () => {
+  const probe = load();
+  const clock = performance.now.bind(performance);
+  let stalled = 0;
+  const now = jest
+    .spyOn(performance, 'now')
+    .mockImplementation(() => clock() + stalled);
+  // Turns the probe on, which starts the frame watch.
+  probe.perfMark('start');
+  // Two smooth seconds at the timers' 16 ms frames: nothing.
+  jest.advanceTimersByTime(2000);
+  // A 120 ms stall on the JS thread: the clock moves, no frame runs.
+  stalled = 120;
+  jest.advanceTimersByTime(3000);
+  now.mockRestore();
+  expect(mockWrites.length).toBeGreaterThan(0);
+  const marks: [string, number, unknown][] = JSON.parse(
+    mockWrites.at(-1)!.body,
+  ).marks;
+  const late = marks.filter(([name]) => name === 'js-frames');
+  expect(late).toHaveLength(1);
+  const [frames, count, worst] = late[0]![2] as number[];
+  expect(frames).toBeGreaterThan(10);
+  expect(count).toBe(1);
+  expect(worst).toBeGreaterThanOrEqual(120);
+  expect(probe.LATE_FRAME_MS).toBe(25);
+});

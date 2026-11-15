@@ -14,8 +14,12 @@ export function SpeakerPortrait({
   name: string;
   slug: string;
 }) {
-  const [photo, setPhoto] =
-    useState<Awaited<ReturnType<typeof portraits.get>>>(null);
+  // A face seen earlier in this launch is in the row's first frame (the
+  // lookup below still runs and its answer stands); a speech list scrolled
+  // back, or opened again, no longer fills its faces in a moment late.
+  const [photo, setPhoto] = useState<Awaited<ReturnType<typeof portraits.get>>>(
+    () => portraits?.peek?.({ name, slug }) ?? null,
+  );
   useEffect(() => {
     let active = true;
     void Promise.resolve()
