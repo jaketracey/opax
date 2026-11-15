@@ -83,7 +83,7 @@ function divisionPage() {
   runInNewContext(`${fn('chamberLabel')}\n${fn('sourceLineHTML')}\n${constLine('billHouse')}\n${fn('billStage')}\n${fn('billQuestion')}
     ${constLine('BILL_DESCRIPTION')}\n${constLine('BILL_PLACEHOLDER')}\n${constLine('billFlat')}\n${fn('billNoteRepair')}\n${fn('billStripStage')}\n${fn('billStripTitle')}
     ${fn('billQuestionParts')}\n${fn('divisionQuestionLead')}\n${fn('divisionBillsHTML')}
-    ${fn('divisionHeading')}\n${fn('divisionAgainstHTML')}\n${fn('renderDivisionDoc')}
+    ${fn('firstSentence')}\n${fn('divisionHeading')}\n${fn('divisionAgainstHTML')}\n${fn('renderDivisionDoc')}
     Object.assign(globalThis, { billHouse, divisionHeading, renderDivisionDoc, divisionBillsHTML });`, context);
   return { ...context, nodes };
 }

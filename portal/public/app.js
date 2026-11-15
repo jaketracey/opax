@@ -47,9 +47,9 @@ const donorNameHTML = (name, record) => donorLabelHTML(record || disclosedDonor(
 
 "use strict";
 let voteTables;
-const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=872590ff14").then(module => { voteTables = module; }));
+const voteTablesReady = lazyReady(() => import("/vote-tables.js?v=76942228e3").then(module => { voteTables = module; }));
 let divisionMarkdown;
-const divisionMarkdownReady = import('/division-markdown.js?v=5991511166').then(module => { divisionMarkdown = module; });
+const divisionMarkdownReady = import('/division-markdown.js?v=9914870fea').then(module => { divisionMarkdown = module; });
 // Who voted differently from most of their party: the rule and words the Worker page, the app and Ask share.
 // Hand-stamped: bump ?v= when it changes (a content stamp would need a 101st _headers rule).
 let divisionAgainst;
@@ -228,10 +228,19 @@ function titleSubject(rec) {
  * all the reader has. Exports and citations never come through here; they
  * quote the record's own title verbatim.
  */
+/**
+ * The text up to and including its first sentence end (".", "!" or "?" before
+ * white space), or all of it. Written without a lookbehind: Safari before 16.4
+ * cannot parse one, and a regex it cannot parse stops this whole file loading.
+ */
+function firstSentence(text) {
+  const value = String(text ?? "");
+  return value.match(/^[\s\S]*?[.!?](?=\s)/)?.[0] ?? value;
+}
 function displayTitle(rec) {
   const title = titleSubject(rec) || String(rec?.title || rec?.slug || "");
   return (rec?.labels?.kind || rec?.kind) === "division"
-    ? billQuestion(title).split(/(?<=[.!?])\s/)[0] : title;
+    ? firstSentence(billQuestion(title)) : title;
 }
 
 function fmtMoney(value) {
@@ -2483,6 +2492,7 @@ attachQuickSearch($("drawer-q"), $("drawer-sugg"), { idPrefix: "ds", beforeGo: (
     line.setAttribute("x1", a.x); line.setAttribute("y1", a.y);
     line.setAttribute("x2", b.x); line.setAttribute("y2", b.y);
     line.setAttribute("class", "logo-thread");
+    if (typeof line.animate !== "function") return; // nothing would fade it away
     svg.insertBefore(line, svg.firstChild); // beneath the land and stars
     line.animate(
       [{ opacity: 0 }, { opacity: 0.4, offset: 0.4 }, { opacity: 0 }],
@@ -2490,10 +2500,18 @@ attachQuickSearch($("drawer-q"), $("drawer-sugg"), { idPrefix: "ds", beforeGo: (
     ).onfinish = () => line.remove();
   };
   const glint = () => {
-    stars ??= [...svg.querySelectorAll(".logo-star")].map((p) => {
-      const b = p.getBBox();
-      return { x: b.x + b.width / 2, y: b.y + b.height / 2 };
+    // A star is measured only if it can be: a page a browser has rewritten
+    // (translated, or read through a proxy) can hold a node here that is not an
+    // SVG graphics element, and getBBox throws on one that is not rendered.
+    stars ??= [...svg.querySelectorAll(".logo-star")].flatMap((p) => {
+      if (typeof p.getBBox !== "function") return [];
+      try {
+        const b = p.getBBox();
+        return [{ x: b.x + b.width / 2, y: b.y + b.height / 2 }];
+      } catch { return []; }
     });
+    // Fewer than two stars to join: there is nothing to draw, now or later.
+    if (stars.length < 2) return;
     // Two or, one time in three, three distinct stars in a short chain.
     const picks = [...stars].sort(() => Math.random() - 0.5)
       .slice(0, Math.random() < 1 / 3 ? 3 : 2);
@@ -13986,7 +14004,7 @@ function divisionMembersHTML(names, { ayes, noes } = {}) {
 function divisionHeading(d, entry) {
   const recorded = String(entry?.title || "").trim();
   const stage = billStage(entry?.stage || "");
-  const motion = billQuestion(d.name || d.question || "").split(/(?<=[.!?])\s/)[0];
+  const motion = firstSentence(billQuestion(d.name || d.question || ""));
   return { title: recorded || stage || motion || "Division", house: billHouse(d.house) || "Parliament" };
 }
 
@@ -14142,7 +14160,7 @@ async function openDocPage(slug, manageFocus) {
     // The headline is the speaker; the title repeats what the byline says, so
     // it only stands in when no speaker is attached, and then as its subject.
     $("doc-title").textContent = (doc.labels?.kind || doc.kind) === "division"
-      ? billQuestion(doc.title || doc.name).split(/(?<=[.!?])\s/)[0]
+      ? firstSentence(billQuestion(doc.title || doc.name))
       : doc.speaker || displayTitle(doc);
     // The trail names the page the same way, shortened for the strip.
     setCrumbs(crumbsFor("/ask?view=search", (doc.kind || slug.split("-")[0]) === "division"
@@ -14355,13 +14373,15 @@ function renderDocText(doc) {
     if (!line.trim()) { nodes.push(document.createTextNode(line)); continue; }
     // Only explicit capitalised speaker/office calls at sentence boundaries.
     // Style one sentence; do not guess how much subsequent prose they own.
-    const calls = /(?:^|(?<=[.!?])[ \t]+)((?:(?:The )?(?:(?:ACTING |DEPUTY )?(?:PRESIDENT|SPEAKER)|CHAIR)|(?:Mr|Mrs|Ms|Dr|Senator|The Hon\.) [A-Z][A-Z’'\-]+(?: [A-Z][A-Z’'\-]+){0,4}):[ \t]+)/g;
+    // No lookbehind (Safari before 16.4 cannot parse one): the sentence end is
+    // matched in group 1 and the call itself is group 2.
+    const calls = /(^|[.!?][ \t]+)((?:(?:The )?(?:(?:ACTING |DEPUTY )?(?:PRESIDENT|SPEAKER)|CHAIR)|(?:Mr|Mrs|Ms|Dr|Senator|The Hon\.) [A-Z][A-Z’'\-]+(?: [A-Z][A-Z’'\-]+){0,4}):[ \t]+)/g;
     let offset = 0;
     for (const match of line.matchAll(calls)) {
-      const start = match.index + match[0].length - match[1].length;
+      const start = match.index + match[0].length - match[2].length;
       if (start < offset) continue;
-      if (identity(match[1].replace(/:\s*$/, "")) === identity(doc.speaker)) continue;
-      const bodyStart = start + match[1].length;
+      if (identity(match[2].replace(/:\s*$/, "")) === identity(doc.speaker)) continue;
+      const bodyStart = start + match[2].length;
       const tail = line.slice(bodyStart);
       const endings = [...tail.matchAll(/[.!?](?=\s|$)/g)];
       const endMark = endings.find((m) => !/\b(?:Mr|Mrs|Ms|Dr|Hon|Sen)\.$/.test(tail.slice(0, m.index + 1)));
