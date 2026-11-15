@@ -60,9 +60,6 @@ exports[`iOS design at font scale 1 BarSeries retains its iOS output 1`] = `
               null,
               null,
               undefined,
-              {
-                "paddingBottom": 0.16666666666666666,
-              },
             ]
           }
         >
@@ -107,9 +104,6 @@ exports[`iOS design at font scale 1 BarSeries retains its iOS output 1`] = `
               },
               null,
               undefined,
-              {
-                "paddingBottom": 0.16666666666666666,
-              },
             ]
           }
         >
@@ -154,9 +148,6 @@ exports[`iOS design at font scale 1 BarSeries retains its iOS output 1`] = `
               },
               null,
               undefined,
-              {
-                "paddingBottom": 0.16666666666666666,
-              },
             ]
           }
         >
@@ -216,9 +207,6 @@ exports[`iOS design at font scale 1 BarSeries retains its iOS output 1`] = `
               "top": 0,
               "width": 9,
             },
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
         testID="bar-series-scale-1"
@@ -262,9 +250,6 @@ exports[`iOS design at font scale 1 BarSeries retains its iOS output 1`] = `
               "textAlign": "right",
               "top": 80,
               "width": 9,
-            },
-            {
-              "paddingBottom": 0.16666666666666666,
             },
           ]
         }
@@ -350,9 +335,6 @@ exports[`iOS design at font scale 1 BarSeries retains its iOS output 1`] = `
           },
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
       testID="bar-series-caption"
@@ -470,9 +452,6 @@ exports[`iOS design at font scale 1 BarSeries retains its iOS output 1`] = `
               null,
               {
                 "textAlign": "center",
-              },
-              {
-                "paddingBottom": 0.16666666666666666,
               },
             ]
           }
@@ -636,9 +615,6 @@ exports[`iOS design at font scale 1 BarSeries retains its iOS output 1`] = `
               {
                 "flexShrink": 1,
               },
-              {
-                "paddingBottom": 0.16666666666666666,
-              },
             ]
           }
         >
@@ -668,9 +644,6 @@ exports[`iOS design at font scale 1 BarSeries retains its iOS output 1`] = `
                 null,
                 null,
                 undefined,
-                {
-                  "paddingBottom": 0.16666666666666666,
-                },
               ]
             }
           >
@@ -816,9 +789,6 @@ exports[`iOS design at font scale 1 BillRow retains its iOS output 1`] = `
               {
                 "flexShrink": 1,
               },
-              {
-                "paddingBottom": 0.16666666666666666,
-              },
             ]
           }
         >
@@ -853,9 +823,6 @@ exports[`iOS design at font scale 1 BillRow retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -1035,9 +1002,6 @@ exports[`iOS design at font scale 1 Button retains its iOS output 1`] = `
             {
               "textAlign": "center",
             },
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -1169,9 +1133,6 @@ exports[`iOS design at font scale 1 Button retains its iOS output 1`] = `
             {
               "textAlign": "center",
             },
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -1296,9 +1257,6 @@ exports[`iOS design at font scale 1 Button retains its iOS output 1`] = `
             {
               "textAlign": "center",
             },
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -1422,9 +1380,6 @@ exports[`iOS design at font scale 1 Button retains its iOS output 1`] = `
             null,
             {
               "textAlign": "center",
-            },
-            {
-              "paddingBottom": 0.16666666666666666,
             },
           ]
         }
@@ -1545,9 +1500,6 @@ exports[`iOS design at font scale 1 Button retains its iOS output 1`] = `
             {
               "textAlign": "center",
             },
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -1667,9 +1619,6 @@ exports[`iOS design at font scale 1 Button retains its iOS output 1`] = `
             {
               "textAlign": "center",
             },
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -1788,9 +1737,6 @@ exports[`iOS design at font scale 1 Button retains its iOS output 1`] = `
             null,
             {
               "textAlign": "center",
-            },
-            {
-              "paddingBottom": 0.16666666666666666,
             },
           ]
         }
@@ -1918,9 +1864,6 @@ exports[`iOS design at font scale 1 Button retains its iOS output 1`] = `
             {
               "textAlign": "center",
             },
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -2014,9 +1957,6 @@ exports[`iOS design at font scale 1 Card retains its iOS output 1`] = `
         null,
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -2386,9 +2326,6 @@ exports[`iOS design at font scale 1 ContextMenu retains its iOS output 1`] = `
                 null,
                 null,
                 undefined,
-                {
-                  "paddingBottom": 0.16666666666666666,
-                },
               ]
             }
           >
@@ -2508,9 +2445,6 @@ exports[`iOS design at font scale 1 Disclosure retains its iOS output 1`] = `
               null,
               null,
               undefined,
-              {
-                "paddingBottom": 0.16666666666666666,
-              },
             ]
           }
         >
@@ -2626,9 +2560,6 @@ exports[`iOS design at font scale 1 Disclosure retains its iOS output 1`] = `
               null,
               null,
               undefined,
-              {
-                "paddingBottom": 0.16666666666666666,
-              },
             ]
           }
         >
@@ -2731,9 +2662,6 @@ exports[`iOS design at font scale 1 DivisionRow retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -2765,9 +2693,6 @@ exports[`iOS design at font scale 1 DivisionRow retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -2831,9 +2756,6 @@ exports[`iOS design at font scale 1 DivisionRow retains its iOS output 1`] = `
             null,
             {
               "flexShrink": 1,
-            },
-            {
-              "paddingBottom": 0.16666666666666666,
             },
           ]
         }
@@ -2911,9 +2833,6 @@ exports[`iOS design at font scale 1 DivisionRow retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -3005,9 +2924,6 @@ exports[`iOS design at font scale 1 Field retains its iOS output 1`] = `
         null,
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -3103,9 +3019,6 @@ exports[`iOS design at font scale 1 Field retains its iOS output 1`] = `
         null,
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -3210,9 +3123,6 @@ exports[`iOS design at font scale 1 FilterChip retains its iOS output 1`] = `
         {
           "flexShrink": 1,
         },
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -3241,9 +3151,6 @@ exports[`iOS design at font scale 1 FilterChip retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -3276,9 +3183,6 @@ exports[`iOS design at font scale 1 FilterChip retains its iOS output 1`] = `
           null,
           {
             "fontFamily": undefined,
-          },
-          {
-            "paddingBottom": 0.16666666666666666,
           },
         ]
       }
@@ -3497,9 +3401,6 @@ exports[`iOS design at font scale 1 FollowButton retains its iOS output 1`] = `
             null,
             {
               "textAlign": "center",
-            },
-            {
-              "paddingBottom": 0.16666666666666666,
             },
           ]
         }
@@ -3763,9 +3664,6 @@ exports[`iOS design at font scale 1 LinkRow retains its iOS output 1`] = `
               null,
               null,
               undefined,
-              {
-                "paddingBottom": 0.16666666666666666,
-              },
             ]
           }
         >
@@ -3971,9 +3869,6 @@ exports[`iOS design at font scale 1 MachinePill retains its iOS output 1`] = `
           {
             "flexShrink": 1,
           },
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -4119,9 +4014,6 @@ exports[`iOS design at font scale 1 MoneyRow retains its iOS output 1`] = `
                     null,
                     null,
                     undefined,
-                    {
-                      "paddingBottom": 0.16666666666666666,
-                    },
                   ]
                 }
               >
@@ -4160,9 +4052,6 @@ exports[`iOS design at font scale 1 MoneyRow retains its iOS output 1`] = `
                 null,
                 {
                   "textAlign": "right",
-                },
-                {
-                  "paddingBottom": 0.16666666666666666,
                 },
               ]
             }
@@ -4361,9 +4250,6 @@ exports[`iOS design at font scale 1 MonthPager retains its iOS output 1`] = `
         {
           "flexShrink": 1,
         },
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -4521,9 +4407,6 @@ exports[`iOS design at font scale 1 PageFoot retains its iOS output 1`] = `
         null,
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -4597,9 +4480,6 @@ exports[`iOS design at font scale 1 PageFoot retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -4630,9 +4510,6 @@ exports[`iOS design at font scale 1 PageFoot retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -4750,9 +4627,6 @@ exports[`iOS design at font scale 1 PartyLabel retains its iOS output 1`] = `
         {
           "flexShrink": 1,
           "fontWeight": "600",
-        },
-        {
-          "paddingBottom": 0.16666666666666666,
         },
       ]
     }
@@ -4963,9 +4837,6 @@ exports[`iOS design at font scale 1 PersonRow retains its iOS output 1`] = `
             {
               "flexShrink": 0,
             },
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -5094,9 +4965,6 @@ exports[`iOS design at font scale 1 PersonRow retains its iOS output 1`] = `
                 {
                   "flexShrink": 1,
                   "fontWeight": "600",
-                },
-                {
-                  "paddingBottom": 0.16666666666666666,
                 },
               ]
             }
@@ -5376,9 +5244,6 @@ exports[`iOS design at font scale 1 RecordRow retains its iOS output 1`] = `
                   null,
                   null,
                   undefined,
-                  {
-                    "paddingBottom": 0.16666666666666666,
-                  },
                 ]
               }
             >
@@ -5411,9 +5276,6 @@ exports[`iOS design at font scale 1 RecordRow retains its iOS output 1`] = `
                   null,
                   null,
                   undefined,
-                  {
-                    "paddingBottom": 0.16666666666666666,
-                  },
                 ]
               }
             >
@@ -5515,9 +5377,6 @@ exports[`iOS design at font scale 1 SectionHeader retains its iOS output 1`] = `
           "flexShrink": 0,
           "maxWidth": "100%",
         },
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -5597,9 +5456,6 @@ exports[`iOS design at font scale 1 SectionHeader retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -5745,9 +5601,6 @@ exports[`iOS design at font scale 1 SegmentedControl retains its iOS output 1`] 
           {
             "textAlign": "center",
           },
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -5848,9 +5701,6 @@ exports[`iOS design at font scale 1 SegmentedControl retains its iOS output 1`] 
           null,
           {
             "textAlign": "center",
-          },
-          {
-            "paddingBottom": 0.16666666666666666,
           },
         ]
       }
@@ -6077,9 +5927,6 @@ exports[`iOS design at font scale 1 SourceAffordance retains its iOS output 1`] 
           {
             "flexShrink": 1,
           },
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -6162,9 +6009,6 @@ exports[`iOS design at font scale 1 StatTile retains its iOS output 1`] = `
         },
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -6196,9 +6040,6 @@ exports[`iOS design at font scale 1 StatTile retains its iOS output 1`] = `
         null,
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -6424,9 +6265,6 @@ exports[`iOS design at font scale 1 StepButtons retains its iOS output 1`] = `
             {
               "textAlign": "center",
             },
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -6550,9 +6388,6 @@ exports[`iOS design at font scale 1 StepButtons retains its iOS output 1`] = `
             null,
             {
               "textAlign": "center",
-            },
-            {
-              "paddingBottom": 0.16666666666666666,
             },
           ]
         }
@@ -6747,9 +6582,6 @@ exports[`iOS design at font scale 1 SuggestionRow retains its iOS output 1`] = `
             null,
             null,
             undefined,
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -6842,9 +6674,6 @@ exports[`iOS design at font scale 1 SwitchRow retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -6876,9 +6705,6 @@ exports[`iOS design at font scale 1 SwitchRow retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -7029,9 +6855,6 @@ exports[`iOS design at font scale 1 Tag retains its iOS output 1`] = `
           {
             "flexShrink": 1,
           },
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -7070,9 +6893,6 @@ exports[`iOS design at font scale 1 Text retains its iOS output 1`] = `
         null,
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -7107,9 +6927,6 @@ exports[`iOS design at font scale 1 Text retains its iOS output 1`] = `
         },
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -7141,9 +6958,6 @@ exports[`iOS design at font scale 1 Text retains its iOS output 1`] = `
         null,
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -7330,9 +7144,6 @@ exports[`iOS design at font scale 1 Tile retains its iOS output 1`] = `
                   {
                     "flex": 1,
                   },
-                  {
-                    "paddingBottom": 0.16666666666666666,
-                  },
                 ]
               }
             >
@@ -7418,9 +7229,6 @@ exports[`iOS design at font scale 1 Tile retains its iOS output 1`] = `
                 null,
                 null,
                 undefined,
-                {
-                  "paddingBottom": 0.16666666666666666,
-                },
               ]
             }
           >
@@ -7477,9 +7285,6 @@ exports[`iOS design at font scale 1 TileGrid retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -7518,9 +7323,6 @@ exports[`iOS design at font scale 1 TileGrid retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -7593,9 +7395,6 @@ exports[`iOS design at font scale 1 ValueRow retains its iOS output 1`] = `
             "flexShrink": 1,
             "minWidth": "35%",
           },
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -7633,9 +7432,6 @@ exports[`iOS design at font scale 1 ValueRow retains its iOS output 1`] = `
           {
             "flexShrink": 0,
             "textAlign": "right",
-          },
-          {
-            "paddingBottom": 0.16666666666666666,
           },
         ]
       }
@@ -7706,9 +7502,6 @@ exports[`iOS design at font scale 2 BarSeries retains its iOS output 1`] = `
               null,
               null,
               undefined,
-              {
-                "paddingBottom": 0.16666666666666666,
-              },
             ]
           }
         >
@@ -7753,9 +7546,6 @@ exports[`iOS design at font scale 2 BarSeries retains its iOS output 1`] = `
               },
               null,
               undefined,
-              {
-                "paddingBottom": 0.16666666666666666,
-              },
             ]
           }
         >
@@ -7800,9 +7590,6 @@ exports[`iOS design at font scale 2 BarSeries retains its iOS output 1`] = `
               },
               null,
               undefined,
-              {
-                "paddingBottom": 0.16666666666666666,
-              },
             ]
           }
         >
@@ -7862,9 +7649,6 @@ exports[`iOS design at font scale 2 BarSeries retains its iOS output 1`] = `
               "top": 0,
               "width": 9,
             },
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
         testID="bar-series-scale-1"
@@ -7908,9 +7692,6 @@ exports[`iOS design at font scale 2 BarSeries retains its iOS output 1`] = `
               "textAlign": "right",
               "top": 80,
               "width": 9,
-            },
-            {
-              "paddingBottom": 0.16666666666666666,
             },
           ]
         }
@@ -7996,9 +7777,6 @@ exports[`iOS design at font scale 2 BarSeries retains its iOS output 1`] = `
           },
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
       testID="bar-series-caption"
@@ -8121,9 +7899,6 @@ exports[`iOS design at font scale 2 BarSeries retains its iOS output 1`] = `
               null,
               {
                 "flexShrink": 1,
-              },
-              {
-                "paddingBottom": 0.16666666666666666,
               },
             ]
           }
@@ -8287,9 +8062,6 @@ exports[`iOS design at font scale 2 BarSeries retains its iOS output 1`] = `
               {
                 "flexShrink": 1,
               },
-              {
-                "paddingBottom": 0.16666666666666666,
-              },
             ]
           }
         >
@@ -8319,9 +8091,6 @@ exports[`iOS design at font scale 2 BarSeries retains its iOS output 1`] = `
                 null,
                 null,
                 undefined,
-                {
-                  "paddingBottom": 0.16666666666666666,
-                },
               ]
             }
           >
@@ -8471,9 +8240,6 @@ exports[`iOS design at font scale 2 BillRow retains its iOS output 1`] = `
               {
                 "flexShrink": 1,
               },
-              {
-                "paddingBottom": 0.16666666666666666,
-              },
             ]
           }
         >
@@ -8508,9 +8274,6 @@ exports[`iOS design at font scale 2 BillRow retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -8698,9 +8461,6 @@ exports[`iOS design at font scale 2 Button retains its iOS output 1`] = `
                 "textAlign": "center",
               },
             ],
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -8840,9 +8600,6 @@ exports[`iOS design at font scale 2 Button retains its iOS output 1`] = `
                 "textAlign": "center",
               },
             ],
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -8972,9 +8729,6 @@ exports[`iOS design at font scale 2 Button retains its iOS output 1`] = `
             {
               "flexShrink": 1,
             },
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -9103,9 +8857,6 @@ exports[`iOS design at font scale 2 Button retains its iOS output 1`] = `
             null,
             {
               "flexShrink": 1,
-            },
-            {
-              "paddingBottom": 0.16666666666666666,
             },
           ]
         }
@@ -9231,9 +8982,6 @@ exports[`iOS design at font scale 2 Button retains its iOS output 1`] = `
             {
               "flexShrink": 1,
             },
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -9358,9 +9106,6 @@ exports[`iOS design at font scale 2 Button retains its iOS output 1`] = `
             {
               "flexShrink": 1,
             },
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -9484,9 +9229,6 @@ exports[`iOS design at font scale 2 Button retains its iOS output 1`] = `
             null,
             {
               "flexShrink": 1,
-            },
-            {
-              "paddingBottom": 0.16666666666666666,
             },
           ]
         }
@@ -9619,9 +9361,6 @@ exports[`iOS design at font scale 2 Button retains its iOS output 1`] = `
             {
               "flexShrink": 1,
             },
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -9715,9 +9454,6 @@ exports[`iOS design at font scale 2 Card retains its iOS output 1`] = `
         null,
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -9785,9 +9521,6 @@ exports[`iOS design at font scale 2 ChoiceChips retains its iOS output 1`] = `
           null,
           null,
           null,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -10185,9 +9918,6 @@ exports[`iOS design at font scale 2 ContextMenu retains its iOS output 1`] = `
                 null,
                 null,
                 undefined,
-                {
-                  "paddingBottom": 0.16666666666666666,
-                },
               ]
             }
           >
@@ -10311,9 +10041,6 @@ exports[`iOS design at font scale 2 Disclosure retains its iOS output 1`] = `
               null,
               null,
               undefined,
-              {
-                "paddingBottom": 0.16666666666666666,
-              },
             ]
           }
         >
@@ -10429,9 +10156,6 @@ exports[`iOS design at font scale 2 Disclosure retains its iOS output 1`] = `
               null,
               null,
               undefined,
-              {
-                "paddingBottom": 0.16666666666666666,
-              },
             ]
           }
         >
@@ -10534,9 +10258,6 @@ exports[`iOS design at font scale 2 DivisionRow retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -10568,9 +10289,6 @@ exports[`iOS design at font scale 2 DivisionRow retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -10634,9 +10352,6 @@ exports[`iOS design at font scale 2 DivisionRow retains its iOS output 1`] = `
             null,
             {
               "flexShrink": 1,
-            },
-            {
-              "paddingBottom": 0.16666666666666666,
             },
           ]
         }
@@ -10714,9 +10429,6 @@ exports[`iOS design at font scale 2 DivisionRow retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -10808,9 +10520,6 @@ exports[`iOS design at font scale 2 Field retains its iOS output 1`] = `
         null,
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -10906,9 +10615,6 @@ exports[`iOS design at font scale 2 Field retains its iOS output 1`] = `
         null,
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -11017,9 +10723,6 @@ exports[`iOS design at font scale 2 FilterChip retains its iOS output 1`] = `
         {
           "flexShrink": 1,
         },
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -11048,9 +10751,6 @@ exports[`iOS design at font scale 2 FilterChip retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -11083,9 +10783,6 @@ exports[`iOS design at font scale 2 FilterChip retains its iOS output 1`] = `
           null,
           {
             "fontFamily": undefined,
-          },
-          {
-            "paddingBottom": 0.16666666666666666,
           },
         ]
       }
@@ -11309,9 +11006,6 @@ exports[`iOS design at font scale 2 FollowButton retains its iOS output 1`] = `
             null,
             {
               "flexShrink": 1,
-            },
-            {
-              "paddingBottom": 0.16666666666666666,
             },
           ]
         }
@@ -11574,9 +11268,6 @@ exports[`iOS design at font scale 2 LinkRow retains its iOS output 1`] = `
               null,
               null,
               undefined,
-              {
-                "paddingBottom": 0.16666666666666666,
-              },
             ]
           }
         >
@@ -11782,9 +11473,6 @@ exports[`iOS design at font scale 2 MachinePill retains its iOS output 1`] = `
           {
             "flexShrink": 1,
           },
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -11929,9 +11617,6 @@ exports[`iOS design at font scale 2 MoneyRow retains its iOS output 1`] = `
                     null,
                     null,
                     undefined,
-                    {
-                      "paddingBottom": 0.16666666666666666,
-                    },
                   ]
                 }
               >
@@ -11971,9 +11656,6 @@ exports[`iOS design at font scale 2 MoneyRow retains its iOS output 1`] = `
                 {
                   "alignSelf": "flex-end",
                   "textAlign": "right",
-                },
-                {
-                  "paddingBottom": 0.16666666666666666,
                 },
               ]
             }
@@ -12172,9 +11854,6 @@ exports[`iOS design at font scale 2 MonthPager retains its iOS output 1`] = `
         {
           "flexShrink": 1,
         },
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -12332,9 +12011,6 @@ exports[`iOS design at font scale 2 PageFoot retains its iOS output 1`] = `
         null,
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -12408,9 +12084,6 @@ exports[`iOS design at font scale 2 PageFoot retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -12441,9 +12114,6 @@ exports[`iOS design at font scale 2 PageFoot retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -12563,9 +12233,6 @@ exports[`iOS design at font scale 2 PartyLabel retains its iOS output 1`] = `
         {
           "flexShrink": 1,
           "fontWeight": "600",
-        },
-        {
-          "paddingBottom": 0.16666666666666666,
         },
       ]
     }
@@ -12778,9 +12445,6 @@ exports[`iOS design at font scale 2 PersonRow retains its iOS output 1`] = `
             {
               "flexShrink": 0,
             },
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -12911,9 +12575,6 @@ exports[`iOS design at font scale 2 PersonRow retains its iOS output 1`] = `
                 {
                   "flexShrink": 1,
                   "fontWeight": "600",
-                },
-                {
-                  "paddingBottom": 0.16666666666666666,
                 },
               ]
             }
@@ -13193,9 +12854,6 @@ exports[`iOS design at font scale 2 RecordRow retains its iOS output 1`] = `
                   null,
                   null,
                   undefined,
-                  {
-                    "paddingBottom": 0.16666666666666666,
-                  },
                 ]
               }
             >
@@ -13228,9 +12886,6 @@ exports[`iOS design at font scale 2 RecordRow retains its iOS output 1`] = `
                   null,
                   null,
                   undefined,
-                  {
-                    "paddingBottom": 0.16666666666666666,
-                  },
                 ]
               }
             >
@@ -13333,9 +12988,6 @@ exports[`iOS design at font scale 2 SectionHeader retains its iOS output 1`] = `
           "flexShrink": 0,
           "maxWidth": "100%",
         },
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -13415,9 +13067,6 @@ exports[`iOS design at font scale 2 SectionHeader retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -13564,9 +13213,6 @@ exports[`iOS design at font scale 2 SegmentedControl retains its iOS output 1`] 
           {
             "textAlign": "center",
           },
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -13665,9 +13311,6 @@ exports[`iOS design at font scale 2 SegmentedControl retains its iOS output 1`] 
           {
             "textAlign": "center",
           },
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -13726,9 +13369,6 @@ exports[`iOS design at font scale 2 SegmentedPicker retains its iOS output 1`] =
         null,
         null,
         null,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -13991,9 +13631,6 @@ exports[`iOS design at font scale 2 SourceAffordance retains its iOS output 1`] 
           {
             "flexShrink": 1,
           },
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -14076,9 +13713,6 @@ exports[`iOS design at font scale 2 StatTile retains its iOS output 1`] = `
         },
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -14110,9 +13744,6 @@ exports[`iOS design at font scale 2 StatTile retains its iOS output 1`] = `
         null,
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -14340,9 +13971,6 @@ exports[`iOS design at font scale 2 StepButtons retains its iOS output 1`] = `
             {
               "flexShrink": 1,
             },
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -14471,9 +14099,6 @@ exports[`iOS design at font scale 2 StepButtons retains its iOS output 1`] = `
             null,
             {
               "flexShrink": 1,
-            },
-            {
-              "paddingBottom": 0.16666666666666666,
             },
           ]
         }
@@ -14672,9 +14297,6 @@ exports[`iOS design at font scale 2 SuggestionRow retains its iOS output 1`] = `
             null,
             null,
             undefined,
-            {
-              "paddingBottom": 0.16666666666666666,
-            },
           ]
         }
       >
@@ -14770,9 +14392,6 @@ exports[`iOS design at font scale 2 SwitchRow retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -14804,9 +14423,6 @@ exports[`iOS design at font scale 2 SwitchRow retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -14958,9 +14574,6 @@ exports[`iOS design at font scale 2 Tag retains its iOS output 1`] = `
           {
             "flexShrink": 1,
           },
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -14999,9 +14612,6 @@ exports[`iOS design at font scale 2 Text retains its iOS output 1`] = `
         null,
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -15036,9 +14646,6 @@ exports[`iOS design at font scale 2 Text retains its iOS output 1`] = `
         },
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -15070,9 +14677,6 @@ exports[`iOS design at font scale 2 Text retains its iOS output 1`] = `
         null,
         null,
         undefined,
-        {
-          "paddingBottom": 0.16666666666666666,
-        },
       ]
     }
   >
@@ -15259,9 +14863,6 @@ exports[`iOS design at font scale 2 Tile retains its iOS output 1`] = `
                   {
                     "flex": 1,
                   },
-                  {
-                    "paddingBottom": 0.16666666666666666,
-                  },
                 ]
               }
             >
@@ -15347,9 +14948,6 @@ exports[`iOS design at font scale 2 Tile retains its iOS output 1`] = `
                 null,
                 null,
                 undefined,
-                {
-                  "paddingBottom": 0.16666666666666666,
-                },
               ]
             }
           >
@@ -15406,9 +15004,6 @@ exports[`iOS design at font scale 2 TileGrid retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -15447,9 +15042,6 @@ exports[`iOS design at font scale 2 TileGrid retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -15518,9 +15110,6 @@ exports[`iOS design at font scale 2 ValueRow retains its iOS output 1`] = `
           null,
           null,
           undefined,
-          {
-            "paddingBottom": 0.16666666666666666,
-          },
         ]
       }
     >
@@ -15557,9 +15146,6 @@ exports[`iOS design at font scale 2 ValueRow retains its iOS output 1`] = `
           null,
           {
             "flexShrink": 0,
-          },
-          {
-            "paddingBottom": 0.16666666666666666,
           },
         ]
       }

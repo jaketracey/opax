@@ -14,7 +14,7 @@ test.each([
   [false, 'down', 3.571, 1, 141, 25],
   [true, 'down', 3.571, 1, 141, 25],
 ] as const)(
-  'iOS wordSafe=%s text size %s rejects a queued frame from the previous identity',
+  'iOS wordSafe=%s text size %s rejects a queued floor from the previous identity',
   (wordSafe, _direction, from, to, staleHeight, freshHeight) => {
     const descriptor = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
     Object.defineProperty(Platform, 'OS', { configurable: true, value: 'ios' });
@@ -59,40 +59,17 @@ test.each([
         height: number,
       ) => void)[] = [];
       text().instance.measure = jest.fn((callback) => callbacks.push(callback));
-      // Lines that end half a point below a frame: proof that it is short.
-      const short = (height: number) =>
-        act(() =>
-          text().props.onTextLayout?.({
-            nativeEvent: {
-              lines: [
-                {
-                  text: 'Example heading',
-                  x: 0,
-                  y: 0,
-                  width: 200,
-                  height: height + 0.5,
-                },
-              ],
-            },
-          }),
-        );
       frame(staleHeight);
-      short(staleHeight);
-      // Plain text listens for no lines and takes no floor at any point: its
-      // slack is in its measured height.
-      const expected = (height: number) => (wordSafe ? height + 1 : undefined);
-      expect(text().props.onTextLayout === undefined).toBe(!wordSafe);
-      expect(floor()).toBe(expected(staleHeight));
+      expect(floor()).toBe(staleHeight + 1);
       size(to);
       frame(staleHeight); // queued frame dispatched after the new size committed
       frame(freshHeight);
-      short(freshHeight);
       // Neither frame carries proof of which identity produced it.
       expect(floor()).toBeUndefined();
       act(() => callbacks.shift()?.(0, 0, 298, freshHeight));
-      expect(floor()).toBe(expected(freshHeight));
+      expect(floor()).toBe(freshHeight + 1);
       frame(staleHeight); // even a later stale frame cannot replace the verified floor
-      expect(floor()).toBe(expected(freshHeight));
+      expect(floor()).toBe(freshHeight + 1);
       expect(text()).toBe(original);
       expect(text().props).toMatchObject({
         accessibilityRole: 'header',
