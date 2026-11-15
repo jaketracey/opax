@@ -1,5 +1,6 @@
 import {
   Linking,
+  Platform,
   View,
   type AccessibilityActionEvent,
   type TextProps,
@@ -9,7 +10,11 @@ import type { Href } from 'expo-router';
 import { useRecordLink } from '../navigation/record-link';
 import { copyText } from '../features/records/actions';
 import { useAccessibilitySize } from './accessibility';
-import { AUTHORISATION_LINE, CORRECTION_CONTACT } from './authorisation';
+import {
+  AUTHORISATION_LINE,
+  CORRECTION_CONTACT,
+  isVictorian,
+} from './authorisation';
 import { copy } from './copy';
 import { spokenFigures, type DateInput } from './format';
 import { haptic } from './haptics';
@@ -133,6 +138,11 @@ export interface StatTileProps {
   testID?: string;
 }
 const statChevron = 'chevron.right';
+const statLabelRow = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: rhythm.line,
+} as const;
 export function StatTile({
   value,
   label,
@@ -153,15 +163,33 @@ export function StatTile({
       >
         {value}
       </Text>
-      <Text wordSafe variant="footnote">
-        {words}
-        {onPress ? (
-          <>
-            {'\u00a0'}
-            <Icon name={statChevron} size={13} maxScale={1.5} tone="inkFaint" />
-          </>
-        ) : null}
-      </Text>
+      {onPress && Platform.OS === 'android' ? (
+        // Android sits an inline view on the text baseline and keeps the
+        // role's line height: at large text the chevron is taller than the
+        // line allows, so the label dropped and lost its descenders ("a year
+        // in pay"). The chevron is a sibling there, centred on the label.
+        <View style={statLabelRow}>
+          <Text wordSafe variant="footnote" style={{ flexShrink: 1 }}>
+            {words}
+          </Text>
+          <Icon name={statChevron} size={13} maxScale={1.5} tone="inkFaint" />
+        </View>
+      ) : (
+        <Text wordSafe variant="footnote">
+          {words}
+          {onPress ? (
+            <>
+              {'\u00a0'}
+              <Icon
+                name={statChevron}
+                size={13}
+                maxScale={1.5}
+                tone="inkFaint"
+              />
+            </>
+          ) : null}
+        </Text>
+      )}
     </>
   );
   const props = {
@@ -263,20 +291,31 @@ export async function openCorrection(email: string = copy.correctionsEmail) {
 }
 export function PageFoot({
   variant,
+  jurisdiction,
   line = AUTHORISATION_LINE,
   corrections,
   testID,
   independenceTestID,
   correctionTestID,
 }: {
-  variant: 'today' | 'authorised';
   line?: string;
   corrections?: { email: string; response: string };
   testID?: string;
   independenceTestID?: string;
   correctionTestID?: string;
-}) {
+} & (
+  | { variant: 'today'; jurisdiction?: undefined }
+  | {
+      variant: 'authorised';
+      /**
+       * Required. The authorisation is Victorian election material, so any
+       * other jurisdiction draws nothing.
+       */
+      jurisdiction: string;
+    }
+)) {
   const highlight = useRowHighlight();
+  if (variant === 'authorised' && !isVictorian(jurisdiction)) return null;
   return (
     <View
       testID={testID}

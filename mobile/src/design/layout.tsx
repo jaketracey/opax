@@ -1,17 +1,12 @@
 import { Pressable } from './pressable';
 import { type Href } from 'expo-router';
-import {
-  NavigationContext,
-  NavigationRouteContext,
-} from 'expo-router/react-navigation';
-import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
+import { NavigationContext } from 'expo-router/react-navigation';
 import {
   Children,
   cloneElement,
   createContext,
   isValidElement,
   useCallback,
-  use,
   useContext,
   useEffect,
   useImperativeHandle,
@@ -39,6 +34,7 @@ import {
 import {
   barBacking,
   clearBarStyle,
+  glassBar,
   opaqueBar,
   useClearRailBar,
   useRailBar,
@@ -46,10 +42,8 @@ import {
 import { useAndroidRootScroll } from '../navigation/useAndroidRootScroll';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { useSafeSetOptions } from '../navigation/preview';
-import {
-  isTabStack,
-  useFloatingBarClearance,
-} from '../navigation/floating-bar';
+import { useSolidRailBacking } from '../navigation/solid-rail';
+import { useFloatingBarClearance } from '../navigation/floating-bar';
 import {
   useRootBarAppearance,
   useRailSolidRoot,
@@ -85,6 +79,7 @@ import {
 } from './row-padding';
 import { usePaneBar, useSplitPane } from './split';
 import { useHeaderBottom } from './useHeaderBottom';
+import { useLayoutProbe } from '../perf/layout-probe';
 import { ScreenSectionGapContext, StatePageProvider } from './states';
 import { Heading, Text } from './text';
 import {
@@ -267,22 +262,6 @@ export function useClearBarTop(): number {
   return useClearRailBar() ? bottom : 0;
 }
 
-/**
- * A pushed page in a tab's stack beside a vertical bar, with Reduce
- * Transparency or Increase Contrast on: it keeps the solid bar, and that bar
- * needs the page's ground behind it (`barBacking`), or the top 14 pt shows the
- * system's grey. Not a sheet: a backing view reserved a band in sheets.
- */
-function useSolidRailBacking(): boolean {
-  const rail = useRailBar();
-  const route = useContext(NavigationRouteContext);
-  const navigation = useContext(NavigationContext);
-  if (rail !== 'solid' || !route || !isTabStack(navigation?.getState()))
-    return false;
-  const presentation = use(DescriptorsContext)[route.key]?.options.presentation;
-  return !presentation || presentation === 'card';
-}
-
 /** When a late scroll view is looked at after mount (ms). */
 const restChecks = [400, 900, 1500];
 /** After this long from mount the page has settled, and is the reader's. */
@@ -426,7 +405,15 @@ export function Screen({
   scrollToOverflowEnabled = false,
   clampScrollOnContentChange = false,
   keyboardInsets = true,
+  artUnderTitle = false,
 }: {
+  /**
+   * The page draws art behind its large title (Today's dot map). Before
+   * iOS 26 the tab root's bar is opaque, so its route runs the page under
+   * the bar instead (navigation/stack/screen.tsx, `artUnderTitle`), and the
+   * bar is clear while the title is expanded and opaque once it collapses.
+   */
+  artUnderTitle?: boolean;
   onLayout?: ViewProps['onLayout'];
   /** The rendered content, rather than the surrounding scroll viewport. */
   onContentLayout?: ViewProps['onLayout'];
@@ -502,9 +489,13 @@ export function Screen({
     disabled: inPane,
     underBar,
   });
+  const clearExpandedBar =
+    artUnderTitle && Platform.OS === 'ios' && !Platform.isPad && !glassBar();
   const backed = useSolidRailBacking();
   const clearRail = useClearRailBar();
+  const onRail = useRailBar() !== null;
   const wasBacked = useRef(false);
+  const wasOnRail = useRef(false);
   useLayoutEffect(() => {
     // A detail pane must not recolour its parent route's navigation bar.
     if (inPane || nativeRoot) return;
@@ -513,22 +504,55 @@ export function Screen({
       ...(clearRail
         ? clearBarStyle(opaqueBar(colors[ground]))
         : opaqueBar(colors[ground])),
+      ...(clearExpandedBar
+        ? { headerLargeStyle: { backgroundColor: 'transparent' } }
+        : {}),
       ...(backed
         ? barBacking(colors[ground])
         : wasBacked.current
           ? { headerBackground: undefined }
           : {}),
+      // Beside a vertical bar UIKit's bar background stops short of the top
+      // edge, and what shows above it is the screen's container. A sheet's
+      // stack paints that in its own ground (Account: the darker grouped
+      // one), so a paper page there had a darker strip above its paper bar
+      // (Methods, Datasets, Portraits, Photo credits). A sheet cannot take
+      // the backing view, so the container takes the page's ground instead.
+      // Opened out, the stack's own container ground comes back.
+      ...(onRail
+        ? { contentStyle: { backgroundColor: colors[ground] } }
+        : wasOnRail.current
+          ? { contentStyle: undefined }
+          : {}),
     });
     wasBacked.current = backed;
-  }, [setOptions, ground, inPane, nativeRoot, backed, clearRail]);
+    wasOnRail.current = onRail;
+  }, [
+    setOptions,
+    ground,
+    inPane,
+    nativeRoot,
+    backed,
+    clearRail,
+    onRail,
+    clearExpandedBar,
+  ]);
   const rest = useClearBarRest();
   const pinnedHere = Platform.OS === 'ios' && !!pinned;
   const railSolidRoot = useRailSolidRoot();
-  const belowBar = nativeRoot && railSolidRoot;
+  // Before iOS 26 every bar a pinned band sits under is opaque, and UIKit
+  // lays the scroll view out below it: React Native's own sticky header
+  // holds at the right place. BarStickyHeader subtracts the bar's height
+  // for a scroll view that runs under the bar, which there held Search's
+  // scope control about 170 pt below the bar, over the rows (iOS 18.4).
+  const belowBar =
+    (nativeRoot && railSolidRoot) || (!glassBar() && !clearExpandedBar);
   const [pinnedRest, setPinnedRest] = useState<number | null>(null);
   // A new band (Search submitted again) learns its rest offset again.
   if (!pinnedHere && pinnedRest !== null) setPinnedRest(null);
   const contentRoot = useRef<View>(null);
+  // A measuring build only; does nothing without its build flag.
+  useLayoutProbe(contentRoot, scrollY, headerBottom);
   const [anchorBottom, setAnchorBottom] = useState<number | null>(null);
   const titleScroll = useRef<TitleScrollHandler | null>(null);
   const suppliedBridge = useContext(ScreenTitleContext);

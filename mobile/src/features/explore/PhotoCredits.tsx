@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { SectionList, StyleSheet, View } from 'react-native';
 import { counted, formatCount } from '../../design/format';
 import {
-  Divider,
+  RowSeparator,
   InlineError,
   RegionProvider,
   SidebarSafe,
@@ -146,7 +146,7 @@ export function PhotoCreditsList() {
               </Text>
             </View>
           )}
-          ItemSeparatorComponent={() => <Divider variant="subtle" />}
+          ItemSeparatorComponent={RowSeparator}
           renderItem={({ item: p }) => (
             <CreditRow
               title={p.caption}

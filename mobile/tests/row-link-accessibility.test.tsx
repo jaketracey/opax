@@ -2,6 +2,7 @@ import { act, type ReactElement } from 'react';
 import { Platform, Pressable, StyleSheet, Text } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { Link, router } from 'expo-router';
+import { NavigationContext } from 'expo-router/react-navigation';
 import { LinkRow, BillRow } from '../src/design/rows';
 import { Tile } from '../src/design/card';
 import { RowLink } from '../src/design/row-link';
@@ -469,4 +470,50 @@ test('an accessible host keeps the native preview and zoom trigger', () => {
   expectAccessibleLink(root, 'money', 'Public money');
   expect(root.findAllByType(Link.Preview)).toHaveLength(1);
   expect(root.findByType(Link.Trigger).props.withAppleZoom).toBe(true);
+});
+
+test('a row link holds its pressed look once it has opened its page, and a selection does not', () => {
+  const listeners: string[] = [];
+  const navigation = {
+    addListener: (name: string) => {
+      listeners.push(name);
+      return () => undefined;
+    },
+  } as never;
+  const lit = (root: ReactTestInstance) =>
+    StyleSheet.flatten(pressable(root).props.style({ pressed: false }))
+      .backgroundColor;
+  const rest = (root: ReactTestInstance) =>
+    StyleSheet.flatten(pressable(root).props.style({ pressed: true }))
+      .backgroundColor;
+  const root = render(
+    <NavigationContext.Provider value={navigation}>
+      <LinkRow title="Quizzes and tools" href="/explore" testID="tools" />
+    </NavigationContext.Provider>,
+  );
+  const ground = lit(root);
+  const highlight = rest(root);
+  expect(highlight).not.toEqual(ground);
+  act(() => pressable(root).props.onPress());
+  expect(router.push).toHaveBeenCalledWith('/explore');
+  // Finger up: the row keeps the highlight while its page pushes.
+  expect(lit(root)).toEqual(highlight);
+  expect(listeners).toEqual(['blur', 'focus']);
+  const select = jest.fn();
+  const chosen = render(
+    <NavigationContext.Provider value={navigation}>
+      <RowLink href="/explore" select={select}>
+        <Pressable
+          style={({ pressed }) => ({
+            backgroundColor: pressed ? 'red' : 'white',
+          })}
+        >
+          <Text>Choose</Text>
+        </Pressable>
+      </RowLink>
+    </NavigationContext.Provider>,
+  );
+  act(() => pressable(chosen).props.onPress());
+  expect(select).toHaveBeenCalledTimes(1);
+  expect(lit(chosen)).toBe('white');
 });

@@ -4,11 +4,11 @@ import type { ReactNode } from 'react';
 import {
   AccessibilityInfo,
   ActivityIndicator,
-  Pressable,
   StyleSheet,
   View,
   useWindowDimensions,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import {
   EXTERNAL_GLYPH,
   Icon,
@@ -25,6 +25,7 @@ import {
 } from '../../design/row-padding';
 import { symbols } from '../../design/symbols';
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
+import { testReportTap } from '../../analytics/test-report';
 import { copyText } from '../records/actions';
 
 // The Account sheet's shared parts (specs/account.md 1.4) live in this file,
@@ -216,6 +217,7 @@ export function VersionFoot() {
     });
   return (
     <Pressable
+      feedback="none"
       accessible
       accessibilityRole="text"
       accessibilityLabel={linksCopy.versionSpoken(version, build)}
@@ -223,6 +225,9 @@ export function VersionFoot() {
       onAccessibilityAction={(event) => {
         if (event.nativeEvent.actionName === 'copy') copy();
       }}
+      // Seven taps within a few seconds offer a test error report
+      // (analytics/test-report.ts). The label and role are unchanged.
+      onPress={() => testReportTap()}
       onLongPress={copy}
       testID="account-version"
       style={styles.foot}

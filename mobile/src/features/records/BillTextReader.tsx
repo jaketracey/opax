@@ -14,13 +14,8 @@ import {
   useRef,
   useState,
 } from 'react';
-import {
-  AccessibilityInfo,
-  Platform,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import type { NativeStackHeaderItem } from 'expo-router';
 import { router, useLocalSearchParams } from 'expo-router';
 import { NavigationContext } from 'expo-router/react-navigation';
@@ -316,7 +311,8 @@ export default function BillTextReader({
             ]
           : []),
         ...menu,
-        ...(android ? [{ title: 'Ask about this bill', onPress: ask }] : []),
+        // No Ask here: the bar has items only once the text's header is
+        // drawn, and that header always carries its own Ask button.
         ...(canShare
           ? [
               {

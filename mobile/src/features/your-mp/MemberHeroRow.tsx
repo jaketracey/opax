@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { openSource } from '../../navigation/external';
 import { personRoute, partyRoute } from '../../navigation/routes';
 import { router } from 'expo-router';

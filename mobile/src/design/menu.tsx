@@ -224,6 +224,7 @@ function MaterialMenuHost() {
         {/* a11y-ok(pressable-role): the tap-outside scrim. The modal menu
             takes TalkBack focus and Back closes it. */}
         <Pressable
+          feedback="none"
           style={StyleSheet.absoluteFill}
           onPress={close}
           accessible={false}
@@ -269,6 +270,7 @@ function MaterialMenuHost() {
             ) : null}
             {current.actions.map((action, index) => (
               <Pressable
+                feedback="wash"
                 ref={index === 0 ? firstItem : undefined}
                 key={`${index}-${action.title}`}
                 accessibilityRole="menuitem"
@@ -282,10 +284,11 @@ function MaterialMenuHost() {
                   close();
                   action.onPress();
                 }}
+                // Titles start at the leading edge. Centring the row's main
+                // axis centred one-line titles between wrapped ones.
                 style={{
                   paddingHorizontal: 16,
                   paddingVertical: 12,
-                  justifyContent: 'center',
                   flexDirection: 'row',
                   alignItems: 'center',
                   gap: 12,

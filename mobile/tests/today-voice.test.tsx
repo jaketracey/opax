@@ -65,6 +65,7 @@ jest.mock('../src/api/runtime', () => ({
 }));
 jest.mock('../src/features/your-mp/useSeat', () => ({
   useSeat: () => ({ status: 'none' }),
+  useSavedChoice: () => null,
   savedSeatDirectory: () => null,
 }));
 jest.mock('../src/features/today/edition-store', () => ({

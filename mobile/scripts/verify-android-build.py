@@ -10,7 +10,8 @@ import subprocess
 import xml.etree.ElementTree as ET
 import zipfile
 
-from android_release import configured_version, verify_identity, verify_evidence, verify_ios_candidate, permission_allowlist, bundled_routes
+from android_release import (configured_version, verify_identity, verify_evidence, verify_ios_candidate, permission_allowlist,
+                             bundled_routes, verify_analytics_config)
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument("variant", choices=["development", "e2e", "production"])
@@ -91,9 +92,9 @@ with zipfile.ZipFile(args.apk) as archive:
             "http://10.0.2.2:" + os.environ.get("OPAX_FIXTURE_PORT", "8910"))
         assert extra["apiOrigin"] == expected_origin
         assert extra["variant"] == args.variant
-        # Android sends no analytics until its Data safety answers include
-        # them (docs/ANALYTICS.md, "iOS and Android app"; verify-play.py).
-        assert "analytics" not in extra, "Android build embeds an analytics config"
+        # Production carries the opax.com.au/ingest analytics config, as on
+        # iOS; e2e carries none (docs/ANALYTICS.md, "iOS and Android app").
+        verify_analytics_config(config, args.variant)
         bundle = archive.read("assets/index.android.bundle")
         routes = bundled_routes(bundle)
         if args.variant == "e2e" or voice:

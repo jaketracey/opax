@@ -8,17 +8,19 @@ import type { Href } from 'expo-router';
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
 import {
-  Pressable,
   ScrollView,
   StyleSheet,
   useWindowDimensions,
   View,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../../design/pressable';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
@@ -44,6 +46,7 @@ import {
   StepButtons,
   Text,
 } from '../../../design/primitives';
+import { LoadingStatus } from '../../../design/states';
 import { symbols } from '../../../design/symbols';
 import {
   colors,
@@ -57,6 +60,7 @@ import { useRecordLink } from '../../../navigation/record-link';
 import { RowOpenListener } from '../../../design/row-link';
 import { moneyMapEntityRoute } from '../record-routes';
 import { moneyYears } from '../records';
+import { frameOf } from './measure';
 import {
   clusterLabel,
   type MapEdge,
@@ -162,6 +166,7 @@ export function focusFlowGroups(
 export function MoneyMapPanel({
   focus,
   totals,
+  publicMoneyExpected = true,
   caption,
   legend,
   sourceLine,
@@ -174,7 +179,10 @@ export function MoneyMapPanel({
   onOpenRecord,
 }: {
   focus: PanelFocus | null;
-  totals: { donations: number; publicMoney: number | null };
+  /** The map's totals; none while it loads, when their place is kept. */
+  totals: { donations: number; publicMoney: number | null } | null;
+  /** While loading: whether the public money figure is to come. */
+  publicMoneyExpected?: boolean;
   /** What the map shows: "413 nodes · 1,159 recorded flows". */
   caption: string;
   legend: ReactNode;
@@ -201,11 +209,30 @@ export function MoneyMapPanel({
     ? Math.max(peek, Math.round(stageHeight * EXPANDED_SHARE))
     : peek;
   const target = maxHeight === undefined ? wanted : Math.min(wanted, maxHeight);
+  // The height glides only after the reader opens or closes the panel or
+  // changes its subject. Its first placement, and a cap corrected as the
+  // stage measures itself, are set at once: gliding those moved the totals
+  // for a third of a second after the map had drawn.
+  const subject = focus?.node.id ?? null;
+  const asked = useRef<number | null>(null);
+  const mounted = useRef(false);
+  const placed = useRef(false);
+  useEffect(() => {
+    // Declared before the height's effect, so it runs first in a commit.
+    if (mounted.current) asked.current = Date.now();
+    mounted.current = true;
+  }, [expanded, subject]);
   useEffect(() => {
     if (!peek) return;
-    height.value = reduced
-      ? target
-      : withTiming(target, { duration: motion.duration.standard });
+    const glide =
+      !reduced &&
+      placed.current &&
+      asked.current !== null &&
+      Date.now() - asked.current < PANEL_GLIDE_WINDOW;
+    height.value = glide
+      ? withTiming(target, { duration: motion.duration.standard })
+      : target;
+    placed.current = true;
   }, [target, peek, reduced, height]);
   const style = useAnimatedStyle(() => ({
     height: height.value || undefined,
@@ -226,31 +253,77 @@ export function MoneyMapPanel({
         }),
     [set],
   );
-  useEffect(() => {
+  // Before the frame is painted, so the stage's first frame has the map's
+  // bottom inset and the panel's cap from the panel's real height.
+  useLayoutEffect(() => {
     if (peek) onPeekHeight(peek);
   }, [peek, onPeekHeight]);
+  const restRef = useRef<View>(null);
+  // Every commit, on purpose: the content's height can change without a
+  // dependency changing. It sets state only on a difference.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useLayoutEffect(() => {
+    const frame = frameOf(restRef);
+    if (!frame || frame.height <= 0) return;
+    const next = Math.ceil(frame.height) + HANDLE + rhythm.block;
+    setPeek((previous) => (previous === next ? previous : next));
+  });
   const { fontScale } = useWindowDimensions();
   const figureBasis = FIGURE_BASIS * Math.max(1, fontScale);
   const figure = (
-    value: number,
+    value: number | null,
     label: string,
     testID: string,
     tone: 'moneyInk' | 'ink' = 'moneyInk',
-  ) => (
-    <View
-      style={[styles.figure, { flexBasis: figureBasis }]}
-      accessible
-      accessibilityLabel={`${moneyAccessibilityLabel(value, true)}, ${label}`}
-      testID={testID}
-    >
-      {/* A figure is one word: at accessibility sizes it steps down
+  ) =>
+    value === null ? (
+      // Loading: the figure's own lines (one blank, at the figure's line
+      // height), laid out and not seen, under a bone, so the panel is its
+      // final height before the totals arrive.
+      <View
+        key={testID}
+        style={[styles.figure, { flexBasis: figureBasis }]}
+        testID={`${testID}-space`}
+      >
+        <View>
+          <Text variant="tileFigure" tabular wordSafe style={styles.unseen}>
+            {'\u00a0'}
+          </Text>
+          <View style={styles.bone} />
+        </View>
+        <Text variant="footnote" wordSafe style={styles.unseen}>
+          {label}
+        </Text>
+      </View>
+    ) : (
+      <View
+        key={testID}
+        style={[styles.figure, { flexBasis: figureBasis }]}
+        accessible
+        accessibilityLabel={`${moneyAccessibilityLabel(value, true)}, ${label}`}
+        testID={testID}
+      >
+        {/* A figure is one word: at accessibility sizes it steps down
           rather than break ("$305.9b / n" at AX3). */}
-      <Text variant="tileFigure" tone={tone} tabular wordSafe>
-        {formatMoneyCompact(value)}
-      </Text>
-      <Text variant="footnote" wordSafe>
-        {label}
-      </Text>
+        <Text variant="tileFigure" tone={tone} tabular wordSafe>
+          {formatMoneyCompact(value)}
+        </Text>
+        <Text variant="footnote" wordSafe>
+          {label}
+        </Text>
+      </View>
+    );
+  const legendButton = (
+    <View style={styles.legendButton}>
+      <Button
+        label="Legend"
+        variant="quiet"
+        size="compact"
+        hug
+        expanded={expanded}
+        onPress={toggle}
+        testID="money-map-legend-toggle"
+      />
     </View>
   );
   // A search result's subject is where VoiceOver goes next: the search
@@ -293,6 +366,7 @@ export function MoneyMapPanel({
     >
       <GestureDetector gesture={drag}>
         <Pressable
+          feedback="wash"
           accessibilityRole="button"
           accessibilityLabel={expanded ? 'Collapse details' : 'Expand details'}
           accessibilityState={{ expanded }}
@@ -311,6 +385,7 @@ export function MoneyMapPanel({
         keyboardShouldPersistTaps="handled"
       >
         <View
+          ref={restRef}
           onLayout={(event) => {
             const h =
               Math.ceil(event.nativeEvent.layout.height) +
@@ -392,7 +467,7 @@ export function MoneyMapPanel({
                 testID="money-map-steps"
               />
             </View>
-          ) : (
+          ) : totals ? (
             <View style={styles.restRow}>
               {figure(
                 totals.donations,
@@ -407,18 +482,41 @@ export function MoneyMapPanel({
                     'ink',
                   )
                 : null}
-              <View style={styles.legendButton}>
+              {legendButton}
+            </View>
+          ) : (
+            <LoadingStatus
+              accessibilityLabel="Loading the money map"
+              style={styles.restRow}
+              testID="money-loading"
+            >
+              {figure(
+                null,
+                'disclosed to parties',
+                'money-map-total-donations',
+              )}
+              {publicMoneyExpected
+                ? figure(
+                    null,
+                    'public money to donors on the map',
+                    'money-map-total-public',
+                  )
+                : null}
+              <View
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+                pointerEvents="none"
+                style={[styles.legendButton, styles.unseen]}
+              >
                 <Button
                   label="Legend"
                   variant="quiet"
                   size="compact"
                   hug
-                  expanded={expanded}
-                  onPress={toggle}
-                  testID="money-map-legend-toggle"
+                  onPress={() => undefined}
                 />
               </View>
-            </View>
+            </LoadingStatus>
           )}
         </View>
         {expanded ? (
@@ -499,6 +597,8 @@ export function MoneyMapPanel({
 }
 
 const HANDLE = 20;
+/** How long after the reader's action a new height still glides (ms). */
+const PANEL_GLIDE_WINDOW = 600;
 const styles = StyleSheet.create({
   panel: {
     backgroundColor: colors.raised,
@@ -562,4 +662,16 @@ const styles = StyleSheet.create({
   // large type size wraps them.
   figure: { gap: 2, flexGrow: 1, flexShrink: 1 },
   legendButton: { marginLeft: 'auto', alignSelf: 'center' },
+  // Laid out, never seen: it keeps the place of a figure still to come.
+  unseen: { opacity: 0 },
+  bone: {
+    position: 'absolute',
+    top: 4,
+    bottom: 4,
+    left: 0,
+    width: 96,
+    borderRadius: radii.bar,
+    borderCurve: 'continuous',
+    backgroundColor: colors.sunken,
+  },
 });

@@ -451,6 +451,7 @@ export function FollowButton({
     try {
       if (following) {
         await unfollow(key);
+        haptic('selection');
       } else {
         const result = await followWithFeedback({ kind, id, title });
         if (result.status === 'limit') {
@@ -1500,7 +1501,11 @@ export function SwitchRow({
       accessibilityState={{ checked: value, disabled }}
       testID={testID}
       disabled={disabled}
-      onPress={() => onValueChange(!value)}
+      onPress={() => {
+        // The row is the control, so UISwitch's own tap never plays.
+        haptic('selection');
+        onValueChange(!value);
+      }}
       style={({ pressed }) => [
         styles.switchRow,
         stacked ? styles.switchRowStacked : null,
@@ -1946,6 +1951,15 @@ export function Divider({
       }}
     />
   );
+}
+
+/**
+ * The subtle rule between a list's rows, as a component of its own: a list
+ * given an inline `() => <Divider />` sees a new component type on every
+ * render and remounts each separator it has drawn.
+ */
+export function RowSeparator() {
+  return <Divider variant="subtle" />;
 }
 
 // iOS retains 44 + 2 * (1 + 1) = 48 outside. Android keeps its 48dp

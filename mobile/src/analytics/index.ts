@@ -15,6 +15,7 @@ import {
 } from './events';
 import { windowClass } from '../design/adaptive';
 import { routeErrorPattern } from './route-patterns';
+import { connectSectionReports } from './sections';
 
 /**
  * Anonymous product analytics (docs/ANALYTICS.md, "iOS and Android app").
@@ -238,6 +239,45 @@ export function useRouteErrorReporting(error: unknown) {
     last.current = { error };
     reportRouteError(error, segments);
   }, [error, pattern, segments]);
+}
+
+// Section load failures (./sections.ts) are sent from here: the event's
+// three fixed fields, through the same allowlist and release gate as every
+// other event.
+connectSectionReports({
+  route: () =>
+    (currentScreen ? routeErrorPattern(currentScreen) : undefined) ?? '/other',
+  send: (section, kind, route) =>
+    track('opax_section_failed', { section, kind, route_pattern: route }),
+});
+
+/**
+ * The fixed message and marker of a test error report (Account, the version
+ * line tapped seven times): `opax_test: true`, so dashboards can leave these
+ * out.
+ */
+export const TEST_REPORT_MESSAGE = 'OPAX test error report';
+export class OpaxTestReport extends Error {
+  constructor() {
+    super(TEST_REPORT_MESSAGE);
+    this.name = 'OpaxTestReport';
+  }
+}
+/**
+ * Sends one handled test exception through the ordinary path (the release
+ * gate, `before_send`, the queue), then flushes. False when this build sends
+ * nothing: development, e2e, or no analytics configuration.
+ */
+export function sendTestErrorReport(): boolean {
+  try {
+    const posthog = analytics();
+    if (!posthog) return false;
+    posthog.captureException(new OpaxTestReport(), { opax_test: true });
+    void posthog.flush().catch(() => {});
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 /** The section of the screen the reader is on ("ask", "person", "today"). */

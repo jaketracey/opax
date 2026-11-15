@@ -9,17 +9,18 @@ import {
   Text as NativeText,
   PanResponder,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   useWindowDimensions,
   View,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { useRead } from '../../api/useRead';
 import {
   useAccessibilitySize,
   useIncreaseContrast,
   useReduceMotion,
+  animatedScroll,
 } from '../../design/accessibility';
 import { useKeyCommand } from '../../design/keyboard';
 import { Text, copy } from '../../design/primitives';
@@ -77,7 +78,7 @@ function ZoomPage({
           r: typeof rect & { animated?: boolean },
         ) => void;
       } | null
-    )?.scrollResponderZoomTo?.({ ...rect, animated: true });
+    )?.scrollResponderZoomTo?.({ ...rect, animated: animatedScroll() });
   return (
     <ScrollView
       ref={zoom}
@@ -99,6 +100,7 @@ function ZoomPage({
       }}
     >
       <Pressable
+        feedback="none"
         accessible
         accessibilityRole="image"
         accessibilityLabel={photo.caption}
@@ -249,6 +251,8 @@ export default function PhotoViewer() {
             ? {
                 headerLeft: () => (
                   <Pressable
+                    // On the black band: the paper wash would hide the text.
+                    feedback="none"
                     accessibilityRole="button"
                     onPress={close}
                     style={styles.androidDone}
@@ -323,6 +327,8 @@ export default function PhotoViewer() {
               </Text>
               {read.record ? null : (
                 <Pressable
+                  // On the black band: the paper wash would hide the text.
+                  feedback="none"
                   accessibilityRole="button"
                   onPress={read.retry}
                   style={styles.retry}
@@ -359,6 +365,8 @@ export default function PhotoViewer() {
               {current.caption}
             </Text>
             <Pressable
+              // On the black band: the paper wash would hide the text.
+              feedback="none"
               accessibilityRole="button"
               accessibilityLabel={`Photo: ${current.author}, ${current.licence}.`}
               accessibilityHint="Double-tap for the source and licence."

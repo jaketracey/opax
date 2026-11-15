@@ -1,7 +1,8 @@
 import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { Skeleton, Text } from '../../design/primitives';
 import { useListSearchBar } from '../../design/search-bar';
 import { StatePageProvider } from '../../design/states';

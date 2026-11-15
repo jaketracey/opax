@@ -68,6 +68,7 @@ export {
   ChoiceChips,
   Composer,
   Divider,
+  RowSeparator,
   Field,
   FilterChip,
   FollowButton,

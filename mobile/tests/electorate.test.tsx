@@ -17,6 +17,7 @@ import { Heading, Text } from '../src/design/text';
 import { Screen, SectionHeader } from '../src/design/layout';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { HeaderHeightContext } from 'expo-router/react-navigation';
+import { AUTHORISATION_LINE } from '../src/design/authorisation';
 import Members from '../src/features/your-mp/Members';
 import Election from '../src/features/your-mp/Election';
 import { chooseElectorateDate } from '../src/features/directories/ElectorateDateSheet';
@@ -31,7 +32,11 @@ import { personRoute } from '../src/navigation/routes';
 import { grantsRoute } from '../src/navigation/routes/public-money';
 import { LinkRow } from '../src/design/rows';
 import { RecordNameLink } from '../src/design/record';
-import { minimumTarget } from '../src/design/tokens';
+import {
+  buttonCapsule,
+  controlHeight,
+  minimumTarget,
+} from '../src/design/tokens';
 import {
   RepresentativeRows,
   sinceLine,
@@ -234,6 +239,14 @@ test('the pending electorate reserves the map, title and member layout with one 
   expect(
     StyleSheet.flatten(host('electorate-loading-map').props.style).height,
   ).toBe(200);
+  // Follow's bone is the capsule the button draws, inside the height its
+  // touch target takes: a 48 pt bone stood taller than the button it became.
+  expect(
+    StyleSheet.flatten(host('electorate-loading-follow').props.style).height,
+  ).toBe(buttonCapsule);
+  expect(
+    StyleSheet.flatten(host('electorate-loading-follow-slot').props.style),
+  ).toMatchObject({ height: controlHeight.default, justifyContent: 'center' });
   expect(
     host('electorate-loading').findAll(
       (node) =>
@@ -1035,6 +1048,67 @@ test('dates at their stated precision', () => {
   ).toBe('Legislative Council region, Victoria');
 });
 
+// The authorisation line is Victorian election material: Victorian pages
+// only. Richmond is the pinned Victorian district; the others are the same
+// file and directory row read as another jurisdiction.
+const asJurisdiction = (jurisdiction: string) => {
+  const s = seat('Richmond', 'vic');
+  const raw = {
+    ...(pinned(s.detail_url) as Record<string, unknown>),
+    jurisdiction,
+    state_code: jurisdiction,
+  };
+  mock.electorateFor.mockResolvedValue(
+    result(c.electorateFor(c.decodeElectorate(raw))),
+  );
+  mockParams.id = s.electorate_id;
+  mockParams.seat = s.electorate_id;
+  mock.directory.mockResolvedValue({
+    ...directory,
+    electorates: result({
+      ...index,
+      electorates: index.electorates.map((e) =>
+        e.electorate_id === s.electorate_id
+          ? { ...e, jurisdiction, state_code: jurisdiction }
+          : e,
+      ),
+    }),
+  } as never);
+};
+
+describe('the authorisation line is Victorian only', () => {
+  afterEach(() => {
+    mock.directory.mockResolvedValue(directory as never);
+  });
+  test.each([
+    ['nsw', false],
+    ['qld', false],
+    ['vic', true],
+  ])('a %s state electorate: authorisation line %s', async (j, shown) => {
+    asJurisdiction(j);
+    const r = await render(<Electorate />);
+    expect(has(r, 'electorate-authorisation')).toBe(shown);
+    expect(text(r).includes(AUTHORISATION_LINE)).toBe(shown);
+    await act(async () => r.unmount());
+  });
+  test('a federal electorate has none', async () => {
+    load('Higgins');
+    const r = await render(<Electorate />);
+    expect(has(r, 'electorate-authorisation')).toBe(false);
+    expect(text(r).includes(AUTHORISATION_LINE)).toBe(false);
+    await act(async () => r.unmount());
+  });
+  test.each([
+    ['nsw', false],
+    ['vic', true],
+  ])('Members for a %s state seat: authorisation line %s', async (j, shown) => {
+    asJurisdiction(j);
+    const r = await render(<Members />);
+    expect(text(r).includes(AUTHORISATION_LINE)).toBe(shown);
+    await act(async () => r.unmount());
+  });
+});
+
 test('the Members page uses the system page-heading role', async () => {
   load('New South Wales');
   mockParams.seat = seat('New South Wales').electorate_id;
@@ -1100,4 +1174,100 @@ test('electorate content uses the shared loader while its headers and source ban
     ).toBeUndefined();
   }
   dimensions.mockRestore();
+});
+
+// Badgerys Creek (NSW Legislative Assembly, 2025 boundary): no roster, no
+// term and no member, and a source list holding the boundary file and the
+// statewide Legislative Council's, cited only by the seat's relation to that
+// chamber. The member block named that Council source under "No member is
+// recorded for this seat yet".
+describe('a seat with no member recorded', () => {
+  const council = 'New South Wales statewide Legislative Council constituency';
+  function badgerysCreek() {
+    const raw = structuredClone(pinned(seat('Grayndler').detail_url)) as {
+      sources: Record<string, { label: string; source_id: string }>;
+      rosters: unknown[];
+      terms: unknown[];
+      representatives: unknown[];
+      people: Record<string, unknown>;
+      representation_status: string;
+      representation_as_of: string | null;
+      relations: { sources: string[] }[];
+    };
+    const [first] = Object.values(raw.sources);
+    raw.sources.source_council = {
+      ...first!,
+      source_id: 'source_council',
+      label: council,
+    };
+    raw.relations = raw.relations.map((relation) => ({
+      ...relation,
+      sources: ['source_council'],
+    }));
+    raw.rosters = [];
+    raw.terms = [];
+    raw.representatives = [];
+    raw.people = {};
+    raw.representation_status = 'unknown';
+    raw.representation_as_of = null;
+    return c.electorateFor(c.decodeElectorate(raw));
+  }
+
+  test('the member block cites roster, term and member sources only', () => {
+    const empty = badgerysCreek();
+    expect(empty.representatives.sources).toEqual([]);
+    // The seat's own list still holds every file, the Council's included.
+    expect(empty.identity.sources.map((s) => s.label)).toContain(council);
+    // A seat with members cites its service records, roster and identities,
+    // and none of its boundary, election or Census files.
+    const labels = (name: string) =>
+      c
+        .electorateFor(c.decodeElectorate(pinned(seat(name).detail_url)))
+        .representatives.sources.map((s) => s.label)
+        .sort();
+    expect(labels('Grayndler')).toEqual([
+      'OPAX existing parliamentary person identifiers',
+      'OPAX federal roster reconciled against APH, 2026-09-04',
+      'OpenAustralia parliamentary service records',
+    ]);
+  });
+
+  test('an abolished seat keeps its past members’ identity source', () => {
+    // Higgins has no present member and no roster: only its past members'
+    // identities cite the identifiers file.
+    const detail = c.decodeElectorate(pinned(seat('Higgins').detail_url));
+    expect(detail.representatives).toEqual([]);
+    expect(
+      c.electorateFor(detail).representatives.sources.map((s) => s.label),
+    ).toContain('OPAX existing parliamentary person identifiers');
+  });
+
+  test('the page says so and draws no source line under it', async () => {
+    const s = seat('Grayndler');
+    mock.electorateFor.mockResolvedValue(result(badgerysCreek()));
+    mockParams.id = s.electorate_id;
+    const r = await render(<Electorate />);
+    const members = r.root.find(
+      (n) => n.props.testID === 'electorate-members' && n.type === View,
+    );
+    expect(
+      members.findAll((n) => n.props.testID === 'electorate-no-member').length,
+    ).toBeGreaterThan(0);
+    expect(
+      members.findAll(
+        (n) => n.props.testID === 'electorate-representatives-source',
+      ),
+    ).toHaveLength(0);
+    const words = members
+      .findAll((n) => n.type === 'Text')
+      .map((n) => [n.props.children].flat(9).join(''))
+      .join(' ');
+    expect(words).toContain('No member is recorded for this seat yet.');
+    expect(words).not.toContain('Legislative Council');
+    // The caveat the hidden source line carried is said in place.
+    expect(words).toContain(
+      'A date with no recorded member does not establish a vacancy.',
+    );
+    await act(async () => r.unmount());
+  });
 });

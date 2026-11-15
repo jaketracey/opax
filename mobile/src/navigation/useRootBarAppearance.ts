@@ -13,7 +13,7 @@ import {
 import { Platform, useWindowDimensions, type ColorValue } from 'react-native';
 import { useSolidBar } from '../design/accessibility';
 import { RootBar, useVerticalBarEdge } from '../../modules/opax-root-bar';
-import { colors, isAccessibilityCategory } from '../design/tokens';
+import { colors } from '../design/tokens';
 import {
   barBacking,
   glassBar,
@@ -24,8 +24,14 @@ import {
 import { isTabStack } from './floating-bar';
 
 const roots = ['index', 'your-mp', 'bills', 'search', 'ask'];
-/** Pages whose scrolling view turns the top edge hard under scrolled text. */
-const hardEdgeRoots = ['index', 'search', 'ask', 'leads'];
+/**
+ * Pages whose scrolling view turns the top edge hard under scrolled text.
+ * Today is not one: its bar has no panel at all, at rest or scrolled. The
+ * page fades out under UIKit's soft edge and the large title collapses to
+ * the inline one (the frosted paper panel with its hairline, b76).
+ */
+const hardEdgeRoots = ['search', 'ask', 'leads'];
+const clearRoot = 'index';
 
 const searches = new WeakMap<
   object,
@@ -166,16 +172,10 @@ export function useRootBarAppearance(
   const verticalBar = barEdge !== 'unspecified';
   const solidSetting = useSolidBar();
   const name = root?.name ?? '';
-  // Today's tall AX title band on a phone needs an opaque ground even when
-  // neither legibility setting is on. iPad and vertical bars keep their chrome.
-  const solid =
-    solidSetting ||
-    (Platform.OS === 'ios' &&
-      !Platform.isPad &&
-      !verticalBar &&
-      largeTitleEnabled &&
-      name === 'index' &&
-      isAccessibilityCategory(fontScale));
+  // Reduce Transparency and Increase Contrast alone ask for a solid ground.
+  // Today's tall AX title band had one too, and it drew over the large
+  // title at rest (26.3, AX3): the soft edge serves every text size.
+  const solid = solidSetting;
   // RouteOptions owns the bar of a large-title list (Leads) but knows no
   // ground; the page's Screen does, and shares it. Beside a vertical bar the
   // bar can be solid and backed, and in paper over the darker grouped page
@@ -193,12 +193,20 @@ export function useRootBarAppearance(
   const identifier = rootKey ? `opax-root-bar-${rootKey}` : undefined;
   useRootBarUnderBar(underBar, !!rootKey && owner === 'screen');
   useLayoutEffect(() => {
-    if (!navigation || !rootKey || owner !== 'screen' || !ground) return;
+    // A root's Screen, and beside a vertical bar any page's: a pushed page
+    // with a search field takes the solid bar there too (RouteOptions).
+    if (
+      !navigation ||
+      (!rootKey && !verticalBar) ||
+      owner !== 'screen' ||
+      !ground
+    )
+      return;
     const state = searchState(navigation);
     if (state.value.ground === ground) return;
     state.value = { ...state.value, ground };
     state.listeners.forEach((listener) => listener());
-  }, [navigation, rootKey, owner, ground]);
+  }, [navigation, rootKey, verticalBar, owner, ground]);
   const contentUnderBar = owner === 'screen' ? underBar : rootOptions.underBar;
   // Beside a vertical bar a search field is stacked below the title band,
   // and UIKit's scroll edge (soft or hard) covers the band alone: the field
@@ -211,6 +219,7 @@ export function useRootBarAppearance(
   const hardEdge =
     !!contentUnderBar &&
     Platform.OS === 'ios' &&
+    name !== clearRoot &&
     (verticalBar || (!Platform.isPad && hardEdgeRoots.includes(name)));
 
   useLayoutEffect(() => {
@@ -326,6 +335,30 @@ export function useRootBarAppearance(
     };
   }, [identifier, largeTitleEnabled, navigation, verticalBar, solid]);
   return !!root;
+}
+
+/**
+ * The ground this route's Screen shares (see `colour` above), for the bar's
+ * owner when that is not the Screen. Undefined until a Screen has said.
+ */
+export function useScreenGround(): ColorValue | undefined {
+  const navigation = useContext(NavigationContext);
+  const subscribe = useCallback(
+    (listener: () => void) => {
+      if (!navigation) return () => {};
+      const state = searchState(navigation);
+      state.listeners.add(listener);
+      return () => {
+        state.listeners.delete(listener);
+      };
+    },
+    [navigation],
+  );
+  return useSyncExternalStore(
+    subscribe,
+    () => (navigation ? searchState(navigation).value.ground : undefined),
+    () => undefined,
+  );
 }
 
 /**

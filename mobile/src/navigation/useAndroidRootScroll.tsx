@@ -1,3 +1,4 @@
+import { animatedScroll } from '../design/accessibility';
 import {
   NavigationContext,
   NavigationRouteContext,
@@ -106,8 +107,9 @@ export function useAndroidRootScroll(
         requestAnimationFrame(() => {
           if (event.defaultPrevented) return;
           const node = scroll.current;
-          if (node?.scrollTo) scrollToTop(node, 0, true);
-          else node?.scrollToOffset?.({ offset: 0, animated: true });
+          if (node?.scrollTo) scrollToTop(node, 0, animatedScroll());
+          else
+            node?.scrollToOffset?.({ offset: 0, animated: animatedScroll() });
         });
       },
     );

@@ -15,11 +15,11 @@ import {
 } from 'react';
 import {
   PanResponder,
-  Pressable,
   StyleSheet,
   View,
   type AccessibilityActionEvent,
 } from 'react-native';
+import { PlainPressable as Pressable } from './pressable';
 import { useAccessibilitySize } from './accessibility';
 import {
   Hoverable,

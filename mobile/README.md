@@ -5,9 +5,9 @@ the iOS minimum. Android targets API 36, with API 24 as the native minimum.
 Both platforms use light mode. Android bringup and its remaining parity work are
 described in [Android notes](../docs/ANDROID-BRINGUP.md).
 App identity: OPAX, `au.com.opax.app`, version `1.0.0`.
-No push or crash reporter. iOS production builds send anonymous product
-analytics ([analytics](../docs/ANALYTICS.md#ios-and-android-app)); Android
-sends none. Android has no microphone permission.
+No push. iOS and Android production builds send anonymous product analytics
+and crash reports ([analytics](../docs/ANALYTICS.md#ios-and-android-app)).
+Android has no microphone permission.
 Production release
 tooling uses locally supplied Apple credentials; none are part of the app config.
 
@@ -92,7 +92,7 @@ invalid or older candidates. The selected version is saved in `java.log`.
 | `OPAX_BUILD_GATE`         | Executable shell script wrapping builds, invoked with lane name and command arguments | Run the command directly, with a notice             |
 | `OPAX_SIM_GATE`           | Shell script booting an allowed simulator, invoked with lane name and UDID            | Boot directly, with a notice                        |
 | `OPAX_PASTE_LOCK`         | Shared directory lock for Maestro input                                               | Skip locking, with a notice                         |
-| `OPAX_SIM_ADMIT_IGNORE`   | UDIDs another slot on a two-slot host owns; admission does not refuse them             | Refuse every other booted simulator                 |
+| `OPAX_SIM_ADMIT_IGNORE`   | UDIDs another slot on a two-slot host owns; admission does not refuse them            | Refuse every other booted simulator                 |
 | `OPAX_CAPACITY_CMD`       | Trusted local shell command checking host capacity                                    | Skip capacity checks, with a notice                 |
 | `OPAX_ALLOWED_UDIDS`      | Space-separated simulator allow-list                                                  | Accept the requested simulator, with a warning      |
 | `OPAX_PASTE_WAIT_SECONDS` | Digit-only deadline for capacity and pasteboard lock waits                            | 7,200 seconds; invalid values also use this default |
@@ -458,13 +458,16 @@ Journey 28 covers the first launch, paging by Next and by swipe, Finish into
 the seat chooser, no repeat after a relaunch, and replay and Skip from
 Account. `.maestro/28b-cold-launch.yaml` (run by path) records a cold launch
 with `startRecording`; cut frames from the `.mp4` in the run's Maestro output
-with `ffmpeg -i <mp4> -vf fps=20 <dir>/%03d.png`. `OPAX_APPEARANCE=dark`
-runs a journey with the simulator in dark appearance (default light):
+with `ffmpeg -i <mp4> -vf fps=20 <dir>/%03d.png`. `OPAX_E2E_APPEARANCE=dark`
+runs a journey with the simulator in dark appearance (default light). It is
+the harness's own switch: `OPAX_APPEARANCE` belongs to `app.config.ts` (a
+build's interface style, `light` or `automatic`) and is left alone, though
+`OPAX_APPEARANCE=dark`, the earlier spelling, still gives a dark simulator:
 
 ```sh
 scripts/e2e.sh <udid> 28 .maestro/28b-cold-launch.yaml
 OPAX_CONTENT_SIZE=accessibility-extra-extra-extra-large scripts/e2e.sh <udid> 28
-OPAX_APPEARANCE=dark scripts/e2e.sh <udid> .maestro/28b-cold-launch.yaml
+OPAX_E2E_APPEARANCE=dark scripts/e2e.sh <udid> .maestro/28b-cold-launch.yaml
 ```
 
 Journey 56 (iPad only) covers the tour in landscape and portrait, every

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { catalogs } from '../../api/runtime';
 import { useAccessibilitySize } from '../../design/accessibility';
@@ -18,14 +18,46 @@ export interface SittingRead {
   record: Awaited<ReturnType<typeof catalogs.sittingDays>>;
 }
 
+/** Today's sitting calendar: the read, and what the first frame needs. */
+export interface Sitting {
+  /** The saved copy first, then the read's answer; null until one answers. */
+  read: SittingRead | null;
+  /**
+   * Nothing is saved and the read is still out: the line's place is held,
+   * so its arrival pushes nothing down.
+   */
+  reserve: boolean;
+  /** The device has been asked for its saved copy (or the read answered). */
+  settled: boolean;
+}
+
 /**
  * Today's one read of the sitting calendar, shared by the line under the
  * date and the page's closing line (sweep 3, item 7), so a launch asks once
- * and a pull revalidates both together. Null until the read answers; a read
+ * and a pull revalidates both together. Null until a read answers; a read
  * that throws answers "no calendar", so the closing line still draws.
+ *
+ * The copy the device saved answers first, with no request, so the line is
+ * under the date in the first frame and is not inserted when the network
+ * read answers (which pushed the whole page down a line). With nothing
+ * saved (a first launch) the line's place is held until the read answers.
  */
-export function useSittingRead(attempt: number): SittingRead | null {
-  return useTodayRead(
+export function useSitting(attempt: number): Sitting {
+  const [saved, setSaved] = useState<SittingRead | 'none' | null>(null);
+  useEffect(() => {
+    let active = true;
+    // A reader without saved copies is "nothing saved", like a failed read.
+    Promise.resolve()
+      .then(() => catalogs.sittingDaysSaved())
+      .catch(() => null)
+      .then((record) => {
+        if (active) setSaved(record ? { record } : 'none');
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+  const read = useTodayRead(
     'sitting',
     async (refresh): Promise<SittingRead> => {
       try {
@@ -36,25 +68,60 @@ export function useSittingRead(attempt: number): SittingRead | null {
     },
     attempt,
   );
+  return {
+    read: read ?? (saved && saved !== 'none' ? saved : null),
+    reserve: read === null && saved === 'none',
+    settled: read !== null || saved !== null,
+  };
+}
+
+/** The calendar's read alone (the closing line, and tests of the line). */
+export function useSittingRead(attempt: number): SittingRead | null {
+  return useSitting(attempt).read;
 }
 
 /**
  * Today's sitting line (critique 13): one `secondary` line under the date,
  * by rule from the published sitting calendar, opening its source sheet.
- * Nothing is drawn while the calendar loads or when it cannot say.
  * `now` is Today's clock, so the line rolls over with the date line.
+ *
+ * Nothing is drawn while the saved calendar is read or when it cannot say.
+ * While `reserve` is set the line's height is held empty, and it stays held
+ * for this visit if the answer has no line: the page under the date never
+ * moves, up or down, once it is on screen.
  */
 export function SittingLine({
   now,
   sitting,
+  reserve = false,
 }: {
   now: Date;
   /** `useSittingRead`'s answer, null while it loads. */
   sitting: SittingRead | null;
+  /** `useSitting`'s `reserve`: hold the line's place. */
+  reserve?: boolean;
 }) {
+  const fixed = useAccessibilitySize();
+  const [held, setHeld] = useState(false);
+  // Held while rendering (React's adjust-state-on-change pattern).
+  if (reserve && !held) setHeld(true);
   const read = sitting?.record ?? null;
   const line = read ? sittingLine(read.data, now) : null;
-  if (!read || !line) return null;
+  if (!read || !line)
+    return reserve || held ? (
+      <Text
+        wordSafe={fixed}
+        variant="secondary"
+        maxFontSizeMultiplier={sittingCap}
+        accessible={false}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        style={styles.reserved}
+        testID="today-sitting-reserved"
+      >
+        {RESERVED_WORDS}
+      </Text>
+    ) : null;
   return (
     <SittingText
       text={line.text}
@@ -62,6 +129,13 @@ export function SittingLine({
     />
   );
 }
+
+/**
+ * Unseen words the length of the usual line ("... next sits <day>"), so the
+ * held place wraps as the line will at accessibility sizes: one line at the
+ * standard sizes, two where the line itself takes two.
+ */
+const RESERVED_WORDS = 'The House next sits Monday 16 November';
 
 /** The sitting line's Dynamic Type cap, shared with its marked term. */
 const sittingCap = 1.353;
@@ -135,6 +209,8 @@ const styles = StyleSheet.create({
     borderRadius: radii.thumb,
     borderCurve: 'continuous',
   },
+  // The held place: laid out, never seen.
+  reserved: { opacity: 0 },
   // Hugging its text, so the pressed highlight is the line's own shape.
   hug: { alignSelf: 'flex-start', maxWidth: '100%' },
   // At accessibility sizes the column's full width, so word-safe text has a

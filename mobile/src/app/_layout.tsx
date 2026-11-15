@@ -26,6 +26,7 @@ import { AndroidMenuHost } from '../design/menu';
 import { colors } from '../design/tokens';
 import { KeyboardFrames } from '../features/ask/keyboard';
 import { installGloss } from '../features/newcomer/gloss-source';
+import { primeScreenReader } from '../features/money/screen-reader';
 import { RootLaunchCover } from '../launch/RootLaunchCover';
 import {
   decideLaunchSequence,
@@ -53,6 +54,8 @@ import {
 export const unstable_settings = rootSettings;
 // Plain lines under headings take the reader's setting and the guide's words.
 installGloss();
+// VoiceOver's state is in before the money map's first paint picks its view.
+primeScreenReader();
 // Last resort: a page that fails to draw shows Try again instead of closing.
 export { RouteErrorBoundary as ErrorBoundary } from '../navigation/RouteErrorBoundary';
 
@@ -85,6 +88,12 @@ export default function Layout() {
     // plays (launch/played.ts). The cover draws either way; motion waits.
     void decideLaunchSequence();
     startAnalytics();
+    // Recent searches are read from the device now, so Search's first frame
+    // already has the Recent group in its place.
+    const { recentSearches } =
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      require('../features/search/recent') as typeof import('../features/search/recent');
+    void recentSearches.load();
   }, []);
   // The launch decision, once (shell.md 3, first-launch 4.1 L2 and 4.5): the
   // splash holds while it is pending. A plain first launch presents the full

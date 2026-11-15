@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState } from 'react-native';
 import { isAbortError } from '../../api/abort';
+import {
+  reportPageFailure,
+  reportRecordBlocks,
+} from '../../analytics/sections';
 
 const dailyRefresh = 24 * 60 * 60 * 1000;
 
@@ -52,6 +56,7 @@ export function useCatalogRecord<R extends { stale: boolean }>(
       attemptedAt.current = Date.now();
       const publish = (result: R) => {
         if (id !== latest.current || controller.signal.aborted) return;
+        reportRecordBlocks(result);
         setOutcome({ load, record: result, error: null });
       };
       // The async boundary also catches a loader that throws before returning
@@ -60,6 +65,7 @@ export function useCatalogRecord<R extends { stale: boolean }>(
       void request()
         .then((result) => {
           if (id !== latest.current || controller.signal.aborted) return;
+          reportRecordBlocks(result);
           setOutcome({ load, record: result, error: null });
         })
         .catch((e: unknown) => {
@@ -67,12 +73,14 @@ export function useCatalogRecord<R extends { stale: boolean }>(
             id === latest.current &&
             !controller.signal.aborted &&
             !isAbortError(e)
-          )
+          ) {
+            reportPageFailure(e);
             setOutcome((previous) => ({
               load,
               record: previous?.load === load ? previous.record : null,
               error: e,
             }));
+          }
         })
         .finally(() => {
           if (id === latest.current) {

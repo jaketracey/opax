@@ -13,6 +13,7 @@ import { MoneyMapControls } from '../src/features/money/map/MoneyMapControls';
 import { MoneyMapPanel } from '../src/features/money/map/MoneyMapPanel';
 import { MoneyMap } from '../src/features/money/map/MoneyMap';
 import { visibleLabels } from '../src/features/money/map/labels';
+import { reportBand } from './money-band';
 import { withNavigationOptions } from './navigation-options';
 import { pinned } from './pinned';
 
@@ -310,13 +311,7 @@ function settle(
       );
     const panel = root.findByType(MoneyMapPanel);
     const shown = Math.min(natural.peek, panel.props.maxHeight ?? Infinity);
-    act(() =>
-      panel.parent!.props.onLayout({
-        nativeEvent: {
-          layout: { y: device.stage - device.bottom - shown, height: shown },
-        },
-      }),
-    );
+    act(() => reportBand(root, panel, device.stage, device.bottom, shown));
   }
 }
 
@@ -334,7 +329,13 @@ function frames(
     : device.stage - device.bottom;
   const controls = controlsOf(root)!;
   const host = flat(controls.parent!);
-  const controlsTop = chromeTop + (host.top as number);
+  // The controls hang from the card's foot: their host starts where the
+  // card, clamped to its cap, ends.
+  const card = Math.min(
+    natural.card,
+    (flat(topOf(root)).maxHeight as number | undefined) ?? Infinity,
+  );
+  const controlsTop = chromeTop + card + (host.top as number);
   const controlsBottom =
     controlsTop +
     (controls.props.horizontal ? rowHeight(device.os) : stackHeight(device.os));
@@ -488,7 +489,10 @@ describe('sweep 2 item 5: the money map at every size', () => {
     const cap = flat(topOf(root)).maxHeight as number;
     const instance = scroll.instance as { flashScrollIndicators?: () => void };
     instance.flashScrollIndicators = flash;
-    act(() => scroll.props.onContentSizeChange(300, cap - 20));
+    // The scroll holds the sentence only: its room is the cap less the
+    // jurisdiction and the picker pinned around it.
+    expect(cap).toBeGreaterThan(100);
+    act(() => scroll.props.onContentSizeChange(300, 20));
     expect(flash).not.toHaveBeenCalled();
     act(() => scroll.props.onContentSizeChange(300, 1500));
     act(() => scroll.props.onContentSizeChange(300, 1600));

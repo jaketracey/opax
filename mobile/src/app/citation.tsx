@@ -26,7 +26,7 @@ import { pageMenu } from '../navigation/chrome';
 import { trackSourceOpen } from '../navigation/external';
 import { askReportRoute } from '../navigation/routes/ask';
 import { citeRoute } from '../navigation/routes/records';
-import { shareRecord, trackShare } from '../navigation/share';
+import { shareSource, trackShare } from '../navigation/share';
 
 /**
  * `/citation` (DIRECTION 4.28, journeys/ask.md 4.6): one cited source at
@@ -108,7 +108,7 @@ export default function Citation() {
       {
         title: 'Share',
         symbol: 'square.and.arrow.up',
-        onPress: () => void shareRecord({ path: source.href, title }),
+        onPress: () => void shareSource(source, title),
       },
       {
         title: 'Report a problem with this source',

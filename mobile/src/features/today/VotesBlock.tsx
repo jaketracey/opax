@@ -11,9 +11,11 @@ import { stageTerm } from '../learn/term-map';
 
 /**
  * How parliament voted (today.md 5.8): three second- and third-reading
- * votes, newest first, each opening that division on its bill page. Drawn
- * only once `/divisions/recent.json` exists: until then (and when the rule
- * leaves nothing) the block is absent, never empty.
+ * votes, newest first, each opening that division on its bill page. While
+ * `/divisions/recent.json` is read the block holds its place with its
+ * heading and three rows' skeleton, so it is never inserted above Just
+ * declared once the file answers. When the file is not there (and when the
+ * rule leaves nothing) the block is absent, never empty.
  */
 export function VotesBlock({
   attempt,
@@ -33,9 +35,9 @@ export function VotesBlock({
         ? { ...read, data: recentReadingVotes(read.data, 3) }
         : { ...read, data: null }
       : null;
-  // Absent until the file answers: nothing is drawn while it loads either,
-  // so a block that may never ship takes no space.
-  if (!read || read.status === 'missing') return null;
+  // The file is published, so the block is expected: it loads in place.
+  // An authoritative "not there" collapses it.
+  if (read?.status === 'missing') return null;
   // Optional: offline with nothing saved, it collapses (today.md 5.14).
   const state = blockState(block, {
     emptyCollapses: true,
@@ -56,7 +58,7 @@ export function VotesBlock({
       onRetry={onRetry}
       report={reportOf(read)}
       line={
-        read.status === 'ready'
+        read?.status === 'ready'
           ? { ...votesSources(read), testID: 'today-votes-sources' }
           : undefined
       }

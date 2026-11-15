@@ -19,8 +19,8 @@ from urllib.parse import unquote, urlsplit
 
 sys.dont_write_bytecode = True
 from privacy_scan import scan as scan_binary_privacy
-from release_support import (JS_CHUNK_ID, JS_SOURCE_MAP, PRIVATE_NAMES, ReleaseError, load_credentials, matches,
-                             private_values, redact, scan_tracked)
+from release_support import (ANALYTICS_CONFIG, JS_CHUNK_ID, JS_SOURCE_MAP, PRIVATE_NAMES, ReleaseError,
+                             load_credentials, matches, private_values, redact, scan_tracked)
 
 GUARDS = (
     "Route is outside the public catalog allow-list",
@@ -52,9 +52,7 @@ POSTHOG_SDK_HOSTS = {"us.i.posthog.com", "eu.i.posthog.com", "us-assets.i.postho
 SDK_PATTERN_EXEMPT = {b"sentryuptimebot", b"amplitude"}
 POSTHOG_PACKAGES = {"node_modules/posthog-react-native", "node_modules/@posthog/core", "node_modules/@posthog/types",
                     "node_modules/@posthog/react-native-plugin"}
-ANALYTICS_CONFIG = {"host": "https://opax.com.au/ingest",
-                    "projectToken": "phc_AsHnQM2UrGBubA5HU9sagkGbg8vqQLNXu3WjEhPRDejr",
-                    "environment": "production"}
+# ANALYTICS_CONFIG (release_support.py) is the one embedded analytics config.
 # What analytics adds to the privacy manifest: not linked, not tracking, Analytics.
 ANALYTICS_DATA_TYPES = ("ProductInteraction", "DeviceID")
 # Anonymous crash and error reports: not linked, not tracking, App Functionality.
@@ -123,6 +121,19 @@ def verify_location_info(info):
     require(all(info.get(key) == value for key, value in location_purposes().items()),
             "approved iPhone and iPad on-device location purpose strings")
 
+
+
+def layout_probe_enabled(value=None):
+    """The layout probe is for one measuring build: OPAX_LAYOUT_PROBE=1 at the
+    release invocation, and the embedded config must say exactly the same."""
+    value = os.environ.get("OPAX_LAYOUT_PROBE", "0") if value is None else value
+    require(value in ("0", "1"), "OPAX_LAYOUT_PROBE must be 0 or 1")
+    return value == "1"
+
+
+def layout_probe_matches(config, enabled):
+    extra = config["extra"]
+    return extra.get("layoutProbe") is True if enabled else "layoutProbe" not in extra
 
 
 def production_voice_enabled(value=None):
@@ -806,10 +817,14 @@ def verify_app(app, args):
         check(True, "no OpaxVoiceCore, OpaxVoice or microphone permission code in any production Mach-O")
     configs = list(app.rglob("app.config"))
     check(bool(configs), "embedded Expo config exists")
+    probe_enabled = layout_probe_enabled()
     for path in configs:
         config = json.loads(path.read_bytes())
         check((config["extra"].get("productionVoiceEnabled") is True) == voice_enabled,
               "embedded production voice switch matches the release invocation")
+        check(layout_probe_matches(config, probe_enabled),
+              "layout probe " + ("ON (OPAX_LAYOUT_PROBE=1): a measuring build, not for the store"
+                                 if probe_enabled else "absent from the embedded config"))
         verify_location_info(config["ios"]["infoPlist"])
         verify_voice_info(config["ios"]["infoPlist"], voice_enabled)
         if voice_enabled:

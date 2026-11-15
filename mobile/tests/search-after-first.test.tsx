@@ -4,14 +4,18 @@ import { withNavigationOptions } from './navigation-options';
 // titles clamp to two lines, and No results drops "0 results" from the
 // source line with its action a block under the body.
 import { act } from 'react';
-import { ScrollView } from 'react-native';
+import { Dimensions, Platform, ScrollView } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import { catalogs, recordSearch } from '../src/api/runtime';
 import { ContentUnavailable } from '../src/design/states';
 import { LinkRow } from '../src/design/rows';
 import { SearchScreen } from '../src/features/search/SearchScreen';
 import { ResultsHeader } from '../src/features/search/ResultsHeader';
-import { TRY_TITLE_LINES } from '../src/features/search/SearchIdle';
+import {
+  TRY_TITLE_LINES,
+  TRY_TITLE_LINES_ANDROID_LARGE,
+  tryTitleLines,
+} from '../src/features/search/SearchIdle';
 import { recentSearches } from '../src/features/search/recent';
 import { resetSearchSession } from '../src/features/search/requests';
 import { decodeRecords } from '../src/features/search/decoders';
@@ -28,6 +32,7 @@ jest.mock('../src/api/runtime', () => ({
   },
 }));
 const mockBar: { options?: Record<string, any> } = {};
+let mockParams: Record<string, string> = {};
 jest.mock('expo-router', () => {
   const React = jest.requireActual('react');
   return {
@@ -39,7 +44,7 @@ jest.mock('expo-router', () => {
     }),
     router: { push: jest.fn(), navigate: jest.fn() },
     useSegments: () => [],
-    useLocalSearchParams: () => ({}),
+    useLocalSearchParams: () => mockParams,
     useFocusEffect: (effect: () => void) => React.useEffect(effect, [effect]),
     Stack: {
       Screen: ({ options }: { options?: Record<string, any> }) => {
@@ -73,6 +78,7 @@ function page(q: string, rows: typeof speeches, kind = 'speech') {
 }
 
 beforeEach(() => {
+  mockParams = {};
   jest.clearAllMocks();
   resetSearchSession();
   recentSearches.clear();
@@ -129,6 +135,23 @@ test('only a query that found something enters Recent', async () => {
   await search('zzqqxxvv');
   expect(recent()).toEqual(['housing']);
   await act(async () => renderer.unmount());
+});
+
+test("words typed into Today's wide field enter Recent; a link's query never does", async () => {
+  // Lane ad-wide-search: the field opens Search with `typed`, so the query
+  // is submitted as typed and kept on this device like any other.
+  mockParams = { q: 'water', scope: 'all' };
+  const link = await mount();
+  await frame();
+  expect(bar().placeholder).toBeDefined();
+  expect(recent()).toEqual([]);
+  await act(async () => link.unmount());
+  resetSearchSession();
+  mockParams = { q: 'water', scope: 'all', typed: '1' };
+  const typed = await mount();
+  await frame();
+  expect(recent()).toEqual(['water']);
+  await act(async () => typed.unmount());
 });
 
 test('the same query submitted again while its results stay up moves to the top of Recent', async () => {
@@ -190,4 +213,43 @@ test('a Try title clamps to two lines', async () => {
   expect(tries.length).toBeGreaterThan(0);
   for (const row of tries) expect(row.props.titleLines).toBe(2);
   await act(async () => renderer.unmount());
+});
+
+describe('Try titles at large text', () => {
+  const scaled = async (os: 'android' | 'ios', fontScale: number) => {
+    Object.defineProperty(Platform, 'OS', { value: os, configurable: true });
+    act(() =>
+      Dimensions.set({
+        window: { ...Dimensions.get('window'), fontScale },
+      }),
+    );
+    const renderer = await mount();
+    const lines = renderer.root
+      .findAllByType(LinkRow)
+      .filter((row) => String(row.props.testID).startsWith('search-try-'))
+      .map((row) => row.props.titleLines);
+    await act(async () => renderer.unmount());
+    return lines;
+  };
+  afterEach(() => {
+    Object.defineProperty(Platform, 'OS', { value: 'ios', configurable: true });
+    act(() =>
+      Dimensions.set({ window: { ...Dimensions.get('window'), fontScale: 1 } }),
+    );
+  });
+  test('Android at 2.0 wraps the title further, so it does not end in an ellipsis against the chevron', async () => {
+    const lines = await scaled('android', 2);
+    expect(lines.length).toBeGreaterThan(0);
+    for (const n of lines) expect(n).toBe(TRY_TITLE_LINES_ANDROID_LARGE);
+    expect(TRY_TITLE_LINES_ANDROID_LARGE).toBeGreaterThan(TRY_TITLE_LINES);
+  });
+  test('Android at 1.0 and iOS at 2.0 and 3.0 keep the two-line clamp', async () => {
+    for (const lines of [
+      await scaled('android', 1),
+      await scaled('ios', 2),
+      await scaled('ios', 3),
+    ])
+      for (const n of lines) expect(n).toBe(TRY_TITLE_LINES);
+    expect(tryTitleLines('android', 1.3)).toBe(2);
+  });
 });

@@ -1,6 +1,7 @@
 import type { Href } from 'expo-router';
 import type { ReactNode } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { formatMoney } from '../../design/format';
 import {
   Icon,

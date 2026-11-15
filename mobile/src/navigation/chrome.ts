@@ -45,6 +45,7 @@ import { askReturnSnapshot } from '../features/ask/return';
 import { voiceLinked } from '../voice/linked';
 import { canShare } from './share';
 import {
+  RootBar,
   useVerticalBarEdge,
   type VerticalBarEdge,
 } from '../../modules/opax-root-bar';
@@ -231,7 +232,14 @@ export function useClearRailBar(): boolean {
   const route = useContext(NavigationRouteContext);
   const verticalBar = useVerticalBarEdge() !== 'unspecified';
   if (!verticalBar || !route) return false;
-  return use(DescriptorsContext)[route.key]?.options.headerTransparent === true;
+  const options = use(DescriptorsContext)[route.key]?.options;
+  // A pushed page only. A presented one owns its bar: the photo viewer is a
+  // full-screen modal in the tab stack with a clear bar of its own and a
+  // dark scrim under its white title, which must stay.
+  return (
+    options?.headerTransparent === true &&
+    (!options.presentation || options.presentation === 'card')
+  );
 }
 
 /**
@@ -296,7 +304,11 @@ export function useStackChrome({
     // Tab roots and explicit large-title lists opt into translucency separately.
     // Beside a vertical bar a tab stack's pushed pages run under the bar.
     headerTransparent: rail,
-    ...opaqueBar(),
+    // Under the clear rail bar the stack sets no bar colour or hairline
+    // either: a page with no Screen and no bar style of its own (Voting
+    // record, Declared interests, Largest sources, the record lists) kept
+    // the hairline, and a paper strip once the band folded.
+    ...(rail ? clearBarStyle(opaqueBar()) : opaqueBar()),
     // A legibility setting keeps the solid bar on the rail too. Pages with
     // their own ground (Screen) replace this backing with one in that colour.
     ...(tabStack && railBar === 'solid' ? barBacking() : {}),
@@ -814,9 +826,81 @@ export function pendingHeaderItems(
   ].includes(name ?? '');
   if (!alwaysTwo && !moreOnly && !shareAndMore) return undefined;
   const count = alwaysTwo || (shareAndMore && canShare) ? 2 : 1;
+  // Beside a vertical bar the items sit on the rail, where a spacing item
+  // takes no room and is no bar content: the page was first laid out with
+  // no title band, 58 pt higher, and dropped when the real buttons arrived
+  // (every pushed page on the closed Duo, b74). The stand-ins there are the
+  // buttons themselves, disabled until the page supplies its own, so the
+  // bar holds the same items from the first frame.
+  if (railItems()) {
+    const more: TestableHeaderItem = {
+      type: 'button',
+      label: 'More',
+      identifier: 'header-more',
+      accessibilityLabel: 'More',
+      icon: { type: 'sfSymbol', name: 'ellipsis.circle' },
+      disabled: true,
+      onPress: () => undefined,
+    };
+    if (count === 1) return [more];
+    const first: TestableHeaderItem = alwaysTwo
+      ? {
+          type: 'button',
+          label: 'Filters',
+          identifier: 'header-filters',
+          accessibilityLabel: 'Filters',
+          icon: {
+            type: 'sfSymbol',
+            name: 'line.3.horizontal.decrease.circle',
+          },
+          disabled: true,
+          onPress: () => undefined,
+        }
+      : {
+          type: 'button',
+          label: 'Share',
+          accessibilityLabel: 'Share',
+          icon: { type: 'sfSymbol', name: 'square.and.arrow.up' },
+          disabled: true,
+          onPress: () => undefined,
+        };
+    return [first, more];
+  }
   // Match the 44 pt items and 16 pt group gap used by barTitleWidth.
   return [{ type: 'spacing', spacing: 44 + 60 * (count - 1) }];
 }
+
+/**
+ * Bar options for a page that has loaded and has no items of its own. On
+ * the rail that clears the stand-in buttons; elsewhere it changes nothing,
+ * and the invisible spacing stays as it was.
+ */
+export function noHeaderItems() {
+  return railItems() ? headerItems(() => []) : {};
+}
+
+/**
+ * Whether bar items sit on a vertical rail right now. Read from the native
+ * module's cached snapshot, since the stack's first options are built
+ * outside any component.
+ */
+function railItems(): boolean {
+  return (
+    RAIL_STAND_IN_BUTTONS &&
+    glassBar() &&
+    (RootBar?.getVerticalBarEdge?.() ?? 'unspecified') !== 'unspecified'
+  );
+}
+
+/**
+ * Off. On the Duo simulator the stand-in buttons made a remembered profile
+ * draw 38 pt high and drop when its own items replaced them (2 of 2 warm
+ * opens), where the spacing item showed no shift. The simulator never
+ * showed the 58 pt drop reported from the phone, so neither stand-in is
+ * proven there; until that is measured on a device the rail keeps the
+ * spacing item it had.
+ */
+export const RAIL_STAND_IN_BUTTONS: boolean = false;
 
 export function pendingHeaderOptions(name: string, params?: object) {
   const items = pendingHeaderItems(name, params);

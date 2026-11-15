@@ -1,7 +1,6 @@
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { AccessibilityInfo } from 'react-native';
 import { router, type Href } from 'expo-router';
-import { haptic } from '../../design/haptics';
 import { InsetGroup, Screen } from '../../design/layout';
 import { LinkRow } from '../../design/rows';
 import { useAccount } from '../account/store';
@@ -67,7 +66,7 @@ export default function AskSettings() {
             void (next ? resetAskConsent() : giveAskConsent())
               .catch(() => undefined)
               .then(() => {
-                haptic('success');
+                // The switch row already played its selection tap.
                 if (next)
                   AccessibilityInfo.announceForAccessibility(
                     askSettingsCopy.noticeDone,

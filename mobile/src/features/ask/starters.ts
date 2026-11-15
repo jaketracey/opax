@@ -1,6 +1,6 @@
 /**
  * The day's starters (specs/ask.md 2.9): one reviewed list, one rule, three
- * callers (Ask shows four, Today two, Search three). Interim list until Jake
+ * callers (Ask shows the first, Today two, Search three). Interim list until Jake
  * approves the data lane's: no party or member is named, and no entry
  * carries a literal year, so the list never goes stale on 1 January.
  */

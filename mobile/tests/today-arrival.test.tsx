@@ -50,6 +50,7 @@ jest.mock('../src/features/today/launch-fixture', () => ({
 jest.mock('../src/api/runtime', () => ({
   catalogs: {
     sittingDays: jest.fn(),
+    sittingDaysSaved: jest.fn(async () => null),
     bills: jest.fn(() => new Promise(() => {})),
     bill: jest.fn(() => new Promise(() => {})),
     roster: jest.fn(() => new Promise(() => {})),
@@ -274,6 +275,26 @@ describe('item 7: Today ends on a sentence', () => {
     expect(ending(root)).toBe(
       'That’s the record for Saturday 14 November. The Senate next sits Monday 16 November.',
     );
+  });
+
+  test('the saved calendar draws the line in the first frame, with no request; the read then takes its place', async () => {
+    let answer!: (read: unknown) => void;
+    jest.mocked(catalogs.sittingDays).mockReturnValue(
+      new Promise((resolve) => {
+        answer = resolve;
+      }) as never,
+    );
+    jest
+      .mocked(catalogs.sittingDaysSaved)
+      .mockResolvedValueOnce(answered(sitting).record);
+    const { root } = await render(<Page />);
+    // The read is still out: the line is already under the date (it was
+    // inserted when the read answered, and pushed the page down a line).
+    expect(host(root, 'today-sitting')).not.toHaveLength(0);
+    expect(ending(root)).toMatch(/Monday 16 November\.$/);
+    // The read's own answer wins, here "no calendar".
+    await act(async () => answer(null));
+    expect(host(root, 'today-sitting')).toHaveLength(0);
   });
 
   test('one calendar read serves the sitting line and the closing line, and a pull revalidates both', async () => {

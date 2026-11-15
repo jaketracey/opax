@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { Fragment, useMemo, type ReactNode } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import type { BillSplit, billSplits } from '../../api/bill-transforms';
 import { billName } from '../../api/bill-transforms';
 import { Button } from '../../design/controls';

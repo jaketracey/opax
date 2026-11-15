@@ -1,7 +1,8 @@
 import { RouteOptions } from '../../navigation/preview';
 import { useTitleOnScroll } from '../../navigation/useTitleOnScroll';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Pressable, RefreshControl, StyleSheet, View } from 'react-native';
+import { RefreshControl, StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { router, useLocalSearchParams } from 'expo-router';
 import { passageText } from '../../api/passage-text';
 import { catalogs } from '../../api/runtime';
@@ -34,7 +35,13 @@ import {
 } from './Connections';
 import { money } from './runtime';
 import { organisationHref } from './routes';
-import { MoneyStatus, moneyBar, readableDates, recordSource } from './parts';
+import {
+  MoneyStatus,
+  moneyBar,
+  noMoneyBar,
+  readableDates,
+  recordSource,
+} from './parts';
 import type { Href } from 'expo-router';
 
 /** The excerpt's publisher in words: "Hansard", "Press release". */
@@ -111,7 +118,7 @@ export default function Connection() {
         stableItems
         options={{
           title,
-          ...(missing ? {} : moneyBar({ name: title, path })),
+          ...(missing ? noMoneyBar() : moneyBar({ name: title, path })),
         }}
       />
       <Screen
@@ -287,6 +294,7 @@ function Excerpt({ excerpt, index }: { excerpt: ExcerptData; index: number }) {
       {body}
       {long && !open ? (
         <Pressable
+          feedback="wash"
           accessibilityRole="button"
           accessibilityLabel={`More, ${publisher(excerpt.source)} excerpt ${index + 1}`}
           hitSlop={MORE_SLOP}

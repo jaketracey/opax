@@ -135,6 +135,8 @@ export function useRecentSearches(store: RecentStore = recentSearches) {
   );
   if (!state.ready && !state.failed) void store.load();
   return {
+    /** The saved list has been read (or could not be): the group is final. */
+    ready: state.ready,
     items: state.failed ? [] : state.items.slice(0, RECENT_SHOWN),
     failed: state.failed,
   };

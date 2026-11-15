@@ -21,9 +21,11 @@ export function useSearchSources() {
   const [sources, setSources] = useState<SearchSources | null>(null);
   const [failed, setFailed] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [asked, setAsked] = useState(false);
   const token = useRef(0);
   const load = useCallback((refresh = false) => {
     const mine = ++token.current;
+    setAsked(true);
     setFailed(false);
     setRefreshing(refresh);
     const read = refresh
@@ -61,6 +63,8 @@ export function useSearchSources() {
     /** The roster as the record search's speaker filter reads it. */
     roster: (sources?.roster ?? null) as Roster | null,
     failed,
+    /** The first read has started: the screen has been opened. */
+    asked,
     /** A pull to refresh only; the first load draws no spinner. */
     refreshing,
     retry: () => load(true),

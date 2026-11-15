@@ -3,10 +3,12 @@ import Constants from 'expo-constants';
 const mockCapture = jest.fn();
 const mockCaptureException = jest.fn();
 const mockScreen = jest.fn();
+const mockFlush = jest.fn(async () => {});
 const mockClient = jest.fn(() => ({
   capture: mockCapture,
   captureException: mockCaptureException,
   screen: mockScreen,
+  flush: mockFlush,
 }));
 jest.mock('posthog-react-native', () => ({
   __esModule: true,
@@ -51,6 +53,7 @@ beforeEach(() => {
   mockClient.mockClear();
   mockCapture.mockClear();
   mockCaptureException.mockClear();
+  mockFlush.mockClear();
 });
 afterAll(() => {
   Reflect.set(globalThis, '__DEV__', originalDev);
@@ -211,3 +214,75 @@ test.each(['development', 'e2e'])(
     expect(mockClient).not.toHaveBeenCalled();
   },
 );
+
+// Section load failures and the test error report use the same gate: the
+// analytics configuration, on either platform, and nothing else.
+function exerciseDiagnostics(platform: 'ios' | 'android') {
+  let sent = false;
+  jest.isolateModules(() => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { Platform } = require('react-native');
+    const os = jest.replaceProperty(Platform, 'OS', platform);
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const analytics = require('../src/analytics');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const sections = require('../src/analytics/sections');
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { httpError } = require('../src/api/errors');
+    for (let attempt = 0; attempt < 30; attempt++)
+      sections.reportReadFailure('/parliamentarians.json', httpError(503));
+    sent = analytics.sendTestErrorReport();
+    os.restore();
+  });
+  return sent;
+}
+
+test.each(['ios', 'android'] as const)(
+  '%s release sends one section failure and a marked test report',
+  (platform) => {
+    expect(exerciseDiagnostics(platform)).toBe(true);
+    expect(mockCapture.mock.calls).toEqual([
+      [
+        'opax_section_failed',
+        { section: 'read_roster', kind: '5xx', route_pattern: '/other' },
+      ],
+    ]);
+    expect(mockCaptureException).toHaveBeenCalledTimes(1);
+    const [error, properties] = mockCaptureException.mock.calls[0]!;
+    expect(error).toMatchObject({
+      name: 'OpaxTestReport',
+      message: 'OPAX test error report',
+    });
+    expect(properties).toEqual({ opax_test: true });
+    expect(mockFlush).toHaveBeenCalledTimes(1);
+  },
+);
+
+test.each([
+  [
+    'debug JS',
+    () => {
+      Reflect.set(globalThis, '__DEV__', true);
+    },
+  ],
+  [
+    'e2e variant',
+    () => {
+      Constants.expoConfig!.extra!.variant = 'e2e';
+    },
+  ],
+  [
+    'no analytics configuration',
+    () => {
+      delete Constants.expoConfig!.extra!.analytics;
+    },
+  ],
+])('%s sends no section failure and no test report', (_name, change) => {
+  change();
+  for (const platform of ['ios', 'android'] as const) {
+    expect(exerciseDiagnostics(platform)).toBe(false);
+    expect(mockClient).not.toHaveBeenCalled();
+    expect(mockCapture).not.toHaveBeenCalled();
+    expect(mockCaptureException).not.toHaveBeenCalled();
+  }
+});

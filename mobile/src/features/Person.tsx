@@ -1,7 +1,15 @@
 import { RouteOptions } from '../navigation/preview';
 import { useScreenReady } from '../analytics/timing';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useCallback,
+  useSyncExternalStore,
+  type ReactNode,
+} from 'react';
 import {
   AccessibilityInfo,
   Platform,
@@ -11,8 +19,9 @@ import {
   type LayoutChangeEvent,
   type ScrollView,
 } from 'react-native';
-import type { Electorate } from '../api/catalogs';
-import type { PersonProfile } from '../api/person-identity';
+import { profileFor, rosterProfileFor, type Electorate } from '../api/catalogs';
+import { keptCatalogs, keptPay, subscribeKept } from '../api/kept-catalogs';
+import { joinPerson, type PersonProfile } from '../api/person-identity';
 import { catalogs } from '../api/runtime';
 import { useReduceMotion } from '../design/accessibility';
 import { PadGrid, ReadableColumn } from '../design/adaptive';
@@ -38,6 +47,7 @@ import {
   InlineError,
   Skeleton,
   SkeletonCrossfade,
+  type ProfileBones,
 } from '../design/states';
 import { Text } from '../design/text';
 import { rhythm } from '../design/tokens';
@@ -80,8 +90,13 @@ import {
 } from './people/model';
 import { profileGrid } from './split/grid';
 import { BlockSource, votesSource } from './your-mp/Evidence';
-import { hasParliamentaryMembership, type ProfileView } from './your-mp/model';
+import {
+  hasParliamentaryMembership,
+  type Directory,
+  type ProfileView,
+} from './your-mp/model';
 import { useIsMyMember } from './your-mp/useIsMyMember';
+import { savedSeatDirectory } from './your-mp/useSeat';
 import { useSetAsMyElectorate } from './your-mp/useSetAsMyElectorate';
 import { perfMark, useDrawnMark } from '../perf/probe';
 import {
@@ -188,18 +203,13 @@ export async function loadProfile(slug: string): Promise<Loaded | null> {
     (p) => p.person_id === person.data.canonicalPersonId,
   );
   const profileIdentity = profile.blocks.identity.data;
-  if (
-    profileIdentity?.partyStatus === 'former' &&
-    released?.electorates.length
-  ) {
+  const dated = profileIdentity && releasedIdentity(profileIdentity, released);
+  if (dated && dated !== profileIdentity) {
     profile = {
       ...profile,
       blocks: {
         ...profile.blocks,
-        identity: {
-          ...profile.blocks.identity,
-          data: { ...profileIdentity, seats: released.electorates },
-        },
+        identity: { ...profile.blocks.identity, data: dated },
       },
     };
   }
@@ -251,6 +261,12 @@ export function ProfileScreen({
   useScreenReady('/person/[slug]', load.status !== 'loading', !embedded);
   const [attempt, setAttempt] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  // A paid post's line ("Prime Minister") is only in the pay catalog. The
+  // bones wait for it; if their wait ran out they were drawn without the
+  // line, and this view then never draws it, so the page lands where the
+  // bones stood. The next open has the catalog in memory.
+  const [postWithheld, setPostWithheld] = useState(false);
+  const withholdPost = useCallback(() => setPostWithheld(true), []);
   useEffect(() => {
     let active = true;
     loadProfile(slug)
@@ -362,7 +378,11 @@ export function ProfileScreen({
               <RefreshControl refreshing={refreshing} onRefresh={refresh} />
             }
           >
-            <PersonSkeleton />
+            <PersonSkeleton
+              slug={slug}
+              name={routeName}
+              onPostWithheld={withholdPost}
+            />
           </Screen>
         }
       >
@@ -411,7 +431,11 @@ export function ProfileScreen({
                 />
               )
             ) : (
-              <PersonSkeleton />
+              <PersonSkeleton
+                slug={slug}
+                name={routeName}
+                onPostWithheld={withholdPost}
+              />
             )}
           </Screen>
         ) : load.status !== 'ready' || !identity ? null : (
@@ -425,6 +449,7 @@ export function ProfileScreen({
             refresh={refresh}
             retry={retry}
             attempt={attempt}
+            postWithheld={postWithheld}
           />
         )}
       </SkeletonCrossfade>
@@ -432,10 +457,189 @@ export function ProfileScreen({
   );
 }
 
-function PersonSkeleton() {
+/**
+ * A former member's seats as the release dates them: the page's identity
+ * and the bones' read the same record, so they draw the same line.
+ */
+function releasedIdentity<
+  T extends Pick<PersonProfile, 'partyStatus' | 'seats'>,
+>(
+  identity: T,
+  released: { electorates: PersonProfile['seats'] } | undefined,
+): T {
+  return identity.partyStatus === 'former' && released?.electorates.length
+    ? { ...identity, seats: released.electorates }
+    : identity;
+}
+
+/** The catalogs a profile's bones read when they are already in memory. */
+type Kept = ReturnType<typeof keptCatalogs>;
+
+/**
+ * The header the page will draw, read from the directory already in memory:
+ * its name, lines and identity rows in the page's own words, so the bones
+ * hold the same places at every text size. With the votes and pay catalogs
+ * in memory too, the figures and a paid post ("Minister for ...") are the
+ * page's own; without them they follow what each parliament's records hold.
+ * Null (the bones' default, a sitting federal member) when the directory is
+ * not read or the slug is not in it.
+ */
+export function profileBones(
+  slug: string,
+  directory: Directory | null,
+  kept: Kept = {},
+): (Omit<ProfileBones, 'yourMP'> & { postUnknown: boolean }) | null {
+  if (!directory) return null;
+  let joined: PersonProfile;
+  try {
+    joined = joinPerson(
+      slug,
+      directory.slugs.data,
+      directory.roster.data,
+      directory.people.data,
+      directory.manifest.data,
+    );
+  } catch {
+    return null;
+  }
+  const released = directory.people.data.people.find(
+    (p) => p.person_id === joined.canonicalPersonId,
+  );
+  const identity = releasedIdentity(joined, released);
+  const former = formerMemberLine(identity);
+  const official =
+    identity.partyStatus !== 'former'
+      ? officialPage(released?.source_url)
+      : null;
+  // The page's own selectors over what is in memory; null when they cannot
+  // run, and the rules below stand in.
+  let profile: Pick<ProfileView, 'blocks'> | null = null;
+  if (kept.votes || kept.pay) {
+    const data = {
+      manifest: directory.manifest.data,
+      roster: directory.roster.data,
+      slugs: directory.slugs.data,
+      people: directory.people.data,
+      votes: kept.votes,
+      pay: kept.pay,
+    };
+    try {
+      profile = identity.canonicalPersonId
+        ? profileFor(identity.canonicalPersonId, data)
+        : rosterProfileFor(identity, data);
+    } catch {
+      profile = null;
+    }
+  }
+  const federal = sittingFederal(identity);
+  // A surname stub's parliament is only in the roster row's `states`.
+  const parliaments = new Set(
+    [
+      ...identity.seats.map((seat) => seat.jurisdiction),
+      ...(identity.rosterRow?.representation ?? []).map(
+        (seat) => seat.jurisdiction,
+      ),
+      ...(identity.rosterRow?.states ?? []),
+    ].map((parliament) => parliament.toLowerCase()),
+  );
+  const tiles: ('votes' | 'interests' | 'pay')[] = [];
+  // Divisions are held for the federal, NSW, Victorian and Queensland
+  // parliaments; a member from before the record starts has none.
+  if (
+    profile && kept.votes
+      ? votesCount(profile) !== null
+      : ['federal', 'nsw', 'vic', 'qld'].some((p) => parliaments.has(p))
+  )
+    tiles.push('votes');
+  // Registers of interests are read for sitting federal and Queensland
+  // members.
+  if (!former && (federal || parliaments.has('qld'))) tiles.push('interests');
+  if (profile && kept.pay ? annualPay(profile) !== null : federal)
+    tiles.push('pay');
+  return {
+    name: identity.name,
+    role: former ?? (profile && kept.pay ? roleLine(profile, false) : null),
+    follow: !!identity.canonicalPersonId,
+    rows: [
+      ...(identity.party
+        ? [
+            {
+              kind: 'party' as const,
+              title: identity.party,
+              detail: identity.formerly
+                ? `Formerly ${identity.formerly}`
+                : undefined,
+            },
+          ]
+        : []),
+      ...(former ? [] : seatRows(identity)).map((seat) => ({
+        kind: 'seat' as const,
+        title: seat.title,
+        detail: seat.detail,
+        link: !!seat.electorateId,
+      })),
+      ...(official
+        ? [{ kind: 'official' as const, title: official.label }]
+        : []),
+    ],
+    tiles,
+    // A sitting federal member may hold a paid post; only pay says so.
+    postUnknown: !former && federal && !kept.pay,
+  };
+}
+
+/**
+ * How long a profile's bones stop at the name while the pay catalog is
+ * read, for a member who may hold a paid post. Past it they are drawn
+ * without the post's line, and that view never gains it.
+ */
+export const POST_HOLD_MS = 1200;
+
+function PersonSkeleton({
+  slug,
+  name,
+  onPostWithheld,
+}: {
+  slug: string;
+  name?: string;
+  /** The wait for the pay catalog ran out: the page omits a paid post too. */
+  onPostWithheld: () => void;
+}) {
+  const yourMP = useIsMyMember(slug);
+  const directory = savedSeatDirectory();
+  const { votes } = keptCatalogs();
+  // Only the bones hear the catalog arrive: a drawn page is not redrawn.
+  const pay = useSyncExternalStore(subscribeKept, keptPay);
+  const [postWithheld, setPostWithheld] = useState(false);
+  const known = useMemo(
+    () =>
+      profileBones(slug, directory, {
+        votes,
+        pay: postWithheld ? undefined : pay,
+      }),
+    [slug, directory, votes, pay, postWithheld],
+  );
+  const { postUnknown = !pay, ...bones } = known ?? {};
+  // Where the rows stand depends on a line only pay can give: draw down to
+  // the name until it is read, or the wait runs out.
+  const waiting = postUnknown && !postWithheld;
+  useEffect(() => {
+    if (!waiting) return;
+    const timer = setTimeout(() => {
+      setPostWithheld(true);
+      onPostWithheld();
+    }, POST_HOLD_MS);
+    return () => clearTimeout(timer);
+  }, [waiting, onPostWithheld]);
   return (
     <Skeleton
       shape="person-profile"
+      profile={{
+        ...(name ? { name } : null),
+        ...bones,
+        yourMP,
+        nameOnly: waiting,
+      }}
       label="Loading the profile"
       testID="person-loading"
     />
@@ -466,6 +670,7 @@ function ProfileContent({
   refresh,
   retry,
   attempt,
+  postWithheld,
 }: {
   slug: string;
   loaded: Loaded;
@@ -476,6 +681,8 @@ function ProfileContent({
   refresh: () => void;
   retry: () => void;
   attempt: number;
+  /** The bones stood without a paid post's line: neither does this view. */
+  postWithheld: boolean;
 }) {
   const { profile } = loaded;
   const b = profile.blocks;
@@ -1023,7 +1230,10 @@ function ProfileContent({
                 retryKey={attempt}
               />
             }
-            role={formerLine ?? roleLine(profile, former)}
+            role={
+              formerLine ??
+              (postWithheld && !former ? null : roleLine(profile, former))
+            }
             yourMP={yourMP}
             identityRows={identityRows}
             follow={

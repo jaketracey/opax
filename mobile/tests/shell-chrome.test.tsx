@@ -62,7 +62,9 @@ import {
 import {
   BarTitle,
   barItemGrowthAX,
+  barTitleCentredWidth,
   barTitleClearanceAX,
+  barTitleDrawnWidth,
   barTitleWidth,
   emptyBarTitle,
   inlineTitleScaleCap,
@@ -310,6 +312,16 @@ test.each([
       // above the title band.
       expect(pushed.scrollEdgeEffects.top).toBe(underBar ? 'soft' : 'hard');
       expect(pushed.scrollEdgeEffects.bottom).toBe('soft');
+      // Under the clear bar the stack itself sets no bar colour or hairline:
+      // a page with no Screen and no bar style of its own (Voting record)
+      // kept the hairline, and a paper strip once the band folded.
+      expect(pushed.headerStyle).toEqual(
+        underBar ? {} : { backgroundColor: colors.paper },
+      );
+      expect(pushed.headerLargeStyle).toEqual(
+        underBar ? {} : { backgroundColor: colors.paper },
+      );
+      expect(pushed.headerShadowVisible).toBe(!underBar);
       // Away from a vertical bar the two stacks are the same, option for
       // option: iPhone, the unfolded Duo and iPad are unchanged.
       if (!underBar) expect(pushed).toEqual(sheet);
@@ -353,7 +365,20 @@ test.each([
       expect('headerTransparent' in tabEdition).toBe(!underBar);
       // The directory and Just declared hold their band open with a search
       // field and pin sticky section headers: a solid, backed bar there.
-      for (const name of ['directory', 'declarations']) {
+      // So do the pushed pages whose bar always holds a field, from the
+      // stack's first layout: set later, the pushed Bills list was drawn
+      // under the clear bar for a frame and laid out again.
+      for (const name of [
+        'directory',
+        'declarations',
+        'bill-list',
+        'person/[slug]/votes',
+        'division-history',
+        'grants',
+        'grant-program',
+        'agencies',
+        'learn/glossary',
+      ]) {
         const list = (
           tabs.children as React.ReactElement<{
             name: string;
@@ -368,6 +393,28 @@ test.each([
         expect(list.headerTransparent).toBe(underBar ? false : undefined);
         expect('headerBackground' in list).toBe(underBar);
       }
+      // A seat's grants share the Grants route but have no search field:
+      // they keep the stack's clear bar. The electorates view has a field.
+      const grants = (
+        tabs.children as React.ReactElement<{
+          name: string;
+          options: (props: object) => Record<string, unknown>;
+        }>[]
+      ).find((entry) => entry.props.name === 'grants')!;
+      const grantsFor = (params: object) =>
+        grants.props.options({
+          route: { key: 'grants', name: 'grants', params },
+          navigation: { getState: () => ({ index: 1, routes: [] }) },
+        });
+      expect('headerTransparent' in grantsFor({ seat: 'Grayndler' })).toBe(
+        false,
+      );
+      expect('headerBackground' in grantsFor({ seat: 'Grayndler' })).toBe(
+        false,
+      );
+      expect(
+        grantsFor({ seat: 'Grayndler', view: 'electorates' }).headerTransparent,
+      ).toBe(underBar ? false : undefined);
       // Reduce Transparency or Increase Contrast: the solid bar, as the tab
       // roots have.
       mockSolidBar = true;
@@ -567,7 +614,7 @@ test('expanded iOS 26 roots leave both appearances uncoloured; older roots remai
   });
   if (version) Object.defineProperty(Platform, 'Version', version);
 });
-test('tab roots are translucent on iOS 26 and opaque on iOS 18.4 to 25', () => {
+test('tab roots are translucent on iOS 26 and opaque on iOS 18.4 to 25, but for Today on an iPhone', () => {
   const version = Object.getOwnPropertyDescriptor(Platform, 'Version');
   const rootOptions = () =>
     [
@@ -617,8 +664,33 @@ test('tab roots are translucent on iOS 26 and opaque on iOS 18.4 to 25', () => {
       value: '18.4',
     });
     expect(glassBar()).toBe(false);
-    for (const options of rootOptions())
-      expect(options.headerTransparent ?? false).toBe(false);
+    for (const options of rootOptions()) {
+      // Today alone runs under its bar on an iPhone before iOS 26, so its
+      // dot map draws behind the large title: clear while the title is
+      // expanded, the opaque ground once it collapses (iOS 18.4).
+      const today = options.title === 'Today';
+      expect(options.headerTransparent ?? false).toBe(today);
+      expect(options.headerStyle).toHaveProperty('backgroundColor');
+      expect(options.headerLargeStyle?.backgroundColor).toBe(
+        today
+          ? 'transparent'
+          : (options.headerStyle as { backgroundColor: string })
+              .backgroundColor,
+      );
+    }
+    // An iPad keeps the opaque bar on Today too.
+    const pad = Object.getOwnPropertyDescriptor(Platform, 'isPad');
+    Object.defineProperty(Platform, 'isPad', {
+      configurable: true,
+      value: true,
+    });
+    try {
+      for (const options of rootOptions())
+        expect(options.headerTransparent ?? false).toBe(false);
+    } finally {
+      if (pad) Object.defineProperty(Platform, 'isPad', pad);
+      else delete (Platform as { isPad?: boolean }).isPad;
+    }
   } finally {
     if (version) Object.defineProperty(Platform, 'Version', version);
   }
@@ -1180,6 +1252,132 @@ describe('bar titles keep their initial layout clear of the bar items', () => {
       act(() => view.unmount());
     }
   });
+  describe('above Large the drawn title stays on the centre line (18.4, AX3 profile)', () => {
+    const at = (fontScale: number) => {
+      const window = Dimensions.get('window');
+      Dimensions.set({
+        window: { ...window, width: 402, fontScale },
+        screen: { ...Dimensions.get('screen'), width: 402, fontScale },
+      });
+    };
+    const drawn = (
+      element: React.ReactElement,
+      widths: Record<string, number>,
+    ) => {
+      let view!: TestRenderer.ReactTestRenderer;
+      act(() => {
+        view = TestRenderer.create(element);
+      });
+      measureBarTitle(view, widths);
+      const text = view.root.findByType(Animated.Text);
+      const result = {
+        maxWidth: style(view).maxWidth as number,
+        // The title view and its text share one width.
+        widths: view.root
+          .findAll((node) => typeof node.type === 'string')
+          .map((node) => StyleSheet.flatten(node.props.style)?.maxWidth)
+          .filter((width) => width !== undefined),
+        text: text.props.children as string,
+        shrinks: text.props.adjustsFontSizeToFit === true,
+      };
+      act(() => view.unmount());
+      return result;
+    };
+    // The capture: a 402 pt window, back chevron, Share and More. UIKit put
+    // the 184 pt name's trailing edge at 280 pt, 9 pt before Share.
+    const trailingLimit = 280;
+    const centredEnd = (width: number) => (402 + width) / 2;
+
+    test('the centred width is the bar less its wider side, twice', () => {
+      // Chevron back (68 pt) against Share and More at AX (140 pt).
+      expect(
+        barTitleCentredWidth(402, 2, undefined, '', undefined, barItemGrowthAX),
+      ).toBe(402 - 2 * 140);
+      // Equal sides: the same as the span between the items.
+      expect(barTitleCentredWidth(402, 2)).toBe(barTitleWidth(402, 2));
+      // A named back pill wider than the trailing items is the wider side.
+      expect(barTitleCentredWidth(402, 1, undefined, 'Bills', 90)).toBe(
+        402 - 2 * (16 + 48 + 90 + 20),
+      );
+      // A trailing text pill against the short named back estimate.
+      expect(barTitleCentredWidth(402, 2, 150)).toBe(402 - 2 * (150 + 24));
+      // Never negative, and half the window at most on iPad.
+      expect(barTitleCentredWidth(320, 3, undefined, '', undefined, 6)).toBe(0);
+      expect(barTitleCentredWidth(1024, 1, undefined, '')).toBe(512);
+      // It is never wider than the span between the items.
+      for (const width of [320, 375, 393, 402, 440])
+        for (const trailing of [0, 1, 2, 3])
+          expect(
+            barTitleCentredWidth(width, trailing, undefined, ''),
+          ).toBeLessThanOrEqual(barTitleWidth(width, trailing, undefined, ''));
+    });
+
+    test('the drawn width grows only while centred, then falls back to the Large width', () => {
+      // Fits centred at any size up to the centred width.
+      expect(barTitleDrawnWidth(186, 114, 70)).toBe(114);
+      // Too wide to centre when enlarged: its Large width, plus a point.
+      expect(barTitleDrawnWidth(186, 114, 135.6)).toBe(137);
+      // Never wider than the span between the items.
+      expect(barTitleDrawnWidth(186, 114, 200)).toBe(186);
+      // Unmeasured: the span, as before.
+      expect(barTitleDrawnWidth(186, 114, undefined)).toBe(186);
+    });
+
+    test('AX3: the name is drawn in its Large width and centres clear of Share', () => {
+      at(2.643);
+      const title = drawn(
+        <BarTitle title="Anthony Albanese" shown trailing={2} person />,
+        { 'Anthony Albanese': 136, Albanese: 70 },
+      );
+      expect(title.text).toBe('Anthony Albanese');
+      expect(title.shrinks).toBe(true);
+      expect(title.maxWidth).toBe(137);
+      expect(new Set(title.widths)).toEqual(new Set([137]));
+      expect(centredEnd(title.maxWidth)).toBeLessThanOrEqual(trailingLimit);
+      // Before: the whole 186 pt span, whose centred end is under Share.
+      const span =
+        barTitleWidth(402, 2, undefined, '', undefined, barItemGrowthAX) -
+        barTitleClearanceAX;
+      expect(centredEnd(span)).toBeGreaterThan(trailingLimit);
+    });
+
+    test('AX3: a short title still grows, inside the centred width', () => {
+      at(2.643);
+      const title = drawn(<BarTitle title="Bills" shown trailing={2} />, {
+        Bills: 35,
+      });
+      expect(title.maxWidth).toBe(402 - 2 * 140 - barTitleClearanceAX);
+      expect(centredEnd(title.maxWidth)).toBeLessThanOrEqual(trailingLimit);
+    });
+
+    test.each([
+      // Below the accessibility sizes the items keep their Large width, so
+      // the centred width (146 pt) already holds the name.
+      ['xxxLarge', 1.353, 146],
+      ['AX1', 1.786, 137],
+      ['AX5', 3.571, 137],
+    ])('%s: the same rule holds', (_size, fontScale, width) => {
+      at(fontScale);
+      const title = drawn(
+        <BarTitle title="Anthony Albanese" shown trailing={2} person />,
+        { 'Anthony Albanese': 136, Albanese: 70 },
+      );
+      expect(title.maxWidth).toBe(width);
+      expect(centredEnd(title.maxWidth)).toBeLessThanOrEqual(trailingLimit);
+    });
+
+    test('at Large nothing changes: the title keeps the room it had', () => {
+      at(1);
+      const title = drawn(
+        <BarTitle title="Anthony Albanese" shown trailing={2} person />,
+        { 'Anthony Albanese': 136, Albanese: 70 },
+      );
+      expect(title.shrinks).toBe(false);
+      // The name fits the equal-sided room at Large, as it did before.
+      expect(title.maxWidth).toBe(barTitleWidth(402, 2));
+    });
+  });
+
   test('at rest the title keeps its text and width, hidden only by opacity and accessibility', () => {
     const view = tree(
       <BarTitle title="Interactive Gambling Bill" shown={false} />,
@@ -1588,7 +1786,6 @@ const edgeCalls = (navigation: { setOptions: jest.Mock }) =>
     .map(([options]) => options.scrollEdgeEffects?.top)
     .filter(Boolean);
 test.each([
-  ['(today)', 'index'],
   ['(search)', 'search'],
   ['(today)', 'leads'],
   ['(ask)', 'ask'],
@@ -1639,6 +1836,58 @@ test.each([
     }),
 );
 
+// Today's bar has no panel (b76: a frosted paper panel with a hairline once
+// the page scrolled, the card blurred behind the title). The page fades out
+// under the soft edge and UIKit collapses the large title, at every text
+// size: the AX band's solid backing drew over the title at rest (26.3, AX3).
+test.each([
+  ['default', 1],
+  ['AX3', 2.643],
+  ['AX5', 3.571],
+] as const)(
+  'Today at %s text has no panel under its bar, at rest or scrolled',
+  (_size, fontScale) =>
+    withGlass(() => {
+      const window = Dimensions.get('window');
+      const { navigation, ground, page, listeners } = fadePage(
+        'index',
+        '(today)',
+      );
+      const renderer = tree(page(100));
+      const appearance = () =>
+        navigation.setOptions.mock.calls
+          .map(([options]) => options)
+          .filter((options) => 'headerTransparent' in options)
+          .at(-1);
+      try {
+        act(() => Dimensions.set({ window: { ...window, fontScale } }));
+        const clear = expect.objectContaining({
+          ...largeTitleBar(ground),
+          headerLargeTitleEnabled: true,
+        });
+        expect(appearance()).toEqual(clear);
+        expect(appearance().scrollEdgeEffects.top).toBe('soft');
+        scrollTo(renderer, -100);
+        scrollTo(renderer, -98);
+        act(() => renderer.update(page(68)));
+        scrollTo(renderer, 400);
+        expect(appearance()).toEqual(clear);
+        act(() => listeners.get('blur')?.forEach((listener) => listener()));
+        act(() => listeners.get('focus')?.forEach((listener) => listener()));
+        scrollTo(renderer, -68);
+        act(() => renderer.update(page(100)));
+        scrollTo(renderer, -100);
+        expect(appearance()).toEqual(clear);
+        expect(edgeCalls(navigation)).not.toContain('hard');
+        expect(edgeCalls(navigation)).not.toContain('hidden');
+        expect(RootBar!.setSolid).not.toHaveBeenCalled();
+      } finally {
+        act(() => renderer.unmount());
+        act(() => Dimensions.set({ window }));
+      }
+    }),
+);
+
 test.each([
   ['(your-mp)', 'your-mp'],
   ['(bills)', 'bills'],
@@ -1673,52 +1922,6 @@ test('the accessibility backing keeps the edge hidden under scrolled text', () =
       mockSolidBar = false;
     }
   }));
-
-test.each([
-  ['AX3', 2.643],
-  ['AX5', 3.571],
-])(
-  'Today %s keeps a solid band across scroll, resize and focus',
-  (_size, fontScale) =>
-    withGlass(() => {
-      const window = Dimensions.get('window');
-      const { navigation, page, ground, identifier, listeners } = fadePage(
-        'index',
-        '(today)',
-      );
-      const renderer = tree(page(120));
-      try {
-        expect(RootBar!.setSolid).not.toHaveBeenCalled();
-        act(() => Dimensions.set({ window: { ...window, fontScale } }));
-        expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
-        expect(navigation.setOptions).toHaveBeenLastCalledWith(
-          expect.objectContaining(largeTitleBar(ground, true)),
-        );
-        navigation.setOptions.mockClear();
-        scrollTo(renderer, 400);
-        expect(edgeCalls(navigation)).not.toContain('hard');
-        act(() => renderer.update(page(68)));
-        expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
-        act(() => listeners.get('blur')!.forEach((listener) => listener()));
-        expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
-        jest.mocked(RootBar!.setSolid!).mockClear();
-        act(() => listeners.get('focus')!.forEach((listener) => listener()));
-        expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
-        act(() => Dimensions.set({ window }));
-        expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
-        expect(navigation.setOptions).toHaveBeenLastCalledWith(
-          expect.objectContaining(largeTitleBar(ground, false, true)),
-        );
-        scrollTo(renderer, -120);
-        expect(navigation.setOptions).toHaveBeenLastCalledWith(
-          expect.objectContaining(largeTitleBar(ground)),
-        );
-      } finally {
-        act(() => renderer.unmount());
-        act(() => Dimensions.set({ window }));
-      }
-    }),
-);
 
 test.each(
   tabCases
@@ -1772,14 +1975,14 @@ test.each(['leading', 'trailing'] as const)(
       try {
         for (const fontScale of [2.643, 3.571]) {
           act(() => Dimensions.set({ window: { ...window, fontScale } }));
-          // The rail's top edge follows the content: soft at rest, hard
-          // from the first scroll point. AX never makes it solid.
+          // Today's top edge is soft on the rail too, at rest and under
+          // scrolled content. AX never makes it solid.
           expect(navigation.setOptions).toHaveBeenLastCalledWith(
             scrollBar(ground, false, edge, false),
           );
           scrollTo(renderer, 20);
           expect(navigation.setOptions).toHaveBeenLastCalledWith(
-            scrollBar(ground, false, edge, true),
+            scrollBar(ground, false, edge, false),
           );
           scrollTo(renderer, -100);
           expect(navigation.setOptions).toHaveBeenLastCalledWith(
@@ -2435,7 +2638,7 @@ describe('scroll edges on every bar shape', () => {
     ['leading', true],
     ['trailing', true],
   ] as const)(
-    'Today on the %s rail (isPad=%s) leaves the map whole at rest and covers it from the first scroll point',
+    'Today on the %s rail (isPad=%s) keeps the soft edge at rest and under scrolled content',
     (edge, pad) =>
       withGlass(() => {
         const idiom = jest.spyOn(Platform, 'isPad', 'get').mockReturnValue(pad);
@@ -2450,9 +2653,9 @@ describe('scroll edges on every bar shape', () => {
           expect(edgeCalls(navigation)).toEqual([]);
           scrollTo(renderer, -98);
           scrollTo(renderer, 20);
-          expect(edgeCalls(navigation)).toEqual(['hard']);
           scrollTo(renderer, -100);
-          expect(edgeCalls(navigation)).toEqual(['hard', 'soft']);
+          expect(edgeCalls(navigation)).not.toContain('hard');
+          expect(new Set(edgeCalls(navigation))).toEqual(new Set(['soft']));
         } finally {
           act(() => renderer.unmount());
           idiom.mockRestore();

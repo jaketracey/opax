@@ -14,13 +14,8 @@ import {
   disabled,
 } from '@expo/ui/swift-ui/modifiers';
 import { useState } from 'react';
-import {
-  InputAccessoryView,
-  Platform,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { InputAccessoryView, Platform, StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../../design/pressable';
 import { useAccessibilitySize } from '../../../design/accessibility';
 import { Button, Field } from '../../../design/controls';
 import { Icon } from '../../../design/icon';
@@ -135,6 +130,7 @@ export function GuessSlider({
         </>
       ) : (
         <Pressable
+          feedback="wash"
           accessibilityRole="button"
           accessibilityLabel={`Your guess, ${shown}`}
           accessibilityHint={

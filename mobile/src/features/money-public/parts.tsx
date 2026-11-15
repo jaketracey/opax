@@ -38,7 +38,7 @@ import {
   StatePageProvider,
 } from '../../design/states';
 import { colors, hairline, layout, rhythm } from '../../design/tokens';
-import { headerItems, pageItems } from '../../navigation/chrome';
+import { headerItems, noHeaderItems, pageItems } from '../../navigation/chrome';
 import { openOnWeb } from '../../navigation/external';
 import { canShare, copyRecordLink, shareRecord } from '../../navigation/share';
 import { useFloatingBarFoot } from '../../navigation/floating-bar';
@@ -203,6 +203,8 @@ export function moneyBar(options: {
         ]
       : []),
   ];
+  // An empty menu is also what a page passes while it loads (no path yet),
+  // so it clears nothing: a loaded page with no path calls noMoneyBar.
   return headerItems(
     menu.length || filters
       ? pageItems({
@@ -214,6 +216,9 @@ export function moneyBar(options: {
       : undefined,
   );
 }
+
+/** A loaded money page with no path: nothing to share, open or filter. */
+export const noMoneyBar = noHeaderItems;
 
 /** "What has parliament said about {name}?" (journeys/ask.md 14). */
 export const askAbout = (name: string) =>

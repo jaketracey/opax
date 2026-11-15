@@ -24,7 +24,7 @@ import { Slider, Stepper } from '../src/design/adjustable';
 import { AndroidMenuHost, showMenu } from '../src/design/menu';
 import { Text } from '../src/design/text';
 import { androidControls, colors, textStyles } from '../src/design/tokens';
-import { Pressable } from '../src/design/pressable';
+import { PlainPressable, Pressable } from '../src/design/pressable';
 import { ContextMenu } from '../src/design/context-menu';
 let mockContrast = false;
 let mockFontScale = 1;
@@ -308,6 +308,11 @@ test('popup menus remain anchored inside the viewport, expose menu items and dis
   );
   expect(r.getByTestId('android-menu').props.accessibilityRole).toBe('menu');
   expect(styles(r.getByTestId('android-menu')).left).toBeLessThan(350);
+  // Every title starts at the leading edge: a one-line title is not centred
+  // between wrapped ones.
+  const item = styles(r.getByRole('menuitem', { name: 'Copy link' }));
+  expect(item).toMatchObject({ flexDirection: 'row', alignItems: 'center' });
+  expect(item.justifyContent ?? 'flex-start').toBe('flex-start');
   fireEvent.press(r.getByRole('menuitem', { name: 'Copy link' }));
   expect(action).toHaveBeenCalledTimes(1);
   expect(dismiss).toHaveBeenCalledTimes(1);
@@ -564,4 +569,20 @@ test('segmented checks never cost a word: the check draws only where the longest
   };
   expect(checks(status, 380)).toEqual([0, false]);
   expect(checks(['All', 'Passed'], 380)).toEqual([0, true]);
+});
+test('a context menu upgrades a PlainPressable trigger as it does a raw one', () => {
+  const r = render(
+    <ContextMenu items={[{ title: 'Copy link', onPress: noop }]}>
+      <PlainPressable
+        accessibilityRole="button"
+        accessibilityLabel="Votes"
+        onPress={noop}
+        style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1, minHeight: 32 })}
+      >
+        <Text>Votes</Text>
+      </PlainPressable>
+    </ContextMenu>,
+  );
+  expect(styles(surface(r))).toMatchObject({ minHeight: 48, opacity: 1 });
+  expect(surface(r).props.android_ripple).toMatchObject({ foreground: true });
 });

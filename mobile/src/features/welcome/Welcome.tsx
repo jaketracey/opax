@@ -262,6 +262,7 @@ export function WelcomePage({
       >
         <View style={[styles.column, { maxWidth: WELCOME_COLUMN }]}>
           <Image
+            fadeDuration={0}
             source={require('../../../assets/splash/mark.png')}
             accessibilityElementsHidden
             importantForAccessibility="no-hide-descendants"

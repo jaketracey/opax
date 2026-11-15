@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { Platform, Pressable, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { router, useLocalSearchParams } from 'expo-router';
 import {
   Button as SwiftButton,
@@ -88,6 +89,7 @@ export function YearMenu({
     <View style={styles.wrap}>
       <TitleAnchor>
         <Pressable
+          feedback="wash"
           accessible
           accessibilityRole="button"
           accessibilityLabel={`Year, ${year}`}

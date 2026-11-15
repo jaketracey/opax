@@ -2,7 +2,6 @@ import { GlassView, isLiquidGlassAvailable } from 'expo-glass-effect';
 import { useState, useSyncExternalStore, type Ref } from 'react';
 import {
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -10,6 +9,7 @@ import {
   useWindowDimensions,
   type LayoutChangeEvent,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { IconButton } from '../../design/controls';
 import { useAccessibilityFocusRequest } from '../../design/keyboard';
 import { formatCount } from '../../design/format';
@@ -212,7 +212,7 @@ export function AskDock({
                   accessibilityHint="Opens Options"
                   onPress={onOptions}
                   android_ripple={{ color: colors.dividerSubtle }}
-                  style={styles.chip}
+                  style={({ pressed }) => chipStyle(pressed)}
                 >
                   <Text variant="footnote" tone="inkSoft">
                     {freshLabel}
@@ -228,7 +228,7 @@ export function AskDock({
                   accessibilityState={{ disabled: s.busy && !s.fresh }}
                   onPress={() => askSession.options(clearChip(options, tag.id))}
                   android_ripple={{ color: colors.dividerSubtle }}
-                  style={styles.chip}
+                  style={({ pressed }) => chipStyle(pressed)}
                   testID={`ask-option-remove-${tag.id}`}
                 >
                   <Text variant="footnote">{tag.value}</Text>
@@ -243,6 +243,7 @@ export function AskDock({
             </View>
           </ScrollView>
           <Pressable
+            feedback="wash"
             accessibilityRole="button"
             accessibilityLabel={composerCopy.clear}
             disabled={s.busy && !s.fresh}
@@ -266,6 +267,7 @@ export function AskDock({
       ) : line ? (
         <View style={styles.optionsLine}>
           <Pressable
+            feedback="wash"
             ref={s.fresh ? waitingLine : undefined}
             accessibilityRole="button"
             accessibilityLabel={spoken}
@@ -288,6 +290,7 @@ export function AskDock({
             </Text>
           </Pressable>
           <Pressable
+            feedback="wash"
             accessibilityRole="button"
             accessibilityLabel={composerCopy.clear}
             accessibilityState={locked ? { disabled: true } : undefined}
@@ -428,7 +431,17 @@ export function AskDock({
     </View>
   );
 }
+/**
+ * A chip is filled with the sunken wash already, so the shared pressed wash
+ * showed nothing on it: pressed, it takes the next step down (iOS; Android
+ * has its ripple in the same colour).
+ */
+const chipStyle = (pressed: boolean) => [
+  styles.chip,
+  pressed && Platform.OS === 'ios' ? styles.chipPressed : null,
+];
 const styles = StyleSheet.create({
+  chipPressed: { backgroundColor: colors.dividerSubtle },
   body: {
     gap: rhythm.line,
     paddingHorizontal: rhythm.line,

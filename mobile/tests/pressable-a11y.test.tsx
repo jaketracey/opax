@@ -6,7 +6,7 @@ import {
   StyleSheet,
   type View,
 } from 'react-native';
-import { Pressable } from '../src/design/pressable';
+import { IOS_PRESS_DELAY, Pressable } from '../src/design/pressable';
 import { border, colors } from '../src/design/tokens';
 
 const originalOS = Platform.OS;
@@ -128,4 +128,20 @@ test('iOS receives no ripple or ring prop from focus', () => {
   fireEvent(r.getByTestId('trigger'), 'focus', { nativeEvent: {} });
   expect(native(r).props.ringed).toBeUndefined();
   expect(native(r).props.android_ripple).toBeUndefined();
+});
+
+test('iOS holds the highlight back while a scroll may be starting; Android keeps the ripple timing', () => {
+  Platform.OS = 'ios';
+  const ios = render(<Pressable testID="trigger" />);
+  expect(native(ios).props.unstable_pressDelay).toBe(IOS_PRESS_DELAY);
+  expect(IOS_PRESS_DELAY).toBeGreaterThanOrEqual(100);
+  expect(IOS_PRESS_DELAY).toBeLessThanOrEqual(150);
+  // A surface outside any scroll view may ask for an immediate highlight.
+  const immediate = render(
+    <Pressable testID="trigger" unstable_pressDelay={0} />,
+  );
+  expect(native(immediate).props.unstable_pressDelay).toBe(0);
+  Platform.OS = 'android';
+  const android = render(<Pressable testID="trigger" />);
+  expect(native(android).props.unstable_pressDelay).toBeUndefined();
 });

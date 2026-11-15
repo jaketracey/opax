@@ -1,0 +1,170 @@
+{
+  "note": "Reviewed party fills for Time machine voices whose retrieved speeches carry no party label. Each row was checked by hand against the person's parliamentary service for that year; the roster's undated party label is never trusted on its own. The rows are the same as scripts/years_party_accept.json, which fills the published year files. Add a row only after checking the party for that year.",
+  "rows": [
+    {
+      "year": 2006,
+      "name": "Kerry O'Brien",
+      "party": "Labor"
+    },
+    {
+      "year": 2006,
+      "name": "Ursula Stephens",
+      "party": "Labor"
+    },
+    {
+      "year": 2006,
+      "name": "Stephen Conroy",
+      "party": "Labor"
+    },
+    {
+      "year": 2007,
+      "name": "Stephen Conroy",
+      "party": "Labor"
+    },
+    {
+      "year": 2007,
+      "name": "Penny Wong",
+      "party": "Labor"
+    },
+    {
+      "year": 2007,
+      "name": "Eric Abetz",
+      "party": "Liberal"
+    },
+    {
+      "year": 2008,
+      "name": "Helen Coonan",
+      "party": "Liberal"
+    },
+    {
+      "year": 2008,
+      "name": "Steve Fielding",
+      "party": "Family First"
+    },
+    {
+      "year": 2008,
+      "name": "Richard Colbeck",
+      "party": "Liberal"
+    },
+    {
+      "year": 2009,
+      "name": "Nick Sherry",
+      "party": "Labor"
+    },
+    {
+      "year": 2009,
+      "name": "Helen Coonan",
+      "party": "Liberal"
+    },
+    {
+      "year": 2009,
+      "name": "Chris Evans",
+      "party": "Labor"
+    },
+    {
+      "year": 2010,
+      "name": "Eric Abetz",
+      "party": "Liberal"
+    },
+    {
+      "year": 2010,
+      "name": "Mathias Cormann",
+      "party": "Liberal"
+    },
+    {
+      "year": 2010,
+      "name": "Gary Humphries",
+      "party": "Liberal"
+    },
+    {
+      "year": 2010,
+      "name": "George Brandis",
+      "party": "Liberal"
+    },
+    {
+      "year": 2011,
+      "name": "Nigel Scullion",
+      "party": "Country Liberal Party"
+    },
+    {
+      "year": 2011,
+      "name": "Ian Macdonald",
+      "party": "Liberal"
+    },
+    {
+      "year": 2011,
+      "name": "Eric Abetz",
+      "party": "Liberal"
+    },
+    {
+      "year": 2012,
+      "name": "Mitch Fifield",
+      "party": "Liberal"
+    },
+    {
+      "year": 2012,
+      "name": "Michaelia Cash",
+      "party": "Liberal"
+    },
+    {
+      "year": 2012,
+      "name": "Simon Birmingham",
+      "party": "Liberal"
+    },
+    {
+      "year": 2012,
+      "name": "Marise Payne",
+      "party": "Liberal"
+    },
+    {
+      "year": 2013,
+      "name": "Mitch Fifield",
+      "party": "Liberal"
+    },
+    {
+      "year": 2020,
+      "name": "S.G. Wade",
+      "party": "Liberal"
+    },
+    {
+      "year": 2020,
+      "name": "V.A. Chapman",
+      "party": "Liberal"
+    },
+    {
+      "year": 2021,
+      "name": "S.S. Marshall",
+      "party": "Liberal"
+    },
+    {
+      "year": 2022,
+      "name": "P.B. Malinauskas",
+      "party": "Labor"
+    },
+    {
+      "year": 2023,
+      "name": "Jane Hume",
+      "party": "Liberal"
+    },
+    {
+      "year": 2023,
+      "name": "James McGrath",
+      "party": "LNP"
+    },
+    {
+      "year": 2024,
+      "name": "Melissa Horne",
+      "party": "Labor"
+    },
+    {
+      "year": 2025,
+      "name": "Andrew Bragg",
+      "party": "Liberal"
+    },
+    {
+      "year": 2026,
+      "name": "Katy Gallagher",
+      "party": "Labor"
+    }
+  ]
+}

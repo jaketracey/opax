@@ -17,7 +17,7 @@ import {
   assertNoVoiceFixtures,
 } from './release-bundle-policy';
 const productionVoice = productionVoiceEnabled('production');
-function config(variant: string, analyticsSwitch = '0') {
+function config(variant: string, analyticsSwitch = '0', android = false) {
   return JSON.parse(
     execFileSync(
       './node_modules/.bin/expo',
@@ -27,6 +27,7 @@ function config(variant: string, analyticsSwitch = '0') {
           ...process.env,
           OPAX_VARIANT: variant,
           OPAX_ANALYTICS: analyticsSwitch,
+          ...(android ? { OPAX_TARGET_PLATFORM: 'android' } : {}),
           EXPO_NO_TELEMETRY: '1',
         },
         encoding: 'utf8',
@@ -124,6 +125,14 @@ for (const variant of ['production', 'e2e', 'development']) {
   }
 }
 assert.equal(release.extra.apiOrigin, 'https://opax.com.au');
+// The layout probe is for one measuring TestFlight build, never by default.
+if (process.env.OPAX_LAYOUT_PROBE !== '1')
+  for (const app of [release, e2e])
+    assert.equal(
+      app.extra.layoutProbe,
+      undefined,
+      'Only a build made with OPAX_LAYOUT_PROBE=1 carries the layout probe',
+    );
 assert.equal(
   release.extra.router.sitemap,
   false,
@@ -139,21 +148,29 @@ assert(
   ),
 );
 assert(!JSON.stringify(e2e).includes('opax.com.au'));
-// Analytics: iOS production sends through the opax.com.au proxy; e2e and
-// development carry no analytics configuration, even with the old opt-in.
-assert.deepEqual(release.extra.analytics, {
+// Analytics: iOS and Android production send through the opax.com.au proxy;
+// e2e and development carry no analytics configuration on either platform,
+// even with the old opt-in.
+const analyticsConfig = {
   host: 'https://opax.com.au/ingest',
   projectToken: 'phc_AsHnQM2UrGBubA5HU9sagkGbg8vqQLNXu3WjEhPRDejr',
   environment: 'production',
-});
+};
+assert.deepEqual(release.extra.analytics, analyticsConfig);
+assert.deepEqual(
+  config('production', '0', true).extra.analytics,
+  analyticsConfig,
+  'Android production sends analytics, as iOS does',
+);
 assert.equal(e2e.extra.analytics, undefined, 'E2E builds send no analytics');
-for (const variant of ['development', 'e2e'])
-  for (const optIn of ['0', '1'])
-    assert.equal(
-      config(variant, optIn).extra.analytics,
-      undefined,
-      `${variant} builds send no analytics, including OPAX_ANALYTICS=${optIn}`,
-    );
+for (const android of [false, true])
+  for (const variant of ['development', 'e2e'])
+    for (const optIn of ['0', '1'])
+      assert.equal(
+        config(variant, optIn, android).extra.analytics,
+        undefined,
+        `${android ? 'Android' : 'iOS'} ${variant} builds send no analytics, including OPAX_ANALYTICS=${optIn}`,
+      );
 assert.deepEqual(
   release.ios.privacyManifests.NSPrivacyCollectedDataTypes.filter(
     (entry: { NSPrivacyCollectedDataTypePurposes: string[] }) =>

@@ -2,11 +2,11 @@ import { useContext, useEffect, useState } from 'react';
 import {
   Animated,
   Easing,
-  Pressable,
   StyleSheet,
   View,
   useWindowDimensions,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../../design/pressable';
 import Svg, { Circle, Path } from 'react-native-svg';
 import {
   useAccessibilitySize,

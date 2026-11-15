@@ -8,8 +8,9 @@
 #   scripts/check-native-scrub.sh [cases.json]
 #
 # Needs only `swift` (Xcode or its command line tools): no simulator, Xcode project or
-# PostHog SDK. The Kotlin copy is not compiled here. It uses the same pattern texts, which
-# the test compares, and on Android the same regex engine (ICU) as NSRegularExpression.
+# PostHog SDK. scripts/check-native-scrub-kotlin.sh runs the Kotlin copy where Java 17 is found
+# (the Android desktop). It uses the same pattern texts, which the test compares, and on Android
+# the same regex engine (ICU) as NSRegularExpression.
 set -euo pipefail
 MOBILE=$(cd "$(dirname "$0")/.." && pwd)
 PATCH="$MOBILE/patches/@posthog+react-native-plugin+2.13.0.patch"

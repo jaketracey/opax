@@ -384,6 +384,38 @@ test('a tile keeps the chevron inside the wrapping label, after its last word', 
   act(() => r.unmount());
 });
 
+test('on Android the chevron is beside the label, not inside it: inline, it dropped the label below its line at large text', () => {
+  const os = jest.replaceProperty(Platform, 'OS', 'android');
+  try {
+    const r = render(
+      <StatTile value="$622,102" label="a year in pay" onPress={jest.fn()} />,
+    );
+    const label = r.root
+      .findAllByType(Text)
+      .find((n) => n.props.variant === 'footnote')!;
+    expect(label.findAllByType(Icon)).toHaveLength(0);
+    expect(StyleSheet.flatten(label.props.style)?.flexShrink).toBe(1);
+    const row = label.parent!;
+    expect(StyleSheet.flatten(row.props.style)).toMatchObject({
+      flexDirection: 'row',
+      alignItems: 'center',
+    });
+    expect(row.findByType(Icon).props).toMatchObject({
+      name: 'chevron.right',
+      tone: 'inkFaint',
+      size: 13,
+      maxScale: 1.5,
+    });
+    act(() => r.unmount());
+    // A tile that goes nowhere has no chevron and stays one text.
+    const plain = render(<StatTile value="28" label="interests" />);
+    expect(plain.root.findAllByType(Icon)).toHaveLength(0);
+    act(() => plain.unmount());
+  } finally {
+    os.restore();
+  }
+});
+
 test('former identity uses the last representation and its recorded periods', () => {
   const identity = {
     ...member,

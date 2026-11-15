@@ -3,8 +3,11 @@ import json
 import os
 from pathlib import Path
 import re
+import signal
 import stat
 import subprocess
+import threading
+import time
 
 
 PRIVATE_NAMES = ("ASC_KEY_PATH", "ASC_KEY_ID", "ASC_ISSUER_ID", "APPLE_TEAM_ID")
@@ -18,6 +21,13 @@ UPLOAD_KEY_NAMES = ("POSTHOG_CLI_API_KEY", "POSTHOG_CLI_TOKEN")
 # and scripts/upload-crash-symbols.sh and scripts/symbolicate-js.sh read them.
 JS_SOURCE_MAP = "main.jsbundle.map"
 JS_CHUNK_ID = "ios.chunk-id"
+# The analytics config every production build embeds, iOS and Android
+# (app.config.ts `extra.analytics`, docs/ANALYTICS.md): the opax.com.au/ingest
+# proxy and the public, write-only project token. E2E and development builds
+# carry none.
+ANALYTICS_CONFIG = {"host": "https://opax.com.au/ingest",
+                    "projectToken": "phc_AsHnQM2UrGBubA5HU9sagkGbg8vqQLNXu3WjEhPRDejr",
+                    "environment": "production"}
 KEY_BEGIN = "-----BEGIN " + "PRIVATE KEY-----"
 KEY_END = "-----END " + "PRIVATE KEY-----"
 
@@ -62,7 +72,12 @@ def redact(text):
                   "[private key redacted]", text, flags=re.S)
 
 
-def run_logged(command, log, *, public_env=False, env=None):
+def run_logged(command, log, *, public_env=False, env=None, timeout=None, grace=10):
+    """With `timeout` (seconds), the command runs in its own process group and
+    the whole group is stopped when the time runs out, so a hung child (a CLI
+    under a script) cannot hold a lock; the log then ends with one line. The
+    group gets TERM first, so a script's EXIT trap can remove what it staged,
+    and KILL `grace` seconds later if any of it is still running."""
     env = (os.environ if env is None else env).copy()
     if public_env:
         for name in (*PRIVATE_NAMES, *UPLOAD_KEY_NAMES, "OPAX_BUNDLE_ID", "OPAX_INTERNAL_TESTER_EMAIL",
@@ -74,19 +89,44 @@ def run_logged(command, log, *, public_env=False, env=None):
                 env.pop(name)
     with Path(log).open("w") as stream:
         process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                   text=True, errors="replace", env=env)
+                                   text=True, errors="replace", env=env, start_new_session=timeout is not None)
+        timed_out = threading.Event()
+        timer = None
+        if timeout is not None:
+            def stop():
+                timed_out.set()
+                try:
+                    os.killpg(process.pid, signal.SIGTERM)
+                    deadline = time.monotonic() + grace
+                    while time.monotonic() < deadline:
+                        time.sleep(0.1)
+                        os.killpg(process.pid, 0)  # raises once the whole group is gone
+                    os.killpg(process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+            timer = threading.Timer(timeout, stop)
+            timer.daemon = True
+            timer.start()
         inside_key = False
-        for line in process.stdout:
-            if KEY_BEGIN in line:
-                inside_key = True
-                stream.write("[private key redacted]\n")
-            if inside_key:
-                if KEY_END in line:
-                    inside_key = False
-                continue
-            stream.write(redact(line))
+        try:
+            for line in process.stdout:
+                if KEY_BEGIN in line:
+                    inside_key = True
+                    stream.write("[private key redacted]\n")
+                if inside_key:
+                    if KEY_END in line:
+                        inside_key = False
+                    continue
+                stream.write(redact(line))
+        finally:
+            if timer:
+                timer.cancel()
         process.stdout.close()
         code = process.wait()
+        if timed_out.is_set():
+            stream.write(f"Timed out after {timeout} seconds; the command was stopped.\n")
+    if timed_out.is_set():
+        raise ReleaseError(f"Command timed out after {timeout} seconds; inspect the redacted log: {log}")
     if code:
         raise ReleaseError(f"Command failed (exit {code}); inspect the redacted log: {log}")
 

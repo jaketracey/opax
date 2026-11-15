@@ -25,7 +25,6 @@ import {
   type DimensionValue,
   type LayoutChangeEvent,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   billEnding,
   billStatusLabel,
@@ -221,7 +220,15 @@ export default function BillDetail({
   const [directory, setDirectory] = useState<SponsorDirectory | null>();
   const view = record?.data;
   const identity = view?.identity.data ?? null;
-  const hasSponsors = !!identity?.sponsorMembers.length;
+  // Arrived from a list, Today, Search or Following: the index row is in
+  // memory, and the header draws from it while the bill's file loads.
+  const seed: IndexRow | null = view ? null : catalogs.billIndexRow(key);
+  // The seeded header draws the sponsor's row too, so the directory is read
+  // as soon as either names a sponsor, not after the bill's file lands.
+  const hasSponsors = !!(
+    identity?.sponsorMembers.length ??
+    (seed && billDisplay(seed).sponsorMembers.length)
+  );
   // Sponsors link to their profile only where the roster and the directory
   // agree on who they are; otherwise the row stays plain.
   useEffect(() => {
@@ -250,9 +257,6 @@ export default function BillDetail({
   const name = identity
     ? billName({ title: identity.title, short_title: identity.shortTitle })
     : '';
-  // Arrived from a list, Today, Search or Following: the index row is in
-  // memory, and the header draws from it while the bill's file loads.
-  const seed: IndexRow | null = view ? null : catalogs.billIndexRow(key);
   const title = name || (seed ? billName(seed) : '') || params.name || '';
   // A key the register could never name, or one it does not publish. A file
   // that arrives but cannot be read is an error, not a missing bill.
@@ -305,30 +309,12 @@ export default function BillDetail({
   const barTitle = useTitleOnScroll(
     embedded ? null : titleRef,
     embedded ? undefined : title || undefined,
-    { trailing: Platform.OS === 'ios' && canShare ? 2 : 1 },
+    { trailing: canShare ? 2 : 1 },
   );
+  // No Ask here on either platform: the menu has items only once the bill
+  // has loaded, and the loaded page always draws its own Ask button.
   const menu = identity
-    ? [
-        ...(Platform.OS === 'ios'
-          ? []
-          : [
-              {
-                title: 'Ask about this bill',
-                symbol: 'text.bubble' as const,
-                onPress: ask,
-              },
-              ...(canShare
-                ? [
-                    {
-                      title: 'Share',
-                      symbol: 'square.and.arrow.up' as const,
-                      onPress: share,
-                    },
-                  ]
-                : []),
-            ]),
-        ...billMenuItems({ billKey: identity.key, title: name, home }),
-      ]
+    ? billMenuItems({ billKey: identity.key, title: name, home })
     : [];
   const failed = notFound || (error && !record);
   // One element per shape: the crossfade keeps the last loading skeleton.
@@ -345,8 +331,10 @@ export default function BillDetail({
     skeleton,
   });
   // Share sits in the bar beside ⋯ and Ask about this bill is a button: iOS 26's
-  // floating tab bar stays up on pushes, and covered a bottom toolbar.
-  const barShare = Platform.OS === 'ios' && canShare && !failed;
+  // floating tab bar stays up on pushes, and covered a bottom toolbar. Android
+  // matches (as its member profile does): its bottom bar held one Share pill
+  // in a band about 70 dp tall above the tabs.
+  const barShare = canShare && !failed;
   return (
     <>
       {embedded ? null : (
@@ -397,7 +385,9 @@ export default function BillDetail({
           />
         }
       >
-        {seed && crossfade.loading ? <SeededHead row={seed} /> : null}
+        {seed && crossfade.loading ? (
+          <SeededHead row={seed} directory={directory} />
+        ) : null}
         {view && identity && record ? (
           <BillPage
             view={view}
@@ -464,9 +454,6 @@ export default function BillDetail({
           </CrossfadeLayers>
         )}
       </Screen>
-      {embedded || failed || Platform.OS === 'ios' || !canShare ? null : (
-        <BillToolbar onShare={share} canShare={!!identity} />
-      )}
     </>
   );
 }
@@ -516,37 +503,6 @@ export function PaneMenu({
         </Menu>
       </Host>
     </View>
-  );
-}
-
-/**
- * Android keeps Share in its bottom bar. Ask follows the summary on every
- * platform; iOS keeps Share in the navigation bar above the floating tab bar.
- */
-function BillToolbar({
-  onShare,
-  canShare: shareReady,
-}: {
-  onShare: () => void;
-  canShare: boolean;
-}) {
-  return (
-    <SafeAreaView
-      edges={['bottom']}
-      style={[
-        styles.toolbar,
-        Platform.OS === 'android' ? styles.androidToolbar : null,
-      ]}
-    >
-      {canShare ? (
-        <Button
-          label="Share"
-          onPress={onShare}
-          disabled={!shareReady}
-          testID="bill-share"
-        />
-      ) : null}
-    </SafeAreaView>
   );
 }
 
@@ -961,11 +917,11 @@ function headerEvent(
 function StatusLine({
   status,
   event,
-  pending = false,
+  pending = null,
 }: {
   status: string;
   event: ReturnType<typeof statusEvent>;
-  pending?: boolean;
+  pending?: ReturnType<typeof likelyStatusEvent>;
 }) {
   const stacked = useAccessibilitySize();
   return (
@@ -985,8 +941,56 @@ function StatusLine({
           {statusEventText(event)}
         </Text>
       ) : pending ? (
-        <Bone width={120} height={15} />
+        <StatusEventBone event={pending} />
       ) : null}
+    </View>
+  );
+}
+
+/**
+ * The event the bill's own file will most likely date the status with, from
+ * what the index row knows: an Act's assent, a stopped bill's own word, and
+ * otherwise the undated "Status as at". Null when the header will draw no
+ * event (no date, or the date is the introduction the meta line carries).
+ * Only its size is used, never its words.
+ */
+export function likelyStatusEvent(
+  row: {
+    status: string;
+    status_as_of: string | null;
+    introduced: string | null;
+  },
+  statusLabel: string,
+): Pick<NonNullable<ReturnType<typeof statusEvent>>, 'label' | 'date'> | null {
+  const date = row.status_as_of;
+  if (!date) return null;
+  if (row.status === 'passed') return { label: 'Royal Assent', date };
+  if (row.status === 'before_parliament' || row.status === 'exposure_draft')
+    return date === row.introduced ? null : { label: 'Status as at', date };
+  return { label: statusLabel, date };
+}
+
+/**
+ * The status event's placeholder, the size its words will take: the likely
+ * words are laid out unseen in the event's own text style and a bar covers
+ * them, so the bar is one line at standard sizes and wraps to two where the
+ * event will (a fixed 15 pt bar dropped the page 87 pt at AX3).
+ */
+function StatusEventBone({
+  event,
+}: {
+  event: Pick<NonNullable<ReturnType<typeof statusEvent>>, 'label' | 'date'>;
+}) {
+  return (
+    <View
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+      testID="bill-status-pending"
+    >
+      <Text variant="secondary" tabular wordSafe style={styles.unseen}>
+        {statusEventText(event)}
+      </Text>
+      <View style={[StyleSheet.absoluteFill, styles.bone]} />
     </View>
   );
 }
@@ -1039,12 +1043,31 @@ function metaLine(bill: {
 
 /**
  * The header from the bills index row, drawn at once while the bill's own
- * file loads (specs/bills.md 4.3): the same title in the same place, the
- * sponsor's name without a portrait, and a live Follow. The status event
- * waits for the key dates unless the row names its stage.
+ * file loads (specs/bills.md 4.3): the same title in the same place, who
+ * brought it in the loaded header's own rows (a sponsor's person row, a
+ * party's link row or the portfolio line, so Follow and the body stay where
+ * they are when the file lands), and a live Follow. The status event waits
+ * for the key dates unless the row names its stage.
  */
-function SeededHead({ row }: { row: IndexRow }) {
-  const display = billDisplay(row);
+function SeededHead({
+  row,
+  directory,
+}: {
+  row: IndexRow;
+  directory: SponsorDirectory | null | undefined;
+}) {
+  const display = useMemo(() => billDisplay(row), [row]);
+  // The loaded header's own sponsor rows, from what the row knows. The index
+  // row carries no person ID: the bill's file confirms it.
+  const sponsors = useMemo(
+    () => ({
+      sponsorMembers: display.sponsorMembers,
+      sponsorParty: display.sponsor_party,
+      sponsorPersonId: null,
+      portfolio: display.portfolio,
+    }),
+    [display],
+  );
   const name = billName(row);
   // The index row carries no stages or votes, only the export's ending when
   // it has one: the same word the bill's own file gives.
@@ -1056,7 +1079,6 @@ function SeededHead({ row }: { row: IndexRow }) {
     introducedLabel: display.introducedLabel,
     house: row.originating_house,
   });
-  const members = display.sponsorMembers;
   return (
     <View style={styles.headBlock} testID="bill-seed">
       <View style={styles.titleBlock}>
@@ -1066,7 +1088,7 @@ function SeededHead({ row }: { row: IndexRow }) {
             introduced: row.introduced,
             introducedLabel: display.introducedLabel,
           })}
-          pending={!event && !!row.status_as_of}
+          pending={event ? null : likelyStatusEvent(row, status)}
         />
         <TitleAnchor>
           <Heading level={1} testID="bill-title">
@@ -1089,24 +1111,7 @@ function SeededHead({ row }: { row: IndexRow }) {
           </TermText>
         ) : null}
       </View>
-      {members.length || display.sponsor_party ? (
-        <View
-          accessible
-          accessibilityLabel={`${members.map((m) => m.name).join(', ') || display.sponsor_party}, ${members.length > 1 ? 'Sponsors' : 'Sponsor'}`}
-          style={styles.seedSponsor}
-        >
-          <Text wordSafe>
-            {members.map((m) => m.name).join(', ') || display.sponsor_party}
-          </Text>
-          <Text variant="secondary" wordSafe>
-            {members.length > 1 ? 'Sponsors' : 'Sponsor'}
-          </Text>
-        </View>
-      ) : display.portfolio ? (
-        <Text variant="secondary" wordSafe testID="bill-portfolio">
-          {`${display.portfolio} portfolio`}
-        </Text>
-      ) : null}
+      <Sponsors identity={sponsors} directory={directory} />
       <FollowButton
         kind="bill"
         id={row.key}
@@ -1176,7 +1181,10 @@ function Sponsors({
   identity,
   directory,
 }: {
-  identity: Identity;
+  identity: Pick<
+    Identity,
+    'sponsorMembers' | 'sponsorParty' | 'sponsorPersonId' | 'portfolio'
+  >;
   directory: SponsorDirectory | null | undefined;
 }) {
   const sponsors = useMemo(
@@ -1533,7 +1541,9 @@ function KeyDates({
   return (
     <View ref={anchor} collapsable={false}>
       <Section title="How it moved" testID="bill-key-dates">
-        {tracker ? <BillStageTracker tracker={tracker} /> : null}
+        {tracker ? (
+          <BillStageTracker tracker={tracker} settleKey={identity?.key} />
+        ) : null}
         {points.length ? (
           <View
             testID="bill-dates-ruler"
@@ -1890,10 +1900,7 @@ function BillVoteRow({
     },
     {
       title: follow.following ? 'Unfollow bill' : 'Follow bill',
-      onPress: () => {
-        follow.onFollow();
-        if (!follow.following) haptic('success');
-      },
+      onPress: follow.onFollow,
     },
     {
       title: 'Copy link',
@@ -1976,6 +1983,7 @@ function BillVoteRow({
                   ayes={division.ayes}
                   noes={division.noes}
                   countsStyle="ayesNoes"
+                  settleKey={division.key}
                   {...chartSource(
                     division.date,
                     division.date,
@@ -2268,6 +2276,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   capsule: { alignSelf: 'flex-start', maxWidth: '100%' },
+  unseen: { opacity: 0 },
   added: { marginTop: rhythm.tight },
   bone: {
     backgroundColor: colors.sunken,
@@ -2275,7 +2284,6 @@ const styles = StyleSheet.create({
     borderCurve: 'continuous',
   },
   boneRound: { borderRadius: radii.round, borderCurve: 'continuous' },
-  seedSponsor: { gap: rhythm.tight },
   seedBody: { gap: rhythm.group, marginTop: rhythm.group },
   seedBlock: { gap: rhythm.line },
   seedPerson: { flexDirection: 'row', alignItems: 'center', gap: rhythm.line },
@@ -2327,12 +2335,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   paneMenuHost: { width: minimumTarget, height: minimumTarget },
-  toolbar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: rhythm.screen,
-    paddingTop: rhythm.tight,
-    backgroundColor: colors.paper,
-  },
-  androidToolbar: { flexWrap: 'wrap', gap: rhythm.tight },
 });

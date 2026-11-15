@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { RecordResult } from './client';
 import { isAbortError } from './abort';
+import { reportPageFailure, reportRecordBlocks } from '../analytics/sections';
 
 // Unlike the catalog hook, this never revalidates on AppState or a timer.
 export function useRead<T>(
@@ -20,21 +21,25 @@ export function useRead<T>(
     const request = async () => load(controller.signal);
     void request()
       .then((record) => {
-        if (generation.current === id && !controller.signal.aborted)
+        if (generation.current === id && !controller.signal.aborted) {
+          reportRecordBlocks(record);
           setOutcome({ load, revision, record, error: null });
+        }
       })
       .catch((error) => {
         if (
           generation.current === id &&
           !controller.signal.aborted &&
           !isAbortError(error)
-        )
+        ) {
+          reportPageFailure(error);
           setOutcome((previous) => ({
             load,
             revision,
             record: previous?.load === load ? previous.record : null,
             error,
           }));
+        }
       });
     return () => {
       generation.current += 1;

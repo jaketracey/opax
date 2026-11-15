@@ -133,6 +133,7 @@ function RetryButton({
   const waiting = remaining > 0;
   return (
     <Pressable
+      feedback="wash"
       accessibilityRole="button"
       accessibilityLabel="Try again"
       accessibilityState={{ disabled: waiting }}

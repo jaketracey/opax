@@ -1,6 +1,7 @@
 import { router, type Href } from 'expo-router';
 import { useRef } from 'react';
-import { Pressable, StyleSheet, type View } from 'react-native';
+import { StyleSheet, type View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { CitationBadge } from '../../design/citation-mark';
 import { Icon } from '../../design/icon';
 import { confirmAction } from '../../design/menu';
@@ -18,7 +19,7 @@ import { minimumTarget, rhythm } from '../../design/tokens';
 import type { SourcePlacement } from '../../analytics/events';
 import { openSource, trackSourceOpen } from '../../navigation/external';
 import { docRoute } from '../../navigation/routes/records';
-import { shareRecord } from '../../navigation/share';
+import { shareSource } from '../../navigation/share';
 import { citationPassage } from './CitationContent';
 import { citeStyles, copyCitation } from './cite';
 import type { Source } from './model';
@@ -66,8 +67,7 @@ export function sourceMenu(
     {
       title: 'Share',
       symbol: 'square.and.arrow.up' as const,
-      onPress: () =>
-        void shareRecord({ path: source.href, title: sourceTitle(source) }),
+      onPress: () => void shareSource(source, sourceTitle(source)),
     },
   ];
 }

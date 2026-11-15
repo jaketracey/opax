@@ -35,7 +35,12 @@ native queue every orbit and was capped at 30 fps.
 floating card (jurisdiction, one line saying what the map shows, the List |
 Map picker), the control stack (search, zoom in, zoom out, fit), the overview
 and the panel. **List:** Donors, Parties and Public money, the full accessible
-data, and the default while VoiceOver is on or not yet known.
+data, and the default while VoiceOver is on. VoiceOver is asked as the app
+starts (`screen-reader.ts`); a screen that mounts before the answer draws
+neither view until it is in (the List if no answer comes), so one view is
+never drawn and then swapped for the other. The Map's frame is the same
+loading and loaded: its bar, card, controls and panel hold their places and
+the map and totals arrive inside them.
 
 Ways around: pinch about the focal point, pan with momentum (rubber-banded at
 the map's edge), double tap to zoom, the zoom and Fit buttons, tap a disc to

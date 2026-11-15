@@ -36,7 +36,7 @@ import { colors } from './tokens';
  * there in the same soft ink.
  *
  * Every answer is the guide's (content/learn/glossary.json). The reader can
- * turn the underline off in Account › Underline terms; then a term is plain
+ * turn the underline off in Account › Glossary terms › Glossary tips; then a term is plain
  * text.
  *
  * VoiceOver can't see an underline:

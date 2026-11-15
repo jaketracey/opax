@@ -13,6 +13,14 @@ export class PeoplePortraits {
   private index?: Promise<Awaited<ReturnType<typeof buildPortraitIndexAsync>>>;
   private snapshot?: readonly unknown[];
   private reading?: typeof this.index;
+  /**
+   * Whose portrait each request resolved to, under the current index only:
+   * a rebuilt index (a refreshed map, credits or directory) empties it, so
+   * a removed or withheld photo is never answered from here.
+   */
+  private resolved = new Map<string, PortraitInfo>();
+  /** The built index the record belongs to. */
+  private built?: Awaited<ReturnType<typeof buildPortraitIndexAsync>>;
   constructor(
     private catalogs: Catalogs,
     private cache: PortraitCache,
@@ -39,6 +47,8 @@ export class PeoplePortraits {
         snapshot.some((data, i) => data !== this.snapshot?.[i])
       ) {
         this.snapshot = snapshot;
+        this.resolved.clear();
+        this.built = undefined;
         const index = buildPortraitIndexAsync({
           roster: d.roster.data,
           slugs: d.slugs.data,
@@ -48,9 +58,14 @@ export class PeoplePortraits {
           photoCredits: credits.data,
         });
         this.index = index;
-        void index.catch(() => {
-          if (this.index === index) this.index = undefined;
-        });
+        void index.then(
+          (value) => {
+            if (this.index === index) this.built = value;
+          },
+          () => {
+            if (this.index === index) this.index = undefined;
+          },
+        );
       }
       return this.index!;
     });
@@ -78,6 +93,27 @@ export class PeoplePortraits {
     const compare = new Intl.Collator('en-AU').compare;
     return [...rows.values()].sort((a, b) => compare(a.name, b.name));
   }
+  private static request(slug?: string, name?: string) {
+    return slug ? `slug:${slug}` : name ? `name:${nameKey(name)}` : null;
+  }
+  /**
+   * The portrait this request last resolved to, at once, if its file was
+   * checked in this launch and is still on disk: a row coming back into
+   * view draws its portrait in its first frame. `get` still answers after
+   * it, and its answer stands.
+   */
+  peek({
+    slug,
+    name,
+  }: {
+    slug?: string;
+    name?: string;
+  }): { info: PortraitInfo; localURI: string } | null {
+    const request = PeoplePortraits.request(slug, name);
+    const info = request ? this.resolved.get(request) : undefined;
+    const localURI = info ? this.cache.peek?.(info.key) : undefined;
+    return info && localURI ? { info, localURI } : null;
+  }
   async get({
     slug,
     name,
@@ -87,6 +123,7 @@ export class PeoplePortraits {
     name?: string;
     refresh?: boolean;
   }): Promise<{ info: PortraitInfo; localURI: string } | null> {
+    const request = PeoplePortraits.request(slug, name);
     const index = await this.directory(refresh);
     if (!slug && name) {
       const matches = [...index.identities].filter(
@@ -107,6 +144,14 @@ export class PeoplePortraits {
       if (new Set(candidates.map((p) => p.key)).size === 1)
         info = candidates[0];
     }
-    return info ? { info, localURI: await this.cache.get(info.key) } : null;
+    if (!info) {
+      if (request) this.resolved.delete(request);
+      return null;
+    }
+    const localURI = await this.cache.get(info.key);
+    // Only under the index that resolved it: one rebuilt meanwhile has
+    // emptied the record, and the next request resolves again.
+    if (request && this.built === index) this.resolved.set(request, info);
+    return { info, localURI };
   }
 }

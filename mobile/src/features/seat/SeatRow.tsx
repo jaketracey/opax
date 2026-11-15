@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import type { Electorate } from '../../api/catalogs';
 import { useAccessibilitySize } from '../../design/accessibility';
 import { Icon } from '../../design/icon';

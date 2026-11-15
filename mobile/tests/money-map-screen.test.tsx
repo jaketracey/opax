@@ -1,3 +1,4 @@
+import { reportBand } from './money-band';
 import { withNavigationOptions } from './navigation-options';
 import { act, type ReactElement } from 'react';
 import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
@@ -266,11 +267,7 @@ test.each([
         top.props.onLayout({ nativeEvent: { layout: { height: 140 } } });
         panel.props.onPeekHeight(180);
       });
-      act(() =>
-        panel.parent!.props.onLayout({
-          nativeEvent: { layout: { y: height - bottom - 200, height: 200 } },
-        }),
-      );
+      act(() => reportBand(root, panel, height, bottom, 200));
       const legacy = {
         width,
         height,
@@ -626,9 +623,7 @@ test.each(['android', 'ios'] as const)(
         // 206 stack leave Fit under the panel (560 + 16 + 206 + 16 > 734).
         top.props.onLayout({ nativeEvent: { layout: { height: 560 } } });
         panel.props.onPeekHeight(180);
-        panel.parent!.props.onLayout({
-          nativeEvent: { layout: { y: height - 200, height: 200 } },
-        });
+        reportBand(r.root, panel, height, 0, 200);
       });
       act(() =>
         controls().parent!.props.onLayout({

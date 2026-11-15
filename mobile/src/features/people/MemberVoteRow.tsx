@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import type { Href } from 'expo-router';
 import { StatusCapsule } from '../../design/labels';
 import { Icon } from '../../design/icon';
