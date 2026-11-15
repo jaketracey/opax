@@ -15,7 +15,7 @@ import { ContentUnavailable, SkeletonCrossfade } from '../src/design/states';
 import { PartyLabel, PersonRow } from '../src/design/people';
 import { Heading, Text } from '../src/design/text';
 import { Screen, SectionHeader } from '../src/design/layout';
-import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { HeaderHeightContext } from 'expo-router/react-navigation';
 import { AUTHORISATION_LINE } from '../src/design/authorisation';
 import Members from '../src/features/your-mp/Members';
