@@ -1,11 +1,14 @@
 import { memo } from 'react';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import Animated, {
+  useAnimatedReaction,
   useAnimatedStyle,
+  useSharedValue,
+  withTiming,
   type SharedValue,
 } from 'react-native-reanimated';
 import { Text } from '../../../design/primitives';
-import { colors } from '../../../design/tokens';
+import { colors, motion } from '../../../design/tokens';
 import { clusterLabelOpacity, nameOpacity } from './camera';
 import type { LabelSlot } from './labels';
 
@@ -19,6 +22,8 @@ export const LABEL_HEIGHT = 22;
  * search and the List view say them at the reader's size.
  */
 export const LABEL_MAX_SCALE = 1.6;
+/** A name's fade as it gains or loses its place. */
+export const LABEL_FADE_MS = motion.duration.quick;
 
 const LabelText = memo(function LabelText({
   text,
@@ -83,6 +88,7 @@ function Slot({
   fitK,
   allowed,
   width,
+  reduceMotion,
 }: {
   slot: LabelSlot;
   tx: SharedValue<number>;
@@ -91,8 +97,25 @@ function Slot({
   fitK: SharedValue<number>;
   allowed: SharedValue<Record<string, 1>>;
   width: number;
+  reduceMotion: boolean;
 }) {
   const { fontScale } = useWindowDimensions();
+  // A name that gains or loses its place among the others fades (it used to
+  // cut in and out as the map moved); with Reduce Motion it still cuts. The
+  // first answer is taken as it is: the map's own arrival brings the names.
+  const shown = useSharedValue(0);
+  const key = slot.key;
+  useAnimatedReaction(
+    () => (allowed.value[key] ? 1 : 0),
+    (now, before) => {
+      if (now === before) return;
+      shown.value =
+        reduceMotion || before === null
+          ? now
+          : withTiming(now, { duration: LABEL_FADE_MS });
+    },
+    [key, reduceMotion],
+  );
   const labelWidth = Math.round(
     LABEL_WIDTH * Math.min(fontScale, LABEL_MAX_SCALE),
   );
@@ -106,12 +129,11 @@ function Slot({
         : slot.kind === 'name'
           ? nameOpacity(level)
           : 1;
-    const shown = allowed.value[slot.key] ? 1 : 0;
     // Beside the disc's rim for a node; above the blob for a cluster.
     const dx = slot.kind === 'cluster' ? -labelWidth / 2 : slot.r * k.value + 6;
     const dy = slot.kind === 'cluster' ? -LABEL_HEIGHT - 4 : -LABEL_HEIGHT / 2;
     return {
-      opacity: byKind * shown,
+      opacity: byKind * shown.value,
       transform: [{ translateX: sx + dx }, { translateY: sy + dy }],
     };
   });
@@ -137,6 +159,7 @@ export function MoneyMapLabels({
   fitK,
   allowed,
   width,
+  reduceMotion = false,
 }: {
   slots: readonly LabelSlot[];
   tx: SharedValue<number>;
@@ -145,6 +168,7 @@ export function MoneyMapLabels({
   fitK: SharedValue<number>;
   allowed: SharedValue<Record<string, 1>>;
   width: number;
+  reduceMotion?: boolean;
 }) {
   return (
     <View
@@ -164,6 +188,7 @@ export function MoneyMapLabels({
           fitK={fitK}
           allowed={allowed}
           width={width}
+          reduceMotion={reduceMotion}
         />
       ))}
     </View>

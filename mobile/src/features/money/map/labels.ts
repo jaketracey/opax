@@ -235,3 +235,22 @@ export function visibleLabels(
   }
   return shown;
 }
+
+/**
+ * Whether two answers of `visibleLabels` show the same names. The camera
+ * moves every frame of a pan or a fly, but the names in view change far
+ * less often: the stage writes a new answer only when this is false, so a
+ * name's fade starts when it comes or goes, not on every frame.
+ */
+export function sameLabels(
+  a: Readonly<Record<string, 1>>,
+  b: Readonly<Record<string, 1>>,
+): boolean {
+  'worklet';
+  let count = 0;
+  for (const key in a) {
+    if (b[key] !== 1) return false;
+    count++;
+  }
+  return Object.keys(b).length === count;
+}

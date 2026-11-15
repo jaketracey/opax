@@ -30,6 +30,7 @@ import Animated, {
   cancelAnimation,
   runOnJS,
   useAnimatedReaction,
+  useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withDecay,
@@ -68,7 +69,12 @@ import {
   type Viewport,
 } from './camera';
 import { blockedMapPoint, HitGrid, pickMapPoint } from './hit';
-import { labelSlots, visibleLabels, type LabelSlot } from './labels';
+import {
+  labelSlots,
+  sameLabels,
+  visibleLabels,
+  type LabelSlot,
+} from './labels';
 import {
   layoutBounds,
   layoutFor,
@@ -79,6 +85,7 @@ import { MINI_HEIGHT, MINI_WIDTH, MiniMap } from './MiniMap';
 import type { MapModel } from './model';
 import { LABEL_HEIGHT, LABEL_WIDTH, MoneyMapLabels } from './MoneyMapLabels';
 import { paintEdges, paintFocus, paintNodes } from './scene';
+import { settleLayout } from './settle';
 import { recordPicture } from './skia-painter';
 import { TapRouter } from './taps';
 
@@ -127,8 +134,6 @@ export function forgetCameras() {
   cameras.clear();
 }
 
-/** Ticks per frame while the layout settles: a short glide into place. */
-const TICKS_PER_FRAME = 10;
 /** A tap allowance around a disc's rim, in points. */
 const TAP_SLACK = 14;
 const FLY_MS = motion.duration.launchLatest;
@@ -147,30 +152,31 @@ const fill = {
   bottom: 0,
 } as const;
 
-/** The layout as the stage reads it: settled, or still gliding. */
+/**
+ * Whether the layout has settled, and whether it did so while this stage
+ * was up (the map then arrives; a layout found settled is simply drawn).
+ * It settles out of sight (settle.ts): nothing is drawn of its steps.
+ */
 function useSettledLayout(layout: ForceLayout, reduced: boolean) {
-  const [generation, setGeneration] = useState(0);
   const [settledLayout, setSettledLayout] = useState<ForceLayout | null>(
     layout.settled ? layout : null,
   );
+  const [arrivedLayout, setArrivedLayout] = useState<ForceLayout | null>(null);
   useEffect(() => {
     if (layout.settled) return;
-    let frame: number | null = null,
-      cancelled = false;
-    const run = () => {
-      if (cancelled) return;
-      const done = layout.tick(reduced ? 400 : TICKS_PER_FRAME);
-      setGeneration((n) => n + 1);
-      if (done) setSettledLayout(layout);
-      else frame = requestAnimationFrame(run);
-    };
-    frame = requestAnimationFrame(run);
-    return () => {
-      cancelled = true;
-      if (frame !== null) cancelAnimationFrame(frame);
-    };
+    return settleLayout(
+      layout,
+      () => {
+        setArrivedLayout(layout);
+        setSettledLayout(layout);
+      },
+      { reduced },
+    );
   }, [layout, reduced]);
-  return { generation, settled: layout.settled || settledLayout === layout };
+  return {
+    settled: layout.settled || settledLayout === layout,
+    arrived: arrivedLayout === layout,
+  };
 }
 
 export function MoneyMap({
@@ -202,7 +208,7 @@ export function MoneyMap({
   // ---- layout and model ------------------------------------------------
   const aspect = window.width / Math.max(1, window.height - 200);
   const layout = layoutFor(graph, aspect);
-  const { generation, settled } = useSettledLayout(layout, reduced);
+  const { settled, arrived } = useSettledLayout(layout, reduced);
   const layoutIndex = useMemo(
     () => new Map(graph.nodes.map((n, i) => [n.id, i])),
     [graph],
@@ -218,15 +224,17 @@ export function MoneyMap({
     },
     [layout, toLayout],
   );
-  // Positions move while the layout settles: `generation` names each step.
+  // The positions are read once the layout has settled.
   const bounds: Bounds = useMemo(() => {
-    void generation;
+    void settled;
     return layoutBounds(layout, toLayout);
-  }, [layout, toLayout, generation]);
+  }, [layout, toLayout, settled]);
   const focusIndex = focus === null ? null : (model.byId.get(focus) ?? null);
 
   // ---- pictures ----------------------------------------------------------
   const pictures = useMemo(() => {
+    // Nothing is recorded of a layout still settling.
+    if (!settled) return null;
     const record = (paint: Parameters<typeof recordPicture>[1]) =>
       recordPicture(bounds, paint);
     return {
@@ -240,20 +248,21 @@ export function MoneyMap({
         paintNodes(p, model, at, 'large', palette.paper),
       ),
     };
-  }, [model, at, bounds, palette.paper]);
+  }, [settled, model, at, bounds, palette.paper]);
   const focusPicture: SkPicture | null = useMemo(
     () =>
-      focusIndex === null
+      focusIndex === null || !settled
         ? null
         : recordPicture(bounds, (p) =>
             paintFocus(p, model, at, focusIndex, palette.ink, palette.paper),
           ),
-    [focusIndex, model, at, bounds, palette.ink, palette.paper],
+    [settled, focusIndex, model, at, bounds, palette.ink, palette.paper],
   );
   const slots: LabelSlot[] = useMemo(() => {
     void bounds;
-    return labelSlots(model, layout.centres, at, focusIndex);
-  }, [model, layout.centres, at, focusIndex, bounds]);
+    // Names come with the settled map, not before it.
+    return settled ? labelSlots(model, layout.centres, at, focusIndex) : [];
+  }, [settled, model, layout.centres, at, focusIndex, bounds]);
   // Picking uses the drawn discs: the model's radii, at the layout's places.
   const hit = useMemo(() => {
     void bounds;
@@ -741,7 +750,7 @@ export function MoneyMap({
     () => ({ tx: tx.value, ty: ty.value, k: k.value }),
     (camera) => {
       const viewport = viewportSV.value;
-      allowed.value = visibleLabels(
+      const next = visibleLabels(
         slots,
         camera,
         {
@@ -753,6 +762,8 @@ export function MoneyMap({
         },
         box,
       );
+      // Only when a name comes or goes: each one fades on that change.
+      if (!sameLabels(allowed.value, next)) allowed.value = next;
     },
     [slots, box, safeLeft, safeRight, clipTop],
   );
@@ -768,6 +779,21 @@ export function MoneyMap({
   );
   // Reduce Motion stops the flick (no decay) and every fly is a cut; a pan
   // or pinch still follows the finger, as a scroll view does.
+
+  // The map arrives once, settled: a short fade when it settled while this
+  // stage was up, nothing when the layout was found settled (coming back)
+  // or with Reduce Motion.
+  const arrival = useSharedValue(settled ? 1 : 0);
+  useEffect(() => {
+    if (!settled) arrival.set(0);
+    else
+      arrival.set(
+        arrived && !reduced
+          ? withTiming(1, { duration: motion.duration.crossfade })
+          : 1,
+      );
+  }, [settled, arrived, reduced, arrival]);
+  const arrivalStyle = useAnimatedStyle(() => ({ opacity: arrival.value }));
 
   // ---- probes (e2e builds only) ----------------------------------------
   const probe = useMoneyMapProbe(canvasRef, settled && size.width > 0);
@@ -838,8 +864,8 @@ export function MoneyMap({
             pointerEvents="none"
             testID="money-map-clip"
           >
-            <View
-              style={
+            <Animated.View
+              style={[
                 clip
                   ? [
                       styles.unclip,
@@ -849,9 +875,11 @@ export function MoneyMap({
                         height: size.height,
                       },
                     ]
-                  : styles.fill
-              }
+                  : styles.fill,
+                arrivalStyle,
+              ]}
               pointerEvents="none"
+              testID="money-map-arrival"
             >
               <SizedCanvas
                 ref={canvasRef}
@@ -862,22 +890,24 @@ export function MoneyMap({
                 accessibilityElementsHidden
                 importantForAccessibility="no-hide-descendants"
               >
-                <Group transform={transform}>
-                  <Group opacity={dim}>
-                    <Group opacity={publicOpacity}>
-                      <Picture picture={pictures.publicEdges} />
+                {pictures ? (
+                  <Group transform={transform}>
+                    <Group opacity={dim}>
+                      <Group opacity={publicOpacity}>
+                        <Picture picture={pictures.publicEdges} />
+                      </Group>
+                      <Group opacity={thinOpacity}>
+                        <Picture picture={pictures.thinEdges} />
+                      </Group>
+                      <Picture picture={pictures.thickEdges} />
+                      <Group opacity={smallOpacity}>
+                        <Picture picture={pictures.smallNodes} />
+                      </Group>
+                      <Picture picture={pictures.largeNodes} />
                     </Group>
-                    <Group opacity={thinOpacity}>
-                      <Picture picture={pictures.thinEdges} />
-                    </Group>
-                    <Picture picture={pictures.thickEdges} />
-                    <Group opacity={smallOpacity}>
-                      <Picture picture={pictures.smallNodes} />
-                    </Group>
-                    <Picture picture={pictures.largeNodes} />
+                    {focusPicture ? <Picture picture={focusPicture} /> : null}
                   </Group>
-                  {focusPicture ? <Picture picture={focusPicture} /> : null}
-                </Group>
+                ) : null}
               </SizedCanvas>
               {size.width > 0 ? (
                 <MoneyMapLabels
@@ -888,9 +918,10 @@ export function MoneyMap({
                   fitK={fitK}
                   allowed={allowed}
                   width={size.width}
+                  reduceMotion={reduced}
                 />
               ) : null}
-            </View>
+            </Animated.View>
           </View>
         </View>
       </GestureDetector>
