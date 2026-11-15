@@ -136,6 +136,18 @@ export class CatalogCache {
     if (!(await this.loadIndex()).some((entry) => entry.url === url)) return;
     return this.readCatalog(url);
   }
+  /**
+   * The copies saved on disk, newest validation first: each URL and when it
+   * was last confirmed. Read from the index the cache already keeps; no
+   * body is read and nothing is written. Session-only search pages are not
+   * listed.
+   */
+  async saved(): Promise<readonly { url: string; validatedAt: number }[]> {
+    await this.queue;
+    return (await this.loadIndex())
+      .map(({ url, validatedAt }) => ({ url, validatedAt }))
+      .sort((a, b) => b.validatedAt - a.validatedAt);
+  }
   /** An authoritative withdrawal removes both the disk and memory copy. */
   async remove(url: string): Promise<void> {
     const task = this.queue.then(async () => {
