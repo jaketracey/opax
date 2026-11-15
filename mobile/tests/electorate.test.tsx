@@ -501,6 +501,14 @@ test('at accessibility sizes an election row’s date has its own line, with no 
         .children;
     expect(line('election-row-0-title')).toBe('2025 federal election');
     expect(line('election-row-0-date')).toBe('3\u00a0May\u00a02025');
+    // Both lines are word-safe: at the largest sizes the date alone is
+    // wider than a phone's column, and must step down, never break inside
+    // a number.
+    for (const id of ['election-row-0-title', 'election-row-0-date'])
+      expect(
+        r.root.find((n) => n.props.testID === id && n.type === Text).props
+          .wordSafe,
+      ).toBe(true);
     const row = r.root.find(
       (n) => n.props.testID === 'election-row-0' && n.props.accessible,
     );

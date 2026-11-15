@@ -977,6 +977,9 @@ function ElectionRow({
           </Text>
           {date && stacked ? (
             <Text
+              // Word-safe, as the title is: at the largest sizes a date is
+              // wider than a phone's column and would break inside a number.
+              wordSafe
               variant="subsectionTitle"
               accessibilityRole="text"
               testID={`${testID}-date`}
