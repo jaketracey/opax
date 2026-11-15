@@ -164,7 +164,16 @@ test("a donor round's source opens the donor's money record by its graph id", as
       typeof node.props.onPress === 'function',
   );
   expect(row.props.external).toBe(false);
+  // The record is pushed two frames after the sheet closes
+  // (navigation/sheets.ts, pushBeneathSheet).
+  const queued: FrameRequestCallback[] = [];
+  const frames = jest
+    .spyOn(global, 'requestAnimationFrame')
+    .mockImplementation((callback) => queued.push(callback));
   act(() => row.props.onPress());
+  queued.shift()!(0);
+  queued.shift()!(0);
+  frames.mockRestore();
   expect(router.push).toHaveBeenCalledWith({
     pathname: '/money-record',
     params: { node: 'donor:wattleby' },
