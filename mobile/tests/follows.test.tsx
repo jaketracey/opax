@@ -1532,6 +1532,30 @@ describe('Following', () => {
     await act(async () => r.unmount());
   });
 
+  test('the caught-up foot stays while an unfollowed row closes, and after it has gone', async () => {
+    jest.useFakeTimers();
+    try {
+      mock.followSources.mockResolvedValue(sources());
+      await follow({ kind: 'bill', id: BILL, title: 'Fixture bill' });
+      await follow({ kind: 'electorate', id: GRAYNDLER, title: 'Grayndler' });
+      const r = await render();
+      expect(has(r, 'follows-quiet')).toBe(true);
+      const menu = row(r, `follows-row-electorate-${GRAYNDLER}`).props.menu;
+      await act(async () => menu.at(-1).items[0].onPress());
+      // The row is on its way out: the foot has not gone with it.
+      expect(has(r, 'follows-quiet')).toBe(true);
+      await act(async () => {
+        jest.advanceTimersByTime(revealMotion.duration + 50);
+      });
+      expect(has(r, `follows-row-electorate-${GRAYNDLER}`)).toBe(false);
+      expect(has(r, `follows-row-bill-${BILL}`)).toBe(true);
+      expect(has(r, 'follows-quiet')).toBe(true);
+      await act(async () => r.unmount());
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
   test('the caught-up rule: every follow checked, none changed, and at least one', () => {
     const ready = readyState(
       followState({ kind: 'bill', id: BILL, seen: null }, sources()),
