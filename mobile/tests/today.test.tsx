@@ -2126,6 +2126,65 @@ describe('since your last visit', () => {
       if (body.includes(FRESH)) expect(body).not.toContain('openedAt');
   });
 
+  test('two old copies that both carry a last-open time have none left after one save, and the line still counts from their total and date', async () => {
+    // As builds 77 to 82 left the store: both alternating copies written,
+    // each with its visit time.
+    const old = oldRecords();
+    const before = new Date(Date.now() - 2 * DAY_MS).toISOString();
+    await old.save({
+      version: 1,
+      openedAt: 1_793_000_000_000,
+      total: 900,
+      checkedAt: before,
+    });
+    await old.save({
+      version: 1,
+      openedAt: 1_794_000_000_000,
+      total: 1000,
+      checkedAt: LAST_NIGHT,
+    });
+    expect(visitFiles()).toHaveLength(2);
+    for (const [, body] of visitFiles()) expect(body).toContain('openedAt');
+    // The read path is as it was: the newer copy's total and date.
+    await expect(readVisit()).resolves.toEqual({
+      total: 1000,
+      checkedAt: LAST_NIGHT,
+    });
+    setUp({ cached: { date: addDays(today, -1) } });
+    mock.corpusSaved.mockResolvedValue(corpus(1000, LAST_NIGHT));
+    mock.corpus.mockResolvedValue(corpus(1412, FRESH));
+    const r = await render(<Today />);
+    firstFrame(r);
+    expect(hosts(r, 'today-since-count').at(-1)!.props.accessibilityLabel).toBe(
+      `412 more records in OPAX since ${day(LAST_NIGHT)}`,
+    );
+    // The one save the drawn line makes clears the time from both copies.
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    expect(visitFiles()).toHaveLength(2);
+    for (const [, body] of visitFiles()) {
+      expect(body).not.toMatch(/openedAt|1793000000000|1794000000000/);
+      expect(JSON.parse(body)).toMatchObject({
+        version: 1,
+        total: 1412,
+        checkedAt: FRESH,
+      });
+    }
+    await expect(readVisit()).resolves.toEqual({
+      total: 1412,
+      checkedAt: FRESH,
+    });
+    // A store already clean is written once, as before.
+    const save = jest.spyOn(TwoSlotStore.prototype, 'save');
+    try {
+      await rememberVisit({ total: 1500, checkedAt: FRESH });
+      expect(save).toHaveBeenCalledTimes(1);
+    } finally {
+      save.mockRestore();
+    }
+  });
+
   test('the next launch draws that growth from the saved copy of the record, in the first frame, with the network still out', async () => {
     // The last launch's late answer is the copy the device now holds.
     await visited();
