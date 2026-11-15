@@ -78,6 +78,7 @@ import {
 } from './row-padding';
 import { usePaneBar, useSplitPane } from './split';
 import { useHeaderBottom } from './useHeaderBottom';
+import { useLayoutProbe } from '../perf/layout-probe';
 import { ScreenSectionGapContext, StatePageProvider } from './states';
 import { Heading, Text } from './text';
 import {
@@ -521,6 +522,8 @@ export function Screen({
   // A new band (Search submitted again) learns its rest offset again.
   if (!pinnedHere && pinnedRest !== null) setPinnedRest(null);
   const contentRoot = useRef<View>(null);
+  // A measuring build only; does nothing without its build flag.
+  useLayoutProbe(contentRoot, scrollY, headerBottom);
   const [anchorBottom, setAnchorBottom] = useState<number | null>(null);
   const titleScroll = useRef<TitleScrollHandler | null>(null);
   const suppliedBridge = useContext(ScreenTitleContext);
