@@ -455,9 +455,11 @@ test('Today with a last visit draws its since-your-last-visit line from the free
       expected_resources: total,
       refresh: { checked_at: checked },
     }) as never;
-  jest
-    .mocked(readVisit)
-    .mockResolvedValue({ openedAt: 1, total: 1000, checkedAt });
+  jest.mocked(readVisit).mockResolvedValue({
+    openedAt: Date.parse('2026-11-12T09:00:00'),
+    total: 1000,
+    checkedAt,
+  });
   jest
     .mocked(catalogs.corpusSaved)
     .mockResolvedValue(collection(1000, checkedAt));
@@ -478,8 +480,8 @@ test('Today with a last visit draws its since-your-last-visit line from the free
   const line = today.root.findAll(
     (n) => typeof n.type === 'string' && n.props.testID === 'today-since-count',
   );
-  expect(line.at(-1)!.props.accessibilityLabel).toBe(
-    '12 more records in OPAX since your last visit',
+  expect(line.at(-1)!.props.accessibilityLabel).toMatch(
+    /^12 records added since 12 Nov( 2026)?$/,
   );
   expect(catalogs.corpus).toHaveBeenCalledTimes(1);
   expect(rememberVisit).toHaveBeenCalledTimes(1);

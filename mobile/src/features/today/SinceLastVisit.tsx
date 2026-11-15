@@ -15,6 +15,7 @@ import { Text } from '../../design/text';
 import { minimumTarget, radii, rhythm, textStyles } from '../../design/tokens';
 import { recentRecordsRoute } from '../../navigation/routes';
 import { presentSource } from '../../navigation/sheets';
+import { changeDate } from '../follows/changes';
 import {
   moreSince,
   readVisit,
@@ -30,6 +31,11 @@ export interface Since {
   checkedAt: string;
   /** The collection's total the count was worked out from. */
   total: number;
+  /**
+   * When the total it is counted from was kept on this device (ms): the
+   * date the line names. Never leaves the device.
+   */
+  since: number;
 }
 
 /** The collection record's two facts the line needs. */
@@ -46,8 +52,8 @@ const collectionOf = (data: {
 });
 
 /**
- * Today's "since your last visit": how many more records the collection
- * holds than when the reader last opened the app.
+ * Today's records-added line: how many more records the collection holds
+ * than the total this device last kept, and the day it kept it.
  *
  * - The count is the change in the total the collection's own public record
  *   states (`/corpus.json`, a free catalogue read: no paid read on launch).
@@ -78,8 +84,8 @@ export function useSinceLastVisit(drawn: boolean): Since | null {
       /** Growth from a current source is a line to draw, if in time. */
       const offer = (collection: Collection) => {
         const count = moreSince(last, collection.total);
-        if (active && sourceCurrent(collection.checkedAt, Date.now()))
-          setAnswer({ count, ...collection });
+        if (active && last && sourceCurrent(collection.checkedAt, Date.now()))
+          setAnswer({ count, ...collection, since: last.openedAt });
       };
       const saved = await Promise.resolve()
         .then(() => catalogs.corpusSaved())
@@ -121,12 +127,15 @@ export function useSinceLastVisit(drawn: boolean): Since | null {
 export const COLLECTION_RECORD = 'OPAX collection coverage record';
 
 /**
- * The line's words, only ever for records added. The number is the change
- * in the collection's stated total, so it says "more records in OPAX",
- * which is exactly what it is.
+ * The line's words, only ever for records added: "1,204 records added
+ * since 12 Nov". The number is the change in the collection's stated total
+ * from the total this device last kept, and the date is the day it kept
+ * it, in the form Today's other lines use (no year in this year). It names
+ * that date, not "your last visit": the total kept moves on only when a
+ * line is drawn or nothing was added, so it can be several launches old.
  */
-export const sinceWords = (count: number) =>
-  `${count.toLocaleString('en-AU')} more ${count === 1 ? 'record' : 'records'} in OPAX since your last visit`;
+export const sinceWords = (count: number, since: number, year?: number) =>
+  `${count.toLocaleString('en-AU')} ${count === 1 ? 'record' : 'records'} added since ${changeDate(since, year)}`;
 
 /** The line's source, as About cites the collection record. */
 export function sinceSources(since: Since): SourceDetails {
@@ -141,15 +150,15 @@ export function sinceSources(since: Since): SourceDetails {
       },
     ],
     notes: [
-      'The number is the change in the total number of records the collection record states, since you last opened OPAX on this device.',
-      'When you last opened OPAX is kept on this device only.',
+      'The number is the change in the total number of records the collection record states, from the total this device last kept, on the date shown.',
+      'That total and its date are kept on this device only.',
     ],
   };
 }
 
 /**
- * Under Today's date, when records were added: "412 more records in OPAX
- * since your last visit", and under it the source line every Today source
+ * Under Today's date, when records were added: "412 records added since
+ * 12 Nov", and under it the source line every Today source
  * draws (`SourceAffordance`: the source glyph, "Updated 15 Nov 2026" and
  * the record's name in navy). Both open Just added; touch and hold on the
  * count (or its VoiceOver action) opens the sources. With no line, nothing
@@ -162,7 +171,7 @@ export function SinceLine({ since }: { since: Since | null }) {
     textStyles.secondary.lineHeight,
   );
   if (!since) return null;
-  const words = sinceWords(since.count);
+  const words = sinceWords(since.count, since.since);
   const updated = updatedText(since.checkedAt);
   const band = Math.max(0, (minimumTarget - textHeight) / 2);
   const openAdded = () => router.push(recentRecordsRoute);
