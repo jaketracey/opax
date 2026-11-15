@@ -49,7 +49,7 @@ import {
   useRailSolidRoot,
 } from '../navigation/useRootBarAppearance';
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
-import { useAccessibilitySize } from './accessibility';
+import { useAccessibilitySize, useReduceMotion } from './accessibility';
 import {
   columnBreakout,
   columns,
@@ -160,6 +160,13 @@ export function useScreenColumn(
   const bar = usePaneBar();
   return { onLayout, content, inner, bar, breakout, regular };
 }
+
+/**
+ * How long the offset must stay still after the cut turns off before the
+ * page is checked against where it should be, and how far short counts.
+ */
+export const CUT_SETTLE_MS = 300;
+const CUT_SETTLE_SLACK = 1;
 
 /** Half a point of rounding between UIKit's inset and the reported bar. */
 const underBarSlack = 1;
@@ -580,6 +587,50 @@ export function Screen({
   // hiding and return leave them (measured on iOS 26.3: 358 → 474 → 358).
   const clipTop =
     Platform.OS === 'ios' && clipAboveSafeTop && !belowBar ? safeTop : 0;
+  // One case UIKit does not get right: at the END of a list. As the cut
+  // turns off the frame grows, React Native keeps the offset inside the new
+  // range before UIKit has moved it, and the page ends `safeTop` short of
+  // where it was (iOS 26.3: 548 → 370, where 432 was the end). So the
+  // offset the page should come back to is noted as the cut turns off, and
+  // once the bar has settled a page left short of it scrolls back.
+  const reduceMotion = useReduceMotion();
+  const settle = useRef<{
+    expected: number;
+    timer: ReturnType<typeof setTimeout> | null;
+  } | null>(null);
+  const settleLater = useCallback(() => {
+    const pending = settle.current;
+    if (!pending) return;
+    if (pending.timer) clearTimeout(pending.timer);
+    pending.timer = setTimeout(() => {
+      settle.current = null;
+      const y = scrollY.current;
+      const view =
+        scrollRef && typeof scrollRef === 'object' ? scrollRef.current : null;
+      if (y === null || !view) return;
+      if (pending.expected - y > CUT_SETTLE_SLACK)
+        view.scrollTo({ y: pending.expected, animated: !reduceMotion });
+    }, CUT_SETTLE_MS);
+  }, [scrollRef, reduceMotion]);
+  const cancelSettle = useCallback(() => {
+    if (settle.current?.timer) clearTimeout(settle.current.timer);
+    settle.current = null;
+  }, []);
+  const lastClipTop = useRef(clipTop);
+  useLayoutEffect(() => {
+    const delta = clipTop - lastClipTop.current;
+    lastClipTop.current = clipTop;
+    if (!delta) return;
+    cancelSettle();
+    const y = scrollY.current;
+    // Turning off, scrolled: the frame moves up by `-delta`, and so should
+    // the offset. (At the top UIKit rests the content itself.)
+    if (delta < 0 && y !== null && y > 0) {
+      settle.current = { expected: y + delta, timer: null };
+      settleLater();
+    }
+  }, [clipTop, cancelSettle, settleLater]);
+  useEffect(() => cancelSettle, [cancelSettle]);
   const [pinnedRest, setPinnedRest] = useState<number | null>(null);
   // A new band (Search submitted again) learns its rest offset again.
   if (!pinnedHere && pinnedRest !== null) setPinnedRest(null);
@@ -678,6 +729,8 @@ export function Screen({
                 if (clampScrollOnContentChange) bounds.onScroll(event);
                 const y = event.nativeEvent.contentOffset.y;
                 scrollY.current = y;
+                // The bar is still settling: look again once it is quiet.
+                if (settle.current) settleLater();
                 rest.track(y);
                 checkUnderBar();
                 if (Platform.OS === 'android') androidRoot.onScroll(y);
@@ -688,6 +741,8 @@ export function Screen({
               onScrollBeginDrag={
                 pinnedHere
                   ? (event) => {
+                      // The reader has taken over: no scrolling back.
+                      cancelSettle();
                       rest.drag();
                       const y = event.nativeEvent.contentOffset.y;
                       // At rest UIKit's inset makes the offset negative; a drag
@@ -697,7 +752,10 @@ export function Screen({
                           rest === null ? y : Math.min(rest, y),
                         );
                     }
-                  : rest.drag
+                  : () => {
+                      cancelSettle();
+                      rest.drag();
+                    }
               }
               onScrollEndDrag={
                 clampScrollOnContentChange ? bounds.onScroll : undefined

@@ -4,7 +4,13 @@ import {
   HeaderHeightContext,
   NavigationContext,
 } from 'expo-router/react-navigation';
-import { act, useContext, type ReactElement, type ReactNode } from 'react';
+import {
+  act,
+  createRef,
+  useContext,
+  type ReactElement,
+  type ReactNode,
+} from 'react';
 import {
   Animated,
   Dimensions,
@@ -20,6 +26,7 @@ import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { Icon } from '../src/design/icon';
 import {
   InsetGroup,
+  CUT_SETTLE_MS,
   PinnedAtTopContext,
   PinnedRestContext,
   Screen,
@@ -1929,6 +1936,97 @@ describe('Screen pins a band under the bar (sweep 1, item 1)', () => {
     expect(live().props.onMomentumScrollEnd).toBeUndefined();
     scrollTo.mockRestore();
     act(() => tree.unmount());
+    // The end of a list is the one place the offset is left short when the
+    // cut turns off (React Native keeps it inside the taller frame's range
+    // before UIKit has moved it): 548 → 494 as the bar returns, then 370,
+    // where 432 was the end. Once the bar has settled the page scrolls back.
+    jest.useFakeTimers();
+    try {
+      const calls: { y: number; animated: boolean }[] = [];
+      const ref = createRef<ScrollView>();
+      const spy = jest
+        .spyOn(ScrollView.prototype, 'scrollTo')
+        .mockImplementation((options) => {
+          calls.push(options as { y: number; animated: boolean });
+        });
+      const cutPage = (on: boolean) => (
+        <SafeAreaInsetsContext.Provider
+          value={{ top: 62, bottom: 34, left: 0, right: 0 }}
+        >
+          <HeaderHeightContext.Provider value={240}>
+            <Screen testID="page" scrollRef={ref} clipAboveSafeTop={on}>
+              <View testID="first" />
+            </Screen>
+          </HeaderHeightContext.Provider>
+        </SafeAreaInsetsContext.Provider>
+      );
+      const end = render(cutPage(true));
+      const view = () =>
+        end.root.find(
+          (node) =>
+            node.props.testID === 'page' &&
+            typeof node.props.onScroll === 'function',
+        );
+      const at = (y: number) =>
+        act(() =>
+          view().props.onScroll({
+            nativeEvent: {
+              contentOffset: { y },
+              contentSize: { height: 1306 },
+              layoutMeasurement: { height: 812 },
+            },
+          }),
+        );
+      const settleNow = () =>
+        act(() => {
+          jest.advanceTimersByTime(CUT_SETTLE_MS + 10);
+        });
+      // End of the list: the bar returns (−54), the cut turns off, and the
+      // offset is left 62 short.
+      at(548);
+      at(494);
+      act(() => end.update(cutPage(false)));
+      at(401);
+      at(370);
+      // Nothing while the offset is still moving.
+      expect(calls).toHaveLength(0);
+      settleNow();
+      expect(calls).toEqual([{ y: 432, animated: true }]);
+      // Mid-list UIKit lands on the right offset by itself: nothing to do.
+      calls.length = 0;
+      act(() => end.update(cutPage(true)));
+      at(474);
+      at(420);
+      act(() => end.update(cutPage(false)));
+      at(389);
+      at(358);
+      settleNow();
+      expect(calls).toHaveLength(0);
+      // A drag in the meantime means the reader has taken over.
+      act(() => end.update(cutPage(true)));
+      at(548);
+      at(494);
+      act(() => end.update(cutPage(false)));
+      at(370);
+      act(() =>
+        view().props.onScrollBeginDrag({
+          nativeEvent: { contentOffset: { y: 370 } },
+        }),
+      );
+      settleNow();
+      expect(calls).toHaveLength(0);
+      // At the top UIKit rests the content itself: never scrolled back.
+      act(() => end.update(cutPage(true)));
+      at(0);
+      act(() => end.update(cutPage(false)));
+      at(-116);
+      settleNow();
+      expect(calls).toHaveLength(0);
+      spy.mockRestore();
+      act(() => end.unmount());
+    } finally {
+      jest.useRealTimers();
+    }
     // Below an opaque bar (before iOS 26) the scroll view already starts
     // under the bar: a margin there would only add a blank band.
     Object.defineProperty(Platform, 'Version', {
