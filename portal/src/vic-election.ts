@@ -92,11 +92,16 @@ const links = (items: string[]) => `<ul class="hub-links">${items.map(x=>`<li>${
 export const latest = (s: Seat) => s.result ? s.result.since || s.result.general : null
 export const contestName = (c: Contest) => `${c.date.slice(0,4)} ${c.kind === 'general' ? 'election' : c.kind === 'supplementary' ? 'supplementary election' : 'by-election'}`
 const seatName = (s: Seat) => s.kind === 'region' ? `${s.name} Region` : s.name
-/** Before the polls close a seat page leads with its candidates, in the words people search with. */
-const candidateLead = (s: Seat, closed: boolean) => !closed && s.candidates?.list.length
-  ? {title:`${seatName(s)} candidates · 2026 Victorian election`,
-    description:`${s.candidates.list.length === 1 ? 'The candidate' : `The ${s.candidates.list.length} candidates`} for ${seatName(s)} at the 2026 Victorian election, in ballot paper order. `}
-  : null
+/**
+ * A seat page's head until the polls close: the seat, its candidate count, the election
+ * date and what the page holds. It names no person and calls nobody a member. The title
+ * leads with candidates, in the words people search with, once a list is published.
+ */
+function openHead(s: Seat, holds: string) {
+  const n = s.candidates?.list.length ?? 0
+  return {title:n ? `${seatName(s)} candidates · 2026 Victorian election` : null,
+    description:`${n ? `${n === 1 ? 'The candidate' : `The ${n} candidates`} for ${seatName(s)}` : seatName(s)} at the Victorian election on 28 November 2026${n ? ', in ballot paper order, with ' : ': '}${holds}.`}
+}
 const memberOf = (d: VicElection, name: string) => d.seats.find(s => s.kind === 'district' && s.name === name)!
 
 export interface KeyDate {
@@ -222,17 +227,18 @@ function electionResults(d: VicElection, s: Seat | null, now: Date) {
 export const VIC_ELECTION_ABOUT = 'Dates, boundaries and results © Victorian Electoral Commission; suburb and postcode splits from the Australian Bureau of Statistics (both CC BY 4.0); speeches and votes from OPAX’s parliamentary record.'
 const about = () => `<p class="vic-about">About this data: ${VIC_ELECTION_ABOUT.replace(/^D/,'d')} ${link('/methods#vic-election','How this page is built')}</p>`
 
-/** Every candidate as the VEC lists them: ballot position and name, the same fields for each. */
-const candidateList = (s: Seat) => s.candidates?.list.length ? [{'@type':'ItemList','@id':ORIGIN+s.path+'#candidates',
-  name:`Candidates for ${seatName(s)} at the 2026 Victorian election`,numberOfItems:s.candidates.list.length,
-  itemListElement:s.candidates.list.map((c,i)=>({'@type':'ListItem',position:i+1,item:{'@type':'Person',name:c.name}}))}] : []
-const structured = (path: string, d: VicElection, rows: {href: string; name: string}[], s: Seat | null = null) => ({'@graph':[
+/** People in a seat's structured data all have the same fields: a position and a name. No link, party or office. */
+const people = (id: string, names: string[], name?: string) => ({'@type':'ItemList','@id':id,...name ? {name} : {},numberOfItems:names.length,
+  itemListElement:names.map((n,i)=>({'@type':'ListItem',position:i+1,item:{'@type':'Person',name:n}}))})
+/** The hub lists its seat pages. A seat lists its candidates in ballot paper order, or its roster names until a list is published. */
+const structured = (d: VicElection, s: Seat | null) => ({'@graph':[
   {'@type':'Event','@id':ORIGIN+VIC_ELECTION_PATH+'#election',name:'2026 Victorian state election',url:ORIGIN+VIC_ELECTION_PATH,
     startDate:VIC_ELECTION_POLLS_OPEN,endDate:VIC_ELECTION_POLLS_CLOSE,eventAttendanceMode:'https://schema.org/OfflineEventAttendanceMode',
     location:{'@type':'Place',name:'Victoria, Australia',address:{'@type':'PostalAddress',addressRegion:'VIC',addressCountry:'AU'}},
     organizer:{'@type':'GovernmentOrganization',name:'Victorian Electoral Commission',url:'https://www.vec.vic.gov.au/'},sameAs:d.sources.election},
-  {'@type':'ItemList','@id':ORIGIN+path+'#records',numberOfItems:rows.length,itemListElement:rows.map((r,i)=>({'@type':'ListItem',position:i+1,name:r.name,url:ORIGIN+r.href}))},
-  ...s ? candidateList(s) : [],
+  !s ? {'@type':'ItemList','@id':ORIGIN+VIC_ELECTION_PATH+'#records',numberOfItems:d.seats.length,itemListElement:d.seats.map((x,i)=>({'@type':'ListItem',position:i+1,name:x.name,url:ORIGIN+x.path}))}
+    : s.candidates?.list.length ? people(ORIGIN+s.path+'#candidates',s.candidates.list.map(c=>c.name),`Candidates for ${seatName(s)} at the 2026 Victorian election`)
+    : people(ORIGIN+s.path+'#records',s.members.map(m=>m.name)),
 ]})
 
 // ---- the seat finder -----------------------------------------------------------------
@@ -295,10 +301,10 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
       + section('regions','Upper house: 8 regions',`<ul class="vic-regions">${regions.map(r=>`<li><a class="vic-region" href="${esc(r.path)}"><span class="vic-seat-name">${esc(r.name)}</span><span class="vic-region-members">${r.members.map(m=>`<span>${esc(m.name)} ${party(m.party)}</span>`).join('')}</span></a></li>`).join('')}</ul>`,rosterNote+'Each region elects five members.')
   } else if (s.kind === 'district') {
     const m = s.members[0], region = d.seats.find(r=>r.kind === 'region' && r.name === s.region)!
-    const lead = candidateLead(s,closed)
-    title = lead?.title ?? `${s.name} district · Victorian election 2026`
     const r = latest(s)
-    description = `${lead?.description ?? ''}${closed ? 'Published member records for' : 'Who holds'} ${s.name}, ${r ? `the ${contestName(r)} result and winning margin, ` : ''}and what ${m.name} has done in Parliament. ${copy.lede}`
+    const head = closed ? null : openHead(s,`${r ? `the ${contestName(r)} result and winning margin, ` : ''}voting dates and the seat’s parliamentary records`)
+    title = head?.title ?? `${s.name} district · Victorian election 2026`
+    description = `${head?.description ?? `Published member records for ${s.name}, ${r ? `the ${contestName(r)} result and winning margin, ` : ''}and what ${m.name} has done in Parliament.`} ${copy.lede}`
     crumbs = trail(VIC_ELECTION_PATH, s.name)
     body = `<div class="ui-page-head"><h1>${esc(s.name)}</h1><p class="ui-page-meta">Lower house district in ${link(region.path,region.name+' Region')}${s.formerly ? `. Called ${esc(s.formerly)} before 2022` : s.created ? '. First contested in 2022' : ''}.</p></div>`
       + `<p class="ui-lede">${esc(copy.lede)}</p>`
@@ -310,9 +316,9 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
       + keyDates(d,now)
       + `<div class="vic-elsewhere">${links([link(s.source_url,'District map and profile (VEC)'),link(VIC_ELECTION_PATH+'#find','Find another seat')])}</div>`
   } else {
-    const lead = candidateLead(s,closed)
-    title = lead?.title ?? `${s.name} Region · Victorian election 2026`
-    description = `${lead?.description ?? ''}The five upper house members ${closed ? 'in the published roster for' : 'for'} ${s.name} Region, what they have done in Parliament, and its 11 districts. ${copy.lede}`
+    const head = closed ? null : openHead(s,'its 11 districts, voting dates and the region’s parliamentary records')
+    title = head?.title ?? `${s.name} Region · Victorian election 2026`
+    description = `${head?.description ?? `The five upper house members in the published roster for ${s.name} Region, what they have done in Parliament, and its 11 districts.`} ${copy.lede}`
     crumbs = trail(VIC_ELECTION_PATH, s.name+' Region')
     body = `<div class="ui-page-head"><h1>${esc(s.name)} Region</h1><p class="ui-page-meta">Upper house region with five members and 11 districts${s.formerly ? `. Called ${esc(s.formerly)} Region before 2022` : ''}.</p></div>`
       + `<p class="ui-lede">${esc(copy.lede)}</p>`
@@ -324,7 +330,7 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
       + `<div class="vic-elsewhere">${links([link(s.source_url,'Region map and profile (VEC)'),link(VIC_ELECTION_PATH+'#find','Find your seat')])}</div>`
   }
   body += section('voting',esc(copy.voting.title),`<p>${esc(copy.voting.text)}</p>${links(copy.voting.links.map(x=>link(x.url,x.label)))}`) + about()
-  return {state:copy.state,title,description,html:hubShell(`<div class="vic-hub" data-election-state="${copy.state}">${body}</div>`,approvedFooter(footer),crumbs),jsonLd:structured(path,d,s ? s.members.map(m=>({href:m.href,name:m.name})) : d.seats.map(x=>({href:x.path,name:x.name})),s),
+  return {state:copy.state,title,description,html:hubShell(`<div class="vic-hub" data-election-state="${copy.state}">${body}</div>`,approvedFooter(footer),crumbs),jsonLd:structured(d,s),
     card:{kicker:'Victorian election · 28 November 2026',title,lines:[description],authorisation:VIC_ELECTION_AUTHORISATION_LINE}}
 }
 /** A broken results drop may not break otherwise valid voting and seat records. */
