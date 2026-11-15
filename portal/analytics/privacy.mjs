@@ -37,7 +37,7 @@ const CHOICES = {
 // Pages with no record in their address are counted by name, and only as
 // themselves: any extra segment ("/ask/<words>") is a typed or shared address,
 // not a page, so it is "/other".
-const STATIC_PAGES = 'ask|chat|search|map|discover|explore|declared|about|methods|stats|expenses|press|today|budget|privacy|support|instruments|terms|security|community|home|connections';
+const STATIC_PAGES = 'ask|chat|search|map|discover|explore|declared|about|methods|stats|expenses|press|today|budget|privacy|support|instruments|terms|security|community|home|connections|mcp';
 // Pages with a record or section in the address; recordTemplate names them.
 const RECORD_PAGES = 'money|subject|doc|bills?|reports?|sitting|estimates|audit|instrument|official-reports|vic-election-2026|video|register';
 const KNOWN_PATH = new RegExp(String.raw`^\/(?:$|connections\.html$|(?:${STATIC_PAGES})\/?$|(?:${RECORD_PAGES})(?:\/|$))`);
