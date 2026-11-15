@@ -395,9 +395,12 @@ export function BarTitle({
       node.measureInWindow((x, _y, boxWidth) => {
         if (!Number.isFinite(x) || !Number.isFinite(boxWidth) || boxWidth <= 0)
           return;
-        // Where UIKit put it, before any move of ours.
+        // Where UIKit put it, before any move of ours. The text is centred in
+        // its view (hugging it, or filling the span), so the view's centre is
+        // the text's, and its edge is half the text's width from it.
         const left = x - applied.current;
         const centre = left + boxWidth / 2;
+        const half = Math.min(textWidth, boxWidth) / 2;
         const items =
           trailingWidth ??
           44 + 60 * Math.max(0, trailing - 1) + growth * Math.max(0, trailing);
@@ -408,7 +411,7 @@ export function BarTitle({
         const limit = origin + safeWidth - (16 + items + 8);
         const next = Math.floor(
           Math.min(
-            Math.max(0, limit - (left + boxWidth)),
+            Math.max(0, limit - (centre + half)),
             Math.max(0, origin + safeWidth / 2 - centre),
           ),
         );
@@ -470,6 +473,9 @@ export function BarTitle({
             color: colors.ink,
             opacity: fits ? opacity : 0,
             maxWidth: drawnRoom,
+            // The view can be as wide as the span (26.3 stretches it): the
+            // text is centred in it, so its centre is the view's.
+            textAlign: 'center',
           },
         ],
       },

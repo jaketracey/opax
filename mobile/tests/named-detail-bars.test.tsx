@@ -1033,10 +1033,12 @@ test.each([
 );
 
 // Where UIKit puts the title view, as the window measures it: its left edge
-// and width. The bar is 402 pt, Share and More start at 282, the back button
-// collapses to its circle (ends at 60).
+// and width. The bar is 402 pt, Share and More start at 282 (the span between
+// the groups ends at 274, where their reserve begins), the back button
+// collapses to its circle (the span starts at 68). The title text is centred
+// in its view.
 describe('a title beside the collapsed back button is centred on the bar by measuring', () => {
-  const place = async (text: number, x: (width: number) => number) => {
+  const place = async (text: number, box: { x: number; width: number }) => {
     const original = Dimensions.get('window');
     act(() =>
       Dimensions.set({ window: { ...original, width: 402, fontScale: 1 } }),
@@ -1044,7 +1046,7 @@ describe('a title beside the collapsed back button is centred on the bar by meas
     const navigation = { setOptions: jest.fn() };
     const measure = jest
       .spyOn(View.prototype, 'measureInWindow')
-      .mockImplementation((done) => done(x(text), 0, text, 30));
+      .mockImplementation((done) => done(box.x, 0, box.width, 30));
     jest.useFakeTimers();
     act(() => {
       view = TestRenderer.create(
@@ -1064,43 +1066,44 @@ describe('a title beside the collapsed back button is centred on the bar by meas
     measure.mockRestore();
     jest.useRealTimers();
     act(() => Dimensions.set({ window: original }));
-    return { shift, right: (x(text) ?? 0) + (shift ?? 0) + text };
+    // Where the text ends, once moved.
+    return {
+      shift,
+      right: box.x + box.width / 2 + text / 2 + (shift ?? 0),
+    };
   };
-  // 26.3 (measured on the device): UIKit places the view at the leading end
-  // of the span, 72 pt from the edge, not centred in it. The span runs to
-  // 274, where Share's reserve begins.
-  const betweenGroups = () => 72;
-  // 18.4: UIKit centres a fitting view on the bar.
-  const onBar = (width: number) => 201 - width / 2;
+  // 26.3 (measured on the device): UIKit stretches the view across the span,
+  // 68 to 274, so the text, centred in it, is at 171, not the bar's 201.
+  const stretched = { x: 68, width: 206 };
+  // 18.4: a hugging view UIKit centres on the bar.
+  const centred = (text: number) => ({ x: 201 - text / 2, width: text });
 
   test('26.3: a title just too wide to sit beside the back name moves onto the bar’s centre line', async () => {
-    const { shift } = await place(144, betweenGroups);
-    // 201 - (72 + 144 / 2): the title's centre lands on the bar's.
-    expect(shift).toBe(57);
+    const { shift, right } = await place(144, stretched);
+    expect(shift).toBe(30);
+    expect(right).toBeLessThanOrEqual(274);
   });
 
-  test('26.3: a title that fills the span never moves under Share', async () => {
+  test('26.3: a title never moves under Share', async () => {
     // One that fills the span has nowhere to go.
-    const full = await place(206, () => 68);
-    expect(full.shift).toBeUndefined();
+    expect((await place(206, stretched)).shift).toBeUndefined();
     // A wide one moves only as far as the span allows.
-    const wide = await place(170, betweenGroups);
-    expect(wide.shift).toBe(32);
+    const wide = await place(170, stretched);
+    expect(wide.shift).toBe(18);
     expect(wide.right).toBeLessThanOrEqual(274);
   });
 
   test('18.4: a title UIKit already centres is not moved', async () => {
-    expect((await place(144, onBar)).shift).toBeUndefined();
+    expect((await place(144, centred(144))).shift).toBeUndefined();
   });
 
   test('18.4 at AX3: a title UIKit pushed against Share (ends 280) is not moved further', async () => {
-    const pushed = await place(170, () => 110);
-    expect(pushed.shift).toBeUndefined();
+    expect((await place(170, { x: 110, width: 170 })).shift).toBeUndefined();
   });
 
   test('the shift never passes the span’s edge by rounding', async () => {
-    const { shift, right } = await place(170, () => 72.5);
-    expect(shift).toBe(31);
+    const { shift, right } = await place(170, { x: 68.5, width: 206 });
+    expect(shift).toBe(17);
     expect(right).toBeLessThanOrEqual(274);
   });
 
@@ -1111,7 +1114,7 @@ describe('a title beside the collapsed back button is centred on the bar by meas
     );
     const measure = jest
       .spyOn(View.prototype, 'measureInWindow')
-      .mockImplementation((done) => done(72, 0, 144, 30));
+      .mockImplementation((done) => done(68, 0, 206, 30));
     jest.useFakeTimers();
     const element = (shown: boolean) => (
       <NavigationContext.Provider value={{ setOptions: jest.fn() } as never}>
@@ -1136,10 +1139,10 @@ describe('a title beside the collapsed back button is centred on the bar by meas
       jest.runOnlyPendingTimers();
     });
     expect(text().props.accessibilityElementsHidden).toBe(false);
-    expect(box()).toBe(57);
+    expect(box()).toBe(30);
     // Hiding does not move it while it fades out.
     act(() => view!.update(element(false)));
-    expect(box()).toBe(57);
+    expect(box()).toBe(30);
     act(() => view!.unmount());
     measure.mockRestore();
     jest.useRealTimers();
