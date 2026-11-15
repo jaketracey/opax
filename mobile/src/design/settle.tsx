@@ -53,6 +53,7 @@ export function useSettle(
     // the figure's one settle.
     if (key && reduced === null) settled.add(key);
     if (!progress || !key) return;
+    settled.add(key);
     const run = Animated.timing(progress, {
       toValue: 1,
       duration,
