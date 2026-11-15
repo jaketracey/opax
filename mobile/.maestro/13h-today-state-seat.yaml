@@ -4,11 +4,11 @@ name: 13h Today with a federal and a Victorian state seat saved
 # OPAXSeat federal+state saves Melbourne and a Victorian district. Your
 # representatives is one group: the federal member's row, then the state
 # lower-house member's row, then the senators link, under one source line.
-# While the election record says the Legislative Assembly is dissolved (its
+# While the election record says the Parliament's term has ended (its
 # caretaker date has passed and the roster's date for the district is before
 # election day), the state row is four lines and names no member: the
-# parliament and house, the district, that the Assembly is dissolved for
-# the election, and the last member. The old state seat card is gone.
+# parliament and house, the district, that the Parliament's term ended
+# for the election, and the last member. The old state seat card is gone.
 # Today draws no authorisation line; the election block has its own.
 - launchApp:
     clearState: true
@@ -26,7 +26,7 @@ name: 13h Today with a federal and a Victorian state seat saved
     text: .*, Federal member for Melbourne
 - assertVisible:
     id: today-rep-state-dissolved
-    text: Victoria, Legislative Assembly\. .*\. Assembly dissolved for the \d+ \w+ election\. Last member. .*
+    text: Victoria, Legislative Assembly\. .*\. Parliament.s term ended on \d+ \w+ for the \d+ \w+ election\. Last member. .*
 - assertNotVisible:
     id: today-rep-state
 - scrollUntilVisible:

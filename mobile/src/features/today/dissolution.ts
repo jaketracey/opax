@@ -6,7 +6,7 @@ import type { Overview } from '../vic-election/decoders';
 
 /**
  * The state row's form in "Your representatives". A state lower house
- * dissolved for an election has no members until the result is declared
+ * whose term has ended for an election has no members until the result is declared
  * and loaded, so the row says a person is the member only when the data at
  * hand decides it. Everything here is read from data; no date is written
  * in the app.
@@ -14,7 +14,9 @@ import type { Overview } from '../vic-election/decoders';
  * - `member`: the roster's member, drawn as any member. `until` is the
  *   instant the decision stops holding (the election record's caretaker
  *   date), or null when nothing ends it.
- * - `dissolved`: the house is dissolved for the election on `electionDay`.
+ * - `dissolved`: the Parliament's term has ended for the election on
+ *   `electionDay` (the name is the data field's, `dissolved_for`; in
+ *   Victoria the term expires, the Parliament is not dissolved).
  * - `neutral`: it cannot be decided on this device; the row states only
  *   what the roster recorded and when, and calls nobody the member.
  * - `held`: the election record is on its way; the row's place is held.
@@ -41,6 +43,20 @@ export function electionDayWords(day: string): string {
     month: 'long',
     timeZone: 'UTC',
   }).format(new Date(`${day.slice(0, 10)}T00:00:00Z`));
+}
+
+/**
+ * The day the Victorian Parliament's term ended before that election, as a
+ * day and month. The Parliament is not dissolved for a general election:
+ * under the Constitution Act 1975 (Vic) its term expires 25 days before
+ * election day, so the day follows from the record's election day and no
+ * date is written here.
+ */
+const TERM_ENDS_DAYS_BEFORE = 25;
+export function termEndWords(electionDay: string): string {
+  const day = new Date(`${electionDay.slice(0, 10)}T00:00:00Z`);
+  day.setUTCDate(day.getUTCDate() - TERM_ENDS_DAYS_BEFORE);
+  return electionDayWords(day.toISOString());
 }
 
 const HOUSES: Record<string, string> = {
@@ -95,7 +111,7 @@ type RecordSeat = Pick<Electorate, 'url' | 'latest_election' | 'dissolved_for'>;
 
 /**
  * What the electorates index itself says, when it carries the field: the
- * election day while the seat's house is dissolved, null once the
+ * election day while the Parliament's term has ended, null once the
  * post-result roster is loaded. Undefined from an index that predates the
  * field, which says nothing either way.
  */
@@ -119,7 +135,7 @@ export function formFromRecord(
     return { kind: 'member', until: null };
   if (resultLoaded(seat, overview.election_day))
     return { kind: 'member', until: null };
-  // The caretaker period begins when the Assembly is dissolved.
+  // The caretaker period begins when the Parliament's term ends.
   const began = overview.key_dates.find((d) => d.id === 'caretaker')?.passes_at;
   if (!began) return { kind: 'neutral' };
   return now.getTime() >= Date.parse(began)
@@ -164,7 +180,7 @@ export function stateForm(
     : { kind: 'neutral' };
 }
 
-/** The dissolved row's four lines. Nobody is called a current member. */
+/** The ended-term row's four lines. Nobody is called a current member. */
 export function dissolvedLines(
   seat: Pick<Electorate, 'name' | 'chamber' | 'state_code'>,
   last: Person,
@@ -173,7 +189,7 @@ export function dissolvedLines(
   return [
     houseLine(seat),
     seat.name,
-    `Assembly dissolved for the ${electionDayWords(electionDay)} election`,
+    `Parliament’s term ended on ${termEndWords(electionDay)} for the ${electionDayWords(electionDay)} election`,
     `Last member: ${personWords(last)}`,
   ];
 }
@@ -208,7 +224,7 @@ export function neutralLines(
 export const DISSOLVED_STAND_IN: readonly string[] = [
   'Victoria\u00a0·\u00a0Legislative Assembly',
   'Narre Warren North',
-  'Assembly dissolved for the 00 September election',
+  'Parliament’s term ended on 00 September for the 00 September election',
   'Last member: Kathleen Matthews-Ward, Independent',
 ];
 export const NEUTRAL_STAND_IN: readonly string[] = [

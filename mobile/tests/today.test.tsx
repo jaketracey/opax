@@ -1218,7 +1218,7 @@ describe('the first frame has the loaded page’s layout', () => {
       expect(drawn.slice(0, 3)).toEqual([
         'Victoria\u00a0·\u00a0Legislative Assembly',
         'Essendon',
-        'Assembly dissolved for the 28 November election',
+        'Parliament’s term ended on 3 November for the 28 November election',
       ]);
       expect(drawn[3]).toMatch(/^Last member: /);
       await expect(readTodayShape()).resolves.toEqual(
@@ -1322,7 +1322,7 @@ describe('the first frame has the loaded page’s layout', () => {
             const r = await launchWith('2026-11-28', { loading: true });
             expect(hosts(r, 'today-rep-state-dissolved')).toHaveLength(1);
             expect(lines(r)[2]).toBe(
-              'Assembly dissolved for the 28 November election',
+              'Parliament’s term ended on 3 November for the 28 November election',
             );
             expect(shared).not.toHaveBeenCalled();
           } finally {
@@ -1400,7 +1400,7 @@ describe('the first frame has the loaded page’s layout', () => {
         await r.answer();
         expect(hosts(r.r, 'today-rep-state-dissolved')).toHaveLength(1);
         expect(lines(r.r)[2]).toBe(
-          'Assembly dissolved for the 30 November election',
+          'Parliament’s term ended on 5 November for the 30 November election',
         );
         await expect(readTodayShape()).resolves.toMatchObject({
           electionDay: '2030-11-30',
@@ -1628,7 +1628,7 @@ describe('the first frame has the loaded page’s layout', () => {
         seatId: maribyrnong.electorate_id,
         stateSeatIds: [essendon.electorate_id],
       };
-      // The index says the Assembly is dissolved: the four lines the row
+      // The index says the Parliament's term has ended: the four lines the row
       // will draw hold its place, under the one heading.
       const dissolved = await launch(victorian, saying('2026-11-28'));
       expect(hosts(dissolved.r, 'today-your-mp-pending')).toHaveLength(1);
