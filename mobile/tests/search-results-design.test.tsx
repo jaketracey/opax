@@ -1,5 +1,5 @@
 import { act } from 'react';
-import { Text as NativeText } from 'react-native';
+import { StyleSheet, Text as NativeText } from 'react-native';
 import TestRenderer from 'react-test-renderer';
 import records from '../scripts/fixtures/search/records.json';
 import {
@@ -199,6 +199,26 @@ test('Summarise sits after the third result and nowhere else', () => {
     'results-summarise',
   ]);
   expect(many.text).toContain('Summarise these speeches');
+});
+
+test('the count line holds its height before the count is known, so results never move down', () => {
+  const lineOf = (count: string | null) => {
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <ResultsHeader count={count} details={null} />,
+      );
+    });
+    const line = renderer.root.find(
+      (n) =>
+        typeof n.type === 'string' &&
+        n.props.testID === (count ? 'search-count' : 'search-count-pending'),
+    );
+    return StyleSheet.flatten(line.props.style);
+  };
+  const pending = lineOf(null);
+  expect(pending.minHeight).toBe(44);
+  expect(pending).toEqual(lineOf('122 results'));
 });
 
 test('the results: one count and source line above, one row per record', () => {

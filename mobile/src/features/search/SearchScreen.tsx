@@ -313,6 +313,7 @@ function SearchContent({
             onRecent={(item: RecentSearch) => submit(item.q, item.scope)}
             onTry={(words) => submit(words, 'all')}
             bills={sources?.bills ?? null}
+            billsSettled={!!sources || failed}
           />
         ) : phase === 'typing' ? (
           <SearchSuggestions

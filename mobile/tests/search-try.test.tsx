@@ -22,12 +22,17 @@ jest.mock('expo-router', () => ({
   useSegments: () => [],
   useLocalSearchParams: () => ({}),
 }));
-const mockRecent: { items: { q: string; scope: 'all'; at: number }[] } = {
-  items: [],
-};
+const mockRecent: {
+  ready: boolean;
+  items: { q: string; scope: 'all'; at: number }[];
+} = { ready: true, items: [] };
 jest.mock('../src/features/search/recent', () => ({
   recentSearches: { clear: jest.fn(), remove: jest.fn() },
-  useRecentSearches: () => ({ items: mockRecent.items, failed: false }),
+  useRecentSearches: () => ({
+    ready: mockRecent.ready,
+    items: mockRecent.items,
+    failed: false,
+  }),
 }));
 
 const { catalogs } = jest.requireMock('../src/api/runtime') as {
@@ -201,7 +206,11 @@ test('a topic edition is the subject row; a politician edition searches its name
 
 describe('SearchIdle', () => {
   /* eslint-disable @typescript-eslint/no-require-imports */
-  const { SearchIdle } = require('../src/features/search/SearchIdle');
+  const {
+    SearchIdle,
+    IDLE_HOLD_MS,
+    forgetIdleEdition,
+  } = require('../src/features/search/SearchIdle');
   const {
     MyMemberContext,
   } = require('../src/features/your-mp/MyMemberContext');
@@ -228,8 +237,86 @@ describe('SearchIdle', () => {
     });
     return r;
   }
+  beforeEach(() => forgetIdleEdition());
   afterEach(() => {
     mockRecent.items = [];
+    mockRecent.ready = true;
+  });
+  const groups = (r: TestRenderer.ReactTestRenderer) =>
+    ids(r).filter((id) => /^search-(recent|try|browse)$/.test(id));
+
+  test('nothing is drawn until Recent is read; then Recent, Try and Browse arrive together', async () => {
+    mockRecent.ready = false;
+    mockRecent.items = [];
+    const r = await render(member);
+    // Browse is not drawn alone, to be pushed down by Recent a moment later.
+    expect(groups(r)).toEqual([]);
+    expect(ids(r)).toContain('search-idle-pending');
+    mockRecent.ready = true;
+    mockRecent.items = [{ q: 'water', scope: 'all', at: 1 }];
+    await act(async () => {
+      r.update(
+        <MyMemberContext.Provider value={member}>
+          <SearchIdle onRecent={jest.fn()} onTry={jest.fn()} bills={bills} />
+        </MyMemberContext.Provider>,
+      );
+    });
+    expect(groups(r)).toEqual(['search-recent', 'search-try', 'search-browse']);
+    act(() => r.unmount());
+  });
+
+  test('a read that settles after the lists are drawn adds no row above them; the next visit has it at once', async () => {
+    jest.useFakeTimers();
+    try {
+      let settle!: (block: unknown) => void;
+      catalogs.todayEdition.mockReturnValue(
+        new Promise((done) => {
+          settle = done;
+        }),
+      );
+      const draw = (index: typeof bills | null, settled: boolean) => (
+        <MyMemberContext.Provider value={null}>
+          <SearchIdle
+            onRecent={jest.fn()}
+            bills={index}
+            billsSettled={settled}
+          />
+        </MyMemberContext.Provider>
+      );
+      let r!: TestRenderer.ReactTestRenderer;
+      await act(async () => {
+        r = TestRenderer.create(draw(null, false));
+      });
+      // Neither the edition nor the bill index is in: the lists wait.
+      expect(groups(r)).toEqual([]);
+      await act(async () => {
+        jest.advanceTimersByTime(IDLE_HOLD_MS);
+      });
+      // The wait is over: Browse is drawn, with no Try rows to show yet.
+      expect(groups(r)).toEqual(['search-browse']);
+      const before = ids(r);
+      await act(async () => {
+        settle({
+          status: 'ready',
+          data: edition({ date: new Date().toISOString().slice(0, 10) }),
+        });
+        r.update(draw(bills, true));
+      });
+      // Both arrived late: nothing is inserted above Browse.
+      expect(ids(r)).toEqual(before);
+      act(() => r.unmount());
+      // The next visit draws them on its first frame.
+      act(() => {
+        r = TestRenderer.create(draw(bills, true));
+      });
+      expect(groups(r)).toEqual(['search-try', 'search-browse']);
+      expect(ids(r)).toEqual(
+        expect.arrayContaining(['search-try-edition', 'search-try-bill']),
+      );
+      act(() => r.unmount());
+    } finally {
+      jest.useRealTimers();
+    }
   });
 
   test('a fresh install: Try sits above Browse with rows from the edition and the bill index', async () => {

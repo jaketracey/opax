@@ -15,7 +15,8 @@ import { FiltersLine } from './FiltersLine';
  * the count and source line, one footnote line and one 44 pt target that
  * opens `/source` ("42 speeches · Updated 8 Nov 2026 · Hansard and 3
  * more"), then, only when filters are on, the one filter line. This is the
- * results' one `SourceLine`: a paged list has no reachable foot.
+ * results' one `SourceLine`: a paged list has no reachable foot. The line
+ * keeps its height before the count is known.
  */
 export function ResultsHeader({
   count,
@@ -35,7 +36,16 @@ export function ResultsHeader({
     <View style={styles.header}>
       {count !== null || details ? (
         <CountLine count={count} details={details} />
-      ) : null}
+      ) : (
+        // The line's place is held while the count is unknown, so the
+        // results drawn under it never move down when it arrives.
+        <View
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          testID="search-count-pending"
+          style={styles.line}
+        />
+      )}
       {filters && onClearFilters ? (
         <FiltersLine
           text={filters}
