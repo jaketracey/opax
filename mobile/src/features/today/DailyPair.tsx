@@ -4,7 +4,7 @@ import { Card } from '../../design/card';
 import { Icon } from '../../design/icon';
 import type { RowMenuAction } from '../../design/row-link';
 import { LoadingStatus } from '../../design/states';
-import { formatDate, unbroken } from '../../design/format';
+import { formatDate } from '../../design/format';
 import { Text } from '../../design/text';
 import { colors, radii, rhythm } from '../../design/tokens';
 import { exploreQuizRoute, exploreToolRoute } from '../../navigation/routes';
@@ -164,10 +164,10 @@ export function ArchiveCard({
         <Kicker symbol="clock.arrow.circlepath" ink="tint">
           {kicker}
         </Kicker>
-        {/* A date never breaks across lines ("3 Nov / 2026"); the label
-            says the plain words. */}
-        <Text variant="tileFigure" testID="today-archive-figure">
-          {unbroken(figure)}
+        {/* Word-safe: at the largest sizes in a narrow column the date
+            wraps at its spaces or steps down, never inside "2026". */}
+        <Text wordSafe variant="tileFigure" testID="today-archive-figure">
+          {figure}
         </Text>
         <Text
           wordSafe

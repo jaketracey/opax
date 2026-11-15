@@ -32,7 +32,10 @@ import {
   paletteFor,
 } from '../src/design/palette';
 import { Picture } from '../src/features/explore/Picture';
+import { contrastRatio } from '../src/design/contrast';
 import {
+  FIELD_OPACITY,
+  HIGH_FIELD_OPACITY,
   QUIZ_ART_RATIO,
   QuizArt,
   quizArtPaths,
@@ -485,14 +488,30 @@ describe('full-width daily cards', () => {
       const [field, lit] = art.findAllByType(Path);
       expect(field!.props.fill).toBe(palette.navy);
       expect(lit!.props.fill).toBe(palette.todayDotBronze);
-      // Increase Contrast: the drawing takes the high-contrast hex.
+      expect(field!.props.fillOpacity).toBe(FIELD_OPACITY);
+      // Increase Contrast must raise the mark's contrast, not lower it. The
+      // map's bronze has no stronger form and the wash under it darkens
+      // (2.33 to 2.05 in light, 4.59 to 3.86 in dark), so the mark takes
+      // the brand artwork's bronze ink: 3:1 or more on the stronger wash,
+      // and more than the standard pair.
       jest.mocked(useIncreaseContrast).mockReturnValue(true);
       const contrast = await render(<QuizArt />);
       const [highField, highLit] = contrast.root.findAllByType(Path);
+      expect(highLit!.props.fill).toBe(high.bronzeInk);
+      expect(highLit!.props.fill).not.toBe(palette.todayDotBronze);
+      const standard = contrastRatio(palette.todayDotBronze, palette.navyWash);
+      const raised = contrastRatio(high.bronzeInk!, high.navyWash!);
+      expect(raised).toBeGreaterThanOrEqual(3);
+      expect(raised).toBeGreaterThan(standard);
+      // What it replaced: the map's bronze on the stronger wash, under 3:1
+      // in light and lower than standard in both.
+      expect(
+        contrastRatio(palette.todayDotBronze, high.navyWash!),
+      ).toBeLessThan(standard);
+      // The field's dots are firmer too.
       expect(highField!.props.fill).toBe(high.navy ?? palette.navy);
-      expect(highLit!.props.fill).toBe(
-        high.todayDotBronze ?? palette.todayDotBronze,
-      );
+      expect(highField!.props.fillOpacity).toBe(HIGH_FIELD_OPACITY);
+      expect(HIGH_FIELD_OPACITY).toBeGreaterThan(FIELD_OPACITY);
       jest.mocked(useIncreaseContrast).mockReturnValue(false);
       // Both cards fill their cell, so side by side they end on one line.
       for (const each of [archive, question])
@@ -536,10 +555,17 @@ describe('full-width daily cards', () => {
     const words = root.findAllByType(Text).map((node) => node.props.children);
     expect(words).toContain('From the record');
     expect(words).not.toContain('From the archive');
-    // Drawn unbroken, so the date never wraps mid-way at large sizes.
-    expect(host(root, 'today-archive-figure').props.children).toBe(
-      '3\u00a0Nov\u00a02026',
-    );
+    // Word-safe with plain spaces: at the largest sizes in a narrow column
+    // it wraps between the day, month and year or steps down, and is never
+    // split inside "2026" (no-break spaces made it wrap by character).
+    const figure = root.findAll(
+      (node) =>
+        node.type === Text && node.props.testID === 'today-archive-figure',
+    )[0]!;
+    expect(figure.props.children).toBe('3 Nov 2026');
+    expect(figure.props.children).not.toMatch(/\u00a0/);
+    expect(figure.props.wordSafe).toBe(true);
+    expect(figure.props.numberOfLines).toBeUndefined();
     const link = root
       .findAll(
         (node) =>
