@@ -212,24 +212,29 @@ describe('a long name keeps its year (sweep 78)', () => {
         typeof node.type === 'string' &&
         node.props.testID === 'bills-on-this-day-row',
     );
-    const json = JSON.stringify(r.toJSON());
+    // What is drawn: the strings inside the row's text, not its props.
+    const drawn: string[] = [];
+    const walk = (node: TestRenderer.ReactTestRendererNode | null) => {
+      if (typeof node === 'string') drawn.push(node);
+      else node?.children?.forEach(walk);
+    };
+    [r.toJSON()].flat().forEach(walk);
     const label = row.props.accessibilityLabel as string;
     act(() => r.unmount());
-    return { json, label };
+    return { drawn, label };
   };
 
   test('at the default size the row draws the name with its year, and VoiceOver hears all of it', () => {
-    const { json, label } = drawnRow(1);
-    expect(json).toContain('Australian Research Council Amendment… Bill 2018');
-    // The whole name is only in the spoken label, never drawn.
-    expect(json.split(long).length - 1).toBe(1);
+    const { drawn, label } = drawnRow(1);
+    expect(drawn).toContain('Australian Research Council Amendment… Bill 2018');
+    expect(drawn).not.toContain(long);
     expect(label).toContain(long);
   });
 
   test('at AX3 the title is not clamped, so the whole name is drawn', () => {
-    const { json, label } = drawnRow(2.643);
-    expect(json).toContain(long);
-    expect(json).not.toContain('…');
+    const { drawn, label } = drawnRow(2.643);
+    expect(drawn).toContain(long);
+    expect(drawn.join(' ')).not.toContain('…');
     expect(label).toContain(long);
   });
 });
