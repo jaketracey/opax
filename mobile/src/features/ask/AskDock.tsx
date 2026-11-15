@@ -54,6 +54,8 @@ export function composerLines(fontScale: number) {
 }
 /** The share of the visible height the whole composer may take. */
 export const COMPOSER_HEIGHT_SHARE = 0.4;
+/** The field's padding above and below its text (styles.input). */
+export const COMPOSER_FIELD_PADDING = 11;
 /**
  * The field's maximum height (ask.md 2.11, "AX3 and above, composer"). The
  * text keeps the reader's size at every size (DIRECTION: every role scales
@@ -61,13 +63,23 @@ export const COMPOSER_HEIGHT_SHARE = 0.4;
  * far that the whole composer, field and its own chrome (padding, the
  * options line, the options and send row), passes 40% of the height the
  * reader can see: the window, less the keyboard while it is up. Past that
- * the field scrolls inside. It never drops below one 44 pt line.
+ * the field scrolls inside. It never drops below one whole line at the
+ * reader's size (nor below 44 pt), even where 40% has no room for one.
+ *
+ * The cap is always a whole number of lines, so the field never ends part
+ * way through one. A draft that fits is its lines and the padding above and
+ * below. One that overflows (`overflowing`) gives up one padding: scrolled
+ * to the top it shows the top padding and whole lines, scrolled to the end
+ * whole lines and the bottom padding. With both paddings kept, the space
+ * of the second showed a slice of the next line (five lines and 9 pt of a
+ * sixth at the default size).
  */
 export function composerFieldCap({
   fontScale,
   windowHeight,
   keyboard = 0,
   chrome,
+  overflowing = false,
 }: {
   fontScale: number;
   windowHeight: number;
@@ -75,15 +87,23 @@ export function composerFieldCap({
   keyboard?: number;
   /** The composer's height outside the field. */
   chrome: number;
+  /** The draft has more lines than the cap holds. */
+  overflowing?: boolean;
 }): number {
-  const byLines =
-    textStyles.body.lineHeight *
-      Math.max(1, fontScale) *
-      composerLines(fontScale) +
-    20;
+  const line = textStyles.body.lineHeight * Math.max(1, fontScale);
   const visible = Math.max(0, windowHeight - keyboard);
   const byHeight = COMPOSER_HEIGHT_SHARE * visible - chrome;
-  return Math.max(minimumTarget, Math.min(byLines, byHeight));
+  const lines = Math.max(
+    1,
+    Math.min(
+      composerLines(fontScale),
+      Math.floor((byHeight - 2 * COMPOSER_FIELD_PADDING) / line),
+    ),
+  );
+  return Math.max(
+    minimumTarget,
+    lines * line + (overflowing ? 1 : 2) * COMPOSER_FIELD_PADDING,
+  );
 }
 /**
  * Where the caret goes in a draft the reader did not type (an arrival's
@@ -229,12 +249,25 @@ export function AskDock({
     bodyHeight !== null && fieldHeight !== null
       ? Math.max(0, bodyHeight - fieldHeight)
       : 2 * rhythm.line + (line ? 28 + rhythm.line : 0);
-  const maxHeight = composerFieldCap({
+  // What a draft that fits may take, and what one that overflows is held
+  // to: the same whole lines, less one padding (composerFieldCap).
+  const [contentHeight, setContentHeight] = useState(0);
+  const fitHeight = composerFieldCap({
     fontScale,
     windowHeight,
     keyboard,
     chrome,
   });
+  const overflowing = Platform.OS === 'ios' && contentHeight > fitHeight + 1;
+  const maxHeight = overflowing
+    ? composerFieldCap({
+        fontScale,
+        windowHeight,
+        keyboard,
+        chrome,
+        overflowing,
+      })
+    : fitHeight;
   const spoken = [
     s.fresh ? freshLabel : null,
     ...tags.map((tag) => `${tag.key}, ${tag.value}`),
@@ -431,8 +464,9 @@ export function AskDock({
             selection={caretSelection(caret, s.draft)}
             onContentSizeChange={(e) => {
               const { height } = e.nativeEvent.contentSize;
+              setContentHeight(height);
               setCaret((old) =>
-                caretAfterContent(old, s.draft, height, maxHeight),
+                caretAfterContent(old, s.draft, height, fitHeight),
               );
             }}
             onSelectionChange={(e) => {
@@ -622,8 +656,8 @@ const styles = StyleSheet.create({
   // (flex here would be vertical, holding typed lines at the minimum).
   input: {
     minHeight: minimumTarget,
-    paddingTop: 11,
-    paddingBottom: 11,
+    paddingTop: COMPOSER_FIELD_PADDING,
+    paddingBottom: COMPOSER_FIELD_PADDING,
     paddingHorizontal: 0,
     ...textStyles.body,
     color: colors.ink,
