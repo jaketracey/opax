@@ -201,7 +201,7 @@ class Tails(unittest.TestCase):
 
     def test_only_named_steps_with_a_log_and_only_the_last_lines(self):
         (self.pipe / "ipea.log").write_text("".join(f"line {i}\n" for i in range(1, 101)) + "\n\n")
-        (self.pipe / "vic.log").write_text(f"not a failed step {R2_SECRET}\n")
+        (self.pipe / "vic.log").write_text("the log of a step that did not fail\n")
         out = st.step_tails(self.pipe, ["ipea", "ipea", "nolog"], ENV, [])
         self.assertEqual(list(out), ["ipea"])
         self.assertEqual(out["ipea"], [f"line {i}" for i in range(86, 101)])

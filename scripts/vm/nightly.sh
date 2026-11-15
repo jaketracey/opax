@@ -187,43 +187,6 @@ publish_status() {
   fi
 }
 
-# One attempt at the status document: $1 the status, $2 where to write it, $3 a file of step log tails or "".
-write_status_file() {
-  local status=$1
-  OPAX_STATUS_OUT="$2" OPAX_STEP_TAILS_FILE="$3" "$PY" - "$LASTFILE" "$status" "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${#FAILURES[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" "${COVERAGE_FAILURES[@]+"${COVERAGE_FAILURES[@]}"}" <<'PYEOF'
-import json, os, sys, datetime
-path, status, day, run, started, sha, deploy, summary, nwarn, nfail, *rest = sys.argv[1:]
-try:
-    failed_step_logs = json.load(open(os.environ["OPAX_STEP_TAILS_FILE"])) if os.environ.get("OPAX_STEP_TAILS_FILE") else {}
-    if not isinstance(failed_step_logs, dict): failed_step_logs = {}
-except (OSError, ValueError):
-    failed_step_logs = {}
-nwarn, nfail = int(nwarn), int(nfail)
-warnings, failures, coverage_alerts = rest[:nwarn], rest[nwarn:nwarn + nfail], rest[nwarn + nfail:]
-from pathlib import Path
-from datetime import date
-from scripts.vm.periodic_state import snapshot
-from parli.ingest.backfill_guard import state_dir, nightly_fields
-backfill_fields = nightly_fields(state_dir(), day, warnings)
-try:
-    periodic_state = snapshot(Path(path).parent / 'periodic-refresh-v1.json', date.fromisoformat(day))
-except (OSError, ValueError, KeyError, TypeError):
-    periodic_state = {"error": "periodic state unreadable; inspect the VM state file"}
-paused_sources = {}
-for receipt in [Path(path).parent / 'source-access.json', *(Path(path).parent / 'source-access').glob('*.json')]:
-    try:
-        paused_sources.update({k:v for k,v in json.loads(receipt.read_text()).items() if v.get('status') == 'paused'})
-    except (OSError, ValueError): pass
-json.dump({"date": day, "run": run, "status": status, "started": started,
-           "finished": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-           "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures, "coverage_alerts": coverage_alerts, "warnings": warnings,
-           **({"failed_step_logs": failed_step_logs} if failed_step_logs else {}),
-           **backfill_fields,
-           "paused_sources": paused_sources, "periodic_state": periodic_state},
-          open(os.environ["OPAX_STATUS_OUT"], "w"), indent=1)
-PYEOF
-}
-
 # The status this night publishes. It is built beside $LASTFILE and only then moved over it, so a status that could
 # not be built never leaves last night's file to be published again: a stale status that looks green is worse than
 # none. If the full document fails it is tried without the step log tails, and if that fails too a short one says
@@ -258,6 +221,44 @@ write_status() {
     log "WARN: no status file could be written; none is published tonight"
   fi
   [ -z "$scratch" ] || rm -rf "$scratch"
+}
+
+# One attempt at the status document (defined after write_status: tests/test_backfill_guard.py runs the first
+# Python block that follows it): $1 the status, $2 where to write it, $3 a file of step log tails or "".
+write_status_file() {
+  local status=$1
+  OPAX_STATUS_OUT="$2" OPAX_STEP_TAILS_FILE="$3" "$PY" - "$LASTFILE" "$status" "$TODAY" "$([ "${EVIDENCE_RUN:-0}" = 1 ] && echo evidence || echo nightly)" "$STARTED_AT" "$COMMIT_SHA" "$DEPLOY" "$RESULT_SUMMARY" "${#WARNINGS[@]}" "${#FAILURES[@]}" "${WARNINGS[@]+"${WARNINGS[@]}"}" "${FAILURES[@]+"${FAILURES[@]}"}" "${COVERAGE_FAILURES[@]+"${COVERAGE_FAILURES[@]}"}" <<'PYEOF'
+import json, os, sys, datetime
+path, status, day, run, started, sha, deploy, summary, nwarn, nfail, *rest = sys.argv[1:]
+try:
+    failed_step_logs = json.load(open(os.environ["OPAX_STEP_TAILS_FILE"])) if os.environ.get("OPAX_STEP_TAILS_FILE") else {}
+    if not isinstance(failed_step_logs, dict): failed_step_logs = {}
+except (OSError, ValueError):
+    failed_step_logs = {}
+nwarn, nfail = int(nwarn), int(nfail)
+warnings, failures, coverage_alerts = rest[:nwarn], rest[nwarn:nwarn + nfail], rest[nwarn + nfail:]
+from pathlib import Path
+from datetime import date
+from scripts.vm.periodic_state import snapshot
+from parli.ingest.backfill_guard import state_dir, nightly_fields
+backfill_fields = nightly_fields(state_dir(), day, warnings)
+try:
+    periodic_state = snapshot(Path(path).parent / 'periodic-refresh-v1.json', date.fromisoformat(day))
+except (OSError, ValueError, KeyError, TypeError):
+    periodic_state = {"error": "periodic state unreadable; inspect the VM state file"}
+paused_sources = {}
+for receipt in [Path(path).parent / 'source-access.json', *(Path(path).parent / 'source-access').glob('*.json')]:
+    try:
+        paused_sources.update({k:v for k,v in json.loads(receipt.read_text()).items() if v.get('status') == 'paused'})
+    except (OSError, ValueError): pass
+json.dump({"date": day, "run": run, "status": status, "started": started,
+           "finished": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+           "commit": sha or None, "deploy": deploy, "summary": summary, "failures": failures, "coverage_alerts": coverage_alerts, "warnings": warnings,
+           **({"failed_step_logs": failed_step_logs} if failed_step_logs else {}),
+           **backfill_fields,
+           "paused_sources": paused_sources, "periodic_state": periodic_state},
+          open(os.environ.get("OPAX_STATUS_OUT") or path, "w"), indent=1)
+PYEOF
 }
 
 paused_summary() {
