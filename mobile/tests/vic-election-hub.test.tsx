@@ -1,5 +1,5 @@
 import { act } from 'react';
-import { Platform, SectionList, StyleSheet } from 'react-native';
+import { Dimensions, Platform, SectionList, StyleSheet } from 'react-native';
 import {
   mockVic,
   renderVic,
@@ -637,6 +637,35 @@ test.each([
       hook.mockRestore();
       size.mockRestore();
       Object.defineProperty(Platform, 'OS', descriptor);
+    }
+  },
+);
+
+// Hub ruling 4c: the system search field takes no inset from the app, so at
+// accessibility sizes its placeholder is the shorter one.
+test.each([
+  ['the default text size', 1, 'Suburb, postcode or district'],
+  ['AX1', 1.786, 'Suburb or postcode'],
+  ['AX3', 2.353, 'Suburb or postcode'],
+  ['AX5', 3.12, 'Suburb or postcode'],
+] as const)(
+  'the search field’s placeholder at %s',
+  async (_size, fontScale, placeholder) => {
+    const window = Dimensions.get('window');
+    act(() => Dimensions.set({ window: { ...window, fontScale } }));
+    try {
+      let searchBar!: SearchBarProps;
+      const r = renderVic(<Hub />, (options: Record<string, unknown>) => {
+        searchBar = options.headerSearchBarOptions as SearchBarProps;
+      });
+      await act(async () => {});
+      expect(searchBar.placeholder).toBe(placeholder);
+      // The system field speaks its placeholder: no stray label or hint
+      // contradicts it, and the words are sentence case with no dash.
+      expect(searchBar.placeholder).not.toMatch(/[\u2014\u2013]/);
+      await act(async () => r.unmount());
+    } finally {
+      act(() => Dimensions.set({ window }));
     }
   },
 );
