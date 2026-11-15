@@ -243,3 +243,55 @@ test('offline with only the index saved, the page hears "not saved" after one wa
   expect(asked).toHaveLength(8);
   expect(new Set(asked).size).toBe(8);
 });
+
+test('offline, a bill saved from its own page still shows, whatever place it holds in the list', async () => {
+  const extraBytes = fixtureBytes(directorySnapshot);
+  let online = true;
+  const asked: string[] = [];
+  const transport = jest.fn(async (url: string | URL | Request) => {
+    const path = new URL(String(url)).pathname;
+    asked.push(path);
+    if (!online) throw new TypeError('Network request failed');
+    return new Response(
+      (Object.hasOwn(directorySnapshot.files, path)
+        ? extraBytes(path)
+        : pinnedBytes(path)
+      ).toString(),
+      { status: 200, headers: { 'cache-control': 'public, max-age=300' } },
+    );
+  });
+  const client = new ApiClient({
+    origin: 'https://fixture.test',
+    version: '1.0.0',
+    build: '16',
+    cache: new CatalogCache(new MemoryStore()),
+    transport: transport as typeof fetch,
+  });
+  const source = new Catalogs(client);
+  const index = await source.bills();
+  // The read's own order: the newest status first.
+  const candidates = index.data.bills
+    .filter((b) => b.divisions > 0)
+    .sort((a, b) =>
+      (b.status_as_of ?? b.introduced ?? '').localeCompare(
+        a.status_as_of ?? a.introduced ?? '',
+      ),
+    );
+  // Opened on its own page while online, far past the first eight.
+  const opened = candidates[40]!;
+  await source.bill(opened.key);
+  online = false;
+  asked.length = 0;
+  const started = Date.now();
+  const record = await readDivisionHistory(source);
+  expect(Date.now() - started).toBeLessThan(2000);
+  // Eight single attempts, then saved copies only.
+  expect(asked).toHaveLength(8);
+  expect(record.loaded).toBe(1);
+  expect(record.failed).toBe(candidates.length - 1);
+  expect(record.stale).toBe(true);
+  expect(record.rows.length).toBeGreaterThan(0);
+  expect(new Set(record.rows.map((row) => row.billKey))).toEqual(
+    new Set([opened.key]),
+  );
+});

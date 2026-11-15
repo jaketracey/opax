@@ -644,6 +644,12 @@ export default function DivisionHistory() {
         symbol="wifi.slash"
         title={copy.notSaved}
         body={copy.notSavedBody}
+        // A brief drop as the page opens lands here too: one tap reads again.
+        action={{
+          label: copy.tryAgain,
+          onPress: retry,
+          testID: 'division-history-offline-retry',
+        }}
         testID="division-history-offline-uncached"
       />
     ) : (error && !record) ||
@@ -691,7 +697,11 @@ export default function DivisionHistory() {
       <RouteOptions
         options={{
           title: TITLE,
-          headerTitleAlign: 'center',
+          // Android keeps the toolbar's own title, as every other bar title
+          // there is: a centred title is a view squeezed between Back and
+          // the three bar items with no margin either side, and at font
+          // scale 2.0 it sat hard against Back and was cut against Filters.
+          headerTitleAlign: Platform.OS === 'android' ? 'left' : 'center',
           headerLargeTitleEnabled: false,
           headerSearchBarOptions: {
             ...searchBar,

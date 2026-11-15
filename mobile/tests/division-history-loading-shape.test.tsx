@@ -1,6 +1,12 @@
 import { act } from 'react';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
-import { Dimensions, StyleSheet, Text as NativeText } from 'react-native';
+import {
+  Dimensions,
+  Platform,
+  StyleSheet,
+  Text as NativeText,
+} from 'react-native';
+import { RouteOptions } from '../src/navigation/preview';
 import { DivisionRow, LinkRow } from '../src/design/primitives';
 import { rhythm } from '../src/design/tokens';
 import { ApiError } from '../src/api/errors';
@@ -173,3 +179,44 @@ test('a failed load holds no count line and draws no placeholder', async () => {
   expect(host(r, 'division-history-error')).toHaveLength(1);
   await act(async () => r.unmount());
 });
+
+test('with nothing saved and no connection, the page offers Try again, which reads again', async () => {
+  const offline = new ApiError('offline', 'Not saved on this iPhone yet.');
+  const value = state(null, offline);
+  jest.mocked(useCatalogRecord).mockReturnValue(value);
+  let r!: TestRenderer.ReactTestRenderer;
+  await act(async () => {
+    r = TestRenderer.create(<DivisionHistory />);
+  });
+  expect(host(r, 'division-history-offline-uncached')).toHaveLength(1);
+  const again = r.root.findAll(
+    (node) =>
+      node.props.testID === 'division-history-offline-retry' &&
+      typeof node.props.onPress === 'function',
+  );
+  expect(again.length).toBeGreaterThan(0);
+  await act(async () => again[0]!.props.onPress());
+  expect(value.retry).toHaveBeenCalledTimes(1);
+  await act(async () => r.unmount());
+});
+
+test.each([
+  ['android', 'left'],
+  ['ios', 'center'],
+] as const)(
+  'on %s the bar title is aligned %s: Android keeps the toolbar own title, with its margins',
+  async (os, align) => {
+    const original = Platform.OS;
+    Platform.OS = os;
+    try {
+      const r = await render(record);
+      expect(r.root.findByType(RouteOptions).props.options).toMatchObject({
+        title: 'Votes in parliament',
+        headerTitleAlign: align,
+      });
+      await act(async () => r.unmount());
+    } finally {
+      Platform.OS = original;
+    }
+  },
+);

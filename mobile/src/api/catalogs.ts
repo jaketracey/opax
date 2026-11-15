@@ -620,6 +620,15 @@ export class Catalogs {
       { signal, persist, ...(retries === undefined ? {} : { retries }) },
     );
   }
+  /** The bill's saved file, or null: never a network read. */
+  async savedBill(key: string) {
+    return (
+      (await this.client.saved?.(
+        `/bills/${billKey(key)}.json`,
+        decode.decodeBill,
+      )) ?? null
+    );
+  }
   votes(signal?: AbortSignal, refresh = false) {
     return this.client
       .get('/votes.json', decode.decodeVotes, refresh, { signal })

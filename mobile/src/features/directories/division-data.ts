@@ -33,14 +33,18 @@ const CONCURRENCY = 8;
  *
  * Each file is tried once. With no connection every read fails, and three
  * attempts a file with their pauses held the placeholder for about two
- * minutes before the page could say so. The read also stops as soon as the
- * first eight files have all failed offline with nothing loaded.
+ * minutes before the page could say so. Once the first eight files have all
+ * failed offline with nothing loaded, the network is asked for nothing
+ * more: the rest are read from their saved copies only, so the bills the
+ * reader has opened before still show, whichever place they hold in the
+ * list.
  *
  * Only the small division projection stays in memory for back-navigation.
  * No launch work, document/ARAG route or per-row call.
  */
 export async function readDivisionHistory(
-  source: Pick<Catalogs, 'bills' | 'bill'>,
+  source: Pick<Catalogs, 'bills' | 'bill'> &
+    Partial<Pick<Catalogs, 'savedBill'>>,
   refresh = false,
   publish?: (record: DivisionRecord) => void,
   signal?: AbortSignal,
@@ -71,7 +75,9 @@ export async function readDivisionHistory(
   let settled = 0;
   let offline: unknown;
   let offlineFailures = 0;
-  // The first wave all failed offline and nothing has loaded: stop asking.
+  // The first wave all failed offline and nothing has loaded: stop asking
+  // the network, and read only what is saved.
+  let savedOnly = false;
   const wave = Math.min(CONCURRENCY, candidates.length);
   const noConnection = () =>
     !view.loaded && offlineFailures === settled && settled >= wave;
@@ -80,15 +86,19 @@ export async function readDivisionHistory(
     waveSettled = resolve;
   });
   const worker = async () => {
-    for (let i = next++; i < candidates.length && !noConnection(); i = next++) {
+    for (let i = next++; i < candidates.length; i = next++) {
+      savedOnly ||= noConnection();
+      if (savedOnly && !source.savedBill) return;
       let failedOffline = false;
       try {
-        const result = await source.bill(candidates[i]!.key, refresh, signal, {
-          persist: false,
-          retries: 0,
-        });
+        const result = savedOnly
+          ? await source.savedBill!(candidates[i]!.key)
+          : await source.bill(candidates[i]!.key, refresh, signal, {
+              persist: false,
+              retries: 0,
+            });
         throwIfAborted(signal);
-        if (result.data.key !== candidates[i]!.key) view.failed++;
+        if (!result || result.data.key !== candidates[i]!.key) view.failed++;
         else {
           view.loaded++;
           view.stale ||= result.stale;
