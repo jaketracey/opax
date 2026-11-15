@@ -4,6 +4,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -18,6 +19,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import { useBoldText } from '../../design/accessibility';
 import { isPad, sizeClassFor, useLayout } from '../../design/adaptive';
 import { Icon } from '../../design/icon';
 import {
@@ -40,6 +42,7 @@ import { useHeaderBottom } from '../../design/useHeaderBottom';
 import { headerItems, rootHeaderItems } from '../../navigation/chrome';
 import { RouteOptions } from '../../navigation/preview';
 import { useAccount } from '../account/store';
+import { frameOf } from '../money/map/measure';
 import { useAskNow, useOpenAsk } from '../ask/open';
 import { openSuggestedPerson } from '../search/navigation';
 import { useRecentSearches } from '../search/recent';
@@ -59,6 +62,59 @@ import {
 import { quickSearch, useQuickSearch } from './store';
 
 export const WIDE_SEARCH_PLACEHOLDER = 'Search people, bills, topics';
+/**
+ * The field's words, longest first, each with its drawn width in ems of the
+ * field's type (measured wide, so a form that is chosen is never cut). The
+ * last is drawn where nothing longer fits.
+ */
+const PLACEHOLDERS: readonly (readonly [words: string, ems: number])[] = [
+  [WIDE_SEARCH_PLACEHOLDER, 13.5],
+  ['Search OPAX', 6.5],
+  ['Search', 3.5],
+];
+/** The field's type stops growing here (the input's own cap). */
+const FIELD_TEXT_SCALE_CAP = 1.5;
+/** Bold Text steps the bundled face up a weight: its words run wider. */
+const BOLD_WIDTH = 1.06;
+/**
+ * The longest form of the placeholder that fits the field's one line. The
+ * bar field on a 13-inch iPad is 206 pt, about 160 pt of it for words: the
+ * full ones were cut at the field's edge with no ellipsis ("Search people,
+ * bills, '", build 81 sweep), at every text size. `room` is the width of
+ * the text input itself.
+ */
+export function widePlaceholder({
+  room,
+  fontScale,
+  bold = false,
+}: {
+  room: number;
+  fontScale: number;
+  bold?: boolean;
+}): string {
+  const em =
+    textStyles.body.fontSize *
+    Math.min(Math.max(fontScale, 1), FIELD_TEXT_SCALE_CAP) *
+    (bold ? BOLD_WIDTH : 1);
+  const fits = PLACEHOLDERS.find(([, ems]) => ems * em <= room);
+  return (fits ?? PLACEHOLDERS.at(-1)!)[0];
+}
+/**
+ * The text input's width before it can be read: the capsule less its
+ * padding, its border, the symbol and the gap after it. Only a stand-in:
+ * the input's own width is read before the first frame is painted
+ * (SearchInput), so the words never change after it.
+ */
+export function wideFieldRoomEstimate(width: number, fontScale: number) {
+  return (
+    width -
+    rhythm.row -
+    rhythm.tight -
+    2 * hairline -
+    Math.round(18 * Math.min(Math.max(fontScale, 1), 1.3)) -
+    rhythm.tight
+  );
+}
 const FIELD_WIDTH = 340;
 const BAR_FIELD_WIDTH = 300;
 const BAR_FIELD_MIN = 180;
@@ -150,6 +206,26 @@ function SearchInput({ width }: { width: number }) {
   const open = focused && !dismissed && armed;
   const input = useRef<TextInput>(null);
   const anchor = useRef<View>(null);
+  // The drawn placeholder is one line, and where the full words do not fit
+  // they are cut at the field's edge, so a shorter form is drawn there. The
+  // input's width is read in a layout effect, so the first painted frame
+  // already has the final words. The label keeps the full words wherever
+  // fewer are drawn: a screen reader hears them at every width and size.
+  const { fontScale } = useWindowDimensions();
+  const bold = useBoldText();
+  const [room, setRoom] = useState<number | null>(null);
+  // Every commit, on purpose: the input's width can change without a
+  // dependency changing. It sets state only on a difference.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useLayoutEffect(() => {
+    const frame = frameOf(input);
+    if (frame && frame.width > 0 && frame.width !== room) setRoom(frame.width);
+  });
+  const placeholder = widePlaceholder({
+    room: room ?? wideFieldRoomEstimate(width, fontScale),
+    fontScale,
+    bold,
+  });
   // The drawn field is the store's. When the placement switches (the bar
   // item to the masthead on a rotation or a window resize) the new field
   // mounts before the old one goes, so a field leaving clears only itself,
@@ -181,10 +257,14 @@ function SearchInput({ width }: { width: number }) {
           }
           onBlur={() => quickSearch.set({ focused: false })}
           onSubmitEditing={() => quickSearch.submit.current()}
-          accessibilityLabel="Search"
+          accessibilityLabel={
+            placeholder === WIDE_SEARCH_PLACEHOLDER
+              ? 'Search'
+              : WIDE_SEARCH_PLACEHOLDER
+          }
           accessibilityHint="Suggestions appear below as you type"
           accessibilityState={{ expanded: open }}
-          placeholder={WIDE_SEARCH_PLACEHOLDER}
+          placeholder={placeholder}
           placeholderTextColor={colors.inkSoft}
           returnKeyType="search"
           submitBehavior="submit"
@@ -192,7 +272,7 @@ function SearchInput({ width }: { width: number }) {
           autoCorrect={false}
           clearButtonMode="while-editing"
           maxLength={100}
-          maxFontSizeMultiplier={1.5}
+          maxFontSizeMultiplier={FIELD_TEXT_SCALE_CAP}
           style={styles.input}
           testID="today-wide-search-input"
         />

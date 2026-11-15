@@ -20,6 +20,8 @@ import {
   WideSearch,
   WideSearchBar,
   barSearchWidth,
+  wideFieldRoomEstimate,
+  widePlaceholder,
 } from '../src/features/quick-search/WideSearch';
 import { quickSearch } from '../src/features/quick-search/store';
 import { openSuggestedPerson } from '../src/features/search/navigation';
@@ -52,6 +54,12 @@ jest.mock('react-native', () => {
     },
   });
 });
+// The input's own frame, as the host reads it before paint; null where the
+// host has no synchronous read, and the estimate stands.
+let mockFrame: { width: number; height: number } | null = null;
+jest.mock('../src/features/money/map/measure', () => ({
+  frameOf: () => mockFrame,
+}));
 jest.mock('../modules/opax-duo', () => ({
   OpaxDuo: null,
   ReservedRegionView: null,
@@ -129,6 +137,7 @@ beforeEach(() => {
   mockWidth = 834;
   mockHeight = 1376;
   mockFontScale = 1;
+  mockFrame = null;
   mockBarOptions = undefined;
   quickSearch.reset();
   mockReports = null;
@@ -516,6 +525,91 @@ describe("the field as Today's bar item (iPad, where the bar has room)", () => {
       bar.unmount();
       page.unmount();
     });
+  });
+
+  const FULL = 'Search people, bills, topics';
+  test('the placeholder is the longest form that fits the field: the 13-inch bar field draws short words, the masthead the full ones', () => {
+    // The bar field on a 13-inch iPad: 206 pt, about 160 pt for words.
+    const bar = wideFieldRoomEstimate(barSearchWidth(1032, 1376, true), 1);
+    expect(bar).toBeGreaterThan(150);
+    expect(bar).toBeLessThan(170);
+    expect(widePlaceholder({ room: bar, fontScale: 1 })).toBe('Search OPAX');
+    expect(widePlaceholder({ room: bar, fontScale: 1, bold: true })).toBe(
+      'Search OPAX',
+    );
+    // At the accessibility sizes the type stops at 1.5 times and the
+    // symbol grows: only the one word fits.
+    for (const fontScale of [1.786, 2.643, 3.571]) {
+      const room = wideFieldRoomEstimate(206, fontScale);
+      expect(widePlaceholder({ room, fontScale })).toBe('Search');
+      expect(widePlaceholder({ room, fontScale, bold: true })).toBe('Search');
+    }
+    // The masthead's 340 pt field holds the full words, also in Bold Text,
+    // and not at the accessibility sizes.
+    const masthead = wideFieldRoomEstimate(340, 1);
+    expect(widePlaceholder({ room: masthead, fontScale: 1 })).toBe(FULL);
+    expect(widePlaceholder({ room: masthead, fontScale: 1, bold: true })).toBe(
+      FULL,
+    );
+    expect(
+      widePlaceholder({
+        room: wideFieldRoomEstimate(340, 2.643),
+        fontScale: 2.643,
+      }),
+    ).toBe('Search OPAX');
+    // Bold Text runs wider: a room the regular words just fit is too small.
+    expect(widePlaceholder({ room: 232, fontScale: 1 })).toBe(FULL);
+    expect(widePlaceholder({ room: 232, fontScale: 1, bold: true })).toBe(
+      'Search OPAX',
+    );
+    // Nothing fits: the shortest is still drawn.
+    expect(widePlaceholder({ room: 10, fontScale: 1 })).toBe('Search');
+  });
+
+  test('the bar field draws the short words and a screen reader still hears the full ones; the measured width decides', async () => {
+    mockWidth = 1032;
+    const first = await mountBar();
+    expect(input(first.bar).props.placeholder).toBe('Search OPAX');
+    expect(input(first.bar).props.accessibilityLabel).toBe(FULL);
+    await act(async () => {
+      first.bar.unmount();
+      first.page.unmount();
+    });
+    // AX3: one word, and the label is still the full words.
+    mockFontScale = 2.643;
+    const large = await mountBar();
+    expect(input(large.bar).props.placeholder).toBe('Search');
+    expect(input(large.bar).props.accessibilityLabel).toBe(FULL);
+    await act(async () => {
+      large.bar.unmount();
+      large.page.unmount();
+    });
+    // The input's own width, read before paint, is what decides: one with
+    // room draws the full words, which are then the placeholder it speaks.
+    mockFontScale = 1;
+    mockFrame = { width: 260, height: 44 };
+    const roomy = await mountBar();
+    expect(input(roomy.bar).props.placeholder).toBe(FULL);
+    expect(input(roomy.bar).props.accessibilityLabel).toBe('Search');
+    await act(async () => {
+      roomy.bar.unmount();
+      roomy.page.unmount();
+    });
+    // And one narrower than the estimate draws less.
+    mockFrame = { width: 80, height: 44 };
+    const tight = await mountBar();
+    expect(input(tight.bar).props.placeholder).toBe('Search');
+    await act(async () => {
+      tight.bar.unmount();
+      tight.page.unmount();
+    });
+  });
+
+  test('the masthead field keeps the full words', async () => {
+    const renderer = await mount();
+    expect(input(renderer).props.placeholder).toBe(FULL);
+    expect(input(renderer).props.accessibilityLabel).toBe('Search');
+    await act(async () => renderer.unmount());
   });
 
   test('without room Today keeps its root items and the masthead field', async () => {
