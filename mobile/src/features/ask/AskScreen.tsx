@@ -566,6 +566,7 @@ export default function AskScreen() {
               <ClearBarFade
                 y={fadeScroll.y}
                 bottom={headerBottom}
+                hidden={hiddenBand}
                 ground={ground}
               />
             ) : null}

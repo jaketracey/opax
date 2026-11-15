@@ -97,6 +97,7 @@ export function BarFade({
   ground = 'paper',
   tail = BAR_FADE_TAIL,
   ramp = BAR_FADE_RAMP,
+  hidden = 0,
 }: {
   y: Animated.Value;
   bottom: number;
@@ -104,10 +105,22 @@ export function BarFade({
   /** 0 where a pinned band holds at the bar's foot: it is its own ground. */
   tail?: number;
   ramp?: number;
+  /**
+   * How much of the bar UIKit reports is not on screen (pt). An open Ask
+   * thread shows the inline bar while UIKit keeps the large-title band in
+   * the bar's height: the fade must end at the bar the reader sees.
+   */
+  hidden?: number;
 }) {
   const measured = use(AnimatedHeaderHeightContext);
+  // The measured height when there is one; `bottom` only outside a stack.
+  const fallback = measured ? 0 : bottom;
   const style = useMemo(() => {
-    const header: Animated.AnimatedNode | number = measured ?? bottom;
+    const header: Animated.AnimatedNode | number = measured
+      ? hidden
+        ? Animated.add(measured, -hidden)
+        : measured
+      : fallback;
     return {
       opacity: Animated.add(y, header).interpolate({
         inputRange: [0, ramp],
@@ -116,7 +129,7 @@ export function BarFade({
       }),
       transform: [{ translateY: Animated.add(header, tail - BAR_FADE_HEIGHT) }],
     };
-  }, [y, measured, bottom, tail, ramp]);
+  }, [y, measured, fallback, hidden, tail, ramp]);
   // Loaded on first use, not with every page: the fade module reads an
   // accessibility setting as it loads, and Screen imports this file.
   const { GroundFade } =

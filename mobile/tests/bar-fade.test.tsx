@@ -1,5 +1,12 @@
 import TestRenderer, { act } from 'react-test-renderer';
-import { Animated, StyleSheet } from 'react-native';
+import * as ReactNative from 'react-native';
+import {
+  AccessibilityInfo,
+  Animated,
+  Platform,
+  StyleSheet,
+} from 'react-native';
+import { paletteFor } from '../src/design/palette';
 import { AnimatedHeaderHeightContext } from 'expo-router/build/react-navigation/native-stack/utils/useAnimatedHeaderHeight';
 import {
   BAR_FADE_RAMP,
@@ -185,4 +192,87 @@ test('scroll events are bound to the fade on the native side, once, and scrollin
   expect(attach).toHaveBeenCalledTimes(2);
   act(() => renderer.unmount());
   expect(detach).toHaveBeenCalledTimes(2);
+});
+
+test('an open Ask thread: the fade ends at the bar on screen, not at the hidden large-title band', () => {
+  // UIKit keeps the large-title band in the bar's height (172) while the
+  // thread shows the inline bar (106), and Ask rests at -106. Measured
+  // against 172 the fade was whole at rest and covered the question.
+  const y = new Animated.Value(-106);
+  const header = new Animated.Value(172);
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(
+      <AnimatedHeaderHeightContext.Provider value={header as never}>
+        <BarFade y={y} bottom={106} hidden={66} />
+      </AnimatedHeaderHeightContext.Provider>,
+    );
+  });
+  try {
+    expect(shown(renderer)).toEqual({ opacity: 0, foot: 106 + BAR_FADE_TAIL });
+    act(() => y.setValue(-106 + BAR_FADE_RAMP));
+    expect(shown(renderer).opacity).toBe(1);
+  } finally {
+    act(() => renderer.unmount());
+  }
+});
+
+test("the stack's own provider is the context the fade reads", () => {
+  // A deep import with no exports map behind it: if a router bump moved the
+  // context, the fade would fall back to the debounced height in silence.
+  const stack = jest.requireActual(
+    'expo-router/build/react-navigation/native-stack',
+  ) as { useAnimatedHeaderHeight(): unknown };
+  const header = new Animated.Value(96);
+  let read: unknown;
+  function Reader() {
+    read = stack.useAnimatedHeaderHeight();
+    return null;
+  }
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(
+      <AnimatedHeaderHeightContext.Provider value={header as never}>
+        <Reader />
+      </AnimatedHeaderHeightContext.Provider>,
+    );
+  });
+  expect(read).toBe(header);
+  act(() => renderer.unmount());
+});
+
+describe("the fade is the page's ground token, in either scheme", () => {
+  const stopColours = async (
+    scheme: 'light' | 'dark',
+    ground: 'paper' | 'sunken',
+  ) => {
+    jest.spyOn(ReactNative, 'useColorScheme').mockReturnValue(scheme);
+    jest
+      .spyOn(AccessibilityInfo, 'isReduceTransparencyEnabled')
+      .mockResolvedValue(false);
+    const platform = jest.replaceProperty(Platform, 'OS', 'ios');
+    let renderer!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      renderer = TestRenderer.create(
+        <BarFade y={new Animated.Value(0)} bottom={100} ground={ground} />,
+      );
+    });
+    const colours = new Set(
+      layer(renderer)
+        .findAll((node) => 'stopColor' in node.props)
+        .map((node) => node.props.stopColor as string),
+    );
+    act(() => renderer.unmount());
+    platform.restore();
+    return [...colours];
+  };
+  afterEach(() => jest.restoreAllMocks());
+  test.each(['paper', 'sunken'] as const)('%s', async (ground) => {
+    const light = await stopColours('light', ground);
+    const dark = await stopColours('dark', ground);
+    expect(light).toEqual([paletteFor('light')[ground]]);
+    expect(dark).toEqual([paletteFor('dark')[ground]]);
+    // A hard-coded light value would give the same colour twice.
+    expect(dark).not.toEqual(light);
+  });
 });

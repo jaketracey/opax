@@ -31,6 +31,7 @@ import {
 import { announceAnswer } from '../src/features/ask/AnswerView';
 import { auditAccessibility } from './screen-a11y';
 import a11yExceptions from './screen-a11y-exceptions.cjs';
+import { BarFade } from '../src/design/bar-fade';
 import AskScreen, { PhoneDock } from '../src/features/ask/AskScreen';
 import { useScreenReady } from '../src/analytics/timing';
 import {
@@ -3354,6 +3355,26 @@ test.each([
       scrollTo(400);
       expect(edges()).not.toContain('hard');
       expect(byId('bar-fade').length).toBeGreaterThan(0);
+      // An open thread on an iPhone: UIKit still reports the large-title
+      // band in the bar's height. Ask tells the fade how much of it is
+      // hidden, so the fade ends at the bar on screen (it covered the
+      // question at rest). No band beside a vertical bar or on iPad.
+      await act(async () =>
+        view!.update(
+          withNavigationOptions(page(200), (options) => {
+            mockBar.options = options;
+          }),
+        ),
+      );
+      const hidden = view!.root.findByType(BarFade).props.hidden as number;
+      expect(hidden > 0).toBe(edge === 'unspecified' && !pad);
+      await act(async () =>
+        view!.update(
+          withNavigationOptions(page(68), (options) => {
+            mockBar.options = options;
+          }),
+        ),
+      );
       await act(async () => barButton('New question')!.onPress());
       // scrollToTop is mocked and emits no event. Idle must already be soft.
       expect(byId('ask-idle').length).toBeGreaterThan(0);
