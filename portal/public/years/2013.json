@@ -197,8 +197,9 @@
    },
    {
     "name": "Mitch Fifield",
-    "party": null,
-    "speeches": 8
+    "party": "Liberal",
+    "speeches": 8,
+    "party_basis": "roster"
    },
    {
     "name": "Tony Abbott",

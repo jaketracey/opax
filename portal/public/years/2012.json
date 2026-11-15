@@ -224,8 +224,9 @@
    },
    {
     "name": "Mitch Fifield",
-    "party": null,
-    "speeches": 8
+    "party": "Liberal",
+    "speeches": 8,
+    "party_basis": "roster"
    },
    {
     "name": "Tony Abbott",
@@ -239,13 +240,15 @@
    },
    {
     "name": "Michaelia Cash",
-    "party": null,
-    "speeches": 6
+    "party": "Liberal",
+    "speeches": 6,
+    "party_basis": "roster"
    },
    {
     "name": "Simon Birmingham",
-    "party": null,
-    "speeches": 5
+    "party": "Liberal",
+    "speeches": 5,
+    "party_basis": "roster"
    },
    {
     "name": "Jenny Macklin",
@@ -254,8 +257,9 @@
    },
    {
     "name": "Marise Payne",
-    "party": null,
-    "speeches": 3
+    "party": "Liberal",
+    "speeches": 3,
+    "party_basis": "roster"
    }
   ],
   "parties": [

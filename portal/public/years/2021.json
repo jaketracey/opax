@@ -258,8 +258,9 @@
    },
    {
     "name": "S.S. Marshall",
-    "party": null,
-    "speeches": 4
+    "party": "Liberal",
+    "speeches": 4,
+    "party_basis": "roster"
    },
    {
     "name": "Sussan Ley",

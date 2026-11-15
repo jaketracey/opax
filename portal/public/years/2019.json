@@ -246,8 +246,9 @@
    },
    {
     "name": "Mark Latham",
-    "party": null,
-    "speeches": 5
+    "party": "One Nation",
+    "speeches": 5,
+    "party_basis": "roster"
    },
    {
     "name": "Adam Searle",

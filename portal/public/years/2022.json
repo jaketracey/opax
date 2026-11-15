@@ -244,8 +244,9 @@
    },
    {
     "name": "P.B. Malinauskas",
-    "party": null,
-    "speeches": 4
+    "party": "Labor",
+    "speeches": 4,
+    "party_basis": "roster"
    },
    {
     "name": "Anthony Albanese",
