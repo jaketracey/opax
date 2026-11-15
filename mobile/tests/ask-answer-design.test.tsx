@@ -33,7 +33,9 @@ import type { AskPerson } from '../src/features/ask/people';
 import { copyText } from '../src/features/records/actions';
 import { shareRecord, trackShare } from '../src/navigation/share';
 import { track } from '../src/analytics';
+import { sourceRoute } from '../src/features/ask/AskRows';
 import {
+  leaveSheetThen,
   presentSheet,
   presentSource,
   pushBeneathSheet,
@@ -92,6 +94,7 @@ jest.mock('../src/navigation/sheets', () => ({
   presentSource: jest.fn(),
   presentSheet: jest.fn(),
   pushBeneathSheet: jest.fn(),
+  leaveSheetThen: jest.fn(),
 }));
 jest.mock('../src/analytics', () => ({
   ...jest.requireActual('../src/analytics'),
@@ -509,10 +512,12 @@ test('the sources sheet never repeats a record title as a serif line', () => {
   jest.mocked(router.back).mockClear();
   jest.mocked(router.push).mockClear();
   details.report!.onPress();
-  expect(pushBeneathSheet).toHaveBeenCalledWith({
-    pathname: '/ask-report',
-    params: { turn: 'fixture-chat:1' },
-  });
+  // The report form is a sheet itself, so it waits for this sheet's
+  // dismissal to end ('sheet'), not the two frames a page waits.
+  expect(pushBeneathSheet).toHaveBeenCalledWith(
+    { pathname: '/ask-report', params: { turn: 'fixture-chat:1' } },
+    'sheet',
+  );
   expect(router.back).not.toHaveBeenCalled();
   expect(router.push).not.toHaveBeenCalled();
   let renderer!: TestRenderer.ReactTestRenderer;
@@ -520,6 +525,34 @@ test('the sources sheet never repeats a record title as a serif line', () => {
     renderer = TestRenderer.create(<>{details.extra}</>);
   });
   mounted.push(renderer);
+  // A record row leaves the sheet for its page through the same helper: a
+  // record OPAX holds is pushed beneath the sheet, anything else opens a
+  // commit after the close. Neither closes and navigates together.
+  const sources = answer().result!.sources!;
+  jest.mocked(pushBeneathSheet).mockClear();
+  jest.mocked(leaveSheetThen).mockClear();
+  const rows = renderer.root.findAll(
+    (n) =>
+      typeof n.props.testID === 'string' &&
+      /^ask-sources-cited-\d+$/.test(n.props.testID) &&
+      typeof n.props.onPress === 'function' &&
+      typeof n.type !== 'string',
+  );
+  expect(rows.length).toBeGreaterThan(0);
+  const first = rows.find((n) => n.props.testID === 'ask-sources-cited-1')!;
+  act(() => first.props.onPress());
+  const cited = sources.filter((s) => s.cited);
+  const route = sourceRoute((cited.length ? cited : sources)[0]!);
+  if (route) {
+    expect(pushBeneathSheet).toHaveBeenCalledTimes(1);
+    expect(pushBeneathSheet).toHaveBeenCalledWith(route);
+    expect(leaveSheetThen).not.toHaveBeenCalled();
+  } else {
+    expect(leaveSheetThen).toHaveBeenCalledTimes(1);
+    expect(pushBeneathSheet).not.toHaveBeenCalled();
+  }
+  expect(router.back).not.toHaveBeenCalled();
+  expect(router.push).not.toHaveBeenCalled();
   const texts = renderer.root
     .findAll(
       (n) => typeof n.type !== 'string' && typeof n.props.variant === 'string',

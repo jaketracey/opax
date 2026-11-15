@@ -91,20 +91,51 @@ export function presentSheet(payload: SheetPayload): void {
   }[payload.kind];
   router.push(route);
 }
+/** How long UIKit takes to dismiss a sheet, with room (as TalkScreen waits). */
+export const SHEET_DISMISS_MS = 500;
+let leaving = false;
+
 /**
- * Closes the sheet on top and pushes a page in the tab beneath it.
+ * Closes the sheet on top, then runs `next` once it is safe to navigate.
  *
- * The push waits two frames, so it lands in a later commit than the close.
- * Closed and pushed in one commit, the new page was laid out in the closing
- * sheet's frame and kept it: a short sheet (a glossary term, a rule) left the
- * page it opened drawn in the top half of the screen, the rest blank, on
- * every iOS (A to Z glossary from a term, iPhone 16 Pro on iOS 18.4 and
- * iPhone 17 Pro on iOS 26.3). The sheet still slides away as the page
- * arrives.
+ * A page (`'page'`): two frames later, so the push lands in a later commit
+ * than the close. Closed and pushed in one commit, the new page was laid out
+ * in the closing sheet's frame and kept it: a short sheet (a glossary term,
+ * a rule) left the page it opened drawn in the top half of the screen, the
+ * rest blank, on every iOS (A to Z glossary from a term, iPhone 16 Pro on
+ * iOS 18.4 and iPhone 17 Pro on iOS 26.3). The sheet still slides away as
+ * the page arrives.
+ *
+ * Another sheet (`'sheet'`): only after the dismissal has ended. Two frames
+ * in, the first sheet is still being dismissed, and react-native-screens
+ * drops a modal presented then (RNSScreenStack.mm, `beingDismissed`) and
+ * leaves its stack waiting, so no later sheet opens there either. No event
+ * reaches JS when a sheet closed from JS has gone, so this waits out the
+ * dismissal.
+ *
+ * A second call while one is pending is ignored: a double tap must not close
+ * two screens or open the page twice.
  */
-export function pushBeneathSheet(href: Href): void {
+export function leaveSheetThen(
+  next: () => void,
+  target: 'page' | 'sheet' = 'page',
+): void {
+  if (leaving) return;
+  leaving = true;
   router.back();
-  requestAnimationFrame(() => requestAnimationFrame(() => router.push(href)));
+  const run = () => {
+    leaving = false;
+    next();
+  };
+  if (target === 'sheet') setTimeout(run, SHEET_DISMISS_MS);
+  else requestAnimationFrame(() => requestAnimationFrame(run));
+}
+/** Closes the sheet on top and opens `href` beneath it (see leaveSheetThen). */
+export function pushBeneathSheet(
+  href: Href,
+  target: 'page' | 'sheet' = 'page',
+): void {
+  leaveSheetThen(() => router.push(href), target);
 }
 export function presentSource(
   details: SourceDetails,
