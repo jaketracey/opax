@@ -27,6 +27,21 @@ export function replyEmail(data:{origin:string,author:string,title:string,body:s
   headers:{'List-Unsubscribe':`<${data.unsubscribeUrl}>`,'List-Unsubscribe-Post':'List-Unsubscribe=One-Click'}}
 }
 
+/** The newsletter's one transactional email: the double opt-in. `sender` is the
+ * legal identity and postal address (Spam Act 2003); `editions` are fixed labels. */
+export function newsletterConfirmEmail(data:{origin:string,link:string,unsubscribeUrl:string,sender:string,editions:string[]}) {
+ const list=data.editions.join(' and ')
+ const link=(href:string,label:string)=>`<a class="email-link" href="${escapeHtml(href)}" style="color:#8A5A12;text-decoration:underline;">${label}</a>`
+ return {...communityEmail({origin:data.origin,subject:'Confirm your OPAX newsletter',title:'Confirm your subscription',
+  preheader:'One step left: confirm that you want the OPAX newsletter.',
+  intro:`Someone, we hope you, asked for the OPAX newsletter (${list}) at this address. Nothing is sent until you confirm.`,
+  link:data.link,button:'Confirm subscription',
+  note:'This link works for <strong>48 hours</strong>. After you confirm, every edition has an unsubscribe link.',
+  reason:`If you didn’t ask for this, ignore this email and you will hear nothing more, or ${link(data.unsubscribeUrl,'remove this address now')}. Sent by ${escapeHtml(data.sender)}. ${link(data.origin+'/privacy','Privacy')}.`,
+  text:`Confirm your subscription\n\nSomeone, we hope you, asked for the OPAX newsletter (${list}) at this address. Nothing is sent until you confirm.\n\nConfirm:\n${data.link}\n\nThis link works for 48 hours. After you confirm, every edition has an unsubscribe link.\n\nIf you didn’t ask for this, ignore this email and you will hear nothing more, or remove this address now:\n${data.unsubscribeUrl}\n\nSent by ${data.sender}\nPrivacy: ${data.origin}/privacy\n\nThe public record belongs to everyone.\nOpen Parliamentary Accountability Exchange\n${data.origin}`}),
+  headers:{'List-Unsubscribe':`<${data.unsubscribeUrl}>`,'List-Unsubscribe-Post':'List-Unsubscribe=One-Click'}}
+}
+
 /** All HTML slots are constructed here from escaped content, never supplied by members. */
 function communityEmail(data:{origin:string,subject:string,title:string,preheader:string,intro:string,detail?:string,link:string,button:string,note:string,reason:string,text:string}) {
  const href=escapeHtml(data.link),home=escapeHtml(data.origin)

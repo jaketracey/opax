@@ -9,6 +9,13 @@ interface Env {
   REPORTS_ENABLED?: string
   /** While the reports are off, the installed apps still read their data files (src/reports-gate.ts). Exact "true". */
   REPORTS_APP_DATA?: string
+  /** The newsletter sign-up (src/newsletter.ts, docs/NEWSLETTER.md). Exact "true" only; anything else means no card, no sign-up and no email. */
+  NEWSLETTER_ENABLED?: string
+  /** The sender's legal name and postal address, printed in every newsletter email (Spam Act 2003). Sign-up refuses to run without it. */
+  NEWSLETTER_SENDER?: string
+  /** Cloudflare Turnstile for the sign-up form: the public site key (a var) and its secret (a Worker secret). */
+  NEWSLETTER_TURNSTILE_SITE_KEY?: string
+  TURNSTILE_SECRET_KEY?: string
   AUTHORISATION_LINE?: string
   CORRECTION_CONTACT?: string
   /** Minimum native app version; absent/invalid defaults to 0.0.0 (never blocks). Raising it is Jake's deliberate update lever. */
