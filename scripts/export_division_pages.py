@@ -8,6 +8,11 @@ Both modes use committed bill links, without a title guess, to link each divisio
 back to its bills. One JSON file per slug avoids a runtime scan of the corpus.
 --refresh-parties rechecks the published snapshot using held dated records,
 without a database or fetch, keeping its source facts and retention reasons.
+--add-staged adds reconciled divisions from a staged import (data/staged/
+vic-divisions, written by parli/ingest/vic_divisions.py) that are not published
+yet: each new record is written, the index is rebuilt, and no published record
+is touched. It is how a reviewed back-catalogue reaches a pull request before
+the refresh box holds it in ext_divisions.
 
 Every refresh preserves the existing division set and recorded member evidence.
 A degraded candidate retains the complete previous record and declares why in
@@ -493,6 +498,68 @@ def write_projection(records, output, carry=False, strict=False, party_evidence=
     return guarded
 
 
+STAGED_SOURCE = "vic-hansard-pdf-staged"
+
+
+def staged_projection(staged, previous):
+    """Reconciled divisions of a staged import that are not published yet, shaped as the database's are."""
+    if str(ROOT) not in sys.path:
+        sys.path.insert(0, str(ROOT))
+    from parli.ingest.vic_divisions import read_staged
+    divisions, votes = read_staged(Path(staged))
+    records = {}
+    for d in divisions:
+        if d.id in previous or not publishable_key(d.id):
+            continue  # a published record is never replaced from a staged file
+        records[d.id] = {
+            "key": d.id, "slug": f"division-{d.id}", "name": d.name, "question": d.question or d.name,
+            "date": d.date, "house": d.house, "jurisdiction": d.jurisdiction,
+            "ayes": d.ayes_count, "noes": d.noes_count, "result": d.result, "source_url": d.source_url,
+            "members": [], "bills": [],
+            "_meta": {"member_coverage": "recorded", "source": STAGED_SOURCE, "schema": 1},
+        }
+    seen = {}
+    for v in sorted(votes, key=lambda v: (v.division_id, v.person_name or "")):
+        division = records.get(v.division_id)
+        if not division or not v.person_name:
+            continue
+        if v.person_name not in seen.setdefault(v.division_id, set()):
+            division["members"].append(rules.publishable_member(
+                {"name": v.person_name, "person_id": v.person_id, "person_slug": person_slug(v.person_name), "vote": v.vote}))
+            seen[v.division_id].add(v.person_name)
+    label_coverage(records)
+    short = sorted(k for k, d in records.items() if d["_meta"]["member_coverage"] != "recorded")
+    if short:
+        raise ValueError(f"Staged divisions whose named votes do not equal their tallies: {', '.join(short[:10])}")
+    return records
+
+
+def write_added(new, previous, output, party_evidence=None):
+    """Write only the new shards, then the index over the published set plus the new records."""
+    output = Path(output)
+    added = guard_projection(new, {})
+    if party_evidence is not None and getattr(party_evidence, "check_labels", True):
+        vote_parties.fill_dated_parties(added.values(), party_evidence)
+    for record in added.values():
+        for member in record.get("members", []):
+            rules.publishable_member(member)
+        record["question"] = rules.publishable_question(record.get("question"))
+    records = {**previous, **added}
+    encode = lambda obj: (json.dumps(obj, ensure_ascii=False, separators=(",", ":"), sort_keys=True, allow_nan=False) + "\n").encode("utf-8")
+    payloads = {f"{r['slug']}.json": encode(r) for r in added.values()}
+    payloads["index.json"] = encode(projection_index(records))
+    with tempfile.TemporaryDirectory(prefix=".division-refresh-", dir=output) as staging:
+        staged = Path(staging)
+        for filename, payload in payloads.items():
+            with (staged / filename).open("wb") as file:
+                file.write(payload)
+                file.flush()
+                os.fsync(file.fileno())
+        for filename in [*(f for f in payloads if f != "index.json"), "index.json"]:
+            os.replace(staged / filename, output / filename)
+    return records, added
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--db", default=DEFAULT_DB)
@@ -502,8 +569,27 @@ def main():
     mode.add_argument("--from-bills", action="store_true")
     mode.add_argument("--refresh-parties", action="store_true",
                       help="Recheck the published snapshot using held dated evidence, without a DB or fetch")
+    mode.add_argument("--add-staged", type=Path, metavar="DIR",
+                      help="Add the reconciled divisions of a staged import that are not published yet; "
+                           "published records are left as they are")
     parser.add_argument("--strict-refresh", action="store_true", help="Refuse evidence regression before publishing any files")
     args = parser.parse_args()
+    if args.add_staged:
+        previous = read_previous_projection(args.out)
+        new = staged_projection(args.add_staged, previous)
+        # Wikidata terms come from the database when one is at hand (read only); without it the
+        # new rows take only the parties the committed dated lists give.
+        if Path(args.db).is_file():
+            with closing(sqlite3.connect(f"file:{Path(args.db).resolve()}?mode=ro", uri=True)) as db:
+                db.execute("PRAGMA query_only=ON")
+                evidence = vote_parties.load_evidence(ROOT, db)
+        else:
+            evidence = vote_parties.load_evidence(ROOT)
+        records, added = write_added(new, previous, args.out, party_evidence=evidence)
+        print(f"Added {len(added)} staged divisions ({sum(len(d['members']) for d in added.values())} named votes, "
+              f"{sum(not m.get('party') for d in added.values() for m in d['members'])} without a party); "
+              f"{len(previous)} published records left as they are; {len(records)} in the index.")
+        return
     published = {} if args.refresh_parties else bill_projection(args.bills)
     if args.refresh_parties:
         records = read_previous_projection(args.out)

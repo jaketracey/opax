@@ -185,6 +185,13 @@ test('A3d: a sitting member with no roster row is counted from the party index, 
     divisions: {seat_rosters}, today: '2026-11-13'});
   assert.deepEqual(browser.current.map(m => m.name), ['Mara Quint']);
   assert.deepEqual(worker.current.map(m => m.name), ['Mara Quint']);
+  // She also votes: the division records name her under the party. Still one person on either side,
+  // with her divisions on the one row (16 Nov 2026: the browser listed such a member twice).
+  const parties = {Labor: [{name: 'Mara Quint', slug: 'mara-quint', last: '2025-02-20', divisions: 2}]};
+  for (const people2 of [people, [...people, {name: 'Mara Quint', pid: 'vic_quint', party: 'Labor', party_now: 'Labor', current: true}]]) {
+    const voted = partyMembers('Labor', {roster: {people: people2}, divisions: {seat_rosters, parties}, today: '2026-11-13'});
+    assert.deepEqual([...voted.current, ...voted.former].map(m => [m.name, m.divisions]), [['Mara Quint', 2]]);
+  }
   // After the next election the roster no longer says she sits, on either side.
   for (const people2 of [people, [...people, {name: 'Mara Quint', pid: 'vic_quint', party: 'Labor', current: true}]]) {
     const later = partyMembers('Labor', {roster: {people: people2}, divisions: {seat_rosters}, today: '2026-12-01'});

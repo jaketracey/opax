@@ -1,0 +1,2529 @@
+[
+ {
+  "id": "vic-lc-2023-02-07-1",
+  "date": "2023-02-07",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa0d4/globalassets/hansard-daily-pdfs/hansard-974425065-20022/hansard-974425065-20022.pdf#page=49",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-19963",
+  "division_line": "Council divided on Samantha Ratnam’s amendment:",
+  "stated": {
+   "ayes": 10,
+   "noes": 28
+  },
+  "parsed": {
+   "ayes": 10,
+   "noes": 28
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-02-07-2",
+  "date": "2023-02-07",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa0d4/globalassets/hansard-daily-pdfs/hansard-974425065-20022/hansard-974425065-20022.pdf#page=49",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-19963",
+  "division_line": "Council divided on Georgie Crozier’s amendment:",
+  "stated": {
+   "ayes": 15,
+   "noes": 23
+  },
+  "parsed": {
+   "ayes": 15,
+   "noes": 23
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-la-2023-02-23-4",
+  "date": "2023-02-23",
+  "house": "vic_la",
+  "source_url": "https://www.parliament.vic.gov.au/4aa26d/globalassets/hansard-daily-pdfs/hansard-2145855009-18843/hansard-2145855009-18843.pdf#page=87",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-2145855009-18762",
+  "division_line": "Assembly divided on question:",
+  "stated": {
+   "ayes": 52,
+   "noes": 28
+  },
+  "parsed": {
+   "ayes": 52,
+   "noes": 28
+  },
+  "reasons": [
+   "result-contradicts-tally"
+  ],
+  "unresolved_names": []
+ },
+ {
+  "id": "vic-lc-2023-02-23-1",
+  "date": "2023-02-23",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa0d4/globalassets/hansard-daily-pdfs/hansard-974425065-20349/hansard-974425065-20349.pdf#page=76",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-20280",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 29,
+   "noes": 7
+  },
+  "parsed": {
+   "ayes": 29,
+   "noes": 7
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-03-08-1",
+  "date": "2023-03-08",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa0a7/globalassets/hansard-daily-pdfs/hansard-974425065-20512/hansard-974425065-20512.pdf#page=61",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-20425",
+  "division_line": "Council divided on Trung Luu’s motion:",
+  "stated": {
+   "ayes": 24,
+   "noes": 15
+  },
+  "parsed": {
+   "ayes": 24,
+   "noes": 15
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-03-08-2",
+  "date": "2023-03-08",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa0a7/globalassets/hansard-daily-pdfs/hansard-974425065-20512/hansard-974425065-20512.pdf#page=77",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-20425",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 17,
+   "noes": 22
+  },
+  "parsed": {
+   "ayes": 17,
+   "noes": 22
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-03-09-1",
+  "date": "2023-03-09",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa0b7/globalassets/hansard-daily-pdfs/hansard-974425065-20583/hansard-974425065-20583.pdf#page=32",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-20514",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 17,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 17,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-03-09-2",
+  "date": "2023-03-09",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa0b7/globalassets/hansard-daily-pdfs/hansard-974425065-20583/hansard-974425065-20583.pdf#page=80",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-20514",
+  "division_line": "Council divided on amendments:",
+  "stated": {
+   "ayes": 18,
+   "noes": 20
+  },
+  "parsed": {
+   "ayes": 18,
+   "noes": 20
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-03-09-3",
+  "date": "2023-03-09",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa0b7/globalassets/hansard-daily-pdfs/hansard-974425065-20583/hansard-974425065-20583.pdf#page=81",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-20514",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-03-09-4",
+  "date": "2023-03-09",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa0b7/globalassets/hansard-daily-pdfs/hansard-974425065-20583/hansard-974425065-20583.pdf#page=82",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-20514",
+  "division_line": "Council divided on amendments:",
+  "stated": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-03-09-5",
+  "date": "2023-03-09",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa0b7/globalassets/hansard-daily-pdfs/hansard-974425065-20583/hansard-974425065-20583.pdf#page=85",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-20514",
+  "division_line": "Council divided on question:",
+  "stated": {
+   "ayes": 21,
+   "noes": 16
+  },
+  "parsed": {
+   "ayes": 21,
+   "noes": 16
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-03-09-6",
+  "date": "2023-03-09",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa0b7/globalassets/hansard-daily-pdfs/hansard-974425065-20583/hansard-974425065-20583.pdf#page=119",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-20514",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 15,
+   "noes": 20
+  },
+  "parsed": {
+   "ayes": 15,
+   "noes": 20
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-03-09-7",
+  "date": "2023-03-09",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa0b7/globalassets/hansard-daily-pdfs/hansard-974425065-20583/hansard-974425065-20583.pdf#page=119",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-20514",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 20,
+   "noes": 15
+  },
+  "parsed": {
+   "ayes": 20,
+   "noes": 15
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-02-1",
+  "date": "2023-05-02",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa07f/globalassets/hansard-daily-pdfs/hansard-974425065-21326/hansard-974425065-21326.pdf#page=61",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21233",
+  "division_line": "Council divided on amendments:",
+  "stated": {
+   "ayes": 14,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 14,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-02-2",
+  "date": "2023-05-02",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa07f/globalassets/hansard-daily-pdfs/hansard-974425065-21326/hansard-974425065-21326.pdf#page=75",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21233",
+  "division_line": "Council divided on question:",
+  "stated": {
+   "ayes": 21,
+   "noes": 14
+  },
+  "parsed": {
+   "ayes": 21,
+   "noes": 14
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-03-1",
+  "date": "2023-05-03",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa08f/globalassets/hansard-daily-pdfs/hansard-974425065-21403/hansard-974425065-21403.pdf#page=79",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21328",
+  "division_line": "Council divided on amended motion:",
+  "stated": {
+   "ayes": 20,
+   "noes": 17
+  },
+  "parsed": {
+   "ayes": 20,
+   "noes": 17
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-04-1",
+  "date": "2023-05-04",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa04a/globalassets/hansard-daily-pdfs/hansard-974425065-21478/hansard-974425065-21478.pdf#page=71",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21405",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 14,
+   "noes": 22
+  },
+  "parsed": {
+   "ayes": 14,
+   "noes": 22
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-04-2",
+  "date": "2023-05-04",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa04a/globalassets/hansard-daily-pdfs/hansard-974425065-21478/hansard-974425065-21478.pdf#page=95",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21405",
+  "division_line": "Council divided on amendments:",
+  "stated": {
+   "ayes": 7,
+   "noes": 30
+  },
+  "parsed": {
+   "ayes": 7,
+   "noes": 30
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-04-3",
+  "date": "2023-05-04",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa04a/globalassets/hansard-daily-pdfs/hansard-974425065-21478/hansard-974425065-21478.pdf#page=98",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21405",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 15,
+   "noes": 22
+  },
+  "parsed": {
+   "ayes": 15,
+   "noes": 22
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-04-4",
+  "date": "2023-05-04",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa04a/globalassets/hansard-daily-pdfs/hansard-974425065-21478/hansard-974425065-21478.pdf#page=101",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21405",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-04-5",
+  "date": "2023-05-04",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa04a/globalassets/hansard-daily-pdfs/hansard-974425065-21478/hansard-974425065-21478.pdf#page=102",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21405",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-04-6",
+  "date": "2023-05-04",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa04a/globalassets/hansard-daily-pdfs/hansard-974425065-21478/hansard-974425065-21478.pdf#page=103",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21405",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-04-7",
+  "date": "2023-05-04",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa04a/globalassets/hansard-daily-pdfs/hansard-974425065-21478/hansard-974425065-21478.pdf#page=105",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21405",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-04-8",
+  "date": "2023-05-04",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa04a/globalassets/hansard-daily-pdfs/hansard-974425065-21478/hansard-974425065-21478.pdf#page=108",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21405",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 7,
+   "noes": 29
+  },
+  "parsed": {
+   "ayes": 7,
+   "noes": 29
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-04-9",
+  "date": "2023-05-04",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa04a/globalassets/hansard-daily-pdfs/hansard-974425065-21478/hansard-974425065-21478.pdf#page=109",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21405",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 7,
+   "noes": 29
+  },
+  "parsed": {
+   "ayes": 7,
+   "noes": 29
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-04-10",
+  "date": "2023-05-04",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa04a/globalassets/hansard-daily-pdfs/hansard-974425065-21478/hansard-974425065-21478.pdf#page=115",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21405",
+  "division_line": "Council divided on question:",
+  "stated": {
+   "ayes": 22,
+   "noes": 14
+  },
+  "parsed": {
+   "ayes": 22,
+   "noes": 14
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-17-1",
+  "date": "2023-05-17",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa055/globalassets/hansard-daily-pdfs/hansard-974425065-21831/hansard-974425065-21831.pdf#page=31",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21753",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 19,
+   "noes": 19
+  },
+  "parsed": {
+   "ayes": 19,
+   "noes": 19
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-17-2",
+  "date": "2023-05-17",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa055/globalassets/hansard-daily-pdfs/hansard-974425065-21831/hansard-974425065-21831.pdf#page=76",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21753",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 16,
+   "noes": 22
+  },
+  "parsed": {
+   "ayes": 16,
+   "noes": 22
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-30-1",
+  "date": "2023-05-30",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa05b/globalassets/hansard-daily-pdfs/hansard-974425065-22003/hansard-974425065-22003.pdf#page=73",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21913",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 35,
+   "noes": 2
+  },
+  "parsed": {
+   "ayes": 35,
+   "noes": 2
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-30-2",
+  "date": "2023-05-30",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa05b/globalassets/hansard-daily-pdfs/hansard-974425065-22003/hansard-974425065-22003.pdf#page=75",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21913",
+  "division_line": "Council divided on amendments:",
+  "stated": {
+   "ayes": 8,
+   "noes": 29
+  },
+  "parsed": {
+   "ayes": 8,
+   "noes": 29
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-30-3",
+  "date": "2023-05-30",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa05b/globalassets/hansard-daily-pdfs/hansard-974425065-22003/hansard-974425065-22003.pdf#page=75",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-21913",
+  "division_line": "Council divided on question:",
+  "stated": {
+   "ayes": 36,
+   "noes": 2
+  },
+  "parsed": {
+   "ayes": 36,
+   "noes": 2
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-31-1",
+  "date": "2023-05-31",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa06a/globalassets/hansard-daily-pdfs/hansard-974425065-22087/hansard-974425065-22087.pdf#page=36",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22005",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 16,
+   "noes": 20
+  },
+  "parsed": {
+   "ayes": 16,
+   "noes": 20
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-05-31-2",
+  "date": "2023-05-31",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa06a/globalassets/hansard-daily-pdfs/hansard-974425065-22087/hansard-974425065-22087.pdf#page=88",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22005",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 22,
+   "noes": 13
+  },
+  "parsed": {
+   "ayes": 22,
+   "noes": 13
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-06-01-1",
+  "date": "2023-06-01",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa03e/globalassets/hansard-daily-pdfs/hansard-974425065-22164/hansard-974425065-22164.pdf#page=15",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22089",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 13,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 13,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-06-01-2",
+  "date": "2023-06-01",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa03e/globalassets/hansard-daily-pdfs/hansard-974425065-22164/hansard-974425065-22164.pdf#page=16",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22089",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 13,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 13,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-06-01-3",
+  "date": "2023-06-01",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa03e/globalassets/hansard-daily-pdfs/hansard-974425065-22164/hansard-974425065-22164.pdf#page=17",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22089",
+  "division_line": "Council divided on new clause:",
+  "stated": {
+   "ayes": 13,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 13,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-06-01-4",
+  "date": "2023-06-01",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa03e/globalassets/hansard-daily-pdfs/hansard-974425065-22164/hansard-974425065-22164.pdf#page=32",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22089",
+  "division_line": "Council divided on question:",
+  "stated": {
+   "ayes": 35,
+   "noes": 2
+  },
+  "parsed": {
+   "ayes": 35,
+   "noes": 2
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-06-20-1",
+  "date": "2023-06-20",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa049/globalassets/hansard-daily-pdfs/hansard-974425065-22255/hansard-974425065-22255.pdf#page=63",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22166",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 14,
+   "noes": 20
+  },
+  "parsed": {
+   "ayes": 14,
+   "noes": 20
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-06-20-2",
+  "date": "2023-06-20",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa049/globalassets/hansard-daily-pdfs/hansard-974425065-22255/hansard-974425065-22255.pdf#page=78",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22166",
+  "division_line": "Council divided on question:",
+  "stated": {
+   "ayes": 20,
+   "noes": 15
+  },
+  "parsed": {
+   "ayes": 20,
+   "noes": 15
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-06-20-3",
+  "date": "2023-06-20",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa049/globalassets/hansard-daily-pdfs/hansard-974425065-22255/hansard-974425065-22255.pdf#page=78",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22166",
+  "division_line": "Council divided on question:",
+  "stated": {
+   "ayes": 20,
+   "noes": 15
+  },
+  "parsed": {
+   "ayes": 20,
+   "noes": 15
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-06-20-4",
+  "date": "2023-06-20",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa049/globalassets/hansard-daily-pdfs/hansard-974425065-22255/hansard-974425065-22255.pdf#page=78",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22166",
+  "division_line": "Council divided on question:",
+  "stated": {
+   "ayes": 20,
+   "noes": 15
+  },
+  "parsed": {
+   "ayes": 20,
+   "noes": 15
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-06-20-5",
+  "date": "2023-06-20",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa049/globalassets/hansard-daily-pdfs/hansard-974425065-22255/hansard-974425065-22255.pdf#page=79",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22166",
+  "division_line": "Council divided on question:",
+  "stated": {
+   "ayes": 21,
+   "noes": 14
+  },
+  "parsed": {
+   "ayes": 21,
+   "noes": 14
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-06-20-6",
+  "date": "2023-06-20",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa049/globalassets/hansard-daily-pdfs/hansard-974425065-22255/hansard-974425065-22255.pdf#page=90",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22166",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 30,
+   "noes": 4
+  },
+  "parsed": {
+   "ayes": 30,
+   "noes": 4
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-06-20-7",
+  "date": "2023-06-20",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa049/globalassets/hansard-daily-pdfs/hansard-974425065-22255/hansard-974425065-22255.pdf#page=91",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22166",
+  "division_line": "Council divided on amendments:",
+  "stated": {
+   "ayes": 4,
+   "noes": 32
+  },
+  "parsed": {
+   "ayes": 4,
+   "noes": 32
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-06-20-8",
+  "date": "2023-06-20",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa049/globalassets/hansard-daily-pdfs/hansard-974425065-22255/hansard-974425065-22255.pdf#page=93",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22166",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 4,
+   "noes": 32
+  },
+  "parsed": {
+   "ayes": 4,
+   "noes": 32
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-06-20-9",
+  "date": "2023-06-20",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa049/globalassets/hansard-daily-pdfs/hansard-974425065-22255/hansard-974425065-22255.pdf#page=93",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22166",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 4,
+   "noes": 32
+  },
+  "parsed": {
+   "ayes": 4,
+   "noes": 32
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-06-20-10",
+  "date": "2023-06-20",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa049/globalassets/hansard-daily-pdfs/hansard-974425065-22255/hansard-974425065-22255.pdf#page=94",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22166",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 4,
+   "noes": 32
+  },
+  "parsed": {
+   "ayes": 4,
+   "noes": 32
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-06-21-1",
+  "date": "2023-06-21",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa032/globalassets/hansard-daily-pdfs/hansard-974425065-22324/hansard-974425065-22324.pdf#page=53",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22257",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 17,
+   "noes": 19
+  },
+  "parsed": {
+   "ayes": 17,
+   "noes": 19
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-06-21-2",
+  "date": "2023-06-21",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa032/globalassets/hansard-daily-pdfs/hansard-974425065-22324/hansard-974425065-22324.pdf#page=74",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22257",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 14,
+   "noes": 20
+  },
+  "parsed": {
+   "ayes": 14,
+   "noes": 20
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-06-21-3",
+  "date": "2023-06-21",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa032/globalassets/hansard-daily-pdfs/hansard-974425065-22324/hansard-974425065-22324.pdf#page=79",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22257",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 12,
+   "noes": 20
+  },
+  "parsed": {
+   "ayes": 12,
+   "noes": 20
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-08-01-1",
+  "date": "2023-08-01",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa023/globalassets/hansard-daily-pdfs/hansard-974425065-22835/hansard-974425065-22835.pdf#page=63",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22737",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 16,
+   "noes": 23
+  },
+  "parsed": {
+   "ayes": 16,
+   "noes": 23
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-08-01-2",
+  "date": "2023-08-01",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa023/globalassets/hansard-daily-pdfs/hansard-974425065-22835/hansard-974425065-22835.pdf#page=79",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22737",
+  "division_line": "Council divided on clause:",
+  "stated": {
+   "ayes": 24,
+   "noes": 13
+  },
+  "parsed": {
+   "ayes": 24,
+   "noes": 13
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-08-01-3",
+  "date": "2023-08-01",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa023/globalassets/hansard-daily-pdfs/hansard-974425065-22835/hansard-974425065-22835.pdf#page=80",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22737",
+  "division_line": "Council divided on clause:",
+  "stated": {
+   "ayes": 24,
+   "noes": 13
+  },
+  "parsed": {
+   "ayes": 24,
+   "noes": 13
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-08-02-1",
+  "date": "2023-08-02",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa00f/globalassets/hansard-daily-pdfs/hansard-974425065-22913/hansard-974425065-22913.pdf#page=30",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22837",
+  "division_line": "Council divided on amendments:",
+  "stated": {
+   "ayes": 19,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 19,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-08-02-2",
+  "date": "2023-08-02",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa00f/globalassets/hansard-daily-pdfs/hansard-974425065-22913/hansard-974425065-22913.pdf#page=31",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22837",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 25,
+   "noes": 15
+  },
+  "parsed": {
+   "ayes": 25,
+   "noes": 15
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-08-02-3",
+  "date": "2023-08-02",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa00f/globalassets/hansard-daily-pdfs/hansard-974425065-22913/hansard-974425065-22913.pdf#page=61",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22837",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 15,
+   "noes": 19
+  },
+  "parsed": {
+   "ayes": 15,
+   "noes": 19
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-08-02-4",
+  "date": "2023-08-02",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa00f/globalassets/hansard-daily-pdfs/hansard-974425065-22913/hansard-974425065-22913.pdf#page=80",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-22837",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-08-16-1",
+  "date": "2023-08-16",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fed/globalassets/hansard-daily-pdfs/hansard-974425065-23163/hansard-974425065-23163.pdf#page=33",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23086",
+  "division_line": "Council divided on question:",
+  "stated": {
+   "ayes": 22,
+   "noes": 14
+  },
+  "parsed": {
+   "ayes": 22,
+   "noes": 14
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-08-16-2",
+  "date": "2023-08-16",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fed/globalassets/hansard-daily-pdfs/hansard-974425065-23163/hansard-974425065-23163.pdf#page=79",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23086",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 23,
+   "noes": 14
+  },
+  "parsed": {
+   "ayes": 23,
+   "noes": 14
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-08-16-3",
+  "date": "2023-08-16",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fed/globalassets/hansard-daily-pdfs/hansard-974425065-23163/hansard-974425065-23163.pdf#page=79",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23086",
+  "division_line": "Council divided on question:",
+  "stated": {
+   "ayes": 23,
+   "noes": 14
+  },
+  "parsed": {
+   "ayes": 23,
+   "noes": 14
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-08-17-1",
+  "date": "2023-08-17",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa00e/globalassets/hansard-daily-pdfs/hansard-974425065-23242/hansard-974425065-23242.pdf#page=61",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23165",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 8,
+   "noes": 29
+  },
+  "parsed": {
+   "ayes": 8,
+   "noes": 29
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-08-17-2",
+  "date": "2023-08-17",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa00e/globalassets/hansard-daily-pdfs/hansard-974425065-23242/hansard-974425065-23242.pdf#page=61",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23165",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 29,
+   "noes": 8
+  },
+  "parsed": {
+   "ayes": 29,
+   "noes": 8
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-08-29-1",
+  "date": "2023-08-29",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9ff8/globalassets/hansard-daily-pdfs/hansard-974425065-23323/hansard-974425065-23323.pdf#page=62",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23244",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 15,
+   "noes": 22
+  },
+  "parsed": {
+   "ayes": 15,
+   "noes": 22
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-08-29-2",
+  "date": "2023-08-29",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9ff8/globalassets/hansard-daily-pdfs/hansard-974425065-23323/hansard-974425065-23323.pdf#page=65",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23244",
+  "division_line": "Council divided on amendments:",
+  "stated": {
+   "ayes": 15,
+   "noes": 22
+  },
+  "parsed": {
+   "ayes": 15,
+   "noes": 22
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-08-29-3",
+  "date": "2023-08-29",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9ff8/globalassets/hansard-daily-pdfs/hansard-974425065-23323/hansard-974425065-23323.pdf#page=66",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23244",
+  "division_line": "Council divided on question:",
+  "stated": {
+   "ayes": 22,
+   "noes": 15
+  },
+  "parsed": {
+   "ayes": 22,
+   "noes": 15
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-08-30-1",
+  "date": "2023-08-30",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9ff1/globalassets/hansard-daily-pdfs/hansard-974425065-23401/hansard-974425065-23401.pdf#page=36",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23325",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 17,
+   "noes": 23
+  },
+  "parsed": {
+   "ayes": 17,
+   "noes": 23
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-08-30-2",
+  "date": "2023-08-30",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9ff1/globalassets/hansard-daily-pdfs/hansard-974425065-23401/hansard-974425065-23401.pdf#page=84",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23325",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 16,
+   "noes": 22
+  },
+  "parsed": {
+   "ayes": 16,
+   "noes": 22
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-03-1",
+  "date": "2023-10-03",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fd6/globalassets/hansard-daily-pdfs/hansard-974425065-23567/hansard-974425065-23567.pdf#page=59",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23486",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 21,
+   "noes": 14
+  },
+  "parsed": {
+   "ayes": 21,
+   "noes": 14
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-03-2",
+  "date": "2023-10-03",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fd6/globalassets/hansard-daily-pdfs/hansard-974425065-23567/hansard-974425065-23567.pdf#page=64",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23486",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 10,
+   "noes": 24
+  },
+  "parsed": {
+   "ayes": 10,
+   "noes": 24
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-03-3",
+  "date": "2023-10-03",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fd6/globalassets/hansard-daily-pdfs/hansard-974425065-23567/hansard-974425065-23567.pdf#page=65",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23486",
+  "division_line": "Council divided on amendments:",
+  "stated": {
+   "ayes": 8,
+   "noes": 26
+  },
+  "parsed": {
+   "ayes": 8,
+   "noes": 26
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-04-1",
+  "date": "2023-10-04",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fe3/globalassets/hansard-daily-pdfs/hansard-974425065-23645/hansard-974425065-23645.pdf#page=34",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23569",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 14,
+   "noes": 19
+  },
+  "parsed": {
+   "ayes": 14,
+   "noes": 19
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-04-2",
+  "date": "2023-10-04",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fe3/globalassets/hansard-daily-pdfs/hansard-974425065-23645/hansard-974425065-23645.pdf#page=67",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23569",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 19,
+   "noes": 14
+  },
+  "parsed": {
+   "ayes": 19,
+   "noes": 14
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-04-3",
+  "date": "2023-10-04",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fe3/globalassets/hansard-daily-pdfs/hansard-974425065-23645/hansard-974425065-23645.pdf#page=85",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23569",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 14,
+   "noes": 20
+  },
+  "parsed": {
+   "ayes": 14,
+   "noes": 20
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-05-1",
+  "date": "2023-10-05",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fdd/globalassets/hansard-daily-pdfs/hansard-974425065-23719/hansard-974425065-23719.pdf#page=76",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23647",
+  "division_line": "Council divided on amendments:",
+  "stated": {
+   "ayes": 6,
+   "noes": 30
+  },
+  "parsed": {
+   "ayes": 6,
+   "noes": 30
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-05-2",
+  "date": "2023-10-05",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fdd/globalassets/hansard-daily-pdfs/hansard-974425065-23719/hansard-974425065-23719.pdf#page=77",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23647",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 30,
+   "noes": 6
+  },
+  "parsed": {
+   "ayes": 30,
+   "noes": 6
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-05-3",
+  "date": "2023-10-05",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fdd/globalassets/hansard-daily-pdfs/hansard-974425065-23719/hansard-974425065-23719.pdf#page=78",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23647",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 15,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 15,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-05-4",
+  "date": "2023-10-05",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fdd/globalassets/hansard-daily-pdfs/hansard-974425065-23719/hansard-974425065-23719.pdf#page=84",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23647",
+  "division_line": "Council divided on new clause:",
+  "stated": {
+   "ayes": 5,
+   "noes": 31
+  },
+  "parsed": {
+   "ayes": 5,
+   "noes": 31
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-05-5",
+  "date": "2023-10-05",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fdd/globalassets/hansard-daily-pdfs/hansard-974425065-23719/hansard-974425065-23719.pdf#page=85",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23647",
+  "division_line": "Council divided on new clause:",
+  "stated": {
+   "ayes": 6,
+   "noes": 30
+  },
+  "parsed": {
+   "ayes": 6,
+   "noes": 30
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-05-6",
+  "date": "2023-10-05",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fdd/globalassets/hansard-daily-pdfs/hansard-974425065-23719/hansard-974425065-23719.pdf#page=86",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23647",
+  "division_line": "Council divided on question:",
+  "stated": {
+   "ayes": 33,
+   "noes": 3
+  },
+  "parsed": {
+   "ayes": 33,
+   "noes": 3
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-17-1",
+  "date": "2023-10-17",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fc1/globalassets/hansard-daily-pdfs/hansard-974425065-23801/hansard-974425065-23801.pdf#page=22",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23721",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 7,
+   "noes": 32
+  },
+  "parsed": {
+   "ayes": 7,
+   "noes": 32
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-17-2",
+  "date": "2023-10-17",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fc1/globalassets/hansard-daily-pdfs/hansard-974425065-23801/hansard-974425065-23801.pdf#page=69",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23721",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 34,
+   "noes": 2
+  },
+  "parsed": {
+   "ayes": 34,
+   "noes": 2
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-17-3",
+  "date": "2023-10-17",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fc1/globalassets/hansard-daily-pdfs/hansard-974425065-23801/hansard-974425065-23801.pdf#page=76",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23721",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 15,
+   "noes": 22
+  },
+  "parsed": {
+   "ayes": 15,
+   "noes": 22
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-17-4",
+  "date": "2023-10-17",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fc1/globalassets/hansard-daily-pdfs/hansard-974425065-23801/hansard-974425065-23801.pdf#page=76",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23721",
+  "division_line": "Council divided on amendments:",
+  "stated": {
+   "ayes": 15,
+   "noes": 22
+  },
+  "parsed": {
+   "ayes": 15,
+   "noes": 22
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-18-1",
+  "date": "2023-10-18",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fcf/globalassets/hansard-daily-pdfs/hansard-974425065-23877/hansard-974425065-23877.pdf#page=60",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24714",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 20,
+   "noes": 17
+  },
+  "parsed": {
+   "ayes": 20,
+   "noes": 17
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-18-2",
+  "date": "2023-10-18",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fcf/globalassets/hansard-daily-pdfs/hansard-974425065-23877/hansard-974425065-23877.pdf#page=79",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24714",
+  "division_line": "Council divided on amendments:",
+  "stated": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-18-3",
+  "date": "2023-10-18",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fcf/globalassets/hansard-daily-pdfs/hansard-974425065-23877/hansard-974425065-23877.pdf#page=79",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24714",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-19-1",
+  "date": "2023-10-19",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fd8/globalassets/hansard-daily-pdfs/hansard-974425065-23953/hansard-974425065-23953.pdf#page=27",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23879",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 36,
+   "noes": 3
+  },
+  "parsed": {
+   "ayes": 36,
+   "noes": 3
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-19-2",
+  "date": "2023-10-19",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fd8/globalassets/hansard-daily-pdfs/hansard-974425065-23953/hansard-974425065-23953.pdf#page=86",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23879",
+  "division_line": "Council divided on amendments:",
+  "stated": {
+   "ayes": 16,
+   "noes": 22
+  },
+  "parsed": {
+   "ayes": 16,
+   "noes": 22
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-19-3",
+  "date": "2023-10-19",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fd8/globalassets/hansard-daily-pdfs/hansard-974425065-23953/hansard-974425065-23953.pdf#page=87",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23879",
+  "division_line": "Council divided on new clauses:",
+  "stated": {
+   "ayes": 17,
+   "noes": 22
+  },
+  "parsed": {
+   "ayes": 17,
+   "noes": 22
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-19-4",
+  "date": "2023-10-19",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fd8/globalassets/hansard-daily-pdfs/hansard-974425065-23953/hansard-974425065-23953.pdf#page=88",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23879",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 17,
+   "noes": 22
+  },
+  "parsed": {
+   "ayes": 17,
+   "noes": 22
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-19-5",
+  "date": "2023-10-19",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fd8/globalassets/hansard-daily-pdfs/hansard-974425065-23953/hansard-974425065-23953.pdf#page=90",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23879",
+  "division_line": "Council divided on new clause:",
+  "stated": {
+   "ayes": 17,
+   "noes": 22
+  },
+  "parsed": {
+   "ayes": 17,
+   "noes": 22
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-31-1",
+  "date": "2023-10-31",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fbb/globalassets/hansard-daily-pdfs/hansard-974425065-24031/hansard-974425065-24031.pdf#page=61",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23955",
+  "division_line": "Council divided on amendments:",
+  "stated": {
+   "ayes": 7,
+   "noes": 28
+  },
+  "parsed": {
+   "ayes": 7,
+   "noes": 28
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-10-31-2",
+  "date": "2023-10-31",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fbb/globalassets/hansard-daily-pdfs/hansard-974425065-24031/hansard-974425065-24031.pdf#page=62",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-23955",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 14,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 14,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-11-01-1",
+  "date": "2023-11-01",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fc9/globalassets/hansard-daily-pdfs/hansard-974425065-24120/hansard-974425065-24120.pdf#page=68",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24877",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 17,
+   "noes": 19
+  },
+  "parsed": {
+   "ayes": 17,
+   "noes": 19
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-11-01-2",
+  "date": "2023-11-01",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fc9/globalassets/hansard-daily-pdfs/hansard-974425065-24120/hansard-974425065-24120.pdf#page=68",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24877",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 22,
+   "noes": 14
+  },
+  "parsed": {
+   "ayes": 22,
+   "noes": 14
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-11-02-1",
+  "date": "2023-11-02",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fad/globalassets/hansard-daily-pdfs/hansard-974425065-24193/hansard-974425065-24193.pdf#page=33",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24122",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 16,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-11-02-2",
+  "date": "2023-11-02",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fad/globalassets/hansard-daily-pdfs/hansard-974425065-24193/hansard-974425065-24193.pdf#page=33",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24122",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 21,
+   "noes": 16
+  },
+  "parsed": {
+   "ayes": 21,
+   "noes": 16
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-11-02-3",
+  "date": "2023-11-02",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fad/globalassets/hansard-daily-pdfs/hansard-974425065-24193/hansard-974425065-24193.pdf#page=49",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24122",
+  "division_line": "Council divided on question:",
+  "stated": {
+   "ayes": 20,
+   "noes": 13
+  },
+  "parsed": {
+   "ayes": 20,
+   "noes": 13
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-11-15-1",
+  "date": "2023-11-15",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9faa/globalassets/hansard-daily-pdfs/hansard-974425065-24339/hansard-974425065-24339.pdf#page=47",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24276",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 32,
+   "noes": 5
+  },
+  "parsed": {
+   "ayes": 32,
+   "noes": 5
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-11-15-2",
+  "date": "2023-11-15",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9faa/globalassets/hansard-daily-pdfs/hansard-974425065-24339/hansard-974425065-24339.pdf#page=66",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24276",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 15,
+   "noes": 22
+  },
+  "parsed": {
+   "ayes": 15,
+   "noes": 22
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-11-15-3",
+  "date": "2023-11-15",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9faa/globalassets/hansard-daily-pdfs/hansard-974425065-24339/hansard-974425065-24339.pdf#page=81",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24276",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 16,
+   "noes": 22
+  },
+  "parsed": {
+   "ayes": 16,
+   "noes": 22
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-11-16-1",
+  "date": "2023-11-16",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fb5/globalassets/hansard-daily-pdfs/hansard-974425065-24429/hansard-974425065-24429.pdf#page=49",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24341",
+  "division_line": "Council divided on clause:",
+  "stated": {
+   "ayes": 35,
+   "noes": 2
+  },
+  "parsed": {
+   "ayes": 35,
+   "noes": 2
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-11-16-2",
+  "date": "2023-11-16",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fb5/globalassets/hansard-daily-pdfs/hansard-974425065-24429/hansard-974425065-24429.pdf#page=106",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24341",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 20,
+   "noes": 19
+  },
+  "parsed": {
+   "ayes": 20,
+   "noes": 19
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-11-29-1",
+  "date": "2023-11-29",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fb2/globalassets/hansard-daily-pdfs/hansard-974425065-24609/hansard-974425065-24609.pdf#page=52",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24518",
+  "division_line": "Council divided on Mrs McArthur’s amendment:",
+  "stated": {
+   "ayes": 19,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 19,
+   "noes": 21
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-11-29-2",
+  "date": "2023-11-29",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fb2/globalassets/hansard-daily-pdfs/hansard-974425065-24609/hansard-974425065-24609.pdf#page=53",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24518",
+  "division_line": "Council divided on amended motion:",
+  "stated": {
+   "ayes": 23,
+   "noes": 17
+  },
+  "parsed": {
+   "ayes": 23,
+   "noes": 17
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-11-29-3",
+  "date": "2023-11-29",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9fb2/globalassets/hansard-daily-pdfs/hansard-974425065-24609/hansard-974425065-24609.pdf#page=83",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24518",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 22,
+   "noes": 16
+  },
+  "parsed": {
+   "ayes": 22,
+   "noes": 16
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-la-2023-11-30-5",
+  "date": "2023-11-30",
+  "house": "vic_la",
+  "source_url": "https://www.parliament.vic.gov.au/4a9e5c/globalassets/hansard-daily-pdfs/hansard-2145855009-23446/hansard-2145855009-23446.pdf#page=101",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-2145855009-23344",
+  "division_line": "Assembly divided on omission (members in favour vote no):",
+  "stated": {
+   "ayes": 54,
+   "noes": 25
+  },
+  "parsed": {
+   "ayes": 54,
+   "noes": 25
+  },
+  "reasons": [
+   "result-contradicts-tally"
+  ],
+  "unresolved_names": []
+ },
+ {
+  "id": "vic-la-2023-11-30-7",
+  "date": "2023-11-30",
+  "house": "vic_la",
+  "source_url": "https://www.parliament.vic.gov.au/4a9e5c/globalassets/hansard-daily-pdfs/hansard-2145855009-23446/hansard-2145855009-23446.pdf#page=102",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-2145855009-23344",
+  "division_line": "Assembly divided on omission (members in favour vote no):",
+  "stated": {
+   "ayes": 54,
+   "noes": 25
+  },
+  "parsed": {
+   "ayes": 54,
+   "noes": 25
+  },
+  "reasons": [
+   "result-contradicts-tally"
+  ],
+  "unresolved_names": []
+ },
+ {
+  "id": "vic-lc-2023-11-30-1",
+  "date": "2023-11-30",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9f96/globalassets/hansard-daily-pdfs/hansard-974425065-24712/hansard-974425065-24712.pdf#page=64",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24782",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 16,
+   "noes": 22
+  },
+  "parsed": {
+   "ayes": 16,
+   "noes": 22
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-11-30-2",
+  "date": "2023-11-30",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9f96/globalassets/hansard-daily-pdfs/hansard-974425065-24712/hansard-974425065-24712.pdf#page=64",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24782",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 22,
+   "noes": 16
+  },
+  "parsed": {
+   "ayes": 22,
+   "noes": 16
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-11-30-3",
+  "date": "2023-11-30",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9f96/globalassets/hansard-daily-pdfs/hansard-974425065-24712/hansard-974425065-24712.pdf#page=74",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24782",
+  "division_line": "Council divided on question:",
+  "stated": {
+   "ayes": 22,
+   "noes": 16
+  },
+  "parsed": {
+   "ayes": 22,
+   "noes": 16
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2023-11-30-4",
+  "date": "2023-11-30",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4a9f96/globalassets/hansard-daily-pdfs/hansard-974425065-24712/hansard-974425065-24712.pdf#page=121",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-24782",
+  "division_line": "Council divided on amendments:",
+  "stated": {
+   "ayes": 21,
+   "noes": 15
+  },
+  "parsed": {
+   "ayes": 21,
+   "noes": 15
+  },
+  "reasons": [
+   "unresolved-name"
+  ],
+  "unresolved_names": [
+   "Matthew Bach"
+  ]
+ },
+ {
+  "id": "vic-lc-2026-08-27-12",
+  "date": "2026-08-27",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa1c8/globalassets/hansard-daily-pdfs/hansard-974425065-36663/hansard-974425065-36663.pdf#page=104",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-36592",
+  "division_line": "Council divided on amendment:",
+  "stated": {
+   "ayes": 15,
+   "noes": 21
+  },
+  "parsed": {
+   "ayes": 15,
+   "noes": 21
+  },
+  "reasons": [
+   "numbering-differs-from-published"
+  ],
+  "unresolved_names": [],
+  "published": {
+   "ayes": 7,
+   "noes": 30
+  }
+ },
+ {
+  "id": "vic-lc-2026-08-27-13",
+  "date": "2026-08-27",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa1c8/globalassets/hansard-daily-pdfs/hansard-974425065-36663/hansard-974425065-36663.pdf#page=108",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-36592",
+  "division_line": "Council divided on new clause:",
+  "stated": {
+   "ayes": 7,
+   "noes": 30
+  },
+  "parsed": {
+   "ayes": 7,
+   "noes": 30
+  },
+  "reasons": [
+   "numbering-differs-from-published"
+  ],
+  "unresolved_names": [],
+  "published": {
+   "ayes": 34,
+   "noes": 3
+  }
+ },
+ {
+  "id": "vic-lc-2026-08-27-14",
+  "date": "2026-08-27",
+  "house": "vic_lc",
+  "source_url": "https://www.parliament.vic.gov.au/4aa1c8/globalassets/hansard-daily-pdfs/hansard-974425065-36663/hansard-974425065-36663.pdf#page=109",
+  "online_url": "https://www.parliament.vic.gov.au/parliamentary-activity/hansard/hansard-details/HANSARD-974425065-36592",
+  "division_line": "Council divided on motion:",
+  "stated": {
+   "ayes": 34,
+   "noes": 3
+  },
+  "parsed": {
+   "ayes": 34,
+   "noes": 3
+  },
+  "reasons": [
+   "numbering-differs-from-published"
+  ],
+  "unresolved_names": [],
+  "published": null
+ }
+]

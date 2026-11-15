@@ -194,9 +194,12 @@ export function partyMembers(label, {roster = null, divisions = null, same = (a,
   for (const [party, members] of Object.entries(divisions?.parties || {})) {
     if (!same(party, label)) continue;
     for (const m of members) {
+      // A seat-roster member with no roster row of their own (a `reference` entry above) who also votes
+      // under this party is one person: the division row joins that entry by name, and is not listed twice.
+      const seated = seatMembers.find(s => s.m.reference && fold(s.m.name) === fold(m.name))?.id;
       const id = m.slug
-        ? byAddress.get(personAddresses.get(m.slug) || `/subject/person/${m.slug}`) || `slug:${m.slug}`
-        : byName.get(fold(m.name)) || `name:${fold(m.name)}`;
+        ? byAddress.get(personAddresses.get(m.slug) || `/subject/person/${m.slug}`) || seated || `slug:${m.slug}`
+        : byName.get(fold(m.name)) || seated || `name:${fold(m.name)}`;
       const r = row(id, {name: m.name, last: Number(String(m.last || '').slice(0, 4)) || 0});
       r.divisions += m.divisions || 0;
       recordedAs(r, party);

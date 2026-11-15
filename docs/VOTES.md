@@ -543,3 +543,79 @@ Expected finish ≈ 2.5 h after 10:17 AEST.
   collaborator strings.
 - Retrieval pollution check (GATE 3c) numbers are in the probe results below; if divisions
   crowd out speeches under `kind=all`, keep the default at `speech` (as now).
+
+## Victoria, the whole 60th Parliament (16 November 2026)
+
+`parli/ingest/vic_divisions.py` walks every sitting day of the 60th Parliament (20 December 2022 to
+24 September 2026, both houses) with the same source, ids and unified rows as the sampled
+`votes_state.py vic` path. Reuse is by permission of the Parliament of Victoria
+([SOURCES-ACCESS.md](SOURCES-ACCESS.md), 13 October 2026). Before the first content request the run
+read `robots.txt` (it names two Facebook crawlers only and disallows nothing) and the site's copyright
+and disclaimer pages (copyright, reuse beyond personal and research use by permission of the Presiding
+Officers; neither restricts automated reading).
+
+| Step | Count |
+| --- | ---: |
+| Requests made, all to www.parliament.vic.gov.au, one at a time, two seconds or more apart, none refused | 405 |
+| Sitting days fetched (Assembly 188, Council 189), each a Final daily Hansard PDF | 377 |
+| Divisions found | 1,113 |
+| Reconciled (names parsed equal both stated tallies, result line agrees, every name resolved) | 998 |
+| On the mismatch list, not published | 115 |
+| Already published (14 August to 24 September 2026), left as they are | 72 |
+| New division records in `portal/public/divisions/` | 926 |
+
+The mismatch list (`data/staged/vic-divisions/mismatches.json`, each entry with its Hansard link, the
+stated and the parsed counts and the reason):
+
+- **unresolved-name, 109.** Every one is a Council division between December 2022 and December 2023 that
+  lists Matthew Bach, who is in no committed roster file. The tallies of all 109 reconcile. Adding him to
+  the roster and running `parse` again (no fetch) would release them.
+- **result-contradicts-tally, 3.** Hansard's own result line disagrees with the tally it prints:
+  `vic-la-2023-02-23-4` (Ayes 52, Noes 28, "Question defeated.") and `vic-la-2023-11-30-5` and `-7`
+  ("divided on omission (members in favour vote no)").
+- **numbering-differs-from-published, 3.** The earlier import missed one Council division on 27 August 2026
+  (Ayes 15, Noes 21, page 104 of that day's PDF), so the published `vic-lc-2026-08-27-12` and `-13` are that
+  day's 13th and 14th divisions. The missed division and the two ids after it are held for a reviewed
+  renumbering; nothing published was replaced.
+
+No division failed the count check: in all 1,113 the names parsed equal the tallies Hansard states.
+
+What each record keeps, as Hansard prints it:
+
+- `source_url`: the day's Hansard PDF, with the page of the division (`#page=`); `date`: the sitting day.
+- `name`: the heading the division sits under (a bill title, "Program", "Sessional orders").
+- `question`: the motion or amendment only where Hansard prints it directly before the division line
+  (223 of the 998), and otherwise the division line itself ("Council divided on amendment"). No text is
+  summarised or reworded.
+- Member names as printed. A name resolves when exactly one person of that house has it in the electorate
+  release's seat roster or the people directory (51,160 and 832 of the 51,992 votes). Where Hansard prints
+  another form of a given name than the roster holds, the name resolves only through the member list at
+  the front of that day's PDF (one member of that surname, and one roster person of that surname in that
+  member's seat); no vote in this load needed it. The committed roster has no term dates for Victorian
+  members, so "on that date" rests on Hansard listing the member in that day's division.
+
+Three published records from the earlier import carry page furniture inside a member name
+(`vic-lc-2026-09-10-2` and `-9`: "Sheena Watt 4198 Legislative Council"; `vic-la-2026-09-10-6`:
+"Meng 3948 Legislative Assembly Heang Tak"). They are not changed here; each needs a reviewed correction.
+
+Reproduce (the cache lives outside the repository; `parse` makes no requests):
+
+```
+python3 -m parli.ingest.vic_divisions fetch --cache ~/opax-work/vic-hansard-cache --from 2022-12-20
+python3 -m parli.ingest.vic_divisions parse --cache ~/opax-work/vic-hansard-cache --out data/staged/vic-divisions
+python3 scripts/export_division_pages.py --add-staged data/staged/vic-divisions
+```
+
+`--add-staged` writes only records that are not published yet and rebuilds the index; published records
+are byte for byte as they were. Parties come from the same dated-roster rule as every other division.
+
+Still to do on the refresh box, after review (not done here, it writes to the database):
+
+```
+python3 -m parli.ingest.vic_divisions unified --staged data/staged/vic-divisions --out /tmp/votes_vic_60.json
+python3 -m parli.ingest.votes_state load /tmp/votes_vic_60.json
+```
+
+Until then the nightly division export does not find these records in `ext_divisions` and keeps them
+flagged `refresh_retained: missing-division`, and `votes.json` (person vote panels) and
+`seo/recent-votes.json` still cover Victoria from 14 August 2026 only.
