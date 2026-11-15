@@ -12,7 +12,7 @@ import {
   type ScrollView,
 } from 'react-native';
 import type { Electorate } from '../api/catalogs';
-import type { PersonProfile } from '../api/person-identity';
+import { joinPerson, type PersonProfile } from '../api/person-identity';
 import { catalogs } from '../api/runtime';
 import { useReduceMotion } from '../design/accessibility';
 import { PadGrid, ReadableColumn } from '../design/adaptive';
@@ -38,6 +38,7 @@ import {
   InlineError,
   Skeleton,
   SkeletonCrossfade,
+  type ProfileBones,
 } from '../design/states';
 import { Text } from '../design/text';
 import { rhythm } from '../design/tokens';
@@ -80,8 +81,13 @@ import {
 } from './people/model';
 import { profileGrid } from './split/grid';
 import { BlockSource, votesSource } from './your-mp/Evidence';
-import { hasParliamentaryMembership, type ProfileView } from './your-mp/model';
+import {
+  hasParliamentaryMembership,
+  type Directory,
+  type ProfileView,
+} from './your-mp/model';
 import { useIsMyMember } from './your-mp/useIsMyMember';
+import { savedSeatDirectory } from './your-mp/useSeat';
 import { useSetAsMyElectorate } from './your-mp/useSetAsMyElectorate';
 import { perfMark, useDrawnMark } from '../perf/probe';
 import {
@@ -188,18 +194,13 @@ export async function loadProfile(slug: string): Promise<Loaded | null> {
     (p) => p.person_id === person.data.canonicalPersonId,
   );
   const profileIdentity = profile.blocks.identity.data;
-  if (
-    profileIdentity?.partyStatus === 'former' &&
-    released?.electorates.length
-  ) {
+  const dated = profileIdentity && releasedIdentity(profileIdentity, released);
+  if (dated && dated !== profileIdentity) {
     profile = {
       ...profile,
       blocks: {
         ...profile.blocks,
-        identity: {
-          ...profile.blocks.identity,
-          data: { ...profileIdentity, seats: released.electorates },
-        },
+        identity: { ...profile.blocks.identity, data: dated },
       },
     };
   }
@@ -362,7 +363,7 @@ export function ProfileScreen({
               <RefreshControl refreshing={refreshing} onRefresh={refresh} />
             }
           >
-            <PersonSkeleton />
+            <PersonSkeleton slug={slug} name={routeName} />
           </Screen>
         }
       >
@@ -411,7 +412,7 @@ export function ProfileScreen({
                 />
               )
             ) : (
-              <PersonSkeleton />
+              <PersonSkeleton slug={slug} name={routeName} />
             )}
           </Screen>
         ) : load.status !== 'ready' || !identity ? null : (
@@ -432,10 +433,94 @@ export function ProfileScreen({
   );
 }
 
-function PersonSkeleton() {
+/**
+ * A former member's seats as the release dates them: the page's identity
+ * and the bones' read the same record, so they draw the same line.
+ */
+function releasedIdentity<
+  T extends Pick<PersonProfile, 'partyStatus' | 'seats'>,
+>(
+  identity: T,
+  released: { electorates: PersonProfile['seats'] } | undefined,
+): T {
+  return identity.partyStatus === 'former' && released?.electorates.length
+    ? { ...identity, seats: released.electorates }
+    : identity;
+}
+
+/**
+ * The header the page will draw, read from the directory already in memory:
+ * its name, lines and identity rows in the page's own words, so the bones
+ * hold the same places at every text size. A paid post ("Minister for ...")
+ * comes with the pay record and is not known yet. Null (the bones' default,
+ * a sitting federal member) when the directory is not read or the slug is
+ * not in it.
+ */
+export function profileBones(
+  slug: string,
+  directory: Directory | null,
+): Omit<ProfileBones, 'yourMP'> | null {
+  if (!directory) return null;
+  let joined: PersonProfile;
+  try {
+    joined = joinPerson(
+      slug,
+      directory.slugs.data,
+      directory.roster.data,
+      directory.people.data,
+      directory.manifest.data,
+    );
+  } catch {
+    return null;
+  }
+  const released = directory.people.data.people.find(
+    (p) => p.person_id === joined.canonicalPersonId,
+  );
+  const identity = releasedIdentity(joined, released);
+  const former = formerMemberLine(identity);
+  const official =
+    identity.partyStatus !== 'former'
+      ? officialPage(released?.source_url)
+      : null;
+  return {
+    name: identity.name,
+    role: former,
+    follow: !!identity.canonicalPersonId,
+    rows: [
+      ...(identity.party
+        ? [
+            {
+              kind: 'party' as const,
+              title: identity.party,
+              detail: identity.formerly
+                ? `Formerly ${identity.formerly}`
+                : undefined,
+            },
+          ]
+        : []),
+      ...(former ? [] : seatRows(identity)).map((seat) => ({
+        kind: 'seat' as const,
+        title: seat.title,
+        detail: seat.detail,
+      })),
+      ...(official
+        ? [{ kind: 'official' as const, title: official.label }]
+        : []),
+    ],
+    // Votes, interests and pay for a sitting federal member; a former
+    // member's page keeps the divisions count alone, as one row.
+    tiles: former ? 1 : sittingFederal(identity) ? 3 : 0,
+  };
+}
+
+function PersonSkeleton({ slug, name }: { slug: string; name?: string }) {
+  const yourMP = useIsMyMember(slug);
+  const directory = savedSeatDirectory();
+  const bones = useMemo(() => profileBones(slug, directory), [slug, directory]);
   return (
     <Skeleton
       shape="person-profile"
+      profile={{ ...(name ? { name } : null), ...bones, yourMP }}
       label="Loading the profile"
       testID="person-loading"
     />
