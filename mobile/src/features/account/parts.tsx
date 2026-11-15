@@ -4,11 +4,11 @@ import type { ReactNode } from 'react';
 import {
   AccessibilityInfo,
   ActivityIndicator,
-  Pressable,
   StyleSheet,
   View,
   useWindowDimensions,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import {
   EXTERNAL_GLYPH,
   Icon,
@@ -217,6 +217,7 @@ export function VersionFoot() {
     });
   return (
     <Pressable
+      feedback="none"
       accessible
       accessibilityRole="text"
       accessibilityLabel={linksCopy.versionSpoken(version, build)}

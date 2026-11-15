@@ -1,3 +1,4 @@
+import { animatedScroll } from '../../design/accessibility';
 import {
   useEffect,
   useRef,
@@ -62,7 +63,10 @@ export function useCursorReveal(scroll: RefObject<ScrollView | null>) {
         const below = y + rowHeight - (height - rhythm.section);
         const by = above < 0 ? above : below > 0 ? below : 0;
         if (by)
-          scroll.current?.scrollTo({ y: offset.current + by, animated: true });
+          scroll.current?.scrollTo({
+            y: offset.current + by,
+            animated: animatedScroll(),
+          });
       });
     },
   };

@@ -1,5 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
-import { Pressable, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { Button } from '../../design/controls';
 import { useKeyCommand } from '../../design/keyboard';
 import { Text } from '../../design/text';
@@ -39,6 +40,7 @@ export default function TermTip() {
   return (
     <View style={styles.fill} testID="term-tip">
       <Pressable
+        feedback="none"
         accessibilityRole="button"
         accessibilityLabel="Close"
         style={styles.fill}

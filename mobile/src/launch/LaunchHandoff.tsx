@@ -10,12 +10,12 @@ import {
 } from 'react';
 import {
   AccessibilityInfo,
-  Pressable,
   StyleSheet,
   useWindowDimensions,
   View,
   type TextStyle,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../design/pressable';
 import Animated, {
   Easing,
   cancelAnimation,
@@ -316,6 +316,7 @@ function LaunchCover({
     >
       <StatusBar style="light" />
       <Pressable
+        feedback="none"
         accessible={false}
         onPress={skip}
         style={StyleSheet.absoluteFill}

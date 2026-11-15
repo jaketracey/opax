@@ -1,4 +1,4 @@
-import { Pressable } from './pressable';
+import { PlainPressable, Pressable } from './pressable';
 import {
   cloneElement,
   createContext,
@@ -11,6 +11,7 @@ import {
 import {
   Alert,
   Platform,
+  Pressable as NativePressable,
   StyleSheet,
   View,
   type PressableProps,
@@ -33,6 +34,7 @@ import { showMenu } from './menu';
 import type { SFSymbol } from './icon';
 import { copy as words } from './copy';
 import { spokenFigures } from './format';
+import { pushHighlightProps, usePushHighlight } from './push-highlight';
 
 export type RowMenuAction =
   | {
@@ -178,6 +180,11 @@ export function RowTrigger({
  */
 export const RowOpenListener = createContext<(() => void) | null>(null);
 
+const isPressable = (element: ReactElement) =>
+  element.type === Pressable ||
+  element.type === PlainPressable ||
+  element.type === NativePressable;
+
 /** A native preview and menu, with every menu choice also directly accessible. */
 export function RowLink({
   href,
@@ -195,6 +202,7 @@ export function RowLink({
   select?: () => void;
 }) {
   const child = children as ReactElement<PressableProps>;
+  const highlight = usePushHighlight();
   const recordLink = useRecordLink(href);
   const currentRecord = recordLink.isCurrent();
   const opened = useContext(RowOpenListener);
@@ -243,6 +251,7 @@ export function RowLink({
   if (Platform.OS !== 'ios')
     return (
       <Pressable
+        feedback="none"
         {...child.props}
         {...accessibility}
         onPress={open}
@@ -287,6 +296,12 @@ export function RowLink({
   );
   const trigger = cloneElement(child, {
     ...accessibility,
+    // Held through the push, faded on the way back (push-highlight.tsx).
+    // Only a pressable itself: another component's style and children are
+    // its own inputs, not its touch surface's.
+    ...(isPressable(child)
+      ? pushHighlightProps(highlight, child.props.style, child.props.children)
+      : {}),
     ...(hasNativeHost
       ? {
           // The outer host groups this content, including inferred labels.
@@ -301,17 +316,16 @@ export function RowLink({
       href={href}
       push={recordLink.push}
       asChild
-      onPress={
-        select || currentRecord || opened
-          ? (event) => {
-              if (select) {
-                event.preventDefault();
-                select();
-              } else if (recordLink.isCurrent()) event.preventDefault();
-              else opened?.();
-            }
-          : undefined
-      }
+      onPress={(event) => {
+        if (select) {
+          event.preventDefault();
+          select();
+        } else if (recordLink.isCurrent()) event.preventDefault();
+        else {
+          opened?.();
+          highlight.hold();
+        }
+      }}
     >
       <Link.Trigger withAppleZoom={zoom && !select}>
         <RowTrigger row={trigger} />

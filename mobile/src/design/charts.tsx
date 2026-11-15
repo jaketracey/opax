@@ -831,6 +831,7 @@ function BarSeriesContent({
                 ];
                 return onSelect ? (
                   <Pressable
+                    feedback="wash"
                     key={index}
                     {...a11y}
                     accessibilityRole="button"

@@ -12,7 +12,7 @@ import {
   Pressable as NativePressable,
   type PressableProps,
 } from 'react-native';
-import { Pressable } from './pressable';
+import { PlainPressable, Pressable } from './pressable';
 import { androidControls } from './tokens';
 import { showMenu } from './menu';
 import { menuTitle } from './menu-title';
@@ -58,8 +58,12 @@ export function ContextMenu({
         ? { onLongPress: () => showMenu('', leaves) }
         : {}),
   });
-  if (Platform.OS === 'android' && children.type === NativePressable)
-    return <Pressable {...trigger.props} />;
+  // React Native's pressable, or the wrapper that hands it on unchanged.
+  if (
+    Platform.OS === 'android' &&
+    (children.type === NativePressable || children.type === PlainPressable)
+  )
+    return <Pressable feedback="none" {...trigger.props} />;
   if (Platform.OS !== 'ios') return trigger;
   return (
     <Host matchContents={{ vertical: true }}>

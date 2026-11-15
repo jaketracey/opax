@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import {
-  Pressable,
   ScrollView,
   StyleSheet,
   View,
   type AccessibilityActionEvent,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { router } from 'expo-router';
 import { Text } from '../../design/primitives';
 import { presentSource } from '../../navigation/sheets';
@@ -56,6 +56,7 @@ export function PhotoCredit({
 }) {
   return (
     <Pressable
+      feedback="wash"
       accessibilityRole="button"
       accessibilityLabel={`Photo: ${photo.author}, ${photo.licence}.`}
       accessibilityHint="Double-tap for the source and licence."
@@ -144,6 +145,7 @@ export function YearGallery({
           >
             {photos.map((p) => (
               <Pressable
+                feedback="none"
                 // a11y-ok(pressable-role): the adjustable frame around the
                 // gallery is the one focus target: it names the photo, pages
                 // with swipes up and down, and opens it on activate.

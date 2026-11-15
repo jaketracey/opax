@@ -75,7 +75,27 @@ export function CachedPortrait({
       active = false;
     };
   }, [request, name, slug, onCredit, retryKey]);
-  const current = saved?.request === request ? saved : null;
+  // Before the lookup answers: the portrait this request resolved to
+  // earlier in this launch, so a row coming back into view (a list
+  // scrolling, a screen returning) draws its face in its first frame rather
+  // than a blank circle that fills a moment later. The lookup still runs,
+  // and once it has answered, its answer stands.
+  const known = useMemo(() => {
+    const value =
+      request.retryKey === 0
+        ? (portraits?.peek?.({ name: request.name, slug: request.slug }) ??
+          null)
+        : null;
+    return value
+      ? {
+          ...value,
+          onDisplay: (visible: boolean) =>
+            onCredit?.(visible ? value.info : null),
+        }
+      : null;
+  }, [request, onCredit]);
+  const current =
+    answered === request ? (saved?.request === request ? saved : null) : known;
   return (
     <Portrait
       key={`${identity}/${retryKey}`}

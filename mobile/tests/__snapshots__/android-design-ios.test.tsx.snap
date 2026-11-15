@@ -291,17 +291,21 @@ exports[`iOS design at font scale 1 BarSeries retains its iOS output 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           [
-            {
-              "backgroundColor": "transparent",
-              "bottom": 0,
-              "minHeight": 44,
-              "position": "absolute",
-              "top": 0,
-            },
-            {
-              "left": 17,
-              "width": 0,
-            },
+            null,
+            [
+              {
+                "backgroundColor": "transparent",
+                "bottom": 0,
+                "minHeight": 44,
+                "position": "absolute",
+                "top": 0,
+              },
+              {
+                "left": 17,
+                "width": 0,
+              },
+            ],
+            null,
           ]
         }
       />
@@ -3901,6 +3905,7 @@ exports[`iOS design at font scale 1 MoneyRow retains its iOS output 1`] = `
   <RouteHost
     asChild={true}
     href="/workbench"
+    onPress={[Function]}
     push={false}
   >
     <RouteHost
@@ -5141,6 +5146,7 @@ exports[`iOS design at font scale 1 RecordRow retains its iOS output 1`] = `
   <RouteHost
     asChild={true}
     href="/workbench"
+    onPress={[Function]}
     push={false}
   >
     <RouteHost
@@ -6986,6 +6992,7 @@ exports[`iOS design at font scale 1 Tile retains its iOS output 1`] = `
   <RouteHost
     asChild={true}
     href="/workbench"
+    onPress={[Function]}
     push={false}
   >
     <RouteHost
@@ -7730,17 +7737,21 @@ exports[`iOS design at font scale 2 BarSeries retains its iOS output 1`] = `
         onStartShouldSetResponder={[Function]}
         style={
           [
-            {
-              "backgroundColor": "transparent",
-              "bottom": 0,
-              "minHeight": 44,
-              "position": "absolute",
-              "top": 0,
-            },
-            {
-              "left": 17,
-              "width": 0,
-            },
+            null,
+            [
+              {
+                "backgroundColor": "transparent",
+                "bottom": 0,
+                "minHeight": 44,
+                "position": "absolute",
+                "top": 0,
+              },
+              {
+                "left": 17,
+                "width": 0,
+              },
+            ],
+            null,
           ]
         }
       />
@@ -11502,6 +11513,7 @@ exports[`iOS design at font scale 2 MoneyRow retains its iOS output 1`] = `
   <RouteHost
     asChild={true}
     href="/workbench"
+    onPress={[Function]}
     push={false}
   >
     <RouteHost
@@ -12748,6 +12760,7 @@ exports[`iOS design at font scale 2 RecordRow retains its iOS output 1`] = `
   <RouteHost
     asChild={true}
     href="/workbench"
+    onPress={[Function]}
     push={false}
   >
     <RouteHost
@@ -14702,6 +14715,7 @@ exports[`iOS design at font scale 2 Tile retains its iOS output 1`] = `
   <RouteHost
     asChild={true}
     href="/workbench"
+    onPress={[Function]}
     push={false}
   >
     <RouteHost

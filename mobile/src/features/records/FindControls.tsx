@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { Text } from '../../design/text';
 import { colors, rhythm } from '../../design/tokens';
 
@@ -47,6 +48,7 @@ export function FindControls({
           { label: 'Done', onPress: onDone, id: 'done', disabled: false },
         ].map((action) => (
           <Pressable
+            feedback="wash"
             key={action.id}
             accessibilityRole="button"
             accessibilityState={{ disabled: action.disabled }}

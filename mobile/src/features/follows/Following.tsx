@@ -1,12 +1,7 @@
 import { RouteOptions } from '../../navigation/preview';
 import { useEffect, useState } from 'react';
-import {
-  Platform,
-  Pressable,
-  RefreshControl,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Platform, RefreshControl, StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Screen, InsetGroup } from '../../design/layout';
 import {
@@ -511,6 +506,7 @@ function EditRow({
       testID={`follows-row-${follow.kind}-${follow.id}`}
     >
       <Pressable
+        feedback="wash"
         accessibilityRole="button"
         accessibilityLabel={`Unfollow ${entry.title}`}
         accessibilityState={{ disabled }}

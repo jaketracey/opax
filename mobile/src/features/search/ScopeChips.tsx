@@ -1,5 +1,6 @@
 import { useRef } from 'react';
-import { Pressable, ScrollView, StyleSheet } from 'react-native';
+import { Platform, ScrollView, StyleSheet } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { Text } from '../../design/text';
 import { colors, rhythm } from '../../design/tokens';
 
@@ -55,7 +56,16 @@ export function ScopeChips<T extends string>({
               });
             }}
             android_ripple={{ color: colors.dividerSubtle }}
-            style={[styles.chip, selected ? styles.selected : null]}
+            // The selected chip keeps its navy wash under a finger; another
+            // takes the pressed fill (iOS; Android has its ripple).
+            style={({ pressed }) => [
+              styles.chip,
+              selected
+                ? styles.selected
+                : pressed && Platform.OS === 'ios'
+                  ? styles.pressed
+                  : null,
+            ]}
             testID={option.testID}
           >
             <Text variant="secondary" tone={selected ? 'navy' : 'ink'}>
@@ -83,4 +93,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.paper,
   },
   selected: { backgroundColor: colors.navyWash, borderColor: colors.navy },
+  pressed: { backgroundColor: colors.sunken },
 });

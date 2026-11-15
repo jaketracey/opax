@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, useColorScheme, View } from 'react-native';
+import { StyleSheet, useColorScheme, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { router } from 'expo-router';
 import { Group, Path } from '@shopify/react-native-skia';
 import { useAccessibilitySize } from '../../design/accessibility';
@@ -105,6 +106,7 @@ export function SeatInvitation({
           itself, so VoiceOver still reads the headline, the body and the two
           buttons one by one; it reaches "Not now" as the headline's action. */}
       <Pressable
+        feedback="none"
         accessible={false}
         onLongPress={() =>
           confirmAction('Who represents you?', [

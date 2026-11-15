@@ -17,7 +17,10 @@ import { screen } from '../src/navigation/stack/screen';
 import { exploreScreens } from '../src/navigation/stack/explore';
 import { Icon } from '../src/design/icon';
 import { AndroidMenuHost } from '../src/design/menu';
-import { Pressable as MenuPressable } from '../src/design/pressable';
+import {
+  PlainPressable,
+  Pressable as MenuPressable,
+} from '../src/design/pressable';
 import { Text } from '../src/design/text';
 import {
   NavigationContext,
@@ -339,6 +342,8 @@ test('Android citation navigation retains previous, next and overflow actions in
   );
   const buttons = tree.findAll(
     (node) =>
+      // The React Native pressable, not the wrapper that hands it on.
+      node.type !== PlainPressable &&
       node.props.accessibilityRole === 'button' &&
       typeof node.props.onPress === 'function',
   );

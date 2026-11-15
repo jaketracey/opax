@@ -4,10 +4,10 @@ import {
   Easing,
   Image,
   Platform,
-  Pressable,
   StyleSheet,
   View,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { localImageURI } from '../../api/image-policy';
 import { yearPictures } from '../../api/runtime';
 import { yearPictureKey } from '../../api/year-picture-policy';
@@ -122,6 +122,7 @@ export function Picture({
           style={[StyleSheet.absoluteFill, { opacity: ready ? reveal : 0 }]}
         >
           <Image
+            fadeDuration={0}
             key={identity}
             source={{ uri: localImageURI(uri) }}
             style={StyleSheet.absoluteFill}
@@ -141,6 +142,8 @@ export function Picture({
                 {'Photo couldn’t be loaded.'}
               </Text>
               <Pressable
+                // On the black ground: the paper wash would hide the text.
+                feedback="none"
                 accessibilityRole="button"
                 accessibilityLabel="Try again"
                 onPress={() => setRetry((v) => v + 1)}

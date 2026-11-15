@@ -9,15 +9,65 @@ import {
 import { useHighTextContrast } from './accessibility';
 import { spokenFigures } from './format';
 import { rememberMenuAnchor } from './menu-anchor';
-import { accents, border, colors, androidControls, type Role } from './tokens';
+import { useRowHighlight } from './row-padding';
+import {
+  accents,
+  border,
+  colors,
+  androidControls,
+  radii,
+  type Role,
+} from './tokens';
+
+/**
+ * iOS: how long a touch rests on a surface before it highlights. Nearly every
+ * surface sits in a scroll view, and with no delay a row lit up under the
+ * finger at the start of each scroll and went dark again as the scroll took
+ * the touch. UIKit holds a scroll view's content touches the same way. A
+ * quick tap still highlights: React Native presses in at release and keeps
+ * the highlight for its minimum press time. Android's ripple is the
+ * platform's own and keeps its timing.
+ */
+export const IOS_PRESS_DELAY = 130;
+
+/**
+ * What a touch does to a surface that draws no pressed state of its own, on
+ * iOS (Android has its ripple). Every surface either styles `pressed` itself
+ * or names one of these, so no control takes a touch without answering it
+ * (tests/press-feedback-policy.test.tsx):
+ * - `wash`: the design's pressed fill, the same one a row and a quiet button
+ *   take, chosen for the ground it sits on (`useRowHighlight`). Never a fade
+ *   of the content: a pressed control keeps its contrast.
+ * - `none`: on purpose. A backdrop, a picture that opens, a wrapper whose
+ *   child draws the highlight, a long-press-only surface.
+ */
+export type PressFeedback = 'wash' | 'none';
+/** The wash's corners where the surface has none of its own. */
+const washShape = {
+  borderRadius: radii.thumb,
+  borderCurve: 'continuous',
+} as const;
+function usePressedStyle(
+  feedback: PressFeedback | undefined,
+  style: PressableProps['style'],
+): PressableProps['style'] {
+  const highlight = useRowHighlight();
+  if (Platform.OS !== 'ios' || feedback !== 'wash') return style;
+  return (state) => [
+    state.pressed ? washShape : null,
+    typeof style === 'function' ? style(state) : style,
+    state.pressed ? { backgroundColor: highlight } : null,
+  ];
+}
 
 /** The shared touch surface; keyboard focus adds a layout-neutral outline. */
 export function Pressable({
   ref,
+  feedback,
   ...props
-}: PressableProps & { ref?: Ref<View> }) {
+}: PressableProps & { ref?: Ref<View>; feedback?: PressFeedback }) {
   const [focused, setFocused] = useState(false);
-  const { style } = props;
+  const style = usePressedStyle(feedback, props.style);
   const Component =
     Platform.OS === 'android' ? AndroidPressable : NativePressable;
   const ringed =
@@ -38,7 +88,13 @@ export function Pressable({
           ? spokenFigures(props.accessibilityLabel)
           : undefined
       }
-      {...(Platform.OS === 'android' ? { ringed } : null)}
+      {...(Platform.OS === 'android'
+        ? { ringed }
+        : {
+            unstable_pressDelay:
+              props.unstable_pressDelay ??
+              (Platform.OS === 'ios' ? IOS_PRESS_DELAY : undefined),
+          })}
       ref={ref}
       onFocus={(event) => {
         setFocused(true);
@@ -55,6 +111,29 @@ export function Pressable({
             : [style, focusStyle]
           : style
       }
+    />
+  );
+}
+/**
+ * React Native's own Pressable with the app's iOS touch timing and press
+ * feedback, and nothing else: no Android ripple or minimum target, no focus
+ * ring, no change to the spoken label. For surfaces that own those
+ * themselves and used the React Native component directly. Android is
+ * passed straight through.
+ */
+export function PlainPressable({
+  ref,
+  feedback,
+  ...props
+}: PressableProps & { ref?: Ref<View>; feedback?: PressFeedback }) {
+  const style = usePressedStyle(feedback, props.style);
+  if (Platform.OS !== 'ios') return <NativePressable {...props} ref={ref} />;
+  return (
+    <NativePressable
+      {...props}
+      ref={ref}
+      unstable_pressDelay={props.unstable_pressDelay ?? IOS_PRESS_DELAY}
+      style={style}
     />
   );
 }

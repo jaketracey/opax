@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { Text } from '../../design/primitives';
 import { colors, minimumTarget, radii, rhythm } from '../../design/tokens';
 import type { TranscriptTurn, VoiceSource } from '../../voice';

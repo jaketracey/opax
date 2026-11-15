@@ -4,12 +4,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   AccessibilityInfo,
   Keyboard,
-  Pressable,
   RefreshControl,
   SectionList,
   StyleSheet,
   View,
 } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import type { SearchBarCommands } from 'react-native-screens';
 import { ApiError } from '../../api/errors';
 import { catalogs } from '../../api/runtime';
@@ -18,7 +18,7 @@ import { useRefreshCommand } from '../../design/keyboard';
 import {
   ContentUnavailable,
   copy,
-  Divider,
+  RowSeparator,
   OfflineLine,
   RegionProvider,
   rowMenus,
@@ -212,6 +212,7 @@ export default function Declarations() {
               {[...active, count].join(' · ')}
             </Text>
             <Pressable
+              feedback="wash"
               accessibilityRole="button"
               accessibilityLabel={filtered ? 'Clear filters' : 'Clear search'}
               testID="declarations-filter-clear"
@@ -373,7 +374,7 @@ export default function Declarations() {
               />
             );
           }}
-          ItemSeparatorComponent={() => <Divider variant="subtle" />}
+          ItemSeparatorComponent={RowSeparator}
           ListHeaderComponent={
             <RegionProvider value={column.inner}>
               {column.bar}

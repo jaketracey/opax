@@ -1,3 +1,4 @@
+import { PlainPressable } from '../src/design/pressable';
 import { act, type ReactElement } from 'react';
 import { AppState, type AppStateStatus } from 'react-native';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
@@ -99,6 +100,8 @@ test('a party row opens its party; a row for no party is not a link', () => {
   expect(
     root.findAll(
       (node) =>
+        // The React Native pressable, not the wrapper that hands it on.
+        node.type !== PlainPressable &&
         typeof node.props.onPress === 'function' &&
         node.props.accessibilityRole === 'link',
     ),

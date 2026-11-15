@@ -1948,6 +1948,15 @@ export function Divider({
   );
 }
 
+/**
+ * The subtle rule between a list's rows, as a component of its own: a list
+ * given an inline `() => <Divider />` sees a new component type on every
+ * render and remounts each separator it has drawn.
+ */
+export function RowSeparator() {
+  return <Divider variant="subtle" />;
+}
+
 // iOS retains 44 + 2 * (1 + 1) = 48 outside. Android keeps its 48dp
 // touch target plus the border; padding must never become negative.
 const segmentPadding = Math.max(

@@ -14,13 +14,8 @@ import {
   useRef,
   useState,
 } from 'react';
-import {
-  AccessibilityInfo,
-  Platform,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import type { NativeStackHeaderItem } from 'expo-router';
 import { router, useLocalSearchParams } from 'expo-router';
 import { NavigationContext } from 'expo-router/react-navigation';

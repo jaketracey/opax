@@ -1,6 +1,7 @@
 import { router, type Href } from 'expo-router';
 import { useRef } from 'react';
-import { Pressable, StyleSheet, type View } from 'react-native';
+import { StyleSheet, type View } from 'react-native';
+import { PlainPressable as Pressable } from '../../design/pressable';
 import { CitationBadge } from '../../design/citation-mark';
 import { Icon } from '../../design/icon';
 import { confirmAction } from '../../design/menu';
