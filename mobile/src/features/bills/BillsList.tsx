@@ -1,4 +1,6 @@
-import { animatedScroll } from '../../design/accessibility';
+import { animatedScroll, useSolidBar } from '../../design/accessibility';
+import { useHeaderBottom } from '../../design/useHeaderBottom';
+import { useRootBarUnderBar } from '../../navigation/useRootBarAppearance';
 import { RouteOptions } from '../../navigation/preview';
 import { useAndroidRootScroll } from '../../navigation/useAndroidRootScroll';
 import {
@@ -253,6 +255,16 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
   );
   const listRef = useRef<FlatList<(typeof rows)[number]>>(null);
   const androidRoot = useAndroidRootScroll(listRef, colors.paper);
+  // With Reduce Transparency or Increase Contrast on, the tab's bar takes a
+  // solid ground only once the list has scrolled under it: at rest that
+  // ground covered the large title. This list is not a Screen, so it says
+  // when it has left rest, from the first point of scroll, as Screen does.
+  // With neither setting on nothing is attached and nothing is reported.
+  const solidBar = useSolidBar();
+  const reportsBar = Platform.OS === 'ios' && solidBar && !pushed;
+  const barBottom = useHeaderBottom();
+  const [underBar, setUnderBar] = useState(false);
+  useRootBarUnderBar(underBar, reportsBar);
   const visible = useRef(new Set<string>());
   const [onViewable] = useState(
     () =>
@@ -570,7 +582,17 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         }
         {...(Platform.OS === 'android'
           ? { onScroll: androidRoot.onScroll, scrollEventThrottle: 16 }
-          : {})}
+          : reportsBar
+            ? {
+                onScroll: (event: {
+                  nativeEvent: { contentOffset: { y: number } };
+                }) =>
+                  setUnderBar(
+                    event.nativeEvent.contentOffset.y + barBottom > 1,
+                  ),
+                scrollEventThrottle: 16,
+              }
+            : {})}
         ListHeaderComponentStyle={styles.header}
         ListFooterComponent={rows.length ? footer : null}
         ListFooterComponentStyle={styles.footer}
