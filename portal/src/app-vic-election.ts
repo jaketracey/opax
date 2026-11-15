@@ -4,7 +4,14 @@ import {findSeats, keyDateRows, latest, titledVotes, vicElectionCopy, vicElectio
 import {VIC_ELECTION_PATH, VIC_ELECTION_ASSET, VIC_ELECTION_PLACES, VIC_ELECTION_POLLS_OPEN, VIC_ELECTION_POLLS_CLOSE, VIC_ELECTION_CACHE, vicElectionEnabled} from '../public/vic-election.js'
 import {validateVicElection, validateVicPlaces, VIC_ELECTION_SOURCE_KEYS as SOURCE_KEYS} from './vic-election-data'
 
-type ElectionEnv = Pick<Env, 'ASSETS' | 'VIC_ELECTION_HUB_ENABLED'>
+type ElectionEnv = Pick<Env, 'ASSETS' | 'VIC_ELECTION_HUB_ENABLED' | 'VIC_ELECTION_APP_ENABLED'>
+
+// The app endpoint's own publication gate. The app's Today reads this endpoint to know the Legislative
+// Assembly is dissolved, and a new install has nothing else to decide it from, so the endpoint must be
+// able to stay up after the web hub is switched off. Only the exact value "true" publishes it and any
+// other set value withdraws it; unset, it follows the hub's flag, as it did before it had its own.
+export const vicElectionAppEnabled = (env: Pick<ElectionEnv, 'VIC_ELECTION_HUB_ENABLED' | 'VIC_ELECTION_APP_ENABLED'>) =>
+  env.VIC_ELECTION_APP_ENABLED == null ? vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED) : env.VIC_ELECTION_APP_ENABLED === 'true'
 const ROOT = '/api/app/v1/vic-election'
 const ORIGIN = 'https://opax.com.au'
 const slug = (path: string) => path.split('/').at(-1)!
@@ -102,7 +109,7 @@ function seatDetail(d: VicElection, s: Seat, now: Date) {
 
 export async function appVicElection(req: Request, env: ElectionEnv, now = new Date()): Promise<Response> {
   const json = (body: unknown, status: number, headers: Record<string,string> = {}) => appJson(req,body,status,{'x-robots-tag':'noindex',...headers})
-  if (!vicElectionEnabled(env.VIC_ELECTION_HUB_ENABLED)) return json({error:'not_published'},404)
+  if (!vicElectionAppEnabled(env)) return json({error:'not_published'},404)
   const method = readOnly(req)
   if (method) { method.headers.set('x-robots-tag','noindex'); return method }
   const url = new URL(req.url)

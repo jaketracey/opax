@@ -3,6 +3,8 @@ interface Env {
   TABLE_DB: D1Database
   /** Publication waits for Jake's election authorisation decision. Exact "true" only. */
   VIC_ELECTION_HUB_ENABLED?: string
+  // The app's /api/app/v1/vic-election, on its own gate so it can outlive the web hub (src/app-vic-election.ts).
+  VIC_ELECTION_APP_ENABLED?: string
   /** The six standing reports (src/reports-gate.ts). Exact "true" publishes them; anything else keeps them off. */
   REPORTS_ENABLED?: string
   /** While the reports are off, the installed apps still read their data files (src/reports-gate.ts). Exact "true". */
