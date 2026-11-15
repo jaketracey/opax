@@ -877,7 +877,7 @@ export default function Today() {
             reserve={calendar.reserve}
           />
         }
-        since={<SinceLine since={since} />}
+        since={<SinceLine since={since} away={visit} />}
         // From the first frame, neutral until the seat read answers, so the
         // map's clearance never moves the date (sweep 3, item 1).
         mark={

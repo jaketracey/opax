@@ -3,18 +3,23 @@ import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { catalogs } from '../../api/runtime';
 import { useAccessibilitySize } from '../../design/accessibility';
-import { formatDate, type DateInput } from '../../design/format';
+import type { DateInput } from '../../design/format';
 import { Pressable } from '../../design/pressable';
 import { useRowHighlight } from '../../design/row-padding';
-import type { SourceDetails } from '../../design/source';
+import {
+  dateSeparator,
+  updatedText,
+  type SourceDetails,
+} from '../../design/source';
 import { Text } from '../../design/text';
 import { minimumTarget, radii, rhythm, textStyles } from '../../design/tokens';
 import { recentRecordsRoute } from '../../navigation/routes';
 import { presentSource } from '../../navigation/sheets';
 import {
+  lineLikely,
   moreSince,
-  refreshLikely,
   rememberVisit,
+  sourceCurrent,
   type Visit,
 } from './visit-store';
 
@@ -26,24 +31,30 @@ export interface Collection {
   checkedAt: string;
 }
 
-/** What the collection record answered for this visit. */
+/** The line this visit draws: records were added, and the source is current. */
 export interface Since {
-  /** More records than at the last visit; 0 when the total did not grow. */
+  /** More records than at the last visit; always more than 0. */
   count: number;
   /** The collection record's own check date. */
   checkedAt: string;
 }
 
 export interface SinceLastVisit {
-  /** Null until the collection record answers. */
+  /**
+   * The line to draw, or null: until the collection record answers, and
+   * for good when nothing was added or the record's own date is older than
+   * the limit (`SOURCE_LIMIT_DAYS`). A "no change" line is never drawn.
+   */
   answer: Since | null;
+  /** The collection record has answered (with a line or with none). */
+  settled: boolean;
   /**
    * Hold the line's place from the first frame. Decided once, from the disk
    * alone: there was a last visit, a copy of the collection record is saved
-   * on the device, and a newer one has likely been published since. It is
-   * never turned on later, so no line is inserted after the page is drawn;
-   * and with a saved copy there is always a dated record to cite, so a held
-   * place always ends in a line and is never given back.
+   * on the device, a newer one has likely been published since, and the
+   * record was current when last read. It is never turned on later, so no
+   * line is inserted after the page is drawn. A held place that ends with
+   * no line is given back once Today is out of view (`SinceLine`).
    */
   hold: boolean;
 }
@@ -88,6 +99,8 @@ export function useSinceLastVisit(
     last: Visit | null;
     saved: Collection | null;
     hold: boolean;
+    /** This visit's time, for the source limit. */
+    at: number;
   } | null>(null);
   // Latched while rendering, once: a later launch read (the date rolling
   // over) never starts a second visit under the reader.
@@ -95,19 +108,24 @@ export function useSinceLastVisit(
     setVisit({
       last,
       saved,
-      hold: !!last && !!saved && refreshLikely(last, now.getTime()),
+      hold: !!last && !!saved && lineLikely(last, now.getTime()),
+      at: now.getTime(),
     });
-  const [answer, setAnswer] = useState<Since | null>(null);
+  const [answer, setAnswer] = useState<{ line: Since | null } | null>(null);
   useEffect(() => {
     if (!visit) return;
     let active = true;
     const settle = (collection: Collection | null) => {
       if (!collection) return;
       void rememberVisit({ openedAt: Date.now(), ...collection });
+      const count = moreSince(visit.last, collection.total);
+      // Nothing added, or a record older than the limit: no line.
       if (active)
         setAnswer({
-          count: moreSince(visit.last, collection.total),
-          checkedAt: collection.checkedAt,
+          line:
+            count > 0 && sourceCurrent(collection.checkedAt, visit.at)
+              ? { count, checkedAt: collection.checkedAt }
+              : null,
         });
     };
     Promise.resolve()
@@ -118,31 +136,39 @@ export function useSinceLastVisit(
       active = false;
     };
   }, [visit]);
-  return { answer, hold: visit?.hold ?? false };
+  return {
+    answer: answer?.line ?? null,
+    settled: answer !== null,
+    hold: visit?.hold ?? false,
+  };
 }
 
 /** The collection's public record, as About and Coverage name it. */
 export const COLLECTION_RECORD = 'OPAX collection coverage record';
 
-/**
- * The held place is never left blank: a total that has not grown (the same,
- * or smaller) is said as plainly, with the same source and the same link.
- */
-const NO_GROWTH = 'The OPAX record count hasn’t grown since your last visit';
+/** Its short publisher name, as Today's source lines name a publisher. */
+export const COLLECTION_PUBLISHER = 'OPAX collection coverage';
 
 /**
- * The line's words. The number is the change in the collection's stated
- * total, so it says "more records in OPAX", which is exactly what it is.
+ * The line's words, only ever for records added. The number is the change
+ * in the collection's stated total, so it says "more records in OPAX",
+ * which is exactly what it is.
  */
 export const sinceWords = (count: number) =>
-  count > 0
-    ? `${count.toLocaleString('en-AU')} more ${count === 1 ? 'record' : 'records'} in OPAX since your last visit`
-    : NO_GROWTH;
+  `${count.toLocaleString('en-AU')} more ${count === 1 ? 'record' : 'records'} in OPAX since your last visit`;
 
-/** The line's source, in the line: the record's own check date and name. */
+/**
+ * The line's source, in the form of Today's other source lines: "Updated
+ * 15 Nov 2026 · OPAX collection coverage", the record's own check date and
+ * its publisher, the dot kept on the date's line.
+ */
 export const sinceSourceWords = (checkedAt: DateInput) =>
-  sourceWords(formatDate(checkedAt, 'short'));
-const sourceWords = (date: string) => `As at ${date}, ${COLLECTION_RECORD}.`;
+  sourceWords(updatedText(checkedAt) ?? '');
+const sourceWords = (updated: string) =>
+  [updated, COLLECTION_PUBLISHER].filter(Boolean).join(dateSeparator);
+/** The source as VoiceOver says it: the same words, a comma for the dot. */
+const spokenSource = (checkedAt: DateInput) =>
+  sinceSourceWords(checkedAt).replace(dateSeparator, ', ');
 
 /** The line's source, as About cites the collection record. */
 export function sinceSources(since: Since): SourceDetails {
@@ -174,36 +200,52 @@ export function sinceSources(since: Since): SourceDetails {
 export const WIDEST_DATE = '88 May 8888';
 
 /**
- * The longest line the place can hold, never seen: the longer of the
- * no-growth sentence and a count of seven digits, with the widest date. It
- * is laid out in the line's own box and type, so the place is as tall as
- * any line can be at this width and text size, and the line that arrives
- * sits in it without moving anything.
+ * The longest line the place can hold, never seen: a count of seven
+ * digits, then the source on its own line with the widest date. It is laid
+ * out in the line's own box and type, so the place is as tall as any line
+ * can be at this width and text size, and the line that arrives sits in it
+ * without moving anything.
  */
-export const LONGEST_LINE = (() => {
-  const count = sinceWords(8_888_888);
-  const words = count.length > NO_GROWTH.length ? count : NO_GROWTH;
-  return `${words}. ${sourceWords(WIDEST_DATE)}`;
-})();
+export const LONGEST_LINE = `${sinceWords(8_888_888)}\n${sourceWords(`Updated ${WIDEST_DATE}`)}`;
 
 /**
  * The line under Today's date: "412 more records in OPAX since your last
- * visit. As at 15 Nov 2026, OPAX collection coverage record." It opens Just
- * added; touch and hold (or its VoiceOver action) opens the sources.
+ * visit", and under it its source, "Updated 15 Nov 2026 · OPAX collection
+ * coverage". It opens Just added; touch and hold (or its VoiceOver action)
+ * opens the sources. It is drawn only when records were added and the
+ * source is current: there is no "no change" line.
  *
  * Nothing is drawn unless `hold` was set on the first frame. The place is
  * one box from then on: the unseen longest line sets its size, and the line
  * that arrives is drawn over it, so the box never grows or shrinks and the
  * page under it never moves. Once drawn, the line stays for the life of the
  * screen; the next cold launch works it out again.
+ *
+ * A held place that ends with no line stays, empty, only while Today is on
+ * screen (taking it away there would move the page up under the reader),
+ * and is given back the first time Today is out of view: `away` counts the
+ * times Today has left view. No place is left for the rest of the session.
  */
-export function SinceLine({ since }: { since: SinceLastVisit }) {
+export function SinceLine({
+  since,
+  away = 0,
+}: {
+  since: SinceLastVisit;
+  /** How many times Today has been out of view (a page over it, a tab). */
+  away?: number;
+}) {
   const fixed = useAccessibilitySize();
   const highlight = useRowHighlight();
   const [textHeight, setTextHeight] = useState<number>(
     textStyles.secondary.lineHeight,
   );
+  // When the record answered "no line", latched while rendering.
+  const [emptyAt, setEmptyAt] = useState<number | null>(null);
+  const empty = since.settled && !since.answer;
+  if (empty && emptyAt === null) setEmptyAt(away);
   if (!since.hold) return null;
+  // Given back once Today has been out of view since.
+  if (empty && emptyAt !== null && away > emptyAt) return null;
   const answer = since.answer;
   const words = answer ? sinceWords(answer.count) : '';
   const source = answer ? sinceSourceWords(answer.checkedAt) : '';
@@ -218,7 +260,9 @@ export function SinceLine({ since }: { since: SinceLastVisit }) {
       accessibilityElementsHidden={!answer}
       importantForAccessibility={answer ? 'yes' : 'no-hide-descendants'}
       accessibilityRole="link"
-      accessibilityLabel={answer ? `${words}. ${source}` : undefined}
+      accessibilityLabel={
+        answer ? `${words}. ${spokenSource(answer.checkedAt)}.` : undefined
+      }
       accessibilityHint="Opens Just added"
       accessibilityActions={[{ name: 'sources', label: 'Sources' }]}
       onAccessibilityAction={(event) => {
@@ -264,7 +308,7 @@ export function SinceLine({ since }: { since: SinceLastVisit }) {
           <Text variant="secondary" tone="link" testID="today-since-count">
             {words}
           </Text>
-          {`. ${source}`}
+          {`\n${source}`}
         </Text>
       ) : null}
     </Pressable>
