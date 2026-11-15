@@ -206,8 +206,25 @@ test('committed measurement covers unchanged frames and cannot raise an existing
   const step = below(2, 2);
   expect(ratio()).toBeCloseTo(step / 2);
   frame(200, base * 2 * step);
+  // This step's own line ends half a point below that frame: proof that it
+  // is short.
+  act(() =>
+    text().props.onTextLayout({
+      nativeEvent: {
+        lines: [
+          {
+            text: 'Representation',
+            width: 190,
+            y: 0,
+            height: base * 2 * step + 0.5,
+          },
+        ],
+      },
+    }),
+  );
   // This step has a new heightKey. A queued frame cannot set its floor;
   // establish it from the committed measurement before testing reinflation.
+  expect(StyleSheet.flatten(text().props.style).minHeight).toBeUndefined();
   act(() => callbacks[1]!(0, 0, 200, base * 2 * step));
   const floor = StyleSheet.flatten(text().props.style).minHeight;
   expect(floor).toBe(Math.ceil(base * 2 * step) + 1);
@@ -230,20 +247,17 @@ test('expected scales follow the role ramp and caller ceiling, rather than the g
   expect(textRampScale('title2', 2, 1.2, 'android', base)).toBe(2);
 });
 
-test('a narrower column fits buffered lines after removing a floor even without another onLayout', () => {
+test('a narrower column fits buffered lines on its frame: a fitting Text has no floor to remove first', () => {
   frame(400, base * ax5);
   lines(ax5, false);
-  const callbacks: ((
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-  ) => void)[] = [];
-  text().instance.measure = jest.fn((callback) => callbacks.push(callback));
+  // The wide frame held its line, so it took no floor (until b77 every Text
+  // did, and the narrower frame had to be measured again without it).
+  expect(StyleSheet.flatten(text().props.style).minHeight).toBeUndefined();
+  const measure = jest.fn();
+  text().instance.measure = measure;
   lines(ax5); // Native lines can arrive before their new frame.
-  frame(200, base * ax5 * 2);
   expect(ratio()).toBe(1);
-  act(() => callbacks[0]!(0, 0, 200, base * ax5 * 2));
+  frame(200, base * ax5 * 2);
   expect(ratio()).toBeLessThan(1);
 });
 
