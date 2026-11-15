@@ -94,20 +94,25 @@ test('an electorate profile has no current member while the Assembly is ended',a
   assert.equal(vicAssemblyEnded({chamber:'representatives'}),false);
 });
 
-test('a person title drops "MP" for a member of the expired Assembly',()=>{
+test('a person title drops "MP" for a member of the expired Assembly, and dates the term within the limit',()=>{
   const p={name:'Example Member',party:'Labor',states:['vic'],last:2026,representation:[{jurisdiction:'vic',chamber:'vic_la',electorate:'Richmond',state:'VIC'}]};
-  const sitting=personRole(p,2026),ended=personRole(p,2026,()=>vicAssemblyExpiredPhrase());
+  const until=phrase=>({phrase,title:'until 3 November 2026',short:'to 3 Nov 2026'});
+  const member={jurisdiction:'vic',member:{role:'Member for Richmond',party:'Greens',until:until(PHRASE)}};
+  const sitting=personRole(p,2026),ended=personRole(p,2026,member);
   assert.equal(roleLine(sitting),'Labor Member for Richmond (Vic)');assert.equal(sitting.name,'Example Member MP');
   assert.equal(ended.name,'Example Member');assert.equal(ended.former,'');
-  assert.equal(roleLine(ended),`Labor Member for Richmond ${PHRASE} (Vic)`);
-  assert.equal(personTitle('Example Member',ended,'Speeches'),`Example Member, Member for Richmond ${PHRASE} · OPAX`);
-  // A former member stays former.
-  assert.equal(roleLine(personRole({...p,last:2019},2026,()=>PHRASE)),'former Labor Member for Richmond (Vic)');
-  // A Council member is "Member for X Region until the Council expired", and "MLC for" once the new roster loads.
+  // The party is the seat roster's; the sentence carries the whole phrase, the title a short date.
+  assert.equal(roleLine(ended),`Greens Member for Richmond ${PHRASE} (Vic)`);
+  assert.equal(personTitle('Example Member',ended,'Speeches'),'Example Member, Member for Richmond until 3 November 2026 · OPAX');
+  const long=personRole({...p,name:'Example Longer-Named Member'},2026,{jurisdiction:'vic',member:{role:'Member for South-Eastern Metropolitan Region',until:until(COUNCIL)}});
+  assert.equal(roleLine(long),`Labor Member for South-Eastern Metropolitan Region ${COUNCIL} (Vic)`);
+  assert.equal(personTitle('Example Longer-Named Member',long,'Speeches'),'Example Longer-Named Member · OPAX');
+  // Anyone else recorded in the ended house is a former member; another jurisdiction's seat is not touched.
+  assert.equal(roleLine(personRole(p,2026,{jurisdiction:'vic',member:null})),'former Labor Member for Richmond (Vic)');
+  const nsw={...p,states:['nsw'],representation:[{jurisdiction:'nsw',chamber:'nsw_la',electorate:'Maitland',state:'NSW'}]};
+  assert.equal(roleLine(personRole(nsw,2026,{jurisdiction:'vic',member:null})),'Labor Member for Maitland (NSW)');
   const mlc={...p,representation:[{jurisdiction:'vic',chamber:'vic_lc',electorate:'Northern Metropolitan',state:'VIC'}]};
   assert.equal(roleLine(personRole(mlc,2026)),'Labor MLC for Northern Metropolitan (Vic)');
-  assert.equal(roleLine(personRole(mlc,2026,()=>COUNCIL)),`Labor Member for Northern Metropolitan Region ${COUNCIL} (Vic)`);
-  assert.equal(personTitle('Example Member',personRole(mlc,2026,()=>COUNCIL),'Speeches'),`Example Member, Member for Northern Metropolitan Region ${COUNCIL} · OPAX`);
 });
 
 test('a region page names its members until the Council expired, following the Assembly’s record',()=>{

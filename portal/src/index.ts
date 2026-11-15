@@ -62,7 +62,9 @@ import { hubPage } from './hubs'
 import { estimatesPage, readEstimatesRecord, type EstimatesCommittee, type EstimatesRecord, type EstimatesRound, type EstimatesRounds } from './estimates'
 import { sydneyDay } from '../public/hubs-data.js'
 import { senateVideoPage } from './video-archive'
-import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionFooterHTML, vicAssemblyEnded, vicAssemblyExpiredPhrase, vicCouncilEnded, vicCouncilExpiredPhrase } from '../public/vic-election.js'
+import { VIC_ELECTION_AUTHORISATION_LINE, vicElectionFooterHTML } from '../public/vic-election.js'
+import { vicExpiredPhrase, vicMembersAtExpiry, vicSeatEnded, vicSeatVacantAtExpiry, vicVacantSentence } from '../public/vic-term.js'
+import { vicEndedSeat } from './vic-term-role'
 import { vicElectionPage, readVicElection, vicElectionState, type VicElection, type VicElectionState } from './vic-election'
 import { vicElectionEnabled, vicElectionPublicationPath, vicElectionDiscovery, vicElectionLlms, VIC_ELECTION_ASSET, VIC_ELECTION_SITEMAP, VIC_ELECTION_CACHE } from '../public/vic-election.js'
 import { AUDIT_ID } from '../public/audit.js'
@@ -4942,7 +4944,8 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
           const query = guardTableURL(voteTableConfig(p.pid || ''),url).query
         const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,url.searchParams))
         const photos=await loadPhotos(env).catch(()=>null)
-        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name)})
+        const vicRows=p.representation?.some(r=>r.jurisdiction==='vic') ? (await loadElectorates(env).catch(()=>null))?.electorates ?? null : null
+        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name),ended:vicEndedSeat(p,vicRows)})
         meta.prerender = head + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '')
         if(content.description) meta.description=clip(content.description)
         personIdentity={...identity,portraitId:photoIdFor(photos,p.name)}
@@ -5170,8 +5173,14 @@ async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMet
     description: 'Browse the OPAX electorate directory.', canonical: canonicalFor(url, true), ogType: 'website',
     status: data ? 404 : 503, jsonLd: null, prerender: null,
   }
-  const representation = e.representatives.length
-    ? `${e.representatives.map((m) => `${m.person.name}${m.party ? ` (${m.party})` : ''}`).join(', ')}. Verified ${e.representation_as_of}.`
+  // A Victorian seat whose house has expired names its members until then, with no roster date and no
+  // claim that anyone holds it now; a seat that was vacant says so and names nobody (public/vic-term.js).
+  const named = (members: ElectorateSummary['representatives']) => members.map((m) => `${m.person.name}${m.party ? ` (${m.party})` : ''}`).join(', ')
+  const representation = vicSeatEnded(e, data!.electorates)
+    ? vicSeatVacantAtExpiry(e) ? vicVacantSentence(e)
+      : `${e.chamber === 'vic_lc' ? 'Members' : 'Member'} ${vicExpiredPhrase(e)}: ${named(vicMembersAtExpiry(e, data!.electorates))}.`
+    : e.representatives.length
+    ? `${named(e.representatives)}. Verified ${e.representation_as_of}.`
     : 'No verified representative for this electorate yet.'
   const house = chamberLabel(e.chamber)
   const facts = `${e.name}, ${e.jurisdiction === 'federal' ? `Federal ${house || 'Parliament'}` : house || `${STATE_NAMES[e.jurisdiction] ?? 'State parliament'}`}. ${representation} ${e.election_count} election ${e.election_count === 1 ? 'contest' : 'contests'} on record.`
@@ -5390,8 +5399,12 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
     : p.states.map((s) => STATE_NAMES[s] ?? s).join(' and ')
   const represented = [...new Set((p.representation ?? []).map(r => r.electorate))].join(', ')
   const who = [p.party, where, represented ? `recorded representation: ${represented}` : ''].filter(Boolean).join(', ')
+  const vicRows = p.representation?.some(r => r.jurisdiction === 'vic') ? (await loadElectorates(env).catch(() => null))?.electorates ?? null : null
+  const vicEnded = vicEndedSeat(p, vicRows)
   if (p.rosterOnly) {
-    const description = clip(`${display}, representative for ${p.rosterOnly.seats.join(', ')}${p.party ? ` (${p.party})` : ''}. Verified ${p.rosterOnly.asOf || 'in the parliamentary roster'}. No speech count for them yet.`)
+    const description = clip(vicEnded
+      ? `${display}, ${vicEnded.member ? `${vicEnded.member.role} ${vicEnded.member.until.phrase}` : `former representative for ${p.rosterOnly.seats.join(', ')}`}${p.party ? ` (${p.party})` : ''}. No speech count for them yet.`
+      : `${display}, representative for ${p.rosterOnly.seats.join(', ')}${p.party ? ` (${p.party})` : ''}. Verified ${p.rosterOnly.asOf || 'in the parliamentary roster'}. No speech count for them yet.`)
     return { title, description, canonical, ogType: 'profile', status: 200,
       jsonLd: { '@context': 'https://schema.org', '@type': 'Person', name: display, url: canonical, jobTitle: 'Parliamentarian' },
       prerender: prerenderBlock(display, description),
@@ -5400,12 +5413,9 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const federal = p.states.includes('federal')
   // The title a search result shows: their role and seat as the parliament
   // names them, then what the page holds (see seo-titles.ts).
-  // A Victorian Assembly member whose house has expired is not titled "MP, Member for": the electorates
-  // index says which seats still wait on the new parliament's roster (dissolved_for).
-  const seatRows = p.speech_scope || !p.representation?.some(r => r.chamber === 'vic_la' || r.chamber === 'vic_lc') ? null : (await loadElectorates(env).catch(() => null))?.electorates ?? null
-  const role = p.speech_scope ? null : personRole(p, new Date().getUTCFullYear(), seat =>
-    seatRows?.some(e => vicAssemblyEnded(e) && e.name.toLowerCase() === seat.electorate.toLowerCase() && seat.chamber === 'vic_la') ? vicAssemblyExpiredPhrase()
-      : seat.chamber === 'vic_lc' && vicCouncilEnded(seatRows) ? vicCouncilExpiredPhrase() : null)
+  // A Victorian member whose house has expired is titled by the seat row that names them, never as a sitting
+  // MP; anyone else recorded in that house is a former member (public/vic-term.js).
+  const role = p.speech_scope ? null : personRole(p, new Date().getUTCFullYear(), vicEnded)
   const interests = await hasInterestsRegister(env, display, p.pid)
   title = personTitle(display, role, federal ? (interests ? 'Speeches, votes & interests' : 'Speeches & votes') : 'Speeches')
   const count = p.roster_only ? NO_HANSARD_HELD : p.speech_count_basis ? `No exact speech count yet; it will count only speeches they gave in the ${where} while in office.` : `${num(p.speeches ?? 0)} speeches in Hansard.`
