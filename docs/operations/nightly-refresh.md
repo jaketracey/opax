@@ -821,7 +821,10 @@ tail is treated as published: at most 15 lines and 2 KB per step, failed steps o
 `export` mean what they mean to the steps) and every credential-named environment variable is replaced, raw and
 percent-encoded; then anything shaped
 like a secret is masked (authorisation headers, `key=value` secrets, URL credentials and query strings, email and IP
-addresses, home directories, long hex or base64 runs). It errs towards masking: a commit hash goes too. A tail that
+addresses, home directories, long hex or base64 runs). It errs towards masking: a commit hash goes too. Known values
+are also matched as JSON or repr prints them and line by line when they span lines. Residual risk, not covered: a
+value under 6 characters, an all-digit value under 8, and a value a step wraps across two lines or transforms before
+printing. A tail that
 cannot be made is left out and never costs the night its status. The status itself is built beside
 `nightly-last.json` and moved over it: if it cannot be built with the tails it is built without them, and failing that
 a short `failed` status says the status could not be built. Last night's file is never published again. `scripts/vm/test_step_tails.py` and `test_nightly.sh`

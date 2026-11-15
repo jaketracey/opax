@@ -13,6 +13,9 @@ the `nightly-status` branch of a PUBLIC repository, so every line here is treate
   * pass 1 replaces every credential value this run knows: each value the env files give a step (taken from
     `env -0` after bash itself sourced them, so quotes, comments and `export` are read as the steps read them)
     and each environment variable whose name looks like a credential, raw and percent-encoded every usual way;
+    A known value is also matched as JSON or repr would print it, and line by line when it spans lines.
+    Not covered, so a residual risk: a value shorter than 6 characters, an all-digit value shorter than 8, and
+    a value a step wraps across two log lines or transforms (hashes, base64s, truncates) before printing;
   * pass 2 masks whatever is merely shaped like one: Authorization and key=value secrets (quoted or bare), a
     token after a secret word, AWS key ids, URL credentials and query strings, email addresses, IP addresses,
     home directories, and long hex or base64 runs;
@@ -39,6 +42,8 @@ MAX_BYTES = 2048
 MAX_LINE = 300
 READ_BYTES = 65536
 MIN_SECRET = 6
+MIN_DIGITS = 8          # an all-digit value this long is a PIN or an id, not a count or a port
+PRE_CUT = 4096          # characters of a line that are redacted at all; the rest is dropped first
 MAX_STEPS = 40          # failed steps shown; the rest are counted
 MAX_TOTAL = 49152       # bytes of JSON for all tails together
 
@@ -108,6 +113,9 @@ def encoded_forms(value: str) -> set[str]:
     """The value as it may appear in a URL or a log of one: percent-encoded every usual way, in either hex
     case, and with `+` read back as a space."""
     forms = {value, value.replace("+", " ")}
+    # as a program prints it inside a string: JSON and repr escape quotes, backslashes and line ends
+    forms |= {json.dumps(value)[1:-1], json.dumps(value, ensure_ascii=False)[1:-1], repr(value)[1:-1],
+              value.replace("\\", "\\\\").replace('"', '\\"'), value.replace("\\", "\\\\").replace("'", "\\'")}
     for quoted in (urllib.parse.quote(value, safe=""), urllib.parse.quote(value), urllib.parse.quote_plus(value)):
         forms.add(quoted)
         forms.add(re.sub(r"%[0-9A-F]{2}", lambda m: m.group(0).lower(), quoted))
@@ -143,9 +151,13 @@ def known_secrets(environ: dict, env_files: list[Path], env0_files: list[Path] =
     values |= {value for name, value in environ.items() if CREDENTIAL_NAME.search(name)}
     out = set()
     for value in values:
-        if len(value) < MIN_SECRET or value.lower() in PLAIN_VALUES or value.isdigit():
+        if len(value) < MIN_SECRET or value.lower() in PLAIN_VALUES or (value.isdigit() and len(value) < MIN_DIGITS):
             continue
-        out |= {form for form in encoded_forms(value) if len(form) >= MIN_SECRET}
+        # the whole value, and each line of a value that spans lines (a key file printed line by line)
+        for part in {value, *(line.strip() for line in value.splitlines())}:
+            if len(part) < MIN_SECRET or (part.isdigit() and len(part) < MIN_DIGITS):
+                continue
+            out |= {form for form in encoded_forms(part) if len(form) >= MIN_SECRET}
     return sorted(out, key=len, reverse=True)
 
 
@@ -172,7 +184,13 @@ def _mask_long_runs(line: str) -> str:
 
 
 def redact(line: str, secrets: list[str], home: str = "") -> str:
-    line = CONTROL.sub(" ", line)
+    # Cut first: the patterns below are slow on a very long line (64 KiB of `a.b-c_d.` took 84 s, past the
+    # caller's timeout, so no tails at all). A secret split by this cut lies far beyond MAX_LINE and is dropped.
+    line = CONTROL.sub(" ", line[:PRE_CUT])
+    # name=value secrets go first: a known value that is itself a word (GRANT_TYPE=password) would otherwise
+    # rewrite the name in `password=...` and leave the value standing
+    line = SECRET_ASSIGNMENT.sub(lambda m: f"{m.group(1)}{m.group(2)}[redacted]", line)
+    line = SECRET_WORD_VALUE.sub(lambda m: f"{m.group(1)}{m.group(2)}[redacted]", line)
     for secret in secrets:                      # pass 1: what this run knows to be a credential
         line = line.replace(secret, "[redacted]")
     if home and len(home) > 1:                  # pass 2: what is only shaped like one

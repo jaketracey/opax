@@ -53,7 +53,7 @@ class Redaction(unittest.TestCase):
         self.assertIn("kb-test", self.secrets)
 
     def test_plain_settings_are_not_treated_as_secrets(self):
-        secrets = st.known_secrets({"OPAX_AUTH_MODE": "true", "API_KEY_COUNT": "12345678", "X_TOKEN": "abc"}, [])
+        secrets = st.known_secrets({"OPAX_AUTH_MODE": "true", "API_KEY_COUNT": "1234567", "X_TOKEN": "abc"}, [])
         self.assertEqual(secrets, [])
 
     def test_shapes_are_masked_without_knowing_the_value(self):
@@ -190,6 +190,57 @@ class ReviewFindings(unittest.TestCase):
         self.assertEqual((proc.returncode, proc.stdout), (0, ""))
         self.assertEqual(json.loads(out.read_text()), {"ipea": ["boom"]})
         self.assertEqual(out.stat().st_mode & 0o777, 0o600)
+
+
+class DeltaReviewFindings(unittest.TestCase):
+    """One test per finding of the second review (16 Nov 2026); every value here is made up."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        self.tmp = Path(self._tmp.name)
+
+    def test_p2_an_all_digit_credential_of_eight_or_more_is_learned(self):
+        env = self.tmp / ".env"
+        env.write_text("DB_PIN=84726153\nRETRIES=1234567\nPORT=5432\n")
+        secrets = st.known_secrets({}, [env])
+        self.assertEqual(st.redact("connect('db', '84726153')", secrets), "connect('db', '[redacted]')")
+        self.assertEqual(st.redact("after 1234567 rows on port 5432", secrets), "after 1234567 rows on port 5432")
+
+    def test_p3_a_very_long_line_is_cut_before_it_is_redacted(self):
+        started = time.monotonic()
+        out = st.redact("a.b-c_d." * 8192, [])
+        self.assertLess(time.monotonic() - started, 5)
+        self.assertLessEqual(len(out), st.MAX_LINE + len(" [cut]"))
+
+    def test_p3_a_known_value_that_is_a_key_word_does_not_unmask_an_assignment(self):
+        secrets = st.known_secrets({}, [], []) + st.known_secrets({"GRANT_TYPE_TOKEN": "password"}, [])
+        self.assertIn("password", secrets)
+        for line in ("login password=Rt5Yh1 sent", "login password: 'Rt5Yh1'", '{"password": "Rt5Yh1"}'):
+            self.assertNotIn("Rt5Yh1", st.redact(line, secrets), line)
+
+    def test_p3_a_known_value_is_matched_as_json_or_repr_prints_it(self):
+        value = 'Kq7"Zm\\4Wd9\'Xp2'
+        secrets = st.known_secrets({"X_SECRET": value}, [])
+        for printed in (json.dumps(value), repr(value), json.dumps({"v": value}), repr([value]), str({"v": value})):
+            out = st.redact("payload " + printed, secrets)
+            for piece in ("Kq7", "Zm", "4Wd9", "Xp2"):
+                self.assertNotIn(piece, out, printed)
+
+    def test_p3_each_line_of_a_multi_line_value_is_matched_on_its_own(self):
+        value = "-----BEGIN FAKE KEY-----\nMIIfakeLineOne0123\nQq9fakeLineTwo4567\n-----END FAKE KEY-----"
+        secrets = st.known_secrets({"X_PRIVATE_KEY": value}, [])
+        for line in ("MIIfakeLineOne0123", "  Qq9fakeLineTwo4567", "key: MIIfakeLineOne0123\\nQq9fakeLineTwo4567"):
+            out = st.redact(line, secrets)
+            self.assertNotIn("fakeLineOne", out, line)
+            self.assertNotIn("fakeLineTwo", out, line)
+
+    def test_p3_the_credential_dump_is_removed_as_soon_as_it_is_used_and_stale_ones_are_swept(self):
+        nightly = (SCRIPT.parent / "nightly.sh").read_text()
+        body = nightly[nightly.index("\nwrite_status() {"):nightly.index("\nwrite_status_file() {")]
+        self.assertLess(body.index('rm -f "$scratch/env0"'), body.index('write_status_file "$status"'))
+        self.assertLess(nightly.index('rm -rf "$PIPE"/.status.*'), nightly.index("sync_repo; then"))
+        self.assertLess(nightly.index("flock -n 8"), nightly.index('rm -rf "$PIPE"/.status.*'))
 
 
 class Tails(unittest.TestCase):

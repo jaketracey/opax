@@ -151,6 +151,9 @@ if ! flock -n 8; then
 fi
 
 log "===== nightly start $TODAY (repo=$REPO pid=$$) ====="
+# scratch directories of a status build that was interrupted (a TERM during it, a power cut): one may hold a dump
+# of the credentials. This run holds the lock, so none of them is in use.
+rm -rf "$PIPE"/.status.* 2>/dev/null || true
 
 # ---- environment -------------------------------------------------------------------
 export PATH="$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin:$PATH"
@@ -207,6 +210,7 @@ write_status() {
          --env-file "$REPO/.env" --env-file "$ENV_FILE" --out "$scratch/tails.json" "${FAILED_STEP_NAMES[@]}" 2>/dev/null; then
       tails="$scratch/tails.json"
     fi
+    rm -f "$scratch/env0"   # the credentials are needed no longer: a run stopped after this leaves none behind
   fi
   if ! write_status_file "$status" "$new" "$tails" 2>>"$LOGFILE"; then
     log "WARN: could not build the status with the step log tails; trying without them"
