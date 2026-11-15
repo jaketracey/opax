@@ -620,6 +620,15 @@ export class Catalogs {
       { signal, persist, ...(retries === undefined ? {} : { retries }) },
     );
   }
+  /** The bill's saved file, or null: never a network read. */
+  async savedBill(key: string) {
+    return (
+      (await this.client.saved?.(
+        `/bills/${billKey(key)}.json`,
+        decode.decodeBill,
+      )) ?? null
+    );
+  }
   votes(signal?: AbortSignal, refresh = false) {
     return this.client
       .get('/votes.json', decode.decodeVotes, refresh, { signal })
@@ -693,6 +702,18 @@ export class Catalogs {
     return this.client.get('/corpus.json', decode.decodeCorpus, false, {
       signal,
     });
+  }
+  /**
+   * The collection record as the device last saved it, with no request, or
+   * null when nothing is saved: Today decides on its first frame whether it
+   * has a dated record to cite. Not marked stale; a read revalidates it.
+   */
+  async corpusSaved(): Promise<RecordResult<decode.Corpus> | null> {
+    const record =
+      (await this.client
+        .saved?.('/corpus.json', decode.decodeCorpus)
+        .catch(() => null)) ?? null;
+    return record ? { ...record, stale: false } : null;
   }
   /** Leads (P1): the static discovery export, decoded whole. */
   discovery(refresh = false, signal?: AbortSignal) {

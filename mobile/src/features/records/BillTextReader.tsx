@@ -311,7 +311,8 @@ export default function BillTextReader({
             ]
           : []),
         ...menu,
-        ...(android ? [{ title: 'Ask about this bill', onPress: ask }] : []),
+        // No Ask here: the bar has items only once the text's header is
+        // drawn, and that header always carries its own Ask button.
         ...(canShare
           ? [
               {
