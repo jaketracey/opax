@@ -76,6 +76,42 @@ test('Ask itemised: the held total and the listed lines both state a partial yea
   assert.equal('covers' in four.rows[0], false);
 });
 
+test('Ask itemised: coverage is what IPEA has published for the year, not the quarters the member has lines in', async () => {
+  const COLUMNS=['quarter','category_high','category_major','description','amount','traveller'];
+  const file = quarters => ({meta:{quarters:quarters.map(id=>({id,label:id,source_url:'https://data.gov.au/x'}))},columns:COLUMNS,lines:quarters.map(q=>[q,'Scheduled Commercial Transport','Fares','Canberra to Sydney',100,'Member'])});
+  // lines in January to March only, in a year whose four quarters are all published: a whole year, never "one quarter published"
+  const oneQuarter = await ask({year:2025,detail:'itemised'},{'expenses/v1/P1/2025.json':file(['2025Q01'])});
+  assert.equal(oneQuarter.citations[0].text, "Jane Example's IPEA-reported travel lines, calendar year 2025: 1 lines totalling $100.00.");
+  assert.doesNotMatch(JSON.stringify(oneQuarter), /quarters? published|partial subtotal|not yet published/);
+  assert.equal('covers' in oneQuarter.rows[0], false);
+  assert.equal(oneQuarter.coverage.matched, true);
+  assert.deepEqual([oneQuarter.coverage.since, oneQuarter.coverage.until], ['2025-01-01', '2025-12-31']);
+  assert.deepEqual(oneQuarter.rows[0].reporting_quarters, ['2025Q01']);
+  // lines in one quarter of a year with two published: the published two, not the member's one
+  const early = await ask({year:2026,detail:'itemised'},{'expenses/v1/P1/2026.json':file(['2026Q01'])});
+  assert.equal(early.citations[0].text, "Jane Example's IPEA-reported travel lines, January to June 2026 (two quarters published): 1 lines totalling $100.00, a partial subtotal of calendar year 2026.");
+  assert.equal(early.rows[0].covers, 'January to June 2026 (two quarters published)');
+  assert.match(early.notes.join(' '), /Reporting quarters not yet published for calendar year 2026: 2026Q03, 2026Q04\./);
+});
+
+test('Ask: a year outside the data says which side it is on: not yet published, or before the data starts', async () => {
+  const later = 'OPAX has no reported IPEA expense total for Jane Example for calendar year 2027. This does not mean expenditure was zero. IPEA has published no quarters of calendar year 2027 yet.';
+  assert.equal((await ask({year:2027})).citations[0].text, later);
+  for (const year of [2010, 2016, 2024]) {
+    const past = await ask({year});
+    assert.equal(past.rows.length, 0);
+    assert.equal(past.citations[0].text, `OPAX has no reported IPEA expense total for Jane Example for calendar year ${year}. This does not mean expenditure was zero. OPAX's IPEA data starts on 1 January 2025.`);
+    assert.doesNotMatch(past.citations[0].text, /published no quarters/);
+    const lines = await ask({year, detail:'itemised'});
+    assert.equal(lines.citations[0].text, `OPAX has no reported IPEA expense lines for Jane Example for calendar year ${year}. This does not mean expenditure was zero. OPAX's IPEA data starts on 1 January 2025.`);
+  }
+  assert.match((await ask({year:2027,detail:'itemised'})).citations[0].text, /IPEA has published no quarters of calendar year 2027 yet\.$/);
+  // a financial year straddling the start of the data holds some quarters, so neither line applies
+  assert.doesNotMatch((await ask({year:'2024-25'})).citations[0].text, /starts on|published no quarters/);
+  // MCP says neither for now
+  for (const year of [2010, 2027]) assert.match((await mcp({year})).citations[0].text, /This does not mean expenditure was zero\.$/);
+});
+
 test('MCP output is unchanged for now: the earlier wording, and no covers field', async () => {
   const partial = await mcp({year:2026});
   assert.equal(partial.citations[0].text, 'Jane Example: $318,774 in IPEA-reported parliamentary expenses for calendar year 2026 (partial reported subtotal, 1 January 2026 to 30 June 2026).');

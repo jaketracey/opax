@@ -173,7 +173,7 @@ test('itemised travel leads with what is held, then subtotals, then each publish
   assert.match(lines[6].text,/Refunded\.: -\$246\.81$/);
   assert.equal(row.next_offset,null);
   assert.equal(result.coverage.matched,false);     // two of the year's four quarters are held
-  assert.match(result.notes.join(' '),/Reporting quarters not held for calendar year 2026: 2026Q03, 2026Q04/);
+  assert.match(result.notes.join(' '),/Reporting quarters not yet published for calendar year 2026: 2026Q03, 2026Q04/);
   assert.match(result.notes.join(' '),/CC BY 3\.0 AU/);
 });
 
@@ -217,17 +217,18 @@ test('itemised answers say what is held when the lines or the category are absen
   for(const year of [2019,'2018-19']){
     const none=await ask({year,detail:'itemised'});
     assert.equal(none.rows.length,0);
-    assert.match(none.citations[0].text,/^OPAX has no reported IPEA expense lines for Jane Example for (calendar|financial) year 2018?-?19\. This does not mean expenditure was zero\.$|^OPAX has no reported IPEA expense lines for Jane Example for calendar year 2019\. This does not mean expenditure was zero\.$/);
+    // a year before the data begins says where the data starts, not that IPEA has yet to publish it
+    assert.equal(none.citations[0].text,`OPAX has no reported IPEA expense lines for Jane Example for ${year===2019?'calendar year 2019':'financial year 2018-19'}. This does not mean expenditure was zero. OPAX's IPEA data starts on 1 January 2024.`);
     assert.doesNotMatch(none.citations[0].text,/not loaded/);
     assert.equal(none.citations[0].value,undefined);
   }
   const empty=await ask({year:2025,detail:'itemised',category:'overseas'});
   assert.equal(empty.rows.length,0);
-  assert.equal(empty.citations[0].text,"Jane Example's IPEA-published lines, July to December 2025 (two quarters published): 2 in other categories and none under overseas travel.");
+  assert.equal(empty.citations[0].text,"Jane Example's IPEA-published lines, calendar year 2025: 2 in other categories and none under overseas travel.");
   const blank=structuredClone(files);
   blank['expenses/v1/P1/2025.json'].lines=[];
   const nothing=await ask({year:2025,detail:'itemised'},blank);
-  assert.equal(nothing.citations[0].text,'IPEA published no expense lines for Jane Example, July to December 2025 (two quarters published).');
+  assert.equal(nothing.citations[0].text,'IPEA published no expense lines for Jane Example, calendar year 2025.');
   assert.ok([...empty.citations,...nothing.citations].every(c=>c.value===undefined));
 });
 
