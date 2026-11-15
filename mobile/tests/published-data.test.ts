@@ -89,6 +89,12 @@ describe('people firsts, from a folder named by OPAX_PUBLISHED_DIR', () => {
     expect(check('whole')).toEqual({ files: 1, problems: [] });
   });
 
+  // The portal's seed (its firsts export branch, people/firsts.json, byte
+  // for byte): the file as it is first published, before any refresh.
+  test('the portal’s seed, with no people yet, decodes whole', () => {
+    expect(check('seed')).toEqual({ files: 1, problems: [] });
+  });
+
   test('a folder without the file has nothing to check: not published yet', () => {
     expect(check('absent')).toEqual({ files: 0, problems: [] });
   });
@@ -103,7 +109,7 @@ describe('people firsts, from a folder named by OPAX_PUBLISHED_DIR', () => {
   });
 
   test('a file in another shape (rows, and no meta) is refused', () => {
-    const { files, problems } = check('seed');
+    const { files, problems } = check('other-shape');
     expect(files).toBe(1);
     expect(problems).toHaveLength(1);
     expect(problems[0]).toMatch(/^people\/firsts\.json .*\(file refused\)$/);
