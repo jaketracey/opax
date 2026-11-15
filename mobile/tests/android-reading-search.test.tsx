@@ -92,8 +92,10 @@ test.each([SearchScreen, ResultsScreen])(
     expect(view.root.findAllByType(Field)).toHaveLength(0);
     expect(view.root.findAllByType(SearchField)).toHaveLength(0);
     const options = view.root.findByType(RouteOptions).props.options;
+    // Jest's window reports font scale 2, an accessibility size: iOS takes
+    // the shorter prompt there (search-placeholder-ax.test.tsx).
     expect(options.headerSearchBarOptions).toMatchObject({
-      placeholder: 'People, bills, topics and more',
+      placeholder: 'People, bills, topics',
       autoCapitalize: 'none',
     });
     expect(view.root.findAllByType(ScopeChips)).toHaveLength(0);
