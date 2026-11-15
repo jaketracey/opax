@@ -89,7 +89,7 @@ function Kicker({
  * the Time machine on that year with that photograph first.
  *
  * The frame keeps its 4:3 shape whatever happens to the photograph: a
- * photo that cannot be loaded leaves the quiet empty frame. It used to give
+ * photo that cannot be loaded leaves the frame with a faint mark. It used to give
  * the frame back, and everything under the card moved up about 150 pt.
  */
 export function ArchiveCard({
@@ -131,7 +131,7 @@ export function ArchiveCard({
         ratio={4 / 3}
         rounded={false}
         resizeMode="cover"
-        failure="quiet"
+        failure="mark"
       />
       <View style={styles.words}>
         <Kicker symbol="clock.arrow.circlepath" ink="tint">

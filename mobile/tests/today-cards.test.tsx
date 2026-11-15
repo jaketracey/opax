@@ -405,7 +405,7 @@ describe('full-width daily cards', () => {
     const card = await render(
       <ArchiveCard year={archiveYear(today)} picture={picture} />,
     );
-    expect(card.root.findByType(Picture).props.failure).toBe('quiet');
+    expect(card.root.findByType(Picture).props.failure).toBe('mark');
   });
   test('a missing archive leaves the full-width question', async () => {
     jest.mocked(explore.pictures).mockRejectedValue(new Error('offline'));
