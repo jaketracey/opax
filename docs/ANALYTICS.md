@@ -432,7 +432,8 @@ captures nothing automatically.
   the global handler in release builds, so `reportRouteError` sends it with
   `captureException`, beside `opax_route_error`. This is what says what was
   thrown when a page shows "This page couldn't be shown". The report holds:
-  - the error's name (a built-in or runtime type name, else `Error`);
+  - the error's name, only when it is in the fixed set of types every crash
+    and error report is held to (below); any other name is sent as `Error`;
   - its message, only when it is on the fixed list every crash and error
     report is held to (below), and then as the fixed text. Any other
     message is left out and `message_omitted: true` is sent;
@@ -520,7 +521,7 @@ device.
 
 | Property | What it may hold |
 | --- | --- |
-| `$exception_list` | Up to 10 exceptions: `type` (an identifier such as `TypeError`, `java.lang.IllegalStateException` or `EXC_BAD_ACCESS`, or one of Swift's three fatal kinds; anything else becomes `Error`), `value` (the message, only when it is on the fixed list below, as its fixed text; otherwise absent), `module`, `thread_id`, `mechanism` (`type`, `handled`, `synthetic`, `exception_id`, `parent_id`) and `stacktrace` (`type` and up to 250 frames) |
+| `$exception_list` | Up to 10 exceptions: `type` (only a name in the fixed set below, such as `TypeError`, `java.lang.IllegalStateException` or `EXC_BAD_ACCESS`; any other becomes `Error`), `value` (the message, only when it is on the fixed list below, as its fixed text; otherwise absent), `module`, `thread_id`, `mechanism` (`type`, `handled`, `synthetic`, `exception_id`, `parent_id`) and `stacktrace` (`type` and up to 250 frames) |
 | Stack frames | `platform`, `function`, `filename`, `abs_path`, `module`, `package` (paths cut at the first `?` or `#`), `lineno`, `colno`, `in_app`, `instruction_addr`, `image_addr`, `symbol_addr`, `chunk_id`, `map_id`, `method_synthetic`, `client_resolved`. Source context, local variables and any other field are dropped |
 | `$debug_images` | Up to 500 binary images native frames point into: `type`, `debug_id`, `code_id`, `code_file`, `image_addr`, `image_vmaddr`, `image_size`, `arch` |
 | `$exception_level`, `$exception_source`, `$exception_fingerprint` | A fixed level word and short tokens |
@@ -559,6 +560,20 @@ copies) is:
 So `Cannot read property 'wombat crossing' of undefined` is sent as `Cannot
 read properties of undefined`, and `Invalid URL: housing affordability in
 3000` is sent with no message and `message_omitted: true`.
+
+**Types.** A type is the error's name, which code can set to anything, so a
+name is not sent for having the shape of an identifier: `Grayndler`,
+`Anthony.Albanese` and `housing_affordability_3000` all have it. Only a name
+in a fixed set is sent (`EXCEPTION_TYPES` in `exceptions.ts`, the same set in
+the Swift and Kotlin copies); any other is sent as `Error`. The set is the
+JavaScript error classes (`Error`, `TypeError`, `RangeError` and the rest),
+the app's own (`ApiError`, `PersonIdentityError`, `ChatSyncError`,
+`AskFailure`, `ElectionUnavailable`, `OpaxTestReport`), the kernel's
+exception and signal names (`EXC_BAD_ACCESS`, `SIGABRT` and the rest),
+Foundation's and the C++ library's exception names, the usual Java, Kotlin,
+Android and React Native classes, and Swift's three fatal kinds. A native
+class that is not in the set is reported as `Error` with its stack frames;
+add its name to the three copies to see it by name.
 
 **No screen, URL or parameter.** No report carries `$screen_name`,
 `$current_url`, `$pathname` or a route parameter. The SDK's screen property

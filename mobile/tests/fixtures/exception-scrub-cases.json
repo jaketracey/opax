@@ -1937,6 +1937,117 @@
      }
     ]
    }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$exception_level": "error",
+    "$exception_list": [
+     {
+      "type": "Grayndler",
+      "value": "Network request failed"
+     },
+     {
+      "type": "Anthony.Albanese",
+      "value": "Network request failed"
+     },
+     {
+      "type": "housing_affordability_3000",
+      "value": "Network request failed"
+     }
+    ]
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$exception_level": "error",
+    "$exception_list": [
+     {
+      "type": "TypeError",
+      "value": "Network request failed"
+     },
+     {
+      "type": "ApiError",
+      "value": "Network request failed"
+     },
+     {
+      "type": "OpaxTestReport",
+      "value": "Network request failed"
+     },
+     {
+      "type": "EXC_BAD_ACCESS",
+      "value": "Network request failed"
+     },
+     {
+      "type": "SIGABRT",
+      "value": "Network request failed"
+     },
+     {
+      "type": "NSInvalidArgumentException",
+      "value": "Network request failed"
+     },
+     {
+      "type": "std::runtime_error",
+      "value": "Network request failed"
+     },
+     {
+      "type": "java.lang.IllegalStateException",
+      "value": "Network request failed"
+     },
+     {
+      "type": "com.facebook.react.common.JavascriptException",
+      "value": "Network request failed"
+     },
+     {
+      "type": "Fatal error",
+      "value": "Network request failed"
+     }
+    ]
+   }
+  },
+  {
+   "event": "$exception",
+   "properties": {
+    "$lib": "posthog-react-native",
+    "$exception_level": "error",
+    "$exception_list": [
+     {
+      "type": "typeerror",
+      "value": "Network request failed"
+     },
+     {
+      "type": "TypeError ",
+      "value": "Network request failed"
+     },
+     {
+      "type": "java.lang.IllegalStateException: Grayndler",
+      "value": "Network request failed"
+     },
+     {
+      "type": "Fatal error: Grayndler",
+      "value": "Network request failed"
+     },
+     {
+      "type": "EXC_BAD_ACCESS_3000",
+      "value": "Network request failed"
+     },
+     {
+      "type": 7,
+      "value": "Network request failed"
+     },
+     {
+      "type": null,
+      "value": "Network request failed"
+     },
+     {
+      "type": "",
+      "value": "Network request failed"
+     }
+    ]
+   }
   }
  ]
 }

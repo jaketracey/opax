@@ -1,9 +1,10 @@
 --- a/node_modules/@posthog/react-native-plugin/ios/PosthogReactNativePlugin.swift
 +++ b/node_modules/@posthog/react-native-plugin/ios/PosthogReactNativePlugin.swift
-@@ -29,6 +29,252 @@
+@@ -28,7 +28,378 @@
+ }
  
  private let fatalCaptureErrorCode = "PosthogReactNativePluginFatalCaptureError"
- 
++
 +// OPAX privacy patch (mobile/patches/privacy-patches.json). posthog-ios builds and sends native
 +// crash reports itself, and adds its own device context to the native copy of a fatal JS error,
 +// so neither passes through the app's JS `scrubEvent`. This last `beforeSend` step applies the
@@ -168,8 +169,133 @@
 +    "image_size": .integer,
 +    "arch": .token(opaxRegex(#"^[a-z0-9_]{1,16}$"#)),
 +]
-+private let opaxExceptionType = opaxRegex(#"^[A-Za-z_$][A-Za-z0-9_$.:]{0,79}$"#)
-+private let opaxSwiftFatalTypes: Set<String> = ["Assertion failed", "Fatal error", "Precondition failed"]
++// The exception types that may be sent, as EXCEPTION_TYPES in exceptions.ts: the JavaScript
++// error classes and the app's own, the kernel's exception and signal names, Foundation's and the
++// C++ library's exception names, the usual Java, Kotlin, Android and React Native classes, and
++// Swift's three fatal kinds. A type is a name the code can set to anything, so any other is "Error".
++private let opaxExceptionTypes: Set<String> = [
++    "Error",
++    "AggregateError",
++    "EvalError",
++    "RangeError",
++    "ReferenceError",
++    "SyntaxError",
++    "TypeError",
++    "URIError",
++    "ApiError",
++    "PersonIdentityError",
++    "ChatSyncError",
++    "AskFailure",
++    "ElectionUnavailable",
++    "OpaxTestReport",
++    "EXC_BAD_ACCESS",
++    "EXC_BAD_INSTRUCTION",
++    "EXC_ARITHMETIC",
++    "EXC_EMULATION",
++    "EXC_SOFTWARE",
++    "EXC_BREAKPOINT",
++    "EXC_SYSCALL",
++    "EXC_MACH_SYSCALL",
++    "EXC_RPC_ALERT",
++    "EXC_CRASH",
++    "EXC_RESOURCE",
++    "EXC_GUARD",
++    "EXC_CORPSE_NOTIFY",
++    "SIGABRT",
++    "SIGBUS",
++    "SIGFPE",
++    "SIGILL",
++    "SIGKILL",
++    "SIGPIPE",
++    "SIGSEGV",
++    "SIGSYS",
++    "SIGTERM",
++    "SIGTRAP",
++    "NSGenericException",
++    "NSRangeException",
++    "NSInvalidArgumentException",
++    "NSInternalInconsistencyException",
++    "NSMallocException",
++    "NSObjectInaccessibleException",
++    "NSObjectNotAvailableException",
++    "NSDestinationInvalidException",
++    "NSPortTimeoutException",
++    "NSInvalidSendPortException",
++    "NSInvalidReceivePortException",
++    "NSPortSendException",
++    "NSPortReceiveException",
++    "NSCharacterConversionException",
++    "NSFileHandleOperationException",
++    "NSUnknownKeyException",
++    "NSParseErrorException",
++    "NSInvalidArchiveOperationException",
++    "NSInvalidUnarchiveOperationException",
++    "std::exception",
++    "std::runtime_error",
++    "std::logic_error",
++    "std::out_of_range",
++    "std::bad_alloc",
++    "std::invalid_argument",
++    "std::length_error",
++    "std::bad_cast",
++    "java.lang.ArithmeticException",
++    "java.lang.ArrayIndexOutOfBoundsException",
++    "java.lang.AssertionError",
++    "java.lang.ClassCastException",
++    "java.lang.ClassNotFoundException",
++    "java.lang.Error",
++    "java.lang.Exception",
++    "java.lang.ExceptionInInitializerError",
++    "java.lang.IllegalArgumentException",
++    "java.lang.IllegalStateException",
++    "java.lang.IndexOutOfBoundsException",
++    "java.lang.InterruptedException",
++    "java.lang.LinkageError",
++    "java.lang.NegativeArraySizeException",
++    "java.lang.NoClassDefFoundError",
++    "java.lang.NoSuchFieldError",
++    "java.lang.NoSuchMethodError",
++    "java.lang.NullPointerException",
++    "java.lang.NumberFormatException",
++    "java.lang.OutOfMemoryError",
++    "java.lang.RuntimeException",
++    "java.lang.SecurityException",
++    "java.lang.StackOverflowError",
++    "java.lang.StringIndexOutOfBoundsException",
++    "java.lang.UnsatisfiedLinkError",
++    "java.lang.UnsupportedOperationException",
++    "java.lang.VerifyError",
++    "java.io.IOException",
++    "java.io.FileNotFoundException",
++    "java.util.ConcurrentModificationException",
++    "java.util.NoSuchElementException",
++    "java.util.concurrent.CancellationException",
++    "java.util.concurrent.ExecutionException",
++    "java.util.concurrent.RejectedExecutionException",
++    "java.util.concurrent.TimeoutException",
++    "kotlin.KotlinNullPointerException",
++    "kotlin.NoWhenBranchMatchedException",
++    "kotlin.NotImplementedError",
++    "kotlin.TypeCastException",
++    "kotlin.UninitializedPropertyAccessException",
++    "android.app.RemoteServiceException",
++    "android.content.ActivityNotFoundException",
++    "android.database.sqlite.SQLiteException",
++    "android.os.BadParcelableException",
++    "android.os.DeadObjectException",
++    "android.os.NetworkOnMainThreadException",
++    "android.os.RemoteException",
++    "android.os.TransactionTooLargeException",
++    "android.util.AndroidRuntimeException",
++    "android.view.InflateException",
++    "com.facebook.jni.CppException",
++    "com.facebook.react.bridge.JSApplicationIllegalArgumentException",
++    "com.facebook.react.common.JavascriptException",
++    "com.facebook.react.uimanager.IllegalViewOperationException",
++    "Assertion failed",
++    "Fatal error",
++    "Precondition failed",
++]
 +private let opaxExceptionLevels: Set<String> = ["fatal", "error", "warning", "log", "info", "debug"]
 +private let opaxExceptionSource = OpaxField.token(opaxRegex(#"^[a-z_.]{1,40}$"#))
 +private let opaxFingerprint = OpaxField.token(opaxRegex(#"^[A-Za-z0-9_.:-]{1,128}$"#))
@@ -189,12 +315,12 @@
 +    "app_version": opaxVersion,
 +    "app_build": .build,
 +]
-+
+ 
 +private func opaxScrubException(_ value: Any) -> [String: Any]? {
 +    guard let exception = value as? [String: Any] else { return nil }
 +    let type = exception["type"] as? String ?? ""
 +    var clean: [String: Any] = [
-+        "type": opaxMatches(opaxExceptionType, type) || opaxSwiftFatalTypes.contains(type) ? type : "Error",
++        "type": opaxExceptionTypes.contains(type) ? type : "Error",
 +    ]
 +    if let message = opaxScrubMessage(exception["value"]) { clean["value"] = message }
 +    if let raw = exception["module"], let module = opaxKeep(.text(256), raw) { clean["module"] = module }
@@ -253,7 +379,7 @@
  /// Holds the JS-approved properties for the thread on which the JS layer's own fatal capture
  /// is running, so `beforeSend` can tell that capture apart from a native re-report of the same
  /// crash — and can put back the values native's own enrichment would otherwise win.
-@@ -368,7 +614,8 @@
+@@ -368,7 +739,8 @@
                  hedgeLog("Failed to record the fatal JS marker state: \(error.localizedDescription)")
              }
          }
@@ -263,7 +389,7 @@
              // The JS layer's own fatal capture is the event we want; only native re-reports
              // of a crash JS already captured are duplicates. Matching the event name as well
              // as the thread-local keeps anything else posthog-ios emits on this thread during
-@@ -394,7 +641,7 @@
+@@ -394,7 +766,7 @@
                  event.distinctId = distinctId
              }
              return event
@@ -272,7 +398,7 @@
  
          // Surveys and session replay are iOS-only in posthog-ios, so the APIs below
          // don't exist on macOS. macOS gets error tracking only.
-@@ -457,6 +704,14 @@
+@@ -457,6 +829,14 @@
          // JS owns flags; it tells us when the native preload would be a duplicate. posthog-ios
          // has no remoteConfig switch to mirror — it deprecated the option and always loads.
          config.preloadFeatureFlags = sdkOptions["preloadFeatureFlags"] as? Bool ?? true
@@ -312,12 +438,10 @@
  
                // Always apply the session replay configuration so that recording started later
                // (e.g. startRecording or a linked feature flag) uses the right mode and masking;
-@@ -917,5 +926,245 @@
-   when (getString(map, "screenshotColorMode", "")) {
-     "ARGB_8888" -> config.screenshotColorMode = PostHogScreenshotColorMode.ARGB_8888
+@@ -919,3 +928,369 @@
      "RGB_565" -> config.screenshotColorMode = PostHogScreenshotColorMode.RGB_565
-+  }
-+}
+   }
+ }
 +
 +// OPAX privacy patch (mobile/patches/privacy-patches.json). posthog-android builds and sends
 +// native crash reports itself, and adds its own device context to the native copy of a fatal JS
@@ -374,9 +498,9 @@
 +    capped.appendCodePoint(codePoint)
 +    index += Character.charCount(codePoint)
 +    count++
-   }
++  }
 +  return capped.toString()
- }
++}
 +
 +// A message was there, and it is not one that may be sent.
 +private fun opaxMessageOmitted(value: Any?): Boolean {
@@ -480,8 +604,134 @@
 +    "image_size" to OpaxField.Whole,
 +    "arch" to OpaxField.Token(opaxRegex("""^[a-z0-9_]{1,16}$""")),
 +  )
-+private val opaxExceptionType = opaxRegex("""^[A-Za-z_$][A-Za-z0-9_$.:]{0,79}$""")
-+private val opaxSwiftFatalTypes = setOf("Assertion failed", "Fatal error", "Precondition failed")
++// The exception types that may be sent, as EXCEPTION_TYPES in exceptions.ts: the JavaScript
++// error classes and the app's own, the kernel's exception and signal names, Foundation's and the
++// C++ library's exception names, the usual Java, Kotlin, Android and React Native classes, and
++// Swift's three fatal kinds. A type is a name the code can set to anything, so any other is "Error".
++private val opaxExceptionTypes: Set<String> =
++  setOf(
++    "Error",
++    "AggregateError",
++    "EvalError",
++    "RangeError",
++    "ReferenceError",
++    "SyntaxError",
++    "TypeError",
++    "URIError",
++    "ApiError",
++    "PersonIdentityError",
++    "ChatSyncError",
++    "AskFailure",
++    "ElectionUnavailable",
++    "OpaxTestReport",
++    "EXC_BAD_ACCESS",
++    "EXC_BAD_INSTRUCTION",
++    "EXC_ARITHMETIC",
++    "EXC_EMULATION",
++    "EXC_SOFTWARE",
++    "EXC_BREAKPOINT",
++    "EXC_SYSCALL",
++    "EXC_MACH_SYSCALL",
++    "EXC_RPC_ALERT",
++    "EXC_CRASH",
++    "EXC_RESOURCE",
++    "EXC_GUARD",
++    "EXC_CORPSE_NOTIFY",
++    "SIGABRT",
++    "SIGBUS",
++    "SIGFPE",
++    "SIGILL",
++    "SIGKILL",
++    "SIGPIPE",
++    "SIGSEGV",
++    "SIGSYS",
++    "SIGTERM",
++    "SIGTRAP",
++    "NSGenericException",
++    "NSRangeException",
++    "NSInvalidArgumentException",
++    "NSInternalInconsistencyException",
++    "NSMallocException",
++    "NSObjectInaccessibleException",
++    "NSObjectNotAvailableException",
++    "NSDestinationInvalidException",
++    "NSPortTimeoutException",
++    "NSInvalidSendPortException",
++    "NSInvalidReceivePortException",
++    "NSPortSendException",
++    "NSPortReceiveException",
++    "NSCharacterConversionException",
++    "NSFileHandleOperationException",
++    "NSUnknownKeyException",
++    "NSParseErrorException",
++    "NSInvalidArchiveOperationException",
++    "NSInvalidUnarchiveOperationException",
++    "std::exception",
++    "std::runtime_error",
++    "std::logic_error",
++    "std::out_of_range",
++    "std::bad_alloc",
++    "std::invalid_argument",
++    "std::length_error",
++    "std::bad_cast",
++    "java.lang.ArithmeticException",
++    "java.lang.ArrayIndexOutOfBoundsException",
++    "java.lang.AssertionError",
++    "java.lang.ClassCastException",
++    "java.lang.ClassNotFoundException",
++    "java.lang.Error",
++    "java.lang.Exception",
++    "java.lang.ExceptionInInitializerError",
++    "java.lang.IllegalArgumentException",
++    "java.lang.IllegalStateException",
++    "java.lang.IndexOutOfBoundsException",
++    "java.lang.InterruptedException",
++    "java.lang.LinkageError",
++    "java.lang.NegativeArraySizeException",
++    "java.lang.NoClassDefFoundError",
++    "java.lang.NoSuchFieldError",
++    "java.lang.NoSuchMethodError",
++    "java.lang.NullPointerException",
++    "java.lang.NumberFormatException",
++    "java.lang.OutOfMemoryError",
++    "java.lang.RuntimeException",
++    "java.lang.SecurityException",
++    "java.lang.StackOverflowError",
++    "java.lang.StringIndexOutOfBoundsException",
++    "java.lang.UnsatisfiedLinkError",
++    "java.lang.UnsupportedOperationException",
++    "java.lang.VerifyError",
++    "java.io.IOException",
++    "java.io.FileNotFoundException",
++    "java.util.ConcurrentModificationException",
++    "java.util.NoSuchElementException",
++    "java.util.concurrent.CancellationException",
++    "java.util.concurrent.ExecutionException",
++    "java.util.concurrent.RejectedExecutionException",
++    "java.util.concurrent.TimeoutException",
++    "kotlin.KotlinNullPointerException",
++    "kotlin.NoWhenBranchMatchedException",
++    "kotlin.NotImplementedError",
++    "kotlin.TypeCastException",
++    "kotlin.UninitializedPropertyAccessException",
++    "android.app.RemoteServiceException",
++    "android.content.ActivityNotFoundException",
++    "android.database.sqlite.SQLiteException",
++    "android.os.BadParcelableException",
++    "android.os.DeadObjectException",
++    "android.os.NetworkOnMainThreadException",
++    "android.os.RemoteException",
++    "android.os.TransactionTooLargeException",
++    "android.util.AndroidRuntimeException",
++    "android.view.InflateException",
++    "com.facebook.jni.CppException",
++    "com.facebook.react.bridge.JSApplicationIllegalArgumentException",
++    "com.facebook.react.common.JavascriptException",
++    "com.facebook.react.uimanager.IllegalViewOperationException",
++    "Assertion failed",
++    "Fatal error",
++    "Precondition failed",
++  )
 +private val opaxExceptionLevels = setOf("fatal", "error", "warning", "log", "info", "debug")
 +private val opaxExceptionSource = OpaxField.Token(opaxRegex("""^[a-z_.]{1,40}$"""))
 +private val opaxFingerprint = OpaxField.Token(opaxRegex("""^[A-Za-z0-9_.:-]{1,128}$"""))
@@ -509,7 +759,7 @@
 +  val exception = value as? Map<*, *> ?: return null
 +  val type = exception["type"] as? String ?: ""
 +  val clean = LinkedHashMap<String, Any>()
-+  clean["type"] = if (opaxExceptionType.matches(type) || type in opaxSwiftFatalTypes) type else "Error"
++  clean["type"] = if (type in opaxExceptionTypes) type else "Error"
 +  opaxScrubMessage(exception["value"])?.let { clean["value"] = it }
 +  opaxKeep(OpaxField.Text(256), exception["module"])?.let { clean["module"] = it }
 +  opaxKeep(OpaxField.Whole, exception["thread_id"])?.let { clean["thread_id"] = it }

@@ -4,6 +4,7 @@ import { analyticsConfig, analyticsOptions } from '../src/analytics';
 import { scrubEvent, type AnalyticsContext } from '../src/analytics/events';
 import {
   EXCEPTION_MESSAGE_MAX_LENGTH,
+  EXCEPTION_TYPES,
   MESSAGE_RULES,
   scrubExceptionMessage,
 } from '../src/analytics/exceptions';
@@ -449,6 +450,100 @@ test('Swift and Kotlin use the JS message rules and the same field patterns', ()
     expect(block).not.toMatch(/"\\?\$screen_name"/);
     expect(block).not.toMatch(/\$current_url|\$pathname/);
   }
+});
+
+test('an exception’s type is sent only from the fixed set: a name is whatever the code set it to', () => {
+  const types = (...given: unknown[]) =>
+    (
+      scrubEvent(
+        {
+          event: '$exception',
+          properties: {
+            $exception_list: given.map((type) => ({ type, value: 'x' })),
+          },
+        },
+        context,
+      )!.properties!.$exception_list as { type: string }[]
+    ).map((exception) => exception.type);
+  // Identifier-shaped, and data all the same: from the privacy review.
+  const named = Object.assign(new Error('x'), { name: 'Grayndler' });
+  expect(
+    types(named.name, 'Anthony.Albanese', 'housing_affordability_3000'),
+  ).toEqual(['Error', 'Error', 'Error']);
+  // A listed name with anything added is not that name.
+  expect(
+    types(
+      'typeerror',
+      'TypeError ',
+      'java.lang.IllegalStateException: Grayndler',
+      'Fatal error: Grayndler',
+      'EXC_BAD_ACCESS_3000',
+      7,
+      null,
+      '',
+    ),
+  ).toEqual(Array(8).fill('Error'));
+  // The classes and runtime names reports do carry.
+  const kept = [
+    'TypeError',
+    'RangeError',
+    'ApiError',
+    'PersonIdentityError',
+    'ChatSyncError',
+    'AskFailure',
+    'OpaxTestReport',
+    'EXC_BAD_ACCESS',
+    'SIGABRT',
+    'NSInvalidArgumentException',
+    'std::runtime_error',
+    'java.lang.IllegalStateException',
+    'com.facebook.react.common.JavascriptException',
+    'Fatal error',
+  ];
+  expect(types(...kept.slice(0, 10))).toEqual(kept.slice(0, 10));
+  expect(types(...kept.slice(10))).toEqual(kept.slice(10));
+  expect(new Set(EXCEPTION_TYPES).size).toBe(EXCEPTION_TYPES.length);
+  // Nothing on the list could be a reader's words: a class or signal name,
+  // or one of Swift's three fatal kinds.
+  for (const type of EXCEPTION_TYPES)
+    expect(type).toMatch(
+      /^(?:[A-Za-z_][A-Za-z0-9_]*(?:(?:\.|::)[A-Za-z_][A-Za-z0-9_]*)*|Assertion failed|Fatal error|Precondition failed)$/,
+    );
+});
+
+test('Swift and Kotlin hold the same set of exception types', () => {
+  /** The quoted names, one a line, between a list's opening and its close. */
+  const listed = (source: string, open: string, close: string) => {
+    const start = source.indexOf(open);
+    expect(start).toBeGreaterThan(-1);
+    const end = source.indexOf(close, start);
+    return [
+      ...source.slice(start + open.length, end).matchAll(/^\s+"(.*)",$/gm),
+    ].map((match) => match[1]);
+  };
+  expect(
+    listed(
+      swiftSource,
+      'private let opaxExceptionTypes: Set<String> = [',
+      '\n]',
+    ),
+  ).toEqual(EXCEPTION_TYPES);
+  expect(
+    listed(
+      kotlinSource,
+      'private val opaxExceptionTypes: Set<String> =\n  setOf(',
+      '\n  )',
+    ),
+  ).toEqual(EXCEPTION_TYPES);
+  // Neither copy passes a type for its shape any more.
+  expect(swiftSource).toContain(
+    '"type": opaxExceptionTypes.contains(type) ? type : "Error"',
+  );
+  expect(kotlinSource).toContain(
+    'clean["type"] = if (type in opaxExceptionTypes) type else "Error"',
+  );
+  for (const source of [swiftSource, kotlinSource])
+    expect(source).not.toMatch(/opaxExceptionType\b|opaxSwiftFatalTypes/);
 });
 
 test('the native SDK fetches no feature flags, person properties or GeoIP', () => {
