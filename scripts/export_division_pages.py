@@ -502,31 +502,30 @@ STAGED_SOURCE = "vic-hansard-pdf-staged"
 
 
 def staged_projection(staged, previous):
-    """Reconciled divisions of a staged import that are not published yet, shaped as the database's are."""
-    if str(ROOT) not in sys.path:
-        sys.path.insert(0, str(ROOT))
-    from parli.ingest.vic_divisions import read_staged
-    divisions, votes = read_staged(Path(staged))
+    """Reconciled divisions of a staged import that are not published yet, shaped as the database's are.
+
+    Reads the staged file itself (one division a line, its named votes with it), so the exporter needs
+    no importer module beside it."""
     records = {}
-    for d in divisions:
-        if d.id in previous or not publishable_key(d.id):
+    for line in (Path(staged) / "divisions.jsonl").read_text(encoding="utf-8").splitlines():
+        d = json.loads(line)
+        key = d["id"]
+        if key in previous or key in records or not publishable_key(key):
             continue  # a published record is never replaced from a staged file
-        records[d.id] = {
-            "key": d.id, "slug": f"division-{d.id}", "name": d.name, "question": d.question or d.name,
-            "date": d.date, "house": d.house, "jurisdiction": d.jurisdiction,
-            "ayes": d.ayes_count, "noes": d.noes_count, "result": d.result, "source_url": d.source_url,
+        record = records[key] = {
+            "key": key, "slug": f"division-{key}", "name": d["name"], "question": d.get("question") or d["name"],
+            "date": d["date"], "house": d["house"], "jurisdiction": d["jurisdiction"],
+            "ayes": d["ayes_count"], "noes": d["noes_count"], "result": d["result"], "source_url": d["source_url"],
             "members": [], "bills": [],
             "_meta": {"member_coverage": "recorded", "source": STAGED_SOURCE, "schema": 1},
         }
-    seen = {}
-    for v in sorted(votes, key=lambda v: (v.division_id, v.person_name or "")):
-        division = records.get(v.division_id)
-        if not division or not v.person_name:
-            continue
-        if v.person_name not in seen.setdefault(v.division_id, set()):
-            division["members"].append(rules.publishable_member(
-                {"name": v.person_name, "person_id": v.person_id, "person_slug": person_slug(v.person_name), "vote": v.vote}))
-            seen[v.division_id].add(v.person_name)
+        seen = set()
+        for v in sorted(d.get("votes", []), key=lambda v: v.get("person_name") or ""):
+            name = v.get("person_name")
+            if name and name not in seen:
+                record["members"].append(rules.publishable_member(
+                    {"name": name, "person_id": None, "person_slug": person_slug(name), "vote": v["vote"]}))
+                seen.add(name)
     label_coverage(records)
     short = sorted(k for k, d in records.items() if d["_meta"]["member_coverage"] != "recorded")
     if short:
