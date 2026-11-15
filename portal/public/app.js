@@ -13614,7 +13614,8 @@ async function runSearch(page = 1) {
   if (fresh) searchMeaningOpen = null;
   $("panel-search").classList.remove("is-meaning-closed");
   try {
-    const data = await api(`/api/search-all?${searchQueryParams(q, f, page, sort)}`);
+    // fill=1: the reader's own results page may fill a label-only card from its record (src/passage-fill.ts).
+    const data = await api(`/api/search-all?${searchQueryParams(q, f, page, sort)}&fill=1`);
     if (mySeq !== searchSeq) return; // a newer search owns the results now
     const results = data.results || [];
     const suggestions = results.length ? [] : searchRecoverySuggestions(q || f.speaker, data.suggestions);
