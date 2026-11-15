@@ -38,6 +38,7 @@ const searches = new WeakMap<
     value: {
       largeTitle?: boolean;
       underBar?: boolean;
+      ownFade?: boolean;
       search?: boolean;
       /** The page's own ground, from its Screen. */
       ground?: ColorValue;
@@ -59,6 +60,26 @@ function searchState(navigation: object) {
 // before its layout effects run. Never apply chrome from that stale read.
 function currentLargeTitle(navigation: object | undefined) {
   return !navigation || searchState(navigation).value.largeTitle !== false;
+}
+
+/**
+ * A root that rests its first line just under the compact bar (an open Ask
+ * thread) and draws its own fade there. UIKit's soft top edge blurs what is
+ * under the bar and a band below it whose depth is UIKit's own: on iOS 27.2
+ * it reached over the thread's question, which was blurred and greyed at
+ * rest (build 87). While this is true the root's top edge is hidden, so the
+ * page's own fade is the only one: clear at rest, and its foot is the
+ * measured bar's. A solid bar (the legibility settings) is unchanged.
+ */
+export function useRootBarOwnFade(ownFade: boolean) {
+  const navigation = useContext(NavigationContext);
+  useLayoutEffect(() => {
+    if (!navigation) return;
+    const state = searchState(navigation);
+    if (!!state.value.ownFade === ownFade) return;
+    state.value = { ...state.value, ownFade };
+    state.listeners.forEach((listener) => listener());
+  }, [navigation, ownFade]);
 }
 
 /**
@@ -242,6 +263,7 @@ export function useRootBarAppearance(
   // view does not report (undefined) keeps the sibling throughout, as
   // before: its content must never run through a clear bar.
   const backed = solid && contentUnderBar !== false;
+  const ownFade = clearBars && !!rootOptions.ownFade;
   const railSearch = verticalBar && !!rootOptions.search;
   const railSolid = solid || railSearch;
   const hardEdge =
@@ -271,6 +293,7 @@ export function useRootBarAppearance(
               verticalBar ? railSolid : solid,
               barEdge,
               contentUnderBar === undefined ? undefined : hardEdge,
+              ownFade,
             ),
             // Beside a vertical bar UIKit's bar background stops short of
             // the top edge, so a solid bar there gets the page's ground.
@@ -295,6 +318,7 @@ export function useRootBarAppearance(
     hardEdge,
     contentUnderBar,
     railSolid,
+    ownFade,
   ]);
   // A coloured UIKit appearance hides large titles on iOS 26. The legibility
   // fallback and Today's AX band use this native sibling. Header-height updates
@@ -433,6 +457,7 @@ export function useRailSolidRoot(): boolean {
 const emptyOptions: {
   largeTitle?: boolean;
   underBar?: boolean;
+  ownFade?: boolean;
   search?: boolean;
   ground?: ColorValue;
 } = {};

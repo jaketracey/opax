@@ -1,6 +1,7 @@
 import { AndroidFocusBack } from '../../navigation/AndroidFocusBack';
 import { RouteOptions } from '../../navigation/preview';
 import {
+  useRootBarOwnFade,
   useRootBarUnderBar,
   useTabRootRoute,
 } from '../../navigation/useRootBarAppearance';
@@ -99,6 +100,9 @@ const announce = (text: string) =>
  * under the conversation, beside its sources). After a cold launch Ask opens
  * idle; within a session it keeps what was on screen.
  */
+/** The bar's glass buttons end about this far below its reported foot. */
+const OWN_FADE_COVER = 16;
+
 export default function AskScreen() {
   const offline = useOffline();
   const atTop = useRef(true);
@@ -207,6 +211,11 @@ export default function AskScreen() {
   // cover the top of the page.
   const barFade = clearBars && tabRoot && Platform.OS === 'ios' && glassBar();
   const fadeScroll = useBarFadeScroll(barFade);
+  // An open thread rests its question just under the compact bar, inside
+  // the band UIKit's soft edge blurs (deeper on iOS 27.2). The thread's own
+  // fade is clear at rest, so it is the only one there.
+  const ownFade = barFade && !idle && !solidBar;
+  useRootBarOwnFade(ownFade);
   const column = useScreenColumn('readable');
   const { overlap: keyboard, visible: keyboardVisible } =
     useKeyboardOverlap(root);
@@ -593,6 +602,10 @@ export default function AskScreen() {
                 y={fadeScroll.y}
                 bottom={headerBottom}
                 hidden={hiddenBand}
+                cover={ownFade ? OWN_FADE_COVER : 0}
+                // No tail below that: a follow-up is pinned just under the
+                // bar, and must sit whole below the fade too.
+                tail={ownFade ? 0 : undefined}
                 ground={ground}
               />
             ) : null}

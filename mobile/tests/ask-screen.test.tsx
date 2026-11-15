@@ -4155,6 +4155,17 @@ test.each([
       );
       const hidden = view!.root.findByType(BarFade).props.hidden as number;
       expect(hidden > 0).toBe(edge === 'unspecified' && !pad);
+      // The thread rests its question just under the compact bar, inside
+      // the band UIKit's soft edge blurs: on iOS 27.2 the question was
+      // blurred and greyed at rest (build 87). An open thread hides the
+      // native top edge, so its own fade is the only one: clear at rest,
+      // and its ground whole to the foot of the bar's buttons once scrolled.
+      expect(edges().at(-1)).toBe('hidden');
+      expect(view!.root.findByType(BarFade).props.cover).toBe(16);
+      // The fade ends there, so a pinned follow-up is whole below it.
+      expect(view!.root.findByType(BarFade).props.tail).toBe(0);
+      scrollTo(-68);
+      expect(edges().at(-1)).toBe('hidden');
       await act(async () =>
         view!.update(
           withNavigationOptions(page(68), (options) => {
@@ -4166,6 +4177,8 @@ test.each([
       // scrollToTop is mocked and emits no event. Idle must already be soft.
       expect(byId('ask-idle').length).toBeGreaterThan(0);
       expect(edges()).not.toContain('hard');
+      // Back on the idle page the native soft edge returns.
+      expect(edges().at(-1)).toBe('soft');
       await act(async () =>
         view!.update(
           withNavigationOptions(page(120), (options) => {

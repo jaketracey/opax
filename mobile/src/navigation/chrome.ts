@@ -171,6 +171,8 @@ export const scrollBar = (
   // A vertical list without a scroll reporter retains its existing cover.
   // Reporters supply false at rest, then true from the first scroll point.
   underBar = edge !== 'unspecified',
+  // The page draws its own fade under the bar (`useRootBarOwnFade`).
+  ownFade = false,
 ) =>
   glassBar()
     ? solid
@@ -183,7 +185,11 @@ export const scrollBar = (
           ...largeTitleBar(ground),
           scrollEdgeEffects: {
             ...barScrollEdges(edge, 'soft'),
-            top: underBar ? ('hard' as const) : ('soft' as const),
+            top: ownFade
+              ? ('hidden' as const)
+              : underBar
+                ? ('hard' as const)
+                : ('soft' as const),
           },
         }
     : opaqueBar(ground);

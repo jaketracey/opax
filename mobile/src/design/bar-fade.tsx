@@ -98,6 +98,7 @@ export function BarFade({
   tail = BAR_FADE_TAIL,
   ramp = BAR_FADE_RAMP,
   hidden = 0,
+  cover = 0,
 }: {
   y: Animated.Value;
   bottom: number;
@@ -111,6 +112,14 @@ export function BarFade({
    * the bar's height: the fade must end at the bar the reader sees.
    */
   hidden?: number;
+  /**
+   * How far below the measured foot the ground stays whole (pt), for a page
+   * whose native top edge is hidden (`useRootBarOwnFade`): the bar's glass
+   * buttons reach below the height the stack reports, and with no native
+   * edge the text passing behind their lower half showed through. The fade
+   * still comes up from the same point of scroll, and is clear at rest.
+   */
+  cover?: number;
 }) {
   const measured = use(AnimatedHeaderHeightContext);
   // The measured height when there is one; `bottom` only outside a stack.
@@ -127,9 +136,11 @@ export function BarFade({
         outputRange: [0, 1],
         extrapolate: 'clamp',
       }),
-      transform: [{ translateY: Animated.add(header, tail - BAR_FADE_HEIGHT) }],
+      transform: [
+        { translateY: Animated.add(header, cover + tail - BAR_FADE_HEIGHT) },
+      ],
     };
-  }, [y, measured, fallback, hidden, tail, ramp]);
+  }, [y, measured, fallback, hidden, tail, ramp, cover]);
   // Loaded on first use, not with every page: the fade module reads an
   // accessibility setting as it loads, and Screen imports this file.
   const { GroundFade } =
