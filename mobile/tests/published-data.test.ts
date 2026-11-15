@@ -2,6 +2,7 @@
 // reads. It fails when any file is refused, loses a row or is read
 // leniently, and names the file and the path inside it. It reads
 // portal/public beside this tree, or OPAX_PUBLISHED_DIR.
+import { join } from 'path';
 import { decodeBill } from '../src/api/catalog-decoders';
 import {
   checkFamily,
@@ -50,9 +51,63 @@ describe(`published data under ${publishedRoot()}`, () => {
       // Not published anywhere yet (api/policy.ts: "Absent until it ships");
       // the app reads its absence as no recent votes. Checked once it exists.
       if (name === 'recent divisions' && !counts[name]) return;
+      // Not published yet: the portal adds people/firsts.json later, and
+      // the app reads its absence as no firsts. Skipped until the file
+      // exists; from then on it must decode whole, as every family must.
+      if (name === 'people firsts' && !counts[name]) {
+        process.stdout.write(
+          'published data: people/firsts.json is not published yet, skipped\n',
+        );
+        return;
+      }
       expect(counts[name]).toBeGreaterThanOrEqual(least[name] ?? 1);
     },
   );
+});
+
+describe('people firsts, from a folder named by OPAX_PUBLISHED_DIR', () => {
+  const firsts = families.find((family) => family.name === 'people firsts')!;
+  // The family as the guard runs it over the named folder.
+  const check = (fixture: string) => {
+    const before = process.env.OPAX_PUBLISHED_DIR;
+    process.env.OPAX_PUBLISHED_DIR = join(
+      __dirname,
+      'fixtures',
+      'published-firsts',
+      fixture,
+    );
+    try {
+      const { files, problems } = checkFamily(firsts);
+      return { files, problems };
+    } finally {
+      if (before === undefined) delete process.env.OPAX_PUBLISHED_DIR;
+      else process.env.OPAX_PUBLISHED_DIR = before;
+    }
+  };
+
+  test('a whole file decodes with no problems', () => {
+    expect(check('whole')).toEqual({ files: 1, problems: [] });
+  });
+
+  test('a folder without the file has nothing to check: not published yet', () => {
+    expect(check('absent')).toEqual({ files: 0, problems: [] });
+  });
+
+  test('a division with no source, which the app leaves out without a word, fails the family', () => {
+    expect(check('malformed')).toEqual({
+      files: 1,
+      problems: [
+        'people/firsts.json by_pid.90002.first_division: Could not be read, left out of the person’s firsts (tolerated)',
+      ],
+    });
+  });
+
+  test('a file in another shape (rows, and no meta) is refused', () => {
+    const { files, problems } = check('seed');
+    expect(files).toBe(1);
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toMatch(/^people\/firsts\.json .*\(file refused\)$/);
+  });
 });
 
 describe('what the guard catches', () => {

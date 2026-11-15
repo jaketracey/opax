@@ -2,9 +2,11 @@ import { readdirSync, readFileSync, existsSync, statSync } from 'fs';
 import { join, relative, resolve } from 'path';
 import * as d from '../src/api/catalog-decoders';
 import { ApiError } from '../src/api/errors';
+import { decodePeopleFirsts } from '../src/api/people-firsts';
 import {
   isPartialCatalog,
   observeLeniency,
+  tolerated,
   type Leniency,
 } from '../src/api/validation';
 import { decodeOnThisDayIndex } from '../src/features/bills/on-this-day';
@@ -58,6 +60,30 @@ const releases = (keep: (name: string) => boolean) => (root: string) => {
     .sort()
     .flatMap((id) => listed(root, `${folder}/${id}`, keep));
 };
+
+/**
+ * `/people/firsts.json` under the app's decoder, with nothing left out. The
+ * app leaves out a fact it cannot read (a first speech with no date, a
+ * first division with no source) without a word, so that the person's other
+ * fact still stands; here every fact the file gives must be one the decoder
+ * kept. A key it refuses is a dropped row, reported by the decoder itself.
+ */
+export function decodeFirstsWhole(value: unknown) {
+  const decoded = decodePeopleFirsts(value);
+  const given = value as Record<
+    string,
+    Record<string, Record<string, unknown>>
+  >;
+  for (const group of ['by_pid', 'by_name'] as const)
+    for (const [key, kept] of Object.entries(decoded[group]))
+      for (const fact of ['first_speech', 'first_division'] as const)
+        if (given[group]![key]![fact] != null && !kept[fact])
+          tolerated(
+            `${group}.${key}.${fact}`,
+            'Could not be read, left out of the person’s firsts',
+          );
+  return decoded;
+}
 
 /**
  * Every static file the app reads through `api/catalogs.ts`, with the
@@ -174,6 +200,15 @@ export const families: Family[] = [
     name: 'recent divisions',
     files: one('divisions/recent.json'),
     decode: decodeRecentDivisions,
+  },
+  {
+    // A side file to the roster, read from build 78 on. 1.1.4 (73) and
+    // 1.1.3 (57) never read it, so no decoder pinned from those versions
+    // has a say in its shape: the app's current decoder is the strictest
+    // one that reads it.
+    name: 'people firsts',
+    files: one('people/firsts.json'),
+    decode: decodeFirstsWhole,
   },
   {
     name: 'party files',
