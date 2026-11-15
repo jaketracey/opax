@@ -418,6 +418,16 @@ describe('full-width daily cards', () => {
     expect(loading.props.accessibilityLabel).toBe(
       'Loading the archive photograph',
     );
+    // Side by side with a taller question card, the skeleton fills the
+    // row as the loaded card does: each wrapper and the card grow, so the
+    // card's bottom does not drop when the photograph's card arrives.
+    for (const id of ['today-archive-loading', 'today-archive-loading-shape'])
+      expect(StyleSheet.flatten(host(root, id).props.style)).toMatchObject({
+        flexGrow: 1,
+      });
+    expect(
+      StyleSheet.flatten(loading.findByType(Card).props.style),
+    ).toMatchObject({ flexGrow: 1 });
     // A photo that cannot be loaded leaves its frame: nothing collapses.
     const card = await render(
       <ArchiveCard year={archiveYear(today)} picture={picture} />,

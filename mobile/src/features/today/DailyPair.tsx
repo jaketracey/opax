@@ -218,10 +218,13 @@ export function ArchiveSkeleton() {
     <LoadingStatus
       accessibilityLabel="Loading the archive photograph"
       testID="today-archive-loading"
+      style={styles.fill}
     >
       <View
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
+        testID="today-archive-loading-shape"
+        style={styles.fill}
       >
         <Card padded={false} style={styles.card}>
           <View testID="today-archive-loading-frame" style={styles.boneFrame} />
@@ -332,6 +335,9 @@ export function DailyPair({
 
 const styles = StyleSheet.create({
   pair: { gap: 12, alignItems: 'stretch' },
+  // The skeleton's wrappers pass the row's height on to its card, so beside
+  // a taller question card it ends where the loaded card will.
+  fill: { flexGrow: 1 },
   // Side by side, each cell is as tall as the row, and its card fills it.
   cell: { alignSelf: 'stretch', flexGrow: 1 },
   // The photograph's frame, as Picture draws it before the photo arrives.
