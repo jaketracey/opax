@@ -869,7 +869,7 @@
       "all_receipts",
       "donations_only"
      ],
-     "description": "all_receipts (default) or donations_only. Party totals always cover all receipt types."
+     "description": "all_receipts (default, every receipt type) or donations_only (Donation Received only)."
     },
     "lending": {
      "type": "boolean",

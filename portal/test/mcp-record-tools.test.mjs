@@ -422,9 +422,12 @@ test('bill_detail asks for a choice when a title matches several bills, and repo
 
 // ---------------------------------------------------------------- money
 test('money_receipts calls receipts receipts: no all-receipts figure is worded as a donation', async () => {
-  const graph = await asset('/graph/money.json'), greens = graph.nodes.find(n => n.id === 'party:Greens');
+  // The money page's selected receipts (money-receipts.json): each receipt once, by type. The node's legacy total also holds donor declarations.
+  const graph = await asset('/graph/money-receipts.json'), greens = graph.nodes.find(n => n.id === 'party:Greens');
+  const typed = Object.values(greens.by_type).reduce((a, b) => a + b, 0), rows = Object.values(greens.by_type_year).flatMap(y => Object.values(y)).reduce((a, [, n]) => a + n, 0);
+  assert.notEqual(typed, greens.total, 'the legacy total is not the selected receipts');
   const total = await run('money_receipts', { party: 'Greens' });
-  assert.deepEqual([total.items.length, total.items[0].amount_aud, total.items[0].receipts, total.measure], [1, greens.total, greens.count, 'all_receipts']);
+  assert.deepEqual([total.items.length, Math.round(total.items[0].amount_aud), total.items[0].receipts, total.measure], [1, Math.round(typed), rows, 'all_receipts']);
   assert.match(total.items[0].statement, /in federal disclosed receipts across/);
   assert.match(total.measure_label, /Not all of this is donations/);
   const top = await run('money_receipts', { party: 'Labor', view: 'top_donors', financial_year: '2023-24' });
@@ -438,7 +441,7 @@ test('money_receipts calls receipts receipts: no all-receipts figure is worded a
     assert.match(row.url, /^https:\/\/opax\.com\.au\/money\?jur=federal&type=receipts&from=2023&to=2023&party=/);
   }
   assert.deepEqual(top.items.map(r => r.amount_aud), top.items.map(r => r.amount_aud).sort((a, b) => b - a));
-  assert.ok(top.notes.some(n => /not every disclosed donor/.test(n)), 'ranking scope label');
+  assert.ok(top.notes.some(n => /uncapped published donor selection from recipient returns/.test(n)), 'ranking scope label');
   assert.ok(top.notes.some(n => /not personal payments to politicians or evidence of influence/.test(n)));
   assert.ok(top.items.some(r => /associated entity of Labor, per AEC register/.test(r.associated_entity ?? '')), 'register qualifier stays on the row');
   const next = await run('money_receipts', { party: 'Labor', view: 'top_donors', financial_year: '2023-24', cursor: top.next_cursor });
@@ -454,16 +457,23 @@ test('money_receipts donations_only counts Donation Received and lists other rec
   assert.ok(gifts.items[0].amount_aud <= all.items[0].amount_aud);
   assert.ok(gifts.other_lines.length && gifts.other_lines.every(l => /other receipts|subscriptions|no receipt type/.test(l.statement) && /^https:\/\/opax\.com\.au\/money\?/.test(l.url)));
   assert.ok(gifts.notes.some(n => /none is called a loan/.test(n)));
-  // A party total has no type split: asked for donations, it is still labelled all receipts, and says so.
+  // A party's typed receipts split too: asked for donations, it is Donation Received only, labelled as donations.
   const party = await run('money_receipts', { party: 'Greens', measure: 'donations_only' });
-  assert.match(party.items[0].statement, /in federal disclosed receipts across/);
+  const greens = (await asset('/graph/money-receipts.json')).nodes.find(n => n.id === 'party:Greens');
+  assert.equal(party.measure, 'donations_only');
+  assert.equal(Math.round(party.items[0].amount_aud), Math.round(greens.by_type.donation_received));
+  assert.match(party.items[0].statement, /in federal disclosed donations across [\d,]+ donations/);
+  assert.match(party.measure_label, /Donation Received/);
+  assert.doesNotMatch(api.getTool('money_receipts').inputSchema.properties.measure.description, /Party totals always cover all receipt types/, 'the listed schema does not say party totals cannot be donations');
+  const everything = await run('money_receipts', { party: 'Greens' });
+  assert.ok(everything.items[0].amount_aud > party.items[0].amount_aud && /disclosed receipts across/.test(everything.items[0].statement));
 });
 test('money_receipts keeps disclosed names whole, including a "- Loan" qualifier', async () => {
-  const graph = structuredClone(await asset('/graph/money.json'));
+  const graph = structuredClone(await asset('/graph/money-receipts.json'));
   const target = graph.nodes.find(n => n.id === 'donor:mineralogy');
   const name = (target.source_name ?? target.label) + ' - Loan';
   target.source_name = name; target.label = name;
-  const out = await run('money_receipts', { donor: name, view: 'top_recipients' }, { ...env, asset: async path => path === '/graph/money.json' ? graph : asset(path) });
+  const out = await run('money_receipts', { donor: name, view: 'top_recipients' }, { ...env, asset: async path => path === '/graph/money-receipts.json' ? graph : asset(path) });
   assert.ok(out.items.length);
   for (const row of out.items) { assert.equal(row.donor, name); assert.ok(row.statement.startsWith(name + ':')); assert.match(row.statement, /disclosed receipts/); }
 });
