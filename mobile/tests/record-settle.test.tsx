@@ -108,6 +108,21 @@ describe('a division’s bar', () => {
     expect(runs()).toHaveLength(2);
   });
 
+  test.each([['not yet known', null]])(
+    'first drawn with Reduce Motion %s, it is seen: reopened with motion, it stays at rest',
+    (_name, reduced) => {
+      mockReduced = reduced;
+      const first = render(split('division-invented-9'));
+      expect(runs()).toHaveLength(0);
+      act(() => first.unmount());
+      mounted.length = 0;
+      mockReduced = false;
+      const again = render(split('division-invented-9'));
+      expect(hosts(again.root, /^vote-split-settle$/)).toHaveLength(0);
+      expect(runs()).toHaveLength(0);
+    },
+  );
+
   test.each([
     ['Reduce Motion on', true, 'division-invented-1'],
     ['Reduce Motion not yet known', null, 'division-invented-1'],

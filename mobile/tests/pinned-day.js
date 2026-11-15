@@ -5,5 +5,5 @@
 // register, so the row is absent unless a suite mocks this module itself
 // (tests/bills-on-this-day.test.tsx does).
 jest.mock('../src/features/bills/sydney-day', () => ({
-  useSydneyDay: () => '2026-01-01',
+  currentSydneyDay: () => '2026-01-01',
 }));

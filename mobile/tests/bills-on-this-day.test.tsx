@@ -2,8 +2,9 @@
 // today's date in an earlier year, chosen by date alone, at the head of the
 // Bills list. Invented bills prove the rule; the pinned register proves the
 // row.
-import { act } from 'react';
-import { RefreshControl, useWindowDimensions } from 'react-native';
+import { act, Profiler } from 'react';
+import { AppState, RefreshControl, useWindowDimensions } from 'react-native';
+import { NavigationContext } from 'expo-router/react-navigation';
 import TestRenderer, { type ReactTestInstance } from 'react-test-renderer';
 import { billName } from '../src/api/bill-transforms';
 import { Catalogs, type Bill } from '../src/api/catalogs';
@@ -48,12 +49,7 @@ jest.mock('react-native/Libraries/Utilities/useWindowDimensions', () => ({
 }));
 let mockDay = '2026-11-15';
 jest.mock('../src/features/bills/sydney-day', () => ({
-  useSydneyDay: () => mockDay,
-}));
-let mockReduced = false;
-jest.mock('../src/design/accessibility', () => ({
-  ...jest.requireActual('../src/design/accessibility'),
-  useReduceMotion: () => mockReduced,
+  currentSydneyDay: () => mockDay,
 }));
 
 const invented = (key: string, introduced: string | null): Bill =>
@@ -129,30 +125,19 @@ describe('the rule', () => {
 });
 
 describe('the day', () => {
-  const { useSydneyDay } = jest.requireActual<
+  const { currentSydneyDay } = jest.requireActual<
     typeof import('../src/features/bills/sydney-day')
   >('../src/features/bills/sydney-day');
   afterEach(() => jest.restoreAllMocks());
 
-  test('is Sydney’s calendar day as the screen first saw it, for the whole visit', () => {
+  test('is Sydney’s calendar day at the moment it is read', () => {
     const now = jest
       .spyOn(Date, 'now')
       // 13:30 UTC on 15 November is already the 16th in Sydney.
       .mockReturnValue(Date.UTC(2026, 10, 15, 13, 30));
-    const seen: string[] = [];
-    function Probe({ n }: { n: number }) {
-      seen.push(`${n}:${useSydneyDay()}`);
-      return null;
-    }
-    let r!: TestRenderer.ReactTestRenderer;
-    act(() => {
-      r = TestRenderer.create(<Probe n={1} />);
-    });
+    expect(currentSydneyDay()).toBe('2026-11-16');
     now.mockReturnValue(Date.UTC(2026, 10, 16, 13, 30));
-    act(() => r.update(<Probe n={2} />));
-    expect(seen.at(0)).toBe('1:2026-11-16');
-    expect(seen.at(-1)).toBe('2:2026-11-16');
-    act(() => r.unmount());
+    expect(currentSydneyDay()).toBe('2026-11-17');
   });
 });
 
@@ -173,7 +158,6 @@ describe('the row on Bills', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     delete mockParams.q;
-    mockReduced = false;
     mockDay = dayWithBill;
     jest
       .mocked(useWindowDimensions)
@@ -200,25 +184,18 @@ describe('the row on Bills', () => {
         node.props.testID === 'bills-on-this-day-row',
     );
 
-  test.each([
-    ['with motion', false],
-    ['under Reduce Motion', true],
-  ])(
-    'names the year, the bill and its introduction date as one link (%s)',
-    async (_name, reduced) => {
-      mockReduced = reduced;
-      const root = await render();
-      const pick = onThisDay(pinnedBills.bills, dayWithBill)!;
-      const [row] = rows(root);
-      expect(row).toBeDefined();
-      expect(row!.props.accessibilityRole).toBe('link');
-      expect(row!.props.accessibilityLabel).toBe(
-        `On this day in ${pick.year}, ${billName(pick.bill)}, introduced ${formatDate(pick.date)}`,
-      );
-      expect(row!.props.accessibilityHint).toBe('Opens the bill');
-      expect(pick.date.slice(4)).toBe(dayWithBill.slice(4));
-    },
-  );
+  test('names the year, the bill and its introduction date as one link', async () => {
+    const root = await render();
+    const pick = onThisDay(pinnedBills.bills, dayWithBill)!;
+    const [row] = rows(root);
+    expect(row).toBeDefined();
+    expect(row!.props.accessibilityRole).toBe('link');
+    expect(row!.props.accessibilityLabel).toBe(
+      `On this day in ${pick.year}, ${billName(pick.bill)}, introduced ${formatDate(pick.date)}`,
+    );
+    expect(row!.props.accessibilityHint).toBe('Opens the bill');
+    expect(pick.date.slice(4)).toBe(dayWithBill.slice(4));
+  });
 
   test('the long-press menu explains the rule', async () => {
     const present = jest
@@ -290,6 +267,167 @@ describe('the row on Bills', () => {
     expect(after.indexOf('bills-count')).toBeLessThan(row);
     // It has no height animation of its own.
     expect(after).not.toContain('bills-on-this-day');
+  });
+
+  test('the first commit that draws a bill already has the row: nothing lands above the bills later', async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    mock.bills.mockImplementation(async (refresh) => {
+      await gate;
+      return fixture.bills(refresh);
+    });
+    // What is on screen at each commit, read in the commit itself.
+    const commits: string[][] = [];
+    let renderer: TestRenderer.ReactTestRenderer | undefined;
+    await act(async () => {
+      renderer = TestRenderer.create(
+        <Profiler
+          id="bills"
+          onRender={() => {
+            if (renderer) commits.push(ids(renderer.root));
+          }}
+        >
+          {withNavigationOptions(<BillsList />, () => {})}
+        </Profiler>,
+      );
+    });
+    mounted.push(renderer!);
+    await act(async () => {
+      release();
+    });
+    await act(async () => {});
+    const hasBill = (commit: string[]) =>
+      commit.some((id) => id.startsWith('bill-row-'));
+    const first = commits.find(hasBill);
+    expect(first).toBeDefined();
+    // Commits before it drew no bill, so there was nothing to push down.
+    expect(commits.slice(0, commits.indexOf(first!)).some(hasBill)).toBe(false);
+    expect(first).toContain('bills-on-this-day-row');
+    expect(first!.indexOf('bills-on-this-day-row')).toBeLessThan(
+      first!.findIndex((id) => id.startsWith('bill-row-')),
+    );
+  });
+
+  describe('a list left mounted into a new day', () => {
+    // A second date the pinned register has a different bill for.
+    const other = pinnedBills.bills.find(
+      (b) =>
+        b.introduced && b.introduced.slice(5, 10) !== dayWithBill.slice(5, 10),
+    )!;
+    const nextDay = `${Number(other.introduced!.slice(0, 4)) + 1}${other.introduced!.slice(4, 10)}`;
+    const label = (root: ReactTestInstance) =>
+      rows(root)[0]?.props.accessibilityLabel as string | undefined;
+    const labelFor = (day: string) => {
+      const pick = onThisDay(pinnedBills.bills, day)!;
+      return `On this day in ${pick.year}, ${billName(pick.bill)}, introduced ${formatDate(pick.date)}`;
+    };
+    let listeners: Record<string, (() => void)[]>;
+    let appHandlers: ((state: string) => void)[];
+    let appRemoved: number;
+    let removed: number;
+    // Other parts of the list listen to the app state too: tell them all.
+    const appChange = (state: string) =>
+      appHandlers.forEach((handler) => handler(state));
+    async function renderWatched() {
+      listeners = {};
+      removed = 0;
+      appHandlers = [];
+      appRemoved = 0;
+      jest.spyOn(AppState, 'addEventListener').mockImplementation(((
+        _type: string,
+        handler: (state: string) => void,
+      ) => {
+        appHandlers.push(handler);
+        return {
+          remove: () => {
+            appRemoved++;
+          },
+        };
+      }) as never);
+      const navigation = {
+        setOptions: () => {},
+        getState: () => ({ index: 0, routes: [{ key: 'r', name: 'index' }] }),
+        isFocused: () => true,
+        addListener: (type: string, handler: () => void) => {
+          (listeners[type] ??= []).push(handler);
+          return () => {
+            removed++;
+          };
+        },
+        removeListener: () => {},
+      };
+      let renderer!: TestRenderer.ReactTestRenderer;
+      await act(async () => {
+        renderer = TestRenderer.create(
+          <NavigationContext.Provider value={navigation as never}>
+            <BillsList />
+          </NavigationContext.Provider>,
+        );
+      });
+      mounted.push(renderer);
+      return renderer;
+    }
+    const emit = (type: string) =>
+      act(() => listeners[type]!.forEach((handler) => handler()));
+    afterEach(() => jest.restoreAllMocks());
+
+    test('the two days name different bills', () => {
+      expect(labelFor(nextDay)).not.toBe(labelFor(dayWithBill));
+    });
+
+    test('in front of the reader it never changes, whatever the clock says', async () => {
+      const r = await renderWatched();
+      expect(label(r.root)).toBe(labelFor(dayWithBill));
+      mockDay = nextDay;
+      await act(async () => {
+        r.root.findByType(RefreshControl).props.onRefresh();
+      });
+      await act(async () => {});
+      // Control Centre over the list: still on screen.
+      act(() => appChange('inactive'));
+      expect(label(r.root)).toBe(labelFor(dayWithBill));
+    });
+
+    test.each([
+      ['the screen blurs', () => emit('blur')],
+      ['the screen takes focus again', () => emit('focus')],
+      [
+        'the app goes to the background',
+        () => act(() => appChange('background')),
+      ],
+      ['the app returns', () => act(() => appChange('active'))],
+    ])('when %s on a new day, it chooses again', async (_name, hide) => {
+      const r = await renderWatched();
+      expect(label(r.root)).toBe(labelFor(dayWithBill));
+      // Out of sight on the same day: nothing to change.
+      hide();
+      expect(label(r.root)).toBe(labelFor(dayWithBill));
+      mockDay = nextDay;
+      hide();
+      expect(label(r.root)).toBe(labelFor(nextDay));
+    });
+
+    test('a new day with no earlier bill takes the row away while hidden', async () => {
+      const r = await renderWatched();
+      expect(rows(r.root)).toHaveLength(1);
+      mockDay = '2026-01-01';
+      emit('blur');
+      expect(rows(r.root)).toHaveLength(0);
+    });
+
+    test('unmounting stops listening', async () => {
+      const r = await renderWatched();
+      act(() => r.unmount());
+      mounted.length = 0;
+      // Blur and focus, and every app-state listener.
+      expect(listeners.blur?.length).toBeGreaterThan(0);
+      expect(listeners.focus?.length).toBeGreaterThan(0);
+      expect(removed).toBe(listeners.blur!.length + listeners.focus!.length);
+      expect(appHandlers.length).toBeGreaterThan(0);
+      expect(appRemoved).toBe(appHandlers.length);
+    });
   });
 
   test('it is never inserted, or taken away, after the list has drawn', async () => {

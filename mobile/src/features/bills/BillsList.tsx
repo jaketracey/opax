@@ -92,10 +92,9 @@ import {
   type BillSort,
 } from './filters';
 import type { BillEntry } from './navigation';
-import { onThisDay, type OnThisDayBill } from './on-this-day';
 import { OnThisDayRow } from './OnThisDay';
 import { BillIndexRow } from './parts';
-import { useSydneyDay } from './sydney-day';
+import { useOnThisDay } from './useOnThisDay';
 import { useCatalogRecord } from './useCatalogRecord';
 
 // Short enough for the bar's field on a phone and beside a Duo's split
@@ -291,15 +290,11 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
     ),
   };
 
-  // On this day is chosen once, in the render that first has the register,
-  // so the row is in the list's first frame or not in this visit at all:
-  // nothing is inserted above content the reader can already see.
-  const day = useSydneyDay();
-  const [onDay, setOnDay] = useState<{ pick: OnThisDayBill | null } | null>(
-    null,
-  );
-  if (index && !onDay) setOnDay({ pick: onThisDay(index.bills, day) });
-  const dayPick = onDay?.pick ?? null;
+  // On this day is chosen in the render that first has the register, so the
+  // row is in the list's first frame or not there: nothing is inserted above
+  // content the reader can already see. A new day chooses again only while
+  // the list is out of sight (useOnThisDay).
+  const dayPick = useOnThisDay(index?.bills);
   const clear = () => list.store.set(list.store.model.reset(list.state));
   const stacked = useAccessibilitySize();
   const filteredEmpty = !!all && !searching && on > 0 && rows.length === 0;

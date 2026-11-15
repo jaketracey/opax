@@ -48,8 +48,11 @@ export function useSettle(
       : null,
   );
   useEffect(() => {
+    // Drawn at rest before the setting was known is still seen: it must not
+    // start moving when it is drawn again. Reduce Motion on does not use up
+    // the figure's one settle.
+    if (key && reduced === null) settled.add(key);
     if (!progress || !key) return;
-    settled.add(key);
     const run = Animated.timing(progress, {
       toValue: 1,
       duration,
