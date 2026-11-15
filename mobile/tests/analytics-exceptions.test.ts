@@ -85,7 +85,8 @@ function exceptionEvent(value: string, extra: Record<string, unknown> = {}) {
         {
           type: 'macho',
           debug_id: '0b8e6a3c-1d2e-3f40-8a9b-0c1d2e3f4a5b',
-          code_file: '/private/var/containers/Bundle/Application/X/OPAX.app/OPAX',
+          code_file:
+            '/private/var/containers/Bundle/Application/X/OPAX.app/OPAX',
           image_addr: '0x0000000104a00000',
           image_size: 1048576,
           arch: 'arm64e',
@@ -146,10 +147,22 @@ test.each([
   ['an apostrophe inside quotes', `Unknown street 'O'Brien ${secrets.field}'`],
   ['curly quotes', `No match for “${secrets.talk}”`],
   ['backticks', `Unexpected value \`${secrets.search}\``],
-  ['an unclosed quote', `JSON Parse error: Unexpected token '${secrets.question}`],
-  ['a URL query', `GET https://opax.com.au/api/search?q=${encodeURIComponent(secrets.search)} failed`],
-  ['a URL fragment', `Load failed: opax://ask#${encodeURIComponent(secrets.question)}`],
-  ['a relative query', `Bad request /api/ask?question=${encodeURIComponent(secrets.question)}`],
+  [
+    'an unclosed quote',
+    `JSON Parse error: Unexpected token '${secrets.question}`,
+  ],
+  [
+    'a URL query',
+    `GET https://opax.com.au/api/search?q=${encodeURIComponent(secrets.search)} failed`,
+  ],
+  [
+    'a URL fragment',
+    `Load failed: opax://ask#${encodeURIComponent(secrets.question)}`,
+  ],
+  [
+    'a relative query',
+    `Bad request /api/ask?question=${encodeURIComponent(secrets.question)}`,
+  ],
   ['an email', `Sign-in failed for ${secrets.email}`],
   ['a code', `Code ${secrets.code} was rejected`],
   ['German quotes', `Kein Treffer für „${secrets.search}“`],
@@ -158,16 +171,43 @@ test.each([
   ['reversed single quotes', `No match for ‛${secrets.field}‛`],
   ['double primes', `No match for ″${secrets.search}″`],
   ['a quote straight after a letter', `Bad key x"${secrets.question}" here`],
-  ['an OPAX URL path', `GET https://opax.com.au/api/search/${encodeURIComponent(secrets.search)} failed`],
-  ['an OPAX host without a scheme', `Load opax.com.au/ask/${encodeURIComponent(secrets.talk)} failed`],
-  ['a bare fragment', `Load /ask#${encodeURIComponent(secrets.question)} failed`],
-  ['URL credentials', `fetch https://${encodeURIComponent(secrets.field)}:${secrets.code}@example.org/a failed`],
-  ['a quote across lines', `Bad input "first line\n${secrets.question}\nlast line" end`],
+  [
+    'an OPAX URL path',
+    `GET https://opax.com.au/api/search/${encodeURIComponent(secrets.search)} failed`,
+  ],
+  [
+    'an OPAX host without a scheme',
+    `Load opax.com.au/ask/${encodeURIComponent(secrets.talk)} failed`,
+  ],
+  [
+    'a bare fragment',
+    `Load /ask#${encodeURIComponent(secrets.question)} failed`,
+  ],
+  [
+    'URL credentials',
+    `fetch https://${encodeURIComponent(secrets.field)}:${secrets.code}@example.org/a failed`,
+  ],
+  [
+    'a quote across lines',
+    `Bad input "first line\n${secrets.question}\nlast line" end`,
+  ],
   ['a single quote across lines', `Bad '\n${secrets.search}\n' end`],
-  ['an unclosed quote across lines', `Bad "first line\n${secrets.talk}\nlast line`],
-  ['an OPAX host with a trailing dot', `GET https://opax.com.au./ask/${encodeURIComponent(secrets.question)} failed`],
-  ['an API path with no host', `GET /api/search/${encodeURIComponent(secrets.search)} failed`],
-  ['an app route with no host', `Route /ask/${encodeURIComponent(secrets.question)} missing`],
+  [
+    'an unclosed quote across lines',
+    `Bad "first line\n${secrets.talk}\nlast line`,
+  ],
+  [
+    'an OPAX host with a trailing dot',
+    `GET https://opax.com.au./ask/${encodeURIComponent(secrets.question)} failed`,
+  ],
+  [
+    'an API path with no host',
+    `GET /api/search/${encodeURIComponent(secrets.search)} failed`,
+  ],
+  [
+    'an app route with no host',
+    `Route /ask/${encodeURIComponent(secrets.question)} missing`,
+  ],
   ['a left single quote after a letter', `No match for x‘${secrets.field}’`],
   ['a low single quote after a letter', `No match for x‚${secrets.talk}‘`],
 ])('a message with %s keeps no private text', (_name, message) => {
@@ -178,7 +218,9 @@ test.each([
 
 test('messages keep their shape and are cut to a short length', () => {
   expect(
-    scrubExceptionMessage(`Cannot read property '${secrets.search}' of undefined`),
+    scrubExceptionMessage(
+      `Cannot read property '${secrets.search}' of undefined`,
+    ),
   ).toBe('Cannot read property [redacted] of undefined');
   // An OPAX URL keeps its host; any other URL or path keeps its path.
   expect(
@@ -311,7 +353,10 @@ test('free-text exception types and empty reports are not sent', () => {
   ]);
   expect(
     scrubEvent(
-      { event: '$exception', properties: { $exception_message: secrets.question } },
+      {
+        event: '$exception',
+        properties: { $exception_message: secrets.question },
+      },
       context,
     ),
   ).toBeNull();
@@ -329,7 +374,9 @@ test('the native plugin patch applies the same rules', () => {
     patch.split(`opaxMessageMaxLength = ${EXCEPTION_MESSAGE_MAX_LENGTH}\n`),
   ).toHaveLength(3);
   // Both drop every native event that is not a crash or error report.
-  expect(patch).toContain('guard event.event == "$exception" else { return nil }');
+  expect(patch).toContain(
+    'guard event.event == "$exception" else { return nil }',
+  );
   expect(patch).toContain('if (event.event != "\\$exception") return null');
 });
 
@@ -466,4 +513,98 @@ test('the plugin pins exactly the reviewed posthog-ios', () => {
   expect(patchedSection('posthog-react-native-plugin.podspec')).toContain(
     `s.dependency 'PostHog', "= #{posthog_ios_version}"`,
   );
+});
+
+/**
+ * The limits set for the route error report's message: at most 300
+ * characters, and no email address or run of four or more digits (a
+ * postcode, an id), so a message that interpolates what a reader typed
+ * cannot carry it. The one scrubber every exception message goes through
+ * already holds to them, more tightly: its cut is 120 characters.
+ */
+describe('an error message within the route report’s limits', () => {
+  test('a 1,000-character message is cut, to well inside 300 characters', () => {
+    const long = 'a'.repeat(1000);
+    const cut = scrubExceptionMessage(long)!;
+    expect(EXCEPTION_MESSAGE_MAX_LENGTH).toBeLessThanOrEqual(300);
+    expect(cut).toBe('a'.repeat(EXCEPTION_MESSAGE_MAX_LENGTH));
+    expect(cut.length).toBeLessThanOrEqual(300);
+    // Words, not one run: still cut, on the same count.
+    const words = scrubExceptionMessage('render failed '.repeat(72))!;
+    expect('render failed '.repeat(72)).toHaveLength(1008);
+    expect(words.length).toBeLessThanOrEqual(EXCEPTION_MESSAGE_MAX_LENGTH);
+    expect(words.startsWith('render failed render failed')).toBe(true);
+  });
+
+  test('an email address is redacted', () => {
+    expect(
+      scrubExceptionMessage(
+        'Could not load the profile for jane.citizen@example.com today',
+      ),
+    ).toBe('Could not load the profile for [email] today');
+    expect(
+      scrubExceptionMessage('No account for jo+opax@mail.example.org.au'),
+    ).toBe('No account for [email]');
+  });
+
+  test('"postcode 3040" and a long id are redacted', () => {
+    expect(scrubExceptionMessage('No seat found for postcode 3040')).toBe(
+      'No seat found for postcode #',
+    );
+    expect(scrubExceptionMessage('Record 1234567890 has no title')).toBe(
+      'Record # has no title',
+    );
+    // An id inside a longer token loses its digits too.
+    expect(scrubExceptionMessage('Bill au-federal-r7520 failed to draw')).toBe(
+      'Bill au-federal-r# failed to draw',
+    );
+    for (const message of [
+      'No seat found for postcode 3040',
+      'Record 1234567890 has no title',
+      'Bill au-federal-r7520 failed to draw',
+      'Could not load the profile for jane.citizen@example.com today',
+    ])
+      expect(scrubExceptionMessage(message)).not.toMatch(
+        /\d{4,}|@|example\.com/,
+      );
+  });
+
+  test('an ordinary message is unchanged', () => {
+    for (const message of [
+      'Maximum update depth exceeded',
+      'Rendered fewer hooks than expected',
+      'Text strings must be rendered within a Text component',
+      // Three digits are a status or a count, not a postcode or an id.
+      'Request failed with status 404',
+    ])
+      expect(scrubExceptionMessage(message)).toBe(message);
+  });
+
+  test('the route report’s own message goes through this same scrubber', () => {
+    const scrubbed = scrubEvent(
+      {
+        event: '$exception',
+        properties: {
+          $exception_list: [
+            {
+              type: 'Error',
+              value:
+                'No seat found for postcode 3040, asked by jane.citizen@example.com',
+            },
+          ],
+          route_pattern: '/bill/[key]',
+        },
+      },
+      context,
+    )!;
+    expect(scrubbed.properties).toMatchObject({
+      route_pattern: '/bill/[key]',
+      $exception_list: [
+        {
+          type: 'Error',
+          value: 'No seat found for postcode #, asked by [email]',
+        },
+      ],
+    });
+  });
 });

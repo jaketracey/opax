@@ -13,6 +13,14 @@
 
 import { routeErrorPattern } from './route-patterns';
 
+/**
+ * The longest message that leaves the phone. The route error report's own
+ * limit is 300 characters, with no email address and no run of four or
+ * more digits; this cut and the rules below already hold every exception
+ * message to that, more tightly. The Swift and Kotlin copies in the plugin
+ * patch use the same number (`opaxMessageMaxLength`), so a change here is
+ * a change there.
+ */
 export const EXCEPTION_MESSAGE_MAX_LENGTH = 120;
 // Longer input is cut before the rules run; a quote the cut opens is then
 // caught by the unclosed-quote rule, so nothing past it survives.
