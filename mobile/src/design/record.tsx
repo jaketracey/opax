@@ -274,18 +274,22 @@ export function PageFoot({
   independenceTestID,
   correctionTestID,
 }: {
-  variant: 'today' | 'authorised';
-  /**
-   * Required for the authorised variant. The authorisation is Victorian
-   * election material, so any other jurisdiction draws nothing.
-   */
-  jurisdiction?: string;
   line?: string;
   corrections?: { email: string; response: string };
   testID?: string;
   independenceTestID?: string;
   correctionTestID?: string;
-}) {
+} & (
+  | { variant: 'today'; jurisdiction?: undefined }
+  | {
+      variant: 'authorised';
+      /**
+       * Required. The authorisation is Victorian election material, so any
+       * other jurisdiction draws nothing.
+       */
+      jurisdiction: string;
+    }
+)) {
   const highlight = useRowHighlight();
   if (variant === 'authorised' && !isVictorian(jurisdiction)) return null;
   return (
