@@ -599,6 +599,41 @@ if [ "${OPAX_NIGHTLY_SKIP_REFRESH:-0}" != 1 ] && [ "${OPAX_SENATE_VIDEO:-1}" != 
   fi
 fi
 
+# ---- 3z. groups held by review (scripts/vm/gate_hold.txt) ----------------------------------------
+# A reviewed, dated hold: "GROUP EXPIRY(YYYY-MM-DD) REASON" per line. A listed group that changed tonight is put
+# back to HEAD before validation and the portal gate, so the gate's first full run tests only what may be
+# published (15 Nov 2026: one full suite took 2,598 s of the 75 min budget, so the blame search could not start
+# and one held export cost every other group the night). Each hold is a status warning. A hold past its expiry,
+# a malformed line or an unknown group fails the night loudly and the group stays held: a hold never lapses or
+# lingers in silence. Groups with their own acceptance state (bills, votes, divisions, evidence ...) cannot be
+# listed. scripts/vm/test_gate_hold.py checks that no group left to publish reads a held group's files.
+GATE_HOLD_FILE="$(dirname "${BASH_SOURCE[0]}")/gate_hold.txt"
+if [ -f "$GATE_HOLD_FILE" ]; then
+  hold_today=${OPAX_TODAY:-$(TZ=Australia/Sydney date +%F)}
+  while read -r hold_group hold_expiry hold_reason || [ -n "${hold_group:-}" ]; do
+    case "${hold_group:-}" in ''|'#'*) continue ;; esac
+    if [ -z "${GROUP_PATHS[$hold_group]:-}" ]; then
+      fail "gate_hold.txt names an unknown group: $hold_group"; continue
+    fi
+    case "$hold_group" in bills|votes|divisions|seovotes|evidence|corpus|wrangler|bills-tas|bills-act|budget|vic-gifts)
+      fail "gate_hold.txt cannot hold $hold_group (it has its own acceptance state)"; continue ;;
+    esac
+    if ! [[ "${hold_expiry:-}" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || [ -z "${hold_reason:-}" ]; then
+      group_changed "$hold_group" && revert_group "$hold_group"
+      fail "gate_hold.txt: the hold on $hold_group needs an expiry date (YYYY-MM-DD) and a reason; $hold_group stays held"
+      continue
+    fi
+    if [[ "$hold_today" > "$hold_expiry" ]]; then
+      group_changed "$hold_group" && revert_group "$hold_group"
+      fail "the review hold on $hold_group expired on $hold_expiry (scripts/vm/gate_hold.txt: $hold_reason): renew it or remove it; $hold_group stays held"
+      continue
+    fi
+    group_changed "$hold_group" || continue
+    revert_group "$hold_group"
+    warn "$hold_group held by review until $hold_expiry (scripts/vm/gate_hold.txt): $hold_reason; put back to HEAD, not published tonight"
+  done < "$GATE_HOLD_FILE"
+fi
+
 # ---- 4. validate what will be committed ----------------------------------------------------------
 # bills and votes are checked every night; every periodic group only when `git status` shows its files changed.
 # A group that fails is put back to HEAD and the night goes on with the rest.
