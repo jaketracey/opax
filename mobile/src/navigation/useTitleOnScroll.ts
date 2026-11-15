@@ -126,7 +126,28 @@ export function drawnTextWidth(
  * phone). The move puts the text's centre on the bar's, and stops where its
  * edge meets the trailing group's reserve (16 pt in, the items, 8 pt gap),
  * so a wide title moves less, and one that fills the span not at all.
+ *
+ * That is only where the title cannot sit on the centre line with room to
+ * spare. One that can, UIKit centres itself, and moving it as well carried
+ * it under Share: "Grayndler" (80 pt), reached from a profile whose long
+ * back name collapses the back button, was drawn 86 pt right of centre
+ * with "Gray" beside the button (build 83 sweep; the same on 26.3 with
+ * every pushed bar clear, where a 137 pt title beside one item was centred
+ * by UIKit too). So a title whose centred edge clears the trailing items
+ * by more than `barTitleCentredGap` is not moved.
  */
+/**
+ * UIKit centres a title only while more than this is left between its
+ * centred edge and the trailing items (pt). From three cases on 26.3. Set
+ * at the leading end: a 143 pt name 9.5 pt short of Share at the default
+ * size, and at AX3 an 85 pt name drawn at 114 pt, 12 pt short of the larger
+ * items (it was left of centre until it was moved: build 77). Centred by
+ * UIKit: an 80 pt title 41 pt short. Nothing is measured between 12 and
+ * 41, so the line is drawn at the largest gap known to be at the leading
+ * end: a title with more room than that is never moved, and if UIKit set
+ * it at the leading end after all it is off-centre, never under a button.
+ */
+export const barTitleCentredGap = 12;
 export function barTitleShift({
   active,
   width,
@@ -147,6 +168,8 @@ export function barTitleShift({
   const items =
     trailingWidth ??
     44 + 60 * Math.max(0, trailing - 1) + growth * Math.max(0, trailing);
+  // UIKit centres this one itself: no move.
+  if (width / 2 + text / 2 + barTitleCentredGap < width - 16 - items) return 0;
   const start = 16 + 44 + 12;
   // The 72 pt start is from a 402 pt phone; a wider one may set its bar
   // margins a few points wider, so keep that much spare before the reserve.
