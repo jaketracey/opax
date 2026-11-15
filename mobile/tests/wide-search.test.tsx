@@ -138,7 +138,7 @@ beforeEach(() => {
 
 const ids = (renderer: TestRenderer.ReactTestRenderer) =>
   renderer.root
-    .findAll((node) => typeof node.props.testID === 'string')
+    .findAll((node) => typeof node.props?.testID === 'string')
     .map((node) => node.props.testID as string);
 const input = (renderer: TestRenderer.ReactTestRenderer) =>
   renderer.root.findByType(TextInput);
@@ -150,7 +150,7 @@ const rows = (renderer: TestRenderer.ReactTestRenderer) => {
     .findAll(
       (node) =>
         typeof node.type !== 'string' &&
-        typeof node.props.testID === 'string' &&
+        typeof node.props?.testID === 'string' &&
         node.props.testID.startsWith('today-wide-search-row-') &&
         typeof node.props.onPress === 'function' &&
         node.props.accessibilityRole === 'button',
