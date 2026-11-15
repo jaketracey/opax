@@ -97,7 +97,10 @@ export function RecordLoadError({
   const gone = error instanceof ApiError && error.code === 'not-found';
   // Offline, on a page (a sheet has no stack to push a record on): the
   // records already saved on this device, read before this view is drawn.
-  const shelf = useSavedShelf(!missing && !gone && !sheet && isOffline(error));
+  const shelf = useSavedShelf(
+    !missing && !gone && !sheet && isOffline(error),
+    error,
+  );
   if (missing) return <MissingRecord sheet={sheet} testID={testID} />;
   if (error instanceof ApiError && error.code === 'not-found')
     return (
