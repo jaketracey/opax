@@ -899,6 +899,44 @@ describe('the first frame has the loaded page’s layout', () => {
     expect(blocks(r.root)[0]).toBe('today-your-mp');
   });
 
+  test('with no saved calendar the sitting line’s place is held while the read is out, and stays held when it has no line', async () => {
+    setUp({ cached: { date: addDays(today, -1) } });
+    const calendarRead = pending<null>();
+    mock.sittingDays.mockReturnValueOnce(calendarRead.promise as never);
+    const r = await render(<Today />);
+    // One line of the sitting line's own type, unseen by VoiceOver.
+    const held = hosts(r, 'today-sitting-reserved');
+    expect(held).toHaveLength(1);
+    expect(held[0]!.props.accessible).toBe(false);
+    expect(
+      hosts(r, 'today-masthead')[0]!.findAll((n) => n === held[0]),
+    ).toHaveLength(1);
+    // The read answers "no calendar": nothing on screen moves up.
+    await act(async () => calendarRead.answer(null));
+    expect(hosts(r, 'today-sitting-reserved')).toHaveLength(1);
+    expect(hosts(r, 'today-sitting')).toHaveLength(0);
+  });
+
+  test('a saved calendar that has no line holds no place', async () => {
+    setUp({ cached: { date: addDays(today, -1) } });
+    // Saved, and it cannot say (its coverage ended long ago).
+    mock.sittingDaysSaved.mockResolvedValue({
+      data: {
+        timezone: 'Australia/Sydney',
+        expires: '2001-01-01',
+        coverage: { first: '2000-01-01', last: '2000-12-31' },
+        days: [],
+        years: [],
+      },
+      stale: false,
+      savedAt: 1,
+    } as never);
+    mock.sittingDays.mockReturnValueOnce(new Promise(() => {}) as never);
+    const r = await render(<Today />);
+    expect(hosts(r, 'today-sitting-reserved')).toHaveLength(0);
+    expect(hosts(r, 'today-sitting')).toHaveLength(0);
+  });
+
   test('A: the edition’s slot holds its skeleton until a read answers, so the edition is not inserted above Bills', async () => {
     setUp({ seat: true, cached: { date: addDays(today, -1) } });
     mock.todayEdition.mockImplementation(() => new Promise(() => {}));

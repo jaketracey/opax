@@ -50,7 +50,7 @@ import { Masthead, useNow } from './today/Masthead';
 import { LearnCard, WithLearnCard } from './learn/LearnCard';
 import { loadLearnSettings } from './learn/settings';
 import { MoreToExplore } from './today/MoreToExplore';
-import { SittingLine, useSittingRead } from './today/SittingLine';
+import { SittingLine, useSitting } from './today/SittingLine';
 import {
   editionInSlot,
   launchCase,
@@ -192,8 +192,13 @@ function useLaunch(day: SydneyDate): Launch | null {
     : launch;
 }
 
-/** E2E captures only: the seat `OPAXSeat` names, chosen once per launch. */
-function useSeatFixture(seat: ReturnType<typeof useSeat>) {
+/**
+ * E2E captures only: the seat `OPAXSeat` names, chosen once per launch.
+ * Answers whether a House seat is still on its way from the launch
+ * arguments, so a capture of a first launch lays the page out for the seat
+ * it is about to have, as a launch with the seat saved does.
+ */
+function useSeatFixture(seat: ReturnType<typeof useSeat>): boolean {
   const done = useRef(false);
   useEffect(() => {
     const wanted = todayFixture().seat;
@@ -242,6 +247,11 @@ function useSeatFixture(seat: ReturnType<typeof useSeat>) {
       if (district) await seat.chooseState(district);
     })().catch(() => undefined);
   }, [seat]);
+  const wanted = todayFixture().seat;
+  return (
+    (wanted === 'federal' || wanted === 'federal+state') &&
+    (seat.status === 'loading' || seat.status === 'none')
+  );
 }
 
 /**
@@ -271,7 +281,7 @@ export default function Today() {
   const launch = useLaunch(day);
   const seat = useSeat();
   const savedChoice = useSavedChoice();
-  useSeatFixture(seat);
+  const seatArriving = useSeatFixture(seat);
   const directory = savedSeatDirectory();
   const [attempt, setAttempt] = useState(0);
   const [pulled, setPulled] = useState<number | null>(null);
@@ -305,8 +315,9 @@ export default function Today() {
   // Whether the page leads with Your MP: the seat once the directory has
   // answered, and until then the choice as the device saved it (null while
   // the disk is being read).
-  const seated =
-    seat.status !== 'loading'
+  const seated = seatArriving
+    ? true
+    : seat.status !== 'loading'
       ? !!home
       : savedChoice === undefined
         ? null
@@ -320,8 +331,11 @@ export default function Today() {
           today: launch.today,
         })
       : null;
-  // The cover lifts on the page in its order, not on an empty body.
-  const shaped = order !== null;
+  const calendar = useSitting(attempt);
+  const sitting = calendar.read;
+  // The cover lifts on the page in its order, not on an empty body, and
+  // with the saved sitting line (or its held place) already under the date.
+  const shaped = order !== null && calendar.settled;
   useEffect(() => {
     if (laidOut && shaped) releaseSplash('today');
   }, [laidOut, shaped]);
@@ -352,7 +366,6 @@ export default function Today() {
     wasOffline.current = offline;
     if (back && nothingSavedAt === attempt) retry();
   }, [offline, nothingSavedAt, attempt, retry]);
-  const sitting = useSittingRead(attempt);
 
   const electionSavedAt =
     election.record &&
@@ -391,7 +404,7 @@ export default function Today() {
         // The directory is on its way: the tile's skeleton holds its place,
         // with the guide card under it as on the loaded page.
         if (!home || !directory)
-          return seat.status === 'loading' ? (
+          return seat.status === 'loading' || seatArriving ? (
             <View key={name} style={styles.seats}>
               <YourMPPending />
               <LearnCard />
@@ -533,7 +546,9 @@ export default function Today() {
       <Masthead
         now={now}
         offlineSavedAt={offlineAt ?? null}
-        sitting={<SittingLine now={now} sitting={sitting} />}
+        sitting={
+          <SittingLine now={now} sitting={sitting} reserve={calendar.reserve} />
+        }
         // From the first frame, neutral until the seat read answers, so the
         // map's clearance never moves the date (sweep 3, item 1).
         mark={
