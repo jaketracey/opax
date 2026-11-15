@@ -527,6 +527,7 @@ export function ArchivePhotograph({
     <View testID={testID} style={styles.bars}>
       {image?.file === photograph.file && failed !== photograph.file ? (
         <Image
+          fadeDuration={0}
           source={{ uri: localImageURI(image.uri) }}
           accessibilityLabel={photograph.caption}
           accessibilityIgnoresInvertColors

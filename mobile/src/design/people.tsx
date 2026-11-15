@@ -103,6 +103,7 @@ export function Portrait({
     >
       {source ? (
         <Image
+          fadeDuration={0}
           source={{ uri: localImageURI(source) }}
           style={{ width: dimension, height: dimension }}
           resizeMode="contain"

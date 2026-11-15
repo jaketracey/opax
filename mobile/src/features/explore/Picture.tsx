@@ -122,6 +122,7 @@ export function Picture({
           style={[StyleSheet.absoluteFill, { opacity: ready ? reveal : 0 }]}
         >
           <Image
+            fadeDuration={0}
             key={identity}
             source={{ uri: localImageURI(uri) }}
             style={StyleSheet.absoluteFill}

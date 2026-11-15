@@ -18,6 +18,7 @@ export function AboutHeader({
   return (
     <View style={styles.header} testID="about-header">
       <Image
+        fadeDuration={0}
         source={require('../../../assets/icon/icon.png')}
         style={styles.icon}
         accessible={false}
