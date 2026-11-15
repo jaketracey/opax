@@ -859,6 +859,21 @@ function MapMode({
         : undefined);
   const topMaxHeight =
     limits?.topMaxHeight ?? (managed ? pose.topMaxHeight : undefined);
+  // The sentence's room in a capped card is what the pinned parts leave,
+  // which is no whole number of lines: its third line was cut through,
+  // right above the picker. The room is taken in whole lines, a line being
+  // the height of one as it is drawn at this text size (measured, since
+  // the system's type ramp is not the font scale). The card is the shorter
+  // by the part line, at one height; the rest of the sentence scrolls a
+  // line at a time, VoiceOver reads all of it, and the List shows it whole.
+  const [sentenceLine, setSentenceLine] = useState(0);
+  const sentenceRoom =
+    topMaxHeight !== undefined && pinnedBase ? topMaxHeight - pinnedBase : 0;
+  const sentenceMax =
+    sentenceLine > 0 && sentenceRoom > 0
+      ? Math.max(1, Math.floor((sentenceRoom + 0.5) / sentenceLine)) *
+        sentenceLine
+      : undefined;
   const insets = useMemo(
     () =>
       pose.folded
@@ -1167,6 +1182,7 @@ function MapMode({
   const headRef = useRef<View>(null);
   const pickerRef = useRef<View>(null);
   const probeRef = useRef<View>(null);
+  const lineRef = useRef<View>(null);
   const settleKey = `${window.width}x${window.height}x${window.fontScale}|${searchOpen}|${expanded}|${loaded}|${!!unavailable}|${resultsKey}`;
   const settle = useRef({ key: '', left: 0 });
   // Every commit, on purpose: a frame can change without a dependency
@@ -1216,6 +1232,15 @@ function MapMode({
         setPinned(next);
         changed = true;
       }
+    }
+    const lineFrame = frameOf(lineRef);
+    if (
+      lineFrame &&
+      lineFrame.height > 0 &&
+      lineFrame.height !== sentenceLine
+    ) {
+      setSentenceLine(lineFrame.height);
+      changed = true;
     }
     const probeFrame = probes ? frameOf(probeRef) : null;
     if (probeFrame) reportInset(Math.round(probeFrame.height));
@@ -1370,9 +1395,38 @@ function MapMode({
                 >
                   {head}
                 </View>
+                {/* One line of the sentence's type, laid out and never seen:
+                    its height is the line the sentence's room is cut to. */}
+                <View
+                  ref={lineRef}
+                  pointerEvents="none"
+                  accessibilityElementsHidden
+                  importantForAccessibility="no-hide-descendants"
+                  style={styles.lineProbe}
+                  onLayout={(event) => {
+                    const { height } = event.nativeEvent.layout;
+                    if (height > 0) setSentenceLine(height);
+                  }}
+                  testID="money-map-card-line"
+                >
+                  <Text wordSafe variant="secondary" numberOfLines={1}>
+                    {'\u00a0'}
+                  </Text>
+                </View>
                 <ScrollView
                   ref={topScroll}
-                  style={styles.topScroll}
+                  style={[
+                    styles.topScroll,
+                    sentenceMax === undefined
+                      ? null
+                      : { maxHeight: sentenceMax },
+                  ]}
+                  snapToInterval={
+                    sentenceMax === undefined ? undefined : sentenceLine
+                  }
+                  decelerationRate={
+                    sentenceMax === undefined ? undefined : 'fast'
+                  }
                   contentContainerStyle={styles.cardScroll}
                   onContentSizeChange={(_w, h) =>
                     // The sentence's room: the cap less the pinned parts.
@@ -1854,6 +1908,7 @@ const styles = StyleSheet.create({
   unavailable: { flexGrow: 1, justifyContent: 'center', padding: rhythm.block },
   // Laid out, never seen or read: it keeps the place of words still to come.
   unseen: { opacity: 0 },
+  lineProbe: { position: 'absolute', left: 0, top: 0, opacity: 0 },
   bandProbe: { position: 'absolute', left: 0, bottom: 0, width: 1, opacity: 0 },
   grow: { flex: 1 },
   panelHost: { width: '100%' },

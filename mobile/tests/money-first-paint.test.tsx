@@ -484,6 +484,54 @@ describe('the card at large text', () => {
     await act(async () => r.unmount());
   });
 
+  test('the sentence’s room is a whole number of its lines: none is cut through above the picker', async () => {
+    const r = await render();
+    act(() =>
+      byTestID(r.root, 'money-screen').props.onLayout({
+        nativeEvent: { layout: { width: 402, height: 758 } },
+      }),
+    );
+    let top = byTestID(r.root, 'money-map-card').parent!;
+    while (flat(top).maxHeight === undefined) top = top.parent!;
+    // The sweep's frames (iPhone 17 Pro, AX3): the jurisdiction 62 pt, the
+    // picker 114 pt, a line of the sentence 43.25 pt.
+    act(() => {
+      byTestID(r.root, 'money-map-card-head').props.onLayout({
+        nativeEvent: { layout: { height: 62 } },
+      });
+      byTestID(r.root, 'money-map-card-picker').props.onLayout({
+        nativeEvent: { layout: { height: 114 } },
+      });
+      byTestID(r.root, 'money-map-card-line').props.onLayout({
+        nativeEvent: { layout: { height: 43.25 } },
+      });
+    });
+    const room =
+      (flat(top).maxHeight as number) -
+      62 -
+      114 -
+      (rhythm.tight * 3 + rhythm.block * 2 + hairline * 2);
+    const scroll = byTestID(r.root, 'money-map-card-scroll');
+    const height = flat(scroll).maxHeight as number;
+    const lines = height / 43.25;
+    expect(lines).toBe(Math.floor(room / 43.25));
+    expect(lines).toBeGreaterThanOrEqual(1);
+    // Not the whole of the room: the part line is given up, not shown.
+    expect(room % 43.25).toBeGreaterThan(1);
+    expect(height).toBeLessThan(room);
+    // It scrolls a line at a time, and the whole sentence is still in it
+    // for VoiceOver.
+    expect(scroll.props.snapToInterval).toBe(43.25);
+    expect(
+      scroll.findAll((n) => n.props.testID === 'money-view-summary').length,
+    ).toBeGreaterThan(0);
+    // The line it is measured by is never read out.
+    expect(
+      byTestID(r.root, 'money-map-card-line').props.accessibilityElementsHidden,
+    ).toBe(true);
+    await act(async () => r.unmount());
+  });
+
   const gaps = rhythm.tight * 3 + rhythm.block * 2 + hairline * 2;
   const line =
     textStyles.secondary.lineHeight *
