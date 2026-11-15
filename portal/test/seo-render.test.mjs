@@ -399,7 +399,9 @@ test('built SSR pages for every route type expose one canonical, factual content
     assert.doesNotMatch(html,/href="(?:https:\/\/opax\.com\.au)?\/(?:search|home)(?:[?"#])/i,path);
     const text=html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/g,'').replace(/<[^>]+>/g,' ').trim();
     assert.ok(text.length>100,path);
-    assert.doesNotMatch(text,/linked to/i,path);
+    // No association wording ("X is linked to Y"). /privacy may say data is "not linked to you":
+    // that is the App Store's own label term (Data Not Linked to You), not an association.
+    assert.doesNotMatch(text,/linked to(?! you\b)/i,path);
     for(const match of html.matchAll(/(?:href|content)="((?:https?:\/\/(?:www\.)?opax\.com\.au)?\/subject\/(person|party)\/[^"?#]+)[^"]*"/g)) {
       const slug=match[1].split('/').at(-1);
       assert.match(slug,/^[a-z0-9]+(?:-[a-z0-9]+)*$/,path+' '+match[1]);
