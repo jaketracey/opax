@@ -11,8 +11,11 @@ import {
   type NativeStackHeaderItem,
 } from 'expo-router';
 import {
+  createRef,
   useCallback,
+  useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -25,12 +28,14 @@ import {
   Platform,
   RefreshControl,
   StyleSheet,
+  useWindowDimensions,
   View,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
   type TextLayoutEvent,
   type ViewToken,
 } from 'react-native';
+import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { billName } from '../../api/bill-transforms';
 import { billsFor } from '../../api/catalogs';
 import { ApiError } from '../../api/errors';
@@ -71,6 +76,7 @@ import {
   rootHeaderItems,
 } from '../../navigation/chrome';
 import { billRoute } from '../../navigation/routes';
+import { frameOf } from '../money/map/measure';
 import { divisionHistoryRoute } from '../../navigation/routes/bills';
 import { filtersRoute } from '../../navigation/routes/filters';
 import { resultsRoute } from '../../navigation/routes/search';
@@ -715,7 +721,7 @@ const MenuRow = PopUpButton as unknown as ComponentType<
   ComponentProps<typeof PopUpButton<BillScope>> & { row: true }
 >;
 
-function ScopeControl({
+export function ScopeControl({
   value,
   onChange,
 }: {
@@ -728,12 +734,42 @@ function ScopeControl({
     const w = Math.max(0, ...event.nativeEvent.lines.map((l) => l.width));
     setWidest((old) => (old[key] === w ? old : { ...old, [key]: w }));
   };
+  // The choice between segments and the menu row hangs on these widths. Read
+  // in a layout effect they are in state before the first frame, so the list
+  // never opens on segments and then swaps them for the row. The layout
+  // events still follow, for a later change of width or text size.
+  const box = useRef<View>(null);
+  const [probes] = useState(() => scopes.map(() => createRef<View>()));
+  useLayoutEffect(() => {
+    const frame = frameOf(box);
+    if (frame?.width) setWidth(frame.width);
+    const read: Record<string, number> = {};
+    scopes.forEach((s, i) => {
+      const text = frameOf(probes[i]!);
+      if (text) read[s.value] = text.width;
+    });
+    if (Object.keys(read).length)
+      setWidest((old) =>
+        scopes.every((s) => old[s.value] !== undefined)
+          ? old
+          : { ...read, ...old },
+      );
+  }, [probes]);
   const measured = scopes.every((s) => widest[s.value] !== undefined);
+  // A tab laid out before it is shown has no side insets yet: beside the
+  // closed Duo's rail the list was measured 84 pt too wide, opened on
+  // segments, and swapped them for the row a frame after the insets came.
+  // A width wider than the window has room for is that case, and the insets
+  // are taken off it here, so the first frame shown is the final control.
+  const window = useWindowDimensions();
+  const insets = useContext(SafeAreaInsetsContext);
+  const sides = (insets?.left ?? 0) + (insets?.right ?? 0);
+  const room = width > window.width - sides ? width - sides : width;
   const fits =
     Platform.OS !== 'ios' ||
     !measured ||
-    !width ||
-    Math.max(...scopes.map((s) => widest[s.value]!)) + 24 <= width / 3;
+    !room ||
+    Math.max(...scopes.map((s) => widest[s.value]!)) + 24 <= room / 3;
   const options = scopes.map((s) => ({
     ...s,
     testID: `bills-scope-${s.value}`,
@@ -749,22 +785,23 @@ function ScopeControl({
       />
     );
   return (
-    <View onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
+    <View ref={box} onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
       <View
         pointerEvents="none"
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
         style={styles.probe}
       >
-        {scopes.map((s) => (
-          <Text
-            key={s.value}
-            variant="footnote"
-            style={styles.probeText}
-            onTextLayout={measure(s.value)}
-          >
-            {s.label}
-          </Text>
+        {scopes.map((s, i) => (
+          <View key={s.value} ref={probes[i]} collapsable={false}>
+            <Text
+              variant="footnote"
+              style={styles.probeText}
+              onTextLayout={measure(s.value)}
+            >
+              {s.label}
+            </Text>
+          </View>
         ))}
       </View>
       {fits ? (
@@ -827,7 +864,14 @@ const styles = StyleSheet.create({
   },
   countStacked: { flexDirection: 'column', alignItems: 'flex-start' },
   grow: { flexGrow: 1, flexShrink: 1 },
-  probe: { position: 'absolute', opacity: 0, left: 0, top: 0 },
+  // Each label keeps its own width: stretched, all would read as the widest.
+  probe: {
+    position: 'absolute',
+    opacity: 0,
+    left: 0,
+    top: 0,
+    alignItems: 'flex-start',
+  },
   probeText: { fontWeight: '600' },
   paneActions: { flexDirection: 'row', alignItems: 'center' },
 });
