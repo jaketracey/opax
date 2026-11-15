@@ -3,7 +3,7 @@ import {mountContractsTable} from './contracts-table.js?v=9ce0addeb6';
 /* Supplier entries: recorded procurement, source notices and funding cross-links.
    No dependencies but the shared formats; the host router owns mounting and calls destroy on departure. */
 import { shortDate, shortMoney } from "./format.js";
-import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=7002342374";
+import { mountSupplierGrowth, supplierDonations } from "./supplier-growth.js?v=7cbc68f1bd";
 import { sourceLineHTML } from "./labels.js?v=fcb2a1091c";
 import { partyUrl } from "./canonical-urls.js?v=9ce13e7ba5";
 import { receiptGraph, receiptGraphScope } from "./donor-disclosure.js?v=d28448a137";

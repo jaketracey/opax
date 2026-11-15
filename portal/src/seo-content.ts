@@ -281,7 +281,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
   // The notes on what the speech count leaves out sit with the speeches, never in the head.
   body += noHansardHeldHTML(p) + heldBackTranscriptsHTML(p.pid, heldBackCounts) + chairRoleTranscriptsHTML(p.pid, chairRoleCounts)
   // The Senate's own video of a first speech, matched to this roster row by the fetcher; nothing when there is none.
-  body += videoSectionHTML('First speech',personVideos(video?.videos,slugs.get(p.name),p),{id:'ssr-first-speech',note:'Video published by the Senate Public Information Office on YouTube.',after:`<p class="video-more">${link('/video/senate?kind=first-speech','All first speeches')}</p>`})
+  body += videoSectionHTML('First speech',personVideos(video?.videos,slugs.get(p.name),p),{id:'ssr-first-speech',after:`<p class="video-more">${link('/video/senate?kind=first-speech','All first speeches')}</p>`})
   if (!p.speech_scope) {
     const {keys, voteData} = await personVotesFor(read,p)
     const {rows, recorded: hasRecent} = personVoteRecords(keys,voteData,await recentVotesFor(read,keys))
