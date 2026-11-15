@@ -10,9 +10,10 @@ import * as measure from '../src/features/money/map/measure';
 // control and swapped it for the "Showing" row a frame later. The first
 // frame is now the control the list settles on.
 
+let mockBarEdge: 'unspecified' | 'trailing' = 'trailing';
 jest.mock('../modules/opax-root-bar', () => ({
   RootBar: null,
-  useVerticalBarEdge: () => 'trailing',
+  useVerticalBarEdge: () => mockBarEdge,
 }));
 jest.mock('expo-router', () => ({
   useIsPreview: () => false,
@@ -38,24 +39,25 @@ beforeEach(() => {
     .mockReturnValue({ width: 466, height: 678, scale: 3, fontScale: 1 });
 });
 afterEach(() => {
+  mockBarEdge = 'trailing';
   jest.restoreAllMocks();
 });
 
 describe("the Bills list's scope control", () => {
   /** The control's own width, then each label's, as read before paint. */
-  function frames(width: number) {
-    const read = [width, 113, 46, 16];
+  function frames(width: number, widest = 113) {
+    const read = [width, widest, 46, 16];
     let call = 0;
     jest
       .spyOn(measure, 'frameOf')
       .mockImplementation(() => ({ width: read[call++ % 4]!, height: 18 }));
   }
-  function open(right: number) {
+  function open(right: number, left = 0) {
     let renderer!: TestRenderer.ReactTestRenderer;
     act(() => {
       renderer = TestRenderer.create(
         <SafeAreaInsetsContext.Provider
-          value={{ top: 0, bottom: 0, left: 0, right }}
+          value={{ top: 0, bottom: 0, left, right }}
         >
           <ScopeControl value="before" onChange={() => undefined} />
         </SafeAreaInsetsContext.Provider>,
@@ -79,5 +81,17 @@ describe("the Bills list's scope control", () => {
     expect(open(0)).toBe('segments');
     frames(342);
     expect(open(84)).toBe('row');
+  });
+
+  test('an iPhone in landscape keeps the width it measured: content runs under its side insets', () => {
+    // 874 pt wide with 59 pt insets each side. The list is 834 pt, a third
+    // of which holds a 230 pt label; 118 pt less would not, and Bills at a
+    // larger text size showed the row where its segments fit.
+    mockBarEdge = 'unspecified';
+    jest
+      .mocked(useWindowDimensions)
+      .mockReturnValue({ width: 874, height: 402, scale: 3, fontScale: 1 });
+    frames(834, 230);
+    expect(open(59, 59)).toBe('segments');
   });
 });

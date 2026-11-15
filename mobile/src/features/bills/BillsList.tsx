@@ -756,14 +756,17 @@ export function ScopeControl({
       );
   }, [probes]);
   const measured = scopes.every((s) => widest[s.value] !== undefined);
-  // A tab laid out before it is shown has no side insets yet: beside the
-  // closed Duo's rail the list was measured 84 pt too wide, opened on
-  // segments, and swapped them for the row a frame after the insets came.
-  // A width wider than the window has room for is that case, and the insets
-  // are taken off it here, so the first frame shown is the final control.
+  // A list laid out before it is shown has no side insets yet: beside the
+  // closed Duo's rail it was measured 84 pt too wide, opened on segments,
+  // and swapped them for the row a frame after the insets came. There a
+  // width wider than the window has room for has the insets taken off it,
+  // so the first frame shown is the final control. Only beside the rail:
+  // an iPhone in landscape runs its content under the side insets, and its
+  // width is the room the segments have.
   const window = useWindowDimensions();
   const insets = useContext(SafeAreaInsetsContext);
-  const sides = (insets?.left ?? 0) + (insets?.right ?? 0);
+  const rail = useVerticalBarEdge() !== 'unspecified';
+  const sides = rail ? (insets?.left ?? 0) + (insets?.right ?? 0) : 0;
   const room = width > window.width - sides ? width - sides : width;
   const fits =
     Platform.OS !== 'ios' ||
