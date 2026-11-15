@@ -50,6 +50,12 @@ import { Masthead, useNow } from './today/Masthead';
 import { LearnCard, WithLearnCard } from './learn/LearnCard';
 import { loadLearnSettings } from './learn/settings';
 import { MoreToExplore } from './today/MoreToExplore';
+import {
+  readTodayShape,
+  rememberTodayShape,
+  shapeKey,
+  type TodayShape,
+} from './today/shape-store';
 import { SittingLine, useSitting } from './today/SittingLine';
 import {
   editionInSlot,
@@ -69,6 +75,7 @@ import { VotesBlock } from './today/VotesBlock';
 import {
   StateSeatCard,
   stateSeatFor,
+  StateSeatPending,
   YourMPCard,
   YourMPPending,
 } from './today/YourMPCard';
@@ -95,6 +102,8 @@ interface Launch {
   today: SydneyDate;
   launchCase: LaunchCase;
   invitation: InvitationDates;
+  /** The lead's shape as the last launch left it (shape-store). */
+  shape: TodayShape | null;
 }
 
 /**
@@ -135,18 +144,25 @@ function useLaunch(day: SydneyDate): Launch | null {
         overrideInvitationDates({ welcomeDeclinedAt: declined });
       // The guide card's setting is read with the dates, so the card is in
       // the page's first frame and is not inserted above the edition later.
-      const [invitation] = await Promise.all([
+      const [invitation, shape] = await Promise.all([
         readInvitationDates(),
+        readTodayShape(),
         loadLearnSettings().catch(() => undefined),
       ]);
       if (active)
-        setLaunch({ today, launchCase: launchCase(cached, today), invitation });
+        setLaunch({
+          today,
+          launchCase: launchCase(cached, today),
+          invitation,
+          shape,
+        });
     })().catch(() => {
       if (active)
         setLaunch({
           today: day,
           launchCase: 'C',
           invitation: { hiddenUntil: null, welcomeDeclinedAt: null },
+          shape: null,
         });
     });
     return () => {
@@ -313,16 +329,54 @@ export default function Today() {
   // copies in idle time while Today has focus (PF2).
   useProfilePreload(apiClient, ready, useScreenFocus, keepCatalog);
 
+  // The lead as the last launch left it for this same saved choice. A
+  // choice kept from 1.0 can name a Senate or a state seat, which is not a
+  // House seat once the directory has migrated it: the kept shape says so
+  // before the directory does, so the page is not reordered each launch.
+  const kept =
+    savedChoice && launch?.shape?.key === shapeKey(savedChoice)
+      ? launch.shape
+      : null;
   // Whether the page leads with Your MP: the seat once the directory has
-  // answered, and until then the choice as the device saved it (null while
-  // the disk is being read).
+  // answered, and until then the kept shape, or with none the choice as the
+  // device saved it (null while the disk is being read).
   const seated = seatArriving
     ? true
     : seat.status !== 'loading'
       ? !!home
       : savedChoice === undefined
         ? null
-        : !!savedChoice?.seatId;
+        : (kept?.house ?? !!savedChoice?.seatId);
+  // The state seat card's place is held while the directory is read.
+  const stateSeatPending = seat.status === 'loading' && !!kept?.state;
+  const stateSeatDrawn =
+    !!home &&
+    !!directory &&
+    !!stateSeatFor(directory, choice?.stateSeatIds ?? [], launch?.today ?? day);
+  const settledKey =
+    (seat.status === 'chosen' || seat.status === 'none') &&
+    directory &&
+    // No saved choice needs no shape: the page has no lead to predict.
+    savedChoice
+      ? shapeKey(savedChoice)
+      : null;
+  const launchShape = launch?.shape;
+  const launched = !!launch;
+  const leads = !!home;
+  useEffect(() => {
+    if (settledKey === null || !launched) return;
+    if (
+      launchShape?.key === settledKey &&
+      launchShape.house === leads &&
+      launchShape.state === stateSeatDrawn
+    )
+      return;
+    void rememberTodayShape({
+      key: settledKey,
+      house: leads,
+      state: stateSeatDrawn,
+    });
+  }, [settledKey, leads, stateSeatDrawn, launched, launchShape]);
   const order =
     launch && seated !== null
       ? todayOrder({
@@ -334,6 +388,10 @@ export default function Today() {
       : null;
   const calendar = useSitting(attempt);
   const sitting = calendar.read;
+  // A held, empty sitting line is given back while Today is out of view
+  // (another page over it, another tab), where nothing is seen to move.
+  const [visit, setVisit] = useState(0);
+  useScreenFocus(useCallback(() => () => setVisit((n) => n + 1), []));
   // The cover lifts on the page in its order, not on an empty body, and
   // with the saved sitting line (or its held place) already under the date.
   const shaped = order !== null && calendar.settled;
@@ -407,7 +465,10 @@ export default function Today() {
         if (!home || !directory)
           return seat.status === 'loading' || seatArriving ? (
             <View key={name} style={styles.seats}>
-              <YourMPPending />
+              <SurfaceGrid testID="today-seat-grid">
+                <YourMPPending />
+                {stateSeatPending ? <StateSeatPending /> : null}
+              </SurfaceGrid>
               <LearnCard />
             </View>
           ) : null;
@@ -548,7 +609,12 @@ export default function Today() {
         now={now}
         offlineSavedAt={offlineAt ?? null}
         sitting={
-          <SittingLine now={now} sitting={sitting} reserve={calendar.reserve} />
+          <SittingLine
+            key={visit}
+            now={now}
+            sitting={sitting}
+            reserve={calendar.reserve}
+          />
         }
         // From the first frame, neutral until the seat read answers, so the
         // map's clearance never moves the date (sweep 3, item 1).
