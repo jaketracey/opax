@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import {
   AccessibilityInfo,
   Dimensions,
+  InteractionManager,
   Platform,
   StyleSheet,
   TextInput,
@@ -14,8 +15,10 @@ import { AskColumns } from '../src/features/ask/AskLayout';
 import { billScopeCopy } from '../src/features/ask/AskBillScope';
 import { client } from '../src/api/runtime';
 import {
+  billKeyPattern,
   chips,
   clearChip,
+  decodeChat,
   decodeOptions,
   defaultOptions,
   requestBody,
@@ -160,6 +163,8 @@ const answer = {
     },
   ],
 };
+// The Worker echoes the bill it kept a scoped answer to.
+const billAnswer = { ...answer, scope: { bill: 'au-federal-s9999' } };
 
 let view: ReactTestRenderer | null = null;
 const os = Object.getOwnPropertyDescriptor(Platform, 'OS')!;
@@ -255,6 +260,51 @@ describe('the request and the saved copy', () => {
         bill: '',
         billName: '',
       });
+  });
+
+  test('a key is 2 to 120 characters, as the Worker takes it', () => {
+    expect(billKeyPattern.test('a')).toBe(false);
+    expect(billKeyPattern.test('ab')).toBe(true);
+    expect(billKeyPattern.test(`a${'b'.repeat(119)}`)).toBe(true);
+    expect(billKeyPattern.test(`a${'b'.repeat(120)}`)).toBe(false);
+  });
+
+  test('a copy restored from the account, which carries no options, is still the bill’s conversation', () => {
+    const restored = decodeChat({
+      id: 'restored-fixture',
+      title: `${bill.name}: What does it change?`,
+      kind: 'all',
+      created: 1,
+      updated: 2,
+      thread: [
+        { role: 'user', text: 'What does it change?' },
+        {
+          role: 'answer',
+          text: 'A fixture answer.',
+          sources: [],
+          scope: { bill: bill.key },
+        },
+      ],
+    })!;
+    expect(restored.options).toMatchObject({
+      bill: bill.key,
+      billName: bill.name,
+    });
+    expect(restored.thread[0]!.options).toMatchObject({ bill: bill.key });
+    expect(titleFor(restored.thread)).toBe(restored.title);
+    // An ordinary restored conversation gains nothing.
+    const plain = decodeChat({
+      id: 'restored-plain',
+      title: 'What does it change?',
+      kind: 'all',
+      created: 1,
+      updated: 2,
+      thread: [
+        { role: 'user', text: 'What does it change?' },
+        { role: 'answer', text: 'A fixture answer.', sources: [] },
+      ],
+    })!;
+    expect(plain.options).toMatchObject({ bill: '', billName: '' });
   });
 
   test('the chip names the bill, and clearing it clears both fields', () => {
@@ -411,9 +461,9 @@ describe('arriving from a bill', () => {
   test('a question is sent with the bill’s key and saved under the bill’s title; follow-ups stay scoped', async () => {
     jest
       .mocked(client.askPost)
-      .mockResolvedValueOnce(answer)
+      .mockResolvedValueOnce(billAnswer)
       .mockResolvedValueOnce({ questions: [] })
-      .mockResolvedValueOnce(answer)
+      .mockResolvedValueOnce(billAnswer)
       .mockResolvedValueOnce({ questions: [] });
     await tapAsk();
     await mount();
@@ -444,6 +494,139 @@ describe('arriving from a bill', () => {
     expect(asks()[1]![1]).toMatchObject({
       question: 'And who?',
       bill: bill.key,
+    });
+  });
+
+  test('the keyboard comes up as Ask opens', async () => {
+    const focus = jest
+      .spyOn(TextInput.prototype, 'focus')
+      .mockImplementation(() => undefined);
+    jest.spyOn(InteractionManager, 'runAfterInteractions').mockImplementation(((
+      task: () => void,
+    ) => {
+      task();
+      return { cancel: () => undefined };
+    }) as never);
+    jest.spyOn(global, 'requestAnimationFrame').mockImplementation((frame) => {
+      frame(0);
+      return 0;
+    });
+    await tapAsk();
+    await mount();
+    expect(focus).toHaveBeenCalled();
+    expect(one('ask-question').props.value).toBe('');
+  });
+
+  test('a link that repeats a parameter opens Ask without the repeated value', async () => {
+    (useLocalSearchParams as jest.Mock).mockReturnValue({
+      entry: 'repeated-fixture-entry',
+      question: ['a', 'b'],
+      bill: bill.key,
+      billName: ['a', 'b'],
+    });
+    await mount();
+    expect(one('ask-question').props.value).toBe('');
+    expect(askSession.composerOptions()).toMatchObject({
+      bill: bill.key,
+      billName: '',
+    });
+    expect(hosts('ask-bill-chip-name')[0]!.props.accessibilityLabel).toBe(
+      'Bill, This bill',
+    );
+  });
+
+  test('an answer the Worker did not keep to the bill drops the chip and the bill from the title', async () => {
+    jest
+      .mocked(client.askPost)
+      .mockResolvedValueOnce(answer)
+      .mockResolvedValueOnce({ questions: [] })
+      .mockResolvedValueOnce(answer)
+      .mockResolvedValueOnce({ questions: [] });
+    await tapAsk();
+    await mount();
+    await act(async () =>
+      one('ask-question').props.onChangeText('What does it change?'),
+    );
+    await act(async () => {
+      await one('ask-submit').props.onPress();
+    });
+    // Nothing is blocked: the answer is there, without the bill's framing.
+    expect(hosts('ask-answer')).toHaveLength(1);
+    expect(byId('ask-bill-chip')).toEqual([]);
+    expect(askSession.snapshot().options).toEqual(defaultOptions);
+    expect(askSession.snapshot().thread.map((m) => m.options?.bill)).toEqual([
+      '',
+      '',
+    ]);
+    const saved = jest.mocked(saveChats).mock.calls.at(-1)![0];
+    expect(saved.chats[0]!.title).toBe('What does it change?');
+    await act(async () => one('ask-question').props.onChangeText('And who?'));
+    await act(async () => {
+      await one('ask-submit').props.onPress();
+    });
+    const second = jest
+      .mocked(client.askPost)
+      .mock.calls.filter(([path]) => path === '/api/ask?stream=1')[1]![1];
+    expect(second).not.toHaveProperty('bill');
+  });
+
+  test('× in the middle of a conversation: later questions go to every record, and the title stays', async () => {
+    jest
+      .mocked(client.askPost)
+      .mockResolvedValueOnce(billAnswer)
+      .mockResolvedValueOnce({ questions: [] })
+      .mockResolvedValueOnce(answer)
+      .mockResolvedValueOnce({ questions: [] });
+    await tapAsk();
+    await mount();
+    await act(async () =>
+      one('ask-question').props.onChangeText('What does it change?'),
+    );
+    await act(async () => {
+      await one('ask-submit').props.onPress();
+    });
+    await act(async () => one('ask-bill-chip-clear').props.onPress());
+    expect(byId('ask-bill-chip')).toEqual([]);
+    // The conversation stays open: this is not a return to the idle page.
+    expect(askSession.snapshot().thread).toHaveLength(2);
+    await act(async () => one('ask-question').props.onChangeText('And who?'));
+    await act(async () => {
+      await one('ask-submit').props.onPress();
+    });
+    const second = jest
+      .mocked(client.askPost)
+      .mock.calls.filter(([path]) => path === '/api/ask?stream=1')[1]![1];
+    expect(second).toMatchObject({ question: 'And who?' });
+    expect(second).not.toHaveProperty('bill');
+    const saved = jest.mocked(saveChats).mock.calls.at(-1)![0];
+    expect(saved.chats[0]!.title).toBe(`${bill.name}: What does it change?`);
+  });
+
+  test('× on a scope that waits for a running answer ends the arrival: the next send is a follow-up', async () => {
+    let finish!: (value: unknown) => void;
+    jest.mocked(client.askPost).mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        }),
+    );
+    await mount();
+    let running!: Promise<void>;
+    await act(async () => {
+      running = askSession.submit('A running fixture question?');
+    });
+    await act(async () => arriveInBillAsk({ question: '', ...scopedBill }));
+    expect(askSession.snapshot().fresh).toBe(true);
+    await act(async () => one('ask-bill-chip-clear').props.onPress());
+    expect(askSession.snapshot()).toMatchObject({
+      fresh: false,
+      freshOptions: null,
+    });
+    expect(byId('ask-bill-chip')).toEqual([]);
+    jest.mocked(client.askPost).mockResolvedValue({ questions: [] });
+    await act(async () => {
+      finish(answer);
+      await running;
     });
   });
 

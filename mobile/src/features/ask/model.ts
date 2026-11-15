@@ -30,8 +30,11 @@ export const defaultOptions: AskOptions = {
   bill: '',
   billName: '',
 };
-/** A bill key as the bill pages use it: "au-federal-r7531". */
-export const billKeyPattern = /^[a-z][a-z0-9-]{0,199}$/;
+/**
+ * A bill key as the bill pages use it: "au-federal-r7531". The same pattern
+ * the Worker accepts for `bill` (portal/src/ask-bill-scope.ts).
+ */
+export const billKeyPattern = /^[a-z][a-z0-9-]{1,119}$/;
 export function decodeOptions(raw: unknown): AskOptions {
   const v = object(raw),
     out = { ...defaultOptions };
@@ -508,6 +511,30 @@ export function decodeChat(raw: unknown): Chat | null {
     thread.push(turn);
   }
   while (thread.at(-1)?.role === 'user') thread.pop();
+  // A copy from the account carries no options. Its answers keep the scope
+  // the Worker applied, so a bill's conversation is still that bill's: the
+  // key from the last answer, the short title from the front of the title.
+  const applied = thread.findLast((m) => m.role === 'answer')?.result?.scope
+    ?.bill;
+  const kept = object(c.options);
+  if (applied && typeof kept.bill !== 'string') {
+    const asked = cut(
+      thread
+        .find((m) => m.role === 'user')
+        ?.text.replace(/\s+/g, ' ')
+        .trim() || '',
+      90,
+    );
+    const title = str(c.title);
+    const billName =
+      asked && title.endsWith(`: ${asked}`)
+        ? title.slice(0, -asked.length - 2)
+        : '';
+    for (const m of thread)
+      if (m.options && !m.options.bill)
+        m.options = { ...m.options, bill: applied, billName };
+    c.options = { ...kept, bill: applied, billName };
+  }
   return {
     id: c.id,
     title: str(c.title) || titleFor(thread),

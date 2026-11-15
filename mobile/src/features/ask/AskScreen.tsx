@@ -192,7 +192,11 @@ export default function AskScreen() {
   // A deep link's draft (useOpenAsk handles taps inside the app itself).
   useEffect(() => {
     if (!params.entry) return;
-    const scope: AskScope = { question: params.question ?? '' };
+    // A link can repeat a parameter, which arrives as a list: only a single
+    // string is a value.
+    const scope: AskScope = {
+      question: typeof params.question === 'string' ? params.question : '',
+    };
     for (const k of [
       'speaker',
       'party',
@@ -204,7 +208,7 @@ export default function AskScreen() {
       'bill',
       'billName',
     ] as const)
-      if (params[k]) scope[k] = params[k];
+      if (typeof params[k] === 'string' && params[k]) scope[k] = params[k];
     if (scope.question.trim()) arriveInAsk(scope, params.entry);
     // A bill's Ask arrives blank and was handled at its tap.
     else if (

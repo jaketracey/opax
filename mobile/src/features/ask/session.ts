@@ -71,7 +71,10 @@ export function scopeOptions(scope: Partial<AskScope>): AskOptions {
   o.kind = scope.kind === 'speech' ? 'speech' : 'all';
   if (typeof scope.bill === 'string' && billKeyPattern.test(scope.bill)) {
     o.bill = scope.bill;
-    o.billName = (scope.billName ?? '').trim();
+    o.billName =
+      typeof scope.billName === 'string'
+        ? scope.billName.trim().slice(0, 300)
+        : '';
   }
   return o;
 }

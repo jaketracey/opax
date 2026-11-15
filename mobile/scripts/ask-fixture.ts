@@ -213,12 +213,18 @@ export async function askFixture(
     )
       break;
     let next = block;
+    // The Worker echoes the bill a scoped ask was kept to.
+    if (typeof input.bill === 'string' && block.startsWith('event: done')) {
+      const data = JSON.parse(block.slice(block.indexOf('data: ') + 6));
+      data.scope = { ...data.scope, bill: input.bill };
+      next = 'event: done\ndata: ' + JSON.stringify(data);
+    }
     if (
       Array.isArray(input.context) &&
       input.context.length &&
       block.startsWith('event: done')
     ) {
-      const data = JSON.parse(block.slice(block.indexOf('data: ') + 6));
+      const data = JSON.parse(next.slice(next.indexOf('data: ') + 6));
       data.asked_as =
         'Who spoke for and against the Interactive Gambling (Cost Recovery Levy) Bill 2026?';
       next = 'event: done\ndata: ' + JSON.stringify(data);

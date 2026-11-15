@@ -1,5 +1,6 @@
 import { phoneCopy } from '../../design/phone-copy';
 import {
+  clearChip,
   decodeAnswer,
   decodeFollowups,
   defaultOptions,
@@ -560,6 +561,16 @@ export class AskController {
         });
         return;
       }
+      // The Worker says which bill it kept to (`scope.bill`). Without that
+      // the answer used every record: this turn and the conversation stop
+      // saying they are about the bill. The answer is shown as any other.
+      const scoped = !o.bill || data.scope?.bill === o.bill;
+      const used = scoped ? o : clearChip(o, 'bill');
+      if (!scoped) {
+        user.options = used;
+        if (this.state.options.bill === o.bill)
+          this.update({ options: clearChip(this.state.options, 'bill') });
+      }
       if (data.asked_as?.trim() && data.asked_as.trim() !== q)
         user.askedAs = data.asked_as.trim();
       if (data.money_ranking && data.money_question)
@@ -569,7 +580,7 @@ export class AskController {
         text: data.answer,
         sources: data.sources,
         result: data,
-        options: o,
+        options: used,
         at: this.io.now(),
         ...(carry?.evidence ? { carried: { source: carry.source || '' } } : {}),
       };

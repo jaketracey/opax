@@ -137,6 +137,12 @@ export function AskDock({
   const billTag =
     Platform.OS === 'ios' ? allTags.find((tag) => tag.id === 'bill') : null;
   const tags = billTag ? allTags.filter((tag) => tag !== billTag) : allTags;
+  // A bill's × on an arrival that waits for a running answer ends the
+  // arrival too: what is typed next is a follow-up, not a new conversation.
+  const clearTag = (id: (typeof allTags)[number]['id']) => {
+    if (id === 'bill' && s.fresh) askSession.clearFresh();
+    else askSession.options(clearChip(options, id));
+  };
   const placeholder = options.bill
     ? billScopeCopy.placeholder
     : composerCopy.placeholder;
@@ -209,7 +215,7 @@ export function AskDock({
         <BillScopeChip
           name={billTag.value}
           disabled={locked}
-          onClear={() => askSession.options(clearChip(options, 'bill'))}
+          onClear={() => clearTag('bill')}
         />
       ) : null}
       {Platform.OS === 'android' && line ? (
@@ -244,7 +250,7 @@ export function AskDock({
                   accessibilityLabel={`Remove ${tag.key}, ${tag.value}`}
                   disabled={s.busy && !s.fresh}
                   accessibilityState={{ disabled: s.busy && !s.fresh }}
-                  onPress={() => askSession.options(clearChip(options, tag.id))}
+                  onPress={() => clearTag(tag.id)}
                   android_ripple={{ color: colors.dividerSubtle }}
                   style={({ pressed }) => chipStyle(pressed)}
                   testID={`ask-option-remove-${tag.id}`}
