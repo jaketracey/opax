@@ -39,6 +39,15 @@ import { pinned } from './pinned';
 import { track } from '../src/analytics';
 import * as rootBar from '../modules/opax-root-bar';
 
+// The switch between the views fades through (tests/fade-through.test.tsx);
+// here a choice is applied at once, so these cases read the views directly.
+jest.mock('../src/design/fade-through', () => ({
+  FadeThroughHost: ({ children }: { children: unknown }) => children,
+  useFadeThrough: (apply: (next: unknown) => void) => ({
+    target: null,
+    choose: apply,
+  }),
+}));
 jest.mock('../src/api/runtime', () => ({ apiClient: { get: jest.fn() } }));
 jest.mock('../src/analytics', () => ({
   ...jest.requireActual('../src/analytics'),

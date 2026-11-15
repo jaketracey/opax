@@ -25,6 +25,15 @@ import { filterFacetRoute } from '../src/navigation/routes/filters';
 import { filtersScreens } from '../src/navigation/stack/filters';
 import { pinned } from './pinned';
 
+// The switch between the views fades through (tests/fade-through.test.tsx);
+// here a choice is applied at once, so these cases read the views directly.
+jest.mock('../src/design/fade-through', () => ({
+  FadeThroughHost: ({ children }: { children: unknown }) => children,
+  useFadeThrough: (apply: (next: unknown) => void) => ({
+    target: null,
+    choose: apply,
+  }),
+}));
 jest.mock('../src/api/runtime', () => ({ apiClient: { get: jest.fn() } }));
 jest.mock('../src/features/money/map/MoneyMap', () => ({
   MoneyMap: () => null,
