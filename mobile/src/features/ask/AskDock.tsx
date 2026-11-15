@@ -10,6 +10,7 @@ import {
   type LayoutChangeEvent,
 } from 'react-native';
 import { PlainPressable as Pressable } from '../../design/pressable';
+import { useAccessibilitySize } from '../../design/accessibility';
 import { IconButton } from '../../design/controls';
 import { useAccessibilityFocusRequest } from '../../design/keyboard';
 import { formatCount } from '../../design/format';
@@ -33,6 +34,8 @@ import { topics } from './topics';
 
 export const composerCopy = {
   placeholder: 'Ask about the public record',
+  /** At accessibility sizes, where the full line is cut on one line. */
+  placeholderShort: 'Ask about the record',
   label: 'Question',
   send: 'Send',
   stop: 'Stop answering',
@@ -205,6 +208,10 @@ export function AskDock({
   const options = askSession.composerOptions();
   const tags = chips(options, (slug) => topics[slug] ?? slug);
   const empty = !s.draft.trim();
+  // The drawn placeholder is one capped line. At accessibility sizes the
+  // full words end in an ellipsis ("Ask about the public rec…"), so a
+  // shorter line is drawn. VoiceOver's hint keeps the full words.
+  const large = useAccessibilitySize();
   // The draft as the reader last typed it. Any other draft is a prefill, as
   // is one already waiting when the composer mounts (prefilledCaret).
   const [typed, setTyped] = useState(s.draft);
@@ -493,7 +500,9 @@ export function AskDock({
                 maxFontSizeMultiplier={chromeTextScaleCap}
                 testID="ask-placeholder"
               >
-                {composerCopy.placeholder}
+                {large
+                  ? composerCopy.placeholderShort
+                  : composerCopy.placeholder}
               </Text>
             </View>
           ) : null}

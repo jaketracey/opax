@@ -1645,6 +1645,120 @@ test('a later read of the seat keeps the starter that is drawn: Try asking is ne
   expect(byId('ask-starter-0').length).toBeGreaterThan(0);
 });
 
+test.each([
+  ['the default size', 1, 'Ask about the public record'],
+  ['xxxLarge', 1.353, 'Ask about the public record'],
+  ['AX1', 1.786, 'Ask about the record'],
+  ['AX3', 2.643, 'Ask about the record'],
+  ['AX5', 3.571, 'Ask about the record'],
+])(
+  '%s: the composer draws "%s" and VoiceOver hears the full words',
+  async (_size, fontScale, drawn) => {
+    const original = Dimensions.get('window');
+    Dimensions.set({
+      window: { ...original, width: 402, height: 874, fontScale },
+    });
+    try {
+      await mount();
+      const line = view!.root.find(
+        (n) => n.props.testID === 'ask-placeholder' && n.type === Text,
+      );
+      expect(line.props.children).toBe(drawn);
+      expect(one('ask-question').props.accessibilityHint).toBe(
+        'Ask about the public record',
+      );
+      expect(one('ask-question').props.accessibilityLabel).toBe('Question');
+    } finally {
+      Dimensions.set({ window: original });
+    }
+  },
+);
+
+describe('the starter box is held from when Try asking is first seen, not first mounted (b80 sweep, AX3)', () => {
+  // Ask is mounted with the tabs at launch, before any seat is read, and
+  // opened later. The navigator says when it is the screen in front.
+  const original = Dimensions.get('window');
+  let focused = false;
+  let onFocus: (() => void)[] = [];
+  const navigation = {
+    setOptions: jest.fn(),
+    getState: () => ({ index: 0, routes: [{ key: 'ask', name: 'ask' }] }),
+    isFocused: () => focused,
+    addListener: (type: string, handler: () => void) => {
+      if (type === 'focus') onFocus.push(handler);
+      return () => {
+        onFocus = onFocus.filter((item) => item !== handler);
+      };
+    },
+  };
+  const mountBehind = async () => {
+    await act(async () => {
+      view = create(
+        <NavigationContext.Provider value={navigation as never}>
+          <AskScreen />
+        </NavigationContext.Provider>,
+      );
+    });
+    return view!;
+  };
+  const redraw = () =>
+    act(async () => {
+      askSession.setDraft(' ');
+      askSession.setDraft('');
+    });
+  const open = () =>
+    act(async () => {
+      focused = true;
+      onFocus.forEach((handler) => handler());
+    });
+  beforeEach(() => {
+    focused = false;
+    onFocus = [];
+    Dimensions.set({
+      window: { ...original, width: 402, height: 874, fontScale: 2.643 },
+    });
+  });
+  afterEach(() => Dimensions.set({ window: original }));
+
+  test('mounted at launch with the seat unread, opened once there is none: the card is its starter, nothing held', async () => {
+    jest.mocked(useSeat).mockReturnValue({ status: 'loading' } as never);
+    jest.mocked(useSavedChoice).mockReturnValue(undefined);
+    await mountBehind();
+    // Behind the other tabs: nothing is held yet, and no starter is drawn
+    // while the seat is unknown.
+    expect(byId('ask-starter-held').length).toBe(0);
+    expect(byId('ask-starter-place').length).toBe(0);
+    // The device answers that no seat is saved, long before Ask is opened.
+    jest.mocked(useSeat).mockReturnValue({ status: 'none' } as never);
+    jest.mocked(useSavedChoice).mockReturnValue(null);
+    await redraw();
+    await open();
+    // The card is the one starter at its own height: no unseen candidates
+    // making it as tall as the longest member's question.
+    expect(byId('ask-starter-held').length).toBe(0);
+    expect(byId('ask-starter-place').length).toBe(0);
+    expect(byId('ask-starter-0').length).toBeGreaterThan(0);
+    // And it stays that way.
+    await redraw();
+    expect(byId('ask-starter-held').length).toBe(0);
+  });
+
+  test('opened while the seat is still being read: held, as before, and for the life of the page', async () => {
+    jest.mocked(useSeat).mockReturnValue({ status: 'loading' } as never);
+    jest.mocked(useSavedChoice).mockReturnValue(undefined);
+    await mountBehind();
+    await open();
+    expect(byId('ask-starter-held').length).toBeGreaterThan(0);
+    expect(byId('ask-starter-place').length).toBeGreaterThan(0);
+    jest.mocked(useSeat).mockReturnValue({ status: 'none' } as never);
+    jest.mocked(useSavedChoice).mockReturnValue(null);
+    await redraw();
+    // The box does not change size once it has been seen.
+    expect(byId('ask-starter-held').length).toBeGreaterThan(0);
+    expect(byId('ask-starter-0').length).toBeGreaterThan(0);
+  });
+});
+
 test('a seat already known when Try asking is first drawn needs no held box', async () => {
   await mount();
   expect(byId('ask-starter-held').length).toBe(0);
@@ -2774,8 +2888,10 @@ describe('the composer at AX5 (ask.md 2.11)', () => {
     const placeholder = r.root.find(
       (n) => n.props.testID === 'ask-placeholder' && n.type === Text,
     );
+    // At accessibility sizes the drawn line is the short one, which fits;
+    // the full words above stay VoiceOver's hint.
     expect(placeholder.props).toMatchObject({
-      children: 'Ask about the public record',
+      children: 'Ask about the record',
       numberOfLines: 1,
       maxFontSizeMultiplier: chromeTextScaleCap,
     });

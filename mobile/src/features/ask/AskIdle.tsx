@@ -1,4 +1,6 @@
 import {
+  useContext,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useState,
@@ -6,6 +8,7 @@ import {
 } from 'react';
 import { Animated, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { router } from 'expo-router';
+import { NavigationContext } from 'expo-router/react-navigation';
 import { track } from '../../analytics';
 import {
   useAccessibilitySize,
@@ -76,6 +79,21 @@ export function useSeatMember(): string | null {
  * holds its one row's box instead of drawing the general starter and
  * swapping it. With no seat saved the general starter is final at once.
  */
+/**
+ * True once this page has been the one on screen. Ask is in every tab's
+ * stack and is mounted with the tabs at launch, long before it is opened.
+ * Outside a navigator (a pane, a test) the page is seen as soon as it is
+ * drawn.
+ */
+function useSeenOnScreen(): boolean {
+  const navigation = useContext(NavigationContext);
+  const [seen, setSeen] = useState(() => navigation?.isFocused() ?? true);
+  useEffect(() => {
+    if (seen || !navigation) return;
+    return navigation.addListener('focus', () => setSeen(true));
+  }, [navigation, seen]);
+  return seen;
+}
 function useSeatPending(): boolean {
   const loading = useSeat().status === 'loading';
   return useSavedChoice() !== null && loading;
@@ -190,9 +208,17 @@ export function AskIdle({
         void copyText(question).then((ok) => ok && haptic('success')),
     },
   ];
-  // Decided once, as Try asking is first drawn: a seat still being read
-  // then means the row's box is held for the life of the page.
-  const [held] = useState(pending);
+  // Decided once, as Try asking is first seen: a seat still being read
+  // then means the row's box is held for the life of the page. Not as it is
+  // first drawn: the page is mounted with the tabs at launch, when no seat
+  // has been read yet, and the hold it took then (the height of the tallest
+  // question a member's name could make) stayed for a reader who opened
+  // Ask long after the seat was known. At accessibility sizes that unused
+  // room pushed the one starter's card past the composer.
+  const seen = useSeenOnScreen();
+  const [holds, setHolds] = useState<boolean | null>(seen ? pending : null);
+  if (holds === null && seen) setHolds(pending);
+  const held = holds === true;
   const theirs = shown?.member ?? null;
   // Nothing is drawn only in the held box, before the first answer.
   const starters = theirs || !shown ? [] : [general];
