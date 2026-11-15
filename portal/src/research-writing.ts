@@ -22,11 +22,11 @@ import {dedupeAnswer,sameStatement,statementSource} from './research-dedupe'
 import {isRecordCountQuestion} from './ask-scope-intent'
 import {researchSentences} from './research-sentences'
 
-export const ANSWER_WRITING_VERSION = 'written-answer-35-one-voice'
+export const ANSWER_WRITING_VERSION = 'written-answer-36-one-voice'
 export interface WritingFact { evidenceId?: string; id: number; text: string; source: QualitativeAnswer['sources'][number]; coverage?: boolean; metadata?: boolean; atoms?: ClaimAtom[]; transcript?: TranscriptTurn }
 export interface WritingInput { question: string; period: Period; facts: WritingFact[]; constraints?: QualitativeAnswer['answer_scope'] }
 /** Added to the writer's contract only when two facts in the sheet come from one record. */
-export const ONE_RECORD_RULE = ' Facts that share a "record" value describe one record: write one sentence for that record, carrying every detail those facts hold and listing each of their ids.'
+export const ONE_RECORD_RULE = ' Facts that share a "record" value are one record in two wordings. Write one sentence for that record that carries every detail those facts hold, and list each of their ids on that sentence.'
 /** The citation key of one point span resting on a record: the record, then a number fixed by the span's own words.
  *  Two points on one record hold two keys, so a sentence citing one of them says nothing about the other. */
 export const pointKey=(resource:string,text:string):string=>`${resource}/t/body/${parseInt(stableEvidenceKey(key(text.replace(/^\s*[-*•]\s*/,''))),16)}`

@@ -5,7 +5,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {importBundle} from './fixtures/import-bundle.mjs';
-const bundled=await build({stdin:{contents:"export {writingFacts,appendWrittenPoints,writingPrompt,pointsWrittenElsewhere,pointKey,ONE_RECORD_RULE} from './src/research-writing'; export {runAgentic,inferPeriod} from './src/agentic-ask'",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']});
+const bundled=await build({stdin:{contents:"export {writingFacts,appendWrittenPoints,writingPrompt,pointsWrittenElsewhere,pointKey,ONE_RECORD_RULE} from './src/research-writing'; export {runAgentic,inferPeriod} from './src/agentic-ask'; export {ledAnswer} from './src/research-answer-shape'",resolveDir:new URL('../',import.meta.url).pathname},bundle:true,write:false,platform:'browser',format:'esm',external:['node:*']});
 const api=await importBundle(bundled.outputFiles[0].text,'ask-each-fact-once');
 
 const url='https://opax.com.au/subject/person/jo-briskey';
@@ -178,4 +178,17 @@ test('end to end: a point spanning two records is kept whole when the writer sta
  // Only a sentence citing both records' keys stands for the point.
  const both=await answered(loop(),loop(),written([api.pointKey('fact-1',spanning),api.pointKey('fact-2',spanning)]),{writer_passes:1});
  assert.ok(!both.includes(spanning)&&both.includes(stated),both);
+});
+// Why the model's points never reached the writer (16 November): the loop cleared its citation map and refilled it
+// from the led answer, which was that same map whenever the lead stayed put. Every fact and point lost its citation.
+test('the loop\'s composed answer keeps its citations when the lead stays put, in a map of its own',()=>{
+ const composed=loopAnswer(),points=pointsOn(service,point);
+ const led=api.ledAnswer(composed.answer,composed.citations,points,'How many itemised travel lines are there?');
+ assert.equal(led.answer,composed.answer);
+ assert.notEqual(led.citations,composed.citations);
+ const before=structuredClone(composed.citations);
+ for(const key of Object.keys(composed.citations))delete composed.citations[key];Object.assign(composed.citations,led.citations);
+ assert.deepEqual(composed.citations,before);
+ // With its citations kept, the point is one of the writer's facts under its own key.
+ assert.ok(api.writingFacts({...composed}).some(f=>f.evidenceId===api.pointKey('fact-2',point)));
 });
