@@ -5,6 +5,7 @@ import { InsetGroup } from '../../design/primitives';
 import { symbols } from '../../design/symbols';
 import { rhythm } from '../../design/tokens';
 import { openCorrection, openOnWeb } from '../../navigation/external';
+import { LayoutProbeRow } from '../../perf/LayoutProbeRow';
 import { AccountGuideRow, AccountTermsRow } from '../learn/AccountLearn';
 import { replayWelcome } from '../welcome/replay';
 import { SettingsRow, closeSheetThen, linksCopy } from './parts';
@@ -118,6 +119,8 @@ export function AccountLinks({
           />
         )}
       </InsetGroup>
+      {/* A measuring build only: absent without its build flag. */}
+      <LayoutProbeRow />
     </View>
   );
 }
