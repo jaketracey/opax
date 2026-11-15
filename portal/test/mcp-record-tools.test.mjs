@@ -767,6 +767,37 @@ test('read_record says plainly when OPAX has no record with a slug, and reads a 
   assert.equal(short.text, 'A short speech.'); assert.equal('next_text_offset' in short, false);
 });
 
+test('search_records pins catalogue slugs to the index version, and read_record opens them (a bill names its bill_id)', async () => {
+  const version = 'a1b2c3d4e5f60718', bill = { slug: 'catalog-7', kind: 'bill', title: 'Housing Affordability Bill 2026', href: '/bill/au-federal-r5960', date: '2026-03-01' };
+  const records = Array.from({ length: 5 }, (_, i) => ({ slug: 'catalog-' + (5 + i), kind: 'person', title: 'Row ' + (5 + i) })); records[2] = bill;
+  const catalogue = { async fetch(req) { const path = new URL(req.url).pathname;
+    if (path === '/search-catalog/manifest.json') return Response.json({ version, count: 10, recordShardSize: 5, coverage: { as_of: '2026-11-15' } });
+    if (path === '/search-catalog/' + version + '/records-1.json') return Response.json({ records });
+    return ASSETS.fetch(req); } };
+  const search = async () => Response.json({ index_version: version, results: [{ ...bill }, { slug: 'speech-157047', kind: 'speech', title: 'A speech' }] });
+  const send = mcp({ ASSETS: catalogue }, search);
+  const found = (await send('tools/call', { name: 'search_records', arguments: { query: 'housing affordability' } })).result.structuredContent.results;
+  assert.equal(found[0].slug, 'catalog-' + version + '-7', 'a catalogue slug names the index it came from');
+  assert.equal(found[0].opax_url, 'https://opax.com.au/bill/au-federal-r5960');
+  assert.equal(found[1].slug, 'speech-157047', 'other slugs are unchanged');
+  for (const slug of [found[0].slug, 'catalog-7']) {
+    const read = (await send('tools/call', { name: 'read_record', arguments: { slug } })).result;
+    assert.equal(read.isError, undefined, slug + ' reads');
+    const record = read.structuredContent;
+    assert.equal(record.title, 'Housing Affordability Bill 2026');
+    assert.equal(record.opax_url, 'https://opax.com.au/bill/au-federal-r5960');
+    assert.equal(record.bill_id, 'au-federal-r5960');
+    assert.match(record.next_step, /bill_detail/);
+    assert.equal(record.slug, slug);
+  }
+  const stale = (await send('tools/call', { name: 'read_record', arguments: { slug: 'catalog-0000000000000000-7' } })).result;
+  assert.equal(stale.isError, true);
+  assert.match(stale.content[0].text, /catalogue has changed\. Search again/);
+  const gone = (await send('tools/call', { name: 'read_record', arguments: { slug: 'catalog-99' } })).result.structuredContent;
+  assert.equal(gone.found, false);
+  assert.match(gone.message, /not available\. Search again/);
+});
+
 test('read_record keeps a 5xx an error, a non-resource 404 an error, and text paging always moves forward', async () => {
   const call = (readPublic, name, args) => mcp({}, readPublic)('tools/call', { name, arguments: args }).then(r => r.result);
   const down = await call(async () => Response.json({ error: 'boom' }, { status: 500 }), 'read_record', { slug: 'speech-788159' });

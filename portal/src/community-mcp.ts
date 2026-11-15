@@ -9,6 +9,8 @@ import {DISPATCH_TEXT,MCP_DIRECT,MCP_EXAMPLES,MCP_REPLACED,MCP_INSTRUCTIONS,MCP_
 import {corpusKb as openCorpusKb} from './tools/corpus-records'
 import {evidenceAsAt} from '../public/evidence-date.js'
 import {mcpToolTitle} from './mcp-tool-titles'
+import {CATALOG_SLUG,CatalogRecordError,readCatalogRecord,versionedCatalogSlug,type CatalogRead} from './catalog-record'
+import {boundedJson} from './voice-tools'
 export async function communityMcp(req:Request,env:Env,openPublic:(path:string,meter:KbMeter,limitKey:string)=>Promise<Response>):Promise<Response>{
  let rpcId:string|number|null=null
  // Every Progress query a tool makes passes this request's meter (mcp-access.ts) just before it is made: the
@@ -43,6 +45,22 @@ export async function communityMcp(req:Request,env:Env,openPublic:(path:string,m
   // Every tool is listed with a title (mcp-tool-titles.ts), both on the tool and in its annotations.
   const register=server.registerTool.bind(server) as (name:string,config:Record<string,unknown>,handler:unknown)=>unknown
   server.registerTool=((name:string,config:Record<string,unknown>,handler:unknown)=>{const title=typeof config.title==='string'?config.title:MCP_TEXT[name]?.title??mcpToolTitle(name);return register(name,{...config,title,annotations:{title,...(config.annotations as object|undefined)}},handler)}) as typeof server.registerTool
+  // A catalogue row from search_records (a bill, member or program) is read from the published search catalogue, not /api/resource.
+  async function catalogRecord(slug:string){
+   const read:CatalogRead=async(path,maxBytes,records)=>boundedJson(await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+path)),maxBytes,records)
+   try{
+    const {record,coverage}=await readCatalogRecord(slug,read)
+    const href=typeof record.href==='string'&&/^\/[a-z]/i.test(record.href)&&!record.href.startsWith('//')?record.href:null
+    const bill=href?/^\/bill\/([a-z0-9-]{1,120})$/.exec(href):null
+    const found={...record,slug,opax_url:env.COMMUNITY_ORIGIN+(href??'/search'),...(coverage?{coverage}:{}),
+     ...(bill?{bill_id:bill[1],next_step:'For this bill\'s stages, status and divisions, call bill_detail with this bill_id.'}:{}),
+     record_note:'This is the published structured record, not a verbatim source transcript. Preserve its stated period and source. Awards are not payments; receipts are not necessarily gifts. Aggregates may overlap individual records.',record_text_notice:RECORD_TEXT_NOTICE}
+    return {content:[{type:'text' as const,text:JSON.stringify(found)}],structuredContent:found}
+   }catch(error){
+    if(error instanceof CatalogRecordError&&error.status===404){const missing={found:false,slug,message:error.message,opax_url:env.COMMUNITY_ORIGIN+'/search',record_text_notice:RECORD_TEXT_NOTICE};return {content:[{type:'text' as const,text:JSON.stringify(missing)}],structuredContent:missing}}
+    return failed(error instanceof CatalogRecordError?error.message:'The record catalogue could not be read just now. Try again in a minute.')
+   }
+  }
   async function result(path:string,textOffset=0){
    // A record is read whole, up to a hard cap, so a long text can be returned in parts; a search answer must fit one response.
    const resource=path.startsWith('/api/resource/'),cap=resource?RECORD_READ_BYTES:MCP_OUTPUT_BYTES
@@ -83,6 +101,8 @@ export async function communityMcp(req:Request,env:Env,openPublic:(path:string,m
     const recipient=recipientPath&&recipientId?{jurisdiction:recipientPath[1],id:recipientId}:jurisdiction&&params?.get('open')?{jurisdiction,id:params.get('open') as string}:null
     return recipient?{...row,opax_url,grant_recipient:recipient}:{...row,opax_url}
    })
+   // Catalogue rows (bills, members, programs) have positional slugs: pin them to the index this search read, so read_record never opens a different record after a rebuild.
+   if(Array.isArray(data.results))data.results=data.results.map((row:Record<string,unknown>)=>'slug' in row?{...row,slug:versionedCatalogSlug(row.slug,data.index_version)}:row)
    // Record text is quoted source material: say so in the result itself, not only in the server instructions.
    data.record_text_notice=RECORD_TEXT_NOTICE
    return {content:[{type:'text' as const,text:JSON.stringify(data)}],structuredContent:data,isError:false}
@@ -92,7 +112,7 @@ export async function communityMcp(req:Request,env:Env,openPublic:(path:string,m
   const detail=z.enum(['concise','full']).default('concise').describe('full lists as many grants as fit; the default lists the 10 largest.')
   const grantOutput=z.looseObject({n:z.string(),grants:z.array(z.unknown()),grants_total:z.number(),grants_listed:z.number(),opax_url:z.string()})
   server.registerTool('search_records',{description:MCP_TEXT.search_records.description,outputSchema:z.looseObject({results:z.array(z.unknown())}),inputSchema:{query:z.string().min(2).max(300).describe('Words or a phrase.'),kind:z.enum(['all','speech','press_release','bill','bill_text','division','grant']).default('all').describe('Only this kind of record.'),page:z.number().int().min(1).max(20).default(1).describe('Results page, 10 a page.')},annotations:readOnly},async({query,kind,page})=>result('/api/search-all?'+new URLSearchParams({q:query,kind,per:'10',page:String(page)})))
-  server.registerTool('read_record',{description:MCP_TEXT.read_record.description,outputSchema:z.looseObject({opax_url:z.string()}),inputSchema:{slug:z.string().regex(/^(?:speech-\d+|legal-\d+|news-\d+|bill-text-au-federal-[a-z0-9-]{1,180}|division-[a-z0-9-]+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+|grantconnect-award-ga\d+(?:-v\d+)?|grant-site-evidence-(?:ga\d+|mlci-invitation-\d{3})|mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/,'Use a slug exactly as search_records returns it, for example speech-931754.').describe('The slug of a search_records result.'),text_offset:z.number().int().min(0).max(5_000_000).optional().describe('Where to start reading a long text: next_text_offset from the previous part.')},annotations:readOnly},async({slug,text_offset})=>result('/api/resource/'+encodeURIComponent(slug),text_offset??0))
+  server.registerTool('read_record',{description:MCP_TEXT.read_record.description,outputSchema:z.looseObject({opax_url:z.string()}),inputSchema:{slug:z.string().regex(/^(?:catalog-(?:[a-f0-9]{16}-)?\d{1,8}|speech-\d+|legal-\d+|news-\d+|bill-text-au-federal-[a-z0-9-]{1,180}|division-[a-z0-9-]+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+|grantconnect-award-ga\d+(?:-v\d+)?|grant-site-evidence-(?:ga\d+|mlci-invitation-\d{3})|mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/,'Use a slug exactly as search_records returns it, for example speech-931754.').describe('The slug of a search_records result.'),text_offset:z.number().int().min(0).max(5_000_000).optional().describe('Where to start reading a long text: next_text_offset from the previous part.')},annotations:readOnly},async({slug,text_offset})=>CATALOG_SLUG.test(slug)?catalogRecord(slug):result('/api/resource/'+encodeURIComponent(slug),text_offset??0))
   server.registerTool('find_connections',{description:MCP_TEXT.find_connections.description,outputSchema:z.looseObject({connections:z.array(z.looseObject({name:z.string(),url:z.string()}))}),inputSchema:{query:z.string().min(2).max(120).describe('Part of a name.')},annotations:readOnly},async({query})=>{
    const response=await env.ASSETS.fetch(new Request(env.COMMUNITY_ORIGIN+'/evidence/index.json'));if(!response.ok)return {content:[{type:'text' as const,text:JSON.stringify({error:'The connections dataset could not be read just now. Try again in a minute.'})}],isError:true}
    const data=await response.json() as {meta?:unknown,entities:{id:string,name:string,kind:string,records:number}[]};const asAt=evidenceAsAt(data.meta);const hits=data.entities.filter(e=>e.name.toLowerCase().includes(query.toLowerCase())).slice(0,20).map(e=>({...e,url:env.COMMUNITY_ORIGIN+'/connections?entity='+e.id}));const found={...(asAt?{as_at:asAt}:{}),connections:hits,record_text_notice:RECORD_TEXT_NOTICE};return {content:[{type:'text' as const,text:JSON.stringify(found)}],structuredContent:found}
