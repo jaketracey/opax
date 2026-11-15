@@ -2892,6 +2892,12 @@ test.each([
       isFocused: () => true,
       addListener: () => () => {},
     };
+    // A phone's idle Ask keeps its large title on a solid native backing at
+    // accessibility sizes, with UIKit's edge hidden behind it (BACKLOG D5).
+    // Beside a vertical bar and on iPad the edge still follows the scroll.
+    const idleSolid = edge === 'unspecified' && !pad;
+    const idle = (...expected: string[]) =>
+      idleSolid ? expected.map(() => 'hidden') : expected;
     const edges = () =>
       navigation.setOptions.mock.calls
         .map(([options]) => options.scrollEdgeEffects?.top)
@@ -2919,13 +2925,13 @@ test.each([
           ([, options]) => options?.owner === 'options',
         ),
       ).toBe(true);
-      expect(edges().at(-1)).toBe('soft');
+      expect(edges().at(-1)).toBe(idle('soft')[0]);
       navigation.setOptions.mockClear();
       scrollTo(-120);
       scrollTo(-121); // Pulling down is still at rest.
       expect(edges()).toEqual([]);
       scrollTo(-118); // Before UIKit reports a collapsed header.
-      expect(edges()).toEqual(['hard']);
+      expect(edges()).toEqual(idle('hard'));
       scrollTo(0);
       await act(async () =>
         view!.update(
@@ -2935,9 +2941,9 @@ test.each([
         ),
       );
       scrollTo(400);
-      expect(edges()).toEqual(['hard']);
+      expect(edges()).toEqual(idle('hard'));
       scrollTo(-68);
-      expect(edges()).toEqual(['hard', 'soft']);
+      expect(edges()).toEqual(idle('hard', 'soft'));
 
       openSavedConversation();
       scrollTo(400);
@@ -2945,7 +2951,7 @@ test.each([
       await act(async () => barButton('New question')!.onPress());
       // scrollToTop is mocked and emits no event. Idle must already be soft.
       expect(byId('ask-idle').length).toBeGreaterThan(0);
-      expect(edges().at(-1)).toBe('soft');
+      expect(edges().at(-1)).toBe(idle('soft')[0]);
       await act(async () =>
         view!.update(
           withNavigationOptions(page(120), (options) => {
@@ -2954,7 +2960,7 @@ test.each([
         ),
       );
       // A new header height must not re-read the previous thread's offset.
-      expect(edges().at(-1)).toBe('soft');
+      expect(edges().at(-1)).toBe(idle('soft')[0]);
     } finally {
       await act(async () => {
         view?.unmount();

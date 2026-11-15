@@ -26,6 +26,8 @@ import { isTabStack } from './floating-bar';
 const roots = ['index', 'your-mp', 'bills', 'search', 'ask'];
 /** Pages whose scrolling view turns the top edge hard under scrolled text. */
 const hardEdgeRoots = ['index', 'search', 'ask', 'leads'];
+/** Large-title roots that take the solid native backing at AX sizes. */
+const solidAtAX = ['index', 'ask'];
 
 const searches = new WeakMap<
   object,
@@ -168,13 +170,16 @@ export function useRootBarAppearance(
   const name = root?.name ?? '';
   // Today's tall AX title band on a phone needs an opaque ground even when
   // neither legibility setting is on. iPad and vertical bars keep their chrome.
+  // Idle Ask too: UIKit's hard edge still drew its starters, blurred, behind
+  // the title and the bar buttons at AX3 (iOS 26.3). An open thread has no
+  // large title and keeps its edge.
   const solid =
     solidSetting ||
     (Platform.OS === 'ios' &&
       !Platform.isPad &&
       !verticalBar &&
       largeTitleEnabled &&
-      name === 'index' &&
+      solidAtAX.includes(name) &&
       isAccessibilityCategory(fontScale));
   // RouteOptions owns the bar of a large-title list (Leads) but knows no
   // ground; the page's Screen does, and shares it. Beside a vertical bar the

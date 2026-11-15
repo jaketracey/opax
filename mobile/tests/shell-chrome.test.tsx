@@ -1675,18 +1675,24 @@ test('the accessibility backing keeps the edge hidden under scrolled text', () =
   }));
 
 test.each([
-  ['AX3', 2.643],
-  ['AX5', 3.571],
-])(
-  'Today %s keeps a solid band across scroll, resize and focus',
-  (_size, fontScale) =>
+  ['index', '(today)', 'AX3', 2.643],
+  ['index', '(today)', 'AX5', 3.571],
+  // Idle Ask: the hard edge still showed its starters, blurred, behind the
+  // bar at AX3 on iOS 26.3 (BACKLOG D5).
+  ['ask', '(ask)', 'AX3', 2.643],
+  ['ask', '(ask)', 'AX5', 3.571],
+] as const)(
+  '%s %s at %s keeps a solid band across scroll, resize and focus',
+  (name, segment, _size, fontScale) =>
     withGlass(() => {
       const window = Dimensions.get('window');
       const { navigation, page, ground, identifier, listeners } = fadePage(
-        'index',
-        '(today)',
+        name,
+        segment,
       );
       const renderer = tree(page(120));
+      // The harness draws Ask as its RouteOptions alone: nothing to scroll.
+      const scrolls = name === 'index';
       try {
         expect(RootBar!.setSolid).not.toHaveBeenCalled();
         act(() => Dimensions.set({ window: { ...window, fontScale } }));
@@ -1695,7 +1701,7 @@ test.each([
           expect.objectContaining(largeTitleBar(ground, true)),
         );
         navigation.setOptions.mockClear();
-        scrollTo(renderer, 400);
+        if (scrolls) scrollTo(renderer, 400);
         expect(edgeCalls(navigation)).not.toContain('hard');
         act(() => renderer.update(page(68)));
         expect(RootBar!.setSolid).toHaveBeenLastCalledWith(identifier, ground);
@@ -1707,9 +1713,9 @@ test.each([
         act(() => Dimensions.set({ window }));
         expect(RootBar!.remove).toHaveBeenLastCalledWith(identifier);
         expect(navigation.setOptions).toHaveBeenLastCalledWith(
-          expect.objectContaining(largeTitleBar(ground, false, true)),
+          expect.objectContaining(largeTitleBar(ground, false, scrolls)),
         );
-        scrollTo(renderer, -120);
+        if (scrolls) scrollTo(renderer, -120);
         expect(navigation.setOptions).toHaveBeenLastCalledWith(
           expect.objectContaining(largeTitleBar(ground)),
         );
@@ -1722,7 +1728,7 @@ test.each([
 
 test.each(
   tabCases
-    .filter(([, name]) => name !== 'index')
+    .filter(([, name]) => name !== 'index' && name !== 'ask')
     .flatMap(([segment, name]) =>
       (
         [
