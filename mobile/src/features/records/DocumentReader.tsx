@@ -454,7 +454,7 @@ export default function DocumentReader({
             <>
               {ios && !embedded && find.open ? (
                 <Pressable
-                  feedback="dim"
+                  feedback="wash"
                   accessibilityRole="button"
                   accessibilityLabel={findLabel(find)}
                   accessibilityHint={find.total ? 'Go to match' : undefined}

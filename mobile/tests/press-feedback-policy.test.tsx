@@ -1,7 +1,7 @@
 /**
  * No control takes a touch without answering it. Every touch surface either
  * styles `pressed` itself or names the shared feedback (design/pressable:
- * dim, fill, or none on purpose), and takes its iOS touch timing from the
+ * wash, or none on purpose), and takes its iOS touch timing from the
  * shared primitive rather than React Native's component directly.
  */
 import { readFileSync, readdirSync } from 'node:fs';
@@ -14,10 +14,10 @@ import {
 } from 'react-native';
 import {
   IOS_PRESS_DELAY,
-  PRESSED_DIM,
   PlainPressable,
   Pressable,
 } from '../src/design/pressable';
+import { SurfaceContext } from '../src/design/row-padding';
 import { colors } from '../src/design/tokens';
 
 const originalOS = Platform.OS;
@@ -40,26 +40,46 @@ describe.each([
   ['Pressable', Pressable],
   ['PlainPressable', PlainPressable],
 ] as const)('%s', (_name, Component) => {
-  test('dim fades the content while pressed, over a plain or a function style', () => {
+  test('wash is the design pressed fill for the ground, over a plain or a function style', () => {
     Platform.OS = 'ios';
-    const plain = render(<Component feedback="dim" style={{ padding: 8 }} />);
+    const plain = render(<Component feedback="wash" style={{ padding: 8 }} />);
     expect(styleOf(plain, false)).toEqual({ padding: 8 });
-    expect(styleOf(plain, true)).toEqual({ padding: 8, opacity: PRESSED_DIM });
+    // On paper the wash is the sunken fill, as a row's and a quiet button's.
+    expect(styleOf(plain, true)).toMatchObject({
+      padding: 8,
+      backgroundColor: colors.sunken,
+    });
+    // Never a fade of the content: a pressed control keeps its contrast.
+    expect(styleOf(plain, true).opacity).toBeUndefined();
     const own = render(
       <Component
-        feedback="dim"
-        style={({ pressed }) => ({ margin: pressed ? 2 : 1 })}
+        feedback="wash"
+        style={({ pressed }) => ({
+          margin: pressed ? 2 : 1,
+          borderRadius: 999,
+        })}
       />,
     );
-    expect(styleOf(own, true)).toEqual({ margin: 2, opacity: PRESSED_DIM });
-    expect(PRESSED_DIM).toBeGreaterThan(0.3);
-    expect(PRESSED_DIM).toBeLessThan(0.8);
+    // The surface's own corners win over the wash's default.
+    expect(styleOf(own, true)).toMatchObject({
+      margin: 2,
+      borderRadius: 999,
+      backgroundColor: colors.sunken,
+    });
+    for (const surface of ['sunken', 'raised'] as const) {
+      const r = render(
+        <SurfaceContext.Provider value={surface}>
+          <Component feedback="wash" />
+        </SurfaceContext.Provider>,
+      );
+      // Always a different colour from the ground it sits on.
+      expect(styleOf(r, true).backgroundColor).toBe(
+        surface === 'sunken' ? colors.raised : colors.dividerSubtle,
+      );
+    }
   });
-  test('fill is the row highlight; none and no feedback leave the style alone', () => {
+  test('none and no feedback leave the style alone', () => {
     Platform.OS = 'ios';
-    const fill = render(<Component feedback="fill" style={{ padding: 8 }} />);
-    expect(styleOf(fill, false).backgroundColor).toBeUndefined();
-    expect(styleOf(fill, true).backgroundColor).toBe(colors.sunken);
     for (const feedback of ['none', undefined] as const) {
       const r = render(
         <Component feedback={feedback} style={{ padding: 8 }} />,
@@ -70,8 +90,8 @@ describe.each([
   });
   test('Android keeps its own feedback: no pressed style is added', () => {
     Platform.OS = 'android';
-    const r = render(<Component feedback="dim" style={{ padding: 8 }} />);
-    expect(styleOf(r, true).opacity).toBeUndefined();
+    const r = render(<Component feedback="wash" style={{ padding: 8 }} />);
+    expect(styleOf(r, true).backgroundColor).toBeUndefined();
     expect(native(r).props.feedback).toBeUndefined();
   });
 });
@@ -154,7 +174,7 @@ const rawImport = (code: string) =>
 test('the surface scan reads a tag with arrows, braces and a children function', () => {
   const code = `
     <Pressable onPress={() => go(a > b)} style={styles.a}>
-    <Pressable feedback="dim" onPress={() => { go(); }}>
+    <Pressable feedback="wash" onPress={() => { go(); }}>
     <Pressable style={({ pressed }) => [pressed ? on : off]}>
     <Pressable onPress={go}>
       {({ pressed }) => <Row on={pressed} />}

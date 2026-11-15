@@ -48,7 +48,7 @@ export function FindControls({
           { label: 'Done', onPress: onDone, id: 'done', disabled: false },
         ].map((action) => (
           <Pressable
-            feedback="dim"
+            feedback="wash"
             key={action.id}
             accessibilityRole="button"
             accessibilityState={{ disabled: action.disabled }}

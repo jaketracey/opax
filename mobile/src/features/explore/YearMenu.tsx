@@ -89,7 +89,7 @@ export function YearMenu({
     <View style={styles.wrap}>
       <TitleAnchor>
         <Pressable
-          feedback="dim"
+          feedback="wash"
           accessible
           accessibilityRole="button"
           accessibilityLabel={`Year, ${year}`}

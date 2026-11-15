@@ -251,7 +251,7 @@ export default function PhotoViewer() {
             ? {
                 headerLeft: () => (
                   <Pressable
-                    feedback="dim"
+                    feedback="wash"
                     accessibilityRole="button"
                     onPress={close}
                     style={styles.androidDone}
@@ -326,7 +326,7 @@ export default function PhotoViewer() {
               </Text>
               {read.record ? null : (
                 <Pressable
-                  feedback="dim"
+                  feedback="wash"
                   accessibilityRole="button"
                   onPress={read.retry}
                   style={styles.retry}
@@ -363,7 +363,7 @@ export default function PhotoViewer() {
               {current.caption}
             </Text>
             <Pressable
-              feedback="dim"
+              feedback="wash"
               accessibilityRole="button"
               accessibilityLabel={`Photo: ${current.author}, ${current.licence}.`}
               accessibilityHint="Double-tap for the source and licence."

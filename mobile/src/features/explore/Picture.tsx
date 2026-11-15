@@ -142,7 +142,7 @@ export function Picture({
                 {'Photo couldn’t be loaded.'}
               </Text>
               <Pressable
-                feedback="dim"
+                feedback="wash"
                 accessibilityRole="button"
                 accessibilityLabel="Try again"
                 onPress={() => setRetry((v) => v + 1)}

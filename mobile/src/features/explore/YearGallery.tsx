@@ -56,7 +56,7 @@ export function PhotoCredit({
 }) {
   return (
     <Pressable
-      feedback="dim"
+      feedback="wash"
       accessibilityRole="button"
       accessibilityLabel={`Photo: ${photo.author}, ${photo.licence}.`}
       accessibilityHint="Double-tap for the source and licence."

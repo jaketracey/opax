@@ -508,7 +508,7 @@ function AgencyLine({
     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
       {agencyId ? (
         <Pressable
-          feedback="dim"
+          feedback="wash"
           accessibilityRole="link"
           accessibilityLabel={agency}
           hitSlop={{ top: 12, bottom: 12, left: 8, right: 8 }}

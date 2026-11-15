@@ -43,7 +43,7 @@ export function SearchField({
       />
       {value ? (
         <Pressable
-          feedback="dim"
+          feedback="wash"
           accessibilityRole="button"
           accessibilityLabel="Clear search"
           onPress={() => {

@@ -42,7 +42,7 @@ export function TopicTide({
           const share = formatPercent(bar.share * 100);
           return (
             <Pressable
-              feedback="dim"
+              feedback="wash"
               key={bar.decade.slug}
               accessibilityRole="button"
               accessibilityLabel={`${bar.decade.label}, ${share} of labelled federal speeches, ${counted(bar.count, 'speech', 'speeches')}`}

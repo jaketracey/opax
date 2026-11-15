@@ -231,7 +231,7 @@ export function AnswerView({
     <View style={styles.answer} testID="ask-answer">
       {selectingText ? (
         <Pressable
-          feedback="dim"
+          feedback="wash"
           accessibilityRole="button"
           android_ripple={{ color: colors.dividerSubtle }}
           onPress={toggleTextSelection}

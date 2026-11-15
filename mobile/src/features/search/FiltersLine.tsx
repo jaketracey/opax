@@ -34,7 +34,7 @@ export function FiltersLine({
     <View style={[styles.line, stacked ? styles.stacked : null]}>
       {onPress ? (
         <Pressable
-          feedback="dim"
+          feedback="wash"
           accessibilityRole="button"
           accessibilityLabel={`Filters: ${text.replace(/ · /g, ', ')}`}
           onPress={onPress}
@@ -54,7 +54,7 @@ export function FiltersLine({
         </View>
       )}
       <Pressable
-        feedback="dim"
+        feedback="wash"
         accessibilityRole="button"
         accessibilityLabel="Clear filters"
         hitSlop={8}

@@ -293,7 +293,7 @@ export function MoneyMapPanel({
     >
       <GestureDetector gesture={drag}>
         <Pressable
-          feedback="dim"
+          feedback="wash"
           accessibilityRole="button"
           accessibilityLabel={expanded ? 'Collapse details' : 'Expand details'}
           accessibilityState={{ expanded }}

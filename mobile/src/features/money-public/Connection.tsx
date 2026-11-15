@@ -288,7 +288,7 @@ function Excerpt({ excerpt, index }: { excerpt: ExcerptData; index: number }) {
       {body}
       {long && !open ? (
         <Pressable
-          feedback="dim"
+          feedback="wash"
           accessibilityRole="button"
           accessibilityLabel={`More, ${publisher(excerpt.source)} excerpt ${index + 1}`}
           hitSlop={MORE_SLOP}

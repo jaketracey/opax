@@ -206,7 +206,7 @@ export function Disclosure({
       style={[styles.panel, { backgroundColor: palette.sunken }]}
     >
       <Pressable
-        feedback="dim"
+        feedback="wash"
         accessibilityRole="button"
         accessibilityLabel={title}
         accessibilityState={{ expanded: state.open }}

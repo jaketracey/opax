@@ -270,7 +270,7 @@ function MaterialMenuHost() {
             ) : null}
             {current.actions.map((action, index) => (
               <Pressable
-                feedback="dim"
+                feedback="wash"
                 ref={index === 0 ? firstItem : undefined}
                 key={`${index}-${action.title}`}
                 accessibilityRole="menuitem"

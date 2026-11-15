@@ -1001,7 +1001,7 @@ export function RecordRow({
             <View style={styles.recordSpeakerWords}>
               {speaker.href ? (
                 <Pressable
-                  feedback="dim"
+                  feedback="wash"
                   accessibilityRole="link"
                   accessibilityLabel={`Open ${speaker.name}${speakerYourMP ? ', Your MP' : ''}`}
                   testID={testID && `${testID}-speaker`}

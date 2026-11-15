@@ -409,7 +409,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
               {[...active, count].join(' · ')}
             </Text>
             <Pressable
-              feedback="dim"
+              feedback="wash"
               accessibilityRole="button"
               accessibilityLabel={filtered ? 'Clear filters' : 'Clear search'}
               testID="directory-filter-clear"

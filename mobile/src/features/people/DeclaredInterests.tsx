@@ -57,7 +57,7 @@ function EntryText({ text }: { text: string }) {
       </Text>
       {long && !open ? (
         <Pressable
-          feedback="dim"
+          feedback="wash"
           accessibilityRole="button"
           accessibilityLabel="More"
           accessibilityHint="Shows the whole entry"

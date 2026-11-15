@@ -506,7 +506,7 @@ function EditRow({
       testID={`follows-row-${follow.kind}-${follow.id}`}
     >
       <Pressable
-        feedback="dim"
+        feedback="wash"
         accessibilityRole="button"
         accessibilityLabel={`Unfollow ${entry.title}`}
         accessibilityState={{ disabled }}

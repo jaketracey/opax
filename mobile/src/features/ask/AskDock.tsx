@@ -206,7 +206,7 @@ export function AskDock({
             <View style={styles.chips}>
               {s.fresh ? (
                 <Pressable
-                  feedback="dim"
+                  feedback="wash"
                   ref={waitingLine}
                   accessibilityRole="button"
                   accessibilityLabel={freshLabel}
@@ -222,7 +222,7 @@ export function AskDock({
               ) : null}
               {tags.map((tag) => (
                 <Pressable
-                  feedback="dim"
+                  feedback="wash"
                   key={tag.id}
                   accessibilityRole="button"
                   accessibilityLabel={`Remove ${tag.key}, ${tag.value}`}
@@ -245,7 +245,7 @@ export function AskDock({
             </View>
           </ScrollView>
           <Pressable
-            feedback="dim"
+            feedback="wash"
             accessibilityRole="button"
             accessibilityLabel={composerCopy.clear}
             disabled={s.busy && !s.fresh}
@@ -269,7 +269,7 @@ export function AskDock({
       ) : line ? (
         <View style={styles.optionsLine}>
           <Pressable
-            feedback="dim"
+            feedback="wash"
             ref={s.fresh ? waitingLine : undefined}
             accessibilityRole="button"
             accessibilityLabel={spoken}
@@ -292,7 +292,7 @@ export function AskDock({
             </Text>
           </Pressable>
           <Pressable
-            feedback="dim"
+            feedback="wash"
             accessibilityRole="button"
             accessibilityLabel={composerCopy.clear}
             accessibilityState={locked ? { disabled: true } : undefined}

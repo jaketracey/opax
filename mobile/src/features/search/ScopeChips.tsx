@@ -35,7 +35,7 @@ export function ScopeChips<T extends string>({
         const selected = option.value === value;
         return (
           <Pressable
-            feedback="dim"
+            feedback="wash"
             key={option.value}
             role="tab"
             accessibilityRole="tab"

@@ -105,7 +105,7 @@ export function SeatRow({
       }
     >
       <Pressable
-        feedback="fill"
+        feedback="wash"
         accessible
         accessibilityRole="link"
         accessibilityLabel={ax}
@@ -169,7 +169,7 @@ export function RegionRow({
   return (
     <RowLink href={vicSeatRoute(r.slug)}>
       <Pressable
-        feedback="fill"
+        feedback="wash"
         accessible
         accessibilityRole="link"
         accessibilityLabel={`${r.name}. ${names.join(', ')}.`}

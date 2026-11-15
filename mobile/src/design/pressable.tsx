@@ -9,7 +9,15 @@ import {
 import { useHighTextContrast } from './accessibility';
 import { spokenFigures } from './format';
 import { rememberMenuAnchor } from './menu-anchor';
-import { accents, border, colors, androidControls, type Role } from './tokens';
+import { useRowHighlight } from './row-padding';
+import {
+  accents,
+  border,
+  colors,
+  androidControls,
+  radii,
+  type Role,
+} from './tokens';
 
 /**
  * iOS: how long a touch rests on a surface before it highlights. Nearly every
@@ -26,19 +34,31 @@ export const IOS_PRESS_DELAY = 130;
  * What a touch does to a surface that draws no pressed state of its own, on
  * iOS (Android has its ripple). Every surface either styles `pressed` itself
  * or names one of these, so no control takes a touch without answering it
- * (tests/press-feedback-policy.test.ts):
- * - `dim`: the content fades back, as a plain system button's does; for
- *   chips, text buttons, glyph buttons and chart bars.
- * - `fill`: the row highlight, for a full-width row.
+ * (tests/press-feedback-policy.test.tsx):
+ * - `wash`: the design's pressed fill, the same one a row and a quiet button
+ *   take, chosen for the ground it sits on (`useRowHighlight`). Never a fade
+ *   of the content: a pressed control keeps its contrast.
  * - `none`: on purpose. A backdrop, a picture that opens, a wrapper whose
  *   child draws the highlight, a long-press-only surface.
  */
-export type PressFeedback = 'dim' | 'fill' | 'none';
-export const PRESSED_DIM = 0.55;
-const pressedStyles = StyleSheet.create({
-  dim: { opacity: PRESSED_DIM },
-  fill: { backgroundColor: colors.sunken },
-});
+export type PressFeedback = 'wash' | 'none';
+/** The wash's corners where the surface has none of its own. */
+const washShape = {
+  borderRadius: radii.thumb,
+  borderCurve: 'continuous',
+} as const;
+function usePressedStyle(
+  feedback: PressFeedback | undefined,
+  style: PressableProps['style'],
+): PressableProps['style'] {
+  const highlight = useRowHighlight();
+  if (Platform.OS !== 'ios' || feedback !== 'wash') return style;
+  return (state) => [
+    state.pressed ? washShape : null,
+    typeof style === 'function' ? style(state) : style,
+    state.pressed ? { backgroundColor: highlight } : null,
+  ];
+}
 
 /** The shared touch surface; keyboard focus adds a layout-neutral outline. */
 export function Pressable({
@@ -47,7 +67,7 @@ export function Pressable({
   ...props
 }: PressableProps & { ref?: Ref<View>; feedback?: PressFeedback }) {
   const [focused, setFocused] = useState(false);
-  const { style } = props;
+  const style = usePressedStyle(feedback, props.style);
   const Component =
     Platform.OS === 'android' ? AndroidPressable : NativePressable;
   const ringed =
@@ -60,10 +80,6 @@ export function Pressable({
         outlineStyle: 'solid' as const,
       }
     : undefined;
-  const pressedStyle =
-    Platform.OS === 'ios' && feedback && feedback !== 'none'
-      ? pressedStyles[feedback]
-      : undefined;
   return (
     <Component
       {...props}
@@ -89,17 +105,11 @@ export function Pressable({
         props.onBlur?.(event);
       }}
       style={
-        pressedStyle
-          ? (state) => [
-              typeof style === 'function' ? style(state) : style,
-              state.pressed ? pressedStyle : null,
-              focusStyle,
-            ]
-          : focusStyle
-            ? typeof style === 'function'
-              ? (state) => [style(state), focusStyle]
-              : [style, focusStyle]
-            : style
+        focusStyle
+          ? typeof style === 'function'
+            ? (state) => [style(state), focusStyle]
+            : [style, focusStyle]
+          : style
       }
     />
   );
@@ -116,23 +126,14 @@ export function PlainPressable({
   feedback,
   ...props
 }: PressableProps & { ref?: Ref<View>; feedback?: PressFeedback }) {
+  const style = usePressedStyle(feedback, props.style);
   if (Platform.OS !== 'ios') return <NativePressable {...props} ref={ref} />;
-  const { style } = props;
-  const pressedStyle =
-    feedback && feedback !== 'none' ? pressedStyles[feedback] : undefined;
   return (
     <NativePressable
       {...props}
       ref={ref}
       unstable_pressDelay={props.unstable_pressDelay ?? IOS_PRESS_DELAY}
-      style={
-        pressedStyle
-          ? (state) => [
-              typeof style === 'function' ? style(state) : style,
-              state.pressed ? pressedStyle : null,
-            ]
-          : style
-      }
+      style={style}
     />
   );
 }

@@ -130,7 +130,7 @@ export function GuessSlider({
         </>
       ) : (
         <Pressable
-          feedback="dim"
+          feedback="wash"
           accessibilityRole="button"
           accessibilityLabel={`Your guess, ${shown}`}
           accessibilityHint={

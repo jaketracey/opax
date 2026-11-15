@@ -125,7 +125,7 @@ export function SheetFrame({
     const trailingBar = androidHeaderBar(others);
     const closeButton = (
       <Pressable
-        feedback="dim"
+        feedback="wash"
         accessibilityRole="button"
         accessibilityLabel="Done"
         accessibilityHint="Closes this sheet"
