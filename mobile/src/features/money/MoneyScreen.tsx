@@ -1065,6 +1065,9 @@ function MapMode({
   const probeRef = useRef<View>(null);
   const settleKey = `${window.width}x${window.height}x${window.fontScale}|${searchOpen}|${expanded}|${loaded}|${!!unavailable}`;
   const settle = useRef({ key: '', left: 0 });
+  // Every commit, on purpose: a frame can change without a dependency
+  // changing. It sets state only on a difference, within the budget.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useLayoutEffect(() => {
     if (settle.current.key !== settleKey)
       settle.current = { key: settleKey, left: SETTLE_PASSES };
@@ -1108,9 +1111,6 @@ function MapMode({
     const probeFrame = probes ? frameOf(probeRef) : null;
     if (probeFrame) reportInset(Math.round(probeFrame.height));
     if (changed) settle.current.left -= 1;
-    // Every commit, on purpose: a frame can change without a dependency
-    // changing. It sets state only on a difference, within the budget.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   });
   const measure =
     (part: 'head' | 'picker') =>

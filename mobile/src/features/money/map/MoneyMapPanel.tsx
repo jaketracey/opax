@@ -259,14 +259,14 @@ export function MoneyMapPanel({
     if (peek) onPeekHeight(peek);
   }, [peek, onPeekHeight]);
   const restRef = useRef<View>(null);
+  // Every commit, on purpose: the content's height can change without a
+  // dependency changing. It sets state only on a difference.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useLayoutEffect(() => {
     const frame = frameOf(restRef);
     if (!frame || frame.height <= 0) return;
     const next = Math.ceil(frame.height) + HANDLE + rhythm.block;
     setPeek((previous) => (previous === next ? previous : next));
-    // Every commit, on purpose: the content's height can change without a
-    // dependency changing. It sets state only on a difference.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   });
   const { fontScale } = useWindowDimensions();
   const figureBasis = FIGURE_BASIS * Math.max(1, fontScale);
