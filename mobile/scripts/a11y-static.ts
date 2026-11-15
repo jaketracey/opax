@@ -156,6 +156,10 @@ export const designPressables: Record<
   PageFoot: { label: 'inside', note: 'the correction link, from copy' },
   PartyLabel: { label: 'inside', note: 'the spoken party name' },
   PersonRow: { label: 'inside', note: 'name, party, place and detail' },
+  PlainPressable: {
+    label: 'inside',
+    note: "React Native's Pressable: checked where used, as one",
+  },
   Pressable: {
     label: 'inside',
     note: 'the shared surface: checked where used',
@@ -548,6 +552,8 @@ class FileScan {
       return 'silent';
     if (/(?:^|\/)design\/[\w-]+$/.test(module)) {
       if (imported === 'Pressable') return 'design-pressable';
+      // React Native's Pressable with the iOS touch timing: checked as one.
+      if (imported === 'PlainPressable') return 'native-pressable';
       if (imported === 'Text' || imported === 'Heading') return 'text';
       if (imported === 'Icon') return 'icon';
       if (imported === 'RowLink') return 'row-link';
