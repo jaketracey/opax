@@ -31,9 +31,10 @@ test('the person header source line names the Parliamentary roster and shows no 
     ts.forEachChild(node, find);
   })(app);
   assert.equal(lines.length, 1, 'one roster source line in the person header');
-  assert.deepEqual(['updated', 'dateLabel', 'asAt'].filter(key => key in lines[0]), []);
-  // The check date stays in the sheet's note, read from the data.
-  assert.match(lines[0].notes.getText(app), /rosterChecked/);
+  // No date on the line, and no "Checked <date>" note in its sheet; the source links stay.
+  assert.deepEqual(['updated', 'dateLabel', 'asAt', 'notes'].filter(key => key in lines[0]), []);
+  assert.ok('originals' in lines[0]);
+  assert.doesNotMatch(source, /rosterChecked|`Checked \$\{/);
 });
 const browserRole = person => {
   const representation = profileJurisdictions(person);

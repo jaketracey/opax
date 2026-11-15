@@ -6699,12 +6699,10 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
     ? electorateReference.module.personRepresentationRows(electorateReference.person, representation.representations, electorateReference.data.electorates)
     : representation.representations.length ? [["Recorded representation", representation.representations.map((r) =>
       `${esc(r.electorate)}${r.state && r.chamber !== 'senate' ? `, ${esc(r.state)}` : ''}`).join('<br>') + '<small class="representation-note">Roster affiliation; may include past seats.</small>']] : [];
-  const verified = (electorateReference?.person?.electorates || []).find((e) => e.current)?.as_of;
   // Who they are, dated: the identity block's one source line. Its sheet holds
   // what Quick facts held beyond the meta line, so every fact stays one tap away.
-  const rosterChecked = verified || rosterData?.meta?.representation?.updated || rosterData?.meta?.generated || "";
   // The line names the source only. The date the roster was last checked stays in the data and
-  // in the sheet's note: on the line it read as the page's own age.
+  // is not shown, on the line or in its sheet: it read as the page's own age.
   head.insertAdjacentHTML("beforeend", sourceLineHTML({
     source: "Parliamentary roster",
     originals: [
@@ -6721,7 +6719,6 @@ async function openSubject(kind, name, manageFocus, params = new URLSearchParams
         `${esc(r.start)} – ${esc(r.end || 'ongoing at the review date')}`]),
       dates.length && ["Speeches in the record", `${esc(fmtDate(dates[0]))} – ${esc(fmtDate(dates[dates.length - 1]))}`],
     ],
-    notes: [rosterChecked ? `Checked ${esc(fmtDate(rosterChecked))}.` : ""],
   }));
   head.insertAdjacentHTML("beforeend", `<div class="page-actions person-actions">
       ${moreMenuHTML([
