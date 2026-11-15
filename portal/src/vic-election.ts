@@ -1,5 +1,6 @@
 import {partyLabelHTML, partyShortName} from '../public/party-page.js'
 import {shortDate} from '../public/format.js'
+import {vacancyText, lastMemberText} from '../public/seat-vacancy.js'
 import {VIC_ELECTION_PATH, VIC_ELECTION_POLLS_OPEN, VIC_ELECTION_POLLS_CLOSE, VIC_ELECTION_DAY_START, VIC_ELECTION_EARLY_OPEN, VIC_ELECTION_EARLY_CLOSE, VIC_ELECTION_RESULTS_URL, VIC_ELECTION_ASSET, VIC_ELECTION_PLACES, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_CORRECTIONS_EMAIL, VIC_ELECTION_CORRECTIONS_RESPONSE, vicElectionEnabled} from '../public/vic-election.js'
 import {escapeHtml as esc, safeHref, type Crumb, type ReadAsset} from './seo-content'
 import {hubShell, type HubFooterConfig} from './hubs'
@@ -21,6 +22,9 @@ export interface Seat {
   result: {general: Contest; since: Contest | null} | null;
   candidates: {published: string; url: string; list: Candidate[]} | null;
   electorate_url: string; roster_date: string; members: Member[];
+  /** A district that was vacant when the Assembly expired (public/seat-vacancy.js): `members` is empty,
+   *  `on` is the day the term ended, `last` the last member and `to` the day their service ended. */
+  vacancy?: {on: string; at: 'expiry'; to: string; last: Member} | null;
 }
 export interface VicElection {
   current_results?: VicResults | null;
@@ -92,6 +96,12 @@ const links = (items: string[]) => `<ul class="hub-links">${items.map(x=>`<li>${
 export const latest = (s: Seat) => s.result ? s.result.since || s.result.general : null
 export const contestName = (c: Contest) => `${c.date.slice(0,4)} ${c.kind === 'general' ? 'election' : c.kind === 'supplementary' ? 'supplementary election' : 'by-election'}`
 const memberOf = (d: VicElection, name: string) => d.seats.find(s => s.kind === 'district' && s.name === name)!
+/** The newest roster date among seats that have members: a vacancy's date speaks for its own seat only. */
+export const rosterDate = (d: VicElection) => d.seats.filter(s=>s.members.length).map(s=>s.roster_date).sort().at(-1)!
+const vacancyLine = (s: Seat, subject = '') => vacancyText({as_of:s.vacancy!.on, chamber:'vic_la'}, subject)
+/** The people whose records a seat page shows. The app's district row and seat detail must name one
+ *  (the shipped decoders require it) and word it "Last held by": for a vacant seat, its last member. */
+export const recorded = (s: Seat): Member[] => s.members.length ? s.members : s.vacancy ? [s.vacancy.last] : []
 
 export interface KeyDate {
   id: 'enrolment' | 'caretaker' | 'nominations' | 'postal' | 'early' | 'election_day';
@@ -123,7 +133,7 @@ function keyDates(d: VicElection, now: Date) {
  *  (or, in finder results for a split place, the share of its residents). */
 function seatRow(s: Seat, share: number | null = null) {
   const r = latest(s)
-  const held = s.kind === 'district' ? `${esc(s.members[0].name)} ${party(s.members[0].party)}` : `${s.members.length} members`
+  const held = s.kind === 'district' ? s.vacancy ? 'Vacant' : `${esc(s.members[0].name)} ${party(s.members[0].party)}` : `${s.members.length} members`
   const [figure, when] = share !== null ? [share >= 99.95 ? 'All' : share < 1 ? 'Under 1%' : `${Math.round(share)}%`, 'of residents']
     // The caption says 2022; only a later by-election names its contest.
     : r ? [`${r.party} by ${points(r.margin)}`, r.kind === 'general' ? '' : contestName(r)] : ['','']
@@ -267,7 +277,7 @@ export function findSeats(q: string, d: VicElection, places: VicPlaces | null): 
 export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFooterConfig = {}, now = new Date(), find: {place: string; hits: PlaceHit[]} | null = null) {
   const path = s?.path || VIC_ELECTION_PATH
   const copy = vicElectionCopy(d,now,s), closed = pollsClosed(now)
-  const rosterNote = closed ? `Members are from the published roster dated ${shortDate(d.seats.map(s=>s.roster_date).sort().at(-1)!)}. ` : ''
+  const rosterNote = closed ? `Members are from the published roster dated ${shortDate(rosterDate(d))}. ` : ''
   const districtNote = rosterNote + 'Each row shows the member and the winning margin at the 2022 election, in percentage points, unless a later by-election is named.'
   const districts = d.seats.filter(x=>x.kind === 'district'), regions = d.seats.filter(x=>x.kind === 'region')
   let title: string, description: string, body: string, crumbs: Crumb[]
@@ -283,17 +293,22 @@ export function renderVicElection(d: VicElection, s: Seat | null, footer: HubFoo
       + section('districts','Lower house: 88 districts',seatList(districts.map(x=>seatRow(x)).join(''),'Districts'),districtNote)
       + section('regions','Upper house: 8 regions',`<ul class="vic-regions">${regions.map(r=>`<li><a class="vic-region" href="${esc(r.path)}"><span class="vic-seat-name">${esc(r.name)}</span><span class="vic-region-members">${r.members.map(m=>`<span>${esc(m.name)} ${party(m.party)}</span>`).join('')}</span></a></li>`).join('')}</ul>`,rosterNote+'Each region elects five members.')
   } else if (s.kind === 'district') {
-    const m = s.members[0], region = d.seats.find(r=>r.kind === 'region' && r.name === s.region)!
+    const m = recorded(s)[0], region = d.seats.find(r=>r.kind === 'region' && r.name === s.region)!
     title = `${s.name} district · Victorian election 2026`
     const r = latest(s)
-    description = `${closed ? 'Published member records for' : 'Who holds'} ${s.name}, ${r ? `the ${contestName(r)} result and winning margin, ` : ''}and what ${m.name} has done in Parliament. ${copy.lede}`
+    // A vacant seat names nobody as its holder, here or in the share card and structured data built from this.
+    description = s.vacancy
+      ? `${vacancyLine(s,s.name)} ${r ? `The ${contestName(r)} result and winning margin. ` : ''}${copy.lede}`
+      : `${closed ? 'Published member records for' : 'Who holds'} ${s.name}, ${r ? `the ${contestName(r)} result and winning margin, ` : ''}and what ${m.name} has done in Parliament. ${copy.lede}`
     crumbs = trail(VIC_ELECTION_PATH, s.name)
     body = `<div class="ui-page-head"><h1>${esc(s.name)}</h1><p class="ui-page-meta">Lower house district in ${link(region.path,region.name+' Region')}${s.formerly ? `. Called ${esc(s.formerly)} before 2022` : s.created ? '. First contested in 2022' : ''}.</p></div>`
       + `<p class="ui-lede">${esc(copy.lede)}</p>`
       + electionResults(d,s,now)
-      + `<dl class="vic-facts"><div><dt>${closed ? 'Member in published roster dated '+esc(shortDate(s.roster_date)) : 'Held by'}</dt><dd>${link(m.href,m.name)} ${party(m.party)}</dd></div>${resultFacts(s)}</dl>`
+      + `<dl class="vic-facts"><div>${s.vacancy
+        ? `<dt>Seat</dt><dd>${esc(vacancyLine(s))} ${lastMemberText(link(m.href,m.name),s.vacancy.to)}</dd>`
+        : `<dt>${closed ? 'Member in published roster dated '+esc(shortDate(s.roster_date)) : 'Held by'}</dt><dd>${link(m.href,m.name)} ${party(m.party)}</dd>`}</div>${resultFacts(s)}</dl>`
       + candidates(s)
-      + section('record',`What ${esc(m.name)} has done`,record(m,{search:true,heading:''}))
+      + section('record',s.vacancy ? `Last member: ${esc(m.name)}` : `What ${esc(m.name)} has done`,record(m,{search:true,heading:''}))
       + section('region',`Upper house: ${esc(region.name)} Region`,`<ul class="vic-people">${region.members.map(x=>`<li>${link(x.href,x.name)} ${party(x.party)}</li>`).join('')}</ul>${links([link(region.path,`${region.name} Region: members and their records`)])}`,`${esc(s.name)} is part of this upper house region, which elects five members.`)
       + keyDates(d,now)
       + `<div class="vic-elsewhere">${links([link(s.source_url,'District map and profile (VEC)'),link(VIC_ELECTION_PATH+'#find','Find another seat')])}</div>`

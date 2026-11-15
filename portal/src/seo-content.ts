@@ -335,7 +335,7 @@ export async function renderPersonAnswer(p: Person, read: ReadAsset, slugs: Map<
  * name does not drop down the page when the portrait arrives. The answer's
  * summary sentence stays as the paragraph after the head.
  */
-export function personHeadPrerender(html: string, p: Pick<Person,'name'|'full'|'current'|'states'|'chambers'|'representation'|'speech_scope'>, opts: {party?: string; portraitId?: string | null}): string {
+export function personHeadPrerender(html: string, p: Pick<Person,'name'|'full'|'current'|'states'|'chambers'|'representation'|'speech_scope'>, opts: {party?: string; portraitId?: string | null; served?: string | null}): string {
   const display = p.full && p.speech_scope ? p.full : p.name
   const portrait = opts.portraitId
     ? `<img class="subject-portrait" src="/photos/${encodeURIComponent(opts.portraitId)}.webp" alt="${/^\d+$/.test(opts.portraitId) ? 'Official portrait' : 'Portrait'} of ${escapeHtml(display)}" width="112" height="112">`
@@ -351,7 +351,8 @@ export function personHeadPrerender(html: string, p: Pick<Person,'name'|'full'|'
   const word = p.current && seats.length ? (house === 'Senate' ? 'Senator for ' : /council/i.test(house) ? 'MLC for ' : /representatives|assembly/i.test(house) ? 'Member for ' : '') : ''
   const parts = [
     opts.party ? partyLabelHTML(opts.party, {full: true}) : '',
-    seats.length ? `<span>${escapeHtml(word + seats.join(', '))}</span>` : '',
+    // `served`: the last member of a seat now recorded vacant, with the dates of that service (seat-vacancy.js).
+    opts.served ? `<span>${escapeHtml(opts.served)}</span>` : seats.length ? `<span>${escapeHtml(word + seats.join(', '))}</span>` : '',
     // Each house with its parliament as one part, as the app writes them.
     ...held.rows.filter(r => r.status === 'current' || r.status === '').map(r => `<span>${escapeHtml(r.label)}</span>`),
     // A parliament with no house shown, unless the seat already names it (a senator's state).

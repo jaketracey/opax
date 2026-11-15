@@ -7,6 +7,9 @@ import { partyLabelHTML, statusLabelHTML, sourceLineHTML } from './labels.js?v=f
 import { pageMenuHTML as moreMenuHTML } from './page-actions-menu.js?v=8640c3d1ca';
 // The person page reads its verified-roster and dated official-list party fallbacks through this module (roster-party.js).
 export { rosterSeatParty, rosterListParty } from './roster-party.js';
+// A seat recorded vacant when its house's term ended, and its last member, are read and worded in one module.
+import { seatVacancy, vacatedSeat, vacancyText, lastMemberText, servedText } from './seat-vacancy.js';
+export { seatVacancy, vacatedSeat };
 export const JURISDICTIONS = { federal: 'Federal', nsw: 'New South Wales', vic: 'Victoria', qld: 'Queensland', sa: 'South Australia', wa: 'Western Australia', tas: 'Tasmania', nt: 'Northern Territory', act: 'Australian Capital Territory' };
 export const CHAMBERS = { representatives: 'House of Representatives', senate: 'Senate', nsw_la: 'NSW Legislative Assembly', nsw_lc: 'NSW Legislative Council', vic_la: 'Victorian Legislative Assembly', vic_lc: 'Victorian Legislative Council', qld_la: 'Queensland Legislative Assembly', sa_ha: 'SA House of Assembly', sa_lc: 'SA Legislative Council', wa_la: 'WA Legislative Assembly', wa_lc: 'WA Legislative Council', tas_ha: 'Tasmanian House of Assembly', tas_lc: 'Tasmanian Legislative Council', nt_la: 'NT Legislative Assembly', act_la: 'ACT Legislative Assembly' };
 export const escapeHTML = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -68,6 +71,9 @@ export function recordedRepresentationHTML(representation, electorates) {
 export function personElectorateLinksHTML(person, representations = [], electorates = []) {
   const seats = person?.electorates || [];
   const current = seats.filter((e) => e.current);
+  // The last member of a seat now recorded vacant: the seat with the dates of their service, never as its holder.
+  const vacated = current.length ? null : vacatedSeat(person, electorates);
+  if (vacated) return servedText(`<a href="${esc(vacated.url)}">${esc(vacated.name)}</a>`, vacated.start, vacated.end);
   if (seats.length) return (current.length ? current : seats).map((e) => `<a href="${esc(e.url)}">${esc(e.name)}</a>`).join(', ');
   return representations.map((r) => recordedRepresentationHTML(r, electorates)).join(', ');
 }
@@ -105,7 +111,7 @@ export async function directorySpec({ photoUrlFor = () => null, partyChipHTML = 
       const holders = e.representatives || [];
       const src = holders[0]?.person?.name ? photoUrlFor(holders[0].person.name) : null;
       const face = src ? `<span class="el-face"><img src="${esc(src)}" alt="" loading="lazy" width="36" height="36"></span>` : '<span class="el-face el-face-blank" aria-hidden="true"></span>';
-      return `<li class="el-directory-row">${face}<div class="el-seat"><a class="el-name" href="${esc(e.url)}">${esc(e.name)}</a><span class="el-meta">${esc(JURISDICTIONS[e.jurisdiction])} · ${esc(CHAMBERS[e.chamber] || e.chamber)}${e.jurisdiction === 'federal' ? ` · ${esc(e.state_code.toUpperCase())}` : ''}${e.status === 'historical' ? ' · Historical' : ''}</span></div><div class="el-holders">${holders.length ? holders.map((m) => `<a href="${esc(personURL(m.person))}">${esc(m.person.name)}</a>${m.party ? ` · <a class="el-party" href="${partyUrl(m.party)}">${partyChipHTML(m.party)}</a>` : ''}`).join('<br>') : 'Representation not yet verified'}${e.representation_as_of ? `<small>Verified ${esc(date(e.representation_as_of))}</small>` : ''}</div><span class="el-meta">${e.election_count ? `${e.election_count} election${e.election_count === 1 ? '' : 's'} recorded` : 'No election results yet'}</span></li>`;
+      return `<li class="el-directory-row">${face}<div class="el-seat"><a class="el-name" href="${esc(e.url)}">${esc(e.name)}</a><span class="el-meta">${esc(JURISDICTIONS[e.jurisdiction])} · ${esc(CHAMBERS[e.chamber] || e.chamber)}${e.jurisdiction === 'federal' ? ` · ${esc(e.state_code.toUpperCase())}` : ''}${e.status === 'historical' ? ' · Historical' : ''}</span></div><div class="el-holders">${holders.length ? holders.map((m) => `<a href="${esc(personURL(m.person))}">${esc(m.person.name)}</a>${m.party ? ` · <a class="el-party" href="${partyUrl(m.party)}">${partyChipHTML(m.party)}</a>` : ''}`).join('<br>') : e.representation_status === 'verified' ? 'Vacant' : 'Representation not yet verified'}${e.representation_as_of ? `<small>Verified ${esc(date(e.representation_as_of))}</small>` : ''}</div><span class="el-meta">${e.election_count ? `${e.election_count} election${e.election_count === 1 ? '' : 's'} recorded` : 'No election results yet'}</span></li>`;
     },
     fineprint: `Coverage varies by parliament. A missing representative or result means the records do not confirm one yet. ABS state outlines use 2025 statistical geography. <a href="/electorates/manifest.json">Sources and reference downloads</a>.`,
   };
@@ -208,7 +214,8 @@ export function heldSinceLine(detail) {
 export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) {
   const selected = on ? representationAt(detail, on) : { status: detail.representation_status, members: detail.representatives, as_of: detail.representation_as_of };
   const plural = Math.max(detail.capacity || 1, selected.members.length) > 1;
-  const title = on ? `Representation on ${date(on)}` : `${detail.status === 'historical' ? 'Last recorded member' : 'Current member'}${plural ? 's' : ''}`;
+  const vacancy = on ? null : seatVacancy(detail);
+  const title = on ? `Representation on ${date(on)}` : vacancy ? 'Member' : `${detail.status === 'historical' ? 'Last recorded member' : 'Current member'}${plural ? 's' : ''}`;
   // The upper house a seat sits within represents its people too; any other relation is named as such.
   const upperOnly = detail.relations.every((r) => r.kind === 'within_upper_house');
   const boundary = [...detail.boundaries].filter((b) => b.geometry).sort((a, b) => Number(b.geometry_kind === 'official') - Number(a.geometry_kind === 'official') || String(b.applicable_election_date || b.effective_from || b.vintage || '').localeCompare(String(a.applicable_election_date || a.effective_from || a.vintage || '')))[0];
@@ -226,7 +233,7 @@ export function profileHTML(detail, on = '', { photoUrlFor = () => null } = {}) 
       { href: detail.detail_url, label: 'Download this electorate', detail: 'JSON, every record on this page with its sources' },
       { href: '/subject/electorate', label: 'All electorates' },
     ], 'More about this electorate')}</div></div>
-    <div class="el-intro"><section id="el-held" class="ui-section"><h2 class="ui-section-title">${esc(title)}</h2>${selected.status === 'conflicting' ? '<p class="ui-empty">The service records for this date conflict.</p>' : selected.members.length ? `<ul class="ui-list el-members" data-rule="none">${selected.members.map((m) => memberHTML(m, people, photoUrlFor)).join('')}</ul>` : `<p class="ui-empty">${selected.status === 'verified' ? 'Vacant at this observation.' : 'No confirmed representative for this date.'}</p>`}${on ? `<p class="el-latest"><a href="${esc(detail.url)}">Latest check</a></p>` : ''}
+    <div class="el-intro"><section id="el-held" class="ui-section"><h2 class="ui-section-title">${esc(title)}</h2>${selected.status === 'conflicting' ? '<p class="ui-empty">The service records for this date conflict.</p>' : selected.members.length ? `<ul class="ui-list el-members" data-rule="none">${selected.members.map((m) => memberHTML(m, people, photoUrlFor)).join('')}</ul>` : `<p class="ui-empty">${vacancy ? `${esc(vacancyText(vacancy))}${vacancy.last ? ` ${lastMemberText(`<a href="${esc(personURL(vacancy.last))}">${esc(displayName(vacancy.last.name))}</a>`, vacancy.last.end)}` : ''}` : selected.status === 'verified' ? 'Vacant at this observation.' : 'No confirmed representative for this date.'}</p>`}${on ? `<p class="el-latest"><a href="${esc(detail.url)}">Latest check</a></p>` : ''}
       ${sourceLineHTML({ updated: selected.as_of || '', dateLabel: 'As at', source: 'Electoral and parliamentary records',
         state: selected.status === 'partial' ? 'partial' : '',
         originals: originalsOf(held), licence: licences(held),

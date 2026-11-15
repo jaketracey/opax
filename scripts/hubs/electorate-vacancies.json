@@ -1,0 +1,39 @@
+{
+  "about": "Reviewed record of seats that were vacant when their house's term ended. scripts/export_electorates.py reads it on every export (parli.electorates.apply_vacancies) and writes, into the electorate bundle, a complete roster observation with no members dated as_of, the last member's dated service record, and the sources. Readers then see no representative for the seat through the existing fields. at is \"expiry\": as_of is the day the house's term ended, which must be the dissolved_on of a record in electorate-dissolutions.json. last_member gives the person as the bundle names them, the party the roster recorded, the party label and the start and end of service as the parliament's member page gives them. Each source is the official page read on fetched_at (sha256 of the bytes read), with what it says in evidence. A record applies only while the seat's roster before as_of still lists the last member alone; otherwise the export stops and the record is reviewed. No cause is recorded.",
+  "vacancies": [
+    {
+      "jurisdiction": "vic",
+      "chamber": "vic_la",
+      "electorate": "Brunswick",
+      "as_of": "2026-11-03",
+      "at": "expiry",
+      "last_member": {
+        "person_id": "person_2841eb5eccfe57458fda8ffb",
+        "name": "Tim Read",
+        "party": "Greens",
+        "source_party_label": "The Australian Greens - Victoria",
+        "start": "2018-11-24",
+        "end": "2026-09-19"
+      },
+      "sources": [
+        {
+          "label": "Parliament of Victoria member page, Tim Read",
+          "url": "https://www.parliament.vic.gov.au/members/tim-read/",
+          "fetched_at": "2026-11-16",
+          "sha256": "07f457c751c6f1e15e9dbf7a048675b2c55690850e1ce833cce780d95e201165",
+          "licence": "See source terms",
+          "evidence": "Former Member. Electorate: Brunswick (24 November 2018 - 19 September 2026). Parties represented: The Australian Greens - Victoria (2022 - 2026); Victorian Greens (2018 - 2022)."
+        },
+        {
+          "label": "VEC state by-election and supplementary election results",
+          "url": "https://www.vec.vic.gov.au/results/state-election-results/state-by-elections-timeline",
+          "fetched_at": "2026-11-16",
+          "sha256": "8cdf5ea7493af14a69bbf6ead8e2660c067a9a098c64994729a281013e7555cf",
+          "licence": "See source terms",
+          "evidence": "The only 2026 entry is the Nepean District by-election, Saturday 2 May. No Brunswick District by-election is listed."
+        }
+      ],
+      "reviewed": "2026-11-16"
+    }
+  ]
+}

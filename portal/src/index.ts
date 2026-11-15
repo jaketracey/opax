@@ -94,6 +94,7 @@ import { operatorAuthorized } from './operator-auth'
 import { deliverReplyEmails, REPLY_EMAIL_CRON } from './community-notifications'
 import { partyUrl, personUrl, personNameKey } from '../public/party-page.js'
 import { referenceOnlyPeople } from '../public/roster-party.js'
+import { seatVacancy, vacatedSeat, vacancyText, servedText } from '../public/seat-vacancy.js'
 import { NO_HANSARD_HELD } from '../public/held-back-transcripts.js'
 import {foldDonorName} from '../public/donor-entity.js'
 import { canonicalPageRedirect } from './canonical-origin'
@@ -4942,7 +4943,7 @@ async function buildMeta(route: SeoRoute, url: URL, request: Request, env: Env, 
           const query = guardTableURL(voteTableConfig(p.pid || ''),url).query
         const content = await timed('person-render', () => renderPersonAnswer(p,read,people.slugOf,identity.aphProfileUrl || undefined,url.searchParams))
         const photos=await loadPhotos(env).catch(()=>null)
-        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name)})
+        const head=personHeadPrerender(content.html,p,{party:content.party,portraitId:photoIdFor(photos,p.name),served:p.current ? null : await servedVacatedSeat(env,p.name)})
         meta.prerender = head + (p.representation?.some(r=>r.jurisdiction==='vic') ? `<div class="wrap">${await vicGiftsPersonBlock(new URL(meta.canonical).pathname,vicGiftsReader(env.ASSETS),url)}</div>` : '')
         if(content.description) meta.description=clip(content.description)
         personIdentity={...identity,portraitId:photoIdFor(photos,p.name)}
@@ -5143,7 +5144,7 @@ async function billMeta(key: string, env: Env): Promise<PageMeta> {
 interface ElectorateSummary {
   electorate_id: string; slug: string; name: string; jurisdiction: string; chamber: string;
   state_code: string; status: string; url: string; detail_url: string;
-  representation_as_of: string | null; election_count: number;
+  representation_as_of: string | null; representation_status?: string; election_count: number;
   representatives: { person_id: string; party?: string; person: { name: string } }[];
 }
 interface ElectoratePerson {
@@ -5162,6 +5163,14 @@ function loadElectorates(env: Env) {
     }).catch((error) => { electorateMemo = null; throw error })
   return electorateMemo
 }
+/** "Member for Brunswick, 2018 to 19 September 2026" for the last member of a seat the release now records
+ *  vacant (public/seat-vacancy.js), else null. The name must be one person's in the release. */
+async function servedVacatedSeat(env: Env, name: string): Promise<string | null> {
+  const data = await loadElectorates(env).catch(() => null)
+  const matches = data?.people.filter((x) => [x.name, ...(x.aliases || [])].includes(name)) ?? []
+  const seat = matches.length === 1 ? vacatedSeat(matches[0], data!.electorates) : null
+  return seat ? servedText(seat.name, seat.start, seat.end) : null
+}
 async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const data = await loadElectorates(env).catch(() => null)
   const e = data?.electorates.find((e) => e.slug === name || e.electorate_id === name)
@@ -5170,9 +5179,12 @@ async function electorateMeta(name: string, url: URL, env: Env): Promise<PageMet
     description: 'Browse the OPAX electorate directory.', canonical: canonicalFor(url, true), ogType: 'website',
     status: data ? 404 : 503, jsonLd: null, prerender: null,
   }
+  // A verified roster with nobody on it is a recorded vacancy (public/seat-vacancy.js); it names no holder.
+  const vacancy = !e.representatives.length && e.representation_status === 'verified'
+    ? seatVacancy(await sharedAssetJson<unknown>(env, e.detail_url).catch(() => null)) : null
   const representation = e.representatives.length
     ? `${e.representatives.map((m) => `${m.person.name}${m.party ? ` (${m.party})` : ''}`).join(', ')}. Verified ${e.representation_as_of}.`
-    : 'No verified representative for this electorate yet.'
+    : vacancy ? vacancyText(vacancy) : 'No verified representative for this electorate yet.'
   const house = chamberLabel(e.chamber)
   const facts = `${e.name}, ${e.jurisdiction === 'federal' ? `Federal ${house || 'Parliament'}` : house || `${STATE_NAMES[e.jurisdiction] ?? 'State parliament'}`}. ${representation} ${e.election_count} election ${e.election_count === 1 ? 'contest' : 'contests'} on record.`
   const canonical = `${SITE_ORIGIN}${e.url}`
@@ -5400,7 +5412,10 @@ async function personMeta(name: string, url: URL, env: Env): Promise<PageMeta> {
   const federal = p.states.includes('federal')
   // The title a search result shows: their role and seat as the parliament
   // names them, then what the page holds (see seo-titles.ts).
-  const role = p.speech_scope ? null : personRole(p, new Date().getUTCFullYear())
+  // The last member of a seat now recorded vacant is named with the dates of that service, never as sitting.
+  const served = p.speech_scope || p.current ? null : await servedVacatedSeat(env, p.name)
+  const role = p.speech_scope ? null : served ? { name: display, former: '', party: '', role: served, tag: '', federal: false }
+    : personRole(p, new Date().getUTCFullYear())
   const interests = await hasInterestsRegister(env, display, p.pid)
   title = personTitle(display, role, federal ? (interests ? 'Speeches, votes & interests' : 'Speeches & votes') : 'Speeches')
   const count = p.roster_only ? NO_HANSARD_HELD : p.speech_count_basis ? `No exact speech count yet; it will count only speeches they gave in the ${where} while in office.` : `${num(p.speeches ?? 0)} speeches in Hansard.`

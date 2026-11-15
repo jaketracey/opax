@@ -11,6 +11,7 @@ import {personNameKey} from '../portal/public/canonical-urls.js';
 import {day, latest} from '../portal/public/hubs-data.js';
 import {divisionPlain} from '../portal/public/division-markdown.js';
 import {validateVicElection, validateVicPlaces, validateVicResults} from '../portal/src/vic-election-data.ts';
+import {seatVacancy} from '../portal/public/seat-vacancy.js';
 import {VIC_ELECTION_PATH, VIC_ELECTION_PLACES, VIC_ELECTION_AUTHORISATION_LINE, VIC_ELECTION_CORRECTIONS_EMAIL, VIC_ELECTION_CORRECTIONS_RESPONSE} from '../portal/public/vic-election.js';
 
 // Only the result fields the hub shows: no candidate names.
@@ -60,13 +61,18 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
   const currentResults = currentSource === undefined ? null : projectVicResults(currentSource,config.election_day,districtNames);
   if (JSON.stringify(Object.keys(results.districts).sort()) !== JSON.stringify(districtNames)) throw new Error('VEC results do not cover the 88 districts');
   if (JSON.stringify(places.districts) !== JSON.stringify(districtNames)) throw new Error('ABS place splits do not use the 88 VEC districts');
-  const seats = constituencies.map(c => {
+  const seats = await Promise.all(constituencies.map(async c => {
     const house = c.kind === 'district' ? 'vic_la' : 'vic_lc';
     const matches = index.electorates.filter(s => s.jurisdiction === 'vic' && s.chamber === house && s.name === c.name && s.status === 'current');
     if (matches.length !== 1) throw new Error(`No exact state electorate: ${c.name}`);
     const seat = matches[0];
-    if (seat.representation_status !== 'verified' || seat.representatives.length !== (c.kind === 'district' ? 1 : 5)) throw new Error(`Unverified roster: ${c.name}`);
-    const members = seat.representatives.map(({person,party}) => {
+    // A district the release records vacant when the Assembly expired (public/seat-vacancy.js) has no member:
+    // it carries the vacancy and its last member's record instead. Any other count is an unverified roster.
+    const vacancy = c.kind === 'district' && seat.representation_status === 'verified' && !seat.representatives.length
+      ? seatVacancy(await read(seat.detail_url)) : null;
+    if (vacancy && (!vacancy.last || vacancy.as_of !== seat.representation_as_of)) throw new Error(`Vacancy without a last member: ${c.name}`);
+    if (seat.representation_status !== 'verified' || seat.representatives.length !== (vacancy ? 0 : c.kind === 'district' ? 1 : 5)) throw new Error(`Unverified roster: ${c.name}`);
+    const member = ({person,party}) => {
       const p = identity.byFold.get(personNameKey(person.name));
       const href = p ? `/subject/person/${identity.slugOf.get(p.name)}` : PERSON_PATHS.exact[person.name];
       if (!href || !publishedPaths.has(href) || !/^\/subject\/person\/[a-z0-9-]+$/.test(href)) throw new Error(`No published person path: ${person.name}`);
@@ -87,7 +93,8 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
         speech_gap:!p || !p.speeches ? 'No speech count for this member.' : !vicOnly ? 'This speech count cannot be split from speeches in other parliaments.' : null,
         votes:v ? {count:v.divisions_total,ayes:v.ayes,noes:v.noes} : null,
         detailed_count:rows.length,divisions:rows.slice(0,5)};
-    });
+    };
+    const members = seat.representatives.map(member);
     const result = results.districts[c.name];
     const list = (c.kind === 'district' ? nominated?.districts : nominated?.regions)?.[c.name];
     return {name:c.name,kind:c.kind,path:`${VIC_ELECTION_PATH}/${personSlug(c.name)}`,source_url:c.source_url,
@@ -96,8 +103,10 @@ export async function buildVicElection(root, configPath = fileURLToPath(new URL(
       result:result ? {general:contest(result.general),since:contest(result.since) || null} : null,
       candidates:list?.length ? {published:nominated.published,url:c.source_url.replace(/\/$/,'')+'/nominations',list:list.map(x=>({name:x.name,party:x.party || '',
         ...c.kind === 'region' ? {group:x.group,group_name:x.group_name} : {}}))} : null,
-      electorate_url:seat.url,roster_date:seat.representation_as_of,members};
-  });
+      electorate_url:seat.url,roster_date:seat.representation_as_of,members,
+      ...vacancy ? {vacancy:{on:vacancy.as_of,at:vacancy.at,to:vacancy.last.end,
+        last:member({person:{name:vacancy.last.name,source_url:vacancy.last.source_url},party:vacancy.last.party})}} : {}};
+  }));
   const updated = latest([config.updated,nominated?.published,currentResults?.fetched,roster.meta.generated,roster.meta.representation?.updated,day(corpus.version),...seats.map(s=>s.roster_date)]);
   const pages = [{path:VIC_ELECTION_PATH,lastmod:updated},...seats.map(s=>({path:s.path,lastmod:updated}))];
   const data = {authorisation:VIC_ELECTION_AUTHORISATION_LINE,
