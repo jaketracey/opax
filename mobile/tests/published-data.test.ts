@@ -33,10 +33,26 @@ describe(`published data under ${publishedRoot()}`, () => {
     },
   );
 
-  test('the bills are there: an empty folder must not pass', () => {
-    expect(counts['bills index']).toBe(1);
-    expect(counts.bills).toBeGreaterThan(1000);
-  });
+  // A folder that moved, or a pattern that matches nothing, must not pass.
+  // Families the app branch's own copy of the data does not carry yet are
+  // required only where the data is given (OPAX_PUBLISHED_DIR: main's).
+  const onlyOnMain = ['on this day', 'sitting days', 'recent divisions'];
+  const least: Record<string, number> = {
+    bills: 1000,
+    electorates: 100,
+    interests: 100,
+    'on this day': 366,
+  };
+  test.each(families.map((family) => family.name))(
+    '%s: the files are there',
+    (name) => {
+      if (!process.env.OPAX_PUBLISHED_DIR && onlyOnMain.includes(name)) return;
+      // Not published anywhere yet (api/policy.ts: "Absent until it ships");
+      // the app reads its absence as no recent votes. Checked once it exists.
+      if (name === 'recent divisions' && !counts[name]) return;
+      expect(counts[name]).toBeGreaterThanOrEqual(least[name] ?? 1);
+    },
+  );
 });
 
 describe('what the guard catches', () => {

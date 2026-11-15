@@ -2,8 +2,15 @@ import { readdirSync, readFileSync, existsSync, statSync } from 'fs';
 import { join, relative, resolve } from 'path';
 import * as d from '../src/api/catalog-decoders';
 import { ApiError } from '../src/api/errors';
-import { observeLeniency, type Leniency } from '../src/api/validation';
+import {
+  isPartialCatalog,
+  observeLeniency,
+  type Leniency,
+} from '../src/api/validation';
+import { decodeOnThisDayIndex } from '../src/features/bills/on-this-day';
 import { decodePartyFile } from '../src/features/directories/party-file';
+import { decodeSittingDays } from '../src/features/today/sitting';
+import { decodeRecentDivisions } from '../src/features/today/votes';
 
 /**
  * The data guard's engine: the app's own decoders, as they ship, run over
@@ -151,6 +158,24 @@ export const families: Family[] = [
     decode: d.decodeAecExtras,
   },
   {
+    name: 'on this day',
+    files: (root) =>
+      listed(root, 'parliament/on-this-day', (name) =>
+        /^\d{2}-\d{2}\.json$/.test(name),
+      ),
+    decode: decodeOnThisDayIndex,
+  },
+  {
+    name: 'sitting days',
+    files: one('parliament/sitting-days.json'),
+    decode: decodeSittingDays,
+  },
+  {
+    name: 'recent divisions',
+    files: one('divisions/recent.json'),
+    decode: decodeRecentDivisions,
+  },
+  {
     name: 'party files',
     files: (root) =>
       listed(root, 'graph', (name) =>
@@ -187,7 +212,11 @@ export function problemsIn(value: unknown, decode: Decode): string[] {
   const found: string[] = [];
   const stop = observeLeniency((event) => found.push(leniencyLine(event)));
   try {
-    decode(value);
+    const decoded = decode(value);
+    // A decoder that lost something without saying where (an electorate's
+    // outline, a lenient field) still marks what it returns as partial.
+    if (!found.length && isPartialCatalog(decoded))
+      found.push('(file): Read in part, with nothing named (partial)');
   } catch (error) {
     if (!(error instanceof ApiError)) throw error;
     const [field, reason] = fieldPath(error.message);
