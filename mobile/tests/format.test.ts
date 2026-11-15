@@ -11,6 +11,7 @@ import {
   formatDate,
   formatFinancialYear,
   titleWith,
+  titleWithWords,
   formatMoney,
   formatMoneyCompact,
   formatMoneyWords,
@@ -291,4 +292,11 @@ test('a title’s separator goes with the part after it, which never breaks: the
   );
   // No break point follows the dot, and none sits inside the part.
   expect(titleWith('Albert Park', 'Suburb')).not.toMatch(/· /);
+  // A part of several words keeps its own breaks: only the dot is bound.
+  expect(titleWithWords('St Kilda', 'Council area')).toBe(
+    'St Kilda ·\u00a0Council area',
+  );
+  expect(titleWithWords('St Kilda', 'Suburb')).toBe(
+    titleWith('St Kilda', 'Suburb'),
+  );
 });

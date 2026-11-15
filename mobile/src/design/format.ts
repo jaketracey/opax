@@ -209,6 +209,17 @@ export function titleWith(title: string, part: string): string {
   return `${title} ·\u00a0${unbroken(part)}`;
 }
 
+/**
+ * The same, for a part of more than one word that may be wider than a line
+ * at the largest text sizes ("St Kilda · Council area"). Only the dot is
+ * bound, to the part's first word: the part still breaks between its own
+ * words. Kept whole, "· Council area" at AX5 is wider than a phone's
+ * column, so it broke inside a word and the heading was stepped down.
+ */
+export function titleWithWords(title: string, part: string): string {
+  return `${title} ·\u00a0${part}`;
+}
+
 /** Financial year with an en dash: 2024 → "2024–25". */
 export function formatFinancialYear(startYear: number): string {
   return `${startYear}–${String((startYear + 1) % 100).padStart(2, '0')}`;

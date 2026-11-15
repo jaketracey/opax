@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AccessibilityInfo, View } from 'react-native';
 import { InlineError, Skeleton } from '../../design/states';
-import { titleWith } from '../../design/format';
+import { titleWithWords } from '../../design/format';
 import { Text } from '../../design/text';
 import { SourceLine } from '../../design/source';
 import { rhythm } from '../../design/tokens';
@@ -85,7 +85,7 @@ export function Finder({
               title={
                 hit.kind === 'District' || hit.kind === 'Region'
                   ? undefined
-                  : titleWith(hit.name, hit.kind)
+                  : titleWithWords(hit.name, hit.kind)
               }
             >
               {hit.seats.map((s) =>
