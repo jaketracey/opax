@@ -352,8 +352,8 @@ boundary, including a new failure after Try again. It uses `track`, the same
 build-config gate (`extra.analytics`) and both privacy scrubbers; there is no
 separate analytics consent setting in the app. Voice consent does not enable
 analytics. E2E and all development builds send no report. No
-identify call or new identifier is added. The same error also goes out once
-as a crash and error report (below).
+identify call or new identifier is added. The error also goes out as a crash
+and error report (below), at most once for each route in a launch.
 
 `error_class` accepts the built-in Error constructors, `ApiError`,
 `PersonIdentityError`, `ChatSyncError` and `AskFailure`; unknown constructors
@@ -429,8 +429,30 @@ captures nothing automatically.
   `errorTracking.autocapture`. Console capture is off (`console: []`) and
   breadcrumbs (`exceptionSteps`) are off.
 - **Route render errors.** React does not pass an error a boundary caught to
-  the global handler in release builds, so `reportRouteError` sends it once
-  with `captureException`, beside `opax_route_error`.
+  the global handler in release builds, so `reportRouteError` sends it with
+  `captureException`, beside `opax_route_error`. This is what says what was
+  thrown when a page shows "This page couldn't be shown". The report holds:
+  - the error's name (a built-in or runtime type name, else `Error`);
+  - its message, through the exception scrubber below (nothing in quotes,
+    no URL path past its first segment, no query, email or long number, at
+    most 120 characters);
+  - its stack frames, as every JS error report has them (where the code is,
+    never what it was working on);
+  - `route_pattern`: the route file's pattern, such as `/bill/[key]`. It is
+    built from the layout segments Expo Router gives (file names, never
+    values), without groups, and kept only when it is on the fixed list in
+    `mobile/src/analytics/route-patterns.ts`; anything else is `/other`.
+    A parameter's value, a path and a query never appear. With its own
+    route named, the report drops the SDK's screen property;
+  - the build and device class every event carries (`app_version`,
+    `app_build`, `platform`, `$device_type`, `layout`, `foldable`).
+
+  It holds no search term, Ask text, postcode, electorate or URL query, and
+  no component stack: Expo Router's boundary does not pass one on. At most
+  one is sent for each route in a launch, so a page that fails again (on Try
+  again, or for another record) adds none; `opax_route_error` still counts
+  each failure. The build gate is the only switch: the app has no analytics
+  opt-out, and a build that sends no analytics sends none of this.
 - **Native crashes.** `@posthog/react-native-plugin` 2.13.0 (posthog-ios
   3.92.7 with PLCrashReporter, posthog-android 3.74.2) with `nativeCrashes`
   and `androidNdkCrashes` on. A crash is written to disk and sent on the next

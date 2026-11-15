@@ -11,6 +11,8 @@
  * these same rules in Swift and Kotlin, so keep the three in step.
  */
 
+import { routeErrorPattern } from './route-patterns';
+
 export const EXCEPTION_MESSAGE_MAX_LENGTH = 120;
 // Longer input is cut before the rules run; a quote the cut opens is then
 // caught by the unclosed-quote rule, so nothing past it survives.
@@ -129,7 +131,11 @@ const address = token(/^0x[0-9a-f]{1,16}$/i);
 
 // Built-in, SDK and runtime names ("TypeError", "java.lang.IllegalState
 // Exception", "EXC_BAD_ACCESS", "SIGABRT"), or Swift's fixed fatal kinds.
-const swiftFatalTypes = ['Assertion failed', 'Fatal error', 'Precondition failed'];
+const swiftFatalTypes = [
+  'Assertion failed',
+  'Fatal error',
+  'Precondition failed',
+];
 function exceptionType(value: unknown): string {
   return typeof value === 'string' &&
     (/^[A-Za-z_$][A-Za-z0-9_$.:]{0,79}$/.test(value) ||
@@ -251,5 +257,10 @@ export function scrubExceptionProperties(
   // flag only, so dashboards can leave test reports out. JavaScript reports
   // only; a native crash report never carries it.
   if (raw.opax_test === true) clean.opax_test = true;
+  // The route a render error was caught on (reportRouteError): one of the
+  // fixed route-file patterns ("/bill/[key]"), or nothing. Never a path,
+  // a parameter's value or a query. JavaScript reports only.
+  const route = routeErrorPattern(raw.route_pattern);
+  if (route) clean.route_pattern = route;
   return clean;
 }

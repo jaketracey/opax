@@ -513,6 +513,10 @@ export function scrubEvent<T extends CaptureEvent>(
     captured.event === 'opax_app_start'
   )
     delete properties.$screen_name;
+  // A route boundary's error report names its route from the fixed list
+  // too (`route_pattern`), so the SDK's screen property goes the same way.
+  if (captured.event === '$exception' && exception?.route_pattern)
+    delete properties.$screen_name;
   if (captured.event === '$screen' && !properties.$screen_name) return null;
   return {
     ...captured,
