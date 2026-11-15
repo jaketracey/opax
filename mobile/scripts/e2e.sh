@@ -5,6 +5,8 @@ export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer EXPO_NO_TELEMETR
 # With no journeys this runs 01-04. --all-iphone runs the whole iPhone suite on
 # the default fixture; --list-iphone prints that and the separate runs it needs.
 if [ "${1:-}" = --list-iphone ]; then source scripts/qa-flows.sh; qa_iphone_plan; exit 0; fi
+# Environment: OPAX_CONTENT_SIZE (the simulator's text size, default large)
+# and OPAX_E2E_APPEARANCE (its appearance, light or dark, default light).
 UDID=${1:?Usage: scripts/e2e.sh udid [--all-iphone | 01 02 03 04 ... | .maestro/<flow>.yaml ...]; scripts/e2e.sh --list-iphone}; shift
 source scripts/qa-env.sh
 source scripts/qa-lock.sh
@@ -37,9 +39,22 @@ if [[ ! "$MAESTRO_DRIVER_STARTUP_TIMEOUT" =~ ^[0-9]+$ || ${#MAESTRO_DRIVER_START
 fi
 export MAESTRO_DRIVER_STARTUP_TIMEOUT=$((10#$MAESTRO_DRIVER_STARTUP_TIMEOUT))
 SIZE=${OPAX_CONTENT_SIZE:-large}
-# The app is light-only; dark is for checking the launch screen (journey 28b).
-APPEARANCE=${OPAX_APPEARANCE:-light}
-case "$APPEARANCE" in light|dark) ;; *) echo "OPAX_APPEARANCE must be light or dark" >&2; exit 1 ;; esac
+# OPAX_E2E_APPEARANCE (light, the default, or dark) is the simulator's
+# appearance for the run; e2e-device.sh sets it with simctl and restores the
+# device's own afterwards. The app is light-only; dark is for checking the
+# launch screen (journey 28b).
+# OPAX_APPEARANCE is a different switch: app.config.ts reads it for a build's
+# interface style (light or automatic) and rejects anything else, and this
+# run's static check evaluates that config. So it is passed on untouched,
+# except for dark, this script's earlier spelling of a dark simulator, which
+# still means that and is not passed on.
+APPEARANCE=${OPAX_E2E_APPEARANCE:-}
+if [ "${OPAX_APPEARANCE:-}" = dark ]; then
+  APPEARANCE=${APPEARANCE:-dark}
+  unset OPAX_APPEARANCE
+fi
+APPEARANCE=${APPEARANCE:-light}
+case "$APPEARANCE" in light|dark) ;; *) echo "OPAX_E2E_APPEARANCE must be light or dark" >&2; exit 1 ;; esac
 RUN=${OPAX_QA_RUN:-$(date -u +%Y%m%dT%H%M%SZ)-${UDID:0:8}-$SIZE}
 OUT="$PWD/private/qa/$RUN"
 mkdir -p "$OUT/screenshots" "$OUT/maestro"
