@@ -1,4 +1,10 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useState } from 'react';
+import {
+  Pressable,
+  StyleSheet,
+  View,
+  type LayoutChangeEvent,
+} from 'react-native';
 import {
   Icon,
   Text,
@@ -9,6 +15,13 @@ import {
 import { colors, minimumTarget, rhythm } from '../../design/tokens';
 import { presentSource } from '../../navigation/sheets';
 import { FiltersLine } from './FiltersLine';
+
+/**
+ * Stands in for the count and source line before the count is known: the
+ * longest ordinary line, so the held height is never too small.
+ */
+export const COUNT_STAND_IN =
+  '0,000+ results · Updated 00 Mmm 0000 · Hansard and 3 more';
 
 /**
  * The results header under the scope control (journeys/search.md 3.4):
@@ -32,19 +45,40 @@ export function ResultsHeader({
   onClearFilters?: () => void;
   onOpenFilters?: () => void;
 }) {
+  // The height the stand-in line took at this text size: the real line is
+  // never shorter, so the results under it do not move up either.
+  const [reserved, setReserved] = useState(0);
   return (
     <View style={styles.header}>
       {count !== null || details ? (
-        <CountLine count={count} details={details} />
+        <CountLine count={count} details={details} minHeight={reserved} />
       ) : (
         // The line's place is held while the count is unknown, so the
-        // results drawn under it never move down when it arrives.
+        // results drawn under it never move down when it arrives. It is the
+        // same glyph and text style with stand-in words, so it wraps as the
+        // real line does at every text size (three lines at AX3).
         <View
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
           testID="search-count-pending"
-          style={styles.line}
-        />
+          onLayout={(event: LayoutChangeEvent) => {
+            const { height } = event.nativeEvent.layout;
+            setReserved((was) => (height > was ? height : was));
+          }}
+          style={[styles.line, styles.standIn]}
+        >
+          <View style={styles.glyph}>
+            <Icon
+              name={symbols.source}
+              size={13}
+              maxScale={1.5}
+              tone="inkSoft"
+            />
+          </View>
+          <Text variant="footnote" tone="inkSoft" style={styles.text}>
+            {COUNT_STAND_IN}
+          </Text>
+        </View>
       )}
       {filters && onClearFilters ? (
         <FiltersLine
@@ -60,10 +94,14 @@ export function ResultsHeader({
 function CountLine({
   count,
   details,
+  minHeight,
 }: {
   count: string | null;
   details: SourceDetails | null;
+  /** The height already held for this line, when taller than the target. */
+  minHeight: number;
 }) {
+  const held = minHeight > minimumTarget ? { minHeight } : null;
   const parts = details ? sourceLineParts(details) : null;
   const lead = [count, parts?.date].filter(Boolean).join(' · ');
   const spoken = [
@@ -102,7 +140,7 @@ function CountLine({
         accessible
         accessibilityLabel={spoken}
         testID="search-count"
-        style={styles.line}
+        style={[styles.line, held]}
       >
         {line}
       </View>
@@ -114,7 +152,7 @@ function CountLine({
       accessibilityHint="Opens the sources"
       testID="search-count"
       onPress={() => presentSource(details, { testID: 'search-sources' })}
-      style={styles.line}
+      style={[styles.line, held]}
     >
       {line}
     </Pressable>
@@ -129,6 +167,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
   },
+  standIn: { opacity: 0 },
   glyph: { alignSelf: 'center' },
   text: { flexShrink: 1 },
 });
