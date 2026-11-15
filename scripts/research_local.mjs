@@ -262,7 +262,15 @@ try {
   for (const q of questions) {
     const prior=q.followup_of?dump.find(r=>r.q.id===q.followup_of):priorFile?JSON.parse(readFileSync(priorFile,'utf8')):undefined;
     if(q.followup_of&&!prior)throw new Error('Missing prior turn: '+q.followup_of);
-    const {status, ms, d, request, stream, telemetry} = await ask(base, q, prior);
+    let asked = await ask(base, q, prior);
+    // wrangler dev can restart the local Worker under a request (a rebuild); that 503 says so and never reached Ask.
+    // Wait for the Worker to answer again and ask once more. Any other failure is the answer and is recorded as it is.
+    if (asked.status === 503 && /worker restarted mid-request/i.test(String(asked.d?.error ?? ''))) {
+      console.log(`  local Worker restarted during ${q.id}; waiting for it and asking once more`);
+      await waitForHealth(() => up(base), {timeoutMs: START_TIMEOUT_MS, failed: () => false});
+      asked = await ask(base, q, prior);
+    }
+    const {status, ms, d, request, stream, telemetry} = asked;
     const r = {...(d.research || {})}, c = checks(d);
     if (telemetry) {
       r.cost_usd ??= telemetry.cost_usd;

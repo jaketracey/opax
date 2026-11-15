@@ -166,3 +166,16 @@ test('end to end: two points under one citation id; the writer states one, and t
  const once=await answered(loop(),pointsOn(twoClaims,term,change),writtenTerm(api.pointKey('fact-2',term)),{writer_passes:1});
  assert.equal(once.split(term).length-1,1,once);
 });
+// Hub probe (16 November): one point resting on two records. The writer states only one record's fact.
+test('end to end: a point spanning two records is kept whole when the writer states only one of them',async()=>{
+ const spanning='Jo Briskey, the member for Maribyrnong since 3 May 2025, reported $318,774 in parliamentary expenses for 2026.';
+ const loop=()=>({answer:spanning,answer_decision:'answer',sources:[record(1,expenses,'https://opax.com.au/expenses/jo-briskey'),record(2,service,url)],citations:{'fact-1':[span(spanning,spanning)],'fact-2':[span(spanning,spanning)]}});
+ const stated='Jo Briskey reported $318,774 in parliamentary expenses for 2026.';
+ const written=keys=>({answer:stated,answer_decision:'answer',sources:[record(1,expenses,'https://opax.com.au/expenses/jo-briskey')],citations:Object.fromEntries(keys.map(key=>[key,[[0,Array.from(stated).length]]]))});
+ assert.deepEqual(api.writingFacts(loop()).map(f=>f.evidenceId),[api.pointKey('fact-1',spanning),api.pointKey('fact-2',spanning)]);
+ const out=await answered(loop(),loop(),written([api.pointKey('fact-1',spanning)]),{writer_passes:1});
+ assert.ok(out.includes('$318,774')&&out.includes('3 May 2025')&&out.includes(spanning),out);
+ // Only a sentence citing both records' keys stands for the point.
+ const both=await answered(loop(),loop(),written([api.pointKey('fact-1',spanning),api.pointKey('fact-2',spanning)]),{writer_passes:1});
+ assert.ok(!both.includes(spanning)&&both.includes(stated),both);
+});
