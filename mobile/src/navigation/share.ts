@@ -107,7 +107,12 @@ export async function shareSourceLink(url: string, title: string) {
     );
     return;
   }
-  await Share.share({ title, url, message: title }).catch(() => undefined);
+  // Android's share intent carries only `message`, so the link goes in it.
+  await Share.share(
+    Platform.OS === 'android'
+      ? { title, message: `${title}\n${url}` }
+      : { title, url, message: title },
+  ).catch(() => undefined);
 }
 
 /**

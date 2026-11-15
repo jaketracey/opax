@@ -101,6 +101,28 @@ describe('a sheet settling on another detent', () => {
     expect(felt()).toEqual(['selection', 'selection']);
   });
 
+  test('only the 24 most recently moved sheets are remembered', () => {
+    for (let i = 0; i < 25; i += 1) snap(`sheet-${i}`, 1);
+    jest.mocked(haptic).mockClear();
+    // The newest 24 are still known: the same detent again is silent.
+    for (let i = 1; i < 25; i += 1) snap(`sheet-${i}`, 1);
+    expect(felt()).toEqual([]);
+    // The oldest was dropped, so its report reads as a first snap again.
+    snap('sheet-0', 1);
+    expect(felt()).toEqual(['selection']);
+  });
+
+  test('moving a remembered sheet keeps it over an older, idle one', () => {
+    for (let i = 0; i < 24; i += 1) snap(`sheet-${i}`, 1);
+    snap('sheet-0', 0);
+    snap('sheet-24', 1);
+    jest.mocked(haptic).mockClear();
+    snap('sheet-0', 0);
+    expect(felt()).toEqual([]);
+    snap('sheet-1', 1);
+    expect(felt()).toEqual(['selection']);
+  });
+
   test('Android: the sheet settling as it opens is not a snap', () => {
     RN.Platform.OS = 'android';
     snap('source-2', 0);

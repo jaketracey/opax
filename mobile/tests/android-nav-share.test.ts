@@ -1,6 +1,6 @@
 import { OpaxShare } from '../modules/opax-share';
 import { defaultOptions } from '../src/features/ask/model';
-import { Alert } from 'react-native';
+import { Alert, Platform, Share } from 'react-native';
 import { shareRecord, shareSource } from '../src/navigation/share';
 
 jest.mock('../src/design/environment', () => ({
@@ -100,6 +100,27 @@ describe('a cited source', () => {
       text: 'A report',
       external: true,
     });
+  });
+
+  test('on Android the publisher address travels in the message', async () => {
+    const os = Platform.OS;
+    Platform.OS = 'android';
+    const share = jest
+      .spyOn(Share, 'share')
+      .mockResolvedValue({ action: 'sharedAction' });
+    try {
+      const url = 'https://publisher.example/report';
+      await shareSource({ href: url, slug: '', url }, 'A report');
+      // OPAX's Android module refuses links off opax.com.au.
+      expect(OpaxShare!.share).not.toHaveBeenCalled();
+      expect(share).toHaveBeenCalledWith({
+        title: 'A report',
+        message: `A report\n${url}`,
+      });
+    } finally {
+      Platform.OS = os;
+      share.mockRestore();
+    }
   });
 
   test.each([
