@@ -98,7 +98,11 @@ export function TalkRecordScreen() {
       {destination.pathname === '/bill/[key]' ? (
         <BillDetail recordKey={destination.params.key} embedded />
       ) : destination.pathname === '/person/[slug]' ? (
-        <ProfileScreen slug={destination.params.slug} embedded />
+        <ProfileScreen
+          key={destination.params.slug}
+          slug={destination.params.slug}
+          embedded
+        />
       ) : destination.pathname === '/doc/[slug]' ? (
         <DocumentReader recordSlug={destination.params.slug} embedded />
       ) : destination.pathname === '/report/[slug]' ? (

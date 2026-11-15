@@ -1205,6 +1205,8 @@ describe('profile', () => {
     });
     return {
       r,
+      person,
+      profile,
       bones: () =>
         order(
           r,
@@ -1254,6 +1256,38 @@ describe('profile', () => {
     await load();
     expect(has(r, 'person-role')).toBe(false);
     expect(page()).toEqual(drawn);
+    await act(async () => r.unmount());
+  });
+
+  test('a pull to refresh brings the withheld paid post’s line only with new content', async () => {
+    const { POST_HOLD_MS } = jest.requireActual('../src/features/Person');
+    const { r, person, profile, load } = await cold();
+    await act(async () => {
+      await new Promise((done) => setTimeout(done, POST_HOLD_MS + 50));
+    });
+    await load();
+    expect(has(r, 'person-role')).toBe(false);
+    const pull = async () => {
+      await act(async () => {
+        r.root.findByType(Native.RefreshControl).props.onRefresh();
+      });
+    };
+    // The same record again: nothing is drawn that was not.
+    await pull();
+    expect(has(r, 'person-role')).toBe(false);
+    // A changed record redraws the page, and the line comes with it.
+    mock.profileFor.mockResolvedValue({
+      ...profile,
+      blocks: {
+        ...profile.blocks,
+        identity: {
+          ...profile.blocks.identity,
+          data: { ...person, formerly: 'a changed record' },
+        },
+      },
+    });
+    await pull();
+    expect(has(r, 'person-role')).toBe(true);
     await act(async () => r.unmount());
   });
 
