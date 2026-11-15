@@ -13,6 +13,7 @@ import {isWitness, belongsToScope, scopeFilter, personScope, scopedCollaborators
 import {personNameKey} from '../public/canonical-urls.js';
 import {personIndex} from '../src/person-slug.ts';
 import {searchFind} from '../src/search-find.ts';
+import { collapseHearings, passageTerms, pickPassage } from '../src/search-passages.ts';
 
 const source=ts.createSourceFile('index.ts',readFileSync(new URL('../src/index.ts',import.meta.url),'utf8'),ts.ScriptTarget.Latest,true);
 const pick=(...names)=>ts.transpile(source.statements.filter(n=>ts.isFunctionDeclaration(n)&&names.includes(n.name?.text)||
@@ -92,7 +93,7 @@ test('search rows carry the stored word_count, null when unknown',async()=>{
   const api=runInNewContext(pick('searchWindow','filterExpression','canonicalSpeaker','TOPIC_SLUGS','speakerAttribution','foldName')+';searchWindow',{
     ...passageText, URL, Response, isWitness, belongsToScope, scopeFilter, personScope, scopedCollaborators, personNameKey, personIndex, searchFind,
     speechPresentation, joinMixedSpeakers, pressTitle, SLUG_RE:/^speech-(\d+)$/, DIVISION_SLUG_RE:/^division-/,
-    stripListingBoilerplate:s=>s, calibrate:s=>s, speakerPrints:async()=>null,
+    stripListingBoilerplate:s=>s, calibrate:s=>s, passageTerms, pickPassage, speakerPrints:async()=>null,
     label:(r,key)=>r.usermetadata.classifications.find(c=>c.labelset===key)?.label,
     loadPeople:async()=>({byFold:new Map()}),
     kbFetch:async()=>Response.json({resources}),

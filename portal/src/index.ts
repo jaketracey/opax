@@ -100,6 +100,7 @@ import { canonicalPageRedirect } from './canonical-origin'
 import { pageEntry } from './page-entry'
 import { htmlValidator, notModified } from './html-etag'
 import { cacheKeyParams } from './cache-key'
+import { collapseHearings, passageTerms, pickPassage, type ScoredPassage } from './search-passages'
 import { searchFind, type SearchRetrieval } from './search-find'
 import { communityMcp } from './community-mcp'
 import { oauthRoute } from './community-oauth'
@@ -534,6 +535,8 @@ interface SearchWindow extends SearchRetrieval {
 }
 
 interface SearchResult {
+  /** On /api/search-all: how many results of one committee hearing this card stands for, when more than one. */
+  hearing_passages?: number
   href?: string
   source?: string
   kind: string
@@ -586,10 +589,10 @@ async function apiSearch(request: Request, url: URL, env: Env, ctx: ExecutionCon
   // inside one result set costs no upstream call and no rate-limit quota.
   const keyParams = (drop: string[]) => cacheKeyParams(url.searchParams, drop)
   // Retire older snippets, windows without retrieval-mode metadata, and rows without recorded source URLs or word_count.
-  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2-word-count-v1\n${keyParams(['nocache'])}`))
+  const pageKey = cacheRequest('search', await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\nyears-topics-v3-split-speakers-passage-v4-speaker-terms-mixed-speakers-v1-bounded-v1-source-url-v2-word-count-v1\n${keyParams(['nocache'])}`))
   const windowKey = cacheRequest(
     'search-window',
-    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v3-mixed-speakers-v1-bounded-v1-source-url-v2-word-count-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
+    await sha256Hex(`${env.CACHE_EPOCH}\n${options.suggest ? 'suggest-noop-v1' : 'predict'}\ntopics-v2-split-speakers-passage-v4-speaker-terms-mixed-speakers-v1-bounded-v1-source-url-v2-word-count-v1\n${topK}\n${keyParams(['nocache', 'page', 'per', 'sort', 'top_k'])}`),
   )
   const bypass = cacheBypass(request, url)
   if (!bypass) {
@@ -727,6 +730,10 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
   // Select the same relevance window before sorting, so changing order never
   // replaces matches or changes the count between pages.
   combined.sort((a, b) => compareSearchResults(a, b, 'relevance'))
+  // One card per committee hearing: the best-ranked turn stands for the rest
+  // and carries their count, before the window is cut, so the total, the years
+  // and the pages are those of the cards shown.
+  const cards = options.suggest ? combined : collapseHearings(combined)
   // Suggestions keep different collections visible and avoid sending the same
   // profile repeatedly for several matching records or source variants.
   const seen = new Set<string>(), kinds = new Map<string, number>()
@@ -735,7 +742,7 @@ async function apiUnifiedSearch(request: Request, url: URL, env: Env, ctx: Execu
     if (seen.has(href) || (kinds.get(row.kind) || 0) >= 2) return false
     seen.add(href); kinds.set(row.kind, (kinds.get(row.kind) || 0) + 1)
     return true
-  }) : combined
+  }) : cards
   const rows = diverse.slice(0, options.suggest ? 9 : 200).sort((a, b) => compareSearchResults(a, b, sort))
   const per = Math.min(200, Number(url.searchParams.get('per') || 20))
   const pageCount = Math.max(1, Math.ceil(rows.length / per))
@@ -779,10 +786,8 @@ async function searchWindow(
 ): Promise<SearchWindow | null> {
   const { q, mode, kind, topK, url } = opts
   const speakerDirectory = await loadPeople(env)
-  const phrases = [...q.matchAll(/"([^"]{2,})"/g)].map((m) => m[1].toLowerCase().trim())
-  const queryTerms = phrases.length
-    ? phrases
-    : q.toLowerCase().split(/[^\p{L}\p{N}']+/u).filter((w) => w.length >= 3)
+  // A speaker's own name is not what a passage is about (src/search-passages.ts).
+  const queryTerms = passageTerms(q, url.searchParams.get('speaker'))
 
   const body: Record<string, unknown> = {
     query: q,
@@ -847,30 +852,16 @@ async function searchWindow(
     // The snippet, though, should be the passage that actually says what the
     // reader searched for: a quoted phrase, else the most query words. Among
     // hits, the higher calibrated score wins; with no hit, the best paragraph.
-    let bestText = ''
-    let bestScore = 0
-    let bestHits = -1
-    let hitAt = -1
+    // A paragraph that is only the speaker's label is passed over while the
+    // record has one with words in it.
+    const passages: ScoredPassage[] = []
     for (const field of Object.values(resource.fields ?? {})) {
       for (const para of Object.values(field.paragraphs ?? {})) {
-        const cal = calibrate(para.score, para.score_type)
         const passage = stripListingBoilerplate(normalizePassage(para.text))
-        if (!passage) continue
-        const lower = passage.toLowerCase()
-        let hits = 0
-        let at = -1
-        for (const t of queryTerms) {
-          const i = lower.indexOf(t)
-          if (i >= 0) { hits++; if (at < 0 || i < at) at = i }
-        }
-        if (hits > bestHits || (hits === bestHits && cal >= bestScore)) {
-          bestHits = hits
-          bestScore = cal
-          bestText = passage
-          hitAt = at
-        }
+        if (passage) passages.push({ text: passage, score: calibrate(para.score, para.score_type) })
       }
     }
+    const { text: bestText, score: bestScore, at: hitAt } = pickPassage(passages, queryTerms)
     // Window the snippet around the first hit so the relevant sentence shows.
     const windowed = passageWindow(bestText, 600, hitAt > 220 ? hitAt - 200 : 0)
     const division = DIVISION_SLUG_RE.test(slug)

@@ -7178,7 +7178,24 @@ function cleanPassage(text) {
   // committee turn: "Ms Barrett : " (a short name, then a colon)
   s = s.replace(/^(?:mr|mrs|ms|miss|dr|prof\.?|senator|chair|the chair)\s+[A-Za-z][A-Za-z'’.\-]*(?:\s+[A-Za-z][A-Za-z'’.\-]*)?\s*:\s+/i, "");
   s = s.replace(/^[:;,—–\-\s]+/, "");
+  // A passage that is only the label of who is about to speak ("Senator DAVID
+  // POCOCK:", "CHAIR:") has no words of the record in it.
+  // An honorific, then at most a name and a parenthetical, then the colon.
+  const label = /^(?:(?:the\s+)?hon\.?|mr|mrs|ms|miss|dr|prof\.?|professor|senator|madam|rev\.?|(?:the\s+)?(?:acting\s+|deputy\s+)?chair)(?=[\s:(])(.*)$/i.exec(s);
+  if (label && /^(?:\s+[A-Z][A-Za-z'’.\-]*){0,5}\s*(?:\([^)]{0,80}\)\s*)?:$/.test(label[1])) return "";
   return s;
+}
+/* A committee record's title in a result list. Estimates get the short form
+   (committeeShortTitle). An inquiry keeps its own name, with the committee
+   said once: older records hold "X Committee - X Committee 27/05/2026 ...". */
+function committeeResultTitle(title) {
+  const t = String(title || "").replace(/\s+/g, " ").trim();
+  const short = committeeShortTitle(t);
+  if (short.includes(" · ")) return short;
+  const m = /^(.+?) - (.+)$/.exec(t);
+  if (!m || !m[2].toLowerCase().startsWith(m[1].toLowerCase())) return t;
+  const rest = m[2].slice(m[1].length).replace(/^[\s:–—-]+/, "");
+  return rest ? `${m[1]} - ${rest}` : m[1];
 }
 
 /* "Legal and Constitutional Affairs Legislation Committee - Legal and … 28/05/2026
@@ -13072,16 +13089,20 @@ function renderResults(results) {
         : searchReadMode === "briefs" && brief
         ? `<p id="search-passage-${index}" class="search-result-text search-result-brief"><span class="visually-hidden">Machine-written brief: </span>${esc(brief)}</p>`
         : `<p id="search-passage-${index}" class="search-result-text snippet">${searchReadMode === "briefs" ? `<span class="visually-hidden">From the record: </span>` : ""}${highlightHTML(cleanPassage(r.snippet), lastSearch.query)}</p>`;
-      const title = r.speaker && r.title === `${r.speaker} — ${r.date}` ? `Speech by ${r.speaker}` : displayTitle(r);
+      const title = r.speaker && r.title === `${r.speaker} — ${r.date}` ? `Speech by ${r.speaker}`
+        : isCommitteeChamber(r.chamber) ? committeeResultTitle(displayTitle(r)) : displayTitle(r);
       // RecordRow (§5.2): kind · date · place above the title, then who spoke.
       const where = [
         isCommitteeChamber(r.chamber) ? `${esc(committeeHouse(r.chamber))} committee evidence` : "",
         r.state ? esc(STATE_NAMES[r.state] || r.state) : "",
       ].filter(Boolean).join(" · ");
+      // One card stands for every turn of this hearing the search found.
+      const passages = Number(r.hearing_passages) > 1 ? `${Number(r.hearing_passages)} passages from this hearing` : "";
       const meta = [
         recordTypeLink(r.kind, lastSearch.query, lastSearch.filters),
         r.date ? `<time datetime="${esc(r.date)}">${esc(fmtDate(r.date))}</time>` : "",
         where,
+        passages,
       ].filter(Boolean).join('<span class="search-meta-separator" aria-hidden="true"> · </span>');
       const byline = [
         r.kind === "speech" ? speechIdentityHTML(r) : "",
