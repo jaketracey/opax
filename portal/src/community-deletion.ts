@@ -1,6 +1,7 @@
 import {body,CommunityError,digest,json,limit,now,randomToken,sameOrigin,type Member} from './community-core'
 import {macHex,matchesSignInCode,randomSignInCode,requireSignInCodeSecret,signInCodeMac} from './community-signin-code'
 import {REVIEWER_EMAILS,reviewerLoginEnabled} from './community-auth'
+import {deletionEmail} from './community-email'
 
 const FAILURE='This deletion could not be completed. Request a new deletion code and try again.'
 const UNAVAILABLE='This action could not be completed. Please try again shortly.'
@@ -51,7 +52,7 @@ export async function deletionRoute(req:Request,env:Env,path:string):Promise<Res
    ])
    if(!results[1].meta.changes)throw new CommunityError(400,FAILURE)
    // Never include a sign-in link or expose the code in the HTTP response/logs.
-   try{if(!reviewer)await env.COMMUNITY_EMAIL.send({from:{email:env.COMMUNITY_EMAIL_FROM,name:'Opax'},to:m.email,subject:'Confirm your Opax account deletion',text:`Your Opax account deletion code: ${code}\n\nIt expires in 15 minutes. Enter it only if you requested permanent account deletion. Never share this code. If you did not request deletion, ignore this email.`})}
+   try{if(!reviewer)await env.COMMUNITY_EMAIL.send({from:{email:env.COMMUNITY_EMAIL_FROM,name:'Opax'},to:m.email,...deletionEmail(env.COMMUNITY_ORIGIN,code)})}
    catch{await env.COMMUNITY_DB.prepare('DELETE FROM community_deletion_challenges WHERE challenge_id=?').bind(challengeId).run();throw new CommunityError(503,UNAVAILABLE)}
    return json({sent:true,challenge_id:challengeId,message:'Check your email for a deletion code. It expires in 15 minutes.'})
   }
