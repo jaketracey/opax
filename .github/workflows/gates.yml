@@ -97,6 +97,66 @@ jobs:
         working-directory: mobile
         run: npx jest --silent --shard=${{ matrix.shard }}/6 --maxWorkers=4
 
+  # The shipped app's own decoders over the published files the app reads (mobile/tests/published-data.test.ts
+  # on the app branch): a data change that any app version would refuse, or lose a row from, fails here and
+  # names the file and the path inside it. main has no mobile tree, so the app tree is exported from
+  # APP_REF beside this checkout and its guard is pointed at this commit's portal/public. It runs only when
+  # a pull request into main changes a file family the app reads (the paths in the first step); nightly
+  # commits pushed straight to main do not pass through here.
+  app-data:
+    if: ${{ !inputs.senate_only && github.event_name == 'pull_request' && github.base_ref == 'main' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      APP_REF: ios/apple-design
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Identify changed app data
+        id: data
+        run: |
+          changed=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD" -- \
+            portal/public/bills portal/public/parliamentarians.json portal/public/votes.json \
+            portal/public/electorates portal/public/interests portal/public/pay.json \
+            portal/public/expenses.json portal/public/expense-categories.json portal/public/photos \
+            portal/public/corpus.json portal/public/discovery.json portal/public/graph \
+            portal/public/parliament portal/public/divisions | head -1)
+          if [ -n "$changed" ]; then
+            echo 'changed=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'No app-read data file changed; the app data guard does not apply.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Export the app tree
+        id: app
+        if: steps.data.outputs.changed == 'true'
+        run: |
+          mkdir -p "$RUNNER_TEMP/app"
+          git archive "origin/$APP_REF" mobile | tar -x -C "$RUNNER_TEMP/app"
+          if [ -f "$RUNNER_TEMP/app/mobile/tests/published-data.test.ts" ]; then
+            echo 'present=true' >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning title=App data guard::The data guard is not on $APP_REF; this change to app-read data was not checked."
+            echo "The data guard is not on $APP_REF yet; nothing was checked." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        if: steps.app.outputs.present == 'true'
+        with:
+          node-version: 24.21.0
+      - name: Install the app's dependencies
+        if: steps.app.outputs.present == 'true'
+        working-directory: ${{ runner.temp }}/app/mobile
+        run: npm ci
+      - name: Decode every published file with the app's decoders
+        if: steps.app.outputs.present == 'true'
+        working-directory: ${{ runner.temp }}/app/mobile
+        env:
+          OPAX_PUBLISHED_DIR: ${{ github.workspace }}/portal/public
+        # npm test, not jest directly: the package script applies the app's Jest flags
+        # (--no-sparkplug) to this one in-band file as well.
+        run: npm test -- tests/published-data.test.ts
+
   # Stored Ask research payloads replayed through the current answer pipeline: no model, network,
   # secrets or release build. Fails on an empty, limitation-only or uncited answer, or a changed API shape.
   ask-replay:
