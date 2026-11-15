@@ -84,9 +84,15 @@ const rich=(value:Rich)=>typeof value==='string'?escapeHtml(value):value.map(par
 const plain=(value:Rich)=>typeof value==='string'?value:value.map(part=>typeof part==='string'?part:part.strong).join('')
 const host=(origin:string)=>origin.replace(/^https?:\/\//,'').replace(/\/.*$/,'')
 const font=(role:'heading'|'section'|'subheading'|'body'|'metadata'|'fine')=>`font-size:${S[role][0]}px;line-height:${S[role][1]}px;`
-const link=(href:string,label:string,style='')=>`<a class="e-link" href="${escapeHtml(href)}" style="color:${light('navy')};text-decoration:underline;${style}">${label}</a>`
+/**
+ * Only an https address becomes a link. Anything else (javascript:, data:, a
+ * bare path) is drawn as plain text, so no email can carry a live link that
+ * is not a web address. OPAX sends no mailto links.
+ */
+export const safeHref=(href:string)=>{try{return new URL(href).protocol==='https:'}catch{return false}}
+const link=(href:string,label:string,style='')=>!safeHref(href)?label:`<a class="e-link" href="${escapeHtml(href)}" style="color:${light('navy')};text-decoration:underline;${style}">${label}</a>`
 /** A link on its own line, as tall as a finger: for the footer and digest titles. */
-const tapLink=(href:string,label:string,style:string)=>`<a class="e-link" href="${escapeHtml(href)}" style="display:inline-block;padding:${(S.target-S.metadata[1])/2}px 0;color:${light('navy')};text-decoration:underline;${style}">${escapeHtml(label)}</a>`
+const tapLink=(href:string,label:string,style:string)=>!safeHref(href)?`<span class="e-ink" style="display:inline-block;color:${light('ink')};${style}">${escapeHtml(label)}</span>`:`<a class="e-link" href="${escapeHtml(href)}" style="display:inline-block;padding:${(S.target-S.metadata[1])/2}px 0;color:${light('navy')};text-decoration:underline;${style}">${escapeHtml(label)}</a>`
 
 function blockHtml(block:EmailBlock):string {
  if(block.kind==='text')return `<p class="e-ink" style="margin:0 0 ${S.block}px;${font('body')}color:${light('ink')};">${rich(block.text)}</p>`
@@ -96,7 +102,7 @@ function blockHtml(block:EmailBlock):string {
 </td></tr></table>${block.note?`<p class="e-ink" style="margin:0 0 ${S.block}px;${font('body')}color:${light('ink')};">${rich(block.note)}</p>`:''}`
  if(block.kind==='quote')return `${block.title?`<p class="e-ink" style="margin:0 0 ${S.heading_gap}px;font-family:${SERIF};${font('subheading')}font-weight:bold;color:${light('ink')};">${escapeHtml(block.title)}</p>`:''}<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 ${S.group}px;"><tr><td class="e-quote e-ink" style="padding:0 0 0 ${S.block}px;border-left:3px solid ${light('navy')};${font('body')}color:${light('ink')};">${escapeHtml(block.text).replaceAll('\n','<br>')}</td></tr></table>`
  const rows=block.items.map((item,i)=>`<tr><td class="e-rule" style="padding:${S.heading_gap}px 0;${i?`border-top:1px solid ${light('dividerSubtle')};`:''}">
-${tapLink(item.href,item.title,`font-family:${SERIF};${font('subheading')}font-weight:bold;padding:${(S.target-S.subheading[1])/2}px 0;`)}
+${tapLink(item.href,item.title,`font-family:${SERIF};${font('subheading')}font-weight:bold;padding:${Math.ceil((S.target-S.subheading[1])/2)}px 0;`)}
 ${item.summary?`<p class="e-ink" style="margin:0 0 ${S.tight}px;${font('body')}color:${light('ink')};">${escapeHtml(item.summary)}</p>`:''}
 <p class="e-soft" style="margin:0;${font('metadata')}color:${light('inkSoft')};">Source: ${item.sourceHref?link(item.sourceHref,escapeHtml(item.source)):escapeHtml(item.source)}${item.date?` &middot; ${escapeHtml(item.date)}`:''}</p>
 </td></tr>`).join('\n')
@@ -128,7 +134,8 @@ export function emailText(spec:EmailSpec):string {
  */
 export function emailLayout(spec:EmailSpec) {
  const home=escapeHtml(spec.origin)
- const action=spec.action,href=action?escapeHtml(action.href):''
+ // An action whose address is not https is not drawn: no button, no line to copy.
+ const action=spec.action&&safeHref(spec.action.href)?spec.action:undefined,href=action?escapeHtml(action.href):''
  // Outlook draws the button from VML at a fixed size; everything else pads a link.
  const button=action?`<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:${S.tight}px 0 ${S.group}px;">
 <!--[if mso]><v:roundrect href="${href}" style="height:50px;v-text-anchor:middle;width:${Math.min(480,action.label.length*10+72)}px;" arcsize="50%" stroke="f" fillcolor="${light('navy')}"><w:anchorlock xmlns:w="urn:schemas-microsoft-com:office:word"/><center style="color:${light('onNavy')};font-family:Arial,sans-serif;font-size:17px;font-weight:bold;">${escapeHtml(action.label)}</center></v:roundrect><![endif]-->

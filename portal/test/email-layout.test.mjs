@@ -6,8 +6,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync, readdirSync} from 'node:fs';
-import {emailLayout, emailText, emailTokens, emailScale} from '../src/email-layout.ts';
-import {emailSamples, digestSpec, ORIGIN} from '../scripts/email-samples.mjs';
+import {emailLayout, emailText, emailTokens, emailScale, safeHref} from '../src/email-layout.ts';
+import {emailSamples, sampleArgs, digestSpec, ORIGIN} from '../scripts/email-samples.mjs';
 
 const samples = emailSamples();
 const tokens = JSON.parse(readFileSync(new URL('../../docs/design/design-tokens.json', import.meta.url), 'utf8'));
@@ -157,7 +157,8 @@ test('each email keeps its own facts', () => {
     assert.match(part, /because you started this discussion/);
     assert.match(part, /Manage email notifications/); assert.match(part, /Unsubscribe from reply emails/);
   }
-  assert.equal(by['reply'].headers['List-Unsubscribe-Post'], 'List-Unsubscribe=One-Click');
+  const unsubscribe = `${ORIGIN}/api/community/email/unsubscribe?token=${'u'.repeat(43)}`;
+  assert.deepEqual(by['reply'].headers, {'List-Unsubscribe': `<${unsubscribe}>`, 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click'});
   for (const part of [words(by['account-deletion'].html), by['account-deletion'].text]) {
     assert.match(part, /Your Opax account deletion code:? 87654321/);
     assert.match(part, /It expires in 15 minutes/);
@@ -167,6 +168,55 @@ test('each email keeps its own facts', () => {
   }
   // The deletion email carries a code to type and no way to sign in.
   assert.doesNotMatch(by['account-deletion'].html + by['account-deletion'].text, /#token=|view=signin/);
+});
+
+test('no code or token in a subject or preheader', () => {
+  // A mailbox shows both on a lock screen and in a list: neither may carry a secret.
+  const a = sampleArgs();
+  const secrets = ['12345678', '87654321', 't'.repeat(43), 'u'.repeat(43), 'n'.repeat(43), '#token=', 'token='];
+  assert.equal(a.signInAppCode[1], '12345678'); assert.equal(a.deletion[1], '87654321');
+  assert.ok(a.signIn[0].endsWith('t'.repeat(43)) && a.reply[0].unsubscribeUrl.endsWith('u'.repeat(43)));
+  for (const {name, mail} of samples) {
+    const preheader = decode(mail.html.match(/<div style="display:none[^"]*">([^<]*)<\/div>/)[1]).replace(/(?:&#847;&zwnj;&nbsp;)+$/, '');
+    assert.doesNotMatch(preheader, /&#847;|&zwnj;/, 'only the padding follows the words');
+    for (const part of [mail.subject, preheader, decode(mail.html.match(/<title>([^<]*)<\/title>/)[1])]) {
+      for (const secret of secrets) assert.ok(!part.includes(secret), `${name}: "${part}" carries ${secret}`);
+      assert.doesNotMatch(part, /\d{6,}|https?:/, `${name}: "${part}"`);
+    }
+  }
+  assert.deepEqual(Object.fromEntries(samples.map((s) => [s.name, decode(s.mail.html.match(/<div style="display:none[^"]*">([^<]*)<\/div>/)[1]).replace(/(?:&#847;&zwnj;&nbsp;)+$/, '')])), {
+    'sign-in': 'Your secure link to the Opax community. Valid for 15 minutes.',
+    'sign-in-app-code': 'Your secure link to the Opax community. Valid for 15 minutes.',
+    'reply': 'Invented Reader replied to “What does the record show on housing?”.',
+    'account-deletion': 'Your code to delete your Opax account. Valid for 15 minutes.',
+    'digest-example': 'Three records from the sitting week, each with its source.',
+  });
+});
+
+test('each sent email’s text part, exactly', () => {
+  const by = Object.fromEntries(samples.map((s) => [s.name, s.mail.text]));
+  const link = `${ORIGIN}/community?view=signin#token=${'t'.repeat(43)}`;
+  const tail = `This link expires in 15 minutes and can only be used once. Keep it private.\n\nIf you did not request this email, you can safely ignore it.\n\nThe public record belongs to everyone.\nOpen Parliamentary Accountability Exchange\n${ORIGIN}\nAccount privacy: ${ORIGIN}/community?view=privacy`;
+  assert.equal(by['sign-in'], `Sign in to Opax\n\nUse this secure link to sign in to your Opax community account:\n\n${link}\n\n${tail}`);
+  assert.equal(by['sign-in-app-code'], `Sign in to Opax\n\nYour Opax app sign-in code: 12345678\nEnter it in the app within 15 minutes. Never share this code. The link signs you in through your browser, not the app. Using the link also uses up this code.\n\nSign in through your browser:\n\n${link}\n\n${tail}`);
+  assert.equal(by['reply'], `You have a new reply\n\nInvented Reader replied to your discussion:\nWhat does the record show on housing?\n\nThe second reading speech is on the record.\nHere is where I found it.\n\nRead the reply:\n${ORIGIN}/community?view=thread&id=housing&reply=reply-1#reply-reply-1\n\nYou’re receiving this because you started this discussion.\nManage email notifications: ${ORIGIN}/community?view=settings#email-notifications\nUnsubscribe from reply emails: ${ORIGIN}/api/community/email/unsubscribe?token=${'u'.repeat(43)}\n\nThe public record belongs to everyone.\nOpen Parliamentary Accountability Exchange\n${ORIGIN}`);
+  assert.equal(by['account-deletion'], 'Your Opax account deletion code: 87654321\n\nIt expires in 15 minutes. Enter it only if you requested permanent account deletion. Never share this code. If you did not request deletion, ignore this email.');
+});
+
+test('only an https address becomes a link', () => {
+  for (const bad of ['javascript:alert(1)', 'JaVaScRiPt:alert(1)', ' javascript:alert(1)', 'data:text/html,<b>x</b>', 'vbscript:x', 'http://opax.example/', '//opax.example/', '/bills/1', 'mailto:someone@opax.example', '']) assert.equal(safeHref(bad), false, bad);
+  assert.equal(safeHref('https://opax.example/bills/1'), true);
+  const bad = 'javascript:alert(1)';
+  const mail = emailLayout({origin: ORIGIN, subject: 'S', preheader: 'A preheader that says something', title: 'T',
+    blocks: [{kind: 'items', heading: 'Bills', items: [
+      {title: 'Hostile title', href: bad, source: 'Hostile source', sourceHref: 'data:text/html,x'},
+      {title: 'Honest title', href: `${ORIGIN}/bills/1`, source: 'Honest source', sourceHref: 'https://source.example/1'}]}],
+    action: {href: bad, label: 'Hostile action'}, reason: 'Why', links: [{href: 'vbscript:x', label: 'Hostile footer'}]});
+  assert.deepEqual(hrefs(mail.html), [`${ORIGIN}/bills/1`, 'https://source.example/1', ORIGIN, `${ORIGIN}/community?view=privacy`]);
+  assert.doesNotMatch(mail.html, /javascript:|vbscript:|data:text/i);
+  // The words stay, as plain text; the action is not drawn at all.
+  for (const kept of ['Hostile title', 'Hostile source', 'Hostile footer', 'Honest title']) assert.ok(words(mail.html).includes(kept), kept);
+  assert.doesNotMatch(mail.html, /class="e-button"|<v:roundrect|Button not working|Hostile action/);
 });
 
 test('the outline of each email', () => {
@@ -208,9 +258,17 @@ test('a digest plugs in: a heading, sourced items and an unsubscribe, with its t
   assert.ok(hrefs(mail.html).includes(unsubscribe.href));
   assert.match(text, new RegExp(`${unsubscribe.label}: ${unsubscribe.href.replace(/[?.]/g, '\\$&')}`));
   // Item titles and footer links are each a line of their own, 44 px tall.
-  for (const m of body(mail.html).matchAll(/<a class="e-link" href="[^"]*" style="display:inline-block;([^"]*)"/g)) {
-    const padding = [...m[1].matchAll(/padding:(\d+)px 0/g)].map((p) => Number(p[1])).at(-1);
-    const line = Number([...m[1].matchAll(/line-height:(\d+)px/g)].map((p) => p[1]).at(-1) ?? emailScale.metadata[1]);
-    assert.ok(2 * padding + line >= emailScale.target, m[0].slice(0, 160));
-  }
+  // A later declaration wins, so the last padding and the last line height in
+  // the style are the ones drawn.
+  const taps = [...body(mail.html).matchAll(/<a class="e-link" href="[^"]*" style="display:inline-block;([^"]*)"[^>]*>([^<]*)</g)].map((m) => {
+    const padding = Number([...m[1].matchAll(/padding:([\d.]+)px 0/g)].at(-1)[1]);
+    const line = Number(([...m[1].matchAll(/line-height:([\d.]+)px/g)].at(-1) ?? [0, emailScale.metadata[1]])[1]);
+    return {label: decode(m[2]), padding, line, height: 2 * padding + line};
+  });
+  for (const tap of taps) assert.ok(tap.height >= emailScale.target, JSON.stringify(tap));
+  // Each kind is measured by its own numbers: three titles on the 23 px
+  // rowRecord line, three footer links on the 22 px secondary line.
+  const titles = taps.filter((t) => items.some((i) => i.title === t.label));
+  assert.deepEqual(titles.map((t) => [t.padding, t.line]), [[11, 23], [11, 23], [11, 23]]);
+  assert.deepEqual(taps.filter((t) => !titles.includes(t)).map((t) => [t.label, t.padding, t.line]), [['Unsubscribe from the digest', 11, 22], ['opax.example', 11, 22], ['Account privacy', 11, 22]]);
 });

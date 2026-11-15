@@ -59,6 +59,7 @@ From top to bottom: the mark and "OPAX" with the full name; the card (title, blo
 - **Images off.** The only image is the mark, embedded in the message (`cid:opax-brand-mark`), 40 by 40 with empty alt text because "OPAX" is written beside it. Nothing is lost with images off, and no remote request is made.
 - **Text size.** Sizes are in px with fixed line heights that scale together; nothing is clipped at 200%, because no box has a fixed height.
 - **A plain-text part for every email**, with the same facts and links.
+- **Only https links.** An address that is not `https:` (`javascript:`, `data:`, a bare path) is drawn as plain text, and an action with such an address is not drawn at all. OPAX sends no `mailto:` links.
 - **Nothing that tracks.** No pixel and no redirect: every link is the address it goes to, the same one as in the text part. The tests hold each email to its own list of links.
 
 ## Copy edits
