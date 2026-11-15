@@ -335,8 +335,6 @@ export function SeatChooser({
   // The clearance ends the list above the keyboard where there is a bottom
   // field; there the scroll view must not add its own keyboard inset too.
   const fieldClearsKeyboard = useFieldClearsKeyboard();
-  const short = useShortPlaceholder();
-  const words = vic ? vicCopy : seatCopy;
   const search = useListSearchBar({
     // Fewer words at accessibility text sizes, as the Victorian hub's field,
     // and the full ones whenever a screen reader would read them.
