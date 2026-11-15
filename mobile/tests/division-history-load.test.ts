@@ -202,3 +202,44 @@ test('with nothing saved and no connection the read fails as offline, not as a b
     }),
   ).rejects.toMatchObject({ code: 'http' });
 });
+
+test('offline with only the index saved, the page hears "not saved" after one wave of eight single attempts', async () => {
+  const extraBytes = fixtureBytes(directorySnapshot);
+  let online = true;
+  const asked: string[] = [];
+  const transport = jest.fn(async (url: string | URL | Request) => {
+    const path = new URL(String(url)).pathname;
+    asked.push(path);
+    if (!online) throw new TypeError('Network request failed');
+    return new Response(
+      (Object.hasOwn(directorySnapshot.files, path)
+        ? extraBytes(path)
+        : pinnedBytes(path)
+      ).toString(),
+      { status: 200, headers: { 'cache-control': 'public, max-age=300' } },
+    );
+  });
+  // The app's own client settings: two retries, with their 300 and 600 ms
+  // pauses, unless the read asks for none.
+  const client = new ApiClient({
+    origin: 'https://fixture.test',
+    version: '1.0.0',
+    build: '16',
+    cache: new CatalogCache(new MemoryStore()),
+    transport: transport as typeof fetch,
+  });
+  const source = new Catalogs(client);
+  const index = await source.bills();
+  const candidates = index.data.bills.filter((b) => b.divisions > 0);
+  expect(candidates.length).toBeGreaterThan(900);
+  online = false;
+  asked.length = 0;
+  const started = Date.now();
+  const failure = await readDivisionHistory(source).catch((error) => error);
+  // Three attempts a file took 16 files 1.8 s: about 110 s for them all.
+  expect(Date.now() - started).toBeLessThan(2000);
+  expect(failure).toBeInstanceOf(ApiError);
+  expect(failure.code).toBe('offline');
+  expect(asked).toHaveLength(8);
+  expect(new Set(asked).size).toBe(8);
+});

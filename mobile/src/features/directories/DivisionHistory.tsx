@@ -53,7 +53,6 @@ import {
   minimumTarget,
   radii,
   rhythm,
-  textStyles,
   type TextVariant,
 } from '../../design/tokens';
 import { headerItems, pageItems } from '../../navigation/chrome';
@@ -247,18 +246,26 @@ const BONE_SECTIONS = [3, 2];
  * The list while it loads, in the loaded list's own shape, so the first
  * bill lands where its placeholder stood: a bill header (symbol, a two-line
  * title, its vote count) and its votes inset under it (stage, where and
- * when, outcome, the vote bar, the counts) with their separators. Heights
- * come from the same text styles and row tokens as `LinkRow` and
- * `DivisionRow`, at the reader's text size.
+ * when, outcome, the vote bar, the counts) with their separators. Each
+ * line of words is a line of type laid out unseen in its own text style
+ * under its bar, so it is the height the words take at the reader's text
+ * size (line height times the font scale ran 6 to 10 pt a line tall at the
+ * accessibility sizes). Rows use `LinkRow` and `DivisionRow`'s tokens.
  */
 function HistoryBones({ inset }: { inset: number }) {
   const { fontScale } = useWindowDimensions();
-  const line = (variant: TextVariant) =>
-    textStyles[variant].lineHeight * fontScale;
   const bone = (width: DimensionValue, height: number, round = false) => (
     <View
       style={[styles.bone, { width, height }, round ? styles.boneRound : null]}
     />
+  );
+  const line = (width: DimensionValue, variant: TextVariant) => (
+    <View style={{ width }}>
+      <Text variant={variant} numberOfLines={1} style={styles.unseen}>
+        {'\u00a0'}
+      </Text>
+      <View style={[StyleSheet.absoluteFill, styles.bone]} />
+    </View>
   );
   const symbol = symbolSize(fontScale);
   return (
@@ -279,9 +286,9 @@ function HistoryBones({ inset }: { inset: number }) {
             >
               {bone(symbol, symbol)}
               <View style={styles.boneBillWords}>
-                {bone('92%', line('body'))}
-                {bone('64%', line('body'))}
-                {bone(56, line('secondary'))}
+                {line('92%', 'body')}
+                {line('64%', 'body')}
+                {line(56, 'secondary')}
               </View>
             </View>
             {Array.from({ length: count }, (_, index) => (
@@ -294,15 +301,23 @@ function HistoryBones({ inset }: { inset: number }) {
                   testID={`division-history-loading-vote-${section}-${index}`}
                 >
                   <View style={styles.boneVoteWords}>
-                    {bone('46%', line('rowRecord'))}
-                    {bone('78%', line('secondary'))}
-                    {bone(
-                      76,
-                      Math.max(22, line('capsule') + rhythm.line * 2),
-                      true,
-                    )}
+                    {line('46%', 'rowRecord')}
+                    {line('78%', 'secondary')}
+                    {/* The outcome capsule: its label, padding and floor. */}
+                    <View style={styles.boneCapsule}>
+                      <Text variant="capsule" style={styles.unseen}>
+                        Not agreed
+                      </Text>
+                      <View
+                        style={[
+                          StyleSheet.absoluteFill,
+                          styles.bone,
+                          styles.boneRound,
+                        ]}
+                      />
+                    </View>
                     {bone('100%', 8, true)}
-                    {bone('40%', line('secondary'))}
+                    {line('40%', 'secondary')}
                   </View>
                   {bone(8, 13)}
                 </View>
@@ -868,4 +883,10 @@ const styles = StyleSheet.create({
   // The header's title starts a gap in from its text column (the probe).
   boneBillWords: { flex: 1, gap: rhythm.line, paddingLeft: rhythm.tight },
   boneVoteWords: { flex: 1, gap: rhythm.line },
+  boneCapsule: {
+    alignSelf: 'flex-start',
+    minHeight: 22,
+    paddingHorizontal: rhythm.tight,
+    paddingVertical: rhythm.line,
+  },
 });

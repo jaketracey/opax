@@ -31,6 +31,11 @@ const CONCURRENCY = 8;
  *   every other saved catalog out of the 220-record cache. A bill opened on
  *   its own page is still saved as before.
  *
+ * Each file is tried once. With no connection every read fails, and three
+ * attempts a file with their pauses held the placeholder for about two
+ * minutes before the page could say so. The read also stops as soon as the
+ * first eight files have all failed offline with nothing loaded.
+ *
  * Only the small division projection stays in memory for back-navigation.
  * No launch work, document/ARAG route or per-row call.
  */
@@ -65,11 +70,22 @@ export async function readDivisionHistory(
   let next = 0;
   let settled = 0;
   let offline: unknown;
+  let offlineFailures = 0;
+  // The first wave all failed offline and nothing has loaded: stop asking.
+  const wave = Math.min(CONCURRENCY, candidates.length);
+  const noConnection = () =>
+    !view.loaded && offlineFailures === settled && settled >= wave;
+  let waveSettled!: () => void;
+  const firstWave = new Promise<void>((resolve) => {
+    waveSettled = resolve;
+  });
   const worker = async () => {
-    for (let i = next++; i < candidates.length; i = next++) {
+    for (let i = next++; i < candidates.length && !noConnection(); i = next++) {
+      let failedOffline = false;
       try {
         const result = await source.bill(candidates[i]!.key, refresh, signal, {
           persist: false,
+          retries: 0,
         });
         throwIfAborted(signal);
         if (result.data.key !== candidates[i]!.key) view.failed++;
@@ -82,12 +98,19 @@ export async function readDivisionHistory(
         }
       } catch (error) {
         throwIfAborted(signal);
-        if (error instanceof ApiError && error.code === 'offline')
+        failedOffline = error instanceof ApiError && error.code === 'offline';
+        if (failedOffline) {
           offline ??= error;
+          offlineFailures++;
+        }
         view.failed++;
       }
+      if (++settled === wave) waveSettled();
+      // A read that failed offline in the first wave asks for nothing more
+      // until that wave has settled and shown whether there is a connection.
+      if (failedOffline && settled < wave) await firstWave;
       // Saved copies answer without a network turn: let the screen draw.
-      if (++settled % CONCURRENCY === 0)
+      if (settled % CONCURRENCY === 0)
         await new Promise<void>((resolve) => setTimeout(resolve, 0));
       throwIfAborted(signal);
     }

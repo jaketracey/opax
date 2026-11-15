@@ -111,9 +111,7 @@ test('partial failures and mismatched bill files settle before publishing a stab
     candidates[0]!.key,
     true,
     undefined,
-    {
-      persist: false,
-    },
+    { persist: false, retries: 0 },
   );
 });
 
