@@ -96,6 +96,8 @@ jest.mock('../src/api/runtime', () => ({
     todayDeclarationsProfiled: jest.fn(),
     recentDivisions: jest.fn(),
     directory: jest.fn(),
+    // No saved directory unless a test says so.
+    directorySaved: jest.fn(async () => null),
     yourMP: jest.fn(),
     electorateFor: jest.fn(),
     profileFor: jest.fn(),
@@ -319,6 +321,7 @@ function setUp({
     retry: jest.fn(),
   });
   mock.directory.mockResolvedValue(directory);
+  mock.directorySaved.mockResolvedValue(null);
   jest
     .mocked(loadChoice)
     .mockResolvedValue(
@@ -1503,6 +1506,137 @@ describe('the first frame has the loaded page’s layout', () => {
         expect(hosts(next.r, 'today-rep-state-dissolved')).toHaveLength(1);
         expect(shared).not.toHaveBeenCalled();
       });
+    });
+  });
+
+  /**
+   * Nothing kept for the saved choice (the first launch of a build that
+   * keeps the shape): the directory the device saved decides the first
+   * frame, with no request. Each test fails without it: the page was laid
+   * out from the choice as 1.0 wrote it.
+   */
+  describe('nothing kept: the saved directory decides the first frame', () => {
+    const seatNamed = (name: string, chamber: string) =>
+      index.electorates.find(
+        (s) =>
+          s.name === name && s.chamber === chamber && s.status !== 'historical',
+      )!;
+    const maribyrnong = seatNamed('Maribyrnong', 'representatives');
+    const essendon = seatNamed('Essendon', 'vic_la');
+    const senate = index.electorates.find(
+      (s) => s.jurisdiction === 'federal' && s.chamber === 'senate',
+    )!;
+    /** The directory with what the index says of Essendon's house. */
+    const saying = (value: string | null) => ({
+      ...directory,
+      electorates: {
+        ...directory.electorates,
+        data: {
+          ...index,
+          electorates: index.electorates.map((s) =>
+            s.electorate_id === essendon.electorate_id
+              ? { ...s, dissolved_for: value }
+              : s,
+          ),
+        },
+      },
+    });
+    /** A launch with nothing kept: a saved directory, the read held back. */
+    const launch = async (
+      choice: { seatId: string; stateSeatIds: string[] },
+      held: typeof directory = directory,
+    ) => {
+      setUp({ cached: { date: addDays(today, -1) } });
+      jest.mocked(loadChoice).mockResolvedValue({ version: 1, ...choice });
+      mock.directorySaved.mockResolvedValue(held as never);
+      const directoryRead = pending<typeof directory>();
+      mock.directory.mockReturnValue(directoryRead.promise as never);
+      const r = await render(<Today />);
+      await expect(readTodayShape()).resolves.toBeNull();
+      return {
+        r,
+        answer: () => act(async () => directoryRead.answer(held)),
+      };
+    };
+    const lines = (r: TestRenderer.ReactTestRenderer) =>
+      r.root
+        .findAll(
+          (n) =>
+            n.type === 'Text' &&
+            /^today-rep-state-line-/.test(n.props.testID ?? ''),
+        )
+        .map((n) => n.props.children);
+
+    test.each([
+      ['Senate', () => ({ seatId: senate.electorate_id, stateSeatIds: [] })],
+      [
+        'Victorian',
+        () => ({ seatId: essendon.electorate_id, stateSeatIds: [] }),
+      ],
+    ])(
+      'a 1.0 %s seatId draws the final layout in the first render, with no invitation after a skeleton',
+      async (_name, choice) => {
+        const first = await launch(choice());
+        const before = blocks(first.r.root);
+        expect(before).toContain('today-invitation');
+        expect(before).not.toContain('today-your-mp-pending');
+        expect(hosts(first.r, 'today-your-mp-loading')).toHaveLength(0);
+        await first.answer();
+        expect(blocks(first.r.root)).toEqual(before);
+        // Decided from the disk: the one directory read is the seat's own.
+        expect(mock.directory).toHaveBeenCalledTimes(1);
+      },
+    );
+
+    test('a federal and Victorian reader’s pending view reserves the state row at the final height', async () => {
+      const victorian = {
+        seatId: maribyrnong.electorate_id,
+        stateSeatIds: [essendon.electorate_id],
+      };
+      // The index says the Assembly is dissolved: the four lines the row
+      // will draw hold its place, under the one heading.
+      const dissolved = await launch(victorian, saying('2026-11-28'));
+      expect(hosts(dissolved.r, 'today-your-mp-pending')).toHaveLength(1);
+      expect(hosts(dissolved.r, 'today-reps-heading')).toHaveLength(1);
+      expect(hosts(dissolved.r, 'today-rep-state-lines-loading')).toHaveLength(
+        1,
+      );
+      const held = lines(dissolved.r);
+      expect(held).toHaveLength(4);
+      await dissolved.answer();
+      expect(hosts(dissolved.r, 'today-rep-state-dissolved')).toHaveLength(1);
+      expect(hosts(dissolved.r, 'today-reps-heading')).toHaveLength(1);
+      expect(lines(dissolved.r)).toEqual(held);
+      // The index says the member sits: a member's row holds the place.
+      mockWelcomeFiles.clear();
+      const sitting = await launch(victorian, saying(null));
+      expect(hosts(sitting.r, 'today-rep-state-loading')).toHaveLength(1);
+      expect(hosts(sitting.r, 'today-rep-state-lines-loading')).toHaveLength(0);
+      await sitting.answer();
+      expect(hosts(sitting.r, 'today-rep-state')).toHaveLength(1);
+    });
+
+    test('an NSW reader’s pending view reserves nothing for a state row', async () => {
+      // A state seat id left beside an NSW seat: the migration sets it
+      // aside, so no row follows and none is held.
+      const first = await launch({
+        seatId: grayndler.electorate_id,
+        stateSeatIds: [essendon.electorate_id],
+      });
+      expect(hosts(first.r, 'today-your-mp-pending')).toHaveLength(1);
+      expect(hosts(first.r, 'today-rep-federal-loading')).toHaveLength(1);
+      expect(hosts(first.r, 'today-rep-state-loading')).toHaveLength(0);
+      expect(hosts(first.r, 'today-rep-state-lines-loading')).toHaveLength(0);
+      expect(hosts(first.r, 'today-reps-loading-senators')).toHaveLength(1);
+      await first.answer();
+      expect(hosts(first.r, 'today-rep-federal')).toHaveLength(1);
+      expect(hosts(first.r, 'today-reps-senators')).toHaveLength(1);
+      for (const id of [
+        'today-rep-state',
+        'today-rep-state-dissolved',
+        'today-rep-state-neutral',
+      ])
+        expect(hosts(first.r, id)).toHaveLength(0);
     });
   });
 

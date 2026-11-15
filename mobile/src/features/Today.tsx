@@ -91,6 +91,7 @@ import {
 } from './today/dissolution';
 import {
   repsShape,
+  stateLines,
   stateSeatFor,
   YourMPCard,
   YourMPPending,
@@ -98,7 +99,13 @@ import {
 import { useProfilePreload } from './people/profile-preload';
 import { keepCatalog } from '../api/kept-catalogs';
 import { saveChoice } from './your-mp/choice-store';
-import { savedSeatDirectory, useSavedChoice, useSeat } from './your-mp/useSeat';
+import type { Directory } from './your-mp/model';
+import {
+  migrateSeatChoice,
+  savedSeatDirectory,
+  useSavedChoice,
+  useSeat,
+} from './your-mp/useSeat';
 
 /**
  * Runs `effect` each time Today's screen gains focus. Unit tests that render
@@ -303,6 +310,31 @@ function useSeatFixture(seat: ReturnType<typeof useSeat>): boolean {
 }
 
 /**
+ * The directory as the device saved it, read with no request while
+ * `wanted`: undefined until the disk answers, null with none saved (or
+ * when it is not wanted). Today asks only when the last launch kept no
+ * shape for the saved choice, so the first frame is still decided from the
+ * migrated choice and not from the choice as 1.0 wrote it.
+ */
+function useSavedDirectory(wanted: boolean): Directory | null | undefined {
+  const [saved, setSaved] = useState<Directory | null | undefined>(undefined);
+  useEffect(() => {
+    if (!wanted) return;
+    let active = true;
+    void Promise.resolve()
+      .then(() => catalogs.directorySaved())
+      .catch(() => null)
+      .then((directory) => {
+        if (active) setSaved(directory ?? null);
+      });
+    return () => {
+      active = false;
+    };
+  }, [wanted]);
+  return wanted ? saved : null;
+}
+
+/**
  * Today, ordered by the reader's situation (today.md 5): Your MP or the
  * invitation to choose one; the daily edition, Following, Bills, How
  * parliament voted and Just declared; More to explore with the daily pair,
@@ -314,7 +346,9 @@ function useSeatFixture(seat: ReturnType<typeof useSeat>): boolean {
  * the disk holds (the launch read and the saved choice), so the page is
  * drawn in its order while the directory is still on its way, with Your MP's
  * skeleton in the tile's place; the launch cover lifts once that order is
- * known. Until then the body draws nothing, never a stand-in of another
+ * known. With no shape kept for the saved choice, the directory the device
+ * saved decides it (the migrated choice, and the group's rows), still with
+ * no request. Until then the body draws nothing, never a stand-in of another
  * shape (it was the edition's outline, and the edition then landed about
  * 450 pt lower, under Your MP and the guide card).
  */
@@ -370,20 +404,80 @@ export default function Today() {
     savedChoice && launch?.shape?.key === shapeKey(savedChoice)
       ? launch.shape
       : null;
+  const overview = election.record?.data ?? null;
+  // Nothing kept for this choice (the first launch of a build that keeps
+  // the shape, or a new choice): the directory the device saved stands in
+  // for the one on its way, so the choice is migrated before the first
+  // frame. Read from the disk only, and only in this case.
+  const preview = useSavedDirectory(
+    !!launch &&
+      !!savedChoice &&
+      !kept &&
+      seat.status === 'loading' &&
+      !seatArriving,
+  );
+  const previewSeats = preview?.electorates.data.electorates ?? null;
+  const previewChoice =
+    previewSeats && savedChoice
+      ? migrateSeatChoice(savedChoice, previewSeats)
+      : null;
+  const previewFederal =
+    previewChoice && previewSeats
+      ? previewSeats.find((s) => s.electorate_id === previewChoice.seatId)
+      : undefined;
+  const previewHome =
+    previewFederal && house(previewFederal) ? previewFederal : null;
   // Whether the page leads with Your MP: the seat once the directory has
-  // answered, and until then the kept shape, or with none the choice as the
+  // answered, and until then the kept shape, or with none the migrated
+  // choice from the saved directory, or with neither the choice as the
   // device saved it (null while the disk is being read).
   const seated = seatArriving
     ? true
     : seat.status !== 'loading'
       ? !!home
-      : savedChoice === undefined
+      : savedChoice === undefined || preview === undefined
         ? null
-        : (kept?.house ?? !!savedChoice?.seatId);
+        : (kept?.house ?? (preview ? !!previewHome : !!savedChoice?.seatId));
+  // The group's rows as the saved directory decides them, by the rules the
+  // loaded group follows: no state row for a seat outside Victoria or a
+  // district with no recorded member, and the state row's own form.
+  const previewReps = (() => {
+    if (!preview || !previewHome || !previewChoice || !previewSeats)
+      return null;
+    const ids = previewChoice.stateSeatIds;
+    const district = stateSeatFor(preview, ids);
+    // The record will be on its way when this row asks for it (below).
+    const reading =
+      !(election.error instanceof ElectionUnavailable) &&
+      (election.loading ||
+        !(
+          todayWindow(electionNow) &&
+          todayEligible(
+            previewChoice,
+            previewSeats,
+            Intl.DateTimeFormat().resolvedOptions().timeZone,
+          )
+        ));
+    const form = district
+      ? stateRowForm(district, { overview, reading }, electionNow, null)
+      : null;
+    const shape = repsShape(previewHome, preview, ids, form);
+    return {
+      state: shape.state,
+      senators: shape.senators,
+      lines:
+        district && form
+          ? form.kind === 'held'
+            ? (form.lines ?? DISSOLVED_STAND_IN)
+            : stateLines(district, preview, form)
+          : null,
+    };
+  })();
   // The representatives group's rows, known before the directory answers:
-  // the kept shape, or with none the choice as the device saved it (a saved
-  // state seat has a member's row; every state has senators). A capture's
-  // seat on its way says which seats it will save.
+  // the kept shape, or with none the saved directory's answer, or with
+  // neither the choice as the device saved it (a saved state seat has a
+  // row; every state has senators). A capture's seat on its way says which
+  // seats it will save.
   const keptRow = kept?.stateRow ?? null;
   const pendingReps = seatArriving
     ? {
@@ -399,7 +493,7 @@ export default function Today() {
           // themselves.
           lines: keptRow && keptRow.kind !== 'member' ? keptRow.lines : null,
         }
-      : {
+      : (previewReps ?? {
           state: !!savedChoice?.stateSeatIds.length,
           senators: true,
           // Nothing kept: the row names no member until the data decides
@@ -409,12 +503,11 @@ export default function Today() {
             election.record || election.loading
               ? DISSOLVED_STAND_IN
               : NEUTRAL_STAND_IN,
-        };
+        });
   const stateSeat =
     home && directory
       ? stateSeatFor(directory, choice?.stateSeatIds ?? [])
       : null;
-  const overview = election.record?.data ?? null;
   // The election block reads the record for this reader while its window
   // runs; Today never adds a second read beside it.
   const electionBlockReads =

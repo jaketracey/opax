@@ -1259,6 +1259,44 @@ export class Catalogs {
       );
     return { manifest, roster, slugs, people, electorates };
   }
+  /**
+   * The directory as the device last saved it, with no request, or null
+   * when any of its files is not saved or they are not of one release.
+   * Today lays out its first frame from it when the last launch kept no
+   * shape for the saved choice; the read that follows replaces it.
+   */
+  async directorySaved(): Promise<Awaited<
+    ReturnType<Catalogs['directory']>
+  > | null> {
+    try {
+      const [manifest, roster, slugs] = await Promise.all([
+        this.client.saved?.(
+          '/electorates/manifest.json',
+          decode.decodeManifest,
+        ),
+        this.client.saved?.('/parliamentarians.json', decode.decodeRoster),
+        this.client.saved?.('/api/person-slugs', decode.decodeSlugs),
+      ]);
+      if (!manifest || !roster || !slugs) return null;
+      const [people, electorates] = await Promise.all([
+        this.client.saved?.(manifest.data.people_url, decode.decodePeople),
+        this.client.saved?.(
+          manifest.data.index_url,
+          decode.decodeElectorateIndex,
+        ),
+      ]);
+      if (
+        !people ||
+        !electorates ||
+        people.data.meta.release_id !== manifest.data.release_id ||
+        electorates.data.meta.release_id !== manifest.data.release_id
+      )
+        return null;
+      return { manifest, roster, slugs, people, electorates };
+    } catch {
+      return null;
+    }
+  }
   async yourMP(
     id: string,
     chosenStateSeats: string[] = [],
