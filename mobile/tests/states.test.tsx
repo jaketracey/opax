@@ -48,6 +48,7 @@ import {
   breaksMidWord,
   lineScale,
   nextWordSafeCap,
+  roleWordSafeSizes,
   textContent,
 } from '../src/design/text';
 import {
@@ -489,6 +490,16 @@ describe('word-safe text', () => {
     });
   // The cap scales the role's own size and line height: React Native's text
   // measure cache ignores maxFontSizeMultiplier, so that prop stays 0.
+  // The role's next word-safe size below `at` (roleWordSafeSizes), as a
+  // multiplier of its default size.
+  const below = (variant: TextVariant, at: number) =>
+    roleWordSafeSizes(variant, 0, 'ios').find((size) => size < at - 0.005)!;
+  // sectionTitle at AX5 (title2, 56pt of 22) and its first three steps:
+  // 52.9pt (filling the 11% gap to 50pt), 50pt and 46.9pt.
+  const AX5_HEADING = 56 / 22;
+  const S1 = below('sectionTitle', AX5_HEADING);
+  const S2 = below('sectionTitle', S1);
+  const S3 = below('sectionTitle', S2);
   const capScale = (node: ReactTestInstance, variant: TextVariant) => {
     const role = textStyles[variant];
     const style = StyleSheet.flatten(node.props.style);
@@ -593,8 +604,12 @@ describe('word-safe text', () => {
           },
         });
       });
-      // 2.7 of the uncapped 3.
-      expect(capScale(label(), 'secondary')).toBeCloseTo(2.94 / 3.27, 6);
+      // The next subheadline size below AX5's 49pt: 45.4pt, filling the
+      // 14% gap to AX4's 42pt.
+      expect(capScale(label(), 'secondary')).toBeCloseTo(
+        below('secondary', 49 / 15) / (49 / 15),
+        6,
+      );
       act(() => {
         renderer.update(<Field label="Name" required={required} />);
       });
@@ -621,7 +636,10 @@ describe('word-safe text', () => {
           },
         });
       });
-      expect(capScale(label(), 'secondary')).toBeCloseTo(2.94 / 3.27, 6);
+      expect(capScale(label(), 'secondary')).toBeCloseTo(
+        below('secondary', 49 / 15) / (49 / 15),
+        6,
+      );
       act(() => {
         renderer.update(<Field label="Name" required={!required} />);
       });
@@ -699,40 +717,32 @@ describe('word-safe text', () => {
     layout(2.55, false);
     expect(capScale(text(), 'sectionTitle')).toBe(1);
     layout(2.55);
-    // Uncapped 2.55, capped 2.29: 90% of the role's size, which Dynamic Type
-    // then multiplies by the same 2.55.
-    expect(capScale(text(), 'sectionTitle')).toBeCloseTo(2.29 / 2.55, 6);
-    // Each layout at the size now drawn that still breaks steps 10% lower,
-    // always as a share of the same uncapped 2.55. A word still wider than
-    // its column goes below the reader's default size, and stops at 11pt
-    // (sectionTitle is 22pt, so half its role size; duo audit A5-1).
-    for (const [at, next] of [
-      [2.29, 2.06],
-      [2.06, 1.85],
-      [1.85, 1.67],
-      [1.67, 1.5],
-      [1.5, 1.35],
-      [1.35, 1.22],
-      [1.22, 1.1],
-      [1.1, 0.99],
-      [0.99, 0.89],
-      [0.89, 0.8],
-      [0.8, 0.72],
-      [0.72, 0.65],
-      [0.65, 0.59],
-      [0.59, 0.53],
-      [0.53, 0.5],
-      [0.5, 0.5],
-    ] as const) {
+    // Uncapped 56pt (2.55), capped to the next word-safe size, 52.9pt, as a
+    // share of the role's size, which Dynamic Type then multiplies by 2.55.
+    expect(capScale(text(), 'sectionTitle')).toBeCloseTo(S1 / AX5_HEADING, 6);
+    // Each layout at the size now drawn that still breaks steps to the next
+    // size: title2's own Dynamic Type sizes, gaps wider than 10% filled, the
+    // same steps for every reader. A word still wider than its column goes
+    // below the reader's default size, and stops at 11pt (sectionTitle is
+    // 22pt, so half its role size; duo audit A5-1).
+    const points = [
+      52.9, 50, 46.9, 44, 41.4, 39, 36.4, 34, 30.9, 28, 26, 24, 22, 21, 20, 19,
+      17.3, 15.8, 14.5, 13.2, 12, 11, 11,
+    ];
+    let at = S1;
+    for (const [step, next] of points.slice(1).entries()) {
+      expect(at * 22).toBeCloseTo(points[step]!, 1);
       layout(at);
-      expect(capScale(text(), 'sectionTitle')).toBeCloseTo(next / 2.55, 6);
+      const cap = capScale(text(), 'sectionTitle') * AX5_HEADING;
+      expect(cap * 22).toBeCloseTo(next, 1);
+      at = cap;
     }
     expect(text().props.accessibilityRole).toBe('header');
   });
   describe('word-safe resets and late layouts', () => {
     const base = textStyles.sectionTitle.lineHeight + LINE_HEIGHT_NUDGE;
     // "Representation" at heading scale: 212pt wide at the uncapped 2.55,
-    // 191pt at 2.29 and 172pt at 2.06.
+    // 200pt at the first step (S1), 189pt at S2 and 177pt at S3.
     const broken = (at: number, widths: [number, number]) => ({
       nativeEvent: {
         lines: [
@@ -803,13 +813,13 @@ describe('word-safe text', () => {
       const { ratio, layout, resize } = heading();
       resize(200);
       layout(broken(2.55, [198, 14]));
-      expect(ratio()).toBeCloseTo(2.29 / 2.55, 6);
-      layout(fits(2.29, 191));
-      // 200 to 220pt: 191pt at 2.29 is 212pt at 2.55, which now fits.
+      expect(ratio()).toBeCloseTo(S1 / AX5_HEADING, 6);
+      layout(fits(S1));
+      // 200 to 220pt: 200pt at S1 is 212pt at 2.55, which now fits.
       resize(220);
       expect(ratio()).toBe(1);
       // The capped layout, delivered late to the full-size text, is ignored.
-      layout(fits(2.29, 191));
+      layout(fits(S1));
       expect(ratio()).toBe(1);
     });
     test('a narrower column that widens again restores the larger cap', () => {
@@ -817,37 +827,37 @@ describe('word-safe text', () => {
       resize(200);
       layout(broken(2.55, [198, 14]));
       resize(200);
-      layout(fits(2.29));
-      expect(ratio()).toBeCloseTo(2.29 / 2.55, 6);
-      // The column narrows to 180pt and 191pt no longer fits.
-      resize(180);
-      layout(broken(2.29, [178, 13]));
-      resize(180);
-      layout(fits(2.06));
-      expect(ratio()).toBeCloseTo(2.06 / 2.55, 6);
+      layout(fits(S1));
+      expect(ratio()).toBeCloseTo(S1 / AX5_HEADING, 6);
+      // The column narrows to 190pt and 200pt no longer fits.
+      resize(190);
+      layout(broken(S1, [188, 13]));
+      resize(190);
+      layout(fits(S2));
+      expect(ratio()).toBeCloseTo(S2 / AX5_HEADING, 6);
       // Back to 200pt: the same capped text's frame widens, so the column
       // did. Full size breaks there again and steps to the 200pt cap.
       resize(200);
       expect(ratio()).toBe(1);
       layout(broken(2.55, [198, 14]));
-      expect(ratio()).toBeCloseTo(2.29 / 2.55, 6);
+      expect(ratio()).toBeCloseTo(S1 / AX5_HEADING, 6);
       // Repeated frames and lines at that width settle without restarting.
       for (let i = 0; i < 5; i++) {
         resize(200);
-        layout(fits(2.29));
+        layout(fits(S1));
       }
-      expect(ratio()).toBeCloseTo(2.29 / 2.55, 6);
+      expect(ratio()).toBeCloseTo(S1 / AX5_HEADING, 6);
     });
     test("the capped text's own narrowing never counts as a wider column", () => {
       const { ratio, layout, resize } = heading();
+      resize(210);
+      layout(broken(2.55, [208, 14]));
+      // The capped text hugs its 200pt word: narrower than the column, and
+      // never wider than the 210pt it broke in, so the cap stays.
       resize(200);
-      layout(broken(2.55, [198, 14]));
-      // The capped text hugs its 191pt word: narrower than the column, and
-      // never wider than the 200pt it broke in, so the cap stays.
-      resize(191);
-      layout(fits(2.29, 191));
-      resize(191);
-      expect(ratio()).toBeCloseTo(2.29 / 2.55, 6);
+      layout(fits(S1, 200));
+      resize(200);
+      expect(ratio()).toBeCloseTo(S1 / AX5_HEADING, 6);
     });
     test("a change of role starts again with that role's own uncapped size", () => {
       const { text, layout } = heading(
@@ -863,7 +873,7 @@ describe('word-safe text', () => {
           ],
         },
       });
-      expect(capScale(text(), 'sectionTitle')).toBeCloseTo(2.29 / 2.55, 6);
+      expect(capScale(text(), 'sectionTitle')).toBeCloseTo(S1 / AX5_HEADING, 6);
       act(() =>
         renderer.update(
           <Text wordSafe variant="footnote">
@@ -872,7 +882,8 @@ describe('word-safe text', () => {
         ),
       );
       expect(capScale(text(), 'footnote')).toBe(1);
-      // The fine role's ramp is 3.4 at this size: 3.06 of 3.4, not of 2.55.
+      // The fine role's ramp is 3.4 at this size (44pt of 13): its next size
+      // is footnote's own 40.9pt, not a step below the heading's 2.55.
       const fine = textStyles.footnote.lineHeight + LINE_HEIGHT_NUDGE;
       act(() => {
         sendFrame(text());
@@ -889,38 +900,42 @@ describe('word-safe text', () => {
           },
         });
       });
-      expect(capScale(text(), 'footnote')).toBeCloseTo(3.06 / 3.4, 6);
+      expect(capScale(text(), 'footnote')).toBeCloseTo(
+        below('footnote', 44 / 13) / (44 / 13),
+        6,
+      );
+      expect(capScale(text(), 'footnote') * 44).toBeCloseTo(40.9, 1);
     });
     test('a late layout from an earlier size can neither raise nor lower the cap', () => {
       const { ratio, layout } = heading();
 
       layout(broken(2.55, [300, 12]));
 
-      layout(broken(2.29, [300, 12]));
-      expect(ratio()).toBeCloseTo(2.06 / 2.55, 6);
+      layout(broken(S1, [300, 12]));
+      expect(ratio()).toBeCloseTo(S2 / AX5_HEADING, 6);
       // Fabric delivers both queued layouts through current props.
       layout(broken(2.55, [300, 12]));
-      layout(broken(2.29, [300, 12]));
-      expect(ratio()).toBeCloseTo(2.06 / 2.55, 6);
+      layout(broken(S1, [300, 12]));
+      expect(ratio()).toBeCloseTo(S2 / AX5_HEADING, 6);
       // A layout at another size arriving at the current callback is ignored.
       layout(broken(2.55, [300, 12]));
       layout(broken(1.3, [300, 12]));
-      expect(ratio()).toBeCloseTo(2.06 / 2.55, 6);
-      // A fresh layout at 2.06 still steps down as usual.
-      layout(broken(2.06, [300, 12]));
-      expect(ratio()).toBeCloseTo(1.85 / 2.55, 6);
+      expect(ratio()).toBeCloseTo(S2 / AX5_HEADING, 6);
+      // A fresh layout at S2 still steps down as usual.
+      layout(broken(S2, [300, 12]));
+      expect(ratio()).toBeCloseTo(S3 / AX5_HEADING, 6);
     });
     // Review round 2, probe 2.
     test('after a switch to standard size a late AX5 layout cannot shrink below the role size', () => {
       const { ratio, layout } = heading();
       layout(broken(2.55, [198, 14]));
-      expect(ratio()).toBeCloseTo(2.29 / 2.55, 6);
+      expect(ratio()).toBeCloseTo(S1 / AX5_HEADING, 6);
 
       act(() => setSize(1));
       expect(ratio()).toBe(1);
       // The queued AX5 layout, through current props.
-      layout(broken(2.29, [198, 14]));
-      layout(broken(2.29, [198, 14]));
+      layout(broken(S1, [198, 14]));
+      layout(broken(S1, [198, 14]));
       expect(ratio()).toBe(1);
       layout(fits(1, 92));
       expect(ratio()).toBe(1);
@@ -933,10 +948,12 @@ describe('word-safe text', () => {
       act(() => setSize(2.643));
       expect(ratio()).toBe(1);
       // The queued AX5 layout cannot set this size's uncapped value.
-      layout(broken(2.29, [198, 14]));
+      layout(broken(S1, [198, 14]));
       expect(ratio()).toBe(1);
       layout(broken(2.0, [198, 14]));
-      expect(ratio()).toBeCloseTo(1.8 / 2.0, 6);
+      // AX3's 44pt steps to 41.4pt, filling the 11% gap to AX2's 39pt.
+      expect(ratio()).toBeCloseTo(below('sectionTitle', 2) / 2, 6);
+      expect(ratio() * 44).toBeCloseTo(41.4, 1);
     });
   });
 });
