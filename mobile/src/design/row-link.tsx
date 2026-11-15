@@ -19,6 +19,7 @@ import {
 import { Link, type Href } from 'expo-router';
 import { menuTitle } from './menu-title';
 import { useRecordLink } from '../navigation/record-link';
+import { usePeekCleanup } from '../navigation/stale-previews';
 import { canonicalUrl, openOnWeb } from '../navigation/external';
 import { shareRecord, trackShare } from '../navigation/share';
 import { copyText } from '../features/records/actions';
@@ -185,6 +186,15 @@ const isPressable = (element: ReactElement) =>
   element.type === PlainPressable ||
   element.type === NativePressable;
 
+/**
+ * RowLink's trigger: RowTrigger, and a closed peek leaves nothing preloaded
+ * behind (navigation/stale-previews.ts). The Slot's props and ref pass on.
+ */
+function PeekRowTrigger(props: RowTriggerProps) {
+  usePeekCleanup();
+  return <RowTrigger {...props} />;
+}
+
 /** A native preview and menu, with every menu choice also directly accessible. */
 export function RowLink({
   href,
@@ -328,7 +338,7 @@ export function RowLink({
       }}
     >
       <Link.Trigger withAppleZoom={zoom && !select}>
-        <RowTrigger row={trigger} />
+        <PeekRowTrigger row={trigger} />
       </Link.Trigger>
       {showPreview ? <Link.Preview /> : null}
       {items.length ? <Link.Menu>{nativeItems(items)}</Link.Menu> : null}
