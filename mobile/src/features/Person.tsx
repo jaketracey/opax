@@ -38,6 +38,7 @@ import {
   InlineError,
   Skeleton,
   SkeletonCrossfade,
+  type ProfileOutline,
 } from '../design/states';
 import { Text } from '../design/text';
 import { rhythm } from '../design/tokens';
@@ -362,7 +363,7 @@ export function ProfileScreen({
               <RefreshControl refreshing={refreshing} onRefresh={refresh} />
             }
           >
-            <PersonSkeleton />
+            <PersonSkeleton slug={slug} />
           </Screen>
         }
       >
@@ -411,7 +412,7 @@ export function ProfileScreen({
                 />
               )
             ) : (
-              <PersonSkeleton />
+              <PersonSkeleton slug={slug} />
             )}
           </Screen>
         ) : load.status !== 'ready' || !identity ? null : (
@@ -432,10 +433,58 @@ export function ProfileScreen({
   );
 }
 
-function PersonSkeleton() {
+/**
+ * The header a profile will draw, from the directory (and pay catalog)
+ * already in memory: the same rules as `ProfileContent`'s header. Null when
+ * nothing is in memory or the person is not in it; the placeholder then
+ * draws a sitting member with no post.
+ */
+export function profileOutline(
+  slug: string,
+  yourMP: boolean,
+): ProfileOutline | null {
+  // Only a hint: a record the header rules cannot read draws the default.
+  try {
+    return outlineOf(catalogs.profileInMemory(slug), yourMP);
+  } catch {
+    return null;
+  }
+}
+function outlineOf(
+  held: ReturnType<typeof catalogs.profileInMemory>,
+  yourMP: boolean,
+): ProfileOutline | null {
+  const identity = held?.profile.blocks.identity.data;
+  if (!held || !identity) return null;
+  const former = identity.partyStatus === 'former';
+  const formerLine = formerMemberLine(identity);
+  return {
+    role: !!(formerLine ?? roleLine(held.profile, former)),
+    yourMP,
+    follow: !!held.profile.personId,
+    rows: [
+      ...(identity.party
+        ? [{ kind: 'party' as const, detail: !!identity.formerly }]
+        : []),
+      ...(formerLine ? [] : seatRows(identity)).map((seat) => ({
+        kind: 'seat' as const,
+        detail: !!seat.detail,
+      })),
+      ...(!former && officialPage(held.sourceUrl)
+        ? [{ kind: 'official' as const, detail: false }]
+        : []),
+    ],
+  };
+}
+
+function PersonSkeleton({ slug }: { slug: string }) {
+  const yourMP = useIsMyMember(slug);
+  // Once, at the first draw: the placeholder never changes shape itself.
+  const [outline] = useState(() => profileOutline(slug, yourMP));
   return (
     <Skeleton
       shape="person-profile"
+      outline={outline}
       label="Loading the profile"
       testID="person-loading"
     />

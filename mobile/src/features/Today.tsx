@@ -13,6 +13,7 @@ import {
   type ReactNode,
 } from 'react';
 import { RefreshControl, StyleSheet, View } from 'react-native';
+import type { Pay } from '../api/catalog-decoders';
 import type { Block, EditionView, Electorate } from '../api/catalogs';
 import { apiClient, catalogs } from '../api/runtime';
 import { useOffline } from '../api/useOffline';
@@ -79,6 +80,11 @@ const useScreenFocus: (effect: () => void | (() => void)) => void =
     ? (effect) => Router.useFocusEffect(effect)
     : () => undefined;
 
+// The preload's pay catalog also sizes a profile's placeholder (its role
+// line), so a profile opened from here lands where the placeholder stood.
+const keepPreloaded = (path: string, data: unknown) => {
+  if (path === '/pay.json') catalogs.keepPay(data as Pay);
+};
 const house = (s: Electorate) =>
   s.jurisdiction === 'federal' &&
   s.chamber === 'representatives' &&
@@ -279,7 +285,7 @@ export default function Today() {
   useScreenReady('/', ready);
   // Once the body is drawn, the profile catalogs are read from their saved
   // copies in idle time while Today has focus (PF2).
-  useProfilePreload(apiClient, ready, useScreenFocus);
+  useProfilePreload(apiClient, ready, useScreenFocus, keepPreloaded);
 
   const order = launch
     ? todayOrder({

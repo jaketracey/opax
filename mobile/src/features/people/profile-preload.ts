@@ -96,8 +96,11 @@ export async function preloadProfileCatalogs(
     first = afterDrawn,
     next = idleSlot,
     active = () => AppState.currentState === 'active',
+    kept,
   }: {
     signal: AbortSignal;
+    /** Each saved catalog as it is decoded (the pay catalog is kept). */
+    kept?: (path: string, data: unknown) => void;
     first?: (signal: AbortSignal) => Promise<void>;
     next?: (signal: AbortSignal) => Promise<void>;
     active?: () => boolean;
@@ -127,6 +130,7 @@ export async function preloadProfileCatalogs(
     } catch {
       saved = null;
     }
+    if (saved) kept?.(path, saved.data);
     (saved ? result.read : result.skipped).push(path);
     perfMark(saved ? 'preload-read' : 'preload-skip', path);
   }
@@ -150,6 +154,7 @@ export function startProfilePreload(
   options: {
     first?: (signal: AbortSignal) => Promise<void>;
     next?: (signal: AbortSignal) => Promise<void>;
+    kept?: (path: string, data: unknown) => void;
   } = {},
 ): () => void {
   let run: AbortController | null = null;
@@ -189,11 +194,12 @@ export function useProfilePreload(
   client: Pick<ApiClient, 'saved'>,
   drawn: boolean,
   useFocus: (effect: () => void | (() => void)) => void,
+  kept?: (path: string, data: unknown) => void,
 ) {
   useFocus(
     useCallback(
-      () => (drawn ? startProfilePreload(client) : undefined),
-      [client, drawn],
+      () => (drawn ? startProfilePreload(client, { kept }) : undefined),
+      [client, drawn, kept],
     ),
   );
 }

@@ -81,6 +81,7 @@ jest.mock('../src/api/runtime', () => ({
     person: jest.fn(),
     profileFor: jest.fn(),
     rosterProfileFor: jest.fn(),
+    profileInMemory: jest.fn(),
     directory: jest.fn(),
     partyPage: jest.fn(),
     followSources: jest.fn(),
@@ -896,6 +897,94 @@ describe('profile', () => {
           node.props.testID?.startsWith('person-loading-stat-divider-'),
       ),
     ).toHaveLength(2);
+  });
+
+  test('the pending profile draws the lines and rows the header will draw, so nothing under it moves', async () => {
+    jest
+      .spyOn(jest.requireActual('react-native'), 'useWindowDimensions')
+      .mockReturnValue({ width: 390, height: 844, scale: 3, fontScale: 1 });
+    const person = c.joinPerson('penny-wong', slugs, roster, people, manifest);
+    const profile = c.profileFor(person.canonicalPersonId!, catalogs);
+    // The release names her own page on the parliament's site.
+    const sourceUrl =
+      'https://www.aph.gov.au/Senators_and_Members/Parliamentarian?MPID=00AOU';
+    mock.directory.mockResolvedValue({
+      ...directory,
+      people: result({
+        ...people,
+        people: people.people.map((p) =>
+          p.person_id === person.canonicalPersonId
+            ? { ...p, source_url: sourceUrl }
+            : p,
+        ),
+      }),
+    } as never);
+    mockParams.slug = 'penny-wong';
+    mock.person.mockReturnValue(new Promise(() => {}));
+    mock.profileInMemory.mockReturnValue(null as never);
+    // With nothing in memory the placeholder is a member with no post.
+    let bare!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      bare = TestRenderer.create(<Person />);
+    });
+    expect(has(bare, 'person-loading-role')).toBe(false);
+    expect(has(bare, 'person-loading-official')).toBe(false);
+    expect(has(bare, 'person-loading-party')).toBe(true);
+    expect(has(bare, 'person-loading-seat-detail')).toBe(true);
+    act(() => bare.unmount());
+    // The directory and pay catalog are in memory; the page's read is not in.
+    mock.profileInMemory.mockReturnValue({
+      profile,
+      payKnown: true,
+      sourceUrl,
+    } as never);
+    let pending!: TestRenderer.ReactTestRenderer;
+    await act(async () => {
+      pending = TestRenderer.create(<Person />);
+    });
+    const ids = (r: TestRenderer.ReactTestRenderer, under: string) =>
+      host(r, under)
+        .findAll(
+          (n) =>
+            typeof n.type === 'string' && typeof n.props.testID === 'string',
+        )
+        .map((n) => n.props.testID as string);
+    const bones = ids(pending, 'person-loading');
+    const style = (testID: string) =>
+      Native.StyleSheet.flatten(host(pending, testID).props.style);
+    const rowStyles = [0, 1, 2].map((i) => style(`person-loading-row-${i}`));
+    const followSlot = style('person-loading-follow-slot');
+    act(() => pending.unmount());
+    const { r } = await wong();
+    // The loaded header: a role line, then one row each for the party, the
+    // seat and the official page.
+    expect(has(r, 'person-role')).toBe(true);
+    const rows = ['person-party', 'person-electorate', 'person-official'];
+    expect(ids(r, 'person-identity').filter((id) => rows.includes(id))).toEqual(
+      rows,
+    );
+    // The placeholder drew the same, in the same order.
+    expect(
+      bones.filter((id) =>
+        /-(portrait|name|role|your-mp|follow|party|seat|official)$/.test(id),
+      ),
+    ).toEqual([
+      'person-loading-portrait',
+      'person-loading-name',
+      'person-loading-role',
+      'person-loading-follow',
+      'person-loading-party',
+      'person-loading-seat',
+      'person-loading-official',
+    ]);
+    expect(bones.filter((id) => /-row-\d+$/.test(id))).toHaveLength(
+      rows.length,
+    );
+    // Each placeholder row is a `LinkRow`'s height, and Follow its target.
+    for (const row of rowStyles)
+      expect(row).toMatchObject({ minHeight: 44, paddingVertical: 11 });
+    expect(followSlot.minHeight).toBe(44);
+    act(() => r.unmount());
   });
 
   test.each(['votes', 'interests', 'pay'] as const)(

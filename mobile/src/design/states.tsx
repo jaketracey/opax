@@ -2,6 +2,7 @@ import { ContentUnavailableView, Host } from '@expo/ui/swift-ui';
 import { accessibilityIdentifier } from '@expo/ui/swift-ui/modifiers';
 import { NavigationContext } from 'expo-router/react-navigation';
 import {
+  Fragment,
   createContext,
   useContext,
   useEffect,
@@ -240,18 +241,48 @@ const bar = (
     ]}
   />
 );
+/**
+ * What a profile's header will hold, known before its own read (from the
+ * directory already in memory): the placeholder draws the same lines and
+ * rows, so the header and everything under it land where it stood.
+ */
+export interface ProfileOutline {
+  /** The role line under the name ("Prime Minister", "Former member"). */
+  role: boolean;
+  /** "Your MP", on the reader's own member. */
+  yourMP: boolean;
+  follow: boolean;
+  /** The identity rows in order; `detail` is a row's second line. */
+  rows: readonly {
+    kind: 'party' | 'seat' | 'official';
+    detail: boolean;
+  }[];
+}
+/** A sitting member with no post: the outline when nothing is in memory. */
+export const defaultProfileOutline: ProfileOutline = {
+  role: false,
+  yourMP: false,
+  follow: true,
+  rows: [
+    { kind: 'party', detail: false },
+    { kind: 'seat', detail: true },
+  ],
+};
 /** Detail placeholders follow the same type, row and spacing tokens as content. */
 function DetailSkeleton({
   person,
+  outline,
   label,
   onSunken,
   testID,
 }: {
   person: boolean;
+  outline?: ProfileOutline | null;
   label: string;
   onSunken: boolean;
   testID?: string;
 }) {
+  const shape = outline ?? defaultProfileOutline;
   const large = useAccessibilitySize();
   const { regular } = useLayout();
   const { fontScale } = useWindowDimensions();
@@ -356,34 +387,81 @@ function DetailSkeleton({
           >
             {bone('portrait', 96, 96, true)}
             {line('name', '70%', 'pageTitle')}
-            {bone('follow', large ? '100%' : 112, controlHeight.default, true)}
-          </View>
-          <View>
-            <View
-              style={{
-                minHeight: minimumTarget,
-                paddingVertical: rhythm.row,
-                justifyContent: 'center',
-              }}
-            >
+            {shape.role ? line('role', '45%') : null}
+            {shape.yourMP ? line('your-mp', 84) : null}
+            {shape.follow ? (
+              // The button's 44 pt target, its capsule drawn inside it.
               <View
+                testID={part('follow-slot')}
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: rhythm.tight,
+                  minHeight: minimumTarget,
+                  justifyContent: 'center',
+                  alignSelf: large ? 'stretch' : undefined,
                 }}
               >
-                {bone('party-dot', 10, 10, true)}
-                {line('party', '40%', 'body')}
+                {bone(
+                  'follow',
+                  large ? '100%' : 112,
+                  large ? minimumTarget : buttonCapsule,
+                  true,
+                )}
               </View>
-            </View>
-            {divider('identity-divider')}
-            <View style={{ gap: rhythm.line, paddingVertical: rhythm.row }}>
-              {line('seat', '65%', 'body')}
-              {line('seat-detail', '45%')}
-            </View>
-            {divider('identity-end')}
+            ) : null}
           </View>
+          {shape.rows.length ? (
+            <View testID={part('identity')}>
+              {shape.rows.map((row, index) => {
+                const seats = shape.rows
+                  .slice(0, index)
+                  .filter((before) => before.kind === 'seat').length;
+                const name =
+                  row.kind === 'seat' && seats ? `seat-${seats}` : row.kind;
+                return (
+                  <Fragment key={name}>
+                    {index
+                      ? divider(
+                          index === 1
+                            ? 'identity-divider'
+                            : `identity-divider-${index}`,
+                        )
+                      : null}
+                    <View
+                      testID={part(`row-${index}`)}
+                      style={{
+                        minHeight: minimumTarget,
+                        paddingVertical: rhythm.row,
+                        justifyContent: 'center',
+                        gap: rhythm.line,
+                      }}
+                    >
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          gap: rhythm.tight,
+                        }}
+                      >
+                        {row.kind === 'party'
+                          ? bone('party-dot', 10, 10, true)
+                          : null}
+                        {line(
+                          name,
+                          row.kind === 'party'
+                            ? '40%'
+                            : row.kind === 'seat'
+                              ? '65%'
+                              : '55%',
+                          'body',
+                        )}
+                      </View>
+                      {row.detail ? line(`${name}-detail`, '45%') : null}
+                    </View>
+                  </Fragment>
+                );
+              })}
+              {divider('identity-end')}
+            </View>
+          ) : null}
         </View>
         <View style={{ gap: rhythm.tight }}>
           <View
@@ -518,18 +596,22 @@ export function Skeleton({
   count = 3,
   label = 'Loading',
   onSunken = false,
+  outline,
   testID,
 }: {
   shape?: SkeletonShape;
   count?: number;
   label?: string;
   onSunken?: boolean;
+  /** `person-profile` only: the header's lines and rows, when known. */
+  outline?: ProfileOutline | null;
   testID?: string;
 }) {
   if (shape === 'person-profile' || shape === 'electorate-profile')
     return (
       <DetailSkeleton
         person={shape === 'person-profile'}
+        outline={outline}
         label={label}
         onSunken={onSunken}
         testID={testID}

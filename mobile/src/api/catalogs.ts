@@ -153,12 +153,23 @@ const failedPartyBlock = (error: unknown): Block<never> => ({
       ? error
       : new ApiError('invalid-data', 'This catalog could not be read.'),
 });
+/** The directory's five records, as `Catalogs.directory` returns them. */
+type DirectoryRecord = {
+  manifest: Awaited<ReturnType<Catalogs['manifest']>>;
+  roster: Awaited<ReturnType<Catalogs['roster']>>;
+  slugs: Awaited<ReturnType<Catalogs['slugs']>>;
+  people: Awaited<ReturnType<Catalogs['people']>>;
+  electorates: Awaited<ReturnType<Catalogs['electorates']>>;
+};
 export class Catalogs {
   private suggestionReads = new ReadSession<SuggestionSources>();
   private suggestionGeneration = 0;
   private suggestionLoadedAt?: number;
   /** The last bills index read this session, for the bill page's party note. */
   private billIndex?: RecordResult<decode.BillIndex>;
+  /** The last directory and pay catalog read, for `profileInMemory`. */
+  private directoryRecord?: DirectoryRecord;
+  private payRecord?: decode.Pay;
   private suggestionIdentityRetry: 'unused' | 'available' | 'used' = 'unused';
   constructor(private client: Pick<ApiClient, 'get'>) {}
   async partyPage(
@@ -610,7 +621,48 @@ export class Catalogs {
     );
   }
   pay(signal?: AbortSignal) {
-    return this.client.get('/pay.json', decode.decodePay, false, { signal });
+    return this.client
+      .get('/pay.json', decode.decodePay, false, { signal })
+      .then((pay) => {
+        this.payRecord = pay.data;
+        return pay;
+      });
+  }
+  /** The profile preload's saved pay catalog, kept for `profileInMemory`. */
+  keepPay(pay: decode.Pay) {
+    this.payRecord ??= pay;
+  }
+  /**
+   * A profile from the directory (and the pay catalog, for the role line)
+   * already in memory, or null: never a read. The profile page sizes its
+   * placeholder from it, so the header it then draws lands in the same
+   * place. Only the identity and pay blocks are filled.
+   */
+  profileInMemory(slug: string) {
+    const directory = this.directoryRecord;
+    if (!directory) return null;
+    try {
+      const identity = this.joinFrom(slug, directory);
+      const data = {
+        manifest: directory.manifest.data,
+        roster: directory.roster.data,
+        slugs: directory.slugs.data,
+        people: directory.people.data,
+        pay: this.payRecord,
+      };
+      return {
+        profile: identity.canonicalPersonId
+          ? profileFor(identity.canonicalPersonId, data)
+          : rosterProfileFor(identity, data),
+        /** False while the role line's catalog has not been read. */
+        payKnown: !!this.payRecord,
+        sourceUrl: directory.people.data.people.find(
+          (p) => p.person_id === identity.canonicalPersonId,
+        )?.source_url,
+      };
+    } catch {
+      return null;
+    }
   }
   expenses(signal?: AbortSignal) {
     return this.client.get('/expenses.json', decode.decodeExpenses, false, {
@@ -1131,7 +1183,10 @@ export class Catalogs {
       error: errors[0] ?? null,
     };
   }
-  async directory(refresh = false, signal?: AbortSignal) {
+  async directory(
+    refresh = false,
+    signal?: AbortSignal,
+  ): Promise<DirectoryRecord> {
     const [manifest, roster, slugs] = await Promise.all([
       this.manifest(refresh, signal),
       this.roster(refresh, signal),
@@ -1149,7 +1204,13 @@ export class Catalogs {
         'invalid-data',
         'The electorate release is incomplete. Try again.',
       );
-    return { manifest, roster, slugs, people, electorates };
+    return (this.directoryRecord = {
+      manifest,
+      roster,
+      slugs,
+      people,
+      electorates,
+    });
   }
   async yourMP(
     id: string,
@@ -1610,12 +1671,10 @@ export class Catalogs {
       },
     };
   }
-  async person(
+  private joinFrom(
     slug: string,
-    signal?: AbortSignal,
-  ): Promise<RecordResult<PersonProfile>> {
-    const directory = await this.directory(undefined, signal);
-    const { slugs, roster, manifest, people } = directory;
+    { slugs, roster, manifest, people }: DirectoryRecord,
+  ): PersonProfile {
     // Identifier-only handoff to the profile lane. Keep the existing slug route
     // working while allowing callers to carry the canonical person ID.
     if (slug.startsWith('person_')) {
@@ -1627,14 +1686,22 @@ export class Catalogs {
         manifest.data,
       );
     }
+    return joinPerson(
+      slug,
+      slugs.data,
+      roster.data,
+      people.data,
+      manifest.data,
+    );
+  }
+  async person(
+    slug: string,
+    signal?: AbortSignal,
+  ): Promise<RecordResult<PersonProfile>> {
+    const directory = await this.directory(undefined, signal);
+    const { manifest, people } = directory;
     return {
-      data: joinPerson(
-        slug,
-        slugs.data,
-        roster.data,
-        people.data,
-        manifest.data,
-      ),
+      data: this.joinFrom(slug, directory),
       ...recordFlags(Object.values(directory)),
       stale: Object.values(directory).some((r) => r.stale),
       savedAt: Math.min(...Object.values(directory).map((r) => r.savedAt)),
