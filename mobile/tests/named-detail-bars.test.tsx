@@ -1033,11 +1033,10 @@ test.each([
   },
 );
 
-// Beside the collapsed back button on iOS 26 the title's text is centred in
-// the span between the bar groups (68 to 274 on a 402 pt phone: the back
-// circle's reserve to where Share's and More's begins), 30 pt left of the
-// bar's centre line. The shift is worked out from those figures, with no
-// measuring.
+// Beside the collapsed back button on iOS 26 the title view, as wide as its
+// text, sits at the leading end of the span between the bar groups (72 pt in,
+// to 274 on a 402 pt phone), so a short title is well left of the bar's
+// centre line. The shift is worked out from those figures, with no measuring.
 describe('a title beside the collapsed back button is moved onto the bar’s centre line on iOS 26', () => {
   let version$: jest.SpyInstance;
   const render = (
@@ -1093,15 +1092,15 @@ describe('a title beside the collapsed back button is moved onto the bar’s cen
 
   test('a title just too wide to sit beside the back name moves onto the centre line', () => {
     const t = render(144);
-    // 201 - (68 + 274) / 2 = 30, and its edge (171 + 72 + 30) stays short of 274.
-    expect(t.shift()).toBe(30);
+    // 201 - (72 + 144 / 2) = 57, and its edge (72 + 144 + 57) stays inside 274.
+    expect(t.shift()).toBe(57);
     t.done();
   });
 
   test('a title never moves under Share', () => {
     // A wide one moves only as far as keeps its edge at 274.
     const wide = render(170);
-    expect(wide.shift()).toBe(18);
+    expect(wide.shift()).toBe(32);
     wide.done();
     // One that fills the span has nowhere to go.
     const full = render(206);
@@ -1171,8 +1170,8 @@ describe('a title beside the collapsed back button is moved onto the bar’s cen
     expect(setOptions).toHaveBeenLastCalledWith({
       headerBackButtonDisplayMode: 'minimal',
     });
-    expect(x).toBe(30);
-    expect(171 + 50 + (x ?? 0)).toBeLessThanOrEqual(274);
+    expect(x).toBe(79);
+    expect(72 + 100 + (x ?? 0)).toBeLessThanOrEqual(274);
     act(() => view!.unmount());
     spy.mockRestore();
     act(() => Dimensions.set({ window: original }));
@@ -1185,10 +1184,10 @@ describe('a title beside the collapsed back button is moved onto the bar’s cen
   });
 
   test('larger text: the items grow, and the shift follows the same figures', () => {
-    // Share and More grow by 6 pt each: reserve 116, span 68 to 262.
+    // Share and More grow by 6 pt each: reserve 116, the span ends at 262.
     expect(
       barTitleShift({ active: true, width: 402, text: 143, growth: 6 }),
-    ).toBe(25);
+    ).toBe(47);
     expect(barTitleShift({ active: false, width: 402, text: 143 })).toBe(0);
     expect(barTitleShift({ active: true, width: 402, text: undefined })).toBe(
       0,

@@ -108,12 +108,13 @@ export function barTitleWidth(
 
 /**
  * How far to move a title right so its text sits on the bar's centre line,
- * when it is centred in the span between the back button's circle (44 pt, 16
- * pt in, 8 pt gap) and the trailing group's reserve (16 pt in, the items, 8 pt
- * gap). The span's centre lies left of the bar's by half the difference of
- * the two reserves; the move stops where the text's edge reaches the
- * trailing reserve, so a text wider than the centred width moves less, and
- * one that fills the span not at all.
+ * beside the back button's collapsed circle. On iOS 26 UIKit sets the title
+ * view, as wide as its text, at the leading end of the span between the bar
+ * groups: 72 pt from the edge (the circle's 16 + 44, and 12), not centred in
+ * it (device capture, 26.3: a 143 pt title spanned 73 to 216 on a 402 pt
+ * phone). The move puts the text's centre on the bar's, and stops where its
+ * edge meets the trailing group's reserve (16 pt in, the items, 8 pt gap),
+ * so a wide title moves less, and one that fills the span not at all.
  */
 export function barTitleShift({
   active,
@@ -135,11 +136,10 @@ export function barTitleShift({
   const items =
     trailingWidth ??
     44 + 60 * Math.max(0, trailing - 1) + growth * Math.max(0, trailing);
-  const start = 16 + 44 + 8;
+  const start = 16 + 44 + 12;
   const end = width - (16 + items + 8);
-  const spanCentre = (start + end) / 2;
-  const toCentre = width / 2 - spanCentre;
-  const room = end - (spanCentre + text / 2);
+  const toCentre = width / 2 - (start + text / 2);
+  const room = end - (start + text);
   return Math.floor(Math.max(0, Math.min(toCentre, room)));
 }
 
@@ -395,15 +395,14 @@ export function BarTitle({
         measured(drawn),
       )
     : room;
-  // Beside the collapsed back button on iOS 26 UIKit stretches the title view
-  // across the span between the bar groups, so the text, centred in it, sits
-  // on the span's centre, not the bar's. The span runs from the circle's end
-  // to where the trailing group's reserve begins (as in barTitleWidth), so the
-  // difference is known from the same figures: no measuring, no timers. The
-  // text is moved onto the bar's centre line only as far as keeps its edge
-  // short of that reserve, so it never goes under Share. It is let go as the
-  // title hides, before the back button expands. 18.4 centres a fitting title
-  // and the Duo's rail has no items on the bar: no shift there.
+  // Beside the collapsed back button on iOS 26 UIKit sets the title view at
+  // the leading end of the span between the bar groups, not on the bar's
+  // centre line. Where it sits is known from the same figures barTitleWidth
+  // uses (see barTitleShift): no measuring, no timers. The text is moved onto
+  // the centre line only as far as keeps its edge short of the trailing
+  // reserve, so it never goes under Share. It is let go as the title hides,
+  // before the back button expands. 18.4 centres a fitting title and the
+  // Duo's rail has no items on the bar: no shift there.
   const shift = barTitleShift({
     active:
       Platform.OS === 'ios' &&
@@ -455,9 +454,6 @@ export function BarTitle({
             color: colors.ink,
             opacity: fits ? opacity : 0,
             maxWidth: drawnRoom,
-            // The view can be as wide as the span (26.3 stretches it): the
-            // text is centred in it, so its centre is the view's.
-            textAlign: 'center',
           },
         ],
       },
