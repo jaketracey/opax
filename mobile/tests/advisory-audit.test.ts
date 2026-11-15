@@ -138,7 +138,7 @@ async function silentRegistry() {
   };
 }
 /** One run of the real step against `port`. The outer limit only stops a hang. */
-function advisoryStep(port: number, env: NodeJS.ProcessEnv = {}) {
+function advisoryStep(port: number, env: Record<string, string> = {}) {
   const started = Date.now();
   return new Promise<{
     error: Error | null;
@@ -181,7 +181,7 @@ const bounded =
 async function boundedAgainstSilentRegistry(
   registry: Awaited<ReturnType<typeof silentRegistry>>,
   attempts: number,
-  env: NodeJS.ProcessEnv = {},
+  env: Record<string, string> = {},
 ) {
   const runs: { asked: boolean; elapsed: number }[] = [];
   while (runs.length < attempts) {
