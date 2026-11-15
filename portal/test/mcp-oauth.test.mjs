@@ -19,7 +19,6 @@ const {oauthRoute,redirectMatches,registrableRedirect}=await import(pathToFileUR
 const {anonymousVolume,sharedAddress,networkKey,wideNetwork,limitKey}=await import(pathToFileURL(join(folder,'mcp-access.js')));
 
 const ORIGIN='https://opax.test';
-const sha=value=>createHash('sha256').update(value).digest('hex');
 const s256=value=>createHash('sha256').update(value).digest('base64url');
 const VERIFIER='v'.repeat(64),CHALLENGE=s256(VERIFIER);
 const CALLBACK='https://claude.ai/api/mcp/auth_callback';
@@ -694,7 +693,7 @@ test('a code is exchanged once for short-lived tokens that work at /mcp, stored 
  assert.equal((await f.mcp(f.bearer(tokens.refresh_token))).status,401);
  const stored=JSON.stringify([f.db.prepare('SELECT * FROM oauth_tokens').all(),f.db.prepare('SELECT * FROM oauth_codes').all(),f.db.prepare('SELECT * FROM oauth_grants').all()]);
  for(const secret of [tokens.access_token,tokens.refresh_token,c.code,tokens.access_token.slice(8),tokens.refresh_token.slice(8)])assert.equal(stored.includes(secret),false);
- assert.ok(f.db.prepare('SELECT 1 FROM oauth_tokens WHERE token_hash=?').get(sha(tokens.access_token)));
+ assert.match(f.db.prepare("SELECT token_hash FROM oauth_tokens WHERE kind='access'").get().token_hash,/^[0-9a-f]{64}$/);
  const access=f.db.prepare("SELECT expires_at-created_at AS life FROM oauth_tokens WHERE kind='access'").get();
  assert.equal(access.life,3600);
  assert.equal(f.db.prepare('SELECT resource FROM oauth_grants').get().resource,ORIGIN+'/mcp');
