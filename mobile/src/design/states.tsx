@@ -241,13 +241,15 @@ const bar = (
   />
 );
 /**
- * What a profile's header will hold, as far as it is known before the read:
- * the bones draw the same lines and rows, so nothing below them moves when
- * the page arrives.
+ * What a profile's header will hold, as far as it is known before the read.
+ * The bones lay out the same words in the same text styles, unseen, under
+ * each bar: they scale and wrap as the page's own words will, at every text
+ * size, so nothing below them moves when the page arrives.
  */
 export interface ProfileBones {
-  /** A line under the name ("Former member for ..."). */
-  role?: boolean;
+  name?: string;
+  /** The line under the name ("Former member for ..."). */
+  role?: string | null;
   /** The "Your MP" line. */
   yourMP?: boolean;
   /** The Follow button. */
@@ -255,20 +257,30 @@ export interface ProfileBones {
   /** The identity rows in order; `detail` is a second line. */
   rows?: readonly {
     kind: 'party' | 'seat' | 'official';
-    detail?: boolean;
+    title: string;
+    detail?: string;
   }[];
+  /** Figures under the rows: three tiles, one full-width row, or none. */
+  tiles?: 0 | 1 | 3;
 }
 /** A sitting federal member: the party, one seat and the official page. */
 const sittingMemberBones: Required<ProfileBones> = {
-  role: false,
+  name: 'Member of Parliament',
+  role: null,
   yourMP: false,
   follow: true,
   rows: [
-    { kind: 'party' },
-    { kind: 'seat', detail: true },
-    { kind: 'official' },
+    { kind: 'party', title: 'Party' },
+    { kind: 'seat', title: 'Member for a seat', detail: 'State, since 2020' },
+    { kind: 'official', title: 'Parliament of Australia page' },
   ],
+  tiles: 3,
 };
+const tileBones = [
+  ['0,000', 'divisions'],
+  ['00', 'interests'],
+  ['$000,000', 'a year in pay'],
+] as const;
 
 /** Detail placeholders follow the same type, row and spacing tokens as content. */
 function DetailSkeleton({
@@ -377,6 +389,32 @@ function DetailSkeleton({
       style={{ height: hairline, backgroundColor: colors.dividerSubtle }}
     />
   );
+  // The page's own words in its own text style, unseen under the bar.
+  const ghost = (
+    name: string,
+    words: ReactNode,
+    width: DimensionValue = '100%',
+    style?: ViewStyle,
+  ) => (
+    <View testID={part(name)} style={style}>
+      <View style={{ opacity: 0 }} pointerEvents="none">
+        {words}
+      </View>
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          width,
+          borderRadius: radii.thumb,
+          borderCurve: 'continuous',
+          backgroundColor: onSunken ? colors.raised : colors.sunken,
+        }}
+      />
+    </View>
+  );
+  const centred = large ? undefined : ({ textAlign: 'center' } as const);
   const content = person ? (
     <>
       <ReadableColumn style={{ gap: rhythm.block }}>
@@ -388,15 +426,54 @@ function DetailSkeleton({
             }}
           >
             {bone('portrait', 96, 96, true)}
-            {line('name', '70%', 'pageTitle')}
-            {header.role ? line('role', '55%') : null}
-            {header.yourMP ? line('your-mp', 84) : null}
+            {ghost(
+              'name',
+              <Heading level={1} kind="page" style={centred}>
+                {header.name}
+              </Heading>,
+            )}
+            {header.role
+              ? ghost(
+                  'role',
+                  <Text wordSafe variant="secondary" style={centred}>
+                    {header.role}
+                  </Text>,
+                )
+              : null}
+            {header.yourMP
+              ? ghost(
+                  'your-mp',
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      gap: rhythm.line,
+                    }}
+                  >
+                    <Icon
+                      name={symbols.yourMP}
+                      size={15}
+                      maxScale={1.5}
+                      tone="inkSoft"
+                    />
+                    <Text variant="secondary">Your MP</Text>
+                  </View>,
+                )
+              : null}
             {header.follow
-              ? bone(
+              ? ghost(
                   'follow',
-                  large ? '100%' : 112,
-                  controlHeight.compact,
-                  true,
+                  <Button
+                    hug
+                    variant="secondary"
+                    label="Follow"
+                    symbol={symbols.follow}
+                    size="compact"
+                    disabled
+                    onPress={() => {}}
+                  />,
+                  '100%',
+                  large ? { alignSelf: 'stretch' } : undefined,
                 )
               : null}
           </View>
@@ -411,32 +488,36 @@ function DetailSkeleton({
                 return (
                   <View key={name}>
                     {index ? divider(`${name}-divider`) : null}
+                    {/* A LinkRow: its padding, its two lines, its chevron. */}
                     <View
                       testID={part(`${name}-row`)}
                       style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: rhythm.tight,
                         minHeight: minimumTarget,
                         paddingVertical: rhythm.row,
-                        justifyContent: 'center',
-                        gap: rhythm.line,
                       }}
                     >
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          gap: rhythm.tight,
-                        }}
-                      >
-                        {row.kind === 'party'
-                          ? bone('party-dot', 10, 10, true)
-                          : null}
-                        {line(
+                      <View style={{ flex: 1, gap: rhythm.line }}>
+                        {ghost(
                           name,
+                          <Text wordSafe variant="body">
+                            {row.title}
+                          </Text>,
                           row.kind === 'party' ? '40%' : '65%',
-                          'body',
                         )}
+                        {row.detail
+                          ? ghost(
+                              `${name}-detail`,
+                              <Text wordSafe variant="secondary">
+                                {row.detail}
+                              </Text>,
+                              '45%',
+                            )
+                          : null}
                       </View>
-                      {row.detail ? line(`${name}-detail`, '45%') : null}
+                      <View style={{ width: 13 }} />
                     </View>
                   </View>
                 );
@@ -445,48 +526,91 @@ function DetailSkeleton({
             </View>
           ) : null}
         </View>
-        <View
-          testID={part('stat-strip')}
-          style={{
-            flexDirection: large ? 'column' : 'row',
-            gap: rhythm.block,
-          }}
-        >
-          {[0, 1, 2].map((index) => (
-            <View
-              key={index}
-              testID={part(`stat-tile-${index}`)}
-              style={large ? undefined : { flex: 1 }}
-            >
-              {index ? (
-                <View
-                  testID={part(`stat-divider-${index}`)}
-                  style={
-                    large
-                      ? {
-                          height: hairline,
-                          backgroundColor: colors.dividerSubtle,
-                          marginBottom: rhythm.block,
-                        }
-                      : {
-                          position: 'absolute',
-                          top: 0,
-                          bottom: 0,
-                          left: -rhythm.tight,
-                          width: hairline,
-                          backgroundColor: colors.dividerSubtle,
-                        }
-                  }
-                />
-              ) : null}
-              {/* A tile's label is one line ("divisions", "a year in pay"). */}
-              <View style={{ minHeight: minimumTarget, gap: rhythm.line }}>
-                {line(`stat-value-${index}`, '85%', 'tileFigure')}
-                {line(`stat-label-${index}`, '90%', 'footnote')}
-              </View>
+        {header.tiles === 1 ? (
+          <View
+            testID={part('stat-row')}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: rhythm.tight,
+              minHeight: minimumTarget,
+              paddingVertical: rhythm.row,
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              {ghost(
+                'stat-row-title',
+                <Text wordSafe variant="body">
+                  0,000 divisions, 2000 to 2020
+                </Text>,
+                '65%',
+              )}
             </View>
-          ))}
-        </View>
+            <View style={{ width: 13 }} />
+          </View>
+        ) : header.tiles ? (
+          <View
+            testID={part('stat-strip')}
+            style={{
+              flexDirection: large ? 'column' : 'row',
+              gap: rhythm.block,
+            }}
+          >
+            {tileBones.map(([value, label], index) => (
+              <View
+                key={label}
+                testID={part(`stat-tile-${index}`)}
+                style={large ? undefined : { flex: 1 }}
+              >
+                {index ? (
+                  <View
+                    testID={part(`stat-divider-${index}`)}
+                    style={
+                      large
+                        ? {
+                            height: hairline,
+                            backgroundColor: colors.dividerSubtle,
+                            marginBottom: rhythm.block,
+                          }
+                        : {
+                            position: 'absolute',
+                            top: 0,
+                            bottom: 0,
+                            left: -rhythm.tight,
+                            width: hairline,
+                            backgroundColor: colors.dividerSubtle,
+                          }
+                    }
+                  />
+                ) : null}
+                {/* A StatTile: the figure, then its label and chevron. */}
+                <View style={{ minHeight: minimumTarget, gap: rhythm.line }}>
+                  {ghost(
+                    `stat-value-${index}`,
+                    <Text wordSafe variant="tileFigure">
+                      {value}
+                    </Text>,
+                    '85%',
+                  )}
+                  {ghost(
+                    `stat-label-${index}`,
+                    <Text wordSafe variant="footnote">
+                      {label}
+                      {'\u00a0'}
+                      <Icon
+                        name={symbols.chevron}
+                        size={13}
+                        maxScale={1.5}
+                        tone="inkFaint"
+                      />
+                    </Text>,
+                    '90%',
+                  )}
+                </View>
+              </View>
+            ))}
+          </View>
+        ) : null}
       </ReadableColumn>
       <View style={{ gap: rhythm.heading }}>
         {heading('votes-heading')}

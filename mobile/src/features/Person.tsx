@@ -194,18 +194,13 @@ export async function loadProfile(slug: string): Promise<Loaded | null> {
     (p) => p.person_id === person.data.canonicalPersonId,
   );
   const profileIdentity = profile.blocks.identity.data;
-  if (
-    profileIdentity?.partyStatus === 'former' &&
-    released?.electorates.length
-  ) {
+  const dated = profileIdentity && releasedIdentity(profileIdentity, released);
+  if (dated && dated !== profileIdentity) {
     profile = {
       ...profile,
       blocks: {
         ...profile.blocks,
-        identity: {
-          ...profile.blocks.identity,
-          data: { ...profileIdentity, seats: released.electorates },
-        },
+        identity: { ...profile.blocks.identity, data: dated },
       },
     };
   }
@@ -368,7 +363,7 @@ export function ProfileScreen({
               <RefreshControl refreshing={refreshing} onRefresh={refresh} />
             }
           >
-            <PersonSkeleton slug={slug} />
+            <PersonSkeleton slug={slug} name={routeName} />
           </Screen>
         }
       >
@@ -417,7 +412,7 @@ export function ProfileScreen({
                 />
               )
             ) : (
-              <PersonSkeleton slug={slug} />
+              <PersonSkeleton slug={slug} name={routeName} />
             )}
           </Screen>
         ) : load.status !== 'ready' || !identity ? null : (
@@ -439,20 +434,36 @@ export function ProfileScreen({
 }
 
 /**
+ * A former member's seats as the release dates them: the page's identity
+ * and the bones' read the same record, so they draw the same line.
+ */
+function releasedIdentity<
+  T extends Pick<PersonProfile, 'partyStatus' | 'seats'>,
+>(
+  identity: T,
+  released: { electorates: PersonProfile['seats'] } | undefined,
+): T {
+  return identity.partyStatus === 'former' && released?.electorates.length
+    ? { ...identity, seats: released.electorates }
+    : identity;
+}
+
+/**
  * The header the page will draw, read from the directory already in memory:
- * its lines and identity rows, so the bones hold the same places. A paid
- * post ("Minister for ...") comes with the pay record and is not known yet.
- * Null (the bones' default, a sitting federal member) when the directory is
- * not read or the slug is not in it.
+ * its name, lines and identity rows in the page's own words, so the bones
+ * hold the same places at every text size. A paid post ("Minister for ...")
+ * comes with the pay record and is not known yet. Null (the bones' default,
+ * a sitting federal member) when the directory is not read or the slug is
+ * not in it.
  */
 export function profileBones(
   slug: string,
   directory: Directory | null,
 ): Omit<ProfileBones, 'yourMP'> | null {
   if (!directory) return null;
-  let identity: PersonProfile;
+  let joined: PersonProfile;
   try {
-    identity = joinPerson(
+    joined = joinPerson(
       slug,
       directory.slugs.data,
       directory.roster.data,
@@ -462,37 +473,54 @@ export function profileBones(
   } catch {
     return null;
   }
-  const former = formerMemberLine(identity);
   const released = directory.people.data.people.find(
-    (p) => p.person_id === identity.canonicalPersonId,
+    (p) => p.person_id === joined.canonicalPersonId,
   );
+  const identity = releasedIdentity(joined, released);
+  const former = formerMemberLine(identity);
+  const official =
+    identity.partyStatus !== 'former'
+      ? officialPage(released?.source_url)
+      : null;
   return {
-    role: former !== null,
+    name: identity.name,
+    role: former,
     follow: !!identity.canonicalPersonId,
     rows: [
       ...(identity.party
-        ? [{ kind: 'party' as const, detail: !!identity.formerly }]
+        ? [
+            {
+              kind: 'party' as const,
+              title: identity.party,
+              detail: identity.formerly
+                ? `Formerly ${identity.formerly}`
+                : undefined,
+            },
+          ]
         : []),
       ...(former ? [] : seatRows(identity)).map((seat) => ({
         kind: 'seat' as const,
-        detail: !!seat.detail,
+        title: seat.title,
+        detail: seat.detail,
       })),
-      ...(identity.partyStatus !== 'former' &&
-      officialPage(released?.source_url)
-        ? [{ kind: 'official' as const }]
+      ...(official
+        ? [{ kind: 'official' as const, title: official.label }]
         : []),
     ],
+    // Votes, interests and pay for a sitting federal member; a former
+    // member's page keeps the divisions count alone, as one row.
+    tiles: former ? 1 : sittingFederal(identity) ? 3 : 0,
   };
 }
 
-function PersonSkeleton({ slug }: { slug: string }) {
+function PersonSkeleton({ slug, name }: { slug: string; name?: string }) {
   const yourMP = useIsMyMember(slug);
   const directory = savedSeatDirectory();
   const bones = useMemo(() => profileBones(slug, directory), [slug, directory]);
   return (
     <Skeleton
       shape="person-profile"
-      profile={{ ...bones, yourMP }}
+      profile={{ ...(name ? { name } : null), ...bones, yourMP }}
       label="Loading the profile"
       testID="person-loading"
     />
