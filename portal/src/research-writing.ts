@@ -103,7 +103,13 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
   if (answer) for (const source of answer.sources.filter(s => s.cited)) {
     // The selected claim, not unrelated parts of a larger original record, is the authority here.
     const ranges = Object.entries(answer.citations).filter(([id]) => id === source.resource || id.startsWith(source.resource+'/')).flatMap(([,ranges]) => ranges)
-    const text = ranges.length && ranges.every(([a,b])=>b-a>3) ? ranges.map(([a,b]) => Array.from(answer.answer).slice(a,b).join('')).join('\n') : source.snippet
+    const cited = ranges.length && ranges.every(([a,b])=>b-a>3) ? ranges.map(([a,b]) => Array.from(answer.answer).slice(a,b).join('')) : null
+    // Each fact appears once. The loop can select a record as a fact and also write a point resting on it, so two spans
+    // of its answer cite that one record. When the record holds a single statement and one span is that statement, the
+    // other spans are the same fact again: the writer is given it once, as recorded.
+    const recorded = cited && cited.length > 1 ? singleStatement(source) : null
+    const own = recorded ? cited!.find(span => signedKey(span.replace(/^[-*•]\s*/, '')) === signedKey(recorded)) : undefined
+    const text = own ?? (cited ? cited.join('\n') : source.snippet)
     for (const part of text.split(/\n+|(?<=[.!?])\s+(?=(?:Coverage:|This selection|It excludes|Amounts are|Period:|Based on AEC|Opax added))/)) {
       const before=out.length;add(part, source, !!source.coverage || isCoverage(part) || source.resource==='coverage' || /^(?:Coverage of|Basis and coverage)/i.test(source.title))
       if(out.length>before){const f=out[out.length-1];if(!f.transcript)f.evidenceId=Object.keys(answer.citations).find(id=>id===source.resource || id.startsWith(source.resource+'/'))??f.evidenceId;f.atoms=f.atoms?.map(a=>({...a,evidenceId:f.evidenceId!}))??atomsFromText(f.text,f.evidenceId!,source)}
@@ -116,6 +122,12 @@ export function writingFacts(answer: QualitativeAnswer | undefined, facts: Fact[
   const source = out[0]?.source
   if (source) for (const note of notes) add(note, {...source,resource:'coverage-'+stableEvidenceKey(note),title:'Coverage of the selected records',snippet:note}, true)
   return dedupeWritingFacts(out).slice(0, 80)
+}
+/** The one statement a structured record holds, or null for a passage or a record with several lines. */
+function singleStatement(source:Pick<WritingFact['source'],'kind'|'snippet'>):string|null {
+  if(['speech','bill'].includes(source.kind))return null
+  const lines=source.snippet.split(/\n+/).filter(line=>/\p{L}/u.test(line))
+  return lines.length===1?lines[0]:null
 }
 /** Tool retries and selected points can describe the same record twice. Keep one writer fact per statement. */
 export function dedupeWritingFacts(facts:WritingFact[]):WritingFact[] {
@@ -680,6 +692,7 @@ export function appendWrittenPoints(written: QualitativeAnswer, points: Qualitat
     const from=Array.from(answer.slice(0,clause.start)).length,until=from+Array.from(clause.text).length
     seen.add(signature(written,clause.text,from,until));identities(written,clause.text,from,until).forEach(id=>claims.add(id))
   }
+  const writtenIds=Object.keys(citations)
   const append=(text:string,from:number,until:number)=>{
     if(answer)answer+='\n\n';const offset=Array.from(answer).length;answer+=text
     for(const [id,ranges] of Object.entries(points.citations))for(const [a,b] of ranges)if(a<until&&b>from)(citations[id]??=[]).push([offset+Math.max(a,from)-from,offset+Math.min(b,until)-from])
@@ -687,6 +700,10 @@ export function appendWrittenPoints(written: QualitativeAnswer, points: Qualitat
   for(const part of points.answer.matchAll(/[^\n]+/g)) {
     const from=Array.from(points.answer.slice(0,part.index)).length,until=from+Array.from(part[0]).length,division=divisionLine(points,part[0],from,until)
     if(division){if(!seen.has(division)){seen.add(division);append(part[0],from,until)}continue}
+    // Each fact appears once: a point resting only on single-statement records the written answer already cites is
+    // that same fact in the model's words, so the written sentence stands for it (same fact, same source).
+    const rests=Object.entries(points.citations).filter(([,ranges])=>ranges.some(([a,b])=>a<until&&b>from)).map(([id])=>points.sources.find(s=>id===s.resource||id.startsWith(s.resource+'/')))
+    if(rests.length&&rests.every(s=>s&&singleStatement(s)&&writtenIds.some(id=>id===s.resource||id.startsWith(s.resource+'/'))))continue
     const line=part[0],base=part.index!,all=claimClauses(line),kept:typeof all=[]
     for(const clause of all){
       const from=Array.from(points.answer.slice(0,base+clause.start)).length,until=from+Array.from(clause.text).length
