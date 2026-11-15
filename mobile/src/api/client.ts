@@ -38,6 +38,12 @@ export interface RecordResult<T> {
 type Decoder<T> = (value: unknown) => T;
 interface GetOptions {
   absence?: boolean;
+  /**
+   * For a file the app can do without and that may not be published yet:
+   * its 404 means "not there yet", not a fault, so it is still thrown to
+   * the caller but never told to `onFailure`. Every other failure is.
+   */
+  optional?: boolean;
   background?: boolean;
   signal?: AbortSignal;
   retries?: number;
@@ -308,7 +314,14 @@ export class ApiClient {
       if (record.partial) this.failed(path, 'partial');
       return record;
     } catch (error) {
-      this.failed(path, error);
+      if (
+        !(
+          options.optional &&
+          error instanceof ApiError &&
+          error.code === 'not-found'
+        )
+      )
+        this.failed(path, error);
       throw error;
     }
   }

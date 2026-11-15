@@ -1,4 +1,9 @@
 import { keepCatalog } from './kept-catalogs';
+import {
+  decodePeopleFirsts,
+  PEOPLE_FIRSTS_PATH,
+  type PeopleFirsts,
+} from './people-firsts';
 import { ReadSession } from './read-session';
 import { throwIfAborted } from './abort';
 import { samePartyLabel } from '../design/party';
@@ -191,6 +196,7 @@ export class Catalogs {
     // `saved` is optional: a reader without saved copies has nothing saved.
     private client: Pick<ApiClient, 'get'> & Partial<Pick<ApiClient, 'saved'>>,
   ) {}
+  private firstsRead?: Promise<PeopleFirsts | null>;
   async partyPage(
     input: string,
     refresh = false,
@@ -668,6 +674,33 @@ export class Catalogs {
         keepCatalog('/pay.json', pay.data);
         return pay;
       });
+  }
+  /**
+   * Each roster person's first speech and first division in the record.
+   * Kept in memory for the next profile to open: a profile shows these rows
+   * only when they were known on its first frame, so nothing moves.
+   *
+   * Read at most once a session, however many profiles open: the answer
+   * (the file, or its 404 while it is not published yet) stands until the
+   * next launch, which asks again. An optional file: its 404 is reported
+   * to no one.
+   */
+  peopleFirsts(): Promise<PeopleFirsts | null> {
+    return (this.firstsRead ??= this.client
+      .get(PEOPLE_FIRSTS_PATH, decodePeopleFirsts, false, { optional: true })
+      .then((firsts) => {
+        keepCatalog(PEOPLE_FIRSTS_PATH, firsts.data);
+        return firsts.data;
+      })
+      .catch((error: unknown) => {
+        // Not published yet: no rows, and no second request this session.
+        if (error instanceof ApiError && error.code === 'not-found')
+          return null;
+        // Any other failure is reported by the client; the next profile
+        // to open may try again.
+        this.firstsRead = undefined;
+        throw error;
+      }));
   }
   expenses(signal?: AbortSignal) {
     return this.client.get('/expenses.json', decode.decodeExpenses, false, {
