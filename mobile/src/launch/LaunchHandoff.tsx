@@ -10,6 +10,7 @@ import {
 } from 'react';
 import {
   AccessibilityInfo,
+  Platform,
   StyleSheet,
   useWindowDimensions,
   View,
@@ -102,6 +103,16 @@ type LaunchHandoffProps = {
   testID?: string;
 };
 
+/**
+ * The status bar icons over the cover: light on its navy, then the page's own
+ * (dark on the light paper) once the fade has passed halfway, so they are never
+ * white on the light page while the cover is still going. Android only: iOS
+ * keeps its icons light until the cover unmounts.
+ */
+export function coverBarStyle(os: string, pageShows: boolean) {
+  return os === 'android' && pageShows ? 'dark' : 'light';
+}
+
 function LaunchCover({
   ready,
   latest = false,
@@ -137,6 +148,9 @@ function LaunchCover({
   const [unfolded, setUnfolded] = useState(false);
   const [skipped, setSkipped] = useState(false);
   const [exiting, setExiting] = useState(false);
+  // Halfway through the fade the page, not the navy field, is most of what
+  // is on screen: Android's icons follow it from there (see StatusBar below).
+  const [pageShows, setPageShows] = useState(false);
   const started = useRef<'full' | 'short' | null>(null);
   const leaving = useRef(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -203,6 +217,7 @@ function LaunchCover({
       leaving.current = true;
       setExiting(true);
       exit.set(withTiming(1, { duration, easing: Easing.inOut(Easing.quad) }));
+      later(() => setPageShows(true), duration / 2);
       if (started.current === 'full') void markFullSplashPlayed();
       later(onDone, duration);
     },
@@ -314,7 +329,7 @@ function LaunchCover({
         fieldStyle,
       ]}
     >
-      <StatusBar style="light" />
+      <StatusBar style={coverBarStyle(Platform.OS, pageShows)} />
       <Pressable
         feedback="none"
         accessible={false}
