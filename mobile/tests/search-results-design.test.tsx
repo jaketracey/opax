@@ -293,7 +293,7 @@ describe('the count line', () => {
     layStandIn(renderer, 224, 4);
     expect(
       StyleSheet.flatten(host(renderer, 'search-count').props.style),
-    ).toMatchObject({ position: 'absolute', height: 280, overflow: 'hidden' });
+    ).toMatchObject({ position: 'absolute', height: 224, overflow: 'hidden' });
     // The box is the stand-in's latest layout: it shrinks as well as grows.
     layStandIn(renderer, 44, 2);
     expect(
