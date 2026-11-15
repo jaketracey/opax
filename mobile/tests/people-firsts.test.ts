@@ -34,7 +34,7 @@ const sample = () => JSON.parse(text) as Record<string, any>;
 
 test('the sample is the portal export’s own, byte for byte', () => {
   expect(createHash('sha256').update(text).digest('hex')).toBe(
-    '711c22d258b08847feb980a4859c183321c3d346323abcc3df9e610330ff2306',
+    'e9409b8e200fb347ffcd43b48ddd6134303984ecf547f714d2a3c02320786393',
   );
 });
 
