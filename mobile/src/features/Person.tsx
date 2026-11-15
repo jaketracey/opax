@@ -620,7 +620,9 @@ export function profileBones(
   if (profile && kept.pay ? annualPay(profile) !== null : federal)
     tiles.push('pay');
   return {
-    name: identity.name,
+    // As the loaded heading draws it (loadProfile), so the line wraps the
+    // same before and after the read.
+    name: personDisplayName(identity.name),
     role: former ?? (profile && kept.pay ? roleLine(profile, false) : null),
     follow: !!identity.canonicalPersonId,
     rows: [

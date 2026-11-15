@@ -1588,6 +1588,26 @@ describe('profile', () => {
     });
   });
 
+  test('the bones size the heading from the name as the loaded page draws it', () => {
+    const { profileBones } = jest.requireActual('../src/features/Person');
+    const { personDisplayName } = jest.requireActual(
+      '../src/design/person-name',
+    );
+    // A record that gives the surname in capitals.
+    const capitals = {
+      ...directory,
+      slugs: result({
+        ...slugs,
+        slugs: { ...slugs.slugs, 'penny-wong': 'Penny WONG' },
+      }),
+    };
+    const bones = profileBones('penny-wong', capitals);
+    // The loaded heading is loadProfile's personDisplayName of the same
+    // record (person-name.test.ts): one string, so one wrap at every size.
+    expect(bones.name).toBe('Penny Wong');
+    expect(bones.name).toBe(personDisplayName('Penny WONG'));
+  });
+
   test('the bones read a person’s header from the directory in memory', async () => {
     const { profileBones } = jest.requireActual('../src/features/Person');
     expect(profileBones('penny-wong', null)).toBeNull();
