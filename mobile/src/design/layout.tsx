@@ -49,7 +49,7 @@ import {
   useRailSolidRoot,
 } from '../navigation/useRootBarAppearance';
 import { useTitleOnScroll } from '../navigation/useTitleOnScroll';
-import { useAccessibilitySize } from './accessibility';
+import { useAccessibilitySize, useReduceMotion } from './accessibility';
 import {
   columnBreakout,
   columns,
@@ -160,6 +160,13 @@ export function useScreenColumn(
   const bar = usePaneBar();
   return { onLayout, content, inner, bar, breakout, regular };
 }
+
+/**
+ * How long the offset must stay still after the cut turns off before the
+ * page is checked against where it should be, and how far short counts.
+ */
+export const CUT_SETTLE_MS = 300;
+const CUT_SETTLE_SLACK = 1;
 
 /** Half a point of rounding between UIKit's inset and the reported bar. */
 const underBarSlack = 1;
@@ -580,6 +587,75 @@ export function Screen({
   // hiding and return leave them (measured on iOS 26.3: 358 → 474 → 358).
   const clipTop =
     Platform.OS === 'ios' && clipAboveSafeTop && !belowBar ? safeTop : 0;
+  // One case UIKit does not get right: at the END of a list. As the cut
+  // turns off the frame grows by `safeTop`, the end of the scroll range is
+  // that much nearer, and React Native cuts the offset back to it before
+  // UIKit takes the same amount off for the inset: the page ends `safeTop`
+  // short of its end (iOS 26.3: 548 → 370, where 432 was the end).
+  //
+  // So the range is given `safeTop` of room at its end in the same commit
+  // that turns the cut off (set while rendering, so it reaches the scroll
+  // view with the new frame), and it is taken back once the bar has
+  // settled. The clamp then has nothing to cut and UIKit's own move lands
+  // the page exactly, in one motion.
+  const [shownClipTop, setShownClipTop] = useState(clipTop);
+  const [endRoom, setEndRoom] = useState(0);
+  if (shownClipTop !== clipTop) {
+    setShownClipTop(clipTop);
+    setEndRoom(clipTop < shownClipTop ? shownClipTop - clipTop : 0);
+  }
+  // The fallback, should the page still end short: it was at its end when
+  // the cut turned off (from the last scroll event while cut, never from
+  // arithmetic on an offset that may be a frame old), and after the bar has
+  // settled it is not. Then it scrolls to its end.
+  const reduceMotion = useReduceMotion();
+  const cutEnd = useRef({ atEnd: false, range: null as number | null });
+  const settle = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancelSettle = useCallback(() => {
+    if (settle.current) clearTimeout(settle.current);
+    settle.current = null;
+  }, []);
+  // A drag while the bar settles: the reader has taken over, so nothing
+  // scrolls back. The room still goes at once: the timer cancelled here was
+  // the only thing that would take it back, and left in place it is a blank
+  // band under the last row until the field is next used.
+  const takeOver = useCallback(() => {
+    if (!settle.current) return;
+    cancelSettle();
+    setEndRoom(0);
+  }, [cancelSettle]);
+  const settleLater = useCallback(() => {
+    if (settle.current) clearTimeout(settle.current);
+    settle.current = setTimeout(() => {
+      settle.current = null;
+      setEndRoom(0);
+      const y = scrollY.current;
+      const { range } = cutEnd.current;
+      const view =
+        scrollRef && typeof scrollRef === 'object' ? scrollRef.current : null;
+      // `range` is the end as the scroll view reported it after the cut
+      // turned off; without such a report there is nothing sure to go to.
+      if (y === null || range === null || !view) return;
+      if (range - y > CUT_SETTLE_SLACK)
+        view.scrollTo({ y: range, animated: !reduceMotion });
+    }, CUT_SETTLE_MS);
+  }, [scrollRef, reduceMotion]);
+  const lastClipTop = useRef(clipTop);
+  useLayoutEffect(() => {
+    const delta = clipTop - lastClipTop.current;
+    lastClipTop.current = clipTop;
+    if (!delta) return;
+    cancelSettle();
+    if (delta > 0) {
+      cutEnd.current = { atEnd: false, range: null };
+      return;
+    }
+    // Off: the room is given back after the settle either way; the page
+    // is looked at again only if it was at its end.
+    cutEnd.current.range = null;
+    settleLater();
+  }, [clipTop, cancelSettle, settleLater]);
+  useEffect(() => cancelSettle, [cancelSettle]);
   const [pinnedRest, setPinnedRest] = useState<number | null>(null);
   // A new band (Search submitted again) learns its rest offset again.
   if (!pinnedHere && pinnedRest !== null) setPinnedRest(null);
@@ -645,6 +721,7 @@ export function Screen({
                 clipTop ? { marginTop: clipTop } : null,
               ]}
               contentInsetAdjustmentBehavior={contentInsetAdjustmentBehavior}
+              contentInset={endRoom ? { bottom: endRoom } : undefined}
               scrollToOverflowEnabled={scrollToOverflowEnabled}
               contentOffset={nativeRoot ? undefined : rest.contentOffset}
               alwaysBounceVertical={Platform.OS === 'ios'}
@@ -678,6 +755,22 @@ export function Screen({
                 if (clampScrollOnContentChange) bounds.onScroll(event);
                 const y = event.nativeEvent.contentOffset.y;
                 scrollY.current = y;
+                if (lastClipTop.current > 0 || settle.current) {
+                  // Only a page that is cut, or settling after it, reads
+                  // where its end is.
+                  const range =
+                    (event.nativeEvent.contentSize?.height ?? 0) -
+                    (event.nativeEvent.layoutMeasurement?.height ?? 0);
+                  if (lastClipTop.current > 0)
+                    cutEnd.current.atEnd = y >= range - CUT_SETTLE_SLACK;
+                  else {
+                    // The bar is still settling: note the end as it is now
+                    // (only for a page that was at its end), and look again
+                    // once the offset is quiet.
+                    if (cutEnd.current.atEnd) cutEnd.current.range = range;
+                    settleLater();
+                  }
+                }
                 rest.track(y);
                 checkUnderBar();
                 if (Platform.OS === 'android') androidRoot.onScroll(y);
@@ -688,6 +781,7 @@ export function Screen({
               onScrollBeginDrag={
                 pinnedHere
                   ? (event) => {
+                      takeOver();
                       rest.drag();
                       const y = event.nativeEvent.contentOffset.y;
                       // At rest UIKit's inset makes the offset negative; a drag
@@ -697,7 +791,10 @@ export function Screen({
                           rest === null ? y : Math.min(rest, y),
                         );
                     }
-                  : rest.drag
+                  : () => {
+                      takeOver();
+                      rest.drag();
+                    }
               }
               onScrollEndDrag={
                 clampScrollOnContentChange ? bounds.onScroll : undefined
