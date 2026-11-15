@@ -1937,9 +1937,9 @@ describe('Screen pins a band under the bar (sweep 1, item 1)', () => {
     scrollTo.mockRestore();
     act(() => tree.unmount());
     // The end of a list is the one place the offset is left short when the
-    // cut turns off (React Native keeps it inside the taller frame's range
-    // before UIKit has moved it): 548 → 494 as the bar returns, then 370,
-    // where 432 was the end. Once the bar has settled the page scrolls back.
+    // cut turns off: React Native cuts it back to the taller frame's range
+    // before UIKit takes the same 62 pt off for the inset (548 → 370, where
+    // 432 was the end).
     jest.useFakeTimers();
     try {
       const calls: { y: number; animated: boolean }[] = [];
@@ -1967,13 +1967,15 @@ describe('Screen pins a band under the bar (sweep 1, item 1)', () => {
             node.props.testID === 'page' &&
             typeof node.props.onScroll === 'function',
         );
-      const at = (y: number) =>
+      // A list 1306 pt long: its end is 494 while cut (an 812 pt frame) and
+      // 432 once it is not (874 pt).
+      const at = (y: number, frame: number) =>
         act(() =>
           view().props.onScroll({
             nativeEvent: {
               contentOffset: { y },
               contentSize: { height: 1306 },
-              layoutMeasurement: { height: 812 },
+              layoutMeasurement: { height: frame },
             },
           }),
         );
@@ -1981,33 +1983,49 @@ describe('Screen pins a band under the bar (sweep 1, item 1)', () => {
         act(() => {
           jest.advanceTimersByTime(CUT_SETTLE_MS + 10);
         });
-      // End of the list: the bar returns (−54), the cut turns off, and the
-      // offset is left 62 short.
-      at(548);
-      at(494);
+      const room = () => view().props.contentInset;
+      // While cut the range is the list's own: no blank under the last row.
+      expect(room()).toBeUndefined();
+      at(548, 812);
+      at(494, 812);
+      // The render that turns the cut off also gives the range 62 pt of
+      // room at its end, so the clamp has nothing to cut and UIKit's own
+      // move lands the page in one motion.
       act(() => end.update(cutPage(false)));
-      at(401);
-      at(370);
-      // Nothing while the offset is still moving.
+      expect(flat(view().props.style).marginTop ?? 0).toBe(0);
+      expect(room()).toEqual({ bottom: 62 });
+      at(432, 874);
+      settleNow();
+      // Landed on its end: the room is given back and nothing scrolls.
+      expect(room()).toBeUndefined();
+      expect(calls).toHaveLength(0);
+      // The fallback: it was at its end, and after the bar has settled it
+      // is short of it. It scrolls to the end the scroll view now reports.
+      act(() => end.update(cutPage(true)));
+      at(548, 812);
+      at(494, 812);
+      act(() => end.update(cutPage(false)));
+      at(401, 874);
+      at(370, 874);
       expect(calls).toHaveLength(0);
       settleNow();
       expect(calls).toEqual([{ y: 432, animated: true }]);
-      // Mid-list UIKit lands on the right offset by itself: nothing to do.
+      // Mid-list it never scrolls back, whichever of the Cancel render and
+      // the bar's own scroll event reaches the page first: no arithmetic
+      // on an offset that may be a frame old.
       calls.length = 0;
       act(() => end.update(cutPage(true)));
-      at(474);
-      at(420);
+      at(474, 812);
       act(() => end.update(cutPage(false)));
-      at(389);
-      at(358);
+      at(420, 874);
+      at(358, 874);
       settleNow();
       expect(calls).toHaveLength(0);
       // A drag in the meantime means the reader has taken over.
       act(() => end.update(cutPage(true)));
-      at(548);
-      at(494);
+      at(548, 812);
       act(() => end.update(cutPage(false)));
-      at(370);
+      at(370, 874);
       act(() =>
         view().props.onScrollBeginDrag({
           nativeEvent: { contentOffset: { y: 370 } },
@@ -2015,11 +2033,11 @@ describe('Screen pins a band under the bar (sweep 1, item 1)', () => {
       );
       settleNow();
       expect(calls).toHaveLength(0);
-      // At the top UIKit rests the content itself: never scrolled back.
+      // With no scroll report after the cut turned off there is no sure
+      // end to go to: nothing scrolls.
       act(() => end.update(cutPage(true)));
-      at(0);
+      at(548, 812);
       act(() => end.update(cutPage(false)));
-      at(-116);
       settleNow();
       expect(calls).toHaveLength(0);
       spy.mockRestore();

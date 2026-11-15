@@ -588,47 +588,63 @@ export function Screen({
   const clipTop =
     Platform.OS === 'ios' && clipAboveSafeTop && !belowBar ? safeTop : 0;
   // One case UIKit does not get right: at the END of a list. As the cut
-  // turns off the frame grows, React Native keeps the offset inside the new
-  // range before UIKit has moved it, and the page ends `safeTop` short of
-  // where it was (iOS 26.3: 548 → 370, where 432 was the end). So the
-  // offset the page should come back to is noted as the cut turns off, and
-  // once the bar has settled a page left short of it scrolls back.
+  // turns off the frame grows by `safeTop`, the end of the scroll range is
+  // that much nearer, and React Native cuts the offset back to it before
+  // UIKit takes the same amount off for the inset: the page ends `safeTop`
+  // short of its end (iOS 26.3: 548 → 370, where 432 was the end).
+  //
+  // So the range is given `safeTop` of room at its end in the same commit
+  // that turns the cut off (set while rendering, so it reaches the scroll
+  // view with the new frame), and it is taken back once the bar has
+  // settled. The clamp then has nothing to cut and UIKit's own move lands
+  // the page exactly, in one motion.
+  const [shownClipTop, setShownClipTop] = useState(clipTop);
+  const [endRoom, setEndRoom] = useState(0);
+  if (shownClipTop !== clipTop) {
+    setShownClipTop(clipTop);
+    setEndRoom(clipTop < shownClipTop ? shownClipTop - clipTop : 0);
+  }
+  // The fallback, should the page still end short: it was at its end when
+  // the cut turned off (from the last scroll event while cut, never from
+  // arithmetic on an offset that may be a frame old), and after the bar has
+  // settled it is not. Then it scrolls to its end.
   const reduceMotion = useReduceMotion();
-  const settle = useRef<{
-    expected: number;
-    timer: ReturnType<typeof setTimeout> | null;
-  } | null>(null);
-  const settleLater = useCallback(() => {
-    const pending = settle.current;
-    if (!pending) return;
-    if (pending.timer) clearTimeout(pending.timer);
-    pending.timer = setTimeout(() => {
-      settle.current = null;
-      const y = scrollY.current;
-      const view =
-        scrollRef && typeof scrollRef === 'object' ? scrollRef.current : null;
-      if (y === null || !view) return;
-      if (pending.expected - y > CUT_SETTLE_SLACK)
-        view.scrollTo({ y: pending.expected, animated: !reduceMotion });
-    }, CUT_SETTLE_MS);
-  }, [scrollRef, reduceMotion]);
+  const cutEnd = useRef({ atEnd: false, range: null as number | null });
+  const settle = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cancelSettle = useCallback(() => {
-    if (settle.current?.timer) clearTimeout(settle.current.timer);
+    if (settle.current) clearTimeout(settle.current);
     settle.current = null;
   }, []);
+  const settleLater = useCallback(() => {
+    if (settle.current) clearTimeout(settle.current);
+    settle.current = setTimeout(() => {
+      settle.current = null;
+      setEndRoom(0);
+      const y = scrollY.current;
+      const { range } = cutEnd.current;
+      const view =
+        scrollRef && typeof scrollRef === 'object' ? scrollRef.current : null;
+      // `range` is the end as the scroll view reported it after the cut
+      // turned off; without such a report there is nothing sure to go to.
+      if (y === null || range === null || !view) return;
+      if (range - y > CUT_SETTLE_SLACK)
+        view.scrollTo({ y: range, animated: !reduceMotion });
+    }, CUT_SETTLE_MS);
+  }, [scrollRef, reduceMotion]);
   const lastClipTop = useRef(clipTop);
   useLayoutEffect(() => {
     const delta = clipTop - lastClipTop.current;
     lastClipTop.current = clipTop;
     if (!delta) return;
     cancelSettle();
-    const y = scrollY.current;
-    // Turning off, scrolled: the frame moves up by `-delta`, and so should
-    // the offset. (At the top UIKit rests the content itself.)
-    if (delta < 0 && y !== null && y > 0) {
-      settle.current = { expected: y + delta, timer: null };
-      settleLater();
+    if (delta > 0) {
+      cutEnd.current = { atEnd: false, range: null };
+      return;
     }
+    // Off: the room is given back after the settle either way; the page
+    // is looked at again only if it was at its end.
+    cutEnd.current.range = null;
+    settleLater();
   }, [clipTop, cancelSettle, settleLater]);
   useEffect(() => cancelSettle, [cancelSettle]);
   const [pinnedRest, setPinnedRest] = useState<number | null>(null);
@@ -696,6 +712,7 @@ export function Screen({
                 clipTop ? { marginTop: clipTop } : null,
               ]}
               contentInsetAdjustmentBehavior={contentInsetAdjustmentBehavior}
+              contentInset={endRoom ? { bottom: endRoom } : undefined}
               scrollToOverflowEnabled={scrollToOverflowEnabled}
               contentOffset={nativeRoot ? undefined : rest.contentOffset}
               alwaysBounceVertical={Platform.OS === 'ios'}
@@ -729,8 +746,22 @@ export function Screen({
                 if (clampScrollOnContentChange) bounds.onScroll(event);
                 const y = event.nativeEvent.contentOffset.y;
                 scrollY.current = y;
-                // The bar is still settling: look again once it is quiet.
-                if (settle.current) settleLater();
+                if (lastClipTop.current > 0 || settle.current) {
+                  // Only a page that is cut, or settling after it, reads
+                  // where its end is.
+                  const range =
+                    (event.nativeEvent.contentSize?.height ?? 0) -
+                    (event.nativeEvent.layoutMeasurement?.height ?? 0);
+                  if (lastClipTop.current > 0)
+                    cutEnd.current.atEnd = y >= range - CUT_SETTLE_SLACK;
+                  else {
+                    // The bar is still settling: note the end as it is now
+                    // (only for a page that was at its end), and look again
+                    // once the offset is quiet.
+                    if (cutEnd.current.atEnd) cutEnd.current.range = range;
+                    settleLater();
+                  }
+                }
                 rest.track(y);
                 checkUnderBar();
                 if (Platform.OS === 'android') androidRoot.onScroll(y);
