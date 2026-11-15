@@ -2,6 +2,7 @@ import {authRoute} from './community-auth'
 import {deletionMember,deletionRoute} from './community-deletion'
 import {socialRoute,socialCounts,notification} from './community-social'
 import {deliverReplyEmails,queueReplyEmail,replyEmailUnsubscribe} from './community-notifications'
+import {memberConnections,removeConnection} from './community-oauth'
 import {body,CommunityError,digest,json,limit,member,now,publicMember,randomToken,requireMember,sameOrigin,sourcePath,text} from './community-core'
 export async function communityRoute(req:Request,env:Env,ctx?:Pick<ExecutionContext,'waitUntil'>):Promise<Response>{
  try{
@@ -18,7 +19,7 @@ async function route(req:Request,env:Env,ctx?:Pick<ExecutionContext,'waitUntil'>
  const deletion=await deletionRoute(req,env,path);if(deletion)return deletion
  if(path==='/api/community/status'&&req.method==='GET'){
   const m=await member(req,env)
-  return json({enabled:String(env.COMMUNITY_ENABLED)==='true',member:m?{...publicMember(m),email:m.email,role:m.role}:null,can_delete_account:!!(m||await deletionMember(req,env)),unread:m&&String(env.COMMUNITY_ENABLED)==='true'?await socialCounts(env,m.id):{messages:0,activity:0},mcp_url:env.COMMUNITY_ORIGIN+'/mcp'})
+  return json({enabled:String(env.COMMUNITY_ENABLED)==='true',member:m?{...publicMember(m),email:m.email,role:m.role}:null,can_delete_account:!!(m||await deletionMember(req,env)),unread:m&&String(env.COMMUNITY_ENABLED)==='true'?await socialCounts(env,m.id):{messages:0,activity:0},mcp_url:env.COMMUNITY_ORIGIN+'/mcp',mcp_member_url:env.COMMUNITY_ORIGIN+'/mcp/member'})
  }
  if(String(env.COMMUNITY_ENABLED)!=='true')throw new CommunityError(503,'The community is being prepared. Please check back soon.')
  const auth=await authRoute(req,env,path);if(auth)return auth
@@ -67,6 +68,10 @@ async function route(req:Request,env:Env,ctx?:Pick<ExecutionContext,'waitUntil'>
  if(path==='/api/community/keys'&&req.method==='POST'){const d=await body(req);await limit(env,'keys:'+m.id,10,3600);const count=await env.COMMUNITY_DB.prepare('SELECT count(*) AS n FROM mcp_keys WHERE member_id=? AND revoked_at IS NULL AND expires_at>?').bind(m.id,t).first<{n:number}>();if(count&&count.n>=3)throw new CommunityError(400,'Revoke an old key before creating another. You can have three active keys.');const token='opax_'+randomToken(),id=crypto.randomUUID();const inserted=await env.COMMUNITY_DB.prepare('INSERT INTO mcp_keys(id,member_id,token_hash,name,prefix,created_at,expires_at) SELECT ?,?,?,?,?,?,? WHERE (SELECT count(*) FROM mcp_keys WHERE member_id=? AND revoked_at IS NULL AND expires_at>?)<3').bind(id,m.id,await digest(token),text(d.name,2,60,'Key name'),token.slice(0,12),t,t+90*86400,m.id,t).run();if(!inserted.meta.changes)throw new CommunityError(400,'You can have three active keys. Revoke an old key first.');return json({id,token,expires_at:t+90*86400},201)}
  const keyId=path.match(/^\/api\/community\/keys\/([\w-]+)$/)?.[1]
  if(keyId&&req.method==='DELETE'){const r=await env.COMMUNITY_DB.prepare('UPDATE mcp_keys SET revoked_at=? WHERE id=? AND member_id=?').bind(t,keyId,m.id).run();if(!r.meta.changes)throw new CommunityError(404,'This key is unavailable.');return json({revoked:true})}
+ // Clients a member connected by signing in, beside their keys.
+ if(path==='/api/community/connections'&&read)return json({connections:await memberConnections(env,m.id)})
+ const connectionId=path.match(/^\/api\/community\/connections\/([\w-]+)$/)?.[1]
+ if(connectionId&&req.method==='DELETE'){if(!await removeConnection(env,m.id,connectionId))throw new CommunityError(404,'This connection is unavailable.');return json({removed:true})}
  throw new CommunityError(404,'This action is unavailable.')
 }
 

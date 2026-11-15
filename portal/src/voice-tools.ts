@@ -1,5 +1,6 @@
 import {CommunityError, text} from './community-core'
 import {CATALOG_KINDS} from './catalog-search'
+import {CATALOG_SLUG, CatalogRecordError, readCatalogRecord, versionedCatalogSlug, type CatalogRead} from './catalog-record'
 import {isReceiptGraph, moneyQuestion, receiptAnswer, receiptGraphForQuestion, voiceReceiptData} from './voice-money'
 import {UNTYPED_RECEIPTS_LABEL} from './receipt-copy'
 import {reportsEnabled} from './reports-gate'
@@ -149,11 +150,11 @@ export async function runVoiceTool(name: string, args: Data, env: Env, readPubli
     }
     const params = new URLSearchParams({q: query, kind, per: '6', page: '1'})
     data = await boundedJson(await readPublic('/api/search-all?' + params))
-    data.results = rows(data, 'results').slice(0, 6).map(row => ({...row, ...(/^catalog-\d+$/.test(String(row.slug)) && /^[a-f0-9]{16}$/.test(String(data.index_version)) ? {slug:String(row.slug).replace('catalog-', 'catalog-' + data.index_version + '-')} : {}), opax_url: safeLink(origin, row)}))
+    data.results = rows(data, 'results').slice(0, 6).map(row => ({...row, slug: versionedCatalogSlug(row.slug, data.index_version), opax_url: safeLink(origin, row)}))
     url = origin + '/ask?view=search&' + params
   } else if (name === 'read_record') {
     const slug = text(args.slug, 1, 180, 'Record identifier')
-    const catalog = /^catalog-(?:([a-f0-9]{16})-)?(\d{1,8})$/.exec(slug)
+    const catalog = CATALOG_SLUG.test(slug)
     const program = /^grant-program-(federal|qld)-([a-z0-9-]{1,80})$/.exec(slug)
     if (program) {
       // Grant program rows carry a stable catalog slug; the file behind it is the program profile the grants page opens.
@@ -164,15 +165,10 @@ export async function runVoiceTool(name: string, args: Data, env: Env, readPubli
       data = {...file, grants: file.grants.slice(0, 40), grants_listed: Math.min(40, file.grants.length), truncated: file.grants.length > 40, opax_url: url,
         record_note: 'A grant program profile built from published award records. Seat holder and government are as at each grant date; margins use 2019 and 2022 election results only. Awards are not payments.'}
     } else if (catalog) {
-      const manifest = await asset('/search-catalog/manifest.json', 20_000)
-      const size = Number(manifest.recordShardSize), count = Number(manifest.count), id = Number(catalog[2]), version = String(manifest.version)
-      if (!/^[a-f0-9]{16}$/.test(version) || !Number.isSafeInteger(size) || size < 1 || size > 2000 || !Number.isSafeInteger(count) || id >= count) throw new CommunityError(404, 'This catalogue record is not available. Search again.')
-      if (catalog[1] && catalog[1] !== version) throw new CommunityError(409, 'The record catalogue has changed. Search again to get its current identifier.')
-      const shard = await boundedJson(await env.ASSETS.fetch(new Request(origin + '/search-catalog/' + version + '/records-' + Math.floor(id / size) + '.json')), 2_000_000, true)
-      const record = rows(shard, 'records')[id % size]
-      if (!record || record.slug !== 'catalog-' + id) throw new CommunityError(404, 'This catalogue record is not available. Search again.')
+      const read: CatalogRead = async (path, maxBytes, records) => boundedJson(await env.ASSETS.fetch(new Request(origin + path)), maxBytes, records)
+      const {record, coverage} = await readCatalogRecord(slug, read).catch(error => { throw error instanceof CatalogRecordError ? new CommunityError(error.status, error.message) : error })
       url = safeLink(origin, record) ?? origin + '/search'
-      data = {...record, opax_url:url, coverage:manifest.coverage, record_note:'This is the published structured record, not a verbatim source transcript. Preserve its stated period and source. Awards are not payments; receipts are not necessarily gifts. Aggregates may overlap individual records.'}
+      data = {...record, opax_url:url, coverage, record_note:'This is the published structured record, not a verbatim source transcript. Preserve its stated period and source. Awards are not payments; receipts are not necessarily gifts. Aggregates may overlap individual records.'}
     } else {
       if (!/^(?:speech-\d+|legal-\d+|news-\d+|division-[a-z0-9-]+|press-(?:pmt|nsw|qld|vic|tre)-[a-z0-9-]+|grantconnect-award-ga\d+(?:-v\d+)?|grant-site-evidence-(?:ga\d+|mlci-invitation-\d{3})|mlci-invitation-\d{3}|mlci-award-ga[a-z0-9-]+|aec-seat-2025-[a-f0-9]{16}|roster-profile-[a-f0-9]{16}|research-(?:cpi-mlci|mlci-program)-2026)$/.test(slug)) throw new CommunityError(400, 'Use the record identifier returned by search.')
       url = origin + '/doc/' + slug

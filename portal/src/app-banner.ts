@@ -25,7 +25,7 @@ export const SKIP_LINK_HTML = skipLinkHTML('main')
  * dismissal checks run in the browser, so cached HTML is the same for everyone. */
 export function withAppBanner(response: Response, url: URL): Response {
   if (!response.body || !response.headers.get('content-type')?.startsWith('text/html') ||
-      /^\/(?:api|support|privacy|community|signin|sign-in|login|auth)(?:\/|\.html|$)/i.test(url.pathname)) return response
+      /^\/(?:api|support|privacy|community|signin|sign-in|login|auth|oauth)(?:\/|\.html|$)/i.test(url.pathname)) return response
 
   const transformed = new HTMLRewriter()
     .on('head', { element(el) {

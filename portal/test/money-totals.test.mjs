@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { build } from 'esbuild';
+// MCP adds two fields that Ask's copy of a result does not carry: the record-text notice and a former-name note.
+const mcpOnly = value => { if (!value || typeof value !== 'object' || Array.isArray(value)) return value; const { record_text_notice, deprecated, ...rest } = value; return rest; };
 
 const built = await build({
   stdin: { contents: "export * from './src/tools/index';export { TOOL_SPECS, runTool } from './src/agentic-tools';export { communityMcp } from './src/community-mcp';export { inferPeriod, factSheet } from './src/agentic-ask';export { extractAskConstraints, constrainStep, guardToolPeriod } from './src/ask-constraints';export { writingFacts, renderFacts } from './src/research-writing';", resolveDir: new URL('../', import.meta.url).pathname },
@@ -295,12 +297,9 @@ function mcpFixture() {
 test('money_totals shares its schema and aggregate JSON between Ask and the public MCP', async () => {
   const f = mcpFixture(), tool = api.getTool('money_totals');
   assert.ok(tool);
-  const entry = (await f.send('tools/list')).result.tools.find(row => row.name === 'money_totals');
-  assert.ok(entry);
-  assert.equal(entry.description, tool.description);
-  const { $schema, ...schema } = entry.inputSchema;
-  assert.deepEqual(schema, tool.inputSchema);
-  assert.equal(entry.annotations.readOnlyHint, true);
+  // money_receipts is the listed tool; money_totals, the calculator behind it, still answers by name.
+  const listed = (await f.send('tools/list')).result.tools.map(row => row.name);
+  assert.ok(listed.includes('money_receipts') && !listed.includes('money_totals'));
   assert.deepEqual(api.TOOL_SPECS.find(row => row.name === 'money_totals').input, tool.inputSchema);
   assert.equal(f.state.reads, 0);
   const args = { party: 'Labor', financial_year: '2017-18' };
@@ -308,11 +307,11 @@ test('money_totals shares its schema and aggregate JSON between Ask and the publ
   const rpc = await f.send('tools/call', { name: 'money_totals', arguments: args });
   assert.equal(ask.ok, true);
   assert.equal(rpc.result.isError, false);
-  assert.deepEqual(rpc.result.structuredContent, ask.data);
-  assert.deepEqual(JSON.parse(rpc.result.content[0].text), ask.data);
+  assert.deepEqual(mcpOnly(rpc.result.structuredContent), ask.data);
+  assert.deepEqual(mcpOnly(JSON.parse(rpc.result.content[0].text)), ask.data);
 });
 
-test('invalid FY arguments fail with -32602 before reading money data', async () => {
+test('invalid FY arguments fail as a tool error before reading money data', async () => {
   const f = mcpFixture();
   for (const args of [
     { financial_year: '2017' }, { financial_year: '2017-19' }, { financial_year: '2017-2019' },
@@ -324,7 +323,7 @@ test('invalid FY arguments fail with -32602 before reading money data', async ()
   ]) {
     assert.throws(() => api.parseToolArgs('money_totals', args), error => error.code === -32602, JSON.stringify(args));
     const rpc = await f.send('tools/call', { name: 'money_totals', arguments: args });
-    assert.equal(rpc.error?.code, -32602, JSON.stringify(args));
+    assert.equal(rpc.result?.isError, true, JSON.stringify(args));
   }
   assert.equal(f.state.reads, 0);
 });

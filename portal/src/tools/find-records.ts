@@ -80,7 +80,7 @@ export const tool: ToolDefinition = {
         ...(sizeLimited ? ['Fewer ranked hits are shown to retain complete bill lifecycles. Narrow the query to a bill title for other matches.'] : [])],
     })
     // Leave room for the Ask adapter inside its 16 KiB result limit. Never cut a lifecycle in half.
-    while (enriched.length > 1 && new TextEncoder().encode(JSON.stringify(result())).length > 14_000) {
+    while (enriched.length > 1 && new TextEncoder().encode(JSON.stringify(result())).length > 13_700) {
       enriched.pop()
       sizeLimited = true
     }

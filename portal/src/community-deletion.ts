@@ -70,7 +70,9 @@ export async function deletionRoute(req:Request,env:Env,path:string):Promise<Res
   if(!await matchesSignInCode(env,challengeId!,data.code,admitted.code_mac,m.id))throw new CommunityError(400,FAILURE)
   const session=req.headers.get('cookie')!.split(';').map(s=>s.trim()).find(s=>s.startsWith('__Host-opax_session='))!.slice(20)
   const sessionHash=await digest(session),limitKeys=await accountLimitKeys(m,now()),t=now()
-  const results=await env.COMMUNITY_DB.batch(deletionBatch(env,m,challengeId!,sessionHash,t,limitKeys))
+  // Connected clients arrive with migration 0019; deletion must keep working on a database that has not had it yet.
+  const connections=await env.COMMUNITY_DB.prepare('SELECT 1 FROM oauth_grants g,oauth_codes c,oauth_tokens k LIMIT 0').first().then(()=>true,()=>false)
+  const results=await env.COMMUNITY_DB.batch(deletionBatch(env,m,challengeId!,sessionHash,t,limitKeys,connections))
   if(!results[0].meta.changes)throw new CommunityError(400,FAILURE)
   if(reviewer)console.log(JSON.stringify({event:'community_reviewer_deletion',timestamp:new Date().toISOString(),colo:req.cf?.colo??null}))
   return json({deleted:true,signed_out:true,message:'Your account and authored content have been deleted.'},200,{'set-cookie':'__Host-opax_session=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0'})
@@ -81,7 +83,7 @@ export async function deletionRoute(req:Request,env:Env,path:string):Promise<Res
 }
 
 /** Redemption and every scope mutation share one transaction and winner guard. */
-function deletionBatch(env:Env,m:Member,challengeId:string,sessionHash:string,t:number,limitKeys:string[]):D1PreparedStatement[] {
+function deletionBatch(env:Env,m:Member,challengeId:string,sessionHash:string,t:number,limitKeys:string[],connections:boolean):D1PreparedStatement[] {
  const winner=randomToken()
  const guard='EXISTS(SELECT 1 FROM community_deletion_challenges WHERE challenge_id=? AND member_id=? AND redemption_token=?)'
  const statement=(sql:string,args:unknown[]=[])=>env.COMMUNITY_DB.prepare(sql+' AND '+guard).bind(...args,challengeId,m.id,winner)
@@ -108,6 +110,11 @@ function deletionBatch(env:Env,m:Member,challengeId:string,sessionHash:string,t:
   statement('DELETE FROM member_chats WHERE member_id=?',[m.id]),
   statement('DELETE FROM voice_access WHERE member_id=?',[m.id]),
   statement('DELETE FROM mcp_keys WHERE member_id=?',[m.id]),
+  ...(connections?[
+   statement('DELETE FROM oauth_tokens WHERE grant_id IN (SELECT id FROM oauth_grants WHERE member_id=?)',[m.id]),
+   statement('DELETE FROM oauth_codes WHERE grant_id IN (SELECT id FROM oauth_grants WHERE member_id=?)',[m.id]),
+   statement('DELETE FROM oauth_grants WHERE member_id=?',[m.id]),
+  ]:[]),
   statement('DELETE FROM login_links WHERE email=? COLLATE NOCASE',[m.email]),
   statement('DELETE FROM member_sessions WHERE member_id=?',[m.id]),
   statement(`DELETE FROM community_limits WHERE (expires_at<=? OR key IN (${limitKeys.map(()=>'?').join(',')}))`,[t,...limitKeys]),
@@ -127,7 +134,7 @@ function deletionBatch(env:Env,m:Member,challengeId:string,sessionHash:string,t:
 // Shared IP quotas remain, including deletion issuance/consumption admission.
 async function accountLimitKeys(m:Member,t:number):Promise<string[]> {
  const scopes:[string,number][]=[['login-email:'+m.email.toLowerCase(),3600],['consume-code-email:'+await digest(m.email.toLowerCase()),86400],
-  ...['social','keys','chats'].map(prefix=>[prefix+':'+m.id,3600] as [string,number]),
+  ...['social','keys','chats','oauth-consent'].map(prefix=>[prefix+':'+m.id,3600] as [string,number]),
   ...['thread','reply','report','list','message-day','message-new'].map(prefix=>[prefix+':'+m.id,86400] as [string,number]),
   ['message-minute:'+m.id,60],['voice-start-member:'+m.id,60],['mcp:'+m.id,60]]
  return Promise.all(scopes.map(([key,seconds])=>digest(key+':'+Math.floor(t/seconds))))

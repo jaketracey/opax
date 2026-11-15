@@ -83,7 +83,8 @@ test('every address the route table spells out, every directory kind and grant j
   assert.ok(jurisdictions.length >= 2);
   for (const j of jurisdictions) paths.push(`/money/grants/${j}/recipient/abn:12345678901`);
   // Pages served from a file: the Worker-first list and the html files in public.
-  const plain = servedFirst.filter((p) => !/[*]|^\/(?:api|ingest|og|mcp|table-index|datatable-workbench)|\.(?:json|txt|xml|html)\/?$|-test/.test(p));
+  // Machine endpoints (API, ingest, images, MCP, OAuth discovery under /.well-known) carry no page analytics.
+  const plain = servedFirst.filter((p) => !/[*]|^\/(?:api|ingest|og|mcp|table-index|datatable-workbench|\.well-known)|\.(?:json|txt|xml|html)\/?$|-test/.test(p));
   for (const file of readdirSync(new URL('../public/', import.meta.url))) {
     const m = file.match(/^([a-z-]+)\.html$/);
     if (m && !/-test$|workbench|^index$/.test(m[1])) plain.push(`/${m[1]}`);
