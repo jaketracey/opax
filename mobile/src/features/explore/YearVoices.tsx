@@ -11,12 +11,13 @@ import {
 import { minimumTarget, rhythm } from '../../design/tokens';
 import { personRoute, partyRoute } from '../../navigation/routes/people';
 import { CachedPortrait } from '../CachedPortrait';
-import { partyName } from '../reports/model';
 import {
   rosterMatch,
   speechesText,
+  voiceParty,
   voicesDebates,
   voicesNote,
+  type VoiceRosterRow,
   type Year,
 } from './model';
 import { yearSource, type YearMeta } from './YearBrief';
@@ -29,7 +30,7 @@ export function yearVoices(data: Year) {
     .slice(0, 6);
 }
 export interface RosterLookup {
-  people: readonly { name: string }[];
+  people: readonly ({ name: string } & VoiceRosterRow)[];
   slugs: Readonly<Record<string, string>>;
 }
 
@@ -62,7 +63,16 @@ export function YearVoices({
           const slug = roster
             ? rosterMatch(voice.name, roster.people, roster.slugs)
             : null;
-          const party = voice.party ? partyName(voice.party) : null;
+          const party = voiceParty(
+            voice,
+            data.year,
+            // rosterMatch has proved the name is one roster row.
+            slug
+              ? (roster?.people.find(
+                  (p) => p.name.trim() === voice.name.trim(),
+                ) ?? null)
+              : null,
+          );
           return slug ? (
             <PersonRow
               key={voice.name}
