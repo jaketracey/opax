@@ -1541,7 +1541,9 @@ function KeyDates({
   return (
     <View ref={anchor} collapsable={false}>
       <Section title="How it moved" testID="bill-key-dates">
-        {tracker ? <BillStageTracker tracker={tracker} /> : null}
+        {tracker ? (
+          <BillStageTracker tracker={tracker} settleKey={identity?.key} />
+        ) : null}
         {points.length ? (
           <View
             testID="bill-dates-ruler"
@@ -1981,6 +1983,7 @@ function BillVoteRow({
                   ayes={division.ayes}
                   noes={division.noes}
                   countsStyle="ayesNoes"
+                  settleKey={division.key}
                   {...chartSource(
                     division.date,
                     division.date,
