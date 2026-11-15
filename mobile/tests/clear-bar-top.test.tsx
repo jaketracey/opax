@@ -498,10 +498,22 @@ describe('no bar colour or hairline under the clear rail bar', () => {
     }
   });
 
+  // Build 82: iPhone and iPad too, on iOS 26. A pushed page under the
+  // stack's clear bar sets no colour and no hairline.
+  test('a pushed Screen page on iPhone has no bar colour or hairline', () => {
+    const styled = options('unspecified', true, screen).filter(
+      (call) => 'headerStyle' in call,
+    );
+    expect(styled.length).toBeGreaterThan(0);
+    for (const call of styled) {
+      expect(call.headerStyle).toEqual({});
+      expect(call.headerShadowVisible).toBe(false);
+    }
+  });
+
   test.each([
-    // iPhone and iPad: the electorate's glass bar and the glossary's paper
-    // bar are the ones they had.
-    ['unspecified', true, screen, [colors.sunken]],
+    // iPhone and iPad, below a solid bar (a search field holds it): the
+    // glossary's paper bar is the one it had.
     ['unspecified', false, glossary, [colors.paper, colors.sunken]],
     // The same page in a sheet beside the rail keeps its opaque bar.
     ['trailing', false, glossary, [colors.paper, colors.sunken]],
@@ -887,6 +899,15 @@ describe('a pushed page with a search field beside the rail', () => {
     expect(backing(options)).toBe(colors.sunken);
   });
 
+  // Build 82: iPhone and iPad run pushed pages under a clear bar too. A
+  // field keeps the solid bar there, in its own colour, with no backing.
+  test('on iPhone a list with a field is solid in paper, with no backing', () => {
+    const options = set('unspecified', <RouteOptions options={search} />);
+    expect(options.headerTransparent).toBe(false);
+    expect(options.headerStyle).toEqual({ backgroundColor: colors.paper });
+    expect('headerBackground' in options).toBe(false);
+  });
+
   test('a page that drops its field takes the clear bar back', () => {
     const options = set(
       'trailing',
@@ -897,9 +918,8 @@ describe('a pushed page with a search field beside the rail', () => {
   });
 
   test.each([
-    // iPhone, iPad and the unfolded Duo.
-    ['unspecified', {}],
     // A tab root: its own owner sets its bar (useRootBarAppearance).
+    ['unspecified', { first: true }],
     ['trailing', { first: true }],
     // A sheet in the tab stack.
     ['trailing', { presentation: 'formSheet' }],

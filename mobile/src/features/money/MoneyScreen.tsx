@@ -71,6 +71,7 @@ import {
   headerItems,
   opaqueBar,
   pageItems,
+  usePushedBar,
   useRailBar,
 } from '../../navigation/chrome';
 import { moneyDonorsRoute } from '../../navigation/routes/public-money';
@@ -1664,16 +1665,18 @@ function ListMode({
   // stack's bar again, from the same check, so a fold or unfold after the
   // map still follows the other pushed pages.
   const rail = useRailBar();
+  // Off the rail the pushed pages' bar is clear too (iOS 26).
+  const clear = usePushedBar() === 'clear';
   const setOptions = useSafeSetOptions();
   useLayoutEffect(() => {
     setOptions({
-      headerTransparent: rail === 'clear',
+      headerTransparent: clear,
       // Screen below sets the solid bar's ground; this runs after it.
       ...(rail === 'solid'
         ? barBacking(colors.paper)
         : { headerBackground: undefined }),
     });
-  }, [setOptions, rail]);
+  }, [setOptions, rail, clear]);
   return (
     <GestureHandlerRootView style={styles.root}>
       <RouteOptions options={options} />

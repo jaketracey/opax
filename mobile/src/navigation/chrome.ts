@@ -6,7 +6,10 @@ import {
   type NativeStackHeaderItemMenuAction,
   type NativeStackHeaderItemMenuSubmenu,
 } from 'expo-router';
-import { NavigationRouteContext } from 'expo-router/react-navigation';
+import {
+  NavigationContext,
+  NavigationRouteContext,
+} from 'expo-router/react-navigation';
 import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
 import { createElement, use, useContext } from 'react';
 import {
@@ -220,6 +223,33 @@ export function useRailBar(): 'clear' | 'solid' | null {
 }
 
 /**
+ * The bar of a tab stack's pushed pages wherever they run under it. Beside
+ * a vertical bar that is the rail's answer. On every other iOS 26 layout,
+ * with `clearBars`, a pushed page takes the roots' treatment: a clear bar
+ * with no colour and no hairline, and the page fades into its own ground
+ * under it (Screen's `BarFade`); the solid paper bar cut rows sharp at its
+ * hairline (build 82). With Reduce Transparency or Increase Contrast on,
+ * off the rail, this is null: the stack's opaque bar stays, as it was.
+ */
+export function usePushedBar(): 'clear' | 'solid' | null {
+  const rail = useRailBar();
+  const solid = useSolidBar();
+  if (rail) return rail;
+  return clearBars && glassBar() && !solid ? 'clear' : null;
+}
+
+/**
+ * What `sharedScreens` is told about the tab stack's pushed pages: false
+ * (below an opaque bar), true (under the clear rail bar) or 'plain' (under
+ * the clear bar of any other layout, where a solid bar needs no backing).
+ */
+export type UnderBar = boolean | 'plain';
+export function useUnderBar(headerTransparent: boolean): UnderBar {
+  const rail = useRailBar();
+  return headerTransparent ? (rail ? true : 'plain') : false;
+}
+
+/**
  * A page that keeps a solid bar where its stack's pages run under a clear
  * one: its title band never folds away (a search field in the bar, a map
  * that does not scroll), so content must end at the band, and a sticky
@@ -227,23 +257,41 @@ export function useRailBar(): 'clear' | 'solid' | null {
  * (`useUnderRailBar`); elsewhere this adds nothing to the route.
  */
 export const solidRailBar = (
-  underBar: boolean,
+  underBar: UnderBar,
   ground: ColorValue = colors.paper,
 ) =>
-  underBar
-    ? { headerTransparent: false, ...opaqueBar(ground), ...barBacking(ground) }
-    : {};
+  underBar === 'plain'
+    ? { headerTransparent: false, ...opaqueBar(ground) }
+    : underBar
+      ? {
+          headerTransparent: false,
+          ...opaqueBar(ground),
+          ...barBacking(ground),
+        }
+      : {};
 
 /**
- * Whether this route's bar is clear beside a vertical bar: a tab stack's
- * pushed page on the closed Duo (see `useStackChrome`). The stack's
- * descriptors are read only beside a vertical bar, so on iPhone and iPad the
- * caller neither subscribes to them nor re-renders when a page sets options.
+ * Whether this route's bar is the clear one of a tab stack's pushed pages
+ * (see `useStackChrome` and `usePushedBar`): beside a vertical bar, and on
+ * every other iOS 26 layout while no legibility setting is on. The stack's
+ * descriptors are read only where that can be so: before iOS 26, and for a
+ * root, the caller neither subscribes to them nor re-renders when a page
+ * sets options.
  */
 export function useClearRailBar(): boolean {
   const route = useContext(NavigationRouteContext);
   const verticalBar = useVerticalBarEdge() !== 'unspecified';
-  if (!verticalBar || !route) return false;
+  const navigation = useContext(NavigationContext);
+  const solid = useSolidBar();
+  if (!route) return false;
+  if (!verticalBar) {
+    // Every other iOS 26 layout: a pushed page under the stack's clear bar
+    // (`usePushedBar`). A root has its own owner, and a legibility setting
+    // keeps the opaque bar.
+    if (!clearBars || !glassBar() || solid) return false;
+    const first = navigation?.getState()?.routes?.[0]?.key;
+    if (!first || first === route.key) return false;
+  }
   const options = use(DescriptorsContext)[route.key]?.options;
   // A pushed page only. A presented one owns its bar: the photo viewer is a
   // full-screen modal in the tab stack with a clear bar of its own and a
@@ -291,7 +339,8 @@ export function clearBarStyle<T extends NativeStackNavigationOptions>(
  * paints a strip of its own above the band at rest.
  * Sheets and modal stacks keep the opaque bar: a sheet's bar items sit over
  * its trailing edge, and only an opaque bar keeps the content beside them.
- * Phones, the unfolded Duo and iPad report 'unspecified' and are unchanged.
+ * On iOS 26 every other layout does the same while no legibility setting
+ * is on (`usePushedBar`): Today's clear bar and fade, on pushed pages too.
  */
 export function useStackChrome({
   tabStack = false,
@@ -301,7 +350,8 @@ export function useStackChrome({
   const titleInk = schemeColour('ink', useColorScheme());
   const barEdge = useVerticalBarEdge();
   const railBar = useRailBar();
-  const rail = tabStack && railBar === 'clear';
+  const pushedBar = usePushedBar();
+  const rail = tabStack && pushedBar === 'clear';
   const category = contentSizeCategory(fontScale);
   const sizes = {
     largeTitle: largeTitleSizes[category],

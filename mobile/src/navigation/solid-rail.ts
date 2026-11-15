@@ -4,7 +4,8 @@ import {
 } from 'expo-router/react-navigation';
 import { DescriptorsContext } from 'expo-router/build/fork/native-stack/descriptors-context';
 import { use, useContext } from 'react';
-import { useRailBar } from './chrome';
+import { clearBars, glassBar, useRailBar } from './chrome';
+import { useSolidBar } from '../design/accessibility';
 import { isTabStack } from './floating-bar';
 
 /**
@@ -21,6 +22,23 @@ export function usePushedRailBar(): 'clear' | 'solid' | null {
   if (!isTabStack(state) || state?.routes?.[0]?.key === route.key) return null;
   const presentation = use(DescriptorsContext)[route.key]?.options.presentation;
   return !presentation || presentation === 'card' ? rail : null;
+}
+
+/**
+ * A page pushed in a tab's stack under the clear bar of a layout without a
+ * vertical bar (iOS 26, no legibility setting on; `usePushedBar`). False
+ * for a tab root, a sheet or modal, and another stack.
+ */
+export function usePushedPlainClear(): boolean {
+  const rail = useRailBar();
+  const solid = useSolidBar();
+  const route = useContext(NavigationRouteContext);
+  const navigation = useContext(NavigationContext);
+  if (rail || solid || !clearBars || !glassBar() || !route) return false;
+  const state = navigation?.getState();
+  if (!isTabStack(state) || state?.routes?.[0]?.key === route.key) return false;
+  const presentation = use(DescriptorsContext)[route.key]?.options.presentation;
+  return !presentation || presentation === 'card';
 }
 
 /**

@@ -577,12 +577,13 @@ export function Screen({
   // bar as content goes under it, on the UI thread. A solid bar (the
   // legibility settings, read by the fade itself; a rail root's search
   // field) covers its own content.
+  // A pushed page under the stack's clear bar fades the same way (off the
+  // rail, whose band folds away); a detail pane has no bar of its own.
   const barFade =
     clearBars &&
-    nativeRoot &&
     Platform.OS === 'ios' &&
     glassBar() &&
-    !railSolidRoot;
+    (nativeRoot ? !railSolidRoot : clearRail && !onRail && !inPane);
   const fadeScroll = useBarFadeScroll(barFade);
   // Before iOS 26 every bar a pinned band sits under is opaque, and UIKit
   // lays the scroll view out below it: React Native's own sticky header

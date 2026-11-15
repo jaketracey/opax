@@ -277,16 +277,48 @@ test('inline and sheet bars cover content and roots keep a native scroll edge', 
   act(() => view.unmount());
 });
 
+// Reduce Transparency and Increase Contrast keep the stack's solid bar,
+// hairline included, on a layout without a vertical bar.
+test('with a legibility setting on, a pushed page on iOS 26 keeps the opaque bar', () => {
+  const descriptor = Object.getOwnPropertyDescriptor(Platform, 'Version');
+  jest.replaceProperty(Platform, 'OS', 'ios');
+  Object.defineProperty(Platform, 'Version', { configurable: true, value: 26 });
+  mockSolidBar = true;
+  let pushed!: ReturnType<typeof useStackChrome>;
+  let sheet!: ReturnType<typeof useStackChrome>;
+  function Harness() {
+    pushed = useStackChrome({ tabStack: true });
+    sheet = useStackChrome();
+    return null;
+  }
+  const view = tree(<Harness />);
+  try {
+    expect(pushed.headerTransparent).toBe(false);
+    expect(pushed.headerStyle).toEqual({ backgroundColor: colors.paper });
+    expect(pushed.headerShadowVisible).toBe(true);
+    expect(pushed.scrollEdgeEffects.top).toBe('hard');
+    expect(pushed).toEqual(sheet);
+  } finally {
+    act(() => view.unmount());
+    mockSolidBar = false;
+    if (descriptor) Object.defineProperty(Platform, 'Version', descriptor);
+  }
+});
+
 // The closed Duo, b69: UIKit folds a pushed page's title band away on scroll
 // and leaves the top safe area (24 pt) as bar. An opaque bar lays the page out
 // below that strip, so the page's own heading was cut off under it.
 test.each([
   ['trailing', 26, true],
   ['leading', 27, true],
-  ['unspecified', 26, false],
-  ['unspecified', 27, false],
+  // Build 82: every other iOS 26 layout too. The solid paper bar cut a
+  // pushed page's rows sharp at its hairline; it is clear, with no colour
+  // and no hairline, and the page fades under it as Today does.
+  ['unspecified', 26, true],
+  ['unspecified', 27, true],
   // Before iOS 26 there is no glass bar, whatever the trait reports.
   ['trailing', 18, false],
+  ['unspecified', 18, false],
 ] as const)(
   'a tab stack page beside a %s bar on iOS %s runs under the bar: %s',
   (edge, version, underBar) => {
@@ -322,8 +354,7 @@ test.each([
         underBar ? {} : { backgroundColor: colors.paper },
       );
       expect(pushed.headerShadowVisible).toBe(!underBar);
-      // Away from a vertical bar the two stacks are the same, option for
-      // option: iPhone, the unfolded Duo and iPad are unchanged.
+      // Before iOS 26 the two stacks are the same, option for option.
       if (!underBar) expect(pushed).toEqual(sheet);
       // A sheet's bar items sit over its content's trailing edge, so sheets
       // and modal stacks keep the opaque bar beside any bar.
@@ -391,7 +422,13 @@ test.each([
             navigation: { getState: () => ({ index: 1, routes: [] }) },
           });
         expect(list.headerTransparent).toBe(underBar ? false : undefined);
-        expect('headerBackground' in list).toBe(underBar);
+        // Only the rail's solid bar needs a backing (UIKit's stops short
+        // of the top edge there); elsewhere its own colour is enough.
+        expect('headerBackground' in list).toBe(
+          underBar && edge !== 'unspecified',
+        );
+        if (underBar)
+          expect(list.headerStyle).toEqual({ backgroundColor: colors.paper });
       }
       // A seat's grants share the Grants route but have no search field:
       // they keep the stack's clear bar. The electorates view has a field.

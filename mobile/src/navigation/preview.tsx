@@ -7,12 +7,17 @@ import { useCallback, useContext, useLayoutEffect, useMemo } from 'react';
 import type { ColorValue } from 'react-native';
 import { sheetListOptions } from './sheet-lists';
 import { usePageUnavailable } from './page-unavailable';
-import { usePushedRailBar, useSolidRailBacking } from './solid-rail';
+import {
+  usePushedPlainClear,
+  usePushedRailBar,
+  useSolidRailBacking,
+} from './solid-rail';
 import { useDetailRouteOptions } from './useDetailRouteOptions';
 import {
   barBacking,
   clearBarStyle,
   headerItems,
+  opaqueBar,
   pendingHeaderItems,
   useClearRailBar,
 } from './chrome';
@@ -88,6 +93,8 @@ export function RouteOptions({
   const solidRail = useSolidRailBacking();
   // A pushed page beside the rail, unless a root-style owner has its bar.
   const pushedRail = usePushedRailBar();
+  // The same page on any other iOS 26 layout, under the stack's clear bar.
+  const plainClear = usePushedPlainClear();
   const screenGround = useScreenGround();
   // Beside a vertical bar the stand-ins are dimmed buttons (chrome.ts). A
   // page showing a whole-page unavailable state will never replace them,
@@ -116,12 +123,19 @@ export function RouteOptions({
     // what UIKit's scroll edge covers, so rows ran through it under a
     // covered title (the pushed Bills list, b74). Like a rail root's, such a
     // bar is solid on the page's own ground: one surface for title and field.
-    if (pushedRail === 'clear' && !root && 'headerSearchBarOptions' in resolved)
+    // Off the rail the solid bar needs no backing, only its colour.
+    if (
+      (pushedRail === 'clear' || plainClear) &&
+      !root &&
+      'headerSearchBarOptions' in resolved
+    )
       return resolved.headerSearchBarOptions
         ? {
             ...resolved,
             headerTransparent: false,
-            ...barBacking(own ?? screenGround ?? colors.paper),
+            ...(plainClear
+              ? opaqueBar(own ?? screenGround ?? colors.paper)
+              : barBacking(own ?? screenGround ?? colors.paper)),
           }
         : {
             ...clearBarStyle(resolved),
@@ -139,6 +153,7 @@ export function RouteOptions({
     clearRail,
     solidRail,
     pushedRail,
+    plainClear,
     root,
     screenGround,
   ]);

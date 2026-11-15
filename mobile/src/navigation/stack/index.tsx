@@ -15,7 +15,7 @@ import { filtersScreens } from './filters';
 import { referenceSharedScreens } from './reference';
 import { cloneElement, type ReactElement } from 'react';
 import type { NativeStackNavigationOptions } from 'expo-router';
-import { solidRailBar, type TabSegment } from '../chrome';
+import { solidRailBar, type TabSegment, type UnderBar } from '../chrome';
 
 const tabRoots = {
   '(today)': 'index',
@@ -44,7 +44,7 @@ export function sharedScreens(
   segment: string,
   signedIn: boolean,
   /** Pushed pages run under the bar (useStackChrome's `tabStack`). */
-  underBar = false,
+  underBar: UnderBar = false,
 ) {
   const screens = [
     ...todayScreens(segment, signedIn),
@@ -70,8 +70,10 @@ export function sharedScreens(
       .filter((screen) => screen.props.name !== root)
       .map((screen) =>
         underBar && railSearchRoutes.has(screen.props.name)
-          ? withSolidRailBar(screen)
-          : screen,
+          ? withSolidRailBar(screen, underBar)
+          : underBar === 'plain'
+            ? withPresentedBelowBar(screen)
+            : screen,
       ),
   ];
 }
@@ -98,12 +100,34 @@ type StackScreen = ReactElement<{
   name: string;
   options: (props: object) => NativeStackNavigationOptions;
 }>;
-function withSolidRailBar(screen: StackScreen) {
+function withSolidRailBar(screen: StackScreen, underBar: UnderBar) {
   const { name, options } = screen.props;
   return cloneElement(screen, {
     options: (props: object) => {
       const base = options(props);
-      return fieldless(name, props) ? base : { ...base, ...solidRailBar(true) };
+      return fieldless(name, props)
+        ? base
+        : { ...base, ...solidRailBar(underBar) };
+    },
+  });
+}
+
+/**
+ * Under the clear bar of a layout without a vertical bar, a sheet or modal
+ * registered in the tab's stack keeps the opaque bar its content is laid
+ * out below: only the pushed pages run under the bar.
+ */
+function withPresentedBelowBar(screen: StackScreen) {
+  const { options } = screen.props;
+  if (!options) return screen;
+  return cloneElement(screen, {
+    options: (props: object) => {
+      const base = typeof options === 'function' ? options(props) : options;
+      return base.presentation &&
+        base.presentation !== 'card' &&
+        !('headerTransparent' in base)
+        ? { ...base, headerTransparent: false }
+        : base;
     },
   });
 }
