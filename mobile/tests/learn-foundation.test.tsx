@@ -591,14 +591,14 @@ describe('Hide tips on the answer sheet (build 76)', () => {
     expect(announce).toHaveBeenCalledWith(
       'Tips hidden. Turn them back on in Account, under Glossary terms.',
     );
-    // iOS is told once; the live region is TalkBack's (next test).
+    // Told once, and not a live region as well.
     expect(
       announce.mock.calls.filter(([said]) => /^Tips hidden/.test(said)),
     ).toHaveLength(1);
     expect(
       byTestID(sheet, 'term-division-tips-hidden')[0]!.props
         .accessibilityLiveRegion,
-    ).toBe('none');
+    ).not.toBe('polite');
     // Never closed, however long the reader takes.
     act(() => {
       jest.advanceTimersByTime(TIPS_HIDDEN_HOLD * 10);
@@ -655,7 +655,7 @@ describe('Hide tips on the answer sheet (build 76)', () => {
     running.mockResolvedValue(false);
   });
 
-  test('Android: the notice is a live region for TalkBack and is not announced as well', async () => {
+  test('Android: TalkBack is told once by an announcement; the notice is not a live region whose words never change', async () => {
     const os = Platform.OS;
     Platform.OS = 'android';
     const announce = jest
@@ -668,17 +668,24 @@ describe('Hide tips on the answer sheet (build 76)', () => {
       await act(async () => {
         sheet = render(<TermSheet />);
       });
-      await act(async () => {
-        pressable(sheet, 'term-division-hide-tips').props.onPress();
-      });
-      expect(
-        byTestID(sheet, 'term-division-tips-hidden')[0]!.props
-          .accessibilityLiveRegion,
-      ).toBe('polite');
-      // One reading, not two.
+      // Nothing is said before the tap.
       expect(
         announce.mock.calls.filter(([said]) => /^Tips hidden/.test(said)),
       ).toHaveLength(0);
+      await act(async () => {
+        pressable(sheet, 'term-division-hide-tips').props.onPress();
+      });
+      // The notice's words were laid out from the start, so a live region
+      // would have nothing new to read: the announcement is what speaks.
+      expect(
+        announce.mock.calls.filter(([said]) => /^Tips hidden/.test(said)),
+      ).toEqual([
+        ['Tips hidden. Turn them back on in Account, under Glossary terms.'],
+      ]);
+      const notice = byTestID(sheet, 'term-division-tips-hidden')[0]!;
+      expect(notice.props.accessibilityLiveRegion ?? 'none').toBe('none');
+      // And it is there for TalkBack to find afterwards.
+      expect(notice.props.importantForAccessibility).toBe('yes');
     } finally {
       Platform.OS = os;
       announce.mockRestore();
@@ -711,6 +718,12 @@ describe('Hide tips on the answer sheet (build 76)', () => {
           .length > 0,
     );
     expect(over.length).toBeGreaterThan(0);
+    // From the top of that place: at large text the notice is taller than
+    // the button, and the spare room falls below it, not above.
+    const place = StyleSheet.flatten(over.at(-1)!.props.style);
+    expect(place.justifyContent).toBe('flex-start');
+    expect(place.alignItems).toBe('flex-start');
+    expect(place).toMatchObject({ top: 0, bottom: 0 });
     back.mockClear();
     await act(async () => {
       pressable(sheet, 'term-division-hide-tips').props.onPress();

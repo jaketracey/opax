@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { AccessibilityInfo, Platform, StyleSheet, View } from 'react-native';
+import { AccessibilityInfo, StyleSheet, View } from 'react-native';
 import { Button } from '../../design/controls';
 import { Text } from '../../design/text';
 import { minimumTarget } from '../../design/tokens';
@@ -140,11 +140,10 @@ function HideTips({ id }: { id: string }) {
         wordSafe
         variant="secondary"
         tone="inkSoft"
-        // TalkBack reads a live region as it changes; VoiceOver has none,
-        // so iOS is told once instead (below). One reading on each.
-        accessibilityLiveRegion={
-          hidden && Platform.OS === 'android' ? 'polite' : 'none'
-        }
+        // Read out once, by the announcement below, on both platforms. Not
+        // a live region: TalkBack reads one when its words change, and these
+        // words are here from the start (unseen), so it would stay silent,
+        // or read twice beside the announcement.
         accessibilityElementsHidden={!hidden}
         importantForAccessibility={hidden ? 'yes' : 'no-hide-descendants'}
         style={hidden ? undefined : styles.unseen}
@@ -160,10 +159,7 @@ function HideTips({ id }: { id: string }) {
             onPress={() => {
               setHidden(true);
               void setUnderlineTerms(false);
-              if (Platform.OS !== 'android')
-                AccessibilityInfo.announceForAccessibility(
-                  learnCopy.tipsHidden,
-                );
+              AccessibilityInfo.announceForAccessibility(learnCopy.tipsHidden);
             }}
             testID={`term-${id}-hide-tips`}
           />
@@ -177,10 +173,13 @@ const styles = StyleSheet.create({
   // The button's 44 pt row at least, and the notice's own height where that
   // is more. Both start on the text's leading edge.
   hide: { minHeight: minimumTarget, justifyContent: 'center' },
+  // From the top of the held place: where the notice is taller than the
+  // button (large text), the spare room falls below the button, not as a
+  // gap between it and the row above.
   button: {
     ...StyleSheet.absoluteFill,
     alignItems: 'flex-start',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   // Laid out, not drawn: it holds the notice's place.
   unseen: { opacity: 0 },
