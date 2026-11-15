@@ -128,6 +128,17 @@ export function useReduceMotion(): boolean {
   );
 }
 /**
+ * Whether a programmatic scroll or zoom may animate, for code outside render
+ * (a callback, a measure response): false with Reduce Motion on, so the view
+ * lands at its target in one step. The first call starts the app's one
+ * subscription if no component has; until the system answers it animates.
+ */
+export function animatedScroll(): boolean {
+  if (!scrollWatch) scrollWatch = reduceMotion.subscribe(() => undefined);
+  return !reduceMotion.get();
+}
+let scrollWatch: (() => void) | undefined;
+/**
  * Reduce Motion, or null until iOS has answered. Use it where motion would
  * start at once on mount (a reveal), so nothing starts before the setting is
  * known.

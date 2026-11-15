@@ -1,3 +1,4 @@
+import { animatedScroll } from './accessibility';
 import { useCallback, useContext, useRef, type RefObject } from 'react';
 import {
   Keyboard,
@@ -37,7 +38,7 @@ export function useScrollReveal() {
             if (by > 0)
               scrollRef.current?.scrollTo({
                 y: offset.current + by,
-                animated: true,
+                animated: animatedScroll(),
               });
           }),
         );

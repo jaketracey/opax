@@ -1,3 +1,4 @@
+import { animatedScroll } from '../../design/accessibility';
 import { RouteOptions } from '../../navigation/preview';
 import { useAndroidRootScroll } from '../../navigation/useAndroidRootScroll';
 import {
@@ -247,7 +248,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         listRef.current?.scrollToIndex({
           index: at,
           viewPosition: 0.5,
-          animated: true,
+          animated: animatedScroll(),
         });
     },
     [rows, setSelectionParams],
@@ -489,7 +490,7 @@ function BillsScreen({ pushed }: { pushed: boolean }) {
         onScrollToIndexFailed={({ index: at, averageItemLength }) =>
           listRef.current?.scrollToOffset({
             offset: averageItemLength * at,
-            animated: true,
+            animated: animatedScroll(),
           })
         }
         ItemSeparatorComponent={separator}

@@ -1,3 +1,4 @@
+import { animatedScroll } from '../../design/accessibility';
 import { MyMemberProvider } from '../your-mp/useIsMyMember';
 import { RouteOptions } from '../../navigation/preview';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -357,7 +358,7 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
             sectionIndex,
             itemIndex,
             viewPosition: 0.5,
-            animated: true,
+            animated: animatedScroll(),
           });
         return true;
       });
@@ -540,7 +541,10 @@ function DirectoryView({ kind }: { kind: DirectoryKind }) {
         onScrollToIndexFailed={({ index: at, averageItemLength }) =>
           listRef.current
             ?.getScrollResponder()
-            ?.scrollTo({ y: averageItemLength * at, animated: true })
+            ?.scrollTo({
+              y: averageItemLength * at,
+              animated: animatedScroll(),
+            })
         }
         ItemSeparatorComponent={separator}
         initialNumToRender={10}

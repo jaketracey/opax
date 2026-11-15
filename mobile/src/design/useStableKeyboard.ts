@@ -1,3 +1,4 @@
+import { animatedScroll } from './accessibility';
 import { useContext, useEffect, useRef, useState, type RefObject } from 'react';
 import {
   Keyboard,
@@ -50,7 +51,7 @@ export function useStableKeyboard(
             if (obscured > 0)
               scroll.current?.scrollTo({
                 y: offset.current + obscured,
-                animated: true,
+                animated: animatedScroll(),
               });
           });
         });

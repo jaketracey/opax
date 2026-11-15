@@ -1,3 +1,4 @@
+import { animatedScroll } from '../../design/accessibility';
 import { useCallback, useMemo, useRef, useState, type RefObject } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { ScrollView, View, useWindowDimensions } from 'react-native';
@@ -176,7 +177,7 @@ export function ReportContent({
             y -
             Math.max(sy, headerBottom) -
             rhythm.block,
-          animated: true,
+          animated: animatedScroll(),
         });
       }),
     );

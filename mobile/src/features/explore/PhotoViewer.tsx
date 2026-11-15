@@ -20,6 +20,7 @@ import {
   useAccessibilitySize,
   useIncreaseContrast,
   useReduceMotion,
+  animatedScroll,
 } from '../../design/accessibility';
 import { useKeyCommand } from '../../design/keyboard';
 import { Text, copy } from '../../design/primitives';
@@ -77,7 +78,7 @@ function ZoomPage({
           r: typeof rect & { animated?: boolean },
         ) => void;
       } | null
-    )?.scrollResponderZoomTo?.({ ...rect, animated: true });
+    )?.scrollResponderZoomTo?.({ ...rect, animated: animatedScroll() });
   return (
     <ScrollView
       ref={zoom}
