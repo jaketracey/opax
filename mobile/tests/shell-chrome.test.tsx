@@ -363,7 +363,20 @@ test.each([
       expect('headerTransparent' in tabEdition).toBe(!underBar);
       // The directory and Just declared hold their band open with a search
       // field and pin sticky section headers: a solid, backed bar there.
-      for (const name of ['directory', 'declarations']) {
+      // So do the pushed pages whose bar always holds a field, from the
+      // stack's first layout: set later, the pushed Bills list was drawn
+      // under the clear bar for a frame and laid out again.
+      for (const name of [
+        'directory',
+        'declarations',
+        'bill-list',
+        'person/[slug]/votes',
+        'division-history',
+        'grants',
+        'grant-program',
+        'agencies',
+        'learn/glossary',
+      ]) {
         const list = (
           tabs.children as React.ReactElement<{
             name: string;
@@ -378,6 +391,28 @@ test.each([
         expect(list.headerTransparent).toBe(underBar ? false : undefined);
         expect('headerBackground' in list).toBe(underBar);
       }
+      // A seat's grants share the Grants route but have no search field:
+      // they keep the stack's clear bar. The electorates view has a field.
+      const grants = (
+        tabs.children as React.ReactElement<{
+          name: string;
+          options: (props: object) => Record<string, unknown>;
+        }>[]
+      ).find((entry) => entry.props.name === 'grants')!;
+      const grantsFor = (params: object) =>
+        grants.props.options({
+          route: { key: 'grants', name: 'grants', params },
+          navigation: { getState: () => ({ index: 1, routes: [] }) },
+        });
+      expect('headerTransparent' in grantsFor({ seat: 'Grayndler' })).toBe(
+        false,
+      );
+      expect('headerBackground' in grantsFor({ seat: 'Grayndler' })).toBe(
+        false,
+      );
+      expect(
+        grantsFor({ seat: 'Grayndler', view: 'electorates' }).headerTransparent,
+      ).toBe(underBar ? false : undefined);
       // Reduce Transparency or Increase Contrast: the solid bar, as the tab
       // roots have.
       mockSolidBar = true;
