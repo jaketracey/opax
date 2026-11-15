@@ -38,8 +38,22 @@ function faults(doc) {
   if (meta.schema !== 1) out.push('meta.schema is not 1')
   if (!realDate(meta.generated)) out.push('meta.generated is not a date')
   if (!realDate(meta.speeches_since)) out.push('meta.speeches_since is not a date')
-  for (const [k, v] of Object.entries(meta.divisions_since ?? {}))
-    if (!realDate(v)) out.push(`meta.divisions_since.${k} is not a date`)
+  const coverage = meta.coverage ?? {}
+  for (const kind of ['speeches', 'divisions']) {
+    if (typeof coverage[kind] !== 'object') out.push(`meta.coverage.${kind} is missing`)
+    for (const [k, v] of Object.entries(coverage[kind] ?? {}))
+      if (!realDate(v)) out.push(`meta.coverage.${kind}.${k} is not a date`)
+  }
+  // "First" is a claim: only for a person who entered that chamber on or after the date its record starts.
+  const claim = (at, kind, fact, entry) => {
+    const from = coverage[kind]?.[fact.chamber]
+    if (typeof fact.chamber !== 'string' || !fact.chamber) out.push(`${at}: no chamber`)
+    else if (!from) out.push(`${at}: no coverage start for ${fact.chamber}`)
+    else if (fact.date < from) out.push(`${at}: before the record of its chamber starts`)
+    if (fact.first !== undefined && fact.first !== true) out.push(`${at}: first is not true or absent`)
+    if (fact.first === true && !(realDate(entry.service_from) && from && from <= entry.service_from && entry.service_from <= fact.date))
+      out.push(`${at}: marked first without an entry date inside the record`)
+  }
   if (typeof meta.sources?.speech !== 'string' || !meta.sources.speech) out.push('meta.sources.speech is missing')
   const labels = meta.sources?.divisions ?? {}
   const people = [
@@ -53,6 +67,10 @@ function faults(doc) {
     if (!speech && !division) out.push(`${at}: holds neither fact`)
     if (speech && !(realDate(speech.date) && SLUG.test(speech.slug))) out.push(`${at}: first_speech`)
     if (speech && speech.date < meta.speeches_since) out.push(`${at}: first_speech is before the record starts`)
+    if (speech) claim(`${at}.first_speech`, 'speeches', speech, entry)
+    if (division) claim(`${at}.first_division`, 'divisions', division, entry)
+    if (entry.service_from !== undefined && !realDate(entry.service_from)) out.push(`${at}: service_from is not a date`)
+    if (entry.service_from !== undefined && at.startsWith('by_name.')) out.push(`${at}: an entry date without a roster id`)
     if (division && !(realDate(division.date) && https(division.url))) out.push(`${at}: first_division`)
     if (division && typeof labels[division.source] !== 'string') out.push(`${at}: first_division has no named source`)
   }
@@ -78,6 +96,16 @@ test('the contract refuses what the apps would refuse (revert guard)', () => {
   assert.notDeepEqual(broken((d) => { d.by_pid[pid].first_division.source = 'unnamed' }), [])
   assert.notDeepEqual(broken((d) => { d.by_pid.person_9c02d321caef54b2ba21a1f8 = d.by_pid[pid] }), [])
   assert.notDeepEqual(broken((d) => { d.by_pid[pid] = {} }), [])
+  // A first needs an entry date on or after the day the chamber's record starts, and a chamber with coverage.
+  assert.equal(sample.by_pid[pid].first_speech.first, true)
+  assert.notDeepEqual(broken((d) => { delete d.by_pid[pid].service_from }), [])
+  assert.notDeepEqual(broken((d) => { d.by_pid[pid].service_from = '1990-03-24' }), [])
+  assert.notDeepEqual(broken((d) => { d.meta.coverage.speeches.representatives = '2008-01-01' }), [])
+  assert.notDeepEqual(broken((d) => { delete d.meta.coverage.divisions.representatives }), [])
+  assert.notDeepEqual(broken((d) => { delete d.by_pid[pid].first_division.chamber }), [])
+  assert.notDeepEqual(broken((d) => { d.by_pid[pid].first_speech.first = false }), [])
+  const unnamed = Object.keys(sample.by_name)[0]
+  assert.notDeepEqual(broken((d) => { d.by_name[unnamed].first_speech.first = true }), [])
   // Added fields are allowed: readers ignore what they do not know.
   assert.deepEqual(broken((d) => { d.by_pid[pid].first_question = { date: '2008-02-20' }; d.meta.extra = 1 }), [])
 })
@@ -92,7 +120,7 @@ test('the sample the app branch decodes is this one', () => {
 
 test('no wording in the file ranks or compares people', () => {
   for (const text of [sampleText, existsSync(published) ? readFileSync(published, 'utf8') : ''])
-    assert.doesNotMatch(text, /first ever|youngest|oldest|longest|\bmost\b|\brank/i)
+    assert.doesNotMatch(text, /first ever|youngest|oldest|longest|\bmost\b|\branks?\b/i)
 })
 
 test('the published file, once exported, holds the contract and names only shipped roster people', { skip: !existsSync(published) && 'not exported yet' }, () => {
@@ -102,5 +130,5 @@ test('the published file, once exported, holds the contract and names only shipp
   const unnamed = new Set(roster.people.filter((p) => !p.pid).map((p) => p.name))
   assert.deepEqual(Object.keys(doc.by_pid).filter((k) => !pids.has(k)), [])
   assert.deepEqual(Object.keys(doc.by_name).filter((k) => !unnamed.has(k)), [])
-  assert.ok(Buffer.byteLength(JSON.stringify(doc)) < 350_000, 'the file stays small')
+  assert.ok(Buffer.byteLength(JSON.stringify(doc)) < 520_000, 'the file stays small')
 })

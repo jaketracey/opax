@@ -105,10 +105,21 @@ or no. The script's docstring is the contract: what counts, how a speech or a
 division is matched to one roster row, and when nothing is published (a name
 two rows answer to, a scoped namesake, a division with no source address).
 
-The dates say when the record starts for a person, not when their service
-did: speeches are held from `meta.speeches_since` and divisions from the dates
-in `meta.divisions_since`. Readers therefore say "First speech in the record"
-and "First division in the record", and never rank or compare people.
+"First" is a claim, so the export makes it only when the record can carry it.
+Each fact names its chamber, and `meta.coverage` gives the date the record of
+speeches and of divisions starts for each chamber, read from the database (the
+earliest date held), never a constant. A fact is marked `"first": true` only
+for a person with a roster id whose entry date in the members table is to that
+chamber, is on or after that chamber's coverage start, and is no more than
+`meta.first_window_days` before the fact. Readers label those "First speech"
+and "First division". Every other fact is the earliest the record holds:
+readers say "Earliest speech in the OPAX record (from 1998)", with the year
+from `meta.coverage`, and never call it a first. Nothing ranks or compares
+people.
+
+Known limit, to check on the first export: the members table holds one entry
+date per person. If that date is a return to parliament after earlier service
+from before the record starts, the rule above cannot see the earlier service.
 
 A roster row with a `pid` is under `by_pid`; a row without one is under
 `by_name` by its exact roster name. Fields are only ever added.
