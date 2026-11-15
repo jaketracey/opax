@@ -7,6 +7,7 @@ import {
   Dimensions,
   Platform,
   SectionList,
+  StyleSheet,
   View,
   ScrollView,
 } from 'react-native';
@@ -34,6 +35,7 @@ import {
 } from '../src/navigation/useNamedBackOptions';
 import {
   BarTitle,
+  barTitleShift,
   barTitleWidth,
   retreatBarTitle,
   barTitleCandidates,
@@ -1030,3 +1032,247 @@ test.each([
     act(() => Dimensions.set({ window: original }));
   },
 );
+
+// Beside the collapsed back button on iOS 26 the title view, as wide as its
+// text, sits at the leading end of the span between the bar groups (72 pt in,
+// to 274 on a 402 pt phone), so a short title is well left of the bar's
+// centre line. The shift is worked out from those figures, with no measuring.
+describe('a title beside the collapsed back button is moved onto the bar’s centre line on iOS 26', () => {
+  let version$: jest.SpyInstance;
+  const render = (
+    text: number,
+    {
+      version = '26.3',
+      shown = true,
+      trailingWidth,
+      fontScale = 1,
+      back = 'Today',
+      backWidth,
+    }: {
+      version?: string;
+      shown?: boolean;
+      trailingWidth?: number;
+      fontScale?: number;
+      back?: string;
+      backWidth?: number;
+    } = {},
+  ) => {
+    const original = Dimensions.get('window');
+    act(() =>
+      Dimensions.set({ window: { ...original, width: 402, fontScale } }),
+    );
+    version$ = jest
+      .spyOn(Platform, 'Version', 'get')
+      .mockReturnValue(version as never);
+    const element = (visible: boolean) => (
+      <NavigationContext.Provider value={{ setOptions: jest.fn() } as never}>
+        <BarTitle
+          title="Anthony Albanese"
+          person
+          shown={visible}
+          backTitle={back}
+          trailingWidth={trailingWidth}
+        />
+      </NavigationContext.Provider>
+    );
+    act(() => {
+      view = TestRenderer.create(element(shown));
+    });
+    measureBarTitle(view!, {
+      'Anthony Albanese': text,
+      ...(backWidth ? { [back]: backWidth } : {}),
+    });
+    const box = () =>
+      view!.root.findByType(Animated.Text).parent!.props as {
+        pointerEvents?: string;
+        style: object;
+      };
+    const shift = () =>
+      StyleSheet.flatten(box().style).transform?.[0]?.translateX as
+        | number
+        | undefined;
+    return {
+      shift,
+      box,
+      hide: () => act(() => view!.update(element(false))),
+      done: () => {
+        act(() => view!.unmount());
+        version$.mockRestore();
+        act(() => Dimensions.set({ window: original }));
+      },
+    };
+  };
+
+  test('a title just too wide to sit beside the back name moves onto the centre line', () => {
+    const t = render(144);
+    // 201 - (72 + 144 / 2) = 57 would centre it; 4 pt are kept spare before
+    // Share's reserve (274), so its edge stops at 270.
+    expect(t.shift()).toBe(54);
+    t.done();
+  });
+
+  test('a title never moves under Share', () => {
+    // A wide one moves only as far as keeps its edge at 274.
+    const wide = render(170);
+    expect(wide.shift()).toBe(28);
+    wide.done();
+    // One that fills the span has nowhere to go.
+    const full = render(206);
+    expect(full.shift()).toBeUndefined();
+    full.done();
+  });
+
+  // Above Large the view hugs the text as drawn, wider than the Large-size
+  // probes measure it. The shift must use the drawn width.
+  test('xxxLarge: a 120 pt title drawn wider stays clear of Share', () => {
+    const t = render(120, {
+      fontScale: 1.353,
+      back: 'Votes in parliament',
+      backWidth: 160,
+    });
+    const drawn = Math.min(
+      StyleSheet.flatten(t.box().style).maxWidth as number,
+      120 * 1.353,
+    );
+    const shift = t.shift() ?? 0;
+    expect(shift).toBeGreaterThan(0);
+    // The items are larger above Large (the pill starts at 272 on the
+    // device): the drawn text ends short of their larger reserve, 262, by
+    // the spare.
+    expect(72 + drawn + shift).toBeLessThanOrEqual(258);
+    t.done();
+  });
+
+  test('AX3: an 85 pt name drawn wider is centred, not pushed right of centre', () => {
+    const t = render(85, {
+      fontScale: 2.353,
+      back: 'Votes in parliament',
+      backWidth: 160,
+    });
+    const drawn = Math.min(
+      StyleSheet.flatten(t.box().style).maxWidth as number,
+      85 * (23 / 17),
+    );
+    const shift = t.shift() ?? 0;
+    expect(shift).toBeGreaterThan(0);
+    // Its centre is not right of the bar's (201), and its edge is short of
+    // the larger items' reserve (402 - 16 - 116 - 8 = 262) by the spare.
+    expect(72 + drawn / 2 + shift).toBeLessThanOrEqual(201);
+    expect(72 + drawn + shift).toBeLessThanOrEqual(258);
+    t.done();
+  });
+
+  test('18.4 centres a fitting title itself: no shift', () => {
+    const t = render(144, { version: '18.4' });
+    expect(t.shift()).toBeUndefined();
+    t.done();
+  });
+
+  test('the Duo’s rail has no items on the bar: no shift', () => {
+    const t = render(144, { trailingWidth: 0 });
+    expect(t.shift()).toBeUndefined();
+    t.done();
+  });
+
+  test('the title view takes no touches, and the shift goes as it hides', () => {
+    const t = render(144);
+    expect(t.box().pointerEvents).toBe('none');
+    t.hide();
+    expect(t.shift()).toBeUndefined();
+    t.done();
+  });
+
+  test('a long back label that cannot fit beside the title collapses it, and the title stays inside the span', () => {
+    const original = Dimensions.get('window');
+    act(() =>
+      Dimensions.set({ window: { ...original, width: 402, fontScale: 1 } }),
+    );
+    const spy = jest
+      .spyOn(Platform, 'Version', 'get')
+      .mockReturnValue('26.3' as never);
+    const setOptions = jest.fn();
+    act(() => {
+      view = TestRenderer.create(
+        <NavigationContext.Provider value={{ setOptions } as never}>
+          <BarTitle title="A to Z glossary" backTitle="How Parliament works" />
+        </NavigationContext.Provider>,
+      );
+    });
+    act(() =>
+      view!.update(
+        <NavigationContext.Provider value={{ setOptions } as never}>
+          <BarTitle
+            title="A to Z glossary"
+            backTitle="How Parliament works"
+            shown
+          />
+        </NavigationContext.Provider>,
+      ),
+    );
+    // The back label (230 pt) leaves no room beside the title (100 pt).
+    measureBarTitle(view!, {
+      'A to Z glossary': 100,
+      'How Parliament works': 230,
+    });
+    const text = view!.root.findByType(Animated.Text);
+    const box = text.parent!.props as { style: object };
+    const x = StyleSheet.flatten(box.style).transform?.[0]?.translateX as
+      | number
+      | undefined;
+    // It retreats to the collapsed back button, and what is left moves onto
+    // the centre line with its edge well inside Share's reserve (274).
+    expect(setOptions).toHaveBeenLastCalledWith({
+      headerBackButtonDisplayMode: 'minimal',
+    });
+    expect(x).toBe(79);
+    expect(72 + 100 + (x ?? 0)).toBeLessThanOrEqual(274);
+    act(() => view!.unmount());
+    spy.mockRestore();
+    act(() => Dimensions.set({ window: original }));
+  });
+
+  test('a screen with no items on the bar (the glossary) gets no shift', () => {
+    expect(
+      barTitleShift({ active: true, width: 402, text: 100, trailing: 0 }),
+    ).toBe(0);
+  });
+
+  test('larger text: the items grow, and the shift follows the same figures', () => {
+    // Share and More grow by 6 pt each: reserve 116, the span ends at 262.
+    expect(
+      barTitleShift({ active: true, width: 402, text: 143, growth: 6 }),
+    ).toBe(43);
+    expect(barTitleShift({ active: false, width: 402, text: 143 })).toBe(0);
+    expect(barTitleShift({ active: true, width: 402, text: undefined })).toBe(
+      0,
+    );
+  });
+});
+
+test('xxxLarge: a 205 pt title is shortened, not run under Share’s larger pill', () => {
+  const original = Dimensions.get('window');
+  act(() =>
+    Dimensions.set({ window: { ...original, width: 402, fontScale: 1.353 } }),
+  );
+  const title = 'Interactive Games Amendment Bill';
+  act(() => {
+    view = TestRenderer.create(
+      <NavigationContext.Provider value={{ setOptions: jest.fn() } as never}>
+        <BarTitle title={title} shown backTitle="Today" />
+      </NavigationContext.Provider>,
+    );
+  });
+  // Share and More are larger above Large: the span beside the collapsed
+  // back button is 194 pt (402 - 68 - 16 - 116 - 8), not 206.
+  measureBarTitle(view!, {
+    [title]: 205,
+    'Interactive Games Amendment…': 180,
+    'Interactive Games…': 120,
+  });
+  expect(view!.root.findByType(Animated.Text).props).toMatchObject({
+    children: 'Interactive Games Amendment…',
+    accessibilityLabel: title,
+  });
+  act(() => view!.unmount());
+  act(() => Dimensions.set({ window: original }));
+});
