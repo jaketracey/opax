@@ -29,16 +29,23 @@ export interface TodayShape {
   stateRow: KeptStateRow | null;
   /** The election record was withdrawn: it is not asked for again. */
   withdrawn: boolean;
+  /**
+   * The election `stateRow` and `withdrawn` were decided for (its day), or
+   * null when none was known. Once the data names another election, the
+   * kept decisions no longer stand, so a new election is decided afresh.
+   */
+  electionDay: string | null;
 }
 /**
- * Version 4: `state` is the state row in the group (version 1 kept the old
- * state seat card, withheld for Victorian seats); `senators`, `stateRow`
- * and `withdrawn` are new. An older file is not read; the page predicts
+ * Version 5: `state` is the state row in the group (version 1 kept the old
+ * state seat card, withheld for Victorian seats); `senators`, `stateRow`,
+ * `withdrawn` and `electionDay` are new. An older file is not read; the page predicts
  * from the saved choice.
  */
 interface ShapeFile extends TodayShape {
-  version: 4;
+  version: 5;
 }
+const DAY = /^\d{4}-\d{2}-\d{2}$/;
 const linesOf = (raw: unknown, count: number): readonly string[] | null =>
   Array.isArray(raw) &&
   raw.length === count &&
@@ -57,7 +64,7 @@ function decodeStateRow(raw: unknown): KeptStateRow | null | undefined {
     const lines = linesOf(row.lines, 4);
     return lines &&
       typeof row.electionDay === 'string' &&
-      /^\d{4}-\d{2}-\d{2}$/.test(row.electionDay)
+      DAY.test(row.electionDay)
       ? { kind: 'dissolved', electionDay: row.electionDay, lines }
       : undefined;
   }
@@ -72,19 +79,28 @@ const store = new TwoSlotStore<ShapeFile>(
   ['opax-today-shape-v1.json', 'opax-today-shape-v1.b.json'],
   (raw) => {
     if (!raw || typeof raw !== 'object') return null;
-    const { version, key, house, state, senators, withdrawn } = raw as Record<
-      string,
-      unknown
-    >;
+    const { version, key, house, state, senators, withdrawn, electionDay } =
+      raw as Record<string, unknown>;
     const stateRow = decodeStateRow((raw as { stateRow?: unknown }).stateRow);
-    return version === 4 &&
+    return version === 5 &&
       typeof key === 'string' &&
       typeof house === 'boolean' &&
       typeof state === 'boolean' &&
       typeof senators === 'boolean' &&
       typeof withdrawn === 'boolean' &&
+      (electionDay === null ||
+        (typeof electionDay === 'string' && DAY.test(electionDay))) &&
       stateRow !== undefined
-      ? { version: 4, key, house, state, senators, stateRow, withdrawn }
+      ? {
+          version: 5,
+          key,
+          house,
+          state,
+          senators,
+          stateRow,
+          withdrawn,
+          electionDay,
+        }
       : null;
   },
   (value) => value,
@@ -108,11 +124,12 @@ export async function readTodayShape(): Promise<TodayShape | null> {
         senators: file.senators,
         stateRow: file.stateRow,
         withdrawn: file.withdrawn,
+        electionDay: file.electionDay,
       }
     : null;
 }
 
 /** Keeps the shape the directory answered; a failed save changes nothing. */
 export async function rememberTodayShape(shape: TodayShape): Promise<void> {
-  await store.save({ version: 4, ...shape }).catch(() => undefined);
+  await store.save({ version: 5, ...shape }).catch(() => undefined);
 }

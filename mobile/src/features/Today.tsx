@@ -424,19 +424,39 @@ export default function Today() {
       directory?.electorates.data.electorates ?? [],
       Intl.DateTimeFormat().resolvedOptions().timeZone,
     );
-  // The record was withdrawn (now, or as the last launch kept): it is not
-  // asked for again.
+  // The election the data at hand is about: the record's, or the one the
+  // index says the seat's house is dissolved for.
+  const electionDay =
+    overview?.election_day ?? stateSeat?.dissolved_for?.slice(0, 10) ?? null;
+  // What the last launch kept was decided for one election. Once the data
+  // names another, none of it stands: a new election is decided afresh.
+  const keptStands =
+    !electionDay || !kept?.electionDay || kept.electionDay === electionDay;
+  const keptDecision = keptStands ? keptRow : null;
+  // The record was withdrawn (now, or as the last launch kept for this
+  // election): it is not asked for again.
   const recordWithdrawn =
     !overview &&
-    (election.error instanceof ElectionUnavailable || !!kept?.withdrawn);
+    (election.error instanceof ElectionUnavailable ||
+      (keptStands && !!kept?.withdrawn));
   // The new member is decided (or the record never covered the seat):
   // nothing more to ask.
-  const rowDecided = keptRow?.kind === 'member' && keptRow.until === null;
+  const rowDecided =
+    keptDecision?.kind === 'member' && keptDecision.until === null;
   // The one read Today may start: only for the state seat of the migrated
-  // choice (never a stray saved id), only until the row is decided or the
-  // record withdrawn, and only when no read of the block's will answer.
+  // choice (never a stray saved id), only while the electorates index does
+  // not say for itself (`dissolved_for`), only until the row is decided or
+  // the record withdrawn, and only when no read of the block's will answer.
   const rowUndecided =
-    !!stateSeat && !overview && !recordWithdrawn && !rowDecided;
+    !!stateSeat &&
+    stateSeat.dissolved_for === undefined &&
+    !overview &&
+    !recordWithdrawn &&
+    !rowDecided;
+  // Kept with the decisions, so the next launch knows which election they
+  // were made for.
+  const decidedFor =
+    electionDay ?? (keptStands ? (kept?.electionDay ?? null) : null);
   const asksRecord = rowUndecided && !electionBlockReads;
   useEffect(() => {
     if (asksRecord) void electionReads.loadOverviewShared();
@@ -448,7 +468,7 @@ export default function Today() {
         stateSeat,
         { overview, reading: rowUndecided && election.loading },
         electionNow,
-        keptRow,
+        keptDecision,
       )
     : null;
   const drawnReps =
@@ -478,6 +498,7 @@ export default function Today() {
       launchShape.state === stateSeatDrawn &&
       launchShape.senators === senatorsDrawn &&
       launchShape.withdrawn === recordWithdrawn &&
+      launchShape.electionDay === decidedFor &&
       JSON.stringify(launchShape.stateRow) === stateRowKept
     )
       return;
@@ -488,6 +509,7 @@ export default function Today() {
       senators: senatorsDrawn,
       stateRow: JSON.parse(stateRowKept) as TodayShape['stateRow'],
       withdrawn: recordWithdrawn,
+      electionDay: decidedFor,
     });
   }, [
     settledKey,
@@ -497,6 +519,7 @@ export default function Today() {
     rowHeld,
     stateRowKept,
     recordWithdrawn,
+    decidedFor,
     launched,
     launchShape,
   ]);

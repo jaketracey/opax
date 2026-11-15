@@ -4,7 +4,11 @@ import { act } from 'react';
 import TestRenderer from 'react-test-renderer';
 import { StyleSheet, Text as NativeText } from 'react-native';
 import { catalogs } from '../src/api/runtime';
-import { yourMPFor, type Electorate } from '../src/api/catalogs';
+import {
+  decodeElectorateIndex,
+  yourMPFor,
+  type Electorate,
+} from '../src/api/catalogs';
 import {
   PartyLabel,
   PersonRow,
@@ -21,6 +25,7 @@ import {
 import {
   DISSOLVED_STAND_IN,
   electionDayWords,
+  formFromIndex,
   formFromRecord,
   NEUTRAL_STAND_IN,
   resultLoaded,
@@ -42,7 +47,7 @@ import {
 } from '../src/features/today/YourMPCard';
 import { MyMemberContext } from '../src/features/your-mp/MyMemberContext';
 import { migrateSeatChoice } from '../src/features/your-mp/useSeat';
-import { index, manifest, people, roster, slugs } from './pinned';
+import { index, manifest, people, pinned, roster, slugs } from './pinned';
 
 jest.mock('../src/api/runtime', () => ({
   catalogs: { yourMP: jest.fn() },
@@ -553,6 +558,72 @@ describe('Today’s representatives group', () => {
       );
       expect(ids(renderer)).not.toContain('today-rep-state-dissolved');
       await act(async () => renderer.unmount());
+    });
+
+    test('the electorates index answers first when it carries dissolved_for: no record needed, and nothing kept overrides it', () => {
+      const none = { overview: null, reading: true };
+      const decided = { kind: 'member' as const, until: null };
+      const dissolvedSeat = { ...essendon, dissolved_for: '2030-11-30' };
+      const sittingSeat = { ...essendon, dissolved_for: null };
+      // Dissolved for whatever election the index names.
+      expect(formFromIndex(dissolvedSeat)).toEqual({
+        kind: 'dissolved',
+        electionDay: '2030-11-30',
+      });
+      expect(stateForm(dissolvedSeat, none, DURING, decided)).toEqual({
+        kind: 'dissolved',
+        electionDay: '2030-11-30',
+      });
+      // Null: the post-result roster is loaded, so the member's row, even
+      // while the election record still says its caretaker period runs.
+      expect(formFromIndex(sittingSeat)).toEqual(decided);
+      expect(
+        stateForm(sittingSeat, { overview, reading: false }, DURING, null),
+      ).toEqual(decided);
+      expect(
+        stateForm(
+          sittingSeat,
+          none,
+          DURING,
+          keptStateRow(essendon, directory, DISSOLVED),
+        ),
+      ).toEqual(decided);
+      // An index that predates the field says nothing: the record decides.
+      expect(essendon.dissolved_for).toBeUndefined();
+      expect(formFromIndex(essendon)).toBeUndefined();
+      expect(
+        stateForm(essendon, { overview, reading: false }, DURING, null),
+      ).toEqual(DISSOLVED);
+    });
+
+    test('an index row with dissolved_for decodes: a day, null, or absent; anything else is not a row', () => {
+      const raw = pinned(manifest.index_url) as {
+        electorates: Record<string, unknown>[];
+      };
+      const withValue = (value: unknown) => ({
+        ...raw,
+        electorates: raw.electorates.map((row) =>
+          row.electorate_id === essendon.electorate_id
+            ? { ...row, dissolved_for: value }
+            : row,
+        ),
+      });
+      const decoded = (value: unknown) =>
+        decodeElectorateIndex(withValue(value)).electorates.find(
+          (s) => s.electorate_id === essendon.electorate_id,
+        );
+      expect(decoded('2026-11-28')!.dissolved_for).toBe('2026-11-28');
+      expect(decoded(null)!.dissolved_for).toBeNull();
+      expect(
+        decodeElectorateIndex(raw).electorates.find(
+          (s) => s.electorate_id === essendon.electorate_id,
+        )!.dissolved_for,
+      ).toBeUndefined();
+      // A malformed value drops that one row, never the index.
+      expect(decoded('soon')).toBeUndefined();
+      expect(decodeElectorateIndex(withValue('soon')).electorates.length).toBe(
+        decodeElectorateIndex(raw).electorates.length - 1,
+      );
     });
 
     test('a kept member row answers while the record is out, until its caretaker instant', () => {

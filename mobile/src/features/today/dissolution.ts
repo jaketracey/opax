@@ -25,6 +25,9 @@ export type StateForm =
   | { kind: 'neutral' }
   | { kind: 'held'; lines: readonly string[] | null };
 
+/** A member with nothing to end it. */
+const MEMBER: StateForm = { kind: 'member', until: null };
+
 /** What the device keeps of the decision and the drawn lines (shape-store). */
 export type KeptStateRow =
   | { kind: 'member'; until: string | null }
@@ -80,7 +83,22 @@ export function resultLoaded(
   return (seat.latest_election ?? '').slice(0, 10) >= electionDay;
 }
 
-type RecordSeat = Pick<Electorate, 'url' | 'latest_election'>;
+type RecordSeat = Pick<Electorate, 'url' | 'latest_election' | 'dissolved_for'>;
+
+/**
+ * What the electorates index itself says, when it carries the field: the
+ * election day while the seat's house is dissolved, null once the
+ * post-result roster is loaded. Undefined from an index that predates the
+ * field, which says nothing either way.
+ */
+export function formFromIndex(
+  seat: Pick<Electorate, 'dissolved_for'>,
+): StateForm | undefined {
+  if (seat.dissolved_for === undefined) return undefined;
+  return seat.dissolved_for === null
+    ? MEMBER
+    : { kind: 'dissolved', electionDay: seat.dissolved_for.slice(0, 10) };
+}
 
 /** What the election record, at hand, decides for a seat. */
 export function formFromRecord(
@@ -103,7 +121,9 @@ export function formFromRecord(
 
 /**
  * The state row's form, decided without waiting where the device can:
- * - the election record, when it is at hand, answers;
+ * - the electorates index answers when it carries `dissolved_for`, with no
+ *   election record and no request at all;
+ * - otherwise the election record, when it is at hand, answers;
  * - with none at hand, what the last launch kept answers while it still
  *   holds: a dissolved row until the seat's result is loaded, a member's
  *   row until its `until` instant;
@@ -116,6 +136,8 @@ export function stateForm(
   now: Date,
   kept: KeptStateRow | null,
 ): StateForm {
+  const indexed = formFromIndex(seat);
+  if (indexed) return indexed;
   if (election.overview) return formFromRecord(seat, election.overview, now);
   if (kept?.kind === 'dissolved')
     return resultLoaded(seat, kept.electionDay)

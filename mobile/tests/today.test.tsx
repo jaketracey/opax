@@ -1067,6 +1067,7 @@ describe('the first frame has the loaded page’s layout', () => {
       senators: false,
       stateRow: null,
       withdrawn: false,
+      electionDay: null,
     });
     // The next launch, the directory still out: no Your MP skeleton and no
     // reorder when the migration runs. It happened on every launch.
@@ -1138,13 +1139,18 @@ describe('the first frame has the loaded page’s layout', () => {
       shared.mockReset();
       shared.mockResolvedValue(undefined);
     });
-    const shape = (stateRow: TodayShape['stateRow'], withdrawn = false) => ({
+    const shape = (
+      stateRow: TodayShape['stateRow'],
+      withdrawn = false,
+      electionDay: string | null = null,
+    ) => ({
       key: shapeKey(victorian),
       house: true,
       state: true,
       senators: true,
       stateRow,
       withdrawn,
+      electionDay,
     });
 
     test('a kept shape for another choice is not used; the kept shape for this choice sets the rows held for the group', async () => {
@@ -1160,6 +1166,7 @@ describe('the first frame has the loaded page’s layout', () => {
         senators: false,
         stateRow: { kind: 'member', until: null },
         withdrawn: false,
+        electionDay: null,
       });
       setUp({ seat: true, cached: { date: addDays(today, -1) } });
       mock.directory.mockImplementation(() => new Promise(() => {}));
@@ -1175,6 +1182,7 @@ describe('the first frame has the loaded page’s layout', () => {
         senators: false,
         stateRow: { kind: 'member', until: null },
         withdrawn: false,
+        electionDay: null,
       });
       setUp({ seat: true, cached: { date: addDays(today, -1) } });
       mock.directory.mockImplementation(() => new Promise(() => {}));
@@ -1202,11 +1210,15 @@ describe('the first frame has the loaded page’s layout', () => {
       ]);
       expect(drawn[3]).toMatch(/^Last member: /);
       await expect(readTodayShape()).resolves.toEqual(
-        shape({
-          kind: 'dissolved',
-          electionDay: overview.election_day,
-          lines: drawn,
-        }),
+        shape(
+          {
+            kind: 'dissolved',
+            electionDay: overview.election_day,
+            lines: drawn,
+          },
+          false,
+          overview.election_day,
+        ),
       );
       // The next launch holds the very lines it will draw, record or not.
       for (const election of [{ record: atHand }, {}]) {
@@ -1262,6 +1274,163 @@ describe('the first frame has the loaded page’s layout', () => {
       await expect(readTodayShape()).resolves.toEqual(
         shape({ kind: 'neutral', lines: lines(first.r) }),
       );
+    });
+
+    describe('the electorates index says it for itself (dissolved_for)', () => {
+      const withField = (value: string | null) => ({
+        ...directory,
+        electorates: {
+          ...directory.electorates,
+          data: {
+            ...index,
+            electorates: index.electorates.map((s) =>
+              s.electorate_id === essendon.electorate_id
+                ? { ...s, dissolved_for: value }
+                : s,
+            ),
+          },
+        },
+      });
+      const launchWith = async (
+        value: string | null,
+        election: Parameters<typeof record>[0] = {},
+      ) => {
+        setUp({ cached: { date: addDays(today, -1) } });
+        jest.mocked(loadChoice).mockResolvedValue(victorian);
+        record(election);
+        mock.directory.mockResolvedValue(withField(value) as never);
+        return render(<Today />);
+      };
+
+      test('dissolved from the index alone: the four-line row with no election record and no request, in or out of the block’s window', async () => {
+        const window = mockElectionNow;
+        for (const now of [window, new Date('2027-02-01T10:00:00+11:00')]) {
+          mockElectionNow = now;
+          try {
+            const r = await launchWith('2026-11-28', { loading: true });
+            expect(hosts(r, 'today-rep-state-dissolved')).toHaveLength(1);
+            expect(lines(r)[2]).toBe(
+              'Assembly dissolved for the 28 November election',
+            );
+            expect(shared).not.toHaveBeenCalled();
+          } finally {
+            mockElectionNow = window;
+          }
+        }
+        // Kept for that election, so the next launch holds the same lines.
+        await expect(readTodayShape()).resolves.toMatchObject({
+          electionDay: '2026-11-28',
+          stateRow: { kind: 'dissolved', electionDay: '2026-11-28' },
+        });
+      });
+
+      test('null in the index: the post-result roster is loaded, the member’s row draws and nothing is asked, even with a dissolved row kept', async () => {
+        const kept = await launchWith('2026-11-28');
+        expect(hosts(kept, 'today-rep-state-dissolved')).toHaveLength(1);
+        const window = mockElectionNow;
+        mockElectionNow = new Date('2027-02-01T10:00:00+11:00');
+        try {
+          const r = await launchWith(null, { loading: true });
+          expect(hosts(r, 'today-rep-state')).toHaveLength(1);
+          expect(hosts(r, 'today-rep-state-dissolved')).toHaveLength(0);
+          expect(shared).not.toHaveBeenCalled();
+        } finally {
+          mockElectionNow = window;
+        }
+      });
+
+      test('a kept dissolved row makes no request once the index carries the field', async () => {
+        // Kept from the election record, before the field shipped.
+        const before = await launch(victorian, { record: atHand });
+        await before.answer();
+        await expect(readTodayShape()).resolves.toMatchObject({
+          stateRow: { kind: 'dissolved' },
+        });
+        // That screen is gone before the clock moves on.
+        act(() => before.r.unmount());
+        const window = mockElectionNow;
+        mockElectionNow = new Date('2026-12-10T10:00:00+11:00');
+        try {
+          // No field yet, after the block retires: the kept row stands, and
+          // the record is asked for once through the shared read.
+          const without = await launch(victorian, { loading: true });
+          await without.answer();
+          expect(hosts(without.r, 'today-rep-state-dissolved')).toHaveLength(1);
+          expect(shared).toHaveBeenCalledTimes(1);
+          shared.mockClear();
+          // The field lands: the same row, and no request at all.
+          const r = await launchWith('2026-11-28', { loading: true });
+          expect(hosts(r, 'today-rep-state-dissolved')).toHaveLength(1);
+          expect(shared).not.toHaveBeenCalled();
+        } finally {
+          mockElectionNow = window;
+        }
+      });
+    });
+
+    describe('kept decisions belong to one election', () => {
+      const next = {
+        ...overview,
+        election_day: '2030-11-30',
+        key_dates: overview.key_dates.map((d) =>
+          d.id === 'caretaker'
+            ? { ...d, passes_at: '2026-11-01T18:00:00+11:00' }
+            : d,
+        ),
+      };
+      test('"member, decided" for one election does not stand once the record names another', async () => {
+        await rememberTodayShape(
+          shape({ kind: 'member', until: null }, false, overview.election_day),
+        );
+        const r = await launch(victorian, {
+          record: { ...atHand, data: next },
+        });
+        await r.answer();
+        expect(hosts(r.r, 'today-rep-state-dissolved')).toHaveLength(1);
+        expect(lines(r.r)[2]).toBe(
+          'Assembly dissolved for the 30 November election',
+        );
+        await expect(readTodayShape()).resolves.toMatchObject({
+          electionDay: '2030-11-30',
+          stateRow: { kind: 'dissolved', electionDay: '2030-11-30' },
+        });
+      });
+
+      test('"withdrawn" for one election is reset when the index names another: the record may be asked for again', async () => {
+        await rememberTodayShape(
+          shape(
+            { kind: 'neutral', lines: ['a', 'b', 'c'] },
+            true,
+            '2026-11-28',
+          ),
+        );
+        // Still that election: withdrawn stands, nothing is asked.
+        const window = mockElectionNow;
+        mockElectionNow = new Date('2030-12-10T10:00:00+11:00');
+        try {
+          const same = await launch(victorian, { loading: true });
+          await same.answer();
+          expect(shared).not.toHaveBeenCalled();
+          expect(hosts(same.r, 'today-rep-state-neutral')).toHaveLength(1);
+          await expect(readTodayShape()).resolves.toMatchObject({
+            withdrawn: true,
+            electionDay: '2026-11-28',
+          });
+          // The record at hand is for a new election: decided afresh, and
+          // withdrawn no longer kept.
+          const fresh = await launch(victorian, {
+            record: { ...atHand, data: next },
+          });
+          await fresh.answer();
+          expect(hosts(fresh.r, 'today-rep-state-dissolved')).toHaveLength(1);
+          await expect(readTodayShape()).resolves.toMatchObject({
+            withdrawn: false,
+            electionDay: '2030-11-30',
+          });
+        } finally {
+          mockElectionNow = window;
+        }
+      });
     });
 
     describe('the election record is asked for once, only when the row needs it', () => {
